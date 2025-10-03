@@ -119,7 +119,9 @@ export function computeAxisValue<T extends ChartSeriesType>({
     const zoomRange: [number, number] = zoom ? [zoom.start, zoom.end] : [0, 100];
     const range = getRange(drawingArea, axisDirection, axis.reverse ?? false);
 
+    const rawTickNumber = scaleDefinition.tickNumber!;
     const triggerTooltip = !axis.ignoreTooltip && axisIdsTriggeringTooltip.has(axis.id);
+    const tickNumber = scaleTickNumberByRange(rawTickNumber, zoomRange);
 
     const data = axis.data ?? [];
 
@@ -140,7 +142,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
           ...axis,
           data,
           scale,
-          tickNumber: axis.data!.length,
+          tickNumber,
           colorScale:
             axis.colorMap &&
             (axis.colorMap.type === 'ordinal'
@@ -157,7 +159,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
           ...axis,
           data,
           scale,
-          tickNumber: axis.data!.length,
+          tickNumber,
           colorScale:
             axis.colorMap &&
             (axis.colorMap.type === 'ordinal'
@@ -179,12 +181,10 @@ export function computeAxisValue<T extends ChartSeriesType>({
       return;
     }
 
-    const rawTickNumber = scaleDefinition.tickNumber!;
     const continuousAxis = axis as Readonly<
       DefaultedAxis<ContinuousScaleName, any, Readonly<ChartsAxisProps>>
     >;
     const scaleType = continuousAxis.scaleType ?? ('linear' as const);
-    const tickNumber = scaleTickNumberByRange(rawTickNumber, zoomRange);
 
     const filter = zoom === undefined && !zoomOption ? getFilters : undefined; // Do not apply filtering if zoom is already defined.
     if (filter) {

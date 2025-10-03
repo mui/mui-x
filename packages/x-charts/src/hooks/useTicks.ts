@@ -2,8 +2,9 @@
 import * as React from 'react';
 import { useChartContext } from '../context/ChartProvider';
 import { AxisConfig, D3ContinuousScale, D3Scale } from '../models/axis';
-import { isOrdinalScale } from '../internals/scaleGuards';
+import { isBandScale, isOrdinalScale } from '../internals/scaleGuards';
 import { isInfinity } from '../internals/isInfinity';
+import { getScale } from '../internals/getScale';
 
 export interface TickParams {
   /**
@@ -64,31 +65,130 @@ export type TickItemType = {
   labelOffset: number;
 };
 
-export function getTicks(
-  options: {
-    scale: D3Scale;
-    valueFormatter?: AxisConfig['valueFormatter'];
-    isInside: (offset: number) => boolean;
-  } & Pick<TickParams, 'tickInterval' | 'tickPlacement' | 'tickLabelPlacement'> &
-    Required<Pick<TickParams, 'tickNumber'>>,
-) {
+interface GetTicksOptions
+  extends Pick<TickParams, 'tickInterval' | 'tickPlacement' | 'tickLabelPlacement'>,
+  Required<Pick<TickParams, 'tickNumber'>> {
+  scale: D3Scale;
+  valueFormatter?: AxisConfig['valueFormatter'];
+  isInside: (offset: number) => boolean;
+  continuousTickPlacement?: boolean;
+}
+
+/*
+ * The ratio between the number of ticks in a continuous scale vs an ordinal scale needed to apply the continuous ticks logic.
+ */
+const CONTINUOUS_TICKS_RATIO = 3;
+
+export function getTicks(options: GetTicksOptions) {
   const {
     scale,
     tickNumber,
     valueFormatter,
     tickInterval,
-    tickPlacement = 'extremities',
+    tickPlacement: tickPlacementProp,
     tickLabelPlacement: tickLabelPlacementProp,
     isInside,
+    continuousTickPlacement = false,
   } = options;
 
-  // band scale
+
+
+
+  // ordinal scale with spaced ticks.
+  if (isOrdinalScale(scale) && continuousTickPlacement) {
+
+    const domain = scale.domain();
+
+    const continuousScale = getScale(
+      typeof domain[0] === 'number' ? 'linear' : 'time',
+      [domain[0], domain[domain.length - 1]],
+      scale.range(),
+    );
+
+
+
+
+    const ticks =
+      typeof tickInterval === 'object'
+        ? tickInterval
+        : getDefaultTicks(continuousScale.copy().nice(tickNumber), tickNumber);
+
+    // If the ratio is not met we stop the computation and fallback on the default ordinal ticks computation.
+    if (ticks.length * CONTINUOUS_TICKS_RATIO < domain.length) {
+
+      const visibleTicks: TickItemType[] = [];
+
+      let bandIndex = 0;
+      let lastAddedBandIndex = undefined;
+      for (let i = 0; i < ticks.length; i += 1) {
+        while (domain[bandIndex] < ticks[i] && bandIndex < domain.length - 1) {
+          bandIndex += 1;
+        }
+        const tickValue = ticks[i];
+        const bandValue = domain[bandIndex];
+
+        // We place tick at start, end or middle of the band depending on the closest position.       
+        const correctOffset = continuousScale(tickValue);
+        const bandStart = scale(bandValue)! - (scale.step() - scale.bandwidth()) / 2
+        let offset = bandStart
+        if (correctOffset > bandStart + 0.25 * scale.step()) {
+          offset = bandStart + 0.5 * scale.step()
+        }
+        if (correctOffset > bandStart + 0.75 * scale.step()) {
+          offset = bandStart + scale.step()
+        }
+
+        if (isInside(correctOffset) || (isInside(correctOffset - 2 * scale.step()) || isInside(correctOffset + 2 * scale.step()))) {
+
+          const defaultTickLabel = continuousScale.tickFormat(tickNumber)(tickValue);
+
+          if (lastAddedBandIndex !== undefined && bandIndex === lastAddedBandIndex
+          ) {
+            visibleTicks[visibleTicks.length - 1] = {
+              value: bandValue,
+              formattedValue:
+                valueFormatter?.(bandValue, {
+                  location: 'tick',
+                  scale,
+                  tickNumber,
+                  defaultTickLabel,
+                }) ?? defaultTickLabel,
+              offset,
+              labelOffset: 0,
+            };
+            continue;
+          }
+
+          visibleTicks.push({
+            value: bandValue,
+            formattedValue:
+              valueFormatter?.(bandValue, {
+                location: 'tick',
+                scale,
+                tickNumber,
+                defaultTickLabel,
+              }) ?? defaultTickLabel,
+            offset,
+            labelOffset: 0,
+          });
+          lastAddedBandIndex = bandIndex
+        }
+      }
+
+      return visibleTicks
+    }
+  }
+
+
+  const tickPlacement = tickPlacementProp ?? 'extremities';
+
+  // Standard ordinal scale: 1 item =1 tick
   if (isOrdinalScale(scale)) {
     const domain = scale.domain();
 
     const tickLabelPlacement = tickLabelPlacementProp ?? 'middle';
 
-    if (scale.bandwidth() > 0) {
+    if (isBandScale(scale)) {
       // scale type = 'band'
       const filteredDomain =
         (typeof tickInterval === 'function' && domain.filter(tickInterval)) ||
@@ -117,12 +217,12 @@ export function getTicks(
 
         ...(tickPlacement === 'extremities'
           ? [
-              {
-                formattedValue: undefined,
-                offset: scale.range()[1],
-                labelOffset: 0,
-              },
-            ]
+            {
+              formattedValue: undefined,
+              offset: scale.range()[1],
+              labelOffset: 0,
+            },
+          ]
           : []),
       ];
     }
@@ -149,6 +249,7 @@ export function getTicks(
       };
     });
   }
+
 
   const domain = scale.domain();
   // Skip axis rendering if no data is available
@@ -203,14 +304,7 @@ function getDefaultTicks(scale: D3ContinuousScale, tickNumber: number) {
   return scale.ticks(tickNumber);
 }
 
-export function useTicks(
-  options: {
-    scale: D3Scale;
-    valueFormatter?: AxisConfig['valueFormatter'];
-    direction: 'x' | 'y';
-  } & Pick<TickParams, 'tickInterval' | 'tickPlacement' | 'tickLabelPlacement'> &
-    Required<Pick<TickParams, 'tickNumber'>>,
-): TickItemType[] {
+export function useTicks(options: Omit<GetTicksOptions, 'isInside'> & { direction: 'x' | 'y' }): TickItemType[] {
   const {
     scale,
     tickNumber,
@@ -219,6 +313,7 @@ export function useTicks(
     tickPlacement = 'extremities',
     tickLabelPlacement,
     direction,
+    continuousTickPlacement,
   } = options;
   const { instance } = useChartContext();
   const isInside = direction === 'x' ? instance.isXInside : instance.isYInside;
@@ -233,7 +328,17 @@ export function useTicks(
         tickLabelPlacement,
         valueFormatter,
         isInside,
+        continuousTickPlacement,
       }),
-    [scale, tickNumber, tickPlacement, tickInterval, tickLabelPlacement, valueFormatter, isInside],
+    [
+      scale,
+      tickNumber,
+      tickPlacement,
+      tickInterval,
+      tickLabelPlacement,
+      valueFormatter,
+      isInside,
+      continuousTickPlacement,
+    ],
   );
 }

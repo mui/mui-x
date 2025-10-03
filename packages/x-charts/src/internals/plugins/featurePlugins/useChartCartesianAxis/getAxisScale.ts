@@ -123,7 +123,7 @@ export type ScaleDefinition =
     }
   | {
       scale: D3OrdinalScale;
-      tickNumber?: never;
+      tickNumber?: number;
     };
 
 function getAxisScale<T extends ChartSeriesType>(
@@ -142,28 +142,6 @@ function getAxisScale<T extends ChartSeriesType>(
 ): ScaleDefinition {
   const zoomRange: [number, number] = zoom ? [zoom.start, zoom.end] : [0, 100];
   const range = getRange(drawingArea, axisDirection, axis);
-
-  if (isBandScaleConfig(axis)) {
-    const categoryGapRatio = axis.categoryGapRatio ?? DEFAULT_CATEGORY_GAP_RATIO;
-    // Reverse range because ordinal scales are presented from top to bottom on y-axis
-    const scaleRange = axisDirection === 'y' ? [range[1], range[0]] : range;
-    const zoomedRange = zoomScaleRange(scaleRange, zoomRange);
-
-    return {
-      scale: scaleBand(axis.data!, zoomedRange)
-        .paddingInner(categoryGapRatio)
-        .paddingOuter(categoryGapRatio / 2),
-    };
-  }
-
-  if (isPointScaleConfig(axis)) {
-    const scaleRange = axisDirection === 'y' ? [...range].reverse() : range;
-    const zoomedRange = zoomScaleRange(scaleRange, zoomRange);
-
-    return { scale: scalePoint(axis.data!, zoomedRange) };
-  }
-
-  const scaleType = axis.scaleType ?? ('linear' as const);
 
   const domainLimit = getDomainLimit(
     axis,
@@ -189,6 +167,54 @@ function getAxisScale<T extends ChartSeriesType>(
   }
 
   const rawTickNumber = getTickNumber(axis, axisExtrema, defaultTickNumber);
+
+  if (isBandScaleConfig(axis)) {
+    const categoryGapRatio = axis.categoryGapRatio ?? DEFAULT_CATEGORY_GAP_RATIO;
+    // Reverse range because ordinal scales are presented from top to bottom on y-axis
+    const scaleRange = axisDirection === 'y' ? [range[1], range[0]] : range;
+    const zoomedRange = zoomScaleRange(scaleRange, zoomRange);
+
+    return {
+      scale: scaleBand(axis.data!, zoomedRange)
+        .paddingInner(categoryGapRatio)
+        .paddingOuter(categoryGapRatio / 2),
+      tickNumber: rawTickNumber,
+    };
+  }
+
+  if (isPointScaleConfig(axis)) {
+    const scaleRange = axisDirection === 'y' ? [...range].reverse() : range;
+    const zoomedRange = zoomScaleRange(scaleRange, zoomRange);
+
+    return { scale: scalePoint(axis.data!, zoomedRange), tickNumber: rawTickNumber };
+  }
+
+  const scaleType = axis.scaleType ?? ('linear' as const);
+
+  // const domainLimit = getDomainLimit(
+  //   axis,
+  //   axisDirection,
+  //   axisIndex,
+  //   formattedSeries,
+  //   preferStrictDomainInLineCharts,
+  // );
+
+  // const [minData, maxData] = getAxisExtrema(
+  //   axis,
+  //   axisDirection,
+  //   seriesConfig as ChartSeriesConfig<CartesianChartSeriesType>,
+  //   axisIndex,
+  //   formattedSeries,
+  // );
+  // const axisExtrema = getActualAxisExtrema(axis, minData, maxData);
+
+  // if (typeof domainLimit === 'function') {
+  //   const { min, max } = domainLimit(minData, maxData);
+  //   axisExtrema[0] = min;
+  //   axisExtrema[1] = max;
+  // }
+
+  // const rawTickNumber = getTickNumber(axis, axisExtrema, defaultTickNumber);
 
   const zoomedRange = zoomScaleRange(range, zoomRange);
 
