@@ -7,6 +7,7 @@ import { useButton } from '../../base-ui-copy/utils/useButton';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
 import { CalendarOccurrencePlaceholderExternalDragData } from '../models';
+import { useDragPreview } from '../utils/useDragPreview';
 
 export const StandaloneEvent = React.forwardRef(function StandaloneEvent(
   componentProps: StandaloneEvent.Props,
@@ -30,15 +31,16 @@ export const StandaloneEvent = React.forwardRef(function StandaloneEvent(
 
   const ref = React.useRef<HTMLDivElement>(null);
   const { getButtonProps, buttonRef } = useButton({ disabled: !isInteractive });
-  const [isDragging, setIsDragging] = React.useState(false);
-  const [dragPosition, setDragPosition] = React.useState<{
-    clientX: number;
-    clientY: number;
-  } | null>(null);
+
+  const { preview, previewState, previewActions } = useDragPreview({
+    elementProps,
+    componentProps,
+    showPreviewOnDragStart: true,
+  });
 
   const state: StandaloneEvent.State = React.useMemo(
-    () => ({ dragging: isDragging }),
-    [isDragging],
+    () => ({ dragging: previewState.isDragging }),
+    [previewState.isDragging],
   );
 
   const getDragData = useEventCallback(() => ({
@@ -62,23 +64,16 @@ export const StandaloneEvent = React.forwardRef(function StandaloneEvent(
         disableNativeDragPreview({ nativeSetDragImage });
       },
       onDragStart: ({ location }) => {
-        setDragPosition(location.initial.input);
-        setIsDragging(true);
+        previewActions.onDragStart(location);
       },
-      onDrag: (param) => {
-        const { location } = param;
-        if (location.current.dropTargets.some((el) => el.data.isSchedulerDropTarget)) {
-          setDragPosition(null);
-        } else {
-          setDragPosition(location.current.input);
-        }
+      onDrag: ({ location }) => {
+        previewActions.onDrag(location);
       },
       onDrop: () => {
-        setDragPosition(null);
-        setIsDragging(false);
+        previewActions.onDrop();
       },
     });
-  }, [isDraggable, getDragData]);
+  }, [isDraggable, getDragData, previewActions]);
 
   const element = useRenderElement('div', componentProps, {
     state,
@@ -88,20 +83,8 @@ export const StandaloneEvent = React.forwardRef(function StandaloneEvent(
 
   return (
     <React.Fragment>
-      {dragPosition != null && (
-        <div
-          style={{
-            position: 'fixed',
-            top: dragPosition.clientY,
-            left: dragPosition.clientX,
-            pointerEvents: 'none',
-            zIndex: 9999,
-          }}
-        >
-          {element}
-        </div>
-      )}
       {element}
+      {preview}
     </React.Fragment>
   );
 });
