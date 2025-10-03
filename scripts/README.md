@@ -92,11 +92,11 @@ In case of a problem, another method to generate the changelog is available at t
 1. Go to the [publish action](https://github.com/mui/mui-x/actions/workflows/publish.yml).
 2. Choose "Run workflow" dropdown
 
-> - **Branch:** master
-> - **Commit SHA to release from:** the commit that contains the merged release on master. This commit is linked to the GitHub release.
-> - **Run in dry-run mode:** Used for debugging.
-> - **Create GitHub release:** Keep selected if you want a GitHub release to be automatically created from the changelog.
-> - **NPM dist tag to publish to** Use to publish legacy or canary versions
+   > - **Branch:** master
+   > - **Commit SHA to release from:** the commit that contains the merged release on master. This commit is linked to the GitHub release.
+   > - **Run in dry-run mode:** Used for debugging.
+   > - **Create GitHub release:** Keep selected if you want a GitHub release to be automatically created from the changelog.
+   > - **NPM dist tag to publish to** Use to publish legacy or canary versions.
 
 3. Click "Run workflow"
 4. Optional: A maintainer may have to approve the workflow run.
