@@ -15,14 +15,6 @@ export interface EventDropDataLookup {
   StandaloneEvent: StandaloneEvent.DragData;
 }
 
-/**
- * Data shared by all draggable event-related components.
- */
-export interface CalendarGridSharedEventDragData {
-  eventId: string | number;
-  occurrenceKey: string;
-}
-
 export function buildIsValidDropTarget<Targets extends keyof EventDropDataLookup>(
   targets: Targets[],
 ) {

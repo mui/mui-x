@@ -14,7 +14,6 @@ import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowConte
 import { selectors } from '../../use-event-calendar/EventCalendarStore.selectors';
 import { CalendarGridDayEventContext } from './CalendarGridDayEventContext';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
-import type { CalendarGridSharedEventDragData } from '../../utils/drag-utils';
 
 const EVENT_PROPS_WHILE_DRAGGING = { style: { pointerEvents: 'none' as const } };
 
@@ -162,7 +161,9 @@ export namespace CalendarGridDayEvent {
     isDraggable?: boolean;
   }
 
-  export interface SharedDragData extends CalendarGridSharedEventDragData {
+  export interface SharedDragData {
+    eventId: string | number;
+    occurrenceKey: string;
     start: SchedulerValidDate;
     end: SchedulerValidDate;
   }

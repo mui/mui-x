@@ -7,7 +7,6 @@ import { useButton } from '../../base-ui-copy/utils/useButton';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
 import { CalendarOccurrencePlaceholderExternalDragData } from '../models';
-import { CalendarGridSharedEventDragData } from '../utils/drag-utils';
 
 export const StandaloneEvent = React.forwardRef(function StandaloneEvent(
   componentProps: StandaloneEvent.Props,
@@ -126,8 +125,10 @@ export namespace StandaloneEvent {
     onEventDrop?: () => void;
   }
 
-  export interface DragData extends CalendarGridSharedEventDragData {
+  export interface DragData {
     source: 'StandaloneEvent';
+    eventId: string | number;
+    occurrenceKey: string;
     eventData: CalendarOccurrencePlaceholderExternalDragData;
     onEventDrop?: () => void;
   }
