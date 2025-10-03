@@ -228,7 +228,8 @@ export const EventPopover = React.forwardRef(function EventPopover(
         eventId: occurrence.id,
         occurrenceStart: occurrence.start,
         changes,
-        scope: 'this-and-following',
+        // TODO: Issue #19766 - Let the user choose the scope via UI.
+        scope: 'all',
       });
     } else {
       store.updateEvent({ id: occurrence.id, ...metaChanges, start, end, rrule });

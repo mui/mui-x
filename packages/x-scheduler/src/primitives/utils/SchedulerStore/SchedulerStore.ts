@@ -20,7 +20,7 @@ import {
   RecurringUpdateEventScope,
 } from './SchedulerStore.types';
 import { Adapter } from '../adapter/types';
-import { applyRecurringUpdateFollowing } from '../recurrence-utils';
+import { applyRecurringUpdateAll, applyRecurringUpdateFollowing } from '../recurrence-utils';
 import { selectors } from './SchedulerStore.selectors';
 import { shouldUpdateOccurrencePlaceholder } from './SchedulerStore.utils';
 import { TimeoutManager } from '../TimeoutManager';
@@ -253,8 +253,14 @@ export class SchedulerStore<
       }
 
       case 'all': {
-        // TODO: Issue #19441 - Allow to edit recurring series => all events.
-        throw new Error('Scheduler: scope="all" not implemented yet.');
+        updatedEvents = applyRecurringUpdateAll(
+          adapter,
+          events,
+          original,
+          occurrenceStart,
+          changes,
+        );
+        break;
       }
 
       case 'only-this': {
@@ -304,7 +310,8 @@ export class SchedulerStore<
         // TODO: Issue #19440 + #19441 - Allow to edit all events or only this event.
         scope = await chooseRecurringEventScope();
       } else {
-        scope = 'this-and-following';
+        // TODO: Issue #19766 - Let the user choose the scope via UI.
+        scope = 'all';
       }
 
       return this.updateRecurringEvent({
