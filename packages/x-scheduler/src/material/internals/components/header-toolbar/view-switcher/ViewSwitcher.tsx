@@ -6,7 +6,7 @@ import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { ChevronDown } from 'lucide-react';
 import { Menubar } from '@base-ui-components/react/menubar';
 import { useTranslations } from '../../../utils/TranslationsContext';
-import { TimelineView, CalendarView } from '../../../../../primitives';
+import { TimelineView, CalendarView } from '../../../../../primitives/models';
 
 export interface ViewSwitcherProps<T> extends React.HTMLAttributes<HTMLDivElement> {
   views: T[];

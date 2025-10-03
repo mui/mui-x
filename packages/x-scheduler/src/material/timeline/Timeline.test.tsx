@@ -1,11 +1,10 @@
 import * as React from 'react';
 import { DateTime } from 'luxon';
 import { screen } from '@mui/internal-test-utils';
-import { diffIn } from '@mui/x-scheduler/primitives/utils/date-utils';
+import { diffIn } from '@mui/x-scheduler/primitives/use-adapter';
 import { Timeline } from '@mui/x-scheduler/material/timeline';
-import { CalendarEvent, CalendarResource, TimelineView } from '@mui/x-scheduler/primitives';
-import { createSchedulerRenderer } from 'test/utils/scheduler';
-import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
+import { CalendarEvent, CalendarResource, TimelineView } from '@mui/x-scheduler/primitives/models';
+import { adapter, createSchedulerRenderer } from 'test/utils/scheduler';
 
 const baseResources: CalendarResource[] = [
   { id: 'resource-1', name: 'Engineering', eventColor: 'blue' },
@@ -40,7 +39,6 @@ describe('<Timeline />', () => {
   const { render } = createSchedulerRenderer({
     clockConfig: new Date('2025-07-03T00:00:00Z'),
   });
-  const adapter = getAdapter();
 
   const visibleDate = DateTime.fromISO('2025-07-03T00:00:00Z');
   function renderTimeline(options?: {

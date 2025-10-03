@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { EventCalendarParameters, useEventCalendar } from '../use-event-calendar';
-import { EventCalendarStoreContext } from '../utils/useEventCalendarStoreContext';
-import { SchedulerStoreContext } from '../utils/useSchedulerStoreContext';
+import { EventCalendarStoreContext } from '../use-event-calendar-store-context';
+import { SchedulerStoreContext } from '../use-scheduler-store-context/useSchedulerStoreContext';
 
 export function EventCalendarProvider(props: EventCalendarProvider.Props) {
   const { children, ...parameters } = props;

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { Timeline as TimelinePrimitive } from '../../../../primitives/timeline';
+import { DEFAULT_EVENT_COLOR } from '../../../../primitives/constants';
+import { CalendarResource } from '../../../../primitives/models';
 import { getColorClassName } from '../../../internals/utils/color-utils';
-import { DEFAULT_EVENT_COLOR } from '../../../../primitives/utils/SchedulerStore';
-import { CalendarResource } from '../../../../primitives';
 
 export default function TimelineTitleCell({ resource }: { resource: CalendarResource }) {
   return (

@@ -1,4 +1,4 @@
-import { TimelineView } from '../../../primitives';
+import { TimelineView } from '../../../primitives/models';
 
 export const TIME_UNITS_COUNT = 3;
 export const DAYS_UNIT_COUNT = 21;
