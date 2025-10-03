@@ -116,7 +116,7 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
       onDrop: ({ source: { data } }) => {
         const newEvent = getEventDropData(data) ?? selectors.occurrencePlaceholder(store.state);
         if (newEvent) {
-          store.applyOccurrencePlaceholder(newEvent);
+          store.applyInternalDragOrResizeOccurrencePlaceholder(newEvent);
         }
       },
     });

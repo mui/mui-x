@@ -161,7 +161,7 @@ interface CalendarOccurrencePlaceholderBase {
   end: SchedulerValidDate;
 }
 
-interface CalendarOccurrencePlaceholderCreation extends CalendarOccurrencePlaceholderBase {
+export interface CalendarOccurrencePlaceholderCreation extends CalendarOccurrencePlaceholderBase {
   /**
    * The type of placeholder.
    */
@@ -173,7 +173,7 @@ interface CalendarOccurrencePlaceholderCreation extends CalendarOccurrencePlaceh
   lockSurfaceType?: boolean;
 }
 
-interface CalendarOccurrencePlaceholderInternalDragOrResize
+export interface CalendarOccurrencePlaceholderInternalDragOrResize
   extends CalendarOccurrencePlaceholderBase {
   /**
    * The type of placeholder.
@@ -193,7 +193,8 @@ interface CalendarOccurrencePlaceholderInternalDragOrResize
   originalStart: SchedulerValidDate;
 }
 
-interface CalendarOccurrencePlaceholderExternalDrag extends CalendarOccurrencePlaceholderBase {
+export interface CalendarOccurrencePlaceholderExternalDrag
+  extends CalendarOccurrencePlaceholderBase {
   /**
    * The type of placeholder.
    */

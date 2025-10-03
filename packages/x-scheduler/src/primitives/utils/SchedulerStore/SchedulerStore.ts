@@ -6,6 +6,8 @@ import {
   CalendarEventColor,
   CalendarEventId,
   CalendarOccurrencePlaceholder,
+  CalendarOccurrencePlaceholderExternalDrag,
+  CalendarOccurrencePlaceholderInternalDragOrResize,
   CalendarResource,
   CalendarResourceId,
   RecurringEventUpdatedProperties,
@@ -273,20 +275,14 @@ export class SchedulerStore<
   /**
    * Applies the data from the placeholder occurrence to the event it represents.
    */
-  public async applyOccurrencePlaceholder(
-    data: CalendarOccurrencePlaceholder,
+  public async applyInternalDragOrResizeOccurrencePlaceholder(
+    placeholder: CalendarOccurrencePlaceholderInternalDragOrResize,
     chooseRecurringEventScope?: () => Promise<RecurringUpdateEventScope>,
   ) {
-    if (data.type !== 'internal-drag-or-resize') {
-      throw new Error(
-        'Scheduler: store.applyOccurrencePlaceholder can only be used for "internal-drag-or-resize" placeholders. Use store.createEvent for other placeholders.',
-      );
-    }
-
     // TODO: Try to do a single state update.
     this.setOccurrencePlaceholder(null);
 
-    const { eventId, start, end, originalStart, surfaceType } = data;
+    const { eventId, start, end, originalStart, surfaceType } = placeholder;
 
     const original = selectors.event(this.state, eventId);
     if (!original) {
@@ -319,6 +315,19 @@ export class SchedulerStore<
 
     return this.updateEvent({ id: eventId, ...changes });
   }
+
+  public applyExternalDragOccurrencePlaceholder = (
+    placeholder: CalendarOccurrencePlaceholderExternalDrag,
+  ) => {
+    const event: CalendarEvent = {
+      ...placeholder.eventData,
+      start: placeholder.start,
+      end: placeholder.end,
+    };
+    store.setOccurrencePlaceholder(null);
+    store.createEvent(event);
+    placeholder.onEventDrop?.();
+  };
 
   /**
    * Deletes an event from the calendar.

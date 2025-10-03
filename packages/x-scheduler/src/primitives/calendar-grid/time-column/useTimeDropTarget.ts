@@ -3,7 +3,7 @@ import * as React from 'react';
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { useAdapter } from '../../utils/adapter/useAdapter';
-import { CalendarEvent, CalendarOccurrencePlaceholder, SchedulerValidDate } from '../../models';
+import { CalendarOccurrencePlaceholder, SchedulerValidDate } from '../../models';
 import {
   EVENT_DRAG_PRECISION_MINUTE,
   buildIsValidDropTarget,
@@ -167,6 +167,7 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
     return dropTargetForElements({
       element: ref.current,
       canDrop: (arg) => isValidDropTarget(arg.source.data),
+      getData: () => ({ source: 'CalendarGridTimeColumn' }),
       onDrag: ({ source: { data }, location }) => {
         const newPlaceholder = getEventDropData(data, location.current.input);
         if (newPlaceholder) {
@@ -179,16 +180,15 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
           selectors.occurrencePlaceholder(store.state);
 
         if (placeholder?.type === 'internal-drag-or-resize') {
-          store.applyOccurrencePlaceholder(placeholder);
+          store.applyInternalDragOrResizeOccurrencePlaceholder(placeholder);
         } else if (placeholder?.type === 'external-drag') {
-          const event: CalendarEvent = {
-            ...placeholder.eventData,
-            start: placeholder.start,
-            end: placeholder.end,
-          };
+          store.applyExternalDragOccurrencePlaceholder(placeholder);
+        }
+      },
+      onDragLeave: () => {
+        const curentPlaceholder = selectors.occurrencePlaceholder(store.state);
+        if (curentPlaceholder?.surfaceType === 'time-grid') {
           store.setOccurrencePlaceholder(null);
-          store.createEvent(event);
-          placeholder.onEventDrop?.();
         }
       },
     });

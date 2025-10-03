@@ -31,7 +31,12 @@ export const CalendarGridExternalEvent = React.forwardRef(function CalendarGridE
 
   const ref = React.useRef<HTMLDivElement>(null);
   const { getButtonProps, buttonRef } = useButton({ disabled: !isInteractive });
-  const [isDragging, setIsDragging] = React.useState(false);
+  const [dragPosition, setDragPosition] = React.useState<{
+    clientX: number;
+    clientY: number;
+  } | null>(null);
+
+  const isDragging = dragPosition != null;
 
   const state: CalendarGridExternalEvent.State = React.useMemo(
     () => ({ dragging: isDragging }),
@@ -55,8 +60,21 @@ export const CalendarGridExternalEvent = React.forwardRef(function CalendarGridE
     return draggable({
       element: ref.current!,
       getInitialData: getDragData,
-      onDragStart: () => setIsDragging(true),
-      onDrop: () => setIsDragging(false),
+      onGenerateDragPreview: ({ nativeSetDragImage }) => {
+        disableNativeDragPreview({ nativeSetDragImage });
+      },
+      onDragStart: ({ location }) => setDragPosition(location.initial.input),
+      onDrag: (param) => {
+        const { location } = param;
+        if (
+          location.current.dropTargets.some((el) => el.data.source === 'CalendarGridTimeColumn')
+        ) {
+          setDragPosition(null);
+        } else {
+          setDragPosition(location.current.input);
+        }
+      },
+      onDrop: () => setDragPosition(null),
     });
   }, [isDraggable, getDragData]);
 
@@ -66,7 +84,27 @@ export const CalendarGridExternalEvent = React.forwardRef(function CalendarGridE
     props: [elementProps, getButtonProps],
   });
 
-  return element;
+  return (
+    <React.Fragment>
+      {dragPosition != null && (
+        <div
+          style={{
+            position: 'fixed',
+            top: dragPosition.clientY,
+            left: dragPosition.clientX,
+            pointerEvents: 'none',
+            backgroundColor: 'red',
+            height: 50,
+            width: 200,
+            zIndex: 9999,
+          }}
+        >
+          {data.title}
+        </div>
+      )}
+      {element}
+    </React.Fragment>
+  );
 });
 
 export namespace CalendarGridExternalEvent {
