@@ -11,7 +11,7 @@ import {
 import classes from './ExternalDrag.module.css';
 
 const initialExternalEvents: CalendarOccurrencePlaceholderExternalDragData[] =
-  Array.from({ length: 12 }, (_, index) => ({
+  Array.from({ length: 10 }, (_, index) => ({
     id: `external-event-${index + 1}`,
     title: `External Event ${index + 1}`,
   }));
@@ -49,8 +49,7 @@ export default function ExternalDragAndDrop() {
           resources={resources}
           defaultVisibleDate={defaultVisibleDate}
           onEventsChange={setEvents}
-          areEventsDraggable
-          areEventsResizable
+          canDragEventsFromTheOutside
           canDropEventsToTheOutside
           preferences={{ isSidePanelOpen: false }}
           className={classes.EventCalendar}

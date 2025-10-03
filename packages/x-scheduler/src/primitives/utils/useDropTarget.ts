@@ -43,7 +43,21 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
     return dropTargetForElements({
       element: ref.current,
       getData: () => ({ isSchedulerDropTarget: true, surfaceType }),
-      canDrop: (arg) => isValidDropTarget(arg.source.data),
+      canDrop: (arg) => {
+        const data = arg.source.data;
+        if (!isValidDropTarget(data)) {
+          return false;
+        }
+
+        if (
+          data.source === 'StandaloneEvent' &&
+          !selectors.canDragEventsFromTheOutside(store.state)
+        ) {
+          return false;
+        }
+
+        return true;
+      },
       onDrag: ({ source: { data }, location }) => {
         const newPlaceholder = getEventDropData({
           data,

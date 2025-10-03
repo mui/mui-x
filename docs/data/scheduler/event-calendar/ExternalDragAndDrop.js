@@ -10,7 +10,7 @@ import {
 } from '../datasets/personal-agenda';
 import classes from './ExternalDrag.module.css';
 
-const initialExternalEvents = Array.from({ length: 12 }, (_, index) => ({
+const initialExternalEvents = Array.from({ length: 10 }, (_, index) => ({
   id: `external-event-${index + 1}`,
   title: `External Event ${index + 1}`,
 }));
@@ -46,8 +46,7 @@ export default function ExternalDragAndDrop() {
           resources={resources}
           defaultVisibleDate={defaultVisibleDate}
           onEventsChange={setEvents}
-          areEventsDraggable
-          areEventsResizable
+          canDragEventsFromTheOutside
           canDropEventsToTheOutside
           preferences={{ isSidePanelOpen: false }}
           className={classes.EventCalendar}
