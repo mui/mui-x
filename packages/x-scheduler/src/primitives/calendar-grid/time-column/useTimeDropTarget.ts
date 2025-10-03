@@ -186,9 +186,18 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
         }
       },
       onDragLeave: () => {
-        const curentPlaceholder = selectors.occurrencePlaceholder(store.state);
-        if (curentPlaceholder?.surfaceType === 'time-grid') {
-          store.setOccurrencePlaceholder(null);
+        const currentPlaceholder = selectors.occurrencePlaceholder(store.state);
+        if (currentPlaceholder?.surfaceType !== 'time-grid') {
+          return;
+        }
+
+        const type = currentPlaceholder.type;
+        const shouldHidePlaceholder =
+          type === 'external-drag' ||
+          (type === 'internal-drag-or-resize' && selectors.canDropEventsToTheOutside(store.state));
+
+        if (shouldHidePlaceholder) {
+          store.setOccurrencePlaceholder({ ...currentPlaceholder, isHidden: true });
         }
       },
     });

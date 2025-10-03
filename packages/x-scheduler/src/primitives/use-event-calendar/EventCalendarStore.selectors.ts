@@ -60,7 +60,8 @@ export const selectors = {
     (state: State, day: SchedulerValidDate, rowStart: SchedulerValidDate) => {
       if (
         state.occurrencePlaceholder === null ||
-        state.occurrencePlaceholder.surfaceType !== 'day-grid'
+        state.occurrencePlaceholder.surfaceType !== 'day-grid' ||
+        state.occurrencePlaceholder.isHidden
       ) {
         return null;
       }
@@ -86,10 +87,12 @@ export const selectors = {
     (state: State, start: SchedulerValidDate, end: SchedulerValidDate) => {
       if (
         state.occurrencePlaceholder === null ||
-        state.occurrencePlaceholder.surfaceType !== 'time-grid'
+        state.occurrencePlaceholder.surfaceType !== 'time-grid' ||
+        state.occurrencePlaceholder.isHidden
       ) {
         return null;
       }
+
       if (
         state.adapter.isBefore(state.occurrencePlaceholder.end, start) ||
         state.adapter.isAfter(state.occurrencePlaceholder.start, end)

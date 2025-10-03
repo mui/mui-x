@@ -159,6 +159,11 @@ interface CalendarOccurrencePlaceholderBase {
    * The new end date and time of the event occurrence.
    */
   end: SchedulerValidDate;
+  /**
+   * Whether the occurrence placeholder should be hidden.
+   * This is used when dragging an event outside of the calendar to avoid showing both the placeholder and the drag preview.
+   */
+  isHidden?: boolean;
 }
 
 export interface CalendarOccurrencePlaceholderCreation extends CalendarOccurrencePlaceholderBase {
