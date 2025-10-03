@@ -209,7 +209,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
       resource: resourceValue,
     };
 
-    if (rawPlaceholder && rawPlaceholder.eventId == null) {
+    if (rawPlaceholder?.type === 'creation') {
       store.createEvent({ id: crypto.randomUUID(), ...metaChanges, start, end, rrule });
     } else if (occurrence.rrule) {
       const changes: RecurringEventUpdatedProperties = {
