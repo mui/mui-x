@@ -1,7 +1,6 @@
 import { scaleBand, scalePoint, type ScaleSymLog } from '@mui/x-charts-vendor/d3-scale';
 import {
   AxisConfig,
-  AxisId,
   ChartsAxisProps,
   ContinuousScaleName,
   D3ContinuousScale,
@@ -15,8 +14,6 @@ import {
 import { CartesianChartSeriesType, ChartSeriesType } from '../../../../models/seriesType/config';
 import { ProcessedSeries } from '../../corePlugins/useChartSeries';
 import { ChartSeriesConfig } from '../../models';
-import { ZoomData } from './zoom.types';
-import { zoomScaleRange } from './zoom';
 import { getAxisDomainLimit } from './getAxisDomainLimit';
 import { getTickNumber } from '../../../ticks';
 import { getScale } from '../../../getScale';
@@ -25,19 +22,7 @@ import { ChartDrawingArea } from '../../../../hooks/useDrawingArea';
 
 const DEFAULT_CATEGORY_GAP_RATIO = 0.2;
 
-type GetAxesScalesParams<T extends ChartSeriesType = ChartSeriesType> = {
-  drawingArea: ChartDrawingArea;
-  formattedSeries: ProcessedSeries<T>;
-  seriesConfig: ChartSeriesConfig<T>;
-  zoomMap?: Map<AxisId, ZoomData>;
-  /**
-   * @deprecated To remove in v9. This is an experimental feature to avoid breaking change.
-   */
-  preferStrictDomainInLineCharts?: boolean;
-  defaultTickNumber: number;
-};
-
-function getRange(
+export function getRange(
   drawingArea: ChartDrawingArea,
   axisDirection: 'x' | 'y',
   axis: AxisConfig<ScaleName, any, ChartsAxisProps>,
@@ -50,72 +35,6 @@ function getRange(
   return axis.reverse ? [range[1], range[0]] : range;
 }
 
-export function getXAxesScales<T extends ChartSeriesType>({
-  drawingArea,
-  formattedSeries,
-  axis: axes = [],
-  seriesConfig,
-  zoomMap,
-  preferStrictDomainInLineCharts,
-  defaultTickNumber,
-}: GetAxesScalesParams<T> & {
-  axis?: DefaultedAxis[];
-}) {
-  const scales: Record<AxisId, ScaleDefinition> = {};
-
-  axes.forEach((eachAxis, axisIndex) => {
-    const axis = eachAxis as Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>;
-    const zoom = zoomMap?.get(axis.id);
-
-    scales[axis.id] = getAxisScale(
-      axis,
-      'x',
-      zoom,
-      drawingArea,
-      seriesConfig,
-      axisIndex,
-      formattedSeries,
-      preferStrictDomainInLineCharts,
-      defaultTickNumber,
-    );
-  });
-
-  return scales;
-}
-
-export function getYAxesScales<T extends ChartSeriesType>({
-  drawingArea,
-  formattedSeries,
-  axis: axes = [],
-  seriesConfig,
-  zoomMap,
-  preferStrictDomainInLineCharts,
-  defaultTickNumber,
-}: GetAxesScalesParams<T> & {
-  axis?: DefaultedAxis[];
-}) {
-  const scales: Record<AxisId, ScaleDefinition> = {};
-
-  axes.forEach((eachAxis, axisIndex) => {
-    const axis = eachAxis as Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>;
-    const zoom = zoomMap?.get(axis.id);
-
-    scales[axis.id] = getAxisScale(
-      axis,
-      'y',
-      zoom,
-      drawingArea,
-      seriesConfig,
-      axisIndex,
-      formattedSeries,
-      preferStrictDomainInLineCharts,
-      defaultTickNumber,
-    );
-  });
-
-  return scales;
-}
-
 export type ScaleDefinition =
   | {
       scale: D3ContinuousScale;
@@ -126,11 +45,9 @@ export type ScaleDefinition =
       tickNumber?: never;
     };
 
-function getAxisScale<T extends ChartSeriesType>(
+export function getNormalizedAxisScale<T extends ChartSeriesType>(
   axis: Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>,
   axisDirection: 'x' | 'y',
-  zoom: ZoomData | undefined,
-  drawingArea: ChartDrawingArea,
   seriesConfig: ChartSeriesConfig<T>,
   axisIndex: number,
   formattedSeries: ProcessedSeries<T>,
@@ -140,27 +57,20 @@ function getAxisScale<T extends ChartSeriesType>(
   preferStrictDomainInLineCharts: boolean | undefined,
   defaultTickNumber: number,
 ): ScaleDefinition {
-  const zoomRange: [number, number] = zoom ? [zoom.start, zoom.end] : [0, 100];
-  const range = getRange(drawingArea, axisDirection, axis);
+  const range = [0, 1];
 
   if (isBandScaleConfig(axis)) {
     const categoryGapRatio = axis.categoryGapRatio ?? DEFAULT_CATEGORY_GAP_RATIO;
-    // Reverse range because ordinal scales are presented from top to bottom on y-axis
-    const scaleRange = axisDirection === 'y' ? [range[1], range[0]] : range;
-    const zoomedRange = zoomScaleRange(scaleRange, zoomRange);
 
     return {
-      scale: scaleBand(axis.data!, zoomedRange)
+      scale: scaleBand(axis.data!, range)
         .paddingInner(categoryGapRatio)
         .paddingOuter(categoryGapRatio / 2),
     };
   }
 
   if (isPointScaleConfig(axis)) {
-    const scaleRange = axisDirection === 'y' ? [...range].reverse() : range;
-    const zoomedRange = zoomScaleRange(scaleRange, zoomRange);
-
-    return { scale: scalePoint(axis.data!, zoomedRange) };
+    return { scale: scalePoint(axis.data!, range) };
   }
 
   const scaleType = axis.scaleType ?? ('linear' as const);
@@ -190,9 +100,7 @@ function getAxisScale<T extends ChartSeriesType>(
 
   const rawTickNumber = getTickNumber(axis, axisExtrema, defaultTickNumber);
 
-  const zoomedRange = zoomScaleRange(range, zoomRange);
-
-  const scale = getScale(scaleType as ContinuousScaleName, axisExtrema, zoomedRange);
+  const scale = getScale(scaleType as ContinuousScaleName, axisExtrema, range);
 
   if (isSymlogScaleConfig(axis) && axis.constant != null) {
     (scale as ScaleSymLog<number, number>).constant(axis.constant);
