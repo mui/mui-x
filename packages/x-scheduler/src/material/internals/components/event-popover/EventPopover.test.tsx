@@ -2,10 +2,15 @@ import * as React from 'react';
 import { spy } from 'sinon';
 import { adapter, createSchedulerRenderer } from 'test/utils/scheduler';
 import { screen } from '@mui/internal-test-utils';
-import { CalendarEventOccurrence, CalendarResource } from '@mui/x-scheduler/primitives/models';
+import {
+  CalendarEventOccurrence,
+  CalendarResource,
+  SchedulerValidDate,
+} from '@mui/x-scheduler/primitives/models';
 import { DEFAULT_EVENT_COLOR } from '@mui/x-scheduler/primitives/constants';
 import { StandaloneView } from '@mui/x-scheduler/material/standalone-view';
 import { Popover } from '@base-ui-components/react/popover';
+import { getByDayMaps } from '@mui/x-scheduler/primitives/utils/recurrence-utils';
 import { EventPopover } from './EventPopover';
 import { getColorClassName } from '../../utils/color-utils';
 import { EventCalendarStoreContext } from '../../../../primitives/use-event-calendar-store-context/useEventCalendarStoreContext';
@@ -23,7 +28,39 @@ function makeMockStore(initialState: any) {
   const setOccurrencePlaceholder = (placeholder) => {
     state = { ...state, occurrencePlaceholder: placeholder };
   };
+  const buildRecurrencePresets = (date: SchedulerValidDate) => {
+    const { numToByDay: numToCode } = getByDayMaps(adapter);
+    const dateDowCode = numToCode[adapter.getDayOfWeek(date)];
+    const dateDayOfMonth = adapter.getDate(date);
 
+    return {
+      daily: { freq: 'DAILY', interval: 1 },
+      weekly: { freq: 'WEEKLY', interval: 1, byDay: [dateDowCode] },
+      monthly: { freq: 'MONTHLY', interval: 1, byMonthDay: [dateDayOfMonth] },
+      yearly: { freq: 'YEARLY', interval: 1 },
+    };
+  };
+
+  const getRecurrencePresetKeyFromRule = (
+    rule: any | undefined,
+  ): 'daily' | 'weekly' | 'custom' | null => {
+    if (!rule) {
+      return null;
+    }
+
+    const interval = rule.interval ?? 1;
+    const neverEnds = !rule.count && !rule.until;
+
+    if (rule.freq === 'DAILY') {
+      return interval === 1 && neverEnds ? 'daily' : 'custom';
+    }
+
+    if (rule.freq === 'WEEKLY') {
+      return interval === 1 && neverEnds ? 'weekly' : 'custom';
+    }
+
+    return 'custom';
+  };
   return {
     getSnapshot,
     subscribe,
@@ -31,6 +68,8 @@ function makeMockStore(initialState: any) {
     updateEvent,
     updateRecurringEvent,
     setOccurrencePlaceholder,
+    buildRecurrencePresets,
+    getRecurrencePresetKeyFromRule,
   };
 }
 

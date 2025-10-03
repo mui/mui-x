@@ -1,10 +1,8 @@
+import { adapter } from 'test/utils/scheduler';
 import { selectors } from './../EventCalendarStore.selectors';
-import { getAdapter } from '../../utils/adapter/getAdapter';
 import { EventCalendarState as State } from '../EventCalendarStore.types';
 
 describe('EventCalendarStore.selectors', () => {
-  const adapter = getAdapter();
-
   const baseState = (overrides: Partial<State> = {}) =>
     ({
       adapter,
@@ -29,7 +27,7 @@ describe('EventCalendarStore.selectors', () => {
 
     it('should return false when there is no placeholder', () => {
       const state = baseState();
-      expect(selectors.isCreatingNewEventInDayGridCell(state, day)).to.equal(false);
+      expect(selectors.isCreatingNewEventInDayCell(state, day)).to.equal(false);
     });
 
     it('should return false when surfaceType is not "day-grid"', () => {
@@ -43,7 +41,7 @@ describe('EventCalendarStore.selectors', () => {
           originalStart: null,
         },
       });
-      expect(selectors.isCreatingNewEventInDayGridCell(state, day)).to.equal(false);
+      expect(selectors.isCreatingNewEventInDayCell(state, day)).to.equal(false);
     });
 
     it('should return false when eventId is not null (editing mode)', () => {
@@ -57,7 +55,7 @@ describe('EventCalendarStore.selectors', () => {
           originalStart: adapter.startOfDay(day),
         },
       });
-      expect(selectors.isCreatingNewEventInDayGridCell(state, day)).to.equal(false);
+      expect(selectors.isCreatingNewEventInDayCell(state, day)).to.equal(false);
     });
 
     it('should return true when creating on the same day', () => {
@@ -71,7 +69,7 @@ describe('EventCalendarStore.selectors', () => {
           originalStart: null,
         },
       });
-      expect(selectors.isCreatingNewEventInDayGridCell(state, day)).to.equal(true);
+      expect(selectors.isCreatingNewEventInDayCell(state, day)).to.equal(true);
     });
 
     it('should return false when day does not match placeholder.start day', () => {
@@ -86,7 +84,7 @@ describe('EventCalendarStore.selectors', () => {
           originalStart: null,
         },
       });
-      expect(selectors.isCreatingNewEventInDayGridCell(state, day)).to.equal(false);
+      expect(selectors.isCreatingNewEventInDayCell(state, day)).to.equal(false);
     });
   });
 
