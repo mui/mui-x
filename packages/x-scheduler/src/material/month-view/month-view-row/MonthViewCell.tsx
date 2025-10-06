@@ -3,11 +3,10 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { useStore } from '@base-ui-components/utils/store';
 import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
-import { useAdapter } from '../../../primitives/utils/adapter/useAdapter';
-import { DayGrid } from '../../../primitives/day-grid';
-import { useEventCalendarStoreContext } from '../../../primitives/utils/useEventCalendarStoreContext';
+import { useAdapter, isWeekend } from '../../../primitives/use-adapter';
+import { CalendarGrid } from '../../../primitives/calendar-grid';
+import { useEventCalendarStoreContext } from '../../../primitives/use-event-calendar-store-context';
 import { DayGridEvent } from '../../internals/components/event/day-grid-event/DayGridEvent';
-import { isWeekend } from '../../../primitives/utils/date-utils';
 import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { EventPopoverTrigger } from '../../internals/components/event-popover';
 import { selectors } from '../../../primitives/use-event-calendar';
@@ -23,10 +22,10 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
   const translations = useTranslations();
-  const placeholder = DayGrid.usePlaceholderInDay(day.value, row);
+  const placeholder = CalendarGrid.usePlaceholderInDay(day.value, row);
   const hasDayView = useStore(store, selectors.hasDayView);
   const visibleDate = useStore(store, selectors.visibleDate);
-  const isCreation = useStore(store, selectors.isCreatingNewEventInDayGridCell, day.value);
+  const isCreation = useStore(store, selectors.isCreatingNewEventInDayCell, day.value);
 
   const cellRef = React.useRef<HTMLDivElement | null>(null);
   const handleRef = useMergedRefs(ref, cellRef);
@@ -74,7 +73,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   }, [isCreation, placeholder, startEditing]);
 
   return (
-    <DayGrid.Cell
+    <CalendarGrid.DayCell
       ref={handleRef}
       key={day.key}
       value={day.value}
@@ -140,7 +139,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
           </div>
         )}
       </div>
-    </DayGrid.Cell>
+    </CalendarGrid.DayCell>
   );
 });
 

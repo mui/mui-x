@@ -7,7 +7,11 @@ import {
   PressEvent,
   TapEvent,
   TurnWheelEvent,
-  TurnWheelGestureOptions,
+  type PressAndDragEvent,
+  type PressAndDragGestureOptions,
+  type TapAndDragEvent,
+  type TapAndDragGestureOptions,
+  type TurnWheelGestureOptions,
 } from '@mui/x-internal-gestures/core';
 import { ChartPluginSignature } from '../../models';
 
@@ -21,13 +25,19 @@ export type ChartInteraction =
   | 'zoomPinch'
   | 'zoomPinchStart'
   | 'zoomPinchEnd'
+  | 'zoomTurnWheel'
+  | 'zoomTapAndDrag'
+  | 'zoomTapAndDragStart'
+  | 'zoomTapAndDragEnd'
+  | 'zoomPressAndDrag'
+  | 'zoomPressAndDragStart'
+  | 'zoomPressAndDragEnd'
   | 'move'
   | 'moveStart'
   | 'moveEnd'
+  | 'tap'
   | 'quickPress'
-  | 'quickPressEnd'
-  | 'zoomTurnWheel'
-  | 'tap';
+  | 'quickPressEnd';
 
 export type InteractionListenerResult = { cleanup: () => void };
 
@@ -62,6 +72,16 @@ export type AddInteractionListener = {
     callback: (event: PressEvent<CustomData>) => void,
     options?: boolean | AddEventListenerOptions,
   ): InteractionListenerResult;
+  <CustomData extends Record<string, unknown> = Record<string, unknown>>(
+    interaction: 'zoomTapAndDrag' | 'zoomTapAndDragStart' | 'zoomTapAndDragEnd',
+    callback: (event: TapAndDragEvent<CustomData>) => void,
+    options?: boolean | AddEventListenerOptions,
+  ): InteractionListenerResult;
+  <CustomData extends Record<string, unknown> = Record<string, unknown>>(
+    interaction: 'zoomPressAndDrag' | 'zoomPressAndDragStart' | 'zoomPressAndDragEnd',
+    callback: (event: PressAndDragEvent<CustomData>) => void,
+    options?: boolean | AddEventListenerOptions,
+  ): InteractionListenerResult;
 };
 
 export type UpdateZoomInteractionListeners = {
@@ -70,6 +90,14 @@ export type UpdateZoomInteractionListeners = {
   (
     interaction: 'zoomTurnWheel',
     options?: Omit<TurnWheelGestureOptions<'zoomTurnWheel'>, 'name'>,
+  ): void;
+  (
+    interaction: 'zoomTapAndDrag',
+    options?: Omit<TapAndDragGestureOptions<'zoomTapAndDrag'>, 'name'>,
+  ): void;
+  (
+    interaction: 'zoomPressAndDrag',
+    options?: Omit<PressAndDragGestureOptions<'zoomPressAndDrag'>, 'name'>,
   ): void;
 };
 

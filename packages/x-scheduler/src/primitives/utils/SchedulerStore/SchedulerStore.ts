@@ -3,13 +3,15 @@ import { Store } from '@base-ui-components/utils/store';
 import { warnOnce } from '@mui/x-internals/warning';
 import {
   CalendarEvent,
-  CalendarEventColor,
   CalendarEventId,
+  CalendarEventOccurrence,
   CalendarOccurrencePlaceholder,
   CalendarResource,
   CalendarResourceId,
   RecurringEventUpdatedProperties,
+  RRuleSpec,
   SchedulerValidDate,
+  RecurrencePresetKey,
 } from '../../models';
 import {
   SchedulerState,
@@ -19,13 +21,30 @@ import {
   SchedulerModelUpdater,
   RecurringUpdateEventScope,
 } from './SchedulerStore.types';
-import { Adapter } from '../adapter/types';
-import { applyRecurringUpdateFollowing } from '../recurrence-utils';
+import { Adapter } from '../../use-adapter/useAdapter.types';
+import {
+  applyRecurringUpdateFollowing,
+  applyRecurringUpdateAll,
+  getByDayMaps,
+  getRecurringEditingScope,
+} from '../recurrence-utils';
 import { selectors } from './SchedulerStore.selectors';
 import { shouldUpdateOccurrencePlaceholder } from './SchedulerStore.utils';
+import { TimeoutManager } from '../TimeoutManager';
+import { DEFAULT_EVENT_COLOR } from '../../constants';
 
 export const DEFAULT_RESOURCES: CalendarResource[] = [];
-export const DEFAULT_EVENT_COLOR: CalendarEventColor = 'jade';
+
+// TODO: Add a prop to configure the behavior.
+export const DEFAULT_IS_MULTI_DAY_EVENT = (event: CalendarEvent | CalendarEventOccurrence) => {
+  if (event.allDay) {
+    return true;
+  }
+
+  return false;
+};
+
+const ONE_MINUTE_IN_MS = 60 * 1000;
 
 /**
  * Instance shared by the Event Calendar and the Timeline components.
@@ -42,6 +61,8 @@ export class SchedulerStore<
 
   private mapper: SchedulerParametersToStateMapper<State, Parameters>;
 
+  protected timeoutManager = new TimeoutManager();
+
   public constructor(
     parameters: Parameters,
     adapter: Adapter,
@@ -52,6 +73,8 @@ export class SchedulerStore<
       ...SchedulerStore.deriveStateFromParameters(parameters, adapter),
       adapter,
       occurrencePlaceholder: null,
+      nowUpdatedEveryMinute: adapter.date(),
+      isMultiDayEvent: DEFAULT_IS_MULTI_DAY_EVENT,
       visibleResources: new Map(),
       visibleDate:
         parameters.visibleDate ??
@@ -65,6 +88,17 @@ export class SchedulerStore<
     this.parameters = parameters;
     this.instanceName = instanceName;
     this.mapper = mapper;
+
+    const currentDate = new Date();
+    const timeUntilNextMinuteMs =
+      ONE_MINUTE_IN_MS - (currentDate.getSeconds() * 1000 + currentDate.getMilliseconds());
+
+    this.timeoutManager.startTimeout('set-now', timeUntilNextMinuteMs, () => {
+      this.set('nowUpdatedEveryMinute', adapter.date());
+      this.timeoutManager.startInterval('set-now', ONE_MINUTE_IN_MS, () => {
+        this.set('nowUpdatedEveryMinute', adapter.date());
+      });
+    });
 
     if (process.env.NODE_ENV !== 'production') {
       this.initialParameters = parameters;
@@ -82,7 +116,6 @@ export class SchedulerStore<
       resources: parameters.resources ?? DEFAULT_RESOURCES,
       areEventsDraggable: parameters.areEventsDraggable ?? false,
       areEventsResizable: parameters.areEventsResizable ?? false,
-      ampm: parameters.ampm ?? true,
       eventColor: parameters.eventColor ?? DEFAULT_EVENT_COLOR,
       showCurrentTimeIndicator: parameters.showCurrentTimeIndicator ?? true,
     };
@@ -140,6 +173,10 @@ export class SchedulerStore<
     );
 
     this.apply(newState);
+  };
+
+  public disposeEffect = () => {
+    return this.timeoutManager.clearAll;
   };
 
   protected setVisibleDate = (visibleDate: SchedulerValidDate, event: React.UIEvent) => {
@@ -233,8 +270,14 @@ export class SchedulerStore<
       }
 
       case 'all': {
-        // TODO: Issue #19441 - Allow to edit recurring series => all events.
-        throw new Error('Scheduler: scope="all" not implemented yet.');
+        updatedEvents = applyRecurringUpdateAll(
+          adapter,
+          events,
+          original,
+          occurrenceStart,
+          changes,
+        );
+        break;
       }
 
       case 'only-this': {
@@ -284,7 +327,8 @@ export class SchedulerStore<
         // TODO: Issue #19440 + #19441 - Allow to edit all events or only this event.
         scope = await chooseRecurringEventScope();
       } else {
-        scope = 'this-and-following';
+        // TODO: Issue #19766 - Let the user choose the scope via UI.
+        scope = getRecurringEditingScope();
       }
 
       return this.updateRecurringEvent({
@@ -323,6 +367,105 @@ export class SchedulerStore<
     const { adapter, occurrencePlaceholder: previous } = this.state;
     if (shouldUpdateOccurrencePlaceholder(adapter, previous, newPlaceholder)) {
       this.set('occurrencePlaceholder', newPlaceholder);
+    }
+  };
+
+  /**
+   * Builds the presets the user can choose from when creating or editing a recurring event.
+   */
+  public buildRecurrencePresets = (
+    date: SchedulerValidDate,
+  ): Record<RecurrencePresetKey, RRuleSpec> => {
+    const { adapter } = this.state;
+    const { numToByDay: numToCode } = getByDayMaps(adapter);
+    const dateDowCode = numToCode[adapter.getDayOfWeek(date)];
+    const dateDayOfMonth = adapter.getDate(date);
+
+    return {
+      daily: {
+        freq: 'DAILY',
+        interval: 1,
+      },
+      weekly: {
+        freq: 'WEEKLY',
+        interval: 1,
+        byDay: [dateDowCode],
+      },
+      monthly: {
+        freq: 'MONTHLY',
+        interval: 1,
+        byMonthDay: [dateDayOfMonth],
+      },
+      yearly: {
+        freq: 'YEARLY',
+        interval: 1,
+      },
+    };
+  };
+
+  /**
+   * Determines which preset (if any) the given rule corresponds to.
+   * If the rule does not correspond to any preset, 'custom' is returned.
+   * If no rule is provided, null is returned.
+   */
+  public getRecurrencePresetKeyFromRule = (
+    rule: CalendarEvent['rrule'] | undefined,
+    start: SchedulerValidDate,
+  ): RecurrencePresetKey | 'custom' | null => {
+    if (!rule) {
+      return null;
+    }
+
+    const { adapter } = this.state;
+    const interval = rule.interval ?? 1;
+    const neverEnds = !rule.count && !rule.until;
+    const hasSelectors = !!(rule.byDay?.length || rule.byMonthDay?.length || rule.byMonth?.length);
+    const { numToByDay: numToCode } = getByDayMaps(adapter);
+
+    switch (rule.freq) {
+      case 'DAILY': {
+        // Preset "Daily" => FREQ=DAILY;INTERVAL=1; no COUNT/UNTIL;
+        return interval === 1 && neverEnds && !hasSelectors ? 'daily' : 'custom';
+      }
+
+      case 'WEEKLY': {
+        // Preset "Weekly" => FREQ=WEEKLY;INTERVAL=1;BYDAY=<weekday-of-start>; no COUNT/UNTIL;
+        const startDowCode = numToCode[adapter.getDayOfWeek(start)];
+
+        const byDay = rule.byDay ?? [];
+        const matchesDefaultByDay =
+          byDay.length === 0 || (byDay.length === 1 && byDay[0] === startDowCode);
+        const isPresetWeekly =
+          interval === 1 &&
+          neverEnds &&
+          matchesDefaultByDay &&
+          !(rule.byMonthDay?.length || rule.byMonth?.length);
+
+        return isPresetWeekly ? 'weekly' : 'custom';
+      }
+
+      case 'MONTHLY': {
+        // Preset "Monthly" => FREQ=MONTHLY;INTERVAL=1;BYMONTHDAY=<start-day>; no COUNT/UNTIL;
+        const day = adapter.getDate(start);
+        const byMonthDay = rule.byMonthDay ?? [];
+        const matchesDefaultByMonthDay =
+          byMonthDay.length === 0 || (byMonthDay.length === 1 && byMonthDay[0] === day);
+        const isPresetMonthly =
+          interval === 1 &&
+          neverEnds &&
+          matchesDefaultByMonthDay &&
+          !(rule.byDay?.length || rule.byMonth?.length);
+
+        return isPresetMonthly ? 'monthly' : 'custom';
+      }
+
+      case 'YEARLY': {
+        // Preset "Yearly" => FREQ=YEARLY;INTERVAL=1; no COUNT/UNTIL;
+        return interval === 1 && neverEnds && !hasSelectors ? 'yearly' : 'custom';
+      }
+
+      default:
+        return 'custom';
     }
   };
 }

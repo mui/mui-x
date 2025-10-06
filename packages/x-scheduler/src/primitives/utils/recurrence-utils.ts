@@ -1,4 +1,4 @@
-import { Adapter } from './adapter/types';
+import { Adapter } from '../use-adapter/useAdapter.types';
 import {
   ByDayCode,
   ByDayValue,
@@ -8,8 +8,15 @@ import {
   RRuleSpec,
   SchedulerValidDate,
 } from '../models';
-import { diffIn, mergeDateAndTime } from './date-utils';
-import { getDateKey } from './event-utils';
+import { mergeDateAndTime, getDateKey } from './date-utils';
+import { diffIn } from '../use-adapter';
+import { RecurringUpdateEventScope } from './SchedulerStore/SchedulerStore.types';
+
+export function getRecurringEditingScope(): RecurringUpdateEventScope {
+  return (
+    (typeof window !== 'undefined' && (window as any).SCHEDULER_RECURRING_EDITING_SCOPE) || 'all'
+  );
+}
 
 /**
  * Build BYDAY<->number maps using a known ISO Monday (2025-01-06).
@@ -89,99 +96,6 @@ export function parseMonthlyByDayOrdinalSingle(ruleByDay: RRuleSpec['byDay']): {
     throw new Error('Event Calendar: MONTHLY BYDAY must include an ordinal (e.g. 2TU or -1FR).');
   }
   return { ord, code };
-}
-
-export type RecurrencePresetKey = 'daily' | 'weekly' | 'monthly' | 'yearly';
-
-export function detectRecurrenceKeyFromRule(
-  adapter: Adapter,
-  rule: CalendarEvent['rrule'] | undefined,
-  start: SchedulerValidDate,
-): RecurrencePresetKey | 'custom' | null {
-  if (!rule) {
-    return null;
-  }
-
-  const interval = rule.interval ?? 1;
-  const neverEnds = !rule.count && !rule.until;
-  const hasSelectors = !!(rule.byDay?.length || rule.byMonthDay?.length || rule.byMonth?.length);
-  const { numToByDay: numToCode } = getByDayMaps(adapter);
-
-  switch (rule.freq) {
-    case 'DAILY': {
-      // Preset "Daily" => FREQ=DAILY;INTERVAL=1; no COUNT/UNTIL;
-      return interval === 1 && neverEnds && !hasSelectors ? 'daily' : 'custom';
-    }
-
-    case 'WEEKLY': {
-      // Preset "Weekly" => FREQ=WEEKLY;INTERVAL=1;BYDAY=<weekday-of-start>; no COUNT/UNTIL;
-      const startDowCode = numToCode[adapter.getDayOfWeek(start)];
-
-      const byDay = rule.byDay ?? [];
-      const matchesDefaultByDay =
-        byDay.length === 0 || (byDay.length === 1 && byDay[0] === startDowCode);
-      const isPresetWeekly =
-        interval === 1 &&
-        neverEnds &&
-        matchesDefaultByDay &&
-        !(rule.byMonthDay?.length || rule.byMonth?.length);
-
-      return isPresetWeekly ? 'weekly' : 'custom';
-    }
-
-    case 'MONTHLY': {
-      // Preset "Monthly" => FREQ=MONTHLY;INTERVAL=1;BYMONTHDAY=<start-day>; no COUNT/UNTIL;
-      const day = adapter.getDate(start);
-      const byMonthDay = rule.byMonthDay ?? [];
-      const matchesDefaultByMonthDay =
-        byMonthDay.length === 0 || (byMonthDay.length === 1 && byMonthDay[0] === day);
-      const isPresetMonthly =
-        interval === 1 &&
-        neverEnds &&
-        matchesDefaultByMonthDay &&
-        !(rule.byDay?.length || rule.byMonth?.length);
-
-      return isPresetMonthly ? 'monthly' : 'custom';
-    }
-
-    case 'YEARLY': {
-      // Preset "Yearly" => FREQ=YEARLY;INTERVAL=1; no COUNT/UNTIL;
-      return interval === 1 && neverEnds && !hasSelectors ? 'yearly' : 'custom';
-    }
-
-    default:
-      return 'custom';
-  }
-}
-
-export function buildRecurrencePresets(
-  adapter: Adapter,
-  start: SchedulerValidDate,
-): Record<RecurrencePresetKey, RRuleSpec> {
-  const { numToByDay: numToCode } = getByDayMaps(adapter);
-  const startDowCode = numToCode[adapter.getDayOfWeek(start)];
-  const startDayOfMonth = adapter.getDate(start);
-
-  return {
-    daily: {
-      freq: 'DAILY',
-      interval: 1,
-    },
-    weekly: {
-      freq: 'WEEKLY',
-      interval: 1,
-      byDay: [startDowCode],
-    },
-    monthly: {
-      freq: 'MONTHLY',
-      interval: 1,
-      byMonthDay: [startDayOfMonth],
-    },
-    yearly: {
-      freq: 'YEARLY',
-      interval: 1,
-    },
-  };
 }
 
 /**
@@ -908,4 +822,50 @@ export function applyRecurringUpdateFollowing(
         newEvent,
       ];
   return updatedEvents;
+}
+
+/**
+ * Applies a "all" update to a recurring series by updating the first event of the series.
+ * Merges date and time parts of start/end according to what the caller touched.
+ * If the caller changed the date part of start or end, uses the provided value as-is.
+ * Otherwise, merges the new time part into the original start/end dates.
+ * @returns The updated list of events.
+ */
+export function applyRecurringUpdateAll(
+  adapter: Adapter,
+  events: CalendarEvent[],
+  originalEvent: CalendarEvent,
+  occurrenceStart: SchedulerValidDate,
+  changes: RecurringEventUpdatedProperties,
+): CalendarEvent[] {
+  const occurrenceEnd = adapter.addMinutes(
+    occurrenceStart,
+    diffIn(adapter, originalEvent.end, originalEvent.start, 'minutes'),
+  );
+  // 1) Detect if the caller changed the date part of start or end
+  const touchedStartDateDay = !adapter.isSameDay(occurrenceStart, changes.start);
+  const touchedEndDateDateDay = !adapter.isSameDay(occurrenceEnd, changes.end);
+
+  // 2) Start from the current root start/end
+  let nextStart = originalEvent.start;
+  let nextEnd = originalEvent.end;
+
+  // 3) If the caller touched the date part of start or end, use the provided values as-is.
+  // Otherwise, merge the new time part into the original start/end dates.
+  if (touchedStartDateDay || touchedEndDateDateDay) {
+    nextStart = changes.start;
+    nextEnd = changes.end;
+  } else {
+    nextStart = mergeDateAndTime(adapter, originalEvent.start, changes.start);
+    nextEnd = mergeDateAndTime(adapter, originalEvent.end, changes.end);
+  }
+
+  const newEvent: CalendarEvent = {
+    ...originalEvent,
+    ...changes,
+    ...{ start: nextStart, end: nextEnd },
+  };
+
+  // 4) Replace the series root in the list
+  return [...events.filter((event) => event.id !== originalEvent.id), newEvent];
 }

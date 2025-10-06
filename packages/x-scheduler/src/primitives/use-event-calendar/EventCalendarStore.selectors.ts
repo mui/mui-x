@@ -2,7 +2,6 @@ import { createSelector } from '@base-ui-components/utils/store';
 import { selectors as schedulerSelectors } from '../utils/SchedulerStore';
 import { EventCalendarState as State } from './EventCalendarStore.types';
 import { CalendarEventId, SchedulerValidDate, EventSurfaceType } from '../models';
-import { isMultiDayEvent } from '../utils/event-utils';
 
 export const selectors = {
   ...schedulerSelectors,
@@ -10,6 +9,9 @@ export const selectors = {
   views: createSelector((state: State) => state.views),
   preferences: createSelector((state: State) => state.preferences),
   preferencesMenuConfig: createSelector((state: State) => state.preferencesMenuConfig),
+  ampm: createSelector((state: State) => state.preferences.ampm),
+  showWeekends: createSelector((state: State) => state.preferences.showWeekends),
+  showWeekNumber: createSelector((state: State) => state.preferences.showWeekNumber),
   hasDayView: createSelector((state: State) => state.views.includes('day')),
   isEventDraggable: createSelector(
     schedulerSelectors.isEventReadOnly,
@@ -28,11 +30,13 @@ export const selectors = {
     schedulerSelectors.event,
     (state: State) => state.areEventsResizable,
     (state: State) => state.view,
+    (state: State) => state.isMultiDayEvent,
     (
       isEventReadOnly,
       event,
       areEventsResizable,
       view,
+      isMultiDayEvent,
       _eventId: CalendarEventId,
       surfaceType: EventSurfaceType,
     ) => {
@@ -97,7 +101,7 @@ export const selectors = {
       return state.occurrencePlaceholder;
     },
   ),
-  isCreatingNewEventInDayGridCell: createSelector((state: State, day: SchedulerValidDate) => {
+  isCreatingNewEventInDayCell: createSelector((state: State, day: SchedulerValidDate) => {
     const placeholder = state.occurrencePlaceholder;
     if (placeholder?.surfaceType !== 'day-grid' || placeholder.eventId != null) {
       return false;

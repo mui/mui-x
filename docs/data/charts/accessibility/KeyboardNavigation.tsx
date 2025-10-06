@@ -11,19 +11,23 @@ import { LineChart } from '@mui/x-charts/LineChart';
 import { PieChart } from '@mui/x-charts/PieChart';
 import { data } from './randomData';
 
+const highlightScope = { highlight: 'item', fade: 'global' } as const;
+
 const scatterSeries = [
   {
     label: 'Series A',
     data: data.map((v) => ({ x: v.x1, y: v.y1, id: v.id })),
+    highlightScope,
   },
   {
     label: 'Series B',
     data: data.map((v) => ({ x: v.x1, y: v.y2, id: v.id })),
+    highlightScope,
   },
 ];
 const series = [
-  { label: 'Series A', data: data.map((p) => p.y1) },
-  { label: 'Series B', data: data.map((p) => p.y2) },
+  { label: 'Series A', data: data.map((p) => p.y1), highlightScope },
+  { label: 'Series B', data: data.map((p) => p.y2), highlightScope },
 ];
 
 type ChartType = 'scatter' | 'line' | 'bar' | 'pie';
@@ -120,6 +124,7 @@ function Chart<T extends ChartType = ChartType>({
                 { id: 1, value: 15, label: 'series B' },
                 { id: 2, value: 20, label: 'series C' },
               ],
+              highlightScope,
             },
           ]}
           height={300}
