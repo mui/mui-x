@@ -158,7 +158,7 @@ export const useGridPrintExport = (
         `.${gridClasses.virtualScrollerContent}`,
       )!.style.flexBasis = 'auto';
 
-      gridClone.querySelector<HTMLElement>(`.${gridClasses['scrollbar--vertical']}`)!.remove();
+      gridClone.querySelector<HTMLElement>(`.${gridClasses['scrollbar--vertical']}`)?.remove();
 
       const gridFooterElement = gridClone.querySelector<HTMLElement>(
         `.${gridClasses.footerContainer}`,
