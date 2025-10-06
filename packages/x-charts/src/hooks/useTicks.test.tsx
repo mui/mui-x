@@ -39,14 +39,16 @@ describe('getTicks', () => {
     it('should place ticks on the next band larger than the tick number value', () => {
       const ticks = getTicks({
         ...defaultOptions,
-        scale: scaleBand<number | string | Date>(sparseNumberData, [0, 100]),
-        tickNumber: 4,
+        scale: scaleBand<number | string | Date>(
+          numberData.filter((v) => v % 2 !== 0),
+          [0, 100],
+        ),
+        tickInterval: [0, 10, 20],
         continuousTickPlacement: true,
       });
 
-      expect(ticks).to.have.length(4); // Extra tick for the end
-      expect(ticks.map((tick) => tick.value)).to.deep.equal([6, 10, 15, 20]);
-      expect(ticks.map((tick) => tick.formattedValue)).to.deep.equal(['5', '10', '15', '20']);
+      expect(ticks.map((tick) => tick.value)).to.deep.equal([1, 11, 21]);
+      expect(ticks.map((tick) => tick.formattedValue)).to.deep.equal(['0', '10', '20']);
     });
 
     it('should place ticks on the next band larger than the tick date value', () => {
@@ -57,21 +59,22 @@ describe('getTicks', () => {
         continuousTickPlacement: true,
       });
 
-      expect(ticks).to.have.length(4); // Extra tick for the end
-
-      // Time scale put ticks on the sunday
       expect(ticks.map((tick) => tick.value)).to.deep.equal([
+        new Date(2025, 9, 1, 0, 0, 0, 0),
         new Date(2025, 9, 6, 0, 0, 0, 0),
         new Date(2025, 9, 13, 0, 0, 0, 0),
         new Date(2025, 9, 20, 0, 0, 0, 0),
         new Date(2025, 9, 27, 0, 0, 0, 0),
+        new Date(2025, 9, 30, 0, 0, 0, 0),
       ]);
       // Band move them to monday because sunday does not exist.
       expect(ticks.map((tick) => tick.formattedValue)).to.deep.equal([
+        'Sep 28',
         'Oct 05',
         'Oct 12',
         'Oct 19',
         'Oct 26',
+        'Nov 02',
       ]);
     });
 
