@@ -11,9 +11,9 @@ import {
 import { screen } from '@mui/internal-test-utils';
 import { CalendarEventOccurrence, CalendarResource } from '@mui/x-scheduler/primitives/models';
 import { DEFAULT_EVENT_COLOR } from '@mui/x-scheduler/primitives/constants';
-import { StandaloneView } from '@mui/x-scheduler/material/standalone-view';
 import { Popover } from '@base-ui-components/react/popover';
 import { EventCalendarStoreContext } from '@mui/x-scheduler/primitives/use-event-calendar-store-context';
+import { EventCalendarProvider } from '@mui/x-scheduler/primitives/event-calendar-provider';
 import { EventPopover } from './EventPopover';
 import { getColorClassName } from '../../utils/color-utils';
 
@@ -55,11 +55,11 @@ describe('<EventPopover />', () => {
 
   it('should render the event data in the form fields', () => {
     render(
-      <StandaloneView events={[occurrence]} resources={resources}>
+      <EventCalendarProvider events={[occurrence]} resources={resources}>
         <Popover.Root open>
           <EventPopover {...defaultProps} />
         </Popover.Root>
-      </StandaloneView>,
+      </EventCalendarProvider>,
     );
     expect(screen.getByDisplayValue('Running')).not.to.equal(null);
     expect(screen.getByDisplayValue('Morning run')).not.to.equal(null);
@@ -80,11 +80,15 @@ describe('<EventPopover />', () => {
   it('should call "onEventsChange" with updated values on submit', async () => {
     const onEventsChange = spy();
     const { user } = render(
-      <StandaloneView events={[occurrence]} onEventsChange={onEventsChange} resources={resources}>
+      <EventCalendarProvider
+        events={[occurrence]}
+        onEventsChange={onEventsChange}
+        resources={resources}
+      >
         <Popover.Root open>
           <EventPopover {...defaultProps} />
         </Popover.Root>
-      </StandaloneView>,
+      </EventCalendarProvider>,
     );
     await user.type(screen.getByLabelText(/event title/i), ' test');
     await user.click(screen.getByRole('checkbox', { name: /all day/i }));
@@ -114,11 +118,11 @@ describe('<EventPopover />', () => {
 
   it('should show error if start date is after end date', async () => {
     const { user } = render(
-      <StandaloneView events={[occurrence]}>
+      <EventCalendarProvider events={[occurrence]}>
         <Popover.Root open>
           <EventPopover {...defaultProps} />
         </Popover.Root>
-      </StandaloneView>,
+      </EventCalendarProvider>,
     );
     await user.clear(screen.getByLabelText(/start date/i));
     await user.type(screen.getByLabelText(/start date/i), '2025-05-27');
@@ -134,11 +138,11 @@ describe('<EventPopover />', () => {
   it('should call "onEventsChange" with the updated values when delete button is clicked', async () => {
     const onEventsChange = spy();
     const { user } = render(
-      <StandaloneView events={[occurrence]} onEventsChange={onEventsChange}>
+      <EventCalendarProvider events={[occurrence]} onEventsChange={onEventsChange}>
         <Popover.Root open>
           <EventPopover {...defaultProps} />
         </Popover.Root>
-      </StandaloneView>,
+      </EventCalendarProvider>,
     );
     await user.click(screen.getByRole('button', { name: /delete event/i }));
     expect(onEventsChange.calledOnce).to.equal(true);
@@ -148,11 +152,11 @@ describe('<EventPopover />', () => {
   it('should handle read-only events', () => {
     const readOnlyOccurrence = { ...occurrence, readOnly: true };
     render(
-      <StandaloneView events={[readOnlyOccurrence]} resources={resources}>
+      <EventCalendarProvider events={[readOnlyOccurrence]} resources={resources}>
         <Popover.Root open>
           <EventPopover {...defaultProps} occurrence={readOnlyOccurrence} />
         </Popover.Root>
-      </StandaloneView>,
+      </EventCalendarProvider>,
     );
     expect(screen.getByDisplayValue('Running')).to.have.attribute('readonly');
     expect(screen.getByDisplayValue('Morning run')).to.have.attribute('readonly');
@@ -183,7 +187,7 @@ describe('<EventPopover />', () => {
     };
 
     render(
-      <StandaloneView
+      <EventCalendarProvider
         events={[occurrenceWithNoColorResource]}
         onEventsChange={onEventsChange}
         resources={resourcesNoColor}
@@ -191,7 +195,7 @@ describe('<EventPopover />', () => {
         <Popover.Root open>
           <EventPopover {...defaultProps} occurrence={occurrenceWithNoColorResource} />
         </Popover.Root>
-      </StandaloneView>,
+      </EventCalendarProvider>,
     );
 
     expect(screen.getByRole('combobox', { name: /resource/i }).textContent).to.match(/NoColor/i);
@@ -209,7 +213,7 @@ describe('<EventPopover />', () => {
     };
 
     const { user } = render(
-      <StandaloneView
+      <EventCalendarProvider
         events={[occurrenceWithoutResource]}
         onEventsChange={onEventsChange}
         resources={resources}
@@ -217,7 +221,7 @@ describe('<EventPopover />', () => {
         <Popover.Root open>
           <EventPopover {...defaultProps} occurrence={occurrenceWithoutResource} />
         </Popover.Root>
-      </StandaloneView>,
+      </EventCalendarProvider>,
     );
 
     expect(screen.getByRole('combobox', { name: /resource/i }).textContent).to.match(
@@ -252,7 +256,7 @@ describe('<EventPopover />', () => {
       };
 
       const { user } = render(
-        <StandaloneView events={[]} resources={resources}>
+        <EventCalendarProvider events={[]} resources={resources}>
           <SchedulerStoreRunner
             context={EventCalendarStoreContext}
             onMount={(store) =>
@@ -275,7 +279,7 @@ describe('<EventPopover />', () => {
             selector={(s) => s.occurrencePlaceholder?.surfaceType}
             onValueChange={handleSurfaceChange}
           />
-        </StandaloneView>,
+        </EventCalendarProvider>,
       );
 
       expect(handleSurfaceChange.lastCall?.firstArg).to.equal('time-grid');
@@ -301,7 +305,7 @@ describe('<EventPopover />', () => {
       };
 
       const { user } = render(
-        <StandaloneView events={[]} resources={resources}>
+        <EventCalendarProvider events={[]} resources={resources}>
           <SchedulerStoreRunner
             context={EventCalendarStoreContext}
             onMount={(store) =>
@@ -324,7 +328,7 @@ describe('<EventPopover />', () => {
             selector={(s) => s.occurrencePlaceholder?.surfaceType}
             onValueChange={handleSurfaceChange}
           />
-        </StandaloneView>,
+        </EventCalendarProvider>,
       );
 
       expect(handleSurfaceChange.lastCall?.firstArg).to.equal('day-grid');
@@ -350,7 +354,7 @@ describe('<EventPopover />', () => {
       };
 
       const { user } = render(
-        <StandaloneView events={[]} resources={resources}>
+        <EventCalendarProvider events={[]} resources={resources}>
           <SchedulerStoreRunner
             context={EventCalendarStoreContext}
             onMount={(store) =>
@@ -373,7 +377,7 @@ describe('<EventPopover />', () => {
             selector={(s) => s.occurrencePlaceholder?.surfaceType}
             onValueChange={handleSurfaceChange}
           />
-        </StandaloneView>,
+        </EventCalendarProvider>,
       );
       expect(handleSurfaceChange.lastCall?.firstArg).to.equal('time-grid');
 
@@ -409,7 +413,7 @@ describe('<EventPopover />', () => {
       let createEventSpy;
 
       const { user } = render(
-        <StandaloneView events={[]} resources={resources} onEventsChange={onEventsChange}>
+        <EventCalendarProvider events={[]} resources={resources} onEventsChange={onEventsChange}>
           <SchedulerStoreRunner
             context={EventCalendarStoreContext}
             onMount={(store) => store?.setOccurrencePlaceholder(placeholder)}
@@ -425,7 +429,7 @@ describe('<EventPopover />', () => {
           <Popover.Root open>
             <EventPopover {...defaultProps} occurrence={creationOccurrence} />
           </Popover.Root>
-        </StandaloneView>,
+        </EventCalendarProvider>,
       );
 
       await user.type(screen.getByLabelText(/event title/i), ' New title ');
@@ -466,7 +470,7 @@ describe('<EventPopover />', () => {
         let updateRecurringEventSpy;
 
         const { user } = render(
-          <StandaloneView events={[originalRecurringEvent]} resources={resources}>
+          <EventCalendarProvider events={[originalRecurringEvent]} resources={resources}>
             <StoreSpy
               Context={EventCalendarStoreContext}
               method="updateRecurringEvent"
@@ -477,7 +481,7 @@ describe('<EventPopover />', () => {
             <Popover.Root open>
               <EventPopover {...defaultProps} occurrence={originalRecurringEvent} />
             </Popover.Root>
-          </StandaloneView>,
+          </EventCalendarProvider>,
         );
         await user.clear(screen.getByLabelText(/start time/i));
         await user.type(screen.getByLabelText(/start time/i), '10:05');
@@ -513,7 +517,7 @@ describe('<EventPopover />', () => {
         let updateRecurringEventSpy;
 
         const { user } = render(
-          <StandaloneView events={[originalRecurringEvent]} resources={resources}>
+          <EventCalendarProvider events={[originalRecurringEvent]} resources={resources}>
             <StoreSpy
               Context={EventCalendarStoreContext}
               method="updateRecurringEvent"
@@ -524,7 +528,7 @@ describe('<EventPopover />', () => {
             <Popover.Root open>
               <EventPopover {...defaultProps} occurrence={originalRecurringEvent} />
             </Popover.Root>
-          </StandaloneView>,
+          </EventCalendarProvider>,
         );
         // We update the recurrence from daily to weekly
         await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
@@ -562,7 +566,7 @@ describe('<EventPopover />', () => {
         let updateRecurringEventSpy;
 
         const { user } = render(
-          <StandaloneView events={[originalRecurringEvent]} resources={resources}>
+          <EventCalendarProvider events={[originalRecurringEvent]} resources={resources}>
             <StoreSpy
               Context={EventCalendarStoreContext}
               method="updateRecurringEvent"
@@ -573,7 +577,7 @@ describe('<EventPopover />', () => {
             <Popover.Root open>
               <EventPopover {...defaultProps} occurrence={originalRecurringEvent} />
             </Popover.Root>
-          </StandaloneView>,
+          </EventCalendarProvider>,
         );
 
         await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
@@ -603,7 +607,7 @@ describe('<EventPopover />', () => {
         let updateEventSpy;
 
         const { user } = render(
-          <StandaloneView events={[nonRecurringEvent]} resources={resources}>
+          <EventCalendarProvider events={[nonRecurringEvent]} resources={resources}>
             <StoreSpy
               Context={EventCalendarStoreContext}
               method="updateEvent"
@@ -614,7 +618,7 @@ describe('<EventPopover />', () => {
             <Popover.Root open>
               <EventPopover {...defaultProps} occurrence={nonRecurringEvent} />
             </Popover.Root>
-          </StandaloneView>,
+          </EventCalendarProvider>,
         );
         await user.type(screen.getByLabelText(/event title/i), ' updated ');
         await user.clear(screen.getByLabelText(/description/i));
@@ -649,7 +653,7 @@ describe('<EventPopover />', () => {
         let updateEventSpy;
 
         const { user } = render(
-          <StandaloneView events={[nonRecurringEvent]} resources={resources}>
+          <EventCalendarProvider events={[nonRecurringEvent]} resources={resources}>
             <StoreSpy
               Context={EventCalendarStoreContext}
               method="updateEvent"
@@ -660,7 +664,7 @@ describe('<EventPopover />', () => {
             <Popover.Root open>
               <EventPopover {...defaultProps} occurrence={nonRecurringEvent} />
             </Popover.Root>
-          </StandaloneView>,
+          </EventCalendarProvider>,
         );
         await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
         await user.click(await screen.findByRole('option', { name: /repeats daily/i }));
