@@ -54,6 +54,7 @@ export type UseChartVoronoiDefaultizedParameters = Pick<
    * If true, the voronoi plugin is disabled.
    */
   disableVoronoi: boolean;
+  disableClosestPoint: boolean;
 };
 
 export type UseChartClosestPointSignature = ChartPluginSignature<{

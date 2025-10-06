@@ -1,3 +1,4 @@
+import { scaleBand, scalePoint } from '@mui/x-charts-vendor/d3-scale';
 import { createScalarFormatter } from '../../../defaultValueFormatters';
 import { ContinuousScaleName, ScaleName } from '../../../../models';
 import {
@@ -12,10 +13,11 @@ import {
   DefaultedAxis,
   AxisValueFormatterContext,
   ComputedAxis,
+  D3Scale,
 } from '../../../../models/axis';
 import { CartesianChartSeriesType, ChartSeriesType } from '../../../../models/seriesType/config';
 import { getColorScale, getOrdinalColorScale, getSequentialColorScale } from '../../../colorScale';
-import { scaleTickNumberByRange } from '../../../ticks';
+import { getDefaultTickNumber, getTickNumber, scaleTickNumberByRange } from '../../../ticks';
 import { getScale } from '../../../getScale';
 import { isDateData, createDateFormatter } from '../../../dateHelpers';
 import { getAxisExtrema } from './getAxisExtrema';
@@ -32,6 +34,7 @@ import {
   ScaleDefinition,
 } from './getAxisScale';
 import { isBandScale, isOrdinalScale } from '../../../scaleGuards';
+import { getAxisDomainLimit } from './getAxisDomainLimit';
 
 function getRange(
   drawingArea: ChartDrawingArea,
@@ -248,4 +251,94 @@ export function computeAxisValue<T extends ChartSeriesType>({
     axis: completeAxis,
     axisIds: allAxis.map(({ id }) => id),
   };
+}
+
+type ComputeOriginalScale<T extends ChartSeriesType = ChartSeriesType> = {
+  drawingArea: ChartDrawingArea;
+  formattedSeries: ProcessedSeries<T>;
+  seriesConfig: ChartSeriesConfig<T>;
+  /**
+   * @deprecated To remove in v9. This is an experimental feature to avoid breaking change.
+   */
+  preferStrictDomainInLineCharts?: boolean;
+};
+
+const DEFAULT_RANGE = [0, 1];
+export function computeAxesScales<T extends ChartSeriesType>({
+  drawingArea,
+  formattedSeries,
+  axis: allAxis,
+  seriesConfig,
+  axisDirection,
+  preferStrictDomainInLineCharts,
+}: ComputeOriginalScale<T> & {
+  axis?: DefaultedAxis[];
+  axisDirection: 'x' | 'y';
+}): Record<AxisId, D3Scale> {
+  if (allAxis === undefined) {
+    return {};
+  }
+
+  const axesWithScales: Record<AxisId, D3Scale> = {};
+  allAxis.forEach((eachAxis, axisIndex) => {
+    const axis = eachAxis as Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>;
+    const range = getRange(drawingArea, axisDirection, axis.reverse ?? false);
+
+    const [minData, maxData] = getAxisExtrema(
+      axis,
+      axisDirection,
+      seriesConfig as ChartSeriesConfig<CartesianChartSeriesType>,
+      axisIndex,
+      formattedSeries,
+      // FIXME: Assume `getFilters` is always undefined. This needs to be fixed before merging.
+      undefined,
+    );
+
+    if (isBandScaleConfig(axis)) {
+      const categoryGapRatio = axis.categoryGapRatio ?? DEFAULT_CATEGORY_GAP_RATIO;
+
+      axesWithScales[axis.id] = scaleBand(axis.data!, DEFAULT_RANGE)
+        .paddingInner(categoryGapRatio)
+        .paddingOuter(categoryGapRatio / 2);
+    }
+
+    if (isPointScaleConfig(axis)) {
+      axesWithScales[axis.id] = scalePoint(axis.data!, DEFAULT_RANGE);
+    }
+
+    if (axis.scaleType === 'band' || axis.scaleType === 'point') {
+      // Could be merged with the two previous "if conditions" but then TS does not get that `axis.scaleType` can't be `band` or `point`.
+      return;
+    }
+
+    const scaleType = axis.scaleType ?? ('linear' as const);
+
+    const domainLimit = preferStrictDomainInLineCharts
+      ? getAxisDomainLimit(axis, axisDirection, axisIndex, formattedSeries)
+      : (axis.domainLimit ?? 'nice');
+
+    const axisExtremums = [axis.min ?? minData, axis.max ?? maxData];
+
+    if (typeof domainLimit === 'function') {
+      const { min, max } = domainLimit(minData, maxData);
+      axisExtremums[0] = min;
+      axisExtremums[1] = max;
+    }
+
+    const rawTickNumber = getTickNumber(
+      axis,
+      axisExtremums,
+      getDefaultTickNumber(Math.abs(range[1] - range[0])),
+    );
+
+    const scale = getScale(scaleType, axisExtremums, DEFAULT_RANGE);
+    const finalScale = domainLimit === 'nice' ? scale.nice(rawTickNumber) : scale;
+    const [minDomain, maxDomain] = finalScale.domain();
+    const domain = [axis.min ?? minDomain, axis.max ?? maxDomain];
+    finalScale.domain(domain);
+
+    axesWithScales[axis.id] = finalScale;
+  });
+
+  return axesWithScales;
 }

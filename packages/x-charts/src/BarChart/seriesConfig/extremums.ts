@@ -1,3 +1,4 @@
+import { start } from 'node:repl';
 import { CartesianExtremumGetter } from '../../internals/plugins/models/seriesConfig';
 import { findMinMax } from '../../internals/findMinMax';
 
