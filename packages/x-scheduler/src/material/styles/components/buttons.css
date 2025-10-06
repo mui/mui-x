@@ -143,3 +143,10 @@
 .mui-x-scheduler .OutlinedNeutralButton[data-pressed]:focus-visible:hover {
   background: var(--gray-5);
 }
+
+.mui-x-scheduler .Button.IconButton {
+  padding: var(--space-1);
+}
+.mui-x-scheduler .IconButton .Icon {
+  margin: var(--space-05);
+}

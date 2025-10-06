@@ -54,6 +54,11 @@ export const useZoomOnPinch = (
     }
 
     const rafThrottledCallback = rafThrottle((event: PinchEvent) => {
+      // If the delta is 0, it means the pinch gesture is not valid.
+      if (event.detail.direction === 0) {
+        return;
+      }
+
       setZoomDataCallback((prev) => {
         return prev.map((zoom) => {
           const option = optionsLookup[zoom.axisId];
@@ -63,11 +68,6 @@ export const useZoomOnPinch = (
 
           const isZoomIn = event.detail.direction > 0;
           const scaleRatio = 1 + event.detail.deltaScale;
-
-          // If the delta is 0, it means the pinch gesture is not valid.
-          if (event.detail.direction === 0) {
-            return zoom;
-          }
 
           const point = getSVGPoint(element, {
             clientX: event.detail.centroid.x,

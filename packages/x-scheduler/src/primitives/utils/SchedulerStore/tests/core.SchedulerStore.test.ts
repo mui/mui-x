@@ -1,7 +1,6 @@
-import { getAdapter } from '../../adapter/getAdapter';
+import { adapter } from 'test/utils/scheduler';
 import { storeClasses, buildEvent, getIds } from './utils';
 
-const adapter = getAdapter();
 const DEFAULT_PARAMS = { events: [] };
 
 storeClasses.forEach((storeClass) => {
@@ -51,7 +50,6 @@ storeClasses.forEach((storeClass) => {
           ],
           areEventsDraggable: true,
           areEventsResizable: true,
-          ampm: false,
           showCurrentTimeIndicator: false,
         };
 
@@ -60,7 +58,6 @@ storeClasses.forEach((storeClass) => {
         expect(getIds(store.state.resources)).to.deep.equal(['r1', 'r2']);
         expect(store.state.areEventsDraggable).to.equal(true);
         expect(store.state.areEventsResizable).to.equal(true);
-        expect(store.state.ampm).to.equal(false);
         expect(store.state.showCurrentTimeIndicator).to.equal(false);
       });
 

@@ -19,10 +19,17 @@ export interface SchedulerTranslations {
   weeks: string;
   years: string;
 
+  // DateNavigator
+  closeSidePanel: string;
+  openSidePanel: string;
+
   // PreferencesMenu
+  amPm12h: string;
+  hour24h: string;
   preferencesMenu: string;
   showWeekends: string;
   showWeekNumber: string;
+  timeFormat: string;
 
   // WeekView
   allDay: string;

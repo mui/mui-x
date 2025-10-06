@@ -238,6 +238,7 @@ Available properties:
 
 - `toggleWeekendVisibility`: show/hide the menu item that toggles weekend visibility.
 - `toggleWeekNumberVisibility`: show/hide the menu item that toggles week number visibility.
+- `toggleAmpm`: show/hide the menu item that toggles 12/24‑hour time format.
 
 ```ts
 // will hide the menu

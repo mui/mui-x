@@ -1,4 +1,6 @@
 .DateNavigatorContainer {
+  grid-column: 1/ 2;
+  grid-template-columns: subgrid;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -8,7 +10,7 @@
 
 .DateNavigatorLabel {
   margin: 0;
-  font-size: var(--font-size-5);
+  font-size: var(--font-size-4);
   font-weight: var(--font-weight-3);
   line-height: 1.4;
 }
