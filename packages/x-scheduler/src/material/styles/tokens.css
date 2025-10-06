@@ -58,7 +58,7 @@
 
   --error-1: var(--red-1);
   --error-2: var(--red-2);
-  --error-2-rgba-20: rgba(var(--red-2-rgb), 0.2);
+  --error-2-rgba-20: rgb(var(--red-2-rgb), 0.2);
   --error-3: var(--red-3);
   --error-4: var(--red-4);
   --error-5: var(--red-5);
@@ -88,9 +88,9 @@
   --font-size-9: 58px;
 
   --line-height-1: 18px;
-  --line-height-2: 22px;
-  --line-height-3: 24px;
-  --line-height-4: 25px;
+  --line-height-2: 20px;
+  --line-height-3: 22px;
+  --line-height-4: 24px;
   --line-height-5: 25px;
   --line-height-6: 31px;
   --line-height-7: 38px;
@@ -111,6 +111,7 @@
   --font-weight-2: 500;
   --font-weight-3: 600;
 
+  --space-05: 2px;
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
@@ -137,8 +138,8 @@
   --duration-3: 100ms;
 
   --shadow-1:
-    0 1px 1px 0 hsl(0, 0, 0, 0.05), 0 2px 1px -1px hsl(0, 0, 0, 0.05),
-    0 1px 3px 0 hsl(0, 0, 0, 0.05);
+    0 1px 1px 0 hsl(0deg 0 0 / 0.05), 0 2px 1px -1px hsl(0deg 0 0 / 0.05),
+    0 1px 3px 0 hsl(0deg 0 0 / 0.05);
 
   --shadow-4:
     0 1px 1px 0px hsl(var(--shadow-tint) / 5%), 0 1px 3px 0px hsl(var(--shadow-tint) / 5%),
@@ -168,16 +169,16 @@
   /* Interactive states */
   --interactive-hover-bg: var(--gray-2);
   --interactive-active-bg:
-    linear-gradient(to bottom, rgba(var(--gray-4-rgb), 0.7), rgba(var(--gray-4-rgb), 0.7)),
-    linear-gradient(to bottom, rgba(var(--gray-2-rgb), 0.3), rgba(var(--gray-2-rgb), 0.3));
+    linear-gradient(to bottom, rgb(var(--gray-4-rgb), 0.7), rgb(var(--gray-4-rgb), 0.7)),
+    linear-gradient(to bottom, rgb(var(--gray-2-rgb), 0.3), rgb(var(--gray-2-rgb), 0.3));
   --interactive-selected-bg: var(--primary-3);
   --interactive-selected-text: var(--primary-12);
   --interactive-selected-hover-bg: var(--primary-4);
   --interactive-focused-bg: var(--gray-3);
-  --interactive-focused-hover-bg: rgba(var(--gray-2-rgb) . 0.8);
+  --interactive-focused-hover-bg: rgb(var(--gray-2-rgb) . 0.8);
   --interactive-active-focused-bg:
-    linear-gradient(to bottom, rgba(var(--primary-4-rgb), 0.8), rgba(var(--primary-4-rgb), 0.8)),
-    linear-gradient(to bottom, rgba(var(--gray-2-rgb), 0.4), rgba(var(--gray-2-rgb), 0.4));
+    linear-gradient(to bottom, rgb(var(--primary-4-rgb), 0.8), rgb(var(--primary-4-rgb), 0.8)),
+    linear-gradient(to bottom, rgb(var(--gray-2-rgb), 0.4), rgb(var(--gray-2-rgb), 0.4));
   --interactive-selected-focused-bg: var(--primary-4);
   --interactive-selected-hover-focused-bg: var(--primary-5);
 
@@ -390,6 +391,13 @@
   --panel: white;
   --shadow-black: 0 0% 0%;
   --shadow-tint: 215 22% 17%;
+
+  --code-background: var(--surface);
+  --code-color: var(--violet-9);
+}
+
+body .mui-x-scheduler {
+  background-color: var(--surface);
 }
 
 .mode-dark .mui-x-scheduler {
@@ -555,8 +563,7 @@
   --surface: var(--mauve-1);
   --panel: var(--mauve-1);
   --shadow-tint: 0 0% 0%;
-}
 
-body .mui-x-scheduler {
-  background-color: var(--surface);
+  --code-background: var(--surface);
+  --code-color: var(--violet-9);
 }

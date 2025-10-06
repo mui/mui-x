@@ -1,13 +1,12 @@
 import * as React from 'react';
 import { DateTime } from 'luxon';
-import { createSchedulerRenderer } from 'test/utils/scheduler';
+import { adapter, createSchedulerRenderer } from 'test/utils/scheduler';
 import { screen, within } from '@mui/internal-test-utils';
 import { CalendarEvent } from '@mui/x-scheduler/primitives/models';
 import { spy } from 'sinon';
 import { MonthView } from '@mui/x-scheduler/material/month-view';
 import { StandaloneView } from '@mui/x-scheduler/material/standalone-view';
 import { EventCalendar } from '../event-calendar';
-import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 
 const events: CalendarEvent[] = [
   {
@@ -64,7 +63,6 @@ const allDayEvents: CalendarEvent[] = [
 
 describe('<MonthView />', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-05-01') });
-  const adapter = getAdapter();
 
   const standaloneDefaults = {
     events,
@@ -290,10 +288,9 @@ describe('<MonthView />', () => {
       const event2GridRow = event2Style.match(/--grid-row:\s*(\d+)/)?.[1];
       const event3GridRow = event3Style.match(/--grid-row:\s*(\d+)/)?.[1];
 
-      // Rows in the month view always have +1 since row 1 is occupied by the day number
-      expect(event1GridRow).to.equal('2');
-      expect(event2GridRow).to.equal('3');
-      expect(event3GridRow).to.equal('2');
+      expect(event1GridRow).to.equal('1');
+      expect(event2GridRow).to.equal('2');
+      expect(event3GridRow).to.equal('1');
     });
 
     it('should render all-day events with correct grid column span', () => {

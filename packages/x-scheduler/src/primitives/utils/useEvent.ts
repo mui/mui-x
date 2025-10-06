@@ -1,41 +1,16 @@
 'use client';
-import * as React from 'react';
-import { useAdapter } from './adapter/useAdapter';
-import { useOnEveryMinuteStart } from './useOnEveryMinuteStart';
+import { useStore } from '@base-ui-components/utils/store';
 import { SchedulerValidDate } from '../models';
+import { useSchedulerStoreContext } from '../use-scheduler-store-context/useSchedulerStoreContext';
+import { selectors } from './SchedulerStore';
 
 export function useEvent(parameters: useEvent.Parameters): useEvent.ReturnValue {
-  const adapter = useAdapter();
-
   const { start, end } = parameters;
 
-  const [state, setState] = React.useState<useEvent.State>(() => {
-    const currentDate = adapter.date();
-    return {
-      started: adapter.isBefore(start, currentDate),
-      ended: adapter.isBefore(end, currentDate),
-    };
-  });
+  const store = useSchedulerStoreContext();
+  const state = useStore(store, selectors.isOccurrenceStartedOrEnded, start, end);
 
-  useOnEveryMinuteStart(() => {
-    setState((prevState) => {
-      const currentDate = adapter.date();
-      const newState = {
-        started: adapter.isBefore(start, currentDate),
-        ended: adapter.isBefore(end, currentDate),
-      };
-
-      if (newState.started === state.started && newState.ended === state.ended) {
-        return prevState;
-      }
-
-      return newState;
-    });
-  });
-
-  const props = React.useMemo(() => ({}), []);
-
-  return { state, props };
+  return { state };
 }
 
 export namespace useEvent {
@@ -52,7 +27,6 @@ export namespace useEvent {
 
   export interface ReturnValue {
     state: State;
-    props: React.HTMLAttributes<HTMLDivElement>;
   }
 
   export interface State {

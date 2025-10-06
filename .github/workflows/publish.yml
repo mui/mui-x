@@ -17,14 +17,20 @@ on:
         required: false
         type: boolean
         default: true
+      dist-tag:
+        description: 'npm dist tag to publish to'
+        required: false
+        type: string
+        default: 'latest'
 
-permissions:
-  contents: write # Required for pushing tags and creating releases
-  id-token: write # Required for provenance
+permissions: {}
 
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # Required for pushing tags and creating releases
+      id-token: write # Required for provenance
     environment:
       name: npm-publish
     steps:
@@ -36,6 +42,8 @@ jobs:
       - name: Prepare for publishing
         uses: mui/mui-public/.github/actions/publish-prepare@master
       - name: Publish packages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # Build common flags
           ARGS=""
@@ -45,5 +53,8 @@ jobs:
           if [ "${{ inputs.github-release }}" = "true" ]; then
             ARGS="$ARGS --github-release"
           fi
+          if [ -n "${{ inputs.dist-tag }}" ]; then
+            ARGS="$ARGS --tag ${{ inputs.dist-tag }}"
+          fi
 
-          pnpm code-infra publish --no-git-checks $ARGS
+          pnpm code-infra publish $ARGS

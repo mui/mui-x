@@ -61,6 +61,10 @@ export interface GridControlledStateEventLookupPremium {
    * Fired when the AI Assistant active conversation index changes.
    */
   aiAssistantActiveConversationIndexChange: { params: number };
+  /**
+   * Fired when the active chart id changes.
+   */
+  activeChartIdChange: { params: string };
 }
 
 interface GridEventLookupPremium extends GridEventLookupPro {
@@ -80,6 +84,10 @@ interface GridEventLookupPremium extends GridEventLookupPro {
    * Fired when the sidebar is closed.
    */
   sidebarClose: { params: { value: GridSidebarValue } };
+  /**
+   * Fired when the chart synchronization state changes.
+   */
+  chartSynchronizationStateChange: { params: { chartId: string; synced: boolean } };
 }
 
 export interface GridColDefPremium<R extends GridValidRowModel = any, V = any, F = V> {
@@ -115,6 +123,11 @@ export interface GridColDefPremium<R extends GridValidRowModel = any, V = any, F
    * @default true
    */
   pivotable?: boolean;
+  /**
+   * If `false`, the column will not be available for charts integration.
+   * @default true
+   */
+  chartable?: boolean;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

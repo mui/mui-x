@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { EventCalendarParameters } from './useEventCalendar.types';
+import { EventCalendarParameters } from './EventCalendarStore.types';
 
 export function useExtractEventCalendarParameters<P extends EventCalendarParameters>(
   props: P,
@@ -19,7 +19,7 @@ export function useExtractEventCalendarParameters<P extends EventCalendarParamet
     areEventsResizable,
     preferences,
     preferencesMenuConfig,
-    ampm,
+    eventColor,
     showCurrentTimeIndicator,
     ...forwardedProps
   } = props;
@@ -40,7 +40,7 @@ export function useExtractEventCalendarParameters<P extends EventCalendarParamet
       areEventsResizable,
       preferences,
       preferencesMenuConfig,
-      ampm,
+      eventColor,
       showCurrentTimeIndicator,
     }),
     [
@@ -58,7 +58,7 @@ export function useExtractEventCalendarParameters<P extends EventCalendarParamet
       areEventsResizable,
       preferences,
       preferencesMenuConfig,
-      ampm,
+      eventColor,
       showCurrentTimeIndicator,
     ],
   );

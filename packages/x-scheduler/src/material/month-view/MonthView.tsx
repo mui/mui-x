@@ -4,24 +4,24 @@ import clsx from 'clsx';
 import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { useStore } from '@base-ui-components/utils/store';
 import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
-import { useDayList } from '../../primitives/use-day-list/useDayList';
-import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
+import { useDayList } from '../../primitives/use-day-list';
+import { useAdapter } from '../../primitives/use-adapter';
+import { useEventCalendarView } from '../../primitives/use-event-calendar-view';
 import { MonthViewProps } from './MonthView.types';
-import { useEventCalendarContext } from '../internals/hooks/useEventCalendarContext';
+import { useEventCalendarStoreContext } from '../../primitives/use-event-calendar-store-context';
 import { selectors } from '../../primitives/use-event-calendar';
-import { useWeekList } from '../../primitives/use-week-list/useWeekList';
-import { DayGrid } from '../../primitives/day-grid';
+import { useWeekList } from '../../primitives/use-week-list';
+import { CalendarGrid } from '../../primitives/calendar-grid';
 import { EventPopoverProvider } from '../internals/components/event-popover';
 import { useTranslations } from '../internals/utils/TranslationsContext';
 import MonthViewWeekRow from './month-view-row/MonthViewWeekRow';
+import { useEventOccurrencesGroupedByDay } from '../../primitives/use-event-occurrences-grouped-by-day';
 import './MonthView.css';
-import { useInitializeView } from '../internals/hooks/useInitializeView';
 
-const adapter = getAdapter();
-const EVENT_HEIGHT = 22;
 const CELL_PADDING = 8;
 const DAY_NUMBER_HEADER_HEIGHT = 18;
-const HIDDEN_EVENTS_HEIGHT = 18;
+const EVENT_HEIGHT = 18;
+const EVENT_GAP = 5;
 
 export const MonthView = React.memo(
   React.forwardRef(function MonthView(
@@ -34,23 +34,30 @@ export const MonthView = React.memo(
     const cellRef = React.useRef<HTMLDivElement>(null);
     const [maxEvents, setMaxEvents] = React.useState<number>(4);
 
-    const { store } = useEventCalendarContext();
-    const preferences = useStore(store, selectors.preferences);
+    const adapter = useAdapter();
+    const store = useEventCalendarStoreContext();
+    const showWeekends = useStore(store, selectors.showWeekends);
+    const showWeekNumber = useStore(store, selectors.showWeekNumber);
     const visibleDate = useStore(store, selectors.visibleDate);
     const translations = useTranslations();
 
     const getDayList = useDayList();
     const getWeekList = useWeekList();
-    const weeks = React.useMemo(
-      () =>
-        getWeekList({
-          date: adapter.startOfMonth(visibleDate),
-          amount: 'end-of-month',
-        }),
-      [getWeekList, visibleDate],
-    );
+    const { weeks, days } = React.useMemo(() => {
+      const weekFirstDays = getWeekList({
+        date: adapter.startOfMonth(visibleDate),
+        amount: 'end-of-month',
+      });
+      const tempWeeks = weekFirstDays.map((week) =>
+        getDayList({ date: week, amount: 'week', excludeWeekends: !showWeekends }),
+      );
 
-    useInitializeView(() => ({
+      return { weeks: tempWeeks, days: tempWeeks.flat(1) };
+    }, [adapter, getWeekList, getDayList, visibleDate, showWeekends]);
+
+    const occurrencesMap = useEventOccurrencesGroupedByDay({ days, renderEventIn: 'every-day' });
+
+    useEventCalendarView(() => ({
       siblingVisibleDateGetter: (date, delta) =>
         adapter.addMonths(adapter.startOfMonth(date), delta),
     }));
@@ -59,9 +66,10 @@ export const MonthView = React.memo(
       cellRef,
       () => {
         const cellHeight = cellRef.current!.clientHeight;
-        const availableHeight =
-          cellHeight - CELL_PADDING - DAY_NUMBER_HEADER_HEIGHT - HIDDEN_EVENTS_HEIGHT;
-        const maxEventsCount = Math.floor(availableHeight / EVENT_HEIGHT);
+        const eventContainerHeight = cellHeight - CELL_PADDING - DAY_NUMBER_HEADER_HEIGHT;
+        const maxEventsCount = Math.floor(
+          (eventContainerHeight + EVENT_GAP) / (EVENT_HEIGHT + EVENT_GAP),
+        );
         setMaxEvents(maxEventsCount);
       },
       true,
@@ -74,22 +82,26 @@ export const MonthView = React.memo(
         {...other}
       >
         <EventPopoverProvider containerRef={containerRef}>
-          <DayGrid.Root className="MonthViewRoot">
-            <div className="MonthViewHeader">
-              <div className="MonthViewWeekHeaderCell">{translations.weekAbbreviation}</div>
-              {getDayList({
-                date: weeks[0],
-                amount: 'week',
-                excludeWeekends: preferences.hideWeekends,
-              }).map((day) => (
+          <CalendarGrid.Root className="MonthViewRoot">
+            <div
+              className={clsx(
+                'MonthViewHeader',
+                'MonthViewRowGrid',
+                showWeekNumber ? 'WithWeekNumber' : undefined,
+              )}
+            >
+              {showWeekNumber && (
+                <div className="MonthViewWeekHeaderCell">{translations.weekAbbreviation}</div>
+              )}
+              {weeks[0].map((weekDay) => (
                 <div
-                  key={day.toString()}
-                  id={`MonthViewHeaderCell-${day.toString()}`}
+                  key={weekDay.key}
+                  id={`MonthViewHeaderCell-${weekDay.key}`}
                   role="columnheader"
                   className="MonthViewHeaderCell"
-                  aria-label={adapter.format(day, 'weekday')}
+                  aria-label={adapter.format(weekDay.value, 'weekday')}
                 >
-                  {adapter.formatByString(day, 'ccc')}
+                  {adapter.formatByString(weekDay.value, 'ccc')}
                 </div>
               ))}
             </div>
@@ -98,12 +110,13 @@ export const MonthView = React.memo(
                 <MonthViewWeekRow
                   key={weekIdx}
                   maxEvents={maxEvents}
-                  week={week}
+                  days={week}
+                  occurrencesMap={occurrencesMap}
                   firstDayRef={weekIdx === 0 ? cellRef : undefined}
                 />
               ))}
             </div>
-          </DayGrid.Root>
+          </CalendarGrid.Root>
         </EventPopoverProvider>
       </div>
     );

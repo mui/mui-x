@@ -6,6 +6,7 @@ import { GridRoot } from '../components';
 import { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
 import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
 import { useGridRowsOverridableMethods } from '../hooks/features/rows/useGridRowsOverridableMethods';
+import { useGridParamsOverridableMethods } from '../hooks/features/rows/useGridParamsOverridableMethods';
 import { DataGridProps } from '../models/props/DataGridProps';
 import { GridContextProvider } from '../context/GridContextProvider';
 import { useDataGridComponent } from './useDataGridComponent';
@@ -25,7 +26,9 @@ const configuration: GridConfiguration = {
     useGridAriaAttributes,
     useGridRowAriaAttributes,
     useGridRowsOverridableMethods,
+    useGridParamsOverridableMethods,
     useCellAggregationResult: () => null,
+    useFilterValueGetter: (apiRef) => apiRef.current.getRowValue,
   },
 };
 
@@ -237,6 +240,11 @@ DataGridRaw.propTypes = {
    * @default false (`!props.checkboxSelection` for MIT Data Grid)
    */
   disableMultipleRowSelection: PropTypes.bool,
+  /**
+   * If `true`, the Data Grid will not use the exclude model optimization when selecting all rows.
+   * @default false
+   */
+  disableRowSelectionExcludeModel: PropTypes.bool,
   /**
    * If `true`, the selection on click on a row or cell is disabled.
    * @default false

@@ -86,7 +86,10 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<
   const props = {
     ...defaultizedProps,
     viewRenderers,
-    format: resolveDateTimeFormat(adapter, defaultizedProps),
+    format: resolveDateTimeFormat(adapter, {
+      ...defaultizedProps,
+      views: defaultizedProps.viewsForFormatting,
+    }),
     views,
     ampmInClock,
     slots: {

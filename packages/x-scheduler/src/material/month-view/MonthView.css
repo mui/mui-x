@@ -1,8 +1,7 @@
 .MonthViewContainer {
   --fixed-cell-width: 28px;
-}
+  --grid-template-columns-month-view: repeat(auto-fit, minmax(0, 1fr));
 
-.MonthViewContainer {
   width: 100%;
   border-radius: var(--radius-4);
   border: 1px solid var(--border-color);
@@ -20,13 +19,16 @@
 }
 
 .MonthViewHeader {
-  display: grid;
-  grid-template-columns: var(--fixed-cell-width) repeat(auto-fit, minmax(0, 1fr));
   border-block-end: 1px solid var(--border-color);
 }
 
-.MonthViewHeaderCell:not(:first-child) {
-  border-inline-start: 1px solid var(--border-color);
+.MonthViewRowGrid {
+  display: grid;
+  grid-template-columns: var(--grid-template-columns-month-view);
+}
+
+.MonthViewRowGrid.WithWeekNumber {
+  grid-template-columns: var(--fixed-cell-width) var(--grid-template-columns-month-view);
 }
 
 .MonthViewHeaderCell {
@@ -34,6 +36,10 @@
   text-align: center;
   font-size: var(--font-size-2);
   line-height: var(--line-height-1);
+}
+
+.MonthViewHeaderCell:not(:first-child) {
+  border-inline-start: 1px solid var(--border-color);
 }
 
 .MonthViewWeekHeaderCell {

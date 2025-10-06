@@ -11,55 +11,119 @@ import { Input } from '@base-ui-components/react/input';
 import { useStore } from '@base-ui-components/utils/store';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { Select } from '@base-ui-components/react/select';
+import { getRecurringEditingScope } from '../../../../primitives/utils/recurrence-utils';
+import { DEFAULT_EVENT_COLOR } from '../../../../primitives/constants';
 import {
   EventPopoverContextValue,
   EventPopoverProps,
   EventPopoverProviderProps,
   EventPopoverTriggerProps,
 } from './EventPopover.types';
-import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
+import { useAdapter } from '../../../../primitives/use-adapter';
 import { getColorClassName } from '../../utils/color-utils';
 import { useTranslations } from '../../utils/TranslationsContext';
-import { CalendarEvent } from '../../../../primitives/models';
-import { selectors } from '../../../../primitives/use-event-calendar';
-import { useEventCalendarContext } from '../../hooks/useEventCalendarContext';
-import './EventPopover.css';
 import {
-  buildRecurrencePresets,
-  detectRecurrenceKeyFromRule,
+  CalendarEventOccurrence,
+  CalendarResourceId,
+  RecurringEventUpdatedProperties,
+  SchedulerValidDate,
   RecurrencePresetKey,
-} from '../../../../primitives/utils/recurrence-utils';
+} from '../../../../primitives/models';
+import { selectors } from '../../../../primitives/use-event-calendar';
+import { useEventCalendarStoreContext } from '../../../../primitives/use-event-calendar-store-context';
+import { EventPopoverContext, useEventPopoverContext } from './EventPopoverContext';
+import './EventPopover.css';
 
 export const EventPopover = React.forwardRef(function EventPopover(
   props: EventPopoverProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const {
-    className,
-    style,
-    container,
-    anchor,
-    calendarEvent,
-    calendarEventResource,
-    onClose,
-    ...other
-  } = props;
+  const { className, style, container, anchor, occurrence, onClose, ...other } = props;
 
   const adapter = useAdapter();
   const translations = useTranslations();
-  const { store, instance } = useEventCalendarContext();
-  const isEventReadOnly = useStore(store, selectors.isEventReadOnly, calendarEvent);
-  const isRecurring = Boolean(calendarEvent.rrule);
+  const store = useEventCalendarStoreContext();
+  const isEventReadOnly = useStore(store, selectors.isEventReadOnly, occurrence.id);
+  const resources = useStore(store, selectors.resources);
+  const color = useStore(store, selectors.eventColor, occurrence.id);
+  const rawPlaceholder = useStore(store, selectors.occurrencePlaceholder);
+
+  const fmtDate = (d: SchedulerValidDate) => adapter.formatByString(d, 'yyyy-MM-dd');
+  const fmtTime = (d: SchedulerValidDate) => adapter.formatByString(d, 'HH:mm');
 
   const [errors, setErrors] = React.useState<Form.Props['errors']>({});
-  const [isAllDay, setIsAllDay] = React.useState<boolean>(Boolean(calendarEvent.allDay));
+  const [isAllDay, setIsAllDay] = React.useState<boolean>(Boolean(occurrence.allDay));
+  const [when, setWhen] = React.useState(() => ({
+    startDate: fmtDate(occurrence.start),
+    endDate: fmtDate(occurrence.end),
+    startTime: fmtTime(occurrence.start),
+    endTime: fmtTime(occurrence.end),
+  }));
+
+  function computeRange(next: typeof when, nextIsAllDay = isAllDay) {
+    if (nextIsAllDay) {
+      const newStart = adapter.startOfDay(adapter.date(next.startDate));
+      const newEnd = adapter.endOfDay(adapter.date(next.endDate));
+      return { start: newStart, end: newEnd, surfaceType: 'day-grid' as const };
+    }
+    // fallback values
+    const startTime = next.startTime || '12:00';
+    const endTime = next.endTime || '12:30';
+
+    const newStart = adapter.date(`${next.startDate}T${startTime}`);
+    const newEnd = adapter.date(`${next.endDate}T${endTime}`);
+
+    return { start: newStart, end: newEnd, surfaceType: 'time-grid' as const };
+  }
+
+  function pushPlaceholder(next: typeof when, nextIsAllDay = isAllDay) {
+    if (!rawPlaceholder || rawPlaceholder.eventId != null) {
+      return;
+    }
+
+    const { start, end, surfaceType } = computeRange(next, nextIsAllDay);
+    const surfaceTypeToUse = rawPlaceholder.lockSurfaceType
+      ? rawPlaceholder.surfaceType
+      : surfaceType;
+
+    store.setOccurrencePlaceholder({
+      eventId: null,
+      occurrenceKey: rawPlaceholder.occurrenceKey,
+      surfaceType: surfaceTypeToUse,
+      start,
+      end,
+      originalStart: null,
+      lockSurfaceType: rawPlaceholder.lockSurfaceType,
+    });
+  }
+
+  const handleChangeDateOrTimeField =
+    (field: keyof typeof when) =>
+    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const value = event.currentTarget.value;
+      setErrors({});
+      setWhen((prev) => {
+        const next = { ...prev, [field]: value };
+        pushPlaceholder(next);
+        return next;
+      });
+    };
+
+  const handleToggleAllDay = (checked: boolean) => {
+    if (isEventReadOnly) {
+      return;
+    }
+
+    setIsAllDay(checked);
+    pushPlaceholder(when, checked);
+  };
 
   const recurrencePresets = React.useMemo(
-    () => buildRecurrencePresets(adapter, calendarEvent.start),
-    [adapter, calendarEvent.start],
+    () => store.buildRecurrencePresets(occurrence.start),
+    [store, occurrence.start],
   );
-  const weekday = adapter.format(calendarEvent.start, 'weekday');
-  const normalDate = adapter.format(calendarEvent.start, 'normalDate');
+  const weekday = adapter.format(occurrence.start, 'weekday');
+  const normalDate = adapter.format(occurrence.start, 'normalDate');
 
   const recurrenceOptions: {
     label: string;
@@ -72,7 +136,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
       value: 'weekly',
     },
     {
-      label: `${translations.recurrenceMonthlyPresetLabel(adapter.getDate(calendarEvent.start))}`,
+      label: `${translations.recurrenceMonthlyPresetLabel(adapter.getDate(occurrence.start))}`,
       value: 'monthly',
     },
     {
@@ -81,55 +145,98 @@ export const EventPopover = React.forwardRef(function EventPopover(
     },
   ];
 
-  const defaultRecurrenceKey = React.useMemo<RecurrencePresetKey | 'custom' | null>(
-    () => detectRecurrenceKeyFromRule(adapter, calendarEvent.rrule, calendarEvent.start),
-    [adapter, calendarEvent.rrule, calendarEvent.start],
+  const resourcesOptions = React.useMemo(() => {
+    return [
+      { label: translations.labelNoResource, value: null, eventColor: DEFAULT_EVENT_COLOR },
+      ...resources.map((resource) => ({
+        label: resource.name,
+        value: resource.id,
+        eventColor: resource.eventColor,
+      })),
+    ];
+  }, [resources, translations.labelNoResource]);
+
+  const defaultRecurrenceKey = React.useMemo(
+    () => store.getRecurrencePresetKeyFromRule(occurrence.rrule, occurrence.start),
+    [store, occurrence.rrule, occurrence.start],
   );
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  function validateRange(
+    start: SchedulerValidDate,
+    end: SchedulerValidDate,
+    allDay: boolean,
+  ): null | { field: 'startDate' | 'startTime' } {
+    const startDay = adapter.startOfDay(start);
+    const endDay = adapter.startOfDay(end);
+    // endDay <= startDay → date error
+    if (adapter.isAfter(startDay, endDay)) {
+      return { field: 'startDate' };
+    }
+
+    if (adapter.isEqual(startDay, endDay)) {
+      if (!allDay && !adapter.isAfter(end, start)) {
+        // end <= start → hour error
+        return { field: 'startTime' };
+      }
+    }
+    return null;
+  }
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const { start, end } = computeRange(when, isAllDay);
+
     const form = new FormData(event.currentTarget);
+    const recurrenceValue = form.get('recurrence') as RecurrencePresetKey;
+    const recurrenceModified =
+      defaultRecurrenceKey !== 'custom' && recurrenceValue !== defaultRecurrenceKey;
+    // TODO: This will change after implementing the custom recurrence editing tab.
+    const rrule =
+      recurrenceModified && recurrenceValue ? recurrencePresets[recurrenceValue] : undefined;
 
-    const startDateValue = form.get('startDate');
-    const startTimeValue = form.get('startTime');
-    const endDateValue = form.get('endDate');
-    const endTimeValue = form.get('endTime');
-    const recurrenceKey = form.get('recurrence') as RecurrencePresetKey;
-    const rrule = recurrenceKey ? recurrencePresets[recurrenceKey] : calendarEvent.rrule;
-
-    const startISO = startTimeValue
-      ? `${startDateValue}T${startTimeValue}`
-      : `${startDateValue}T00:00`;
-    const endISO = endTimeValue ? `${endDateValue}T${endTimeValue}` : `${endDateValue}T23:59`;
-
-    const start = adapter.date(startISO);
-    const end = adapter.date(endISO);
+    const resourceRawValue = form.get('resource');
+    const resourceValue =
+      resourceRawValue === '' ? undefined : (resourceRawValue as CalendarResourceId);
 
     setErrors({});
-
-    if (adapter.isAfter(start, end) || adapter.isEqual(start, end)) {
-      const isSameDay = adapter.isEqual(adapter.startOfDay(start), adapter.startOfDay(end));
-
-      setErrors({
-        [isSameDay ? 'startTime' : 'startDate']: translations.startDateAfterEndDateError,
-      });
-
+    const err = validateRange(start, end, isAllDay);
+    if (err) {
+      setErrors({ [err.field]: translations.startDateAfterEndDateError });
       return;
     }
-    instance.updateEvent({
-      ...calendarEvent,
+
+    const metaChanges = {
       title: (form.get('title') as string).trim(),
       description: (form.get('description') as string).trim(),
-      start,
-      end,
       allDay: isAllDay,
-      rrule,
-    });
+      resource: resourceValue,
+    };
+
+    if (rawPlaceholder && rawPlaceholder.eventId == null) {
+      store.createEvent({ id: crypto.randomUUID(), ...metaChanges, start, end, rrule });
+    } else if (occurrence.rrule) {
+      const changes: RecurringEventUpdatedProperties = {
+        ...metaChanges,
+        start,
+        end,
+        ...(recurrenceModified ? { rrule } : {}),
+      };
+      store.updateRecurringEvent({
+        eventId: occurrence.id,
+        occurrenceStart: occurrence.start,
+        changes,
+        // TODO: Issue #19766 - Let the user choose the scope via UI.
+        scope: getRecurringEditingScope(),
+      });
+    } else {
+      store.updateEvent({ id: occurrence.id, ...metaChanges, start, end, rrule });
+    }
+
     onClose();
   };
 
   const handleDelete = useEventCallback(() => {
-    instance.deleteEvent(calendarEvent.id);
+    store.deleteEvent(occurrence.id);
     onClose();
   });
 
@@ -140,27 +247,92 @@ export const EventPopover = React.forwardRef(function EventPopover(
           sideOffset={8}
           anchor={anchor}
           trackAnchor={false}
-          className={clsx(
-            'PopoverPositioner',
-            getColorClassName({ resource: calendarEventResource }),
-          )}
+          className={clsx('PopoverPositioner', getColorClassName(color))}
         >
           <Popover.Popup finalFocus={{ current: anchor }}>
             <Form errors={errors} onClearErrors={setErrors} onSubmit={handleSubmit}>
               <header className="EventPopoverHeader">
-                <Field.Root className="EventPopoverFieldRoot" name="title" disabled={isRecurring}>
-                  <Field.Label className="EventPopoverTitle">
-                    <Input
-                      className="EventPopoverTitleInput"
-                      type="text"
-                      defaultValue={calendarEvent.title}
-                      aria-label={translations.eventTitleAriaLabel}
-                      required
+                <div className="EventPopoverHeaderContent">
+                  <Field.Root className="EventPopoverFieldRoot" name="title">
+                    <Field.Label className="EventPopoverTitle">
+                      <Input
+                        className="EventPopoverTitleInput"
+                        type="text"
+                        defaultValue={occurrence.title}
+                        aria-label={translations.eventTitleAriaLabel}
+                        required
+                        readOnly={isEventReadOnly}
+                      />
+                    </Field.Label>
+                    <Field.Error className="EventPopoverRequiredFieldError" />
+                  </Field.Root>
+                  <Field.Root className="EventPopoverFieldRoot" name="resource">
+                    <Select.Root
+                      items={resourcesOptions}
+                      defaultValue={occurrence.resource}
                       readOnly={isEventReadOnly}
-                    />
-                  </Field.Label>
-                  <Field.Error className="EventPopoverRequiredFieldError" />
-                </Field.Root>
+                    >
+                      <Select.Trigger
+                        className="EventPopoverSelectTrigger Ghost"
+                        aria-label={translations.resourceLabel}
+                      >
+                        <Select.Value>
+                          {(value: string | null) => {
+                            const selected = resourcesOptions.find(
+                              (option) => option.value === value,
+                            );
+
+                            return (
+                              <div className="EventPopoverSelectItemTitleWrapper">
+                                <span
+                                  className={clsx(
+                                    'ResourceLegendColor',
+                                    getColorClassName(selected?.eventColor ?? DEFAULT_EVENT_COLOR),
+                                  )}
+                                />
+                                <span>
+                                  {value ? selected?.label : translations.labelNoResource}
+                                </span>
+                              </div>
+                            );
+                          }}
+                        </Select.Value>
+                        <Select.Icon className="EventPopoverSelectIcon">
+                          <ChevronDown size={14} />
+                        </Select.Icon>
+                      </Select.Trigger>
+                      <Select.Portal>
+                        <Select.Positioner
+                          alignItemWithTrigger={false}
+                          align="start"
+                          className="EventPopoverSelectPositioner"
+                        >
+                          <Select.Popup className="EventPopoverSelectPopup">
+                            {resourcesOptions.map((resource) => (
+                              <Select.Item
+                                key={resource.value}
+                                value={resource.value}
+                                className="EventPopoverSelectItem"
+                              >
+                                <div className="EventPopoverSelectItemTitleWrapper">
+                                  <span
+                                    className={clsx(
+                                      'ResourceLegendColor',
+                                      getColorClassName(resource.eventColor ?? DEFAULT_EVENT_COLOR),
+                                    )}
+                                  />
+                                  <Select.ItemText className="EventPopoverSelectItemText">
+                                    {resource.label}
+                                  </Select.ItemText>
+                                </div>
+                              </Select.Item>
+                            ))}
+                          </Select.Popup>
+                        </Select.Positioner>
+                      </Select.Portal>
+                    </Select.Root>
+                  </Field.Root>
+                </div>
                 <Popover.Close
                   aria-label={translations.closeButtonAriaLabel}
                   className="EventPopoverCloseButton"
@@ -172,19 +344,14 @@ export const EventPopover = React.forwardRef(function EventPopover(
               <div className="EventPopoverMainContent">
                 <div className="EventPopoverDateTimeFields">
                   <div className="EventPopoverDateTimeFieldsStartRow">
-                    <Field.Root
-                      className="EventPopoverFieldRoot"
-                      name="startDate"
-                      disabled={isRecurring}
-                    >
+                    <Field.Root className="EventPopoverFieldRoot" name="startDate">
                       <Field.Label className="EventPopoverFormLabel">
                         {translations.startDateLabel}
                         <Input
                           className="EventPopoverInput"
                           type="date"
-                          defaultValue={
-                            adapter.formatByString(calendarEvent.start, 'yyyy-MM-dd') ?? ''
-                          }
+                          value={when.startDate}
+                          onChange={handleChangeDateOrTimeField('startDate')}
                           aria-describedby="startDate-error"
                           required
                           readOnly={isEventReadOnly}
@@ -192,19 +359,14 @@ export const EventPopover = React.forwardRef(function EventPopover(
                       </Field.Label>
                     </Field.Root>
                     {!isAllDay && (
-                      <Field.Root
-                        className="EventPopoverFieldRoot"
-                        name="startTime"
-                        disabled={isRecurring}
-                      >
+                      <Field.Root className="EventPopoverFieldRoot" name="startTime">
                         <Field.Label className="EventPopoverFormLabel">
                           {translations.startTimeLabel}
                           <Input
                             className="EventPopoverInput"
                             type="time"
-                            defaultValue={
-                              adapter.formatByString(calendarEvent.start, 'HH:mm') ?? ''
-                            }
+                            value={when.startTime}
+                            onChange={handleChangeDateOrTimeField('startTime')}
                             aria-describedby="startTime-error"
                             required
                             readOnly={isEventReadOnly}
@@ -214,36 +376,28 @@ export const EventPopover = React.forwardRef(function EventPopover(
                     )}
                   </div>
                   <div className="EventPopoverDateTimeFieldsEndRow">
-                    <Field.Root
-                      className="EventPopoverFieldRoot"
-                      name="endDate"
-                      disabled={isRecurring}
-                    >
+                    <Field.Root className="EventPopoverFieldRoot" name="endDate">
                       <Field.Label className="EventPopoverFormLabel">
                         {translations.endDateLabel}
                         <Input
                           className="EventPopoverInput"
                           type="date"
-                          defaultValue={
-                            adapter.formatByString(calendarEvent.end, 'yyyy-MM-dd') ?? ''
-                          }
+                          value={when.endDate}
+                          onChange={handleChangeDateOrTimeField('endDate')}
                           required
                           readOnly={isEventReadOnly}
                         />
                       </Field.Label>
                     </Field.Root>
                     {!isAllDay && (
-                      <Field.Root
-                        className="EventPopoverFieldRoot"
-                        name="endTime"
-                        disabled={isRecurring}
-                      >
+                      <Field.Root className="EventPopoverFieldRoot" name="endTime">
                         <Field.Label className="EventPopoverFormLabel">
                           {translations.endTimeLabel}
                           <Input
                             className="EventPopoverInput"
                             type="time"
-                            defaultValue={adapter.formatByString(calendarEvent.end, 'HH:mm') ?? ''}
+                            value={when.endTime}
+                            onChange={handleChangeDateOrTimeField('endTime')}
                             required
                             readOnly={isEventReadOnly}
                           />
@@ -267,17 +421,13 @@ export const EventPopover = React.forwardRef(function EventPopover(
                   >
                     <Field.Error />
                   </Field.Root>
-                  <Field.Root
-                    className="EventPopoverFieldRoot"
-                    name="allDay"
-                    disabled={isRecurring}
-                  >
+                  <Field.Root className="EventPopoverFieldRoot" name="allDay">
                     <Field.Label className="AllDayCheckboxLabel">
                       <Checkbox.Root
                         className="AllDayCheckboxRoot"
                         id="enable-all-day-checkbox"
                         checked={isAllDay}
-                        onCheckedChange={setIsAllDay}
+                        onCheckedChange={handleToggleAllDay}
                         readOnly={isEventReadOnly}
                       >
                         <Checkbox.Indicator className="AllDayCheckboxIndicator">
@@ -288,14 +438,10 @@ export const EventPopover = React.forwardRef(function EventPopover(
                     </Field.Label>
                   </Field.Root>
                 </div>
-                <Field.Root
-                  className="EventPopoverFieldRoot"
-                  name="recurrence"
-                  disabled={isRecurring}
-                >
+                <Field.Root className="EventPopoverFieldRoot" name="recurrence">
                   {defaultRecurrenceKey === 'custom' ? (
                     // TODO: Issue #19137 - Display the actual custom recurrence rule (e.g. "Repeats every 2 weeks on Monday")
-                    <p className="EventPopoverFormLabel">{`Custom ${calendarEvent.rrule?.freq.toLowerCase()} recurrence`}</p>
+                    <p className="EventPopoverFormLabel">{`Custom ${occurrence.rrule?.freq.toLowerCase()} recurrence`}</p>
                   ) : (
                     <Select.Root
                       items={recurrenceOptions}
@@ -312,7 +458,11 @@ export const EventPopover = React.forwardRef(function EventPopover(
                         </Select.Icon>
                       </Select.Trigger>
                       <Select.Portal>
-                        <Select.Positioner className="EventPopoverSelectPositioner">
+                        <Select.Positioner
+                          alignItemWithTrigger={false}
+                          align="start"
+                          className="EventPopoverSelectPositioner"
+                        >
                           <Select.Popup className="EventPopoverSelectPopup">
                             {recurrenceOptions.map(({ label, value }) => (
                               <Select.Item
@@ -320,12 +470,6 @@ export const EventPopover = React.forwardRef(function EventPopover(
                                 value={value}
                                 className="EventPopoverSelectItem"
                               >
-                                <Select.ItemIndicator className="EventPopoverSelectItemIndicator">
-                                  <CheckIcon
-                                    size={14}
-                                    className="EventPopoverSelectItemIndicatorIcon"
-                                  />
-                                </Select.ItemIndicator>
                                 <Select.ItemText className="EventPopoverSelectItemText">
                                   {label}
                                 </Select.ItemText>
@@ -337,25 +481,16 @@ export const EventPopover = React.forwardRef(function EventPopover(
                     </Select.Root>
                   )}
                 </Field.Root>
-                {isRecurring && (
-                  <p className="EventPopoverEditDisabledNotice">
-                    {translations.editDisabledNotice}
-                  </p>
-                )}
                 <Separator className="EventPopoverSeparator" />
                 <div>
-                  <Field.Root
-                    className="EventPopoverFieldRoot"
-                    name="description"
-                    disabled={isRecurring}
-                  >
+                  <Field.Root className="EventPopoverFieldRoot" name="description">
                     <Field.Label className="EventPopoverFormLabel">
                       {translations.descriptionLabel}
                       <Input
                         render={
                           <textarea
                             className="EventPopoverTextarea"
-                            defaultValue={calendarEvent.description}
+                            defaultValue={occurrence.description}
                             rows={5}
                           />
                         }
@@ -388,31 +523,30 @@ export const EventPopover = React.forwardRef(function EventPopover(
   );
 });
 
-const EventPopoverContext = React.createContext<EventPopoverContextValue>({
-  startEditing: () => {},
-});
-
 export function EventPopoverProvider(props: EventPopoverProviderProps) {
   const { containerRef, children } = props;
+  const store = useEventCalendarStoreContext();
   const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
   const [anchor, setAnchor] = React.useState<HTMLElement | null>(null);
-  const [selectedEvent, setSelectedEvent] = React.useState<CalendarEvent | null>(null);
-  const { store } = useEventCalendarContext();
-  const resourcesByIdMap = useStore(store, selectors.resourcesByIdMap);
+  const [selectedOccurrence, setSelectedOccurrence] =
+    React.useState<CalendarEventOccurrence | null>(null);
 
-  const startEditing = useEventCallback((event: React.MouseEvent, calendarEvent: CalendarEvent) => {
-    setAnchor(event.currentTarget as HTMLElement);
-    setSelectedEvent(calendarEvent);
-    setIsPopoverOpen(true);
-  });
+  const startEditing = useEventCallback(
+    (anchorElement: HTMLElement, occurrence: CalendarEventOccurrence) => {
+      setAnchor(anchorElement);
+      setSelectedOccurrence(occurrence);
+      setIsPopoverOpen(true);
+    },
+  );
 
   const handleClose = useEventCallback(() => {
     if (!isPopoverOpen) {
       return;
     }
+    store.setOccurrencePlaceholder(null);
     setIsPopoverOpen(false);
     setAnchor(null);
-    setSelectedEvent(null);
+    setSelectedOccurrence(null);
   });
 
   const contextValue = React.useMemo<EventPopoverContextValue>(
@@ -424,11 +558,10 @@ export function EventPopoverProvider(props: EventPopoverProviderProps) {
     <EventPopoverContext.Provider value={contextValue}>
       <Popover.Root open={isPopoverOpen} onOpenChange={handleClose} modal>
         {children}
-        {anchor && selectedEvent && (
+        {anchor && selectedOccurrence && (
           <EventPopover
             anchor={anchor}
-            calendarEvent={selectedEvent}
-            calendarEventResource={resourcesByIdMap.get(selectedEvent.resource)}
+            occurrence={selectedOccurrence}
             container={containerRef.current}
             onClose={handleClose}
           />
@@ -439,13 +572,13 @@ export function EventPopoverProvider(props: EventPopoverProviderProps) {
 }
 
 export function EventPopoverTrigger(props: EventPopoverTriggerProps) {
-  const { event: calendarEvent, ...other } = props;
-  const { startEditing } = React.useContext(EventPopoverContext);
+  const { occurrence, ...other } = props;
+  const { startEditing } = useEventPopoverContext();
 
   return (
     <Popover.Trigger
       nativeButton={false}
-      onClick={(event) => startEditing(event, calendarEvent)}
+      onClick={(event) => startEditing(event.currentTarget, occurrence)}
       {...other}
     />
   );

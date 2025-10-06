@@ -169,6 +169,18 @@ You have to import it from `@mui/x-license` instead:
   rowSelectionManager.has(rowId);
   ```
 
+  **Opting out of exclude model optimization**
+
+  If you prefer the previous behavior where the selection model always contains explicit row IDs (even when selecting all rows), you can use the new `disableRowSelectionExcludeModel` prop:
+
+  ```tsx
+  <DataGrid
+    disableRowSelectionExcludeModel
+    // This disables the exclude model optimization and ensures
+    // the selection model always uses type: 'include' with explicit row IDs
+  />
+  ```
+
 - The `selectedIdsLookupSelector` selector has been removed. Use the `gridRowSelectionManagerSelector` or `gridRowSelectionStateSelector` selectors instead.
 - ✅ The `selectedGridRowsSelector` has been renamed to `gridRowSelectionIdsSelector`.
 - ✅ The `selectedGridRowsCountSelector` has been renamed to `gridRowSelectionCountSelector`.

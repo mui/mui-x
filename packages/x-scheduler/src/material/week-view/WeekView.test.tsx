@@ -1,12 +1,11 @@
 import * as React from 'react';
 import { DateTime } from 'luxon';
 import { spy } from 'sinon';
-import { createSchedulerRenderer } from 'test/utils/scheduler';
+import { adapter, createSchedulerRenderer } from 'test/utils/scheduler';
 import { screen, within } from '@mui/internal-test-utils';
 import { WeekView } from '@mui/x-scheduler/material/week-view';
 import { EventCalendar } from '@mui/x-scheduler/material/event-calendar';
 import { StandaloneView } from '@mui/x-scheduler/material/standalone-view';
-import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 
 const allDayEvents = [
   {
@@ -34,7 +33,6 @@ const allDayEvents = [
 
 describe('<WeekView />', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-05-04') });
-  const adapter = getAdapter();
 
   describe('All day events', () => {
     it('should render all-day events correctly with main event in start date cell', () => {
@@ -228,7 +226,7 @@ describe('<WeekView />', () => {
       expect(indicators.length).to.equal(7);
 
       const todayColumn = document.querySelector('.DayTimeGridColumn[data-current]');
-      expect(todayColumn).to.not.equal(null);
+      expect(todayColumn).not.to.equal(null);
     });
 
     it("doesn't render the current time indicator if today is not in view", () => {

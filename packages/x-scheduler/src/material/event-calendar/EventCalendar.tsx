@@ -7,26 +7,28 @@ import { WeekView } from '../week-view/WeekView';
 import { AgendaView } from '../agenda-view';
 import { DayView } from '../day-view/DayView';
 import { TranslationsProvider } from '../internals/utils/TranslationsContext';
-import { EventCalendarContext } from '../internals/hooks/useEventCalendarContext';
+import { EventCalendarStoreContext } from '../../primitives/use-event-calendar-store-context';
 import { MonthView } from '../month-view';
 import { HeaderToolbar } from '../internals/components/header-toolbar';
-import { DateNavigator } from '../internals/components/date-navigator';
 import { ResourceLegend } from '../internals/components/resource-legend';
 import {
   useEventCalendar,
   selectors,
   useExtractEventCalendarParameters,
 } from '../../primitives/use-event-calendar';
+import { SchedulerStoreContext } from '../../primitives/use-scheduler-store-context';
 import '../index.css';
 import './EventCalendar.css';
+import { DateNavigator } from '../internals/components/date-navigator';
 
 export const EventCalendar = React.forwardRef(function EventCalendar(
   props: EventCalendarProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const { parameters, forwardedProps } = useExtractEventCalendarParameters(props);
-  const contextValue = useEventCalendar(parameters);
-  const view = useStore(contextValue.store, selectors.view);
+  const store = useEventCalendar(parameters);
+  const view = useStore(store, selectors.view);
+  const isSidePanelOpen = useStore(store, selectors.preferences).isSidePanelOpen;
   const {
     // TODO: Move inside useEventCalendar so that standalone view can benefit from it (#19293).
     translations,
@@ -52,36 +54,47 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
   }
 
   return (
-    <EventCalendarContext.Provider value={contextValue}>
-      <TranslationsProvider translations={translations}>
-        <div
-          {...other}
-          className={clsx(forwardedProps.className, 'EventCalendarRoot', 'mui-x-scheduler')}
-          ref={forwardedRef}
-        >
-          <aside className="EventCalendarSidePanel">
+    <EventCalendarStoreContext.Provider value={store}>
+      <SchedulerStoreContext.Provider value={store as any}>
+        <TranslationsProvider translations={translations}>
+          <div
+            {...other}
+            className={clsx(forwardedProps.className, 'EventCalendarRoot', 'mui-x-scheduler')}
+            ref={forwardedRef}
+          >
             <DateNavigator />
-            <section
-              className="EventCalendarMonthCalendarPlaceholder"
-              // TODO: Add localization
-              aria-label="Month calendar"
-            >
-              Month Calendar
-            </section>
-            <ResourceLegend />
-          </aside>
-          <div className={clsx('EventCalendarMainPanel', view === 'month' && 'StretchView')}>
+
             <HeaderToolbar />
-            <section
-              // TODO: Add localization
-              className={clsx('EventCalendarContent', view === 'month' && 'StretchView')}
-              aria-label="Calendar content"
-            >
-              {content}
-            </section>
+
+            <div className={clsx('EventCalendarMainPanel', view === 'month' && 'StretchView')}>
+              {isSidePanelOpen && (
+                <aside className="EventCalendarSidePanel">
+                  <section
+                    className="EventCalendarMonthCalendarPlaceholder"
+                    // TODO: Add localization
+                    aria-label="Month calendar"
+                  >
+                    Month Calendar
+                  </section>
+                  <ResourceLegend />
+                </aside>
+              )}
+
+              <section
+                // TODO: Add localization
+                className={clsx(
+                  'EventCalendarContent',
+                  view === 'month' && 'StretchView',
+                  !isSidePanelOpen && 'FullWidth',
+                )}
+                aria-label="Calendar content"
+              >
+                {content}
+              </section>
+            </div>
           </div>
-        </div>
-      </TranslationsProvider>
-    </EventCalendarContext.Provider>
+        </TranslationsProvider>
+      </SchedulerStoreContext.Provider>
+    </EventCalendarStoreContext.Provider>
   );
 });

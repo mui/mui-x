@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { isWeekend } from '../utils/date-utils';
-import { SchedulerValidDate } from '../models';
-import { useAdapter } from '../utils/adapter/useAdapter';
+import { CalendarProcessedDate, SchedulerValidDate } from '../models';
+import { useAdapter, isWeekend } from '../use-adapter/useAdapter';
+import { processDate } from '../process-date';
 
 export function useDayList(): useDayList.ReturnValue {
   const adapter = useAdapter();
@@ -43,14 +43,14 @@ export function useDayList(): useDayList.ReturnValue {
         }
       }
 
-      return days;
+      return days.map((day) => processDate(day, adapter));
     },
     [adapter],
   );
 }
 
 export namespace useDayList {
-  export type ReturnValue = (parameters: ReturnValueParameters) => SchedulerValidDate[];
+  export type ReturnValue = (parameters: ReturnValueParameters) => CalendarProcessedDate[];
 
   export interface ReturnValueParameters {
     /**

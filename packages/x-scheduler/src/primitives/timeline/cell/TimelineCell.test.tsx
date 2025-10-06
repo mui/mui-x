@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Timeline } from '@mui/x-scheduler/primitives/timeline';
 import { createSchedulerRenderer, describeConformance } from 'test/utils/scheduler';
+import { TimelineProvider } from '@mui/x-scheduler/primitives/timeline-provider';
 
 describe('<Timeline.Cell />', () => {
   const { render } = createSchedulerRenderer();
@@ -9,9 +10,11 @@ describe('<Timeline.Cell />', () => {
     refInstanceof: window.HTMLDivElement,
     render(node) {
       return render(
-        <Timeline.Root items={[]}>
-          <Timeline.Row>{node}</Timeline.Row>
-        </Timeline.Root>,
+        <TimelineProvider events={[]}>
+          <Timeline.Root items={[]}>
+            <Timeline.Row>{node}</Timeline.Row>
+          </Timeline.Root>
+        </TimelineProvider>,
       );
     },
   }));

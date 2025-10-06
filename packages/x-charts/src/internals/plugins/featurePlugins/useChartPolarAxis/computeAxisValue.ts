@@ -12,7 +12,7 @@ import {
 } from '../../../../models/axis';
 import { ChartSeriesType, PolarChartSeriesType } from '../../../../models/seriesType/config';
 import { getColorScale, getOrdinalColorScale } from '../../../colorScale';
-import { getTickNumber, scaleTickNumberByRange } from '../../../ticks';
+import { getDefaultTickNumber, getTickNumber, scaleTickNumberByRange } from '../../../ticks';
 import { getScale } from '../../../getScale';
 import { isDateData, createDateFormatter } from '../../../dateHelpers';
 import { getAxisExtremum } from './getAxisExtremum';
@@ -146,7 +146,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
       };
 
       if (isDateData(axis.data)) {
-        const dateFormatter = createDateFormatter(axis, range);
+        const dateFormatter = createDateFormatter(axis.data, range, axis.tickNumber);
         completeAxis[axis.id].valueFormatter = axis.valueFormatter ?? dateFormatter;
       }
     }
@@ -166,7 +166,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
       };
 
       if (isDateData(axis.data)) {
-        const dateFormatter = createDateFormatter(axis, range);
+        const dateFormatter = createDateFormatter(axis.data, range, axis.tickNumber);
         completeAxis[axis.id].valueFormatter = axis.valueFormatter ?? dateFormatter;
       }
     }
@@ -188,7 +188,11 @@ export function computeAxisValue<T extends ChartSeriesType>({
       axisExtremums[1] = max;
     }
 
-    const rawTickNumber = getTickNumber({ ...axis, range, domain: axisExtremums });
+    const rawTickNumber = getTickNumber(
+      axis,
+      axisExtremums,
+      getDefaultTickNumber(Math.abs(range[1] - range[0])),
+    );
     const tickNumber = scaleTickNumberByRange(rawTickNumber, range);
 
     const scale = getScale(scaleType, axisExtremums, range);

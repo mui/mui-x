@@ -76,6 +76,10 @@
         "describedArgs": ["zoomData"]
       }
     },
+    "renderer": {
+      "type": { "name": "enum", "description": "'svg-batch'<br>&#124;&nbsp;'svg-single'" },
+      "default": "'svg-single'"
+    },
     "showToolbar": { "type": { "name": "bool" }, "default": "false" },
     "skipAnimation": { "type": { "name": "bool" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
@@ -84,7 +88,9 @@
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
-    "voronoiMaxRadius": { "type": { "name": "number" } },
+    "voronoiMaxRadius": {
+      "type": { "name": "union", "description": "'item'<br>&#124;&nbsp;number" }
+    },
     "width": { "type": { "name": "number" } },
     "xAxis": {
       "type": {
@@ -108,6 +114,12 @@
       "type": {
         "name": "arrayOf",
         "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, end: number, start: number }&gt;"
+      }
+    },
+    "zoomInteractionConfig": {
+      "type": {
+        "name": "shape",
+        "description": "{ pan?: Array&lt;'drag'<br>&#124;&nbsp;'pressAndDrag'<br>&#124;&nbsp;{ pointerMode?: 'mouse'<br>&#124;&nbsp;'touch', requiredKeys?: Array&lt;string&gt;, type: 'drag' }<br>&#124;&nbsp;{ pointerMode?: 'mouse'<br>&#124;&nbsp;'touch', requiredKeys?: Array&lt;string&gt;, type: 'pressAndDrag' }&gt;, zoom?: Array&lt;'pinch'<br>&#124;&nbsp;'tapAndDrag'<br>&#124;&nbsp;'wheel'<br>&#124;&nbsp;{ pointerMode?: any, requiredKeys?: Array&lt;string&gt;, type: 'wheel' }<br>&#124;&nbsp;{ pointerMode?: any, requiredKeys?: array, type: 'pinch' }<br>&#124;&nbsp;{ pointerMode?: 'mouse'<br>&#124;&nbsp;'touch', requiredKeys?: Array&lt;string&gt;, type: 'tapAndDrag' }&gt; }"
       }
     }
   },

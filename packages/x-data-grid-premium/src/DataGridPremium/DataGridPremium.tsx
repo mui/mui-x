@@ -15,6 +15,7 @@ import {
   validateProps,
   GridConfiguration,
   useGridApiInitialization,
+  getRowValue,
 } from '@mui/x-data-grid-pro/internals';
 import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
 import { forwardRef } from '@mui/x-internals/forwardRef';
@@ -31,11 +32,12 @@ import { gridCellAggregationResultSelector } from '../hooks/features/aggregation
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import type { GridApiPremium, GridPrivateApiPremium } from '../models/gridApiPremium';
 import { useGridRowsOverridableMethods } from '../hooks/features/rows/useGridRowsOverridableMethods';
+import { useGridParamsOverridableMethods } from '../hooks/features/rows/useGridParamsOverridableMethods';
 import { gridSidebarOpenSelector } from '../hooks/features/sidebar';
 
 export type { GridPremiumSlotsComponent as GridSlots } from '../models';
 
-const configuration: GridConfiguration<GridPrivateApiPremium> = {
+const configuration: GridConfiguration<GridPrivateApiPremium, DataGridPremiumProcessedProps> = {
   hooks: {
     useCSSVariables: useMaterialCSSVariables,
     useGridAriaAttributes: useGridAriaAttributesPremium,
@@ -44,7 +46,15 @@ const configuration: GridConfiguration<GridPrivateApiPremium> = {
       const apiRef = useGridApiContext();
       return useGridSelector(apiRef, gridCellAggregationResultSelector, { id, field });
     },
+    useFilterValueGetter: (apiRef, props) => (row, column) => {
+      if (props.aggregationRowsScope === 'all') {
+        return apiRef.current.getRowValue(row, column);
+      }
+
+      return getRowValue(row, column, apiRef);
+    },
     useGridRowsOverridableMethods,
+    useGridParamsOverridableMethods,
   },
 };
 const releaseInfo = '__RELEASE_INFO__';
@@ -101,6 +111,10 @@ DataGridPremiumRaw.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The id of the active chart.
+   */
+  activeChartId: PropTypes.string,
   /**
    * Aggregation functions available on the grid.
    * @default GRID_AGGREGATION_FUNCTIONS when `dataSource` is not provided, `{}` when `dataSource` is provided
@@ -223,6 +237,11 @@ DataGridPremiumRaw.propTypes = {
    * Set the cell selection model of the grid.
    */
   cellSelectionModel: PropTypes.object,
+  /**
+   * If `true`, the charts integration feature is enabled.
+   * @default false
+   */
+  chartsIntegration: PropTypes.bool,
   /**
    * If `true`, the Data Grid will display an extra column with checkboxes for selecting rows.
    * @default false
@@ -404,6 +423,11 @@ DataGridPremiumRaw.propTypes = {
    */
   disableRowGrouping: PropTypes.bool,
   /**
+   * If `true`, the Data Grid will not use the exclude model optimization when selecting all rows.
+   * @default false
+   */
+  disableRowSelectionExcludeModel: PropTypes.bool,
+  /**
    * If `true`, the selection on click on a row or cell is disabled.
    * @default false
    */
@@ -429,6 +453,7 @@ DataGridPremiumRaw.propTypes = {
    * For each feature, if the flag is not explicitly set to `true`, then the feature is fully disabled, and neither property nor method calls will have any effect.
    */
   experimentalFeatures: PropTypes.shape({
+    charts: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**
@@ -694,6 +719,11 @@ DataGridPremiumRaw.propTypes = {
    * Nonce of the inline styles for [Content Security Policy](https://www.w3.org/TR/2016/REC-CSP2-20161215/#script-src-the-nonce-attribute).
    */
   nonce: PropTypes.string,
+  /**
+   * Callback fired when the active chart changes.
+   * @param {string} activeChartId The new active chart id.
+   */
+  onActiveChartIdChange: PropTypes.func,
   /**
    * Callback fired when the row grouping model changes.
    * @param {GridAggregationModel} model The aggregated columns.
@@ -1104,12 +1134,22 @@ DataGridPremiumRaw.propTypes = {
    */
   pinnedColumns: PropTypes.object,
   /**
+   * Sets the type of separator between pinned columns and non-pinned columns.
+   * @default 'border-and-shadow'
+   */
+  pinnedColumnsSectionSeparator: PropTypes.oneOf(['border-and-shadow', 'border', 'shadow']),
+  /**
    * Rows data to pin on top or bottom.
    */
   pinnedRows: PropTypes.shape({
     bottom: PropTypes.arrayOf(PropTypes.object),
     top: PropTypes.arrayOf(PropTypes.object),
   }),
+  /**
+   * Sets the type of separator between pinned rows and non-pinned rows.
+   * @default 'border-and-shadow'
+   */
+  pinnedRowsSectionSeparator: PropTypes.oneOf(['border-and-shadow', 'border']),
   /**
    * If `true`, the data grid will show data in pivot mode using the `pivotModel`.
    * @default false

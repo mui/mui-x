@@ -1,34 +1,21 @@
-import { SchedulerValidDate } from '../models';
-import type { TimeGridEvent } from '../time-grid/event';
-import type { TimeGridEventResizeHandler } from '../time-grid/event-resize-handler';
-import { Adapter } from './adapter/types';
+import type { CalendarGridDayEvent } from '../calendar-grid/day-event/CalendarGridDayEvent';
+import type { CalendarGridDayEventResizeHandler } from '../calendar-grid/day-event-resize-handler/CalendarGridDayEventResizeHandler';
+import type { CalendarGridTimeEvent } from '../calendar-grid/time-event/CalendarGridTimeEvent';
+import type { CalendarGridTimeEventResizeHandler } from '../calendar-grid/time-event-resize-handler/CalendarGridTimeEventResizeHandler';
 
 export const EVENT_DRAG_PRECISION_MINUTE = 15;
 export const EVENT_DRAG_PRECISION_MS = EVENT_DRAG_PRECISION_MINUTE * 60 * 1000;
 
-export function isDraggingTimeGridEvent(data: any): data is TimeGridEvent.DragData {
-  return data.source === 'TimeGridEvent';
+interface EventDropDataLookup {
+  CalendarGridTimeEvent: CalendarGridTimeEvent.DragData;
+  CalendarGridTimeEventResizeHandler: CalendarGridTimeEventResizeHandler.DragData;
+  CalendarGridDayEvent: CalendarGridDayEvent.DragData;
+  CalendarGridDayEventResizeHandler: CalendarGridDayEventResizeHandler.DragData;
 }
 
-export function isDraggingTimeGridEventResizeHandler(
-  data: any,
-): data is TimeGridEventResizeHandler.DragData {
-  return data.source === 'TimeGridEventResizeHandler';
-}
-
-export function addRoundedOffsetToDate(
-  parameters: AddRoundedOffsetToDateParameters,
-): SchedulerValidDate {
-  const { date, offsetMs, adapter } = parameters;
-
-  const roundedOffset = Math.round(offsetMs / EVENT_DRAG_PRECISION_MS) * EVENT_DRAG_PRECISION_MS;
-
-  // TODO: Use "addMilliseconds" instead of "addSeconds" when available in the adapter
-  return adapter.addSeconds(date, roundedOffset / 1000);
-}
-
-interface AddRoundedOffsetToDateParameters {
-  adapter: Adapter;
-  date: SchedulerValidDate;
-  offsetMs: number;
+export function buildIsValidDropTarget<Targets extends keyof EventDropDataLookup>(
+  targets: Targets[],
+) {
+  const targetsSet = new Set(targets);
+  return (data: any): data is EventDropDataLookup[Targets] => targetsSet.has(data.source);
 }

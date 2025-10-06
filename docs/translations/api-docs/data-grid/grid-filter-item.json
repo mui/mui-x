@@ -2,7 +2,9 @@
   "interfaceDescription": "Filter item definition interface.",
   "propertiesDescriptions": {
     "field": { "description": "The column from which we want to filter the rows." },
-    "operator": { "description": "The name of the operator we want to apply." },
+    "operator": {
+      "description": "The name of the operator we want to apply.<br />A custom operator is supported by providing any string value."
+    },
     "id": {
       "description": "Must be unique.<br />Only useful when the model contains several items."
     },

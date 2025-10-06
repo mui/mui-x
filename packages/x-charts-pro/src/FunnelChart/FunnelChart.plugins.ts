@@ -12,14 +12,14 @@ import {
 import { useChartFunnelAxis } from './funnelAxisPlugin/useChartFunnelAxis';
 import { UseChartFunnelAxisSignature } from './funnelAxisPlugin/useChartFunnelAxis.types';
 
-export type FunnelChartPluginsSignatures = [
+export type FunnelChartPluginSignatures = [
   UseChartFunnelAxisSignature,
   UseChartInteractionSignature,
   UseChartHighlightSignature,
   UseChartProExportSignature,
 ];
 
-export const FUNNEL_CHART_PLUGINS: ConvertSignaturesIntoPlugins<FunnelChartPluginsSignatures> = [
+export const FUNNEL_CHART_PLUGINS: ConvertSignaturesIntoPlugins<FunnelChartPluginSignatures> = [
   useChartFunnelAxis,
   useChartInteraction,
   useChartHighlight,
