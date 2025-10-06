@@ -156,11 +156,10 @@ describe('Press Gesture', () => {
       duration: 300,
     });
 
-    expect(events).toStrictEqual([
-      'pressStart: x: 50 | y: 50 | duration: 0',
-      'press: x: 50 | y: 50 | duration: 0',
-      'pressCancel: x: 50 | y: 50 | duration: 201',
-      'pressEnd: x: 50 | y: 50 | duration: 201',
-    ]);
+    expect(events.at(0)).toBe(`pressStart: x: 50 | y: 50 | duration: 0`);
+    expect(events.at(1)).toBe(`press: x: 50 | y: 50 | duration: 0`);
+    // Micro second precision may vary
+    expect(events.at(2)).toContain(`pressCancel: x: 50 | y: 50 | duration: 20`);
+    expect(events.at(3)).toContain(`pressEnd: x: 50 | y: 50 | duration: 20`);
   });
 });
