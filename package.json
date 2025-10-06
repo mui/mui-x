@@ -144,7 +144,7 @@
     "stylelint-config-tailwindcss": "^1.0.0",
     "terser-webpack-plugin": "^5.3.14",
     "tsx": "catalog:",
-    "typescript": "^5.9.2",
+    "typescript": "^5.9.3",
     "unist-util-visit": "^5.0.0",
     "util": "^0.12.5",
     "vite": "catalog:",
