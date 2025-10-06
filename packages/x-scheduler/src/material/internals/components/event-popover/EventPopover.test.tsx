@@ -13,7 +13,7 @@ import { CalendarEventOccurrence, CalendarResource } from '@mui/x-scheduler/prim
 import { DEFAULT_EVENT_COLOR } from '@mui/x-scheduler/primitives/constants';
 import { StandaloneView } from '@mui/x-scheduler/material/standalone-view';
 import { Popover } from '@base-ui-components/react/popover';
-import { EventCalendarStoreContext } from '@mui/x-scheduler/primitives/use-event-calendar-store-context/useEventCalendarStoreContext';
+import { EventCalendarStoreContext } from '@mui/x-scheduler/primitives/use-event-calendar-store-context';
 import { EventPopover } from './EventPopover';
 import { getColorClassName } from '../../utils/color-utils';
 

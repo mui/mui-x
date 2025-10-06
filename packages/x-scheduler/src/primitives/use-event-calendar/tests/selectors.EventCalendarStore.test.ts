@@ -13,15 +13,18 @@ describe('EventCalendarStore.selectors', () => {
   describe('isEventDraggable', () => {
     // TODO
   });
+
   describe('isEventResizable', () => {
     // TODO
   });
   describe('occurrencePlaceholderToRenderInDayCell', () => {
     // TODO
   });
+
   describe('occurrencePlaceholderToRenderInTimeRange', () => {
     // TODO
   });
+
   describe('isCreatingNewEventInDayGridCell', () => {
     const day = adapter.date('2024-01-15');
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { EventCalendarStoreContext } from '@mui/x-scheduler/primitives/use-event-calendar-store-context/useEventCalendarStoreContext';
+import { EventCalendarStoreContext } from '@mui/x-scheduler/primitives/use-event-calendar-store-context';
 import { CalendarOccurrencePlaceholder } from '@mui/x-scheduler/primitives/models';
 
 export function PlaceholderSeeder({ placeholder }: { placeholder: CalendarOccurrencePlaceholder }) {
