@@ -5,10 +5,14 @@ import {
 } from '../../corePlugins/useChartSeries';
 import { createSelector } from '../../utils/selectors';
 import { computeAxisValue } from './computeAxisValue';
-import { UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
+import { ExtremumFilter, UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
 import { ChartState } from '../../models/chart';
-import { createAxisFilterMapper, createGetAxisFilters } from './createAxisFilterMapper';
-import { ZoomAxisFilters, ZoomData } from './zoom.types';
+import {
+  createContinuousScaleGetAxisFilter,
+  createDiscreteScaleGetAxisFilter,
+  createGetAxisFilters,
+} from './createAxisFilterMapper';
+import { ZoomData } from './zoom.types';
 import { createZoomLookup } from './createZoomLookup';
 import { AxisId } from '../../../../models/axis';
 import {
@@ -18,6 +22,7 @@ import {
 import { selectorPreferStrictDomainInLineCharts } from '../../corePlugins/useChartExperimentalFeature';
 import { getXAxesScales, getYAxesScales } from './getAxisScale';
 import { getDefaultTickNumber } from '../../../ticks';
+import { isOrdinalScale } from '../../../scaleGuards';
 
 export const createZoomMap = (zoom: readonly ZoomData[]) => {
   const zoomItemMap = new Map<AxisId, ZoomData>();
@@ -55,18 +60,6 @@ export const selectorChartZoomOptionsLookup = createSelector(
 export const selectorChartAxisZoomOptionsLookup = createSelector(
   [selectorChartZoomOptionsLookup, (_, axisId: AxisId) => axisId],
   (axisLookup, axisId) => axisLookup[axisId],
-);
-
-const selectorChartXFilter = createSelector(
-  [selectorChartZoomMap, selectorChartZoomOptionsLookup],
-  (zoomMap, zoomOptions) =>
-    zoomMap && zoomOptions && createAxisFilterMapper(zoomMap, zoomOptions, 'x'),
-);
-
-const selectorChartYFilter = createSelector(
-  [selectorChartZoomMap, selectorChartZoomOptionsLookup],
-  (zoomMap, zoomOptions) =>
-    zoomMap && zoomOptions && createAxisFilterMapper(zoomMap, zoomOptions, 'y'),
 );
 
 export const selectorDefaultXAxisTickNumber = createSelector(
@@ -147,40 +140,63 @@ export const selectorChartYScales = createSelector(
 
 export const selectorChartZoomAxisFilters = createSelector(
   [
-    selectorChartXFilter,
-    selectorChartYFilter,
+    selectorChartZoomMap,
+    selectorChartZoomOptionsLookup,
     selectorChartRawXAxis,
     selectorChartRawYAxis,
     selectorChartXScales,
     selectorChartYScales,
   ],
-  (xMapper, yMapper, xAxis, yAxis, xScales, yScales) => {
-    if (xMapper === undefined || yMapper === undefined) {
-      // Early return if there is no zoom.
+  (zoomMap, zoomOptions, xAxis, yAxis, xScales, yScales) => {
+    if (!zoomMap || !zoomOptions) {
       return undefined;
     }
 
-    const xFilters = xAxis?.reduce<ZoomAxisFilters>((acc, axis) => {
-      const filter = xMapper(axis.id, axis.data, xScales[axis.id].scale);
-      if (filter !== null) {
-        acc[axis.id] = filter;
-      }
-      return acc;
-    }, {});
+    let hasFilter = false;
+    const filters: Record<AxisId, ExtremumFilter> = {};
+    const axes = [...(xAxis ?? []), ...(yAxis ?? [])];
 
-    const yFilters = yAxis?.reduce<ZoomAxisFilters>((acc, axis) => {
-      const filter = yMapper(axis.id, axis.data, yScales[axis.id].scale);
-      if (filter !== null) {
-        acc[axis.id] = filter;
-      }
-      return acc;
-    }, {} as ZoomAxisFilters);
+    for (let i = 0; i < axes.length; i += 1) {
+      const axis = axes[i];
 
-    if (Object.keys(xFilters ?? {}).length === 0 && Object.keys(yFilters ?? {}).length === 0) {
+      if (!zoomOptions[axis.id] || zoomOptions[axis.id].filterMode !== 'discard') {
+        continue;
+      }
+
+      const zoom = zoomMap.get(axis.id);
+      if (zoom === undefined || (zoom.start <= 0 && zoom.end >= 100)) {
+        // No zoom, or zoom with all data visible
+        continue;
+      }
+
+      const axisDirection = i < (xAxis?.length ?? 0) ? 'x' : 'y';
+      const scale = axisDirection === 'x' ? xScales[axis.id].scale : yScales[axis.id].scale;
+
+      if (isOrdinalScale(scale)) {
+        filters[axis.id] = createDiscreteScaleGetAxisFilter(
+          axis.data,
+          zoom.start,
+          zoom.end,
+          axisDirection,
+        );
+      } else {
+        filters[axis.id] = createContinuousScaleGetAxisFilter(
+          scale.domain(),
+          zoom.start,
+          zoom.end,
+          axisDirection,
+          axis.data,
+        );
+      }
+
+      hasFilter = true;
+    }
+
+    if (!hasFilter) {
       return undefined;
     }
 
-    return createGetAxisFilters({ ...xFilters, ...yFilters });
+    return createGetAxisFilters(filters);
   },
 );
 
