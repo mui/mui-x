@@ -11,6 +11,7 @@ import { Input } from '@base-ui-components/react/input';
 import { useStore } from '@base-ui-components/utils/store';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { Select } from '@base-ui-components/react/select';
+import { getRecurringEditingScope } from '../../../../primitives/utils/recurrence-utils';
 import { DEFAULT_EVENT_COLOR } from '../../../../primitives/constants';
 import {
   EventPopoverContextValue,
@@ -30,8 +31,8 @@ import {
 } from '../../../../primitives/models';
 import { selectors } from '../../../../primitives/use-event-calendar';
 import { useEventCalendarStoreContext } from '../../../../primitives/use-event-calendar-store-context';
-import './EventPopover.css';
 import { EventPopoverContext, useEventPopoverContext } from './EventPopoverContext';
+import './EventPopover.css';
 
 export const EventPopover = React.forwardRef(function EventPopover(
   props: EventPopoverProps,
@@ -224,7 +225,8 @@ export const EventPopover = React.forwardRef(function EventPopover(
         eventId: occurrence.id,
         occurrenceStart: occurrence.start,
         changes,
-        scope: 'this-and-following',
+        // TODO: Issue #19766 - Let the user choose the scope via UI.
+        scope: getRecurringEditingScope(),
       });
     } else {
       store.updateEvent({ id: occurrence.id, ...metaChanges, start, end, rrule });
