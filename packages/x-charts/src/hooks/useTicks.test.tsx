@@ -4,7 +4,7 @@ import { getTicks } from './useTicks';
 const defaultOptions = {
   scale: scaleBand<number | string | Date>([1, 2, 3, 5], [0, 100]),
   tickNumber: 5,
-  isInside: () => true,
+  isInside: (value: number) => value >= 0 && value <= 100,
   continuousTickPlacement: false,
 };
 
@@ -75,20 +75,61 @@ describe('getTicks', () => {
       ]);
     });
 
-    it.only('should place tick at the start/middle/end according to the closest position of ticks value.', () => {
+    it('should place tick at the start/middle/end according to the closest position of ticks value.', () => {
       const ticks = getTicks({
         ...defaultOptions,
         scale: scaleBand<number | string | Date>(sparseNumberData, [0, 100]),
         tickNumber: 4,
-        tickInterval: [0, 10, 20, 30], // Force to have ticks outside bands.
+        tickInterval: [0, 10, 20, 25], // Force to have ticks outside bands.
         continuousTickPlacement: true,
       });
 
       expect(ticks).to.have.length(4); // Extra tick for the end
       expect(ticks.map((tick) => tick.value)).to.deep.equal([2, 10, 20, 24]);
-      expect(ticks.map((tick) => tick.formattedValue)).to.deep.equal(['0', '10', '20', '30']);
+      expect(ticks.map((tick) => tick.formattedValue)).to.deep.equal(['0', '10', '20', '25']);
 
       expect(ticks.map((tick) => Math.floor(tick.offset))).to.deep.equal([0, 36, 80, 100]);
     });
+
+    it('should place extra tick at the beginning/end when nice values are close.', () => {
+      const ticks = getTicks({
+        ...defaultOptions,
+        scale: scaleBand<number | string | Date>(
+          Array.from({ length: 49 }, (_, i) => i + 1),
+          [0, 100],
+        ),
+        tickNumber: 4,
+        continuousTickPlacement: true,
+      });
+
+      expect(ticks.map((tick) => tick.value)).to.deep.equal([1, 10, 20, 30, 40, 49]);
+      // 0 and 50 are out of range but close enough to be added.
+      expect(ticks.map((tick) => tick.formattedValue)).to.deep.equal([
+        '0',
+        '10',
+        '20',
+        '30',
+        '40',
+        '50',
+      ]);
+    });
+  });
+
+  it('should not place extra tick at the beginning/end when nice values are too far.', () => {
+    const ticks = getTicks({
+      ...defaultOptions,
+      scale: scaleBand<number | string | Date>(
+        Array.from({ length: 42 }, (_, i) => i + 4), // numbers in [4, 45]
+        [0, 100],
+      ),
+      tickNumber: 4,
+      continuousTickPlacement: true,
+    });
+
+    // 0 and 50 are not added cause too far from range [4, 45].
+    expect(ticks.map((tick) => tick.value)).to.deep.equal([10, 20, 30, 40]);
+    expect(ticks.map((tick) => tick.formattedValue)).to.deep.equal(['10', '20', '30', '40']);
+
+    expect(ticks.map((tick) => Math.floor(tick.offset))).to.deep.equal([15, 39, 63, 86]);
   });
 });

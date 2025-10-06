@@ -67,7 +67,7 @@ export type TickItemType = {
 
 interface GetTicksOptions
   extends Pick<TickParams, 'tickInterval' | 'tickPlacement' | 'tickLabelPlacement'>,
-  Required<Pick<TickParams, 'tickNumber'>> {
+    Required<Pick<TickParams, 'tickNumber'>> {
   scale: D3Scale;
   valueFormatter?: AxisConfig['valueFormatter'];
   isInside: (offset: number) => boolean;
@@ -91,22 +91,16 @@ export function getTicks(options: GetTicksOptions) {
     continuousTickPlacement = false,
   } = options;
 
-
-
-
   // ordinal scale with spaced ticks.
   if (isOrdinalScale(scale) && continuousTickPlacement) {
-
     const domain = scale.domain();
+    const range = scale.range();
 
     const continuousScale = getScale(
       typeof domain[0] === 'number' ? 'linear' : 'time',
       [domain[0], domain[domain.length - 1]],
-      scale.range(),
+      [range[0] + scale.bandwidth() / 2, range[1] - scale.bandwidth() / 2],
     );
-
-
-
 
     const ticks =
       typeof tickInterval === 'object'
@@ -115,11 +109,10 @@ export function getTicks(options: GetTicksOptions) {
 
     // If the ratio is not met we stop the computation and fallback on the default ordinal ticks computation.
     if (ticks.length * CONTINUOUS_TICKS_RATIO < domain.length) {
-
       const visibleTicks: TickItemType[] = [];
 
       let bandIndex = 0;
-      let lastAddedBandIndex = undefined;
+      let lastAddedBandIndex: number | undefined = undefined;
       for (let i = 0; i < ticks.length; i += 1) {
         while (domain[bandIndex] < ticks[i] && bandIndex < domain.length - 1) {
           bandIndex += 1;
@@ -127,23 +120,26 @@ export function getTicks(options: GetTicksOptions) {
         const tickValue = ticks[i];
         const bandValue = domain[bandIndex];
 
-        // We place tick at start, end or middle of the band depending on the closest position.       
+        // We place tick at start, end or middle of the band depending on the closest position.
         const correctOffset = continuousScale(tickValue);
-        const bandStart = scale(bandValue)! - (scale.step() - scale.bandwidth()) / 2
-        let offset = bandStart
+
+        const bandStart = scale(bandValue)! - (scale.step() - scale.bandwidth()) / 2;
+        let offset = bandStart;
         if (correctOffset > bandStart + 0.25 * scale.step()) {
-          offset = bandStart + 0.5 * scale.step()
+          offset = bandStart + 0.5 * scale.step();
         }
         if (correctOffset > bandStart + 0.75 * scale.step()) {
-          offset = bandStart + scale.step()
+          offset = bandStart + scale.step();
         }
 
-        if (isInside(correctOffset) || (isInside(correctOffset - 2 * scale.step()) || isInside(correctOffset + 2 * scale.step()))) {
-
+        if (
+          isInside(correctOffset) ||
+          isInside(correctOffset - 2 * scale.step()) ||
+          isInside(correctOffset + 2 * scale.step())
+        ) {
           const defaultTickLabel = continuousScale.tickFormat(tickNumber)(tickValue);
 
-          if (lastAddedBandIndex !== undefined && bandIndex === lastAddedBandIndex
-          ) {
+          if (lastAddedBandIndex !== undefined && bandIndex === lastAddedBandIndex) {
             visibleTicks[visibleTicks.length - 1] = {
               value: bandValue,
               formattedValue:
@@ -171,14 +167,13 @@ export function getTicks(options: GetTicksOptions) {
             offset,
             labelOffset: 0,
           });
-          lastAddedBandIndex = bandIndex
+          lastAddedBandIndex = bandIndex;
         }
       }
 
-      return visibleTicks
+      return visibleTicks;
     }
   }
-
 
   const tickPlacement = tickPlacementProp ?? 'extremities';
 
@@ -217,12 +212,12 @@ export function getTicks(options: GetTicksOptions) {
 
         ...(tickPlacement === 'extremities'
           ? [
-            {
-              formattedValue: undefined,
-              offset: scale.range()[1],
-              labelOffset: 0,
-            },
-          ]
+              {
+                formattedValue: undefined,
+                offset: scale.range()[1],
+                labelOffset: 0,
+              },
+            ]
           : []),
       ];
     }
@@ -249,7 +244,6 @@ export function getTicks(options: GetTicksOptions) {
       };
     });
   }
-
 
   const domain = scale.domain();
   // Skip axis rendering if no data is available
@@ -304,7 +298,9 @@ function getDefaultTicks(scale: D3ContinuousScale, tickNumber: number) {
   return scale.ticks(tickNumber);
 }
 
-export function useTicks(options: Omit<GetTicksOptions, 'isInside'> & { direction: 'x' | 'y' }): TickItemType[] {
+export function useTicks(
+  options: Omit<GetTicksOptions, 'isInside'> & { direction: 'x' | 'y' },
+): TickItemType[] {
   const {
     scale,
     tickNumber,
