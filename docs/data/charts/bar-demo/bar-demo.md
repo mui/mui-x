@@ -39,3 +39,7 @@ components: BarChart, BarElement, BarPlot
 ## Population pyramid
 
 {{"demo": "PopulationPyramidBarChart.js"}}
+
+## LinearGauge
+
+{{"demo": "LinearGauge.js"}}
