@@ -26,6 +26,8 @@ import { GridExportDisplayOptions, GridPrintExportMenuItem } from '../../../comp
 import { getTotalHeaderHeight } from '../columns/gridColumnsUtils';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../colDef/gridCheckboxSelectionColDef';
 
+const DEBUG_MODE = false;
+
 function raf() {
   return new Promise<void>((resolve) => {
     requestAnimationFrame(() => {
@@ -53,6 +55,10 @@ function buildPrintWindow(title?: string): HTMLIFrameElement {
   iframeEl.style.position = 'absolute';
   iframeEl.style.width = '0px';
   iframeEl.style.height = '0px';
+  if (DEBUG_MODE) {
+    iframeEl.style.width = '100%';
+    iframeEl.style.height = '10000px';
+  }
   iframeEl.title = title || document.title;
   return iframeEl;
 }
@@ -225,7 +231,7 @@ export const useGridPrintExport = (
       }
 
       // Trigger print
-      if (process.env.NODE_ENV !== 'test') {
+      if (process.env.NODE_ENV !== 'test' && !DEBUG_MODE) {
         // wait for remote stylesheets to load
         Promise.all(stylesheetLoadPromises).then(() => {
           printWindow.contentWindow!.print();
