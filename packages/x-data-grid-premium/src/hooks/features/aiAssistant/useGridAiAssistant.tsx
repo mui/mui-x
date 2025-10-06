@@ -10,6 +10,8 @@ import {
   useGridApiMethod,
   GRID_CHECKBOX_SELECTION_FIELD,
   GridPreferencePanelsValue,
+  gridColumnGroupsUnwrappedModelSelector,
+  gridVisibleRowsSelector,
 } from '@mui/x-data-grid-pro';
 import {
   getValueOptions,
@@ -31,8 +33,10 @@ import {
   gridAiAssistantActiveConversationSelector,
   gridAiAssistantActiveConversationIndexSelector,
 } from './gridAiAssistantSelectors';
+import { gridChartsIntegrationActiveChartIdSelector } from '../chartsIntegration/gridChartsIntegrationSelectors';
 
 const DEFAULT_SAMPLE_COUNT = 5;
+const MAX_CHART_DATA_POINTS = 1000;
 
 export const aiAssistantStateInitializer: GridStateInitializer<
   Pick<DataGridPremiumProcessedProps, 'initialState' | 'aiAssistantConversations' | 'aiAssistant'>
@@ -74,6 +78,8 @@ export const useGridAiAssistant = (
     | 'disableAggregation'
     | 'disableColumnSorting'
     | 'disablePivoting'
+    | 'chartsIntegration'
+    | 'experimentalFeatures'
   >,
 ) => {
   const {
@@ -85,7 +91,10 @@ export const useGridAiAssistant = (
     disableAggregation,
     disableColumnSorting,
     disablePivoting,
+    chartsIntegration,
+    experimentalFeatures,
   } = props;
+  const activeChartId = gridChartsIntegrationActiveChartIdSelector(apiRef);
   const columnsLookup = gridColumnLookupSelector(apiRef);
   const columns = Object.values(columnsLookup);
   const rows = Object.values(gridRowsLookupSelector(apiRef));
@@ -241,6 +250,43 @@ export const useGridAiAssistant = (
         );
       }
 
+      if (experimentalFeatures?.charts && chartsIntegration && activeChartId && result.chart) {
+        apiRef.current.updateChartDimensionsData(
+          activeChartId,
+          result.chart.dimensions.map((item) => ({ field: item })),
+        );
+
+        if (appliedPivoting) {
+          const unsubscribe = apiRef.current.subscribeEvent('rowsSet', () => {
+            const unwrappedGroupingModel = Object.keys(
+              gridColumnGroupsUnwrappedModelSelector(apiRef),
+            );
+            // wait until pivoting creates column grouping model
+            if (unwrappedGroupingModel.length === 0) {
+              return;
+            }
+
+            const visibleRowsCount = gridVisibleRowsSelector(apiRef).rows.length;
+            const maxColumns = Math.floor(MAX_CHART_DATA_POINTS / visibleRowsCount);
+
+            // we assume that the pivoting was adjusted to what needs to be shown in the chart
+            // so we can just pick up all the columns that were created by pivoting
+            // to avoid rendering issues, set the limit to MAX_CHART_DATA_POINTS data points (rows * columns)
+            apiRef.current.updateChartValuesData(
+              activeChartId,
+              unwrappedGroupingModel.slice(0, maxColumns).map((field) => ({ field })),
+            );
+
+            unsubscribe();
+          });
+        } else {
+          apiRef.current.updateChartValuesData(
+            activeChartId,
+            result.chart.values.map((item) => ({ field: item })),
+          );
+        }
+      }
+
       const visibleRowsData = getVisibleRows(apiRef);
       const rowSelectionModel: GridRowSelectionModel = { type: 'include', ids: new Set() };
       if (result.select !== -1) {
@@ -268,6 +314,9 @@ export const useGridAiAssistant = (
       disablePivoting,
       columnsLookup,
       isAiAssistantAvailable,
+      activeChartId,
+      chartsIntegration,
+      experimentalFeatures?.charts,
     ],
   );
 
