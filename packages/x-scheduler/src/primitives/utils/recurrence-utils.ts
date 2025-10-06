@@ -10,6 +10,13 @@ import {
 } from '../models';
 import { mergeDateAndTime, getDateKey } from './date-utils';
 import { diffIn } from '../use-adapter';
+import { RecurringUpdateEventScope } from './SchedulerStore/SchedulerStore.types';
+
+export function getRecurringEditingScope(): RecurringUpdateEventScope {
+  return (
+    (typeof window !== 'undefined' && (window as any).SCHEDULER_RECURRING_EDITING_SCOPE) || 'all'
+  );
+}
 
 /**
  * Build BYDAY<->number maps using a known ISO Monday (2025-01-06).

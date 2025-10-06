@@ -26,6 +26,7 @@ import {
   applyRecurringUpdateFollowing,
   applyRecurringUpdateAll,
   getByDayMaps,
+  getRecurringEditingScope,
 } from '../recurrence-utils';
 import { selectors } from './SchedulerStore.selectors';
 import { shouldUpdateOccurrencePlaceholder } from './SchedulerStore.utils';
@@ -327,7 +328,7 @@ export class SchedulerStore<
         scope = await chooseRecurringEventScope();
       } else {
         // TODO: Issue #19766 - Let the user choose the scope via UI.
-        scope = 'all';
+        scope = getRecurringEditingScope() ?? 'all';
       }
 
       return this.updateRecurringEvent({
