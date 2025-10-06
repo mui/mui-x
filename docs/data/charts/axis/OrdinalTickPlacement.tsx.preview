@@ -1,0 +1,16 @@
+<FormControlLabel
+  checked={isNumerical}
+  control={
+    <Checkbox onChange={(event) => setIsNumerical(event.target.checked)} />
+  }
+  label="is numerical"
+  labelPlacement="end"
+/>
+<BarChartPro
+  height={400}
+  series={series}
+  xAxis={[
+    { ...xAxis, scaleType: 'band', zoom: true, tickNumber: 4, isNumerical },
+  ]}
+  yAxis={[yAxis]}
+/>

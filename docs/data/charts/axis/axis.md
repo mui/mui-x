@@ -178,6 +178,19 @@ At the bottom, you can see one tick for the beginning and the middle of the day,
 
 {{"demo": "TickLabelPosition.js"}}
 
+### Ordinal tick management
+
+Ordinal scales (`'band'` and `'point'`) display one tick per item by default.
+If you set `isNumerical` to `true` in the axis config, this behavior gets modified.
+
+Ticks are computed as if the scale was a continuous one (`'linear'` or `'time'`) and placed on the closest value.
+
+The demo bellow shows the daily GOOGL stock exchange volume.
+Thanks to band scale, the missing day (week-end and bank holidays) are not visible.
+But ticks appear as a continuous scale.
+
+{{"demo": "OrdinalTickPlacement.js"}}
+
 ## Position
 
 You can customize axis positioning with the `position` property of the axis configuration.
