@@ -155,6 +155,9 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
           event.preventDefault();
           return {
             ...prevState,
+            ...(prevState.highlight && {
+              highlight: { ...prevState.highlight, lastUpdate: 'keyboard' },
+            }),
             ...(prevState.interaction && {
               interaction: { ...prevState.interaction, lastUpdate: 'keyboard' },
             }),

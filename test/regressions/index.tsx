@@ -2,10 +2,12 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider, Outlet, NavLink, useNavigate } from 'react-router';
 import { Globals } from '@react-spring/web';
-import { setupFakeClock, restoreFakeClock } from '../utils/setupFakeClock'; // eslint-disable-line
-import { generateTestLicenseKey, setupTestLicenseKey } from '../utils/testLicense'; // eslint-disable-line
+// eslint-disable-next-line import/no-relative-packages
+import '../utils/setupFakeClock';
+// eslint-disable-next-line import/no-relative-packages
+import { generateTestLicenseKey, setupTestLicenseKey } from '../utils/testLicense';
 import TestViewer from './TestViewer';
-import type { Test } from './testsBySuite';
+import { type Test, testsBySuite } from './testsBySuite';
 
 setupTestLicenseKey(generateTestLicenseKey(new Date('2099-01-01')));
 
@@ -29,17 +31,9 @@ window.muiFixture = {
   },
 };
 
-let testsBySuite: typeof import('./testsBySuite').testsBySuite;
-
 main();
 
 async function main() {
-  setupFakeClock();
-
-  testsBySuite = (await import('./testsBySuite')).testsBySuite;
-
-  restoreFakeClock();
-
   ReactDOM.createRoot(document.getElementById('react-root')!).render(<App />);
 }
 

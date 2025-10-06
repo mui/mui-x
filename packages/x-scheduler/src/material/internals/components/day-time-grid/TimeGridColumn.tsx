@@ -1,24 +1,23 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store';
-import { CalendarEventOccurrenceWithTimePosition } from '../../../../primitives';
-import { TimeGrid } from '../../../../primitives/time-grid';
-import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
-import { isWeekend } from '../../../../primitives/utils/date-utils';
-import { useEventCalendarStoreContext } from '../../../../primitives/utils/useEventCalendarStoreContext';
-import { selectors } from '../../../../primitives/use-event-calendar';
-import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
-import { useOnEveryMinuteStart } from '../../../../primitives/utils/useOnEveryMinuteStart';
-import { useEventOccurrencesWithDayGridPosition } from '../../../../primitives/use-event-occurrences-with-day-grid-position';
-import { useEventOccurrencesWithTimelinePosition } from '../../../../primitives/use-event-occurrences-with-timeline-position';
-import { EventPopoverTrigger } from '../event-popover';
-import { useGetDateFromPositionInColumn } from '../../../../primitives/time-grid/column/useGetDateFromPositionInColumn';
-import { SchedulerValidDate } from '../../../../primitives/models/date';
-import { useEventPopoverContext } from '../event-popover/EventPopoverContext';
+import {
+  CalendarEventOccurrenceWithTimePosition,
+  SchedulerValidDate,
+} from '../../../../primitives/models';
 import {
   EVENT_CREATION_DEFAULT_LENGTH_MINUTE,
   EVENT_CREATION_PRECISION_MINUTE,
-} from '../../../../primitives/utils/event-utils';
+} from '../../../../primitives/constants';
+import { CalendarGrid } from '../../../../primitives/calendar-grid';
+import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
+import { useEventCalendarStoreContext } from '../../../../primitives/use-event-calendar-store-context';
+import { selectors } from '../../../../primitives/use-event-calendar';
+import { useAdapter, isWeekend } from '../../../../primitives/use-adapter';
+import { useEventOccurrencesWithDayGridPosition } from '../../../../primitives/use-event-occurrences-with-day-grid-position';
+import { useEventOccurrencesWithTimelinePosition } from '../../../../primitives/use-event-occurrences-with-timeline-position';
+import { EventPopoverTrigger } from '../event-popover';
+import { useEventPopoverContext } from '../event-popover/EventPopoverContext';
 import './DayTimeGrid.css';
 
 export function TimeGridColumn(props: TimeGridColumnProps) {
@@ -29,11 +28,11 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
   const end = React.useMemo(() => adapter.endOfDay(day.value), [adapter, day]);
   const { occurrences, maxIndex } = useEventOccurrencesWithTimelinePosition({
     occurrences: day.withoutPosition,
-    maxColumnSpan: Infinity,
+    maxSpan: Infinity,
   });
 
   return (
-    <TimeGrid.Column
+    <CalendarGrid.TimeColumn
       start={start}
       end={end}
       className="DayTimeGridColumn"
@@ -50,7 +49,7 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
         occurrences={occurrences}
         maxIndex={maxIndex}
       />
-    </TimeGrid.Column>
+    </CalendarGrid.TimeColumn>
   );
 }
 
@@ -73,10 +72,10 @@ function ColumnInteractiveLayer({
 }) {
   const adapter = useAdapter();
 
-  const placeholder = TimeGrid.usePlaceholderInRange({ start, end, occurrences, maxIndex });
+  const placeholder = CalendarGrid.usePlaceholderInRange({ start, end, occurrences, maxIndex });
   const store = useEventCalendarStoreContext();
   const columnRef = React.useRef<HTMLDivElement | null>(null);
-  const getDateFromPosition = useGetDateFromPositionInColumn({
+  const getDateFromPosition = CalendarGrid.useGetDateFromPositionInColumn({
     elementRef: columnRef,
     snapMinutes: EVENT_CREATION_PRECISION_MINUTE,
   });
@@ -138,9 +137,9 @@ function ColumnInteractiveLayer({
         />
       )}
       {showCurrentTimeIndicator ? (
-        <TimeGrid.CurrentTimeIndicator className="DayTimeGridCurrentTimeIndicator">
+        <CalendarGrid.CurrentTimeIndicator className="DayTimeGridCurrentTimeIndicator">
           {index === 0 && <TimeGridCurrentTimeLabel />}
-        </TimeGrid.CurrentTimeIndicator>
+        </CalendarGrid.CurrentTimeIndicator>
       ) : null}
     </div>
   );
@@ -149,11 +148,9 @@ function ColumnInteractiveLayer({
 function TimeGridCurrentTimeLabel() {
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
+  const now = useStore(store, selectors.nowUpdatedEveryMinute);
   const ampm = useStore(store, selectors.ampm);
   const timeFormat = ampm ? 'hoursMinutes12h' : 'hoursMinutes24h';
-
-  const [now, setNow] = React.useState(() => adapter.date());
-  useOnEveryMinuteStart(() => setNow(adapter.date()));
 
   const currentTimeLabel = React.useMemo(
     () => adapter.format(now, timeFormat),

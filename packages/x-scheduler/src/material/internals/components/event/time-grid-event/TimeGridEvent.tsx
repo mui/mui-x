@@ -4,16 +4,14 @@ import clsx from 'clsx';
 import { useId } from '@base-ui-components/utils/useId';
 import { useStore } from '@base-ui-components/utils/store';
 import { Repeat } from 'lucide-react';
-import { TimeGridEventProps } from './TimeGridEvent.types';
-import { getAdapter } from '../../../../../primitives/utils/adapter/getAdapter';
-import { TimeGrid } from '../../../../../primitives/time-grid';
-import { getColorClassName } from '../../../utils/color-utils';
+import { useAdapter } from '../../../../../primitives/use-adapter';
 import { selectors } from '../../../../../primitives/use-event-calendar';
-import { useEventCalendarStoreContext } from '../../../../../primitives/utils/useEventCalendarStoreContext';
+import { useEventCalendarStoreContext } from '../../../../../primitives/use-event-calendar-store-context';
+import { TimeGridEventProps } from './TimeGridEvent.types';
+import { CalendarGrid } from '../../../../../primitives/calendar-grid';
+import { getColorClassName } from '../../../utils/color-utils';
 import './TimeGridEvent.css';
 import '../index.css';
-
-const adapter = getAdapter();
 
 export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   props: TimeGridEventProps,
@@ -23,7 +21,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
 
   const id = useId(idProp);
   const store = useEventCalendarStoreContext();
-
+  const adapter = useAdapter();
   const isRecurring = Boolean(occurrence.rrule);
   const isDraggable = useStore(store, selectors.isEventDraggable);
   const isResizable = useStore(store, selectors.isEventResizable, occurrence.id, 'time-grid');
@@ -79,6 +77,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       </React.Fragment>
     );
   }, [
+    adapter,
     isBetween30and60Minutes,
     isLessThan30Minutes,
     titleLineCountRegularVariant,
@@ -118,21 +117,21 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
 
   if (variant === 'placeholder') {
     return (
-      <TimeGrid.EventPlaceholder aria-hidden={true} {...sharedProps}>
+      <CalendarGrid.TimeEventPlaceholder aria-hidden={true} {...sharedProps}>
         {content}
-      </TimeGrid.EventPlaceholder>
+      </CalendarGrid.TimeEventPlaceholder>
     );
   }
 
   return (
-    <TimeGrid.Event isDraggable={isDraggable} {...sharedProps}>
+    <CalendarGrid.TimeEvent isDraggable={isDraggable} {...sharedProps}>
       {isResizable && (
-        <TimeGrid.EventResizeHandler side="start" className="TimeGridEventResizeHandler" />
+        <CalendarGrid.TimeEventResizeHandler side="start" className="TimeGridEventResizeHandler" />
       )}
       {content}
       {isResizable && (
-        <TimeGrid.EventResizeHandler side="end" className="TimeGridEventResizeHandler" />
+        <CalendarGrid.TimeEventResizeHandler side="end" className="TimeGridEventResizeHandler" />
       )}
-    </TimeGrid.Event>
+    </CalendarGrid.TimeEvent>
   );
 });

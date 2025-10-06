@@ -1,26 +1,27 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import { useStore } from '@base-ui-components/utils/store';
 import { DateNavigatorProps } from './DateNavigator.types';
-import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
+import { useAdapter } from '../../../../primitives/use-adapter';
 import { useTranslations } from '../../utils/TranslationsContext';
-import { useEventCalendarStoreContext } from '../../../../primitives/utils/useEventCalendarStoreContext';
+import { useEventCalendarStoreContext } from '../../../../primitives/use-event-calendar-store-context';
 import { selectors } from '../../../../primitives/use-event-calendar';
 import './DateNavigator.css';
-
-const adapter = getAdapter();
 
 export const DateNavigator = React.forwardRef(function DateNavigator(
   props: DateNavigatorProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const { className, ...other } = props;
+
+  const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
   const translations = useTranslations();
   const view = useStore(store, selectors.view);
   const visibleDate = useStore(store, selectors.visibleDate);
+  const isSidePanelOpen = useStore(store, selectors.preferences).isSidePanelOpen;
 
   return (
     <header
@@ -29,6 +30,18 @@ export const DateNavigator = React.forwardRef(function DateNavigator(
       className={clsx('DateNavigatorContainer', className)}
       {...other}
     >
+      <button
+        type="button"
+        aria-label={isSidePanelOpen ? translations.closeSidePanel : translations.openSidePanel}
+        className={clsx('OutlinedNeutralButton', 'Button', 'IconButton')}
+        onClick={(event) => store.setPreferences({ isSidePanelOpen: !isSidePanelOpen }, event)}
+      >
+        {isSidePanelOpen ? (
+          <PanelLeftClose size={20} strokeWidth={1.5} className="Icon" />
+        ) : (
+          <PanelLeftOpen size={20} strokeWidth={1.5} className="Icon" />
+        )}
+      </button>
       <p className="DateNavigatorLabel" aria-live="polite">
         {adapter.format(visibleDate, 'month')} {adapter.format(visibleDate, 'year')}
       </p>

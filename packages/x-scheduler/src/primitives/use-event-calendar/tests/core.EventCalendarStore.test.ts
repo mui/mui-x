@@ -1,4 +1,5 @@
-import { getAdapter } from '../../utils/adapter/getAdapter';
+import { adapter } from 'test/utils/scheduler';
+import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import {
   DEFAULT_PREFERENCES,
   DEFAULT_PREFERENCES_MENU_CONFIG,
@@ -7,13 +8,14 @@ import {
   EventCalendarStore,
 } from '../EventCalendarStore';
 import { CalendarView } from '../../models';
-import { DEFAULT_RESOURCES } from '../../utils/SchedulerStore';
+import { DEFAULT_IS_MULTI_DAY_EVENT, DEFAULT_RESOURCES } from '../../utils/SchedulerStore';
 
-const adapter = getAdapter();
 const DEFAULT_PARAMS = { events: [] };
 
 describe('Core - EventCalendarStore', () => {
   describe('create', () => {
+    createRenderer({ clockConfig: new Date(2012, 4, 3, 14, 30, 15, 743) });
+
     it('should initialize default state', () => {
       const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
 
@@ -24,9 +26,10 @@ describe('Core - EventCalendarStore', () => {
         resources: DEFAULT_RESOURCES,
         events: [],
         visibleResources: new Map(),
+        nowUpdatedEveryMinute: adapter.date(),
+        isMultiDayEvent: DEFAULT_IS_MULTI_DAY_EVENT,
         areEventsDraggable: false,
         areEventsResizable: false,
-        ampm: true,
         showCurrentTimeIndicator: true,
         eventColor: 'jade',
         preferences: DEFAULT_PREFERENCES,
