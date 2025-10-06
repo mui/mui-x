@@ -328,7 +328,7 @@ export class SchedulerStore<
         scope = await chooseRecurringEventScope();
       } else {
         // TODO: Issue #19766 - Let the user choose the scope via UI.
-        scope = getRecurringEditingScope() ?? 'all';
+        scope = getRecurringEditingScope();
       }
 
       return this.updateRecurringEvent({

@@ -226,7 +226,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
         occurrenceStart: occurrence.start,
         changes,
         // TODO: Issue #19766 - Let the user choose the scope via UI.
-        scope: getRecurringEditingScope() ?? 'all',
+        scope: getRecurringEditingScope(),
       });
     } else {
       store.updateEvent({ id: occurrence.id, ...metaChanges, start, end, rrule });
