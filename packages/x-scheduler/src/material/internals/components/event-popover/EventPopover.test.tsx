@@ -16,7 +16,7 @@ import { EventCalendarStoreContext } from '@mui/x-scheduler/primitives/use-event
 import { EventCalendarProvider } from '@mui/x-scheduler/primitives/event-calendar-provider';
 import { EventPopover } from './EventPopover';
 import { getColorClassName } from '../../utils/color-utils';
-import '@mui/x-scheduler/styles.css';
+import '../../../styles.css';
 
 const occurrence: CalendarEventOccurrence = {
   id: '1',
