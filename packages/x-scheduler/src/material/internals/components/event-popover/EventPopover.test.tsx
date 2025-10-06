@@ -3,7 +3,7 @@ import { spy } from 'sinon';
 import {
   adapter,
   createSchedulerRenderer,
-  PlaceholderSeeder,
+  SchedulerStoreRunner,
   StateWatcher,
   StoreSpy,
 } from 'test/utils/scheduler';
@@ -253,16 +253,19 @@ describe('<EventPopover />', () => {
 
       const { user } = render(
         <StandaloneView events={[]} resources={resources}>
-          <PlaceholderSeeder
-            placeholder={{
-              eventId: null,
-              occurrenceKey: null,
-              surfaceType: 'time-grid',
-              start,
-              end,
-              originalStart: null,
-              lockSurfaceType: false,
-            }}
+          <SchedulerStoreRunner
+            context={EventCalendarStoreContext}
+            onMount={(store) =>
+              store?.setOccurrencePlaceholder({
+                eventId: null,
+                occurrenceKey: null,
+                surfaceType: 'time-grid',
+                start,
+                end,
+                originalStart: null,
+                lockSurfaceType: false,
+              })
+            }
           />
           <Popover.Root open>
             <EventPopover {...defaultProps} occurrence={creationOccurrence} />
@@ -299,16 +302,19 @@ describe('<EventPopover />', () => {
 
       const { user } = render(
         <StandaloneView events={[]} resources={resources}>
-          <PlaceholderSeeder
-            placeholder={{
-              eventId: null,
-              occurrenceKey: null,
-              surfaceType: 'day-grid',
-              start,
-              end,
-              originalStart: null,
-              lockSurfaceType: false,
-            }}
+          <SchedulerStoreRunner
+            context={EventCalendarStoreContext}
+            onMount={(store) =>
+              store?.setOccurrencePlaceholder({
+                eventId: null,
+                occurrenceKey: null,
+                surfaceType: 'day-grid',
+                start,
+                end,
+                originalStart: null,
+                lockSurfaceType: false,
+              })
+            }
           />
           <Popover.Root open>
             <EventPopover {...defaultProps} occurrence={creationOccurrence} />
@@ -345,16 +351,19 @@ describe('<EventPopover />', () => {
 
       const { user } = render(
         <StandaloneView events={[]} resources={resources}>
-          <PlaceholderSeeder
-            placeholder={{
-              eventId: null,
-              occurrenceKey: null,
-              surfaceType: 'time-grid',
-              start,
-              end,
-              originalStart: null,
-              lockSurfaceType: true,
-            }}
+          <SchedulerStoreRunner
+            context={EventCalendarStoreContext}
+            onMount={(store) =>
+              store?.setOccurrencePlaceholder({
+                eventId: null,
+                occurrenceKey: null,
+                surfaceType: 'time-grid',
+                start,
+                end,
+                originalStart: null,
+                lockSurfaceType: true,
+              })
+            }
           />
           <Popover.Root open>
             <EventPopover {...defaultProps} occurrence={creationOccurrence as any} />
@@ -401,7 +410,10 @@ describe('<EventPopover />', () => {
 
       const { user } = render(
         <StandaloneView events={[]} resources={resources} onEventsChange={onEventsChange}>
-          <PlaceholderSeeder placeholder={placeholder} />
+          <SchedulerStoreRunner
+            context={EventCalendarStoreContext}
+            onMount={(store) => store?.setOccurrencePlaceholder(placeholder)}
+          />
           <StoreSpy
             Context={EventCalendarStoreContext}
             method="createEvent"
