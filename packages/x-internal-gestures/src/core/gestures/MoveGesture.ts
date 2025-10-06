@@ -204,6 +204,17 @@ export class MoveGesture<GestureName extends string> extends PointerGesture<Gest
     pointers: Map<number, PointerData>,
     event: PointerEvent,
   ): void => {
+    const targetElement = this.getTargetElement(event);
+    const pointersArray = Array.from(pointers.values());
+
+    if (event.type === 'forceCancel') {
+      if (this.isActive && targetElement) {
+        this.emitMoveEvent(targetElement, 'end', pointersArray, event);
+      }
+      this.resetState();
+      return;
+    }
+
     if (
       event.type !== 'pointermove' ||
       (event.pointerType !== 'mouse' && event.pointerType !== 'pen')
@@ -218,10 +229,7 @@ export class MoveGesture<GestureName extends string> extends PointerGesture<Gest
       event.stopPropagation();
     }
 
-    const pointersArray = Array.from(pointers.values());
-
-    // Find which element (if any) is being targeted
-    const targetElement = this.getTargetElement(event);
+    // Move event needs a target element, else we should not proceed
     if (!targetElement) {
       return;
     }
@@ -280,6 +288,7 @@ export class MoveGesture<GestureName extends string> extends PointerGesture<Gest
       timeStamp: event.timeStamp,
       activeGestures,
       customData: this.customData,
+      cancel: () => this.cancelGesture(pointers),
     };
 
     // Event names to trigger

@@ -141,20 +141,17 @@ export class RotateGesture<GestureName extends string> extends PointerGesture<Ge
     event: PointerEvent,
   ): void => {
     const pointersArray = Array.from(pointers.values());
-
-    // Find which element (if any) is being targeted
     const targetElement = this.getTargetElement(event);
-    if (!targetElement) {
+
+    if (
+      event.type === 'forceCancel' ||
+      (targetElement && this.shouldPreventGesture(targetElement, event.pointerType))
+    ) {
+      this.cancel(targetElement, pointersArray, event);
       return;
     }
 
-    // Check if this gesture should be prevented by active gestures
-    if (this.shouldPreventGesture(targetElement, event.pointerType)) {
-      if (this.isActive) {
-        // If the gesture was active but now should be prevented, end it gracefully
-        this.emitRotateEvent(targetElement, 'cancel', pointersArray, event);
-        this.resetState();
-      }
+    if (!targetElement) {
       return;
     }
 
@@ -163,11 +160,7 @@ export class RotateGesture<GestureName extends string> extends PointerGesture<Ge
 
     // Check if we have enough pointers for a rotation (at least 2)
     if (!this.isWithinPointerCount(relevantPointers, event.pointerType)) {
-      if (this.isActive) {
-        // End the gesture if it was active
-        this.emitRotateEvent(targetElement, 'end', relevantPointers, event);
-        this.resetState();
-      }
+      this.cancel(targetElement, pointersArray, event);
       return;
     }
 
@@ -236,7 +229,6 @@ export class RotateGesture<GestureName extends string> extends PointerGesture<Ge
 
       case 'pointerup':
       case 'pointercancel':
-      case 'forceCancel':
         if (this.isActive) {
           const remainingPointers = relevantPointers.filter(
             (p) => p.type !== 'pointerup' && p.type !== 'pointercancel',
@@ -298,6 +290,7 @@ export class RotateGesture<GestureName extends string> extends PointerGesture<Ge
       velocity: this.state.velocity,
       activeGestures,
       customData: this.customData,
+      cancel: () => this.cancelGesture(pointers),
     };
 
     // Handle default event behavior
@@ -321,5 +314,21 @@ export class RotateGesture<GestureName extends string> extends PointerGesture<Ge
     });
 
     element.dispatchEvent(domEvent);
+  }
+
+  /**
+   * Cancel the current gesture
+   */
+  private cancel(
+    element: TargetElement | null,
+    pointers: PointerData[],
+    event: PointerEvent,
+  ): void {
+    if (this.isActive) {
+      const el = element ?? this.element;
+      this.emitRotateEvent(el, 'cancel', pointers, event);
+      this.emitRotateEvent(el, 'end', pointers, event);
+    }
+    this.resetState();
   }
 }
