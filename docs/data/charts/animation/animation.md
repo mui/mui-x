@@ -79,6 +79,10 @@ The demo below shows how to integrate [React Spring](https://www.react-spring.de
 
 ### Motion
 
-The following demo uses the [Motion library](https://motion.dev/docs/react) for a fade-in effect on the points and lines in the chart:
+The following demo uses the [Motion library](https://motion.dev/docs/react) to show fade-in, progressive effect on the points and lines in the chart:
 
 {{"demo": "MotionAnimationCustomization.js"}}
+
+The following demo shows the delay effect on the bar chart:
+
+{{"demo": "MotionAnimationBarChart.js"}}
