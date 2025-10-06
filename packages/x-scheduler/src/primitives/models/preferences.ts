@@ -17,6 +17,11 @@ export interface EventCalendarPreferences extends SchedulerPreferences {
    * @default false
    */
   showWeekNumber: boolean;
+  /**
+   * Whether the side panel is open.
+   * @default true
+   */
+  isSidePanelOpen: boolean;
 }
 
 export interface TimelinePreferences extends SchedulerPreferences {}

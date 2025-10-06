@@ -3,5 +3,5 @@
   resources={resources}
   defaultVisibleDate={defaultVisibleDate}
   onEventsChange={setEvents}
-  preferences={{ showWeekends: false }}
+  preferences={{ showWeekends: false, isSidePanelOpen: false }}
 />
