@@ -56,6 +56,12 @@ describe('Pinch Gesture', () => {
         `pinchEnd: scale: ${detail.scale.toFixed(2)} | distance: ${Math.floor(detail.distance)} | direction: ${detail.direction}`,
       );
     });
+    gestureTarget.addEventListener('pinchCancel', (event) => {
+      const detail = event.detail;
+      events.push(
+        `pinchCancel: scale: ${detail.scale.toFixed(2)} | distance: ${Math.floor(detail.distance)} | direction: ${detail.direction}`,
+      );
+    });
   });
 
   afterEach(() => {
@@ -145,5 +151,25 @@ describe('Pinch Gesture', () => {
       maxPointers: 3,
       preventIf: ['rotate', 'pan'],
     });
+  });
+
+  it('should emit pinchCancel and pinchEnd when cancel is called', async () => {
+    target.addEventListener('pinch', ((event: CustomEvent) => {
+      event.detail.cancel();
+    }) as EventListener);
+
+    await touchGesture.pinch({
+      target,
+      angle: 0,
+      distance: 50,
+      steps: 1,
+    });
+
+    expect(events).toStrictEqual([
+      'pinchStart: scale: 1.50 | distance: 75 | direction: 1',
+      'pinch: scale: 1.50 | distance: 75 | direction: 1',
+      'pinchCancel: scale: 1.50 | distance: 75 | direction: 1',
+      'pinchEnd: scale: 1.50 | distance: 75 | direction: 1',
+    ]);
   });
 });

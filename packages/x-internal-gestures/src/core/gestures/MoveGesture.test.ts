@@ -200,4 +200,43 @@ describe('Move Gesture', () => {
       preventIf: ['pan', 'pinch'],
     });
   });
+
+  it('should cancel when calling the cancel function in event.details', async () => {
+    let counter = 0;
+    target.addEventListener('move', ((event: CustomEvent) => {
+      counter += 1;
+      if (counter >= 2) {
+        event.detail.cancel();
+      }
+    }) as EventListener);
+
+    const gesture = mouseGesture.setup();
+
+    await gesture.move({
+      target,
+      steps: 2,
+      distance: 50,
+    });
+
+    expect(events).toStrictEqual([
+      'moveStart: 1 | x: 125 | y: 100',
+      'move: 1 | x: 125 | y: 100',
+      'move: 1 | x: 150 | y: 100',
+      'moveEnd: 0 | x: 150 | y: 100',
+    ]);
+
+    events = [];
+
+    await gesture.move({
+      target,
+      steps: 1,
+      distance: 50,
+    });
+
+    expect(events).toStrictEqual([
+      'moveStart: 1 | x: 200 | y: 100',
+      'move: 1 | x: 200 | y: 100',
+      'moveEnd: 0 | x: 200 | y: 100',
+    ]);
+  });
 });

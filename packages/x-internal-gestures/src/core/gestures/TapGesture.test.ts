@@ -112,4 +112,19 @@ describe('Tap Gesture', () => {
       taps: 2,
     });
   });
+
+  it('should emit tapCancel when cancel is called', async () => {
+    target.addEventListener('tap', ((event: CustomEvent) => {
+      event.detail.cancel();
+    }) as EventListener);
+    target.addEventListener('tapCancel', () => {
+      events.push('tapCancel');
+    });
+
+    await touchGesture.tap({
+      target,
+    });
+
+    expect(events).toStrictEqual(['tap: x: 50 | y: 50 | tapCount: 1', 'tapCancel']);
+  });
 });

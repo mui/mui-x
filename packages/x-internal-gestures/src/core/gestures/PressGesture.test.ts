@@ -145,4 +145,22 @@ describe('Press Gesture', () => {
       maxDistance: 15,
     });
   });
+
+  it('should emit pressCancel and pressEnd when cancel is called', async () => {
+    target.addEventListener('press', ((event: CustomEvent) => {
+      event.detail.cancel();
+    }) as EventListener);
+
+    await touchGesture.press({
+      target,
+      duration: 300,
+    });
+
+    expect(events).toStrictEqual([
+      'pressStart: x: 50 | y: 50 | duration: 0',
+      'press: x: 50 | y: 50 | duration: 0',
+      'pressCancel: x: 50 | y: 50 | duration: 201',
+      'pressEnd: x: 50 | y: 50 | duration: 201',
+    ]);
+  });
 });

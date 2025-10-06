@@ -208,8 +208,8 @@ export class MoveGesture<GestureName extends string> extends PointerGesture<Gest
     const pointersArray = Array.from(pointers.values());
 
     if (event.type === 'forceCancel') {
-      if (this.isActive && targetElement) {
-        this.emitMoveEvent(targetElement, 'end', pointersArray, event);
+      if (this.isActive) {
+        this.emitMoveEvent(targetElement ?? this.element, 'end', pointersArray, event);
       }
       this.resetState();
       return;
