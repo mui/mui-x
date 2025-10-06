@@ -13,16 +13,16 @@ const lineAnimationDuration = 1.5;
 
 export default function MotionAnimationCustomization() {
   const [key, animate] = React.useReducer((v) => v + 1, 0);
-  const [animationType, setAnimationType] = React.useState('progressive');
+  const [animationStyle, setAnimationStyle] = React.useState('progressive');
 
   const handleChange = (event) => {
-    setAnimationType(event.target.value);
+    setAnimationStyle(event.target.value);
   };
 
   return (
     <Stack alignItems="center">
       <LineChart
-        key={`${key}-${animationType}`}
+        key={`${key}-${animationStyle}`}
         xAxis={[{ data: xAxisData, scaleType: 'point' }]}
         series={[
           {
@@ -42,22 +42,22 @@ export default function MotionAnimationCustomization() {
         }}
         slotProps={{
           line: {
-            animationType,
+            animationStyle,
           },
           mark: {
             totalPoints: xAxisData.length,
-            animationType,
+            animationStyle,
           },
         }}
       />
       <Stack direction="row" spacing={2} alignItems="center">
         <FormControl sx={{ minWidth: 150 }}>
-          <InputLabel id="animation-type-label">Animation Type</InputLabel>
+          <InputLabel id="animation-style-label">Animation Style</InputLabel>
           <Select
-            labelId="animation-type-label"
-            id="animation-type-select"
-            value={animationType}
-            label="Animation Type"
+            labelId="animation-style-label"
+            id="animation-style-select"
+            value={animationStyle}
+            label="Animation Style"
             onChange={handleChange}
           >
             <MenuItem value="progressive">Progressive</MenuItem>
@@ -70,8 +70,8 @@ export default function MotionAnimationCustomization() {
   );
 }
 
-function AnimatedLine({ d, ownerState, skipAnimation, animationType }) {
-  if (animationType === 'fadeIn') {
+function AnimatedLine({ d, ownerState, skipAnimation, animationStyle }) {
+  if (animationStyle === 'fadeIn') {
     return (
       <motion.path
         d={d}
@@ -107,15 +107,15 @@ function AnimatedMark({
   skipAnimation,
   dataIndex,
   totalPoints,
-  animationType,
+  animationStyle,
 }) {
   const delay =
-    animationType === 'progressive'
+    animationStyle === 'progressive'
       ? ((dataIndex ?? 0) / (totalPoints - 1)) * lineAnimationDuration
       : 0;
 
   const transition =
-    animationType === 'progressive'
+    animationStyle === 'progressive'
       ? { duration: 0.2, delay, ease: 'backOut' }
       : { duration: 0.5, ease: 'easeOut', delay: lineAnimationDuration * 0.2 };
 
