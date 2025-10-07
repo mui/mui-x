@@ -60,21 +60,17 @@ describe('getTicks', () => {
       });
 
       expect(ticks.map((tick) => tick.value)).to.deep.equal([
-        new Date(2025, 9, 1, 0, 0, 0, 0),
         new Date(2025, 9, 6, 0, 0, 0, 0),
         new Date(2025, 9, 13, 0, 0, 0, 0),
         new Date(2025, 9, 20, 0, 0, 0, 0),
         new Date(2025, 9, 27, 0, 0, 0, 0),
-        new Date(2025, 9, 30, 0, 0, 0, 0),
       ]);
       // Band move them to monday because sunday does not exist.
       expect(ticks.map((tick) => tick.formattedValue)).to.deep.equal([
-        'Sep 28',
         'Oct 05',
         'Oct 12',
         'Oct 19',
         'Oct 26',
-        'Nov 02',
       ]);
     });
 
@@ -91,7 +87,7 @@ describe('getTicks', () => {
       expect(ticks.map((tick) => tick.value)).to.deep.equal([2, 10, 20, 24]);
       expect(ticks.map((tick) => tick.formattedValue)).to.deep.equal(['0', '10', '20', '25']);
 
-      expect(ticks.map((tick) => Math.floor(tick.offset))).to.deep.equal([0, 36, 80, 100]);
+      expect(ticks.map((tick) => Math.floor(tick.offset))).to.deep.equal([0, 36, 81, 100]);
     });
 
     it('should place extra tick at the beginning/end when nice values are close.', () => {
@@ -133,6 +129,6 @@ describe('getTicks', () => {
     expect(ticks.map((tick) => tick.value)).to.deep.equal([10, 20, 30, 40]);
     expect(ticks.map((tick) => tick.formattedValue)).to.deep.equal(['10', '20', '30', '40']);
 
-    expect(ticks.map((tick) => Math.floor(tick.offset))).to.deep.equal([15, 39, 63, 86]);
+    expect(ticks.map((tick) => Math.floor(tick.offset))).to.deep.equal([15, 39, 63, 87]);
   });
 });

@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { NumberValue } from '@mui/x-charts-vendor/d3-scale';
 import { useChartContext } from '../context/ChartProvider';
 import { AxisConfig, D3ContinuousScale, D3Scale } from '../models/axis';
 import { isBandScale, isOrdinalScale } from '../internals/scaleGuards';
@@ -114,29 +115,50 @@ export function getTicks(options: GetTicksOptions) {
       let bandIndex = 0;
       let lastAddedBandIndex: number | undefined = undefined;
       for (let i = 0; i < ticks.length; i += 1) {
-        while (domain[bandIndex] < ticks[i] && bandIndex < domain.length - 1) {
+        while (domain[bandIndex].valueOf() < ticks[i] && bandIndex < domain.length - 1) {
           bandIndex += 1;
         }
         const tickValue = ticks[i];
-        const bandValue = domain[bandIndex];
+        const bandValue = domain[bandIndex] as NumberValue;
 
-        // We place tick at start, end or middle of the band depending on the closest position.
-        const correctOffset = continuousScale(tickValue);
+        // Compute the average band width based on the closest values.
+        let bandNumber = 0;
+        let minValue: NumberValue = bandValue;
+        let maxValue: NumberValue = bandValue;
+        if (bandIndex > 0) {
+          const prevValue = domain[bandIndex - 1];
+          if (prevValue !== null && typeof prevValue !== 'string') {
+            minValue = prevValue;
+            bandNumber += 1;
+          }
+        }
+        if (bandIndex < domain.length - 1) {
+          const nextValue = domain[bandIndex + 1];
+          if (nextValue !== null && typeof nextValue !== 'string') {
+            maxValue = nextValue;
+            bandNumber += 1;
+          }
+        }
+        const avgBandWidth = (maxValue.valueOf() - minValue.valueOf()) / bandNumber;
 
-        const bandStart = scale(bandValue)! - (scale.step() - scale.bandwidth()) / 2;
+        // If the tick is too far from the band value we skip it.
+        if (Math.abs(tickValue.valueOf() - bandValue.valueOf()) > 2 * avgBandWidth) {
+          continue;
+        }
+
+        // Deduce from average band width the position of the tick in the band.
+        const bandStart = scale(bandValue.valueOf())! - (scale.step() - scale.bandwidth()) / 2;
         let offset = bandStart;
-        if (correctOffset > bandStart + 0.25 * scale.step()) {
+
+        if (tickValue.valueOf() >= bandValue.valueOf() - avgBandWidth / 2) {
           offset = bandStart + 0.5 * scale.step();
         }
-        if (correctOffset > bandStart + 0.75 * scale.step()) {
+        if (tickValue.valueOf() > bandValue.valueOf() + avgBandWidth / 2) {
           offset = bandStart + scale.step();
         }
 
-        if (
-          isInside(correctOffset) ||
-          isInside(correctOffset - 2 * scale.step()) ||
-          isInside(correctOffset + 2 * scale.step())
-        ) {
+        offset = Math.round(offset); // Rounding offset to avoid subpixel errors. like 100.0000001 being refused cause it's larger than 100.
+        if (isInside(offset)) {
           const defaultTickLabel = continuousScale.tickFormat(tickNumber)(tickValue);
 
           if (lastAddedBandIndex !== undefined && bandIndex === lastAddedBandIndex) {
