@@ -7,10 +7,10 @@
   labelPlacement="end"
 />
 <BarChartPro
-  height={400}
-  series={series}
-  xAxis={[
-    { ...xAxis, scaleType: 'band', zoom: true, tickNumber: 4, isNumerical },
-  ]}
-  yAxis={[yAxis]}
+  {...barSettings}
+  xAxis={[{ ...xAxis, scaleType: 'band', zoom, tickNumber: 4, isNumerical }]}
+/>
+<LineChartPro
+  {...lineSettings}
+  xAxis={[{ ...xAxis, scaleType: 'point', zoom, tickNumber: 4, isNumerical }]}
 />
