@@ -150,10 +150,10 @@ export function getTicks(options: GetTicksOptions) {
         const bandStart = scale(bandValue.valueOf())! - (scale.step() - scale.bandwidth()) / 2;
         let offset = bandStart;
 
-        if (tickValue.valueOf() >= bandValue.valueOf() - avgBandWidth / 2) {
+        if (tickValue.valueOf() >= bandValue.valueOf() - avgBandWidth / 3) {
           offset = bandStart + 0.5 * scale.step();
         }
-        if (tickValue.valueOf() > bandValue.valueOf() + avgBandWidth / 2) {
+        if (tickValue.valueOf() > bandValue.valueOf() + avgBandWidth / 3) {
           offset = bandStart + scale.step();
         }
 
@@ -165,7 +165,7 @@ export function getTicks(options: GetTicksOptions) {
             visibleTicks[visibleTicks.length - 1] = {
               value: bandValue,
               formattedValue:
-                valueFormatter?.(bandValue, {
+                valueFormatter?.(tickValue, {
                   location: 'tick',
                   scale,
                   tickNumber,
@@ -180,7 +180,7 @@ export function getTicks(options: GetTicksOptions) {
           visibleTicks.push({
             value: bandValue,
             formattedValue:
-              valueFormatter?.(bandValue, {
+              valueFormatter?.(tickValue, {
                 location: 'tick',
                 scale,
                 tickNumber,
