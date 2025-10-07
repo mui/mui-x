@@ -9,7 +9,10 @@ import { useRadiusAxis, useRotationAxis, useXAxis, useYAxis } from './useAxis';
  * @param {D3Scale} scale The scale to use
  * @returns {(value: any) => number} A function that map value to their position
  */
-export function getValueToPositionMapper(scale: D3Scale): (value: any) => number {
+export function getValueToPositionMapper<
+  Domain extends { toString(): string } = { toString(): string },
+  Range = number,
+>(scale: D3Scale<Domain, Range>): (value: any) => number {
   if (isOrdinalScale(scale)) {
     return (value: any) => (scale(value) ?? 0) + scale.bandwidth() / 2;
   }
