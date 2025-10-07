@@ -9,6 +9,7 @@ import type {
   ScaleThreshold,
   ScaleTime,
   ScaleSymLog,
+  NumberValue,
 } from '@mui/x-charts-vendor/d3-scale';
 import { SxProps } from '@mui/system/styleFunctionSx';
 import { type MakeOptional, MakeRequired } from '@mui/x-internals/types';
@@ -434,12 +435,12 @@ type MinMaxConfig<S extends ScaleName = ScaleName> = S extends ContinuousScaleNa
          * The minimal value of the domain.
          * If not provided, it gets computed to display the entire chart data.
          */
-        min?: Date;
+        min?: NumberValue;
         /**
          * The maximal value of the domain.
          * If not provided, it gets computed to display the entire chart data.
          */
-        max?: Date;
+        max?: NumberValue;
       }
     : {
         /**
