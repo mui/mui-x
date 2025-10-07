@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import { WeekView } from '@mui/x-scheduler/material/week-view';
-import { StandaloneView } from '@mui/x-scheduler/material/standalone-view';
+import { WeekView } from '@mui/x-scheduler/week-view';
+import { StandaloneView } from '@mui/x-scheduler/standalone-view';
 import {
   initialEvents,
   defaultVisibleDate,
