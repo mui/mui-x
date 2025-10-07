@@ -24,6 +24,7 @@
     "height": { "type": { "description": "number" }, "default": "30" },
     "hideTooltip": { "type": { "description": "boolean" } },
     "ignoreTooltip": { "type": { "description": "boolean" } },
+    "isNumerical": { "type": { "description": "boolean" } },
     "label": { "type": { "description": "string" } },
     "labelStyle": { "type": { "description": "ChartsTextProps['style']" } },
     "max": { "type": { "description": "number | Date" } },

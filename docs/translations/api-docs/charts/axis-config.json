@@ -23,6 +23,7 @@
     "ignoreTooltip": {
       "description": "If <code>true</code>, the axis will be ignored by the tooltip with <code>trigger=&#39;axis&#39;</code>."
     },
+    "isNumerical": { "description": "" },
     "label": { "description": "The label of the axis." },
     "labelStyle": { "description": "The style applied to the axis label." },
     "max": {

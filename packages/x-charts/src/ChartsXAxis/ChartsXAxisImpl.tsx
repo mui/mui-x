@@ -2,7 +2,7 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { styled, useTheme, useThemeProps } from '@mui/material/styles';
-import { AxisScaleConfig, ChartsXAxisProps, ComputedAxis } from '../models/axis';
+import { ChartsXAxisProps, ComputedAxis, ScaleName } from '../models/axis';
 import { ChartsSingleXAxisTicks } from './ChartsSingleXAxisTicks';
 import { ChartsGroupedXAxisTicks } from './ChartsGroupedXAxisTicks';
 import { ChartsText, ChartsTextProps } from '../ChartsText';
@@ -19,14 +19,14 @@ const XAxisRoot = styled(AxisRoot, {
 })({});
 
 interface ChartsXAxisImplProps extends Omit<ChartsXAxisProps, 'axis'> {
-  axis: ComputedAxis<keyof AxisScaleConfig, any, ChartsXAxisProps>;
+  axis: ComputedAxis<ScaleName, any, ChartsXAxisProps>;
 }
 
 /**
  * @ignore - internal component. Use `ChartsXAxis` instead.
  */
 export function ChartsXAxisImpl({ axis, ...inProps }: ChartsXAxisImplProps) {
-  const { scale: xScale, tickNumber, reverse, ...settings } = axis;
+  const { scale: xScale, tickNumber, reverse, isNumerical, ...settings } = axis;
 
   // eslint-disable-next-line material-ui/mui-name-matches-component-name
   const themedProps = useThemeProps({ props: { ...settings, ...inProps }, name: 'MuiChartsXAxis' });
@@ -84,7 +84,11 @@ export function ChartsXAxisImpl({ axis, ...inProps }: ChartsXAxisImplProps) {
       'groups' in axis && Array.isArray(axis.groups) ? (
         <ChartsGroupedXAxisTicks {...inProps} />
       ) : (
-        <ChartsSingleXAxisTicks {...inProps} axisLabelHeight={labelHeight} />
+        <ChartsSingleXAxisTicks
+          {...inProps}
+          axisLabelHeight={labelHeight}
+          continuousTickPlacement={isNumerical}
+        />
       );
   }
 
