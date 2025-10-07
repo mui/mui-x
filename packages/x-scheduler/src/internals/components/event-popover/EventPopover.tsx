@@ -19,7 +19,7 @@ import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import {
   CalendarEventOccurrence,
   CalendarResourceId,
-  RecurringEventUpdatedProperties,
+  CalendarEventUpdatedProperties,
   SchedulerValidDate,
   RecurrencePresetKey,
 } from '@mui/x-scheduler-headless/models';
@@ -215,7 +215,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
     if (rawPlaceholder?.type === 'creation') {
       store.createEvent({ id: crypto.randomUUID(), ...metaChanges, start, end, rrule });
     } else if (occurrence.rrule) {
-      const changes: RecurringEventUpdatedProperties = {
+      const changes: CalendarEventUpdatedProperties = {
         ...metaChanges,
         id: occurrence.id,
         start,

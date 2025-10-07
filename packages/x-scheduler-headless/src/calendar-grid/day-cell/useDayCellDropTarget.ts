@@ -6,6 +6,7 @@ import { useAdapter, diffIn } from '../../use-adapter';
 import { CalendarEvent, SchedulerValidDate } from '../../models';
 import { mergeDateAndTime } from '../../utils/date-utils';
 import { useDropTarget } from '../../utils/useDropTarget';
+import { EVENT_CREATION_DEFAULT_LENGTH_MINUTE } from '../../constants';
 
 const isValidDropTarget = buildIsValidDropTarget([
   'CalendarGridDayEvent',
@@ -86,7 +87,14 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
       // Move an Standalone Event into the Time Grid
       if (data.source === 'StandaloneEvent') {
         // TODO: Improve the start and end time of a non all-day event dropped in the Month View.
-        return createDropData(data, value, adapter.addMinutes(value, data.duration));
+        return createDropData(
+          data,
+          value,
+          adapter.addMinutes(
+            value,
+            data.eventData.duration ?? EVENT_CREATION_DEFAULT_LENGTH_MINUTE,
+          ),
+        );
       }
 
       return undefined;

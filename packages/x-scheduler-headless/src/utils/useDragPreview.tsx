@@ -1,25 +1,24 @@
 'use client';
 import * as React from 'react';
-import { useRenderElement } from '../base-ui-copy/utils/useRenderElement';
+import { RenderDragPreviewParameters } from '../models';
 
 /**
  * Returns the drag preview to render when the dragged event is not over a valid drop target.
  */
 export function useDragPreview(parameters: useDragPreview.Parameters) {
-  const { elementProps, componentProps, showPreviewOnDragStart } = parameters;
+  const { renderDragPreview, showPreviewOnDragStart, data, type } = parameters;
 
   const [state, setState] = React.useState<useDragPreview.State>({
     isDragging: false,
     dragPosition: null,
   });
 
-  const rawElement = useRenderElement('div', componentProps, {
-    state,
-    props: [elementProps],
-  });
+  const element = React.useMemo(() => {
+    if (state.dragPosition == null) {
+      return null;
+    }
 
-  const element =
-    state.dragPosition == null ? null : (
+    return (
       <div
         style={{
           position: 'fixed',
@@ -29,9 +28,10 @@ export function useDragPreview(parameters: useDragPreview.Parameters) {
           zIndex: 9999,
         }}
       >
-        {rawElement}
+        {renderDragPreview({ data, type } as RenderDragPreviewParameters)}
       </div>
     );
+  }, [state.dragPosition, renderDragPreview, data, type]);
 
   const actions = React.useMemo(
     () => ({
@@ -63,11 +63,13 @@ export function useDragPreview(parameters: useDragPreview.Parameters) {
 }
 
 export namespace useDragPreview {
-  export interface Parameters {
-    elementProps: any;
-    componentProps: any;
+  export type Parameters = RenderDragPreviewParameters & {
     showPreviewOnDragStart: boolean;
-  }
+    /**
+     * Returns the drag preview element.
+     */
+    renderDragPreview: (parameters: RenderDragPreviewParameters) => React.ReactNode;
+  };
 
   export interface State {
     isDragging: boolean;

@@ -31,6 +31,7 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     end,
     eventId,
     occurrenceKey,
+    renderDragPreview,
     isDraggable = false,
     // Props forwarded to the DOM element
     ...elementProps
@@ -44,12 +45,14 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
   const ref = React.useRef<HTMLDivElement>(null);
   const store = useEventCalendarStoreContext();
   const isDragging = useStore(store, selectors.isOccurrenceMatchingThePlaceholder, occurrenceKey);
+  const event = useStore(store, selectors.event, eventId)!;
   const [isResizing, setIsResizing] = React.useState(false);
   const { getButtonProps, buttonRef } = useButton({ disabled: !isInteractive });
 
   const preview = useDragPreview({
-    elementProps,
-    componentProps,
+    type: 'internal-event',
+    data: event,
+    renderDragPreview,
     showPreviewOnDragStart: false,
   });
 
@@ -176,7 +179,10 @@ export namespace CalendarGridTimeEvent {
     resizing: boolean;
   }
 
-  export interface Props extends BaseUIComponentProps<'div', State>, useEvent.Parameters {
+  export interface Props
+    extends BaseUIComponentProps<'div', State>,
+      useEvent.Parameters,
+      Pick<useDragPreview.Parameters, 'renderDragPreview'> {
     /**
      * The unique identifier of the event.
      */

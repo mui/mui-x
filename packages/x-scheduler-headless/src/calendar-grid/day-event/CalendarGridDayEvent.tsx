@@ -14,6 +14,7 @@ import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowConte
 import { selectors } from '../../use-event-calendar/EventCalendarStore.selectors';
 import { CalendarGridDayEventContext } from './CalendarGridDayEventContext';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
+import { useDragPreview } from '../../utils/useDragPreview';
 
 const EVENT_PROPS_WHILE_DRAGGING = { style: { pointerEvents: 'none' as const } };
 
@@ -30,6 +31,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     end,
     eventId,
     occurrenceKey,
+    renderDragPreview,
     isDraggable = false,
     // Props forwarded to the DOM element
     ...elementProps
@@ -47,7 +49,15 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
   const store = useEventCalendarStoreContext();
   const hasPlaceholder = useStore(store, selectors.hasOccurrencePlaceholder);
   const isDragging = useStore(store, selectors.isOccurrenceMatchingThePlaceholder, occurrenceKey);
+  const event = useStore(store, selectors.event, eventId)!;
   const [isResizing, setIsResizing] = React.useState(false);
+
+  const preview = useDragPreview({
+    type: 'internal-event',
+    data: event,
+    renderDragPreview,
+    showPreviewOnDragStart: false,
+  });
 
   const props = hasPlaceholder ? EVENT_PROPS_WHILE_DRAGGING : undefined;
 
@@ -117,9 +127,18 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
       onGenerateDragPreview: ({ nativeSetDragImage }) => {
         disableNativeDragPreview({ nativeSetDragImage });
       },
-      onDrop: () => store.setOccurrencePlaceholder(null),
+      onDragStart: ({ location }) => {
+        preview.actions.onDragStart(location);
+      },
+      onDrag: ({ location }) => {
+        preview.actions.onDrag(location);
+      },
+      onDrop: () => {
+        store.setOccurrencePlaceholder(null);
+        preview.actions.onDrop();
+      },
     });
-  }, [isDraggable, getDraggedDay, getSharedDragData, store]);
+  }, [isDraggable, getDraggedDay, getSharedDragData, store, preview.actions]);
 
   const element = useRenderElement('div', componentProps, {
     state,
@@ -130,6 +149,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
   return (
     <CalendarGridDayEventContext.Provider value={contextValue}>
       {element}
+      {preview.element}
     </CalendarGridDayEventContext.Provider>
   );
 });
@@ -146,7 +166,10 @@ export namespace CalendarGridDayEvent {
     resizing: boolean;
   }
 
-  export interface Props extends BaseUIComponentProps<'div', State>, useEvent.Parameters {
+  export interface Props
+    extends BaseUIComponentProps<'div', State>,
+      useEvent.Parameters,
+      Pick<useDragPreview.Parameters, 'renderDragPreview'> {
     /**
      * The unique identifier of the event.
      */

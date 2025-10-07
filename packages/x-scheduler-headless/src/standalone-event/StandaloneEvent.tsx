@@ -8,7 +8,6 @@ import { useRenderElement } from '../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../base-ui-copy/utils/types';
 import { CalendarOccurrencePlaceholderExternalDragData } from '../models';
 import { useDragPreview } from '../utils/useDragPreview';
-import { EVENT_CREATION_DEFAULT_LENGTH_MINUTE } from '../constants';
 
 export const StandaloneEvent = React.forwardRef(function StandaloneEvent(
   componentProps: StandaloneEvent.Props,
@@ -20,9 +19,8 @@ export const StandaloneEvent = React.forwardRef(function StandaloneEvent(
     render,
     // Internal props
     data,
-    duration = EVENT_CREATION_DEFAULT_LENGTH_MINUTE,
     onEventDrop,
-    isDraggable = false,
+    renderDragPreview,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
@@ -35,8 +33,9 @@ export const StandaloneEvent = React.forwardRef(function StandaloneEvent(
   const { getButtonProps, buttonRef } = useButton({ disabled: !isInteractive });
 
   const preview = useDragPreview({
-    elementProps,
-    componentProps,
+    type: 'standalone-event',
+    data,
+    renderDragPreview,
     showPreviewOnDragStart: true,
   });
 
@@ -48,18 +47,12 @@ export const StandaloneEvent = React.forwardRef(function StandaloneEvent(
   const getDragData = useEventCallback(() => ({
     source: 'StandaloneEvent',
     eventData: data,
-    duration,
     onEventDrop,
     eventId: data.id,
     occurrenceKey: `external-${data.id}`,
   }));
 
   React.useEffect(() => {
-    if (!isDraggable) {
-      return;
-    }
-
-    // eslint-disable-next-line consistent-return
     return draggable({
       element: ref.current!,
       getInitialData: getDragData,
@@ -76,7 +69,7 @@ export const StandaloneEvent = React.forwardRef(function StandaloneEvent(
         preview.actions.onDrop();
       },
     });
-  }, [isDraggable, getDragData, preview.actions]);
+  }, [getDragData, preview.actions]);
 
   const element = useRenderElement('div', componentProps, {
     state,
@@ -100,22 +93,9 @@ export namespace StandaloneEvent {
     dragging: boolean;
   }
 
-  export interface Props extends BaseUIComponentProps<'div', State> {
-    /**
-     * The data of the event to insert in the Event Calendar when dropped.
-     */
-    data: CalendarOccurrencePlaceholderExternalDragData;
-    /**
-     * The default duration of the event in minutes.
-     * Will be ignored if the event is dropped on a UI that only handles multi-day events.
-     * @default 30
-     */
-    duration: number;
-    /**
-     * Whether the event can be dragged to be inserted inside the Event Calendar.
-     * @default false
-     */
-    isDraggable?: boolean;
+  export interface Props
+    extends BaseUIComponentProps<'div', State>,
+      Pick<useDragPreview.Parameters, 'renderDragPreview' | 'data'> {
     /**
      * Callback fired when the event is dropped into the Event Calendar.
      */
@@ -126,7 +106,6 @@ export namespace StandaloneEvent {
     source: 'StandaloneEvent';
     eventId: string | number;
     occurrenceKey: string;
-    duration: number;
     eventData: CalendarOccurrencePlaceholderExternalDragData;
     onEventDrop?: () => void;
   }

@@ -1,4 +1,5 @@
 import type { SchedulerValidDate } from './date';
+import type { CalendarOccurrencePlaceholderExternalDragData } from './dragAndDrop';
 import type { CalendarResourceId } from './resource';
 
 export interface CalendarEvent {
@@ -222,9 +223,6 @@ export type CalendarOccurrencePlaceholder =
   | CalendarOccurrencePlaceholderCreation
   | CalendarOccurrencePlaceholderInternalDragOrResize
   | CalendarOccurrencePlaceholderExternalDrag;
-
-export interface CalendarOccurrencePlaceholderExternalDragData
-  extends Omit<CalendarEvent, 'start' | 'end'> {}
 
 export interface CalendarProcessedDate {
   /**

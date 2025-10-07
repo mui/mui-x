@@ -10,6 +10,7 @@ import {
 } from '../../build-is-valid-drop-target';
 import { CalendarGridTimeColumnContext } from './CalendarGridTimeColumnContext';
 import { useDropTarget } from '../../utils/useDropTarget';
+import { EVENT_CREATION_DEFAULT_LENGTH_MINUTE } from '../../constants';
 
 const isValidDropTarget = buildIsValidDropTarget([
   'CalendarGridTimeEvent',
@@ -122,7 +123,14 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
       // Move an Standalone Event into the Time Grid
       if (data.source === 'StandaloneEvent') {
         const cursorDate = addOffsetToDate(start, cursorOffsetMs);
-        return createDropData(data, cursorDate, adapter.addMinutes(cursorDate, data.duration));
+        return createDropData(
+          data,
+          cursorDate,
+          adapter.addMinutes(
+            cursorDate,
+            data.eventData.duration ?? EVENT_CREATION_DEFAULT_LENGTH_MINUTE,
+          ),
+        );
       }
 
       return undefined;
