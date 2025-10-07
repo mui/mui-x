@@ -242,11 +242,11 @@ export class SchedulerStore<
   public updateRecurringEvent = (params: UpdateRecurringEventParameters) => {
     const { adapter, events } = this.state;
     const { onEventsChange } = this.parameters;
-    const { eventId, occurrenceStart, changes, scope } = params;
+    const { occurrenceStart, changes, scope } = params;
 
-    const original = selectors.event(this.state, eventId);
+    const original = selectors.event(this.state, changes.id);
     if (!original) {
-      throw new Error(`Scheduler: the original event was not found (id="${eventId}").`);
+      throw new Error(`Scheduler: the original event was not found (id="${changes.id}").`);
     }
     if (!original.rrule) {
       throw new Error(

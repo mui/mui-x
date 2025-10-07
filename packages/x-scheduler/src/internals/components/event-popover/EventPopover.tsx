@@ -217,12 +217,12 @@ export const EventPopover = React.forwardRef(function EventPopover(
     } else if (occurrence.rrule) {
       const changes: RecurringEventUpdatedProperties = {
         ...metaChanges,
+        id: occurrence.id,
         start,
         end,
         ...(recurrenceModified ? { rrule } : {}),
       };
       store.updateRecurringEvent({
-        eventId: occurrence.id,
         occurrenceStart: occurrence.start,
         changes,
         // TODO: Issue #19766 - Let the user choose the scope via UI.

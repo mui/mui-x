@@ -42,6 +42,7 @@ export function DayGridCell(props: DayGridCellProps) {
     <CalendarGrid.DayCell
       ref={cellRef}
       value={day.value}
+      addPropertiesToDroppedEvent={addPropertiesToDroppedEvent}
       className="DayTimeGridAllDayEventsCell"
       style={
         {
@@ -97,4 +98,13 @@ export function DayGridCell(props: DayGridCellProps) {
 interface DayGridCellProps {
   day: useEventOccurrencesWithDayGridPosition.DayData;
   row: useEventOccurrencesWithDayGridPosition.ReturnValue;
+}
+
+/**
+ * Makes sure any event dropped in the day cell is turned into an all-day event.
+ */
+function addPropertiesToDroppedEvent() {
+  return {
+    allDay: true,
+  };
 }

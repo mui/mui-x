@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { useAdapter } from '../../use-adapter/useAdapter';
-import { SchedulerValidDate } from '../../models';
+import { CalendarEvent, SchedulerValidDate } from '../../models';
 import {
   EVENT_DRAG_PRECISION_MINUTE,
   buildIsValidDropTarget,
@@ -19,7 +19,7 @@ const isValidDropTarget = buildIsValidDropTarget([
 ]);
 
 export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
-  const { start, end } = parameters;
+  const { start, end, addPropertiesToDroppedEvent } = parameters;
 
   const adapter = useAdapter();
   const ref = React.useRef<HTMLDivElement>(null);
@@ -122,7 +122,6 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
       // Move an Standalone Event into the Time Grid
       if (data.source === 'StandaloneEvent') {
         const cursorDate = addOffsetToDate(start, cursorOffsetMs);
-        console.log(data.duration);
         return createDropData(data, cursorDate, adapter.addMinutes(cursorDate, data.duration));
       }
 
@@ -135,6 +134,7 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
     surfaceType: 'time-grid',
     getEventDropData,
     isValidDropTarget,
+    addPropertiesToDroppedEvent,
   });
 
   return { getCursorPositionInElementMs, ref };
@@ -150,6 +150,10 @@ export namespace useTimeDropTarget {
      * The data and time at which the column ends.
      */
     end: SchedulerValidDate;
+    /**
+     * Add properties to the event dropped in the column before storing it in the store.
+     */
+    addPropertiesToDroppedEvent?: () => Partial<CalendarEvent>;
   }
 
   export interface ReturnValue

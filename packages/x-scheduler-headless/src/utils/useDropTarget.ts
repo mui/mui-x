@@ -7,7 +7,7 @@ import {
   CalendarOccurrencePlaceholderExternalDrag,
   CalendarOccurrencePlaceholderInternalDragOrResize,
   EventSurfaceType,
-  RecurringEventUpdatedProperties,
+  CalendarEventUpdatedProperties,
   SchedulerValidDate,
 } from '../models';
 import {
@@ -21,7 +21,7 @@ import { SCHEDULER_RECURRING_EDITING_SCOPE } from '../constants';
 export function useDropTarget<Targets extends keyof EventDropDataLookup>(
   parameters: useDropTarget.Parameters<Targets>,
 ) {
-  const { surfaceType, ref, getEventDropData, isValidDropTarget, preProcessDroppedEvent } =
+  const { surfaceType, ref, getEventDropData, isValidDropTarget, addPropertiesToDroppedEvent } =
     parameters;
   const store = useSchedulerStoreContext();
 
@@ -94,10 +94,10 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
           applyInternalDragOrResizeOccurrencePlaceholder(
             store,
             placeholder,
-            preProcessDroppedEvent,
+            addPropertiesToDroppedEvent,
           );
         } else if (placeholder?.type === 'external-drag') {
-          applyExternalDragOccurrencePlaceholder(store, placeholder);
+          applyExternalDragOccurrencePlaceholder(store, placeholder, addPropertiesToDroppedEvent);
         }
       },
       onDragLeave: () => {
@@ -116,7 +116,7 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
         }
       },
     });
-  }, [ref, surfaceType, getEventDropData, isValidDropTarget, preProcessDroppedEvent, store]);
+  }, [ref, surfaceType, getEventDropData, isValidDropTarget, addPropertiesToDroppedEvent, store]);
 }
 
 export namespace useDropTarget {
@@ -126,9 +126,9 @@ export namespace useDropTarget {
     isValidDropTarget: (data: any) => data is EventDropDataLookup[Targets];
     getEventDropData: GetEventDropData;
     /**
-     * Processed the event dropped in the element before storing it in the store.
+     * Add properties to the event dropped in the element before storing it in the store.
      */
-    preProcessDroppedEvent?: (event: CalendarEvent) => CalendarEvent;
+    addPropertiesToDroppedEvent?: () => Partial<CalendarEvent>;
   }
 
   export type CreateDropData = (
@@ -150,24 +150,22 @@ export namespace useDropTarget {
 async function applyInternalDragOrResizeOccurrencePlaceholder(
   store: SchedulerStoreInContext,
   placeholder: CalendarOccurrencePlaceholderInternalDragOrResize,
-  preProcessDroppedEvent: (event: CalendarEvent) => CalendarEvent,
+  addPropertiesToDroppedEvent?: () => Partial<CalendarEvent>,
   chooseRecurringEventScope?: () => Promise<RecurringUpdateEventScope>,
 ) {
   // TODO: Try to do a single state update.
   store.setOccurrencePlaceholder(null);
 
-  const { eventId, start, end, originalEvent, surfaceType } = placeholder;
+  const { eventId, start, end, originalEvent } = placeholder;
 
   const original = selectors.event(store.state, eventId);
   if (!original) {
     throw new Error(`Scheduler: the original event was not found (id="${eventId}").`);
   }
 
-  const changes: RecurringEventUpdatedProperties = { start, end };
-  if (surfaceType === 'time-grid' && original.allDay) {
-    changes.allDay = false;
-  } else if (surfaceType === 'day-grid' && !original.allDay) {
-    changes.allDay = true;
+  const changes: CalendarEventUpdatedProperties = { id: eventId, start, end };
+  if (addPropertiesToDroppedEvent) {
+    Object.assign(changes, addPropertiesToDroppedEvent());
   }
 
   if (original.rrule) {
@@ -181,26 +179,30 @@ async function applyInternalDragOrResizeOccurrencePlaceholder(
     }
 
     return store.updateRecurringEvent({
-      eventId,
       occurrenceStart: originalEvent.start,
       changes,
       scope,
     });
   }
 
-  return store.updateEvent({ id: eventId, ...changes });
+  return store.updateEvent(changes);
 }
 
 function applyExternalDragOccurrencePlaceholder(
   store: SchedulerStoreInContext,
   placeholder: CalendarOccurrencePlaceholderExternalDrag,
+  addPropertiesToDroppedEvent?: () => Partial<CalendarEvent>,
 ) {
   const event: CalendarEvent = {
-    ...placeholder.eventData,
     start: placeholder.start,
     end: placeholder.end,
-    allDay: placeholder.surfaceType === 'day-grid',
+    ...placeholder.eventData,
   };
+
+  if (addPropertiesToDroppedEvent) {
+    Object.assign(event, addPropertiesToDroppedEvent());
+  }
+
   store.setOccurrencePlaceholder(null);
   store.createEvent(event);
   placeholder.onEventDrop?.();

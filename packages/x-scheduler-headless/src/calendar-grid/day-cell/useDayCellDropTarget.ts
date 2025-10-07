@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
 import { useAdapter, diffIn } from '../../use-adapter';
-import { CalendarOccurrencePlaceholder, SchedulerValidDate } from '../../models';
+import { CalendarEvent, SchedulerValidDate } from '../../models';
 import { mergeDateAndTime } from '../../utils/date-utils';
 import { useDropTarget } from '../../utils/useDropTarget';
 
@@ -15,7 +15,7 @@ const isValidDropTarget = buildIsValidDropTarget([
 ]);
 
 export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters) {
-  const { value, preProcessDroppedEvent } = parameters;
+  const { value, addPropertiesToDroppedEvent } = parameters;
 
   const adapter = useAdapter();
   const ref = React.useRef<HTMLDivElement>(null);
@@ -85,7 +85,8 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
 
       // Move an Standalone Event into the Time Grid
       if (data.source === 'StandaloneEvent') {
-        return createDropData(data, adapter.startOfDay(value), adapter.endOfDay(value));
+        // TODO: Improve the start and end time of a non all-day event dropped in the Month View.
+        return createDropData(data, value, adapter.addMinutes(value, data.duration));
       }
 
       return undefined;
@@ -97,7 +98,7 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
     ref,
     getEventDropData,
     isValidDropTarget,
-    preProcessDroppedEvent,
+    addPropertiesToDroppedEvent,
   });
 
   return ref;
@@ -110,10 +111,8 @@ export namespace useDayCellDropTarget {
      */
     value: SchedulerValidDate;
     /**
-     * Processed the event dropped in the cell before storing it in the store.
+     * Add properties to the event dropped in the cell before storing it in the store.
      */
-    preProcessDroppedEvent?: (
-      event: CalendarOccurrencePlaceholder,
-    ) => CalendarOccurrencePlaceholder;
+    addPropertiesToDroppedEvent?: () => Partial<CalendarEvent>;
   }
 }

@@ -240,12 +240,12 @@ export interface CalendarProcessedDate {
 }
 
 /**
- * Helper type for `applyRecurringUpdateFollowing` and `updateRecurringEvent`.
- *  It requires `start` and `end` (always needed when updating an occurrence),
- *  and makes all other `CalendarEvent` properties optional.
+ * Properties to pass to the methods that update an event (recurring or not).
+ * The `id`, `start` and `end` properties are required in order to identify the event to update and the new dates.
+ * All other properties are optional and can be skipped if not modified.
  */
-export type RecurringEventUpdatedProperties = Partial<CalendarEvent> &
-  Required<Pick<CalendarEvent, 'start' | 'end'>>;
+export type CalendarEventUpdatedProperties = Partial<CalendarEvent> &
+  Required<Pick<CalendarEvent, 'id'>>;
 
 /**
  * The type of surface the event is being rendered on.
