@@ -46,10 +46,14 @@ export function calculateInitialDomainAndTickNumber(
     axisExtrema[1] = max;
   }
 
-  const rawTickNumber = getTickNumber(axis, axisExtrema, defaultTickNumber);
+  const tickNumber = getTickNumber(axis, axisExtrema, defaultTickNumber);
 
   if (domainLimit === 'nice') {
-    axisExtrema = niceDomain(axis.scaleType as ContinuousScaleName, axisExtrema, rawTickNumber);
+    axisExtrema = niceDomain(
+      (axis.scaleType ?? 'linear') as ContinuousScaleName,
+      axisExtrema,
+      tickNumber,
+    );
   }
 
   axisExtrema = [
@@ -57,7 +61,7 @@ export function calculateInitialDomainAndTickNumber(
     'max' in axis ? (axis.max ?? axisExtrema[1]) : axisExtrema[1],
   ];
 
-  return { domain: axisExtrema, tickNumber: rawTickNumber };
+  return { domain: axisExtrema, tickNumber };
 }
 
 /**
