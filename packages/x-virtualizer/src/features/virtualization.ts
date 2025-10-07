@@ -61,11 +61,21 @@ export const EMPTY_RENDER_CONTEXT = {
   lastColumnIndex: 0,
 };
 
-const selectors = {
-  renderContext: createSelector((state: BaseState) => state.virtualization.renderContext),
-  enabledForRows: createSelector((state: BaseState) => state.virtualization.enabledForRows),
-  enabledForColumns: createSelector((state: BaseState) => state.virtualization.enabledForColumns),
-};
+const selectors = (() => {
+  const firstRowIndexSelector = createSelector(
+    (state: BaseState) => state.virtualization.renderContext.firstRowIndex,
+  );
+  return {
+    renderContext: createSelector((state: BaseState) => state.virtualization.renderContext),
+    enabledForRows: createSelector((state: BaseState) => state.virtualization.enabledForRows),
+    enabledForColumns: createSelector((state: BaseState) => state.virtualization.enabledForColumns),
+    offsetTop: createSelector(
+      Dimensions.selectors.rowPositions,
+      firstRowIndexSelector,
+      (rowPositions, firstRowIndex) => rowPositions[firstRowIndex] ?? 0,
+    ),
+  };
+})();
 
 export const Virtualization = {
   initialize: initializeState,
@@ -147,7 +157,7 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
   const renderContext = useStore(store, selectors.renderContext);
   const enabledForRows = useStore(store, selectors.enabledForRows);
   const enabledForColumns = useStore(store, selectors.enabledForColumns);
-  const rowsMeta = useStore(store, Dimensions.selectors.rowsMeta);
+  const offsetTop = useStore(store, selectors.offsetTop);
 
   const contentHeight = useStore(store, Dimensions.selectors.contentHeight);
 
@@ -558,7 +568,6 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     params.layout,
   ]);
 
-  const offsetTop = rowsMeta.positions[renderContext.firstRowIndex] ?? 0;
   const positionerStyle = React.useMemo(() => {
     switch (params.layout) {
       case LayoutMode.DataGrid: {
