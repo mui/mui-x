@@ -223,7 +223,7 @@ The following demo shows one event for each palette:
 ### Translations
 
 ```tsx
-import { frFR } from '@mui/x-scheduler/translations/frFR';
+import { frFR } from '@mui/x-scheduler/translations';
 
 <EventCalendar translations={frFR} />;
 ```
