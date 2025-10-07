@@ -10,6 +10,13 @@ import {
 } from '../models';
 import { mergeDateAndTime, getDateKey } from './date-utils';
 import { diffIn } from '../use-adapter';
+import { RecurringUpdateEventScope } from './SchedulerStore/SchedulerStore.types';
+
+export function getRecurringEditingScope(): RecurringUpdateEventScope {
+  return (
+    (typeof window !== 'undefined' && (window as any).SCHEDULER_RECURRING_EDITING_SCOPE) || 'all'
+  );
+}
 
 /**
  * Build BYDAY<->number maps using a known ISO Monday (2025-01-06).
@@ -815,4 +822,50 @@ export function applyRecurringUpdateFollowing(
         newEvent,
       ];
   return updatedEvents;
+}
+
+/**
+ * Applies a "all" update to a recurring series by updating the first event of the series.
+ * Merges date and time parts of start/end according to what the caller touched.
+ * If the caller changed the date part of start or end, uses the provided value as-is.
+ * Otherwise, merges the new time part into the original start/end dates.
+ * @returns The updated list of events.
+ */
+export function applyRecurringUpdateAll(
+  adapter: Adapter,
+  events: CalendarEvent[],
+  originalEvent: CalendarEvent,
+  occurrenceStart: SchedulerValidDate,
+  changes: RecurringEventUpdatedProperties,
+): CalendarEvent[] {
+  const occurrenceEnd = adapter.addMinutes(
+    occurrenceStart,
+    diffIn(adapter, originalEvent.end, originalEvent.start, 'minutes'),
+  );
+  // 1) Detect if the caller changed the date part of start or end
+  const touchedStartDateDay = !adapter.isSameDay(occurrenceStart, changes.start);
+  const touchedEndDateDateDay = !adapter.isSameDay(occurrenceEnd, changes.end);
+
+  // 2) Start from the current root start/end
+  let nextStart = originalEvent.start;
+  let nextEnd = originalEvent.end;
+
+  // 3) If the caller touched the date part of start or end, use the provided values as-is.
+  // Otherwise, merge the new time part into the original start/end dates.
+  if (touchedStartDateDay || touchedEndDateDateDay) {
+    nextStart = changes.start;
+    nextEnd = changes.end;
+  } else {
+    nextStart = mergeDateAndTime(adapter, originalEvent.start, changes.start);
+    nextEnd = mergeDateAndTime(adapter, originalEvent.end, changes.end);
+  }
+
+  const newEvent: CalendarEvent = {
+    ...originalEvent,
+    ...changes,
+    ...{ start: nextStart, end: nextEnd },
+  };
+
+  // 4) Replace the series root in the list
+  return [...events.filter((event) => event.id !== originalEvent.id), newEvent];
 }
