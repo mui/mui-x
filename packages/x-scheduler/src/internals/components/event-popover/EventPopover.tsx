@@ -11,7 +11,10 @@ import { Input } from '@base-ui-components/react/input';
 import { useStore } from '@base-ui-components/utils/store';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { Select } from '@base-ui-components/react/select';
-import { DEFAULT_EVENT_COLOR } from '@mui/x-scheduler-headless/constants';
+import {
+  DEFAULT_EVENT_COLOR,
+  SCHEDULER_RECURRING_EDITING_SCOPE,
+} from '@mui/x-scheduler-headless/constants';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import {
   CalendarEventOccurrence,
@@ -224,7 +227,8 @@ export const EventPopover = React.forwardRef(function EventPopover(
         eventId: occurrence.id,
         occurrenceStart: occurrence.start,
         changes,
-        scope: 'this-and-following',
+        // TODO: Issue #19766 - Let the user choose the scope via UI.
+        scope: SCHEDULER_RECURRING_EDITING_SCOPE,
       });
     } else {
       store.updateEvent({ id: occurrence.id, ...metaChanges, start, end, rrule });

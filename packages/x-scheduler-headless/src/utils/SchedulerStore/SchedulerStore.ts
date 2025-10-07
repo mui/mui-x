@@ -22,11 +22,15 @@ import {
   RecurringUpdateEventScope,
 } from './SchedulerStore.types';
 import { Adapter } from '../../use-adapter/useAdapter.types';
-import { applyRecurringUpdateFollowing, getByDayMaps } from '../recurrence-utils';
+import {
+  applyRecurringUpdateFollowing,
+  applyRecurringUpdateAll,
+  getByDayMaps,
+} from '../recurrence-utils';
 import { selectors } from './SchedulerStore.selectors';
 import { shouldUpdateOccurrencePlaceholder } from './SchedulerStore.utils';
 import { TimeoutManager } from '../TimeoutManager';
-import { DEFAULT_EVENT_COLOR } from '../../constants';
+import { DEFAULT_EVENT_COLOR, SCHEDULER_RECURRING_EDITING_SCOPE } from '../../constants';
 
 export const DEFAULT_RESOURCES: CalendarResource[] = [];
 
@@ -265,8 +269,14 @@ export class SchedulerStore<
       }
 
       case 'all': {
-        // TODO: Issue #19441 - Allow to edit recurring series => all events.
-        throw new Error('Scheduler: scope="all" not implemented yet.');
+        updatedEvents = applyRecurringUpdateAll(
+          adapter,
+          events,
+          original,
+          occurrenceStart,
+          changes,
+        );
+        break;
       }
 
       case 'only-this': {
@@ -316,7 +326,8 @@ export class SchedulerStore<
         // TODO: Issue #19440 + #19441 - Allow to edit all events or only this event.
         scope = await chooseRecurringEventScope();
       } else {
-        scope = 'this-and-following';
+        // TODO: Issue #19766 - Let the user choose the scope via UI.
+        scope = SCHEDULER_RECURRING_EDITING_SCOPE;
       }
 
       return this.updateRecurringEvent({
