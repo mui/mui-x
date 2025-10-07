@@ -2,9 +2,21 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import type { SeriesId } from '@mui/x-charts/internals';
-import { useInteractionItemProps } from '@mui/x-charts/internals';
+import {
+  useInteractionItemProps,
+  useStore,
+  useSelector,
+  selectorChartsHighlightedItem,
+} from '@mui/x-charts/internals';
 import { useTheme } from '@mui/material/styles';
-import { SankeyLayoutNode, type SankeyNodeIdentifierWithData } from './sankey.types';
+import type {
+  SankeyLayoutNode,
+  SankeyNodeIdentifierWithData,
+  SankeyItemIdentifier,
+  SankeyNodeOptions,
+  SankeyLinkOptions,
+} from './sankey.types';
+import { isNodeHighlighted, isNodeHighlightedByLink, shouldFadeItem } from './utils';
 
 export interface SankeyNodeElementProps {
   /**
@@ -19,6 +31,14 @@ export interface SankeyNodeElementProps {
    * Whether to show the node label
    */
   showLabel?: boolean;
+  /**
+   * Node options for highlighting configuration
+   */
+  nodeOptions?: SankeyNodeOptions;
+  /**
+   * Link options for highlighting configuration
+   */
+  linkOptions?: SankeyLinkOptions;
   /**
    * Callback fired when a sankey item is clicked.
    * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
@@ -35,8 +55,14 @@ export interface SankeyNodeElementProps {
  */
 export const SankeyNodeElement = React.forwardRef<SVGGElement, SankeyNodeElementProps>(
   function SankeyNodeElement(props, ref) {
-    const { node, showLabel = true, onClick, seriesId } = props;
+    const { node, showLabel = true, onClick, seriesId, nodeOptions, linkOptions } = props;
     const theme = useTheme();
+    const store = useStore();
+
+    const highlightedItem = useSelector(
+      store,
+      selectorChartsHighlightedItem,
+    ) as SankeyItemIdentifier | null;
 
     const x0 = node.x0 ?? 0;
     const y0 = node.y0 ?? 0;
@@ -62,12 +88,30 @@ export const SankeyNodeElement = React.forwardRef<SVGGElement, SankeyNodeElement
       node,
     };
 
+    const highlighted =
+      isNodeHighlighted(highlightedItem, node.id, nodeOptions) ||
+      isNodeHighlightedByLink(highlightedItem, node.id, linkOptions);
+
+    const faded = shouldFadeItem(highlightedItem, highlighted, nodeOptions, linkOptions);
+
     // Add interaction props for tooltips
     const interactionProps = useInteractionItemProps(identifier);
 
     const handleClick = useEventCallback((event: React.MouseEvent<SVGRectElement>) => {
       onClick?.(event, identifier);
     });
+
+    // TODO: improve
+    let opacity = 1;
+    let filter: string | undefined;
+
+    if (faded) {
+      opacity = 0.3;
+      filter = 'saturate(80%)';
+    } else if (highlighted) {
+      opacity = 1;
+      filter = 'saturate(120%)';
+    }
 
     return (
       <g ref={ref} data-node={node.id}>
@@ -77,6 +121,8 @@ export const SankeyNodeElement = React.forwardRef<SVGGElement, SankeyNodeElement
           width={nodeWidth}
           height={nodeHeight}
           fill={node.color}
+          opacity={opacity}
+          style={{ filter }}
           onClick={onClick ? handleClick : undefined}
           cursor={onClick ? 'pointer' : 'default'}
           stroke="none"
@@ -92,6 +138,7 @@ export const SankeyNodeElement = React.forwardRef<SVGGElement, SankeyNodeElement
             fontSize={theme.typography.caption.fontSize}
             fontFamily={theme.typography.fontFamily}
             pointerEvents="none"
+            opacity={opacity}
           >
             {node.label}
           </text>
