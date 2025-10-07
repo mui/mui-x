@@ -1,24 +1,48 @@
 import * as React from 'react';
+import { X } from 'lucide-react';
 import { Popover } from '@base-ui-components/react';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
-import { ArrowSvg } from './arrow';
+import { useTranslations } from '../../utils/TranslationsContext';
 import { MoreEventsPopoverContext, useMoreEventsPopoverContext } from './MoreEventsPopoverContext';
 import { MoreEventsPopoverContextValue } from './MoreEventsPopover.types';
 import { CalendarEventOccurrence } from '../../../../primitives';
+import { ArrowSvg } from './arrow';
+import './MoreEventsPopover.css';
+import { DayGridEvent } from '../event';
+import { AgendaEvent } from '../event/agenda-event/AgendaEvent';
 
 export default function MoreEventsPopover(props) {
   const { anchor, container, occurrences, onClose } = props;
+
+  console.log(occurrences);
+
+  const translations = useTranslations();
+
   return (
     <Popover.Portal container={container}>
-      <Popover.Positioner anchor={anchor} sideOffset={8}>
+      <Popover.Positioner
+        anchor={anchor}
+        sideOffset={8}
+        className="PopoverPositioner MoreEventsPopoverPositioner"
+      >
         <Popover.Popup>
-          <Popover.Arrow>
+          <Popover.Arrow className="PopoverArrow">
             <ArrowSvg />
           </Popover.Arrow>
-          <Popover.Title className="MoreEventsPopoverTitle">2 more events</Popover.Title>
-          <Popover.Description className="MoreEventsPopoverDescription">
-            You are all caught up. Good job!
-          </Popover.Description>
+          <div className="MoreEventsPopoverHeader">
+            <Popover.Title className="MoreEventsPopoverTitle">2 more events</Popover.Title>
+            <Popover.Close
+              aria-label={translations.closeButtonAriaLabel}
+              className="EventPopoverCloseButton NeutralTextButton"
+            >
+              <X size={16} strokeWidth={1.5} />
+            </Popover.Close>
+          </div>
+          <div className="MoreEventsPopoverContent">
+            {occurrences.map((occurrence) => (
+              <AgendaEvent key={occurrence.id} occurrence={occurrence} />
+            ))}
+          </div>
         </Popover.Popup>
       </Popover.Positioner>
     </Popover.Portal>
@@ -74,10 +98,6 @@ export function MoreEventsPopoverTrigger(props: any) {
   const { showEvents } = useMoreEventsPopoverContext();
 
   return (
-    <Popover.Trigger
-      nativeButton={false}
-      onClick={(event) => showEvents(event.currentTarget, occurrences)}
-      {...other}
-    />
+    <Popover.Trigger onClick={(event) => showEvents(event.currentTarget, occurrences)} {...other} />
   );
 }

@@ -137,7 +137,13 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
           <MoreEventsPopoverTrigger
             occurrences={invisibleOccurrences}
             render={
-              <p className="MonthViewMoreEvents">{translations.hiddenEvents(hiddenCount)} </p>
+              <button
+                type="button"
+                aria-label={translations.hiddenEvents(hiddenCount)}
+                className={clsx('MonthViewMoreEvents', 'Button--small', 'NeutralTextButton')}
+              >
+                {translations.hiddenEvents(hiddenCount)}{' '}
+              </button>
             }
           />
         )}

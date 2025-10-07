@@ -7,6 +7,15 @@
   font-weight: var(--font-weight-2);
   line-height: var(--line-height-2);
 }
+.mui-x-scheduler .Button--small {
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-1);
+  border-radius: var(--radius-4);
+  font-size: var(--font-size-1);
+  font-weight: var(--font-weight-1);
+  line-height: var(--line-height-1);
+}
 
 .mui-x-scheduler .NeutralButton {
   background: var(--gray-3);

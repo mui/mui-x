@@ -249,7 +249,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
           sideOffset={8}
           anchor={anchor}
           trackAnchor={false}
-          className={clsx('PopoverPositioner', getColorClassName(color))}
+          className={clsx('PopoverPositioner', 'EventPopoverPositioner', getColorClassName(color))}
         >
           <Popover.Popup finalFocus={{ current: anchor }}>
             <Form errors={errors} onClearErrors={setErrors} onSubmit={handleSubmit}>

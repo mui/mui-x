@@ -1,0 +1,19 @@
+.MoreEventsPopoverPositioner {
+  max-width: 200px;
+}
+
+.MoreEventsPopoverHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-2);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.MoreEventsPopoverTitle {
+  font-size: var(--font-size-2);
+  font-weight: var(--font-weight-2);
+  color: var(--default-text-color);
+  line-height: var(--line-height-1);
+  margin: 0;
+}
