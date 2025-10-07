@@ -16,6 +16,7 @@ describe('<CalendarGrid.DayEvent />', () => {
       occurrenceKey="fake-key"
       start={eventStart}
       end={eventEnd}
+      renderDragPreview={() => null}
     />,
     () => ({
       refInstanceof: window.HTMLDivElement,

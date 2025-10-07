@@ -5,8 +5,11 @@ import { createSchedulerRenderer, describeConformance } from 'test/utils/schedul
 describe('<StandaloneEvent />', () => {
   const { render } = createSchedulerRenderer();
 
-  describeConformance(<StandaloneEvent data={{ id: '1', title: 'External event' }} />, () => ({
-    refInstanceof: window.HTMLDivElement,
-    render,
-  }));
+  describeConformance(
+    <StandaloneEvent data={{ id: '1', title: 'External event' }} renderDragPreview={() => null} />,
+    () => ({
+      refInstanceof: window.HTMLDivElement,
+      render,
+    }),
+  );
 });
