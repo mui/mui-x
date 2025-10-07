@@ -73,14 +73,14 @@
     "@inquirer/prompts": "^7.8.6",
     "@mui/internal-babel-plugin-display-name": "^1.0.4-canary.7",
     "@mui/internal-bundle-size-checker": "^1.0.9-canary.46",
-    "@mui/internal-code-infra": "^0.0.3-canary.17",
+    "@mui/internal-code-infra": "^0.0.3-canary.19",
     "@mui/internal-markdown": "^2.0.6",
     "@mui/internal-test-utils": "catalog:",
     "@mui/material": "catalog:",
     "@mui/monorepo": "github:mui/material-ui#411a87ab5ea796203606e268c3e756829e824130",
     "@mui/utils": "catalog:",
     "@next/eslint-plugin-next": "15.5.4",
-    "@octokit/plugin-retry": "^8.0.1",
+    "@octokit/plugin-retry": "^8.0.2",
     "@octokit/rest": "^22.0.0",
     "@playwright/test": "catalog:",
     "@types/babel__core": "^7.20.5",
@@ -115,7 +115,7 @@
     "eslint": "^9.36.0",
     "eslint-import-resolver-webpack": "^0.13.10",
     "eslint-plugin-consistent-default-export-name": "^0.0.15",
-    "eslint-plugin-jsdoc": "^60.3.1",
+    "eslint-plugin-jsdoc": "^60.7.1",
     "eslint-plugin-mui-x": "workspace:^",
     "execa": "^9.6.0",
     "glob-gitignore": "^1.0.15",
@@ -144,7 +144,7 @@
     "stylelint-config-tailwindcss": "^1.0.0",
     "terser-webpack-plugin": "^5.3.14",
     "tsx": "catalog:",
-    "typescript": "^5.9.2",
+    "typescript": "^5.9.3",
     "unist-util-visit": "^5.0.0",
     "util": "^0.12.5",
     "vite": "catalog:",
@@ -155,9 +155,9 @@
   "resolutions": {
     "ast-types": "^0.14.2"
   },
-  "packageManager": "pnpm@10.17.1",
+  "packageManager": "pnpm@10.18.0",
   "engines": {
-    "pnpm": "10.17.1",
+    "pnpm": "10.18.0",
     "node": ">=22.18"
   }
 }

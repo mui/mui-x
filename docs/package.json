@@ -7,7 +7,7 @@
     "build:clean": "rimraf .next && pnpm build",
     "build-sw": "node ./scripts/buildServiceWorker.js",
     "dev": "cross-env-shell 'next dev --port ${PORT:-3001}'",
-    "deploy": "git push -f upstream master:docs-v8",
+    "deploy": "git fetch upstream master && git push -f upstream FETCH_HEAD:docs-v8",
     "icons": "rimraf public/static/icons/* && node ./scripts/buildIcons.js",
     "serve": "serve ./export -l 3010",
     "create-playground": "node ./scripts/createPlayground.js",
@@ -30,7 +30,7 @@
     "@mui/joy": "^5.0.0-beta.52",
     "@mui/lab": "^7.0.0-beta.17",
     "@mui/material": "catalog:",
-    "@mui/material-nextjs": "^7.3.2",
+    "@mui/material-nextjs": "^7.3.3",
     "@mui/stylis-plugin-rtl": "catalog:",
     "@mui/system": "catalog:",
     "@mui/utils": "catalog:",
@@ -95,7 +95,7 @@
     "rxjs": "^7.8.2",
     "styled-components": "^6.1.19",
     "stylis": "catalog:",
-    "webpack-bundle-analyzer": "catalog:"
+    "webpack-bundle-analyzer": "^4.10.2"
   },
   "devDependencies": {
     "@babel/plugin-transform-react-constant-elements": "catalog:",

@@ -1,10 +1,10 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
-import { EventCalendar } from '@mui/x-scheduler/material/event-calendar';
-import { StandaloneEvent } from '@mui/x-scheduler/primitives/standalone-event';
-import { CalendarOccurrencePlaceholderExternalDragData } from '@mui/x-scheduler/primitives/models';
-import { buildIsValidDropTarget } from '@mui/x-scheduler/primitives/build-is-valid-drop-target';
+import { EventCalendar } from '@mui/x-scheduler/event-calendar';
+import { StandaloneEvent } from '@mui/x-scheduler-headless/standalone-event';
+import { CalendarOccurrencePlaceholderExternalDragData } from '@mui/x-scheduler-headless/models';
+import { buildIsValidDropTarget } from '@mui/x-scheduler-headless/build-is-valid-drop-target';
 import {
   initialEvents,
   defaultVisibleDate,
