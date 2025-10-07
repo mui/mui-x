@@ -454,7 +454,7 @@ describe('<EventPopover />', () => {
     });
   });
   describe('Event editing', () => {
-    describe('Recurring events - this & following', () => {
+    describe('Recurring events - all', () => {
       it('should call updateRecurringEvent with scope and not include rrule if not modified on Submit', async () => {
         const originalRecurringEvent = {
           id: 'recurring-1',
@@ -493,7 +493,7 @@ describe('<EventPopover />', () => {
         const payload = updateRecurringEventSpy.lastCall.firstArg;
 
         expect(payload.eventId).to.equal('recurring-1');
-        expect(payload.scope).to.equal('this-and-following');
+        expect(payload.scope).to.equal('all');
         expect(payload.changes.title).to.equal('Daily standup');
         expect(payload.changes.description).to.equal('sync');
         expect(payload.changes.allDay).to.equal(false);
@@ -540,7 +540,7 @@ describe('<EventPopover />', () => {
         const payload = updateRecurringEventSpy.lastCall.firstArg;
 
         expect(payload.eventId).to.equal('recurring-2');
-        expect(payload.scope).to.equal('this-and-following');
+        expect(payload.scope).to.equal('all');
         expect(payload.changes.title).to.equal('Daily standup');
         expect(payload.changes.description).to.equal('sync');
         expect(payload.changes.allDay).to.equal(false);
@@ -588,7 +588,7 @@ describe('<EventPopover />', () => {
         const payload = updateRecurringEventSpy.lastCall.firstArg;
 
         expect(payload.eventId).to.equal('recurring-3');
-        expect(payload.scope).to.equal('this-and-following');
+        expect(payload.scope).to.equal('all');
         expect(payload.changes.rrule).to.equal(undefined);
       });
     });
