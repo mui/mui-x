@@ -1,13 +1,13 @@
 /* eslint-disable no-console */
 const path = require('path');
-const fse = require('fs-extra');
+const fs = require('node:fs');
 const { parseDocFolder, getAnchor } = require('@mui/monorepo/docs/scripts/reportBrokenLinksLib');
 
 const docsSpaceRoot = path.join(__dirname, '../');
 
 function save(lines) {
   const fileContents = [...lines, ''].join('\n');
-  fse.writeFileSync(path.join(docsSpaceRoot, '.link-check-errors.txt'), fileContents);
+  fs.writeFileSync(path.join(docsSpaceRoot, '.link-check-errors.txt'), fileContents);
 }
 
 const UNSUPPORTED_PATHS = ['/careers/', '/store/', '/system/styles/'];

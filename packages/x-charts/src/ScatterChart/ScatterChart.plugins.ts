@@ -16,22 +16,28 @@ import {
 } from '../internals/plugins/featurePlugins/useChartHighlight';
 import { ConvertSignaturesIntoPlugins } from '../internals/plugins/models/helpers';
 import {
-  useChartVoronoi,
-  UseChartVoronoiSignature,
-} from '../internals/plugins/featurePlugins/useChartVoronoi';
+  useChartClosestPoint,
+  UseChartClosestPointSignature,
+} from '../internals/plugins/featurePlugins/useChartClosestPoint';
+import {
+  useChartKeyboardNavigation,
+  UseChartKeyboardNavigationSignature,
+} from '../internals/plugins/featurePlugins/useChartKeyboardNavigation';
 
-export type ScatterChartPluginsSignatures = [
+export type ScatterChartPluginSignatures = [
   UseChartZAxisSignature,
   UseChartCartesianAxisSignature<'scatter'>,
   UseChartInteractionSignature,
   UseChartHighlightSignature,
-  UseChartVoronoiSignature,
+  UseChartClosestPointSignature,
+  UseChartKeyboardNavigationSignature,
 ];
 
-export const SCATTER_CHART_PLUGINS: ConvertSignaturesIntoPlugins<ScatterChartPluginsSignatures> = [
+export const SCATTER_CHART_PLUGINS: ConvertSignaturesIntoPlugins<ScatterChartPluginSignatures> = [
   useChartZAxis,
   useChartCartesianAxis,
   useChartInteraction,
   useChartHighlight,
-  useChartVoronoi,
+  useChartClosestPoint,
+  useChartKeyboardNavigation,
 ];

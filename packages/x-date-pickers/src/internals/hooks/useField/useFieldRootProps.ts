@@ -139,7 +139,7 @@ export function useFieldRootProps(
       return;
     }
 
-    const activeElement = getActiveElement(document);
+    const activeElement = getActiveElement(domGetters.getRoot());
 
     setFocused(true);
 
@@ -155,7 +155,7 @@ export function useFieldRootProps(
         return;
       }
 
-      const activeElement = getActiveElement(document);
+      const activeElement = getActiveElement(domGetters.getRoot());
       const shouldBlur = !domGetters.getRoot().contains(activeElement);
       if (shouldBlur) {
         setFocused(false);
@@ -175,7 +175,7 @@ export function useFieldRootProps(
 
     // Other
     contentEditable: parsedSelectedSections === 'all',
-    tabIndex: parsedSelectedSections === 0 ? -1 : 0, // TODO: Try to set to undefined when there is a section selected.
+    tabIndex: internalPropsWithDefaults.disabled || parsedSelectedSections === 0 ? -1 : 0, // TODO: Try to set to undefined when there is a section selected.
   };
 }
 

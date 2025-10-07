@@ -11,6 +11,21 @@ To persist the changes, use <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">En
 
 {{"demo": "MultilineEditing.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## Autocomplete editing
+
+To enhance the editing experience for columns with many options, you can create a custom edit component using Material UI [`Autocomplete`](/material-ui/react-autocomplete/) component.
+This allows users to search for desired values by typing while preserving keyboard navigation.
+
+For a consistent editing experience, configure the Autocomplete with `openOnFocus` and set `autoFocus: true` on the HTML input element through the `slotProps`.
+This ensures that when users enter edit mode, the Autocomplete automatically receives focus and displays the available options immediately.
+
+The component integrates with the Data Grid's state management through the editing API:
+
+- Use `apiRef.current.setEditCellValue()` to update the cell value when the user makes a selection
+- Call `apiRef.current.stopCellEditMode()` to exit edit mode after a value is selected
+
+{{"demo": "AutocompleteEditing.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Conditional validation
 
 When all cells in a row are in edit mode, you can validate fields by comparing their values against one another.
@@ -18,7 +33,7 @@ To do this, start by adding the `preProcessEditCellProps` as explained in the [v
 When the callback is called, it will have an additional `otherFieldsProps` param containing the props from the other fields in the same row.
 Use this param to check if the value from the current column is valid or not.
 Return the modified `props` containing the error as you would for cell editing.
-Once at the least one field has the `error` attribute set to a truthy value, the row will not exit edit mode.
+Once at least one field has the `error` attribute set to a truthy value, the row will not exit edit mode.
 
 The following demo requires a value for the **Payment method** column only if the **Is paid?** column is checked:
 
@@ -70,8 +85,8 @@ const CustomTypeEditComponent = (props: GridEditSingleSelectCellProps) => {
 };
 ```
 
-The demo below combines the steps showed above.
-You can experiment it by changing the value of any cell in the **Type** column.
+The demo below combines the steps shown above.
+You can experiment with it by changing the value of any cell in the **Type** column.
 The **Account** column is automatically updated with the correct options.
 
 {{"demo": "LinkedFieldsRowEditing.js", "bg": "inline", "defaultCodeOpen": false}}
@@ -94,7 +109,7 @@ const handleChange = async () => {
 
 A similar behavior can be reproduced with cell editing.
 Instead of `apiRef.current.setEditCellValue()`, the `rows` prop must be updated or `apiRef.current.updateRows()` be used.
-Note that the `onCellEditStart` and `onCellEditStop` props also have to be used to revert the value of the cell changed, in case the user cancels the edit.
+Note that the `onCellEditStart` and `onCellEditStop` props also need to be used to revert the value of the cell changed, in case the user cancels the edit.
 
 {{"demo": "LinkedFieldsCellEditing.js", "bg": "inline", "defaultCodeOpen": false}}
 

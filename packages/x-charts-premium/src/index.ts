@@ -1,12 +1,8 @@
 // TODO: Add typeOverloads when available
 // import './typeOverloads/modules';
+import '@mui/x-charts-pro/typeOverloads';
 
 // exports from MIT package
-export * from '@mui/x-charts/constants';
-export * from '@mui/x-charts/context';
-export * from '@mui/x-charts/hooks';
-export * from '@mui/x-charts/colorPalettes';
-export * from '@mui/x-charts/models';
 export * from '@mui/x-charts/ChartsClipPath';
 export * from '@mui/x-charts/ChartsReferenceLine';
 export * from '@mui/x-charts/ChartsAxis';
@@ -28,18 +24,11 @@ export * from '@mui/x-charts/RadarChart';
 export * from '@mui/x-charts/ChartsSurface';
 export * from '@mui/x-charts/ChartDataProvider';
 export * from '@mui/x-charts/ChartsLabel';
-export type {
-  ZoomData,
-  ZoomFilterMode,
-  ZoomSliderShowTooltip,
-  ZoomOptions,
-  ZoomSliderOptions,
-} from '@mui/x-charts/internals';
 
 // Pro components
-export * from '@mui/x-charts-pro/hooks';
 export * from '@mui/x-charts-pro/Heatmap';
-export * from '@mui/x-charts-pro/ChartContainerPro';
+export { ChartContainerPro } from '@mui/x-charts-pro/ChartContainerPro';
+export type { ChartContainerProProps } from '@mui/x-charts-pro/ChartContainerPro';
 export * from '@mui/x-charts-pro/ChartDataProviderPro';
 export * from '@mui/x-charts-pro/ScatterChartPro';
 export * from '@mui/x-charts-pro/BarChartPro';
@@ -49,3 +38,15 @@ export * from '@mui/x-charts-pro/FunnelChart';
 export * from '@mui/x-charts-pro/RadarChartPro';
 export * from '@mui/x-charts-pro/ChartZoomSlider';
 export * from '@mui/x-charts-pro/ChartsToolbarPro';
+
+// Premium utilities
+export * from './colorPalettes';
+export * from './constants';
+export * from './hooks';
+export * from './context';
+export * from './models';
+// Locales should be imported from `@mui/x-charts-premium/locales`
+// export * from './locales';
+
+// Premium components
+export * from './ChartsRenderer';

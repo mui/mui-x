@@ -68,6 +68,9 @@
     "disableMultipleRowSelection": {
       "description": "If <code>true</code>, multiple selection using the Ctrl/CMD or Shift key is disabled. The MIT DataGrid will ignore this prop, unless <code>checkboxSelection</code> is enabled."
     },
+    "disableRowSelectionExcludeModel": {
+      "description": "If <code>true</code>, the Data Grid will not use the exclude model optimization when selecting all rows."
+    },
     "disableRowSelectionOnClick": {
       "description": "If <code>true</code>, the selection on click on a row or cell is disabled."
     },
@@ -482,7 +485,7 @@
       }
     },
     "onProcessRowUpdateError": {
-      "description": "Callback called when <code>processRowUpdate</code> throws an error or rejects.",
+      "description": "Callback called when <code>processRowUpdate()</code> throws an error or rejects.",
       "typeDescriptions": { "error": { "name": "error", "description": "The error thrown." } }
     },
     "onResize": {
@@ -1485,7 +1488,9 @@
     "baseSelectOption": "The custom SelectOption component used in the grid.",
     "baseSkeleton": "The custom Skeleton component used in the grid.",
     "baseSwitch": "The custom Switch component used in the grid.",
+    "baseTabs": "The custom Tabs component used in the grid.",
     "baseTextField": "The custom TextField component used in the grid.",
+    "baseToggleButton": "The custom ToggleButton component used in the grid.",
     "baseTooltip": "The custom Tooltip component used in the grid.",
     "booleanCellFalseIcon": "Icon displayed on the boolean cell to represent the false value.",
     "booleanCellTrueIcon": "Icon displayed on the boolean cell to represent the true value.",
@@ -1511,6 +1516,7 @@
     "columnSortedAscendingIcon": "Icon displayed on the side of the column header title when sorted in ascending order.",
     "columnSortedDescendingIcon": "Icon displayed on the side of the column header title when sorted in descending order.",
     "columnsPanel": "GridColumns panel component rendered when clicking the columns button.",
+    "columnUnsortedIcon": "Icon displayed on the side of the column header title when unsorted.",
     "densityComfortableIcon": "Icon displayed on the &quot;comfortable&quot; density option in the toolbar.",
     "densityCompactIcon": "Icon displayed on the compact density option in the toolbar.",
     "densityStandardIcon": "Icon displayed on the standard density option in the toolbar.",

@@ -1,8 +1,0 @@
-<StandaloneView
-  events={events}
-  resources={resources}
-  defaultVisibleDate={events[0].start}
-  onEventsChange={setEvents}
->
-  <WeekView className={classes.Container} />
-</StandaloneView>

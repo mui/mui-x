@@ -2,7 +2,7 @@
 
 <p class="description">One filter field to quickly filter grid.</p>
 
-Quick filter allows filtering rows by multiple columns with a single text input.
+Quick filter lets users filter rows by multiple columns with a single text input.
 
 By default, the quick filter considers the input as a list of values separated by space and keeps only rows that contain all the values.
 
@@ -56,7 +56,7 @@ However, when you disable the `Exclude hidden columns` switch, the rows containi
 ## Custom filtering logic
 
 The logic used for quick filter can be switched to filter rows that contain _at least_ one of the values specified instead of testing if it contains all of them.
-To do so, set `quickFilterLogicOperator` to `GridLogicOperator.Or` as follow:
+To do so, set `quickFilterLogicOperator` to `GridLogicOperator.Or` as follows:
 
 ```js
 initialState={{
@@ -111,7 +111,7 @@ If you control the `quickFilterValues` either by controlling `filterModel` or wi
 By default, values are joint with spaces. You can customize this behavior by providing a custom formatter.
 This formatter can be seen as the inverse of the `parser`.
 
-For example, the following parser allows to search words containing a space by using the `','` to split values.
+For example, the following parser lets you search words containing a space by using the `','` to split values.
 
 ```jsx
 // Default toolbar:

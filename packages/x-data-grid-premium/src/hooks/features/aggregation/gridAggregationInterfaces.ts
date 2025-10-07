@@ -54,7 +54,7 @@ export interface GridAggregationFunction<V = any, AV = V> {
    * @param {GridApiPremium} api The grid API.
    * @returns {AV} The aggregated value.
    */
-  apply: (params: GridAggregationParams<V>, api: GridApiPremium) => AV | null | undefined;
+  apply: (params: GridAggregationParams<V>, api?: GridApiPremium) => AV | null | undefined;
   /**
    * Label of the aggregation function.
    * Used for adding a label to the footer of the grouping column when this aggregation function is the only one being used.
@@ -116,6 +116,7 @@ export type GridAggregationLookup = {
     [field: string]: {
       position: GridAggregationPosition;
       value: any;
+      formattedValue?: any;
     };
   };
 };

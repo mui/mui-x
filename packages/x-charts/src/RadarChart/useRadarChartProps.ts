@@ -2,11 +2,11 @@
 import type { RadarChartProps } from './RadarChart';
 import { ChartsOverlayProps } from '../ChartsOverlay';
 import { ChartsLegendSlotExtension } from '../ChartsLegend';
-import type { ChartsWrapperProps } from '../internals/components/ChartsWrapper';
+import type { ChartsWrapperProps } from '../ChartsWrapper';
 import { RadarDataProviderProps } from './RadarDataProvider/RadarDataProvider';
 import { ChartsSurfaceProps } from '../ChartsSurface';
 import { RadarGridProps } from './RadarGrid';
-import { RadarChartPluginsSignatures } from './RadarChart.plugins';
+import { RadarChartPluginSignatures } from './RadarChart.plugins';
 import { RadarSeriesAreaProps, RadarSeriesMarksProps } from './RadarSeriesPlot';
 
 /**
@@ -45,7 +45,7 @@ export const useRadarChartProps = (props: RadarChartProps) => {
     ...other
   } = props;
 
-  const radarDataProviderProps: RadarDataProviderProps<RadarChartPluginsSignatures> = {
+  const radarDataProviderProps: RadarDataProviderProps<RadarChartPluginSignatures> = {
     apiRef,
     series,
     radar,
@@ -73,6 +73,7 @@ export const useRadarChartProps = (props: RadarChartProps) => {
 
   const chartsWrapperProps: Omit<ChartsWrapperProps, 'children'> = {
     sx,
+    hideLegend: props.hideLegend ?? false,
   };
 
   const radarGrid: RadarGridProps = { divisions, shape, stripeColor };

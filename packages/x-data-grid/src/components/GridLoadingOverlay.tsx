@@ -7,8 +7,7 @@ import { GridOverlay, GridOverlayProps } from './containers/GridOverlay';
 import { GridSkeletonLoadingOverlay } from './GridSkeletonLoadingOverlay';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { gridRowCountSelector, useGridSelector } from '../hooks';
-
-export type GridLoadingOverlayVariant = 'circular-progress' | 'linear-progress' | 'skeleton';
+import type { GridLoadingOverlayVariant } from '../hooks/features/overlays/gridOverlaysInterfaces';
 
 export interface GridLoadingOverlayProps extends GridOverlayProps {
   /**

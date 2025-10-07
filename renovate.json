@@ -1,16 +1,11 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["github>mui/mui-public//renovate/default"],
-  "schedule": "on monday before 6:00am",
+  "schedule": "* 0-4 * * 1",
   "lockFileMaintenance": {
-    "schedule": "* 0-5 2 * *"
+    "schedule": "* 0-4 2 * *"
   },
   "packageRules": [
-    {
-      "matchDepTypes": ["devDependencies"],
-      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
-      "automerge": true
-    },
     {
       "groupName": "D3",
       "matchPackageNames": ["d3-*", "@types/d3-*"]
@@ -27,15 +22,10 @@
     {
       "groupName": "bundling fixtures",
       "matchFileNames": ["test/bundling/fixtures/**/package.json"],
-      "schedule": "every 6 months on the first day of the month"
+      "schedule": "* * 1 1,7 *"
     },
     {
-      "groupName": "Material UI",
-      "matchPackageNames": ["@mui/*"]
-    },
-    {
-      "groupName": "date-fns-v2",
-      "matchPackageNames": ["date-fns-v2"],
+      "matchDepNames": ["date-fns-v2"],
       "allowedVersions": "< 3.0.0"
     },
     {

@@ -26,10 +26,20 @@
       "type": { "description": "(options?: GridAutosizeOptions) =&gt; Promise&lt;void&gt;" },
       "required": true
     },
+    "collapseAllRows": {
+      "type": { "description": "() =&gt; void" },
+      "required": true,
+      "isProPlan": true
+    },
     "dataSource": { "type": { "description": "GridDataSourceApiBase" }, "required": true },
     "deleteFilterItem": {
       "type": { "description": "(item: GridFilterItem) =&gt; void" },
       "required": true
+    },
+    "expandAllRows": {
+      "type": { "description": "() =&gt; void" },
+      "required": true,
+      "isProPlan": true
     },
     "exportDataAsCsv": {
       "type": { "description": "(options?: GridCsvExportOptions) =&gt; void" },
@@ -74,9 +84,7 @@
       "isPremiumPlan": true
     },
     "getCellValue": {
-      "type": {
-        "description": "&lt;V extends any = any&gt;(id: GridRowId, field: string) =&gt; V"
-      },
+      "type": { "description": "&lt;V = any&gt;(id: GridRowId, field: string) =&gt; V" },
       "required": true
     },
     "getColumn": {
@@ -304,6 +312,11 @@
       "required": true,
       "isProPlan": true
     },
+    "setActiveChartId": {
+      "type": { "description": "(chartId: string) =&gt; void" },
+      "required": true,
+      "isPremiumPlan": true
+    },
     "setAggregationModel": {
       "type": { "description": "(model: GridAggregationModel) =&gt; void" },
       "required": true,
@@ -315,6 +328,21 @@
     },
     "setCellSelectionModel": {
       "type": { "description": "(newModel: GridCellSelectionModel) =&gt; void" },
+      "required": true,
+      "isPremiumPlan": true
+    },
+    "setChartsPanelOpen": {
+      "type": { "description": "(open: boolean | ((prev: boolean) =&gt; boolean)) =&gt; void" },
+      "required": true,
+      "isPremiumPlan": true
+    },
+    "setChartSynchronizationState": {
+      "type": { "description": "(chartId: string, synced: boolean) =&gt; void" },
+      "required": true,
+      "isPremiumPlan": true
+    },
+    "setChartType": {
+      "type": { "description": "(chartId: string, type: string) =&gt; void" },
       "required": true,
       "isPremiumPlan": true
     },
@@ -527,6 +555,20 @@
     "unstable_setVirtualization": {
       "type": { "description": "(enabled: boolean) =&gt; void" },
       "required": true
+    },
+    "updateChartDimensionsData": {
+      "type": {
+        "description": "(chartId: string, dimensions: GridChartsIntegrationItem[] | ((prev: GridChartsIntegrationItem[]) =&gt; GridChartsIntegrationItem[])) =&gt; void"
+      },
+      "required": true,
+      "isPremiumPlan": true
+    },
+    "updateChartValuesData": {
+      "type": {
+        "description": "(chartId: string, values: GridChartsIntegrationItem[] | ((prev: GridChartsIntegrationItem[]) =&gt; GridChartsIntegrationItem[])) =&gt; void"
+      },
+      "required": true,
+      "isPremiumPlan": true
     },
     "updateColumns": {
       "type": { "description": "(cols: GridColDef[]) =&gt; void" },

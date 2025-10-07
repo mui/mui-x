@@ -2,14 +2,18 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
 import { ChartPlugin } from '../../models';
 import { Coordinate, UseChartInteractionSignature } from './useChartInteraction.types';
-import { ChartItemIdentifier, ChartSeriesType } from '../../../../models/seriesType/config';
+import {
+  ChartItemIdentifier,
+  ChartSeriesType,
+  type ChartItemIdentifierWithData,
+} from '../../../../models/seriesType/config';
 
 export const useChartInteraction: ChartPlugin<UseChartInteractionSignature> = ({ store }) => {
   const cleanInteraction = useEventCallback(function cleanInteraction() {
     store.update((prev) => {
       return {
         ...prev,
-        interaction: { pointer: null, item: null },
+        interaction: { ...prev.interaction, pointer: null, item: null },
       };
     });
   });
@@ -56,7 +60,7 @@ export const useChartInteraction: ChartPlugin<UseChartInteractionSignature> = ({
   });
 
   const setItemInteraction = useEventCallback(function setItemInteraction(
-    newItem: ChartItemIdentifier<ChartSeriesType>,
+    newItem: ChartItemIdentifierWithData<ChartSeriesType>,
   ) {
     store.update((prev) => {
       if (fastObjectShallowCompare(prev.interaction.item, newItem)) {
@@ -81,6 +85,7 @@ export const useChartInteraction: ChartPlugin<UseChartInteractionSignature> = ({
       interaction: {
         ...prev.interaction,
         pointer: coordinate,
+        lastUpdate: coordinate !== null ? 'pointer' : prev.interaction.lastUpdate,
       },
     }));
   });
@@ -96,7 +101,7 @@ export const useChartInteraction: ChartPlugin<UseChartInteractionSignature> = ({
 };
 
 useChartInteraction.getInitialState = () => ({
-  interaction: { item: null, pointer: null },
+  interaction: { item: null, pointer: null, lastUpdate: 'pointer' },
 });
 
 useChartInteraction.params = {};

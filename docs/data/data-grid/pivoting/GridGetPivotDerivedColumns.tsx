@@ -16,14 +16,16 @@ const getPivotDerivedColumns: DataGridPremiumProps['getPivotDerivedColumns'] = (
       {
         field: `${field}-year`,
         headerName: `${column.headerName} (Year)`,
-        valueGetter: (value, row) => new Date(row[field]).getFullYear(),
+        valueGetter: (_, row) => new Date(row[field]).getFullYear(),
       },
 
       {
         field: `${field}-month`,
         headerName: `${column.headerName} (Month)`,
-        valueGetter: (value, row) =>
-          `M${`${new Date(row[field]).getMonth() + 1}`.padStart(2, '0')}`,
+        type: 'number',
+        valueGetter: (_, row) => new Date(row[field]).getMonth(),
+        valueFormatter: (month) =>
+          new Date(0, month).toLocaleString(undefined, { month: 'long' }),
       },
     ];
   }
@@ -39,8 +41,7 @@ const columns: GridColDef[] = [
     type: 'date',
     headerName: 'Transaction Date',
     width: 140,
-    valueGetter: (value) => new Date(value),
-    groupingValueGetter: (value) => value,
+    valueGetter: (value) => (value ? new Date(value) : null),
   },
   { field: 'ticker', headerName: 'Ticker' },
   {
@@ -81,7 +82,7 @@ export default function GridGetPivotDerivedColumns() {
           getPivotDerivedColumns={getPivotDerivedColumns}
           initialState={{
             pivoting: {
-              enabled: false,
+              enabled: true,
               model: pivotModel,
             },
             sidebar: {

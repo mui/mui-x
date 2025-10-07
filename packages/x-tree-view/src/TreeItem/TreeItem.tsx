@@ -58,6 +58,7 @@ export const TreeItemContent = styled('div', {
   '&[data-disabled]': {
     opacity: (theme.vars || theme).palette.action.disabledOpacity,
     backgroundColor: 'transparent',
+    cursor: 'auto',
   },
   '&[data-focused]': {
     backgroundColor: (theme.vars || theme).palette.action.focus,
@@ -122,6 +123,7 @@ export const TreeItemIconContainer = styled('div', {
   flexShrink: 0,
   justifyContent: 'center',
   position: 'relative',
+  cursor: 'inherit',
   '& svg': {
     fontSize: 18,
   },
@@ -379,7 +381,6 @@ export const TreeItem = React.forwardRef(function TreeItem(
         <Content {...contentProps}>
           <IconContainer {...iconContainerProps}>
             {status.error && <ErrorIcon {...errorContainerProps} />}
-
             {status.loading ? (
               <LoadingIcon {...loadingContainerProps} />
             ) : (

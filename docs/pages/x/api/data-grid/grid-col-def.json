@@ -19,6 +19,7 @@
       "isPremiumPlan": true
     },
     "cellClassName": { "type": { "description": "GridCellClassNamePropType&lt;R, V&gt;" } },
+    "chartable": { "type": { "description": "boolean" }, "default": "true", "isPremiumPlan": true },
     "colSpan": {
       "type": { "description": "number | GridColSpanFn&lt;R, V, F&gt;" },
       "default": "1"
@@ -44,6 +45,10 @@
     "groupable": { "type": { "description": "boolean" }, "default": "true" },
     "groupingValueGetter": {
       "type": { "description": "GridGroupingValueGetter&lt;R&gt;" },
+      "isPremiumPlan": true
+    },
+    "groupingValueSetter": {
+      "type": { "description": "GridGroupingValueSetter&lt;R&gt;" },
       "isPremiumPlan": true
     },
     "headerAlign": { "type": { "description": "GridAlignment" } },

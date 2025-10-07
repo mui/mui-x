@@ -5,8 +5,8 @@ const frFRGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Pas de résultats',
   noResultsOverlayLabel: 'Aucun résultat.',
-  // noColumnsOverlayLabel: 'No columns',
-  // noColumnsOverlayManageColumns: 'Manage columns',
+  noColumnsOverlayLabel: 'Aucune colonne',
+  noColumnsOverlayManageColumns: 'Gérer les colonnes',
   // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
 
   // Density selector toolbar button text
@@ -43,15 +43,18 @@ const frFRGrid: Partial<GridLocaleText> = {
   // Toolbar pivot button
   // toolbarPivot: 'Pivot',
 
+  // Toolbar charts button
+  // toolbarCharts: 'Charts',
+
   // Toolbar AI Assistant button
-  // toolbarAssistant: 'AI Assistant',
+  toolbarAssistant: 'Assistant IA',
 
   // Columns management text
   columnsManagementSearchTitle: 'Rechercher',
   columnsManagementNoColumns: 'Pas de colonnes',
   columnsManagementShowHideAllText: 'Afficher/masquer toutes',
   columnsManagementReset: 'Réinitialiser',
-  // columnsManagementDeleteIconLabel: 'Clear',
+  columnsManagementDeleteIconLabel: 'Effacer',
 
   // Filter panel text
   filterPanelAddFilter: 'Ajouter un filtre',
@@ -110,7 +113,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Est supérieur ou égal à',
   'headerFilterOperator<': 'Est inférieur à',
   'headerFilterOperator<=': 'Est inférieur ou égal à',
-  // headerFilterClear: 'Clear filter',
+  headerFilterClear: 'Effacer le filtre',
 
   // Filter values text
   filterValueAny: 'tous',
@@ -119,7 +122,7 @@ const frFRGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Menu',
-  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
+  columnMenuAriaLabel: (columnName: string) => `Menu pour la colonne ${columnName}`,
   columnMenuShowColumns: 'Afficher les colonnes',
   columnMenuManageColumns: 'Gérer les colonnes',
   columnMenuFilter: 'Filtrer',
@@ -128,6 +131,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   columnMenuSortAsc: 'Tri ascendant',
   columnMenuSortDesc: 'Tri descendant',
   // columnMenuManagePivot: 'Manage pivot',
+  // columnMenuManageCharts: 'Manage charts',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -184,18 +188,13 @@ const frFRGrid: Partial<GridLocaleText> = {
 
   // Pagination
   paginationRowsPerPage: 'Lignes par page :',
-  // paginationDisplayedRows: ({
-  //   from,
-  //   to,
-  //   count,
-  //   estimated
-  // }) => {
-  //   if (!estimated) {
-  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
-  //   }
-  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
-  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
-  // },
+  paginationDisplayedRows: ({ from, to, count, estimated }) => {
+    if (!estimated) {
+      return `${from}–${to} sur ${count !== -1 ? count : `plus de ${to}`}`;
+    }
+    const estimatedLabel = estimated && estimated > to ? `environ ${estimated}` : `plus de ${to}`;
+    return `${from}–${to} sur ${count !== -1 ? count : estimatedLabel}`;
+  },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {
       return 'Aller à la première page';
@@ -215,6 +214,7 @@ const frFRGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: 'Agrégation',
+  // aggregationFunctionLabelNone: 'none',
   aggregationFunctionLabelSum: 'Somme',
   aggregationFunctionLabelAvg: 'Moyenne',
   aggregationFunctionLabelMin: 'Minimum',
@@ -249,6 +249,34 @@ const frFRGrid: Partial<GridLocaleText> = {
   // pivotDragToValues: 'Drag here to create values',
   // pivotYearColumnHeaderName: '(Year)',
   // pivotQuarterColumnHeaderName: '(Quarter)',
+
+  // Charts configuration panel
+  chartsNoCharts: 'Aucun graphique disponible',
+  chartsChartNotSelected: 'Sélectionnez un type de graphique pour configurer ses options',
+  chartsTabChart: 'Graphique',
+  chartsTabFields: 'Champs',
+  chartsTabCustomize: 'Personnaliser',
+  chartsCloseButton: 'Fermer la configuration des graphiques',
+  chartsSyncButtonLabel: 'Synchroniser le graphique',
+  chartsSearchPlaceholder: 'Rechercher des champs',
+  chartsSearchLabel: 'Rechercher des champs',
+  chartsSearchClear: 'Effacer la recherche',
+  chartsNoFields: 'Aucun champ',
+  // chartsFieldBlocked: 'This field cannot be added to any section',
+  chartsCategories: 'Catégories',
+  chartsSeries: 'Séries',
+  chartsMenuAddToDimensions: (dimensionLabel: string) => `Ajouter aux ${dimensionLabel}`,
+  chartsMenuAddToValues: (valuesLabel: string) => `Ajouter aux ${valuesLabel}`,
+  chartsMenuMoveUp: 'Déplacer vers le haut',
+  chartsMenuMoveDown: 'Déplacer vers le bas',
+  chartsMenuMoveToTop: 'Déplacer en haut',
+  chartsMenuMoveToBottom: 'Déplacer en bas',
+  chartsMenuOptions: 'Options du champ',
+  chartsMenuRemove: 'Supprimer',
+  chartsDragToDimensions: (dimensionLabel: string) =>
+    `Faites glisser ici pour utiliser la colonne comme ${dimensionLabel}`,
+  chartsDragToValues: (valuesLabel: string) =>
+    `Faites glisser ici pour utiliser la colonne comme ${valuesLabel}`,
 
   // AI Assistant panel
   // aiAssistantPanelTitle: 'AI Assistant',

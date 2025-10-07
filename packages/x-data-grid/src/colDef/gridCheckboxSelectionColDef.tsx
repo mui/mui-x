@@ -17,6 +17,7 @@ export const GRID_CHECKBOX_SELECTION_COL_DEF: GridColDef = {
   filterable: false,
   // @ts-ignore
   aggregable: false,
+  chartable: false,
   disableColumnMenu: true,
   disableReorder: true,
   disableExport: true,
@@ -26,6 +27,7 @@ export const GRID_CHECKBOX_SELECTION_COL_DEF: GridColDef = {
     const rowId = gridRowIdSelector(apiRef, row);
     return apiRef.current.isRowSelected(rowId);
   },
+  rowSpanValueGetter: (_, row, column, apiRef) => gridRowIdSelector(apiRef, row),
   renderHeader: (params) => <GridHeaderCheckbox {...params} />,
   renderCell: (params) => <GridCellCheckboxRenderer {...params} />,
 };

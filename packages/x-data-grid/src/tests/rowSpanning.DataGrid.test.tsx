@@ -3,13 +3,14 @@ import { RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { DataGrid, useGridApiRef, DataGridProps, GridApi } from '@mui/x-data-grid';
+import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
 import { getCell, getActiveCell } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
 
-describe('<DataGrid /> - Row spanning', () => {
+describe.skipIf(isJSDOM)('<DataGrid /> - Row spanning', () => {
   const { render } = createRenderer();
 
-  let apiRef: RefObject<GridApi | null>;
+  let publicApiRef: RefObject<GridApi | null>;
   const baselineProps: DataGridProps = {
     rowSpanning: true,
     columns: [
@@ -102,75 +103,73 @@ describe('<DataGrid /> - Row spanning', () => {
   };
 
   function TestDataGrid(props: Partial<DataGridProps>) {
-    apiRef = useGridApiRef();
+    publicApiRef = useGridApiRef();
     return (
       <div style={{ width: 500, height: 300 }}>
-        <DataGrid {...baselineProps} apiRef={apiRef} {...props} disableVirtualization={isJSDOM} />
+        <DataGrid {...baselineProps} apiRef={publicApiRef} {...props} />
       </div>
     );
   }
 
   const rowHeight = 52;
 
-  it.skipIf(isJSDOM)('should span the repeating row values', () => {
+  it('should span the repeating row values', () => {
     render(<TestDataGrid />);
+    const api = unwrapPrivateAPI(publicApiRef.current!);
 
-    if (!apiRef.current?.state) {
-      throw new Error('apiRef.current.state is undefined');
+    if (!api?.state) {
+      throw new Error('api.virtualizer.store.state is undefined');
     }
 
-    const rowsWithSpannedCells = Object.keys(apiRef.current.state.rowSpanning.spannedCells);
+    const store = api.virtualizer.store;
+    const rowsWithSpannedCells = Object.keys(store.state.rowSpanning.caches.spannedCells);
     expect(rowsWithSpannedCells.length).to.equal(1);
-    const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(4);
+    const rowIndex = api.getRowIndexRelativeToVisibleRows(4);
     expect(rowIndex).to.equal(3);
-    const spanValue = apiRef.current.state.rowSpanning.spannedCells['4'];
-    expect(spanValue).to.deep.equal({ code: 3, totalPrice: 3 });
+    const spanValue = store.state.rowSpanning.caches.spannedCells['4'];
+    expect(spanValue).to.deep.equal({ '0': 3, '4': 3 });
     const spannedCell = getCell(rowIndex, 0);
-    expect(spannedCell).to.have.style('height', `${rowHeight * spanValue.code}px`);
+    expect(spannedCell).to.have.style('height', `${rowHeight * spanValue[0]}px`);
   });
 
   describe('sorting', () => {
-    it.skipIf(isJSDOM)('should work with sorting when initializing sorting', () => {
+    it('should work with sorting when initializing sorting', () => {
       render(
         <TestDataGrid
           initialState={{ sorting: { sortModel: [{ field: 'code', sort: 'desc' }] } }}
         />,
       );
 
-      if (!apiRef.current?.state) {
-        throw new Error('apiRef.current.state is undefined');
-      }
-
-      const rowsWithSpannedCells = Object.keys(apiRef.current.state.rowSpanning.spannedCells);
+      const api = unwrapPrivateAPI(publicApiRef.current!);
+      const store = api.virtualizer.store;
+      const rowsWithSpannedCells = Object.keys(store.state.rowSpanning.caches.spannedCells);
       expect(rowsWithSpannedCells.length).to.equal(1);
-      const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(4);
+      const rowIndex = api.getRowIndexRelativeToVisibleRows(4);
       expect(rowIndex).to.equal(1);
-      const spanValue = apiRef.current.state.rowSpanning.spannedCells['4'];
-      expect(spanValue).to.deep.equal({ code: 3, totalPrice: 3 });
+      const spanValue = store.state.rowSpanning.caches.spannedCells['4'];
+      expect(spanValue).to.deep.equal({ '0': 3, '4': 3 });
       const spannedCell = getCell(rowIndex, 0);
-      expect(spannedCell).to.have.style('height', `${rowHeight * spanValue.code}px`);
+      expect(spannedCell).to.have.style('height', `${rowHeight * spanValue[0]}px`);
     });
 
-    it.skipIf(isJSDOM)('should work with sorting when controlling sorting', () => {
+    it('should work with sorting when controlling sorting', () => {
       render(<TestDataGrid sortModel={[{ field: 'code', sort: 'desc' }]} />);
 
-      if (!apiRef.current?.state) {
-        throw new Error('apiRef.current.state is undefined');
-      }
-
-      const rowsWithSpannedCells = Object.keys(apiRef.current.state.rowSpanning.spannedCells);
+      const api = unwrapPrivateAPI(publicApiRef.current!);
+      const store = api.virtualizer.store;
+      const rowsWithSpannedCells = Object.keys(store.state.rowSpanning.caches.spannedCells);
       expect(rowsWithSpannedCells.length).to.equal(1);
-      const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(4);
+      const rowIndex = api.getRowIndexRelativeToVisibleRows(4);
       expect(rowIndex).to.equal(1);
-      const spanValue = apiRef.current.state.rowSpanning.spannedCells['4'];
-      expect(spanValue).to.deep.equal({ code: 3, totalPrice: 3 });
+      const spanValue = store.state.rowSpanning.caches.spannedCells['4'];
+      expect(spanValue).to.deep.equal({ '0': 3, '4': 3 });
       const spannedCell = getCell(rowIndex, 0);
-      expect(spannedCell).to.have.style('height', `${rowHeight * spanValue.code}px`);
+      expect(spannedCell).to.have.style('height', `${rowHeight * spanValue[0]}px`);
     });
   });
 
   describe('filtering', () => {
-    it.skipIf(isJSDOM)('should work with filtering when initializing filter', () => {
+    it('should work with filtering when initializing filter', () => {
       render(
         <TestDataGrid
           initialState={{
@@ -183,21 +182,19 @@ describe('<DataGrid /> - Row spanning', () => {
         />,
       );
 
-      if (!apiRef.current?.state) {
-        throw new Error('apiRef.current.state is undefined');
-      }
-
-      const rowsWithSpannedCells = Object.keys(apiRef.current.state.rowSpanning.spannedCells);
+      const api = unwrapPrivateAPI(publicApiRef.current!);
+      const store = api.virtualizer.store;
+      const rowsWithSpannedCells = Object.keys(store.state.rowSpanning.caches.spannedCells);
       expect(rowsWithSpannedCells.length).to.equal(1);
-      const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(5);
+      const rowIndex = api.getRowIndexRelativeToVisibleRows(5);
       expect(rowIndex).to.equal(0);
-      const spanValue = apiRef.current.state.rowSpanning.spannedCells['5'];
-      expect(spanValue).to.deep.equal({ code: 2, totalPrice: 2 });
+      const spanValue = store.state.rowSpanning.caches.spannedCells['5'];
+      expect(spanValue).to.deep.equal({ '0': 2, '4': 2 });
       const spannedCell = getCell(rowIndex, 0);
-      expect(spannedCell).to.have.style('height', `${rowHeight * spanValue.code}px`);
+      expect(spannedCell).to.have.style('height', `${rowHeight * spanValue[0]}px`);
     });
 
-    it.skipIf(isJSDOM)('should work with filtering when controlling filter', () => {
+    it('should work with filtering when controlling filter', () => {
       render(
         <TestDataGrid
           filterModel={{
@@ -206,23 +203,21 @@ describe('<DataGrid /> - Row spanning', () => {
         />,
       );
 
-      if (!apiRef.current?.state) {
-        throw new Error('apiRef.current.state is undefined');
-      }
-
-      const rowsWithSpannedCells = Object.keys(apiRef.current.state.rowSpanning.spannedCells);
+      const api = unwrapPrivateAPI(publicApiRef.current!);
+      const store = api.virtualizer.store;
+      const rowsWithSpannedCells = Object.keys(store.state.rowSpanning.caches.spannedCells);
       expect(rowsWithSpannedCells.length).to.equal(1);
-      const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(5);
+      const rowIndex = api.getRowIndexRelativeToVisibleRows(5);
       expect(rowIndex).to.equal(0);
-      const spanValue = apiRef.current.state.rowSpanning.spannedCells['5'];
-      expect(spanValue).to.deep.equal({ code: 2, totalPrice: 2 });
+      const spanValue = store.state.rowSpanning.caches.spannedCells['5'];
+      expect(spanValue).to.deep.equal({ '0': 2, '4': 2 });
       const spannedCell = getCell(rowIndex, 0);
-      expect(spannedCell).to.have.style('height', `${rowHeight * spanValue.code}px`);
+      expect(spannedCell).to.have.style('height', `${rowHeight * spanValue[0]}px`);
     });
   });
 
   describe('pagination', () => {
-    it.skipIf(isJSDOM)('should only compute the row spanning state for current page', async () => {
+    it('should only compute the row spanning state for current page', async () => {
       render(
         <TestDataGrid
           pagination
@@ -231,16 +226,15 @@ describe('<DataGrid /> - Row spanning', () => {
         />,
       );
 
-      if (!apiRef.current?.state) {
-        throw new Error('apiRef.current.state is undefined');
-      }
+      const api = unwrapPrivateAPI(publicApiRef.current!);
 
-      expect(Object.keys(apiRef.current.state.rowSpanning.spannedCells).length).to.equal(0);
+      const store = api.virtualizer.store;
+      expect(Object.keys(store.state.rowSpanning.caches.spannedCells).length).to.equal(0);
       act(() => {
-        apiRef.current?.setPage(1);
+        api?.setPage(1);
       });
-      expect(Object.keys(apiRef.current.state.rowSpanning.spannedCells).length).to.equal(1);
-      expect(Object.keys(apiRef.current.state.rowSpanning.hiddenCells).length).to.equal(1);
+      expect(Object.keys(store.state.rowSpanning.caches.spannedCells).length).to.equal(1);
+      expect(Object.keys(store.state.rowSpanning.caches.hiddenCells).length).to.equal(1);
     });
   });
 
@@ -248,7 +242,7 @@ describe('<DataGrid /> - Row spanning', () => {
     it('should respect the spanned cells when navigating using keyboard', () => {
       render(<TestDataGrid />);
       // Set focus to the cell with value `- 16GB RAM Upgrade`
-      act(() => apiRef.current?.setCellFocus(5, 'description'));
+      act(() => publicApiRef.current?.setCellFocus(5, 'description'));
       expect(getActiveCell()).to.equal('4-1');
       const cell41 = getCell(4, 1);
       fireEvent.keyDown(cell41, { key: 'ArrowLeft' });
@@ -268,28 +262,30 @@ describe('<DataGrid /> - Row spanning', () => {
         <TestDataGrid
           columns={[{ field: 'code', rowSpanValueGetter }]}
           rows={[{ id: 1, code: 'A101' }]}
-          onStateChange={(newState) => {
-            const newSpannedCells = newState.rowSpanning.spannedCells;
-            if (newSpannedCells !== spannedCells) {
-              rowSpanningStateUpdates += 1;
-              spannedCells = newSpannedCells;
-            }
-          }}
         />,
       );
 
-      // First update by initializer
-      expect(rowSpanningStateUpdates).to.equal(1);
+      const api = unwrapPrivateAPI(publicApiRef.current!);
+      const store = api.virtualizer.store;
+      const dispose = store.subscribe((newState) => {
+        const newSpannedCells = newState.rowSpanning.caches.spannedCells;
+        if (newSpannedCells !== spannedCells) {
+          rowSpanningStateUpdates += 1;
+          spannedCells = newSpannedCells;
+        }
+      });
 
       act(() => {
-        apiRef.current?.setRows([
+        publicApiRef.current?.setRows([
           { id: 1, code: 'A101' },
           { id: 2, code: 'A101' },
         ]);
       });
 
-      // Second update on row update
+      // 2 updates on `rows` update, one for the reset (necessary to track deleted or updated data values) and one for the new computed state
       expect(rowSpanningStateUpdates).to.equal(2);
+
+      dispose();
     });
   });
 

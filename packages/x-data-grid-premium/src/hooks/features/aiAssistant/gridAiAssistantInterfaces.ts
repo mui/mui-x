@@ -62,6 +62,27 @@ export type PromptResponse = {
   pivoting: Pivoting;
 };
 
+export type PromptResolverOptions = {
+  /**
+   * By default, MUI's prompt resolver service stores the queries made to the service to analyze potential errors and improve the service (data is never stored). Enable private mode to make the service only keep track of the token count, without any query related data.
+   * @default false
+   */
+  privateMode?: boolean;
+  /**
+   * Additional context to make the processing results more accurate.
+   */
+  additionalContext?: string;
+  /**
+   * Additional metadata to track the usage for each unique user.
+   */
+  metadata?: {
+    /**
+     * The reference ID that would be stored for you to identify the entity that made the request and then to be able to track the usage for each unique user/entity.
+     */
+    referenceId?: string;
+  };
+};
+
 /**
  * The prompt API interface that is available in the grid [[apiRef]].
  */

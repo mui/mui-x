@@ -4,12 +4,13 @@ import { useThemeProps } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import { ChartsOverlay, ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
-import { ChartSeriesConfig, ChartsWrapper } from '@mui/x-charts/internals';
+import { ChartSeriesConfig } from '@mui/x-charts/internals';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { MakeOptional } from '@mui/x-internals/types';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
+import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { FunnelPlot, FunnelPlotProps } from './FunnelPlot';
 import { FunnelSeriesType } from './funnel.types';
 import { useFunnelChartProps } from './useFunnelChartProps';
@@ -19,12 +20,12 @@ import { useChartContainerProProps } from '../ChartContainerPro/useChartContaine
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
 import { FunnelChartSlotExtension } from './funnelSlots.types';
 import { CategoryAxis } from './categoryAxis.types';
-import { FUNNEL_CHART_PLUGINS, FunnelChartPluginsSignatures } from './FunnelChart.plugins';
+import { FUNNEL_CHART_PLUGINS, FunnelChartPluginSignatures } from './FunnelChart.plugins';
 
 export type FunnelSeries = MakeOptional<FunnelSeriesType, 'type'>;
 export interface FunnelChartProps
   extends Omit<
-      ChartContainerProProps<'funnel', FunnelChartPluginsSignatures>,
+      ChartContainerProProps<'funnel', FunnelChartPluginSignatures>,
       | 'series'
       | 'plugins'
       | 'zAxis'
@@ -94,7 +95,7 @@ const FunnelChart = React.forwardRef(function FunnelChart(
   const Tooltip = themedProps.slots?.tooltip ?? ChartsTooltip;
 
   return (
-    <ChartDataProviderPro<'funnel', FunnelChartPluginsSignatures>
+    <ChartDataProviderPro<'funnel', FunnelChartPluginSignatures>
       {...chartDataProviderProProps}
       gap={themedProps.gap}
       seriesConfig={seriesConfig}
@@ -109,7 +110,7 @@ const FunnelChart = React.forwardRef(function FunnelChart(
           <ChartsAxis {...chartsAxisProps} />
           {children}
         </ChartsSurface>
-        {!themedProps.loading && <Tooltip {...themedProps.slotProps?.tooltip} trigger="item" />}
+        {!themedProps.loading && <Tooltip trigger="item" {...themedProps.slotProps?.tooltip} />}
       </ChartsWrapper>
     </ChartDataProviderPro>
   );

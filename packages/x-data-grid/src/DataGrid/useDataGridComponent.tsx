@@ -4,6 +4,7 @@ import { RefObject } from '@mui/x-internals/types';
 import { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { GridPrivateApiCommunity } from '../models/api/gridApiCommunity';
 import { useGridInitialization } from '../hooks/core/useGridInitialization';
+import { useGridVirtualizer } from '../hooks/core/useGridVirtualizer';
 import { useGridInitializeState } from '../hooks/utils/useGridInitializeState';
 import { useGridClipboard } from '../hooks/features/clipboard/useGridClipboard';
 import {
@@ -66,10 +67,12 @@ import {
 } from '../hooks/features/listView/useGridListView';
 import { propsStateInitializer } from '../hooks/core/useGridProps';
 import { useGridDataSource } from '../hooks/features/dataSource/useGridDataSource';
+import { GridConfiguration } from '../models/configuration/gridConfiguration';
 
 export const useDataGridComponent = (
   apiRef: RefObject<GridPrivateApiCommunity>,
   props: DataGridProcessedProps,
+  configuration: GridConfiguration,
 ) => {
   useGridInitialization<GridPrivateApiCommunity>(apiRef, props);
 
@@ -102,18 +105,19 @@ export const useDataGridComponent = (
   useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
   useGridInitializeState(listViewStateInitializer, apiRef, props);
 
+  useGridVirtualizer(apiRef, props);
   useGridKeyboardNavigation(apiRef, props);
   useGridRowSelection(apiRef, props);
   useGridColumns(apiRef, props);
-  useGridRows(apiRef, props);
+  useGridRows(apiRef, props, configuration);
   useGridRowSpanning(apiRef, props);
-  useGridParamsApi(apiRef, props);
+  useGridParamsApi(apiRef, props, configuration);
   useGridColumnSpanning(apiRef);
   useGridColumnGrouping(apiRef, props);
   useGridEditing(apiRef, props);
   useGridFocus(apiRef, props);
   useGridPreferencesPanel(apiRef, props);
-  useGridFilter(apiRef, props);
+  useGridFilter(apiRef, props, configuration);
   useGridSorting(apiRef, props);
   useGridDensity(apiRef, props);
   useGridColumnResize(apiRef, props);

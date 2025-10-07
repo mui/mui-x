@@ -2,6 +2,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
+import { computeOffsetLeft } from '@mui/x-virtualizer';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { useGridSelector } from '../../utils';
 import { useGridRootProps } from '../../utils/useGridRootProps';
@@ -18,7 +19,6 @@ import {
   gridVerticalScrollbarWidthSelector,
 } from '../dimensions/gridDimensionsSelectors';
 import { gridRenderContextColumnsSelector } from '../virtualization';
-import { computeOffsetLeft } from '../virtualization/useGridVirtualScroller';
 import { GridColumnGroupHeader } from '../../../components/columnHeaders/GridColumnGroupHeader';
 import { GridColumnGroup } from '../../../models/gridColumnGrouping';
 import { GridStateColDef } from '../../../models/colDef/gridColDef';
@@ -163,7 +163,8 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     const { renderContext: currentContext = renderContext } = params || {};
 
     const firstColumnToRender = currentContext.firstColumnIndex;
-    const lastColumnToRender = currentContext.lastColumnIndex;
+    // HACK: renderContext ins't always synchronized, this should be handled properly.
+    const lastColumnToRender = Math.min(currentContext.lastColumnIndex, visibleColumns.length);
     const renderedColumns = visibleColumns.slice(firstColumnToRender, lastColumnToRender);
 
     return {
@@ -201,14 +202,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
             )}
           />
         )}
-        {hasScrollbarFiller && (
-          <ScrollbarFiller
-            header
-            pinnedRight={isPinnedRight}
-            borderBottom={borderBottom}
-            borderTop={false}
-          />
-        )}
+        {hasScrollbarFiller && <ScrollbarFiller pinnedRight={isPinnedRight} />}
       </React.Fragment>
     );
   };
@@ -248,19 +242,23 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         ? columnHeaderFocus !== null &&
           columnHeaderFocus.field === siblingWithBorderingSeparator.field
         : false;
-      const isLastUnpinned =
-        columnIndex + 1 === columnPositions.length - pinnedColumns.right.length;
 
       const indexInSection = i;
       const sectionLength = renderedColumns.length;
 
-      const showLeftBorder = shouldCellShowLeftBorder(pinnedPosition, indexInSection);
+      const showLeftBorder = shouldCellShowLeftBorder(
+        pinnedPosition,
+        indexInSection,
+        rootProps.showColumnVerticalBorder,
+        rootProps.pinnedColumnsSectionSeparator,
+      );
       const showRightBorder = shouldCellShowRightBorder(
         pinnedPosition,
         indexInSection,
         sectionLength,
         rootProps.showColumnVerticalBorder,
         gridHasFiller,
+        rootProps.pinnedColumnsSectionSeparator,
       );
 
       columns.push(
@@ -281,7 +279,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           tabIndex={tabIndex}
           pinnedPosition={pinnedPosition}
           pinnedOffset={pinnedOffset}
-          isLastUnpinned={isLastUnpinned}
           isSiblingFocused={isSiblingFocused}
           showLeftBorder={showLeftBorder}
           showRightBorder={showRightBorder}
@@ -438,13 +435,19 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           tabIndex={tabIndex}
           pinnedPosition={pinnedPosition}
           pinnedOffset={pinnedOffset}
-          showLeftBorder={shouldCellShowLeftBorder(pinnedPosition, indexInSection)}
+          showLeftBorder={shouldCellShowLeftBorder(
+            pinnedPosition,
+            indexInSection,
+            rootProps.showColumnVerticalBorder,
+            rootProps.pinnedColumnsSectionSeparator,
+          )}
           showRightBorder={shouldCellShowRightBorder(
             pinnedPosition,
             indexInSection,
             visibleColumnGroupHeader.length,
             rootProps.showColumnVerticalBorder,
             gridHasFiller,
+            rootProps.pinnedColumnsSectionSeparator,
           )}
         />
       );

@@ -90,6 +90,8 @@ export default withDocsInfra({
     CHARTS_VERSION: chartsPkg.version,
     TREE_VIEW_VERSION: treeViewPkg.version,
     PICKERS_ADAPTERS_DEPS: JSON.stringify(pickersAdaptersDeps),
+    MUI_CHAT_API_BASE_URL: 'https://chat-backend.mui.com',
+    MUI_CHAT_SCOPES: 'x-data-grid,x-date-pickers,x-charts,x-tree-view',
   },
   // @ts-ignore
   webpack: (config, options) => {
@@ -205,8 +207,6 @@ export default withDocsInfra({
       console.log('Considering only English for SSR');
       traverse(pages, 'en');
     } else {
-      // eslint-disable-next-line no-console
-      console.log('Considering various locales for SSR');
       LANGUAGES_SSR.forEach((userLanguage) => {
         traverse(pages, userLanguage);
       });

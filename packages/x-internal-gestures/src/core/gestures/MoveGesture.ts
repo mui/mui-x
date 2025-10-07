@@ -88,17 +88,8 @@ export class MoveGesture<GestureName extends string> extends PointerGesture<Gest
    */
   protected threshold: number;
 
-  // Store bound event handlers to properly remove them
-  private handleElementEnterBound: (event: PointerEvent) => void;
-
-  private handleElementLeaveBound: (event: PointerEvent) => void;
-
   constructor(options: MoveGestureOptions<GestureName>) {
     super(options);
-    // Pre-bind handlers to this instance to maintain reference equality
-    this.handleElementEnterBound = this.handleElementEnter.bind(this);
-    this.handleElementLeaveBound = this.handleElementLeave.bind(this);
-
     this.threshold = options.threshold || 0;
   }
 
@@ -113,6 +104,7 @@ export class MoveGesture<GestureName extends string> extends PointerGesture<Gest
       requiredKeys: [...this.requiredKeys],
       pointerMode: [...this.pointerMode],
       preventIf: [...this.preventIf],
+      pointerOptions: structuredClone(this.pointerOptions),
       // Apply any overrides passed to the method
       ...overrides,
     });
@@ -129,17 +121,17 @@ export class MoveGesture<GestureName extends string> extends PointerGesture<Gest
     // Add event listeners for entering and leaving elements
     // These are different from pointer events handled by PointerManager
     // @ts-expect-error, PointerEvent is correct.
-    this.element.addEventListener('pointerenter', this.handleElementEnterBound);
+    this.element.addEventListener('pointerenter', this.handleElementEnter);
     // @ts-expect-error, PointerEvent is correct.
-    this.element.addEventListener('pointerleave', this.handleElementLeaveBound);
+    this.element.addEventListener('pointerleave', this.handleElementLeave);
   }
 
   public destroy(): void {
     // Remove event listeners using the same function references
     // @ts-expect-error, PointerEvent is correct.
-    this.element.removeEventListener('pointerenter', this.handleElementEnterBound);
+    this.element.removeEventListener('pointerenter', this.handleElementEnter);
     // @ts-expect-error, PointerEvent is correct.
-    this.element.removeEventListener('pointerleave', this.handleElementLeaveBound);
+    this.element.removeEventListener('pointerleave', this.handleElementLeave);
     this.resetState();
     super.destroy();
   }
@@ -160,7 +152,7 @@ export class MoveGesture<GestureName extends string> extends PointerGesture<Gest
    * Handle pointer enter events for a specific element
    * @param event The original pointer event
    */
-  private handleElementEnter(event: PointerEvent): void {
+  private handleElementEnter = (event: PointerEvent): void => {
     if (event.pointerType !== 'mouse' && event.pointerType !== 'pen') {
       return;
     }
@@ -170,7 +162,7 @@ export class MoveGesture<GestureName extends string> extends PointerGesture<Gest
     const pointersArray = Array.from(pointers.values());
 
     // Only activate if we're within pointer count constraints
-    if (pointersArray.length >= this.minPointers && pointersArray.length <= this.maxPointers) {
+    if (this.isWithinPointerCount(pointersArray, event.pointerType)) {
       this.isActive = true;
       const currentPosition = { x: event.clientX, y: event.clientY };
       this.state.lastPosition = currentPosition;
@@ -179,13 +171,13 @@ export class MoveGesture<GestureName extends string> extends PointerGesture<Gest
       this.emitMoveEvent(this.element, 'start', pointersArray, event);
       this.emitMoveEvent(this.element, 'ongoing', pointersArray, event);
     }
-  }
+  };
 
   /**
    * Handle pointer leave events for a specific element
    * @param event The original pointer event
    */
-  private handleElementLeave(event: PointerEvent): void {
+  private handleElementLeave = (event: PointerEvent): void => {
     if (event.pointerType !== 'mouse' && event.pointerType !== 'pen') {
       return;
     }
@@ -201,14 +193,17 @@ export class MoveGesture<GestureName extends string> extends PointerGesture<Gest
     // Emit end event and reset state
     this.emitMoveEvent(this.element, 'end', pointersArray, event);
     this.resetState();
-  }
+  };
 
   /**
    * Handle pointer events for the move gesture (only handles move events now)
    * @param pointers Map of active pointers
    * @param event The original pointer event
    */
-  protected handlePointerEvent(pointers: Map<number, PointerData>, event: PointerEvent): void {
+  protected handlePointerEvent = (
+    pointers: Map<number, PointerData>,
+    event: PointerEvent,
+  ): void => {
     if (
       event.type !== 'pointermove' ||
       (event.pointerType !== 'mouse' && event.pointerType !== 'pen')
@@ -231,12 +226,11 @@ export class MoveGesture<GestureName extends string> extends PointerGesture<Gest
       return;
     }
 
-    // Make sure we're still within pointer count constraints
-    if (pointersArray.length < this.minPointers || pointersArray.length > this.maxPointers) {
+    if (!this.isWithinPointerCount(pointersArray, event.pointerType)) {
       return;
     }
 
-    if (this.shouldPreventGesture(targetElement)) {
+    if (this.shouldPreventGesture(targetElement, event.pointerType)) {
       if (!this.isActive) {
         return;
       }
@@ -255,7 +249,7 @@ export class MoveGesture<GestureName extends string> extends PointerGesture<Gest
     }
     // Emit ongoing event
     this.emitMoveEvent(targetElement, 'ongoing', pointersArray, event);
-  }
+  };
 
   /**
    * Emit move-specific events

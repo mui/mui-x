@@ -1,19 +1,30 @@
 import * as React from 'react';
 
-import { EventCalendar } from '@mui/x-scheduler/joy/event-calendar';
-import { events as initialEvents, resources } from '../../../data/scheduler/event-calendar/events';
+import { EventCalendar } from '@mui/x-scheduler/event-calendar';
+import {
+  initialEvents,
+  defaultVisibleDate,
+  resources,
+} from '../../../data/scheduler/datasets/personal-agenda';
 
 export default function FullEventCalendar() {
   const [events, setEvents] = React.useState(initialEvents);
 
   return (
-    <EventCalendar
-      events={events}
-      resources={resources}
-      defaultVisibleDate={events[0].start}
-      onEventsChange={setEvents}
-      areEventsDraggable
-      areEventsResizable
-    />
+    <div
+      style={{
+        display: 'flex',
+        height: '100vh',
+      }}
+    >
+      <EventCalendar
+        events={events}
+        resources={resources}
+        defaultVisibleDate={defaultVisibleDate}
+        onEventsChange={setEvents}
+        areEventsDraggable
+        areEventsResizable
+      />
+    </div>
   );
 }

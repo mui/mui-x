@@ -1,4 +1,4 @@
-import { ChartsWrapper, DEFAULT_PIE_CHART_MARGIN, defaultizeMargin } from '@mui/x-charts/internals';
+import { DEFAULT_PIE_CHART_MARGIN, defaultizeMargin } from '@mui/x-charts/internals';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
@@ -7,6 +7,7 @@ import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { PieChartProps, PieChartSlotProps, PieChartSlots, PiePlot } from '@mui/x-charts/PieChart';
+import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
 import { ChartsSlotsPro, ChartsSlotPropsPro } from '../internals/material';
@@ -97,13 +98,14 @@ const PieChartPro = React.forwardRef<SVGSVGElement, PieChartProProps>(
       <ChartDataProviderPro<'pie', PieChartProPluginSignatures> {...chartDataProviderProProps}>
         <ChartsWrapper
           legendPosition={props.slotProps?.legend?.position}
-          legendDirection={props?.slotProps?.legend?.direction ?? 'vertical'}
+          legendDirection={props.slotProps?.legend?.direction ?? 'vertical'}
           sx={sx}
+          hideLegend={hideLegend ?? false}
         >
           {showToolbar ? <Toolbar /> : null}
           {!hideLegend && (
             <ChartsLegend
-              direction={props?.slotProps?.legend?.direction ?? 'vertical'}
+              direction={props.slotProps?.legend?.direction ?? 'vertical'}
               slots={slots}
               slotProps={slotProps}
             />
@@ -143,6 +145,7 @@ PieChartPro.propTypes = {
    */
   dataset: PropTypes.arrayOf(PropTypes.object),
   desc: PropTypes.string,
+  enableKeyboardNavigation: PropTypes.bool,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */

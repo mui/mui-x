@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useStore } from '@mui/x-internals/store';
 import Alert from '@mui/material/Alert';
 import Typography from '@mui/material/Typography';
 import composeClasses from '@mui/utils/composeClasses';
@@ -13,11 +14,7 @@ import { useTreeView } from '../internals/useTreeView';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { RICH_TREE_VIEW_PLUGINS, RichTreeViewPluginSignatures } from './RichTreeView.plugins';
 import { RichTreeViewItems } from '../internals/components/RichTreeViewItems';
-import { useSelector } from '../internals/hooks/useSelector';
-import {
-  selectorGetTreeViewError,
-  selectorIsTreeViewLoading,
-} from '../internals/plugins/useTreeViewItems/useTreeViewItems.selectors';
+import { lazyLoadingSelectors } from '../internals/plugins/useTreeViewLazyLoading';
 
 const useThemeProps = createUseThemeProps('MuiRichTreeView');
 
@@ -91,8 +88,8 @@ const RichTreeView = React.forwardRef(function RichTreeView<
     rootRef: ref,
     props: other,
   });
-  const isLoading = useSelector(contextValue.store, selectorIsTreeViewLoading);
-  const treeViewError = useSelector(contextValue.store, selectorGetTreeViewError);
+  const isLoading = useStore(contextValue.store, lazyLoadingSelectors.isItemLoading, null);
+  const error = useStore(contextValue.store, lazyLoadingSelectors.itemError, null);
 
   const classes = useUtilityClasses(props);
 
@@ -109,8 +106,8 @@ const RichTreeView = React.forwardRef(function RichTreeView<
     return <Typography>Loading...</Typography>;
   }
 
-  if (treeViewError) {
-    return <Alert severity="error">{treeViewError.message}</Alert>;
+  if (error) {
+    return <Alert severity="error">{error.message}</Alert>;
   }
 
   return (
@@ -137,17 +134,18 @@ RichTreeView.propTypes = {
    */
   apiRef: PropTypes.shape({
     current: PropTypes.shape({
-      focusItem: PropTypes.func.isRequired,
-      getItem: PropTypes.func.isRequired,
-      getItemDOMElement: PropTypes.func.isRequired,
-      getItemOrderedChildrenIds: PropTypes.func.isRequired,
-      getItemTree: PropTypes.func.isRequired,
-      getParentId: PropTypes.func.isRequired,
-      setEditedItem: PropTypes.func.isRequired,
-      setIsItemDisabled: PropTypes.func.isRequired,
-      setItemExpansion: PropTypes.func.isRequired,
-      setItemSelection: PropTypes.func.isRequired,
-      updateItemLabel: PropTypes.func.isRequired,
+      focusItem: PropTypes.func,
+      getItem: PropTypes.func,
+      getItemDOMElement: PropTypes.func,
+      getItemOrderedChildrenIds: PropTypes.func,
+      getItemTree: PropTypes.func,
+      getParentId: PropTypes.func,
+      isItemExpanded: PropTypes.func,
+      setEditedItem: PropTypes.func,
+      setIsItemDisabled: PropTypes.func,
+      setItemExpansion: PropTypes.func,
+      setItemSelection: PropTypes.func,
+      updateItemLabel: PropTypes.func,
     }),
   }),
   /**
