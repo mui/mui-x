@@ -4,6 +4,7 @@ import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import { StandaloneEvent } from '@mui/x-scheduler-headless/standalone-event';
 import { CalendarOccurrencePlaceholderExternalDragData } from '@mui/x-scheduler-headless/models';
+import { diffIn, useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { buildIsValidDropTarget } from '@mui/x-scheduler-headless/build-is-valid-drop-target';
 import {
   initialEvents,
@@ -17,23 +18,46 @@ const isValidDropTarget = buildIsValidDropTarget([
   'CalendarGridDayEvent',
 ]);
 
-const initialExternalEvents: CalendarOccurrencePlaceholderExternalDragData[] =
-  Array.from({ length: 9 }, (_, index) => ({
-    id: `external-event-${index + 1}`,
-    title: `External Event ${index + 1}`,
-  }));
+const initialExternalEvents: {
+  data: CalendarOccurrencePlaceholderExternalDragData;
+  duration: number;
+}[] = [
+  {
+    data: { id: 'external-1', title: 'External Event 1' },
+    duration: 30,
+  },
+  {
+    data: { id: 'external-2', title: 'External Event 2' },
+    duration: 60,
+  },
+  {
+    data: { id: 'external-3', title: 'External Event 3' },
+    duration: 90,
+  },
+  {
+    data: { id: 'external-4', title: 'External Event 4' },
+    duration: 60,
+  },
+  {
+    data: { id: 'external-5', title: 'External Event 5' },
+    duration: 45,
+  },
+];
 
 export default function ExternalDragAndDrop() {
+  const adapter = useAdapter();
   const [events, setEvents] = React.useState(initialEvents);
-  const [placeholder, setPlaceholder] =
-    React.useState<CalendarOccurrencePlaceholderExternalDragData | null>(null);
+  const [placeholder, setPlaceholder] = React.useState<{
+    data: CalendarOccurrencePlaceholderExternalDragData;
+    duration: number;
+  } | null>(null);
   const [externalEvents, setExternalEvents] = React.useState(initialExternalEvents);
 
   const handleEventDropInsideEventCalendar = (
     removedEvent: CalendarOccurrencePlaceholderExternalDragData,
   ) => {
     setExternalEvents((prev) =>
-      prev.filter((event) => event.id !== removedEvent.id),
+      prev.filter((event) => event.data.id !== removedEvent.id),
     );
   };
 
@@ -51,7 +75,12 @@ export default function ExternalDragAndDrop() {
           return;
         }
 
-        setPlaceholder({ id: data.event.id, title: data.event.title });
+        const { start, end, ...eventData } = data.event;
+
+        setPlaceholder({
+          data: eventData,
+          duration: diffIn(adapter, end, start, 'minutes'),
+        });
       },
       onDrop: () => {
         if (placeholder == null) {
@@ -59,7 +88,9 @@ export default function ExternalDragAndDrop() {
         }
 
         setExternalEvents((prev) => [...prev, placeholder]);
-        setEvents((prev) => prev.filter((event) => event.id !== placeholder.id));
+        setEvents((prev) =>
+          prev.filter((event) => event.id !== placeholder.data.id),
+        );
         setPlaceholder(null);
       },
     });
@@ -73,18 +104,19 @@ export default function ExternalDragAndDrop() {
       >
         {externalEvents.map((event) => (
           <StandaloneEvent
-            key={event.id}
+            key={event.data.id}
             isDraggable
-            data={event}
-            onEventDrop={() => handleEventDropInsideEventCalendar(event)}
+            data={event.data}
+            duration={event.duration}
+            onEventDrop={() => handleEventDropInsideEventCalendar(event.data)}
             className={clsx(classes.ExternalEvent)}
           >
-            {event.title}
+            {event.data.title} ({event.duration} mins)
           </StandaloneEvent>
         ))}
         {placeholder != null && (
           <div className={clsx(classes.ExternalEvent)} data-placeholder>
-            {placeholder.title}
+            {placeholder.data.title} ({placeholder.duration} mins)
           </div>
         )}
       </div>

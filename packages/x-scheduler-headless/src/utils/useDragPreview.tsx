@@ -13,12 +13,12 @@ export function useDragPreview(parameters: useDragPreview.Parameters) {
     dragPosition: null,
   });
 
-  const element = useRenderElement('div', componentProps, {
+  const rawElement = useRenderElement('div', componentProps, {
     state,
     props: [elementProps],
   });
 
-  const preview =
+  const element =
     state.dragPosition == null ? null : (
       <div
         style={{
@@ -29,7 +29,7 @@ export function useDragPreview(parameters: useDragPreview.Parameters) {
           zIndex: 9999,
         }}
       >
-        {element}
+        {rawElement}
       </div>
     );
 
@@ -56,9 +56,9 @@ export function useDragPreview(parameters: useDragPreview.Parameters) {
   );
 
   return {
-    preview,
-    previewState: state,
-    previewActions: actions,
+    element,
+    state,
+    actions,
   };
 }
 

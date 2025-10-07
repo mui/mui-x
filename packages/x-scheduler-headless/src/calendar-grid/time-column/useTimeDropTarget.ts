@@ -122,8 +122,8 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
       // Move an Standalone Event into the Time Grid
       if (data.source === 'StandaloneEvent') {
         const cursorDate = addOffsetToDate(start, cursorOffsetMs);
-
-        return createDropData(data, cursorDate, adapter.addMinutes(cursorDate, 60));
+        console.log(data.duration);
+        return createDropData(data, cursorDate, adapter.addMinutes(cursorDate, data.duration));
       }
 
       return undefined;

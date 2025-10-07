@@ -1,18 +1,28 @@
 'use client';
 import * as React from 'react';
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
-import { CalendarOccurrencePlaceholder, EventSurfaceType, SchedulerValidDate } from '../models';
+import {
+  CalendarEvent,
+  CalendarOccurrencePlaceholder,
+  CalendarOccurrencePlaceholderExternalDrag,
+  CalendarOccurrencePlaceholderInternalDragOrResize,
+  EventSurfaceType,
+  RecurringEventUpdatedProperties,
+  SchedulerValidDate,
+} from '../models';
 import {
   EventDropData,
   EventDropDataLookup,
 } from '../build-is-valid-drop-target/buildIsValidDropTarget';
-import { useSchedulerStoreContext } from '../use-scheduler-store-context';
-import { selectors } from './SchedulerStore';
+import { SchedulerStoreInContext, useSchedulerStoreContext } from '../use-scheduler-store-context';
+import { RecurringUpdateEventScope, selectors } from './SchedulerStore';
+import { SCHEDULER_RECURRING_EDITING_SCOPE } from '../constants';
 
 export function useDropTarget<Targets extends keyof EventDropDataLookup>(
   parameters: useDropTarget.Parameters<Targets>,
 ) {
-  const { surfaceType, ref, getEventDropData, isValidDropTarget } = parameters;
+  const { surfaceType, ref, getEventDropData, isValidDropTarget, preProcessDroppedEvent } =
+    parameters;
   const store = useSchedulerStoreContext();
 
   React.useEffect(() => {
@@ -81,9 +91,13 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
         const placeholder = dropData ?? selectors.occurrencePlaceholder(store.state);
 
         if (placeholder?.type === 'internal-drag-or-resize') {
-          store.applyInternalDragOrResizeOccurrencePlaceholder(placeholder);
+          applyInternalDragOrResizeOccurrencePlaceholder(
+            store,
+            placeholder,
+            preProcessDroppedEvent,
+          );
         } else if (placeholder?.type === 'external-drag') {
-          store.applyExternalDragOccurrencePlaceholder(placeholder);
+          applyExternalDragOccurrencePlaceholder(store, placeholder);
         }
       },
       onDragLeave: () => {
@@ -102,7 +116,7 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
         }
       },
     });
-  }, [ref, surfaceType, getEventDropData, isValidDropTarget, store]);
+  }, [ref, surfaceType, getEventDropData, isValidDropTarget, preProcessDroppedEvent, store]);
 }
 
 export namespace useDropTarget {
@@ -111,6 +125,10 @@ export namespace useDropTarget {
     ref: React.RefObject<HTMLDivElement | null>;
     isValidDropTarget: (data: any) => data is EventDropDataLookup[Targets];
     getEventDropData: GetEventDropData;
+    /**
+     * Processed the event dropped in the element before storing it in the store.
+     */
+    preProcessDroppedEvent?: (event: CalendarEvent) => CalendarEvent;
   }
 
   export type CreateDropData = (
@@ -124,4 +142,66 @@ export namespace useDropTarget {
     input: { clientX: number; clientY: number };
     createDropData: CreateDropData;
   }) => CalendarOccurrencePlaceholder | undefined;
+}
+
+/**
+ * Applies the data from the placeholder occurrence to the event it represents.
+ */
+async function applyInternalDragOrResizeOccurrencePlaceholder(
+  store: SchedulerStoreInContext,
+  placeholder: CalendarOccurrencePlaceholderInternalDragOrResize,
+  preProcessDroppedEvent: (event: CalendarEvent) => CalendarEvent,
+  chooseRecurringEventScope?: () => Promise<RecurringUpdateEventScope>,
+) {
+  // TODO: Try to do a single state update.
+  store.setOccurrencePlaceholder(null);
+
+  const { eventId, start, end, originalEvent, surfaceType } = placeholder;
+
+  const original = selectors.event(store.state, eventId);
+  if (!original) {
+    throw new Error(`Scheduler: the original event was not found (id="${eventId}").`);
+  }
+
+  const changes: RecurringEventUpdatedProperties = { start, end };
+  if (surfaceType === 'time-grid' && original.allDay) {
+    changes.allDay = false;
+  } else if (surfaceType === 'day-grid' && !original.allDay) {
+    changes.allDay = true;
+  }
+
+  if (original.rrule) {
+    let scope: RecurringUpdateEventScope;
+    if (chooseRecurringEventScope) {
+      // TODO: Issue #19440 + #19441 - Allow to edit all events or only this event.
+      scope = await chooseRecurringEventScope();
+    } else {
+      // TODO: Issue #19766 - Let the user choose the scope via UI.
+      scope = SCHEDULER_RECURRING_EDITING_SCOPE;
+    }
+
+    return store.updateRecurringEvent({
+      eventId,
+      occurrenceStart: originalEvent.start,
+      changes,
+      scope,
+    });
+  }
+
+  return store.updateEvent({ id: eventId, ...changes });
+}
+
+function applyExternalDragOccurrencePlaceholder(
+  store: SchedulerStoreInContext,
+  placeholder: CalendarOccurrencePlaceholderExternalDrag,
+) {
+  const event: CalendarEvent = {
+    ...placeholder.eventData,
+    start: placeholder.start,
+    end: placeholder.end,
+    allDay: placeholder.surfaceType === 'day-grid',
+  };
+  store.setOccurrencePlaceholder(null);
+  store.createEvent(event);
+  placeholder.onEventDrop?.();
 }

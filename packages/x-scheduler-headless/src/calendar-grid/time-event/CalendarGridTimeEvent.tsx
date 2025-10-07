@@ -47,7 +47,7 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
   const [isResizing, setIsResizing] = React.useState(false);
   const { getButtonProps, buttonRef } = useButton({ disabled: !isInteractive });
 
-  const { preview, previewActions } = useDragPreview({
+  const preview = useDragPreview({
     elementProps,
     componentProps,
     showPreviewOnDragStart: false,
@@ -138,17 +138,17 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
         disableNativeDragPreview({ nativeSetDragImage });
       },
       onDragStart: ({ location }) => {
-        previewActions.onDragStart(location);
+        preview.actions.onDragStart(location);
       },
       onDrag: ({ location }) => {
-        previewActions.onDrag(location);
+        preview.actions.onDrag(location);
       },
       onDrop: () => {
         store.setOccurrencePlaceholder(null);
-        previewActions.onDrop();
+        preview.actions.onDrop();
       },
     });
-  }, [getSharedDragData, isDraggable, store, previewActions]);
+  }, [getSharedDragData, isDraggable, store, preview.actions]);
 
   const element = useRenderElement('div', componentProps, {
     state,
@@ -159,7 +159,7 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
   return (
     <CalendarGridTimeEventContext.Provider value={contextValue}>
       {element}
-      {preview}
+      {preview.element}
     </CalendarGridTimeEventContext.Provider>
   );
 });

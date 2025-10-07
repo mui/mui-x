@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
 import { useAdapter, diffIn } from '../../use-adapter';
-import { SchedulerValidDate } from '../../models';
+import { CalendarOccurrencePlaceholder, SchedulerValidDate } from '../../models';
 import { mergeDateAndTime } from '../../utils/date-utils';
 import { useDropTarget } from '../../utils/useDropTarget';
 
@@ -15,7 +15,7 @@ const isValidDropTarget = buildIsValidDropTarget([
 ]);
 
 export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters) {
-  const { value } = parameters;
+  const { value, preProcessDroppedEvent } = parameters;
 
   const adapter = useAdapter();
   const ref = React.useRef<HTMLDivElement>(null);
@@ -97,6 +97,7 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
     ref,
     getEventDropData,
     isValidDropTarget,
+    preProcessDroppedEvent,
   });
 
   return ref;
@@ -108,5 +109,11 @@ export namespace useDayCellDropTarget {
      * The value of the cell.
      */
     value: SchedulerValidDate;
+    /**
+     * Processed the event dropped in the cell before storing it in the store.
+     */
+    preProcessDroppedEvent?: (
+      event: CalendarOccurrencePlaceholder,
+    ) => CalendarOccurrencePlaceholder;
   }
 }

@@ -6,11 +6,8 @@ import {
   CalendarEventId,
   CalendarEventOccurrence,
   CalendarOccurrencePlaceholder,
-  CalendarOccurrencePlaceholderExternalDrag,
-  CalendarOccurrencePlaceholderInternalDragOrResize,
   CalendarResource,
   CalendarResourceId,
-  RecurringEventUpdatedProperties,
   RRuleSpec,
   SchedulerValidDate,
   RecurrencePresetKey,
@@ -21,7 +18,6 @@ import {
   UpdateRecurringEventParameters,
   SchedulerParametersToStateMapper,
   SchedulerModelUpdater,
-  RecurringUpdateEventScope,
 } from './SchedulerStore.types';
 import { Adapter } from '../../use-adapter/useAdapter.types';
 import {
@@ -32,7 +28,7 @@ import {
 import { selectors } from './SchedulerStore.selectors';
 import { shouldUpdateOccurrencePlaceholder } from './SchedulerStore.utils';
 import { TimeoutManager } from '../TimeoutManager';
-import { DEFAULT_EVENT_COLOR, SCHEDULER_RECURRING_EDITING_SCOPE } from '../../constants';
+import { DEFAULT_EVENT_COLOR } from '../../constants';
 
 export const DEFAULT_RESOURCES: CalendarResource[] = [];
 
@@ -294,65 +290,6 @@ export class SchedulerStore<
     }
 
     onEventsChange?.(updatedEvents);
-  };
-
-  /**
-   * Applies the data from the placeholder occurrence to the event it represents.
-   */
-  public async applyInternalDragOrResizeOccurrencePlaceholder(
-    placeholder: CalendarOccurrencePlaceholderInternalDragOrResize,
-    chooseRecurringEventScope?: () => Promise<RecurringUpdateEventScope>,
-  ) {
-    // TODO: Try to do a single state update.
-    this.setOccurrencePlaceholder(null);
-
-    const { eventId, start, end, originalEvent, surfaceType } = placeholder;
-
-    const original = selectors.event(this.state, eventId);
-    if (!original) {
-      throw new Error(`Scheduler: the original event was not found (id="${eventId}").`);
-    }
-
-    const changes: RecurringEventUpdatedProperties = { start, end };
-    if (surfaceType === 'time-grid' && original.allDay) {
-      changes.allDay = false;
-    } else if (surfaceType === 'day-grid' && !original.allDay) {
-      changes.allDay = true;
-    }
-
-    if (original.rrule) {
-      let scope: RecurringUpdateEventScope;
-      if (chooseRecurringEventScope) {
-        // TODO: Issue #19440 + #19441 - Allow to edit all events or only this event.
-        scope = await chooseRecurringEventScope();
-      } else {
-        // TODO: Issue #19766 - Let the user choose the scope via UI.
-        scope = SCHEDULER_RECURRING_EDITING_SCOPE;
-      }
-
-      return this.updateRecurringEvent({
-        eventId,
-        occurrenceStart: originalEvent.start,
-        changes,
-        scope,
-      });
-    }
-
-    return this.updateEvent({ id: eventId, ...changes });
-  }
-
-  public applyExternalDragOccurrencePlaceholder = (
-    placeholder: CalendarOccurrencePlaceholderExternalDrag,
-  ) => {
-    const event: CalendarEvent = {
-      ...placeholder.eventData,
-      start: placeholder.start,
-      end: placeholder.end,
-      allDay: placeholder.surfaceType === 'day-grid',
-    };
-    this.setOccurrencePlaceholder(null);
-    this.createEvent(event);
-    placeholder.onEventDrop?.();
   };
 
   /**

@@ -8,6 +8,7 @@ import { useRenderElement } from '../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../base-ui-copy/utils/types';
 import { CalendarOccurrencePlaceholderExternalDragData } from '../models';
 import { useDragPreview } from '../utils/useDragPreview';
+import { EVENT_CREATION_DEFAULT_LENGTH_MINUTE } from '../constants';
 
 export const StandaloneEvent = React.forwardRef(function StandaloneEvent(
   componentProps: StandaloneEvent.Props,
@@ -19,6 +20,7 @@ export const StandaloneEvent = React.forwardRef(function StandaloneEvent(
     render,
     // Internal props
     data,
+    duration = EVENT_CREATION_DEFAULT_LENGTH_MINUTE,
     onEventDrop,
     isDraggable = false,
     // Props forwarded to the DOM element
@@ -32,20 +34,21 @@ export const StandaloneEvent = React.forwardRef(function StandaloneEvent(
   const ref = React.useRef<HTMLDivElement>(null);
   const { getButtonProps, buttonRef } = useButton({ disabled: !isInteractive });
 
-  const { preview, previewState, previewActions } = useDragPreview({
+  const preview = useDragPreview({
     elementProps,
     componentProps,
     showPreviewOnDragStart: true,
   });
 
   const state: StandaloneEvent.State = React.useMemo(
-    () => ({ dragging: previewState.isDragging }),
-    [previewState.isDragging],
+    () => ({ dragging: preview.state.isDragging }),
+    [preview.state.isDragging],
   );
 
   const getDragData = useEventCallback(() => ({
     source: 'StandaloneEvent',
     eventData: data,
+    duration,
     onEventDrop,
     eventId: data.id,
     occurrenceKey: `external-${data.id}`,
@@ -64,16 +67,16 @@ export const StandaloneEvent = React.forwardRef(function StandaloneEvent(
         disableNativeDragPreview({ nativeSetDragImage });
       },
       onDragStart: ({ location }) => {
-        previewActions.onDragStart(location);
+        preview.actions.onDragStart(location);
       },
       onDrag: ({ location }) => {
-        previewActions.onDrag(location);
+        preview.actions.onDrag(location);
       },
       onDrop: () => {
-        previewActions.onDrop();
+        preview.actions.onDrop();
       },
     });
-  }, [isDraggable, getDragData, previewActions]);
+  }, [isDraggable, getDragData, preview.actions]);
 
   const element = useRenderElement('div', componentProps, {
     state,
@@ -84,7 +87,7 @@ export const StandaloneEvent = React.forwardRef(function StandaloneEvent(
   return (
     <React.Fragment>
       {element}
-      {preview}
+      {preview.element}
     </React.Fragment>
   );
 });
@@ -103,6 +106,12 @@ export namespace StandaloneEvent {
      */
     data: CalendarOccurrencePlaceholderExternalDragData;
     /**
+     * The default duration of the event in minutes.
+     * Will be ignored if the event is dropped on a UI that only handles multi-day events.
+     * @default 30
+     */
+    duration: number;
+    /**
      * Whether the event can be dragged to be inserted inside the Event Calendar.
      * @default false
      */
@@ -117,6 +126,7 @@ export namespace StandaloneEvent {
     source: 'StandaloneEvent';
     eventId: string | number;
     occurrenceKey: string;
+    duration: number;
     eventData: CalendarOccurrencePlaceholderExternalDragData;
     onEventDrop?: () => void;
   }
