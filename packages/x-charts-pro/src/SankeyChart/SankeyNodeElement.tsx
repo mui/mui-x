@@ -126,6 +126,8 @@ export const SankeyNodeElement = React.forwardRef<SVGGElement, SankeyNodeElement
           onClick={onClick ? handleClick : undefined}
           cursor={onClick ? 'pointer' : 'default'}
           stroke="none"
+          data-highlighted={highlighted || undefined}
+          data-faded={faded || undefined}
           {...interactionProps}
         />
 

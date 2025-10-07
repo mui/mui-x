@@ -109,6 +109,8 @@ export const SankeyLinkElement = React.forwardRef<SVGPathElement, SankeyLinkElem
         style={{ filter }}
         data-link-source={link.source.id}
         data-link-target={link.target.id}
+        data-highlighted={highlighted || undefined}
+        data-faded={faded || undefined}
         onClick={onClick ? handleClick : undefined}
         cursor={onClick ? 'pointer' : 'default'}
         {...interactionProps}
