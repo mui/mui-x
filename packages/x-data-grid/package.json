@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid",
-  "version": "8.11.3",
+  "version": "8.13.1",
   "author": "MUI Team",
   "description": "The Community plan edition of the MUI X Data Grid components.",
   "license": "MIT",
@@ -69,9 +69,10 @@
   },
   "devDependencies": {
     "@mui/internal-test-utils": "catalog:",
+    "@mui/icons-material": "catalog:",
     "@mui/material": "catalog:",
     "@mui/system": "catalog:",
-    "@mui/types": "^7.4.6",
+    "@mui/types": "^7.4.7",
     "@types/prop-types": "catalog:",
     "@types/use-sync-external-store": "catalog:",
     "react": "catalog:",

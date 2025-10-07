@@ -718,6 +718,32 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
           expect(view.getItemCheckboxInput('1').dataset.indeterminate).to.equal('true');
         });
 
+        it('should set the parent checkbox indeterminate when all its children are selected but the parent is not', () => {
+          const view = render({
+            multiSelect: true,
+            checkboxSelection: true,
+            items: [{ id: '1', children: [{ id: '1.1' }, { id: '1.2' }] }],
+            defaultSelectedItems: ['1.1', '1.2'],
+            defaultExpandedItems: ['1'],
+          });
+
+          expect(view.getItemCheckboxInput('1').dataset.indeterminate).to.equal('true');
+        });
+
+        it('should set the parent checkbox indeterminate when some of its descendants are selected but the parent is not', () => {
+          const view = render({
+            multiSelect: true,
+            checkboxSelection: true,
+            items: [
+              { id: '1', children: [{ id: '1.1' }, { id: '1.2', children: [{ id: '1.2.1' }] }] },
+            ],
+            defaultSelectedItems: ['1.2.1'],
+            defaultExpandedItems: ['1', '1.2'],
+          });
+
+          expect(view.getItemCheckboxInput('1').dataset.indeterminate).to.equal('true');
+        });
+
         it('should keep the parent checkbox indeterminate after collapsing it and expanding another node', () => {
           const view = render({
             multiSelect: true,

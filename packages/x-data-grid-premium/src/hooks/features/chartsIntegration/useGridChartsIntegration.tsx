@@ -56,6 +56,19 @@ import { gridAggregationModelSelector } from '../aggregation/gridAggregationSele
 import { gridPivotModelSelector } from '../pivoting/gridPivotingSelectors';
 import type { GridPivotModel } from '../pivoting/gridPivotingInterfaces';
 
+const EMPTY_CHART_INTEGRATION_CONTEXT: GridChartsIntegrationContextValue = {
+  chartStateLookup: {},
+  setChartState: () => {},
+};
+
+export const EMPTY_CHART_INTEGRATION_CONTEXT_STATE: ChartState = {
+  synced: true,
+  dimensions: [],
+  values: [],
+  type: '',
+  configuration: {},
+};
+
 export const chartsIntegrationStateInitializer: GridStateInitializer<
   Pick<
     DataGridPremiumProcessedProps,
@@ -123,19 +136,6 @@ export const chartsIntegrationStateInitializer: GridStateInitializer<
       charts,
     } as GridChartsIntegrationState,
   };
-};
-
-const EMPTY_CHART_INTEGRATION_CONTEXT: GridChartsIntegrationContextValue = {
-  chartStateLookup: {},
-  setChartState: () => {},
-};
-
-export const EMPTY_CHART_INTEGRATION_CONTEXT_STATE: ChartState = {
-  synced: true,
-  dimensions: [],
-  values: [],
-  type: '',
-  configuration: {},
 };
 
 export const useGridChartsIntegration = (
@@ -321,7 +321,11 @@ export const useGridChartsIntegration = (
       const rowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
       const rowTree = gridRowTreeSelector(apiRef);
       const rowsPerDepth = gridFilteredSortedDepthRowEntriesSelector(apiRef);
-      const defaultDepth = Math.max(0, (visibleDimensions.current[activeChartId]?.length ?? 0) - 1);
+      const currentChartId = gridChartsIntegrationActiveChartIdSelector(apiRef);
+      const defaultDepth = Math.max(
+        0,
+        (visibleDimensions.current[currentChartId]?.length ?? 0) - 1,
+      );
       const rowsAtDefaultDepth = (rowsPerDepth[defaultDepth] ?? []).length;
 
       // keep only unique columns and transform the grouped column to carry the correct field name to get the grouped value
@@ -377,6 +381,7 @@ export const useGridChartsIntegration = (
             targetRow,
             dataColumns[j],
           );
+
           if (value !== null) {
             data[dataColumns[j].dataFieldName].push(
               typeof value === 'object' && 'label' in value ? value.label : value,
@@ -400,7 +405,7 @@ export const useGridChartsIntegration = (
         });
       });
     },
-    [apiRef, activeChartId, orderedFields, getColumnName, getValueDatasetLabel, setChartState],
+    [apiRef, orderedFields, getColumnName, getValueDatasetLabel, setChartState],
   );
 
   const debouncedHandleRowDataUpdate = React.useMemo(

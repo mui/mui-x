@@ -39,6 +39,7 @@ type GetAxesScalesParams<T extends ChartSeriesType = ChartSeriesType> = {
    * @deprecated To remove in v9. This is an experimental feature to avoid breaking change.
    */
   preferStrictDomainInLineCharts?: boolean;
+  defaultTickNumber: number;
 };
 
 function getRange(
@@ -61,6 +62,7 @@ export function getXAxesScales<T extends ChartSeriesType>({
   seriesConfig,
   zoomMap,
   preferStrictDomainInLineCharts,
+  defaultTickNumber,
 }: GetAxesScalesParams<T> & {
   axis?: DefaultedAxis[];
 }) {
@@ -79,6 +81,7 @@ export function getXAxesScales<T extends ChartSeriesType>({
       axisIndex,
       formattedSeries,
       preferStrictDomainInLineCharts,
+      defaultTickNumber,
     );
   });
 
@@ -92,6 +95,7 @@ export function getYAxesScales<T extends ChartSeriesType>({
   seriesConfig,
   zoomMap,
   preferStrictDomainInLineCharts,
+  defaultTickNumber,
 }: GetAxesScalesParams<T> & {
   axis?: DefaultedAxis[];
 }) {
@@ -110,6 +114,7 @@ export function getYAxesScales<T extends ChartSeriesType>({
       axisIndex,
       formattedSeries,
       preferStrictDomainInLineCharts,
+      defaultTickNumber,
     );
   });
 
@@ -138,6 +143,7 @@ function getAxisScale<T extends ChartSeriesType>(
    * @deprecated To remove in v9. This is an experimental feature to avoid breaking change.
    */
   preferStrictDomainInLineCharts: boolean | undefined,
+  defaultTickNumber: number,
 ): ScaleDefinition {
   const zoomRange: [number, number] = zoom ? [zoom.start, zoom.end] : [0, 100];
   const range = getRange(drawingArea, axisDirection, axis);
@@ -187,7 +193,7 @@ function getAxisScale<T extends ChartSeriesType>(
     axisExtrema[1] = max;
   }
 
-  const rawTickNumber = getTickNumber({ ...axis, range, domain: axisExtrema });
+  const rawTickNumber = getTickNumber(axis, axisExtrema, defaultTickNumber);
 
   const zoomedRange = zoomScaleRange(range, zoomRange);
 
@@ -221,7 +227,7 @@ export function getDomainLimit(
 
 export function applyDomainLimit(
   scale: D3ContinuousScale,
-  axis: { min?: NumberValue; max?: NumberValue },
+  axis: { min?: NumberValue | Date; max?: NumberValue | Date } | {},
   domainLimit: DomainLimit,
   rawTickNumber: number,
 ) {
@@ -229,6 +235,9 @@ export function applyDomainLimit(
     scale.nice(rawTickNumber);
   }
 
+  if (!('min' in axis) && !('max' in axis)) {
+    return;
+  }
   const [minDomain, maxDomain] = scale.domain();
   scale.domain([axis.min ?? minDomain, axis.max ?? maxDomain]);
 }
@@ -240,20 +249,23 @@ export function applyDomainLimit(
  * @param maxData Maximum value from the data.
  */
 export function getActualAxisExtrema(
-  axisExtrema: Pick<AxisConfig, 'min' | 'max'>,
+  axisExtrema: { min?: number | Date; max?: number | Date } | {},
   minData: number,
   maxData: number,
 ): [NumberValue, NumberValue] {
   let min: NumberValue = minData;
   let max: NumberValue = maxData;
 
-  if (axisExtrema.max != null && axisExtrema.max.valueOf() < minData) {
+  if ('max' in axisExtrema && axisExtrema.max != null && axisExtrema.max.valueOf() < minData) {
     min = axisExtrema.max;
   }
 
-  if (axisExtrema.min != null && axisExtrema.min.valueOf() > minData) {
+  if ('min' in axisExtrema && axisExtrema.min != null && axisExtrema.min.valueOf() > minData) {
     max = axisExtrema.min;
   }
 
+  if (!('min' in axisExtrema) && !('max' in axisExtrema)) {
+    return [min, max];
+  }
   return [axisExtrema.min ?? min, axisExtrema.max ?? max];
 }

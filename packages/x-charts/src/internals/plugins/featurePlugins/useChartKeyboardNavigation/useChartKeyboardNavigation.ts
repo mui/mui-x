@@ -2,7 +2,7 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { ChartPlugin } from '../../models';
+import { ChartPlugin, ChartState } from '../../models';
 import { UseChartKeyboardNavigationSignature } from './useChartKeyboardNavigation.types';
 import {
   getNextSeriesWithData,
@@ -10,175 +10,102 @@ import {
   seriesHasData,
 } from './useChartKeyboardNavigation.helpers';
 
+function getNextIndexFocusedItem(state: ChartState<[UseChartKeyboardNavigationSignature], []>) {
+  let { type, seriesId } = state.keyboardNavigation.item ?? {};
+  if (
+    type === undefined ||
+    // @ts-ignore sankey is not in MIT version
+    type === 'sankey' ||
+    seriesId === undefined ||
+    !seriesHasData(state.series.processedSeries, type, seriesId)
+  ) {
+    const nextSeries = getNextSeriesWithData(state.series.processedSeries, type, seriesId);
+    if (nextSeries === null) {
+      return null;
+    }
+    type = nextSeries.type;
+    seriesId = nextSeries.seriesId;
+  }
+
+  const dataLength = state.series.processedSeries[type]!.series[seriesId].data.length;
+  return {
+    type,
+    seriesId,
+    dataIndex: ((state.keyboardNavigation.item?.dataIndex ?? -1) + 1) % dataLength,
+  };
+}
+
+function getPreviousIndexFocusedItem(state: ChartState<[UseChartKeyboardNavigationSignature], []>) {
+  let { type, seriesId } = state.keyboardNavigation.item ?? {};
+  if (
+    type === undefined ||
+    // @ts-ignore sankey is not in MIT version
+    type === 'sankey' ||
+    seriesId === undefined ||
+    !seriesHasData(state.series.processedSeries, type, seriesId)
+  ) {
+    const previousSeries = getPreviousSeriesWithData(state.series.processedSeries, type, seriesId);
+    if (previousSeries === null) {
+      return null;
+    }
+    type = previousSeries.type;
+    seriesId = previousSeries.seriesId;
+  }
+
+  const dataLength = state.series.processedSeries[type]!.series[seriesId].data.length;
+  return {
+    type,
+    seriesId,
+    dataIndex: (dataLength + (state.keyboardNavigation.item?.dataIndex ?? 1) - 1) % dataLength,
+  };
+}
+
+function getNextSeriesFocusedItem(state: ChartState<[UseChartKeyboardNavigationSignature], []>) {
+  let { type, seriesId } = state.keyboardNavigation.item ?? {};
+
+  const nextSeries = getNextSeriesWithData(state.series.processedSeries, type, seriesId);
+
+  if (nextSeries === null) {
+    return null; // No series to move the focus to.
+  }
+  type = nextSeries.type;
+  seriesId = nextSeries.seriesId;
+
+  const dataLength = state.series.processedSeries[type]!.series[seriesId].data.length;
+
+  return {
+    type,
+    seriesId,
+    dataIndex: Math.min(dataLength - 1, state.keyboardNavigation.item?.dataIndex ?? 0),
+  };
+}
+
+function getPreviousSeriesFocusedItem(
+  state: ChartState<[UseChartKeyboardNavigationSignature], []>,
+) {
+  let { type, seriesId } = state.keyboardNavigation.item ?? {};
+
+  const previousSeries = getPreviousSeriesWithData(state.series.processedSeries, type, seriesId);
+  if (previousSeries === null) {
+    return null; // No series to move the focus to.
+  }
+  type = previousSeries.type;
+  seriesId = previousSeries.seriesId;
+
+  const dataLength = state.series.processedSeries[type]!.series[seriesId].data.length;
+
+  return {
+    type,
+    seriesId,
+    dataIndex: Math.min(dataLength - 1, state.keyboardNavigation.item?.dataIndex ?? 0),
+  };
+}
+
 export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationSignature> = ({
   params,
   store,
   svgRef,
 }) => {
-  const focusNextItem = useEventCallback(function focusNextItem() {
-    store.update((state) => {
-      let { type, seriesId } = state.keyboardNavigation.item ?? {};
-      if (
-        type === undefined ||
-        // @ts-ignore sankey is not in MIT version
-        type === 'sankey' ||
-        seriesId === undefined ||
-        !seriesHasData(state.series.processedSeries, type, seriesId)
-      ) {
-        const nextSeries = getNextSeriesWithData(state.series.processedSeries, type, seriesId);
-        if (nextSeries === null) {
-          return {
-            ...state,
-            keyboardNavigation: {
-              ...state.keyboardNavigation,
-              item: null, // No series to move the focus too.
-            },
-          };
-        }
-        type = nextSeries.type;
-        seriesId = nextSeries.seriesId;
-      }
-
-      const dataLength = state.series.processedSeries[type]!.series[seriesId].data.length;
-
-      return {
-        ...state,
-        keyboardNavigation: {
-          ...state.keyboardNavigation,
-          item: {
-            type,
-            seriesId,
-            dataIndex: ((state.keyboardNavigation.item?.dataIndex ?? -1) + 1) % dataLength,
-          },
-        },
-      };
-    });
-  });
-
-  const focusPreviousItem = useEventCallback(function focusPreviousItem() {
-    store.update((state) => {
-      let { type, seriesId } = state.keyboardNavigation.item ?? {};
-      if (
-        type === undefined ||
-        // @ts-ignore sankey is not in MIT version
-        type === 'sankey' ||
-        seriesId === undefined ||
-        !seriesHasData(state.series.processedSeries, type, seriesId)
-      ) {
-        const previousSeries = getPreviousSeriesWithData(
-          state.series.processedSeries,
-          type,
-          seriesId,
-        );
-        if (previousSeries === null) {
-          return {
-            ...state,
-            keyboardNavigation: {
-              ...state.keyboardNavigation,
-              item: null, // No series to move the focus too.} };
-            },
-          };
-        }
-        type = previousSeries.type;
-        seriesId = previousSeries.seriesId;
-      }
-
-      const dataLength = state.series.processedSeries[type]!.series[seriesId].data.length;
-
-      return {
-        ...state,
-        keyboardNavigation: {
-          ...state.keyboardNavigation,
-          item: {
-            type,
-            seriesId,
-            dataIndex:
-              (dataLength + (state.keyboardNavigation.item?.dataIndex ?? 1) - 1) % dataLength,
-          },
-        },
-      };
-    });
-  });
-
-  const focusPreviousSeries = useEventCallback(function focusPreviousSeries() {
-    let setNewSeries = false;
-    store.update((state) => {
-      let { type, seriesId } = state.keyboardNavigation.item ?? {};
-
-      const previousSeries = getPreviousSeriesWithData(
-        state.series.processedSeries,
-        type,
-        seriesId,
-      );
-      if (previousSeries === null) {
-        return {
-          ...state,
-          keyboardNavigation: {
-            ...state.keyboardNavigation,
-            item: null, // No series to move the focus too.
-          },
-        };
-      }
-      type = previousSeries.type;
-      seriesId = previousSeries.seriesId;
-
-      const dataLength = state.series.processedSeries[type]!.series[seriesId].data.length;
-
-      setNewSeries = true;
-      return {
-        ...state,
-        keyboardNavigation: {
-          ...state.keyboardNavigation,
-          item: {
-            type,
-            seriesId,
-            dataIndex: Math.min(dataLength - 1, state.keyboardNavigation.item?.dataIndex ?? 0),
-          },
-        },
-      };
-    });
-    return setNewSeries;
-  });
-
-  const focusNextSeries = useEventCallback(function focusNextSeries() {
-    let setNewSeries = false;
-
-    store.update((state) => {
-      let { type, seriesId } = state.keyboardNavigation.item ?? {};
-
-      const nextSeries = getNextSeriesWithData(state.series.processedSeries, type, seriesId);
-
-      if (nextSeries === null) {
-        return {
-          ...state,
-          keyboardNavigation: {
-            ...state.keyboardNavigation,
-            item: null, // No series to move the focus too.
-          },
-        };
-      }
-      type = nextSeries.type;
-      seriesId = nextSeries.seriesId;
-
-      const dataLength = state.series.processedSeries[type]!.series[seriesId].data.length;
-
-      setNewSeries = true;
-      return {
-        ...state,
-        keyboardNavigation: {
-          ...state.keyboardNavigation,
-          item: {
-            type,
-            seriesId,
-            dataIndex: Math.min(dataLength - 1, state.keyboardNavigation.item?.dataIndex ?? 0),
-          },
-        },
-      };
-    });
-
-    return setNewSeries;
-  });
-
   const removeFocus = useEventCallback(function removeFocus() {
     store.update((state) => {
       if (state.keyboardNavigation.item === null) {
@@ -196,40 +123,53 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
 
   React.useEffect(() => {
     const element = svgRef.current;
+
     if (!element || !params.enableKeyboardNavigation) {
       return undefined;
     }
 
     function keyboardHandler(event: KeyboardEvent) {
-      switch (event.key) {
-        case 'ArrowRight':
-          focusNextItem();
-          break;
-        case 'ArrowLeft':
-          focusPreviousItem();
-          break;
-        case 'ArrowDown': {
-          const updatedStore = focusPreviousSeries();
+      store.update((prevState) => {
+        let newFocusedItem = prevState.keyboardNavigation.item;
 
-          if (updatedStore) {
-            // prevents scrolling
-            event.preventDefault();
+        switch (event.key) {
+          case 'ArrowRight':
+            newFocusedItem = getNextIndexFocusedItem(prevState);
+            break;
+          case 'ArrowLeft':
+            newFocusedItem = getPreviousIndexFocusedItem(prevState);
+            break;
+          case 'ArrowDown': {
+            newFocusedItem = getPreviousSeriesFocusedItem(prevState);
+            break;
           }
-
-          break;
-        }
-        case 'ArrowUp': {
-          const updatedStore = focusNextSeries();
-
-          if (updatedStore) {
-            // prevents scrolling
-            event.preventDefault();
+          case 'ArrowUp': {
+            newFocusedItem = getNextSeriesFocusedItem(prevState);
+            break;
           }
-          break;
+          default:
+            break;
         }
-        default:
-          break;
-      }
+
+        if (newFocusedItem !== prevState.keyboardNavigation.item) {
+          event.preventDefault();
+          return {
+            ...prevState,
+            ...(prevState.highlight && {
+              highlight: { ...prevState.highlight, lastUpdate: 'keyboard' },
+            }),
+            ...(prevState.interaction && {
+              interaction: { ...prevState.interaction, lastUpdate: 'keyboard' },
+            }),
+            keyboardNavigation: {
+              ...prevState.keyboardNavigation,
+              item: newFocusedItem,
+            },
+          };
+        }
+
+        return prevState;
+      });
     }
 
     element.addEventListener('keydown', keyboardHandler);
@@ -238,15 +178,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
       element.removeEventListener('keydown', keyboardHandler);
       element.removeEventListener('blur', removeFocus);
     };
-  }, [
-    svgRef,
-    focusNextItem,
-    focusPreviousItem,
-    removeFocus,
-    focusPreviousSeries,
-    focusNextSeries,
-    params.enableKeyboardNavigation,
-  ]);
+  }, [svgRef, removeFocus, params.enableKeyboardNavigation, store]);
 
   useEnhancedEffect(
     () =>
@@ -265,9 +197,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     [store, params.enableKeyboardNavigation],
   );
 
-  return {
-    instance: {},
-  };
+  return {};
 };
 
 useChartKeyboardNavigation.getInitialState = (params) => ({
