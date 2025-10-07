@@ -42,13 +42,13 @@ export function getNormalizedAxisScale(
   if (isBandScaleConfig(axis)) {
     const categoryGapRatio = axis.categoryGapRatio ?? DEFAULT_CATEGORY_GAP_RATIO;
 
-    return scaleBand(domain, range)
+    return scaleBand<{ toString(): string }>(domain, range)
       .paddingInner(categoryGapRatio)
       .paddingOuter(categoryGapRatio / 2);
   }
 
   if (isPointScaleConfig(axis)) {
-    return scalePoint(domain, range);
+    return scalePoint<{ toString(): string }>(domain, range);
   }
 
   const scaleType = axis.scaleType ?? ('linear' as const);
