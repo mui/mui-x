@@ -139,6 +139,8 @@ The `SankeyItemIdentifierWithData` type is a union of `SankeyNodeIdentifierWithD
 
 You can highlight nodes and links by hovering over them or by controlling the highlighting programmatically. When an item is highlighted, other items can be faded out to improve focus.
 
+{{"demo": "SankeyHighlighting.js"}}
+
 The highlighting behavior is configured separately for nodes and links through their respective options:
 
 #### Node highlighting
