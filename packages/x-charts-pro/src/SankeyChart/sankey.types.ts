@@ -95,6 +95,21 @@ export type SankeyNodeOptions = {
    * @returns {number} Comparison result
    */
   sort?: (a: SankeyLayoutNode, b: SankeyLayoutNode) => number | null;
+  /**
+   * Highlight mode for nodes
+   * - 'nodes': Highlight hovered node
+   * - 'links': Highlight links connected to hovered node
+   * - 'incoming': Highlight incoming links to hovered node
+   * - 'outgoing': Highlight outgoing links from hovered node
+   * - 'none': No highlighting
+   */
+  highlight: 'nodes' | 'links' | 'incoming' | 'outgoing' | 'none';
+  /**
+   * Fade mode for nodes
+   * - 'global': Fade all non-highlighted items
+   * - 'none': No fading
+   */
+  fade: 'global' | 'none';
 };
 
 export type SankeyLinkOptions = {
@@ -128,6 +143,21 @@ export type SankeyLinkOptions = {
    * @default 10
    */
   curveCorrection?: number;
+  /**
+   * Highlight mode for links
+   * - 'links': Highlight hovered link
+   * - 'nodes': Highlight nodes connected to hovered link
+   * - 'source': Highlight source node of hovered link
+   * - 'target': Highlight target node of hovered link
+   * - 'none': No highlighting
+   */
+  highlight: 'links' | 'nodes' | 'source' | 'target' | 'none';
+  /**
+   * Fade mode for links
+   * - 'global': Fade all non-highlighted items
+   * - 'none': No fading
+   */
+  fade: 'global' | 'none';
 };
 
 export interface SankeyData {
