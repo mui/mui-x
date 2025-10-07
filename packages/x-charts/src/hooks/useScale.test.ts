@@ -3,7 +3,7 @@ import { getValueToPositionMapper } from './useScale';
 
 describe('getValueToPositionMapper', () => {
   it('returns a function that maps values to their position for ordinal scales', () => {
-    const scale = scaleBand<{ toString(): string }>(['A', 'B', 'C'], [0, 1]);
+    const scale = scaleBand<string | number | Date>(['A', 'B', 'C'], [0, 1]);
 
     const mapper = getValueToPositionMapper(scale);
 

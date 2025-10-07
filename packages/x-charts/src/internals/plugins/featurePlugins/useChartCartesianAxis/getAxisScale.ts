@@ -35,7 +35,7 @@ export function getRange(
 
 export function getNormalizedAxisScale(
   axis: Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>,
-  domain: ReadonlyArray<{ toString(): string } | NumberValue>,
+  domain: ReadonlyArray<NumberValue | string>,
 ): D3Scale {
   const range = [0, 1];
 

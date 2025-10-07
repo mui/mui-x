@@ -22,7 +22,7 @@ import { ContinuousColorConfig, OrdinalColorConfig, PiecewiseColorConfig } from 
 export type AxisId = string | number;
 
 export type D3Scale<
-  Domain extends { toString(): string } = { toString(): string },
+  Domain extends { toString(): string } = number | Date | string,
   Range = number,
   Output = number,
 > =
@@ -41,7 +41,7 @@ export type D3ContinuousScale<Range = number, Output = number> =
   | ScaleTime<Range, Output>
   | ScaleLinear<Range, Output>;
 
-export type D3OrdinalScale<Domain extends { toString(): string } = { toString(): string }> =
+export type D3OrdinalScale<Domain extends { toString(): string } = number | Date | string> =
   | ScaleBand<Domain>
   | ScalePoint<Domain>;
 
@@ -266,7 +266,7 @@ export type AxisGroups = {
 export interface AxisScaleConfig {
   band: {
     scaleType: 'band';
-    scale: ScaleBand<{ toString(): string }>;
+    scale: ScaleBand<number | Date | string>;
     /**
      * The ratio between the space allocated for padding between two categories and the category width.
      * 0 means no gap, and 1 no data.
@@ -284,7 +284,7 @@ export interface AxisScaleConfig {
     Pick<TickParams, 'tickPlacement' | 'tickLabelPlacement'>;
   point: {
     scaleType: 'point';
-    scale: ScalePoint<{ toString(): string }>;
+    scale: ScalePoint<number | Date | string>;
     colorMap?: OrdinalColorConfig | ContinuousColorConfig | PiecewiseColorConfig;
   } & AxisGroups;
   log: {

@@ -52,7 +52,10 @@ export function calculateInitialDomainAndTickNumber(
     axisExtrema = niceDomain(axis.scaleType as ContinuousScaleName, axisExtrema, rawTickNumber);
   }
 
-  axisExtrema = [axis.min ?? axisExtrema[0], axis.max ?? axisExtrema[1]];
+  axisExtrema = [
+    'min' in axis ? (axis.min ?? axisExtrema[0]) : axisExtrema[0],
+    'max' in axis ? (axis.max ?? axisExtrema[1]) : axisExtrema[1],
+  ];
 
   return { domain: axisExtrema, tickNumber: rawTickNumber };
 }
