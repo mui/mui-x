@@ -65,7 +65,7 @@ export type PromptResponse = {
   sorting: ColumnSort[];
   grouping: Grouping[];
   pivoting: Pivoting;
-  chart?: Chart;
+  chart: Chart | null;
 };
 
 export type PromptResolverOptions = {

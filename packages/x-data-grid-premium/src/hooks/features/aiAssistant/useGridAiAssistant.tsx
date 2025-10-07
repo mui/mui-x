@@ -221,6 +221,7 @@ export const useGridAiAssistant = (
         appliedPivoting = true;
       } else if ('columns' in result.pivoting) {
         // if pivoting is disabled and there are pivoting results, try to move them into grouping and aggregation
+        apiRef.current.setPivotActive(false);
         result.pivoting.columns.forEach((c) => {
           result.grouping.push({ column: c.column });
         });
@@ -233,6 +234,8 @@ export const useGridAiAssistant = (
         });
         // remove the pivoting results data
         result.pivoting = {};
+      } else {
+        apiRef.current.setPivotActive(false);
       }
 
       if (!disableRowGrouping && !appliedPivoting) {
