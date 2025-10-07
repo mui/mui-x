@@ -49,7 +49,7 @@ jobs:
       # Ensure we are running on the prod version of our libs
       - run: pnpm --filter "@mui/x-charts-premium..." build
       - name: Run benchmarks
-        uses: CodSpeedHQ/action@653fdc30e6c40ffd9739e40c8a0576f4f4523ca1
+        uses: CodSpeedHQ/action@2e730a0869061a41a5b9974e2f3b9edc82d1f84b
         with:
           mode: instrumentation
           run: pnpm --filter @mui-x-internal/performance-charts test:performance
