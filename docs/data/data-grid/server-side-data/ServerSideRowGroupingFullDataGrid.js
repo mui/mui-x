@@ -15,7 +15,6 @@ export default function ServerSideRowGroupingFullDataGrid() {
   const apiRef = useGridApiRef();
 
   const { fetchRows, editRow, columns, loadNewData } = useMockServer({
-    rowGrouping: true,
     rowLength: 1000,
     dataSet: 'Commodity',
     maxColumns: 20,

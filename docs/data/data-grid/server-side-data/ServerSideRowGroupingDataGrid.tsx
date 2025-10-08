@@ -12,7 +12,7 @@ export default function ServerSideRowGroupingDataGrid() {
   const apiRef = useGridApiRef();
 
   const { fetchRows, columns } = useMockServer({
-    rowGrouping: true,
+    dataSet: 'Movies',
   });
 
   const dataSource: GridDataSource = React.useMemo(() => {

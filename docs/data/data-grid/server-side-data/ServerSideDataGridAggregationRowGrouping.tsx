@@ -19,7 +19,7 @@ const aggregationFunctions = {
 export default function ServerSideDataGridAggregationRowGrouping() {
   const apiRef = useGridApiRef();
   const { columns, initialState, fetchRows } = useMockServer<GridGetRowsResponse>({
-    rowGrouping: true,
+    dataSet: 'Movies',
   });
 
   const dataSource: GridDataSource = React.useMemo(
@@ -44,7 +44,7 @@ export default function ServerSideDataGridAggregationRowGrouping() {
       },
       getGroupKey: (row) => row.group,
       getChildrenCount: (row) => row.descendantCount,
-      getAggregatedValue: (row, field) => row[`${field}Aggregate`],
+      getAggregatedValue: (row, field) => row[field],
     }),
     [fetchRows],
   );

@@ -47,7 +47,7 @@ export default function ServerSideDataGridAggregationTreeData() {
       },
       getGroupKey: (row) => row[dataSetOptions.treeData.groupingField],
       getChildrenCount: (row) => row.descendantCount,
-      getAggregatedValue: (row, field) => row[`${field}Aggregate`],
+      getAggregatedValue: (row, field) => row[field],
     }),
     [fetchRows],
   );

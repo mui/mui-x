@@ -38,9 +38,7 @@ export default function ServerSideDataGridAggregation() {
         const syncedRow = await editRow(params.rowId, params.updatedRow);
         return syncedRow;
       },
-      getAggregatedValue: (row, field) => {
-        return row[`${field}Aggregate`];
-      },
+      getAggregatedValue: (row, field) => row[field],
     }),
     [fetchRows, editRow],
   );
