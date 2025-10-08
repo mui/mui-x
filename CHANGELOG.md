@@ -5,6 +5,110 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.14.0
+
+_Oct 8, 2025_
+
+We'd like to extend a big thank you to the 12 contributors who made this release possible. Here are some highlights ✨:
+
+TODO INSERT HIGHLIGHTS
+
+Special thanks go out to the community members for their valuable contributions:
+@brijeshb42, @djpremier, @noraleonte, @Utkarsh-0304
+
+The following are all team members who have contributed to this release:
+@alexfauquette, @bernardobelchior, @flaviendelangle, @hasdfa, @Janpot, @JCQuintas, @prakhargupta1, @rita-codes
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.14.0`
+
+Internal changes.
+
+#### `@mui/x-data-grid-pro@8.14.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.14.0`.
+
+#### `@mui/x-data-grid-premium@8.14.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.14.0`.
+
+### Date and Time Pickers
+
+From https://github.com/mui/mui-x/pull/19387
+
+Fixed the extra element for the disabled date picker
+
+#### `@mui/x-date-pickers@8.14.0`
+
+- [pickers] Fixed the extra element for the disabled date picker (#19387) @Utkarsh-0304
+
+#### `@mui/x-date-pickers-pro@8.14.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.14.0`.
+
+### Charts
+
+From https://github.com/mui/mui-x/pull/19779
+
+The chart zoom now supports the `pressAndDrag` gesture. Pan by pressing and dragging.
+
+#### `@mui/x-charts@8.14.0`
+
+- [charts] Add `pressAndDrag` pan gesture (#19779) @JCQuintas
+- [charts] Allow `minPointers` and `maxPointers` to be configured by pointer type (#19794) @JCQuintas
+- [charts] Correct scale domain types (#19844) @bernardobelchior
+- [charts] Fix tooltip position when scrolling (#19857) @alexfauquette
+- [charts] Link item highlight with keyboard navigation (#19768) @alexfauquette
+- [charts] Refactor domain/scale selectors (#19832) @bernardobelchior
+- [charts] Remove min/max from ordinal configuration (#19789) @alexfauquette
+- [charts] Simplify axes filters selectors (#19833) @bernardobelchior
+- [charts][docs] Add overview section for pie chart (#19672) @prakhargupta1
+- [charts][docs] Fix demo title knob keys (#19843) @JCQuintas
+
+#### `@mui/x-charts-pro@8.14.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.14.0`.
+
+#### `@mui/x-charts-premium@8.14.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@8.14.0`.
+
+### Tree View
+
+#### `@mui/x-tree-view@8.14.0`
+
+- [tree view] Fix Tree View tooltip anchoring on overview page (#19806) @noraleonte
+
+#### `@mui/x-tree-view-pro@8.14.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.14.0`.
+
+### Codemod
+
+#### `@mui/x-codemod@8.14.0`
+
+Internal changes.
+
+### Core
+
+- [code-infra] Cleanup unused dependencies (#19788) @brijeshb42
+- [code-infra] Fix pnpm-lock issue (#19861) @JCQuintas
+- [code-infra] Improve publishing docs (#19404) @Janpot
+- [code-infra] Remove tsconfig `baseUrl` (#19837) @Janpot
+- [code-infra] Support custom npm dist tags during release (#19803) @Janpot
+- [code-infra] Wait longer for print dialog (#19795) @JCQuintas
+- [docs-infra] Add `title` knob (#19792) @JCQuintas
+- [docs-infra] Fix missing key in title knob (#19804) @JCQuintas
+
+### Miscellaneous
+
+- [infra] Replace `lodash` with `es-toolkit` (#19853) @bernardobelchior
+- [infra] Update release script PR checklist (#19785) @bernardobelchior
+- [l10n] Improve Brazilian Portuguese (pt-BR) locale (#19658) @djpremier
+- [x-telemetry] Fix transpile issues (#19761) @hasdfa
+- [x-telemetry] Fix ref to deleted file (#19842) @JCQuintas
+
 ## 8.13.1
 
 _Oct 1, 2025_
@@ -222,7 +326,7 @@ We'd like to extend a big thank you to the 15 contributors who made this release
 
 ![Grid x Charts](https://github.com/user-attachments/assets/0817c36f-f87f-4688-8f30-fa0db638ca8c)
 
-  👉 [🎥 Watch the full video](https://github.com/user-attachments/assets/28f1848e-dc85-4077-8756-a3e88afd4e54)
+👉 [🎥 Watch the full video](https://github.com/user-attachments/assets/28f1848e-dc85-4077-8756-a3e88afd4e54)
 
 - ⌨️ Charts keyboard navigation
 - ⚡️ Charts: Add new `renderer="svg-batch"` prop to Scatter charts that provides improved performance for large datasets
