@@ -65,7 +65,6 @@
     "date-fns": "catalog:",
     "date-fns-jalali": "catalog:",
     "dayjs": "catalog:",
-    "es-toolkit": "^1.39.10",
     "exceljs": "catalog:",
     "fg-loadcss": "^3.1.0",
     "jscodeshift": "catalog:",
