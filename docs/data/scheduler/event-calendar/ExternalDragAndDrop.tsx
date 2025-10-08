@@ -82,6 +82,9 @@ export default function ExternalDragAndDrop() {
           duration: diffIn(adapter, end, start, 'minutes'),
         });
       },
+      onDragLeave: () => {
+        setPlaceholder(null);
+      },
       onDrop: () => {
         if (placeholder == null) {
           return;
