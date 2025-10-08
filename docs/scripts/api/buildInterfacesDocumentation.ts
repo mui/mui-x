@@ -1,6 +1,6 @@
 import { Symbol, JSDocTagInfo, Type, InterfaceDeclaration, isPropertySignature } from 'typescript';
 import { EOL } from 'os';
-import { kebabCase } from 'es-toolkit/string';
+import kebabCase from 'lodash/kebabCase';
 import path from 'path';
 import { renderMarkdown } from '@mui/internal-markdown';
 import {

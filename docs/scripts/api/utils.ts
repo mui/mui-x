@@ -1,4 +1,4 @@
-import { kebabCase } from 'es-toolkit/string';
+import kebabCase from 'lodash/kebabCase';
 import * as prettier from 'prettier';
 import { Symbol, isPropertySignature, isExportSpecifier, TypeFormatFlags } from 'typescript';
 import fs from 'node:fs/promises';
