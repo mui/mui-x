@@ -145,21 +145,7 @@ export type CalendarEventColor =
   | 'indigo'
   | 'blue';
 
-/**
- * Object representing the placeholder of an event occurrence.
- * It is used when creating a new event or when dragging an event occurrence.
- */
-export interface CalendarOccurrencePlaceholder {
-  /**
-   * The id of the event being changed.
-   * It can be null when creating a new event.
-   */
-  eventId: CalendarEventId | null;
-  /**
-   * The key of the event occurrence being changed.
-   * It can be null when creating a new event.
-   */
-  occurrenceKey: string | null;
+interface CalendarOccurrencePlaceholderBase {
   /**
    * The type of surface the draft should be rendered on.
    * This is useful to make sure the placeholder is only rendered in the correct grid.
@@ -174,16 +160,51 @@ export interface CalendarOccurrencePlaceholder {
    */
   end: SchedulerValidDate;
   /**
-   * The start date and time of the event occurrence before the change.
-   * It can be null when creating a new event.
+   * Whether the occurrence placeholder should be hidden.
+   * This is used when dragging an event outside of the calendar to avoid showing both the placeholder and the drag preview.
    */
-  originalStart: SchedulerValidDate | null;
+  isHidden?: boolean;
+}
+
+export interface CalendarOccurrencePlaceholderCreation extends CalendarOccurrencePlaceholderBase {
+  /**
+   * The type of placeholder.
+   */
+  type: 'creation';
   /**
    * Whether to lock the surface type of the placeholder.
    * When true, the surfaceType will not be updated when editing the placeholder.
    */
   lockSurfaceType?: boolean;
 }
+
+export interface CalendarOccurrencePlaceholderInternalDragOrResize
+  extends CalendarOccurrencePlaceholderBase {
+  /**
+   * The type of placeholder.
+   */
+  type: 'internal-drag-or-resize';
+  /**
+   * The id of the event being changed.
+   */
+  eventId: CalendarEventId;
+  /**
+   * The key of the event occurrence being changed.
+   */
+  occurrenceKey: string;
+  /**
+   * The data of the event to use when dropping the event outside of the Event Calendar.
+   */
+  originalEvent: CalendarEvent;
+}
+
+/**
+ * Object representing the placeholder of an event occurrence.
+ * It is used when creating a new event or when dragging an event occurrence.
+ */
+export type CalendarOccurrencePlaceholder =
+  | CalendarOccurrencePlaceholderCreation
+  | CalendarOccurrencePlaceholderInternalDragOrResize;
 
 export interface CalendarProcessedDate {
   /**
@@ -199,12 +220,12 @@ export interface CalendarProcessedDate {
 }
 
 /**
- * Helper type for `applyRecurringUpdateFollowing` and `updateRecurringEvent`.
- *  It requires `start` and `end` (always needed when updating an occurrence),
- *  and makes all other `CalendarEvent` properties optional.
+ * Properties to pass to the methods that update an event (recurring or not).
+ * The `id`, `start` and `end` properties are required in order to identify the event to update and the new dates.
+ * All other properties are optional and can be skipped if not modified.
  */
-export type RecurringEventUpdatedProperties = Partial<CalendarEvent> &
-  Required<Pick<CalendarEvent, 'start' | 'end'>>;
+export type CalendarEventUpdatedProperties = Partial<CalendarEvent> &
+  Required<Pick<CalendarEvent, 'id'>>;
 
 /**
  * The type of surface the event is being rendered on.

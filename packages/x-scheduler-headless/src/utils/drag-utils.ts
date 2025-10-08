@@ -6,12 +6,14 @@ import type { CalendarGridTimeEventResizeHandler } from '../calendar-grid/time-e
 export const EVENT_DRAG_PRECISION_MINUTE = 15;
 export const EVENT_DRAG_PRECISION_MS = EVENT_DRAG_PRECISION_MINUTE * 60 * 1000;
 
-interface EventDropDataLookup {
+export interface EventDropDataLookup {
   CalendarGridTimeEvent: CalendarGridTimeEvent.DragData;
   CalendarGridTimeEventResizeHandler: CalendarGridTimeEventResizeHandler.DragData;
   CalendarGridDayEvent: CalendarGridDayEvent.DragData;
   CalendarGridDayEventResizeHandler: CalendarGridDayEventResizeHandler.DragData;
 }
+
+export type EventDropData = EventDropDataLookup[keyof EventDropDataLookup];
 
 export function buildIsValidDropTarget<Targets extends keyof EventDropDataLookup>(
   targets: Targets[],

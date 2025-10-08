@@ -1,11 +1,23 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import { adapter, createSchedulerRenderer } from 'test/utils/scheduler';
+import {
+  adapter,
+  createSchedulerRenderer,
+  SchedulerStoreRunner,
+  StateWatcher,
+  StoreSpy,
+} from 'test/utils/scheduler';
+
 import { screen } from '@mui/internal-test-utils';
-import { CalendarEventOccurrence, CalendarResource } from '@mui/x-scheduler-headless/models';
+import {
+  CalendarEventOccurrence,
+  CalendarOccurrencePlaceholderCreation,
+  CalendarResource,
+} from '@mui/x-scheduler-headless/models';
 import { DEFAULT_EVENT_COLOR } from '@mui/x-scheduler-headless/constants';
-import { StandaloneView } from '@mui/x-scheduler/standalone-view';
 import { Popover } from '@base-ui-components/react/popover';
+import { EventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
+import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
 import { EventPopover } from './EventPopover';
 import { getColorClassName } from '../../utils/color-utils';
 
@@ -47,11 +59,11 @@ describe('<EventPopover />', () => {
 
   it('should render the event data in the form fields', () => {
     render(
-      <StandaloneView events={[occurrence]} resources={resources}>
+      <EventCalendarProvider events={[occurrence]} resources={resources}>
         <Popover.Root open>
           <EventPopover {...defaultProps} />
         </Popover.Root>
-      </StandaloneView>,
+      </EventCalendarProvider>,
     );
     expect(screen.getByDisplayValue('Running')).not.to.equal(null);
     expect(screen.getByDisplayValue('Morning run')).not.to.equal(null);
@@ -72,11 +84,15 @@ describe('<EventPopover />', () => {
   it('should call "onEventsChange" with updated values on submit', async () => {
     const onEventsChange = spy();
     const { user } = render(
-      <StandaloneView events={[occurrence]} onEventsChange={onEventsChange} resources={resources}>
+      <EventCalendarProvider
+        events={[occurrence]}
+        onEventsChange={onEventsChange}
+        resources={resources}
+      >
         <Popover.Root open>
           <EventPopover {...defaultProps} />
         </Popover.Root>
-      </StandaloneView>,
+      </EventCalendarProvider>,
     );
     await user.type(screen.getByLabelText(/event title/i), ' test');
     await user.click(screen.getByRole('checkbox', { name: /all day/i }));
@@ -106,11 +122,11 @@ describe('<EventPopover />', () => {
 
   it('should show error if start date is after end date', async () => {
     const { user } = render(
-      <StandaloneView events={[occurrence]}>
+      <EventCalendarProvider events={[occurrence]}>
         <Popover.Root open>
           <EventPopover {...defaultProps} />
         </Popover.Root>
-      </StandaloneView>,
+      </EventCalendarProvider>,
     );
     await user.clear(screen.getByLabelText(/start date/i));
     await user.type(screen.getByLabelText(/start date/i), '2025-05-27');
@@ -126,11 +142,11 @@ describe('<EventPopover />', () => {
   it('should call "onEventsChange" with the updated values when delete button is clicked', async () => {
     const onEventsChange = spy();
     const { user } = render(
-      <StandaloneView events={[occurrence]} onEventsChange={onEventsChange}>
+      <EventCalendarProvider events={[occurrence]} onEventsChange={onEventsChange}>
         <Popover.Root open>
           <EventPopover {...defaultProps} />
         </Popover.Root>
-      </StandaloneView>,
+      </EventCalendarProvider>,
     );
     await user.click(screen.getByRole('button', { name: /delete event/i }));
     expect(onEventsChange.calledOnce).to.equal(true);
@@ -140,11 +156,11 @@ describe('<EventPopover />', () => {
   it('should handle read-only events', () => {
     const readOnlyOccurrence = { ...occurrence, readOnly: true };
     render(
-      <StandaloneView events={[readOnlyOccurrence]} resources={resources}>
+      <EventCalendarProvider events={[readOnlyOccurrence]} resources={resources}>
         <Popover.Root open>
           <EventPopover {...defaultProps} occurrence={readOnlyOccurrence} />
         </Popover.Root>
-      </StandaloneView>,
+      </EventCalendarProvider>,
     );
     expect(screen.getByDisplayValue('Running')).to.have.attribute('readonly');
     expect(screen.getByDisplayValue('Morning run')).to.have.attribute('readonly');
@@ -175,7 +191,7 @@ describe('<EventPopover />', () => {
     };
 
     render(
-      <StandaloneView
+      <EventCalendarProvider
         events={[occurrenceWithNoColorResource]}
         onEventsChange={onEventsChange}
         resources={resourcesNoColor}
@@ -183,7 +199,7 @@ describe('<EventPopover />', () => {
         <Popover.Root open>
           <EventPopover {...defaultProps} occurrence={occurrenceWithNoColorResource} />
         </Popover.Root>
-      </StandaloneView>,
+      </EventCalendarProvider>,
     );
 
     expect(screen.getByRole('combobox', { name: /resource/i }).textContent).to.match(/NoColor/i);
@@ -201,7 +217,7 @@ describe('<EventPopover />', () => {
     };
 
     const { user } = render(
-      <StandaloneView
+      <EventCalendarProvider
         events={[occurrenceWithoutResource]}
         onEventsChange={onEventsChange}
         resources={resources}
@@ -209,7 +225,7 @@ describe('<EventPopover />', () => {
         <Popover.Root open>
           <EventPopover {...defaultProps} occurrence={occurrenceWithoutResource} />
         </Popover.Root>
-      </StandaloneView>,
+      </EventCalendarProvider>,
     );
 
     expect(screen.getByRole('combobox', { name: /resource/i }).textContent).to.match(
@@ -225,5 +241,441 @@ describe('<EventPopover />', () => {
     expect(onEventsChange.calledOnce).to.equal(true);
     const updated = onEventsChange.firstCall.firstArg[0];
     expect(updated.resource).to.equal(undefined);
+  });
+
+  describe('Event creation', () => {
+    it('should change surface of the placeholder to day-grid when all-day is changed to true', async () => {
+      const start = adapter.date('2025-05-26T07:30:00');
+      const end = adapter.date('2025-05-26T08:30:00');
+      const handleSurfaceChange = spy();
+
+      const creationOccurrence = {
+        id: 'tmp',
+        key: 'tmp',
+        start,
+        end,
+        title: '',
+        description: '',
+        allDay: false,
+      };
+
+      const { user } = render(
+        <EventCalendarProvider events={[]} resources={resources}>
+          <SchedulerStoreRunner
+            context={EventCalendarStoreContext}
+            onMount={(store) =>
+              store.setOccurrencePlaceholder({
+                type: 'creation',
+                surfaceType: 'time-grid',
+                start,
+                end,
+                lockSurfaceType: false,
+              })
+            }
+          />
+          <Popover.Root open>
+            <EventPopover {...defaultProps} occurrence={creationOccurrence} />
+          </Popover.Root>
+          <StateWatcher
+            Context={EventCalendarStoreContext}
+            selector={(s) => s.occurrencePlaceholder?.surfaceType}
+            onValueChange={handleSurfaceChange}
+          />
+        </EventCalendarProvider>,
+      );
+
+      expect(handleSurfaceChange.lastCall?.firstArg).to.equal('time-grid');
+
+      await user.click(screen.getByRole('checkbox', { name: /all day/i }));
+
+      expect(handleSurfaceChange.lastCall?.firstArg).to.equal('day-grid');
+    });
+
+    it('should change surface of the placeholder to time-grid when all-day is changed to false', async () => {
+      const start = adapter.date('2025-05-26T07:30:00');
+      const end = adapter.date('2025-05-26T08:30:00');
+      const handleSurfaceChange = spy();
+
+      const creationOccurrence = {
+        id: 'tmp',
+        key: 'tmp',
+        start,
+        end,
+        title: '',
+        description: '',
+        allDay: true,
+      };
+
+      const { user } = render(
+        <EventCalendarProvider events={[]} resources={resources}>
+          <SchedulerStoreRunner
+            context={EventCalendarStoreContext}
+            onMount={(store) =>
+              store.setOccurrencePlaceholder({
+                type: 'creation',
+                surfaceType: 'day-grid',
+                start,
+                end,
+                lockSurfaceType: false,
+              })
+            }
+          />
+          <Popover.Root open>
+            <EventPopover {...defaultProps} occurrence={creationOccurrence} />
+          </Popover.Root>
+          <StateWatcher
+            Context={EventCalendarStoreContext}
+            selector={(s) => s.occurrencePlaceholder?.surfaceType}
+            onValueChange={handleSurfaceChange}
+          />
+        </EventCalendarProvider>,
+      );
+
+      expect(handleSurfaceChange.lastCall?.firstArg).to.equal('day-grid');
+
+      await user.click(screen.getByRole('checkbox', { name: /all day/i }));
+
+      expect(handleSurfaceChange.lastCall?.firstArg).to.equal('time-grid');
+    });
+
+    it('should not change surfaceType when all day changed to true and lockSurfaceType=true', async () => {
+      const start = adapter.date('2025-05-26T07:30:00');
+      const end = adapter.date('2025-05-26T08:30:00');
+      const handleSurfaceChange = spy();
+
+      const creationOccurrence = {
+        id: 'tmp',
+        key: 'tmp',
+        start,
+        end,
+        title: '',
+        description: '',
+        allDay: false,
+      };
+
+      const { user } = render(
+        <EventCalendarProvider events={[]} resources={resources}>
+          <SchedulerStoreRunner
+            context={EventCalendarStoreContext}
+            onMount={(store) =>
+              store.setOccurrencePlaceholder({
+                type: 'creation',
+                surfaceType: 'time-grid',
+                start,
+                end,
+                lockSurfaceType: true,
+              })
+            }
+          />
+          <Popover.Root open>
+            <EventPopover {...defaultProps} occurrence={creationOccurrence as any} />
+          </Popover.Root>
+          <StateWatcher
+            Context={EventCalendarStoreContext}
+            selector={(s) => s.occurrencePlaceholder?.surfaceType}
+            onValueChange={handleSurfaceChange}
+          />
+        </EventCalendarProvider>,
+      );
+      expect(handleSurfaceChange.lastCall?.firstArg).to.equal('time-grid');
+
+      await user.click(screen.getByRole('checkbox', { name: /all day/i }));
+
+      expect(handleSurfaceChange.lastCall?.firstArg).to.equal('time-grid');
+    });
+
+    it('should call createEvent with metaChanges + computed start/end on Submit', async () => {
+      const start = adapter.date('2025-06-10T09:00:00');
+      const end = adapter.date('2025-06-10T09:30:00');
+      const placeholder: CalendarOccurrencePlaceholderCreation = {
+        type: 'creation',
+        surfaceType: 'time-grid' as const,
+        start,
+        end,
+        lockSurfaceType: false,
+      };
+
+      const creationOccurrence = {
+        id: 'placeholder-id',
+        key: 'placeholder-key',
+        start,
+        end,
+        title: '',
+        description: '',
+        allDay: false,
+      };
+
+      const onEventsChange = spy();
+      let createEventSpy;
+
+      const { user } = render(
+        <EventCalendarProvider events={[]} resources={resources} onEventsChange={onEventsChange}>
+          <SchedulerStoreRunner
+            context={EventCalendarStoreContext}
+            onMount={(store) => store.setOccurrencePlaceholder(placeholder)}
+          />
+          <StoreSpy
+            Context={EventCalendarStoreContext}
+            method="createEvent"
+            onSpyReady={(sp) => {
+              createEventSpy = sp;
+            }}
+          />
+
+          <Popover.Root open>
+            <EventPopover {...defaultProps} occurrence={creationOccurrence} />
+          </Popover.Root>
+        </EventCalendarProvider>,
+      );
+
+      await user.type(screen.getByLabelText(/event title/i), ' New title ');
+      await user.type(screen.getByLabelText(/description/i), ' Some details ');
+      await user.click(screen.getByRole('combobox', { name: /resource/i }));
+      await user.click(await screen.findByRole('option', { name: /work/i }));
+      await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+      await user.click(await screen.findByRole('option', { name: /daily/i }));
+      await user.click(screen.getByRole('button', { name: /save changes/i }));
+
+      expect(createEventSpy?.calledOnce).to.equal(true);
+      const payload = createEventSpy.lastCall.firstArg;
+
+      expect(payload.id).to.be.a('string');
+      expect(payload.title).to.equal('New title');
+      expect(payload.description).to.equal('Some details');
+      expect(payload.allDay).to.equal(false);
+      expect(payload.resource).to.equal('r1');
+      expect(payload.start).toEqualDateTime(start);
+      expect(payload.end).toEqualDateTime(end);
+      expect(payload.rrule).to.deep.equal({ freq: 'DAILY', interval: 1 });
+    });
+  });
+  describe('Event editing', () => {
+    describe('Recurring events - all', () => {
+      it('should call updateRecurringEvent with scope and not include rrule if not modified on Submit', async () => {
+        const originalRecurringEvent = {
+          id: 'recurring-1',
+          key: 'recurring-1-key',
+          title: 'Daily standup',
+          description: 'sync',
+          start: adapter.date('2025-06-11T10:00:00'),
+          end: adapter.date('2025-06-11T10:30:00'),
+          allDay: false,
+          rrule: { freq: 'DAILY' as const, interval: 1 },
+        };
+
+        let updateRecurringEventSpy;
+
+        const { user } = render(
+          <EventCalendarProvider events={[originalRecurringEvent]} resources={resources}>
+            <StoreSpy
+              Context={EventCalendarStoreContext}
+              method="updateRecurringEvent"
+              onSpyReady={(sp) => {
+                updateRecurringEventSpy = sp;
+              }}
+            />
+            <Popover.Root open>
+              <EventPopover {...defaultProps} occurrence={originalRecurringEvent} />
+            </Popover.Root>
+          </EventCalendarProvider>,
+        );
+        await user.clear(screen.getByLabelText(/start time/i));
+        await user.type(screen.getByLabelText(/start time/i), '10:05');
+        await user.clear(screen.getByLabelText(/end time/i));
+        await user.type(screen.getByLabelText(/end time/i), '10:35');
+        await user.click(screen.getByRole('button', { name: /save changes/i }));
+
+        expect(updateRecurringEventSpy?.calledOnce).to.equal(true);
+        const payload = updateRecurringEventSpy.lastCall.firstArg;
+
+        expect(payload.scope).to.equal('all');
+        expect(payload.changes.id).to.equal('recurring-1');
+        expect(payload.changes.title).to.equal('Daily standup');
+        expect(payload.changes.description).to.equal('sync');
+        expect(payload.changes.allDay).to.equal(false);
+        expect(payload.changes.start).to.toEqualDateTime(adapter.date('2025-06-11T10:05:00'));
+        expect(payload.changes.end).to.toEqualDateTime(adapter.date('2025-06-11T10:35:00'));
+        expect(payload.changes).to.not.have.property('rrule');
+      });
+
+      it('should call updateRecurringEvent with scope and include rrule if modified on Submit', async () => {
+        const originalRecurringEvent = {
+          id: 'recurring-2',
+          key: 'recurring-2-key',
+          title: 'Daily standup',
+          description: 'sync',
+          start: adapter.date('2025-06-11T10:00:00'),
+          end: adapter.date('2025-06-11T10:30:00'),
+          allDay: false,
+          rrule: { freq: 'DAILY' as const, interval: 1 },
+        };
+
+        let updateRecurringEventSpy;
+
+        const { user } = render(
+          <EventCalendarProvider events={[originalRecurringEvent]} resources={resources}>
+            <StoreSpy
+              Context={EventCalendarStoreContext}
+              method="updateRecurringEvent"
+              onSpyReady={(sp) => {
+                updateRecurringEventSpy = sp;
+              }}
+            />
+            <Popover.Root open>
+              <EventPopover {...defaultProps} occurrence={originalRecurringEvent} />
+            </Popover.Root>
+          </EventCalendarProvider>,
+        );
+        // We update the recurrence from daily to weekly
+        await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+        await user.click(await screen.findByRole('option', { name: /repeats weekly/i }));
+        await user.click(screen.getByRole('button', { name: /save changes/i }));
+
+        expect(updateRecurringEventSpy?.calledOnce).to.equal(true);
+
+        const payload = updateRecurringEventSpy.lastCall.firstArg;
+
+        expect(payload.scope).to.equal('all');
+        expect(payload.changes.id).to.equal('recurring-2');
+        expect(payload.changes.title).to.equal('Daily standup');
+        expect(payload.changes.description).to.equal('sync');
+        expect(payload.changes.allDay).to.equal(false);
+        expect(payload.changes.rrule).to.deep.equal({
+          freq: 'WEEKLY',
+          interval: 1,
+          byDay: ['WE'],
+        });
+      });
+
+      it('should call updateRecurringEvent with scope and send rrule as undefined when "no repeat" is selected on Submit', async () => {
+        const originalRecurringEvent = {
+          id: 'recurring-3',
+          key: 'recurring-3-key',
+          title: 'Daily standup',
+          description: 'sync',
+          start: adapter.date('2025-06-11T10:00:00'),
+          end: adapter.date('2025-06-11T10:30:00'),
+          allDay: false,
+          rrule: { freq: 'DAILY' as const, interval: 1 },
+        };
+
+        let updateRecurringEventSpy;
+
+        const { user } = render(
+          <EventCalendarProvider events={[originalRecurringEvent]} resources={resources}>
+            <StoreSpy
+              Context={EventCalendarStoreContext}
+              method="updateRecurringEvent"
+              onSpyReady={(sp) => {
+                updateRecurringEventSpy = sp;
+              }}
+            />
+            <Popover.Root open>
+              <EventPopover {...defaultProps} occurrence={originalRecurringEvent} />
+            </Popover.Root>
+          </EventCalendarProvider>,
+        );
+
+        await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+        await user.click(await screen.findByRole('option', { name: /don.?t repeat/i }));
+        await user.click(screen.getByRole('button', { name: /save changes/i }));
+
+        expect(updateRecurringEventSpy?.calledOnce).to.equal(true);
+        const payload = updateRecurringEventSpy.lastCall.firstArg;
+
+        expect(payload.scope).to.equal('all');
+        expect(payload.changes.id).to.equal('recurring-3');
+        expect(payload.changes.rrule).to.equal(undefined);
+      });
+    });
+
+    describe('Non-recurring events', () => {
+      it('should call updateEvent with updated values on Submit', async () => {
+        const nonRecurringEvent = {
+          id: 'non-recurring-1',
+          key: 'non-recurring-1-key',
+          title: 'Task',
+          description: 'description',
+          start: adapter.date('2025-06-12T14:00:00'),
+          end: adapter.date('2025-06-12T15:00:00'),
+          allDay: false,
+        };
+
+        let updateEventSpy;
+
+        const { user } = render(
+          <EventCalendarProvider events={[nonRecurringEvent]} resources={resources}>
+            <StoreSpy
+              Context={EventCalendarStoreContext}
+              method="updateEvent"
+              onSpyReady={(sp) => {
+                updateEventSpy = sp;
+              }}
+            />
+            <Popover.Root open>
+              <EventPopover {...defaultProps} occurrence={nonRecurringEvent} />
+            </Popover.Root>
+          </EventCalendarProvider>,
+        );
+        await user.type(screen.getByLabelText(/event title/i), ' updated ');
+        await user.clear(screen.getByLabelText(/description/i));
+        await user.type(screen.getByLabelText(/description/i), '  new description  ');
+        await user.click(screen.getByRole('combobox', { name: /resource/i }));
+        await user.click(await screen.findByRole('option', { name: /work/i }));
+        await user.click(screen.getByRole('button', { name: /save changes/i }));
+
+        expect(updateEventSpy?.calledOnce).to.equal(true);
+        const payload = updateEventSpy.lastCall.firstArg;
+
+        expect(payload.id).to.equal('non-recurring-1');
+        expect(payload.title).to.equal('Task updated');
+        expect(payload.description).to.equal('new description');
+        expect(payload.resource).to.equal('r1');
+        expect(payload.allDay).to.equal(false);
+        expect(payload.start).toEqualDateTime(adapter.date('2025-06-12T14:00:00'));
+        expect(payload.end).toEqualDateTime(adapter.date('2025-06-12T15:00:00'));
+        expect(payload.rrule).to.equal(undefined);
+      });
+
+      it('should call updateEvent with updated values and send rrule if recurrence was selected on Submit', async () => {
+        const nonRecurringEvent = {
+          id: 'non-recurring-1',
+          key: 'non-recurring-1-key',
+          title: 'Task',
+          description: 'description',
+          start: adapter.date('2025-06-12T14:00:00'),
+          end: adapter.date('2025-06-12T15:00:00'),
+        };
+
+        let updateEventSpy;
+
+        const { user } = render(
+          <EventCalendarProvider events={[nonRecurringEvent]} resources={resources}>
+            <StoreSpy
+              Context={EventCalendarStoreContext}
+              method="updateEvent"
+              onSpyReady={(sp) => {
+                updateEventSpy = sp;
+              }}
+            />
+            <Popover.Root open>
+              <EventPopover {...defaultProps} occurrence={nonRecurringEvent} />
+            </Popover.Root>
+          </EventCalendarProvider>,
+        );
+        await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+        await user.click(await screen.findByRole('option', { name: /repeats daily/i }));
+        await user.click(screen.getByRole('button', { name: /save changes/i }));
+
+        expect(updateEventSpy?.calledOnce).to.equal(true);
+        const payload = updateEventSpy.lastCall.firstArg;
+
+        expect(payload.id).to.equal('non-recurring-1');
+        expect(payload.rrule).to.deep.equal({
+          freq: 'DAILY',
+          interval: 1,
+        });
+      });
+    });
   });
 });
