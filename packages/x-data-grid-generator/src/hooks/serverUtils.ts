@@ -124,9 +124,7 @@ const getRowComparator = (
     return comparator;
   }
   const sortOperators = sortModel.map((sortItem) => {
-    const columnField = aggregationModel?.[sortItem.field]
-      ? `${sortItem.field}Aggregate`
-      : sortItem.field;
+    const columnField = sortItem.field;
     const colDef = columnsWithDefaultColDef.find(({ field }) => field === sortItem.field) as any;
     return {
       ...sortItem,
@@ -334,7 +332,7 @@ const applyAggregation = (
       return;
     }
     const values = rows.map((row) => row[field]);
-    aggregateValues[`${field}Aggregate`] = aggregationFunction.apply({
+    aggregateValues[field] = aggregationFunction.apply({
       values,
       field,
       groupId,

@@ -20,9 +20,7 @@ export default function ServerSideRowGroupingErrorHandling() {
   const [shouldRequestsFail, setShouldRequestsFail] = React.useState(false);
 
   const { fetchRows, columns } = useMockServer<GridGetRowsResponse>(
-    {
-      rowGrouping: true,
-    },
+    { dataSet: 'Movies' },
     {},
     shouldRequestsFail,
   );

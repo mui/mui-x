@@ -18,9 +18,7 @@ export default function ServerSideRowGroupingErrorHandling() {
   const [shouldRequestsFail, setShouldRequestsFail] = React.useState(false);
 
   const { fetchRows, columns } = useMockServer(
-    {
-      rowGrouping: true,
-    },
+    { dataSet: 'Movies' },
     {},
     shouldRequestsFail,
   );

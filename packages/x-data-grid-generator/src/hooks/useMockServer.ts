@@ -60,7 +60,6 @@ interface UseMockServerOptions {
   visibleFields?: string[];
   editable?: boolean;
   treeData?: AddPathToDemoDataOptions;
-  rowGrouping?: boolean;
   derivedColumns?: boolean;
 }
 
@@ -76,13 +75,11 @@ interface ColumnsOptions
     'dataSet' | 'editable' | 'maxColumns' | 'visibleFields' | 'derivedColumns'
   > {}
 
-const GET_DEFAULT_DATASET_OPTIONS: (isRowGrouping: boolean) => UseMockServerOptions = (
-  isRowGrouping,
-) => ({
-  dataSet: isRowGrouping ? 'Movies' : 'Commodity',
-  rowLength: isRowGrouping ? getMovieRows().length : 100,
+const GET_DEFAULT_DATASET_OPTIONS: UseMockServerOptions = {
+  dataSet: 'Commodity',
+  rowLength: 100,
   maxColumns: 6,
-});
+};
 
 const getColumnsFromOptions = (options: ColumnsOptions): GridColDefGenerator[] | GridColDef[] => {
   let columns;
@@ -189,9 +186,7 @@ export const useMockServer = <T extends GridGetRowsResponse>(
     }
   }, [shouldRequestsFail]);
 
-  const isRowGrouping = dataSetOptions?.rowGrouping ?? false;
-
-  const options = { ...GET_DEFAULT_DATASET_OPTIONS(isRowGrouping), ...dataSetOptions };
+  const options = { ...GET_DEFAULT_DATASET_OPTIONS, ...dataSetOptions };
 
   const isTreeData = options.treeData?.groupingField != null;
 
@@ -378,19 +373,6 @@ export const useMockServer = <T extends GridGetRowsResponse>(
           rowCount: rootRowCount,
           ...(aggregateRow ? { aggregateRow } : {}),
         };
-      } else if (isRowGrouping) {
-        const { rows, rootRowCount, aggregateRow } = await processRowGroupingRows(
-          dataRef.current?.rows ?? [],
-          params,
-          serverOptionsWithDefault,
-          columnsWithDefaultColDef,
-        );
-
-        getRowsResponse = {
-          rows: rows.slice().map((row) => ({ ...row, path: undefined })),
-          rowCount: rootRowCount,
-          ...(aggregateRow ? { aggregateRow } : {}),
-        };
       } else if (
         typeof params.pivotModel === 'object' &&
         params.pivotModel.columns &&
@@ -409,6 +391,19 @@ export const useMockServer = <T extends GridGetRowsResponse>(
           rowCount: rootRowCount,
           pivotColumns,
           aggregateRow,
+        };
+      } else if (params.groupFields && params.groupFields.length > 0) {
+        const { rows, rootRowCount, aggregateRow } = await processRowGroupingRows(
+          dataRef.current?.rows ?? [],
+          params,
+          serverOptionsWithDefault,
+          columnsWithDefaultColDef,
+        );
+
+        getRowsResponse = {
+          rows: rows.slice().map((row) => ({ ...row, path: undefined })),
+          rowCount: rootRowCount,
+          ...(aggregateRow ? { aggregateRow } : {}),
         };
       } else {
         const { returnedRows, nextCursor, totalRowCount, aggregateRow } = await loadServerRows(
@@ -442,7 +437,6 @@ export const useMockServer = <T extends GridGetRowsResponse>(
       columnsWithDefaultColDef,
       columnsWithDerivedColDef,
       nestedPagination,
-      isRowGrouping,
     ],
   );
 

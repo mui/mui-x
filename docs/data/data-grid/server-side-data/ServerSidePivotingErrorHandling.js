@@ -58,6 +58,7 @@ export default function ServerSidePivotingErrorHandling() {
           sortModel: JSON.stringify(params.sortModel),
           groupKeys: JSON.stringify(params.groupKeys),
           groupFields: JSON.stringify(params.groupFields),
+          aggregationModel: JSON.stringify(params.aggregationModel),
           pivotModel: JSON.stringify(params.pivotModel),
         });
         const getRowsResponse = await fetchRows(
