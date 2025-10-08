@@ -30,6 +30,7 @@ const defaultAlias = {
   '@mui/x-charts-premium': resolveAliasPath('./packages/x-charts-premium/src'),
   '@mui/x-charts-vendor': resolveAliasPath('./packages/x-charts-vendor'),
   '@mui/x-scheduler': resolveAliasPath('./packages/x-scheduler'),
+  '@mui/x-scheduler-headless': resolveAliasPath('./packages/x-scheduler-headless'),
   '@mui/x-tree-view': resolveAliasPath('./packages/x-tree-view/src'),
   '@mui/x-tree-view-pro': resolveAliasPath('./packages/x-tree-view-pro/src'),
   '@mui/x-internals': resolveAliasPath('./packages/x-internals/src'),

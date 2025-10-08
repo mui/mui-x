@@ -16,18 +16,17 @@ catalog:
   '@emotion/cache': ^11.14.0
   '@emotion/react': ^11.14.0
   '@emotion/styled': ^11.14.1
-  '@mui/icons-material': ^7.3.2
+  '@mui/icons-material': ^7.3.4
   '@mui/internal-test-utils': ^2.0.9
-  '@mui/material': ^7.3.2
-  '@mui/stylis-plugin-rtl': ^7.3.2
-  '@mui/system': ^7.3.2
-  '@mui/utils': ^7.3.2
+  '@mui/material': ^7.3.4
+  '@mui/stylis-plugin-rtl': ^7.3.3
+  '@mui/system': ^7.3.3
+  '@mui/utils': ^7.3.3
   '@playwright/test': ^1.55.1
   '@react-spring/web': ^10.0.3
   '@types/chance': ^1.1.7
   '@types/d3-scale': ^4.0.9
   '@types/karma': ^6.3.9
-  '@types/lodash': ^4.17.20
   '@types/luxon': ^3.7.1
   '@types/moment-hijri': ^2.1.4
   '@types/moment-jalaali': ^0.7.9
@@ -58,7 +57,6 @@ catalog:
   dayjs: ^1.11.13
   exceljs: ^4.4.0
   jscodeshift: 17.3.0
-  lodash: ^4.17.21
   luxon: ^3.7.2
   moment: ^2.30.1
   moment-hijri: ^3.0.0
@@ -68,7 +66,7 @@ catalog:
   prop-types: ^15.8.1
   react: 19.1.1
   react-dom: 19.1.1
-  react-router: ^7.9.2
+  react-router: ^7.9.3
   react-transition-group: ^4.4.5
   reselect: ^5.1.1
   rimraf: ^6.0.1
@@ -78,7 +76,6 @@ catalog:
   use-sync-external-store: ^1.5.0
   vite: ^7.1.9
   vitest: 3.2.4
-  webpack-bundle-analyzer: ^4.10.2
   yargs: ^18.0.0
 
 engineStrict: true
