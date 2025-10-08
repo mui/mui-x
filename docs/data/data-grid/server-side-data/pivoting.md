@@ -54,6 +54,15 @@ const customDataSource: GridDataSource = {
 Additionally, use [pivotingColDef()](/x/api/data-grid/data-grid-premium/#data-grid-premium-prop-pivotingColDef) as a callback to customize the column definition for pivot columns based on the pivot value and column group path.
 You must at least override the field name to target the row property holding the pivoted data.
 
+```tsx
+const pivotingColDef: DataGridPremiumProps['pivotingColDef'] = (
+  originalColumnField,
+  columnGroupPath,
+) => ({
+  field: columnGroupPath.concat(originalColumnField).join('>->'),
+});
+```
+
 In addition to the standard parameters, the `getRows()` callback receives the [`pivotModel`](/x/react-data-grid/pivoting/#pivot-model) parameter when pivoting is active.
 This corresponds to the current pivot configuration and contains the visible rows, columns, and values from the pivot model.
 Use `pivotModel` on the server to pivot the data for each `getRows()` call.
