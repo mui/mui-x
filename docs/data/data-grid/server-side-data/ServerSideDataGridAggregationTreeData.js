@@ -60,6 +60,7 @@ export default function ServerSideDataGridAggregationTreeData() {
           },
         }}
         aggregationFunctions={aggregationFunctions}
+        disablePivoting
       />
     </div>
   );

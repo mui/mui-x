@@ -97,6 +97,7 @@ export default function ServerSideRowGroupingErrorHandling() {
           dataSourceCache={null}
           apiRef={apiRef}
           initialState={initialState}
+          disablePivoting
         />
         {rootError && <ErrorOverlay error={rootError} />}
         <Snackbar

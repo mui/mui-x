@@ -62,6 +62,7 @@ export default function ServerSideRowGroupingDataGrid() {
           dataSource={dataSource}
           apiRef={apiRef}
           initialState={initialState}
+          disablePivoting
         />
       </div>
     </div>
