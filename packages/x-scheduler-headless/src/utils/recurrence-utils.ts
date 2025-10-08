@@ -879,7 +879,7 @@ export function applyRecurringUpdateAll(
 /**
  * Applies a "only-this" update to a recurring series by:
  *  - creating a detached one-off event with the requested changes, and
- *  - adding an EXDATE to the master event to exclude the original occurrence.
+ *  - adding an EXDATE to the original event to exclude the occurrence from the series.
  * @returns The updated list of events.
  */
 export function applyRecurringUpdateOnlyThis(
