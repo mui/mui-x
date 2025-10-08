@@ -516,6 +516,17 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     return rowElements;
   };
 
+  const scrollRestoreCallback = React.useRef<Function | null>(null);
+  const contentNodeRef = React.useCallback(
+    (node: HTMLDivElement | null) => {
+      if (!node) {
+        return;
+      }
+      scrollRestoreCallback.current?.(columnsTotalWidth, contentHeight);
+    },
+    [columnsTotalWidth, contentHeight],
+  );
+
   const scrollerStyle = React.useMemo(
     () =>
       ({
@@ -583,16 +594,51 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     }
   }, [offsetTop, params.layout]);
 
-  const scrollRestoreCallback = React.useRef<Function | null>(null);
-  const contentNodeRef = React.useCallback(
-    (node: HTMLDivElement | null) => {
-      if (!node) {
-        return;
-      }
-      scrollRestoreCallback.current?.(columnsTotalWidth, contentHeight);
-    },
-    [columnsTotalWidth, contentHeight],
-  );
+  const refSetter = (name: keyof typeof refs) => (node: HTMLDivElement | null) => {
+    if (node && refs[name].current !== node) {
+      refs[name].current = node;
+      setRefTick((tick) => tick + 1);
+    }
+  };
+
+  // Legacy API, cannot change without a breaking change in the grid (GridDetailPanels, etc)
+  const legacyAPI = {
+    setPanels,
+    getRows,
+    getContainerProps: () => ({
+      ref: refSetter('container'),
+    }),
+    getScrollerProps: () => ({
+      ref: refSetter('scroller'),
+      onScroll: handleScroll,
+      onWheel,
+      onTouchMove,
+      style: scrollerStyle,
+      role: 'presentation',
+      // `tabIndex` shouldn't be used along role=presentation, but it fixes a Firefox bug
+      // https://github.com/mui/mui-x/pull/13891#discussion_r1683416024
+      tabIndex: platform.isFirefox ? -1 : undefined,
+    }),
+    getContentProps: () => ({
+      ref: contentNodeRef,
+      style: contentStyle,
+      role: 'presentation',
+    }),
+    getPositionerProps: () => ({
+      style: positionerStyle,
+    }),
+    getScrollbarVerticalProps: () => ({
+      ref: refSetter('scrollbarVertical'),
+      scrollPosition,
+    }),
+    getScrollbarHorizontalProps: () => ({
+      ref: refSetter('scrollbarHorizontal'),
+      scrollPosition,
+    }),
+    getScrollAreaProps: () => ({
+      scrollPosition,
+    }),
+  };
 
   useEnhancedEffect(() => {
     if (!isRenderContextReady.current) {
@@ -660,52 +706,6 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
   });
 
   useStoreEffect(store, Dimensions.selectors.dimensions, forceUpdateRenderContext);
-
-  const refSetter = (name: keyof typeof refs) => (node: HTMLDivElement | null) => {
-    if (node && refs[name].current !== node) {
-      refs[name].current = node;
-      setRefTick((tick) => tick + 1);
-    }
-  };
-
-  // Legacy API, cannot change without a breaking change in the grid (GridDetailPanels, etc)
-  const legacyAPI = {
-    setPanels,
-    getRows,
-    getContainerProps: () => ({
-      ref: refSetter('container'),
-    }),
-    getScrollerProps: () => ({
-      ref: refSetter('scroller'),
-      onScroll: handleScroll,
-      onWheel,
-      onTouchMove,
-      style: scrollerStyle,
-      role: 'presentation',
-      // `tabIndex` shouldn't be used along role=presentation, but it fixes a Firefox bug
-      // https://github.com/mui/mui-x/pull/13891#discussion_r1683416024
-      tabIndex: platform.isFirefox ? -1 : undefined,
-    }),
-    getContentProps: () => ({
-      ref: contentNodeRef,
-      style: contentStyle,
-      role: 'presentation',
-    }),
-    getPositionerProps: () => ({
-      style: positionerStyle,
-    }),
-    getScrollbarVerticalProps: () => ({
-      ref: refSetter('scrollbarVertical'),
-      scrollPosition,
-    }),
-    getScrollbarHorizontalProps: () => ({
-      ref: refSetter('scrollbarHorizontal'),
-      scrollPosition,
-    }),
-    getScrollAreaProps: () => ({
-      scrollPosition,
-    }),
-  };
 
   if (params.legacy) {
     /* eslint-disable react-hooks/rules-of-hooks */
