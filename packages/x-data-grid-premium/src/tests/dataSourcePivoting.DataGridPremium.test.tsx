@@ -515,7 +515,7 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
     });
   });
 
-  it('should handle server-side pivoting with custom getPivotColumnDef', async () => {
+  it('should handle server-side pivoting with custom pivotingColDef header name', async () => {
     const pivotModel: GridPivotModel = {
       rows: [{ field: 'traderName' }],
       columns: [{ field: 'status' }],
