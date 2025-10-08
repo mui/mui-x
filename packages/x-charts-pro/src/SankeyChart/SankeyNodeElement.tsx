@@ -2,12 +2,7 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import type { SeriesId } from '@mui/x-charts/internals';
-import {
-  useInteractionItemProps,
-  useStore,
-  useSelector,
-  selectorChartsHighlightedItem,
-} from '@mui/x-charts/internals';
+import { useInteractionItemProps, useStore, useSelector } from '@mui/x-charts/internals';
 import { useTheme } from '@mui/material/styles';
 import type {
   SankeyLayoutNode,
@@ -17,6 +12,7 @@ import type {
   SankeyLinkOptions,
 } from './sankey.types';
 import { isNodeHighlighted, isNodeHighlightedByLink, shouldFadeItem } from './utils';
+import { selectorSankeyHighlightedItem } from './plugins/useSankeyHighlight.selectors';
 
 export interface SankeyNodeElementProps {
   /**
@@ -59,9 +55,10 @@ export const SankeyNodeElement = React.forwardRef<SVGGElement, SankeyNodeElement
     const theme = useTheme();
     const store = useStore();
 
+    // Get the currently highlighted item from the Sankey-specific highlight plugin
     const highlightedItem = useSelector(
       store,
-      selectorChartsHighlightedItem,
+      selectorSankeyHighlightedItem as any,
     ) as SankeyItemIdentifier | null;
 
     const x0 = node.x0 ?? 0;
