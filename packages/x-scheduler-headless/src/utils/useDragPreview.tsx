@@ -1,12 +1,15 @@
 'use client';
 import * as React from 'react';
 import { RenderDragPreviewParameters } from '../models';
+import { useSchedulerStoreContext } from '../use-scheduler-store-context';
+import { selectors } from './SchedulerStore';
 
 /**
  * Returns the drag preview to render when the dragged event is not over a valid drop target.
  */
 export function useDragPreview(parameters: useDragPreview.Parameters) {
   const { renderDragPreview, showPreviewOnDragStart, data, type } = parameters;
+  const store = useSchedulerStoreContext(true);
 
   const [state, setState] = React.useState<useDragPreview.State>({
     isDragging: false,
@@ -42,11 +45,21 @@ export function useDragPreview(parameters: useDragPreview.Parameters) {
         });
       },
       onDrag: (location: useDragPreview.DragLocationHistory) => {
-        if (location.current.dropTargets.some((el) => el.data.isSchedulerDropTarget)) {
-          setState({ isDragging: true, dragPosition: null });
-        } else {
-          setState({ isDragging: true, dragPosition: location.current.input });
+        let shouldShowPreview = true;
+        if (
+          store &&
+          type === 'internal-event' &&
+          !selectors.canDropEventsToTheOutside(store.state)
+        ) {
+          shouldShowPreview = false;
+        } else if (location.current.dropTargets.some((el) => el.data.isSchedulerDropTarget)) {
+          shouldShowPreview = false;
         }
+
+        setState({
+          isDragging: true,
+          dragPosition: shouldShowPreview ? location.current.input : null,
+        });
       },
       onDrop: () => {
         setState({ isDragging: false, dragPosition: null });
