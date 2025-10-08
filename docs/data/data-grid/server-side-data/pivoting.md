@@ -23,7 +23,8 @@ For pivoting on the client side, see [Pivoting](/x/react-data-grid/pivoting/).
 
 ## Prerequisites
 
-Server-side pivoting is an extension of its client-side counterpart, it is recommended to review [the client-side pivoting doc](/x/react-data-grid/pivoting/) to understand the underlying data structures and core implementation before proceeding.
+Server-side pivoting is an extension of its client-side counterpart.
+It is recommended to review [the client-side pivoting doc](/x/react-data-grid/pivoting/) to understand the underlying data structures and core implementation before proceeding.
 
 To dynamically load pivoted data from the server, create a Data Source and pass it in the `dataSource` prop, as detailed in the [Server-side data overview](/x/react-data-grid/server-side-data/).
 
@@ -176,7 +177,7 @@ Since the formatted value is not known on the server, rows contain pivot data in
 
 ### Column sorting
 
-Pivot column sort parameter is processed differently for different column group types.
+The pivot column sort parameter is processed differently for different column group types.
 
 Column groups returned as strings are considered formatted and sorted on the server, and the Data Grid does not sort these values on the client-side.
 
@@ -192,7 +193,7 @@ Use the `getPivotDerivedColumn()` prop to add supported derived columns.
 This prop is called for each original column and returns an array of derived columns, or `undefined` if no derived columns are needed.
 
 :::success
-To sort the derived columns by a value different from the column header name—to display months of the year, use `valueGetter()` to return the month number for sorting and use `valueFormatter()` for the column header name.
+To sort the derived columns by a value different from the column header name—for instance, to display months of the year—use `valueGetter()` to return the month number for sorting and use `valueFormatter()` for the column header name.
 :::
 
 {{"demo": "ServerSidePivotingDerivedColumns.js", "bg": "inline"}}
