@@ -26,6 +26,7 @@ import {
   applyRecurringUpdateFollowing,
   applyRecurringUpdateAll,
   getByDayMaps,
+  applyRecurringUpdateOnlyThis,
 } from '../recurrence-utils';
 import { selectors } from './SchedulerStore.selectors';
 import { shouldUpdateOccurrencePlaceholder } from './SchedulerStore.utils';
@@ -280,8 +281,14 @@ export class SchedulerStore<
       }
 
       case 'only-this': {
-        // TODO: Issue #19440 - Allow to edit recurring series => this event only.
-        throw new Error('Scheduler: scope="only-this" not implemented yet.');
+        updatedEvents = applyRecurringUpdateOnlyThis(
+          adapter,
+          events,
+          original,
+          occurrenceStart,
+          changes,
+        );
+        break;
       }
 
       default: {
