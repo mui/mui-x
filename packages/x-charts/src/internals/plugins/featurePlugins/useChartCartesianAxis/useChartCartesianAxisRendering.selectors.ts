@@ -330,7 +330,7 @@ export const selectorChartFilteredXDomains = createSelector(
   },
   {
     memoizeOptions: {
-      resultEqualityCheck: (a, b) => isDeepEqual(a, b),
+      resultEqualityCheck: (a: any, b: any) => isDeepEqual(a, b),
     },
   },
 );
@@ -400,7 +400,7 @@ export const selectorChartFilteredYDomains = createSelector(
   },
   {
     memoizeOptions: {
-      resultEqualityCheck: (a, b) => isDeepEqual(a, b),
+      resultEqualityCheck: (a: any, b: any) => isDeepEqual(a, b),
     },
   },
 );
