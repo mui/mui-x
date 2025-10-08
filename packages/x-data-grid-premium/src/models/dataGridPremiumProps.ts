@@ -297,6 +297,7 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    * For server-side pivoting, only the `PivotingColDefCallback` signature is supported, and the prop is required.
    * @type {Partial<GridPivotingColDefOverrides> | PivotingColDefCallback}
    * @default undefined
+   * @throws {Error} If `undefined` and `dataSource` is provided.
    */
   pivotingColDef?: Partial<GridPivotingColDefOverrides> | PivotingColDefCallback;
   /**
