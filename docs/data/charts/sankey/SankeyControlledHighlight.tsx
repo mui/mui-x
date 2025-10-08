@@ -12,7 +12,12 @@ import {
 
 export default function SankeyControlledHighlight() {
   type HighlightItem = SankeyNodeIdentifier | SankeyLinkIdentifier | null;
-  const [highlightedItem, setHighlightedItem] = React.useState<HighlightItem>(null);
+  const [highlightedItem, setHighlightedItem] = React.useState<HighlightItem>({
+    type: 'sankey',
+    seriesId: 'auto-generated-id',
+    subType: 'node',
+    nodeId: 'A',
+  });
 
   const handleHighlightChange: (item: HighlightItem) => void = (item) => {
     setHighlightedItem(item);

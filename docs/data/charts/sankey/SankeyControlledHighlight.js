@@ -7,7 +7,12 @@ import FormLabel from '@mui/material/FormLabel';
 import { Unstable_SankeyChart as SankeyChart } from '@mui/x-charts-pro/SankeyChart';
 
 export default function SankeyControlledHighlight() {
-  const [highlightedItem, setHighlightedItem] = React.useState(null);
+  const [highlightedItem, setHighlightedItem] = React.useState({
+    type: 'sankey',
+    seriesId: 'auto-generated-id',
+    subType: 'node',
+    nodeId: 'A',
+  });
 
   const handleHighlightChange = (item) => {
     setHighlightedItem(item);
