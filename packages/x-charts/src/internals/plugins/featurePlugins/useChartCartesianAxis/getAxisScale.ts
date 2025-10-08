@@ -219,7 +219,7 @@ export function getDomainLimit(
 
 export function applyDomainLimit(
   scale: D3ContinuousScale,
-  axis: { min?: number | Date; max?: number | Date },
+  axis: { min?: number | Date; max?: number | Date } | {},
   domainLimit: DomainLimit,
   rawTickNumber: number,
 ) {
@@ -227,6 +227,9 @@ export function applyDomainLimit(
     scale.nice(rawTickNumber);
   }
 
+  if (!('min' in axis) && !('max' in axis)) {
+    return;
+  }
   const [minDomain, maxDomain] = scale.domain();
   scale.domain([axis.min ?? minDomain, axis.max ?? maxDomain]);
 }
@@ -238,20 +241,23 @@ export function applyDomainLimit(
  * @param maxData Maximum value from the data.
  */
 export function getActualAxisExtrema(
-  axisExtrema: Pick<AxisConfig, 'min' | 'max'>,
+  axisExtrema: { min?: number | Date; max?: number | Date } | {},
   minData: number,
   maxData: number,
 ): [number | Date, number | Date] {
   let min: number | Date = minData;
   let max: number | Date = maxData;
 
-  if (axisExtrema.max != null && axisExtrema.max.valueOf() < minData) {
+  if ('max' in axisExtrema && axisExtrema.max != null && axisExtrema.max.valueOf() < minData) {
     min = axisExtrema.max;
   }
 
-  if (axisExtrema.min != null && axisExtrema.min.valueOf() > minData) {
+  if ('min' in axisExtrema && axisExtrema.min != null && axisExtrema.min.valueOf() > minData) {
     max = axisExtrema.min;
   }
 
+  if (!('min' in axisExtrema) && !('max' in axisExtrema)) {
+    return [min, max];
+  }
   return [axisExtrema.min ?? min, axisExtrema.max ?? max];
 }
