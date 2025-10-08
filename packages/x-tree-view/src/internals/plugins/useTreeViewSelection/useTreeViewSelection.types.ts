@@ -163,7 +163,7 @@ export type UseTreeViewSelectionSignature = TreeViewPluginSignature<{
 }>;
 
 export interface UseTreeItemRootSlotPropsFromSelection {
-  'aria-selected': React.AriaAttributes['aria-selected'];
+  'aria-checked': React.AriaAttributes['aria-checked'];
 }
 
 export interface UseTreeItemCheckboxSlotPropsFromSelection {
