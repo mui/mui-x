@@ -70,7 +70,6 @@ export const useTreeItem = <
   const checkboxRef = React.useRef<HTMLButtonElement>(null);
 
   const treeId = useStore(store, idSelectors.treeId);
-  const isSelectionEnabledForItem = useStore(store, selectionSelectors.canItemBeSelected, itemId);
   const isCheckboxSelectionEnabled = useStore(store, selectionSelectors.isCheckboxSelectionEnabled);
   const idAttribute = generateTreeItemIdAttribute({ itemId, treeId, id });
   const shouldBeAccessibleWithTab = useStore(
@@ -205,19 +204,6 @@ export const useTreeItem = <
       ...extractEventHandlers(externalProps),
     };
 
-    // https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
-    let ariaSelected: boolean | undefined;
-    if (status.selected) {
-      // - each selected node has aria-selected set to true.
-      ariaSelected = true;
-    } else if (!isSelectionEnabledForItem) {
-      // - if the tree contains nodes that are not selectable, aria-selected is not present on those nodes.
-      ariaSelected = undefined;
-    } else {
-      // - all nodes that are selectable but not selected have aria-selected set to false.
-      ariaSelected = false;
-    }
-
     const props: UseTreeItemRootSlotPropsFromUseTreeItem = {
       ...externalEventHandlers,
       ref: handleRootRef,
@@ -225,7 +211,6 @@ export const useTreeItem = <
       tabIndex: shouldBeAccessibleWithTab ? 0 : -1,
       id: idAttribute,
       'aria-expanded': status.expandable ? status.expanded : undefined,
-      'aria-selected': ariaSelected,
       'aria-disabled': status.disabled || undefined,
       ...externalProps,
       style: {
