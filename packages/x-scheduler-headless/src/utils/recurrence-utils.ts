@@ -803,7 +803,7 @@ export function applyRecurringUpdateFollowing(
     occurrenceStart,
     changes,
   );
-  const newEventId = `${originalEvent.id}::${adapter.format(changes.start, 'keyboardDate')}`;
+  const newEventId = `${originalEvent.id}::${getDateKey(changes.start, adapter)}`;
 
   const newEvent: CalendarEvent = {
     ...originalEvent,
@@ -886,7 +886,7 @@ export function applyRecurringUpdateOnlyThis(
   occurrenceStart: SchedulerValidDate,
   changes: RecurringEventUpdatedProperties,
 ): CalendarEvent[] {
-  const detachedId = `${originalEvent.id}::${adapter.format(changes.start, 'keyboardDate')}`;
+  const detachedId = `${originalEvent.id}::${getDateKey(changes.start, adapter)}`;
 
   const detachedEvent: CalendarEvent = {
     ...originalEvent,
