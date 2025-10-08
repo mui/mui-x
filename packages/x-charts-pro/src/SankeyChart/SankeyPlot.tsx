@@ -82,8 +82,6 @@ function SankeyPlot(props: SankeyPlotProps) {
             key={`${link.source.id}-${link.target.id}`}
             link={link}
             opacity={linkOptions?.opacity}
-            nodeOptions={nodeOptions}
-            linkOptions={linkOptions}
             onClick={onLinkClick}
           />
         ))}
@@ -96,8 +94,6 @@ function SankeyPlot(props: SankeyPlotProps) {
             key={node.id}
             node={node}
             showLabel={nodeOptions?.showLabels}
-            nodeOptions={nodeOptions}
-            linkOptions={linkOptions}
             onClick={onNodeClick}
           />
         ))}
