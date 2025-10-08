@@ -21,8 +21,7 @@ function niceDomain(
  * The domain should still run through the zoom filterMode after this step.
  */
 export function calculateInitialDomainAndTickNumber(
-  axis: Pick<DefaultedAxis, 'id' | 'domainLimit' | 'scaleType'> &
-    TickParams & { min?: NumberValue; max?: NumberValue },
+  axis: DefaultedAxis<ContinuousScaleName>,
   axisDirection: 'x' | 'y',
   axisIndex: number,
   formattedSeries: ProcessedSeries,
@@ -49,11 +48,7 @@ export function calculateInitialDomainAndTickNumber(
   const tickNumber = getTickNumber(axis, axisExtrema, defaultTickNumber);
 
   if (domainLimit === 'nice') {
-    axisExtrema = niceDomain(
-      (axis.scaleType ?? 'linear') as ContinuousScaleName,
-      axisExtrema,
-      tickNumber,
-    );
+    axisExtrema = niceDomain(axis.scaleType, axisExtrema, tickNumber);
   }
 
   axisExtrema = [
@@ -69,7 +64,7 @@ export function calculateInitialDomainAndTickNumber(
  * After this step, the domain can be used to create the axis scale.
  */
 export function calculateFinalDomain(
-  axis: Pick<DefaultedAxis, 'id' | 'domainLimit' | 'scaleType'> &
+  axis: Pick<DefaultedAxis<ContinuousScaleName>, 'id' | 'domainLimit' | 'scaleType'> &
     TickParams & { min?: NumberValue; max?: NumberValue },
   axisDirection: 'x' | 'y',
   axisIndex: number,
@@ -95,11 +90,7 @@ export function calculateFinalDomain(
   }
 
   if (domainLimit === 'nice') {
-    axisExtrema = niceDomain(
-      (axis.scaleType ?? 'linear') as ContinuousScaleName,
-      axisExtrema,
-      tickNumber,
-    );
+    axisExtrema = niceDomain(axis.scaleType, axisExtrema, tickNumber);
   }
 
   return [axis.min ?? axisExtrema[0], axis.max ?? axisExtrema[1]];

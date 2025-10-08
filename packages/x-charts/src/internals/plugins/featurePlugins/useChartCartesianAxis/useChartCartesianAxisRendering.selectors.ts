@@ -18,6 +18,7 @@ import { createZoomLookup } from './createZoomLookup';
 import {
   AxisId,
   ChartsAxisProps,
+  ContinuousScaleName,
   D3Scale,
   DefaultedAxis,
   isBandScaleConfig,
@@ -130,7 +131,7 @@ export const selectorChartXDomains = createSelector(
       );
 
       domains[axis.id] = calculateInitialDomainAndTickNumber(
-        axis,
+        axis as Readonly<DefaultedAxis<ContinuousScaleName, any, Readonly<ChartsAxisProps>>>,
         'x',
         axisIndex,
         formattedSeries,
@@ -179,7 +180,7 @@ export const selectorChartYDomains = createSelector(
       );
 
       domains[axis.id] = calculateInitialDomainAndTickNumber(
-        axis,
+        axis as Readonly<DefaultedAxis<ContinuousScaleName, any, Readonly<ChartsAxisProps>>>,
         'y',
         axisIndex,
         formattedSeries,
@@ -307,7 +308,7 @@ export const selectorChartFilteredXDomains = createSelector(
       );
 
       filteredDomains[axis.id] = calculateFinalDomain(
-        axis,
+        axis as Readonly<DefaultedAxis<ContinuousScaleName, any, Readonly<ChartsAxisProps>>>,
         'x',
         axisIndex,
         formattedSeries,
@@ -372,7 +373,7 @@ export const selectorChartFilteredYDomains = createSelector(
       );
 
       filteredDomains[axis.id] = calculateFinalDomain(
-        axis,
+        axis as Readonly<DefaultedAxis<ContinuousScaleName, any, Readonly<ChartsAxisProps>>>,
         'y',
         axisIndex,
         formattedSeries,
