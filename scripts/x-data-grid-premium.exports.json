@@ -421,7 +421,6 @@
   { "name": "GridGetRowsError", "kind": "Class" },
   { "name": "GridGetRowsParams", "kind": "Interface" },
   { "name": "GridGetRowsResponse", "kind": "Interface" },
-  { "name": "GridGetRowsResponsePivotColumn", "kind": "Interface" },
   { "name": "GridGetRowsToExportParams", "kind": "Interface" },
   { "name": "GridGroupingColDefOverride", "kind": "Interface" },
   { "name": "GridGroupingColDefOverrideParams", "kind": "Interface" },

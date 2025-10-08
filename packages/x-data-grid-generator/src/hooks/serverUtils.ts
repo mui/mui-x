@@ -13,7 +13,7 @@ import {
   GridAggregationFunction,
   GridPivotModel,
   gridStringOrNumberComparator,
-  GridGetRowsResponsePivotColumn,
+  GridGetRowsResponse,
 } from '@mui/x-data-grid-premium';
 import { GridStateColDef } from '@mui/x-data-grid-pro/internals';
 import { randomInt } from '../services/random-generator';
@@ -96,7 +96,7 @@ interface NestedDataRowsResponse {
 }
 
 interface PivotingDataRowsResponse extends NestedDataRowsResponse {
-  pivotColumns: GridGetRowsResponsePivotColumn[];
+  pivotColumns: GridGetRowsResponse['pivotColumns'];
 }
 
 declare const DISABLE_CHANCE_RANDOM: any;
@@ -868,7 +868,7 @@ export const processPivotingRows = (
 
   // Create pivot columns based on the pivot model
   const columnGroupIdSeparator = '>->';
-  const pivotColumns: GridGetRowsResponsePivotColumn[] = [];
+  const pivotColumns: GridGetRowsResponse['pivotColumns'] = [];
   const uniqueColumnGroups = new Map<string, (string | GridRowModel)[]>();
 
   // Generate pivot column names based on pivot model columns
@@ -955,7 +955,7 @@ export const processPivotingRows = (
 
     const convertMapToArray = (
       map: Map<string, { group: string | GridRowModel; children: Map<string, any> }>,
-    ): GridGetRowsResponsePivotColumn[] => {
+    ): NonNullable<GridGetRowsResponse['pivotColumns']> => {
       return Array.from(map.entries()).map(([key, group]) => ({
         key,
         group: group.group,
