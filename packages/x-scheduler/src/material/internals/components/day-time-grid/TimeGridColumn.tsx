@@ -14,7 +14,7 @@ import { useEventOccurrencesWithTimelinePosition } from '../../../../primitives/
 import { EventPopoverTrigger } from '../event-popover';
 import { useGetDateFromPositionInColumn } from '../../../../primitives/time-grid/column/useGetDateFromPositionInColumn';
 import { SchedulerValidDate } from '../../../../primitives/models/date';
-import { useEventPopoverContext } from '../event-popover/EventPopoverContext';
+import { useEventPopoverContext } from '../event-popover/EventPopover';
 import {
   EVENT_CREATION_DEFAULT_LENGTH_MINUTE,
   EVENT_CREATION_PRECISION_MINUTE,
@@ -80,7 +80,7 @@ function ColumnInteractiveLayer({
     elementRef: columnRef,
     snapMinutes: EVENT_CREATION_PRECISION_MINUTE,
   });
-  const { startEditing } = useEventPopoverContext();
+  const { open: startEditing } = useEventPopoverContext();
   const isCreation = useStore(store, selectors.isCreatingNewEventInTimeRange, start, end);
 
   const computeInitialRange = (event: React.MouseEvent<HTMLDivElement>) => {

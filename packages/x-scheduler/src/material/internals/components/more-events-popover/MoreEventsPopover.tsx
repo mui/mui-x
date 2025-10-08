@@ -1,22 +1,33 @@
 import * as React from 'react';
 import { X } from 'lucide-react';
 import { Popover } from '@base-ui-components/react';
-import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { useTranslations } from '../../utils/TranslationsContext';
-import { MoreEventsPopoverContext, useMoreEventsPopoverContext } from './MoreEventsPopoverContext';
-import { MoreEventsPopoverContextValue } from './MoreEventsPopover.types';
 import { CalendarEventOccurrence } from '../../../../primitives';
-import { ArrowSvg } from './arrow';
 import './MoreEventsPopover.css';
-import { DayGridEvent } from '../event';
-import { AgendaEvent } from '../event/agenda-event/AgendaEvent';
+import { createPopoverComponents } from '../popover';
+import { EventPopoverTrigger } from '../event-popover';
+import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler/primitives/use-event-occurrences-with-day-grid-position';
+import { MoreEventsPopoverProps, MoreEventsPopoverProviderProps } from './MoreEventsPopover.types';
+import { useEventPopoverContext } from '../event-popover/EventPopover';
 
-export default function MoreEventsPopover(props) {
-  const { anchor, container, occurrences, onClose } = props;
+interface MoreEventsData {
+  occurrences: CalendarEventOccurrence[];
+  count: number;
+  day: useEventOccurrencesWithDayGridPosition.DayData;
+}
 
-  console.log(occurrences);
+const MoreEventsPopoverComponents = createPopoverComponents<MoreEventsData>({
+  contextName: 'MoreEventsPopoverContext',
+});
+
+export const MoreEventsPopoverContext = MoreEventsPopoverComponents.Context;
+export const useMoreEventsPopoverContext = MoreEventsPopoverComponents.useContext;
+
+export default function MoreEventsPopover(props: MoreEventsPopoverProps) {
+  const { anchor, container, occurrences, day } = props;
 
   const translations = useTranslations();
+  const context = useMoreEventsPopoverContext();
 
   return (
     <Popover.Portal container={container}>
@@ -26,9 +37,6 @@ export default function MoreEventsPopover(props) {
         className="PopoverPositioner MoreEventsPopoverPositioner"
       >
         <Popover.Popup>
-          <Popover.Arrow className="PopoverArrow">
-            <ArrowSvg />
-          </Popover.Arrow>
           <div className="MoreEventsPopoverHeader">
             <Popover.Title className="MoreEventsPopoverTitle">2 more events</Popover.Title>
             <Popover.Close
@@ -40,7 +48,12 @@ export default function MoreEventsPopover(props) {
           </div>
           <div className="MoreEventsPopoverContent">
             {occurrences.map((occurrence) => (
-              <AgendaEvent key={occurrence.id} occurrence={occurrence} />
+              <EventPopoverTrigger
+                key={occurrence.key}
+                occurrence={occurrence}
+                onClick={(_e) => context.setKeepOpen(true)}
+                render={<p>{occurrence.title}</p>}
+              />
             ))}
           </div>
         </Popover.Popup>
@@ -49,55 +62,41 @@ export default function MoreEventsPopover(props) {
   );
 }
 
-export function MoreEventsPopoverProvider(props) {
+export function MoreEventsPopoverProvider(props: MoreEventsPopoverProviderProps) {
   const { containerRef, children } = props;
-  const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
-  const [anchor, setAnchor] = React.useState<HTMLElement | null>(null);
-  const [occurrences, setOccurrences] = React.useState<CalendarEventOccurrence[] | []>([]);
-
-  const handleClose = useEventCallback(() => {
-    if (!isPopoverOpen) {
-      return;
-    }
-    setIsPopoverOpen(false);
-    setAnchor(null);
-  });
-
-  const showEvents = useEventCallback(
-    (anchorElement: HTMLElement, occurrences: CalendarEventOccurrence[]) => {
-      setAnchor(anchorElement);
-      setOccurrences(occurrences);
-      setIsPopoverOpen(true);
-    },
-  );
-
-  const contextValue = React.useMemo<MoreEventsPopoverContextValue>(
-    () => ({ showEvents }),
-    [showEvents],
-  );
 
   return (
-    <MoreEventsPopoverContext.Provider value={contextValue}>
-      <Popover.Root open={isPopoverOpen} onOpenChange={handleClose} modal>
-        {children}
-        {anchor && occurrences.length > 0 && (
-          <MoreEventsPopover
-            anchor={anchor}
-            occurrences={occurrences}
-            container={containerRef.current}
-            onClose={handleClose}
-          />
-        )}
-      </Popover.Root>
-    </MoreEventsPopoverContext.Provider>
+    <MoreEventsPopoverComponents.Provider
+      containerRef={containerRef}
+      renderPopover={({ anchor, data, container, onClose }) => (
+        <MoreEventsPopover
+          anchor={anchor}
+          container={container}
+          occurrences={data.occurrences}
+          count={data.count}
+          day={data.day}
+          onClose={onClose}
+        />
+      )}
+    >
+      {children}
+    </MoreEventsPopoverComponents.Provider>
   );
 }
 
-export function MoreEventsPopoverTrigger(props: any) {
-  const { occurrences, ...other } = props;
-  const { showEvents } = useMoreEventsPopoverContext();
+interface MoreEventsPopoverTriggerProps
+  extends Omit<React.ComponentProps<typeof Popover.Trigger>, 'onClick'> {
+  occurrences: CalendarEventOccurrence[];
+  day: useEventOccurrencesWithDayGridPosition.DayData;
+}
+
+export function MoreEventsPopoverTrigger(props: MoreEventsPopoverTriggerProps) {
+  const { occurrences, day, ...other } = props;
 
   return (
-    <Popover.Trigger onClick={(event) => showEvents(event.currentTarget, occurrences)} {...other} />
+    <MoreEventsPopoverComponents.Trigger
+      data={{ occurrences, count: occurrences.length, day }}
+      {...other}
+    />
   );
 }

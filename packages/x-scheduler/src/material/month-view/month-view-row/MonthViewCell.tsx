@@ -12,12 +12,9 @@ import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { EventPopoverTrigger } from '../../internals/components/event-popover';
 import { selectors } from '../../../primitives/use-event-calendar';
 import { useEventOccurrencesWithDayGridPosition } from '../../../primitives/use-event-occurrences-with-day-grid-position';
-import { useEventPopoverContext } from '../../internals/components/event-popover/EventPopoverContext';
 import './MonthViewWeekRow.css';
-import { Popover } from '@base-ui-components/react';
-import MoreEventsPopover, {
-  MoreEventsPopoverTrigger,
-} from '../../internals/components/more-events-popover/MoreEventsPopover';
+import { MoreEventsPopoverTrigger } from '../../internals/components/more-events-popover/MoreEventsPopover';
+import { useEventPopoverContext } from '../../internals/components/event-popover/EventPopover';
 
 export const MonthViewCell = React.forwardRef(function MonthViewCell(
   props: MonthViewCellProps,
@@ -35,7 +32,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const cellRef = React.useRef<HTMLDivElement | null>(null);
   const handleRef = useMergedRefs(ref, cellRef);
 
-  const { startEditing } = useEventPopoverContext();
+  const { open: startEditing } = useEventPopoverContext();
 
   const isCurrentMonth = adapter.isSameMonth(day.value, visibleDate);
   const isFirstDayOfMonth = adapter.isSameDay(day.value, adapter.startOfMonth(day.value));
@@ -136,6 +133,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
         {hiddenCount > 0 && (
           <MoreEventsPopoverTrigger
             occurrences={invisibleOccurrences}
+            day={day}
             render={
               <button
                 type="button"

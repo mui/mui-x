@@ -12,7 +12,6 @@ import { useStore } from '@base-ui-components/utils/store';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { Select } from '@base-ui-components/react/select';
 import {
-  EventPopoverContextValue,
   EventPopoverProps,
   EventPopoverProviderProps,
   EventPopoverTriggerProps,
@@ -34,8 +33,17 @@ import {
   detectRecurrenceKeyFromRule,
   RecurrencePresetKey,
 } from '../../../../primitives/utils/recurrence-utils';
-import { EventPopoverContext, useEventPopoverContext } from './EventPopoverContext';
+// import { EventPopoverContext, useEventPopoverContext } from './EventPopoverContext';
 import { DEFAULT_EVENT_COLOR } from '../../../../primitives/utils/SchedulerStore';
+import { createPopoverComponents } from '../popover';
+import { useMoreEventsPopoverContext } from '../more-events-popover';
+
+const EventPopoverComponents = createPopoverComponents<CalendarEventOccurrence>({
+  contextName: 'EventPopoverContext',
+});
+
+export const EventPopoverContext = EventPopoverComponents.Context;
+export const useEventPopoverContext = EventPopoverComponents.useContext;
 
 export const EventPopover = React.forwardRef(function EventPopover(
   props: EventPopoverProps,
@@ -528,60 +536,29 @@ export const EventPopover = React.forwardRef(function EventPopover(
 export function EventPopoverProvider(props: EventPopoverProviderProps) {
   const { containerRef, children } = props;
   const store = useEventCalendarStoreContext();
-  const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
-  const [anchor, setAnchor] = React.useState<HTMLElement | null>(null);
-  const [selectedOccurrence, setSelectedOccurrence] =
-    React.useState<CalendarEventOccurrence | null>(null);
-
-  const startEditing = useEventCallback(
-    (anchorElement: HTMLElement, occurrence: CalendarEventOccurrence) => {
-      setAnchor(anchorElement);
-      setSelectedOccurrence(occurrence);
-      setIsPopoverOpen(true);
-    },
-  );
-
-  const handleClose = useEventCallback(() => {
-    if (!isPopoverOpen) {
-      return;
-    }
-    store.setOccurrencePlaceholder(null);
-    setIsPopoverOpen(false);
-    setAnchor(null);
-    setSelectedOccurrence(null);
-  });
-
-  const contextValue = React.useMemo<EventPopoverContextValue>(
-    () => ({ startEditing }),
-    [startEditing],
-  );
 
   return (
-    <EventPopoverContext.Provider value={contextValue}>
-      <Popover.Root open={isPopoverOpen} onOpenChange={handleClose} modal>
-        {children}
-        {anchor && selectedOccurrence && (
-          <EventPopover
-            anchor={anchor}
-            occurrence={selectedOccurrence}
-            container={containerRef.current}
-            onClose={handleClose}
-          />
-        )}
-      </Popover.Root>
-    </EventPopoverContext.Provider>
+    <EventPopoverComponents.Provider
+      containerRef={containerRef}
+      renderPopover={({ anchor, data: occurrence, container, onClose }) => (
+        <EventPopover
+          anchor={anchor}
+          occurrence={occurrence}
+          container={container}
+          onClose={onClose}
+        />
+      )}
+      onClose={() => {
+        store.setOccurrencePlaceholder(null);
+      }}
+    >
+      {children}
+    </EventPopoverComponents.Provider>
   );
 }
 
 export function EventPopoverTrigger(props: EventPopoverTriggerProps) {
   const { occurrence, ...other } = props;
-  const { startEditing } = useEventPopoverContext();
 
-  return (
-    <Popover.Trigger
-      nativeButton={false}
-      onClick={(event) => startEditing(event.currentTarget, occurrence)}
-      {...other}
-    />
-  );
+  return <EventPopoverComponents.Trigger data={occurrence} nativeButton={false} {...other} />;
 }
