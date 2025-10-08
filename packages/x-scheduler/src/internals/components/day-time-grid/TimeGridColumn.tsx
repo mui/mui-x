@@ -21,7 +21,7 @@ import { useEventPopoverContext } from '../event-popover/EventPopoverContext';
 import './DayTimeGrid.css';
 
 export function TimeGridColumn(props: TimeGridColumnProps) {
-  const { day, isToday, showCurrentTimeIndicator, index } = props;
+  const { day, showCurrentTimeIndicator, index } = props;
 
   const adapter = useAdapter();
   const start = React.useMemo(() => adapter.startOfDay(day.value), [adapter, day]);
@@ -38,7 +38,6 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
       addPropertiesToDroppedEvent={addPropertiesToDroppedEvent}
       className="DayTimeGridColumn"
       data-weekend={isWeekend(adapter, day.value) ? '' : undefined}
-      data-current={isToday ? '' : undefined}
       style={{ '--columns-count': maxIndex } as React.CSSProperties}
     >
       <ColumnInteractiveLayer
@@ -119,22 +118,10 @@ function ColumnInteractiveLayer({
         <EventPopoverTrigger
           key={occurrence.key}
           occurrence={occurrence}
-          render={
-            <TimeGridEvent
-              occurrence={occurrence}
-              variant="regular"
-              ariaLabelledBy={`DayTimeGridHeaderCell-${adapter.getDate(day.value)}`}
-            />
-          }
+          render={<TimeGridEvent occurrence={occurrence} variant="regular" />}
         />
       ))}
-      {placeholder != null && (
-        <TimeGridEvent
-          occurrence={placeholder}
-          variant="placeholder"
-          ariaLabelledBy={`DayTimeGridHeaderCell-${day.key}`}
-        />
-      )}
+      {placeholder != null && <TimeGridEvent occurrence={placeholder} variant="placeholder" />}
       {showCurrentTimeIndicator ? (
         <CalendarGrid.CurrentTimeIndicator className="DayTimeGridCurrentTimeIndicator">
           {index === 0 && <TimeGridCurrentTimeLabel />}
@@ -165,7 +152,6 @@ function TimeGridCurrentTimeLabel() {
 
 interface TimeGridColumnProps {
   day: useEventOccurrencesWithDayGridPosition.DayData;
-  isToday: boolean;
   index: number;
   showCurrentTimeIndicator: boolean;
 }

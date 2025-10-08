@@ -2,9 +2,10 @@
 import * as React from 'react';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
+import { CompositeList } from '../../base-ui-copy/composite/list/CompositeList';
 
-export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHeaderCell(
-  componentProps: CalendarGridHeaderCell.Props,
+export const CalendarGridHeaderRow = React.forwardRef(function CalendarGridHeaderRow(
+  componentProps: CalendarGridHeaderRow.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const {
@@ -15,15 +16,18 @@ export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHead
     ...elementProps
   } = componentProps;
 
-  const props = React.useMemo(() => ({ role: 'Cell' }), []);
+  const props = React.useMemo(() => ({ role: 'row' }), []);
+  const cellsRefs = React.useRef<(HTMLDivElement | null)[]>([]);
 
-  return useRenderElement('div', componentProps, {
+  const element = useRenderElement('div', componentProps, {
     ref: [forwardedRef],
     props: [props, elementProps],
   });
+
+  return <CompositeList elementsRef={cellsRefs}>{element}</CompositeList>;
 });
 
-export namespace CalendarGridHeaderCell {
+export namespace CalendarGridHeaderRow {
   export interface State {}
 
   export interface Props extends BaseUIComponentProps<'div', State> {}

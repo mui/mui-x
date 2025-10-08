@@ -4,6 +4,7 @@ import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/disable-native-drag-preview';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { useStore } from '@base-ui-components/utils/store';
+import { useId } from '@base-ui-components/utils/useId';
 import { useButton } from '../../base-ui-copy/utils/useButton';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
@@ -11,11 +12,13 @@ import { CalendarGridTimeEventCssVars } from './CalendarGridTimeEventCssVars';
 import { useCalendarGridTimeColumnContext } from '../time-column/CalendarGridTimeColumnContext';
 import { useEvent } from '../../utils/useEvent';
 import { useElementPositionInCollection } from '../../utils/useElementPositionInCollection';
+import { getCalendarGridHeaderCellId } from '../../utils/accessibility-utils';
 import { CalendarEvent, CalendarEventId, SchedulerValidDate } from '../../models';
 import { CalendarGridTimeEventContext } from './CalendarGridTimeEventContext';
 import { useAdapter } from '../../use-adapter/useAdapter';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { selectors } from '../../use-event-calendar';
+import { useCalendarGridRootContext } from '../root/CalendarGridRootContext';
 
 export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeEvent(
   componentProps: CalendarGridTimeEvent.Props,
@@ -30,6 +33,7 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     end,
     eventId,
     occurrenceKey,
+    id: idProp,
     isDraggable = false,
     // Props forwarded to the DOM element
     ...elementProps
@@ -42,13 +46,16 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
   const adapter = useAdapter();
   const ref = React.useRef<HTMLDivElement>(null);
   const store = useEventCalendarStoreContext();
+  const { id: rootId } = useCalendarGridRootContext();
   const isDragging = useStore(store, selectors.isOccurrenceMatchingThePlaceholder, occurrenceKey);
   const [isResizing, setIsResizing] = React.useState(false);
   const { getButtonProps, buttonRef } = useButton({ disabled: !isInteractive });
+  const id = useId(idProp);
 
   const {
     start: columnStart,
     end: columnEnd,
+    index: columnIndex,
     getCursorPositionInElementMs,
   } = useCalendarGridTimeColumnContext();
 
@@ -68,7 +75,12 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     [position, duration],
   );
 
-  const props = React.useMemo(() => ({ style }), [style]);
+  const columnHeaderId = getCalendarGridHeaderCellId(rootId, columnIndex);
+
+  const props = React.useMemo(
+    () => ({ style, 'aria-labelledby': `${columnHeaderId} ${id}` }),
+    [style, columnHeaderId, id],
+  );
 
   const { state: eventState } = useEvent({ start, end });
 

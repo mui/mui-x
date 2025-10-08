@@ -3,10 +3,11 @@ import * as React from 'react';
 import { autoScrollForElements } from '@atlaskit/pragmatic-drag-and-drop-auto-scroll/element';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
+import { CompositeList } from '../../base-ui-copy/composite/list/CompositeList';
 
-export const CalendarGridScrollableContent = React.forwardRef(
+export const CalendarGridTimeScrollableContent = React.forwardRef(
   function CalendarGridScrollableContent(
-    componentProps: CalendarGridScrollableContent.Props,
+    componentProps: CalendarGridTimeScrollableContent.Props,
     forwardedRef: React.ForwardedRef<HTMLDivElement>,
   ) {
     const {
@@ -18,6 +19,7 @@ export const CalendarGridScrollableContent = React.forwardRef(
     } = componentProps;
 
     const ref = React.useRef<HTMLDivElement>(null);
+    const columnsRefs = React.useRef<(HTMLDivElement | null)[]>([]);
 
     React.useEffect(() => {
       // TODO: Try to add the behavior back in the test
@@ -32,14 +34,16 @@ export const CalendarGridScrollableContent = React.forwardRef(
       });
     });
 
-    return useRenderElement('div', componentProps, {
+    const element = useRenderElement('div', componentProps, {
       ref: [forwardedRef, ref],
       props: [elementProps],
     });
+
+    return <CompositeList elementsRef={columnsRefs}>{element}</CompositeList>;
   },
 );
 
-export namespace CalendarGridScrollableContent {
+export namespace CalendarGridTimeScrollableContent {
   export interface State {}
 
   export interface Props extends BaseUIComponentProps<'div', State> {}
