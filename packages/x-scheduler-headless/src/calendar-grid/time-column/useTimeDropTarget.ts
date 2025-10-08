@@ -3,14 +3,14 @@ import * as React from 'react';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { useAdapter } from '../../use-adapter/useAdapter';
 import { CalendarEvent, SchedulerValidDate } from '../../models';
-import {
-  EVENT_DRAG_PRECISION_MINUTE,
-  buildIsValidDropTarget,
-  EVENT_DRAG_PRECISION_MS,
-} from '../../build-is-valid-drop-target';
+import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
 import { CalendarGridTimeColumnContext } from './CalendarGridTimeColumnContext';
 import { useDropTarget } from '../../utils/useDropTarget';
-import { EVENT_CREATION_DEFAULT_LENGTH_MINUTE } from '../../constants';
+import {
+  EVENT_CREATION_DEFAULT_LENGTH_MINUTE,
+  EVENT_DRAG_PRECISION_MINUTE,
+  EVENT_DRAG_PRECISION_MS,
+} from '../../constants';
 
 const isValidDropTarget = buildIsValidDropTarget([
   'CalendarGridTimeEvent',
