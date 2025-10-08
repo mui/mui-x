@@ -1696,6 +1696,9 @@ importers:
       '@floating-ui/react':
         specifier: ^0.27.16
         version: 0.27.16(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      '@floating-ui/react-dom':
+        specifier: ^2.1.6
+        version: 2.1.6(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@floating-ui/utils':
         specifier: ^0.2.10
         version: 0.2.10
@@ -1705,6 +1708,9 @@ importers:
       prop-types:
         specifier: 'catalog:'
         version: 15.8.1
+      tabbable:
+        specifier: ^6.2.0
+        version: 6.2.0
     devDependencies:
       '@mui/internal-test-utils':
         specifier: 'catalog:'
