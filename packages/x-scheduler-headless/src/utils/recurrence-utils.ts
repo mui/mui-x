@@ -4,7 +4,7 @@ import {
   ByDayValue,
   CalendarEvent,
   CalendarEventOccurrence,
-  RecurringEventUpdatedProperties,
+  CalendarEventUpdatedProperties,
   RRuleSpec,
   SchedulerValidDate,
 } from '../models';
@@ -769,8 +769,10 @@ export function applyRecurringUpdateFollowing(
   events: CalendarEvent[],
   originalEvent: CalendarEvent,
   occurrenceStart: SchedulerValidDate,
-  changes: RecurringEventUpdatedProperties,
+  changes: CalendarEventUpdatedProperties,
 ): CalendarEvent[] {
+  const newStart = changes.start ?? originalEvent.start;
+
   // 1) Old series: truncate rule to end the day before the edited occurrence
   const occurrenceDayStart = adapter.startOfDay(occurrenceStart);
   const untilDate = adapter.addDays(occurrenceDayStart, -1);
@@ -793,14 +795,12 @@ export function applyRecurringUpdateFollowing(
     occurrenceStart,
     changes,
   );
-  const newEventId = `${originalEvent.id}::${adapter.format(changes.start, 'keyboardDate')}`;
+  const newEventId = `${originalEvent.id}::${getDateKey(newStart, adapter)}`;
 
   const newEvent: CalendarEvent = {
     ...originalEvent,
     ...changes,
     id: newEventId,
-    start: changes.start,
-    end: changes.end,
     rrule: newRRule,
     extractedFromId: originalEvent.id,
   };
@@ -829,15 +829,17 @@ export function applyRecurringUpdateAll(
   events: CalendarEvent[],
   originalEvent: CalendarEvent,
   occurrenceStart: SchedulerValidDate,
-  changes: RecurringEventUpdatedProperties,
+  changes: CalendarEventUpdatedProperties,
 ): CalendarEvent[] {
   const occurrenceEnd = adapter.addMinutes(
     occurrenceStart,
     diffIn(adapter, originalEvent.end, originalEvent.start, 'minutes'),
   );
   // 1) Detect if the caller changed the date part of start or end
-  const touchedStartDateDay = !adapter.isSameDay(occurrenceStart, changes.start);
-  const touchedEndDateDateDay = !adapter.isSameDay(occurrenceEnd, changes.end);
+  const touchedStartDateDay =
+    changes.start != null && !adapter.isSameDay(occurrenceStart, changes.start);
+  const touchedEndDateDateDay =
+    changes.end != null && !adapter.isSameDay(occurrenceEnd, changes.end);
 
   // 2) Start from the current root start/end
   let nextStart = originalEvent.start;
@@ -846,17 +848,24 @@ export function applyRecurringUpdateAll(
   // 3) If the caller touched the date part of start or end, use the provided values as-is.
   // Otherwise, merge the new time part into the original start/end dates.
   if (touchedStartDateDay || touchedEndDateDateDay) {
-    nextStart = changes.start;
-    nextEnd = changes.end;
+    nextStart = changes.start!;
+    nextEnd = changes.end!;
   } else {
-    nextStart = mergeDateAndTime(adapter, originalEvent.start, changes.start);
-    nextEnd = mergeDateAndTime(adapter, originalEvent.end, changes.end);
+    nextStart =
+      changes.start == null
+        ? originalEvent.start
+        : mergeDateAndTime(adapter, originalEvent.start, changes.start);
+    nextEnd =
+      changes.end == null
+        ? originalEvent.end
+        : mergeDateAndTime(adapter, originalEvent.end, changes.end);
   }
 
   const newEvent: CalendarEvent = {
     ...originalEvent,
     ...changes,
-    ...{ start: nextStart, end: nextEnd },
+    start: nextStart,
+    end: nextEnd,
   };
 
   // 4) Replace the series root in the list
