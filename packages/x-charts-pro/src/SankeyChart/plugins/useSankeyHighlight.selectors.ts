@@ -16,14 +16,19 @@ const selectorSankeyHighlight = (state: UseSankeyHighlightSignature['state']) =>
 
 const selectSeries: ChartRootSelector<UseChartSeriesSignature> = (state) => state.series;
 
+const selectorSankeySeries = createSelector(
+  [selectSeries],
+  (series) =>
+    series.processedSeries.sankey?.series[series.processedSeries.sankey?.seriesOrder[0]] || null,
+);
+
 /**
  * Get the node highlight configuration from the Sankey series.
  * Defaults to 'none' if not specified.
  */
 export const selectorNodeHighlightConfig = createSelector(
-  [selectSeries],
-  (series): SankeyNodeHighlight =>
-    series.processedSeries.sankey?.series[0].nodeOptions?.highlight ?? 'none',
+  [selectorSankeySeries],
+  (series): SankeyNodeHighlight => series?.nodeOptions?.highlight ?? 'none',
 );
 
 /**
@@ -31,8 +36,8 @@ export const selectorNodeHighlightConfig = createSelector(
  * Defaults to 'none' if not specified.
  */
 export const selectorNodeFadeConfig = createSelector(
-  [selectSeries],
-  (series): SankeyNodeFade => series.processedSeries.sankey?.series[0].nodeOptions?.fade ?? 'none',
+  [selectorSankeySeries],
+  (series): SankeyNodeFade => series?.nodeOptions?.fade ?? 'none',
 );
 
 /**
@@ -40,9 +45,8 @@ export const selectorNodeFadeConfig = createSelector(
  * Defaults to 'none' if not specified.
  */
 export const selectorLinkHighlightConfig = createSelector(
-  [selectSeries],
-  (series): SankeyLinkHighlight =>
-    series.processedSeries.sankey?.series[0].linkOptions?.highlight ?? 'none',
+  [selectorSankeySeries],
+  (series): SankeyLinkHighlight => series?.linkOptions?.highlight ?? 'none',
 );
 
 /**
@@ -50,8 +54,8 @@ export const selectorLinkHighlightConfig = createSelector(
  * Defaults to 'none' if not specified.
  */
 export const selectorLinkFadeConfig = createSelector(
-  [selectSeries],
-  (series): SankeyLinkFade => series.processedSeries.sankey?.series[0].linkOptions?.fade ?? 'none',
+  [selectorSankeySeries],
+  (series): SankeyLinkFade => series?.linkOptions?.fade ?? 'none',
 );
 
 /**
