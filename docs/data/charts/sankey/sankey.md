@@ -171,7 +171,38 @@ Configure link highlighting behavior using `linkOptions.highlight` and `linkOpti
   - `'global'`: Fade all non-highlighted items when a link is highlighted
   - `'none'`: No fade effect
 
-You can also control highlighting externally using the `highlightedItem` and `onHighlightChange` props.
+### Controlled highlighting
+
+You can control the highlighting externally using the `highlightedItem` and `onHighlightChange` props. This is useful when you want to programmatically highlight specific nodes or links, or synchronize highlighting with other UI elements.
+
+The `highlightedItem` prop accepts either a `SankeyNodeIdentifier` or a `SankeyLinkIdentifier`:
+
+For nodes:
+
+```ts
+{
+  type: 'sankey',
+  seriesId: string,
+  subType: 'node',
+  nodeId: string | number,
+}
+```
+
+For links:
+
+```ts
+{
+  type: 'sankey',
+  seriesId: string,
+  subType: 'link',
+  sourceId: string | number,
+  targetId: string | number,
+}
+```
+
+The `onHighlightChange` callback is called whenever the highlighted item changes (either through user interaction or programmatic control), allowing you to keep your state synchronized.
+
+{{"demo": "SankeyControlledHighlight.js"}}
 
 ## Tooltip
 
