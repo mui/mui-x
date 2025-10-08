@@ -70,6 +70,7 @@ export default function ServerSideDataGridAggregationRowGrouping() {
         dataSource={dataSource}
         initialState={initialStateUpdated}
         aggregationFunctions={aggregationFunctions}
+        disablePivoting
       />
     </div>
   );

@@ -1,12 +1,11 @@
 import {
   CalendarEvent,
   CalendarEventColor,
-  CalendarEventId,
   CalendarEventOccurrence,
   CalendarOccurrencePlaceholder,
   CalendarResource,
   CalendarResourceId,
-  RecurringEventUpdatedProperties,
+  CalendarEventUpdatedProperties,
   SchedulerValidDate,
 } from '../../models';
 import { Adapter } from '../../use-adapter/useAdapter.types';
@@ -132,10 +131,6 @@ export type RecurringUpdateEventScope = 'this-and-following' | 'all' | 'only-thi
  */
 export type UpdateRecurringEventParameters = {
   /**
-   * The id of the recurring event to update.
-   */
-  eventId: CalendarEventId;
-  /**
    * The start date of the occurrence affected by the update.
    */
   occurrenceStart: SchedulerValidDate;
@@ -143,7 +138,7 @@ export type UpdateRecurringEventParameters = {
    * The changes to apply.
    * Requires `start` and `end`, all other properties are optional.
    */
-  changes: RecurringEventUpdatedProperties;
+  changes: CalendarEventUpdatedProperties;
   /**
    * The scope of the update.
    */

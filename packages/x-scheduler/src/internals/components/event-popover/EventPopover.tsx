@@ -19,7 +19,7 @@ import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import {
   CalendarEventOccurrence,
   CalendarResourceId,
-  RecurringEventUpdatedProperties,
+  CalendarEventUpdatedProperties,
   SchedulerValidDate,
   RecurrencePresetKey,
 } from '@mui/x-scheduler-headless/models';
@@ -79,7 +79,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
   }
 
   function pushPlaceholder(next: typeof when, nextIsAllDay = isAllDay) {
-    if (!rawPlaceholder || rawPlaceholder.eventId != null) {
+    if (rawPlaceholder?.type !== 'creation') {
       return;
     }
 
@@ -89,12 +89,10 @@ export const EventPopover = React.forwardRef(function EventPopover(
       : surfaceType;
 
     store.setOccurrencePlaceholder({
-      eventId: null,
-      occurrenceKey: rawPlaceholder.occurrenceKey,
+      type: 'creation',
       surfaceType: surfaceTypeToUse,
       start,
       end,
-      originalStart: null,
       lockSurfaceType: rawPlaceholder.lockSurfaceType,
     });
   }
@@ -214,17 +212,17 @@ export const EventPopover = React.forwardRef(function EventPopover(
       resource: resourceValue,
     };
 
-    if (rawPlaceholder && rawPlaceholder.eventId == null) {
+    if (rawPlaceholder?.type === 'creation') {
       store.createEvent({ id: crypto.randomUUID(), ...metaChanges, start, end, rrule });
     } else if (occurrence.rrule) {
-      const changes: RecurringEventUpdatedProperties = {
+      const changes: CalendarEventUpdatedProperties = {
         ...metaChanges,
+        id: occurrence.id,
         start,
         end,
         ...(recurrenceModified ? { rrule } : {}),
       };
       store.updateRecurringEvent({
-        eventId: occurrence.id,
         occurrenceStart: occurrence.start,
         changes,
         // TODO: Issue #19766 - Let the user choose the scope via UI.

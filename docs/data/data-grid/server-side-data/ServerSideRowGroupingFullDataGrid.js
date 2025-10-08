@@ -74,6 +74,7 @@ export default function ServerSideRowGroupingFullDataGrid() {
           initialState={initialState}
           showToolbar
           groupingColDef={groupingColDef}
+          disablePivoting
         />
       </div>
     </div>

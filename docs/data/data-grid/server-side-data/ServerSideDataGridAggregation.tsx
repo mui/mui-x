@@ -71,6 +71,8 @@ export default function ServerSideDataGridAggregation() {
         initialState={initialStateWithPagination}
         pageSizeOptions={[10, 20, 50]}
         aggregationFunctions={aggregationFunctions}
+        disablePivoting
+        disableRowGrouping
       />
     </div>
   );

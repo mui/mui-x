@@ -100,6 +100,7 @@ export default function ServerSideRowGroupingErrorHandling() {
           }}
           apiRef={apiRef}
           initialState={initialState}
+          disablePivoting
         />
         <Snackbar
           open={!!error}

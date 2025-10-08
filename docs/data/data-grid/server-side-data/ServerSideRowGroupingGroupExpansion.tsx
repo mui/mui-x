@@ -64,6 +64,7 @@ export default function ServerSideRowGroupingGroupExpansion() {
           apiRef={apiRef}
           initialState={initialState}
           defaultGroupingExpansionDepth={-1}
+          disablePivoting
         />
       </div>
     </div>
