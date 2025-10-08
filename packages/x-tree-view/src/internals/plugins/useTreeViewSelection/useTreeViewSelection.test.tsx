@@ -923,65 +923,65 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
       });
     });
 
-    // The `aria-selected` attribute is used by the `view.isItemSelected` method.
+    // The `aria-checked` attribute is used by the `view.isItemSelected` method.
     // This `describe` only tests basics scenarios, more complex scenarios are tested in this file's other `describe`.
-    describe('aria-selected item attribute', () => {
+    describe('aria-checked item attribute', () => {
       describe('single selection', () => {
-        it('should have the attribute `aria-selected=false` if not selected', () => {
+        it('should have the attribute `aria-checked=false` if not selected', () => {
           const view = render({
             items: [{ id: '1' }, { id: '2' }],
           });
 
-          expect(view.getItemRoot('1')).to.have.attribute('aria-selected', 'false');
+          expect(view.getItemRoot('1')).to.have.attribute('aria-checked', 'false');
         });
 
-        it('should have the attribute `aria-selected=true` if selected', () => {
+        it('should have the attribute `aria-checked=true` if selected', () => {
           const view = render({
             items: [{ id: '1' }, { id: '2' }],
             defaultSelectedItems: '1',
           });
 
-          expect(view.getItemRoot('1')).to.have.attribute('aria-selected', 'true');
+          expect(view.getItemRoot('1')).to.have.attribute('aria-checked', 'true');
         });
       });
 
       describe('multi selection', () => {
-        it('should have the attribute `aria-selected=false` if not selected', () => {
+        it('should have the attribute `aria-checked=false` if not selected', () => {
           const view = render({
             multiSelect: true,
             items: [{ id: '1' }, { id: '2' }],
           });
 
-          expect(view.getItemRoot('1')).to.have.attribute('aria-selected', 'false');
+          expect(view.getItemRoot('1')).to.have.attribute('aria-checked ', 'false');
         });
 
-        it('should have the attribute `aria-selected=true` if selected', () => {
+        it('should have the attribute `aria-checked=true` if selected', () => {
           const view = render({
             multiSelect: true,
             items: [{ id: '1' }, { id: '2' }],
             defaultSelectedItems: ['1'],
           });
 
-          expect(view.getItemRoot('1')).to.have.attribute('aria-selected', 'true');
+          expect(view.getItemRoot('1')).to.have.attribute('aria-checked', 'true');
         });
 
-        it('should not have the attribute `aria-selected=false` if disabledSelection is true', () => {
+        it('should not have the attribute `aria-checked=false` if disabledSelection is true', () => {
           const view = render({
             multiSelect: true,
             items: [{ id: '1' }, { id: '2' }],
             disableSelection: true,
           });
 
-          expect(view.getItemRoot('1')).not.to.have.attribute('aria-selected');
+          expect(view.getItemRoot('1')).not.to.have.attribute('aria-checked');
         });
 
-        it('should not have the attribute `aria-selected=false` if the item is disabled', () => {
+        it('should not have the attribute `aria-checked=false` if the item is disabled', () => {
           const view = render({
             multiSelect: true,
             items: [{ id: '1', disabled: true }, { id: '2' }],
           });
 
-          expect(view.getItemRoot('1')).not.to.have.attribute('aria-selected');
+          expect(view.getItemRoot('1')).not.to.have.attribute('aria-checked');
         });
       });
     });
