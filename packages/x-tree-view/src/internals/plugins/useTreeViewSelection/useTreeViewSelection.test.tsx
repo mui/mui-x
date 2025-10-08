@@ -952,7 +952,7 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
             items: [{ id: '1' }, { id: '2' }],
           });
 
-          expect(view.getItemRoot('1')).to.have.attribute('aria-checked ', 'false');
+          expect(view.getItemRoot('1')).to.have.attribute('aria-checked', 'false');
         });
 
         it('should have the attribute `aria-checked=true` if selected', () => {
