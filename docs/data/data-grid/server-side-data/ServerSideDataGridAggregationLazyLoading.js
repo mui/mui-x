@@ -56,6 +56,8 @@ export default function ServerSideDataGridAggregationLazyLoading() {
         }}
         lazyLoading
         aggregationFunctions={aggregationFunctions}
+        disablePivoting
+        disableRowGrouping
       />
     </div>
   );
