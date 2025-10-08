@@ -9,7 +9,11 @@ import {
 } from 'test/utils/scheduler';
 
 import { screen } from '@mui/internal-test-utils';
-import { CalendarEventOccurrence, CalendarResource } from '@mui/x-scheduler-headless/models';
+import {
+  CalendarEventOccurrence,
+  CalendarOccurrencePlaceholderCreation,
+  CalendarResource,
+} from '@mui/x-scheduler-headless/models';
 import { DEFAULT_EVENT_COLOR } from '@mui/x-scheduler-headless/constants';
 import { Popover } from '@base-ui-components/react/popover';
 import { EventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
@@ -260,13 +264,11 @@ describe('<EventPopover />', () => {
           <SchedulerStoreRunner
             context={EventCalendarStoreContext}
             onMount={(store) =>
-              store?.setOccurrencePlaceholder({
-                eventId: null,
-                occurrenceKey: null,
+              store.setOccurrencePlaceholder({
+                type: 'creation',
                 surfaceType: 'time-grid',
                 start,
                 end,
-                originalStart: null,
                 lockSurfaceType: false,
               })
             }
@@ -309,13 +311,11 @@ describe('<EventPopover />', () => {
           <SchedulerStoreRunner
             context={EventCalendarStoreContext}
             onMount={(store) =>
-              store?.setOccurrencePlaceholder({
-                eventId: null,
-                occurrenceKey: null,
+              store.setOccurrencePlaceholder({
+                type: 'creation',
                 surfaceType: 'day-grid',
                 start,
                 end,
-                originalStart: null,
                 lockSurfaceType: false,
               })
             }
@@ -358,13 +358,11 @@ describe('<EventPopover />', () => {
           <SchedulerStoreRunner
             context={EventCalendarStoreContext}
             onMount={(store) =>
-              store?.setOccurrencePlaceholder({
-                eventId: null,
-                occurrenceKey: null,
+              store.setOccurrencePlaceholder({
+                type: 'creation',
                 surfaceType: 'time-grid',
                 start,
                 end,
-                originalStart: null,
                 lockSurfaceType: true,
               })
             }
@@ -389,13 +387,11 @@ describe('<EventPopover />', () => {
     it('should call createEvent with metaChanges + computed start/end on Submit', async () => {
       const start = adapter.date('2025-06-10T09:00:00');
       const end = adapter.date('2025-06-10T09:30:00');
-      const placeholder = {
-        eventId: null,
-        occurrenceKey: null,
+      const placeholder: CalendarOccurrencePlaceholderCreation = {
+        type: 'creation',
         surfaceType: 'time-grid' as const,
         start,
         end,
-        originalStart: null,
         lockSurfaceType: false,
       };
 
@@ -416,7 +412,7 @@ describe('<EventPopover />', () => {
         <EventCalendarProvider events={[]} resources={resources} onEventsChange={onEventsChange}>
           <SchedulerStoreRunner
             context={EventCalendarStoreContext}
-            onMount={(store) => store?.setOccurrencePlaceholder(placeholder)}
+            onMount={(store) => store.setOccurrencePlaceholder(placeholder)}
           />
           <StoreSpy
             Context={EventCalendarStoreContext}
@@ -492,8 +488,8 @@ describe('<EventPopover />', () => {
         expect(updateRecurringEventSpy?.calledOnce).to.equal(true);
         const payload = updateRecurringEventSpy.lastCall.firstArg;
 
-        expect(payload.eventId).to.equal('recurring-1');
         expect(payload.scope).to.equal('all');
+        expect(payload.changes.id).to.equal('recurring-1');
         expect(payload.changes.title).to.equal('Daily standup');
         expect(payload.changes.description).to.equal('sync');
         expect(payload.changes.allDay).to.equal(false);
@@ -539,8 +535,8 @@ describe('<EventPopover />', () => {
 
         const payload = updateRecurringEventSpy.lastCall.firstArg;
 
-        expect(payload.eventId).to.equal('recurring-2');
         expect(payload.scope).to.equal('all');
+        expect(payload.changes.id).to.equal('recurring-2');
         expect(payload.changes.title).to.equal('Daily standup');
         expect(payload.changes.description).to.equal('sync');
         expect(payload.changes.allDay).to.equal(false);
@@ -587,11 +583,12 @@ describe('<EventPopover />', () => {
         expect(updateRecurringEventSpy?.calledOnce).to.equal(true);
         const payload = updateRecurringEventSpy.lastCall.firstArg;
 
-        expect(payload.eventId).to.equal('recurring-3');
         expect(payload.scope).to.equal('all');
+        expect(payload.changes.id).to.equal('recurring-3');
         expect(payload.changes.rrule).to.equal(undefined);
       });
     });
+
     describe('Non-recurring events', () => {
       it('should call updateEvent with updated values on Submit', async () => {
         const nonRecurringEvent = {

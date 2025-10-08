@@ -14,11 +14,12 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
     render,
     // Internal props
     value,
+    addPropertiesToDroppedEvent,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
 
-  const dropTargetRef = useDayCellDropTarget({ value });
+  const dropTargetRef = useDayCellDropTarget({ value, addPropertiesToDroppedEvent });
   const props = React.useMemo(() => ({ role: 'gridcell' }), []);
 
   return useRenderElement('div', componentProps, {
