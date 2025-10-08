@@ -11,13 +11,15 @@ _Oct 8, 2025_
 
 We'd like to extend a big thank you to the 12 contributors who made this release possible. Here are some highlights ✨:
 
-TODO INSERT HIGHLIGHTS
+- 📊 The [Chart zoom now supports the `pressAndDrag` gesture](https://mui.com/x/react-charts/zoom-and-pan/#zoom-interactions-configuration). Pan by pressing and dragging.
+- 🐞 Bugfixes
+- 📚 Documentation improvements
 
 Special thanks go out to the community members for their valuable contributions:
-@brijeshb42, @djpremier, @noraleonte, @Utkarsh-0304
+@djpremier, @Utkarsh-0304
 
 The following are all team members who have contributed to this release:
-@alexfauquette, @bernardobelchior, @flaviendelangle, @hasdfa, @Janpot, @JCQuintas, @prakhargupta1, @rita-codes
+@alexfauquette, @bernardobelchior, @flaviendelangle, @hasdfa, @Janpot, @JCQuintas, @prakhargupta1, @rita-codes, @noraleonte, @brijeshb42
 
 ### Data Grid
 
@@ -48,10 +50,6 @@ Fixed the extra element for the disabled date picker
 Same changes as in `@mui/x-date-pickers@8.14.0`.
 
 ### Charts
-
-From https://github.com/mui/mui-x/pull/19779
-
-The chart zoom now supports the `pressAndDrag` gesture. Pan by pressing and dragging.
 
 #### `@mui/x-charts@8.14.0`
 
