@@ -365,6 +365,9 @@ importers:
       date-fns-v2:
         specifier: npm:date-fns@2.30.0
         version: date-fns@2.30.0
+      es-toolkit:
+        specifier: ^1.4.0
+        version: 1.39.10
       esbuild:
         specifier: ^0.25.10
         version: 0.25.10
