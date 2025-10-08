@@ -66,9 +66,6 @@ catalogs:
     '@types/d3-scale':
       specifier: ^4.0.9
       version: 4.0.9
-    '@types/lodash':
-      specifier: ^4.17.20
-      version: 4.17.20
     '@types/luxon':
       specifier: ^3.7.1
       version: 3.7.1
@@ -159,9 +156,6 @@ catalogs:
     jscodeshift:
       specifier: 17.3.0
       version: 17.3.0
-    lodash:
-      specifier: ^4.17.21
-      version: 4.17.21
     luxon:
       specifier: ^3.7.2
       version: 3.7.2
@@ -299,9 +293,6 @@ importers:
       '@types/chai-dom':
         specifier: ^1.11.3
         version: 1.11.3
-      '@types/lodash':
-        specifier: 'catalog:'
-        version: 4.17.20
       '@types/node':
         specifier: ^22.18.8
         version: 22.18.8
@@ -407,9 +398,6 @@ importers:
       lerna:
         specifier: ^9.0.0
         version: 9.0.0(@swc/core@1.13.5)(@types/node@22.18.8)(babel-plugin-macros@3.1.0)
-      lodash:
-        specifier: 'catalog:'
-        version: 4.17.21
       magic-string:
         specifier: ^0.30.19
         version: 0.30.19
@@ -653,9 +641,6 @@ importers:
       jscodeshift:
         specifier: 'catalog:'
         version: 17.3.0(@babel/preset-env@7.28.3(@babel/core@7.28.4))
-      lodash:
-        specifier: 'catalog:'
-        version: 4.17.21
       luxon:
         specifier: 'catalog:'
         version: 3.7.2
@@ -765,9 +750,6 @@ importers:
       '@types/gtag.js':
         specifier: ^0.0.20
         version: 0.0.20
-      '@types/lodash':
-        specifier: 'catalog:'
-        version: 4.17.20
       '@types/luxon':
         specifier: 'catalog:'
         version: 3.7.1
@@ -1627,7 +1609,7 @@ importers:
         version: 7.28.4
       '@base-ui-components/react':
         specifier: ^1.0.0-beta.3
-        version: 1.0.0-beta.3(@types/react@19.1.13)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+        version: 1.0.0-beta.4(@types/react@19.1.13)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@base-ui-components/utils':
         specifier: ^0.1.2
         version: 0.1.2(@types/react@19.1.13)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
@@ -1689,7 +1671,7 @@ importers:
         version: 7.28.4
       '@base-ui-components/react':
         specifier: ^1.0.0-beta.3
-        version: 1.0.0-beta.3(@types/react@19.1.13)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+        version: 1.0.0-beta.4(@types/react@19.1.13)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@base-ui-components/utils':
         specifier: ^0.1.1
         version: 0.1.2(@types/react@19.1.13)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
@@ -3190,19 +3172,9 @@ packages:
     resolution: {integrity: sha512-bkFqkLhh3pMBUQQkpVgWDWq/lqzc2678eUyDlTBhRqhCHFguYYGM0Efga7tYk4TogG/3x0EEl66/OQ+WGbWB/Q==}
     engines: {node: '>=6.9.0'}
 
-  '@base-ui-components/react@1.0.0-beta.3':
-    resolution: {integrity: sha512-4sAq6zmDA9ixV2HRjjeM1+tSEw5R6nvGjXUQmFoQnC3DZLEUdwO94gWDmUDdpoDuChn27jdbaJs9F0Ih4w2UAA==}
+  '@base-ui-components/react@1.0.0-beta.4':
+    resolution: {integrity: sha512-sPYKj26gbFHD2ZsrMYqQshXnMuomBodzPn+d0dDxWieTj232XCQ9QGt9fU9l5SDGC9hi8s24lDlg9FXPSI7T8A==}
     engines: {node: '>=14.0.0'}
-    peerDependencies:
-      '@types/react': ^17 || ^18 || ^19
-      react: ^17 || ^18 || ^19
-      react-dom: ^17 || ^18 || ^19
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-
-  '@base-ui-components/utils@0.1.1':
-    resolution: {integrity: sha512-HWXZA8upEKgrdL1rQqxWu1H+2tB2cXzY2jCxvgnpUv3eoWN2jldhXxMZnXIjZF7jahGxSWXfSIM/qskiTWFFxA==}
     peerDependencies:
       '@types/react': ^17 || ^18 || ^19
       react: ^17 || ^18 || ^19
@@ -5554,9 +5526,6 @@ packages:
 
   '@types/katex@0.16.7':
     resolution: {integrity: sha512-HMwFiRujE5PjrgwHQ25+bsLJgowjGjm5Z8FVSf0N6PwgJrwxH0QxzHYDcKsTfV3wva0vzrpqMTJS2jXPr5BMEQ==}
-
-  '@types/lodash@4.17.20':
-    resolution: {integrity: sha512-H3MHACvFUEiujabxhaI/ImO6gUrd8oOurg7LQtS7mbwIXA/cUqWrvBsaeJ23aZEPk1TAYkurjfMbSELfoCXlGA==}
 
   '@types/luxon@3.7.1':
     resolution: {integrity: sha512-H3iskjFIAn5SlJU7OuxUmTEpebK6TKB8rxZShDslBMZJ5u9S//KM1sbdAisiSrqwLQncVjnpi2OK2J51h+4lsg==}
@@ -13816,27 +13785,16 @@ snapshots:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.27.1
 
-  '@base-ui-components/react@1.0.0-beta.3(@types/react@19.1.13)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
+  '@base-ui-components/react@1.0.0-beta.4(@types/react@19.1.13)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
     dependencies:
       '@babel/runtime': 7.28.4
-      '@base-ui-components/utils': 0.1.1(@types/react@19.1.13)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      '@base-ui-components/utils': 0.1.2(@types/react@19.1.13)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@floating-ui/react-dom': 2.1.6(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@floating-ui/utils': 0.2.10
       react: 19.1.1
       react-dom: 19.1.1(react@19.1.1)
       reselect: 5.1.1
       tabbable: 6.2.0
-      use-sync-external-store: 1.5.0(react@19.1.1)
-    optionalDependencies:
-      '@types/react': 19.1.13
-
-  '@base-ui-components/utils@0.1.1(@types/react@19.1.13)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
-    dependencies:
-      '@babel/runtime': 7.28.4
-      '@floating-ui/utils': 0.2.10
-      react: 19.1.1
-      react-dom: 19.1.1(react@19.1.1)
-      reselect: 5.1.1
       use-sync-external-store: 1.5.0(react@19.1.1)
     optionalDependencies:
       '@types/react': 19.1.13
@@ -16526,8 +16484,6 @@ snapshots:
       '@types/node': 22.18.8
 
   '@types/katex@0.16.7': {}
-
-  '@types/lodash@4.17.20': {}
 
   '@types/luxon@3.7.1': {}
 
