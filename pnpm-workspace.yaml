@@ -56,7 +56,7 @@ catalog:
   date-fns: ^4.1.0
   date-fns-jalali: ^4.1.0-0
   dayjs: ^1.11.13
-  exceljs: ^4.4.0
+  '@cherniavskii/exceljs-fork': ^4.4.0
   jscodeshift: 17.3.0
   lodash: ^4.17.21
   luxon: ^3.7.2

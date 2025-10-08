@@ -1,4 +1,4 @@
-import type * as Excel from 'exceljs';
+import type * as Excel from '@cherniavskii/exceljs-fork';
 import type { GridExcelExportOptions } from '../gridExcelExportInterface';
 import {
   addColumnGroupingHeaders,

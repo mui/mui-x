@@ -46,7 +46,7 @@
     "@mui/x-internals": "workspace:*",
     "@mui/x-license": "workspace:*",
     "clsx": "catalog:",
-    "exceljs": "catalog:",
+    "@cherniavskii/exceljs-fork": "catalog:",
     "prop-types": "catalog:"
   },
   "peerDependencies": {
