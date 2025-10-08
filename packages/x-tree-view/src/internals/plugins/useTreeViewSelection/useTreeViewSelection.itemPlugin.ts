@@ -5,6 +5,7 @@ import { useTreeViewContext } from '../../TreeViewProvider';
 import { TreeViewItemPlugin, TreeViewState } from '../../models';
 import {
   UseTreeItemCheckboxSlotPropsFromSelection,
+  UseTreeItemRootSlotPropsFromSelection,
   UseTreeViewSelectionSignature,
 } from './useTreeViewSelection.types';
 import { UseTreeViewItemsSignature } from '../useTreeViewItems';
@@ -69,7 +70,7 @@ export const useTreeViewSelectionItemPlugin: TreeViewItemPlugin = ({ props }) =>
 
   return {
     propsEnhancers: {
-      root: () => {
+      root: (): UseTreeItemRootSlotPropsFromSelection => {
         // https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
         let ariaChecked: React.AriaAttributes['aria-checked'];
         if (selectionStatus === 'checked') {
