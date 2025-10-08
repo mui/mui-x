@@ -1,4 +1,5 @@
 import { NumberValue } from '@mui/x-charts-vendor/d3-scale';
+import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions';
 import {
   selectorChartSeriesConfig,
@@ -327,6 +328,11 @@ export const selectorChartFilteredXDomains = createSelector(
 
     return filteredDomains;
   },
+  {
+    memoizeOptions: {
+      resultEqualityCheck: (a, b) => isDeepEqual(a, b),
+    },
+  },
 );
 
 export const selectorChartFilteredYDomains = createSelector(
@@ -391,6 +397,11 @@ export const selectorChartFilteredYDomains = createSelector(
     });
 
     return filteredDomains;
+  },
+  {
+    memoizeOptions: {
+      resultEqualityCheck: (a, b) => isDeepEqual(a, b),
+    },
   },
 );
 
