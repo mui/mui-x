@@ -14,13 +14,13 @@ export type SankeyNodeHighlightScope = {
    * - 'outgoing': Highlight outgoing links from hovered node
    * - 'none': No highlighting
    */
-  highlight: SankeyNodeHighlight;
+  highlight?: SankeyNodeHighlight;
   /**
    * Fade mode for nodes
    * - 'global': Fade all non-highlighted items
    * - 'none': No fading
    */
-  fade: SankeyNodeFade;
+  fade?: SankeyNodeFade;
 };
 
 export type SankeyLinkHighlightScope = {
@@ -32,11 +32,11 @@ export type SankeyLinkHighlightScope = {
    * - 'target': Highlight target node of hovered link
    * - 'none': No highlighting
    */
-  highlight: SankeyLinkHighlight;
+  highlight?: SankeyLinkHighlight;
   /**
    * Fade mode for links
    * - 'global': Fade all non-highlighted items
    * - 'none': No fading
    */
-  fade: SankeyLinkFade;
+  fade?: SankeyLinkFade;
 };
