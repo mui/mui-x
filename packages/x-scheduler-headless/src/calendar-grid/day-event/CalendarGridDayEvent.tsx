@@ -8,7 +8,7 @@ import { useButton } from '../../base-ui-copy/utils/useButton';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
 import { useEvent } from '../../utils/useEvent';
-import { CalendarEvent, SchedulerValidDate } from '../../models';
+import { CalendarEvent, CalendarEventId, SchedulerValidDate } from '../../models';
 import { useAdapter, diffIn } from '../../use-adapter/useAdapter';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
 import { selectors } from '../../use-event-calendar/EventCalendarStore.selectors';
@@ -186,7 +186,7 @@ export namespace CalendarGridDayEvent {
   }
 
   export interface SharedDragData {
-    eventId: string | number;
+    eventId: CalendarEventId;
     occurrenceKey: string;
     event: CalendarEvent;
     start: SchedulerValidDate;

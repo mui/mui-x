@@ -15,6 +15,8 @@ export interface EventDropDataLookup {
   StandaloneEvent: StandaloneEvent.DragData;
 }
 
+export type EventDropData = EventDropDataLookup[keyof EventDropDataLookup];
+
 export function buildIsValidDropTarget<Targets extends keyof EventDropDataLookup>(
   targets: Targets[],
 ) {
