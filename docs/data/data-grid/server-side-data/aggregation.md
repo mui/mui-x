@@ -86,7 +86,7 @@ const dataSource = {
    ...
   },
   getAggregatedValue: (row, field) => {
-    return row[`${field}Aggregate`];
+    return row[field];
   },
 }
 ```
