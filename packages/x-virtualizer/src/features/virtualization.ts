@@ -328,10 +328,6 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     }
   });
 
-  const getOffsetTop = () => {
-    return rowsMeta.positions[renderContext.firstRowIndex] ?? 0;
-  };
-
   /**
    * HACK: unstable_rowTree fixes the issue described below, but does it by tightly coupling this
    * section of code to the DataGrid's rowTree model. The `unstable_rowTree` param is a temporary
@@ -675,7 +671,6 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
   // Legacy API, cannot change without a breaking change in the grid (GridDetailPanels, etc)
   const legacyAPI = {
     setPanels,
-    getOffsetTop,
     getRows,
     getContainerProps: () => ({
       ref: refSetter('container'),
