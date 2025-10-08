@@ -56,14 +56,13 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
     return dropTargetForElements({
       element: ref.current,
       getData: () => ({ isSchedulerDropTarget: true, surfaceType }),
-      canDrop: (arg) => {
-        const data = arg.source.data;
-        if (!isValidDropTarget(data)) {
+      canDrop: ({ source }) => {
+        if (!isValidDropTarget(source.data)) {
           return false;
         }
 
         if (
-          data.source === 'StandaloneEvent' &&
+          source.data.source === 'StandaloneEvent' &&
           !selectors.canDragEventsFromTheOutside(store.state)
         ) {
           return false;
@@ -71,9 +70,9 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
 
         return true;
       },
-      onDrag: ({ source: { data }, location }) => {
+      onDrag: ({ source, location }) => {
         const newPlaceholder = getEventDropData({
-          data,
+          data: source.data,
           createDropData,
           input: location.current.input,
         });
@@ -81,9 +80,9 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
           store.setOccurrencePlaceholder(newPlaceholder);
         }
       },
-      onDrop: ({ source: { data }, location }) => {
+      onDrop: ({ source, location }) => {
         const dropData = getEventDropData({
-          data,
+          data: source.data,
           createDropData,
           input: location.current.input,
         });

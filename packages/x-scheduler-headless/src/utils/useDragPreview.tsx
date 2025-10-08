@@ -65,7 +65,7 @@ export function useDragPreview(parameters: useDragPreview.Parameters) {
         setState({ isDragging: false, dragPosition: null });
       },
     }),
-    [showPreviewOnDragStart],
+    [store, showPreviewOnDragStart, type],
   );
 
   return {
