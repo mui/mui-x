@@ -123,7 +123,6 @@ function Scatter(props: ScatterProps) {
             }
             data-highlighted={isItemHighlighted || undefined}
             data-faded={isItemFaded || undefined}
-            data-focused={isItemFocused || undefined}
             {...(skipInteractionHandlers
               ? undefined
               : getInteractionItemProps(instance, dataPoint))}

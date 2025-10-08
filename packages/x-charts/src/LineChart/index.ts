@@ -10,6 +10,9 @@ export * from './AnimatedArea';
 export * from './LineElement';
 export * from './AnimatedLine';
 export * from './MarkElement';
+
+export * from './LineFocusedMark';
+
 export * from './LineHighlightElement';
 export * from './LineChart.plugins';
 

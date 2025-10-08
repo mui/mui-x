@@ -80,3 +80,17 @@ When focused, the chart highlights a value item that can be modified with arrow 
 | --------------------------------------------------------------------: | :---------------------------- |
 | <kbd class="key">Arrow Left</kbd>, <kbd class="key">Arrow Right</kbd> | Moves focus inside the series |
 |    <kbd class="key">Arrow Up</kbd>, <kbd class="key">Arrow Down</kbd> | Move focus between series     |
+
+### Composition
+
+The focus highlight is done with a dedicated SVG element.
+When using composition, you've to add this component to make the focus visible.
+
+Each series type has its own component.
+Exception for the pie chart that has the focus directly managed in the `<PieArcPlot />`.
+
+```js
+// import { FocusedBar } from '@mui/x-charts/BarChart';
+import { LineFocusedMark } from '@mui/x-charts/LineChart';
+import { ScatterFocusedMark } from '@mui/x-charts/ScatterChart';
+```

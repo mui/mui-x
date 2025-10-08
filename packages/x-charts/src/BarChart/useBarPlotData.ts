@@ -156,7 +156,7 @@ export function useBarPlotData(
  * @param gapRatio The ratio of the gap between bars over the bar width.
  * @returns The bar width and the offset between bars.
  */
-function getBandSize({
+export function getBandSize({
   bandWidth: W,
   numberOfGroups: N,
   gapRatio: r,
@@ -179,7 +179,7 @@ function getBandSize({
   };
 }
 
-function getValueCoordinate(
+export function getValueCoordinate(
   isVertical: boolean,
   minValueCoord: number,
   maxValueCoord: number,

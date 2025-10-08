@@ -56,9 +56,6 @@ const ChartsSurfaceStyles = styled('svg', {
       outline: 'none',
     },
   },
-  '& [data-focused=true]': {
-    outline: `${(theme.vars ?? theme).palette.text.primary} solid 2px`,
-  },
 }));
 
 /**
