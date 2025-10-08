@@ -32,9 +32,6 @@ To dynamically load pivoted data from the server, create a Data Source and pass 
 
 To implement server-side pivoting, add the [Server-side row grouping](/x/react-data-grid/server-side-data/row-grouping/#implementating-server-side-row-grouping) and [Server-side aggregation](/x/react-data-grid/server-side-data/aggregation/#implementing-server-side-aggregation) properties to the Data Source.
 
-Additionally, use [pivotingColDef()](/x/api/data-grid/data-grid-premium/#data-grid-premium-prop-pivotingColDef) as a callback to customize the column definition for pivot columns based on the pivot value and column group path.
-You must at least override the field name to target the row property holding the pivoted data.
-
 ```tsx
 const customDataSource: GridDataSource = {
   getRows: async (params) => {
@@ -53,6 +50,9 @@ const customDataSource: GridDataSource = {
   },
 };
 ```
+
+Additionally, use [pivotingColDef()](/x/api/data-grid/data-grid-premium/#data-grid-premium-prop-pivotingColDef) as a callback to customize the column definition for pivot columns based on the pivot value and column group path.
+You must at least override the field name to target the row property holding the pivoted data.
 
 In addition to the standard parameters, the `getRows()` callback receives the [`pivotModel`](/x/react-data-grid/pivoting/#pivot-model) parameter when pivoting is active.
 This corresponds to the current pivot configuration and contains the visible rows, columns, and values from the pivot model.
