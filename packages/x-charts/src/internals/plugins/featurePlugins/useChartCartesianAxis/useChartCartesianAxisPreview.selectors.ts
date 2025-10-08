@@ -10,15 +10,25 @@ import {
 } from '../../corePlugins/useChartSeries';
 import { computeAxisValue } from './computeAxisValue';
 import {
-  selectorChartZoomAxisFilters,
+  selectorChartNormalizedXScales,
+  selectorChartNormalizedYScales,
+  selectorChartXDomains,
+  selectorChartYDomains,
   selectorChartZoomOptionsLookup,
 } from './useChartCartesianAxisRendering.selectors';
-import { AxisId } from '../../../../models/axis';
+import {
+  AxisId,
+  ChartsAxisProps,
+  D3Scale,
+  DefaultedAxis,
+  ScaleName,
+} from '../../../../models/axis';
 import { ZoomData } from './zoom.types';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions';
 import { ZOOM_SLIDER_PREVIEW_SIZE } from '../../../constants';
-import { selectorPreferStrictDomainInLineCharts } from '../../corePlugins/useChartExperimentalFeature';
-import { getXAxesScales, getYAxesScales } from './getAxisScale';
+import { getRange } from './getAxisScale';
+import { zoomScaleRange } from './zoom';
+import { isOrdinalScale } from '../../../scaleGuards';
 
 function createPreviewDrawingArea(
   axisDirection: 'x' | 'y',
@@ -47,38 +57,36 @@ export const selectorChartPreviewXScales = createSelector(
   [
     selectorChartRawXAxis,
     selectorChartDrawingArea,
-    selectorChartSeriesProcessed,
-    selectorChartSeriesConfig,
     selectorChartZoomOptionsLookup,
-    selectorPreferStrictDomainInLineCharts,
+    selectorChartNormalizedXScales,
     (_, axisId: AxisId) => axisId,
   ],
   function selectorChartPreviewXScales(
     xAxes,
     chartDrawingArea,
-    formattedSeries,
-    seriesConfig,
     zoomOptions,
-    preferStrictDomainInLineCharts,
+    normalizedXScales,
     axisId,
   ) {
     const hasAxis = xAxes?.some((axis) => axis.id === axisId);
     const drawingArea = createPreviewDrawingArea(hasAxis ? 'x' : 'y', chartDrawingArea);
-
     const options = zoomOptions[axisId];
-    const zoomMap = new Map<AxisId, ZoomData>([
-      [axisId, { axisId, start: options.minStart, end: options.maxEnd }],
-    ]);
 
-    return getXAxesScales({
-      drawingArea,
-      formattedSeries,
-      axis: xAxes,
-      seriesConfig,
-      zoomMap,
-      zoomOptions,
-      preferStrictDomainInLineCharts,
+    const scales: Record<AxisId, D3Scale> = {};
+
+    xAxes?.forEach((eachAxis) => {
+      const axis = eachAxis as Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>;
+
+      const scale = normalizedXScales[axis.id].copy();
+      const range = getRange(drawingArea, 'x', axis);
+      const zoomedRange = zoomScaleRange(range, [options.minStart, options.maxEnd]);
+
+      scale.range(zoomedRange);
+
+      scales[axis.id] = scale;
     });
+
+    return scales;
   },
 );
 
@@ -88,10 +96,9 @@ export const selectorChartPreviewComputedXAxis = createSelector(
     selectorChartSeriesProcessed,
     selectorChartSeriesConfig,
     selectorChartZoomOptionsLookup,
-    selectorChartZoomAxisFilters,
     selectorChartDrawingArea,
-    selectorPreferStrictDomainInLineCharts,
     selectorChartPreviewXScales,
+    selectorChartXDomains,
     (_, axisId: AxisId) => axisId,
   ],
 
@@ -100,10 +107,9 @@ export const selectorChartPreviewComputedXAxis = createSelector(
     formattedSeries,
     seriesConfig,
     zoomOptions,
-    getFilters,
     chartDrawingArea,
-    preferStrictDomainInLineCharts,
     scales,
+    domains,
     axisId,
   ) => {
     const hasAxis = xAxes?.some((axis) => axis.id === axisId);
@@ -122,9 +128,7 @@ export const selectorChartPreviewComputedXAxis = createSelector(
       seriesConfig,
       axisDirection: 'x',
       zoomMap,
-      zoomOptions,
-      getFilters,
-      preferStrictDomainInLineCharts,
+      domains,
     });
 
     if (computedAxes.axis[axisId]) {
@@ -139,38 +143,41 @@ export const selectorChartPreviewYScales = createSelector(
   [
     selectorChartRawYAxis,
     selectorChartDrawingArea,
-    selectorChartSeriesProcessed,
-    selectorChartSeriesConfig,
     selectorChartZoomOptionsLookup,
-    selectorPreferStrictDomainInLineCharts,
+    selectorChartNormalizedYScales,
     (_, axisId: AxisId) => axisId,
   ],
   function selectorChartPreviewYScales(
     yAxes,
     chartDrawingArea,
-    formattedSeries,
-    seriesConfig,
     zoomOptions,
-    preferStrictDomainInLineCharts,
+    normalizedYScales,
     axisId,
   ) {
     const hasAxis = yAxes?.some((axis) => axis.id === axisId);
     const drawingArea = createPreviewDrawingArea(hasAxis ? 'y' : 'x', chartDrawingArea);
-
     const options = zoomOptions[axisId];
-    const zoomMap = new Map<AxisId, ZoomData>([
-      [axisId, { axisId, start: options.minStart, end: options.maxEnd }],
-    ]);
 
-    return getYAxesScales({
-      drawingArea,
-      formattedSeries,
-      axis: yAxes,
-      seriesConfig,
-      zoomMap,
-      zoomOptions,
-      preferStrictDomainInLineCharts,
+    const scales: Record<AxisId, D3Scale> = {};
+
+    yAxes?.forEach((eachAxis) => {
+      const axis = eachAxis as Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>;
+
+      const scale = normalizedYScales[axis.id].copy();
+      let range = getRange(drawingArea, 'y', axis);
+
+      if (isOrdinalScale(scale)) {
+        range = range.reverse() as [number, number];
+      }
+
+      const zoomedRange = zoomScaleRange(range, [options.minStart, options.maxEnd]);
+
+      scale.range(zoomedRange);
+
+      scales[axis.id] = scale;
     });
+
+    return scales;
   },
 );
 
@@ -180,10 +187,9 @@ export const selectorChartPreviewComputedYAxis = createSelector(
     selectorChartSeriesProcessed,
     selectorChartSeriesConfig,
     selectorChartZoomOptionsLookup,
-    selectorChartZoomAxisFilters,
     selectorChartDrawingArea,
-    selectorPreferStrictDomainInLineCharts,
     selectorChartPreviewYScales,
+    selectorChartYDomains,
     (_, axisId: AxisId) => axisId,
   ],
   (
@@ -191,10 +197,9 @@ export const selectorChartPreviewComputedYAxis = createSelector(
     formattedSeries,
     seriesConfig,
     zoomOptions,
-    getFilters,
     chartDrawingArea,
-    preferStrictDomainInLineCharts,
     scales,
+    domains,
     axisId,
   ) => {
     const hasAxis = yAxes?.some((axis) => axis.id === axisId);
@@ -213,9 +218,7 @@ export const selectorChartPreviewComputedYAxis = createSelector(
       seriesConfig,
       axisDirection: 'y',
       zoomMap,
-      zoomOptions,
-      getFilters,
-      preferStrictDomainInLineCharts,
+      domains,
     });
 
     if (computedAxes.axis[axisId]) {

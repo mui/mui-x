@@ -80,6 +80,9 @@ export const gridRowMaximumTreeDepthSelector = createSelectorMemoized(
   },
 );
 
+/**
+ * @category Rows
+ */
 export const gridDataRowIdsSelector = createSelector(
   gridRowsStateSelector,
   (rows) => rows.dataRowIds,

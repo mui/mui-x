@@ -7,10 +7,12 @@
     "autosizeColumns": {
       "description": "Auto-size the columns of the grid based on the cells&#39; content and the space available."
     },
+    "collapseAllRows": { "description": "Collapse all rows. Works for the client side data only." },
     "dataSource": { "description": "The data source API." },
     "deleteFilterItem": {
       "description": "Deletes a <a href=\"/x/api/data-grid/grid-filter-item/\">GridFilterItem</a>."
     },
+    "expandAllRows": { "description": "Expand all rows. Works for the client side data only." },
     "exportDataAsCsv": { "description": "Downloads and exports a CSV of the grid&#39;s data." },
     "exportDataAsExcel": {
       "description": "Downloads and exports an Excel file of the grid&#39;s data."
@@ -205,7 +207,9 @@
     "setQuickFilterValues": {
       "description": "Set the quick filter values to the one given by <code>values</code>"
     },
-    "setRowChildrenExpansion": { "description": "Expand or collapse a row children." },
+    "setRowChildrenExpansion": {
+      "description": "Expand or collapse a row children.<br />Only works for the client side data or to collapse already fetched server side rows.<br />For server-side data, use <code>dataSource.fetchRows(childId)</code> to fetch and expand the children."
+    },
     "setRowCount": { "description": "Sets the <code>rowCount</code> to a new value." },
     "setRowGroupingCriteriaIndex": {
       "description": "Sets the grouping index of a grouping criteria."

@@ -12,6 +12,7 @@ import {
   isSeriesFaded,
   isSeriesHighlighted,
 } from './highlightStates';
+import { selectorChartsKeyboardItem } from '../useChartKeyboardNavigation';
 
 const selectHighlight: ChartRootSelector<UseChartHighlightSignature> = (state) => state.highlight;
 
@@ -34,9 +35,9 @@ export const selectorChartsHighlightScopePerSeriesId = createSelector(
 );
 
 export const selectorChartsHighlightedItem = createSelector(
-  [selectHighlight],
-  function selectorChartsHighlightedItem(highlight) {
-    return highlight.item;
+  [selectHighlight, selectorChartsKeyboardItem],
+  function selectorChartsHighlightedItem(highlight, keyboardItem) {
+    return highlight.lastUpdate === 'pointer' ? highlight.item : keyboardItem;
   },
 );
 

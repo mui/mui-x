@@ -31,7 +31,7 @@ export interface ChartsSurfaceProps
 const ChartsSurfaceStyles = styled('svg', {
   name: 'MuiChartsSurface',
   slot: 'Root',
-})<{ ownerState: { width?: number; height?: number } }>(({ ownerState }) => ({
+})<{ ownerState: { width?: number; height?: number } }>(({ ownerState, theme }) => ({
   width: ownerState.width ?? '100%',
   height: ownerState.height ?? '100%',
   display: 'flex',
@@ -50,14 +50,14 @@ const ChartsSurfaceStyles = styled('svg', {
   },
   '&:focus-visible': {
     // Show focus outline on the SVG container only when using keyboard navigation
-    outline: 'auto',
+    outline: `${(theme.vars ?? theme).palette.text.primary} solid 2px`,
     '&[data-has-focused-item=true]': {
       // But not if the chart has a focused children item
       outline: 'none',
     },
   },
   '& [data-focused=true]': {
-    outline: 'auto',
+    outline: `${(theme.vars ?? theme).palette.text.primary} solid 2px`,
   },
 }));
 
