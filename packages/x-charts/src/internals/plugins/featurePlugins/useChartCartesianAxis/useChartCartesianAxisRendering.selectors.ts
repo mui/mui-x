@@ -626,10 +626,3 @@ export const selectorChartSeriesFlatbushMap = createSelector(
     return flatbushMap;
   },
 );
-
-export const selectorChartSeriesFlatbush = createSelector(
-  [selectorChartSeriesFlatbushMap, (_, seriesId: SeriesId) => seriesId],
-  function selectChartSeriesFlatbush(flatbushMap, seriesId) {
-    return flatbushMap.get(seriesId);
-  },
-);
