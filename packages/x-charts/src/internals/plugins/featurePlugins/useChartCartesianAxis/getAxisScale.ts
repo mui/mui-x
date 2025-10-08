@@ -1,4 +1,9 @@
-import { scaleBand, scalePoint, type ScaleSymLog } from '@mui/x-charts-vendor/d3-scale';
+import {
+  NumberValue,
+  scaleBand,
+  scalePoint,
+  type ScaleSymLog,
+} from '@mui/x-charts-vendor/d3-scale';
 import {
   AxisConfig,
   AxisId,
@@ -241,18 +246,18 @@ export function applyDomainLimit(
  * @param maxData Maximum value from the data.
  */
 export function getActualAxisExtrema(
-  axisExtrema: { min?: number | Date; max?: number | Date } | {},
-  minData: number,
-  maxData: number,
-): [number | Date, number | Date] {
-  let min: number | Date = minData;
-  let max: number | Date = maxData;
+  axisExtrema: { min?: NumberValue; max?: NumberValue } | {},
+  minData: NumberValue,
+  maxData: NumberValue,
+): [NumberValue, NumberValue] {
+  let min = minData;
+  let max = maxData;
 
-  if ('max' in axisExtrema && axisExtrema.max != null && axisExtrema.max.valueOf() < minData) {
+  if ('max' in axisExtrema && axisExtrema.max != null && axisExtrema.max < minData) {
     min = axisExtrema.max;
   }
 
-  if ('min' in axisExtrema && axisExtrema.min != null && axisExtrema.min.valueOf() > minData) {
+  if ('min' in axisExtrema && axisExtrema.min != null && axisExtrema.min > minData) {
     max = axisExtrema.min;
   }
 

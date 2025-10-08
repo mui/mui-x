@@ -9,7 +9,7 @@ import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
 import { useEvent } from '../../utils/useEvent';
 import { CalendarEvent, CalendarEventId, SchedulerValidDate } from '../../models';
-import { useAdapter, diffIn } from '../../use-adapter/useAdapter';
+import { useAdapter, diffIn } from '../../use-adapter';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
 import { selectors } from '../../use-event-calendar/EventCalendarStore.selectors';
 import { CalendarGridDayEventContext } from './CalendarGridDayEventContext';
