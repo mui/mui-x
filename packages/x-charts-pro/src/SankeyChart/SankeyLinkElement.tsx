@@ -3,15 +3,9 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import type { SeriesId } from '@mui/x-charts/internals';
 import { useInteractionItemProps, useStore, useSelector } from '@mui/x-charts/internals';
-import type {
-  SankeyLayoutLink,
-  SankeyLinkIdentifierWithData,
-  SankeyItemIdentifier,
-  SankeyNodeOptions,
-  SankeyLinkOptions,
-} from './sankey.types';
-import { isLinkHighlighted, isLinkHighlightedByNode, shouldFadeItem } from './utils';
-import { selectorSankeyHighlightedItem } from './plugins/useSankeyHighlight.selectors';
+import type { SankeyLayoutLink, SankeyLinkIdentifierWithData } from './sankey.types';
+import { selectorIsLinkHighlighted } from './plugins';
+import { selectorIsSankeyItemFaded } from './plugins/useSankeyHighlight.selectors';
 
 export interface SankeyLinkElementProps {
   /**
@@ -26,14 +20,7 @@ export interface SankeyLinkElementProps {
    * Opacity to apply to the link
    */
   opacity?: number;
-  /**
-   * Node options for highlighting configuration
-   */
-  nodeOptions?: SankeyNodeOptions;
-  /**
-   * Link options for highlighting configuration
-   */
-  linkOptions?: SankeyLinkOptions;
+
   /**
    * Callback fired when a sankey item is clicked.
    * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
@@ -50,14 +37,8 @@ export interface SankeyLinkElementProps {
  */
 export const SankeyLinkElement = React.forwardRef<SVGPathElement, SankeyLinkElementProps>(
   function SankeyLinkElement(props, ref) {
-    const { link, opacity = 0.4, onClick, seriesId, nodeOptions, linkOptions } = props;
+    const { link, opacity = 0.4, onClick, seriesId } = props;
     const store = useStore();
-
-    // Get the currently highlighted item from the Sankey-specific highlight plugin
-    const highlightedItem = useSelector(
-      store,
-      selectorSankeyHighlightedItem as any,
-    ) as SankeyItemIdentifier | null;
 
     const identifier: SankeyLinkIdentifierWithData = {
       type: 'sankey',
@@ -68,11 +49,8 @@ export const SankeyLinkElement = React.forwardRef<SVGPathElement, SankeyLinkElem
       link,
     };
 
-    const highlighted =
-      isLinkHighlighted(highlightedItem, link, linkOptions) ||
-      isLinkHighlightedByNode(highlightedItem, link, nodeOptions);
-
-    const faded = shouldFadeItem(highlightedItem, highlighted, nodeOptions, linkOptions);
+    const isHighlighted = useSelector(store, selectorIsLinkHighlighted, [link]);
+    const isFaded = useSelector(store, selectorIsSankeyItemFaded, [isHighlighted]);
 
     // Add interaction props for tooltips
     const interactionProps = useInteractionItemProps(identifier);
@@ -89,10 +67,10 @@ export const SankeyLinkElement = React.forwardRef<SVGPathElement, SankeyLinkElem
     let finalOpacity = opacity;
     let filter: string | undefined;
 
-    if (faded) {
+    if (isFaded) {
       finalOpacity = opacity * 0.3;
       filter = 'saturate(80%)';
-    } else if (highlighted) {
+    } else if (isHighlighted) {
       finalOpacity = Math.min(opacity * 1.2, 1);
       filter = 'saturate(120%)';
     }
@@ -106,8 +84,8 @@ export const SankeyLinkElement = React.forwardRef<SVGPathElement, SankeyLinkElem
         style={{ filter }}
         data-link-source={link.source.id}
         data-link-target={link.target.id}
-        data-highlighted={highlighted || undefined}
-        data-faded={faded || undefined}
+        data-highlighted={isHighlighted || undefined}
+        data-faded={isFaded || undefined}
         onClick={onClick ? handleClick : undefined}
         cursor={onClick ? 'pointer' : 'default'}
         {...interactionProps}
