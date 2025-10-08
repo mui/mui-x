@@ -1290,7 +1290,7 @@ describe('<DataGridPro /> - Row selection', () => {
   });
 
   describe('apiRef: getPropagatedRowSelectionModel', () => {
-    it.only('`getPropagatedRowSelectionModel` should return exclude models unchanged', () => {
+    it('`getPropagatedRowSelectionModel` should return exclude models unchanged', () => {
       render(<TreeDataGrid rowSelectionPropagation={{ descendants: true, parents: true }} />);
 
       // Exclude models are not affected by propagation
