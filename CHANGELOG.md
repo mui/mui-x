@@ -105,6 +105,7 @@ Internal changes.
 - [code-infra] Wait longer for print dialog (#19795) @JCQuintas
 - [code-infra] Replace `lodash` with `es-toolkit` (#19853) @bernardobelchior
 - [code-infra] Update release script PR checklist (#19785) @bernardobelchior
+- [code-infra] Remove remaining usages of `lodash` (#19864) @bernardobelchior
 - [docs-infra] Add `title` knob (#19792) @JCQuintas
 - [docs-infra] Fix missing key in title knob (#19804) @JCQuintas
 
