@@ -26,7 +26,7 @@ The following are all team members who have contributed to this release:
 
 #### `@mui/x-data-grid@8.14.0`
 
-Internal changes.
+- [l10n] Improve Brazilian Portuguese (pt-BR) locale (#19658) @djpremier
 
 #### `@mui/x-data-grid-pro@8.14.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -43,6 +43,7 @@ Same changes as in `@mui/x-data-grid-pro@8.14.0`, plus:
 #### `@mui/x-date-pickers@8.14.0`
 
 - [pickers] Fixed the extra element for the disabled date picker (#19387) @Utkarsh-0304
+- [l10n] Improve Brazilian Portuguese (pt-BR) locale (#19658) @djpremier
 
 #### `@mui/x-date-pickers-pro@8.14.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -60,6 +61,7 @@ Same changes as in `@mui/x-date-pickers@8.14.0`.
 - [charts] Refactor domain/scale selectors (#19832) @bernardobelchior
 - [charts] Remove min/max from ordinal configuration (#19789) @alexfauquette
 - [charts] Simplify axes filters selectors (#19833) @bernardobelchior
+- [l10n] Improve Brazilian Portuguese (pt-BR) locale (#19658) @djpremier
 
 #### `@mui/x-charts-pro@8.14.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -107,7 +109,6 @@ Internal changes.
 
 ### Miscellaneous
 
-- [l10n] Improve Brazilian Portuguese (pt-BR) locale (#19658) @djpremier
 - [x-telemetry] Fix transpile issues (#19761) @hasdfa
 - [x-telemetry] Fix ref to deleted file (#19842) @JCQuintas
 
