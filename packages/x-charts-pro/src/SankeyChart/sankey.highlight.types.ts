@@ -13,7 +13,7 @@ export type SankeyNodeHighlightScope = {
    * - 'incoming': Highlight incoming links to hovered node
    * - 'outgoing': Highlight outgoing links from hovered node
    * - 'none': No highlighting
-   * @default 'nodes'
+   * @default 'links'
    */
   highlight?: SankeyNodeHighlight;
   /**

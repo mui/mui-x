@@ -22,7 +22,7 @@ const selectorSankeySeries = createSelector(
     series.processedSeries.sankey?.series[series.processedSeries.sankey?.seriesOrder[0]] || null,
 );
 
-const DEFAULT_NODE_HIGHLIGHT: SankeyNodeHighlight = 'nodes';
+const DEFAULT_NODE_HIGHLIGHT: SankeyNodeHighlight = 'links';
 const DEFAULT_LINK_HIGHLIGHT: SankeyLinkHighlight = 'links';
 const DEFAULT_FADE: SankeyNodeFade & SankeyLinkFade = 'none';
 
