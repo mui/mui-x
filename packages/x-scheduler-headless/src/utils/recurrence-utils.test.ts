@@ -1,5 +1,4 @@
-import { DateTime } from 'luxon';
-import { adapter } from 'test/utils/scheduler';
+import { adapter, adapterFr } from 'test/utils/scheduler';
 import {
   ByDayCode,
   ByDayValue,
@@ -26,29 +25,12 @@ import {
   applyRecurringUpdateAll,
 } from './recurrence-utils';
 import { diffIn } from '../use-adapter';
-import { Adapter } from '../use-adapter/useAdapter.types';
 
 describe('recurrence-utils', () => {
   describe('getByDayMaps', () => {
-    type MiniAdapter = Pick<Adapter<any>, 'date' | 'addDays' | 'getDayOfWeek'>;
-
-    const ISO_ADAPTER = {
-      date: (value?: string | null) => adapter.date(value as string),
-      addDays: adapter.addDays,
-      // TODO: Do not use Luxon APIs directly
-      getDayOfWeek: (d: DateTime) => d.weekday,
-    } as unknown as MiniAdapter;
-
-    const SUNDAY_FIRST_ADAPTER = {
-      date: (value?: string | null) => adapter.date(value as string),
-      addDays: adapter.addDays,
-      // TODO: Do not use Luxon APIs directly
-      getDayOfWeek: (d: DateTime) => (d.weekday === 7 ? 1 : d.weekday + 1),
-    } as unknown as MiniAdapter;
-
     const ALL_CODES: ByDayCode[] = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
-    it('respects ISO Mon=1 numbering', () => {
-      const { byDayToNum, numToByDay } = getByDayMaps(ISO_ADAPTER as Adapter);
+    it('respects fr locale Mon=1 numbering', () => {
+      const { byDayToNum, numToByDay } = getByDayMaps(adapterFr);
 
       expect(byDayToNum.MO).to.equal(1);
       expect(byDayToNum.SU).to.equal(7);
@@ -59,8 +41,8 @@ describe('recurrence-utils', () => {
       });
     });
 
-    it('respects Sunday=1 numbering', () => {
-      const { byDayToNum, numToByDay } = getByDayMaps(SUNDAY_FIRST_ADAPTER as Adapter);
+    it('respects enUS locale Sunday=1 numbering', () => {
+      const { byDayToNum, numToByDay } = getByDayMaps(adapter);
 
       expect(byDayToNum.SU).to.equal(1);
       expect(byDayToNum.MO).to.equal(2);
