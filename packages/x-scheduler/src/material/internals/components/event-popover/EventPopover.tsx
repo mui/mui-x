@@ -34,7 +34,7 @@ import {
   RecurrencePresetKey,
 } from '../../../../primitives/utils/recurrence-utils';
 import { DEFAULT_EVENT_COLOR } from '../../../../primitives/utils/SchedulerStore';
-import { createPopoverComponents } from '../popover';
+import { createPopoverComponents } from '../../../../internals/components/popover';
 
 const EventPopoverComponents = createPopoverComponents<CalendarEventOccurrence>({
   contextName: 'EventPopoverContext',

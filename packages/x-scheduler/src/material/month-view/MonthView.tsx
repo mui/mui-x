@@ -16,7 +16,7 @@ import { EventPopoverProvider } from '../internals/components/event-popover';
 import { useTranslations } from '../internals/utils/TranslationsContext';
 import MonthViewWeekRow from './month-view-row/MonthViewWeekRow';
 import { useEventOccurrencesGroupedByDay } from '../../primitives/use-event-occurrences-grouped-by-day';
-import { MoreEventsPopoverProvider } from '../internals/components/more-events-popover';
+import { MoreEventsPopoverProvider } from '../../internals/components/more-events-popover';
 import './MonthView.css';
 
 const adapter = getAdapter();

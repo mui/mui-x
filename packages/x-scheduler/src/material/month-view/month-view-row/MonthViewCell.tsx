@@ -13,7 +13,7 @@ import { EventPopoverTrigger } from '../../internals/components/event-popover';
 import { selectors } from '../../../primitives/use-event-calendar';
 import { useEventOccurrencesWithDayGridPosition } from '../../../primitives/use-event-occurrences-with-day-grid-position';
 import './MonthViewWeekRow.css';
-import { MoreEventsPopoverTrigger } from '../../internals/components/more-events-popover/MoreEventsPopover';
+import { MoreEventsPopoverTrigger } from '../../../internals/components/more-events-popover/MoreEventsPopover';
 import { useEventPopoverContext } from '../../internals/components/event-popover/EventPopover';
 
 export const MonthViewCell = React.forwardRef(function MonthViewCell(

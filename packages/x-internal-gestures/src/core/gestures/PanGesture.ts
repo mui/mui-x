@@ -13,20 +13,8 @@ import { GesturePhase, GestureState } from '../Gesture';
 import { PointerGesture, PointerGestureEventData, PointerGestureOptions } from '../PointerGesture';
 import { PointerData } from '../PointerManager';
 import { TargetElement } from '../types/TargetElement';
+import { Direction } from '../types/Direction';
 import { calculateCentroid, createEventName, getDirection, isDirectionAllowed } from '../utils';
-
-/**
- * The direction of movement for the pan gesture
- * This type defines the detected directions based on the vertical and horizontal components
- * The values can be 'up', 'down', 'left', 'right' or null if not applicable.
- *
- * The null values indicate that the gesture is not moving in that direction.
- */
-export type Direction = {
-  vertical: 'up' | 'down' | null;
-  horizontal: 'left' | 'right' | null;
-  mainAxis: 'horizontal' | 'vertical' | 'diagonal' | null;
-};
 
 /**
  * Configuration options for PanGesture
@@ -200,6 +188,7 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
     super.updateOptions(options);
 
     this.direction = options.direction || this.direction;
+    this.threshold = options.threshold ?? this.threshold;
   }
 
   protected resetState(): void {
@@ -224,7 +213,10 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
   /**
    * Handle pointer events for the pan gesture
    */
-  protected handlePointerEvent(pointers: Map<number, PointerData>, event: PointerEvent): void {
+  protected handlePointerEvent = (
+    pointers: Map<number, PointerData>,
+    event: PointerEvent,
+  ): void => {
     const pointersArray = Array.from(pointers.values());
 
     // Check for our forceCancel event to handle interrupted gestures (from contextmenu, blur)
@@ -251,8 +243,7 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
     // Filter pointers to only include those targeting our element or its children
     const relevantPointers = this.getRelevantPointers(pointersArray, targetElement);
 
-    // Check if we have enough pointers and not too many
-    if (relevantPointers.length < this.minPointers || relevantPointers.length > this.maxPointers) {
+    if (!this.isWithinPointerCount(relevantPointers, event.pointerType)) {
       // Cancel or end the gesture if it was active
       this.cancel(targetElement, relevantPointers, event);
       return;
@@ -276,7 +267,10 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
         break;
 
       case 'pointermove':
-        if (this.state.startCentroid && relevantPointers.length >= this.minPointers) {
+        if (
+          this.state.startCentroid &&
+          this.isWithinPointerCount(pointersArray, event.pointerType)
+        ) {
           // Calculate current centroid
           const currentCentroid = calculateCentroid(relevantPointers);
 
@@ -347,11 +341,12 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
       case 'forceCancel':
         // If the gesture was active (threshold was reached), emit end event
         if (this.isActive && this.state.movementThresholdReached) {
-          // If we have less than the minimum required pointers, end the gesture
-          if (
-            relevantPointers.filter((p) => p.type !== 'pointerup' && p.type !== 'pointercancel')
-              .length < this.minPointers
-          ) {
+          const remainingPointers = relevantPointers.filter(
+            (p) => p.type !== 'pointerup' && p.type !== 'pointercancel',
+          );
+
+          // If we no longer meet the pointer count requirements, end the gesture
+          if (!this.isWithinPointerCount(remainingPointers, event.pointerType)) {
             // End the gesture
             const currentCentroid = this.state.lastCentroid || this.state.startCentroid!;
             if (event.type === 'pointercancel') {
@@ -368,7 +363,7 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
       default:
         break;
     }
-  }
+  };
 
   /**
    * Emit pan-specific events with additional data
