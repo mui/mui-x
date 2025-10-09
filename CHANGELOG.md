@@ -40,10 +40,6 @@ Same changes as in `@mui/x-data-grid-pro@8.14.0`, plus:
 
 ### Date and Time Pickers
 
-From https://github.com/mui/mui-x/pull/19387
-
-Fixed the extra element for the disabled date picker
-
 #### `@mui/x-date-pickers@8.14.0`
 
 - [pickers] Fixed the extra element for the disabled date picker (#19387) @Utkarsh-0304
@@ -64,8 +60,6 @@ Same changes as in `@mui/x-date-pickers@8.14.0`.
 - [charts] Refactor domain/scale selectors (#19832) @bernardobelchior
 - [charts] Remove min/max from ordinal configuration (#19789) @alexfauquette
 - [charts] Simplify axes filters selectors (#19833) @bernardobelchior
-- [charts][docs] Add overview section for pie chart (#19672) @prakhargupta1
-- [charts][docs] Fix demo title knob keys (#19843) @JCQuintas
 
 #### `@mui/x-charts-pro@8.14.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -93,6 +87,8 @@ Internal changes.
 
 ### Docs
 
+- [docs] Add overview section for pie chart (#19672) @prakhargupta1
+- [docs] Fix demo title knob keys (#19843) @JCQuintas
 - [docs] Hide UI elements of unsupported features in the data source demos (#19849) @arminmeh
 
 ### Core
