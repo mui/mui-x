@@ -901,10 +901,7 @@ export function applyRecurringUpdateOnlyThis(
 
   const updatedOriginalEvent: CalendarEvent = {
     ...originalEvent,
-    exDates: [
-      ...(originalEvent.exDates ?? []),
-      originalEvent.allDay ? adapter.startOfDay(occurrenceStart) : occurrenceStart,
-    ],
+    exDates: [...(originalEvent.exDates ?? []), adapter.startOfDay(occurrenceStart)],
   };
 
   const updatedEvents = events.map((event) =>
