@@ -103,13 +103,13 @@ Internal changes.
 - [code-infra] Remove tsconfig `baseUrl` (#19837) @Janpot
 - [code-infra] Support custom npm dist tags during release (#19803) @Janpot
 - [code-infra] Wait longer for print dialog (#19795) @JCQuintas
+- [code-infra] Replace `lodash` with `es-toolkit` (#19853) @bernardobelchior
+- [code-infra] Update release script PR checklist (#19785) @bernardobelchior
 - [docs-infra] Add `title` knob (#19792) @JCQuintas
 - [docs-infra] Fix missing key in title knob (#19804) @JCQuintas
 
 ### Miscellaneous
 
-- [infra] Replace `lodash` with `es-toolkit` (#19853) @bernardobelchior
-- [infra] Update release script PR checklist (#19785) @bernardobelchior
 - [l10n] Improve Brazilian Portuguese (pt-BR) locale (#19658) @djpremier
 - [x-telemetry] Fix transpile issues (#19761) @hasdfa
 - [x-telemetry] Fix ref to deleted file (#19842) @JCQuintas
