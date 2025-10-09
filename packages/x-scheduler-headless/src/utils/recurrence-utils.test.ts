@@ -40,13 +40,6 @@ describe('recurrence-utils', () => {
     ...overrides,
   });
 
-  const makeOtherEvent = (): CalendarEvent => ({
-    id: 'other',
-    title: 'Other Event',
-    start: adapter.date('2025-02-01T09:00:00Z'),
-    end: adapter.date('2025-02-01T10:00:00Z'),
-  });
-
   describe('getByDayMaps', () => {
     const ALL_CODES: ByDayCode[] = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
     it('respects fr locale Mon=1 numbering', () => {
