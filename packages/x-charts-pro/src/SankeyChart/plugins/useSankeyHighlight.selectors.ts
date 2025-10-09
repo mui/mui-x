@@ -22,13 +22,17 @@ const selectorSankeySeries = createSelector(
     series.processedSeries.sankey?.series[series.processedSeries.sankey?.seriesOrder[0]] || null,
 );
 
+const DEFAULT_NODE_HIGHLIGHT: SankeyNodeHighlight = 'nodes';
+const DEFAULT_LINK_HIGHLIGHT: SankeyLinkHighlight = 'links';
+const DEFAULT_FADE: SankeyNodeFade & SankeyLinkFade = 'none';
+
 /**
  * Get the node highlight configuration from the Sankey series.
- * Defaults to 'none' if not specified.
+ * Defaults to 'nodes' if not specified.
  */
 export const selectorNodeHighlightConfig = createSelector(
   [selectorSankeySeries],
-  (series): SankeyNodeHighlight => series?.nodeOptions?.highlight ?? 'none',
+  (series): SankeyNodeHighlight => series?.nodeOptions?.highlight ?? DEFAULT_NODE_HIGHLIGHT,
 );
 
 /**
@@ -37,16 +41,16 @@ export const selectorNodeHighlightConfig = createSelector(
  */
 export const selectorNodeFadeConfig = createSelector(
   [selectorSankeySeries],
-  (series): SankeyNodeFade => series?.nodeOptions?.fade ?? 'none',
+  (series): SankeyNodeFade => series?.nodeOptions?.fade ?? DEFAULT_FADE,
 );
 
 /**
  * Get the link highlight configuration from the Sankey series.
- * Defaults to 'none' if not specified.
+ * Defaults to 'links' if not specified.
  */
 export const selectorLinkHighlightConfig = createSelector(
   [selectorSankeySeries],
-  (series): SankeyLinkHighlight => series?.linkOptions?.highlight ?? 'none',
+  (series): SankeyLinkHighlight => series?.linkOptions?.highlight ?? DEFAULT_LINK_HIGHLIGHT,
 );
 
 /**
@@ -55,7 +59,7 @@ export const selectorLinkHighlightConfig = createSelector(
  */
 export const selectorLinkFadeConfig = createSelector(
   [selectorSankeySeries],
-  (series): SankeyLinkFade => series?.linkOptions?.fade ?? 'none',
+  (series): SankeyLinkFade => series?.linkOptions?.fade ?? DEFAULT_FADE,
 );
 
 /**
