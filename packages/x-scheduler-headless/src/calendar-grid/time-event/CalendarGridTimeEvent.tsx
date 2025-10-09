@@ -6,7 +6,7 @@ import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { useStore } from '@base-ui-components/utils/store';
 import { useButton } from '../../base-ui-copy/utils/useButton';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
-import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
+import { BaseUIComponentProps, NonNativeButtonProps } from '../../base-ui-copy/utils/types';
 import { CalendarGridTimeEventCssVars } from './CalendarGridTimeEventCssVars';
 import { useCalendarGridTimeColumnContext } from '../time-column/CalendarGridTimeColumnContext';
 import { useEvent } from '../../utils/useEvent';
@@ -31,6 +31,7 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     eventId,
     occurrenceKey,
     isDraggable = false,
+    nativeButton = false,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
@@ -44,7 +45,10 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
   const store = useEventCalendarStoreContext();
   const isDragging = useStore(store, selectors.isOccurrenceMatchingThePlaceholder, occurrenceKey);
   const [isResizing, setIsResizing] = React.useState(false);
-  const { getButtonProps, buttonRef } = useButton({ disabled: !isInteractive });
+  const { getButtonProps, buttonRef } = useButton({
+    disabled: !isInteractive,
+    native: nativeButton,
+  });
 
   const {
     start: columnStart,
@@ -159,7 +163,10 @@ export namespace CalendarGridTimeEvent {
     resizing: boolean;
   }
 
-  export interface Props extends BaseUIComponentProps<'div', State>, useEvent.Parameters {
+  export interface Props
+    extends BaseUIComponentProps<'div', State>,
+      NonNativeButtonProps,
+      useEvent.Parameters {
     /**
      * The unique identifier of the event.
      */

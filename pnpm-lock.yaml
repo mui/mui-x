@@ -401,9 +401,6 @@ importers:
       lerna:
         specifier: ^9.0.0
         version: 9.0.0(@swc/core@1.13.5)(@types/node@22.18.8)(babel-plugin-macros@3.1.0)
-      lodash:
-        specifier: ^4.17.21
-        version: 4.17.21
       magic-string:
         specifier: ^0.30.19
         version: 0.30.19
@@ -1684,12 +1681,21 @@ importers:
       '@floating-ui/react':
         specifier: ^0.27.16
         version: 0.27.16(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      '@floating-ui/react-dom':
+        specifier: ^2.1.6
+        version: 2.1.6(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      '@floating-ui/utils':
+        specifier: ^0.2.10
+        version: 0.2.10
       '@mui/x-internals':
         specifier: workspace:*
         version: link:../x-internals/build
       prop-types:
         specifier: 'catalog:'
         version: 15.8.1
+      tabbable:
+        specifier: ^6.2.0
+        version: 6.2.0
     devDependencies:
       '@mui/internal-test-utils':
         specifier: 'catalog:'
