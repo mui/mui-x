@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { DateTime } from 'luxon';
 import { screen } from '@mui/internal-test-utils';
-import { createSchedulerRenderer } from 'test/utils/scheduler';
+import { adapter, createSchedulerRenderer } from 'test/utils/scheduler';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import {
   changeTo24HoursFormat,
@@ -21,14 +20,14 @@ describe('EventCalendar', () => {
         events={[
           {
             id: '1',
-            start: DateTime.fromISO('2025-05-26T07:30:00'),
-            end: DateTime.fromISO('2025-05-26T08:15:00'),
+            start: adapter.date('2025-05-26T07:30:00'),
+            end: adapter.date('2025-05-26T08:15:00'),
             title: 'Running',
           },
           {
             id: '2',
-            start: DateTime.fromISO('2025-05-27T16:00:00'),
-            end: DateTime.fromISO('2025-05-27T17:00:00'),
+            start: adapter.date('2025-05-27T16:00:00'),
+            end: adapter.date('2025-05-27T17:00:00'),
             title: 'Weekly',
           },
         ]}
@@ -57,15 +56,15 @@ describe('EventCalendar', () => {
         events={[
           {
             id: '1',
-            start: DateTime.fromISO('2025-05-26T07:30:00'),
-            end: DateTime.fromISO('2025-05-26T08:15:00'),
+            start: adapter.date('2025-05-26T07:30:00'),
+            end: adapter.date('2025-05-26T08:15:00'),
             title: 'Running',
             resource: '1',
           },
           {
             id: '2',
-            start: DateTime.fromISO('2025-05-27T16:00:00'),
-            end: DateTime.fromISO('2025-05-27T17:00:00'),
+            start: adapter.date('2025-05-27T16:00:00'),
+            end: adapter.date('2025-05-27T17:00:00'),
             title: 'Weekly',
             resource: '2',
           },
@@ -220,8 +219,8 @@ describe('EventCalendar', () => {
           events={[
             {
               id: '1',
-              start: DateTime.fromISO('2025-05-26T07:30:00'),
-              end: DateTime.fromISO('2025-05-26T08:15:00'),
+              start: adapter.date('2025-05-26T07:30:00'),
+              end: adapter.date('2025-05-26T08:15:00'),
               title: 'Running',
             },
           ]}
@@ -253,8 +252,8 @@ describe('EventCalendar', () => {
           events={[
             {
               id: '1',
-              start: DateTime.fromISO('2025-05-26T07:30:00'),
-              end: DateTime.fromISO('2025-05-26T08:15:00'),
+              start: adapter.date('2025-05-26T07:30:00'),
+              end: adapter.date('2025-05-26T08:15:00'),
               title: 'Running',
             },
           ]}
