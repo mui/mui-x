@@ -6,10 +6,10 @@ import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { useStore } from '@base-ui-components/utils/store/useStore';
 import { useButton } from '../../base-ui-copy/utils/useButton';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
-import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
+import { BaseUIComponentProps, NonNativeButtonProps } from '../../base-ui-copy/utils/types';
 import { useEvent } from '../../utils/useEvent';
-import { CalendarEventId, SchedulerValidDate } from '../../models';
-import { useAdapter, diffIn } from '../../use-adapter/useAdapter';
+import { CalendarEvent, CalendarEventId, SchedulerValidDate } from '../../models';
+import { useAdapter, diffIn } from '../../use-adapter';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
 import { selectors } from '../../use-event-calendar/EventCalendarStore.selectors';
 import { CalendarGridDayEventContext } from './CalendarGridDayEventContext';
@@ -31,6 +31,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     eventId,
     occurrenceKey,
     isDraggable = false,
+    nativeButton = false,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
@@ -41,7 +42,10 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
 
   const adapter = useAdapter();
   const ref = React.useRef<HTMLDivElement>(null);
-  const { getButtonProps, buttonRef } = useButton({ disabled: !isInteractive });
+  const { getButtonProps, buttonRef } = useButton({
+    disabled: !isInteractive,
+    native: nativeButton,
+  });
   const { start: rowStart, end: rowEnd } = useCalendarGridDayRowContext();
   const { state: eventState } = useEvent({ start, end });
   const store = useEventCalendarStoreContext();
@@ -75,6 +79,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     () => ({
       eventId,
       occurrenceKey,
+      event: selectors.event(store.state, eventId)!,
       start,
       end,
     }),
@@ -145,7 +150,10 @@ export namespace CalendarGridDayEvent {
     resizing: boolean;
   }
 
-  export interface Props extends BaseUIComponentProps<'div', State>, useEvent.Parameters {
+  export interface Props
+    extends BaseUIComponentProps<'div', State>,
+      NonNativeButtonProps,
+      useEvent.Parameters {
     /**
      * The unique identifier of the event.
      */
@@ -164,6 +172,7 @@ export namespace CalendarGridDayEvent {
   export interface SharedDragData {
     eventId: CalendarEventId;
     occurrenceKey: string;
+    event: CalendarEvent;
     start: SchedulerValidDate;
     end: SchedulerValidDate;
   }

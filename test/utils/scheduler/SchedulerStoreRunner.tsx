@@ -1,11 +1,11 @@
 import * as React from 'react';
 
-export function SchedulerStoreRunner({
+export function SchedulerStoreRunner<T>({
   context,
   onMount,
 }: {
-  context: React.Context<any>;
-  onMount: (store: any) => void;
+  context: React.Context<T | null>;
+  onMount: (store: T) => void;
 }) {
   const store = React.useContext(context);
   if (!store) {

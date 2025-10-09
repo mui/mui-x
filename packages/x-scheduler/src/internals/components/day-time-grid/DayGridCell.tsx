@@ -24,12 +24,10 @@ export function DayGridCell(props: DayGridCellProps) {
 
   const handleDoubleClick = () => {
     store.setOccurrencePlaceholder({
-      eventId: null,
-      occurrenceKey: 'create-placeholder',
+      type: 'creation',
       surfaceType: 'day-grid',
       start: adapter.startOfDay(day.value),
       end: adapter.endOfDay(day.value),
-      originalStart: null,
     });
   };
 
@@ -44,6 +42,7 @@ export function DayGridCell(props: DayGridCellProps) {
     <CalendarGrid.DayCell
       ref={cellRef}
       value={day.value}
+      addPropertiesToDroppedEvent={addPropertiesToDroppedEvent}
       className="DayTimeGridAllDayEventsCell"
       style={
         {
@@ -99,4 +98,13 @@ export function DayGridCell(props: DayGridCellProps) {
 interface DayGridCellProps {
   day: useEventOccurrencesWithDayGridPosition.DayData;
   row: useEventOccurrencesWithDayGridPosition.ReturnValue;
+}
+
+/**
+ * Makes sure any event dropped in the day cell is turned into an all-day event.
+ */
+function addPropertiesToDroppedEvent() {
+  return {
+    allDay: true,
+  };
 }

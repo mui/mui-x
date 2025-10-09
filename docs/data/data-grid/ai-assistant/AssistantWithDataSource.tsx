@@ -7,6 +7,7 @@ import {
   useKeepGroupedColumnsHidden,
   unstable_gridDefaultPromptResolver as promptResolver,
   GridAiAssistantPanel,
+  DataGridPremiumProps,
 } from '@mui/x-data-grid-premium';
 import { useMockServer } from '@mui/x-data-grid-generator';
 
@@ -37,6 +38,13 @@ const aggregationFunctions = {
   size: {},
 };
 
+const pivotingColDef: DataGridPremiumProps['pivotingColDef'] = (
+  originalColumnField,
+  columnGroupPath,
+) => ({
+  field: columnGroupPath.concat(originalColumnField).join('>->'),
+});
+
 function processPrompt(prompt: string, context: string, conversationId?: string) {
   return promptResolver(
     'https://backend.mui.com/api/datagrid/prompt',
@@ -53,7 +61,6 @@ export default function AssistantWithDataSource() {
       dataSet: 'Employee',
       visibleFields: VISIBLE_FIELDS,
       maxColumns: 16,
-      rowGrouping: true,
       rowLength: 1000,
     },
     { useCursorPagination: false },
@@ -69,6 +76,7 @@ export default function AssistantWithDataSource() {
           groupKeys: JSON.stringify(params.groupKeys),
           groupFields: JSON.stringify(params.groupFields),
           aggregationModel: JSON.stringify(params.aggregationModel),
+          pivotModel: JSON.stringify(params.pivotModel),
         });
         const getRowsResponse = await fetchRows(
           `https://mui.com/x/api/data-grid?${urlParams.toString()}`,
@@ -77,11 +85,12 @@ export default function AssistantWithDataSource() {
           rows: getRowsResponse.rows,
           rowCount: getRowsResponse.rowCount,
           aggregateRow: getRowsResponse.aggregateRow,
+          pivotColumns: getRowsResponse.pivotColumns,
         };
       },
       getGroupKey: (row) => row.group,
       getChildrenCount: (row) => row.descendantCount,
-      getAggregatedValue: (row, field) => row[`${field}Aggregate`],
+      getAggregatedValue: (row, field) => row[field],
     }),
     [fetchRows],
   );
@@ -123,7 +132,7 @@ export default function AssistantWithDataSource() {
         onPrompt={processPrompt}
         aggregationFunctions={aggregationFunctions}
         onDataSourceError={console.error}
-        disablePivoting
+        pivotingColDef={pivotingColDef}
       />
     </div>
   );

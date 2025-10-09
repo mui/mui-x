@@ -16,11 +16,16 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
     // Internal props
     start,
     end,
+    addPropertiesToDroppedEvent,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
 
-  const { getCursorPositionInElementMs, ref: dropTargetRef } = useTimeDropTarget({ start, end });
+  const { getCursorPositionInElementMs, ref: dropTargetRef } = useTimeDropTarget({
+    start,
+    end,
+    addPropertiesToDroppedEvent,
+  });
   const props = React.useMemo(() => ({ role: 'gridcell' }), []);
 
   const contextValue: CalendarGridTimeColumnContext = React.useMemo(
