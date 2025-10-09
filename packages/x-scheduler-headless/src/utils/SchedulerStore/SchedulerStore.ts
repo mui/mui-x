@@ -208,7 +208,6 @@ export class SchedulerStore<
         if (deleted.has(event.id)) {
           continue;
         }
-
         const newEvent = updated.has(event.id) ? { ...event, ...updated.get(event.id) } : event;
         newEvents.push(newEvent);
       }
@@ -217,13 +216,11 @@ export class SchedulerStore<
     }
 
     for (const createdEvent of created) {
-      const existing = selectors.event(this.state, createdEvent.id);
-      if (existing) {
+      if (selectors.event(this.state, createdEvent.id)) {
         throw new Error(
           `Scheduler: an event with id="${createdEvent.id}" already exists. Use updateEvent(...) instead.`,
         );
       }
-
       newEvents.push(createdEvent);
     }
 
