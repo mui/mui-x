@@ -32,7 +32,7 @@
     "@fingerprintjs/fingerprintjs": "^3.4.2",
     "ci-info": "^4.3.0",
     "conf": "^11.0.2",
-    "is-docker": "^3.0.0",
+    "is-docker": "^4.0.0",
     "node-machine-id": "^1.1.12"
   },
   "devDependencies": {

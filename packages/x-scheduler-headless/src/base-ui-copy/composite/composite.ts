@@ -1,5 +1,4 @@
 import { isHTMLElement } from '@floating-ui/utils/dom';
-import type { TextDirection } from '../direction-provider/DirectionContext';
 
 export {
   stopEvent,
@@ -60,7 +59,7 @@ export function isNativeInput(
 export function scrollIntoViewIfNeeded(
   scrollContainer: HTMLElement | null,
   element: HTMLElement | null,
-  direction: TextDirection,
+  direction: 'ltr' | 'rtl',
   orientation: 'horizontal' | 'vertical' | 'both',
 ) {
   if (!scrollContainer || !element || !element.scrollTo) {
