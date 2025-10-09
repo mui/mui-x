@@ -5,7 +5,6 @@ import { ExportExcel } from './export';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { PivotPanelTrigger } from './pivotPanel/PivotPanelTrigger';
-import { isPivotingAvailable } from '../hooks/features/pivoting/utils';
 import { AiAssistantPanelTrigger } from './aiAssistantPanel';
 import { ChartsPanelTrigger } from './chartsPanel/ChartsPanelTrigger';
 
@@ -16,7 +15,7 @@ export function GridPremiumToolbar(props: GridToolbarProps) {
 
   const additionalItems = (
     <React.Fragment>
-      {isPivotingAvailable(rootProps) && (
+      {!rootProps.disablePivoting && (
         <PivotPanelTrigger
           render={(triggerProps, state) => (
             <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('toolbarPivot')}>
