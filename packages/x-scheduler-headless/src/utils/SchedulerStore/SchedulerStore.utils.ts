@@ -1,12 +1,5 @@
-import {
-  CalendarEvent,
-  CalendarEventId,
-  CalendarEventUpdatedProperties,
-  CalendarOccurrencePlaceholder,
-} from '../../models';
+import { CalendarOccurrencePlaceholder } from '../../models';
 import { Adapter } from '../../use-adapter/useAdapter.types';
-import { selectors } from './SchedulerStore.selectors';
-import { SchedulerState } from './SchedulerStore.types';
 
 /**
  * Determines if the occurrence placeholder has changed in a meaningful way that requires updating the store.
