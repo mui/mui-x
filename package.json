@@ -122,7 +122,6 @@
     "globby": "^14.1.0",
     "jsdom": "26.1.0",
     "lerna": "^9.0.0",
-    "lodash": "^4.17.21",
     "magic-string": "^0.30.19",
     "markdownlint-cli2": "^0.18.1",
     "moment": "catalog:",
