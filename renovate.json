@@ -7,11 +7,6 @@
   },
   "packageRules": [
     {
-      "matchDepTypes": ["devDependencies"],
-      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
-      "automerge": true
-    },
-    {
       "groupName": "D3",
       "matchPackageNames": ["d3-*", "@types/d3-*"]
     },
@@ -30,12 +25,7 @@
       "schedule": "* * 1 1,7 *"
     },
     {
-      "groupName": "Material UI",
-      "matchPackageNames": ["@mui/*"]
-    },
-    {
-      "groupName": "date-fns-v2",
-      "matchPackageNames": ["date-fns-v2"],
+      "matchDepNames": ["date-fns-v2"],
       "allowedVersions": "< 3.0.0"
     },
     {

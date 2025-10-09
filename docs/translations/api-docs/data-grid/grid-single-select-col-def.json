@@ -4,6 +4,10 @@
     "field": {
       "description": "The unique identifier of the column. Used to map with GridRowModel values."
     },
+    "getOptionLabel": {
+      "description": "Used to determine the label displayed for a given value option."
+    },
+    "getOptionValue": { "description": "Used to determine the value used for a value option." },
     "type": { "description": "The type of the column." },
     "aggregable": {
       "description": "If <code>true</code>, the cells of the column can be aggregated based."
@@ -13,6 +17,9 @@
       "description": "Limit the aggregation function usable on this column.<br />By default, the column will have all the aggregation functions that are compatible with its type."
     },
     "cellClassName": { "description": "Class name added to cells in this column." },
+    "chartable": {
+      "description": "If <code>false</code>, the column will not be available for charts integration."
+    },
     "colSpan": { "description": "Number of columns a cell should span." },
     "description": {
       "description": "The tooltip text shown when the column header name is truncated."
@@ -37,10 +44,6 @@
     "getApplyQuickFilterFn": {
       "description": "The callback that generates a filtering function for a given quick filter value.<br />This function can return <code>null</code> to skip filtering for this value and column."
     },
-    "getOptionLabel": {
-      "description": "Used to determine the label displayed for a given value option."
-    },
-    "getOptionValue": { "description": "Used to determine the value used for a value option." },
     "getSortComparator": {
       "description": "Provide an alternative comparator function for sorting.<br />Takes precedence over <code>sortComparator</code>."
     },
@@ -49,6 +52,9 @@
     },
     "groupingValueGetter": {
       "description": "Function that transforms a complex cell value into a key that be used for grouping the rows.<br />Not supported with the server-side row grouping. Use <code>dataSource.getGroupKey()</code> instead."
+    },
+    "groupingValueSetter": {
+      "description": "Function that takes a grouping value and updates the row data accordingly.<br />This is the inverse operation of <code>groupingValueGetter</code>."
     },
     "headerAlign": { "description": "Align column header content." },
     "headerClassName": { "description": "Class name added to the column header cell." },

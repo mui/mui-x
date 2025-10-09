@@ -9,6 +9,7 @@ import type {
   ScaleThreshold,
   ScaleTime,
   ScaleSymLog,
+  NumberValue,
 } from '@mui/x-charts-vendor/d3-scale';
 import { SxProps } from '@mui/system/styleFunctionSx';
 import { type MakeOptional, MakeRequired } from '@mui/x-internals/types';
@@ -21,7 +22,7 @@ import { ContinuousColorConfig, OrdinalColorConfig, PiecewiseColorConfig } from 
 export type AxisId = string | number;
 
 export type D3Scale<
-  Domain extends { toString(): string } = number | Date | string,
+  Domain extends { toString(): string } = { toString(): string },
   Range = number,
   Output = number,
 > =
@@ -39,6 +40,10 @@ export type D3ContinuousScale<Range = number, Output = number> =
   | ScalePower<Range, Output>
   | ScaleTime<Range, Output>
   | ScaleLinear<Range, Output>;
+
+export type D3OrdinalScale<Domain extends { toString(): string } = { toString(): string }> =
+  | ScaleBand<Domain>
+  | ScalePoint<Domain>;
 
 export interface ChartsAxisSlots {
   /**
@@ -87,11 +92,6 @@ export interface ChartsAxisProps extends TickParams {
    */
   disableTicks?: boolean;
   /**
-   * The fill color of the axis text.
-   * @default 'currentColor'
-   */
-  fill?: string;
-  /**
    * The style applied to ticks text.
    */
   tickLabelStyle?: ChartsTextProps['style'];
@@ -110,11 +110,6 @@ export interface ChartsAxisProps extends TickParams {
    * The label of the axis.
    */
   label?: string;
-  /**
-   * The stroke color of the axis line.
-   * @default 'currentColor'
-   */
-  stroke?: string;
   /**
    * The size of the ticks.
    * @default 6
@@ -271,7 +266,7 @@ export type AxisGroups = {
 export interface AxisScaleConfig {
   band: {
     scaleType: 'band';
-    scale: ScaleBand<number | Date | string>;
+    scale: ScaleBand<{ toString(): string }>;
     /**
      * The ratio between the space allocated for padding between two categories and the category width.
      * 0 means no gap, and 1 no data.
@@ -289,7 +284,7 @@ export interface AxisScaleConfig {
     Pick<TickParams, 'tickPlacement' | 'tickLabelPlacement'>;
   point: {
     scaleType: 'point';
-    scale: ScalePoint<number | Date | string>;
+    scale: ScalePoint<{ toString(): string }>;
     colorMap?: OrdinalColorConfig | ContinuousColorConfig | PiecewiseColorConfig;
   } & AxisGroups;
   log: {
@@ -433,6 +428,34 @@ export type AxisValueFormatterContext<S extends ScaleName = ScaleName> =
       tickNumber?: number;
     };
 
+type MinMaxConfig<S extends ScaleName = ScaleName> = S extends ContinuousScaleName
+  ? S extends 'utc' | 'time'
+    ? {
+        /**
+         * The minimal value of the domain.
+         * If not provided, it gets computed to display the entire chart data.
+         */
+        min?: NumberValue;
+        /**
+         * The maximal value of the domain.
+         * If not provided, it gets computed to display the entire chart data.
+         */
+        max?: NumberValue;
+      }
+    : {
+        /**
+         * The minimal value of the domain.
+         * If not provided, it gets computed to display the entire chart data.
+         */
+        min?: number;
+        /**
+         * The maximal value of the domain.
+         * If not provided, it gets computed to display the entire chart data.
+         */
+        max?: number;
+      }
+  : {};
+
 /**
  * Config that is shared between cartesian and polar axes.
  */
@@ -443,16 +466,6 @@ type CommonAxisConfig<S extends ScaleName = ScaleName, V = any> = {
    * The ID must be unique across all axes in this chart.
    */
   id: AxisId;
-  /**
-   * The minimal value of the domain.
-   * If not provided, it gets computed to display the entire chart data.
-   */
-  min?: number | Date;
-  /**
-   * The maximal value of the domain.
-   * If not provided, it gets computed to display the entire chart data.
-   */
-  max?: number | Date;
   /**
    * The data used by `'band'` and `'point'` scales.
    */
@@ -505,6 +518,7 @@ export type PolarAxisConfig<
    */
   offset?: number;
 } & CommonAxisConfig<S, V> &
+  MinMaxConfig<S> &
   Omit<Partial<AxisProps>, 'axisId'> &
   Partial<Omit<AxisScaleConfig[S], 'scale'>> &
   AxisConfigExtension;
@@ -525,6 +539,7 @@ export type AxisConfig<
    */
   offset?: number;
 } & CommonAxisConfig<S, V> &
+  MinMaxConfig<S> &
   Omit<Partial<AxisProps>, 'axisId'> &
   Partial<Omit<AxisScaleConfig[S], 'scale'>> &
   AxisSideConfig<AxisProps> &
@@ -587,6 +602,12 @@ export function isPointScaleConfig(
   scaleConfig: AxisConfig<ScaleName>,
 ): scaleConfig is AxisConfig<'point'> & { scaleType: 'point' } {
   return scaleConfig.scaleType === 'point';
+}
+
+export function isContinuousScaleConfig(
+  scaleConfig: AxisConfig<ScaleName>,
+): scaleConfig is AxisConfig<ContinuousScaleName> {
+  return scaleConfig.scaleType !== 'point' && scaleConfig.scaleType !== 'band';
 }
 
 export function isSymlogScaleConfig(

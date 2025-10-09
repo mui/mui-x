@@ -5,7 +5,6 @@ import composeClasses from '@mui/utils/composeClasses';
 import {
   GridRenderCellParams,
   GridRowEventLookup,
-  gridRowMaximumTreeDepthSelector,
   gridSortModelSelector,
   useGridApiContext,
   useGridSelector,
@@ -44,21 +43,22 @@ function GridRowReorderCell(params: GridRenderCellParams) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
-  const treeDepth = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector);
   const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
-  // eslint-disable-next-line no-underscore-dangle
-  const cellValue = params.row.__reorder__ || params.id;
+  const cellValue =
+    // eslint-disable-next-line no-underscore-dangle
+    params.row.__reorder__ ||
+    (params.rowNode.type === 'group' ? (params.rowNode.groupingKey ?? params.id) : params.id);
   const cellRef = React.useRef<HTMLDivElement>(null);
   const listenerNodeRef = React.useRef<HTMLDivElement>(null);
 
-  // TODO: remove sortModel and treeDepth checks once row reorder is compatible
+  // TODO: remove sortModel and treeData checks once row reorder is compatible
   const isDraggable = React.useMemo(
     () =>
       !!rootProps.rowReordering &&
       !sortModel.length &&
-      treeDepth === 1 &&
+      !rootProps.treeData &&
       Object.keys(editRowsState).length === 0,
-    [rootProps.rowReordering, sortModel, treeDepth, editRowsState],
+    [rootProps.rowReordering, sortModel, rootProps.treeData, editRowsState],
   );
 
   const ownerState = { isDraggable, classes: rootProps.classes };

@@ -33,3 +33,8 @@ export const selectorChartsInteractionItemIsDefined = createSelector(
   [selectorChartsInteractionItem],
   (item) => item !== null,
 );
+
+export const selectorChartsLastInteraction = createSelector(
+  [selectInteraction],
+  (interaction) => interaction?.lastUpdate,
+);

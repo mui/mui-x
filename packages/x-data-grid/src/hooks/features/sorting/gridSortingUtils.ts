@@ -53,6 +53,10 @@ export const mergeStateWithSortModel =
 const isDesc = (direction: GridSortDirection) => direction === 'desc';
 
 /**
+ * @name sortValueGetter
+ * @param {GridRowId} id The id of the row.
+ * @param {string} field The field to sort by.
+ *
  * Transform an item of the sorting model into a method comparing two rows.
  * @param {GridSortItem} sortItem The sort item we want to apply.
  * @param {RefObject<GridApiCommunity>} apiRef The API of the grid.

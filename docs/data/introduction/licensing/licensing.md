@@ -48,8 +48,7 @@ The Premium version is available under a commercial license—visit [the Pricing
 Exclusive features are marked with the <span class="plan-premium" aria-label="MUI X Premium plan icon"></span> icon throughout the documentation.
 
 - [`@mui/x-data-grid-premium`](https://www.npmjs.com/package/@mui/x-data-grid-premium)
-  <!-- TODO: CHARTS-PREMIUM: uncomment when ready -->
-  <!-- - [`@mui/x-charts-premium`](https://www.npmjs.com/package/@mui/x-charts-premium) -->
+- [`@mui/x-charts-premium`](https://www.npmjs.com/package/@mui/x-charts-premium)
 
 ## Upgrading
 

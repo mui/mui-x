@@ -67,6 +67,7 @@
       "type": { "name": "bool" },
       "default": "false (`!props.checkboxSelection` for MIT Data Grid)"
     },
+    "disableRowSelectionExcludeModel": { "type": { "name": "bool" }, "default": "false" },
     "disableRowSelectionOnClick": { "type": { "name": "bool" }, "default": "false" },
     "disableVirtualization": { "type": { "name": "bool" }, "default": "false" },
     "editMode": {
@@ -533,11 +534,22 @@
       "type": { "name": "shape", "description": "{ page: number, pageSize: number }" }
     },
     "pinnedColumns": { "type": { "name": "object" } },
+    "pinnedColumnsSectionSeparator": {
+      "type": {
+        "name": "enum",
+        "description": "'border-and-shadow'<br>&#124;&nbsp;'border'<br>&#124;&nbsp;'shadow'"
+      },
+      "default": "'border-and-shadow'"
+    },
     "pinnedRows": {
       "type": {
         "name": "shape",
         "description": "{ bottom?: Array&lt;object&gt;, top?: Array&lt;object&gt; }"
       }
+    },
+    "pinnedRowsSectionSeparator": {
+      "type": { "name": "enum", "description": "'border-and-shadow'<br>&#124;&nbsp;'border'" },
+      "default": "'border-and-shadow'"
     },
     "processRowUpdate": {
       "type": { "name": "func" },
@@ -840,6 +852,12 @@
       "class": null
     },
     {
+      "name": "baseToggleButton",
+      "description": "The custom ToggleButton component used in the grid.",
+      "default": "ToggleButton",
+      "class": null
+    },
+    {
       "name": "baseTooltip",
       "description": "The custom Tooltip component used in the grid.",
       "default": "Tooltip",
@@ -873,6 +891,12 @@
       "name": "baseSwitch",
       "description": "The custom Switch component used in the grid.",
       "default": "Switch",
+      "class": null
+    },
+    {
+      "name": "baseTabs",
+      "description": "The custom Tabs component used in the grid.",
+      "default": "Tabs",
       "class": null
     },
     {

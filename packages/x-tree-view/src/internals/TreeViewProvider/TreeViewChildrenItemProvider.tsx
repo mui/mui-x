@@ -5,7 +5,7 @@ import { useTreeViewContext } from './TreeViewContext';
 import { escapeOperandAttributeSelector } from '../utils/utils';
 import type { UseTreeViewJSXItemsSignature } from '../plugins/useTreeViewJSXItems';
 import type { UseTreeViewItemsSignature } from '../plugins/useTreeViewItems';
-import { selectorItemOrderedChildrenIds } from '../plugins/useTreeViewItems/useTreeViewItems.selectors';
+import { itemsSelectors } from '../plugins/useTreeViewItems/useTreeViewItems.selectors';
 
 export const TreeViewChildrenItemContext =
   React.createContext<TreeViewChildrenItemContextValue | null>(null);
@@ -28,7 +28,8 @@ export function TreeViewChildrenItemProvider(props: TreeViewChildrenItemProvider
       return;
     }
 
-    const previousChildrenIds = selectorItemOrderedChildrenIds(store.value, itemId ?? null) ?? [];
+    const previousChildrenIds =
+      itemsSelectors.itemOrderedChildrenIds(store.state, itemId ?? null) ?? [];
     const escapedIdAttr = escapeOperandAttributeSelector(idAttribute ?? rootRef.current.id);
 
     // If collapsed, skip childrenIds update prevents clearing the parent's indeterminate state after opening a sibling.

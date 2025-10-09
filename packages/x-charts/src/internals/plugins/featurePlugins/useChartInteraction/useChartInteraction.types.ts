@@ -1,7 +1,13 @@
 import { ChartPluginSignature } from '../../models';
-import { ChartItemIdentifier, ChartSeriesType } from '../../../../models/seriesType/config';
+import {
+  ChartItemIdentifier,
+  ChartSeriesType,
+  type ChartItemIdentifierWithData,
+} from '../../../../models/seriesType/config';
 
 export type Coordinate = { x: number; y: number };
+
+export type InteractionUpdateSource = 'pointer' | 'keyboard';
 
 export interface UseChartInteractionInstance {
   /**
@@ -12,7 +18,7 @@ export interface UseChartInteractionInstance {
    * Setter for the item the user is interacting with.
    * @param {ChartItemIdentifier} newItem The identifier of the item.
    */
-  setItemInteraction: (newItem: ChartItemIdentifier<ChartSeriesType>) => void;
+  setItemInteraction: (newItem: ChartItemIdentifierWithData<ChartSeriesType>) => void;
   /**
    * Remove item interaction if the current if the provided item is still the one interacting.
    * @param {ChartItemIdentifier} itemToRemove The identifier of the item.
@@ -30,11 +36,16 @@ export interface UseChartInteractionState {
     /**
      * The item currently interacting.
      */
-    item: null | ChartItemIdentifier<ChartSeriesType>;
+    item: null | ChartItemIdentifierWithData<ChartSeriesType>;
     /**
      * The x/y SVG coordinate of the "main" pointer
      */
     pointer: Coordinate | null;
+    /**
+     * The last interaction highlight update.
+     * Used to decide if highlight should be based on pointer position or keyboard navigation.
+     */
+    lastUpdate: InteractionUpdateSource;
   };
 }
 

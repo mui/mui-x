@@ -37,7 +37,7 @@ import { HeatmapPlot } from './HeatmapPlot';
 import { seriesConfig as heatmapSeriesConfig } from './seriesConfig';
 import { HeatmapTooltip, HeatmapTooltipProps } from './HeatmapTooltip';
 import { HeatmapItemSlotProps, HeatmapItemSlots } from './HeatmapItem';
-import { HEATMAP_PLUGINS, HeatmapPluginsSignatures } from './Heatmap.plugins';
+import { HEATMAP_PLUGINS, HeatmapPluginSignatures } from './Heatmap.plugins';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
 import {
@@ -75,7 +75,7 @@ export interface HeatmapSlotProps
 export type HeatmapSeries = MakeOptional<HeatmapSeriesType, 'type'>;
 export interface HeatmapProps
   extends Omit<
-      ChartContainerProProps<'heatmap', HeatmapPluginsSignatures>,
+      ChartContainerProProps<'heatmap', HeatmapPluginSignatures>,
       | 'series'
       | 'plugins'
       | 'xAxis'
@@ -233,12 +233,13 @@ const Heatmap = React.forwardRef(function Heatmap(
     sx,
     legendPosition: props.slotProps?.legend?.position,
     legendDirection: props.slotProps?.legend?.direction,
+    hideLegend,
   };
   const Tooltip = slots?.tooltip ?? HeatmapTooltip;
   const Toolbar = slots?.toolbar ?? ChartsToolbarPro;
 
   return (
-    <ChartDataProviderPro<'heatmap', HeatmapPluginsSignatures>
+    <ChartDataProviderPro<'heatmap', HeatmapPluginSignatures>
       apiRef={apiRef}
       seriesConfig={seriesConfig}
       series={series.map((s) => ({
@@ -454,7 +455,6 @@ Heatmap.propTypes = {
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-      fill: PropTypes.string,
       groups: PropTypes.arrayOf(
         PropTypes.shape({
           getValue: PropTypes.func.isRequired,
@@ -468,15 +468,12 @@ Heatmap.propTypes = {
       ignoreTooltip: PropTypes.bool,
       label: PropTypes.string,
       labelStyle: PropTypes.object,
-      max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       offset: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'none', 'top']),
       reverse: PropTypes.bool,
       scaleType: PropTypes.oneOf(['band']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
-      stroke: PropTypes.string,
       sx: PropTypes.oneOfType([
         PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
         PropTypes.func,
@@ -542,7 +539,6 @@ Heatmap.propTypes = {
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-      fill: PropTypes.string,
       groups: PropTypes.arrayOf(
         PropTypes.shape({
           getValue: PropTypes.func.isRequired,
@@ -555,15 +551,12 @@ Heatmap.propTypes = {
       ignoreTooltip: PropTypes.bool,
       label: PropTypes.string,
       labelStyle: PropTypes.object,
-      max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       offset: PropTypes.number,
       position: PropTypes.oneOf(['left', 'none', 'right']),
       reverse: PropTypes.bool,
       scaleType: PropTypes.oneOf(['band']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
-      stroke: PropTypes.string,
       sx: PropTypes.oneOfType([
         PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
         PropTypes.func,

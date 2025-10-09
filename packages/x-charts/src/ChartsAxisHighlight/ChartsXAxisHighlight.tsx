@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { getValueToPositionMapper } from '../hooks/useScale';
-import { isBandScale } from '../internals/isBandScale';
+import { isOrdinalScale } from '../internals/scaleGuards';
 import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
 import {
@@ -39,10 +39,10 @@ export default function ChartsXHighlight(props: {
     const xScale = xAxis.scale;
     const getXPosition = getValueToPositionMapper(xScale);
 
-    const isBandScaleX = type === 'band' && value !== null && isBandScale(xScale);
+    const isXScaleOrdinal = type === 'band' && value !== null && isOrdinalScale(xScale);
 
     if (process.env.NODE_ENV !== 'production') {
-      const isError = isBandScaleX && xScale(value) === undefined;
+      const isError = isXScaleOrdinal && xScale(value) === undefined;
 
       if (isError) {
         console.error(
@@ -57,7 +57,7 @@ export default function ChartsXHighlight(props: {
 
     return (
       <React.Fragment key={`${axisId}-${value}`}>
-        {isBandScaleX && xScale(value) !== undefined && (
+        {isXScaleOrdinal && xScale(value) !== undefined && (
           <ChartsAxisHighlightPath
             d={`M ${xScale(value)! - (xScale.step() - xScale.bandwidth()) / 2} ${
               top

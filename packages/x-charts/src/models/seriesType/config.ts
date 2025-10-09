@@ -31,6 +31,7 @@ export interface ChartsSeriesConfig {
      */
     seriesProp: BarSeriesType;
     itemIdentifier: BarItemIdentifier;
+    itemIdentifierWithData: BarItemIdentifier;
     valueType: number | null;
     canBeStacked: true;
     axisType: 'cartesian';
@@ -40,6 +41,7 @@ export interface ChartsSeriesConfig {
     series: DefaultizedLineSeriesType;
     seriesProp: LineSeriesType;
     itemIdentifier: LineItemIdentifier;
+    itemIdentifierWithData: LineItemIdentifier;
     valueType: number | null;
     canBeStacked: true;
     axisType: 'cartesian';
@@ -50,6 +52,7 @@ export interface ChartsSeriesConfig {
     seriesProp: ScatterSeriesType;
     valueType: ScatterValueType;
     itemIdentifier: ScatterItemIdentifier;
+    itemIdentifierWithData: ScatterItemIdentifier;
     axisType: 'cartesian';
   };
   pie: {
@@ -59,6 +62,7 @@ export interface ChartsSeriesConfig {
     series: DefaultizedPieSeriesType;
     seriesProp: PieSeriesType<MakeOptional<PieValueType, 'id'>>;
     itemIdentifier: PieItemIdentifier;
+    itemIdentifierWithData: PieItemIdentifier;
     valueType: DefaultizedPieValueType;
   };
   radar: {
@@ -66,6 +70,7 @@ export interface ChartsSeriesConfig {
     series: DefaultizedRadarSeriesType;
     seriesProp: RadarSeriesType;
     itemIdentifier: RadarItemIdentifier;
+    itemIdentifierWithData: RadarItemIdentifier;
     valueType: number;
     axisType: 'polar';
   };
@@ -106,6 +111,9 @@ export type ChartSeriesDefaultized<T extends ChartSeriesType> = ChartsSeriesConf
 
 export type ChartItemIdentifier<T extends ChartSeriesType> =
   ChartsSeriesConfig[T]['itemIdentifier'];
+
+export type ChartItemIdentifierWithData<T extends ChartSeriesType> =
+  ChartsSeriesConfig[T]['itemIdentifierWithData'];
 
 export type DatasetElementType<T> = {
   [key: string]: Readonly<T>;

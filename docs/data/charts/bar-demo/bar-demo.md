@@ -1,12 +1,12 @@
 ---
-title: Charts - Bar demonstration
+title: Charts - Bar demos
 productId: x-charts
 components: BarChart, BarElement, BarPlot
 ---
 
-# Charts - Bar demonstration
+# Charts - Bar demos
 
-<p class="description">This page groups demonstration using bar charts.</p>
+<p class="description">This page groups demos using bar charts.</p>
 
 ## TinyBarChart
 

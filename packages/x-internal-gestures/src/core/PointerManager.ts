@@ -124,10 +124,16 @@ export class PointerManager {
     new Set();
 
   public constructor(options: PointerManagerOptions) {
-    this.root = (options.root ?? document.getRootNode({ composed: true })) as HTMLElement;
+    this.root =
+      // User provided root element
+      (options.root as HTMLElement) ??
+      // Fallback to document root or body, this fixes shadow DOM scenarios
+      (document.getRootNode({ composed: true }) as HTMLElement) ??
+      // Fallback to document body, for some testing environments
+      document.body;
     this.touchAction = options.touchAction || 'auto';
     this.passive = options.passive ?? false;
-    this.preventEventInterruption = options.preventEventInterruption ?? false;
+    this.preventEventInterruption = options.preventEventInterruption ?? true;
 
     this.setupEventListeners();
   }
@@ -290,7 +296,6 @@ export class PointerManager {
    * @param event - The original browser pointer event
    * @returns A new PointerData object representing this pointer
    */
-  // eslint-disable-next-line class-methods-use-this
   private createPointerData(event: PointerEvent): PointerData {
     return {
       pointerId: event.pointerId,

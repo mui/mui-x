@@ -25,7 +25,7 @@ const excludeLabels = ['dependencies', 'scope: scheduler'];
  * @type {string[]}
  * Tags found in title to exclude the commit from the changelog
  */
-const excludeTitleTags = ['[charts-premium]'];
+const excludeTitleTags = [];
 
 /**
  * @type {string}
@@ -109,14 +109,30 @@ function parseTags(commitMessage) {
 
 /**
  * Find the latest tagged version from GitHub
+ * @param {number} major - The major version to find the latest tagged version for
  * @returns {Promise<string>} The latest tagged version
  */
-async function findLatestTaggedVersion() {
-  // fetch tags from the GitHub API and return the last one
-  const { data: tags } = await octokit.rest.repos.listTags({
+async function findLatestTaggedVersionForMajor(major) {
+  // Fetch all tags from the GitHub API (pagination > 100) and return the last one after optional filtering
+  const tags = await octokit.paginate(octokit.rest.repos.listTags, {
     owner: ORG,
     repo: REPO,
+    per_page: 100,
   });
+
+  if (!tags || tags.length === 0) {
+    throw new Error('No tags found in repository');
+  }
+
+  if (major != null) {
+    const majorStr = String(major);
+    const filteredTags = tags.filter((tag) => tag.name && tag.name.startsWith(`v${majorStr}.`));
+    if (filteredTags.length > 0) {
+      // GitHub returns tags in reverse chronological order, so first is the latest
+      return filteredTags[0].name.trim();
+    }
+  }
+
   return tags[0].name.trim();
 }
 
@@ -149,24 +165,20 @@ function resolvePackagesByLabels(labels) {
 /**
  * Generates a changelog for MUI X packages
  * @param {object} options - The options for generating the changelog
- * @param {import('@octokit/rest').Octokit} options.octokit - The Octokit instance to use for GitHub API calls
  * @param {string} [options.lastRelease] - The release to compare against
  * @param {string} options.release - The release to generate the changelog for
  * @param {string} [options.nextVersion] - The version expected to be released
  * @param {boolean} [options.returnEntry] - Whether to return the changelog as a string
  * @returns {Promise<string|null>} The changelog string or null
  */
-export async function generateChangelog({
-  octokit: octokitInput,
+async function generateChangelog({
   lastRelease: lastReleaseInput,
   release = 'master',
   nextVersion,
   returnEntry = false,
 }) {
-  octokit = octokitInput;
-
   // fetch the last tag and chose the one to use for the release
-  const latestTaggedVersion = await findLatestTaggedVersion();
+  const latestTaggedVersion = await findLatestTaggedVersionForMajor();
   const lastRelease = lastReleaseInput !== undefined ? lastReleaseInput : latestTaggedVersion;
   if (lastRelease !== latestTaggedVersion) {
     console.warn(
@@ -276,6 +288,7 @@ export async function generateChangelog({
   const pickersProCommits = [];
   const chartsCommits = [];
   const chartsProCommits = [];
+  const chartsPremiumCommits = [];
   const treeViewCommits = [];
   const treeViewProCommits = [];
   const schedulerCommits = [];
@@ -315,6 +328,9 @@ export async function generateChangelog({
         case 'TimeRangePicker':
           pickersProCommits.push(commitItem);
           break;
+        case 'charts-premium':
+          chartsPremiumCommits.push(commitItem);
+          break;
         case 'charts-pro':
           chartsProCommits.push(commitItem);
           break;
@@ -340,8 +356,10 @@ export async function generateChangelog({
         case 'docs':
           docsCommits.push(commitItem);
           break;
-        case 'core': // Legacy
         case 'internal':
+        case 'support-infra':
+        case 'code-infra':
+        case 'docs-infra':
           internalCommits.push(commitItem);
           break;
         case 'codemod':
@@ -402,10 +420,8 @@ export async function generateChangelog({
       .join('\n');
   };
 
-  const proIcon =
-    '[![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")';
-  const premiumIcon =
-    '[![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link "Premium plan")';
+  const proIcon = `[![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')`;
+  const premiumIcon = `[![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')`;
 
   /**
    * Generates a changelog section for a product
@@ -561,6 +577,7 @@ ${logProductSection({
   packageName: 'x-charts',
   baseCommits: chartsCommits,
   proCommits: chartsProCommits,
+  premiumCommits: chartsPremiumCommits,
   changelogKey: 'charts',
 })}
 
@@ -611,4 +628,17 @@ ${logOtherSection({
     }
     return null;
   }
+}
+
+/**
+ * Used to pass in the octokit instance from outside the module and return ready to use functions
+ * @param {import('@octokit/rest').Octokit} octokitInstance - The Octokit instance to use for GitHub API calls
+ * @returns {{generateChangelog: ((function({octokit: import('@octokit/rest').Octokit, lastRelease?: string, release: string, nextVersion?: string, returnEntry?: boolean}): Promise<string|null>)|*), findLatestTaggedVersionForMajor: (function(): Promise<string>)}}
+ */
+export function getChangelogUtils(octokitInstance) {
+  octokit = octokitInstance;
+  return {
+    generateChangelog,
+    findLatestTaggedVersionForMajor,
+  };
 }
