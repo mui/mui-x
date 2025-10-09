@@ -35,6 +35,7 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
     <CalendarGrid.TimeColumn
       start={start}
       end={end}
+      addPropertiesToDroppedEvent={addPropertiesToDroppedEvent}
       className="DayTimeGridColumn"
       data-weekend={isWeekend(adapter, day.value) ? '' : undefined}
       data-current={isToday ? '' : undefined}
@@ -94,12 +95,10 @@ function ColumnInteractiveLayer({
   const handleDoubleClick = (event: React.MouseEvent<HTMLDivElement>) => {
     const draftRange = computeInitialRange(event);
     store.setOccurrencePlaceholder({
-      eventId: null,
-      occurrenceKey: 'create-placeholder',
+      type: 'creation',
       surfaceType: 'time-grid',
       start: draftRange.start,
       end: draftRange.end,
-      originalStart: null,
     });
   };
 
@@ -169,4 +168,13 @@ interface TimeGridColumnProps {
   isToday: boolean;
   index: number;
   showCurrentTimeIndicator: boolean;
+}
+
+/**
+ * Makes sure any event dropped in the time grid column is turned into an non all-day event.
+ */
+function addPropertiesToDroppedEvent() {
+  return {
+    allDay: false,
+  };
 }

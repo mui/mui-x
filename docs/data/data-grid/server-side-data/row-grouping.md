@@ -88,7 +88,7 @@ Use `dataSource.getGroupKey()` to compute the group key for the row instead.
 
 ## Error handling
 
-If an error occurs during a `getRows()` call, the Data Grid displays an error message in the row group cell.
+If an error occurs during a `getRows()` call, the Data Grid displays an error indicator in the row group cell.
 `onDataSourceError()` is also triggered with an error containing the params described in [Server-side data overview—Error handling](/x/react-data-grid/server-side-data/#error-handling).
 
 The demo below renders a custom Snackbar component to display an error message when the requests fail, which you can simulate using the checkbox and the **Refetch rows** button at the top.

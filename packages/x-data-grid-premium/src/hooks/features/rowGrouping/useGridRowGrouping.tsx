@@ -65,7 +65,6 @@ export const useGridRowGrouping = (
     | 'initialState'
     | 'rowGroupingModel'
     | 'onRowGroupingModelChange'
-    | 'defaultGroupingExpansionDepth'
     | 'isGroupExpandedByDefault'
     | 'rowGroupingColumnMode'
     | 'disableRowGrouping'
