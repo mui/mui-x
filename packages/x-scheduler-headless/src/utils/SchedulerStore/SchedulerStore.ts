@@ -196,14 +196,10 @@ export class SchedulerStore<
    * Adds, updates and / or deletes events in the calendar.
    */
   protected updateEvents(parameters: UpdateEventsParameters) {
-    const { deleted: deletedParam = [], updated: updatedParam = [], created = [] } = parameters;
+    const { deleted: deletedParam, updated: updatedParam = [], created = [] } = parameters;
 
-    const updated = new Map<CalendarEventId, CalendarEventUpdatedProperties>(
-      updatedParam.map((ev) => [ev.id, ev]),
-    );
-
-    const deleted = new Set<CalendarEventId>(deletedParam);
-
+    const updated = new Map(updatedParam.map((ev) => [ev.id, ev]));
+    const deleted = new Set(deletedParam);
     const originalEvents = selectors.events(this.state);
     const newEvents: CalendarEvent[] = [];
 
@@ -221,6 +217,8 @@ export class SchedulerStore<
 
         newEvents.push(event);
       }
+    } else {
+      newEvents.push(...originalEvents);
     }
 
     for (const createdEvent of created) {
