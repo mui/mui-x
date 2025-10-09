@@ -140,6 +140,7 @@ export const AgendaEvent = React.forwardRef(function AgendaEvent(
         );
     }
   }, [
+    adapter,
     variant,
     occurrence.title,
     occurrence?.allDay,

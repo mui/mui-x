@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { X } from 'lucide-react';
 import { Popover } from '@base-ui-components/react';
-import { useTranslations } from '../../utils/TranslationsContext';
 import { CalendarEventOccurrence } from '@mui/x-scheduler-headless/models';
+import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 import { MoreEventsPopoverProps, MoreEventsPopoverProviderProps } from './MoreEventsPopover.types';
-import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
+import { useTranslations } from '../../utils/TranslationsContext';
 import { AgendaEvent } from '../event/agenda-event/AgendaEvent';
 import { createPopoverComponents } from '../popover';
 import { ArrowSvg } from './arrow/ArrowSvg';
