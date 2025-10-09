@@ -47,8 +47,9 @@ export function findClosestPoints(
             return Infinity;
           }
 
-          const vmrx = maxRadius * Math.cos(Math.atan(dy / dx));
-          const vmry = maxRadius * Math.sin(Math.atan(dy / dx));
+          const ratio = Math.atan(dy / dx);
+          const vmrx = maxRadius * Math.cos(ratio);
+          const vmry = maxRadius * Math.sin(ratio);
 
           return vmrx * vmrx + vmry * vmry;
         };
