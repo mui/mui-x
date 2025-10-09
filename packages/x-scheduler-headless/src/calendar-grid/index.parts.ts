@@ -3,9 +3,6 @@ export { CalendarGridRoot as Root } from './root/CalendarGridRoot';
 export { CalendarGridHeaderRow as HeaderRow } from './header-row/CalendarGridHeaderRow';
 export { CalendarGridHeaderCell as HeaderCell } from './header-cell/CalendarGridHeaderCell';
 
-export { CalendarGridHeaderRow as HeaderRow } from './header-row/CalendarGridHeaderRow';
-export { CalendarGridHeaderCell as HeaderCell } from './header-cell/CalendarGridHeaderCell';
-
 export { CalendarGridDayRow as DayRow } from './day-row/CalendarGridDayRow';
 export { CalendarGridDayCell as DayCell } from './day-cell/CalendarGridDayCell';
 export { CalendarGridDayEvent as DayEvent } from './day-event/CalendarGridDayEvent';
