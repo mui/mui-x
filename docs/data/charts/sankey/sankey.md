@@ -147,11 +147,11 @@ The highlighting behavior is configured separately for nodes and links through t
 
 Configure node highlighting behavior using `nodeOptions.highlight` and `nodeOptions.fade`:
 
-- `nodeOptions.highlight`: Controls what gets highlighted when hovering over a node
-  - `'nodes'`: Highlight only the hovered node
-  - `'links'`: Highlight all links connected to the hovered node
-  - `'incoming'`: Highlight only incoming links to the hovered node
-  - `'outgoing'`: Highlight only outgoing links from the hovered node
+- `nodeOptions.highlight`: Controls what gets highlighted when selecting a node
+  - `'nodes'`: Highlight only the selected node
+  - `'links'`: Highlight all links connected to the selected node
+  - `'incoming'`: Highlight only incoming links to the selected node
+  - `'outgoing'`: Highlight only outgoing links from the selected node
   - `'none'`: Disable node highlighting
 - `nodeOptions.fade`: Controls the fade effect
   - `'global'`: Fade all non-highlighted items when a node is highlighted
@@ -161,11 +161,11 @@ Configure node highlighting behavior using `nodeOptions.highlight` and `nodeOpti
 
 Configure link highlighting behavior using `linkOptions.highlight` and `linkOptions.fade`:
 
-- `linkOptions.highlight`: Controls what gets highlighted when hovering over a link
-  - `'links'`: Highlight only the hovered link
-  - `'nodes'`: Highlight both source and target nodes of the hovered link
-  - `'source'`: Highlight only the source node of the hovered link
-  - `'target'`: Highlight only the target node of the hovered link
+- `linkOptions.highlight`: Controls what gets highlighted when selecting a link
+  - `'links'`: Highlight only the selected link
+  - `'nodes'`: Highlight both source and target nodes of the selected link
+  - `'source'`: Highlight only the source node of the selected link
+  - `'target'`: Highlight only the target node of the selected link
   - `'none'`: Disable link highlighting
 - `linkOptions.fade`: Controls the fade effect
   - `'global'`: Fade all non-highlighted items when a link is highlighted

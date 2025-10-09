@@ -75,8 +75,8 @@ export const selectorSankeyHighlightedItem = createSelector(
 /**
  * Determines if a specific node should be highlighted.
  * A node is highlighted if:
- * - It's the hovered node (unless highlight mode is 'none')
- * - It's connected to a hovered link (based on linkOptions.highlight)
+ * - It's the highlighted node (unless highlight mode is 'none')
+ * - It's connected to a highlighted link (based on linkOptions.highlight)
  */
 export const selectorIsNodeHighlighted = createSelector(
   [
@@ -120,8 +120,8 @@ export const selectorIsNodeHighlighted = createSelector(
 /**
  * Selector that determines if a specific link should be highlighted.
  * A link is highlighted if:
- * - It's the hovered link (unless highlight mode is 'none')
- * - It's connected to a hovered node (based on nodeOptions.highlight)
+ * - It's the highlighted link (unless highlight mode is 'none')
+ * - It's connected to a highlighted node (based on nodeOptions.highlight)
  */
 export const selectorIsLinkHighlighted = createSelector(
   [
@@ -148,15 +148,15 @@ export const selectorIsLinkHighlighted = createSelector(
         return false;
       }
 
-      const hoveredNodeId = highlightedItem.nodeId;
+      const highlightedNodeId = highlightedItem.nodeId;
 
       switch (nodeHighlight) {
         case 'links':
-          return link.source.id === hoveredNodeId || link.target.id === hoveredNodeId;
+          return link.source.id === highlightedNodeId || link.target.id === highlightedNodeId;
         case 'incoming':
-          return link.target.id === hoveredNodeId;
+          return link.target.id === highlightedNodeId;
         case 'outgoing':
-          return link.source.id === hoveredNodeId;
+          return link.source.id === highlightedNodeId;
         default:
           return false;
       }
@@ -171,7 +171,7 @@ export const selectorIsLinkHighlighted = createSelector(
  * An item is faded if:
  * - There's a highlighted item
  * - This item is not highlighted
- * - The fade mode is 'global' for the hovered element type
+ * - The fade mode is 'global' for the highlighted element type
  */
 export const selectorIsSankeyItemFaded = createSelector(
   [
