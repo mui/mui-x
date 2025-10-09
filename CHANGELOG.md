@@ -9,7 +9,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Oct 9, 2025_
 
-We'd like to extend a big thank you to the 13 contributors who made this release possible. Here are some highlights ✨:
+We'd like to extend a big thank you to the 14 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 The [Chart zoom now supports the `pressAndDrag` gesture](https://mui.com/x/react-charts/zoom-and-pan/#zoom-interactions-configuration). Pan by pressing and dragging.
 - 🔄 [Server-side pivoting](https://mui.com/x/react-data-grid/server-side-data/pivoting/) support for the Data Grid
@@ -20,7 +20,7 @@ Special thanks go out to the community members for their valuable contributions:
 @djpremier, @Utkarsh-0304
 
 The following are all team members who have contributed to this release:
-@alexfauquette, @bernardobelchior, @flaviendelangle, @hasdfa, @Janpot, @JCQuintas, @prakhargupta1, @rita-codes, @noraleonte, @brijeshb42, @arminmeh
+@alexfauquette, @bernardobelchior, @flaviendelangle, @hasdfa, @Janpot, @JCQuintas, @prakhargupta1, @rita-codes, @noraleonte, @brijeshb42, @arminmeh, @michelengelen
 
 ### Data Grid
 
@@ -43,6 +43,7 @@ Same changes as in `@mui/x-data-grid-pro@8.14.0`, plus:
 #### `@mui/x-date-pickers@8.14.0`
 
 - [pickers] Fixed the extra element for the disabled date picker (#19387) @Utkarsh-0304
+- [pickers] Fix input `autoCapitalize` value for Firefox compatibility (#19285) @michelengelen
 - [l10n] Improve Brazilian Portuguese (pt-BR) locale (#19658) @djpremier
 
 #### `@mui/x-date-pickers-pro@8.14.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
