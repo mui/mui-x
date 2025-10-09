@@ -1611,7 +1611,7 @@ importers:
         specifier: 'catalog:'
         version: 7.28.4
       '@base-ui-components/react':
-        specifier: ^1.0.0-beta.3
+        specifier: ^1.0.0-beta.4
         version: 1.0.0-beta.4(@types/react@19.2.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@base-ui-components/utils':
         specifier: ^0.1.2
@@ -1673,7 +1673,7 @@ importers:
         specifier: 'catalog:'
         version: 7.28.4
       '@base-ui-components/react':
-        specifier: ^1.0.0-beta.3
+        specifier: ^1.0.0-beta.4
         version: 1.0.0-beta.4(@types/react@19.2.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@base-ui-components/utils':
         specifier: ^0.1.1
