@@ -57,7 +57,7 @@ export class SchedulerStore<
 
   private initialParameters: Parameters | null = null;
 
-  private instanceName: string;
+  public instanceName: string;
 
   private mapper: SchedulerParametersToStateMapper<State, Parameters>;
 
