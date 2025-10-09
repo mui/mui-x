@@ -49,6 +49,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
   const resources = useStore(store, selectors.resources);
   const color = useStore(store, selectors.eventColor, occurrence.id);
   const rawPlaceholder = useStore(store, selectors.occurrencePlaceholder);
+  const recurrencePresets = useStore(store, selectors.recurrencePresets, occurrence.start);
 
   const fmtDate = (d: SchedulerValidDate) => adapter.formatByString(d, 'yyyy-MM-dd');
   const fmtTime = (d: SchedulerValidDate) => adapter.formatByString(d, 'HH:mm');
@@ -118,10 +119,6 @@ export const EventPopover = React.forwardRef(function EventPopover(
     pushPlaceholder(when, checked);
   };
 
-  const recurrencePresets = React.useMemo(
-    () => store.buildRecurrencePresets(occurrence.start),
-    [store, occurrence.start],
-  );
   const weekday = adapter.format(occurrence.start, 'weekday');
   const normalDate = adapter.format(occurrence.start, 'normalDate');
 

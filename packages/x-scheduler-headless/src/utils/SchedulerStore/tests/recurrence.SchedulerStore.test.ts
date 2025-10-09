@@ -2,16 +2,24 @@ import { adapter } from 'test/utils/scheduler';
 import { RRuleSpec } from '@mui/x-scheduler-headless/models';
 import { storeClasses } from './utils';
 import { getByDayMaps } from '../../recurrence-utils';
+import { selectors } from '../SchedulerStore.selectors';
+import { SchedulerState as State } from '../SchedulerStore.types';
 
 const DEFAULT_PARAMS = { events: [] };
 
+const baseState = (overrides: Partial<State> = {}) =>
+  ({
+    adapter,
+    ...overrides,
+  }) as State;
+
 storeClasses.forEach((storeClass) => {
-  describe(`Date - ${storeClass.name}`, () => {
-    describe('Method: buildRecurrencePresets', () => {
+  describe(`Recurrence - ${storeClass.name}`, () => {
+    describe('Selector: recurrencePresets', () => {
       it('returns daily, weekly, monthly and yearly presets', () => {
-        const store = new storeClass.Value({ ...DEFAULT_PARAMS }, adapter);
+        const state = baseState();
         const start = adapter.date('2025-08-05T09:00:00Z'); // Tuesday
-        const presets = store.buildRecurrencePresets(start);
+        const presets = selectors.recurrencePresets(state, start);
         const { numToByDay } = getByDayMaps(adapter);
 
         expect(presets.daily).to.deep.equal({
@@ -36,9 +44,10 @@ storeClasses.forEach((storeClass) => {
     });
 
     describe('Method: getRecurrencePresetKeyFromRule', () => {
+      const state = baseState();
       const store = new storeClass.Value({ ...DEFAULT_PARAMS }, adapter);
       const start = adapter.date('2025-08-05T09:00:00'); // Tuesday
-      const presets = store.buildRecurrencePresets(start);
+      const presets = selectors.recurrencePresets(state, start);
 
       it('returns null when rule undefined', () => {
         expect(store.getRecurrencePresetKeyFromRule(undefined, start)).to.equal(null);
