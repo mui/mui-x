@@ -1,5 +1,4 @@
-import { DateTime } from 'luxon';
-import { adapter } from 'test/utils/scheduler';
+import { adapter, adapterFr } from 'test/utils/scheduler';
 import {
   ByDayCode,
   ByDayValue,
@@ -24,31 +23,32 @@ import {
   applyRecurringUpdateFollowing,
   decideSplitRRule,
   applyRecurringUpdateAll,
+  applyRecurringUpdateOnlyThis,
 } from './recurrence-utils';
 import { diffIn } from '../use-adapter';
-import { Adapter } from '../use-adapter/useAdapter.types';
 
 describe('recurrence-utils', () => {
+  const makeRecurringEvent = (overrides: Partial<CalendarEvent> = {}): CalendarEvent => ({
+    id: 'recurring',
+    title: 'Recurring Event',
+    start: adapter.date('2025-01-01T09:00:00Z'),
+    end: adapter.date('2025-01-01T10:00:00Z'),
+    allDay: false,
+    rrule: { freq: 'DAILY', interval: 1 },
+    ...overrides,
+  });
+
+  const makeOtherEvent = (): CalendarEvent => ({
+    id: 'other',
+    title: 'Other Event',
+    start: adapter.date('2025-02-01T09:00:00Z'),
+    end: adapter.date('2025-02-01T10:00:00Z'),
+  });
+
   describe('getByDayMaps', () => {
-    type MiniAdapter = Pick<Adapter<any>, 'date' | 'addDays' | 'getDayOfWeek'>;
-
-    const ISO_ADAPTER = {
-      date: (value?: string | null) => adapter.date(value as string),
-      addDays: adapter.addDays,
-      // TODO: Do not use Luxon APIs directly
-      getDayOfWeek: (d: DateTime) => d.weekday,
-    } as unknown as MiniAdapter;
-
-    const SUNDAY_FIRST_ADAPTER = {
-      date: (value?: string | null) => adapter.date(value as string),
-      addDays: adapter.addDays,
-      // TODO: Do not use Luxon APIs directly
-      getDayOfWeek: (d: DateTime) => (d.weekday === 7 ? 1 : d.weekday + 1),
-    } as unknown as MiniAdapter;
-
     const ALL_CODES: ByDayCode[] = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
-    it('respects ISO Mon=1 numbering', () => {
-      const { byDayToNum, numToByDay } = getByDayMaps(ISO_ADAPTER as Adapter);
+    it('respects fr locale Mon=1 numbering', () => {
+      const { byDayToNum, numToByDay } = getByDayMaps(adapterFr);
 
       expect(byDayToNum.MO).to.equal(1);
       expect(byDayToNum.SU).to.equal(7);
@@ -59,8 +59,8 @@ describe('recurrence-utils', () => {
       });
     });
 
-    it('respects Sunday=1 numbering', () => {
-      const { byDayToNum, numToByDay } = getByDayMaps(SUNDAY_FIRST_ADAPTER as Adapter);
+    it('respects enUS locale Sunday=1 numbering', () => {
+      const { byDayToNum, numToByDay } = getByDayMaps(adapter);
 
       expect(byDayToNum.SU).to.equal(1);
       expect(byDayToNum.MO).to.equal(2);
@@ -1215,23 +1215,6 @@ describe('recurrence-utils', () => {
   });
 
   describe('applyRecurringUpdateFollowing', () => {
-    const makeRecurringEvent = (overrides: Partial<CalendarEvent> = {}): CalendarEvent => ({
-      id: 'recurring',
-      title: 'Recurring Event',
-      start: adapter.date('2025-01-01T09:00:00Z'),
-      end: adapter.date('2025-01-01T10:00:00Z'),
-      allDay: false,
-      rrule: { freq: 'DAILY', interval: 1 },
-      ...overrides,
-    });
-
-    const makeOtherEvent = (): CalendarEvent => ({
-      id: 'other',
-      title: 'Other Event',
-      start: adapter.date('2025-02-01T09:00:00Z'),
-      end: adapter.date('2025-02-01T10:00:00Z'),
-    });
-
     it('should set extractedFromId for the new series', () => {
       // Original: daily from Jan 01
       const original = makeRecurringEvent();
@@ -1433,16 +1416,6 @@ describe('recurrence-utils', () => {
   });
 
   describe('applyRecurringUpdateAll', () => {
-    const makeRecurringEvent = (overrides: Partial<CalendarEvent> = {}): CalendarEvent => ({
-      id: 'recurring',
-      title: 'Recurring Event',
-      start: adapter.date('2025-01-01T09:00:00Z'),
-      end: adapter.date('2025-01-01T10:00:00Z'),
-      allDay: false,
-      rrule: { freq: 'DAILY', interval: 1 },
-      ...overrides,
-    });
-
     it('should replace exactly one event without creating duplicates', () => {
       const first = makeRecurringEvent({ id: 'rec-1' });
       const second = makeRecurringEvent({ id: 'rec-2' });
@@ -1588,6 +1561,140 @@ describe('recurrence-utils', () => {
       // Uses the provided values as-is (new startDate on Jan 12)
       expect(adapter.isEqual(updatedEvent.start, changes.start)).to.equal(true);
       expect(adapter.isEqual(updatedEvent.end, changes.end)).to.equal(true);
+    });
+  });
+
+  describe('applyRecurringUpdateOnlyThis', () => {
+    it('should create a detached event with exDate on the original and keep the rest intact', () => {
+      const original = makeRecurringEvent();
+      const other = makeOtherEvent();
+      const events = [original, other];
+
+      const occurrenceStart = adapter.date('2025-01-05T09:00:00Z');
+      const changes: CalendarEvent = {
+        ...original,
+        title: 'Only-this edited',
+        start: adapter.date('2025-01-05T11:00:00Z'),
+        end: adapter.date('2025-01-05T12:00:00Z'),
+      };
+
+      const updated = applyRecurringUpdateOnlyThis(
+        adapter,
+        events,
+        original,
+        occurrenceStart,
+        changes,
+      );
+
+      const updatedMaster = updated.find((event) => event.id === original.id)!;
+      expect(
+        adapter.isEqual(updatedMaster.exDates![0], adapter.startOfDay(occurrenceStart)),
+      ).to.equal(true);
+
+      const detachedId = `${original.id}::${adapter.format(changes.start, 'keyboardDate')}`;
+      const detached = updated.find((event) => event.id === detachedId)!;
+
+      expect(detached.title).to.equal('Only-this edited');
+      expect(adapter.isEqual(detached.start, changes.start)).to.equal(true);
+      expect(adapter.isEqual(detached.end, changes.end)).to.equal(true);
+      expect(detached.rrule).to.equal(undefined);
+      expect(detached.extractedFromId).to.equal(original.id);
+
+      const stillOther = updated.find((event) => event.id === 'other')!;
+      expect(stillOther).to.deep.equal(other);
+    });
+
+    it('should use startOfDay for exDate when allDay is true', () => {
+      const original = makeRecurringEvent({
+        allDay: true,
+      });
+      const events = [original];
+
+      const occurrenceStart = adapter.date('2025-01-12T09:00:00Z');
+      const changes: CalendarEvent = {
+        ...original,
+        title: 'Only-this allDay',
+      };
+
+      const updated = applyRecurringUpdateOnlyThis(
+        adapter,
+        events,
+        original,
+        occurrenceStart,
+        changes,
+      );
+
+      const updatedMaster = updated.find((event) => event.id === original.id)!;
+      const expectedExDate = adapter.startOfDay(occurrenceStart);
+      expect(adapter.isEqual(updatedMaster.exDates![0], expectedExDate)).to.equal(true);
+
+      const detachedId = `${original.id}::${adapter.format(changes.start, 'keyboardDate')}`;
+      const detached = updated.find((event) => event.id === detachedId)!;
+      expect(detached.rrule).to.equal(undefined);
+      expect(detached.extractedFromId).to.equal(original.id);
+    });
+
+    it('should accumulate previous exDates', () => {
+      const prevEx = adapter.startOfDay(adapter.date('2025-01-03T09:00:00Z'));
+      const original = makeRecurringEvent({
+        exDates: [prevEx],
+      });
+      const events = [original];
+
+      const occurrenceStart = adapter.date('2025-01-05T09:00:00Z');
+      const changes: CalendarEvent = {
+        ...original,
+        title: 'Another only-this',
+        start: adapter.date('2025-01-05T11:00:00Z'),
+        end: adapter.date('2025-01-05T12:00:00Z'),
+      };
+
+      const updated = applyRecurringUpdateOnlyThis(
+        adapter,
+        events,
+        original,
+        occurrenceStart,
+        changes,
+      );
+
+      const updatedMaster = updated.find((event) => event.id === original.id)!;
+      expect(updatedMaster.exDates).to.have.length(2);
+      expect(adapter.isEqual(updatedMaster.exDates![0], prevEx)).to.equal(true);
+      expect(
+        adapter.isEqual(updatedMaster.exDates![1], adapter.startOfDay(occurrenceStart)),
+      ).to.equal(true);
+    });
+
+    it('should use changes.start to generate the detachedId', () => {
+      const original = makeRecurringEvent();
+      const events = [original];
+
+      const occurrenceStart = adapter.date('2025-01-07T09:00:00Z');
+      const changes: CalendarEvent = {
+        ...original,
+        title: 'Only-this changed date',
+        start: adapter.date('2025-01-08T11:00:00Z'),
+        end: adapter.date('2025-01-08T12:00:00Z'),
+      };
+
+      const updated = applyRecurringUpdateOnlyThis(
+        adapter,
+        events,
+        original,
+        occurrenceStart,
+        changes,
+      );
+
+      const expectedId = `${original.id}::${adapter.format(changes.start, 'keyboardDate')}`;
+      const detached = updated.find((event) => event.id === expectedId)!;
+
+      expect(adapter.isEqual(detached.start, changes.start)).to.equal(true);
+      expect(adapter.isEqual(detached.end, changes.end)).to.equal(true);
+
+      const master = updated.find((event) => event.id === original.id)!;
+      expect(adapter.isEqual(master.exDates![0], adapter.startOfDay(occurrenceStart))).to.equal(
+        true,
+      );
     });
   });
 });

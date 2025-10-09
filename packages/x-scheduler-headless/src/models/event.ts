@@ -33,6 +33,11 @@ export interface CalendarEvent {
    */
   rrule?: RRuleSpec;
   /**
+   * Exception dates for the event.
+   * These dates will be excluded from the recurrence.
+   */
+  exDates?: SchedulerValidDate[];
+  /**
    * Whether the event is an all-day event.
    */
   allDay?: boolean;

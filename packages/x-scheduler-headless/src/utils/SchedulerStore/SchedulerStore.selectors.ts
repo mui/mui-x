@@ -106,4 +106,9 @@ export const selectors = {
   ),
   canDragEventsFromTheOutside: createSelector((state: State) => state.canDragEventsFromTheOutside),
   canDropEventsToTheOutside: createSelector((state: State) => state.canDropEventsToTheOutside),
+  isCurrentDay: createSelector(
+    (state: State) => state.adapter,
+    (state: State) => state.nowUpdatedEveryMinute,
+    (adapter, now, date: SchedulerValidDate) => adapter.isSameDay(date, now),
+  ),
 };

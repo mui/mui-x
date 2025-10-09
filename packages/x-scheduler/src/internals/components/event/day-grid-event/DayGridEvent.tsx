@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { useId } from '@base-ui-components/utils/useId';
 import { useStore } from '@base-ui-components/utils/store';
 import { Repeat } from 'lucide-react';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
@@ -23,7 +22,6 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
 ) {
   const {
     occurrence,
-    ariaLabelledBy,
     variant,
     className: classNameProp,
     onEventClick,
@@ -33,7 +31,6 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   } = props;
 
   const adapter = useAdapter();
-  const id = useId(idProp);
   const translations = useTranslations();
   const store = useEventCalendarStoreContext();
   const isDraggable = useStore(store, selectors.isEventDraggable);
@@ -126,7 +123,6 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
 
   const sharedProps = {
     ref: forwardedRef,
-    id,
     className: clsx(
       classNameProp,
       'EventContainer',
@@ -139,7 +135,6 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
       '--grid-column-span': occurrence.position.daySpan,
       ...styleProp,
     } as React.CSSProperties,
-    'aria-labelledby': `${ariaLabelledBy} ${id}`,
     ...other,
   };
 

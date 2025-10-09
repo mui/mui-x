@@ -58,12 +58,7 @@ export function DayGridCell(props: DayGridCellProps) {
         {day.withPosition.map((occurrence) => {
           if (occurrence.position.isInvisible) {
             return (
-              <DayGridEvent
-                key={occurrence.key}
-                occurrence={occurrence}
-                variant="invisible"
-                ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
-              />
+              <DayGridEvent key={occurrence.key} occurrence={occurrence} variant="invisible" />
             );
           }
 
@@ -71,23 +66,13 @@ export function DayGridCell(props: DayGridCellProps) {
             <EventPopoverTrigger
               key={occurrence.key}
               occurrence={occurrence}
-              render={
-                <DayGridEvent
-                  occurrence={occurrence}
-                  variant="allDay"
-                  ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
-                />
-              }
+              render={<DayGridEvent occurrence={occurrence} variant="allDay" />}
             />
           );
         })}
         {placeholder != null && (
           <div className="DayTimeGridAllDayEventContainer">
-            <DayGridEvent
-              occurrence={placeholder}
-              variant="placeholder"
-              ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
-            />
+            <DayGridEvent occurrence={placeholder} variant="placeholder" />
           </div>
         )}
       </div>
