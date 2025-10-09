@@ -784,13 +784,7 @@ export function applyRecurringUpdateFollowing(
   const originalRule = originalEvent.rrule as RRuleSpec;
   const { count, until, ...baseRule } = originalRule;
 
-  // 2) If UNTIL falls before DTSTART, the original series has no remaining occurrences -> drop it
-  const shouldDropOldSeries = adapter.isBefore(
-    adapter.endOfDay(untilDate),
-    adapter.startOfDay(originalEvent.start),
-  );
-
-  // 3) New event: apply changes, decide RRULE for the new series
+  // 2) New event: apply changes, decide RRULE for the new series
   const newRRule = decideSplitRRule(
     adapter,
     originalRule,
@@ -808,18 +802,20 @@ export function applyRecurringUpdateFollowing(
     extractedFromId: originalEvent.id,
   };
 
-  // 4) Build the final events list: old series (updated or dropped) + new event
-  let updatedEvents: UpdateEventsParameters;
+  // 3) If UNTIL falls before DTSTART, the original series has no remaining occurrences -> drop it, otherwise truncate it.
+  const shouldDropOldSeries = adapter.isBefore(
+    adapter.endOfDay(untilDate),
+    adapter.startOfDay(originalEvent.start),
+  );
+
   if (shouldDropOldSeries) {
-    updatedEvents = { created: [newEvent], deleted: [originalEvent.id] };
-  } else {
-    updatedEvents = {
-      created: [newEvent],
-      updated: [{ id: originalEvent.id, rrule: { ...baseRule, until: untilDate } }],
-    };
+    return { created: [newEvent], deleted: [originalEvent.id] };
   }
 
-  return updatedEvents;
+  return {
+    created: [newEvent],
+    updated: [{ id: originalEvent.id, rrule: { ...baseRule, until: untilDate } }],
+  };
 }
 
 /**
@@ -831,7 +827,6 @@ export function applyRecurringUpdateFollowing(
  */
 export function applyRecurringUpdateAll(
   adapter: Adapter,
-  events: CalendarEvent[],
   originalEvent: CalendarEvent,
   occurrenceStart: SchedulerValidDate,
   changes: CalendarEventUpdatedProperties,

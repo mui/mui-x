@@ -6,7 +6,6 @@ import {
 } from '../models';
 import { Adapter } from '../use-adapter/useAdapter.types';
 import { getRecurringEventOccurrencesForVisibleDays } from './recurrence-utils';
-import type { UpdateEventsParameters } from './SchedulerStore';
 
 /**
  *  Returns the key of the days an event occurrence should be visible on.
