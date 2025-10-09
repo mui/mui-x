@@ -1605,7 +1605,9 @@ describe('recurrence-utils', () => {
       );
 
       const updatedMaster = updated.find((event) => event.id === original.id)!;
-      expect(adapter.isEqual(updatedMaster.exDates![0], occurrenceStart)).to.equal(true);
+      expect(
+        adapter.isEqual(updatedMaster.exDates![0], adapter.startOfDay(occurrenceStart)),
+      ).to.equal(true);
 
       const detachedId = `${original.id}::${adapter.format(changes.start, 'keyboardDate')}`;
       const detached = updated.find((event) => event.id === detachedId)!;
@@ -1651,7 +1653,7 @@ describe('recurrence-utils', () => {
     });
 
     it('should accumulate previous exDates', () => {
-      const prevEx = adapter.date('2025-01-03T09:00:00Z');
+      const prevEx = adapter.startOfDay(adapter.date('2025-01-03T09:00:00Z'));
       const original = makeRecurringEvent({
         exDates: [prevEx],
       });
@@ -1676,7 +1678,9 @@ describe('recurrence-utils', () => {
       const updatedMaster = updated.find((event) => event.id === original.id)!;
       expect(updatedMaster.exDates).to.have.length(2);
       expect(adapter.isEqual(updatedMaster.exDates![0], prevEx)).to.equal(true);
-      expect(adapter.isEqual(updatedMaster.exDates![1], occurrenceStart)).to.equal(true);
+      expect(
+        adapter.isEqual(updatedMaster.exDates![1], adapter.startOfDay(occurrenceStart)),
+      ).to.equal(true);
     });
 
     it('should use changes.start to generate the detachedId', () => {
@@ -1706,7 +1710,9 @@ describe('recurrence-utils', () => {
       expect(adapter.isEqual(detached.end, changes.end)).to.equal(true);
 
       const master = updated.find((event) => event.id === original.id)!;
-      expect(adapter.isEqual(master.exDates![0], occurrenceStart)).to.equal(true);
+      expect(adapter.isEqual(master.exDates![0], adapter.startOfDay(occurrenceStart))).to.equal(
+        true,
+      );
     });
   });
 });
