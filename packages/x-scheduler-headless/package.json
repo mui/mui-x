@@ -71,8 +71,11 @@
     "@base-ui-components/react": "^1.0.0-beta.3",
     "@base-ui-components/utils": "^0.1.1",
     "@floating-ui/react": "^0.27.16",
+    "@floating-ui/react-dom": "^2.1.6",
+    "@floating-ui/utils": "^0.2.10",
     "@mui/x-internals": "workspace:*",
-    "prop-types": "catalog:"
+    "prop-types": "catalog:",
+    "tabbable": "^6.2.0"
   },
   "peerDependencies": {
     "luxon": "^3.0.2",

@@ -6,7 +6,7 @@ import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { useStore } from '@base-ui-components/utils/store';
 import { useButton } from '../../base-ui-copy/utils/useButton';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
-import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
+import { BaseUIComponentProps, NonNativeButtonProps } from '../../base-ui-copy/utils/types';
 import { CalendarGridTimeEventCssVars } from './CalendarGridTimeEventCssVars';
 import { useCalendarGridTimeColumnContext } from '../time-column/CalendarGridTimeColumnContext';
 import { useEvent } from '../../utils/useEvent';
@@ -33,6 +33,7 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     occurrenceKey,
     renderDragPreview,
     isDraggable = false,
+    nativeButton = false,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
@@ -47,7 +48,10 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
   const isDragging = useStore(store, selectors.isOccurrenceMatchingThePlaceholder, occurrenceKey);
   const event = useStore(store, selectors.event, eventId)!;
   const [isResizing, setIsResizing] = React.useState(false);
-  const { getButtonProps, buttonRef } = useButton({ disabled: !isInteractive });
+  const { getButtonProps, buttonRef } = useButton({
+    disabled: !isInteractive,
+    native: nativeButton,
+  });
 
   const preview = useDragPreview({
     type: 'internal-event',
@@ -181,6 +185,7 @@ export namespace CalendarGridTimeEvent {
 
   export interface Props
     extends BaseUIComponentProps<'div', State>,
+      NonNativeButtonProps,
       useEvent.Parameters,
       Pick<useDragPreview.Parameters, 'renderDragPreview'> {
     /**
