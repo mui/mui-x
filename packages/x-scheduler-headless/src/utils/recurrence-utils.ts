@@ -152,6 +152,10 @@ export function getRecurringEventOccurrencesForVisibleDays(
 
     const key = `${event.id}::${getDateKey(occurrenceStart, adapter)}`;
 
+    if ((event.exDates ?? []).some((exDate) => adapter.isSameDay(exDate, occurrenceStart))) {
+      continue;
+    }
+
     instances.push({
       ...event,
       key,
@@ -870,4 +874,39 @@ export function applyRecurringUpdateAll(
 
   // 4) Replace the series root in the list
   return [...events.filter((event) => event.id !== originalEvent.id), newEvent];
+}
+
+/**
+ * Applies a "only-this" update to a recurring series by:
+ *  - creating a detached one-off event with the requested changes, and
+ *  - adding an EXDATE to the original event to exclude the occurrence from the series.
+ * @returns The updated list of events.
+ */
+export function applyRecurringUpdateOnlyThis(
+  adapter: Adapter,
+  events: CalendarEvent[],
+  originalEvent: CalendarEvent,
+  occurrenceStart: SchedulerValidDate,
+  changes: CalendarEventUpdatedProperties,
+): CalendarEvent[] {
+  const detachedId = `${originalEvent.id}::${getDateKey(changes.start ?? originalEvent.start, adapter)}`;
+
+  const detachedEvent: CalendarEvent = {
+    ...originalEvent,
+    ...changes,
+    id: detachedId,
+    rrule: undefined,
+    extractedFromId: originalEvent.id,
+  };
+
+  const updatedOriginalEvent: CalendarEvent = {
+    ...originalEvent,
+    exDates: [...(originalEvent.exDates ?? []), adapter.startOfDay(occurrenceStart)],
+  };
+
+  const updatedEvents = events.map((event) =>
+    event.id === originalEvent.id ? updatedOriginalEvent : event,
+  );
+
+  return [...updatedEvents, detachedEvent];
 }
