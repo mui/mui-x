@@ -103,10 +103,8 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
             {days.map((day) => (
               <CalendarGrid.HeaderCell
                 key={day.key}
-                id={`DayTimeGridHeaderCell-${day.key}`}
-                role="columnheader"
-                aria-label={`${adapter.format(day.value, 'weekday')} ${adapter.format(day.value, 'dayOfMonth')}`}
-                data-current={adapter.isSameDay(day.value, now) ? '' : undefined}
+                date={day}
+                ariaLabelFormat={`${adapter.formats.weekday} ${adapter.formats.dayOfMonth}`}
               >
                 {hasDayView ? (
                   <button
@@ -150,7 +148,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
           <div className="ScrollablePlaceholder" />
         </div>
         <div className="DayTimeGridRoot">
-          <CalendarGrid.ScrollableContent ref={bodyRef} className="DayTimeGridBody">
+          <CalendarGrid.TimeScrollableContent ref={bodyRef} className="DayTimeGridBody">
             <div className="DayTimeGridScrollableContent">
               <div className="DayTimeGridTimeAxis" aria-hidden="true">
                 {/* TODO: Handle DST days where there are not exactly 24 hours */}
@@ -178,14 +176,13 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                   <TimeGridColumn
                     key={day.key}
                     day={day}
-                    isToday={adapter.isSameDay(day.value, now)}
                     index={index}
                     showCurrentTimeIndicator={showCurrentTimeIndicator && isTodayInView}
                   />
                 ))}
               </div>
             </div>
-          </CalendarGrid.ScrollableContent>
+          </CalendarGrid.TimeScrollableContent>
         </div>
       </EventPopoverProvider>
     </CalendarGrid.Root>

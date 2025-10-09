@@ -1,5 +1,7 @@
 export { CalendarGridRoot as Root } from './root/CalendarGridRoot';
-export { CalendarGridScrollableContent as ScrollableContent } from './scrollable-content/CalendarGridScrollableContent';
+
+export { CalendarGridHeaderRow as HeaderRow } from './header-row/CalendarGridHeaderRow';
+export { CalendarGridHeaderCell as HeaderCell } from './header-cell/CalendarGridHeaderCell';
 
 export { CalendarGridHeaderRow as HeaderRow } from './header-row/CalendarGridHeaderRow';
 export { CalendarGridHeaderCell as HeaderCell } from './header-cell/CalendarGridHeaderCell';
@@ -10,6 +12,7 @@ export { CalendarGridDayEvent as DayEvent } from './day-event/CalendarGridDayEve
 export { CalendarGridDayEventPlaceholder as DayEventPlaceholder } from './day-event-placeholder/CalendarGridDayEventPlaceholder';
 export { CalendarGridDayEventResizeHandler as DayEventResizeHandler } from './day-event-resize-handler/CalendarGridDayEventResizeHandler';
 
+export { CalendarGridTimeScrollableContent as TimeScrollableContent } from './time-scrollable-content/CalendarGridTimeScrollableContent';
 export { CalendarGridTimeColumn as TimeColumn } from './time-column/CalendarGridTimeColumn';
 export { CalendarGridTimeEvent as TimeEvent } from './time-event/CalendarGridTimeEvent';
 export { CalendarGridTimeEventPlaceholder as TimeEventPlaceholder } from './time-event-placeholder/CalendarGridTimeEventPlaceholder';
