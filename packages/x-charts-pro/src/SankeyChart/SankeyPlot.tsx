@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useTheme } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import { useDrawingArea } from '@mui/x-charts/hooks';
 import {
   SankeyLayout,
@@ -42,6 +42,11 @@ export interface SankeyPlotProps {
   ) => void;
 }
 
+const SankeyPlotRoot = styled('g')({
+  '& [data-faded=true]': { filter: 'saturate(80%)' },
+  '& [data-highlighted=true]': { filter: 'saturate(120%)' },
+});
+
 /**
  * Renders a Sankey diagram plot.
  */
@@ -74,7 +79,7 @@ function SankeyPlot(props: SankeyPlotProps) {
   }
 
   return (
-    <g className={classes.root}>
+    <SankeyPlotRoot className={classes.root}>
       <g className={classes.links}>
         {layout.links.map((link) => (
           <SankeyLinkElement
@@ -106,7 +111,7 @@ function SankeyPlot(props: SankeyPlotProps) {
           ))}
         </g>
       )}
-    </g>
+    </SankeyPlotRoot>
   );
 }
 

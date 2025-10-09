@@ -75,16 +75,11 @@ export const SankeyNodeElement = React.forwardRef<SVGGElement, SankeyNodeElement
       onClick?.(event, identifier);
     });
 
-    // TODO: improve
     let opacity = 1;
-    let filter: string | undefined;
-
     if (isFaded) {
       opacity = 0.3;
-      filter = 'saturate(80%)';
     } else if (isHighlighted) {
       opacity = 1;
-      filter = 'saturate(120%)';
     }
 
     return (
@@ -96,7 +91,6 @@ export const SankeyNodeElement = React.forwardRef<SVGGElement, SankeyNodeElement
           height={nodeHeight}
           fill={node.color}
           opacity={opacity}
-          style={{ filter }}
           onClick={onClick ? handleClick : undefined}
           cursor={onClick ? 'pointer' : 'default'}
           stroke="none"

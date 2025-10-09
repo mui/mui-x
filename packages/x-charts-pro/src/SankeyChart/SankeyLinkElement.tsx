@@ -20,7 +20,6 @@ export interface SankeyLinkElementProps {
    * Opacity to apply to the link
    */
   opacity?: number;
-
   /**
    * Callback fired when a sankey item is clicked.
    * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
@@ -60,19 +59,14 @@ export const SankeyLinkElement = React.forwardRef<SVGPathElement, SankeyLinkElem
     });
 
     if (!link.path) {
-      return null; // No path defined, nothing to render
+      return null;
     }
 
-    // TODO: improve
     let finalOpacity = opacity;
-    let filter: string | undefined;
-
     if (isFaded) {
       finalOpacity = opacity * 0.3;
-      filter = 'saturate(80%)';
     } else if (isHighlighted) {
       finalOpacity = Math.min(opacity * 1.2, 1);
-      filter = 'saturate(120%)';
     }
 
     return (
@@ -81,7 +75,6 @@ export const SankeyLinkElement = React.forwardRef<SVGPathElement, SankeyLinkElem
         d={link.path}
         fill={link.color}
         opacity={finalOpacity}
-        style={{ filter }}
         data-link-source={link.source.id}
         data-link-target={link.target.id}
         data-highlighted={isHighlighted || undefined}
