@@ -209,13 +209,8 @@ export class SchedulerStore<
           continue;
         }
 
-        if (updated.has(event.id)) {
-          const updatedEvent = updated.get(event.id);
-          newEvents.push({ ...event, ...updatedEvent });
-          continue;
-        }
-
-        newEvents.push(event);
+        const newEvent = updated.has(event.id) ? { ...event, ...updated.get(event.id) } : event;
+        newEvents.push(newEvent);
       }
     } else {
       newEvents.push(...originalEvents);
