@@ -13,7 +13,7 @@ import { SankeyNodeElement } from './SankeyNodeElement';
 import { SankeyLinkElement } from './SankeyLinkElement';
 import { SankeyLinkLabel } from './SankeyLinkLabel';
 import { useSankeySeriesContext } from '../hooks/useSankeySeries';
-import { useUtilityClasses, type SankeyPlotClasses } from './sankeyClasses';
+import { sankeyPlotClasses, useUtilityClasses, type SankeyPlotClasses } from './sankeyClasses';
 
 export interface SankeyPlotProps {
   /**
@@ -43,6 +43,9 @@ export interface SankeyPlotProps {
 }
 
 const SankeyPlotRoot = styled('g')({
+  [`.${sankeyPlotClasses.links} path, .${sankeyPlotClasses.nodes} rect`]: {
+    transition: 'opacity 0.1s ease-out, filter 0.1s ease-out',
+  },
   '& [data-faded=true]': { filter: 'saturate(80%)' },
   '& [data-highlighted=true]': { filter: 'saturate(120%)' },
 });
