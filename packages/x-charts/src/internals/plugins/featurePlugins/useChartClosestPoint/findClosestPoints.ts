@@ -39,21 +39,6 @@ export function findClosestPoints(
     return fx * fx * dx * dx + fy * fy * dy * dy;
   }
 
-  const maxDistSqFn =
-    maxRadius === Infinity
-      ? () => Infinity
-      : function maxDistSqFn(dx: number, dy: number) {
-          if (dx === 0 && dy === 0) {
-            return Infinity;
-          }
-
-          const ratio = Math.atan(dy / dx);
-          const vmrx = maxRadius * Math.cos(ratio);
-          const vmry = maxRadius * Math.sin(ratio);
-
-          return vmrx * vmrx + vmry * vmry;
-        };
-
   const isXIncreasing = xScale.range()[1] > xScale.range()[0];
   const isYIncreasing = yScale.range()[1] > yScale.range()[0];
   const xRatio = (svgPointX - drawingArea.left) / drawingArea.width;
@@ -65,9 +50,7 @@ export function findClosestPoints(
     pointX,
     pointY,
     maxResults,
-    maxDistSqFn,
-    maxRadius != null ? fx * fx * maxRadius * maxRadius : Infinity,
-    maxRadius != null ? fy * fy * maxRadius * maxRadius : Infinity,
+    maxRadius != null ? maxRadius * maxRadius : Infinity,
     excludeIfOutsideDrawingArea,
     sqDistFn,
   );

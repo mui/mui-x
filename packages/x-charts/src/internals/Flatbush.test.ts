@@ -183,21 +183,13 @@ test('performs a k-nearest-neighbors query', () => {
 
 test('k-nearest-neighbors query accepts maxDistance', () => {
   const index = createIndex();
-  const ids = index.neighbors(50, 50, Infinity, () => 12 ** 2);
+  const ids = index.neighbors(50, 50, Infinity, 12 ** 2);
   expect(ids.sort(compare)).to.deep.eq([6, 29, 31, 75, 85].sort(compare));
 });
 
 test('k-nearest-neighbors query accepts filterFn', () => {
   const index = createIndex();
-  const ids = index.neighbors(
-    50,
-    50,
-    6,
-    () => Infinity,
-    Infinity,
-    Infinity,
-    (i) => i % 2 === 0,
-  );
+  const ids = index.neighbors(50, 50, 6, Infinity, (i) => i % 2 === 0);
   expect(ids.sort(compare)).to.deep.eq([6, 16, 18, 24, 54, 80].sort(compare));
 });
 

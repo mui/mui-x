@@ -313,21 +313,19 @@ export class Flatbush {
 
   /**
    * Search items in order of distance from the given point.
-   * @param {number} x
-   * @param {number} y
-   * @param {number} [maxResults=Infinity]
-   * @param {number} [maxDistance=Infinity]
-   * @param {(index: number) => boolean} [filterFn] An optional function for filtering the results.
-   * @param {(dx: number, dy: number) => number} [sqDistFn] An optional function to calculate squared distance from the point to the item.
+   * @param x
+   * @param y
+   * @param [maxResults=Infinity]
+   * @param maxDistSq
+   * @param [filterFn] An optional function for filtering the results.
+   * @param [sqDistFn] An optional function to calculate squared distance from the point to the item.
    * @returns {number[]} An array of indices of items found.
    */
   neighbors(
     x,
     y,
     maxResults = Infinity,
-    maxDistSqFn?: (dx: number, dy: number) => number = () => Infinity,
-    maxDistSqX?: number = Infinity,
-    maxDistSqY?: number = Infinity,
+    maxDistSq?: number = Infinity,
     filterFn?: (index: number) => boolean,
     sqDistFn = sqDist,
   ) {
@@ -339,7 +337,6 @@ export class Flatbush {
     let nodeIndex = this._boxes.length - 4;
     const q = this._queue;
     const results = [];
-    const dArray = new Float64Array();
 
     /* eslint-disable no-labels */
     outer: while (nodeIndex !== undefined) {
@@ -355,17 +352,9 @@ export class Flatbush {
         const maxY = this._boxes[pos + 3];
         const dx = x < minX ? minX - x : x > maxX ? x - maxX : 0;
         const dy = y < minY ? minY - y : y > maxY ? y - maxY : 0;
-        dArray[index] = dx;
-        dArray[index + 1] = dy;
         const dist = sqDistFn(dx, dy);
 
-        if (dist > maxDistSqX || dist > maxDistSqY) {
-          continue;
-        }
-
-        const maxDistSquared = maxDistSqFn(dx, dy);
-
-        if (dist > maxDistSquared) {
+        if (dist > maxDistSq) {
           continue;
         }
 
@@ -380,19 +369,9 @@ export class Flatbush {
       // @ts-expect-error q.length check eliminates undefined values
       while (q.length && q.peek() & 1) {
         const dist = q.peekValue();
-        const index = q.peek() >> 1;
-
-        const dx = dArray[index];
-        const dy = dArray[index + 1];
-
-        if (dist > maxDistSqX || dist > maxDistSqY) {
-          continue;
-        }
-
-        const maxDistSquared = maxDistSqFn(dx, dy);
 
         // @ts-expect-error
-        if (dist > maxDistSquared) {
+        if (dist > maxDistSq) {
           break outer;
         }
         // @ts-expect-error
