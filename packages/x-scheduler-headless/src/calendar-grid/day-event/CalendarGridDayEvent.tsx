@@ -7,7 +7,7 @@ import { useStore } from '@base-ui-components/utils/store/useStore';
 import { useId } from '@base-ui-components/utils/useId';
 import { useButton } from '../../base-ui-copy/utils/useButton';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
-import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
+import { BaseUIComponentProps, NonNativeButtonProps } from '../../base-ui-copy/utils/types';
 import { useEvent } from '../../utils/useEvent';
 import { CalendarEvent, CalendarEventId, SchedulerValidDate } from '../../models';
 import { useAdapter, diffIn } from '../../use-adapter';
@@ -36,6 +36,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     occurrenceKey,
     id: idProp,
     isDraggable = false,
+    nativeButton = false,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
@@ -51,7 +52,10 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
   const { index: cellIndex } = useCalendarGridDayCellContext();
 
   const ref = React.useRef<HTMLDivElement>(null);
-  const { getButtonProps, buttonRef } = useButton({ disabled: !isInteractive });
+  const { getButtonProps, buttonRef } = useButton({
+    disabled: !isInteractive,
+    native: nativeButton,
+  });
   const { state: eventState } = useEvent({ start, end });
   const hasPlaceholder = useStore(store, selectors.hasOccurrencePlaceholder);
   const isDragging = useStore(store, selectors.isOccurrenceMatchingThePlaceholder, occurrenceKey);
@@ -163,7 +167,10 @@ export namespace CalendarGridDayEvent {
     resizing: boolean;
   }
 
-  export interface Props extends BaseUIComponentProps<'div', State>, useEvent.Parameters {
+  export interface Props
+    extends BaseUIComponentProps<'div', State>,
+      NonNativeButtonProps,
+      useEvent.Parameters {
     /**
      * The unique identifier of the event.
      */
