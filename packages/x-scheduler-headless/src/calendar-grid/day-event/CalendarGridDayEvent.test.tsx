@@ -1,14 +1,13 @@
 import * as React from 'react';
-import { DateTime } from 'luxon';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
-import { createSchedulerRenderer, describeConformance } from 'test/utils/scheduler';
+import { adapter, createSchedulerRenderer, describeConformance } from 'test/utils/scheduler';
 
 describe('<CalendarGrid.DayEvent />', () => {
   const { render } = createSchedulerRenderer();
 
-  const eventStart = DateTime.now();
-  const eventEnd = eventStart.plus({ hours: 1 });
+  const eventStart = adapter.date();
+  const eventEnd = adapter.addHours(eventStart, 1);
 
   describeConformance(
     <CalendarGrid.DayEvent

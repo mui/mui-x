@@ -83,7 +83,7 @@ export const MonthView = React.memo(
       >
         <EventPopoverProvider containerRef={containerRef}>
           <CalendarGrid.Root className="MonthViewRoot">
-            <div
+            <CalendarGrid.HeaderRow
               className={clsx(
                 'MonthViewHeader',
                 'MonthViewRowGrid',
@@ -94,17 +94,16 @@ export const MonthView = React.memo(
                 <div className="MonthViewWeekHeaderCell">{translations.weekAbbreviation}</div>
               )}
               {weeks[0].map((weekDay) => (
-                <div
+                <CalendarGrid.HeaderCell
                   key={weekDay.key}
-                  id={`MonthViewHeaderCell-${weekDay.key}`}
-                  role="columnheader"
+                  date={weekDay}
+                  skipDataCurrent
                   className="MonthViewHeaderCell"
-                  aria-label={adapter.format(weekDay.value, 'weekday')}
                 >
                   {adapter.formatByString(weekDay.value, 'ccc')}
-                </div>
+                </CalendarGrid.HeaderCell>
               ))}
-            </div>
+            </CalendarGrid.HeaderRow>
             <div className="MonthViewBody">
               {weeks.map((week, weekIdx) => (
                 <MonthViewWeekRow
