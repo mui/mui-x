@@ -4,7 +4,7 @@ import { adapter, createSchedulerRenderer, describeConformance } from 'test/util
 import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
 import { processDate } from '@mui/x-scheduler-headless/process-date';
 
-describe('<CalendarGrid.DayRow />', () => {
+describe('<CalendarGrid.HeaderCell />', () => {
   const { render } = createSchedulerRenderer();
 
   describeConformance(
