@@ -114,7 +114,6 @@ export const insertDataRowInTree = ({
             defaultGroupingExpansionDepth,
             maxDepth,
             isGroupExpandedByDefault,
-            (previousTree?.[id] as GridGroupNode)?.childrenExpanded,
           );
           if (shouldFetchChildren) {
             groupsToFetch?.add(id);
