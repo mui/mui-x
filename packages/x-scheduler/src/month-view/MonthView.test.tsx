@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { DateTime } from 'luxon';
 import { adapter, createSchedulerRenderer } from 'test/utils/scheduler';
 import { screen, within } from '@mui/internal-test-utils';
 import { CalendarEvent } from '@mui/x-scheduler-headless/models';
@@ -11,14 +10,14 @@ import { EventCalendar } from '../event-calendar';
 const events: CalendarEvent[] = [
   {
     id: '1',
-    start: DateTime.fromISO('2025-05-01T09:00:00'),
-    end: DateTime.fromISO('2025-05-01T10:00:00'),
+    start: adapter.date('2025-05-01T09:00:00'),
+    end: adapter.date('2025-05-01T10:00:00'),
     title: 'Meeting',
   },
   {
     id: '2',
-    start: DateTime.fromISO('2025-05-15T14:00:00'),
-    end: DateTime.fromISO('2025-05-15T15:00:00'),
+    start: adapter.date('2025-05-15T14:00:00'),
+    end: adapter.date('2025-05-15T15:00:00'),
     title: 'Doctor Appointment',
   },
 ];
@@ -26,36 +25,36 @@ const events: CalendarEvent[] = [
 const allDayEvents: CalendarEvent[] = [
   {
     id: 'all-day-1',
-    start: DateTime.fromISO('2025-05-05T00:00:00'),
-    end: DateTime.fromISO('2025-05-07T23:59:59'),
+    start: adapter.date('2025-05-05T00:00:00'),
+    end: adapter.date('2025-05-07T23:59:59'),
     title: 'Multi-day Conference',
     allDay: true,
   },
   {
     id: 'all-day-2',
-    start: DateTime.fromISO('2025-04-28T00:00:00'), // Previous week
-    end: DateTime.fromISO('2025-05-06T23:59:59'), // Current week
+    start: adapter.date('2025-04-28T00:00:00'), // Previous week
+    end: adapter.date('2025-05-06T23:59:59'), // Current week
     title: 'Long Event',
     allDay: true,
   },
   {
     id: 'all-day-3',
-    start: DateTime.fromISO('2025-05-12T00:00:00'),
-    end: DateTime.fromISO('2025-05-14T23:59:59'),
+    start: adapter.date('2025-05-12T00:00:00'),
+    end: adapter.date('2025-05-14T23:59:59'),
     title: 'Grid Row Test',
     allDay: true,
   },
   {
     id: 'all-day-4',
-    start: DateTime.fromISO('2025-05-14T00:00:00'),
-    end: DateTime.fromISO('2025-05-16T23:59:59'),
+    start: adapter.date('2025-05-14T00:00:00'),
+    end: adapter.date('2025-05-16T23:59:59'),
     title: 'Three Day Event',
     allDay: true,
   },
   {
     id: 'all-day-5',
-    start: DateTime.fromISO('2025-05-06T00:00:00'),
-    end: DateTime.fromISO('2025-05-16T23:59:59'),
+    start: adapter.date('2025-05-06T00:00:00'),
+    end: adapter.date('2025-05-16T23:59:59'),
     title: 'Multiple week event',
     allDay: true,
   },
@@ -117,7 +116,7 @@ describe('<MonthView />', () => {
     expect(handleViewChange.firstCall.firstArg).to.equal('day');
     expect(handleVisibleDateChange.calledOnce).to.equal(true);
     expect(handleVisibleDateChange.firstCall.firstArg).toEqualDateTime(
-      DateTime.fromISO('2025-05-15T00:00:00'),
+      adapter.date('2025-05-15T00:00:00'),
     );
   });
 
@@ -135,32 +134,32 @@ describe('<MonthView />', () => {
     const manyEvents = [
       {
         id: '1',
-        start: DateTime.fromISO('2025-05-01T08:00:00'),
-        end: DateTime.fromISO('2025-05-01T09:00:00'),
+        start: adapter.date('2025-05-01T08:00:00'),
+        end: adapter.date('2025-05-01T09:00:00'),
         title: 'Breakfast',
       },
       {
         id: '2',
-        start: DateTime.fromISO('2025-05-01T09:30:00'),
-        end: DateTime.fromISO('2025-05-01T10:30:00'),
+        start: adapter.date('2025-05-01T09:30:00'),
+        end: adapter.date('2025-05-01T10:30:00'),
         title: 'Team Standup',
       },
       {
         id: '3',
-        start: DateTime.fromISO('2025-05-01T11:00:00'),
-        end: DateTime.fromISO('2025-05-01T12:00:00'),
+        start: adapter.date('2025-05-01T11:00:00'),
+        end: adapter.date('2025-05-01T12:00:00'),
         title: 'Client Call',
       },
       {
         id: '4',
-        start: DateTime.fromISO('2025-05-01T13:00:00'),
-        end: DateTime.fromISO('2025-05-01T14:00:00'),
+        start: adapter.date('2025-05-01T13:00:00'),
+        end: adapter.date('2025-05-01T14:00:00'),
         title: 'Lunch',
       },
       {
         id: '5',
-        start: DateTime.fromISO('2025-05-01T15:00:00'),
-        end: DateTime.fromISO('2025-05-01T16:00:00'),
+        start: adapter.date('2025-05-01T15:00:00'),
+        end: adapter.date('2025-05-01T16:00:00'),
         title: 'Design Review',
       },
     ];
@@ -245,22 +244,22 @@ describe('<MonthView />', () => {
       const overlappingEvents = [
         {
           id: 'event-1',
-          start: DateTime.fromISO('2025-05-12T00:00:00'),
-          end: DateTime.fromISO('2025-05-14T23:59:59'),
+          start: adapter.date('2025-05-12T00:00:00'),
+          end: adapter.date('2025-05-14T23:59:59'),
           title: 'Event 1',
           allDay: true,
         },
         {
           id: 'event-2',
-          start: DateTime.fromISO('2025-05-13T00:00:00'),
-          end: DateTime.fromISO('2025-05-15T23:59:59'),
+          start: adapter.date('2025-05-13T00:00:00'),
+          end: adapter.date('2025-05-15T23:59:59'),
           title: 'Event 2',
           allDay: true,
         },
         {
           id: 'event-3',
-          start: DateTime.fromISO('2025-05-16T00:00:00'),
-          end: DateTime.fromISO('2025-05-17T23:59:59'),
+          start: adapter.date('2025-05-16T00:00:00'),
+          end: adapter.date('2025-05-17T23:59:59'),
           title: 'Event 3',
           allDay: true,
         },
@@ -330,7 +329,7 @@ describe('<MonthView />', () => {
   describe('time navigation', () => {
     it('should go to start of previous month when clicking on the Previous Month button', async () => {
       const onVisibleDateChange = spy();
-      const visibleDate = DateTime.fromISO('2025-07-03T00:00:00Z');
+      const visibleDate = adapter.date('2025-07-03T00:00:00Z');
 
       const { user } = render(
         <EventCalendar
@@ -349,7 +348,7 @@ describe('<MonthView />', () => {
 
     it('should go to start of next month when clicking on the Next Month button', async () => {
       const onVisibleDateChange = spy();
-      const visibleDate = DateTime.fromISO('2025-07-03T00:00:00Z');
+      const visibleDate = adapter.date('2025-07-03T00:00:00Z');
 
       const { user } = render(
         <EventCalendar

@@ -1,5 +1,5 @@
 {
-  "version": "8.13.1",
+  "version": "8.14.0",
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
@@ -73,7 +73,7 @@
     "@inquirer/prompts": "^7.8.6",
     "@mui/internal-babel-plugin-display-name": "^1.0.4-canary.7",
     "@mui/internal-bundle-size-checker": "^1.0.9-canary.48",
-    "@mui/internal-code-infra": "^0.0.3-canary.24",
+    "@mui/internal-code-infra": "^0.0.3-canary.25",
     "@mui/internal-markdown": "^2.0.6",
     "@mui/internal-test-utils": "catalog:",
     "@mui/material": "catalog:",
@@ -122,7 +122,6 @@
     "globby": "^14.1.0",
     "jsdom": "26.1.0",
     "lerna": "^9.0.0",
-    "lodash": "^4.17.21",
     "magic-string": "^0.30.19",
     "markdownlint-cli2": "^0.18.1",
     "moment": "catalog:",

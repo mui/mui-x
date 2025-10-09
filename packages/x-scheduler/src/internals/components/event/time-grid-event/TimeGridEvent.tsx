@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { useId } from '@base-ui-components/utils/useId';
 import { useStore } from '@base-ui-components/utils/store';
 import { Repeat } from 'lucide-react';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
@@ -17,9 +16,8 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   props: TimeGridEventProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { occurrence, ariaLabelledBy, className, id: idProp, variant, ...other } = props;
+  const { occurrence, className, variant, ...other } = props;
 
-  const id = useId(idProp);
   const store = useEventCalendarStoreContext();
   const adapter = useAdapter();
   const isRecurring = Boolean(occurrence.rrule);
@@ -94,7 +92,6 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
     start: occurrence.start,
     end: occurrence.end,
     ref: forwardedRef,
-    id,
     className: clsx(
       className,
       'TimeGridEvent',
@@ -111,7 +108,6 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       '--first-index': occurrence.position.firstIndex,
       '--last-index': occurrence.position.lastIndex,
     } as React.CSSProperties,
-    'aria-labelledby': `${ariaLabelledBy} ${id}`,
     ...other,
   };
 

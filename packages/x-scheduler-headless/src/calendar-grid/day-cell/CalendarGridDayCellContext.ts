@@ -1,7 +1,12 @@
 'use client';
 import * as React from 'react';
 
-export interface CalendarGridDayCellContext {}
+export interface CalendarGridDayCellContext {
+  /**
+   * The index of the cell in the row.
+   */
+  index: number;
+}
 
 export const CalendarGridDayCellContext = React.createContext<
   CalendarGridDayCellContext | undefined
