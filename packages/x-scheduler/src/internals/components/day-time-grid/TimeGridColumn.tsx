@@ -41,7 +41,6 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
       style={{ '--columns-count': maxIndex } as React.CSSProperties}
     >
       <ColumnInteractiveLayer
-        day={day}
         start={start}
         end={end}
         showCurrentTimeIndicator={showCurrentTimeIndicator}
@@ -54,7 +53,6 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
 }
 
 function ColumnInteractiveLayer({
-  day,
   start,
   end,
   showCurrentTimeIndicator,
@@ -62,7 +60,6 @@ function ColumnInteractiveLayer({
   occurrences,
   maxIndex,
 }: {
-  day: useEventOccurrencesWithDayGridPosition.DayData;
   start: SchedulerValidDate;
   end: SchedulerValidDate;
   showCurrentTimeIndicator: boolean;
