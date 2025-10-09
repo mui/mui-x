@@ -101,12 +101,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
         {visibleOccurrences.map((occurrence) => {
           if (occurrence.position.isInvisible) {
             return (
-              <DayGridEvent
-                key={occurrence.key}
-                occurrence={occurrence}
-                variant="invisible"
-                ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
-              />
+              <DayGridEvent key={occurrence.key} occurrence={occurrence} variant="invisible" />
             );
           }
 
@@ -118,7 +113,6 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
                 <DayGridEvent
                   occurrence={occurrence}
                   variant={occurrence.allDay ? 'allDay' : 'compact'}
-                  ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
                 />
               }
             />
@@ -129,11 +123,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
         )}
         {placeholder != null && (
           <div className="MonthViewPlaceholderEventContainer">
-            <DayGridEvent
-              occurrence={placeholder}
-              variant="placeholder"
-              ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
-            />
+            <DayGridEvent occurrence={placeholder} variant="placeholder" />
           </div>
         )}
       </div>

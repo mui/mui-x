@@ -8,8 +8,9 @@ describe('useCalendarGridDateFromPositionInTimeColumn', () => {
   const START = adapter.date('2024-01-15T00:00:00');
 
   function Wrapper({ children }: { children: React.ReactNode }) {
-    const value = React.useMemo(
+    const value: CalendarGridTimeColumnContext = React.useMemo(
       () => ({
+        index: 0,
         start: START,
         end: adapter.addHours(START, 12),
         getCursorPositionInElementMs: ({ input }: any) => {
