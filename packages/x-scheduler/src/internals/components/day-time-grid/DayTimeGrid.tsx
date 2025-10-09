@@ -98,10 +98,10 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     >
       <EventPopoverProvider containerRef={containerRef}>
         <div className="DayTimeGridHeader">
-          <div className="DayTimeGridGridRow DayTimeGridHeaderRow" role="row">
+          <CalendarGrid.HeaderRow className="DayTimeGridGridRow DayTimeGridHeaderRow">
             <div className="DayTimeGridAllDayEventsCell" />
             {days.map((day) => (
-              <div
+              <CalendarGrid.HeaderCell
                 key={day.key}
                 id={`DayTimeGridHeaderCell-${day.key}`}
                 role="columnheader"
@@ -120,9 +120,9 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                 ) : (
                   renderHeaderContent(day)
                 )}
-              </div>
+              </CalendarGrid.HeaderCell>
             ))}
-          </div>
+          </CalendarGrid.HeaderRow>
         </div>
         <div
           ref={allDayHeaderWrapperRef}

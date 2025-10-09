@@ -10,6 +10,7 @@ import {
 } from '../models';
 import { mergeDateAndTime, getDateKey } from './date-utils';
 import { diffIn } from '../use-adapter';
+import { UpdateEventsParameters } from './SchedulerStore';
 
 /**
  * Build BYDAY<->number maps using a known ISO Monday (2025-01-06).
@@ -770,11 +771,10 @@ export function decideSplitRRule(
  */
 export function applyRecurringUpdateFollowing(
   adapter: Adapter,
-  events: CalendarEvent[],
   originalEvent: CalendarEvent,
   occurrenceStart: SchedulerValidDate,
   changes: CalendarEventUpdatedProperties,
-): CalendarEvent[] {
+): UpdateEventsParameters {
   const newStart = changes.start ?? originalEvent.start;
 
   // 1) Old series: truncate rule to end the day before the edited occurrence
@@ -783,7 +783,6 @@ export function applyRecurringUpdateFollowing(
 
   const originalRule = originalEvent.rrule as RRuleSpec;
   const { count, until, ...baseRule } = originalRule;
-  const truncatedRule = { ...baseRule, until: untilDate };
 
   // 2) If UNTIL falls before DTSTART, the original series has no remaining occurrences -> drop it
   const shouldDropOldSeries = adapter.isBefore(
@@ -810,14 +809,16 @@ export function applyRecurringUpdateFollowing(
   };
 
   // 4) Build the final events list: old series (updated or dropped) + new event
-  const updatedEvents = shouldDropOldSeries
-    ? [...events.filter((event) => event.id !== originalEvent.id), newEvent]
-    : [
-        ...events.map((event) =>
-          event.id === originalEvent.id ? { ...originalEvent, rrule: truncatedRule } : event,
-        ),
-        newEvent,
-      ];
+  let updatedEvents: UpdateEventsParameters;
+  if (shouldDropOldSeries) {
+    updatedEvents = { created: [newEvent], deleted: [originalEvent.id] };
+  } else {
+    updatedEvents = {
+      created: [newEvent],
+      updated: [{ id: originalEvent.id, rrule: { ...baseRule, until: untilDate } }],
+    };
+  }
+
   return updatedEvents;
 }
 
@@ -834,7 +835,7 @@ export function applyRecurringUpdateAll(
   originalEvent: CalendarEvent,
   occurrenceStart: SchedulerValidDate,
   changes: CalendarEventUpdatedProperties,
-): CalendarEvent[] {
+): UpdateEventsParameters {
   const occurrenceEnd = adapter.addMinutes(
     occurrenceStart,
     diffIn(adapter, originalEvent.end, originalEvent.start, 'minutes'),
@@ -865,15 +866,14 @@ export function applyRecurringUpdateAll(
         : mergeDateAndTime(adapter, originalEvent.end, changes.end);
   }
 
-  const newEvent: CalendarEvent = {
-    ...originalEvent,
+  const eventUpdatedProperties: CalendarEventUpdatedProperties = {
     ...changes,
     start: nextStart,
     end: nextEnd,
   };
 
   // 4) Replace the series root in the list
-  return [...events.filter((event) => event.id !== originalEvent.id), newEvent];
+  return { updated: [eventUpdatedProperties] };
 }
 
 /**
@@ -884,11 +884,10 @@ export function applyRecurringUpdateAll(
  */
 export function applyRecurringUpdateOnlyThis(
   adapter: Adapter,
-  events: CalendarEvent[],
   originalEvent: CalendarEvent,
   occurrenceStart: SchedulerValidDate,
   changes: CalendarEventUpdatedProperties,
-): CalendarEvent[] {
+): UpdateEventsParameters {
   const detachedId = `${originalEvent.id}::${getDateKey(changes.start ?? originalEvent.start, adapter)}`;
 
   const detachedEvent: CalendarEvent = {
@@ -899,14 +898,13 @@ export function applyRecurringUpdateOnlyThis(
     extractedFromId: originalEvent.id,
   };
 
-  const updatedOriginalEvent: CalendarEvent = {
-    ...originalEvent,
-    exDates: [...(originalEvent.exDates ?? []), adapter.startOfDay(occurrenceStart)],
+  return {
+    created: [detachedEvent],
+    updated: [
+      {
+        id: originalEvent.id,
+        exDates: [...(originalEvent.exDates ?? []), adapter.startOfDay(occurrenceStart)],
+      },
+    ],
   };
-
-  const updatedEvents = events.map((event) =>
-    event.id === originalEvent.id ? updatedOriginalEvent : event,
-  );
-
-  return [...updatedEvents, detachedEvent];
 }

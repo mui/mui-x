@@ -11,6 +11,7 @@ import {
   RRuleSpec,
   SchedulerValidDate,
   RecurrencePresetKey,
+  CalendarEventUpdatedProperties,
 } from '../../models';
 import {
   SchedulerState,
@@ -18,6 +19,7 @@ import {
   UpdateRecurringEventParameters,
   SchedulerParametersToStateMapper,
   SchedulerModelUpdater,
+  UpdateEventsParameters,
 } from './SchedulerStore.types';
 import { Adapter } from '../../use-adapter/useAdapter.types';
 import {
@@ -191,6 +193,51 @@ export class SchedulerStore<
   };
 
   /**
+   * Adds, updates and / or deletes events in the calendar.
+   */
+  protected updateEvents(parameters: UpdateEventsParameters) {
+    const { deleted: deletedParam = [], updated: updatedParam = [], created = [] } = parameters;
+
+    const updated = new Map<CalendarEventId, CalendarEventUpdatedProperties>(
+      updatedParam.map((ev) => [ev.id, ev]),
+    );
+
+    const deleted = new Set<CalendarEventId>(deletedParam);
+
+    const originalEvents = selectors.events(this.state);
+    const newEvents: CalendarEvent[] = [];
+
+    if (deleted.size > 0 || updated.size > 0) {
+      for (const event of originalEvents) {
+        if (deleted.has(event.id)) {
+          continue;
+        }
+
+        if (updated.has(event.id)) {
+          const updatedEvent = updated.get(event.id);
+          newEvents.push({ ...event, ...updatedEvent });
+          continue;
+        }
+
+        newEvents.push(event);
+      }
+    }
+
+    for (const createdEvent of created) {
+      const existing = selectors.event(this.state, createdEvent.id);
+      if (existing) {
+        throw new Error(
+          `Scheduler: an event with id="${createdEvent.id}" already exists. Use updateEvent(...) instead.`,
+        );
+      }
+
+      newEvents.push(createdEvent);
+    }
+
+    this.parameters.onEventsChange?.(newEvents);
+  }
+
+  /**
    * Goes to today's date without changing the view.
    */
   public goToToday = (event: React.UIEvent) => {
@@ -202,24 +249,14 @@ export class SchedulerStore<
    * Creates a new event in the calendar.
    */
   public createEvent = (calendarEvent: CalendarEvent): CalendarEvent => {
-    const existing = selectors.event(this.state, calendarEvent.id);
-    if (existing) {
-      throw new Error(
-        `Event Calendar: an event with id="${calendarEvent.id}" already exists. Use updateEvent(...) instead.`,
-      );
-    }
-
-    const { onEventsChange } = this.parameters;
-    const updatedEvents = [...this.state.events, calendarEvent];
-    onEventsChange?.(updatedEvents);
-
+    this.updateEvents({ created: [calendarEvent] });
     return calendarEvent;
   };
 
   /**
    * Updates an event in the calendar.
    */
-  public updateEvent = (calendarEvent: Partial<CalendarEvent> & Pick<CalendarEvent, 'id'>) => {
+  public updateEvent = (calendarEvent: CalendarEventUpdatedProperties) => {
     const original = selectors.event(this.state, calendarEvent.id);
     if (!original) {
       throw new Error(`Scheduler: the original event was not found (id="${calendarEvent.id}").`);
@@ -228,11 +265,7 @@ export class SchedulerStore<
       throw new Error('Scheduler: this event is recurring. Use updateRecurringEvent(...) instead.');
     }
 
-    const { onEventsChange } = this.parameters;
-    const updatedEvents = this.state.events.map((ev) =>
-      ev.id === calendarEvent.id ? { ...ev, ...calendarEvent } : ev,
-    );
-    onEventsChange?.(updatedEvents);
+    this.updateEvents({ updated: [calendarEvent] });
   };
 
   /**
@@ -240,7 +273,6 @@ export class SchedulerStore<
    */
   public updateRecurringEvent = (params: UpdateRecurringEventParameters) => {
     const { adapter, events } = this.state;
-    const { onEventsChange } = this.parameters;
     const { occurrenceStart, changes, scope } = params;
 
     const original = selectors.event(this.state, changes.id);
@@ -253,17 +285,11 @@ export class SchedulerStore<
       );
     }
 
-    let updatedEvents: CalendarEvent[] = [];
+    let updatedEvents: UpdateEventsParameters;
 
     switch (scope) {
       case 'this-and-following': {
-        updatedEvents = applyRecurringUpdateFollowing(
-          adapter,
-          events,
-          original,
-          occurrenceStart,
-          changes,
-        );
+        updatedEvents = applyRecurringUpdateFollowing(adapter, original, occurrenceStart, changes);
         break;
       }
 
@@ -279,13 +305,7 @@ export class SchedulerStore<
       }
 
       case 'only-this': {
-        updatedEvents = applyRecurringUpdateOnlyThis(
-          adapter,
-          events,
-          original,
-          occurrenceStart,
-          changes,
-        );
+        updatedEvents = applyRecurringUpdateOnlyThis(adapter, original, occurrenceStart, changes);
         break;
       }
 
@@ -294,16 +314,14 @@ export class SchedulerStore<
       }
     }
 
-    onEventsChange?.(updatedEvents);
+    this.updateEvents(updatedEvents);
   };
 
   /**
    * Deletes an event from the calendar.
    */
   public deleteEvent = (eventId: CalendarEventId) => {
-    const { onEventsChange } = this.parameters;
-    const updatedEvents = this.state.events.filter((ev) => ev.id !== eventId);
-    onEventsChange?.(updatedEvents);
+    this.updateEvents({ deleted: [eventId] });
   };
 
   /**
