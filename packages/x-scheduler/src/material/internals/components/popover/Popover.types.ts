@@ -4,10 +4,9 @@ export interface PopoverState<TAnchorData> {
   isOpen: boolean;
   anchor: HTMLElement | null;
   data: TAnchorData | null;
-  keepOpen: boolean;
 }
 
-export interface CreatePopoverComponentsConfig<TAnchorData> {
+export interface CreatePopoverComponentsConfig {
   contextName: string;
 }
 
@@ -15,7 +14,6 @@ export type ContextValue<TAnchorData> = {
   open: (anchor: HTMLElement, data: TAnchorData) => void;
   close: () => void;
   isOpen: boolean;
-  setKeepOpen: (value: boolean) => void;
 };
 
 export interface ProviderProps<TAnchorData> {

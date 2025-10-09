@@ -33,10 +33,8 @@ import {
   detectRecurrenceKeyFromRule,
   RecurrencePresetKey,
 } from '../../../../primitives/utils/recurrence-utils';
-// import { EventPopoverContext, useEventPopoverContext } from './EventPopoverContext';
 import { DEFAULT_EVENT_COLOR } from '../../../../primitives/utils/SchedulerStore';
 import { createPopoverComponents } from '../popover';
-import { useMoreEventsPopoverContext } from '../more-events-popover';
 
 const EventPopoverComponents = createPopoverComponents<CalendarEventOccurrence>({
   contextName: 'EventPopoverContext',

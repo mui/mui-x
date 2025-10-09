@@ -42,9 +42,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
     day.withPosition.length > maxEvents
       ? day.withPosition.slice(0, maxEvents - 1)
       : day.withPosition;
-  const invisibleOccurrences =
-    day.withPosition.length > maxEvents ? day.withPosition.slice(maxEvents - 1) : [];
-  const hiddenCount = invisibleOccurrences.length;
+  const hiddenCount = day.withPosition.length - visibleOccurrences.length;
 
   const cellNumberContent = (
     <span className="MonthViewCellNumber">
@@ -132,7 +130,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
         })}
         {hiddenCount > 0 && (
           <MoreEventsPopoverTrigger
-            occurrences={invisibleOccurrences}
+            occurrences={day.withPosition}
             day={day}
             render={
               <button

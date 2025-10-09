@@ -18,6 +18,11 @@
   width: 150px;
 }
 
+.AgendaEventTime--compact {
+  width: fit-content;
+  margin-inline-end: var(--space-1);
+}
+
 .EventCard--compact {
   container-type: inline-size;
   border-radius: var(--radius-3);
@@ -26,7 +31,7 @@
   height: fit-content;
 }
 
-.EventCard--compact .AgendaEventCardContent {
+.AgendaEventCardContent {
   margin: 0;
   height: var(--line-height-1);
   line-height: var(--line-height-1);
@@ -38,11 +43,33 @@
   gap: var(--space-2);
   padding: var(--space-1) var(--space-2);
 }
+.AgendaEventCardWrapper--compact,
+.AgendaEventCardWrapper--allDay {
+  padding: 0 var(--space-1);
+}
 
-.EventCard--compact:active {
+.AgendaEventCard.EventCard {
+  padding: 0;
+  border-radius: var(--radius-3);
+}
+
+.AgendaEventCard--compact,
+.AgendaEventCard--allDay {
+  padding: 0;
+  border-radius: var(--radius-3);
+}
+
+.AgendaEventCard--compact:active,
+.AgendaEventCard--regular:active {
   background-color: var(--interactive-active-bg);
 }
 
-.EventCard--compact:hover {
+.AgendaEventCard--compact:hover,
+.AgendaEventCard--regular:hover {
   background-color: var(--interactive-hover-bg);
+}
+
+.AgendaEventCard--allDay {
+  --event-background: var(--allDay-accepted-bg);
+  color: var(--allDay-accepted-primary-text);
 }

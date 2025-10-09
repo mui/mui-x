@@ -28,6 +28,7 @@ export const AgendaEvent = React.forwardRef(function AgendaEvent(
     onEventClick,
     id: idProp,
     style,
+    variant = 'regular',
     ...other
   } = props;
 
@@ -39,6 +40,118 @@ export const AgendaEvent = React.forwardRef(function AgendaEvent(
   const color = useStore(store, selectors.eventColor, occurrence.id);
   const isRecurring = Boolean(occurrence.rrule);
 
+  const content = React.useMemo(() => {
+    switch (variant) {
+      case 'compact':
+        return (
+          <React.Fragment>
+            <span
+              className="ResourceLegendColor"
+              role="img"
+              aria-label={
+                resource?.name
+                  ? translations.resourceAriaLabel(resource.name)
+                  : translations.noResourceAriaLabel
+              }
+            />
+            <p
+              className={clsx('AgendaEventCardContent', 'LinesClamp')}
+              style={{ '--number-of-lines': 1 } as React.CSSProperties}
+            >
+              <time className="AgendaEventTime AgendaEventTime--compact">
+                <span>
+                  {adapter.format(occurrence.start, ampm ? 'hoursMinutes12h' : 'hoursMinutes24h')}
+                </span>
+              </time>
+
+              <span className="AgendaEventTitle">{occurrence.title}</span>
+            </p>
+            {isRecurring && (
+              <Repeat
+                size={12}
+                strokeWidth={1.5}
+                className="EventRecurringIcon"
+                aria-hidden="true"
+              />
+            )}
+          </React.Fragment>
+        );
+
+      case 'allDay':
+        return (
+          <React.Fragment>
+            <p
+              className={clsx('AgendaEventTitle', 'LinesClamp')}
+              style={{ '--number-of-lines': 1 } as React.CSSProperties}
+            >
+              {occurrence.title}
+            </p>
+            {isRecurring && (
+              <Repeat
+                size={12}
+                strokeWidth={1.5}
+                className="EventRecurringIcon"
+                aria-hidden="true"
+              />
+            )}
+          </React.Fragment>
+        );
+      case 'regular':
+      default:
+        return (
+          <div className="AgendaEventCardWrapper">
+            <span
+              className="ResourceLegendColor"
+              role="img"
+              aria-label={
+                resource?.name
+                  ? translations.resourceAriaLabel(resource.name)
+                  : translations.noResourceAriaLabel
+              }
+            />
+            <p
+              className={clsx('AgendaEventCardContent', 'LinesClamp')}
+              style={{ '--number-of-lines': 1 } as React.CSSProperties}
+            >
+              {occurrence?.allDay ? (
+                <span className="AgendaEventTime">{translations.allDay}</span>
+              ) : (
+                <time className="AgendaEventTime">
+                  <span>
+                    {adapter.format(occurrence.start, ampm ? 'hoursMinutes12h' : 'hoursMinutes24h')}
+                  </span>
+                  <span>
+                    {' '}
+                    - {adapter.format(occurrence.end, ampm ? 'hoursMinutes12h' : 'hoursMinutes24h')}
+                  </span>
+                </time>
+              )}
+
+              <span className="AgendaEventTitle">{occurrence.title}</span>
+            </p>
+            {isRecurring && (
+              <Repeat
+                size={12}
+                strokeWidth={1.5}
+                className="EventRecurringIcon"
+                aria-hidden="true"
+              />
+            )}
+          </div>
+        );
+    }
+  }, [
+    variant,
+    occurrence.title,
+    occurrence?.allDay,
+    occurrence.start,
+    occurrence.end,
+    isRecurring,
+    resource?.name,
+    translations,
+    ampm,
+  ]);
+
   return (
     // TODO: Use button
     <div
@@ -48,45 +161,15 @@ export const AgendaEvent = React.forwardRef(function AgendaEvent(
         className,
         'EventContainer',
         'EventCard',
-        `EventCard--compact`, // Add a "variant" prop if we add support for other variants
+        'AgendaEventCard',
+        `AgendaEventCard--${variant}`,
         getColorClassName(color),
       )}
       aria-labelledby={`${ariaLabelledBy} ${id}`}
       {...other}
     >
-      <div className="AgendaEventCardWrapper">
-        <span
-          className="ResourceLegendColor"
-          role="img"
-          aria-label={
-            resource?.name
-              ? translations.resourceAriaLabel(resource.name)
-              : translations.noResourceAriaLabel
-          }
-        />
-        <p
-          className={clsx('AgendaEventCardContent', 'LinesClamp')}
-          style={{ '--number-of-lines': 1 } as React.CSSProperties}
-        >
-          {occurrence?.allDay ? (
-            <span className="AgendaEventTime">{translations.allDay}</span>
-          ) : (
-            <time className="AgendaEventTime">
-              <span>
-                {adapter.format(occurrence.start, ampm ? 'hoursMinutes12h' : 'hoursMinutes24h')}
-              </span>
-              <span>
-                {' '}
-                - {adapter.format(occurrence.end, ampm ? 'hoursMinutes12h' : 'hoursMinutes24h')}
-              </span>
-            </time>
-          )}
-
-          <span className="AgendaEventTitle">{occurrence.title}</span>
-        </p>
-        {isRecurring && (
-          <Repeat size={12} strokeWidth={1.5} className="EventRecurringIcon" aria-hidden="true" />
-        )}
+      <div className={clsx('AgendaEventCardWrapper', `AgendaEventCardWrapper--${variant}`)}>
+        {content}
       </div>
     </div>
   );

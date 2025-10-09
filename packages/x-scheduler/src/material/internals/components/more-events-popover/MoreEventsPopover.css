@@ -1,5 +1,5 @@
 .MoreEventsPopoverPositioner {
-  max-width: 200px;
+  max-width: 300px;
 }
 
 .MoreEventsPopoverHeader {
@@ -16,4 +16,11 @@
   color: var(--default-text-color);
   line-height: var(--line-height-1);
   margin: 0;
+}
+
+.MoreEventsPopoverContent {
+  padding: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
 }

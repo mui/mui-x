@@ -3,12 +3,13 @@ import { X } from 'lucide-react';
 import { Popover } from '@base-ui-components/react';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { CalendarEventOccurrence } from '../../../../primitives';
-import './MoreEventsPopover.css';
-import { createPopoverComponents } from '../popover';
-import { EventPopoverTrigger } from '../event-popover';
-import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler/primitives/use-event-occurrences-with-day-grid-position';
+import { useEventOccurrencesWithDayGridPosition } from '../../../../primitives/use-event-occurrences-with-day-grid-position';
 import { MoreEventsPopoverProps, MoreEventsPopoverProviderProps } from './MoreEventsPopover.types';
-import { useEventPopoverContext } from '../event-popover/EventPopover';
+import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
+import { AgendaEvent } from '../event/agenda-event/AgendaEvent';
+import { createPopoverComponents } from '../popover';
+import { ArrowSvg } from './arrow/ArrowSvg';
+import './MoreEventsPopover.css';
 
 interface MoreEventsData {
   occurrences: CalendarEventOccurrence[];
@@ -27,7 +28,7 @@ export default function MoreEventsPopover(props: MoreEventsPopoverProps) {
   const { anchor, container, occurrences, day } = props;
 
   const translations = useTranslations();
-  const context = useMoreEventsPopoverContext();
+  const adapter = useAdapter();
 
   return (
     <Popover.Portal container={container}>
@@ -37,8 +38,18 @@ export default function MoreEventsPopover(props: MoreEventsPopoverProps) {
         className="PopoverPositioner MoreEventsPopoverPositioner"
       >
         <Popover.Popup>
-          <div className="MoreEventsPopoverHeader">
-            <Popover.Title className="MoreEventsPopoverTitle">2 more events</Popover.Title>
+          <Popover.Arrow className="PopoverArrow">
+            <ArrowSvg />
+          </Popover.Arrow>
+
+          <div
+            className="MoreEventsPopoverHeader"
+            id={`PopoverHeader-${day.key}`}
+            aria-label={`${adapter.format(day.value, 'normalDateWithWeekday')}`}
+          >
+            <Popover.Title className="MoreEventsPopoverTitle">
+              {adapter.format(day.value, 'normalDateWithWeekday')}
+            </Popover.Title>
             <Popover.Close
               aria-label={translations.closeButtonAriaLabel}
               className="EventPopoverCloseButton NeutralTextButton"
@@ -48,11 +59,11 @@ export default function MoreEventsPopover(props: MoreEventsPopoverProps) {
           </div>
           <div className="MoreEventsPopoverContent">
             {occurrences.map((occurrence) => (
-              <EventPopoverTrigger
+              <AgendaEvent
+                variant={occurrence.allDay ? 'allDay' : 'compact'}
                 key={occurrence.key}
                 occurrence={occurrence}
-                onClick={(_e) => context.setKeepOpen(true)}
-                render={<p>{occurrence.title}</p>}
+                ariaLabelledBy={`PopoverHeader-${day.key}`}
               />
             ))}
           </div>

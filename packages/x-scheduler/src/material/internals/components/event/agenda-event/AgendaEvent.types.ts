@@ -6,4 +6,8 @@ export interface AgendaEventProps extends EventProps {
    * The event occurrence to render.
    */
   occurrence: CalendarEventOccurrence;
+  /**
+   * The event occurrence to render.
+   */
+  variant?: 'regular' | 'allDay' | 'compact';
 }
