@@ -104,4 +104,9 @@ export const selectors = {
       };
     },
   ),
+  isCurrentDay: createSelector(
+    (state: State) => state.adapter,
+    (state: State) => state.nowUpdatedEveryMinute,
+    (adapter, now, date: SchedulerValidDate) => adapter.isSameDay(date, now),
+  ),
 };

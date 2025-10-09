@@ -1,6 +1,8 @@
 import * as React from 'react';
+import { useId } from '@base-ui-components/utils/useId';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
+import { CalendarGridRootContext } from './CalendarGridRootContext';
 
 export const CalendarGridRoot = React.forwardRef(function CalendarGridRoot(
   componentProps: CalendarGridRoot.Props,
@@ -10,16 +12,28 @@ export const CalendarGridRoot = React.forwardRef(function CalendarGridRoot(
     // Rendering props
     className,
     render,
+    // Internal props
+    id: idProp,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
 
-  const props = React.useMemo(() => ({ role: 'grid' }), []);
+  const id = useId(idProp);
 
-  return useRenderElement('div', componentProps, {
+  const props = React.useMemo(() => ({ role: 'grid', id }), [id]);
+
+  const contextValue: CalendarGridRootContext = React.useMemo(() => ({ id }), [id]);
+
+  const element = useRenderElement('div', componentProps, {
     ref: [forwardedRef],
     props: [props, elementProps],
   });
+
+  return (
+    <CalendarGridRootContext.Provider value={contextValue}>
+      {element}
+    </CalendarGridRootContext.Provider>
+  );
 });
 
 export namespace CalendarGridRoot {
