@@ -141,7 +141,7 @@ storeClasses.forEach((storeClass) => {
         );
 
         expect(() => store.createEvent(duplicate)).to.throw(
-          'Scheduler: an event with id="Event 1" already exists. Use updateEvent(...) instead.',
+          `${storeClass.name}: an event with id="Event 1" already exists. Use updateEvent(...) instead.`,
         );
         expect(onEventsChange.called).to.equal(false);
       });

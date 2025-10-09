@@ -218,7 +218,7 @@ export class SchedulerStore<
     for (const createdEvent of created) {
       if (selectors.event(this.state, createdEvent.id)) {
         throw new Error(
-          `Scheduler: an event with id="${createdEvent.id}" already exists. Use updateEvent(...) instead.`,
+          `${this.instanceName}: an event with id="${createdEvent.id}" already exists. Use updateEvent(...) instead.`,
         );
       }
       newEvents.push(createdEvent);
@@ -249,10 +249,14 @@ export class SchedulerStore<
   public updateEvent = (calendarEvent: CalendarEventUpdatedProperties) => {
     const original = selectors.event(this.state, calendarEvent.id);
     if (!original) {
-      throw new Error(`Scheduler: the original event was not found (id="${calendarEvent.id}").`);
+      throw new Error(
+        `${this.instanceName}: the original event was not found (id="${calendarEvent.id}").`,
+      );
     }
     if (original?.rrule) {
-      throw new Error('Scheduler: this event is recurring. Use updateRecurringEvent(...) instead.');
+      throw new Error(
+        `${this.instanceName}: this event is recurring. Use updateRecurringEvent(...) instead.`,
+      );
     }
 
     this.updateEvents({ updated: [calendarEvent] });
@@ -267,11 +271,13 @@ export class SchedulerStore<
 
     const original = selectors.event(this.state, changes.id);
     if (!original) {
-      throw new Error(`Scheduler: the original event was not found (id="${changes.id}").`);
+      throw new Error(
+        `${this.instanceName}: the original event was not found (id="${changes.id}").`,
+      );
     }
     if (!original.rrule) {
       throw new Error(
-        'Scheduler: the original event is not recurring. Use updateEvent(...) instead.',
+        `${this.instanceName}: the original event is not recurring. Use updateEvent(...) instead.`,
       );
     }
 
@@ -294,7 +300,7 @@ export class SchedulerStore<
       }
 
       default: {
-        throw new Error(`Scheduler: scope="${scope}" is not supported.`);
+        throw new Error(`${this.instanceName}: scope="${scope}" is not supported.`);
       }
     }
 
