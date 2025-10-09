@@ -19,7 +19,7 @@ import { useEventCalendarStoreContext } from '../../use-event-calendar-store-con
 import { useCalendarGridDayCellContext } from '../day-cell/CalendarGridDayCellContext';
 import { useCalendarGridRootContext } from '../root/CalendarGridRootContext';
 
-const EVENT_PROPS_WHILE_DRAGGING = { style: { pointerEvents: 'none' as const } };
+const EVENT_STYLE_WHILE_DRAGGING = { pointerEvents: 'none' as const };
 
 export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEvent(
   componentProps: CalendarGridDayEvent.Props,
@@ -66,8 +66,9 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
 
   const props = React.useMemo(
     () => ({
-      ...(hasPlaceholder ? EVENT_PROPS_WHILE_DRAGGING : undefined),
+      id,
       'aria-labelledby': `${columnHeaderId} ${id}`,
+      style: hasPlaceholder ? EVENT_STYLE_WHILE_DRAGGING : undefined,
     }),
     [hasPlaceholder, columnHeaderId, id],
   );

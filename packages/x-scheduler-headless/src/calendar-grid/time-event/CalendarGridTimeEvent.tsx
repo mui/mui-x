@@ -82,7 +82,7 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
   const columnHeaderId = getCalendarGridHeaderCellId(rootId, columnIndex);
 
   const props = React.useMemo(
-    () => ({ style, 'aria-labelledby': `${columnHeaderId} ${id}` }),
+    () => ({ id, style, 'aria-labelledby': `${columnHeaderId} ${id}` }),
     [style, columnHeaderId, id],
   );
 
