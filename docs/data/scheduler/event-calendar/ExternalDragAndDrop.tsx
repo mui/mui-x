@@ -3,9 +3,8 @@ import clsx from 'clsx';
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import { StandaloneEvent } from '@mui/x-scheduler/standalone-event';
+import { CalendarOccurrencePlaceholderExternalDragData } from '@mui/x-scheduler/models';
 // TODO: Estimate if we can avoid all imports from the headless package.
-import { CalendarOccurrencePlaceholderExternalDragData } from '@mui/x-scheduler-headless/models';
-import { diffIn, useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { buildIsValidDropTarget } from '@mui/x-scheduler-headless/build-is-valid-drop-target';
 import {
   initialEvents,
@@ -48,7 +47,6 @@ const initialExternalEvents: CalendarOccurrencePlaceholderExternalDragData[] = [
 ];
 
 export default function ExternalDragAndDrop() {
-  const adapter = useAdapter();
   const [events, setEvents] = React.useState(initialEvents);
   const [placeholder, setPlaceholder] =
     React.useState<CalendarOccurrencePlaceholderExternalDragData | null>(null);
@@ -80,7 +78,7 @@ export default function ExternalDragAndDrop() {
 
         setPlaceholder({
           ...eventData,
-          duration: diffIn(adapter, end, start, 'minutes'),
+          duration: end.diff(start).as('minutes'),
         });
       },
       onDragLeave: () => {
