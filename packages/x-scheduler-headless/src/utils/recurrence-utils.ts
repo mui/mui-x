@@ -831,41 +831,30 @@ export function applyRecurringUpdateAll(
   occurrenceStart: SchedulerValidDate,
   changes: CalendarEventUpdatedProperties,
 ): UpdateEventsParameters {
-  const occurrenceEnd = adapter.addMinutes(
-    occurrenceStart,
-    diffIn(adapter, originalEvent.end, originalEvent.start, 'minutes'),
-  );
-  // 1) Detect if the caller changed the date part of start or end
-  const touchedStartDateDay =
-    changes.start != null && !adapter.isSameDay(occurrenceStart, changes.start);
-  const touchedEndDateDateDay =
-    changes.end != null && !adapter.isSameDay(occurrenceEnd, changes.end);
+  const eventUpdatedProperties: CalendarEventUpdatedProperties = { ...changes };
 
-  // 2) Start from the current root start/end
-  let nextStart = originalEvent.start;
-  let nextEnd = originalEvent.end;
-
-  // 3) If the caller touched the date part of start or end, use the provided values as-is.
+  // 2) If the caller touched the date part of start or end, use the provided values as-is.
   // Otherwise, merge the new time part into the original start/end dates.
-  if (touchedStartDateDay || touchedEndDateDateDay) {
-    nextStart = changes.start!;
-    nextEnd = changes.end!;
-  } else {
-    nextStart =
-      changes.start == null
-        ? originalEvent.start
-        : mergeDateAndTime(adapter, originalEvent.start, changes.start);
-    nextEnd =
-      changes.end == null
-        ? originalEvent.end
-        : mergeDateAndTime(adapter, originalEvent.end, changes.end);
+  if (changes.start != null) {
+    if (adapter.isSameDay(occurrenceStart, changes.start)) {
+      eventUpdatedProperties.start = mergeDateAndTime(adapter, originalEvent.start, changes.start);
+    } else {
+      eventUpdatedProperties.start = changes.start;
+    }
   }
 
-  const eventUpdatedProperties: CalendarEventUpdatedProperties = {
-    ...changes,
-    start: nextStart,
-    end: nextEnd,
-  };
+  if (changes.end != null) {
+    const occurrenceEnd = adapter.addMinutes(
+      occurrenceStart,
+      diffIn(adapter, originalEvent.end, originalEvent.start, 'minutes'),
+    );
+
+    if (adapter.isSameDay(occurrenceEnd, changes.end)) {
+      eventUpdatedProperties.end = mergeDateAndTime(adapter, originalEvent.end, changes.end);
+    } else {
+      eventUpdatedProperties.end = changes.end;
+    }
+  }
 
   // 4) Replace the series root in the list
   return { updated: [eventUpdatedProperties] };
