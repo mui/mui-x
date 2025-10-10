@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { useStore, useSelector, selectorChartDrawingArea } from '@mui/x-charts/internals';
 import clsx from 'clsx';
+import { useTheme } from '@mui/material/styles';
 import {
   selectorChartBrushConfig,
   selectorChartBrushCurrentX,
@@ -12,7 +13,6 @@ import {
 import type { UseChartProZoomSignature } from '../plugins';
 import { brushOverlayClasses } from './ChartsBrushOverlay.classes';
 
-// TODO: Styles
 function BrushLine(props: React.SVGProps<SVGLineElement>) {
   return (
     <line
@@ -27,7 +27,13 @@ function BrushLine(props: React.SVGProps<SVGLineElement>) {
 
 function BrushRect(props: React.SVGProps<SVGRectElement>) {
   return (
-    <rect className={brushOverlayClasses.rect} strokeWidth={1} pointerEvents={'none'} {...props} />
+    <rect
+      className={brushOverlayClasses.rect}
+      strokeWidth={1}
+      fillOpacity={0.2}
+      pointerEvents={'none'}
+      {...props}
+    />
   );
 }
 
@@ -39,6 +45,8 @@ export interface ChartsBrushOverlayProps {}
 export function ChartsBrushOverlay(_: ChartsBrushOverlayProps) {
   const store = useStore<[UseChartProZoomSignature]>();
   const drawingArea = useSelector(store, selectorChartDrawingArea);
+
+  const theme = useTheme();
 
   const brushStartX = useSelector(store, selectorChartBrushStartX);
   const brushStartY = useSelector(store, selectorChartBrushStartY);
@@ -59,6 +67,8 @@ export function ChartsBrushOverlay(_: ChartsBrushOverlayProps) {
   const startY = clampY(brushStartY);
   const currentX = clampX(brushCurrentX);
   const currentY = clampY(brushCurrentY);
+  const rectColor = theme.palette.mode === 'light' ? 'grey' : 'white';
+  const strokeColor = theme.palette.mode === 'light' ? '#000000' : '#ffffff';
 
   // For scatter charts, show only the rectangle without guide lines
   if (brushConfig === 'orthogonal') {
@@ -72,6 +82,7 @@ export function ChartsBrushOverlay(_: ChartsBrushOverlayProps) {
       <g className={clsx(brushOverlayClasses.root, brushOverlayClasses.orthogonal)}>
         {showRect && (
           <BrushRect
+            fill={rectColor}
             x={rectWidth >= 0 ? startX : currentX}
             y={rectHeight >= 0 ? startY : currentY}
             width={Math.abs(rectWidth)}
@@ -92,11 +103,17 @@ export function ChartsBrushOverlay(_: ChartsBrushOverlayProps) {
 
     return (
       <g className={clsx(brushOverlayClasses.root, brushOverlayClasses.horizontal)}>
-        <BrushLine x1={left} y1={startY} x2={left + width} y2={startY} />
+        <BrushLine stroke={strokeColor} x1={left} y1={startY} x2={left + width} y2={startY} />
         {showRect && (
           <React.Fragment>
-            <BrushLine x1={left} y1={currentY} x2={left + width} y2={currentY} />
-            <BrushRect x={left} y={minY} width={width} height={rectHeight} />
+            <BrushLine
+              stroke={strokeColor}
+              x1={left}
+              y1={currentY}
+              x2={left + width}
+              y2={currentY}
+            />
+            <BrushRect fill={rectColor} x={left} y={minY} width={width} height={rectHeight} />
           </React.Fragment>
         )}
       </g>
@@ -112,10 +129,10 @@ export function ChartsBrushOverlay(_: ChartsBrushOverlayProps) {
 
   return (
     <g className={clsx(brushOverlayClasses.root, brushOverlayClasses.vertical)}>
-      <BrushLine x1={startX} y1={top} x2={startX} y2={top + height} />
+      <BrushLine stroke={strokeColor} x1={startX} y1={top} x2={startX} y2={top + height} />
       {showRect && (
         <React.Fragment>
-          <BrushLine x1={currentX} y1={top} x2={currentX} y2={top + height} />
+          <BrushLine stroke={strokeColor} x1={currentX} y1={top} x2={currentX} y2={top + height} />
           <BrushRect x={minX} y={top} width={rectWidth} height={height} />
         </React.Fragment>
       )}
