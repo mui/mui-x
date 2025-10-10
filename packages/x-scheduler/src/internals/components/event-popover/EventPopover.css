@@ -1,14 +1,8 @@
 @import '../../../styles/tokens.css';
 
-.PopoverPositioner {
+.EventPopoverPositioner {
   max-width: 460px;
-  width: 100%;
-  background-color: var(--panel);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-4);
   overflow: hidden;
-  z-index: 1300;
-  box-shadow: var(--shadow-4);
 }
 
 .EventPopoverHeader {

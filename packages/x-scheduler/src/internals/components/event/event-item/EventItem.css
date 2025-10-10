@@ -1,6 +1,6 @@
 @import '../../../../styles/colors.css';
 
-.AgendaEventTitle {
+.EventItemTitle {
   margin: 0;
   color: var(--event-primary-text);
   font-weight: var(--font-weight-2);
@@ -8,7 +8,7 @@
   line-height: var(--line-height-1);
 }
 
-.AgendaEventTime {
+.EventItemTime {
   display: inline-block;
   color: var(--event-secondary-text);
   font-weight: var(--font-weight-1);
@@ -16,6 +16,11 @@
   line-height: var(--line-height-1);
   white-space: nowrap;
   width: 150px;
+}
+
+.EventItemTime--compact {
+  width: fit-content;
+  margin-inline-end: var(--space-1);
 }
 
 .EventCard--compact {
@@ -26,23 +31,45 @@
   height: fit-content;
 }
 
-.EventCard--compact .AgendaEventCardContent {
+.EventItemCardContent {
   margin: 0;
   height: var(--line-height-1);
   line-height: var(--line-height-1);
 }
 
-.AgendaEventCardWrapper {
+.EventItemCardWrapper {
   display: flex;
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-1) var(--space-2);
 }
+.EventItemCardWrapper--compact,
+.EventItemCardWrapper--allDay {
+  padding: 0 var(--space-1);
+}
 
-.EventCard--compact:active {
+.EventItemCard.EventCard {
+  padding: 0;
+  border-radius: var(--radius-3);
+}
+
+.EventItemCard--compact,
+.EventItemCard--allDay {
+  padding: 0;
+  border-radius: var(--radius-3);
+}
+
+.EventItemCard--compact:active,
+.EventItemCard--regular:active {
   background-color: var(--interactive-active-bg);
 }
 
-.EventCard--compact:hover {
+.EventItemCard--compact:hover,
+.EventItemCard--regular:hover {
   background-color: var(--interactive-hover-bg);
+}
+
+.EventItemCard--allDay {
+  --event-background: var(--allDay-accepted-bg);
+  color: var(--allDay-accepted-primary-text);
 }
