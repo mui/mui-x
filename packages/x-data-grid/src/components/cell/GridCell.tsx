@@ -203,6 +203,8 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
     }),
   );
 
+  cellParams.isEditable = useGridSelector(apiRef, () => apiRef.current.isCellEditable(cellParams));
+
   const store = apiRef.current.virtualizer.store;
   const hiddenCells = useStore(store, Rowspan.selectors.hiddenCells);
   const spannedCells = useStore(store, Rowspan.selectors.spannedCells);
