@@ -7,7 +7,7 @@ import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headles
 import { MoreEventsPopoverProps, MoreEventsPopoverProviderProps } from './MoreEventsPopover.types';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { AgendaEvent } from '../event/agenda-event/AgendaEvent';
-import { createPopoverComponents } from '../popover';
+import { createPopover } from '../popover';
 import { ArrowSvg } from './arrow/ArrowSvg';
 import './MoreEventsPopover.css';
 
@@ -17,14 +17,14 @@ interface MoreEventsData {
   day: useEventOccurrencesWithDayGridPosition.DayData;
 }
 
-const MoreEventsPopoverComponents = createPopoverComponents<MoreEventsData>({
+const MoreEventsPopover = createPopover<MoreEventsData>({
   contextName: 'MoreEventsPopoverContext',
 });
 
-export const MoreEventsPopoverContext = MoreEventsPopoverComponents.Context;
-export const useMoreEventsPopoverContext = MoreEventsPopoverComponents.useContext;
+export const MoreEventsPopoverContext = MoreEventsPopover.Context;
+export const useMoreEventsPopoverContext = MoreEventsPopover.useContext;
 
-export default function MoreEventsPopover(props: MoreEventsPopoverProps) {
+export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) {
   const { anchor, container, occurrences, day } = props;
 
   const translations = useTranslations();
@@ -77,10 +77,10 @@ export function MoreEventsPopoverProvider(props: MoreEventsPopoverProviderProps)
   const { containerRef, children } = props;
 
   return (
-    <MoreEventsPopoverComponents.Provider
+    <MoreEventsPopover.Provider
       containerRef={containerRef}
       renderPopover={({ anchor, data, container, onClose }) => (
-        <MoreEventsPopover
+        <MoreEventsPopoverContent
           anchor={anchor}
           container={container}
           occurrences={data.occurrences}
@@ -91,7 +91,7 @@ export function MoreEventsPopoverProvider(props: MoreEventsPopoverProviderProps)
       )}
     >
       {children}
-    </MoreEventsPopoverComponents.Provider>
+    </MoreEventsPopover.Provider>
   );
 }
 
@@ -105,9 +105,6 @@ export function MoreEventsPopoverTrigger(props: MoreEventsPopoverTriggerProps) {
   const { occurrences, day, ...other } = props;
 
   return (
-    <MoreEventsPopoverComponents.Trigger
-      data={{ occurrences, count: occurrences.length, day }}
-      {...other}
-    />
+    <MoreEventsPopover.Trigger data={{ occurrences, count: occurrences.length, day }} {...other} />
   );
 }

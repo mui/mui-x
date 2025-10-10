@@ -32,17 +32,17 @@ import {
 } from './EventPopover.types';
 import { getColorClassName } from '../../utils/color-utils';
 import { useTranslations } from '../../utils/TranslationsContext';
-import { createPopoverComponents } from '../popover';
+import { createPopover } from '../popover';
 import './EventPopover.css';
 
-const EventPopoverComponents = createPopoverComponents<CalendarEventOccurrence>({
+const EventPopover = createPopover<CalendarEventOccurrence>({
   contextName: 'EventPopoverContext',
 });
 
-export const EventPopoverContext = EventPopoverComponents.Context;
-export const useEventPopoverContext = EventPopoverComponents.useContext;
+export const EventPopoverContext = EventPopover.Context;
+export const useEventPopoverContext = EventPopover.useContext;
 
-export const EventPopover = React.forwardRef(function EventPopover(
+export const EventPopoverContent = React.forwardRef(function EventPopoverContent(
   props: EventPopoverProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
@@ -534,10 +534,10 @@ export function EventPopoverProvider(props: EventPopoverProviderProps) {
   const store = useEventCalendarStoreContext();
 
   return (
-    <EventPopoverComponents.Provider
+    <EventPopover.Provider
       containerRef={containerRef}
       renderPopover={({ anchor, data: occurrence, container, onClose }) => (
-        <EventPopover
+        <EventPopoverContent
           anchor={anchor}
           occurrence={occurrence}
           container={container}
@@ -549,12 +549,12 @@ export function EventPopoverProvider(props: EventPopoverProviderProps) {
       }}
     >
       {children}
-    </EventPopoverComponents.Provider>
+    </EventPopover.Provider>
   );
 }
 
 export function EventPopoverTrigger(props: EventPopoverTriggerProps) {
   const { occurrence, ...other } = props;
 
-  return <EventPopoverComponents.Trigger data={occurrence} nativeButton={false} {...other} />;
+  return <EventPopover.Trigger data={occurrence} nativeButton={false} {...other} />;
 }

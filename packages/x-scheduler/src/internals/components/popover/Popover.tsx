@@ -4,13 +4,13 @@ import { Popover } from '@base-ui-components/react/popover';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import {
   ContextValue,
-  CreatePopoverComponentsConfig,
+  CreatePopoverConfig,
   PopoverState,
   ProviderProps,
   TriggerProps,
 } from './Popover.types';
 
-export function createPopoverComponents<TAnchorData>(config: CreatePopoverComponentsConfig) {
+export function createPopover<TAnchorData>(config: CreatePopoverConfig) {
   const Context = React.createContext<ContextValue<TAnchorData> | undefined>(undefined);
 
   function usePopoverContext(): ContextValue<TAnchorData> {

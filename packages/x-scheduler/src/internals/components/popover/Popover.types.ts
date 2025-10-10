@@ -6,7 +6,7 @@ export interface PopoverState<TAnchorData> {
   data: TAnchorData | null;
 }
 
-export interface CreatePopoverComponentsConfig {
+export interface CreatePopoverConfig {
   contextName: string;
 }
 
