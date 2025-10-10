@@ -16,9 +16,12 @@ export const DateNavigator = React.forwardRef(function DateNavigator(
 ) {
   const { className, ...other } = props;
 
+  // Context hooks
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
   const translations = useTranslations();
+
+  // Selector hooks
   const view = useStore(store, selectors.view);
   const visibleDate = useStore(store, selectors.visibleDate);
   const isSidePanelOpen = useStore(store, selectors.preferences).isSidePanelOpen;
