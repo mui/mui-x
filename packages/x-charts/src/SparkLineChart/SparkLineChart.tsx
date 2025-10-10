@@ -21,7 +21,7 @@ import { MarkPlotSlots, MarkPlotSlotProps } from '../LineChart/MarkPlot';
 import { LineHighlightPlotSlots, LineHighlightPlotSlotProps } from '../LineChart/LineHighlightPlot';
 import { BarPlotSlots, BarPlotSlotProps } from '../BarChart/BarPlot';
 import { ChartMargin } from '../internals/plugins/corePlugins/useChartDimensions/useChartDimensions.types';
-import { FocusedMark } from '../LineChart/FocusedMark';
+import { FocusedMark } from '../LineChart/LineFocusedMark';
 
 export interface SparkLineChartSlots
   extends AreaPlotSlots,

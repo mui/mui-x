@@ -83,6 +83,8 @@ export default chartsApiPages;
       'x-charts/src/Gauge/GaugeReferenceArc.tsx',
       'x-charts/src/Gauge/GaugeValueArc.tsx',
       'x-charts/src/Gauge/GaugeValueText.tsx',
+      'x-charts/src/BarChart/FocusedBar.tsx',
+      'x-charts/src/ScatterChart/ScatterFocusedMark.tsx',
       'x-charts/src/ChartsReferenceLine/ChartsXReferenceLine.tsx',
       'x-charts/src/ChartsReferenceLine/ChartsYReferenceLine.tsx',
       'x-charts/src/ChartsOverlay/ChartsOverlay.tsx',
