@@ -60,11 +60,9 @@ export function getCalendarEventFromModel<EventModel extends {}>(
 
   for (const key of EVENT_PROPERTIES) {
     const getter = eventModelStructure[key]?.getter;
-    if (getter) {
-      processedEvent[key as any] = getter(event);
-    } else {
-      processedEvent[key as any] = (event as any)[key];
-    }
+
+    // @ts-ignore
+    processedEvent[key] = getter ? getter(event) : event[key];
   }
 
   return processedEvent;
@@ -81,11 +79,9 @@ export function getUpdatedEventModelFromPartialCalendarEvent<EventModel extends 
       const typedKey = key as keyof CalendarEvent;
       if (eventModelStructure[typedKey]) {
         const setter = eventModelStructure[typedKey]?.setter as AnySetter<EventModel>;
-        if (setter) {
-          updatedEventModel[typedKey] = setter(updatedEventModel, changes[typedKey]) as EventModel;
-        } else {
-          (updatedEventModel as any)[key] = changes[typedKey];
-        }
+
+        // @ts-ignore
+        updatedEventModel[key] = setter ? setter(updatedEventModel, changes[key]) : changes[key];
       }
     }
   }
@@ -104,11 +100,9 @@ export function createEventModel<EventModel extends {}>(
       if (eventModelStructure[typedKey]) {
         // TODO: Run properties without setters before the ones with setters
         const setter = eventModelStructure[typedKey]?.setter as AnySetter<EventModel>;
-        if (setter) {
-          eventModel[typedKey] = setter(eventModel, event[typedKey]) as EventModel;
-        } else {
-          (eventModel as any)[key] = event[typedKey];
-        }
+
+        // @ts-ignore
+        eventModel[key] = setter ? setter(eventModel, event[key]) : event[key];
       }
     }
   }

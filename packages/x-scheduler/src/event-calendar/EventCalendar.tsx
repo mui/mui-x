@@ -100,4 +100,8 @@ export const EventCalendar = React.forwardRef(function EventCalendar<EventModel 
       </SchedulerStoreContext.Provider>
     </EventCalendarStoreContext.Provider>
   );
-});
+}) as EventCalendarComponent;
+
+type EventCalendarComponent = <EventModel extends {}>(
+  props: EventCalendarProps<EventModel> & { ref?: React.ForwardedRef<HTMLDivElement> },
+) => React.JSX.Element;

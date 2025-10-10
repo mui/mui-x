@@ -1,7 +1,9 @@
 import { adapter } from 'test/utils/scheduler';
+import { CalendarEvent } from '@mui/x-scheduler-headless/models';
 import { storeClasses, buildEvent, getIds } from './utils';
+import { selectors } from '../SchedulerStore.selectors';
 
-const DEFAULT_PARAMS = { events: [] };
+const DEFAULT_PARAMS = { events: [] as CalendarEvent[] };
 
 storeClasses.forEach((storeClass) => {
   describe(`Core - ${storeClass.name}`, () => {
@@ -24,10 +26,10 @@ storeClasses.forEach((storeClass) => {
 
         const store = new storeClass.Value({ events }, adapter);
 
-        expect(store.state.events).to.have.length(2);
-        expect(store.state.events[0].title).to.equal('Event 1');
-        expect(store.state.events[1].title).to.equal('Event 2');
-        expect(store.state.events).to.equal(events);
+        expect(selectors.eventIdList(store.state)).to.deep.equal(['1', '2']);
+        expect(selectors.event(store.state, '1')!.title).to.equal('Event 1');
+        expect(selectors.event(store.state, '2')!.title).to.equal('Event 2');
+        expect(selectors.eventModelList(store.state)).to.equal(events);
       });
     });
 
@@ -54,8 +56,10 @@ storeClasses.forEach((storeClass) => {
         };
 
         store.updateStateFromParameters(newParams, adapter);
-        expect(getIds(store.state.events)).to.deep.equal(['1']);
-        expect(getIds(store.state.resources)).to.deep.equal(['r1', 'r2']);
+
+        expect(selectors.eventIdList(store.state)).to.deep.equal(['1']);
+        expect(getIds(selectors.resources(store.state))).to.deep.equal(['r1', 'r2']);
+
         expect(store.state.areEventsDraggable).to.equal(true);
         expect(store.state.areEventsResizable).to.equal(true);
         expect(store.state.showCurrentTimeIndicator).to.equal(false);

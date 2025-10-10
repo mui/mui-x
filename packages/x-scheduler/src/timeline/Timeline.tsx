@@ -44,4 +44,8 @@ export const Timeline = React.forwardRef(function Timeline<EventModel extends {}
       </SchedulerStoreContext.Provider>
     </TimelineStoreContext.Provider>
   );
-});
+}) as TimelineComponent;
+
+type TimelineComponent = <EventModel extends {}>(
+  props: TimelineProps<EventModel> & { ref?: React.ForwardedRef<HTMLDivElement> },
+) => React.JSX.Element;
