@@ -741,8 +741,64 @@ function PTOCalendar() {
 
   const todayStr = format(new Date(), 'yyyy-MM-dd');
 
+  // added just for initial visualization
+  const sourceFiles = {
+    'CalendarFilters.tsx': `import * as React from 'react';
+import Stack from '@mui/material/Stack';
+import Link from '@mui/material/Link';
+import { ToolbarButton } from '@mui/x-data-grid-premium';
+import Chip from '@mui/material/Chip';
+import Check from '@mui/icons-material/Check';
+import { FilterType } from './types/pto';
+import { FILTER_OPTIONS, FILTER_LABELS, FILTER_COLORS } from './constants';
+
+interface CalendarFiltersProps {
+  activeFilters: FilterType[];
+  showPresentToday: boolean;
+  onFilterRemove: (filter: FilterType) => void;
+  onFilterAdd: (filter: FilterType) => void;
+  onTogglePresentToday: () => void;
+}
+
+export function CalendarFilters({
+  activeFilters,
+  showPresentToday,
+  onFilterRemove,
+  onFilterAdd,
+  onTogglePresentToday,
+}: CalendarFiltersProps) {
   return (
-    <DemoContainer theme={ptoCalendarTheme}>
+    <Stack direction="row" alignItems="center" gap={2}>
+      <Stack direction="row" alignItems="center" gap={1}>
+        {FILTER_OPTIONS.map((filter) => {
+          const isActive = activeFilters.includes(filter);
+          return (
+            <ToolbarButton
+              key={filter}
+              onClick={!isActive ? () => onFilterAdd(filter) : () => onFilterRemove(filter)}
+              render={
+                <Chip
+                  label={FILTER_LABELS[filter]}
+                  icon={isActive ? <Check fontSize="small" /> : undefined}
+                  color={isActive ? 'primary' : 'default'}
+                  variant={isActive ? 'filled' : 'outlined'}
+                />
+              }
+            />
+          );
+        })}
+      </Stack>
+    </Stack>
+  );
+}`,
+  };
+
+  return (
+    <DemoContainer
+      theme={ptoCalendarTheme}
+      sourceFiles={sourceFiles}
+      defaultExpandedFile="CalendarFilters.tsx"
+    >
       <CalendarContext.Provider value={calendarState}>
         <Box
           sx={(theme) => ({
