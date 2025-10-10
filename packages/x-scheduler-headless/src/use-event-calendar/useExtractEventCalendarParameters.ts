@@ -1,12 +1,15 @@
 import * as React from 'react';
 import { EventCalendarParameters } from './EventCalendarStore.types';
 
-export function useExtractEventCalendarParameters<P extends EventCalendarParameters>(
-  props: P,
-): UseExtractEventCalendarParametersReturnValue<P> {
+export function useExtractEventCalendarParameters<
+  TEvent extends {},
+  TResource extends {},
+  P extends EventCalendarParameters<TEvent, TResource>,
+>(props: P): UseExtractEventCalendarParametersReturnValue<TEvent, TResource, P> {
   const {
     events,
     onEventsChange,
+    eventModelStructure,
     resources,
     view,
     defaultView,
@@ -24,10 +27,11 @@ export function useExtractEventCalendarParameters<P extends EventCalendarParamet
     ...forwardedProps
   } = props;
 
-  const parameters: EventCalendarParameters = React.useMemo(
+  const parameters: EventCalendarParameters<TEvent, TResource> = React.useMemo(
     () => ({
       events,
       onEventsChange,
+      eventModelStructure,
       resources,
       view,
       defaultView,
@@ -46,6 +50,7 @@ export function useExtractEventCalendarParameters<P extends EventCalendarParamet
     [
       events,
       onEventsChange,
+      eventModelStructure,
       resources,
       view,
       defaultView,
@@ -63,10 +68,17 @@ export function useExtractEventCalendarParameters<P extends EventCalendarParamet
     ],
   );
 
-  return { parameters, forwardedProps: forwardedProps as Omit<P, keyof EventCalendarParameters> };
+  return {
+    parameters,
+    forwardedProps: forwardedProps as Omit<P, keyof EventCalendarParameters<TEvent, TResource>>,
+  };
 }
 
-interface UseExtractEventCalendarParametersReturnValue<P extends EventCalendarParameters> {
-  parameters: EventCalendarParameters;
-  forwardedProps: Omit<P, keyof EventCalendarParameters>;
+interface UseExtractEventCalendarParametersReturnValue<
+  TEvent extends {},
+  TResource extends {},
+  P extends EventCalendarParameters<TEvent, TResource>,
+> {
+  parameters: EventCalendarParameters<TEvent, TResource>;
+  forwardedProps: Omit<P, keyof EventCalendarParameters<TEvent, TResource>>;
 }

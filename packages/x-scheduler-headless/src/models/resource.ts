@@ -9,9 +9,9 @@ export interface CalendarResource {
    */
   id: CalendarResourceId;
   /**
-   * The name of the resource.
+   * The title of the resource.
    */
-  name: string;
+  title: string;
   /**
    * The color palette used for events assigned to this resource.
    * Can be overridden per event using the `color` property on the event model. (TODO: not implemented yet)
@@ -19,3 +19,9 @@ export interface CalendarResource {
    */
   eventColor?: CalendarEventColor;
 }
+
+export type SchedulerResourceModelStructure<TResource extends {}> = {
+  [key in keyof CalendarResource]?: {
+    getter: (event: TResource) => CalendarResource[key];
+  };
+};

@@ -19,7 +19,9 @@ export function buildEvent(
   };
 }
 
-export function getIds<T extends { id: string | number }>(items: T[]): Array<T['id']> {
+export function getIds<T extends { id: string | number }>(
+  items: T[] | readonly T[],
+): Array<T['id']> {
   return items.map((item) => item.id);
 }
 

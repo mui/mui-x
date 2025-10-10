@@ -49,7 +49,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
 
   // Selector hooks
   const isEventReadOnly = useStore(store, selectors.isEventReadOnly, occurrence.id);
-  const resources = useStore(store, selectors.resources);
+  const resources = useStore(store, selectors.processedResourceList);
   const color = useStore(store, selectors.eventColor, occurrence.id);
   const rawPlaceholder = useStore(store, selectors.occurrencePlaceholder);
   const recurrencePresets = useStore(store, selectors.recurrencePresets, occurrence.start);
@@ -152,7 +152,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
     return [
       { label: translations.labelNoResource, value: null, eventColor: DEFAULT_EVENT_COLOR },
       ...resources.map((resource) => ({
-        label: resource.name,
+        label: resource.title,
         value: resource.id,
         eventColor: resource.eventColor,
       })),

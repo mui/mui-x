@@ -245,10 +245,10 @@ export const initialEvents = [
 ];
 
 export const resources = [
-  { name: 'Work', id: 'work', eventColor: 'violet' },
-  { name: 'Holidays', id: 'holidays', eventColor: 'red' },
-  { name: 'Workout', id: 'workout', eventColor: 'jade' },
-  { name: 'Birthdays', id: 'birthdays', eventColor: 'lime' },
-  { name: 'Personal', id: 'personal', eventColor: 'orange' },
-  { name: 'Medical', id: 'medical', eventColor: 'indigo' },
+  { title: 'Work', id: 'work', eventColor: 'violet' },
+  { title: 'Holidays', id: 'holidays', eventColor: 'red' },
+  { title: 'Workout', id: 'workout', eventColor: 'jade' },
+  { title: 'Birthdays', id: 'birthdays', eventColor: 'lime' },
+  { title: 'Personal', id: 'personal', eventColor: 'orange' },
+  { title: 'Medical', id: 'medical', eventColor: 'indigo' },
 ];

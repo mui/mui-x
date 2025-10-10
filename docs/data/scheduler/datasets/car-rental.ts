@@ -66,8 +66,8 @@ export const initialEvents: CalendarEvent[] = [
 ];
 
 export const resources: CalendarResource[] = [
-  { name: 'Fiat 500', id: 'fiat-500', eventColor: 'indigo' },
-  { name: 'Volkswagen ID3', id: 'volkswagen-id3', eventColor: 'blue' },
-  { name: 'Peugeot 3008', id: 'peugeot-3008', eventColor: 'jade' },
-  { name: 'Cupra Leon', id: 'cupra-leon', eventColor: 'orange' },
+  { title: 'Fiat 500', id: 'fiat-500', eventColor: 'indigo' },
+  { title: 'Volkswagen ID3', id: 'volkswagen-id3', eventColor: 'blue' },
+  { title: 'Peugeot 3008', id: 'peugeot-3008', eventColor: 'jade' },
+  { title: 'Cupra Leon', id: 'cupra-leon', eventColor: 'orange' },
 ];

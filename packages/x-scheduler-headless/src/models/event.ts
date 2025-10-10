@@ -1,6 +1,8 @@
 import type { SchedulerValidDate } from './date';
 import type { CalendarResourceId } from './resource';
 
+// TODO: Rename SchedulerProcessedEvent and replace the raw SchedulerValidDate with processed dates.
+// TODO: Create a new SchedulerDefaultEventModel to replace CalendarEvent on props.events.
 export interface CalendarEvent {
   /**
    * The unique identifier of the event.
@@ -236,3 +238,18 @@ export type CalendarEventUpdatedProperties = Partial<CalendarEvent> &
  * The type of surface the event is being rendered on.
  */
 export type EventSurfaceType = 'day-grid' | 'time-grid';
+
+export type SchedulerEventModelStructure<TEvent extends {}> = {
+  [key in keyof CalendarEvent]?: {
+    getter: (event: TEvent) => CalendarEvent[key];
+    // TODO: Improve typing to show that only properties with setter can be undefined.
+    /**
+     * Setter for the event property.
+     * If not provided, the property won't be editable.
+     */
+    setter?: (
+      event: TEvent | Partial<TEvent>,
+      value: CalendarEvent[key],
+    ) => TEvent | Partial<TEvent>;
+  };
+};

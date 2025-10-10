@@ -58,8 +58,8 @@ export const AgendaEvent = React.forwardRef(function AgendaEvent(
           className="ResourceLegendColor"
           role="img"
           aria-label={
-            resource?.name
-              ? translations.resourceAriaLabel(resource.name)
+            resource?.title
+              ? translations.resourceAriaLabel(resource.title)
               : translations.noResourceAriaLabel
           }
         />

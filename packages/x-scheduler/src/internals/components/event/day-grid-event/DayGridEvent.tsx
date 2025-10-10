@@ -71,8 +71,8 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
               className="ResourceLegendColor"
               role="img"
               aria-label={
-                resource?.name
-                  ? translations.resourceAriaLabel(resource.name)
+                resource?.title
+                  ? translations.resourceAriaLabel(resource.title)
                   : translations.noResourceAriaLabel
               }
             />
@@ -115,7 +115,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     occurrence.start,
     occurrence.end,
     isRecurring,
-    resource?.name,
+    resource?.title,
     translations,
     ampm,
   ]);
