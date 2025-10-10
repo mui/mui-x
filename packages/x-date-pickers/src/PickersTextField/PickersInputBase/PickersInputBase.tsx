@@ -102,6 +102,22 @@ export const PickersInputBaseSectionsContainer = styled(PickersSectionListRoot, 
             opacity: theme.palette.mode === 'light' ? 0.42 : 0.5,
           },
     },
+    {
+      props: {
+        hasStartAdornment: false,
+        isFieldFocused: false,
+        isFieldValueEmpty: true,
+        inputHasLabel: true,
+        isLabelShrunk: true,
+      },
+      style: theme.vars
+        ? {
+            opacity: theme.vars.opacity.inputPlaceholder,
+          }
+        : {
+            opacity: theme.palette.mode === 'light' ? 0.42 : 0.5,
+          },
+    },
   ],
 }));
 

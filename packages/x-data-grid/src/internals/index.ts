@@ -73,6 +73,8 @@ export { passFilterLogic } from '../hooks/features/filter/gridFilterUtils';
 export {
   gridFilteredChildrenCountLookupSelector,
   gridExpandedSortedRowTreeLevelPositionLookupSelector,
+  gridExpandedSortedRowIndexLookupSelector,
+  gridFilteredSortedDepthRowEntriesSelector,
 } from '../hooks/features/filter/gridFilterSelector';
 export { isSingleSelectColDef } from '../components/panel/filterPanel/filterPanelUtils';
 export type {
@@ -98,6 +100,8 @@ export {
 } from '../hooks/features/rows/useGridRowSpanning';
 export { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
 export { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
+export { useGridRowsOverridableMethods } from '../hooks/features/rows/useGridRowsOverridableMethods';
+export { useGridParamsOverridableMethods } from '../hooks/features/rows/useGridParamsOverridableMethods';
 export { useGridRowsPreProcessors } from '../hooks/features/rows/useGridRowsPreProcessors';
 export type {
   GridRowTreeCreationParams,

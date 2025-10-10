@@ -4,7 +4,7 @@ import { RadarAxisProps } from './RadarAxis';
  * Return text anchor of labels.
  * @param angle The axis angle (in rad) with clock direction and 0 at the top
  */
-function getTextAnchor(angle: number): string {
+function getTextAnchor(angle: number) {
   if (angle < 20) {
     return 'start';
   }
@@ -21,14 +21,14 @@ function getTextAnchor(angle: number): string {
   }
   return 'start';
 }
-function getDominantBaseline(angle: number): string {
+function getDominantBaseline(angle: number) {
   if (angle < 160) {
-    return 'baseline';
+    return 'auto';
   }
   if (angle < 360 - 20) {
     return 'hanging';
   }
-  return 'baseline';
+  return 'auto';
 }
 
 const LABEL_MARGIN = 2;
@@ -56,7 +56,7 @@ export function getLabelAttributes(params: GetLabelAttributesParams) {
         : (params.dominantBaseline ?? getDominantBaseline(angle));
 
     const marginX = textAnchor === 'start' ? LABEL_MARGIN : -LABEL_MARGIN;
-    const marginY = dominantBaseline === 'baseline' ? -LABEL_MARGIN : LABEL_MARGIN;
+    const marginY = dominantBaseline === 'auto' ? -LABEL_MARGIN : LABEL_MARGIN;
 
     return {
       x: x + marginX,
@@ -75,7 +75,7 @@ export function getLabelAttributes(params: GetLabelAttributesParams) {
   const dominantBaseline =
     typeof params.dominantBaseline === 'function'
       ? params.dominantBaseline(angle)
-      : (params.dominantBaseline ?? 'baseline');
+      : (params.dominantBaseline ?? 'auto');
 
   return {
     x,

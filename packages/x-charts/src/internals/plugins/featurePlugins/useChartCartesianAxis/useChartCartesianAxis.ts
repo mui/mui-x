@@ -17,6 +17,7 @@ import { getSVGPoint } from '../../../getSVGPoint';
 import { selectorChartsInteractionIsInitialized } from '../useChartInteraction';
 import { selectorChartAxisInteraction } from './useChartCartesianInteraction.selectors';
 import { useLazySelectorEffect } from '../../utils/useLazySelectorEffect';
+import { checkHasInteractionPlugin } from '../useChartInteraction/checkHasInteractionPlugin';
 
 export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<any>> = ({
   params,
@@ -120,26 +121,28 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
     !onHighlightedAxisChange,
   );
 
+  const hasInteractionPlugin = checkHasInteractionPlugin(instance);
+
   React.useEffect(() => {
     const element = svgRef.current;
-    if (!isInteractionEnabled || !element || params.disableAxisListener) {
+    if (!isInteractionEnabled || !hasInteractionPlugin || !element || params.disableAxisListener) {
       return () => {};
     }
 
     // Clean the interaction when the mouse leaves the chart.
     const moveEndHandler = instance.addInteractionListener('moveEnd', (event) => {
       if (!event.detail.activeGestures.pan) {
-        instance.cleanInteraction?.();
+        instance.cleanInteraction();
       }
     });
     const panEndHandler = instance.addInteractionListener('panEnd', (event) => {
       if (!event.detail.activeGestures.move) {
-        instance.cleanInteraction?.();
+        instance.cleanInteraction();
       }
     });
     const pressEndHandler = instance.addInteractionListener('quickPressEnd', (event) => {
       if (!event.detail.activeGestures.move && !event.detail.activeGestures.pan) {
-        instance.cleanInteraction?.();
+        instance.cleanInteraction();
       }
     });
 
@@ -162,7 +165,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
 
         return;
       }
-      instance.setPointerCoordinate?.(svgPoint);
+      instance.setPointerCoordinate(svgPoint);
     };
 
     const moveHandler = instance.addInteractionListener('move', gestureHandler);
@@ -187,6 +190,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
     instance,
     params.disableAxisListener,
     isInteractionEnabled,
+    hasInteractionPlugin,
   ]);
 
   React.useEffect(() => {

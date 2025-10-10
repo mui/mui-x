@@ -30,7 +30,12 @@ export const useChartHighlight: ChartPlugin<UseChartHighlightSignature> = ({ sto
 
   const clearHighlight = useEventCallback(() => {
     params.onHighlightChange?.(null);
-    store.update((prev) => ({ ...prev, highlight: { item: null } }));
+    const prevItem = store.getSnapshot().highlight.item;
+    if (prevItem === null) {
+      return;
+    }
+
+    store.update((prev) => ({ ...prev, highlight: { item: null, lastUpdate: 'pointer' } }));
   });
 
   const setHighlight = useEventCallback((newItem: HighlightItemData) => {
@@ -41,7 +46,7 @@ export const useChartHighlight: ChartPlugin<UseChartHighlightSignature> = ({ sto
     }
 
     params.onHighlightChange?.(newItem);
-    store.update((prev) => ({ ...prev, highlight: { item: newItem } }));
+    store.update((prev) => ({ ...prev, highlight: { item: newItem, lastUpdate: 'pointer' } }));
   });
 
   return {
@@ -58,7 +63,10 @@ useChartHighlight.getDefaultizedParams = ({ params }) => ({
 });
 
 useChartHighlight.getInitialState = (params) => ({
-  highlight: { item: params.highlightedItem },
+  highlight: {
+    item: params.highlightedItem,
+    lastUpdate: 'pointer',
+  },
 });
 
 useChartHighlight.params = {

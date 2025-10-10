@@ -4,7 +4,7 @@ import { hideBin } from 'yargs/helpers';
 import path from 'path';
 import fs from 'fs';
 import * as prettier from 'prettier';
-import kebabCase from 'lodash/kebabCase';
+import { kebabCase } from 'es-toolkit/string';
 import {
   buildApiInterfacesJson,
   buildInterfacesDocumentationPage,

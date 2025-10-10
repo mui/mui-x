@@ -40,7 +40,7 @@ You can either use the piecewise or continuous [color mapping](https://mui.com/x
 
 ## Highlight
 
-You can chose to highlight the hovered element by setting `highlightScope.highlight` to `'item'`.
+You can choose to highlight the hovered element by setting `highlightScope.highlight` to `'item'`.
 To fade the other item, set `highlightScope.fade` to `'global'`.
 
 {{"demo": "HighlightHeatmap.js"}}

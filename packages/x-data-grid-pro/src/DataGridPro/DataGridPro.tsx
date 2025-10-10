@@ -7,6 +7,8 @@ import {
   GridConfiguration,
   validateProps,
   useGridApiInitialization,
+  useGridRowsOverridableMethods,
+  useGridParamsOverridableMethods,
 } from '@mui/x-data-grid/internals';
 import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
 import { forwardRef } from '@mui/x-internals/forwardRef';
@@ -25,7 +27,10 @@ const configuration: GridConfiguration = {
     useCSSVariables: useMaterialCSSVariables,
     useGridAriaAttributes: useGridAriaAttributesPro,
     useGridRowAriaAttributes: useGridRowAriaAttributesPro,
+    useGridRowsOverridableMethods,
+    useGridParamsOverridableMethods,
     useCellAggregationResult: () => null,
+    useFilterValueGetter: (apiRef) => apiRef.current.getRowValue,
   },
 };
 const releaseInfo = '__RELEASE_INFO__';
@@ -40,7 +45,7 @@ const DataGridProRaw = forwardRef(function DataGridPro<R extends GridValidRowMod
     props.apiRef,
     props,
   );
-  useDataGridProComponent(privateApiRef, props);
+  useDataGridProComponent(privateApiRef, props, configuration);
   useLicenseVerifier('x-data-grid-pro', releaseInfo);
 
   if (process.env.NODE_ENV !== 'production') {
@@ -291,6 +296,11 @@ DataGridProRaw.propTypes = {
    * @default false (`!props.checkboxSelection` for MIT Data Grid)
    */
   disableMultipleRowSelection: PropTypes.bool,
+  /**
+   * If `true`, the Data Grid will not use the exclude model optimization when selecting all rows.
+   * @default false
+   */
+  disableRowSelectionExcludeModel: PropTypes.bool,
   /**
    * If `true`, the selection on click on a row or cell is disabled.
    * @default false
@@ -761,7 +771,7 @@ DataGridProRaw.propTypes = {
    */
   onPreferencePanelOpen: PropTypes.func,
   /**
-   * Callback called when `processRowUpdate` throws an error or rejects.
+   * Callback called when `processRowUpdate()` throws an error or rejects.
    * @param {any} error The error thrown.
    */
   onProcessRowUpdateError: PropTypes.func,
@@ -889,12 +899,22 @@ DataGridProRaw.propTypes = {
    */
   pinnedColumns: PropTypes.object,
   /**
+   * Sets the type of separator between pinned columns and non-pinned columns.
+   * @default 'border-and-shadow'
+   */
+  pinnedColumnsSectionSeparator: PropTypes.oneOf(['border-and-shadow', 'border', 'shadow']),
+  /**
    * Rows data to pin on top or bottom.
    */
   pinnedRows: PropTypes.shape({
     bottom: PropTypes.arrayOf(PropTypes.object),
     top: PropTypes.arrayOf(PropTypes.object),
   }),
+  /**
+   * Sets the type of separator between pinned rows and non-pinned rows.
+   * @default 'border-and-shadow'
+   */
+  pinnedRowsSectionSeparator: PropTypes.oneOf(['border-and-shadow', 'border']),
   /**
    * Callback called before updating a row with new values in the row and cell editing.
    * @template R

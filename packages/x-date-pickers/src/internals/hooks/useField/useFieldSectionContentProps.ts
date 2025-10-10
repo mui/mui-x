@@ -1,6 +1,5 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import useId from '@mui/utils/useId';
 import { UseFieldStateReturnValue } from './useFieldState';
 import { FieldSection, MuiPickersAdapter, PickerManager } from '../../../models';
 import { UseFieldDOMGetters, UseFieldInternalProps } from './useField.types';
@@ -22,7 +21,6 @@ export function useFieldSectionContentProps(
 ): UseFieldSectionContentPropsReturnValue {
   const adapter = usePickerAdapter();
   const translations = usePickerTranslations();
-  const id = useId();
 
   const {
     focused,
@@ -176,7 +174,6 @@ export function useFieldSectionContentProps(
         onFocus: createFocusHandler(sectionIndex),
 
         // Aria attributes
-        'aria-labelledby': `${id}-${section.type}`,
         'aria-readonly': readOnly,
         'aria-valuenow': getSectionValueNow(section, adapter),
         'aria-valuemin': sectionBoundaries.minimum,
@@ -188,13 +185,14 @@ export function useFieldSectionContentProps(
         'aria-disabled': disabled,
 
         // Other
-        tabIndex: isContainerEditable || sectionIndex > 0 ? -1 : 0,
+        tabIndex: !isEditable || isContainerEditable || sectionIndex > 0 ? -1 : 0,
         contentEditable: !isContainerEditable && !disabled && !readOnly,
         role: 'spinbutton',
-        id: `${id}-${section.type}`,
         'data-range-position': (section as FieldRangeSection).dateName || undefined,
         spellCheck: isEditable ? false : undefined,
-        autoCapitalize: isEditable ? 'off' : undefined,
+        // Firefox hydrates this as `'none`' instead of `'off'`. No problems in chromium with both values.
+        // For reference https://github.com/mui/mui-x/issues/19012
+        autoCapitalize: isEditable ? 'none' : undefined,
         autoCorrect: isEditable ? 'off' : undefined,
         children: section.value || section.placeholder,
         inputMode: section.contentType === 'letter' ? 'text' : 'numeric',
@@ -202,7 +200,6 @@ export function useFieldSectionContentProps(
     },
     [
       sectionsValueBoundaries,
-      id,
       isContainerEditable,
       disabled,
       readOnly,
@@ -244,18 +241,23 @@ function getSectionValueText(
   switch (section.type) {
     case 'month': {
       if (section.contentType === 'digit') {
-        return adapter.format(adapter.setMonth(adapter.date(), Number(section.value) - 1), 'month');
+        const dateWithMonth = adapter.setMonth(adapter.date(), Number(section.value) - 1);
+        return adapter.isValid(dateWithMonth) ? adapter.format(dateWithMonth, 'month') : '';
       }
       const parsedDate = adapter.parse(section.value, section.format);
-      return parsedDate ? adapter.format(parsedDate, 'month') : undefined;
+      return parsedDate && adapter.isValid(parsedDate)
+        ? adapter.format(parsedDate, 'month')
+        : undefined;
     }
     case 'day':
-      return section.contentType === 'digit'
-        ? adapter.format(
-            adapter.setDate(adapter.startOfYear(adapter.date()), Number(section.value)),
-            'dayOfMonthFull',
-          )
-        : section.value;
+      if (section.contentType === 'digit') {
+        const dateWithDay = adapter.setDate(
+          adapter.startOfYear(adapter.date()),
+          Number(section.value),
+        );
+        return adapter.isValid(dateWithDay) ? adapter.format(dateWithDay, 'dayOfMonthFull') : '';
+      }
+      return section.value;
     case 'weekDay':
       // TODO: improve by providing the label of the week day
       return undefined;

@@ -1,14 +1,14 @@
 ---
 title: Charts - Export
 productId: x-charts
-components: ScatterChartPro, BarChartPro, LineChartPro, Heatmap, FunnelChart, RadarChartPro
+components: ScatterChartPro, BarChartPro, LineChartPro, Heatmap, FunnelChart, RadarChartPro, SankeyChart
 ---
 
 # Charts - Export [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 <p class="description">Export charts as a PDF from the print dialog, or as an image.</p>
 
-Export is available for the following charts: `<LineChartPro />`, `<BarChartPro />`, `<ScatterChartPro />`, `PieChartPro />`, `<Heatmap />`, `<FunnelChart />` and `<RadarChartPro />`.
+Export is available for the following charts: `<LineChartPro />`, `<BarChartPro />`, `<ScatterChartPro />`, `PieChartPro />`, `<Heatmap />`, `<FunnelChart />`, `<RadarChartPro />` and `<SankeyChart />`.
 
 ## Enabling export
 
@@ -100,9 +100,16 @@ To add custom styles or modify the chart's appearance before exporting, use the 
 When exporting, the chart is rendered onto an iframe and then exported as an image or PDF.
 The `onBeforeExport` callback gives you access to the iframe before the export process starts.
 
-For example, you can hide the toolbar and only show the legend when exporting the chart, as shown below:
+For example, you can add the title and caption to the exported chart, as shown below:
 
 {{"demo": "ExportChartOnBeforeExport.js"}}
+
+:::info
+
+If you don't want to manually add elements to the chart export, you can create a chart through composition and include the elements you want to export as part of the chart.
+See the [Composition](#composition) section below for more information.
+
+:::
 
 ## Copy styles
 
@@ -116,7 +123,7 @@ You can disable this behavior by setting the `copyStyles` property to `false` in
 
 ## Composition
 
-As detailed in the [Composition](/x/react-charts/composition/) section, charts can alternatively be composed of more specific components to create custom visualizations.
+As detailed in the [Composition](/x/react-charts/composition/) page, charts can alternatively be composed of more specific components to create custom visualizations.
 
 When exporting a chart, the `ChartsWrapper` element is considered the root element of the chart, and every descendant is included in the export.
 As such, you need to ensure that the `ChartsWrapper` element is the root element of the chart you want to export.
@@ -131,7 +138,7 @@ If you want to use a custom wrapper element, you need to use the `useChartRootRe
 
 The `apiRef` prop exposes a `exportAsPrint()` method that can be used to open the browser's print dialog.
 
-The print dialog allows you to print the chart or save it as a PDF, as well as configuring other settings.
+The print dialog lets you print the chart or save it as a PDF, as well as configuring other settings.
 
 {{"demo": "PrintChart.js"}}
 
@@ -149,8 +156,8 @@ Follow the installation instructions [here](#image-export-pre-requisites).
 
 The function accepts an options object with the `type` property, which specifies the image format. The available formats are:
 
-- `image/png` and `image/jpeg`, which are supported across all [supported platforms](/material-ui/getting-started/supported-platforms/);
-- `image/webp` which is only supported in some browsers.
+- `image/png` and `image/jpeg`, which are supported across all [supported platforms](/material-ui/getting-started/supported-platforms/)
+- `image/webp` which is only supported in some browsers
 
 If the format is not supported by the browser, `exportAsImage()` falls back to `image/png`.
 
