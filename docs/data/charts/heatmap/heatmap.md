@@ -18,7 +18,7 @@ Here are the basic requirements to create a heatmap:
 - One numerical metric determining the color intensity of each cell
 - Optional: a color scale or gradient to represent value ranges effectively
 
-{{"demo": "HeatmapDemo.js"}}
+{{"demo": "HeatmapDemo.js", "disableAd": true, "defaultCodeOpen": false}}
 
 ## Basics
 

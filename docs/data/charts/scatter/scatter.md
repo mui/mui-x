@@ -17,7 +17,7 @@ Here are the basic requirements to create a scatter chart:
 - Two numerical dimensions (one for the x‑axis and one for the y‑axis)
 - An array of data points, where each point has x and y values
 
-{{"demo": "ScatterOverview.js"}}
+{{"demo": "ScatterOverview.js", "disableAd": true, "defaultCodeOpen": false}}
 
 ## Basics
 
