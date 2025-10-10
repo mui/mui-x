@@ -65,13 +65,14 @@ export const ResourceLegend = React.forwardRef(function ResourceLegend(
   const { className, ...other } = props;
   const translations = useTranslations();
   const store = useEventCalendarStoreContext();
-  const resources = useStore(store, selectors.resources);
+  const resources = useStore(store, selectors.processedResourceList);
   const visibleResourcesList = useStore(store, selectors.visibleResourcesList);
 
   const handleVisibleResourcesChange = useEventCallback((value: string[]) => {
     const valueSet = new Set(value);
     const newVisibleResourcesMap = new Map(
-      store.state.resources
+      selectors
+        .processedResourceList(store.state)
         .filter((resource) => !valueSet.has(resource.id))
         .map((resource) => [resource.id, false]),
     );

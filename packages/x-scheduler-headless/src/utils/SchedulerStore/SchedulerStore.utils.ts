@@ -1,8 +1,16 @@
-import { CalendarEvent, CalendarEventId, CalendarOccurrencePlaceholder } from '../../models';
+import { EMPTY_ARRAY } from '@base-ui-components/utils/empty';
+import {
+  CalendarEvent,
+  CalendarEventId,
+  CalendarOccurrencePlaceholder,
+  CalendarResource,
+  CalendarResourceId,
+} from '../../models';
 import { Adapter } from '../../use-adapter/useAdapter.types';
 import {
   SchedulerEventModelStructure,
   SchedulerParameters,
+  SchedulerResourceModelStructure,
   SchedulerState,
 } from './SchedulerStore.types';
 
@@ -52,9 +60,17 @@ const EVENT_PROPERTIES_LOOKUP: { [P in keyof CalendarEvent]-?: true } = {
 
 const EVENT_PROPERTIES = Object.keys(EVENT_PROPERTIES_LOOKUP) as (keyof CalendarEvent)[];
 
-export function getCalendarEventFromModel<EventModel extends {}>(
-  event: EventModel,
-  eventModelStructure: SchedulerEventModelStructure<EventModel> | undefined,
+const RESOURCE_PROPERTIES_LOOKUP: { [P in keyof CalendarResource]-?: true } = {
+  id: true,
+  name: true,
+  eventColor: true,
+};
+
+const RESOURCE_PROPERTIES = Object.keys(RESOURCE_PROPERTIES_LOOKUP) as (keyof CalendarResource)[];
+
+export function getProcessedEventFromModel<TEvent extends {}>(
+  event: TEvent,
+  eventModelStructure: SchedulerEventModelStructure<TEvent> | undefined,
 ): CalendarEvent {
   const processedEvent = {} as CalendarEvent;
 
@@ -68,13 +84,13 @@ export function getCalendarEventFromModel<EventModel extends {}>(
   return processedEvent;
 }
 
-export function getUpdatedEventModelFromPartialCalendarEvent<EventModel extends {}>(
-  event: EventModel,
+export function getUpdatedEventModelFromChanges<TEvent extends {}>(
+  event: TEvent,
   changes: Partial<CalendarEvent>,
-  eventModelStructure: SchedulerEventModelStructure<EventModel> | undefined,
-): EventModel {
+  eventModelStructure: SchedulerEventModelStructure<TEvent> | undefined,
+): TEvent {
   let updatedEventModel = { ...event };
-  const propertiesWithSetter: [AnySetter<EventModel>, any][] = [];
+  const propertiesWithSetter: [AnyEventSetter<TEvent>, any][] = [];
 
   for (const key in changes) {
     if (changes.hasOwnProperty(key)) {
@@ -97,12 +113,12 @@ export function getUpdatedEventModelFromPartialCalendarEvent<EventModel extends 
   return updatedEventModel;
 }
 
-export function createEventModel<EventModel extends {}>(
+export function createEventModel<TEvent extends {}>(
   event: CalendarEvent,
-  eventModelStructure: SchedulerEventModelStructure<EventModel> | undefined,
-): EventModel {
-  let eventModel: Partial<EventModel> = {};
-  const propertiesWithSetter: [AnySetter<EventModel>, any][] = [];
+  eventModelStructure: SchedulerEventModelStructure<TEvent> | undefined,
+): TEvent {
+  let eventModel: Partial<TEvent> = {};
+  const propertiesWithSetter: [AnyEventSetter<TEvent>, any][] = [];
 
   for (const key in event) {
     if (event.hasOwnProperty(key)) {
@@ -122,34 +138,66 @@ export function createEventModel<EventModel extends {}>(
     eventModel = setter(eventModel, value);
   }
 
-  return eventModel as EventModel;
+  return eventModel as TEvent;
 }
 
-type AnySetter<EventModel extends {}> = (
-  event: EventModel | Partial<EventModel>,
-  value: any,
-) => EventModel;
+export function getProcessedResourceFromModel<TResource extends {}>(
+  resource: TResource,
+  resourceModelStructure: SchedulerResourceModelStructure<TResource> | undefined,
+): CalendarResource {
+  const processedResource = {} as CalendarResource;
 
-export function buildEventLookups<EventModel extends {}>(
-  parameters: Pick<SchedulerParameters<EventModel>, 'events' | 'eventModelStructure'>,
+  for (const key of RESOURCE_PROPERTIES) {
+    const getter = resourceModelStructure?.[key]?.getter;
+
+    // @ts-ignore
+    processedResource[key] = getter ? getter(resource) : resource[key];
+  }
+
+  return processedResource;
+}
+
+type AnyEventSetter<TEvent extends {}> = (event: TEvent | Partial<TEvent>, value: any) => TEvent;
+
+export function buildEventAndResourceState<TEvent extends {}, TResource extends {}>(
+  parameters: Pick<
+    SchedulerParameters<TEvent, TResource>,
+    'events' | 'eventModelStructure' | 'resources' | 'resourceModelStructure'
+  >,
 ): Pick<
-  SchedulerState<EventModel>,
+  SchedulerState<TEvent>,
   | 'eventModelStructure'
   | 'eventIdList'
   | 'eventModelList'
   | 'eventModelLookup'
   | 'processedEventLookup'
+  | 'resourceIdList'
+  | 'processedResourceLookup'
+  | 'resourceModelStructure'
 > {
-  const { events, eventModelStructure } = parameters;
+  const {
+    events,
+    resources = EMPTY_ARRAY,
+    eventModelStructure,
+    resourceModelStructure,
+  } = parameters;
 
   const eventIdList: CalendarEventId[] = [];
-  const eventModelLookup = new Map<CalendarEventId, EventModel>();
+  const eventModelLookup = new Map<CalendarEventId, TEvent>();
   const processedEventLookup = new Map<CalendarEventId, CalendarEvent>();
   for (const event of events) {
-    const processedEvent = getCalendarEventFromModel(event, eventModelStructure);
+    const processedEvent = getProcessedEventFromModel(event, eventModelStructure);
     eventIdList.push(processedEvent.id);
     eventModelLookup.set(processedEvent.id, event);
     processedEventLookup.set(processedEvent.id, processedEvent);
+  }
+
+  const resourceIdList: string[] = [];
+  const processedResourceLookup = new Map<CalendarResourceId, CalendarResource>();
+  for (const resource of resources) {
+    const processedResource = getProcessedResourceFromModel(resource, resourceModelStructure);
+    resourceIdList.push(processedResource.id);
+    processedResourceLookup.set(processedResource.id, processedResource);
   }
 
   return {
@@ -158,5 +206,8 @@ export function buildEventLookups<EventModel extends {}>(
     eventIdList,
     eventModelLookup,
     processedEventLookup,
+    resourceIdList,
+    processedResourceLookup,
+    resourceModelStructure,
   };
 }

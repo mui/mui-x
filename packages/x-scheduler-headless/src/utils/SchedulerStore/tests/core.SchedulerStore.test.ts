@@ -1,6 +1,6 @@
 import { adapter } from 'test/utils/scheduler';
 import { CalendarEvent } from '@mui/x-scheduler-headless/models';
-import { storeClasses, buildEvent, getIds } from './utils';
+import { storeClasses, buildEvent } from './utils';
 import { selectors } from '../SchedulerStore.selectors';
 
 const DEFAULT_PARAMS = { events: [] as CalendarEvent[] };
@@ -58,7 +58,7 @@ storeClasses.forEach((storeClass) => {
         store.updateStateFromParameters(newParams, adapter);
 
         expect(selectors.eventIdList(store.state)).to.deep.equal(['1']);
-        expect(getIds(selectors.resources(store.state))).to.deep.equal(['r1', 'r2']);
+        expect(selectors.resourceIdList(store.state)).to.deep.equal(['r1', 'r2']);
 
         expect(store.state.areEventsDraggable).to.equal(true);
         expect(store.state.areEventsResizable).to.equal(true);

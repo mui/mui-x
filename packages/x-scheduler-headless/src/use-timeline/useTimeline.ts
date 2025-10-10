@@ -6,9 +6,9 @@ import { useAdapter } from '../use-adapter/useAdapter';
 import { TimelineStore } from './TimelineStore';
 import { TimelineParameters } from './TimelineStore.types';
 
-export function useTimeline<TModel extends {}>(
-  parameters: TimelineParameters<TModel>,
-): TimelineStore<TModel> {
+export function useTimeline<TEvent extends {}, TResource extends {}>(
+  parameters: TimelineParameters<TEvent, TResource>,
+): TimelineStore<TEvent, TResource> {
   const adapter = useAdapter();
   const store = useRefWithInit(() => new TimelineStore(parameters, adapter)).current;
 

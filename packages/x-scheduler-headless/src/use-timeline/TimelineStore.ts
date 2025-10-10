@@ -6,8 +6,8 @@ import { TimelineState, TimelineParameters } from './TimelineStore.types';
 export const DEFAULT_VIEWS: TimelineView[] = ['time', 'days', 'weeks', 'months', 'years'];
 export const DEFAULT_VIEW: TimelineView = 'time';
 
-const deriveStateFromParameters = <EventModel extends {}>(
-  parameters: TimelineParameters<EventModel>,
+const deriveStateFromParameters = <TEvent extends {}, TResource extends {}>(
+  parameters: TimelineParameters<TEvent, TResource>,
 ) => ({
   views: parameters.views ?? DEFAULT_VIEWS,
 });
@@ -15,7 +15,7 @@ export const DEFAULT_PREFERENCES: TimelinePreferences = {
   ampm: true,
 };
 
-const mapper: SchedulerParametersToStateMapper<TimelineState, TimelineParameters<any>> = {
+const mapper: SchedulerParametersToStateMapper<TimelineState, TimelineParameters<any, any>> = {
   getInitialState: (schedulerInitialState, parameters) => ({
     ...schedulerInitialState,
     ...deriveStateFromParameters(parameters),
@@ -33,12 +33,13 @@ const mapper: SchedulerParametersToStateMapper<TimelineState, TimelineParameters
   },
 };
 
-export class TimelineStore<EventModel extends {}> extends SchedulerStore<
-  EventModel,
+export class TimelineStore<TEvent extends {}, TResource extends {}> extends SchedulerStore<
+  TEvent,
+  TResource,
   TimelineState,
-  TimelineParameters<EventModel>
+  TimelineParameters<TEvent, TResource>
 > {
-  public constructor(parameters: TimelineParameters<EventModel>, adapter: Adapter) {
+  public constructor(parameters: TimelineParameters<TEvent, TResource>, adapter: Adapter) {
     super(parameters, adapter, 'Timeline', mapper);
 
     if (process.env.NODE_ENV !== 'production') {

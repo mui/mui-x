@@ -2,9 +2,10 @@ import * as React from 'react';
 import { TimelineParameters } from './TimelineStore.types';
 
 export function useExtractTimelineParameters<
-  EventModel extends {},
-  P extends TimelineParameters<EventModel>,
->(props: P): UseExtractTimelineParametersReturnValue<EventModel, P> {
+  TEvent extends {},
+  TResource extends {},
+  P extends TimelineParameters<TEvent, TResource>,
+>(props: P): UseExtractTimelineParametersReturnValue<TEvent, TResource, P> {
   const {
     events,
     onEventsChange,
@@ -25,7 +26,7 @@ export function useExtractTimelineParameters<
     ...forwardedProps
   } = props;
 
-  const parameters: TimelineParameters<EventModel> = React.useMemo(
+  const parameters: TimelineParameters<TEvent, TResource> = React.useMemo(
     () => ({
       events,
       onEventsChange,
@@ -66,14 +67,15 @@ export function useExtractTimelineParameters<
 
   return {
     parameters,
-    forwardedProps: forwardedProps as Omit<P, keyof TimelineParameters<EventModel>>,
+    forwardedProps: forwardedProps as Omit<P, keyof TimelineParameters<TEvent, TResource>>,
   };
 }
 
 interface UseExtractTimelineParametersReturnValue<
-  EventModel extends {},
-  P extends TimelineParameters<EventModel>,
+  TEvent extends {},
+  TResource extends {},
+  P extends TimelineParameters<TEvent, TResource>,
 > {
-  parameters: TimelineParameters<EventModel>;
-  forwardedProps: Omit<P, keyof TimelineParameters<EventModel>>;
+  parameters: TimelineParameters<TEvent, TResource>;
+  forwardedProps: Omit<P, keyof TimelineParameters<TEvent, TResource>>;
 }

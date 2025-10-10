@@ -19,7 +19,7 @@ export function useEventOccurrencesGroupedByResource(
   const store = useTimelineStoreContext();
   const events = useStore(store, selectors.processedEventList);
   const visibleResources = useStore(store, selectors.visibleResourcesMap);
-  const resources = useStore(store, selectors.resources);
+  const resources = useStore(store, selectors.processedResourceList);
 
   return React.useMemo(
     () =>

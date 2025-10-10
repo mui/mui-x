@@ -6,7 +6,6 @@ import {
   CalendarEventId,
   CalendarEventOccurrence,
   CalendarOccurrencePlaceholder,
-  CalendarResource,
   CalendarResourceId,
   SchedulerValidDate,
   RecurrencePresetKey,
@@ -29,15 +28,13 @@ import {
 } from '../recurrence-utils';
 import { selectors } from './SchedulerStore.selectors';
 import {
-  buildEventLookups,
+  buildEventAndResourceState,
   createEventModel,
-  getUpdatedEventModelFromPartialCalendarEvent,
+  getUpdatedEventModelFromChanges,
   shouldUpdateOccurrencePlaceholder,
 } from './SchedulerStore.utils';
 import { TimeoutManager } from '../TimeoutManager';
 import { DEFAULT_EVENT_COLOR } from '../../constants';
-
-export const DEFAULT_RESOURCES: CalendarResource[] = [];
 
 // TODO: Add a prop to configure the behavior.
 export const DEFAULT_IS_MULTI_DAY_EVENT = (event: CalendarEvent | CalendarEventOccurrence) => {
@@ -54,9 +51,10 @@ const ONE_MINUTE_IN_MS = 60 * 1000;
  * Instance shared by the Event Calendar and the Timeline components.
  */
 export class SchedulerStore<
-  EventModel extends {},
+  TEvent extends {},
+  TResource extends {},
   State extends SchedulerState,
-  Parameters extends SchedulerParameters<EventModel>,
+  Parameters extends SchedulerParameters<TEvent, TResource>,
 > extends Store<State> {
   protected parameters: Parameters;
 
@@ -74,7 +72,7 @@ export class SchedulerStore<
     instanceName: string,
     mapper: SchedulerParametersToStateMapper<State, Parameters>,
   ) {
-    const schedulerInitialState: SchedulerState<EventModel> = {
+    const schedulerInitialState: SchedulerState<TEvent> = {
       ...SchedulerStore.deriveStateFromParameters(parameters, adapter),
       adapter,
       occurrencePlaceholder: null,
@@ -114,14 +112,13 @@ export class SchedulerStore<
    * Returns the properties of the state that are derived from the parameters.
    * This do not contain state properties that don't update whenever the parameters update.
    */
-  private static deriveStateFromParameters<EventModel extends {}>(
-    parameters: SchedulerParameters<EventModel>,
+  private static deriveStateFromParameters<TEvent extends {}, TResource extends {}>(
+    parameters: SchedulerParameters<TEvent, TResource>,
     adapter: Adapter,
   ) {
     return {
       adapter,
-      ...buildEventLookups(parameters),
-      resources: parameters.resources ?? DEFAULT_RESOURCES,
+      ...buildEventAndResourceState(parameters),
       areEventsDraggable: parameters.areEventsDraggable ?? false,
       areEventsResizable: parameters.areEventsResizable ?? false,
       eventColor: parameters.eventColor ?? DEFAULT_EVENT_COLOR,
@@ -210,7 +207,7 @@ export class SchedulerStore<
     const deleted = new Set(deletedParam);
     const originalEventIds = selectors.eventIdList(this.state);
     const originalEventModelLookup = selectors.eventModelLookup(this.state);
-    const newEvents: EventModel[] = [];
+    const newEvents: TEvent[] = [];
 
     if (deleted.size > 0 || updated.size > 0) {
       for (const eventId of originalEventIds) {
@@ -218,7 +215,7 @@ export class SchedulerStore<
           continue;
         }
         const newEvent = updated.has(eventId)
-          ? getUpdatedEventModelFromPartialCalendarEvent<EventModel>(
+          ? getUpdatedEventModelFromChanges<TEvent>(
               originalEventModelLookup.get(eventId),
               updated.get(eventId)!,
               this.state.eventModelStructure,

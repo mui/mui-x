@@ -2,13 +2,13 @@
 import * as React from 'react';
 import { TimelineStore } from '../use-timeline';
 
-export const TimelineStoreContext = React.createContext<TimelineStore<any> | null>(null);
+export const TimelineStoreContext = React.createContext<TimelineStore<any, any> | null>(null);
 
-export function useTimelineStoreContext<TModel extends {}>() {
+export function useTimelineStoreContext<TEvent extends {}, TResource extends {}>() {
   const context = React.useContext(TimelineStoreContext);
   if (context == null) {
     throw new Error('useTimelineStoreContext must be used within an <Timeline /> component');
   }
 
-  return context as TimelineStore<TModel>;
+  return context as TimelineStore<TEvent, TResource>;
 }

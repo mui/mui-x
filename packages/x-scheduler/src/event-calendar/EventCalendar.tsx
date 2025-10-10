@@ -21,12 +21,13 @@ import { DateNavigator } from '../internals/components/date-navigator';
 import '../index.css';
 import './EventCalendar.css';
 
-export const EventCalendar = React.forwardRef(function EventCalendar<EventModel extends {}>(
-  props: EventCalendarProps<EventModel>,
-  forwardedRef: React.ForwardedRef<HTMLDivElement>,
-) {
+export const EventCalendar = React.forwardRef(function EventCalendar<
+  TEvent extends {},
+  TResource extends {},
+>(props: EventCalendarProps<TEvent, TResource>, forwardedRef: React.ForwardedRef<HTMLDivElement>) {
   const { parameters, forwardedProps } = useExtractEventCalendarParameters<
-    EventModel,
+    TEvent,
+    TResource,
     typeof props
   >(props);
   const store = useEventCalendar(parameters);
@@ -102,6 +103,6 @@ export const EventCalendar = React.forwardRef(function EventCalendar<EventModel 
   );
 }) as EventCalendarComponent;
 
-type EventCalendarComponent = <EventModel extends {}>(
-  props: EventCalendarProps<EventModel> & { ref?: React.ForwardedRef<HTMLDivElement> },
+type EventCalendarComponent = <TEvent extends {}, TResource extends {}>(
+  props: EventCalendarProps<TEvent, TResource> & { ref?: React.ForwardedRef<HTMLDivElement> },
 ) => React.JSX.Element;

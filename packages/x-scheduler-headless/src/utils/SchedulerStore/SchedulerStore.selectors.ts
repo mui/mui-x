@@ -1,12 +1,5 @@
 import { createSelector, createSelectorMemoized } from '@base-ui-components/utils/store';
-import {
-  CalendarEventId,
-  CalendarResource,
-  CalendarResourceId,
-  RecurrencePresetKey,
-  RRuleSpec,
-  SchedulerValidDate,
-} from '../../models';
+import { CalendarEventId, RecurrencePresetKey, RRuleSpec, SchedulerValidDate } from '../../models';
 import { SchedulerState as State } from './SchedulerStore.types';
 import { getByDayMaps } from '../recurrence-utils';
 
@@ -16,20 +9,10 @@ const eventSelector = createSelector(
     eventId == null ? null : processedEventLookup.get(eventId),
 );
 
-const resourcesByIdMapSelector = createSelectorMemoized(
-  (state: State) => state.resources,
-  (resources) => {
-    const map = new Map<CalendarResourceId | null | undefined, CalendarResource>();
-    for (const resource of resources) {
-      map.set(resource.id, resource);
-    }
-    return map;
-  },
-);
-
 const resourceSelector = createSelector(
-  resourcesByIdMapSelector,
-  (resourcesByIdMap, resourceId: string | null | undefined) => resourcesByIdMap.get(resourceId),
+  (state: State) => state.processedResourceLookup,
+  (resourcesByIdMap, resourceId: string | null | undefined) =>
+    resourceId == null ? null : resourcesByIdMap.get(resourceId),
 );
 
 const isEventReadOnlySelector = createSelector(
@@ -45,7 +28,6 @@ export const selectors = {
   showCurrentTimeIndicator: createSelector((state: State) => state.showCurrentTimeIndicator),
   nowUpdatedEveryMinute: createSelector((state: State) => state.nowUpdatedEveryMinute),
   isMultiDayEvent: createSelector((state: State) => state.isMultiDayEvent),
-  resources: createSelector((state: State) => state.resources),
   processedEventList: createSelectorMemoized(
     (state: State) => state.eventIdList,
     (state: State) => state.processedEventLookup,
@@ -54,6 +36,13 @@ export const selectors = {
   eventIdList: createSelector((state: State) => state.eventIdList),
   eventModelList: createSelector((state: State) => state.eventModelList),
   eventModelLookup: createSelector((state: State) => state.eventModelLookup),
+  processedResourceList: createSelectorMemoized(
+    (state: State) => state.resourceIdList,
+    (state: State) => state.processedResourceLookup,
+    (resourceIds, processedResourceLookup) =>
+      resourceIds.map((id) => processedResourceLookup.get(id)!),
+  ),
+  resourceIdList: createSelector((state: State) => state.resourceIdList),
   visibleResourcesMap: createSelector((state: State) => state.visibleResources),
   resource: resourceSelector,
   eventColor: createSelector((state: State, eventId: CalendarEventId) => {
@@ -70,15 +59,15 @@ export const selectors = {
     return state.eventColor;
   }),
   visibleResourcesList: createSelectorMemoized(
-    (state: State) => state.resources,
+    (state: State) => state.resourceIdList,
     (state: State) => state.visibleResources,
     (resources, visibleResources) =>
       resources
         .filter(
-          (resource) =>
-            !visibleResources.has(resource.id) || visibleResources.get(resource.id) === true,
+          (resourceId) =>
+            !visibleResources.has(resourceId) || visibleResources.get(resourceId) === true,
         )
-        .map((resource) => resource.id),
+        .map((resourceId) => resourceId),
   ),
   event: eventSelector,
   isEventReadOnly: isEventReadOnlySelector,
