@@ -17,7 +17,7 @@ export function useEventOccurrencesGroupedByResource(
   const { start, end } = parameters;
   const adapter = useAdapter();
   const store = useTimelineStoreContext();
-  const events = useStore(store, selectors.events);
+  const events = useStore(store, selectors.processedEventList);
   const visibleResources = useStore(store, selectors.visibleResourcesMap);
   const resources = useStore(store, selectors.resources);
 

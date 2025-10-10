@@ -19,7 +19,7 @@ export function useEventOccurrencesGroupedByDay(
   const { days, renderEventIn } = parameters;
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
-  const events = useStore(store, selectors.events);
+  const events = useStore(store, selectors.processedEventList);
   const visibleResources = useStore(store, selectors.visibleResourcesMap);
 
   return React.useMemo(

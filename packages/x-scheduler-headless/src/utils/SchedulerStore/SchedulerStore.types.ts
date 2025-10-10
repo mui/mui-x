@@ -11,7 +11,7 @@ import {
 } from '../../models';
 import { Adapter } from '../../use-adapter/useAdapter.types';
 
-export interface SchedulerState {
+export interface SchedulerState<EventModel extends {} = any> {
   /**
    * The adapter of the date library.
    * Not publicly exposed, is only set in state to avoid passing it to the selectors.
@@ -22,13 +22,31 @@ export interface SchedulerState {
    */
   visibleDate: SchedulerValidDate;
   /**
-   * The events available in the calendar.
+   * The model of the events available in the calendar as provided to props.events.
    */
-  events: CalendarEvent[];
+  eventModelList: readonly EventModel[];
+  /**
+   * The IDs of the events available in the calendar.
+   */
+  eventIdList: readonly CalendarEventId[];
+  /**
+   * A lookup to get the event model as provided to props.events from its ID.
+   */
+  eventModelLookup: Map<CalendarEventId, EventModel>;
+  /**
+   * A lookup to get the processed event from its ID.
+   */
+  processedEventLookup: Map<CalendarEventId, CalendarEvent>;
+  /**
+   * The structure of the event model.
+   * It defines how to read and write the properties of the event model.
+   * If not provided, the event model is assumed to match the `CalendarEvent` interface.
+   */
+  eventModelStructure: SchedulerEventModelStructure<any>;
   /**
    * The resources the events can be assigned to.
    */
-  resources: CalendarResource[];
+  resources: readonly CalendarResource[];
   /**
    * Visibility status for each resource.
    * A resource is visible if it is registered in this lookup with `true` value or if it is not registered at all.
@@ -66,15 +84,21 @@ export interface SchedulerState {
   isMultiDayEvent: (event: CalendarEvent | CalendarEventOccurrence) => boolean;
 }
 
-export interface SchedulerParameters {
+export interface SchedulerParameters<EventModel extends {}> {
   /**
    * The events currently available in the calendar.
    */
-  events: CalendarEvent[];
+  events: EventModel[];
   /**
    * Callback fired when some event of the calendar change.
    */
-  onEventsChange?: (value: CalendarEvent[]) => void;
+  onEventsChange?: (value: EventModel[]) => void;
+  /**
+   * The structure of the event model.
+   * It defines how to read and write the properties of the event model.
+   * If not provided, the event model is assumed to match the `CalendarEvent` interface.
+   */
+  eventModelStructure?: SchedulerEventModelStructure<EventModel>;
   /**
    * The resources the events can be assigned to.
    */
@@ -152,7 +176,7 @@ export type UpdateRecurringEventParameters = {
  */
 export interface SchedulerParametersToStateMapper<
   State extends SchedulerState,
-  Parameters extends SchedulerParameters,
+  Parameters extends SchedulerParameters<any>,
 > {
   /**
    * Gets the initial state of the store based on the initial parameters.
@@ -174,7 +198,7 @@ export interface SchedulerParametersToStateMapper<
 
 export type SchedulerModelUpdater<
   State extends SchedulerState,
-  Parameters extends SchedulerParameters,
+  Parameters extends SchedulerParameters<any>,
 > = (
   newState: Partial<State>,
   controlledProp: keyof Parameters & keyof State & string,
@@ -186,3 +210,10 @@ export interface UpdateEventsParameters {
   created?: CalendarEvent[];
   updated?: CalendarEventUpdatedProperties[];
 }
+
+export type SchedulerEventModelStructure<EventModel extends {}> = {
+  [key in keyof CalendarEvent]?: {
+    getter: (event: EventModel) => CalendarEvent[key];
+    setter: (event: EventModel | Partial<EventModel>, value: CalendarEvent[key]) => EventModel;
+  };
+};

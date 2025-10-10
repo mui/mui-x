@@ -24,11 +24,13 @@ export const DEFAULT_PREFERENCES_MENU_CONFIG: EventCalendarPreferencesMenuConfig
   toggleAmpm: true,
 };
 
-const deriveStateFromParameters = (parameters: EventCalendarParameters) => ({
+const deriveStateFromParameters = <EventModel extends {}>(
+  parameters: EventCalendarParameters<EventModel>,
+) => ({
   views: parameters.views ?? DEFAULT_VIEWS,
 });
 
-const mapper: SchedulerParametersToStateMapper<EventCalendarState, EventCalendarParameters> = {
+const mapper: SchedulerParametersToStateMapper<EventCalendarState, EventCalendarParameters<any>> = {
   getInitialState: (schedulerInitialState, parameters) => ({
     ...schedulerInitialState,
     ...deriveStateFromParameters(parameters),
@@ -54,11 +56,12 @@ const mapper: SchedulerParametersToStateMapper<EventCalendarState, EventCalendar
   },
 };
 
-export class EventCalendarStore extends SchedulerStore<
+export class EventCalendarStore<EventModel extends {}> extends SchedulerStore<
+  EventModel,
   EventCalendarState,
-  EventCalendarParameters
+  EventCalendarParameters<EventModel>
 > {
-  public constructor(parameters: EventCalendarParameters, adapter: Adapter) {
+  public constructor(parameters: EventCalendarParameters<EventModel>, adapter: Adapter) {
     super(parameters, adapter, 'Event Calendar', mapper);
 
     if (process.env.NODE_ENV !== 'production') {

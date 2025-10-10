@@ -31,7 +31,8 @@ export interface EventCalendarState extends SchedulerState {
   viewConfig: CalendarViewConfig | null;
 }
 
-export interface EventCalendarParameters extends SchedulerParameters {
+export interface EventCalendarParameters<EventModel extends {}>
+  extends SchedulerParameters<EventModel> {
   /**
    * The view currently displayed in the calendar.
    */

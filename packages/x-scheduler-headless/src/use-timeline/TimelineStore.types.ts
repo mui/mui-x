@@ -18,7 +18,7 @@ export interface TimelineState extends SchedulerState {
   preferences: TimelinePreferences;
 }
 
-export interface TimelineParameters extends SchedulerParameters {
+export interface TimelineParameters<EventModel extends {}> extends SchedulerParameters<EventModel> {
   /**
    * The view currently displayed in the timeline.
    */

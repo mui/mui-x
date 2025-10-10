@@ -1,6 +1,5 @@
 import { createSelector, createSelectorMemoized } from '@base-ui-components/utils/store';
 import {
-  CalendarEvent,
   CalendarEventId,
   CalendarResource,
   CalendarResourceId,
@@ -11,20 +10,10 @@ import {
 import { SchedulerState as State } from './SchedulerStore.types';
 import { getByDayMaps } from '../recurrence-utils';
 
-const eventByIdMapSelector = createSelectorMemoized(
-  (state: State) => state.events,
-  (events) => {
-    const map = new Map<CalendarEventId | null | undefined, CalendarEvent>();
-    for (const event of events) {
-      map.set(event.id, event);
-    }
-    return map;
-  },
-);
-
 const eventSelector = createSelector(
-  eventByIdMapSelector,
-  (events, eventId: CalendarEventId | null | undefined) => events.get(eventId),
+  (state: State) => state.processedEventLookup,
+  (processedEventLookup, eventId: CalendarEventId | null | undefined) =>
+    eventId == null ? null : processedEventLookup.get(eventId),
 );
 
 const resourcesByIdMapSelector = createSelectorMemoized(
@@ -57,7 +46,14 @@ export const selectors = {
   nowUpdatedEveryMinute: createSelector((state: State) => state.nowUpdatedEveryMinute),
   isMultiDayEvent: createSelector((state: State) => state.isMultiDayEvent),
   resources: createSelector((state: State) => state.resources),
-  events: createSelector((state: State) => state.events),
+  processedEventList: createSelectorMemoized(
+    (state: State) => state.eventIdList,
+    (state: State) => state.processedEventLookup,
+    (eventIds, processedEventLookup) => eventIds.map((id) => processedEventLookup.get(id)!),
+  ),
+  eventIdList: createSelector((state: State) => state.eventIdList),
+  eventModelList: createSelector((state: State) => state.eventModelList),
+  eventModelLookup: createSelector((state: State) => state.eventModelLookup),
   visibleResourcesMap: createSelector((state: State) => state.visibleResources),
   resource: resourceSelector,
   eventColor: createSelector((state: State, eventId: CalendarEventId) => {
