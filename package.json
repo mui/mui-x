@@ -21,7 +21,6 @@
     "deduplicate": "pnpm dedupe",
     "dataset:file-tree": "tsx ./scripts/treeDataFromFileTree.ts",
     "l10n": "tsx ./scripts/l10n.ts",
-    "jsonlint": "code-infra jsonlint",
     "eslint": "eslint . --cache --report-unused-disable-directives --ext .js,.ts,.tsx --max-warnings 0",
     "eslint:fix": "pnpm eslint --fix",
     "eslint:ci": "eslint . --report-unused-disable-directives --ext .js,.ts,.tsx --max-warnings 0",
