@@ -1,38 +1,24 @@
+'use client';
 import * as React from 'react';
 
-export function useRunOncePerLoop<T extends (...args: any[]) => void>(
-  callback: T,
-  nextFrame: boolean = false,
-) {
-  const scheduledRef = React.useRef(false);
+export function useRunOncePerLoop<T extends (...args: any[]) => void>(callback: T) {
+  const scheduledCallbackRef = React.useRef<(...args: any) => void>(null);
 
   const schedule = React.useCallback(
     (...args: Parameters<T>) => {
-      if (scheduledRef.current) {
-        return;
-      }
-      scheduledRef.current = true;
-
-      const runner = () => {
-        scheduledRef.current = false;
+      scheduledCallbackRef.current = () => {
+        scheduledCallbackRef.current = null;
         callback(...args);
       };
-
-      if (nextFrame) {
-        if (typeof requestAnimationFrame === 'function') {
-          requestAnimationFrame(runner);
-        }
-        return;
-      }
-
-      if (typeof queueMicrotask === 'function') {
-        queueMicrotask(runner);
-      } else {
-        Promise.resolve().then(runner);
-      }
     },
-    [callback, nextFrame],
+    [callback],
   );
+
+  React.useLayoutEffect(() => {
+    if (scheduledCallbackRef.current) {
+      scheduledCallbackRef.current();
+    }
+  });
 
   return schedule;
 }

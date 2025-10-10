@@ -1,6 +1,7 @@
 import useLazyRef from '@mui/utils/useLazyRef';
 import useOnMount from '@mui/utils/useOnMount';
 import type { ReadonlyStore } from './Store';
+import { fastObjectShallowCompare } from '../fastObjectShallowCompare';
 
 const noop = () => {};
 
@@ -36,7 +37,9 @@ function initialize<State, Value>(params?: {
     subscribe: () => {
       instance.dispose ??= store.subscribe((state) => {
         const nextState = selector(state);
-        instance.effect(previousState, nextState);
+        if (!argsEqual(previousState, nextState)) {
+          instance.effect(previousState, nextState);
+        }
         previousState = nextState;
       });
     },
@@ -53,3 +56,22 @@ function initialize<State, Value>(params?: {
 
   return instance;
 }
+
+const objectShallowCompare = fastObjectShallowCompare as (a: unknown, b: unknown) => boolean;
+const arrayShallowCompare = (a: any[], b: any[]) => {
+  if (a === b) {
+    return true;
+  }
+
+  return a.length === b.length && a.every((v, i) => v === b[i]);
+};
+
+const argsEqual = (prev: any, curr: any) => {
+  let fn = Object.is;
+  if (curr instanceof Array) {
+    fn = arrayShallowCompare;
+  } else if (curr instanceof Object) {
+    fn = objectShallowCompare;
+  }
+  return fn(prev, curr);
+};
