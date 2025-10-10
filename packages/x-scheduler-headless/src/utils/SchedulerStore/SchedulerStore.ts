@@ -9,6 +9,7 @@ import {
   CalendarResource,
   CalendarResourceId,
   SchedulerValidDate,
+  CalendarEventUpdatedProperties,
 } from '../../models';
 import {
   SchedulerState,
@@ -16,6 +17,7 @@ import {
   UpdateRecurringEventParameters,
   SchedulerParametersToStateMapper,
   SchedulerModelUpdater,
+  UpdateEventsParameters,
 } from './SchedulerStore.types';
 import { Adapter } from '../../use-adapter/useAdapter.types';
 import {
@@ -52,7 +54,7 @@ export class SchedulerStore<
 
   private initialParameters: Parameters | null = null;
 
-  private instanceName: string;
+  public instanceName: string;
 
   private mapper: SchedulerParametersToStateMapper<State, Parameters>;
 
@@ -188,6 +190,41 @@ export class SchedulerStore<
   };
 
   /**
+   * Adds, updates and / or deletes events in the calendar.
+   */
+  protected updateEvents(parameters: UpdateEventsParameters) {
+    const { deleted: deletedParam, updated: updatedParam = [], created = [] } = parameters;
+
+    const updated = new Map(updatedParam.map((ev) => [ev.id, ev]));
+    const deleted = new Set(deletedParam);
+    const originalEvents = selectors.events(this.state);
+    const newEvents: CalendarEvent[] = [];
+
+    if (deleted.size > 0 || updated.size > 0) {
+      for (const event of originalEvents) {
+        if (deleted.has(event.id)) {
+          continue;
+        }
+        const newEvent = updated.has(event.id) ? { ...event, ...updated.get(event.id) } : event;
+        newEvents.push(newEvent);
+      }
+    } else {
+      newEvents.push(...originalEvents);
+    }
+
+    for (const createdEvent of created) {
+      if (selectors.event(this.state, createdEvent.id)) {
+        throw new Error(
+          `${this.instanceName}: an event with id="${createdEvent.id}" already exists. Use updateEvent(...) instead.`,
+        );
+      }
+      newEvents.push(createdEvent);
+    }
+
+    this.parameters.onEventsChange?.(newEvents);
+  }
+
+  /**
    * Goes to today's date without changing the view.
    */
   public goToToday = (event: React.UIEvent) => {
@@ -199,108 +236,79 @@ export class SchedulerStore<
    * Creates a new event in the calendar.
    */
   public createEvent = (calendarEvent: CalendarEvent): CalendarEvent => {
-    const existing = selectors.event(this.state, calendarEvent.id);
-    if (existing) {
-      throw new Error(
-        `Event Calendar: an event with id="${calendarEvent.id}" already exists. Use updateEvent(...) instead.`,
-      );
-    }
-
-    const { onEventsChange } = this.parameters;
-    const updatedEvents = [...this.state.events, calendarEvent];
-    onEventsChange?.(updatedEvents);
-
+    this.updateEvents({ created: [calendarEvent] });
     return calendarEvent;
   };
 
   /**
    * Updates an event in the calendar.
    */
-  public updateEvent = (calendarEvent: Partial<CalendarEvent> & Pick<CalendarEvent, 'id'>) => {
+  public updateEvent = (calendarEvent: CalendarEventUpdatedProperties) => {
     const original = selectors.event(this.state, calendarEvent.id);
     if (!original) {
-      throw new Error(`Scheduler: the original event was not found (id="${calendarEvent.id}").`);
+      throw new Error(
+        `${this.instanceName}: the original event was not found (id="${calendarEvent.id}").`,
+      );
     }
     if (original?.rrule) {
-      throw new Error('Scheduler: this event is recurring. Use updateRecurringEvent(...) instead.');
+      throw new Error(
+        `${this.instanceName}: this event is recurring. Use updateRecurringEvent(...) instead.`,
+      );
     }
 
-    const { onEventsChange } = this.parameters;
-    const updatedEvents = this.state.events.map((ev) =>
-      ev.id === calendarEvent.id ? { ...ev, ...calendarEvent } : ev,
-    );
-    onEventsChange?.(updatedEvents);
+    this.updateEvents({ updated: [calendarEvent] });
   };
 
   /**
    * Updates a recurring event in the calendar.
    */
   public updateRecurringEvent = (params: UpdateRecurringEventParameters) => {
-    const { adapter, events } = this.state;
-    const { onEventsChange } = this.parameters;
+    const { adapter } = this.state;
     const { occurrenceStart, changes, scope } = params;
 
     const original = selectors.event(this.state, changes.id);
     if (!original) {
-      throw new Error(`Scheduler: the original event was not found (id="${changes.id}").`);
+      throw new Error(
+        `${this.instanceName}: the original event was not found (id="${changes.id}").`,
+      );
     }
     if (!original.rrule) {
       throw new Error(
-        'Scheduler: the original event is not recurring. Use updateEvent(...) instead.',
+        `${this.instanceName}: the original event is not recurring. Use updateEvent(...) instead.`,
       );
     }
 
-    let updatedEvents: CalendarEvent[] = [];
+    let updatedEvents: UpdateEventsParameters;
 
     switch (scope) {
       case 'this-and-following': {
-        updatedEvents = applyRecurringUpdateFollowing(
-          adapter,
-          events,
-          original,
-          occurrenceStart,
-          changes,
-        );
+        updatedEvents = applyRecurringUpdateFollowing(adapter, original, occurrenceStart, changes);
         break;
       }
 
       case 'all': {
-        updatedEvents = applyRecurringUpdateAll(
-          adapter,
-          events,
-          original,
-          occurrenceStart,
-          changes,
-        );
+        updatedEvents = applyRecurringUpdateAll(adapter, original, occurrenceStart, changes);
         break;
       }
 
       case 'only-this': {
-        updatedEvents = applyRecurringUpdateOnlyThis(
-          adapter,
-          events,
-          original,
-          occurrenceStart,
-          changes,
-        );
+        updatedEvents = applyRecurringUpdateOnlyThis(adapter, original, occurrenceStart, changes);
         break;
       }
 
       default: {
-        throw new Error(`Scheduler: scope="${scope}" is not supported.`);
+        throw new Error(`${this.instanceName}: scope="${scope}" is not supported.`);
       }
     }
 
-    onEventsChange?.(updatedEvents);
+    this.updateEvents(updatedEvents);
   };
 
   /**
    * Deletes an event from the calendar.
    */
   public deleteEvent = (eventId: CalendarEventId) => {
-    const { onEventsChange } = this.parameters;
-    const updatedEvents = this.state.events.filter((ev) => ev.id !== eventId);
-    onEventsChange?.(updatedEvents);
+    this.updateEvents({ deleted: [eventId] });
   };
 
   /**
