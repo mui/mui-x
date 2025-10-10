@@ -16,11 +16,13 @@ import { TimelineContent } from './content';
 import '../index.css';
 import './Timeline.css';
 
-export const Timeline = React.forwardRef(function Timeline(
-  props: TimelineProps,
+export const Timeline = React.forwardRef(function Timeline<EventModel extends {}>(
+  props: TimelineProps<EventModel>,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { parameters, forwardedProps } = useExtractTimelineParameters(props);
+  const { parameters, forwardedProps } = useExtractTimelineParameters<EventModel, typeof props>(
+    props,
+  );
   const store = useTimeline(parameters);
 
   const view = useStore(store, selectors.view);

@@ -3,14 +3,14 @@ import * as React from 'react';
 import { SchedulerParameters, SchedulerState, SchedulerStore } from '../utils/SchedulerStore';
 
 // TODO: Use Remove `update: any` for the update method once `useStore` uses `ReadonlyStore`
-export interface SchedulerStoreInContext
-  extends SchedulerStore<SchedulerState, SchedulerParameters> {
+export interface SchedulerStoreInContext<TModel extends {}>
+  extends SchedulerStore<any, SchedulerState, SchedulerParameters<TModel>> {
   update: any;
 }
 
-export const SchedulerStoreContext = React.createContext<SchedulerStoreInContext | null>(null);
+export const SchedulerStoreContext = React.createContext<SchedulerStoreInContext<any> | null>(null);
 
-export function useSchedulerStoreContext() {
+export function useSchedulerStoreContext<TModel extends {}>() {
   const context = React.useContext(SchedulerStoreContext);
   if (context == null) {
     throw new Error(
@@ -18,5 +18,5 @@ export function useSchedulerStoreContext() {
     );
   }
 
-  return context;
+  return context as SchedulerStoreInContext<TModel>;
 }

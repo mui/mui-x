@@ -102,7 +102,7 @@ export namespace useDropTarget {
  * Applies the data from the placeholder occurrence to the event it represents.
  */
 async function applyInternalDragOrResizeOccurrencePlaceholder(
-  store: SchedulerStoreInContext,
+  store: SchedulerStoreInContext<any>,
   placeholder: CalendarOccurrencePlaceholderInternalDragOrResize,
   addPropertiesToDroppedEvent?: () => Partial<CalendarEvent>,
   chooseRecurringEventScope?: () => Promise<RecurringUpdateEventScope>,

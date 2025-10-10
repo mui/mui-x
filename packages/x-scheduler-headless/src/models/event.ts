@@ -1,7 +1,7 @@
 import type { SchedulerValidDate } from './date';
 import type { CalendarResourceId } from './resource';
 
-// TODO: Rename SchedulerProcessedEvent
+// TODO: Rename SchedulerProcessedEvent and replace the raw SchedulerValidDate with processed dates.
 export interface CalendarEvent {
   /**
    * The unique identifier of the event.

@@ -6,7 +6,9 @@ import { useAdapter } from '../use-adapter/useAdapter';
 import { EventCalendarStore } from './EventCalendarStore';
 import { EventCalendarParameters } from './EventCalendarStore.types';
 
-export function useEventCalendar(parameters: EventCalendarParameters): EventCalendarStore {
+export function useEventCalendar<TModel extends {}>(
+  parameters: EventCalendarParameters<TModel>,
+): EventCalendarStore<TModel> {
   const adapter = useAdapter();
   const store = useRefWithInit(() => new EventCalendarStore(parameters, adapter)).current;
 

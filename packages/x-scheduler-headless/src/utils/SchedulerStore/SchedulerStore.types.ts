@@ -88,7 +88,7 @@ export interface SchedulerParameters<EventModel extends {}> {
   /**
    * The events currently available in the calendar.
    */
-  events: EventModel[];
+  events: readonly EventModel[];
   /**
    * Callback fired when some event of the calendar change.
    */
@@ -102,7 +102,7 @@ export interface SchedulerParameters<EventModel extends {}> {
   /**
    * The resources the events can be assigned to.
    */
-  resources?: CalendarResource[];
+  resources?: readonly CalendarResource[];
   /**
    * The date currently used to determine the visible date range in each view.
    */

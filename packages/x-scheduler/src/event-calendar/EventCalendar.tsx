@@ -17,15 +17,18 @@ import { TranslationsProvider } from '../internals/utils/TranslationsContext';
 import { MonthView } from '../month-view';
 import { HeaderToolbar } from '../internals/components/header-toolbar';
 import { ResourceLegend } from '../internals/components/resource-legend';
+import { DateNavigator } from '../internals/components/date-navigator';
 import '../index.css';
 import './EventCalendar.css';
-import { DateNavigator } from '../internals/components/date-navigator';
 
-export const EventCalendar = React.forwardRef(function EventCalendar(
-  props: EventCalendarProps,
+export const EventCalendar = React.forwardRef(function EventCalendar<EventModel extends {}>(
+  props: EventCalendarProps<EventModel>,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { parameters, forwardedProps } = useExtractEventCalendarParameters(props);
+  const { parameters, forwardedProps } = useExtractEventCalendarParameters<
+    EventModel,
+    typeof props
+  >(props);
   const store = useEventCalendar(parameters);
   const view = useStore(store, selectors.view);
   const isSidePanelOpen = useStore(store, selectors.preferences).isSidePanelOpen;

@@ -55,7 +55,7 @@ export function innerGetEventOccurrencesGroupedByResource(
   adapter: Adapter,
   events: CalendarEvent[],
   visibleResources: Map<string, boolean>,
-  resources: CalendarResource[],
+  resources: readonly CalendarResource[],
   start: SchedulerValidDate,
   end: SchedulerValidDate,
 ): { resource: CalendarResource; occurrences: CalendarEventOccurrence[] }[] {
