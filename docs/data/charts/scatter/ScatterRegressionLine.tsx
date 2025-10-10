@@ -5,6 +5,8 @@ import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import useId from '@mui/utils/useId';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import { useTheme } from '@mui/material/styles';
+import { rainbowSurgePalette } from '@mui/x-charts';
 import { diamonds } from '../dataset/diamonds';
 
 const dollarFormatter = new Intl.NumberFormat('en-US', {
@@ -50,6 +52,9 @@ export default function ScatterRegressionLine() {
 }
 
 function RegressionLine({ seriesId }: { seriesId: string }) {
+  const theme = useTheme();
+  const palette = rainbowSurgePalette(theme.palette.mode);
+  const stroke = palette[2];
   const allSeries = useSeries();
   const series = allSeries.scatter!.series[seriesId]!;
   const xScale = useXScale(series.xAxisId!);
@@ -68,15 +73,7 @@ function RegressionLine({ seriesId }: { seriesId: string }) {
     <React.Fragment>
       <ChartsClipPath id={clipPathId} />
       <g clipPath={`url(#${clipPathId})`}>
-        <line
-          x1={x1}
-          y1={y1}
-          x2={x2}
-          y2={y2}
-          stroke="red"
-          fill="red"
-          strokeWidth={2}
-        />
+        <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={stroke} strokeWidth={2} />
       </g>
     </React.Fragment>
   );
