@@ -148,8 +148,8 @@ catalogs:
       specifier: ^4.1.0-0
       version: 4.1.0-0
     dayjs:
-      specifier: ^1.11.13
-      version: 1.11.13
+      specifier: ^1.11.18
+      version: 1.11.18
     exceljs:
       specifier: ^4.4.0
       version: 4.4.0
@@ -255,8 +255,8 @@ importers:
         specifier: ^1.0.9-canary.48
         version: 1.0.9-canary.48(@types/node@22.18.8)(rollup@4.50.1)(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.1)
       '@mui/internal-code-infra':
-        specifier: ^0.0.3-canary.24
-        version: 0.0.3-canary.24(@types/node@22.18.8)(@typescript-eslint/parser@8.46.0(eslint@9.36.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.46.0(eslint@9.36.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.36.0))(eslint@9.36.0)(postcss@8.5.6)(prettier@3.6.2)(stylelint@16.24.0(typescript@5.9.3))(typescript@5.9.3)
+        specifier: ^0.0.3-canary.25
+        version: 0.0.3-canary.25(@types/node@22.18.8)(@typescript-eslint/parser@8.46.0(eslint@9.36.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.46.0(eslint@9.36.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.36.0))(eslint@9.36.0)(postcss@8.5.6)(prettier@3.6.2)(stylelint@16.24.0(typescript@5.9.3))(typescript@5.9.3)
       '@mui/internal-markdown':
         specifier: ^2.0.6
         version: 2.0.9
@@ -631,7 +631,7 @@ importers:
         version: 4.1.0-0
       dayjs:
         specifier: 'catalog:'
-        version: 1.11.13
+        version: 1.11.18
       es-toolkit:
         specifier: ^1.39.10
         version: 1.39.10
@@ -1120,7 +1120,7 @@ importers:
         version: 17.3.0
       dayjs:
         specifier: 'catalog:'
-        version: 1.11.13
+        version: 1.11.18
       moment-timezone:
         specifier: 'catalog:'
         version: 0.6.0
@@ -1430,7 +1430,7 @@ importers:
         version: 4.1.0-0
       dayjs:
         specifier: 'catalog:'
-        version: 1.11.13
+        version: 1.11.18
       luxon:
         specifier: 'catalog:'
         version: 3.7.2
@@ -1519,7 +1519,7 @@ importers:
         version: 4.1.0-0
       dayjs:
         specifier: 'catalog:'
-        version: 1.11.13
+        version: 1.11.18
       luxon:
         specifier: 'catalog:'
         version: 3.7.2
@@ -1993,7 +1993,7 @@ importers:
         version: 7.7.1
       dayjs:
         specifier: 'catalog:'
-        version: 1.11.13
+        version: 1.11.18
       moment:
         specifier: 'catalog:'
         version: 2.30.1
@@ -4081,8 +4081,8 @@ packages:
     resolution: {integrity: sha512-FFhLlGmYUIz+q32RP9IkcoVIb5bkqPoMqfEuSAp1s9vHlenkWt3gu8CpBXYG9F0m0k0flwaU32pVz/F9g84nng==}
     hasBin: true
 
-  '@mui/internal-code-infra@0.0.3-canary.24':
-    resolution: {integrity: sha512-1jW7BASC6U5taARaHnGNzGRo0RAB2tf0nMv2d458YTgCYVuFXGIiuvSPv5FYgGJtEGtDPHn0d0YcO0McGQu3Sw==}
+  '@mui/internal-code-infra@0.0.3-canary.25':
+    resolution: {integrity: sha512-gWW7zE2ji8BcHngcdyCSObv+eGXYLqx2X2Q9/nhSF6J6K8M7CAzGG51l6wHUGA+DYxGe85x1jh2OMcOxL7pVEw==}
     hasBin: true
     peerDependencies:
       eslint: ^9.0.0
@@ -7268,8 +7268,8 @@ packages:
   dateformat@3.0.3:
     resolution: {integrity: sha512-jyCETtSl3VMZMWeRo7iY1FL19ges1t55hMo5yaam4Jrsm5EPL89UQkoQRyiI+Yf4k8r2ZpdngkV8hr1lIdjb3Q==}
 
-  dayjs@1.11.13:
-    resolution: {integrity: sha512-oaMBel6gjolK862uaPQOVTA7q3TZhuSvuMQAAglQDOWYO9A91IrAOUJEyKVlqJlHE0vq5p5UXxzdPfMH/x6xNg==}
+  dayjs@1.11.18:
+    resolution: {integrity: sha512-zFBQ7WFRvVRhKcWoUh+ZA1g2HVgUbsZm9sbddh8EC5iv93sui8DVVz1Npvz+r6meo9VKfa8NyLWBsQK1VvIKPA==}
 
   debounce-fn@5.1.2:
     resolution: {integrity: sha512-Sr4SdOZ4vw6eQDvPYNxHogvrxmCIld/VenC5JbNrFwMiwd7lY/Z18ZFfo+EWNG4DD9nFlAujWAo/wGuOPHmy5A==}
@@ -14871,7 +14871,7 @@ snapshots:
       - tsx
       - yaml
 
-  '@mui/internal-code-infra@0.0.3-canary.24(@types/node@22.18.8)(@typescript-eslint/parser@8.46.0(eslint@9.36.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.46.0(eslint@9.36.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.36.0))(eslint@9.36.0)(postcss@8.5.6)(prettier@3.6.2)(stylelint@16.24.0(typescript@5.9.3))(typescript@5.9.3)':
+  '@mui/internal-code-infra@0.0.3-canary.25(@types/node@22.18.8)(@typescript-eslint/parser@8.46.0(eslint@9.36.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.46.0(eslint@9.36.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.36.0))(eslint@9.36.0)(postcss@8.5.6)(prettier@3.6.2)(stylelint@16.24.0(typescript@5.9.3))(typescript@5.9.3)':
     dependencies:
       '@argos-ci/core': 4.2.0
       '@babel/cli': 7.28.3(@babel/core@7.28.4)
@@ -18701,7 +18701,7 @@ snapshots:
 
   dateformat@3.0.3: {}
 
-  dayjs@1.11.13: {}
+  dayjs@1.11.18: {}
 
   debounce-fn@5.1.2:
     dependencies:
@@ -19501,7 +19501,7 @@ snapshots:
   exceljs@4.4.0:
     dependencies:
       archiver: 5.3.2
-      dayjs: 1.11.13
+      dayjs: 1.11.18
       fast-csv: 4.3.6
       jszip: 3.10.1
       readable-stream: 3.6.2

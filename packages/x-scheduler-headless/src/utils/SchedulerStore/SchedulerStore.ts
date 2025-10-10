@@ -8,7 +8,6 @@ import {
   CalendarOccurrencePlaceholder,
   CalendarResource,
   CalendarResourceId,
-  RRuleSpec,
   SchedulerValidDate,
   RecurrencePresetKey,
 } from '../../models';
@@ -323,39 +322,6 @@ export class SchedulerStore<
     if (shouldUpdateOccurrencePlaceholder(adapter, previous, newPlaceholder)) {
       this.set('occurrencePlaceholder', newPlaceholder);
     }
-  };
-
-  /**
-   * Builds the presets the user can choose from when creating or editing a recurring event.
-   */
-  public buildRecurrencePresets = (
-    date: SchedulerValidDate,
-  ): Record<RecurrencePresetKey, RRuleSpec> => {
-    const { adapter } = this.state;
-    const { numToByDay: numToCode } = getByDayMaps(adapter);
-    const dateDowCode = numToCode[adapter.getDayOfWeek(date)];
-    const dateDayOfMonth = adapter.getDate(date);
-
-    return {
-      daily: {
-        freq: 'DAILY',
-        interval: 1,
-      },
-      weekly: {
-        freq: 'WEEKLY',
-        interval: 1,
-        byDay: [dateDowCode],
-      },
-      monthly: {
-        freq: 'MONTHLY',
-        interval: 1,
-        byMonthDay: [dateDayOfMonth],
-      },
-      yearly: {
-        freq: 'YEARLY',
-        interval: 1,
-      },
-    };
   };
 
   /**

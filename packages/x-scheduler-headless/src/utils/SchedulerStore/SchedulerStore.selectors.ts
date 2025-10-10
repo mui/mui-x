@@ -4,9 +4,12 @@ import {
   CalendarEventId,
   CalendarResource,
   CalendarResourceId,
+  RecurrencePresetKey,
+  RRuleSpec,
   SchedulerValidDate,
 } from '../../models';
 import { SchedulerState as State } from './SchedulerStore.types';
+import { getByDayMaps } from '../recurrence-utils';
 
 const eventByIdMapSelector = createSelectorMemoized(
   (state: State) => state.events,
@@ -108,5 +111,34 @@ export const selectors = {
     (state: State) => state.adapter,
     (state: State) => state.nowUpdatedEveryMinute,
     (adapter, now, date: SchedulerValidDate) => adapter.isSameDay(date, now),
+  ),
+  recurrencePresets: createSelectorMemoized(
+    (state: State) => state.adapter,
+    (adapter, date: SchedulerValidDate): Record<RecurrencePresetKey, RRuleSpec> => {
+      const { numToByDay: numToCode } = getByDayMaps(adapter);
+      const dateDowCode = numToCode[adapter.getDayOfWeek(date)];
+      const dateDayOfMonth = adapter.getDate(date);
+
+      return {
+        daily: {
+          freq: 'DAILY',
+          interval: 1,
+        },
+        weekly: {
+          freq: 'WEEKLY',
+          interval: 1,
+          byDay: [dateDowCode],
+        },
+        monthly: {
+          freq: 'MONTHLY',
+          interval: 1,
+          byMonthDay: [dateDayOfMonth],
+        },
+        yearly: {
+          freq: 'YEARLY',
+          interval: 1,
+        },
+      };
+    },
   ),
 };
