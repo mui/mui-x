@@ -92,26 +92,13 @@ commands:
             node --version
             pnpm --version
 
-      - when:
-          condition:
-            equal: [stable, << parameters.react-version >>]
-          steps:
-            - run:
-                name: Install js dependencies
-                command: pnpm install
-      - unless:
-          condition:
-            equal: [stable, << parameters.react-version >>]
-          steps:
-            - run:
-                name: Install js dependencies without frozen lockfile
-                command: pnpm install --no-frozen-lockfile
+      - run:
+          name: Install js dependencies
+          command: pnpm install
       - run:
           name: Resolve React version
           command: |
-            pnpm use-react-version
-            # log a patch for maintainers who want to check out this change
-            git --no-pager diff HEAD
+            pnpm code-infra set-version-overrides --pkg "react@$REACT_VERSION"
       - when:
           condition: << pipeline.parameters.with-material-ui-6 >>
           steps:
