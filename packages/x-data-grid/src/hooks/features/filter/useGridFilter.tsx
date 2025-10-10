@@ -3,6 +3,7 @@ import { lruMemoize } from '@mui/x-internals/lruMemoize';
 import { RefObject } from '@mui/x-internals/types';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
+import { isObjectEmpty } from '@mui/x-internals/isObjectEmpty';
 import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -37,7 +38,6 @@ import {
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import type { ItemPlusTag } from '../../../components/panel/filterPanel/GridFilterInputValue';
 import type { GridConfiguration } from '../../../models/configuration/gridConfiguration';
-import { isObjectEmpty } from '@mui/x-internals/isObjectEmpty';
 
 export const filterStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'filterModel' | 'initialState' | 'disableMultipleColumnsFiltering'>

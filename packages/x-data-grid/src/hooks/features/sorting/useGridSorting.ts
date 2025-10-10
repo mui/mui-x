@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import { isObjectEmpty } from '@mui/x-internals/isObjectEmpty';
 import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -33,7 +34,6 @@ import {
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { getTreeNodeDescendants } from '../rows/gridRowsUtils';
-import { isObjectEmpty } from '@mui/x-internals/isObjectEmpty';
 
 export const sortingStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'sortModel' | 'initialState' | 'disableMultipleColumnsSorting'>

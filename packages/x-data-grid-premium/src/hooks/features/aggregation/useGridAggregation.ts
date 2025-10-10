@@ -10,6 +10,8 @@ import {
   gridRenderContextSelector,
   gridVisibleColumnFieldsSelector,
   gridSortModelSelector,
+  gridRowMaximumTreeDepthSelector,
+  gridRowCountSelector,
 } from '@mui/x-data-grid-pro';
 import {
   useGridRegisterPipeProcessor,
@@ -88,11 +90,11 @@ export const useGridAggregation = (
   );
 
   const abortControllerRef = React.useRef<AbortController | null>(null);
-  const applyAggregationReasonRef = React.useRef<'filter' | 'sort' | null>(null);
   const applyAggregation = React.useCallback(() => {
-    const reason = applyAggregationReasonRef.current;
-    console.log('reason', reason);
-    applyAggregationReasonRef.current = null;
+    const rowCount = gridRowCountSelector(apiRef);
+    if (!rowCount) {
+      return;
+    }
     const aggregationRules = getAggregationRules(
       gridColumnLookupSelector(apiRef),
       gridAggregationModelSelector(apiRef),
@@ -101,11 +103,6 @@ export const useGridAggregation = (
     );
     const aggregatedFields = Object.keys(aggregationRules);
     const currentAggregationLookup = gridAggregationLookupSelector(apiRef);
-    const needsSorting = shouldApplySorting(aggregationRules, aggregatedFields);
-    if (reason === 'sort' && !needsSorting) {
-      // no need to re-apply aggregation on `sortedRowsSet` if sorting is not needed
-      return;
-    }
 
     // Abort previous if we're proceeding
     if (abortControllerRef.current) {
@@ -126,7 +123,9 @@ export const useGridAggregation = (
       sortFields.filter((field) => !visibleAggregatedFields.includes(field)),
     );
 
-    const hasAggregatedSortedField = sortFields.some((field) => aggregationRules[field]);
+    const hasAggregatedSortedField =
+      gridRowMaximumTreeDepthSelector(apiRef) > 1 &&
+      sortFields.some((field) => aggregationRules[field]);
     if (visibleAggregatedFields.length > 0) {
       chunks.push(visibleAggregatedFieldsWithSort);
     }
@@ -285,12 +284,28 @@ export const useGridAggregation = (
 
   useGridEvent(apiRef, 'aggregationModelChange', checkAggregationRulesDiff);
   useGridEvent(apiRef, 'columnsChange', checkAggregationRulesDiff);
-  useGridEvent(apiRef, 'filteredRowsSet', () => {
-    applyAggregationReasonRef.current = 'filter';
-    deferredApplyAggregation();
-  });
+  useGridEvent(apiRef, 'filteredRowsSet', deferredApplyAggregation);
+
+  const lastSortModel = React.useRef(gridSortModelSelector(apiRef));
   useGridEvent(apiRef, 'sortedRowsSet', () => {
-    applyAggregationReasonRef.current ??= 'sort';
+    const sortModel = gridSortModelSelector(apiRef);
+    if (lastSortModel.current === sortModel) {
+      return;
+    }
+    lastSortModel.current = sortModel;
+
+    const aggregationRules = getAggregationRules(
+      gridColumnLookupSelector(apiRef),
+      gridAggregationModelSelector(apiRef),
+      props.aggregationFunctions,
+      !!props.dataSource,
+    );
+    const aggregatedFields = Object.keys(aggregationRules);
+    const needsSorting = shouldApplySorting(aggregationRules, aggregatedFields);
+    if (!needsSorting) {
+      return;
+    }
+
     deferredApplyAggregation();
   });
 
