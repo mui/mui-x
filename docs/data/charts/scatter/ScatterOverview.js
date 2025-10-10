@@ -19,7 +19,7 @@ const series = [
   {
     type: 'scatter',
     label: 'Other',
-    highlightScope: { highlight: 'item', fade: 'global' },
+    highlightScope: { highlight: 'series', fade: 'global' },
     markerSize: 3,
     data: data
       .filter(
@@ -29,7 +29,7 @@ const series = [
   },
   ...constructors.map((constructor) => ({
     label: constructor,
-    highlightScope: { highlight: 'item', fade: 'global' },
+    highlightScope: { highlight: 'series', fade: 'global' },
     markerSize: 3,
     data: data
       .filter((item) => item.constructor === constructor && item.density !== null)
