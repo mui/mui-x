@@ -2,6 +2,7 @@ import { ChartDrawingArea } from '../../../../hooks/useDrawingArea';
 import { ScatterValueType } from '../../../../models/seriesType/scatter';
 import { Flatbush } from '../../../Flatbush';
 import { D3Scale } from '../../../../models/axis';
+import { isOrdinalScale } from '../../../scaleGuards';
 
 export function findClosestPoints(
   flatbush: Flatbush,
@@ -41,12 +42,12 @@ export function findClosestPoints(
     return fxSq * dx * dx + fySq * dy * dy;
   }
 
-  const isXIncreasing = xScale.range()[1] > xScale.range()[0];
-  const isYIncreasing = yScale.range()[1] > yScale.range()[0];
-  const xRatio = (svgPointX - drawingArea.left) / drawingArea.width;
-  const yRatio = (svgPointY - drawingArea.top) / drawingArea.height;
-  const pointX = xZoomStart + (isXIncreasing ? xRatio : 1 - xRatio) * (xZoomEnd - xZoomStart);
-  const pointY = yZoomStart + (isYIncreasing ? yRatio : 1 - yRatio) * (yZoomEnd - yZoomStart);
+  const pointX = originalXScale(
+    invertScale(xScale, svgPointX, (dataIndex) => seriesData[dataIndex].x),
+  );
+  const pointY = originalYScale(
+    invertScale(yScale, svgPointY, (dataIndex) => seriesData[dataIndex].y),
+  );
 
   return flatbush.neighbors(
     pointX,
@@ -56,4 +57,17 @@ export function findClosestPoints(
     excludeIfOutsideDrawingArea,
     sqDistFn,
   );
+}
+
+function invertScale<T>(scale: D3Scale, value: number, getDataPoint: (dataIndex: number) => T) {
+  if (isOrdinalScale(scale)) {
+    const dataIndex =
+      scale.bandwidth() === 0
+        ? Math.floor((value - Math.min(...scale.range()) + scale.step() / 2) / scale.step())
+        : Math.floor((value - Math.min(...scale.range())) / scale.step());
+
+    return getDataPoint(dataIndex);
+  }
+
+  return scale.invert(value);
 }
