@@ -5,3 +5,4 @@ export * from './export';
 export * from './cellSelection';
 export * from './aiAssistant';
 export * from './sidebar';
+export * from './pivoting';

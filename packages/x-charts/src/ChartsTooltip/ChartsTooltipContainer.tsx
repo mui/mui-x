@@ -99,10 +99,12 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
 
     element.addEventListener('pointerdown', handlePointerEvent);
     element.addEventListener('pointermove', handlePointerEvent);
+    element.addEventListener('pointerenter', handlePointerEvent);
 
     return () => {
       element.removeEventListener('pointerdown', handlePointerEvent);
       element.removeEventListener('pointermove', handlePointerEvent);
+      element.removeEventListener('pointerenter', handlePointerEvent);
       update.clear();
     };
   }, [svgRef, positionRef]);

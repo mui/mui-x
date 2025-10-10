@@ -11,6 +11,7 @@ interface CreateRowTreeParams {
   isGroupExpandedByDefault?: DataGridProProps['isGroupExpandedByDefault'];
   groupingName: string;
   onDuplicatePath?: GridTreePathDuplicateHandler;
+  maxDepth?: number;
 }
 
 /**
@@ -39,6 +40,7 @@ export const createRowTree = (params: CreateRowTreeParams): GridRowTreeCreationV
       isGroupExpandedByDefault: params.isGroupExpandedByDefault,
       defaultGroupingExpansionDepth: params.defaultGroupingExpansionDepth,
       groupsToFetch,
+      maxDepth: params.maxDepth,
     });
   }
 

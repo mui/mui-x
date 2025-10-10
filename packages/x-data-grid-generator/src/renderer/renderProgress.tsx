@@ -67,6 +67,10 @@ export function renderProgress(params: GridRenderCellParams<any, number, any>) {
     return '';
   }
 
+  if (params.rowNode.type === 'group') {
+    return `${(params.value * 100).toLocaleString()} %`;
+  }
+
   // If the aggregated value does not have the same unit as the other cell
   // Then we fall back to the default rendering based on `valueGetter` instead of rendering a progress bar.
   if (params.aggregation && !params.aggregation.hasCellUnit) {
