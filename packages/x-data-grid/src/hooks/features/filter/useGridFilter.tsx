@@ -37,6 +37,7 @@ import {
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import type { ItemPlusTag } from '../../../components/panel/filterPanel/GridFilterInputValue';
 import type { GridConfiguration } from '../../../models/configuration/gridConfiguration';
+import { isObjectEmpty } from '@mui/x-internals/isObjectEmpty';
 
 export const filterStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'filterModel' | 'initialState' | 'disableMultipleColumnsFiltering'>
@@ -108,6 +109,7 @@ export const useGridFilter = (
   });
 
   const updateFilteredRows = React.useCallback(() => {
+    let didChange = false;
     apiRef.current.setState((state) => {
       const filterModel = gridFilterModelSelector(apiRef);
       const filterState = apiRef.current.getFilterState(filterModel);
@@ -122,12 +124,22 @@ export const useGridFilter = (
 
       const visibleRowsLookupState = getVisibleRowsLookupState(apiRef, newState);
 
+      if (
+        visibleRowsLookupState !== state.visibleRowsLookup &&
+        !(isObjectEmpty(visibleRowsLookupState) && !isObjectEmpty(state.visibleRowsLookup))
+      ) {
+        didChange = true;
+        newState.visibleRowsLookup = visibleRowsLookupState;
+      }
+
       return {
         ...newState,
         visibleRowsLookup: visibleRowsLookupState,
       };
     });
-    apiRef.current.publishEvent('filteredRowsSet');
+    if (didChange) {
+      apiRef.current.publishEvent('filteredRowsSet');
+    }
   }, [apiRef]);
 
   const addColumnMenuItem = React.useCallback<GridPipeProcessor<'columnMenu'>>(

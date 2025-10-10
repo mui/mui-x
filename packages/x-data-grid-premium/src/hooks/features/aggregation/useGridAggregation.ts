@@ -91,6 +91,7 @@ export const useGridAggregation = (
   const applyAggregationReasonRef = React.useRef<'filter' | 'sort' | null>(null);
   const applyAggregation = React.useCallback(() => {
     const reason = applyAggregationReasonRef.current;
+    console.log('reason', reason);
     applyAggregationReasonRef.current = null;
     const aggregationRules = getAggregationRules(
       gridColumnLookupSelector(apiRef),
@@ -124,6 +125,7 @@ export const useGridAggregation = (
     const visibleAggregatedFieldsWithSort = visibleAggregatedFields.concat(
       sortFields.filter((field) => !visibleAggregatedFields.includes(field)),
     );
+
     const hasAggregatedSortedField = sortFields.some((field) => aggregationRules[field]);
     if (visibleAggregatedFields.length > 0) {
       chunks.push(visibleAggregatedFieldsWithSort);

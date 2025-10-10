@@ -33,6 +33,7 @@ import {
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { getTreeNodeDescendants } from '../rows/gridRowsUtils';
+import { isObjectEmpty } from '@mui/x-internals/isObjectEmpty';
 
 export const sortingStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'sortModel' | 'initialState' | 'disableMultipleColumnsSorting'>
@@ -140,6 +141,7 @@ export const useGridSorting = (
    * API METHODS
    */
   const applySorting = React.useCallback<GridSortApi['applySorting']>(() => {
+    let didChange = false;
     apiRef.current.setState((state) => {
       if (props.sortingMode === 'server') {
         logger.debug('Skipping sorting rows as sortingMode = server');
@@ -162,13 +164,23 @@ export const useGridSorting = (
         sortRowList,
       });
 
-      return {
-        ...state,
-        sorting: { ...state.sorting, sortedRows },
-      };
+      if (
+        sortedRows !== state.sorting.sortedRows &&
+        !(isObjectEmpty(sortedRows) && isObjectEmpty(state.sorting.sortedRows))
+      ) {
+        didChange = true;
+        return {
+          ...state,
+          sorting: { ...state.sorting, sortedRows },
+        };
+      }
+
+      return state;
     });
 
-    apiRef.current.publishEvent('sortedRowsSet');
+    if (didChange) {
+      apiRef.current.publishEvent('sortedRowsSet');
+    }
   }, [apiRef, logger, props.sortingMode]);
 
   const setSortModel = React.useCallback<GridSortApi['setSortModel']>(
