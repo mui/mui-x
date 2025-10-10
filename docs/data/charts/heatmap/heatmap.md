@@ -8,6 +8,18 @@ components: Heatmap, HeatmapPlot, HeatmapTooltip, HeatmapTooltipContent
 
 <p class="description">Heatmap charts visually represents data with color variations to highlight patterns and trends across two dimensions.</p>
 
+## Overview
+
+Heatmaps are ideal for visualizing intensity variations across two categorical or continuous dimensions. They highlight areas of high and low concentration in a dataset, making it easy to detect trends, clusters, or anomalies at a glance. Each cell in a heatmap represents the intersection of two variables, with color encoding used to convey the magnitude of a numerical value.
+
+Here are the basic requirements to create a heatmap:
+
+- Two categorical or continuous dimensions (for the x‑axis and y‑axis)
+- One numerical metric determining the color intensity of each cell
+- Optional: a color scale or gradient to represent value ranges effectively
+
+{{"demo": "HeatmapDemo.js"}}
+
 ## Basics
 
 Heatmap charts series must contain a `data` property containing an array of 3-tuples.
