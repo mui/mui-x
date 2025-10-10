@@ -6,7 +6,7 @@ export type ZoomInteractionConfig = {
    * - `wheel`: Zooms in or out when the mouse wheel is scrolled.
    * - `pinch`: Zooms in or out when a pinch gesture is detected.
    * - `tapAndDrag`: Zooms in or out by tapping twice and then dragging vertically. Dragging up zooms in, dragging down zooms out.
-   * - `brush`: Zooms into a selected area by clicking and dragging to create a selection area.
+   * - `brush`: Zooms into a selected area by clicking and dragging to create a selection area. (Conflicts with `drag` pan interaction)
    * - `doubleTapReset`: Resets the zoom level to the original state when double-tapping.
    *
    * @default ['wheel', 'pinch']
