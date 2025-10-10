@@ -34,11 +34,25 @@ const event = {
 
 ## Drag interactions
 
-You can enable the drag and drop using the `areEventsDraggable` and `areEventsResizable` props.
+### Drag and resize events
+
+You can enable the dragging and resizing of events within the Event Calendar using the `areEventsDraggable` and `areEventsResizable` props.
 When `areEventsDraggable` is `true`, the events can be dragged to another point in time.
 When `areEventsResizable` is `true`, the event extremities can be dragged to change its duration.
 
 {{"demo": "DragAndDrop.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### External drag and drop
+
+You can enable the dragging from and to the outside of the Event Calendar using the `canDragEventsFromTheOutside` and `canDropEventsToTheOutside` props.
+When `canDragEventsFromTheOutside` is `true`, the events created with `<StandaloneEvent />` can be dropped inside the Event Calendar.
+When `canDropEventsToTheOutside` is `true`, the events from within the Event Calendar can be dropped outside of it (not working yet).
+
+:::success
+To be able to drag an event to the outside, your events must be draggable, so `areEventsDraggable` must be `true`.
+:::
+
+{{"demo": "ExternalDragAndDrop.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Customization
 

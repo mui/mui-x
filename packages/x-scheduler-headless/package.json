@@ -14,11 +14,13 @@
     "url": "https://opencollective.com/mui-org"
   },
   "exports": {
+    "./build-is-valid-drop-target": "./src/build-is-valid-drop-target/index.ts",
     "./calendar-grid": "./src/calendar-grid/index.ts",
     "./constants": "./src/constants/index.ts",
     "./event-calendar-provider": "./src/event-calendar-provider/index.ts",
     "./models": "./src/models/index.ts",
     "./process-date": "./src/process-date/index.ts",
+    "./standalone-event": "./src/standalone-event/index.ts",
     "./timeline": "./src/timeline/index.ts",
     "./timeline-provider": "./src/timeline-provider/index.ts",
     "./use-adapter": "./src/use-adapter/index.ts",

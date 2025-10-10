@@ -4,12 +4,16 @@ import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element
 import {
   CalendarEvent,
   CalendarOccurrencePlaceholder,
+  CalendarOccurrencePlaceholderExternalDrag,
   CalendarOccurrencePlaceholderInternalDragOrResize,
   EventSurfaceType,
   CalendarEventUpdatedProperties,
   SchedulerValidDate,
 } from '../models';
-import { EventDropData, EventDropDataLookup } from '../utils/drag-utils';
+import {
+  EventDropData,
+  EventDropDataLookup,
+} from '../build-is-valid-drop-target/buildIsValidDropTarget';
 import { SchedulerStoreInContext, useSchedulerStoreContext } from '../use-scheduler-store-context';
 import { RecurringUpdateEventScope, selectors } from './SchedulerStore';
 import { SCHEDULER_RECURRING_EDITING_SCOPE } from '../constants';
@@ -27,6 +31,17 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
     }
 
     const createDropData: useDropTarget.CreateDropData = (data, newStart, newEnd) => {
+      if (data.source === 'StandaloneEvent') {
+        return {
+          type: 'external-drag',
+          surfaceType,
+          start: newStart,
+          end: newEnd,
+          eventData: data.eventData,
+          onEventDrop: data.onEventDrop,
+        };
+      }
+
       return {
         type: 'internal-drag-or-resize',
         surfaceType,
@@ -41,7 +56,20 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
     return dropTargetForElements({
       element: ref.current,
       getData: () => ({ isSchedulerDropTarget: true, surfaceType }),
-      canDrop: ({ source }) => isValidDropTarget(source.data),
+      canDrop: ({ source }) => {
+        if (!isValidDropTarget(source.data)) {
+          return false;
+        }
+
+        if (
+          source.data.source === 'StandaloneEvent' &&
+          !selectors.canDragEventsFromTheOutside(store.state)
+        ) {
+          return false;
+        }
+
+        return true;
+      },
       onDrag: ({ source, location }) => {
         const newPlaceholder = getEventDropData({
           data: source.data,
@@ -67,6 +95,23 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
             placeholder,
             addPropertiesToDroppedEvent,
           );
+        } else if (placeholder?.type === 'external-drag') {
+          applyExternalDragOccurrencePlaceholder(store, placeholder, addPropertiesToDroppedEvent);
+        }
+      },
+      onDragLeave: () => {
+        const currentPlaceholder = selectors.occurrencePlaceholder(store.state);
+        if (currentPlaceholder?.surfaceType !== surfaceType) {
+          return;
+        }
+
+        const type = currentPlaceholder.type;
+        const shouldHidePlaceholder =
+          type === 'external-drag' ||
+          (type === 'internal-drag-or-resize' && selectors.canDropEventsToTheOutside(store.state));
+
+        if (shouldHidePlaceholder) {
+          store.setOccurrencePlaceholder({ ...currentPlaceholder, isHidden: true });
         }
       },
     });
@@ -140,4 +185,24 @@ async function applyInternalDragOrResizeOccurrencePlaceholder(
   }
 
   return store.updateEvent(changes);
+}
+
+function applyExternalDragOccurrencePlaceholder(
+  store: SchedulerStoreInContext,
+  placeholder: CalendarOccurrencePlaceholderExternalDrag,
+  addPropertiesToDroppedEvent?: () => Partial<CalendarEvent>,
+) {
+  const event: CalendarEvent = {
+    start: placeholder.start,
+    end: placeholder.end,
+    ...placeholder.eventData,
+  };
+
+  if (addPropertiesToDroppedEvent) {
+    Object.assign(event, addPropertiesToDroppedEvent());
+  }
+
+  store.setOccurrencePlaceholder(null);
+  store.createEvent(event);
+  placeholder.onEventDrop?.();
 }

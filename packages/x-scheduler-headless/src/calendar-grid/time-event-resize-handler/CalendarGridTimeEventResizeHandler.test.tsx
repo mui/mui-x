@@ -21,6 +21,7 @@ describe('<CalendarGrid.TimeEventResizeHandler />', () => {
                 occurrenceKey="fake-key"
                 start={eventStart}
                 end={eventEnd}
+                renderDragPreview={() => null}
               >
                 {node}
               </CalendarGrid.TimeEvent>

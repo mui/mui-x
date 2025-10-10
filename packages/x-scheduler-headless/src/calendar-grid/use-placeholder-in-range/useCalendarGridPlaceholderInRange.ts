@@ -45,6 +45,18 @@ export function useCalendarGridPlaceholderInRange(
       };
     }
 
+    if (rawPlaceholder.type === 'external-drag') {
+      return {
+        ...sharedProperties,
+        id: 'occurrence-placeholder',
+        title: rawPlaceholder.eventData.title ?? '',
+        position: {
+          firstIndex: 1,
+          lastIndex: maxIndex,
+        },
+      };
+    }
+
     const position = occurrences.find(
       (occurrence) => occurrence.key === rawPlaceholder.occurrenceKey,
     )?.position ?? {

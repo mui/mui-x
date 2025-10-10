@@ -53,6 +53,18 @@ export function useCalendarGridPlaceholderInDay(
       };
     }
 
+    if (rawPlaceholder.type === 'external-drag') {
+      return {
+        ...sharedProperties,
+        id: 'occurrence-placeholder',
+        title: rawPlaceholder.eventData.title ?? '',
+        position: {
+          index: 1,
+          daySpan: diffIn(adapter, rawPlaceholder.end, day, 'days') + 1,
+        },
+      };
+    }
+
     let positionIndex = 1;
     for (const rowDay of row.days) {
       const found = rowDay.withPosition.find(
