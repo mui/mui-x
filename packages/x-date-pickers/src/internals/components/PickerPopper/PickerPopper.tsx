@@ -19,6 +19,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions';
 import { MuiEvent, SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { isElementInteractive } from '../../utils/isElementInteractive';
 import { getPickerPopperUtilityClass, PickerPopperClasses } from './pickerPopperClasses';
 import { executeInTheNextEventLoopTick, getActiveElement } from '../../utils/utils';
 import { usePickerPrivateContext } from '../../hooks/usePickerPrivateContext';
@@ -326,6 +327,14 @@ const PickerPopperPaperWrapper = React.forwardRef(
   },
 );
 
+const isEventTargetInteractive = (eventTarget: EventTarget) => {
+  const element = eventTarget instanceof HTMLElement ? eventTarget : null;
+  if (!element) {
+    return false;
+  }
+  return isElementInteractive(element);
+};
+
 export function PickerPopper(inProps: PickerPopperProps) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickerPopper' });
   const { children, placement = 'bottom-start', slots, slotProps, classes: classesProp } = props;
@@ -350,6 +359,7 @@ export function PickerPopper(inProps: PickerPopperProps) {
   }, [dismissViews, open]);
 
   const lastFocusedElementRef = React.useRef<Element | null>(null);
+
   React.useEffect(() => {
     if (viewContainerRole === 'tooltip' || getCurrentViewMode() === 'field') {
       return;
@@ -373,7 +383,7 @@ export function PickerPopper(inProps: PickerPopperProps) {
 
   const classes = useUtilityClasses(classesProp);
 
-  const handleClickAway: OnClickAway = useEventCallback(() => {
+  const handleClickAway: OnClickAway = useEventCallback((event) => {
     if (viewContainerRole === 'tooltip') {
       executeInTheNextEventLoopTick(() => {
         if (
@@ -386,6 +396,14 @@ export function PickerPopper(inProps: PickerPopperProps) {
         dismissViews();
       });
     } else {
+      // Get all the targets of this event.
+      const eventTargets = event.composedPath();
+      // https://github.com/mui/mui-x/pull/13434
+      // Check if the click is on an interactive element.
+      // If it is, we don't want to refocus the last focused element.
+      if (eventTargets.some(isEventTargetInteractive)) {
+        lastFocusedElementRef.current = null;
+      }
       dismissViews();
     }
   });
@@ -442,7 +460,6 @@ export function PickerPopper(inProps: PickerPopperProps) {
           // which would force screen readers to read too old label
           disableRestoreFocus
           disableEnforceFocus={viewContainerRole === 'tooltip'}
-          isEnabled={() => true}
           {...slotProps?.desktopTrapFocus}
         >
           <Transition
