@@ -24,7 +24,7 @@
     "@emotion/react": "catalog:",
     "@emotion/server": "^11.11.0",
     "@emotion/styled": "catalog:",
-    "@mui/docs": "7.1.2",
+    "@mui/docs": "7.3.4",
     "@mui/icons-material": "catalog:",
     "@mui/joy": "^5.0.0-beta.52",
     "@mui/lab": "^7.0.0-beta.17",
@@ -99,7 +99,7 @@
   "devDependencies": {
     "@babel/plugin-transform-react-constant-elements": "catalog:",
     "@babel/preset-typescript": "catalog:",
-    "@mui/internal-docs-utils": "^2.0.1",
+    "@mui/internal-docs-utils": "^2.0.3",
     "@mui/internal-scripts": "https://pkg.pr.new/mui/material-ui/@mui/internal-scripts@7b4e85d",
     "@types/chance": "catalog:",
     "@types/d3-scale": "catalog:",
