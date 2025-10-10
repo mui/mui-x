@@ -15,7 +15,6 @@ import {
   useGridRegisterPipeProcessor,
   GridStateInitializer,
   GridPipeProcessor,
-  gridPivotActiveSelector,
 } from '@mui/x-data-grid-pro/internals';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
@@ -91,13 +90,6 @@ export const useGridAggregation = (
   const abortControllerRef = React.useRef<AbortController | null>(null);
   const applyAggregation = React.useCallback(
     (reason?: 'filter' | 'sort') => {
-      // Abort previous if any
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-      }
-      const abortController = new AbortController();
-      abortControllerRef.current = abortController;
-
       const aggregationRules = getAggregationRules(
         gridColumnLookupSelector(apiRef),
         gridAggregationModelSelector(apiRef),
@@ -112,18 +104,28 @@ export const useGridAggregation = (
         return;
       }
 
+      // Abort previous if we're proceeding
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+      const abortController = new AbortController();
+      abortControllerRef.current = abortController;
+
       const renderContext = gridRenderContextSelector(apiRef);
       const visibleColumns = gridVisibleColumnFieldsSelector(apiRef);
 
       const chunks: string[][] = [];
+      const sortFields = gridSortModelSelector(apiRef).map((s) => s.field);
       const visibleAggregatedFields = visibleColumns
         .slice(renderContext.firstColumnIndex, renderContext.lastColumnIndex + 1)
         .filter((field) => aggregatedFields.includes(field));
+      const visibleAggregatedFieldsWithSort = visibleAggregatedFields.concat(sortFields);
+      const hasAggregatedSortedField = sortFields.some((field) => aggregationRules[field]);
       if (visibleAggregatedFields.length > 0) {
-        chunks.push(visibleAggregatedFields);
+        chunks.push(visibleAggregatedFieldsWithSort);
       }
       const otherAggregatedFields = aggregatedFields.filter(
-        (field) => !visibleAggregatedFields.includes(field),
+        (field) => !visibleAggregatedFieldsWithSort.includes(field),
       );
 
       const chunkSize = 20; // columns per chunk
@@ -143,11 +145,6 @@ export const useGridAggregation = (
 
         const currentChunk = chunks[chunkIndex];
         if (!currentChunk) {
-          const sortModel = gridSortModelSelector(apiRef).map((s) => s.field);
-          const hasAggregatedSorting = sortModel.some((field) => aggregationRules[field]);
-          if (hasAggregatedSorting) {
-            apiRef.current.applySorting();
-          }
           abortControllerRef.current = null;
           return;
         }
@@ -176,6 +173,10 @@ export const useGridAggregation = (
           ...state,
           aggregation: { ...state.aggregation, lookup: { ...aggregationLookup } },
         }));
+
+        if (chunkIndex === 0 && hasAggregatedSortedField) {
+          apiRef.current.applySorting();
+        }
 
         chunkIndex += 1;
 
@@ -248,7 +249,6 @@ export const useGridAggregation = (
    * EVENTS
    */
   const checkAggregationRulesDiff = React.useCallback(() => {
-    const pivotingActive = gridPivotActiveSelector(apiRef);
     const { rulesOnLastRowHydration, rulesOnLastColumnHydration } =
       apiRef.current.caches.aggregation;
 
@@ -262,10 +262,7 @@ export const useGridAggregation = (
         );
 
     // Re-apply the row hydration to add / remove the aggregation footers
-    if (
-      (!props.dataSource || pivotingActive) &&
-      !areAggregationRulesEqual(rulesOnLastRowHydration, aggregationRules)
-    ) {
+    if (!props.dataSource && !areAggregationRulesEqual(rulesOnLastRowHydration, aggregationRules)) {
       apiRef.current.requestPipeProcessorsApplication('hydrateRows');
       deferredApplyAggregation();
     }
