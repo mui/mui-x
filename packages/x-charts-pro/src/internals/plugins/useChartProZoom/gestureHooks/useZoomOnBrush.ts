@@ -59,13 +59,7 @@ export const useZoomOnBrush = (
         clientY: event.detail.initialCentroid.y,
       });
 
-      // Only start brush if the initial point is inside the drawing area
-      if (!instance.isPointInside(point.x, point.y)) {
-        brushStartRef.current = null;
-        store.update((prevState) => ({
-          ...prevState,
-          zoomBrushState: { start: null, current: null },
-        }));
+      if ((event.detail.target as SVGElement)?.closest('[data-charts-zoom-slider]')) {
         return;
       }
 
