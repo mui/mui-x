@@ -45,7 +45,6 @@ export interface UseTreeItemRootSlotPropsFromUseTreeItem {
   tabIndex: 0 | -1;
   id: string;
   'aria-expanded': React.AriaAttributes['aria-expanded'];
-  'aria-selected': React.AriaAttributes['aria-selected'];
   'aria-disabled': React.AriaAttributes['aria-disabled'];
   onFocus: TreeViewCancellableEventHandler<React.FocusEvent<HTMLElement>>;
   onBlur: TreeViewCancellableEventHandler<React.FocusEvent<HTMLElement>>;
