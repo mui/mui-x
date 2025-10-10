@@ -157,5 +157,14 @@
   "engines": {
     "pnpm": "10.18.0",
     "node": ">=22.18"
+  },
+  "pnpm": {
+    "packageExtensions": {
+      "@mui/internal-test-utils": {
+        "dependencies": {
+          "lodash.kebabcase": "^4.1.1"
+        }
+      }
+    }
   }
 }
