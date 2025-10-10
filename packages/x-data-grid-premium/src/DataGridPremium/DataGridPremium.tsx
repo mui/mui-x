@@ -152,6 +152,7 @@ DataGridPremiumRaw.propTypes = {
           helperText: PropTypes.string,
           response: PropTypes.shape({
             aggregation: PropTypes.object.isRequired,
+            chart: PropTypes.object,
             conversationId: PropTypes.string.isRequired,
             filterOperator: PropTypes.oneOf(['and', 'or']),
             filters: PropTypes.arrayOf(PropTypes.object).isRequired,

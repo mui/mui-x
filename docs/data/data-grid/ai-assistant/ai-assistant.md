@@ -54,6 +54,14 @@ The example below shows how to combine the AI Assistant with [server-side data](
 
 {{"demo": "AssistantWithDataSource.js", "bg": "inline"}}
 
+### Data visualization
+
+AI Assistant analyzes the query to determine if it is helpful to visualize the results.
+
+[Integrate](/x/react-data-grid/charts-integration/) the Data Grid with [MUI X Charts](/x/react-charts/) to enable the Data Grid to apply the visalization instructions.
+
+{{"demo": "AssistantWithCharts.js", "bg": "inline"}}
+
 ## Processing service integration
 
 Natural language prompts must be processed by a service to understand what kinds of state changes must be applied to the Data Grid to match the user's request.
