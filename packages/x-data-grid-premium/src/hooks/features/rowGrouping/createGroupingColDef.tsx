@@ -138,7 +138,7 @@ function getGroupingCriteriaProperties(
     valueFormatter = (value, row, column, apiRef) => {
       const rowId = gridRowIdSelector(apiRef, row);
       const rowNode = gridRowNodeSelector(apiRef, rowId);
-      if (rowNode.type === 'group') {
+      if (rowNode?.type === 'group') {
         const originalColDef = columnsLookup[rowNode.groupingField!]!;
         if (originalColDef.type === 'singleSelect') {
           // the default valueFormatter of a singleSelect colDef won't work with the grouping column values

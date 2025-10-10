@@ -11,7 +11,7 @@ export default function ServerSideRowGroupingDataGrid() {
   const apiRef = useGridApiRef();
 
   const { fetchRows, columns } = useMockServer({
-    rowGrouping: true,
+    dataSet: 'Movies',
   });
 
   const dataSource = React.useMemo(() => {
@@ -62,6 +62,7 @@ export default function ServerSideRowGroupingDataGrid() {
           dataSource={dataSource}
           apiRef={apiRef}
           initialState={initialState}
+          disablePivoting
         />
       </div>
     </div>

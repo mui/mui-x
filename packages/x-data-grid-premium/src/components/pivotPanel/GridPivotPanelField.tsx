@@ -163,9 +163,9 @@ function AggregationSelect({
       getAvailableAggregationFunctions({
         aggregationFunctions: rootProps.aggregationFunctions,
         colDef,
-        isDataSource: false,
+        isDataSource: !!rootProps.dataSource,
       }),
-    [colDef, rootProps.aggregationFunctions],
+    [colDef, rootProps.aggregationFunctions, rootProps.dataSource],
   );
 
   const handleClick = (func: string) => {
@@ -183,7 +183,7 @@ function AggregationSelect({
     setAggregationMenuOpen(false);
   };
 
-  return (
+  return availableAggregationFunctions.length > 0 ? (
     <React.Fragment>
       <rootProps.slots.baseChip
         label={getAggregationFunctionLabel({
@@ -233,7 +233,7 @@ function AggregationSelect({
         </rootProps.slots.baseMenuList>
       </GridMenu>
     </React.Fragment>
-  );
+  ) : null;
 }
 
 function GridPivotPanelField(props: GridPivotPanelFieldProps) {
