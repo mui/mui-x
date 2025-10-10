@@ -27,7 +27,7 @@ function ResourceLegendItem(props: { resource: CalendarResource }) {
           getColorClassName(resource.eventColor ?? DEFAULT_EVENT_COLOR),
         )}
       />
-      <span className="ResourceLegendName">{resource.name}</span>
+      <span className="ResourceLegendName">{resource.title}</span>
       <Checkbox.Root
         className={clsx('NeutralTextButton', 'Button', 'ResourceLegendButton')}
         value={resource.id}
@@ -36,8 +36,8 @@ function ResourceLegendItem(props: { resource: CalendarResource }) {
             type="button"
             aria-label={
               state.checked
-                ? translations.hideEventsLabel(resource.name)
-                : translations.showEventsLabel(resource.name)
+                ? translations.hideEventsLabel(resource.title)
+                : translations.showEventsLabel(resource.title)
             }
             {...rootProps}
           />

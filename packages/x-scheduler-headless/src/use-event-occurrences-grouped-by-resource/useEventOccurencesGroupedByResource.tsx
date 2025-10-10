@@ -77,8 +77,8 @@ export function innerGetEventOccurrencesGroupedByResource(
     occurrencesGroupedByResource.has(resource.id),
   );
 
-  // Sort by resource.name (localeCompare for stable alphabetical ordering).
-  filteredResources.sort((a, b) => a.name.localeCompare(b.name));
+  // Sort by resource.title (localeCompare for stable alphabetical ordering).
+  filteredResources.sort((a, b) => a.title.localeCompare(b.title));
 
   return filteredResources.map((resource) => ({
     resource,

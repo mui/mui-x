@@ -5,14 +5,11 @@ import {
   CalendarOccurrencePlaceholder,
   CalendarResource,
   CalendarResourceId,
+  SchedulerEventModelStructure,
+  SchedulerResourceModelStructure,
 } from '../../models';
 import { Adapter } from '../../use-adapter/useAdapter.types';
-import {
-  SchedulerEventModelStructure,
-  SchedulerParameters,
-  SchedulerResourceModelStructure,
-  SchedulerState,
-} from './SchedulerStore.types';
+import { SchedulerParameters, SchedulerState } from './SchedulerStore.types';
 
 /**
  * Determines if the occurrence placeholder has changed in a meaningful way that requires updating the store.

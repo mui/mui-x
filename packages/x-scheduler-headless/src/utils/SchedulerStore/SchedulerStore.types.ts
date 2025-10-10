@@ -39,7 +39,7 @@ export interface SchedulerState<TEvent extends {} = any> {
   processedEventLookup: Map<CalendarEventId, CalendarEvent>;
   /**
    * The structure of the event model.
-   * It defines how to read and write the properties of the event model.
+   * It defines how to read and write properties of the event model.
    * If not provided, the event model is assumed to match the `CalendarEvent` interface.
    */
   eventModelStructure: SchedulerEventModelStructure<any> | undefined;
@@ -53,7 +53,7 @@ export interface SchedulerState<TEvent extends {} = any> {
   processedResourceLookup: Map<CalendarResourceId, CalendarResource>;
   /**
    * The structure of the resource model.
-   * It defines how to read and write the properties of the resource model.
+   * It defines how to read properties of the resource model.
    * If not provided, the resource model is assumed to match the `CalendarResource` interface.
    */
   resourceModelStructure: SchedulerResourceModelStructure<any> | undefined;
@@ -226,17 +226,3 @@ export interface UpdateEventsParameters {
   created?: CalendarEvent[];
   updated?: CalendarEventUpdatedProperties[];
 }
-
-export type SchedulerEventModelStructure<TEvent extends {}> = {
-  [key in keyof CalendarEvent]?: {
-    getter: (event: TEvent) => CalendarEvent[key];
-    setter: (event: TEvent | Partial<TEvent>, value: CalendarEvent[key]) => TEvent;
-  };
-};
-
-export type SchedulerResourceModelStructure<TResource extends {}> = {
-  [key in keyof CalendarResource]?: {
-    getter: (event: TResource) => CalendarResource[key];
-    setter: (event: TResource | Partial<TResource>, value: CalendarResource[key]) => TResource;
-  };
-};
