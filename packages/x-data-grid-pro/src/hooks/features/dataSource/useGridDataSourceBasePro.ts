@@ -65,12 +65,12 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
 
   const handleEditRow = React.useCallback(
     (params: GridUpdateRowParams, updatedRow: GridRowModel) => {
-      const groupKeys = getGroupKeys(gridRowTreeSelector(apiRef), params.rowId) as string[];
-      apiRef.current.updateNestedRows([updatedRow], groupKeys);
       if (updatedRow && !isDeepEqual(updatedRow, params.previousRow)) {
         // Reset the outdated cache, only if the row is _actually_ updated
         apiRef.current.dataSource.cache.clear();
       }
+      const groupKeys = getGroupKeys(gridRowTreeSelector(apiRef), params.rowId) as string[];
+      apiRef.current.updateNestedRows([updatedRow], groupKeys);
     },
     [apiRef],
   );
