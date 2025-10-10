@@ -3,9 +3,8 @@ import { interpolateBlues } from 'd3-scale-chromatic';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { Heatmap } from '@mui/x-charts-pro/Heatmap';
-import { HeatmapValueType } from '@mui/x-charts-pro/models';
-import bikeData from 'docsx/data/charts/dataset/ParisBicycle.json';
-import ChartDemoWrapper from '../ChartDemoWrapper';
+
+import bikeData from '../dataset/ParisBicycle.json';
 
 const days = [
   new Date(2025, 1, 24),
@@ -44,7 +43,8 @@ const hours = [
   '23',
 ];
 
-const shortDayFormatter = new Intl.DateTimeFormat('en-US', { weekday: 'short' }).format;
+const shortDayFormatter = new Intl.DateTimeFormat('en-US', { weekday: 'short' })
+  .format;
 const dateFormatter = new Intl.DateTimeFormat('en-US', {
   weekday: 'short',
   day: 'numeric',
@@ -52,20 +52,21 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', {
   year: 'numeric',
 }).format;
 
-function HeatmapDemoContent() {
+export default function HeatmapDemo() {
   return (
-    <Stack height="100%">
+    <Stack width="100%">
       <Typography align="center" sx={{ width: '100%', mb: 1 }}>
         Bicycle count: Paris - Rivoli street (West-East)
       </Typography>
       <div style={{ flexGrow: 1, minHeight: 0 }}>
         <Heatmap
+          height={400}
           margin={{ left: 2 }}
           xAxis={[
             {
               data: days,
               label: 'Day',
-              valueFormatter: (value: Date, context) => {
+              valueFormatter: (value, context) => {
                 return context.location === 'tick'
                   ? shortDayFormatter(value)
                   : dateFormatter(value);
@@ -83,14 +84,19 @@ function HeatmapDemoContent() {
               width: 60,
             },
           ]}
-          series={[{ data: bikeData as unknown as HeatmapValueType[], label: 'Bicycle count' }]}
+          series={[
+            {
+              data: bikeData,
+              label: 'Bicycle count',
+              highlightScope: { highlight: 'item', fade: 'global' },
+            },
+          ]}
           zAxis={[
             {
               colorMap: {
                 max: 700,
                 type: 'continuous',
-
-                color: (t: number) => interpolateBlues(Math.sqrt(t)),
+                color: (t) => interpolateBlues(Math.sqrt(t)),
               },
             },
           ]}
@@ -111,13 +117,5 @@ function HeatmapDemoContent() {
         </a>
       </Typography>
     </Stack>
-  );
-}
-
-export default function HeatmapDemo() {
-  return (
-    <ChartDemoWrapper link="/x/react-charts/heatmap/">
-      <HeatmapDemoContent />
-    </ChartDemoWrapper>
   );
 }
