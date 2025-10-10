@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import { DataGridPro, gridRowSelectionIdsSelector } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
-export default function RowSelectionFromCallback() {
+export default function SelectorInEventHandler() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 10,
@@ -14,7 +14,7 @@ export default function RowSelectionFromCallback() {
 
   const [selectedDesks, setSelectedDesks] = React.useState([]);
 
-  const updateSelectionAndFilter = (details) => {
+  const updateSelectedDesks = (details) => {
     // `details.api` is the same object as `apiRef.current`, so it can be passed
     // to any selector by wrapping it in a ref-shaped object: `{ current: details.api }`
     const apiRef = { current: details.api };
@@ -28,10 +28,10 @@ export default function RowSelectionFromCallback() {
       <DataGridPro
         checkboxSelection
         onRowSelectionModelChange={(newRowSelectionModel, details) => {
-          updateSelectionAndFilter(details);
+          updateSelectedDesks(details);
         }}
         onFilterModelChange={(newFilterModel, details) => {
-          updateSelectionAndFilter(details);
+          updateSelectedDesks(details);
         }}
         {...data}
         sx={{ height: 400 }}
