@@ -51,16 +51,20 @@ const isEventReadOnlySelector = createSelector(
   },
 );
 
-export const selectors = {
-  visibleDate: createSelector((state: State) => state.visibleDate),
-  showCurrentTimeIndicator: createSelector((state: State) => state.showCurrentTimeIndicator),
-  nowUpdatedEveryMinute: createSelector((state: State) => state.nowUpdatedEveryMinute),
-  isMultiDayEvent: createSelector((state: State) => state.isMultiDayEvent),
-  resources: createSelector((state: State) => state.resources),
-  events: createSelector((state: State) => state.events),
-  visibleResourcesMap: createSelector((state: State) => state.visibleResources),
-  resource: resourceSelector,
-  eventColor: createSelector((state: State, eventId: CalendarEventId) => {
+export const nowSelectors = {
+  value: createSelector((state: State) => state.nowUpdatedEveryMinute),
+  isCurrentDay: createSelector(
+    (state: State) => state.adapter,
+    (state: State) => state.nowUpdatedEveryMinute,
+    (adapter, now, date: SchedulerValidDate) => adapter.isSameDay(date, now),
+  ),
+};
+
+export const eventSelectors = {
+  collection: createSelector((state: State) => state.events),
+  model: eventSelector,
+  isReadOnly: isEventReadOnlySelector,
+  color: createSelector((state: State, eventId: CalendarEventId) => {
     const event = eventSelector(state, eventId);
     if (!event) {
       return state.eventColor;
@@ -73,6 +77,12 @@ export const selectors = {
 
     return state.eventColor;
   }),
+};
+
+export const resourceSelectors = {
+  model: resourceSelector,
+  collection: createSelector((state: State) => state.resources),
+  visibleResourcesMap: createSelector((state: State) => state.visibleResources),
   visibleResourcesList: createSelectorMemoized(
     (state: State) => state.resources,
     (state: State) => state.visibleResources,
@@ -84,11 +94,12 @@ export const selectors = {
         )
         .map((resource) => resource.id),
   ),
-  event: eventSelector,
-  isEventReadOnly: isEventReadOnlySelector,
-  occurrencePlaceholder: createSelector((state: State) => state.occurrencePlaceholder),
-  hasOccurrencePlaceholder: createSelector((state: State) => state.occurrencePlaceholder !== null),
-  isOccurrenceMatchingThePlaceholder: createSelector((state: State, occurrenceKey: string) => {
+};
+
+export const occurrencePlaceholderSelectors = {
+  value: createSelector((state: State) => state.occurrencePlaceholder),
+  isDefined: createSelector((state: State) => state.occurrencePlaceholder !== null),
+  isMatching: createSelector((state: State, occurrenceKey: string) => {
     const placeholder = state.occurrencePlaceholder;
     if (placeholder?.type !== 'internal-drag-or-resize') {
       return false;
@@ -96,6 +107,28 @@ export const selectors = {
 
     return placeholder.occurrenceKey === occurrenceKey;
   }),
+};
+
+export const selectors = {
+  // TODO: Remove those selectors in favor of using the `nowSelectors`, `eventSelectors`, `resourceSelectors` or `occurrencePlaceholderSelectors` directly.
+  nowUpdatedEveryMinute: nowSelectors.value,
+  isCurrentDay: nowSelectors.isCurrentDay,
+  eventColor: eventSelectors.color,
+  isEventReadOnly: isEventReadOnlySelector,
+  event: eventSelector,
+  events: eventSelectors.collection,
+  resource: resourceSelector,
+  resources: resourceSelectors.collection,
+  visibleResourcesMap: resourceSelectors.visibleResourcesMap,
+  visibleResourcesList: resourceSelectors.visibleResourcesList,
+  occurrencePlaceholder: occurrencePlaceholderSelectors.value,
+  hasOccurrencePlaceholder: occurrencePlaceholderSelectors.isDefined,
+  isOccurrenceMatchingThePlaceholder: occurrencePlaceholderSelectors.isMatching,
+
+  visibleDate: createSelector((state: State) => state.visibleDate),
+  showCurrentTimeIndicator: createSelector((state: State) => state.showCurrentTimeIndicator),
+  isMultiDayEvent: createSelector((state: State) => state.isMultiDayEvent),
+
   // TODO: Pass the occurrence key instead of the start and end dates once the occurrences are stored in the state.
   isOccurrenceStartedOrEnded: createSelector(
     (state: State) => state.adapter,
@@ -106,11 +139,6 @@ export const selectors = {
         ended: adapter.isBefore(end, now),
       };
     },
-  ),
-  isCurrentDay: createSelector(
-    (state: State) => state.adapter,
-    (state: State) => state.nowUpdatedEveryMinute,
-    (adapter, now, date: SchedulerValidDate) => adapter.isSameDay(date, now),
   ),
   recurrencePresets: createSelectorMemoized(
     (state: State) => state.adapter,
