@@ -33,7 +33,7 @@ module.exports = {
       docs: path.resolve(__dirname, './node_modules/@mui/monorepo/docs'),
       docsx: path.resolve(__dirname, './docs'),
     },
-    extensions: ['.js', '.mjs', '.ts', '.tsx', '.d.ts'],
+    extensions: ['.js', '.mjs', '.cjs', '.jsx', '.ts', '.mts', '.cjs', '.tsx', '.d.ts'],
   },
   output: {
     path: path.join(__dirname, 'build'),
