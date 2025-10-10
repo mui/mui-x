@@ -362,4 +362,354 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
       expect(getAxisTickValues('x').length).to.be.lessThan(4);
     });
   });
+
+  describe('Brush zoom', () => {
+    it('should zoom into the brushed area', async () => {
+      const onZoomChange = sinon.spy();
+      const { user } = render(
+        <BarChartPro
+          {...barChartProps}
+          onZoomChange={onZoomChange}
+          zoomInteractionConfig={{
+            zoom: ['brush'],
+            pan: [], // Disable panning to avoid conflicts
+          }}
+        />,
+        options,
+      );
+
+      expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C', 'D']);
+
+      const svg = document.querySelector('svg')!;
+
+      await user.pointer([
+        {
+          keys: '[MouseLeft>]',
+          target: svg,
+          coords: { x: 15, y: 50 },
+        },
+        {
+          target: svg,
+          coords: { x: 50, y: 50 },
+        },
+        {
+          keys: '[/MouseLeft]',
+          target: svg,
+          coords: { x: 50, y: 50 },
+        },
+      ]);
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
+
+      expect(onZoomChange.callCount).to.be.greaterThan(0);
+      expect(getAxisTickValues('x')).to.deep.equal(['B']);
+    });
+
+    it('should not zoom if brush is too small', async () => {
+      const onZoomChange = sinon.spy();
+      const { user } = render(
+        <BarChartPro
+          {...barChartProps}
+          onZoomChange={onZoomChange}
+          zoomInteractionConfig={{
+            zoom: ['brush'],
+            pan: [],
+          }}
+        />,
+        options,
+      );
+
+      expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C', 'D']);
+
+      const svg = document.querySelector('svg')!;
+
+      // Make a very small brush (less than 5 pixels) - just a single point
+      await user.pointer([
+        {
+          keys: '[MouseLeft>]',
+          target: svg,
+          coords: { x: 50, y: 50 },
+        },
+        {
+          keys: '[/MouseLeft]',
+          target: svg,
+          coords: { x: 50, y: 50 },
+        },
+      ]);
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
+
+      // Should not zoom because there was no brush movement
+      expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C', 'D']);
+    });
+
+    it('should work with key modifiers', async () => {
+      const onZoomChange = sinon.spy();
+      const { user } = render(
+        <BarChartPro
+          {...barChartProps}
+          onZoomChange={onZoomChange}
+          zoomInteractionConfig={{
+            zoom: [{ type: 'brush', requiredKeys: ['Shift'] }],
+            pan: [],
+          }}
+        />,
+        options,
+      );
+
+      expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C', 'D']);
+
+      const svg = document.querySelector('svg')!;
+
+      // Try brushing without Shift key - should not work
+      await user.pointer([
+        {
+          keys: '[MouseLeft>]',
+          target: svg,
+          coords: { x: 15, y: 50 },
+        },
+        {
+          target: svg,
+          coords: { x: 50, y: 50 },
+        },
+        {
+          keys: '[/MouseLeft]',
+          target: svg,
+          coords: { x: 50, y: 50 },
+        },
+      ]);
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
+
+      expect(onZoomChange.callCount).to.equal(0);
+      expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C', 'D']);
+
+      // Try brushing with Shift key - should work
+      await user.keyboard('{Shift>}');
+      await user.pointer([
+        {
+          keys: '[MouseLeft>]',
+          target: svg,
+          coords: { x: 15, y: 50 },
+        },
+        {
+          target: svg,
+          coords: { x: 50, y: 50 },
+        },
+        {
+          keys: '[/MouseLeft]',
+          target: svg,
+          coords: { x: 50, y: 50 },
+        },
+      ]);
+      await user.keyboard('{/Shift}');
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
+
+      expect(onZoomChange.callCount).to.be.greaterThan(0);
+    });
+  });
+
+  describe('Double tap reset', () => {
+    it('should reset zoom to default on double tap', async () => {
+      const onZoomChange = sinon.spy();
+      const { user } = render(
+        <BarChartPro
+          {...barChartProps}
+          initialZoom={[{ axisId: 'x', start: 50, end: 75 }]}
+          onZoomChange={onZoomChange}
+          zoomInteractionConfig={{
+            zoom: ['doubleTapReset'],
+          }}
+        />,
+        options,
+      );
+
+      // Should start zoomed in
+      expect(getAxisTickValues('x')).to.deep.equal(['C']);
+
+      const svg = document.querySelector('svg')!;
+
+      // Double tap to reset
+      await user.pointer([
+        {
+          keys: '[MouseLeft>]',
+          target: svg,
+          coords: { x: 50, y: 50 },
+        },
+        {
+          keys: '[/MouseLeft]',
+          target: svg,
+          coords: { x: 50, y: 50 },
+        },
+        {
+          keys: '[MouseLeft>]',
+          target: svg,
+          coords: { x: 50, y: 50 },
+        },
+        {
+          keys: '[/MouseLeft]',
+          target: svg,
+          coords: { x: 50, y: 50 },
+        },
+      ]);
+
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
+
+      expect(onZoomChange.callCount).to.be.greaterThan(0);
+      // Should have reset to show all ticks
+      expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C', 'D']);
+    });
+
+    it('should work with key modifiers', async () => {
+      const onZoomChange = sinon.spy();
+      const { user } = render(
+        <BarChartPro
+          {...barChartProps}
+          initialZoom={[{ axisId: 'x', start: 50, end: 75 }]}
+          onZoomChange={onZoomChange}
+          zoomInteractionConfig={{
+            zoom: [{ type: 'doubleTapReset', requiredKeys: ['Control'] }],
+          }}
+        />,
+        options,
+      );
+
+      // Should start zoomed in
+      expect(getAxisTickValues('x')).to.deep.equal(['C']);
+
+      const svg = document.querySelector('svg')!;
+
+      await user.pointer([
+        {
+          keys: '[MouseLeft>]',
+          target: svg,
+          coords: { x: 50, y: 50 },
+        },
+        {
+          keys: '[/MouseLeft]',
+          target: svg,
+          coords: { x: 50, y: 50 },
+        },
+        {
+          keys: '[MouseLeft>]',
+          target: svg,
+          coords: { x: 50, y: 50 },
+        },
+        {
+          keys: '[/MouseLeft]',
+          target: svg,
+          coords: { x: 50, y: 50 },
+        },
+      ]);
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
+
+      expect(onZoomChange.callCount).to.equal(0);
+
+      // Try double tap with Control key - should reset
+      await user.keyboard('{Control>}');
+      await user.pointer([
+        {
+          keys: '[MouseLeft>]',
+          target: svg,
+          coords: { x: 50, y: 50 },
+        },
+        {
+          keys: '[/MouseLeft]',
+          target: svg,
+          coords: { x: 50, y: 50 },
+        },
+        {
+          keys: '[MouseLeft>]',
+          target: svg,
+          coords: { x: 50, y: 50 },
+        },
+        {
+          keys: '[/MouseLeft]',
+          target: svg,
+          coords: { x: 50, y: 50 },
+        },
+      ]);
+      await user.keyboard('{/Control}');
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
+
+      expect(onZoomChange.callCount).to.be.greaterThan(0);
+      expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C', 'D']);
+    });
+
+    it('should reset all axes when multiple axes are zoomed', async () => {
+      const onZoomChange = sinon.spy();
+      const { user } = render(
+        <BarChartPro
+          series={[
+            {
+              data: [10, 20, 30, 40],
+            },
+          ]}
+          xAxis={[
+            {
+              data: ['A', 'B', 'C', 'D'],
+              zoom: true,
+              height: 30,
+              id: 'x',
+            },
+          ]}
+          yAxis={[{ zoom: true, id: 'y' }]}
+          width={100}
+          height={130}
+          margin={0}
+          slotProps={{ tooltip: { trigger: 'none' } }}
+          initialZoom={[
+            { axisId: 'x', start: 50, end: 75 },
+            { axisId: 'y', start: 25, end: 50 },
+          ]}
+          onZoomChange={onZoomChange}
+          zoomInteractionConfig={{
+            zoom: ['doubleTapReset'],
+          }}
+        />,
+        options,
+      );
+
+      const svg = document.querySelector('svg')!;
+
+      // Double tap to reset both axes
+      await user.pointer([
+        {
+          keys: '[MouseLeft>]',
+          target: svg,
+          coords: { x: 50, y: 50 },
+        },
+        {
+          keys: '[/MouseLeft]',
+          target: svg,
+          coords: { x: 50, y: 50 },
+        },
+        {
+          keys: '[MouseLeft>]',
+          target: svg,
+          coords: { x: 50, y: 50 },
+        },
+        {
+          keys: '[/MouseLeft]',
+          target: svg,
+          coords: { x: 50, y: 50 },
+        },
+      ]);
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
+
+      expect(onZoomChange.callCount).to.be.greaterThan(0);
+
+      // Verify the callback was called with reset values for both axes
+      const lastCall = onZoomChange.lastCall.args[0];
+      expect(lastCall).to.be.an('array').with.lengthOf(2);
+
+      // Check that both axes are reset to full range (0-100)
+      const xAxis = lastCall.find((z: any) => z.axisId === 'x');
+      const yAxis = lastCall.find((z: any) => z.axisId === 'y');
+
+      expect(xAxis).to.not.equal(undefined);
+      expect(yAxis).to.not.equal(undefined);
+      expect(xAxis.start).to.equal(0);
+      expect(xAxis.end).to.equal(100);
+      expect(yAxis.start).to.equal(0);
+      expect(yAxis.end).to.equal(100);
+    });
+  });
 });
