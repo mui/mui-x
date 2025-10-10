@@ -42,6 +42,7 @@ export type ChartInteraction =
   | 'zoomDoubleTapReset'
   | 'zoomBrush'
   | 'zoomBrushStart'
+  | 'zoomBrushCancel'
   | 'zoomBrushEnd';
 
 export type InteractionListenerResult = { cleanup: () => void };
@@ -57,6 +58,7 @@ export type AddInteractionListener = {
       | 'zoomPanEnd'
       | 'zoomBrush'
       | 'zoomBrushStart'
+      | 'zoomBrushCancel'
       | 'zoomBrushEnd',
     callback: (event: PanEvent<CustomData>) => void,
     options?: boolean | AddEventListenerOptions,

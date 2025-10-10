@@ -62,10 +62,58 @@ export const useZoomOnBrush = (
       // Only start brush if the initial point is inside the drawing area
       if (!instance.isPointInside(point.x, point.y)) {
         brushStartRef.current = null;
+        store.update((prevState) => ({
+          ...prevState,
+          zoom: {
+            ...prevState.zoom,
+            brushState: { start: null, current: null },
+          },
+        }));
         return;
       }
 
       brushStartRef.current = point;
+      store.update((prevState) => ({
+        ...prevState,
+        zoom: {
+          ...prevState.zoom,
+          brushState: { start: point, current: point },
+        },
+      }));
+    };
+
+    const handleBrushCancel = () => {
+      brushStartRef.current = null;
+      store.update((prevState) => ({
+        ...prevState,
+        zoom: {
+          ...prevState.zoom,
+          brushState: { start: null, current: null },
+        },
+      }));
+    };
+
+    const handleBrush = (event: PanEvent) => {
+      // Update current brush position for visual feedback
+      if (!brushStartRef.current) {
+        return;
+      }
+
+      const currentPoint = getSVGPoint(element, {
+        clientX: event.detail.centroid.x,
+        clientY: event.detail.centroid.y,
+      });
+
+      store.update((prevState) => ({
+        ...prevState,
+        zoom: {
+          ...prevState.zoom,
+          brushState: {
+            start: brushStartRef.current,
+            current: currentPoint,
+          },
+        },
+      }));
     };
 
     const handleBrushEnd = (event: PanEvent) => {
@@ -143,20 +191,30 @@ export const useZoomOnBrush = (
       });
 
       brushStartRef.current = null;
-    };
 
-    const handleBrush = () => {
-      // TODO: handle visuals
+      // Clear brush visual state
+      store.update((prevState) => ({
+        ...prevState,
+        zoom: {
+          ...prevState.zoom,
+          brushState: { start: null, current: null },
+        },
+      }));
     };
 
     const brushStartHandler = instance.addInteractionListener('zoomBrushStart', handleBrushStart);
     const brushHandler = instance.addInteractionListener('zoomBrush', handleBrush);
+    const brushCancelHandler = instance.addInteractionListener(
+      'zoomBrushCancel',
+      handleBrushCancel,
+    );
     const brushEndHandler = instance.addInteractionListener('zoomBrushEnd', handleBrushEnd);
 
     return () => {
       brushStartHandler.cleanup();
       brushHandler.cleanup();
       brushEndHandler.cleanup();
+      brushCancelHandler.cleanup();
       brushStartRef.current = null;
     };
   }, [

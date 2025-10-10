@@ -49,3 +49,25 @@ export const selectorChartCanZoomIn = createSelector(
     });
   },
 );
+
+const selectorChartBrushState = createSelector([selectorChartZoomState], (zoom) => zoom.brushState);
+
+export const selectorChartBrushStartX = createSelector(
+  [selectorChartBrushState],
+  (brushState) => brushState.start?.x ?? null,
+);
+
+export const selectorChartBrushStartY = createSelector(
+  [selectorChartBrushState],
+  (brushState) => brushState.start?.y ?? null,
+);
+
+export const selectorChartBrushCurrentX = createSelector(
+  [selectorChartBrushState],
+  (brushState) => brushState.current?.x ?? null,
+);
+
+export const selectorChartBrushCurrentY = createSelector(
+  [selectorChartBrushState],
+  (brushState) => brushState.current?.y ?? null,
+);

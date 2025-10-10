@@ -55,6 +55,13 @@ export interface UseChartProZoomState {
      * Configuration for zoom interactions.
      */
     zoomInteractionConfig: DefaultizedZoomInteractionConfig;
+    /**
+     * Current brush selection state for visual feedback.
+     */
+    brushState: {
+      start: { x: number; y: number } | null;
+      current: { x: number; y: number } | null;
+    };
   };
 }
 

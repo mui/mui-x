@@ -265,6 +265,10 @@ useChartProZoom.getInitialState = (params) => {
       isInteracting: false,
       isControlled: zoomData !== undefined,
       zoomInteractionConfig: initializeZoomInteractionConfig(params.zoomInteractionConfig),
+      brushState: {
+        start: null,
+        current: null,
+      },
     },
   };
 };
