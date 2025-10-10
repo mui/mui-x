@@ -1,0 +1,12 @@
+<DataGrid
+  columns={columns}
+  dataSource={dataSource}
+  pagination
+  initialState={{
+    ...initialState,
+    pagination: { rowCount: 0 },
+  }}
+  paginationModel={paginationModel}
+  onPaginationModelChange={handlePaginationModelChange}
+  pageSizeOptions={[10, 20, 50]}
+/>
