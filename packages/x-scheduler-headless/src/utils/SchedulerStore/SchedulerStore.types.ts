@@ -7,6 +7,7 @@ import {
   CalendarResourceId,
   CalendarEventUpdatedProperties,
   SchedulerValidDate,
+  CalendarEventId,
 } from '../../models';
 import { Adapter } from '../../use-adapter/useAdapter.types';
 
@@ -201,3 +202,9 @@ export type SchedulerModelUpdater<
   controlledProp: keyof Parameters & keyof State & string,
   defaultProp: keyof Parameters,
 ) => void;
+
+export interface UpdateEventsParameters {
+  deleted?: CalendarEventId[];
+  created?: CalendarEvent[];
+  updated?: CalendarEventUpdatedProperties[];
+}
