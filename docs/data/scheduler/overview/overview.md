@@ -15,6 +15,10 @@ githubLabel: 'scope: scheduler'
 This package is not published yet.
 :::
 
+## Common features
+
+- [Recurring events](/x/react-scheduler/recurring-events/)
+
 ## Event Calendar
 
 - [Event Calendar](/x/react-scheduler/event-calendar/) ([full screen demo](/x/react-scheduler/full-screen-event-calendar/))
