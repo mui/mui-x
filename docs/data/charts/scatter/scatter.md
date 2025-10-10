@@ -8,6 +8,17 @@ components: ScatterChart, ScatterChartPro, ScatterPlot, ChartsGrid, ChartsWrappe
 
 <p class="description">Scatter charts express the relation between two variables, using points in a surface.</p>
 
+## Overview
+
+Scatter charts are ideal for visualizing relationships or correlations as they show how one variable changes relative to another, identifying clusters, trends, and outliers in datasets. Each axis represents a continuous numerical scale, and each point represents an individual data observation, positioned by its values on the two axes, often revealing linear or non‑linear patterns. Scatter charts are commonly used for statistical analysis, scientific data, and performance metrics.
+
+Here are the basic requirements to create a scatter chart:
+
+- Two numerical dimensions (one for the x‑axis and one for the y‑axis)
+- An array of data points, where each point has x and y values
+
+{{"demo": "ScatterOverview.js"}}
+
 ## Basics
 
 Scatter chart series should contain a `data` property containing an array of objects.
