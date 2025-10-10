@@ -128,6 +128,8 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
         'quickPress',
         'zoomTapAndDrag',
         'zoomPressAndDrag',
+        'zoomDoubleTapReset',
+        'zoomBrush',
       ],
       svg,
     );

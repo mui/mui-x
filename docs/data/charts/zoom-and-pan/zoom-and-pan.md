@@ -160,10 +160,13 @@ The `zoomInteractionConfig` prop allows you to specify which interactions are en
 - **`wheel`**: Zoom in/out by scrolling the mouse wheel (default)
 - **`pinch`**: Zoom in/out by pinching on touch devices (default)
 - **`tapAndDrag`**: Zoom in/out by tapping twice and then dragging vertically. Dragging up zooms in, dragging down zooms out.
+- **`brush`**: Zoom into a selected area by clicking and dragging to create a selection rectangle.
+- **`doubleTapReset`**: Reset the zoom level to the original state when double-tapping.
 
 **Pan** interactions:
 
 - **`drag`**: Pan the chart by dragging with the mouse or touch (default)
+- **`pressAndDrag`**: Pan the chart by pressing and holding, then dragging. Useful for avoiding conflicts with selection gestures.
 
 {{"demo": "ZoomAndPanInteractions.js"}}
 
