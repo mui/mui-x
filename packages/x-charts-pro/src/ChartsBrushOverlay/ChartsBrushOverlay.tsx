@@ -12,6 +12,7 @@ import {
 import type { UseChartProZoomSignature } from '../plugins';
 import { brushOverlayClasses } from './ChartsBrushOverlay.classes';
 
+// TODO: Styles
 function BrushLine(props: React.SVGProps<SVGLineElement>) {
   return (
     <line

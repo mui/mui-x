@@ -64,10 +64,7 @@ export const useZoomOnBrush = (
         brushStartRef.current = null;
         store.update((prevState) => ({
           ...prevState,
-          zoom: {
-            ...prevState.zoom,
-            brushState: { start: null, current: null },
-          },
+          zoomBrushState: { start: null, current: null },
         }));
         return;
       }
@@ -75,10 +72,7 @@ export const useZoomOnBrush = (
       brushStartRef.current = point;
       store.update((prevState) => ({
         ...prevState,
-        zoom: {
-          ...prevState.zoom,
-          brushState: { start: point, current: point },
-        },
+        zoomBrushState: { start: point, current: point },
       }));
     };
 
@@ -86,10 +80,7 @@ export const useZoomOnBrush = (
       brushStartRef.current = null;
       store.update((prevState) => ({
         ...prevState,
-        zoom: {
-          ...prevState.zoom,
-          brushState: { start: null, current: null },
-        },
+        zoomBrushState: { start: null, current: null },
       }));
     };
 
@@ -106,12 +97,9 @@ export const useZoomOnBrush = (
 
       store.update((prevState) => ({
         ...prevState,
-        zoom: {
-          ...prevState.zoom,
-          brushState: {
-            start: brushStartRef.current,
-            current: currentPoint,
-          },
+        zoomBrushState: {
+          start: brushStartRef.current,
+          current: currentPoint,
         },
       }));
     };
@@ -195,10 +183,7 @@ export const useZoomOnBrush = (
       // Clear brush visual state
       store.update((prevState) => ({
         ...prevState,
-        zoom: {
-          ...prevState.zoom,
-          brushState: { start: null, current: null },
-        },
+        zoomBrushState: { start: null, current: null },
       }));
     };
 

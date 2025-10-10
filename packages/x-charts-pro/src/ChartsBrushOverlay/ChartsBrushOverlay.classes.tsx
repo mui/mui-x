@@ -17,11 +17,7 @@ export interface BrushOverlayClasses {
 
 export type BrushOverlayClassKey = keyof BrushOverlayClasses;
 
-export const brushOverlayClasses: BrushOverlayClasses = generateUtilityClasses('MuiBrushOverlay', [
-  'root',
-  'line',
-  'rect',
-  'horizontal',
-  'vertical',
-  'orthogonal',
-]);
+export const brushOverlayClasses: BrushOverlayClasses = generateUtilityClasses(
+  'MuiChartsBrushOverlay',
+  ['root', 'line', 'rect', 'horizontal', 'vertical', 'orthogonal'],
+);
