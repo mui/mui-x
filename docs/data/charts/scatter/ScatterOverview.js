@@ -6,7 +6,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
-import data from './transistorCPUdata';
+import data from '../dataset/transistorCPUdata';
 
 const chartSetting = {
   yAxis: [{ width: 50, scaleType: 'log' }],
@@ -19,7 +19,7 @@ const series = [
   {
     type: 'scatter',
     label: 'Other',
-    highlightScope: { highlight: 'series', fade: 'global' },
+    highlightScope: { highlight: 'item', fade: 'global' },
     markerSize: 3,
     data: data
       .filter(
@@ -29,7 +29,7 @@ const series = [
   },
   ...constructors.map((constructor) => ({
     label: constructor,
-    highlightScope: { highlight: 'series', fade: 'global' },
+    highlightScope: { highlight: 'item', fade: 'global' },
     markerSize: 3,
     data: data
       .filter((item) => item.constructor === constructor && item.density !== null)

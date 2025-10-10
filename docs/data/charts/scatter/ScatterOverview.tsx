@@ -6,7 +6,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
-import data from './transistorCPUdata';
+import data from '../dataset/transistorCPUdata';
 
 const chartSetting = {
   yAxis: [{ width: 50, scaleType: 'log' as const }],
@@ -19,7 +19,7 @@ const series = [
   {
     type: 'scatter',
     label: 'Other',
-    highlightScope: { highlight: 'item', fade: 'global' },
+    highlightScope: { highlight: 'series', fade: 'global' },
     markerSize: 3,
     data: data
       .filter(
@@ -30,7 +30,7 @@ const series = [
   ...constructors.map(
     (constructor): ScatterSeries => ({
       label: constructor,
-      highlightScope: { highlight: 'item', fade: 'global' },
+      highlightScope: { highlight: 'series', fade: 'global' },
       markerSize: 3,
       data: data
         .filter((item) => item.constructor === constructor && item.density !== null)
@@ -94,7 +94,7 @@ function CustomTooltip() {
 
 export default function ScatterOverview() {
   return (
-    <Stack height="100%">
+    <Stack width="100%">
       <Typography align="center">Processor density (in transistor/mm²)</Typography>
       <ScatterChart
         height={300}

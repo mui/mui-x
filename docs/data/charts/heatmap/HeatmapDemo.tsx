@@ -4,7 +4,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { Heatmap } from '@mui/x-charts-pro/Heatmap';
 import { HeatmapValueType } from '@mui/x-charts-pro/models';
-import bikeData from './ParisBicycle.json';
+import bikeData from '../dataset/ParisBicycle.json';
 
 const days = [
   new Date(2025, 1, 24),

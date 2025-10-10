@@ -3,7 +3,7 @@ import { interpolateBlues } from 'd3-scale-chromatic';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { Heatmap } from '@mui/x-charts-pro/Heatmap';
-import bikeData from './ParisBicycle.json';
+import bikeData from '../dataset/ParisBicycle.json';
 
 const days = [
   new Date(2025, 1, 24),
@@ -95,7 +95,6 @@ export default function HeatmapDemo() {
               colorMap: {
                 max: 700,
                 type: 'continuous',
-
                 color: (t) => interpolateBlues(Math.sqrt(t)),
               },
             },
