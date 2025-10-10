@@ -45,6 +45,8 @@ export type PointerGestureEventData<
 > = GestureEventData<CustomData> & {
   /** The original event that triggered this gesture */
   srcEvent: PointerEvent;
+  /** Function to programmatically cancel the gesture from within an event handler */
+  cancel: () => void;
 };
 
 /**
@@ -187,5 +189,21 @@ export abstract class PointerGesture<GestureName extends string> extends Gesture
       this.unregisterHandler = null;
     }
     super.destroy();
+  }
+
+  /**
+   * Programmatically cancel the gesture from within an event handler.
+   * This method can be called from the cancel function provided in event.detail.
+   * Implementations should emit cancel/end events as appropriate and reset state.
+   */
+  protected cancelGesture(pointers: PointerData[]): void {
+    const cancelEvent = new PointerEvent('forceCancel', {
+      bubbles: false,
+      cancelable: false,
+    });
+    this.handlePointerEvent(
+      new Map(pointers.map((pointer) => [pointer.pointerId, pointer])),
+      cancelEvent,
+    );
   }
 }

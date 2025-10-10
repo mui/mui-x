@@ -184,20 +184,17 @@ export class PinchGesture<GestureName extends string> extends PointerGesture<Ges
     event: PointerEvent,
   ): void => {
     const pointersArray = Array.from(pointers.values());
-
-    // Find which element (if any) is being targeted
     const targetElement = this.getTargetElement(event);
-    if (!targetElement) {
+
+    if (
+      event.type === 'forceCancel' ||
+      (targetElement && this.shouldPreventGesture(targetElement, event.pointerType))
+    ) {
+      this.cancel(targetElement, pointersArray, event);
       return;
     }
 
-    // Check if this gesture should be prevented by active gestures
-    if (this.shouldPreventGesture(targetElement, event.pointerType)) {
-      if (this.isActive) {
-        // If the gesture was active but now should be prevented, end it gracefully
-        this.emitPinchEvent(targetElement, 'cancel', pointersArray, event);
-        this.resetState();
-      }
+    if (!targetElement) {
       return;
     }
 
@@ -269,7 +266,6 @@ export class PinchGesture<GestureName extends string> extends PointerGesture<Ges
 
       case 'pointerup':
       case 'pointercancel':
-      case 'forceCancel':
         if (this.isActive) {
           const remainingPointers = relevantPointers.filter(
             (p) => p.type !== 'pointerup' && p.type !== 'pointercancel',
@@ -333,6 +329,7 @@ export class PinchGesture<GestureName extends string> extends PointerGesture<Ges
       activeGestures,
       direction: getPinchDirection(this.state.velocity),
       customData: this.customData,
+      cancel: () => this.cancelGesture(pointers),
     };
 
     // Handle default event behavior
@@ -356,5 +353,21 @@ export class PinchGesture<GestureName extends string> extends PointerGesture<Ges
     });
 
     element.dispatchEvent(domEvent);
+  }
+
+  /**
+   * Cancel the current gesture
+   */
+  private cancel(
+    element: TargetElement | null,
+    pointers: PointerData[],
+    event: PointerEvent,
+  ): void {
+    if (this.isActive) {
+      const el = element ?? this.element;
+      this.emitPinchEvent(el, 'cancel', pointers, event);
+      this.emitPinchEvent(el, 'end', pointers, event);
+    }
+    this.resetState();
   }
 }
