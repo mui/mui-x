@@ -23,6 +23,7 @@ import { ChartsToolbarPro } from '../ChartsToolbarPro';
 import { ChartContainerProProps } from '../ChartContainerPro';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
+import { ChartsBrushOverlay } from '../ChartsBrushOverlay';
 import { BAR_CHART_PRO_PLUGINS, BarChartProPluginSignatures } from './BarChartPro.plugins';
 
 export interface BarChartProSlots
@@ -115,6 +116,7 @@ const BarChartPro = React.forwardRef(function BarChartPro(
           </g>
           <ChartsAxis {...chartsAxisProps} />
           <ChartZoomSlider />
+          <ChartsBrushOverlay />
           <ChartsClipPath {...clipPathProps} />
           {children}
         </ChartsSurface>

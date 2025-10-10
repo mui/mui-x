@@ -11,7 +11,7 @@ export type ZoomInteractionConfig = {
    *
    * @default ['wheel', 'pinch']
    */
-  zoom?: (ZoomInteraction | ZoomInteraction['type'])[];
+  zoom?: readonly (ZoomInteraction | ZoomInteraction['type'])[];
   /**
    * Defines the interactions that trigger panning.
    * - `drag`: Pans the chart when dragged with the mouse.
@@ -19,7 +19,7 @@ export type ZoomInteractionConfig = {
    *
    * @default ['drag']
    */
-  pan?: (PanInteraction | PanInteraction['type'])[];
+  pan?: readonly (PanInteraction | PanInteraction['type'])[];
 };
 
 type Entry<T extends AnyInteraction> = {

@@ -2,6 +2,7 @@ import {
   AxisId,
   ChartRootSelector,
   createSelector,
+  selectorChartSeriesProcessed,
   selectorChartZoomMap,
   selectorChartZoomOptionsLookup,
 } from '@mui/x-charts/internals';
@@ -71,3 +72,25 @@ export const selectorChartBrushCurrentY = createSelector(
   [selectorChartBrushState],
   (brushState) => brushState.current?.y ?? null,
 );
+
+export const selectorChartBrushConfig = createSelector([selectorChartSeriesProcessed], (series) => {
+  let hasHorizontal = false;
+  let hasScatter = false;
+  if (series) {
+    Object.entries(series).forEach(([seriesType, seriesData]) => {
+      if (Object.values(seriesData.series).some((s) => s.layout === 'horizontal')) {
+        hasHorizontal = true;
+      }
+      if (seriesType === 'scatter' && seriesData.seriesOrder.length > 0) {
+        hasScatter = true;
+      }
+    });
+  }
+  if (hasScatter) {
+    return 'orthogonal';
+  }
+  if (hasHorizontal) {
+    return 'horizontal';
+  }
+  return 'vertical';
+});
