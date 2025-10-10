@@ -11,6 +11,7 @@ import {
   type PressAndDragGestureOptions,
   type TapAndDragEvent,
   type TapAndDragGestureOptions,
+  type TapGestureOptions,
   type TurnWheelGestureOptions,
 } from '@mui/x-internal-gestures/core';
 import { ChartPluginSignature } from '../../models';
@@ -37,13 +38,28 @@ export type ChartInteraction =
   | 'moveEnd'
   | 'tap'
   | 'quickPress'
-  | 'quickPressEnd';
+  | 'quickPressEnd'
+  | 'zoomDoubleTapReset'
+  | 'zoomBrush'
+  | 'zoomBrushStart'
+  | 'zoomBrushCancel'
+  | 'zoomBrushEnd';
 
 export type InteractionListenerResult = { cleanup: () => void };
 
 export type AddInteractionListener = {
   <CustomData extends Record<string, unknown> = Record<string, unknown>>(
-    interaction: 'pan' | 'panStart' | 'panEnd' | 'zoomPan' | 'zoomPanStart' | 'zoomPanEnd',
+    interaction:
+      | 'pan'
+      | 'panStart'
+      | 'panEnd'
+      | 'zoomPan'
+      | 'zoomPanStart'
+      | 'zoomPanEnd'
+      | 'zoomBrush'
+      | 'zoomBrushStart'
+      | 'zoomBrushCancel'
+      | 'zoomBrushEnd',
     callback: (event: PanEvent<CustomData>) => void,
     options?: boolean | AddEventListenerOptions,
   ): InteractionListenerResult;
@@ -63,7 +79,7 @@ export type AddInteractionListener = {
     options?: boolean | AddEventListenerOptions,
   ): InteractionListenerResult;
   <CustomData extends Record<string, unknown> = Record<string, unknown>>(
-    interaction: 'tap',
+    interaction: 'tap' | 'zoomDoubleTapReset',
     callback: (event: TapEvent<CustomData>) => void,
     options?: boolean | AddEventListenerOptions,
   ): InteractionListenerResult;
@@ -99,6 +115,11 @@ export type UpdateZoomInteractionListeners = {
     interaction: 'zoomPressAndDrag',
     options?: Omit<PressAndDragGestureOptions<'zoomPressAndDrag'>, 'name'>,
   ): void;
+  (
+    interaction: 'zoomDoubleTapReset',
+    options?: Omit<TapGestureOptions<'zoomDoubleTapReset'>, 'name'>,
+  ): void;
+  (interaction: 'zoomBrush', options?: Omit<PanGestureOptions<'zoomBrush'>, 'name'>): void;
 };
 
 export interface UseChartInteractionListenerParameters {}

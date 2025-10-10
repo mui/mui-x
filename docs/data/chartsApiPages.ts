@@ -69,6 +69,11 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsAxisTooltipContent',
   },
   {
+    pathname: '/x/api/charts/charts-brush-overlay',
+    title: 'ChartsBrushOverlay',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/charts/charts-clip-path',
     title: 'ChartsClipPath',
   },
