@@ -35,8 +35,10 @@ export function findClosestPoints(
   // fx and fy are the factors to convert the distance from [0, 1] to the current drawing area.
   const fx = xScale.range()[1] - xScale.range()[0];
   const fy = yScale.range()[1] - yScale.range()[0];
+  const fxSq = fx * fx;
+  const fySq = fy * fy;
   function sqDistFn(dx: number, dy: number) {
-    return fx * fx * dx * dx + fy * fy * dy * dy;
+    return fxSq * dx * dx + fySq * dy * dy;
   }
 
   const isXIncreasing = xScale.range()[1] > xScale.range()[0];

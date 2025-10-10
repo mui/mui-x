@@ -47,7 +47,7 @@ describe('Flatbush benchmarks', () => {
 
   describe('neighbors 1M points', () => {
     bench('neighbors 1M points', () => {
-      flatbush1M.neighbors(0.5, 0.5, 1, () => 0.04, 0.2, 0.2, undefined);
+      flatbush1M.neighbors(0.5, 0.5, 1, 0.04, undefined);
     });
   });
 });
