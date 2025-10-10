@@ -6,7 +6,7 @@ import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 import { MoreEventsPopoverProps, MoreEventsPopoverProviderProps } from './MoreEventsPopover.types';
 import { useTranslations } from '../../utils/TranslationsContext';
-import { AgendaEvent } from '../event/agenda-event/AgendaEvent';
+import { EventItem } from '../event/event-item/EventItem';
 import { createPopover } from '../popover';
 import { ArrowSvg } from './arrow/ArrowSvg';
 import './MoreEventsPopover.css';
@@ -59,7 +59,7 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
           </div>
           <div className="MoreEventsPopoverContent">
             {occurrences.map((occurrence) => (
-              <AgendaEvent
+              <EventItem
                 variant={occurrence.allDay ? 'allDay' : 'compact'}
                 key={occurrence.key}
                 occurrence={occurrence}

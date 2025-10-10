@@ -7,16 +7,20 @@ import { Repeat } from 'lucide-react';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { selectors } from '@mui/x-scheduler-headless/use-event-calendar';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { AgendaEventProps } from './AgendaEvent.types';
+import { EventItemProps } from './EventItem.types';
 import { getColorClassName } from '../../../utils/color-utils';
 import { useTranslations } from '../../../utils/TranslationsContext';
-import './AgendaEvent.css';
+import './EventItem.css';
 // TODO: Create a standalone component for the resource color pin instead of re-using another component's CSS classes
 import '../../resource-legend/ResourceLegend.css';
 import '../index.css';
 
-export const AgendaEvent = React.forwardRef(function AgendaEvent(
-  props: AgendaEventProps,
+/**
+ * Component used to display an event occurrence, without any positioning capabilities
+ * Used in <AgendaView /> and in the event popover of <MonthView /> to display the list of events for a specific day.
+ */
+export const EventItem = React.forwardRef(function EventItem(
+  props: EventItemProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const {
@@ -54,16 +58,16 @@ export const AgendaEvent = React.forwardRef(function AgendaEvent(
               }
             />
             <p
-              className={clsx('AgendaEventCardContent', 'LinesClamp')}
+              className={clsx('EventItemCardContent', 'LinesClamp')}
               style={{ '--number-of-lines': 1 } as React.CSSProperties}
             >
-              <time className="AgendaEventTime AgendaEventTime--compact">
+              <time className="EventItemTime EventItemTime--compact">
                 <span>
                   {adapter.format(occurrence.start, ampm ? 'hoursMinutes12h' : 'hoursMinutes24h')}
                 </span>
               </time>
 
-              <span className="AgendaEventTitle">{occurrence.title}</span>
+              <span className="EventItemTitle">{occurrence.title}</span>
             </p>
             {isRecurring && (
               <Repeat
@@ -80,7 +84,7 @@ export const AgendaEvent = React.forwardRef(function AgendaEvent(
         return (
           <React.Fragment>
             <p
-              className={clsx('AgendaEventTitle', 'LinesClamp')}
+              className={clsx('EventItemTitle', 'LinesClamp')}
               style={{ '--number-of-lines': 1 } as React.CSSProperties}
             >
               {occurrence.title}
@@ -98,7 +102,7 @@ export const AgendaEvent = React.forwardRef(function AgendaEvent(
       case 'regular':
       default:
         return (
-          <div className="AgendaEventCardWrapper">
+          <div className="EventItemCardWrapper">
             <span
               className="ResourceLegendColor"
               role="img"
@@ -109,13 +113,13 @@ export const AgendaEvent = React.forwardRef(function AgendaEvent(
               }
             />
             <p
-              className={clsx('AgendaEventCardContent', 'LinesClamp')}
+              className={clsx('EventItemCardContent', 'LinesClamp')}
               style={{ '--number-of-lines': 1 } as React.CSSProperties}
             >
               {occurrence?.allDay ? (
-                <span className="AgendaEventTime">{translations.allDay}</span>
+                <span className="EventItemTime">{translations.allDay}</span>
               ) : (
-                <time className="AgendaEventTime">
+                <time className="EventItemTime">
                   <span>
                     {adapter.format(occurrence.start, ampm ? 'hoursMinutes12h' : 'hoursMinutes24h')}
                   </span>
@@ -126,7 +130,7 @@ export const AgendaEvent = React.forwardRef(function AgendaEvent(
                 </time>
               )}
 
-              <span className="AgendaEventTitle">{occurrence.title}</span>
+              <span className="EventItemTitle">{occurrence.title}</span>
             </p>
             {isRecurring && (
               <Repeat
@@ -161,14 +165,14 @@ export const AgendaEvent = React.forwardRef(function AgendaEvent(
         className,
         'EventContainer',
         'EventCard',
-        'AgendaEventCard',
-        `AgendaEventCard--${variant}`,
+        'EventItemCard',
+        `EventItemCard--${variant}`,
         getColorClassName(color),
       )}
       aria-labelledby={`${ariaLabelledBy} ${id}`}
       {...other}
     >
-      <div className={clsx('AgendaEventCardWrapper', `AgendaEventCardWrapper--${variant}`)}>
+      <div className={clsx('EventItemCardWrapper', `EventItemCardWrapper--${variant}`)}>
         {content}
       </div>
     </div>

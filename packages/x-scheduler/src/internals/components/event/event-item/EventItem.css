@@ -1,6 +1,6 @@
 @import '../../../../styles/colors.css';
 
-.AgendaEventTitle {
+.EventItemTitle {
   margin: 0;
   color: var(--event-primary-text);
   font-weight: var(--font-weight-2);
@@ -8,7 +8,7 @@
   line-height: var(--line-height-1);
 }
 
-.AgendaEventTime {
+.EventItemTime {
   display: inline-block;
   color: var(--event-secondary-text);
   font-weight: var(--font-weight-1);
@@ -18,7 +18,7 @@
   width: 150px;
 }
 
-.AgendaEventTime--compact {
+.EventItemTime--compact {
   width: fit-content;
   margin-inline-end: var(--space-1);
 }
@@ -31,45 +31,45 @@
   height: fit-content;
 }
 
-.AgendaEventCardContent {
+.EventItemCardContent {
   margin: 0;
   height: var(--line-height-1);
   line-height: var(--line-height-1);
 }
 
-.AgendaEventCardWrapper {
+.EventItemCardWrapper {
   display: flex;
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-1) var(--space-2);
 }
-.AgendaEventCardWrapper--compact,
-.AgendaEventCardWrapper--allDay {
+.EventItemCardWrapper--compact,
+.EventItemCardWrapper--allDay {
   padding: 0 var(--space-1);
 }
 
-.AgendaEventCard.EventCard {
+.EventItemCard.EventCard {
   padding: 0;
   border-radius: var(--radius-3);
 }
 
-.AgendaEventCard--compact,
-.AgendaEventCard--allDay {
+.EventItemCard--compact,
+.EventItemCard--allDay {
   padding: 0;
   border-radius: var(--radius-3);
 }
 
-.AgendaEventCard--compact:active,
-.AgendaEventCard--regular:active {
+.EventItemCard--compact:active,
+.EventItemCard--regular:active {
   background-color: var(--interactive-active-bg);
 }
 
-.AgendaEventCard--compact:hover,
-.AgendaEventCard--regular:hover {
+.EventItemCard--compact:hover,
+.EventItemCard--regular:hover {
   background-color: var(--interactive-hover-bg);
 }
 
-.AgendaEventCard--allDay {
+.EventItemCard--allDay {
   --event-background: var(--allDay-accepted-bg);
   color: var(--allDay-accepted-primary-text);
 }
