@@ -42,7 +42,7 @@ export interface SchedulerState<EventModel extends {} = any> {
    * It defines how to read and write the properties of the event model.
    * If not provided, the event model is assumed to match the `CalendarEvent` interface.
    */
-  eventModelStructure: SchedulerEventModelStructure<any>;
+  eventModelStructure: SchedulerEventModelStructure<any> | undefined;
   /**
    * The resources the events can be assigned to.
    */
