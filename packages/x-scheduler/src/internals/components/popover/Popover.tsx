@@ -17,7 +17,7 @@ export function createPopoverComponents<TAnchorData>(config: CreatePopoverCompon
     const context = React.useContext(Context);
     if (context === undefined) {
       throw new Error(
-        `Scheduler: \`${config.contextName}\` is missing. Hook must be placed within Provider.`,
+        `Scheduler: \`${config.contextName}\` is missing. Hook must be placed within its Provider.`,
       );
     }
     return context;

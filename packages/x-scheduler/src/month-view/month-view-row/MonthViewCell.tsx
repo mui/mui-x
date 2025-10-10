@@ -129,7 +129,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
                 aria-label={translations.hiddenEvents(hiddenCount)}
                 className={clsx('MonthViewMoreEvents', 'Button--small', 'NeutralTextButton')}
               >
-                {translations.hiddenEvents(hiddenCount)}{' '}
+                {translations.hiddenEvents(hiddenCount)}
               </button>
             }
           />
