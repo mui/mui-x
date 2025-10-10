@@ -6,6 +6,8 @@ export type ZoomInteractionConfig = {
    * - `wheel`: Zooms in or out when the mouse wheel is scrolled.
    * - `pinch`: Zooms in or out when a pinch gesture is detected.
    * - `tapAndDrag`: Zooms in or out by tapping twice and then dragging vertically. Dragging up zooms in, dragging down zooms out.
+   * - `brush`: Zooms into a selected area by clicking and dragging to create a selection area.
+   * - `doubleTapReset`: Resets the zoom level to the original state when double-tapping.
    *
    * @default ['wheel', 'pinch']
    */
@@ -32,7 +34,12 @@ export type DefaultizedZoomInteractionConfig = {
   pan: Entry<PanInteraction>;
 };
 
-export type ZoomInteraction = WheelInteraction | PinchInteraction | TapAndDragInteraction;
+export type ZoomInteraction =
+  | WheelInteraction
+  | PinchInteraction
+  | TapAndDragInteraction
+  | DoubleTapResetInteraction
+  | BrushInteraction;
 export type PanInteraction = DragInteraction | PressAndDragInteraction;
 
 export type ZoomInteractionName = ZoomInteraction['type'];
@@ -105,6 +112,20 @@ export type TapAndDragInteraction = Unpack<
 export type PressAndDragInteraction = Unpack<
   {
     type: 'pressAndDrag';
+  } & AllModeProp &
+    AllKeysProp
+>;
+
+export type DoubleTapResetInteraction = Unpack<
+  {
+    type: 'doubleTapReset';
+  } & AllModeProp &
+    AllKeysProp
+>;
+
+export type BrushInteraction = Unpack<
+  {
+    type: 'brush';
   } & AllModeProp &
     AllKeysProp
 >;
