@@ -373,35 +373,15 @@ export const useGridSorting = (
    * 1ST RENDER
    */
   useFirstRender(() => {
-    // When using controlled sortModel, skip calling applySorting here
-    // The useEnhancedEffect below will handle it after the component mounts
-    // This ensures proper initialization order with features like aggregation
-    if (props.sortModel === undefined) {
-      apiRef.current.applySorting();
-    }
+    apiRef.current.applySorting();
   });
 
   /**
    * EFFECTS
    */
-  const isFirstEffect = React.useRef(true);
   useEnhancedEffect(() => {
     if (props.sortModel !== undefined) {
-      const currentModel = gridSortModelSelector(apiRef);
-      // On first render with controlled sortModel, always call setSortModel
-      // to ensure aggregation and other features get the correct sorted state
-      if (isFirstEffect.current) {
-        isFirstEffect.current = false;
-        // Always call setSortModel on first render to trigger applySorting
-        apiRef.current.setState(
-          mergeStateWithSortModel(props.sortModel, props.disableMultipleColumnsSorting),
-        );
-        apiRef.current.applySorting();
-      } else if (currentModel !== props.sortModel) {
-        apiRef.current.setSortModel(props.sortModel);
-      }
-    } else {
-      isFirstEffect.current = false;
+      apiRef.current.setSortModel(props.sortModel);
     }
-  }, [apiRef, props.sortModel, props.disableMultipleColumnsSorting]);
+  }, [apiRef, props.sortModel]);
 };
