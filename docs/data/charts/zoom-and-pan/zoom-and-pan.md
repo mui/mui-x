@@ -170,6 +170,13 @@ The `zoomInteractionConfig` prop allows you to specify which interactions are en
 
 {{"demo": "ZoomAndPanInteractions.js"}}
 
+### Brush zoom
+
+The brush zoom interaction allows users to select a specific area to zoom into by clicking and dragging to create a selection rectangle.
+This provides an intuitive way to focus on a particular region of interest in the chart.
+
+{{"demo": "BrushZoom.js"}}
+
 ### Key modifiers
 
 Some interactions allow setting up required keys to be pressed to enable the interaction.
