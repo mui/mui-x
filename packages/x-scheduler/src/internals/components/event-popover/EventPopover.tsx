@@ -53,6 +53,12 @@ export const EventPopover = React.forwardRef(function EventPopover(
   const color = useStore(store, selectors.eventColor, occurrence.id);
   const rawPlaceholder = useStore(store, selectors.occurrencePlaceholder);
   const recurrencePresets = useStore(store, selectors.recurrencePresets, occurrence.start);
+  const defaultRecurrenceKey = useStore(
+    store,
+    selectors.defaultRecurrencePresetKey,
+    occurrence.rrule,
+    occurrence.start,
+  );
 
   // State hooks
   const [errors, setErrors] = React.useState<Form.Props['errors']>({});
@@ -158,11 +164,6 @@ export const EventPopover = React.forwardRef(function EventPopover(
       })),
     ];
   }, [resources, translations.labelNoResource]);
-
-  const defaultRecurrenceKey = React.useMemo(
-    () => store.getRecurrencePresetKeyFromRule(occurrence.rrule, occurrence.start),
-    [store, occurrence.rrule, occurrence.start],
-  );
 
   function validateRange(
     start: SchedulerValidDate,
