@@ -20,7 +20,7 @@ import { GridPreferencePanelsValue } from '../preferencesPanel/gridPreferencePan
 import { defaultGridFilterLookup, getDefaultGridFilterModel } from './gridFilterState';
 import { gridFilterModelSelector } from './gridFilterSelector';
 import { useFirstRender } from '../../utils/useFirstRender';
-import { gridRowsLookupSelector } from '../rows';
+import { gridRowCountSelector, gridRowsLookupSelector } from '../rows';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import {
   GRID_DEFAULT_STRATEGY,
@@ -109,6 +109,9 @@ export const useGridFilter = (
   });
 
   const updateFilteredRows = React.useCallback(() => {
+    if (!gridRowCountSelector(apiRef)) {
+      return;
+    }
     let didChange = false;
     apiRef.current.setState((state) => {
       const filterModel = gridFilterModelSelector(apiRef);
