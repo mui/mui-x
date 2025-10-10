@@ -1,0 +1,8 @@
+<DataGridPro
+  {...data}
+  loading={loading}
+  rowReordering
+  disableRowSelectionOnClick
+  getTreeDataPath={getTreeDataPath}
+  setTreeDataPath={setTreeDataPath}
+/>

@@ -4,30 +4,30 @@ import {
   gridRowTreeSelector,
   gridExpandedSortedRowIdsSelector,
   gridRowNodeSelector,
+  useGridSelector,
   gridRowMaximumTreeDepthSelector,
-} from '@mui/x-data-grid-pro';
+} from '@mui/x-data-grid';
 import {
   gridExpandedSortedRowIndexLookupSelector,
+  gridRowDropPositionSelector,
+  gridRowDropTargetRowIdSelector,
   useGridRowsOverridableMethodsCommunity,
-  useGridRowsOverridableMethodsPro,
-  useGridSelector,
-  type ReorderExecutionContext,
-} from '@mui/x-data-grid-pro/internals';
+} from '@mui/x-data-grid/internals';
 import type { RefObject } from '@mui/x-internals/types';
-import { rowGroupingReorderExecutor } from '../rowReorder/rowGroupingReorderExecutor';
-import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
-import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import type { ReorderExecutionContext } from '../rowReorder/types';
+import { treeDataReorderExecutor } from '../treeData/treeDataReorderExecutor';
+import type { GridPrivateApiPro } from '../../../models/gridApiPro';
+import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
 export const useGridRowsOverridableMethods = (
-  apiRef: RefObject<GridPrivateApiPremium>,
+  apiRef: RefObject<GridPrivateApiPro>,
   props: Pick<
-    DataGridPremiumProcessedProps,
-    'processRowUpdate' | 'onProcessRowUpdateError' | 'treeData'
+    DataGridProProcessedProps,
+    'processRowUpdate' | 'onProcessRowUpdateError' | 'setTreeDataPath'
   >,
 ) => {
-  const { processRowUpdate, onProcessRowUpdateError } = props;
-  const { setRowIndex: setRowIndexPlain } = useGridRowsOverridableMethodsCommunity(apiRef);
-  const { setRowIndex: setRowIndexTreeData } = useGridRowsOverridableMethodsPro(apiRef, props);
+  const { processRowUpdate, onProcessRowUpdateError, setTreeDataPath } = props;
+  const { setRowIndex: setRowIndexFlat } = useGridRowsOverridableMethodsCommunity(apiRef);
 
   const flatTree = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector) === 1;
 
@@ -36,6 +36,14 @@ export const useGridRowsOverridableMethods = (
       const sortedFilteredRowIds = gridExpandedSortedRowIdsSelector(apiRef);
       const sortedFilteredRowIndexLookup = gridExpandedSortedRowIndexLookupSelector(apiRef);
       const rowTree = gridRowTreeSelector(apiRef);
+
+      const targetRowId = gridRowDropTargetRowIdSelector(apiRef);
+
+      if (!targetRowId) {
+        throw new Error(`MUI X: No target row id found.`);
+      }
+
+      const dropPosition = gridRowDropPositionSelector(apiRef, targetRowId)!;
 
       const sourceNode = gridRowNodeSelector(apiRef, sourceRowId);
 
@@ -48,24 +56,20 @@ export const useGridRowsOverridableMethods = (
       }
 
       /**
-       * Row Grouping Reordering Use Cases
+       * Tree Data Reordering Use Cases
        * =================================
        *
        * | Case | Source Node | Target Node | Parent Relationship       | Action                                                                      |
        * | :--- | :---------- | :---------- | :------------------------ | :-------------------------------------------------------------------------- |
        * | A ✅ | Leaf        | Leaf        | Same parent               | Swap positions (similar to flat tree structure)                             |
        * | B ✅ | Group       | Group       | Same parent               | Swap positions (along with their descendants)                               |
-       * | C ✅ | Leaf        | Leaf        | Different parents         | Make source node a child of target's parent and update parent nodes in tree |
-       * | D ✅ | Leaf        | Group       | Different parents         | Make source a child of target, only allowed at same depth as source.parent  |
-       * | E ❌ | Leaf        | Group       | Target is source's parent | Not allowed, will have no difference                                        |
-       * | F ❌ | Group       | Leaf        | Any                       | Not allowed, will break the row grouping criteria                           |
-       * | G ✅ | Group       | Group       | Different parents         | Only allowed at same depth to preserve grouping criteria                    |
+       *
+       * Rest of the cases in progress!!!
        */
 
       const executionContext: ReorderExecutionContext = {
         sourceRowId,
-        // TODO: Use the correct drop position here
-        dropPosition: 'below',
+        dropPosition,
         placeholderIndex: targetOriginalIndex,
         sortedFilteredRowIds,
         sortedFilteredRowIndexLookup,
@@ -73,26 +77,15 @@ export const useGridRowsOverridableMethods = (
         apiRef,
         processRowUpdate,
         onProcessRowUpdateError,
+        setTreeDataPath,
       };
 
-      return rowGroupingReorderExecutor.execute(executionContext);
+      return treeDataReorderExecutor.execute(executionContext);
     },
-    [apiRef, processRowUpdate, onProcessRowUpdateError],
+    [apiRef, processRowUpdate, onProcessRowUpdateError, setTreeDataPath],
   );
 
-  if (flatTree) {
-    return {
-      setRowIndex: setRowIndexPlain,
-    };
-  }
-
-  if (props.treeData) {
-    return {
-      setRowIndex: setRowIndexTreeData,
-    };
-  }
-
   return {
-    setRowIndex,
+    setRowIndex: flatTree ? setRowIndexFlat : setRowIndex,
   };
 };

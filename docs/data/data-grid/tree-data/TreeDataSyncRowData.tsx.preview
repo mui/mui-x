@@ -1,0 +1,12 @@
+<DataGridPro
+  apiRef={apiRef}
+  loading={loading}
+  rows={rows}
+  columns={columns}
+  treeData
+  rowReordering
+  disableRowSelectionOnClick
+  onRowOrderChange={handleRowOrderChange}
+  getTreeDataPath={getTreeDataPath}
+  setTreeDataPath={setTreeDataPath}
+/>
