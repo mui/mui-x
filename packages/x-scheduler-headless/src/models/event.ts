@@ -239,7 +239,7 @@ export type CalendarEventUpdatedProperties = Partial<CalendarEvent> &
  */
 export type EventSurfaceType = 'day-grid' | 'time-grid';
 
-export type SchedulerEventModelStructure<TEvent extends {}> = {
+export type SchedulerEventModelStructure<TEvent extends object> = {
   [key in keyof CalendarEvent]?: {
     getter: (event: TEvent) => CalendarEvent[key];
     /**

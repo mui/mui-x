@@ -3,7 +3,7 @@ import { TimelineParameters, useTimeline } from '../use-timeline';
 import { TimelineStoreContext } from '../use-timeline-store-context/useTimelineStoreContext';
 import { SchedulerStoreContext } from '../use-scheduler-store-context/useSchedulerStoreContext';
 
-export function TimelineProvider<TEvent extends {}, TResource extends {}>(
+export function TimelineProvider<TEvent extends object, TResource extends object>(
   props: TimelineProvider.Props<TEvent, TResource>,
 ) {
   const { children, ...parameters } = props;
@@ -19,7 +19,7 @@ export function TimelineProvider<TEvent extends {}, TResource extends {}>(
 }
 
 export namespace TimelineProvider {
-  export interface Props<TEvent extends {}, TResource extends {}>
+  export interface Props<TEvent extends object, TResource extends object>
     extends TimelineParameters<TEvent, TResource> {
     children: React.ReactNode;
   }

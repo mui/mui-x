@@ -50,8 +50,8 @@ const ONE_MINUTE_IN_MS = 60 * 1000;
  * Instance shared by the Event Calendar and the Timeline components.
  */
 export class SchedulerStore<
-  TEvent extends {},
-  TResource extends {},
+  TEvent extends object,
+  TResource extends object,
   State extends SchedulerState,
   Parameters extends SchedulerParameters<TEvent, TResource>,
 > extends Store<State> {
@@ -113,7 +113,7 @@ export class SchedulerStore<
    * Returns the properties of the state that are derived from the parameters.
    * This do not contain state properties that don't update whenever the parameters update.
    */
-  private static deriveStateFromParameters<TEvent extends {}, TResource extends {}>(
+  private static deriveStateFromParameters<TEvent extends object, TResource extends object>(
     parameters: SchedulerParameters<TEvent, TResource>,
     adapter: Adapter,
   ) {

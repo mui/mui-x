@@ -6,7 +6,7 @@ export const EventCalendarStoreContext = React.createContext<EventCalendarStore<
   null,
 );
 
-export function useEventCalendarStoreContext<TEvent extends {}, TResource extends {}>() {
+export function useEventCalendarStoreContext<TEvent extends object, TResource extends object>() {
   const context = React.useContext(EventCalendarStoreContext);
   if (context == null) {
     throw new Error(

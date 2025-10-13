@@ -24,7 +24,7 @@ export const DEFAULT_PREFERENCES_MENU_CONFIG: EventCalendarPreferencesMenuConfig
   toggleAmpm: true,
 };
 
-const deriveStateFromParameters = <TEvent extends {}, TResource extends {}>(
+const deriveStateFromParameters = <TEvent extends object, TResource extends object>(
   parameters: EventCalendarParameters<TEvent, TResource>,
 ) => ({
   views: parameters.views ?? DEFAULT_VIEWS,
@@ -59,7 +59,10 @@ const mapper: SchedulerParametersToStateMapper<
   },
 };
 
-export class EventCalendarStore<TEvent extends {}, TResource extends {}> extends SchedulerStore<
+export class EventCalendarStore<
+  TEvent extends object,
+  TResource extends object,
+> extends SchedulerStore<
   TEvent,
   TResource,
   EventCalendarState,

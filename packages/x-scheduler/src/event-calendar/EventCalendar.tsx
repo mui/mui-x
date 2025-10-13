@@ -22,8 +22,8 @@ import '../index.css';
 import './EventCalendar.css';
 
 export const EventCalendar = React.forwardRef(function EventCalendar<
-  TEvent extends {},
-  TResource extends {},
+  TEvent extends object,
+  TResource extends object,
 >(props: EventCalendarProps<TEvent, TResource>, forwardedRef: React.ForwardedRef<HTMLDivElement>) {
   const { parameters, forwardedProps } = useExtractEventCalendarParameters<
     TEvent,
@@ -103,6 +103,6 @@ export const EventCalendar = React.forwardRef(function EventCalendar<
   );
 }) as EventCalendarComponent;
 
-type EventCalendarComponent = <TEvent extends {}, TResource extends {}>(
+type EventCalendarComponent = <TEvent extends object, TResource extends object>(
   props: EventCalendarProps<TEvent, TResource> & { ref?: React.ForwardedRef<HTMLDivElement> },
 ) => React.JSX.Element;

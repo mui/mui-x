@@ -2,8 +2,8 @@ import * as React from 'react';
 import { TimelineParameters } from './TimelineStore.types';
 
 export function useExtractTimelineParameters<
-  TEvent extends {},
-  TResource extends {},
+  TEvent extends object,
+  TResource extends object,
   P extends TimelineParameters<TEvent, TResource>,
 >(props: P): UseExtractTimelineParametersReturnValue<TEvent, TResource, P> {
   const {
@@ -72,8 +72,8 @@ export function useExtractTimelineParameters<
 }
 
 interface UseExtractTimelineParametersReturnValue<
-  TEvent extends {},
-  TResource extends {},
+  TEvent extends object,
+  TResource extends object,
   P extends TimelineParameters<TEvent, TResource>,
 > {
   parameters: TimelineParameters<TEvent, TResource>;

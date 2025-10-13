@@ -2,8 +2,8 @@ import * as React from 'react';
 import { EventCalendarParameters } from './EventCalendarStore.types';
 
 export function useExtractEventCalendarParameters<
-  TEvent extends {},
-  TResource extends {},
+  TEvent extends object,
+  TResource extends object,
   P extends EventCalendarParameters<TEvent, TResource>,
 >(props: P): UseExtractEventCalendarParametersReturnValue<TEvent, TResource, P> {
   const {
@@ -75,8 +75,8 @@ export function useExtractEventCalendarParameters<
 }
 
 interface UseExtractEventCalendarParametersReturnValue<
-  TEvent extends {},
-  TResource extends {},
+  TEvent extends object,
+  TResource extends object,
   P extends EventCalendarParameters<TEvent, TResource>,
 > {
   parameters: EventCalendarParameters<TEvent, TResource>;

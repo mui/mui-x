@@ -6,7 +6,7 @@ import { TimelineState, TimelineParameters } from './TimelineStore.types';
 export const DEFAULT_VIEWS: TimelineView[] = ['time', 'days', 'weeks', 'months', 'years'];
 export const DEFAULT_VIEW: TimelineView = 'time';
 
-const deriveStateFromParameters = <TEvent extends {}, TResource extends {}>(
+const deriveStateFromParameters = <TEvent extends object, TResource extends object>(
   parameters: TimelineParameters<TEvent, TResource>,
 ) => ({
   views: parameters.views ?? DEFAULT_VIEWS,
@@ -33,7 +33,7 @@ const mapper: SchedulerParametersToStateMapper<TimelineState, TimelineParameters
   },
 };
 
-export class TimelineStore<TEvent extends {}, TResource extends {}> extends SchedulerStore<
+export class TimelineStore<TEvent extends object, TResource extends object> extends SchedulerStore<
   TEvent,
   TResource,
   TimelineState,

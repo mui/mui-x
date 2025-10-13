@@ -68,7 +68,7 @@ const RESOURCE_PROPERTIES = Object.keys(RESOURCE_PROPERTIES_LOOKUP) as (keyof Ca
 /**
  * Converts an event model to a processed event using the provided model structure.
  */
-export function getProcessedEventFromModel<TEvent extends {}>(
+export function getProcessedEventFromModel<TEvent extends object>(
   event: TEvent,
   eventModelStructure: SchedulerEventModelStructure<TEvent> | undefined,
 ): CalendarEvent {
@@ -87,7 +87,7 @@ export function getProcessedEventFromModel<TEvent extends {}>(
 /**
  * Updates an event model based on the provided changes and model structure.
  */
-export function getUpdatedEventModelFromChanges<TEvent extends {}>(
+export function getUpdatedEventModelFromChanges<TEvent extends object>(
   event: TEvent,
   changes: Partial<CalendarEvent>,
   eventModelStructure: SchedulerEventModelStructure<TEvent> | undefined,
@@ -119,7 +119,7 @@ export function getUpdatedEventModelFromChanges<TEvent extends {}>(
 /**
  * Create an event model from a processed event using the provided model structure.
  */
-export function createEventModel<TEvent extends {}>(
+export function createEventModel<TEvent extends object>(
   event: CalendarEvent,
   eventModelStructure: SchedulerEventModelStructure<TEvent> | undefined,
 ): TEvent {
@@ -150,7 +150,7 @@ export function createEventModel<TEvent extends {}>(
 /**
  * Converts a resource model to a processed resource using the provided model structure.
  */
-export function getProcessedResourceFromModel<TResource extends {}>(
+export function getProcessedResourceFromModel<TResource extends object>(
   resource: TResource,
   resourceModelStructure: SchedulerResourceModelStructure<TResource> | undefined,
 ): CalendarResource {
@@ -166,9 +166,12 @@ export function getProcessedResourceFromModel<TResource extends {}>(
   return processedResource;
 }
 
-type AnyEventSetter<TEvent extends {}> = (event: TEvent | Partial<TEvent>, value: any) => TEvent;
+type AnyEventSetter<TEvent extends object> = (
+  event: TEvent | Partial<TEvent>,
+  value: any,
+) => TEvent;
 
-export function buildEventsState<TEvent extends {}, TResource extends {}>(
+export function buildEventsState<TEvent extends object, TResource extends object>(
   parameters: Pick<SchedulerParameters<TEvent, TResource>, 'events' | 'eventModelStructure'>,
 ): Pick<
   SchedulerState<TEvent>,
@@ -199,7 +202,7 @@ export function buildEventsState<TEvent extends {}, TResource extends {}>(
   };
 }
 
-export function buildResourcesState<TEvent extends {}, TResource extends {}>(
+export function buildResourcesState<TEvent extends object, TResource extends object>(
   parameters: Pick<SchedulerParameters<TEvent, TResource>, 'resources' | 'resourceModelStructure'>,
 ): Pick<
   SchedulerState<TEvent>,

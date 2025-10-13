@@ -22,7 +22,7 @@ export interface CalendarResource {
   eventColor?: CalendarEventColor;
 }
 
-export type SchedulerResourceModelStructure<TResource extends {}> = {
+export type SchedulerResourceModelStructure<TResource extends object> = {
   [key in keyof CalendarResource]?: {
     getter: (event: TResource) => CalendarResource[key];
   };

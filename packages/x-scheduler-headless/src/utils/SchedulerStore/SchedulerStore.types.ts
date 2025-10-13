@@ -13,7 +13,7 @@ import {
 } from '../../models';
 import { Adapter } from '../../use-adapter/useAdapter.types';
 
-export interface SchedulerState<TEvent extends {} = any> {
+export interface SchedulerState<TEvent extends object = any> {
   /**
    * The adapter of the date library.
    * Not publicly exposed, is only set in state to avoid passing it to the selectors.
@@ -96,7 +96,7 @@ export interface SchedulerState<TEvent extends {} = any> {
   isMultiDayEvent: (event: CalendarEvent | CalendarEventOccurrence) => boolean;
 }
 
-export interface SchedulerParameters<TEvent extends {}, TResource extends {}> {
+export interface SchedulerParameters<TEvent extends object, TResource extends object> {
   /**
    * The events currently available in the calendar.
    */

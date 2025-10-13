@@ -16,10 +16,10 @@ import { TimelineContent } from './content';
 import '../index.css';
 import './Timeline.css';
 
-export const Timeline = React.forwardRef(function Timeline<TEvent extends {}, TResource extends {}>(
-  props: TimelineProps<TEvent, TResource>,
-  forwardedRef: React.ForwardedRef<HTMLDivElement>,
-) {
+export const Timeline = React.forwardRef(function Timeline<
+  TEvent extends object,
+  TResource extends object,
+>(props: TimelineProps<TEvent, TResource>, forwardedRef: React.ForwardedRef<HTMLDivElement>) {
   const { parameters, forwardedProps } = useExtractTimelineParameters<
     TEvent,
     TResource,
@@ -48,6 +48,6 @@ export const Timeline = React.forwardRef(function Timeline<TEvent extends {}, TR
   );
 }) as TimelineComponent;
 
-type TimelineComponent = <TEvent extends {}, TResource extends {}>(
+type TimelineComponent = <TEvent extends object, TResource extends object>(
   props: TimelineProps<TEvent, TResource> & { ref?: React.ForwardedRef<HTMLDivElement> },
 ) => React.JSX.Element;
