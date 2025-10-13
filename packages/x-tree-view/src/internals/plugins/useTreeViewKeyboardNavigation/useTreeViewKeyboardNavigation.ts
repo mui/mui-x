@@ -33,6 +33,10 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
   const isRtl = useRtl();
   const firstCharMap = React.useRef<TreeViewFirstCharMap>({});
 
+  const typeaheadQueryRef = React.useRef<string>('');
+  const typeaheadTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const TYPEAHEAD_TIMEOUT = 500;
+
   const updateFirstCharMap = useEventCallback(
     (callback: (firstCharMap: TreeViewFirstCharMap) => TreeViewFirstCharMap) => {
       firstCharMap.current = callback(firstCharMap.current);
@@ -55,8 +59,25 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
     firstCharMap.current = newFirstCharMap;
   }, [itemMetaLookup, params.getItemId, instance]);
 
+  React.useEffect(() => {
+    return () => {
+      if (typeaheadTimeoutRef.current) {
+        clearTimeout(typeaheadTimeoutRef.current);
+      }
+    };
+  }, []);
+
   const getFirstMatchingItem = (itemId: string, query: string) => {
-    const cleanQuery = query.toLowerCase();
+    const currentItemLabel = itemMetaLookup[itemId]?.label?.toLowerCase() || '';
+
+    // Try matching with accumulated query + new key
+    const cleanQuery = (typeaheadQueryRef.current + query).toLowerCase();
+
+    // If query length > 1, first check if current item matches
+    if (cleanQuery.length > 1 && currentItemLabel.startsWith(cleanQuery)) {
+      typeaheadQueryRef.current = cleanQuery;
+      return itemId;
+    }
 
     const getNextItem = (itemIdToCheck: string) => {
       const nextItemId = getNextNavigableItem(store.state, itemIdToCheck);
@@ -73,12 +94,25 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
     const checkedItems: Record<string, true> = {};
     // The "!checkedItems[currentItemId]" condition avoids an infinite loop when there is no matching item.
     while (matchingItemId == null && !checkedItems[currentItemId]) {
-      if (firstCharMap.current[currentItemId] === cleanQuery) {
+      const itemLabel = firstCharMap.current[currentItemId];
+      const fullLabel = itemMetaLookup[currentItemId]?.label?.toLowerCase() || '';
+
+      // Check if label starts with the query (supports multi-char)
+      const matches =
+        cleanQuery.length > 1 ? fullLabel.startsWith(cleanQuery) : itemLabel === cleanQuery;
+
+      if (matches) {
         matchingItemId = currentItemId;
       } else {
         checkedItems[currentItemId] = true;
         currentItemId = getNextItem(currentItemId);
       }
+    }
+    if (matchingItemId) {
+      typeaheadQueryRef.current = cleanQuery;
+    } else if (typeaheadQueryRef.current.length > 0 && !matchingItemId) {
+      typeaheadQueryRef.current = '';
+      matchingItemId = getFirstMatchingItem(itemId, query);
     }
 
     return matchingItemId;
@@ -291,13 +325,25 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       }
 
       // Type-ahead
-      // TODO: Support typing multiple characters
       case !ctrlPressed && !event.shiftKey && isPrintableKey(key): {
+        if (typeaheadTimeoutRef.current) {
+          clearTimeout(typeaheadTimeoutRef.current);
+        }
+
         const matchingItem = getFirstMatchingItem(itemId, key);
+
         if (matchingItem != null) {
           instance.focusItem(event, matchingItem);
           event.preventDefault();
+        } else {
+          typeaheadQueryRef.current = '';
+          typeaheadTimeoutRef.current = null;
         }
+
+        typeaheadTimeoutRef.current = setTimeout(() => {
+          typeaheadQueryRef.current = '';
+          typeaheadTimeoutRef.current = null;
+        }, TYPEAHEAD_TIMEOUT);
         break;
       }
     }

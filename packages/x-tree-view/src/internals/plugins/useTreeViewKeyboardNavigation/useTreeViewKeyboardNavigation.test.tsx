@@ -1167,6 +1167,9 @@ describeTreeView<
       expect(view.getFocusedItemId()).to.equal('4');
 
       fireEvent.keyDown(view.getItemRoot('4'), { key: 'o' });
+      expect(view.getFocusedItemId()).to.equal('4');
+
+      fireEvent.keyDown(view.getItemRoot('4'), { key: 'o' });
       expect(view.getFocusedItemId()).to.equal('1');
     });
 
@@ -1215,6 +1218,9 @@ describeTreeView<
       expect(view.getFocusedItemId()).to.equal('4');
 
       fireEvent.keyDown(view.getItemRoot('4'), { key: 'o' });
+      expect(view.getFocusedItemId()).to.equal('4');
+
+      fireEvent.keyDown(view.getItemRoot('4'), { key: 'o' });
       expect(view.getFocusedItemId()).to.equal('1');
     });
 
@@ -1240,6 +1246,9 @@ describeTreeView<
         expect(view.getFocusedItemId()).to.equal('2');
 
         fireEvent.keyDown(view.getItemRoot('2'), { key: 'f' });
+        expect(view.getFocusedItemId()).to.equal('4');
+
+        fireEvent.keyDown(view.getItemRoot('4'), { key: 'o' });
         expect(view.getFocusedItemId()).to.equal('4');
 
         fireEvent.keyDown(view.getItemRoot('4'), { key: 'o' });
@@ -1338,6 +1347,29 @@ describeTreeView<
     });
   });
 
+  describe('Multi-character type-ahead', () => {
+    it('should move the focus to the next item when typing multiple characters quickly', async () => {
+      const view = render({
+        items: [
+          { id: '1', label: 'apple' },
+          { id: '2', label: 'apricot' },
+          { id: '3', label: 'banana' },
+          { id: '4', label: 'blueberry' },
+        ],
+      });
+
+      act(() => {
+        view.getItemRoot('1').focus();
+      });
+      expect(view.getFocusedItemId()).to.equal('1');
+
+      fireEvent.keyDown(view.getItemRoot('1'), { key: 'a' });
+      fireEvent.keyDown(view.getItemRoot('1'), { key: 'p' });
+      fireEvent.keyDown(view.getItemRoot('1'), { key: 'r' });
+      expect(view.getFocusedItemId()).to.equal('2');
+    });
+  });
+
   describe('onKeyDown prop', () => {
     it('should call onKeyDown on the Tree View and the Tree Item when a key is pressed', () => {
       const handleTreeViewKeyDown = spy();
@@ -1361,5 +1393,36 @@ describeTreeView<
       expect(handleTreeViewKeyDown.callCount).to.equal(3);
       expect(handleTreeItemKeyDown.callCount).to.equal(3);
     });
+  });
+
+  it('should work after adding / removing items', () => {
+    const view = render({
+      items: [
+        { id: '1', label: 'apple' },
+        { id: '2', label: 'apricot' },
+        { id: '3', label: 'banana' },
+      ],
+    });
+
+    act(() => {
+      view.getItemRoot('1').focus();
+    });
+
+    fireEvent.keyDown(view.getItemRoot('1'), { key: 'a' });
+    fireEvent.keyDown(view.getItemRoot('1'), { key: 'p' });
+    expect(view.getFocusedItemId()).to.equal('1');
+
+    fireEvent.keyDown(view.getItemRoot('1'), { key: 'r' });
+    expect(view.getFocusedItemId()).to.equal('2');
+
+    view.setItems([
+      { id: '1', label: 'apple' },
+      { id: '3', label: 'banana' },
+    ]);
+    expect(view.getFocusedItemId()).to.equal('1');
+
+    fireEvent.keyDown(view.getItemRoot('1'), { key: 'b' });
+    fireEvent.keyDown(view.getItemRoot('1'), { key: 'a' });
+    expect(view.getFocusedItemId()).to.equal('3');
   });
 });
