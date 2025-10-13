@@ -165,6 +165,7 @@ export const useGridRowSelection = (
    */
   const setRowSelectionModel = React.useCallback<GridRowSelectionApi['setRowSelectionModel']>(
     (model, reason) => {
+      console.log('model', model, reason);
       if (
         props.signature === GridSignature.DataGrid &&
         !canHaveMultipleSelection &&
@@ -874,11 +875,6 @@ export const useGridRowSelection = (
     apiRef.current.setRowSelectionModel(propRowSelectionModel);
   });
 
-  useGridEvent(
-    apiRef,
-    'sortedRowsSet',
-    runIfRowSelectionIsEnabled(() => removeOutdatedSelection(true)),
-  );
   useGridEvent(
     apiRef,
     'filteredRowsSet',
