@@ -129,19 +129,16 @@ export const useGridFilter = (
       const visibleRowsLookupState = getVisibleRowsLookupState(apiRef, newState);
 
       if (
-        visibleRowsLookupState !== state.visibleRowsLookup &&
-        !(isObjectEmpty(visibleRowsLookupState) && isObjectEmpty(state.visibleRowsLookup))
+        (visibleRowsLookupState !== state.visibleRowsLookup &&
+          !(isObjectEmpty(visibleRowsLookupState) && isObjectEmpty(state.visibleRowsLookup))) ||
+        firstRender.current
       ) {
+        firstRender.current = false;
         didChange = true;
         return {
           ...newState,
           visibleRowsLookup: visibleRowsLookupState,
         };
-      }
-
-      if (firstRender.current) {
-        firstRender.current = false;
-        didChange = true;
       }
 
       return state;

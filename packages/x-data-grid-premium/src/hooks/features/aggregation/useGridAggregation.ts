@@ -91,6 +91,13 @@ export const useGridAggregation = (
 
   const abortControllerRef = React.useRef<AbortController | null>(null);
   const applyAggregation = React.useCallback(() => {
+    // Abort previous if we're proceeding
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    const abortController = new AbortController();
+    abortControllerRef.current = abortController;
+
     const aggregationRules = getAggregationRules(
       gridColumnLookupSelector(apiRef),
       gridAggregationModelSelector(apiRef),
@@ -99,13 +106,6 @@ export const useGridAggregation = (
     );
     const aggregatedFields = Object.keys(aggregationRules);
     const currentAggregationLookup = gridAggregationLookupSelector(apiRef);
-
-    // Abort previous if we're proceeding
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-    }
-    const abortController = new AbortController();
-    abortControllerRef.current = abortController;
 
     const renderContext = gridRenderContextSelector(apiRef);
     const visibleColumns = gridVisibleColumnFieldsSelector(apiRef);

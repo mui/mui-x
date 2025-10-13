@@ -358,15 +358,13 @@ export function useGridVirtualizer(
 
   useStoreEffect(virtualizer.store, Virtualization.selectors.renderContext, (_, renderContext) => {
     if (renderContext !== apiRef.current.state.virtualization.renderContext) {
-      queueMicrotask(() => {
-        apiRef.current.setState((gridState) => ({
-          ...gridState,
-          virtualization: {
-            ...gridState.virtualization,
-            renderContext,
-          },
-        }));
-      });
+      apiRef.current.setState((gridState) => ({
+        ...gridState,
+        virtualization: {
+          ...gridState.virtualization,
+          renderContext,
+        },
+      }));
     }
   });
 
