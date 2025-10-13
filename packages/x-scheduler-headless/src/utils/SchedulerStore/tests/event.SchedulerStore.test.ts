@@ -186,7 +186,7 @@ storeClasses.forEach((storeClass) => {
         // Not called again when updating a non-related parameter.
         expect(idGetter.callCount).to.equal(1);
 
-        const events2 = [
+        const events2: MyEvent2[] = [
           {
             myId: '1',
             title: 'Event 1',
@@ -222,7 +222,7 @@ storeClasses.forEach((storeClass) => {
           adapter,
         );
 
-        // Called again to convert Event 1 and Event 2 because props.eventModelStructure2 changed.
+        // Called again to convert Event 1 and Event 2 because props.eventModelStructure changed.
         expect(idGetter.callCount).to.equal(5);
       });
     });
