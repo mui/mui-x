@@ -292,7 +292,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     return nextRenderContext;
   });
 
-  const forceUpdateRenderContext = useEventCallback(() => {
+  const forceUpdateRenderContext = () => {
     // skip update if dimensions are not ready and virtualization is enabled
     if (
       !Dimensions.selectors.dimensions(store.state).isReady &&
@@ -305,11 +305,11 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     // Reset the frozen context when the render context changes, see the illustration in https://github.com/mui/mui-x/pull/12353
     frozenContext.current = undefined;
     updateRenderContext(nextRenderContext);
-  });
+  };
 
   useStoreEffect(store, Dimensions.selectors.dimensions, (previous, next) => {
     if (next.isReady) {
-      forceUpdateRenderContext;
+      forceUpdateRenderContext();
     }
   });
 
