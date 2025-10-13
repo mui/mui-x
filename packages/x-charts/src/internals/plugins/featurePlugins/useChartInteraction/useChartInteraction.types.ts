@@ -17,8 +17,13 @@ export interface UseChartInteractionInstance {
   /**
    * Setter for the item the user is interacting with.
    * @param {ChartItemIdentifier} newItem The identifier of the item.
+   * @param {{ interaction: InteractionUpdateSource }} context The context of the interaction.
+   * @param {InteractionUpdateSource} context.interaction The source of the interaction update (pointer or keyboard).
    */
-  setItemInteraction: (newItem: ChartItemIdentifierWithData<ChartSeriesType>) => void;
+  setItemInteraction: (
+    newItem: ChartItemIdentifierWithData<ChartSeriesType>,
+    context: { interaction: InteractionUpdateSource },
+  ) => void;
   /**
    * Remove item interaction if the current if the provided item is still the one interacting.
    * @param {ChartItemIdentifier} itemToRemove The identifier of the item.
