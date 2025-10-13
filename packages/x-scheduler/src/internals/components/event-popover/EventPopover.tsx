@@ -49,6 +49,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
 
   // Selector hooks
   const isEventReadOnly = useStore(store, selectors.isEventReadOnly, occurrence.id);
+  const isPropertyReadOnly = useStore(store, selectors.isEventPropertyReadOnly, occurrence.id);
   const resources = useStore(store, selectors.processedResourceList);
   const color = useStore(store, selectors.eventColor, occurrence.id);
   const rawPlaceholder = useStore(store, selectors.occurrencePlaceholder);
@@ -117,7 +118,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
     };
 
   const handleToggleAllDay = (checked: boolean) => {
-    if (isEventReadOnly) {
+    if (isPropertyReadOnly('allDay')) {
       return;
     }
 
@@ -264,7 +265,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                         defaultValue={occurrence.title}
                         aria-label={translations.eventTitleAriaLabel}
                         required
-                        readOnly={isEventReadOnly}
+                        readOnly={isPropertyReadOnly('title')}
                       />
                     </Field.Label>
                     <Field.Error className="EventPopoverRequiredFieldError" />
@@ -273,7 +274,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                     <Select.Root
                       items={resourcesOptions}
                       defaultValue={occurrence.resource}
-                      readOnly={isEventReadOnly}
+                      readOnly={isPropertyReadOnly('resource')}
                     >
                       <Select.Trigger
                         className="EventPopoverSelectTrigger Ghost"
@@ -357,7 +358,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                           onChange={handleChangeDateOrTimeField('startDate')}
                           aria-describedby="startDate-error"
                           required
-                          readOnly={isEventReadOnly}
+                          readOnly={isPropertyReadOnly('start')}
                         />
                       </Field.Label>
                     </Field.Root>
@@ -372,7 +373,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                             onChange={handleChangeDateOrTimeField('startTime')}
                             aria-describedby="startTime-error"
                             required
-                            readOnly={isEventReadOnly}
+                            readOnly={isPropertyReadOnly('start')}
                           />
                         </Field.Label>
                       </Field.Root>
@@ -388,7 +389,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                           value={when.endDate}
                           onChange={handleChangeDateOrTimeField('endDate')}
                           required
-                          readOnly={isEventReadOnly}
+                          readOnly={isPropertyReadOnly('end')}
                         />
                       </Field.Label>
                     </Field.Root>
@@ -402,7 +403,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                             value={when.endTime}
                             onChange={handleChangeDateOrTimeField('endTime')}
                             required
-                            readOnly={isEventReadOnly}
+                            readOnly={isPropertyReadOnly('end')}
                           />
                         </Field.Label>
                       </Field.Root>
@@ -431,7 +432,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                         id="enable-all-day-checkbox"
                         checked={isAllDay}
                         onCheckedChange={handleToggleAllDay}
-                        readOnly={isEventReadOnly}
+                        readOnly={isPropertyReadOnly('allDay')}
                       >
                         <Checkbox.Indicator className="AllDayCheckboxIndicator">
                           <CheckIcon className="AllDayCheckboxIcon" />
@@ -449,7 +450,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                     <Select.Root
                       items={recurrenceOptions}
                       defaultValue={defaultRecurrenceKey}
-                      readOnly={isEventReadOnly}
+                      readOnly={isPropertyReadOnly('rrule')}
                     >
                       <Select.Trigger
                         className="EventPopoverSelectTrigger"
@@ -497,7 +498,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                             rows={5}
                           />
                         }
-                        readOnly={isEventReadOnly}
+                        readOnly={isPropertyReadOnly('description')}
                       />
                     </Field.Label>
                   </Field.Root>

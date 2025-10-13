@@ -1,5 +1,11 @@
 import { createSelector, createSelectorMemoized } from '@base-ui-components/utils/store';
-import { CalendarEventId, RecurrencePresetKey, RRuleSpec, SchedulerValidDate } from '../../models';
+import {
+  CalendarEvent,
+  CalendarEventId,
+  RecurrencePresetKey,
+  RRuleSpec,
+  SchedulerValidDate,
+} from '../../models';
 import { SchedulerState as State } from './SchedulerStore.types';
 import { getByDayMaps } from '../recurrence-utils';
 
@@ -58,6 +64,23 @@ export const selectors = {
 
     return state.eventColor;
   }),
+  isEventPropertyReadOnly: createSelector(
+    isEventReadOnlySelector,
+    (state: State) => state.eventModelStructure,
+    (isEventReadOnly, eventModelStructure, _eventId: CalendarEventId) => {
+      if (isEventReadOnly) {
+        return () => true;
+      }
+
+      return (property: keyof CalendarEvent) => {
+        if (eventModelStructure?.[property] && !eventModelStructure?.[property].setter) {
+          return true;
+        }
+
+        return false;
+      };
+    },
+  ),
   visibleResourcesList: createSelectorMemoized(
     (state: State) => state.resourceIdList,
     (state: State) => state.visibleResources,
