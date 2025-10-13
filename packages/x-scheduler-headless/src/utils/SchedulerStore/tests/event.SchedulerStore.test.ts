@@ -7,37 +7,53 @@ import { selectors } from '../SchedulerStore.selectors';
 storeClasses.forEach((storeClass) => {
   describe(`Event - ${storeClass.name}`, () => {
     describe('prop: eventModelStructure', () => {
-      it('should use the provided event model structure to read event properties', () => {
-        interface MyEvent {
-          myId: string;
-          myTitle: string;
-          myStart: string;
-          myEnd: string;
-        }
+      interface MyEvent {
+        myId: string;
+        myTitle: string;
+        myStart: string;
+        myEnd: string;
+      }
 
+      const eventModelStructure: SchedulerEventModelStructure<MyEvent> = {
+        id: {
+          getter: (event) => event.myId,
+          setter: (event, value) => {
+            event.myId = value.toString();
+            return event;
+          },
+        },
+        title: {
+          getter: (event) => event.myTitle,
+          setter: (event, value) => {
+            event.myTitle = value;
+            return event;
+          },
+        },
+        start: {
+          getter: (event) => adapter.date(event.myStart),
+          setter: (event, value) => {
+            event.myStart = value.toISO()!;
+            return event;
+          },
+        },
+        end: {
+          getter: (event) => adapter.date(event.myEnd),
+          setter: (event, value) => {
+            event.myEnd = value.toISO()!;
+            return event;
+          },
+        },
+      };
+
+      it('should use the provided event model structure to read event properties', () => {
         const events: MyEvent[] = [
           {
             myId: '1',
             myTitle: 'Event 1',
-            myStart: '2025-07-01T09:00:00Z',
-            myEnd: '2025-07-01T10:00:00Z',
+            myStart: '2025-07-01T09:00:00.000+00:00',
+            myEnd: '2025-07-01T10:00:00.000+00:00',
           },
         ];
-
-        const eventModelStructure: SchedulerEventModelStructure<MyEvent> = {
-          id: {
-            getter: (event) => event.myId,
-          },
-          title: {
-            getter: (event) => event.myTitle,
-          },
-          start: {
-            getter: (event) => adapter.date(event.myStart),
-          },
-          end: {
-            getter: (event) => adapter.date(event.myEnd),
-          },
-        };
 
         const store = new storeClass.Value({ events, eventModelStructure }, adapter);
         const event = selectors.event(store.state, '1');
@@ -45,9 +61,53 @@ storeClasses.forEach((storeClass) => {
         expect(event).to.deep.contain({
           id: '1',
           title: 'Event 1',
-          start: adapter.date('2025-07-01T09:00:00Z'),
-          end: adapter.date('2025-07-01T10:00:00Z'),
+          start: adapter.date('2025-07-01T09:00:00.000+00:00'),
+          end: adapter.date('2025-07-01T10:00:00.000+00:00'),
         });
+      });
+
+      it('should use the provided event model structure to write event properties', () => {
+        const onEventsChange = spy();
+
+        const events: MyEvent[] = [
+          {
+            myId: '1',
+            myTitle: 'Event 1',
+            myStart: '2025-07-01T09:00:00.000+00:00',
+            myEnd: '2025-07-01T10:00:00.000+00:00',
+          },
+        ];
+
+        const store = new storeClass.Value(
+          { events, eventModelStructure, onEventsChange },
+          adapter,
+        );
+        store.updateEvent({
+          id: '1',
+          title: 'Event 1 updated',
+          start: adapter.date('2025-07-01T09:30:00.000+00:00'),
+          end: adapter.date('2025-07-01T10:30:00.000+00:00'),
+        });
+        const event = selectors.event(store.state, '1');
+
+        // Should update the state with the built-in properties
+        expect(event).to.deep.contain({
+          id: '1',
+          title: 'Event 1',
+          start: adapter.date('2025-07-01T09:00:00.000+00:00'),
+          end: adapter.date('2025-07-01T10:00:00.000+00:00'),
+        });
+
+        // Should call onEventsChange with the updated event using the custom model structure
+        expect(onEventsChange.calledOnce).to.equal(true);
+        expect(onEventsChange.lastCall.firstArg).to.deep.equal([
+          {
+            myId: '1',
+            myTitle: 'Event 1 updated',
+            myStart: '2025-07-01T09:30:00.000+00:00',
+            myEnd: '2025-07-01T10:30:00.000+00:00',
+          },
+        ]);
       });
     });
 
