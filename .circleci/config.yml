@@ -112,7 +112,7 @@ commands:
               args="$args @mui/material@$MATERIAL_UI_VERSION @mui/system@$MATERIAL_UI_VERSION @mui/icons-material@$MATERIAL_UI_VERSION @mui/utils@$MATERIAL_UI_VERSION @mui/material-nextjs@$MATERIAL_UI_VERSION @mui/lab@latest"
             fi
             if [ -n "$args" ]; then
-              pnpm dlx @mui/internal-code-infra set-version-overrides $args
+              pnpm dlx @mui/internal-code-infra set-version-overrides --pkg $args
             else
               pnpm install
             fi
