@@ -21,6 +21,7 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
     start,
     end,
     addPropertiesToDroppedEvent,
+    chooseRecurringEventScope,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
@@ -33,6 +34,7 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
     start,
     end,
     addPropertiesToDroppedEvent,
+    chooseRecurringEventScope,
   });
 
   const state: CalendarGridTimeColumn.State = React.useMemo(

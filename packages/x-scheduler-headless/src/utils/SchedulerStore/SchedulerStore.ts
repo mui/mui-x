@@ -237,10 +237,10 @@ export class SchedulerStore<
   /**
    * Updates a recurring event in the calendar.
    */
-  public updateRecurringEvent = (params: UpdateRecurringEventParameters) => {
+  public updateRecurringEvent = (parameters: UpdateRecurringEventParameters) => {
     const { adapter, events } = this.state;
     const { onEventsChange } = this.parameters;
-    const { occurrenceStart, changes, scope } = params;
+    const { occurrenceStart, changes, scope } = parameters;
 
     const original = selectors.event(this.state, changes.id);
     if (!original) {

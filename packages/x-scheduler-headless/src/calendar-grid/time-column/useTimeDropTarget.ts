@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { useAdapter } from '../../use-adapter/useAdapter';
-import { CalendarEvent, SchedulerValidDate } from '../../models';
+import { CalendarEvent, RecurringUpdateEventScope, SchedulerValidDate } from '../../models';
 import {
   EVENT_DRAG_PRECISION_MINUTE,
   buildIsValidDropTarget,
@@ -18,7 +18,7 @@ const isValidDropTarget = buildIsValidDropTarget([
 ]);
 
 export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
-  const { start, end, addPropertiesToDroppedEvent } = parameters;
+  const { start, end, addPropertiesToDroppedEvent, chooseRecurringEventScope } = parameters;
 
   const adapter = useAdapter();
   const ref = React.useRef<HTMLDivElement>(null);
@@ -128,6 +128,7 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
     getEventDropData,
     isValidDropTarget,
     addPropertiesToDroppedEvent,
+    chooseRecurringEventScope,
   });
 
   return { getCursorPositionInElementMs, ref };
@@ -147,6 +148,11 @@ export namespace useTimeDropTarget {
      * Add properties to the event dropped in the column before storing it in the store.
      */
     addPropertiesToDroppedEvent?: () => Partial<CalendarEvent>;
+    /**
+     * Prompts the UI to choose the scope for a recurring event update.
+     * Return `null` to cancel the operation.
+     */
+    chooseRecurringEventScope?: () => Promise<RecurringUpdateEventScope | null>;
   }
 
   export interface ReturnValue

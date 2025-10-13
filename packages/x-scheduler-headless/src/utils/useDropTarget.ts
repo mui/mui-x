@@ -13,13 +13,18 @@ import {
 import { EventDropData, EventDropDataLookup } from '../utils/drag-utils';
 import { SchedulerStoreInContext, useSchedulerStoreContext } from '../use-scheduler-store-context';
 import { selectors } from './SchedulerStore';
-import { SCHEDULER_RECURRING_EDITING_SCOPE } from '../constants';
 
 export function useDropTarget<Targets extends keyof EventDropDataLookup>(
   parameters: useDropTarget.Parameters<Targets>,
 ) {
-  const { surfaceType, ref, getEventDropData, isValidDropTarget, addPropertiesToDroppedEvent } =
-    parameters;
+  const {
+    surfaceType,
+    ref,
+    getEventDropData,
+    isValidDropTarget,
+    addPropertiesToDroppedEvent,
+    chooseRecurringEventScope,
+  } = parameters;
   const store = useSchedulerStoreContext();
 
   React.useEffect(() => {
@@ -53,7 +58,7 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
           store.setOccurrencePlaceholder(newPlaceholder);
         }
       },
-      onDrop: ({ source, location }) => {
+      onDrop: async ({ source, location }) => {
         const dropData = getEventDropData({
           data: source.data,
           createDropData,
@@ -67,11 +72,20 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
             store,
             placeholder,
             addPropertiesToDroppedEvent,
+            chooseRecurringEventScope,
           );
         }
       },
     });
-  }, [ref, surfaceType, getEventDropData, isValidDropTarget, addPropertiesToDroppedEvent, store]);
+  }, [
+    ref,
+    surfaceType,
+    getEventDropData,
+    isValidDropTarget,
+    addPropertiesToDroppedEvent,
+    store,
+    chooseRecurringEventScope,
+  ]);
 }
 
 export namespace useDropTarget {
@@ -84,6 +98,11 @@ export namespace useDropTarget {
      * Add properties to the event dropped in the element before storing it in the store.
      */
     addPropertiesToDroppedEvent?: () => Partial<CalendarEvent>;
+    /**
+     * Prompts the UI to choose the scope for a recurring event update.
+     * Return `null` to cancel the operation.
+     */
+    chooseRecurringEventScope?: () => Promise<RecurringUpdateEventScope | null>;
   }
 
   export type CreateDropData = (
@@ -106,8 +125,8 @@ async function applyInternalDragOrResizeOccurrencePlaceholder(
   store: SchedulerStoreInContext,
   placeholder: CalendarOccurrencePlaceholderInternalDragOrResize,
   addPropertiesToDroppedEvent?: () => Partial<CalendarEvent>,
-  chooseRecurringEventScope?: () => Promise<RecurringUpdateEventScope>,
-) {
+  chooseRecurringEventScope?: () => Promise<RecurringUpdateEventScope | null>,
+): Promise<void> {
   // TODO: Try to do a single state update.
   store.setOccurrencePlaceholder(null);
 
@@ -124,21 +143,19 @@ async function applyInternalDragOrResizeOccurrencePlaceholder(
   }
 
   if (original.rrule) {
-    let scope: RecurringUpdateEventScope;
-    if (chooseRecurringEventScope) {
-      // TODO: Issue #19440 + #19441 - Allow to edit all events or only this event.
-      scope = await chooseRecurringEventScope();
-    } else {
-      // TODO: Issue #19766 - Let the user choose the scope via UI.
-      scope = SCHEDULER_RECURRING_EDITING_SCOPE;
+    const scope = chooseRecurringEventScope ? await chooseRecurringEventScope() : null;
+
+    if (!scope) {
+      return;
     }
 
-    return store.updateRecurringEvent({
+    store.updateRecurringEvent({
       occurrenceStart: originalEvent.start,
       changes,
       scope,
     });
+    return;
   }
 
-  return store.updateEvent(changes);
+  store.updateEvent(changes);
 }
