@@ -5,7 +5,13 @@ import { useRtl } from '@mui/system/RtlProvider';
 import { roundToDecimalPlaces } from '@mui/x-internals/math';
 import { lruMemoize } from '@mui/x-internals/lruMemoize';
 import { useStoreEffect } from '@mui/x-internals/store';
-import { useVirtualizer, Dimensions, VirtualizerParams, Virtualization } from '@mui/x-virtualizer';
+import {
+  useVirtualizer,
+  Dimensions,
+  VirtualizerParams,
+  Virtualization,
+  EMPTY_RENDER_CONTEXT,
+} from '@mui/x-virtualizer';
 import { useFirstRender } from '../utils/useFirstRender';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
 import { createSelector } from '../../utils/createSelector';
@@ -353,14 +359,14 @@ export function useGridVirtualizer() {
     }
   });
 
-  useStoreEffect(virtualizer.store, Virtualization.selectors.renderContext, (_, renderContext) => {
-    if (renderContext !== apiRef.current.state.virtualization.renderContext) {
+  useStoreEffect(virtualizer.store, Virtualization.selectors.store, (_, virtualization) => {
+    if (virtualization.renderContext === EMPTY_RENDER_CONTEXT) {
+      return;
+    }
+    if (virtualization !== apiRef.current.state.virtualization) {
       apiRef.current.setState((gridState) => ({
         ...gridState,
-        virtualization: {
-          ...gridState.virtualization,
-          renderContext,
-        },
+        virtualization,
       }));
     }
   });

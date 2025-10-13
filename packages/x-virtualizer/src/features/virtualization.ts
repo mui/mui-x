@@ -61,6 +61,7 @@ export const EMPTY_RENDER_CONTEXT = {
 };
 
 const selectors = {
+  store: createSelector((state: BaseState) => state.virtualization),
   renderContext: createSelector((state: BaseState) => state.virtualization.renderContext),
   enabledForRows: createSelector((state: BaseState) => state.virtualization.enabledForRows),
   enabledForColumns: createSelector((state: BaseState) => state.virtualization.enabledForColumns),
@@ -312,15 +313,15 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     }
   });
 
+  const [key, setKey] = React.useState(0);
   useEnhancedEffect(() => {
-    if (isUpdateScheduled.current) {
+    if (key) {
       forceUpdateRenderContext();
-      isUpdateScheduled.current = false;
     }
-  });
+  }, [key]);
 
   const scheduleUpdateRenderContext = () => {
-    isUpdateScheduled.current = true;
+    setKey((k) => k + 1);
   };
 
   const handleScroll = useEventCallback(() => {
