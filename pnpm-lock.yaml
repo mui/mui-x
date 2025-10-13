@@ -1669,7 +1669,7 @@ importers:
         specifier: ^1.0.0-beta.4
         version: 1.0.0-beta.4(@types/react@19.2.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@base-ui-components/utils':
-        specifier: ^0.1.1
+        specifier: ^0.1.2
         version: 0.1.2(@types/react@19.2.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@floating-ui/react':
         specifier: ^0.27.16
