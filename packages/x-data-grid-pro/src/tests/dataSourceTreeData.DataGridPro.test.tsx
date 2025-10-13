@@ -159,6 +159,70 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     );
   });
 
+  it('should keep the nested data visible after the root level re-fetch', async () => {
+    const { user } = render(<TestDataSource dataSourceCache={null} />);
+
+    expect(fetchRowsSpy.callCount).to.equal(1);
+    await waitFor(() => {
+      expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(10 + 1);
+    });
+
+    const cell11 = getCell(0, 0);
+    await user.click(within(cell11).getByRole('button'));
+
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.equal(2);
+    });
+
+    const cell11ChildrenCount = Number(cell11.innerText.split('(')[1].split(')')[0]);
+    expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(
+      10 + 1 + cell11ChildrenCount,
+    );
+
+    act(() => {
+      apiRef.current?.dataSource.fetchRows();
+    });
+
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.equal(3);
+    });
+
+    expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(
+      10 + 1 + cell11ChildrenCount,
+    );
+  });
+
+  it('should collapse the nested data if refetching the root level with `collapseChildren` set to `true`', async () => {
+    const { user } = render(<TestDataSource dataSourceCache={null} />);
+
+    expect(fetchRowsSpy.callCount).to.equal(1);
+    await waitFor(() => {
+      expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(10 + 1);
+    });
+
+    const cell11 = getCell(0, 0);
+    await user.click(within(cell11).getByRole('button'));
+
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.equal(2);
+    });
+
+    const cell11ChildrenCount = Number(cell11.innerText.split('(')[1].split(')')[0]);
+    expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(
+      10 + 1 + cell11ChildrenCount,
+    );
+
+    act(() => {
+      apiRef.current?.dataSource.fetchRows(undefined, { collapseChildren: true });
+    });
+
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.equal(3);
+    });
+
+    expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(10 + 1);
+  });
+
   it('should fetch nested data when calling API method `dataSource.fetchRows`', async () => {
     render(<TestDataSource />);
 
