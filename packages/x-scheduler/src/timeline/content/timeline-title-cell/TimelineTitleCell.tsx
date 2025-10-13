@@ -10,16 +10,16 @@ export default function TimelineTitleCell({ resource }: { resource: CalendarReso
     <TimelinePrimitive.Row className="TimelineRow">
       <TimelinePrimitive.Cell
         className={clsx('TimelineCell', 'TimelineTitleCell')}
-        id={`TimelineTitleCell-${resource!.id}`}
+        id={`TimelineTitleCell-${resource.id}`}
       >
         <span
           className={clsx(
             'ResourceLegendColor',
-            getColorClassName(resource!.eventColor ?? DEFAULT_EVENT_COLOR),
+            getColorClassName(resource.eventColor ?? DEFAULT_EVENT_COLOR),
           )}
         />
 
-        {resource!.name}
+        {resource.title}
       </TimelinePrimitive.Cell>
     </TimelinePrimitive.Row>
   );
