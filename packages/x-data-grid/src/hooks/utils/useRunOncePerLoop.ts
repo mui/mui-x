@@ -10,6 +10,13 @@ export function useRunOncePerLoop<T extends (...args: any[]) => void>(callback: 
         scheduledCallbackRef.current = null;
         callback(...args);
       };
+
+      // fallback in case no state is being set
+      queueMicrotask(() => {
+        if (scheduledCallbackRef.current) {
+          scheduledCallbackRef.current();
+        }
+      });
     },
     [callback],
   );

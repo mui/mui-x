@@ -141,7 +141,7 @@ export const useGridFilter = (
         };
       }
 
-      return state;
+      return newState;
     });
     if (didChange) {
       apiRef.current.publishEvent('filteredRowsSet');

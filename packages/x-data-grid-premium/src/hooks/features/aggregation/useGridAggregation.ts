@@ -317,4 +317,10 @@ export const useGridAggregation = (
       apiRef.current.setAggregationModel(props.aggregationModel);
     }
   }, [apiRef, props.aggregationModel]);
+
+  React.useEffect(() => {
+    if (props.getAggregationPosition !== undefined) {
+      deferredApplyAggregation();
+    }
+  }, [props.getAggregationPosition]);
 };
