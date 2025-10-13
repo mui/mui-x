@@ -835,9 +835,7 @@ function computeRenderContext(
     renderContext.lastColumnIndex = lastColumnIndex;
   }
 
-  console.log('computed render context', renderContext.lastRowIndex);
   const actualRenderContext = deriveRenderContext(inputs, renderContext, scrollCache);
-  console.log('computed render context', actualRenderContext, inputs, renderContext);
 
   return actualRenderContext;
 }
