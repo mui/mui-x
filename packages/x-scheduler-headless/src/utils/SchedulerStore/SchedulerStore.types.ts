@@ -13,7 +13,7 @@ import {
 } from '../../models';
 import { Adapter } from '../../use-adapter/useAdapter.types';
 
-export interface SchedulerState<TEvent extends {} = any, TResource extends {} = any> {
+export interface SchedulerState<TEvent extends {} = any> {
   /**
    * The adapter of the date library.
    * Not publicly exposed, is only set in state to avoid passing it to the selectors.
@@ -23,10 +23,6 @@ export interface SchedulerState<TEvent extends {} = any, TResource extends {} = 
    * The date used to determine the visible date range in each view.
    */
   visibleDate: SchedulerValidDate;
-  /**
-   * The last value provided to the `events` prop.
-   */
-  eventsProp: readonly TEvent[];
   /**
    * The model of the events available in the calendar as provided to props.events.
    */
@@ -49,10 +45,6 @@ export interface SchedulerState<TEvent extends {} = any, TResource extends {} = 
    * If not provided, the event model is assumed to match the `CalendarEvent` interface.
    */
   eventModelStructure: SchedulerEventModelStructure<any> | undefined;
-  /**
-   * The last value provided to the `resources` prop.
-   */
-  resourcesProp: readonly TResource[];
   /**
    * The IDs of the resources the events can be assigned to.
    */

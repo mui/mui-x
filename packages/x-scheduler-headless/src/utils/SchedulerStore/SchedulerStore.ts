@@ -192,6 +192,7 @@ export class SchedulerStore<
     );
 
     this.apply(newState);
+    this.parameters = parameters;
   };
 
   public disposeEffect = () => {

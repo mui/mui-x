@@ -171,8 +171,7 @@ type AnyEventSetter<TEvent extends {}> = (event: TEvent | Partial<TEvent>, value
 export function buildEventsState<TEvent extends {}, TResource extends {}>(
   parameters: Pick<SchedulerParameters<TEvent, TResource>, 'events' | 'eventModelStructure'>,
 ): Pick<
-  SchedulerState<TEvent, TResource>,
-  | 'eventsProp'
+  SchedulerState<TEvent>,
   | 'eventIdList'
   | 'eventModelLookup'
   | 'processedEventLookup'
@@ -197,15 +196,14 @@ export function buildEventsState<TEvent extends {}, TResource extends {}>(
     eventModelStructure,
     processedEventLookup,
     eventModelList: events,
-    eventsProp: events,
   };
 }
 
 export function buildResourcesState<TEvent extends {}, TResource extends {}>(
   parameters: Pick<SchedulerParameters<TEvent, TResource>, 'resources' | 'resourceModelStructure'>,
 ): Pick<
-  SchedulerState<TEvent, TResource>,
-  'resourcesProp' | 'resourceIdList' | 'processedResourceLookup' | 'resourceModelStructure'
+  SchedulerState<TEvent>,
+  'resourceIdList' | 'processedResourceLookup' | 'resourceModelStructure'
 > {
   const { resources = EMPTY_ARRAY, resourceModelStructure } = parameters;
 
@@ -218,7 +216,6 @@ export function buildResourcesState<TEvent extends {}, TResource extends {}>(
   }
 
   return {
-    resourcesProp: resources,
     resourceIdList,
     processedResourceLookup,
     resourceModelStructure,
