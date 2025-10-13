@@ -428,9 +428,8 @@ function useRowsMeta(
       pinnedBottomRowsTotalHeight,
     };
 
-    store.set('rowsMeta', rowsMeta);
-
     if (didHeightsChange) {
+      store.set('rowsMeta', rowsMeta);
       updateDimensions();
     }
 

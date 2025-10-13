@@ -18,7 +18,7 @@ import {
   gridSortedRowIdsSelector,
   gridSortModelSelector,
 } from './gridSortingSelector';
-import { GRID_ROOT_GROUP_ID, gridRowCountSelector, gridRowTreeSelector } from '../rows';
+import { GRID_ROOT_GROUP_ID, gridRowTreeSelector } from '../rows';
 import { useFirstRender } from '../../utils/useFirstRender';
 import {
   useGridRegisterStrategyProcessor,
@@ -141,9 +141,6 @@ export const useGridSorting = (
    * API METHODS
    */
   const applySorting = React.useCallback<GridSortApi['applySorting']>(() => {
-    if (!gridRowCountSelector(apiRef)) {
-      return;
-    }
     let didChange = false;
     apiRef.current.setState((state) => {
       if (props.sortingMode === 'server') {
@@ -383,13 +380,6 @@ export const useGridSorting = (
   useGridEvent(apiRef, 'rowsSet', apiRef.current.applySorting);
   useGridEvent(apiRef, 'columnsChange', handleColumnsChange);
   useGridEvent(apiRef, 'activeStrategyProcessorChange', handleStrategyProcessorChange);
-
-  /**
-   * 1ST RENDER
-   */
-  useFirstRender(() => {
-    apiRef.current.applySorting();
-  });
 
   /**
    * EFFECTS

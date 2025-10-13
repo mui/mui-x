@@ -257,8 +257,9 @@ export const useGridDetailPanel = (
 
   const updateCachesIfNeeded = React.useCallback(() => {
     if (
-      props.getDetailPanelContent === previousGetDetailPanelContentProp.current &&
-      props.getDetailPanelHeight === previousGetDetailPanelHeightProp.current
+      (props.getDetailPanelContent === previousGetDetailPanelContentProp.current &&
+        props.getDetailPanelHeight === previousGetDetailPanelHeightProp.current) ||
+      !props.getDetailPanelContent
     ) {
       return;
     }

@@ -91,10 +91,6 @@ export const useGridAggregation = (
 
   const abortControllerRef = React.useRef<AbortController | null>(null);
   const applyAggregation = React.useCallback(() => {
-    const rowCount = gridRowCountSelector(apiRef);
-    if (!rowCount) {
-      return;
-    }
     const aggregationRules = getAggregationRules(
       gridColumnLookupSelector(apiRef),
       gridAggregationModelSelector(apiRef),

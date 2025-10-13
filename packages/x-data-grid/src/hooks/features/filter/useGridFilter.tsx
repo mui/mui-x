@@ -108,6 +108,7 @@ export const useGridFilter = (
     changeEvent: 'filterModelChange',
   });
 
+  const firstRender = React.useRef(true);
   const updateFilteredRows = React.useCallback(() => {
     if (!gridRowCountSelector(apiRef)) {
       return;
@@ -129,16 +130,21 @@ export const useGridFilter = (
 
       if (
         visibleRowsLookupState !== state.visibleRowsLookup &&
-        !(isObjectEmpty(visibleRowsLookupState) && !isObjectEmpty(state.visibleRowsLookup))
+        !(isObjectEmpty(visibleRowsLookupState) && isObjectEmpty(state.visibleRowsLookup))
       ) {
         didChange = true;
-        newState.visibleRowsLookup = visibleRowsLookupState;
+        return {
+          ...newState,
+          visibleRowsLookup: visibleRowsLookupState,
+        };
       }
 
-      return {
-        ...newState,
-        visibleRowsLookup: visibleRowsLookupState,
-      };
+      if (firstRender.current) {
+        firstRender.current = false;
+        didChange = true;
+      }
+
+      return state;
     });
     if (didChange) {
       apiRef.current.publishEvent('filteredRowsSet');

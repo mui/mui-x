@@ -6,7 +6,7 @@ import { RefObject } from '@mui/x-internals/types';
 import { roundToDecimalPlaces } from '@mui/x-internals/math';
 import { lruMemoize } from '@mui/x-internals/lruMemoize';
 import { useStoreEffect } from '@mui/x-internals/store';
-import { useVirtualizer, Dimensions, VirtualizerParams } from '@mui/x-virtualizer';
+import { useVirtualizer, Dimensions, VirtualizerParams, Virtualization } from '@mui/x-virtualizer';
 import { useFirstRender } from '../utils/useFirstRender';
 import { GridPrivateApiCommunity } from '../../models/api/gridApiCommunity';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
@@ -37,10 +37,6 @@ import {
 } from '../features/rows/gridRowsUtils';
 import { getTotalHeaderHeight } from '../features/columns/gridColumnsUtils';
 import { useGridOverlays } from '../features/overlays/useGridOverlays';
-
-function identity<T>(x: T) {
-  return x;
-}
 
 type RootProps = DataGridProcessedProps;
 
@@ -351,18 +347,26 @@ export function useGridVirtualizer(
     }));
   });
 
-  useStoreEffect(virtualizer.store, identity, (_, state) => {
-    if (state.rowsMeta !== apiRef.current.state.rowsMeta) {
+  useStoreEffect(virtualizer.store, Dimensions.selectors.rowsMeta, (_, rowsMeta) => {
+    if (rowsMeta !== apiRef.current.state.rowsMeta) {
       apiRef.current.setState((gridState) => ({
         ...gridState,
-        rowsMeta: state.rowsMeta,
+        rowsMeta,
       }));
     }
-    if (state.virtualization !== apiRef.current.state.virtualization) {
-      apiRef.current.setState((gridState) => ({
-        ...gridState,
-        virtualization: state.virtualization,
-      }));
+  });
+
+  useStoreEffect(virtualizer.store, Virtualization.selectors.renderContext, (_, renderContext) => {
+    if (renderContext !== apiRef.current.state.virtualization.renderContext) {
+      queueMicrotask(() => {
+        apiRef.current.setState((gridState) => ({
+          ...gridState,
+          virtualization: {
+            ...gridState.virtualization,
+            renderContext,
+          },
+        }));
+      });
     }
   });
 
