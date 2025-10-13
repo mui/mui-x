@@ -1,9 +1,56 @@
 import { spy } from 'sinon';
 import { adapter } from 'test/utils/scheduler';
+import { SchedulerEventModelStructure } from '@mui/x-scheduler-headless/models';
 import { buildEvent, storeClasses, getIds } from './utils';
+import { selectors } from '../SchedulerStore.selectors';
 
 storeClasses.forEach((storeClass) => {
   describe(`Event - ${storeClass.name}`, () => {
+    describe('prop: eventModelStructure', () => {
+      it('should use the provided event model structure to read event properties', () => {
+        interface MyEvent {
+          myId: string;
+          myTitle: string;
+          myStart: string;
+          myEnd: string;
+        }
+
+        const events: MyEvent[] = [
+          {
+            myId: '1',
+            myTitle: 'Event 1',
+            myStart: '2025-07-01T09:00:00Z',
+            myEnd: '2025-07-01T10:00:00Z',
+          },
+        ];
+
+        const eventModelStructure: SchedulerEventModelStructure<MyEvent> = {
+          id: {
+            getter: (event) => event.myId,
+          },
+          title: {
+            getter: (event) => event.myTitle,
+          },
+          start: {
+            getter: (event) => adapter.date(event.myStart),
+          },
+          end: {
+            getter: (event) => adapter.date(event.myEnd),
+          },
+        };
+
+        const store = new storeClass.Value({ events, eventModelStructure }, adapter);
+        const event = selectors.event(store.state, '1');
+
+        expect(event).to.deep.contain({
+          id: '1',
+          title: 'Event 1',
+          start: adapter.date('2025-07-01T09:00:00Z'),
+          end: adapter.date('2025-07-01T10:00:00Z'),
+        });
+      });
+    });
+
     describe('Method: updateEvent', () => {
       it('should replace matching id and emit onEventsChange with the updated events', () => {
         const onEventsChange = spy();
