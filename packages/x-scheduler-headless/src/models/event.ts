@@ -200,7 +200,7 @@ export interface CalendarOccurrencePlaceholderInternalDragOrResize
   /**
    * The data of the event to use when dropping the event outside of the Event Calendar.
    */
-  originalEvent: CalendarEvent;
+  originalOccurrence: CalendarEventOccurrence;
 }
 
 /**

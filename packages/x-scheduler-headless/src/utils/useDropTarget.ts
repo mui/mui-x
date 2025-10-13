@@ -40,7 +40,7 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
         end: newEnd,
         eventId: data.eventId,
         occurrenceKey: data.occurrenceKey,
-        originalEvent: data.event,
+        originalOccurrence: data.originalOccurrence,
       };
     };
 
@@ -130,7 +130,7 @@ async function applyInternalDragOrResizeOccurrencePlaceholder(
   // TODO: Try to do a single state update.
   store.setOccurrencePlaceholder(null);
 
-  const { eventId, start, end, originalEvent } = placeholder;
+  const { eventId, start, end, originalOccurrence } = placeholder;
 
   const original = selectors.event(store.state, eventId);
   if (!original) {
@@ -150,7 +150,7 @@ async function applyInternalDragOrResizeOccurrencePlaceholder(
     }
 
     store.updateRecurringEvent({
-      occurrenceStart: originalEvent.start,
+      occurrenceStart: originalOccurrence.start,
       changes,
       scope,
     });
