@@ -15,6 +15,8 @@ This tutorial walks you through building a Data Grid that fetches data from a se
 
 ## Part one: app setup
 
+In part one, you'll set up the basic scaffold for a full-stack React app using Vite on the front end and Express.js for the back end.
+
 ### 1. Create the project structure
 
 Create a new directory and set up the folder structure:
@@ -540,8 +542,8 @@ app.listen(PORT, () => {
 
 ### 5. Set up the client code
 
-Create a new directory called `components`.
-Inside, add a new file named `EmployeeDataGrid.tsx` with the following boilerplate.
+In the `client` directory, add a new directory called `components`.
+Inside `components`, add a new file named `EmployeeDataGrid.tsx` with the following boilerplate.
 (You'll build out this component in part two of this tutorial.)
 
 ```ts
@@ -629,7 +631,8 @@ All steps that follow take place in `EmployeeDataGrid.tsx`.
 
 ### 8. Define the data structure
 
-Define what your data looks like by creating interfaces that match your server response:
+Define what your data looks like by creating interfaces that match your server response.
+Add the following interfaces below the imports in `EmployeeDataGrid.tsx`:
 
 ```ts
 interface Employee {
@@ -661,15 +664,18 @@ interface ApiResponse {
 Define how each column should appear and behave:
 
 ```ts
-const columns: GridColDef[] = [
-  { field: 'id', headerName: 'ID', width: 80 },
-  { field: 'name', headerName: 'Name', width: 200 },
-  { field: 'email', headerName: 'Email', width: 250 },
-  { field: 'role', headerName: 'Role', width: 150 },
-  { field: 'department', headerName: 'Department', width: 150 },
-  { field: 'salary', headerName: 'Salary', width: 120 },
-  { field: 'startDate', headerName: 'Start Date', width: 130 },
-];
+const EmployeeDataGrid: React.FC = () => {
+  const columns: GridColDef[] = [
+    { field: 'id', headerName: 'ID', width: 80 },
+    { field: 'name', headerName: 'Name', width: 200 },
+    { field: 'email', headerName: 'Email', width: 250 },
+    { field: 'role', headerName: 'Role', width: 150 },
+    { field: 'department', headerName: 'Department', width: 150 },
+    { field: 'salary', headerName: 'Salary', width: 120 },
+    { field: 'startDate', headerName: 'Start Date', width: 130 },
+  ];
+
+  return ( //...
 ```
 
 **What's happening here:**
@@ -684,14 +690,18 @@ const columns: GridColDef[] = [
 The `GridDataSource` tells the grid how to fetch data:
 
 ```ts
-const dataSource: GridDataSource = useMemo(
-  () => ({
-    getRows: async (params: GridGetRowsParams): Promise<GridGetRowsResponse> => {
-      // You'll implement this function next
-    },
-  }),
-  [],
-);
+  const columns: GridColDef[] //...
+
+  const dataSource: GridDataSource = useMemo(
+    () => ({
+      getRows: async (params: GridGetRowsParams): Promise<GridGetRowsResponse> => {
+        // You'll implement this function next
+      },
+    }),
+    [],
+  );
+
+  return ( //...
 ```
 
 **What's happening here:**
@@ -705,12 +715,19 @@ const dataSource: GridDataSource = useMemo(
 Inside `getRows`, construct the API call with the grid's current state:
 
 ```ts
-const urlParams = new URLSearchParams({
-  page: params.paginationModel?.page?.toString() || '0',
-  pageSize: params.paginationModel?.pageSize?.toString() || '40',
-  sortModel: JSON.stringify(params.sortModel || []),
-  filterModel: JSON.stringify(params.filterModel || {}),
-});
+const dataSource: GridDataSource = useMemo(
+  () => ({
+    getRows: async (params: GridGetRowsParams): Promise<GridGetRowsResponse> => {
+      const urlParams = new URLSearchParams({
+        page: params.paginationModel?.page?.toString() || '0',
+        pageSize: params.paginationModel?.pageSize?.toString() || '40',
+        sortModel: JSON.stringify(params.sortModel || []),
+        filterModel: JSON.stringify(params.filterModel || {}),
+      });
+    },
+  }),
+  [],
+);
 ```
 
 **What's happening here:**
@@ -725,15 +742,27 @@ const urlParams = new URLSearchParams({
 Fetch the data from your server:
 
 ```ts
-const response = await fetch(
-  `http://localhost:3001/api/employees?${urlParams.toString()}`,
-);
+getRows: async (params: GridGetRowsParams): Promise<GridGetRowsResponse> => {
+  const urlParams = new URLSearchParams({
+    page: params.paginationModel?.page?.toString() || '0',
+    pageSize: params.paginationModel?.pageSize?.toString() || '40',
+    sortModel: JSON.stringify(params.sortModel || []),
+    filterModel: JSON.stringify(params.filterModel || {}),
+  });
 
-if (!response.ok) {
-  throw new Error(`HTTP error! status: ${response.status}`);
-}
+  const response = await fetch(`http://localhost:3001/api/employees?${urlParams.toString()}`);
 
-const result: ApiResponse = await response.json();
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  const result: ApiResponse = await response.json();
+
+  return {
+    rows: result.data,
+    rowCount: result.total,
+  };
+},
 ```
 
 ### 13. Return the data to the grid
