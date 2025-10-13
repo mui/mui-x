@@ -186,11 +186,7 @@ function getBandSize({
 function shouldInvertStartCoordinate(verticalLayout: boolean, baseValue: number, reverse: boolean) {
   const isVerticalAndPositive = verticalLayout && baseValue > 0;
   const isHorizontalAndNegative = !verticalLayout && baseValue < 0;
-  let invertStartCoordinate = isVerticalAndPositive || isHorizontalAndNegative;
+  const invertStartCoordinate = isVerticalAndPositive || isHorizontalAndNegative;
 
-  if (reverse) {
-    invertStartCoordinate = !invertStartCoordinate;
-  }
-
-  return invertStartCoordinate;
+  return reverse ? !invertStartCoordinate : invertStartCoordinate;
 }
