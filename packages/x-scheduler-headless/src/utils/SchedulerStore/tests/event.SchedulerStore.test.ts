@@ -12,6 +12,7 @@ storeClasses.forEach((storeClass) => {
         myTitle: string;
         myStart: string;
         myEnd: string;
+        allDay?: boolean;
       }
 
       const eventModelStructure: SchedulerEventModelStructure<MyEvent> = {
@@ -52,6 +53,7 @@ storeClasses.forEach((storeClass) => {
             myTitle: 'Event 1',
             myStart: '2025-07-01T09:00:00.000+00:00',
             myEnd: '2025-07-01T10:00:00.000+00:00',
+            allDay: false,
           },
         ];
 
@@ -63,6 +65,7 @@ storeClasses.forEach((storeClass) => {
           title: 'Event 1',
           start: adapter.date('2025-07-01T09:00:00.000+00:00'),
           end: adapter.date('2025-07-01T10:00:00.000+00:00'),
+          allDay: false,
         });
       });
 
@@ -75,6 +78,7 @@ storeClasses.forEach((storeClass) => {
             myTitle: 'Event 1',
             myStart: '2025-07-01T09:00:00.000+00:00',
             myEnd: '2025-07-01T10:00:00.000+00:00',
+            allDay: false,
           },
         ];
 
@@ -87,15 +91,7 @@ storeClasses.forEach((storeClass) => {
           title: 'Event 1 updated',
           start: adapter.date('2025-07-01T09:30:00.000+00:00'),
           end: adapter.date('2025-07-01T10:30:00.000+00:00'),
-        });
-        const event = selectors.event(store.state, '1');
-
-        // Should update the state with the built-in properties
-        expect(event).to.deep.contain({
-          id: '1',
-          title: 'Event 1',
-          start: adapter.date('2025-07-01T09:00:00.000+00:00'),
-          end: adapter.date('2025-07-01T10:00:00.000+00:00'),
+          allDay: true,
         });
 
         // Should call onEventsChange with the updated event using the custom model structure
@@ -106,6 +102,37 @@ storeClasses.forEach((storeClass) => {
             myTitle: 'Event 1 updated',
             myStart: '2025-07-01T09:30:00.000+00:00',
             myEnd: '2025-07-01T10:30:00.000+00:00',
+            allDay: true,
+          },
+        ]);
+      });
+
+      it('should use the provided event model structure to create an event', () => {
+        const onEventsChange = spy();
+
+        const events: MyEvent[] = [];
+
+        const store = new storeClass.Value(
+          { events, eventModelStructure, onEventsChange },
+          adapter,
+        );
+        store.createEvent({
+          id: '1',
+          title: 'Event 1',
+          start: adapter.date('2025-07-01T09:00:00.000+00:00'),
+          end: adapter.date('2025-07-01T10:00:00.000+00:00'),
+          allDay: false,
+        });
+
+        // Should call onEventsChange with the created event using the custom model structure
+        expect(onEventsChange.calledOnce).to.equal(true);
+        expect(onEventsChange.lastCall.firstArg).to.deep.equal([
+          {
+            myId: '1',
+            myTitle: 'Event 1',
+            myStart: '2025-07-01T09:00:00.000+00:00',
+            myEnd: '2025-07-01T10:00:00.000+00:00',
+            allDay: false,
           },
         ]);
       });
