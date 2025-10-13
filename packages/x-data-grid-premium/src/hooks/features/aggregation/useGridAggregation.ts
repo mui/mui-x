@@ -16,6 +16,7 @@ import {
   useGridRegisterPipeProcessor,
   GridStateInitializer,
   GridPipeProcessor,
+  gridPivotActiveSelector,
 } from '@mui/x-data-grid-pro/internals';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
@@ -110,19 +111,19 @@ export const useGridAggregation = (
     const visibleColumns = gridVisibleColumnFieldsSelector(apiRef);
 
     const chunks: string[][] = [];
-    const sortFields = gridSortModelSelector(apiRef).map((s) => s.field);
+    const sortedAggregatedFields = gridSortModelSelector(apiRef)
+      .map((s) => s.field)
+      .filter((field) => aggregatedFields.includes(field));
     const visibleAggregatedFields = visibleColumns
       .slice(renderContext.firstColumnIndex, renderContext.lastColumnIndex + 1)
       .filter((field) => aggregatedFields.includes(field));
-    const visibleAggregatedFieldsWithSort = visibleAggregatedFields.concat(
-      sortFields.filter(
-        (field) => aggregationRules[field] && !visibleAggregatedFields.includes(field),
-      ),
-    );
-
+    const visibleAggregatedFieldsWithSort = [
+      ...visibleAggregatedFields,
+      ...sortedAggregatedFields.filter((field) => !visibleAggregatedFields.includes(field)),
+    ];
     const hasAggregatedSortedField =
-      gridRowMaximumTreeDepthSelector(apiRef) > 1 &&
-      sortFields.some((field) => aggregationRules[field]);
+      gridRowMaximumTreeDepthSelector(apiRef) > 1 && sortedAggregatedFields.length > 0;
+
     if (visibleAggregatedFields.length > 0) {
       chunks.push(visibleAggregatedFieldsWithSort);
     }
@@ -249,6 +250,7 @@ export const useGridAggregation = (
    * EVENTS
    */
   const checkAggregationRulesDiff = React.useCallback(() => {
+    const pivotingActive = gridPivotActiveSelector(apiRef);
     const { rulesOnLastRowHydration, rulesOnLastColumnHydration } =
       apiRef.current.caches.aggregation;
 
@@ -262,7 +264,10 @@ export const useGridAggregation = (
         );
 
     // Re-apply the row hydration to add / remove the aggregation footers
-    if (!props.dataSource && !areAggregationRulesEqual(rulesOnLastRowHydration, aggregationRules)) {
+    if (
+      (!props.dataSource || pivotingActive) &&
+      !areAggregationRulesEqual(rulesOnLastRowHydration, aggregationRules)
+    ) {
       apiRef.current.requestPipeProcessorsApplication('hydrateRows');
       deferredApplyAggregation();
     }
