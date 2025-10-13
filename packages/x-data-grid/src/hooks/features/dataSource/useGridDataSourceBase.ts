@@ -230,11 +230,11 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
           handleEditRowOption(params, finalRowUpdate);
           return finalRowUpdate;
         }
-        apiRef.current.updateNestedRows([finalRowUpdate], []);
         if (finalRowUpdate && !isDeepEqual(finalRowUpdate, params.previousRow)) {
           // Reset the outdated cache, only if the row is _actually_ updated
           apiRef.current.dataSource.cache.clear();
         }
+        apiRef.current.updateNestedRows([finalRowUpdate], []);
         return finalRowUpdate;
       } catch (errorThrown) {
         if (typeof onDataSourceErrorProp === 'function') {
