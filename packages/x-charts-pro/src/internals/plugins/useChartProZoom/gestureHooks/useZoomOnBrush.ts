@@ -157,14 +157,6 @@ export const useZoomOnBrush = (
             return zoom;
           }
 
-          // Only update if there's a meaningful change (brush is not too small)
-          const MIN_BRUSH_SIZE = 5; // pixels
-          const brushSize = option.axisDirection === 'x' ? maxX - minX : maxY - minY;
-
-          if (brushSize < MIN_BRUSH_SIZE) {
-            return zoom;
-          }
-
           return {
             axisId: zoom.axisId,
             start: clampedStart,
