@@ -42,26 +42,38 @@ export const EventPopover = React.forwardRef(function EventPopover(
 ) {
   const { className, style, container, anchor, occurrence, onClose, ...other } = props;
 
+  // Context hooks
   const adapter = useAdapter();
   const translations = useTranslations();
   const store = useEventCalendarStoreContext();
+
+  // Selector hooks
   const isEventReadOnly = useStore(store, selectors.isEventReadOnly, occurrence.id);
   const resources = useStore(store, selectors.resources);
   const color = useStore(store, selectors.eventColor, occurrence.id);
   const rawPlaceholder = useStore(store, selectors.occurrencePlaceholder);
   const recurrencePresets = useStore(store, selectors.recurrencePresets, occurrence.start);
+  const defaultRecurrenceKey = useStore(
+    store,
+    selectors.defaultRecurrencePresetKey,
+    occurrence.rrule,
+    occurrence.start,
+  );
 
-  const fmtDate = (d: SchedulerValidDate) => adapter.formatByString(d, 'yyyy-MM-dd');
-  const fmtTime = (d: SchedulerValidDate) => adapter.formatByString(d, 'HH:mm');
-
+  // State hooks
   const [errors, setErrors] = React.useState<Form.Props['errors']>({});
   const [isAllDay, setIsAllDay] = React.useState<boolean>(Boolean(occurrence.allDay));
-  const [when, setWhen] = React.useState(() => ({
-    startDate: fmtDate(occurrence.start),
-    endDate: fmtDate(occurrence.end),
-    startTime: fmtTime(occurrence.start),
-    endTime: fmtTime(occurrence.end),
-  }));
+  const [when, setWhen] = React.useState(() => {
+    const fmtDate = (d: SchedulerValidDate) => adapter.formatByString(d, 'yyyy-MM-dd');
+    const fmtTime = (d: SchedulerValidDate) => adapter.formatByString(d, 'HH:mm');
+
+    return {
+      startDate: fmtDate(occurrence.start),
+      endDate: fmtDate(occurrence.end),
+      startTime: fmtTime(occurrence.start),
+      endTime: fmtTime(occurrence.end),
+    };
+  });
 
   function computeRange(next: typeof when, nextIsAllDay = isAllDay) {
     if (nextIsAllDay) {
@@ -146,17 +158,12 @@ export const EventPopover = React.forwardRef(function EventPopover(
     return [
       { label: translations.labelNoResource, value: null, eventColor: DEFAULT_EVENT_COLOR },
       ...resources.map((resource) => ({
-        label: resource.name,
+        label: resource.title,
         value: resource.id,
         eventColor: resource.eventColor,
       })),
     ];
   }, [resources, translations.labelNoResource]);
-
-  const defaultRecurrenceKey = React.useMemo(
-    () => store.getRecurrencePresetKeyFromRule(occurrence.rrule, occurrence.start),
-    [store, occurrence.rrule, occurrence.start],
-  );
 
   function validateRange(
     start: SchedulerValidDate,

@@ -44,24 +44,32 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
   // to control whether the event should behave like a button
   const isInteractive = true;
 
+  // Context hooks
   const adapter = useAdapter();
-  const ref = React.useRef<HTMLDivElement>(null);
   const store = useEventCalendarStoreContext();
   const { id: rootId } = useCalendarGridRootContext();
-  const isDragging = useStore(store, selectors.isOccurrenceMatchingThePlaceholder, occurrenceKey);
-  const [isResizing, setIsResizing] = React.useState(false);
-  const { getButtonProps, buttonRef } = useButton({
-    disabled: !isInteractive,
-    native: nativeButton,
-  });
-  const id = useId(idProp);
-
   const {
     start: columnStart,
     end: columnEnd,
     index: columnIndex,
     getCursorPositionInElementMs,
   } = useCalendarGridTimeColumnContext();
+
+  // Ref hooks
+  const ref = React.useRef<HTMLDivElement>(null);
+
+  // Selector hooks
+  const isDragging = useStore(store, selectors.isOccurrenceMatchingThePlaceholder, occurrenceKey);
+
+  // State hooks
+  const [isResizing, setIsResizing] = React.useState(false);
+  const id = useId(idProp);
+
+  // Feature hooks
+  const { getButtonProps, buttonRef } = useButton({
+    disabled: !isInteractive,
+    native: nativeButton,
+  });
 
   const { position, duration } = useElementPositionInCollection({
     start,

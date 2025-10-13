@@ -70,8 +70,8 @@ describe('EventCalendar', () => {
           },
         ]}
         resources={[
-          { id: '1', name: 'Sport' },
-          { id: '2', name: 'Work' },
+          { id: '1', title: 'Sport' },
+          { id: '2', title: 'Work' },
         ]}
       />,
     );
