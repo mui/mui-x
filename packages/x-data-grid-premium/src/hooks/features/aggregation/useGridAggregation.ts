@@ -115,7 +115,9 @@ export const useGridAggregation = (
       .slice(renderContext.firstColumnIndex, renderContext.lastColumnIndex + 1)
       .filter((field) => aggregatedFields.includes(field));
     const visibleAggregatedFieldsWithSort = visibleAggregatedFields.concat(
-      sortFields.filter((field) => !visibleAggregatedFields.includes(field)),
+      sortFields.filter(
+        (field) => aggregationRules[field] && !visibleAggregatedFields.includes(field),
+      ),
     );
 
     const hasAggregatedSortedField =
@@ -296,6 +298,9 @@ export const useGridAggregation = (
       !!props.dataSource,
     );
     const aggregatedFields = Object.keys(aggregationRules);
+    if (!aggregatedFields.length) {
+      return;
+    }
     const needsSorting = shouldApplySorting(aggregationRules, aggregatedFields);
     if (!needsSorting) {
       return;
