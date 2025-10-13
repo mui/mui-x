@@ -6,7 +6,7 @@ import useId from '@mui/utils/useId';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
-import { rainbowSurgePalette } from '@mui/x-charts';
+import { rainbowSurgePalette } from '@mui/x-charts/colorPalettes';
 import { diamonds } from '../dataset/diamonds';
 
 const dollarFormatter = new Intl.NumberFormat('en-US', {
