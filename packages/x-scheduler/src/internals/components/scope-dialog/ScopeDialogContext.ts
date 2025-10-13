@@ -2,7 +2,10 @@
 import * as React from 'react';
 import { ScopeDialogContextValue } from './ScopeDialog.types';
 
-export const ScopeDialogContext = React.createContext<ScopeDialogContextValue | null>(null);
+export const ScopeDialogContext = React.createContext<ScopeDialogContextValue | null>({
+  promptScope: async () => null,
+  isOpen: false,
+});
 
 export function useScopeDialogContext(): ScopeDialogContextValue {
   const ctx = React.useContext(ScopeDialogContext);

@@ -19,7 +19,7 @@ import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
 import { EventPopoverTrigger } from '../event-popover';
 import { useEventPopoverContext } from '../event-popover/EventPopoverContext';
 import './DayTimeGrid.css';
-import { useScopeDialogContext } from '../scope-popover/ScopeDialogContext';
+import { useScopeDialogContext } from '../scope-dialog/ScopeDialogContext';
 
 export function TimeGridColumn(props: TimeGridColumnProps) {
   const { day, showCurrentTimeIndicator, index } = props;

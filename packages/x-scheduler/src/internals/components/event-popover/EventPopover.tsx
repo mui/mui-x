@@ -32,7 +32,7 @@ import { getColorClassName } from '../../utils/color-utils';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { EventPopoverContext, useEventPopoverContext } from './EventPopoverContext';
 import './EventPopover.css';
-import { useScopeDialogContext } from '../scope-popover/ScopeDialogContext';
+import { useScopeDialogContext } from '../scope-dialog/ScopeDialogContext';
 
 export const EventPopover = React.forwardRef(function EventPopover(
   props: EventPopoverProps,

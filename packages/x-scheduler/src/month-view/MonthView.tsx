@@ -17,7 +17,7 @@ import { EventPopoverProvider } from '../internals/components/event-popover';
 import { useTranslations } from '../internals/utils/TranslationsContext';
 import MonthViewWeekRow from './month-view-row/MonthViewWeekRow';
 import './MonthView.css';
-import { RecurringScopeDialogProvider } from '../internals/components/scope-popover/ScopeDialog';
+import { RecurringScopeDialogProvider } from '../internals/components/scope-dialog/ScopeDialog';
 
 const CELL_PADDING = 8;
 const DAY_NUMBER_HEADER_HEIGHT = 18;

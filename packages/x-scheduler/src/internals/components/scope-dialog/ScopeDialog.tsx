@@ -24,8 +24,8 @@ export const ScopeDialog = React.forwardRef<HTMLDivElement, ScopePopoverProps>(
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       const form = new FormData(event.currentTarget);
-      const recurrenceScopeValue = form.get('recurrenceScope');
-      onResolve(recurrenceScopeValue as RecurringUpdateEventScope);
+      const recurrenceScopeValue = form.get('recurrenceScope') as RecurringUpdateEventScope;
+      onResolve(recurrenceScopeValue);
     };
 
     return (

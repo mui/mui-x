@@ -13,7 +13,7 @@ import { AgendaViewProps } from './AgendaView.types';
 import { EventPopoverProvider, EventPopoverTrigger } from '../internals/components/event-popover';
 import { AgendaEvent } from '../internals/components/event/agenda-event/AgendaEvent';
 import './AgendaView.css';
-import { RecurringScopeDialogProvider } from '../internals/components/scope-popover/ScopeDialog';
+import { RecurringScopeDialogProvider } from '../internals/components/scope-dialog/ScopeDialog';
 
 // TODO: Create a prop to allow users to customize the number of days in agenda view
 export const AGENDA_VIEW_DAYS_AMOUNT = 12;

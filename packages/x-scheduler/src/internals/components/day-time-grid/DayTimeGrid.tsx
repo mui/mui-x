@@ -17,7 +17,7 @@ import { EventPopoverProvider } from '../event-popover';
 import { TimeGridColumn } from './TimeGridColumn';
 import { DayGridCell } from './DayGridCell';
 import './DayTimeGrid.css';
-import { RecurringScopeDialogProvider } from '../scope-popover/ScopeDialog';
+import { RecurringScopeDialogProvider } from '../scope-dialog/ScopeDialog';
 
 export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   props: DayTimeGridProps,
