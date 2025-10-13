@@ -195,6 +195,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
     formattedValue: forcedFormattedValue,
   });
   cellParams.api = apiRef.current;
+  cellParams.isEditable = useGridSelector(apiRef, () => apiRef.current.isCellEditable(cellParams));
 
   const isSelected = useGridSelector(apiRef, () =>
     apiRef.current.unstable_applyPipeProcessors('isCellSelected', false, {
@@ -202,8 +203,6 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
       field,
     }),
   );
-
-  cellParams.isEditable = useGridSelector(apiRef, () => apiRef.current.isCellEditable(cellParams));
 
   const store = apiRef.current.virtualizer.store;
   const hiddenCells = useStore(store, Rowspan.selectors.hiddenCells);
