@@ -2,9 +2,13 @@ import type { RefObject } from '@mui/x-internals/types';
 import {
   GridColDef,
   GridColumnGroupingModel,
+  GridRowId,
   GridRowModel,
+  GridRowTreeConfig,
   gridStringOrNumberComparator,
+  GRID_ROOT_GROUP_ID,
 } from '@mui/x-data-grid-pro';
+
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import type {
   GridPivotingDynamicPropsOverrides,
@@ -193,4 +197,22 @@ export const getPropsOverrides = (
     columnGroupingModel,
     aggregationModel,
   };
+};
+
+export const fetchParents = (
+  rowTree: GridRowTreeConfig,
+  rowId: GridRowId,
+  fetchHandler: (id?: GridRowId) => void,
+) => {
+  const parents: GridRowId[] = [];
+
+  // collect all parents ids
+  let currentId = rowId;
+  while (currentId !== undefined && currentId !== GRID_ROOT_GROUP_ID) {
+    const parentId = rowTree[currentId].parent!;
+    parents.push(parentId);
+    currentId = parentId;
+  }
+
+  return Promise.all(parents.reverse().map(fetchHandler));
 };
