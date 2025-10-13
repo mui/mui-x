@@ -8,9 +8,8 @@ import {
   CalendarOccurrencePlaceholder,
   CalendarResource,
   CalendarResourceId,
-  RRuleSpec,
   SchedulerValidDate,
-  RecurrencePresetKey,
+  CalendarEventUpdatedProperties,
 } from '../../models';
 import {
   SchedulerState,
@@ -18,12 +17,12 @@ import {
   UpdateRecurringEventParameters,
   SchedulerParametersToStateMapper,
   SchedulerModelUpdater,
+  UpdateEventsParameters,
 } from './SchedulerStore.types';
 import { Adapter } from '../../use-adapter/useAdapter.types';
 import {
   applyRecurringUpdateFollowing,
   applyRecurringUpdateAll,
-  getByDayMaps,
   applyRecurringUpdateOnlyThis,
 } from '../recurrence-utils';
 import { selectors } from './SchedulerStore.selectors';
@@ -55,7 +54,7 @@ export class SchedulerStore<
 
   private initialParameters: Parameters | null = null;
 
-  private instanceName: string;
+  public instanceName: string;
 
   private mapper: SchedulerParametersToStateMapper<State, Parameters>;
 
@@ -191,6 +190,41 @@ export class SchedulerStore<
   };
 
   /**
+   * Adds, updates and / or deletes events in the calendar.
+   */
+  protected updateEvents(parameters: UpdateEventsParameters) {
+    const { deleted: deletedParam, updated: updatedParam = [], created = [] } = parameters;
+
+    const updated = new Map(updatedParam.map((ev) => [ev.id, ev]));
+    const deleted = new Set(deletedParam);
+    const originalEvents = selectors.events(this.state);
+    const newEvents: CalendarEvent[] = [];
+
+    if (deleted.size > 0 || updated.size > 0) {
+      for (const event of originalEvents) {
+        if (deleted.has(event.id)) {
+          continue;
+        }
+        const newEvent = updated.has(event.id) ? { ...event, ...updated.get(event.id) } : event;
+        newEvents.push(newEvent);
+      }
+    } else {
+      newEvents.push(...originalEvents);
+    }
+
+    for (const createdEvent of created) {
+      if (selectors.event(this.state, createdEvent.id)) {
+        throw new Error(
+          `${this.instanceName}: an event with id="${createdEvent.id}" already exists. Use updateEvent(...) instead.`,
+        );
+      }
+      newEvents.push(createdEvent);
+    }
+
+    this.parameters.onEventsChange?.(newEvents);
+  }
+
+  /**
    * Goes to today's date without changing the view.
    */
   public goToToday = (event: React.UIEvent) => {
@@ -202,108 +236,79 @@ export class SchedulerStore<
    * Creates a new event in the calendar.
    */
   public createEvent = (calendarEvent: CalendarEvent): CalendarEvent => {
-    const existing = selectors.event(this.state, calendarEvent.id);
-    if (existing) {
-      throw new Error(
-        `Event Calendar: an event with id="${calendarEvent.id}" already exists. Use updateEvent(...) instead.`,
-      );
-    }
-
-    const { onEventsChange } = this.parameters;
-    const updatedEvents = [...this.state.events, calendarEvent];
-    onEventsChange?.(updatedEvents);
-
+    this.updateEvents({ created: [calendarEvent] });
     return calendarEvent;
   };
 
   /**
    * Updates an event in the calendar.
    */
-  public updateEvent = (calendarEvent: Partial<CalendarEvent> & Pick<CalendarEvent, 'id'>) => {
+  public updateEvent = (calendarEvent: CalendarEventUpdatedProperties) => {
     const original = selectors.event(this.state, calendarEvent.id);
     if (!original) {
-      throw new Error(`Scheduler: the original event was not found (id="${calendarEvent.id}").`);
+      throw new Error(
+        `${this.instanceName}: the original event was not found (id="${calendarEvent.id}").`,
+      );
     }
     if (original?.rrule) {
-      throw new Error('Scheduler: this event is recurring. Use updateRecurringEvent(...) instead.');
+      throw new Error(
+        `${this.instanceName}: this event is recurring. Use updateRecurringEvent(...) instead.`,
+      );
     }
 
-    const { onEventsChange } = this.parameters;
-    const updatedEvents = this.state.events.map((ev) =>
-      ev.id === calendarEvent.id ? { ...ev, ...calendarEvent } : ev,
-    );
-    onEventsChange?.(updatedEvents);
+    this.updateEvents({ updated: [calendarEvent] });
   };
 
   /**
    * Updates a recurring event in the calendar.
    */
   public updateRecurringEvent = (params: UpdateRecurringEventParameters) => {
-    const { adapter, events } = this.state;
-    const { onEventsChange } = this.parameters;
+    const { adapter } = this.state;
     const { occurrenceStart, changes, scope } = params;
 
     const original = selectors.event(this.state, changes.id);
     if (!original) {
-      throw new Error(`Scheduler: the original event was not found (id="${changes.id}").`);
+      throw new Error(
+        `${this.instanceName}: the original event was not found (id="${changes.id}").`,
+      );
     }
     if (!original.rrule) {
       throw new Error(
-        'Scheduler: the original event is not recurring. Use updateEvent(...) instead.',
+        `${this.instanceName}: the original event is not recurring. Use updateEvent(...) instead.`,
       );
     }
 
-    let updatedEvents: CalendarEvent[] = [];
+    let updatedEvents: UpdateEventsParameters;
 
     switch (scope) {
       case 'this-and-following': {
-        updatedEvents = applyRecurringUpdateFollowing(
-          adapter,
-          events,
-          original,
-          occurrenceStart,
-          changes,
-        );
+        updatedEvents = applyRecurringUpdateFollowing(adapter, original, occurrenceStart, changes);
         break;
       }
 
       case 'all': {
-        updatedEvents = applyRecurringUpdateAll(
-          adapter,
-          events,
-          original,
-          occurrenceStart,
-          changes,
-        );
+        updatedEvents = applyRecurringUpdateAll(adapter, original, occurrenceStart, changes);
         break;
       }
 
       case 'only-this': {
-        updatedEvents = applyRecurringUpdateOnlyThis(
-          adapter,
-          events,
-          original,
-          occurrenceStart,
-          changes,
-        );
+        updatedEvents = applyRecurringUpdateOnlyThis(adapter, original, occurrenceStart, changes);
         break;
       }
 
       default: {
-        throw new Error(`Scheduler: scope="${scope}" is not supported.`);
+        throw new Error(`${this.instanceName}: scope="${scope}" is not supported.`);
       }
     }
 
-    onEventsChange?.(updatedEvents);
+    this.updateEvents(updatedEvents);
   };
 
   /**
    * Deletes an event from the calendar.
    */
   public deleteEvent = (eventId: CalendarEventId) => {
-    const { onEventsChange } = this.parameters;
-    const updatedEvents = this.state.events.filter((ev) => ev.id !== eventId);
-    onEventsChange?.(updatedEvents);
+    this.updateEvents({ deleted: [eventId] });
   };
 
   /**
@@ -322,105 +327,6 @@ export class SchedulerStore<
     const { adapter, occurrencePlaceholder: previous } = this.state;
     if (shouldUpdateOccurrencePlaceholder(adapter, previous, newPlaceholder)) {
       this.set('occurrencePlaceholder', newPlaceholder);
-    }
-  };
-
-  /**
-   * Builds the presets the user can choose from when creating or editing a recurring event.
-   */
-  public buildRecurrencePresets = (
-    date: SchedulerValidDate,
-  ): Record<RecurrencePresetKey, RRuleSpec> => {
-    const { adapter } = this.state;
-    const { numToByDay: numToCode } = getByDayMaps(adapter);
-    const dateDowCode = numToCode[adapter.getDayOfWeek(date)];
-    const dateDayOfMonth = adapter.getDate(date);
-
-    return {
-      daily: {
-        freq: 'DAILY',
-        interval: 1,
-      },
-      weekly: {
-        freq: 'WEEKLY',
-        interval: 1,
-        byDay: [dateDowCode],
-      },
-      monthly: {
-        freq: 'MONTHLY',
-        interval: 1,
-        byMonthDay: [dateDayOfMonth],
-      },
-      yearly: {
-        freq: 'YEARLY',
-        interval: 1,
-      },
-    };
-  };
-
-  /**
-   * Determines which preset (if any) the given rule corresponds to.
-   * If the rule does not correspond to any preset, 'custom' is returned.
-   * If no rule is provided, null is returned.
-   */
-  public getRecurrencePresetKeyFromRule = (
-    rule: CalendarEvent['rrule'] | undefined,
-    start: SchedulerValidDate,
-  ): RecurrencePresetKey | 'custom' | null => {
-    if (!rule) {
-      return null;
-    }
-
-    const { adapter } = this.state;
-    const interval = rule.interval ?? 1;
-    const neverEnds = !rule.count && !rule.until;
-    const hasSelectors = !!(rule.byDay?.length || rule.byMonthDay?.length || rule.byMonth?.length);
-    const { numToByDay: numToCode } = getByDayMaps(adapter);
-
-    switch (rule.freq) {
-      case 'DAILY': {
-        // Preset "Daily" => FREQ=DAILY;INTERVAL=1; no COUNT/UNTIL;
-        return interval === 1 && neverEnds && !hasSelectors ? 'daily' : 'custom';
-      }
-
-      case 'WEEKLY': {
-        // Preset "Weekly" => FREQ=WEEKLY;INTERVAL=1;BYDAY=<weekday-of-start>; no COUNT/UNTIL;
-        const startDowCode = numToCode[adapter.getDayOfWeek(start)];
-
-        const byDay = rule.byDay ?? [];
-        const matchesDefaultByDay =
-          byDay.length === 0 || (byDay.length === 1 && byDay[0] === startDowCode);
-        const isPresetWeekly =
-          interval === 1 &&
-          neverEnds &&
-          matchesDefaultByDay &&
-          !(rule.byMonthDay?.length || rule.byMonth?.length);
-
-        return isPresetWeekly ? 'weekly' : 'custom';
-      }
-
-      case 'MONTHLY': {
-        // Preset "Monthly" => FREQ=MONTHLY;INTERVAL=1;BYMONTHDAY=<start-day>; no COUNT/UNTIL;
-        const day = adapter.getDate(start);
-        const byMonthDay = rule.byMonthDay ?? [];
-        const matchesDefaultByMonthDay =
-          byMonthDay.length === 0 || (byMonthDay.length === 1 && byMonthDay[0] === day);
-        const isPresetMonthly =
-          interval === 1 &&
-          neverEnds &&
-          matchesDefaultByMonthDay &&
-          !(rule.byDay?.length || rule.byMonth?.length);
-
-        return isPresetMonthly ? 'monthly' : 'custom';
-      }
-
-      case 'YEARLY': {
-        // Preset "Yearly" => FREQ=YEARLY;INTERVAL=1; no COUNT/UNTIL;
-        return interval === 1 && neverEnds && !hasSelectors ? 'yearly' : 'custom';
-      }
-
-      default:
-        return 'custom';
     }
   };
 }

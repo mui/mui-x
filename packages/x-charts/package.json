@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-charts",
-  "version": "8.13.1",
+  "version": "8.14.0",
   "author": "MUI Team",
   "description": "The community edition of MUI X Charts components.",
   "license": "MIT",
@@ -40,6 +40,7 @@
     "@mui/x-internals": "workspace:*",
     "bezier-easing": "^2.1.0",
     "clsx": "catalog:",
+    "flatqueue": "^3.0.0",
     "prop-types": "catalog:",
     "reselect": "catalog:",
     "use-sync-external-store": "catalog:"

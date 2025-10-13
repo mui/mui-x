@@ -52,8 +52,8 @@ export const EventItem = React.forwardRef(function EventItem(
               className="ResourceLegendColor"
               role="img"
               aria-label={
-                resource?.name
-                  ? translations.resourceAriaLabel(resource.name)
+                resource?.title
+                  ? translations.resourceAriaLabel(resource.title)
                   : translations.noResourceAriaLabel
               }
             />
@@ -107,8 +107,8 @@ export const EventItem = React.forwardRef(function EventItem(
               className="ResourceLegendColor"
               role="img"
               aria-label={
-                resource?.name
-                  ? translations.resourceAriaLabel(resource.name)
+                resource?.title
+                  ? translations.resourceAriaLabel(resource.title)
                   : translations.noResourceAriaLabel
               }
             />
@@ -151,7 +151,7 @@ export const EventItem = React.forwardRef(function EventItem(
     occurrence.start,
     occurrence.end,
     isRecurring,
-    resource?.name,
+    resource?.title,
     translations,
     ampm,
   ]);
