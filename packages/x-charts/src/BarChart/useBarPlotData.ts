@@ -67,8 +67,9 @@ export function useBarPlotData(
 
       for (let dataIndex = 0; dataIndex < baseScaleConfig.data!.length; dataIndex += 1) {
         const baseValue = baseScaleConfig.data![dataIndex];
+        const seriesValue = currentSeriesData[dataIndex];
 
-        if (currentSeriesData[dataIndex] == null) {
+        if (seriesValue == null) {
           continue;
         }
 
@@ -80,8 +81,8 @@ export function useBarPlotData(
 
         const stackId = series[seriesId].stack;
 
-        const barSize = baseValue === 0 ? 0 : Math.max(minBarSize, maxValueCoord - minValueCoord);
-        const startCoordinate = shouldInvertStartCoordinate(verticalLayout, baseValue, reverse)
+        const barSize = seriesValue === 0 ? 0 : Math.max(minBarSize, maxValueCoord - minValueCoord);
+        const startCoordinate = shouldInvertStartCoordinate(verticalLayout, seriesValue, reverse)
           ? maxValueCoord - barSize
           : minValueCoord;
 
