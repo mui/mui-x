@@ -13,7 +13,7 @@ import {
   GRID_ROOT_GROUP_ID,
 } from '@mui/x-data-grid-premium';
 import { spy } from 'sinon';
-import { getColumnHeaderCell, getCell } from 'test/utils/helperFn';
+import { getColumnHeaderCell } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
 
 describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => {
