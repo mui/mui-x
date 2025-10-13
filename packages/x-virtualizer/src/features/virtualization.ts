@@ -635,12 +635,17 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
   );
 
   const isFirstSizing = React.useRef(true);
+
+  const cleanup = React.useRef<() => void | undefined>(undefined);
+  React.useEffect(() => {
+    //return cleanup.current;
+  }, [cleanup.current]);
+
   const containerRef = useEventCallback((node: HTMLDivElement | null) => {
     if (node && refs.container.current !== node) {
       refs.container.current = node;
-      return observeRootNode(node, store, (rootSize: Size) => {
+      cleanup.current = observeRootNode(node, store, (rootSize: Size) => {
         store.state.rootSize = rootSize;
-        store.update({ rootSize });
         if (isFirstSizing.current || !api.debouncedUpdateDimensions) {
           // We want to initialize the grid dimensions as soon as possible to avoid flickering
           api.updateDimensions(isFirstSizing.current);
@@ -650,7 +655,6 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
         }
       });
     }
-    return undefined;
   });
 
   const getters = {
