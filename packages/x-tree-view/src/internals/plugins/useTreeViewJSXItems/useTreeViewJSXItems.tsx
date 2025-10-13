@@ -77,15 +77,15 @@ export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> =
     });
   };
 
-  const mapFirstCharFromJSX = useEventCallback((itemId: string, firstChar: string) => {
-    instance.updateFirstCharMap((firstCharMap) => {
-      firstCharMap[itemId] = firstChar;
-      return firstCharMap;
+  const mapLabelFromJSX = useEventCallback((itemId: string, firstChar: string) => {
+    instance.updateLabelMap((labelMap) => {
+      labelMap[itemId] = firstChar;
+      return labelMap;
     });
 
     return () => {
-      instance.updateFirstCharMap((firstCharMap) => {
-        const newMap = { ...firstCharMap };
+      instance.updateLabelMap((labelMap) => {
+        const newMap = { ...labelMap };
         delete newMap[itemId];
         return newMap;
       });
@@ -96,7 +96,7 @@ export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> =
     instance: {
       insertJSXItem,
       setJSXItemsOrderedChildrenIds,
-      mapFirstCharFromJSX,
+      mapLabelFromJSX,
     },
   };
 };
@@ -145,9 +145,9 @@ const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin = ({ props, rootRef, con
 
   React.useEffect(() => {
     if (label) {
-      return instance.mapFirstCharFromJSX(
+      return instance.mapLabelFromJSX(
         itemId,
-        (pluginContentRef.current?.textContent ?? '').substring(0, 1).toLowerCase(),
+        (pluginContentRef.current?.textContent ?? '').toLowerCase(),
       );
     }
     return undefined;

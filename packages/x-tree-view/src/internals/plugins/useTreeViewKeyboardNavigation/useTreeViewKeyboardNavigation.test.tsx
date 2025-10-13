@@ -1364,9 +1364,44 @@ describeTreeView<
       expect(view.getFocusedItemId()).to.equal('1');
 
       fireEvent.keyDown(view.getItemRoot('1'), { key: 'a' });
+      fireEvent.keyDown(view.getItemRoot('2'), { key: 'p' });
+      fireEvent.keyDown(view.getItemRoot('2'), { key: 'r' });
+      expect(view.getFocusedItemId()).to.equal('2');
+    });
+
+    it('should work after adding / removing items', () => {
+      const view = render({
+        items: [
+          { id: '1', label: 'apple' },
+          { id: '2', label: 'apricot' },
+          { id: '3', label: 'banana' },
+        ],
+      });
+
+      act(() => {
+        view.getItemRoot('3').focus();
+      });
+
+      fireEvent.keyDown(view.getItemRoot('3'), { key: 'a' });
+      expect(view.getFocusedItemId()).to.equal('1');
       fireEvent.keyDown(view.getItemRoot('1'), { key: 'p' });
+      expect(view.getFocusedItemId()).to.equal('1');
+
       fireEvent.keyDown(view.getItemRoot('1'), { key: 'r' });
       expect(view.getFocusedItemId()).to.equal('2');
+      fireEvent.keyDown(view.getItemRoot('2'), { key: 'a' });
+      expect(view.getFocusedItemId()).to.equal('1');
+
+      view.setItems([
+        { id: '1', label: 'apple' },
+        { id: '3', label: 'banana' },
+      ]);
+      expect(view.getFocusedItemId()).to.equal('1');
+
+      fireEvent.keyDown(view.getItemRoot('1'), { key: 'b' });
+      expect(view.getFocusedItemId()).to.equal('3');
+      fireEvent.keyDown(view.getItemRoot('3'), { key: 'a' });
+      expect(view.getFocusedItemId()).to.equal('3');
     });
   });
 
@@ -1393,36 +1428,5 @@ describeTreeView<
       expect(handleTreeViewKeyDown.callCount).to.equal(3);
       expect(handleTreeItemKeyDown.callCount).to.equal(3);
     });
-  });
-
-  it('should work after adding / removing items', () => {
-    const view = render({
-      items: [
-        { id: '1', label: 'apple' },
-        { id: '2', label: 'apricot' },
-        { id: '3', label: 'banana' },
-      ],
-    });
-
-    act(() => {
-      view.getItemRoot('1').focus();
-    });
-
-    fireEvent.keyDown(view.getItemRoot('1'), { key: 'a' });
-    fireEvent.keyDown(view.getItemRoot('1'), { key: 'p' });
-    expect(view.getFocusedItemId()).to.equal('1');
-
-    fireEvent.keyDown(view.getItemRoot('1'), { key: 'r' });
-    expect(view.getFocusedItemId()).to.equal('2');
-
-    view.setItems([
-      { id: '1', label: 'apple' },
-      { id: '3', label: 'banana' },
-    ]);
-    expect(view.getFocusedItemId()).to.equal('1');
-
-    fireEvent.keyDown(view.getItemRoot('1'), { key: 'b' });
-    fireEvent.keyDown(view.getItemRoot('1'), { key: 'a' });
-    expect(view.getFocusedItemId()).to.equal('3');
   });
 });
