@@ -7,6 +7,7 @@ import {
   CalendarResourceId,
   CalendarEventUpdatedProperties,
   SchedulerValidDate,
+  RecurringUpdateEventScope,
 } from '../../models';
 import { Adapter } from '../../use-adapter/useAdapter.types';
 
@@ -115,16 +116,6 @@ export interface SchedulerParameters {
    */
   eventColor?: CalendarEventColor;
 }
-
-/**
- * The scope of a recurring event update.
- *
- * - `only-this`: Updates only the selected occurrence of the recurring event.
- * - `this-and-following`: Updates the selected occurrence and all following occurrences,
- *   but leaves the previous ones untouched.
- * - `all`: Updates all occurrences in the recurring series, past, present, and future.
- */
-export type RecurringUpdateEventScope = 'this-and-following' | 'all' | 'only-this';
 
 /**
  * Parameters for updating a recurring event.

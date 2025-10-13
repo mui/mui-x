@@ -1,5 +1,4 @@
-import { CalendarEventColor } from '../models';
-import { RecurringUpdateEventScope } from '../utils/SchedulerStore';
+import { CalendarEventColor, RecurringUpdateEventScope } from '../models';
 
 export const EVENT_CREATION_PRECISION_MINUTE = 30;
 

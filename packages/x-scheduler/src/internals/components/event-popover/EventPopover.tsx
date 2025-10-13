@@ -11,10 +11,7 @@ import { Input } from '@base-ui-components/react/input';
 import { useStore } from '@base-ui-components/utils/store';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { Select } from '@base-ui-components/react/select';
-import {
-  DEFAULT_EVENT_COLOR,
-  SCHEDULER_RECURRING_EDITING_SCOPE,
-} from '@mui/x-scheduler-headless/constants';
+import { DEFAULT_EVENT_COLOR } from '@mui/x-scheduler-headless/constants';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import {
   CalendarEventOccurrence,
@@ -35,6 +32,7 @@ import { getColorClassName } from '../../utils/color-utils';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { EventPopoverContext, useEventPopoverContext } from './EventPopoverContext';
 import './EventPopover.css';
+import { useScopeDialogContext } from '../scope-popover/ScopeDialogContext';
 
 export const EventPopover = React.forwardRef(function EventPopover(
   props: EventPopoverProps,
@@ -50,6 +48,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
   const color = useStore(store, selectors.eventColor, occurrence.id);
   const rawPlaceholder = useStore(store, selectors.occurrencePlaceholder);
   const recurrencePresets = useStore(store, selectors.recurrencePresets, occurrence.start);
+  const { promptScope } = useScopeDialogContext();
 
   const fmtDate = (d: SchedulerValidDate) => adapter.formatByString(d, 'yyyy-MM-dd');
   const fmtTime = (d: SchedulerValidDate) => adapter.formatByString(d, 'HH:mm');
@@ -219,11 +218,15 @@ export const EventPopover = React.forwardRef(function EventPopover(
         end,
         ...(recurrenceModified ? { rrule } : {}),
       };
+      const scope = await promptScope();
+      if (!scope) {
+        return;
+      }
+
       store.updateRecurringEvent({
         occurrenceStart: occurrence.start,
         changes,
-        // TODO: Issue #19766 - Let the user choose the scope via UI.
-        scope: SCHEDULER_RECURRING_EDITING_SCOPE,
+        scope,
       });
     } else {
       store.updateEvent({ id: occurrence.id, ...metaChanges, start, end, rrule });
@@ -527,6 +530,7 @@ export function EventPopoverProvider(props: EventPopoverProviderProps) {
   const [anchor, setAnchor] = React.useState<HTMLElement | null>(null);
   const [selectedOccurrence, setSelectedOccurrence] =
     React.useState<CalendarEventOccurrence | null>(null);
+  const { isOpen: isScopeDialogOpen } = useScopeDialogContext();
 
   const startEditing = useEventCallback(
     (anchorElement: HTMLElement, occurrence: CalendarEventOccurrence) => {
@@ -537,7 +541,7 @@ export function EventPopoverProvider(props: EventPopoverProviderProps) {
   );
 
   const handleClose = useEventCallback(() => {
-    if (!isPopoverOpen) {
+    if (!isPopoverOpen || isScopeDialogOpen) {
       return;
     }
     store.setOccurrencePlaceholder(null);

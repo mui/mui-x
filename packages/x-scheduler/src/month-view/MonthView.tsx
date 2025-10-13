@@ -17,6 +17,7 @@ import { EventPopoverProvider } from '../internals/components/event-popover';
 import { useTranslations } from '../internals/utils/TranslationsContext';
 import MonthViewWeekRow from './month-view-row/MonthViewWeekRow';
 import './MonthView.css';
+import { RecurringScopeDialogProvider } from '../internals/components/scope-popover/ScopeDialog';
 
 const CELL_PADDING = 8;
 const DAY_NUMBER_HEADER_HEIGHT = 18;
@@ -81,42 +82,44 @@ export const MonthView = React.memo(
         className={clsx('MonthViewContainer', 'mui-x-scheduler', className)}
         {...other}
       >
-        <EventPopoverProvider containerRef={containerRef}>
-          <CalendarGrid.Root className="MonthViewRoot">
-            <CalendarGrid.HeaderRow
-              className={clsx(
-                'MonthViewHeader',
-                'MonthViewRowGrid',
-                showWeekNumber ? 'WithWeekNumber' : undefined,
-              )}
-            >
-              {showWeekNumber && (
-                <div className="MonthViewWeekHeaderCell">{translations.weekAbbreviation}</div>
-              )}
-              {weeks[0].map((weekDay) => (
-                <CalendarGrid.HeaderCell
-                  key={weekDay.key}
-                  date={weekDay}
-                  skipDataCurrent
-                  className="MonthViewHeaderCell"
-                >
-                  {adapter.formatByString(weekDay.value, 'ccc')}
-                </CalendarGrid.HeaderCell>
-              ))}
-            </CalendarGrid.HeaderRow>
-            <div className="MonthViewBody">
-              {weeks.map((week, weekIdx) => (
-                <MonthViewWeekRow
-                  key={weekIdx}
-                  maxEvents={maxEvents}
-                  days={week}
-                  occurrencesMap={occurrencesMap}
-                  firstDayRef={weekIdx === 0 ? cellRef : undefined}
-                />
-              ))}
-            </div>
-          </CalendarGrid.Root>
-        </EventPopoverProvider>
+        <RecurringScopeDialogProvider containerRef={containerRef}>
+          <EventPopoverProvider containerRef={containerRef}>
+            <CalendarGrid.Root className="MonthViewRoot">
+              <CalendarGrid.HeaderRow
+                className={clsx(
+                  'MonthViewHeader',
+                  'MonthViewRowGrid',
+                  showWeekNumber ? 'WithWeekNumber' : undefined,
+                )}
+              >
+                {showWeekNumber && (
+                  <div className="MonthViewWeekHeaderCell">{translations.weekAbbreviation}</div>
+                )}
+                {weeks[0].map((weekDay) => (
+                  <CalendarGrid.HeaderCell
+                    key={weekDay.key}
+                    date={weekDay}
+                    skipDataCurrent
+                    className="MonthViewHeaderCell"
+                  >
+                    {adapter.formatByString(weekDay.value, 'ccc')}
+                  </CalendarGrid.HeaderCell>
+                ))}
+              </CalendarGrid.HeaderRow>
+              <div className="MonthViewBody">
+                {weeks.map((week, weekIdx) => (
+                  <MonthViewWeekRow
+                    key={weekIdx}
+                    maxEvents={maxEvents}
+                    days={week}
+                    occurrencesMap={occurrencesMap}
+                    firstDayRef={weekIdx === 0 ? cellRef : undefined}
+                  />
+                ))}
+              </div>
+            </CalendarGrid.Root>
+          </EventPopoverProvider>
+        </RecurringScopeDialogProvider>
       </div>
     );
   }),

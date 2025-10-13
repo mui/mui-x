@@ -8,10 +8,11 @@ import {
   EventSurfaceType,
   CalendarEventUpdatedProperties,
   SchedulerValidDate,
+  RecurringUpdateEventScope,
 } from '../models';
 import { EventDropData, EventDropDataLookup } from '../utils/drag-utils';
 import { SchedulerStoreInContext, useSchedulerStoreContext } from '../use-scheduler-store-context';
-import { RecurringUpdateEventScope, selectors } from './SchedulerStore';
+import { selectors } from './SchedulerStore';
 import { SCHEDULER_RECURRING_EDITING_SCOPE } from '../constants';
 
 export function useDropTarget<Targets extends keyof EventDropDataLookup>(
