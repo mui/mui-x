@@ -398,7 +398,8 @@ workflows:
       and:
         - equal: [additional, << pipeline.parameters.workflow >>]
         - or:
-            - equal: [true, << pipeline.parameters.with-material-ui-6 >>]
+            - not:
+                equal: ['stable', << pipeline.parameters.material-ui-version >>]
             - not:
                 equal: ['stable', << pipeline.parameters.with-react-version >>]
     jobs:
@@ -422,7 +423,8 @@ workflows:
     when:
       and:
         - equal: [additional, << pipeline.parameters.workflow >>]
-        - equal: [true, << pipeline.parameters.with-material-ui-6 >>]
+        - not:
+            equal: ['stable', << pipeline.parameters.material-ui-version >>]
     jobs:
       - test_types:
           <<: *default-context
