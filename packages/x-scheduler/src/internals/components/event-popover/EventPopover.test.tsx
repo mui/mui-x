@@ -34,12 +34,12 @@ const occurrence: CalendarEventOccurrence = {
 const resources: CalendarResource[] = [
   {
     id: 'r1',
-    name: 'Work',
+    title: 'Work',
     eventColor: 'blue',
   },
   {
     id: 'r2',
-    name: 'Personal',
+    title: 'Personal',
     eventColor: 'cyan',
   },
 ];

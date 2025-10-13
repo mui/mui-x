@@ -8,6 +8,8 @@ import {
   CalendarEventUpdatedProperties,
   SchedulerValidDate,
   CalendarEventId,
+  SchedulerResourceModelStructure,
+  SchedulerEventModelStructure,
 } from '../../models';
 import { Adapter } from '../../use-adapter/useAdapter.types';
 

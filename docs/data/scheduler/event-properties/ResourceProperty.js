@@ -99,16 +99,16 @@ const initialEvents = [
 ];
 
 const rooms = [
-  { id: 'Room A', name: 'Room A', eventColor: 'violet' },
-  { id: 'Room B', name: 'Room B', eventColor: 'jade' },
-  { id: 'Room C', name: 'Room C', eventColor: 'lime' },
+  { id: 'Room A', title: 'Room A', eventColor: 'violet' },
+  { id: 'Room B', title: 'Room B', eventColor: 'jade' },
+  { id: 'Room C', title: 'Room C', eventColor: 'lime' },
 ];
 
 const classes = [
-  { id: 'french', name: 'French', eventColor: 'orange' },
-  { id: 'science', name: 'Science', eventColor: 'cyan' },
-  { id: 'english', name: 'English', eventColor: 'pink' },
-  { id: 'history', name: 'History', eventColor: 'indigo' },
+  { id: 'french', title: 'French', eventColor: 'orange' },
+  { id: 'science', title: 'Science', eventColor: 'cyan' },
+  { id: 'english', title: 'English', eventColor: 'pink' },
+  { id: 'history', title: 'History', eventColor: 'indigo' },
 ];
 
 export default function ResourceProperty() {
