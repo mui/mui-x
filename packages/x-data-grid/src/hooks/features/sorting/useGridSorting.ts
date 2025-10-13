@@ -141,7 +141,7 @@ export const useGridSorting = (
    * API METHODS
    */
   const applySorting = React.useCallback<GridSortApi['applySorting']>(() => {
-    let didChange = false;
+    let didChange = props.sortingMode === 'server';
     apiRef.current.setState((state) => {
       if (props.sortingMode === 'server') {
         logger.debug('Skipping sorting rows as sortingMode = server');
