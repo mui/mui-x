@@ -262,6 +262,9 @@ importers:
       '@mui/internal-markdown':
         specifier: ^2.0.11
         version: 2.0.11
+      '@mui/internal-netlify-cache':
+        specifier: ^0.0.2-canary.0
+        version: 0.0.2-canary.0
       '@mui/internal-test-utils':
         specifier: 'catalog:'
         version: 2.0.14(@babel/core@7.28.4)(@playwright/test@1.55.1)(@types/react-dom@19.2.1(@types/react@19.2.2))(@types/react@19.2.2)(chai@5.2.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -4099,6 +4102,9 @@ packages:
 
   '@mui/internal-markdown@2.0.11':
     resolution: {integrity: sha512-AWjU0FJDbcKrP0xfNkswR3RJoPvW5O1eUywDppywXRktqmgNQObtCSvKJvS4FjbE/jSCWs+P/HjdJ/4i0qpNaA==}
+
+  '@mui/internal-netlify-cache@0.0.2-canary.0':
+    resolution: {integrity: sha512-3MtmhEBDf8O1ow95tC2ewbQgzctbWkCR3I4CA23CCfhUx3/9FqJNm+MI1NqReeQV5W7BDMsqKz1L2ps5sKt22A==}
 
   '@mui/internal-scripts@https://pkg.pr.new/mui/material-ui/@mui/internal-scripts@7b4e85d':
     resolution: {tarball: https://pkg.pr.new/mui/material-ui/@mui/internal-scripts@7b4e85d}
@@ -14968,6 +14974,8 @@ snapshots:
       lodash: 4.17.21
       marked: 16.3.0
       prismjs: 1.30.0
+
+  '@mui/internal-netlify-cache@0.0.2-canary.0': {}
 
   '@mui/internal-scripts@https://pkg.pr.new/mui/material-ui/@mui/internal-scripts@7b4e85d':
     dependencies:

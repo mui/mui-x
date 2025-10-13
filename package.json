@@ -74,6 +74,7 @@
     "@mui/internal-bundle-size-checker": "^1.0.9-canary.49",
     "@mui/internal-code-infra": "^0.0.3-canary.27",
     "@mui/internal-markdown": "^2.0.11",
+    "@mui/internal-netlify-cache": "^0.0.2-canary.0",
     "@mui/internal-test-utils": "catalog:",
     "@mui/material": "catalog:",
     "@mui/monorepo": "github:mui/material-ui#57ae83d02aecf2eeb8cff71cdf8c28ae7b6ea0e5",
