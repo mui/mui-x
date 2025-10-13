@@ -395,8 +395,8 @@ importers:
         specifier: ^1.0.15
         version: 1.0.15
       globby:
-        specifier: ^15.0.0
-        version: 15.0.0
+        specifier: ^14.1.0
+        version: 14.1.0
       jsdom:
         specifier: 26.1.0
         version: 26.1.0
