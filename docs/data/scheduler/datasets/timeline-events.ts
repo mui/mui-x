@@ -80,9 +80,9 @@ export const initialEvents: CalendarEvent[] = [
 ];
 
 export const resources: CalendarResource[] = [
-  { name: 'Project', id: 'project', eventColor: 'orange' },
-  { name: 'IT', id: 'it', eventColor: 'cyan' },
-  { name: 'Design', id: 'design', eventColor: 'pink' },
-  { name: 'Engineering', id: 'engineering', eventColor: 'indigo' },
-  { name: 'Marketing', id: 'marketing', eventColor: 'lime' },
+  { title: 'Project', id: 'project', eventColor: 'orange' },
+  { title: 'IT', id: 'it', eventColor: 'cyan' },
+  { title: 'Design', id: 'design', eventColor: 'pink' },
+  { title: 'Engineering', id: 'engineering', eventColor: 'indigo' },
+  { title: 'Marketing', id: 'marketing', eventColor: 'lime' },
 ];

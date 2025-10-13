@@ -6,8 +6,8 @@ import { CalendarEvent, CalendarResource, TimelineView } from '@mui/x-scheduler-
 import { adapter, createSchedulerRenderer } from 'test/utils/scheduler';
 
 const baseResources: CalendarResource[] = [
-  { id: 'resource-1', name: 'Engineering', eventColor: 'blue' },
-  { id: 'resource-2', name: 'Design', eventColor: 'jade' },
+  { id: 'resource-1', title: 'Engineering', eventColor: 'blue' },
+  { id: 'resource-2', title: 'Design', eventColor: 'jade' },
 ];
 
 const baseEvents: CalendarEvent[] = [
@@ -62,7 +62,7 @@ describe('<Timeline />', () => {
       renderTimeline();
 
       baseResources.forEach((resourceItem) => {
-        expect(screen.getByText(resourceItem.name)).not.to.equal(null);
+        expect(screen.getByText(resourceItem.title)).not.to.equal(null);
       });
       const resourceTitleCells = document.querySelectorAll('.TimelineTitleCell');
       expect(resourceTitleCells.length).to.equal(baseResources.length);
@@ -71,7 +71,7 @@ describe('<Timeline />', () => {
     it('does not render resources with no events', () => {
       const extendedResources: CalendarResource[] = [
         ...baseResources,
-        { id: 'resource-3', name: 'QA', eventColor: 'red' },
+        { id: 'resource-3', title: 'QA', eventColor: 'red' },
       ];
       renderTimeline({ resources: extendedResources });
 
