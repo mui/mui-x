@@ -93,10 +93,7 @@ export const PickersLayoutContentWrapper = styled('div', {
   flexDirection: 'column',
   variants: [
     {
-      props: (p) => {
-        console.log(p.shouldRenderTimeInASingleColumn, 'ppp', p);
-        return p.shouldRenderTimeInASingleColumn === true;
-      },
+      props: (p) => p.shouldRenderTimeInASingleColumn === true,
       style: {
         gridColumn: '1 / 4',
       },
@@ -122,8 +119,6 @@ const PickersLayout = React.forwardRef(function PickersLayout<TValue extends Pic
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickersLayout' });
-
-  console.log(props);
 
   const { toolbar, content, tabs, actionBar, shortcuts, ownerState } = usePickerLayout(props);
   const { orientation, variant } = usePickerContext();
