@@ -34,25 +34,13 @@ export const selectors = {
     },
   ),
   isEventResizable: createSelector(
-    schedulerSelectors.isEventReadOnly,
-    schedulerSelectors.event,
-    (state: State) => state.areEventsResizable,
-    (state: State) => state.view,
-    (state: State) => state.isMultiDayEvent,
-    (state: State) => state.eventModelStructure,
-    (
-      isEventReadOnly,
-      event,
-      areEventsResizable,
-      view,
-      isMultiDayEvent,
-      eventModelStructure,
-      _eventId: CalendarEventId,
-      surfaceType: EventSurfaceType,
-    ) => {
-      if (isEventReadOnly || !areEventsResizable) {
+    (state: State, eventId: CalendarEventId, surfaceType: EventSurfaceType) => {
+      if (schedulerSelectors.isEventReadOnly(state, eventId) || !state.areEventsDraggable) {
         return false;
       }
+
+      const event = schedulerSelectors.event(state, eventId);
+      const { view, eventModelStructure, isMultiDayEvent } = state;
 
       // There is only one day cell in the day view
       if (view === 'day' && surfaceType === 'day-grid') {

@@ -41,8 +41,14 @@ function Calendar() {
 
 {{"demo": "TitleProperty.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### String dates
+
+A common use case is to convert your dates from a string to a valid date object:
+
+{{"demo": "StartEndProperties.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ### Dynamic resource field
 
-This can be useful to switch the resource between several fields:
+This can also be useful to switch the resource between several fields:
 
 {{"demo": "ResourceProperty.js", "bg": "inline", "defaultCodeOpen": false}}
