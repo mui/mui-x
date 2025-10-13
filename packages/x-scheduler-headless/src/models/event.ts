@@ -242,7 +242,6 @@ export type EventSurfaceType = 'day-grid' | 'time-grid';
 export type SchedulerEventModelStructure<TEvent extends {}> = {
   [key in keyof CalendarEvent]?: {
     getter: (event: TEvent) => CalendarEvent[key];
-    // TODO: Improve typing to show that only properties with setter can be undefined.
     /**
      * Setter for the event property.
      * If not provided, the property won't be editable.

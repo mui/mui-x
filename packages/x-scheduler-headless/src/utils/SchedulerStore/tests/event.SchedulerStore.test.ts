@@ -1,6 +1,6 @@
 import { spy } from 'sinon';
 import { adapter } from 'test/utils/scheduler';
-import { SchedulerEventModelStructure } from '@mui/x-scheduler-headless/models';
+import { SchedulerEventModelStructure, SchedulerValidDate } from '@mui/x-scheduler-headless/models';
 import { buildEvent, storeClasses, getIds } from './utils';
 import { selectors } from '../SchedulerStore.selectors';
 
@@ -135,6 +135,95 @@ storeClasses.forEach((storeClass) => {
             allDay: false,
           },
         ]);
+      });
+
+      it('should only re-compute the processed events when updating events or eventModelStructure parameters', () => {
+        interface MyEvent2 {
+          myId: string;
+          title: string;
+          start: SchedulerValidDate;
+          end: SchedulerValidDate;
+        }
+
+        const idGetter = spy((event: MyEvent2) => event.myId);
+
+        const eventModelStructure2: SchedulerEventModelStructure<MyEvent2> = {
+          id: {
+            getter: idGetter,
+            setter: (event, value) => {
+              event.myId = value.toString();
+              return event;
+            },
+          },
+        };
+
+        const events: MyEvent2[] = [
+          {
+            myId: '1',
+            title: 'Event 1',
+            start: adapter.date('2025-07-01T09:00:00.000+00:00'),
+            end: adapter.date('2025-07-01T10:00:00.000+00:00'),
+          },
+        ];
+
+        const store = new storeClass.Value(
+          { events, eventModelStructure: eventModelStructure2, showCurrentTimeIndicator: false },
+          adapter,
+        );
+
+        // Called to convert Event 1 on mount.
+        expect(idGetter.callCount).to.equal(1);
+
+        store.updateStateFromParameters(
+          {
+            events,
+            eventModelStructure: eventModelStructure2,
+            showCurrentTimeIndicator: true,
+          },
+          adapter,
+        );
+
+        // Not called again when updating a non-related parameter.
+        expect(idGetter.callCount).to.equal(1);
+
+        const events2 = [
+          {
+            myId: '1',
+            title: 'Event 1',
+            start: adapter.date('2025-07-01T09:00:00.000+00:00'),
+            end: adapter.date('2025-07-01T10:00:00.000+00:00'),
+          },
+          {
+            myId: '2',
+            title: 'Event 2',
+            start: adapter.date('2025-07-01T10:00:00.000+00:00'),
+            end: adapter.date('2025-07-01T11:00:00.000+00:00'),
+          },
+        ];
+
+        store.updateStateFromParameters(
+          {
+            events: events2,
+            eventModelStructure: eventModelStructure2,
+            showCurrentTimeIndicator: true,
+          },
+          adapter,
+        );
+
+        // Called again to convert Event 1 and Event 2 because props.events changed.
+        expect(idGetter.callCount).to.equal(3);
+
+        store.updateStateFromParameters(
+          {
+            events: events2,
+            eventModelStructure: { ...eventModelStructure2 },
+            showCurrentTimeIndicator: true,
+          },
+          adapter,
+        );
+
+        // Called again to convert Event 1 and Event 2 because props.eventModelStructure2 changed.
+        expect(idGetter.callCount).to.equal(5);
       });
     });
 

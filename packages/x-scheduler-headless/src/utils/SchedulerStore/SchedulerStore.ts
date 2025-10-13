@@ -26,7 +26,8 @@ import {
 } from '../recurrence-utils';
 import { selectors } from './SchedulerStore.selectors';
 import {
-  buildEventAndResourceState,
+  buildEventsState,
+  buildResourcesState,
   createEventModel,
   getUpdatedEventModelFromChanges,
   shouldUpdateOccurrencePlaceholder,
@@ -72,6 +73,8 @@ export class SchedulerStore<
   ) {
     const schedulerInitialState: SchedulerState<TEvent> = {
       ...SchedulerStore.deriveStateFromParameters(parameters, adapter),
+      ...buildEventsState(parameters),
+      ...buildResourcesState(parameters),
       adapter,
       occurrencePlaceholder: null,
       nowUpdatedEveryMinute: adapter.date(),
@@ -116,7 +119,6 @@ export class SchedulerStore<
   ) {
     return {
       adapter,
-      ...buildEventAndResourceState(parameters),
       areEventsDraggable: parameters.areEventsDraggable ?? false,
       areEventsResizable: parameters.areEventsResizable ?? false,
       eventColor: parameters.eventColor ?? DEFAULT_EVENT_COLOR,
@@ -166,6 +168,20 @@ export class SchedulerStore<
       parameters,
       adapter,
     ) as Partial<State>;
+
+    if (
+      parameters.events !== this.parameters.events ||
+      parameters.eventModelStructure !== this.parameters.eventModelStructure
+    ) {
+      Object.assign(newSchedulerState, buildEventsState(parameters));
+    }
+
+    if (
+      parameters.resources !== this.parameters.resources ||
+      parameters.resourceModelStructure !== this.parameters.resourceModelStructure
+    ) {
+      Object.assign(newSchedulerState, buildResourcesState(parameters));
+    }
 
     updateModel(newSchedulerState, 'visibleDate', 'defaultVisibleDate');
 

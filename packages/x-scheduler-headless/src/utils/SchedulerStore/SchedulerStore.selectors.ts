@@ -40,7 +40,7 @@ export const selectors = {
     (eventIds, processedEventLookup) => eventIds.map((id) => processedEventLookup.get(id)!),
   ),
   eventIdList: createSelector((state: State) => state.eventIdList),
-  eventModelList: createSelector((state: State) => state.eventModelList),
+  eventModelList: createSelector((state: State) => state.eventsProp),
   eventModelLookup: createSelector((state: State) => state.eventModelLookup),
   processedResourceList: createSelectorMemoized(
     (state: State) => state.resourceIdList,

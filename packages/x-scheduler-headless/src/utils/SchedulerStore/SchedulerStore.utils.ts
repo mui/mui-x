@@ -65,6 +65,9 @@ const RESOURCE_PROPERTIES_LOOKUP: { [P in keyof CalendarResource]-?: true } = {
 
 const RESOURCE_PROPERTIES = Object.keys(RESOURCE_PROPERTIES_LOOKUP) as (keyof CalendarResource)[];
 
+/**
+ * Converts an event model to a processed event using the provided model structure.
+ */
 export function getProcessedEventFromModel<TEvent extends {}>(
   event: TEvent,
   eventModelStructure: SchedulerEventModelStructure<TEvent> | undefined,
@@ -81,6 +84,9 @@ export function getProcessedEventFromModel<TEvent extends {}>(
   return processedEvent;
 }
 
+/**
+ * Updates an event model based on the provided changes and model structure.
+ */
 export function getUpdatedEventModelFromChanges<TEvent extends {}>(
   event: TEvent,
   changes: Partial<CalendarEvent>,
@@ -110,6 +116,9 @@ export function getUpdatedEventModelFromChanges<TEvent extends {}>(
   return updatedEventModel;
 }
 
+/**
+ * Create an event model from a processed event using the provided model structure.
+ */
 export function createEventModel<TEvent extends {}>(
   event: CalendarEvent,
   eventModelStructure: SchedulerEventModelStructure<TEvent> | undefined,
@@ -138,6 +147,9 @@ export function createEventModel<TEvent extends {}>(
   return eventModel as TEvent;
 }
 
+/**
+ * Converts a resource model to a processed resource using the provided model structure.
+ */
 export function getProcessedResourceFromModel<TResource extends {}>(
   resource: TResource,
   resourceModelStructure: SchedulerResourceModelStructure<TResource> | undefined,
@@ -156,28 +168,18 @@ export function getProcessedResourceFromModel<TResource extends {}>(
 
 type AnyEventSetter<TEvent extends {}> = (event: TEvent | Partial<TEvent>, value: any) => TEvent;
 
-export function buildEventAndResourceState<TEvent extends {}, TResource extends {}>(
-  parameters: Pick<
-    SchedulerParameters<TEvent, TResource>,
-    'events' | 'eventModelStructure' | 'resources' | 'resourceModelStructure'
-  >,
+export function buildEventsState<TEvent extends {}, TResource extends {}>(
+  parameters: Pick<SchedulerParameters<TEvent, TResource>, 'events' | 'eventModelStructure'>,
 ): Pick<
-  SchedulerState<TEvent>,
-  | 'eventModelStructure'
+  SchedulerState<TEvent, TResource>,
+  | 'eventsProp'
   | 'eventIdList'
-  | 'eventModelList'
   | 'eventModelLookup'
   | 'processedEventLookup'
-  | 'resourceIdList'
-  | 'processedResourceLookup'
-  | 'resourceModelStructure'
+  | 'eventModelStructure'
+  | 'eventModelList'
 > {
-  const {
-    events,
-    resources = EMPTY_ARRAY,
-    eventModelStructure,
-    resourceModelStructure,
-  } = parameters;
+  const { events, eventModelStructure } = parameters;
 
   const eventIdList: CalendarEventId[] = [];
   const eventModelLookup = new Map<CalendarEventId, TEvent>();
@@ -189,6 +191,24 @@ export function buildEventAndResourceState<TEvent extends {}, TResource extends 
     processedEventLookup.set(processedEvent.id, processedEvent);
   }
 
+  return {
+    eventIdList,
+    eventModelLookup,
+    eventModelStructure,
+    processedEventLookup,
+    eventModelList: events,
+    eventsProp: events,
+  };
+}
+
+export function buildResourcesState<TEvent extends {}, TResource extends {}>(
+  parameters: Pick<SchedulerParameters<TEvent, TResource>, 'resources' | 'resourceModelStructure'>,
+): Pick<
+  SchedulerState<TEvent, TResource>,
+  'resourceProp' | 'resourceIdList' | 'processedResourceLookup' | 'resourceModelStructure'
+> {
+  const { resources = EMPTY_ARRAY, resourceModelStructure } = parameters;
+
   const resourceIdList: string[] = [];
   const processedResourceLookup = new Map<CalendarResourceId, CalendarResource>();
   for (const resource of resources) {
@@ -198,11 +218,7 @@ export function buildEventAndResourceState<TEvent extends {}, TResource extends 
   }
 
   return {
-    eventModelStructure,
-    eventModelList: events,
-    eventIdList,
-    eventModelLookup,
-    processedEventLookup,
+    resourceProp: resources,
     resourceIdList,
     processedResourceLookup,
     resourceModelStructure,
