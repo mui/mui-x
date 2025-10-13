@@ -59,7 +59,7 @@ const EVENT_PROPERTIES = Object.keys(EVENT_PROPERTIES_LOOKUP) as (keyof Calendar
 
 const RESOURCE_PROPERTIES_LOOKUP: { [P in keyof CalendarResource]-?: true } = {
   id: true,
-  name: true,
+  title: true,
   eventColor: true,
 };
 
