@@ -1,7 +1,6 @@
 import useLazyRef from '@mui/utils/useLazyRef';
 import useOnMount from '@mui/utils/useOnMount';
 import type { ReadonlyStore } from './Store';
-import { fastObjectShallowCompare } from '../fastObjectShallowCompare';
 
 const noop = () => {};
 

@@ -11,7 +11,6 @@ import {
   gridVisibleColumnFieldsSelector,
   gridSortModelSelector,
   gridRowMaximumTreeDepthSelector,
-  gridRowCountSelector,
 } from '@mui/x-data-grid-pro';
 import {
   useGridRegisterPipeProcessor,
