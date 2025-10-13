@@ -86,6 +86,19 @@ Server-side row grouping does not support the [`colDef.groupingValueGetter()`](/
 Use `dataSource.getGroupKey()` to compute the group key for the row instead.
 :::
 
+## Row expansion state persistence
+
+The Data Grid compares the IDs of the newly fetched rows with the existing tree level.
+Matching rows are not recreated and they maintain their expansion state and child rows.
+
+To drop all child rows and reset the expansion state, pass `collapseChildren` flag to the fetch options of the `dataSource.fetchRows()` API method.
+
+Expand some rows in the following demo and use two different refetch action buttons to see the difference in the behavior.
+
+The cache is disabled to make all server requests visible in the console.
+
+{{"demo": "ServerSideRowGroupingExpansionPersistence.js", "bg": "inline"}}
+
 ## Error handling
 
 If an error occurs during a `getRows()` call, the Data Grid displays an error indicator in the row group cell.

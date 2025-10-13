@@ -251,6 +251,16 @@ To disable the Data Source cache, pass `null` to the `dataSourceCache` prop.
 
 {{"demo": "ServerSideDataGridNoCache.js", "bg": "inline"}}
 
+:::success
+To bypasses the cache and force a refetch of the rows from the server for a single `dataSource.fetchRows()` API method call, pass `skipCache` flag to the fetch options.
+
+```tsx
+apiRef.current.dataSource.fetchRows(GRID_ROOT_GROUP_ID, { skipCache: true });
+```
+
+The response will be used to refresh the cache.
+:::
+
 ## Updating server-side data
 
 The Data Source supports an optional `updateRow()` method for updating data on the server.

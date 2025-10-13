@@ -74,6 +74,19 @@ In a real-world scenario you would replace this with your own server-side data-f
 Open the Info section of your browser console to see the requests being made and the data being fetched in response.
 :::
 
+## Row expansion state persistence
+
+The Data Grid compares the IDs of the newly fetched rows with the existing tree level.
+Matching rows are not recreated and they maintain their expansion state and child rows.
+
+To drop all child rows and reset the expansion state, pass `collapseChildren` flag to the fetch options of the `dataSource.fetchRows()` API method.
+
+Expand some rows in the following demo and use two different refetch action buttons to see the difference in the behavior.
+
+The cache is disabled to make all server requests visible in the console.
+
+{{"demo": "ServerSideTreeDataExpansionPersistence.js", "bg": "inline"}}
+
 ## Error handling
 
 For each row group expansion, the Data Source is called to fetch the children.
