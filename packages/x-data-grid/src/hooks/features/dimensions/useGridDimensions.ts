@@ -108,10 +108,6 @@ const columnsTotalWidthSelector = createSelector(
 );
 
 export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, props: RootProps) {
-  const virtualizer = apiRef.current.virtualizer;
-  const updateDimensions = virtualizer?.api.updateDimensions;
-  const getViewportPageSize = virtualizer?.api.getViewportPageSize;
-
   const getRootDimensions = React.useCallback(() => gridDimensionsSelector(apiRef), [apiRef]);
 
   const apiPublic: GridDimensionsApi = {
@@ -119,8 +115,12 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
   };
 
   const apiPrivate: GridDimensionsPrivateApi = {
-    updateDimensions,
-    getViewportPageSize,
+    updateDimensions: () => {
+      return apiRef.current.virtualizer.api.updateDimensions();
+    },
+    getViewportPageSize: () => {
+      return apiRef.current.virtualizer.api.getViewportPageSize();
+    },
   };
 
   useGridApiMethod(apiRef, apiPublic, 'public');
