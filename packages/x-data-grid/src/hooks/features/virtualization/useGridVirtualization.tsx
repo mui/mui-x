@@ -42,7 +42,6 @@ export function useGridVirtualization(
   apiRef: RefObject<GridPrivateApiCommunity>,
   rootProps: RootProps,
 ): void {
-  const { virtualizer } = apiRef.current;
   const { autoHeight, disableVirtualization } = rootProps;
 
   /*
@@ -50,6 +49,7 @@ export function useGridVirtualization(
    */
 
   const setVirtualization = (enabled: boolean) => {
+    const { virtualizer } = apiRef.current;
     enabled &&= HAS_LAYOUT;
     virtualizer.store.set('virtualization', {
       ...virtualizer.store.state.virtualization,
@@ -60,6 +60,7 @@ export function useGridVirtualization(
   };
 
   const setColumnVirtualization = (enabled: boolean) => {
+    const { virtualizer } = apiRef.current;
     enabled &&= HAS_LAYOUT;
     virtualizer.store.set('virtualization', {
       ...virtualizer.store.state.virtualization,
@@ -74,7 +75,10 @@ export function useGridVirtualization(
 
   useGridApiMethod(apiRef, api, 'public');
 
-  const forceUpdateRenderContext = virtualizer.api.forceUpdateRenderContext;
+  const forceUpdateRenderContext = () => {
+    const { virtualizer } = apiRef.current;
+    virtualizer?.api.scheduleUpdateRenderContext();
+  };
 
   apiRef.current.register('private', {
     updateRenderContext: forceUpdateRenderContext,
@@ -90,7 +94,10 @@ export function useGridVirtualization(
 
   /* eslint-disable react-hooks/exhaustive-deps */
   React.useEffect(() => {
+    if (!apiRef.current.virtualizer) {
+      return;
+    }
     setVirtualization(!rootProps.disableVirtualization);
-  }, [disableVirtualization, autoHeight]);
+  }, [apiRef, disableVirtualization, autoHeight]);
   /* eslint-enable react-hooks/exhaustive-deps */
 }

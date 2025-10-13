@@ -10,9 +10,9 @@ import * as platform from '@mui/x-internals/platform';
 import { useRunOnce } from '@mui/x-internals/useRunOnce';
 import { useFirstRender } from '@mui/x-internals/useFirstRender';
 import { createSelector, useStore, useStoreEffect, Store } from '@mui/x-internals/store';
-import { PinnedRows, PinnedColumns } from '../models/core';
+import { PinnedRows, PinnedColumns, Size } from '../models/core';
 import type { CellColSpanInfo } from '../models/colspan';
-import { Dimensions } from './dimensions';
+import { Dimensions, observeRootNode } from './dimensions';
 import type { BaseState, VirtualizerParams } from '../useVirtualizer';
 import {
   PinnedRowPosition,
@@ -139,7 +139,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
 
   const hasBottomPinnedRows = pinnedRows.bottom.length > 0;
   const [panels, setPanels] = React.useState(EMPTY_DETAIL_PANELS);
-  const [, setRefTick] = React.useState(0);
+  const isUpdateScheduled = React.useRef(false);
 
   const isRenderContextReady = React.useRef(false);
 
@@ -305,6 +305,17 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     frozenContext.current = undefined;
     updateRenderContext(nextRenderContext);
   });
+
+  useEnhancedEffect(() => {
+    if (isUpdateScheduled.current) {
+      forceUpdateRenderContext();
+      isUpdateScheduled.current = false;
+    }
+  });
+
+  const scheduleUpdateRenderContext = () => {
+    isUpdateScheduled.current = true;
+  };
 
   const handleScroll = useEventCallback(() => {
     if (ignoreNextScrollEvent.current) {
@@ -606,19 +617,35 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
 
   useStoreEffect(store, Dimensions.selectors.dimensions, forceUpdateRenderContext);
 
-  const refSetter = (name: keyof typeof refs) => (node: HTMLDivElement | null) => {
-    if (node && refs[name].current !== node) {
-      refs[name].current = node;
-      setRefTick((tick) => tick + 1);
-    }
-  };
+  const refSetter = React.useCallback(
+    (name: keyof typeof refs, cb?: (node: HTMLDivElement | null) => void) =>
+      (node: HTMLDivElement | null) => {
+        if (node && refs[name].current !== node) {
+          refs[name].current = node;
+          return cb?.(node);
+        }
+      },
+    [refs],
+  );
 
+  const isFirstSizing = React.useRef(true);
   const getters = {
     setPanels,
     getOffsetTop,
     getRows,
     getContainerProps: () => ({
-      ref: refSetter('container'),
+      ref: refSetter('container', (node) => {
+        return observeRootNode(node, store, (rootSize: Size) => {
+          store.state.rootSize = rootSize;
+          if (isFirstSizing.current || !api.debouncedUpdateDimensions) {
+            // We want to initialize the grid dimensions as soon as possible to avoid flickering
+            api.updateDimensions(isFirstSizing.current);
+            isFirstSizing.current = false;
+          } else {
+            api.debouncedUpdateDimensions();
+          }
+        });
+      }),
     }),
     getScrollerProps: () => ({
       ref: refSetter('scroller'),
@@ -649,17 +676,6 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     }),
   };
 
-  useFirstRender(() => {
-    store.state = {
-      ...store.state,
-      getters,
-    };
-  });
-  React.useEffect(() => {
-    store.update({ getters });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, Object.values(getters));
-
   /* Placeholder API functions for colspan & rowspan to re-implement */
 
   const getCellColSpanInfo: AbstractAPI['getCellColSpanInfo'] = () => {
@@ -679,6 +695,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     useVirtualization: () => useStore(store, (state) => state),
     setPanels,
     forceUpdateRenderContext,
+    scheduleUpdateRenderContext,
     getCellColSpanInfo,
     calculateColSpan,
     getHiddenCellsOrigin,

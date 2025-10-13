@@ -12,12 +12,15 @@ import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
  * @requires useGridParamsApi (method)
  */
 export const useGridColumnSpanning = (apiRef: RefObject<GridPrivateApiCommunity>) => {
-  const virtualizer = apiRef.current.virtualizer;
-
-  const resetColSpan: GridColumnSpanningPrivateApi['resetColSpan'] = virtualizer.api.resetColSpan;
-  const getCellColSpanInfo: GridColumnSpanningApi['unstable_getCellColSpanInfo'] =
-    virtualizer.api.getCellColSpanInfo;
-  const calculateColSpan = virtualizer.api.calculateColSpan;
+  const resetColSpan: GridColumnSpanningPrivateApi['resetColSpan'] = () => {
+    return apiRef.current.virtualizer.api.resetColSpan();
+  };
+  const getCellColSpanInfo: GridColumnSpanningApi['unstable_getCellColSpanInfo'] = (...params) => {
+    return apiRef.current.virtualizer.api.getCellColSpanInfo(...params);
+  };
+  const calculateColSpan: GridColumnSpanningPrivateApi['calculateColSpan'] = (...params) => {
+    apiRef.current.virtualizer.api.calculateColSpan(...params);
+  };
 
   const columnSpanningPublicApi: GridColumnSpanningApi = {
     unstable_getCellColSpanInfo: getCellColSpanInfo,

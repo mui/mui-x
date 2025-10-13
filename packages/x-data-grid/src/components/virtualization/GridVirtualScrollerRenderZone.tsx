@@ -37,7 +37,7 @@ const GridVirtualScrollerRenderZone = forwardRef<
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
-  const offsetTop = apiRef.current.virtualizer.api.useVirtualization().getters.getOffsetTop();
+  const offsetTop = apiRef.current.virtualizer.api.getters.getOffsetTop();
 
   return (
     <VirtualScrollerRenderZoneRoot

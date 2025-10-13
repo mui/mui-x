@@ -106,8 +106,8 @@ const columnsTotalWidthSelector = createSelector(
 
 export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, props: RootProps) {
   const virtualizer = apiRef.current.virtualizer;
-  const updateDimensions = virtualizer.api.updateDimensions;
-  const getViewportPageSize = virtualizer.api.getViewportPageSize;
+  const updateDimensions = virtualizer?.api.updateDimensions;
+  const getViewportPageSize = virtualizer?.api.getViewportPageSize;
 
   const getRootDimensions = React.useCallback(() => gridDimensionsSelector(apiRef), [apiRef]);
 
@@ -171,6 +171,11 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
     apiRef.current.store,
     (s) => s.dimensions,
     (previous, next) => {
+      // not sure why previous can be undefined here
+      if (!next.isReady || !previous) {
+        return;
+      }
+
       if (apiRef.current.rootElementRef.current) {
         setCSSVariables(apiRef.current.rootElementRef.current, next);
       }

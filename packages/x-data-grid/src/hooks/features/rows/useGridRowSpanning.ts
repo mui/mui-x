@@ -234,10 +234,9 @@ export const useGridRowSpanning = (
   apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'rowSpanning' | 'pagination' | 'paginationMode'>,
 ): void => {
-  const store = apiRef.current.virtualizer.store;
-
   const updateRowSpanningState = React.useCallback(
     (renderContext: GridRenderContext, resetState: boolean = false) => {
+      const store = apiRef.current.virtualizer.store;
       const { range, rows: visibleRows } = getVisibleRows(apiRef);
       if (resetState && store.getSnapshot().rowSpanning !== EMPTY_STATE) {
         store.set('rowSpanning', EMPTY_STATE);
@@ -291,7 +290,7 @@ export const useGridRowSpanning = (
 
       store.set('rowSpanning', newState);
     },
-    [apiRef, store],
+    [apiRef],
   );
 
   // Reset events trigger a full re-computation of the row spanning state:
@@ -320,6 +319,10 @@ export const useGridRowSpanning = (
   useGridEvent(apiRef, 'columnsChange', runIf(props.rowSpanning, resetRowSpanningState));
 
   React.useEffect(() => {
+    const store = apiRef.current.virtualizer?.store;
+    if (!store) {
+      return;
+    }
     if (!props.rowSpanning) {
       if (store.state.rowSpanning !== EMPTY_STATE) {
         store.set('rowSpanning', EMPTY_STATE);
@@ -327,5 +330,5 @@ export const useGridRowSpanning = (
     } else if (store.state.rowSpanning.caches === EMPTY_CACHES) {
       resetRowSpanningState();
     }
-  }, [apiRef, store, resetRowSpanningState, props.rowSpanning]);
+  }, [apiRef, resetRowSpanningState, props.rowSpanning]);
 };

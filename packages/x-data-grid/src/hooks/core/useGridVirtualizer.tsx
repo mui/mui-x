@@ -2,13 +2,11 @@ import * as React from 'react';
 import useLazyRef from '@mui/utils/useLazyRef';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useRtl } from '@mui/system/RtlProvider';
-import { RefObject } from '@mui/x-internals/types';
 import { roundToDecimalPlaces } from '@mui/x-internals/math';
 import { lruMemoize } from '@mui/x-internals/lruMemoize';
 import { useStoreEffect } from '@mui/x-internals/store';
 import { useVirtualizer, Dimensions, VirtualizerParams, Virtualization } from '@mui/x-virtualizer';
 import { useFirstRender } from '../utils/useFirstRender';
-import { GridPrivateApiCommunity } from '../../models/api/gridApiCommunity';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
 import { createSelector } from '../../utils/createSelector';
 import { useGridSelector } from '../utils/useGridSelector';
@@ -25,7 +23,6 @@ import {
 } from '../features/columns/gridColumnsSelector';
 import { gridPinnedRowsSelector, gridRowCountSelector } from '../features/rows/gridRowsSelector';
 import { useGridVisibleRows } from '../utils/useGridVisibleRows';
-import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { gridPaginationSelector } from '../features/pagination';
 import { gridFocusedVirtualCellSelector } from '../features/virtualization/gridFocusedVirtualCellSelector';
 import { gridRowSelectionManagerSelector } from '../features/rowSelection';
@@ -37,8 +34,9 @@ import {
 } from '../features/rows/gridRowsUtils';
 import { getTotalHeaderHeight } from '../features/columns/gridColumnsUtils';
 import { useGridOverlays } from '../features/overlays/useGridOverlays';
-
-type RootProps = DataGridProcessedProps;
+import { useGridRootProps } from '../utils/useGridRootProps';
+import { useGridPrivateApiContext } from '../utils/useGridPrivateApiContext';
+import { useGridRowsMeta } from '../features/rows/useGridRowsMeta';
 
 const columnsTotalWidthSelector = createSelector(
   gridVisibleColumnDefinitionsSelector,
@@ -79,11 +77,10 @@ const addGridDimensionsCreator = () =>
 /**
  * Virtualizer setup
  */
-export function useGridVirtualizer(
-  apiRef: RefObject<GridPrivateApiCommunity>,
-  rootProps: RootProps,
-): void {
+export function useGridVirtualizer() {
   const isRtl = useRtl();
+  const rootProps = useGridRootProps();
+  const apiRef = useGridPrivateApiContext();
   const { listView } = rootProps;
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
 
@@ -334,7 +331,7 @@ export function useGridVirtualizer(
     apiRef.current.store.state.virtualization = virtualizer.store.state.virtualization;
   });
 
-  useStoreEffect(virtualizer.store, Dimensions.selectors.dimensions, (_, dimensions) => {
+  useStoreEffect(virtualizer.store, Dimensions.selectors.dimensions, (prev, dimensions) => {
     apiRef.current.setState((gridState) => ({
       ...gridState,
       dimensions: addGridDimensions(
@@ -371,4 +368,8 @@ export function useGridVirtualizer(
   apiRef.current.register('private', {
     virtualizer,
   });
+
+  useGridRowsMeta(apiRef, rootProps);
+
+  return virtualizer;
 }
