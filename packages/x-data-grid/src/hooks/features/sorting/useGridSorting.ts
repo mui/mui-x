@@ -19,6 +19,7 @@ import {
   gridSortModelSelector,
 } from './gridSortingSelector';
 import { GRID_ROOT_GROUP_ID, gridRowTreeSelector } from '../rows';
+import { useFirstRender } from '../../utils/useFirstRender';
 import {
   useGridRegisterStrategyProcessor,
   GridStrategyProcessor,
@@ -379,6 +380,13 @@ export const useGridSorting = (
   useGridEvent(apiRef, 'rowsSet', apiRef.current.applySorting);
   useGridEvent(apiRef, 'columnsChange', handleColumnsChange);
   useGridEvent(apiRef, 'activeStrategyProcessorChange', handleStrategyProcessorChange);
+
+  /**
+   * 1ST RENDER
+   */
+  useFirstRender(() => {
+    apiRef.current.applySorting();
+  });
 
   /**
    * EFFECTS
