@@ -94,11 +94,12 @@ commands:
 
       - run:
           name: Install js dependencies
-          command: pnpm install
-      - run:
-          name: Resolve React version
           command: |
-            pnpm code-infra set-version-overrides --pkg "react@$REACT_VERSION"
+            if [ -n "$REACT_VERSION" ]; then
+              pnpm dlx @mui/internal-code-infra set-version-overrides "react@$REACT_VERSION"
+            else
+              pnpm install
+            fi
       - when:
           condition: << pipeline.parameters.with-material-ui-6 >>
           steps:
