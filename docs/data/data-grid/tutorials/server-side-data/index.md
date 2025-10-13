@@ -540,8 +540,42 @@ app.listen(PORT, () => {
 
 ### 5. Set up the client code
 
+Create a new directory called `components`.
+Inside, add a new file named `EmployeeDataGrid.tsx` with the following boilerplate.
+(You'll build out this component in part two of this tutorial.)
+
+```ts
+import React, { useMemo } from 'react';
+import { DataGridPro, type GridColDef, type GridDataSource, type GridGetRowsParams, type GridGetRowsResponse } from '@mui/x-data-grid-pro';
+import { Box, Typography } from '@mui/material';
+
+const EmployeeDataGrid: React.FC = () => {
+  const columns: GridColDef[] = [
+    { field: 'id', headerName: 'ID', width: 80 },
+    { field: 'name', headerName: 'Name', width: 200 },
+    { field: 'email', headerName: 'Email', width: 250 },
+    { field: 'role', headerName: 'Role', width: 150 },
+    { field: 'department', headerName: 'Department', width: 150 },
+    { field: 'salary', headerName: 'Salary', width: 120 },
+    { field: 'startDate', headerName: 'Start Date', width: 130 },
+  ];
+
+  return (
+    <Box sx={{ height: 600, width: '100%' }}>
+      <Typography variant="h4" component="h1" gutterBottom>
+        Employee Management
+      </Typography>
+      <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+        Server-side data with pagination, sorting, and filtering
+      </Typography>
+    </Box>
+  );
+};
+
+export default EmployeeDataGrid;
+```
+
 Update `client/src/App.tsx` with the boilerplate setup below.
-Note that the `<EmployeeDataGrid>` import and component have been commented out—you can uncomment them after building this component in part two of this tutorial.
 
 ```ts
 import React from 'react';
@@ -550,7 +584,7 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-// import EmployeeDataGrid from './components/EmployeeDataGrid';
+import EmployeeDataGrid from './components/EmployeeDataGrid';
 
 const theme = createTheme();
 
@@ -558,9 +592,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <div style={{ padding: '20px' }}>
-        // <EmployeeDataGrid />
-      </div>
+        <EmployeeDataGrid />
     </ThemeProvider>
   );
 }
@@ -601,6 +633,9 @@ pnpm run dev
 The server runs on `http://localhost:3001` and the client on `http://localhost:5173`.
 
 ## Part two: Data Grid setup
+
+In this section, you'll build out the grid's data fetching functionality.
+All steps that follow take place in `EmployeeDataGrid.tsx`.
 
 ### 8. Define the data structure
 
