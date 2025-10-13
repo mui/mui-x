@@ -125,6 +125,10 @@ type InputDataType = {
   defaultValue?: string;
 } & DefaultTypes;
 
+type TitleDataType = {
+  knob: 'title';
+} & DefaultTypes;
+
 type PlacementDataType = {
   knob: 'placement';
   /**
@@ -139,6 +143,7 @@ export type DataType =
   | RadioDataType
   | SwitchDataType
   | InputDataType
+  | TitleDataType
   | PlacementDataType;
 
 export type PropsFromData<Data extends Record<string, DataType>> = {
@@ -155,7 +160,7 @@ export type FromKnob<DT extends DataType> = DT['knob'] extends 'number' | 'slide
   ? number
   : DT['knob'] extends 'switch'
     ? boolean
-    : DT['knob'] extends 'input'
+    : DT['knob'] extends 'input' | 'title'
       ? string
       : DT['knob'] extends 'placement'
         ? Placement
@@ -189,7 +194,10 @@ export default function ChartDemoPropsForm<
   const initialProps = React.useMemo(
     () =>
       Object.entries(data).reduce(
-        (acc, [propName, value]) => ({ ...acc, [propName]: value.defaultValue }),
+        (acc, [propName, value]) => ({
+          ...acc,
+          [propName]: 'defaultValue' in value ? value.defaultValue : undefined,
+        }),
         {} as Props,
       ),
     [data],
@@ -242,17 +250,22 @@ export default function ChartDemoPropsForm<
       <Divider sx={{ opacity: 0.5 }} />
       <Box
         sx={{
-          p: 3,
+          pt: 3,
+          pb: 3,
           display: 'flex',
           flexDirection: 'column',
           gap: 2,
           [`& .${formLabelClasses.root}`]: {
             fontWeight: 'lg',
           },
+          '&& > *': {
+            px: 3,
+          },
         }}
       >
-        {Object.entries(data).map(([propName, propData]) => {
-          const { knob, defaultValue, displayName } = propData;
+        {Object.entries(data).map(([propName, propData], i) => {
+          const { knob, displayName } = propData;
+          const defaultValue = 'defaultValue' in propData ? propData.defaultValue : undefined;
           const resolvedValue = props[propName] ?? defaultValue;
           const title = displayName || propName;
           if (!knob) {
@@ -422,6 +435,16 @@ export default function ChartDemoPropsForm<
                   }}
                 />
               </FormControl>
+            );
+          }
+          if (knob === 'title') {
+            return (
+              <React.Fragment key={propName}>
+                <Typography variant="body2" fontWeight="bold" sx={{ pt: i !== 0 ? 2 : 0 }}>
+                  {title}
+                </Typography>
+                <Divider sx={{ opacity: 0.5 }} />
+              </React.Fragment>
             );
           }
           if (knob === 'number') {

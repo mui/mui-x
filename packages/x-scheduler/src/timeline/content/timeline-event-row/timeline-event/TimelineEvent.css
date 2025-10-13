@@ -1,0 +1,25 @@
+.TimelineEvent {
+  border-radius: var(--radius-4);
+  background-color: var(--event-color-3);
+  color: var(--event-color-12);
+  padding: var(--space-1) var(--space-2);
+  position: relative;
+
+  width: var(--width);
+  margin-left: var(--x-position);
+
+  grid-row: var(--row-index, 1);
+  grid-column: 1;
+}
+
+.TimelineEvent::before {
+  content: '';
+  position: absolute;
+  top: var(--space-1);
+  bottom: var(--space-1);
+  left: 0;
+  width: 3px;
+  border-radius: var(--radius-1);
+  background: var(--event-color-9);
+  pointer-events: none;
+}

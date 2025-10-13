@@ -17,6 +17,7 @@ import {
   isSpanValid,
   zoomAtPoint,
 } from './useZoom.utils';
+import { selectorZoomInteractionConfig } from '../ZoomInteractionConfig.selectors';
 
 export const useZoomOnWheel = (
   {
@@ -28,20 +29,35 @@ export const useZoomOnWheel = (
 ) => {
   const drawingArea = useSelector(store, selectorChartDrawingArea);
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
-  const isZoomEnabled = Object.keys(optionsLookup).length > 0;
   const startedOutsideRef = React.useRef(false);
   const startedOutsideTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const config = useSelector(store, selectorZoomInteractionConfig, ['wheel' as const]);
+
+  const isZoomOnWheelEnabled = React.useMemo(
+    () => (Object.keys(optionsLookup).length > 0 && config) || false,
+    [optionsLookup, config],
+  );
+
+  React.useEffect(() => {
+    if (!isZoomOnWheelEnabled) {
+      return;
+    }
+
+    instance.updateZoomInteractionListeners('zoomTurnWheel', {
+      requiredKeys: config!.requiredKeys,
+    });
+  }, [config, isZoomOnWheelEnabled, instance]);
 
   // Add event for chart zoom in/out
   React.useEffect(() => {
     const element = svgRef.current;
-    if (element === null || !isZoomEnabled) {
+    if (element === null || !isZoomOnWheelEnabled) {
       return () => {};
     }
 
     const rafThrottledSetZoomData = rafThrottle(setZoomDataCallback);
 
-    const zoomOnWheelHandler = instance.addInteractionListener('turnWheel', (event) => {
+    const zoomOnWheelHandler = instance.addInteractionListener('zoomTurnWheel', (event) => {
       const point = getSVGPoint(element, {
         clientX: event.detail.centroid.x,
         clientY: event.detail.centroid.y,
@@ -96,5 +112,13 @@ export const useZoomOnWheel = (
       startedOutsideRef.current = false;
       rafThrottledSetZoomData.clear();
     };
-  }, [svgRef, drawingArea, isZoomEnabled, optionsLookup, instance, setZoomDataCallback, store]);
+  }, [
+    svgRef,
+    drawingArea,
+    isZoomOnWheelEnabled,
+    optionsLookup,
+    instance,
+    setZoomDataCallback,
+    store,
+  ]);
 };

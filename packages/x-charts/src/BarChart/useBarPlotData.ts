@@ -1,7 +1,7 @@
 import { ChartsXAxisProps, ChartsYAxisProps, ComputedAxis } from '../models/axis';
 import getColor from './seriesConfig/getColor';
 import { ChartDrawingArea, useChartId, useXAxes, useYAxes } from '../hooks';
-import { MaskData, ProcessedBarSeriesData } from './types';
+import { MaskData, ProcessedBarData, ProcessedBarSeriesData } from './types';
 import { checkScaleErrors } from './checkScaleErrors';
 import { useBarSeriesContext } from '../hooks/useBarSeries';
 import { SeriesProcessorResult } from '../internals/plugins/models/seriesConfig/seriesProcessor.types';
@@ -62,77 +62,83 @@ export function useBarPlotData(
 
       const { stackedData, data: currentSeriesData, layout, minBarSize } = series[seriesId];
 
-      const seriesDataPoints = baseScaleConfig
-        .data!.map((baseValue, dataIndex: number) => {
-          if (currentSeriesData[dataIndex] == null) {
-            return null;
-          }
-          const values = stackedData[dataIndex];
-          const valueCoordinates = values.map((v) => (verticalLayout ? yScale(v)! : xScale(v)!));
+      const seriesDataPoints: ProcessedBarData[] = [];
 
-          const minValueCoord = Math.round(Math.min(...valueCoordinates));
-          const maxValueCoord = Math.round(Math.max(...valueCoordinates));
+      for (let dataIndex = 0; dataIndex < baseScaleConfig.data!.length; dataIndex += 1) {
+        const baseValue = baseScaleConfig.data![dataIndex];
 
-          const stackId = series[seriesId].stack;
+        if (currentSeriesData[dataIndex] == null) {
+          continue;
+        }
 
-          const { barSize, startCoordinate } = getValueCoordinate(
-            verticalLayout,
-            minValueCoord,
-            maxValueCoord,
-            currentSeriesData[dataIndex],
-            minBarSize,
-          );
+        const values = stackedData[dataIndex];
+        const valueCoordinates = values.map((v) => (verticalLayout ? yScale(v)! : xScale(v)!));
 
-          const result = {
-            seriesId,
-            dataIndex,
-            layout,
-            x: verticalLayout ? xScale(baseValue)! + barOffset : startCoordinate,
-            y: verticalLayout ? startCoordinate : yScale(baseValue)! + barOffset,
-            xOrigin: xScale(0) ?? 0,
-            yOrigin: yScale(0) ?? 0,
-            height: verticalLayout ? barSize : barWidth,
-            width: verticalLayout ? barWidth : barSize,
-            color: colorGetter(dataIndex),
-            value: currentSeriesData[dataIndex],
-            maskId: `${chartId}_${stackId || seriesId}_${groupIndex}_${dataIndex}`,
+        const minValueCoord = Math.round(Math.min(...valueCoordinates));
+        const maxValueCoord = Math.round(Math.max(...valueCoordinates));
+
+        const stackId = series[seriesId].stack;
+
+        const { barSize, startCoordinate } = getValueCoordinate(
+          verticalLayout,
+          minValueCoord,
+          maxValueCoord,
+          currentSeriesData[dataIndex],
+          minBarSize,
+        );
+
+        const result = {
+          seriesId,
+          dataIndex,
+          layout,
+          x: verticalLayout ? xScale(baseValue)! + barOffset : startCoordinate,
+          y: verticalLayout ? startCoordinate : yScale(baseValue)! + barOffset,
+          xOrigin: xScale(0) ?? 0,
+          yOrigin: yScale(0) ?? 0,
+          height: verticalLayout ? barSize : barWidth,
+          width: verticalLayout ? barWidth : barSize,
+          color: colorGetter(dataIndex),
+          value: currentSeriesData[dataIndex],
+          maskId: `${chartId}_${stackId || seriesId}_${groupIndex}_${dataIndex}`,
+        };
+
+        if (
+          result.x > xMax ||
+          result.x + result.width < xMin ||
+          result.y > yMax ||
+          result.y + result.height < yMin
+        ) {
+          continue;
+        }
+
+        if (!masks[result.maskId]) {
+          masks[result.maskId] = {
+            id: result.maskId,
+            width: 0,
+            height: 0,
+            hasNegative: false,
+            hasPositive: false,
+            layout: result.layout,
+            xOrigin: xScale(0)!,
+            yOrigin: yScale(0)!,
+            x: 0,
+            y: 0,
           };
+        }
 
-          if (
-            result.x > xMax ||
-            result.x + result.width < xMin ||
-            result.y > yMax ||
-            result.y + result.height < yMin
-          ) {
-            return null;
-          }
+        const mask = masks[result.maskId];
+        mask.width = result.layout === 'vertical' ? result.width : mask.width + result.width;
+        mask.height = result.layout === 'vertical' ? mask.height + result.height : result.height;
+        mask.x = Math.min(mask.x === 0 ? Infinity : mask.x, result.x);
+        mask.y = Math.min(mask.y === 0 ? Infinity : mask.y, result.y);
 
-          if (!masks[result.maskId]) {
-            masks[result.maskId] = {
-              id: result.maskId,
-              width: 0,
-              height: 0,
-              hasNegative: false,
-              hasPositive: false,
-              layout: result.layout,
-              xOrigin: xScale(0)!,
-              yOrigin: yScale(0)!,
-              x: 0,
-              y: 0,
-            };
-          }
+        const reverse = (verticalLayout ? yAxisConfig.reverse : xAxisConfig.reverse) ?? false;
+        const value = result.value ?? 0;
+        mask.hasNegative = mask.hasNegative || (reverse ? value > 0 : value < 0);
+        mask.hasPositive = mask.hasPositive || (reverse ? value < 0 : value > 0);
 
-          const mask = masks[result.maskId];
-          mask.width = result.layout === 'vertical' ? result.width : mask.width + result.width;
-          mask.height = result.layout === 'vertical' ? mask.height + result.height : result.height;
-          mask.x = Math.min(mask.x === 0 ? Infinity : mask.x, result.x);
-          mask.y = Math.min(mask.y === 0 ? Infinity : mask.y, result.y);
-          mask.hasNegative = mask.hasNegative || (result.value ?? 0) < 0;
-          mask.hasPositive = mask.hasPositive || (result.value ?? 0) > 0;
-
-          return result;
-        })
-        .filter((rectangle) => rectangle !== null);
+        seriesDataPoints.push(result);
+      }
 
       return {
         seriesId,

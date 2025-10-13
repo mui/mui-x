@@ -1,0 +1,12 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "id": { "description": "The unique identifier for the chart." },
+    "label": { "description": "The label for the chart." },
+    "onRender": {
+      "description": "Callback function called when the chart is about to be rendered. Use this to check and modify the chart props before it is rendered."
+    },
+    "renderer": { "description": "The renderer component that will render the chart." }
+  },
+  "classDescriptions": {}
+}

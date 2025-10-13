@@ -6,7 +6,7 @@ import { RefObject } from '@mui/x-internals/types';
 import { roundToDecimalPlaces } from '@mui/x-internals/math';
 import { lruMemoize } from '@mui/x-internals/lruMemoize';
 import { useStoreEffect } from '@mui/x-internals/store';
-import { useVirtualizer, Dimensions } from '@mui/x-virtualizer';
+import { useVirtualizer, Dimensions, VirtualizerParams } from '@mui/x-virtualizer';
 import { useFirstRender } from '../utils/useFirstRender';
 import { GridPrivateApiCommunity } from '../../models/api/gridApiCommunity';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
@@ -36,6 +36,7 @@ import {
   rowHeightWarning,
 } from '../features/rows/gridRowsUtils';
 import { getTotalHeaderHeight } from '../features/columns/gridColumnsUtils';
+import { useGridOverlays } from '../features/overlays/useGridOverlays';
 
 function identity<T>(x: T) {
   return x;
@@ -94,8 +95,10 @@ export function useGridVirtualizer(
   const pinnedColumns = gridVisiblePinnedColumnDefinitionsSelector(apiRef);
 
   const rowSelectionManager = useGridSelector(apiRef, gridRowSelectionManagerSelector);
-  const isRowSelected = (id: any) =>
-    rowSelectionManager.has(id) && apiRef.current.isRowSelectable(id);
+  const isRowSelected = React.useCallback(
+    (id: any) => rowSelectionManager.has(id) && apiRef.current.isRowSelectable(id),
+    [rowSelectionManager, apiRef],
+  );
 
   const currentPage = useGridVisibleRows(apiRef);
 
@@ -129,6 +132,8 @@ export function useGridVirtualizer(
   const leftPinnedWidth = pinnedColumns.left.reduce((w, col) => w + col.computedWidth, 0);
   const rightPinnedWidth = pinnedColumns.right.reduce((w, col) => w + col.computedWidth, 0);
 
+  const overlayState = useGridOverlays(apiRef, rootProps);
+
   const dimensionsParams = {
     rowHeight,
     headerHeight,
@@ -156,6 +161,9 @@ export function useGridVirtualizer(
 
   const focusedVirtualCell = useGridSelector(apiRef, gridFocusedVirtualCellSelector);
 
+  const RowSlot = rootProps.slots.row;
+  const rowSlotProps = rootProps.slotProps?.row;
+
   const virtualizer = useVirtualizer({
     refs: {
       container: apiRef.current.mainElementRef,
@@ -172,14 +180,17 @@ export function useGridVirtualizer(
     },
     colspan: {
       enabled: hasColSpan,
-      getColspan: (rowId, column) => {
-        if (typeof column.colSpan === 'function') {
-          const row = apiRef.current.getRow(rowId);
-          const value = apiRef.current.getRowValue(row, column as GridStateColDef);
-          return column.colSpan(value, row, column, apiRef) ?? 0;
-        }
-        return column.colSpan ?? 1;
-      },
+      getColspan: React.useCallback(
+        (rowId, column) => {
+          if (typeof column.colSpan === 'function') {
+            const row = apiRef.current.getRow(rowId);
+            const value = apiRef.current.getRowValue(row, column as GridStateColDef);
+            return column.colSpan(value, row, column, apiRef) ?? 0;
+          }
+          return column.colSpan ?? 1;
+        },
+        [apiRef],
+      ),
     },
 
     initialState: {
@@ -195,6 +206,10 @@ export function useGridVirtualizer(
     pinnedColumns,
 
     autoHeight,
+    disableHorizontalScroll: listView,
+    disableVerticalScroll:
+      overlayState.overlayType === 'noColumnsOverlay' ||
+      overlayState.loadingOverlayVariant === 'skeleton',
     minimalContentHeight,
     getRowHeight: React.useMemo(() => {
       if (!getRowHeight) {
@@ -250,43 +265,60 @@ export function useGridVirtualizer(
     onRenderContextChange: useEventCallback((nextRenderContext) => {
       apiRef.current.publishEvent('renderedRowsIntervalChange', nextRenderContext);
     }),
-    onScrollChange: (scrollPosition, nextRenderContext) => {
-      apiRef.current.publishEvent('scrollPositionChange', {
-        top: scrollPosition.top,
-        left: scrollPosition.left,
-        renderContext: nextRenderContext,
-      });
-    },
+    onScrollChange: React.useCallback<NonNullable<VirtualizerParams['onScrollChange']>>(
+      (scrollPosition, nextRenderContext) => {
+        apiRef.current.publishEvent('scrollPositionChange', {
+          top: scrollPosition.top,
+          left: scrollPosition.left,
+          renderContext: nextRenderContext,
+        });
+      },
+      [apiRef],
+    ),
 
     scrollReset,
 
-    renderRow: (params) => (
-      <rootProps.slots.row
-        key={params.id}
-        row={params.model}
-        rowId={params.id}
-        index={params.rowIndex}
-        selected={isRowSelected(params.id)}
-        offsetLeft={params.offsetLeft}
-        columnsTotalWidth={columnsTotalWidth}
-        rowHeight={params.baseRowHeight}
-        pinnedColumns={pinnedColumns}
-        visibleColumns={visibleColumns}
-        firstColumnIndex={params.firstColumnIndex}
-        lastColumnIndex={params.lastColumnIndex}
-        focusedColumnIndex={params.focusedColumnIndex}
-        isFirstVisible={params.isFirstVisible}
-        isLastVisible={params.isLastVisible}
-        isNotVisible={params.isVirtualFocusRow}
-        showBottomBorder={params.showBottomBorder}
-        scrollbarWidth={verticalScrollbarWidth}
-        gridHasFiller={hasFiller}
-        {...rootProps.slotProps?.row}
-      />
+    renderRow: React.useCallback(
+      (params) => (
+        <RowSlot
+          key={params.id}
+          row={params.model}
+          rowId={params.id}
+          index={params.rowIndex}
+          selected={isRowSelected(params.id)}
+          offsetLeft={params.offsetLeft}
+          columnsTotalWidth={columnsTotalWidth}
+          rowHeight={params.baseRowHeight}
+          pinnedColumns={pinnedColumns}
+          visibleColumns={visibleColumns}
+          firstColumnIndex={params.firstColumnIndex}
+          lastColumnIndex={params.lastColumnIndex}
+          focusedColumnIndex={params.focusedColumnIndex}
+          isFirstVisible={params.isFirstVisible}
+          isLastVisible={params.isLastVisible}
+          isNotVisible={params.isVirtualFocusRow}
+          showBottomBorder={params.showBottomBorder}
+          scrollbarWidth={verticalScrollbarWidth}
+          gridHasFiller={hasFiller}
+          {...rowSlotProps}
+        />
+      ),
+      [
+        columnsTotalWidth,
+        hasFiller,
+        isRowSelected,
+        pinnedColumns,
+        RowSlot,
+        rowSlotProps,
+        verticalScrollbarWidth,
+        visibleColumns,
+      ],
     ),
 
-    renderInfiniteLoadingTrigger: (id) =>
-      (apiRef as any).current.getInfiniteLoadingTriggerElement?.({ lastRowId: id }),
+    renderInfiniteLoadingTrigger: React.useCallback(
+      (id) => (apiRef as any).current.getInfiniteLoadingTriggerElement?.({ lastRowId: id }),
+      [apiRef],
+    ),
   });
 
   // HACK: Keep the grid's store in sync with the virtualizer store. We set up the

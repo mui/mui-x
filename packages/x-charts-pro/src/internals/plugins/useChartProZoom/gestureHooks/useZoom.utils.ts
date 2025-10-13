@@ -62,6 +62,7 @@ export function isSpanValid(
   const newSpanPercent = maxRange - minRange;
 
   if (
+    newSpanPercent < 0 ||
     (isZoomIn && newSpanPercent < option.minSpan) ||
     (!isZoomIn && newSpanPercent > option.maxSpan)
   ) {

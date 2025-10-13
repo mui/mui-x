@@ -825,6 +825,18 @@ async function initializeEnvironment(
           // check that selecting a day doesn't change the day text
           expect(await day11.textContent()).to.equal('11');
         });
+
+        it('should assert that disabled field is not tabbable', async () => {
+          await renderFixture('DatePicker/DesktopDatePickerDisabledField');
+
+          const startButton = page.getByTestId('start-btn');
+
+          await startButton.focus();
+          await page.keyboard.press('Tab');
+
+          const endButton = page.getByTestId('end-btn');
+          expect(await endButton.evaluate((el) => document.activeElement === el)).to.equal(true);
+        });
       });
 
       describe('<MobileDatePicker />', () => {

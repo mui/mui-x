@@ -12,7 +12,7 @@ import { ChartContainerProProps } from '../ChartContainerPro';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { SankeyPlot, type SankeyPlotProps } from './SankeyPlot';
 import { useSankeyChartProps } from './useSankeyChartProps';
-import { SANKEY_CHART_PLUGINS, type SankeyChartPluginsSignatures } from './SankeyChart.plugins';
+import { SANKEY_CHART_PLUGINS, type SankeyChartPluginSignatures } from './SankeyChart.plugins';
 import type { SankeySeriesType } from './sankey.types';
 import { seriesConfig as sankeySeriesConfig } from './seriesConfig';
 import { SankeyTooltip } from './SankeyTooltip';
@@ -24,16 +24,8 @@ const seriesConfig: ChartSeriesConfig<'sankey'> = { sankey: sankeySeriesConfig }
 
 export interface SankeyChartProps
   extends Omit<
-      ChartContainerProProps<'sankey', SankeyChartPluginsSignatures>,
-      | 'plugins'
-      | 'series'
-      | 'slotProps'
-      | 'slots'
-      | 'dataset'
-      | 'hideLegend'
-      | 'skipAnimation'
-      | 'highlightedItem'
-      | 'onHighlightChange'
+      ChartContainerProProps<'sankey', SankeyChartPluginSignatures>,
+      'plugins' | 'series' | 'slotProps' | 'slots' | 'dataset' | 'hideLegend' | 'skipAnimation'
     >,
     Omit<SankeyPlotProps, 'data'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
@@ -75,7 +67,7 @@ const SankeyChart = React.forwardRef(function SankeyChart(
   const Tooltip = themedProps.slots?.tooltip ?? SankeyTooltip;
 
   return (
-    <ChartDataProviderPro<'sankey', SankeyChartPluginsSignatures>
+    <ChartDataProviderPro<'sankey', SankeyChartPluginSignatures>
       {...chartDataProviderProProps}
       seriesConfig={seriesConfig}
       plugins={SANKEY_CHART_PLUGINS}
@@ -98,7 +90,10 @@ SankeyChart.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   apiRef: PropTypes.shape({
-    current: PropTypes.object,
+    current: PropTypes.shape({
+      exportAsImage: PropTypes.func.isRequired,
+      exportAsPrint: PropTypes.func.isRequired,
+    }),
   }),
   /**
    * Classes applied to the various elements.
@@ -121,6 +116,35 @@ SankeyChart.propTypes = {
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
   height: PropTypes.number,
+  /**
+   * The highlighted item.
+   * Used when the highlight is controlled.
+   */
+  highlightedItem: PropTypes.oneOfType([
+    PropTypes.shape({
+      nodeId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      subType: PropTypes.oneOf([
+        /**
+         * Subtype to differentiate between node and link
+         */
+        'node',
+      ]).isRequired,
+      type: PropTypes.oneOf(['sankey']).isRequired,
+    }),
+    PropTypes.shape({
+      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      sourceId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      subType: PropTypes.oneOf([
+        /**
+         * Subtype to differentiate between node and link
+         */
+        'link',
+      ]).isRequired,
+      targetId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      type: PropTypes.oneOf(['sankey']).isRequired,
+    }),
+  ]),
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
@@ -150,6 +174,12 @@ SankeyChart.propTypes = {
       top: PropTypes.number,
     }),
   ]),
+  /**
+   * The callback fired when the highlighted item changes.
+   *
+   * @param {SankeyHighlightItemData | null} highlightedItem The newly highlighted item.
+   */
+  onHighlightChange: PropTypes.func,
   /**
    * Callback fired when a sankey item is clicked.
    * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
