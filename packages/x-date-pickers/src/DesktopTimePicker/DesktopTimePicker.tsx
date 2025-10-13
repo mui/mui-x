@@ -336,6 +336,12 @@ DesktopTimePicker.propTypes = {
    */
   shouldDisableTime: PropTypes.func,
   /**
+   * Whether the time picker should render in a single column layout.
+   * This is computed based on thresholdToRenderTimeInASingleColumn and timeSteps.
+   * @internal
+   */
+  shouldRenderTimeInASingleColumn: PropTypes.bool,
+  /**
    * If `true`, disabled digital clock items will not be rendered.
    * @default false
    */

@@ -360,6 +360,12 @@ DateTimeRangePicker.propTypes = {
    */
   shouldDisableTime: PropTypes.func,
   /**
+   * Whether the time picker should render in a single column layout.
+   * This is computed based on thresholdToRenderTimeInASingleColumn and timeSteps.
+   * @internal
+   */
+  shouldRenderTimeInASingleColumn: PropTypes.bool,
+  /**
    * If `true`, days outside the current month are rendered:
    *
    * - if `fixedWeekNumber` is defined, renders days to have the weeks requested.
