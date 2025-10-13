@@ -306,6 +306,12 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     updateRenderContext(nextRenderContext);
   });
 
+  useStoreEffect(store, Dimensions.selectors.dimensions, (previous, next) => {
+    if (next.isReady) {
+      forceUpdateRenderContext;
+    }
+  });
+
   useEnhancedEffect(() => {
     if (isUpdateScheduled.current) {
       forceUpdateRenderContext();
