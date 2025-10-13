@@ -1,5 +1,5 @@
 {
-  "version": "8.13.1",
+  "version": "8.14.0",
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
@@ -21,7 +21,6 @@
     "deduplicate": "pnpm dedupe",
     "dataset:file-tree": "tsx ./scripts/treeDataFromFileTree.ts",
     "l10n": "tsx ./scripts/l10n.ts",
-    "jsonlint": "code-infra jsonlint",
     "eslint": "eslint . --cache --report-unused-disable-directives --ext .js,.ts,.tsx --max-warnings 0",
     "eslint:fix": "pnpm eslint --fix",
     "eslint:ci": "eslint . --report-unused-disable-directives --ext .js,.ts,.tsx --max-warnings 0",
@@ -72,9 +71,10 @@
     "@emotion/cache": "catalog:",
     "@inquirer/prompts": "^7.8.6",
     "@mui/internal-babel-plugin-display-name": "^1.0.4-canary.7",
-    "@mui/internal-bundle-size-checker": "^1.0.9-canary.48",
-    "@mui/internal-code-infra": "^0.0.3-canary.24",
-    "@mui/internal-markdown": "^2.0.6",
+    "@mui/internal-bundle-size-checker": "^1.0.9-canary.49",
+    "@mui/internal-code-infra": "^0.0.3-canary.29",
+    "@mui/internal-markdown": "^2.0.11",
+    "@mui/internal-netlify-cache": "^0.0.2-canary.0",
     "@mui/internal-test-utils": "catalog:",
     "@mui/material": "catalog:",
     "@mui/monorepo": "github:mui/material-ui#57ae83d02aecf2eeb8cff71cdf8c28ae7b6ea0e5",
@@ -86,7 +86,7 @@
     "@types/babel__core": "^7.20.5",
     "@types/babel__traverse": "^7.28.0",
     "@types/chai-dom": "^1.11.3",
-    "@types/node": "^22.18.8",
+    "@types/node": "^22.18.9",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@types/requestidlecallback": "^0.3.7",
@@ -97,7 +97,7 @@
     "@vitest/browser": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "@vvago/vale": "^3.12.0",
-    "axe-core": "4.10.3",
+    "axe-core": "4.11.0",
     "babel-loader": "^10.0.0",
     "babel-plugin-module-resolver": "catalog:",
     "babel-plugin-react-remove-properties": "catalog:",
@@ -110,16 +110,16 @@
     "danger": "^13.0.4",
     "date-fns-jalali-v2": "npm:date-fns-jalali@2.30.0-0",
     "date-fns-v2": "npm:date-fns@2.30.0",
-    "es-toolkit": "^1.4.0",
+    "es-toolkit": "^1.40.0",
     "esbuild": "^0.25.10",
     "eslint": "^9.36.0",
     "eslint-import-resolver-webpack": "^0.13.10",
     "eslint-plugin-consistent-default-export-name": "^0.0.15",
-    "eslint-plugin-jsdoc": "^60.7.1",
+    "eslint-plugin-jsdoc": "^61.1.0",
     "eslint-plugin-mui-x": "workspace:^",
     "execa": "^9.6.0",
     "glob-gitignore": "^1.0.15",
-    "globby": "^14.1.0",
+    "globby": "^15.0.0",
     "jsdom": "26.1.0",
     "lerna": "^9.0.0",
     "magic-string": "^0.30.19",
@@ -139,7 +139,7 @@
     "sinon": "^21.0.0",
     "stream-browserify": "^3.0.0",
     "string-replace-loader": "^3.2.0",
-    "stylelint": "^16.24.0",
+    "stylelint": "^16.25.0",
     "stylelint-config-tailwindcss": "^1.0.0",
     "terser-webpack-plugin": "^5.3.14",
     "tsx": "catalog:",
@@ -154,9 +154,18 @@
   "resolutions": {
     "ast-types": "^0.14.2"
   },
-  "packageManager": "pnpm@10.18.0",
+  "packageManager": "pnpm@10.18.2",
   "engines": {
-    "pnpm": "10.18.0",
+    "pnpm": "10.18.2",
     "node": ">=22.18"
+  },
+  "pnpm": {
+    "packageExtensions": {
+      "@mui/internal-test-utils": {
+        "dependencies": {
+          "lodash.kebabcase": "^4.1.1"
+        }
+      }
+    }
   }
 }

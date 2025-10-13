@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { DateTime } from 'luxon';
 import { screen } from '@mui/internal-test-utils';
 import { diffIn } from '@mui/x-scheduler-headless/use-adapter';
 import { Timeline } from '@mui/x-scheduler/timeline';
@@ -7,30 +6,30 @@ import { CalendarEvent, CalendarResource, TimelineView } from '@mui/x-scheduler-
 import { adapter, createSchedulerRenderer } from 'test/utils/scheduler';
 
 const baseResources: CalendarResource[] = [
-  { id: 'resource-1', name: 'Engineering', eventColor: 'blue' },
-  { id: 'resource-2', name: 'Design', eventColor: 'jade' },
+  { id: 'resource-1', title: 'Engineering', eventColor: 'blue' },
+  { id: 'resource-2', title: 'Design', eventColor: 'jade' },
 ];
 
 const baseEvents: CalendarEvent[] = [
   {
     id: 'event-1',
     title: 'Spec Review',
-    start: DateTime.fromISO('2025-07-03T09:00:00Z'),
-    end: DateTime.fromISO('2025-07-03T10:00:00Z'),
+    start: adapter.date('2025-07-03T09:00:00Z'),
+    end: adapter.date('2025-07-03T10:00:00Z'),
     resource: 'resource-1',
   },
   {
     id: 'event-2',
     title: 'UX Sync',
-    start: DateTime.fromISO('2025-07-03T11:00:00Z'),
-    end: DateTime.fromISO('2025-07-06T12:00:00Z'),
+    start: adapter.date('2025-07-03T11:00:00Z'),
+    end: adapter.date('2025-07-06T12:00:00Z'),
     resource: 'resource-2',
   },
   {
     id: 'event-3',
     title: 'Architecture Session',
-    start: DateTime.fromISO('2025-07-04T13:00:00Z'),
-    end: DateTime.fromISO('2025-08-04T14:30:00Z'),
+    start: adapter.date('2025-07-04T13:00:00Z'),
+    end: adapter.date('2025-08-04T14:30:00Z'),
     resource: 'resource-1',
   },
 ];
@@ -40,7 +39,7 @@ describe('<Timeline />', () => {
     clockConfig: new Date('2025-07-03T00:00:00Z'),
   });
 
-  const visibleDate = DateTime.fromISO('2025-07-03T00:00:00Z');
+  const visibleDate = adapter.date('2025-07-03T00:00:00Z');
   function renderTimeline(options?: {
     resources?: CalendarResource[];
     events?: CalendarEvent[];
@@ -63,7 +62,7 @@ describe('<Timeline />', () => {
       renderTimeline();
 
       baseResources.forEach((resourceItem) => {
-        expect(screen.getByText(resourceItem.name)).not.to.equal(null);
+        expect(screen.getByText(resourceItem.title)).not.to.equal(null);
       });
       const resourceTitleCells = document.querySelectorAll('.TimelineTitleCell');
       expect(resourceTitleCells.length).to.equal(baseResources.length);
@@ -72,7 +71,7 @@ describe('<Timeline />', () => {
     it('does not render resources with no events', () => {
       const extendedResources: CalendarResource[] = [
         ...baseResources,
-        { id: 'resource-3', name: 'QA', eventColor: 'red' },
+        { id: 'resource-3', title: 'QA', eventColor: 'red' },
       ];
       renderTimeline({ resources: extendedResources });
 
@@ -94,8 +93,8 @@ describe('<Timeline />', () => {
         {
           id: 'event-4',
           title: 'Out of range',
-          start: DateTime.fromISO('2050-07-04T13:00:00Z'),
-          end: DateTime.fromISO('2050-08-04T14:30:00Z'),
+          start: adapter.date('2050-07-04T13:00:00Z'),
+          end: adapter.date('2050-08-04T14:30:00Z'),
           resource: 'resource-1',
         },
       ];
@@ -178,8 +177,8 @@ describe('<Timeline />', () => {
         {
           id: 'event-4',
           title: 'Next month',
-          start: DateTime.fromISO('2025-08-04T13:00:00Z'),
-          end: DateTime.fromISO('2025-09-04T14:30:00Z'),
+          start: adapter.date('2025-08-04T13:00:00Z'),
+          end: adapter.date('2025-09-04T14:30:00Z'),
           resource: 'resource-1',
         },
       ];
@@ -209,15 +208,15 @@ describe('<Timeline />', () => {
         {
           id: 'event-1',
           title: 'This year',
-          start: DateTime.fromISO('2025-08-03T13:00:00Z'),
-          end: DateTime.fromISO('2025-09-04T14:30:00Z'),
+          start: adapter.date('2025-08-03T13:00:00Z'),
+          end: adapter.date('2025-09-04T14:30:00Z'),
           resource: 'resource-1',
         },
         {
           id: 'event-2',
           title: 'Next year',
-          start: DateTime.fromISO('2026-08-03T13:00:00Z'),
-          end: DateTime.fromISO('2026-09-04T14:30:00Z'),
+          start: adapter.date('2026-08-03T13:00:00Z'),
+          end: adapter.date('2026-09-04T14:30:00Z'),
           resource: 'resource-1',
         },
       ];

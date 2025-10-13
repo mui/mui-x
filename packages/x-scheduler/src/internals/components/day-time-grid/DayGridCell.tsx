@@ -14,11 +14,19 @@ import { useEventPopoverContext } from '../event-popover/EventPopoverContext';
 
 export function DayGridCell(props: DayGridCellProps) {
   const { day, row } = props;
+
+  // Context hooks
   const adapter = useAdapter();
-  const placeholder = CalendarGrid.usePlaceholderInDay(day.value, row);
   const store = useEventCalendarStoreContext();
+
+  // Ref hooks
   const cellRef = React.useRef<HTMLDivElement | null>(null);
+
+  // Selector hooks
   const isCreation = useStore(store, selectors.isCreatingNewEventInDayCell, day.value);
+
+  // Feature hooks
+  const placeholder = CalendarGrid.usePlaceholderInDay(day.value, row);
 
   const { startEditing } = useEventPopoverContext();
 
@@ -58,12 +66,7 @@ export function DayGridCell(props: DayGridCellProps) {
         {day.withPosition.map((occurrence) => {
           if (occurrence.position.isInvisible) {
             return (
-              <DayGridEvent
-                key={occurrence.key}
-                occurrence={occurrence}
-                variant="invisible"
-                ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
-              />
+              <DayGridEvent key={occurrence.key} occurrence={occurrence} variant="invisible" />
             );
           }
 
@@ -71,23 +74,13 @@ export function DayGridCell(props: DayGridCellProps) {
             <EventPopoverTrigger
               key={occurrence.key}
               occurrence={occurrence}
-              render={
-                <DayGridEvent
-                  occurrence={occurrence}
-                  variant="allDay"
-                  ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
-                />
-              }
+              render={<DayGridEvent occurrence={occurrence} variant="allDay" />}
             />
           );
         })}
         {placeholder != null && (
           <div className="DayTimeGridAllDayEventContainer">
-            <DayGridEvent
-              occurrence={placeholder}
-              variant="placeholder"
-              ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
-            />
+            <DayGridEvent occurrence={placeholder} variant="placeholder" />
           </div>
         )}
       </div>
