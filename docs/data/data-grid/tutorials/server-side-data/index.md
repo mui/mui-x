@@ -540,7 +540,8 @@ app.listen(PORT, () => {
 
 ### 5. Set up the client code
 
-Update `client/src/App.tsx`:
+Update `client/src/App.tsx` with the boilerplate setup below.
+Note that the `<EmployeeDataGrid>` import and component have been commented out—you can uncomment them after building this component in part two of this tutorial.
 
 ```ts
 import React from 'react';
@@ -549,7 +550,7 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import EmployeeDataGrid from './components/EmployeeDataGrid';
+// import EmployeeDataGrid from './components/EmployeeDataGrid';
 
 const theme = createTheme();
 
@@ -558,7 +559,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <div style={{ padding: '20px' }}>
-        <EmployeeDataGrid />
+        // <EmployeeDataGrid />
       </div>
     </ThemeProvider>
   );
@@ -723,7 +724,7 @@ return {
 
 ### 14. Put it all together
 
-Combining all the previous steps in part two, the complete `getRows` function should look like this:
+Combining all the previous steps in part two, the complete `getRows` function looks like this:
 
 ```ts
 const dataSource: GridDataSource = useMemo(
