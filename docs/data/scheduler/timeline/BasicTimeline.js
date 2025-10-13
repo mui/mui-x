@@ -1,11 +1,11 @@
 import * as React from 'react';
 
-import { Timeline } from '@mui/x-scheduler/material/timeline';
+import { Timeline } from '@mui/x-scheduler/timeline';
 import {
-  initialEvents,
   defaultVisibleDate,
+  initialEvents,
   resources,
-} from '../datasets/personal-agenda';
+} from '../datasets/timeline-events';
 
 export default function BasicTimeline() {
   const [events, setEvents] = React.useState(initialEvents);

@@ -2,7 +2,8 @@ import * as React from 'react';
 import { useLocation } from 'react-router';
 import { styled } from '@mui/material/styles';
 import GlobalStyles from '@mui/material/GlobalStyles';
-import { fakeClock, setupFakeClock } from '../utils/setupFakeClock'; // eslint-disable-line
+// eslint-disable-next-line import/no-relative-packages
+import { fakeClock, setupFakeClock } from '../utils/setupFakeClock';
 
 const StyledBox = styled('div', {
   shouldForwardProp: (prop) => prop !== 'isDataGridTest' && prop !== 'isDataGridPivotTest',
@@ -75,15 +76,16 @@ function TestViewer(props: any) {
 }
 
 function MockTime(props: React.PropsWithChildren<{ shouldAdvanceTime: boolean }>) {
-  const [ready, setReady] = React.useState(false);
+  const [dispose, setDispose] = React.useState<(() => void) | null>(null);
+  const [prevShouldAdvanceTime, setPrevShouldAdvanceTime] = React.useState(props.shouldAdvanceTime);
 
-  React.useEffect(() => {
-    const dispose = setupFakeClock(props.shouldAdvanceTime);
-    setReady(true);
-    return dispose;
-  }, [props.shouldAdvanceTime]);
+  if (!dispose || prevShouldAdvanceTime !== props.shouldAdvanceTime) {
+    dispose?.();
+    setDispose(() => setupFakeClock(props.shouldAdvanceTime));
+    setPrevShouldAdvanceTime(props.shouldAdvanceTime);
+  }
 
-  return ready ? props.children : null;
+  return props.children;
 }
 
 function LoadFont(props: any) {
