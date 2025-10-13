@@ -4,8 +4,6 @@ import { DateTime } from 'luxon';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import { defaultVisibleDate } from '../datasets/personal-agenda';
 
-const START_OF_FIRST_WEEK = defaultVisibleDate.startOf('week');
-
 const initialEvents = [
   {
     id: 'work-daily-standup',

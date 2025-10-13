@@ -4,8 +4,6 @@ import { RRuleSpec, SchedulerEventModelStructure } from '@mui/x-scheduler/models
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import { defaultVisibleDate } from '../datasets/personal-agenda';
 
-const START_OF_FIRST_WEEK = defaultVisibleDate.startOf('week');
-
 interface CustomEvent {
   id: string;
   start: string;
