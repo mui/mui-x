@@ -1,19 +1,23 @@
-import {
+import type {
   GridRowTreeCreationParams,
   GridRowTreeCreationValue,
   GridRowsState,
 } from '../../features/rows/gridRowsInterfaces';
-import {
+import type {
   GridFilteringMethodParams,
   GridFilteringMethodValue,
   GridFilterState,
   GridVisibleRowsLookupState,
 } from '../../features/filter/gridFilterState';
-import {
+import type {
   GridSortingMethodParams,
   GridSortingMethodValue,
 } from '../../features/sorting/gridSortingState';
-import { GridGetRowsParams, GridGetRowsResponse } from '../../../models/gridDataSource';
+import type {
+  GridGetRowsParams,
+  GridGetRowsResponse,
+  GridGetRowsOptions,
+} from '../../../models/gridDataSource';
 
 export type GridStrategyProcessorName = keyof GridStrategyProcessingLookup;
 
@@ -31,10 +35,12 @@ export interface GridStrategyProcessingLookup {
       | {
           response: GridGetRowsResponse;
           fetchParams: GridGetRowsParams;
+          options: GridGetRowsOptions;
         }
       | {
           error: Error;
           fetchParams: GridGetRowsParams;
+          options: GridGetRowsOptions;
         };
     value: void;
   };

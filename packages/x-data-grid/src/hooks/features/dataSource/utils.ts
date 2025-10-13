@@ -1,8 +1,9 @@
 import type { GridGetRowsParams, GridGetRowsResponse } from '../../../models/gridDataSource';
 
 export enum DataSourceRowsUpdateStrategy {
-  Default = 'set-new-rows',
+  Default = 'set-flat-rows',
   LazyLoading = 'replace-row-range',
+  GroupedData = 'set-grouped-rows',
 }
 
 /**
