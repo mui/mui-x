@@ -19,6 +19,8 @@
     "@mui/x-data-grid-pro": "workspace:*",
     "@mui/x-date-pickers": "workspace:*",
     "@mui/x-date-pickers-pro": "workspace:*",
+    "@mui/x-scheduler": "workspace:*",
+    "@mui/x-scheduler-headless": "workspace:*",
     "@mui/x-license": "workspace:*",
     "@playwright/test": "catalog:",
     "@react-spring/web": "catalog:",

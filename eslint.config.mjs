@@ -3,6 +3,7 @@ import {
   createBaseConfig,
   createDocsConfig,
   createTestConfig,
+  EXTENSION_TEST_FILE,
   EXTENSION_TS,
 } from '@mui/internal-code-infra/eslint';
 import eslintPluginConsistentName from 'eslint-plugin-consistent-default-export-name';
@@ -24,7 +25,7 @@ const GRID_PACKAGES = [
 ];
 const PICKERS_PACKAGES = ['x-date-pickers', 'x-date-pickers-pro'];
 const TREE_VIEW_PACKAGES = ['x-tree-view', 'x-tree-view-pro'];
-const SCHEDULER_PACKAGES = ['x-scheduler'];
+const SCHEDULER_PACKAGES = ['x-scheduler', 'x-scheduler-headless'];
 
 // Enable React Compiler Plugin rules globally
 const ENABLE_REACT_COMPILER_PLUGIN = process.env.ENABLE_REACT_COMPILER_PLUGIN ?? false;
@@ -57,7 +58,7 @@ function getReactCompilerFilesForPackages(packageInfo) {
   return packageInfo
     .filter((pkg) => pkg.isEnabled)
     .flatMap((pkg) =>
-      pkg.packagesNames.map((packageName) => `packages/${packageName}/src/**/*.${EXTENSION_TS}`),
+      pkg.packagesNames.map((packageName) => `packages/${packageName}/src/**/*${EXTENSION_TS}`),
     );
 }
 
@@ -72,6 +73,8 @@ const RESTRICTED_TOP_LEVEL_IMPORTS = [
   '@mui/x-date-pickers-pro',
   '@mui/x-tree-view',
   '@mui/x-tree-view-pro',
+  '@mui/x-scheduler',
+  '@mui/x-scheduler-headless',
 ];
 
 const packageFilesWithReactCompiler = getReactCompilerFilesForPackages([
@@ -98,12 +101,13 @@ const packageFilesWithReactCompiler = getReactCompilerFilesForPackages([
 ]);
 
 export default defineConfig(
+  createBaseConfig({
+    baseDirectory: dirname,
+    enableReactCompiler: isAnyReactCompilerPluginEnabled,
+  }),
   {
-    name: 'Base Config',
-    extends: createBaseConfig({
-      baseDirectory: dirname,
-      enableReactCompiler: isAnyReactCompilerPluginEnabled,
-    }),
+    name: 'MUI X Overrides',
+    files: [`**/*${EXTENSION_TS}`],
     plugins: {
       jsdoc: eslintPluginJsdoc,
       'mui-x': eslintPluginMuiX,
@@ -111,8 +115,8 @@ export default defineConfig(
     },
     settings: {
       'import/resolver': {
-        webpack: {
-          config: path.join(dirname, './webpackBaseConfig.js'),
+        typescript: {
+          project: ['tsconfig.json'],
         },
       },
     },
@@ -168,13 +172,19 @@ export default defineConfig(
       // migration rules
       '@typescript-eslint/ban-ts-comment': 'off',
       '@typescript-eslint/no-require-imports': 'off',
+      'react-hooks/exhaustive-deps': [
+        'error',
+        {
+          additionalHooks: '(useEnhancedEffect|useIsoLayoutEffect|useEffectAfterFirstRender)',
+        },
+      ],
     },
   },
   // Test start
   {
     files: [
       // matching the pattern of the test runner
-      `**/*.test.${EXTENSION_TS}`,
+      `**/*${EXTENSION_TEST_FILE}`,
     ],
     extends: createTestConfig({ useMocha: false }),
     ignores: ['test/e2e/**/*', 'test/regressions/**/*'],
@@ -185,7 +195,7 @@ export default defineConfig(
   baseSpecRules,
 
   {
-    files: [`**/*.test.${EXTENSION_TS}`, 'test/**'],
+    files: [`**/*${EXTENSION_TEST_FILE}`, `test/**/*${EXTENSION_TS}`],
     rules: {
       'no-restricted-imports': [
         'error',
@@ -225,8 +235,8 @@ export default defineConfig(
   },
 
   {
-    files: [`packages/*/src/**/*.${EXTENSION_TS}`],
-    ignores: ['**/*.d.ts', `**/*.spec.${EXTENSION_TS}`, `**/*.test.${EXTENSION_TS}`],
+    files: [`packages/*/src/**/*${EXTENSION_TS}`],
+    ignores: ['**/*.d.ts', `**/*.spec${EXTENSION_TS}`, `**/*.test${EXTENSION_TS}`],
     rules: {
       'material-ui/mui-name-matches-component-name': [
         'error',
@@ -252,7 +262,7 @@ export default defineConfig(
 
   // Common config from core start
   {
-    files: ['docs/**'],
+    files: [`docs/**/*${EXTENSION_TS}`],
     extends: createDocsConfig(),
     rules: {
       '@next/next/no-img-element': 'off',
@@ -260,7 +270,7 @@ export default defineConfig(
   },
 
   {
-    files: ['docs/src/pages/**/*', 'docs/data/**/*'],
+    files: [`docs/src/pages/**/*${EXTENSION_TS}`, `docs/data/**/*${EXTENSION_TS}`],
     rules: {
       // This most often reports data that is defined after the component definition.
       // This is safe to do and helps readability of the demo code since the data is mostly irrelevant.
@@ -272,7 +282,7 @@ export default defineConfig(
   },
 
   {
-    files: ['docs/data/**/*'],
+    files: [`docs/data/**/*${EXTENSION_TS}`],
     ignores: [
       // filenames/match-exported sees filename as 'file-name.d'
       // Plugin looks unmaintain, find alternative? (e.g. eslint-plugin-project-structure)
@@ -289,7 +299,7 @@ export default defineConfig(
 
   // Next.js entry points pages
   {
-    files: ['docs/pages/**/*'],
+    files: [`docs/pages/**/*${EXTENSION_TS}`],
     rules: {
       'react/prop-types': 'off',
     },
@@ -298,9 +308,9 @@ export default defineConfig(
 
   {
     files: [
-      `docs/**/*.${EXTENSION_TS}`,
-      `packages/*/src/**/*.test.${EXTENSION_TS}`,
-      `packages/*/src/**/*.spec.${EXTENSION_TS}`,
+      `docs/**/*${EXTENSION_TS}`,
+      `packages/*/src/**/*.test${EXTENSION_TS}`,
+      `packages/*/src/**/*.spec${EXTENSION_TS}`,
     ],
     ignores: ['**/*.d.ts'],
     rules: {
@@ -317,9 +327,6 @@ export default defineConfig(
                 '@mui/*/*/*',
                 // Allow any import depth with any internal packages
                 '!@mui/internal-*/**',
-
-                // The scheduler import strategy is not determined yet
-                '!@mui/x-scheduler/**',
 
                 // Exceptions (QUESTION: Keep or remove?)
                 '!@mui/x-data-grid/internals/demo',
@@ -343,7 +350,10 @@ export default defineConfig(
     },
   },
   {
-    files: ['packages/x-scheduler/**/*{.tsx,.ts,.js}'],
+    files: [
+      'packages/x-scheduler/**/*{.tsx,.ts,.js}',
+      'packages/x-scheduler-headless/**/*{.tsx,.ts,.js}',
+    ],
     rules: {
       // Base UI lint rules
       '@typescript-eslint/no-redeclare': 'off',
@@ -365,12 +375,13 @@ export default defineConfig(
     'x-date-pickers',
     'x-date-pickers-pro',
     'x-scheduler',
+    'x-scheduler-headless',
     'x-tree-view',
     'x-tree-view-pro',
     'x-license',
     'x-telemetry',
   ].map((pkgName) => ({
-    files: [`packages/${pkgName}/src/**/*.${EXTENSION_TS}`],
+    files: [`packages/${pkgName}/src/**/*${EXTENSION_TS}`],
     ignores: ['**/*.d.ts', '**/*.spec{.ts,.tsx}', '**/*.test{.ts,.tsx}'],
     rules: {
       'no-restricted-imports': [
@@ -407,7 +418,7 @@ export default defineConfig(
 
   // We can't use the react-compiler plugin in the base-ui-utils folder because the Base UI team doesn't use it yet.
   {
-    files: ['packages/x-scheduler/src/base-ui-copy/**/*{.tsx,.ts,.js}'],
+    files: ['packages/x-scheduler-headless/src/base-ui-copy/**/*{.tsx,.ts,.js}'],
     rules: {
       'react-compiler/react-compiler': 'off',
     },
@@ -416,8 +427,9 @@ export default defineConfig(
   {
     // TODO: typescript namespaces found to be harmful. Refactor to different patterns. More info: https://github.com/mui/mui-x/pull/19071
     files: [
-      `packages/x-scheduler/src/**/*.${EXTENSION_TS}`,
-      `packages/x-virtualizer/src/**/*.${EXTENSION_TS}`,
+      `packages/x-scheduler/src/**/*${EXTENSION_TS}`,
+      `packages/x-scheduler-headless/src/**/*${EXTENSION_TS}`,
+      `packages/x-virtualizer/src/**/*${EXTENSION_TS}`,
     ],
     rules: {
       '@typescript-eslint/no-namespace': 'off',

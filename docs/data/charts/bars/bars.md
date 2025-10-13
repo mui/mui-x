@@ -273,3 +273,5 @@ Here's how the Bar Chart is composed:
   </ChartsWrapper>
 </ChartDataProvider>
 ```
+
+{{"demo": "BarScatterCompostion.js"}}

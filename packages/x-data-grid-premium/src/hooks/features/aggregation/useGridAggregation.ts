@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
+import { isObjectEmpty } from '@mui/x-internals/isObjectEmpty';
 import {
   gridColumnLookupSelector,
   useGridEvent,
@@ -14,10 +15,14 @@ import {
   useGridRegisterPipeProcessor,
   GridStateInitializer,
   GridPipeProcessor,
+  gridPivotActiveSelector,
 } from '@mui/x-data-grid-pro/internals';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
-import { gridAggregationModelSelector } from './gridAggregationSelectors';
+import {
+  gridAggregationLookupSelector,
+  gridAggregationModelSelector,
+} from './gridAggregationSelectors';
 import {
   GridAggregationApi,
   GridAggregationLookup,
@@ -100,6 +105,7 @@ export const useGridAggregation = (
         !!props.dataSource,
       );
       const aggregatedFields = Object.keys(aggregationRules);
+      const currentAggregationLookup = gridAggregationLookupSelector(apiRef);
       const needsSorting = shouldApplySorting(aggregationRules, aggregatedFields);
       if (reason === 'sort' && !needsSorting) {
         // no need to re-apply aggregation on `sortedRowsSet` if sorting is not needed
@@ -185,6 +191,15 @@ export const useGridAggregation = (
       };
 
       processChunk();
+
+      // processChunk() does nothing if there are no aggregated fields
+      // make sure that the lookup is empty in this case
+      if (aggregatedFields.length === 0 && !isObjectEmpty(currentAggregationLookup)) {
+        apiRef.current.setState((state) => ({
+          ...state,
+          aggregation: { ...state.aggregation, lookup: {} },
+        }));
+      }
     },
     [
       apiRef,
@@ -233,6 +248,7 @@ export const useGridAggregation = (
    * EVENTS
    */
   const checkAggregationRulesDiff = React.useCallback(() => {
+    const pivotingActive = gridPivotActiveSelector(apiRef);
     const { rulesOnLastRowHydration, rulesOnLastColumnHydration } =
       apiRef.current.caches.aggregation;
 
@@ -246,7 +262,10 @@ export const useGridAggregation = (
         );
 
     // Re-apply the row hydration to add / remove the aggregation footers
-    if (!props.dataSource && !areAggregationRulesEqual(rulesOnLastRowHydration, aggregationRules)) {
+    if (
+      (!props.dataSource || pivotingActive) &&
+      !areAggregationRulesEqual(rulesOnLastRowHydration, aggregationRules)
+    ) {
       apiRef.current.requestPipeProcessorsApplication('hydrateRows');
       deferredApplyAggregation();
     }
