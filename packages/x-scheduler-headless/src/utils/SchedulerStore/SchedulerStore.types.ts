@@ -52,7 +52,7 @@ export interface SchedulerState<TEvent extends {} = any, TResource extends {} = 
   /**
    * The last value provided to the `resources` prop.
    */
-  resourceProp: readonly TResource[];
+  resourcesProp: readonly TResource[];
   /**
    * The IDs of the resources the events can be assigned to.
    */

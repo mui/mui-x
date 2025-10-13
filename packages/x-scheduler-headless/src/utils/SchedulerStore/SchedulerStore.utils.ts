@@ -205,7 +205,7 @@ export function buildResourcesState<TEvent extends {}, TResource extends {}>(
   parameters: Pick<SchedulerParameters<TEvent, TResource>, 'resources' | 'resourceModelStructure'>,
 ): Pick<
   SchedulerState<TEvent, TResource>,
-  'resourceProp' | 'resourceIdList' | 'processedResourceLookup' | 'resourceModelStructure'
+  'resourcesProp' | 'resourceIdList' | 'processedResourceLookup' | 'resourceModelStructure'
 > {
   const { resources = EMPTY_ARRAY, resourceModelStructure } = parameters;
 
@@ -218,7 +218,7 @@ export function buildResourcesState<TEvent extends {}, TResource extends {}>(
   }
 
   return {
-    resourceProp: resources,
+    resourcesProp: resources,
     resourceIdList,
     processedResourceLookup,
     resourceModelStructure,

@@ -15,11 +15,13 @@ describe('Core - TimelineStore', () => {
       const expectedState = {
         adapter,
         visibleResources: new Map(),
+        eventsProp: [],
         eventIdList: [],
         eventModelList: [],
         eventModelLookup: new Map(),
         processedEventLookup: new Map(),
         eventModelStructure: undefined,
+        resourcesProp: [],
         resourceIdList: [],
         processedResourceLookup: new Map(),
         resourceModelStructure: undefined,
