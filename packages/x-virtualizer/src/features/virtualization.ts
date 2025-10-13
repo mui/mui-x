@@ -637,9 +637,10 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
   const isFirstSizing = React.useRef(true);
 
   const cleanup = React.useRef<() => void | undefined>(undefined);
+  const cleanupFn = cleanup.current;
   React.useEffect(() => {
-    //return cleanup.current;
-  }, [cleanup.current]);
+    return cleanupFn;
+  }, [cleanupFn]);
 
   const containerRef = useEventCallback((node: HTMLDivElement | null) => {
     if (node && refs.container.current !== node) {
