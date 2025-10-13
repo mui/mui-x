@@ -618,15 +618,30 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
   useStoreEffect(store, Dimensions.selectors.dimensions, forceUpdateRenderContext);
 
   const refSetter = React.useCallback(
-    (name: keyof typeof refs, cb?: (node: HTMLDivElement | null) => void) =>
-      (node: HTMLDivElement | null) => {
-        if (node && refs[name].current !== node) {
-          refs[name].current = node;
-          return cb?.(node);
-        }
-      },
+    (name: keyof typeof refs) => (node: HTMLDivElement | null) => {
+      if (node && refs[name].current !== node) {
+        refs[name].current = node;
+      }
+    },
     [refs],
   );
+
+  const containerRef = useEventCallback((node: HTMLDivElement | null) => {
+    if (node && refs.container.current !== node) {
+      refs.container.current = node;
+      return observeRootNode(node, store, (rootSize: Size) => {
+        store.state.rootSize = rootSize;
+        store.update({ rootSize });
+        if (isFirstSizing.current || !api.debouncedUpdateDimensions) {
+          // We want to initialize the grid dimensions as soon as possible to avoid flickering
+          api.updateDimensions(isFirstSizing.current);
+          isFirstSizing.current = false;
+        } else {
+          api.debouncedUpdateDimensions();
+        }
+      });
+    }
+  });
 
   const isFirstSizing = React.useRef(true);
   const getters = {
@@ -634,18 +649,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     getOffsetTop,
     getRows,
     getContainerProps: () => ({
-      ref: refSetter('container', (node) => {
-        return observeRootNode(node, store, (rootSize: Size) => {
-          store.state.rootSize = rootSize;
-          if (isFirstSizing.current || !api.debouncedUpdateDimensions) {
-            // We want to initialize the grid dimensions as soon as possible to avoid flickering
-            api.updateDimensions(isFirstSizing.current);
-            isFirstSizing.current = false;
-          } else {
-            api.debouncedUpdateDimensions();
-          }
-        });
-      }),
+      ref: containerRef,
     }),
     getScrollerProps: () => ({
       ref: refSetter('scroller'),
@@ -831,7 +835,9 @@ function computeRenderContext(
     renderContext.lastColumnIndex = lastColumnIndex;
   }
 
+  console.log('computed render context', renderContext.lastRowIndex);
   const actualRenderContext = deriveRenderContext(inputs, renderContext, scrollCache);
+  console.log('computed render context', actualRenderContext, inputs, renderContext);
 
   return actualRenderContext;
 }

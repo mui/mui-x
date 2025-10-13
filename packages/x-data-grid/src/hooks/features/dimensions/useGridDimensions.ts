@@ -74,18 +74,21 @@ export const dimensionsStateInitializer: GridStateInitializer<RootProps> = (
   const dimensions = EMPTY_DIMENSIONS;
 
   const density = gridDensityFactorSelector(apiRef);
+  const dimensionsWithStatic = {
+    ...dimensions,
+    ...getStaticDimensions(
+      props,
+      apiRef,
+      density,
+      gridVisiblePinnedColumnDefinitionsSelector(apiRef),
+    ),
+  };
+
+  apiRef.current.store.state.dimensions = dimensionsWithStatic;
 
   return {
     ...state,
-    dimensions: {
-      ...dimensions,
-      ...getStaticDimensions(
-        props,
-        apiRef,
-        density,
-        gridVisiblePinnedColumnDefinitionsSelector(apiRef),
-      ),
-    },
+    dimensions: dimensionsWithStatic,
   };
 };
 
@@ -171,8 +174,7 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
     apiRef.current.store,
     (s) => s.dimensions,
     (previous, next) => {
-      // not sure why previous can be undefined here
-      if (!next.isReady || !previous) {
+      if (!next.isReady) {
         return;
       }
 
