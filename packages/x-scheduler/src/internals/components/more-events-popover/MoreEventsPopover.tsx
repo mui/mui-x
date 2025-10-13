@@ -7,7 +7,7 @@ import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headles
 import { MoreEventsPopoverProps, MoreEventsPopoverProviderProps } from './MoreEventsPopover.types';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { EventItem } from '../event/event-item/EventItem';
-import { createPopover } from '../popover';
+import { createPopover } from '../create-popover';
 import { ArrowSvg } from './arrow/ArrowSvg';
 import './MoreEventsPopover.css';
 

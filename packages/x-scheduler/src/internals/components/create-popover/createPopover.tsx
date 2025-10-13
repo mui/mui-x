@@ -8,8 +8,17 @@ import {
   PopoverState,
   ProviderProps,
   TriggerProps,
-} from './Popover.types';
+} from './createPopover.types';
 
+/**
+ * Creates a reusable popover system with Provider, Trigger, and context management.
+ * Handles popover opening, closing and anchoring behaviors.
+ * Allows passing custom data to the popover when opened.
+ *
+ * @template TAnchorData - The type of data passed to the popover when opened
+ * @param {CreatePopoverConfig} config - Configuration for the popover (requires `contextName`)
+ * @returns An object containing `Context`, `useContext`, `Provider`, and `Trigger`
+ */
 export function createPopover<TAnchorData>(config: CreatePopoverConfig) {
   const Context = React.createContext<ContextValue<TAnchorData> | undefined>(undefined);
 

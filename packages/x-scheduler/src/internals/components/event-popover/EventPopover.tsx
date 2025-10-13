@@ -32,7 +32,7 @@ import {
 } from './EventPopover.types';
 import { getColorClassName } from '../../utils/color-utils';
 import { useTranslations } from '../../utils/TranslationsContext';
-import { createPopover } from '../popover';
+import { createPopover } from '../create-popover';
 import './EventPopover.css';
 
 const EventPopover = createPopover<CalendarEventOccurrence>({
