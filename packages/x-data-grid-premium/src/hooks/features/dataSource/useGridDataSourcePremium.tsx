@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
-import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import {
   useGridEvent as addEventHandler,
   useGridApiMethod,
@@ -9,9 +8,6 @@ import {
   GRID_ROOT_GROUP_ID,
   GridValidRowModel,
   useGridEvent,
-  GridUpdateRowParams,
-  GridRowModel,
-  gridRowTreeSelector,
 } from '@mui/x-data-grid-pro';
 import {
   useGridDataSourceBasePro,
@@ -23,7 +19,6 @@ import {
   gridPivotActiveSelector,
   GridStrategyGroup,
   DataSourceRowsUpdateStrategy,
-  getGroupKeys,
 } from '@mui/x-data-grid-pro/internals';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
@@ -33,10 +28,8 @@ import type {
   GridGetRowsParamsPremium,
   GridGetRowsResponsePremium,
 } from './models';
-import { getPropsOverrides, fetchParents } from './utils';
+import { getPropsOverrides } from './utils';
 import { gridRowGroupingSanitizedModelSelector } from '../rowGrouping/gridRowGroupingSelector';
-
-import { gridAggregationModelSelector } from '../aggregation/gridAggregationSelectors';
 
 function getKeyPremium(params: GridGetRowsParamsPremium) {
   return JSON.stringify([
@@ -61,7 +54,6 @@ export const useGridDataSourcePremium = (
   apiRef: RefObject<GridPrivateApiPremium>,
   props: DataGridPremiumProcessedProps,
 ) => {
-  const aggregationModel = gridAggregationModelSelector(apiRef);
   const groupingModelSize = gridRowGroupingSanitizedModelSelector(apiRef).length;
   const setStrategyAvailability = React.useCallback(() => {
     const targetStrategy =
@@ -83,33 +75,13 @@ export const useGridDataSourcePremium = (
     groupingModelSize,
   ]);
 
-  const handleEditRowWithAggregation = React.useCallback(
-    (params: GridUpdateRowParams, updatedRow: GridRowModel) => {
-      const rowTree = gridRowTreeSelector(apiRef);
-      if (updatedRow && !isDeepEqual(updatedRow, params.previousRow)) {
-        // Reset the outdated cache, only if the row is _actually_ updated
-        apiRef.current.dataSource.cache.clear();
-      }
-      const groupKeys = getGroupKeys(rowTree, params.rowId) as string[];
-      apiRef.current.updateNestedRows([updatedRow], groupKeys);
-      // To refresh the aggregation values of all parent rows and the footer row, recursively re-fetch all parent levels
-      fetchParents(rowTree, params.rowId, apiRef.current.dataSource.fetchRows);
-    },
-    [apiRef],
-  );
-
   const {
     api,
     debouncedFetchRows,
     flatTreeStrategyProcessor,
     groupedDataStrategyProcessor,
     events,
-  } = useGridDataSourceBasePro<GridPrivateApiPremium>(apiRef, props, {
-    ...(!props.disableAggregation && Object.keys(aggregationModel).length > 0
-      ? { handleEditRow: handleEditRowWithAggregation }
-      : {}),
-    ...options,
-  });
+  } = useGridDataSourceBasePro<GridPrivateApiPremium>(apiRef, props, options);
   const aggregateRowRef = React.useRef<GridValidRowModel>({});
 
   const initialColumns = gridPivotInitialColumnsSelector(apiRef);
