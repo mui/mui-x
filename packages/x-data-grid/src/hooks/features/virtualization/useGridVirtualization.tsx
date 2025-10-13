@@ -89,6 +89,7 @@ export function useGridVirtualization(
    */
 
   useGridEventPriority(apiRef, 'sortedRowsSet', forceUpdateRenderContext);
+  useGridEventPriority(apiRef, 'filteredRowsSet', forceUpdateRenderContext);
   useGridEventPriority(apiRef, 'paginationModelChange', forceUpdateRenderContext);
   useGridEventPriority(apiRef, 'columnsChange', forceUpdateRenderContext);
 

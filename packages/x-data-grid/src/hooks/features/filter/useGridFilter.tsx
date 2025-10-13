@@ -3,7 +3,6 @@ import { lruMemoize } from '@mui/x-internals/lruMemoize';
 import { RefObject } from '@mui/x-internals/types';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
-import { isObjectEmpty } from '@mui/x-internals/isObjectEmpty';
 import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -20,7 +19,7 @@ import { GridPreferencePanelsValue } from '../preferencesPanel/gridPreferencePan
 import { defaultGridFilterLookup, getDefaultGridFilterModel } from './gridFilterState';
 import { gridFilterModelSelector } from './gridFilterSelector';
 import { useFirstRender } from '../../utils/useFirstRender';
-import { gridRowCountSelector, gridRowsLookupSelector } from '../rows';
+import { gridRowsLookupSelector } from '../rows';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import {
   GRID_DEFAULT_STRATEGY,
@@ -108,12 +107,7 @@ export const useGridFilter = (
     changeEvent: 'filterModelChange',
   });
 
-  const firstRender = React.useRef(true);
   const updateFilteredRows = React.useCallback(() => {
-    if (!gridRowCountSelector(apiRef)) {
-      return;
-    }
-    let didChange = false;
     apiRef.current.setState((state) => {
       const filterModel = gridFilterModelSelector(apiRef);
       const filterState = apiRef.current.getFilterState(filterModel);
@@ -128,24 +122,12 @@ export const useGridFilter = (
 
       const visibleRowsLookupState = getVisibleRowsLookupState(apiRef, newState);
 
-      if (
-        (visibleRowsLookupState !== state.visibleRowsLookup &&
-          !(isObjectEmpty(visibleRowsLookupState) && isObjectEmpty(state.visibleRowsLookup))) ||
-        firstRender.current
-      ) {
-        firstRender.current = false;
-        didChange = true;
-        return {
-          ...newState,
-          visibleRowsLookup: visibleRowsLookupState,
-        };
-      }
-
-      return newState;
+      return {
+        ...newState,
+        visibleRowsLookup: visibleRowsLookupState,
+      };
     });
-    if (didChange) {
-      apiRef.current.publishEvent('filteredRowsSet');
-    }
+    apiRef.current.publishEvent('filteredRowsSet');
   }, [apiRef]);
 
   const addColumnMenuItem = React.useCallback<GridPipeProcessor<'columnMenu'>>(

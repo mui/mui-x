@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { isObjectEmpty } from '@mui/x-internals/isObjectEmpty';
 import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -141,7 +140,6 @@ export const useGridSorting = (
    * API METHODS
    */
   const applySorting = React.useCallback<GridSortApi['applySorting']>(() => {
-    let didChange = props.sortingMode === 'server';
     apiRef.current.setState((state) => {
       if (props.sortingMode === 'server') {
         logger.debug('Skipping sorting rows as sortingMode = server');
@@ -164,23 +162,13 @@ export const useGridSorting = (
         sortRowList,
       });
 
-      if (
-        sortedRows !== state.sorting.sortedRows &&
-        !(isObjectEmpty(sortedRows) && isObjectEmpty(state.sorting.sortedRows))
-      ) {
-        didChange = true;
-        return {
-          ...state,
-          sorting: { ...state.sorting, sortedRows },
-        };
-      }
-
-      return state;
+      return {
+        ...state,
+        sorting: { ...state.sorting, sortedRows },
+      };
     });
 
-    if (didChange) {
-      apiRef.current.publishEvent('sortedRowsSet');
-    }
+    apiRef.current.publishEvent('sortedRowsSet');
   }, [apiRef, logger, props.sortingMode]);
 
   const setSortModel = React.useCallback<GridSortApi['setSortModel']>(
