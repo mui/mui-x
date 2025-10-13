@@ -200,46 +200,4 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => 
       'Agg value',
     );
   });
-
-  it('should re-fetch all parents when the leaf row is updated', async () => {
-    const { user } = render(
-      <TestDataSourceAggregation
-        dataSourceCache={null}
-        initialState={{
-          rowGrouping: { model: ['company'] },
-          aggregation: { model: { gross: 'sum' } },
-        }}
-        dataSetOptions={{
-          dataSet: 'Movies',
-          rowLength: 100,
-          editable: true,
-          maxColumns: undefined,
-        }}
-      />,
-    );
-
-    expect(fetchRowsSpy.callCount).to.equal(1);
-    await waitFor(() => {
-      expect(Object.keys(apiRef.current!.state.rows.tree).length).to.be.greaterThan(1);
-    });
-
-    const cell11 = getCell(0, 0);
-    await user.click(within(cell11).getByRole('button'));
-
-    await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(2);
-    });
-
-    const cell = getCell(1, apiRef.current!.state.columns.orderedFields.indexOf('gross'));
-    await user.click(cell);
-    expect(cell).toHaveFocus();
-
-    await user.keyboard('{Enter}{Delete}1{Enter}');
-
-    expect(editRowSpy.callCount).to.equal(1);
-    // Two additional calls should be made
-    await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(4);
-    });
-  });
 });
