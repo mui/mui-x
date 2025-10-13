@@ -250,6 +250,7 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
     },
     [
       store,
+      refs.container,
       params.dimensions.scrollbarSize,
       params.autoHeight,
       params.disableHorizontalScroll,

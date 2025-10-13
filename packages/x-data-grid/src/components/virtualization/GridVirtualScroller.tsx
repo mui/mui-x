@@ -113,7 +113,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
     getScrollAreaProps,
   } = virtualScroller;
 
-  const rows = virtualScroller.getRows(undefined, gridRowTreeSelector(apiRef));
+  const rows = getRows(undefined, gridRowTreeSelector(apiRef));
 
   return (
     <Container className={classes.root} {...getContainerProps()} ownerState={ownerState}>

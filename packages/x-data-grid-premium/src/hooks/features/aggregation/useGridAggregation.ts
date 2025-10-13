@@ -327,5 +327,5 @@ export const useGridAggregation = (
     if (props.getAggregationPosition !== undefined) {
       deferredApplyAggregation();
     }
-  }, [props.getAggregationPosition]);
+  }, [deferredApplyAggregation, props.getAggregationPosition]);
 };

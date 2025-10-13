@@ -8,7 +8,6 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import type { integer } from '@mui/x-internals/types';
 import * as platform from '@mui/x-internals/platform';
 import { useRunOnce } from '@mui/x-internals/useRunOnce';
-import { useFirstRender } from '@mui/x-internals/useFirstRender';
 import { createSelector, useStore, useStoreEffect, Store } from '@mui/x-internals/store';
 import { PinnedRows, PinnedColumns, Size } from '../models/core';
 import type { CellColSpanInfo } from '../models/colspan';
@@ -307,21 +306,23 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     updateRenderContext(nextRenderContext);
   };
 
+  const forceUpdateRenderContextCallback = useEventCallback(forceUpdateRenderContext);
+
   useStoreEffect(store, Dimensions.selectors.dimensions, (previous, next) => {
     if (next.isReady) {
       forceUpdateRenderContext();
     }
   });
 
-  const [key, setKey] = React.useState(0);
   useEnhancedEffect(() => {
-    if (key) {
+    if (isUpdateScheduled.current) {
       forceUpdateRenderContext();
+      isUpdateScheduled.current = false;
     }
-  }, [key]);
+  });
 
   const scheduleUpdateRenderContext = () => {
-    setKey((k) => k + 1);
+    isUpdateScheduled.current = true;
   };
 
   const handleScroll = useEventCallback(() => {
@@ -561,8 +562,8 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     if (!isRenderContextReady.current) {
       return;
     }
-    forceUpdateRenderContext();
-  }, [enabledForColumns, enabledForRows, forceUpdateRenderContext]);
+    forceUpdateRenderContextCallback();
+  }, [enabledForColumns, enabledForRows, forceUpdateRenderContextCallback]);
 
   useEnhancedEffect(() => {
     if (refs.scroller.current) {
@@ -633,6 +634,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     [refs],
   );
 
+  const isFirstSizing = React.useRef(true);
   const containerRef = useEventCallback((node: HTMLDivElement | null) => {
     if (node && refs.container.current !== node) {
       refs.container.current = node;
@@ -648,9 +650,9 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
         }
       });
     }
+    return undefined;
   });
 
-  const isFirstSizing = React.useRef(true);
   const getters = {
     setPanels,
     getOffsetTop,

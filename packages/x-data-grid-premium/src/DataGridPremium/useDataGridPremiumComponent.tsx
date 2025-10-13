@@ -23,7 +23,6 @@ import {
   useGridRows,
   useGridRowsPreProcessors,
   rowsStateInitializer,
-  useGridRowsMeta,
   useGridParamsApi,
   useGridRowSelection,
   useGridSorting,
