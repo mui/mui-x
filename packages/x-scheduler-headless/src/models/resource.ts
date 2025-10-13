@@ -11,7 +11,7 @@ export interface CalendarResource {
   /**
    * The name of the resource.
    */
-  name: string;
+  title: string;
   /**
    * The color palette used for events assigned to this resource.
    * Can be overridden per event using the `color` property on the event model. (TODO: not implemented yet)
