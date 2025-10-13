@@ -12,7 +12,10 @@ import { useEvent } from '../../utils/useEvent';
 import { CalendarEvent, CalendarEventId, SchedulerValidDate } from '../../models';
 import { useAdapter, diffIn } from '../../use-adapter';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
-import { eventSelectors, occurrencePlaceholderSelectors } from '../../utils/SchedulerStore';
+import {
+  eventSchedulerSelectors,
+  occurrencePlaceholderSchedulerSelectors,
+} from '../../utils/SchedulerStore';
 import { getCalendarGridHeaderCellId } from '../../utils/accessibility-utils';
 import { CalendarGridDayEventContext } from './CalendarGridDayEventContext';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
@@ -56,8 +59,12 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
   const ref = React.useRef<HTMLDivElement>(null);
 
   // Selector hooks
-  const hasPlaceholder = useStore(store, occurrencePlaceholderSelectors.isDefined);
-  const isDragging = useStore(store, occurrencePlaceholderSelectors.isMatching, occurrenceKey);
+  const hasPlaceholder = useStore(store, occurrencePlaceholderSchedulerSelectors.isDefined);
+  const isDragging = useStore(
+    store,
+    occurrencePlaceholderSchedulerSelectors.isMatching,
+    occurrenceKey,
+  );
 
   // State hooks
   const [isResizing, setIsResizing] = React.useState(false);
@@ -106,7 +113,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     () => ({
       eventId,
       occurrenceKey,
-      event: eventSelectors.model(store.state, eventId)!,
+      event: eventSchedulerSelectors.model(store.state, eventId)!,
       start,
       end,
     }),

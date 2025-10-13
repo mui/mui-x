@@ -34,12 +34,12 @@ const occurrence: CalendarEventOccurrence = {
 const resources: CalendarResource[] = [
   {
     id: 'r1',
-    name: 'Work',
+    title: 'Work',
     eventColor: 'blue',
   },
   {
     id: 'r2',
-    name: 'Personal',
+    title: 'Personal',
     eventColor: 'cyan',
   },
 ];
@@ -180,9 +180,9 @@ describe('<EventPopover />', () => {
     const onEventsChange = spy();
 
     const resourcesNoColor: CalendarResource[] = [
-      { id: 'r1', name: 'Work', eventColor: 'blue' },
-      { id: 'r2', name: 'Personal', eventColor: 'cyan' },
-      { id: 'r3', name: 'NoColor' },
+      { id: 'r1', title: 'Work', eventColor: 'blue' },
+      { id: 'r2', title: 'Personal', eventColor: 'cyan' },
+      { id: 'r3', title: 'NoColor' },
     ];
 
     const occurrenceWithNoColorResource: CalendarEventOccurrence = {

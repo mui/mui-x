@@ -51,7 +51,7 @@ const isEventReadOnlySelector = createSelector(
   },
 );
 
-export const nowSelectors = {
+export const nowSchedulerSelectors = {
   value: createSelector((state: State) => state.nowUpdatedEveryMinute),
   isCurrentDay: createSelector(
     (state: State) => state.adapter,
@@ -60,7 +60,7 @@ export const nowSelectors = {
   ),
 };
 
-export const eventSelectors = {
+export const eventSchedulerSelectors = {
   collection: createSelector((state: State) => state.events),
   model: eventSelector,
   isReadOnly: isEventReadOnlySelector,
@@ -79,7 +79,7 @@ export const eventSelectors = {
   }),
 };
 
-export const resourceSelectors = {
+export const resourceSchedulerSelectors = {
   model: resourceSelector,
   collection: createSelector((state: State) => state.resources),
   visibleResourcesMap: createSelector((state: State) => state.visibleResources),
@@ -96,7 +96,7 @@ export const resourceSelectors = {
   ),
 };
 
-export const occurrencePlaceholderSelectors = {
+export const occurrencePlaceholderSchedulerSelectors = {
   value: createSelector((state: State) => state.occurrencePlaceholder),
   isDefined: createSelector((state: State) => state.occurrencePlaceholder !== null),
   isMatching: createSelector((state: State, occurrenceKey: string) => {
@@ -111,19 +111,19 @@ export const occurrencePlaceholderSelectors = {
 
 export const selectors = {
   // TODO: Remove those selectors in favor of using the `nowSelectors`, `eventSelectors`, `resourceSelectors` or `occurrencePlaceholderSelectors` directly.
-  nowUpdatedEveryMinute: nowSelectors.value,
-  isCurrentDay: nowSelectors.isCurrentDay,
-  eventColor: eventSelectors.color,
+  nowUpdatedEveryMinute: nowSchedulerSelectors.value,
+  isCurrentDay: nowSchedulerSelectors.isCurrentDay,
+  eventColor: eventSchedulerSelectors.color,
   isEventReadOnly: isEventReadOnlySelector,
   event: eventSelector,
-  events: eventSelectors.collection,
+  events: eventSchedulerSelectors.collection,
   resource: resourceSelector,
-  resources: resourceSelectors.collection,
-  visibleResourcesMap: resourceSelectors.visibleResourcesMap,
-  visibleResourcesList: resourceSelectors.visibleResourcesList,
-  occurrencePlaceholder: occurrencePlaceholderSelectors.value,
-  hasOccurrencePlaceholder: occurrencePlaceholderSelectors.isDefined,
-  isOccurrenceMatchingThePlaceholder: occurrencePlaceholderSelectors.isMatching,
+  resources: resourceSchedulerSelectors.collection,
+  visibleResourcesMap: resourceSchedulerSelectors.visibleResourcesMap,
+  visibleResourcesList: resourceSchedulerSelectors.visibleResourcesList,
+  occurrencePlaceholder: occurrencePlaceholderSchedulerSelectors.value,
+  hasOccurrencePlaceholder: occurrencePlaceholderSchedulerSelectors.isDefined,
+  isOccurrenceMatchingThePlaceholder: occurrencePlaceholderSchedulerSelectors.isMatching,
 
   visibleDate: createSelector((state: State) => state.visibleDate),
   showCurrentTimeIndicator: createSelector((state: State) => state.showCurrentTimeIndicator),
@@ -140,6 +140,9 @@ export const selectors = {
       };
     },
   ),
+  /**
+   * Builds the presets the user can choose from when creating or editing a recurring event.
+   */
   recurrencePresets: createSelectorMemoized(
     (state: State) => state.adapter,
     (adapter, date: SchedulerValidDate): Record<RecurrencePresetKey, RRuleSpec> => {
@@ -167,6 +170,78 @@ export const selectors = {
           interval: 1,
         },
       };
+    },
+  ),
+  /**
+   * Determines which preset (if any) the given rule corresponds to.
+   * If the rule does not correspond to any preset, 'custom' is returned.
+   * If no rule is provided, null is returned.
+   */
+  defaultRecurrencePresetKey: createSelectorMemoized(
+    (state: State) => state.adapter,
+    (
+      adapter,
+      rule: CalendarEvent['rrule'] | undefined,
+      occurrenceStart: SchedulerValidDate,
+    ): RecurrencePresetKey | 'custom' | null => {
+      if (!rule) {
+        return null;
+      }
+
+      const interval = rule.interval ?? 1;
+      const neverEnds = !rule.count && !rule.until;
+      const hasSelectors = !!(
+        rule.byDay?.length ||
+        rule.byMonthDay?.length ||
+        rule.byMonth?.length
+      );
+      const { numToByDay: numToCode } = getByDayMaps(adapter);
+
+      switch (rule.freq) {
+        case 'DAILY': {
+          // Preset "Daily" => FREQ=DAILY;INTERVAL=1; no COUNT/UNTIL;
+          return interval === 1 && neverEnds && !hasSelectors ? 'daily' : 'custom';
+        }
+
+        case 'WEEKLY': {
+          // Preset "Weekly" => FREQ=WEEKLY;INTERVAL=1;BYDAY=<weekday-of-start>; no COUNT/UNTIL;
+          const startDowCode = numToCode[adapter.getDayOfWeek(occurrenceStart)];
+
+          const byDay = rule.byDay ?? [];
+          const matchesDefaultByDay =
+            byDay.length === 0 || (byDay.length === 1 && byDay[0] === startDowCode);
+          const isPresetWeekly =
+            interval === 1 &&
+            neverEnds &&
+            matchesDefaultByDay &&
+            !(rule.byMonthDay?.length || rule.byMonth?.length);
+
+          return isPresetWeekly ? 'weekly' : 'custom';
+        }
+
+        case 'MONTHLY': {
+          // Preset "Monthly" => FREQ=MONTHLY;INTERVAL=1;BYMONTHDAY=<start-day>; no COUNT/UNTIL;
+          const day = adapter.getDate(occurrenceStart);
+          const byMonthDay = rule.byMonthDay ?? [];
+          const matchesDefaultByMonthDay =
+            byMonthDay.length === 0 || (byMonthDay.length === 1 && byMonthDay[0] === day);
+          const isPresetMonthly =
+            interval === 1 &&
+            neverEnds &&
+            matchesDefaultByMonthDay &&
+            !(rule.byDay?.length || rule.byMonth?.length);
+
+          return isPresetMonthly ? 'monthly' : 'custom';
+        }
+
+        case 'YEARLY': {
+          // Preset "Yearly" => FREQ=YEARLY;INTERVAL=1; no COUNT/UNTIL;
+          return interval === 1 && neverEnds && !hasSelectors ? 'yearly' : 'custom';
+        }
+
+        default:
+          return 'custom';
+      }
     },
   ),
 };
