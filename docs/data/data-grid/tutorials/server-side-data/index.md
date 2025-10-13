@@ -550,16 +550,6 @@ import { DataGridPro, type GridColDef, type GridDataSource, type GridGetRowsPara
 import { Box, Typography } from '@mui/material';
 
 const EmployeeDataGrid: React.FC = () => {
-  const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', width: 80 },
-    { field: 'name', headerName: 'Name', width: 200 },
-    { field: 'email', headerName: 'Email', width: 250 },
-    { field: 'role', headerName: 'Role', width: 150 },
-    { field: 'department', headerName: 'Department', width: 150 },
-    { field: 'salary', headerName: 'Salary', width: 120 },
-    { field: 'startDate', headerName: 'Start Date', width: 130 },
-  ];
-
   return (
     <Box sx={{ height: 600, width: '100%' }}>
       <Typography variant="h4" component="h1" gutterBottom>
