@@ -7,17 +7,15 @@ export interface BrushOverlayClasses {
   line: string;
   /** Styles applied to the brush rectangles. */
   rect: string;
-  /** Styles applied when using the horizontal brush mode. */
-  horizontal: string;
-  /** Styles applied when using the vertical brush mode. */
-  vertical: string;
-  /** Styles applied when using the orthogonal brush mode. */
-  orthogonal: string;
+  /** Styles applied when the brush is selecting the x axis. */
+  x: string;
+  /** Styles applied when the brush is selecting the y axis. */
+  y: string;
 }
 
 export type BrushOverlayClassKey = keyof BrushOverlayClasses;
 
 export const brushOverlayClasses: BrushOverlayClasses = generateUtilityClasses(
   'MuiChartsBrushOverlay',
-  ['root', 'line', 'rect', 'horizontal', 'vertical', 'orthogonal'],
+  ['root', 'line', 'rect', 'x', 'y'],
 );

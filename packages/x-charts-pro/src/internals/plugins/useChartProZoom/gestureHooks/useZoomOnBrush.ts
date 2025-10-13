@@ -66,6 +66,7 @@ export const useZoomOnBrush = (
       brushStartRef.current = point;
       store.update((prevState) => ({
         ...prevState,
+        zoom: { ...prevState.zoom, isInteracting: true },
         zoomBrushState: { start: point, current: point },
       }));
     };

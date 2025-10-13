@@ -71,7 +71,7 @@ export function ChartsBrushOverlay(_: ChartsBrushOverlayProps) {
   const strokeColor = theme.palette.mode === 'light' ? '#000000' : '#ffffff';
 
   // For scatter charts, show only the rectangle without guide lines
-  if (brushConfig === 'orthogonal') {
+  if (brushConfig === 'xy') {
     const rectWidth = currentX - startX;
     const rectHeight = currentY - startY;
 
@@ -79,7 +79,7 @@ export function ChartsBrushOverlay(_: ChartsBrushOverlayProps) {
     const showRect = Math.abs(rectWidth) > 2 || Math.abs(rectHeight) > 2;
 
     return (
-      <g className={clsx(brushOverlayClasses.root, brushOverlayClasses.orthogonal)}>
+      <g className={clsx(brushOverlayClasses.root, brushOverlayClasses.x, brushOverlayClasses.y)}>
         {showRect && (
           <BrushRect
             fill={rectColor}
@@ -93,7 +93,7 @@ export function ChartsBrushOverlay(_: ChartsBrushOverlayProps) {
     );
   }
 
-  if (brushConfig === 'horizontal') {
+  if (brushConfig === 'y') {
     const minY = Math.min(startY, currentY);
     const maxY = Math.max(startY, currentY);
     const rectHeight = maxY - minY;
@@ -102,7 +102,7 @@ export function ChartsBrushOverlay(_: ChartsBrushOverlayProps) {
     const showRect = rectHeight > 2;
 
     return (
-      <g className={clsx(brushOverlayClasses.root, brushOverlayClasses.horizontal)}>
+      <g className={clsx(brushOverlayClasses.root, brushOverlayClasses.y)}>
         <BrushLine stroke={strokeColor} x1={left} y1={startY} x2={left + width} y2={startY} />
         {showRect && (
           <React.Fragment>
@@ -128,7 +128,7 @@ export function ChartsBrushOverlay(_: ChartsBrushOverlayProps) {
   const showRect = rectWidth > 2;
 
   return (
-    <g className={clsx(brushOverlayClasses.root, brushOverlayClasses.vertical)}>
+    <g className={clsx(brushOverlayClasses.root, brushOverlayClasses.x)}>
       <BrushLine stroke={strokeColor} x1={startX} y1={top} x2={startX} y2={top + height} />
       {showRect && (
         <React.Fragment>

@@ -90,10 +90,10 @@ export const selectorChartBrushConfig = createSelector([selectorChartSeriesProce
     });
   }
   if (hasScatter) {
-    return 'orthogonal';
+    return 'xy';
   }
   if (hasHorizontal) {
-    return 'horizontal';
+    return 'y';
   }
-  return 'vertical';
+  return 'x';
 });
