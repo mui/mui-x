@@ -500,8 +500,8 @@ importers:
         specifier: 'catalog:'
         version: 7.28.4
       '@docsearch/react':
-        specifier: ^4.1.0
-        version: 4.1.0(@algolia/client-search@5.35.0)(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(search-insights@2.17.3)
+        specifier: ^4.2.0
+        version: 4.2.0(@algolia/client-search@5.35.0)(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(search-insights@2.17.3)
       '@emotion/cache':
         specifier: 'catalog:'
         version: 11.14.0
@@ -3286,11 +3286,11 @@ packages:
     resolution: {integrity: sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==}
     engines: {node: '>=10.0.0'}
 
-  '@docsearch/css@4.1.0':
-    resolution: {integrity: sha512-nuNKGjHj/FQeWgE9t+i83QD/V67QiaAmGY7xS9TVCRUiCqSljOgIKlsLoQZKKVwEG8f+OWKdznzZkJxGZ7d06A==}
+  '@docsearch/css@4.2.0':
+    resolution: {integrity: sha512-65KU9Fw5fGsPPPlgIghonMcndyx1bszzrDQYLfierN+Ha29yotMHzVS94bPkZS6On9LS8dE4qmW4P/fGjtCf/g==}
 
-  '@docsearch/react@4.1.0':
-    resolution: {integrity: sha512-4GHI7TT3sJZ2Vs4Kjadv7vAkMrTsJqHvzvxO3JA7UT8iPRKaDottG5o5uNshPWhVVaBYPC35Ukf8bfCotGpjSg==}
+  '@docsearch/react@4.2.0':
+    resolution: {integrity: sha512-zSN/KblmtBcerf7Z87yuKIHZQmxuXvYc6/m0+qnjyNu+Ir67AVOagTa1zBqcxkVUVkmBqUExdcyrdo9hbGbqTw==}
     peerDependencies:
       '@types/react': '>= 16.8.0 < 20.0.0'
       react: '>= 16.8.0 < 20.0.0'
@@ -14013,13 +14013,13 @@ snapshots:
 
   '@discoveryjs/json-ext@0.5.7': {}
 
-  '@docsearch/css@4.1.0': {}
+  '@docsearch/css@4.2.0': {}
 
-  '@docsearch/react@4.1.0(@algolia/client-search@5.35.0)(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(search-insights@2.17.3)':
+  '@docsearch/react@4.2.0(@algolia/client-search@5.35.0)(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(search-insights@2.17.3)':
     dependencies:
       '@ai-sdk/react': 2.0.53(react@19.2.0)(zod@4.1.11)
       '@algolia/autocomplete-core': 1.19.2(@algolia/client-search@5.35.0)(algoliasearch@5.35.0)(search-insights@2.17.3)
-      '@docsearch/css': 4.1.0
+      '@docsearch/css': 4.2.0
       ai: 5.0.53(zod@4.1.11)
       algoliasearch: 5.35.0
       marked: 16.3.0
