@@ -5,7 +5,7 @@ import { useFocusedItem } from '../hooks/useFocusedItem';
 import { useLineSeriesContext, useXAxes, useYAxes } from '../hooks';
 
 const RADIUS = 6;
-export function FocusedMark() {
+export function LineFocusedMark() {
   const theme = useTheme();
   const focusedItem = useFocusedItem();
 

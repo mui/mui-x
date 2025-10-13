@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import { barElementClasses } from './barElementClasses';
 import { BarElement, BarElementSlotProps, BarElementSlots } from './BarElement';
 import { BarItemIdentifier } from '../models';
@@ -13,6 +13,7 @@ import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
 import { useBarPlotData } from './useBarPlotData';
 import { useUtilityClasses } from './barClasses';
+import { useFocusedItem } from '../hooks/useFocusedItem';
 
 export interface BarPlotSlots extends BarElementSlots, BarLabelSlots {}
 
@@ -71,6 +72,10 @@ const BarPlotRoot = styled('g', {
  */
 function BarPlot(props: BarPlotProps) {
   const { skipAnimation: inSkipAnimation, onItemClick, borderRadius, barLabel, ...other } = props;
+
+  const theme = useTheme();
+
+  const focusedItem = useFocusedItem();
   const isZoomInteracting = useInternalIsZoomInteracting();
   const skipAnimation = useSkipAnimation(isZoomInteracting || inSkipAnimation);
   const { xAxis: xAxes } = useXAxes();
@@ -79,6 +84,13 @@ function BarPlot(props: BarPlotProps) {
 
   const withoutBorderRadius = !borderRadius || borderRadius <= 0;
   const classes = useUtilityClasses();
+
+  const focusedItemProps =
+    focusedItem?.seriesType === 'bar'
+      ? completedData.find((series) => series.seriesId === focusedItem.seriesId)?.data[
+          focusedItem.dataIndex
+        ]
+      : null;
 
   return (
     <BarPlotRoot className={classes.root}>
@@ -147,6 +159,21 @@ function BarPlot(props: BarPlotProps) {
           </g>
         );
       })}
+
+      {focusedItemProps && (
+        <rect
+          x={focusedItemProps.x - 3}
+          y={focusedItemProps.y - 3}
+          width={focusedItemProps.width + 6}
+          height={focusedItemProps.height + 6}
+          fill="transparent"
+          stroke={(theme.vars ?? theme).palette.text.primary}
+          strokeWidth={2}
+          rx={3}
+          ry={3}
+          pointerEvents="none"
+        />
+      )}
       {barLabel && (
         <BarLabelPlot
           bars={completedData}

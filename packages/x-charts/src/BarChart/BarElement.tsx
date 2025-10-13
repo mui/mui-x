@@ -110,7 +110,6 @@ function BarElement(props: BarElementProps) {
       fill: color,
       skipAnimation,
       layout,
-      'data-focused': isFocused || undefined,
     },
     className: classes.root,
     ownerState,
