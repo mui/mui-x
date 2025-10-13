@@ -42,6 +42,7 @@ export function useBarPlotData(
       const yAxisConfig = yAxes[yAxisId];
 
       const verticalLayout = series[seriesId].layout === 'vertical';
+      const reverse = (verticalLayout ? yAxisConfig.reverse : xAxisConfig.reverse) ?? false;
 
       checkScaleErrors(verticalLayout, seriesId, series[seriesId], xAxisId, xAxes, yAxisId, yAxes);
 
@@ -79,13 +80,10 @@ export function useBarPlotData(
 
         const stackId = series[seriesId].stack;
 
-        const { barSize, startCoordinate } = getValueCoordinate(
-          verticalLayout,
-          minValueCoord,
-          maxValueCoord,
-          currentSeriesData[dataIndex],
-          minBarSize,
-        );
+        const barSize = baseValue === 0 ? 0 : Math.max(minBarSize, maxValueCoord - minValueCoord);
+        const startCoordinate = shouldInvertStartCoordinate(verticalLayout, baseValue, reverse)
+          ? maxValueCoord - barSize
+          : minValueCoord;
 
         const result = {
           seriesId,
@@ -132,7 +130,6 @@ export function useBarPlotData(
         mask.x = Math.min(mask.x === 0 ? Infinity : mask.x, result.x);
         mask.y = Math.min(mask.y === 0 ? Infinity : mask.y, result.y);
 
-        const reverse = (verticalLayout ? yAxisConfig.reverse : xAxisConfig.reverse) ?? false;
         const value = result.value ?? 0;
         mask.hasNegative = mask.hasNegative || (reverse ? value > 0 : value < 0);
         mask.hasPositive = mask.hasPositive || (reverse ? value < 0 : value > 0);
@@ -185,32 +182,14 @@ function getBandSize({
   };
 }
 
-function getValueCoordinate(
-  isVertical: boolean,
-  minValueCoord: number,
-  maxValueCoord: number,
-  baseValue: number | null,
-  minBarSize: number,
-): { barSize: number; startCoordinate: number } {
-  if (baseValue === 0 || baseValue == null) {
-    return {
-      barSize: 0,
-      startCoordinate: minValueCoord,
-    };
+function shouldInvertStartCoordinate(verticalLayout: boolean, baseValue: number, reverse: boolean) {
+  const isVerticalAndPositive = verticalLayout && baseValue > 0;
+  const isHorizontalAndNegative = !verticalLayout && baseValue < 0;
+  let invertStartCoordinate = isVerticalAndPositive || isHorizontalAndNegative;
+
+  if (reverse) {
+    invertStartCoordinate = !invertStartCoordinate;
   }
 
-  const isSizeLessThanMin = maxValueCoord - minValueCoord < minBarSize;
-  const barSize = isSizeLessThanMin ? minBarSize : maxValueCoord - minValueCoord;
-
-  const isVerticalAndPositive = isVertical && baseValue >= 0;
-  const isHorizontalAndNegative = !isVertical && baseValue < 0;
-
-  if (isSizeLessThanMin && (isVerticalAndPositive || isHorizontalAndNegative)) {
-    return {
-      barSize,
-      startCoordinate: maxValueCoord - barSize,
-    };
-  }
-
-  return { barSize, startCoordinate: minValueCoord };
+  return invertStartCoordinate;
 }
