@@ -43,6 +43,7 @@ default-job: &default-job
     # expose it globally otherwise we have to thread it from each job to the install command
     BROWSERSTACK_FORCE: << pipeline.parameters.browserstack-force >>
     REACT_VERSION: << parameters.react-version >>
+    MUI_V6: << pipeline.parameters.with-material-ui-6 >>
     COREPACK_ENABLE_DOWNLOAD_PROMPT: '0'
   working_directory: /tmp/mui
   docker:
@@ -71,6 +72,10 @@ commands:
         description: The version of React to use.
         type: string
         default: << pipeline.parameters.react-version >>
+      with-material-ui-6:
+        description: Use material-ui v6 for additional checks and tests
+        type: boolean
+        default: << pipeline.parameters.with-material-ui-6 >>
     steps:
       - when:
           condition: << parameters.playwright >>
@@ -95,17 +100,18 @@ commands:
       - run:
           name: Install js dependencies
           command: |
-            if [ -n "$REACT_VERSION" ]; then
-              pnpm dlx @mui/internal-code-infra set-version-overrides "react@$REACT_VERSION"
+            args=""
+            if [ -n "$REACT_VERSION" ] && [ "$REACT_VERSION" != "stable" ]; then
+              args="react@$REACT_VERSION"
+            fi
+            if [ "$MUI_V6" = "true" ]; then
+              args="$args @mui/material@6 @mui/system@6 @mui/icons-material@6 @mui/utils@6 @mui/material-nextjs@6 @mui/lab@latest"
+            fi
+            if [ -n "$args" ]; then
+              pnpm dlx @mui/internal-code-infra set-version-overrides $args
             else
               pnpm install
             fi
-      - when:
-          condition: << pipeline.parameters.with-material-ui-6 >>
-          steps:
-            - run:
-                name: Install @mui/material v6
-                command: pnpm use-material-ui-v6
 
 jobs:
   checkout:
