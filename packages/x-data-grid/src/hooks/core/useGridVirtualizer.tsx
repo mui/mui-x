@@ -370,7 +370,6 @@ export function useGridVirtualizer() {
       return;
     }
     if (virtualization !== apiRef.current.state.virtualization) {
-      console.log('virtualization change', virtualization);
       apiRef.current.setState((gridState) => ({
         ...gridState,
         virtualization,
