@@ -19,6 +19,7 @@ export default function BrushBasic() {
             area: true,
           },
         ]}
+        enableBrush
         xAxis={[
           {
             data: [

@@ -118,6 +118,7 @@ export default function BrushCustomOverlay() {
             label: 'Revenue',
           },
         ]}
+        enableBrush
         xAxis={[
           {
             data: ['Q1', 'Q2', 'Q3', 'Q4'],

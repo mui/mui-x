@@ -36,11 +36,11 @@ export interface UseChartBrushParameters {
    * Enables or disables the brush interaction.
    * @default false
    */
-  brushEnabled?: boolean;
+  enableBrush?: boolean;
 }
 
 export type UseChartBrushDefaultizedParameters = {
-  brushEnabled: boolean;
+  enableBrush: boolean;
 };
 
 export type UseChartBrushSignature = ChartPluginSignature<{

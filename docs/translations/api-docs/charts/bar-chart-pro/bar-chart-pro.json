@@ -9,7 +9,7 @@
       "description": "If provided, the function will be used to format the label of the bar. It can be set to &#39;value&#39; to display the current value."
     },
     "borderRadius": { "description": "Defines the border radius of the bar element." },
-    "brushEnabled": { "description": "Enables or disables the brush interaction." },
+    "enableBrush": { "description": "Enables or disables the brush interaction." },
     "colors": { "description": "Color palette used to colorize multiple series." },
     "dataset": {
       "description": "An array of objects that can be used to populate series and axes data using their <code>dataKey</code> property."
