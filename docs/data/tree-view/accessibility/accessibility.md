@@ -50,7 +50,7 @@ Some devices may lack certain keys, requiring the use of key combinations. In th
 |                                                                    <kbd class="key">End</kbd> | Focuses the last item in the tree                                                                                                                                                                                    |
 |                                                                     <kbd class="key">\*</kbd> | Expands all siblings that are at the same level as the focused item without moving focus                                                                                                                             |
 
-Type-ahead is supported for single characters. When typing a character, focus moves to the next item with a label that starts with the typed character.
+Type-ahead is supported for single or multiple characters. When typing a character, focus moves to the next item with a label that starts with the typed characters.
 
 ## Selection
 
