@@ -46,18 +46,21 @@ describe('<ChartsLabelGradient />', () => {
     describe('horizontal', () => {
       it('should render a gradient in the correct orientation', () => {
         const { container } = render(<ChartsLabelGradient gradientId="gradient.test-id" />);
+        // eslint-disable-next-line testing-library/no-container
         const svg = container.querySelector('svg');
         expect(matrixToRotation(svg)).to.equal(0);
       });
 
       it('should reverse the gradient', () => {
         const { container } = render(<ChartsLabelGradient gradientId="gradient.test-id" reverse />);
+        // eslint-disable-next-line testing-library/no-container
         const svg = container.querySelector('svg');
         expect(matrixToRotation(svg)).to.equal(180);
       });
 
       it('should rotate the gradient', () => {
         const { container } = render(<ChartsLabelGradient gradientId="gradient.test-id" rotate />);
+        // eslint-disable-next-line testing-library/no-container
         const svg = container.querySelector('svg');
         expect(matrixToRotation(svg)).to.equal(90);
       });
@@ -66,6 +69,7 @@ describe('<ChartsLabelGradient />', () => {
         const { container } = render(
           <ChartsLabelGradient gradientId="gradient.test-id" reverse rotate />,
         );
+        // eslint-disable-next-line testing-library/no-container
         const svg = container.querySelector('svg');
         expect(matrixToRotation(svg)).to.equal(-90);
       });
@@ -76,6 +80,7 @@ describe('<ChartsLabelGradient />', () => {
         const { container } = render(
           <ChartsLabelGradient gradientId="gradient.test-id" direction="vertical" />,
         );
+        // eslint-disable-next-line testing-library/no-container
         const svg = container.querySelector('svg');
         expect(matrixToRotation(svg)).to.equal(-90);
       });
@@ -84,6 +89,7 @@ describe('<ChartsLabelGradient />', () => {
         const { container } = render(
           <ChartsLabelGradient gradientId="gradient.test-id" direction="vertical" reverse />,
         );
+        // eslint-disable-next-line testing-library/no-container
         const svg = container.querySelector('svg');
         expect(matrixToRotation(svg)).to.equal(90);
       });
@@ -92,6 +98,7 @@ describe('<ChartsLabelGradient />', () => {
         const { container } = render(
           <ChartsLabelGradient gradientId="gradient.test-id" direction="vertical" rotate />,
         );
+        // eslint-disable-next-line testing-library/no-container
         const svg = container.querySelector('svg');
         expect(matrixToRotation(svg)).to.equal(0);
       });
@@ -100,6 +107,7 @@ describe('<ChartsLabelGradient />', () => {
         const { container } = render(
           <ChartsLabelGradient gradientId="gradient.test-id" direction="vertical" reverse rotate />,
         );
+        // eslint-disable-next-line testing-library/no-container
         const svg = container.querySelector('svg');
         expect(matrixToRotation(svg)).to.equal(180);
       });
@@ -111,6 +119,7 @@ describe('<ChartsLabelGradient />', () => {
           const { container } = render(<ChartsLabelGradient gradientId="gradient.test-id" />, {
             wrapper: RtlWrapper,
           });
+          // eslint-disable-next-line testing-library/no-container
           const svg = container.querySelector('svg');
           // Technically it is -180, but the browser will normalize it to 180
           expect(matrixToRotation(svg)).to.equal(180);
@@ -121,6 +130,7 @@ describe('<ChartsLabelGradient />', () => {
             <ChartsLabelGradient gradientId="gradient.test-id" reverse />,
             { wrapper: RtlWrapper },
           );
+          // eslint-disable-next-line testing-library/no-container
           const svg = container.querySelector('svg');
           expect(matrixToRotation(svg)).to.equal(0);
         });
@@ -130,6 +140,7 @@ describe('<ChartsLabelGradient />', () => {
             <ChartsLabelGradient gradientId="gradient.test-id" rotate />,
             { wrapper: RtlWrapper },
           );
+          // eslint-disable-next-line testing-library/no-container
           const svg = container.querySelector('svg');
           expect(matrixToRotation(svg)).to.equal(-90);
         });
@@ -139,6 +150,7 @@ describe('<ChartsLabelGradient />', () => {
             <ChartsLabelGradient gradientId="gradient.test-id" reverse rotate />,
             { wrapper: RtlWrapper },
           );
+          // eslint-disable-next-line testing-library/no-container
           const svg = container.querySelector('svg');
           expect(matrixToRotation(svg)).to.equal(90);
         });
@@ -150,6 +162,7 @@ describe('<ChartsLabelGradient />', () => {
             <ChartsLabelGradient gradientId="gradient.test-id" direction="vertical" />,
             { wrapper: RtlWrapper },
           );
+          // eslint-disable-next-line testing-library/no-container
           const svg = container.querySelector('svg');
           expect(matrixToRotation(svg)).to.equal(-90);
         });
@@ -159,6 +172,7 @@ describe('<ChartsLabelGradient />', () => {
             <ChartsLabelGradient gradientId="gradient.test-id" direction="vertical" reverse />,
             { wrapper: RtlWrapper },
           );
+          // eslint-disable-next-line testing-library/no-container
           const svg = container.querySelector('svg');
           expect(matrixToRotation(svg)).to.equal(90);
         });
@@ -168,6 +182,7 @@ describe('<ChartsLabelGradient />', () => {
             <ChartsLabelGradient gradientId="gradient.test-id" direction="vertical" rotate />,
             { wrapper: RtlWrapper },
           );
+          // eslint-disable-next-line testing-library/no-container
           const svg = container.querySelector('svg');
           expect(matrixToRotation(svg)).to.equal(0);
         });
@@ -182,6 +197,7 @@ describe('<ChartsLabelGradient />', () => {
             />,
             { wrapper: RtlWrapper },
           );
+          // eslint-disable-next-line testing-library/no-container
           const svg = container.querySelector('svg');
           expect(matrixToRotation(svg)).to.equal(180);
         });
