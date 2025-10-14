@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createSchedulerRenderer } from 'test/utils/scheduler';
-import { StandaloneView } from '@mui/x-scheduler/standalone-view';
+import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
 import { HeaderToolbar } from './HeaderToolbar';
 
 describe('<ViewSwitcher />', () => {
@@ -14,9 +14,9 @@ describe('<ViewSwitcher />', () => {
   // Rendering the HeaderToolbar instead of the ViewSwitcher directly - ViewSwitcher takes views as a prop from toolbar
   it('should render the first three views + Arrow down for the default set of views', () => {
     const { container } = render(
-      <StandaloneView {...standaloneDefaults}>
+      <EventCalendarProvider {...standaloneDefaults}>
         <HeaderToolbar />
-      </StandaloneView>,
+      </EventCalendarProvider>,
     );
 
     const buttons = container.querySelectorAll('.MainItem');
@@ -29,9 +29,9 @@ describe('<ViewSwitcher />', () => {
 
   it('should render the first three views + Arrow down for a custom set of views (with more than 3 views)', () => {
     const { container } = render(
-      <StandaloneView {...standaloneDefaults} views={['agenda', 'week', 'day', 'month']}>
+      <EventCalendarProvider {...standaloneDefaults} views={['agenda', 'week', 'day', 'month']}>
         <HeaderToolbar />
-      </StandaloneView>,
+      </EventCalendarProvider>,
     );
 
     const buttons = container.querySelectorAll('.MainItem');
@@ -44,9 +44,13 @@ describe('<ViewSwitcher />', () => {
 
   it('should render the first three views + the selected view for a custom set of views (with more than 3 views)', () => {
     const { container } = render(
-      <StandaloneView {...standaloneDefaults} view="day" views={['agenda', 'week', 'day', 'month']}>
+      <EventCalendarProvider
+        {...standaloneDefaults}
+        view="day"
+        views={['agenda', 'week', 'day', 'month']}
+      >
         <HeaderToolbar />
-      </StandaloneView>,
+      </EventCalendarProvider>,
     );
 
     const buttons = container.querySelectorAll('.MainItem');
@@ -60,9 +64,9 @@ describe('<ViewSwitcher />', () => {
 
   it('should render the three first views for a custom set of views (with exactly 3 views)', () => {
     const { container } = render(
-      <StandaloneView {...standaloneDefaults} views={['agenda', 'week', 'day']}>
+      <EventCalendarProvider {...standaloneDefaults} views={['agenda', 'week', 'day']}>
         <HeaderToolbar />
-      </StandaloneView>,
+      </EventCalendarProvider>,
     );
 
     const buttons = container.querySelectorAll('.MainItem');
@@ -74,9 +78,9 @@ describe('<ViewSwitcher />', () => {
 
   it('should render the two first views for a custom set of views (with exactly 2 views)', () => {
     const { container } = render(
-      <StandaloneView {...standaloneDefaults} views={['agenda', 'week']}>
+      <EventCalendarProvider {...standaloneDefaults} views={['agenda', 'week']}>
         <HeaderToolbar />
-      </StandaloneView>,
+      </EventCalendarProvider>,
     );
 
     const buttons = container.querySelectorAll('.MainItem');
