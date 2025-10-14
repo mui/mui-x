@@ -158,8 +158,6 @@ export function useGridVirtualizer() {
   const { getRowHeight, getEstimatedRowHeight, getRowSpacing } = rootProps;
   // </ROWS_META>
 
-  const focusedVirtualCell = useGridSelector(apiRef, gridFocusedVirtualCellSelector);
-
   const RowSlot = rootProps.slots.row;
   const rowSlotProps = rootProps.slotProps?.row;
 
@@ -251,7 +249,7 @@ export function useGridVirtualizer() {
     ),
     virtualizeColumnsWithAutoRowHeight: rootProps.virtualizeColumnsWithAutoRowHeight,
 
-    focusedVirtualCell: useEventCallback(() => focusedVirtualCell),
+    focusedVirtualCell: useEventCallback(() => gridFocusedVirtualCellSelector(apiRef)),
 
     resizeThrottleMs: rootProps.resizeThrottleMs,
     onResize: useEventCallback((size) => apiRef.current.publishEvent('resize', size)),

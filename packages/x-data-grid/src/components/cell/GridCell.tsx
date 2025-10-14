@@ -40,6 +40,7 @@ import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiCon
 import { gridEditCellStateSelector } from '../../hooks/features/editing/gridEditingSelectors';
 import { attachPinnedStyle } from '../../internals/utils';
 import { useGridConfiguration } from '../../hooks/utils/useGridConfiguration';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 
 export const gridPinnedColumnPositionLookup = {
   [PinnedColumnPosition.LEFT]: GridPinnedColumnPosition.LEFT,
@@ -350,7 +351,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
     return cellStyle;
   }, [width, isNotVisible, styleProp, pinnedOffset, pinnedPosition, isRtl, rowSpan]);
 
-  React.useEffect(() => {
+  useEnhancedEffect(() => {
     if (!hasFocus || cellMode === GridCellModes.Edit) {
       return;
     }
