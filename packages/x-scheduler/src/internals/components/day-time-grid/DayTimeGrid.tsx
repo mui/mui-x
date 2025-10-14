@@ -25,15 +25,18 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 ) {
   const { days, className, ...other } = props;
 
+  // Context hooks
   const adapter = useAdapter();
   const translations = useTranslations();
   const store = useEventCalendarStoreContext();
 
+  // Context hooks
   const bodyRef = React.useRef<HTMLDivElement>(null);
   const allDayHeaderWrapperRef = React.useRef<HTMLDivElement>(null);
   const containerRef = React.useRef<HTMLElement | null>(null);
   const handleRef = useMergedRefs(forwardedRef, containerRef);
 
+  // Selector hooks
   const visibleDate = useStore(store, selectors.visibleDate);
   const hasDayView = useStore(store, selectors.hasDayView);
   const now = useStore(store, selectors.nowUpdatedEveryMinute);
@@ -41,6 +44,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const ampm = useStore(store, selectors.ampm);
   const showCurrentTimeIndicator = useStore(store, selectors.showCurrentTimeIndicator);
 
+  // Feature hooks
   const occurrencesMap = useEventOccurrencesGroupedByDay({ days, renderEventIn: 'every-day' });
   const occurrences = useEventOccurrencesWithDayGridPosition({
     days,
@@ -87,6 +91,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 
   const renderHeaderContent = (day: CalendarProcessedDate) => (
     <span className="DayTimeGridHeaderContent">
+      {/* TODO: Add the 3 letter week day format to the adapter */}
       <span className="DayTimeGridHeaderDayName">{adapter.formatByString(day.value, 'ccc')}</span>
       <span className="DayTimeGridHeaderDayNumber">{adapter.format(day.value, 'dayOfMonth')}</span>
     </span>
