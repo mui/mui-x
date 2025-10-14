@@ -28,7 +28,7 @@ export function createDiscreteScaleGetAxisFilter(
 }
 
 export function createContinuousScaleGetAxisFilter(
-  domain: NumberValue[],
+  domain: readonly NumberValue[],
   zoomStart: number,
   zoomEnd: number,
   direction: 'x' | 'y',

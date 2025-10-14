@@ -17,11 +17,11 @@ import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headles
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-timeline-position';
 import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
 import { EventPopoverTrigger } from '../event-popover';
-import { useEventPopoverContext } from '../event-popover/EventPopoverContext';
+import { useEventPopoverContext } from '../event-popover/EventPopover';
 import './DayTimeGrid.css';
 
 export function TimeGridColumn(props: TimeGridColumnProps) {
-  const { day, isToday, showCurrentTimeIndicator, index } = props;
+  const { day, showCurrentTimeIndicator, index } = props;
 
   const adapter = useAdapter();
   const start = React.useMemo(() => adapter.startOfDay(day.value), [adapter, day]);
@@ -35,13 +35,12 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
     <CalendarGrid.TimeColumn
       start={start}
       end={end}
+      addPropertiesToDroppedEvent={addPropertiesToDroppedEvent}
       className="DayTimeGridColumn"
       data-weekend={isWeekend(adapter, day.value) ? '' : undefined}
-      data-current={isToday ? '' : undefined}
       style={{ '--columns-count': maxIndex } as React.CSSProperties}
     >
       <ColumnInteractiveLayer
-        day={day}
         start={start}
         end={end}
         showCurrentTimeIndicator={showCurrentTimeIndicator}
@@ -54,7 +53,6 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
 }
 
 function ColumnInteractiveLayer({
-  day,
   start,
   end,
   showCurrentTimeIndicator,
@@ -62,7 +60,6 @@ function ColumnInteractiveLayer({
   occurrences,
   maxIndex,
 }: {
-  day: useEventOccurrencesWithDayGridPosition.DayData;
   start: SchedulerValidDate;
   end: SchedulerValidDate;
   showCurrentTimeIndicator: boolean;
@@ -79,7 +76,7 @@ function ColumnInteractiveLayer({
     elementRef: columnRef,
     snapMinutes: EVENT_CREATION_PRECISION_MINUTE,
   });
-  const { startEditing } = useEventPopoverContext();
+  const { open: startEditing } = useEventPopoverContext();
   const isCreation = useStore(store, selectors.isCreatingNewEventInTimeRange, start, end);
 
   const computeInitialRange = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -94,12 +91,10 @@ function ColumnInteractiveLayer({
   const handleDoubleClick = (event: React.MouseEvent<HTMLDivElement>) => {
     const draftRange = computeInitialRange(event);
     store.setOccurrencePlaceholder({
-      eventId: null,
-      occurrenceKey: 'create-placeholder',
+      type: 'creation',
       surfaceType: 'time-grid',
       start: draftRange.start,
       end: draftRange.end,
-      originalStart: null,
     });
   };
 
@@ -120,22 +115,10 @@ function ColumnInteractiveLayer({
         <EventPopoverTrigger
           key={occurrence.key}
           occurrence={occurrence}
-          render={
-            <TimeGridEvent
-              occurrence={occurrence}
-              variant="regular"
-              ariaLabelledBy={`DayTimeGridHeaderCell-${adapter.getDate(day.value)}`}
-            />
-          }
+          render={<TimeGridEvent occurrence={occurrence} variant="regular" />}
         />
       ))}
-      {placeholder != null && (
-        <TimeGridEvent
-          occurrence={placeholder}
-          variant="placeholder"
-          ariaLabelledBy={`DayTimeGridHeaderCell-${day.key}`}
-        />
-      )}
+      {placeholder != null && <TimeGridEvent occurrence={placeholder} variant="placeholder" />}
       {showCurrentTimeIndicator ? (
         <CalendarGrid.CurrentTimeIndicator className="DayTimeGridCurrentTimeIndicator">
           {index === 0 && <TimeGridCurrentTimeLabel />}
@@ -166,7 +149,15 @@ function TimeGridCurrentTimeLabel() {
 
 interface TimeGridColumnProps {
   day: useEventOccurrencesWithDayGridPosition.DayData;
-  isToday: boolean;
   index: number;
   showCurrentTimeIndicator: boolean;
+}
+
+/**
+ * Makes sure any event dropped in the time grid column is turned into an non all-day event.
+ */
+function addPropertiesToDroppedEvent() {
+  return {
+    allDay: false,
+  };
 }

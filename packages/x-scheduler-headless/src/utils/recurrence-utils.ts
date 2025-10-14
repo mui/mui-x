@@ -4,12 +4,13 @@ import {
   ByDayValue,
   CalendarEvent,
   CalendarEventOccurrence,
-  RecurringEventUpdatedProperties,
+  CalendarEventUpdatedProperties,
   RRuleSpec,
   SchedulerValidDate,
 } from '../models';
 import { mergeDateAndTime, getDateKey } from './date-utils';
 import { diffIn } from '../use-adapter';
+import { UpdateEventsParameters } from './SchedulerStore';
 
 /**
  * Build BYDAY<->number maps using a known ISO Monday (2025-01-06).
@@ -151,6 +152,10 @@ export function getRecurringEventOccurrencesForVisibleDays(
       : adapter.addMinutes(occurrenceStart, durationMinutes);
 
     const key = `${event.id}::${getDateKey(occurrenceStart, adapter)}`;
+
+    if ((event.exDates ?? []).some((exDate) => adapter.isSameDay(exDate, occurrenceStart))) {
+      continue;
+    }
 
     instances.push({
       ...event,
@@ -766,26 +771,20 @@ export function decideSplitRRule(
  */
 export function applyRecurringUpdateFollowing(
   adapter: Adapter,
-  events: CalendarEvent[],
   originalEvent: CalendarEvent,
   occurrenceStart: SchedulerValidDate,
-  changes: RecurringEventUpdatedProperties,
-): CalendarEvent[] {
+  changes: CalendarEventUpdatedProperties,
+): UpdateEventsParameters {
+  const newStart = changes.start ?? originalEvent.start;
+
   // 1) Old series: truncate rule to end the day before the edited occurrence
   const occurrenceDayStart = adapter.startOfDay(occurrenceStart);
   const untilDate = adapter.addDays(occurrenceDayStart, -1);
 
   const originalRule = originalEvent.rrule as RRuleSpec;
   const { count, until, ...baseRule } = originalRule;
-  const truncatedRule = { ...baseRule, until: untilDate };
 
-  // 2) If UNTIL falls before DTSTART, the original series has no remaining occurrences -> drop it
-  const shouldDropOldSeries = adapter.isBefore(
-    adapter.endOfDay(untilDate),
-    adapter.startOfDay(originalEvent.start),
-  );
-
-  // 3) New event: apply changes, decide RRULE for the new series
+  // 2) New event: apply changes, decide RRULE for the new series
   const newRRule = decideSplitRRule(
     adapter,
     originalRule,
@@ -793,28 +792,30 @@ export function applyRecurringUpdateFollowing(
     occurrenceStart,
     changes,
   );
-  const newEventId = `${originalEvent.id}::${adapter.format(changes.start, 'keyboardDate')}`;
+  const newEventId = `${originalEvent.id}::${getDateKey(newStart, adapter)}`;
 
   const newEvent: CalendarEvent = {
     ...originalEvent,
     ...changes,
     id: newEventId,
-    start: changes.start,
-    end: changes.end,
     rrule: newRRule,
     extractedFromId: originalEvent.id,
   };
 
-  // 4) Build the final events list: old series (updated or dropped) + new event
-  const updatedEvents = shouldDropOldSeries
-    ? [...events.filter((event) => event.id !== originalEvent.id), newEvent]
-    : [
-        ...events.map((event) =>
-          event.id === originalEvent.id ? { ...originalEvent, rrule: truncatedRule } : event,
-        ),
-        newEvent,
-      ];
-  return updatedEvents;
+  // 3) If UNTIL falls before DTSTART, the original series has no remaining occurrences -> drop it, otherwise truncate it.
+  const shouldDropOldSeries = adapter.isBefore(
+    adapter.endOfDay(untilDate),
+    adapter.startOfDay(originalEvent.start),
+  );
+
+  if (shouldDropOldSeries) {
+    return { created: [newEvent], deleted: [originalEvent.id] };
+  }
+
+  return {
+    created: [newEvent],
+    updated: [{ id: originalEvent.id, rrule: { ...baseRule, until: untilDate } }],
+  };
 }
 
 /**
@@ -826,39 +827,68 @@ export function applyRecurringUpdateFollowing(
  */
 export function applyRecurringUpdateAll(
   adapter: Adapter,
-  events: CalendarEvent[],
   originalEvent: CalendarEvent,
   occurrenceStart: SchedulerValidDate,
-  changes: RecurringEventUpdatedProperties,
-): CalendarEvent[] {
-  const occurrenceEnd = adapter.addMinutes(
-    occurrenceStart,
-    diffIn(adapter, originalEvent.end, originalEvent.start, 'minutes'),
-  );
-  // 1) Detect if the caller changed the date part of start or end
-  const touchedStartDateDay = !adapter.isSameDay(occurrenceStart, changes.start);
-  const touchedEndDateDateDay = !adapter.isSameDay(occurrenceEnd, changes.end);
+  changes: CalendarEventUpdatedProperties,
+): UpdateEventsParameters {
+  const eventUpdatedProperties: CalendarEventUpdatedProperties = { ...changes };
 
-  // 2) Start from the current root start/end
-  let nextStart = originalEvent.start;
-  let nextEnd = originalEvent.end;
-
-  // 3) If the caller touched the date part of start or end, use the provided values as-is.
+  // 2) If the caller touched the date part of start or end, use the provided values as-is.
   // Otherwise, merge the new time part into the original start/end dates.
-  if (touchedStartDateDay || touchedEndDateDateDay) {
-    nextStart = changes.start;
-    nextEnd = changes.end;
-  } else {
-    nextStart = mergeDateAndTime(adapter, originalEvent.start, changes.start);
-    nextEnd = mergeDateAndTime(adapter, originalEvent.end, changes.end);
+  if (changes.start != null) {
+    if (adapter.isSameDay(occurrenceStart, changes.start)) {
+      eventUpdatedProperties.start = mergeDateAndTime(adapter, originalEvent.start, changes.start);
+    } else {
+      eventUpdatedProperties.start = changes.start;
+    }
   }
 
-  const newEvent: CalendarEvent = {
-    ...originalEvent,
-    ...changes,
-    ...{ start: nextStart, end: nextEnd },
-  };
+  if (changes.end != null) {
+    const occurrenceEnd = adapter.addMinutes(
+      occurrenceStart,
+      diffIn(adapter, originalEvent.end, originalEvent.start, 'minutes'),
+    );
+
+    if (adapter.isSameDay(occurrenceEnd, changes.end)) {
+      eventUpdatedProperties.end = mergeDateAndTime(adapter, originalEvent.end, changes.end);
+    } else {
+      eventUpdatedProperties.end = changes.end;
+    }
+  }
 
   // 4) Replace the series root in the list
-  return [...events.filter((event) => event.id !== originalEvent.id), newEvent];
+  return { updated: [eventUpdatedProperties] };
+}
+
+/**
+ * Applies a "only-this" update to a recurring series by:
+ *  - creating a detached one-off event with the requested changes, and
+ *  - adding an EXDATE to the original event to exclude the occurrence from the series.
+ * @returns The updated list of events.
+ */
+export function applyRecurringUpdateOnlyThis(
+  adapter: Adapter,
+  originalEvent: CalendarEvent,
+  occurrenceStart: SchedulerValidDate,
+  changes: CalendarEventUpdatedProperties,
+): UpdateEventsParameters {
+  const detachedId = `${originalEvent.id}::${getDateKey(changes.start ?? originalEvent.start, adapter)}`;
+
+  const detachedEvent: CalendarEvent = {
+    ...originalEvent,
+    ...changes,
+    id: detachedId,
+    rrule: undefined,
+    extractedFromId: originalEvent.id,
+  };
+
+  return {
+    created: [detachedEvent],
+    updated: [
+      {
+        id: originalEvent.id,
+        exDates: [...(originalEvent.exDates ?? []), adapter.startOfDay(occurrenceStart)],
+      },
+    ],
+  };
 }

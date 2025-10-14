@@ -10,6 +10,12 @@
       "type": { "name": "shape", "description": "{ preferStrictDomainInLineCharts?: bool }" }
     },
     "height": { "type": { "name": "number" } },
+    "highlightedItem": {
+      "type": {
+        "name": "union",
+        "description": "{ nodeId: number<br>&#124;&nbsp;string, seriesId: number<br>&#124;&nbsp;string, subType: 'node', type: 'sankey' }<br>&#124;&nbsp;{ seriesId: number<br>&#124;&nbsp;string, sourceId: number<br>&#124;&nbsp;string, subType: 'link', targetId: number<br>&#124;&nbsp;string, type: 'sankey' }"
+      }
+    },
     "id": { "type": { "name": "string" } },
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },
@@ -17,6 +23,13 @@
       "type": {
         "name": "union",
         "description": "number<br>&#124;&nbsp;{ bottom?: number, left?: number, right?: number, top?: number }"
+      }
+    },
+    "onHighlightChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(highlightedItem: SankeyHighlightItemData | null) => void",
+        "describedArgs": ["highlightedItem"]
       }
     },
     "onLinkClick": {

@@ -1,7 +1,11 @@
 'use client';
 import * as React from 'react';
+import { useStore } from '@base-ui-components/utils/store';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
+import { useCompositeListItem } from '../../base-ui-copy/composite/list/useCompositeListItem';
+import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
+import { selectors } from '../../use-event-calendar';
 import { CalendarGridTimeColumnContext } from './CalendarGridTimeColumnContext';
 import { useTimeDropTarget } from './useTimeDropTarget';
 
@@ -16,24 +20,43 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
     // Internal props
     start,
     end,
+    addPropertiesToDroppedEvent,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
 
-  const { getCursorPositionInElementMs, ref: dropTargetRef } = useTimeDropTarget({ start, end });
+  const store = useEventCalendarStoreContext();
+  const isCurrentDay = useStore(store, selectors.isCurrentDay, start);
+  const { ref: listItemRef, index } = useCompositeListItem();
+
+  const { getCursorPositionInElementMs, ref: dropTargetRef } = useTimeDropTarget({
+    start,
+    end,
+    addPropertiesToDroppedEvent,
+  });
+
+  const state: CalendarGridTimeColumn.State = React.useMemo(
+    () => ({
+      current: isCurrentDay,
+    }),
+    [isCurrentDay],
+  );
+
   const props = React.useMemo(() => ({ role: 'gridcell' }), []);
 
   const contextValue: CalendarGridTimeColumnContext = React.useMemo(
     () => ({
       start,
       end,
+      index,
       getCursorPositionInElementMs,
     }),
-    [start, end, getCursorPositionInElementMs],
+    [start, end, index, getCursorPositionInElementMs],
   );
 
   const element = useRenderElement('div', componentProps, {
-    ref: [forwardedRef, dropTargetRef],
+    state,
+    ref: [forwardedRef, dropTargetRef, listItemRef],
     props: [props, elementProps],
   });
 
@@ -45,7 +68,12 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
 });
 
 export namespace CalendarGridTimeColumn {
-  export interface State {}
+  export interface State {
+    /**
+     * Whether the column represents the current day.
+     */
+    current: boolean;
+  }
 
   export interface Props extends BaseUIComponentProps<'div', State>, useTimeDropTarget.Parameters {}
 }

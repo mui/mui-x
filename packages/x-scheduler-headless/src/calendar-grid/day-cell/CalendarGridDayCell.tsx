@@ -2,7 +2,9 @@
 import * as React from 'react';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
+import { useCompositeListItem } from '../../base-ui-copy/composite/list/useCompositeListItem';
 import { useDayCellDropTarget } from './useDayCellDropTarget';
+import { CalendarGridDayCellContext } from './CalendarGridDayCellContext';
 
 export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell(
   componentProps: CalendarGridDayCell.Props,
@@ -14,17 +16,33 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
     render,
     // Internal props
     value,
+    addPropertiesToDroppedEvent,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
 
-  const dropTargetRef = useDayCellDropTarget({ value });
+  const { ref: listItemRef, index } = useCompositeListItem();
+  const dropTargetRef = useDayCellDropTarget({ value, addPropertiesToDroppedEvent });
+
   const props = React.useMemo(() => ({ role: 'gridcell' }), []);
 
-  return useRenderElement('div', componentProps, {
-    ref: [forwardedRef, dropTargetRef],
+  const contextValue: CalendarGridDayCellContext = React.useMemo(
+    () => ({
+      index,
+    }),
+    [index],
+  );
+
+  const element = useRenderElement('div', componentProps, {
+    ref: [forwardedRef, dropTargetRef, listItemRef],
     props: [props, elementProps],
   });
+
+  return (
+    <CalendarGridDayCellContext.Provider value={contextValue}>
+      {element}
+    </CalendarGridDayCellContext.Provider>
+  );
 });
 
 export namespace CalendarGridDayCell {

@@ -17,7 +17,7 @@ const aggregationFunctions = {
 export default function ServerSideDataGridAggregationRowGrouping() {
   const apiRef = useGridApiRef();
   const { columns, initialState, fetchRows } = useMockServer({
-    rowGrouping: true,
+    dataSet: 'Movies',
   });
 
   const dataSource = React.useMemo(
@@ -42,7 +42,7 @@ export default function ServerSideDataGridAggregationRowGrouping() {
       },
       getGroupKey: (row) => row.group,
       getChildrenCount: (row) => row.descendantCount,
-      getAggregatedValue: (row, field) => row[`${field}Aggregate`],
+      getAggregatedValue: (row, field) => row[field],
     }),
     [fetchRows],
   );
@@ -68,6 +68,7 @@ export default function ServerSideDataGridAggregationRowGrouping() {
         dataSource={dataSource}
         initialState={initialStateUpdated}
         aggregationFunctions={aggregationFunctions}
+        disablePivoting
       />
     </div>
   );
