@@ -15,6 +15,7 @@ import clsx from 'clsx';
 import { useTheme } from '@mui/material/styles';
 import type { UseChartProZoomSignature } from '../plugins';
 import { brushOverlayClasses } from './ChartsBrushOverlay.classes';
+import { selectorIsZoomBrushEnabled } from '../internals/plugins/useChartProZoom/ZoomInteractionConfig.selectors';
 
 function BrushRect(props: React.SVGProps<SVGRectElement>) {
   return (
@@ -44,7 +45,9 @@ export function ChartsBrushOverlay(_: ChartsBrushOverlayProps) {
   const brushCurrentX = useSelector(store, selectorChartBrushCurrentX);
   const brushCurrentY = useSelector(store, selectorChartBrushCurrentY);
   const brushConfig = useSelector(store, selectorChartBrushConfig);
-  if (!brushStartX || !brushStartY || !brushCurrentX || !brushCurrentY) {
+  const isBrushEnabled = useSelector(store, selectorIsZoomBrushEnabled);
+
+  if (!isBrushEnabled || !brushStartX || !brushStartY || !brushCurrentX || !brushCurrentY) {
     return null;
   }
 
