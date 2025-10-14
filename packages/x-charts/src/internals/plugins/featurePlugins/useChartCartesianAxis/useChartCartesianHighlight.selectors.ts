@@ -26,7 +26,7 @@ const selectAxisHighlight = (
   computedIndex: number | null,
   axis: ComputeResult<ChartsAxisProps>,
   axisItems: AxisItemIdentifier[] | undefined,
-  isBrushSelectionActive: boolean,
+  isBrushSelectionActive: boolean | undefined,
 ) => {
   if (isBrushSelectionActive) {
     return [];
@@ -65,7 +65,7 @@ const selectAxisHighlightWithValue = (
   controlledAxisItems: AxisItemIdentifier[] | undefined,
   keyboardAxisItem: AxisItemIdentifier | undefined,
   lastInteractionUpdate: InteractionUpdateSource | undefined,
-  isBrushSelectionActive: boolean,
+  isBrushSelectionActive: boolean | undefined,
 ) => {
   if (isBrushSelectionActive) {
     return [];
