@@ -251,7 +251,7 @@ export function useGridVirtualizer() {
     ),
     virtualizeColumnsWithAutoRowHeight: rootProps.virtualizeColumnsWithAutoRowHeight,
 
-    focusedVirtualCell: () => focusedVirtualCell,
+    focusedVirtualCell: useEventCallback(() => focusedVirtualCell),
 
     resizeThrottleMs: rootProps.resizeThrottleMs,
     onResize: useEventCallback((size) => apiRef.current.publishEvent('resize', size)),
