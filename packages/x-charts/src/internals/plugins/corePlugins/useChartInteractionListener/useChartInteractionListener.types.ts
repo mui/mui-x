@@ -41,9 +41,9 @@ export type ChartInteraction =
   | 'quickPressEnd'
   | 'zoomDoubleTapReset'
   | 'brush'
-  | 'zoomBrushStart'
-  | 'zoomBrushCancel'
-  | 'zoomBrushEnd';
+  | 'brushStart'
+  | 'brushCancel'
+  | 'brushEnd';
 
 export type InteractionListenerResult = { cleanup: () => void };
 
@@ -57,9 +57,9 @@ export type AddInteractionListener = {
       | 'zoomPanStart'
       | 'zoomPanEnd'
       | 'brush'
-      | 'zoomBrushStart'
-      | 'zoomBrushCancel'
-      | 'zoomBrushEnd',
+      | 'brushStart'
+      | 'brushCancel'
+      | 'brushEnd',
     callback: (event: PanEvent<CustomData>) => void,
     options?: boolean | AddEventListenerOptions,
   ): InteractionListenerResult;

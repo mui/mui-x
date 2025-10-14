@@ -174,13 +174,10 @@ export const useZoomOnBrush = (
       }));
     };
 
-    const brushStartHandler = instance.addInteractionListener('zoomBrushStart', handleBrushStart);
+    const brushStartHandler = instance.addInteractionListener('brushStart', handleBrushStart);
     const brushHandler = instance.addInteractionListener('brush', handleBrush);
-    const brushCancelHandler = instance.addInteractionListener(
-      'zoomBrushCancel',
-      handleBrushCancel,
-    );
-    const brushEndHandler = instance.addInteractionListener('zoomBrushEnd', handleBrushEnd);
+    const brushCancelHandler = instance.addInteractionListener('brushCancel', handleBrushCancel);
+    const brushEndHandler = instance.addInteractionListener('brushEnd', handleBrushEnd);
 
     return () => {
       brushStartHandler.cleanup();
