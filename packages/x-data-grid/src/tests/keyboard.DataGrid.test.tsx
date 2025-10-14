@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen, act } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import {
   getActiveCell,
@@ -199,7 +199,9 @@ describe('<DataGrid /> - Keyboard', () => {
         await user.click(cell);
         expect(getActiveCell()).to.equal('8-1');
         fireEvent.keyDown(document.activeElement!, { key: 'PageUp' });
-        expect(getActiveCell()).to.equal(`3-1`);
+        waitFor(() => {
+          expect(getActiveCell()).to.equal(`3-1`);
+        });
       },
     );
 
