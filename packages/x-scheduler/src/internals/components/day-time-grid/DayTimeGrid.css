@@ -150,6 +150,7 @@
   display: flex;
   height: calc(var(--hour-height) * 24);
   position: relative;
+  overflow: auto;
 }
 
 .DayTimeGridTimeAxis {
