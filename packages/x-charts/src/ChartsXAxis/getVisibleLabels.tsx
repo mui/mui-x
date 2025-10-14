@@ -1,6 +1,6 @@
 'use client';
 import { TickItemType } from '../hooks/useTicks';
-import { ChartsXAxisProps, ComputedXAxis } from '../models/axis';
+import { ChartsXAxisProps } from '../models/axis';
 import { getMinXTranslation } from '../internals/geometry';
 import { ChartsTextStyle } from '../internals/getWordsByLines';
 import { batchMeasureStrings } from '../internals/domUtils';
@@ -8,41 +8,53 @@ import { batchMeasureStrings } from '../internals/domUtils';
 /* Returns a set of indices of the tick labels that should be visible.  */
 export function getVisibleLabels<T extends TickItemType>(
   xTicks: T[],
-  {
-    tickLabelStyle: style,
-    tickLabelInterval,
-    tickLabelMinGap,
-    reverse,
-    isMounted,
-    isXInside,
-  }: Pick<ChartsXAxisProps, 'tickLabelInterval' | 'tickLabelStyle'> &
-    Pick<ComputedXAxis, 'reverse'> & {
-      isMounted: boolean;
-      tickLabelMinGap: NonNullable<ChartsXAxisProps['tickLabelMinGap']>;
-      isXInside: (x: number) => boolean;
-    },
+  tickLabelStyle: ChartsXAxisProps['tickLabelStyle'],
+  tickLabelMinGap: number,
+  reverse: boolean,
+  isMounted: boolean,
+  isXInside: (x: number) => boolean,
+  drawingAreaWidth: number,
 ): Set<T> {
-  if (typeof tickLabelInterval === 'function') {
-    return new Set(xTicks.filter((item, index) => tickLabelInterval(item.value, index)));
-  }
-
   // Filter label to avoid overlap
   let previousTextLimit = 0;
   const direction = reverse ? -1 : 1;
 
-  const candidateTickLabels = xTicks.filter((item) => {
+  let candidateTickLabels: T[] = [];
+
+  for (const item of xTicks) {
     const { offset, labelOffset, formattedValue } = item;
 
     if (formattedValue === '') {
-      return false;
+      continue;
     }
 
     const textPosition = offset + labelOffset;
 
-    return isXInside(textPosition);
-  });
+    if (!isXInside(textPosition)) {
+      continue;
+    }
 
-  const sizeMap = measureTickLabels(candidateTickLabels, style);
+    candidateTickLabels.push(item);
+  }
+
+  // If there are more labels than pixels, we can allocate one label per pixel and skip the rest,
+  // saving time on measuring.
+  if (candidateTickLabels.length > drawingAreaWidth) {
+    const preCandidates: T[] = candidateTickLabels;
+    candidateTickLabels = [];
+
+    let lastPixel = -Infinity;
+    for (const item of preCandidates) {
+      // Round to the nearest pixel to avoid sub-pixel overlap checks
+      const roundedLabelPosition = Math.round(item.offset + item.labelOffset);
+      if (roundedLabelPosition !== lastPixel) {
+        candidateTickLabels.push(item);
+        lastPixel = roundedLabelPosition;
+      }
+    }
+  }
+
+  const sizeMap = measureTickLabels(candidateTickLabels, tickLabelStyle);
 
   return new Set(
     candidateTickLabels.filter((item, labelIndex) => {
@@ -61,7 +73,7 @@ export function getVisibleLabels<T extends TickItemType>(
         ? getTickLabelSize(sizeMap, item)
         : { width: 0, height: 0 };
 
-      const distance = getMinXTranslation(width, height, style?.angle);
+      const distance = getMinXTranslation(width, height, tickLabelStyle?.angle);
 
       const currentTextLimit = textPosition - (direction * distance) / 2;
       if (
