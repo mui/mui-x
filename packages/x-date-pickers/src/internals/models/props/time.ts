@@ -63,9 +63,9 @@ export interface DigitalTimePickerProps
    */
   timeSteps?: TimeStepOptions;
   /**
+   * @ignore
    * Whether the time picker should render in a single column layout.
    * This is computed based on thresholdToRenderTimeInASingleColumn and timeSteps.
-   * @internal
    */
   shouldRenderTimeInASingleColumn?: boolean;
 }

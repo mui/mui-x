@@ -263,9 +263,9 @@ TimePicker.propTypes = {
    */
   shouldDisableTime: PropTypes.func,
   /**
+   * @ignore
    * Whether the time picker should render in a single column layout.
    * This is computed based on thresholdToRenderTimeInASingleColumn and timeSteps.
-   * @internal
    */
   shouldRenderTimeInASingleColumn: PropTypes.bool,
   /**
