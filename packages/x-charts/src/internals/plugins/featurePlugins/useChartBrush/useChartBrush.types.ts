@@ -18,10 +18,9 @@ export interface UseChartBrushState {
 export interface UseChartBrushInstance {
   /**
    * Set the brush coordinates.
-   * @param {BrushCoordinate} start The starting coordinate of the brush.
-   * @param {BrushCoordinate} current The current coordinate of the brush.
+   * @param {BrushCoordinate} point The point coordinate, if start value is null, it will set both start and current to this value.
    */
-  setBrushCoordinates: (start: BrushCoordinate, current: BrushCoordinate) => void;
+  setBrushCoordinates: (point: BrushCoordinate) => void;
   /**
    * Clear the brush coordinates.
    */
@@ -31,10 +30,11 @@ export interface UseChartBrushInstance {
 export interface UseChartBrushParameters {
   /**
    * Callback fired when the brush coordinates change.
-   * @param {BrushCoordinate} start The starting coordinate of the brush.
-   * @param {BrushCoordinate} current The current coordinate of the brush.
+   * @param {object} brush The brush coordinates.
+   * @param {BrushCoordinate} brush.start The starting coordinate of the brush.
+   * @param {BrushCoordinate} brush.current The current coordinate of the brush.
    */
-  onBrushChange?: (start: BrushCoordinate, current: BrushCoordinate) => void;
+  onBrushChange?: (brush: { start: BrushCoordinate; current: BrushCoordinate }) => void;
 }
 
 export type UseChartBrushDefaultizedParameters = UseChartBrushParameters;
