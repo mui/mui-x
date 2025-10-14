@@ -18,7 +18,7 @@ storeClasses.forEach((storeClass) => {
         const state = baseState();
         const start = adapter.date('2025-08-05T09:00:00Z'); // Tuesday
         const presets = selectors.recurrencePresets(state, start);
-        const { numToCode: numToByDay } = getWeekDayMaps(adapter);
+        const { numToCode } = getWeekDayMaps(adapter);
 
         expect(presets.daily).to.deep.equal({
           freq: 'DAILY',
@@ -27,7 +27,7 @@ storeClasses.forEach((storeClass) => {
         expect(presets.weekly).to.deep.equal({
           freq: 'WEEKLY',
           interval: 1,
-          byDay: [numToByDay[adapter.getDayOfWeek(start)]],
+          byDay: [numToCode[adapter.getDayOfWeek(start)]],
         });
         expect(presets.monthly).to.deep.equal({
           freq: 'MONTHLY',

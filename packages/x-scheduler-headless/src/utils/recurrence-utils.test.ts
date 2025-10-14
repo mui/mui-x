@@ -366,8 +366,8 @@ describe('recurrence-utils', () => {
     describe('weekly frequency', () => {
       it('returns true when the weekday is in byDay', () => {
         const event = createEvent();
-        const { numToCode: numToByDay } = getWeekDayMaps(adapter);
-        const code = numToByDay[adapter.getDayOfWeek(event.start)];
+        const { numToCode } = getWeekDayMaps(adapter);
+        const code = numToCode[adapter.getDayOfWeek(event.start)];
         const rule: RecurringEventRecurrenceRule = {
           freq: 'WEEKLY',
           interval: 1,
@@ -388,8 +388,8 @@ describe('recurrence-utils', () => {
 
       it('interval > 1 (every 2 weeks) includes only correct weeks', () => {
         const event = createEvent(baseStart);
-        const { numToCode: numToByDay } = getWeekDayMaps(adapter);
-        const code = numToByDay[adapter.getDayOfWeek(event.start)]; // FR
+        const { numToCode } = getWeekDayMaps(adapter);
+        const code = numToCode[adapter.getDayOfWeek(event.start)]; // FR
         const rule: RecurringEventRecurrenceRule = {
           freq: 'WEEKLY',
           interval: 2,
@@ -680,8 +680,8 @@ describe('recurrence-utils', () => {
     it('returns 0 when target date is before series start', () => {
       const start = adapter.date('2025-06-10T09:00:00Z'); // Tuesday
       const target = adapter.date('2025-06-09T23:59:59Z'); // Mon before start
-      const { numToCode: numToByDay } = getWeekDayMaps(adapter);
-      const code = numToByDay[adapter.getDayOfWeek(start)]; // TU
+      const { numToCode } = getWeekDayMaps(adapter);
+      const code = numToCode[adapter.getDayOfWeek(start)]; // TU
       expect(countWeeklyOccurrencesUpToExact(adapter, createRule([code]), start, target)).to.equal(
         0,
       );
@@ -690,8 +690,8 @@ describe('recurrence-utils', () => {
     it('counts first occurrence when target is same day', () => {
       const start = adapter.date('2025-06-10T09:00:00Z'); // Tuesday
       const target = adapter.date('2025-06-10T23:59:59Z');
-      const { numToCode: numToByDay } = getWeekDayMaps(adapter);
-      const code = numToByDay[adapter.getDayOfWeek(start)]; // TU
+      const { numToCode } = getWeekDayMaps(adapter);
+      const code = numToCode[adapter.getDayOfWeek(start)]; // TU
       expect(countWeeklyOccurrencesUpToExact(adapter, createRule([code]), start, target)).to.equal(
         1,
       );
@@ -700,8 +700,8 @@ describe('recurrence-utils', () => {
     it('counts occurrences for a single weekday across several weeks (interval=1)', () => {
       const start = adapter.date('2025-06-10T09:00:00Z'); // Tuesday
       const target = adapter.date('2025-07-08T12:00:00Z'); // 5 Tuesdays inclusive
-      const { numToCode: numToByDay } = getWeekDayMaps(adapter);
-      const code = numToByDay[adapter.getDayOfWeek(start)]; // TU
+      const { numToCode } = getWeekDayMaps(adapter);
+      const code = numToCode[adapter.getDayOfWeek(start)]; // TU
       expect(countWeeklyOccurrencesUpToExact(adapter, createRule([code]), start, target)).to.equal(
         5,
       );
@@ -720,8 +720,8 @@ describe('recurrence-utils', () => {
     it('respects interval > 1 (every 2 weeks)', () => {
       const start = adapter.date('2025-06-10T09:00:00Z'); // Tuesday
       const target = adapter.date('2025-07-22T12:00:00Z');
-      const { numToCode: numToByDay } = getWeekDayMaps(adapter);
-      const code = numToByDay[adapter.getDayOfWeek(start)]; // TU
+      const { numToCode } = getWeekDayMaps(adapter);
+      const code = numToCode[adapter.getDayOfWeek(start)]; // TU
       expect(
         countWeeklyOccurrencesUpToExact(adapter, createRule([code], 2), start, target),
       ).to.equal(4);
@@ -730,8 +730,8 @@ describe('recurrence-utils', () => {
     it('does not count weekday in target week occurring after target day', () => {
       const start = adapter.date('2025-06-10T09:00:00Z'); // Tuesday
       const target = adapter.date('2025-06-23T12:00:00Z'); // Monday of week containing Tue 24
-      const { numToCode: numToByDay } = getWeekDayMaps(adapter);
-      const code = numToByDay[adapter.getDayOfWeek(start)]; // TU
+      const { numToCode } = getWeekDayMaps(adapter);
+      const code = numToCode[adapter.getDayOfWeek(start)]; // TU
       // Occurrences counted: Jun 10, Jun 17 => 2 (Jun 24 excluded)
       expect(countWeeklyOccurrencesUpToExact(adapter, createRule([code]), start, target)).to.equal(
         2,
@@ -1088,8 +1088,8 @@ describe('recurrence-utils', () => {
         adapter.addDays(visibleStart, 7),
         adapter,
       );
-      const { numToCode: numToByDay } = getWeekDayMaps(adapter);
-      const dows = result.map((o) => numToByDay[adapter.getDayOfWeek(o.start)]);
+      const { numToCode } = getWeekDayMaps(adapter);
+      const dows = result.map((o) => numToCode[adapter.getDayOfWeek(o.start)]);
 
       // Only WE, TH, FR in the first week
       expect(dows).to.deep.equal(['WE', 'TH', 'FR']);

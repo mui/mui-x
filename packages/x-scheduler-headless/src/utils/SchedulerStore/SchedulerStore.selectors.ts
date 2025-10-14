@@ -121,7 +121,7 @@ export const selectors = {
       adapter,
       date: SchedulerValidDate,
     ): Record<RecurringEventPresetKey, RecurringEventRecurrenceRule> => {
-      const { numToCode: numToCode } = getWeekDayMaps(adapter);
+      const { numToCode } = getWeekDayMaps(adapter);
       const dateDowCode = numToCode[adapter.getDayOfWeek(date)];
       const dateDayOfMonth = adapter.getDate(date);
 
@@ -170,7 +170,7 @@ export const selectors = {
         rule.byMonthDay?.length ||
         rule.byMonth?.length
       );
-      const { numToCode: numToCode } = getWeekDayMaps(adapter);
+      const { numToCode } = getWeekDayMaps(adapter);
 
       switch (rule.freq) {
         case 'DAILY': {
