@@ -258,9 +258,9 @@ describe('<DataGrid /> - Keyboard', () => {
     it('should navigate to the 1st cell of the 1st row when pressing "Home" + ctrlKey of metaKey of shiftKey', async () => {
       const { user } = render(<NavigationTestCaseNoScrollX />);
 
-      const cell = getCell(8, 1);
+      const cell = getCell(5, 1);
       await user.click(cell);
-      expect(getActiveCell()).to.equal('8-1');
+      expect(getActiveCell()).to.equal('5-1');
       fireEvent.keyDown(document.activeElement!, { key: 'Home', ctrlKey: true });
       expect(getActiveCell()).to.equal('0-0');
 
@@ -268,7 +268,7 @@ describe('<DataGrid /> - Keyboard', () => {
         await act(async () => cell.scrollIntoView());
       }
       await user.click(cell);
-      expect(getActiveCell()).to.equal('8-1');
+      expect(getActiveCell()).to.equal('5-1');
       fireEvent.keyDown(document.activeElement!, { key: 'Home', metaKey: true });
       expect(getActiveCell()).to.equal('0-0');
 
@@ -276,7 +276,7 @@ describe('<DataGrid /> - Keyboard', () => {
         await act(async () => cell.scrollIntoView());
       }
       await user.click(cell);
-      expect(getActiveCell()).to.equal('8-1');
+      expect(getActiveCell()).to.equal('5-1');
       fireEvent.keyDown(document.activeElement!, { key: 'Home', shiftKey: true });
       expect(getActiveCell()).to.equal('0-0');
     });
