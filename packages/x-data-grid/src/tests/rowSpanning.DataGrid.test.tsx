@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
-import { createRenderer, fireEvent, act, waitFor } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { DataGrid, useGridApiRef, DataGridProps, GridApi } from '@mui/x-data-grid';
 import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
-import { getCell, getActiveCell, microtasks } from 'test/utils/helperFn';
+import { getCell, getActiveCell } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
 
 describe.skipIf(isJSDOM)('<DataGrid /> - Row spanning', () => {
@@ -283,8 +283,7 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Row spanning', () => {
       });
 
       // 2 updates on `rows` update, one for the reset (necessary to track deleted or updated data values) and one for the new computed state
-      // virtualizer updates on the next tick, so we need to wait for it
-      waitFor(() => expect(rowSpanningStateUpdates).to.equal(2));
+      expect(rowSpanningStateUpdates).to.equal(2);
 
       dispose();
     });
