@@ -23,6 +23,7 @@ const CELL_PADDING = 8;
 const DAY_NUMBER_HEADER_HEIGHT = 18;
 const EVENT_HEIGHT = 18;
 const EVENT_GAP = 5;
+export const FAKE_DATA = {};
 
 export const MonthView = React.memo(
   React.forwardRef(function MonthView(
