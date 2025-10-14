@@ -8,15 +8,6 @@ function isSsr(): boolean {
 const stringCache = new Map<string, { width: number; height: number }>();
 
 const MAX_CACHE_NUM = 2000;
-const SPAN_STYLE = {
-  position: 'absolute',
-  top: '-20000px',
-  left: 0,
-  padding: 0,
-  margin: 0,
-  border: 'none',
-  whiteSpace: 'pre',
-};
 const STYLE_LIST = [
   'minWidth',
   'maxWidth',
@@ -90,8 +81,6 @@ export const getStyleString = (style: React.CSSProperties) =>
       '',
     );
 
-let domCleanTimeout: ReturnType<typeof setTimeout> | undefined;
-
 /**
  *
  * @param text The string to estimate
@@ -113,23 +102,23 @@ export const getStringSize = (text: string | number, style: React.CSSProperties 
   }
 
   try {
-    let measurementSpan = document.getElementById(MEASUREMENT_SPAN_ID);
-    if (measurementSpan === null) {
-      measurementSpan = document.createElement('span');
-      measurementSpan.setAttribute('id', MEASUREMENT_SPAN_ID);
-      measurementSpan.setAttribute('aria-hidden', 'true');
-      document.body.appendChild(measurementSpan);
-    }
+    const measurementSpanContainer = getMeasurementSpanContainer();
+    const measurementSpan = document.createElement('span');
+
     // Need to use CSS Object Model (CSSOM) to be able to comply with Content Security Policy (CSP)
     // https://en.wikipedia.org/wiki/Content_Security_Policy
-    const measurementSpanStyle: Record<string, any> = { ...SPAN_STYLE, ...style };
-
-    Object.keys(measurementSpanStyle).map((styleKey) => {
+    Object.keys(style as Record<string, any>).map((styleKey) => {
       (measurementSpan!.style as Record<string, any>)[camelToMiddleLine(styleKey)] =
-        autoCompleteStyle(styleKey, measurementSpanStyle[styleKey]);
+        autoCompleteStyle(styleKey, (style as Record<string, any>)[styleKey]);
       return styleKey;
     });
+
+    measurementSpan.style.position = 'absolute';
+    measurementSpan.style.whiteSpace = 'pre';
     measurementSpan.textContent = str;
+
+    measurementSpanContainer.replaceChildren(measurementSpan);
+
     const rect = measurementSpan.getBoundingClientRect();
     const result = { width: rect.width, height: rect.height };
 
@@ -139,21 +128,41 @@ export const getStringSize = (text: string | number, style: React.CSSProperties 
       stringCache.clear();
     }
 
-    if (process.env.NODE_ENV === 'test') {
-      // In test environment, we clean the measurement span immediately
-      measurementSpan.textContent = '';
-    } else {
-      if (domCleanTimeout) {
-        clearTimeout(domCleanTimeout);
-      }
-      domCleanTimeout = setTimeout(() => {
-        // Limit node cleaning to once per render cycle
-        measurementSpan.textContent = '';
-      }, 0);
-    }
-
     return result;
   } catch {
     return { width: 0, height: 0 };
   }
 };
+
+/**
+ * Get (or create) a hidden span element to measure text size.
+ */
+function getMeasurementSpanContainer() {
+  let measurementSpanContainer = document.getElementById(MEASUREMENT_SPAN_ID);
+
+  if (measurementSpanContainer === null) {
+    // Create a hidden wrapper that wraps the measurement span container.
+    const wrapper = document.createElement('span');
+    wrapper.setAttribute('aria-hidden', 'true');
+
+    wrapper.style.position = 'absolute';
+    wrapper.style.top = '-20000px';
+    wrapper.style.left = '0';
+    wrapper.style.padding = '0';
+    wrapper.style.margin = '0';
+    wrapper.style.border = 'none';
+    wrapper.style.pointerEvents = 'none';
+    wrapper.style.visibility = 'hidden';
+    wrapper.style.contain = 'strict';
+
+    document.body.appendChild(wrapper);
+
+    measurementSpanContainer = document.createElement('span');
+    // Use relative positioning so its children can use absolute positioning and not be visible
+    measurementSpanContainer.style.position = 'relative';
+    measurementSpanContainer.setAttribute('id', MEASUREMENT_SPAN_ID);
+    wrapper.appendChild(measurementSpanContainer);
+  }
+
+  return measurementSpanContainer;
+}
