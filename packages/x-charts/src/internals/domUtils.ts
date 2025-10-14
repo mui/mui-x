@@ -113,7 +113,6 @@ export const getStringSize = (text: string | number, style: React.CSSProperties 
       return styleKey;
     });
 
-    // measurementElem.style.whiteSpace = 'pre';
     measurementElem.textContent = str;
 
     measurementSpanContainer.replaceChildren(measurementElem);
