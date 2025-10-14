@@ -15,6 +15,7 @@
         "text": "highlighting docs"
       }
     },
+    "brushEnabled": { "type": { "name": "bool" }, "default": "false" },
     "colors": {
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
       "default": "rainbowSurgePalette"

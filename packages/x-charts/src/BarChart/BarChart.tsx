@@ -187,6 +187,11 @@ BarChart.propTypes = {
    * Defines the border radius of the bar element.
    */
   borderRadius: PropTypes.number,
+  /**
+   * Enables or disables the brush interaction.
+   * @default false
+   */
+  brushEnabled: PropTypes.bool,
   children: PropTypes.node,
   className: PropTypes.string,
   /**

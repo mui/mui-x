@@ -12,6 +12,7 @@
       },
       "default": "0"
     },
+    "brushEnabled": { "type": { "name": "bool" }, "default": "false" },
     "clipAreaOffset": {
       "type": {
         "name": "shape",

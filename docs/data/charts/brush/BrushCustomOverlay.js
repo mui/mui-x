@@ -45,7 +45,6 @@ function CustomBrushOverlay() {
         strokeDasharray="5,5"
         pointerEvents="none"
       />
-
       {/* Current line */}
       <line
         x1={clampedCurrentX}
@@ -57,7 +56,6 @@ function CustomBrushOverlay() {
         strokeDasharray="5,5"
         pointerEvents="none"
       />
-
       {/* Selection rectangle */}
       <rect
         x={minX}
@@ -70,7 +68,6 @@ function CustomBrushOverlay() {
         strokeWidth={1}
         pointerEvents="none"
       />
-
       {/* Start label */}
       <g transform={`translate(${clampedStartX}, ${top + 15})`}>
         <rect x={-30} y={0} width={60} height={24} fill={color} rx={4} />

@@ -19,11 +19,11 @@ export const useChartBrush: ChartPlugin<UseChartBrushSignature> = ({
         ...prev,
         brush: {
           ...prev.brush,
-          enabled: params.enabled ?? false,
+          enabled: params.brushEnabled ?? false,
         },
       };
     });
-  }, [store, params.enabled]);
+  }, [store, params.brushEnabled]);
 
   const setBrushCoordinates = useEventCallback(function setBrushCoordinates(point: Point | null) {
     store.update((prev) => {
@@ -101,13 +101,13 @@ export const useChartBrush: ChartPlugin<UseChartBrushSignature> = ({
 };
 
 useChartBrush.params = {
-  enabled: true,
+  brushEnabled: true,
 };
 
 useChartBrush.getInitialState = (params) => {
   return {
     brush: {
-      enabled: params.enabled ?? false,
+      enabled: params.brushEnabled ?? false,
       start: null,
       current: null,
     },
