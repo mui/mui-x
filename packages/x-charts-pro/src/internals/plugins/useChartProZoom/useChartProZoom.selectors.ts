@@ -2,7 +2,6 @@ import {
   AxisId,
   ChartRootSelector,
   createSelector,
-  selectorChartSeriesProcessed,
   selectorChartZoomMap,
   selectorChartZoomOptionsLookup,
 } from '@mui/x-charts/internals';
@@ -51,48 +50,3 @@ export const selectorChartCanZoomIn = createSelector(
     });
   },
 );
-
-const selectorChartBrushState: ChartRootSelector<UseChartProZoomSignature, 'zoomBrush'> = (state) =>
-  state.zoomBrush;
-
-export const selectorChartBrushStartX = createSelector(
-  [selectorChartBrushState],
-  (brushState) => brushState.start?.x ?? null,
-);
-
-export const selectorChartBrushStartY = createSelector(
-  [selectorChartBrushState],
-  (brushState) => brushState.start?.y ?? null,
-);
-
-export const selectorChartBrushCurrentX = createSelector(
-  [selectorChartBrushState],
-  (brushState) => brushState.current?.x ?? null,
-);
-
-export const selectorChartBrushCurrentY = createSelector(
-  [selectorChartBrushState],
-  (brushState) => brushState.current?.y ?? null,
-);
-
-export const selectorChartBrushConfig = createSelector([selectorChartSeriesProcessed], (series) => {
-  let hasHorizontal = false;
-  let hasScatter = false;
-  if (series) {
-    Object.entries(series).forEach(([seriesType, seriesData]) => {
-      if (Object.values(seriesData.series).some((s) => s.layout === 'horizontal')) {
-        hasHorizontal = true;
-      }
-      if (seriesType === 'scatter' && seriesData.seriesOrder.length > 0) {
-        hasScatter = true;
-      }
-    });
-  }
-  if (hasScatter) {
-    return 'xy';
-  }
-  if (hasHorizontal) {
-    return 'y';
-  }
-  return 'x';
-});

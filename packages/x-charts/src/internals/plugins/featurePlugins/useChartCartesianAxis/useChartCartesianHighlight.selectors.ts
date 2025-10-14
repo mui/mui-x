@@ -16,18 +16,17 @@ import {
 } from '../useChartKeyboardNavigation/useChartKeyboardNavigation.selectors';
 import { selectorChartsLastInteraction } from '../useChartInteraction/useChartInteraction.selectors';
 import { InteractionUpdateSource } from '../useChartInteraction/useChartInteraction.types';
+import type { UseChartBrushSignature } from '../useChartBrush/useChartBrush.types';
 
 const selectorChartControlledCartesianAxisHighlight = (
   state: ChartState<[], [UseChartCartesianAxisSignature]>,
 ) => state.controlledCartesianAxisHighlight;
 
-const selectorChartBrushState: ChartRootSelector<UseChartCartesianAxisSignature, 'zoomBrush'> = (
-  state,
-) => state.zoomBrush;
+const selectorChartBrush: ChartRootSelector<UseChartBrushSignature> = (state) => state.brush;
 
 const selectorIsBrushSelectionActive = createSelector(
-  [selectorChartBrushState],
-  (brushState) => brushState.start !== null && brushState.current !== null,
+  [selectorChartBrush],
+  (brush) => brush.start !== null && brush.current !== null,
 );
 
 const selectAxisHighlight = (

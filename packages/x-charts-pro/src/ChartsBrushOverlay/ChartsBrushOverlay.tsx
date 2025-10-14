@@ -1,15 +1,18 @@
 'use client';
 import * as React from 'react';
-import { useStore, useSelector, selectorChartDrawingArea } from '@mui/x-charts/internals';
-import clsx from 'clsx';
-import { useTheme } from '@mui/material/styles';
 import {
-  selectorChartBrushConfig,
+  useStore,
+  useSelector,
+  selectorChartDrawingArea,
   selectorChartBrushCurrentX,
   selectorChartBrushCurrentY,
   selectorChartBrushStartX,
   selectorChartBrushStartY,
-} from '../internals/plugins/useChartProZoom/useChartProZoom.selectors';
+  selectorChartBrushConfig,
+  type UseChartBrushSignature,
+} from '@mui/x-charts/internals';
+import clsx from 'clsx';
+import { useTheme } from '@mui/material/styles';
 import type { UseChartProZoomSignature } from '../plugins';
 import { brushOverlayClasses } from './ChartsBrushOverlay.classes';
 
@@ -31,7 +34,7 @@ export interface ChartsBrushOverlayProps {}
  * Component that renders visual feedback during brush zoom interaction
  */
 export function ChartsBrushOverlay(_: ChartsBrushOverlayProps) {
-  const store = useStore<[UseChartProZoomSignature]>();
+  const store = useStore<[UseChartProZoomSignature, UseChartBrushSignature]>();
   const drawingArea = useSelector(store, selectorChartDrawingArea);
 
   const theme = useTheme();
