@@ -178,7 +178,7 @@ export const useGridAggregation = (
         aggregation: { ...state.aggregation, lookup: { ...aggregationLookup } },
       }));
 
-      if (chunkIndex === 0) {
+      if (chunkIndex === 0 && hasAggregatedSortedField) {
         apiRef.current.applySorting();
       }
 
