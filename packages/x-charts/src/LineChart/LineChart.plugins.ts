@@ -19,9 +19,14 @@ import {
   UseChartKeyboardNavigationSignature,
 } from '../internals/plugins/featurePlugins/useChartKeyboardNavigation';
 import { ConvertSignaturesIntoPlugins } from '../internals/plugins/models/helpers';
+import {
+  useChartBrush,
+  UseChartBrushSignature,
+} from '../internals/plugins/featurePlugins/useChartBrush';
 
 export type LineChartPluginSignatures = [
   UseChartZAxisSignature,
+  UseChartBrushSignature,
   UseChartCartesianAxisSignature<'line'>,
   UseChartInteractionSignature,
   UseChartHighlightSignature,
@@ -30,6 +35,7 @@ export type LineChartPluginSignatures = [
 
 export const LINE_CHART_PLUGINS: ConvertSignaturesIntoPlugins<LineChartPluginSignatures> = [
   useChartZAxis,
+  useChartBrush,
   useChartCartesianAxis,
   useChartInteraction,
   useChartHighlight,

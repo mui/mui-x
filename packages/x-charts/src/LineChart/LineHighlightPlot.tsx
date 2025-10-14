@@ -15,6 +15,7 @@ import {
   selectorChartsHighlightXAxisIndex,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { useXAxes, useYAxes } from '../hooks/useAxis';
+import type { UseChartBrushSignature } from '../internals/plugins/featurePlugins/useChartBrush';
 
 export interface LineHighlightPlotSlots {
   lineHighlight?: React.JSXElementConstructor<LineHighlightElementProps>;
@@ -56,7 +57,7 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
 
   const { instance } = useChartContext();
 
-  const store = useStore<[UseChartCartesianAxisSignature]>();
+  const store = useStore<[UseChartCartesianAxisSignature, UseChartBrushSignature]>();
   const highlightedIndexes = useSelector(store, selectorChartsHighlightXAxisIndex);
 
   if (highlightedIndexes.length === 0) {
