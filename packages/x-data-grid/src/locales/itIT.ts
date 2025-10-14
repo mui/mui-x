@@ -41,13 +41,14 @@ const itITGrid: Partial<GridLocaleText> = {
   toolbarExportExcel: 'Scarica come Excel',
 
   // Toolbar pivot button
-  // toolbarPivot: 'Pivot',
+  // 'Pivot' can also be accepted as a valid italian translation
+  toolbarPivot: 'Trasponi',
 
   // Toolbar charts button
   // toolbarCharts: 'Charts',
 
   // Toolbar AI Assistant button
-  // toolbarAssistant: 'AI Assistant',
+  toolbarAssistant: 'Assistente AI',
 
   // Columns management text
   columnsManagementSearchTitle: 'Cerca',
@@ -113,7 +114,7 @@ const itITGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Maggiore o uguale a',
   'headerFilterOperator<': 'Minore di',
   'headerFilterOperator<=': 'Minore o uguale a',
-  // headerFilterClear: 'Clear filter',
+  headerFilterClear: 'Rimuovi filtri',
 
   // Filter values text
   filterValueAny: 'qualunque',
@@ -130,7 +131,8 @@ const itITGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: "Annulla l'ordinamento",
   columnMenuSortAsc: 'Ordinamento crescente',
   columnMenuSortDesc: 'Ordinamento decrescente',
-  // columnMenuManagePivot: 'Manage pivot',
+  // ALT: columnMenuManagePivot: 'Gestisci pivoting',
+  columnMenuManagePivot: 'Gestisci trasposizione',
   // columnMenuManageCharts: 'Manage charts',
 
   // Column header text
@@ -188,18 +190,18 @@ const itITGrid: Partial<GridLocaleText> = {
 
   // Pagination
   paginationRowsPerPage: 'Righe per pagina:',
-  // paginationDisplayedRows: ({
-  //   from,
-  //   to,
-  //   count,
-  //   estimated
-  // }) => {
-  //   if (!estimated) {
-  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
-  //   }
-  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
-  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
-  // },
+  paginationDisplayedRows: ({
+     from,
+     to,
+     count,
+     estimated
+   }) => {
+     if (!estimated) {
+       return `${from}–${to} di ${count !== -1 ? count : `più di ${to}`}`;
+     }
+     const estimatedLabel = estimated && estimated > to ? `circa ${estimated}` : `più di ${to}`;
+     return `${from}–${to} di ${count !== -1 ? count : estimatedLabel}`;
+   },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {
       return 'Vai alla prima pagina';
@@ -219,7 +221,7 @@ const itITGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: 'aggregazione',
-  // aggregationFunctionLabelNone: 'none',
+  aggregationFunctionLabelNone: 'nessuna',
   aggregationFunctionLabelSum: 'somma',
   aggregationFunctionLabelAvg: 'media',
   aggregationFunctionLabelMin: 'minimo',
@@ -227,59 +229,59 @@ const itITGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'numero di elementi',
 
   // Pivot panel
-  // pivotToggleLabel: 'Pivot',
-  // pivotRows: 'Rows',
-  // pivotColumns: 'Columns',
-  // pivotValues: 'Values',
-  // pivotCloseButton: 'Close pivot settings',
-  // pivotSearchButton: 'Search fields',
-  // pivotSearchControlPlaceholder: 'Search fields',
-  // pivotSearchControlLabel: 'Search fields',
-  // pivotSearchControlClear: 'Clear search',
-  // pivotNoFields: 'No fields',
-  // pivotMenuMoveUp: 'Move up',
-  // pivotMenuMoveDown: 'Move down',
-  // pivotMenuMoveToTop: 'Move to top',
-  // pivotMenuMoveToBottom: 'Move to bottom',
-  // pivotMenuRows: 'Rows',
-  // pivotMenuColumns: 'Columns',
-  // pivotMenuValues: 'Values',
-  // pivotMenuOptions: 'Field options',
-  // pivotMenuAddToRows: 'Add to Rows',
-  // pivotMenuAddToColumns: 'Add to Columns',
-  // pivotMenuAddToValues: 'Add to Values',
-  // pivotMenuRemove: 'Remove',
-  // pivotDragToRows: 'Drag here to create rows',
-  // pivotDragToColumns: 'Drag here to create columns',
-  // pivotDragToValues: 'Drag here to create values',
-  // pivotYearColumnHeaderName: '(Year)',
-  // pivotQuarterColumnHeaderName: '(Quarter)',
+  pivotToggleLabel: 'Trasponi',
+  pivotRows: 'Righe',
+  pivotColumns: 'Colonne',
+  pivotValues: 'Valori',
+  pivotCloseButton: 'Chiudi impostazioni di trasposizione',
+  pivotSearchButton: 'Cerca attrubuti',
+  pivotSearchControlPlaceholder: 'Cerca attrubuti',
+  pivotSearchControlLabel: 'Cerca attrubuti',
+  pivotSearchControlClear: 'Annulla ricerca',
+  pivotNoFields: 'Nessun attributo',
+  pivotMenuMoveUp: 'Sposta in alto',
+  pivotMenuMoveDown: 'Sposta in basso',
+  pivotMenuMoveToTop: 'Sposta in cima',
+  pivotMenuMoveToBottom: 'Sposta in fondo',
+  pivotMenuRows: 'Righe',
+  pivotMenuColumns: 'Colonne',
+  pivotMenuValues: 'Valori',
+  pivotMenuOptions: 'Opzioni',
+  pivotMenuAddToRows: 'Aggiungi alle Righe',
+  pivotMenuAddToColumns: 'Aggiungi alle Colonne',
+  pivotMenuAddToValues: 'Aggiungi ai Valori',
+  pivotMenuRemove: 'Rimuovi',
+  pivotDragToRows: 'Trascina qui per creare le righe',
+  pivotDragToColumns: 'Trascina qui per creare le colonne',
+  pivotDragToValues: 'Trascina qui per creare valori',
+  pivotYearColumnHeaderName: '(Anno)',
+  pivotQuarterColumnHeaderName: '(Quarto)',
 
   // Charts configuration panel
-  // chartsNoCharts: 'There are no charts available',
-  // chartsChartNotSelected: 'Select a chart type to configure its options',
-  // chartsTabChart: 'Chart',
-  // chartsTabFields: 'Fields',
-  // chartsTabCustomize: 'Customize',
-  // chartsCloseButton: 'Close charts configuration',
-  // chartsSyncButtonLabel: 'Sync chart',
-  // chartsSearchPlaceholder: 'Search fields',
-  // chartsSearchLabel: 'Search fields',
-  // chartsSearchClear: 'Clear search',
-  // chartsNoFields: 'No fields',
-  // chartsFieldBlocked: 'This field cannot be added to any section',
-  // chartsCategories: 'Categories',
-  // chartsSeries: 'Series',
-  // chartsMenuAddToDimensions: (dimensionLabel: string) => `Add to ${dimensionLabel}`,
-  // chartsMenuAddToValues: (valuesLabel: string) => `Add to ${valuesLabel}`,
-  // chartsMenuMoveUp: 'Move up',
-  // chartsMenuMoveDown: 'Move down',
-  // chartsMenuMoveToTop: 'Move to top',
-  // chartsMenuMoveToBottom: 'Move to bottom',
-  // chartsMenuOptions: 'Field options',
-  // chartsMenuRemove: 'Remove',
-  // chartsDragToDimensions: (dimensionLabel: string) => `Drag here to use column as ${dimensionLabel}`,
-  // chartsDragToValues: (valuesLabel: string) => `Drag here to use column as ${valuesLabel}`,
+  chartsNoCharts: 'Non ci sono grafici disponibili',
+  chartsChartNotSelected: 'Seleziona un tipo di grafico per configurarne le opzioni',
+  chartsTabChart: 'Grafico',
+  chartsTabFields: 'Attributi',
+  chartsTabCustomize: 'Personalizza',
+  chartsCloseButton: 'Chiudi la configurazione dei grafici',
+  chartsSyncButtonLabel: 'Sincronizza grafico',
+  chartsSearchPlaceholder: 'Cerca attributi',
+  chartsSearchLabel: 'Cerca attributi',
+  chartsSearchClear: 'Annulla ricerca',
+  chartsNoFields: 'Nessun attributo',
+  chartsFieldBlocked: 'Questo attributo non può essere aggiunto ad alcuna sezione',
+  chartsCategories: 'Categorie',
+  chartsSeries: 'Serie',
+  chartsMenuAddToDimensions: (dimensionLabel: string) => `Aggiungi a ${dimensionLabel}`,
+  chartsMenuAddToValues: (valuesLabel: string) => `Aggiungi a ${valuesLabel}`,
+  chartsMenuMoveUp: 'Sposta in alto',
+  chartsMenuMoveDown: 'Sposta in basso',
+  chartsMenuMoveToTop: 'Sposta in cima',
+  chartsMenuMoveToBottom: 'Sposta in fondo',
+  chartsMenuOptions: 'Opzioni per l\'attributo',
+  chartsMenuRemove: 'Rimuovi',
+  chartsDragToDimensions: (dimensionLabel: string) => `Trascina qui per usare la colonna come ${dimensionLabel}`,
+  chartsDragToValues: (valuesLabel: string) => `Trascina qui per usare la colonna come ${valuesLabel}`,
 
   // AI Assistant panel
   // aiAssistantPanelTitle: 'AI Assistant',
