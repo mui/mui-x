@@ -123,7 +123,7 @@ Event colors can be set at two levels. The effective color resolves in the follo
 1. The `eventColor` assigned to the event's resource
 
 ```tsx
-<EventCalendar resources={[{ id: '1', name: 'Resource 1', eventColor: 'pink' }]} />
+<EventCalendar resources={[{ id: '1', title: 'Resource 1', eventColor: 'pink' }]} />
 ```
 
 2. The `eventColor` assigned to the Event Calendar

@@ -11,7 +11,8 @@ import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headles
 import { DayGridEvent } from '../../internals/components/event/day-grid-event/DayGridEvent';
 import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { EventPopoverTrigger } from '../../internals/components/event-popover';
-import { useEventPopoverContext } from '../../internals/components/event-popover/EventPopoverContext';
+import { MoreEventsPopoverTrigger } from '../../internals/components/more-events-popover/MoreEventsPopover';
+import { useEventPopoverContext } from '../../internals/components/event-popover/EventPopover';
 import './MonthViewWeekRow.css';
 
 export const MonthViewCell = React.forwardRef(function MonthViewCell(
@@ -30,7 +31,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const cellRef = React.useRef<HTMLDivElement | null>(null);
   const handleRef = useMergedRefs(ref, cellRef);
 
-  const { startEditing } = useEventPopoverContext();
+  const { open: startEditing } = useEventPopoverContext();
 
   const isCurrentMonth = adapter.isSameMonth(day.value, visibleDate);
   const isFirstDayOfMonth = adapter.isSameDay(day.value, adapter.startOfMonth(day.value));
@@ -119,7 +120,19 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
           );
         })}
         {hiddenCount > 0 && (
-          <p className="MonthViewMoreEvents">{translations.hiddenEvents(hiddenCount)}</p>
+          <MoreEventsPopoverTrigger
+            occurrences={day.withPosition}
+            day={day}
+            render={
+              <button
+                type="button"
+                aria-label={translations.hiddenEvents(hiddenCount)}
+                className={clsx('MonthViewMoreEvents', 'Button--small', 'NeutralTextButton')}
+              >
+                {translations.hiddenEvents(hiddenCount)}
+              </button>
+            }
+          />
         )}
         {placeholder != null && (
           <div className="MonthViewPlaceholderEventContainer">

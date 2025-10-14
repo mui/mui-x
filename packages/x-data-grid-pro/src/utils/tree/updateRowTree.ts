@@ -8,7 +8,7 @@ import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { GridTreePathDuplicateHandler, RowTreeBuilderNode } from './models';
 import { insertDataRowInTree } from './insertDataRowInTree';
 import { removeDataRowFromTree } from './removeDataRowFromTree';
-import { createUpdatedGroupsManager, getNodePathInTree } from './utils';
+import { getNodePathInTree } from './utils';
 
 export interface UpdateRowTreeNodes {
   inserted: RowTreeBuilderNode[];
@@ -31,7 +31,6 @@ interface UpdateRowTreeParams {
 export const updateRowTree = (params: UpdateRowTreeParams): GridRowTreeCreationValue => {
   const tree = { ...params.previousTree };
   const treeDepths = { ...params.previousTreeDepth };
-  const updatedGroupsManager = createUpdatedGroupsManager();
   const groupsToFetch = params.previousGroupsToFetch
     ? new Set([...params.previousGroupsToFetch])
     : new Set([]);
@@ -43,7 +42,6 @@ export const updateRowTree = (params: UpdateRowTreeParams): GridRowTreeCreationV
       previousTree: params.previousTree,
       tree,
       treeDepths,
-      updatedGroupsManager,
       id,
       path,
       serverChildrenCount,
@@ -61,7 +59,6 @@ export const updateRowTree = (params: UpdateRowTreeParams): GridRowTreeCreationV
     removeDataRowFromTree({
       tree,
       treeDepths,
-      updatedGroupsManager,
       id: nodeId,
       groupingName: params.groupingName,
     });
@@ -76,7 +73,6 @@ export const updateRowTree = (params: UpdateRowTreeParams): GridRowTreeCreationV
       removeDataRowFromTree({
         tree,
         treeDepths,
-        updatedGroupsManager,
         id,
         groupingName: params.groupingName,
       });
@@ -85,7 +81,6 @@ export const updateRowTree = (params: UpdateRowTreeParams): GridRowTreeCreationV
         previousTree: params.previousTree,
         tree,
         treeDepths,
-        updatedGroupsManager,
         id,
         path,
         serverChildrenCount,
@@ -95,8 +90,6 @@ export const updateRowTree = (params: UpdateRowTreeParams): GridRowTreeCreationV
         groupsToFetch,
         maxDepth: params.maxDepth,
       });
-    } else {
-      updatedGroupsManager?.addAction(tree[id].parent!, 'modifyChildren');
     }
   }
 
@@ -108,7 +101,6 @@ export const updateRowTree = (params: UpdateRowTreeParams): GridRowTreeCreationV
     treeDepths,
     groupingName: params.groupingName,
     dataRowIds,
-    updatedGroupsManager,
     groupsToFetch: Array.from(groupsToFetch),
   };
 };
