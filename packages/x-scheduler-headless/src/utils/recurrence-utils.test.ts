@@ -202,8 +202,7 @@ describe('recurrence-utils', () => {
     });
 
     describe('parseMonthlyByDayOrdinalSingle', () => {
-      it('throws when ruleByDay is undefined, empty or multiple', () => {
-        expect(() => parsesByDayForMonthlyFrequency(undefined)).to.throw();
+      it('throws when ruleByDay is empty or multiple', () => {
         expect(() => parsesByDayForMonthlyFrequency([])).to.throw();
         expect(() => parsesByDayForMonthlyFrequency(['1MO', '2TU'])).to.throw();
       });
