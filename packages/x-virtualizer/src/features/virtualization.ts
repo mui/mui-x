@@ -662,6 +662,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     setPanels,
     getOffsetTop,
     getRows,
+    rows: params.rows,
     getContainerProps: () => ({
       ref: containerRef,
     }),

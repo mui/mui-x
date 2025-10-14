@@ -238,8 +238,13 @@ export const useGridRowSpanning = (
     (renderContext: GridRenderContext, resetState: boolean = false) => {
       const store = apiRef.current.virtualizer.store;
       const { range, rows: visibleRows } = getVisibleRows(apiRef);
-      if (resetState && store.getSnapshot().rowSpanning !== EMPTY_STATE) {
+      if (resetState) {
         store.set('rowSpanning', EMPTY_STATE);
+        // HACK: virtualizer hasn't yet updated with the latest rows, hence it doesn't make sense to update the row spanning state at this point
+        // TO-DO: ideally virtualizer shouldn't have a cross-dependency with rows that it renders
+        if (apiRef.current.virtualizer.api.getters.rows !== visibleRows) {
+          return;
+        }
       }
 
       if (range === null || !isRowContextInitialized(renderContext)) {
