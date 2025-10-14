@@ -19,7 +19,7 @@
   "dependencies": {
     "@babel/core": "catalog:",
     "@babel/runtime": "catalog:",
-    "@docsearch/react": "^4.1.0",
+    "@docsearch/react": "^4.2.0",
     "@emotion/cache": "catalog:",
     "@emotion/react": "catalog:",
     "@emotion/server": "^11.11.0",

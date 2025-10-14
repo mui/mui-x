@@ -87,8 +87,6 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   ]);
 
   const sharedProps = {
-    eventId: occurrence.id,
-    occurrenceKey: occurrence.key,
     start: occurrence.start,
     end: occurrence.end,
     ref: forwardedRef,
@@ -120,7 +118,12 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   }
 
   return (
-    <CalendarGrid.TimeEvent isDraggable={isDraggable} {...sharedProps}>
+    <CalendarGrid.TimeEvent
+      isDraggable={isDraggable}
+      eventId={occurrence.id}
+      occurrenceKey={occurrence.key}
+      {...sharedProps}
+    >
       {isResizable && (
         <CalendarGrid.TimeEventResizeHandler side="start" className="TimeGridEventResizeHandler" />
       )}
