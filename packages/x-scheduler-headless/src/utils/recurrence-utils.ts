@@ -822,10 +822,11 @@ export function applyRecurringUpdateFollowing(
  * Adjusts a recurring event's RRULE when applying an "all" update that changes the weekday.
  *
  * Rules:
- * - For WEEKLY rules: replaces the weekday of DTSTART with the new weekday (deduped).
- * - For MONTHLY rules:
- *     * If BYMONTHDAY is used → updates it to match the new start date's day of month.
- *     * If BYDAY (ordinal) is used → recomputes the ordinal (e.g. 2TU → 3WE) for the new start date.
+ * - WEEKLY: realign BYDAY by swapping the weekday of the edited occurrence
+ *   with the weekday of the destination.
+ * - MONTHLY:
+ *   - If BYMONTHDAY is used → set it to the new start date's day of month.
+ *   - If BYDAY (ordinal) is used → recompute the ordinal (e.g. 2TU → 3WE) based on the new start.
  * @returns The adjusted RRULE object, or the original rrule if no change is needed.
  */
 export function adjustRRuleForAllMove(
