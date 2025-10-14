@@ -17,6 +17,7 @@ import { useGridEvent } from '../../utils/useGridEvent';
 import { runIf } from '../../../utils/utils';
 import { gridPageSizeSelector } from '../pagination';
 import { gridDataRowIdsSelector } from './gridRowsSelector';
+import { useRunOncePerLoop } from '../../utils/useRunOncePerLoop';
 
 export interface GridRowSpanningState extends RowSpanningState {}
 
@@ -307,16 +308,22 @@ export const useGridRowSpanning = (
     updateRowSpanningState(renderContext, true);
   }, [apiRef, updateRowSpanningState]);
 
+  const deferredResetRowSpanningState = useRunOncePerLoop(resetRowSpanningState);
+
   useGridEvent(
     apiRef,
     'renderedRowsIntervalChange',
-    runIf(props.rowSpanning, updateRowSpanningState),
+    runIf(props.rowSpanning, deferredResetRowSpanningState),
   );
 
-  useGridEvent(apiRef, 'sortedRowsSet', runIf(props.rowSpanning, resetRowSpanningState));
-  useGridEvent(apiRef, 'paginationModelChange', runIf(props.rowSpanning, resetRowSpanningState));
-  useGridEvent(apiRef, 'filteredRowsSet', runIf(props.rowSpanning, resetRowSpanningState));
-  useGridEvent(apiRef, 'columnsChange', runIf(props.rowSpanning, resetRowSpanningState));
+  useGridEvent(apiRef, 'sortedRowsSet', runIf(props.rowSpanning, deferredResetRowSpanningState));
+  useGridEvent(
+    apiRef,
+    'paginationModelChange',
+    runIf(props.rowSpanning, deferredResetRowSpanningState),
+  );
+  useGridEvent(apiRef, 'filteredRowsSet', runIf(props.rowSpanning, deferredResetRowSpanningState));
+  useGridEvent(apiRef, 'columnsChange', runIf(props.rowSpanning, deferredResetRowSpanningState));
 
   React.useEffect(() => {
     const store = apiRef.current.virtualizer?.store;
