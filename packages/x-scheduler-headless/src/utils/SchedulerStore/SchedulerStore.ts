@@ -9,7 +9,6 @@ import {
   CalendarResource,
   CalendarResourceId,
   SchedulerValidDate,
-  RecurrencePresetKey,
   CalendarEventUpdatedProperties,
 } from '../../models';
 import {
@@ -24,7 +23,6 @@ import { Adapter } from '../../use-adapter/useAdapter.types';
 import {
   applyRecurringUpdateFollowing,
   applyRecurringUpdateAll,
-  getByDayMaps,
   applyRecurringUpdateOnlyThis,
 } from '../recurrence-utils';
 import { selectors } from './SchedulerStore.selectors';
@@ -331,72 +329,6 @@ export class SchedulerStore<
     const { adapter, occurrencePlaceholder: previous } = this.state;
     if (shouldUpdateOccurrencePlaceholder(adapter, previous, newPlaceholder)) {
       this.set('occurrencePlaceholder', newPlaceholder);
-    }
-  };
-
-  /**
-   * Determines which preset (if any) the given rule corresponds to.
-   * If the rule does not correspond to any preset, 'custom' is returned.
-   * If no rule is provided, null is returned.
-   */
-  public getRecurrencePresetKeyFromRule = (
-    rule: CalendarEvent['rrule'] | undefined,
-    start: SchedulerValidDate,
-  ): RecurrencePresetKey | 'custom' | null => {
-    if (!rule) {
-      return null;
-    }
-
-    const { adapter } = this.state;
-    const interval = rule.interval ?? 1;
-    const neverEnds = !rule.count && !rule.until;
-    const hasSelectors = !!(rule.byDay?.length || rule.byMonthDay?.length || rule.byMonth?.length);
-    const { numToByDay: numToCode } = getByDayMaps(adapter);
-
-    switch (rule.freq) {
-      case 'DAILY': {
-        // Preset "Daily" => FREQ=DAILY;INTERVAL=1; no COUNT/UNTIL;
-        return interval === 1 && neverEnds && !hasSelectors ? 'daily' : 'custom';
-      }
-
-      case 'WEEKLY': {
-        // Preset "Weekly" => FREQ=WEEKLY;INTERVAL=1;BYDAY=<weekday-of-start>; no COUNT/UNTIL;
-        const startDowCode = numToCode[adapter.getDayOfWeek(start)];
-
-        const byDay = rule.byDay ?? [];
-        const matchesDefaultByDay =
-          byDay.length === 0 || (byDay.length === 1 && byDay[0] === startDowCode);
-        const isPresetWeekly =
-          interval === 1 &&
-          neverEnds &&
-          matchesDefaultByDay &&
-          !(rule.byMonthDay?.length || rule.byMonth?.length);
-
-        return isPresetWeekly ? 'weekly' : 'custom';
-      }
-
-      case 'MONTHLY': {
-        // Preset "Monthly" => FREQ=MONTHLY;INTERVAL=1;BYMONTHDAY=<start-day>; no COUNT/UNTIL;
-        const day = adapter.getDate(start);
-        const byMonthDay = rule.byMonthDay ?? [];
-        const matchesDefaultByMonthDay =
-          byMonthDay.length === 0 || (byMonthDay.length === 1 && byMonthDay[0] === day);
-        const isPresetMonthly =
-          interval === 1 &&
-          neverEnds &&
-          matchesDefaultByMonthDay &&
-          !(rule.byDay?.length || rule.byMonth?.length);
-
-        return isPresetMonthly ? 'monthly' : 'custom';
-      }
-
-      case 'YEARLY': {
-        // Preset "Yearly" => FREQ=YEARLY;INTERVAL=1; no COUNT/UNTIL;
-        return interval === 1 && neverEnds && !hasSelectors ? 'yearly' : 'custom';
-      }
-
-      default:
-        return 'custom';
     }
   };
 }
