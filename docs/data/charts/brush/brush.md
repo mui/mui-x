@@ -27,7 +27,7 @@ To display visual feedback when users interact with the chart, enable the brush 
 ## Custom overlay
 
 You can create a custom brush overlay by building your own component that uses the `useBrush` hook.
-This example shows how to display the difference between the start and current positions of the brush selection.
+This example shows how to display the values at the start and end positions, along with the difference and percentage change between them.
 
 {{"demo": "BrushCustomOverlay.js"}}
 

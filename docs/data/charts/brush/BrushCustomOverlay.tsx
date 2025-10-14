@@ -27,10 +27,22 @@ function CustomBrushOverlay() {
 
   const color = theme.palette.primary.main;
 
-  // Only show if there's meaningful movement
-  if (rectWidth < 2) {
+  if (rectWidth < 1) {
     return null;
   }
+
+  // Calculate the approximate data indices based on x position
+  // Not sure how to solve this in a more direct way without approximation.
+  const dataPointWidth = width / (marketData.length - 1);
+  const startIndex = Math.round((clampedStartX - left) / dataPointWidth);
+  const currentIndex = Math.round((clampedCurrentX - left) / dataPointWidth);
+
+  const startValue =
+    marketData[Math.max(0, Math.min(marketData.length - 1, startIndex))];
+  const currentValue =
+    marketData[Math.max(0, Math.min(marketData.length - 1, currentIndex))];
+  const difference = currentValue - startValue;
+  const percentChange = ((difference / startValue) * 100).toFixed(2);
 
   return (
     <g>
@@ -79,25 +91,50 @@ function CustomBrushOverlay() {
           y={16}
           textAnchor="middle"
           fill="white"
-          fontSize={12}
+          fontSize={11}
           fontWeight="bold"
         >
-          Start
+          {startValue.toFixed(2)}
         </text>
       </g>
 
       {/* End label */}
-      <g transform={`translate(${clampedCurrentX}, ${top + 45})`}>
-        <rect x={-25} y={0} width={50} height={24} fill={color} rx={4} />
+      <g transform={`translate(${clampedCurrentX}, ${top + 15})`}>
+        <rect x={-30} y={0} width={60} height={24} fill={color} rx={4} />
         <text
           x={0}
           y={16}
           textAnchor="middle"
           fill="white"
+          fontSize={11}
+          fontWeight="bold"
+        >
+          {currentValue.toFixed(2)}
+        </text>
+      </g>
+
+      {/* Difference label in the middle */}
+      <g transform={`translate(${(minX + maxX) / 2}, ${top + height - 30})`}>
+        <rect
+          x={-45}
+          y={0}
+          width={90}
+          height={26}
+          fill={
+            difference >= 0 ? theme.palette.success.main : theme.palette.error.main
+          }
+          rx={4}
+        />
+        <text
+          x={0}
+          y={17}
+          textAnchor="middle"
+          fill="white"
           fontSize={12}
           fontWeight="bold"
         >
-          End
+          {difference >= 0 ? '+' : ''}
+          {difference.toFixed(2)} ({percentChange}%)
         </text>
       </g>
     </g>
@@ -120,7 +157,8 @@ export default function BrushCustomOverlay() {
   return (
     <Box sx={{ width: '100%' }}>
       <Typography variant="body2" sx={{ mb: 2 }}>
-        Custom brush overlay with labeled start and end positions.
+        Custom brush overlay showing the values at start and end positions, and the
+        difference between them.
       </Typography>
       <LineChart
         height={300}
