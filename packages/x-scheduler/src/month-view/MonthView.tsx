@@ -29,8 +29,6 @@ export const MonthView = React.memo(
     props: MonthViewProps,
     forwardedRef: React.ForwardedRef<HTMLDivElement>,
   ) {
-    const { className, ...other } = props;
-
     // Context hooks
     const adapter = useAdapter();
     const translations = useTranslations();
@@ -86,9 +84,9 @@ export const MonthView = React.memo(
 
     return (
       <div
+        {...props}
         ref={handleRef}
-        className={clsx('MonthViewContainer', 'mui-x-scheduler', className)}
-        {...other}
+        className={clsx('MonthViewContainer', 'mui-x-scheduler', props.className)}
       >
         <EventPopoverProvider containerRef={containerRef}>
           <MoreEventsPopoverProvider containerRef={containerRef}>

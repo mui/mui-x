@@ -22,8 +22,6 @@ export const AgendaView = React.memo(
     props: AgendaViewProps,
     forwardedRef: React.ForwardedRef<HTMLDivElement>,
   ) {
-    const { className, ...other } = props;
-
     // Context hooks
     const adapter = useAdapter();
     const store = useEventCalendarStoreContext();
@@ -58,9 +56,9 @@ export const AgendaView = React.memo(
 
     return (
       <div
+        {...props}
         ref={handleRef}
-        className={clsx('AgendaViewContainer', 'mui-x-scheduler', className)}
-        {...other}
+        className={clsx('AgendaViewContainer', 'mui-x-scheduler', props.className)}
       >
         <EventPopoverProvider containerRef={containerRef}>
           {days.map((day) => (
