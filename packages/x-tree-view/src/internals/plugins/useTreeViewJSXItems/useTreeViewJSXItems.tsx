@@ -77,9 +77,9 @@ export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> =
     });
   };
 
-  const mapLabelFromJSX = useEventCallback((itemId: string, firstChar: string) => {
+  const mapLabelFromJSX = useEventCallback((itemId: string, label: string) => {
     instance.updateLabelMap((labelMap) => {
-      labelMap[itemId] = firstChar;
+      labelMap[itemId] = label;
       return labelMap;
     });
 
