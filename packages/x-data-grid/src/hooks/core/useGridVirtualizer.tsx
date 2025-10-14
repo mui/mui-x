@@ -43,6 +43,7 @@ import { useGridOverlays } from '../features/overlays/useGridOverlays';
 import { useGridRootProps } from '../utils/useGridRootProps';
 import { useGridPrivateApiContext } from '../utils/useGridPrivateApiContext';
 import { useGridRowsMeta } from '../features/rows/useGridRowsMeta';
+import { eslintUseValue } from '../../utils/utils';
 
 const columnsTotalWidthSelector = createSelector(
   gridVisibleColumnDefinitionsSelector,
@@ -160,6 +161,10 @@ export function useGridVirtualizer() {
 
   const RowSlot = rootProps.slots.row;
   const rowSlotProps = rootProps.slotProps?.row;
+
+  const focusedVirtualCell = useGridSelector(apiRef, gridFocusedVirtualCellSelector);
+  // We need it to trigger a new render, but rowsMeta needs access to the latest value, hence we cannot pass it to the focusedVirtualCell callback in the virtualizer params
+  eslintUseValue(focusedVirtualCell);
 
   const virtualizer = useVirtualizer({
     refs: {

@@ -449,7 +449,7 @@ describe('<DataGrid /> - Column spanning', () => {
       // should be scrolled to the end of the cell
       expect(virtualScroller.scrollLeft).to.equal(3 * 100);
 
-      await user.keyboard('{ArrowLeft>}{ArrowLeft}');
+      await user.keyboard('{ArrowLeft}{ArrowLeft}');
 
       expect(getActiveCell()).to.equal('0-0');
 
