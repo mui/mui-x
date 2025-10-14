@@ -11,4 +11,8 @@
   NODE_OPTIONS = "--max-old-space-size=4096"
 
 [[plugins]]
-  package = "@mui/internal-netlify-cache"
+# disabled because of https://github.com/mui/mui-public/issues/809
+# TODO: Re-enable after either:
+#   - we notice PR previews in Netlify restore caches from master branch and not from docs-v8
+#   - we completely remove the @mui/monorepo dependency
+#  package = "@mui/internal-netlify-cache"
