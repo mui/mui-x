@@ -64,6 +64,7 @@ export const useGridSorting = (
     | 'disableColumnSorting'
     | 'disableMultipleColumnsSorting'
     | 'multipleColumnsSortingMode'
+    | 'signature'
   >,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridSorting');
@@ -373,7 +374,9 @@ export const useGridSorting = (
    * 1ST RENDER
    */
   useFirstRender(() => {
-    apiRef.current.applySorting();
+    if (props.signature === 'DataGrid') {
+      apiRef.current.applySorting();
+    }
   });
 
   /**
