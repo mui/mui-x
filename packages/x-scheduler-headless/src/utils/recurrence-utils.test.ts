@@ -16,11 +16,11 @@ import {
   buildEndGuard,
   getAllDaySpanDays,
   countYearlyOccurrencesUpToExact,
-  getByDayMaps,
+  getWeekDayMaps,
   tokenizeByDay,
-  parseWeeklyByDayPlain,
+  parsesByDayForWeeklyFrequency,
   nthWeekdayOfMonth,
-  parseMonthlyByDayOrdinalSingle,
+  parsesByDayForMonthlyFrequency,
   applyRecurringUpdateFollowing,
   decideSplitRRule,
   applyRecurringUpdateAll,
@@ -41,34 +41,18 @@ describe('recurrence-utils', () => {
     ...overrides,
   });
 
-  describe('getByDayMaps', () => {
+  describe('getWeekDayMaps', () => {
     it('respects fr locale Mon=1 numbering', () => {
-      const { byDayToNum, numToByDay } = getByDayMaps(adapterFr);
-
-      expect(byDayToNum).to.deep.equal({ MO: 1, TU: 2, WE: 3, TH: 4, FR: 5, SA: 6, SU: 7 });
-      expect(numToByDay).to.deep.equal({
-        1: 'MO',
-        2: 'TU',
-        3: 'WE',
-        4: 'TH',
-        5: 'FR',
-        6: 'SA',
-        7: 'SU',
+      expect(getWeekDayMaps(adapterFr)).to.deep.equal({
+        codeToNum: { MO: 1, TU: 2, WE: 3, TH: 4, FR: 5, SA: 6, SU: 7 },
+        numToCode: { 1: 'MO', 2: 'TU', 3: 'WE', 4: 'TH', 5: 'FR', 6: 'SA', 7: 'SU' },
       });
     });
 
     it('respects enUS locale Sunday=1 numbering', () => {
-      const { byDayToNum, numToByDay } = getByDayMaps(adapter);
-
-      expect(byDayToNum).to.deep.equal({ SU: 1, MO: 2, TU: 3, WE: 4, TH: 5, FR: 6, SA: 7 });
-      expect(numToByDay).to.deep.equal({
-        1: 'SU',
-        2: 'MO',
-        3: 'TU',
-        4: 'WE',
-        5: 'TH',
-        6: 'FR',
-        7: 'SA',
+      expect(getWeekDayMaps(adapter)).to.deep.equal({
+        codeToNum: { SU: 1, MO: 2, TU: 3, WE: 4, TH: 5, FR: 6, SA: 7 },
+        numToCode: { 1: 'SU', 2: 'MO', 3: 'TU', 4: 'WE', 5: 'TH', 6: 'FR', 7: 'SA' },
       });
     });
   });
@@ -194,41 +178,41 @@ describe('recurrence-utils', () => {
       it('returns fallback when ruleByDay is undefined or empty', () => {
         // ruleByDay is undefined
         const fallbackTU: RecurringEventWeekDayCode[] = ['TU'];
-        expect(parseWeeklyByDayPlain(undefined, fallbackTU)).to.deep.equal(fallbackTU);
+        expect(parsesByDayForWeeklyFrequency(undefined, fallbackTU)).to.deep.equal(fallbackTU);
 
         // ruleByDay is empty
         const fallbackMO: RecurringEventWeekDayCode[] = ['MO'];
-        expect(parseWeeklyByDayPlain([], fallbackMO)).to.deep.equal(fallbackMO);
+        expect(parsesByDayForWeeklyFrequency([], fallbackMO)).to.deep.equal(fallbackMO);
       });
 
       it('accepts plain byDay codes and returns them unchanged', () => {
         const byDay: RecurringEventRecurrenceRule['byDay'] = ['MO', 'WE', 'FR'];
-        expect(parseWeeklyByDayPlain(byDay, ['TU'])).to.deep.equal(['MO', 'WE', 'FR']);
+        expect(parsesByDayForWeeklyFrequency(byDay, ['TU'])).to.deep.equal(['MO', 'WE', 'FR']);
       });
 
       it('throws when any ordinal is provided (e.g., 1MO, -1FR)', () => {
         const withOrdinal: RecurringEventRecurrenceRule['byDay'] = ['1MO', '-1FR'];
-        expect(() => parseWeeklyByDayPlain(withOrdinal, ['MO'])).to.throw();
+        expect(() => parsesByDayForWeeklyFrequency(withOrdinal, ['MO'])).to.throw();
       });
 
       it('throws for invalid BYDAY values (e.g., XX)', () => {
         const invalid: RecurringEventRecurrenceRule['byDay'] = ['XX' as any];
-        expect(() => parseWeeklyByDayPlain(invalid, ['MO'])).to.throw();
+        expect(() => parsesByDayForWeeklyFrequency(invalid, ['MO'])).to.throw();
       });
     });
 
     describe('parseMonthlyByDayOrdinalSingle', () => {
       it('throws when ruleByDay is undefined, empty or multiple', () => {
-        expect(() => parseMonthlyByDayOrdinalSingle(undefined)).to.throw();
-        expect(() => parseMonthlyByDayOrdinalSingle([])).to.throw();
-        expect(() => parseMonthlyByDayOrdinalSingle(['1MO', '2TU'])).to.throw();
+        expect(() => parsesByDayForMonthlyFrequency(undefined)).to.throw();
+        expect(() => parsesByDayForMonthlyFrequency([])).to.throw();
+        expect(() => parsesByDayForMonthlyFrequency(['1MO', '2TU'])).to.throw();
       });
 
       it('parses one ordinal byDay code (e.g., 1MO, 3WE, -1FR)', () => {
         const byDay: RecurringEventRecurrenceRule['byDay'] = ['1FR'];
-        expect(parseMonthlyByDayOrdinalSingle(byDay)).to.deep.equal({ ord: 1, code: 'FR' });
+        expect(parsesByDayForMonthlyFrequency(byDay)).to.deep.equal({ ord: 1, code: 'FR' });
         const negativeByDay: RecurringEventRecurrenceRule['byDay'] = ['-1MO'];
-        expect(parseMonthlyByDayOrdinalSingle(negativeByDay)).to.deep.equal({
+        expect(parsesByDayForMonthlyFrequency(negativeByDay)).to.deep.equal({
           ord: -1,
           code: 'MO',
         });
@@ -236,7 +220,7 @@ describe('recurrence-utils', () => {
 
       it('throws when any entry lacks an ordinal (e.g., plain MO)', () => {
         const mixed: RecurringEventRecurrenceRule['byDay'] = ['2TU', 'MO'];
-        expect(() => parseMonthlyByDayOrdinalSingle(mixed)).to.throw();
+        expect(() => parsesByDayForMonthlyFrequency(mixed)).to.throw();
       });
     });
   });
@@ -383,7 +367,7 @@ describe('recurrence-utils', () => {
     describe('weekly frequency', () => {
       it('returns true when the weekday is in byDay', () => {
         const event = createEvent();
-        const { numToByDay } = getByDayMaps(adapter);
+        const { numToCode: numToByDay } = getWeekDayMaps(adapter);
         const code = numToByDay[adapter.getDayOfWeek(event.start)];
         const rule: RecurringEventRecurrenceRule = {
           freq: 'WEEKLY',
@@ -405,7 +389,7 @@ describe('recurrence-utils', () => {
 
       it('interval > 1 (every 2 weeks) includes only correct weeks', () => {
         const event = createEvent(baseStart);
-        const { numToByDay } = getByDayMaps(adapter);
+        const { numToCode: numToByDay } = getWeekDayMaps(adapter);
         const code = numToByDay[adapter.getDayOfWeek(event.start)]; // FR
         const rule: RecurringEventRecurrenceRule = {
           freq: 'WEEKLY',
@@ -697,7 +681,7 @@ describe('recurrence-utils', () => {
     it('returns 0 when target date is before series start', () => {
       const start = adapter.date('2025-06-10T09:00:00Z'); // Tuesday
       const target = adapter.date('2025-06-09T23:59:59Z'); // Mon before start
-      const { numToByDay } = getByDayMaps(adapter);
+      const { numToCode: numToByDay } = getWeekDayMaps(adapter);
       const code = numToByDay[adapter.getDayOfWeek(start)]; // TU
       expect(countWeeklyOccurrencesUpToExact(adapter, createRule([code]), start, target)).to.equal(
         0,
@@ -707,7 +691,7 @@ describe('recurrence-utils', () => {
     it('counts first occurrence when target is same day', () => {
       const start = adapter.date('2025-06-10T09:00:00Z'); // Tuesday
       const target = adapter.date('2025-06-10T23:59:59Z');
-      const { numToByDay } = getByDayMaps(adapter);
+      const { numToCode: numToByDay } = getWeekDayMaps(adapter);
       const code = numToByDay[adapter.getDayOfWeek(start)]; // TU
       expect(countWeeklyOccurrencesUpToExact(adapter, createRule([code]), start, target)).to.equal(
         1,
@@ -717,7 +701,7 @@ describe('recurrence-utils', () => {
     it('counts occurrences for a single weekday across several weeks (interval=1)', () => {
       const start = adapter.date('2025-06-10T09:00:00Z'); // Tuesday
       const target = adapter.date('2025-07-08T12:00:00Z'); // 5 Tuesdays inclusive
-      const { numToByDay } = getByDayMaps(adapter);
+      const { numToCode: numToByDay } = getWeekDayMaps(adapter);
       const code = numToByDay[adapter.getDayOfWeek(start)]; // TU
       expect(countWeeklyOccurrencesUpToExact(adapter, createRule([code]), start, target)).to.equal(
         5,
@@ -737,7 +721,7 @@ describe('recurrence-utils', () => {
     it('respects interval > 1 (every 2 weeks)', () => {
       const start = adapter.date('2025-06-10T09:00:00Z'); // Tuesday
       const target = adapter.date('2025-07-22T12:00:00Z');
-      const { numToByDay } = getByDayMaps(adapter);
+      const { numToCode: numToByDay } = getWeekDayMaps(adapter);
       const code = numToByDay[adapter.getDayOfWeek(start)]; // TU
       expect(
         countWeeklyOccurrencesUpToExact(adapter, createRule([code], 2), start, target),
@@ -747,7 +731,7 @@ describe('recurrence-utils', () => {
     it('does not count weekday in target week occurring after target day', () => {
       const start = adapter.date('2025-06-10T09:00:00Z'); // Tuesday
       const target = adapter.date('2025-06-23T12:00:00Z'); // Monday of week containing Tue 24
-      const { numToByDay } = getByDayMaps(adapter);
+      const { numToCode: numToByDay } = getWeekDayMaps(adapter);
       const code = numToByDay[adapter.getDayOfWeek(start)]; // TU
       // Occurrences counted: Jun 10, Jun 17 => 2 (Jun 24 excluded)
       expect(countWeeklyOccurrencesUpToExact(adapter, createRule([code]), start, target)).to.equal(
@@ -1105,7 +1089,7 @@ describe('recurrence-utils', () => {
         adapter.addDays(visibleStart, 7),
         adapter,
       );
-      const { numToByDay } = getByDayMaps(adapter);
+      const { numToCode: numToByDay } = getWeekDayMaps(adapter);
       const dows = result.map((o) => numToByDay[adapter.getDayOfWeek(o.start)]);
 
       // Only WE, TH, FR in the first week

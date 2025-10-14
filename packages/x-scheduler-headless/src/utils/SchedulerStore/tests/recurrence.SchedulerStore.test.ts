@@ -1,7 +1,7 @@
 import { adapter } from 'test/utils/scheduler';
 import { RecurringEventRecurrenceRule } from '@mui/x-scheduler-headless/models';
 import { storeClasses } from './utils';
-import { getByDayMaps } from '../../recurrence-utils';
+import { getWeekDayMaps } from '../../recurrence-utils';
 import { selectors } from '../SchedulerStore.selectors';
 import { SchedulerState as State } from '../SchedulerStore.types';
 
@@ -18,7 +18,7 @@ storeClasses.forEach((storeClass) => {
         const state = baseState();
         const start = adapter.date('2025-08-05T09:00:00Z'); // Tuesday
         const presets = selectors.recurrencePresets(state, start);
-        const { numToByDay } = getByDayMaps(adapter);
+        const { numToCode: numToByDay } = getWeekDayMaps(adapter);
 
         expect(presets.daily).to.deep.equal({
           freq: 'DAILY',

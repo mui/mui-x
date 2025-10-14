@@ -9,7 +9,7 @@ import {
   SchedulerValidDate,
 } from '../../models';
 import { SchedulerState as State } from './SchedulerStore.types';
-import { getByDayMaps } from '../recurrence-utils';
+import { getWeekDayMaps } from '../recurrence-utils';
 
 const eventByIdMapSelector = createSelectorMemoized(
   (state: State) => state.events,
@@ -121,7 +121,7 @@ export const selectors = {
       adapter,
       date: SchedulerValidDate,
     ): Record<RecurringEventPresetKey, RecurringEventRecurrenceRule> => {
-      const { numToByDay: numToCode } = getByDayMaps(adapter);
+      const { numToCode: numToCode } = getWeekDayMaps(adapter);
       const dateDowCode = numToCode[adapter.getDayOfWeek(date)];
       const dateDayOfMonth = adapter.getDate(date);
 
@@ -170,7 +170,7 @@ export const selectors = {
         rule.byMonthDay?.length ||
         rule.byMonth?.length
       );
-      const { numToByDay: numToCode } = getByDayMaps(adapter);
+      const { numToCode: numToCode } = getWeekDayMaps(adapter);
 
       switch (rule.freq) {
         case 'DAILY': {
