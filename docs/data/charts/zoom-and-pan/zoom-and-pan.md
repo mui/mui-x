@@ -168,6 +168,15 @@ The `zoomInteractionConfig` prop allows you to specify which interactions are en
 - **`drag`**: Pan the chart by dragging with the mouse or touch (default)
 - **`pressAndDrag`**: Pan the chart by pressing and holding, then dragging. Useful for avoiding conflicts with selection gestures.
 
+:::info
+When modifying the zoom interaction configuration, care should be taken as to not create a bad user experience.
+
+For example, the "drag" and "brush" interactions do not work well together.
+
+If both are needed, the `pointerMode` and `requiredKeys` options described in the next sections can help.
+
+:::
+
 {{"demo": "ZoomAndPanInteractions.js"}}
 
 ### Brush zoom
