@@ -300,30 +300,26 @@ export const useGridRowSpanning = (
   // - The sorting is applied
   // - The `paginationModel` is updated
   // - The rows are updated
+  const deferredUpdateRowSpawnningState = useRunOncePerLoop(updateRowSpanningState);
+
   const resetRowSpanningState = React.useCallback(() => {
     const renderContext = gridRenderContextSelector(apiRef);
     if (!isRowContextInitialized(renderContext)) {
       return;
     }
-    updateRowSpanningState(renderContext, true);
-  }, [apiRef, updateRowSpanningState]);
-
-  const deferredResetRowSpanningState = useRunOncePerLoop(resetRowSpanningState);
+    deferredUpdateRowSpawnningState(renderContext, true);
+  }, [apiRef, deferredUpdateRowSpawnningState]);
 
   useGridEvent(
     apiRef,
     'renderedRowsIntervalChange',
-    runIf(props.rowSpanning, deferredResetRowSpanningState),
+    runIf(props.rowSpanning, resetRowSpanningState),
   );
 
-  useGridEvent(apiRef, 'sortedRowsSet', runIf(props.rowSpanning, deferredResetRowSpanningState));
-  useGridEvent(
-    apiRef,
-    'paginationModelChange',
-    runIf(props.rowSpanning, deferredResetRowSpanningState),
-  );
-  useGridEvent(apiRef, 'filteredRowsSet', runIf(props.rowSpanning, deferredResetRowSpanningState));
-  useGridEvent(apiRef, 'columnsChange', runIf(props.rowSpanning, deferredResetRowSpanningState));
+  useGridEvent(apiRef, 'sortedRowsSet', runIf(props.rowSpanning, resetRowSpanningState));
+  useGridEvent(apiRef, 'paginationModelChange', runIf(props.rowSpanning, resetRowSpanningState));
+  useGridEvent(apiRef, 'filteredRowsSet', runIf(props.rowSpanning, resetRowSpanningState));
+  useGridEvent(apiRef, 'columnsChange', runIf(props.rowSpanning, resetRowSpanningState));
 
   React.useEffect(() => {
     const store = apiRef.current.virtualizer?.store;
