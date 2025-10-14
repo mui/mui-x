@@ -2,11 +2,29 @@
 import useEventCallback from '@mui/utils/useEventCallback';
 import type { PanEvent } from '@mui/x-internal-gestures/core';
 import * as React from 'react';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { getSVGPoint } from '../../../getSVGPoint';
 import { ChartPlugin } from '../../models';
 import { UseChartBrushSignature, type Point } from './useChartBrush.types';
 
-export const useChartBrush: ChartPlugin<UseChartBrushSignature> = ({ store, svgRef, instance }) => {
+export const useChartBrush: ChartPlugin<UseChartBrushSignature> = ({
+  store,
+  svgRef,
+  instance,
+  params,
+}) => {
+  useEnhancedEffect(() => {
+    store.update((prev) => {
+      return {
+        ...prev,
+        brush: {
+          ...prev.brush,
+          enabled: params.enabled ?? false,
+        },
+      };
+    });
+  }, [store, params.enabled]);
+
   const setBrushCoordinates = useEventCallback(function setBrushCoordinates(point: Point | null) {
     store.update((prev) => {
       return {
