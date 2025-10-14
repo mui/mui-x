@@ -11,6 +11,6 @@ export const DEFAULT_EVENT_COLOR: CalendarEventColor = 'jade';
 export const SCHEDULER_RECURRING_EDITING_SCOPE: RecurringUpdateEventScope =
   (typeof window !== 'undefined' && (window as any).SCHEDULER_RECURRING_EDITING_SCOPE) || 'all';
 
-export const EVENT_DRAG_PRECISION_MINUTE = 15;
+export const EVENT_DRAG_PRECISION_MINUTES = 15;
 
-export const EVENT_DRAG_PRECISION_MS = EVENT_DRAG_PRECISION_MINUTE * 60 * 1000;
+export const EVENT_DRAG_PRECISION_MS = EVENT_DRAG_PRECISION_MINUTES * 60 * 1000;
