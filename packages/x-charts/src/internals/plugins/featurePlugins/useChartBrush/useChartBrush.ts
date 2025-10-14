@@ -4,11 +4,7 @@ import type { PanEvent } from '@mui/x-internal-gestures/core';
 import * as React from 'react';
 import { getSVGPoint } from '../../../getSVGPoint';
 import { ChartPlugin } from '../../models';
-import {
-  UseChartBrushSignature,
-  type BrushCoordinate,
-  type UseChartBrushState,
-} from './useChartBrush.types';
+import { UseChartBrushSignature, type Point, type UseChartBrushState } from './useChartBrush.types';
 
 const emptyBrush: UseChartBrushState['brush'] = { start: null, current: null };
 
@@ -18,9 +14,7 @@ export const useChartBrush: ChartPlugin<UseChartBrushSignature> = ({
   svgRef,
   instance,
 }) => {
-  const setBrushCoordinates = useEventCallback(function setBrushCoordinates(
-    point: BrushCoordinate,
-  ) {
+  const setBrushCoordinates = useEventCallback(function setBrushCoordinates(point: Point | null) {
     store.update((prev) => {
       return {
         ...prev,
