@@ -30,7 +30,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const translations = useTranslations();
   const store = useEventCalendarStoreContext();
 
-  // Context hooks
+  // Ref hooks
   const bodyRef = React.useRef<HTMLDivElement>(null);
   const allDayHeaderWrapperRef = React.useRef<HTMLDivElement>(null);
   const containerRef = React.useRef<HTMLElement | null>(null);
