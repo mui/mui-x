@@ -1,0 +1,97 @@
+{
+  "name": "@mui/x-scheduler-headless",
+  "version": "0.0.1-alpha.0",
+  "private": true,
+  "description": "The community edition of the headless version of the Scheduler component (MUI X).",
+  "author": "MUI Team",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mui/mui-x/issues"
+  },
+  "homepage": "https://mui.com/x/react-scheduler/",
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/mui-org"
+  },
+  "exports": {
+    "./calendar-grid": "./src/calendar-grid/index.ts",
+    "./constants": "./src/constants/index.ts",
+    "./event-calendar-provider": "./src/event-calendar-provider/index.ts",
+    "./models": "./src/models/index.ts",
+    "./process-date": "./src/process-date/index.ts",
+    "./timeline": "./src/timeline/index.ts",
+    "./timeline-provider": "./src/timeline-provider/index.ts",
+    "./use-adapter": "./src/use-adapter/index.ts",
+    "./use-day-list": "./src/use-day-list/index.ts",
+    "./use-event-calendar": "./src/use-event-calendar/index.ts",
+    "./use-event-calendar-store-context": "./src/use-event-calendar-store-context/index.ts",
+    "./use-event-calendar-view": "./src/use-event-calendar-view/index.ts",
+    "./use-event-occurrences-grouped-by-day": "./src/use-event-occurrences-grouped-by-day/index.ts",
+    "./use-event-occurrences-grouped-by-resource": "./src/use-event-occurrences-grouped-by-resource/index.ts",
+    "./use-event-occurrences-with-day-grid-position": "./src/use-event-occurrences-with-day-grid-position/index.ts",
+    "./use-event-occurrences-with-timeline-position": "./src/use-event-occurrences-with-timeline-position/index.ts",
+    "./use-month-list": "./src/use-month-list/index.ts",
+    "./use-scheduler-store-context": "./src/use-scheduler-store-context/index.ts",
+    "./use-timeline": "./src/use-timeline/index.ts",
+    "./use-timeline-store-context": "./src/use-timeline-store-context/index.ts",
+    "./use-week-list": "./src/use-week-list/index.ts"
+  },
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public",
+    "directory": "build"
+  },
+  "keywords": [
+    "react",
+    "react-component",
+    "scheduler",
+    "event-calendar",
+    "calendar",
+    "timeline",
+    "agenda",
+    "planning",
+    "big-calendar"
+  ],
+  "scripts": {
+    "typescript": "tsc -p tsconfig.json",
+    "build": "code-infra build --copy \"src/**/*.css\" --copy \"src/**/*.css:esm\"",
+    "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mui/mui-x.git",
+    "directory": "packages/x-scheduler"
+  },
+  "dependencies": {
+    "@atlaskit/pragmatic-drag-and-drop": "^1.7.7",
+    "@atlaskit/pragmatic-drag-and-drop-auto-scroll": "^2.1.2",
+    "@babel/runtime": "catalog:",
+    "@base-ui-components/react": "^1.0.0-beta.4",
+    "@base-ui-components/utils": "^0.1.2",
+    "@floating-ui/react": "^0.27.16",
+    "@floating-ui/react-dom": "^2.1.6",
+    "@floating-ui/utils": "^0.2.10",
+    "@mui/x-internals": "workspace:*",
+    "prop-types": "catalog:",
+    "tabbable": "^6.2.0"
+  },
+  "peerDependencies": {
+    "luxon": "^3.0.2",
+    "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
+  },
+  "devDependencies": {
+    "@mui/internal-test-utils": "catalog:",
+    "@types/luxon": "catalog:",
+    "@types/prop-types": "catalog:",
+    "@types/use-sync-external-store": "catalog:",
+    "luxon": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "rimraf": "catalog:",
+    "use-isomorphic-layout-effect": "^1.2.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
