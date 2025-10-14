@@ -11,7 +11,7 @@ import { selectors } from '@mui/x-scheduler-headless/use-event-calendar';
 import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-headless/use-event-occurrences-grouped-by-day';
 import { AgendaViewProps } from './AgendaView.types';
 import { EventPopoverProvider, EventPopoverTrigger } from '../internals/components/event-popover';
-import { AgendaEvent } from '../internals/components/event/agenda-event/AgendaEvent';
+import { EventItem } from '../internals/components/event/event-item/EventItem';
 import './AgendaView.css';
 import { RecurringScopeDialogProvider } from '../internals/components/scope-dialog/ScopeDialog';
 
@@ -87,7 +87,7 @@ export const AgendaView = React.memo(
                       <EventPopoverTrigger
                         occurrence={occurrence}
                         render={
-                          <AgendaEvent
+                          <EventItem
                             occurrence={occurrence}
                             ariaLabelledBy={`DayHeaderCell-${day.key}`}
                           />

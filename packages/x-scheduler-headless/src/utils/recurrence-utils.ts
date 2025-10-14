@@ -10,6 +10,7 @@ import {
 } from '../models';
 import { mergeDateAndTime, getDateKey } from './date-utils';
 import { diffIn } from '../use-adapter';
+import { UpdateEventsParameters } from './SchedulerStore';
 
 /**
  * Build BYDAY<->number maps using a known ISO Monday (2025-01-06).
@@ -770,11 +771,10 @@ export function decideSplitRRule(
  */
 export function applyRecurringUpdateFollowing(
   adapter: Adapter,
-  events: CalendarEvent[],
   originalEvent: CalendarEvent,
   occurrenceStart: SchedulerValidDate,
   changes: CalendarEventUpdatedProperties,
-): CalendarEvent[] {
+): UpdateEventsParameters {
   const newStart = changes.start ?? originalEvent.start;
 
   // 1) Old series: truncate rule to end the day before the edited occurrence
@@ -783,15 +783,8 @@ export function applyRecurringUpdateFollowing(
 
   const originalRule = originalEvent.rrule as RRuleSpec;
   const { count, until, ...baseRule } = originalRule;
-  const truncatedRule = { ...baseRule, until: untilDate };
 
-  // 2) If UNTIL falls before DTSTART, the original series has no remaining occurrences -> drop it
-  const shouldDropOldSeries = adapter.isBefore(
-    adapter.endOfDay(untilDate),
-    adapter.startOfDay(originalEvent.start),
-  );
-
-  // 3) New event: apply changes, decide RRULE for the new series
+  // 2) New event: apply changes, decide RRULE for the new series
   const newRRule = decideSplitRRule(
     adapter,
     originalRule,
@@ -809,16 +802,20 @@ export function applyRecurringUpdateFollowing(
     extractedFromId: originalEvent.id,
   };
 
-  // 4) Build the final events list: old series (updated or dropped) + new event
-  const updatedEvents = shouldDropOldSeries
-    ? [...events.filter((event) => event.id !== originalEvent.id), newEvent]
-    : [
-        ...events.map((event) =>
-          event.id === originalEvent.id ? { ...originalEvent, rrule: truncatedRule } : event,
-        ),
-        newEvent,
-      ];
-  return updatedEvents;
+  // 3) If UNTIL falls before DTSTART, the original series has no remaining occurrences -> drop it, otherwise truncate it.
+  const shouldDropOldSeries = adapter.isBefore(
+    adapter.endOfDay(untilDate),
+    adapter.startOfDay(originalEvent.start),
+  );
+
+  if (shouldDropOldSeries) {
+    return { created: [newEvent], deleted: [originalEvent.id] };
+  }
+
+  return {
+    created: [newEvent],
+    updated: [{ id: originalEvent.id, rrule: { ...baseRule, until: untilDate } }],
+  };
 }
 
 /**
@@ -880,61 +877,61 @@ export function adjustRRuleForAllMove(
  */
 export function applyRecurringUpdateAll(
   adapter: Adapter,
-  events: CalendarEvent[],
   originalEvent: CalendarEvent,
   occurrenceStart: SchedulerValidDate,
   changes: CalendarEventUpdatedProperties,
-): CalendarEvent[] {
+): UpdateEventsParameters {
+  const eventUpdatedProperties: CalendarEventUpdatedProperties = { ...changes };
+
+  // 1) Detect if caller changed the date part of start or end (vs only time)
   const occurrenceEnd = adapter.addMinutes(
     occurrenceStart,
     diffIn(adapter, originalEvent.end, originalEvent.start, 'minutes'),
   );
-  // 1) Detect if the caller changed the date part of start or end
-  const touchedStartDateDay =
+  const touchedStartDate =
     changes.start != null && !adapter.isSameDay(occurrenceStart, changes.start);
-  const touchedEndDateDateDay =
-    changes.end != null && !adapter.isSameDay(occurrenceEnd, changes.end);
+  const touchedEndDate = changes.end != null && !adapter.isSameDay(occurrenceEnd, changes.end);
 
-  // 2) Detect if the edited occurrence is the first in the series (DTSTART)
+  // 2) Is the edited occurrence the first of the series (DTSTART)?
   const editedIsDtstart = adapter.isSameDay(occurrenceStart, originalEvent.start);
 
-  let nextStart = originalEvent.start;
-  let nextEnd = originalEvent.end;
-
-  if (touchedStartDateDay || touchedEndDateDateDay) {
-    if (editedIsDtstart) {
-      // If the edited occurrence is the first: mover DTSTART/DTEND
-      nextStart = changes.start!;
-      nextEnd = changes.end!;
+  // 3) Decide new start/end
+  if (changes.start != null) {
+    if (touchedStartDate) {
+      // Date changed
+      if (editedIsDtstart) {
+        // First occurrence: allow moving DTSTART date
+        eventUpdatedProperties.start = changes.start;
+      } else {
+        // Not first: keep original DTSTART date, merge only time
+        eventUpdatedProperties.start = mergeDateAndTime(
+          adapter,
+          originalEvent.start,
+          changes.start,
+        );
+      }
     } else {
-      // If not the first: keep original DTSTART/DTEND and merge times if needed
-      nextStart =
-        changes.start == null
-          ? originalEvent.start
-          : mergeDateAndTime(adapter, originalEvent.start, changes.start);
-      nextEnd =
-        changes.end == null
-          ? originalEvent.end
-          : mergeDateAndTime(adapter, originalEvent.end, changes.end);
+      // Same day -> merge time into original date
+      eventUpdatedProperties.start = mergeDateAndTime(adapter, originalEvent.start, changes.start);
     }
-  } else {
-    // Date parts not changed, only time, merge times if needed.
-    nextStart =
-      changes.start == null
-        ? originalEvent.start
-        : mergeDateAndTime(adapter, originalEvent.start, changes.start);
-    nextEnd =
-      changes.end == null
-        ? originalEvent.end
-        : mergeDateAndTime(adapter, originalEvent.end, changes.end);
   }
 
-  // 3) RRULE adjustment: if the date part of start or end changed and the event is recurring,
-  //    adjust the RRULE pattern to match the new weekday of the edited occurrence.
-  let nextRRule = originalEvent.rrule;
-  if ((touchedStartDateDay || touchedEndDateDateDay) && originalEvent.rrule) {
-    const newOccurrenceStart = changes.start ?? occurrenceStart; // destino real del drag
-    nextRRule = adjustRRuleForAllMove(
+  if (changes.end != null) {
+    if (touchedEndDate) {
+      if (editedIsDtstart) {
+        eventUpdatedProperties.end = changes.end;
+      } else {
+        eventUpdatedProperties.end = mergeDateAndTime(adapter, originalEvent.end, changes.end);
+      }
+    } else {
+      eventUpdatedProperties.end = mergeDateAndTime(adapter, originalEvent.end, changes.end);
+    }
+  }
+
+  // 4) RRULE adjustment: only if day changed and the event is recurring
+  if ((touchedStartDate || touchedEndDate) && originalEvent.rrule) {
+    const newOccurrenceStart = changes.start ?? occurrenceStart;
+    eventUpdatedProperties.rrule = adjustRRuleForAllMove(
       adapter,
       originalEvent.rrule,
       occurrenceStart,
@@ -942,16 +939,14 @@ export function applyRecurringUpdateAll(
     );
   }
 
-  const newEvent: CalendarEvent = {
-    ...originalEvent,
-    ...changes,
-    start: nextStart,
-    end: nextEnd,
-    rrule: nextRRule,
+  // 5) Return the updated event
+  return {
+    updated: [
+      {
+        ...eventUpdatedProperties,
+      },
+    ],
   };
-
-  // 4) Replace the series root in the list
-  return [...events.filter((event) => event.id !== originalEvent.id), newEvent];
 }
 
 /**
@@ -962,11 +957,10 @@ export function applyRecurringUpdateAll(
  */
 export function applyRecurringUpdateOnlyThis(
   adapter: Adapter,
-  events: CalendarEvent[],
   originalEvent: CalendarEvent,
   occurrenceStart: SchedulerValidDate,
   changes: CalendarEventUpdatedProperties,
-): CalendarEvent[] {
+): UpdateEventsParameters {
   const detachedId = `${originalEvent.id}::${getDateKey(changes.start ?? originalEvent.start, adapter)}`;
 
   const detachedEvent: CalendarEvent = {
@@ -977,14 +971,13 @@ export function applyRecurringUpdateOnlyThis(
     extractedFromId: originalEvent.id,
   };
 
-  const updatedOriginalEvent: CalendarEvent = {
-    ...originalEvent,
-    exDates: [...(originalEvent.exDates ?? []), adapter.startOfDay(occurrenceStart)],
+  return {
+    created: [detachedEvent],
+    updated: [
+      {
+        id: originalEvent.id,
+        exDates: [...(originalEvent.exDates ?? []), adapter.startOfDay(occurrenceStart)],
+      },
+    ],
   };
-
-  const updatedEvents = events.map((event) =>
-    event.id === originalEvent.id ? updatedOriginalEvent : event,
-  );
-
-  return [...updatedEvents, detachedEvent];
 }

@@ -17,7 +17,7 @@ import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headles
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-timeline-position';
 import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
 import { EventPopoverTrigger } from '../event-popover';
-import { useEventPopoverContext } from '../event-popover/EventPopoverContext';
+import { useEventPopoverContext } from '../event-popover/EventPopover';
 import './DayTimeGrid.css';
 import { useScopeDialogContext } from '../scope-dialog/ScopeDialogContext';
 
@@ -79,7 +79,7 @@ function ColumnInteractiveLayer({
     elementRef: columnRef,
     snapMinutes: EVENT_CREATION_PRECISION_MINUTE,
   });
-  const { startEditing } = useEventPopoverContext();
+  const { open: startEditing } = useEventPopoverContext();
   const isCreation = useStore(store, selectors.isCreatingNewEventInTimeRange, start, end);
 
   const computeInitialRange = (event: React.MouseEvent<HTMLDivElement>) => {

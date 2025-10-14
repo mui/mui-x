@@ -13,27 +13,23 @@ To help provide an easy path to folks still using CommonJS in their Node.js appl
 ## Main difference with victory-vendor
 
 Victory is using the `d3-voronoi` which is an archived project.
-Our chart library relies on the `d3-delaunay` which is also ESM only and reuse `robust-predicates` which is also ESM only
 
 ## Packages
 
 We presently provide the following top-level libraries:
 
 - d3-color
-- d3-delaunay
 - d3-interpolate
 - d3-sankey
 - d3-scale
 - d3-shape
 - d3-time
-- delaunator
-- robust-predicate
+- d3-timer
 
 This is the total list of top and transitive libraries we vendor:
 
 - d3-array
 - d3-color
-- d3-delaunay
 - d3-format
 - d3-interpolate
 - d3-path
@@ -42,9 +38,8 @@ This is the total list of top and transitive libraries we vendor:
 - d3-shape
 - d3-time
 - d3-time-format
-- delaunator
+- d3-timer
 - internmap
-- robust-predicates
 
 ## How to add a new package
 

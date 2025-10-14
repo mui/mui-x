@@ -18,7 +18,7 @@ import { DEFAULT_EVENT_COLOR } from '@mui/x-scheduler-headless/constants';
 import { Popover } from '@base-ui-components/react/popover';
 import { EventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
-import { EventPopover } from './EventPopover';
+import { EventPopoverContent } from './EventPopover';
 import { getColorClassName } from '../../utils/color-utils';
 import { RecurringScopeDialogProvider } from '../scope-dialog/ScopeDialog';
 
@@ -35,17 +35,17 @@ const occurrence: CalendarEventOccurrence = {
 const resources: CalendarResource[] = [
   {
     id: 'r1',
-    name: 'Work',
+    title: 'Work',
     eventColor: 'blue',
   },
   {
     id: 'r2',
-    name: 'Personal',
+    title: 'Personal',
     eventColor: 'cyan',
   },
 ];
 
-describe('<EventPopover />', () => {
+describe('<EventPopoverContent />', () => {
   const anchor = document.createElement('button');
   document.body.appendChild(anchor);
 
@@ -62,7 +62,7 @@ describe('<EventPopover />', () => {
     render(
       <EventCalendarProvider events={[occurrence]} resources={resources}>
         <Popover.Root open>
-          <EventPopover {...defaultProps} />
+          <EventPopoverContent {...defaultProps} />
         </Popover.Root>
       </EventCalendarProvider>,
     );
@@ -91,7 +91,7 @@ describe('<EventPopover />', () => {
         resources={resources}
       >
         <Popover.Root open>
-          <EventPopover {...defaultProps} />
+          <EventPopoverContent {...defaultProps} />
         </Popover.Root>
       </EventCalendarProvider>,
     );
@@ -125,7 +125,7 @@ describe('<EventPopover />', () => {
     const { user } = render(
       <EventCalendarProvider events={[occurrence]}>
         <Popover.Root open>
-          <EventPopover {...defaultProps} />
+          <EventPopoverContent {...defaultProps} />
         </Popover.Root>
       </EventCalendarProvider>,
     );
@@ -145,7 +145,7 @@ describe('<EventPopover />', () => {
     const { user } = render(
       <EventCalendarProvider events={[occurrence]} onEventsChange={onEventsChange}>
         <Popover.Root open>
-          <EventPopover {...defaultProps} />
+          <EventPopoverContent {...defaultProps} />
         </Popover.Root>
       </EventCalendarProvider>,
     );
@@ -159,7 +159,7 @@ describe('<EventPopover />', () => {
     render(
       <EventCalendarProvider events={[readOnlyOccurrence]} resources={resources}>
         <Popover.Root open>
-          <EventPopover {...defaultProps} occurrence={readOnlyOccurrence} />
+          <EventPopoverContent {...defaultProps} occurrence={readOnlyOccurrence} />
         </Popover.Root>
       </EventCalendarProvider>,
     );
@@ -181,9 +181,9 @@ describe('<EventPopover />', () => {
     const onEventsChange = spy();
 
     const resourcesNoColor: CalendarResource[] = [
-      { id: 'r1', name: 'Work', eventColor: 'blue' },
-      { id: 'r2', name: 'Personal', eventColor: 'cyan' },
-      { id: 'r3', name: 'NoColor' },
+      { id: 'r1', title: 'Work', eventColor: 'blue' },
+      { id: 'r2', title: 'Personal', eventColor: 'cyan' },
+      { id: 'r3', title: 'NoColor' },
     ];
 
     const occurrenceWithNoColorResource: CalendarEventOccurrence = {
@@ -198,7 +198,7 @@ describe('<EventPopover />', () => {
         resources={resourcesNoColor}
       >
         <Popover.Root open>
-          <EventPopover {...defaultProps} occurrence={occurrenceWithNoColorResource} />
+          <EventPopoverContent {...defaultProps} occurrence={occurrenceWithNoColorResource} />
         </Popover.Root>
       </EventCalendarProvider>,
     );
@@ -224,7 +224,7 @@ describe('<EventPopover />', () => {
         resources={resources}
       >
         <Popover.Root open>
-          <EventPopover {...defaultProps} occurrence={occurrenceWithoutResource} />
+          <EventPopoverContent {...defaultProps} occurrence={occurrenceWithoutResource} />
         </Popover.Root>
       </EventCalendarProvider>,
     );
@@ -275,7 +275,7 @@ describe('<EventPopover />', () => {
             }
           />
           <Popover.Root open>
-            <EventPopover {...defaultProps} occurrence={creationOccurrence} />
+            <EventPopoverContent {...defaultProps} occurrence={creationOccurrence} />
           </Popover.Root>
           <StateWatcher
             Context={EventCalendarStoreContext}
@@ -322,7 +322,7 @@ describe('<EventPopover />', () => {
             }
           />
           <Popover.Root open>
-            <EventPopover {...defaultProps} occurrence={creationOccurrence} />
+            <EventPopoverContent {...defaultProps} occurrence={creationOccurrence} />
           </Popover.Root>
           <StateWatcher
             Context={EventCalendarStoreContext}
@@ -369,7 +369,7 @@ describe('<EventPopover />', () => {
             }
           />
           <Popover.Root open>
-            <EventPopover {...defaultProps} occurrence={creationOccurrence as any} />
+            <EventPopoverContent {...defaultProps} occurrence={creationOccurrence as any} />
           </Popover.Root>
           <StateWatcher
             Context={EventCalendarStoreContext}
@@ -424,7 +424,7 @@ describe('<EventPopover />', () => {
           />
 
           <Popover.Root open>
-            <EventPopover {...defaultProps} occurrence={creationOccurrence} />
+            <EventPopoverContent {...defaultProps} occurrence={creationOccurrence} />
           </Popover.Root>
         </EventCalendarProvider>,
       );
@@ -468,6 +468,7 @@ describe('<EventPopover />', () => {
         const containerRef = React.createRef<HTMLDivElement>();
 
         const { user } = render(
+<<<<<<< HEAD
           <React.Fragment>
             <div ref={containerRef} />
             <RecurringScopeDialogProvider containerRef={containerRef}>
@@ -485,6 +486,20 @@ describe('<EventPopover />', () => {
               </EventCalendarProvider>
             </RecurringScopeDialogProvider>
           </React.Fragment>,
+=======
+          <EventCalendarProvider events={[originalRecurringEvent]} resources={resources}>
+            <StoreSpy
+              Context={EventCalendarStoreContext}
+              method="updateRecurringEvent"
+              onSpyReady={(sp) => {
+                updateRecurringEventSpy = sp;
+              }}
+            />
+            <Popover.Root open>
+              <EventPopoverContent {...defaultProps} occurrence={originalRecurringEvent} />
+            </Popover.Root>
+          </EventCalendarProvider>,
+>>>>>>> upstream/master
         );
 
         await user.clear(screen.getByLabelText(/start time/i));
@@ -574,6 +589,7 @@ describe('<EventPopover />', () => {
         const containerRef = React.createRef<HTMLDivElement>();
 
         const { user } = render(
+<<<<<<< HEAD
           <React.Fragment>
             <div ref={containerRef} />
             <RecurringScopeDialogProvider containerRef={containerRef}>
@@ -591,6 +607,20 @@ describe('<EventPopover />', () => {
               </EventCalendarProvider>
             </RecurringScopeDialogProvider>
           </React.Fragment>,
+=======
+          <EventCalendarProvider events={[originalRecurringEvent]} resources={resources}>
+            <StoreSpy
+              Context={EventCalendarStoreContext}
+              method="updateRecurringEvent"
+              onSpyReady={(sp) => {
+                updateRecurringEventSpy = sp;
+              }}
+            />
+            <Popover.Root open>
+              <EventPopoverContent {...defaultProps} occurrence={originalRecurringEvent} />
+            </Popover.Root>
+          </EventCalendarProvider>,
+>>>>>>> upstream/master
         );
         // We update the recurrence from daily to weekly
         await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
@@ -633,6 +663,7 @@ describe('<EventPopover />', () => {
         const containerRef = React.createRef<HTMLDivElement>();
 
         const { user } = render(
+<<<<<<< HEAD
           <React.Fragment>
             <div ref={containerRef} />
             <RecurringScopeDialogProvider containerRef={containerRef}>
@@ -650,6 +681,20 @@ describe('<EventPopover />', () => {
               </EventCalendarProvider>
             </RecurringScopeDialogProvider>
           </React.Fragment>,
+=======
+          <EventCalendarProvider events={[originalRecurringEvent]} resources={resources}>
+            <StoreSpy
+              Context={EventCalendarStoreContext}
+              method="updateRecurringEvent"
+              onSpyReady={(sp) => {
+                updateRecurringEventSpy = sp;
+              }}
+            />
+            <Popover.Root open>
+              <EventPopoverContent {...defaultProps} occurrence={originalRecurringEvent} />
+            </Popover.Root>
+          </EventCalendarProvider>,
+>>>>>>> upstream/master
         );
 
         await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
@@ -693,7 +738,7 @@ describe('<EventPopover />', () => {
               }}
             />
             <Popover.Root open>
-              <EventPopover {...defaultProps} occurrence={nonRecurringEvent} />
+              <EventPopoverContent {...defaultProps} occurrence={nonRecurringEvent} />
             </Popover.Root>
           </EventCalendarProvider>,
         );
@@ -739,7 +784,7 @@ describe('<EventPopover />', () => {
               }}
             />
             <Popover.Root open>
-              <EventPopover {...defaultProps} occurrence={nonRecurringEvent} />
+              <EventPopoverContent {...defaultProps} occurrence={nonRecurringEvent} />
             </Popover.Root>
           </EventCalendarProvider>,
         );
