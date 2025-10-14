@@ -84,21 +84,25 @@ export function RecurringScopeDialogProvider(props: RecurringScopeDialogProvider
   const { containerRef, children } = props;
 
   const [open, setOpen] = React.useState(false);
-  const resolverRef = React.useRef<((v: RecurringUpdateEventScope | null) => void) | null>(null);
-  const lastActiveRef = React.useRef<HTMLElement | null>(null);
+  const resolverRef = React.useRef<((value: RecurringUpdateEventScope | null) => void) | null>(
+    null,
+  );
+
+  const resolveAndClose = React.useCallback(
+    (value: RecurringUpdateEventScope | null) => {
+      resolverRef.current?.(value);
+      resolverRef.current = null;
+      setOpen(false);
+    },
+    [setOpen],
+  );
+
   const promptScope = React.useCallback(() => {
-    lastActiveRef.current = (document.activeElement as HTMLElement) ?? null;
     setOpen(true);
     return new Promise<RecurringUpdateEventScope | null>((resolve) => {
       resolverRef.current = resolve;
     });
-  }, []);
-
-  const resolveAndClose = React.useCallback((value: RecurringUpdateEventScope | null) => {
-    resolverRef.current?.(value);
-    resolverRef.current = null;
-    setOpen(false);
-  }, []);
+  }, [setOpen]);
 
   const handleOpenChange = React.useCallback((next: boolean) => {
     setOpen(next);
