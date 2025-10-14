@@ -26,7 +26,7 @@ function ChartsTooltip(props: ChartsTooltipProps) {
   const classes = useUtilityClasses(propClasses);
 
   return (
-    <ChartsTooltipContainer {...props} classes={propClasses}>
+    <ChartsTooltipContainer {...props} classes={propClasses} position="top">
       {trigger === 'axis' ? (
         <ChartsAxisTooltipContent classes={classes} />
       ) : (
@@ -41,6 +41,11 @@ ChartsTooltip.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Determine if the tooltip should be placed on the pointer location or on the node.
+   * @default 'pointer'
+   */
+  anchor: PropTypes.oneOf(['node', 'pointer']),
   /**
    * An HTML element, [virtualElement](https://popper.js.org/docs/v2/virtual-elements/),
    * or a function that returns either.
@@ -240,6 +245,10 @@ ChartsTooltip.propTypes = {
       }),
     }),
   ]),
+  /**
+   * Determines the tooltip position relatively to the anchor.
+   */
+  position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
   /**
    * The props used for each slot inside the Popper.
    * @default {}

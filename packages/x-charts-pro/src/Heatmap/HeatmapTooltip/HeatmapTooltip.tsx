@@ -23,6 +23,11 @@ HeatmapTooltip.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
+   * Determine if the tooltip should be placed on the pointer location or on the node.
+   * @default 'pointer'
+   */
+  anchor: PropTypes.oneOf(['node', 'pointer']),
+  /**
    * An HTML element, [virtualElement](https://popper.js.org/docs/v2/virtual-elements/),
    * or a function that returns either.
    * It's used to set the position of the popper.
@@ -221,6 +226,10 @@ HeatmapTooltip.propTypes = {
       }),
     }),
   ]),
+  /**
+   * Determines the tooltip position relatively to the anchor.
+   */
+  position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
   /**
    * The props used for each slot inside the Popper.
    * @default {}

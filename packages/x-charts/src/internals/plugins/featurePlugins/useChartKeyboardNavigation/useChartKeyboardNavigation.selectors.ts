@@ -9,6 +9,12 @@ import { ComputeResult } from '../useChartCartesianAxis/computeAxisValue';
 import { ChartSeriesType } from '../../../../models/seriesType/config';
 import { SeriesId } from '../../../../models/seriesType/common';
 import { AxisId, AxisItemIdentifier, ChartsAxisProps } from '../../../../models/axis';
+import {
+  BarItemIdentifier,
+  LineItemIdentifier,
+  PieItemIdentifier,
+  ScatterItemIdentifier,
+} from '../../../../models/seriesType';
 
 const selectKeyboardNavigation: ChartOptionalRootSelector<UseChartKeyboardNavigationSignature> = (
   state,
@@ -98,9 +104,20 @@ export const selectorChartsKeyboardYAxisIndex = createSelector(
 export const selectorChartsKeyboardItem = createSelector(
   [selectorChartsFocusedSeriesType, selectorChartsFocusedSeriesId, selectorChartsFocusedDataIndex],
   function selectorChartsKeyboardItem(seriesType, seriesId, dataIndex) {
-    if (seriesId === undefined) {
+    if (seriesType === undefined || seriesId === undefined) {
       return null;
     }
-    return { seriesId, dataIndex: seriesType === 'line' ? undefined : dataIndex };
+    return {
+      type: seriesType,
+      seriesId,
+      dataIndex: seriesType === 'line' ? undefined : dataIndex,
+    } as BarItemIdentifier | LineItemIdentifier | ScatterItemIdentifier | PieItemIdentifier;
+  },
+);
+
+export const selectorChartsKeyboardItemIsDefined = createSelector(
+  [selectorChartsFocusedSeriesType, selectorChartsFocusedSeriesId, selectorChartsFocusedDataIndex],
+  function selectorChartsKeyboardItemIsDefined(seriesType, seriesId, dataIndex) {
+    return seriesId !== undefined && dataIndex !== undefined;
   },
 );
