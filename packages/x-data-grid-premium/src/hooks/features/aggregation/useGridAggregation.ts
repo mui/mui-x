@@ -148,6 +148,7 @@ export const useGridAggregation = (
 
       const currentChunk = chunks[chunkIndex];
       if (!currentChunk) {
+        apiRef.current.publishEvent('aggregationLookupSet');
         abortControllerRef.current = null;
         return;
       }
@@ -177,7 +178,7 @@ export const useGridAggregation = (
         aggregation: { ...state.aggregation, lookup: { ...aggregationLookup } },
       }));
 
-      if (chunkIndex === 0 && hasAggregatedSortedField) {
+      if (chunkIndex === 0) {
         apiRef.current.applySorting();
       }
 
