@@ -66,7 +66,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       }
     };
   }, []);
-  const getFirstMatchingItem = (itemId: string, query: string) => {
+  const getFirstMatchingItem = (itemId: string, query: string): string | null => {
     // Try matching with accumulated query + new key
     const cleanQuery = (typeaheadQueryRef.current + query).toLowerCase();
 
