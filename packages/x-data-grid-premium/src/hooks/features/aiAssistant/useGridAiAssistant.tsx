@@ -80,6 +80,7 @@ export const useGridAiAssistant = (
     | 'disablePivoting'
     | 'chartsIntegration'
     | 'experimentalFeatures'
+    | 'getPivotDerivedColumns'
   >,
 ) => {
   const {
@@ -93,6 +94,7 @@ export const useGridAiAssistant = (
     disablePivoting,
     chartsIntegration,
     experimentalFeatures,
+    getPivotDerivedColumns,
   } = props;
   const activeChartId = gridChartsIntegrationActiveChartIdSelector(apiRef);
   const columnsLookup = gridColumnLookupSelector(apiRef);
@@ -157,17 +159,48 @@ export const useGridAiAssistant = (
 
       const examples = allowDataSampling ? collectSampleData() : {};
 
-      const columnsContext = columns.map((column) => ({
-        field: column.field,
-        description: column.description ?? null,
-        examples: examples[column.field] ?? column.examples ?? [],
-        type: column.type ?? 'string',
-        allowedOperators: column.filterOperators?.map((operator) => operator.value) ?? [],
-      }));
+      const columnsContext = columns.reduce(
+        (acc, column) => {
+          const columnContextWithoutExamples = {
+            field: column.field,
+            description: column.description ?? null,
+            examples: [],
+            type: column.type ?? 'string',
+            allowedOperators: column.filterOperators?.map((operator) => operator.value) ?? [],
+          };
+
+          acc.push({
+            ...columnContextWithoutExamples,
+            examples: examples[column.field] ?? column.examples ?? [],
+          });
+
+          if (disablePivoting) {
+            return acc;
+          }
+
+          (getPivotDerivedColumns?.(column, apiRef.current.getLocaleText) || []).forEach((col) =>
+            acc.push({
+              ...columnContextWithoutExamples,
+              ...col,
+              derivedFrom: column.field,
+            }),
+          );
+
+          return acc;
+        },
+        [] as Record<string, any>[],
+      );
 
       return JSON.stringify(columnsContext);
     },
-    [columns, collectSampleData, isAiAssistantAvailable],
+    [
+      apiRef,
+      columns,
+      collectSampleData,
+      getPivotDerivedColumns,
+      isAiAssistantAvailable,
+      disablePivoting,
+    ],
   );
 
   const applyPromptResult = React.useCallback(

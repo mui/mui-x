@@ -31,13 +31,17 @@ To increase the accuracy of the language processing, provide example values for 
 ### Provide custom examples
 
 Use the `examples` property on items of the `columns` array to provide custom examples as context for prompt processing.
-The `examples` property should contain an array of possible values for its respective column.
+The `examples` property should contain an array of possible values for each respective column.
 
 :::info
-AI Assistant demos use limited [MUI's processing service](/x/react-data-grid/ai-assistant/#with-muis-service).
+AI Assistant demos use a limited version of [MUI's processing service](/x/react-data-grid/ai-assistant/#with-muis-service).
 :::
 
 {{"demo": "AssistantWithExamples.js", "bg": "inline"}}
+
+:::success
+Provide examples for the [derived columns](/x/react-data-grid/pivoting/#derived-columns-in-pivot-mode) using the `getPivotDerivedColumns()` prop.
+:::
 
 ### Use row data for examples
 
