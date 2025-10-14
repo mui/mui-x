@@ -1,12 +1,19 @@
-import * as React from 'react';
-import { Popover } from '@base-ui-components/react/popover';
 import { CalendarEventOccurrence } from '@mui/x-scheduler-headless/models';
+import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 
-export interface EventPopoverProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface MoreEventsPopoverProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * The event occurrence to display in the popover.
    */
-  occurrence: CalendarEventOccurrence;
+  occurrences: CalendarEventOccurrence[];
+  /**
+   * The total count of occurrences.
+   */
+  count: number;
+  /**
+   * The day data for the occurrences.
+   */
+  day: useEventOccurrencesWithDayGridPosition.DayData;
   /**
    * The anchor element for the popover positioning.
    */
@@ -21,11 +28,7 @@ export interface EventPopoverProps extends React.HTMLAttributes<HTMLDivElement> 
   onClose: () => void;
 }
 
-export interface EventPopoverProviderProps {
+export interface MoreEventsPopoverProviderProps {
   containerRef: React.RefObject<HTMLElement | null>;
   children: React.ReactNode;
-}
-
-export interface EventPopoverTriggerProps extends Popover.Trigger.Props {
-  occurrence: CalendarEventOccurrence;
 }
