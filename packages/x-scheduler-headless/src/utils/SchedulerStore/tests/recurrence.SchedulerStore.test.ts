@@ -1,5 +1,5 @@
 import { adapter } from 'test/utils/scheduler';
-import { RRuleSpec } from '@mui/x-scheduler-headless/models';
+import { RecurringEventRecurrenceRule } from '@mui/x-scheduler-headless/models';
 import { storeClasses } from './utils';
 import { getByDayMaps } from '../../recurrence-utils';
 import { selectors } from '../SchedulerStore.selectors';
@@ -64,36 +64,39 @@ storeClasses.forEach((storeClass) => {
       });
 
       it('classifies daily interval>1 or with finite end (count) as custom', () => {
-        const ruleInterval2: RRuleSpec = { ...presets.daily, interval: 2 };
+        const ruleInterval2: RecurringEventRecurrenceRule = { ...presets.daily, interval: 2 };
         expect(selectors.defaultRecurrencePresetKey(state, ruleInterval2, start)).to.equal(
           'custom',
         );
 
-        const ruleFiniteCount: RRuleSpec = { ...presets.daily, count: 5 };
+        const ruleFiniteCount: RecurringEventRecurrenceRule = { ...presets.daily, count: 5 };
         expect(selectors.defaultRecurrencePresetKey(state, ruleFiniteCount, start)).to.equal(
           'custom',
         );
       });
 
       it('classifies weekly with extra day as custom', () => {
-        const rule: RRuleSpec = { ...presets.weekly, byDay: ['TU', 'WE'] };
+        const rule: RecurringEventRecurrenceRule = { ...presets.weekly, byDay: ['TU', 'WE'] };
         expect(selectors.defaultRecurrencePresetKey(state, rule, start)).to.equal('custom');
       });
 
       it('classifies monthly with different day or with interval>1 as custom', () => {
-        const ruleDifferentDay: RRuleSpec = { ...presets.monthly, byMonthDay: [26] };
+        const ruleDifferentDay: RecurringEventRecurrenceRule = {
+          ...presets.monthly,
+          byMonthDay: [26],
+        };
         expect(selectors.defaultRecurrencePresetKey(state, ruleDifferentDay, start)).to.equal(
           'custom',
         );
 
-        const ruleInterval2: RRuleSpec = { ...presets.monthly, interval: 2 };
+        const ruleInterval2: RecurringEventRecurrenceRule = { ...presets.monthly, interval: 2 };
         expect(selectors.defaultRecurrencePresetKey(state, ruleInterval2, start)).to.equal(
           'custom',
         );
       });
 
       it('classifies yearly interval>1 as custom', () => {
-        const rule: RRuleSpec = { ...presets.yearly, interval: 2 };
+        const rule: RecurringEventRecurrenceRule = { ...presets.yearly, interval: 2 };
         expect(selectors.defaultRecurrencePresetKey(state, rule, start)).to.equal('custom');
       });
     });

@@ -8,10 +8,11 @@ import {
   EventSurfaceType,
   CalendarEventUpdatedProperties,
   SchedulerValidDate,
+  RecurringEventUpdateScope,
 } from '../models';
 import { EventDropData, EventDropDataLookup } from '../utils/drag-utils';
 import { SchedulerStoreInContext, useSchedulerStoreContext } from '../use-scheduler-store-context';
-import { RecurringUpdateEventScope, selectors } from './SchedulerStore';
+import { selectors } from './SchedulerStore';
 import { SCHEDULER_RECURRING_EDITING_SCOPE } from '../constants';
 
 export function useDropTarget<Targets extends keyof EventDropDataLookup>(
@@ -105,7 +106,7 @@ async function applyInternalDragOrResizeOccurrencePlaceholder(
   store: SchedulerStoreInContext,
   placeholder: CalendarOccurrencePlaceholderInternalDragOrResize,
   addPropertiesToDroppedEvent?: () => Partial<CalendarEvent>,
-  chooseRecurringEventScope?: () => Promise<RecurringUpdateEventScope>,
+  chooseRecurringEventScope?: () => Promise<RecurringEventUpdateScope>,
 ) {
   // TODO: Try to do a single state update.
   store.setOccurrencePlaceholder(null);
@@ -123,7 +124,7 @@ async function applyInternalDragOrResizeOccurrencePlaceholder(
   }
 
   if (original.rrule) {
-    let scope: RecurringUpdateEventScope;
+    let scope: RecurringEventUpdateScope;
     if (chooseRecurringEventScope) {
       // TODO: Issue #19440 + #19441 - Allow to edit all events or only this event.
       scope = await chooseRecurringEventScope();

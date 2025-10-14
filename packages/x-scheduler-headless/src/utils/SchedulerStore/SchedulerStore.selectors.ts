@@ -4,8 +4,8 @@ import {
   CalendarEventId,
   CalendarResource,
   CalendarResourceId,
-  RecurrencePresetKey,
-  RRuleSpec,
+  RecurringEventPresetKey,
+  RecurringEventRecurrenceRule,
   SchedulerValidDate,
 } from '../../models';
 import { SchedulerState as State } from './SchedulerStore.types';
@@ -117,7 +117,10 @@ export const selectors = {
    */
   recurrencePresets: createSelectorMemoized(
     (state: State) => state.adapter,
-    (adapter, date: SchedulerValidDate): Record<RecurrencePresetKey, RRuleSpec> => {
+    (
+      adapter,
+      date: SchedulerValidDate,
+    ): Record<RecurringEventPresetKey, RecurringEventRecurrenceRule> => {
       const { numToByDay: numToCode } = getByDayMaps(adapter);
       const dateDowCode = numToCode[adapter.getDayOfWeek(date)];
       const dateDayOfMonth = adapter.getDate(date);
@@ -155,7 +158,7 @@ export const selectors = {
       adapter,
       rule: CalendarEvent['rrule'] | undefined,
       occurrenceStart: SchedulerValidDate,
-    ): RecurrencePresetKey | 'custom' | null => {
+    ): RecurringEventPresetKey | 'custom' | null => {
       if (!rule) {
         return null;
       }
