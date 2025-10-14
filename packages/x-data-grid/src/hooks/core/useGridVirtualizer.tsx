@@ -341,6 +341,9 @@ export function useGridVirtualizer() {
   });
 
   useStoreEffect(virtualizer.store, Dimensions.selectors.dimensions, (_, dimensions) => {
+    if (!dimensions.isReady) {
+      return;
+    }
     apiRef.current.setState((gridState) => ({
       ...gridState,
       dimensions: addGridDimensions(
@@ -367,6 +370,7 @@ export function useGridVirtualizer() {
       return;
     }
     if (virtualization !== apiRef.current.state.virtualization) {
+      console.log('virtualization change', virtualization);
       apiRef.current.setState((gridState) => ({
         ...gridState,
         virtualization,

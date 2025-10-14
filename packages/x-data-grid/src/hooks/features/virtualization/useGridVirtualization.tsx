@@ -51,6 +51,14 @@ export function useGridVirtualization(
   const setVirtualization = (enabled: boolean) => {
     const { virtualizer } = apiRef.current;
     enabled &&= HAS_LAYOUT;
+    const snapshot = virtualizer.store.getSnapshot();
+    if (
+      snapshot.virtualization.enabled === enabled &&
+      snapshot.virtualization.enabledForRows === enabled &&
+      snapshot.virtualization.enabledForColumns === enabled
+    ) {
+      return;
+    }
     virtualizer.store.set('virtualization', {
       ...virtualizer.store.state.virtualization,
       enabled,
@@ -62,6 +70,10 @@ export function useGridVirtualization(
   const setColumnVirtualization = (enabled: boolean) => {
     const { virtualizer } = apiRef.current;
     enabled &&= HAS_LAYOUT;
+    const snapshot = virtualizer.store.getSnapshot();
+    if (snapshot.virtualization.enabledForColumns === enabled) {
+      return;
+    }
     virtualizer.store.set('virtualization', {
       ...virtualizer.store.state.virtualization,
       enabledForColumns: enabled,
