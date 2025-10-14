@@ -62,7 +62,7 @@ describe('recurrence-utils', () => {
       expect(Object.values(byDayToNum)).to.have.length(7);
       expect(Object.keys(numToByDay)).to.have.length(7);
 
-      ALL_CODES.forEach((code) => {
+      WEEK_DAYS.forEach((code) => {
         expect(numToByDay[byDayToNum[code]]).to.equal(code);
       });
     });
