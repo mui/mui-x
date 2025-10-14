@@ -335,7 +335,7 @@ export function useGridVirtualizer() {
     apiRef.current.store.state.virtualization = virtualizer.store.state.virtualization;
   });
 
-  useStoreEffect(virtualizer.store, Dimensions.selectors.dimensions, (prev, dimensions) => {
+  useStoreEffect(virtualizer.store, Dimensions.selectors.dimensions, (_, dimensions) => {
     apiRef.current.setState((gridState) => ({
       ...gridState,
       dimensions: addGridDimensions(
