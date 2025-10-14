@@ -158,7 +158,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
     return [
       { label: translations.labelNoResource, value: null, eventColor: DEFAULT_EVENT_COLOR },
       ...resources.map((resource) => ({
-        label: resource.name,
+        label: resource.title,
         value: resource.id,
         eventColor: resource.eventColor,
       })),
