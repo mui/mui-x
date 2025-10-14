@@ -105,7 +105,6 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
             name: 'zoomBrush',
             threshold: 0,
             maxPointers: 1,
-            preventIf: ['zoomTapAndDrag'],
           }),
         ],
       });

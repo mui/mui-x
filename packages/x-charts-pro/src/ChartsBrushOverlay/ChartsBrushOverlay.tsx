@@ -55,7 +55,7 @@ export function ChartsBrushOverlay(_: ChartsBrushOverlayProps) {
   const startY = clampY(brushStartY);
   const currentX = clampX(brushCurrentX);
   const currentY = clampY(brushCurrentY);
-  const rectColor = theme.palette.mode === 'light' ? 'grey' : 'white';
+  const rectColor = theme.palette.mode === 'light' ? 'black' : 'white';
 
   // For scatter charts, show only the rectangle without guide lines
   if (brushConfig === 'xy') {
@@ -106,7 +106,9 @@ export function ChartsBrushOverlay(_: ChartsBrushOverlayProps) {
 
   return (
     <g className={clsx(brushOverlayClasses.root, brushOverlayClasses.x)}>
-      {showRect && <BrushRect x={minX} y={top} width={rectWidth} height={height} />}
+      {showRect && (
+        <BrushRect fill={rectColor} x={minX} y={top} width={rectWidth} height={height} />
+      )}
     </g>
   );
 }
