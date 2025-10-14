@@ -837,7 +837,7 @@ export function adjustRRuleForAllMove(
 ): RRuleSpec {
   let nextRRule: RRuleSpec = { ...rrule };
 
-  if (rrule.freq === 'WEEKLY' && rrule.byDay?.length) {
+  if (rrule.freq === 'WEEKLY') {
     const { numToByDay } = getByDayMaps(adapter);
 
     const normalized = parseWeeklyByDayPlain(rrule.byDay, [
