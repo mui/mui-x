@@ -42,7 +42,7 @@ export function getWeekDayMaps(adapter: Adapter): {
 }
 
 /**
- * Tokenizes a BYDAY value into { ord, code }.
+ * Tokenizes a byDay value into { ord, code }.
  * @returns { ord: number | null, code: RecurringEventWeekDayCode }
  * @throws if the value is invalid.
  */
@@ -52,7 +52,7 @@ export function tokenizeByDay(byDay: RecurringEventByDayValue): {
 } {
   const match = String(byDay).match(/^(-?[1-5])?(MO|TU|WE|TH|FR|SA|SU)$/);
   if (!match) {
-    throw new Error('Event Calendar: invalid BYDAY value.');
+    throw new Error(`Scheduler: ${byDay} is not a valid value for the byDay property.`);
   }
   return { ord: match[1] ? Number(match[1]) : null, code: match[2] as RecurringEventWeekDayCode };
 }
@@ -192,7 +192,7 @@ export function buildEndGuard(
 
   if (hasCount && hasUntil) {
     throw new Error(
-      'Event Calendar: RRULE invalid, COUNT and UNTIL are mutually exclusive per RFC 5545.',
+      'Scheduler: The recurring rule cannot have both the count and until properties.',
     );
   }
 
@@ -328,7 +328,7 @@ export function matchesRecurrence(
       if (rule.byDay?.length) {
         if (rule.byMonthDay?.length) {
           throw new Error(
-            'Scheduler: For "MONTHLY" frequency, use either the byDay property (with an ordinal) or the byMonthDay property, not both.',
+            'Scheduler: The monthly recurrences cannot have both the byDay and the byMonthDay properties.',
           );
         }
 
@@ -356,7 +356,7 @@ export function matchesRecurrence(
       // Any use of BYMONTH, BYMONTHDAY, BYDAY, or multiple values is not allowed.
       if (rule.byMonth?.length || rule.byMonthDay?.length || rule.byDay?.length) {
         throw new Error(
-          'Event Calendar: YEARLY supports only exact same date recurrence (month/day of DTSTART).',
+          'Scheduler: The yearly recurrences only support exact same date recurrence (month/day of DTSTART).',
         );
       }
 
@@ -411,7 +411,7 @@ export function estimateOccurrencesUpTo(
     default:
       throw new Error(
         [
-          `Event Calendar: Unknown frequency ${rule.freq}`,
+          `Scheduler: Unknown frequency ${rule.freq}.`,
           'Expected: "DAILY" | "WEEKLY" | "MONTHLY" | "YEARLY".',
         ].join('\n'),
       );
@@ -508,7 +508,7 @@ export function countMonthlyOccurrencesUpToExact(
   if (rule.byDay?.length) {
     if (rule.byMonthDay?.length) {
       throw new Error(
-        'Event Calendar: MONTHLY use either BYDAY (ordinal) or BYMONTHDAY, not both.',
+        'Scheduler: The monthly recurrences cannot have both the byDay and the byMonthDay properties.',
       );
     }
 
@@ -539,7 +539,9 @@ export function countMonthlyOccurrencesUpToExact(
 
   // Path B: BYMONTHDAY (single mode, default to DTSTART day)
   if ((rule.byMonthDay?.length ?? 0) > 1) {
-    throw new Error('Event Calendar: MONTHLY supports only a single BYMONTHDAY.');
+    throw new Error(
+      "Scheduler: The monthly recurrences don't support byMonthDay with multiple elements.",
+    );
   }
 
   // If no BYMONTHDAY is provided in a MONTHLY rule, default to the day of month of DTSTART.
@@ -597,7 +599,7 @@ export function countYearlyOccurrencesUpToExact(
   // Any use of BYMONTH, BYMONTHDAY, or BYDAY is not allowed at the moment.
   if (rule.byMonth?.length || rule.byMonthDay?.length || rule.byDay?.length) {
     throw new Error(
-      'Event Calendar: YEARLY supports only exact same date recurrence (month/day of DTSTART).',
+      'Scheduler: The yearly recurrences must have either the byMonth, the byMonthDay or the byDay property defined.',
     );
   }
 
