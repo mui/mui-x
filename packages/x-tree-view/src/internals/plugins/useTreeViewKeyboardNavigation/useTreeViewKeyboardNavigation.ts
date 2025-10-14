@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { useStore } from '@mui/x-internals/store';
 import { useRtl } from '@mui/system/RtlProvider';
+import { useTimeout } from '@base-ui-components/utils/useTimeout';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { TreeViewCancellableEvent } from '../../../models';
 import { TreeViewItemMeta, TreeViewPlugin } from '../../models';
@@ -27,6 +28,8 @@ function isPrintableKey(string: string) {
   return !!string && string.length === 1 && !!string.match(/\S/);
 }
 
+const TYPEAHEAD_TIMEOUT = 500;
+
 export const useTreeViewKeyboardNavigation: TreeViewPlugin<
   UseTreeViewKeyboardNavigationSignature
 > = ({ instance, store, params }) => {
@@ -34,8 +37,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
   const labelMap = React.useRef<TreeViewLabelMap>({});
 
   const typeaheadQueryRef = React.useRef<string>('');
-  const typeaheadTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
-  const TYPEAHEAD_TIMEOUT = 500;
+  const typeaheadTimeout = useTimeout();
 
   const updateLabelMap = useEventCallback(
     (callback: (labelMap: TreeViewLabelMap) => TreeViewLabelMap) => {
@@ -59,13 +61,6 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
     labelMap.current = newLabelMap;
   }, [itemMetaLookup, params.getItemId, instance]);
 
-  React.useEffect(() => {
-    return () => {
-      if (typeaheadTimeoutRef.current) {
-        clearTimeout(typeaheadTimeoutRef.current);
-      }
-    };
-  }, []);
   const getFirstMatchingItem = (itemId: string, query: string): string | null => {
     // Try matching with accumulated query + new key
     const cleanQuery = (typeaheadQueryRef.current + query).toLowerCase();
@@ -318,9 +313,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
       // Type-ahead
       case !ctrlPressed && !event.shiftKey && isPrintableKey(key): {
-        if (typeaheadTimeoutRef.current) {
-          clearTimeout(typeaheadTimeoutRef.current);
-        }
+        typeaheadTimeout.clear();
 
         const matchingItem = getFirstMatchingItem(itemId, key);
 
@@ -329,13 +322,11 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
           event.preventDefault();
         } else {
           typeaheadQueryRef.current = '';
-          typeaheadTimeoutRef.current = null;
         }
 
-        typeaheadTimeoutRef.current = setTimeout(() => {
+        typeaheadTimeout.start(TYPEAHEAD_TIMEOUT, () => {
           typeaheadQueryRef.current = '';
-          typeaheadTimeoutRef.current = null;
-        }, TYPEAHEAD_TIMEOUT);
+        });
         break;
       }
     }
