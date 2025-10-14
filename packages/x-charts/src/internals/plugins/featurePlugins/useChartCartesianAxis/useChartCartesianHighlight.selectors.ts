@@ -1,4 +1,4 @@
-import { createSelector } from '../../utils/selectors';
+import { createSelector, type ChartRootSelector } from '../../utils/selectors';
 import { AxisItemIdentifier, ChartsAxisProps } from '../../../../models/axis';
 import { selectorChartXAxis, selectorChartYAxis } from './useChartCartesianAxisRendering.selectors';
 import {
@@ -21,11 +21,25 @@ const selectorChartControlledCartesianAxisHighlight = (
   state: ChartState<[], [UseChartCartesianAxisSignature]>,
 ) => state.controlledCartesianAxisHighlight;
 
+const selectorChartBrushState: ChartRootSelector<UseChartCartesianAxisSignature, 'zoomBrush'> = (
+  state,
+) => state.zoomBrush;
+
+const selectorIsBrushSelectionActive = createSelector(
+  [selectorChartBrushState],
+  (brushState) => brushState.start !== null && brushState.current !== null,
+);
+
 const selectAxisHighlight = (
   computedIndex: number | null,
   axis: ComputeResult<ChartsAxisProps>,
   axisItems: AxisItemIdentifier[] | undefined,
+  isBrushSelectionActive: boolean,
 ) => {
+  if (isBrushSelectionActive) {
+    return [];
+  }
+
   if (axisItems !== undefined) {
     return axisItems.filter((item) => axis.axis[item.axisId] !== undefined).map((item) => item);
   }
@@ -37,6 +51,7 @@ export const selectorChartsHighlightXAxisIndex = createSelector(
     selectorChartsInteractionXAxisIndex,
     selectorChartXAxis,
     selectorChartControlledCartesianAxisHighlight,
+    selectorIsBrushSelectionActive,
   ],
   selectAxisHighlight,
 );
@@ -46,6 +61,7 @@ export const selectorChartsHighlightYAxisIndex = createSelector(
     selectorChartsInteractionYAxisIndex,
     selectorChartYAxis,
     selectorChartControlledCartesianAxisHighlight,
+    selectorIsBrushSelectionActive,
   ],
   selectAxisHighlight,
 );
@@ -57,7 +73,12 @@ const selectAxisHighlightWithValue = (
   controlledAxisItems: AxisItemIdentifier[] | undefined,
   keyboardAxisItem: AxisItemIdentifier | undefined,
   lastInteractionUpdate: InteractionUpdateSource | undefined,
+  isBrushSelectionActive: boolean,
 ) => {
+  if (isBrushSelectionActive) {
+    return [];
+  }
+
   if (controlledAxisItems !== undefined) {
     return controlledAxisItems
       .map((item) => ({
@@ -106,6 +127,7 @@ export const selectorChartsHighlightXAxisValue = createSelector(
     selectorChartControlledCartesianAxisHighlight,
     selectorChartsKeyboardXAxisIndex,
     selectorChartsLastInteraction,
+    selectorIsBrushSelectionActive,
   ],
   selectAxisHighlightWithValue,
 );
@@ -118,6 +140,7 @@ export const selectorChartsHighlightYAxisValue = createSelector(
     selectorChartControlledCartesianAxisHighlight,
     selectorChartsKeyboardYAxisIndex,
     selectorChartsLastInteraction,
+    selectorIsBrushSelectionActive,
   ],
   selectAxisHighlightWithValue,
 );

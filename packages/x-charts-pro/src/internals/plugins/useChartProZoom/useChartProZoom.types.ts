@@ -59,7 +59,7 @@ export interface UseChartProZoomState {
   /**
    * Current brush selection state for visual feedback.
    */
-  zoomBrushState: {
+  zoomBrush: {
     start: { x: number; y: number } | null;
     current: { x: number; y: number } | null;
   };

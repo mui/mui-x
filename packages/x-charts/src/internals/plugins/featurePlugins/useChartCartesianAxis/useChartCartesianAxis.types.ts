@@ -94,6 +94,13 @@ export interface UseChartCartesianAxisState {
     isInteracting: boolean;
     zoomData: readonly ZoomData[];
   };
+  /**
+   * @ignore - state populated by the useChartProZoomPlugin
+   */
+  zoomBrush: {
+    start: { x: number; y: number } | null;
+    current: { x: number; y: number } | null;
+  };
   cartesianAxis: {
     x: DefaultedXAxis[];
     y: DefaultedYAxis[];

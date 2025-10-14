@@ -52,9 +52,8 @@ export const selectorChartCanZoomIn = createSelector(
   },
 );
 
-const selectorChartBrushState: ChartRootSelector<UseChartProZoomSignature, 'zoomBrushState'> = (
-  state,
-) => state.zoomBrushState;
+const selectorChartBrushState: ChartRootSelector<UseChartProZoomSignature, 'zoomBrush'> = (state) =>
+  state.zoomBrush;
 
 export const selectorChartBrushStartX = createSelector(
   [selectorChartBrushState],
