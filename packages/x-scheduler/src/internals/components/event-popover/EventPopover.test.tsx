@@ -468,7 +468,6 @@ describe('<EventPopoverContent />', () => {
         const containerRef = React.createRef<HTMLDivElement>();
 
         const { user } = render(
-<<<<<<< HEAD
           <React.Fragment>
             <div ref={containerRef} />
             <RecurringScopeDialogProvider containerRef={containerRef}>
@@ -481,25 +480,11 @@ describe('<EventPopoverContent />', () => {
                   }}
                 />
                 <Popover.Root open>
-                  <EventPopover {...defaultProps} occurrence={originalRecurringEvent} />
+                  <EventPopoverContent {...defaultProps} occurrence={originalRecurringEvent} />
                 </Popover.Root>
               </EventCalendarProvider>
             </RecurringScopeDialogProvider>
           </React.Fragment>,
-=======
-          <EventCalendarProvider events={[originalRecurringEvent]} resources={resources}>
-            <StoreSpy
-              Context={EventCalendarStoreContext}
-              method="updateRecurringEvent"
-              onSpyReady={(sp) => {
-                updateRecurringEventSpy = sp;
-              }}
-            />
-            <Popover.Root open>
-              <EventPopoverContent {...defaultProps} occurrence={originalRecurringEvent} />
-            </Popover.Root>
-          </EventCalendarProvider>,
->>>>>>> upstream/master
         );
 
         await user.clear(screen.getByLabelText(/start time/i));
@@ -589,7 +574,6 @@ describe('<EventPopoverContent />', () => {
         const containerRef = React.createRef<HTMLDivElement>();
 
         const { user } = render(
-<<<<<<< HEAD
           <React.Fragment>
             <div ref={containerRef} />
             <RecurringScopeDialogProvider containerRef={containerRef}>
@@ -602,25 +586,11 @@ describe('<EventPopoverContent />', () => {
                   }}
                 />
                 <Popover.Root open>
-                  <EventPopover {...defaultProps} occurrence={originalRecurringEvent} />
+                  <EventPopoverContent {...defaultProps} occurrence={originalRecurringEvent} />
                 </Popover.Root>
               </EventCalendarProvider>
             </RecurringScopeDialogProvider>
           </React.Fragment>,
-=======
-          <EventCalendarProvider events={[originalRecurringEvent]} resources={resources}>
-            <StoreSpy
-              Context={EventCalendarStoreContext}
-              method="updateRecurringEvent"
-              onSpyReady={(sp) => {
-                updateRecurringEventSpy = sp;
-              }}
-            />
-            <Popover.Root open>
-              <EventPopoverContent {...defaultProps} occurrence={originalRecurringEvent} />
-            </Popover.Root>
-          </EventCalendarProvider>,
->>>>>>> upstream/master
         );
         // We update the recurrence from daily to weekly
         await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
@@ -663,7 +633,6 @@ describe('<EventPopoverContent />', () => {
         const containerRef = React.createRef<HTMLDivElement>();
 
         const { user } = render(
-<<<<<<< HEAD
           <React.Fragment>
             <div ref={containerRef} />
             <RecurringScopeDialogProvider containerRef={containerRef}>
@@ -676,25 +645,11 @@ describe('<EventPopoverContent />', () => {
                   }}
                 />
                 <Popover.Root open>
-                  <EventPopover {...defaultProps} occurrence={originalRecurringEvent} />
+                  <EventPopoverContent {...defaultProps} occurrence={originalRecurringEvent} />
                 </Popover.Root>
               </EventCalendarProvider>
             </RecurringScopeDialogProvider>
           </React.Fragment>,
-=======
-          <EventCalendarProvider events={[originalRecurringEvent]} resources={resources}>
-            <StoreSpy
-              Context={EventCalendarStoreContext}
-              method="updateRecurringEvent"
-              onSpyReady={(sp) => {
-                updateRecurringEventSpy = sp;
-              }}
-            />
-            <Popover.Root open>
-              <EventPopoverContent {...defaultProps} occurrence={originalRecurringEvent} />
-            </Popover.Root>
-          </EventCalendarProvider>,
->>>>>>> upstream/master
         );
 
         await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
