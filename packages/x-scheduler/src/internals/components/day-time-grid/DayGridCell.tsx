@@ -11,6 +11,7 @@ import { DayGridEvent } from '../event';
 
 import './DayTimeGrid.css';
 import { useEventPopoverContext } from '../event-popover/EventPopoverContext';
+import { useScopeDialogContext } from '../scope-dialog/ScopeDialogContext';
 
 export function DayGridCell(props: DayGridCellProps) {
   const { day, row } = props;
@@ -19,6 +20,7 @@ export function DayGridCell(props: DayGridCellProps) {
   const store = useEventCalendarStoreContext();
   const cellRef = React.useRef<HTMLDivElement | null>(null);
   const isCreation = useStore(store, selectors.isCreatingNewEventInDayCell, day.value);
+  const { promptScope } = useScopeDialogContext();
 
   const { startEditing } = useEventPopoverContext();
 
@@ -43,6 +45,7 @@ export function DayGridCell(props: DayGridCellProps) {
       ref={cellRef}
       value={day.value}
       addPropertiesToDroppedEvent={addPropertiesToDroppedEvent}
+      chooseRecurringEventScope={promptScope}
       className="DayTimeGridAllDayEventsCell"
       style={
         {
