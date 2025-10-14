@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BarChart } from '@mui/x-charts/BarChart';
+import { LineChart } from '@mui/x-charts/LineChart';
 import { useBrush, useDrawingArea } from '@mui/x-charts/hooks';
 import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -101,29 +101,44 @@ function CustomBrushOverlay() {
   );
 }
 
+const marketData = [
+  100, 96.56, 97.04, 98.95, 102.66, 106.18, 107.76, 109.78, 113.57, 111.54, 107.69,
+  104.58, 106.62, 103.81, 104.46, 105.14, 108.94, 112.81, 112.62, 117.52, 122.17,
+  122.11, 121.44, 122.5, 125.42, 127.46, 129.21, 124.71, 125.0, 125.28, 125.15,
+  125.06, 120.48, 115.83, 116.47, 119.58, 118.99, 123.46, 126.83, 130.84, 131.12,
+  131.31, 129.14, 133.35, 130.15, 129.02, 132.57, 136.1, 139.33, 139.66,
+];
+
+const dates = Array.from({ length: 50 }, (_, i) => {
+  const date = new Date(2024, 0, i + 1);
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+});
+
 export default function BrushCustomOverlay() {
   return (
     <Box sx={{ width: '100%' }}>
       <Typography variant="body2" sx={{ mb: 2 }}>
         Custom brush overlay with labeled start and end positions.
       </Typography>
-      <BarChart
+      <LineChart
         height={300}
         series={[
           {
-            data: [45, 62, 58, 71],
-            label: 'Revenue',
+            data: marketData,
+            label: 'Market Value',
+            showMark: false,
           },
         ]}
+        enableBrush
         xAxis={[
           {
-            data: ['Q1', 'Q2', 'Q3', 'Q4'],
-            scaleType: 'band',
+            data: dates,
+            scaleType: 'point',
           },
         ]}
       >
         <CustomBrushOverlay />
-      </BarChart>
+      </LineChart>
     </Box>
   );
 }
