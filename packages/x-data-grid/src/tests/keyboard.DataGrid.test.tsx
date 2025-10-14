@@ -258,27 +258,27 @@ describe('<DataGrid /> - Keyboard', () => {
     it('should navigate to the 1st cell of the 1st row when pressing "Home" + ctrlKey of metaKey of shiftKey', async () => {
       const { user } = render(<NavigationTestCaseNoScrollX />);
 
-      const cell = getCell(8, 1);
+      let cell = getCell(5, 1);
       await user.click(cell);
-      expect(getActiveCell()).to.equal('8-1');
+      expect(getActiveCell()).to.equal('5-1');
       fireEvent.keyDown(document.activeElement!, { key: 'Home', ctrlKey: true });
-      await waitFor(() => expect(getActiveCell()).to.equal('0-0'));
+      expect(getActiveCell()).to.equal('0-0');
 
       if (!isJSDOM) {
         await act(async () => cell.scrollIntoView());
       }
       await user.click(cell);
-      expect(getActiveCell()).to.equal('8-1');
+      expect(getActiveCell()).to.equal('5-1');
       fireEvent.keyDown(document.activeElement!, { key: 'Home', metaKey: true });
-      await waitFor(() => expect(getActiveCell()).to.equal('0-0'));
+      expect(getActiveCell()).to.equal('0-0');
 
       if (!isJSDOM) {
         await act(async () => cell.scrollIntoView());
       }
       await user.click(cell);
-      expect(getActiveCell()).to.equal('8-1');
+      expect(getActiveCell()).to.equal('5-1');
       fireEvent.keyDown(document.activeElement!, { key: 'Home', shiftKey: true });
-      await waitFor(() => expect(getActiveCell()).to.equal('0-0'));
+      expect(getActiveCell()).to.equal('0-0');
     });
 
     it('should navigate to the last cell of the current row when pressing "End"', async () => {
