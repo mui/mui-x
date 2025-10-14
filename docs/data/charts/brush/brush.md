@@ -20,7 +20,7 @@ The brush plugin is available in the `LineChart`, `BarChart`, and `ScatterChart`
 
 ## Basic usage
 
-To display visual feedback when users interact with the chart, enable the brush with `enableBrush` and add the `ChartsBrushOverlay` component as a child of your chart.
+To display visual feedback when users interact with the chart, enable the brush with `brushConfig={{ enabled: true }}` and add the `ChartsBrushOverlay` component as a child of your chart.
 
 {{"demo": "BrushBasic.js"}}
 
@@ -56,6 +56,27 @@ The hook returns an object with:
 
 - `start` - The starting point of the brush selection (`{ x: number, y: number } | null`)
 - `current` - The current point of the brush selection (`{ x: number, y: number } | null`)
+
+## Configuration
+
+The `brushConfig` prop accepts an object with the following options:
+
+- `enabled` (boolean, default: `false`) - Whether the brush interaction is enabled
+- `preventTooltip` (boolean, default: `true`) - Whether to prevent tooltip from showing during brush interaction
+- `preventHighlight` (boolean, default: `true`) - Whether to prevent highlighting during brush interaction
+
+Example:
+
+```jsx
+<LineChart
+  brushConfig={{
+    enabled: true,
+    preventTooltip: true,
+    preventHighlight: true,
+  }}
+  // ... other props
+/>
+```
 
 <!-- ## Integration with Zoom
 

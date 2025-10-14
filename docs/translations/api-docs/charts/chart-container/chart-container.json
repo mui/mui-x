@@ -1,7 +1,7 @@
 {
   "componentDescription": "It sets up the data providers as well as the `<svg>` for the chart.\n\nThis is a combination of both the `ChartDataProvider` and `ChartsSurface` components.",
   "propDescriptions": {
-    "enableBrush": { "description": "Enables or disables the brush interaction." },
+    "brushConfig": { "description": "Configuration for the brush interaction." },
     "colors": { "description": "Color palette used to colorize multiple series." },
     "dataset": {
       "description": "An array of objects that can be used to populate series and axes data using their <code>dataKey</code> property."

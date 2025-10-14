@@ -19,6 +19,10 @@ import {
 import { selectorChartsInteractionPolarAxisTooltip } from '../internals/plugins/featurePlugins/useChartPolarAxis/useChartPolarInteraction.selectors';
 import { useAxisSystem } from '../hooks/useAxisSystem';
 import { useSvgRef } from '../hooks';
+import {
+  selectorBrushShouldPreventTooltip,
+  type UseChartBrushSignature,
+} from '../internals/plugins/featurePlugins/useChartBrush';
 
 const noAxis = () => false;
 
@@ -73,8 +77,8 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
 
   const axisSystem = useAxisSystem();
 
-  const store = useStore<[UseChartCartesianAxisSignature]>();
-  const isOpen = useSelector(
+  const store = useStore<[UseChartCartesianAxisSignature, UseChartBrushSignature]>();
+  const hasData = useSelector(
     store,
     trigger === 'axis'
       ? (axisSystem === 'polar' && selectorChartsInteractionPolarAxisTooltip) ||
@@ -82,6 +86,9 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
           noAxis
       : selectorChartsInteractionItemIsDefined,
   );
+  const shouldPreventBecauseOfBrush = useSelector(store, selectorBrushShouldPreventTooltip);
+
+  const isOpen = !shouldPreventBecauseOfBrush && hasData;
 
   React.useEffect(() => {
     const element = svgRef.current;

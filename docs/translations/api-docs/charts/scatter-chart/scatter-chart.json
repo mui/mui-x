@@ -5,7 +5,7 @@
       "description": "The configuration of axes highlight.",
       "seeMoreText": "See {{link}} for more details."
     },
-    "enableBrush": { "description": "Enables or disables the brush interaction." },
+    "brushConfig": { "description": "Configuration for the brush interaction." },
     "colors": { "description": "Color palette used to colorize multiple series." },
     "dataset": {
       "description": "An array of objects that can be used to populate series and axes data using their <code>dataKey</code> property."

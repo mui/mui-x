@@ -1,32 +1,32 @@
 import { selectorChartSeriesProcessed } from '../../../../internals/plugins/corePlugins/useChartSeries';
-import { ChartRootSelector, createSelector } from '../../utils/selectors';
+import { createSelector, type ChartOptionalRootSelector } from '../../utils/selectors';
 import type { UseChartBrushSignature } from './useChartBrush.types';
 
-export const selectorBrush: ChartRootSelector<UseChartBrushSignature, 'brush'> = (state) =>
+export const selectorBrush: ChartOptionalRootSelector<UseChartBrushSignature> = (state) =>
   state.brush;
 
-export const selectorBrushStart = createSelector([selectorBrush], (brush) => brush.start);
+export const selectorBrushStart = createSelector([selectorBrush], (brush) => brush?.start);
 
-export const selectorBrushCurrent = createSelector([selectorBrush], (brush) => brush.current);
+export const selectorBrushCurrent = createSelector([selectorBrush], (brush) => brush?.current);
 
 export const selectorBrushStartX = createSelector(
   [selectorBrush],
-  (brush) => brush.start?.x ?? null,
+  (brush) => brush?.start?.x ?? null,
 );
 
 export const selectorBrushStartY = createSelector(
   [selectorBrush],
-  (brush) => brush.start?.y ?? null,
+  (brush) => brush?.start?.y ?? null,
 );
 
 export const selectorBrushCurrentX = createSelector(
   [selectorBrush],
-  (brush) => brush.current?.x ?? null,
+  (brush) => brush?.current?.x ?? null,
 );
 
 export const selectorBrushCurrentY = createSelector(
   [selectorBrush],
-  (brush) => brush.current?.y ?? null,
+  (brush) => brush?.current?.y ?? null,
 );
 
 export const selectorBrushState = createSelector(
@@ -59,4 +59,18 @@ export const selectorBrushConfig = createSelector([selectorChartSeriesProcessed]
   return 'x';
 });
 
-export const selectorIsBrushEnabled = createSelector([selectorBrush], (brush) => brush.enabled);
+export const selectorIsBrushEnabled = createSelector([selectorBrush], (brush) => brush?.enabled);
+
+export const selectorIsBrushSelectionActive = createSelector([selectorBrush], (brush) => {
+  return brush?.enabled && brush?.start !== null && brush?.current !== null;
+});
+
+export const selectorBrushShouldPreventAxisHighlight = createSelector(
+  [selectorBrush, selectorIsBrushSelectionActive],
+  (brush, isBrushSelectionActive) => isBrushSelectionActive && brush?.preventHighlight,
+);
+
+export const selectorBrushShouldPreventTooltip = createSelector(
+  [selectorBrush, selectorIsBrushSelectionActive],
+  (brush, isBrushSelectionActive) => isBrushSelectionActive && brush?.preventTooltip,
+);

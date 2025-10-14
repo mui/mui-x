@@ -18,7 +18,7 @@ export default function BrushBasic() {
             label: 'Sales',
           },
         ]}
-        enableBrush
+        brushConfig={{ enabled: true }}
         xAxis={[
           {
             data: [

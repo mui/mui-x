@@ -19,11 +19,18 @@ export const useChartBrush: ChartPlugin<UseChartBrushSignature> = ({
         ...prev,
         brush: {
           ...prev.brush,
-          enabled: params.enableBrush ?? false,
+          enabled: params.brushConfig.enabled ?? false,
+          preventTooltip: params.brushConfig.preventTooltip ?? true,
+          preventHighlight: params.brushConfig.preventHighlight ?? true,
         },
       };
     });
-  }, [store, params.enableBrush]);
+  }, [
+    store,
+    params.brushConfig.enabled,
+    params.brushConfig.preventTooltip,
+    params.brushConfig.preventHighlight,
+  ]);
 
   const setBrushCoordinates = useEventCallback(function setBrushCoordinates(point: Point | null) {
     store.update((prev) => {
@@ -101,13 +108,26 @@ export const useChartBrush: ChartPlugin<UseChartBrushSignature> = ({
 };
 
 useChartBrush.params = {
-  enableBrush: true,
+  brushConfig: true,
+};
+
+useChartBrush.getDefaultizedParams = ({ params }) => {
+  return {
+    ...params,
+    brushConfig: {
+      enabled: params?.brushConfig?.enabled ?? false,
+      preventTooltip: params?.brushConfig?.preventTooltip ?? true,
+      preventHighlight: params?.brushConfig?.preventHighlight ?? true,
+    },
+  };
 };
 
 useChartBrush.getInitialState = (params) => {
   return {
     brush: {
-      enabled: params.enableBrush ?? false,
+      enabled: params.brushConfig.enabled,
+      preventTooltip: params.brushConfig.preventTooltip,
+      preventHighlight: params.brushConfig.preventHighlight,
       start: null,
       current: null,
     },

@@ -129,7 +129,7 @@ export default function BrushCustomOverlay() {
             showMark: false,
           },
         ]}
-        enableBrush
+        brushConfig={{ enabled: true }}
         xAxis={[
           {
             data: dates,

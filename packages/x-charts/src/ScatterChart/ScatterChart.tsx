@@ -194,10 +194,13 @@ ScatterChart.propTypes = {
     y: PropTypes.oneOf(['band', 'line', 'none']),
   }),
   /**
-   * Enables or disables the brush interaction.
-   * @default false
+   * Configuration for the brush interaction.
    */
-  enableBrush: PropTypes.bool,
+  brushConfig: PropTypes.shape({
+    enabled: PropTypes.bool,
+    preventHighlight: PropTypes.bool,
+    preventTooltip: PropTypes.bool,
+  }),
   children: PropTypes.node,
   className: PropTypes.string,
   /**

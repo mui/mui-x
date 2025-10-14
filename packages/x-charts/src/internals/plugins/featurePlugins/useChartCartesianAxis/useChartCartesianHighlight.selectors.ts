@@ -1,4 +1,4 @@
-import { createSelector, type ChartRootSelector } from '../../utils/selectors';
+import { createSelector } from '../../utils/selectors';
 import { AxisItemIdentifier, ChartsAxisProps } from '../../../../models/axis';
 import { selectorChartXAxis, selectorChartYAxis } from './useChartCartesianAxisRendering.selectors';
 import {
@@ -16,18 +16,11 @@ import {
 } from '../useChartKeyboardNavigation/useChartKeyboardNavigation.selectors';
 import { selectorChartsLastInteraction } from '../useChartInteraction/useChartInteraction.selectors';
 import { InteractionUpdateSource } from '../useChartInteraction/useChartInteraction.types';
-import type { UseChartBrushSignature } from '../useChartBrush/useChartBrush.types';
+import { selectorBrushShouldPreventAxisHighlight } from '../useChartBrush';
 
 const selectorChartControlledCartesianAxisHighlight = (
   state: ChartState<[], [UseChartCartesianAxisSignature]>,
 ) => state.controlledCartesianAxisHighlight;
-
-const selectorChartBrush: ChartRootSelector<UseChartBrushSignature> = (state) => state.brush;
-
-const selectorIsBrushSelectionActive = createSelector(
-  [selectorChartBrush],
-  (brush) => brush.start !== null && brush.current !== null,
-);
 
 const selectAxisHighlight = (
   computedIndex: number | null,
@@ -50,7 +43,7 @@ export const selectorChartsHighlightXAxisIndex = createSelector(
     selectorChartsInteractionXAxisIndex,
     selectorChartXAxis,
     selectorChartControlledCartesianAxisHighlight,
-    selectorIsBrushSelectionActive,
+    selectorBrushShouldPreventAxisHighlight,
   ],
   selectAxisHighlight,
 );
@@ -60,7 +53,7 @@ export const selectorChartsHighlightYAxisIndex = createSelector(
     selectorChartsInteractionYAxisIndex,
     selectorChartYAxis,
     selectorChartControlledCartesianAxisHighlight,
-    selectorIsBrushSelectionActive,
+    selectorBrushShouldPreventAxisHighlight,
   ],
   selectAxisHighlight,
 );
@@ -126,7 +119,7 @@ export const selectorChartsHighlightXAxisValue = createSelector(
     selectorChartControlledCartesianAxisHighlight,
     selectorChartsKeyboardXAxisIndex,
     selectorChartsLastInteraction,
-    selectorIsBrushSelectionActive,
+    selectorBrushShouldPreventAxisHighlight,
   ],
   selectAxisHighlightWithValue,
 );
@@ -139,7 +132,7 @@ export const selectorChartsHighlightYAxisValue = createSelector(
     selectorChartControlledCartesianAxisHighlight,
     selectorChartsKeyboardYAxisIndex,
     selectorChartsLastInteraction,
-    selectorIsBrushSelectionActive,
+    selectorBrushShouldPreventAxisHighlight,
   ],
   selectAxisHighlightWithValue,
 );

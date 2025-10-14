@@ -9,6 +9,14 @@ export interface UseChartBrushState {
      */
     enabled: boolean;
     /**
+     * Whether to prevent tooltip from showing during brush interaction.
+     */
+    preventTooltip: boolean;
+    /**
+     * Whether to prevent highlighting during brush interaction.
+     */
+    preventHighlight: boolean;
+    /**
      * The starting coordinate of the brush interaction.
      */
     start: Point | null;
@@ -31,16 +39,33 @@ export interface UseChartBrushInstance {
   clearBrush: () => void;
 }
 
-export interface UseChartBrushParameters {
+export interface BrushConfig {
   /**
-   * Enables or disables the brush interaction.
+   * Whether the brush interaction is enabled.
    * @default false
    */
-  enableBrush?: boolean;
+  enabled?: boolean;
+  /**
+   * Whether to prevent tooltip from showing during brush interaction.
+   * @default false
+   */
+  preventTooltip?: boolean;
+  /**
+   * Whether to prevent highlighting during brush interaction.
+   * @default false
+   */
+  preventHighlight?: boolean;
+}
+
+export interface UseChartBrushParameters {
+  /**
+   * Configuration for the brush interaction.
+   */
+  brushConfig?: BrushConfig;
 }
 
 export type UseChartBrushDefaultizedParameters = {
-  enableBrush: boolean;
+  brushConfig: Required<BrushConfig>;
 };
 
 export type UseChartBrushSignature = ChartPluginSignature<{
