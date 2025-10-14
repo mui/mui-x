@@ -1,5 +1,5 @@
 import type { SchedulerValidDate } from './date';
-import { RecurringEventRecurrenceRule } from './recurrence';
+import { RecurringEventRecurrenceRule } from './recurring-event';
 import type { CalendarResourceId } from './resource';
 
 export interface CalendarEvent {

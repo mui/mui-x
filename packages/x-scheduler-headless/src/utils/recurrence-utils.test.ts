@@ -25,6 +25,7 @@ import {
   decideSplitRRule,
   applyRecurringUpdateAll,
   applyRecurringUpdateOnlyThis,
+  WEEK_DAYS,
 } from './recurrence-utils';
 import { diffIn } from '../use-adapter';
 import { mergeDateAndTime } from './date-utils';
@@ -41,7 +42,6 @@ describe('recurrence-utils', () => {
   });
 
   describe('getByDayMaps', () => {
-    const ALL_CODES: RecurringEventWeekDayCode[] = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
     it('respects fr locale Mon=1 numbering', () => {
       const { byDayToNum, numToByDay } = getByDayMaps(adapterFr);
 
@@ -49,7 +49,7 @@ describe('recurrence-utils', () => {
       expect(byDayToNum.SU).to.equal(7);
       expect(Object.values(byDayToNum)).to.have.length(7);
       expect(Object.keys(numToByDay)).to.have.length(7);
-      ALL_CODES.forEach((code) => {
+      WEEK_DAYS.forEach((code) => {
         expect(numToByDay[byDayToNum[code]]).to.equal(code);
       });
     });
@@ -129,8 +129,7 @@ describe('recurrence-utils', () => {
   describe('BYDAY parsers: tokenizeByDay / parseWeeklyByDayPlain / parseMonthlyByDayOrdinalSingle', () => {
     describe('tokenizeByDay', () => {
       it('parses plain byDay codes without ordinal', () => {
-        const ALL_CODES: RecurringEventWeekDayCode[] = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
-        ALL_CODES.forEach((code) => {
+        WEEK_DAYS.forEach((code) => {
           const res = tokenizeByDay(code);
           expect(res).to.deep.equal({ ord: null, code });
         });

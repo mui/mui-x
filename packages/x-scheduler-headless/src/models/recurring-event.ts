@@ -22,10 +22,11 @@ export type RecurringEventUpdateScope = 'this-and-following' | 'all' | 'only-thi
 export type RecurringEventWeekDayCode = 'MO' | 'TU' | 'WE' | 'TH' | 'FR' | 'SA' | 'SU';
 
 /**
- * Ordinal prefix for BYDAY ordinals.
- * Positive 1..5 for “Nth” weekday, negative for “last” (e.g. `-1` = last).
+ * Ordinal prefix for the `byDay` property.
+ * If positive, it represents the n-th occurrence of the weekday in the month (e.g: "2TU" means "the second Tuesday of the month").
+ * If negative, it represents the n-th occurrence of the weekday counting backwards from the end of the month (e.g: "-1FR" means "the last Friday of the month").
  */
-type Ordinal = `${'' | '-'}${1 | 2 | 3 | 4 | 5}`;
+type RecurringEventByDayOrdinal = `${'' | '-'}${1 | 2 | 3 | 4 | 5}`;
 
 /**
  * The valid values for the BYDAY property of the RRULE.
@@ -34,7 +35,7 @@ type Ordinal = `${'' | '-'}${1 | 2 | 3 | 4 | 5}`;
  */
 export type RecurringEventByDayValue =
   | RecurringEventWeekDayCode
-  | `${Ordinal}${RecurringEventWeekDayCode}`;
+  | `${RecurringEventByDayOrdinal}${RecurringEventWeekDayCode}`;
 
 /**
  * The recurrence rule to convert a single event into a series of occurrences.

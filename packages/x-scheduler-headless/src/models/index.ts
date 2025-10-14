@@ -3,4 +3,4 @@ export * from './event';
 export * from './resource';
 export * from './view';
 export * from './preferences';
-export * from './recurrence';
+export * from './recurring-event';

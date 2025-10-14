@@ -13,6 +13,11 @@ import { diffIn } from '../use-adapter';
 import { UpdateEventsParameters } from './SchedulerStore';
 
 /**
+ * The week day codes for all 7 days of the week.
+ */
+export const WEEK_DAYS: RecurringEventWeekDayCode[] = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
+
+/**
  * Build BYDAY<->number maps using a known ISO Monday (2025-01-06).
  * Day numbers come from adapter.getDayOfWeek(), so it respects the adapter’s locale/numbering.
  */
@@ -21,16 +26,15 @@ export function getByDayMaps(adapter: Adapter): {
   numToByDay: Record<number, RecurringEventWeekDayCode>;
 } {
   const baseMonday = adapter.date('2025-01-06T00:00:00Z', 'utc'); // ISO Monday
-  const byDayCodes: RecurringEventWeekDayCode[] = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
 
   const byDayToNum = {} as Record<RecurringEventWeekDayCode, number>;
-  for (let i = 0; i < byDayCodes.length; i += 1) {
+  for (let i = 0; i < WEEK_DAYS.length; i += 1) {
     const day = i === 0 ? baseMonday : adapter.addDays(baseMonday, i);
-    byDayToNum[byDayCodes[i]] = adapter.getDayOfWeek(day);
+    byDayToNum[WEEK_DAYS[i]] = adapter.getDayOfWeek(day);
   }
 
   const numToByDay: Record<number, RecurringEventWeekDayCode> = {};
-  for (const byDayCode of byDayCodes) {
+  for (const byDayCode of WEEK_DAYS) {
     numToByDay[byDayToNum[byDayCode]] = byDayCode;
   }
 
