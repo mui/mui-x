@@ -40,7 +40,7 @@ export type ChartInteraction =
   | 'quickPress'
   | 'quickPressEnd'
   | 'zoomDoubleTapReset'
-  | 'zoomBrush'
+  | 'brush'
   | 'zoomBrushStart'
   | 'zoomBrushCancel'
   | 'zoomBrushEnd';
@@ -56,7 +56,7 @@ export type AddInteractionListener = {
       | 'zoomPan'
       | 'zoomPanStart'
       | 'zoomPanEnd'
-      | 'zoomBrush'
+      | 'brush'
       | 'zoomBrushStart'
       | 'zoomBrushCancel'
       | 'zoomBrushEnd',
@@ -119,7 +119,7 @@ export type UpdateZoomInteractionListeners = {
     interaction: 'zoomDoubleTapReset',
     options?: Omit<TapGestureOptions<'zoomDoubleTapReset'>, 'name'>,
   ): void;
-  (interaction: 'zoomBrush', options?: Omit<PanGestureOptions<'zoomBrush'>, 'name'>): void;
+  (interaction: 'brush', options?: Omit<PanGestureOptions<'brush'>, 'name'>): void;
 };
 
 export interface UseChartInteractionListenerParameters {}

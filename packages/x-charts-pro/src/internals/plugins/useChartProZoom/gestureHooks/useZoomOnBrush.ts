@@ -36,7 +36,7 @@ export const useZoomOnBrush = (
       return;
     }
 
-    instance.updateZoomInteractionListeners('zoomBrush', {
+    instance.updateZoomInteractionListeners('brush', {
       requiredKeys: config!.requiredKeys,
       pointerMode: config!.pointerMode,
       pointerOptions: {
@@ -175,7 +175,7 @@ export const useZoomOnBrush = (
     };
 
     const brushStartHandler = instance.addInteractionListener('zoomBrushStart', handleBrushStart);
-    const brushHandler = instance.addInteractionListener('zoomBrush', handleBrush);
+    const brushHandler = instance.addInteractionListener('brush', handleBrush);
     const brushCancelHandler = instance.addInteractionListener(
       'zoomBrushCancel',
       handleBrushCancel,
