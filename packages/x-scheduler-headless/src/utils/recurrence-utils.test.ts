@@ -45,25 +45,30 @@ describe('recurrence-utils', () => {
     it('respects fr locale Mon=1 numbering', () => {
       const { byDayToNum, numToByDay } = getByDayMaps(adapterFr);
 
-      expect(byDayToNum.MO).to.equal(1);
-      expect(byDayToNum.SU).to.equal(7);
-      expect(Object.values(byDayToNum)).to.have.length(7);
-      expect(Object.keys(numToByDay)).to.have.length(7);
-      WEEK_DAYS.forEach((code) => {
-        expect(numToByDay[byDayToNum[code]]).to.equal(code);
+      expect(byDayToNum).to.deep.equal({ MO: 1, TU: 2, WE: 3, TH: 4, FR: 5, SA: 6, SU: 7 });
+      expect(numToByDay).to.deep.equal({
+        1: 'MO',
+        2: 'TU',
+        3: 'WE',
+        4: 'TH',
+        5: 'FR',
+        6: 'SA',
+        7: 'SU',
       });
     });
 
     it('respects enUS locale Sunday=1 numbering', () => {
       const { byDayToNum, numToByDay } = getByDayMaps(adapter);
 
-      expect(byDayToNum.SU).to.equal(1);
-      expect(byDayToNum.MO).to.equal(2);
-      expect(Object.values(byDayToNum)).to.have.length(7);
-      expect(Object.keys(numToByDay)).to.have.length(7);
-
-      WEEK_DAYS.forEach((code) => {
-        expect(numToByDay[byDayToNum[code]]).to.equal(code);
+      expect(byDayToNum).to.deep.equal({ SU: 1, MO: 2, TU: 3, WE: 4, TH: 5, FR: 6, SA: 7 });
+      expect(numToByDay).to.deep.equal({
+        1: 'SU',
+        2: 'MO',
+        3: 'TU',
+        4: 'WE',
+        5: 'TH',
+        6: 'FR',
+        7: 'SA',
       });
     });
   });
