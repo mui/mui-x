@@ -3,6 +3,7 @@ import { TickItemType } from '../hooks/useTicks';
 import { ChartsXAxisProps, ComputedXAxis } from '../models/axis';
 import { getMinXTranslation } from '../internals/geometry';
 import { getWordsByLines } from '../internals/getWordsByLines';
+import { warmUpStringSizeCache } from '../internals/domUtils';
 
 /* Returns a set of indices of the tick labels that should be visible.  */
 export function getVisibleLabels<T extends TickItemType>(
@@ -42,13 +43,26 @@ export function getVisibleLabels<T extends TickItemType>(
   let previousTextLimit = 0;
   const direction = reverse ? -1 : 1;
 
-  return new Set(
-    xTicks.filter((item, labelIndex) => {
-      const { offset, labelOffset, formattedValue } = item;
+  const candidateTickLabels = xTicks.filter((item) => {
+    const { offset, labelOffset, formattedValue } = item;
 
-      if (formattedValue === '') {
-        return false;
-      }
+    if (formattedValue === '') {
+      return false;
+    }
+
+    const textPosition = offset + labelOffset;
+
+    return isXInside(textPosition);
+  });
+
+  warmUpStringSizeCache(
+    candidateTickLabels.map((t) => t.formattedValue ?? ''),
+    style,
+  );
+
+  return new Set(
+    candidateTickLabels.filter((item, labelIndex) => {
+      const { offset, labelOffset } = item;
 
       const textPosition = offset + labelOffset;
 
@@ -56,10 +70,6 @@ export function getVisibleLabels<T extends TickItemType>(
         labelIndex > 0 &&
         direction * textPosition < direction * (previousTextLimit + tickLabelMinGap)
       ) {
-        return false;
-      }
-
-      if (!isXInside(textPosition)) {
         return false;
       }
 

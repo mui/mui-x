@@ -1,5 +1,6 @@
-// DOM utils taken from
+// DOM utils adapted from
 // https://github.com/recharts/recharts/blob/master/src/util/DOMUtils.ts
+import * as React from 'react';
 
 function isSsr(): boolean {
   return typeof window === 'undefined';
@@ -136,6 +137,58 @@ export const getStringSize = (text: string | number, style: React.CSSProperties 
     return { width: 0, height: 0 };
   }
 };
+
+export function warmUpStringSizeCache(texts: (string | number)[], style: React.CSSProperties = {}) {
+  if (isSsr()) {
+    return;
+  }
+
+  const textToMeasure: string[] = [];
+  const styleString = getStyleString(style);
+
+  for (const text of texts) {
+    const str = `${text}`;
+    const cacheKey = `${str}-${styleString}`;
+
+    if (!stringCache.has(cacheKey)) {
+      textToMeasure.push(str);
+    }
+  }
+
+  const measurementSpanContainer = getMeasurementContainer();
+  // Need to use CSS Object Model (CSSOM) to be able to comply with Content Security Policy (CSP)
+  // https://en.wikipedia.org/wiki/Content_Security_Policy
+  const measurementSpanStyle: Record<string, any> = { ...style };
+
+  Object.keys(measurementSpanStyle).map((styleKey) => {
+    (measurementSpanContainer!.style as Record<string, any>)[camelToMiddleLine(styleKey)] =
+      autoCompleteStyle(styleKey, measurementSpanStyle[styleKey]);
+    return styleKey;
+  });
+
+  const measurementElems: SVGTextElement[] = [];
+  for (const string of textToMeasure) {
+    const measurementElem = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    measurementElem.textContent = string;
+    measurementElems.push(measurementElem);
+  }
+
+  measurementSpanContainer.replaceChildren(...measurementElems);
+
+  for (let i = 0; i < textToMeasure.length; i += 1) {
+    const str = textToMeasure[i];
+    const measurementSpan = measurementSpanContainer.children[i] as HTMLSpanElement;
+    const rect = measurementSpan.getBoundingClientRect();
+    const result = { width: rect.width, height: rect.height };
+    const cacheKey = `${str}-${styleString}`;
+
+    stringCache.set(cacheKey, result);
+  }
+
+  if (stringCache.size + 1 > MAX_CACHE_NUM) {
+    stringCache.clear();
+  }
+}
 
 /**
  * Get (or create) a hidden span element to measure text size.
