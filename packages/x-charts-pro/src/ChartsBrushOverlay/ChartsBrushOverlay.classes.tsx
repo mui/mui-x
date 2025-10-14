@@ -4,8 +4,6 @@ export interface BrushOverlayClasses {
   /** Styles applied to the root element. */
   root: string;
   /** Styles applied to the brush lines. */
-  line: string;
-  /** Styles applied to the brush rectangles. */
   rect: string;
   /** Styles applied when the brush is selecting the x axis. */
   x: string;
@@ -17,5 +15,5 @@ export type BrushOverlayClassKey = keyof BrushOverlayClasses;
 
 export const brushOverlayClasses: BrushOverlayClasses = generateUtilityClasses(
   'MuiChartsBrushOverlay',
-  ['root', 'line', 'rect', 'x', 'y'],
+  ['root', 'rect', 'x', 'y'],
 );

@@ -13,18 +13,6 @@ import {
 import type { UseChartProZoomSignature } from '../plugins';
 import { brushOverlayClasses } from './ChartsBrushOverlay.classes';
 
-function BrushLine(props: React.SVGProps<SVGLineElement>) {
-  return (
-    <line
-      className={brushOverlayClasses.line}
-      strokeWidth={2}
-      strokeDasharray={'4 2'}
-      pointerEvents={'none'}
-      {...props}
-    />
-  );
-}
-
 function BrushRect(props: React.SVGProps<SVGRectElement>) {
   return (
     <rect
@@ -68,7 +56,6 @@ export function ChartsBrushOverlay(_: ChartsBrushOverlayProps) {
   const currentX = clampX(brushCurrentX);
   const currentY = clampY(brushCurrentY);
   const rectColor = theme.palette.mode === 'light' ? 'grey' : 'white';
-  const strokeColor = theme.palette.mode === 'light' ? '#000000' : '#ffffff';
 
   // For scatter charts, show only the rectangle without guide lines
   if (brushConfig === 'xy') {
@@ -103,18 +90,8 @@ export function ChartsBrushOverlay(_: ChartsBrushOverlayProps) {
 
     return (
       <g className={clsx(brushOverlayClasses.root, brushOverlayClasses.y)}>
-        <BrushLine stroke={strokeColor} x1={left} y1={startY} x2={left + width} y2={startY} />
         {showRect && (
-          <React.Fragment>
-            <BrushLine
-              stroke={strokeColor}
-              x1={left}
-              y1={currentY}
-              x2={left + width}
-              y2={currentY}
-            />
-            <BrushRect fill={rectColor} x={left} y={minY} width={width} height={rectHeight} />
-          </React.Fragment>
+          <BrushRect fill={rectColor} x={left} y={minY} width={width} height={rectHeight} />
         )}
       </g>
     );
@@ -129,13 +106,7 @@ export function ChartsBrushOverlay(_: ChartsBrushOverlayProps) {
 
   return (
     <g className={clsx(brushOverlayClasses.root, brushOverlayClasses.x)}>
-      <BrushLine stroke={strokeColor} x1={startX} y1={top} x2={startX} y2={top + height} />
-      {showRect && (
-        <React.Fragment>
-          <BrushLine stroke={strokeColor} x1={currentX} y1={top} x2={currentX} y2={top + height} />
-          <BrushRect x={minX} y={top} width={rectWidth} height={height} />
-        </React.Fragment>
-      )}
+      {showRect && <BrushRect x={minX} y={top} width={rectWidth} height={height} />}
     </g>
   );
 }
