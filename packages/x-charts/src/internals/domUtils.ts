@@ -155,13 +155,13 @@ export function warmUpStringSizeCache(texts: (string | number)[], style: React.C
     }
   }
 
-  const measurementSpanContainer = getMeasurementContainer();
+  const measurementContainer = getMeasurementContainer();
   // Need to use CSS Object Model (CSSOM) to be able to comply with Content Security Policy (CSP)
   // https://en.wikipedia.org/wiki/Content_Security_Policy
   const measurementSpanStyle: Record<string, any> = { ...style };
 
   Object.keys(measurementSpanStyle).map((styleKey) => {
-    (measurementSpanContainer!.style as Record<string, any>)[camelToMiddleLine(styleKey)] =
+    (measurementContainer!.style as Record<string, any>)[camelToMiddleLine(styleKey)] =
       autoCompleteStyle(styleKey, measurementSpanStyle[styleKey]);
     return styleKey;
   });
@@ -173,11 +173,11 @@ export function warmUpStringSizeCache(texts: (string | number)[], style: React.C
     measurementElems.push(measurementElem);
   }
 
-  measurementSpanContainer.replaceChildren(...measurementElems);
+  measurementContainer.replaceChildren(...measurementElems);
 
   for (let i = 0; i < textToMeasure.length; i += 1) {
     const str = textToMeasure[i];
-    const measurementSpan = measurementSpanContainer.children[i] as HTMLSpanElement;
+    const measurementSpan = measurementContainer.children[i] as HTMLSpanElement;
     const rect = measurementSpan.getBoundingClientRect();
     const result = { width: rect.width, height: rect.height };
     const cacheKey = `${str}-${styleString}`;
@@ -187,6 +187,11 @@ export function warmUpStringSizeCache(texts: (string | number)[], style: React.C
 
   if (stringCache.size + 1 > MAX_CACHE_NUM) {
     stringCache.clear();
+  }
+
+  if (process.env.NODE_ENV === 'test') {
+    // In test environment, we clean the measurement span immediately
+    measurementContainer.replaceChildren();
   }
 }
 
