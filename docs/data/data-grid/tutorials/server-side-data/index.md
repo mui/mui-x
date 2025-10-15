@@ -15,7 +15,7 @@ The primary purpose is to demonstrate the use of the [Data Source layer](/x/reac
 - Familiarity with async/await and fetch API
 
 :::success
-While it isn't necesary to read the documentation on [server-side data in the Data Grid](/x/react-data-grid/server-side-data/) before proceeding, you may want to familiarize yourself the key concepts there to better understand how and why to use the Data Source layer.
+While it isn't necesary to read the documentation on [server-side data in the Data Grid](/x/react-data-grid/server-side-data/) before proceeding, you may want to familiarize yourself with the key concepts there to better understand how and why to use the Data Source layer.
 :::
 
 ## Part one: app setup
