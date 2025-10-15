@@ -137,6 +137,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
       positionRef.current = { x, y };
       popperRef.current?.update();
     });
+
     const handlePointerEvent = (event: PointerEvent) => {
       pointerUpdate(event.clientX, event.clientY);
     };
@@ -202,7 +203,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
     [isMouse, isTouch],
   );
 
-  if (trigger === 'none' || (positionRef.current.x === 0 && positionRef.current.y === 0)) {
+  if (trigger === 'none') {
     return null;
   }
 

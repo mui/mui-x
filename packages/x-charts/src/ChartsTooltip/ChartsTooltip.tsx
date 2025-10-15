@@ -26,7 +26,7 @@ function ChartsTooltip(props: ChartsTooltipProps) {
   const classes = useUtilityClasses(propClasses);
 
   return (
-    <ChartsTooltipContainer {...props} classes={propClasses} position="top">
+    <ChartsTooltipContainer {...props} classes={propClasses}>
       {trigger === 'axis' ? (
         <ChartsAxisTooltipContent classes={classes} />
       ) : (
