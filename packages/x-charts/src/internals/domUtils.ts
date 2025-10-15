@@ -8,7 +8,7 @@ function isSsr(): boolean {
 const stringCache = new Map<string, { width: number; height: number }>();
 
 const MAX_CACHE_NUM = 2000;
-const STYLE_LIST = [
+const STYLE_SET = new Set([
   'minWidth',
   'maxWidth',
   'width',
@@ -28,7 +28,7 @@ const STYLE_LIST = [
   'marginRight',
   'marginTop',
   'marginBottom',
-];
+]);
 export const MEASUREMENT_SPAN_ID = 'mui_measurement_span';
 
 /**
@@ -38,7 +38,7 @@ export const MEASUREMENT_SPAN_ID = 'mui_measurement_span';
  * @returns add 'px' for distance properties
  */
 function autoCompleteStyle(name: string, value: number) {
-  if (STYLE_LIST.indexOf(name) >= 0 && value === +value) {
+  if (STYLE_SET.has(name) && value === +value) {
     return `${value}px`;
   }
 
