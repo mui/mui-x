@@ -1,7 +1,5 @@
 'use client';
 import * as React from 'react';
-import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
-import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/disable-native-drag-preview';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { useStore } from '@base-ui-components/utils/store/useStore';
 import { useId } from '@base-ui-components/utils/useId';
@@ -94,7 +92,11 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     draggedDay: getDraggedDay(input),
   }));
 
-  const { state, preview, setIsResizing } = useDraggableEvent({
+  const {
+    state,
+    preview,
+    contextValue: draggableEventContextValue,
+  } = useDraggableEvent({
     ref,
     start,
     end,
@@ -103,6 +105,8 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     isDraggable,
     renderDragPreview,
     getDragData,
+    collectionStart: rowStart,
+    collectionEnd: rowEnd,
   });
 
   const { getButtonProps, buttonRef } = useButton({
@@ -123,54 +127,10 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     [hasPlaceholder, columnHeaderId, id],
   );
 
-  const doesEventStartBeforeRowStart = React.useMemo(
-    () => adapter.isBefore(start, rowStart),
-    [adapter, start, rowStart],
-  );
-
-  const doesEventEndAfterRowEnd = React.useMemo(
-    () => adapter.isAfter(end, rowEnd),
-    [adapter, end, rowEnd],
-  );
-
   const contextValue: CalendarGridDayEventContext = React.useMemo(
-    () => ({
-      setIsResizing,
-      getSharedDragData,
-      doesEventStartBeforeRowStart,
-      doesEventEndAfterRowEnd,
-    }),
-    [setIsResizing, getSharedDragData, doesEventStartBeforeRowStart, doesEventEndAfterRowEnd],
+    () => ({ ...draggableEventContextValue, getSharedDragData }),
+    [draggableEventContextValue, getSharedDragData],
   );
-
-  React.useEffect(() => {
-    if (!isDraggable) {
-      return;
-    }
-
-    // eslint-disable-next-line consistent-return
-    return draggable({
-      element: ref.current!,
-      getInitialData: ({ input }) => ({
-        ...getSharedDragData(input),
-        source: 'CalendarGridDayEvent',
-        draggedDay: getDraggedDay(input),
-      }),
-      onGenerateDragPreview: ({ nativeSetDragImage }) => {
-        disableNativeDragPreview({ nativeSetDragImage });
-      },
-      onDragStart: ({ location }) => {
-        preview.actions.onDragStart(location);
-      },
-      onDrag: ({ location }) => {
-        preview.actions.onDrag(location);
-      },
-      onDrop: () => {
-        store.setOccurrencePlaceholder(null);
-        preview.actions.onDrop();
-      },
-    });
-  }, [isDraggable, getDraggedDay, getSharedDragData, store, preview.actions]);
 
   const element = useRenderElement('div', componentProps, {
     state,
@@ -192,7 +152,7 @@ export namespace CalendarGridDayEvent {
   export interface Props
     extends BaseUIComponentProps<'div', State>,
       NonNativeButtonProps,
-      Omit<useDraggableEvent.Parameters, 'ref' | 'getDragData'> {}
+      useDraggableEvent.PublicParameters {}
 
   export interface SharedDragData {
     eventId: CalendarEventId;

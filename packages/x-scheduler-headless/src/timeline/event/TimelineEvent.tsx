@@ -72,7 +72,11 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
     source: 'TimelineEvent',
   }));
 
-  const { state, preview, setIsResizing } = useDraggableEvent({
+  const {
+    state,
+    preview,
+    contextValue: draggableEventContextValue,
+  } = useDraggableEvent({
     ref,
     start,
     end,
@@ -81,6 +85,8 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
     isDraggable,
     renderDragPreview,
     getDragData,
+    collectionStart: rowStart,
+    collectionEnd: rowEnd,
   });
 
   const { getButtonProps, buttonRef } = useButton({
@@ -107,24 +113,9 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
 
   const props = React.useMemo(() => ({ style }), [style]);
 
-  const doesEventStartBeforeRowStart = React.useMemo(
-    () => adapter.isBefore(start, rowStart),
-    [adapter, start, rowStart],
-  );
-
-  const doesEventEndAfterRowEnd = React.useMemo(
-    () => adapter.isAfter(end, rowEnd),
-    [adapter, end, rowEnd],
-  );
-
   const contextValue: TimelineEventContext = React.useMemo(
-    () => ({
-      setIsResizing,
-      getSharedDragData,
-      doesEventStartBeforeRowStart,
-      doesEventEndAfterRowEnd,
-    }),
-    [setIsResizing, getSharedDragData, doesEventStartBeforeRowStart, doesEventEndAfterRowEnd],
+    () => ({ ...draggableEventContextValue, getSharedDragData }),
+    [draggableEventContextValue, getSharedDragData],
   );
 
   const element = useRenderElement('div', componentProps, {
@@ -147,7 +138,7 @@ export namespace TimelineEvent {
   export interface Props
     extends BaseUIComponentProps<'div', State>,
       NonNativeButtonProps,
-      Omit<useDraggableEvent.Parameters, 'ref' | 'getDragData'> {}
+      useDraggableEvent.PublicParameters {}
 
   export interface SharedDragData {
     eventId: CalendarEventId;

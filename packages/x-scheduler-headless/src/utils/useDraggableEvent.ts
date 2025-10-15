@@ -5,9 +5,10 @@ import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/elem
 import { useStore } from '@base-ui-components/utils/store';
 import { useSchedulerStoreContext } from '../use-scheduler-store-context';
 import { selectors } from './SchedulerStore';
-import { CalendarEventId } from '../models';
+import { CalendarEventId, SchedulerValidDate } from '../models';
 import { useDragPreview } from './useDragPreview';
 import { useEvent } from './useEvent';
+import { useAdapter } from '../use-adapter';
 
 export function useDraggableEvent(
   parameters: useDraggableEvent.Parameters,
@@ -20,10 +21,13 @@ export function useDraggableEvent(
     eventId,
     renderDragPreview,
     getDragData,
+    collectionStart,
+    collectionEnd,
     isDraggable = false,
   } = parameters;
 
   // Context hooks
+  const adapter = useAdapter();
   const store = useSchedulerStoreContext();
 
   // Selector hooks
@@ -53,13 +57,13 @@ export function useDraggableEvent(
   );
 
   React.useEffect(() => {
-    if (!isDraggable) {
+    if (!isDraggable || !ref.current) {
       return;
     }
 
     // eslint-disable-next-line consistent-return
     return draggable({
-      element: ref.current!,
+      element: ref.current,
       getInitialData: ({ input }) => getDragData(input),
       onGenerateDragPreview: ({ nativeSetDragImage }) => {
         disableNativeDragPreview({ nativeSetDragImage });
@@ -77,7 +81,16 @@ export function useDraggableEvent(
     });
   }, [ref, getDragData, isDraggable, store, preview.actions]);
 
-  return { state, ref, preview, setIsResizing };
+  const contextValue: useDraggableEvent.ContextValue = React.useMemo(
+    () => ({
+      setIsResizing,
+      doesEventStartBeforeCollectionStart: adapter.isBefore(start, collectionStart),
+      doesEventEndAfterCollectionEnd: adapter.isAfter(end, collectionEnd),
+    }),
+    [adapter, start, end, collectionStart, collectionEnd],
+  );
+
+  return { state, ref, preview, contextValue };
 }
 
 export namespace useDraggableEvent {
@@ -92,7 +105,7 @@ export namespace useDraggableEvent {
     resizing: boolean;
   }
 
-  export interface Parameters
+  export interface PublicParameters
     extends useEvent.Parameters,
       Pick<useDragPreview.Parameters, 'renderDragPreview'> {
     /**
@@ -108,6 +121,9 @@ export namespace useDraggableEvent {
      * The unique identifier of the event occurrence.
      */
     occurrenceKey: string;
+  }
+
+  export interface Parameters extends PublicParameters {
     /**
      * Gets the drag data.
      * @param {{ clientX: number, clientY: number }} input The input object provided by the drag and drop library for the current event.
@@ -118,12 +134,35 @@ export namespace useDraggableEvent {
      * The ref to the event's root element.
      */
     ref: React.RefObject<HTMLDivElement | null>;
+    /**
+     * The start date of the collection the event belongs to.
+     */
+    collectionStart: SchedulerValidDate;
+    /**
+     * The end date of the collection the event belongs to.
+     */
+    collectionEnd: SchedulerValidDate;
   }
 
   export interface ReturnValue {
     state: State;
-    ref: React.RefObject<HTMLDivElement | null>;
+    contextValue: ContextValue;
     preview: useDragPreview.ReturnValue;
+    ref: React.RefObject<HTMLDivElement | null>;
+  }
+
+  export interface ContextValue {
+    /**
+     * Sets whether the event is being resized.
+     */
     setIsResizing: (isResizing: boolean) => void;
+    /**
+     * Whether the event starts before the collection starts.
+     */
+    doesEventStartBeforeCollectionStart: boolean;
+    /**
+     * Whether the event ends after the collection ends.
+     */
+    doesEventEndAfterCollectionEnd: boolean;
   }
 }

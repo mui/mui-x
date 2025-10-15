@@ -83,7 +83,11 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     source: 'CalendarGridTimeEvent',
   }));
 
-  const { state, preview, setIsResizing } = useDraggableEvent({
+  const {
+    state,
+    preview,
+    contextValue: draggableEventContextValue,
+  } = useDraggableEvent({
     ref,
     start,
     end,
@@ -92,6 +96,8 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     isDraggable,
     renderDragPreview,
     getDragData,
+    collectionStart: columnStart,
+    collectionEnd: columnEnd,
   });
 
   const { getButtonProps, buttonRef } = useButton({
@@ -123,24 +129,9 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     [style, columnHeaderId, id],
   );
 
-  const doesEventStartBeforeColumnStart = React.useMemo(
-    () => adapter.isBefore(start, columnStart),
-    [adapter, start, columnStart],
-  );
-
-  const doesEventEndAfterColumnEnd = React.useMemo(
-    () => adapter.isAfter(end, columnEnd),
-    [adapter, end, columnEnd],
-  );
-
   const contextValue: CalendarGridTimeEventContext = React.useMemo(
-    () => ({
-      setIsResizing,
-      getSharedDragData,
-      doesEventStartBeforeColumnStart,
-      doesEventEndAfterColumnEnd,
-    }),
-    [setIsResizing, getSharedDragData, doesEventStartBeforeColumnStart, doesEventEndAfterColumnEnd],
+    () => ({ ...draggableEventContextValue, getSharedDragData }),
+    [draggableEventContextValue, getSharedDragData],
   );
 
   const element = useRenderElement('div', componentProps, {
@@ -163,7 +154,7 @@ export namespace CalendarGridTimeEvent {
   export interface Props
     extends BaseUIComponentProps<'div', State>,
       NonNativeButtonProps,
-      Omit<useDraggableEvent.Parameters, 'ref' | 'getDragData'> {}
+      useDraggableEvent.PublicParameters {}
 
   export interface SharedDragData {
     eventId: CalendarEventId;

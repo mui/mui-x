@@ -1,20 +1,9 @@
 'use client';
 import * as React from 'react';
 import type { TimelineEvent } from './TimelineEvent';
+import type { useDraggableEvent } from '../../utils/useDraggableEvent';
 
-export interface TimelineEventContext {
-  /**
-   * Whether this event is starting before the row starts.
-   */
-  doesEventStartBeforeRowStart: boolean;
-  /**
-   * Whether this event is ending after the row ends.
-   */
-  doesEventEndAfterRowEnd: boolean;
-  /**
-   * Sets whether the event is being resized.
-   */
-  setIsResizing: (isResizing: boolean) => void;
+export interface TimelineEventContext extends useDraggableEvent.ContextValue {
   /**
    * Gets the drag data shared by the Timeline.Event and Timeline.EventResizeHandler parts.
    * @param {{ clientX: number }} input The input object provided by the drag and drop library for the current event.
