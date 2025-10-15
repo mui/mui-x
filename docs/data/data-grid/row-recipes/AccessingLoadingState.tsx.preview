@@ -1,0 +1,11 @@
+<DataGrid
+  columns={[{ field: 'name' }]}
+  rows={[
+    { id: 1, name: 'React' },
+    { id: 2, name: 'MUI' },
+  ]}
+  slots={{
+    toolbar: CustomToolbar,
+  }}
+  showToolbar
+/>
