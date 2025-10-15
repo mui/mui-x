@@ -46,7 +46,12 @@ export function ChartsBrushOverlay(props: ChartsBrushOverlayProps) {
   const brushCurrentY = useSelector(store, selectorBrushCurrentY);
   const brushConfig = useSelector(store, selectorBrushConfig);
 
-  if (!brushStartX || !brushStartY || !brushCurrentX || !brushCurrentY) {
+  if (
+    brushStartX === null ||
+    brushStartY === null ||
+    brushCurrentX === null ||
+    brushCurrentY === null
+  ) {
     return null;
   }
 
@@ -67,21 +72,16 @@ export function ChartsBrushOverlay(props: ChartsBrushOverlayProps) {
     const rectWidth = currentX - startX;
     const rectHeight = currentY - startY;
 
-    // Only show rectangle if there's meaningful movement
-    const showRect = Math.abs(rectWidth) > 2 || Math.abs(rectHeight) > 2;
-
     return (
       <g className={clsx(brushOverlayClasses.root, brushOverlayClasses.x, brushOverlayClasses.y)}>
-        {showRect && (
-          <BrushRect
-            fill={rectColor}
-            x={rectWidth >= 0 ? startX : currentX}
-            y={rectHeight >= 0 ? startY : currentY}
-            width={Math.abs(rectWidth)}
-            height={Math.abs(rectHeight)}
-            {...props}
-          />
-        )}
+        <BrushRect
+          fill={rectColor}
+          x={rectWidth >= 0 ? startX : currentX}
+          y={rectHeight >= 0 ? startY : currentY}
+          width={Math.abs(rectWidth)}
+          height={Math.abs(rectHeight)}
+          {...props}
+        />
       </g>
     );
   }
@@ -91,21 +91,16 @@ export function ChartsBrushOverlay(props: ChartsBrushOverlayProps) {
     const maxY = Math.max(startY, currentY);
     const rectHeight = maxY - minY;
 
-    // Only show rectangle if there's meaningful movement
-    const showRect = rectHeight > 2;
-
     return (
       <g className={clsx(brushOverlayClasses.root, brushOverlayClasses.y)}>
-        {showRect && (
-          <BrushRect
-            fill={rectColor}
-            x={left}
-            y={minY}
-            width={width}
-            height={rectHeight}
-            {...props}
-          />
-        )}
+        <BrushRect
+          fill={rectColor}
+          x={left}
+          y={minY}
+          width={width}
+          height={rectHeight}
+          {...props}
+        />
       </g>
     );
   }
@@ -114,14 +109,9 @@ export function ChartsBrushOverlay(props: ChartsBrushOverlayProps) {
   const maxX = Math.max(startX, currentX);
   const rectWidth = maxX - minX;
 
-  // Only show rectangle if there's meaningful movement
-  const showRect = rectWidth > 2;
-
   return (
     <g className={clsx(brushOverlayClasses.root, brushOverlayClasses.x)}>
-      {showRect && (
-        <BrushRect fill={rectColor} x={minX} y={top} width={rectWidth} height={height} {...props} />
-      )}
+      <BrushRect fill={rectColor} x={minX} y={top} width={rectWidth} height={height} {...props} />
     </g>
   );
 }
