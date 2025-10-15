@@ -15,7 +15,7 @@ describe('<Timeline.EventPlaceholder />', () => {
       return render(
         <TimelineProvider events={[]}>
           <Timeline.Root items={[]}>
-            <Timeline.EventRow start={start} end={end}>
+            <Timeline.EventRow start={start} end={end} resourceId={undefined}>
               {node}
             </Timeline.EventRow>
           </Timeline.Root>

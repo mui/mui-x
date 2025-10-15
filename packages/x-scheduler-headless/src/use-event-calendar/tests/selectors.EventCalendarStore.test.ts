@@ -52,6 +52,7 @@ describe('EventCalendarStore.selectors', () => {
           eventId: 'event-id',
           occurrenceKey: 'event-id-key',
           surfaceType: 'day-grid',
+          resourceId: undefined,
           start: adapter.startOfDay(day),
           end: adapter.endOfDay(day),
           originalEvent: {
@@ -120,6 +121,7 @@ describe('EventCalendarStore.selectors', () => {
           eventId: 'event-id',
           occurrenceKey: 'event-id-key',
           surfaceType: 'time-grid',
+          resourceId: undefined,
           start: adapter.startOfDay(day),
           end: adapter.endOfDay(day),
           originalEvent: {

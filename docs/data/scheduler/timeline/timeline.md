@@ -19,6 +19,24 @@ This package is not published yet.
 
 {{"demo": "BasicTimeline.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## Drag interactions
+
+### Drag and resize events
+
+You can enable the dragging and resizing of events within the Timeline using the `areEventsDraggable` and `areEventsResizable` props.
+When `areEventsDraggable` is `true`, the events can be dragged to another point in time.
+When `areEventsResizable` is `true`, the event extremities can be dragged to change its duration.
+
+{{"demo": "DragAndDrop.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### External drag and drop
+
+:::success
+Not available yet.
+:::
+
+## Customization
+
 ### Preferences
 
 You can customize the Timeline with the preferences prop.
