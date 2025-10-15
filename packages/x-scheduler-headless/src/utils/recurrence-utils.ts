@@ -10,6 +10,7 @@ import {
 } from '../models';
 import { mergeDateAndTime, getDateKey } from './date-utils';
 import { diffIn } from '../use-adapter';
+import { UpdateEventsParameters } from './SchedulerStore';
 
 /**
  * Build BYDAY<->number maps using a known ISO Monday (2025-01-06).
@@ -770,11 +771,10 @@ export function decideSplitRRule(
  */
 export function applyRecurringUpdateFollowing(
   adapter: Adapter,
-  events: CalendarEvent[],
   originalEvent: CalendarEvent,
   occurrenceStart: SchedulerValidDate,
   changes: CalendarEventUpdatedProperties,
-): CalendarEvent[] {
+): UpdateEventsParameters {
   const newStart = changes.start ?? originalEvent.start;
 
   // 1) Old series: truncate rule to end the day before the edited occurrence
@@ -783,15 +783,8 @@ export function applyRecurringUpdateFollowing(
 
   const originalRule = originalEvent.rrule as RRuleSpec;
   const { count, until, ...baseRule } = originalRule;
-  const truncatedRule = { ...baseRule, until: untilDate };
 
-  // 2) If UNTIL falls before DTSTART, the original series has no remaining occurrences -> drop it
-  const shouldDropOldSeries = adapter.isBefore(
-    adapter.endOfDay(untilDate),
-    adapter.startOfDay(originalEvent.start),
-  );
-
-  // 3) New event: apply changes, decide RRULE for the new series
+  // 2) New event: apply changes, decide RRULE for the new series
   const newRRule = decideSplitRRule(
     adapter,
     originalRule,
@@ -809,16 +802,20 @@ export function applyRecurringUpdateFollowing(
     extractedFromId: originalEvent.id,
   };
 
-  // 4) Build the final events list: old series (updated or dropped) + new event
-  const updatedEvents = shouldDropOldSeries
-    ? [...events.filter((event) => event.id !== originalEvent.id), newEvent]
-    : [
-        ...events.map((event) =>
-          event.id === originalEvent.id ? { ...originalEvent, rrule: truncatedRule } : event,
-        ),
-        newEvent,
-      ];
-  return updatedEvents;
+  // 3) If UNTIL falls before DTSTART, the original series has no remaining occurrences -> drop it, otherwise truncate it.
+  const shouldDropOldSeries = adapter.isBefore(
+    adapter.endOfDay(untilDate),
+    adapter.startOfDay(originalEvent.start),
+  );
+
+  if (shouldDropOldSeries) {
+    return { created: [newEvent], deleted: [originalEvent.id] };
+  }
+
+  return {
+    created: [newEvent],
+    updated: [{ id: originalEvent.id, rrule: { ...baseRule, until: untilDate } }],
+  };
 }
 
 /**
@@ -830,50 +827,37 @@ export function applyRecurringUpdateFollowing(
  */
 export function applyRecurringUpdateAll(
   adapter: Adapter,
-  events: CalendarEvent[],
   originalEvent: CalendarEvent,
   occurrenceStart: SchedulerValidDate,
   changes: CalendarEventUpdatedProperties,
-): CalendarEvent[] {
-  const occurrenceEnd = adapter.addMinutes(
-    occurrenceStart,
-    diffIn(adapter, originalEvent.end, originalEvent.start, 'minutes'),
-  );
-  // 1) Detect if the caller changed the date part of start or end
-  const touchedStartDateDay =
-    changes.start != null && !adapter.isSameDay(occurrenceStart, changes.start);
-  const touchedEndDateDateDay =
-    changes.end != null && !adapter.isSameDay(occurrenceEnd, changes.end);
+): UpdateEventsParameters {
+  const eventUpdatedProperties: CalendarEventUpdatedProperties = { ...changes };
 
-  // 2) Start from the current root start/end
-  let nextStart = originalEvent.start;
-  let nextEnd = originalEvent.end;
-
-  // 3) If the caller touched the date part of start or end, use the provided values as-is.
+  // 2) If the caller touched the date part of start or end, use the provided values as-is.
   // Otherwise, merge the new time part into the original start/end dates.
-  if (touchedStartDateDay || touchedEndDateDateDay) {
-    nextStart = changes.start!;
-    nextEnd = changes.end!;
-  } else {
-    nextStart =
-      changes.start == null
-        ? originalEvent.start
-        : mergeDateAndTime(adapter, originalEvent.start, changes.start);
-    nextEnd =
-      changes.end == null
-        ? originalEvent.end
-        : mergeDateAndTime(adapter, originalEvent.end, changes.end);
+  if (changes.start != null) {
+    if (adapter.isSameDay(occurrenceStart, changes.start)) {
+      eventUpdatedProperties.start = mergeDateAndTime(adapter, originalEvent.start, changes.start);
+    } else {
+      eventUpdatedProperties.start = changes.start;
+    }
   }
 
-  const newEvent: CalendarEvent = {
-    ...originalEvent,
-    ...changes,
-    start: nextStart,
-    end: nextEnd,
-  };
+  if (changes.end != null) {
+    const occurrenceEnd = adapter.addMinutes(
+      occurrenceStart,
+      diffIn(adapter, originalEvent.end, originalEvent.start, 'minutes'),
+    );
+
+    if (adapter.isSameDay(occurrenceEnd, changes.end)) {
+      eventUpdatedProperties.end = mergeDateAndTime(adapter, originalEvent.end, changes.end);
+    } else {
+      eventUpdatedProperties.end = changes.end;
+    }
+  }
 
   // 4) Replace the series root in the list
-  return [...events.filter((event) => event.id !== originalEvent.id), newEvent];
+  return { updated: [eventUpdatedProperties] };
 }
 
 /**
@@ -884,11 +868,10 @@ export function applyRecurringUpdateAll(
  */
 export function applyRecurringUpdateOnlyThis(
   adapter: Adapter,
-  events: CalendarEvent[],
   originalEvent: CalendarEvent,
   occurrenceStart: SchedulerValidDate,
   changes: CalendarEventUpdatedProperties,
-): CalendarEvent[] {
+): UpdateEventsParameters {
   const detachedId = `${originalEvent.id}::${getDateKey(changes.start ?? originalEvent.start, adapter)}`;
 
   const detachedEvent: CalendarEvent = {
@@ -899,14 +882,13 @@ export function applyRecurringUpdateOnlyThis(
     extractedFromId: originalEvent.id,
   };
 
-  const updatedOriginalEvent: CalendarEvent = {
-    ...originalEvent,
-    exDates: [...(originalEvent.exDates ?? []), adapter.startOfDay(occurrenceStart)],
+  return {
+    created: [detachedEvent],
+    updated: [
+      {
+        id: originalEvent.id,
+        exDates: [...(originalEvent.exDates ?? []), adapter.startOfDay(occurrenceStart)],
+      },
+    ],
   };
-
-  const updatedEvents = events.map((event) =>
-    event.id === originalEvent.id ? updatedOriginalEvent : event,
-  );
-
-  return [...updatedEvents, detachedEvent];
 }
