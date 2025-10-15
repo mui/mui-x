@@ -34,29 +34,29 @@ export function useTimelinePlaceholderInRange(
       end: rawPlaceholder.end,
     };
 
-    // if (rawPlaceholder.type === 'creation') {
-    //   return {
-    //     ...sharedProperties,
-    //     id: 'occurrence-placeholder',
-    //     title: '',
-    //     position: {
-    //       firstIndex: 1,
-    //       lastIndex: maxIndex,
-    //     },
-    //   };
-    // }
+    if (rawPlaceholder.type === 'creation') {
+      return {
+        ...sharedProperties,
+        id: 'occurrence-placeholder',
+        title: '',
+        position: {
+          firstIndex: 1,
+          lastIndex: maxIndex,
+        },
+      };
+    }
 
-    // if (rawPlaceholder.type === 'external-drag') {
-    //   return {
-    //     ...sharedProperties,
-    //     id: 'occurrence-placeholder',
-    //     title: rawPlaceholder.eventData.title ?? '',
-    //     position: {
-    //       firstIndex: 1,
-    //       lastIndex: maxIndex,
-    //     },
-    //   };
-    // }
+    if (rawPlaceholder.type === 'external-drag') {
+      return {
+        ...sharedProperties,
+        id: 'occurrence-placeholder',
+        title: rawPlaceholder.eventData.title ?? '',
+        position: {
+          firstIndex: 1,
+          lastIndex: maxIndex,
+        },
+      };
+    }
 
     const position = occurrences.find(
       (occurrence) => occurrence.key === rawPlaceholder.occurrenceKey,
