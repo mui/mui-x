@@ -26,7 +26,7 @@ const event = {
 
 The scheduler expands recurring events only for the visible range, keeps the original duration and handles all-day and multi-day spans.
 
-{{"demo": "Recurrence.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "RecurringEventsDataset.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Supported recurrence patterns
 
