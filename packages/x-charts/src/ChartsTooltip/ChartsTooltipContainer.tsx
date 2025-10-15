@@ -120,28 +120,27 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
       return () => {};
     }
 
+    if (itemPosition !== null) {
+      const positionUpdate = rafThrottle(() => {
+        // eslint-disable-next-line react-compiler/react-compiler
+        positionRef.current = {
+          x: svgElement.getBoundingClientRect().left + (itemPosition?.x ?? 0),
+          y: svgElement.getBoundingClientRect().top + (itemPosition?.y ?? 0),
+        };
+        popperRef.current?.update();
+      });
+      positionUpdate();
+      return () => positionUpdate.clear();
+    }
+
     const pointerUpdate = rafThrottle((x: number, y: number) => {
-      // eslint-disable-next-line react-compiler/react-compiler
       positionRef.current = { x, y };
       popperRef.current?.update();
     });
-
-    const positionUpdate = rafThrottle(() => {
-      positionRef.current = {
-        x: svgElement.getBoundingClientRect().left + (itemPosition?.x ?? 0),
-        y: svgElement.getBoundingClientRect().top + (itemPosition?.y ?? 0),
-      };
-      popperRef.current?.update();
-    });
-
     const handlePointerEvent = (event: PointerEvent) => {
       pointerUpdate(event.clientX, event.clientY);
     };
 
-    if (itemPosition !== null) {
-      positionUpdate();
-      return () => positionUpdate.clear();
-    }
     svgElement.addEventListener('pointerdown', handlePointerEvent);
     svgElement.addEventListener('pointermove', handlePointerEvent);
     svgElement.addEventListener('pointerenter', handlePointerEvent);
