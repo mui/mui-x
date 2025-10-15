@@ -90,7 +90,7 @@ export function useDraggableEvent(
     [adapter, start, end, collectionStart, collectionEnd],
   );
 
-  return { state, ref, preview, contextValue };
+  return { state, preview, contextValue };
 }
 
 export namespace useDraggableEvent {
@@ -145,10 +145,18 @@ export namespace useDraggableEvent {
   }
 
   export interface ReturnValue {
+    /**
+     * The state to pass to the useRenderElement hook.
+     */
     state: State;
+    /**
+     * The context to access in useEventResizeHandler.
+     */
     contextValue: ContextValue;
+    /**
+     * The drag preview to render when the dragged event is not over a valid drop target.
+     */
     preview: useDragPreview.ReturnValue;
-    ref: React.RefObject<HTMLDivElement | null>;
   }
 
   export interface ContextValue {

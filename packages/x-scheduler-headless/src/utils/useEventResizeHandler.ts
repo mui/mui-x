@@ -58,11 +58,14 @@ export namespace useEventResizeHandler {
     end: boolean;
   }
 
-  export interface Parameters {
+  export interface PublicParameters {
     /**
      * The date to edit when dragging the resize handler.
      */
     side: 'start' | 'end';
+  }
+
+  export interface Parameters extends PublicParameters {
     /**
      * The ref to the event's resize handler root element.
      */
@@ -80,7 +83,13 @@ export namespace useEventResizeHandler {
   }
 
   export interface ReturnValue {
+    /**
+     * The state to pass to the useRenderElement hook.
+     */
     state: State;
+    /**
+     * Whether the resize handler is enabled.
+     */
     enabled: boolean;
   }
 }

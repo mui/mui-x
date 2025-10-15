@@ -28,20 +28,15 @@ export const TimelineEventResizeHandler = React.forwardRef(function TimelineEven
   const ref = React.useRef<HTMLDivElement>(null);
 
   // Feature hooks
-  const enabled =
-    (side === 'start' && !contextValue.doesEventStartBeforeRowStart) ||
-    (side === 'end' && !contextValue.doesEventEndAfterRowEnd);
-
   const getDragData = useEventCallback(({ input }) => ({
     ...contextValue.getSharedDragData(input),
     source: 'TimelineEventResizeHandler',
     side,
   }));
 
-  const { state } = useEventResizeHandler({
+  const { state, enabled } = useEventResizeHandler({
     ref,
     side,
-    enabled,
     contextValue,
     getDragData,
   });
@@ -59,7 +54,7 @@ export namespace TimelineEventResizeHandler {
 
   export interface Props
     extends BaseUIComponentProps<'div', State>,
-      Pick<useEventResizeHandler.Parameters, 'side'> {}
+      useEventResizeHandler.PublicParameters {}
 
   export interface DragData extends TimelineEvent.SharedDragData {
     source: 'TimelineEventResizeHandler';

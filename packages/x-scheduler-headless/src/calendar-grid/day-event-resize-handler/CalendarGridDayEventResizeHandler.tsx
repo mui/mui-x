@@ -55,7 +55,7 @@ export namespace CalendarGridDayEventResizeHandler {
 
   export interface Props
     extends BaseUIComponentProps<'div', State>,
-      Pick<useEventResizeHandler.Parameters, 'side'> {}
+      useEventResizeHandler.PublicParameters {}
 
   export interface DragData extends CalendarGridDayEvent.SharedDragData {
     source: 'CalendarGridDayEventResizeHandler';
