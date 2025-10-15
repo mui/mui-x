@@ -2,8 +2,8 @@
 import { TickItemType } from '../hooks/useTicks';
 import { ChartsXAxisProps, ComputedXAxis } from '../models/axis';
 import { getMinXTranslation } from '../internals/geometry';
-import { getWordsByLines } from '../internals/getWordsByLines';
-import { warmUpStringSizeCache } from '../internals/domUtils';
+import { ChartsTextStyle } from '../internals/getWordsByLines';
+import { batchMeasureStrings } from '../internals/domUtils';
 
 /* Returns a set of indices of the tick labels that should be visible.  */
 export function getVisibleLabels<T extends TickItemType>(
@@ -22,19 +22,6 @@ export function getVisibleLabels<T extends TickItemType>(
       isXInside: (x: number) => boolean;
     },
 ): Set<T> {
-  const getTickLabelSize = (tick: T) => {
-    if (!isMounted || tick.formattedValue === undefined) {
-      return { width: 0, height: 0 };
-    }
-
-    const tickSizes = getWordsByLines({ style, needsComputation: true, text: tick.formattedValue });
-
-    return {
-      width: Math.max(...tickSizes.map((size) => size.width)),
-      height: Math.max(tickSizes.length * tickSizes[0].height),
-    };
-  };
-
   if (typeof tickLabelInterval === 'function') {
     return new Set(xTicks.filter((item, index) => tickLabelInterval(item.value, index)));
   }
@@ -55,10 +42,7 @@ export function getVisibleLabels<T extends TickItemType>(
     return isXInside(textPosition);
   });
 
-  warmUpStringSizeCache(
-    candidateTickLabels.map((t) => t.formattedValue ?? ''),
-    style,
-  );
+  const sizeMap = measureTickLabels(candidateTickLabels, style);
 
   return new Set(
     candidateTickLabels.filter((item, labelIndex) => {
@@ -74,7 +58,9 @@ export function getVisibleLabels<T extends TickItemType>(
       }
 
       /* Measuring text width is expensive, so we need to delay it as much as possible to improve performance. */
-      const { width, height } = getTickLabelSize(item);
+      const { width, height } = isMounted
+        ? getTickLabelSize(sizeMap, item)
+        : { width: 0, height: 0 };
 
       const distance = getMinXTranslation(width, height, style?.angle);
 
@@ -92,4 +78,38 @@ export function getVisibleLabels<T extends TickItemType>(
       return true;
     }),
   );
+}
+
+function getTickLabelSize<T extends TickItemType>(
+  sizeMap: Map<string | number, { width: number; height: number }>,
+  tick: T,
+) {
+  if (tick.formattedValue === undefined) {
+    return { width: 0, height: 0 };
+  }
+
+  let width = 0;
+  let height = 0;
+
+  for (const line of tick.formattedValue.split('\n')) {
+    const lineSize = sizeMap.get(line);
+    if (lineSize) {
+      width = Math.max(width, lineSize.width);
+      height += lineSize.height;
+    }
+  }
+
+  return { width, height };
+}
+
+function measureTickLabels<T extends TickItemType>(ticks: T[], style: ChartsTextStyle | undefined) {
+  const strings = new Set<string>();
+
+  for (const tick of ticks) {
+    if (tick.formattedValue) {
+      tick.formattedValue.split('\n').forEach((line) => strings.add(line));
+    }
+  }
+
+  return batchMeasureStrings(strings, style);
 }

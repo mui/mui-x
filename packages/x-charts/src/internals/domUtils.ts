@@ -138,20 +138,28 @@ export const getStringSize = (text: string | number, style: React.CSSProperties 
   }
 };
 
-export function warmUpStringSizeCache(texts: (string | number)[], style: React.CSSProperties = {}) {
+export function batchMeasureStrings(
+  texts: Iterable<string | number>,
+  style: React.CSSProperties = {},
+) {
   if (isSsr()) {
-    return;
+    return new Map<string | number, { width: number; height: number }>(
+      Array.from(texts).map((text) => [text, { width: 0, height: 0 }]),
+    );
   }
 
-  const textToMeasure: string[] = [];
+  const sizeMap = new Map<string | number, { width: number; height: number }>();
+  const textToMeasure: Array<string | number> = [];
   const styleString = getStyleString(style);
 
   for (const text of texts) {
-    const str = `${text}`;
-    const cacheKey = `${str}-${styleString}`;
+    const cacheKey = `${text}-${styleString}`;
+    const size = stringCache.get(cacheKey);
 
-    if (!stringCache.has(cacheKey)) {
-      textToMeasure.push(str);
+    if (size) {
+      sizeMap.set(text, size);
+    } else {
+      textToMeasure.push(text);
     }
   }
 
@@ -169,20 +177,21 @@ export function warmUpStringSizeCache(texts: (string | number)[], style: React.C
   const measurementElems: SVGTextElement[] = [];
   for (const string of textToMeasure) {
     const measurementElem = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    measurementElem.textContent = string;
+    measurementElem.textContent = `${string}`;
     measurementElems.push(measurementElem);
   }
 
   measurementContainer.replaceChildren(...measurementElems);
 
   for (let i = 0; i < textToMeasure.length; i += 1) {
-    const str = textToMeasure[i];
+    const text = textToMeasure[i];
     const measurementSpan = measurementContainer.children[i] as HTMLSpanElement;
     const rect = measurementSpan.getBoundingClientRect();
     const result = { width: rect.width, height: rect.height };
-    const cacheKey = `${str}-${styleString}`;
+    const cacheKey = `${text}-${styleString}`;
 
     stringCache.set(cacheKey, result);
+    sizeMap.set(text, result);
   }
 
   if (stringCache.size + 1 > MAX_CACHE_NUM) {
@@ -193,6 +202,8 @@ export function warmUpStringSizeCache(texts: (string | number)[], style: React.C
     // In test environment, we clean the measurement span immediately
     measurementContainer.replaceChildren();
   }
+
+  return sizeMap;
 }
 
 /**
