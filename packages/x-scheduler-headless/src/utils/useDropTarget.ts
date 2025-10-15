@@ -146,7 +146,7 @@ export namespace useDropTarget {
      */
     addPropertiesToDroppedEvent?: () => Partial<CalendarEvent>;
     /**
-     * The resource id of the resource onto which to drop the event.
+     * The id of the resource onto which to drop the event.
      * If null, the event will be dropped onto the resource it was originally in (if any).
      * If undefined, the event will be dropped outside of any resource.
      * @default null

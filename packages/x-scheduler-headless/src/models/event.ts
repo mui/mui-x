@@ -166,7 +166,7 @@ interface CalendarOccurrencePlaceholderBase {
    */
   end: SchedulerValidDate;
   /**
-   * The resource id of the resource onto which to drop the event.
+   * The id of the resource onto which to drop the event.
    * If undefined, the event will be dropped outside of any resource.
    */
   resourceId: CalendarResourceId | undefined;

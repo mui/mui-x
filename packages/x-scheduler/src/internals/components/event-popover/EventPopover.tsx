@@ -110,6 +110,8 @@ export const EventPopoverContent = React.forwardRef(function EventPopoverContent
     store.setOccurrencePlaceholder({
       type: 'creation',
       surfaceType: surfaceTypeToUse,
+      // TODO: Pass the right resourceId
+      resourceId: undefined,
       start,
       end,
       lockSurfaceType: rawPlaceholder.lockSurfaceType,
