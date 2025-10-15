@@ -8,7 +8,7 @@ import { useGaugeState } from './GaugeProvider';
 
 const StyledPath = styled('path', {
   name: 'MuiGauge',
-  slot: 'ReferenceArc',
+  slot: 'ValueArc',
 })(({ theme }) => ({
   fill: (theme.vars || theme).palette.primary.main,
 }));
