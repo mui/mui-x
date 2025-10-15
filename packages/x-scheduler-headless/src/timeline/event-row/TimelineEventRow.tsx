@@ -2,8 +2,8 @@
 import * as React from 'react';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
-import { SchedulerValidDate } from '../../models';
 import { TimelineEventRowContext } from './TimelineEventRowContext';
+import { useEventRowDropTarget } from './useEventRowDropTarget';
 
 export const TimelineEventRow = React.forwardRef(function TimelineEventRow(
   componentProps: TimelineEventRow.Props,
@@ -16,17 +16,27 @@ export const TimelineEventRow = React.forwardRef(function TimelineEventRow(
     // Internal props
     start,
     end,
+    addPropertiesToDroppedEvent,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
 
+  const { getCursorPositionInElementMs, ref: dropTargetRef } = useEventRowDropTarget({
+    start,
+    end,
+    addPropertiesToDroppedEvent,
+  });
+
   // TODO: Add aria-rowindex using Composite.
   const props = React.useMemo(() => ({ role: 'row' }), []);
 
-  const contextValue: TimelineEventRowContext = React.useMemo(() => ({ start, end }), [start, end]);
+  const contextValue: TimelineEventRowContext = React.useMemo(
+    () => ({ start, end, getCursorPositionInElementMs }),
+    [start, end, getCursorPositionInElementMs],
+  );
 
   const element = useRenderElement('div', componentProps, {
-    ref: [forwardedRef],
+    ref: [forwardedRef, dropTargetRef],
     props: [props, elementProps],
   });
 
@@ -40,14 +50,7 @@ export const TimelineEventRow = React.forwardRef(function TimelineEventRow(
 export namespace TimelineEventRow {
   export interface State {}
 
-  export interface Props extends BaseUIComponentProps<'div', State> {
-    /**
-     * The start date and time of the row.
-     */
-    start: SchedulerValidDate;
-    /**
-     * The end date and time of the row.
-     */
-    end: SchedulerValidDate;
-  }
+  export interface Props
+    extends BaseUIComponentProps<'div', State>,
+      useEventRowDropTarget.Parameters {}
 }

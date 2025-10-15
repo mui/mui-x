@@ -22,6 +22,8 @@ export default function FullTimeline() {
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
+        areEventsDraggable
+        areEventsResizable
       />
     </div>
   );

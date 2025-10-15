@@ -250,7 +250,8 @@ export interface CalendarProcessedDate {
 export type CalendarEventUpdatedProperties = Partial<CalendarEvent> &
   Required<Pick<CalendarEvent, 'id'>>;
 
+// TODO: Consider splitting the interface in two, one for the Event Calendar and one for the Timeline.
 /**
  * The type of surface the event is being rendered on.
  */
-export type EventSurfaceType = 'day-grid' | 'time-grid';
+export type EventSurfaceType = 'day-grid' | 'time-grid' | 'timeline';

@@ -10,6 +10,15 @@
 
   grid-row: var(--row-index, 1);
   grid-column: 1;
+
+  &[data-dragging],
+  &[data-resizing] {
+    opacity: 0.5;
+  }
+
+  &:hover .EventResizeHandler {
+    opacity: 1;
+  }
 }
 
 .TimelineEvent::before {

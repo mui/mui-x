@@ -6,8 +6,8 @@ import { Timeline } from '@mui/x-scheduler-headless/timeline';
 import { selectors } from '@mui/x-scheduler-headless/use-timeline';
 import { useTimelineStoreContext } from '@mui/x-scheduler-headless/use-timeline-store-context';
 import { getColorClassName } from '../../../../internals/utils/color-utils';
+import { EventDragPreview } from '../../../../internals/components/event-drag-preview';
 import { TimelineEventProps } from './TimelineEvent.types';
-
 import './TimelineEvent.css';
 
 export const TimelineEvent = React.forwardRef(function TimelineEvent(
@@ -27,23 +27,31 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
   const store = useTimelineStoreContext();
 
   const id = useId(idProp);
+  const isDraggable = useStore(store, selectors.isEventDraggable);
+  // const isResizable = useStore(store, selectors.isEventResizable, occurrence.id, 'timeline');
   const color = useStore(store, selectors.eventColor, occurrence.id);
+
+  const sharedProps = {
+    id,
+    start: occurrence.start,
+    end: occurrence.end,
+    ref: forwardedRef,
+    'aria-labelledby': `${ariaLabelledBy} ${id}`,
+    className: clsx(className, 'TimelineEvent', 'LinesClamp', getColorClassName(color)),
+    style: {
+      '--number-of-lines': 1,
+      '--row-index': occurrence.position.firstIndex,
+    } as React.CSSProperties,
+    ...other,
+  };
 
   return (
     <Timeline.Event
-      ref={forwardedRef}
-      className={clsx(className, 'TimelineEvent', 'LinesClamp', getColorClassName(color))}
-      id={id}
-      aria-labelledby={`${ariaLabelledBy} ${id}`}
-      style={
-        {
-          '--number-of-lines': 1,
-          '--row-index': occurrence.position.firstIndex,
-        } as React.CSSProperties
-      }
-      start={occurrence.start}
-      end={occurrence.end}
-      {...other}
+      isDraggable={isDraggable}
+      eventId={occurrence.id}
+      occurrenceKey={occurrence.key}
+      renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
+      {...sharedProps}
     >
       {occurrence.title}
     </Timeline.Event>

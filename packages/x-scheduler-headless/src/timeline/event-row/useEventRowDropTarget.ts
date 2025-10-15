@@ -1,0 +1,108 @@
+'use client';
+import * as React from 'react';
+import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
+import { useAdapter } from '../../use-adapter/useAdapter';
+import { CalendarEvent, SchedulerValidDate } from '../../models';
+import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
+import { TimelineEventRowContext } from './TimelineEventRowContext';
+import { useDropTarget } from '../../utils/useDropTarget';
+import {
+  EVENT_CREATION_DEFAULT_LENGTH_MINUTE,
+  EVENT_DRAG_PRECISION_MINUTE,
+  EVENT_DRAG_PRECISION_MS,
+} from '../../constants';
+
+const isValidDropTarget = buildIsValidDropTarget(['TimelineEvent']);
+
+export function useEventRowDropTarget(parameters: useEventRowDropTarget.Parameters) {
+  const { start, end, addPropertiesToDroppedEvent } = parameters;
+
+  const adapter = useAdapter();
+  const ref = React.useRef<HTMLDivElement>(null);
+
+  // TODO: Avoid JS date conversion
+  const getTimestamp = (date: SchedulerValidDate) => adapter.toJsDate(date).getTime();
+  const collectionStartTimestamp = getTimestamp(start);
+  const collectionEndTimestamp = getTimestamp(end);
+  const collectionDurationMs = collectionEndTimestamp - collectionStartTimestamp;
+
+  const getCursorPositionInElementMs: TimelineEventRowContext['getCursorPositionInElementMs'] =
+    useEventCallback(({ input, elementRef }) => {
+      if (!ref.current || !elementRef.current) {
+        return 0;
+      }
+
+      const clientX = input.clientX;
+      const elementPosition = elementRef.current.getBoundingClientRect();
+      const positionX = (clientX - elementPosition.x) / ref.current.offsetWidth;
+
+      return Math.round(collectionDurationMs * positionX);
+    });
+
+  const getEventDropData: useDropTarget.GetEventDropData = useEventCallback(
+    ({ data, createDropData, input }) => {
+      if (!isValidDropTarget(data)) {
+        return undefined;
+      }
+
+      const cursorOffsetMs = getCursorPositionInElementMs({ input, elementRef: ref });
+
+      const addOffsetToDate = (date: SchedulerValidDate, offsetMs: number) => {
+        const roundedOffset =
+          Math.round(offsetMs / EVENT_DRAG_PRECISION_MS) * EVENT_DRAG_PRECISION_MS;
+
+        // TODO: Use "addMilliseconds" instead of "addSeconds" when available in the adapter
+        return adapter.addSeconds(date, roundedOffset / 1000);
+      };
+
+      // Move a Timeline Event within the Timeline
+      if (data.source === 'TimelineEvent') {
+        // TODO: Avoid JS Date conversion
+        const eventDurationMinute =
+          (adapter.toJsDate(data.end).getTime() - adapter.toJsDate(data.start).getTime()) /
+          (60 * 1000);
+
+        const newStartDate = addOffsetToDate(
+          start,
+          cursorOffsetMs - data.initialCursorPositionInEventMs,
+        );
+
+        const newEndDate = adapter.addMinutes(newStartDate, eventDurationMinute);
+
+        return createDropData(data, newStartDate, newEndDate);
+      }
+
+      return undefined;
+    },
+  );
+
+  useDropTarget({
+    ref,
+    surfaceType: 'timeline',
+    getEventDropData,
+    isValidDropTarget,
+    addPropertiesToDroppedEvent,
+  });
+
+  return { getCursorPositionInElementMs, ref };
+}
+
+export namespace useEventRowDropTarget {
+  export interface Parameters {
+    /**
+     * The data and time at which the row starts.
+     */
+    start: SchedulerValidDate;
+    /**
+     * The data and time at which the row ends.
+     */
+    end: SchedulerValidDate;
+    /**
+     * Add properties to the event dropped in the row before storing it in the store.
+     */
+    addPropertiesToDroppedEvent?: () => Partial<CalendarEvent>;
+  }
+
+  export interface ReturnValue
+    extends Pick<TimelineEventRowContext, 'getCursorPositionInElementMs'> {}
+}
