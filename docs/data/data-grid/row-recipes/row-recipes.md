@@ -31,3 +31,9 @@ When clicked, it uses [`setExpandedDetailPanels`](/x/api/data-grid/grid-api/#gri
 In the demo below, you can toggle the detail panel by clicking anywhere on the row:
 
 {{"demo": "DetailPanelExpandOnRowClick.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Accessing loading state
+
+The following demo shows how to disable a button on the toolbar when the Data Grid is in loading state using the `useGridSelector` hook with the `gridRowsLoadingSelector`.
+
+{{"demo": "AccessingLoadingState.js", "bg": "inline"}}
