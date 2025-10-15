@@ -128,6 +128,11 @@ export const getStringSize = (text: string | number, style: React.CSSProperties 
       stringCache.clear();
     }
 
+    if (process.env.NODE_ENV === 'test') {
+      // In test environment, we clean the measurement span immediately
+      measurementSpanContainer.replaceChildren();
+    }
+
     return result;
   } catch {
     return { width: 0, height: 0 };
