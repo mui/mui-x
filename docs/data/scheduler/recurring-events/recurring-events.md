@@ -28,7 +28,7 @@ const event = {
 **Standards compliance**: This scheduler follows the iCalendar **RRULE** standard from **RFC 5545**. We do not support every rule or combination yet. If you want more information about a specific rule, see **[RFC 5545 §3.3.10 Recurrence Rule](https://datatracker.ietf.org/doc/html/rfc5545#section-3.3.10)**.
 :::
 
-The scheduler expands recurring events only for the visible range, keeps the original duration and handles all-day and multi-day spans.
+The Event Calendar and the Timeline expand recurring events only for the visible range, keeps the original duration and handles all-day and multi-day spans.
 
 {{"demo": "RecurringEventsDataset.js", "bg": "inline", "defaultCodeOpen": false}}
 
