@@ -188,7 +188,7 @@ async function applyInternalDragOrResizeOccurrencePlaceholder(
 }
 
 function applyExternalDragOccurrencePlaceholder(
-  store: SchedulerStoreInContext,
+  store: SchedulerStoreInContext<any, any>,
   placeholder: CalendarOccurrencePlaceholderExternalDrag,
   addPropertiesToDroppedEvent?: () => Partial<CalendarEvent>,
 ) {
