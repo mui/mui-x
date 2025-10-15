@@ -26,6 +26,10 @@ export function useScatterPlotData(
       const x = getXPosition(scatterPoint.x);
       const y = getYPosition(scatterPoint.y);
 
+      if (x === undefined || y === undefined) {
+        continue;
+      }
+
       const isInRange = isPointInside(x, y);
 
       if (isInRange) {

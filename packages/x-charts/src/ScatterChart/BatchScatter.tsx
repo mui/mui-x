@@ -66,7 +66,7 @@ function useCreatePaths(
     const x = getXPosition(scatterPoint.x);
     const y = getYPosition(scatterPoint.y);
 
-    if (!instance.isPointInside(x, y)) {
+    if (x === undefined || y === undefined || !instance.isPointInside(x, y)) {
       continue;
     }
 
@@ -160,33 +160,37 @@ export function BatchScatter(props: BatchScatterProps) {
     const datum = series.data[seriesHighlightedItem];
     const getXPosition = getValueToPositionMapper(xScale);
     const getYPosition = getValueToPositionMapper(yScale);
+    const x = getXPosition(datum.x);
+    const y = getYPosition(datum.y);
 
-    siblings.push(
-      <path
-        key={`highlighted-${series.id}`}
-        fill={colorGetter ? colorGetter(seriesHighlightedItem) : color}
-        data-highlighted
-        d={createPath(
-          getXPosition(datum.x),
-          getYPosition(datum.y),
-          markerSize * highlightedModifier,
-        )}
-      />,
-    );
+    if (x !== undefined && y !== undefined) {
+      siblings.push(
+        <path
+          key={`highlighted-${series.id}`}
+          fill={colorGetter ? colorGetter(seriesHighlightedItem) : color}
+          data-highlighted
+          d={createPath(x, y, markerSize * highlightedModifier)}
+        />,
+      );
+    }
   }
 
   if (seriesUnfadedItem != null) {
     const datum = series.data[seriesUnfadedItem];
     const getXPosition = getValueToPositionMapper(xScale);
     const getYPosition = getValueToPositionMapper(yScale);
+    const x = getXPosition(datum.x);
+    const y = getYPosition(datum.y);
 
-    siblings.push(
-      <path
-        key={`unfaded-${series.id}`}
-        fill={colorGetter ? colorGetter(seriesUnfadedItem) : color}
-        d={createPath(getXPosition(datum.x), getYPosition(datum.y), markerSize)}
-      />,
-    );
+    if (x !== undefined && y !== undefined) {
+      siblings.push(
+        <path
+          key={`unfaded-${series.id}`}
+          fill={colorGetter ? colorGetter(seriesUnfadedItem) : color}
+          d={createPath(x, y, markerSize)}
+        />,
+      );
+    }
   }
 
   return (

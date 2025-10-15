@@ -109,7 +109,7 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
             const x = xScale(xData[highlightedIndex]);
             const y = yScale(stackedData[highlightedIndex][1])!; // This should not be undefined since y should not be a band scale
 
-            if (!instance.isPointInside(x, y)) {
+            if (x === undefined || !instance.isPointInside(x, y)) {
               return null;
             }
 

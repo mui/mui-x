@@ -12,7 +12,7 @@ import { useRadiusAxis, useRotationAxis, useXAxis, useYAxis } from './useAxis';
 export function getValueToPositionMapper<
   Domain extends { toString(): string } = { toString(): string },
   Range = number,
->(scale: D3Scale<Domain, Range>): (value: any) => number {
+>(scale: D3Scale<Domain, Range, number | undefined>): (value: any) => number | undefined {
   if (isOrdinalScale(scale)) {
     return (value: any) => (scale(value) ?? 0) + scale.bandwidth() / 2;
   }
@@ -24,7 +24,7 @@ export function getValueToPositionMapper<
     return (value: any) => (value === domain[0] ? scale(value) : NaN);
   }
 
-  return (value: any) => scale(value) as number;
+  return (value: any) => scale(value);
 }
 
 /**

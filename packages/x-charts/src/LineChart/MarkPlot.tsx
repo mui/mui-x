@@ -151,7 +151,7 @@ function MarkPlot(props: MarkPlotProps) {
                   };
                 })
                 .filter(({ x, y, index, position, value }) => {
-                  if (value === null || y === null) {
+                  if (value === null || x === undefined || y === null) {
                     // Remove missing data point
                     return false;
                   }
