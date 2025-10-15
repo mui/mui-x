@@ -1,7 +1,8 @@
-<DataGridPremium
+<DataGridPro
   {...data}
-  apiRef={apiRef}
-  initialState={initialState}
+  setTreeDataPath={setTreeDataPath}
+  getTreeDataPath={getTreeDataPath}
+  loading={loading}
   rowReordering
   isValidRowReorder={isValidRowReorder}
 />

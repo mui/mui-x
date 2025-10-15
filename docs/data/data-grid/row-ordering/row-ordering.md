@@ -116,7 +116,7 @@ The row reorder feature has an internal validation ruleset that makes sure that 
 :::
 
 :::info
-The above demo uses row grouping to demonstrate the concept. You can check more about this in the [Row grouping—Drag-and-drop group reordering](/x/react-data-grid/row-grouping/#drag-and-drop-group-reordering) documentation section.
+The above demo uses row grouping to demonstrate the concept. You can check more about this in the [Tree data—Drag-and-drop tree data reordering](/x/react-data-grid/tree-data/#drag-and-drop-tree-data-reordering) documentation section.
 :::
 
 ## Row reordering with tree data
