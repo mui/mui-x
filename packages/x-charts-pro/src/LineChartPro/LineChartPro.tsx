@@ -1962,7 +1962,7 @@ LineChartPro.propTypes = {
   zoomInteractionConfig: PropTypes.shape({
     pan: PropTypes.arrayOf(
       PropTypes.oneOfType([
-        PropTypes.oneOf(['drag', 'pressAndDrag']),
+        PropTypes.oneOf(['drag', 'wheel', 'pressAndDrag']),
         PropTypes.shape({
           pointerMode: PropTypes.oneOf(['mouse', 'touch']),
           requiredKeys: PropTypes.arrayOf(PropTypes.string),
@@ -1972,6 +1972,12 @@ LineChartPro.propTypes = {
           pointerMode: PropTypes.oneOf(['mouse', 'touch']),
           requiredKeys: PropTypes.arrayOf(PropTypes.string),
           type: PropTypes.oneOf(['pressAndDrag']).isRequired,
+        }),
+        PropTypes.shape({
+          axesFilter: PropTypes.oneOf(['x', 'xy', 'y']),
+          pointerMode: PropTypes.any,
+          requiredKeys: PropTypes.arrayOf(PropTypes.string),
+          type: PropTypes.oneOf(['wheel']).isRequired,
         }),
       ]).isRequired,
     ),

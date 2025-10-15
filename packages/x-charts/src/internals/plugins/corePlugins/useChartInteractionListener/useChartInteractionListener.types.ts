@@ -26,6 +26,7 @@ export type ChartInteraction =
   | 'zoomPinchStart'
   | 'zoomPinchEnd'
   | 'zoomTurnWheel'
+  | 'panTurnWheel'
   | 'zoomTapAndDrag'
   | 'zoomTapAndDragStart'
   | 'zoomTapAndDragEnd'
@@ -54,6 +55,11 @@ export type AddInteractionListener = {
   ): InteractionListenerResult;
   <CustomData extends Record<string, unknown> = Record<string, unknown>>(
     interaction: 'zoomTurnWheel',
+    callback: (event: TurnWheelEvent<CustomData>) => void,
+    options?: boolean | AddEventListenerOptions,
+  ): InteractionListenerResult;
+  <CustomData extends Record<string, unknown> = Record<string, unknown>>(
+    interaction: 'panTurnWheel',
     callback: (event: TurnWheelEvent<CustomData>) => void,
     options?: boolean | AddEventListenerOptions,
   ): InteractionListenerResult;
@@ -90,6 +96,10 @@ export type UpdateZoomInteractionListeners = {
   (
     interaction: 'zoomTurnWheel',
     options?: Omit<TurnWheelGestureOptions<'zoomTurnWheel'>, 'name'>,
+  ): void;
+  (
+    interaction: 'panTurnWheel',
+    options?: Omit<TurnWheelGestureOptions<'panTurnWheel'>, 'name'>,
   ): void;
   (
     interaction: 'zoomTapAndDrag',

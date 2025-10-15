@@ -18,7 +18,7 @@ export const initializeZoomInteractionConfig = (
       pinch: { type: 'pinch', requiredKeys: [], mouse: {}, touch: {} },
     };
   } else {
-    defaultizedConfig.zoom = initializeFor<'zoom'>(zoomInteractionConfig.zoom);
+    defaultizedConfig.zoom = initializeFor('zoom', zoomInteractionConfig.zoom);
   }
 
   if (!zoomInteractionConfig?.pan) {
@@ -26,13 +26,14 @@ export const initializeZoomInteractionConfig = (
       drag: { type: 'drag', requiredKeys: [], mouse: {}, touch: {} },
     };
   } else {
-    defaultizedConfig.pan = initializeFor<'pan'>(zoomInteractionConfig.pan);
+    defaultizedConfig.pan = initializeFor('pan', zoomInteractionConfig.pan);
   }
 
   return defaultizedConfig;
 };
 
 function initializeFor<T extends 'zoom' | 'pan'>(
+  interactionType: T,
   zoomInteractionConfig: Exclude<ZoomInteractionConfig[T], undefined>,
 ): DefaultizedZoomInteractionConfig[T] {
   // We aggregate interactions by type
@@ -86,6 +87,10 @@ function initializeFor<T extends 'zoom' | 'pan'>(
           }
         : {},
     };
+
+    if (type === 'wheel' && interactionType === 'pan') {
+      acc[type].axesFilter = lastEmpty?.axesFilter ?? 'x';
+    }
   }
   return acc;
 }
