@@ -18,6 +18,7 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
     occurrence,
     ariaLabelledBy,
     className,
+    variant,
     onEventClick,
     id: idProp,
     style,
@@ -44,6 +45,14 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
     } as React.CSSProperties,
     ...other,
   };
+
+  if (variant === 'placeholder') {
+    return (
+      <Timeline.EventPlaceholder aria-hidden={true} {...sharedProps}>
+        {occurrence.title}
+      </Timeline.EventPlaceholder>
+    );
+  }
 
   return (
     <Timeline.Event
