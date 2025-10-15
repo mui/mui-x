@@ -36,7 +36,7 @@ export const selectors = {
       state: State,
       start: SchedulerValidDate,
       end: SchedulerValidDate,
-      resourceId: CalendarResourceId,
+      resourceId: CalendarResourceId | undefined,
     ) => {
       if (
         state.occurrencePlaceholder === null ||
@@ -56,7 +56,7 @@ export const selectors = {
         return null;
       }
 
-      if (state.occurrencePlaceholder.originalEvent.resource !== resourceId) {
+      if (state.occurrencePlaceholder.resourceId !== resourceId) {
         return null;
       }
 

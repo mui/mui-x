@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { useAdapter } from '../../use-adapter/useAdapter';
-import { CalendarEvent, SchedulerValidDate } from '../../models';
+import { CalendarEvent, CalendarResourceId, SchedulerValidDate } from '../../models';
 import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
 import { TimelineEventRowContext } from './TimelineEventRowContext';
 import { useDropTarget } from '../../utils/useDropTarget';
@@ -11,7 +11,7 @@ import { EVENT_DRAG_PRECISION_MINUTE, EVENT_DRAG_PRECISION_MS } from '../../cons
 const isValidDropTarget = buildIsValidDropTarget(['TimelineEvent', 'TimelineEventResizeHandler']);
 
 export function useEventRowDropTarget(parameters: useEventRowDropTarget.Parameters) {
-  const { start, end, addPropertiesToDroppedEvent } = parameters;
+  const { start, end, resourceId, addPropertiesToDroppedEvent } = parameters;
 
   const adapter = useAdapter();
   const ref = React.useRef<HTMLDivElement>(null);
@@ -109,6 +109,7 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
 
   useDropTarget({
     ref,
+    resourceId,
     surfaceType: 'timeline',
     getEventDropData,
     isValidDropTarget,
@@ -128,6 +129,11 @@ export namespace useEventRowDropTarget {
      * The data and time at which the row ends.
      */
     end: SchedulerValidDate;
+    /**
+     * The id of the resource to drop the event onto.
+     * If undefined, the event will be dropped outside of any resource.
+     */
+    resourceId: CalendarResourceId | undefined;
     /**
      * Add properties to the event dropped in the row before storing it in the store.
      */

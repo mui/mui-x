@@ -26,7 +26,12 @@ export default function TimelineEventRow({
   });
 
   return (
-    <TimelinePrimitive.EventRow className="TimelineEventRow" start={start} end={end}>
+    <TimelinePrimitive.EventRow
+      className="TimelineEventRow"
+      resourceId={resourceId}
+      start={start}
+      end={end}
+    >
       {occurrencesWithPosition.occurrences.map((occurrence) => (
         <TimelineEvent
           key={occurrence.key}

@@ -16,6 +16,7 @@ export const TimelineEventRow = React.forwardRef(function TimelineEventRow(
     // Internal props
     start,
     end,
+    resourceId,
     addPropertiesToDroppedEvent,
     // Props forwarded to the DOM element
     ...elementProps
@@ -24,6 +25,7 @@ export const TimelineEventRow = React.forwardRef(function TimelineEventRow(
   const { getCursorPositionInElementMs, ref: dropTargetRef } = useEventRowDropTarget({
     start,
     end,
+    resourceId,
     addPropertiesToDroppedEvent,
   });
 

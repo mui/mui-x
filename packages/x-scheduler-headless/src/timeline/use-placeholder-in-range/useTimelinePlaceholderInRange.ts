@@ -80,7 +80,7 @@ export namespace useTimelinePlaceholderInRange {
     /**
      * The resource id of the row in which to render the placeholder.
      */
-    resourceId: string;
+    resourceId: string | undefined;
   }
 
   export type ReturnValue = CalendarEventOccurrenceWithTimePosition | null;

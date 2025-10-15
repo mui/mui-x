@@ -7,6 +7,6 @@ import {
 export type TimelineEventRowProps = {
   start: SchedulerValidDate;
   end: SchedulerValidDate;
-  resourceId: CalendarResourceId;
+  resourceId: CalendarResourceId | undefined;
   occurrences: CalendarEventOccurrence[];
 };
