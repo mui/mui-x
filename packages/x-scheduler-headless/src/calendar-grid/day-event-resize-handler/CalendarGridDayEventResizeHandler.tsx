@@ -28,6 +28,7 @@ export const CalendarGridDayEventResizeHandler = React.forwardRef(
     // Ref hooks
     const ref = React.useRef<HTMLDivElement>(null);
 
+    // Feature hooks
     const getDragData = useEventCallback(({ input }) => ({
       ...contextValue.getSharedDragData(input),
       source: 'TimelineEventResizeHandler',
