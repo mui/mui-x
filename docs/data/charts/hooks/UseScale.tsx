@@ -31,7 +31,7 @@ function CustomDataPoints() {
       {series.map((s) =>
         s.data.map((point, index) => {
           const x = xMapper(xAxis.data?.[index]);
-          const y = yMapper(point);
+          const y = yMapper(point)!;
 
           return (
             <g key={index}>
