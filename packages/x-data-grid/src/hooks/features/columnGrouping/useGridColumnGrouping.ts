@@ -24,7 +24,8 @@ export const columnGroupsStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'columnGroupingModel'>
 > = (state, props, apiRef) => {
   apiRef.current.caches.columnGrouping = {
-    lastColumnGroupingModel: props.columnGroupingModel,
+    lastColumnGroupingModel:
+      props.columnGroupingModel ?? apiRef.current.caches.columnGrouping?.lastColumnGroupingModel,
   };
   if (!props.columnGroupingModel) {
     return state;
