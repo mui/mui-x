@@ -2,7 +2,8 @@ import type { CalendarGridDayEvent } from '../calendar-grid/day-event/CalendarGr
 import type { CalendarGridDayEventResizeHandler } from '../calendar-grid/day-event-resize-handler/CalendarGridDayEventResizeHandler';
 import type { CalendarGridTimeEvent } from '../calendar-grid/time-event/CalendarGridTimeEvent';
 import type { CalendarGridTimeEventResizeHandler } from '../calendar-grid/time-event-resize-handler/CalendarGridTimeEventResizeHandler';
-import type { TimelineEvent } from '../timeline/event';
+import type { TimelineEvent } from '../timeline/event/TimelineEvent';
+import type { TimelineEventResizeHandler } from '../timeline/event-resize-handler/TimelineEventResizeHandler';
 import type { StandaloneEvent } from '../standalone-event';
 
 export interface EventDropDataLookup {
@@ -11,6 +12,7 @@ export interface EventDropDataLookup {
   CalendarGridDayEvent: CalendarGridDayEvent.DragData;
   CalendarGridDayEventResizeHandler: CalendarGridDayEventResizeHandler.DragData;
   TimelineEvent: TimelineEvent.DragData;
+  TimelineEventResizeHandler: TimelineEventResizeHandler.DragData;
   StandaloneEvent: StandaloneEvent.DragData;
 }
 

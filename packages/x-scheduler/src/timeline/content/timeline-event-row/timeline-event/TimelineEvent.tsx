@@ -29,7 +29,7 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
 
   const id = useId(idProp);
   const isDraggable = useStore(store, selectors.isEventDraggable);
-  // const isResizable = useStore(store, selectors.isEventResizable, occurrence.id, 'timeline');
+  const isResizable = useStore(store, selectors.isEventResizable, occurrence.id, 'timeline');
   const color = useStore(store, selectors.eventColor, occurrence.id);
 
   const sharedProps = {
@@ -62,7 +62,13 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       {...sharedProps}
     >
+      {isResizable && (
+        <Timeline.EventResizeHandler side="start" className="TimelineEventResizeHandler" />
+      )}
       {occurrence.title}
+      {isResizable && (
+        <Timeline.EventResizeHandler side="end" className="TimelineEventResizeHandler" />
+      )}
     </Timeline.Event>
   );
 });

@@ -6,13 +6,9 @@ import { CalendarEvent, SchedulerValidDate } from '../../models';
 import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
 import { TimelineEventRowContext } from './TimelineEventRowContext';
 import { useDropTarget } from '../../utils/useDropTarget';
-import {
-  EVENT_CREATION_DEFAULT_LENGTH_MINUTE,
-  EVENT_DRAG_PRECISION_MINUTE,
-  EVENT_DRAG_PRECISION_MS,
-} from '../../constants';
+import { EVENT_DRAG_PRECISION_MINUTE, EVENT_DRAG_PRECISION_MS } from '../../constants';
 
-const isValidDropTarget = buildIsValidDropTarget(['TimelineEvent']);
+const isValidDropTarget = buildIsValidDropTarget(['TimelineEvent', 'TimelineEventResizeHandler']);
 
 export function useEventRowDropTarget(parameters: useEventRowDropTarget.Parameters) {
   const { start, end, addPropertiesToDroppedEvent } = parameters;
@@ -70,6 +66,41 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
         const newEndDate = adapter.addMinutes(newStartDate, eventDurationMinute);
 
         return createDropData(data, newStartDate, newEndDate);
+      }
+
+      // Resize a Timeline Event
+      if (data.source === 'TimelineEventResizeHandler') {
+        if (data.side === 'start') {
+          const cursorDate = addOffsetToDate(
+            start,
+            cursorOffsetMs - data.initialCursorPositionInEventMs,
+          );
+
+          // Ensure the new start date is not after or too close to the end date.
+          const maxStartDate = adapter.addMinutes(data.end, -EVENT_DRAG_PRECISION_MINUTE);
+          const newStartDate = adapter.isBefore(cursorDate, maxStartDate)
+            ? cursorDate
+            : maxStartDate;
+
+          return createDropData(data, newStartDate, data.end);
+        }
+
+        if (data.side === 'end') {
+          // TODO: Avoid JS Date conversion
+          const eventDurationMs =
+            adapter.toJsDate(data.end).getTime() - adapter.toJsDate(data.start).getTime();
+
+          const cursorDate = addOffsetToDate(
+            start,
+            cursorOffsetMs - data.initialCursorPositionInEventMs + eventDurationMs,
+          );
+
+          // Ensure the new end date is not before or too close to the start date.
+          const minEndDate = adapter.addMinutes(data.start, EVENT_DRAG_PRECISION_MINUTE);
+          const newEndDate = adapter.isAfter(cursorDate, minEndDate) ? cursorDate : minEndDate;
+
+          return createDropData(data, data.start, newEndDate);
+        }
       }
 
       return undefined;
