@@ -4,6 +4,10 @@ import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 
 const knobs = {
   // Zoom interactions
+  zoom: {
+    knob: 'title',
+    displayName: 'Zoom interactions',
+  },
   wheel: {
     displayName: 'Wheel',
     knob: 'switch',
@@ -20,10 +24,19 @@ const knobs = {
     defaultValue: false,
   },
   // Pan interactions
+  pan: {
+    knob: 'title',
+    displayName: 'Pan interactions',
+  },
   drag: {
     displayName: 'Drag',
     knob: 'switch',
     defaultValue: true,
+  },
+  pressAndDrag: {
+    displayName: 'Press and drag',
+    knob: 'switch',
+    defaultValue: false,
   },
 };
 
@@ -49,6 +62,9 @@ export default function ZoomAndPanInteractions() {
         const panInteractions = [];
         if (props.drag) {
           panInteractions.push('drag');
+        }
+        if (props.pressAndDrag) {
+          panInteractions.push('pressAndDrag');
         }
 
         const zoomInteractionConfig = {
@@ -95,6 +111,9 @@ export default function ZoomAndPanInteractions() {
         const panInteractions = [];
         if (props.drag) {
           panInteractions.push('drag');
+        }
+        if (props.pressAndDrag) {
+          panInteractions.push('pressAndDrag');
         }
 
         const zoomConfig =

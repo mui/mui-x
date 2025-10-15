@@ -2,6 +2,7 @@ import { ChartPluginSignature } from '../../models';
 import { ChartSeriesType } from '../../../../models/seriesType/config';
 import { SeriesId } from '../../../../models/seriesType/common';
 import { UseChartInteractionSignature } from '../useChartInteraction';
+import { UseChartHighlightSignature } from '../useChartHighlight';
 
 export interface UseChartKeyboardNavigationInstance {}
 
@@ -36,5 +37,5 @@ export type UseChartKeyboardNavigationSignature = ChartPluginSignature<{
   defaultizedParams: UseChartKeyboardNavigationParameters;
   instance: UseChartKeyboardNavigationInstance;
   state: UseChartKeyboardNavigationState;
-  optionalDependencies: [UseChartInteractionSignature];
+  optionalDependencies: [UseChartInteractionSignature, UseChartHighlightSignature];
 }>;

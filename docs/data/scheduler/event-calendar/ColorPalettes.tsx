@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import { CalendarEvent } from '@mui/x-scheduler/primitives/models';
-import { EventCalendar } from '@mui/x-scheduler/material/event-calendar';
+import { CalendarEvent } from '@mui/x-scheduler/models';
+import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import {
   initialEvents,
   defaultVisibleDate,
@@ -18,7 +18,7 @@ export default function ColorPalettes() {
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
-        preferences={{ showWeekends: false }}
+        preferences={{ showWeekends: false, isSidePanelOpen: false }}
       />
     </div>
   );

@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid-premium",
-  "version": "8.13.1",
+  "version": "8.14.0",
   "author": "MUI Team",
   "description": "The Premium plan edition of the MUI X Data Grid Components.",
   "license": "SEE LICENSE IN LICENSE",
@@ -45,7 +45,6 @@
     "@mui/x-data-grid-pro": "workspace:*",
     "@mui/x-internals": "workspace:*",
     "@mui/x-license": "workspace:*",
-    "@types/format-util": "catalog:",
     "clsx": "catalog:",
     "exceljs": "catalog:",
     "prop-types": "catalog:"

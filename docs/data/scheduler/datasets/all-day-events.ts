@@ -2,7 +2,7 @@
 // Non-realistic set focused on edge cases of all-day events positioning.
 
 import { DateTime } from 'luxon';
-import { CalendarEvent, CalendarResource } from '@mui/x-scheduler/primitives/models';
+import { CalendarEvent, CalendarResource } from '@mui/x-scheduler/models';
 
 export const defaultVisibleDate = DateTime.fromISO('2025-07-01T00:00:00');
 
@@ -76,9 +76,9 @@ export const initialEvents: CalendarEvent[] = [
 ];
 
 export const resources: CalendarResource[] = [
-  { name: 'Resource A', id: 'A', eventColor: 'violet' },
-  { name: 'Resource B', id: 'B', eventColor: 'jade' },
-  { name: 'Resource C', id: 'C', eventColor: 'lime' },
-  { name: 'Resource D', id: 'D', eventColor: 'orange' },
-  { name: 'Resource E', id: 'E', eventColor: 'indigo' },
+  { title: 'Resource A', id: 'A', eventColor: 'violet' },
+  { title: 'Resource B', id: 'B', eventColor: 'jade' },
+  { title: 'Resource C', id: 'C', eventColor: 'lime' },
+  { title: 'Resource D', id: 'D', eventColor: 'orange' },
+  { title: 'Resource E', id: 'E', eventColor: 'indigo' },
 ];

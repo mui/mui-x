@@ -202,6 +202,10 @@ const pages: MuiPage[] = [
                 plan: 'premium',
               },
               {
+                pathname: '/x/react-data-grid/server-side-data/pivoting',
+                plan: 'premium',
+              },
+              {
                 pathname: '/x/react-data-grid/server-side-data/recipes',
               },
             ],

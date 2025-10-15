@@ -1,5 +1,8 @@
 {
-  "props": {},
+  "props": {
+    "skipAnimation": { "type": { "name": "bool" } },
+    "skipInteraction": { "type": { "name": "bool" } }
+  },
   "name": "PieArc",
   "imports": [
     "import { PieArc } from '@mui/x-charts/PieChart';",
