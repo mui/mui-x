@@ -185,7 +185,7 @@ You also need to pass the `setTreeDataPath()` prop to revert the operation done 
 
 {{"demo": "TreeDataReordering.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Sync row data with reordered data
+### Reordering persistance
 
 If you want to update the external row data, for example to persist it in the local storage, you can use the `onRowOrderChange()` callback and the Data Grid selectors to get the reordered data and sync with the external data.
 
