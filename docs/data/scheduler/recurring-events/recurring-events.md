@@ -111,7 +111,7 @@ Use either the `byMonthDay` or the `byDay` property (both can't be defined toget
 
   ```
 
-### Yearly
+### Yearly frequency
 
 No extra field is required:
 
