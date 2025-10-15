@@ -26,6 +26,8 @@ import {
 import { ChartSeriesConfig } from '../../models/seriesConfig/seriesConfig.types';
 import { ChartsXAxisProps, ChartsYAxisProps } from '../../../../models/axis';
 import { ComputeResult } from '../useChartCartesianAxis/computeAxisValue';
+import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions/useChartDimensions.selectors';
+import { ChartDrawingArea } from '../../../../hooks/useDrawingArea';
 
 export const selectorChartsTooltipItem = createSelector(
   [selectorChartsLastInteraction, selectorChartsInteractionItem, selectorChartsKeyboardItem],
@@ -46,6 +48,7 @@ export const selectorChartsTooltipItemIsDefined = createSelector(
 export const selectorChartsTooltipItemPosition = createSelector(
   [
     selectorChartsTooltipItem,
+    selectorChartDrawingArea,
     selectorChartSeriesConfig,
     selectorChartXAxis,
     selectorChartYAxis,
@@ -54,6 +57,7 @@ export const selectorChartsTooltipItemPosition = createSelector(
   ],
   function selectorChartsTooltipItemPosition<T extends ChartSeriesType>(
     identifier: ChartItemIdentifierWithData<T> | null,
+    drawingArea: ChartDrawingArea,
     seriesConfig: ChartSeriesConfig<T>,
     { axis: xAxis, axisIds: xAxisIds }: ComputeResult<ChartsXAxisProps>,
     { axis: yAxis, axisIds: yAxisIds }: ComputeResult<ChartsYAxisProps>,
@@ -85,6 +89,7 @@ export const selectorChartsTooltipItemPosition = createSelector(
         return (
           seriesConfig[itemSeries.type as T].tooltipItemPositionGetter?.({
             series,
+            drawingArea,
             axesConfig,
             identifier,
             placement,
