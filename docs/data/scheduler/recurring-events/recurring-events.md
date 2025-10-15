@@ -50,7 +50,7 @@ export interface RecurringEventRecurrenceRule {
    * @default 1
    */
   interval?: number;
-  // ... other optional properties like `byDay` or `byMonthDay` that depends on the frequency
+  // ... other properties like `byDay` or `byMonthDay` that depends on the frequency
   // see the example below or the full RecurringEventRecurrenceRule definition for more details
 }
 ```
