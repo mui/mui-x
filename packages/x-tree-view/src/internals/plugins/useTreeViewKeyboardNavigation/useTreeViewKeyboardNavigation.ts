@@ -61,45 +61,48 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
     labelMap.current = newLabelMap;
   }, [itemMetaLookup, params.getItemId, instance]);
 
-  const getFirstMatchingItem = (itemId: string, query: string): string | null => {
-    // Try matching with accumulated query + new key
-    const cleanQuery = (typeaheadQueryRef.current + query).toLowerCase();
-
-    // If query length > 1, first check if current item matches
-    if (cleanQuery.length > 1 && labelMap.current[itemId]?.startsWith(cleanQuery)) {
-      typeaheadQueryRef.current = cleanQuery;
-      return itemId;
+  const getNextItem = (itemIdToCheck: string) => {
+    const nextItemId = getNextNavigableItem(store.state, itemIdToCheck);
+    // We reached the end of the tree, check from the beginning
+    if (nextItemId === null) {
+      return getFirstNavigableItem(store.state);
     }
 
-    const getNextItem = (itemIdToCheck: string) => {
-      const nextItemId = getNextNavigableItem(store.state, itemIdToCheck);
-      // We reached the end of the tree, check from the beginning
-      if (nextItemId === null) {
-        return getFirstNavigableItem(store.state);
-      }
+    return nextItemId;
+  };
 
-      return nextItemId;
-    };
-
+  const getNextMatchingItem = (itemId: string): string | null => {
     let matchingItemId: string | null = null;
-    let currentItemId: string = getNextItem(itemId);
     const checkedItems: Record<string, true> = {};
+    const query = typeaheadQueryRef.current;
+    // If query length > 1, first check if current item matches
+    let currentItemId: string = query.length > 1 ? itemId : getNextItem(itemId);
     // The "!checkedItems[currentItemId]" condition avoids an infinite loop when there is no matching item.
     while (matchingItemId == null && !checkedItems[currentItemId]) {
       const itemLabel = labelMap.current[currentItemId];
 
-      if (itemLabel?.startsWith(cleanQuery)) {
+      if (itemLabel?.startsWith(query)) {
         matchingItemId = currentItemId;
       } else {
         checkedItems[currentItemId] = true;
         currentItemId = getNextItem(currentItemId);
       }
     }
-    if (matchingItemId) {
-      typeaheadQueryRef.current = cleanQuery;
-    } else if (typeaheadQueryRef.current.length > 0 && !matchingItemId) {
-      typeaheadQueryRef.current = '';
-      matchingItemId = getFirstMatchingItem(itemId, query);
+    return matchingItemId;
+  };
+
+  const getFirstMatchingItem = (itemId: string, newKey: string): string | null => {
+    // Try matching with accumulated query + new key
+    const cleanQuery = (typeaheadQueryRef.current + newKey).toLowerCase();
+
+    // check if the entire typed query matches an item
+    typeaheadQueryRef.current = cleanQuery;
+    let matchingItemId = getNextMatchingItem(itemId);
+
+    // if not, try matching with only the new key
+    if (typeaheadQueryRef.current.length > 0 && !matchingItemId) {
+      typeaheadQueryRef.current = newKey.toLowerCase();
+      matchingItemId = getNextMatchingItem(itemId);
     }
 
     return matchingItemId;
