@@ -67,7 +67,7 @@ export default function ChartsXHighlight(props: {
           />
         )}
 
-        {type === 'line' && value !== null && (
+        {type === 'line' && value !== null && getXPosition(value) != null && (
           <ChartsAxisHighlightPath
             d={`M ${getXPosition(value)} ${top} L ${getXPosition(value)} ${top + height}`}
             className={classes.root}
