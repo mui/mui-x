@@ -12,7 +12,7 @@ const baseState = (overrides: Partial<State> = {}) =>
   }) as State;
 
 storeClasses.forEach((storeClass) => {
-  describe(`Recurrence - ${storeClass.name}`, () => {
+  describe(`Recurring event - ${storeClass.name}`, () => {
     describe('Selector: recurrencePresets', () => {
       it('returns daily, weekly, monthly and yearly presets', () => {
         const state = baseState();
