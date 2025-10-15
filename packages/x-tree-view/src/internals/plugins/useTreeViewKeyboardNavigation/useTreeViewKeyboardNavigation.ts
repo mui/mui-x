@@ -71,7 +71,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
     return nextItemId;
   };
 
-  const getNextMatchingItem = (itemId: string): string | null => {
+  const getNextMatchingItemId = (itemId: string): string | null => {
     let matchingItemId: string | null = null;
     const checkedItems: Record<string, true> = {};
     const query = typeaheadQueryRef.current;
@@ -97,12 +97,12 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
     // check if the entire typed query matches an item
     typeaheadQueryRef.current = cleanQuery;
-    let matchingItemId = getNextMatchingItem(itemId);
+    let matchingItemId = getNextMatchingItemId(itemId);
 
     // if not, try matching with only the new key
     if (typeaheadQueryRef.current.length > 0 && !matchingItemId) {
       typeaheadQueryRef.current = newKey.toLowerCase();
-      matchingItemId = getNextMatchingItem(itemId);
+      matchingItemId = getNextMatchingItemId(itemId);
     }
 
     return matchingItemId;
