@@ -5662,9 +5662,6 @@ packages:
   '@types/node@22.18.10':
     resolution: {integrity: sha512-anNG/V/Efn/YZY4pRzbACnKxNKoBng2VTFydVu8RRs5hQjikP8CQfaeAV59VFSCzKNp90mXiVXW2QzV56rwMrg==}
 
-  '@types/node@22.18.8':
-    resolution: {integrity: sha512-pAZSHMiagDR7cARo/cch1f3rXy0AEXwsVsVH09FcyeJVAzCnGgmYis7P3JidtTUjyadhTeSo8TgRPswstghDaw==}
-
   '@types/node@24.5.2':
     resolution: {integrity: sha512-FYxk1I7wPv3K2XBaoyH2cTnocQEu8AOZ60hPbsyukMPLv5/5qr7V1i8PLHdl6Zf87I+xZXFvPCXYjiTFq+YSDQ==}
 
@@ -16715,10 +16712,6 @@ snapshots:
     dependencies:
       undici-types: 6.21.0
 
-  '@types/node@22.18.8':
-    dependencies:
-      undici-types: 6.21.0
-
   '@types/node@24.5.2':
     dependencies:
       undici-types: 7.12.0
@@ -16794,7 +16787,7 @@ snapshots:
 
   '@types/webpack-bundle-analyzer@4.7.0(@swc/core@1.13.5)(esbuild@0.25.10)':
     dependencies:
-      '@types/node': 22.18.8
+      '@types/node': 22.18.10
       tapable: 2.2.2
       webpack: 5.101.3(@swc/core@1.13.5)(esbuild@0.25.10)
     transitivePeerDependencies:
