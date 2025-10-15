@@ -46,6 +46,7 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
           end: newEnd,
           eventData: data.eventData,
           onEventDrop: data.onEventDrop,
+          resourceId: resourceId === null ? data.eventData.resource : resourceId,
         };
       }
 
@@ -225,6 +226,10 @@ function applyExternalDragOccurrencePlaceholder(
     end: placeholder.end,
     ...placeholder.eventData,
   };
+
+  if (placeholder.resourceId != null) {
+    event.resource = placeholder.resourceId;
+  }
 
   if (addPropertiesToDroppedEvent) {
     Object.assign(event, addPropertiesToDroppedEvent());

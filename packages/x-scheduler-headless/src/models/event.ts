@@ -166,6 +166,11 @@ interface CalendarOccurrencePlaceholderBase {
    */
   end: SchedulerValidDate;
   /**
+   * The resource id of the resource onto which to drop the event.
+   * If undefined, the event will be dropped outside of any resource.
+   */
+  resourceId: CalendarResourceId | undefined;
+  /**
    * Whether the occurrence placeholder should be hidden.
    * This is used when dragging an event outside of the calendar to avoid showing both the placeholder and the drag preview.
    */
@@ -202,11 +207,6 @@ export interface CalendarOccurrencePlaceholderInternalDragOrResize
    * The data of the event to use when dropping the event outside of the Event Calendar.
    */
   originalEvent: CalendarEvent;
-  /**
-   * The resource id of the resource onto which to drop the event.
-   * If undefined, the event will be dropped outside of any resource.
-   */
-  resourceId: CalendarResourceId | undefined;
 }
 
 export interface CalendarOccurrencePlaceholderExternalDrag

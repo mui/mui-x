@@ -6,9 +6,17 @@ import { CalendarEvent, CalendarResourceId, SchedulerValidDate } from '../../mod
 import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
 import { TimelineEventRowContext } from './TimelineEventRowContext';
 import { useDropTarget } from '../../utils/useDropTarget';
-import { EVENT_DRAG_PRECISION_MINUTE, EVENT_DRAG_PRECISION_MS } from '../../constants';
+import {
+  EVENT_CREATION_DEFAULT_LENGTH_MINUTE,
+  EVENT_DRAG_PRECISION_MINUTE,
+  EVENT_DRAG_PRECISION_MS,
+} from '../../constants';
 
-const isValidDropTarget = buildIsValidDropTarget(['TimelineEvent', 'TimelineEventResizeHandler']);
+const isValidDropTarget = buildIsValidDropTarget([
+  'TimelineEvent',
+  'TimelineEventResizeHandler',
+  'StandaloneEvent',
+]);
 
 export function useEventRowDropTarget(parameters: useEventRowDropTarget.Parameters) {
   const { start, end, resourceId, addPropertiesToDroppedEvent } = parameters;
@@ -101,6 +109,19 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
 
           return createDropData(data, data.start, newEndDate);
         }
+      }
+
+      // Move a Standalone Event into the Time Grid
+      if (data.source === 'StandaloneEvent') {
+        const cursorDate = addOffsetToDate(start, cursorOffsetMs);
+        return createDropData(
+          data,
+          cursorDate,
+          adapter.addMinutes(
+            cursorDate,
+            data.eventData.duration ?? EVENT_CREATION_DEFAULT_LENGTH_MINUTE,
+          ),
+        );
       }
 
       return undefined;

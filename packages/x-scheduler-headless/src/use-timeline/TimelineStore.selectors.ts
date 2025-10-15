@@ -41,22 +41,9 @@ export const selectors = {
       if (
         state.occurrencePlaceholder === null ||
         state.occurrencePlaceholder.surfaceType !== 'timeline' ||
-        state.occurrencePlaceholder.isHidden
+        state.occurrencePlaceholder.isHidden ||
+        state.occurrencePlaceholder.resourceId !== resourceId
       ) {
-        return null;
-      }
-
-      // TODO: Render the placeholder when creating a new event, only in the right resource row.
-      if (state.occurrencePlaceholder.type === 'creation') {
-        return null;
-      }
-
-      // TODO: Render the placeholder when dragging a Standalone Event, only in the right resource row.
-      if (state.occurrencePlaceholder.type === 'external-drag') {
-        return null;
-      }
-
-      if (state.occurrencePlaceholder.resourceId !== resourceId) {
         return null;
       }
 

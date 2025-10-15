@@ -31,9 +31,15 @@ When `areEventsResizable` is `true`, the event extremities can be dragged to cha
 
 ### External drag and drop
 
+You can enable the dragging from and to the outside of the Timeline using the `canDragEventsFromTheOutside` and `canDropEventsToTheOutside` props.
+When `canDragEventsFromTheOutside` is `true`, the events created with `<StandaloneEvent />` can be dropped inside the Timeline.
+When `canDropEventsToTheOutside` is `true`, the events from within the Timeline can be dropped outside of it.
+
 :::success
-Not available yet.
+To be able to drag an event to the outside, your events must be draggable, so `areEventsDraggable` must be `true`.
 :::
+
+{{"demo": "ExternalDragAndDrop.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Customization
 
