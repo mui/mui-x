@@ -154,8 +154,8 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
           <div className="ScrollablePlaceholder" />
         </div>
         <div className="DayTimeGridRoot">
-          <CalendarGrid.TimeScrollableContent ref={bodyRef} className="DayTimeGridBody">
-            <div className="DayTimeGridScrollableContent">
+          <div ref={bodyRef} className="DayTimeGridBody">
+            <CalendarGrid.TimeScrollableContent className="DayTimeGridScrollableContent">
               <div className="DayTimeGridTimeAxis" aria-hidden="true">
                 {/* TODO: Handle DST days where there are not exactly 24 hours */}
                 {Array.from({ length: 24 }, (_, hour) => (
@@ -187,8 +187,8 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                   />
                 ))}
               </div>
-            </div>
-          </CalendarGrid.TimeScrollableContent>
+            </CalendarGrid.TimeScrollableContent>
+          </div>
         </div>
       </EventPopoverProvider>
     </CalendarGrid.Root>

@@ -9,6 +9,7 @@ import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-even
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { TimeGridEventProps } from './TimeGridEvent.types';
 import { getColorClassName } from '../../../utils/color-utils';
+import { EventDragPreview } from '../../event-drag-preview';
 import './TimeGridEvent.css';
 import '../index.css';
 
@@ -87,8 +88,6 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   ]);
 
   const sharedProps = {
-    eventId: occurrence.id,
-    occurrenceKey: occurrence.key,
     start: occurrence.start,
     end: occurrence.end,
     ref: forwardedRef,
@@ -120,7 +119,13 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   }
 
   return (
-    <CalendarGrid.TimeEvent isDraggable={isDraggable} {...sharedProps}>
+    <CalendarGrid.TimeEvent
+      isDraggable={isDraggable}
+      eventId={occurrence.id}
+      occurrenceKey={occurrence.key}
+      renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
+      {...sharedProps}
+    >
       {isResizable && (
         <CalendarGrid.TimeEventResizeHandler side="start" className="TimeGridEventResizeHandler" />
       )}

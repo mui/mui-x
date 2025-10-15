@@ -8,9 +8,9 @@ import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-even
 import { selectors } from '@mui/x-scheduler-headless/use-event-calendar';
 import { EventPopoverTrigger } from '../event-popover';
 import { DayGridEvent } from '../event';
+import { useEventPopoverContext } from '../event-popover/EventPopover';
 
 import './DayTimeGrid.css';
-import { useEventPopoverContext } from '../event-popover/EventPopoverContext';
 
 export function DayGridCell(props: DayGridCellProps) {
   const { day, row } = props;
@@ -28,7 +28,7 @@ export function DayGridCell(props: DayGridCellProps) {
   // Feature hooks
   const placeholder = CalendarGrid.usePlaceholderInDay(day.value, row);
 
-  const { startEditing } = useEventPopoverContext();
+  const { open: startEditing } = useEventPopoverContext();
 
   const handleDoubleClick = () => {
     store.setOccurrencePlaceholder({
