@@ -1,9 +1,6 @@
 'use client';
 import * as React from 'react';
-import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
-import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/disable-native-drag-preview';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
-import { useStore } from '@base-ui-components/utils/store';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps, NonNativeButtonProps } from '../../base-ui-copy/utils/types';
 import { useButton } from '../../base-ui-copy/utils/useButton';
@@ -11,9 +8,8 @@ import { CalendarEvent, CalendarEventId, SchedulerValidDate } from '../../models
 import { useAdapter } from '../../use-adapter';
 import { useTimelineStoreContext } from '../../use-timeline-store-context';
 import { selectors } from '../../use-timeline';
-import { useDragPreview } from '../../utils/useDragPreview';
 import { useTimelineEventRowContext } from '../event-row/TimelineEventRowContext';
-import { useEvent } from '../../utils/useEvent';
+import { useDraggableEvent } from '../../utils/useDraggableEvent';
 import { TimelineEventCssVars } from './TimelineEventCssVars';
 import { useElementPositionInCollection } from '../../utils/useElementPositionInCollection';
 import { TimelineEventContext } from './TimelineEventContext';
@@ -32,7 +28,7 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
     eventId,
     occurrenceKey,
     renderDragPreview,
-    isDraggable = false,
+    isDraggable,
     nativeButton = false,
     // Props forwarded to the DOM element
     ...elementProps
@@ -54,21 +50,37 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
   // Ref hooks
   const ref = React.useRef<HTMLDivElement>(null);
 
-  // Selector hooks
-  const isDragging = useStore(store, selectors.isOccurrenceMatchingThePlaceholder, occurrenceKey);
-  const event = useStore(store, selectors.event, eventId)!;
-
-  // State hooks
-  const [isResizing, setIsResizing] = React.useState(false);
-
   // Feature hooks
-  const { state: eventState } = useEvent({ start, end });
+  const getSharedDragData: TimelineEventContext['getSharedDragData'] = useEventCallback((input) => {
+    const offsetBeforeRowStart = Math.max(
+      adapter.toJsDate(rowStart).getTime() - adapter.toJsDate(start).getTime(),
+      0,
+    );
+    const offsetInsideRow = getCursorPositionInElementMs({ input, elementRef: ref });
+    return {
+      eventId,
+      occurrenceKey,
+      event: selectors.event(store.state, eventId)!,
+      start,
+      end,
+      initialCursorPositionInEventMs: offsetBeforeRowStart + offsetInsideRow,
+    };
+  });
 
-  const preview = useDragPreview({
-    type: 'internal-event',
-    data: event,
+  const getDragData = useEventCallback((input) => ({
+    ...getSharedDragData(input),
+    source: 'TimelineEvent',
+  }));
+
+  const { state, preview, setIsResizing } = useDraggableEvent({
+    ref,
+    start,
+    end,
+    occurrenceKey,
+    eventId,
+    isDraggable,
     renderDragPreview,
-    showPreviewOnDragStart: false,
+    getDragData,
   });
 
   const { getButtonProps, buttonRef } = useButton({
@@ -95,27 +107,6 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
 
   const props = React.useMemo(() => ({ style }), [style]);
 
-  const state: TimelineEvent.State = React.useMemo(
-    () => ({ ...eventState, dragging: isDragging, resizing: isResizing }),
-    [eventState, isDragging, isResizing],
-  );
-
-  const getSharedDragData: TimelineEventContext['getSharedDragData'] = useEventCallback((input) => {
-    const offsetBeforeRowStart = Math.max(
-      adapter.toJsDate(rowStart).getTime() - adapter.toJsDate(start).getTime(),
-      0,
-    );
-    const offsetInsideRow = getCursorPositionInElementMs({ input, elementRef: ref });
-    return {
-      eventId,
-      occurrenceKey,
-      event: selectors.event(store.state, eventId)!,
-      start,
-      end,
-      initialCursorPositionInEventMs: offsetBeforeRowStart + offsetInsideRow,
-    };
-  });
-
   const doesEventStartBeforeRowStart = React.useMemo(
     () => adapter.isBefore(start, rowStart),
     [adapter, start, rowStart],
@@ -133,36 +124,8 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
       doesEventStartBeforeRowStart,
       doesEventEndAfterRowEnd,
     }),
-    [getSharedDragData, doesEventStartBeforeRowStart, doesEventEndAfterRowEnd],
+    [setIsResizing, getSharedDragData, doesEventStartBeforeRowStart, doesEventEndAfterRowEnd],
   );
-
-  React.useEffect(() => {
-    if (!isDraggable) {
-      return;
-    }
-
-    // eslint-disable-next-line consistent-return
-    return draggable({
-      element: ref.current!,
-      getInitialData: ({ input }) => ({
-        ...getSharedDragData(input),
-        source: 'TimelineEvent',
-      }),
-      onGenerateDragPreview: ({ nativeSetDragImage }) => {
-        disableNativeDragPreview({ nativeSetDragImage });
-      },
-      onDragStart: ({ location }) => {
-        preview.actions.onDragStart(location);
-      },
-      onDrag: ({ location }) => {
-        preview.actions.onDrag(location);
-      },
-      onDrop: () => {
-        store.setOccurrencePlaceholder(null);
-        preview.actions.onDrop();
-      },
-    });
-  }, [getSharedDragData, isDraggable, store, preview.actions]);
 
   const element = useRenderElement('div', componentProps, {
     state,
@@ -179,36 +142,12 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
 });
 
 export namespace TimelineEvent {
-  export interface State extends useEvent.State {
-    /**
-     * Whether the event is being dragged.
-     */
-    dragging: boolean;
-    /**
-     * Whether the event is being resized.
-     */
-    resizing: boolean;
-  }
+  export interface State extends useDraggableEvent.State {}
 
   export interface Props
     extends BaseUIComponentProps<'div', State>,
       NonNativeButtonProps,
-      useEvent.Parameters,
-      Pick<useDragPreview.Parameters, 'renderDragPreview'> {
-    /**
-     * The unique identifier of the event.
-     */
-    eventId: string | number;
-    /**
-     * The unique identifier of the event occurrence.
-     */
-    occurrenceKey: string;
-    /**
-     * Whether the event can be dragged to change its start and end dates or times without changing the duration.
-     * @default false
-     */
-    isDraggable?: boolean;
-  }
+      Omit<useDraggableEvent.Parameters, 'ref' | 'getDragData'> {}
 
   export interface SharedDragData {
     eventId: CalendarEventId;

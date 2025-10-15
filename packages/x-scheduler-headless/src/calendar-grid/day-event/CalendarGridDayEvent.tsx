@@ -8,7 +8,7 @@ import { useId } from '@base-ui-components/utils/useId';
 import { useButton } from '../../base-ui-copy/utils/useButton';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps, NonNativeButtonProps } from '../../base-ui-copy/utils/types';
-import { useEvent } from '../../utils/useEvent';
+import { useDraggableEvent } from '../../utils/useDraggableEvent';
 import { CalendarEvent, CalendarEventId, SchedulerValidDate } from '../../models';
 import { useAdapter, diffIn } from '../../use-adapter';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
@@ -16,7 +16,6 @@ import { selectors } from '../../use-event-calendar/EventCalendarStore.selectors
 import { getCalendarGridHeaderCellId } from '../../utils/accessibility-utils';
 import { CalendarGridDayEventContext } from './CalendarGridDayEventContext';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
-import { useDragPreview } from '../../utils/useDragPreview';
 import { useCalendarGridDayCellContext } from '../day-cell/CalendarGridDayCellContext';
 import { useCalendarGridRootContext } from '../root/CalendarGridRootContext';
 
@@ -59,46 +58,11 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
 
   // Selector hooks
   const hasPlaceholder = useStore(store, selectors.hasOccurrencePlaceholder);
-  const isDragging = useStore(store, selectors.isOccurrenceMatchingThePlaceholder, occurrenceKey);
-  const event = useStore(store, selectors.event, eventId)!;
 
   // State hooks
-  const [isResizing, setIsResizing] = React.useState(false);
   const id = useId(idProp);
 
   // Feature hooks
-  const { state: eventState } = useEvent({ start, end });
-
-  const preview = useDragPreview({
-    type: 'internal-event',
-    data: event,
-    renderDragPreview,
-    showPreviewOnDragStart: false,
-  });
-
-  const { getButtonProps, buttonRef } = useButton({
-    disabled: !isInteractive,
-    native: nativeButton,
-  });
-
-  // Rendering hooks
-
-  const columnHeaderId = getCalendarGridHeaderCellId(rootId, cellIndex);
-
-  const props = React.useMemo(
-    () => ({
-      id,
-      'aria-labelledby': `${columnHeaderId} ${id}`,
-      style: hasPlaceholder ? EVENT_STYLE_WHILE_DRAGGING : undefined,
-    }),
-    [hasPlaceholder, columnHeaderId, id],
-  );
-
-  const state: CalendarGridDayEvent.State = React.useMemo(
-    () => ({ ...eventState, dragging: isDragging, resizing: isResizing }),
-    [eventState, isDragging, isResizing],
-  );
-
   const getDraggedDay = useEventCallback((input: { clientX: number }) => {
     if (!ref.current) {
       return start;
@@ -124,6 +88,41 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     }),
   );
 
+  const getDragData = useEventCallback((input) => ({
+    ...getSharedDragData(input),
+    source: 'CalendarGridDayEvent',
+    draggedDay: getDraggedDay(input),
+  }));
+
+  const { state, preview, setIsResizing } = useDraggableEvent({
+    ref,
+    start,
+    end,
+    occurrenceKey,
+    eventId,
+    isDraggable,
+    renderDragPreview,
+    getDragData,
+  });
+
+  const { getButtonProps, buttonRef } = useButton({
+    disabled: !isInteractive,
+    native: nativeButton,
+  });
+
+  // Rendering hooks
+
+  const columnHeaderId = getCalendarGridHeaderCellId(rootId, cellIndex);
+
+  const props = React.useMemo(
+    () => ({
+      id,
+      'aria-labelledby': `${columnHeaderId} ${id}`,
+      style: hasPlaceholder ? EVENT_STYLE_WHILE_DRAGGING : undefined,
+    }),
+    [hasPlaceholder, columnHeaderId, id],
+  );
+
   const doesEventStartBeforeRowStart = React.useMemo(
     () => adapter.isBefore(start, rowStart),
     [adapter, start, rowStart],
@@ -141,7 +140,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
       doesEventStartBeforeRowStart,
       doesEventEndAfterRowEnd,
     }),
-    [getSharedDragData, doesEventStartBeforeRowStart, doesEventEndAfterRowEnd],
+    [setIsResizing, getSharedDragData, doesEventStartBeforeRowStart, doesEventEndAfterRowEnd],
   );
 
   React.useEffect(() => {
@@ -188,36 +187,12 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
 });
 
 export namespace CalendarGridDayEvent {
-  export interface State extends useEvent.State {
-    /**
-     * Whether the event is being dragged.
-     */
-    dragging: boolean;
-    /**
-     * Whether the event is being resized.
-     */
-    resizing: boolean;
-  }
+  export interface State extends useDraggableEvent.State {}
 
   export interface Props
     extends BaseUIComponentProps<'div', State>,
       NonNativeButtonProps,
-      useEvent.Parameters,
-      Pick<useDragPreview.Parameters, 'renderDragPreview'> {
-    /**
-     * The unique identifier of the event.
-     */
-    eventId: string | number;
-    /**
-     * The unique identifier of the event occurrence.
-     */
-    occurrenceKey: string;
-    /**
-     * Whether the event can be dragged to change its start and end dates without changing the duration.
-     * @default false
-     */
-    isDraggable?: boolean;
-  }
+      Omit<useDraggableEvent.Parameters, 'ref' | 'getDragData'> {}
 
   export interface SharedDragData {
     eventId: CalendarEventId;
