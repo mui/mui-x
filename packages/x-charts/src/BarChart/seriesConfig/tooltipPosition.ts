@@ -1,6 +1,5 @@
-import { ComputedAxis } from '../../models/axis';
 import type { TooltipItemPositionGetter } from '../../internals/plugins/models/seriesConfig/tooltipItemPositionGetter.types';
-import { getBandSize, getValueCoordinate } from '../useBarPlotData';
+import { getBarDimensions } from '../useBarPlotData';
 
 const tooltipItemPositionGetter: TooltipItemPositionGetter<'bar'> = (params) => {
   const { series, identifier, axesConfig, placement } = params;
@@ -18,50 +17,21 @@ const tooltipItemPositionGetter: TooltipItemPositionGetter<'bar'> = (params) => 
     return null;
   }
 
-  const xScale = axesConfig.x.scale;
-  const yScale = axesConfig.y.scale;
-
-  const verticalLayout = itemSeries.layout === 'vertical';
-
-  const baseAxisConfig = (verticalLayout ? axesConfig.x : axesConfig.y)! as ComputedAxis<'band'>;
-
-  const bandWidth = baseAxisConfig.scale.bandwidth();
-
-  const { barWidth, offset } = getBandSize({
-    bandWidth,
+  const dimensions = getBarDimensions({
+    verticalLayout: itemSeries.layout === 'vertical',
+    xAxisConfig: axesConfig.x,
+    yAxisConfig: axesConfig.y,
+    series: itemSeries,
+    dataIndex: identifier.dataIndex,
     numberOfGroups: series.bar.stackingGroups.length,
-    gapRatio: baseAxisConfig.barGapRatio,
+    groupIndex: series.bar.stackingGroups.findIndex((group) => group.ids.includes(itemSeries.id)),
   });
-  const groupIndex = series.bar.stackingGroups.findIndex((group) =>
-    group.ids.includes(itemSeries.id),
-  );
-  const barOffset = groupIndex * (barWidth + offset);
 
-  const baseValue = baseAxisConfig.data?.[identifier.dataIndex];
-
-  if (baseValue == null || itemSeries.data[identifier.dataIndex] == null) {
+  if (dimensions == null) {
     return null;
   }
 
-  const values = itemSeries.stackedData[identifier.dataIndex];
-  const valueCoordinates = values.map((v) => (verticalLayout ? yScale(v)! : xScale(v)!));
-
-  const minValueCoord = Math.round(Math.min(...valueCoordinates));
-  const maxValueCoord = Math.round(Math.max(...valueCoordinates));
-
-  const { barSize, startCoordinate } = getValueCoordinate(
-    verticalLayout,
-    minValueCoord,
-    maxValueCoord,
-    itemSeries.data[identifier.dataIndex],
-    itemSeries.minBarSize,
-  );
-
-  const x = verticalLayout ? xScale(baseValue)! + barOffset : startCoordinate;
-  const y = verticalLayout ? startCoordinate : yScale(baseValue)! + barOffset;
-  const height = verticalLayout ? barSize : barWidth;
-  const width = verticalLayout ? barWidth : barSize;
-
+  const { x, y, width, height } = dimensions;
   switch (placement) {
     case 'right':
       return { x: x + width, y: y + height / 2 };

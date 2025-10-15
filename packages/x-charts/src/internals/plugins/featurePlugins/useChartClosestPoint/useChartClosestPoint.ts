@@ -47,11 +47,11 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
       prev.voronoi.isVoronoiEnabled === !disableVoronoi
         ? prev
         : {
-          ...prev,
-          voronoi: {
-            isVoronoiEnabled: !disableVoronoi,
+            ...prev,
+            voronoi: {
+              isVoronoiEnabled: !disableVoronoi,
+            },
           },
-        },
     );
   }, [store, disableVoronoi]);
 
@@ -178,7 +178,10 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
       }
 
       const { seriesId, dataIndex } = closestPoint;
-      instance.setItemInteraction?.({ type: 'scatter', seriesId, dataIndex }, { interaction: 'pointer' });
+      instance.setItemInteraction?.(
+        { type: 'scatter', seriesId, dataIndex },
+        { interaction: 'pointer' },
+      );
       instance.setHighlight?.({
         seriesId,
         dataIndex,
