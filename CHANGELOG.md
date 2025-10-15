@@ -6,18 +6,19 @@ All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
 ## 8.14.1
-<!-- generated comparing v8.14.0..master -->
+
 _Oct 16, 2025_
 
 We'd like to extend a big thank you to the 12 contributors who made this release possible. Here are some highlights ✨:
 
-TODO INSERT HIGHLIGHTS
+- 🐞 Bugfixes
+- 📚 Documentation improvements
 
 Special thanks go out to the community members for their valuable contributions:
-@arminmeh, @brijeshb42, @djpremier, @jacknot, @mellis481, @noraleonte, @sai6855
+@djpremier, @jacknot, @mellis481, @sai6855
 
 The following are all team members who have contributed to this release:
-@bernardobelchior, @cherniavskii, @flaviendelangle, @Janpot, @JCQuintas
+@arminmeh, @bernardobelchior, @brijeshb42, @cherniavskii, @flaviendelangle, @Janpot, @JCQuintas, @noraleonte
 
 ### Data Grid
 
