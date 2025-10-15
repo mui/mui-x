@@ -6,4 +6,5 @@ export type {
   SchedulerEventModelStructure,
   SchedulerResourceModelStructure,
   RRuleSpec,
+  CalendarOccurrencePlaceholderExternalDragData,
 } from '@mui/x-scheduler-headless/models';

@@ -12,9 +12,17 @@ export const SchedulerStoreContext = React.createContext<SchedulerStoreInContext
   null,
 );
 
-export function useSchedulerStoreContext<TEvent extends object, TResource extends object>() {
+export function useSchedulerStoreContext<TEvent extends object, TResource extends object>(
+  optional: true,
+): SchedulerStoreInContext<TEvent, TResource> | null;
+export function useSchedulerStoreContext<TEvent extends object, TResource extends object>(
+  optional?: false,
+): SchedulerStoreInContext<TEvent, TResource>;
+export function useSchedulerStoreContext<TEvent extends object, TResource extends object>(
+  optional = false,
+) {
   const context = React.useContext(SchedulerStoreContext);
-  if (context == null) {
+  if (context == null && !optional) {
     throw new Error(
       'useSchedulerStoreContext must be used within an <EventCalendar /> or a <Timeline /> component',
     );

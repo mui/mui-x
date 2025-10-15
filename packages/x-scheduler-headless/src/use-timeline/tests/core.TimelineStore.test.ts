@@ -27,6 +27,8 @@ describe('Core - TimelineStore', () => {
         isMultiDayEvent: DEFAULT_IS_MULTI_DAY_EVENT,
         areEventsDraggable: false,
         areEventsResizable: false,
+        canDragEventsFromTheOutside: false,
+        canDropEventsToTheOutside: false,
         eventColor: 'jade',
         showCurrentTimeIndicator: true,
         occurrencePlaceholder: null,

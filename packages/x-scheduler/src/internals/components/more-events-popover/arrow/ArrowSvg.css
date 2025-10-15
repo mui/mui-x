@@ -1,0 +1,11 @@
+.ArrowFill {
+  fill: var(--surface);
+}
+
+.ArrowOuterStroke {
+  fill: var(--border-color);
+}
+
+.ArrowInnerStroke {
+  fill: var(--surface-color);
+}

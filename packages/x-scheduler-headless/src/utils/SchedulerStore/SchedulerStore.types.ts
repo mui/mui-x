@@ -73,6 +73,16 @@ export interface SchedulerState<TEvent extends object = any> {
    */
   areEventsResizable: boolean;
   /**
+   * Whether events can be dragged from outside of the calendar and dropped into it.
+   */
+  canDragEventsFromTheOutside: boolean;
+  /**
+   * Whether events can be dragged from inside of the calendar and dropped outside of it.
+   * If true, when the mouse leaves the calendar, the event won't be rendered inside the calendar anymore.
+   * If false, when the mouse leaves the calendar, the event will be rendered in its last valid position inside the calendar.
+   */
+  canDropEventsToTheOutside: boolean;
+  /**
    * The color palette used for all events.
    */
   eventColor: CalendarEventColor;
@@ -145,6 +155,18 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
    * @default false
    */
   areEventsResizable?: boolean;
+  /**
+   * Whether events can be dragged from outside of the calendar and dropped into it.
+   * @default false
+   */
+  canDragEventsFromTheOutside?: boolean;
+  /**
+   * Whether events can be dragged from inside of the calendar and dropped outside of it.
+   * If true, when the mouse leaves the calendar, the event won't be rendered inside the calendar anymore.
+   * If false, when the mouse leaves the calendar, the event will be rendered in its last valid position inside the calendar.
+   * @default false
+   */
+  canDropEventsToTheOutside?: boolean;
   /**
    * Whether the component should display the current time indicator.
    * @default true

@@ -121,6 +121,8 @@ export class SchedulerStore<
       adapter,
       areEventsDraggable: parameters.areEventsDraggable ?? false,
       areEventsResizable: parameters.areEventsResizable ?? false,
+      canDragEventsFromTheOutside: parameters.canDragEventsFromTheOutside ?? false,
+      canDropEventsToTheOutside: parameters.canDropEventsToTheOutside ?? false,
       eventColor: parameters.eventColor ?? DEFAULT_EVENT_COLOR,
       showCurrentTimeIndicator: parameters.showCurrentTimeIndicator ?? true,
     };
