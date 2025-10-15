@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
+import { useFirstRender } from '@mui/x-internals/useFirstRender';
 import { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { GridPrivateApiCommunity } from '../models/api/gridApiCommunity';
 import { useGridInitialization } from '../hooks/core/useGridInitialization';
@@ -67,7 +68,6 @@ import {
 import { propsStateInitializer } from '../hooks/core/useGridProps';
 import { useGridDataSource } from '../hooks/features/dataSource/useGridDataSource';
 import { GridConfiguration } from '../models/configuration/gridConfiguration';
-import { useFirstRender } from '@mui/x-internals/useFirstRender';
 
 export const useDataGridComponent = (
   apiRef: RefObject<GridPrivateApiCommunity>,
