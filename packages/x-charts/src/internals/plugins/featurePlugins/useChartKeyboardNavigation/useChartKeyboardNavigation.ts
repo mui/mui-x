@@ -123,6 +123,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
 
   React.useEffect(() => {
     const element = svgRef.current;
+
     if (!element || !params.enableKeyboardNavigation) {
       return undefined;
     }
@@ -154,6 +155,12 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
           event.preventDefault();
           return {
             ...prevState,
+            ...(prevState.highlight && {
+              highlight: { ...prevState.highlight, lastUpdate: 'keyboard' },
+            }),
+            ...(prevState.interaction && {
+              interaction: { ...prevState.interaction, lastUpdate: 'keyboard' },
+            }),
             keyboardNavigation: {
               ...prevState.keyboardNavigation,
               item: newFocusedItem,
@@ -190,9 +197,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     [store, params.enableKeyboardNavigation],
   );
 
-  return {
-    instance: {},
-  };
+  return {};
 };
 
 useChartKeyboardNavigation.getInitialState = (params) => ({

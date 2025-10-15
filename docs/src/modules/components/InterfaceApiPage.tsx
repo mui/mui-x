@@ -23,7 +23,7 @@ import {
   InterfaceApiContent,
 } from 'docsx/scripts/api/buildInterfacesDocumentation';
 import { TableOfContentsEntry } from '@mui/internal-markdown';
-import kebabCase from 'lodash/kebabCase';
+import { kebabCase } from 'es-toolkit/string';
 
 type HeaderHash = 'demos' | 'import';
 

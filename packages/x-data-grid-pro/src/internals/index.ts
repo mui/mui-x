@@ -54,7 +54,6 @@ export {
   gridDataSourceErrorSelector,
   gridDataSourceLoadingIdSelector,
 } from '../hooks/features/dataSource/gridDataSourceSelector';
-export { getGroupKeys } from '../hooks/features/dataSource/utils';
 
 export type {
   GridExperimentalProFeatures,

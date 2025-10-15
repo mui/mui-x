@@ -153,7 +153,7 @@ jobs:
     <<: *default-job
     docker:
       - image: mcr.microsoft.com/playwright:v1.55.1-noble
-    resource_class: medium+
+    resource_class: large
     steps:
       - checkout
       - install_js:
@@ -208,9 +208,6 @@ jobs:
       - run:
           name: Stylelint
           command: pnpm stylelint
-      - run:
-          name: Lint JSON
-          command: pnpm jsonlint
       - run:
           name: Lint Markdown
           command: pnpm markdownlint

@@ -277,6 +277,7 @@
     "category": "Visible Columns",
     "description": "Get the visible pinned columns model."
   },
+  { "name": "gridPivotModelSelector", "returnType": "GridPivotModel", "description": "" },
   {
     "name": "gridPreferencePanelStateSelector",
     "returnType": "GridPreferencePanelState",
