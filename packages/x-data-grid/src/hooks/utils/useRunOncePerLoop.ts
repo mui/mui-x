@@ -23,7 +23,11 @@ export function useRunOncePerLoop<T extends (...args: any[]) => void>(callback: 
   return {
     schedule,
     cancel: () => {
-      scheduledCallbackRef.current = null;
+      if (scheduledCallbackRef.current) {
+        scheduledCallbackRef.current = null;
+        return true;
+      }
+      return false;
     },
   };
 }

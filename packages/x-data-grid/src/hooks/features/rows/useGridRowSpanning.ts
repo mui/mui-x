@@ -15,8 +15,6 @@ import type { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { getUnprocessedRange, isRowContextInitialized, getCellValue } from './gridRowSpanningUtils';
 import { useGridEvent } from '../../utils/useGridEvent';
 import { runIf } from '../../../utils/utils';
-import { gridPageSizeSelector } from '../pagination';
-import { gridDataRowIdsSelector } from './gridRowsSelector';
 import { useRunOncePerLoop } from '../../utils/useRunOncePerLoop';
 
 export interface GridRowSpanningState extends RowSpanningState {}
@@ -30,13 +28,6 @@ const EMPTY_CACHES: RowSpanningState['caches'] = {
 };
 const EMPTY_RANGE: RowRange = { firstRowIndex: 0, lastRowIndex: 0 };
 const EMPTY_STATE = { caches: EMPTY_CACHES, processedRange: EMPTY_RANGE };
-
-/**
- * Default number of rows to process during state initialization to avoid flickering.
- * Number `20` is arbitrarily chosen to be large enough to cover most of the cases without
- * compromising performance.
- */
-const DEFAULT_ROWS_TO_PROCESS = 20;
 
 const computeRowSpanningState = (
   apiRef: RefObject<GridPrivateApiCommunity>,
@@ -151,83 +142,15 @@ const computeRowSpanningState = (
   return { caches: { spannedCells, hiddenCells, hiddenCellOriginMap }, processedRange };
 };
 
-const getInitialRangeToProcess = (
-  props: Pick<DataGridProcessedProps, 'pagination'>,
-  apiRef: React.RefObject<GridPrivateApiCommunity>,
-) => {
-  const rowCount = gridDataRowIdsSelector(apiRef).length;
-
-  if (props.pagination) {
-    const pageSize = gridPageSizeSelector(apiRef);
-    let paginationLastRowIndex = DEFAULT_ROWS_TO_PROCESS;
-    if (pageSize > 0) {
-      paginationLastRowIndex = pageSize - 1;
-    }
-    return {
-      firstRowIndex: 0,
-      lastRowIndex: Math.min(paginationLastRowIndex, rowCount),
-    };
-  }
-
-  return {
-    firstRowIndex: 0,
-    lastRowIndex: Math.min(DEFAULT_ROWS_TO_PROCESS, rowCount),
-  };
-};
-
 /**
  * @requires columnsStateInitializer (method) - should be initialized before
  * @requires rowsStateInitializer (method) - should be initialized before
  * @requires filterStateInitializer (method) - should be initialized before
  */
-export const rowSpanningStateInitializer: GridStateInitializer = (state, props, apiRef) => {
-  if (!props.rowSpanning) {
-    return {
-      ...state,
-      rowSpanning: EMPTY_STATE,
-    };
-  }
-
-  const rowIds = state.rows!.dataRowIds || [];
-  const orderedFields = state.columns!.orderedFields || [];
-  const dataRowIdToModelLookup = state.rows!.dataRowIdToModelLookup;
-  const columnsLookup = state.columns!.lookup;
-  const isFilteringPending =
-    Boolean(state.filter!.filterModel!.items!.length) ||
-    Boolean(state.filter!.filterModel!.quickFilterValues?.length);
-
-  if (
-    !rowIds.length ||
-    !orderedFields.length ||
-    !dataRowIdToModelLookup ||
-    !columnsLookup ||
-    isFilteringPending
-  ) {
-    return {
-      ...state,
-      rowSpanning: EMPTY_STATE,
-    };
-  }
-
-  const rangeToProcess = getInitialRangeToProcess(props, apiRef);
-  const rows = rowIds.map((id) => ({
-    id,
-    model: dataRowIdToModelLookup[id!],
-  })) as GridRowEntry<GridValidRowModel>[];
-  const colDefs = orderedFields.map((field) => columnsLookup[field!]) as GridColDef[];
-
-  const rowSpanning = computeRowSpanningState(
-    apiRef,
-    colDefs,
-    rows,
-    rangeToProcess,
-    rangeToProcess,
-    true,
-  );
-
+export const rowSpanningStateInitializer: GridStateInitializer = (state) => {
   return {
     ...state,
-    rowSpanning,
+    rowSpanning: EMPTY_STATE,
   };
 };
 
@@ -315,8 +238,8 @@ export const useGridRowSpanning = (
     apiRef,
     'renderedRowsIntervalChange',
     runIf(props.rowSpanning, (renderContext: GridRenderContext) => {
-      cancel();
-      updateRowSpanningState(renderContext);
+      const didHavePendingReset = cancel();
+      updateRowSpanningState(renderContext, didHavePendingReset);
     }),
   );
 
