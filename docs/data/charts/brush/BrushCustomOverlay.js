@@ -27,12 +27,12 @@ function CustomBrushOverlay() {
 
   const color = theme.palette.primary.main;
 
-  // Only show if there's meaningful movement
-  if (rectWidth < 2) {
+  if (rectWidth < 1) {
     return null;
   }
 
   // Calculate the approximate data indices based on x position
+  // Not sure how to solve this in a more direct way without approximation.
   const dataPointWidth = width / (marketData.length - 1);
   const startIndex = Math.round((clampedStartX - left) / dataPointWidth);
   const currentIndex = Math.round((clampedCurrentX - left) / dataPointWidth);
@@ -82,7 +82,7 @@ function CustomBrushOverlay() {
       />
       {/* Start label */}
       <g transform={`translate(${clampedStartX}, ${top + 15})`}>
-        <rect x={-35} y={0} width={70} height={24} fill={color} rx={4} />
+        <rect x={-30} y={0} width={60} height={24} fill={color} rx={4} />
         <text
           x={0}
           y={16}
@@ -97,7 +97,7 @@ function CustomBrushOverlay() {
 
       {/* End label */}
       <g transform={`translate(${clampedCurrentX}, ${top + 15})`}>
-        <rect x={-35} y={0} width={70} height={24} fill={color} rx={4} />
+        <rect x={-30} y={0} width={60} height={24} fill={color} rx={4} />
         <text
           x={0}
           y={16}
