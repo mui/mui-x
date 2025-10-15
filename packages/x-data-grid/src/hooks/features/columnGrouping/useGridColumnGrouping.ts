@@ -29,12 +29,7 @@ export const columnGroupsStateInitializer: GridStateInitializer<
   if (!props.columnGroupingModel) {
     return {
       ...state,
-      columnGrouping: {
-        lookup: undefined,
-        unwrappedGroupingModel: undefined,
-        headerStructure: undefined,
-        maxDepth: undefined,
-      },
+      columnGrouping: undefined,
     };
   }
 
