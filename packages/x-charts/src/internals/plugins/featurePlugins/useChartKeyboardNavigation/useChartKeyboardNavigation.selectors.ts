@@ -110,7 +110,7 @@ export const selectorChartsKeyboardItem = createSelector(
     return {
       type: seriesType,
       seriesId,
-      dataIndex: seriesType === 'line' ? undefined : dataIndex,
+      dataIndex,
     } as BarItemIdentifier | LineItemIdentifier | ScatterItemIdentifier | PieItemIdentifier;
   },
 );

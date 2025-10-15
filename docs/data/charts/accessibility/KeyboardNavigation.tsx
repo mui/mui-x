@@ -97,6 +97,7 @@ function Chart<T extends ChartType = ChartType>({
           height={300}
           xAxis={[{ data: data.map((p) => p.x1).toSorted((a, b) => a - b) }]}
           series={series}
+          slotProps={{ tooltip: { trigger: 'item' } }}
         />
       );
     case 'bar':
