@@ -2,14 +2,23 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import {
   DataGridPremium,
+  GridColDef,
   useKeepGroupedColumnsHidden,
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
-import Chip from '@mui/material/Chip';
+import Chip, { ChipProps } from '@mui/material/Chip';
 
 const SEPARATOR = '___MULTI_COL___';
 
-const rows = [
+interface Task {
+  id: number;
+  label: string;
+  detail: string;
+  assignee: string;
+  priority: 'Low' | 'Medium' | 'High';
+}
+
+const rows: Task[] = [
   {
     id: 1,
     label: 'Design mockups',
@@ -68,7 +77,7 @@ const rows = [
   },
 ];
 
-const columns = [
+const columns: GridColDef<Task>[] = [
   {
     field: 'assignee',
     headerName: 'Assignee',
@@ -85,7 +94,7 @@ const columns = [
           return null;
         }
         const val = params.value.split(SEPARATOR);
-        let color = 'default';
+        let color: ChipProps['color'] = 'default';
         if (val[1] === 'High') {
           color = 'error';
         } else if (val[1] === 'Medium') {
@@ -110,7 +119,7 @@ const columns = [
   },
 ];
 
-export default function GroupedColumns() {
+export default function RowGroupingMultipleFields() {
   const apiRef = useGridApiRef();
   const initialState = useKeepGroupedColumnsHidden({
     apiRef,
