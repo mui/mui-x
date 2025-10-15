@@ -6,12 +6,17 @@ description: TK.
 # Build a Data Grid with Server-side Data
 
 This tutorial walks you through building a Data Grid that fetches data from a server with pagination, sorting, and filtering.
+The primary purpose is to demonstrate the use of the [Data Source layer](/x/react-data-grid/server-side-data/), which streamlines the development and maintenance of key Data Grid features by providing an interface for communications between the Grid on the client and the data on the server.
 
 ## Prerequisites
 
 - Basic React knowledge
 - Understanding of TypeScript interfaces
 - Familiarity with async/await and fetch API
+
+:::success
+While it isn't necesary to read the documentation on [server-side data in the Data Grid](/x/react-data-grid/server-side-data/) before proceeding, you may want to familiarize yourself the key concepts there to better understand how and why to use the Data Source layer.
+:::
 
 ## Part one: app setup
 
@@ -72,7 +77,7 @@ pnpm create vite@latest . -- --template react-ts
 pnpm install
 ```
 
-Install MUI dependencies:
+Install Material UI and MUI X dependencies:
 
 ```bash
 pnpm install @mui/material @emotion/react @emotion/styled @mui/icons-material @mui/x-data-grid-pro @fontsource/roboto
@@ -80,7 +85,7 @@ pnpm install @mui/material @emotion/react @emotion/styled @mui/icons-material @m
 
 ### 4. Set up the server code
 
-Create `server/src/index.ts`:
+Create `server/src/index.ts` and add the following code:
 
 ```ts
 import express from 'express';
@@ -551,7 +556,7 @@ import React, { useMemo } from 'react';
 import { DataGridPro, type GridColDef, type GridDataSource, type GridGetRowsParams, type GridGetRowsResponse } from '@mui/x-data-grid-pro';
 import { Box, Typography } from '@mui/material';
 
-const EmployeeDataGrid: React.FC = () => {
+const EmployeeDataGrid = () => {
   return (
     <Box sx={{ height: 600, width: '100%' }}>
       <Typography variant="h4" component="h1" gutterBottom>
@@ -626,8 +631,8 @@ The server runs on `http://localhost:3001` and the client on `http://localhost:5
 
 ## Part two: Data Grid setup
 
-In this section, you'll build out the grid's data fetching functionality.
-All steps that follow take place in `EmployeeDataGrid.tsx`.
+In this section, you'll build out the Grid's data fetching functionality.
+All steps that follow take place in the `EmployeeDataGrid.tsx` component you created in step 5.
 
 ### 8. Define the data structure
 
@@ -664,7 +669,7 @@ interface ApiResponse {
 Define how each column should appear and behave:
 
 ```ts
-const EmployeeDataGrid: React.FC = () => {
+const EmployeeDataGrid = () => {
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 80 },
     { field: 'name', headerName: 'Name', width: 200 },
@@ -687,7 +692,7 @@ const EmployeeDataGrid: React.FC = () => {
 
 ### 10. Set up GridDataSource
 
-The `GridDataSource` tells the grid how to fetch data:
+The `GridDataSource` tells the Grid how to fetch data:
 
 ```ts
   const columns: GridColDef[] //...
@@ -767,7 +772,7 @@ getRows: async (params: GridGetRowsParams): Promise<GridGetRowsResponse> => {
 
 ### 13. Return the data to the grid
 
-Return the data in the format the grid expects:
+Return the data in the format the Grid expects:
 
 ```ts
 return {
@@ -778,7 +783,7 @@ return {
 
 ### 14. Put it all together
 
-Combining all the previous steps in part two, the complete `getRows` function looks like this:
+Combining steps 10 through 13, the complete Data Source looks like this:
 
 ```ts
 const dataSource: GridDataSource = useMemo(
@@ -813,7 +818,7 @@ const dataSource: GridDataSource = useMemo(
 
 ### 15. Render the Data Grid
 
-Finally, render the grid with your configuration:
+Finally, render the Grid with your configuration:
 
 ```ts
 <DataGridPro
@@ -941,3 +946,9 @@ const EmployeeDataGrid: React.FC = () => {
 
 export default EmployeeDataGrid;
 ```
+
+Now your Vite app should successfully fetch and render the dummy data from your Express.js server.
+
+## Learn more
+
+To learn more about the features covered in this tutorial, check out the [server-side data documentation](/x/react-data-grid/server-side-data/).
