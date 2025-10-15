@@ -24,11 +24,18 @@ export const columnGroupsStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'columnGroupingModel'>
 > = (state, props, apiRef) => {
   apiRef.current.caches.columnGrouping = {
-    lastColumnGroupingModel:
-      props.columnGroupingModel ?? apiRef.current.caches.columnGrouping?.lastColumnGroupingModel,
+    lastColumnGroupingModel: props.columnGroupingModel,
   };
   if (!props.columnGroupingModel) {
-    return state;
+    return {
+      ...state,
+      columnGrouping: {
+        lookup: undefined,
+        unwrappedGroupingModel: undefined,
+        headerStructure: undefined,
+        maxDepth: undefined,
+      },
+    };
   }
 
   const columnFields = gridColumnFieldsSelector(apiRef);
