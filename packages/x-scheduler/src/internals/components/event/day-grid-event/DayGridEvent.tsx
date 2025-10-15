@@ -10,6 +10,7 @@ import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-even
 import { DayGridEventProps } from './DayGridEvent.types';
 import { getColorClassName } from '../../../utils/color-utils';
 import { useTranslations } from '../../../utils/TranslationsContext';
+import { EventDragPreview } from '../../event-drag-preview';
 import './DayGridEvent.css';
 // TODO: Create a standalone component for the resource color pin instead of re-using another component's CSS classes
 import '../../resource-legend/ResourceLegend.css';
@@ -68,7 +69,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
         return (
           <div className="DayGridEventCardWrapper">
             <span
-              className="ResourceLegendColor"
+              className="EventColorIndicator"
               role="img"
               aria-label={
                 resource?.title
@@ -152,6 +153,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
       start={occurrence.start}
       end={occurrence.end}
       isDraggable={isDraggable}
+      renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       aria-hidden={variant === 'invisible'}
       {...sharedProps}
     >
