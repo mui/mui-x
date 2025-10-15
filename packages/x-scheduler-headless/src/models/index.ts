@@ -3,4 +3,5 @@ export * from './event';
 export * from './resource';
 export * from './view';
 export * from './preferences';
-export * from './recurring-event';
+export * from './recurringEvent';
+export * from './dragAndDrop';
