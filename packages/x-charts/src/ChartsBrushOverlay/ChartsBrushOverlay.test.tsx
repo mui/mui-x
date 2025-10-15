@@ -25,9 +25,8 @@ const barChartProps = {
   height: 130,
   margin: 0,
   slotProps: { tooltip: { trigger: 'none' } },
-  zoomInteractionConfig: {
-    zoom: ['brush'],
-    pan: [],
+  brushConfig: {
+    enabled: true,
   },
 } as const;
 
