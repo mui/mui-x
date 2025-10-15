@@ -6,7 +6,7 @@ description: TK.
 # Build a Data Grid with Server-side Data
 
 This tutorial walks you through building a Data Grid that fetches data from a server with pagination, sorting, and filtering.
-The primary purpose is to demonstrate the use of the [Data Source layer](/x/react-data-grid/server-side-data/), which streamlines the development and maintenance of key Data Grid features by providing an interface for communications between the Grid on the client and the data on the server.
+The primary purpose is to demonstrate the use of the [Data Source layer](/x/react-data-grid/server-side-data/), which streamlines the development of key Data Grid features when working with server-side data by providing an interface for communications between the Grid on the client and the data on the server.
 
 ## Prerequisites
 
@@ -80,7 +80,7 @@ pnpm install
 Install Material UI and MUI X dependencies:
 
 ```bash
-pnpm install @mui/material @emotion/react @emotion/styled @mui/icons-material @mui/x-data-grid-pro @fontsource/roboto
+pnpm install @mui/material @emotion/react @emotion/styled @mui/icons-material @mui/x-data-grid @fontsource/roboto
 ```
 
 ### 4. Set up the server code
@@ -821,7 +821,7 @@ const dataSource: GridDataSource = useMemo(
 Finally, render the Grid with your configuration:
 
 ```ts
-<DataGridPro
+<DataGrid
   columns={columns}
   dataSource={dataSource}
   pagination
@@ -852,7 +852,7 @@ return (
       Server-side data with pagination, sorting, and filtering
     </Typography>
 
-    <DataGridPro
+    <DataGrid
       columns={columns}
       dataSource={dataSource}
       pagination
@@ -889,7 +889,7 @@ interface ApiResponse {
   pageSize: number;
 }
 
-const EmployeeDataGrid: React.FC = () => {
+const EmployeeDataGrid = () => {
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 80 },
     { field: 'name', headerName: 'Name', width: 200 },
@@ -933,7 +933,7 @@ const EmployeeDataGrid: React.FC = () => {
         Server-side data with pagination, sorting, and filtering
       </Typography>
 
-      <DataGridPro
+      <DataGrid
         columns={columns}
         dataSource={dataSource}
         pagination
