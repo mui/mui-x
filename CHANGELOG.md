@@ -69,12 +69,6 @@ Same changes as in `@mui/x-charts-pro@8.14.1`.
 
 ### Tree View
 
-From https://github.com/mui/mui-x/pull/19092
-
-- Corrects errors in TreeView docs
-
-- [x] I have followed (at least) the [PR section of the contributing guide](https://github.com/mui/mui-x/blob/HEAD/CONTRIBUTING.md#sending-a-pull-request).
-
 #### `@mui/x-tree-view@8.14.1`
 
 - [tree view] Do not forward the `ownerState` to the icon (#19772) @flaviendelangle
