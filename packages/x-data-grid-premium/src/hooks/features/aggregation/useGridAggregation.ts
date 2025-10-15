@@ -222,7 +222,7 @@ export const useGridAggregation = (
     };
   }, []);
 
-  const deferredApplyAggregation = useRunOncePerLoop(applyAggregation);
+  const { schedule: deferredApplyAggregation } = useRunOncePerLoop(applyAggregation);
 
   const aggregationApi: GridAggregationApi = {
     setAggregationModel,

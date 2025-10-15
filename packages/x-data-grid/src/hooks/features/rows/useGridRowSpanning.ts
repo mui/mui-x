@@ -300,7 +300,8 @@ export const useGridRowSpanning = (
   // - The sorting is applied
   // - The `paginationModel` is updated
   // - The rows are updated
-  const deferredUpdateRowSpawnningState = useRunOncePerLoop(updateRowSpanningState);
+  const { schedule: deferredUpdateRowSpawnningState, cancel } =
+    useRunOncePerLoop(updateRowSpanningState);
 
   const resetRowSpanningState = React.useCallback(() => {
     const renderContext = gridRenderContextSelector(apiRef);
@@ -313,7 +314,10 @@ export const useGridRowSpanning = (
   useGridEvent(
     apiRef,
     'renderedRowsIntervalChange',
-    runIf(props.rowSpanning, resetRowSpanningState),
+    runIf(props.rowSpanning, (renderContext: GridRenderContext) => {
+      cancel();
+      updateRowSpanningState(renderContext);
+    }),
   );
 
   useGridEvent(apiRef, 'sortedRowsSet', runIf(props.rowSpanning, resetRowSpanningState));
