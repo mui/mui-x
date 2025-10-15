@@ -9,8 +9,8 @@ import {
   useGridApiInitialization,
   useGridRowsOverridableMethods,
   useGridParamsOverridableMethods,
+  useMaterialCSSVariables,
 } from '@mui/x-data-grid/internals';
-import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useDataGridProComponent } from './useDataGridProComponent';
 import { DataGridProProps } from '../models/dataGridProProps';

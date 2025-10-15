@@ -16,8 +16,8 @@ import {
   GridConfiguration,
   useGridApiInitialization,
   getRowValue,
+  useMaterialCSSVariables,
 } from '@mui/x-data-grid-pro/internals';
-import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useDataGridPremiumComponent } from './useDataGridPremiumComponent';
 import {
