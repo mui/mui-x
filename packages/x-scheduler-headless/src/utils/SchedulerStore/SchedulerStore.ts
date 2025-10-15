@@ -24,7 +24,7 @@ import {
   applyRecurringUpdateFollowing,
   applyRecurringUpdateAll,
   applyRecurringUpdateOnlyThis,
-} from '../recurrence-utils';
+} from '../recurring-event-utils';
 import { selectors } from './SchedulerStore.selectors';
 import { shouldUpdateOccurrencePlaceholder } from './SchedulerStore.utils';
 import { TimeoutManager } from '../TimeoutManager';

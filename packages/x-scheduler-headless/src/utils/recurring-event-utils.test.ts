@@ -26,11 +26,11 @@ import {
   applyRecurringUpdateAll,
   applyRecurringUpdateOnlyThis,
   WEEK_DAYS,
-} from './recurrence-utils';
+} from './recurring-event-utils';
 import { diffIn } from '../use-adapter';
 import { mergeDateAndTime } from './date-utils';
 
-describe('recurrence-utils', () => {
+describe('recurring-event-utils', () => {
   const makeRecurringEvent = (overrides: Partial<CalendarEvent> = {}): CalendarEvent => ({
     id: 'recurring',
     title: 'Recurring Event',
