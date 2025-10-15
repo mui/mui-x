@@ -58,9 +58,14 @@ export default function AssistantWithCharts() {
             initialState={initialState}
             pagination
             aiAssistantSuggestions={[
-              { value: 'How many commodities are in each status' },
-              { value: 'Give me an avarage unit price per commodity' },
-              { value: 'Which trader made the most revenue' },
+              {
+                value:
+                  'Visualize the unit price averages per status for each commodity',
+              },
+              {
+                value:
+                  'Show the total revenue trends per maturity quarter for each commodity',
+              },
             ]}
             allowAiAssistantDataSampling
             aiAssistant
