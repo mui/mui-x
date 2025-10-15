@@ -192,7 +192,7 @@ The disabled column specific features like `hiding`, `sorting`, `filtering`, `pi
 
 Here's the list of affected features, column definition flags and props to disable them, and the related props and API methods to control them programmatically.
 
-<!-- {{"demo": "ColDefChangesGridNoSnap.js", "bg": "inline", "hideToolbar": true}} -->
+{{"demo": "ColDefChangesGridNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
 ### State access
 
