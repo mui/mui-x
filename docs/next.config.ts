@@ -119,6 +119,9 @@ export default withDocsInfra({
           ...config.resolve.alias,
           ...MONOREPO_ALIASES,
           '@mui/x-license': path.resolve(currentDirectory, '../packages/x-license/src'),
+          '@mui/x-data-grid/internals': path.resolve(currentDirectory, '../packages/x-data-grid/src/internals'),
+          '@mui/x-data-grid-pro/internals': path.resolve(currentDirectory, '../packages/x-data-grid-pro/src/internals'),
+          '@mui/x-data-grid-premium/internals': path.resolve(currentDirectory, '../packages/x-data-grid-premium/src/internals'),
           // TODO: get rid of this, replace with @mui/docs
           docs: path.resolve(MONOREPO_PATH, './docs'),
           docsx: path.resolve(currentDirectory, '../docs'),
