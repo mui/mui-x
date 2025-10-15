@@ -198,3 +198,9 @@ The `data-drawing-container` indicates that children of this element should be c
 
 See the [Composition—clipping](/x/react-charts/composition/#clipping) for more info.
 :::
+
+### Regression line
+
+You add a regression line to a scatter plot by leveraging composition.
+
+{{"demo": "ScatterRegressionLine.js"}}
