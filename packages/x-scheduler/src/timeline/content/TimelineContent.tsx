@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
+import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { useStore } from '@base-ui-components/utils/store';
 import { Timeline as TimelinePrimitive } from '@mui/x-scheduler-headless/timeline';
 import { selectors } from '@mui/x-scheduler-headless/use-timeline';
@@ -12,6 +13,7 @@ import { DaysHeader, MonthsHeader, TimeHeader, WeeksHeader, YearHeader } from '.
 import { TimelineContentProps } from './TimelineContent.types';
 import TimelineEventRow from './timeline-event-row/TimelineEventRow';
 import TimelineTitleCell from './timeline-title-cell/TimelineTitleCell';
+import { EventPopoverProvider } from '../../internals/components/event-popover';
 import {
   DAYS_UNIT_COUNT,
   MONTHS_UNIT_COUNT,
@@ -44,6 +46,8 @@ export const TimelineContent = React.forwardRef(function TimelineContent(
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const { className, ...other } = props;
+  const containerRef = React.useRef<HTMLElement | null>(null);
+  const handleRef = useMergedRefs(forwardedRef, containerRef);
 
   const adapter = useAdapter();
   const store = useTimelineStoreContext();
@@ -82,46 +86,48 @@ export const TimelineContent = React.forwardRef(function TimelineContent(
   }, [view]);
 
   return (
-    <section className="TimelineViewContent" ref={forwardedRef} {...other}>
-      <TimelinePrimitive.Root
-        items={resourcesWithOccurrences}
-        className="TimelineRoot"
-        style={
-          {
-            '--unit-count': diff,
-            '--unit-width': `var(--${view}-cell-width)`,
-            '--row-count': resources.length - 1,
-          } as React.CSSProperties
-        }
-      >
-        <div className="TitleSubGridContainer">
-          <TimelinePrimitive.Row className="HeaderTitleRow">
-            <TimelinePrimitive.Cell className={clsx('TimelineCell', 'HeaderTitleCell')}>
-              Resource title
-            </TimelinePrimitive.Cell>
-          </TimelinePrimitive.Row>
-          <TimelinePrimitive.SubGrid className="TitleSubGrid">
-            {({ resource }) => <TimelineTitleCell key={resource.id} resource={resource} />}
-          </TimelinePrimitive.SubGrid>
-        </div>
-        <div className="EventSubGridContainer">
-          <TimelinePrimitive.Row className="HeaderRow">
-            <TimelinePrimitive.Cell className={clsx('TimelineCell', 'HeaderCell')}>
-              {header}
-            </TimelinePrimitive.Cell>
-          </TimelinePrimitive.Row>
-          <TimelinePrimitive.SubGrid className="EventSubGrid">
-            {({ resource, occurrences }) => (
-              <TimelineEventRow
-                key={resource.id}
-                start={start}
-                end={end}
-                occurrences={occurrences}
-              />
-            )}
-          </TimelinePrimitive.SubGrid>
-        </div>
-      </TimelinePrimitive.Root>
+    <section className="TimelineViewContent" ref={handleRef} {...other}>
+      <EventPopoverProvider containerRef={containerRef}>
+        <TimelinePrimitive.Root
+          items={resourcesWithOccurrences}
+          className="TimelineRoot"
+          style={
+            {
+              '--unit-count': diff,
+              '--unit-width': `var(--${view}-cell-width)`,
+              '--row-count': resources.length - 1,
+            } as React.CSSProperties
+          }
+        >
+          <div className="TitleSubGridContainer">
+            <TimelinePrimitive.Row className="HeaderTitleRow">
+              <TimelinePrimitive.Cell className={clsx('TimelineCell', 'HeaderTitleCell')}>
+                Resource title
+              </TimelinePrimitive.Cell>
+            </TimelinePrimitive.Row>
+            <TimelinePrimitive.SubGrid className="TitleSubGrid">
+              {({ resource }) => <TimelineTitleCell key={resource.id} resource={resource} />}
+            </TimelinePrimitive.SubGrid>
+          </div>
+          <div className="EventSubGridContainer">
+            <TimelinePrimitive.Row className="HeaderRow">
+              <TimelinePrimitive.Cell className={clsx('TimelineCell', 'HeaderCell')}>
+                {header}
+              </TimelinePrimitive.Cell>
+            </TimelinePrimitive.Row>
+            <TimelinePrimitive.SubGrid className="EventSubGrid">
+              {({ resource, occurrences }) => (
+                <TimelineEventRow
+                  key={resource.id}
+                  start={start}
+                  end={end}
+                  occurrences={occurrences}
+                />
+              )}
+            </TimelinePrimitive.SubGrid>
+          </div>
+        </TimelinePrimitive.Root>
+      </EventPopoverProvider>
     </section>
   );
 });
