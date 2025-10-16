@@ -7,6 +7,11 @@ import {
 } from '@mui/x-data-grid';
 import { useMockServer } from '@mui/x-data-grid-generator';
 
+const INITIAL_PAGINATION_MODEL = {
+  page: 0,
+  pageSize: 10,
+};
+
 export default function ServerSideCursorBlocking() {
   const { columns, initialState, fetchRows } = useMockServer(
     {},
@@ -15,25 +20,22 @@ export default function ServerSideCursorBlocking() {
   const mapPageToNextCursor = React.useRef<{
     [page: number]: GridRowId | undefined;
   }>({});
-  const [paginationModel, setPaginationModel] = React.useState({
-    page: 0,
-    pageSize: 10,
-  });
+  const paginationModelRef = React.useRef(INITIAL_PAGINATION_MODEL);
 
   const handlePaginationModelChange = (newPaginationModel: GridPaginationModel) => {
-    // We have the cursor, we can allow the page transition.
     if (
       newPaginationModel.page === 0 ||
       mapPageToNextCursor.current[newPaginationModel.page - 1]
     ) {
-      setPaginationModel(newPaginationModel);
+      paginationModelRef.current = newPaginationModel;
     }
   };
 
   const dataSource: GridDataSource = React.useMemo(
     () => ({
       getRows: async (params) => {
-        const cursor = mapPageToNextCursor.current[paginationModel.page - 1];
+        const cursor =
+          mapPageToNextCursor.current[paginationModelRef.current.page - 1];
         const urlParams = new URLSearchParams({
           paginationModel: JSON.stringify(params.paginationModel),
           filterModel: JSON.stringify(params.filterModel),
@@ -51,7 +53,7 @@ export default function ServerSideCursorBlocking() {
         };
       },
     }),
-    [fetchRows, paginationModel],
+    [fetchRows],
   );
 
   return (
@@ -62,9 +64,8 @@ export default function ServerSideCursorBlocking() {
         pagination
         initialState={{
           ...initialState,
-          pagination: { rowCount: 0 },
+          pagination: { rowCount: 0, paginationModel: INITIAL_PAGINATION_MODEL },
         }}
-        paginationModel={paginationModel}
         onPaginationModelChange={handlePaginationModelChange}
         pageSizeOptions={[10, 20, 50]}
       />
