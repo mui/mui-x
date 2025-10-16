@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { DateTime } from 'luxon';
-import { RRuleSpec, SchedulerEventModelStructure } from '@mui/x-scheduler/models';
+import {
+  RecurringEventRecurrenceRule,
+  SchedulerEventModelStructure,
+} from '@mui/x-scheduler/models';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import { defaultVisibleDate } from '../datasets/personal-agenda';
 
@@ -11,7 +14,7 @@ interface CustomEvent {
   start: DateTime;
   end: DateTime;
   name: string;
-  rrule: RRuleSpec;
+  rrule: RecurringEventRecurrenceRule;
 }
 
 const initialEvents: CustomEvent[] = [

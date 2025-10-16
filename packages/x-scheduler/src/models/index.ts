@@ -5,6 +5,6 @@ export type {
   CalendarEventColor,
   SchedulerEventModelStructure,
   SchedulerResourceModelStructure,
-  RRuleSpec,
+  RecurringEventRecurrenceRule,
   CalendarOccurrencePlaceholderExternalDragData,
 } from '@mui/x-scheduler-headless/models';
