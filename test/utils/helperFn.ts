@@ -199,3 +199,7 @@ export function getSelectByName(name: string) {
 export const includeRowSelection = (ids: GridRowId[]) => {
   return { type: 'include', ids: new Set(ids) } as const;
 };
+
+export const excludeRowSelection = (ids: GridRowId[]) => {
+  return { type: 'exclude', ids: new Set(ids) } as const;
+};
