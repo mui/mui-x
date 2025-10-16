@@ -6,6 +6,8 @@ function isSsr(): boolean {
 }
 
 let measurementContainer: SVGSVGElement | null = null;
+let measurementElement: SVGTextElement | null = null;
+let measurementLastStyle: string | null = null;
 
 const stringCache = new Map<string, { width: number; height: number }>();
 
@@ -86,9 +88,9 @@ export const getStringSize = (text: string | number, style: React.CSSProperties 
     return { width: 0, height: 0 };
   }
 
-  const str = `${text}`;
+  const string = String(text);
   const styleString = getStyleString(style);
-  const cacheKey = `${str}-${styleString}`;
+  const cacheKey = `${string}-${styleString}`;
 
   const size = stringCache.get(cacheKey);
   if (size) {
@@ -96,19 +98,24 @@ export const getStringSize = (text: string | number, style: React.CSSProperties 
   }
 
   try {
+    if (measurementElement === null || styleString !== measurementLastStyle) {
+      measurementLastStyle = styleString;
+      measurementElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+
+      // Need to use CSS Object Model (CSSOM) to be able to comply with CSP
+      Object.keys(style as Record<string, any>).forEach((styleKey) => {
+        (element!.style as Record<string, any>)[camelCaseToDashCase(styleKey)] = convertPixelValue(
+          styleKey,
+          (style as Record<string, any>)[styleKey],
+        );
+        return styleKey;
+      });
+    }
+
     const container = getMeasurementContainer();
-    const element = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    const element = measurementElement;
 
-    // Need to use CSS Object Model (CSSOM) to be able to comply with CSP
-    Object.keys(style as Record<string, any>).forEach((styleKey) => {
-      (element!.style as Record<string, any>)[camelCaseToDashCase(styleKey)] = convertPixelValue(
-        styleKey,
-        (style as Record<string, any>)[styleKey],
-      );
-      return styleKey;
-    });
-
-    element.textContent = str;
+    element.textContent = string;
 
     container.replaceChildren(element);
 
