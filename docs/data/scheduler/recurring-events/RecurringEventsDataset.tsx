@@ -7,7 +7,7 @@ import {
   resources,
 } from '../datasets/recurring-events';
 
-export default function Recurrence() {
+export default function RecurringEventsDataset() {
   const [events, setEvents] = React.useState<CalendarEvent[]>(initialEvents);
 
   return (
