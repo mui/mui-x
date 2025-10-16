@@ -102,24 +102,23 @@ export const getStringSize = (text: string | number, style: React.CSSProperties 
   }
 
   try {
-    const measurementSpanContainer = getMeasurementSpanContainer();
-    const measurementSpan = document.createElement('span');
+    const measurementSpanContainer = getMeasurementContainer();
+    const measurementElem = document.createElementNS('http://www.w3.org/2000/svg', 'text');
 
     // Need to use CSS Object Model (CSSOM) to be able to comply with Content Security Policy (CSP)
     // https://en.wikipedia.org/wiki/Content_Security_Policy
     Object.keys(style as Record<string, any>).map((styleKey) => {
-      (measurementSpan!.style as Record<string, any>)[camelToMiddleLine(styleKey)] =
+      (measurementElem!.style as Record<string, any>)[camelToMiddleLine(styleKey)] =
         autoCompleteStyle(styleKey, (style as Record<string, any>)[styleKey]);
       return styleKey;
     });
 
-    measurementSpan.style.position = 'absolute';
-    measurementSpan.style.whiteSpace = 'pre';
-    measurementSpan.textContent = str;
+    // measurementElem.style.whiteSpace = 'pre';
+    measurementElem.textContent = str;
 
-    measurementSpanContainer.replaceChildren(measurementSpan);
+    measurementSpanContainer.replaceChildren(measurementElem);
 
-    const rect = measurementSpan.getBoundingClientRect();
+    const rect = measurementElem.getBoundingClientRect();
     const result = { width: rect.width, height: rect.height };
 
     stringCache.set(cacheKey, result);
@@ -142,32 +141,28 @@ export const getStringSize = (text: string | number, style: React.CSSProperties 
 /**
  * Get (or create) a hidden span element to measure text size.
  */
-function getMeasurementSpanContainer() {
-  let measurementSpanContainer = document.getElementById(MEASUREMENT_SPAN_ID);
+function getMeasurementContainer() {
+  let measurementContainer = document.getElementById(
+    MEASUREMENT_SPAN_ID,
+  ) as unknown as SVGSVGElement;
 
-  if (measurementSpanContainer === null) {
-    // Create a hidden wrapper that wraps the measurement span container.
-    const wrapper = document.createElement('span');
-    wrapper.setAttribute('aria-hidden', 'true');
+  if (measurementContainer === null) {
+    measurementContainer = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    measurementContainer.setAttribute('aria-hidden', 'true');
 
-    wrapper.style.position = 'absolute';
-    wrapper.style.top = '-20000px';
-    wrapper.style.left = '0';
-    wrapper.style.padding = '0';
-    wrapper.style.margin = '0';
-    wrapper.style.border = 'none';
-    wrapper.style.pointerEvents = 'none';
-    wrapper.style.visibility = 'hidden';
-    wrapper.style.contain = 'strict';
+    measurementContainer.style.position = 'absolute';
+    measurementContainer.style.top = '-20000px';
+    measurementContainer.style.left = '0';
+    measurementContainer.style.padding = '0';
+    measurementContainer.style.margin = '0';
+    measurementContainer.style.border = 'none';
+    measurementContainer.style.pointerEvents = 'none';
+    measurementContainer.style.visibility = 'hidden';
+    measurementContainer.style.contain = 'strict';
+    measurementContainer.setAttribute('id', MEASUREMENT_SPAN_ID);
 
-    document.body.appendChild(wrapper);
-
-    measurementSpanContainer = document.createElement('span');
-    // Use relative positioning so its children can use absolute positioning and not be visible
-    measurementSpanContainer.style.position = 'relative';
-    measurementSpanContainer.setAttribute('id', MEASUREMENT_SPAN_ID);
-    wrapper.appendChild(measurementSpanContainer);
+    document.body.appendChild(measurementContainer);
   }
 
-  return measurementSpanContainer;
+  return measurementContainer;
 }
