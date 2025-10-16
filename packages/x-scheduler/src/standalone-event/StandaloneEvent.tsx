@@ -9,7 +9,6 @@ export const StandaloneEvent = React.forwardRef<HTMLDivElement, StandaloneEventP
     return (
       <HeadlessStandaloneEvent
         ref={forwardedRef}
-        nativeButton={false}
         {...props}
         className={clsx('StandaloneEvent', props.className)}
         renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
