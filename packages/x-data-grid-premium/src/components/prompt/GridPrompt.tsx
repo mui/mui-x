@@ -382,11 +382,15 @@ function GridPrompt(props: GridPromptProps) {
   const getChartChanges = React.useCallback(
     (chart: NonNullable<PromptResponse['chart']>) => {
       return {
-        label: chart.dimensions.map(getColumnName).join(', '),
+        label: apiRef.current.getLocaleText('toolbarCharts'),
+        description: apiRef.current.getLocaleText('promptChangeChartsLabel')(
+          chart.dimensions.length,
+          chart.values.length,
+        ),
         icon: rootProps.slots.promptChartsIcon,
       };
     },
-    [getColumnName, rootProps.slots.promptChartsIcon],
+    [apiRef, rootProps.slots.promptChartsIcon],
   );
 
   const changeList = React.useMemo(() => {
