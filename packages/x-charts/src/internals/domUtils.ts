@@ -5,6 +5,8 @@ function isSsr(): boolean {
   return typeof window === 'undefined';
 }
 
+let measurementContainer: SVGSVGElement | null = null;
+
 const stringCache = new Map<string, { width: number; height: number }>();
 
 const MAX_CACHE_NUM = 2000;
@@ -97,15 +99,13 @@ export const getStringSize = (text: string | number, style: React.CSSProperties 
     const measurementSpanContainer = getMeasurementContainer();
     const measurementElem = document.createElementNS('http://www.w3.org/2000/svg', 'text');
 
-    // Need to use CSS Object Model (CSSOM) to be able to comply with Content Security Policy (CSP)
-    // https://en.wikipedia.org/wiki/Content_Security_Policy
-    Object.keys(style as Record<string, any>).map((styleKey) => {
+    // Need to use CSS Object Model (CSSOM) to be able to comply with CSP
+    Object.keys(style as Record<string, any>).forEach((styleKey) => {
       (measurementElem!.style as Record<string, any>)[camelCaseToDashCase(styleKey)] =
         convertPixelValue(styleKey, (style as Record<string, any>)[styleKey]);
       return styleKey;
     });
 
-    // measurementElem.style.whiteSpace = 'pre';
     measurementElem.textContent = str;
 
     measurementSpanContainer.replaceChildren(measurementElem);
@@ -134,9 +134,9 @@ export const getStringSize = (text: string | number, style: React.CSSProperties 
  * Get (or create) a hidden span element to measure text size.
  */
 function getMeasurementContainer() {
-  let measurementContainer = document.getElementById(
-    MEASUREMENT_SPAN_ID,
-  ) as unknown as SVGSVGElement;
+  if (measurementContainer === null) {
+    measurementContainer = document.getElementById(MEASUREMENT_SPAN_ID) as unknown as SVGSVGElement;
+  }
 
   if (measurementContainer === null) {
     measurementContainer = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
