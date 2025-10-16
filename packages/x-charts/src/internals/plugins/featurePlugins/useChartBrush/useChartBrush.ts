@@ -19,9 +19,9 @@ export const useChartBrush: ChartPlugin<UseChartBrushSignature> = ({
         ...prev,
         brush: {
           ...prev.brush,
-          enabled: params.brushConfig.enabled ?? false,
-          preventTooltip: params.brushConfig.preventTooltip ?? true,
-          preventHighlight: params.brushConfig.preventHighlight ?? true,
+          enabled: params.brushConfig.enabled,
+          preventTooltip: params.brushConfig.preventTooltip,
+          preventHighlight: params.brushConfig.preventHighlight,
         },
       };
     });
@@ -38,7 +38,7 @@ export const useChartBrush: ChartPlugin<UseChartBrushSignature> = ({
         ...prev,
         brush: {
           ...prev.brush,
-          start: prev.brush.start === null ? point : prev.brush.start,
+          start: prev.brush.start ?? point,
           current: point,
         },
       };
