@@ -620,8 +620,8 @@ return (
 Here is the complete `EmployeeDataGrid.tsx` component for reference:
 
 ```ts
-import React, { useMemo } from 'react';
-import { DataGridPro, type GridColDef, type GridDataSource, type GridGetRowsParams, type GridGetRowsResponse } from '@mui/x-data-grid-pro';
+import { useMemo } from 'react';
+import { DataGrid, type GridColDef, type GridDataSource, type GridGetRowsParams, type GridGetRowsResponse } from '@mui/x-data-grid';
 import { Box, Typography } from '@mui/material';
 
 interface Employee {
@@ -662,13 +662,13 @@ const EmployeeDataGrid = () => {
       });
 
       const response = await fetch(`http://localhost:3001/api/employees?${urlParams.toString()}`);
-
+      
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-
+      
       const result: ApiResponse = await response.json();
-
+      
       return {
         rows: result.data,
         rowCount: result.total,
@@ -679,12 +679,12 @@ const EmployeeDataGrid = () => {
   return (
     <Box sx={{ height: 600, width: '100%' }}>
       <Typography variant="h4" component="h1" gutterBottom>
-        Employee Management
+        MUI X Data Grid with the Data Source layer
       </Typography>
       <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-        Server-side data with pagination, sorting, and filtering
+        Server-side data with pagination, sorting, and filtering.
       </Typography>
-
+      
       <DataGrid
         columns={columns}
         dataSource={dataSource}
