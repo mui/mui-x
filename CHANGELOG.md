@@ -11,6 +11,7 @@ _Oct 16, 2025_
 
 We'd like to extend a big thank you to the 12 contributors who made this release possible. Here are some highlights ✨:
 
+- 🚀 Charts have optimized data structures for closest point calculations — initial render times reduced by ~25% for 1,000+ data points, with greater gains at larger scales (#19790) @bernardobelchior
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
