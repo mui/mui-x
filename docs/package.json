@@ -102,7 +102,7 @@
     "@babel/plugin-transform-react-constant-elements": "catalog:",
     "@babel/preset-typescript": "catalog:",
     "@mui/internal-docs-utils": "^2.0.3",
-    "@mui/internal-scripts": "https://pkg.pr.new/mui/material-ui/@mui/internal-scripts@7b4e85d",
+    "@mui/internal-scripts": "^2.0.14 ",
     "@types/chance": "catalog:",
     "@types/d3-scale": "catalog:",
     "@types/d3-scale-chromatic": "^3.1.0",
