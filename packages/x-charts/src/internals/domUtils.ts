@@ -8,7 +8,7 @@ function isSsr(): boolean {
 const stringCache = new Map<string, { width: number; height: number }>();
 
 const MAX_CACHE_NUM = 2000;
-const STYLE_SET = new Set([
+const PIXEL_STYLES = new Set([
   'minWidth',
   'maxWidth',
   'width',
@@ -37,8 +37,8 @@ export const MEASUREMENT_SPAN_ID = 'mui_measurement_span';
  * @param value
  * @returns add 'px' for distance properties
  */
-function autoCompleteStyle(name: string, value: number) {
-  if (STYLE_SET.has(name) && value === +value) {
+function convertPixelValue(name: string, value: number) {
+  if (PIXEL_STYLES.has(name) && value === +value) {
     return `${value}px`;
   }
 
@@ -50,18 +50,8 @@ function autoCompleteStyle(name: string, value: number) {
  * @param text camelcase css property
  * @returns css property
  */
-function camelToMiddleLine(text: string) {
-  const strs = text.split('');
-
-  const formatStrs = strs.reduce((result: string[], entry) => {
-    if (entry === entry.toUpperCase()) {
-      return [...result, '-', entry.toLowerCase()];
-    }
-
-    return [...result, entry];
-  }, []);
-
-  return formatStrs.join('');
+function camelCaseToDashCase(text: string) {
+  return text.replace(/([A-Z])/g, (match) => `-${match.toLowerCase()}`);
 }
 
 /**
@@ -69,17 +59,19 @@ function camelToMiddleLine(text: string) {
  * @param style React style object
  * @returns CSS styling string
  */
-export const getStyleString = (style: React.CSSProperties) =>
-  Object.keys(style)
-    .sort()
-    .reduce(
-      (result, s) =>
-        `${result}${camelToMiddleLine(s)}:${autoCompleteStyle(
-          s,
-          (style as Record<string, any>)[s],
-        )};`,
-      '',
-    );
+export const getStyleString = (style: React.CSSProperties) => {
+  let result = '';
+  for (const key in style) {
+    if (Object.hasOwn(style, key)) {
+      const value = style[key as keyof React.CSSProperties] as string;
+      result += `${result}${camelCaseToDashCase(value)}:${convertPixelValue(
+        value,
+        (style as Record<string, any>)[value],
+      )};`;
+    }
+  }
+  return result;
+};
 
 /**
  *
@@ -108,8 +100,8 @@ export const getStringSize = (text: string | number, style: React.CSSProperties 
     // Need to use CSS Object Model (CSSOM) to be able to comply with Content Security Policy (CSP)
     // https://en.wikipedia.org/wiki/Content_Security_Policy
     Object.keys(style as Record<string, any>).map((styleKey) => {
-      (measurementElem!.style as Record<string, any>)[camelToMiddleLine(styleKey)] =
-        autoCompleteStyle(styleKey, (style as Record<string, any>)[styleKey]);
+      (measurementElem!.style as Record<string, any>)[camelCaseToDashCase(styleKey)] =
+        convertPixelValue(styleKey, (style as Record<string, any>)[styleKey]);
       return styleKey;
     });
 
