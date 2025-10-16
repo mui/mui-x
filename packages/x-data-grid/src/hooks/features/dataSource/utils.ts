@@ -80,9 +80,8 @@ export class CacheChunkManager {
 
     return responses.reduce(
       (acc, response) => ({
+        ...response,
         rows: [...acc.rows, ...response.rows],
-        rowCount: response.rowCount,
-        pageInfo: response.pageInfo,
       }),
       { rows: [], rowCount: 0, pageInfo: {} },
     );
