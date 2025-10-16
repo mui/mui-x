@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
+import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import {
   GridRowSelectionModel,
   gridColumnLookupSelector,
@@ -98,6 +99,7 @@ export const useGridAiAssistant = (
     experimentalFeatures,
     getPivotDerivedColumns,
   } = props;
+  const previousUnwrappedGroupingModel = React.useRef<string[]>([]);
   const activeChartId = gridChartsIntegrationActiveChartIdSelector(apiRef);
   const columnsLookup = gridColumnLookupSelector(apiRef);
   const columns = Object.values(columnsLookup);
@@ -205,6 +207,24 @@ export const useGridAiAssistant = (
     ],
   );
 
+  const updateChart = React.useCallback(
+    (result: PromptResponse) => {
+      if (!result.chart) {
+        return;
+      }
+
+      apiRef.current.updateChartDimensionsData(
+        activeChartId,
+        result.chart.dimensions.map((item) => ({ field: item })),
+      );
+      apiRef.current.updateChartValuesData(
+        activeChartId,
+        result.chart.values.map((item) => ({ field: item })),
+      );
+    },
+    [apiRef, activeChartId],
+  );
+
   const applyPromptResult = React.useCallback(
     (result: PromptResponse) => {
       if (!isAiAssistantAvailable) {
@@ -297,20 +317,21 @@ export const useGridAiAssistant = (
       }
 
       if (experimentalFeatures?.charts && chartsIntegration && activeChartId && result.chart) {
-        apiRef.current.updateChartDimensionsData(
-          activeChartId,
-          result.chart.dimensions.map((item) => ({ field: item })),
-        );
-
         if (appliedPivoting) {
           const unsubscribe = apiRef.current.subscribeEvent('rowsSet', () => {
             const unwrappedGroupingModel = Object.keys(
               gridColumnGroupsUnwrappedModelSelector(apiRef),
             );
-            // wait until pivoting creates column grouping model
-            if (unwrappedGroupingModel.length === 0) {
+            // wait until unwrapped grouping model changes
+            if (
+              !result.chart ||
+              unwrappedGroupingModel.length === 0 ||
+              isDeepEqual(previousUnwrappedGroupingModel.current, unwrappedGroupingModel)
+            ) {
               return;
             }
+
+            previousUnwrappedGroupingModel.current = unwrappedGroupingModel;
 
             const visibleRowsCount = gridVisibleRowsSelector(apiRef).rows.length;
             const maxColumns = Math.floor(MAX_CHART_DATA_POINTS / visibleRowsCount);
@@ -318,18 +339,13 @@ export const useGridAiAssistant = (
             // we assume that the pivoting was adjusted to what needs to be shown in the chart
             // so we can just pick up all the columns that were created by pivoting
             // to avoid rendering issues, set the limit to MAX_CHART_DATA_POINTS data points (rows * columns)
-            apiRef.current.updateChartValuesData(
-              activeChartId,
-              unwrappedGroupingModel.slice(0, maxColumns).map((field) => ({ field })),
-            );
+            result.chart.values = unwrappedGroupingModel.slice(0, maxColumns);
+            updateChart(result);
 
             unsubscribe();
           });
         } else {
-          apiRef.current.updateChartValuesData(
-            activeChartId,
-            result.chart.values.map((item) => ({ field: item })),
-          );
+          updateChart(result);
         }
       }
 
@@ -354,6 +370,7 @@ export const useGridAiAssistant = (
     },
     [
       apiRef,
+      updateChart,
       rowSelection,
       disableColumnFilter,
       disableRowGrouping,
