@@ -13,7 +13,6 @@ import { useDrawingArea } from '../hooks';
 import { ChartsAxisHighlightType } from './ChartsAxisHighlight.types';
 import { ChartsAxisHighlightClasses } from './chartsAxisHighlightClasses';
 import { ChartsAxisHighlightPath } from './ChartsAxisHighlightPath';
-import type { UseChartBrushSignature } from '../internals/plugins/featurePlugins/useChartBrush';
 
 /**
  * @ignore - internal component.
@@ -26,7 +25,7 @@ export default function ChartsYHighlight(props: {
 
   const { left, width } = useDrawingArea();
 
-  const store = useStore<[UseChartCartesianAxisSignature, UseChartBrushSignature]>();
+  const store = useStore<[UseChartCartesianAxisSignature]>();
   const axisYValues = useSelector(store, selectorChartsHighlightYAxisValue);
   const yAxes = useSelector(store, selectorChartYAxis);
 

@@ -20,7 +20,6 @@ import {
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { useSelector } from '../internals/store/useSelector';
 import { AxisId } from '../models/axis';
-import type { UseChartBrushSignature } from '../internals/plugins/featurePlugins/useChartBrush';
 
 export interface MarkPlotSlots {
   mark?: React.JSXElementConstructor<MarkElementProps>;
@@ -74,8 +73,7 @@ function MarkPlot(props: MarkPlotProps) {
   const { yAxis, yAxisIds } = useYAxes();
 
   const chartId = useChartId();
-  const { instance, store } =
-    useChartContext<[UseChartCartesianAxisSignature, UseChartBrushSignature]>();
+  const { instance, store } = useChartContext<[UseChartCartesianAxisSignature]>();
   const { isFaded, isHighlighted } = useItemHighlightedGetter();
   const xAxisHighlightIndexes = useSelector(store, selectorChartsHighlightXAxisIndex);
 

@@ -19,10 +19,7 @@ import {
 import { selectorChartsInteractionPolarAxisTooltip } from '../internals/plugins/featurePlugins/useChartPolarAxis/useChartPolarInteraction.selectors';
 import { useAxisSystem } from '../hooks/useAxisSystem';
 import { useSvgRef } from '../hooks';
-import {
-  selectorBrushShouldPreventTooltip,
-  type UseChartBrushSignature,
-} from '../internals/plugins/featurePlugins/useChartBrush';
+import { selectorBrushShouldPreventTooltip } from '../internals/plugins/featurePlugins/useChartBrush';
 
 const noAxis = () => false;
 
@@ -77,7 +74,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
 
   const axisSystem = useAxisSystem();
 
-  const store = useStore<[UseChartCartesianAxisSignature, UseChartBrushSignature]>();
+  const store = useStore<[UseChartCartesianAxisSignature]>();
   const hasData = useSelector(
     store,
     trigger === 'axis'
