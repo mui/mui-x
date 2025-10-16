@@ -528,7 +528,7 @@ describe('<EventPopoverContent />', () => {
                   }}
                 />
                 <Popover.Root open>
-                  <EventPopover {...defaultProps} occurrence={originalRecurringEvent} />
+                  <EventPopoverContent {...defaultProps} occurrence={originalRecurringEvent} />
                 </Popover.Root>
               </EventCalendarProvider>
             </RecurringScopeDialogProvider>
