@@ -6,7 +6,7 @@ import { Radio } from '@base-ui-components/react/radio';
 import { Form } from '@base-ui-components/react/form';
 import { Field } from '@base-ui-components/react/field';
 import { RadioGroup } from '@base-ui-components/react/radio-group';
-import { RecurringUpdateEventScope } from '@mui/x-scheduler-headless/models';
+import { RecurringEventUpdateScope } from '@mui/x-scheduler-headless/models';
 import {
   RecurringScopeDialogProviderProps,
   ScopeDialogContextValue,
@@ -24,7 +24,7 @@ export const ScopeDialog = React.forwardRef<HTMLDivElement, ScopePopoverProps>(
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       const form = new FormData(event.currentTarget);
-      const recurrenceScopeValue = form.get('recurrenceScope') as RecurringUpdateEventScope;
+      const recurrenceScopeValue = form.get('recurrenceScope') as RecurringEventUpdateScope;
       onResolve(recurrenceScopeValue);
     };
 
@@ -84,12 +84,12 @@ export function RecurringScopeDialogProvider(props: RecurringScopeDialogProvider
   const { containerRef, children } = props;
 
   const [open, setOpen] = React.useState(false);
-  const resolverRef = React.useRef<((value: RecurringUpdateEventScope | null) => void) | null>(
+  const resolverRef = React.useRef<((value: RecurringEventUpdateScope | null) => void) | null>(
     null,
   );
 
   const resolveAndClose = React.useCallback(
-    (value: RecurringUpdateEventScope | null) => {
+    (value: RecurringEventUpdateScope | null) => {
       resolverRef.current?.(value);
       resolverRef.current = null;
       setOpen(false);
@@ -99,7 +99,7 @@ export function RecurringScopeDialogProvider(props: RecurringScopeDialogProvider
 
   const promptScope = React.useCallback(() => {
     setOpen(true);
-    return new Promise<RecurringUpdateEventScope | null>((resolve) => {
+    return new Promise<RecurringEventUpdateScope | null>((resolve) => {
       resolverRef.current = resolve;
     });
   }, [setOpen]);
