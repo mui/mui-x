@@ -16,11 +16,13 @@ It captures the start and current positions of the user's selection, which can b
 - Highlighting specific areas
 - Creating custom interactions
 
-The brush plugin is available in the `LineChart`, `BarChart`, and `ScatterChart` types and provides visual feedback through the `ChartsBrushOverlay` component.
+The brush is available in the `LineChart`, `BarChart`, and `ScatterChart` types and provides visual feedback through the `ChartsBrushOverlay` component.
 
 ## Basic usage
 
 To display visual feedback when users interact with the chart, enable the brush with `brushConfig={{ enabled: true }}` and add the `ChartsBrushOverlay` component as a child of your chart.
+
+The brush itself has no default behavior; you can use the `useBrush` hook to create custom interactions based on the brush state.
 
 {{"demo": "BrushBasic.js"}}
 
@@ -31,19 +33,26 @@ This example shows how to display the values at the start and end positions, alo
 
 {{"demo": "BrushCustomOverlay.js"}}
 
-### Using the useBrush hook
+### Using the `useBrush` hook
 
-The `useBrush` hook provides access to the current brush state:
+The `useBrush` hook provides access to the current brush state.
+
+The hook returns an object with:
+
+- `start` - The starting point of the brush selection (`{ x: number, y: number } | null`)
+- `current` - The current point of the brush selection (`{ x: number, y: number } | null`)
 
 ```jsx
 import { useBrush } from '@mui/x-charts/hooks';
 
 function MyCustomOverlay() {
-  const { start, current } = useBrush();
+  const brush = useBrush();
 
-  if (!start || !current) {
+  if (!brush) {
     return null;
   }
+
+  const { start, current } = brush;
 
   // start.x, start.y - The coordinates where the brush started
   // current.x, current.y - The current coordinates of the brush
@@ -51,11 +60,6 @@ function MyCustomOverlay() {
   return <g>{/* Your custom overlay */}</g>;
 }
 ```
-
-The hook returns an object with:
-
-- `start` - The starting point of the brush selection (`{ x: number, y: number } | null`)
-- `current` - The current point of the brush selection (`{ x: number, y: number } | null`)
 
 ## Configuration
 

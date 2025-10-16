@@ -32,10 +32,15 @@ export const selectorBrushCurrentY = createSelector(
 
 export const selectorBrushState = createSelector(
   [selectorBrushStartX, selectorBrushStartY, selectorBrushCurrentX, selectorBrushCurrentY],
-  (startX, startY, currentX, currentY) => ({
-    start: { x: startX, y: startY },
-    current: { x: currentX, y: currentY },
-  }),
+  (startX, startY, currentX, currentY) => {
+    if (startX === null || startY === null || currentX === null || currentY === null) {
+      return null;
+    }
+    return {
+      start: { x: startX, y: startY },
+      current: { x: currentX, y: currentY },
+    };
+  },
 );
 
 export const selectorBrushConfigNoZoom = createSelector(
