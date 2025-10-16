@@ -25,7 +25,8 @@
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
     "build": "code-infra build",
-    "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
+    "prebuild": "rimraf build tsconfig.build.tsbuildinfo",
+    "bench": "pnpm vitest bench -c ./vitest.config.browser.mts"
   },
   "repository": {
     "type": "git",
