@@ -75,7 +75,7 @@ Use the `byDay` property with plain weekday codes (no ordinal) to define the day
 // Every week on Monday
 rrule={{ freq: 'WEEKLY' }}
 
-// Every two week on Monday, Wednesday and Friday
+// Every two weeks on Monday, Wednesday and Friday
 rrule={{ freq: 'WEEKLY', interval: 2, byDay: ['MO', 'WE', 'FR'] }}
 ```
 
