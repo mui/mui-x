@@ -109,7 +109,7 @@ commands:
               args="react@$REACT_VERSION"
             fi
             if [ -n "$MATERIAL_UI_VERSION" ] && [ "$MATERIAL_UI_VERSION" != "stable" ]; then
-              args="$args @mui/material@$MATERIAL_UI_VERSION @mui/system@$MATERIAL_UI_VERSION @mui/icons-material@$MATERIAL_UI_VERSION @mui/utils@$MATERIAL_UI_VERSION @mui/material-nextjs@$MATERIAL_UI_VERSION @mui/lab@latest"
+              args="$args @mui/material@$MATERIAL_UI_VERSION"
             fi
             if [ -n "$args" ]; then
               pnpm dlx @mui/internal-code-infra set-version-overrides --pkg $args
