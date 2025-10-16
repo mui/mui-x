@@ -32,7 +32,7 @@ function BrushRect(props: React.SVGProps<SVGRectElement>) {
 export interface ChartsBrushOverlayProps {}
 
 /**
- * Component that renders visual feedback during brush zoom interaction
+ * Component that renders visual feedback during brush interaction
  */
 export function ChartsBrushOverlay(props: ChartsBrushOverlayProps) {
   const store = useStore<[UseChartBrushSignature]>();
