@@ -62,7 +62,7 @@ The example below shows how to combine the AI Assistant with [server-side data](
 
 AI Assistant analyzes the query to determine if it is helpful to visualize the results.
 
-[Integrate](/x/react-data-grid/charts-integration/) the Data Grid with [MUI X Charts](/x/react-charts/) to enable the Data Grid to apply the visualization instructions.
+[Integrate](/x/react-data-grid/charts-integration/) the Data Grid with [MUI X Charts](/x/react-charts/) to enable the Data Grid to apply the visualization instructions.
 
 {{"demo": "AssistantWithCharts.js", "bg": "inline"}}
 
