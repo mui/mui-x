@@ -1,4 +1,5 @@
 import type { SchedulerValidDate } from './date';
+import type { CalendarOccurrencePlaceholderExternalDragData } from './dragAndDrop';
 import type { CalendarResourceId } from './resource';
 
 export interface CalendarEvent {
@@ -203,13 +204,30 @@ export interface CalendarOccurrencePlaceholderInternalDragOrResize
   originalEvent: CalendarEvent;
 }
 
+export interface CalendarOccurrencePlaceholderExternalDrag
+  extends CalendarOccurrencePlaceholderBase {
+  /**
+   * The type of placeholder.
+   */
+  type: 'external-drag';
+  /**
+   * The data of the event to insert in the Event Calendar when dropped.
+   */
+  eventData: CalendarOccurrencePlaceholderExternalDragData;
+  /**
+   * Callback fired when the event is dropped into the Event Calendar.
+   */
+  onEventDrop?: () => void;
+}
+
 /**
  * Object representing the placeholder of an event occurrence.
  * It is used when creating a new event or when dragging an event occurrence.
  */
 export type CalendarOccurrencePlaceholder =
   | CalendarOccurrencePlaceholderCreation
-  | CalendarOccurrencePlaceholderInternalDragOrResize;
+  | CalendarOccurrencePlaceholderInternalDragOrResize
+  | CalendarOccurrencePlaceholderExternalDrag;
 
 export interface CalendarProcessedDate {
   /**
