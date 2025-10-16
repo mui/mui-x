@@ -223,7 +223,7 @@ export const useGridRowSpanning = (
   // - The sorting is applied
   // - The `paginationModel` is updated
   // - The rows are updated
-  const { schedule: deferredUpdateRowSpawnningState, cancel } =
+  const { schedule: deferredUpdateRowSpanningState, cancel } =
     useRunOncePerLoop(updateRowSpanningState);
 
   const resetRowSpanningState = React.useCallback(() => {
@@ -231,8 +231,8 @@ export const useGridRowSpanning = (
     if (!isRowContextInitialized(renderContext)) {
       return;
     }
-    deferredUpdateRowSpawnningState(renderContext, true);
-  }, [apiRef, deferredUpdateRowSpawnningState]);
+    deferredUpdateRowSpanningState(renderContext, true);
+  }, [apiRef, deferredUpdateRowSpanningState]);
 
   useGridEvent(
     apiRef,
@@ -257,8 +257,8 @@ export const useGridRowSpanning = (
       if (store.state.rowSpanning !== EMPTY_STATE) {
         store.set('rowSpanning', EMPTY_STATE);
       }
-    } else if (store.state.rowSpanning.caches === EMPTY_CACHES) {
-      resetRowSpanningState();
+    } else if (store.state.rowSpanning === EMPTY_STATE) {
+      updateRowSpanningState(gridRenderContextSelector(apiRef));
     }
-  }, [apiRef, resetRowSpanningState, props.rowSpanning]);
+  }, [apiRef, props.rowSpanning]);
 };
