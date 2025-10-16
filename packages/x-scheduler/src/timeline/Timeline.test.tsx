@@ -245,29 +245,27 @@ describe('<Timeline />', () => {
 
   describe('views', () => {
     it('should render the correct header and updates CSS variable when switching views', async () => {
-      const { container: firstContainer } = renderTimeline({
+      renderTimeline({
         view: 'time',
         views: ['days', 'time'],
       });
 
-      const rootElement = firstContainer.querySelector('.TimelineRoot') as HTMLElement;
-      expect(firstContainer.querySelector('.TimeHeader')).not.to.equal(null);
+      let rootElement = screen.getByRole('grid');
+      expect(rootElement.querySelector('.TimeHeader')).not.to.equal(null);
 
       expect(rootElement.style.getPropertyValue('--unit-width')).to.contain('time-cell-width');
 
       const daysSwitchControl = screen.getByRole('button', { name: /days/i });
       expect(daysSwitchControl).not.to.equal(null);
 
-      const { container: secondContainer } = renderTimeline({
+      renderTimeline({
         view: 'days',
         views: ['days', 'time'],
       });
 
-      const updatedRootElement = secondContainer.querySelector('.TimelineRoot') as HTMLElement;
-      expect(secondContainer.querySelector('.DaysHeader')).not.to.equal(null);
-      expect(updatedRootElement.style.getPropertyValue('--unit-width')).to.contain(
-        'days-cell-width',
-      );
+      rootElement = screen.getAllByRole('grid').at(-1) as HTMLElement;
+      expect(rootElement.querySelector('.DaysHeader')).not.to.equal(null);
+      expect(rootElement.style.getPropertyValue('--unit-width')).to.contain('days-cell-width');
     });
   });
 });

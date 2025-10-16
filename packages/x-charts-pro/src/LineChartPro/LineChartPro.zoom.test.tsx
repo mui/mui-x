@@ -57,6 +57,7 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
 
     expect(getAxisTickValues('x', container)).to.deep.equal(['A', 'B', 'C', 'D']);
 
+    // eslint-disable-next-line testing-library/no-container
     const svg = container.querySelector('svg')!;
 
     await user.pointer([
@@ -116,6 +117,7 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
 
       expect(getAxisTickValues('x', container)).to.deep.equal(['D']);
 
+      // eslint-disable-next-line testing-library/no-container
       const svg = container.querySelector('svg')!;
 
       // we drag one position so C should be visible
@@ -187,6 +189,7 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
 
     expect(getAxisTickValues('x', container)).to.deep.equal(['D']);
 
+    // eslint-disable-next-line testing-library/no-container
     const target = container.querySelector('.MuiAreaElement-root')!;
 
     // We drag from right to left to pan the view
@@ -245,6 +248,7 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
 
     expect(getAxisTickValues('x', container)).to.deep.equal(['A', 'B', 'C', 'D']);
 
+    // eslint-disable-next-line testing-library/no-container
     const svg = container.querySelector('svg')!;
 
     await user.pointer([
@@ -300,6 +304,7 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
 
     expect(getAxisTickValues('x', container)).to.deep.equal(['A', 'B', 'C', 'D']);
 
+    // eslint-disable-next-line testing-library/no-container
     const svg = container.querySelector('svg')!;
 
     // Perform tap and drag gesture - tap once, then drag vertically up to zoom in
@@ -351,6 +356,7 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
 
     expect(getAxisTickValues('x', container)).to.deep.equal(['A', 'B', 'C', 'D']);
 
+    // eslint-disable-next-line testing-library/no-container
     const svg = container.querySelector('svg')!;
 
     // Simulate the problematic scenario:
@@ -436,6 +442,7 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
 
     expect(getAxisTickValues('x', container)).to.deep.equal(['D']);
 
+    // eslint-disable-next-line testing-library/no-container
     const svg = container.querySelector('svg')!;
 
     await user.pointer([
@@ -483,6 +490,7 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
 
     expect(getAxisTickValues('x', container)).to.deep.equal(['D']);
 
+    // eslint-disable-next-line testing-library/no-container
     const svg = container.querySelector('svg')!;
 
     // we drag one position so C should be visible
