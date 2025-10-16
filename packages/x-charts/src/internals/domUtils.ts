@@ -149,6 +149,7 @@ function getMeasurementContainer() {
   if (measurementContainer === null) {
     measurementContainer = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     measurementContainer.setAttribute('aria-hidden', 'true');
+    measurementContainer.setAttribute('id', MEASUREMENT_SPAN_ID);
 
     measurementContainer.style.position = 'absolute';
     measurementContainer.style.top = '-20000px';
@@ -159,7 +160,6 @@ function getMeasurementContainer() {
     measurementContainer.style.pointerEvents = 'none';
     measurementContainer.style.visibility = 'hidden';
     measurementContainer.style.contain = 'strict';
-    measurementContainer.setAttribute('id', MEASUREMENT_SPAN_ID);
 
     document.body.appendChild(measurementContainer);
   }
