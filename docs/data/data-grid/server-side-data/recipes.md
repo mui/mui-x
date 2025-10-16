@@ -25,6 +25,8 @@ The following example demonstrates the non-blocking approach using a custom cach
 - **`pushKey()`**: Tracks request order before responses arrive, allowing immediate pagination
 - **`getLast()`**: Waits for the previous page's cursor to resolve before making the actual request
 
+The cache is cleared whenever the filter or sort model changes to ensure data consistency.
+
 {{"demo": "ServerSideCursorNonBlocking.js", "bg": "inline"}}
 
 ## Tree data nested pagination

@@ -123,6 +123,8 @@ export default function ServerSideCursorNonBlocking() {
           },
         }}
         pageSizeOptions={[10, 20, 50]}
+        onFilterModelChange={() => cache.clear()}
+        onSortModelChange={() => cache.clear()}
       />
     </div>
   );
