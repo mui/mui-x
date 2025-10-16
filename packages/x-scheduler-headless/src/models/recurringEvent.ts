@@ -58,7 +58,7 @@ export interface RecurringEventRecurrenceRule {
   /**
    * A list of days (with or without ordinals) the event occurs on.
    * When used with a weekly frequency, it needs to be a weekday code (e.g: "TU", "FR").
-   * When used with a monthly or yearly frequency, it needs to be an ordinal and a weekday (e.g: "2TU", "-1FR").
+   * When used with a monthly frequency, it needs to be an ordinal and a weekday (e.g: "2TU", "-1FR").
    * Corresponds to the BYDAY property of the string-based RRULE.
    */
   byDay?: RecurringEventByDayValue[];
