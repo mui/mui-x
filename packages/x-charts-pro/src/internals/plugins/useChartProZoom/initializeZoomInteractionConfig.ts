@@ -55,6 +55,7 @@ function initializeFor<T extends 'zoom' | 'pan'>(
         type,
         pointerMode: interaction.pointerMode,
         requiredKeys: interaction.requiredKeys,
+        axesFilter: (interaction as any).axesFilter,
       });
       return acc;
     },

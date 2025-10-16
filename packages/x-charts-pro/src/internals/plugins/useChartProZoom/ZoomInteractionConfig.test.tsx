@@ -5,6 +5,7 @@ import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import * as sinon from 'sinon';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
+import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
 import { CHART_SELECTOR } from '../../../tests/constants';
 
 describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
@@ -384,6 +385,49 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
       // Should trigger zoom change (pan)
       expect(onZoomChange.callCount).to.be.greaterThan(0);
       expect(getAxisTickValues('x')).to.deep.equal(['A', 'B']);
+    });
+
+    it('should pan diagonally on wheel scroll with xy', async () => {
+      const onZoomChange = sinon.spy();
+      render(
+        <ScatterChartPro
+          {...barChartProps}
+          initialZoom={[
+            { axisId: 'x', start: 25, end: 75 },
+            { axisId: 'y', start: 25, end: 75 },
+          ]}
+          series={[
+            {
+              data: [
+                { x: 10, y: 10 },
+                { x: 20, y: 20 },
+                { x: 30, y: 30 },
+                { x: 40, y: 40 },
+              ],
+            },
+          ]}
+          yAxis={[{ id: 'y', zoom: true, width: 30 }]}
+          onZoomChange={onZoomChange}
+          zoomInteractionConfig={{
+            zoom: [], // Disable zoom to avoid conflict
+            pan: [{ type: 'wheel', axesFilter: 'xy' }],
+          }}
+        />,
+        options,
+      );
+
+      const svg = document.querySelector(CHART_SELECTOR)!;
+      expect(getAxisTickValues('x')).to.deep.equal(['10', '20']);
+      expect(getAxisTickValues('y')).to.deep.equal(['10', '20']);
+
+      // Simulate wheel scroll
+      fireEvent.wheel(svg, { deltaX: 100, deltaY: 100, clientX: 50, clientY: 50 });
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
+
+      // Should trigger zoom change (pan)
+      expect(onZoomChange.callCount).to.be.greaterThan(0);
+      expect(getAxisTickValues('x')).to.deep.equal(['0', '10']);
+      expect(getAxisTickValues('y')).to.deep.equal(['0', '10']);
     });
 
     it('should not pan when required keys are not pressed', async () => {
