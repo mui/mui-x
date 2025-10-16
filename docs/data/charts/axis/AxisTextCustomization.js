@@ -63,7 +63,7 @@ export default function AxisTextCustomization() {
       )}
       getCode={({ props }) => `import { BarChart } from '@mui/x-charts/BarChart';
 
-<ScatterChart
+<BarChart
   // ...
   xAxis={[
     {

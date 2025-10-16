@@ -82,6 +82,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
     children,
     ...other
   } = props;
+
   const svgRef = useSvgRef();
   const classes = useUtilityClasses(propClasses);
 
@@ -211,13 +212,13 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
     <NoSsr>
       {isOpen && (
         <ChartsTooltipRoot
+          {...other}
           className={classes?.root}
           open={isOpen}
-          placement={position ?? (isMouse ? 'right-start' : 'top')}
+          placement={position ?? other.placement ?? (isMouse ? 'right-start' : 'top')}
           popperRef={popperRef}
           anchorEl={anchorEl}
           modifiers={modifiers}
-          {...other}
         >
           {children}
         </ChartsTooltipRoot>
