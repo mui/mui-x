@@ -963,7 +963,7 @@ const EmployeeDataGrid = () => {
 export default EmployeeDataGrid;
 ```
 
-Now your Data Grid should successfully fetch and render the dummy data from your server.
+Now your Data Grid should successfully fetch and render the dummy data from your server, and sorting, filtering, and pagination should all work as expected.
 
 ## Learn more
 
