@@ -126,6 +126,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
           <MoreEventsPopoverTrigger
             occurrences={day.withPosition}
             day={day}
+            nativeButton={true}
             render={
               <button
                 type="button"
