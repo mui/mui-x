@@ -89,7 +89,7 @@ Internal changes.
 - [docs] Add `'bumpX'` and `'bumpY'` curve types to the interpolation demo (#19676) @djpremier
 - [docs] Add scatter chart with linear regression demo (#19900) @bernardobelchior
 - [docs] Correctly describe Data Grid's row selection behavior (#19968) @arminmeh
-- [tree view][docs] Fix `isExpanded` type in docs (#19092) @mellis481
+- [docs] Fix `isExpanded` type in tree view docs (#19092) @mellis481
 
 ### Core
 
