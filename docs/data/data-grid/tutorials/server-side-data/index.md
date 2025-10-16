@@ -491,7 +491,7 @@ app.get('/api/employees', (req, res) => {
           });
         });
       }
-    } catch (e) {
+    } catch (error) {
       // Invalid filter, return all data
     }
   }
@@ -512,7 +512,7 @@ app.get('/api/employees', (req, res) => {
           return 0;
         });
       }
-    } catch (e) {
+    } catch (error) {
       // Invalid sort, keep original order
     }
   }
@@ -545,15 +545,35 @@ app.listen(PORT, () => {
 - Results are paginated using `page` and `pageSize` parameters
 - Data is returned in the format expected by the Data Grid
 
-### 5. Set up the client code
+### 5. Add scripts to package.json files
+
+In `server/package.json`, add:
+
+```json
+{
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  }
+}
+```
+
+### 6. Set up the client code
 
 In the `client` directory, add a new directory called `components`.
 Inside `components`, add a new file named `EmployeeDataGrid.tsx` with the following boilerplate.
 (You'll build out this component in part two of this tutorial.)
 
-```ts
-import React, { useMemo } from 'react';
-import { DataGridPro, type GridColDef, type GridDataSource, type GridGetRowsParams, type GridGetRowsResponse } from '@mui/x-data-grid-pro';
+```tsx
+import { useMemo } from 'react';
+import {
+  DataGrid,
+  type GridColDef,
+  type GridDataSource,
+  type GridGetRowsParams,
+  type GridGetRowsResponse,
+} from '@mui/x-data-grid';
 import { Box, Typography } from '@mui/material';
 
 const EmployeeDataGrid = () => {
@@ -572,43 +592,39 @@ const EmployeeDataGrid = () => {
 export default EmployeeDataGrid;
 ```
 
-Update `client/src/App.tsx` with the boilerplate setup below.
+Update `client/src/App.tsx` with the boilerplate setup below:
 
-```ts
-import React from 'react';
-import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
-import '@fontsource/roboto/300.css';
-import '@fontsource/roboto/400.css';
-import '@fontsource/roboto/500.css';
-import '@fontsource/roboto/700.css';
+```tsx
+import CssBaseline from '@mui/material/CssBaseline';
+import { Container } from '@mui/material';
 import EmployeeDataGrid from './components/EmployeeDataGrid';
-
-const theme = createTheme();
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
+    <>
       <CssBaseline />
+      <Container maxWidth="lg" sx={{ py: 4 }}>
         <EmployeeDataGrid />
-    </ThemeProvider>
+      </Container>
+    </>
   );
 }
 
 export default App;
 ```
 
-### 6. Add scripts to package.json files
+Replace the boilerplate code in `client/src/main.tsx` with the following:
 
-In `server/package.json`, add:
+```tsx
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App.tsx';
 
-```json
-{
-  "scripts": {
-    "dev": "tsx watch src/index.ts",
-    "build": "tsc",
-    "start": "node dist/index.js"
-  }
-}
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+);
 ```
 
 ### 7. Run the application
@@ -842,7 +858,7 @@ Finally, render the Grid with your configuration:
 
 Wrap everything in a container:
 
-```ts
+```tsx
 return (
   <Box sx={{ height: 600, width: '100%' }}>
     <Typography variant="h4" component="h1" gutterBottom>
@@ -947,7 +963,7 @@ const EmployeeDataGrid = () => {
 export default EmployeeDataGrid;
 ```
 
-Now your Vite app should successfully fetch and render the dummy data from your Express.js server.
+Now your Data Grid should successfully fetch and render the dummy data from your server.
 
 ## Learn more
 
