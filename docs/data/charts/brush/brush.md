@@ -26,12 +26,21 @@ The brush itself has no default behavior; you can use the `useBrush` hook to cre
 
 {{"demo": "BrushBasic.js"}}
 
-## Custom overlay
+## Customization examples
+
+### Custom overlay
 
 You can create a custom brush overlay by building your own component that uses the `useBrush` hook.
 This example shows how to display the values at the start and end positions, along with the difference and percentage change between them.
 
 {{"demo": "BrushCustomOverlay.js"}}
+
+### Data selection
+
+The brush can also be used to select and display data points within the selection area.
+This example shows a scatter chart where you can select points by dragging, and the selected points are displayed below the chart.
+
+{{"demo": "BrushScatterList.js"}}
 
 ### Using the `useBrush` hook
 
