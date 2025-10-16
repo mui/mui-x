@@ -4,6 +4,7 @@ import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import * as sinon from 'sinon';
 import { LineChartPro } from './LineChartPro';
+import { CHART_SELECTOR } from '../tests/constants';
 
 const getAxisTickValues = (axis: 'x' | 'y', container: HTMLElement): string[] => {
   const axisData = Array.from(
@@ -58,7 +59,7 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
     expect(getAxisTickValues('x', container)).to.deep.equal(['A', 'B', 'C', 'D']);
 
     // eslint-disable-next-line testing-library/no-container
-    const svg = container.querySelector('svg')!;
+    const svg = container.querySelector(CHART_SELECTOR)!;
 
     await user.pointer([
       {
@@ -118,7 +119,7 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
       expect(getAxisTickValues('x', container)).to.deep.equal(['D']);
 
       // eslint-disable-next-line testing-library/no-container
-      const svg = container.querySelector('svg')!;
+      const svg = container.querySelector(CHART_SELECTOR)!;
 
       // we drag one position so C should be visible
       await user.pointer([
@@ -249,7 +250,7 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
     expect(getAxisTickValues('x', container)).to.deep.equal(['A', 'B', 'C', 'D']);
 
     // eslint-disable-next-line testing-library/no-container
-    const svg = container.querySelector('svg')!;
+    const svg = container.querySelector(CHART_SELECTOR)!;
 
     await user.pointer([
       {
@@ -305,7 +306,7 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
     expect(getAxisTickValues('x', container)).to.deep.equal(['A', 'B', 'C', 'D']);
 
     // eslint-disable-next-line testing-library/no-container
-    const svg = container.querySelector('svg')!;
+    const svg = container.querySelector(CHART_SELECTOR)!;
 
     // Perform tap and drag gesture - tap once, then drag vertically up to zoom in
     await user.pointer([
@@ -357,7 +358,7 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
     expect(getAxisTickValues('x', container)).to.deep.equal(['A', 'B', 'C', 'D']);
 
     // eslint-disable-next-line testing-library/no-container
-    const svg = container.querySelector('svg')!;
+    const svg = container.querySelector(CHART_SELECTOR)!;
 
     // Simulate the problematic scenario:
     // 1. Small drag down (positive deltaY) - this should zoom out slightly
@@ -443,7 +444,7 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
     expect(getAxisTickValues('x', container)).to.deep.equal(['D']);
 
     // eslint-disable-next-line testing-library/no-container
-    const svg = container.querySelector('svg')!;
+    const svg = container.querySelector(CHART_SELECTOR)!;
 
     await user.pointer([
       {
@@ -491,7 +492,7 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
     expect(getAxisTickValues('x', container)).to.deep.equal(['D']);
 
     // eslint-disable-next-line testing-library/no-container
-    const svg = container.querySelector('svg')!;
+    const svg = container.querySelector(CHART_SELECTOR)!;
 
     // we drag one position so C should be visible
     await user.pointer([
