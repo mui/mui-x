@@ -38,6 +38,11 @@ const knobs = {
     knob: 'switch',
     defaultValue: false,
   },
+  panOnWheel: {
+    displayName: 'Pan on wheel',
+    knob: 'switch',
+    defaultValue: false,
+  },
 };
 
 export default function ZoomAndPanInteractions() {
@@ -65,6 +70,9 @@ export default function ZoomAndPanInteractions() {
         }
         if (props.pressAndDrag) {
           panInteractions.push('pressAndDrag');
+        }
+        if (props.panOnWheel) {
+          panInteractions.push('panOnWheel');
         }
 
         const zoomInteractionConfig = {
@@ -114,6 +122,9 @@ export default function ZoomAndPanInteractions() {
         }
         if (props.pressAndDrag) {
           panInteractions.push('pressAndDrag');
+        }
+        if (props.panOnWheel) {
+          panInteractions.push('panOnWheel');
         }
 
         const zoomConfig =

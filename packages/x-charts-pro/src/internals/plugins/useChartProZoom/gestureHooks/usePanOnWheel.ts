@@ -77,66 +77,26 @@ export const usePanOnWheel = (
       const axesFilter = config?.axesFilter ?? 'x';
 
       rafThrottledSetZoomData((prev) => {
-        // Get the wheel delta
-        const wheelEvent = event.detail.srcEvent;
+        const wheelEvent = event.detail;
 
-        // Determine pan direction and amount based on axes filter
         let movementX = 0;
         let movementY = 0;
 
         if (axesFilter === 'x' || axesFilter === 'xy') {
-          // Pan horizontally when scrolling
-          movementX = -wheelEvent.deltaY;
+          movementX = wheelEvent.deltaX;
         }
 
         if (axesFilter === 'y' || axesFilter === 'xy') {
-          // Pan vertically when scrolling
           movementY = wheelEvent.deltaY;
         }
 
-        // Filter the zoom data based on the axes filter
-        const filteredPrev = prev.map((zoom) => {
-          const option = optionsLookup[zoom.axisId];
-          if (!option) {
-            return zoom;
-          }
-
-          // Apply axis filter
-          if (axesFilter === 'x' && option.axisDirection !== 'x') {
-            return zoom;
-          }
-          if (axesFilter === 'y' && option.axisDirection !== 'y') {
-            return zoom;
-          }
-          // 'xy' applies to all axes
-
-          return zoom;
-        });
-
         return translateZoom(
-          filteredPrev,
+          prev,
           { x: movementX, y: movementY },
           drawingArea,
           optionsLookup,
-        ).map((newZoom) => {
-          // Find the original zoom data for axes that weren't affected by the filter
-          const originalZoom = prev.find((z) => z.axisId === newZoom.axisId);
-          const option = optionsLookup[newZoom.axisId];
-
-          if (!option) {
-            return originalZoom!;
-          }
-
-          // Return the new zoom only if it was supposed to be affected
-          if (axesFilter === 'x' && option.axisDirection !== 'x') {
-            return originalZoom!;
-          }
-          if (axesFilter === 'y' && option.axisDirection !== 'y') {
-            return originalZoom!;
-          }
-
-          return newZoom;
-        });
+          axesFilter,
+        );
       });
     });
 
