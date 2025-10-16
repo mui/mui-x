@@ -58,8 +58,8 @@ Same changes as in `@mui/x-date-pickers@8.14.1`.
 - [charts] Fix bar chart border radius when axis is reversed (#19895) @bernardobelchior
 - [charts] Fix scatter chart `datasetKeys.id` not being optional (#19897) @bernardobelchior
 - [charts] Use more performant data structure for closest point (#19790) @bernardobelchior
-- [charts] Fix GaugeValueArc having wrong class (#19965) @bernardobelchior 
-- [charts] Fix undefined path when highlight empty line chart axis (#19969) @bernardobelchior 
+- [charts] Fix `GaugeValueArc` having wrong class (#19965) @bernardobelchior
+- [charts] Fix `undefined` path when highlight empty line chart axis (#19969) @bernardobelchior
 
 #### `@mui/x-charts-pro@8.14.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
