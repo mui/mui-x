@@ -71,10 +71,9 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
     return nextItemId;
   };
 
-  const getNextMatchingItemId = (itemId: string): string | null => {
+  const getNextMatchingItemId = (itemId: string, query: string): string | null => {
     let matchingItemId: string | null = null;
     const checkedItems: Record<string, true> = {};
-    const query = typeaheadQueryRef.current;
     // If query length > 1, first check if current item matches
     let currentItemId: string = query.length > 1 ? itemId : getNextItem(itemId);
     // The "!checkedItems[currentItemId]" condition avoids an infinite loop when there is no matching item.
@@ -92,20 +91,26 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
   };
 
   const getFirstMatchingItem = (itemId: string, newKey: string): string | null => {
+    const cleanNewKey = newKey.toLowerCase();
+
     // Try matching with accumulated query + new key
-    const cleanQuery = (typeaheadQueryRef.current + newKey).toLowerCase();
+    const concatenatedQuery = `${typeaheadQueryRef.current}${cleanNewKey}`;
 
     // check if the entire typed query matches an item
-    typeaheadQueryRef.current = cleanQuery;
-    let matchingItemId = getNextMatchingItemId(itemId);
-
-    // if not, try matching with only the new key
-    if (typeaheadQueryRef.current.length > 0 && !matchingItemId) {
-      typeaheadQueryRef.current = newKey.toLowerCase();
-      matchingItemId = getNextMatchingItemId(itemId);
+    const concatenatedQueryMatchingItemId = getNextMatchingItemId(itemId, concatenatedQuery);
+    if (concatenatedQueryMatchingItemId != null) {
+      typeaheadQueryRef.current = concatenatedQuery;
+      return concatenatedQueryMatchingItemId;
     }
 
-    return matchingItemId;
+    const newKeyMatchingItemId = getNextMatchingItemId(itemId, cleanNewKey);
+    if (newKeyMatchingItemId != null) {
+      typeaheadQueryRef.current = cleanNewKey;
+      return newKeyMatchingItemId;
+    }
+
+    typeaheadQueryRef.current = '';
+    return null;
   };
 
   const canToggleItemSelection = (itemId: string) =>
