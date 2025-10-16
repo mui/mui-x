@@ -8,9 +8,9 @@ import Typography from '@mui/material/Typography';
 function CustomBrushOverlay() {
   const theme = useTheme();
   const drawingArea = useDrawingArea();
-  const { start, current } = useBrush();
+  const brush = useBrush();
 
-  if (!start || !current) {
+  if (!brush) {
     return null;
   }
 
@@ -18,8 +18,8 @@ function CustomBrushOverlay() {
 
   // Clamp coordinates to drawing area
   const clampX = (x) => Math.max(left, Math.min(left + width, x));
-  const clampedStartX = clampX(start.x);
-  const clampedCurrentX = clampX(current.x);
+  const clampedStartX = clampX(brush.start.x);
+  const clampedCurrentX = clampX(brush.current.x);
 
   const minX = Math.min(clampedStartX, clampedCurrentX);
   const maxX = Math.max(clampedStartX, clampedCurrentX);
