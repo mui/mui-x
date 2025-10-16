@@ -9,7 +9,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Oct 16, 2025_
 
-We'd like to extend a big thank you to the 12 contributors who made this release possible. Here are some highlights ✨:
+We'd like to extend a big thank you to the 13 contributors who made this release possible. Here are some highlights ✨:
 
 - 🚀 Charts have optimized data structures for closest point calculations — initial render times reduced by ~25% for 1,000+ data points, with greater gains at larger scales (#19790) @bernardobelchior
 - 🐞 Bugfixes
@@ -19,7 +19,7 @@ Special thanks go out to the community members for their valuable contributions:
 @djpremier, @jacknot, @mellis481, @sai6855
 
 The following are all team members who have contributed to this release:
-@arminmeh, @bernardobelchior, @brijeshb42, @cherniavskii, @flaviendelangle, @Janpot, @JCQuintas, @noraleonte
+@arminmeh, @bernardobelchior, @brijeshb42, @cherniavskii, @flaviendelangle, @Janpot, @JCQuintas, @noraleonte, @siriwatknp
 
 ### Data Grid
 
@@ -27,6 +27,7 @@ The following are all team members who have contributed to this release:
 
 - [DataGrid] Fix cell not rerendering on `isCellEditable` prop change (#19898) @cherniavskii
 - [DataGrid] Fix virtualizer memory leaks (#19886) @cherniavskii
+- [DataGrid] Fix tree data unable to deselect row for exclude model (#19846) @siriwatknp
 - [l10n] Improve Italian (it-IT) locale (#19322) @jacknot
 
 #### `@mui/x-data-grid-pro@8.14.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
