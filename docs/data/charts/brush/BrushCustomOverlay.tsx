@@ -85,8 +85,6 @@ function CustomBrushOverlay() {
         height={height}
         fill={color}
         fillOpacity={0.1}
-        stroke={color}
-        strokeWidth={1}
         pointerEvents="none"
       />
 
