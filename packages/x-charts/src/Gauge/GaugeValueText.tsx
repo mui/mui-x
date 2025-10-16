@@ -1,8 +1,10 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import { useGaugeState } from './GaugeProvider';
 import { ChartsText, ChartsTextProps } from '../ChartsText';
+import { gaugeClasses } from './gaugeClasses';
 
 export interface GaugeFormatterParams {
   value: number | null;
@@ -29,7 +31,7 @@ function GaugeValueText(props: GaugeValueTextProps) {
   }
 
   return (
-    <g className={className}>
+    <g className={clsx(gaugeClasses.valueText, className)}>
       <ChartsText
         x={cx}
         y={cy}
