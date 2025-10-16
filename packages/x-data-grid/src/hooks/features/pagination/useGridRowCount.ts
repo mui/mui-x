@@ -7,7 +7,7 @@ import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPaginationRowCountApi, GridPaginationState } from './gridPaginationInterfaces';
 import { gridFilteredTopLevelRowCountSelector } from '../filter';
-import { useGridLogger, useGridApiMethod, useGridEvent } from '../../utils';
+import { useGridLogger, useGridApiMethod, useGridEvent, useFirstRender } from '../../utils';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import {
   gridPaginationRowCountSelector,
@@ -157,7 +157,7 @@ export const useGridRowCount = (
       return undefined;
     },
     (_, isLastPageOrRowCount) => {
-      if (isLastPageOrRowCount === true) {
+      if (isLastPageOrRowCount === true && gridPaginationRowCountSelector(apiRef) !== -1) {
         const visibleTopLevelRowCount = gridFilteredTopLevelRowCountSelector(apiRef);
         const paginationModel = gridPaginationModelSelector(apiRef);
         apiRef.current.setRowCount(
@@ -168,4 +168,10 @@ export const useGridRowCount = (
       }
     },
   );
+
+  useFirstRender(() => {
+    if (props.paginationMode === 'client') {
+      apiRef.current.setRowCount(gridFilteredTopLevelRowCountSelector(apiRef));
+    }
+  });
 };
