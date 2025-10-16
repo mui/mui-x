@@ -27,18 +27,20 @@ function CustomToolbar() {
   );
 }
 
+const rows = [
+  { id: 1, name: 'React' },
+  { id: 2, name: 'MUI' },
+];
+
+const columns = [{ field: 'name' }];
+
 export default function AccessingLoadingState() {
   return (
     <div style={{ height: 300, width: '100%' }}>
       <DataGrid
-        columns={[{ field: 'name' }]}
-        rows={[
-          { id: 1, name: 'React' },
-          { id: 2, name: 'MUI' },
-        ]}
-        slots={{
-          toolbar: CustomToolbar,
-        }}
+        columns={columns}
+        rows={rows}
+        slots={{ toolbar: CustomToolbar }}
         showToolbar
       />
     </div>
