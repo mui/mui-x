@@ -1484,6 +1484,12 @@
       "class": null
     },
     {
+      "name": "promptChartsIcon",
+      "description": "Icon used to mark the request to visalize the data",
+      "default": "GridChartsIcon",
+      "class": null
+    },
+    {
       "name": "promptGroupIcon",
       "description": "Icon used to display group changes",
       "default": "GridGroupWorkIcon",
