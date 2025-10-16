@@ -384,7 +384,7 @@ The server runs on `http://localhost:3001` and the client on `http://localhost:5
 ## Part two: Data Grid setup
 
 In this section, you'll build out the Grid's data fetching functionality.
-All steps that follow take place in the `EmployeeDataGrid.tsx` component you created in step 5.
+All steps that follow take place in the `EmployeeDataGrid.tsx` component you created in step 6.
 
 ### 8. Define the data structure
 
