@@ -129,7 +129,7 @@
     "zoomInteractionConfig": {
       "type": {
         "name": "shape",
-        "description": "{ pan?: Array&lt;'drag'<br>&#124;&nbsp;'pressAndDrag'<br>&#124;&nbsp;{ pointerMode?: 'mouse'<br>&#124;&nbsp;'touch', requiredKeys?: Array&lt;string&gt;, type: 'drag' }<br>&#124;&nbsp;{ pointerMode?: 'mouse'<br>&#124;&nbsp;'touch', requiredKeys?: Array&lt;string&gt;, type: 'pressAndDrag' }&gt;, zoom?: Array&lt;'pinch'<br>&#124;&nbsp;'tapAndDrag'<br>&#124;&nbsp;'wheel'<br>&#124;&nbsp;{ pointerMode?: any, requiredKeys?: Array&lt;string&gt;, type: 'wheel' }<br>&#124;&nbsp;{ pointerMode?: any, requiredKeys?: array, type: 'pinch' }<br>&#124;&nbsp;{ pointerMode?: 'mouse'<br>&#124;&nbsp;'touch', requiredKeys?: Array&lt;string&gt;, type: 'tapAndDrag' }&gt; }"
+        "description": "{ pan?: Array&lt;'drag'<br>&#124;&nbsp;'pressAndDrag'<br>&#124;&nbsp;'wheel'<br>&#124;&nbsp;{ pointerMode?: 'mouse'<br>&#124;&nbsp;'touch', requiredKeys?: Array&lt;string&gt;, type: 'drag' }<br>&#124;&nbsp;{ pointerMode?: 'mouse'<br>&#124;&nbsp;'touch', requiredKeys?: Array&lt;string&gt;, type: 'pressAndDrag' }<br>&#124;&nbsp;{ axesFilter?: 'x'<br>&#124;&nbsp;'xy'<br>&#124;&nbsp;'y', pointerMode?: any, requiredKeys?: Array&lt;string&gt;, type: 'wheel' }&gt;, zoom?: Array&lt;'pinch'<br>&#124;&nbsp;'tapAndDrag'<br>&#124;&nbsp;'wheel'<br>&#124;&nbsp;{ pointerMode?: any, requiredKeys?: Array&lt;string&gt;, type: 'wheel' }<br>&#124;&nbsp;{ pointerMode?: any, requiredKeys?: array, type: 'pinch' }<br>&#124;&nbsp;{ pointerMode?: 'mouse'<br>&#124;&nbsp;'touch', requiredKeys?: Array&lt;string&gt;, type: 'tapAndDrag' }&gt; }"
       }
     }
   },
