@@ -83,7 +83,7 @@ rrule={{ freq: 'WEEKLY', interval: 2, byDay: ['MO', 'WE', 'FR'] }}
 
 Use either the `byMonthDay` or the `byDay` property (both can't be defined together):
 
-- Use the `byMonthDay` property with a single day number to define the days of the month on which the event should be applied:
+- Use the `byMonthDay` property with a single day number to define the day of the month on which the event should be applied:
 
   ```tsx
   // Every month on the 15th
