@@ -112,7 +112,7 @@ commands:
               args="$args @mui/material@$MATERIAL_UI_VERSION"
             fi
             if [ -n "$args" ]; then
-              pnpm dlx @mui/internal-code-infra set-version-overrides --pkg $args
+              pnpm dlx @mui/internal-code-infra@canary set-version-overrides --pkg $args
             else
               pnpm install
             fi
