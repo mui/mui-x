@@ -1,6 +1,5 @@
-import { RecurringUpdateEventScope } from '@mui/x-scheduler-headless/models';
+import { RecurringEventUpdateScope } from '@mui/x-scheduler-headless/models';
 import * as React from 'react';
-// import { RecurringUpdateEventScope } from '@mui/x-scheduler-headless/models';
 
 export interface ScopePopoverProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
@@ -10,11 +9,11 @@ export interface ScopePopoverProps extends React.HTMLAttributes<HTMLDivElement> 
   /**
    * Resolves the promise returned by `promptScope` with the selected scope or `null` if cancelled.
    */
-  onResolve: (value: RecurringUpdateEventScope | null) => void;
+  onResolve: (value: RecurringEventUpdateScope | null) => void;
 }
 
 export interface ScopeDialogContextValue {
-  promptScope: () => Promise<RecurringUpdateEventScope | null>;
+  promptScope: () => Promise<RecurringEventUpdateScope | null>;
   isOpen: boolean;
 }
 

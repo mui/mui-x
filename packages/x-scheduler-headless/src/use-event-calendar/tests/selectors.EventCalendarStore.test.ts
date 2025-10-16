@@ -55,6 +55,7 @@ describe('EventCalendarStore.selectors', () => {
           start: adapter.startOfDay(day),
           end: adapter.endOfDay(day),
           originalOccurrence: {
+            key: 'event-id-key',
             id: 'event-id',
             title: 'Event',
             start: adapter.startOfDay(day),
@@ -124,6 +125,7 @@ describe('EventCalendarStore.selectors', () => {
           end: adapter.endOfDay(day),
           originalOccurrence: {
             id: 'event-id',
+            key: 'event-id-key',
             title: 'Event',
             start: adapter.startOfDay(day),
             end: adapter.endOfDay(day),
