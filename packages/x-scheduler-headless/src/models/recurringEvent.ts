@@ -31,7 +31,7 @@ type RecurringEventByDayOrdinal = `${'' | '-'}${1 | 2 | 3 | 4 | 5}`;
 /**
  * The valid values for the BYDAY property of the RRULE.
  * When used with a weekly frequency, it needs to be a weekday code (e.g: "TU", "FR").
- * When used with a monthly or yearly frequency, it needs to be an ordinal and a weekday (e.g: "2TU", "-1FR").
+ * When used with a monthly frequency, it needs to be an ordinal and a weekday (e.g: "2TU", "-1FR").
  */
 export type RecurringEventByDayValue =
   | RecurringEventWeekDayCode
