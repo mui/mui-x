@@ -9,7 +9,7 @@ import {
   EventSurfaceType,
   CalendarEventUpdatedProperties,
   SchedulerValidDate,
-  RecurringUpdateEventScope,
+  RecurringEventUpdateScope,
 } from '../models';
 import {
   EventDropData,
@@ -147,7 +147,7 @@ export namespace useDropTarget {
      * Prompts the UI to choose the scope for a recurring event update.
      * Return `null` to cancel the operation.
      */
-    chooseRecurringEventScope?: () => Promise<RecurringUpdateEventScope | null>;
+    chooseRecurringEventScope?: () => Promise<RecurringEventUpdateScope | null>;
   }
 
   export type CreateDropData = (
@@ -170,7 +170,7 @@ async function applyInternalDragOrResizeOccurrencePlaceholder(
   store: SchedulerStoreInContext,
   placeholder: CalendarOccurrencePlaceholderInternalDragOrResize,
   addPropertiesToDroppedEvent?: () => Partial<CalendarEvent>,
-  chooseRecurringEventScope?: () => Promise<RecurringUpdateEventScope | null>,
+  chooseRecurringEventScope?: () => Promise<RecurringEventUpdateScope | null>,
 ): Promise<void> {
   // TODO: Try to do a single state update.
   store.setOccurrencePlaceholder(null);

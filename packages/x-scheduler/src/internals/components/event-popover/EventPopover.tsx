@@ -18,7 +18,7 @@ import {
   CalendarResourceId,
   CalendarEventUpdatedProperties,
   SchedulerValidDate,
-  RecurrencePresetKey,
+  RecurringEventPresetKey,
 } from '@mui/x-scheduler-headless/models';
 import { selectors } from '@mui/x-scheduler-headless/use-event-calendar';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
@@ -141,7 +141,7 @@ export const EventPopoverContent = React.forwardRef(function EventPopoverContent
 
   const recurrenceOptions: {
     label: string;
-    value: RecurrencePresetKey | null;
+    value: RecurringEventPresetKey | null;
   }[] = [
     { label: `${translations.recurrenceNoRepeat}`, value: null },
     { label: `${translations.recurrenceDailyPresetLabel}`, value: 'daily' },
@@ -196,7 +196,7 @@ export const EventPopoverContent = React.forwardRef(function EventPopoverContent
     const { start, end } = computeRange(when, isAllDay);
 
     const form = new FormData(event.currentTarget);
-    const recurrenceValue = form.get('recurrence') as RecurrencePresetKey;
+    const recurrenceValue = form.get('recurrence') as RecurringEventPresetKey;
     const recurrenceModified =
       defaultRecurrenceKey !== 'custom' && recurrenceValue !== defaultRecurrenceKey;
     // TODO: This will change after implementing the custom recurrence editing tab.

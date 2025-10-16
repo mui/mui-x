@@ -7,8 +7,8 @@ import {
   CalendarResourceId,
   CalendarEventUpdatedProperties,
   SchedulerValidDate,
-  RecurringUpdateEventScope,
   CalendarEventId,
+  RecurringEventUpdateScope,
 } from '../../models';
 import { Adapter } from '../../use-adapter/useAdapter.types';
 
@@ -156,7 +156,7 @@ export type UpdateRecurringEventParameters = {
   /**
    * The scope of the update.
    */
-  scope: RecurringUpdateEventScope;
+  scope: RecurringEventUpdateScope;
 };
 
 /**

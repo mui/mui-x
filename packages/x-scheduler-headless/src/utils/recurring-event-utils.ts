@@ -1,11 +1,11 @@
 import { Adapter } from '../use-adapter/useAdapter.types';
 import {
-  ByDayCode,
-  ByDayValue,
+  RecurringEventWeekDayCode,
+  RecurringEventByDayValue,
   CalendarEvent,
   CalendarEventOccurrence,
   CalendarEventUpdatedProperties,
-  RRuleSpec,
+  RecurringEventRecurrenceRule,
   SchedulerValidDate,
 } from '../models';
 import { mergeDateAndTime, getDateKey } from './date-utils';
@@ -13,82 +13,91 @@ import { diffIn } from '../use-adapter';
 import { UpdateEventsParameters } from './SchedulerStore';
 
 /**
- * Build BYDAY<->number maps using a known ISO Monday (2025-01-06).
- * Day numbers come from adapter.getDayOfWeek(), so it respects the adapter’s locale/numbering.
+ * The week day codes for all 7 days of the week.
  */
-export function getByDayMaps(adapter: Adapter): {
-  byDayToNum: Record<ByDayCode, number>;
-  numToByDay: Record<number, ByDayCode>;
+export const WEEK_DAYS: RecurringEventWeekDayCode[] = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
+
+/**
+ * Builds maps to convert between a week day code and a week day number.
+ * This method uses a known ISO Monday (2025-01-06).
+ * Day numbers come from adapter.getDayOfWeek(), so it respects the adapter’s locale numbering.
+ */
+export function getWeekDayMaps(adapter: Adapter): {
+  codeToNum: Record<RecurringEventWeekDayCode, number>;
+  numToCode: Record<number, RecurringEventWeekDayCode>;
 } {
   const baseMonday = adapter.date('2025-01-06T00:00:00Z', 'utc'); // ISO Monday
-  const byDayCodes: ByDayCode[] = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
+  const codeToNum = {} as Record<RecurringEventWeekDayCode, number>;
+  const numToCode: Record<number, RecurringEventWeekDayCode> = {};
 
-  const byDayToNum = {} as Record<ByDayCode, number>;
-  for (let i = 0; i < byDayCodes.length; i += 1) {
+  for (let i = 0; i < WEEK_DAYS.length; i += 1) {
     const day = i === 0 ? baseMonday : adapter.addDays(baseMonday, i);
-    byDayToNum[byDayCodes[i]] = adapter.getDayOfWeek(day);
+    const code = WEEK_DAYS[i];
+    const num = adapter.getDayOfWeek(day);
+    codeToNum[code] = num;
+    numToCode[num] = code;
   }
 
-  const numToByDay: Record<number, ByDayCode> = {};
-  for (const byDayCode of byDayCodes) {
-    numToByDay[byDayToNum[byDayCode]] = byDayCode;
-  }
-
-  return { byDayToNum, numToByDay };
+  return { codeToNum, numToCode };
 }
 
 /**
- * Tokenizes a BYDAY value into { ord, code }.
- * @returns { ord: number|null, code: ByDayCode }
+ * Tokenizes a byDay value into { ord, code }.
+ * @returns { ord: number | null, code: RecurringEventWeekDayCode }
  * @throws if the value is invalid.
  */
-export function tokenizeByDay(byDay: ByDayValue): { ord: number | null; code: ByDayCode } {
+export function tokenizeByDay(byDay: RecurringEventByDayValue): {
+  ord: number | null;
+  code: RecurringEventWeekDayCode;
+} {
   const match = String(byDay).match(/^(-?[1-5])?(MO|TU|WE|TH|FR|SA|SU)$/);
   if (!match) {
-    throw new Error('Event Calendar: invalid BYDAY value.');
+    throw new Error(`Scheduler: ${byDay} is not a valid value for the byDay property.`);
   }
-  return { ord: match[1] ? Number(match[1]) : null, code: match[2] as ByDayCode };
+  return { ord: match[1] ? Number(match[1]) : null, code: match[2] as RecurringEventWeekDayCode };
 }
 
 /**
- * Parses WEEKLY BYDAY expecting plain weekday codes (MO..SU).
+ * Parses the byDay property for a weekly frequency.
+ * It only accepts weekday codes (MO..SU) without ordinal.
  * If `ruleByDay` is empty, returns `fallback`.
  * @throws if any ordinal is present (e.g. 1MO, -1FR).
  */
-export function parseWeeklyByDayPlain(
-  ruleByDay: RRuleSpec['byDay'],
-  fallback: ByDayCode[],
-): ByDayCode[] {
+export function parsesByDayForWeeklyFrequency(
+  ruleByDay: RecurringEventRecurrenceRule['byDay'] | undefined,
+  fallback: RecurringEventWeekDayCode[],
+): RecurringEventWeekDayCode[] {
   if (!ruleByDay?.length) {
     return fallback;
   }
   const parsed = ruleByDay.map(tokenizeByDay);
   if (parsed.some((item) => item.ord !== null)) {
     throw new Error(
-      'Event Calendar: WEEKLY BYDAY must be plain MO..SU (no ordinals like 1MO, -1FR).',
+      'Scheduler: The byDay property must be a plain MO..SU (no ordinals like 1MO, -1FR) when used with a weekly frequency.',
     );
   }
   return parsed.map((item) => item.code);
 }
 
 /**
- * Parses MONTHLY BYDAY expecting one ordinal entry (e.g. 2TU, -1FR).
+ * Parses the byDay property for a monthly frequency.
+ * Expects a single ordinal entry (e.g. 2TU, -1FR).
  * Returns normalized tokens with positive/negative ordinals.
- * @throws if BYDAY is missing, multiple, or missing ordinal.
+ * @throws if byDay property is missing, multiple, or missing ordinal.
  */
-export function parseMonthlyByDayOrdinalSingle(ruleByDay: RRuleSpec['byDay']): {
+export function parsesByDayForMonthlyFrequency(ruleByDay: RecurringEventByDayValue[]): {
   ord: number;
-  code: ByDayCode;
+  code: RecurringEventWeekDayCode;
 } {
-  if (!ruleByDay?.length || ruleByDay.length !== 1) {
+  const { ord, code } =
+    ruleByDay.length === 1 ? tokenizeByDay(ruleByDay[0]) : { ord: null, code: null };
+
+  if (ord == null) {
     throw new Error(
-      'Event Calendar: MONTHLY BYDAY must contain exactly one ordinal entry (e.g. 2TU or -1FR).',
+      'Scheduler: The byDay property must contain contain a single element with an ordinal (e.g. ["2TU"] or ["-1FR"]).',
     );
   }
-  const { ord, code } = tokenizeByDay(ruleByDay[0]);
-  if (ord == null) {
-    throw new Error('Event Calendar: MONTHLY BYDAY must include an ordinal (e.g. 2TU or -1FR).');
-  }
+
   return { ord, code };
 }
 
@@ -174,7 +183,7 @@ export function getRecurringEventOccurrencesForVisibleDays(
  *  COUNT uses `estimateOccurrencesUpTo` (inclusive) to stop after the Nth occurrence.
  */
 export function buildEndGuard(
-  rule: RRuleSpec,
+  rule: RecurringEventRecurrenceRule,
   seriesStart: SchedulerValidDate,
   adapter: Adapter,
 ): (date: SchedulerValidDate) => boolean {
@@ -183,7 +192,7 @@ export function buildEndGuard(
 
   if (hasCount && hasUntil) {
     throw new Error(
-      'Event Calendar: RRULE invalid, COUNT and UNTIL are mutually exclusive per RFC 5545.',
+      'Scheduler: The recurring rule cannot have both the count and until properties.',
     );
   }
 
@@ -220,11 +229,11 @@ export function buildEndGuard(
 export function nthWeekdayOfMonth(
   adapter: Adapter,
   monthStart: SchedulerValidDate,
-  weekdayCode: ByDayCode,
+  weekdayCode: RecurringEventWeekDayCode,
   ordinal: number,
 ): SchedulerValidDate | null {
-  const { byDayToNum } = getByDayMaps(adapter);
-  const targetWeekdayNumber = byDayToNum[weekdayCode];
+  const { codeToNum } = getWeekDayMaps(adapter);
+  const targetWeekdayNumber = codeToNum[weekdayCode];
 
   const totalDaysInMonth = adapter.getDaysInMonth(monthStart);
 
@@ -268,13 +277,12 @@ export function nthWeekdayOfMonth(
  *  @throws For unsupported YEARLY or MONTHLY selector combos.
  */
 export function matchesRecurrence(
-  rule: RRuleSpec,
+  rule: RecurringEventRecurrenceRule,
   date: SchedulerValidDate,
   adapter: Adapter,
   event: CalendarEvent,
 ): boolean {
   const interval = Math.max(1, rule.interval ?? 1);
-
   const seriesStartDay = adapter.startOfDay(event.start);
   const candidateDay = adapter.startOfDay(date);
 
@@ -291,15 +299,15 @@ export function matchesRecurrence(
     case 'WEEKLY': {
       const seriesWeek = adapter.startOfWeek(seriesStartDay);
       const dateWeek = adapter.startOfWeek(candidateDay);
-      const { numToByDay: numToCode } = getByDayMaps(adapter);
+      const { numToCode } = getWeekDayMaps(adapter);
 
       // If no BYDAY is provided in a WEEKLY rule, default to the weekday of DTSTART.
-      const byDay = parseWeeklyByDayPlain(rule.byDay, [
+      const weekDayCode = parsesByDayForWeeklyFrequency(rule.byDay, [
         numToCode[adapter.getDayOfWeek(seriesStartDay)],
       ]);
 
       const dateDowCode = numToCode[adapter.getDayOfWeek(candidateDay)];
-      if (!byDay.includes(dateDowCode)) {
+      if (!weekDayCode.includes(dateDowCode)) {
         return false;
       }
 
@@ -320,11 +328,11 @@ export function matchesRecurrence(
       if (rule.byDay?.length) {
         if (rule.byMonthDay?.length) {
           throw new Error(
-            'Event Calendar: For MONTHLY use either BYDAY (ordinal) or BYMONTHDAY, not both.',
+            'Scheduler: The monthly recurrences cannot have both the byDay and the byMonthDay properties.',
           );
         }
 
-        const { ord, code } = parseMonthlyByDayOrdinalSingle(rule.byDay);
+        const { ord, code } = parsesByDayForMonthlyFrequency(rule.byDay);
         const occurrenceDate = nthWeekdayOfMonth(adapter, dateMonth, code, ord);
         if (occurrenceDate && adapter.isSameDay(occurrenceDate, candidateDay)) {
           return true;
@@ -348,7 +356,7 @@ export function matchesRecurrence(
       // Any use of BYMONTH, BYMONTHDAY, BYDAY, or multiple values is not allowed.
       if (rule.byMonth?.length || rule.byMonthDay?.length || rule.byDay?.length) {
         throw new Error(
-          'Event Calendar: YEARLY supports only exact same date recurrence (month/day of DTSTART).',
+          'Scheduler: The yearly recurrences only support exact same date recurrence (month/day of DTSTART).',
         );
       }
 
@@ -374,7 +382,7 @@ export function matchesRecurrence(
  */
 export function estimateOccurrencesUpTo(
   adapter: Adapter,
-  rule: RRuleSpec,
+  rule: RecurringEventRecurrenceRule,
   seriesStart: SchedulerValidDate,
   date: SchedulerValidDate,
 ): number {
@@ -403,7 +411,7 @@ export function estimateOccurrencesUpTo(
     default:
       throw new Error(
         [
-          `Event Calendar: Unknown frequency ${rule.freq}`,
+          `Scheduler: Unknown frequency ${rule.freq}.`,
           'Expected: "DAILY" | "WEEKLY" | "MONTHLY" | "YEARLY".',
         ].join('\n'),
       );
@@ -413,8 +421,12 @@ export function estimateOccurrencesUpTo(
 /**
  *  Given a week start and a BYDAY code, returns the exact date in that week.
  */
-function dayInWeek(adapter: Adapter, weekStart: SchedulerValidDate, code: ByDayCode) {
-  const { byDayToNum: codeToNum } = getByDayMaps(adapter);
+function dayInWeek(
+  adapter: Adapter,
+  weekStart: SchedulerValidDate,
+  code: RecurringEventWeekDayCode,
+) {
+  const { codeToNum } = getWeekDayMaps(adapter);
   const weekStartDow = adapter.getDayOfWeek(weekStart);
   const ruleDow = codeToNum[code];
   const delta = (((ruleDow - weekStartDow) % 7) + 7) % 7;
@@ -428,7 +440,7 @@ function dayInWeek(adapter: Adapter, weekStart: SchedulerValidDate, code: ByDayC
  */
 export function countWeeklyOccurrencesUpToExact(
   adapter: Adapter,
-  rule: RRuleSpec,
+  rule: RecurringEventRecurrenceRule,
   seriesStart: SchedulerValidDate,
   date: SchedulerValidDate,
 ): number {
@@ -436,8 +448,10 @@ export function countWeeklyOccurrencesUpToExact(
     return 0;
   }
 
-  const { numToByDay: numToCode } = getByDayMaps(adapter);
-  const byDay = parseWeeklyByDayPlain(rule.byDay, [numToCode[adapter.getDayOfWeek(seriesStart)]]);
+  const { numToCode } = getWeekDayMaps(adapter);
+  const byDay = parsesByDayForWeeklyFrequency(rule.byDay, [
+    numToCode[adapter.getDayOfWeek(seriesStart)],
+  ]);
 
   const interval = Math.max(1, rule.interval ?? 1);
 
@@ -478,7 +492,7 @@ export function countWeeklyOccurrencesUpToExact(
  */
 export function countMonthlyOccurrencesUpToExact(
   adapter: Adapter,
-  rule: RRuleSpec,
+  rule: RecurringEventRecurrenceRule,
   seriesStart: SchedulerValidDate,
   date: SchedulerValidDate,
 ): number {
@@ -494,11 +508,11 @@ export function countMonthlyOccurrencesUpToExact(
   if (rule.byDay?.length) {
     if (rule.byMonthDay?.length) {
       throw new Error(
-        'Event Calendar: MONTHLY use either BYDAY (ordinal) or BYMONTHDAY, not both.',
+        'Scheduler: The monthly recurrences cannot have both the byDay and the byMonthDay properties.',
       );
     }
 
-    const { ord, code } = parseMonthlyByDayOrdinalSingle(rule.byDay);
+    const { ord, code } = parsesByDayForMonthlyFrequency(rule.byDay);
 
     let count = 0;
     for (
@@ -525,7 +539,9 @@ export function countMonthlyOccurrencesUpToExact(
 
   // Path B: BYMONTHDAY (single mode, default to DTSTART day)
   if ((rule.byMonthDay?.length ?? 0) > 1) {
-    throw new Error('Event Calendar: MONTHLY supports only a single BYMONTHDAY.');
+    throw new Error(
+      "Scheduler: The monthly recurrences don't support byMonthDay with multiple elements.",
+    );
   }
 
   // If no BYMONTHDAY is provided in a MONTHLY rule, default to the day of month of DTSTART.
@@ -567,7 +583,7 @@ export function countMonthlyOccurrencesUpToExact(
  */
 export function countYearlyOccurrencesUpToExact(
   adapter: Adapter,
-  rule: RRuleSpec,
+  rule: RecurringEventRecurrenceRule,
   seriesStart: SchedulerValidDate,
   date: SchedulerValidDate,
 ): number {
@@ -583,7 +599,7 @@ export function countYearlyOccurrencesUpToExact(
   // Any use of BYMONTH, BYMONTHDAY, or BYDAY is not allowed at the moment.
   if (rule.byMonth?.length || rule.byMonthDay?.length || rule.byDay?.length) {
     throw new Error(
-      'Event Calendar: YEARLY supports only exact same date recurrence (month/day of DTSTART).',
+      'Scheduler: The yearly recurrences must have either the byMonth, the byMonthDay or the byDay property defined.',
     );
   }
 
@@ -628,8 +644,8 @@ export function countYearlyOccurrencesUpToExact(
  */
 export function computeMonthlyOrdinal(adapter: Adapter, date: SchedulerValidDate): number {
   const monthStart = adapter.startOfMonth(date);
-  const { numToByDay } = getByDayMaps(adapter);
-  const code = numToByDay[adapter.getDayOfWeek(date)];
+  const { numToCode } = getWeekDayMaps(adapter);
+  const code = numToCode[adapter.getDayOfWeek(date)];
 
   // Is it the last same-weekday of the month? (-1)
   const lastSameWeekday = nthWeekdayOfMonth(adapter, monthStart, code, -1)!;
@@ -647,31 +663,31 @@ export function computeMonthlyOrdinal(adapter: Adapter, date: SchedulerValidDate
  * Realigns a WEEKLY BYDAY pattern when splitting “this and following”.
  * Swaps the weekday of the edited occurrence (oldRefDay) with the weekday of the new
  * series start (newStart), preserving the rest of the pattern and avoiding duplicates.
- * @returns {ByDayValue[]} - The realigned BYDAY list (deduplicated).
+ * @returns {RecurringEventByDayValue[]} - The realigned BYDAY list (deduplicated).
  */
 export function realignWeeklyByDay(
   adapter: Adapter,
-  byDays: ByDayCode[],
+  weekDayCodes: RecurringEventWeekDayCode[],
   oldRefDay: SchedulerValidDate,
   newStart: SchedulerValidDate,
-): ByDayCode[] {
-  const { numToByDay, byDayToNum } = getByDayMaps(adapter);
-  const oldCode = numToByDay[adapter.getDayOfWeek(oldRefDay)];
-  const newCode = numToByDay[adapter.getDayOfWeek(newStart)];
+): RecurringEventWeekDayCode[] {
+  const { numToCode, codeToNum } = getWeekDayMaps(adapter);
+  const oldCode = numToCode[adapter.getDayOfWeek(oldRefDay)];
+  const newCode = numToCode[adapter.getDayOfWeek(newStart)];
 
   if (oldCode === newCode) {
-    return byDays;
+    return weekDayCodes;
   }
 
-  const swapped = Array.from(new Set(byDays.map((d) => (d === oldCode ? newCode : d))));
+  const swapped = Array.from(new Set(weekDayCodes.map((d) => (d === oldCode ? newCode : d))));
 
-  swapped.sort((a, b) => byDayToNum[a] - byDayToNum[b]);
+  swapped.sort((a, b) => codeToNum[a] - codeToNum[b]);
 
   return swapped;
 }
 
 /**
- * Decide the RRULE for the split (new) segment when editing "this and following".
+ * Decides the RRULE for the split (new) segment when editing "this and following".
  *
  * Rules:
  * - If user provided changes.rrule → use it as-is (preserve COUNT/UNTIL).
@@ -689,11 +705,11 @@ export function realignWeeklyByDay(
  */
 export function decideSplitRRule(
   adapter: Adapter,
-  originalRule: RRuleSpec,
+  originalRule: RecurringEventRecurrenceRule,
   originalSeriesStart: SchedulerValidDate,
   splitStart: SchedulerValidDate,
   changes: Partial<CalendarEvent>,
-): RRuleSpec | undefined {
+): RecurringEventRecurrenceRule | undefined {
   // Normalize base pattern (drop COUNT/UNTIL)
   const { count, until, ...baseRule } = originalRule;
 
@@ -712,7 +728,7 @@ export function decideSplitRRule(
   }
 
   // Case C — user did not touch RRULE → inherit pattern and recompute boundaries
-  let realignedRule: Omit<RRuleSpec, 'count' | 'until'> = { ...baseRule };
+  let realignedRule: Omit<RecurringEventRecurrenceRule, 'count' | 'until'> = { ...baseRule };
   const splitDayStart = adapter.startOfDay(splitStart);
 
   // Freq WEEKLY: realign BYDAY, swap the old weekday for the new one while preserving the rest of the weekly pattern.
@@ -721,7 +737,7 @@ export function decideSplitRRule(
       ...realignedRule,
       byDay: realignWeeklyByDay(
         adapter,
-        baseRule.byDay as ByDayCode[],
+        baseRule.byDay as RecurringEventWeekDayCode[],
         adapter.startOfDay(splitStart),
         changes.start,
       ),
@@ -736,10 +752,10 @@ export function decideSplitRRule(
 
     // B) Ordinal BYDAY → recompute ordinal + weekday for the new date
     if (baseRule.byDay?.length) {
-      const { numToByDay } = getByDayMaps(adapter);
-      const code = numToByDay[adapter.getDayOfWeek(changes.start)];
+      const { numToCode } = getWeekDayMaps(adapter);
+      const code = numToCode[adapter.getDayOfWeek(changes.start)];
       const ord = computeMonthlyOrdinal(adapter, changes.start);
-      realignedRule = { ...realignedRule, byDay: [`${ord}${code}` as ByDayValue] };
+      realignedRule = { ...realignedRule, byDay: [`${ord}${code}` as RecurringEventByDayValue] };
     }
   }
 
@@ -781,7 +797,7 @@ export function applyRecurringUpdateFollowing(
   const occurrenceDayStart = adapter.startOfDay(occurrenceStart);
   const untilDate = adapter.addDays(occurrenceDayStart, -1);
 
-  const originalRule = originalEvent.rrule as RRuleSpec;
+  const originalRule = originalEvent.rrule as RecurringEventRecurrenceRule;
   const { count, until, ...baseRule } = originalRule;
 
   // 2) New event: apply changes, decide RRULE for the new series
@@ -831,17 +847,17 @@ export function applyRecurringUpdateFollowing(
  */
 export function adjustRRuleForAllMove(
   adapter: Adapter,
-  rrule: RRuleSpec,
+  rrule: RecurringEventRecurrenceRule,
   occurrenceStart: SchedulerValidDate,
   newStart: SchedulerValidDate,
-): RRuleSpec {
-  let nextRRule: RRuleSpec = { ...rrule };
+): RecurringEventRecurrenceRule {
+  let nextRRule: RecurringEventRecurrenceRule = { ...rrule };
 
   if (rrule.freq === 'WEEKLY') {
-    const { numToByDay } = getByDayMaps(adapter);
+    const { numToCode } = getWeekDayMaps(adapter);
 
-    const normalized = parseWeeklyByDayPlain(rrule.byDay, [
-      numToByDay[adapter.getDayOfWeek(occurrenceStart)],
+    const normalized = parsesByDayForWeeklyFrequency(rrule.byDay, [
+      numToCode[adapter.getDayOfWeek(occurrenceStart)],
     ]);
 
     const swapped = realignWeeklyByDay(adapter, normalized, occurrenceStart, newStart);
@@ -855,10 +871,10 @@ export function adjustRRuleForAllMove(
     }
     // Ordinal BYDAY → recompute ordinal + weekday for newStart
     if (rrule.byDay?.length) {
-      const { numToByDay } = getByDayMaps(adapter);
-      const code = numToByDay[adapter.getDayOfWeek(newStart)];
+      const { numToCode } = getWeekDayMaps(adapter);
+      const code = numToCode[adapter.getDayOfWeek(newStart)];
       const ord = computeMonthlyOrdinal(adapter, newStart);
-      nextRRule = { ...nextRRule, byDay: [`${ord}${code}` as ByDayValue] };
+      nextRRule = { ...nextRRule, byDay: [`${ord}${code}` as RecurringEventByDayValue] };
     }
   }
 
