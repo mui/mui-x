@@ -254,11 +254,11 @@ importers:
         specifier: ^1.0.4-canary.7
         version: 1.0.4-canary.7(@babel/core@7.28.4)(@babel/preset-react@7.27.1(@babel/core@7.28.4))
       '@mui/internal-bundle-size-checker':
-        specifier: ^1.0.9-canary.49
-        version: 1.0.9-canary.49(@types/node@22.18.10)(rollup@4.50.1)(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.1)
+        specifier: ^1.0.9-canary.50
+        version: 1.0.9-canary.50(@types/node@22.18.10)(rollup@4.50.1)(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.1)
       '@mui/internal-code-infra':
-        specifier: ^0.0.3-canary.29
-        version: 0.0.3-canary.29(@types/node@22.18.10)(@typescript-eslint/parser@8.46.0(eslint@9.37.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.46.0(eslint@9.37.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.37.0))(eslint@9.37.0)(postcss@8.5.6)(prettier@3.6.2)(stylelint@16.25.0(typescript@5.9.3))(typescript@5.9.3)
+        specifier: ^0.0.3-canary.30
+        version: 0.0.3-canary.30(@types/node@22.18.10)(@typescript-eslint/parser@8.46.0(eslint@9.37.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.46.0(eslint@9.37.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.37.0))(eslint@9.37.0)(postcss@8.5.6)(prettier@3.6.2)(stylelint@16.25.0(typescript@5.9.3))(typescript@5.9.3)
       '@mui/internal-markdown':
         specifier: ^2.0.11
         version: 2.0.11
@@ -744,8 +744,8 @@ importers:
         specifier: ^2.0.3
         version: 2.0.3
       '@mui/internal-scripts':
-        specifier: https://pkg.pr.new/mui/material-ui/@mui/internal-scripts@7b4e85d
-        version: https://pkg.pr.new/mui/material-ui/@mui/internal-scripts@7b4e85d
+        specifier: '^2.0.14 '
+        version: 2.0.14
       '@types/chance':
         specifier: 'catalog:'
         version: 1.1.7
@@ -4091,12 +4091,12 @@ packages:
     peerDependencies:
       '@babel/core': '7'
 
-  '@mui/internal-bundle-size-checker@1.0.9-canary.49':
-    resolution: {integrity: sha512-A/S5b6Z1bQUCSoX2VwecE8KYHXuNsqlj7iVN0wsBIgKN884pX+/owNpwkEs5+cX6pKakly6SSQjZsH+LaAjCXg==}
+  '@mui/internal-bundle-size-checker@1.0.9-canary.50':
+    resolution: {integrity: sha512-GoVQpD41e66y03rreMXFL9SDnRuoWynMDspS9dVLA6JVTsoHhU0Mm4TbaIB+vULN6zjoyNxzaAvnCndOC647sg==}
     hasBin: true
 
-  '@mui/internal-code-infra@0.0.3-canary.29':
-    resolution: {integrity: sha512-dSbXmMBIhQKggGQSP8w/1kFjK4HiVqblOeEEbMJtuDYR/3D6y1vzHcmtkKJb1yeRFeerG7aVR9sGHeziLx4Gfg==}
+  '@mui/internal-code-infra@0.0.3-canary.30':
+    resolution: {integrity: sha512-l/x2wuYqJJrob//1pPca2WoSm1NJe4RpQkZesbgWMJeHeEs7EXWdXmTelrVWkB5bmXZwAgZG7A8VrPNeiRR0gQ==}
     hasBin: true
     peerDependencies:
       eslint: ^9.0.0
@@ -4106,19 +4106,14 @@ packages:
   '@mui/internal-docs-utils@2.0.3':
     resolution: {integrity: sha512-uAWpXlSvhzbyjUXS2lXpx+Ld6uvAQlq/U8wse/AlgrqzKq8dXLNwV2UPayBEz5NyO3m9lkusdnQzcTyUzlKqyw==}
 
-  '@mui/internal-docs-utils@https://pkg.pr.new/mui/material-ui/@mui/internal-docs-utils@7b4e85daf5ec7caf9cd02565f9c059e1f775ec9a':
-    resolution: {tarball: https://pkg.pr.new/mui/material-ui/@mui/internal-docs-utils@7b4e85daf5ec7caf9cd02565f9c059e1f775ec9a}
-    version: 2.0.2
-
   '@mui/internal-markdown@2.0.11':
     resolution: {integrity: sha512-AWjU0FJDbcKrP0xfNkswR3RJoPvW5O1eUywDppywXRktqmgNQObtCSvKJvS4FjbE/jSCWs+P/HjdJ/4i0qpNaA==}
 
   '@mui/internal-netlify-cache@0.0.2-canary.0':
     resolution: {integrity: sha512-3MtmhEBDf8O1ow95tC2ewbQgzctbWkCR3I4CA23CCfhUx3/9FqJNm+MI1NqReeQV5W7BDMsqKz1L2ps5sKt22A==}
 
-  '@mui/internal-scripts@https://pkg.pr.new/mui/material-ui/@mui/internal-scripts@7b4e85d':
-    resolution: {tarball: https://pkg.pr.new/mui/material-ui/@mui/internal-scripts@7b4e85d}
-    version: 2.0.13
+  '@mui/internal-scripts@2.0.14':
+    resolution: {integrity: sha512-mVhPG7XCbvgUkYNn0pqbfAowvi7d5ug9g6eD1vHdTF5U70w372Cz8cx3VACpWVNAOv/TBwGkaZs8bvXTcHg/qw==}
 
   '@mui/internal-test-utils@2.0.14':
     resolution: {integrity: sha512-lLmV0sHco23txbSVQdJm74bza6VnBd4ke5j9fz7ahIdGA6shE04rqrp5SmNChq2jVoFlSTABT3H5XJim142Zog==}
@@ -14835,7 +14830,7 @@ snapshots:
       '@babel/core': 7.28.4
       resolve: 1.22.10
 
-  '@mui/internal-bundle-size-checker@1.0.9-canary.49(@types/node@22.18.10)(rollup@4.50.1)(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.1)':
+  '@mui/internal-bundle-size-checker@1.0.9-canary.50(@types/node@22.18.10)(rollup@4.50.1)(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.1)':
     dependencies:
       '@aws-sdk/client-s3': 3.901.0
       '@aws-sdk/credential-providers': 3.901.0
@@ -14865,7 +14860,7 @@ snapshots:
       - tsx
       - yaml
 
-  '@mui/internal-code-infra@0.0.3-canary.29(@types/node@22.18.10)(@typescript-eslint/parser@8.46.0(eslint@9.37.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.46.0(eslint@9.37.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.37.0))(eslint@9.37.0)(postcss@8.5.6)(prettier@3.6.2)(stylelint@16.25.0(typescript@5.9.3))(typescript@5.9.3)':
+  '@mui/internal-code-infra@0.0.3-canary.30(@types/node@22.18.10)(@typescript-eslint/parser@8.46.0(eslint@9.37.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.46.0(eslint@9.37.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.37.0))(eslint@9.37.0)(postcss@8.5.6)(prettier@3.6.2)(stylelint@16.25.0(typescript@5.9.3))(typescript@5.9.3)':
     dependencies:
       '@argos-ci/core': 4.2.0
       '@babel/cli': 7.28.3(@babel/core@7.28.4)
@@ -14936,11 +14931,6 @@ snapshots:
       rimraf: 6.0.1
       typescript: 5.9.3
 
-  '@mui/internal-docs-utils@https://pkg.pr.new/mui/material-ui/@mui/internal-docs-utils@7b4e85daf5ec7caf9cd02565f9c059e1f775ec9a':
-    dependencies:
-      rimraf: 6.0.1
-      typescript: 5.9.3
-
   '@mui/internal-markdown@2.0.11':
     dependencies:
       '@babel/runtime': 7.28.4
@@ -14950,14 +14940,14 @@ snapshots:
 
   '@mui/internal-netlify-cache@0.0.2-canary.0': {}
 
-  '@mui/internal-scripts@https://pkg.pr.new/mui/material-ui/@mui/internal-scripts@7b4e85d':
+  '@mui/internal-scripts@2.0.14':
     dependencies:
       '@babel/core': 7.28.4
       '@babel/plugin-syntax-class-properties': 7.12.13(@babel/core@7.28.4)
       '@babel/plugin-syntax-jsx': 7.27.1(@babel/core@7.28.4)
       '@babel/plugin-syntax-typescript': 7.27.1(@babel/core@7.28.4)
       '@babel/types': 7.28.4
-      '@mui/internal-docs-utils': https://pkg.pr.new/mui/material-ui/@mui/internal-docs-utils@7b4e85daf5ec7caf9cd02565f9c059e1f775ec9a
+      '@mui/internal-docs-utils': 2.0.3
       doctrine: 3.0.0
       lodash: 4.17.21
       typescript: 5.9.3
