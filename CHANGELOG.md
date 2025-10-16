@@ -16,7 +16,7 @@ We'd like to extend a big thank you to the 13 contributors who made this release
 - 📚 Documentation improvements
 
 Special thanks go out to the community members for their valuable contributions:
-@djpremier, @jacknot, @mellis481, @sai6855
+@djpremier, @jacknot, @justdoit1897, @mellis481, @sai6855
 
 The following are all team members who have contributed to this release:
 @arminmeh, @bernardobelchior, @brijeshb42, @cherniavskii, @flaviendelangle, @Janpot, @JCQuintas, @noraleonte, @siriwatknp
@@ -28,7 +28,7 @@ The following are all team members who have contributed to this release:
 - [DataGrid] Fix cell not rerendering on `isCellEditable` prop change (#19898) @cherniavskii
 - [DataGrid] Fix virtualizer memory leaks (#19886) @cherniavskii
 - [DataGrid] Fix tree data unable to deselect row for exclude model (#19846) @siriwatknp
-- [l10n] Improve Italian (it-IT) locale (#19322) @jacknot
+- [l10n] Improve Italian (it-IT) locale (#19322) @jacknot and (#19940) @justdoit1897
 
 #### `@mui/x-data-grid-pro@8.14.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -58,6 +58,8 @@ Same changes as in `@mui/x-date-pickers@8.14.1`.
 - [charts] Fix bar chart border radius when axis is reversed (#19895) @bernardobelchior
 - [charts] Fix scatter chart `datasetKeys.id` not being optional (#19897) @bernardobelchior
 - [charts] Use more performant data structure for closest point (#19790) @bernardobelchior
+- [charts] Fix GaugeValueArc having wrong class (#19965) @bernardobelchior 
+- [charts] Fix undefined path when highlight empty line chart axis (#19969) @bernardobelchior 
 
 #### `@mui/x-charts-pro@8.14.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
