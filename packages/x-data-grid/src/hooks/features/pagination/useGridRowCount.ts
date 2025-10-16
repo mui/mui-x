@@ -154,6 +154,7 @@ export const useGridRowCount = (
       if (props.paginationMode === 'client') {
         return gridFilteredTopLevelRowCountSelector(apiRef);
       }
+      return undefined;
     },
     (_, isLastPageOrRowCount) => {
       if (isLastPageOrRowCount === true) {
