@@ -120,7 +120,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     key: occurrenceKey,
     start,
     end,
-    title: firstEventOfSeries.title,
+    title: firstEventOfSeries?.title,
   };
 
   const getSharedDragData: CalendarGridDayEventContext['getSharedDragData'] = useEventCallback(

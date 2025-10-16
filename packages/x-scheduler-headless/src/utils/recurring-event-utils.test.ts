@@ -1494,7 +1494,7 @@ describe('recurring-event-utils', () => {
       expect(updatedEvents.updated).to.deep.equal([changes]);
     });
 
-    it('should keep the original date and just update hours/minutes when changing the time of a later occurrence', () => {
+    it('should keep the original date and just update hours/minutes when changing the time of a non-first occurrence', () => {
       const original = makeRecurringEvent();
 
       // Edited the Jan 05 occurrence and changed only the time
@@ -1522,11 +1522,33 @@ describe('recurring-event-utils', () => {
       ]);
     });
 
-    it('should move the series when the caller changes the date part (uses provided start/end as-is)', () => {
-      const original = makeRecurringEvent();
+    it('should update the rrule when editing a non-first occurrence with a different day', () => {
+      const original = makeRecurringEvent({ rrule: { byDay: ['SU'], freq: 'WEEKLY' } });
+      const occurrenceStart = adapter.date('2025-01-05T09:00:00Z'); // Jan 5, a Sunday
+      const changes: CalendarEventUpdatedProperties = {
+        id: original.id,
+        start: adapter.date('2025-01-11T11:00:00Z'), // Saturday
+        end: adapter.date('2025-01-11T12:00:00Z'),
+      };
 
-      // Edited the Jan 05 occurrence but explicitly picked a different date
-      const occurrenceStart = adapter.date('2025-01-05T09:00:00Z');
+      const updatedEvents = applyRecurringUpdateAll(adapter, original, occurrenceStart, changes);
+
+      expect(updatedEvents.deleted).to.equal(undefined);
+      expect(updatedEvents.created).to.equal(undefined);
+      expect(updatedEvents.updated).to.deep.equal([
+        {
+          ...changes,
+          start: mergeDateAndTime(adapter, original.start, changes.start!),
+          end: mergeDateAndTime(adapter, original.end, changes.end!),
+          rrule: { byDay: ['SA'], freq: 'WEEKLY' },
+        },
+      ]);
+    });
+
+    it('should update the start date of the original event when editing the first occurrence (DTSTART)', () => {
+      const original = makeRecurringEvent(); // DTSTART = 2025-01-01
+      const occurrenceStart = original.start;
+
       const changes: CalendarEventUpdatedProperties = {
         id: original.id,
         start: adapter.date('2025-01-12T11:00:00Z'),
@@ -1535,10 +1557,12 @@ describe('recurring-event-utils', () => {
 
       const updatedEvents = applyRecurringUpdateAll(adapter, original, occurrenceStart, changes);
 
-      expect(updatedEvents.deleted).to.equal(undefined);
-      expect(updatedEvents.created).to.equal(undefined);
-      // Uses the provided values as-is (new startDate on Jan 12)
-      expect(updatedEvents.updated).to.deep.equal([changes]);
+      expect(updatedEvents.updated).to.deep.equal([
+        {
+          ...changes,
+          rrule: original.rrule,
+        },
+      ]);
     });
   });
 
