@@ -34,7 +34,6 @@ const PIXEL_STYLES = new Set([
   'marginTop',
   'marginBottom',
 ]);
-export const MEASUREMENT_SPAN_ID = 'mui_measurement_span';
 
 /**
  *
@@ -167,8 +166,8 @@ export function batchMeasureStrings(
   const measurementSpanStyle: Record<string, any> = { ...style };
 
   Object.keys(measurementSpanStyle).map((styleKey) => {
-    (measurementContainer!.style as Record<string, any>)[camelToMiddleLine(styleKey)] =
-      autoCompleteStyle(styleKey, measurementSpanStyle[styleKey]);
+    (measurementContainer!.style as Record<string, any>)[camelCaseToDashCase(styleKey)] =
+      convertPixelValue(styleKey, measurementSpanStyle[styleKey]);
     return styleKey;
   });
 
@@ -204,18 +203,15 @@ export function batchMeasureStrings(
   return sizeMap;
 }
 
+let measurementContainer: SVGSVGElement | null = null;
+
 /**
  * Get (or create) a hidden span element to measure text size.
  */
 function getMeasurementContainer() {
-  let measurementContainer = document.getElementById(
-    MEASUREMENT_SPAN_ID,
-  ) as unknown as SVGSVGElement;
-
   if (measurementContainer === null) {
     measurementContainer = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     measurementContainer.setAttribute('aria-hidden', 'true');
-    measurementContainer.setAttribute('id', MEASUREMENT_SPAN_ID);
 
     measurementContainer.style.position = 'absolute';
     measurementContainer.style.top = '-20000px';
