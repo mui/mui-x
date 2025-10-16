@@ -68,14 +68,14 @@ describe('<Timeline />', () => {
       expect(resourceTitleCells.length).to.equal(baseResources.length);
     });
 
-    it('does not render resources with no events', () => {
+    it('does render resources with no events', () => {
       const extendedResources: CalendarResource[] = [
         ...baseResources,
         { id: 'resource-3', title: 'QA', eventColor: 'red' },
       ];
       renderTimeline({ resources: extendedResources });
 
-      expect(screen.queryByText('QA')).to.equal(null);
+      expect(screen.queryByText('QA')).to.not.equal(null);
     });
   });
 

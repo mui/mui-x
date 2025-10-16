@@ -2,12 +2,12 @@ import { createSelector, createSelectorMemoized } from '@base-ui-components/util
 import {
   CalendarEvent,
   CalendarEventId,
-  RecurrencePresetKey,
-  RRuleSpec,
+  RecurringEventPresetKey,
+  RecurringEventRecurrenceRule,
   SchedulerValidDate,
 } from '../../models';
 import { SchedulerState as State } from './SchedulerStore.types';
-import { getByDayMaps } from '../recurrence-utils';
+import { getWeekDayMaps } from '../recurring-event-utils';
 
 const eventSelector = createSelector(
   (state: State) => state.processedEventLookup,
@@ -127,8 +127,11 @@ export const selectors = {
    */
   recurrencePresets: createSelectorMemoized(
     (state: State) => state.adapter,
-    (adapter, date: SchedulerValidDate): Record<RecurrencePresetKey, RRuleSpec> => {
-      const { numToByDay: numToCode } = getByDayMaps(adapter);
+    (
+      adapter,
+      date: SchedulerValidDate,
+    ): Record<RecurringEventPresetKey, RecurringEventRecurrenceRule> => {
+      const { numToCode } = getWeekDayMaps(adapter);
       const dateDowCode = numToCode[adapter.getDayOfWeek(date)];
       const dateDayOfMonth = adapter.getDate(date);
 
@@ -165,7 +168,7 @@ export const selectors = {
       adapter,
       rule: CalendarEvent['rrule'] | undefined,
       occurrenceStart: SchedulerValidDate,
-    ): RecurrencePresetKey | 'custom' | null => {
+    ): RecurringEventPresetKey | 'custom' | null => {
       if (!rule) {
         return null;
       }
@@ -177,7 +180,7 @@ export const selectors = {
         rule.byMonthDay?.length ||
         rule.byMonth?.length
       );
-      const { numToByDay: numToCode } = getByDayMaps(adapter);
+      const { numToCode } = getWeekDayMaps(adapter);
 
       switch (rule.freq) {
         case 'DAILY': {

@@ -23,7 +23,7 @@ import {
   applyRecurringUpdateFollowing,
   applyRecurringUpdateAll,
   applyRecurringUpdateOnlyThis,
-} from '../recurrence-utils';
+} from '../recurring-event-utils';
 import { selectors } from './SchedulerStore.selectors';
 import {
   buildEventsState,
