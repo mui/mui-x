@@ -1,19 +1,18 @@
-import { stack as d3Stack } from '@mui/x-charts-vendor/d3-shape';
 import { warnOnce } from '@mui/x-internals/warning';
 import { DefaultizedProps } from '@mui/x-internals/types';
-import { getStackingGroups } from '../../internals/stackSeries';
-import { ChartSeries, DatasetElementType, DatasetType } from '../../models/seriesType/config';
+import { ChartSeries, DatasetType } from '../../models/seriesType/config';
 import { defaultizeValueFormatter } from '../../internals/defaultizeValueFormatter';
 import { SeriesId } from '../../models/seriesType/common';
 import { SeriesProcessor } from '../../internals/plugins/models';
+import { AreaRangeValueType } from '../../models/seriesType/area-range';
 
 // For now it's a copy past of bar charts formatter, but maybe will diverge later
 const seriesProcessor: SeriesProcessor<'areaRange'> = (params, dataset) => {
   const { seriesOrder, series } = params;
-  const stackingGroups = getStackingGroups({ ...params, defaultStrategy: { stackOffset: 'none' } });
 
   // Create a data set with format adapted to d3
-  const d3Dataset: DatasetType<number | null> = (dataset as DatasetType<number | null>) ?? [];
+  const d3Dataset: DatasetType<AreaRangeValueType | null> =
+    (dataset as DatasetType<AreaRangeValueType | null>) ?? [];
   seriesOrder.forEach((id) => {
     const data = series[id].data;
     if (data !== undefined) {
@@ -34,57 +33,63 @@ const seriesProcessor: SeriesProcessor<'areaRange'> = (params, dataset) => {
     }
   });
 
-  const completedSeries: Record<
-    SeriesId,
-    DefaultizedProps<ChartSeries<'areaRange'>, 'data'> & { stackedData: [number, number][] }
-  > = {};
+  const completedSeries: Record<SeriesId, DefaultizedProps<ChartSeries<'areaRange'>, 'data'>> = {};
 
-  stackingGroups.forEach((stackingGroup) => {
-    // Get stacked values, and derive the domain
-    const { ids, stackingOrder, stackingOffset } = stackingGroup;
-    const stackedSeries = d3Stack<any, DatasetElementType<number | null>, SeriesId>()
-      .keys(
-        ids.map((id) => {
-          // Use dataKey if needed and available
-          const dataKey = series[id].dataKey;
-          return series[id].data === undefined && dataKey !== undefined ? dataKey : id;
-        }),
-      )
-      .value((d, key) => d[key] ?? 0) // defaultize null value to 0
-      .order(stackingOrder)
-      .offset(stackingOffset)(d3Dataset);
+  for (const id of seriesOrder) {
+    const seriesData = series[id];
+    const datasetKeys = seriesData?.datasetKeys;
 
-    ids.forEach((id, index) => {
-      const dataKey = series[id].dataKey;
-      completedSeries[id] = {
-        labelMarkType: 'line',
-        ...series[id],
-        data: dataKey
-          ? dataset!.map((data) => {
-              const value = data[dataKey];
-              if (typeof value !== 'number') {
-                if (process.env.NODE_ENV !== 'production') {
-                  if (value !== null) {
-                    warnOnce([
-                      `MUI X Charts: Your dataset key "${dataKey}" is used for plotting line, but contains nonnumerical elements.`,
-                      'Line plots only support numbers and null values.',
-                    ]);
-                  }
+    const missingKeys = (['start', 'end'] as const).filter(
+      (key) => typeof datasetKeys?.[key] !== 'string',
+    );
+
+    if (seriesData?.datasetKeys && missingKeys.length > 0) {
+      throw new Error(
+        [
+          `MUI X Charts: scatter series with id='${id}' has incomplete datasetKeys.`,
+          `Properties ${missingKeys.map((key) => `"${key}"`).join(', ')} are missing.`,
+        ].join('\n'),
+      );
+    }
+
+    completedSeries[id] = {
+      labelMarkType: 'line',
+      ...series[id],
+      data: datasetKeys
+        ? dataset!.map((data) => {
+            const start = data[datasetKeys.start];
+            const end = data[datasetKeys.end];
+
+            if (typeof start !== 'number' || typeof end !== 'number') {
+              if (process.env.NODE_ENV !== 'production') {
+                if (start !== null) {
+                  warnOnce([
+                    `MUI X Charts: Your dataset key "start" is used for plotting an area range, but contains nonnumerical elements.`,
+                    'Area plots only support numbers and null values.',
+                  ]);
                 }
-                return null;
+
+                if (end !== null) {
+                  warnOnce([
+                    `MUI X Charts: Your dataset key "end" is used for plotting an area range, but contains nonnumerical elements.`,
+                    'Area plots only support numbers and null values.',
+                  ]);
+                }
               }
-              return value;
-            })
-          : series[id].data!,
-        stackedData: stackedSeries[index].map(([a, b]) => [a, b]),
-      };
-    });
-  });
+              return null;
+            }
+
+            return { start, end };
+          })
+        : series[id].data!,
+    };
+  }
 
   return {
     seriesOrder,
-    stackingGroups,
-    series: defaultizeValueFormatter(completedSeries, (v) => (v == null ? '' : v.toLocaleString())),
+    series: defaultizeValueFormatter(completedSeries, (v) =>
+      v == null ? '' : `${v.start} - ${v.end}`,
+    ),
   };
 };
 

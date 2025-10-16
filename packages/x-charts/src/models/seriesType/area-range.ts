@@ -9,6 +9,11 @@ import {
 } from './common';
 import { CurveType } from '../curve';
 
+export type AreaRangeValueType = {
+  start: number;
+  end: number;
+};
+
 export interface ShowMarkParams<AxisValue = number | Date> {
   /**
    * The item index.
@@ -33,18 +38,33 @@ export interface ShowMarkParams<AxisValue = number | Date> {
 }
 
 export interface AreaRangeSeriesType
-  extends CommonSeriesType<number | null>,
+  extends CommonSeriesType<AreaRangeValueType | null>,
     CartesianSeriesType,
     StackableSeriesType {
   type: 'areaRange';
   /**
    * Data associated to the area range.
    */
-  data?: ReadonlyArray<{ start: number; end: number } | null>;
+  data?: ReadonlyArray<AreaRangeValueType | null>;
   /**
    * The key used to retrieve data from the dataset.
    */
   dataKey?: string;
+  /**
+   * The keys used to retrieve data from the dataset.
+   *
+   * When this prop is provided, both `start` and `end` are mandatory.
+   */
+  datasetKeys?: {
+    /**
+     * The key used to retrieve data from the dataset for the start of the area.
+     */
+    start: string;
+    /**
+     * The key used to retrieve data from the dataset for the end of the area.
+     */
+    end: string;
+  };
   /**
    * The label to display on the tooltip or the legend. It can be a string or a function.
    */

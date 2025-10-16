@@ -18,6 +18,7 @@ import { DefaultizedRadarSeriesType, RadarItemIdentifier, RadarSeriesType } from
 import {
   AreaRangeItemIdentifier,
   AreaRangeSeriesType,
+  AreaRangeValueType,
   DefaultizedAreaRangeSeriesType,
 } from './area-range';
 
@@ -85,7 +86,7 @@ export interface ChartsSeriesConfig {
     seriesProp: AreaRangeSeriesType;
     itemIdentifier: AreaRangeItemIdentifier;
     itemIdentifierWithData: AreaRangeItemIdentifier;
-    valueType: number | null;
+    valueType: AreaRangeValueType | null;
     axisType: 'cartesian';
   };
 }
