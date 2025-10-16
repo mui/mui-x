@@ -63,7 +63,7 @@ function camelCaseToDashCase(text: string) {
  * @param style React style object
  * @returns CSS styling string
  */
-export const getStyleString = (style: React.CSSProperties) => {
+const getStyleString = (style: React.CSSProperties) => {
   let result = '';
   for (const key in style) {
     if (Object.hasOwn(style, key)) {
