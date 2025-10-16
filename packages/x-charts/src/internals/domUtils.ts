@@ -35,48 +35,6 @@ export const MEASUREMENT_SPAN_ID = 'mui_measurement_span';
 
 /**
  *
- * @param name CSS property name
- * @param value
- * @returns add 'px' for distance properties
- */
-function convertPixelValue(name: string, value: number) {
-  if (PIXEL_STYLES.has(name) && value === +value) {
-    return `${value}px`;
-  }
-
-  return value;
-}
-
-/**
- *
- * @param text camelcase css property
- * @returns css property
- */
-function camelCaseToDashCase(text: string) {
-  return text.replace(/([A-Z])/g, (match) => `-${match.toLowerCase()}`);
-}
-
-/**
- *
- * @param style React style object
- * @returns CSS styling string
- */
-export const getStyleString = (style: React.CSSProperties) => {
-  let result = '';
-  for (const key in style) {
-    if (Object.hasOwn(style, key)) {
-      const value = style[key as keyof React.CSSProperties] as string;
-      result += `${result}${camelCaseToDashCase(value)}:${convertPixelValue(
-        value,
-        (style as Record<string, any>)[value],
-      )};`;
-    }
-  }
-  return result;
-};
-
-/**
- *
  * @param text The string to estimate
  * @param style The style applied
  * @returns width and height of the text
@@ -131,6 +89,25 @@ export const getStringSize = (text: string | number, style: React.CSSProperties 
 };
 
 /**
+ *
+ * @param style React style object
+ * @returns CSS styling string
+ */
+export const getStyleString = (style: React.CSSProperties) => {
+  let result = '';
+  for (const key in style) {
+    if (Object.hasOwn(style, key)) {
+      const value = style[key as keyof React.CSSProperties] as string;
+      result += `${result}${camelCaseToDashCase(value)}:${convertPixelValue(
+        value,
+        (style as Record<string, any>)[value],
+      )};`;
+    }
+  }
+  return result;
+};
+
+/**
  * Get (or create) a hidden span element to measure text size.
  */
 function getMeasurementContainer() {
@@ -157,4 +134,27 @@ function getMeasurementContainer() {
   }
 
   return measurementContainer;
+}
+
+/**
+ *
+ * @param name CSS property name
+ * @param value
+ * @returns add 'px' for distance properties
+ */
+function convertPixelValue(name: string, value: number) {
+  if (PIXEL_STYLES.has(name) && value === +value) {
+    return `${value}px`;
+  }
+
+  return value;
+}
+
+/**
+ *
+ * @param text camelcase css property
+ * @returns css property
+ */
+function camelCaseToDashCase(text: string) {
+  return text.replace(/([A-Z])/g, (match) => `-${match.toLowerCase()}`);
 }
