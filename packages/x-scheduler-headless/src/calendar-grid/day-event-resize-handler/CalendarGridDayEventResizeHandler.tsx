@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
-import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
-import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/disable-native-drag-preview';
+import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
+import { useEventResizeHandler } from '../../utils/useEventResizeHandler';
 import { useCalendarGridDayEventContext } from '../day-event/CalendarGridDayEventContext';
 import type { CalendarGridDayEvent } from '../day-event/CalendarGridDayEvent';
 
@@ -22,43 +22,25 @@ export const CalendarGridDayEventResizeHandler = React.forwardRef(
       ...elementProps
     } = componentProps;
 
+    // Context hooks
+    const contextValue = useCalendarGridDayEventContext();
+
+    // Ref hooks
     const ref = React.useRef<HTMLDivElement>(null);
-    const {
-      setIsResizing,
-      getSharedDragData,
-      doesEventStartBeforeRowStart,
-      doesEventEndAfterRowEnd,
-    } = useCalendarGridDayEventContext();
 
-    const enabled =
-      (side === 'start' && !doesEventStartBeforeRowStart) ||
-      (side === 'end' && !doesEventEndAfterRowEnd);
+    // Feature hooks
+    const getDragData = useEventCallback(({ input }) => ({
+      ...contextValue.getSharedDragData(input),
+      source: 'TimelineEventResizeHandler',
+      side,
+    }));
 
-    const state: CalendarGridDayEventResizeHandler.State = React.useMemo(
-      () => ({ start: side === 'start', end: side === 'end' }),
-      [side],
-    );
-
-    React.useEffect(() => {
-      const domElement = ref.current;
-      if (!domElement || !enabled) {
-        return undefined;
-      }
-
-      return draggable({
-        element: domElement,
-        getInitialData: ({ input }) => ({
-          ...getSharedDragData(input),
-          source: 'CalendarGridDayEventResizeHandler',
-          side,
-        }),
-        onGenerateDragPreview: ({ nativeSetDragImage }) => {
-          disableNativeDragPreview({ nativeSetDragImage });
-        },
-        onDragStart: () => setIsResizing(true),
-        onDrop: () => setIsResizing(false),
-      });
-    }, [enabled, side, setIsResizing, getSharedDragData]);
+    const { state, enabled } = useEventResizeHandler({
+      ref,
+      side,
+      contextValue,
+      getDragData,
+    });
 
     return useRenderElement('div', componentProps, {
       enabled,
@@ -70,23 +52,11 @@ export const CalendarGridDayEventResizeHandler = React.forwardRef(
 );
 
 export namespace CalendarGridDayEventResizeHandler {
-  export interface State {
-    /**
-     * Whether the resize handler is targeting the start date of the event.
-     */
-    start: boolean;
-    /**
-     * Whether the resize handler is targeting the end date of the event.
-     */
-    end: boolean;
-  }
+  export interface State extends useEventResizeHandler.State {}
 
-  export interface Props extends BaseUIComponentProps<'div', State> {
-    /**
-     * The date to edit when dragging the resize handler.
-     */
-    side: 'start' | 'end';
-  }
+  export interface Props
+    extends BaseUIComponentProps<'div', State>,
+      useEventResizeHandler.PublicParameters {}
 
   export interface DragData extends CalendarGridDayEvent.SharedDragData {
     source: 'CalendarGridDayEventResizeHandler';
