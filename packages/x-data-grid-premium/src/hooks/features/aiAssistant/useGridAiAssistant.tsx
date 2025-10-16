@@ -73,6 +73,7 @@ export const useGridAiAssistant = (
     | 'onAiAssistantActiveConversationIndexChange'
     | 'onPrompt'
     | 'slots'
+    | 'rowSelection'
     | 'disableColumnFilter'
     | 'disableRowGrouping'
     | 'disableAggregation'
@@ -87,6 +88,7 @@ export const useGridAiAssistant = (
     onPrompt,
     allowAiAssistantDataSampling,
     slots,
+    rowSelection,
     disableColumnFilter,
     disableRowGrouping,
     disableAggregation,
@@ -238,6 +240,8 @@ export const useGridAiAssistant = (
           quickFilterValues: [],
         });
         interestColumns.push(...result.filters.map((f) => f.column));
+      } else {
+        result.filters = [];
       }
 
       let appliedPivoting = false;
@@ -273,17 +277,23 @@ export const useGridAiAssistant = (
 
       if (!disableRowGrouping && !appliedPivoting) {
         apiRef.current.setRowGroupingModel(result.grouping.map((g) => g.column));
+      } else {
+        result.grouping = [];
       }
 
       if (!disableAggregation && !appliedPivoting) {
         apiRef.current.setAggregationModel(result.aggregation);
         interestColumns.push(...Object.keys(result.aggregation));
+      } else {
+        result.aggregation = {};
       }
 
       if (!disableColumnSorting) {
         apiRef.current.setSortModel(
           result.sorting.map((s) => ({ field: s.column, sort: s.direction })),
         );
+      } else {
+        result.sorting = [];
       }
 
       if (experimentalFeatures?.charts && chartsIntegration && activeChartId && result.chart) {
@@ -325,7 +335,8 @@ export const useGridAiAssistant = (
 
       const visibleRowsData = getVisibleRows(apiRef);
       const rowSelectionModel: GridRowSelectionModel = { type: 'include', ids: new Set() };
-      if (result.select !== -1) {
+      const selection = rowSelection ? result.select : -1;
+      if (selection !== -1) {
         for (let i = 0; i < result.select; i += 1) {
           const row = visibleRowsData.rows[i];
           const id = apiRef.current.getRowId(row);
@@ -343,6 +354,7 @@ export const useGridAiAssistant = (
     },
     [
       apiRef,
+      rowSelection,
       disableColumnFilter,
       disableRowGrouping,
       disableAggregation,
