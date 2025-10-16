@@ -169,9 +169,9 @@ export const useGridRowCount = (
     },
   );
 
-  useFirstRender(() => {
+  React.useEffect(() => {
     if (props.paginationMode === 'client') {
       apiRef.current.setRowCount(gridFilteredTopLevelRowCountSelector(apiRef));
     }
-  });
+  }, [apiRef, props.paginationMode]);
 };
