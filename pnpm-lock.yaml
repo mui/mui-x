@@ -117,9 +117,6 @@ catalogs:
     autoprefixer:
       specifier: ^10.4.21
       version: 10.4.21
-    babel-plugin-module-resolver:
-      specifier: ^5.0.2
-      version: 5.0.2
     babel-plugin-optimize-clsx:
       specifier: ^2.6.2
       version: 2.6.2
@@ -337,9 +334,6 @@ importers:
       babel-loader:
         specifier: ^10.0.0
         version: 10.0.0(@babel/core@7.28.4)(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10))
-      babel-plugin-module-resolver:
-        specifier: 'catalog:'
-        version: 5.0.2
       babel-plugin-react-remove-properties:
         specifier: 'catalog:'
         version: 0.3.1
@@ -601,9 +595,6 @@ importers:
       autoprefixer:
         specifier: 'catalog:'
         version: 10.4.21(postcss@8.5.6)
-      babel-plugin-module-resolver:
-        specifier: 'catalog:'
-        version: 5.0.2
       babel-plugin-optimize-clsx:
         specifier: 'catalog:'
         version: 2.6.2
@@ -1074,6 +1065,9 @@ importers:
       '@types/d3-time-format':
         specifier: ^4.0.3
         version: 4.0.3
+      babel-plugin-module-resolver:
+        specifier: ^5.0.2
+        version: 5.0.2
       d3-array:
         specifier: ^3.2.4
         version: 3.2.4
