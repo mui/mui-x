@@ -1,6 +1,11 @@
 import * as React from 'react';
 import { LineChart } from '@mui/x-charts/LineChart';
-import { useBrush, useDrawingArea } from '@mui/x-charts/hooks';
+import {
+  useBrush,
+  useDrawingArea,
+  useLineSeries,
+  useXScale,
+} from '@mui/x-charts/hooks';
 import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -9,8 +14,10 @@ function CustomBrushOverlay() {
   const theme = useTheme();
   const drawingArea = useDrawingArea();
   const brush = useBrush();
+  const xScale = useXScale();
+  const series = useLineSeries('marketValue');
 
-  if (!brush) {
+  if (!brush || !series) {
     return null;
   }
 
@@ -31,16 +38,16 @@ function CustomBrushOverlay() {
     return null;
   }
 
+  const getIndex = (x) =>
+    Math.floor(
+      (x - Math.min(...xScale.range()) + xScale.step() / 2) / xScale.step(),
+    );
   // Calculate the approximate data indices based on x position
-  // Not sure how to solve this in a more direct way without approximation.
-  const dataPointWidth = width / (marketData.length - 1);
-  const startIndex = Math.round((clampedStartX - left) / dataPointWidth);
-  const currentIndex = Math.round((clampedCurrentX - left) / dataPointWidth);
+  const startIndex = getIndex(clampedStartX);
+  const currentIndex = getIndex(clampedCurrentX);
 
-  const startValue =
-    marketData[Math.max(0, Math.min(marketData.length - 1, startIndex))];
-  const currentValue =
-    marketData[Math.max(0, Math.min(marketData.length - 1, currentIndex))];
+  const startValue = series.data[startIndex];
+  const currentValue = series.data[currentIndex];
   const difference = currentValue - startValue;
   const percentChange = ((difference / startValue) * 100).toFixed(2);
 
@@ -165,6 +172,7 @@ export default function BrushCustomOverlay() {
             data: marketData,
             label: 'Market Value',
             showMark: false,
+            id: 'marketValue',
           },
         ]}
         brushConfig={{ enabled: true }}
