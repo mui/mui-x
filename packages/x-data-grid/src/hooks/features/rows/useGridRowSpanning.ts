@@ -260,5 +260,5 @@ export const useGridRowSpanning = (
     } else if (store.state.rowSpanning === EMPTY_STATE) {
       updateRowSpanningState(gridRenderContextSelector(apiRef));
     }
-  }, [apiRef, props.rowSpanning]);
+  }, [apiRef, props.rowSpanning, updateRowSpanningState]);
 };
