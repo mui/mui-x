@@ -63,6 +63,9 @@ export interface ChartsComponents<Theme = unknown> {
     defaultProps?: ComponentsProps['MuiScatterChart'];
   };
   MuiScatter?: {};
+  MuiGauge?: {
+    styleOverrides?: ComponentsOverrides<Theme>['MuiGauge'];
+  };
 }
 
 declare module '@mui/material/styles' {

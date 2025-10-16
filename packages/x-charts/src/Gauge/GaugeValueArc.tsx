@@ -2,18 +2,23 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
+import clsx from 'clsx';
 import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { useAnimateGaugeValueArc } from '../hooks/animation/useAnimateGaugeValueArc';
 import { useGaugeState } from './GaugeProvider';
+import { gaugeClasses } from './gaugeClasses';
 
 const StyledPath = styled('path', {
   name: 'MuiGauge',
-  slot: 'ReferenceArc',
+  slot: 'ValueArc',
 })(({ theme }) => ({
   fill: (theme.vars || theme).palette.primary.main,
 }));
 
-function GaugeValueArc(props: React.ComponentProps<'path'> & { skipAnimation?: boolean }) {
+function GaugeValueArc({
+  className,
+  ...other
+}: React.ComponentProps<'path'> & { skipAnimation?: boolean }) {
   const {
     value,
     valueMin,
@@ -36,7 +41,8 @@ function GaugeValueArc(props: React.ComponentProps<'path'> & { skipAnimation?: b
 
   return (
     <AnimatedGaugeValueArc
-      {...props}
+      {...other}
+      className={clsx(gaugeClasses.valueArc, className)}
       cx={cx}
       cy={cy}
       startAngle={startAngle}
