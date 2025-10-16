@@ -1464,7 +1464,7 @@ describe('recurring-event-utils', () => {
 
       const next = adjustRRuleForAllMove(adapter, rrule, occurrenceStart, newStart);
 
-      expect(next).to.deep.equal({ freq: 'WEEKLY', byDay: ['MO', 'SA', 'WE'] });
+      expect(next).to.deep.equal({ freq: 'WEEKLY', byDay: ['MO', 'WE', 'SA'] });
     });
 
     it('should align the day-of-month to the destination date for MONTHLY (BYMONTHDAY)', () => {
