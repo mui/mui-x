@@ -55,7 +55,7 @@ function convertPixelValue(name: string, value: number) {
  * @returns css property
  */
 function camelCaseToDashCase(text: string) {
-  return text.replace(/([A-Z])/g, (match) => `-${match.toLowerCase()}`);
+  return String(text).replace(/([A-Z])/g, (match) => `-${match.toLowerCase()}`);
 }
 
 /**
