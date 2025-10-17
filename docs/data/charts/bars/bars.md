@@ -91,6 +91,13 @@ You can test all configuration options in the following demo:
 
 {{"demo": "TickPlacementBars.js"}}
 
+### Numerical axis
+
+If your band axis represents numerical data in a usual way (they are sorted and evenly spaced), you can set `isNumerical` to `true` in the axis config.
+This modifies the [tick management](/x/react-charts/axis/#ordinal-tick-management).
+
+Instead of one tick per band, the axis will display tick as if the scale is continuous.
+
 ### Minimum bar size
 
 You can set a minimum bar size with the `minBarSize` property.
