@@ -7,17 +7,12 @@ function isSsr(): boolean {
 
 const stringCache = new Map<string, { width: number; height: number }>();
 
+export function clearStringMeasurementCache() {
+  stringCache.clear();
+}
+
 const MAX_CACHE_NUM = 2000;
-const SPAN_STYLE = {
-  position: 'absolute',
-  top: '-20000px',
-  left: 0,
-  padding: 0,
-  margin: 0,
-  border: 'none',
-  whiteSpace: 'pre',
-};
-const STYLE_LIST = [
+const STYLE_SET = new Set([
   'minWidth',
   'maxWidth',
   'width',
@@ -37,7 +32,7 @@ const STYLE_LIST = [
   'marginRight',
   'marginTop',
   'marginBottom',
-];
+]);
 export const MEASUREMENT_SPAN_ID = 'mui_measurement_span';
 
 /**
@@ -47,7 +42,7 @@ export const MEASUREMENT_SPAN_ID = 'mui_measurement_span';
  * @returns add 'px' for distance properties
  */
 function autoCompleteStyle(name: string, value: number) {
-  if (STYLE_LIST.indexOf(name) >= 0 && value === +value) {
+  if (STYLE_SET.has(name) && value === +value) {
     return `${value}px`;
   }
 
@@ -90,8 +85,6 @@ export const getStyleString = (style: React.CSSProperties) =>
       '',
     );
 
-let domCleanTimeout: ReturnType<typeof setTimeout> | undefined;
-
 /**
  *
  * @param text The string to estimate
@@ -113,24 +106,23 @@ export const getStringSize = (text: string | number, style: React.CSSProperties 
   }
 
   try {
-    let measurementSpan = document.getElementById(MEASUREMENT_SPAN_ID);
-    if (measurementSpan === null) {
-      measurementSpan = document.createElement('span');
-      measurementSpan.setAttribute('id', MEASUREMENT_SPAN_ID);
-      measurementSpan.setAttribute('aria-hidden', 'true');
-      document.body.appendChild(measurementSpan);
-    }
+    const measurementSpanContainer = getMeasurementContainer();
+    const measurementElem = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+
     // Need to use CSS Object Model (CSSOM) to be able to comply with Content Security Policy (CSP)
     // https://en.wikipedia.org/wiki/Content_Security_Policy
-    const measurementSpanStyle: Record<string, any> = { ...SPAN_STYLE, ...style };
-
-    Object.keys(measurementSpanStyle).map((styleKey) => {
-      (measurementSpan!.style as Record<string, any>)[camelToMiddleLine(styleKey)] =
-        autoCompleteStyle(styleKey, measurementSpanStyle[styleKey]);
+    Object.keys(style as Record<string, any>).map((styleKey) => {
+      (measurementElem!.style as Record<string, any>)[camelToMiddleLine(styleKey)] =
+        autoCompleteStyle(styleKey, (style as Record<string, any>)[styleKey]);
       return styleKey;
     });
-    measurementSpan.textContent = str;
-    const rect = measurementSpan.getBoundingClientRect();
+
+    // measurementElem.style.whiteSpace = 'pre';
+    measurementElem.textContent = str;
+
+    measurementSpanContainer.replaceChildren(measurementElem);
+
+    const rect = measurementElem.getBoundingClientRect();
     const result = { width: rect.width, height: rect.height };
 
     stringCache.set(cacheKey, result);
@@ -141,15 +133,7 @@ export const getStringSize = (text: string | number, style: React.CSSProperties 
 
     if (process.env.NODE_ENV === 'test') {
       // In test environment, we clean the measurement span immediately
-      measurementSpan.textContent = '';
-    } else {
-      if (domCleanTimeout) {
-        clearTimeout(domCleanTimeout);
-      }
-      domCleanTimeout = setTimeout(() => {
-        // Limit node cleaning to once per render cycle
-        measurementSpan.textContent = '';
-      }, 0);
+      measurementSpanContainer.replaceChildren();
     }
 
     return result;
@@ -157,3 +141,32 @@ export const getStringSize = (text: string | number, style: React.CSSProperties 
     return { width: 0, height: 0 };
   }
 };
+
+/**
+ * Get (or create) a hidden span element to measure text size.
+ */
+function getMeasurementContainer() {
+  let measurementContainer = document.getElementById(
+    MEASUREMENT_SPAN_ID,
+  ) as unknown as SVGSVGElement;
+
+  if (measurementContainer === null) {
+    measurementContainer = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    measurementContainer.setAttribute('aria-hidden', 'true');
+    measurementContainer.setAttribute('id', MEASUREMENT_SPAN_ID);
+
+    measurementContainer.style.position = 'absolute';
+    measurementContainer.style.top = '-20000px';
+    measurementContainer.style.left = '0';
+    measurementContainer.style.padding = '0';
+    measurementContainer.style.margin = '0';
+    measurementContainer.style.border = 'none';
+    measurementContainer.style.pointerEvents = 'none';
+    measurementContainer.style.visibility = 'hidden';
+    measurementContainer.style.contain = 'strict';
+
+    document.body.appendChild(measurementContainer);
+  }
+
+  return measurementContainer;
+}

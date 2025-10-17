@@ -7,11 +7,9 @@
   ],
   "properties": {
     "id": { "type": { "description": "AxisId" }, "required": true },
-    "scaleType": { "type": { "description": "'band'" }, "required": true },
+    "scaleType": { "type": { "description": "'linear'" }, "required": true },
     "classes": { "type": { "description": "Partial&lt;ChartsAxisClasses&gt;" } },
-    "colorMap": {
-      "type": { "description": "OrdinalColorConfig | ContinuousColorConfig | PiecewiseColorConfig" }
-    },
+    "colorMap": { "type": { "description": "ContinuousColorConfig | PiecewiseColorConfig" } },
     "data": { "type": { "description": "readonly V[]" } },
     "dataKey": { "type": { "description": "string" } },
     "disableLine": { "type": { "description": "boolean" }, "default": "false" },
@@ -24,11 +22,9 @@
     "height": { "type": { "description": "number" }, "default": "30" },
     "hideTooltip": { "type": { "description": "boolean" } },
     "ignoreTooltip": { "type": { "description": "boolean" } },
-    "isNumerical": { "type": { "description": "boolean" } },
+    "isNumerical": { "type": { "description": "false" } },
     "label": { "type": { "description": "string" } },
     "labelStyle": { "type": { "description": "ChartsTextProps['style']" } },
-    "max": { "type": { "description": "number | Date" } },
-    "min": { "type": { "description": "number | Date" } },
     "offset": { "type": { "description": "number" }, "default": "0" },
     "position": { "type": { "description": "'top' | 'bottom' | 'none'" } },
     "reverse": { "type": { "description": "boolean" } },

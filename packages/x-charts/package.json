@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-charts",
-  "version": "8.13.1",
+  "version": "8.14.1",
   "author": "MUI Team",
   "description": "The community edition of MUI X Charts components.",
   "license": "MIT",
@@ -24,8 +24,10 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "code-infra build",
-    "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
+    "build": "code-infra build --ignore 'src/**/*.bench.ts'",
+    "prebuild": "rimraf build tsconfig.build.tsbuildinfo",
+    "bench:jsdom": "pnpm vitest bench -c ./vitest.config.jsdom.mts",
+    "bench:browser": "pnpm vitest bench -c ./vitest.config.browser.mts"
   },
   "repository": {
     "type": "git",
@@ -40,6 +42,7 @@
     "@mui/x-internals": "workspace:*",
     "bezier-easing": "^2.1.0",
     "clsx": "catalog:",
+    "flatqueue": "^3.0.0",
     "prop-types": "catalog:",
     "reselect": "catalog:",
     "use-sync-external-store": "catalog:"

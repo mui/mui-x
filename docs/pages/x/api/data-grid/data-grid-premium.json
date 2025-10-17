@@ -19,7 +19,7 @@
     "aiAssistantConversations": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ id?: string, prompts: Array&lt;{ createdAt: Date, helperText?: string, response?: { aggregation: object, conversationId: string, filterOperator?: 'and'<br>&#124;&nbsp;'or', filters: Array&lt;object&gt;, grouping: Array&lt;object&gt;, pivoting: object, select: number, sorting: Array&lt;object&gt; }, value: string, variant?: 'error'<br>&#124;&nbsp;'processing'<br>&#124;&nbsp;'success' }&gt;, title?: string }&gt;"
+        "description": "Array&lt;{ id?: string, prompts: Array&lt;{ createdAt: Date, helperText?: string, response?: { aggregation: object, chart?: object, conversationId: string, filterOperator?: 'and'<br>&#124;&nbsp;'or', filters: Array&lt;object&gt;, grouping: Array&lt;object&gt;, pivoting: object, select: number, sorting: Array&lt;object&gt; }, value: string, variant?: 'error'<br>&#124;&nbsp;'processing'<br>&#124;&nbsp;'success' }&gt;, title?: string }&gt;"
       }
     },
     "aiAssistantSuggestions": {
@@ -700,7 +700,7 @@
     "pivotingColDef": {
       "type": {
         "name": "union",
-        "description": "func<br>&#124;&nbsp;{ align?: 'center'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right', cellClassName?: func<br>&#124;&nbsp;string, description?: string, display?: 'flex'<br>&#124;&nbsp;'text', flex?: number, headerAlign?: 'center'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right', headerClassName?: func<br>&#124;&nbsp;string, headerName?: string, maxWidth?: number, minWidth?: number, resizable?: bool, sortingOrder?: Array&lt;'asc'<br>&#124;&nbsp;'desc'&gt;, width?: number }"
+        "description": "func<br>&#124;&nbsp;{ align?: 'center'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right', cellClassName?: func<br>&#124;&nbsp;string, description?: string, display?: 'flex'<br>&#124;&nbsp;'text', field?: string, flex?: number, headerAlign?: 'center'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right', headerClassName?: func<br>&#124;&nbsp;string, headerName?: string, maxWidth?: number, minWidth?: number, resizable?: bool, sortingOrder?: Array&lt;'asc'<br>&#124;&nbsp;'desc'&gt;, width?: number }"
       },
       "default": "undefined"
     },
@@ -1481,6 +1481,12 @@
       "name": "promptSortDescIcon",
       "description": "Icon used to display sort descending changes",
       "default": "GridArrowDownwardIcon",
+      "class": null
+    },
+    {
+      "name": "promptChartsIcon",
+      "description": "Icon used to mark the request to visalize the data",
+      "default": "GridChartsIcon",
       "class": null
     },
     {
@@ -2659,6 +2665,24 @@
       "key": "scrollbar--vertical",
       "className": "MuiDataGridPremium-scrollbar--vertical",
       "description": "Styles applied to the horizontal scrollbar.",
+      "isGlobal": false
+    },
+    {
+      "key": "scrollShadow",
+      "className": "MuiDataGridPremium-scrollShadow",
+      "description": "Styles applied to the scroll shadow element.",
+      "isGlobal": false
+    },
+    {
+      "key": "scrollShadow--horizontal",
+      "className": "MuiDataGridPremium-scrollShadow--horizontal",
+      "description": "Styles applied to the horizontal scroll shadow element.",
+      "isGlobal": false
+    },
+    {
+      "key": "scrollShadow--vertical",
+      "className": "MuiDataGridPremium-scrollShadow--vertical",
+      "description": "Styles applied to the vertical scroll shadow element.",
       "isGlobal": false
     },
     {
