@@ -94,6 +94,23 @@ const setTreeDataPath = (path: readonly string[], row: GridRowModel) => ({
   path,
 });
 
+/**
+ * Helper to perform a complete drag operation sequence.
+ */
+function performDragOperation(
+  sourceCell: ChildNode,
+  targetCell: ChildNode,
+  dropPosition: 'above' | 'below' | 'over' = 'above',
+  isOutsideGrid: boolean = false,
+) {
+  fireDragStart(sourceCell);
+  fireEvent.dragEnter(targetCell);
+  const dragOverEvent = createDragOverEvent(targetCell, dropPosition);
+  fireEvent(targetCell, dragOverEvent);
+  const dragEndEvent = createDragEndEvent(sourceCell, isOutsideGrid);
+  fireEvent(sourceCell, dragEndEvent);
+}
+
 const baselineProps: DataGridProProps = {
   rows: [
     { id: 1, path: ['Documents'], name: 'Documents' },
@@ -125,22 +142,6 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
 
   let apiRef: RefObject<GridApi | null>;
 
-  // Suppress `act()` warnings
-  const originalError = console.error;
-  beforeEach(() => {
-    console.error = (...args: any[]) => {
-      // Filter out act() warnings specifically
-      if (typeof args[0] === 'string' && args[0].includes('not wrapped in act')) {
-        return;
-      }
-      originalError.call(console, ...args);
-    };
-  });
-
-  afterEach(() => {
-    console.error = originalError;
-  });
-
   function Test(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();
     return (
@@ -151,6 +152,20 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
   }
 
   describe('Same-parent reordering', () => {
+    const originalError = console.error;
+    beforeEach(() => {
+      console.error = (...args: any[]) => {
+        if (typeof args[0] === 'string' && args[0].includes('not wrapped in act')) {
+          return; // Suppress act() warnings
+        }
+        originalError.call(console, ...args);
+      };
+    });
+
+    afterEach(() => {
+      console.error = originalError;
+    });
+
     it('should reorder group nodes within same parent', () => {
       render(<Test />);
 
@@ -164,12 +179,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
       const sourceCell = getCell(initialPersonalIndex, 0).firstChild!; // Personal
       const targetCell = getCell(initialWorkIndex, 0); // Work
 
-      fireDragStart(sourceCell);
-      fireEvent.dragEnter(targetCell);
-      const dragOverEvent = createDragOverEvent(targetCell, 'above');
-      fireEvent(targetCell, dragOverEvent);
-      const dragEndEvent = createDragEndEvent(sourceCell);
-      fireEvent(sourceCell, dragEndEvent);
+      performDragOperation(sourceCell, targetCell, 'above');
 
       // Verify new order
       const newValues = getColumnValues(0);
@@ -319,8 +329,8 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
       const allValues = getColumnValues(0);
 
       // Drop LeafA "over" LeafB to make LeafB a parent of LeafA
-      const leafAIndex = allValues.indexOf('LeafA');
-      const leafBIndex = allValues.indexOf('LeafB');
+      const leafAIndex = findRowIndex(allValues, 'LeafA', 2);
+      const leafBIndex = findRowIndex(allValues, 'LeafB', 3);
 
       expect(leafAIndex).to.be.greaterThan(-1, `LeafA should be found in: ${allValues.join(', ')}`);
       expect(leafBIndex).to.be.greaterThan(-1, `LeafB should be found in: ${allValues.join(', ')}`);
@@ -328,12 +338,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
       const sourceCell = getCell(leafAIndex, 0).firstChild!;
       const targetCell = getCell(leafBIndex, 0);
 
-      fireDragStart(sourceCell);
-      fireEvent.dragEnter(targetCell);
-      const dragOverEvent = createDragOverEvent(targetCell, 'over');
-      fireEvent(targetCell, dragOverEvent);
-      const dragEndEvent = createDragEndEvent(sourceCell);
-      fireEvent(sourceCell, dragEndEvent);
+      performDragOperation(sourceCell, targetCell, 'over');
 
       await waitFor(() => {
         expect(handleRowOrderChange.callCount).to.equal(1);
@@ -603,36 +608,54 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
         expect(beachUpdate!.fullPath).to.include('Documents');
       });
 
-      it('should show warning when setTreeDataPath is missing', () => {
-        const warnSpy = spy();
-        const originalWarn = console.warn;
-        console.warn = warnSpy;
+      // TODO: Find a better solution
+      describe('with act() suppressed', () => {
+        const originalError = console.error;
+        beforeEach(() => {
+          console.error = (...args: any[]) => {
+            if (typeof args[0] === 'string' && args[0].includes('not wrapped in act')) {
+              return; // Suppress act() warnings
+            }
+            originalError.call(console, ...args);
+          };
+        });
 
-        render(<Test setTreeDataPath={undefined} />);
+        afterEach(() => {
+          console.error = originalError;
+        });
 
-        // Attempt cross-parent reorder
-        const allValues = getColumnValues(0);
-        const beachIndex = findRowIndex(allValues, 'Beach.jpg', 10);
-        const documentsIndex = findRowIndex(allValues, 'Documents', 1);
+        it('should show warning when setTreeDataPath is missing', async () => {
+          const warnSpy = spy();
+          const handleRowOrderChange = spy();
+          const originalWarn = console.warn;
+          console.warn = warnSpy;
 
-        const sourceCell = getCell(beachIndex, 0).firstChild!;
-        const targetCell = getCell(documentsIndex, 0);
+          render(<Test setTreeDataPath={undefined} onRowOrderChange={handleRowOrderChange} />);
 
-        fireDragStart(sourceCell);
-        fireEvent.dragEnter(targetCell);
-        const dragOverEvent = createDragOverEvent(targetCell, 'below');
-        fireEvent(targetCell, dragOverEvent);
-        const dragEndEvent = createDragEndEvent(sourceCell);
-        fireEvent(sourceCell, dragEndEvent);
+          // Attempt cross-parent reorder
+          const allValues = getColumnValues(0);
+          const beachIndex = findRowIndex(allValues, 'Beach.jpg', 10);
+          const documentsIndex = findRowIndex(allValues, 'Documents', 1);
 
-        console.warn = originalWarn;
+          const targetCell = getCell(beachIndex, 0);
+          const sourceCell = getCell(documentsIndex, 0).firstChild!;
 
-        // In development mode, check for the setTreeDataPath warning
-        const warningCalls = warnSpy.getCalls();
-        const hasSetTreeDataPathWarning = warningCalls.some((call) =>
-          call.args.some((arg) => typeof arg === 'string' && arg.includes('setTreeDataPath')),
-        );
-        expect(hasSetTreeDataPathWarning).to.equal(true);
+          fireDragStart(sourceCell);
+          fireEvent.dragEnter(targetCell);
+          const dragOverEvent = createDragOverEvent(targetCell, 'below');
+          fireEvent(targetCell, dragOverEvent);
+          const dragEndEvent = createDragEndEvent(sourceCell);
+          fireEvent(sourceCell, dragEndEvent);
+
+          console.warn = originalWarn;
+
+          // In development mode, check for the setTreeDataPath warning
+          const warningCalls = warnSpy.getCalls();
+          const hasSetTreeDataPathWarning = warningCalls.some((call) =>
+            call.args.some((arg) => typeof arg === 'string' && arg.includes('setTreeDataPath')),
+          );
+          expect(hasSetTreeDataPathWarning).to.equal(true);
+        });
       });
     });
   });
@@ -732,7 +755,6 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
     });
 
     it('should handle processRowUpdate rejection gracefully', async () => {
-      const handleRowOrderChange = spy();
       const handleProcessRowUpdateError = spy();
       let processRowUpdateCallCount = 0;
 
@@ -743,7 +765,6 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
 
       render(
         <Test
-          onRowOrderChange={handleRowOrderChange}
           processRowUpdate={processRowUpdate}
           onProcessRowUpdateError={handleProcessRowUpdateError}
         />,
