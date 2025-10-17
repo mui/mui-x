@@ -21,6 +21,7 @@ import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { useLineChartProps } from '@mui/x-charts/internals';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
+import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
 import {
   ChartsToolbarProSlotProps,
   ChartsToolbarProSlots,
@@ -28,7 +29,6 @@ import {
 import { ChartsSlotPropsPro, ChartsSlotsPro } from '../internals/material';
 import { ChartZoomSlider } from '../ChartZoomSlider';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
-import { ChartsBrushOverlay } from '../ChartsBrushOverlay';
 import { ChartContainerProProps } from '../ChartContainerPro';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';

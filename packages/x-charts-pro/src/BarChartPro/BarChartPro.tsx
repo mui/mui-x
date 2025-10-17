@@ -13,6 +13,7 @@ import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { useBarChartProps } from '@mui/x-charts/internals';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
+import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
 import {
   ChartsToolbarProSlotProps,
   ChartsToolbarProSlots,
@@ -23,7 +24,6 @@ import { ChartsToolbarPro } from '../ChartsToolbarPro';
 import { ChartContainerProProps } from '../ChartContainerPro';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
-import { ChartsBrushOverlay } from '../ChartsBrushOverlay';
 import { BAR_CHART_PRO_PLUGINS, BarChartProPluginSignatures } from './BarChartPro.plugins';
 
 export interface BarChartProSlots
