@@ -260,3 +260,12 @@ If you are not using the axis highlight or the tooltip, consider disabling this 
 ```
 
 :::
+
+## Extra examples
+
+### Bell curve
+
+This example demonstrates how to combine scatter and line plots to overlay a normal distribution curve (bell curve) over scattered data points.
+The bell curve is calculated based on the mean and standard deviation of the data.
+
+{{"demo": "BellCurveOverlay.js" }}
