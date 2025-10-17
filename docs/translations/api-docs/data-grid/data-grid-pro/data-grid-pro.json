@@ -1497,16 +1497,6 @@
       "nodeName": "the floating special row reorder cell element",
       "conditions": "it is dragged"
     },
-    "row--dropAbove": {
-      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
-      "nodeName": "the row element",
-      "conditions": "it is a drop target above"
-    },
-    "row--dropBelow": {
-      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
-      "nodeName": "the row element",
-      "conditions": "it is a drop target below"
-    },
     "row--dynamicHeight": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the row",

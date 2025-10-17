@@ -72,8 +72,6 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
   const slots = {
     rowDragging: ['row--dragging'],
-    rowDropAbove: ['row--dropAbove'],
-    rowDropBelow: ['row--dropBelow'],
     rowBeingDragged: ['row--beingDragged'],
   };
 

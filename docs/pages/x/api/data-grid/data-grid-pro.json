@@ -2138,18 +2138,6 @@
       "isGlobal": false
     },
     {
-      "key": "row--dropAbove",
-      "className": "MuiDataGridPro-row--dropAbove",
-      "description": "Styles applied to the row element when it is a drop target above.",
-      "isGlobal": false
-    },
-    {
-      "key": "row--dropBelow",
-      "className": "MuiDataGridPro-row--dropBelow",
-      "description": "Styles applied to the row element when it is a drop target below.",
-      "isGlobal": false
-    },
-    {
       "key": "row--dynamicHeight",
       "className": "MuiDataGridPro-row--dynamicHeight",
       "description": "Styles applied to the row if it has dynamic row height.",
