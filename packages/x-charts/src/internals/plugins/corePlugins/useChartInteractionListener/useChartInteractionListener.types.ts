@@ -38,13 +38,27 @@ export type ChartInteraction =
   | 'moveEnd'
   | 'tap'
   | 'quickPress'
-  | 'quickPressEnd';
+  | 'quickPressEnd'
+  | 'brush'
+  | 'brushStart'
+  | 'brushCancel'
+  | 'brushEnd';
 
 export type InteractionListenerResult = { cleanup: () => void };
 
 export type AddInteractionListener = {
   <CustomData extends Record<string, unknown> = Record<string, unknown>>(
-    interaction: 'pan' | 'panStart' | 'panEnd' | 'zoomPan' | 'zoomPanStart' | 'zoomPanEnd',
+    interaction:
+      | 'pan'
+      | 'panStart'
+      | 'panEnd'
+      | 'zoomPan'
+      | 'zoomPanStart'
+      | 'zoomPanEnd'
+      | 'brush'
+      | 'brushStart'
+      | 'brushCancel'
+      | 'brushEnd',
     callback: (event: PanEvent<CustomData>) => void,
     options?: boolean | AddEventListenerOptions,
   ): InteractionListenerResult;
