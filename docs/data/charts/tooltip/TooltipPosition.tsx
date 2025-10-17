@@ -100,7 +100,7 @@ export default function TooltipPosition() {
           : `
         placement: ${props.placement},`
       }
-        },
+      },
     }}
 />`}
     />
