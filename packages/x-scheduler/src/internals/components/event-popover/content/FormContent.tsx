@@ -14,7 +14,7 @@ import {
   CalendarEventOccurrence,
   CalendarEventUpdatedProperties,
   CalendarResourceId,
-  RecurrencePresetKey,
+  RecurringEventPresetKey,
   SchedulerValidDate,
 } from '@mui/x-scheduler-headless/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
@@ -114,7 +114,7 @@ export default function FormContent(props: FormContentProps) {
     const { start, end } = computeRange(adapter, when, isAllDay);
 
     const form = new FormData(event.currentTarget);
-    const recurrenceValue = form.get('recurrence') as RecurrencePresetKey;
+    const recurrenceValue = form.get('recurrence') as RecurringEventPresetKey;
     const recurrenceModified =
       defaultRecurrenceKey !== 'custom' && recurrenceValue !== defaultRecurrenceKey;
     // TODO: This will change after implementing the custom recurrence editing tab.
@@ -183,7 +183,7 @@ export default function FormContent(props: FormContentProps) {
 
   const recurrenceOptions: {
     label: string;
-    value: RecurrencePresetKey | null;
+    value: RecurringEventPresetKey | null;
   }[] = [
     { label: `${translations.recurrenceNoRepeat}`, value: null },
     { label: `${translations.recurrenceDailyPresetLabel}`, value: 'daily' },

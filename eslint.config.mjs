@@ -188,9 +188,6 @@ export default defineConfig(
     ],
     extends: createTestConfig({ useMocha: false }),
     ignores: ['test/e2e/**/*', 'test/regressions/**/*'],
-    rules: {
-      'testing-library/no-container': 'off',
-    },
   },
   baseSpecRules,
 

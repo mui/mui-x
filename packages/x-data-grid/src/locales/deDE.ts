@@ -330,6 +330,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   promptChangePivotValuesLabel: (count: number) => `Werte (${count})`,
   promptChangePivotValuesDescription: (column: string, aggregation: string) =>
     `${column} (${aggregation})`,
+  // promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) => `Dimensions (${dimensionsCount}), Values (${valuesCount})`,
 };
 
 export const deDE: Localization = getGridLocalization(deDEGrid);
