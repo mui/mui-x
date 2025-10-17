@@ -30,6 +30,7 @@ describe('Core - TimelineStore', () => {
         preferences: DEFAULT_PREFERENCES,
         view: 'time',
         views: ['time', 'days', 'weeks', 'months', 'years'],
+        readonly: false,
       };
 
       expect(store.state).to.deep.equal(expectedState);

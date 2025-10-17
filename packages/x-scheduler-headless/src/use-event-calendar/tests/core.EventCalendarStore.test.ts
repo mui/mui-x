@@ -39,6 +39,7 @@ describe('Core - EventCalendarStore', () => {
         viewConfig: null,
         occurrencePlaceholder: null,
         visibleDate: adapter.startOfDay(adapter.date()),
+        readonly: false,
       };
 
       expect(store.state).to.deep.equal(expectedState);
