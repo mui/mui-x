@@ -49,10 +49,6 @@ p {
   outline: 2px solid var(--event-color-5);
 }
 
-.EventPopoverTitle {
-  flex: 1;
-}
-
 .mui-x-scheduler .EventPopoverTitleInput {
   padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-4);
@@ -325,6 +321,7 @@ p {
 }
 
 .EventPopoverTitle {
+  flex: 1;
   color: var(--event-color-12);
   font-size: var(--font-size-3);
   line-height: var(--line-height-3);
