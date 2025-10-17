@@ -7,7 +7,7 @@ import { useDrawingArea, useXScale } from '../hooks';
 import {
   CommonChartsReferenceLineProps,
   DEFAULT_SPACING,
-  DEFAULT_SPACING_MIDDLE,
+  DEFAULT_SPACING_MIDDLE_OTHER_AXIS,
   ReferenceLineRoot,
 } from './common';
 import { ChartsText } from '../ChartsText';
@@ -110,13 +110,17 @@ function ChartsXReferenceLine(props: ChartsXReferenceLineProps) {
 
   const classes = getXReferenceLineClasses(inClasses);
 
-  const defaultSpacing =
-    labelAlign === 'middle' || !labelAlign ? DEFAULT_SPACING_MIDDLE : DEFAULT_SPACING;
   const spacing =
-    typeof spacingProp === 'object' ? spacingProp : { x: spacingProp, y: spacingProp };
+    typeof spacingProp === 'object'
+      ? {
+          x: DEFAULT_SPACING,
+          y: DEFAULT_SPACING_MIDDLE_OTHER_AXIS,
+          ...spacingProp,
+        }
+      : { x: spacingProp ?? DEFAULT_SPACING, y: DEFAULT_SPACING_MIDDLE_OTHER_AXIS };
 
-  const spacingX = spacing.x ?? defaultSpacing;
-  const spacingY = spacing.y ?? defaultSpacing;
+  const spacingX = spacing.x;
+  const spacingY = spacing.y;
 
   const textParams = {
     x: xPosition + spacingX,
