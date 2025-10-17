@@ -89,6 +89,7 @@ export const useGridAggregation = (
   );
 
   const abortControllerRef = React.useRef<AbortController | null>(null);
+  const hasAppliedAggregationRef = React.useRef(false);
   const applyAggregation = React.useCallback(
     (reason?: 'filter' | 'sort') => {
       // Abort previous if any
@@ -107,7 +108,11 @@ export const useGridAggregation = (
       const aggregatedFields = Object.keys(aggregationRules);
       const currentAggregationLookup = gridAggregationLookupSelector(apiRef);
       const needsSorting = shouldApplySorting(aggregationRules, aggregatedFields);
-      if (reason === 'sort' && !needsSorting) {
+      // Only skip re-applying aggregation if:
+      // 1. This is triggered by a sort event
+      // 2. None of the aggregated columns need sorting
+      // 3. Aggregation has been applied at least once before
+      if (reason === 'sort' && !needsSorting && hasAppliedAggregationRef.current) {
         // no need to re-apply aggregation on `sortedRowsSet` if sorting is not needed
         return;
       }
@@ -149,6 +154,7 @@ export const useGridAggregation = (
             apiRef.current.applySorting();
           }
           abortControllerRef.current = null;
+          hasAppliedAggregationRef.current = true;
           return;
         }
 
@@ -199,6 +205,7 @@ export const useGridAggregation = (
           ...state,
           aggregation: { ...state.aggregation, lookup: {} },
         }));
+        hasAppliedAggregationRef.current = true;
       }
     },
     [
@@ -286,6 +293,12 @@ export const useGridAggregation = (
   useGridEvent(apiRef, 'columnsChange', checkAggregationRulesDiff);
   useGridEvent(apiRef, 'filteredRowsSet', deferredApplyAggregation);
   useGridEvent(apiRef, 'sortedRowsSet', () => deferredApplyAggregation('sort'));
+  useGridEvent(apiRef, 'rowsSet', () => {
+    // Reset the flag so that subsequent aggregation (even from sort) will run
+    // This ensures aggregation recalculates when rows load asynchronously
+    hasAppliedAggregationRef.current = false;
+    deferredApplyAggregation();
+  });
 
   /**
    * EFFECTS
