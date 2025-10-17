@@ -136,6 +136,7 @@ const GridVirtualScrollbar = forwardRef<HTMLDivElement, GridVirtualScrollbarProp
     });
 
     const isScrollbarSyncScheduled = React.useRef(false);
+    const lastScrollValue = React.useRef(0);
     const onScrollbarScroll = useEventCallback(() => {
       const scroller = apiRef.current.virtualScrollerRef.current!;
       const scrollbar = scrollbarRef.current;
@@ -150,12 +151,13 @@ const GridVirtualScrollbar = forwardRef<HTMLDivElement, GridVirtualScrollbarProp
       }
       isLocked.current = true;
 
+      lastScrollValue.current = scrollbar[propertyScroll];
       if (isScrollbarSyncScheduled.current) {
         return;
       }
       isScrollbarSyncScheduled.current = true;
       requestAnimationFrame(() => {
-        scroller[propertyScroll] = scrollbar[propertyScroll];
+        scroller[propertyScroll] = lastScrollValue.current;
         isScrollbarSyncScheduled.current = false;
       });
     });
