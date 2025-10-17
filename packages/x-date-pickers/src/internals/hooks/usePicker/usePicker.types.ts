@@ -147,6 +147,7 @@ export interface UsePickerProps<
     UsePickerNonStaticProps {
   // We don't add JSDoc here because we want the `referenceDate` JSDoc to be the one from the view which has more context.
   referenceDate?: TValue extends PickerRangeValue ? TValue | PickerValidDate : PickerValidDate;
+  shouldRenderTimeInASingleColumn?: boolean;
   className?: string;
   sx?: SxProps<Theme>;
 }
