@@ -221,11 +221,7 @@ export function getBarDimensions(params: {
 
   const barSize =
     seriesValue === 0 ? 0 : Math.max(series.minBarSize, maxValueCoord - minValueCoord);
-  const startCoordinate = shouldInvertStartCoordinate(
-    verticalLayout,
-    seriesValue,
-    reverse,
-  )
+  const startCoordinate = shouldInvertStartCoordinate(verticalLayout, seriesValue, reverse)
     ? maxValueCoord - barSize
     : minValueCoord;
 
