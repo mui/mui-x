@@ -5,6 +5,18 @@ export type Point = { x: number; y: number };
 export interface UseChartBrushState {
   brush: {
     /**
+     * Whether the brush interaction is enabled.
+     */
+    enabled: boolean;
+    /**
+     * Whether to prevent tooltip from showing during brush interaction.
+     */
+    preventTooltip: boolean;
+    /**
+     * Whether to prevent highlighting during brush interaction.
+     */
+    preventHighlight: boolean;
+    /**
      * The starting coordinate of the brush interaction.
      */
     start: Point | null;
@@ -27,17 +39,34 @@ export interface UseChartBrushInstance {
   clearBrush: () => void;
 }
 
-export interface UseChartBrushParameters {
+export interface BrushConfig {
   /**
-   * Callback fired when the brush coordinates change.
-   * @param {object} brush The brush coordinates.
-   * @param {Point | null} brush.start The starting coordinate of the brush.
-   * @param {Point | null} brush.current The current coordinate of the brush.
+   * Whether the brush interaction is enabled.
+   * @default false
    */
-  onBrushChange?: (brush: { start: Point | null; current: Point | null }) => void;
+  enabled?: boolean;
+  /**
+   * Whether to prevent tooltip from showing during brush interaction.
+   * @default false
+   */
+  preventTooltip?: boolean;
+  /**
+   * Whether to prevent highlighting during brush interaction.
+   * @default false
+   */
+  preventHighlight?: boolean;
 }
 
-export type UseChartBrushDefaultizedParameters = UseChartBrushParameters;
+export interface UseChartBrushParameters {
+  /**
+   * Configuration for the brush interaction.
+   */
+  brushConfig?: BrushConfig;
+}
+
+export type UseChartBrushDefaultizedParameters = {
+  brushConfig: Required<BrushConfig>;
+};
 
 export type UseChartBrushSignature = ChartPluginSignature<{
   params: UseChartBrushParameters;

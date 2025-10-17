@@ -306,6 +306,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Row reorder', () => {
     const { container } = render(<Test />);
 
     // Initially, no scroll areas should be visible
+    /* eslint-disable testing-library/no-container */
     expect(container.querySelectorAll(`.${gridClasses.scrollArea}`)).to.have.length(0);
 
     // Start dragging a row at the top (scroll = 0)
@@ -352,6 +353,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Row reorder', () => {
 
     // Scroll areas should be hidden again
     expect(container.querySelectorAll(`.${gridClasses.scrollArea}`)).to.have.length(0);
+    /* eslint-enable testing-library/no-container */
   });
 
   it('should allow row reordering when dragging from any cell during active reorder', () => {

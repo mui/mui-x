@@ -71,7 +71,6 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/charts-brush-overlay',
     title: 'ChartsBrushOverlay',
-    plan: 'pro',
   },
   {
     pathname: '/x/api/charts/charts-clip-path',

@@ -1,4 +1,6 @@
 import type { SchedulerValidDate } from './date';
+import { RecurringEventRecurrenceRule } from './recurringEvent';
+import type { CalendarOccurrencePlaceholderExternalDragData } from './dragAndDrop';
 import type { CalendarResourceId } from './resource';
 
 export interface CalendarEvent {
@@ -30,7 +32,7 @@ export interface CalendarEvent {
    * The recurrence rule for the event.
    * If not defined, the event will have only one occurrence.
    */
-  rrule?: RRuleSpec;
+  rrule?: RecurringEventRecurrenceRule;
   /**
    * Exception dates for the event.
    * These dates will be excluded from the recurrence.
@@ -52,38 +54,6 @@ export interface CalendarEvent {
    * and no link to an original event will be created.
    */
   extractedFromId?: CalendarEventId;
-}
-
-/** Two-letter weekday codes as defined by RFC 5545 (`BYDAY`). */
-export type ByDayCode = 'MO' | 'TU' | 'WE' | 'TH' | 'FR' | 'SA' | 'SU';
-
-/**
- *  Ordinal prefix for BYDAY ordinals.
- *  Positive 1..5 for “Nth” weekday, negative for “last” (e.g. `-1` = last).
- */
-type Ordinal = `${'' | '-'}${1 | 2 | 3 | 4 | 5}`;
-
-/** A BYDAY entry: either a plain weekday (`'MO'`) or an ordinal + weekday (`'2TU'`, `'-1FR'`). */
-export type ByDayValue = ByDayCode | `${Ordinal}${ByDayCode}`;
-
-/**
- *  Minimal subset of RFC 5545 RRULE supported by the scheduler.
- */
-export interface RRuleSpec {
-  /** Base frequency of the rule. */
-  freq: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
-  /** Step between occurrences at the given frequency. Defaults to 1. */
-  interval?: number;
-  /** BYDAY: MO..SU or ordinals like 4SA, -1MO */
-  byDay?: ByDayValue[];
-  /** BYMONTHDAY: list of calendar days in the month (1..31). */
-  byMonthDay?: number[];
-  /** BYMONTH: list of months (1..12). */
-  byMonth?: number[];
-  /** COUNT: total number of occurrences, mutually exclusive with `until`. */
-  count?: number;
-  /** UNTIL: inclusive end boundary, mutually exclusive with `count`. */
-  until?: SchedulerValidDate;
 }
 
 /**
@@ -203,13 +173,30 @@ export interface CalendarOccurrencePlaceholderInternalDragOrResize
   originalEvent: CalendarEvent;
 }
 
+export interface CalendarOccurrencePlaceholderExternalDrag
+  extends CalendarOccurrencePlaceholderBase {
+  /**
+   * The type of placeholder.
+   */
+  type: 'external-drag';
+  /**
+   * The data of the event to insert in the Event Calendar when dropped.
+   */
+  eventData: CalendarOccurrencePlaceholderExternalDragData;
+  /**
+   * Callback fired when the event is dropped into the Event Calendar.
+   */
+  onEventDrop?: () => void;
+}
+
 /**
  * Object representing the placeholder of an event occurrence.
  * It is used when creating a new event or when dragging an event occurrence.
  */
 export type CalendarOccurrencePlaceholder =
   | CalendarOccurrencePlaceholderCreation
-  | CalendarOccurrencePlaceholderInternalDragOrResize;
+  | CalendarOccurrencePlaceholderInternalDragOrResize
+  | CalendarOccurrencePlaceholderExternalDrag;
 
 export interface CalendarProcessedDate {
   /**

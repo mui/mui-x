@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { useStore } from '@mui/x-internals/store';
 import { useRtl } from '@mui/system/RtlProvider';
+import { useTimeout } from '@base-ui-components/utils/useTimeout';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { TreeViewCancellableEvent } from '../../../models';
 import { TreeViewItemMeta, TreeViewPlugin } from '../../models';
@@ -13,7 +14,7 @@ import {
   isTargetInDescendants,
 } from '../../utils/tree';
 import {
-  TreeViewFirstCharMap,
+  TreeViewLabelMap,
   UseTreeViewKeyboardNavigationSignature,
 } from './useTreeViewKeyboardNavigation.types';
 import { hasPlugin } from '../../utils/plugins';
@@ -27,15 +28,20 @@ function isPrintableKey(string: string) {
   return !!string && string.length === 1 && !!string.match(/\S/);
 }
 
+const TYPEAHEAD_TIMEOUT = 500;
+
 export const useTreeViewKeyboardNavigation: TreeViewPlugin<
   UseTreeViewKeyboardNavigationSignature
 > = ({ instance, store, params }) => {
   const isRtl = useRtl();
-  const firstCharMap = React.useRef<TreeViewFirstCharMap>({});
+  const labelMap = React.useRef<TreeViewLabelMap>({});
 
-  const updateFirstCharMap = useEventCallback(
-    (callback: (firstCharMap: TreeViewFirstCharMap) => TreeViewFirstCharMap) => {
-      firstCharMap.current = callback(firstCharMap.current);
+  const typeaheadQueryRef = React.useRef<string>('');
+  const typeaheadTimeout = useTimeout();
+
+  const updateLabelMap = useEventCallback(
+    (callback: (labelMap: TreeViewLabelMap) => TreeViewLabelMap) => {
+      labelMap.current = callback(labelMap.current);
     },
   );
 
@@ -45,43 +51,66 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       return;
     }
 
-    const newFirstCharMap: { [itemId: string]: string } = {};
+    const newLabelMap: { [itemId: string]: string } = {};
 
     const processItem = (item: TreeViewItemMeta) => {
-      newFirstCharMap[item.id] = item.label!.substring(0, 1).toLowerCase();
+      newLabelMap[item.id] = item.label!.toLowerCase();
     };
 
     Object.values(itemMetaLookup).forEach(processItem);
-    firstCharMap.current = newFirstCharMap;
+    labelMap.current = newLabelMap;
   }, [itemMetaLookup, params.getItemId, instance]);
 
-  const getFirstMatchingItem = (itemId: string, query: string) => {
-    const cleanQuery = query.toLowerCase();
+  const getNextItem = (itemIdToCheck: string) => {
+    const nextItemId = getNextNavigableItem(store.state, itemIdToCheck);
+    // We reached the end of the tree, check from the beginning
+    if (nextItemId === null) {
+      return getFirstNavigableItem(store.state);
+    }
 
-    const getNextItem = (itemIdToCheck: string) => {
-      const nextItemId = getNextNavigableItem(store.state, itemIdToCheck);
-      // We reached the end of the tree, check from the beginning
-      if (nextItemId === null) {
-        return getFirstNavigableItem(store.state);
-      }
+    return nextItemId;
+  };
 
-      return nextItemId;
-    };
-
+  const getNextMatchingItemId = (itemId: string, query: string): string | null => {
     let matchingItemId: string | null = null;
-    let currentItemId: string = getNextItem(itemId);
     const checkedItems: Record<string, true> = {};
+    // If query length > 1, first check if current item matches
+    let currentItemId: string = query.length > 1 ? itemId : getNextItem(itemId);
     // The "!checkedItems[currentItemId]" condition avoids an infinite loop when there is no matching item.
     while (matchingItemId == null && !checkedItems[currentItemId]) {
-      if (firstCharMap.current[currentItemId] === cleanQuery) {
+      const itemLabel = labelMap.current[currentItemId];
+
+      if (itemLabel?.startsWith(query)) {
         matchingItemId = currentItemId;
       } else {
         checkedItems[currentItemId] = true;
         currentItemId = getNextItem(currentItemId);
       }
     }
-
     return matchingItemId;
+  };
+
+  const getFirstMatchingItem = (itemId: string, newKey: string): string | null => {
+    const cleanNewKey = newKey.toLowerCase();
+
+    // Try matching with accumulated query + new key
+    const concatenatedQuery = `${typeaheadQueryRef.current}${cleanNewKey}`;
+
+    // check if the entire typed query matches an item
+    const concatenatedQueryMatchingItemId = getNextMatchingItemId(itemId, concatenatedQuery);
+    if (concatenatedQueryMatchingItemId != null) {
+      typeaheadQueryRef.current = concatenatedQuery;
+      return concatenatedQueryMatchingItemId;
+    }
+
+    const newKeyMatchingItemId = getNextMatchingItemId(itemId, cleanNewKey);
+    if (newKeyMatchingItemId != null) {
+      typeaheadQueryRef.current = cleanNewKey;
+      return newKeyMatchingItemId;
+    }
+
+    typeaheadQueryRef.current = '';
+    return null;
   };
 
   const canToggleItemSelection = (itemId: string) =>
@@ -291,13 +320,21 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       }
 
       // Type-ahead
-      // TODO: Support typing multiple characters
       case !ctrlPressed && !event.shiftKey && isPrintableKey(key): {
+        typeaheadTimeout.clear();
+
         const matchingItem = getFirstMatchingItem(itemId, key);
+
         if (matchingItem != null) {
           instance.focusItem(event, matchingItem);
           event.preventDefault();
+        } else {
+          typeaheadQueryRef.current = '';
         }
+
+        typeaheadTimeout.start(TYPEAHEAD_TIMEOUT, () => {
+          typeaheadQueryRef.current = '';
+        });
         break;
       }
     }
@@ -305,7 +342,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
   return {
     instance: {
-      updateFirstCharMap,
+      updateLabelMap,
       handleItemKeyDown,
     },
   };
