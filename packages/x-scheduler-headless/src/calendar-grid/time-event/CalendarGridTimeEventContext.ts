@@ -1,20 +1,9 @@
 'use client';
 import * as React from 'react';
 import type { CalendarGridTimeEvent } from './CalendarGridTimeEvent';
+import type { useDraggableEvent } from '../../utils/useDraggableEvent';
 
-export interface CalendarGridTimeEventContext {
-  /**
-   * Whether this event is starting before the column starts.
-   */
-  doesEventStartBeforeColumnStart: boolean;
-  /**
-   * Whether this event is ending after the column ends.
-   */
-  doesEventEndAfterColumnEnd: boolean;
-  /**
-   * Sets whether the event is being resized.
-   */
-  setIsResizing: (isResizing: boolean) => void;
+export interface CalendarGridTimeEventContext extends useDraggableEvent.ContextValue {
   /**
    * Gets the drag data shared by the CalendarGrid.TimeEvent and CalendarGrid.TimeEventResizeHandler parts.
    * @param {{ clientY: number }} input The input object provided by the drag and drop library for the current event.
