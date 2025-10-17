@@ -49,7 +49,7 @@ const ChartsTooltipRoot = styled(Popper, {
   zIndex: theme.zIndex.modal,
 }));
 
-const selectorSelectSelector = createSelector(
+const selectorSelectIsOpenSelector = createSelector(
   [
     selectorBrushShouldPreventTooltip,
     (_, trigger: TriggerOptions) => trigger,
@@ -100,7 +100,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
 
   const store = useStore<[UseChartCartesianAxisSignature]>();
 
-  const isOpenSelector = useSelector(store, selectorSelectSelector, [trigger, axisSystem]);
+  const isOpenSelector = useSelector(store, selectorSelectIsOpenSelector, [trigger, axisSystem]);
 
   const isOpen = useSelector(store, isOpenSelector);
 
