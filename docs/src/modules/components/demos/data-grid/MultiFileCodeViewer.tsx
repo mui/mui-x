@@ -16,20 +16,7 @@ interface MultiFileCodeViewerProps {
 
 function getLanguageFromFilename(filename: string): string {
   const ext = filename.split('.').pop()?.toLowerCase();
-  switch (ext) {
-    case 'ts':
-    case 'tsx':
-      return 'tsx';
-    case 'js':
-    case 'jsx':
-      return 'jsx';
-    case 'css':
-      return 'css';
-    case 'json':
-      return 'json';
-    default:
-      return 'tsx';
-  }
+  return ext === 'ts' ? 'ts' : 'tsx';
 }
 
 export default function MultiFileCodeViewer({
