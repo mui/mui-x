@@ -147,6 +147,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     });
 
     const cell11 = getCell(0, 0);
+    await within(cell11).findByRole('button');
     await user.click(within(cell11).getByRole('button'));
 
     await waitFor(() => {
@@ -183,11 +184,13 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
       expect(fetchRowsSpy.callCount).to.equal(2);
     });
 
-    const cell11 = getCell(0, 0);
-    const cell11ChildrenCount = Number(cell11.innerText.split('(')[1].split(')')[0]);
-    expect(Object.keys(apiRef.current.state.rows.tree).length).to.equal(
-      10 + 1 + cell11ChildrenCount,
-    );
+    await waitFor(() => {
+      const cell11 = getCell(0, 0);
+      const cell11ChildrenCount = Number(cell11.innerText.split('(')[1].split(')')[0]);
+      expect(Object.keys(apiRef.current?.state.rows.tree ?? {}).length).to.equal(
+        10 + 1 + cell11ChildrenCount,
+      );
+    });
   });
 
   it('should lazily fetch nested data when using `defaultGroupingExpansionDepth`', async () => {
