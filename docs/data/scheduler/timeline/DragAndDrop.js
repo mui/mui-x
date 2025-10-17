@@ -2,21 +2,16 @@ import * as React from 'react';
 
 import { Timeline } from '@mui/x-scheduler/timeline';
 import {
-  initialEvents,
   defaultVisibleDate,
+  initialEvents,
   resources,
-} from '../../../data/scheduler/datasets/timeline-events';
+} from '../datasets/timeline-events';
 
-export default function FullTimeline() {
+export default function DragAndDrop() {
   const [events, setEvents] = React.useState(initialEvents);
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        height: '100vh',
-      }}
-    >
+    <div style={{ height: '500px', width: '100%' }}>
       <Timeline
         events={events}
         resources={resources}

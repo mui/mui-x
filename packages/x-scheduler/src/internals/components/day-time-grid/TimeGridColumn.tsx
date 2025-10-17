@@ -95,6 +95,7 @@ function ColumnInteractiveLayer({
       surfaceType: 'time-grid',
       start: draftRange.start,
       end: draftRange.end,
+      resourceId: undefined,
     });
   };
 

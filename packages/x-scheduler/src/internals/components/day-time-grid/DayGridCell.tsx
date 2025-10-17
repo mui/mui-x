@@ -36,6 +36,7 @@ export function DayGridCell(props: DayGridCellProps) {
       surfaceType: 'day-grid',
       start: adapter.startOfDay(day.value),
       end: adapter.endOfDay(day.value),
+      resourceId: undefined,
     });
   };
 

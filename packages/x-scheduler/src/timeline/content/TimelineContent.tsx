@@ -117,6 +117,7 @@ export const TimelineContent = React.forwardRef(function TimelineContent(
                 start={start}
                 end={end}
                 occurrences={occurrences}
+                resourceId={resource.id}
               />
             )}
           </TimelinePrimitive.SubGrid>

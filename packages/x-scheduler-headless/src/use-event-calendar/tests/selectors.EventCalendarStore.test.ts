@@ -40,6 +40,7 @@ describe('EventCalendarStore.selectors', () => {
           surfaceType: 'time-grid',
           start: adapter.startOfDay(day),
           end: adapter.endOfDay(day),
+          resourceId: undefined,
         },
       });
       expect(selectors.isCreatingNewEventInDayCell(state, day)).to.equal(false);
@@ -52,6 +53,7 @@ describe('EventCalendarStore.selectors', () => {
           eventId: 'event-id',
           occurrenceKey: 'event-id-key',
           surfaceType: 'day-grid',
+          resourceId: undefined,
           start: adapter.startOfDay(day),
           end: adapter.endOfDay(day),
           originalEvent: {
@@ -72,6 +74,7 @@ describe('EventCalendarStore.selectors', () => {
           surfaceType: 'day-grid',
           start: adapter.startOfDay(day),
           end: adapter.endOfDay(day),
+          resourceId: undefined,
         },
       });
       expect(selectors.isCreatingNewEventInDayCell(state, day)).to.equal(true);
@@ -85,6 +88,7 @@ describe('EventCalendarStore.selectors', () => {
           surfaceType: 'day-grid',
           start: adapter.startOfDay(otherDay),
           end: adapter.endOfDay(otherDay),
+          resourceId: undefined,
         },
       });
       expect(selectors.isCreatingNewEventInDayCell(state, day)).to.equal(false);
@@ -108,6 +112,7 @@ describe('EventCalendarStore.selectors', () => {
           surfaceType: 'day-grid',
           start: adapter.setHours(dayStart, 10),
           end: adapter.setHours(dayStart, 11),
+          resourceId: undefined,
         },
       });
       expect(selectors.isCreatingNewEventInTimeRange(state, dayStart, dayEnd)).to.equal(false);
@@ -120,6 +125,7 @@ describe('EventCalendarStore.selectors', () => {
           eventId: 'event-id',
           occurrenceKey: 'event-id-key',
           surfaceType: 'time-grid',
+          resourceId: undefined,
           start: adapter.startOfDay(day),
           end: adapter.endOfDay(day),
           originalEvent: {
@@ -141,6 +147,7 @@ describe('EventCalendarStore.selectors', () => {
           surfaceType: 'time-grid',
           start: adapter.setHours(adapter.startOfDay(nextDay), 9),
           end: adapter.setHours(adapter.startOfDay(nextDay), 10),
+          resourceId: undefined,
         },
       });
       expect(selectors.isCreatingNewEventInTimeRange(state, dayStart, dayEnd)).to.equal(false);
@@ -153,6 +160,7 @@ describe('EventCalendarStore.selectors', () => {
           surfaceType: 'time-grid',
           start: adapter.setHours(dayStart, 10), // < dayEnd
           end: adapter.setHours(dayStart, 11), // > dayStart
+          resourceId: undefined,
         },
       });
       expect(selectors.isCreatingNewEventInTimeRange(state, dayStart, dayEnd)).to.equal(true);
@@ -165,6 +173,7 @@ describe('EventCalendarStore.selectors', () => {
           surfaceType: 'time-grid',
           start: dayEnd, // start < dayEnd is false
           end: adapter.addMinutes(dayEnd, 30),
+          resourceId: undefined,
         },
       });
       expect(selectors.isCreatingNewEventInTimeRange(state, dayStart, dayEnd)).to.equal(false);
@@ -177,6 +186,7 @@ describe('EventCalendarStore.selectors', () => {
           surfaceType: 'time-grid',
           start: adapter.addMinutes(dayStart, -60),
           end: dayStart, // end > dayStart is false
+          resourceId: undefined,
         },
       });
       expect(selectors.isCreatingNewEventInTimeRange(state, dayStart, dayEnd)).to.equal(false);

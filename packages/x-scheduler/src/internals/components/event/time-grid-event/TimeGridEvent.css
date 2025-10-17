@@ -8,7 +8,7 @@
     opacity: 0.5;
   }
 
-  &:hover .EventResizeHandler {
+  &:hover .TimeGridEventResizeHandler {
     opacity: 1;
   }
 }
