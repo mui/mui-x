@@ -17,9 +17,9 @@ export function useEventOccurrencesGroupedByResource(
   const { start, end } = parameters;
   const adapter = useAdapter();
   const store = useTimelineStoreContext();
-  const events = useStore(store, selectors.events);
+  const events = useStore(store, selectors.processedEventList);
   const visibleResources = useStore(store, selectors.visibleResourcesMap);
-  const resources = useStore(store, selectors.resources);
+  const resources = useStore(store, selectors.processedResourceList);
 
   return React.useMemo(
     () =>
@@ -55,7 +55,7 @@ export function innerGetEventOccurrencesGroupedByResource(
   adapter: Adapter,
   events: CalendarEvent[],
   visibleResources: Map<string, boolean>,
-  resources: CalendarResource[],
+  resources: readonly CalendarResource[],
   start: SchedulerValidDate,
   end: SchedulerValidDate,
 ): { resource: CalendarResource; occurrences: CalendarEventOccurrence[] }[] {
@@ -77,7 +77,7 @@ export function innerGetEventOccurrencesGroupedByResource(
   return (
     resources
       // Sort by resource.title (localeCompare for stable alphabetical ordering).
-      .sort((a, b) => a.title.localeCompare(b.title))
+      .toSorted((a, b) => a.title.localeCompare(b.title))
       .map((resource) => ({
         resource,
         occurrences: occurrencesGroupedByResource.get(resource.id) ?? [],

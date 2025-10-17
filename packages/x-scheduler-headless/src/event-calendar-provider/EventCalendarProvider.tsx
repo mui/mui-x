@@ -3,7 +3,9 @@ import { EventCalendarParameters, useEventCalendar } from '../use-event-calendar
 import { EventCalendarStoreContext } from '../use-event-calendar-store-context';
 import { SchedulerStoreContext } from '../use-scheduler-store-context/useSchedulerStoreContext';
 
-export function EventCalendarProvider(props: EventCalendarProvider.Props) {
+export function EventCalendarProvider<TEvent extends object, TResource extends object>(
+  props: EventCalendarProvider.Props<TEvent, TResource>,
+) {
   const { children, ...parameters } = props;
   const store = useEventCalendar(parameters);
 
@@ -17,7 +19,8 @@ export function EventCalendarProvider(props: EventCalendarProvider.Props) {
 }
 
 export namespace EventCalendarProvider {
-  export interface Props extends EventCalendarParameters {
+  export interface Props<TEvent extends object, TResource extends object>
+    extends EventCalendarParameters<TEvent, TResource> {
     children: React.ReactNode;
   }
 }

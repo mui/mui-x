@@ -2,9 +2,11 @@
 import * as React from 'react';
 import { EventCalendarStore } from '../use-event-calendar';
 
-export const EventCalendarStoreContext = React.createContext<EventCalendarStore | null>(null);
+export const EventCalendarStoreContext = React.createContext<EventCalendarStore<any, any> | null>(
+  null,
+);
 
-export function useEventCalendarStoreContext() {
+export function useEventCalendarStoreContext<TEvent extends object, TResource extends object>() {
   const context = React.useContext(EventCalendarStoreContext);
   if (context == null) {
     throw new Error(
@@ -12,5 +14,5 @@ export function useEventCalendarStoreContext() {
     );
   }
 
-  return context;
+  return context as EventCalendarStore<TEvent, TResource>;
 }

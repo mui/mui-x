@@ -17,15 +17,19 @@ import { TranslationsProvider } from '../internals/utils/TranslationsContext';
 import { MonthView } from '../month-view';
 import { HeaderToolbar } from '../internals/components/header-toolbar';
 import { ResourceLegend } from '../internals/components/resource-legend';
+import { DateNavigator } from '../internals/components/date-navigator';
 import '../index.css';
 import './EventCalendar.css';
-import { DateNavigator } from '../internals/components/date-navigator';
 
-export const EventCalendar = React.forwardRef(function EventCalendar(
-  props: EventCalendarProps,
-  forwardedRef: React.ForwardedRef<HTMLDivElement>,
-) {
-  const { parameters, forwardedProps } = useExtractEventCalendarParameters(props);
+export const EventCalendar = React.forwardRef(function EventCalendar<
+  TEvent extends object,
+  TResource extends object,
+>(props: EventCalendarProps<TEvent, TResource>, forwardedRef: React.ForwardedRef<HTMLDivElement>) {
+  const { parameters, forwardedProps } = useExtractEventCalendarParameters<
+    TEvent,
+    TResource,
+    typeof props
+  >(props);
   const store = useEventCalendar(parameters);
   const view = useStore(store, selectors.view);
   const isSidePanelOpen = useStore(store, selectors.preferences).isSidePanelOpen;
@@ -97,4 +101,8 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
       </SchedulerStoreContext.Provider>
     </EventCalendarStoreContext.Provider>
   );
-});
+}) as EventCalendarComponent;
+
+type EventCalendarComponent = <TEvent extends object, TResource extends object>(
+  props: EventCalendarProps<TEvent, TResource> & { ref?: React.ForwardedRef<HTMLDivElement> },
+) => React.JSX.Element;
