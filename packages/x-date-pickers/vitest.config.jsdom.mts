@@ -1,9 +1,7 @@
 import { fileURLToPath } from 'node:url';
-import { mergeConfig } from 'vitest/config';
 // eslint-disable-next-line import/no-relative-packages
 import { redirectImports } from '../../test/vite-plugin-filter-replace.mts';
-import sharedConfig from '../../vitest.shared.mts';
-import { getTestName } from '../../scripts/getTestName.mts';
+import { xVitestConfig } from '../../vitest.shared.mts';
 
 export const filterReplace = redirectImports([
   {
@@ -20,11 +18,10 @@ export const filterReplace = redirectImports([
   },
 ]);
 
-export default mergeConfig(sharedConfig, {
-  plugins: [filterReplace],
-  test: {
-    name: getTestName(import.meta.url),
-    environment: 'jsdom',
-    setupFiles: [fileURLToPath(new URL('../../test/utils/setupPickers.js', import.meta.url))],
+export default xVitestConfig('jsdom', {
+  url: import.meta.url,
+  setupFiles: [fileURLToPath(new URL('../../test/utils/setupPickers.js', import.meta.url))],
+  config: {
+    plugins: [filterReplace],
   },
 });

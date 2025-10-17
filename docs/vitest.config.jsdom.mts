@@ -1,13 +1,3 @@
-import { mergeConfig, defineProject } from 'vitest/config';
-import sharedConfig from '../vitest.shared.mts';
-import { getTestName } from '../scripts/getTestName.mts';
+import { xVitestConfig } from '../vitest.shared.mts';
 
-export default mergeConfig(
-  sharedConfig,
-  defineProject({
-    test: {
-      name: getTestName(import.meta.url),
-      environment: 'jsdom',
-    },
-  }),
-);
+export default xVitestConfig('jsdom', { url: import.meta.url });
