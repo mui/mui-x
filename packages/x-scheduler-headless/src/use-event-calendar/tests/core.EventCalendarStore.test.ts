@@ -8,7 +8,7 @@ import {
   EventCalendarStore,
 } from '../EventCalendarStore';
 import { CalendarView } from '../../models';
-import { DEFAULT_IS_MULTI_DAY_EVENT, DEFAULT_RESOURCES } from '../../utils/SchedulerStore';
+import { DEFAULT_IS_MULTI_DAY_EVENT, DEFAULT_RESOURCES } from '../../scheduler-store';
 
 const DEFAULT_PARAMS = { events: [] };
 

@@ -1,6 +1,6 @@
 import { TimelinePreferences, TimelineView } from '../models';
 import { Adapter } from '../use-adapter';
-import { SchedulerParametersToStateMapper, SchedulerStore } from '../utils/SchedulerStore';
+import { SchedulerParametersToStateMapper, SchedulerStore } from '../scheduler-store';
 import { TimelineState, TimelineParameters } from './TimelineStore.types';
 
 export const DEFAULT_VIEWS: TimelineView[] = ['time', 'days', 'weeks', 'months', 'years'];

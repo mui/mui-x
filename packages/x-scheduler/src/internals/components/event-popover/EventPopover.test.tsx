@@ -153,7 +153,7 @@ describe('<EventPopoverContent />', () => {
     expect(onEventsChange.firstCall.firstArg).to.deep.equal([]);
   });
 
-  it('should handle read-only events', () => {
+  it('should handle read-only events and render ReadonlyContent', () => {
     const readOnlyOccurrence = { ...occurrence, readOnly: true };
     render(
       <EventCalendarProvider events={[readOnlyOccurrence]} resources={resources}>
@@ -162,18 +162,26 @@ describe('<EventPopoverContent />', () => {
         </Popover.Root>
       </EventCalendarProvider>,
     );
-    expect(screen.getByDisplayValue('Running')).to.have.attribute('readonly');
-    expect(screen.getByDisplayValue('Morning run')).to.have.attribute('readonly');
-    expect(screen.getByLabelText(/start date/i)).to.have.attribute('readonly');
-    expect(screen.getByLabelText(/end date/i)).to.have.attribute('readonly');
-    expect(screen.getByLabelText(/start time/i)).to.have.attribute('readonly');
-    expect(screen.getByLabelText(/end time/i)).to.have.attribute('readonly');
-    expect(screen.getByRole('combobox', { name: /resource/i })).to.have.attribute('aria-readonly');
-    expect(screen.getByRole('combobox', { name: /recurrence/i })).to.have.attribute(
-      'aria-readonly',
-    );
-    expect(screen.queryByRole('button', { name: /save changes/i })).to.equal(null);
-    expect(screen.queryByRole('button', { name: /delete event/i })).to.equal(null);
+    // Should display title as text, not in an input
+    expect(screen.getByText('Running')).not.to.equal(null);
+    expect(screen.queryByLabelText(/event title/i)).to.equal(null);
+
+    // Should display description as text, not in an input
+    expect(screen.getByText('Morning run')).not.to.equal(null);
+    expect(screen.queryByLabelText(/description/i)).to.equal(null);
+
+    // Should not have date/time inputs
+    expect(screen.queryByLabelText(/start date/i)).to.equal(null);
+    expect(screen.queryByLabelText(/end date/i)).to.equal(null);
+    expect(screen.queryByLabelText(/start time/i)).to.equal(null);
+    expect(screen.queryByLabelText(/end time/i)).to.equal(null);
+
+    // Should not have all-day checkbox
+    expect(screen.queryByRole('checkbox', { name: /all day/i })).to.equal(null);
+
+    // Should not have resource/recurrence comboboxes
+    expect(screen.queryByRole('combobox', { name: /resource/i })).to.equal(null);
+    expect(screen.queryByRole('combobox', { name: /recurrence/i })).to.equal(null);
   });
 
   it('should handle a resource without an eventColor (fallback to default)', async () => {

@@ -1,6 +1,6 @@
 import { adapter } from 'test/utils/scheduler';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
-import { DEFAULT_IS_MULTI_DAY_EVENT, DEFAULT_RESOURCES } from '../../utils/SchedulerStore';
+import { DEFAULT_IS_MULTI_DAY_EVENT, DEFAULT_RESOURCES } from '../../scheduler-store';
 import { DEFAULT_PREFERENCES, TimelineStore } from '../TimelineStore';
 
 const DEFAULT_PARAMS = { events: [] };

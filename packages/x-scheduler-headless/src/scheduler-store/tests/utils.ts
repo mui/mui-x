@@ -1,7 +1,7 @@
-import { SchedulerValidDate } from '../../../models/date';
-import { CalendarEvent } from '../../../models/event';
-import { EventCalendarStore } from '../../../use-event-calendar';
-import { TimelineStore } from '../../../use-timeline';
+import { SchedulerValidDate } from '../../models/date';
+import { CalendarEvent } from '../../models/event';
+import { EventCalendarStore } from '../../use-event-calendar';
+import { TimelineStore } from '../../use-timeline';
 
 export function buildEvent(
   id: string,

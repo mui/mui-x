@@ -2,7 +2,7 @@
 import { useStore } from '@base-ui-components/utils/store';
 import { SchedulerValidDate } from '../models';
 import { useSchedulerStoreContext } from '../use-scheduler-store-context/useSchedulerStoreContext';
-import { selectors } from './SchedulerStore';
+import { selectors } from '../scheduler-store';
 
 export function useEvent(parameters: useEvent.Parameters): useEvent.ReturnValue {
   const { start, end } = parameters;

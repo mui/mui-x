@@ -46,6 +46,7 @@ export const enUS: SchedulerTranslations = {
   // EventPopover
   allDayLabel: 'All Day',
   closeButtonAriaLabel: 'Close modal',
+  closeButtonLabel: 'Close',
   deleteEvent: 'Delete event',
   descriptionLabel: 'Description',
   editDisabledNotice: 'Editing is currently unavailable for recurrent events',
@@ -55,6 +56,7 @@ export const enUS: SchedulerTranslations = {
   labelNoResource: 'No resource',
   recurrenceLabel: 'Recurrence',
   recurrenceNoRepeat: "Don't repeat",
+  recurrenceCustomRepeat: 'Custom repeat rule',
   recurrenceDailyPresetLabel: 'Repeats daily',
   recurrenceWeeklyPresetLabel: (weekday) => `Repeats weekly on ${weekday}`,
   recurrenceMonthlyPresetLabel: (dayNumber) => `Repeats monthly on day ${dayNumber}`,
