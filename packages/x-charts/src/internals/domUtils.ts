@@ -36,7 +36,7 @@ const PIXEL_STYLES = new Set([
 ]);
 
 /**
- *
+ * Convert number value to pixel value for certain CSS properties
  * @param name CSS property name
  * @param value
  * @returns add 'px' for distance properties
@@ -50,9 +50,8 @@ function convertPixelValue(name: string, value: number | string) {
 }
 
 /**
- *
+ * Converts camelcase to dash-case
  * @param text camelcase css property
- * @returns css property
  */
 const AZ = /([A-Z])/g;
 function camelCaseToDashCase(text: string) {
@@ -60,11 +59,11 @@ function camelCaseToDashCase(text: string) {
 }
 
 /**
- *
+ * Converts a style object into a string to be used as a cache key
  * @param style React style object
  * @returns CSS styling string
  */
-function getStyleString(style: React.CSSProperties) {
+export function getStyleString(style: React.CSSProperties) {
   let result = '';
 
   for (const key in style) {
