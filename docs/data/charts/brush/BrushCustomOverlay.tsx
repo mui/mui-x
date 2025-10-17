@@ -51,6 +51,10 @@ function CustomBrushOverlay() {
   const difference = currentValue - startValue;
   const percentChange = ((difference / startValue) * 100).toFixed(2);
 
+  // Get the date labels
+  const startDate = (xScale.domain()[startIndex] as string) || '';
+  const currentDate = (xScale.domain()[currentIndex] as string) || '';
+
   return (
     <g>
       {/* Start line */}
@@ -90,10 +94,15 @@ function CustomBrushOverlay() {
 
       {/* Start label */}
       <g transform={`translate(${clampedStartX}, ${top + 15})`}>
-        <rect x={-30} y={0} width={60} height={24} fill={color} rx={4} />
+        <rect x={-30} y={0} width={60} height={40} fill={color} rx={4} />
+        {/* Date label */}
+        <text x={0} y={16} textAnchor="middle" fill="white" fontSize={10}>
+          {startDate}
+        </text>
+        {/* Value label */}
         <text
           x={0}
-          y={16}
+          y={32}
           textAnchor="middle"
           fill="white"
           fontSize={11}
@@ -105,10 +114,15 @@ function CustomBrushOverlay() {
 
       {/* End label */}
       <g transform={`translate(${clampedCurrentX}, ${top + 15})`}>
-        <rect x={-30} y={0} width={60} height={24} fill={color} rx={4} />
+        <rect x={-30} y={0} width={60} height={40} fill={color} rx={4} />
+        {/* Date label */}
+        <text x={0} y={16} textAnchor="middle" fill="white" fontSize={10}>
+          {currentDate}
+        </text>
+        {/* Value label */}
         <text
           x={0}
-          y={16}
+          y={32}
           textAnchor="middle"
           fill="white"
           fontSize={11}
@@ -121,9 +135,9 @@ function CustomBrushOverlay() {
       {/* Difference label in the middle */}
       <g transform={`translate(${(minX + maxX) / 2}, ${top + height - 30})`}>
         <rect
-          x={-45}
+          x={-50}
           y={0}
-          width={90}
+          width={100}
           height={26}
           fill={
             difference >= 0 ? theme.palette.success.main : theme.palette.error.main
