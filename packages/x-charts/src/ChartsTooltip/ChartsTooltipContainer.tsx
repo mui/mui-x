@@ -215,7 +215,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
           {...other}
           className={classes?.root}
           open={isOpen}
-          placement={position ?? other.placement ?? (isMouse ? 'right-start' : 'top')}
+          placement={other.placement ?? position ?? (isMouse ? 'right-start' : 'top')}
           popperRef={popperRef}
           anchorEl={anchorEl}
           modifiers={modifiers}
