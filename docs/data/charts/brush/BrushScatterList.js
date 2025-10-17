@@ -142,7 +142,6 @@ export default function BrushScatterList() {
         ]}
         xAxis={[{ id: 'x-axis', min: 0, max: 100 }]}
         yAxis={[{ id: 'y-axis', min: 0, max: 50 }]}
-        width={600}
         height={400}
         brushConfig={{ enabled: true }}
       >
