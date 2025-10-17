@@ -171,6 +171,7 @@ export type {
   GridDataSourceApiBase,
   GridDataSourceApi,
   GridDataSourceBaseOptions,
+  GridDataSourceFetchRowsParams,
 } from '../hooks/features/dataSource/models';
 export { DataSourceRowsUpdateStrategy } from '../hooks/features/dataSource/utils';
 export { useGridDataSourceBase } from '../hooks/features/dataSource/useGridDataSourceBase';

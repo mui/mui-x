@@ -63,8 +63,11 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     apiRef.current.getActiveStrategy(GridStrategyGroup.DataSource) as DataSourceRowsUpdateStrategy,
   );
 
-  const defaultRowsUpdateStrategyActive = React.useMemo(() => {
-    return currentStrategy === DataSourceRowsUpdateStrategy.Default;
+  const standardRowsUpdateStrategyActive = React.useMemo(() => {
+    return (
+      currentStrategy === DataSourceRowsUpdateStrategy.Default ||
+      currentStrategy === DataSourceRowsUpdateStrategy.GroupedData
+    );
   }, [currentStrategy]);
 
   const paginationModel = useGridSelector(apiRef, gridPaginationModelSelector);
@@ -102,7 +105,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
 
       options.clearDataSourceState?.();
 
-      const { skipCache, ...getRowsParams } = params || {};
+      const { skipCache, collapseChildren, ...getRowsParams } = params || {};
 
       const fetchParams = {
         ...gridGetRowsParamsSelector(apiRef),
@@ -117,12 +120,13 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
         apiRef.current.applyStrategyProcessor('dataSourceRowsUpdate', {
           response: CacheChunkManager.mergeResponses(responses as GridGetRowsResponse[]),
           fetchParams,
+          options: { skipCache, collapseChildren },
         });
         return;
       }
 
       // Manage loading state only for the default strategy
-      if (defaultRowsUpdateStrategyActive || apiRef.current.getRowsCount() === 0) {
+      if (standardRowsUpdateStrategyActive || apiRef.current.getRowsCount() === 0) {
         apiRef.current.setLoading(true);
       }
 
@@ -139,6 +143,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
           apiRef.current.applyStrategyProcessor('dataSourceRowsUpdate', {
             response: getRowsResponse,
             fetchParams,
+            options: { skipCache, collapseChildren },
           });
         }
       } catch (originalError) {
@@ -146,6 +151,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
           apiRef.current.applyStrategyProcessor('dataSourceRowsUpdate', {
             error: originalError as Error,
             fetchParams,
+            options: { skipCache, collapseChildren },
           });
           if (typeof onDataSourceErrorProp === 'function') {
             onDataSourceErrorProp(
@@ -167,7 +173,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
           }
         }
       } finally {
-        if (defaultRowsUpdateStrategyActive && lastRequestId.current === requestId) {
+        if (standardRowsUpdateStrategyActive && lastRequestId.current === requestId) {
           apiRef.current.setLoading(false);
         }
       }
@@ -176,7 +182,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
       cacheChunkManager,
       cache,
       apiRef,
-      defaultRowsUpdateStrategyActive,
+      standardRowsUpdateStrategyActive,
       props.dataSource?.getRows,
       onDataSourceErrorProp,
       options,
@@ -289,7 +295,8 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     // Context: https://github.com/mui/mui-x/issues/19650
     if (
       currentStrategy !== DataSourceRowsUpdateStrategy.Default &&
-      currentStrategy !== DataSourceRowsUpdateStrategy.LazyLoading
+      currentStrategy !== DataSourceRowsUpdateStrategy.LazyLoading &&
+      currentStrategy !== DataSourceRowsUpdateStrategy.GroupedData
     ) {
       return undefined;
     }
@@ -317,9 +324,9 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     cache,
     events: {
       strategyAvailabilityChange: handleStrategyActivityChange,
-      sortModelChange: runIf(defaultRowsUpdateStrategyActive, () => debouncedFetchRows()),
-      filterModelChange: runIf(defaultRowsUpdateStrategyActive, () => debouncedFetchRows()),
-      paginationModelChange: runIf(defaultRowsUpdateStrategyActive, () => debouncedFetchRows()),
+      sortModelChange: runIf(standardRowsUpdateStrategyActive, () => debouncedFetchRows()),
+      filterModelChange: runIf(standardRowsUpdateStrategyActive, () => debouncedFetchRows()),
+      paginationModelChange: runIf(standardRowsUpdateStrategyActive, () => debouncedFetchRows()),
     },
   };
 };
