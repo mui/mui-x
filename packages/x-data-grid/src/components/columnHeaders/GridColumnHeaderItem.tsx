@@ -128,10 +128,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   const iconButtonRef = React.useRef<HTMLButtonElement>(null);
   const [showColumnMenuIcon, setShowColumnMenuIcon] = React.useState(columnMenuOpen);
 
-  const isDraggable = React.useMemo(
-    () => !rootProps.disableColumnReorder && !disableReorder && !colDef.disableReorder,
-    [rootProps.disableColumnReorder, disableReorder, colDef.disableReorder],
-  );
+  const isDraggable = !rootProps.disableColumnReorder && !disableReorder && !colDef.disableReorder;
 
   let headerComponent: React.ReactNode;
   if (colDef.renderHeader) {
@@ -201,7 +198,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   );
 
   React.useEffect(() => {
-    if (!showColumnMenuIcon) {
+    if (!showColumnMenuIcon && columnMenuOpen) {
       setShowColumnMenuIcon(columnMenuOpen);
     }
   }, [showColumnMenuIcon, columnMenuOpen]);
