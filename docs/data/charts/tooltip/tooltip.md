@@ -112,10 +112,6 @@ You can pass those props to the tooltip using `slotProps.tooltip`, or directly t
 
 {{"demo": "TooltipPosition.js", "hideToolbar": true, "bg": "playground"}}
 
-:::info
-Currently only `trigger="item"` supports these configurations.
-:::
-
 ## Style modification
 
 The tooltip can be styled using CSS classes, similar to other elements.
