@@ -110,14 +110,19 @@ function ChartsXReferenceLine(props: ChartsXReferenceLineProps) {
 
   const classes = getXReferenceLineClasses(inClasses);
 
+  const defaultSpacingOtherAxis =
+    labelAlign === 'middle' || labelAlign === undefined
+      ? DEFAULT_SPACING_MIDDLE_OTHER_AXIS
+      : DEFAULT_SPACING;
+
   const spacing =
     typeof spacingProp === 'object'
       ? {
           x: DEFAULT_SPACING,
-          y: DEFAULT_SPACING_MIDDLE_OTHER_AXIS,
+          y: defaultSpacingOtherAxis,
           ...spacingProp,
         }
-      : { x: spacingProp ?? DEFAULT_SPACING, y: DEFAULT_SPACING_MIDDLE_OTHER_AXIS };
+      : { x: spacingProp ?? DEFAULT_SPACING, y: defaultSpacingOtherAxis };
 
   const spacingX = spacing.x;
   const spacingY = spacing.y;
