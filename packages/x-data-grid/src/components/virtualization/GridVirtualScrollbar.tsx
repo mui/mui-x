@@ -123,7 +123,9 @@ const GridVirtualScrollbar = forwardRef<HTMLDivElement, GridVirtualScrollbarProp
       }
       isLocked.current = true;
 
-      scrollbar[propertyScroll] = scrollPosition[propertyScrollPosition];
+      requestAnimationFrame(() => {
+        scrollbar[propertyScroll] = props.scrollPosition.current[propertyScrollPosition];
+      });
     });
 
     const onScrollbarScroll = useEventCallback(() => {
@@ -140,7 +142,9 @@ const GridVirtualScrollbar = forwardRef<HTMLDivElement, GridVirtualScrollbarProp
       }
       isLocked.current = true;
 
-      scroller[propertyScroll] = scrollbar[propertyScroll];
+      requestAnimationFrame(() => {
+        scroller[propertyScroll] = scrollbar[propertyScroll];
+      });
     });
 
     useOnMount(() => {
