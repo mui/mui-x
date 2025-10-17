@@ -10,7 +10,7 @@ import {
 } from '@mui/x-data-grid-premium';
 import { createRenderer, screen, act } from '@mui/internal-test-utils';
 import { spy, SinonSpy } from 'sinon';
-import Excel from 'exceljs';
+import Excel from '@mui/x-internal-exceljs-fork';
 import { spyApi } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
