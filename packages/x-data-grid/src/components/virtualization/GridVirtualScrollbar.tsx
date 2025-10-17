@@ -123,10 +123,6 @@ const GridVirtualScrollbar = forwardRef<HTMLDivElement, GridVirtualScrollbarProp
       }
       isLocked.current = true;
 
-      if (isScrollerSyncScheduled.current) {
-        return;
-      }
-
       scrollbar[propertyScroll] = props.scrollPosition.current[propertyScrollPosition];
     });
 
