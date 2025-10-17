@@ -1,4 +1,8 @@
-import * as React from 'react';
+import { createSourceFiles } from '../utils/sourceFileImporter';
+
+export const ptoCalendarSourceFiles = createSourceFiles({
+  'PTOCalendar.tsx': {
+    content: `import * as React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
@@ -29,7 +33,7 @@ import { ptoCalendarSourceFiles } from './sourceFiles';
 
 type RowDataEntry = PTOData[string];
 
-type DateTemplate = `${string}-${string}-${string}`;
+type DateTemplate = \`\${string}-\${string}-\${string}\`;
 
 interface RowData extends RowDataEntry {
   id: number | string;
@@ -106,19 +110,19 @@ function getCellTooltipTitle({
   isBirthday,
 }: TooltipTitleParams): string {
   if (showHoliday && hasHolidayBooked) {
-    return `${holidayName} (booked as PTO)`;
+    return \`\${holidayName} (booked as PTO)\`;
   }
   if (showHoliday) {
-    return `${holidayName}`;
+    return \`\${holidayName}\`;
   }
   if (showPTO) {
-    return `Vacation (${currentPTOPeriod?.length} day${currentPTOPeriod?.length === 1 ? '' : 's'})`;
+    return \`Vacation (\${currentPTOPeriod?.length} day\${currentPTOPeriod?.length === 1 ? '' : 's'})\`;
   }
   if (showSick) {
-    return `Sick leave (${currentSickPeriod?.length} day${currentSickPeriod?.length === 1 ? '' : 's'})`;
+    return \`Sick leave (\${currentSickPeriod?.length} day\${currentSickPeriod?.length === 1 ? '' : 's'})\`;
   }
   if (isBirthday) {
-    return `Birthday`;
+    return \`Birthday\`;
   }
   return '';
 }
@@ -149,8 +153,8 @@ function renderCellIconLabel({
       <React.Fragment>
         <Box
           component="img"
-          src={`https://flagcdn.com/w40/${params.row.nationality.toLowerCase()}.png`}
-          alt={`${params.row.nationality} flag`}
+          src={\`https://flagcdn.com/w40/\${params.row.nationality.toLowerCase()}.png\`}
+          alt={\`\${params.row.nationality} flag\`}
           sx={{
             width: 18,
             height: 18,
@@ -438,7 +442,7 @@ function PTOCalendar() {
               }}
             >
               <Avatar
-                src={`/static/x/data-grid/demos/${params.row.avatar}.png`}
+                src={\`/static/x/data-grid/demos/\${params.row.avatar}.png\`}
                 sx={{
                   flexShrink: 0,
                   width: 32,
@@ -787,4 +791,529 @@ function PTOCalendar() {
   );
 }
 
-export default PTOCalendar;
+export default PTOCalendar;`,
+    category: 'main',
+    priority: 1,
+  },
+
+  'CalendarToolbar.tsx': {
+    content: `import * as React from 'react';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import { Toolbar } from '@mui/x-data-grid-premium';
+import { styled } from '@mui/material/styles';
+import { CalendarFilters } from './CalendarFilters';
+import { useCalendarContext } from './CalendarContext';
+import { CalendarNavigation } from './CalendarNavigation';
+import { CalendarDensity } from './CalendarDensity';
+
+const StyledToolbar = styled(Toolbar)({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'stretch',
+  padding: 0,
+  width: '100%',
+  minHeight: 'auto',
+});
+
+function CalendarToolbar() {
+  const {
+    activeFilters,
+    showPresentToday,
+    handleFilterRemove,
+    handleFilterAdd,
+    handleTogglePresentToday,
+  } = useCalendarContext();
+
+  return (
+    <StyledToolbar>
+      <Stack
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+        flexWrap="wrap"
+        gap={2}
+        sx={{
+          borderBottom: '1px solid',
+          borderBottomColor: 'divider',
+          px: 2,
+          py: 1.5,
+        }}
+      >
+        <Typography fontSize="1.2rem" fontWeight="bold">
+          Time Off Calendar
+        </Typography>
+        <CalendarDensity />
+      </Stack>
+      <Stack
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+        flexWrap="wrap"
+        gap={1}
+        sx={{
+          borderBottom: '1px solid',
+          borderBottomColor: 'divider',
+          px: 2,
+          py: 1.5,
+        }}
+      >
+        <CalendarFilters
+          activeFilters={activeFilters}
+          showPresentToday={showPresentToday}
+          onFilterRemove={handleFilterRemove}
+          onFilterAdd={handleFilterAdd}
+          onTogglePresentToday={handleTogglePresentToday}
+        />
+        <CalendarNavigation />
+      </Stack>
+    </StyledToolbar>
+  );
+}
+
+export { CalendarToolbar };`,
+    category: 'components',
+    priority: 1,
+  },
+
+  'CalendarSearch.tsx': {
+    content: `import * as React from 'react';
+import TextField from '@mui/material/TextField';
+import Tooltip from '@mui/material/Tooltip';
+import CancelIcon from '@mui/icons-material/Cancel';
+import SearchIcon from '@mui/icons-material/Search';
+import {
+  QuickFilter,
+  QuickFilterClear,
+  QuickFilterControl,
+  QuickFilterTrigger,
+  ToolbarButton,
+} from '@mui/x-data-grid-premium';
+import InputAdornment from '@mui/material/InputAdornment';
+import { styled } from '@mui/material/styles';
+
+type OwnerState = {
+  expanded: boolean;
+};
+
+const StyledQuickFilter = styled(QuickFilter)({
+  display: 'grid',
+  alignItems: 'center',
+  marginLeft: 'auto',
+});
+
+const StyledToolbarButton = styled(ToolbarButton)<{ ownerState: OwnerState }>(
+  ({ theme, ownerState }) => ({
+    gridArea: '1 / 1',
+    width: 'min-content',
+    height: 'min-content',
+    zIndex: 1,
+    opacity: ownerState.expanded ? 0 : 1,
+    pointerEvents: ownerState.expanded ? 'none' : 'auto',
+    transition: theme.transitions.create(['opacity']),
+  }),
+);
+
+const StyledTextField = styled(TextField)<{
+  ownerState: OwnerState;
+}>(({ theme, ownerState }) => ({
+  gridArea: '1 / 1',
+  overflowX: 'clip',
+  width: ownerState.expanded ? 200 : 'var(--trigger-width)',
+  opacity: ownerState.expanded ? 1 : 0,
+  transition: theme.transitions.create(['width', 'opacity']),
+}));
+
+function CalendarSearch() {
+  return (
+    <StyledQuickFilter>
+      <QuickFilterTrigger
+        render={(triggerProps, state) => (
+          <Tooltip title="Search" enterDelay={0}>
+            <StyledToolbarButton
+              {...triggerProps}
+              ownerState={{ expanded: state.expanded }}
+              color="default"
+              aria-disabled={state.expanded}
+            >
+              <SearchIcon fontSize="small" />
+            </StyledToolbarButton>
+          </Tooltip>
+        )}
+      />
+      <QuickFilterControl
+        render={({ ref, ...controlProps }, state) => (
+          <StyledTextField
+            {...controlProps}
+            ownerState={{ expanded: state.expanded }}
+            inputRef={ref}
+            aria-label="Search"
+            placeholder="Search..."
+            size="small"
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon fontSize="small" />
+                  </InputAdornment>
+                ),
+                endAdornment: state.value ? (
+                  <InputAdornment position="end">
+                    <QuickFilterClear
+                      edge="end"
+                      size="small"
+                      aria-label="Clear search"
+                      material={{ sx: { marginRight: -0.75 } }}
+                    >
+                      <CancelIcon fontSize="small" />
+                    </QuickFilterClear>
+                  </InputAdornment>
+                ) : null,
+                ...controlProps.slotProps?.input,
+              },
+              ...controlProps.slotProps,
+            }}
+          />
+        )}
+      />
+    </StyledQuickFilter>
+  );
+}
+
+export { CalendarSearch };
+`,
+    category: 'components',
+    priority: 3,
+  },
+
+  'CalendarFilters.tsx': {
+    content: `import * as React from 'react';
+import Stack from '@mui/material/Stack';
+import Link from '@mui/material/Link';
+import { ToolbarButton } from '@mui/x-data-grid-premium';
+import Chip from '@mui/material/Chip';
+import Check from '@mui/icons-material/Check';
+import { FilterType } from './types/pto';
+import { FILTER_OPTIONS, FILTER_LABELS, FILTER_COLORS } from './constants';
+
+interface CalendarFiltersProps {
+  activeFilters: FilterType[];
+  showPresentToday: boolean;
+  onFilterRemove: (filter: FilterType) => void;
+  onFilterAdd: (filter: FilterType) => void;
+  onTogglePresentToday: () => void;
+}
+
+export function CalendarFilters({
+  activeFilters,
+  showPresentToday,
+  onFilterRemove,
+  onFilterAdd,
+  onTogglePresentToday,
+}: CalendarFiltersProps) {
+  return (
+    <Stack direction="row" alignItems="center" gap={2}>
+      <Stack direction="row" alignItems="center" gap={1}>
+        {FILTER_OPTIONS.map((filter) => {
+          const isActive = activeFilters.includes(filter);
+          return (
+            <ToolbarButton
+              key={filter}
+              onClick={!isActive ? () => onFilterAdd(filter) : () => onFilterRemove(filter)}
+              render={
+                <Chip
+                  label={FILTER_LABELS[filter]}
+                  icon={isActive ? <Check fontSize="small" /> : undefined}
+                  color={isActive ? 'primary' : 'default'}
+                  variant={isActive ? 'filled' : 'outlined'}
+                  sx={(theme) => ({
+                    '&.MuiChip-filled': {
+                      ...FILTER_COLORS[filter].light,
+                      borderWidth: '1px',
+                      borderStyle: 'solid',
+                      '&:hover': {
+                        backgroundColor: \`color-mix(in srgb, \${FILTER_COLORS[filter].light.backgroundColor} 50%, #fff)\`,
+                      },
+                      ...theme.applyStyles('dark', {
+                        ...FILTER_COLORS[filter].dark,
+                        '&:hover': {
+                          backgroundColor: \`color-mix(in srgb, \${FILTER_COLORS[filter].dark.backgroundColor} 90%, #fff)\`,
+                        },
+                      }),
+                    },
+                    '&.MuiChip-outlined': {
+                      borderColor: FILTER_COLORS[filter].light.borderColor,
+                      color: FILTER_COLORS[filter].light.color,
+                      '&:hover': {
+                        backgroundColor: FILTER_COLORS[filter].light.backgroundColor,
+                      },
+                      ...theme.applyStyles('dark', {
+                        color: FILTER_COLORS[filter].dark.color,
+                        borderColor: FILTER_COLORS[filter].dark.borderColor,
+                        '&:hover': {
+                          backgroundColor: FILTER_COLORS[filter].dark.backgroundColor,
+                        },
+                      }),
+                    },
+                  })}
+                />
+              }
+            />
+          );
+        })}
+      </Stack>
+      <Link
+        component="button"
+        variant="body2"
+        onClick={onTogglePresentToday}
+        sx={(theme) => ({
+          color: showPresentToday ? 'primary.main' : 'text.secondary',
+          textDecoration: 'none',
+          paddingTop: '2px',
+          fontWeight: 'medium',
+          '&:hover': {
+            textDecoration: 'underline',
+          },
+          ...theme.applyStyles('dark', {
+            color: showPresentToday ? 'primary.light' : 'text.secondary',
+          }),
+        })}
+      >
+        {showPresentToday ? '(Show all employees)' : '(Hide out today)'}
+      </Link>
+    </Stack>
+  );
+}`,
+    category: 'components',
+    priority: 2,
+  },
+
+  'CalendarNavigation.tsx': {
+    content: `import * as React from 'react';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import ChevronLeft from '@mui/icons-material/ChevronLeft';
+import ChevronRight from '@mui/icons-material/ChevronRight';
+import Tooltip from '@mui/material/Tooltip';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { usePickerContext, useSplitFieldProps } from '@mui/x-date-pickers/hooks';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import useForkRef from '@mui/utils/useForkRef';
+import { format } from 'date-fns';
+import { ToolbarButton } from '@mui/x-data-grid-premium';
+import { useCalendarContext } from './CalendarContext';
+import { CalendarSearch } from './CalendarSearch';
+
+function ButtonField(props: any) {
+  const { forwardedProps } = useSplitFieldProps(props, 'date');
+  const pickerContext = usePickerContext();
+  const handleRef = useForkRef(pickerContext.triggerRef, pickerContext.rootRef);
+  const valueStr = format(pickerContext.value, pickerContext.fieldFormat);
+
+  return (
+    <ToolbarButton
+      {...forwardedProps}
+      ref={handleRef}
+      onClick={() => pickerContext.setOpen((prev) => !prev)}
+      render={
+        <Button variant="outlined" size="small">
+          {pickerContext.label ?? valueStr}
+        </Button>
+      }
+    />
+  );
+}
+
+function CalendarNavigation() {
+  const {
+    currentDate,
+    isDatePickerOpen,
+    dateConstraints,
+    setIsDatePickerOpen,
+    handlePreviousMonth,
+    handleNextMonth,
+    handleDateChange,
+  } = useCalendarContext();
+
+  return (
+    <Box sx={{ display: 'flex', gap: 1 }}>
+      <CalendarSearch />
+      <ToolbarButton
+        onClick={() => handleDateChange(new Date())}
+        render={
+          <Button variant="outlined" size="small">
+            Today
+          </Button>
+        }
+      />
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <DatePicker
+          value={currentDate}
+          onChange={handleDateChange}
+          open={isDatePickerOpen}
+          onOpen={() => setIsDatePickerOpen(true)}
+          onClose={() => setIsDatePickerOpen(false)}
+          minDate={dateConstraints.minDate}
+          maxDate={dateConstraints.maxDate}
+          views={['month']}
+          slots={{ field: ButtonField }}
+        />
+      </LocalizationProvider>
+      <Box sx={{ display: 'flex' }}>
+        <Tooltip title="Previous month">
+          <ToolbarButton size="small" onClick={handlePreviousMonth}>
+            <ChevronLeft />
+          </ToolbarButton>
+        </Tooltip>
+        <Tooltip title="Next month">
+          <ToolbarButton size="small" onClick={handleNextMonth}>
+            <ChevronRight />
+          </ToolbarButton>
+        </Tooltip>
+      </Box>
+    </Box>
+  );
+}
+
+export { CalendarNavigation };
+`,
+    category: 'components',
+    priority: 4,
+  },
+
+  'CalendarContext.tsx': {
+    content: `import * as React from 'react';
+import { useCalendarState } from './hooks/useCalendarState';
+
+export const CalendarContext = React.createContext<ReturnType<typeof useCalendarState> | undefined>(
+  undefined,
+);
+
+export function useCalendarContext() {
+  const context = React.useContext(CalendarContext);
+
+  if (context === undefined) {
+    throw new Error('Missing context');
+  }
+
+  return context;
+}`,
+    category: 'context',
+    priority: 1,
+  },
+
+  'hooks/useCalendarState.ts': {
+    content: `import * as React from 'react';
+import { addMonths, subMonths } from 'date-fns';
+import { FilterType } from '../types/pto';
+import { DATE_CONSTRAINTS } from '../constants';
+
+export const useCalendarState = () => {
+  const [density, setDensity] = React.useState<'compact' | 'comfortable'>('compact');
+  const [currentDate, setCurrentDate] = React.useState(new Date());
+  const [isDatePickerOpen, setIsDatePickerOpen] = React.useState(false);
+  const [activeFilters, setActiveFilters] = React.useState<FilterType[]>([
+    'holidays',
+    'vacation',
+    'sick',
+  ]);
+  const [showPresentToday, setShowPresentToday] = React.useState(false);
+
+  const handlePreviousMonth = React.useCallback(() => {
+    setCurrentDate((prev) => {
+      const newDate = subMonths(prev, 1);
+      return newDate >= DATE_CONSTRAINTS.minDate ? newDate : prev;
+    });
+  }, []);
+
+  const handleNextMonth = React.useCallback(() => {
+    setCurrentDate((prev) => {
+      const newDate = addMonths(prev, 1);
+      return newDate <= DATE_CONSTRAINTS.maxDate ? newDate : prev;
+    });
+  }, []);
+
+  const handleDateChange = React.useCallback((newDate: Date | null) => {
+    if (newDate && newDate >= DATE_CONSTRAINTS.minDate && newDate <= DATE_CONSTRAINTS.maxDate) {
+      setCurrentDate(newDate);
+      setIsDatePickerOpen(false);
+    }
+  }, []);
+
+  const handleFilterRemove = React.useCallback((filter: FilterType) => {
+    setActiveFilters((prev) => prev.filter((f) => f !== filter));
+  }, []);
+
+  const handleFilterAdd = React.useCallback((filter: FilterType) => {
+    setActiveFilters((prev) => [...prev, filter]);
+  }, []);
+
+  const handleTogglePresentToday = React.useCallback(() => {
+    setShowPresentToday((prev) => !prev);
+  }, []);
+
+  return {
+    density,
+    setDensity,
+    currentDate,
+    isDatePickerOpen,
+    setIsDatePickerOpen,
+    activeFilters,
+    showPresentToday,
+    dateConstraints: DATE_CONSTRAINTS,
+    handlePreviousMonth,
+    handleNextMonth,
+    handleDateChange,
+    handleFilterRemove,
+    handleFilterAdd,
+    handleTogglePresentToday,
+  };
+};`,
+    category: 'hooks',
+    priority: 1,
+  },
+
+  'types/pto.ts': {
+    content: `export interface PTOData {
+  [key: string]: {
+    ptoDates: string[];
+    sickDates: string[];
+    nationality: string;
+    team: string;
+    birthday: string;
+    avatar: string;
+  };
+}
+
+export interface RowData {
+  id: number;
+  employee: string;
+  [key: string]:
+    | string
+    | number
+    | boolean
+    | {
+        hasPTO: boolean;
+        hasSick: boolean;
+        hasHoliday: boolean;
+        show: boolean;
+      };
+}
+
+export type FilterType = 'holidays' | 'vacation' | 'sick';
+
+export interface HolidayData {
+  [country: string]: {
+    [date: string]: string;
+  };
+}
+
+export interface EmployeeStatus {
+  isOutToday: boolean;
+  isPresentToday: boolean;
+}`,
+    category: 'types',
+    priority: 1,
+  },
+});

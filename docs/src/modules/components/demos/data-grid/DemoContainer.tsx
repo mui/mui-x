@@ -5,15 +5,25 @@ import Button from '@mui/material/Button';
 import Collapse from '@mui/material/Collapse';
 import Paper from '@mui/material/Paper';
 import MultiFileCodeViewer from './MultiFileCodeViewer';
+import type { DemoSourceFiles, SourceFileDisplayConfig } from './types/sourceFiles';
 
 interface DemoContainerProps {
   theme: Theme;
   children: React.ReactNode;
   sourceFiles?: Record<string, string>;
-  defaultExpandedFile?: string;
+  demoSourceFiles?: DemoSourceFiles;
+  sourceDisplayConfig?: Partial<SourceFileDisplayConfig>;
+  defaultFile?: string;
 }
 
-function DemoContainer({ theme, children, sourceFiles, defaultExpandedFile }: DemoContainerProps) {
+function DemoContainer({
+  theme,
+  children,
+  sourceFiles,
+  demoSourceFiles,
+  sourceDisplayConfig,
+  defaultFile,
+}: DemoContainerProps) {
   const docsTheme = useTheme();
   const docsMode = docsTheme?.palette?.mode;
   const [showCode, setShowCode] = React.useState(false);
@@ -36,7 +46,7 @@ function DemoContainer({ theme, children, sourceFiles, defaultExpandedFile }: De
           {children}
         </Box>
 
-        {sourceFiles && (
+        {(sourceFiles || demoSourceFiles) && (
           <Paper
             component="div"
             elevation={0}
@@ -62,13 +72,18 @@ function DemoContainer({ theme, children, sourceFiles, defaultExpandedFile }: De
             >
               {showCode ? 'Hide' : 'Show'} code
             </Button>
-            {/* Add stackblitz/GitHub buttons too? */}
+            {/* TODO:Add stackblitz/GitHub buttons too?? */}
           </Paper>
         )}
 
-        {sourceFiles && (
+        {(sourceFiles || demoSourceFiles) && (
           <Collapse in={showCode}>
-            <MultiFileCodeViewer files={sourceFiles} defaultFile={defaultExpandedFile} />
+            <MultiFileCodeViewer
+              files={sourceFiles}
+              sourceFiles={demoSourceFiles}
+              displayConfig={sourceDisplayConfig}
+              defaultFile={defaultFile}
+            />
           </Collapse>
         )}
       </Box>
