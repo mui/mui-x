@@ -7,6 +7,10 @@ function isSsr(): boolean {
 
 const stringCache = new Map<string, { width: number; height: number }>();
 
+export function clearStringMeasurementCache() {
+  stringCache.clear();
+}
+
 const MAX_CACHE_NUM = 2000;
 const STYLE_SET = new Set([
   'minWidth',
