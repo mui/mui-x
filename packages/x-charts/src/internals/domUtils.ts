@@ -41,7 +41,7 @@ const PIXEL_STYLES = new Set([
  * @param value
  * @returns add 'px' for distance properties
  */
-function convertPixelValue(name: string, value: number) {
+function convertPixelValue(name: string, value: number | string) {
   if (PIXEL_STYLES.has(name) && value === +value) {
     return `${value}px`;
   }
@@ -69,11 +69,14 @@ function getStyleString(style: React.CSSProperties) {
 
   for (const key in style) {
     if (Object.hasOwn(style, key)) {
-      const value = style[key as keyof React.CSSProperties] as string;
-      result += `${result}${camelCaseToDashCase(value)}:${convertPixelValue(
-        value,
-        (style as Record<string, any>)[value],
-      )};`;
+      const k = key as keyof React.CSSProperties;
+      const value = style[k];
+
+      if (value === undefined) {
+        continue;
+      }
+
+      result += `${camelCaseToDashCase(k)}:${convertPixelValue(k, value)};`;
     }
   }
   return result;
