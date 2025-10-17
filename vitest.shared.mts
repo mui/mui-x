@@ -1,10 +1,42 @@
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { defineConfig } from 'vitest/config';
+import { defineConfig, mergeConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
+import { getTestName } from './scripts/getTestName.mts';
 
 const CURRENT_DIR = dirname(fileURLToPath(import.meta.url));
 const WORKSPACE_ROOT = resolve(CURRENT_DIR, './');
+
+export interface XDefaultConfiguratorOptions {
+  /**
+   * The import.meta.url of the calling file
+   * Used to determine the test name from package.json
+   */
+  url: string;
+  /**
+   * Optional setup files to be loaded before tests
+   */
+  setupFiles?: string[];
+  /**
+   * Optional additional config to merge
+   */
+  config?: Record<string, any>;
+  /**
+   * Browser-specific options
+   */
+  browserOptions?: {
+    /**
+     * Whether to enable isolation for browser tests
+     * @default false (inherited from shared config)
+     */
+    isolate?: boolean;
+    /**
+     * Whether to ignore default args for scrollbars (required for data-grid)
+     * @default false
+     */
+    ignoreScrollbars?: boolean;
+  };
+}
 
 export const alias = [
   // Generates resolver aliases for all packages and their plans.
@@ -38,7 +70,7 @@ export const alias = [
   },
 ];
 
-export default defineConfig({
+const sharedConfig = defineConfig({
   // If enabling babel plugins, ensure the tests in CI are stable
   // https://github.com/mui/mui-x/pull/18341
   plugins: [react()],
@@ -99,3 +131,87 @@ export default defineConfig({
     exclude: ['**/*.spec.{js,ts,tsx}', '**/node_modules/**', '**/dist/**'],
   },
 });
+
+/**
+ * Creates a vitest configuration for a specific environment (browser, jsdom, or node)
+ * This centralizes common configuration patterns across all packages
+ *
+ * @param mode - The test environment mode: 'browser', 'jsdom', or 'node'
+ * @param options - Configuration options
+ * @returns Vitest configuration
+ *
+ * @example
+ * // packages/x-charts/vitest.config.browser.mts
+ * export default xVitestConfig('browser', { url: import.meta.url });
+ *
+ * @example
+ * // packages/x-charts/vitest.config.jsdom.mts
+ * export default xVitestConfig('jsdom', { url: import.meta.url });
+ *
+ * @example
+ * // packages/eslint-plugin-mui-x/vitest.config.node.mts
+ * export default xVitestConfig('node', { url: import.meta.url });
+ */
+export function xVitestConfig(
+  mode: 'browser' | 'jsdom' | 'node',
+  options: XDefaultConfiguratorOptions,
+) {
+  const { url, setupFiles, config: additionalConfig, browserOptions } = options;
+
+  const testName = getTestName(url);
+
+  if (mode === 'node') {
+    // Node tests don't use the shared config
+    return defineConfig(
+      mergeConfig(
+        {
+          test: {
+            name: testName,
+            environment: 'node',
+            ...(setupFiles && { setupFiles }),
+          },
+        },
+        additionalConfig ?? {},
+      ),
+    );
+  }
+
+  const projectConfig = {
+    test: {
+      name: testName,
+      ...(setupFiles && { setupFiles }),
+      ...(mode === 'jsdom' && {
+        environment: 'jsdom',
+      }),
+      ...(mode === 'browser' && {
+        browser: {
+          enabled: true,
+          ...(browserOptions?.isolate !== undefined && { isolate: browserOptions.isolate }),
+          instances: [
+            {
+              browser: 'chromium',
+              ...(process.env.PLAYWRIGHT_SERVER_WS
+                ? {
+                    connect: {
+                      wsEndpoint: process.env.PLAYWRIGHT_SERVER_WS,
+                    },
+                  }
+                : {
+                    ...(browserOptions?.ignoreScrollbars && {
+                      launch: {
+                        // Required for tests which use scrollbars.
+                        ignoreDefaultArgs: ['--hide-scrollbars'],
+                      },
+                    }),
+                  }),
+            },
+          ],
+        },
+      }),
+    },
+  };
+
+  const finalConfig = mergeConfig(projectConfig, additionalConfig ?? {});
+
+  return mergeConfig(sharedConfig, finalConfig);
+}
