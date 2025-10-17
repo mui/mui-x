@@ -36,8 +36,15 @@ const chartProps = {
 
 function MiniChart({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
-      <Typography variant="caption" sx={{ textAlign: 'center', minHeight: 32 }}>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: 1,
+      }}
+    >
+      <Typography variant="caption" sx={{ textAlign: 'center' }}>
         {title}
       </Typography>
       <ChartContainer {...chartProps}>
@@ -52,13 +59,18 @@ function MiniChart({ title, children }: { title: string; children: React.ReactNo
 
 export default function ReferenceLineVariations() {
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, p: 1 }}>
-      {/* X Reference Lines - labelAlign variations */}
+    <div>
       <div>
         <Typography variant="h6" sx={{ mb: 1 }}>
           X Reference Lines - labelAlign
         </Typography>
-        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1 }}>
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: 1,
+          }}
+        >
           <MiniChart title="x=3, labelAlign='start'">
             <ChartsReferenceLine x={3} label="Start" labelAlign="start" />
           </MiniChart>
@@ -71,12 +83,17 @@ export default function ReferenceLineVariations() {
         </Box>
       </div>
 
-      {/* Y Reference Lines - labelAlign variations */}
       <div>
         <Typography variant="h6" sx={{ mb: 1 }}>
           Y Reference Lines - labelAlign
         </Typography>
-        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1 }}>
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: 1,
+          }}
+        >
           <MiniChart title="y=5, labelAlign='start'">
             <ChartsReferenceLine y={5} label="Start" labelAlign="start" />
           </MiniChart>
@@ -89,12 +106,17 @@ export default function ReferenceLineVariations() {
         </Box>
       </div>
 
-      {/* X Reference Lines - spacing as number */}
       <div>
         <Typography variant="h6" sx={{ mb: 1 }}>
           X Reference Lines - spacing (number)
         </Typography>
-        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1 }}>
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: 1,
+          }}
+        >
           <MiniChart title="x=3, spacing=0, labelAlign='start'">
             <ChartsReferenceLine x={3} label="0" spacing={0} labelAlign="start" />
           </MiniChart>
@@ -107,12 +129,17 @@ export default function ReferenceLineVariations() {
         </Box>
       </div>
 
-      {/* Y Reference Lines - spacing as number */}
       <div>
         <Typography variant="h6" sx={{ mb: 1 }}>
           Y Reference Lines - spacing (number)
         </Typography>
-        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1 }}>
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: 1,
+          }}
+        >
           <MiniChart title="y=5, spacing=0, labelAlign='start'">
             <ChartsReferenceLine y={5} label="0" spacing={0} labelAlign="start" />
           </MiniChart>
@@ -125,12 +152,17 @@ export default function ReferenceLineVariations() {
         </Box>
       </div>
 
-      {/* X Reference Lines - spacing as object */}
       <div>
         <Typography variant="h6" sx={{ mb: 1 }}>
           X Reference Lines - spacing (object)
         </Typography>
-        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1 }}>
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: 1,
+          }}
+        >
           <MiniChart title="x=3, spacing={{x:0,y:0}}, start">
             <ChartsReferenceLine
               x={3}
@@ -158,12 +190,17 @@ export default function ReferenceLineVariations() {
         </Box>
       </div>
 
-      {/* Y Reference Lines - spacing as object */}
       <div>
         <Typography variant="h6" sx={{ mb: 1 }}>
           Y Reference Lines - spacing (object)
         </Typography>
-        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1 }}>
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: 1,
+          }}
+        >
           <MiniChart title="y=5, spacing={{x:0,y:0}}, start">
             <ChartsReferenceLine
               y={5}
@@ -191,12 +228,17 @@ export default function ReferenceLineVariations() {
         </Box>
       </div>
 
-      {/* Middle labelAlign with different spacing */}
       <div>
         <Typography variant="h6" sx={{ mb: 1 }}>
           Middle labelAlign - spacing variations
         </Typography>
-        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 1 }}>
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(4, 1fr)',
+            gap: 1,
+          }}
+        >
           <MiniChart title="x=3, middle, default spacing">
             <ChartsReferenceLine x={3} label="Default" labelAlign="middle" />
           </MiniChart>
@@ -212,12 +254,17 @@ export default function ReferenceLineVariations() {
         </Box>
       </div>
 
-      {/* Combined X and Y reference lines */}
       <div>
         <Typography variant="h6" sx={{ mb: 1 }}>
           Combined X and Y Reference Lines
         </Typography>
-        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 1 }}>
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(2, 1fr)',
+            gap: 1,
+          }}
+        >
           <MiniChart title="Both axes, start align">
             <ChartsReferenceLine x={3} label="X=3" labelAlign="start" />
             <ChartsReferenceLine y={5} label="Y=5" labelAlign="start" />
@@ -229,12 +276,17 @@ export default function ReferenceLineVariations() {
         </Box>
       </div>
 
-      {/* Edge cases - multiple reference lines */}
       <div>
         <Typography variant="h6" sx={{ mb: 1 }}>
           Multiple Reference Lines
         </Typography>
-        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 1 }}>
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(2, 1fr)',
+            gap: 1,
+          }}
+        >
           <MiniChart title="Multiple X lines">
             <ChartsReferenceLine x={2} label="X=2" labelAlign="start" />
             <ChartsReferenceLine x={4} label="X=4" labelAlign="end" />
@@ -245,6 +297,6 @@ export default function ReferenceLineVariations() {
           </MiniChart>
         </Box>
       </div>
-    </Box>
+    </div>
   );
 }
