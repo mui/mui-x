@@ -9,6 +9,7 @@ import {
   ProviderProps,
   TriggerProps,
 } from './createPopover.types';
+import { useScopeDialogContext } from '../scope-dialog/ScopeDialogContext';
 
 /**
  * Creates a reusable popover system with Provider, Trigger, and context management.
@@ -34,6 +35,8 @@ export function createPopover<TAnchorData>(config: CreatePopoverConfig) {
 
   function Provider(props: ProviderProps<TAnchorData>) {
     const { containerRef, children, renderPopover, onClose: onCloseProp, modal = true } = props;
+    const { isOpen: isScopeDialogOpen } = useScopeDialogContext();
+
     const [state, setState] = React.useState<PopoverState<TAnchorData>>({
       isOpen: false,
       anchor: null,
@@ -45,10 +48,10 @@ export function createPopover<TAnchorData>(config: CreatePopoverConfig) {
     });
 
     const close = useEventCallback(() => {
-      if (!state.isOpen) {
+      onCloseProp?.();
+      if (!state.isOpen || isScopeDialogOpen) {
         return;
       }
-      onCloseProp?.();
       setState({ isOpen: false, anchor: null, data: null });
     });
 

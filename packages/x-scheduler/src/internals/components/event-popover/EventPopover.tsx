@@ -11,10 +11,7 @@ import { Input } from '@base-ui-components/react/input';
 import { useStore } from '@base-ui-components/utils/store';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { Select } from '@base-ui-components/react/select';
-import {
-  DEFAULT_EVENT_COLOR,
-  SCHEDULER_RECURRING_EDITING_SCOPE,
-} from '@mui/x-scheduler-headless/constants';
+import { DEFAULT_EVENT_COLOR } from '@mui/x-scheduler-headless/constants';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import {
   CalendarEventOccurrence,
@@ -34,6 +31,7 @@ import { getColorClassName } from '../../utils/color-utils';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { createPopover } from '../create-popover';
 import './EventPopover.css';
+import { useScopeDialogContext } from '../scope-dialog/ScopeDialogContext';
 
 const EventPopover = createPopover<CalendarEventOccurrence>({
   contextName: 'EventPopoverContext',
@@ -59,6 +57,7 @@ export const EventPopoverContent = React.forwardRef(function EventPopoverContent
   const color = useStore(store, selectors.eventColor, occurrence.id);
   const rawPlaceholder = useStore(store, selectors.occurrencePlaceholder);
   const recurrencePresets = useStore(store, selectors.recurrencePresets, occurrence.start);
+  const { promptScope } = useScopeDialogContext();
   const defaultRecurrenceKey = useStore(
     store,
     selectors.defaultRecurrencePresetKey,
@@ -232,11 +231,15 @@ export const EventPopoverContent = React.forwardRef(function EventPopoverContent
         end,
         ...(recurrenceModified ? { rrule } : {}),
       };
+      const scope = await promptScope();
+      if (!scope) {
+        return;
+      }
+
       store.updateRecurringEvent({
         occurrenceStart: occurrence.start,
         changes,
-        // TODO: Issue #19766 - Let the user choose the scope via UI.
-        scope: SCHEDULER_RECURRING_EDITING_SCOPE,
+        scope,
       });
     } else {
       store.updateEvent({ id: occurrence.id, ...metaChanges, start, end, rrule });

@@ -64,4 +64,13 @@ export interface SchedulerTranslations {
   startDateAfterEndDateError: string;
   startDateLabel: string;
   startTimeLabel: string;
+
+  // ScopeDialog
+  all: string;
+  cancel: string;
+  confirm: string;
+  onlyThis: string;
+  radioGroupAriaLabel: string;
+  thisAndFollowing: string;
+  title: string;
 }

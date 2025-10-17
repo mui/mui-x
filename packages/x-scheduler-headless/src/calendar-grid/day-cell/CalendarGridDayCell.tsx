@@ -17,12 +17,17 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
     // Internal props
     value,
     addPropertiesToDroppedEvent,
+    chooseRecurringEventScope,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
 
   const { ref: listItemRef, index } = useCompositeListItem();
-  const dropTargetRef = useDayCellDropTarget({ value, addPropertiesToDroppedEvent });
+  const dropTargetRef = useDayCellDropTarget({
+    value,
+    addPropertiesToDroppedEvent,
+    chooseRecurringEventScope,
+  });
 
   const props = React.useMemo(() => ({ role: 'gridcell' }), []);
 

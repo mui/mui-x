@@ -17,7 +17,7 @@ import { CalendarGridTimeEventContext } from './CalendarGridTimeEventContext';
 import { useAdapter } from '../../use-adapter/useAdapter';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { selectors } from '../../use-event-calendar';
-import { CalendarEvent, CalendarEventId, SchedulerValidDate } from '../../models';
+import { CalendarEventId, SchedulerValidDate, CalendarEventOccurrence } from '../../models';
 import { useDragPreview } from '../../utils/useDragPreview';
 import { useCalendarGridRootContext } from '../root/CalendarGridRootContext';
 
@@ -119,10 +119,18 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
         0,
       );
       const offsetInsideColumn = getCursorPositionInElementMs({ input, elementRef: ref });
+
+      const originalOccurrence: CalendarEventOccurrence = {
+        key: occurrenceKey,
+        id: eventId,
+        start,
+        end,
+        title: event.title,
+      };
       return {
         eventId,
         occurrenceKey,
-        event: selectors.event(store.state, eventId)!,
+        originalOccurrence,
         start,
         end,
         initialCursorPositionInEventMs: offsetBeforeColumnStart + offsetInsideColumn,
@@ -227,7 +235,7 @@ export namespace CalendarGridTimeEvent {
   export interface SharedDragData {
     eventId: CalendarEventId;
     occurrenceKey: string;
-    event: CalendarEvent;
+    originalOccurrence: CalendarEventOccurrence;
     start: SchedulerValidDate;
     end: SchedulerValidDate;
     initialCursorPositionInEventMs: number;
