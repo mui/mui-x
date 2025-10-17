@@ -74,6 +74,11 @@ export interface SchedulerState {
    * It can also be styled differently in the day grid.
    */
   isMultiDayEvent: (event: CalendarEvent | CalendarEventOccurrence) => boolean;
+  /**
+   * Whether the calendar is in read-only mode.
+   * @default false
+   */
+  readonly: boolean;
 }
 
 export interface SchedulerParameters {
@@ -137,6 +142,11 @@ export interface SchedulerParameters {
    * @default "jade"
    */
   eventColor?: CalendarEventColor;
+  /**
+   * Whether the calendar is in read-only mode.
+   * @default false
+   */
+  readonly?: boolean;
 }
 
 /**

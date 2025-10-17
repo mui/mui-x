@@ -175,6 +175,28 @@ describe('<EventPopoverContent />', () => {
     expect(screen.queryByRole('button', { name: /save changes/i })).to.equal(null);
     expect(screen.queryByRole('button', { name: /delete event/i })).to.equal(null);
   });
+  it('should handle read-only events if EventCalendar is read-only', () => {
+    const readOnlyOccurrence = { ...occurrence };
+    render(
+      <EventCalendarProvider events={[readOnlyOccurrence]} resources={resources} readonly>
+        <Popover.Root open>
+          <EventPopoverContent {...defaultProps} occurrence={readOnlyOccurrence} />
+        </Popover.Root>
+      </EventCalendarProvider>,
+    );
+    expect(screen.getByDisplayValue('Running')).to.have.attribute('readonly');
+    expect(screen.getByDisplayValue('Morning run')).to.have.attribute('readonly');
+    expect(screen.getByLabelText(/start date/i)).to.have.attribute('readonly');
+    expect(screen.getByLabelText(/end date/i)).to.have.attribute('readonly');
+    expect(screen.getByLabelText(/start time/i)).to.have.attribute('readonly');
+    expect(screen.getByLabelText(/end time/i)).to.have.attribute('readonly');
+    expect(screen.getByRole('combobox', { name: /resource/i })).to.have.attribute('aria-readonly');
+    expect(screen.getByRole('combobox', { name: /recurrence/i })).to.have.attribute(
+      'aria-readonly',
+    );
+    expect(screen.queryByRole('button', { name: /save changes/i })).to.equal(null);
+    expect(screen.queryByRole('button', { name: /delete event/i })).to.equal(null);
+  });
 
   it('should handle a resource without an eventColor (fallback to default)', async () => {
     const onEventsChange = spy();
