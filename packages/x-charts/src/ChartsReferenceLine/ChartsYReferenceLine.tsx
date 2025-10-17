@@ -4,7 +4,12 @@ import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import { warnOnce } from '@mui/x-internals/warning';
 import { useDrawingArea, useYScale } from '../hooks';
-import { CommonChartsReferenceLineProps, ReferenceLineRoot } from './common';
+import {
+  CommonChartsReferenceLineProps,
+  DEFAULT_SPACING,
+  DEFAULT_SPACING_MIDDLE,
+  ReferenceLineRoot,
+} from './common';
 import { ChartsText } from '../ChartsText';
 import {
   ChartsReferenceLineClasses,
@@ -54,7 +59,7 @@ const getTextParams = ({
 
     default:
       return {
-        x: left + width / 2,
+        x: left + width / 2 + spacingX,
         style: {
           dominantBaseline: 'auto',
           textAnchor: 'middle',
@@ -79,7 +84,7 @@ function ChartsYReferenceLine(props: ChartsYReferenceLineProps) {
   const {
     y,
     label = '',
-    spacing = 5,
+    spacing: spacingProp,
     classes: inClasses,
     labelAlign,
     lineStyle,
@@ -106,8 +111,13 @@ function ChartsYReferenceLine(props: ChartsYReferenceLineProps) {
 
   const classes = getYReferenceLineClasses(inClasses);
 
-  const spacingX = typeof spacing === 'object' ? (spacing.x ?? 0) : spacing;
-  const spacingY = typeof spacing === 'object' ? (spacing.y ?? 0) : spacing;
+  const defaultSpacing =
+    labelAlign === 'middle' || !labelAlign ? DEFAULT_SPACING_MIDDLE : DEFAULT_SPACING;
+  const spacing =
+    typeof spacingProp === 'object' ? spacingProp : { x: spacingProp, y: spacingProp };
+
+  const spacingX = spacing.x ?? defaultSpacing;
+  const spacingY = spacing.y ?? defaultSpacing;
 
   const textParams = {
     y: yPosition - spacingY,

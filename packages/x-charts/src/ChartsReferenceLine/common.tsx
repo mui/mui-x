@@ -3,6 +3,9 @@ import { referenceLineClasses, ChartsReferenceLineClasses } from './chartsRefere
 import { ChartsTextStyle } from '../ChartsText';
 import { AxisId } from '../models/axis';
 
+export const DEFAULT_SPACING = 5;
+export const DEFAULT_SPACING_MIDDLE = 0;
+
 export type CommonChartsReferenceLineProps = {
   /**
    * The alignment if the label is in the chart drawing area.
@@ -16,7 +19,7 @@ export type CommonChartsReferenceLineProps = {
   /**
    * Additional space around the label in px.
    * Can be a number or an object `{ x, y }` to distinguish space with the reference line and space with axes.
-   * @default 5
+   * @default 5 for 'start' and 'end', 0 for 'middle'
    */
   spacing?: number | { x?: number; y?: number };
   /**

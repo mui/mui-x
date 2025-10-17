@@ -64,7 +64,7 @@ ChartsReferenceLine.propTypes = {
   /**
    * Additional space around the label in px.
    * Can be a number or an object `{ x, y }` to distinguish space with the reference line and space with axes.
-   * @default 5
+   * @default 5 for 'start' and 'end', 0 for 'middle'
    */
   spacing: PropTypes.oneOfType([
     PropTypes.number,

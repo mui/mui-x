@@ -20,7 +20,7 @@
         "name": "union",
         "description": "number<br>&#124;&nbsp;{ x?: number, y?: number }"
       },
-      "default": "5"
+      "default": "5 for 'start' and 'end', 0 for 'middle'"
     },
     "x": {
       "type": { "name": "union", "description": "Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string" }
