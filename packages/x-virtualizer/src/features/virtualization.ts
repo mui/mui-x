@@ -666,6 +666,28 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     }
   });
 
+  const scrollerRef = useEventCallback((node: HTMLDivElement | null) => {
+    if (node && refs.scroller.current !== node) {
+      refs.scroller.current = node;
+      const opts: AddEventListenerOptions = { passive: true };
+      node.addEventListener('scroll', handleScroll, opts);
+      node.addEventListener('wheel', onWheel as any, opts);
+      node.addEventListener('touchmove', onTouchMove as any, opts);
+    }
+  });
+
+  React.useEffect(() => {
+    return () => {
+      const scroller = refs.scroller.current;
+      if (scroller) {
+        const opts: AddEventListenerOptions = { passive: true };
+        scroller.removeEventListener('scroll', handleScroll, opts);
+        scroller.removeEventListener('wheel', onWheel as any, opts);
+        scroller.removeEventListener('touchmove', onTouchMove as any, opts);
+      }
+    };
+  }, []);
+
   const getters = {
     setPanels,
     getOffsetTop,
@@ -675,10 +697,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
       ref: containerRef,
     }),
     getScrollerProps: () => ({
-      ref: refSetter('scroller'),
-      onScroll: handleScroll,
-      onWheel,
-      onTouchMove,
+      ref: scrollerRef,
       style: scrollerStyle,
       role: 'presentation',
       // `tabIndex` shouldn't be used along role=presentation, but it fixes a Firefox bug

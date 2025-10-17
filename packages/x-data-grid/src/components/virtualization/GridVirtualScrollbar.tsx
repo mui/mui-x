@@ -129,14 +129,10 @@ const GridVirtualScrollbar = forwardRef<HTMLDivElement, GridVirtualScrollbarProp
       }
       isScrollerSyncScheduled.current = true;
 
-      requestAnimationFrame(() => {
-        scrollbar[propertyScroll] = props.scrollPosition.current[propertyScrollPosition];
-        isScrollerSyncScheduled.current = false;
-      });
+      scrollbar[propertyScroll] = props.scrollPosition.current[propertyScrollPosition];
+      isScrollerSyncScheduled.current = false;
     });
 
-    const isScrollbarSyncScheduled = React.useRef(false);
-    const lastScrollValue = React.useRef(0);
     const onScrollbarScroll = useEventCallback(() => {
       const scroller = apiRef.current.virtualScrollerRef.current!;
       const scrollbar = scrollbarRef.current;
@@ -151,25 +147,16 @@ const GridVirtualScrollbar = forwardRef<HTMLDivElement, GridVirtualScrollbarProp
       }
       isLocked.current = true;
 
-      lastScrollValue.current = scrollbar[propertyScroll];
-      if (isScrollbarSyncScheduled.current) {
-        return;
-      }
-      isScrollbarSyncScheduled.current = true;
-      requestAnimationFrame(() => {
-        scroller[propertyScroll] = lastScrollValue.current;
-        isScrollbarSyncScheduled.current = false;
-      });
+      scroller[propertyScroll] = scrollbar[propertyScroll];
     });
 
     useOnMount(() => {
-      const scroller = apiRef.current.virtualScrollerRef.current!;
       const scrollbar = scrollbarRef.current!;
       const options: AddEventListenerOptions = { passive: true };
-      scroller.addEventListener('scroll', onScrollerScroll, options);
+      const unsubscribe = apiRef.current.subscribeEvent('scrollPositionChange', onScrollerScroll);
       scrollbar.addEventListener('scroll', onScrollbarScroll, options);
       return () => {
-        scroller.removeEventListener('scroll', onScrollerScroll, options);
+        unsubscribe();
         scrollbar.removeEventListener('scroll', onScrollbarScroll, options);
       };
     });
