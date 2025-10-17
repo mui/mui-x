@@ -68,7 +68,7 @@ export type TickItemType = {
 
 interface GetTicksOptions
   extends Pick<TickParams, 'tickInterval' | 'tickPlacement' | 'tickLabelPlacement'>,
-    Required<Pick<TickParams, 'tickNumber'>> {
+  Required<Pick<TickParams, 'tickNumber'>> {
   scale: D3Scale;
   valueFormatter?: AxisConfig['valueFormatter'];
   isInside: (offset: number) => boolean;
@@ -106,7 +106,7 @@ export function getTicks(options: GetTicksOptions) {
     const ticks =
       typeof tickInterval === 'object'
         ? tickInterval
-        : getDefaultTicks(continuousScale.copy().nice(tickNumber), tickNumber);
+        : getDefaultTicks(continuousScale, tickNumber);
 
     // If the ratio is not met we stop the computation and fallback on the default ordinal ticks computation.
     if (ticks.length * CONTINUOUS_TICKS_RATIO < domain.length) {
@@ -234,12 +234,12 @@ export function getTicks(options: GetTicksOptions) {
 
         ...(tickPlacement === 'extremities'
           ? [
-              {
-                formattedValue: undefined,
-                offset: scale.range()[1],
-                labelOffset: 0,
-              },
-            ]
+            {
+              formattedValue: undefined,
+              offset: scale.range()[1],
+              labelOffset: 0,
+            },
+          ]
           : []),
       ];
     }
