@@ -5,6 +5,10 @@ function isSsr(): boolean {
   return typeof window === 'undefined';
 }
 
+let measurementContainer: SVGSVGElement | null = null;
+let measurementElement: SVGTextElement | null = null;
+let measurementLastStyle: string | null = null;
+
 const stringCache = new Map<string, { width: number; height: number }>();
 
 export function clearStringMeasurementCache() {
@@ -12,7 +16,7 @@ export function clearStringMeasurementCache() {
 }
 
 const MAX_CACHE_NUM = 2000;
-const STYLE_SET = new Set([
+const PIXEL_STYLES = new Set([
   'minWidth',
   'maxWidth',
   'width',
@@ -41,8 +45,8 @@ export const MEASUREMENT_SPAN_ID = 'mui_measurement_span';
  * @param value
  * @returns add 'px' for distance properties
  */
-function autoCompleteStyle(name: string, value: number) {
-  if (STYLE_SET.has(name) && value === +value) {
+function convertPixelValue(name: string, value: number) {
+  if (PIXEL_STYLES.has(name) && value === +value) {
     return `${value}px`;
   }
 
@@ -54,18 +58,8 @@ function autoCompleteStyle(name: string, value: number) {
  * @param text camelcase css property
  * @returns css property
  */
-function camelToMiddleLine(text: string) {
-  const strs = text.split('');
-
-  const formatStrs = strs.reduce((result: string[], entry) => {
-    if (entry === entry.toUpperCase()) {
-      return [...result, '-', entry.toLowerCase()];
-    }
-
-    return [...result, entry];
-  }, []);
-
-  return formatStrs.join('');
+function camelCaseToDashCase(text: string) {
+  return String(text).replace(/([A-Z])/g, (match) => `-${match.toLowerCase()}`);
 }
 
 /**
@@ -73,17 +67,19 @@ function camelToMiddleLine(text: string) {
  * @param style React style object
  * @returns CSS styling string
  */
-export const getStyleString = (style: React.CSSProperties) =>
-  Object.keys(style)
-    .sort()
-    .reduce(
-      (result, s) =>
-        `${result}${camelToMiddleLine(s)}:${autoCompleteStyle(
-          s,
-          (style as Record<string, any>)[s],
-        )};`,
-      '',
-    );
+const getStyleString = (style: React.CSSProperties) => {
+  let result = '';
+  for (const key in style) {
+    if (Object.hasOwn(style, key)) {
+      const value = style[key as keyof React.CSSProperties] as string;
+      result += `${result}${camelCaseToDashCase(value)}:${convertPixelValue(
+        value,
+        (style as Record<string, any>)[value],
+      )};`;
+    }
+  }
+  return result;
+};
 
 /**
  *
@@ -96,9 +92,9 @@ export const getStringSize = (text: string | number, style: React.CSSProperties 
     return { width: 0, height: 0 };
   }
 
-  const str = `${text}`;
+  const string = String(text);
   const styleString = getStyleString(style);
-  const cacheKey = `${str}-${styleString}`;
+  const cacheKey = `${string}-${styleString}`;
 
   const size = stringCache.get(cacheKey);
   if (size) {
@@ -106,23 +102,28 @@ export const getStringSize = (text: string | number, style: React.CSSProperties 
   }
 
   try {
-    const measurementSpanContainer = getMeasurementContainer();
-    const measurementElem = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    if (measurementElement === null || styleString !== measurementLastStyle) {
+      measurementLastStyle = styleString;
+      measurementElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
 
-    // Need to use CSS Object Model (CSSOM) to be able to comply with Content Security Policy (CSP)
-    // https://en.wikipedia.org/wiki/Content_Security_Policy
-    Object.keys(style as Record<string, any>).map((styleKey) => {
-      (measurementElem!.style as Record<string, any>)[camelToMiddleLine(styleKey)] =
-        autoCompleteStyle(styleKey, (style as Record<string, any>)[styleKey]);
-      return styleKey;
-    });
+      // Need to use CSS Object Model (CSSOM) to be able to comply with CSP
+      Object.keys(style as Record<string, any>).forEach((styleKey) => {
+        (element!.style as Record<string, any>)[camelCaseToDashCase(styleKey)] = convertPixelValue(
+          styleKey,
+          (style as Record<string, any>)[styleKey],
+        );
+        return styleKey;
+      });
+    }
 
-    // measurementElem.style.whiteSpace = 'pre';
-    measurementElem.textContent = str;
+    const container = getMeasurementContainer();
+    const element = measurementElement;
 
-    measurementSpanContainer.replaceChildren(measurementElem);
+    element.textContent = string;
 
-    const rect = measurementElem.getBoundingClientRect();
+    container.replaceChildren(element);
+
+    const rect = element.getBoundingClientRect();
     const result = { width: rect.width, height: rect.height };
 
     stringCache.set(cacheKey, result);
@@ -133,7 +134,7 @@ export const getStringSize = (text: string | number, style: React.CSSProperties 
 
     if (process.env.NODE_ENV === 'test') {
       // In test environment, we clean the measurement span immediately
-      measurementSpanContainer.replaceChildren();
+      container.replaceChildren();
     }
 
     return result;
@@ -146,9 +147,9 @@ export const getStringSize = (text: string | number, style: React.CSSProperties 
  * Get (or create) a hidden span element to measure text size.
  */
 function getMeasurementContainer() {
-  let measurementContainer = document.getElementById(
-    MEASUREMENT_SPAN_ID,
-  ) as unknown as SVGSVGElement;
+  if (measurementContainer === null) {
+    measurementContainer = document.getElementById(MEASUREMENT_SPAN_ID) as unknown as SVGSVGElement;
+  }
 
   if (measurementContainer === null) {
     measurementContainer = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
