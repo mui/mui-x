@@ -17,9 +17,15 @@ interface ChartsGridHorizontalProps {
 export function ChartsGridHorizontal(props: ChartsGridHorizontalProps) {
   const { axis, start, end, classes } = props;
 
-  const { scale, tickNumber, tickInterval } = axis;
+  const { scale, tickNumber, tickInterval, isNumerical } = axis;
 
-  const yTicks = useTicks({ scale, tickNumber, tickInterval, direction: 'y' });
+  const yTicks = useTicks({
+    scale,
+    tickNumber,
+    tickInterval,
+    continuousTickPlacement: isNumerical,
+    direction: 'y',
+  });
 
   return (
     <React.Fragment>
