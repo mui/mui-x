@@ -580,7 +580,6 @@ export default function PopularFeaturesDemo() {
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        minHeight: 1000,
         width: '100%',
       }}
     >
