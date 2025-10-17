@@ -323,6 +323,7 @@ const koKRGrid: Partial<GridLocaleText> = {
   promptChangePivotValuesLabel: (count: number) => `(${count}) 개의 값`,
   promptChangePivotValuesDescription: (column: string, aggregation: string) =>
     `${column} (${aggregation})`,
+  // promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) => `Dimensions (${dimensionsCount}), Values (${valuesCount})`,
 };
 
 export const koKR: Localization = getGridLocalization(koKRGrid);

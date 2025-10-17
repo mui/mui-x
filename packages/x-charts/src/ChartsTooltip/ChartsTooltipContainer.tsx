@@ -23,8 +23,10 @@ import {
 import { selectorChartsInteractionPolarAxisTooltip } from '../internals/plugins/featurePlugins/useChartPolarAxis/useChartPolarInteraction.selectors';
 import { useAxisSystem } from '../hooks/useAxisSystem';
 import { useSvgRef } from '../hooks';
+import { selectorBrushShouldPreventTooltip } from '../internals/plugins/featurePlugins/useChartBrush';
+import { createSelector } from '../internals/plugins/utils/selectors';
 
-const noAxis = () => false;
+const selectorReturnFalse = () => false;
 
 export interface ChartsTooltipContainerProps<T extends TriggerOptions = TriggerOptions>
   extends Partial<PopperProps> {
@@ -59,6 +61,29 @@ const ChartsTooltipRoot = styled(Popper, {
   pointerEvents: 'none',
   zIndex: theme.zIndex.modal,
 }));
+
+const selectorSelectIsOpenSelector = createSelector(
+  [
+    selectorBrushShouldPreventTooltip,
+    (_, trigger: TriggerOptions) => trigger,
+    (_, __, axisSystem: 'none' | 'polar' | 'cartesian') => axisSystem,
+  ],
+  (shouldPreventBecauseOfBrush, trigger, axisSystem) => {
+    if (shouldPreventBecauseOfBrush) {
+      return selectorReturnFalse;
+    }
+    if (trigger === 'item') {
+      return selectorChartsTooltipItemIsDefined;
+    }
+    if (axisSystem === 'polar') {
+      return selectorChartsInteractionPolarAxisTooltip;
+    }
+    if (axisSystem === 'cartesian') {
+      return selectorChartsInteractionAxisTooltip;
+    }
+    return selectorReturnFalse;
+  },
+);
 
 /**
  * Demos:
@@ -95,14 +120,10 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   const axisSystem = useAxisSystem();
 
   const store = useStore<[UseChartCartesianAxisSignature]>();
-  const isOpen = useSelector(
-    store,
-    trigger === 'axis'
-      ? (axisSystem === 'polar' && selectorChartsInteractionPolarAxisTooltip) ||
-          (axisSystem === 'cartesian' && selectorChartsInteractionAxisTooltip) ||
-          noAxis
-      : selectorChartsTooltipItemIsDefined,
-  );
+
+  const isOpenSelector = useSelector(store, selectorSelectIsOpenSelector, [trigger, axisSystem]);
+
+  const isOpen = useSelector(store, isOpenSelector);
 
   const lastInteraction = useSelector(store, selectorChartsLastInteraction);
   const computedAnchor = lastInteraction === 'keyboard' ? 'node' : anchor;
