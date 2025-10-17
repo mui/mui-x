@@ -10,110 +10,40 @@ import {
   type GridKeyValue,
   type GridValidRowModel,
   type GridUpdateRowParams,
-} from '@mui/x-data-grid-pro';
+} from '@mui/x-data-grid';
 import { warnOnce } from '@mui/x-internals/warning';
-import type { RowTreeBuilderGroupingCriterion } from '@mui/x-data-grid-pro/internals';
-import type { ReorderValidationContext as Ctx, ReorderOperationType } from './types';
-import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
-import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import { type ReorderOperationType } from './types';
+import { RowTreeBuilderGroupingCriterion } from '../../../utils/tree/models';
+import type { GridPrivateApiPro } from '../../../models/gridApiPro';
+import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
-// TODO: Share these conditions with the executor by making the contexts similar
 /**
- * Reusable validation conditions for row reordering validation
+ * Finds the closest cell element from the given event target.
+ * If the target itself is a cell, returns it.
+ * Otherwise, searches for the closest parent with 'cell' in its className.
+ * @param target - The event target to start searching from
+ * @returns The cell element or the original target if no cell is found
  */
-export const conditions = {
-  // Node type checks
-  isGroupToGroup: (ctx: Ctx) => ctx.sourceNode.type === 'group' && ctx.targetNode.type === 'group',
+export function findCellElement(target: EventTarget | null): Element {
+  const element = target as Element;
+  if (!element) {
+    return element;
+  }
 
-  isLeafToLeaf: (ctx: Ctx) => ctx.sourceNode.type === 'leaf' && ctx.targetNode.type === 'leaf',
+  // Check if the target itself is a cell
+  if (
+    element instanceof Element &&
+    element.className &&
+    typeof element.className === 'string' &&
+    element.className.includes('cell')
+  ) {
+    return element;
+  }
 
-  isLeafToGroup: (ctx: Ctx) => ctx.sourceNode.type === 'leaf' && ctx.targetNode.type === 'group',
-
-  isGroupToLeaf: (ctx: Ctx) => ctx.sourceNode.type === 'group' && ctx.targetNode.type === 'leaf',
-
-  // Drop position checks
-  isDropAbove: (ctx: Ctx) => ctx.dropPosition === 'above',
-  isDropBelow: (ctx: Ctx) => ctx.dropPosition === 'below',
-
-  // Depth checks
-  sameDepth: (ctx: Ctx) => ctx.sourceNode.depth === ctx.targetNode.depth,
-
-  sourceDepthGreater: (ctx: Ctx) => ctx.sourceNode.depth > ctx.targetNode.depth,
-
-  targetDepthIsSourceMinusOne: (ctx: Ctx) => ctx.targetNode.depth === ctx.sourceNode.depth - 1,
-
-  // Parent checks
-  sameParent: (ctx: Ctx) => ctx.sourceNode.parent === ctx.targetNode.parent,
-
-  // Node state checks
-  targetGroupExpanded: (ctx: Ctx) =>
-    (ctx.targetNode.type === 'group' && (ctx.targetNode as GridGroupNode).childrenExpanded) ??
-    false,
-
-  targetGroupCollapsed: (ctx: Ctx) =>
-    ctx.targetNode.type === 'group' && !(ctx.targetNode as GridGroupNode).childrenExpanded,
-
-  // Previous/Next node checks
-  hasPrevNode: (ctx: Ctx) => ctx.prevNode !== null,
-  hasNextNode: (ctx: Ctx) => ctx.nextNode !== null,
-
-  prevIsLeaf: (ctx: Ctx) => ctx.prevNode?.type === 'leaf',
-  prevIsGroup: (ctx: Ctx) => ctx.prevNode?.type === 'group',
-  nextIsLeaf: (ctx: Ctx) => ctx.nextNode?.type === 'leaf',
-  nextIsGroup: (ctx: Ctx) => ctx.nextNode?.type === 'group',
-
-  prevDepthEquals: (ctx: Ctx, depth: number) => ctx.prevNode?.depth === depth,
-
-  prevDepthEqualsSource: (ctx: Ctx) => ctx.prevNode?.depth === ctx.sourceNode.depth,
-
-  // Complex checks
-  prevBelongsToSource: (ctx: Ctx) => {
-    if (!ctx.prevNode) {
-      return false;
-    }
-    // Check if prevNode.parent OR any of its ancestors === sourceNode.id
-    let currentId = ctx.prevNode.parent;
-    while (currentId) {
-      if (currentId === ctx.sourceNode.id) {
-        return true;
-      }
-      const node = ctx.rowTree[currentId];
-      if (!node) {
-        break;
-      }
-      currentId = node.parent;
-    }
-    return false;
-  },
-
-  // Position checks
-  isAdjacentPosition: (ctx: Ctx) => {
-    const { sourceRowIndex, targetRowIndex, dropPosition } = ctx;
-    return (
-      (dropPosition === 'above' && targetRowIndex === sourceRowIndex + 1) ||
-      (dropPosition === 'below' && targetRowIndex === sourceRowIndex - 1)
-    );
-  },
-
-  // First child check
-  targetFirstChildIsGroupWithSourceDepth: (ctx: Ctx) => {
-    if (ctx.targetNode.type !== 'group') {
-      return false;
-    }
-    const targetGroup = ctx.targetNode as GridGroupNode;
-    const firstChild = targetGroup.children?.[0] ? ctx.rowTree[targetGroup.children[0]] : null;
-    return firstChild?.type === 'group' && firstChild.depth === ctx.sourceNode.depth;
-  },
-
-  targetFirstChildDepthEqualsSource: (ctx: Ctx) => {
-    if (ctx.targetNode.type !== 'group') {
-      return false;
-    }
-    const targetGroup = ctx.targetNode as GridGroupNode;
-    const firstChild = targetGroup.children?.[0] ? ctx.rowTree[targetGroup.children[0]] : null;
-    return firstChild ? firstChild.depth === ctx.sourceNode.depth : false;
-  },
-};
+  // Try to find the closest cell parent
+  const cellElement = element.closest('[class*="cell"]');
+  return cellElement || element;
+}
 
 export function determineOperationType(
   sourceNode: GridTreeNode,
@@ -197,6 +127,83 @@ export const collectAllLeafDescendants = (
   return leafIds;
 };
 
+// Recursively collect all descendant nodes (groups and leaves) from a group
+export const collectAllDescendants = (
+  groupNode: GridGroupNode,
+  tree: GridRowTreeConfig,
+): GridTreeNode[] => {
+  const descendants: GridTreeNode[] = [];
+
+  const collectFromNode = (nodeId: GridRowId) => {
+    const node = tree[nodeId];
+    if (node) {
+      descendants.push(node);
+      if (node.type === 'group') {
+        (node as GridGroupNode).children.forEach(collectFromNode);
+      }
+    }
+  };
+
+  groupNode.children.forEach(collectFromNode);
+  return descendants;
+};
+
+// Check if a node is a descendant of another node
+export const isDescendantOf = (
+  possibleDescendant: GridTreeNode,
+  ancestor: GridTreeNode,
+  tree: GridRowTreeConfig,
+): boolean => {
+  let current = possibleDescendant;
+
+  while (current && current.id !== GRID_ROOT_GROUP_ID) {
+    if (current.id === ancestor.id) {
+      return true;
+    }
+    current = tree[current.parent!];
+  }
+
+  return false;
+};
+
+// Build a simple string path to a node (for tree data paths)
+export const buildTreeDataPath = (node: GridTreeNode, tree: GridRowTreeConfig): string[] => {
+  const path: string[] = [];
+  let current = node;
+
+  while (current && current.id !== GRID_ROOT_GROUP_ID) {
+    if ((current.type === 'leaf' || current.type === 'group') && current.groupingKey !== null) {
+      path.unshift(String(current.groupingKey));
+    }
+    current = tree[current.parent!];
+  }
+
+  return path;
+};
+
+// Update depths for all descendant nodes recursively
+export const updateDescendantDepths = (
+  group: GridGroupNode,
+  tree: GridRowTreeConfig,
+  depthDiff: number,
+): void => {
+  const updateNodeDepth = (nodeId: GridRowId) => {
+    const node = tree[nodeId];
+    if (node) {
+      tree[nodeId] = {
+        ...node,
+        depth: node.depth + depthDiff,
+      };
+
+      if (node.type === 'group') {
+        (node as GridGroupNode).children.forEach(updateNodeDepth);
+      }
+    }
+  };
+
+  group.children.forEach(updateNodeDepth);
+};
+
 /**
  * Adjusts the target node based on specific reorder scenarios and constraints.
  *
@@ -220,7 +227,7 @@ export function adjustTargetNode(
   targetIndex: number,
   placeholderIndex: number,
   sortedFilteredRowIds: GridRowId[],
-  apiRef: RefObject<GridPrivateApiPremium>,
+  apiRef: RefObject<GridPrivateApiPro>,
 ): { adjustedTargetNode: GridTreeNode; isLastChild: boolean } {
   let adjustedTargetNode: GridTreeNode = targetNode;
   let isLastChild = false;
@@ -343,7 +350,7 @@ export function removeEmptyAncestors(
 
 export function handleProcessRowUpdateError(
   error: any,
-  onProcessRowUpdateError?: DataGridPremiumProcessedProps['onProcessRowUpdateError'],
+  onProcessRowUpdateError?: DataGridProProcessedProps['onProcessRowUpdateError'],
 ): void {
   if (onProcessRowUpdateError) {
     onProcessRowUpdateError(error);
@@ -368,7 +375,7 @@ export function handleProcessRowUpdateError(
  *
  * @example
  * ```tsx
- * const updater = new BatchRowUpdater(processRowUpdate, onError);
+ * const updater = new BatchRowUpdater(apiRef, processRowUpdate, onError);
  *
  * // Queue multiple updates
  * updater.queueUpdate('row1', originalRow1, newRow1);
@@ -395,9 +402,10 @@ export class BatchRowUpdater {
   private pendingRowUpdates: GridValidRowModel[] = [];
 
   constructor(
-    private processRowUpdate: DataGridPremiumProcessedProps['processRowUpdate'] | undefined,
+    private apiRef: RefObject<GridPrivateApiPro>,
+    private processRowUpdate: DataGridProProcessedProps['processRowUpdate'] | undefined,
     private onProcessRowUpdateError:
-      | DataGridPremiumProcessedProps['onProcessRowUpdateError']
+      | DataGridProProcessedProps['onProcessRowUpdateError']
       | undefined,
   ) {}
 
@@ -453,7 +461,10 @@ export class BatchRowUpdater {
       });
     });
 
+    this.apiRef.current.setLoading(true);
     await Promise.all(promises);
+
+    this.apiRef.current.setLoading(false);
 
     return {
       successful: Array.from(this.successfulRowIds),

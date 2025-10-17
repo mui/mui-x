@@ -9,6 +9,7 @@ import {
   gridRowMaximumTreeDepthSelector,
   gridRowTreeSelector,
   gridExpandedSortedRowIdsSelector,
+  type ReorderValidationContext,
 } from '@mui/x-data-grid-pro';
 import {
   useGridRegisterPipeProcessor,
@@ -35,8 +36,7 @@ import {
 } from './gridRowGroupingUtils';
 import { GridRowGroupingApi } from './gridRowGroupingInterfaces';
 import { GridInitialStatePremium } from '../../../models/gridStatePremium';
-import { rowGroupingReorderValidator } from '../rowReorder/reorderValidator';
-import { ReorderValidationContext } from '../rowReorder/types';
+import { rowGroupingReorderValidator } from '../rowReorder/rowGroupingReorderValidator';
 
 export const rowGroupingStateInitializer: GridStateInitializer<
   Pick<DataGridPremiumProcessedProps, 'rowGroupingModel' | 'initialState'>
@@ -72,6 +72,7 @@ export const useGridRowGrouping = (
     | 'slots'
     | 'dataSource'
     | 'treeData'
+    | 'isValidRowReorder'
   >,
 ) => {
   apiRef.current.registerControlState({
@@ -290,6 +291,7 @@ export const useGridRowGrouping = (
     }
   }, [apiRef, props.disableRowGrouping]);
 
+  const isValidRowReorder = props.isValidRowReorder;
   const getRowReorderTargetIndex = React.useCallback<GridPipeProcessor<'getRowReorderTargetIndex'>>(
     (initialValue, { sourceRowId, targetRowId, dropPosition, dragDirection }) => {
       if (gridRowMaximumTreeDepthSelector(apiRef) === 1 || props.treeData) {
@@ -330,13 +332,21 @@ export const useGridRowGrouping = (
         expandedSortedRowIndexLookup,
       };
 
-      // Check if the reorder is valid
-      if (rowGroupingReorderValidator.validate(context)) {
+      // First apply internal validation
+      let isValid = rowGroupingReorderValidator.validate(context);
+
+      // If internal validation passes AND user provided additional validation
+      if (isValid && isValidRowReorder) {
+        // Apply additional user restrictions
+        isValid = isValidRowReorder(context);
+      }
+
+      if (isValid) {
         return dropPosition === 'below' ? targetRowIndex + 1 : targetRowIndex;
       }
       return -1;
     },
-    [apiRef, props.treeData],
+    [apiRef, props.treeData, isValidRowReorder],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'getRowReorderTargetIndex', getRowReorderTargetIndex);

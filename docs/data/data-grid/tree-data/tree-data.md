@@ -165,6 +165,36 @@ const invalidRows = [{ path: ['X'] }, { path: ['Y'] }, { path: ['X', 'X'] }];
 
 :::
 
+## Drag-and-drop tree data reordering
+
+With row reordering, users can reorder tree data or move rows from one group to another.
+
+To enable this feature with tree data, pass the `rowReordering` prop to the Data Grid component.
+You also need to pass the `setTreeDataPath()` prop to revert the operation done by [`getTreeDataPath()`](/x/api/data-grid/data-grid-pro/#data-grid-pro-prop-getTreeDataPath) while building the tree as row reordering can change the path of the row.
+
+```tsx
+<DataGridPro
+  columns={columns}
+  rows={rows}
+  treeData
+  getTreeDataPath={getTreeDataPath}
+  setTreeDataPath={setTreeDataPath}
+  rowReordering
+/>
+```
+
+{{"demo": "TreeDataReordering.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Reordering persistance
+
+If you want to update the external row data, for example to persist it in the local storage, you can use the `onRowOrderChange()` callback and the Data Grid selectors to get the reordered data and sync with the external data.
+
+```tsx
+<DataGridPro onRowOrderChange={handleRowOrderChange} />
+```
+
+{{"demo": "TreeDataSyncRowData.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Lazy-loading tree data children
 
 See [Server-side data—Tree data](/x/react-data-grid/server-side-data/tree-data/) for details on lazy-loading tree data children.

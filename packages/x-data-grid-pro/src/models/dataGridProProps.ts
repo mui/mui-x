@@ -23,18 +23,20 @@ import type {
   DataGridProSharedPropsWithoutDefaultValue,
 } from '@mui/x-data-grid/internals';
 import type { GridPinnedRowsProp } from '../hooks/features/rowPinning';
-import { GridApiPro } from './gridApiPro';
+import type { GridApiPro } from './gridApiPro';
 import {
   GridGroupingColDefOverride,
   GridGroupingColDefOverrideParams,
 } from './gridGroupingColDefOverride';
-import { GridInitialStatePro } from './gridStatePro';
-import { GridProSlotsComponent } from './gridProSlotsComponent';
+import type { GridInitialStatePro } from './gridStatePro';
+import type { GridProSlotsComponent } from './gridProSlotsComponent';
 import type { GridProSlotProps } from './gridProSlotProps';
-import {
+import type {
   GridDataSourcePro as GridDataSource,
   GridGetRowsParamsPro as GridGetRowsParams,
 } from '../hooks/features/dataSource/models';
+import type { ReorderValidationContext } from '../hooks/features/rowReorder/reorderValidationTypes';
+import type { IsRowReorderableParams } from '../hooks/features/rowReorder';
 
 export interface GridExperimentalProFeatures extends GridExperimentalFeatures {}
 
@@ -173,6 +175,15 @@ interface DataGridProRegularProps<R extends GridValidRowModel> {
    * @returns {string[]} The path to the row.
    */
   getTreeDataPath?: (row: R) => readonly string[];
+  /**
+   * Updates the tree path in a row model.
+   * Used when reordering rows across different parents in tree data.
+   * @template R
+   * @param {string[]} path The new path for the row.
+   * @param {R} row The row model to update.
+   * @returns {R} The updated row model with the new path.
+   */
+  setTreeDataPath?: (path: string[], row: R) => R;
 }
 
 export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel = any>
@@ -278,4 +289,20 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * @param {GridGetRowsError | GridUpdateRowError} error The data source error object.
    */
   onDataSourceError?: (error: GridGetRowsError<GridGetRowsParams> | GridUpdateRowError) => void;
+  /**
+   * Determines if a row is reorderable.
+   * @param {object} params With all properties from the row.
+   * @param {R} params.row The row model of the row that the current cell belongs to.
+   * @param {GridTreeNode} params.rowNode The node of the row that the current cell belongs to.
+   * @returns {boolean} A boolean indicating if the row is reorderable.
+   */
+  isRowReorderable?: (params: IsRowReorderableParams) => boolean;
+  /**
+   * Allows to disable certain row reorder operations based on the context.
+   * The internal validation is still applied which allows maximum supported use-cases.
+   * Use `isValidRowReorder()` to omit some of the default validation rules.
+   * @param {ReorderValidationContext} context The context object containing all information about the reorder operation.
+   * @returns {boolean} A boolean indicating if the reorder operation should go through.
+   */
+  isValidRowReorder?: (context: ReorderValidationContext) => boolean;
 }

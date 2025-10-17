@@ -216,6 +216,7 @@
     "returnType": "GridHeaderFilteringState",
     "description": ""
   },
+  { "name": "gridOrderedDataRowsSelector", "returnType": "GridValidRowModel[]", "description": "" },
   {
     "name": "gridPageCountSelector",
     "returnType": "number",
