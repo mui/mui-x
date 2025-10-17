@@ -201,11 +201,7 @@ export const useGridRowReorder = (
         }
       });
 
-      // Execute callback and wait if it's async
-      const result = callback();
-      if (result && typeof result.then === 'function') {
-        await result;
-      }
+      await callback();
 
       // Use `requestAnimationFrame` to ensure DOM has updated
       requestAnimationFrame(() => {
@@ -511,13 +507,7 @@ export const useGridRowReorder = (
         if (validatedIndex !== -1) {
           try {
             await applyRowAnimation(async () => {
-              // Wait for setRowIndex to complete (if it returns a Promise)
-              const result = apiRef.current.setRowIndex(dragRowId, validatedIndex);
-
-              // Handle both sync and async cases
-              if (result && typeof result.then === 'function') {
-                await result;
-              }
+              await apiRef.current.setRowIndex(dragRowId, validatedIndex);
 
               // Only emit event and clear state after successful reorder
               const rowOrderChangeParams: GridRowOrderChangeParams = {
