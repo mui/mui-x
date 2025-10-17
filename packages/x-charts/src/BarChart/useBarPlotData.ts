@@ -194,6 +194,7 @@ export function getBarDimensions(params: {
   } = params;
 
   const baseScaleConfig = (verticalLayout ? xAxisConfig : yAxisConfig) as ComputedAxis<'band'>;
+  const reverse = (verticalLayout ? yAxisConfig.reverse : xAxisConfig.reverse) ?? false;
 
   const { barWidth, offset } = getBandSize({
     bandWidth: baseScaleConfig.scale.bandwidth(),
@@ -223,7 +224,7 @@ export function getBarDimensions(params: {
   const startCoordinate = shouldInvertStartCoordinate(
     verticalLayout,
     seriesValue,
-    baseScaleConfig.reverse ?? false,
+    reverse,
   )
     ? maxValueCoord - barSize
     : minValueCoord;
