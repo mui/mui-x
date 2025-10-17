@@ -1,10 +1,10 @@
 import * as React from 'react';
+import { spy } from 'sinon';
 import { adapter, createSchedulerRenderer } from 'test/utils/scheduler';
 import { screen, within } from '@mui/internal-test-utils';
 import { CalendarEvent } from '@mui/x-scheduler-headless/models';
-import { spy } from 'sinon';
 import { MonthView } from '@mui/x-scheduler/month-view';
-import { StandaloneView } from '@mui/x-scheduler/standalone-view';
+import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
 import { EventCalendar } from '../event-calendar';
 
 const events: CalendarEvent[] = [
@@ -70,9 +70,9 @@ describe('<MonthView />', () => {
 
   it('should render the weekday headers, a cell for each day, and show the abbreviated month for day 1', () => {
     render(
-      <StandaloneView {...standaloneDefaults}>
+      <EventCalendarProvider {...standaloneDefaults}>
         <MonthView />
-      </StandaloneView>,
+      </EventCalendarProvider>,
     );
     const headerTexts = screen.getAllByRole('columnheader').map((header) => header.textContent);
     const gridCells = screen.getAllByRole('gridcell');
@@ -84,9 +84,9 @@ describe('<MonthView />', () => {
 
   it('should render events in the correct cell', () => {
     render(
-      <StandaloneView {...standaloneDefaults}>
+      <EventCalendarProvider {...standaloneDefaults}>
         <MonthView />
-      </StandaloneView>,
+      </EventCalendarProvider>,
     );
 
     const gridCells = screen.getAllByRole('gridcell');
@@ -101,13 +101,13 @@ describe('<MonthView />', () => {
     const handleViewChange = spy();
     const handleVisibleDateChange = spy();
     const { user } = render(
-      <StandaloneView
+      <EventCalendarProvider
         {...standaloneDefaults}
         onViewChange={handleViewChange}
         onVisibleDateChange={handleVisibleDateChange}
       >
         <MonthView />
-      </StandaloneView>,
+      </EventCalendarProvider>,
     );
     const button = screen.getByRole('button', { name: '15' });
     await user.click(button);
@@ -122,9 +122,9 @@ describe('<MonthView />', () => {
 
   it('should render day numbers as plain text when the day view is not enabled', () => {
     render(
-      <StandaloneView {...standaloneDefaults} views={['week', 'month']}>
+      <EventCalendarProvider {...standaloneDefaults} views={['week', 'month']}>
         <MonthView />
-      </StandaloneView>,
+      </EventCalendarProvider>,
     );
     expect(screen.queryByRole('button', { name: '15' })).to.equal(null);
     expect(screen.getByText('15')).not.to.equal(null);
@@ -164,9 +164,9 @@ describe('<MonthView />', () => {
       },
     ];
     render(
-      <StandaloneView events={manyEvents} resources={[]}>
+      <EventCalendarProvider events={manyEvents} resources={[]}>
         <MonthView />
-      </StandaloneView>,
+      </EventCalendarProvider>,
     );
     expect(screen.getByText(/more/i)).not.to.equal(null);
   });
@@ -174,9 +174,9 @@ describe('<MonthView />', () => {
   describe('All day events', () => {
     it('should render all-day events correctly with main event in start date cell', () => {
       render(
-        <StandaloneView events={allDayEvents} resources={[]}>
+        <EventCalendarProvider events={allDayEvents} resources={[]}>
           <MonthView />
-        </StandaloneView>,
+        </EventCalendarProvider>,
       );
 
       const gridCells = screen.getAllByRole('gridcell');
@@ -203,9 +203,9 @@ describe('<MonthView />', () => {
 
     it('should render all-day event in first cell of week when event starts before the week', () => {
       render(
-        <StandaloneView events={allDayEvents} resources={[]}>
+        <EventCalendarProvider events={allDayEvents} resources={[]}>
           <MonthView />
-        </StandaloneView>,
+        </EventCalendarProvider>,
       );
 
       const gridCells = screen.getAllByRole('gridcell');
@@ -218,9 +218,9 @@ describe('<MonthView />', () => {
 
     it('should place invisible events on the same grid row as the main event', () => {
       render(
-        <StandaloneView events={allDayEvents} resources={[]}>
+        <EventCalendarProvider events={allDayEvents} resources={[]}>
           <MonthView />
-        </StandaloneView>,
+        </EventCalendarProvider>,
       );
 
       const allEvents = screen.getAllByLabelText('Grid Row Test');
@@ -266,9 +266,9 @@ describe('<MonthView />', () => {
       ];
 
       render(
-        <StandaloneView events={overlappingEvents} resources={[]}>
+        <EventCalendarProvider events={overlappingEvents} resources={[]}>
           <MonthView />
-        </StandaloneView>,
+        </EventCalendarProvider>,
       );
 
       const event1Elements = screen.getAllByLabelText('Event 1');
@@ -294,9 +294,9 @@ describe('<MonthView />', () => {
 
     it('should render all-day events with correct grid column span', () => {
       render(
-        <StandaloneView events={allDayEvents} resources={[]}>
+        <EventCalendarProvider events={allDayEvents} resources={[]}>
           <MonthView />
-        </StandaloneView>,
+        </EventCalendarProvider>,
       );
 
       const mainEvent = screen
@@ -311,9 +311,9 @@ describe('<MonthView />', () => {
 
     it('should render one visible event per row if event spans across multiple weeks', () => {
       render(
-        <StandaloneView events={allDayEvents} resources={[]}>
+        <EventCalendarProvider events={allDayEvents} resources={[]}>
           <MonthView />
-        </StandaloneView>,
+        </EventCalendarProvider>,
       );
 
       const eventInstances = screen.getAllByLabelText('Multiple week event');

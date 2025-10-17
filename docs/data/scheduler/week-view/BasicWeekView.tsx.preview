@@ -1,8 +1,6 @@
-<StandaloneView
+<StandaloneWeekView
   events={events}
   resources={resources}
   defaultVisibleDate={defaultVisibleDate}
   onEventsChange={setEvents}
->
-  <WeekView />
-</StandaloneView>
+/>

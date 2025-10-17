@@ -1,8 +1,6 @@
 import * as React from 'react';
-
 import { CalendarEvent } from '@mui/x-scheduler/models';
-import { StandaloneView } from '@mui/x-scheduler/standalone-view';
-import { MonthView } from '@mui/x-scheduler/month-view';
+import { StandaloneMonthView } from '@mui/x-scheduler/month-view';
 import {
   initialEvents,
   defaultVisibleDate,
@@ -14,14 +12,12 @@ export default function BasicMonthView() {
 
   return (
     <div style={{ height: '650px', width: '100%' }}>
-      <StandaloneView
+      <StandaloneMonthView
         events={events}
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
-      >
-        <MonthView />
-      </StandaloneView>
+      />
     </div>
   );
 }
