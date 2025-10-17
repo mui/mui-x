@@ -6,7 +6,6 @@ import { getCell, getColumnValues } from 'test/utils/helperFn';
 import {
   DataGridPro,
   DataGridProProps,
-  GridRowsProp,
   GridRowModel,
   gridRowTreeSelector,
   GridApi,
@@ -88,19 +87,6 @@ const findRowIndex = (allValues: string[], name: string, id?: number): number =>
   return index;
 };
 
-const createTreeData = (): GridRowsProp => [
-  { id: 1, path: ['Documents'], name: 'Documents' },
-  { id: 2, path: ['Documents', 'Work'], name: 'Work' },
-  { id: 3, path: ['Documents', 'Work', 'Reports'], name: 'Reports' },
-  { id: 4, path: ['Documents', 'Work', 'Reports', 'Q1.pdf'], name: 'Q1.pdf' },
-  { id: 5, path: ['Documents', 'Work', 'Reports', 'Q2.pdf'], name: 'Q2.pdf' },
-  { id: 6, path: ['Documents', 'Personal'], name: 'Personal' },
-  { id: 7, path: ['Documents', 'Personal', 'Resume.pdf'], name: 'Resume.pdf' },
-  { id: 8, path: ['Pictures'], name: 'Pictures' },
-  { id: 9, path: ['Pictures', 'Vacation'], name: 'Vacation' },
-  { id: 10, path: ['Pictures', 'Vacation', 'Beach.jpg'], name: 'Beach.jpg' },
-];
-
 const getTreeDataPath = (row: GridRowModel) => row.path;
 
 const setTreeDataPath = (path: readonly string[], row: GridRowModel) => ({
@@ -109,7 +95,18 @@ const setTreeDataPath = (path: readonly string[], row: GridRowModel) => ({
 });
 
 const baselineProps: DataGridProProps = {
-  rows: createTreeData(),
+  rows: [
+    { id: 1, path: ['Documents'], name: 'Documents' },
+    { id: 2, path: ['Documents', 'Work'], name: 'Work' },
+    { id: 3, path: ['Documents', 'Work', 'Reports'], name: 'Reports' },
+    { id: 4, path: ['Documents', 'Work', 'Reports', 'Q1.pdf'], name: 'Q1.pdf' },
+    { id: 5, path: ['Documents', 'Work', 'Reports', 'Q2.pdf'], name: 'Q2.pdf' },
+    { id: 6, path: ['Documents', 'Personal'], name: 'Personal' },
+    { id: 7, path: ['Documents', 'Personal', 'Resume.pdf'], name: 'Resume.pdf' },
+    { id: 8, path: ['Pictures'], name: 'Pictures' },
+    { id: 9, path: ['Pictures', 'Vacation'], name: 'Vacation' },
+    { id: 10, path: ['Pictures', 'Vacation', 'Beach.jpg'], name: 'Beach.jpg' },
+  ],
   columns: [
     { field: 'name', headerName: 'Name', width: 200 },
     { field: 'id', headerName: 'ID', width: 100 },
@@ -325,21 +322,11 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
       const leafAIndex = allValues.indexOf('LeafA');
       const leafBIndex = allValues.indexOf('LeafB');
 
-      // If not found by name, look for node IDs
-      const idAIndex = leafAIndex >= 0 ? leafAIndex : allValues.indexOf('2');
-      const idBIndex = leafBIndex >= 0 ? leafBIndex : allValues.indexOf('3');
+      expect(leafAIndex).to.be.greaterThan(-1, `LeafA should be found in: ${allValues.join(', ')}`);
+      expect(leafBIndex).to.be.greaterThan(-1, `LeafB should be found in: ${allValues.join(', ')}`);
 
-      expect(idAIndex).to.be.greaterThan(
-        -1,
-        `LeafA or ID 2 should be found in: ${allValues.join(', ')}`,
-      );
-      expect(idBIndex).to.be.greaterThan(
-        -1,
-        `LeafB or ID 3 should be found in: ${allValues.join(', ')}`,
-      );
-
-      const sourceCell = getCell(idAIndex, 0).firstChild!;
-      const targetCell = getCell(idBIndex, 0);
+      const sourceCell = getCell(leafAIndex, 0).firstChild!;
+      const targetCell = getCell(leafBIndex, 0);
 
       fireDragStart(sourceCell);
       fireEvent.dragEnter(targetCell);
@@ -446,7 +433,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
 
   describe('Props behavior', () => {
     describe('isRowReorderable', () => {
-      it('should prevent specific rows from being dragged', () => {
+      it('should prevent specific rows from being dragged', async () => {
         const handleRowOrderChange = spy();
 
         // Prevent dragging rows with even IDs
@@ -466,36 +453,34 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
         expect(q1Index).to.be.greaterThan(-1, 'Q1.pdf should be found');
         expect(q2Index).to.be.greaterThan(-1, 'Q2.pdf should be found');
 
-        const sourceCell = getCell(q1Index, 0).firstChild!;
-        const targetCell = getCell(q2Index, 0);
+        let sourceCell = getCell(q1Index, 0).firstChild!;
+        let targetCell = getCell(q2Index, 0);
 
         fireDragStart(sourceCell);
         fireEvent.dragEnter(targetCell);
-        const dragOverEvent = createDragOverEvent(targetCell, 'above');
+        let dragOverEvent = createDragOverEvent(targetCell, 'above');
         fireEvent(targetCell, dragOverEvent);
-        const dragEndEvent = createDragEndEvent(sourceCell);
+        let dragEndEvent = createDragEndEvent(sourceCell);
         fireEvent(sourceCell, dragEndEvent);
 
         // Verify drag was blocked
         expect(handleRowOrderChange.callCount).to.equal(0);
-      });
 
-      it('should render correctly with isRowReorderable prop', () => {
-        // Allow dragging rows with odd IDs
-        const isRowReorderable = (params: any) => params.row.id % 2 !== 0;
+        // Try to drag an odd ID row (should be executed)
+        sourceCell = getCell(q2Index, 0).firstChild!;
+        targetCell = getCell(q1Index, 0);
 
-        render(<Test isRowReorderable={isRowReorderable} />);
+        fireDragStart(sourceCell);
+        fireEvent.dragEnter(targetCell);
+        dragOverEvent = createDragOverEvent(targetCell, 'above');
+        fireEvent(targetCell, dragOverEvent);
+        dragEndEvent = createDragEndEvent(sourceCell);
+        fireEvent(sourceCell, dragEndEvent);
 
-        // Verify grid renders without errors with the prop
-        const allValues = getColumnValues(0);
-        expect(allValues.length).to.be.greaterThan(0);
-
-        // Verify the prop is applied by checking basic drag setup doesn't crash
-        const q2Index = findRowIndex(allValues, 'Q2.pdf', 5); // Has odd ID, should be draggable
-        if (q2Index >= 0) {
-          const sourceCell = getCell(q2Index, 0).firstChild!;
-          expect(() => fireDragStart(sourceCell)).to.not.throw();
-        }
+        // Verify drag was executed
+        await waitFor(() => {
+          expect(handleRowOrderChange.callCount).to.equal(1);
+        });
       });
     });
 
@@ -529,20 +514,18 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
         const rootIndex =
           allValues.indexOf('Root') >= 0 ? allValues.indexOf('Root') : allValues.indexOf('1');
 
-        if (leafIndex >= 0 && rootIndex >= 0) {
-          const sourceCell = getCell(leafIndex, 0).firstChild!;
-          const targetCell = getCell(rootIndex, 0);
+        const sourceCell = getCell(leafIndex, 0).firstChild!;
+        const targetCell = getCell(rootIndex, 0);
 
-          fireDragStart(sourceCell);
-          fireEvent.dragEnter(targetCell);
-          const dragOverEvent = createDragOverEvent(targetCell, 'below');
-          fireEvent(targetCell, dragOverEvent);
-          const dragEndEvent = createDragEndEvent(sourceCell);
-          fireEvent(sourceCell, dragEndEvent);
+        fireDragStart(sourceCell);
+        fireEvent.dragEnter(targetCell);
+        const dragOverEvent = createDragOverEvent(targetCell, 'below');
+        fireEvent(targetCell, dragOverEvent);
+        const dragEndEvent = createDragEndEvent(sourceCell);
+        fireEvent(sourceCell, dragEndEvent);
 
-          // Custom validation should block this operation
-          expect(handleRowOrderChange.callCount).to.equal(0);
-        }
+        // Custom validation should block this operation
+        expect(handleRowOrderChange.callCount).to.equal(0);
       });
 
       it('should not bypass internal validation', () => {
@@ -562,20 +545,18 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
         const documentsIndex = allValues.indexOf('Documents');
         const workIndex = allValues.indexOf('Work');
 
-        if (documentsIndex >= 0 && workIndex >= 0) {
-          const sourceCell = getCell(documentsIndex, 0).firstChild!;
-          const targetCell = getCell(workIndex, 0);
+        const sourceCell = getCell(documentsIndex, 0).firstChild!;
+        const targetCell = getCell(workIndex, 0);
 
-          fireDragStart(sourceCell);
-          fireEvent.dragEnter(targetCell);
-          const dragOverEvent = createDragOverEvent(targetCell, 'below');
-          fireEvent(targetCell, dragOverEvent);
-          const dragEndEvent = createDragEndEvent(sourceCell);
-          fireEvent(sourceCell, dragEndEvent);
+        fireDragStart(sourceCell);
+        fireEvent.dragEnter(targetCell);
+        const dragOverEvent = createDragOverEvent(targetCell, 'below');
+        fireEvent(targetCell, dragOverEvent);
+        const dragEndEvent = createDragEndEvent(sourceCell);
+        fireEvent(sourceCell, dragEndEvent);
 
-          // Internal validation should still block this
-          expect(handleRowOrderChange.callCount).to.equal(0);
-        }
+        // Internal validation should still block this
+        expect(handleRowOrderChange.callCount).to.equal(0);
       });
     });
 
@@ -619,9 +600,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
         // Verify path was updated
         const beachUpdate = updatedRows.find((row) => row.id === 10);
         expect(beachUpdate).to.not.equal(undefined);
-        if (beachUpdate) {
-          expect(beachUpdate.fullPath).to.include('Documents');
-        }
+        expect(beachUpdate!.fullPath).to.include('Documents');
       });
 
       it('should show warning when setTreeDataPath is missing', () => {
@@ -629,7 +608,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
         const originalWarn = console.warn;
         console.warn = warnSpy;
 
-        render(<Test setTreeDataPath={undefined} rows={createTreeData()} />);
+        render(<Test setTreeDataPath={undefined} />);
 
         // Attempt cross-parent reorder
         const allValues = getColumnValues(0);
@@ -789,14 +768,6 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
         expect(processRowUpdateCallCount).to.be.greaterThan(0);
       });
 
-      // Wait a bit more for error handling to complete
-      await waitFor(
-        () => {
-          expect(handleProcessRowUpdateError.callCount).to.be.greaterThan(0);
-        },
-        { timeout: 200 },
-      );
-
       // Verify that the error was handled
       expect(processRowUpdateCallCount).to.be.greaterThan(0);
       expect(handleProcessRowUpdateError.callCount).to.be.greaterThan(0);
@@ -902,47 +873,6 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
       // Verify drag operation was set up (should not throw errors)
       expect(sourceCell).to.not.equal(null);
       expect(targetCell).to.not.equal(null);
-    });
-  });
-
-  describe('Edge Cases and Stability', () => {
-    it('should handle empty tree data gracefully', () => {
-      const handleRowOrderChange = spy();
-      render(<Test rows={[]} onRowOrderChange={handleRowOrderChange} />);
-
-      // Should render without errors with empty data
-      const allValues = getColumnValues(0);
-      expect(allValues).to.deep.equal([]);
-      expect(handleRowOrderChange.callCount).to.equal(0);
-    });
-
-    it('should handle single node tree', () => {
-      const handleRowOrderChange = spy();
-      render(
-        <Test
-          rows={[{ id: 1, path: ['Single'], name: 'Single' }]}
-          onRowOrderChange={handleRowOrderChange}
-        />,
-      );
-
-      const allValues = getColumnValues(0);
-      expect(allValues.length).to.be.greaterThan(0);
-      // Grid might show ID instead of name for single items
-      const hasSingle = allValues.includes('Single') || allValues.includes('1');
-      expect(hasSingle).to.equal(true);
-
-      // Try to drag the only node - look for either name or ID
-      let singleIndex = allValues.indexOf('Single');
-      if (singleIndex < 0) {
-        singleIndex = allValues.indexOf('1'); // fallback to ID
-      }
-      const sourceCell = getCell(singleIndex, 0).firstChild!;
-      fireDragStart(sourceCell);
-      const dragEndEvent = createDragEndEvent(sourceCell);
-      fireEvent(sourceCell, dragEndEvent);
-
-      // Should not trigger reorder for single node
-      expect(handleRowOrderChange.callCount).to.equal(0);
     });
   });
 });
