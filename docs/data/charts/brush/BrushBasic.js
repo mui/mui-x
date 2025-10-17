@@ -19,27 +19,25 @@ export default function BrushBasic() {
           },
         ]}
         brushConfig={{ enabled: true }}
-        xAxis={[
-          {
-            data: [
-              'Jan',
-              'Feb',
-              'Mar',
-              'Apr',
-              'May',
-              'Jun',
-              'Jul',
-              'Aug',
-              'Sep',
-              'Oct',
-              'Nov',
-              'Dec',
-            ],
-          },
-        ]}
+        xAxis={[{ data: xAxisData }]}
       >
         <ChartsBrushOverlay />
       </BarChart>
     </Box>
   );
 }
+
+const xAxisData = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+];

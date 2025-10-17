@@ -13,16 +13,20 @@ components: ChartsBrushOverlay
 The brush feature provides a way to track user selections on charts through a click-and-drag interaction.
 It captures the start and current positions of the user's selection, which can be used for various purposes such as:
 
-- Highlighting specific areas
-- Creating custom interactions
+- Highlighting trends or clusters within a defined range
+<!-- - Zooming in on a selected region to focus on specific data points   -->
+- Selecting data points for further inspection, editing, or annotation
+- Triggering callbacks or custom events based on the selection area
 
 The brush is available in the `LineChart`, `BarChart`, and `ScatterChart` types and provides visual feedback through the `ChartsBrushOverlay` component.
 
 ## Basic usage
 
-To display visual feedback when users interact with the chart, enable the brush with `brushConfig={{ enabled: true }}` and add the `ChartsBrushOverlay` component as a child of your chart.
+The brush gesture can be enabled by setting `brushConfig={{ enabled: true }}` in a cartesian chart.
 
-The brush itself has no default behavior; you can use the `useBrush` hook to create custom interactions based on the brush state.
+By default, the brush gesture has no visual feedback. If you want to see the selected area, you can add the `ChartsBrushOverlay` component as a child of your chart.
+
+Alternatively, if you want to create a custom interaction, you can use the `useBrush` hook, as shown in the [Custom overlay](#custom-overlay) section below.
 
 {{"demo": "BrushBasic.js"}}
 
@@ -57,6 +61,7 @@ import { useBrush } from '@mui/x-charts/hooks';
 function MyCustomOverlay() {
   const brush = useBrush();
 
+  // No brush is in progress
   if (!brush) {
     return null;
   }
