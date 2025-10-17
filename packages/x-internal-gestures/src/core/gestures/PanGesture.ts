@@ -218,25 +218,17 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
     event: PointerEvent,
   ): void => {
     const pointersArray = Array.from(pointers.values());
-
-    // Check for our forceCancel event to handle interrupted gestures (from contextmenu, blur)
-    if (event.type === 'forceCancel') {
-      // Reset all active pan gestures when we get a force reset event
-      this.cancel(event.target as null, pointersArray, event);
-      return;
-    }
-
-    // Find which element (if any) is being targeted
     const targetElement = this.getTargetElement(event);
 
-    if (!targetElement) {
+    if (
+      event.type === 'forceCancel' ||
+      (targetElement && this.shouldPreventGesture(targetElement, event.pointerType))
+    ) {
+      this.cancel(targetElement, pointersArray, event);
       return;
     }
 
-    // Check if this gesture should be prevented by active gestures
-    if (this.shouldPreventGesture(targetElement, event.pointerType)) {
-      // If the gesture was active but now should be prevented, cancel it gracefully
-      this.cancel(targetElement, pointersArray, event);
+    if (!targetElement) {
       return;
     }
 
@@ -244,7 +236,6 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
     const relevantPointers = this.getRelevantPointers(pointersArray, targetElement);
 
     if (!this.isWithinPointerCount(relevantPointers, event.pointerType)) {
-      // Cancel or end the gesture if it was active
       this.cancel(targetElement, relevantPointers, event);
       return;
     }
@@ -338,7 +329,6 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
 
       case 'pointerup':
       case 'pointercancel':
-      case 'forceCancel':
         // If the gesture was active (threshold was reached), emit end event
         if (this.isActive && this.state.movementThresholdReached) {
           const remainingPointers = relevantPointers.filter(
@@ -414,6 +404,7 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
       activeDeltaY: this.state.activeDeltaY,
       activeGestures,
       customData: this.customData,
+      cancel: () => this.cancelGesture(pointers),
     };
 
     // Event names to trigger
