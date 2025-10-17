@@ -1,7 +1,7 @@
 import { adapter } from 'test/utils/scheduler';
 import { RRuleSpec } from '@mui/x-scheduler-headless/models';
 import { storeClasses } from './utils';
-import { getByDayMaps } from '../../recurrence-utils';
+import { getByDayMaps } from '../../utils/recurrence-utils';
 import { selectors } from '../SchedulerStore.selectors';
 import { SchedulerState as State } from '../SchedulerStore.types';
 

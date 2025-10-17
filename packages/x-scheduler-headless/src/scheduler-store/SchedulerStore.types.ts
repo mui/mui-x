@@ -8,8 +8,8 @@ import {
   CalendarEventUpdatedProperties,
   SchedulerValidDate,
   CalendarEventId,
-} from '../../models';
-import { Adapter } from '../../use-adapter/useAdapter.types';
+} from '../models';
+import { Adapter } from '../use-adapter/useAdapter.types';
 
 export interface SchedulerState {
   /**

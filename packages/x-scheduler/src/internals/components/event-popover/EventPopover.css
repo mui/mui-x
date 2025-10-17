@@ -1,5 +1,9 @@
 @import '../../../styles/tokens.css';
 
+p {
+  margin: 0;
+}
+
 .EventPopoverPositioner {
   max-width: 460px;
   overflow: hidden;
@@ -318,4 +322,48 @@
   color: var(--event-color-9);
   border: 1px solid var(--event-color-6);
   border-radius: var(--radius-4);
+}
+
+.EventPopoverTitle {
+  color: var(--event-color-12);
+  font-size: var(--font-size-3);
+  line-height: var(--line-height-3);
+  font-weight: var(--font-weight-2);
+  margin: 0;
+}
+
+.EventPopoverResourceContainer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.EventPopoverResourceTitle {
+  font-size: var(--font-size-2);
+  color: var(--event-color-11);
+}
+
+.ReadonlyContent {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-4) var(--space-4);
+  color: var(--default-text-color);
+  gap: var(--space-2);
+}
+
+.EventPopoverDateTimeContainer {
+  display: flex;
+  gap: var(--space-1);
+  align-items: center;
+}
+
+.EventPopoverDateTimeContainer .EventDate,
+.EventPopoverDateTimeContainer .EventTime,
+.EventPopoverDateTimeContainer .EventAllDay {
+  font-size: var(--font-size-2);
+}
+
+.EventRecurrence {
+  font-size: var(--font-size-2);
+  color: var(--secondary-text-color);
 }

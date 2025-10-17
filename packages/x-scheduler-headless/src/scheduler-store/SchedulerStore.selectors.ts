@@ -7,9 +7,9 @@ import {
   RecurrencePresetKey,
   RRuleSpec,
   SchedulerValidDate,
-} from '../../models';
+} from '../models';
 import { SchedulerState as State } from './SchedulerStore.types';
-import { getByDayMaps } from '../recurrence-utils';
+import { getByDayMaps } from '../utils/recurrence-utils';
 
 const eventByIdMapSelector = createSelectorMemoized(
   (state: State) => state.events,

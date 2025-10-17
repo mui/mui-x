@@ -10,7 +10,7 @@ import {
 } from '../models';
 import { mergeDateAndTime, getDateKey } from './date-utils';
 import { diffIn } from '../use-adapter';
-import { UpdateEventsParameters } from './SchedulerStore';
+import { UpdateEventsParameters } from '../scheduler-store';
 
 /**
  * Build BYDAY<->number maps using a known ISO Monday (2025-01-06).

@@ -10,7 +10,7 @@ import {
   CalendarResourceId,
   SchedulerValidDate,
   CalendarEventUpdatedProperties,
-} from '../../models';
+} from '../models';
 import {
   SchedulerState,
   SchedulerParameters,
@@ -19,16 +19,16 @@ import {
   SchedulerModelUpdater,
   UpdateEventsParameters,
 } from './SchedulerStore.types';
-import { Adapter } from '../../use-adapter/useAdapter.types';
+import { Adapter } from '../use-adapter/useAdapter.types';
 import {
   applyRecurringUpdateFollowing,
   applyRecurringUpdateAll,
   applyRecurringUpdateOnlyThis,
-} from '../recurrence-utils';
+} from '../utils/recurrence-utils';
 import { selectors } from './SchedulerStore.selectors';
 import { shouldUpdateOccurrencePlaceholder } from './SchedulerStore.utils';
-import { TimeoutManager } from '../TimeoutManager';
-import { DEFAULT_EVENT_COLOR } from '../../constants';
+import { TimeoutManager } from '../utils/TimeoutManager';
+import { DEFAULT_EVENT_COLOR } from '../constants';
 
 export const DEFAULT_RESOURCES: CalendarResource[] = [];
 

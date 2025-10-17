@@ -36,7 +36,8 @@
     "./use-scheduler-store-context": "./src/use-scheduler-store-context/index.ts",
     "./use-timeline": "./src/use-timeline/index.ts",
     "./use-timeline-store-context": "./src/use-timeline-store-context/index.ts",
-    "./use-week-list": "./src/use-week-list/index.ts"
+    "./use-week-list": "./src/use-week-list/index.ts",
+    "./scheduler-store": "./src/scheduler-store/index.ts"
   },
   "sideEffects": false,
   "publishConfig": {
