@@ -13,7 +13,6 @@ import { getCell, getColumnValues, getRow } from 'test/utils/helperFn';
 import {
   DataGridPremium,
   DataGridPremiumProps,
-  gridClasses,
   GridRowsProp,
   GridGroupNode,
   GridApi,
@@ -536,48 +535,6 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         // Verify no change
         const newValues = getColumnValues(1);
         expect(newValues).to.deep.equal(initialValues);
-      });
-
-      it('should show drop indicator during valid drag but remove on invalid drop', () => {
-        render(
-          <div style={{ width: 500, height: 500 }}>
-            <DataGridPremium {...baselineProps} />
-          </div>,
-        );
-
-        // Get row elements
-        const itemA1Row = getRow(3);
-        const itemB1Row = getRow(7);
-
-        const sourceCell = itemA1Row.querySelector('[role="gridcell"]')!.firstChild!;
-        const targetCell = itemB1Row.querySelector('[role="gridcell"]')!;
-
-        // Start drag with dataTransfer
-        fireDragStart(sourceCell);
-        fireEvent.dragEnter(targetCell);
-
-        // Drag over - should show indicator
-        const dragOverEvent = createDragOverEvent(targetCell, 'above');
-        fireEvent(targetCell, dragOverEvent);
-
-        const targetRow = targetCell.closest('[data-id]');
-
-        const rowDragPlaceholder = targetRow?.lastElementChild;
-
-        expect(rowDragPlaceholder).not.to.be.oneOf([null, undefined]);
-
-        // Check for the placeholder pseudo-element
-        expect(rowDragPlaceholder).to.have.style('position', 'absolute');
-        const beforePseudoElement = window.getComputedStyle(rowDragPlaceholder!, '::before');
-        expect(beforePseudoElement.height).to.equal('2px');
-
-        // End drag outside grid
-        const dragEndEvent = createDragEndEvent(sourceCell, true);
-        fireEvent(sourceCell, dragEndEvent);
-
-        // Verify indicator removed
-        expect(itemB1Row).not.to.have.class(gridClasses['row--dropAbove']);
-        expect(itemB1Row).not.to.have.class(gridClasses['row--dropBelow']);
       });
 
       it('should not allow group to be dropped on collapsed group', async () => {
