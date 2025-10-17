@@ -57,7 +57,6 @@ export function getVisibleLabels<T extends TickItemType>(
         return false;
       }
 
-      /* Measuring text width is expensive, so we need to delay it as much as possible to improve performance. */
       const { width, height } = isMounted
         ? getTickLabelSize(sizeMap, item)
         : { width: 0, height: 0 };
