@@ -135,6 +135,11 @@ export interface GridPremiumIconSlotsComponent {
    */
   promptSortDescIcon: React.JSXElementConstructor<IconProps>;
   /**
+   * Icon used to mark the request to visalize the data
+   * @default GridChartsIcon
+   */
+  promptChartsIcon: React.JSXElementConstructor<IconProps>;
+  /**
    * Icon used to display group changes
    * @default GridGroupWorkIcon
    */
