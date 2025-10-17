@@ -553,6 +553,7 @@
   { "name": "useBarSeriesContext", "kind": "Function" },
   { "name": "UseBarSeriesContextReturnValue", "kind": "TypeAlias" },
   { "name": "UseBarSeriesReturnValue", "kind": "TypeAlias" },
+  { "name": "useBrush", "kind": "Function" },
   { "name": "useChartApiContext", "kind": "Function" },
   { "name": "useChartCartesianAxis", "kind": "Variable" },
   { "name": "UseChartCartesianAxisSignature", "kind": "TypeAlias" },

@@ -56,6 +56,7 @@ export const useChartContainerProps = <
     slotProps,
     experimentalFeatures,
     enableKeyboardNavigation,
+    brushConfig,
     ...other
   } = props as ChartContainerProps<TSeries, AllPluginSignatures>;
 
@@ -93,6 +94,7 @@ export const useChartContainerProps = <
     seriesConfig,
     experimentalFeatures,
     enableKeyboardNavigation,
+    brushConfig,
     plugins: plugins ?? DEFAULT_PLUGINS,
     slots,
     slotProps,

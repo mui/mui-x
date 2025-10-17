@@ -19,7 +19,7 @@
     "aiAssistantConversations": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ id?: string, prompts: Array&lt;{ createdAt: Date, helperText?: string, response?: { aggregation: object, conversationId: string, filterOperator?: 'and'<br>&#124;&nbsp;'or', filters: Array&lt;object&gt;, grouping: Array&lt;object&gt;, pivoting: object, select: number, sorting: Array&lt;object&gt; }, value: string, variant?: 'error'<br>&#124;&nbsp;'processing'<br>&#124;&nbsp;'success' }&gt;, title?: string }&gt;"
+        "description": "Array&lt;{ id?: string, prompts: Array&lt;{ createdAt: Date, helperText?: string, response?: { aggregation: object, chart?: object, conversationId: string, filterOperator?: 'and'<br>&#124;&nbsp;'or', filters: Array&lt;object&gt;, grouping: Array&lt;object&gt;, pivoting: object, select: number, sorting: Array&lt;object&gt; }, value: string, variant?: 'error'<br>&#124;&nbsp;'processing'<br>&#124;&nbsp;'success' }&gt;, title?: string }&gt;"
       }
     },
     "aiAssistantSuggestions": {
@@ -1484,6 +1484,12 @@
       "class": null
     },
     {
+      "name": "promptChartsIcon",
+      "description": "Icon used to mark the request to visalize the data",
+      "default": "GridChartsIcon",
+      "class": null
+    },
+    {
       "name": "promptGroupIcon",
       "description": "Icon used to display group changes",
       "default": "GridGroupWorkIcon",
@@ -2659,6 +2665,24 @@
       "key": "scrollbar--vertical",
       "className": "MuiDataGridPremium-scrollbar--vertical",
       "description": "Styles applied to the horizontal scrollbar.",
+      "isGlobal": false
+    },
+    {
+      "key": "scrollShadow",
+      "className": "MuiDataGridPremium-scrollShadow",
+      "description": "Styles applied to the scroll shadow element.",
+      "isGlobal": false
+    },
+    {
+      "key": "scrollShadow--horizontal",
+      "className": "MuiDataGridPremium-scrollShadow--horizontal",
+      "description": "Styles applied to the horizontal scroll shadow element.",
+      "isGlobal": false
+    },
+    {
+      "key": "scrollShadow--vertical",
+      "className": "MuiDataGridPremium-scrollShadow--vertical",
+      "description": "Styles applied to the vertical scroll shadow element.",
       "isGlobal": false
     },
     {
