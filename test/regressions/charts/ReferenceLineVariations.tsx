@@ -66,8 +66,8 @@ export default function ReferenceLineVariations() {
         </Typography>
         <Box
           sx={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
+            display: 'flex',
+            flexDirection: 'row',
             gap: 1,
           }}
         >
@@ -89,8 +89,8 @@ export default function ReferenceLineVariations() {
         </Typography>
         <Box
           sx={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
+            display: 'flex',
+            flexDirection: 'row',
             gap: 1,
           }}
         >
@@ -112,8 +112,8 @@ export default function ReferenceLineVariations() {
         </Typography>
         <Box
           sx={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
+            display: 'flex',
+            flexDirection: 'row',
             gap: 1,
           }}
         >
@@ -135,8 +135,8 @@ export default function ReferenceLineVariations() {
         </Typography>
         <Box
           sx={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
+            display: 'flex',
+            flexDirection: 'row',
             gap: 1,
           }}
         >
@@ -158,8 +158,8 @@ export default function ReferenceLineVariations() {
         </Typography>
         <Box
           sx={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
+            display: 'flex',
+            flexDirection: 'row',
             gap: 1,
           }}
         >
@@ -196,8 +196,8 @@ export default function ReferenceLineVariations() {
         </Typography>
         <Box
           sx={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
+            display: 'flex',
+            flexDirection: 'row',
             gap: 1,
           }}
         >
@@ -234,8 +234,8 @@ export default function ReferenceLineVariations() {
         </Typography>
         <Box
           sx={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(4, 1fr)',
+            display: 'flex',
+            flexDirection: 'row',
             gap: 1,
           }}
         >
@@ -245,6 +245,14 @@ export default function ReferenceLineVariations() {
           <MiniChart title="x=3, middle, spacing=10">
             <ChartsReferenceLine x={3} label="10" spacing={10} labelAlign="middle" />
           </MiniChart>
+        </Box>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            gap: 1,
+          }}
+        >
           <MiniChart title="y=5, middle, default spacing">
             <ChartsReferenceLine y={5} label="Default" labelAlign="middle" />
           </MiniChart>
@@ -260,8 +268,8 @@ export default function ReferenceLineVariations() {
         </Typography>
         <Box
           sx={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(2, 1fr)',
+            display: 'flex',
+            flexDirection: 'row',
             gap: 1,
           }}
         >
@@ -282,8 +290,8 @@ export default function ReferenceLineVariations() {
         </Typography>
         <Box
           sx={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(2, 1fr)',
+            display: 'flex',
+            flexDirection: 'row',
             gap: 1,
           }}
         >
