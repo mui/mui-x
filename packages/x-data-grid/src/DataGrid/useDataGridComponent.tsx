@@ -68,6 +68,7 @@ import {
 import { propsStateInitializer } from '../hooks/core/useGridProps';
 import { useGridDataSource } from '../hooks/features/dataSource/useGridDataSource';
 import { GridConfiguration } from '../models/configuration/gridConfiguration';
+import { useFirstRender } from '../hooks';
 
 export const useDataGridComponent = (
   apiRef: RefObject<GridPrivateApiCommunity>,
@@ -136,6 +137,9 @@ export const useDataGridComponent = (
   useGridDataSource(apiRef, props);
 
   // Should be the last thing to run, because all pre-processors should have been registered by now.
+  useFirstRender(() => {
+    apiRef.current.runAppliersForPendingProcessors();
+  });
   React.useEffect(() => {
     apiRef.current.runAppliersForPendingProcessors();
   });

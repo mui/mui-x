@@ -56,6 +56,7 @@ import {
   listViewStateInitializer,
   propsStateInitializer,
   GridConfiguration,
+  useFirstRender,
 } from '@mui/x-data-grid/internals';
 import { GridPrivateApiPro } from '../models/gridApiPro';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
@@ -195,6 +196,9 @@ export const useDataGridProComponent = (
   useGridListView(apiRef, props);
 
   // Should be the last thing to run, because all pre-processors should have been registered by now.
+  useFirstRender(() => {
+    apiRef.current.runAppliersForPendingProcessors();
+  });
   React.useEffect(() => {
     apiRef.current.runAppliersForPendingProcessors();
   });
