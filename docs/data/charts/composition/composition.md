@@ -261,7 +261,7 @@ If you are not using the axis highlight or the tooltip, consider disabling this 
 
 :::
 
-## Extra examples
+## Examples
 
 ### Bell curve
 
