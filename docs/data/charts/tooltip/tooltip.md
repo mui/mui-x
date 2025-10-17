@@ -97,6 +97,21 @@ It removes the header showing the x-axis value from the tooltip.
 To hide a series, the formatted value should be `null`.
 To display the series with a blank space, return an empty string.
 
+## Position
+
+By default the tooltip is placed relative to the pointer position.
+If the pointer is not available, it is placed relative to the item instead.
+
+This behavior can be modified with the `anchor`, `position`, and `placement` props.
+
+- The `anchor: 'pointer' | 'node'` indicates if the tooltip should be placed relative to the pointer or the node.
+- The `position: 'top' | 'right' | 'bottom' | 'left'` precise the anchor position compared to the node.
+- The `placement` is the tooltip placement from [PopperJS](https://popper.js.org/docs/v1/#popperplacements--codeenumcode). By default the same value as `position` if defined.
+
+You can pass those props to the tooltip using `slotProps.tooltip`, or directly to either `<ChartsTooltip />` or `<ChartsTooltipContainer />` if you're using composition.
+
+{{"demo": "TooltipPosition.js", "hideToolbar": true, "bg": "playground"}}
+
 ## Style modification
 
 The tooltip can be styled using CSS classes, similar to other elements.
