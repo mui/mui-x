@@ -40,6 +40,7 @@ export const useGridColumnMenu = (apiRef: RefObject<GridPrivateApiCommunity>): v
           }
 
           logger.debug('Opening Column Menu');
+          subscribeToScrollChange();
 
           return {
             ...state,
@@ -88,6 +89,7 @@ export const useGridColumnMenu = (apiRef: RefObject<GridPrivateApiCommunity>): v
     if (shouldUpdate) {
       apiRef.current.setState((state) => {
         logger.debug('Hiding Column Menu');
+        unsubscribeFromScrollChange();
         return {
           ...state,
           columnMenu: newState,
@@ -109,6 +111,28 @@ export const useGridColumnMenu = (apiRef: RefObject<GridPrivateApiCommunity>): v
     [apiRef, logger, showColumnMenu, hideColumnMenu],
   );
 
+  const subscriptionRefs = React.useRef<{
+    wheel?: () => void;
+    touchMove?: () => void;
+  }>({});
+
+  const subscribeToScrollChange = React.useCallback(() => {
+    unsubscribeFromScrollChange();
+    subscriptionRefs.current.wheel = apiRef.current.subscribeEvent(
+      'virtualScrollerWheel',
+      apiRef.current.hideColumnMenu,
+    );
+    subscriptionRefs.current.touchMove = apiRef.current.subscribeEvent(
+      'virtualScrollerTouchMove',
+      apiRef.current.hideColumnMenu,
+    );
+  }, [apiRef]);
+
+  const unsubscribeFromScrollChange = React.useCallback(() => {
+    subscriptionRefs.current.wheel?.();
+    subscriptionRefs.current.touchMove?.();
+  }, []);
+
   const columnMenuApi: GridColumnMenuApi = {
     showColumnMenu,
     hideColumnMenu,
@@ -116,8 +140,5 @@ export const useGridColumnMenu = (apiRef: RefObject<GridPrivateApiCommunity>): v
   };
 
   useGridApiMethod(apiRef, columnMenuApi, 'public');
-
   useGridEvent(apiRef, 'columnResizeStart', hideColumnMenu);
-  useGridEvent(apiRef, 'virtualScrollerWheel', apiRef.current.hideColumnMenu);
-  useGridEvent(apiRef, 'virtualScrollerTouchMove', apiRef.current.hideColumnMenu);
 };
