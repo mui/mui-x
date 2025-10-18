@@ -23,6 +23,7 @@ import {
   ScrollPosition,
   ScrollDirection,
 } from '../models';
+import useOnMount from '@mui/utils/useOnMount';
 
 /* eslint-disable import/export, @typescript-eslint/no-redeclare */
 
@@ -637,13 +638,13 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
   const isFirstSizing = React.useRef(true);
 
   const cleanup = React.useRef<() => void | undefined>(undefined);
-  const cleanupFn = cleanup.current;
-  React.useEffect(() => {
-    return cleanupFn;
-  }, [cleanupFn]);
+  useOnMount(() => {
+    return cleanup.current;
+  });
 
   const containerRef = useEventCallback((node: HTMLDivElement | null) => {
     if (node && refs.container.current !== node) {
+      cleanup.current?.();
       refs.container.current = node;
       const unsubscribe = observeRootNode(node, store, (rootSize: Size) => {
         if (
@@ -673,13 +674,12 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
   const scrollerCleanupRef = React.useRef<() => void | undefined>(undefined);
   const scrollerRef = useEventCallback((node: HTMLDivElement | null) => {
     if (node && refs.scroller.current !== node) {
+      scrollerCleanupRef.current?.();
       refs.scroller.current = node;
       const opts: AddEventListenerOptions = { passive: true };
-      node.addEventListener('scroll', handleScroll, opts);
       node.addEventListener('wheel', onWheel as any, opts);
       node.addEventListener('touchmove', onTouchMove as any, opts);
       scrollerCleanupRef.current = () => {
-        node.removeEventListener('scroll', handleScroll, opts);
         node.removeEventListener('wheel', onWheel as any, opts);
         node.removeEventListener('touchmove', onTouchMove as any, opts);
         refs.scroller.current = null;
@@ -687,10 +687,9 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     }
   });
 
-  const scrollerCleanup = scrollerCleanupRef.current;
-  React.useEffect(() => {
-    return scrollerCleanup;
-  }, [scrollerCleanup]);
+  useOnMount(() => {
+    return scrollerCleanupRef.current;
+  });
 
   const getters = {
     setPanels,
@@ -702,6 +701,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     }),
     getScrollerProps: () => ({
       ref: scrollerRef,
+      onScroll: handleScroll,
       style: scrollerStyle,
       role: 'presentation',
       // `tabIndex` shouldn't be used along role=presentation, but it fixes a Firefox bug
