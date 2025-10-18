@@ -626,14 +626,11 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
 
   useStoreEffect(store, Dimensions.selectors.dimensions, forceUpdateRenderContext);
 
-  const refSetter = React.useCallback(
-    (name: keyof typeof refs) => (node: HTMLDivElement | null) => {
-      if (node && refs[name].current !== node) {
-        refs[name].current = node;
-      }
-    },
-    [refs],
-  );
+  const refSetter = (name: keyof typeof refs) => (node: HTMLDivElement | null) => {
+    if (node && refs[name].current !== node) {
+      refs[name].current = node;
+    }
+  };
 
   const isFirstSizing = React.useRef(true);
 
@@ -673,9 +670,11 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
       scrollerCleanupRef.current?.();
       refs.scroller.current = node;
       const opts: AddEventListenerOptions = { passive: true };
+      node.addEventListener('scroll', handleScroll, opts);
       node.addEventListener('wheel', onWheel as any, opts);
       node.addEventListener('touchmove', onTouchMove as any, opts);
       scrollerCleanupRef.current = () => {
+        node.removeEventListener('scroll', handleScroll, opts);
         node.removeEventListener('wheel', onWheel as any, opts);
         node.removeEventListener('touchmove', onTouchMove as any, opts);
       };
@@ -696,7 +695,6 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     }),
     getScrollerProps: () => ({
       ref: scrollerRef,
-      onScroll: handleScroll,
       style: scrollerStyle,
       role: 'presentation',
       // `tabIndex` shouldn't be used along role=presentation, but it fixes a Firefox bug
@@ -709,11 +707,11 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
       role: 'presentation',
     }),
     getScrollbarVerticalProps: () => ({
-      ref: refSetter('scrollbarVertical'),
+      ref: useEventCallback(() => refSetter('scrollbarVertical')),
       scrollPosition,
     }),
     getScrollbarHorizontalProps: () => ({
-      ref: refSetter('scrollbarHorizontal'),
+      ref: useEventCallback(() => refSetter('scrollbarHorizontal')),
       scrollPosition,
     }),
     getScrollAreaProps: () => ({
