@@ -23,6 +23,28 @@ export const columnMenuStateInitializer: GridStateInitializer = (state) => ({
 export const useGridColumnMenu = (apiRef: RefObject<GridPrivateApiCommunity>): void => {
   const logger = useGridLogger(apiRef, 'useGridColumnMenu');
 
+  const subscriptionRefs = React.useRef<{
+    wheel?: () => void;
+    touchMove?: () => void;
+  }>({});
+
+  const unsubscribeFromScrollChange = React.useCallback(() => {
+    subscriptionRefs.current.wheel?.();
+    subscriptionRefs.current.touchMove?.();
+  }, []);
+
+  const subscribeToScrollChange = React.useCallback(() => {
+    unsubscribeFromScrollChange();
+    subscriptionRefs.current.wheel = apiRef.current.subscribeEvent(
+      'virtualScrollerWheel',
+      apiRef.current.hideColumnMenu,
+    );
+    subscriptionRefs.current.touchMove = apiRef.current.subscribeEvent(
+      'virtualScrollerTouchMove',
+      apiRef.current.hideColumnMenu,
+    );
+  }, [apiRef, unsubscribeFromScrollChange]);
+
   /**
    * API METHODS
    */
@@ -50,7 +72,7 @@ export const useGridColumnMenu = (apiRef: RefObject<GridPrivateApiCommunity>): v
         apiRef.current.hidePreferences();
       }
     },
-    [apiRef, logger],
+    [apiRef, logger, subscribeToScrollChange],
   );
 
   const hideColumnMenu = React.useCallback<GridColumnMenuApi['hideColumnMenu']>(() => {
@@ -96,7 +118,7 @@ export const useGridColumnMenu = (apiRef: RefObject<GridPrivateApiCommunity>): v
         };
       });
     }
-  }, [apiRef, logger]);
+  }, [apiRef, logger, unsubscribeFromScrollChange]);
 
   const toggleColumnMenu = React.useCallback<GridColumnMenuApi['toggleColumnMenu']>(
     (field) => {
@@ -110,28 +132,6 @@ export const useGridColumnMenu = (apiRef: RefObject<GridPrivateApiCommunity>): v
     },
     [apiRef, logger, showColumnMenu, hideColumnMenu],
   );
-
-  const subscriptionRefs = React.useRef<{
-    wheel?: () => void;
-    touchMove?: () => void;
-  }>({});
-
-  const subscribeToScrollChange = React.useCallback(() => {
-    unsubscribeFromScrollChange();
-    subscriptionRefs.current.wheel = apiRef.current.subscribeEvent(
-      'virtualScrollerWheel',
-      apiRef.current.hideColumnMenu,
-    );
-    subscriptionRefs.current.touchMove = apiRef.current.subscribeEvent(
-      'virtualScrollerTouchMove',
-      apiRef.current.hideColumnMenu,
-    );
-  }, [apiRef]);
-
-  const unsubscribeFromScrollChange = React.useCallback(() => {
-    subscriptionRefs.current.wheel?.();
-    subscriptionRefs.current.touchMove?.();
-  }, []);
 
   const columnMenuApi: GridColumnMenuApi = {
     showColumnMenu,

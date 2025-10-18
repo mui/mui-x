@@ -232,4 +232,9 @@ export interface GridSlotsComponent extends GridBaseSlots, GridIconSlotsComponen
    * @default GridRow
    */
   row: React.JSXElementConstructor<GridSlotProps['row']>;
+  /**
+   * Component rendered for vertical and horizontal scrollbars.
+   * @default GridVirtualScrollbar
+   */
+  scrollbar: React.JSXElementConstructor<GridSlotProps['scrollbar']>;
 }

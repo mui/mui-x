@@ -9,6 +9,7 @@ import type { integer } from '@mui/x-internals/types';
 import * as platform from '@mui/x-internals/platform';
 import { useRunOnce } from '@mui/x-internals/useRunOnce';
 import { createSelector, useStore, useStoreEffect, Store } from '@mui/x-internals/store';
+import useOnMount from '@mui/utils/useOnMount';
 import { PinnedRows, PinnedColumns, Size } from '../models/core';
 import type { CellColSpanInfo } from '../models/colspan';
 import { Dimensions, observeRootNode } from './dimensions';
@@ -676,7 +677,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     }
   });
 
-  React.useEffect(() => {
+  useOnMount(() => {
     return () => {
       const scroller = refs.scroller.current;
       if (scroller) {
@@ -686,7 +687,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
         scroller.removeEventListener('touchmove', onTouchMove as any, opts);
       }
     };
-  }, []);
+  });
 
   const getters = {
     setPanels,

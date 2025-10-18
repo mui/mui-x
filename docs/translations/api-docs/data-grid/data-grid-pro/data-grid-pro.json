@@ -1533,7 +1533,6 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the top scroll area element"
     },
-    "scrollbar": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the scrollbars" },
     "scrollbar--horizontal": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the horizontal scrollbar"
@@ -1706,6 +1705,7 @@
     "quickFilterIcon": "Icon displayed on the quick filter input.",
     "row": "Component rendered for each row.",
     "rowReorderIcon": "Icon displayed on the <code>reorder</code> column type to reorder a row.",
+    "scrollbar": "Component rendered for vertical and horizontal scrollbars.",
     "skeletonCell": "Component rendered for each skeleton cell.",
     "toolbar": "Toolbar component rendered in the grid header.",
     "treeDataCollapseIcon": "Icon displayed on the tree data toggling column when the children are expanded",

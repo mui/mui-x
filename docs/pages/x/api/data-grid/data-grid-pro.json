@@ -768,6 +768,12 @@
       "class": "MuiDataGridPro-row"
     },
     {
+      "name": "scrollbar",
+      "description": "Component rendered for vertical and horizontal scrollbars.",
+      "default": "GridVirtualScrollbar",
+      "class": "MuiDataGridPro-scrollbar"
+    },
+    {
       "name": "baseAutocomplete",
       "description": "The custom Autocomplete component used in the grid for both header and cells.",
       "default": "Autocomplete",
@@ -2219,12 +2225,6 @@
       "key": "scrollArea--up",
       "className": "MuiDataGridPro-scrollArea--up",
       "description": "Styles applied to the top scroll area element.",
-      "isGlobal": false
-    },
-    {
-      "key": "scrollbar",
-      "className": "MuiDataGridPro-scrollbar",
-      "description": "Styles applied to the scrollbars.",
       "isGlobal": false
     },
     {
