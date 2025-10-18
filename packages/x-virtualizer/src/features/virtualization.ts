@@ -646,7 +646,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     if (node && refs.container.current !== node) {
       cleanup.current?.();
       refs.container.current = node;
-      const unsubscribe = observeRootNode(node, store, (rootSize: Size) => {
+      cleanup.current = observeRootNode(node, store, (rootSize: Size) => {
         if (
           rootSize.width === 0 &&
           rootSize.height === 0 &&
@@ -664,10 +664,6 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
           api.debouncedUpdateDimensions();
         }
       });
-      cleanup.current = () => {
-        unsubscribe?.();
-        refs.container.current = null;
-      };
     }
   });
 
@@ -682,7 +678,6 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
       scrollerCleanupRef.current = () => {
         node.removeEventListener('wheel', onWheel as any, opts);
         node.removeEventListener('touchmove', onTouchMove as any, opts);
-        refs.scroller.current = null;
       };
     }
   });
