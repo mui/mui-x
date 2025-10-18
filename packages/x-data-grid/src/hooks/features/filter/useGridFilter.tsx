@@ -94,6 +94,7 @@ export const useGridFilter = (
     | 'disableColumnFilter'
     | 'disableEval'
     | 'ignoreDiacritics'
+    | 'signature'
   >,
   configuration: GridConfiguration,
 ): void => {
@@ -546,7 +547,9 @@ export const useGridFilter = (
    * 1ST RENDER
    */
   useFirstRender(() => {
-    updateFilteredRows();
+    if (props.signature === 'DataGrid') {
+      updateFilteredRows();
+    }
   });
 
   /**

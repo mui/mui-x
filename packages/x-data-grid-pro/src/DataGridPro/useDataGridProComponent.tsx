@@ -4,7 +4,6 @@ import { RefObject } from '@mui/x-internals/types';
 import {
   useGridInitialization,
   useGridInitializeState,
-  useGridVirtualizer,
   useGridClipboard,
   useGridColumnMenu,
   useGridColumns,
@@ -24,7 +23,6 @@ import {
   useGridRows,
   useGridRowsPreProcessors,
   rowsStateInitializer,
-  useGridRowsMeta,
   useGridParamsApi,
   useGridRowSelection,
   useGridSorting,
@@ -56,6 +54,7 @@ import {
   listViewStateInitializer,
   propsStateInitializer,
   GridConfiguration,
+  useFirstRender,
 } from '@mui/x-data-grid/internals';
 import { GridPrivateApiPro } from '../models/gridApiPro';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
@@ -153,7 +152,6 @@ export const useDataGridProComponent = (
   useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
   useGridInitializeState(listViewStateInitializer, apiRef, props);
 
-  useGridVirtualizer(apiRef, props);
   useGridHeaderFiltering(apiRef, props);
   useGridTreeData(apiRef, props);
   useGridKeyboardNavigation(apiRef, props);
@@ -176,7 +174,6 @@ export const useDataGridProComponent = (
   useGridColumnReorder(apiRef, props);
   useGridColumnResize(apiRef, props);
   useGridPagination(apiRef, props);
-  useGridRowsMeta(apiRef, props);
   useGridRowReorder(apiRef, props);
   useGridScroll(apiRef, props);
   useGridInfiniteLoader(apiRef, props);
@@ -195,6 +192,9 @@ export const useDataGridProComponent = (
   useGridListView(apiRef, props);
 
   // Should be the last thing to run, because all pre-processors should have been registered by now.
+  useFirstRender(() => {
+    apiRef.current.runAppliersForPendingProcessors();
+  });
   React.useEffect(() => {
     apiRef.current.runAppliersForPendingProcessors();
   });

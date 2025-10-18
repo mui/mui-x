@@ -879,6 +879,11 @@ export const useGridChartsIntegration = (
     'sortedRowsSet',
     runIf(isChartsIntegrationAvailable, () => debouncedHandleRowDataUpdate(syncedChartIds)),
   );
+  useGridEvent(
+    apiRef,
+    'aggregationLookupSet',
+    runIf(isChartsIntegrationAvailable, () => debouncedHandleRowDataUpdate(syncedChartIds)),
+  );
 
   React.useEffect(() => {
     if (!activeChartId && availableChartIds.length > 0) {

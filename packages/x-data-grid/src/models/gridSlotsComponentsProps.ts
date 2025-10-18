@@ -18,6 +18,7 @@ import type { GridLoadingOverlayProps } from '../components/GridLoadingOverlay';
 import type { GridRowCountProps } from '../components/GridRowCount';
 import type { GridColumnHeaderSortIconProps } from '../components/columnHeaders/GridColumnHeaderSortIcon';
 import type { GridBottomContainerProps } from '../components/virtualization/GridBottomContainer';
+import type { GridVirtualScrollbarProps } from '../components/virtualization/GridVirtualScrollbar';
 import type {
   AutocompleteProps,
   BadgeProps,
@@ -94,6 +95,7 @@ export interface PinnedRowsPropsOverrides {}
 export interface SkeletonCellPropsOverrides {}
 export interface RowPropsOverrides {}
 export interface BottomContainerPropsOverrides {}
+export interface VirtualScrollbarPropsOverrides {}
 
 interface BaseSlotProps {
   baseAutocomplete: AutocompleteProps<string, true, false, true> & BaseAutocompletePropsOverrides;
@@ -146,6 +148,7 @@ interface ElementSlotProps {
   row: GridRowProps & RowPropsOverrides;
   skeletonCell: GridSkeletonCellProps & SkeletonCellPropsOverrides;
   toolbar: GridToolbarProps & ToolbarPropsOverrides;
+  scrollbar: GridVirtualScrollbarProps & VirtualScrollbarPropsOverrides;
   /**
    * Props passed to the `.main` (role="grid") element.
    */
