@@ -690,6 +690,9 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     return scrollerCleanupRef.current;
   });
 
+  const scrollbarVerticalRef = useEventCallback(refSetter('scrollbarVertical'));
+  const scrollbarHorizontalRef = useEventCallback(refSetter('scrollbarHorizontal'));
+
   const getters = {
     setPanels,
     getOffsetTop,
@@ -712,11 +715,11 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
       role: 'presentation',
     }),
     getScrollbarVerticalProps: () => ({
-      ref: refSetter('scrollbarVertical'),
+      ref: scrollbarVerticalRef,
       scrollPosition,
     }),
     getScrollbarHorizontalProps: () => ({
-      ref: refSetter('scrollbarHorizontal'),
+      ref: scrollbarHorizontalRef,
       scrollPosition,
     }),
     getScrollAreaProps: () => ({
