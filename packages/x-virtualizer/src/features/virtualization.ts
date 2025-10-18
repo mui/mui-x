@@ -9,7 +9,6 @@ import type { integer } from '@mui/x-internals/types';
 import * as platform from '@mui/x-internals/platform';
 import { useRunOnce } from '@mui/x-internals/useRunOnce';
 import { createSelector, useStore, useStoreEffect, Store } from '@mui/x-internals/store';
-import useOnMount from '@mui/utils/useOnMount';
 import { PinnedRows, PinnedColumns, Size } from '../models/core';
 import type { CellColSpanInfo } from '../models/colspan';
 import { Dimensions, observeRootNode } from './dimensions';
@@ -671,6 +670,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     }
   });
 
+  const scrollerCleanupRef = React.useRef<() => void | undefined>(undefined);
   const scrollerRef = useEventCallback((node: HTMLDivElement | null) => {
     if (node && refs.scroller.current !== node) {
       refs.scroller.current = node;
@@ -678,21 +678,19 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
       node.addEventListener('scroll', handleScroll, opts);
       node.addEventListener('wheel', onWheel as any, opts);
       node.addEventListener('touchmove', onTouchMove as any, opts);
+      scrollerCleanupRef.current = () => {
+        node.removeEventListener('scroll', handleScroll, opts);
+        node.removeEventListener('wheel', onWheel as any, opts);
+        node.removeEventListener('touchmove', onTouchMove as any, opts);
+        refs.scroller.current = null;
+      };
     }
   });
 
-  useOnMount(() => {
-    return () => {
-      const scroller = refs.scroller.current;
-      if (scroller) {
-        const opts: AddEventListenerOptions = { passive: true };
-        scroller.removeEventListener('scroll', handleScroll, opts);
-        scroller.removeEventListener('wheel', onWheel as any, opts);
-        scroller.removeEventListener('touchmove', onTouchMove as any, opts);
-        refs.scroller.current = null;
-      }
-    };
-  });
+  const scrollerCleanup = scrollerCleanupRef.current;
+  React.useEffect(() => {
+    return scrollerCleanup;
+  }, [scrollerCleanup]);
 
   const getters = {
     setPanels,
