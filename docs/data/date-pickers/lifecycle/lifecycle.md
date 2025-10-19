@@ -31,8 +31,7 @@ The example below shows the last value received by `onChange`.
 ## Lifecycle on range fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 On range fields (`SingleInputDateRangeField` / `MultiInputDateRangeField` / ... ),
-`onChange` is called if the date you are modifying is matching one of the conditions above,
-regardless of the other date state.
+`onChange` is called if the date you are modifying matches one of the conditions above, regardless of the other date state.
 
 The example below shows the last value received by `onChange`.
 Note how changing the value of the start date section will call `onChange` even if the end date is empty or partially filled.
@@ -80,7 +79,7 @@ The examples below are using the desktop and mobile variants of the pickers, but
   **Behavior:** The picker will not close when selecting a day. The user will have to click on the _OK_ action to close it.
 
   :::success
-  If you want to set `closeOnSelect` to `false` on a desktop picker, you should consider enabling the action bar to allow the user to validate the value:
+  If you want to set `closeOnSelect` to `false` on a desktop picker, you should consider enabling the action bar to let the user validate the value:
 
   ```tsx
   <DesktopDatePicker
@@ -201,7 +200,7 @@ You can find more information [in the dedicated doc section](/x/react-date-picke
 
 ### Usage
 
-The `onAccept` callback allows you to get the final value selected by the user without caring about the intermediary steps.
+The `onAccept` callback lets you get the final value selected by the user without caring about the intermediary steps.
 
 ```tsx
 <DatePicker onAccept={(value) => sendValueToServer(value)} />
@@ -257,7 +256,7 @@ The examples below are using the desktop and mobile variants of the pickers, but
   **Behavior:** The picker will not call `onAccept` when selecting a value.
 
   :::success
-  If you want to set `closeOnSelect` to `false` on a desktop picker, you should consider enabling the action bar to allow the user to validate the value:
+  If you want to set `closeOnSelect` to `false` on a desktop picker, you should consider enabling the action bar to let the user validate the value:
 
   ```tsx
   <DesktopDatePicker
@@ -282,9 +281,9 @@ The examples below are using the desktop and mobile variants of the pickers, but
   ```
 
   - Default `views` prop: `['hours', 'minutes']` (plus a `meridiem` view if the locale is in 12-hours format)
-  - Default `closeOnSelect` prop: `true`
+  - Default `closeOnSelect` prop: `false`
 
-  **Behavior:** The picker will call `onAccept` when selecting the minutes or meridiem (if a 12-hour clock is used).
+  **Behavior:** The picker will not call `onAccept` when selecting the minutes or meridiem (if a 12-hour clock is used).
 
 #### When the picker is manually closed
 

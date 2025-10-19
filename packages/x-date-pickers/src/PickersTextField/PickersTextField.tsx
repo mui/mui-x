@@ -131,6 +131,7 @@ const PickersTextField = React.forwardRef(function PickersTextField(
       hasStartAdornment: Boolean(startAdornment ?? InputProps?.startAdornment),
       hasEndAdornment: Boolean(endAdornment ?? InputProps?.endAdornment),
       inputHasLabel: !!label,
+      isLabelShrunk: Boolean(InputLabelProps?.shrink),
     }),
     [
       fieldOwnerState,
@@ -145,6 +146,7 @@ const PickersTextField = React.forwardRef(function PickersTextField(
       InputProps?.startAdornment,
       InputProps?.endAdornment,
       label,
+      InputLabelProps?.shrink,
     ],
   );
   const classes = useUtilityClasses(classesProp, ownerState);

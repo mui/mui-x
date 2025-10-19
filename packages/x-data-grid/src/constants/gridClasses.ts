@@ -239,11 +239,6 @@ export interface GridClasses {
    */
   'columnHeader--last': string;
   /**
-   * Styles applied to the last unpinned column header item.
-   * @ignore - do not document.
-   */
-  'columnHeader--lastUnpinned': string;
-  /**
    * Styles applied to a column header item when its sibling with a bordering separator is focused.
    * @ignore - do not document.
    */
@@ -681,24 +676,21 @@ export interface GridClasses {
   scrollbarFiller: string;
   /**
    * @ignore - do not document.
-   * Styles applied to the scrollbar filler cell, in header position.
-   */
-  'scrollbarFiller--header': string;
-  /**
-   * @ignore - do not document.
-   * Styles applied to the scrollbar filler cell, with a border top.
-   */
-  'scrollbarFiller--borderTop': string;
-  /**
-   * @ignore - do not document.
-   * Styles applied to the scrollbar filler cell, with a border bottom.
-   */
-  'scrollbarFiller--borderBottom': string;
-  /**
-   * @ignore - do not document.
    * Styles applied to the scrollbar filler cell.
    */
   'scrollbarFiller--pinnedRight': string;
+  /**
+   * Styles applied to the scroll shadow element.
+   */
+  scrollShadow: string;
+  /**
+   * Styles applied to the horizontal scroll shadow element.
+   */
+  'scrollShadow--horizontal': string;
+  /**
+   * Styles applied to the vertical scroll shadow element.
+   */
+  'scrollShadow--vertical': string;
   /**
    * Styles applied to the footer selected row count element.
    */
@@ -1003,7 +995,6 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'columnHeader--pinnedLeft',
   'columnHeader--pinnedRight',
   'columnHeader--last',
-  'columnHeader--lastUnpinned',
   'columnHeader--siblingFocused',
   'columnHeader--filter',
   'columnHeaderFilterInput',
@@ -1103,10 +1094,10 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'scrollbar--vertical',
   'scrollbar--horizontal',
   'scrollbarFiller',
-  'scrollbarFiller--header',
-  'scrollbarFiller--borderTop',
-  'scrollbarFiller--borderBottom',
   'scrollbarFiller--pinnedRight',
+  'scrollShadow',
+  'scrollShadow--vertical',
+  'scrollShadow--horizontal',
   'selectedRowCount',
   'sortButton',
   'sortIcon',

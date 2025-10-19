@@ -20,12 +20,12 @@ import { useChartContainerProProps } from '../ChartContainerPro/useChartContaine
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
 import { FunnelChartSlotExtension } from './funnelSlots.types';
 import { CategoryAxis } from './categoryAxis.types';
-import { FUNNEL_CHART_PLUGINS, FunnelChartPluginsSignatures } from './FunnelChart.plugins';
+import { FUNNEL_CHART_PLUGINS, FunnelChartPluginSignatures } from './FunnelChart.plugins';
 
 export type FunnelSeries = MakeOptional<FunnelSeriesType, 'type'>;
 export interface FunnelChartProps
   extends Omit<
-      ChartContainerProProps<'funnel', FunnelChartPluginsSignatures>,
+      ChartContainerProProps<'funnel', FunnelChartPluginSignatures>,
       | 'series'
       | 'plugins'
       | 'zAxis'
@@ -95,7 +95,7 @@ const FunnelChart = React.forwardRef(function FunnelChart(
   const Tooltip = themedProps.slots?.tooltip ?? ChartsTooltip;
 
   return (
-    <ChartDataProviderPro<'funnel', FunnelChartPluginsSignatures>
+    <ChartDataProviderPro<'funnel', FunnelChartPluginSignatures>
       {...chartDataProviderProProps}
       gap={themedProps.gap}
       seriesConfig={seriesConfig}

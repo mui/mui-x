@@ -8,7 +8,8 @@
   "imports": [
     "import { ChartsGrid } from '@mui/x-charts/ChartsGrid';",
     "import { ChartsGrid } from '@mui/x-charts';",
-    "import { ChartsGrid } from '@mui/x-charts-pro';"
+    "import { ChartsGrid } from '@mui/x-charts-pro';",
+    "import { ChartsGrid } from '@mui/x-charts-premium';"
   ],
   "classes": [
     {

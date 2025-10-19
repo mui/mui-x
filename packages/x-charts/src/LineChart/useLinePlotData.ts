@@ -2,7 +2,7 @@ import * as React from 'react';
 import { warnOnce } from '@mui/x-internals/warning';
 import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
 import { useChartGradientIdBuilder } from '../hooks/useChartGradientId';
-import { isBandScale } from '../internals/isBandScale';
+import { isOrdinalScale } from '../internals/scaleGuards';
 import { ComputedAxisConfig } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { getCurveFactory } from '../internals/getCurve';
 import { ChartsXAxisProps, ChartsYAxisProps } from '../models';
@@ -82,7 +82,7 @@ export function useLinePlotData(
           }
         }
 
-        const shouldExpand = curve?.includes('step') && !strictStepCurve && isBandScale(xScale);
+        const shouldExpand = curve?.includes('step') && !strictStepCurve && isOrdinalScale(xScale);
 
         const formattedData: {
           x: any;

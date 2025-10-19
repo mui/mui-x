@@ -71,8 +71,8 @@ export function useAnimatePieArcLabel(
     {
       startAngle: props.startAngle,
       endAngle: props.endAngle,
-      innerRadius: props?.arcLabelRadius ?? props.innerRadius,
-      outerRadius: props?.arcLabelRadius ?? props.outerRadius,
+      innerRadius: props.arcLabelRadius ?? props.innerRadius,
+      outerRadius: props.arcLabelRadius ?? props.outerRadius,
       paddingAngle: props.paddingAngle,
       cornerRadius: props.cornerRadius,
     },

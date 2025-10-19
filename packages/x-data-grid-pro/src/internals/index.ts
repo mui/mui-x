@@ -53,13 +53,14 @@ export {
   gridDataSourceErrorSelector,
   gridDataSourceLoadingIdSelector,
 } from '../hooks/features/dataSource/gridDataSourceSelector';
-export { getGroupKeys } from '../hooks/features/dataSource/utils';
 
 export type {
   GridExperimentalProFeatures,
   DataGridProPropsWithoutDefaultValue,
   DataGridProPropsWithDefaultValue,
 } from '../models/dataGridProProps';
+
+export type { GridProSlotProps } from '../models/gridProSlotProps';
 
 export { createRowTree } from '../utils/tree/createRowTree';
 export { updateRowTree } from '../utils/tree/updateRowTree';

@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Send message to discord
     steps:
-      - name: parse and send message
+      - name: Parse and send message
         uses: michelengelen/discord-message-action@02af30a15955ecf718049bc33b0efabf6f626e0b
         with:
           webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}

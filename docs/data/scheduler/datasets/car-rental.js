@@ -65,8 +65,8 @@ export const initialEvents = [
 ];
 
 export const resources = [
-  { name: 'Fiat 500', id: 'fiat-500', color: 'indigo' },
-  { name: 'Volkswagen ID3', id: 'volkswagen-id3', color: 'blue' },
-  { name: 'Peugeot 3008', id: 'peugeot-3008', color: 'jade' },
-  { name: 'Cupra Leon', id: 'cupra-leon', color: 'orange' },
+  { title: 'Fiat 500', id: 'fiat-500', eventColor: 'indigo' },
+  { title: 'Volkswagen ID3', id: 'volkswagen-id3', eventColor: 'blue' },
+  { title: 'Peugeot 3008', id: 'peugeot-3008', eventColor: 'jade' },
+  { title: 'Cupra Leon', id: 'cupra-leon', eventColor: 'orange' },
 ];

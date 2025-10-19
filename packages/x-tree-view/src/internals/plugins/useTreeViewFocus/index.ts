@@ -4,3 +4,4 @@ export type {
   UseTreeViewFocusParameters,
   UseTreeViewFocusParametersWithDefaults,
 } from './useTreeViewFocus.types';
+export { focusSelectors } from './useTreeViewFocus.selectors';

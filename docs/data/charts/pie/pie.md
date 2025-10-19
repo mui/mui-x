@@ -8,6 +8,19 @@ components: PieArc, PieArcLabel, PieArcLabelPlot, PieArcPlot, PieChart, PiePlot,
 
 <p class="description">Pie charts express portions of a whole, using arcs or angles within a circle.</p>
 
+## Overview
+
+Pie charts are ideal for showing proportions of a whole.
+They excel at visualizing how categories contribute to a total, making relative shares easy to compare at a glance.
+Here are the basic requirements to create a pie chart:
+
+- One categorical dimension (each category represented as a slice)
+- One numerical metric representing the value or size of each slice (converted into percentage of the whole)
+
+The pie chart below compares survival rates of passengers in different classes on the Titanic:
+
+{{"demo": "TitanicPie.js"}}
+
 ## Basics
 
 Pie charts series must contain a `data` property containing an array of objects.
@@ -148,10 +161,7 @@ In addition to the common chart components available for [composition](/x/react-
 Here's how the Pie Chart is composed:
 
 ```jsx
-// Disable the default axis behavior
-const noAxis = [{ position: 'none' }];
-
-<ChartDataProvider xAxis={noAxis} yAxis={noAxis}>
+<ChartDataProvider plugins={PIE_CHART_PLUGINS}>
   <ChartsWrapper>
     <ChartsLegend />
     <ChartsSurface>
@@ -160,10 +170,12 @@ const noAxis = [{ position: 'none' }];
     </ChartsSurface>
     <ChartsTooltip trigger="item" />
   </ChartsWrapper>
-</ChartDataProvider>;
+</ChartDataProvider>
 ```
 
 :::info
-The code defines `noAxis` for the x and y-axes to override the default axes created by the `<ChartDataProvider />`.
-This ensures that the pie is centered.
+The `<ChartDataProvider />` accepts a [`plugins`](/x/react-charts/plugins/) prop.
+This is done to remove cartesian-axis features which are useless for a pie chart, and interfere with the pie position.
+
+For pro users, use the `PIE_CHART_PRO_PLUGINS` instead to activate the export feature.
 :::

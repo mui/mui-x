@@ -114,7 +114,7 @@ Note that the signature of `valueFormatter` has changed in v7 – see the [migra
 If you're using v6, please use the [v6 documentation](https://v6.mui.com/x/react-data-grid/column-definition/#value-formatter).
 :::
 
-The value formatter allows you to convert the value before displaying it.
+The value formatter lets you convert the value before displaying it.
 Common use cases include converting a JavaScript `Date` object to a date string or a `Number` into a formatted number (for example "1,000.50").
 
 Note, that the value returned by `valueFormatter` is only used for rendering purposes.
@@ -141,7 +141,7 @@ It resolves the rendered output in the following order:
 4. `row[field]`
 
 The `renderCell` method of the column definitions is similar to `valueFormatter`.
-However, it trades to be able to only render in a cell in exchange for allowing to return a React node (instead of a string).
+However, it trades the ability to only render in a cell in exchange for letting you return a React node (instead of a string).
 
 ```tsx
 const columns: GridColDef[] = [
@@ -233,7 +233,7 @@ If you want the cell information to persist, you should save it either in the Da
 ### Expand cell renderer
 
 By default, the Data Grid cuts the content of a cell and renders an ellipsis if the content of the cell does not fit in the cell.
-As a workaround, you can create a cell renderer that will allow seeing the full content of the cell in the Data Grid.
+As a workaround, you can create a cell renderer that lets users see the full content of the cell in the Data Grid.
 
 {{"demo": "RenderExpandCellGrid.js", "bg": "inline"}}
 

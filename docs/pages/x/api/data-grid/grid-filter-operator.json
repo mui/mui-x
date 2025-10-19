@@ -11,7 +11,7 @@
       "type": { "description": "GetApplyFilterFn&lt;R, V, F&gt;" },
       "required": true
     },
-    "value": { "type": { "description": "string" }, "required": true },
+    "value": { "type": { "description": "GridFilterItem['operator']" }, "required": true },
     "getValueAsString": {
       "type": { "description": "(value: GridFilterItem['value']) =&gt; string" }
     },

@@ -1,0 +1,13 @@
+<SliderHandle
+  curveCorrection={curveCorrection}
+  setCurveCorrection={setCurveCorrection}
+/>
+<SankeyChart
+  height={400}
+  series={{
+    data,
+    linkOptions: {
+      curveCorrection,
+    },
+  }}
+/>

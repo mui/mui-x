@@ -25,7 +25,10 @@ export default function ChartsUsageDemo<
 }: ChartsUsageDemoProps<Data, Props>) {
   const [props, setProps] = React.useState<Props>(
     Object.entries(data).reduce(
-      (acc, [propName, value]) => ({ ...acc, [propName]: value.defaultValue }),
+      (acc, [propName, value]) => ({
+        ...acc,
+        [propName]: 'defaultValue' in value ? value.defaultValue : undefined,
+      }),
       {} as Props,
     ),
   );
@@ -33,7 +36,10 @@ export default function ChartsUsageDemo<
   React.useEffect(() => {
     setProps(
       Object.entries(data).reduce(
-        (acc, [propName, value]) => ({ ...acc, [propName]: value.defaultValue }),
+        (acc, [propName, value]) => ({
+          ...acc,
+          [propName]: 'defaultValue' in value ? value.defaultValue : undefined,
+        }),
         {} as Props,
       ),
     );

@@ -17,7 +17,7 @@ You will find the details of the editing API in the next sections.
 
 You can make a column editable by enabling the `editable` property in its [column definition](/x/api/data-grid/grid-col-def/).
 
-This lets the user edit any cell from the specified columns.
+This lets users edit any cell from the specified columns.
 For example, with the code snippet below, users can edit cells in the `name` column, but not in the `id` column.
 
 ```tsx

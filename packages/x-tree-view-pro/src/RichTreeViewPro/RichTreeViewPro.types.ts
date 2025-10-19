@@ -30,7 +30,7 @@ export interface RichTreeViewProSlotProps<R extends {}, Multiple extends boolean
 }
 
 export type RichTreeViewProApiRef = React.RefObject<
-  TreeViewPublicAPI<RichTreeViewProPluginSignatures> | undefined
+  Partial<TreeViewPublicAPI<RichTreeViewProPluginSignatures>> | undefined
 >;
 
 export interface RichTreeViewProPropsBase extends React.HTMLAttributes<HTMLUListElement> {

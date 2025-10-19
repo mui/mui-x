@@ -1,8 +1,0 @@
-<StandaloneView
-  events={events}
-  resources={resources}
-  defaultVisibleDate={defaultVisibleDate}
-  onEventsChange={setEvents}
->
-  <DayView className={classes.Container} />
-</StandaloneView>

@@ -36,7 +36,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => 
     },
   ) {
     apiRef = useGridApiRef();
-    const { getAggregatedValue: getAggregatedValueProp, ...rest } = props;
+    const { getAggregatedValue: getAggregatedValueProp, ...other } = props;
     const { fetchRows, columns, isReady } = useMockServer<GridGetRowsResponse>(
       { rowLength: 10, maxColumns: 1 },
       { useCursorPagination: false, minDelay: 0, maxDelay: 0, verbose: false },
@@ -64,11 +64,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => 
             aggregateRow: getRowsResponse.aggregateRow,
           };
         },
-        getAggregatedValue:
-          getAggregatedValueProp ??
-          ((row, field) => {
-            return row[`${field}Aggregate`];
-          }),
+        getAggregatedValue: getAggregatedValueProp ?? ((row, field) => row[field]),
       };
     }, [fetchRows, getAggregatedValueProp]);
 
@@ -91,7 +87,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => 
             max: { columnTypes: ['number', 'date', 'dateTime'] },
             size: {},
           }}
-          {...rest}
+          {...other}
         />
       </div>
     );

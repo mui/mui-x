@@ -155,22 +155,20 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
             />
           </Stack>
           <Stack direction="row" spacing={1} alignItems="center">
-            <IconButton
-              size="small"
-              onClick={() => {
-                publicAPI.setIsItemDisabled({ itemId });
-              }}
-            >
-              {status.disabled ? (
-                <Tooltip title="Unlock" arrow>
+            <Tooltip title={status.disabled ? 'Unlock' : 'Lock'} arrow>
+              <IconButton
+                size="small"
+                onClick={() => {
+                  publicAPI.setIsItemDisabled({ itemId });
+                }}
+              >
+                {status.disabled ? (
                   <LockOutlinedIcon sx={{ fontSize: 16 }} />
-                </Tooltip>
-              ) : (
-                <Tooltip title="Lock" arrow>
+                ) : (
                   <LockOpenOutlinedIcon sx={{ fontSize: 16 }} />
-                </Tooltip>
-              )}
-            </IconButton>
+                )}
+              </IconButton>
+            </Tooltip>
           </Stack>
         </CustomTreeItemContent>
         {children && <TransitionComponent {...getGroupTransitionProps()} />}

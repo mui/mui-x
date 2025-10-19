@@ -7,6 +7,7 @@ import {
   gridRowTreeSelector,
   GRID_ROOT_GROUP_ID,
   gridRowsLookupSelector,
+  GridColumnLookup,
 } from '@mui/x-data-grid-pro';
 import { getVisibleRows } from '@mui/x-data-grid/internals';
 import { GridApiPremium, GridPrivateApiPremium } from '../../../models/gridApiPremium';
@@ -33,11 +34,12 @@ const getGroupAggregatedValue = (
   aggregationRowsScope: DataGridPremiumProcessedProps['aggregationRowsScope'],
   aggregatedFields: string[],
   aggregationRules: GridAggregationRules,
-  position: GridAggregationPosition,
+  position: GridAggregationPosition | null,
   applySorting: boolean,
   valueGetters: Record<string, (row: any) => any>,
   publicApi: GridApiPremium,
   groupAggregatedValuesLookup: Map<GridRowId, AggregatedValues>,
+  columnsLookup: GridColumnLookup,
 ) => {
   const groupAggregationLookup: GridAggregationLookup[GridRowId] = {};
   const aggregatedValues: AggregatedValues = [];
@@ -119,11 +121,23 @@ const getGroupAggregatedValue = (
       },
       publicApi,
     );
+    const formattedValue = aggregationFunction.valueFormatter
+      ? aggregationFunction.valueFormatter(
+          value as never,
+          rowLookup[groupId],
+          columnsLookup[aggregatedField],
+          apiRef,
+        )
+      : undefined;
 
-    groupAggregationLookup[aggregatedField] = {
-      position,
-      value,
-    };
+    // Only add to groupAggregationLookup if position is not null
+    if (position !== null) {
+      groupAggregationLookup[aggregatedField] = {
+        position,
+        value,
+        formattedValue,
+      };
+    }
   }
 
   return { groupAggregationLookup, aggregatedValues };
@@ -201,29 +215,35 @@ export const createAggregationLookup = ({
 
     const position = getAggregationPosition(groupNode);
 
-    if (position !== null) {
-      if (isDataSource) {
+    if (isDataSource) {
+      if (position !== null) {
         aggregationLookup[groupNode.id] = getGroupAggregatedValueDataSource(
           groupNode.id,
           apiRef,
           aggregatedFields,
           position,
         );
-      } else if (groupNode.children.length) {
-        const result = getGroupAggregatedValue(
-          groupNode.id,
-          apiRef,
-          aggregationRowsScope,
-          aggregatedFields,
-          aggregationRules,
-          position,
-          applySorting,
-          valueGetters,
-          apiRef.current,
-          groupAggregatedValuesLookup,
-        );
+      }
+    } else if (groupNode.children.length) {
+      const result = getGroupAggregatedValue(
+        groupNode.id,
+        apiRef,
+        aggregationRowsScope,
+        aggregatedFields,
+        aggregationRules,
+        position,
+        applySorting,
+        valueGetters,
+        apiRef.current,
+        groupAggregatedValuesLookup,
+        columnsLookup,
+      );
+      // Always populate groupAggregatedValuesLookup for groups with children
+      // This ensures parent groups can access child aggregated values even when position is null
+      groupAggregatedValuesLookup.set(groupNode.id, result.aggregatedValues);
+      // Only set aggregationLookup if position is not null (meaning aggregation should be displayed)
+      if (position !== null) {
         aggregationLookup[groupNode.id] = result.groupAggregationLookup;
-        groupAggregatedValuesLookup.set(groupNode.id, result.aggregatedValues);
       }
     }
   };

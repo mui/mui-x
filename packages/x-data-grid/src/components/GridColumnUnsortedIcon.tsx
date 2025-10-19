@@ -3,7 +3,7 @@ import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { GridBaseIconProps } from '../models/gridSlotsComponentsProps';
 import { GridSortDirection } from '../models/gridSortModel';
 
-interface GridColumnUnsortedIconProps extends GridBaseIconProps {
+export interface GridColumnUnsortedIconProps extends GridBaseIconProps {
   sortingOrder: GridSortDirection[];
 }
 

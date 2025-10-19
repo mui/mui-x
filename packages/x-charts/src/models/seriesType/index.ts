@@ -37,6 +37,9 @@ type StackableSeriesType = DefaultizedSeriesType<StackableChartSeriesType>;
 export type SeriesItemIdentifier<T extends ChartSeriesType = ChartSeriesType> =
   ChartsSeriesConfig[T]['itemIdentifier'];
 
+export type SeriesItemIdentifierWithData<T extends ChartSeriesType = ChartSeriesType> =
+  ChartsSeriesConfig[T]['itemIdentifierWithData'];
+
 export * from './line';
 export * from './bar';
 export * from './scatter';

@@ -121,6 +121,7 @@ type UseDateTimeRangePickerDefaultizedProps<Props extends BaseDateTimeRangePicke
   > & {
     shouldRenderTimeInASingleColumn: boolean;
     views: readonly DateTimeRangePickerView[];
+    viewsForFormatting: readonly DateOrTimeViewWithMeridiem[];
   };
 
 export function useDateTimeRangePickerDefaultizedProps<Props extends BaseDateTimeRangePickerProps>(
@@ -154,6 +155,11 @@ export function useDateTimeRangePickerDefaultizedProps<Props extends BaseDateTim
     views: defaultViews,
   });
 
+  // Keep the original views for format calculation (before filtering)
+  const viewsForFormatting: readonly DateOrTimeViewWithMeridiem[] = ampm
+    ? [...defaultViews, 'meridiem']
+    : defaultViews;
+
   return {
     ...themeProps,
     ...validationProps,
@@ -162,6 +168,7 @@ export function useDateTimeRangePickerDefaultizedProps<Props extends BaseDateTim
     shouldRenderTimeInASingleColumn,
     thresholdToRenderTimeInASingleColumn,
     views,
+    viewsForFormatting,
     ampm,
     slots: {
       tabs: DateTimeRangePickerTabs,

@@ -107,4 +107,42 @@ describe('<BarChart />', () => {
       expect(screen.queryByRole('tooltip')).to.equal(null);
     },
   );
+
+  // svg.createSVGPoint not supported by JSDom https://github.com/jsdom/jsdom/issues/300
+  it.skipIf(isJSDOM)(
+    'should highlight element on pointer enter and remove highlight on pointer leave',
+    async () => {
+      const { user } = render(
+        <BarChart
+          height={400}
+          width={400}
+          series={[
+            { data: [5, 10], highlightScope: { highlight: 'item', fade: 'global' } },
+            { data: [1, 2] },
+          ]}
+          xAxis={[{ data: ['A', 'B'] }]}
+          hideLegend
+          skipAnimation
+        />,
+        { wrapper },
+      );
+
+      const bars = document.querySelectorAll(`.${barElementClasses.root}`);
+
+      await user.pointer({ target: bars[0] });
+
+      expect([...bars].map((b) => b.getAttribute('data-highlighted'))).to.deep.equal([
+        'true',
+        null,
+        null,
+        null,
+      ]);
+      expect([...bars].map((b) => b.getAttribute('data-faded'))).to.deep.equal([
+        null,
+        'true',
+        'true',
+        'true',
+      ]);
+    },
+  );
 });

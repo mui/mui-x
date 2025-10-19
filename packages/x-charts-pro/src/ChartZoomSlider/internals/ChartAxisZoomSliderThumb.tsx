@@ -46,7 +46,7 @@ export interface ChartZoomSliderThumbProps
  */
 export const ChartAxisZoomSliderThumb = React.forwardRef<SVGRectElement, ChartZoomSliderThumbProps>(
   function ChartAxisZoomSliderThumb(
-    { className, onMove, orientation, placement, rx = 4, ry = 4, ...rest },
+    { className, onMove, orientation, placement, rx = 4, ry = 4, ...other },
     forwardedRef,
   ) {
     const classes = useUtilityClasses({ onMove, orientation, placement });
@@ -90,6 +90,6 @@ export const ChartAxisZoomSliderThumb = React.forwardRef<SVGRectElement, ChartZo
       };
     }, [onMoveEvent, orientation]);
 
-    return <Rect className={clsx(classes.root, className)} ref={ref} rx={rx} ry={ry} {...rest} />;
+    return <Rect className={clsx(classes.root, className)} ref={ref} rx={rx} ry={ry} {...other} />;
   },
 );

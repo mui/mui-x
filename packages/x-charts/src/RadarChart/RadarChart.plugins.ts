@@ -13,7 +13,7 @@ import {
 
 export const RADAR_PLUGINS = [useChartPolarAxis, useChartInteraction, useChartHighlight] as const;
 
-export type RadarChartPluginsSignatures = [
+export type RadarChartPluginSignatures = [
   UseChartPolarAxisSignature,
   UseChartInteractionSignature,
   UseChartHighlightSignature,

@@ -60,7 +60,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
     clearButton,
     headerFilterMenu,
     slotProps,
-    ...others
+    ...other
   } = props;
   const filterValue = item.value ?? '';
   const id = useId();
@@ -69,16 +69,10 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
 
   const isSelectNative = rootProps.slotProps?.baseSelect?.native ?? false;
 
-  let resolvedColumn: GridSingleSelectColDef | null = null;
-  if (item.field) {
-    const column = apiRef.current.getColumn(item.field);
-    if (isSingleSelectColDef(column)) {
-      resolvedColumn = column;
-    }
-  }
+  const resolvedColumn = apiRef.current.getColumn(item.field) as GridSingleSelectColDef | undefined;
 
-  const getOptionValue = resolvedColumn?.getOptionValue!;
-  const getOptionLabel = resolvedColumn?.getOptionLabel!;
+  const getOptionValue = resolvedColumn!.getOptionValue;
+  const getOptionLabel = resolvedColumn!.getOptionLabel;
 
   const currentValueOptions = React.useMemo(() => {
     return getValueOptions(resolvedColumn!);
@@ -95,7 +89,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
     [currentValueOptions, getOptionValue, applyValue, item],
   );
 
-  if (!isSingleSelectColDef(resolvedColumn)) {
+  if (!resolvedColumn || !isSingleSelectColDef(resolvedColumn)) {
     return null;
   }
 
@@ -123,7 +117,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
         }}
         native={isSelectNative}
         {...rootProps.slotProps?.baseSelect}
-        {...others}
+        {...other}
         {...slotProps?.root}
       >
         {renderSingleSelectOptions({

@@ -43,11 +43,15 @@ const COMPONENT_API_PAGES = [
   'src/components/filterPanel/FilterPanelTrigger.tsx',
   'src/components/columnsPanel/ColumnsPanelTrigger.tsx',
   'src/components/pivotPanel/PivotPanelTrigger.tsx',
+  'src/components/chartsPanel/GridChartsPanel.tsx',
+  'src/components/chartsPanel/ChartsPanelTrigger.tsx',
   'src/components/aiAssistantPanel/AiAssistantPanelTrigger.tsx',
   'src/components/promptField/PromptField.tsx',
   'src/components/promptField/PromptFieldRecord.tsx',
   'src/components/promptField/PromptFieldControl.tsx',
   'src/components/promptField/PromptFieldSend.tsx',
+
+  'src/context/GridChartsRendererProxy.tsx',
 ];
 
 export const projectGridSettings: ProjectSettings = {

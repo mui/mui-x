@@ -134,7 +134,7 @@ In the demo below, you can see that the calendar is set to April 2022 on mount:
 
 {{"demo": "ReferenceDateUsingValue.js"}}
 
-When `value` and `defaultValue` contains no valid date, the component will try to find a reference date that passes the validation to initialize its rendering:
+When `value` and `defaultValue` contain no valid date, the component will try to find a reference date that passes the validation to initialize its rendering:
 
 {{"demo": "ReferenceDateDefaultBehavior.js"}}
 
@@ -143,7 +143,7 @@ You can override this date using the `referenceDate` prop:
 {{"demo": "ReferenceDateExplicitDateTimePicker.js"}}
 
 This can also be useful to set the part of the value that will not be selectable in the component.
-For example, in a Time Picker, it allows you to choose the date of your value:
+For example, in a Time Picker, it lets you choose the date of your value:
 
 {{"demo": "ReferenceDateExplicitTimePicker.js"}}
 
@@ -152,7 +152,7 @@ You can pass an array of dates to the `referenceDate` prop to set the reference 
 This might be useful when you want different time values for start and end positions in a Date Time Range Picker.
 
 :::info
-Try selecting a date the demo below, then move to next position to observe the end reference date usage.
+Try selecting a date in the demo below, then move to the next position to observe the end reference date usage.
 :::
 
 {{"demo": "ReferenceDateRange.js"}}
@@ -166,16 +166,16 @@ Some test environments (for example `jsdom`) do not support media query. In such
 :::
 
 Be aware that running tests in headless browsers might not pass the default mediaQuery (`pointer: fine`).
-In such case you can [force pointer precision](https://github.com/microsoft/playwright/issues/7769#issuecomment-1205106311) via browser flags or preferences.
+In such cases you can [force pointer precision](https://github.com/microsoft/playwright/issues/7769#issuecomment-1205106311) via browser flags or preferences.
 
 ### Field components
 
 :::info
-To support RTL and some keyboard interactions, field components add some Unicode character that are invisible, but appears in the input value.
+To support RTL and some keyboard interactions, field components add some Unicode characters that are invisible, but appear in the input value.
 :::
 
-To add tests about a field value without having to care about those characters, you can remove the specific character before testing the equality.
-Here is an example about how to do it.
+To add tests about a field value without having to care about those characters, you can remove the specific characters before testing the equality.
+Here is an example of how to do it.
 
 ```js
 // Helper removing specific characters

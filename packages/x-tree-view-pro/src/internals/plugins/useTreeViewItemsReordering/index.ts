@@ -5,3 +5,4 @@ export type {
   UseTreeViewItemsReorderingParametersWithDefaults,
   TreeViewItemReorderPosition,
 } from './useTreeViewItemsReordering.types';
+export { itemsReorderingSelectors } from './useTreeViewItemsReordering.selectors';

@@ -207,8 +207,6 @@ export default withDocsInfra({
       console.log('Considering only English for SSR');
       traverse(pages, 'en');
     } else {
-      // eslint-disable-next-line no-console
-      console.log('Considering various locales for SSR');
       LANGUAGES_SSR.forEach((userLanguage) => {
         traverse(pages, userLanguage);
       });

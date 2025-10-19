@@ -41,7 +41,7 @@ describe('<DataGridPro /> - Row editing', () => {
 
   function TestCase(props: Partial<DataGridProProps> & { column1Props?: any; column2Props?: any }) {
     apiRef = useGridApiRef();
-    const { column1Props = {}, column2Props = {}, ...rest } = props;
+    const { column1Props = {}, column2Props = {}, ...other } = props;
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGridPro
@@ -68,7 +68,7 @@ describe('<DataGridPro /> - Row editing', () => {
             }
             return column;
           })}
-          {...rest}
+          {...other}
         />
       </div>
     );
@@ -648,7 +648,7 @@ describe('<DataGridPro /> - Row editing', () => {
         await act(async () => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' }));
 
         expect(consoleMock.mock.lastCall?.[0]).to.include(
-          'MUI X: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
+          'MUI X: A call to `processRowUpdate()` threw an error which was not handled because `onProcessRowUpdateError()` is missing.',
         );
         expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing');
       });

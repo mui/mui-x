@@ -740,7 +740,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
   });
 
   it('Method: getDayOfWeek', () => {
-    expect(adapter.getDayOfWeek(testDateIso)).to.equal(adapter.lib === 'luxon' ? 2 : 3);
+    expect(adapter.getDayOfWeek(testDateIso)).to.equal(3);
   });
 
   describe('Method: getWeekArray', () => {

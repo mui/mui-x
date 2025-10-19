@@ -103,7 +103,11 @@ export class KeyboardManager {
 
     return keys.every((key) => {
       if (key === 'ControlOrMeta') {
-        return this.pressedKeys.has('Control') || this.pressedKeys.has('Meta');
+        // May be "deprecated" on types, but it is still the best option for cross-platform detection
+        // https://stackoverflow.com/a/71785253/24269134
+        return navigator.platform.includes('Mac')
+          ? this.pressedKeys.has('Meta')
+          : this.pressedKeys.has('Control');
       }
       return this.pressedKeys.has(key);
     });

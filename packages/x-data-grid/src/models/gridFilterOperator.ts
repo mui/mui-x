@@ -41,7 +41,7 @@ export interface GridFilterOperator<
    * The name of the filter operator.
    * It will be matched with the `operator` property of the filter items.
    */
-  value: string;
+  value: GridFilterItem['operator'];
   /**
    * The callback that generates a filtering function for a given filter item and column.
    * This function can return `null` to skip filtering for this item and column.

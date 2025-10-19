@@ -98,6 +98,7 @@ function GridToolbar(props: GridToolbarProps) {
     printOptions,
     additionalItems,
     additionalExportMenuItems,
+    ...other
   } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -112,7 +113,7 @@ function GridToolbar(props: GridToolbarProps) {
   const closeExportMenu = () => setExportMenuOpen(false);
 
   return (
-    <Toolbar>
+    <Toolbar {...other}>
       {rootProps.label && <GridToolbarLabel>{rootProps.label}</GridToolbarLabel>}
 
       {!rootProps.disableColumnSelector && (

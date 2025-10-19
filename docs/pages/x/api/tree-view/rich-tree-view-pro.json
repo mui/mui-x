@@ -3,7 +3,7 @@
     "apiRef": {
       "type": {
         "name": "shape",
-        "description": "{ current?: { focusItem: func, getItem: func, getItemDOMElement: func, getItemOrderedChildrenIds: func, getItemTree: func, getParentId: func, setEditedItem: func, setIsItemDisabled: func, setItemExpansion: func, setItemSelection: func, updateItemLabel: func } }"
+        "description": "{ current?: { focusItem?: func, getItem?: func, getItemDOMElement?: func, getItemOrderedChildrenIds?: func, getItemTree?: func, getParentId?: func, isItemExpanded?: func, setEditedItem?: func, setIsItemDisabled?: func, setItemExpansion?: func, setItemSelection?: func, updateItemChildren?: func, updateItemLabel?: func } }"
       }
     },
     "canMoveItemToNewPosition": {
@@ -106,7 +106,7 @@
     "onItemExpansionToggle": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.SyntheticEvent | null, itemId: array, isExpanded: array) => void",
+        "type": "function(event: React.SyntheticEvent | null, itemId: array, isExpanded: boolean) => void",
         "describedArgs": ["event", "itemId", "isExpanded"]
       }
     },
@@ -134,7 +134,7 @@
     "onItemSelectionToggle": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.SyntheticEvent, itemId: array, isSelected: array) => void",
+        "type": "function(event: React.SyntheticEvent, itemId: array, isSelected: boolean) => void",
         "describedArgs": ["event", "itemId", "isSelected"]
       }
     },

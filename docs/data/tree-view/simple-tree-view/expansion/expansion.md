@@ -71,3 +71,16 @@ apiRef.current.setItemExpansion({
 ```
 
 {{"demo": "ApiMethodSetItemExpansion.js"}}
+
+### Check if an item is expanded
+
+Use the `isItemExpanded()` API method to check the expansion of an item.
+
+```ts
+apiRef.current.isItemExpanded(
+  // The id of the item to check
+  itemId,
+);
+```
+
+{{"demo": "ApiMethodIsItemExpanded.js", "defaultCodeOpen": false}}

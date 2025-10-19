@@ -42,6 +42,9 @@ It can also be moved with the `position: { vertical, horizontal }` property whic
 
 By default, the legend is placed above the charts.
 
+The position management relies on a [grid-template](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-template).
+If you create a custom legend component, you need to set the CSS property `grid-area` to `'legend'` to get your component correctly placed.
+
 :::warning
 The `position` property is only available in the `slotProps`, but not in the `<ChartsLegend />` props.
 In the second case, you are free to place the legend where you want.
@@ -100,8 +103,7 @@ Each legend item has a `data-series` attribute where its value is the ID of the 
 ### Custom component
 
 For advanced customization, you can create your own legend with `useLegend`.
-This hook returns the items that the default legend would plot.
-Allowing you to focus on the rendering.
+This hook returns the items that the default legend would plot so you can focus on the rendering.
 
 This demo also shows how to use `labelMarkType` together with a custom legend to create a legend with custom shapes.
 
@@ -137,11 +139,17 @@ This component position is done exactly the same way as the [legend for series](
 ### Label position
 
 The labels can be positioned in relation to the marks or gradient with the `labelPosition` prop.
-The values accepted are `'start'`, `'end'` or `'extremes'`.
+The general values accepted are `'start'`, `'end'`, `'extremes'`.
+While the piecewise legend has two more options, `'inline-start'`, and `'inline-end'`.
 
 - With `direction='horizontal'`, using `'start'` places the labels above the visual marker, while `end` places them below.
 - When `direction='vertical'`, is `'start'` or `'end'` the labels are positioned `left` and `right` of the visual markers, respectively.
 - With the `'extremes'` value, the labels are positioned at both the beginning and end of the visual marker.
+
+For the piecewise legend, two extra values are accepted
+
+- With `direction='horizontal'`, using `'inline-start'` and `'inline-end'` positions the labels inline with the marker.
+- When `direction='vertical'`, it works the same as `'start'` and `'end'`.
 
 {{"demo": "LegendLabelPositions.js"}}
 

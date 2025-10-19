@@ -115,7 +115,10 @@ const DesktopTimeRangePicker = React.forwardRef(function DesktopTimeRangePicker<
     views,
     viewRenderers,
     ampmInClock: true,
-    format: resolveTimeFormat(adapter, defaultizedProps),
+    format: resolveTimeFormat(adapter, {
+      ...defaultizedProps,
+      views: defaultizedProps.viewsForFormatting,
+    }),
     slots: {
       field: SingleInputTimeRangeField,
       ...defaultizedProps.slots,

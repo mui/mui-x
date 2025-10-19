@@ -17,6 +17,6 @@
   "muiName": "MuiChartsToolbarImageExportTrigger",
   "filename": "/packages/x-charts-pro/src/ChartsToolbarPro/ChartsToolbarImageExportTrigger.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/toolbar/\">Charts - Toolbar 🧪</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/toolbar/\">Charts - Toolbar</a></li></ul>",
   "cssComponent": false
 }

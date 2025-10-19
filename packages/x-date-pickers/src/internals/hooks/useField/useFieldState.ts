@@ -412,19 +412,19 @@ export const useFieldState = <
 
   // If `prop.value` changes, we update the state to reflect the new value
   if (value !== state.lastExternalValue) {
-    let sections: InferFieldSection<TValue>[];
-    if (
+    const isActiveDateInvalid =
       sectionToUpdateOnNextInvalidDateRef.current != null &&
       !adapter.isValid(
         fieldValueManager.getDateFromSection(
           value,
           state.sections[sectionToUpdateOnNextInvalidDateRef.current.sectionIndex],
         ),
-      )
-    ) {
+      );
+    let sections: InferFieldSection<TValue>[];
+    if (isActiveDateInvalid) {
       sections = setSectionValue(
-        sectionToUpdateOnNextInvalidDateRef.current.sectionIndex,
-        sectionToUpdateOnNextInvalidDateRef.current.value,
+        sectionToUpdateOnNextInvalidDateRef.current!.sectionIndex,
+        sectionToUpdateOnNextInvalidDateRef.current!.value,
       );
     } else {
       sections = getSectionsFromValue(value);
@@ -435,11 +435,9 @@ export const useFieldState = <
       lastExternalValue: value,
       sections,
       sectionsDependencies: { format, isRtl, locale: adapter.locale },
-      referenceValue: fieldValueManager.updateReferenceValue(
-        adapter,
-        value,
-        prevState.referenceValue,
-      ),
+      referenceValue: isActiveDateInvalid
+        ? prevState.referenceValue
+        : fieldValueManager.updateReferenceValue(adapter, value, prevState.referenceValue),
       tempValueStrAndroid: null,
     }));
   }

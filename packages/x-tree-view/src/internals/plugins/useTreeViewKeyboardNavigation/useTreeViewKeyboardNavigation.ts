@@ -1,7 +1,9 @@
 'use client';
 import * as React from 'react';
+import { useStore } from '@mui/x-internals/store';
 import { useRtl } from '@mui/system/RtlProvider';
-import useEventCallback from '@mui/utils/useEventCallback';
+import { useTimeout } from '@base-ui-components/utils/useTimeout';
+import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { TreeViewCancellableEvent } from '../../../models';
 import { TreeViewItemMeta, TreeViewPlugin } from '../../models';
 import {
@@ -12,98 +14,112 @@ import {
   isTargetInDescendants,
 } from '../../utils/tree';
 import {
-  TreeViewFirstCharMap,
+  TreeViewLabelMap,
   UseTreeViewKeyboardNavigationSignature,
 } from './useTreeViewKeyboardNavigation.types';
 import { hasPlugin } from '../../utils/plugins';
 import { useTreeViewLabel } from '../useTreeViewLabel';
-import { useSelector } from '../../hooks/useSelector';
-import {
-  selectorItemMetaLookup,
-  selectorIsItemDisabled,
-  selectorItemParentId,
-} from '../useTreeViewItems/useTreeViewItems.selectors';
-import {
-  selectorIsItemBeingEdited,
-  selectorIsItemEditable,
-} from '../useTreeViewLabel/useTreeViewLabel.selectors';
-import {
-  selectorIsItemSelected,
-  selectorIsMultiSelectEnabled,
-  selectorIsSelectionEnabled,
-} from '../useTreeViewSelection/useTreeViewSelection.selectors';
-import {
-  selectorIsItemExpandable,
-  selectorIsItemExpanded,
-} from '../useTreeViewExpansion/useTreeViewExpansion.selectors';
+import { itemsSelectors } from '../useTreeViewItems/useTreeViewItems.selectors';
+import { labelSelectors } from '../useTreeViewLabel/useTreeViewLabel.selectors';
+import { selectionSelectors } from '../useTreeViewSelection/useTreeViewSelection.selectors';
+import { expansionSelectors } from '../useTreeViewExpansion/useTreeViewExpansion.selectors';
 
 function isPrintableKey(string: string) {
   return !!string && string.length === 1 && !!string.match(/\S/);
 }
 
+const TYPEAHEAD_TIMEOUT = 500;
+
 export const useTreeViewKeyboardNavigation: TreeViewPlugin<
   UseTreeViewKeyboardNavigationSignature
 > = ({ instance, store, params }) => {
   const isRtl = useRtl();
-  const firstCharMap = React.useRef<TreeViewFirstCharMap>({});
+  const labelMap = React.useRef<TreeViewLabelMap>({});
 
-  const updateFirstCharMap = useEventCallback(
-    (callback: (firstCharMap: TreeViewFirstCharMap) => TreeViewFirstCharMap) => {
-      firstCharMap.current = callback(firstCharMap.current);
+  const typeaheadQueryRef = React.useRef<string>('');
+  const typeaheadTimeout = useTimeout();
+
+  const updateLabelMap = useEventCallback(
+    (callback: (labelMap: TreeViewLabelMap) => TreeViewLabelMap) => {
+      labelMap.current = callback(labelMap.current);
     },
   );
 
-  const itemMetaLookup = useSelector(store, selectorItemMetaLookup);
+  const itemMetaLookup = useStore(store, itemsSelectors.itemMetaLookup);
   React.useEffect(() => {
     if (instance.areItemUpdatesPrevented()) {
       return;
     }
 
-    const newFirstCharMap: { [itemId: string]: string } = {};
+    const newLabelMap: { [itemId: string]: string } = {};
 
     const processItem = (item: TreeViewItemMeta) => {
-      newFirstCharMap[item.id] = item.label!.substring(0, 1).toLowerCase();
+      newLabelMap[item.id] = item.label!.toLowerCase();
     };
 
     Object.values(itemMetaLookup).forEach(processItem);
-    firstCharMap.current = newFirstCharMap;
+    labelMap.current = newLabelMap;
   }, [itemMetaLookup, params.getItemId, instance]);
 
-  const getFirstMatchingItem = (itemId: string, query: string) => {
-    const cleanQuery = query.toLowerCase();
+  const getNextItem = (itemIdToCheck: string) => {
+    const nextItemId = getNextNavigableItem(store.state, itemIdToCheck);
+    // We reached the end of the tree, check from the beginning
+    if (nextItemId === null) {
+      return getFirstNavigableItem(store.state);
+    }
 
-    const getNextItem = (itemIdToCheck: string) => {
-      const nextItemId = getNextNavigableItem(store.value, itemIdToCheck);
-      // We reached the end of the tree, check from the beginning
-      if (nextItemId === null) {
-        return getFirstNavigableItem(store.value);
-      }
+    return nextItemId;
+  };
 
-      return nextItemId;
-    };
-
+  const getNextMatchingItemId = (itemId: string, query: string): string | null => {
     let matchingItemId: string | null = null;
-    let currentItemId: string = getNextItem(itemId);
     const checkedItems: Record<string, true> = {};
+    // If query length > 1, first check if current item matches
+    let currentItemId: string = query.length > 1 ? itemId : getNextItem(itemId);
     // The "!checkedItems[currentItemId]" condition avoids an infinite loop when there is no matching item.
     while (matchingItemId == null && !checkedItems[currentItemId]) {
-      if (firstCharMap.current[currentItemId] === cleanQuery) {
+      const itemLabel = labelMap.current[currentItemId];
+
+      if (itemLabel?.startsWith(query)) {
         matchingItemId = currentItemId;
       } else {
         checkedItems[currentItemId] = true;
         currentItemId = getNextItem(currentItemId);
       }
     }
-
     return matchingItemId;
   };
 
+  const getFirstMatchingItem = (itemId: string, newKey: string): string | null => {
+    const cleanNewKey = newKey.toLowerCase();
+
+    // Try matching with accumulated query + new key
+    const concatenatedQuery = `${typeaheadQueryRef.current}${cleanNewKey}`;
+
+    // check if the entire typed query matches an item
+    const concatenatedQueryMatchingItemId = getNextMatchingItemId(itemId, concatenatedQuery);
+    if (concatenatedQueryMatchingItemId != null) {
+      typeaheadQueryRef.current = concatenatedQuery;
+      return concatenatedQueryMatchingItemId;
+    }
+
+    const newKeyMatchingItemId = getNextMatchingItemId(itemId, cleanNewKey);
+    if (newKeyMatchingItemId != null) {
+      typeaheadQueryRef.current = cleanNewKey;
+      return newKeyMatchingItemId;
+    }
+
+    typeaheadQueryRef.current = '';
+    return null;
+  };
+
   const canToggleItemSelection = (itemId: string) =>
-    selectorIsSelectionEnabled(store.value) && !selectorIsItemDisabled(store.value, itemId);
+    selectionSelectors.enabled(store.state) && !itemsSelectors.isItemDisabled(store.state, itemId);
 
   const canToggleItemExpansion = (itemId: string) => {
     return (
-      !selectorIsItemDisabled(store.value, itemId) && selectorIsItemExpandable(store.value, itemId)
+      !itemsSelectors.isItemDisabled(store.state, itemId) &&
+      expansionSelectors.isItemExpandable(store.state, itemId)
     );
   };
 
@@ -125,7 +141,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
     const ctrlPressed = event.ctrlKey || event.metaKey;
     const key = event.key;
-    const isMultiSelectEnabled = selectorIsMultiSelectEnabled(store.value);
+    const isMultiSelectEnabled = selectionSelectors.isMultiSelectEnabled(store.state);
 
     // eslint-disable-next-line default-case
     switch (true) {
@@ -150,8 +166,8 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       case key === 'Enter': {
         if (
           hasPlugin(instance, useTreeViewLabel) &&
-          selectorIsItemEditable(store.value, itemId) &&
-          !selectorIsItemBeingEdited(store.value, itemId)
+          labelSelectors.isItemEditable(store.state, itemId) &&
+          !labelSelectors.isItemBeingEdited(store.state, itemId)
         ) {
           instance.setEditedItem(itemId);
         } else if (canToggleItemExpansion(itemId)) {
@@ -161,7 +177,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
           if (isMultiSelectEnabled) {
             event.preventDefault();
             instance.setItemSelection({ event, itemId, keepExistingSelection: true });
-          } else if (!selectorIsItemSelected(store.value, itemId)) {
+          } else if (!selectionSelectors.isItemSelected(store.state, itemId)) {
             instance.setItemSelection({ event, itemId });
             event.preventDefault();
           }
@@ -172,7 +188,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
       // Focus the next focusable item
       case key === 'ArrowDown': {
-        const nextItem = getNextNavigableItem(store.value, itemId);
+        const nextItem = getNextNavigableItem(store.state, itemId);
         if (nextItem) {
           event.preventDefault();
           instance.focusItem(event, nextItem);
@@ -189,7 +205,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
       // Focuses the previous focusable item
       case key === 'ArrowUp': {
-        const previousItem = getPreviousNavigableItem(store.value, itemId);
+        const previousItem = getPreviousNavigableItem(store.state, itemId);
         if (previousItem) {
           event.preventDefault();
           instance.focusItem(event, previousItem);
@@ -210,8 +226,8 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
         if (ctrlPressed) {
           return;
         }
-        if (selectorIsItemExpanded(store.value, itemId)) {
-          const nextItemId = getNextNavigableItem(store.value, itemId);
+        if (expansionSelectors.isItemExpanded(store.state, itemId)) {
+          const nextItemId = getNextNavigableItem(store.state, itemId);
           if (nextItemId) {
             instance.focusItem(event, nextItemId);
             event.preventDefault();
@@ -230,11 +246,14 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
         if (ctrlPressed) {
           return;
         }
-        if (canToggleItemExpansion(itemId) && selectorIsItemExpanded(store.value, itemId)) {
+        if (
+          canToggleItemExpansion(itemId) &&
+          expansionSelectors.isItemExpanded(store.state, itemId)
+        ) {
           instance.setItemExpansion({ event, itemId });
           event.preventDefault();
         } else {
-          const parent = selectorItemParentId(store.value, itemId);
+          const parent = itemsSelectors.itemParentId(store.state, itemId);
           if (parent) {
             instance.focusItem(event, parent);
             event.preventDefault();
@@ -256,7 +275,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
         ) {
           instance.selectRangeFromStartToItem(event, itemId);
         } else {
-          instance.focusItem(event, getFirstNavigableItem(store.value));
+          instance.focusItem(event, getFirstNavigableItem(store.state));
         }
 
         event.preventDefault();
@@ -275,7 +294,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
         ) {
           instance.selectRangeFromItemToEnd(event, itemId);
         } else {
-          instance.focusItem(event, getLastNavigableItem(store.value));
+          instance.focusItem(event, getLastNavigableItem(store.state));
         }
 
         event.preventDefault();
@@ -294,20 +313,28 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       case String.fromCharCode(event.keyCode) === 'A' &&
         ctrlPressed &&
         isMultiSelectEnabled &&
-        selectorIsSelectionEnabled(store.value): {
+        selectionSelectors.enabled(store.state): {
         instance.selectAllNavigableItems(event);
         event.preventDefault();
         break;
       }
 
       // Type-ahead
-      // TODO: Support typing multiple characters
       case !ctrlPressed && !event.shiftKey && isPrintableKey(key): {
+        typeaheadTimeout.clear();
+
         const matchingItem = getFirstMatchingItem(itemId, key);
+
         if (matchingItem != null) {
           instance.focusItem(event, matchingItem);
           event.preventDefault();
+        } else {
+          typeaheadQueryRef.current = '';
         }
+
+        typeaheadTimeout.start(TYPEAHEAD_TIMEOUT, () => {
+          typeaheadQueryRef.current = '';
+        });
         break;
       }
     }
@@ -315,7 +342,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
   return {
     instance: {
-      updateFirstCharMap,
+      updateLabelMap,
       handleItemKeyDown,
     },
   };

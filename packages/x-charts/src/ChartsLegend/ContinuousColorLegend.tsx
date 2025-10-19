@@ -121,6 +121,7 @@ const RootElement = styled('ul', {
   paddingInlineStart: 0,
   marginBlock: theme.spacing(1),
   marginInline: theme.spacing(1),
+  gridArea: 'legend',
   [`&.${continuousColorLegendClasses.horizontal}`]: {
     gridTemplateRows: 'min-content min-content',
     gridTemplateColumns: 'min-content auto min-content',

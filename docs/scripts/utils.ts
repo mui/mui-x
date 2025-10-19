@@ -1,9 +1,9 @@
 import * as path from 'path';
-import * as fse from 'fs-extra';
+import * as fs from 'node:fs';
 import * as prettier from 'prettier';
 
 export const getComponentFilesInFolder = (folderPath: string): string[] => {
-  const files = fse.readdirSync(folderPath, { withFileTypes: true });
+  const files = fs.readdirSync(folderPath, { withFileTypes: true });
   return files.reduce((acc, file) => {
     if (file.isDirectory()) {
       const filesInFolder = getComponentFilesInFolder(path.join(folderPath, file.name));

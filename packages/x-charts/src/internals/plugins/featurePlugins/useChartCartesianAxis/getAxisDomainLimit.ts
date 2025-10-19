@@ -3,7 +3,7 @@ import { CartesianChartSeriesType } from '../../../../models/seriesType/config';
 import { ProcessedSeries } from '../../corePlugins/useChartSeries';
 
 export const getAxisDomainLimit = <T extends CartesianChartSeriesType>(
-  axis: AxisConfig,
+  axis: Pick<AxisConfig, 'id' | 'domainLimit'>,
   axisDirection: 'x' | 'y',
   axisIndex: number,
   formattedSeries: ProcessedSeries<T | 'line'>,

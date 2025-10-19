@@ -4,7 +4,7 @@ import {
   worldElectricityProduction,
   keyToLabel,
   colors,
-} from './worldElectricityProduction';
+} from '../dataset/worldElectricityProduction';
 
 const stackStrategy = {
   stack: 'total',
@@ -15,19 +15,13 @@ const stackStrategy = {
 const customize = {
   height: 350,
   hideLegend: true,
+  experimentalFeatures: { preferStrictDomainInLineCharts: true },
 };
 
 export default function LineDataset() {
   return (
     <LineChart
-      xAxis={[
-        {
-          dataKey: 'year',
-          valueFormatter: (value) => value.toString(),
-          min: 1985,
-          max: 2022,
-        },
-      ]}
+      xAxis={[{ dataKey: 'year', valueFormatter: (value) => value.toString() }]}
       yAxis={[{ width: 50 }]}
       series={Object.keys(keyToLabel).map((key) => ({
         dataKey: key,

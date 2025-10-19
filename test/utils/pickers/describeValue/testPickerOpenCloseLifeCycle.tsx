@@ -433,7 +433,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
     } else {
       toolbarButton = screen.getAllByTestId('toolbar-button')[0];
     }
-    expect(toolbarButton.querySelector('[data-selected="true"]')).to.not.equal(null);
+    expect(toolbarButton.querySelector('[data-selected="true"]')).not.to.equal(null);
   });
 
   it.skipIf(

@@ -23,6 +23,10 @@ export interface PiecewiseColorLegendClasses {
   end: string;
   /** Styles applied to the legend with the labels on the extremes of the color marks. */
   extremes: string;
+  /** Styles applied to the legend with the labels inlined before the color marks. */
+  inlineStart: string;
+  /** Styles applied to the legend with the labels inlined after the color marks. */
+  inlineEnd: string;
   /** Styles applied to the marks. */
   mark: string;
   /** Styles applied to the series label. */
@@ -36,7 +40,11 @@ function getLegendUtilityClass(slot: string) {
 export const useUtilityClasses = (props: PiecewiseColorLegendProps & ChartsLegendSlotExtension) => {
   const { classes, direction, labelPosition } = props;
   const slots = {
-    root: ['root', direction, labelPosition],
+    root: [
+      'root',
+      direction,
+      labelPosition?.replaceAll(/-(\w)/g, (match) => match[1].toUpperCase()),
+    ],
     minLabel: ['minLabel'],
     maxLabel: ['maxLabel'],
     item: ['item'],
@@ -59,6 +67,8 @@ export const piecewiseColorLegendClasses: PiecewiseColorLegendClasses = generate
     'start',
     'end',
     'extremes',
+    'inlineStart',
+    'inlineEnd',
     'mark',
     'label',
   ],

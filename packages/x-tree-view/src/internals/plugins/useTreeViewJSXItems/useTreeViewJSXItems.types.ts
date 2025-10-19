@@ -11,13 +11,13 @@ export interface UseTreeViewItemsInstance {
    */
   insertJSXItem: (item: TreeViewItemMeta) => () => void;
   /**
-   * Updates the `firstCharMap` to register the first character of the given item's label.
+   * Updates the `labelMap` to register the first character of the given item's label.
    * This map is used to navigate the tree using type-ahead search.
-   * @param {TreeViewItemId} itemId The id of the item to map the first character of.
-   * @param {string} firstChar The first character of the item's label.
-   * @returns {() => void} A function to remove the item from the `firstCharMap`.
+   * @param {TreeViewItemId} itemId The id of the item to map the label of.
+   * @param {string} label The item's label.
+   * @returns {() => void} A function to remove the item from the `labelMap`.
    */
-  mapFirstCharFromJSX: (itemId: TreeViewItemId, firstChar: string) => () => void;
+  mapLabelFromJSX: (itemId: TreeViewItemId, label: string) => () => void;
   /**
    * Store the ids of a given item's children in the state.
    * Those ids must be passed in the order they should be rendered.

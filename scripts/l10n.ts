@@ -1,5 +1,5 @@
-import * as fse from 'fs-extra';
 import * as path from 'path';
+import fs from 'node:fs';
 import { exec } from 'child_process';
 import traverse from '@babel/traverse';
 import * as prettier from 'prettier';
@@ -123,7 +123,7 @@ function plugin(existingTranslations: Translations): babel.PluginObj {
 }
 
 function extractTranslations(translationsPath: string): [TranslationsByGroup, Translations] {
-  const file = fse.readFileSync(translationsPath, { encoding: 'utf-8' });
+  const file = fs.readFileSync(translationsPath, 'utf-8');
   const ast = babel.parseSync(file, {
     plugins: BABEL_PLUGINS,
     configFile: false,
@@ -175,7 +175,7 @@ function extractTranslations(translationsPath: string): [TranslationsByGroup, Tr
 }
 
 function findLocales(localesDirectory: string, constantsPath: string) {
-  const items = fse.readdirSync(localesDirectory);
+  const items = fs.readdirSync(localesDirectory);
   const locales: any[] = [];
   const localeRegex = /^[a-z]{2}[A-Z]{2}|^[a-z]{2}(?=.ts)/;
 
@@ -186,7 +186,7 @@ function findLocales(localesDirectory: string, constantsPath: string) {
     }
 
     const localePath = path.resolve(localesDirectory, item);
-    if (fse.lstatSync(localePath).isDirectory()) {
+    if (fs.lstatSync(localePath).isDirectory()) {
       return;
     }
     const code = match[0] || match[1];
@@ -201,7 +201,7 @@ function findLocales(localesDirectory: string, constantsPath: string) {
 
 function extractAndReplaceTranslations(localePath: string) {
   const translations: Translations = {};
-  const file = fse.readFileSync(localePath, { encoding: 'utf-8' });
+  const file = fs.readFileSync(localePath, 'utf-8');
   const { code } = babel.transformSync(file, {
     plugins: [...BABEL_PLUGINS, plugin(translations)],
     configFile: false,
@@ -362,7 +362,7 @@ const generateDocReport = async (
       });
     });
 
-    await fse.writeFileSync(
+    await fs.writeFileSync(
       path.join(workspaceRoot, documentationReportPath),
       `${JSON.stringify(
         documentationReport.sort((a, b) => a.localeName.localeCompare(b.localeName)),
@@ -480,7 +480,7 @@ async function run(argv: ArgumentsCamelCase<HandlerArgv>) {
           });
 
           if (!report) {
-            fse.writeFileSync(localePath, prettifiedCode);
+            fs.writeFileSync(localePath, prettifiedCode);
             // eslint-disable-next-line no-console
             console.log(`Wrote ${localeCode} locale.`);
           }

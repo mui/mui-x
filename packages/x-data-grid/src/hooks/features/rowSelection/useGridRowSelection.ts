@@ -71,6 +71,7 @@ export const useGridRowSelection = (
     | 'onRowSelectionModelChange'
     | 'disableMultipleRowSelection'
     | 'disableRowSelectionOnClick'
+    | 'disableRowSelectionExcludeModel'
     | 'isRowSelectable'
     | 'checkboxSelectionVisibleOnly'
     | 'pagination'
@@ -434,6 +435,7 @@ export const useGridRowSelection = (
       if (
         !isNestedData ||
         !applyAutoSelection ||
+        inputSelectionModel.type === 'exclude' ||
         (inputSelectionModel.ids.size === 0 && inputSelectionModel.type === 'include')
       ) {
         return inputSelectionModel;
@@ -729,7 +731,8 @@ export const useGridRowSelection = (
         !props.isRowSelectable &&
         !props.checkboxSelectionVisibleOnly &&
         (!isNestedData || props.rowSelectionPropagation?.descendants) &&
-        !hasFilters
+        !hasFilters &&
+        !props.disableRowSelectionExcludeModel
       ) {
         apiRef.current.setRowSelectionModel(
           {
@@ -748,6 +751,7 @@ export const useGridRowSelection = (
       props.checkboxSelectionVisibleOnly,
       props.isRowSelectable,
       props.rowSelectionPropagation?.descendants,
+      props.disableRowSelectionExcludeModel,
       isNestedData,
     ],
   );

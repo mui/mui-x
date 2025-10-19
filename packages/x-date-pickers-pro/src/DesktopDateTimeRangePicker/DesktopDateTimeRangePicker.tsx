@@ -149,7 +149,11 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
     ...defaultizedProps,
     views,
     viewRenderers,
-    format: resolveDateTimeFormat(adapter, defaultizedProps, true),
+    format: resolveDateTimeFormat(
+      adapter,
+      { ...defaultizedProps, views: defaultizedProps.viewsForFormatting },
+      true,
+    ),
     // force true to correctly handle `renderTimeViewClock` as a renderer
     ampmInClock: true,
     calendars: defaultizedProps.calendars ?? 1,

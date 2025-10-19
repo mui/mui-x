@@ -13,7 +13,7 @@ describe('<DatePicker />', () => {
     const { user } = render(<DatePicker />);
 
     await user.click(screen.getByLabelText(/Choose date/));
-    expect(screen.queryByRole('dialog')).to.not.equal(null);
+    expect(screen.queryByRole('dialog')).not.to.equal(null);
   });
 
   describe('form behavior', () => {

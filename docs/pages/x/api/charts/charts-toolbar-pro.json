@@ -9,6 +9,6 @@
   "muiName": "MuiChartsToolbarPro",
   "filename": "/packages/x-charts-pro/src/ChartsToolbarPro/ChartsToolbarPro.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/toolbar/\">Charts - Toolbar 🧪</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/toolbar/\">Charts - Toolbar</a></li></ul>",
   "cssComponent": false
 }

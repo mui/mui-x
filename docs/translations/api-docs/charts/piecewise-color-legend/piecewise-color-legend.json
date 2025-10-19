@@ -43,6 +43,14 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the legend in row layout"
     },
+    "inlineEnd": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the legend with the labels inlined after the color marks"
+    },
+    "inlineStart": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the legend with the labels inlined before the color marks"
+    },
     "item": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the list items" },
     "label": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the series label" },
     "mark": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the marks" },

@@ -25,6 +25,10 @@ import type {
 } from '../hooks/features/pivoting/gridPivotingInterfaces';
 import { GridAiAssistantApi } from '../hooks/features/aiAssistant/gridAiAssistantInterfaces';
 import { GridSidebarApi } from '../hooks/features/sidebar/gridSidebarInterfaces';
+import {
+  GridChartsIntegrationApi,
+  GridChartsIntegrationPrivateApi,
+} from '../hooks/features/chartsIntegration/gridChartsIntegrationInterfaces';
 
 /**
  * The api of Data Grid Premium.
@@ -44,6 +48,7 @@ export interface GridApiPremium
     GridPivotingApi,
     GridAiAssistantApi,
     GridSidebarApi,
+    GridChartsIntegrationApi,
     // APIs that are private in Community plan, but public in Pro and Premium plans
     GridRowMultiSelectionApi,
     GridColumnReorderApi {}
@@ -55,4 +60,5 @@ export interface GridPrivateApiPremium
     GridAggregationPrivateApi,
     GridDetailPanelPrivateApi,
     GridRowReorderPrivateApi,
-    GridPivotingPrivateApi {}
+    GridPivotingPrivateApi,
+    GridChartsIntegrationPrivateApi {}

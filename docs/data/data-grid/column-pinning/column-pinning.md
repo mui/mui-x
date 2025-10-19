@@ -46,6 +46,28 @@ Use it together with `onPinnedColumnsChange` to track when columns are pinned an
 
 {{"demo": "ControlPinnedColumns.js", "bg": "inline"}}
 
+## Pinned columns appearance
+
+By default, the pinned columns sections are separated from non-pinned columns with a border and a shadow that appears when there is scroll.
+
+You can change the appearance by setting the [`pinnedColumnsSectionSeparator`](/x/api/data-grid/data-grid-pro/#data-grid-pro-prop-pinnedColumnsSectionSeparator) prop to `'border'`, `'shadow'`, or `'border-and-shadow'`.
+
+{{"demo": "ColumnPinningSectionSeparator.js", "bg": "inline"}}
+
+You can override the scroll shadow's color and opacity by setting the `--color` and `--opacity` CSS variables on the `.MuiDataGrid-scrollShadow` class. For example:
+
+```tsx
+<DataGridPro
+  pinnedColumnsSectionSeparator="shadow"
+  sx={{
+    '& .MuiDataGrid-scrollShadow': {
+      '--color': '255, 0, 0', // must be an RGB value
+      '--opacity': '0.5',
+    },
+  }}
+/>
+```
+
 ## Disabling column pinning
 
 Column pinning is enabled by default on the Data Grid Pro, but you can disable it for some or all columns.

@@ -27,7 +27,7 @@ You can find more information about the supported column types in the [columns s
 
 If the built-in filter operators are not enough, creating a custom operator is an option.
 A custom operator is defined by creating a `GridFilterOperator` object.
-This object has to be added to the `filterOperators` attribute of the `GridColDef`.
+This object needs to be added to the `filterOperators` attribute of the `GridColDef`.
 
 The main part of an operator is the `getApplyFilterFn` function.
 When applying the filters, the Data Grid will call this function with the filter item and the column on which the item must be applied.
@@ -123,7 +123,7 @@ In the demo below, the `rating` column only has the `<` and `>` operators.
 
 ### Custom input component
 
-The value used by the operator to look for has to be entered by the user.
+The value used by the operator to look for needs to be entered by the user.
 On most column types, a text field is used.
 However, a custom component can be rendered instead.
 
@@ -152,9 +152,9 @@ You can customize the rendering of the filter panel as shown in [the component s
 ### Customize the filter panel content
 
 The customization of the filter panel content can be performed by passing props to the default [`<GridFilterPanel />`](/x/api/data-grid/grid-filter-panel/) component.
-The available props allow overriding:
+The available props let you override:
 
-- The `logicOperators` (can contains `GridLogicOperator.And` and `GridLogicOperator.Or`)
+- The `logicOperators` (can contain `GridLogicOperator.And` and `GridLogicOperator.Or`)
 - The order of the column selector (can be `"asc"` or `"desc"`)
 - Any prop of the input components
 

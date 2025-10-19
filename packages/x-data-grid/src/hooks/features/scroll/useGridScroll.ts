@@ -131,8 +131,8 @@ export const useGridScroll = (
       );
 
       if (
-        typeof scrollCoordinates.left !== undefined ||
-        typeof scrollCoordinates.top !== undefined
+        typeof scrollCoordinates.left !== 'undefined' ||
+        typeof scrollCoordinates.top !== 'undefined'
       ) {
         apiRef.current.scroll(scrollCoordinates);
         return true;

@@ -1,6 +1,7 @@
 {
   "componentDescription": "It sets up the data providers as well as the `<svg>` for the chart.\n\nThis is a combination of both the `ChartDataProvider` and `ChartsSurface` components.",
   "propDescriptions": {
+    "brushConfig": { "description": "Configuration for the brush interaction." },
     "colors": { "description": "Color palette used to colorize multiple series." },
     "dataset": {
       "description": "An array of objects that can be used to populate series and axes data using their <code>dataKey</code> property."
@@ -81,7 +82,7 @@
     "slotProps": { "description": "The props for the slots." },
     "slots": { "description": "Slots to customize charts&#39; components." },
     "voronoiMaxRadius": {
-      "description": "Defines the maximal distance between a scatter point and the pointer that triggers the interaction. If <code>undefined</code>, the radius is assumed to be infinite."
+      "description": "Defines the maximum distance between a scatter point and the pointer that triggers the interaction. If set to <code>&#39;item&#39;</code>, the radius is the <code>markerSize</code>. If <code>undefined</code>, the radius is assumed to be infinite."
     },
     "width": {
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."

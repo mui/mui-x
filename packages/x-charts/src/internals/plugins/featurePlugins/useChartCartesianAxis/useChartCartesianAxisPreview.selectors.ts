@@ -10,13 +10,25 @@ import {
 } from '../../corePlugins/useChartSeries';
 import { computeAxisValue } from './computeAxisValue';
 import {
-  selectorChartZoomAxisFilters,
+  selectorChartNormalizedXScales,
+  selectorChartNormalizedYScales,
+  selectorChartXDomains,
+  selectorChartYDomains,
   selectorChartZoomOptionsLookup,
 } from './useChartCartesianAxisRendering.selectors';
-import { AxisId } from '../../../../models/axis';
+import {
+  AxisId,
+  ChartsAxisProps,
+  D3Scale,
+  DefaultedAxis,
+  ScaleName,
+} from '../../../../models/axis';
 import { ZoomData } from './zoom.types';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions';
 import { ZOOM_SLIDER_PREVIEW_SIZE } from '../../../constants';
+import { getRange } from './getAxisScale';
+import { zoomScaleRange } from './zoom';
+import { isOrdinalScale } from '../../../scaleGuards';
 
 function createPreviewDrawingArea(
   axisDirection: 'x' | 'y',
@@ -41,18 +53,65 @@ function createPreviewDrawingArea(
       };
 }
 
+export const selectorChartPreviewXScales = createSelector(
+  [
+    selectorChartRawXAxis,
+    selectorChartDrawingArea,
+    selectorChartZoomOptionsLookup,
+    selectorChartNormalizedXScales,
+    (_, axisId: AxisId) => axisId,
+  ],
+  function selectorChartPreviewXScales(
+    xAxes,
+    chartDrawingArea,
+    zoomOptions,
+    normalizedXScales,
+    axisId,
+  ) {
+    const hasAxis = xAxes?.some((axis) => axis.id === axisId);
+    const drawingArea = createPreviewDrawingArea(hasAxis ? 'x' : 'y', chartDrawingArea);
+    const options = zoomOptions[axisId];
+
+    const scales: Record<AxisId, D3Scale> = {};
+
+    xAxes?.forEach((eachAxis) => {
+      const axis = eachAxis as Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>;
+
+      const scale = normalizedXScales[axis.id].copy();
+      const range = getRange(drawingArea, 'x', axis);
+      const zoomedRange = zoomScaleRange(range, [options.minStart, options.maxEnd]);
+
+      scale.range(zoomedRange);
+
+      scales[axis.id] = scale;
+    });
+
+    return scales;
+  },
+);
+
 export const selectorChartPreviewComputedXAxis = createSelector(
   [
     selectorChartRawXAxis,
     selectorChartSeriesProcessed,
     selectorChartSeriesConfig,
     selectorChartZoomOptionsLookup,
-    selectorChartZoomAxisFilters,
     selectorChartDrawingArea,
+    selectorChartPreviewXScales,
+    selectorChartXDomains,
     (_, axisId: AxisId) => axisId,
   ],
 
-  (xAxes, formattedSeries, seriesConfig, zoomOptions, getFilters, chartDrawingArea, axisId) => {
+  (
+    xAxes,
+    formattedSeries,
+    seriesConfig,
+    zoomOptions,
+    chartDrawingArea,
+    scales,
+    domains,
+    axisId,
+  ) => {
     const hasAxis = xAxes?.some((axis) => axis.id === axisId);
     const drawingArea = createPreviewDrawingArea(hasAxis ? 'x' : 'y', chartDrawingArea);
 
@@ -62,14 +121,14 @@ export const selectorChartPreviewComputedXAxis = createSelector(
     ]);
 
     const computedAxes = computeAxisValue({
+      scales,
       drawingArea,
       formattedSeries,
       axis: xAxes,
       seriesConfig,
       axisDirection: 'x',
       zoomMap,
-      zoomOptions,
-      getFilters,
+      domains,
     });
 
     if (computedAxes.axis[axisId]) {
@@ -80,17 +139,69 @@ export const selectorChartPreviewComputedXAxis = createSelector(
   },
 );
 
+export const selectorChartPreviewYScales = createSelector(
+  [
+    selectorChartRawYAxis,
+    selectorChartDrawingArea,
+    selectorChartZoomOptionsLookup,
+    selectorChartNormalizedYScales,
+    (_, axisId: AxisId) => axisId,
+  ],
+  function selectorChartPreviewYScales(
+    yAxes,
+    chartDrawingArea,
+    zoomOptions,
+    normalizedYScales,
+    axisId,
+  ) {
+    const hasAxis = yAxes?.some((axis) => axis.id === axisId);
+    const drawingArea = createPreviewDrawingArea(hasAxis ? 'y' : 'x', chartDrawingArea);
+    const options = zoomOptions[axisId];
+
+    const scales: Record<AxisId, D3Scale> = {};
+
+    yAxes?.forEach((eachAxis) => {
+      const axis = eachAxis as Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>;
+
+      const scale = normalizedYScales[axis.id].copy();
+      let range = getRange(drawingArea, 'y', axis);
+
+      if (isOrdinalScale(scale)) {
+        range = range.reverse() as [number, number];
+      }
+
+      const zoomedRange = zoomScaleRange(range, [options.minStart, options.maxEnd]);
+
+      scale.range(zoomedRange);
+
+      scales[axis.id] = scale;
+    });
+
+    return scales;
+  },
+);
+
 export const selectorChartPreviewComputedYAxis = createSelector(
   [
     selectorChartRawYAxis,
     selectorChartSeriesProcessed,
     selectorChartSeriesConfig,
     selectorChartZoomOptionsLookup,
-    selectorChartZoomAxisFilters,
     selectorChartDrawingArea,
+    selectorChartPreviewYScales,
+    selectorChartYDomains,
     (_, axisId: AxisId) => axisId,
   ],
-  (yAxes, formattedSeries, seriesConfig, zoomOptions, getFilters, chartDrawingArea, axisId) => {
+  (
+    yAxes,
+    formattedSeries,
+    seriesConfig,
+    zoomOptions,
+    chartDrawingArea,
+    scales,
+    domains,
+    axisId,
+  ) => {
     const hasAxis = yAxes?.some((axis) => axis.id === axisId);
     const drawingArea = createPreviewDrawingArea(hasAxis ? 'y' : 'x', chartDrawingArea);
 
@@ -100,14 +211,14 @@ export const selectorChartPreviewComputedYAxis = createSelector(
     ]);
 
     const computedAxes = computeAxisValue({
+      scales,
       drawingArea,
       formattedSeries,
       axis: yAxes,
       seriesConfig,
       axisDirection: 'y',
       zoomMap,
-      zoomOptions,
-      getFilters,
+      domains,
     });
 
     if (computedAxes.axis[axisId]) {

@@ -45,6 +45,9 @@ export interface GridLocaleText {
   // Toolbar pivot button
   toolbarPivot: string;
 
+  // Toolbar charts button
+  toolbarCharts: string;
+
   // Toolbar AI Assistant button
   toolbarAssistant: React.ReactNode;
 
@@ -130,6 +133,7 @@ export interface GridLocaleText {
   columnMenuSortAsc: React.ReactNode | ((colDef: GridColDef) => React.ReactNode);
   columnMenuSortDesc: React.ReactNode | ((colDef: GridColDef) => React.ReactNode);
   columnMenuManagePivot: string;
+  columnMenuManageCharts: string;
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count: number) => React.ReactNode;
@@ -184,6 +188,7 @@ export interface GridLocaleText {
 
   // Aggregation
   aggregationMenuItemHeader: string;
+  aggregationFunctionLabelNone: string;
   aggregationFunctionLabelSum: string;
   aggregationFunctionLabelAvg: string;
   aggregationFunctionLabelMin: string;
@@ -229,6 +234,32 @@ export interface GridLocaleText {
   pivotYearColumnHeaderName: string;
   pivotQuarterColumnHeaderName: string;
 
+  // Charts configuration panel
+  chartsNoCharts: string;
+  chartsChartNotSelected: string;
+  chartsTabChart: string;
+  chartsTabFields: string;
+  chartsTabCustomize: string;
+  chartsCloseButton: string;
+  chartsSyncButtonLabel: string;
+  chartsSearchPlaceholder: string;
+  chartsSearchLabel: string;
+  chartsSearchClear: string;
+  chartsNoFields: string;
+  chartsFieldBlocked: string;
+  chartsCategories: string;
+  chartsSeries: string;
+  chartsMenuAddToDimensions: (dimensionLabel: string) => string;
+  chartsMenuAddToValues: (valuesLabel: string) => string;
+  chartsMenuMoveUp: string;
+  chartsMenuMoveDown: string;
+  chartsMenuMoveToTop: string;
+  chartsMenuMoveToBottom: string;
+  chartsMenuOptions: string;
+  chartsMenuRemove: string;
+  chartsDragToDimensions: (dimensionLabel: string) => string;
+  chartsDragToValues: (valuesLabel: string) => string;
+
   // AI Assistant panel
   aiAssistantPanelTitle: string;
   aiAssistantPanelClose: string;
@@ -256,6 +287,7 @@ export interface GridLocaleText {
   promptChangePivotRowsLabel: (count: number) => string;
   promptChangePivotValuesLabel: (count: number) => string;
   promptChangePivotValuesDescription: (column: string, aggregation: string) => string;
+  promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) => string;
 
   // Prompt field
   promptFieldLabel: string;

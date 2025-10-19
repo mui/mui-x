@@ -12,7 +12,8 @@
   "imports": [
     "import { AreaElement } from '@mui/x-charts/LineChart';",
     "import { AreaElement } from '@mui/x-charts';",
-    "import { AreaElement } from '@mui/x-charts-pro';"
+    "import { AreaElement } from '@mui/x-charts-pro';",
+    "import { AreaElement } from '@mui/x-charts-premium';"
   ],
   "slots": [
     {
@@ -51,6 +52,6 @@
   "muiName": "MuiAreaElement",
   "filename": "/packages/x-charts/src/LineChart/AreaElement.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/areas-demo/\">Charts - Areas demonstration</a></li>\n<li><a href=\"/x/react-charts/lines/\">Charts - Lines</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/areas-demo/\">Charts - Areas demos</a></li>\n<li><a href=\"/x/react-charts/lines/\">Charts - Lines</a></li></ul>",
   "cssComponent": false
 }

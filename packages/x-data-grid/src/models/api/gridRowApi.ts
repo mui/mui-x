@@ -118,10 +118,20 @@ export interface GridRowProApi {
   getRowGroupChildren: (params: GridRowGroupChildrenGetterParams) => GridRowId[];
   /**
    * Expand or collapse a row children.
+   * Only works for the client side data or to collapse already fetched server side rows.
+   * For server-side data, use `dataSource.fetchRows(childId)` to fetch and expand the children.
    * @param {GridRowId} id the ID of the row to expand or collapse.
    * @param {boolean} isExpanded A boolean indicating if the row must be expanded or collapsed.
    */
   setRowChildrenExpansion: (id: GridRowId, isExpanded: boolean) => void;
+  /**
+   * Expand all rows. Works for the client side data only.
+   */
+  expandAllRows: () => void;
+  /**
+   * Collapse all rows. Works for the client side data only.
+   */
+  collapseAllRows: () => void;
 }
 
 export interface GridRowProPrivateApi {

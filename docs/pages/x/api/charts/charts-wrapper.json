@@ -4,6 +4,7 @@
       "type": { "name": "bool" },
       "default": "`false` if the `height` prop is set. And `true` otherwise."
     },
+    "hideLegend": { "type": { "name": "bool" }, "default": "false" },
     "legendDirection": {
       "type": { "name": "enum", "description": "'horizontal'<br>&#124;&nbsp;'vertical'" },
       "default": "'horizontal'"
@@ -20,7 +21,8 @@
   "imports": [
     "import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';",
     "import { ChartsWrapper } from '@mui/x-charts';",
-    "import { ChartsWrapper } from '@mui/x-charts-pro';"
+    "import { ChartsWrapper } from '@mui/x-charts-pro';",
+    "import { ChartsWrapper } from '@mui/x-charts-premium';"
   ],
   "classes": [],
   "muiName": "MuiChartsWrapper",

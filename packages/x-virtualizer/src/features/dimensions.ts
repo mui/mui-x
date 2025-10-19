@@ -7,12 +7,22 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { throttle } from '@mui/x-internals/throttle';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { roundToDecimalPlaces } from '@mui/x-internals/math';
-import { Store, useStore, useStoreEffect, createSelectorMemoized } from '@mui/x-internals/store';
+import { Store, useStore, createSelectorMemoized } from '@mui/x-internals/store';
 import { ColumnWithWidth, DimensionsState, RowId, RowEntry, RowsMetaState, Size } from '../models';
 import type { BaseState, VirtualizerParams } from '../useVirtualizer';
 
 /* eslint-disable import/export, @typescript-eslint/no-redeclare */
 /* eslint-disable no-underscore-dangle */
+
+export type DimensionsParams = {
+  rowHeight: number;
+  columnsTotalWidth: number;
+  leftPinnedWidth: number;
+  rightPinnedWidth: number;
+  topPinnedHeight: number;
+  bottomPinnedHeight: number;
+  scrollbarSize?: number;
+};
 
 const EMPTY_DIMENSIONS: DimensionsState = {
   isReady: false,
@@ -24,15 +34,11 @@ const EMPTY_DIMENSIONS: DimensionsState = {
   hasScrollX: false,
   hasScrollY: false,
   scrollbarSize: 0,
-  headerHeight: 0,
-  groupHeaderHeight: 0,
-  headerFilterHeight: 0,
   rowWidth: 0,
   rowHeight: 0,
   columnsTotalWidth: 0,
   leftPinnedWidth: 0,
   rightPinnedWidth: 0,
-  headersTotalHeight: 0,
   topContainerHeight: 0,
   bottomContainerHeight: 0,
 };
@@ -41,6 +47,7 @@ const selectors = {
   rootSize: (state: BaseState) => state.rootSize,
   dimensions: (state: BaseState) => state.dimensions,
   rowHeight: (state: BaseState) => state.dimensions.rowHeight,
+  contentHeight: (state: BaseState) => state.dimensions.contentSize.height,
   rowsMeta: (state: BaseState) => state.rowsMeta,
   columnPositions: createSelectorMemoized((_, columns: ColumnWithWidth[]) => {
     const positions: number[] = [];
@@ -106,15 +113,16 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
     refs,
     dimensions: {
       rowHeight,
-      headerHeight,
       columnsTotalWidth,
-      groupHeaderHeight,
-      headerFilterHeight,
-      headersTotalHeight,
       leftPinnedWidth,
       rightPinnedWidth,
+      topPinnedHeight,
+      bottomPinnedHeight,
     },
+    onResize,
   } = params;
+
+  const containerNode = refs.container.current;
 
   const updateDimensions = React.useCallback(() => {
     if (isFirstSizing.current) {
@@ -127,10 +135,10 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
     // All the floating point dimensions should be rounded to .1 decimal places to avoid subpixel rendering issues
     // https://github.com/mui/mui-x/issues/9550#issuecomment-1619020477
     // https://github.com/mui/mui-x/issues/15721
-    const scrollbarSize = measureScrollbarSize(params.refs.container.current, params.scrollbarSize);
+    const scrollbarSize = measureScrollbarSize(containerNode, params.dimensions.scrollbarSize);
 
-    const topContainerHeight = headersTotalHeight + rowsMeta.pinnedTopRowsTotalHeight;
-    const bottomContainerHeight = rowsMeta.pinnedBottomRowsTotalHeight;
+    const topContainerHeight = topPinnedHeight + rowsMeta.pinnedTopRowsTotalHeight;
+    const bottomContainerHeight = bottomPinnedHeight + rowsMeta.pinnedBottomRowsTotalHeight;
 
     const contentSize = {
       width: columnsTotalWidth,
@@ -188,6 +196,14 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
       }
     }
 
+    if (params.disableHorizontalScroll) {
+      hasScrollX = false;
+    }
+
+    if (params.disableVerticalScroll) {
+      hasScrollY = false;
+    }
+
     const rowWidth = Math.max(
       viewportOuterSize.width,
       columnsTotalWidth + (hasScrollY ? scrollbarSize : 0),
@@ -208,15 +224,11 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
       hasScrollX,
       hasScrollY,
       scrollbarSize,
-      headerHeight,
-      groupHeaderHeight,
-      headerFilterHeight,
       rowWidth,
       rowHeight,
       columnsTotalWidth,
       leftPinnedWidth,
       rightPinnedWidth,
-      headersTotalHeight,
       topContainerHeight,
       bottomContainerHeight,
     };
@@ -228,41 +240,33 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
     }
 
     store.update({ dimensions: newDimensions });
+    onResize?.(newDimensions.root);
   }, [
     store,
-    params.refs.container,
-    params.scrollbarSize,
+    containerNode,
+    params.dimensions.scrollbarSize,
     params.autoHeight,
+    params.disableHorizontalScroll,
+    params.disableVerticalScroll,
+    onResize,
     rowHeight,
-    headerHeight,
-    groupHeaderHeight,
-    headerFilterHeight,
     columnsTotalWidth,
-    headersTotalHeight,
     leftPinnedWidth,
     rightPinnedWidth,
+    topPinnedHeight,
+    bottomPinnedHeight,
   ]);
 
-  const { resizeThrottleMs, onResize } = params;
+  const { resizeThrottleMs } = params;
   const updateDimensionCallback = useEventCallback(updateDimensions);
   const debouncedUpdateDimensions = React.useMemo(
-    () =>
-      resizeThrottleMs > 0
-        ? throttle(() => {
-            updateDimensionCallback();
-            onResize?.(store.state.rootSize);
-          }, resizeThrottleMs)
-        : undefined,
-    [resizeThrottleMs, onResize, store, updateDimensionCallback],
+    () => (resizeThrottleMs > 0 ? throttle(updateDimensionCallback, resizeThrottleMs) : undefined),
+    [resizeThrottleMs, updateDimensionCallback],
   );
   React.useEffect(() => debouncedUpdateDimensions?.clear, [debouncedUpdateDimensions]);
 
-  useLayoutEffect(() => observeRootNode(refs.container.current, store), [refs, store]);
-
-  useLayoutEffect(updateDimensions, [updateDimensions]);
-
-  useStoreEffect(store, selectors.rootSize, (_, size) => {
-    params.onResize?.(size);
+  const setRootSize = useEventCallback((rootSize: Size) => {
+    store.state.rootSize = rootSize;
 
     if (isFirstSizing.current || !debouncedUpdateDimensions) {
       // We want to initialize the grid dimensions as soon as possible to avoid flickering
@@ -272,6 +276,13 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
       debouncedUpdateDimensions();
     }
   });
+
+  useLayoutEffect(
+    () => observeRootNode(containerNode, store, setRootSize),
+    [containerNode, store, setRootSize],
+  );
+
+  useLayoutEffect(updateDimensions, [updateDimensions]);
 
   const rowsMeta = useRowsMeta(store, params, updateDimensions);
 
@@ -314,7 +325,7 @@ function useRowsMeta(
     return entry;
   });
 
-  const { rowIdToIndexMap, applyRowHeight } = params;
+  const { applyRowHeight } = params;
   const processHeightEntry = React.useCallback(
     (row: RowEntry) => {
       // HACK: rowHeight trails behind the most up-to-date value just enough to
@@ -352,14 +363,7 @@ function useRowsMeta(
       }
 
       if (getRowSpacing) {
-        const indexRelativeToCurrentPage = rowIdToIndexMap.get(row.id) ?? -1;
-
-        const spacing = getRowSpacing(row, {
-          isFirstVisible: indexRelativeToCurrentPage === 0,
-          isLastVisible: indexRelativeToCurrentPage === rows.length - 1,
-          indexRelativeToCurrentPage,
-        });
-
+        const spacing = getRowSpacing(row);
         entry.spacingTop = spacing.top ?? 0;
         entry.spacingBottom = spacing.bottom ?? 0;
       } else {
@@ -373,13 +377,11 @@ function useRowsMeta(
     },
     [
       store,
-      rows,
       getRowHeightProp,
       getRowHeightEntry,
       getEstimatedRowHeight,
       rowHeight,
       getRowSpacing,
-      rowIdToIndexMap,
       applyRowHeight,
     ],
   );
@@ -387,15 +389,17 @@ function useRowsMeta(
   const hydrateRowsMeta = React.useCallback(() => {
     hasRowWithAutoHeight.current = false;
 
-    const pinnedTopRowsTotalHeight = pinnedRows.top.reduce((acc, row) => {
-      const entry = processHeightEntry(row);
-      return acc + entry.content + entry.spacingTop + entry.spacingBottom + entry.detail;
-    }, 0);
+    const pinnedTopRowsTotalHeight =
+      pinnedRows?.top.reduce((acc, row) => {
+        const entry = processHeightEntry(row);
+        return acc + entry.content + entry.spacingTop + entry.spacingBottom + entry.detail;
+      }, 0) ?? 0;
 
-    const pinnedBottomRowsTotalHeight = pinnedRows.bottom.reduce((acc, row) => {
-      const entry = processHeightEntry(row);
-      return acc + entry.content + entry.spacingTop + entry.spacingBottom + entry.detail;
-    }, 0);
+    const pinnedBottomRowsTotalHeight =
+      pinnedRows?.bottom.reduce((acc, row) => {
+        const entry = processHeightEntry(row);
+        return acc + entry.content + entry.spacingTop + entry.spacingBottom + entry.detail;
+      }, 0) ?? 0;
 
     const positions: number[] = [];
     const currentPageTotalHeight = rows.reduce((acc, row) => {
@@ -479,7 +483,7 @@ function useRowsMeta(
                 ? entry.borderBoxSize[0].blockSize
                 : entry.contentRect.height;
             const rowId = (entry.target as any).__mui_id;
-            const focusedVirtualRowId = params.focusedVirtualCell()?.id;
+            const focusedVirtualRowId = params.focusedVirtualCell?.()?.id;
             if (focusedVirtualRowId === rowId && height === 0) {
               // Focused virtual row has 0 height.
               // We don't want to store it to avoid scroll jumping.
@@ -524,7 +528,11 @@ function useRowsMeta(
   };
 }
 
-function observeRootNode(node: Element | null, store: Store<BaseState>) {
+function observeRootNode(
+  node: Element | null,
+  store: Store<BaseState>,
+  setRootSize: (size: Size) => void,
+) {
   if (!node) {
     return undefined;
   }
@@ -534,7 +542,7 @@ function observeRootNode(node: Element | null, store: Store<BaseState>) {
     height: roundToDecimalPlaces(bounds.height, 1),
   };
   if (store.state.rootSize === Size.EMPTY || !Size.equals(initialSize, store.state.rootSize)) {
-    store.update({ rootSize: initialSize });
+    setRootSize(initialSize);
   }
 
   if (typeof ResizeObserver === 'undefined') {
@@ -549,7 +557,7 @@ function observeRootNode(node: Element | null, store: Store<BaseState>) {
       height: roundToDecimalPlaces(entry.contentRect.height, 1),
     };
     if (!Size.equals(rootSize, store.state.rootSize)) {
-      store.update({ rootSize });
+      setRootSize(rootSize);
     }
   });
 

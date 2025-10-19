@@ -61,7 +61,7 @@ For more information, see [stacking docs](/x/react-charts/stacking/).
 
 ### Axis domain
 
-By default axes round their limits to match human readable values.
+By default, axes round their limits to match human-readable values.
 For example, if your data ranges from 2 to 195, the axis displays values from 0 to 200.
 This behavior can be modified by the [axis property `domainLimit`](/x/react-charts/axis/#relative-axis-subdomain).
 
@@ -144,7 +144,7 @@ const clickHandler = (
 {{"demo": "LineClick.js"}}
 
 :::info
-Their is a slight difference between the `event` of `onAxisClick` and the others:
+There is a slight difference between the `event` of `onAxisClick` and the others:
 
 - For `onAxisClick` it's a native mouse event emitted by the svg component.
 - For others, it's a React synthetic mouse event emitted by the area, line, or mark component.
@@ -153,7 +153,7 @@ Their is a slight difference between the `event` of `onAxisClick` and the others
 
 ### Composition
 
-If you're using composition, you can get those click event as follow.
+If you're using composition, you can get those click events as follows.
 Notice that the `onAxisClick` will handle both bar and line series if you mix them.
 
 ```jsx

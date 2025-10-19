@@ -81,23 +81,10 @@ export interface GridRowTreeCreationParams {
   previousGroupsToFetch?: GridRowId[];
 }
 
-export type GridRowTreeUpdateGroupAction = 'removeChildren' | 'insertChildren' | 'modifyChildren';
-
-export type GridRowTreeUpdatedGroupsValue = {
-  [groupId: GridRowId]: { [action in GridRowTreeUpdateGroupAction]?: boolean };
-};
-
-export type GridRowTreeUpdatedGroupsManager = {
-  value: GridRowTreeUpdatedGroupsValue;
-  addAction: (groupId: GridRowId, action: GridRowTreeUpdateGroupAction) => void;
-};
-
 export type GridRowTreeCreationValue = Pick<
   GridRowsState,
   'groupingName' | 'tree' | 'treeDepths' | 'dataRowIds' | 'groupsToFetch'
-> & {
-  updatedGroupsManager?: GridRowTreeUpdatedGroupsManager;
-};
+>;
 
 export type GridHydrateRowsValue = Pick<
   GridRowsState,

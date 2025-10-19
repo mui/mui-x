@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import kebabCase from 'lodash/kebabCase';
+import { kebabCase } from 'es-toolkit/string';
 import { getHeaders, getTitle, renderMarkdown } from '@mui/internal-markdown';
 import {
   ComponentInfo,

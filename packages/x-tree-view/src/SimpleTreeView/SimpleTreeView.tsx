@@ -121,15 +121,16 @@ SimpleTreeView.propTypes = {
    */
   apiRef: PropTypes.shape({
     current: PropTypes.shape({
-      focusItem: PropTypes.func.isRequired,
-      getItem: PropTypes.func.isRequired,
-      getItemDOMElement: PropTypes.func.isRequired,
-      getItemOrderedChildrenIds: PropTypes.func.isRequired,
-      getItemTree: PropTypes.func.isRequired,
-      getParentId: PropTypes.func.isRequired,
-      setIsItemDisabled: PropTypes.func.isRequired,
-      setItemExpansion: PropTypes.func.isRequired,
-      setItemSelection: PropTypes.func.isRequired,
+      focusItem: PropTypes.func,
+      getItem: PropTypes.func,
+      getItemDOMElement: PropTypes.func,
+      getItemOrderedChildrenIds: PropTypes.func,
+      getItemTree: PropTypes.func,
+      getParentId: PropTypes.func,
+      isItemExpanded: PropTypes.func,
+      setIsItemDisabled: PropTypes.func,
+      setItemExpansion: PropTypes.func,
+      setItemSelection: PropTypes.func,
     }),
   }),
   /**
@@ -210,7 +211,7 @@ SimpleTreeView.propTypes = {
    * Callback fired when a Tree Item is expanded or collapsed.
    * @param {React.SyntheticEvent | null} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemExpansion()` method.
    * @param {array} itemId The itemId of the modified item.
-   * @param {array} isExpanded `true` if the item has just been expanded, `false` if it has just been collapsed.
+   * @param {boolean} isExpanded `true` if the item has just been expanded, `false` if it has just been collapsed.
    */
   onItemExpansionToggle: PropTypes.func,
   /**
@@ -223,7 +224,7 @@ SimpleTreeView.propTypes = {
    * Callback fired when a Tree Item is selected or deselected.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemSelection()` method.
    * @param {array} itemId The itemId of the modified item.
-   * @param {array} isSelected `true` if the item has just been selected, `false` if it has just been deselected.
+   * @param {boolean} isSelected `true` if the item has just been selected, `false` if it has just been deselected.
    */
   onItemSelectionToggle: PropTypes.func,
   /**

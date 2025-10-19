@@ -19,7 +19,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Alert from '@mui/material/Alert';
-import pick from 'lodash/pick';
+import { pick } from 'es-toolkit/object';
 import {
   useCustomizationPlayground,
   UseCustomizationPlaygroundProps,

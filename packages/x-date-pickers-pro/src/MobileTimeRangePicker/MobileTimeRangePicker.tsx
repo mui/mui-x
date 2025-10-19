@@ -110,7 +110,10 @@ const MobileTimeRangePicker = React.forwardRef(function MobileTimeRangePicker<
     ...defaultizedProps,
     ampmInClock: true,
     viewRenderers,
-    format: resolveTimeFormat(adapter, defaultizedProps),
+    format: resolveTimeFormat(adapter, {
+      ...defaultizedProps,
+      views: defaultizedProps.viewsForFormatting,
+    }),
     slots: {
       field: SingleInputTimeRangeField,
       ...defaultizedProps.slots,

@@ -1,4 +1,3 @@
-/* eslint-disable class-methods-use-this */
 /* v8 ignore start */
 import dayjs, { Dayjs } from 'dayjs';
 // dayjs has no exports field defined

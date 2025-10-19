@@ -11,7 +11,8 @@
   "imports": [
     "import { BarElement } from '@mui/x-charts/BarChart';",
     "import { BarElement } from '@mui/x-charts';",
-    "import { BarElement } from '@mui/x-charts-pro';"
+    "import { BarElement } from '@mui/x-charts-pro';",
+    "import { BarElement } from '@mui/x-charts-premium';"
   ],
   "slots": [
     {
@@ -50,6 +51,6 @@
   "muiName": "MuiBarElement",
   "filename": "/packages/x-charts/src/BarChart/BarElement.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/bar-demo/\">Charts - Bar demonstration</a></li>\n<li><a href=\"/x/react-charts/bars/\">Charts - Bars</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/bar-demo/\">Charts - Bar demos</a></li>\n<li><a href=\"/x/react-charts/bars/\">Charts - Bars</a></li></ul>",
   "cssComponent": false
 }

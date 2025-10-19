@@ -70,6 +70,7 @@ export const ChartsTooltipCell = styled(Typography, {
     paddingRight: theme.spacing(1),
   },
   [`&.${chartsTooltipClasses.labelCell}`]: {
+    whiteSpace: 'nowrap',
     fontWeight: theme.typography.fontWeightRegular,
   },
   [`&.${chartsTooltipClasses.valueCell}, &.${chartsTooltipClasses.axisValueCell}`]: {

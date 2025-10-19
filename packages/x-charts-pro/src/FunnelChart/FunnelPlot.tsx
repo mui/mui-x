@@ -7,7 +7,7 @@ import {
   cartesianSeriesTypes,
   useSelector,
   useStore,
-  isBandScale,
+  isOrdinalScale,
 } from '@mui/x-charts/internals';
 import { FunnelItemIdentifier } from './funnel.types';
 import { FunnelSection } from './FunnelSection';
@@ -81,7 +81,7 @@ const useAggregatedData = () => {
         stackOffset,
         useBand,
       ) => {
-        if (isBandScale(xScale)) {
+        if (isOrdinalScale(xScale)) {
           const position = xScale(bandIdentifier)!;
           return useBand ? position + bandWidth : position;
         }
@@ -98,7 +98,7 @@ const useAggregatedData = () => {
         stackOffset?: number,
         useBand?: boolean,
       ) => {
-        if (isBandScale(yScale)) {
+        if (isOrdinalScale(yScale)) {
           const position = yScale(bandIdentifier);
           return useBand ? position! + bandWidth : position!;
         }

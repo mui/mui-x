@@ -1,26 +1,22 @@
 'use client';
 import * as React from 'react';
+import { useStore } from '@mui/x-internals/store';
 import { TreeViewPlugin } from '../../models';
 import { UseTreeViewIdSignature } from './useTreeViewId.types';
-import { useSelector } from '../../hooks/useSelector';
-import { selectorTreeViewId } from './useTreeViewId.selectors';
+import { idSelectors } from './useTreeViewId.selectors';
 import { createTreeViewDefaultId } from './useTreeViewId.utils';
 
 export const useTreeViewId: TreeViewPlugin<UseTreeViewIdSignature> = ({ params, store }) => {
   React.useEffect(() => {
-    store.update((prevState) => {
-      if (params.id === prevState.id.providedTreeId && prevState.id.treeId !== undefined) {
-        return prevState;
-      }
+    const prevIdState = store.state.id;
+    if (params.id === prevIdState.providedTreeId && prevIdState.treeId !== undefined) {
+      return;
+    }
 
-      return {
-        ...prevState,
-        id: { ...prevState.id, treeId: params.id ?? createTreeViewDefaultId() },
-      };
-    });
+    store.set('id', { ...prevIdState, treeId: params.id ?? createTreeViewDefaultId() });
   }, [store, params.id]);
 
-  const treeId = useSelector(store, selectorTreeViewId);
+  const treeId = useStore(store, idSelectors.treeId);
 
   return {
     getRootProps: () => ({

@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
 import { useChartContext } from '../context/ChartProvider';
-import { AxisConfig, D3Scale } from '../models/axis';
-import { isBandScale } from '../internals/isBandScale';
+import { AxisConfig, D3ContinuousScale, D3Scale } from '../models/axis';
+import { isOrdinalScale } from '../internals/scaleGuards';
 import { isInfinity } from '../internals/isInfinity';
 
 export interface TickParams {
@@ -83,7 +83,7 @@ export function getTicks(
   } = options;
 
   // band scale
-  if (isBandScale(scale)) {
+  if (isOrdinalScale(scale)) {
     const domain = scale.domain();
 
     const tickLabelPlacement = tickLabelPlacementProp ?? 'middle';
@@ -156,8 +156,10 @@ export function getTicks(
   if (domain.some(isInfinity)) {
     return [];
   }
+
   const tickLabelPlacement = tickLabelPlacementProp;
-  const ticks = typeof tickInterval === 'object' ? tickInterval : scale.ticks(tickNumber);
+  const ticks =
+    typeof tickInterval === 'object' ? tickInterval : getDefaultTicks(scale, tickNumber);
 
   // Ticks inside the drawing area
   const visibleTicks: TickItemType[] = [];
@@ -190,6 +192,15 @@ export function getTicks(
   }
 
   return visibleTicks;
+}
+
+function getDefaultTicks(scale: D3ContinuousScale, tickNumber: number) {
+  const domain = scale.domain();
+  if (domain[0] === domain[1]) {
+    return [domain[0]];
+  }
+
+  return scale.ticks(tickNumber);
 }
 
 export function useTicks(

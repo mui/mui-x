@@ -44,13 +44,14 @@
   "imports": [
     "import { PieArcPlot } from '@mui/x-charts/PieChart';",
     "import { PieArcPlot } from '@mui/x-charts';",
-    "import { PieArcPlot } from '@mui/x-charts-pro';"
+    "import { PieArcPlot } from '@mui/x-charts-pro';",
+    "import { PieArcPlot } from '@mui/x-charts-premium';"
   ],
   "slots": [{ "name": "pieArc", "description": "", "class": null }],
   "classes": [],
   "muiName": "MuiPieArcPlot",
   "filename": "/packages/x-charts/src/PieChart/PieArcPlot.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/pie/\">Charts - Pie</a></li>\n<li><a href=\"/x/react-charts/pie-demo/\">Charts - Pie demonstration</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/pie/\">Charts - Pie</a></li>\n<li><a href=\"/x/react-charts/pie-demo/\">Charts - Pie demos</a></li></ul>",
   "cssComponent": false
 }

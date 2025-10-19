@@ -7,7 +7,7 @@ packageName: '@mui/x-charts'
 
 {{"component": "modules/components/overview/XLogo.tsx"}}
 
-# MUI X Charts
+# MUI X Charts
 
 <p class="description">A collection of React chart components for data visualization.</p>
 
@@ -25,7 +25,7 @@ Features such as axes and legends are shared across Chart components and are des
 
 {{"component": "modules/components/ChartFeaturesGrid.js"}}
 
-## All MUI X Charts
+## All MUI X Charts
 
 {{"component": "modules/components/ChartComponentsGrid.js"}}
 

@@ -91,10 +91,17 @@ function valueGetter(
   ids: AxisId | AxisId[] = axes.axisIds[0],
 ): Value | Value[] {
   return Array.isArray(ids)
-    ? ids.map((id, axisIndex) =>
-        getAxisValue(axes.axis[id], value, (indexes as (number | null)[])[axisIndex]),
-      )
-    : getAxisValue(axes.axis[ids], value, indexes as number | null);
+    ? ids.map((id, axisIndex) => {
+        const axis = axes.axis[id];
+
+        return getAxisValue(
+          axis.scale,
+          axis.data,
+          value,
+          (indexes as (number | null)[])[axisIndex],
+        );
+      })
+    : getAxisValue(axes.axis[ids].scale, axes.axis[ids].data, value, indexes as number | null);
 }
 
 export const selectorChartsInteractionXAxisValue = createSelector(

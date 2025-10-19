@@ -141,7 +141,10 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
   const props = {
     ...defaultizedProps,
     viewRenderers,
-    format: resolveDateTimeFormat(adapter, defaultizedProps),
+    format: resolveDateTimeFormat(adapter, {
+      ...defaultizedProps,
+      views: defaultizedProps.viewsForFormatting,
+    }),
     views,
     yearsPerRow: defaultizedProps.yearsPerRow ?? 4,
     ampmInClock,

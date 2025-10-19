@@ -2,7 +2,7 @@
 productId: x-date-pickers
 title: React Digital Clock component
 components: DigitalClock, MultiSectionDigitalClock
-githubLabel: 'scope: TimePicker'
+githubLabel: 'component: TimePicker'
 packageName: '@mui/x-date-pickers'
 ---
 
@@ -12,7 +12,7 @@ packageName: '@mui/x-date-pickers'
 
 ## Description
 
-There are two component versions for different cases. The `DigitalClock` handles selection of a single time instance in one step, just like a `select` component. The `MultiSectionDigitalClock` allows selecting time using separate sections for separate views.
+There are two component versions for different cases. The `DigitalClock` handles selection of a single time instance in one step, just like a `select` component. The `MultiSectionDigitalClock` lets users select time using separate sections for separate views.
 
 The `DigitalClock` is more appropriate when there is a limited number of time options needed, while the `MultiSectionDigitalClock` is suited for cases when a more granular time selection is needed.
 
@@ -77,7 +77,7 @@ The prop accepts:
 
 ## Skip rendering disabled options
 
-With the `skipDisabled` prop, the components don't render options that are not available to the user (for example through `minTime`, `maxTime`, `shouldDisabledTime` etc.).
+With the `skipDisabled` prop, the components don't render options that are not available to the user (for example through `minTime`, `maxTime`, `shouldDisableTime` etc.).
 
 The following example combines these properties to customize which options are rendered.
 

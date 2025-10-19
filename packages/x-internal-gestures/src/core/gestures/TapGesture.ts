@@ -117,6 +117,7 @@ export class TapGesture<GestureName extends string> extends PointerGesture<Gestu
       requiredKeys: [...this.requiredKeys],
       pointerMode: [...this.pointerMode],
       preventIf: [...this.preventIf],
+      pointerOptions: structuredClone(this.pointerOptions),
       // Apply any overrides passed to the method
       ...overrides,
     });
@@ -147,7 +148,10 @@ export class TapGesture<GestureName extends string> extends PointerGesture<Gestu
   /**
    * Handle pointer events for the tap gesture
    */
-  protected handlePointerEvent(pointers: Map<number, PointerData>, event: PointerEvent): void {
+  protected handlePointerEvent = (
+    pointers: Map<number, PointerData>,
+    event: PointerEvent,
+  ): void => {
     const pointersArray = Array.from(pointers.values());
 
     // Find which element (if any) is being targeted
@@ -159,11 +163,9 @@ export class TapGesture<GestureName extends string> extends PointerGesture<Gestu
     // Filter pointers to only include those targeting our element or its children
     const relevantPointers = this.getRelevantPointers(pointersArray, targetElement);
 
-    // Check if we have enough pointers and not too many
     if (
-      this.shouldPreventGesture(targetElement) ||
-      relevantPointers.length < this.minPointers ||
-      relevantPointers.length > this.maxPointers
+      this.shouldPreventGesture(targetElement, event.pointerType) ||
+      !this.isWithinPointerCount(relevantPointers, event.pointerType)
     ) {
       if (this.isActive) {
         // Cancel the gesture if it was active
@@ -256,7 +258,7 @@ export class TapGesture<GestureName extends string> extends PointerGesture<Gestu
       default:
         break;
     }
-  }
+  };
 
   /**
    * Fire the main tap event when a valid tap is detected
