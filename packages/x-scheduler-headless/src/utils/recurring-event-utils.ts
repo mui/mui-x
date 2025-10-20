@@ -15,30 +15,66 @@ import { UpdateEventsParameters } from './SchedulerStore';
 /**
  * The week day codes for all 7 days of the week.
  */
-export const WEEK_DAYS: RecurringEventWeekDayCode[] = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
+export const NOT_LOCALIZED_WEEK_DAYS: RecurringEventWeekDayCode[] = [
+  'MO',
+  'TU',
+  'WE',
+  'TH',
+  'FR',
+  'SA',
+  'SU',
+];
 
+const mondayMap = new WeakMap<Adapter, SchedulerValidDate>();
 /**
- * Builds maps to convert between a week day code and a week day number.
- * This method uses a known ISO Monday (2025-01-06).
- * Day numbers come from adapter.getDayOfWeek(), so it respects the adapter’s locale numbering.
+ * Returns the week day number (1..7) of Monday for a given adapter.
  */
-export function getWeekDayMaps(adapter: Adapter): {
-  codeToNum: Record<RecurringEventWeekDayCode, number>;
-  numToCode: Record<number, RecurringEventWeekDayCode>;
-} {
-  const baseMonday = adapter.date('2025-01-06T00:00:00Z', 'utc'); // ISO Monday
-  const codeToNum = {} as Record<RecurringEventWeekDayCode, number>;
-  const numToCode: Record<number, RecurringEventWeekDayCode> = {};
-
-  for (let i = 0; i < WEEK_DAYS.length; i += 1) {
-    const day = i === 0 ? baseMonday : adapter.addDays(baseMonday, i);
-    const code = WEEK_DAYS[i];
-    const num = adapter.getDayOfWeek(day);
-    codeToNum[code] = num;
-    numToCode[num] = code;
+function getMondayWeekDayNumber(adapter: Adapter) {
+  let monday: SchedulerValidDate;
+  const mondayFromCache = mondayMap.get(adapter);
+  if (mondayFromCache != null) {
+    monday = mondayFromCache;
+  } else {
+    monday = adapter.date('2025-01-06T00:00:00Z', 'utc'); // ISO Monday
+    mondayMap.set(adapter, monday);
   }
 
-  return { codeToNum, numToCode };
+  return adapter.getDayOfWeek(monday);
+}
+
+function getLocalizedWeekDays(adapter: Adapter): RecurringEventWeekDayCode[] {
+  const mondayWeekDayNumber = getMondayWeekDayNumber(adapter);
+
+  return Array.from(
+    { length: NOT_LOCALIZED_WEEK_DAYS.length },
+    (_, i) => NOT_LOCALIZED_WEEK_DAYS[(i + mondayWeekDayNumber - 1) % 7],
+  );
+}
+
+/**
+ * Returns the week day code (MO..SU) for a given date.
+ * Day numbers come from adapter.getDayOfWeek(), so it respects the adapter’s locale numbering.
+ */
+export function getWeekDayCode(
+  adapter: Adapter,
+  date: SchedulerValidDate,
+): RecurringEventWeekDayCode {
+  const dayOfWeek = adapter.getDayOfWeek(date);
+  const mondayWeekDayNumber = getMondayWeekDayNumber(adapter);
+  return NOT_LOCALIZED_WEEK_DAYS[(dayOfWeek - mondayWeekDayNumber + 7) % 7];
+}
+
+/**
+ * Returns the week day number (1..7) for a given week day code (MO..SU).
+ * Day numbers come from adapter.getDayOfWeek(), so it respects the adapter’s locale numbering.
+ */
+export function getWeekDayNumberFromCode(
+  adapter: Adapter,
+  code: RecurringEventWeekDayCode,
+): number {
+  const mondayWeekDayNumber = getMondayWeekDayNumber(adapter);
+  const indexOfCode = NOT_LOCALIZED_WEEK_DAYS.indexOf(code);
+  return ((indexOfCode + mondayWeekDayNumber - 1) % 7) + 1;
 }
 
 /**
@@ -65,10 +101,9 @@ export function tokenizeByDay(byDay: RecurringEventByDayValue): {
  */
 export function parsesByDayForWeeklyFrequency(
   ruleByDay: RecurringEventRecurrenceRule['byDay'] | undefined,
-  fallback: RecurringEventWeekDayCode[],
-): RecurringEventWeekDayCode[] {
+): RecurringEventWeekDayCode[] | null {
   if (!ruleByDay?.length) {
-    return fallback;
+    return null;
   }
   const parsed = ruleByDay.map(tokenizeByDay);
   if (parsed.some((item) => item.ord !== null)) {
@@ -232,9 +267,7 @@ export function nthWeekdayOfMonth(
   weekdayCode: RecurringEventWeekDayCode,
   ordinal: number,
 ): SchedulerValidDate | null {
-  const { codeToNum } = getWeekDayMaps(adapter);
-  const targetWeekdayNumber = codeToNum[weekdayCode];
-
+  const targetWeekdayNumber = getWeekDayNumberFromCode(adapter, weekdayCode);
   const totalDaysInMonth = adapter.getDaysInMonth(monthStart);
 
   // Path A — Nth occurrence from the start of the month (ordinal > 0)
@@ -299,14 +332,13 @@ export function matchesRecurrence(
     case 'WEEKLY': {
       const seriesWeek = adapter.startOfWeek(seriesStartDay);
       const dateWeek = adapter.startOfWeek(candidateDay);
-      const { numToCode } = getWeekDayMaps(adapter);
 
       // If no BYDAY is provided in a WEEKLY rule, default to the weekday of DTSTART.
-      const weekDayCode = parsesByDayForWeeklyFrequency(rule.byDay, [
-        numToCode[adapter.getDayOfWeek(seriesStartDay)],
-      ]);
+      const weekDayCode = parsesByDayForWeeklyFrequency(rule.byDay) ?? [
+        getWeekDayCode(adapter, seriesStartDay),
+      ];
 
-      const dateDowCode = numToCode[adapter.getDayOfWeek(candidateDay)];
+      const dateDowCode = getWeekDayCode(adapter, candidateDay);
       if (!weekDayCode.includes(dateDowCode)) {
         return false;
       }
@@ -426,9 +458,8 @@ function dayInWeek(
   weekStart: SchedulerValidDate,
   code: RecurringEventWeekDayCode,
 ) {
-  const { codeToNum } = getWeekDayMaps(adapter);
   const weekStartDow = adapter.getDayOfWeek(weekStart);
-  const ruleDow = codeToNum[code];
+  const ruleDow = getWeekDayNumberFromCode(adapter, code);
   const delta = (((ruleDow - weekStartDow) % 7) + 7) % 7;
   return adapter.startOfDay(adapter.addDays(weekStart, delta));
 }
@@ -448,10 +479,7 @@ export function countWeeklyOccurrencesUpToExact(
     return 0;
   }
 
-  const { numToCode } = getWeekDayMaps(adapter);
-  const byDay = parsesByDayForWeeklyFrequency(rule.byDay, [
-    numToCode[adapter.getDayOfWeek(seriesStart)],
-  ]);
+  const byDay = parsesByDayForWeeklyFrequency(rule.byDay) ?? [getWeekDayCode(adapter, seriesStart)];
 
   const interval = Math.max(1, rule.interval ?? 1);
 
@@ -644,8 +672,7 @@ export function countYearlyOccurrencesUpToExact(
  */
 export function computeMonthlyOrdinal(adapter: Adapter, date: SchedulerValidDate): number {
   const monthStart = adapter.startOfMonth(date);
-  const { numToCode } = getWeekDayMaps(adapter);
-  const code = numToCode[adapter.getDayOfWeek(date)];
+  const code = getWeekDayCode(adapter, date);
 
   // Is it the last same-weekday of the month? (-1)
   const lastSameWeekday = nthWeekdayOfMonth(adapter, monthStart, code, -1)!;
@@ -671,19 +698,18 @@ export function realignWeeklyByDay(
   oldRefDay: SchedulerValidDate,
   newStart: SchedulerValidDate,
 ): RecurringEventWeekDayCode[] {
-  const { numToCode, codeToNum } = getWeekDayMaps(adapter);
-  const oldCode = numToCode[adapter.getDayOfWeek(oldRefDay)];
-  const newCode = numToCode[adapter.getDayOfWeek(newStart)];
+  const oldCode = getWeekDayCode(adapter, oldRefDay);
+  const newCode = getWeekDayCode(adapter, newStart);
 
   if (oldCode === newCode) {
     return weekDayCodes;
   }
 
-  const swapped = Array.from(new Set(weekDayCodes.map((d) => (d === oldCode ? newCode : d))));
+  const weekDayCodesSet = new Set(weekDayCodes);
 
-  swapped.sort((a, b) => codeToNum[a] - codeToNum[b]);
-
-  return swapped;
+  return getLocalizedWeekDays(adapter).filter(
+    (code) => (weekDayCodesSet.has(code) && code !== oldCode) || code === newCode,
+  );
 }
 
 /**
@@ -752,8 +778,7 @@ export function decideSplitRRule(
 
     // B) Ordinal BYDAY → recompute ordinal + weekday for the new date
     if (baseRule.byDay?.length) {
-      const { numToCode } = getWeekDayMaps(adapter);
-      const code = numToCode[adapter.getDayOfWeek(changes.start)];
+      const code = getWeekDayCode(adapter, changes.start);
       const ord = computeMonthlyOrdinal(adapter, changes.start);
       realignedRule = { ...realignedRule, byDay: [`${ord}${code}` as RecurringEventByDayValue] };
     }
