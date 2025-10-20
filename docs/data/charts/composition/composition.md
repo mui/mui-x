@@ -6,9 +6,9 @@ components: ChartContainer, ChartContainerPro, ChartsGrid, ChartDataProvider, Ch
 packageName: '@mui/x-charts'
 ---
 
-# Chart composition
+# Charts - Composition
 
-<p class="description">Creating advanced custom charts.</p>
+<p class="description">Learn how to use composition to build advanced custom Charts.</p>
 
 ## Overview
 
