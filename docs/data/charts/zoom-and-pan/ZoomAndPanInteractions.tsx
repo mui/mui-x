@@ -42,7 +42,7 @@ const knobs = {
   wheelPan: {
     displayName: 'Pan on wheel',
     knob: 'switch',
-    defaultValue: false,
+    defaultValue: true,
   },
 } as const;
 
