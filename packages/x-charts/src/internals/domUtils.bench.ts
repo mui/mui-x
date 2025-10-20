@@ -1,7 +1,7 @@
 import { bench, describe } from 'vitest';
-import { getStringSize } from './domUtils';
+import { batchMeasureStrings, clearStringMeasurementCache, getStringSize } from './domUtils';
 
-export const countryNames = [
+export const strings = [
   'Aruba',
   'Afghanistan',
   'Angola',
@@ -220,19 +220,65 @@ export const countryNames = [
   'South Africa',
   'Zambia',
   'Zimbabwe',
-] as const;
+];
+
+const baseDate = new Date(1760670813770);
+for (let i = 0; i < 10_000; i += 1) {
+  const date = new Date(baseDate);
+  date.setDate(i + 1);
+  strings.push(date.toISOString());
+}
+
+const setup = () => {
+  // Call once to create the measuring dom element
+  getStringSize('Warmup');
+  clearStringMeasurementCache();
+};
 
 describe('getStringSize', () => {
-  bench('without styles', () => {
-    countryNames.forEach((countryName) => getStringSize(countryName));
-  });
+  bench(
+    'without styles',
+    () => {
+      strings.forEach((countryName) => getStringSize(countryName));
+    },
+    { setup },
+  );
 
-  bench('with alternating styles', () => {
-    const style1 = { fontSize: 12, fontFamily: 'Arial' };
-    const style2 = { fontSize: 16, fontFamily: 'Times New Roman', fontWeight: 'bold' };
+  bench(
+    'with alternating styles',
+    () => {
+      const style1 = { fontSize: 12, fontFamily: 'Arial' };
+      const style2 = { fontSize: 16, fontFamily: 'Times New Roman', fontWeight: 'bold' };
+      const firstHalf = strings.filter((_, i) => i % 2 === 0);
+      const secondHalf = strings.filter((_, i) => i % 2 !== 0);
 
-    countryNames.forEach((countryName, i) =>
-      getStringSize(countryName, i % 2 === 0 ? style1 : style2),
-    );
-  });
+      firstHalf.forEach((countryName) => getStringSize(countryName, style1));
+      secondHalf.forEach((countryName) => getStringSize(countryName, style2));
+    },
+    { setup },
+  );
+});
+
+describe('batchMeasureStrings', () => {
+  bench(
+    'without styles',
+    () => {
+      batchMeasureStrings(strings);
+    },
+    { setup },
+  );
+
+  bench(
+    'with alternating styles',
+    () => {
+      const style1 = { fontSize: 12, fontFamily: 'Arial' };
+      const style2 = { fontSize: 16, fontFamily: 'Times New Roman', fontWeight: 'bold' };
+      const firstHalf = strings.filter((_, i) => i % 2 === 0);
+      const secondHalf = strings.filter((_, i) => i % 2 !== 0);
+
+      batchMeasureStrings(firstHalf, style1);
+      batchMeasureStrings(secondHalf, style2);
+    },
+    { setup },
+  );
 });

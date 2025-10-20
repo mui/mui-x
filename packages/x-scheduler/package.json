@@ -20,7 +20,6 @@
     "./models": "./src/models/index.ts",
     "./month-view": "./src/month-view/index.ts",
     "./standalone-event": "./src/standalone-event/index.ts",
-    "./standalone-view": "./src/standalone-view/index.ts",
     "./timeline": "./src/timeline/index.ts",
     "./translations": "./src/translations/index.ts",
     "./week-view": "./src/week-view/index.ts"
