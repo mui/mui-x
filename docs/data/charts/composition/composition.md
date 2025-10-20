@@ -10,19 +10,15 @@ packageName: '@mui/x-charts'
 
 <p class="description">Learn how to use composition to build advanced custom Charts.</p>
 
-## Overview
+The MUI X Charts components follow an architecture based on context providers: you can pass your series and axes definitions to specialized components that transform the data and make it available to its children, which can then be composed.
 
-The `@mui/x-charts` follows an architecture based on context providers.
-The overall idea is to pass your series and axes definitions to special components.
-This component transforms the data and makes it available to its children, which can be composed.
+There are two main types of components used to create Charts: structural and graphical.
 
-There are two main classes of components, which are used to create a chart.
-
-### Structural components
+## Structural components
 
 These are used to define the chart's structure and data.
 
-#### The Data Provider and Surface components
+### The Data Provider and Surface components
 
 As the name suggests, the `ChartDataProvider` provides the data to the children components.
 While the `ChartsSurface` renders the SVG elements.
@@ -50,7 +46,7 @@ The demos here are using the `ChartContainer` component.
 To see demos using the separate `ChartDataProvider` and `ChartsSurface` components, check the [HTML components documentation](/x/react-charts/components/#html-components).
 :::
 
-#### The `ChartContainer` helper
+### The Chart Container helper
 
 This component is a composition of the two previous components.
 It can be used instead of them when there is no need to customize anything outside the chart's graphical elements.
@@ -69,7 +65,7 @@ It can be used instead of them when there is no need to customize anything outsi
 </ChartContainer>
 ```
 
-### Graphical components
+## Graphical components
 
 These are any component that render the graphical elements of the chart.
 They are the children of the **Structural components** shown above.
