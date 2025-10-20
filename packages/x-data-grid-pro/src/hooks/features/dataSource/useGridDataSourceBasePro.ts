@@ -348,14 +348,15 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
         const rowsToDelete: { id: GridRowId; _action: 'delete' }[] = [];
         if (parentRowsToDelete.size > 0) {
           parentRowsToDelete.forEach((parentRowId) => {
-            const descendants = getTreeNodeDescendants(tree, parentRowId, false, false).reverse(); // reverse to make sure that the deepest descendants are deleted first
-            for (let i = 0; i < descendants.length; i += 1) {
+            const descendants = getTreeNodeDescendants(tree, parentRowId, false, false);
+            for (let i = descendants.length - 1; i >= 0; i -= 1) {
+              // delete deepest descendants first
               rowsToDelete.push({ id: descendants[i], _action: 'delete' });
             }
             rowsToDelete.push({ id: parentRowId, _action: 'delete' });
           });
         }
-        apiRef.current.updateRows([...rowsToDelete, ...response.rows]);
+        apiRef.current.updateRows(response.rows.concat(rowsToDelete));
       }
 
       apiRef.current.unstable_applyPipeProcessors(
