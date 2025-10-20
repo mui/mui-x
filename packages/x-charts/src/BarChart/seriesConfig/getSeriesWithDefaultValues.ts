@@ -1,15 +1,13 @@
-import type { GetSeriesWithDefaultValues } from '../../internals/plugins/models/seriesConfig';
+import { AllSeriesType } from '../../models/seriesType';
 
-const getSeriesWithDefaultValues: GetSeriesWithDefaultValues<'bar'> = (
-  seriesData,
-  seriesIndex,
-  colors,
-) => {
+export function getSeriesWithDefaultValues<T extends 'bar' | 'barRange'>(
+  seriesData: AllSeriesType<T>,
+  seriesIndex: number,
+  colors: readonly string[],
+) {
   return {
     id: seriesData.id ?? `auto-generated-id-${seriesIndex}`,
     color: colors[seriesIndex % colors.length],
     ...seriesData,
   };
-};
-
-export default getSeriesWithDefaultValues;
+}

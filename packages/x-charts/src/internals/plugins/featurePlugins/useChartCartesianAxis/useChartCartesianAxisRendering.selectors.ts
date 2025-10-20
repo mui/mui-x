@@ -384,6 +384,7 @@ export const selectorChartFilteredYDomains = createSelector(
         formattedSeries,
         filter,
       );
+      console.log(axisExtrema);
 
       filteredDomains[axis.id] = calculateFinalDomain(
         axis as Readonly<DefaultedAxis<ContinuousScaleName, any, Readonly<ChartsAxisProps>>>,

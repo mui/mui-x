@@ -1,6 +1,6 @@
 import { ColorProcessor } from '../../internals/plugins/models';
 
-const getColor: ColorProcessor<'bar'> = (series, xAxis, yAxis) => {
+const getColor: ColorProcessor<'bar' | 'barRange'> = (series, xAxis, yAxis) => {
   const verticalLayout = series.layout === 'vertical';
 
   const bandColorScale = verticalLayout ? xAxis?.colorScale : yAxis?.colorScale;
