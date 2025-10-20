@@ -12,6 +12,7 @@ import {
 import debounce from '@mui/utils/debounce';
 import { useEffectAfterFirstRender } from '@mui/x-internals/useEffectAfterFirstRender';
 import { useEventCallback } from '@mui/material/utils';
+import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { calculateZoom } from './calculateZoom';
 import { UseChartProZoomSignature } from './useChartProZoom.types';
 import { useZoomOnWheel } from './gestureHooks/useZoomOnWheel';
@@ -115,6 +116,11 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginDat
       store.update((prevState) => {
         const newZoomData =
           typeof zoomData === 'function' ? zoomData([...prevState.zoom.zoomData]) : zoomData;
+
+        if (isDeepEqual(newZoomData, prevState.zoom.zoomData)) {
+          return prevState;
+        }
+
         onZoomChange?.(newZoomData);
         if (prevState.zoom.isControlled) {
           return prevState;
