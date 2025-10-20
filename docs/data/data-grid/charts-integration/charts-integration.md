@@ -4,9 +4,9 @@ title: Data Grid and Charts integration
 
 # Charts integration [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') 🧪
 
-<p class="description">Use the MUI X Charts to visualize data from the Data Grid.</p>
+<p class="description">Use the MUI X Charts to visualize data from the Data Grid.</p>
 
-Data Grid seamlessly integrates with [MUI X Charts](/x/react-charts/) for data visualization with dynamic Chart updates based on the Data Grid state changes (whether through the Data Grid API or user interactions).
+Data Grid seamlessly integrates with [MUI X Charts](/x/react-charts/) for data visualization with dynamic Chart updates based on the Data Grid state changes (whether through the Data Grid API or user interactions).
 
 :::warning
 This feature is in preview. It is ready for production use, but its API, visuals and behavior may change in future minor or patch releases.
