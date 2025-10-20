@@ -55,7 +55,7 @@
 
 .DayTimeGridAllDayEventsGrid {
   border-bottom: 1px solid var(--border-color);
-  grid-template-columns: minmax(var(--fixed-cell-width), auto) minmax(0, 1fr) fit-content(100%);
+  grid-template-columns: var(--fixed-cell-width) minmax(0, 1fr) fit-content(100%);
 }
 
 .DayTimeGridAllDayEventsGrid[style*='--has-scroll: 1'] .ScrollablePlaceholder {
@@ -121,6 +121,9 @@
   text-align: end;
   color: var(--secondary-text-color);
   border-right: 1px solid var(--border-color);
+  overflow-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
 }
 
 .DayTimeGridHeaderDayName {

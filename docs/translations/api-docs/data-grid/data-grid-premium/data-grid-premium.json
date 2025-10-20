@@ -1722,6 +1722,18 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the horizontal scrollbar"
     },
+    "scrollShadow": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the scroll shadow element"
+    },
+    "scrollShadow--horizontal": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the horizontal scroll shadow element"
+    },
+    "scrollShadow--vertical": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the vertical scroll shadow element"
+    },
     "selectedRowCount": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the footer selected row count element"
@@ -1916,6 +1928,7 @@
     "pivotSearchIcon": "Icon used for the search icon in the sidebar search field",
     "promptAggregationIcon": "Icon used to display aggregation changes",
     "promptChangesToggleIcon": "Icon used on the toggle button of the changes list",
+    "promptChartsIcon": "Icon used to mark the request to visalize the data",
     "promptFilterIcon": "Icon used to display filter changes",
     "promptGroupIcon": "Icon used to display group changes",
     "promptIcon": "Icon used for the prompt",

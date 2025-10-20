@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { styled } from '@mui/system';
 import { useRtl } from '@mui/system/RtlProvider';
+import composeClasses from '@mui/utils/composeClasses';
 import {
   gridDimensionsSelector,
   gridPinnedColumnsSelector,
@@ -18,6 +19,7 @@ import {
   gridHasScrollXSelector,
   gridHasScrollYSelector,
 } from '../hooks/features/dimensions/gridDimensionsSelectors';
+import { getDataGridUtilityClass } from '../constants';
 
 interface GridScrollShadowsProps {
   position: 'vertical' | 'horizontal';
@@ -27,7 +29,21 @@ type OwnerState = Pick<DataGridProcessedProps, 'classes'> & {
   position: 'vertical' | 'horizontal';
 };
 
-const ScrollShadow = styled('div')<{ ownerState: OwnerState }>(({ theme }) => ({
+const useUtilityClasses = (ownerState: OwnerState) => {
+  const { classes, position } = ownerState;
+
+  const slots = {
+    root: ['scrollShadow', `scrollShadow--${position}`],
+  };
+
+  return composeClasses(slots, getDataGridUtilityClass, classes);
+};
+
+const ScrollShadow = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'ScrollShadow',
+  overridesResolver: (props, styles) => [styles.root, styles[props.position]],
+})<{ ownerState: OwnerState }>(({ theme }) => ({
   position: 'absolute',
   inset: 0,
   pointerEvents: 'none',
@@ -37,8 +53,9 @@ const ScrollShadow = styled('div')<{ ownerState: OwnerState }>(({ theme }) => ({
   '--opacity': theme.palette.mode === 'dark' ? '0.7' : '0.18',
   '--blur': 'var(--length)',
   '--spread': 'calc(var(--length) * -1)',
-  '--color-start': 'rgba(0, 0, 0, calc(var(--hasScrollStart) * var(--opacity)))',
-  '--color-end': 'rgba(0, 0, 0, calc(var(--hasScrollEnd) * var(--opacity)))',
+  '--color': '0, 0, 0',
+  '--color-start': 'rgba(var(--color), calc(var(--hasScrollStart) * var(--opacity)))',
+  '--color-end': 'rgba(var(--color), calc(var(--hasScrollEnd) * var(--opacity)))',
   variants: [
     {
       props: { position: 'vertical' },
@@ -67,6 +84,7 @@ function GridScrollShadows(props: GridScrollShadowsProps) {
   const { position } = props;
   const rootProps = useGridRootProps();
   const ownerState = { classes: rootProps.classes, position };
+  const classes = useUtilityClasses(ownerState);
   const ref = React.useRef<HTMLDivElement>(null);
   const apiRef = useGridPrivateApiContext();
   const hasScrollX = useGridSelector(apiRef, gridHasScrollXSelector);
@@ -135,6 +153,7 @@ function GridScrollShadows(props: GridScrollShadowsProps) {
 
   return (
     <ScrollShadow
+      className={classes.root}
       ownerState={ownerState}
       ref={ref}
       style={

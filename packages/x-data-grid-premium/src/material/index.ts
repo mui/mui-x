@@ -64,6 +64,7 @@ const iconsSlots: GridPremiumIconSlotsComponent = {
   promptPivotIcon: GridPivotIcon,
   promptAggregationIcon: GridFunctionsIcon,
   promptGroupIcon: GridGroupWorkIcon,
+  promptChartsIcon: GridChartsIcon,
   promptChangesToggleIcon: GridExpandMoreIcon,
   chartsIcon: GridChartsIcon,
   chartsSearchIcon: GridSearchIcon,
