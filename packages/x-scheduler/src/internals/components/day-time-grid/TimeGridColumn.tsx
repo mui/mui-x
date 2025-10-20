@@ -67,17 +67,24 @@ function ColumnInteractiveLayer({
   occurrences: CalendarEventOccurrenceWithTimePosition[];
   maxIndex: number;
 }) {
+  // Context hooks
   const adapter = useAdapter();
-
-  const placeholder = CalendarGrid.usePlaceholderInRange({ start, end, occurrences, maxIndex });
   const store = useEventCalendarStoreContext();
+  const { open: startEditing } = useEventPopoverContext();
+
+  // Ref hooks
   const columnRef = React.useRef<HTMLDivElement | null>(null);
+
+  // Feature hooks
+  const placeholder = CalendarGrid.usePlaceholderInRange({ start, end, occurrences, maxIndex });
   const getDateFromPosition = CalendarGrid.useGetDateFromPositionInColumn({
     elementRef: columnRef,
     snapMinutes: EVENT_CREATION_PRECISION_MINUTE,
   });
-  const { open: startEditing } = useEventPopoverContext();
+
+  // Selector hooks
   const isCreation = useStore(store, selectors.isCreatingNewEventInTimeRange, start, end);
+  const canCreateEvent = useStore(store, selectors.canCreateNewEvent);
 
   const computeInitialRange = (event: React.MouseEvent<HTMLDivElement>) => {
     const startDateFromPosition = getDateFromPosition(event.clientY);
@@ -89,6 +96,9 @@ function ColumnInteractiveLayer({
   };
 
   const handleDoubleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (!canCreateEvent) {
+      return;
+    }
     const draftRange = computeInitialRange(event);
     store.setOccurrencePlaceholder({
       type: 'creation',
