@@ -464,7 +464,7 @@ const dummyData = [
   },
 ];
 
-// API Routes
+// API route
 app.get('/api/employees', (req, res) => {
   const { page = 0, pageSize = 40, sortModel = [], filterModel = {} } = req.query;
 
@@ -607,7 +607,7 @@ app.listen(PORT, () => {
 
 **What's happening here:**
 
-- Express server is set up with CORS enabled for cross-origin requests
+- Express.js server is set up with CORS enabled for cross-origin requests
 - Dummy employee data simulates a database
 - `/api/employees` endpoint is created with pagination, sorting, and filtering
 - Filters can be applied based on column field, operator, and value
@@ -650,10 +650,10 @@ const EmployeeDataGrid = () => {
   return (
     <Box sx={{ height: 600, width: '100%' }}>
       <Typography variant="h4" component="h1" gutterBottom>
-        Employee Management
+        MUI X Data Grid with the Data Source layer
       </Typography>
       <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-        Server-side data with pagination, sorting, and filtering
+        Server-side data with pagination, sorting, and filtering.
       </Typography>
     </Box>
   );
@@ -725,7 +725,7 @@ All steps that follow take place in the `EmployeeDataGrid.tsx` component you cre
 Define what your data looks like by creating interfaces that match your server response.
 Add the following interfaces below the imports in `EmployeeDataGrid.tsx`:
 
-```ts
+```tsx
 interface Employee {
   id: number;
   name: string;
@@ -754,7 +754,7 @@ interface ApiResponse {
 
 Define how each column should appear and behave:
 
-```ts
+```tsx
 const EmployeeDataGrid = () => {
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 80 },
@@ -780,7 +780,7 @@ const EmployeeDataGrid = () => {
 
 The `GridDataSource` tells the Grid how to fetch data:
 
-```ts
+```tsx
   const columns: GridColDef[] //...
 
   const dataSource: GridDataSource = useMemo(
@@ -805,7 +805,7 @@ The `GridDataSource` tells the Grid how to fetch data:
 
 Inside `getRows`, construct the API call with the grid's current state:
 
-```ts
+```tsx
 const dataSource: GridDataSource = useMemo(
   () => ({
     getRows: async (params: GridGetRowsParams): Promise<GridGetRowsResponse> => {
@@ -832,7 +832,7 @@ const dataSource: GridDataSource = useMemo(
 
 Fetch the data from your server:
 
-```ts
+```tsx
 getRows: async (params: GridGetRowsParams): Promise<GridGetRowsResponse> => {
   const urlParams = new URLSearchParams({
     page: params.paginationModel?.page?.toString() || '0',
@@ -860,7 +860,7 @@ getRows: async (params: GridGetRowsParams): Promise<GridGetRowsResponse> => {
 
 Return the data in the format the Grid expects:
 
-```ts
+```tsx
 return {
   rows: result.data,
   rowCount: result.total,
@@ -871,7 +871,7 @@ return {
 
 Combining steps 10 through 13, the complete Data Source looks like this:
 
-```ts
+```tsx
 const dataSource: GridDataSource = useMemo(
   () => ({
     getRows: async (params: GridGetRowsParams): Promise<GridGetRowsResponse> => {
@@ -906,7 +906,7 @@ const dataSource: GridDataSource = useMemo(
 
 Finally, render the Grid with your configuration:
 
-```ts
+```tsx
 <DataGrid
   columns={columns}
   dataSource={dataSource}
@@ -949,11 +949,11 @@ return (
 );
 ```
 
-### Complete component code
+### 17. Complete component code
 
-Here is the complete `EmployeeDataGrid.tsx` component for reference:
+Here is the complete `EmployeeDataGrid.tsx` component:
 
-```ts
+```tsx
 import { useMemo } from 'react';
 import { DataGrid, type GridColDef, type GridDataSource, type GridGetRowsParams, type GridGetRowsResponse } from '@mui/x-data-grid';
 import { Box, Typography } from '@mui/material';
