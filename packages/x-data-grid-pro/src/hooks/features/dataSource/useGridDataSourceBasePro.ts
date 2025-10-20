@@ -335,21 +335,27 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
       if (keepChildrenExpanded === false) {
         apiRef.current.setRows(response.rows);
       } else {
+        const tree = gridRowTreeSelector(apiRef);
         // Remove existing outdated rows before setting the new ones
         // Create a set of the current root rows
-        const rowsToDelete = new Set(
-          getTreeNodeDescendants(gridRowTreeSelector(apiRef), GRID_ROOT_GROUP_ID, false, true),
+        const parentRowsToDelete = new Set(
+          getTreeNodeDescendants(tree, GRID_ROOT_GROUP_ID, false, true),
         );
         // Remove from the list the rows that are again in the response
         response.rows.forEach((row) => {
-          rowsToDelete.delete(gridRowIdSelector(apiRef, row));
+          parentRowsToDelete.delete(gridRowIdSelector(apiRef, row));
         });
-        if (rowsToDelete.size > 0) {
-          apiRef.current.updateRows(
-            Array.from(rowsToDelete).map((rowId) => ({ id: rowId, _action: 'delete' })),
-          );
+        const rowsToDelete: { id: GridRowId; _action: 'delete' }[] = [];
+        if (parentRowsToDelete.size > 0) {
+          parentRowsToDelete.forEach((parentRowId) => {
+            const descendants = getTreeNodeDescendants(tree, parentRowId, false, false).reverse(); // reverse to make sure that the deepest descendants are deleted first
+            for (let i = 0; i < descendants.length; i += 1) {
+              rowsToDelete.push({ id: descendants[i], _action: 'delete' });
+            }
+            rowsToDelete.push({ id: parentRowId, _action: 'delete' });
+          });
         }
-        apiRef.current.updateRows(response.rows);
+        apiRef.current.updateRows([...rowsToDelete, ...response.rows]);
       }
 
       apiRef.current.unstable_applyPipeProcessors(
