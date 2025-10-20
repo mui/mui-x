@@ -49,6 +49,7 @@ export const useBarChartProps = (props: BarChartProps) => {
     className,
     hideLegend,
     showToolbar,
+    brushConfig,
     ...other
   } = props;
 
@@ -139,6 +140,7 @@ export const useBarChartProps = (props: BarChartProps) => {
       axisHighlight?.y === 'none',
     className,
     skipAnimation,
+    brushConfig,
     plugins: BAR_CHART_PLUGINS,
   };
 

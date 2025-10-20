@@ -4,11 +4,19 @@ import { useStore } from '@base-ui-components/utils/store';
 import { useDayList } from '@mui/x-scheduler-headless/use-day-list';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { selectors } from '@mui/x-scheduler-headless/use-event-calendar';
+import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
+import {
+  selectors,
+  useExtractEventCalendarParameters,
+} from '@mui/x-scheduler-headless/use-event-calendar';
 import { useEventCalendarView } from '@mui/x-scheduler-headless/use-event-calendar-view';
-import { WeekViewProps } from './WeekView.types';
+import { StandaloneWeekViewProps, WeekViewProps } from './WeekView.types';
 import { DayTimeGrid } from '../internals/components/day-time-grid/DayTimeGrid';
+import '../index.css';
 
+/**
+ * A Week View to use inside the Event Calendar.
+ */
 export const WeekView = React.memo(
   React.forwardRef(function WeekView(
     props: WeekViewProps,
@@ -37,3 +45,19 @@ export const WeekView = React.memo(
     return <DayTimeGrid ref={forwardedRef} days={days} {...props} />;
   }),
 );
+
+/**
+ * A Week View that can be used outside of the Event Calendar.
+ */
+export const StandaloneWeekView = React.forwardRef(function StandaloneWeekView(
+  props: StandaloneWeekViewProps,
+  forwardedRef: React.ForwardedRef<HTMLDivElement>,
+) {
+  const { parameters, forwardedProps } = useExtractEventCalendarParameters(props);
+
+  return (
+    <EventCalendarProvider {...parameters}>
+      <WeekView ref={forwardedRef} {...forwardedProps} />
+    </EventCalendarProvider>
+  );
+});
