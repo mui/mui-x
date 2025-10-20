@@ -60,7 +60,7 @@ export default function ServerSideRowGroupingExpansionPersistence() {
           variant="outlined"
           onClick={() => {
             apiRef.current?.dataSource.fetchRows(GRID_ROOT_GROUP_ID, {
-              collapseChildren: true,
+              keepChildrenExpanded: false,
             });
           }}
         >
