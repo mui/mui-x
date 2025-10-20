@@ -1,1 +1,5 @@
-export const preventDefault = (event: Event) => event.preventDefault();
+export const preventDefault = (event: Event) => {
+  if (event.cancelable) {
+    event.preventDefault();
+  }
+};
