@@ -4,6 +4,7 @@ import { describeConformance } from 'test/utils/describeConformance';
 import { Unstable_RadarChart as RadarChart, RadarChartProps } from '@mui/x-charts/RadarChart';
 import { spy } from 'sinon';
 import { isJSDOM } from 'test/utils/skipIf';
+import { CHART_SELECTOR } from '../tests/constants';
 
 const radarConfig: RadarChartProps = {
   height: 100,
@@ -66,7 +67,7 @@ describe('<RadarChart />', () => {
       </div>,
     );
 
-    const svg = document.querySelector<HTMLElement>('svg')!;
+    const svg = document.querySelector<HTMLElement>(CHART_SELECTOR)!;
     await user.pointer([{ target: svg, coords: { clientX: 45, clientY: 45 } }]);
 
     expect(document.querySelector<HTMLElement>('svg .MuiRadarAxisHighlight-root')!).toBeVisible();
