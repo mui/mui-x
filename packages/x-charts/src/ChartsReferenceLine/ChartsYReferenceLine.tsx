@@ -29,18 +29,28 @@ export type ChartsYReferenceLineProps<
 type GetTextPlacementParams = {
   left: number;
   width: number;
-  spacingX: number;
-} & Pick<CommonChartsReferenceLineProps, 'labelAlign'>;
+  position: number;
+} & Pick<CommonChartsReferenceLineProps, 'labelAlign' | 'spacing'>;
 
 const getTextParams = ({
   left,
   width,
-  spacingX,
+  spacing,
+  position,
   labelAlign = 'middle',
 }: GetTextPlacementParams) => {
+  const defaultSpacingOtherAxis =
+    labelAlign === 'middle' || labelAlign === undefined
+      ? DEFAULT_SPACING_MIDDLE_OTHER_AXIS
+      : DEFAULT_SPACING;
+
+  const spacingX = (typeof spacing === 'object' ? spacing.x : spacing) ?? defaultSpacingOtherAxis;
+  const spacingY = (typeof spacing === 'object' ? spacing.y : spacing) ?? DEFAULT_SPACING;
+
   switch (labelAlign) {
     case 'start':
       return {
+        y: position - spacingY,
         x: left + spacingX,
         style: {
           dominantBaseline: 'auto',
@@ -50,6 +60,7 @@ const getTextParams = ({
 
     case 'end':
       return {
+        y: position - spacingY,
         x: left + width - spacingX,
         style: {
           dominantBaseline: 'auto',
@@ -59,6 +70,7 @@ const getTextParams = ({
 
     default:
       return {
+        y: position - spacingY,
         x: left + width / 2 + spacingX,
         style: {
           dominantBaseline: 'auto',
@@ -84,9 +96,9 @@ function ChartsYReferenceLine(props: ChartsYReferenceLineProps) {
   const {
     y,
     label = '',
-    spacing: spacingProp,
+    spacing,
     classes: inClasses,
-    labelAlign,
+    labelAlign = 'middle',
     lineStyle,
     labelStyle,
     axisId,
@@ -111,24 +123,14 @@ function ChartsYReferenceLine(props: ChartsYReferenceLineProps) {
 
   const classes = getYReferenceLineClasses(inClasses);
 
-  const defaultSpacingOtherAxis =
-    labelAlign === 'middle' || labelAlign === undefined
-      ? DEFAULT_SPACING_MIDDLE_OTHER_AXIS
-      : DEFAULT_SPACING;
-
-  const spacingX =
-    (typeof spacingProp === 'object' ? spacingProp.x : spacingProp) ?? defaultSpacingOtherAxis;
-  const spacingY =
-    (typeof spacingProp === 'object' ? spacingProp.y : spacingProp) ?? DEFAULT_SPACING;
-
   const textParams = {
-    y: yPosition - spacingY,
     text: label,
     fontSize: 12,
     ...getTextParams({
       left,
       width,
-      spacingX,
+      spacing,
+      position: yPosition,
       labelAlign,
     }),
     className: classes.label,
