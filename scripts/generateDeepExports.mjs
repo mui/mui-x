@@ -175,6 +175,7 @@ async function getComponentDirectories(packagePath, ignoreList) {
   const srcPath = path.join(packagePath, 'src');
 
   const dirents = await fs.readdir(srcPath, { withFileTypes: true });
+
   const directories = dirents
     .filter((dirent) => dirent.isDirectory())
     .map((dirent) => dirent.name)
@@ -182,6 +183,13 @@ async function getComponentDirectories(packagePath, ignoreList) {
 
   const validityChecks = await Promise.all(
     directories.map(async (name) => {
+      const tsxIndex = path.join(srcPath, name, 'index.tsx');
+
+      if (existsSync(tsxIndex)) {
+        console.warn(`  ⚠️  Warning: Found 'index.tsx' in ${name}, renaming to 'index.ts'`);
+        await fs.rename(tsxIndex, tsxIndex.replace('.tsx', '.ts'));
+      }
+
       const indexFile = path.join(srcPath, name, 'index.ts');
       try {
         const content = await fs.readFile(indexFile, 'utf8');
@@ -338,7 +346,7 @@ async function main() {
       // eslint-disable-next-line no-await-in-loop
       await processPackage(basePackageName);
     } catch (error) {
-      console.error(`Error processing ${basePackageName}:`, error);
+      console.error(`\nError processing ${basePackageName}:\n`);
       throw error;
     }
   }

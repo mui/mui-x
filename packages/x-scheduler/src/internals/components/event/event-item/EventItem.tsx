@@ -34,13 +34,19 @@ export const EventItem = React.forwardRef(function EventItem(
     ...other
   } = props;
 
-  const id = useId(idProp);
+  // Context hooks
   const translations = useTranslations();
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
+
+  // State hooks
+  const id = useId(idProp);
+
+  // Selector hooks
   const ampm = useStore(store, selectors.ampm);
   const resource = useStore(store, selectors.resource, occurrence.resource);
   const color = useStore(store, selectors.eventColor, occurrence.id);
+
   const isRecurring = Boolean(occurrence.rrule);
 
   const content = React.useMemo(() => {
