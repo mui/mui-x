@@ -54,6 +54,20 @@ You can change the appearance by setting the [`pinnedColumnsSectionSeparator`](/
 
 {{"demo": "ColumnPinningSectionSeparator.js", "bg": "inline"}}
 
+You can override the scroll shadow's color and opacity by setting the `--color` and `--opacity` CSS variables on the `.MuiDataGrid-scrollShadow` class. For example:
+
+```tsx
+<DataGridPro
+  pinnedColumnsSectionSeparator="shadow"
+  sx={{
+    '& .MuiDataGrid-scrollShadow': {
+      '--color': '255, 0, 0', // must be an RGB value
+      '--opacity': '0.5',
+    },
+  }}
+/>
+```
+
 ## Disabling column pinning
 
 Column pinning is enabled by default on the Data Grid Pro, but you can disable it for some or all columns.

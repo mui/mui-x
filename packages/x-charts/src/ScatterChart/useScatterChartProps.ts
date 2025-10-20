@@ -45,6 +45,7 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     className,
     showToolbar,
     renderer,
+    brushConfig,
     ...other
   } = props;
 
@@ -74,6 +75,7 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     plugins: SCATTER_CHART_PLUGINS,
     slots,
     slotProps,
+    brushConfig,
   };
 
   const chartsAxisProps: ChartsAxisProps = {
