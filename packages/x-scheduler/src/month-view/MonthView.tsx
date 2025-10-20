@@ -38,19 +38,25 @@ export const MonthView = React.memo(
     props: MonthViewProps,
     forwardedRef: React.ForwardedRef<HTMLDivElement>,
   ) {
-    const { className, ...other } = props;
+    // Context hooks
+    const adapter = useAdapter();
+    const translations = useTranslations();
+    const store = useEventCalendarStoreContext();
+
+    // Ref hooks
     const containerRef = React.useRef<HTMLElement | null>(null);
     const handleRef = useMergedRefs(forwardedRef, containerRef);
     const cellRef = React.useRef<HTMLDivElement>(null);
-    const [maxEvents, setMaxEvents] = React.useState<number>(4);
 
-    const adapter = useAdapter();
-    const store = useEventCalendarStoreContext();
+    // Selector hooks
     const showWeekends = useStore(store, selectors.showWeekends);
     const showWeekNumber = useStore(store, selectors.showWeekNumber);
     const visibleDate = useStore(store, selectors.visibleDate);
-    const translations = useTranslations();
 
+    // State hooks
+    const [maxEvents, setMaxEvents] = React.useState<number>(4);
+
+    // Feature hooks
     const getDayList = useDayList();
     const getWeekList = useWeekList();
     const { weeks, days } = React.useMemo(() => {
@@ -87,9 +93,9 @@ export const MonthView = React.memo(
 
     return (
       <div
+        {...props}
         ref={handleRef}
-        className={clsx('MonthViewContainer', 'mui-x-scheduler', className)}
-        {...other}
+        className={clsx('MonthViewContainer', 'mui-x-scheduler', props.className)}
       >
         <EventPopoverProvider containerRef={containerRef}>
           <MoreEventsPopoverProvider containerRef={containerRef}>

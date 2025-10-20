@@ -30,16 +30,19 @@ export const AgendaView = React.memo(
     props: AgendaViewProps,
     forwardedRef: React.ForwardedRef<HTMLDivElement>,
   ) {
-    const containerRef = React.useRef<HTMLElement | null>(null);
-    const handleRef = useMergedRefs(forwardedRef, containerRef);
-    const { className, ...other } = props;
-
+    // Context hooks
     const adapter = useAdapter();
     const store = useEventCalendarStoreContext();
-    const today = adapter.date();
+
+    // Ref hooks
+    const containerRef = React.useRef<HTMLElement | null>(null);
+    const handleRef = useMergedRefs(forwardedRef, containerRef);
+
+    // Selector hooks
     const visibleDate = useStore(store, selectors.visibleDate);
     const showWeekends = useStore(store, selectors.showWeekends);
 
+    // Feature hooks
     const getDayList = useDayList();
     const days = React.useMemo(
       () =>
@@ -57,11 +60,13 @@ export const AgendaView = React.memo(
         adapter.addDays(date, AGENDA_VIEW_DAYS_AMOUNT * delta),
     }));
 
+    const today = adapter.date();
+
     return (
       <div
+        {...props}
         ref={handleRef}
-        className={clsx('AgendaViewContainer', 'mui-x-scheduler', className)}
-        {...other}
+        className={clsx('AgendaViewContainer', 'mui-x-scheduler', props.className)}
       >
         <EventPopoverProvider containerRef={containerRef}>
           {days.map((day) => (
