@@ -287,6 +287,7 @@ export interface GridLocaleText {
   promptChangePivotRowsLabel: (count: number) => string;
   promptChangePivotValuesLabel: (count: number) => string;
   promptChangePivotValuesDescription: (column: string, aggregation: string) => string;
+  promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) => string;
 
   // Prompt field
   promptFieldLabel: string;

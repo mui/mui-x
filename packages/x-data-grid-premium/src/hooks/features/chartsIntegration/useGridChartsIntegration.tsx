@@ -164,7 +164,6 @@ export const useGridChartsIntegration = (
   const isChartsIntegrationAvailable =
     !!props.chartsIntegration && !!props.experimentalFeatures?.charts && !!context;
   const activeChartId = gridChartsIntegrationActiveChartIdSelector(apiRef);
-  const orderedFields = gridColumnFieldsSelector(apiRef);
   const aggregationModel = gridAggregationModelSelector(apiRef);
   const pivotActive = gridPivotActiveSelector(apiRef);
   const pivotModel = gridPivotModelSelector(apiRef);
@@ -318,6 +317,7 @@ export const useGridChartsIntegration = (
         return;
       }
 
+      const orderedFields = gridColumnFieldsSelector(apiRef);
       const rowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
       const rowTree = gridRowTreeSelector(apiRef);
       const rowsPerDepth = gridFilteredSortedDepthRowEntriesSelector(apiRef);
@@ -405,7 +405,7 @@ export const useGridChartsIntegration = (
         });
       });
     },
-    [apiRef, orderedFields, getColumnName, getValueDatasetLabel, setChartState],
+    [apiRef, getColumnName, getValueDatasetLabel, setChartState],
   );
 
   const debouncedHandleRowDataUpdate = React.useMemo(
