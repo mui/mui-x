@@ -5,7 +5,7 @@ import {
   CalendarEventOccurrence,
 } from '../models';
 import { Adapter } from '../use-adapter/useAdapter.types';
-import { getRecurringEventOccurrencesForVisibleDays } from './recurrence-utils';
+import { getRecurringEventOccurrencesForVisibleDays } from './recurring-event-utils';
 
 /**
  *  Returns the key of the days an event occurrence should be visible on.

@@ -324,6 +324,7 @@ export const idIDGrid: Partial<GridLocaleText> = {
   promptChangePivotValuesLabel: (count: number) => `Nilai (${count})`,
   promptChangePivotValuesDescription: (column: string, aggregation: string) =>
     `${column} (${aggregation})`,
+  // promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) => `Dimensions (${dimensionsCount}), Values (${valuesCount})`,
 };
 
 export const idID: Localization = getGridLocalization(idIDGrid);

@@ -4,7 +4,12 @@ import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import { warnOnce } from '@mui/x-internals/warning';
 import { useDrawingArea, useXScale } from '../hooks';
-import { CommonChartsReferenceLineProps, ReferenceLineRoot } from './common';
+import {
+  CommonChartsReferenceLineProps,
+  DEFAULT_SPACING,
+  DEFAULT_SPACING_MIDDLE_OTHER_AXIS,
+  ReferenceLineRoot,
+} from './common';
 import { ChartsText } from '../ChartsText';
 import {
   ChartsReferenceLineClasses,
@@ -24,18 +29,27 @@ export type ChartsXReferenceLineProps<
 type GetTextPlacementParams = {
   top: number;
   height: number;
-  spacingY: number;
-} & Pick<CommonChartsReferenceLineProps, 'labelAlign'>;
+  position: number;
+} & Pick<CommonChartsReferenceLineProps, 'labelAlign' | 'spacing'>;
 
 const getTextParams = ({
   top,
   height,
-  spacingY,
+  spacing,
+  position,
   labelAlign = 'middle',
 }: GetTextPlacementParams) => {
+  const defaultSpacingOtherAxis =
+    labelAlign === 'middle' ? DEFAULT_SPACING_MIDDLE_OTHER_AXIS : DEFAULT_SPACING;
+
+  const spacingX = (typeof spacing === 'object' ? spacing.x : spacing) ?? DEFAULT_SPACING;
+  const spacingY =
+    (typeof spacing === 'object' ? spacing.y : defaultSpacingOtherAxis) ?? defaultSpacingOtherAxis;
+
   switch (labelAlign) {
     case 'start':
       return {
+        x: position + spacingX,
         y: top + spacingY,
         style: {
           dominantBaseline: 'hanging',
@@ -45,6 +59,7 @@ const getTextParams = ({
 
     case 'end':
       return {
+        x: position + spacingX,
         y: top + height - spacingY,
         style: {
           dominantBaseline: 'auto',
@@ -54,7 +69,8 @@ const getTextParams = ({
 
     default:
       return {
-        y: top + height / 2,
+        x: position + spacingX,
+        y: top + height / 2 + spacingY,
         style: {
           dominantBaseline: 'central',
           textAnchor: 'start',
@@ -79,9 +95,9 @@ function ChartsXReferenceLine(props: ChartsXReferenceLineProps) {
   const {
     x,
     label = '',
-    spacing = 5,
+    spacing,
     classes: inClasses,
-    labelAlign,
+    labelAlign = 'middle',
     lineStyle,
     labelStyle,
     axisId,
@@ -105,17 +121,14 @@ function ChartsXReferenceLine(props: ChartsXReferenceLineProps) {
 
   const classes = getXReferenceLineClasses(inClasses);
 
-  const spacingX = typeof spacing === 'object' ? (spacing.x ?? 0) : spacing;
-  const spacingY = typeof spacing === 'object' ? (spacing.y ?? 0) : spacing;
-
   const textParams = {
-    x: xPosition + spacingX,
     text: label,
     fontSize: 12,
     ...getTextParams({
       top,
       height,
-      spacingY,
+      spacing,
+      position: xPosition,
       labelAlign,
     }),
     className: classes.label,

@@ -14,7 +14,7 @@ export const initialEvents = [
     end: START.set({ weekday: 1, hour: 9, minute: 0 }),
     title: 'MO to TH',
     resource: 'weekly',
-    rrule: { freq: 'WEEKLY', interval: 1, byDay: ['MO', 'TU', 'WE', 'TH'] },
+    rrule: { freq: 'WEEKLY', byDay: ['MO', 'TU', 'WE', 'TH'] },
   },
   {
     id: 'weekly-mwf',
@@ -22,7 +22,7 @@ export const initialEvents = [
     end: START.set({ weekday: 1, hour: 9, minute: 30 }),
     title: 'MO, WE and FR',
     resource: 'weekly',
-    rrule: { freq: 'WEEKLY', interval: 1, byDay: ['MO', 'WE', 'FR'] },
+    rrule: { freq: 'WEEKLY', byDay: ['MO', 'WE', 'FR'] },
   },
   {
     id: 'weekly-weekend-block',
@@ -30,7 +30,7 @@ export const initialEvents = [
     end: START.set({ weekday: 6, hour: 12 }),
     title: 'SA and SU',
     resource: 'weekly',
-    rrule: { freq: 'WEEKLY', interval: 1, byDay: ['SA', 'SU'] },
+    rrule: { freq: 'WEEKLY', byDay: ['SA', 'SU'] },
   },
   {
     id: 'weekly-biweekly-thu',
@@ -72,7 +72,7 @@ export const initialEvents = [
     end: START.set({ weekday: 1, hour: 11 }),
     title: '1st Monday of Month',
     resource: 'monthly',
-    rrule: { freq: 'MONTHLY', interval: 1, byDay: ['1MO'] },
+    rrule: { freq: 'MONTHLY', byDay: ['1MO'] },
   },
   {
     id: 'monthly-last-friday',
@@ -80,7 +80,7 @@ export const initialEvents = [
     end: START.set({ weekday: 5, hour: 17 }),
     title: 'Last Friday of Month',
     resource: 'monthly',
-    rrule: { freq: 'MONTHLY', interval: 1, byDay: ['-1FR'] },
+    rrule: { freq: 'MONTHLY', byDay: ['-1FR'] },
   },
   {
     id: 'monthly-15th',
@@ -88,7 +88,7 @@ export const initialEvents = [
     end: START.set({ weekday: 4, hour: 14 }),
     title: 'Monthly on 15th',
     resource: 'monthly',
-    rrule: { freq: 'MONTHLY', interval: 1, byMonthDay: [15] },
+    rrule: { freq: 'MONTHLY', byMonthDay: [15] },
   },
   {
     id: 'monthly-20th-every-two-months',
@@ -104,7 +104,7 @@ export const initialEvents = [
     end: START.set({ weekday: 4, hour: 14 }),
     title: '31st (skip short months)',
     resource: 'monthly',
-    rrule: { freq: 'MONTHLY', interval: 1, byMonthDay: [31] },
+    rrule: { freq: 'MONTHLY', byMonthDay: [31] },
   },
   {
     id: 'monthly-every-2-months-2nd-thu',
@@ -121,7 +121,7 @@ export const initialEvents = [
     end: DateTime.fromISO('2024-11-28T13:00:00'),
     title: 'Yearly event',
     resource: 'yearly',
-    rrule: { freq: 'YEARLY', interval: 1 },
+    rrule: { freq: 'YEARLY' },
   },
   {
     id: 'yearly-leap-day',
@@ -129,7 +129,7 @@ export const initialEvents = [
     end: DateTime.fromISO('2024-02-29T10:00:00'),
     title: 'Yearly Leap Day Only',
     resource: 'yearly',
-    rrule: { freq: 'YEARLY', interval: 1 },
+    rrule: { freq: 'YEARLY' },
   },
   // ALL-DAY AND SPANNING EVENTS
   {
@@ -139,7 +139,7 @@ export const initialEvents = [
     title: 'First Saturday of the Month',
     allDay: true,
     resource: 'allday',
-    rrule: { freq: 'MONTHLY', interval: 1, byDay: ['1SA'] },
+    rrule: { freq: 'MONTHLY', byDay: ['1SA'] },
   },
   {
     id: 'allday-oncall-7day-every-4-weeks',

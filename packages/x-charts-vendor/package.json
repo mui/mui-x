@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-charts-vendor",
-  "version": "8.14.0",
+  "version": "8.14.1",
   "author": "MUI Team",
   "description": "Vendored dependencies for MUI X Charts.",
   "keywords": [
@@ -47,6 +47,7 @@
     "@types/d3-format": "^3.0.4",
     "@types/d3-path": "^3.1.1",
     "@types/d3-time-format": "^4.0.3",
+    "babel-plugin-module-resolver": "^5.0.2",
     "d3-array": "^3.2.4",
     "d3-format": "^3.1.0",
     "d3-path": "^3.1.0",

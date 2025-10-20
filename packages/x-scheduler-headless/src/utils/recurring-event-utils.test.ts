@@ -1,10 +1,10 @@
 import { adapter, adapterFr } from 'test/utils/scheduler';
 import {
-  ByDayCode,
-  ByDayValue,
+  RecurringEventWeekDayCode,
+  RecurringEventByDayValue,
   CalendarEvent,
   CalendarEventUpdatedProperties,
-  RRuleSpec,
+  RecurringEventRecurrenceRule,
   SchedulerValidDate,
 } from '@mui/x-scheduler-headless/models';
 import {
@@ -16,20 +16,21 @@ import {
   buildEndGuard,
   getAllDaySpanDays,
   countYearlyOccurrencesUpToExact,
-  getByDayMaps,
+  getWeekDayMaps,
   tokenizeByDay,
-  parseWeeklyByDayPlain,
+  parsesByDayForWeeklyFrequency,
   nthWeekdayOfMonth,
-  parseMonthlyByDayOrdinalSingle,
+  parsesByDayForMonthlyFrequency,
   applyRecurringUpdateFollowing,
   decideSplitRRule,
   applyRecurringUpdateAll,
   applyRecurringUpdateOnlyThis,
-} from './recurrence-utils';
+  WEEK_DAYS,
+} from './recurring-event-utils';
 import { diffIn } from '../use-adapter';
 import { mergeDateAndTime } from './date-utils';
 
-describe('recurrence-utils', () => {
+describe('recurring-event-utils', () => {
   const makeRecurringEvent = (overrides: Partial<CalendarEvent> = {}): CalendarEvent => ({
     id: 'recurring',
     title: 'Recurring Event',
@@ -40,30 +41,18 @@ describe('recurrence-utils', () => {
     ...overrides,
   });
 
-  describe('getByDayMaps', () => {
-    const ALL_CODES: ByDayCode[] = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
+  describe('getWeekDayMaps', () => {
     it('respects fr locale Mon=1 numbering', () => {
-      const { byDayToNum, numToByDay } = getByDayMaps(adapterFr);
-
-      expect(byDayToNum.MO).to.equal(1);
-      expect(byDayToNum.SU).to.equal(7);
-      expect(Object.values(byDayToNum)).to.have.length(7);
-      expect(Object.keys(numToByDay)).to.have.length(7);
-      ALL_CODES.forEach((code) => {
-        expect(numToByDay[byDayToNum[code]]).to.equal(code);
+      expect(getWeekDayMaps(adapterFr)).to.deep.equal({
+        codeToNum: { MO: 1, TU: 2, WE: 3, TH: 4, FR: 5, SA: 6, SU: 7 },
+        numToCode: { 1: 'MO', 2: 'TU', 3: 'WE', 4: 'TH', 5: 'FR', 6: 'SA', 7: 'SU' },
       });
     });
 
     it('respects enUS locale Sunday=1 numbering', () => {
-      const { byDayToNum, numToByDay } = getByDayMaps(adapter);
-
-      expect(byDayToNum.SU).to.equal(1);
-      expect(byDayToNum.MO).to.equal(2);
-      expect(Object.values(byDayToNum)).to.have.length(7);
-      expect(Object.keys(numToByDay)).to.have.length(7);
-
-      ALL_CODES.forEach((code) => {
-        expect(numToByDay[byDayToNum[code]]).to.equal(code);
+      expect(getWeekDayMaps(adapter)).to.deep.equal({
+        codeToNum: { SU: 1, MO: 2, TU: 3, WE: 4, TH: 5, FR: 6, SA: 7 },
+        numToCode: { 1: 'SU', 2: 'MO', 3: 'TU', 4: 'WE', 5: 'TH', 6: 'FR', 7: 'SA' },
       });
     });
   });
@@ -129,15 +118,14 @@ describe('recurrence-utils', () => {
   describe('BYDAY parsers: tokenizeByDay / parseWeeklyByDayPlain / parseMonthlyByDayOrdinalSingle', () => {
     describe('tokenizeByDay', () => {
       it('parses plain byDay codes without ordinal', () => {
-        const ALL_CODES: ByDayCode[] = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
-        ALL_CODES.forEach((code) => {
+        WEEK_DAYS.forEach((code) => {
           const res = tokenizeByDay(code);
           expect(res).to.deep.equal({ ord: null, code });
         });
       });
 
       it('parses positive ordinals', () => {
-        const cases: Array<[ByDayValue, number, ByDayCode]> = [
+        const cases: Array<[RecurringEventByDayValue, number, RecurringEventWeekDayCode]> = [
           ['1MO', 1, 'MO'],
           ['2TU', 2, 'TU'],
           ['3WE', 3, 'WE'],
@@ -152,7 +140,7 @@ describe('recurrence-utils', () => {
       });
 
       it('parses negative ordinals (-1..-5)', () => {
-        const cases: Array<[ByDayValue, number, ByDayCode]> = [
+        const cases: Array<[RecurringEventByDayValue, number, RecurringEventWeekDayCode]> = [
           ['-1MO', -1, 'MO'],
           ['-2TU', -2, 'TU'],
           ['-3WE', -3, 'WE'],
@@ -181,7 +169,7 @@ describe('recurrence-utils', () => {
         ];
 
         invalidInputs.forEach((input) => {
-          expect(() => tokenizeByDay(input as ByDayCode)).to.throw();
+          expect(() => tokenizeByDay(input as RecurringEventWeekDayCode)).to.throw();
         });
       });
     });
@@ -189,57 +177,58 @@ describe('recurrence-utils', () => {
     describe('parseWeeklyByDayPlain', () => {
       it('returns fallback when ruleByDay is undefined or empty', () => {
         // ruleByDay is undefined
-        const fallbackTU: ByDayCode[] = ['TU'];
-        expect(parseWeeklyByDayPlain(undefined, fallbackTU)).to.deep.equal(fallbackTU);
+        const fallbackTU: RecurringEventWeekDayCode[] = ['TU'];
+        expect(parsesByDayForWeeklyFrequency(undefined, fallbackTU)).to.deep.equal(fallbackTU);
 
         // ruleByDay is empty
-        const fallbackMO: ByDayCode[] = ['MO'];
-        expect(parseWeeklyByDayPlain([], fallbackMO)).to.deep.equal(fallbackMO);
+        const fallbackMO: RecurringEventWeekDayCode[] = ['MO'];
+        expect(parsesByDayForWeeklyFrequency([], fallbackMO)).to.deep.equal(fallbackMO);
       });
 
       it('accepts plain byDay codes and returns them unchanged', () => {
-        const byDay: RRuleSpec['byDay'] = ['MO', 'WE', 'FR'];
-        expect(parseWeeklyByDayPlain(byDay, ['TU'])).to.deep.equal(['MO', 'WE', 'FR']);
+        const byDay: RecurringEventRecurrenceRule['byDay'] = ['MO', 'WE', 'FR'];
+        expect(parsesByDayForWeeklyFrequency(byDay, ['TU'])).to.deep.equal(['MO', 'WE', 'FR']);
       });
 
       it('throws when any ordinal is provided (e.g., 1MO, -1FR)', () => {
-        const withOrdinal: RRuleSpec['byDay'] = ['1MO', '-1FR'];
-        expect(() => parseWeeklyByDayPlain(withOrdinal, ['MO'])).to.throw();
+        const withOrdinal: RecurringEventRecurrenceRule['byDay'] = ['1MO', '-1FR'];
+        expect(() => parsesByDayForWeeklyFrequency(withOrdinal, ['MO'])).to.throw();
       });
 
       it('throws for invalid BYDAY values (e.g., XX)', () => {
-        const invalid: RRuleSpec['byDay'] = ['XX' as any];
-        expect(() => parseWeeklyByDayPlain(invalid, ['MO'])).to.throw();
+        const invalid: RecurringEventRecurrenceRule['byDay'] = ['XX' as any];
+        expect(() => parsesByDayForWeeklyFrequency(invalid, ['MO'])).to.throw();
       });
     });
 
     describe('parseMonthlyByDayOrdinalSingle', () => {
-      it('throws when ruleByDay is undefined, empty or multiple', () => {
-        expect(() => parseMonthlyByDayOrdinalSingle(undefined)).to.throw();
-        expect(() => parseMonthlyByDayOrdinalSingle([])).to.throw();
-        expect(() => parseMonthlyByDayOrdinalSingle(['1MO', '2TU'])).to.throw();
+      it('throws when ruleByDay is empty or multiple', () => {
+        expect(() => parsesByDayForMonthlyFrequency([])).to.throw();
+        expect(() => parsesByDayForMonthlyFrequency(['1MO', '2TU'])).to.throw();
       });
 
       it('parses one ordinal byDay code (e.g., 1MO, 3WE, -1FR)', () => {
-        const byDay: RRuleSpec['byDay'] = ['1FR'];
-        expect(parseMonthlyByDayOrdinalSingle(byDay)).to.deep.equal({ ord: 1, code: 'FR' });
-        const negativeByDay: RRuleSpec['byDay'] = ['-1MO'];
-        expect(parseMonthlyByDayOrdinalSingle(negativeByDay)).to.deep.equal({
+        const byDay: RecurringEventRecurrenceRule['byDay'] = ['1FR'];
+        expect(parsesByDayForMonthlyFrequency(byDay)).to.deep.equal({ ord: 1, code: 'FR' });
+        const negativeByDay: RecurringEventRecurrenceRule['byDay'] = ['-1MO'];
+        expect(parsesByDayForMonthlyFrequency(negativeByDay)).to.deep.equal({
           ord: -1,
           code: 'MO',
         });
       });
 
       it('throws when any entry lacks an ordinal (e.g., plain MO)', () => {
-        const mixed: RRuleSpec['byDay'] = ['2TU', 'MO'];
-        expect(() => parseMonthlyByDayOrdinalSingle(mixed)).to.throw();
+        const mixed: RecurringEventRecurrenceRule['byDay'] = ['2TU', 'MO'];
+        expect(() => parsesByDayForMonthlyFrequency(mixed)).to.throw();
       });
     });
   });
 
   describe('buildEndGuard', () => {
     const baseStart = adapter.date('2025-01-01T09:00:00Z');
-    const createDailyRule = (overrides: Partial<RRuleSpec> = {}): RRuleSpec => ({
+    const createDailyRule = (
+      overrides: Partial<RecurringEventRecurrenceRule> = {},
+    ): RecurringEventRecurrenceRule => ({
       freq: 'DAILY',
       interval: 1,
       ...overrides,
@@ -247,7 +236,7 @@ describe('recurrence-utils', () => {
 
     it('throws when COUNT and UNTIL are both set (RFC 5545)', () => {
       const until = adapter.addDays(baseStart, 5);
-      const rule: RRuleSpec = { freq: 'DAILY', interval: 1, count: 10, until };
+      const rule: RecurringEventRecurrenceRule = { freq: 'DAILY', interval: 1, count: 10, until };
 
       expect(() => buildEndGuard(rule, baseStart, adapter)).to.throw();
     });
@@ -357,14 +346,14 @@ describe('recurrence-utils', () => {
     describe('daily frequency', () => {
       it('returns false for date before series start', () => {
         const event = createEvent();
-        const rule: RRuleSpec = { freq: 'DAILY', interval: 1 };
+        const rule: RecurringEventRecurrenceRule = { freq: 'DAILY', interval: 1 };
         const date = adapter.addDays(baseStart, -1);
         expect(matchesRecurrence(rule, date, adapter, event)).to.equal(false);
       });
 
       it('returns true on start day and respects interval > 1', () => {
         const event = createEvent();
-        const rule: RRuleSpec = { freq: 'DAILY', interval: 2 };
+        const rule: RecurringEventRecurrenceRule = { freq: 'DAILY', interval: 2 };
         const day0 = baseStart;
         const day1 = adapter.addDays(baseStart, 1);
         const day2 = adapter.addDays(baseStart, 2);
@@ -377,9 +366,9 @@ describe('recurrence-utils', () => {
     describe('weekly frequency', () => {
       it('returns true when the weekday is in byDay', () => {
         const event = createEvent();
-        const { numToByDay } = getByDayMaps(adapter);
-        const code = numToByDay[adapter.getDayOfWeek(event.start)];
-        const rule: RRuleSpec = {
+        const { numToCode } = getWeekDayMaps(adapter);
+        const code = numToCode[adapter.getDayOfWeek(event.start)];
+        const rule: RecurringEventRecurrenceRule = {
           freq: 'WEEKLY',
           interval: 1,
           byDay: [code],
@@ -389,7 +378,7 @@ describe('recurrence-utils', () => {
 
       it('returns false when the weekday is not in byDay', () => {
         const event = createEvent();
-        const rule: RRuleSpec = {
+        const rule: RecurringEventRecurrenceRule = {
           freq: 'WEEKLY',
           interval: 1,
           byDay: ['MO'], // Monday
@@ -399,9 +388,9 @@ describe('recurrence-utils', () => {
 
       it('interval > 1 (every 2 weeks) includes only correct weeks', () => {
         const event = createEvent(baseStart);
-        const { numToByDay } = getByDayMaps(adapter);
-        const code = numToByDay[adapter.getDayOfWeek(event.start)]; // FR
-        const rule: RRuleSpec = {
+        const { numToCode } = getWeekDayMaps(adapter);
+        const code = numToCode[adapter.getDayOfWeek(event.start)]; // FR
+        const rule: RecurringEventRecurrenceRule = {
           freq: 'WEEKLY',
           interval: 2,
           byDay: [code],
@@ -416,7 +405,7 @@ describe('recurrence-utils', () => {
 
       it('multiple byDay matches any of them', () => {
         const event = createEvent();
-        const rule: RRuleSpec = {
+        const rule: RecurringEventRecurrenceRule = {
           freq: 'WEEKLY',
           interval: 1,
           byDay: ['MO', 'TU', 'FR'],
@@ -426,7 +415,7 @@ describe('recurrence-utils', () => {
 
       it('does not match days before DTSTART within the first week', () => {
         const event = createEvent(baseStart);
-        const rule: RRuleSpec = {
+        const rule: RecurringEventRecurrenceRule = {
           freq: 'WEEKLY',
           interval: 1,
           byDay: ['MO', 'TU', 'WE', 'TH', 'FR'],
@@ -450,7 +439,7 @@ describe('recurrence-utils', () => {
 
       it('defaults to DTSTART weekday when byDay is omitted', () => {
         const event = createEvent(baseStart);
-        const rule: RRuleSpec = { freq: 'WEEKLY', interval: 1 }; // no byDay
+        const rule: RecurringEventRecurrenceRule = { freq: 'WEEKLY', interval: 1 }; // no byDay
         expect(matchesRecurrence(rule, baseStart, adapter, event)).to.equal(true); // same friday
         expect(matchesRecurrence(rule, adapter.addDays(baseStart, 1), adapter, event)).to.equal(
           false,
@@ -462,7 +451,7 @@ describe('recurrence-utils', () => {
 
       it('throws an error for ordinal BYDAY values (e.g., 1MO)', () => {
         const event = createEvent();
-        const bad: RRuleSpec = { freq: 'WEEKLY', byDay: ['1MO'] };
+        const bad: RecurringEventRecurrenceRule = { freq: 'WEEKLY', byDay: ['1MO'] };
         expect(() => matchesRecurrence(bad, event.start, adapter, event)).to.throw();
       });
     });
@@ -472,7 +461,7 @@ describe('recurrence-utils', () => {
         it('returns true on start month/day', () => {
           const event = createEvent();
           const day = adapter.getDate(event.start);
-          const rule: RRuleSpec = {
+          const rule: RecurringEventRecurrenceRule = {
             freq: 'MONTHLY',
             interval: 1,
             byMonthDay: [day],
@@ -483,7 +472,7 @@ describe('recurrence-utils', () => {
         it('interval > 1 (every 2 months) includes only correct months', () => {
           const start = baseStart;
           const event = createEvent(start);
-          const rule: RRuleSpec = {
+          const rule: RecurringEventRecurrenceRule = {
             freq: 'MONTHLY',
             interval: 2,
             byMonthDay: [adapter.getDate(start)],
@@ -496,7 +485,7 @@ describe('recurrence-utils', () => {
 
         it('returns false when day does not match', () => {
           const event = createEvent();
-          const rule: RRuleSpec = {
+          const rule: RecurringEventRecurrenceRule = {
             freq: 'MONTHLY',
             interval: 1,
             byMonthDay: [25],
@@ -508,7 +497,7 @@ describe('recurrence-utils', () => {
         it('falls back to DTSTART day-of-month when byMonthDay is omitted', () => {
           const start = adapter.date('2025-03-15T09:00:00Z');
           const event = createEvent(start);
-          const rule: RRuleSpec = { freq: 'MONTHLY', interval: 1 }; // no byMonthDay
+          const rule: RecurringEventRecurrenceRule = { freq: 'MONTHLY', interval: 1 }; // no byMonthDay
           expect(matchesRecurrence(rule, adapter.addMonths(start, 1), adapter, event)).to.equal(
             true,
           ); // 15 Apr
@@ -527,7 +516,11 @@ describe('recurrence-utils', () => {
           // July 2025: 2nd Tuesday is Jul 8
           const start = adapter.date('2025-07-01T09:00:00Z');
           const event = createEvent(start);
-          const rule: RRuleSpec = { freq: 'MONTHLY', interval: 1, byDay: ['2TU'] };
+          const rule: RecurringEventRecurrenceRule = {
+            freq: 'MONTHLY',
+            interval: 1,
+            byDay: ['2TU'],
+          };
 
           const secondTue = adapter.addWeeks(start, 1);
           const nextTue = adapter.addWeeks(start, 2);
@@ -540,7 +533,11 @@ describe('recurrence-utils', () => {
           // July 2025: Wednesdays are 2,9,16,23,30 → 2nd last is 23
           const start = adapter.date('2025-07-01T09:00:00Z');
           const event = createEvent(start);
-          const rule: RRuleSpec = { freq: 'MONTHLY', interval: 1, byDay: ['-2WE'] };
+          const rule: RecurringEventRecurrenceRule = {
+            freq: 'MONTHLY',
+            interval: 1,
+            byDay: ['-2WE'],
+          };
 
           const secondLastWed = adapter.date('2025-07-23T09:00:00Z');
           const lastWed = adapter.addWeeks(secondLastWed, 1);
@@ -553,7 +550,11 @@ describe('recurrence-utils', () => {
           // July 1st Friday: Jul 4 → with interval=2 starting in Jul, Jul & Sep match
           const start = adapter.date('2025-07-01T09:00:00Z');
           const event = createEvent(start);
-          const rule: RRuleSpec = { freq: 'MONTHLY', interval: 2, byDay: ['1FR'] };
+          const rule: RecurringEventRecurrenceRule = {
+            freq: 'MONTHLY',
+            interval: 2,
+            byDay: ['1FR'],
+          };
 
           const julFirstFri = adapter.date('2025-07-04T09:00:00Z'); // included
           const augFirstFri = adapter.date('2025-08-01T09:00:00Z'); // skipped
@@ -569,7 +570,11 @@ describe('recurrence-utils', () => {
           // Next valid is 12 August
           const start = adapter.date('2025-07-20T09:00:00Z'); // 20 July
           const event = createEvent(start);
-          const rule: RRuleSpec = { freq: 'MONTHLY', interval: 1, byDay: ['2TU'] };
+          const rule: RecurringEventRecurrenceRule = {
+            freq: 'MONTHLY',
+            interval: 1,
+            byDay: ['2TU'],
+          };
 
           const julSecondTue = adapter.date('2025-07-08T09:00:00Z'); // before DTSTART
           const augSecondTue = adapter.date('2025-08-12T09:00:00Z');
@@ -581,7 +586,11 @@ describe('recurrence-utils', () => {
         it('throws when BYDAY is mixed with BYMONTHDAY', () => {
           const start = adapter.date('2025-07-01T09:00:00Z');
           const event = createEvent(start);
-          const mixedRule: RRuleSpec = { freq: 'MONTHLY', byDay: ['2TU'], byMonthDay: [10] };
+          const mixedRule: RecurringEventRecurrenceRule = {
+            freq: 'MONTHLY',
+            byDay: ['2TU'],
+            byMonthDay: [10],
+          };
           const candidate = adapter.date('2025-07-08T09:00:00Z'); // 2nd Tue
 
           expect(() => matchesRecurrence(mixedRule, candidate, adapter, event)).to.throw();
@@ -592,14 +601,14 @@ describe('recurrence-utils', () => {
     describe('yearly frequency', () => {
       it('returns true on start year', () => {
         const event = createEvent();
-        const rule: RRuleSpec = { freq: 'YEARLY', interval: 1 };
+        const rule: RecurringEventRecurrenceRule = { freq: 'YEARLY', interval: 1 };
         expect(matchesRecurrence(rule, event.start, adapter, event)).to.equal(true);
       });
 
       it('interval > 1 (every 2 years) includes only correct years', () => {
         const start = adapter.date('2025-03-15T09:00:00Z');
         const event = createEvent(start);
-        const rule: RRuleSpec = { freq: 'YEARLY', interval: 2 };
+        const rule: RecurringEventRecurrenceRule = { freq: 'YEARLY', interval: 2 };
         const plus1 = adapter.addYears(start, 1); // skipped
         const plus2 = adapter.addYears(start, 2); // included
         expect(matchesRecurrence(rule, plus1, adapter, event)).to.equal(false);
@@ -609,16 +618,16 @@ describe('recurrence-utils', () => {
       it('returns false when day differs despite interval', () => {
         const start = adapter.date('2025-07-20T09:00:00Z');
         const event = createEvent(start);
-        const rule: RRuleSpec = { freq: 'YEARLY', interval: 1 };
+        const rule: RecurringEventRecurrenceRule = { freq: 'YEARLY', interval: 1 };
         const diffDay = adapter.addDays(adapter.addYears(start, 1), 1);
         expect(matchesRecurrence(rule, diffDay, adapter, event)).to.equal(false);
       });
 
       it('yearly throws when BY* selectors are provided', () => {
         const event = createEvent();
-        const bad1: RRuleSpec = { freq: 'YEARLY', byMonth: [7] };
-        const bad2: RRuleSpec = { freq: 'YEARLY', byMonthDay: [20] };
-        const bad3: RRuleSpec = { freq: 'YEARLY', byDay: ['MO'] };
+        const bad1: RecurringEventRecurrenceRule = { freq: 'YEARLY', byMonth: [7] };
+        const bad2: RecurringEventRecurrenceRule = { freq: 'YEARLY', byMonthDay: [20] };
+        const bad3: RecurringEventRecurrenceRule = { freq: 'YEARLY', byDay: ['MO'] };
         expect(() => matchesRecurrence(bad1, event.start, adapter, event)).to.throw();
         expect(() => matchesRecurrence(bad2, event.start, adapter, event)).to.throw();
         expect(() => matchesRecurrence(bad3, event.start, adapter, event)).to.throw();
@@ -627,7 +636,7 @@ describe('recurrence-utils', () => {
   });
 
   describe('estimateOccurrencesUpTo', () => {
-    const createDailyRule = (interval = 1): RRuleSpec => ({
+    const createDailyRule = (interval = 1): RecurringEventRecurrenceRule => ({
       freq: 'DAILY',
       interval,
     });
@@ -659,7 +668,10 @@ describe('recurrence-utils', () => {
   });
 
   describe('countWeeklyOccurrencesUpToExact', () => {
-    const createRule = (by: ByDayCode[], interval = 1): RRuleSpec => ({
+    const createRule = (
+      by: RecurringEventWeekDayCode[],
+      interval = 1,
+    ): RecurringEventRecurrenceRule => ({
       freq: 'WEEKLY',
       interval,
       byDay: by,
@@ -668,8 +680,8 @@ describe('recurrence-utils', () => {
     it('returns 0 when target date is before series start', () => {
       const start = adapter.date('2025-06-10T09:00:00Z'); // Tuesday
       const target = adapter.date('2025-06-09T23:59:59Z'); // Mon before start
-      const { numToByDay } = getByDayMaps(adapter);
-      const code = numToByDay[adapter.getDayOfWeek(start)]; // TU
+      const { numToCode } = getWeekDayMaps(adapter);
+      const code = numToCode[adapter.getDayOfWeek(start)]; // TU
       expect(countWeeklyOccurrencesUpToExact(adapter, createRule([code]), start, target)).to.equal(
         0,
       );
@@ -678,8 +690,8 @@ describe('recurrence-utils', () => {
     it('counts first occurrence when target is same day', () => {
       const start = adapter.date('2025-06-10T09:00:00Z'); // Tuesday
       const target = adapter.date('2025-06-10T23:59:59Z');
-      const { numToByDay } = getByDayMaps(adapter);
-      const code = numToByDay[adapter.getDayOfWeek(start)]; // TU
+      const { numToCode } = getWeekDayMaps(adapter);
+      const code = numToCode[adapter.getDayOfWeek(start)]; // TU
       expect(countWeeklyOccurrencesUpToExact(adapter, createRule([code]), start, target)).to.equal(
         1,
       );
@@ -688,8 +700,8 @@ describe('recurrence-utils', () => {
     it('counts occurrences for a single weekday across several weeks (interval=1)', () => {
       const start = adapter.date('2025-06-10T09:00:00Z'); // Tuesday
       const target = adapter.date('2025-07-08T12:00:00Z'); // 5 Tuesdays inclusive
-      const { numToByDay } = getByDayMaps(adapter);
-      const code = numToByDay[adapter.getDayOfWeek(start)]; // TU
+      const { numToCode } = getWeekDayMaps(adapter);
+      const code = numToCode[adapter.getDayOfWeek(start)]; // TU
       expect(countWeeklyOccurrencesUpToExact(adapter, createRule([code]), start, target)).to.equal(
         5,
       );
@@ -697,7 +709,7 @@ describe('recurrence-utils', () => {
 
     it('counts multiple days per week (e.g. Mon & Wed) up to target inclusive', () => {
       const start = adapter.date('2025-06-02T09:00:00Z'); // Monday
-      const byDay: ByDayCode[] = ['MO', 'WE'];
+      const byDay: RecurringEventWeekDayCode[] = ['MO', 'WE'];
       const target = adapter.date('2025-06-18T23:59:59Z'); // includes weeks of Jun 2,9,16
       // Occurrences: Mon(2), Wed(4), Mon(9), Wed(11), Mon(16), Wed(18) = 6
       expect(countWeeklyOccurrencesUpToExact(adapter, createRule(byDay), start, target)).to.equal(
@@ -708,8 +720,8 @@ describe('recurrence-utils', () => {
     it('respects interval > 1 (every 2 weeks)', () => {
       const start = adapter.date('2025-06-10T09:00:00Z'); // Tuesday
       const target = adapter.date('2025-07-22T12:00:00Z');
-      const { numToByDay } = getByDayMaps(adapter);
-      const code = numToByDay[adapter.getDayOfWeek(start)]; // TU
+      const { numToCode } = getWeekDayMaps(adapter);
+      const code = numToCode[adapter.getDayOfWeek(start)]; // TU
       expect(
         countWeeklyOccurrencesUpToExact(adapter, createRule([code], 2), start, target),
       ).to.equal(4);
@@ -718,8 +730,8 @@ describe('recurrence-utils', () => {
     it('does not count weekday in target week occurring after target day', () => {
       const start = adapter.date('2025-06-10T09:00:00Z'); // Tuesday
       const target = adapter.date('2025-06-23T12:00:00Z'); // Monday of week containing Tue 24
-      const { numToByDay } = getByDayMaps(adapter);
-      const code = numToByDay[adapter.getDayOfWeek(start)]; // TU
+      const { numToCode } = getWeekDayMaps(adapter);
+      const code = numToCode[adapter.getDayOfWeek(start)]; // TU
       // Occurrences counted: Jun 10, Jun 17 => 2 (Jun 24 excluded)
       expect(countWeeklyOccurrencesUpToExact(adapter, createRule([code]), start, target)).to.equal(
         2,
@@ -728,7 +740,7 @@ describe('recurrence-utils', () => {
 
     it('handles unordered byDay array', () => {
       const start = adapter.date('2025-06-02T09:00:00Z'); // Monday
-      const byDay: ByDayCode[] = ['FR', 'MO'];
+      const byDay: RecurringEventWeekDayCode[] = ['FR', 'MO'];
       const target = adapter.date('2025-06-13T23:59:59Z'); // Mon 2, Fri 6, Mon 9, Fri 13 => 4
       expect(countWeeklyOccurrencesUpToExact(adapter, createRule(byDay), start, target)).to.equal(
         4,
@@ -738,7 +750,7 @@ describe('recurrence-utils', () => {
 
   describe('countMonthlyOccurrencesUpToExact', () => {
     describe('byMonthDay', () => {
-      const createRule = (day: number, interval = 1): RRuleSpec => ({
+      const createRule = (day: number, interval = 1): RecurringEventRecurrenceRule => ({
         freq: 'MONTHLY',
         interval,
         byMonthDay: [day],
@@ -786,7 +798,10 @@ describe('recurrence-utils', () => {
     });
 
     describe('ByDay (ordinal: Nth / last weekday)', () => {
-      const createByDayRule = (byDay: ByDayValue[], interval = 1): RRuleSpec => ({
+      const createByDayRule = (
+        byDay: RecurringEventByDayValue[],
+        interval = 1,
+      ): RecurringEventRecurrenceRule => ({
         freq: 'MONTHLY',
         interval,
         byDay,
@@ -849,14 +864,18 @@ describe('recurrence-utils', () => {
       it('throws when BYDAY and BYMONTHDAY are both provided', () => {
         const start = adapter.date('2025-07-01T00:00:00Z');
         const target = adapter.date('2025-07-31T23:59:59Z');
-        const bad: RRuleSpec = { freq: 'MONTHLY', byDay: ['2TU'], byMonthDay: [10] };
+        const bad: RecurringEventRecurrenceRule = {
+          freq: 'MONTHLY',
+          byDay: ['2TU'],
+          byMonthDay: [10],
+        };
         expect(() => countMonthlyOccurrencesUpToExact(adapter, bad, start, target)).to.throw();
       });
     });
   });
 
   describe('countYearlyOccurrencesUpToExact', () => {
-    const createRule = (interval = 1): RRuleSpec => ({
+    const createRule = (interval = 1): RecurringEventRecurrenceRule => ({
       freq: 'YEARLY',
       interval,
     });
@@ -1069,8 +1088,8 @@ describe('recurrence-utils', () => {
         adapter.addDays(visibleStart, 7),
         adapter,
       );
-      const { numToByDay } = getByDayMaps(adapter);
-      const dows = result.map((o) => numToByDay[adapter.getDayOfWeek(o.start)]);
+      const { numToCode } = getWeekDayMaps(adapter);
+      const dows = result.map((o) => numToCode[adapter.getDayOfWeek(o.start)]);
 
       // Only WE, TH, FR in the first week
       expect(dows).to.deep.equal(['WE', 'TH', 'FR']);
@@ -1104,29 +1123,29 @@ describe('recurrence-utils', () => {
     const splitStart = adapter.date('2025-01-06T15:00:00Z'); // "this and following" starts here
 
     const call = (
-      originalRule: RRuleSpec,
+      originalRule: RecurringEventRecurrenceRule,
       changes: Partial<CalendarEvent> = {},
       originalSeriesStart: SchedulerValidDate = seriesStart,
       split: SchedulerValidDate = splitStart,
     ) => decideSplitRRule(adapter, originalRule, originalSeriesStart, split, changes);
 
     it('should return changes.rrule as is when user explicitly changed recurrence', () => {
-      const original: RRuleSpec = { freq: 'DAILY', interval: 1 };
-      const newRule: RRuleSpec = { freq: 'WEEKLY', interval: 2, count: 5 };
+      const original: RecurringEventRecurrenceRule = { freq: 'DAILY', interval: 1 };
+      const newRule: RecurringEventRecurrenceRule = { freq: 'WEEKLY', interval: 2, count: 5 };
 
       const res = call(original, { rrule: newRule });
       expect(res).to.deep.equal({ freq: 'WEEKLY', interval: 2, count: 5 });
     });
 
     it('should return undefined when user explicitly removed recurrence', () => {
-      const original: RRuleSpec = { freq: 'DAILY', interval: 1 };
+      const original: RecurringEventRecurrenceRule = { freq: 'DAILY', interval: 1 };
       const res = call(original, { rrule: undefined });
       expect(res).to.equal(undefined);
     });
 
     describe('should inherit base pattern when RRULE not explicitly changed', () => {
       it('should inherit base pattern when RRULE not touched and there are no boundaries', () => {
-        const original: RRuleSpec = { freq: 'DAILY', interval: 2 };
+        const original: RecurringEventRecurrenceRule = { freq: 'DAILY', interval: 2 };
         const res = call(original, { title: 'New Event Title' });
         expect(res).to.deep.equal({ freq: 'DAILY', interval: 2 });
       });
@@ -1134,7 +1153,7 @@ describe('recurrence-utils', () => {
       it('should inherit base pattern and recomputes COUNT to remaining occurrences when RRULE not touched', () => {
         // Original: daily with count 42 from Jan 01
         // Split on Jan 06 => Jan 01..05 consumed => remaining 37 => new COUNT=37
-        const original: RRuleSpec = { freq: 'DAILY', interval: 1, count: 42 };
+        const original: RecurringEventRecurrenceRule = { freq: 'DAILY', interval: 1, count: 42 };
 
         const dayBeforeSplit = adapter.addDays(adapter.startOfDay(splitStart), -1);
         const consumed = estimateOccurrencesUpTo(adapter, original, seriesStart, dayBeforeSplit);
@@ -1146,7 +1165,11 @@ describe('recurrence-utils', () => {
 
       it('should keep the original UNTIL when inheriting (untouched RRULE)', () => {
         const originalUntil = adapter.date('2025-01-20T23:59:59Z');
-        const original: RRuleSpec = { freq: 'DAILY', interval: 1, until: originalUntil };
+        const original: RecurringEventRecurrenceRule = {
+          freq: 'DAILY',
+          interval: 1,
+          until: originalUntil,
+        };
 
         const res = call(original, { title: 'New Event Title' })!;
         expect(adapter.isSameDay(res.until!, originalUntil)).to.equal(true);
@@ -1155,14 +1178,22 @@ describe('recurrence-utils', () => {
 
       describe('weekly realignment (BYDAY swap)', () => {
         it('should keep pattern selectors when inheriting (e.g., WEEKLY BYDAY)', () => {
-          const original: RRuleSpec = { freq: 'WEEKLY', interval: 1, byDay: ['MO', 'WE'] };
+          const original: RecurringEventRecurrenceRule = {
+            freq: 'WEEKLY',
+            interval: 1,
+            byDay: ['MO', 'WE'],
+          };
           const res = call(original, { title: 'New Event Title' });
           expect(res).to.deep.equal({ freq: 'WEEKLY', interval: 1, byDay: ['MO', 'WE'] });
         });
 
         it('should realign WEEKLY BYDAY when moving the day of the occurrence', () => {
           // Expect MO,WE → TU,WE (preserve pattern, swap only the edited weekday).
-          const original: RRuleSpec = { freq: 'WEEKLY', interval: 1, byDay: ['MO', 'WE'] };
+          const original: RecurringEventRecurrenceRule = {
+            freq: 'WEEKLY',
+            interval: 1,
+            byDay: ['MO', 'WE'],
+          };
           const movedStart = adapter.date('2025-01-07T15:00:00Z');
           const res = call(original, { start: movedStart });
           expect(res).to.deep.equal({ freq: 'WEEKLY', interval: 1, byDay: ['TU', 'WE'] });
@@ -1170,7 +1201,11 @@ describe('recurrence-utils', () => {
 
         it('should avoid duplicates when new weekday already exists (MO→TU with TU present)', () => {
           // Expect MO,TU and moving MO → TU to result in just TU (no duplicate).
-          const original: RRuleSpec = { freq: 'WEEKLY', interval: 1, byDay: ['MO', 'TU'] };
+          const original: RecurringEventRecurrenceRule = {
+            freq: 'WEEKLY',
+            interval: 1,
+            byDay: ['MO', 'TU'],
+          };
           const movedStart = adapter.date('2025-01-07T10:00:00Z');
           const res = call(original, { start: movedStart });
           expect(res).to.deep.equal({ freq: 'WEEKLY', interval: 1, byDay: ['TU'] });
@@ -1179,7 +1214,11 @@ describe('recurrence-utils', () => {
 
       describe('monthly realignment (BYMONTHDAY swap / ordinal BYDAY)', () => {
         it('should realign to new day of month (10th → 12th) (BYMONTHDAY)', () => {
-          const original: RRuleSpec = { freq: 'MONTHLY', interval: 1, byMonthDay: [10] };
+          const original: RecurringEventRecurrenceRule = {
+            freq: 'MONTHLY',
+            interval: 1,
+            byMonthDay: [10],
+          };
           const movedStart = adapter.date('2025-03-12T10:00:00Z');
           expect(call(original, { start: movedStart })).to.deep.equal({
             freq: 'MONTHLY',
@@ -1190,7 +1229,11 @@ describe('recurrence-utils', () => {
 
         it('should recompute ordinal+weekday (2TU → 3WE) (ordinal BYDAY)', () => {
           const startMonth = adapter.date('2025-07-01T00:00:00Z');
-          const original: RRuleSpec = { freq: 'MONTHLY', interval: 1, byDay: ['2TU'] };
+          const original: RecurringEventRecurrenceRule = {
+            freq: 'MONTHLY',
+            interval: 1,
+            byDay: ['2TU'],
+          };
           const thirdWed = adapter.date('2025-07-16T10:00:00Z'); // 3rd Wednesday
           expect(
             call(original, { start: thirdWed }, startMonth, adapter.startOfDay(thirdWed)),
@@ -1199,7 +1242,11 @@ describe('recurrence-utils', () => {
 
         it('should use -1 for last weekday of month (→ -1FR) (ordinal BYDAY)', () => {
           const monthStart = adapter.date('2025-10-01T00:00:00Z');
-          const original: RRuleSpec = { freq: 'MONTHLY', interval: 1, byDay: ['2TU'] };
+          const original: RecurringEventRecurrenceRule = {
+            freq: 'MONTHLY',
+            interval: 1,
+            byDay: ['2TU'],
+          };
           const lastFri = adapter.date('2025-10-31T09:00:00Z'); // last Friday
           expect(
             call(original, { start: lastFri }, monthStart, adapter.startOfDay(lastFri)),
