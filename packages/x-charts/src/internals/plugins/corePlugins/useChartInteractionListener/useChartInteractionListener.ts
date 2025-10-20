@@ -38,6 +38,7 @@ type GestureManagerTyped = GestureManager<
   | PressGesture<'quickPress'>
   | TapAndDragGesture<'zoomTapAndDrag'>
   | PressAndDragGesture<'zoomPressAndDrag'>
+  | PanGesture<'brush'>
 >;
 
 export const useChartInteractionListener: ChartPlugin<UseChartInteractionListenerSignature> = ({
@@ -58,15 +59,29 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
             threshold: 0,
             maxPointers: 1,
           }),
+          new MoveGesture({
+            name: 'move',
+            preventIf: ['pan', 'zoomPinch', 'zoomPan'],
+          }),
+          new TapGesture({
+            name: 'tap',
+            preventIf: ['pan', 'zoomPinch', 'zoomPan'],
+          }),
+          new PressGesture({
+            name: 'quickPress',
+            duration: 50,
+          }),
+          new PanGesture({
+            name: 'brush',
+            threshold: 0,
+            maxPointers: 1,
+          }),
+          // Zoom gestures
           new PanGesture({
             name: 'zoomPan',
             threshold: 0,
             maxPointers: 1,
             preventIf: ['zoomTapAndDrag', 'zoomPressAndDrag'],
-          }),
-          new MoveGesture({
-            name: 'move',
-            preventIf: ['pan', 'zoomPinch', 'zoomPan'], // Prevent move gesture when pan is active
           }),
           new PinchGesture({
             name: 'zoomPinch',
@@ -77,14 +92,6 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
             name: 'zoomTurnWheel',
             sensitivity: 0.01,
             initialDelta: 1,
-          }),
-          new TapGesture({
-            name: 'tap',
-            preventIf: ['pan', 'zoomPan', 'zoomPinch'],
-          }),
-          new PressGesture({
-            name: 'quickPress',
-            duration: 50,
           }),
           new TapAndDragGesture({
             name: 'zoomTapAndDrag',
@@ -117,6 +124,7 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
         'quickPress',
         'zoomTapAndDrag',
         'zoomPressAndDrag',
+        'brush',
       ],
       svg,
     );

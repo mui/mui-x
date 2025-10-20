@@ -5,6 +5,7 @@ import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import * as sinon from 'sinon';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
+import { CHART_SELECTOR } from '../../../tests/constants';
 
 describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
   const { render } = createRenderer();
@@ -64,7 +65,7 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
 
       expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C', 'D']);
 
-      const svg = document.querySelector('svg')!;
+      const svg = document.querySelector(CHART_SELECTOR)!;
 
       await user.pointer([
         {
@@ -111,7 +112,7 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
 
       expect(getAxisTickValues('x')).to.deep.equal(['D']);
 
-      const svg = document.querySelector('svg')!;
+      const svg = document.querySelector(CHART_SELECTOR)!;
 
       // Drag without Alt key - should not pan
       await user.pointer([
@@ -177,7 +178,7 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
 
       expect(getAxisTickValues('x')).to.deep.equal(['D']);
 
-      const svg = document.querySelector('svg')!;
+      const svg = document.querySelector(CHART_SELECTOR)!;
 
       // Drag with only Shift key - should not pan
       await user.keyboard('{Shift>}');
@@ -247,7 +248,7 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
 
       expect(getAxisTickValues('x')).to.deep.equal(['D']);
 
-      const svg = document.querySelector('svg')!;
+      const svg = document.querySelector(CHART_SELECTOR)!;
 
       // Mouse drag - should pan
       await user.pointer([
@@ -311,7 +312,7 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
 
       expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C', 'D']);
 
-      const svg = document.querySelector('svg')!;
+      const svg = document.querySelector('svg:not([aria-hidden="true"])')!;
 
       // Wheel - should not zoom since only pinch is enabled
       for (let i = 0; i < 30; i += 1) {

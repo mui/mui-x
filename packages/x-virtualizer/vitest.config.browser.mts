@@ -6,7 +6,6 @@ import { getTestName } from '../../scripts/getTestName.mts';
 export default mergeConfig(sharedConfig, {
   test: {
     name: getTestName(import.meta.url),
-    environment: 'browser',
     browser: {
       enabled: true,
       instances: [
