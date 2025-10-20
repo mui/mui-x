@@ -76,8 +76,8 @@ export const useZoomOnPinch = (
 
           const centerRatio =
             option.axisDirection === 'x'
-              ? getHorizontalCenterRatio(point, drawingArea)
-              : getVerticalCenterRatio(point, drawingArea);
+              ? getHorizontalCenterRatio(point, drawingArea, option.reverse)
+              : getVerticalCenterRatio(point, drawingArea, option.reverse);
 
           const [newMinRange, newMaxRange] = zoomAtPoint(centerRatio, scaleRatio, zoom, option);
 
