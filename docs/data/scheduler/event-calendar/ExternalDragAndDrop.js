@@ -66,7 +66,8 @@ export default function ExternalDragAndDrop() {
     return dropTargetForElements({
       element: externalEventsContainerRef.current,
       canDrop: (arg) => isValidDropTarget(arg.source.data),
-      onDragEnter: ({ source: { data } }) => {
+      onDragEnter: (args) => {
+        const data = args.source.data;
         if (!isValidDropTarget(data)) {
           return;
         }
