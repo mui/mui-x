@@ -24,6 +24,7 @@ export const initializeZoomInteractionConfig = (
   if (!zoomInteractionConfig?.pan) {
     defaultizedConfig.pan = {
       drag: { type: 'drag', requiredKeys: [], mouse: {}, touch: {} },
+      wheel: { type: 'wheel', requiredKeys: [], mouse: {}, touch: {}, axesFilter: 'x' },
     };
   } else {
     defaultizedConfig.pan = initializeFor('pan', zoomInteractionConfig.pan);

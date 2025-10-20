@@ -16,7 +16,7 @@ export type ZoomInteractionConfig = {
    * - `pressAndDrag`: Pans the chart by pressing and holding, then dragging. Useful for avoiding conflicts with selection gestures.
    * - `wheel`: Pans the chart when the mouse wheel is scrolled (horizontal by default).
    *
-   * @default ['drag']
+   * @default ['drag', 'wheel']
    */
   pan?: (PanInteraction | PanInteraction['type'])[];
 };
