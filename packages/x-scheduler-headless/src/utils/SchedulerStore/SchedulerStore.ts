@@ -117,7 +117,7 @@ export class SchedulerStore<
       canDropEventsToTheOutside: parameters.canDropEventsToTheOutside ?? false,
       eventColor: parameters.eventColor ?? DEFAULT_EVENT_COLOR,
       showCurrentTimeIndicator: parameters.showCurrentTimeIndicator ?? true,
-      readonly: parameters.readonly ?? false,
+      readOnly: parameters.readOnly ?? false,
     };
   }
 

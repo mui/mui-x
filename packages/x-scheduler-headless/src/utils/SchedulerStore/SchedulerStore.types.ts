@@ -78,7 +78,7 @@ export interface SchedulerState {
    * Whether the calendar is in read-only mode.
    * @default false
    */
-  readonly: boolean;
+  readOnly: boolean;
 }
 
 export interface SchedulerParameters {
@@ -146,7 +146,7 @@ export interface SchedulerParameters {
    * Whether the calendar is in read-only mode.
    * @default false
    */
-  readonly?: boolean;
+  readOnly?: boolean;
 }
 
 /**

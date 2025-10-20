@@ -175,10 +175,11 @@ describe('<EventPopoverContent />', () => {
     expect(screen.queryByRole('button', { name: /save changes/i })).to.equal(null);
     expect(screen.queryByRole('button', { name: /delete event/i })).to.equal(null);
   });
+
   it('should handle read-only events if EventCalendar is read-only', () => {
     const readOnlyOccurrence = { ...occurrence };
     render(
-      <EventCalendarProvider events={[readOnlyOccurrence]} resources={resources} readonly>
+      <EventCalendarProvider events={[readOnlyOccurrence]} resources={resources} readOnly>
         <Popover.Root open>
           <EventPopoverContent {...defaultProps} occurrence={readOnlyOccurrence} />
         </Popover.Root>

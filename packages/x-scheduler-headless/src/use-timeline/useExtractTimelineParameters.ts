@@ -20,6 +20,7 @@ export function useExtractTimelineParameters<P extends TimelineParameters>(
     defaultView,
     onViewChange,
     preferences,
+    readOnly,
     ...forwardedProps
   } = props;
 
@@ -40,6 +41,7 @@ export function useExtractTimelineParameters<P extends TimelineParameters>(
       defaultView,
       onViewChange,
       preferences,
+      readOnly,
     }),
     [
       events,
@@ -57,6 +59,7 @@ export function useExtractTimelineParameters<P extends TimelineParameters>(
       defaultView,
       onViewChange,
       preferences,
+      readOnly,
     ],
   );
 

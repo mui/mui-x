@@ -45,9 +45,9 @@ const resourceSelector = createSelector(
 
 const isEventReadOnlySelector = createSelector(
   eventSelector,
-  (state: State) => state.readonly,
-  (event, readonly, _eventId: CalendarEventId) => {
-    return !!event?.readOnly || readonly;
+  (state: State) => state.readOnly,
+  (event, readOnly, _eventId: CalendarEventId) => {
+    return !!event?.readOnly || readOnly;
   },
 );
 
