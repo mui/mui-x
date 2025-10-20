@@ -6,7 +6,6 @@ import { StandaloneEvent } from '@mui/x-scheduler/standalone-event';
 import { CalendarOccurrencePlaceholderExternalDragData } from '@mui/x-scheduler/models';
 // TODO: Estimate if we can avoid all imports from the headless package.
 import { buildIsValidDropTarget } from '@mui/x-scheduler-headless/build-is-valid-drop-target';
-
 import {
   initialEvents,
   defaultVisibleDate,
