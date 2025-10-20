@@ -74,7 +74,7 @@ export const usePanOnWheel = (
 
       event.detail.srcEvent.preventDefault();
 
-      const axesFilter = config?.axesFilter ?? 'x';
+      const allowedDirection = config?.allowedDirection ?? 'x';
 
       rafThrottledSetZoomData((prev) => {
         const wheelEvent = event.detail;
@@ -82,11 +82,11 @@ export const usePanOnWheel = (
         let movementX = 0;
         let movementY = 0;
 
-        if (axesFilter === 'x' || axesFilter === 'xy') {
+        if (allowedDirection === 'x' || allowedDirection === 'xy') {
           movementX = wheelEvent.deltaX;
         }
 
-        if (axesFilter === 'y' || axesFilter === 'xy') {
+        if (allowedDirection === 'y' || allowedDirection === 'xy') {
           movementY = wheelEvent.deltaY;
         }
 
@@ -95,7 +95,7 @@ export const usePanOnWheel = (
           { x: movementX, y: movementY },
           drawingArea,
           optionsLookup,
-          axesFilter,
+          allowedDirection,
         );
       });
     });

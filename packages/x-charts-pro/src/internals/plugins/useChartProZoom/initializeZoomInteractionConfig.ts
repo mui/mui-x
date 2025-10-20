@@ -24,7 +24,7 @@ export const initializeZoomInteractionConfig = (
   if (!zoomInteractionConfig?.pan) {
     defaultizedConfig.pan = {
       drag: { type: 'drag', requiredKeys: [], mouse: {}, touch: {} },
-      wheel: { type: 'wheel', requiredKeys: [], mouse: {}, touch: {}, axesFilter: 'x' },
+      wheel: { type: 'wheel', requiredKeys: [], mouse: {}, touch: {}, allowedDirection: 'x' },
     };
   } else {
     defaultizedConfig.pan = initializeFor('pan', zoomInteractionConfig.pan);
@@ -56,7 +56,7 @@ function initializeFor<T extends 'zoom' | 'pan'>(
         type,
         pointerMode: interaction.pointerMode,
         requiredKeys: interaction.requiredKeys,
-        axesFilter: (interaction as any).axesFilter,
+        allowedDirection: (interaction as any).allowedDirection,
       });
       return acc;
     },
@@ -91,7 +91,7 @@ function initializeFor<T extends 'zoom' | 'pan'>(
     };
 
     if (type === 'wheel' && interactionType === 'pan') {
-      acc[type].axesFilter = lastEmpty?.axesFilter ?? 'x';
+      acc[type].allowedDirection = lastEmpty?.allowedDirection ?? 'x';
     }
   }
   return acc;

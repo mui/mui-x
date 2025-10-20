@@ -97,7 +97,7 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
           }),
           new TurnWheelGesture({
             name: 'panTurnWheel',
-            sensitivity: 0.5,
+            sensitivity: 1,
             initialDelta: 1,
           }),
           new TapAndDragGesture({

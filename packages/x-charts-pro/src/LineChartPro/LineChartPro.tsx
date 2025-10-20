@@ -1982,7 +1982,7 @@ LineChartPro.propTypes = {
           type: PropTypes.oneOf(['pressAndDrag']).isRequired,
         }),
         PropTypes.shape({
-          axesFilter: PropTypes.oneOf(['x', 'xy', 'y']),
+          allowedDirection: PropTypes.oneOf(['x', 'xy', 'y']),
           pointerMode: PropTypes.any,
           requiredKeys: PropTypes.arrayOf(PropTypes.string),
           type: PropTypes.oneOf(['wheel']).isRequired,

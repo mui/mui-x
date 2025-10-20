@@ -410,7 +410,7 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
           onZoomChange={onZoomChange}
           zoomInteractionConfig={{
             zoom: [], // Disable zoom to avoid conflict
-            pan: [{ type: 'wheel', axesFilter: 'xy' }],
+            pan: [{ type: 'wheel', allowedDirection: 'xy' }],
           }}
         />,
         options,

@@ -164,7 +164,7 @@ The `zoomInteractionConfig` prop allows you to specify which interactions are en
 **Pan** interactions:
 
 - **`drag` _(default)_**: Pan the chart by dragging with the mouse or touch
-- **`wheel` _(default)_**: Pan the chart by scrolling the mouse wheel . On a desktop trackpad, it enables pan using two fingers. Only pans the horizontal axis. Use `axesFilter` to customize which axes are affected.
+- **`wheel` _(default)_**: Pan the chart by scrolling the mouse wheel . On a desktop trackpad, it enables pan using two fingers. Only pans the horizontal axis. Use `allowedDirection` to customize which axes are affected.
 - **`pressAndDrag`**: Pan the chart by long-pressing and dragging.
 
 {{"demo": "ZoomAndPanInteractions.js"}}

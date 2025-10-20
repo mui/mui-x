@@ -26,7 +26,7 @@ type Entry<T extends AnyInteraction> = {
     mouse: { requiredKeys?: KeyboardKey[] };
     touch: { requiredKeys?: KeyboardKey[] };
     pointerMode?: PointerMode[];
-    axesFilter?: 'x' | 'y' | 'xy';
+    allowedDirection?: 'x' | 'y' | 'xy';
   };
 };
 export type DefaultizedZoomInteractionConfig = {
@@ -121,7 +121,7 @@ export type WheelPanInteraction = Unpack<
      * - `'xy'`: Pan both axes
      * @default 'x'
      */
-    axesFilter?: 'x' | 'y' | 'xy';
+    allowedDirection?: 'x' | 'y' | 'xy';
   } & NoModeProp &
     AllKeysProp
 >;
@@ -130,11 +130,11 @@ export type AnyInteraction = {
   type: string;
   pointerMode?: InteractionMode;
   requiredKeys?: KeyboardKey[];
-  axesFilter?: 'x' | 'y' | 'xy';
+  allowedDirection?: 'x' | 'y' | 'xy';
 };
 export type AnyEntry = Omit<AnyInteraction, 'pointerMode'> & {
   mouse: { requiredKeys?: KeyboardKey[] };
   touch: { requiredKeys?: KeyboardKey[] };
   pointerMode?: PointerMode[];
-  axesFilter?: 'x' | 'y' | 'xy';
+  allowedDirection?: 'x' | 'y' | 'xy';
 };
