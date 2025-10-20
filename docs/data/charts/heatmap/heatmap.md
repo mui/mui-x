@@ -8,6 +8,11 @@ components: Heatmap, HeatmapPlot, HeatmapTooltip, HeatmapTooltipContent
 
 <p class="description">Heatmap charts visually represents data with color variations to highlight patterns and trends across two dimensions.</p>
 
+## Overview
+
+Heatmaps are ideal for visualizing intensity variations across two categorical or continuous dimensions. They highlight areas of high and low concentration in a dataset, making it easy to detect trends, clusters, or anomalies at a glance. Each cell in a heatmap represents the intersection of two variables, with color encoding used to convey the magnitude of a numerical value.
+{{"demo": "HeatmapDemo.js", "disableAd": true, "defaultCodeOpen": false}}
+
 ## Basics
 
 Heatmap charts series must contain a `data` property containing an array of 3-tuples.
