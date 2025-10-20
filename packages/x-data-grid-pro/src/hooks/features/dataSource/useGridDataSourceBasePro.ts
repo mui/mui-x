@@ -326,13 +326,13 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
 
       const {
         response,
-        options: { collapseChildren },
+        options: { keepChildrenExpanded },
       } = params;
       if (response.rowCount !== undefined) {
         apiRef.current.setRowCount(response.rowCount);
       }
 
-      if (collapseChildren) {
+      if (keepChildrenExpanded === false) {
         apiRef.current.setRows(response.rows);
       } else {
         // Remove existing outdated rows before setting the new ones

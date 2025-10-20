@@ -105,7 +105,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
 
       options.clearDataSourceState?.();
 
-      const { skipCache, collapseChildren, ...getRowsParams } = params || {};
+      const { skipCache, keepChildrenExpanded, ...getRowsParams } = params || {};
 
       const fetchParams = {
         ...gridGetRowsParamsSelector(apiRef),
@@ -120,7 +120,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
         apiRef.current.applyStrategyProcessor('dataSourceRowsUpdate', {
           response: CacheChunkManager.mergeResponses(responses as GridGetRowsResponse[]),
           fetchParams,
-          options: { skipCache, collapseChildren },
+          options: { skipCache, keepChildrenExpanded },
         });
         return;
       }
@@ -143,7 +143,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
           apiRef.current.applyStrategyProcessor('dataSourceRowsUpdate', {
             response: getRowsResponse,
             fetchParams,
-            options: { skipCache, collapseChildren },
+            options: { skipCache, keepChildrenExpanded },
           });
         }
       } catch (originalError) {
@@ -151,7 +151,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
           apiRef.current.applyStrategyProcessor('dataSourceRowsUpdate', {
             error: originalError as Error,
             fetchParams,
-            options: { skipCache, collapseChildren },
+            options: { skipCache, keepChildrenExpanded },
           });
           if (typeof onDataSourceErrorProp === 'function') {
             onDataSourceErrorProp(

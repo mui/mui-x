@@ -77,7 +77,7 @@ export default function ServerSideTreeDataExpansionPersistence() {
           variant="outlined"
           onClick={() => {
             apiRef.current?.dataSource.fetchRows(GRID_ROOT_GROUP_ID, {
-              collapseChildren: true,
+              keepChildrenExpanded: false,
             });
           }}
         >

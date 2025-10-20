@@ -91,7 +91,7 @@ Use `dataSource.getGroupKey()` to compute the group key for the row instead.
 The Data Grid compares the IDs of the newly fetched rows with the existing tree level.
 Matching rows are not recreated and they maintain their expansion state and child rows.
 
-To drop all child rows and reset the expansion state, pass `collapseChildren` flag to the fetch options of the `dataSource.fetchRows()` API method.
+To drop all child rows and reset the expansion state, pass `keepChildrenExpanded` flag set to `false` to the fetch options of the `dataSource.fetchRows()` API method.
 
 Expand some rows in the following demo and use two different refetch action buttons to see the difference in the behavior.
 

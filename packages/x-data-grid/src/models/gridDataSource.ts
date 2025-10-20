@@ -31,9 +31,10 @@ export interface GridGetRowsOptions {
   skipCache?: boolean;
   /**
    * By default, the grid tries to keep the children expanded and attached to the parent with the same ID after the data is re-fetched.
-   * If `collapseChildren` is `true`, the children of the parent with the `parentId` (all children for the root level data fetch) will be collapsed and removed from the tree.
+   * If `keepChildrenExpanded` is `false`, the children of the parent with the `parentId` (all children for the root level data fetch) will be collapsed and removed from the tree.
+   * @default true
    */
-  collapseChildren?: boolean;
+  keepChildrenExpanded?: boolean;
 }
 
 export interface GridUpdateRowParams {
