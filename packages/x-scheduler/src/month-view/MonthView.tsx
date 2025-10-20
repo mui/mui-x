@@ -8,41 +8,56 @@ import { useDayList } from '@mui/x-scheduler-headless/use-day-list';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventCalendarView } from '@mui/x-scheduler-headless/use-event-calendar-view';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { selectors } from '@mui/x-scheduler-headless/use-event-calendar';
+import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
+import {
+  selectors,
+  useExtractEventCalendarParameters,
+} from '@mui/x-scheduler-headless/use-event-calendar';
+
 import { useWeekList } from '@mui/x-scheduler-headless/use-week-list';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-headless/use-event-occurrences-grouped-by-day';
-import { MonthViewProps } from './MonthView.types';
+import { MonthViewProps, StandaloneMonthViewProps } from './MonthView.types';
 import { EventPopoverProvider } from '../internals/components/event-popover';
 import { useTranslations } from '../internals/utils/TranslationsContext';
 import MonthViewWeekRow from './month-view-row/MonthViewWeekRow';
 import { MoreEventsPopoverProvider } from '../internals/components/more-events-popover';
 import './MonthView.css';
 import { RecurringScopeDialogProvider } from '../internals/components/scope-dialog/ScopeDialog';
+import '../index.css';
 
 const CELL_PADDING = 8;
 const DAY_NUMBER_HEADER_HEIGHT = 18;
 const EVENT_HEIGHT = 18;
 const EVENT_GAP = 5;
 
+/**
+ * A Month View to use inside the Event Calendar.
+ */
 export const MonthView = React.memo(
   React.forwardRef(function MonthView(
     props: MonthViewProps,
     forwardedRef: React.ForwardedRef<HTMLDivElement>,
   ) {
-    const { className, ...other } = props;
+    // Context hooks
+    const adapter = useAdapter();
+    const translations = useTranslations();
+    const store = useEventCalendarStoreContext();
+
+    // Ref hooks
     const containerRef = React.useRef<HTMLElement | null>(null);
     const handleRef = useMergedRefs(forwardedRef, containerRef);
     const cellRef = React.useRef<HTMLDivElement>(null);
-    const [maxEvents, setMaxEvents] = React.useState<number>(4);
 
-    const adapter = useAdapter();
-    const store = useEventCalendarStoreContext();
+    // Selector hooks
     const showWeekends = useStore(store, selectors.showWeekends);
     const showWeekNumber = useStore(store, selectors.showWeekNumber);
     const visibleDate = useStore(store, selectors.visibleDate);
-    const translations = useTranslations();
 
+    // State hooks
+    const [maxEvents, setMaxEvents] = React.useState<number>(4);
+
+    // Feature hooks
     const getDayList = useDayList();
     const getWeekList = useWeekList();
     const { weeks, days } = React.useMemo(() => {
@@ -79,9 +94,9 @@ export const MonthView = React.memo(
 
     return (
       <div
+        {...props}
         ref={handleRef}
-        className={clsx('MonthViewContainer', 'mui-x-scheduler', className)}
-        {...other}
+        className={clsx('MonthViewContainer', 'mui-x-scheduler', props.className)}
       >
         <RecurringScopeDialogProvider containerRef={containerRef}>
           <EventPopoverProvider containerRef={containerRef}>
@@ -127,3 +142,19 @@ export const MonthView = React.memo(
     );
   }),
 );
+
+/**
+ * A Month View that can be used outside of the Event Calendar.
+ */
+export const StandaloneMonthView = React.forwardRef(function StandaloneMonthView(
+  props: StandaloneMonthViewProps,
+  forwardedRef: React.ForwardedRef<HTMLDivElement>,
+) {
+  const { parameters, forwardedProps } = useExtractEventCalendarParameters(props);
+
+  return (
+    <EventCalendarProvider {...parameters}>
+      <MonthView ref={forwardedRef} {...forwardedProps} />
+    </EventCalendarProvider>
+  );
+});
