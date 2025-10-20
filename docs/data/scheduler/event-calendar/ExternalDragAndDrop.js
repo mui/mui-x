@@ -71,7 +71,7 @@ export default function ExternalDragAndDrop() {
           return;
         }
 
-        const { start, end, ...eventData } = data.event;
+        const { start, end, ...eventData } = data.originalOccurrence;
 
         setPlaceholder({
           ...eventData,
