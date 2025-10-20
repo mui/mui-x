@@ -43,7 +43,6 @@ export default function FormContent(props: FormContentProps) {
   const store = useSchedulerStoreContext();
 
   // Selector hooks
-  const isEventReadOnly = useStore(store, selectors.isEventReadOnly, occurrence.id);
   const rawPlaceholder = useStore(store, selectors.occurrencePlaceholder);
   const resources = useStore(store, selectors.resources);
   const recurrencePresets = useStore(store, selectors.recurrencePresets, occurrence.start);
@@ -101,10 +100,6 @@ export default function FormContent(props: FormContentProps) {
     };
 
   const handleToggleAllDay = (checked: boolean) => {
-    if (isEventReadOnly) {
-      return;
-    }
-
     setIsAllDay(checked);
     pushPlaceholder(when, checked);
   };
@@ -212,17 +207,12 @@ export default function FormContent(props: FormContentProps) {
               defaultValue={occurrence.title}
               aria-label={translations.eventTitleAriaLabel}
               required
-              readOnly={isEventReadOnly}
             />
           </Field.Label>
           <Field.Error className="EventPopoverRequiredFieldError" />
         </Field.Root>
         <Field.Root className="EventPopoverFieldRoot" name="resource">
-          <Select.Root
-            items={resourcesOptions}
-            defaultValue={occurrence.resource}
-            readOnly={isEventReadOnly}
-          >
+          <Select.Root items={resourcesOptions} defaultValue={occurrence.resource}>
             <Select.Trigger
               className="EventPopoverSelectTrigger Ghost"
               aria-label={translations.resourceLabel}
@@ -294,7 +284,6 @@ export default function FormContent(props: FormContentProps) {
                   onChange={handleChangeDateOrTimeField('startDate')}
                   aria-describedby="startDate-error"
                   required
-                  readOnly={isEventReadOnly}
                 />
               </Field.Label>
             </Field.Root>
@@ -309,7 +298,6 @@ export default function FormContent(props: FormContentProps) {
                     onChange={handleChangeDateOrTimeField('startTime')}
                     aria-describedby="startTime-error"
                     required
-                    readOnly={isEventReadOnly}
                   />
                 </Field.Label>
               </Field.Root>
@@ -325,7 +313,6 @@ export default function FormContent(props: FormContentProps) {
                   value={when.endDate}
                   onChange={handleChangeDateOrTimeField('endDate')}
                   required
-                  readOnly={isEventReadOnly}
                 />
               </Field.Label>
             </Field.Root>
@@ -339,7 +326,6 @@ export default function FormContent(props: FormContentProps) {
                     value={when.endTime}
                     onChange={handleChangeDateOrTimeField('endTime')}
                     required
-                    readOnly={isEventReadOnly}
                   />
                 </Field.Label>
               </Field.Root>
@@ -368,7 +354,6 @@ export default function FormContent(props: FormContentProps) {
                 id="enable-all-day-checkbox"
                 checked={isAllDay}
                 onCheckedChange={handleToggleAllDay}
-                readOnly={isEventReadOnly}
               >
                 <Checkbox.Indicator className="AllDayCheckboxIndicator">
                   <CheckIcon className="AllDayCheckboxIcon" />
@@ -383,11 +368,7 @@ export default function FormContent(props: FormContentProps) {
             // TODO: Issue #19137 - Display the actual custom recurrence rule (e.g. "Repeats every 2 weeks on Monday")
             <p className="EventPopoverFormLabel">{`Custom ${occurrence.rrule?.freq.toLowerCase()} recurrence`}</p>
           ) : (
-            <Select.Root
-              items={recurrenceOptions}
-              defaultValue={defaultRecurrenceKey}
-              readOnly={isEventReadOnly}
-            >
+            <Select.Root items={recurrenceOptions} defaultValue={defaultRecurrenceKey}>
               <Select.Trigger
                 className="EventPopoverSelectTrigger"
                 aria-label={translations.recurrenceLabel}
@@ -430,27 +411,24 @@ export default function FormContent(props: FormContentProps) {
                     rows={5}
                   />
                 }
-                readOnly={isEventReadOnly}
               />
             </Field.Label>
           </Field.Root>
         </div>
       </div>
       <Separator className="EventPopoverSeparator" />
-      {!isEventReadOnly && (
-        <div className="EventPopoverActions">
-          <button
-            className={clsx('SecondaryErrorButton', 'Button')}
-            type="button"
-            onClick={handleDelete}
-          >
-            {translations.deleteEvent}
-          </button>
-          <button className={clsx('NeutralButton', 'Button')} type="submit">
-            {translations.saveChanges}
-          </button>
-        </div>
-      )}
+      <div className="EventPopoverActions">
+        <button
+          className={clsx('SecondaryErrorButton', 'Button')}
+          type="button"
+          onClick={handleDelete}
+        >
+          {translations.deleteEvent}
+        </button>
+        <button className={clsx('NeutralButton', 'Button')} type="submit">
+          {translations.saveChanges}
+        </button>
+      </div>
     </Form>
   );
 }
