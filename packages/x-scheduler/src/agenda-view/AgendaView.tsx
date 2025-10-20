@@ -118,15 +118,28 @@ export const AgendaView = React.memo(
 /**
  * An Agenda View that can be used outside of the Event Calendar.
  */
-export const StandaloneAgendaView = React.forwardRef(function StandaloneAgendaView(
-  props: StandaloneAgendaViewProps,
+export const StandaloneAgendaView = React.forwardRef(function StandaloneAgendaView<
+  TEvent extends object,
+  TResource extends object,
+>(
+  props: StandaloneAgendaViewProps<TEvent, TResource>,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { parameters, forwardedProps } = useExtractEventCalendarParameters(props);
+  const { parameters, forwardedProps } = useExtractEventCalendarParameters<
+    TEvent,
+    TResource,
+    typeof props
+  >(props);
 
   return (
     <EventCalendarProvider {...parameters}>
       <AgendaView ref={forwardedRef} {...forwardedProps} />
     </EventCalendarProvider>
   );
-});
+}) as StandaloneAgendaViewComponent;
+
+type StandaloneAgendaViewComponent = <TEvent extends object, TResource extends object>(
+  props: StandaloneAgendaViewProps<TEvent, TResource> & {
+    ref?: React.ForwardedRef<HTMLDivElement>;
+  },
+) => React.JSX.Element;
