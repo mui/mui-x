@@ -5,33 +5,44 @@ import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { useStore } from '@base-ui-components/utils/store';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventCalendarView } from '@mui/x-scheduler-headless/use-event-calendar-view';
+import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
 import { useDayList } from '@mui/x-scheduler-headless/use-day-list';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { selectors } from '@mui/x-scheduler-headless/use-event-calendar';
+import {
+  selectors,
+  useExtractEventCalendarParameters,
+} from '@mui/x-scheduler-headless/use-event-calendar';
 import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-headless/use-event-occurrences-grouped-by-day';
-import { AgendaViewProps } from './AgendaView.types';
+import { AgendaViewProps, StandaloneAgendaViewProps } from './AgendaView.types';
 import { EventPopoverProvider, EventPopoverTrigger } from '../internals/components/event-popover';
-import { AgendaEvent } from '../internals/components/event/agenda-event/AgendaEvent';
+import { EventItem } from '../internals/components/event/event-item/EventItem';
 import './AgendaView.css';
+import '../index.css';
 
 // TODO: Create a prop to allow users to customize the number of days in agenda view
 export const AGENDA_VIEW_DAYS_AMOUNT = 12;
 
+/**
+ * An Agenda View to use inside the Event Calendar.
+ */
 export const AgendaView = React.memo(
   React.forwardRef(function AgendaView(
     props: AgendaViewProps,
     forwardedRef: React.ForwardedRef<HTMLDivElement>,
   ) {
-    const containerRef = React.useRef<HTMLElement | null>(null);
-    const handleRef = useMergedRefs(forwardedRef, containerRef);
-    const { className, ...other } = props;
-
+    // Context hooks
     const adapter = useAdapter();
     const store = useEventCalendarStoreContext();
-    const today = adapter.date();
+
+    // Ref hooks
+    const containerRef = React.useRef<HTMLElement | null>(null);
+    const handleRef = useMergedRefs(forwardedRef, containerRef);
+
+    // Selector hooks
     const visibleDate = useStore(store, selectors.visibleDate);
     const showWeekends = useStore(store, selectors.showWeekends);
 
+    // Feature hooks
     const getDayList = useDayList();
     const days = React.useMemo(
       () =>
@@ -49,11 +60,13 @@ export const AgendaView = React.memo(
         adapter.addDays(date, AGENDA_VIEW_DAYS_AMOUNT * delta),
     }));
 
+    const today = adapter.date();
+
     return (
       <div
+        {...props}
         ref={handleRef}
-        className={clsx('AgendaViewContainer', 'mui-x-scheduler', className)}
-        {...other}
+        className={clsx('AgendaViewContainer', 'mui-x-scheduler', props.className)}
       >
         <EventPopoverProvider containerRef={containerRef}>
           {days.map((day) => (
@@ -85,7 +98,7 @@ export const AgendaView = React.memo(
                     <EventPopoverTrigger
                       occurrence={occurrence}
                       render={
-                        <AgendaEvent
+                        <EventItem
                           occurrence={occurrence}
                           ariaLabelledBy={`DayHeaderCell-${day.key}`}
                         />
@@ -101,3 +114,19 @@ export const AgendaView = React.memo(
     );
   }),
 );
+
+/**
+ * An Agenda View that can be used outside of the Event Calendar.
+ */
+export const StandaloneAgendaView = React.forwardRef(function StandaloneAgendaView(
+  props: StandaloneAgendaViewProps,
+  forwardedRef: React.ForwardedRef<HTMLDivElement>,
+) {
+  const { parameters, forwardedProps } = useExtractEventCalendarParameters(props);
+
+  return (
+    <EventCalendarProvider {...parameters}>
+      <AgendaView ref={forwardedRef} {...forwardedProps} />
+    </EventCalendarProvider>
+  );
+});

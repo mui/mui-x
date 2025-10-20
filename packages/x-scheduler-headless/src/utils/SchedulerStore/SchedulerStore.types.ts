@@ -7,6 +7,8 @@ import {
   CalendarResourceId,
   CalendarEventUpdatedProperties,
   SchedulerValidDate,
+  CalendarEventId,
+  RecurringEventUpdateScope,
 } from '../../models';
 import { Adapter } from '../../use-adapter/useAdapter.types';
 
@@ -41,6 +43,16 @@ export interface SchedulerState {
    * Whether the event start or end can be dragged to change its duration without changing its other date.
    */
   areEventsResizable: boolean;
+  /**
+   * Whether events can be dragged from outside of the calendar and dropped into it.
+   */
+  canDragEventsFromTheOutside: boolean;
+  /**
+   * Whether events can be dragged from inside of the calendar and dropped outside of it.
+   * If true, when the mouse leaves the calendar, the event won't be rendered inside the calendar anymore.
+   * If false, when the mouse leaves the calendar, the event will be rendered in its last valid position inside the calendar.
+   */
+  canDropEventsToTheOutside: boolean;
   /**
    * The color palette used for all events.
    */
@@ -103,6 +115,18 @@ export interface SchedulerParameters {
    */
   areEventsResizable?: boolean;
   /**
+   * Whether events can be dragged from outside of the calendar and dropped into it.
+   * @default false
+   */
+  canDragEventsFromTheOutside?: boolean;
+  /**
+   * Whether events can be dragged from inside of the calendar and dropped outside of it.
+   * If true, when the mouse leaves the calendar, the event won't be rendered inside the calendar anymore.
+   * If false, when the mouse leaves the calendar, the event will be rendered in its last valid position inside the calendar.
+   * @default false
+   */
+  canDropEventsToTheOutside?: boolean;
+  /**
    * Whether the component should display the current time indicator.
    * @default true
    */
@@ -115,16 +139,6 @@ export interface SchedulerParameters {
    */
   eventColor?: CalendarEventColor;
 }
-
-/**
- * The scope of a recurring event update.
- *
- * - `only-this`: Updates only the selected occurrence of the recurring event.
- * - `this-and-following`: Updates the selected occurrence and all following occurrences,
- *   but leaves the previous ones untouched.
- * - `all`: Updates all occurrences in the recurring series, past, present, and future.
- */
-export type RecurringUpdateEventScope = 'this-and-following' | 'all' | 'only-this';
 
 /**
  * Parameters for updating a recurring event.
@@ -142,7 +156,7 @@ export type UpdateRecurringEventParameters = {
   /**
    * The scope of the update.
    */
-  scope: RecurringUpdateEventScope;
+  scope: RecurringEventUpdateScope;
 };
 
 /**
@@ -179,3 +193,9 @@ export type SchedulerModelUpdater<
   controlledProp: keyof Parameters & keyof State & string,
   defaultProp: keyof Parameters,
 ) => void;
+
+export interface UpdateEventsParameters {
+  deleted?: CalendarEventId[];
+  created?: CalendarEvent[];
+  updated?: CalendarEventUpdatedProperties[];
+}

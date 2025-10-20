@@ -3,6 +3,7 @@ import {
   createBaseConfig,
   createDocsConfig,
   createTestConfig,
+  EXTENSION_TEST_FILE,
   EXTENSION_TS,
 } from '@mui/internal-code-infra/eslint';
 import eslintPluginConsistentName from 'eslint-plugin-consistent-default-export-name';
@@ -57,7 +58,7 @@ function getReactCompilerFilesForPackages(packageInfo) {
   return packageInfo
     .filter((pkg) => pkg.isEnabled)
     .flatMap((pkg) =>
-      pkg.packagesNames.map((packageName) => `packages/${packageName}/src/**/*.${EXTENSION_TS}`),
+      pkg.packagesNames.map((packageName) => `packages/${packageName}/src/**/*${EXTENSION_TS}`),
     );
 }
 
@@ -100,12 +101,13 @@ const packageFilesWithReactCompiler = getReactCompilerFilesForPackages([
 ]);
 
 export default defineConfig(
+  createBaseConfig({
+    baseDirectory: dirname,
+    enableReactCompiler: isAnyReactCompilerPluginEnabled,
+  }),
   {
-    name: 'Base Config',
-    extends: createBaseConfig({
-      baseDirectory: dirname,
-      enableReactCompiler: isAnyReactCompilerPluginEnabled,
-    }),
+    name: 'MUI X Overrides',
+    files: [`**/*${EXTENSION_TS}`],
     plugins: {
       jsdoc: eslintPluginJsdoc,
       'mui-x': eslintPluginMuiX,
@@ -113,8 +115,8 @@ export default defineConfig(
     },
     settings: {
       'import/resolver': {
-        webpack: {
-          config: path.join(dirname, './webpackBaseConfig.js'),
+        typescript: {
+          project: ['tsconfig.json'],
         },
       },
     },
@@ -182,18 +184,15 @@ export default defineConfig(
   {
     files: [
       // matching the pattern of the test runner
-      `**/*.test.${EXTENSION_TS}`,
+      `**/*${EXTENSION_TEST_FILE}`,
     ],
     extends: createTestConfig({ useMocha: false }),
     ignores: ['test/e2e/**/*', 'test/regressions/**/*'],
-    rules: {
-      'testing-library/no-container': 'off',
-    },
   },
   baseSpecRules,
 
   {
-    files: [`**/*.test.${EXTENSION_TS}`, 'test/**'],
+    files: [`**/*${EXTENSION_TEST_FILE}`, `test/**/*${EXTENSION_TS}`],
     rules: {
       'no-restricted-imports': [
         'error',
@@ -233,8 +232,8 @@ export default defineConfig(
   },
 
   {
-    files: [`packages/*/src/**/*.${EXTENSION_TS}`],
-    ignores: ['**/*.d.ts', `**/*.spec.${EXTENSION_TS}`, `**/*.test.${EXTENSION_TS}`],
+    files: [`packages/*/src/**/*${EXTENSION_TS}`],
+    ignores: ['**/*.d.ts', `**/*.spec${EXTENSION_TS}`, `**/*.test${EXTENSION_TS}`],
     rules: {
       'material-ui/mui-name-matches-component-name': [
         'error',
@@ -260,7 +259,7 @@ export default defineConfig(
 
   // Common config from core start
   {
-    files: ['docs/**'],
+    files: [`docs/**/*${EXTENSION_TS}`],
     extends: createDocsConfig(),
     rules: {
       '@next/next/no-img-element': 'off',
@@ -268,7 +267,7 @@ export default defineConfig(
   },
 
   {
-    files: ['docs/src/pages/**/*', 'docs/data/**/*'],
+    files: [`docs/src/pages/**/*${EXTENSION_TS}`, `docs/data/**/*${EXTENSION_TS}`],
     rules: {
       // This most often reports data that is defined after the component definition.
       // This is safe to do and helps readability of the demo code since the data is mostly irrelevant.
@@ -280,7 +279,7 @@ export default defineConfig(
   },
 
   {
-    files: ['docs/data/**/*'],
+    files: [`docs/data/**/*${EXTENSION_TS}`],
     ignores: [
       // filenames/match-exported sees filename as 'file-name.d'
       // Plugin looks unmaintain, find alternative? (e.g. eslint-plugin-project-structure)
@@ -297,7 +296,7 @@ export default defineConfig(
 
   // Next.js entry points pages
   {
-    files: ['docs/pages/**/*'],
+    files: [`docs/pages/**/*${EXTENSION_TS}`],
     rules: {
       'react/prop-types': 'off',
     },
@@ -306,9 +305,9 @@ export default defineConfig(
 
   {
     files: [
-      `docs/**/*.${EXTENSION_TS}`,
-      `packages/*/src/**/*.test.${EXTENSION_TS}`,
-      `packages/*/src/**/*.spec.${EXTENSION_TS}`,
+      `docs/**/*${EXTENSION_TS}`,
+      `packages/*/src/**/*.test${EXTENSION_TS}`,
+      `packages/*/src/**/*.spec${EXTENSION_TS}`,
     ],
     ignores: ['**/*.d.ts'],
     rules: {
@@ -379,7 +378,7 @@ export default defineConfig(
     'x-license',
     'x-telemetry',
   ].map((pkgName) => ({
-    files: [`packages/${pkgName}/src/**/*.${EXTENSION_TS}`],
+    files: [`packages/${pkgName}/src/**/*${EXTENSION_TS}`],
     ignores: ['**/*.d.ts', '**/*.spec{.ts,.tsx}', '**/*.test{.ts,.tsx}'],
     rules: {
       'no-restricted-imports': [
@@ -425,9 +424,9 @@ export default defineConfig(
   {
     // TODO: typescript namespaces found to be harmful. Refactor to different patterns. More info: https://github.com/mui/mui-x/pull/19071
     files: [
-      `packages/x-scheduler/src/**/*.${EXTENSION_TS}`,
-      `packages/x-scheduler-headless/src/**/*.${EXTENSION_TS}`,
-      `packages/x-virtualizer/src/**/*.${EXTENSION_TS}`,
+      `packages/x-scheduler/src/**/*${EXTENSION_TS}`,
+      `packages/x-scheduler-headless/src/**/*${EXTENSION_TS}`,
+      `packages/x-virtualizer/src/**/*${EXTENSION_TS}`,
     ],
     rules: {
       '@typescript-eslint/no-namespace': 'off',

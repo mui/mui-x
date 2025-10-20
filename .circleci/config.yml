@@ -13,10 +13,10 @@ parameters:
     description: The name of the workflow to run
     type: string
     default: pipeline
-  with-material-ui-6:
-    description: Use material-ui v6 for additional checks and tests
-    type: boolean
-    default: false
+  material-ui-version:
+    description: The version of material-ui to be used
+    type: string
+    default: stable
   with-react-version:
     description: The version of react to be used for the additional tests
     type: string
@@ -31,6 +31,10 @@ default-parameters: &default-parameters
     description: The version of react to be used
     type: string
     default: << pipeline.parameters.react-version >>
+  material-ui-version:
+    description: The version of material-ui to be used
+    type: string
+    default: << pipeline.parameters.material-ui-version >>
   e2e-base-url:
     description: The base url for running end-to-end test
     type: string
@@ -43,6 +47,7 @@ default-job: &default-job
     # expose it globally otherwise we have to thread it from each job to the install command
     BROWSERSTACK_FORCE: << pipeline.parameters.browserstack-force >>
     REACT_VERSION: << parameters.react-version >>
+    MATERIAL_UI_VERSION: << parameters.material-ui-version >>
     COREPACK_ENABLE_DOWNLOAD_PROMPT: '0'
   working_directory: /tmp/mui
   docker:
@@ -71,6 +76,10 @@ commands:
         description: The version of React to use.
         type: string
         default: << pipeline.parameters.react-version >>
+      material-ui-version:
+        description: The version of material-ui to use.
+        type: string
+        default: << pipeline.parameters.material-ui-version >>
     steps:
       - when:
           condition: << parameters.playwright >>
@@ -92,32 +101,21 @@ commands:
             node --version
             pnpm --version
 
-      - when:
-          condition:
-            equal: [stable, << parameters.react-version >>]
-          steps:
-            - run:
-                name: Install js dependencies
-                command: pnpm install
-      - unless:
-          condition:
-            equal: [stable, << parameters.react-version >>]
-          steps:
-            - run:
-                name: Install js dependencies without frozen lockfile
-                command: pnpm install --no-frozen-lockfile
       - run:
-          name: Resolve React version
+          name: Install js dependencies
           command: |
-            pnpm use-react-version
-            # log a patch for maintainers who want to check out this change
-            git --no-pager diff HEAD
-      - when:
-          condition: << pipeline.parameters.with-material-ui-6 >>
-          steps:
-            - run:
-                name: Install @mui/material v6
-                command: pnpm use-material-ui-v6
+            args=""
+            if [ -n "$REACT_VERSION" ] && [ "$REACT_VERSION" != "stable" ]; then
+              args="react@$REACT_VERSION"
+            fi
+            if [ -n "$MATERIAL_UI_VERSION" ] && [ "$MATERIAL_UI_VERSION" != "stable" ]; then
+              args="$args @mui/material@$MATERIAL_UI_VERSION"
+            fi
+            if [ -n "$args" ]; then
+              pnpm dlx @mui/internal-code-infra@canary set-version-overrides --pkg $args
+            else
+              pnpm install
+            fi
 
 jobs:
   checkout:
@@ -208,9 +206,6 @@ jobs:
       - run:
           name: Stylelint
           command: pnpm stylelint
-      - run:
-          name: Lint JSON
-          command: pnpm jsonlint
       - run:
           name: Lint Markdown
           command: pnpm markdownlint
@@ -403,7 +398,8 @@ workflows:
       and:
         - equal: [additional, << pipeline.parameters.workflow >>]
         - or:
-            - equal: [true, << pipeline.parameters.with-material-ui-6 >>]
+            - not:
+                equal: ['stable', << pipeline.parameters.material-ui-version >>]
             - not:
                 equal: ['stable', << pipeline.parameters.with-react-version >>]
     jobs:
@@ -427,7 +423,8 @@ workflows:
     when:
       and:
         - equal: [additional, << pipeline.parameters.workflow >>]
-        - equal: [true, << pipeline.parameters.with-material-ui-6 >>]
+        - not:
+            equal: ['stable', << pipeline.parameters.material-ui-version >>]
     jobs:
       - test_types:
           <<: *default-context

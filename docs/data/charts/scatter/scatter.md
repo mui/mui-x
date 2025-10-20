@@ -161,7 +161,8 @@ However, this comes with the following limitations:
 
 - CSS styling of single `circle` elements is no longer possible;
 - Overriding the `marker` slot is not supported;
-- Transparent highlight style: for performance reasons, the highlighted state creates a highlighted circle on top of the original marker. Applying transparency to the highlighted circle can cause the original circle to be partially visible.
+- Transparent highlight style: for performance reasons, the highlighted state creates a highlighted circle on top of the original marker. Applying transparency to the highlighted circle can cause the original circle to be partially visible;
+- `disableHover` for scatter series does not work.
 
 On top of that, there's also some differences in behavior:
 
@@ -204,3 +205,9 @@ The `data-drawing-container` indicates that children of this element should be c
 
 See the [Composition—clipping](/x/react-charts/composition/#clipping) for more info.
 :::
+
+### Regression line
+
+You add a regression line to a scatter plot by leveraging composition.
+
+{{"demo": "ScatterRegressionLine.js"}}

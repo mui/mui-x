@@ -328,4 +328,6 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
   promptChangePivotValuesDescription: (column: string, aggregation: string) =>
     `${column} (${aggregation})`,
+  promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) =>
+    `Dimensions (${dimensionsCount}), Values (${valuesCount})`,
 };
