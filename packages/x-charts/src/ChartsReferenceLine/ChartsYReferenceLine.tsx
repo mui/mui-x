@@ -42,7 +42,8 @@ const getTextParams = ({
   const defaultSpacingOtherAxis =
     labelAlign === 'middle' ? DEFAULT_SPACING_MIDDLE_OTHER_AXIS : DEFAULT_SPACING;
 
-  const spacingX = (typeof spacing === 'object' ? spacing.x : spacing) ?? defaultSpacingOtherAxis;
+  const spacingX =
+    (typeof spacing === 'object' ? spacing.x : defaultSpacingOtherAxis) ?? defaultSpacingOtherAxis;
   const spacingY = (typeof spacing === 'object' ? spacing.y : spacing) ?? DEFAULT_SPACING;
 
   switch (labelAlign) {
