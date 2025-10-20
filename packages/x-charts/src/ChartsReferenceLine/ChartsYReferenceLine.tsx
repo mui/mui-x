@@ -116,17 +116,10 @@ function ChartsYReferenceLine(props: ChartsYReferenceLineProps) {
       ? DEFAULT_SPACING_MIDDLE_OTHER_AXIS
       : DEFAULT_SPACING;
 
-  const spacing =
-    typeof spacingProp === 'object'
-      ? {
-          x: defaultSpacingOtherAxis,
-          y: DEFAULT_SPACING,
-          ...spacingProp,
-        }
-      : { x: defaultSpacingOtherAxis, y: spacingProp ?? DEFAULT_SPACING };
-
-  const spacingX = spacing.x;
-  const spacingY = spacing.y;
+  const spacingX =
+    (typeof spacingProp === 'object' ? spacingProp.x : spacingProp) ?? defaultSpacingOtherAxis;
+  const spacingY =
+    (typeof spacingProp === 'object' ? spacingProp.y : spacingProp) ?? DEFAULT_SPACING;
 
   const textParams = {
     y: yPosition - spacingY,
