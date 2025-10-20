@@ -13,7 +13,7 @@ export function clearStringMeasurementCache() {
 }
 
 const MAX_CACHE_NUM = 2000;
-const STYLE_SET = new Set([
+const PIXEL_STYLES = new Set([
   'minWidth',
   'maxWidth',
   'width',
@@ -34,16 +34,15 @@ const STYLE_SET = new Set([
   'marginTop',
   'marginBottom',
 ]);
-export const MEASUREMENT_SPAN_ID = 'mui_measurement_span';
 
 /**
- *
+ * Convert number value to pixel value for certain CSS properties
  * @param name CSS property name
  * @param value
  * @returns add 'px' for distance properties
  */
-function autoCompleteStyle(name: string, value: number) {
-  if (STYLE_SET.has(name) && value === +value) {
+function convertPixelValue(name: string, value: number | string) {
+  if (PIXEL_STYLES.has(name) && value === +value) {
     return `${value}px`;
   }
 
@@ -51,40 +50,36 @@ function autoCompleteStyle(name: string, value: number) {
 }
 
 /**
- *
+ * Converts camelcase to dash-case
  * @param text camelcase css property
- * @returns css property
  */
-function camelToMiddleLine(text: string) {
-  const strs = text.split('');
-
-  const formatStrs = strs.reduce((result: string[], entry) => {
-    if (entry === entry.toUpperCase()) {
-      return [...result, '-', entry.toLowerCase()];
-    }
-
-    return [...result, entry];
-  }, []);
-
-  return formatStrs.join('');
+const AZ = /([A-Z])/g;
+function camelCaseToDashCase(text: string) {
+  return String(text).replace(AZ, (match) => `-${match.toLowerCase()}`);
 }
 
 /**
- *
+ * Converts a style object into a string to be used as a cache key
  * @param style React style object
  * @returns CSS styling string
  */
-export const getStyleString = (style: React.CSSProperties) =>
-  Object.keys(style)
-    .sort()
-    .reduce(
-      (result, s) =>
-        `${result}${camelToMiddleLine(s)}:${autoCompleteStyle(
-          s,
-          (style as Record<string, any>)[s],
-        )};`,
-      '',
-    );
+export function getStyleString(style: React.CSSProperties) {
+  let result = '';
+
+  for (const key in style) {
+    if (Object.hasOwn(style, key)) {
+      const k = key as keyof React.CSSProperties;
+      const value = style[k];
+
+      if (value === undefined) {
+        continue;
+      }
+
+      result += `${camelCaseToDashCase(k)}:${convertPixelValue(k, value)};`;
+    }
+  }
+  return result;
+}
 
 /**
  *
@@ -97,7 +92,7 @@ export const getStringSize = (text: string | number, style: React.CSSProperties 
     return { width: 0, height: 0 };
   }
 
-  const str = `${text}`;
+  const str = String(text);
   const styleString = getStyleString(style);
   const cacheKey = `${str}-${styleString}`;
 
@@ -113,8 +108,8 @@ export const getStringSize = (text: string | number, style: React.CSSProperties 
     // Need to use CSS Object Model (CSSOM) to be able to comply with Content Security Policy (CSP)
     // https://en.wikipedia.org/wiki/Content_Security_Policy
     Object.keys(style as Record<string, any>).map((styleKey) => {
-      (measurementElem!.style as Record<string, any>)[camelToMiddleLine(styleKey)] =
-        autoCompleteStyle(styleKey, (style as Record<string, any>)[styleKey]);
+      (measurementElem!.style as Record<string, any>)[camelCaseToDashCase(styleKey)] =
+        convertPixelValue(styleKey, (style as Record<string, any>)[styleKey]);
       return styleKey;
     });
 
@@ -173,8 +168,8 @@ export function batchMeasureStrings(
   const measurementSpanStyle: Record<string, any> = { ...style };
 
   Object.keys(measurementSpanStyle).map((styleKey) => {
-    (measurementContainer!.style as Record<string, any>)[camelToMiddleLine(styleKey)] =
-      autoCompleteStyle(styleKey, measurementSpanStyle[styleKey]);
+    (measurementContainer!.style as Record<string, any>)[camelCaseToDashCase(styleKey)] =
+      convertPixelValue(styleKey, measurementSpanStyle[styleKey]);
     return styleKey;
   });
 
@@ -210,18 +205,15 @@ export function batchMeasureStrings(
   return sizeMap;
 }
 
+let measurementContainer: SVGSVGElement | null = null;
+
 /**
  * Get (or create) a hidden span element to measure text size.
  */
 function getMeasurementContainer() {
-  let measurementContainer = document.getElementById(
-    MEASUREMENT_SPAN_ID,
-  ) as unknown as SVGSVGElement;
-
   if (measurementContainer === null) {
     measurementContainer = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     measurementContainer.setAttribute('aria-hidden', 'true');
-    measurementContainer.setAttribute('id', MEASUREMENT_SPAN_ID);
 
     measurementContainer.style.position = 'absolute';
     measurementContainer.style.top = '-20000px';
