@@ -27,14 +27,12 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const translations = useTranslations();
   const { open: startEditing } = useEventPopoverContext();
 
-  // Feature hooks
-  const placeholder = CalendarGrid.usePlaceholderInDay(day.value, row);
-
   // Selector hooks
   const hasDayView = useStore(store, selectors.hasDayView);
   const visibleDate = useStore(store, selectors.visibleDate);
   const isCreation = useStore(store, selectors.isCreatingNewEventInDayCell, day.value);
   const canCreateEvent = useStore(store, selectors.canCreateNewEvent);
+  const placeholder = CalendarGrid.usePlaceholderInDay(day.value, row);
 
   // Ref hooks
   const cellRef = React.useRef<HTMLDivElement | null>(null);

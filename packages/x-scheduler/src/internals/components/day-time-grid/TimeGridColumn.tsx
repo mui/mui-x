@@ -75,16 +75,16 @@ function ColumnInteractiveLayer({
   // Ref hooks
   const columnRef = React.useRef<HTMLDivElement | null>(null);
 
-  // Feature hooks
+  // Selector hooks
+  const isCreation = useStore(store, selectors.isCreatingNewEventInTimeRange, start, end);
   const placeholder = CalendarGrid.usePlaceholderInRange({ start, end, occurrences, maxIndex });
+  const canCreateEvent = useStore(store, selectors.canCreateNewEvent);
+
+  // Feature hooks
   const getDateFromPosition = CalendarGrid.useGetDateFromPositionInColumn({
     elementRef: columnRef,
     snapMinutes: EVENT_CREATION_PRECISION_MINUTE,
   });
-
-  // Selector hooks
-  const isCreation = useStore(store, selectors.isCreatingNewEventInTimeRange, start, end);
-  const canCreateEvent = useStore(store, selectors.canCreateNewEvent);
 
   const computeInitialRange = (event: React.MouseEvent<HTMLDivElement>) => {
     const startDateFromPosition = getDateFromPosition(event.clientY);
