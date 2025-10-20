@@ -125,7 +125,7 @@ export function getVerticalCenterRatio(
   reverse = false,
 ) {
   const { top, height } = area;
-  const ratio = ((point.y - top) / height) * -1 + 1;
+  const ratio = (top - point.y) / height + 1;
   return reverse ? 1 - ratio : ratio;
 }
 
