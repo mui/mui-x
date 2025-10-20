@@ -33,7 +33,7 @@ export const CalendarGridDayEventPlaceholder = React.forwardRef(
 );
 
 export namespace CalendarGridDayEventPlaceholder {
-  export interface State {}
+  export interface State extends useEvent.State {}
 
   export interface Props extends BaseUIComponentProps<'div', State>, useEvent.Parameters {}
 }
