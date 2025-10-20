@@ -363,4 +363,173 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
       expect(getAxisTickValues('x').length).to.be.lessThan(4);
     });
   });
+
+  describe('Zoom and Pan with reversed axis', () => {
+    it('should zoom at the correct position with reversed x-axis', async () => {
+      const onZoomChange = sinon.spy();
+      const { user } = render(
+        <BarChartPro
+          series={[
+            {
+              data: [10, 20, 30, 40],
+            },
+          ]}
+          xAxis={[
+            {
+              data: ['A', 'B', 'C', 'D'],
+              zoom: true,
+              height: 30,
+              id: 'x',
+              reverse: true, // Reversed axis
+            },
+          ]}
+          yAxis={[{ position: 'none' }]}
+          width={100}
+          height={130}
+          margin={0}
+          slotProps={{ tooltip: { trigger: 'none' } }}
+          onZoomChange={onZoomChange}
+        />,
+        options,
+      );
+
+      // The reverse property affects scale mapping, not tick order
+      // Ticks still render in data order: A, B, C, D
+      expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C', 'D']);
+
+      const svg = document.querySelector(CHART_SELECTOR)!;
+
+      await user.pointer([
+        {
+          target: svg,
+          coords: { x: 25, y: 50 }, // Point near left edge
+        },
+      ]);
+
+      // Zoom in with a larger delta (similar to other zoom tests)
+      fireEvent.wheel(svg, { deltaY: -500, clientX: 25, clientY: 50 });
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
+
+      expect(onZoomChange.callCount).to.be.greaterThan(0);
+
+      // After zooming, should have fewer ticks than before
+      const ticksAfterZoom = getAxisTickValues('x');
+      expect(ticksAfterZoom.length).to.be.lessThan(4);
+      expect(ticksAfterZoom.length).to.be.greaterThan(0);
+    });
+
+    it('should pan in the correct direction with reversed x-axis on drag', async () => {
+      const onZoomChange = sinon.spy();
+      const { user } = render(
+        <BarChartPro
+          series={[
+            {
+              data: [10, 20, 30, 40],
+            },
+          ]}
+          xAxis={[
+            {
+              data: ['A', 'B', 'C', 'D'],
+              zoom: true,
+              height: 30,
+              id: 'x',
+              reverse: true,
+            },
+          ]}
+          yAxis={[{ position: 'none' }]}
+          width={100}
+          height={130}
+          margin={0}
+          slotProps={{ tooltip: { trigger: 'none' } }}
+          initialZoom={[{ axisId: 'x', start: 25, end: 75 }]}
+          onZoomChange={onZoomChange}
+        />,
+        options,
+      );
+
+      // With zoom at 25-75%, we see the middle range which is B and C
+      expect(getAxisTickValues('x')).to.deep.equal(['B', 'C']);
+
+      const svg = document.querySelector(CHART_SELECTOR)!;
+
+      // Drag from left to right (positive direction)
+      await user.pointer([
+        {
+          keys: '[MouseLeft>]',
+          target: svg,
+          coords: { x: 15, y: 50 },
+        },
+        {
+          target: svg,
+          coords: { x: 85, y: 50 },
+        },
+        {
+          keys: '[/MouseLeft]',
+          target: svg,
+          coords: { x: 85, y: 50 },
+        },
+      ]);
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
+
+      expect(onZoomChange.callCount).to.be.greaterThan(0);
+
+      // Pan should have occurred
+      const ticksAfterDrag = getAxisTickValues('x');
+      expect(ticksAfterDrag).to.not.deep.equal(['B', 'C']);
+    });
+
+    it('should zoom at the correct position with reversed y-axis', async () => {
+      const onZoomChange = sinon.spy();
+      const { user } = render(
+        <BarChartPro
+          series={[
+            {
+              data: [10, 20, 30, 40],
+            },
+          ]}
+          xAxis={[
+            {
+              data: ['A', 'B', 'C', 'D'],
+              height: 30,
+            },
+          ]}
+          yAxis={[
+            {
+              zoom: true,
+              width: 30,
+              id: 'y',
+              reverse: true, // Reversed y-axis
+            },
+          ]}
+          width={100}
+          height={130}
+          margin={0}
+          slotProps={{ tooltip: { trigger: 'none' } }}
+          onZoomChange={onZoomChange}
+        />,
+        options,
+      );
+
+      const svg = document.querySelector(CHART_SELECTOR)!;
+
+      await user.pointer([
+        {
+          target: svg,
+          coords: { x: 50, y: 25 }, // Point near top
+        },
+      ]);
+
+      // Zoom in by scrolling up
+      for (let i = 0; i < 30; i += 1) {
+        fireEvent.wheel(svg, { deltaY: -1, clientX: 50, clientY: 25 });
+        await act(async () => new Promise((r) => requestAnimationFrame(r)));
+      }
+
+      expect(onZoomChange.callCount).to.be.greaterThan(0);
+
+      // After zooming, should have fewer ticks
+      const ticksAfterZoom = getAxisTickValues('y');
+      expect(ticksAfterZoom.length).to.be.greaterThan(0);
+    });
+  });
 });

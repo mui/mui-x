@@ -44,7 +44,7 @@ export function defaultizeXAxis(
       id,
       position,
       height: axisConfig.height ?? defaultHeight,
-      zoom: defaultizeZoom(axisConfig.zoom, id, 'x'),
+      zoom: defaultizeZoom(axisConfig.zoom, id, 'x', axisConfig.reverse),
     };
 
     // Increment the offset for the next axis
@@ -104,7 +104,7 @@ export function defaultizeYAxis(
       id,
       position,
       width: axisConfig.width ?? defaultWidth,
-      zoom: defaultizeZoom(axisConfig.zoom, id, 'y'),
+      zoom: defaultizeZoom(axisConfig.zoom, id, 'y', axisConfig.reverse),
     } satisfies DefaultedYAxis;
 
     // Increment the offset for the next axis
