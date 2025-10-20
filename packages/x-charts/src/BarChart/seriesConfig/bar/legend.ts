@@ -3,7 +3,7 @@ import { getLabel } from '../../../internals/getLabel';
 import { LegendGetter } from '../../../internals/plugins/models';
 import { getSeriesColorFn } from '../../../internals/getSeriesColorFn';
 
-const legendGetter: LegendGetter<'bar'> = (params) => {
+const legendGetter: LegendGetter<'bar' | 'barRange'> = (params) => {
   const { seriesOrder, series } = params;
   return seriesOrder.reduce((acc, seriesId) => {
     const formattedLabel = getLabel(series[seriesId].label, 'legend');
