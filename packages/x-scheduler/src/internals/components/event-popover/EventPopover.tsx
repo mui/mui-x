@@ -30,8 +30,8 @@ import {
 import { getColorClassName } from '../../utils/color-utils';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { createPopover } from '../create-popover';
-import './EventPopover.css';
 import { useScopeDialogContext } from '../scope-dialog/ScopeDialogContext';
+import './EventPopover.css';
 
 const EventPopover = createPopover<CalendarEventOccurrence>({
   contextName: 'EventPopoverContext',
@@ -539,7 +539,7 @@ export const EventPopoverContent = React.forwardRef(function EventPopoverContent
 export function EventPopoverProvider(props: EventPopoverProviderProps) {
   const { containerRef, children } = props;
   const store = useEventCalendarStoreContext();
-
+  const { isOpen: isScopeDialogOpen } = useScopeDialogContext();
   return (
     <EventPopover.Provider
       containerRef={containerRef}
@@ -554,6 +554,7 @@ export function EventPopoverProvider(props: EventPopoverProviderProps) {
       onClose={() => {
         store.setOccurrencePlaceholder(null);
       }}
+      shouldBlockClose={isScopeDialogOpen}
     >
       {children}
     </EventPopover.Provider>

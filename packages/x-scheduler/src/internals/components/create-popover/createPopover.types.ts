@@ -27,6 +27,7 @@ export interface ProviderProps<TAnchorData> {
     onClose: () => void;
   }) => React.ReactNode;
   onClose?: () => void;
+  shouldBlockClose?: boolean;
 }
 
 export interface TriggerProps<TAnchorData> extends React.ComponentProps<typeof Popover.Trigger> {
