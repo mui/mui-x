@@ -176,7 +176,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
         // change the second row
         if (!hasTransformedTheData && index === 1) {
           hasTransformedTheData = true;
-          return { ...row, id: testRowId };
+          return { ...row, id: testRowId, name: `${row.name}-updated` };
         }
         return row;
       });
@@ -184,7 +184,10 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
       <TestDataSource dataSourceCache={null} transformGetRowsResponse={transformGetRowsResponse} />,
     );
 
-    expect(fetchRowsSpy.callCount).to.equal(1);
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.equal(1);
+    });
+
     await waitFor(() => {
       expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(10 + 1);
     });
