@@ -30,7 +30,7 @@ function ChartsSingleXAxisTicks(inProps: ChartsSingleXAxisProps) {
     Tick,
     TickLabel,
     axisTickLabelProps,
-    reverse,
+    reverse = false,
   } = useAxisTicksProps(inProps);
 
   const isRtl = useRtl();
@@ -65,14 +65,17 @@ function ChartsSingleXAxisTicks(inProps: ChartsSingleXAxisProps) {
     direction: 'x',
   });
 
-  const visibleLabels = getVisibleLabels(xTicks, {
-    tickLabelStyle: axisTickLabelProps.style,
-    tickLabelInterval,
-    tickLabelMinGap,
-    reverse,
-    isMounted,
-    isXInside: instance.isXInside,
-  });
+  const visibleLabels =
+    typeof tickLabelInterval === 'function'
+      ? new Set(xTicks.filter((item, index) => tickLabelInterval(item.value, index)))
+      : getVisibleLabels(
+          xTicks,
+          axisTickLabelProps.style,
+          tickLabelMinGap,
+          reverse,
+          isMounted,
+          instance.isXInside,
+        );
 
   /* If there's an axis title, the tick labels have less space to render  */
   const tickLabelsMaxHeight = Math.max(

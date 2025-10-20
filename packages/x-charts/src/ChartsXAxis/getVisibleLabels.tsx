@@ -1,6 +1,6 @@
 'use client';
 import { TickItemType } from '../hooks/useTicks';
-import { ChartsXAxisProps, ComputedXAxis } from '../models/axis';
+import { ChartsXAxisProps } from '../models/axis';
 import { getMinXTranslation } from '../internals/geometry';
 import { ChartsTextStyle } from '../internals/getWordsByLines';
 import { batchMeasureStrings } from '../internals/domUtils';
@@ -8,24 +8,12 @@ import { batchMeasureStrings } from '../internals/domUtils';
 /* Returns a set of indices of the tick labels that should be visible.  */
 export function getVisibleLabels<T extends TickItemType>(
   xTicks: T[],
-  {
-    tickLabelStyle: style,
-    tickLabelInterval,
-    tickLabelMinGap,
-    reverse,
-    isMounted,
-    isXInside,
-  }: Pick<ChartsXAxisProps, 'tickLabelInterval' | 'tickLabelStyle'> &
-    Pick<ComputedXAxis, 'reverse'> & {
-      isMounted: boolean;
-      tickLabelMinGap: NonNullable<ChartsXAxisProps['tickLabelMinGap']>;
-      isXInside: (x: number) => boolean;
-    },
+  tickLabelStyle: ChartsXAxisProps['tickLabelStyle'],
+  tickLabelMinGap: number,
+  reverse: boolean,
+  isMounted: boolean,
+  isXInside: (x: number) => boolean,
 ): Set<T> {
-  if (typeof tickLabelInterval === 'function') {
-    return new Set(xTicks.filter((item, index) => tickLabelInterval(item.value, index)));
-  }
-
   // Filter label to avoid overlap
   let previousTextLimit = 0;
   const direction = reverse ? -1 : 1;
@@ -42,7 +30,7 @@ export function getVisibleLabels<T extends TickItemType>(
     return isXInside(textPosition);
   });
 
-  const sizeMap = measureTickLabels(candidateTickLabels, style);
+  const sizeMap = measureTickLabels(candidateTickLabels, tickLabelStyle);
 
   return new Set(
     candidateTickLabels.filter((item, labelIndex) => {
@@ -61,7 +49,7 @@ export function getVisibleLabels<T extends TickItemType>(
         ? getTickLabelSize(sizeMap, item)
         : { width: 0, height: 0 };
 
-      const distance = getMinXTranslation(width, height, style?.angle);
+      const distance = getMinXTranslation(width, height, tickLabelStyle?.angle);
 
       const currentTextLimit = textPosition - (direction * distance) / 2;
       if (
