@@ -17,8 +17,11 @@ Charts dimensions are defined by the following props:
 - `height` and `width` for the `<svg />` size; if not provided, these values are derived from the container
 - `margin` for the space between the `<svg />` border and the drawing area
 
+Plus some extra space used to draw axes defined by `height` and `width` properties of the x- and y-axes.
+
+
 Drawing area refers to the space available to plot data (scatter points, lines, or pie arcs).
-The `margin` is used to leave space for extra elements, such as the axes, legend, or title.
+The `margin` is used to leave space for extra elements, or let data item overflow the drawing area.
 
 You can use the `useDrawingArea()` hook in the charts subcomponents to get the coordinates of the drawing area:
 
