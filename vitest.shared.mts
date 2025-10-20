@@ -1,6 +1,6 @@
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { defineConfig, mergeConfig } from 'vitest/config';
+import { defineConfig, mergeConfig, type ViteUserConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import { getTestName } from './scripts/getTestName.mts';
 
@@ -20,7 +20,7 @@ export interface XDefaultConfiguratorOptions {
   /**
    * Optional additional config to merge
    */
-  config?: Record<string, any>;
+  config?: ViteUserConfig;
   /**
    * Browser-specific options
    */
