@@ -40,9 +40,7 @@ const getTextParams = ({
   labelAlign = 'middle',
 }: GetTextPlacementParams) => {
   const defaultSpacingOtherAxis =
-    labelAlign === 'middle' || labelAlign === undefined
-      ? DEFAULT_SPACING_MIDDLE_OTHER_AXIS
-      : DEFAULT_SPACING;
+    labelAlign === 'middle' ? DEFAULT_SPACING_MIDDLE_OTHER_AXIS : DEFAULT_SPACING;
 
   const spacingX = (typeof spacing === 'object' ? spacing.x : spacing) ?? defaultSpacingOtherAxis;
   const spacingY = (typeof spacing === 'object' ? spacing.y : spacing) ?? DEFAULT_SPACING;
