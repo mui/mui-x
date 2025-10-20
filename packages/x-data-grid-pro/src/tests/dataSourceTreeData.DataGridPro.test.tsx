@@ -224,7 +224,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     expect(apiRef.current!.state.rows.tree[testRowId]).to.equal(undefined);
   });
 
-  it('should collapse the nested data if refetching the root level with `collapseChildren` set to `true`', async () => {
+  it('should collapse the nested data if refetching the root level with `keepChildrenExpanded` set to `false`', async () => {
     const { user } = render(<TestDataSource dataSourceCache={null} />);
 
     expect(fetchRowsSpy.callCount).to.equal(1);
@@ -245,7 +245,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     );
 
     act(() => {
-      apiRef.current?.dataSource.fetchRows(undefined, { collapseChildren: true });
+      apiRef.current?.dataSource.fetchRows(undefined, { keepChildrenExpanded: false });
     });
 
     await waitFor(() => {
