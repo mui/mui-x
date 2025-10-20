@@ -4,6 +4,10 @@ import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 
 const knobs = {
   // Zoom interactions
+  zoom: {
+    knob: 'title',
+    displayName: 'Zoom interactions',
+  },
   wheel: {
     displayName: 'Wheel',
     knob: 'switch',
@@ -21,6 +25,10 @@ const knobs = {
   },
 
   // Pan interactions
+  pan: {
+    knob: 'title',
+    displayName: 'Pan interactions',
+  },
   drag: {
     displayName: 'Drag',
     knob: 'switch',

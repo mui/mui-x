@@ -2,9 +2,11 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import type { SeriesId } from '@mui/x-charts/internals';
-import { useInteractionItemProps } from '@mui/x-charts/internals';
+import { useInteractionItemProps, useStore, useSelector } from '@mui/x-charts/internals';
 import { useTheme } from '@mui/material/styles';
-import { SankeyLayoutNode, type SankeyNodeIdentifierWithData } from './sankey.types';
+import type { SankeyLayoutNode, SankeyNodeIdentifierWithData } from './sankey.types';
+import { selectorIsNodeHighlighted } from './plugins';
+import { selectorIsSankeyItemFaded } from './plugins/useSankeyHighlight.selectors';
 
 export interface SankeyNodeElementProps {
   /**
@@ -37,6 +39,7 @@ export const SankeyNodeElement = React.forwardRef<SVGGElement, SankeyNodeElement
   function SankeyNodeElement(props, ref) {
     const { node, showLabel = true, onClick, seriesId } = props;
     const theme = useTheme();
+    const store = useStore();
 
     const x0 = node.x0 ?? 0;
     const y0 = node.y0 ?? 0;
@@ -62,12 +65,22 @@ export const SankeyNodeElement = React.forwardRef<SVGGElement, SankeyNodeElement
       node,
     };
 
+    const isHighlighted = useSelector(store, selectorIsNodeHighlighted, [node]);
+    const isFaded = useSelector(store, selectorIsSankeyItemFaded, [isHighlighted]);
+
     // Add interaction props for tooltips
     const interactionProps = useInteractionItemProps(identifier);
 
     const handleClick = useEventCallback((event: React.MouseEvent<SVGRectElement>) => {
       onClick?.(event, identifier);
     });
+
+    let opacity = 1;
+    if (isFaded) {
+      opacity = 0.3;
+    } else if (isHighlighted) {
+      opacity = 1;
+    }
 
     return (
       <g ref={ref} data-node={node.id}>
@@ -77,9 +90,12 @@ export const SankeyNodeElement = React.forwardRef<SVGGElement, SankeyNodeElement
           width={nodeWidth}
           height={nodeHeight}
           fill={node.color}
+          opacity={opacity}
           onClick={onClick ? handleClick : undefined}
           cursor={onClick ? 'pointer' : 'default'}
           stroke="none"
+          data-highlighted={isHighlighted || undefined}
+          data-faded={isFaded || undefined}
           {...interactionProps}
         />
 
@@ -92,6 +108,7 @@ export const SankeyNodeElement = React.forwardRef<SVGGElement, SankeyNodeElement
             fontSize={theme.typography.caption.fontSize}
             fontFamily={theme.typography.fontFamily}
             pointerEvents="none"
+            opacity={opacity}
           >
             {node.label}
           </text>

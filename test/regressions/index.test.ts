@@ -282,7 +282,7 @@ async function main() {
           printButton.click();
         });
 
-        await sleep(4000);
+        await sleep(5000);
 
         await screenshotPrintDialogPreview(screenshotPath, {
           x: 72,

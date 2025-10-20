@@ -64,11 +64,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => 
             aggregateRow: getRowsResponse.aggregateRow,
           };
         },
-        getAggregatedValue:
-          getAggregatedValueProp ??
-          ((row, field) => {
-            return row[`${field}Aggregate`];
-          }),
+        getAggregatedValue: getAggregatedValueProp ?? ((row, field) => row[field]),
       };
     }, [fetchRows, getAggregatedValueProp]);
 

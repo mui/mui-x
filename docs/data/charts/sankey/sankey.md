@@ -135,6 +135,75 @@ The `SankeyItemIdentifierWithData` type is a union of `SankeyNodeIdentifierWithD
 
 {{"demo": "SankeyClick.js"}}
 
+### Highlighting
+
+You can highlight nodes and links by hovering over them or by controlling the highlighting programmatically. When an item is highlighted, other items can be faded out to improve focus.
+
+{{"demo": "SankeyHighlighting.js"}}
+
+The highlighting behavior is configured separately for nodes and links through their respective options:
+
+#### Node highlighting
+
+Configure node highlighting behavior using `nodeOptions.highlight` and `nodeOptions.fade`:
+
+- `nodeOptions.highlight`: Controls what gets highlighted when selecting a node
+  - `'nodes'`: Highlight only the selected node
+  - `'links'`: Highlight all links connected to the selected node
+  - `'incoming'`: Highlight only incoming links to the selected node
+  - `'outgoing'`: Highlight only outgoing links from the selected node
+  - `'none'`: Disable node highlighting
+- `nodeOptions.fade`: Controls the fade effect
+  - `'global'`: Fade all non-highlighted items when a node is highlighted
+  - `'none'`: No fade effect
+
+#### Link highlighting
+
+Configure link highlighting behavior using `linkOptions.highlight` and `linkOptions.fade`:
+
+- `linkOptions.highlight`: Controls what gets highlighted when selecting a link
+  - `'links'`: Highlight only the selected link
+  - `'nodes'`: Highlight both source and target nodes of the selected link
+  - `'source'`: Highlight only the source node of the selected link
+  - `'target'`: Highlight only the target node of the selected link
+  - `'none'`: Disable link highlighting
+- `linkOptions.fade`: Controls the fade effect
+  - `'global'`: Fade all non-highlighted items when a link is highlighted
+  - `'none'`: No fade effect
+
+### Controlled highlighting
+
+You can control the highlighting externally using the `highlightedItem` and `onHighlightChange` props. This is useful when you want to programmatically highlight specific nodes or links, or synchronize highlighting with other UI elements.
+
+The `highlightedItem` prop accepts either a `SankeyNodeIdentifier` or a `SankeyLinkIdentifier`:
+
+For nodes:
+
+```ts
+{
+  type: 'sankey',
+  seriesId: string,
+  subType: 'node',
+  nodeId: string | number,
+}
+```
+
+For links:
+
+```ts
+{
+  type: 'sankey',
+  seriesId: string,
+  subType: 'link',
+  sourceId: string | number,
+  targetId: string | number,
+}
+```
+
+The `onHighlightChange` callback is called whenever the highlighted item changes (either through user interaction or programmatic control), allowing you to keep your state synchronized.
+
+{{"demo": "SankeyControlledHighlight.js"}}
+
 ## Tooltip
 
 The Sankey chart has an item tooltip that can be customized as described in the [Tooltip documentation page](/x/react-charts/tooltip/).

@@ -435,6 +435,7 @@ export const useGridRowSelection = (
       if (
         !isNestedData ||
         !applyAutoSelection ||
+        inputSelectionModel.type === 'exclude' ||
         (inputSelectionModel.ids.size === 0 && inputSelectionModel.type === 'include')
       ) {
         return inputSelectionModel;
