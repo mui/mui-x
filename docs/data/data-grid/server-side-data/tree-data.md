@@ -76,14 +76,10 @@ Open the Info section of your browser console to see the requests being made and
 
 ## Row expansion state persistence
 
-The Data Grid compares the IDs of the newly fetched rows with the existing tree level.
-Matching rows are not recreated and they maintain their expansion state and child rows.
-
-To drop all child rows and reset the expansion state, pass `keepChildrenExpanded` flag set to `false` to the fetch options of the `dataSource.fetchRows()` API method.
+For complete details on row expansion state persistence, see [Server-side data row grouping—Row expansion state persistence](/x/react-data-grid/server-side-data/row-grouping/#row-expansion-state-persistence).
+The implementation and behavior are the same when working with tree data.
 
 Expand some rows in the following demo and use two different refetch action buttons to see the difference in the behavior.
-
-The cache is disabled to make all server requests visible in the console.
 
 {{"demo": "ServerSideTreeDataExpansionPersistence.js", "bg": "inline"}}
 
