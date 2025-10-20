@@ -42,7 +42,9 @@ export interface GridDataSourceApi {
 }
 
 export interface GridDataSourceApiBase {
-  dataSource: GridDataSourceApi['dataSource'];
+  fetchRows: GridDataSourceApi['dataSource']['fetchRows'];
+  cache: GridDataSourceApi['dataSource']['cache'];
+  editRow: GridDataSourceApi['dataSource']['editRow'];
 }
 
 export interface GridDataSourceBaseOptions {
