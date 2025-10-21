@@ -20,7 +20,7 @@
     "@vitejs/plugin-react-swc": "catalog:",
     "@vitest/browser": "catalog:",
     "@vitest/ui": "catalog:",
-    "jsdom": "^26.1.0",
+    "jsdom": "^27.0.1",
     "react": "catalog:",
     "react-dom": "catalog:",
     "vitest": "catalog:"
