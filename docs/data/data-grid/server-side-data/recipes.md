@@ -27,6 +27,9 @@ The following example demonstrates the non-blocking approach using a custom cach
 
 The cache is cleared whenever the filter or sort model changes to ensure data consistency.
 
+For error handling, the example simulates a server error when requesting page 8.
+When an error occurs, the cache entry for that request is deleted, and the `paginationModel` is reverted to the previous page to maintain a consistent state.
+
 {{"demo": "ServerSideCursorNonBlocking.js", "bg": "inline"}}
 
 ## Tree data nested pagination

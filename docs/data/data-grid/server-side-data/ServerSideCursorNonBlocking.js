@@ -1,5 +1,7 @@
 import * as React from 'react';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, useGridApiRef } from '@mui/x-data-grid';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 import { useMockServer } from '@mui/x-data-grid-generator';
 
 function getKeyDefault(params) {
@@ -38,6 +40,12 @@ class Cache {
     this.cacheKeys.add(keyString);
   }
 
+  deleteKey(key) {
+    const keyString = this.getKey(key);
+    delete this.cache[keyString];
+    this.cacheKeys.delete(keyString);
+  }
+
   async getLast(key) {
     const cacheKeys = Array.from(this.cacheKeys);
     const prevKey = cacheKeys[cacheKeys.indexOf(this.getKey(key)) - 1];
@@ -64,6 +72,8 @@ class Cache {
 }
 
 export default function ServerSideCursorNonBlocking() {
+  const apiRef = useGridApiRef();
+  const [snackbar, setSnackbar] = React.useState(null);
   const { columns, initialState, fetchRows } = useMockServer(
     {},
     { useCursorPagination: true, minDelay: 200, maxDelay: 500 },
@@ -81,22 +91,40 @@ export default function ServerSideCursorNonBlocking() {
           sortModel: JSON.stringify(params.sortModel),
           cursor: String(latestResponse?.pageInfo?.nextCursor ?? ''),
         });
-        const getRowsResponse = await fetchRows(
-          `https://mui.com/x/api/data-grid?${urlParams.toString()}`,
-        );
-        return {
-          rows: getRowsResponse.rows,
-          rowCount: getRowsResponse.rowCount,
-          pageInfo: { nextCursor: getRowsResponse.pageInfo?.nextCursor },
-        };
+        try {
+          if (params.paginationModel?.page === 7) {
+            throw new Error('Simulate server error on page 8');
+          }
+          const getRowsResponse = await fetchRows(
+            `https://mui.com/x/api/data-grid?${urlParams.toString()}`,
+          );
+          return {
+            rows: getRowsResponse.rows,
+            rowCount: getRowsResponse.rowCount,
+            pageInfo: { nextCursor: getRowsResponse.pageInfo?.nextCursor },
+          };
+        } catch (error) {
+          cache.deleteKey(params);
+          apiRef.current?.setPaginationModel({
+            page: params.paginationModel.page - 1,
+            pageSize: params.paginationModel.pageSize,
+          });
+          setSnackbar({ children: error.message, severity: 'error' });
+          throw error;
+        }
       },
     }),
-    [fetchRows, cache],
+    [fetchRows, cache, apiRef],
   );
+
+  const handleCloseSnackbar = () => {
+    setSnackbar(null);
+  };
 
   return (
     <div style={{ width: '100%', height: 400 }}>
       <DataGrid
+        apiRef={apiRef}
         columns={columns}
         dataSource={dataSource}
         dataSourceCache={cache}
@@ -115,6 +143,16 @@ export default function ServerSideCursorNonBlocking() {
         onFilterModelChange={() => cache.clear()}
         onSortModelChange={() => cache.clear()}
       />
+      {!!snackbar && (
+        <Snackbar
+          open
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+          onClose={handleCloseSnackbar}
+          autoHideDuration={6000}
+        >
+          <Alert {...snackbar} onClose={handleCloseSnackbar} />
+        </Snackbar>
+      )}
     </div>
   );
 }
