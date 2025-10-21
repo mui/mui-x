@@ -20,18 +20,23 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   ref: React.ForwardedRef<HTMLDivElement>,
 ) {
   const { day, row, maxEvents } = props;
+
+  // Context hooks
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
   const translations = useTranslations();
-  const placeholder = CalendarGrid.usePlaceholderInDay(day.value, row);
+  const { open: startEditing } = useEventPopoverContext();
+
+  // Selector hooks
   const hasDayView = useStore(store, selectors.hasDayView);
   const visibleDate = useStore(store, selectors.visibleDate);
   const isCreation = useStore(store, selectors.isCreatingNewEventInDayCell, day.value);
+  const canCreateEvent = useStore(store, selectors.canCreateNewEvent);
+  const placeholder = CalendarGrid.usePlaceholderInDay(day.value, row);
 
+  // Ref hooks
   const cellRef = React.useRef<HTMLDivElement | null>(null);
   const handleRef = useMergedRefs(ref, cellRef);
-
-  const { open: startEditing } = useEventPopoverContext();
 
   const isCurrentMonth = adapter.isSameMonth(day.value, visibleDate);
   const isFirstDayOfMonth = adapter.isSameDay(day.value, adapter.startOfMonth(day.value));
@@ -55,6 +60,9 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const rowCount = 1 + maxEvents;
 
   const handleDoubleClick = () => {
+    if (!canCreateEvent) {
+      return;
+    }
     store.setOccurrencePlaceholder({
       type: 'creation',
       surfaceType: 'day-grid',
