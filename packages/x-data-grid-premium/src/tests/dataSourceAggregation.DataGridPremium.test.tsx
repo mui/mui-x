@@ -21,6 +21,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => 
 
   let apiRef: RefObject<GridApi | null>;
   const fetchRowsSpy = spy();
+  const editRowSpy = spy();
 
   // TODO: Resets strictmode calls, need to find a better fix for this, maybe an AbortController?
   function Reset() {
@@ -33,14 +34,27 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => 
   function TestDataSourceAggregation(
     props: Partial<DataGridPremiumProps> & {
       getAggregatedValue?: GridDataSource['getAggregatedValue'];
+      dataSetOptions?: Record<string, any>;
     },
   ) {
     apiRef = useGridApiRef();
-    const { getAggregatedValue: getAggregatedValueProp, ...other } = props;
-    const { fetchRows, columns, isReady } = useMockServer<GridGetRowsResponse>(
-      { rowLength: 10, maxColumns: 1 },
+    const { getAggregatedValue: getAggregatedValueProp, dataSetOptions, ...other } = props;
+    const {
+      fetchRows,
+      columns: mockColumns,
+      isReady,
+      editRow,
+    } = useMockServer<GridGetRowsResponse>(
+      { rowLength: 10, maxColumns: 1, ...dataSetOptions },
       { useCursorPagination: false, minDelay: 0, maxDelay: 0, verbose: false },
     );
+
+    const columns = React.useMemo(() => {
+      return mockColumns.map((column) => ({
+        ...column,
+        editable: true,
+      }));
+    }, [mockColumns]);
 
     const dataSource: GridDataSource = React.useMemo(() => {
       return {
@@ -49,6 +63,8 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => 
             filterModel: JSON.stringify(params.filterModel),
             sortModel: JSON.stringify(params.sortModel),
             paginationModel: JSON.stringify(params.paginationModel),
+            groupKeys: JSON.stringify(params.groupKeys),
+            groupFields: JSON.stringify(params.groupFields),
             aggregationModel: JSON.stringify(params.aggregationModel),
           });
 
@@ -64,9 +80,16 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => 
             aggregateRow: getRowsResponse.aggregateRow,
           };
         },
+        getGroupKey: (row) => row.group,
+        getChildrenCount: (row) => row.descendantCount,
         getAggregatedValue: getAggregatedValueProp ?? ((row, field) => row[field]),
+        updateRow: async (params) => {
+          editRowSpy(params);
+          const syncedRow = await editRow(params.rowId, params.updatedRow);
+          return syncedRow;
+        },
       };
-    }, [fetchRows, getAggregatedValueProp]);
+    }, [fetchRows, editRow, getAggregatedValueProp]);
 
     if (!isReady) {
       return null;

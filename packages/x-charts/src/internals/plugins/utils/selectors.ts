@@ -37,10 +37,10 @@ const cache = new WeakMap<
   >
 >();
 
-export type ChartRootSelector<TSignature extends ChartAnyPluginSignature> = Selector<
-  ChartState<[TSignature]>,
-  TSignature['state'][keyof TSignature['state']]
->;
+export type ChartRootSelector<
+  TSignature extends ChartAnyPluginSignature,
+  T extends keyof TSignature['state'] = keyof TSignature['state'],
+> = Selector<ChartState<[TSignature]>, TSignature['state'][T]>;
 
 export type ChartOptionalRootSelector<TSignature extends ChartAnyPluginSignature> = Selector<
   ChartState<[], [TSignature]>,
