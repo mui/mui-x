@@ -68,6 +68,12 @@ function CustomToolbar() {
         placement="bottom-end"
         id="new-panel"
         onKeyDown={handleKeyDown}
+        modifiers={[
+          {
+            name: 'flip',
+            enabled: false,
+          },
+        ]}
       >
         <ClickAwayListener onClickAway={handleClose}>
           <Paper

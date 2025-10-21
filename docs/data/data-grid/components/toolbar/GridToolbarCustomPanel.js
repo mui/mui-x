@@ -68,6 +68,12 @@ function CustomToolbar() {
         placement="bottom-end"
         id="new-panel"
         onKeyDown={handleKeyDown}
+        modifiers={[
+          {
+            name: 'flip',
+            enabled: false,
+          },
+        ]}
       >
         <ClickAwayListener onClickAway={handleClose}>
           <Paper
@@ -80,7 +86,7 @@ function CustomToolbar() {
             }}
             elevation={8}
           >
-            <Typography fontWeight="bold">Add new commodity</Typography>
+            <Typography fontWeight="bold">Add new commodityyyy</Typography>
             <form onSubmit={handleSubmit}>
               <Stack spacing={2}>
                 <TextField
