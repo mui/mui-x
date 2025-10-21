@@ -67,11 +67,10 @@ export function useAgendaEventOccurrencesGroupedByDay(
 
     // 2) If we show empty days, just return the amount days
     if (showEmptyDays) {
-      const finalDays = accumulatedDays.slice(0, amount);
       const finalOccurrences = new Map(
-        finalDays.map((d) => [d.key, occurrenceMap.get(d.key) ?? []]),
+        accumulatedDays.map((d) => [d.key, occurrenceMap.get(d.key) ?? []]),
       );
-      return { days: finalDays, occurrencesMap: finalOccurrences };
+      return { days: accumulatedDays, occurrencesMap: finalOccurrences };
     }
 
     // 3) If we hide empty days, keep extending forward in blocks until we fill `amount` days with events
