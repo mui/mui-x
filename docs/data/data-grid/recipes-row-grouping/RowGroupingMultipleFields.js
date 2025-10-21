@@ -9,6 +9,48 @@ import Chip from '@mui/material/Chip';
 
 const SEPARATOR = '___MULTI_COL___';
 
+const columns = [
+  {
+    field: 'assignee',
+    headerName: 'Assignee',
+    width: 150,
+  },
+  {
+    field: 'label',
+    headerName: 'Task Group',
+    width: 240,
+    groupingValueGetter: (value, row) => `${value}${SEPARATOR}${row.priority}`,
+    renderCell: (params) => {
+      if (params.rowNode.type === 'group') {
+        if (params.value === undefined) {
+          return null;
+        }
+        const val = params.value.split(SEPARATOR);
+        let color = 'default';
+        if (val[1] === 'High') {
+          color = 'error';
+        } else if (val[1] === 'Medium') {
+          color = 'warning';
+        } else {
+          color = 'success';
+        }
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <div>{val[0]}</div>
+            <Chip color={color} label={val[1]} size="small" />
+          </Box>
+        );
+      }
+      return params.value;
+    },
+  },
+  {
+    field: 'detail',
+    headerName: 'Detail',
+    width: 360,
+  },
+];
+
 const rows = [
   {
     id: 1,
@@ -68,48 +110,6 @@ const rows = [
   },
 ];
 
-const columns = [
-  {
-    field: 'assignee',
-    headerName: 'Assignee',
-    width: 150,
-  },
-  {
-    field: 'label',
-    headerName: 'Task Group',
-    width: 240,
-    groupingValueGetter: (value, row) => `${value}${SEPARATOR}${row.priority}`,
-    renderCell: (params) => {
-      if (params.rowNode.type === 'group') {
-        if (params.value === undefined) {
-          return null;
-        }
-        const val = params.value.split(SEPARATOR);
-        let color = 'default';
-        if (val[1] === 'High') {
-          color = 'error';
-        } else if (val[1] === 'Medium') {
-          color = 'warning';
-        } else {
-          color = 'success';
-        }
-        return (
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <div>{val[0]}</div>
-            <Chip color={color} label={val[1]} size="small" />
-          </Box>
-        );
-      }
-      return params.value;
-    },
-  },
-  {
-    field: 'detail',
-    headerName: 'Detail',
-    width: 360,
-  },
-];
-
 export default function RowGroupingMultipleFields() {
   const apiRef = useGridApiRef();
   const initialState = useKeepGroupedColumnsHidden({
@@ -123,7 +123,12 @@ export default function RowGroupingMultipleFields() {
 
   return (
     <Box sx={{ height: 400, width: '100%' }}>
-      <DataGridPremium rows={rows} columns={columns} initialState={initialState} />
+      <DataGridPremium
+        rows={rows}
+        columns={columns}
+        initialState={initialState}
+        defaultGroupingExpansionDepth={1}
+      />
     </Box>
   );
 }
