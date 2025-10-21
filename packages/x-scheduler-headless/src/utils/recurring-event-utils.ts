@@ -46,7 +46,7 @@ function getLocalizedWeekDays(adapter: Adapter): RecurringEventWeekDayCode[] {
   const mondayWeekDayNumber = getMondayWeekDayNumber(adapter);
 
   return Array.from(
-    { length: NOT_LOCALIZED_WEEK_DAYS.length },
+    NOT_LOCALIZED_WEEK_DAYS,
     (_, i) => NOT_LOCALIZED_WEEK_DAYS[(i + mondayWeekDayNumber - 1) % 7],
   );
 }
