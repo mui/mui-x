@@ -2,6 +2,12 @@ import * as React from 'react';
 import { createRenderer, waitFor } from '@mui/internal-test-utils';
 import { BarChart, BarChartProps } from '@mui/x-charts/BarChart';
 import { isJSDOM } from 'test/utils/skipIf';
+import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
+import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
+import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
+import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
+import { ScatterPlot } from '@mui/x-charts/ScatterChart';
+import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { useItemTooltip } from './useItemTooltip';
 import { useBarSeries } from '../hooks';
 import { ChartsTooltipContainer } from './ChartsTooltipContainer';
@@ -159,6 +165,51 @@ describe.skipIf(isJSDOM)('ChartsTooltip', () => {
           ...firstRow,
           ...secondRow,
         ]);
+      });
+    });
+
+    it('should render tooltip when using composing scatter series', async () => {
+      const series = [
+        {
+          type: 'scatter',
+          data: [
+            { x: 'Mon', y: 10 },
+            { x: 'Tue', y: 5 },
+          ],
+        },
+      ] as const;
+      const { user } = render(
+        <ChartDataProvider
+          width={400}
+          height={400}
+          margin={0}
+          series={series}
+          xAxis={[{ id: 'x', scaleType: 'band', data: ['Mon', 'Tue'], position: 'none' }]}
+          yAxis={[{ id: 'y', position: 'none' }]}
+        >
+          <ChartsSurface>
+            <ScatterPlot />
+            <ChartsXAxis axisId="x" />
+            <ChartsYAxis axisId="y" />
+          </ChartsSurface>
+          <ChartsTooltip trigger="axis" />
+        </ChartDataProvider>,
+        { wrapper },
+      );
+      const svg = document.querySelector<HTMLElement>('svg')!;
+
+      // Trigger the tooltip
+      await user.pointer({
+        target: svg,
+        coords: {
+          x: 150,
+          y: 60,
+        },
+      });
+
+      await waitFor(() => {
+        const cells = document.querySelectorAll<HTMLElement>(cellSelector);
+        expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['Mon', '', '(Mon, 10)']);
       });
     });
   });
