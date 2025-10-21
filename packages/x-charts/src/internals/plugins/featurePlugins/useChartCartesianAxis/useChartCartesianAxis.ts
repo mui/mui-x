@@ -61,16 +61,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
 
   useEnhancedEffect(() => {
     if (params.highlightedAxis !== undefined) {
-      store.update((prevState) => {
-        if (prevState.controlledCartesianAxisHighlight === params.highlightedAxis) {
-          return prevState;
-        }
-
-        return {
-          ...prevState,
-          controlledCartesianAxisHighlight: params.highlightedAxis,
-        };
-      });
+      store.set('controlledCartesianAxisHighlight', params.highlightedAxis);
     }
   }, [store, params.highlightedAxis]);
 
@@ -83,14 +74,11 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
       return;
     }
 
-    store.update((prev) => ({
-      ...prev,
-      cartesianAxis: {
-        ...prev.cartesianAxis,
-        x: defaultizeXAxis(xAxis, dataset),
-        y: defaultizeYAxis(yAxis, dataset),
-      },
-    }));
+    store.set('cartesianAxis', {
+      ...store.state.cartesianAxis,
+      x: defaultizeXAxis(xAxis, dataset),
+      y: defaultizeYAxis(yAxis, dataset),
+    });
   }, [seriesConfig, drawingArea, xAxis, yAxis, dataset, store]);
 
   const usedXAxis = xAxisIds[0];
