@@ -10,7 +10,7 @@ import { isOrdinalScale } from '../internals/scaleGuards';
 import { isInfinity } from '../internals/isInfinity';
 import { defaultProps, useUtilityClasses } from './utilities';
 import { useDrawingArea } from '../hooks';
-import { getStringSize } from '../internals/domUtils';
+import { measureText } from '../internals/domUtils';
 import { AxisRoot } from '../internals/components/AxisSharedComponents';
 
 const XAxisRoot = styled(AxisRoot, {
@@ -72,7 +72,7 @@ export function ChartsXAxisImpl({ axis, ...inProps }: ChartsXAxisImplProps) {
     return null;
   }
 
-  const labelHeight = label ? getStringSize(label, axisLabelProps.style).height : 0;
+  const labelHeight = label ? measureText(label, axisLabelProps.style).height : 0;
 
   const domain = xScale.domain();
   const isScaleOrdinal = isOrdinalScale(xScale);
