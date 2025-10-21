@@ -17,6 +17,8 @@ import {
   gridPivotInitialColumnsSelector,
   runIf,
   gridPivotActiveSelector,
+  GridStrategyGroup,
+  DataSourceRowsUpdateStrategy,
 } from '@mui/x-data-grid-pro/internals';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
@@ -27,6 +29,7 @@ import type {
   GridGetRowsResponsePremium,
 } from './models';
 import { getPropsOverrides } from './utils';
+import { gridRowGroupingSanitizedModelSelector } from '../rowGrouping/gridRowGroupingSelector';
 
 function getKeyPremium(params: GridGetRowsParamsPremium) {
   return JSON.stringify([
@@ -51,8 +54,34 @@ export const useGridDataSourcePremium = (
   apiRef: RefObject<GridPrivateApiPremium>,
   props: DataGridPremiumProcessedProps,
 ) => {
-  const { api, debouncedFetchRows, strategyProcessor, events, setStrategyAvailability } =
-    useGridDataSourceBasePro<GridPrivateApiPremium>(apiRef, props, options);
+  const groupingModelSize = gridRowGroupingSanitizedModelSelector(apiRef).length;
+  const setStrategyAvailability = React.useCallback(() => {
+    const targetStrategy =
+      props.treeData || (!props.disableRowGrouping && groupingModelSize > 0)
+        ? DataSourceRowsUpdateStrategy.GroupedData
+        : DataSourceRowsUpdateStrategy.Default;
+
+    apiRef.current.setStrategyAvailability(
+      GridStrategyGroup.DataSource,
+      targetStrategy,
+      props.dataSource && !props.lazyLoading ? () => true : () => false,
+    );
+  }, [
+    apiRef,
+    props.dataSource,
+    props.lazyLoading,
+    props.treeData,
+    props.disableRowGrouping,
+    groupingModelSize,
+  ]);
+
+  const {
+    api,
+    debouncedFetchRows,
+    flatTreeStrategyProcessor,
+    groupedDataStrategyProcessor,
+    events,
+  } = useGridDataSourceBasePro<GridPrivateApiPremium>(apiRef, props, options);
   const aggregateRowRef = React.useRef<GridValidRowModel>({});
 
   const initialColumns = gridPivotInitialColumnsSelector(apiRef);
@@ -144,10 +173,17 @@ export const useGridDataSourcePremium = (
 
   useGridRegisterStrategyProcessor(
     apiRef,
-    strategyProcessor.strategyName,
-    strategyProcessor.group,
-    strategyProcessor.processor,
+    flatTreeStrategyProcessor.strategyName,
+    flatTreeStrategyProcessor.group,
+    flatTreeStrategyProcessor.processor,
   );
+  useGridRegisterStrategyProcessor(
+    apiRef,
+    groupedDataStrategyProcessor.strategyName,
+    groupedDataStrategyProcessor.group,
+    groupedDataStrategyProcessor.processor,
+  );
+
   useGridRegisterPipeProcessor(apiRef, 'processDataSourceRows', processDataSourceRows);
 
   Object.entries(events).forEach(([event, handler]) => {
