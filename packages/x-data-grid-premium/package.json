@@ -44,9 +44,9 @@
     "@mui/x-data-grid": "workspace:*",
     "@mui/x-data-grid-pro": "workspace:*",
     "@mui/x-internals": "workspace:*",
+    "@mui/x-internal-exceljs-fork": "catalog:",
     "@mui/x-license": "workspace:*",
     "clsx": "catalog:",
-    "exceljs": "catalog:",
     "prop-types": "catalog:"
   },
   "peerDependencies": {
