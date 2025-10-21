@@ -7,27 +7,28 @@ import {
 } from '@mui/x-data-grid';
 import { useMockServer } from '@mui/x-data-grid-generator';
 
-const INITIAL_PAGINATION_MODEL = {
-  page: 0,
-  pageSize: 10,
-};
-
 export default function ServerSideCursorBlocking() {
   const { columns, initialState, fetchRows } = useMockServer(
     {},
-    { useCursorPagination: true, minDelay: 200, maxDelay: 500 },
+    { useCursorPagination: true, minDelay: 1000, maxDelay: 2000 },
   );
+  const [paginationModel, setPaginationModel] = React.useState({
+    page: 0,
+    pageSize: 10,
+  });
+  const paginationModelRef = React.useRef(paginationModel);
+  paginationModelRef.current = paginationModel;
+
   const mapPageToNextCursor = React.useRef<{
     [page: number]: GridRowId | undefined;
   }>({});
-  const paginationModelRef = React.useRef(INITIAL_PAGINATION_MODEL);
 
   const handlePaginationModelChange = (newPaginationModel: GridPaginationModel) => {
     if (
       newPaginationModel.page === 0 ||
       mapPageToNextCursor.current[newPaginationModel.page - 1]
     ) {
-      paginationModelRef.current = newPaginationModel;
+      setPaginationModel(newPaginationModel);
     }
   };
 
@@ -64,8 +65,9 @@ export default function ServerSideCursorBlocking() {
         pagination
         initialState={{
           ...initialState,
-          pagination: { rowCount: 0, paginationModel: INITIAL_PAGINATION_MODEL },
+          pagination: { rowCount: 0 },
         }}
+        paginationModel={paginationModel}
         onPaginationModelChange={handlePaginationModelChange}
         pageSizeOptions={[10, 20, 50]}
       />
