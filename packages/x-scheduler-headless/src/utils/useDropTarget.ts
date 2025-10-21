@@ -16,7 +16,7 @@ import {
   EventDropDataLookup,
 } from '../build-is-valid-drop-target/buildIsValidDropTarget';
 import { SchedulerStoreInContext, useSchedulerStoreContext } from '../use-scheduler-store-context';
-import { selectors } from '../scheduler-store';
+import { selectors } from '../scheduler-selectors';
 import { SCHEDULER_RECURRING_EDITING_SCOPE } from '../constants';
 
 export function useDropTarget<Targets extends keyof EventDropDataLookup>(

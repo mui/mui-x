@@ -5,7 +5,7 @@ import { useStore } from '@base-ui-components/utils/store';
 import { CalendarEventOccurrence } from '@mui/x-scheduler-headless/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { DEFAULT_EVENT_COLOR } from '@mui/x-scheduler-headless/constants';
-import { selectors } from '@mui/x-scheduler-headless/scheduler-store';
+import { selectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import EventPopoverHeader from '../header/EventPopoverHeader';
 import { useTranslations } from '../../../utils/TranslationsContext';

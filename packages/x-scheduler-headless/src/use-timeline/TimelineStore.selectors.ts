@@ -1,5 +1,5 @@
 import { createSelector } from '@base-ui-components/utils/store';
-import { selectors as schedulerSelectors } from '../scheduler-store';
+import { selectors as schedulerSelectors } from '../scheduler-selectors';
 import { TimelineState as State } from './TimelineStore.types';
 
 export const selectors = {

@@ -37,7 +37,7 @@
     "./use-timeline": "./src/use-timeline/index.ts",
     "./use-timeline-store-context": "./src/use-timeline-store-context/index.ts",
     "./use-week-list": "./src/use-week-list/index.ts",
-    "./scheduler-store": "./src/scheduler-store/index.ts"
+    "./scheduler-selectors": "./src/scheduler-selectors/index.ts"
   },
   "sideEffects": false,
   "publishConfig": {

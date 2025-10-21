@@ -10,7 +10,7 @@ import {
 } from '../models';
 import { mergeDateAndTime, getDateKey } from './date-utils';
 import { diffIn } from '../use-adapter';
-import { UpdateEventsParameters } from '../scheduler-store';
+import { UpdateEventsParameters } from './SchedulerStore';
 
 /**
  * The week day codes for all 7 days of the week.

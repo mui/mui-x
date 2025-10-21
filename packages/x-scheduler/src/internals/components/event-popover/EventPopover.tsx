@@ -5,7 +5,7 @@ import { useStore } from '@base-ui-components/utils/store';
 import { Popover } from '@base-ui-components/react/popover';
 import { CalendarEventOccurrence } from '@mui/x-scheduler-headless/models';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { selectors } from '@mui/x-scheduler-headless/scheduler-store';
+import { selectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import {
   EventPopoverProps,

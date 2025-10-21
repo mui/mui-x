@@ -1,12 +1,12 @@
 import { SchedulerValidDate } from '@mui/x-scheduler-headless/models';
 import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
 
-type WhenType = {
+interface WhenType {
   startDate: string;
   endDate: string;
   startTime: string;
   endTime: string;
-};
+}
 
 export function computeRange(adapter: Adapter, next: WhenType, nextIsAllDay: boolean) {
   if (nextIsAllDay) {

@@ -9,7 +9,7 @@ import { useEventCalendarStoreContext } from '../../use-event-calendar-store-con
 import { CalendarProcessedDate } from '../../models';
 import { getCalendarGridHeaderCellId } from '../../utils/accessibility-utils';
 import { useCalendarGridRootContext } from '../root/CalendarGridRootContext';
-import { selectors } from '../../scheduler-store';
+import { selectors } from '../../scheduler-selectors';
 
 export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHeaderCell(
   componentProps: CalendarGridHeaderCell.Props,

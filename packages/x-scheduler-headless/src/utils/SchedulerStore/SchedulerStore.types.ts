@@ -9,8 +9,8 @@ import {
   SchedulerValidDate,
   CalendarEventId,
   RecurringEventUpdateScope,
-} from '../models';
-import { Adapter } from '../use-adapter/useAdapter.types';
+} from '../../models';
+import { Adapter } from '../../use-adapter/useAdapter.types';
 
 export interface SchedulerState {
   /**

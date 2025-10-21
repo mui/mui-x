@@ -23,7 +23,7 @@ import {
   DEFAULT_EVENT_COLOR,
   SCHEDULER_RECURRING_EDITING_SCOPE,
 } from '@mui/x-scheduler-headless/constants';
-import { selectors } from '@mui/x-scheduler-headless/scheduler-store';
+import { selectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useTranslations } from '../../../utils/TranslationsContext';
 import { getColorClassName } from '../../../utils/color-utils';
 import { computeRange, validateRange } from '../utils';

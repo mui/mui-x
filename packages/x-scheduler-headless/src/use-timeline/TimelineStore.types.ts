@@ -1,6 +1,6 @@
 import { TimelineView } from '../models';
 import { TimelinePreferences } from '../models/preferences';
-import { SchedulerState, SchedulerParameters } from '../scheduler-store';
+import { SchedulerState, SchedulerParameters } from '../utils/SchedulerStore';
 
 export interface TimelineState extends SchedulerState {
   /**
