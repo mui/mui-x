@@ -20,7 +20,7 @@ import { EventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-c
 import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
 import { EventPopoverContent } from './EventPopover';
 import { getColorClassName } from '../../utils/color-utils';
-import { RecurringScopeDialogProvider } from '../scope-dialog/ScopeDialog';
+import { RecurringScopeDialog } from '../scope-dialog/ScopeDialog';
 
 const occurrence: CalendarEventOccurrence = {
   id: '1',
@@ -470,20 +470,19 @@ describe('<EventPopoverContent />', () => {
         const { user } = render(
           <React.Fragment>
             <div ref={containerRef} />
-            <RecurringScopeDialogProvider containerRef={containerRef}>
-              <EventCalendarProvider events={[originalRecurringEvent]} resources={resources}>
-                <StoreSpy
-                  Context={EventCalendarStoreContext}
-                  method="updateRecurringEvent"
-                  onSpyReady={(sp) => {
-                    updateRecurringEventSpy = sp;
-                  }}
-                />
-                <Popover.Root open>
-                  <EventPopoverContent {...defaultProps} occurrence={originalRecurringEvent} />
-                </Popover.Root>
-              </EventCalendarProvider>
-            </RecurringScopeDialogProvider>
+            <EventCalendarProvider events={[originalRecurringEvent]} resources={resources}>
+              <StoreSpy
+                Context={EventCalendarStoreContext}
+                method="updateRecurringEvent"
+                onSpyReady={(sp) => {
+                  updateRecurringEventSpy = sp;
+                }}
+              />
+              <Popover.Root open>
+                <EventPopoverContent {...defaultProps} occurrence={originalRecurringEvent} />
+              </Popover.Root>
+              <RecurringScopeDialog containerRef={containerRef} />
+            </EventCalendarProvider>
           </React.Fragment>,
         );
 
@@ -518,20 +517,19 @@ describe('<EventPopoverContent />', () => {
         const { user } = render(
           <React.Fragment>
             <div ref={containerRef} />
-            <RecurringScopeDialogProvider containerRef={containerRef}>
-              <EventCalendarProvider events={[originalRecurringEvent]} resources={resources}>
-                <StoreSpy
-                  Context={EventCalendarStoreContext}
-                  method="updateRecurringEvent"
-                  onSpyReady={(sp) => {
-                    updateRecurringEventSpy = sp;
-                  }}
-                />
-                <Popover.Root open>
-                  <EventPopoverContent {...defaultProps} occurrence={originalRecurringEvent} />
-                </Popover.Root>
-              </EventCalendarProvider>
-            </RecurringScopeDialogProvider>
+            <EventCalendarProvider events={[originalRecurringEvent]} resources={resources}>
+              <StoreSpy
+                Context={EventCalendarStoreContext}
+                method="updateRecurringEvent"
+                onSpyReady={(sp) => {
+                  updateRecurringEventSpy = sp;
+                }}
+              />
+              <Popover.Root open>
+                <EventPopoverContent {...defaultProps} occurrence={originalRecurringEvent} />
+              </Popover.Root>
+              <RecurringScopeDialog containerRef={containerRef} />
+            </EventCalendarProvider>
           </React.Fragment>,
         );
 
@@ -576,20 +574,19 @@ describe('<EventPopoverContent />', () => {
         const { user } = render(
           <React.Fragment>
             <div ref={containerRef} />
-            <RecurringScopeDialogProvider containerRef={containerRef}>
-              <EventCalendarProvider events={[originalRecurringEvent]} resources={resources}>
-                <StoreSpy
-                  Context={EventCalendarStoreContext}
-                  method="updateRecurringEvent"
-                  onSpyReady={(sp) => {
-                    updateRecurringEventSpy = sp;
-                  }}
-                />
-                <Popover.Root open>
-                  <EventPopoverContent {...defaultProps} occurrence={originalRecurringEvent} />
-                </Popover.Root>
-              </EventCalendarProvider>
-            </RecurringScopeDialogProvider>
+            <EventCalendarProvider events={[originalRecurringEvent]} resources={resources}>
+              <StoreSpy
+                Context={EventCalendarStoreContext}
+                method="updateRecurringEvent"
+                onSpyReady={(sp) => {
+                  updateRecurringEventSpy = sp;
+                }}
+              />
+              <Popover.Root open>
+                <EventPopoverContent {...defaultProps} occurrence={originalRecurringEvent} />
+              </Popover.Root>
+              <RecurringScopeDialog containerRef={containerRef} />
+            </EventCalendarProvider>
           </React.Fragment>,
         );
         // We update the recurrence from daily to weekly
@@ -635,20 +632,19 @@ describe('<EventPopoverContent />', () => {
         const { user } = render(
           <React.Fragment>
             <div ref={containerRef} />
-            <RecurringScopeDialogProvider containerRef={containerRef}>
-              <EventCalendarProvider events={[originalRecurringEvent]} resources={resources}>
-                <StoreSpy
-                  Context={EventCalendarStoreContext}
-                  method="updateRecurringEvent"
-                  onSpyReady={(sp) => {
-                    updateRecurringEventSpy = sp;
-                  }}
-                />
-                <Popover.Root open>
-                  <EventPopoverContent {...defaultProps} occurrence={originalRecurringEvent} />
-                </Popover.Root>
-              </EventCalendarProvider>
-            </RecurringScopeDialogProvider>
+            <EventCalendarProvider events={[originalRecurringEvent]} resources={resources}>
+              <StoreSpy
+                Context={EventCalendarStoreContext}
+                method="updateRecurringEvent"
+                onSpyReady={(sp) => {
+                  updateRecurringEventSpy = sp;
+                }}
+              />
+              <Popover.Root open>
+                <EventPopoverContent {...defaultProps} occurrence={originalRecurringEvent} />
+              </Popover.Root>
+              <RecurringScopeDialog containerRef={containerRef} />
+            </EventCalendarProvider>
           </React.Fragment>,
         );
 

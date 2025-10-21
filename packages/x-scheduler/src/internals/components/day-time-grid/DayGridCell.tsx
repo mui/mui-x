@@ -9,7 +9,6 @@ import { selectors } from '@mui/x-scheduler-headless/use-event-calendar';
 import { EventPopoverTrigger } from '../event-popover';
 import { DayGridEvent } from '../event';
 import { useEventPopoverContext } from '../event-popover/EventPopover';
-import { useScopeDialogContext } from '../scope-dialog/ScopeDialogContext';
 
 import './DayTimeGrid.css';
 
@@ -25,7 +24,6 @@ export function DayGridCell(props: DayGridCellProps) {
 
   // Selector hooks
   const isCreation = useStore(store, selectors.isCreatingNewEventInDayCell, day.value);
-  const { promptScope } = useScopeDialogContext();
 
   // Feature hooks
   const placeholder = CalendarGrid.usePlaceholderInDay(day.value, row);
@@ -53,7 +51,6 @@ export function DayGridCell(props: DayGridCellProps) {
       ref={cellRef}
       value={day.value}
       addPropertiesToDroppedEvent={addPropertiesToDroppedEvent}
-      chooseRecurringEventScope={promptScope}
       className="DayTimeGridAllDayEventsCell"
       style={
         {
