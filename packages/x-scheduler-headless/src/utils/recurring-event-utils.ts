@@ -156,7 +156,7 @@ export function getRecurringEventOccurrencesForVisibleDays(
   adapter: Adapter,
 ): CalendarEventOccurrence[] {
   const rule = event.rrule!;
-  const instances: CalendarEventOccurrence[] = [];
+  const occurrences: CalendarEventOccurrence[] = [];
 
   const endGuard = buildEndGuard(rule, event.start, adapter);
   const durationMinutes = diffIn(adapter, event.end, event.start, 'minutes');
@@ -192,7 +192,7 @@ export function getRecurringEventOccurrencesForVisibleDays(
       continue;
     }
 
-    instances.push({
+    occurrences.push({
       ...event,
       key,
       start: occurrenceStart,
@@ -200,7 +200,7 @@ export function getRecurringEventOccurrencesForVisibleDays(
     });
   }
 
-  return instances;
+  return occurrences;
 }
 
 /**

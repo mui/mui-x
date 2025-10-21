@@ -1,11 +1,17 @@
 import * as React from 'react';
-
+import { DateTime } from 'luxon';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
-import {
-  initialEvents,
-  defaultVisibleDate,
-  resources,
-} from '../../../data/scheduler/datasets/personal-agenda';
+
+const initialEvents = [
+    {
+    id: 'daily-every-2-days',
+    start: DateTime.fromISO('2025-07-01T00:00:00'),
+    end: DateTime.fromISO('2025-07-01T00:00:00'),
+    title: 'Daily event',
+    allDay: true,
+    rrule: { freq: 'DAILY' },
+  },
+]
 
 export default function FullEventCalendar() {
   const [events, setEvents] = React.useState(initialEvents);
@@ -19,11 +25,7 @@ export default function FullEventCalendar() {
     >
       <EventCalendar
         events={events}
-        resources={resources}
-        defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
-        areEventsDraggable
-        areEventsResizable
       />
     </div>
   );
