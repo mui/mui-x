@@ -42,15 +42,6 @@ function getMondayWeekDayNumber(adapter: Adapter) {
   return adapter.getDayOfWeek(monday);
 }
 
-function getLocalizedWeekDays(adapter: Adapter): RecurringEventWeekDayCode[] {
-  const mondayWeekDayNumber = getMondayWeekDayNumber(adapter);
-
-  return Array.from(
-    NOT_LOCALIZED_WEEK_DAYS,
-    (_, i) => NOT_LOCALIZED_WEEK_DAYS[(i + mondayWeekDayNumber - 1) % 7],
-  );
-}
-
 /**
  * Returns the week day code (MO..SU) for a given date.
  * Day numbers come from adapter.getDayOfWeek(), so it respects the adapter’s locale numbering.
@@ -706,10 +697,17 @@ export function realignWeeklyByDay(
   }
 
   const weekDayCodesSet = new Set(weekDayCodes);
+  const mondayWeekDayNumber = getMondayWeekDayNumber(adapter);
 
-  return getLocalizedWeekDays(adapter).filter(
-    (code) => (weekDayCodesSet.has(code) && code !== oldCode) || code === newCode,
-  );
+  const newWeekDayCodes: RecurringEventWeekDayCode[] = [];
+  for (let i = 0; i < NOT_LOCALIZED_WEEK_DAYS.length; i += 1) {
+    const code = NOT_LOCALIZED_WEEK_DAYS[(i + mondayWeekDayNumber - 1) % 7];
+    if ((weekDayCodesSet.has(code) && code !== oldCode) || code === newCode) {
+      newWeekDayCodes.push(code);
+    }
+  }
+
+  return newWeekDayCodes;
 }
 
 /**
