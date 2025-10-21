@@ -7,6 +7,22 @@
   padding: var(--space-1);
 }
 
+.MenuSeparator {
+  margin: var(--space-1) var(--space-2);
+  height: 1px;
+  background-color: var(--border-color);
+}
+
+.MenuGroupLabel {
+  padding: 0 var(--space-2);
+  color: var(--secondary-text-color);
+  font-size: var(--font-size-1);
+
+  &:first-letter {
+    text-transform: uppercase;
+  }
+}
+
 .mui-x-scheduler .PreferencesMenuContainer .CheckboxItem[data-checked],
 .mui-x-scheduler .PreferencesMenuContainer .RadioItem[data-checked] {
   background: var(--surface);

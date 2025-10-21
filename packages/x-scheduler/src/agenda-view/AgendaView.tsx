@@ -6,13 +6,12 @@ import { useStore } from '@base-ui-components/utils/store';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventCalendarView } from '@mui/x-scheduler-headless/use-event-calendar-view';
 import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
-import { useDayList } from '@mui/x-scheduler-headless/use-day-list';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import {
   selectors,
   useExtractEventCalendarParameters,
 } from '@mui/x-scheduler-headless/use-event-calendar';
-import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-headless/use-event-occurrences-grouped-by-day';
+import { useAgendaEventOccurrencesGroupedByDay } from '@mui/x-scheduler-headless/use-agenda-event-occurrences-grouped-by-day';
 import { AgendaViewProps, StandaloneAgendaViewProps } from './AgendaView.types';
 import { EventPopoverProvider, EventPopoverTrigger } from '../internals/components/event-popover';
 import { EventItem } from '../internals/components/event/event-item/EventItem';
@@ -41,20 +40,16 @@ export const AgendaView = React.memo(
     // Selector hooks
     const visibleDate = useStore(store, selectors.visibleDate);
     const showWeekends = useStore(store, selectors.showWeekends);
+    const showEmptyDays = useStore(store, selectors.showEmptyDaysInAgenda);
 
     // Feature hooks
-    const getDayList = useDayList();
-    const days = React.useMemo(
-      () =>
-        getDayList({
-          date: visibleDate,
-          amount: AGENDA_VIEW_DAYS_AMOUNT,
-          excludeWeekends: !showWeekends,
-        }),
-      [getDayList, showWeekends, visibleDate],
-    );
-    const occurrences = useEventOccurrencesGroupedByDay({ days, renderEventIn: 'every-day' });
-
+    const { days, occurrencesMap } = useAgendaEventOccurrencesGroupedByDay({
+      date: visibleDate,
+      amount: AGENDA_VIEW_DAYS_AMOUNT,
+      excludeWeekends: !showWeekends,
+      showEmptyDays,
+      renderEventIn: 'every-day',
+    });
     useEventCalendarView(() => ({
       siblingVisibleDateGetter: (date, delta) =>
         adapter.addDays(date, AGENDA_VIEW_DAYS_AMOUNT * delta),
@@ -93,7 +88,7 @@ export const AgendaView = React.memo(
                 </div>
               </header>
               <ul className="EventsList">
-                {occurrences.get(day.key)!.map((occurrence) => (
+                {occurrencesMap.get(day.key)!.map((occurrence) => (
                   <li key={occurrence.key}>
                     <EventPopoverTrigger
                       occurrence={occurrence}
