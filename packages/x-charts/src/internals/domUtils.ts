@@ -39,6 +39,7 @@ const PIXEL_STYLES = new Set([
   'marginRight',
   'marginTop',
   'marginBottom',
+  'letterSpacing',
 ]);
 
 /**
