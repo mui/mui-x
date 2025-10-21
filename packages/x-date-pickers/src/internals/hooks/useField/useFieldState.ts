@@ -107,16 +107,6 @@ export const useFieldState = <
     onError: internalPropsWithDefaults.onError,
   });
 
-  const error = React.useMemo(() => {
-    // only override when `error` is undefined.
-    // in case of multi input fields, the `error` value is provided externally and will always be defined.
-    if (errorProp !== undefined) {
-      return errorProp;
-    }
-
-    return hasValidationError;
-  }, [hasValidationError, errorProp]);
-
   const localizedDigits = React.useMemo(() => getLocalizedDigits(adapter), [adapter]);
 
   const sectionsValueBoundaries = React.useMemo(
@@ -208,6 +198,65 @@ export const useFieldState = <
     () => state.sections.every((section) => section.value === ''),
     [state.sections],
   );
+
+  // Keep invalid state sticky while sections still represent an invalid date.
+  // This prevents a transient clearing of the error during rapid keyboard updates (e.g. holding ArrowUp/Down)
+  // where `value` might not be immediately updated but the visible sections still form an invalid date.
+  const hasInvalidSectionValue = React.useMemo(() => {
+    // If all sections are empty, we don't consider it invalid.
+    if (state.sections.every((s) => s.value === '')) {
+      return false;
+    }
+
+    // Consider sections invalid only when all are filled but they do not form a valid date.
+    const allFilled = state.sections.every((s) => s.value !== '');
+    if (!allFilled) {
+      return false;
+    }
+
+    // If no section is active (e.g., range field with no focused section),
+    // defer to regular validator to avoid mixing both dates' sections.
+    if (activeSectionIndex == null) {
+      return false;
+    }
+
+    // Build a date from the current sections and check validity using the active date's sections only.
+    const activeDateSections = fieldValueManager.getDateSectionsFromValue(
+      state.sections,
+      state.sections[activeSectionIndex] as any,
+    );
+
+    const dateFromSections = getDateFromDateSections(adapter, activeDateSections as any, localizedDigits);
+    return !adapter.isValid(dateFromSections);
+  }, [adapter, fieldValueManager, state.sections, activeSectionIndex, localizedDigits]);
+
+  // When the field loses focus (no active section), consider partially filled sections as invalid.
+  // This enforces that the field must be entirely filled or entirely empty on blur.
+  const hasPartiallyFilledSectionsOnBlur = React.useMemo(() => {
+    // Only check on blur: when no section is active.
+    if (activeSectionIndex != null) {
+      return false;
+    }
+
+    const someFilled = state.sections.some((s) => s.value !== '');
+    const someEmpty = state.sections.some((s) => s.value === '');
+
+    // Partially filled means at least one section filled and at least one empty.
+    // If all sections are empty, we don't consider it invalid on blur.
+    return someFilled && someEmpty;
+  }, [state.sections, activeSectionIndex]);
+
+  const error = React.useMemo(() => {
+    // only override when `error` is undefined.
+    // in case of multi input fields, the `error` value is provided externally and will always be defined.
+    if (errorProp !== undefined) {
+      return errorProp;
+    }
+
+    // If validation reports an error, or the current sections compose to an invalid date,
+    // or the field is blurred with partially filled sections, keep the field in error state.
+    return hasValidationError || hasInvalidSectionValue || hasPartiallyFilledSectionsOnBlur;
+  }, [hasValidationError, hasInvalidSectionValue, hasPartiallyFilledSectionsOnBlur, errorProp]);
 
   const publishValue = (newValue: TValue) => {
     const context: FieldChangeHandlerContext<TError> = {
