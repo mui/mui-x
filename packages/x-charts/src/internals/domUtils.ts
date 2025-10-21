@@ -94,7 +94,7 @@ export function getStyleString(style: React.CSSProperties) {
  * @param style The style applied
  * @returns width and height of the text
  */
-export const getStringSize = (text: string | number, style: React.CSSProperties = {}) => {
+export const measureText = (text: string | number, style: React.CSSProperties = {}) => {
   if (text === undefined || text === null || isSsr()) {
     return { width: 0, height: 0 };
   }
@@ -123,11 +123,10 @@ export const getStringSize = (text: string | number, style: React.CSSProperties 
 
       // Need to use CSS Object Model (CSSOM) to be able to comply with Content Security Policy (CSP)
       // https://en.wikipedia.org/wiki/Content_Security_Policy
-      Object.keys(style as Record<string, any>).map((styleKey) => {
+      for (const styleKey of Object.keys(style as Record<string, any>)) {
         (measurementElem!.style as Record<string, any>)[camelCaseToDashCase(styleKey)] =
           convertPixelValue(styleKey, (style as Record<string, any>)[styleKey]);
-        return styleKey;
-      });
+      }
 
       measurementElem.textContent = str;
 
@@ -154,7 +153,7 @@ export const getStringSize = (text: string | number, style: React.CSSProperties 
   }
 };
 
-export function batchMeasureStrings(
+export function measureTextBatch(
   texts: Iterable<string | number>,
   style: React.CSSProperties = {},
 ) {
@@ -202,11 +201,10 @@ export function batchMeasureStrings(
     // https://en.wikipedia.org/wiki/Content_Security_Policy
     const measurementSpanStyle: Record<string, any> = { ...style };
 
-    Object.keys(measurementSpanStyle).map((styleKey) => {
+    for (const styleKey of Object.keys(measurementSpanStyle)) {
       (measurementContainer!.style as Record<string, any>)[camelCaseToDashCase(styleKey)] =
         convertPixelValue(styleKey, measurementSpanStyle[styleKey]);
-      return styleKey;
-    });
+    }
 
     const measurementElems: SVGTextElement[] = [];
     for (const string of textToMeasure) {
