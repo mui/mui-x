@@ -1,7 +1,7 @@
 import { getLabel } from '../../internals/getLabel';
-import type { TooltipGetter } from '../../internals/plugins/models';
+import type { AxisTooltipGetter, TooltipGetter } from '../../internals/plugins/models';
 
-const tooltipGetter: TooltipGetter<'scatter'> = (params) => {
+export const tooltipGetter: TooltipGetter<'scatter'> = (params) => {
   const { series, getColor, identifier } = params;
 
   if (!identifier || identifier.dataIndex === undefined) {
@@ -22,4 +22,6 @@ const tooltipGetter: TooltipGetter<'scatter'> = (params) => {
   };
 };
 
-export default tooltipGetter;
+export const axisTooltipGetter: AxisTooltipGetter<'scatter', 'x' | 'y'> = (series) => {
+  return Object.values(series).map((s) => ({ direction: 'x', axisId: s.xAxisId }));
+};

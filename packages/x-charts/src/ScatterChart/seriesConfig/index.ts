@@ -3,7 +3,7 @@ import { getExtremumX, getExtremumY } from './extremums';
 import seriesProcessor from './seriesProcessor';
 import getColor from './getColor';
 import legendGetter from './legend';
-import tooltipGetter from './tooltip';
+import { tooltipGetter, axisTooltipGetter } from './tooltip';
 import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
 import tooltipItemPositionGetter from './tooltipPosition';
 
@@ -13,6 +13,7 @@ export const seriesConfig: ChartSeriesTypeConfig<'scatter'> = {
   legendGetter,
   tooltipGetter,
   tooltipItemPositionGetter,
+  axisTooltipGetter,
   xExtremumGetter: getExtremumX,
   yExtremumGetter: getExtremumY,
   getSeriesWithDefaultValues,
