@@ -8,8 +8,14 @@ function isSsr(): boolean {
 
 const stringCache = new Map<string, { width: number; height: number }>();
 
+let canvasSupportsLetterSpacing: boolean | null = null;
+let measurementCanvas: HTMLCanvasElement | null = null;
+let measurementContext: CanvasRenderingContext2D | null = null;
+
 export function clearStringMeasurementCache() {
   stringCache.clear();
+  // Reset letterSpacing support detection to force re-check
+  canvasSupportsLetterSpacing = null;
 }
 
 const MAX_CACHE_NUM = 2000;
@@ -82,6 +88,105 @@ export function getStyleString(style: React.CSSProperties) {
 }
 
 /**
+ * Get (or create) a canvas context for text measurement.
+ */
+function getCanvasContext() {
+  if (measurementCanvas === null) {
+    try {
+      measurementCanvas = document.createElement('canvas');
+      measurementContext = measurementCanvas.getContext('2d');
+    } catch (error) {
+      // Canvas not available (e.g., in test environments like jsdom)
+      measurementCanvas = null;
+      measurementContext = null;
+    }
+  }
+  return measurementContext;
+}
+
+/**
+ * Check if the canvas rendering context supports letterSpacing.
+ * This check is performed only once on the first measurement.
+ */
+function checkLetterSpacingSupport(): boolean {
+  if (canvasSupportsLetterSpacing !== null) {
+    return canvasSupportsLetterSpacing;
+  }
+
+  try {
+    const ctx = getCanvasContext();
+    if (!ctx) {
+      canvasSupportsLetterSpacing = false;
+      return false;
+    }
+
+    // Test if letterSpacing property is supported
+    const testText = 'test';
+    const testStyle = { fontSize: 16, letterSpacing: '5px' };
+    
+    // Apply styles
+    ctx.font = `${testStyle.fontSize}px sans-serif`;
+    const widthWithoutLetterSpacing = ctx.measureText(testText).width;
+    
+    // Try to apply letterSpacing
+    (ctx as any).letterSpacing = testStyle.letterSpacing;
+    const widthWithLetterSpacing = ctx.measureText(testText).width;
+    
+    // If letterSpacing is supported, the widths should be different
+    // We expect approximately 15px difference (3 letter spacings * 5px)
+    const hasSupport = widthWithLetterSpacing > widthWithoutLetterSpacing;
+    
+    canvasSupportsLetterSpacing = hasSupport;
+    return hasSupport;
+  } catch (error) {
+    // Silently catch errors (e.g., canvas not supported in jsdom)
+    canvasSupportsLetterSpacing = false;
+    return false;
+  }
+}
+
+/**
+ * Measure text using canvas API.
+ * @param text The text to measure
+ * @param style The style applied
+ * @returns width and height of the text
+ */
+function measureTextWithCanvas(text: string, style: React.CSSProperties) {
+  const ctx = getCanvasContext();
+  if (!ctx) {
+    throw new Error('Canvas context not available');
+  }
+
+  // Build font string from style
+  const fontSize = style.fontSize ? convertPixelValue('fontSize', style.fontSize) : '16px';
+  const fontFamily = style.fontFamily || 'sans-serif';
+  const fontWeight = style.fontWeight || 'normal';
+  const fontStyle = style.fontStyle || 'normal';
+  
+  ctx.font = `${fontStyle} ${fontWeight} ${fontSize} ${fontFamily}`;
+  
+  // Apply letterSpacing if supported and specified
+  if (style.letterSpacing) {
+    (ctx as any).letterSpacing = convertPixelValue('letterSpacing', style.letterSpacing);
+  } else {
+    // Reset letterSpacing to default
+    (ctx as any).letterSpacing = '0px';
+  }
+
+  const metrics = ctx.measureText(text);
+  
+  // Calculate height based on font size
+  // Canvas doesn't provide height directly, so we estimate from font metrics
+  const fontSizeNum = typeof style.fontSize === 'number' ? style.fontSize : 16;
+  const height = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent || fontSizeNum * 1.2;
+  
+  return {
+    width: metrics.width,
+    height,
+  };
+}
+
+/**
  *
  * @param text The string to estimate
  * @param style The style applied
@@ -102,33 +207,43 @@ export const getStringSize = (text: string | number, style: React.CSSProperties 
   }
 
   try {
-    const measurementSpanContainer = getMeasurementContainer();
-    const measurementElem = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    // Check if we should use canvas-based measurement
+    const useCanvas = checkLetterSpacingSupport();
+    
+    let result: { width: number; height: number };
+    
+    if (useCanvas) {
+      result = measureTextWithCanvas(str, style);
+    } else {
+      // Fall back to SVG-based measurement
+      const measurementSpanContainer = getMeasurementContainer();
+      const measurementElem = document.createElementNS('http://www.w3.org/2000/svg', 'text');
 
-    // Need to use CSS Object Model (CSSOM) to be able to comply with Content Security Policy (CSP)
-    // https://en.wikipedia.org/wiki/Content_Security_Policy
-    Object.keys(style as Record<string, any>).map((styleKey) => {
-      (measurementElem!.style as Record<string, any>)[camelCaseToDashCase(styleKey)] =
-        convertPixelValue(styleKey, (style as Record<string, any>)[styleKey]);
-      return styleKey;
-    });
+      // Need to use CSS Object Model (CSSOM) to be able to comply with Content Security Policy (CSP)
+      // https://en.wikipedia.org/wiki/Content_Security_Policy
+      Object.keys(style as Record<string, any>).map((styleKey) => {
+        (measurementElem!.style as Record<string, any>)[camelCaseToDashCase(styleKey)] =
+          convertPixelValue(styleKey, (style as Record<string, any>)[styleKey]);
+        return styleKey;
+      });
 
-    measurementElem.textContent = str;
+      measurementElem.textContent = str;
 
-    measurementSpanContainer.replaceChildren(measurementElem);
+      measurementSpanContainer.replaceChildren(measurementElem);
 
-    const rect = measurementElem.getBoundingClientRect();
-    const result = { width: rect.width, height: rect.height };
+      const rect = measurementElem.getBoundingClientRect();
+      result = { width: rect.width, height: rect.height };
+
+      if (process.env.NODE_ENV === 'test') {
+        // In test environment, we clean the measurement span immediately
+        measurementSpanContainer.replaceChildren();
+      }
+    }
 
     stringCache.set(cacheKey, result);
 
     if (stringCache.size + 1 > MAX_CACHE_NUM) {
       stringCache.clear();
-    }
-
-    if (process.env.NODE_ENV === 'test') {
-      // In test environment, we clean the measurement span immediately
-      measurementSpanContainer.replaceChildren();
     }
 
     return result;
@@ -162,44 +277,63 @@ export function batchMeasureStrings(
     }
   }
 
-  const measurementContainer = getMeasurementContainer();
-  // Need to use CSS Object Model (CSSOM) to be able to comply with Content Security Policy (CSP)
-  // https://en.wikipedia.org/wiki/Content_Security_Policy
-  const measurementSpanStyle: Record<string, any> = { ...style };
-
-  Object.keys(measurementSpanStyle).map((styleKey) => {
-    (measurementContainer!.style as Record<string, any>)[camelCaseToDashCase(styleKey)] =
-      convertPixelValue(styleKey, measurementSpanStyle[styleKey]);
-    return styleKey;
-  });
-
-  const measurementElems: SVGTextElement[] = [];
-  for (const string of textToMeasure) {
-    const measurementElem = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    measurementElem.textContent = `${string}`;
-    measurementElems.push(measurementElem);
+  if (textToMeasure.length === 0) {
+    return sizeMap;
   }
 
-  measurementContainer.replaceChildren(...measurementElems);
+  // Check if we should use canvas-based measurement
+  const useCanvas = checkLetterSpacingSupport();
 
-  for (let i = 0; i < textToMeasure.length; i += 1) {
-    const text = textToMeasure[i];
-    const measurementSpan = measurementContainer.children[i] as HTMLSpanElement;
-    const rect = measurementSpan.getBoundingClientRect();
-    const result = { width: rect.width, height: rect.height };
-    const cacheKey = `${text}-${styleString}`;
+  if (useCanvas) {
+    // Use canvas for batch measurement
+    for (const text of textToMeasure) {
+      const result = measureTextWithCanvas(String(text), style);
+      const cacheKey = `${text}-${styleString}`;
+      
+      stringCache.set(cacheKey, result);
+      sizeMap.set(text, result);
+    }
+  } else {
+    // Fall back to SVG-based batch measurement
+    const measurementContainer = getMeasurementContainer();
+    // Need to use CSS Object Model (CSSOM) to be able to comply with Content Security Policy (CSP)
+    // https://en.wikipedia.org/wiki/Content_Security_Policy
+    const measurementSpanStyle: Record<string, any> = { ...style };
 
-    stringCache.set(cacheKey, result);
-    sizeMap.set(text, result);
+    Object.keys(measurementSpanStyle).map((styleKey) => {
+      (measurementContainer!.style as Record<string, any>)[camelCaseToDashCase(styleKey)] =
+        convertPixelValue(styleKey, measurementSpanStyle[styleKey]);
+      return styleKey;
+    });
+
+    const measurementElems: SVGTextElement[] = [];
+    for (const string of textToMeasure) {
+      const measurementElem = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      measurementElem.textContent = `${string}`;
+      measurementElems.push(measurementElem);
+    }
+
+    measurementContainer.replaceChildren(...measurementElems);
+
+    for (let i = 0; i < textToMeasure.length; i += 1) {
+      const text = textToMeasure[i];
+      const measurementSpan = measurementContainer.children[i] as HTMLSpanElement;
+      const rect = measurementSpan.getBoundingClientRect();
+      const result = { width: rect.width, height: rect.height };
+      const cacheKey = `${text}-${styleString}`;
+
+      stringCache.set(cacheKey, result);
+      sizeMap.set(text, result);
+    }
+
+    if (process.env.NODE_ENV === 'test') {
+      // In test environment, we clean the measurement span immediately
+      measurementContainer.replaceChildren();
+    }
   }
 
   if (stringCache.size + 1 > MAX_CACHE_NUM) {
     stringCache.clear();
-  }
-
-  if (process.env.NODE_ENV === 'test') {
-    // In test environment, we clean the measurement span immediately
-    measurementContainer.replaceChildren();
   }
 
   return sizeMap;
