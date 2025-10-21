@@ -1,32 +1,20 @@
 import { warnOnce } from '@mui/x-internals/warning';
 import { DefaultizedProps } from '@mui/x-internals/types';
-import { ChartSeries, DatasetType } from '../../models/seriesType/config';
+import { ChartSeries } from '../../models/seriesType/config';
 import { defaultizeValueFormatter } from '../../internals/defaultizeValueFormatter';
 import { SeriesId } from '../../models/seriesType/common';
 import { SeriesProcessor } from '../../internals/plugins/models';
-import { AreaRangeValueType } from '../../models/seriesType/area-range';
 
 // For now it's a copy past of bar charts formatter, but maybe will diverge later
 const seriesProcessor: SeriesProcessor<'areaRange'> = (params, dataset) => {
   const { seriesOrder, series } = params;
 
-  // Create a data set with format adapted to d3
-  const d3Dataset: DatasetType<AreaRangeValueType | null> =
-    (dataset as DatasetType<AreaRangeValueType | null>) ?? [];
   seriesOrder.forEach((id) => {
     const data = series[id].data;
-    if (data !== undefined) {
-      data.forEach((value, index) => {
-        if (d3Dataset.length <= index) {
-          d3Dataset.push({ [id]: value });
-        } else {
-          d3Dataset[index][id] = value;
-        }
-      });
-    } else if (dataset === undefined && process.env.NODE_ENV !== 'production') {
+    if (data === undefined && dataset === undefined && process.env.NODE_ENV !== 'production') {
       throw new Error(
         [
-          `MUI X Charts: line series with id='${id}' has no data.`,
+          `MUI X Charts: area series with id='${id}' has no data.`,
           'Either provide a data property to the series or use the dataset prop.',
         ].join('\n'),
       );
@@ -46,13 +34,14 @@ const seriesProcessor: SeriesProcessor<'areaRange'> = (params, dataset) => {
     if (seriesData?.datasetKeys && missingKeys.length > 0) {
       throw new Error(
         [
-          `MUI X Charts: scatter series with id='${id}' has incomplete datasetKeys.`,
+          `MUI X Charts: area series with id='${id}' has incomplete datasetKeys.`,
           `Properties ${missingKeys.map((key) => `"${key}"`).join(', ')} are missing.`,
         ].join('\n'),
       );
     }
 
     completedSeries[id] = {
+      // TODO: Do we need this prop?
       labelMarkType: 'line',
       ...series[id],
       data: datasetKeys
