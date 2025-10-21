@@ -123,9 +123,6 @@ export const selectors = {
       adapter,
       date: SchedulerValidDate,
     ): Record<RecurringEventPresetKey, RecurringEventRecurrenceRule> => {
-      const weekDayCode = getWeekDayCode(adapter, date);
-      const dayOfMonth = adapter.getDate(date);
-
       return {
         daily: {
           freq: 'DAILY',
@@ -134,12 +131,12 @@ export const selectors = {
         weekly: {
           freq: 'WEEKLY',
           interval: 1,
-          byDay: [weekDayCode],
+          byDay: [getWeekDayCode(adapter, date)],
         },
         monthly: {
           freq: 'MONTHLY',
           interval: 1,
-          byMonthDay: [dayOfMonth],
+          byMonthDay: [adapter.getDate(date)],
         },
         yearly: {
           freq: 'YEARLY',
