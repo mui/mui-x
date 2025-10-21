@@ -2,13 +2,21 @@
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { selectors } from '@mui/x-scheduler-headless/use-event-calendar';
+import {
+  selectors,
+  useExtractEventCalendarParameters,
+} from '@mui/x-scheduler-headless/use-event-calendar';
+import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventCalendarView } from '@mui/x-scheduler-headless/use-event-calendar-view';
 import { processDate } from '@mui/x-scheduler-headless/process-date';
-import { DayViewProps } from './DayView.types';
+import { DayViewProps, StandaloneDayViewProps } from './DayView.types';
 import { DayTimeGrid } from '../internals/components/day-time-grid/DayTimeGrid';
+import '../index.css';
 
+/**
+ * A Day View to use inside the Event Calendar.
+ */
 export const DayView = React.memo(
   React.forwardRef(function DayView(
     props: DayViewProps,
@@ -26,3 +34,19 @@ export const DayView = React.memo(
     return <DayTimeGrid ref={forwardedRef} days={days} {...props} />;
   }),
 );
+
+/**
+ * A Day View that can be used outside of the Event Calendar.
+ */
+export const StandaloneDayView = React.forwardRef(function StandaloneDayView(
+  props: StandaloneDayViewProps,
+  forwardedRef: React.ForwardedRef<HTMLDivElement>,
+) {
+  const { parameters, forwardedProps } = useExtractEventCalendarParameters(props);
+
+  return (
+    <EventCalendarProvider {...parameters}>
+      <DayView ref={forwardedRef} {...forwardedProps} />
+    </EventCalendarProvider>
+  );
+});

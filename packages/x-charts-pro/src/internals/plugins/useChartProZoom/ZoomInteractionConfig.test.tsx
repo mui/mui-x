@@ -5,6 +5,7 @@ import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import * as sinon from 'sinon';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
+import { CHART_SELECTOR } from '../../../tests/constants';
 
 describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
   const { render } = createRenderer();
@@ -64,7 +65,7 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
 
       expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C', 'D']);
 
-      const svg = document.querySelector('svg')!;
+      const svg = document.querySelector(CHART_SELECTOR)!;
 
       await user.pointer([
         {
@@ -111,7 +112,7 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
 
       expect(getAxisTickValues('x')).to.deep.equal(['D']);
 
-      const svg = document.querySelector('svg')!;
+      const svg = document.querySelector(CHART_SELECTOR)!;
 
       // Drag without Alt key - should not pan
       await user.pointer([
@@ -177,7 +178,7 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
 
       expect(getAxisTickValues('x')).to.deep.equal(['D']);
 
-      const svg = document.querySelector('svg')!;
+      const svg = document.querySelector(CHART_SELECTOR)!;
 
       // Drag with only Shift key - should not pan
       await user.keyboard('{Shift>}');
@@ -247,7 +248,7 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
 
       expect(getAxisTickValues('x')).to.deep.equal(['D']);
 
-      const svg = document.querySelector('svg')!;
+      const svg = document.querySelector(CHART_SELECTOR)!;
 
       // Mouse drag - should pan
       await user.pointer([
@@ -311,7 +312,7 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
 
       expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C', 'D']);
 
-      const svg = document.querySelector('svg')!;
+      const svg = document.querySelector('svg:not([aria-hidden="true"])')!;
 
       // Wheel - should not zoom since only pinch is enabled
       for (let i = 0; i < 30; i += 1) {
@@ -360,6 +361,120 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
       expect(onZoomChange.callCount).to.be.greaterThan(0);
       // Should have zoomed in to show fewer ticks
       expect(getAxisTickValues('x').length).to.be.lessThan(4);
+    });
+  });
+
+  describe('Zoom and Pan with reversed axis', () => {
+    it('should zoom at the correct position with reversed x-axis', async () => {
+      const onZoomChange = sinon.spy();
+      const { user } = render(
+        <BarChartPro
+          series={[
+            {
+              data: [10, 20, 30, 40],
+            },
+          ]}
+          xAxis={[
+            {
+              data: ['A', 'B', 'C', 'D'],
+              zoom: true,
+              height: 30,
+              id: 'x',
+              reverse: true, // Reversed axis
+            },
+          ]}
+          yAxis={[{ position: 'none' }]}
+          width={100}
+          height={130}
+          margin={0}
+          slotProps={{ tooltip: { trigger: 'none' } }}
+          onZoomChange={onZoomChange}
+        />,
+        options,
+      );
+
+      // The reverse property affects scale mapping, not tick order
+      // Ticks still render in data order: A, B, C, D
+      expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C', 'D']);
+
+      const svg = document.querySelector(CHART_SELECTOR)!;
+
+      await user.pointer([
+        {
+          target: svg,
+          coords: { x: 25, y: 50 },
+        },
+      ]);
+
+      // Zoom in the <-- left side
+      // For `[D, C, B, A]` should zoom towards B, C, D
+      fireEvent.wheel(svg, { deltaY: -500, clientX: 15, clientY: 50 });
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
+
+      expect(onZoomChange.callCount).to.be.greaterThan(0);
+
+      const ticksAfterZoom = getAxisTickValues('x');
+      expect(ticksAfterZoom).to.deep.equal(['B', 'C', 'D']);
+    });
+
+    it('should pan in the correct direction with reversed x-axis on drag', async () => {
+      const onZoomChange = sinon.spy();
+      const { user } = render(
+        <BarChartPro
+          series={[
+            {
+              data: [10, 20, 30, 40],
+            },
+          ]}
+          xAxis={[
+            {
+              data: ['A', 'B', 'C', 'D'],
+              zoom: true,
+              height: 30,
+              id: 'x',
+              reverse: true,
+            },
+          ]}
+          yAxis={[{ position: 'none' }]}
+          width={100}
+          height={130}
+          margin={0}
+          slotProps={{ tooltip: { trigger: 'none' } }}
+          initialZoom={[{ axisId: 'x', start: 25, end: 75 }]}
+          onZoomChange={onZoomChange}
+        />,
+        options,
+      );
+
+      // With zoom at 25-75%, we see the middle range which is B and C
+      expect(getAxisTickValues('x')).to.deep.equal(['B', 'C']);
+
+      const svg = document.querySelector(CHART_SELECTOR)!;
+
+      // Drag from left to right (positive direction)
+      // Drag --> should pan towards left side of data [D, C, B, A], showing C and D
+      await user.pointer([
+        {
+          keys: '[MouseLeft>]',
+          target: svg,
+          coords: { x: 15, y: 50 },
+        },
+        {
+          target: svg,
+          coords: { x: 85, y: 50 },
+        },
+        {
+          keys: '[/MouseLeft]',
+          target: svg,
+          coords: { x: 85, y: 50 },
+        },
+      ]);
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
+
+      expect(onZoomChange.callCount).to.be.greaterThan(0);
+
+      const ticksAfterDrag = getAxisTickValues('x');
+      expect(ticksAfterDrag).to.deep.equal(['C', 'D']);
     });
   });
 });
