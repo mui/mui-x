@@ -1,9 +1,9 @@
-import { ChartRootSelector, createSelector } from '../../utils/selectors';
+import { ChartRootSelector, createChartSelector } from '../../utils/selectors';
 import { UseChartClosestPointSignature } from './useChartClosestPoint.types';
 
 const selectVoronoi: ChartRootSelector<UseChartClosestPointSignature> = (state) => state.voronoi;
 
-export const selectorChartsIsVoronoiEnabled = createSelector(
+export const selectorChartsIsVoronoiEnabled = createChartSelector(
   [selectVoronoi],
   (voronoi) => voronoi?.isVoronoiEnabled,
 );

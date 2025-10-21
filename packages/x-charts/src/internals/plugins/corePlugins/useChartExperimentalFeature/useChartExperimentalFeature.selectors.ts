@@ -1,11 +1,11 @@
-import { ChartRootSelector, createSelector } from '../../utils/selectors';
+import { ChartRootSelector, createChartSelector } from '../../utils/selectors';
 import type { UseChartExperimentalFeaturesSignature } from './useChartExperimentalFeature.types';
 
 export const selectorChartExperimentalFeaturesState: ChartRootSelector<
   UseChartExperimentalFeaturesSignature
 > = (state) => state.experimentalFeatures;
 
-export const selectorPreferStrictDomainInLineCharts = createSelector(
+export const selectorPreferStrictDomainInLineCharts = createChartSelector(
   [selectorChartExperimentalFeaturesState],
   (features) => Boolean(features?.preferStrictDomainInLineCharts),
 );

@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
+import { useStore } from '@mui/x-internals/store';
 import {
   ChartPlugin,
-  useSelector,
   getSVGPoint,
   selectorChartDrawingArea,
   ZoomData,
@@ -27,9 +27,9 @@ export const useZoomOnPinch = (
   }: Pick<Parameters<ChartPlugin<UseChartProZoomSignature>>[0], 'store' | 'instance' | 'svgRef'>,
   setZoomDataCallback: React.Dispatch<ZoomData[] | ((prev: ZoomData[]) => ZoomData[])>,
 ) => {
-  const drawingArea = useSelector(store, selectorChartDrawingArea);
-  const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
-  const config = useSelector(store, selectorZoomInteractionConfig, ['pinch' as const]);
+  const drawingArea = useStore(store, selectorChartDrawingArea);
+  const optionsLookup = useStore(store, selectorChartZoomOptionsLookup);
+  const config = useStore(store, selectorZoomInteractionConfig, 'pinch' as const);
 
   const isZoomOnPinchEnabled = React.useMemo(
     () => (Object.keys(optionsLookup).length > 0 && config) || false,

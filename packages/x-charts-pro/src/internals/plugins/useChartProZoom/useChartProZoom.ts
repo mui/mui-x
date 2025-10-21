@@ -4,7 +4,6 @@ import {
   ChartPlugin,
   AxisId,
   ZoomData,
-  useSelector,
   selectorChartZoomOptionsLookup,
   createZoomLookup,
   selectorChartAxisZoomOptionsLookup,
@@ -12,6 +11,7 @@ import {
 import debounce from '@mui/utils/debounce';
 import { useEffectAfterFirstRender } from '@mui/x-internals/useEffectAfterFirstRender';
 import { useEventCallback } from '@mui/material/utils';
+import { useStore } from '@mui/x-internals/store';
 import { calculateZoom } from './calculateZoom';
 import { UseChartProZoomSignature } from './useChartProZoom.types';
 import { useZoomOnWheel } from './gestureHooks/useZoomOnWheel';
@@ -31,7 +31,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginDat
   } = params;
 
   const onZoomChange = useEventCallback(onZoomChangeProp ?? (() => {}));
-  const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
+  const optionsLookup = useStore(store, selectorChartZoomOptionsLookup);
 
   useEffectAfterFirstRender(() => {
     store.set('zoom', {

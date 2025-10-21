@@ -1,6 +1,6 @@
 'use client';
-import { useSelector } from '../../../store/useSelector';
-import { useStore } from '../../../store/useStore';
+import { useStore } from '@mui/x-internals/store';
+import { useChartStore } from '../../../store/useChartStore';
 import { selectorChartZoomIsInteracting } from './useChartCartesianAxisRendering.selectors';
 import { UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
 
@@ -14,8 +14,8 @@ import { UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
  * @returns {boolean} Inform the zoom is interacting.
  */
 export function useInternalIsZoomInteracting(): boolean | undefined {
-  const store = useStore<[UseChartCartesianAxisSignature]>();
-  const isInteracting = useSelector(store, selectorChartZoomIsInteracting);
+  const store = useChartStore<[UseChartCartesianAxisSignature]>();
+  const isInteracting = useStore(store, selectorChartZoomIsInteracting);
 
   return isInteracting;
 }

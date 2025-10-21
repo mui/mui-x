@@ -1,13 +1,13 @@
 import * as React from 'react';
+import { useStore } from '@mui/x-internals/store';
 import { styled } from '@mui/material/styles';
 import {
   AxisId,
-  useSelector,
-  useStore,
   useAreaPlotData,
   selectorChartPreviewComputedXAxis,
   selectorChartPreviewComputedYAxis,
   SeriesId,
+  useChartStore,
 } from '@mui/x-charts/internals';
 import { PreviewPlotProps } from './PreviewPlot.types';
 
@@ -63,10 +63,10 @@ function PreviewAreaElement({ id, color, gradientId, onClick, ...other }: Previe
 }
 
 function useAreaPreviewData(axisId: AxisId) {
-  const store = useStore();
+  const store = useChartStore();
 
-  const xAxes = useSelector(store, selectorChartPreviewComputedXAxis, [axisId]);
-  const yAxes = useSelector(store, selectorChartPreviewComputedYAxis, [axisId]);
+  const xAxes = useStore(store, selectorChartPreviewComputedXAxis, axisId);
+  const yAxes = useStore(store, selectorChartPreviewComputedYAxis, axisId);
 
   return useAreaPlotData(xAxes, yAxes);
 }

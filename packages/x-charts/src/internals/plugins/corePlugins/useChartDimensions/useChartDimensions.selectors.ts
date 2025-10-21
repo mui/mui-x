@@ -1,4 +1,4 @@
-import { ChartRootSelector, createSelector } from '../../utils/selectors';
+import { ChartRootSelector, createChartSelector } from '../../utils/selectors';
 import type { UseChartDimensionsSignature } from './useChartDimensions.types';
 import {
   selectorChartBottomAxisSize,
@@ -29,7 +29,7 @@ const selectorChartBottomMargin = (state: ChartState<[UseChartDimensionsSignatur
 const selectorChartLeftMargin = (state: ChartState<[UseChartDimensionsSignature]>) =>
   state.dimensions.margin.left;
 
-export const selectorChartDrawingArea = createSelector(
+export const selectorChartDrawingArea = createChartSelector(
   [
     selectorChartWidth,
     selectorChartHeight,
@@ -63,7 +63,7 @@ export const selectorChartDrawingArea = createSelector(
   }),
 );
 
-export const selectorChartPropsSize = createSelector(
+export const selectorChartPropsSize = createChartSelector(
   [selectorChartDimensionsState],
   (dimensionsState) => ({
     width: dimensionsState.propsWidth,
@@ -71,7 +71,7 @@ export const selectorChartPropsSize = createSelector(
   }),
 );
 
-export const selectorChartContainerSize = createSelector(
+export const selectorChartContainerSize = createChartSelector(
   [selectorChartWidth, selectorChartHeight],
   (width, height) => ({
     width,

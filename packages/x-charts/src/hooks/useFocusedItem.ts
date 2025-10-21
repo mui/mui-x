@@ -1,7 +1,8 @@
 'use client';
 import * as React from 'react';
-import { useStore } from '../internals/store/useStore';
-import { useSelector } from '../internals/store/useSelector';
+import { useStore } from '@mui/x-internals/store';
+import { useChartStore } from '../internals/store/useChartStore';
+
 import {
   selectorChartsFocusedSeriesType,
   selectorChartsFocusedSeriesId,
@@ -20,10 +21,10 @@ export type FocusedItemData = {
  * Get the focused item from keyboard navigation.
  */
 export function useFocusedItem() {
-  const store = useStore();
-  const focusedSeriesType = useSelector(store, selectorChartsFocusedSeriesType);
-  const focusedSeriesId = useSelector(store, selectorChartsFocusedSeriesId);
-  const focusedDataIndex = useSelector(store, selectorChartsFocusedDataIndex);
+  const store = useChartStore();
+  const focusedSeriesType = useStore(store, selectorChartsFocusedSeriesType);
+  const focusedSeriesId = useStore(store, selectorChartsFocusedSeriesId);
+  const focusedDataIndex = useStore(store, selectorChartsFocusedDataIndex);
 
   return React.useMemo(
     () =>

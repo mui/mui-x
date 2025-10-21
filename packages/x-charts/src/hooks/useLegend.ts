@@ -1,4 +1,5 @@
 'use client';
+import { useStore } from '@mui/x-internals/store';
 import { ChartSeriesType } from '../models/seriesType/config';
 import {
   ProcessedSeries,
@@ -7,8 +8,8 @@ import {
 } from '../internals/plugins/corePlugins/useChartSeries';
 import { useSeries } from './useSeries';
 import type { LegendItemParams } from '../ChartsLegend';
-import { useStore } from '../internals/store/useStore';
-import { useSelector } from '../internals/store/useSelector';
+import { useChartStore } from '../internals/store/useChartStore';
+
 import { ChartSeriesConfig } from '../internals/plugins/models/seriesConfig';
 
 function getSeriesToDisplay(
@@ -34,8 +35,8 @@ function getSeriesToDisplay(
  */
 export function useLegend(): { items: LegendItemParams[] } {
   const series = useSeries();
-  const store = useStore<[UseChartSeriesSignature]>();
-  const seriesConfig = useSelector(store, selectorChartSeriesConfig);
+  const store = useChartStore<[UseChartSeriesSignature]>();
+  const seriesConfig = useStore(store, selectorChartSeriesConfig);
 
   return {
     items: getSeriesToDisplay(series, seriesConfig),

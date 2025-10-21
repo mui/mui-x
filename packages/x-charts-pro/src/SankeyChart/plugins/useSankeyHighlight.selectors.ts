@@ -1,10 +1,10 @@
 import {
-  createSelector,
+  createChartSelector,
   type ChartRootSelector,
   type UseChartSeriesSignature,
 } from '@mui/x-charts/internals';
 import type { UseSankeyHighlightSignature } from './useSankeyHighlight.types';
-import type { SankeyLayoutLink, SankeyLayoutNode } from '../sankey.types';
+import type { SankeyLayoutLink, SankeyNodeId } from '../sankey.types';
 import type {
   SankeyLinkFade,
   SankeyLinkHighlight,
@@ -16,7 +16,7 @@ const selectorSankeyHighlight = (state: UseSankeyHighlightSignature['state']) =>
 
 const selectSeries: ChartRootSelector<UseChartSeriesSignature> = (state) => state.series;
 
-const selectorSankeySeries = createSelector(
+const selectorSankeySeries = createChartSelector(
   [selectSeries],
   (series) =>
     series.processedSeries.sankey?.series[series.processedSeries.sankey?.seriesOrder[0]] || null,
@@ -30,7 +30,7 @@ const DEFAULT_FADE: SankeyNodeFade & SankeyLinkFade = 'none';
  * Get the node highlight configuration from the Sankey series.
  * Defaults to 'nodes' if not specified.
  */
-export const selectorNodeHighlightConfig = createSelector(
+export const selectorNodeHighlightConfig = createChartSelector(
   [selectorSankeySeries],
   (series): SankeyNodeHighlight => series?.nodeOptions?.highlight ?? DEFAULT_NODE_HIGHLIGHT,
 );
@@ -39,7 +39,7 @@ export const selectorNodeHighlightConfig = createSelector(
  * Get the node fade configuration from the Sankey series.
  * Defaults to 'none' if not specified.
  */
-export const selectorNodeFadeConfig = createSelector(
+export const selectorNodeFadeConfig = createChartSelector(
   [selectorSankeySeries],
   (series): SankeyNodeFade => series?.nodeOptions?.fade ?? DEFAULT_FADE,
 );
@@ -48,7 +48,7 @@ export const selectorNodeFadeConfig = createSelector(
  * Get the link highlight configuration from the Sankey series.
  * Defaults to 'links' if not specified.
  */
-export const selectorLinkHighlightConfig = createSelector(
+export const selectorLinkHighlightConfig = createChartSelector(
   [selectorSankeySeries],
   (series): SankeyLinkHighlight => series?.linkOptions?.highlight ?? DEFAULT_LINK_HIGHLIGHT,
 );
@@ -57,7 +57,7 @@ export const selectorLinkHighlightConfig = createSelector(
  * Get the link fade configuration from the Sankey series.
  * Defaults to 'none' if not specified.
  */
-export const selectorLinkFadeConfig = createSelector(
+export const selectorLinkFadeConfig = createChartSelector(
   [selectorSankeySeries],
   (series): SankeyLinkFade => series?.linkOptions?.fade ?? DEFAULT_FADE,
 );
@@ -67,7 +67,7 @@ export const selectorLinkFadeConfig = createSelector(
  * @param {UseSankeyHighlightSignature['state']} state The state of the chart.
  * @returns {SankeyItemIdentifier | null} The highlighted item identifier or null.
  */
-export const selectorSankeyHighlightedItem = createSelector(
+export const selectorSankeyHighlightedItem = createChartSelector(
   [selectorSankeyHighlight],
   (highlight) => highlight.item,
 );
@@ -78,14 +78,9 @@ export const selectorSankeyHighlightedItem = createSelector(
  * - It's the highlighted node (unless highlight mode is 'none')
  * - It's connected to a highlighted link (based on linkOptions.highlight)
  */
-export const selectorIsNodeHighlighted = createSelector(
-  [
-    selectorSankeyHighlightedItem,
-    selectorNodeHighlightConfig,
-    selectorLinkHighlightConfig,
-    (_, node: SankeyLayoutNode) => node.id,
-  ],
-  (highlightedItem, nodeHighlight, linkHighlight, nodeId): boolean => {
+export const selectorIsNodeHighlighted = createChartSelector(
+  [selectorSankeyHighlightedItem, selectorNodeHighlightConfig, selectorLinkHighlightConfig],
+  (highlightedItem, nodeHighlight, linkHighlight, nodeId: SankeyNodeId): boolean => {
     if (!highlightedItem) {
       return false;
     }
@@ -123,14 +118,9 @@ export const selectorIsNodeHighlighted = createSelector(
  * - It's the highlighted link (unless highlight mode is 'none')
  * - It's connected to a highlighted node (based on nodeOptions.highlight)
  */
-export const selectorIsLinkHighlighted = createSelector(
-  [
-    selectorSankeyHighlightedItem,
-    selectorNodeHighlightConfig,
-    selectorLinkHighlightConfig,
-    (_, link: SankeyLayoutLink) => link,
-  ],
-  (highlightedItem, nodeHighlight, linkHighlight, link): boolean => {
+export const selectorIsLinkHighlighted = createChartSelector(
+  [selectorSankeyHighlightedItem, selectorNodeHighlightConfig, selectorLinkHighlightConfig],
+  (highlightedItem, nodeHighlight, linkHighlight, link: SankeyLayoutLink): boolean => {
     if (!highlightedItem) {
       return false;
     }
@@ -173,14 +163,9 @@ export const selectorIsLinkHighlighted = createSelector(
  * - This item is not highlighted
  * - The fade mode is 'global' for the highlighted element type
  */
-export const selectorIsSankeyItemFaded = createSelector(
-  [
-    selectorSankeyHighlightedItem,
-    selectorNodeFadeConfig,
-    selectorLinkFadeConfig,
-    (_, isHighlighted) => isHighlighted,
-  ],
-  (highlightedItem, nodeFade, linkFade, isHighlighted): boolean => {
+export const selectorIsSankeyItemFaded = createChartSelector(
+  [selectorSankeyHighlightedItem, selectorNodeFadeConfig, selectorLinkFadeConfig],
+  (highlightedItem, nodeFade, linkFade, isHighlighted: boolean): boolean => {
     if (!highlightedItem || isHighlighted) {
       return false;
     }

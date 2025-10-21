@@ -5,12 +5,12 @@ import PropTypes from 'prop-types';
 import { Toolbar, ChartsToolbarProps, ToolbarButton } from '@mui/x-charts/Toolbar';
 import {
   useChartContext,
-  useSelector,
   useChartsSlots,
   UseChartCartesianAxisSignature,
 } from '@mui/x-charts/internals';
 import { useChartsLocalization } from '@mui/x-charts/hooks';
 import useId from '@mui/utils/useId';
+import { useStore } from '@mui/x-internals/store';
 import { ChartsToolbarDivider } from './internals/ChartsToolbarDivider';
 import { ChartsMenu } from './internals/ChartsMenu';
 import { selectorChartZoomIsEnabled } from '../internals/plugins/useChartProZoom';
@@ -48,7 +48,7 @@ function ChartsToolbarPro({
   const exportMenuTriggerRef = React.useRef<HTMLButtonElement>(null);
   const exportMenuId = useId();
   const exportMenuTriggerId = useId();
-  const isZoomEnabled = useSelector(store, selectorChartZoomIsEnabled);
+  const isZoomEnabled = useStore(store, selectorChartZoomIsEnabled);
   const imageExportOptionList = rawImageExportOptions ?? DEFAULT_IMAGE_EXPORT_OPTIONS;
   const showExportMenu = !printOptions?.disableToolbarButton || imageExportOptionList.length > 0;
 

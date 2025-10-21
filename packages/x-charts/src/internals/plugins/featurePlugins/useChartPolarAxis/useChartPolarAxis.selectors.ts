@@ -3,7 +3,7 @@ import {
   selectorChartSeriesConfig,
   selectorChartSeriesProcessed,
 } from '../../corePlugins/useChartSeries';
-import { createSelector } from '../../utils/selectors';
+import { createChartSelector } from '../../utils/selectors';
 import { UseChartPolarAxisSignature } from './useChartPolarAxis.types';
 import { ChartState } from '../../models/chart';
 import { computeAxisValue } from './computeAxisValue';
@@ -11,12 +11,12 @@ import { computeAxisValue } from './computeAxisValue';
 export const selectorChartPolarAxisState = (state: ChartState<[], [UseChartPolarAxisSignature]>) =>
   state.polarAxis;
 
-export const selectorChartRawRotationAxis = createSelector(
+export const selectorChartRawRotationAxis = createChartSelector(
   [selectorChartPolarAxisState],
   (axis) => axis?.rotation,
 );
 
-export const selectorChartRawRadiusAxis = createSelector(
+export const selectorChartRawRadiusAxis = createChartSelector(
   [selectorChartPolarAxisState],
   (axis) => axis?.radius,
 );
@@ -25,7 +25,7 @@ export const selectorChartRawRadiusAxis = createSelector(
  * The only interesting selectors that merge axis data and zoom if provided.
  */
 
-export const selectorChartRotationAxis = createSelector(
+export const selectorChartRotationAxis = createChartSelector(
   [
     selectorChartRawRotationAxis,
     selectorChartDrawingArea,
@@ -42,7 +42,7 @@ export const selectorChartRotationAxis = createSelector(
     }),
 );
 
-export const selectorChartRadiusAxis = createSelector(
+export const selectorChartRadiusAxis = createChartSelector(
   [
     selectorChartRawRadiusAxis,
     selectorChartDrawingArea,
@@ -59,7 +59,7 @@ export const selectorChartRadiusAxis = createSelector(
     }),
 );
 
-export const selectorChartPolarCenter = createSelector(
+export const selectorChartPolarCenter = createChartSelector(
   [selectorChartDrawingArea],
   (drawingArea) => ({
     cx: drawingArea.left + drawingArea.width / 2,

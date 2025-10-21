@@ -2,11 +2,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
+import { useStore } from '@mui/x-internals/store';
 import { ScatterMarkerSlotProps, ScatterMarkerSlots } from './ScatterMarker.types';
 import { DefaultizedScatterSeriesType, ScatterItemIdentifier } from '../models/seriesType/scatter';
 import { getInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { useStore } from '../internals/store/useStore';
-import { useSelector } from '../internals/store/useSelector';
+import { useChartStore } from '../internals/store/useChartStore';
+
 import { D3Scale } from '../models/axis';
 import { useItemHighlightedGetter } from '../hooks/useItemHighlightedGetter';
 import {
@@ -71,8 +72,8 @@ function Scatter(props: ScatterProps) {
 
   const { instance } =
     useChartContext<[UseChartInteractionSignature, UseChartHighlightSignature]>();
-  const store = useStore<[UseChartClosestPointSignature]>();
-  const isVoronoiEnabled = useSelector(store, selectorChartsIsVoronoiEnabled);
+  const store = useChartStore<[UseChartClosestPointSignature]>();
+  const isVoronoiEnabled = useStore(store, selectorChartsIsVoronoiEnabled);
 
   const skipInteractionHandlers = isVoronoiEnabled || series.disableHover;
   const { isFaded, isHighlighted } = useItemHighlightedGetter();

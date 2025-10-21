@@ -7,10 +7,10 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import Popper, { PopperProps } from '@mui/material/Popper';
 import NoSsr from '@mui/material/NoSsr';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
+import { useStore } from '@mui/x-internals/store';
 import { TriggerOptions, useIsFineMainPointer, usePointerType } from './utils';
 import { ChartsTooltipClasses, useUtilityClasses } from './chartsTooltipClasses';
-import { useSelector } from '../internals/store/useSelector';
-import { useStore } from '../internals/store/useStore';
+import { useChartStore } from '../internals/store/useChartStore';
 import { selectorChartsInteractionItemIsDefined } from '../internals/plugins/featurePlugins/useChartInteraction';
 import {
   selectorChartsInteractionAxisTooltip,
@@ -20,7 +20,7 @@ import { selectorChartsInteractionPolarAxisTooltip } from '../internals/plugins/
 import { useAxisSystem } from '../hooks/useAxisSystem';
 import { useSvgRef } from '../hooks';
 import { selectorBrushShouldPreventTooltip } from '../internals/plugins/featurePlugins/useChartBrush';
-import { createSelector } from '../internals/plugins/utils/selectors';
+import { createChartSelector } from '../internals/plugins/utils/selectors';
 
 const selectorReturnFalse = () => false;
 
@@ -49,7 +49,7 @@ const ChartsTooltipRoot = styled(Popper, {
   zIndex: theme.zIndex.modal,
 }));
 
-const selectorSelectIsOpenSelector = createSelector(
+const selectorSelectIsOpenSelector = createChartSelector(
   [
     selectorBrushShouldPreventTooltip,
     (_, trigger: TriggerOptions) => trigger,
@@ -98,11 +98,11 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
 
   const axisSystem = useAxisSystem();
 
-  const store = useStore<[UseChartCartesianAxisSignature]>();
+  const store = useChartStore<[UseChartCartesianAxisSignature]>();
 
-  const isOpenSelector = useSelector(store, selectorSelectIsOpenSelector, [trigger, axisSystem]);
+  const isOpenSelector = useStore(store, selectorSelectIsOpenSelector, [trigger, axisSystem]);
 
-  const isOpen = useSelector(store, isOpenSelector);
+  const isOpen = useStore(store, isOpenSelector);
 
   React.useEffect(() => {
     const element = svgRef.current;

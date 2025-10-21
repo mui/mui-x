@@ -2,13 +2,13 @@
 import * as React from 'react';
 import {
   ChartPlugin,
-  useSelector,
   selectorChartDrawingArea,
   ZoomData,
   selectorChartZoomOptionsLookup,
 } from '@mui/x-charts/internals';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
 import { PanEvent } from '@mui/x-internal-gestures/core';
+import { useStore } from '@mui/x-internals/store';
 import { UseChartProZoomSignature } from '../useChartProZoom.types';
 import { translateZoom } from './useZoom.utils';
 import { selectorPanInteractionConfig } from '../ZoomInteractionConfig.selectors';
@@ -21,10 +21,10 @@ export const usePanOnDrag = (
   }: Pick<Parameters<ChartPlugin<UseChartProZoomSignature>>[0], 'store' | 'instance' | 'svgRef'>,
   setZoomDataCallback: React.Dispatch<ZoomData[] | ((prev: ZoomData[]) => ZoomData[])>,
 ) => {
-  const drawingArea = useSelector(store, selectorChartDrawingArea);
-  const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
+  const drawingArea = useStore(store, selectorChartDrawingArea);
+  const optionsLookup = useStore(store, selectorChartZoomOptionsLookup);
   const startRef = React.useRef<readonly ZoomData[]>(null);
-  const config = useSelector(store, selectorPanInteractionConfig, ['drag' as const]);
+  const config = useStore(store, selectorPanInteractionConfig, 'drag' as const);
 
   const isPanOnDragEnabled = React.useMemo(
     () => (Object.values(optionsLookup).some((v) => v.panning) && config) || false,
@@ -56,7 +56,7 @@ export const usePanOnDrag = (
 
     const handlePanStart = (event: PanEvent) => {
       if (!(event.detail.target as SVGElement)?.closest('[data-charts-zoom-slider]')) {
-        startRef.current = store.value.zoom.zoomData;
+        startRef.current = store.state.zoom.zoomData;
       }
     };
     const handlePanEnd = () => {

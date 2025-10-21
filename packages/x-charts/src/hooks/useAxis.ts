@@ -1,4 +1,5 @@
 'use client';
+import { useStore } from '@mui/x-internals/store';
 import { UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import {
   selectorChartXAxis,
@@ -9,8 +10,8 @@ import {
   selectorChartRotationAxis,
   UseChartPolarAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartPolarAxis';
-import { useSelector } from '../internals/store/useSelector';
-import { useStore } from '../internals/store/useStore';
+
+import { useChartStore } from '../internals/store/useChartStore';
 import {
   AxisId,
   ChartsRadiusAxisProps,
@@ -34,8 +35,8 @@ import {
  * @returns `{ xAxis, xAxisIds }` - The x-axes and their IDs.
  */
 export function useXAxes() {
-  const store = useStore<[UseChartCartesianAxisSignature]>();
-  const { axis: xAxis, axisIds: xAxisIds } = useSelector(store, selectorChartXAxis);
+  const store = useChartStore<[UseChartCartesianAxisSignature]>();
+  const { axis: xAxis, axisIds: xAxisIds } = useStore(store, selectorChartXAxis);
 
   return { xAxis, xAxisIds };
 }
@@ -51,8 +52,8 @@ export function useXAxes() {
  * @returns `{ yAxis, yAxisIds }` - The y-axes and their IDs.
  */
 export function useYAxes() {
-  const store = useStore<[UseChartCartesianAxisSignature]>();
-  const { axis: yAxis, axisIds: yAxisIds } = useSelector(store, selectorChartYAxis);
+  const store = useChartStore<[UseChartCartesianAxisSignature]>();
+  const { axis: yAxis, axisIds: yAxisIds } = useStore(store, selectorChartYAxis);
 
   return { yAxis, yAxisIds };
 }
@@ -65,8 +66,8 @@ export function useYAxes() {
 export function useXAxis<T extends keyof AxisScaleConfig>(
   axisId?: AxisId,
 ): ComputedAxis<T, any, ChartsXAxisProps> {
-  const store = useStore<[UseChartCartesianAxisSignature]>();
-  const { axis: xAxis, axisIds: xAxisIds } = useSelector(store, selectorChartXAxis);
+  const store = useChartStore<[UseChartCartesianAxisSignature]>();
+  const { axis: xAxis, axisIds: xAxisIds } = useStore(store, selectorChartXAxis);
 
   const id = axisId ?? xAxisIds[0];
 
@@ -81,8 +82,8 @@ export function useXAxis<T extends keyof AxisScaleConfig>(
 export function useYAxis<T extends keyof AxisScaleConfig>(
   axisId?: AxisId,
 ): ComputedAxis<T, any, ChartsYAxisProps> {
-  const store = useStore<[UseChartCartesianAxisSignature]>();
-  const { axis: yAxis, axisIds: yAxisIds } = useSelector(store, selectorChartYAxis);
+  const store = useChartStore<[UseChartCartesianAxisSignature]>();
+  const { axis: yAxis, axisIds: yAxisIds } = useStore(store, selectorChartYAxis);
 
   const id = axisId ?? yAxisIds[0];
 
@@ -90,8 +91,8 @@ export function useYAxis<T extends keyof AxisScaleConfig>(
 }
 
 export function useRotationAxes() {
-  const store = useStore();
-  const { axis: rotationAxis, axisIds: rotationAxisIds } = useSelector(
+  const store = useChartStore();
+  const { axis: rotationAxis, axisIds: rotationAxisIds } = useStore(
     store,
     selectorChartRotationAxis,
   );
@@ -100,8 +101,8 @@ export function useRotationAxes() {
 }
 
 export function useRadiusAxes() {
-  const store = useStore();
-  const { axis: radiusAxis, axisIds: radiusAxisIds } = useSelector(store, selectorChartRadiusAxis);
+  const store = useChartStore();
+  const { axis: radiusAxis, axisIds: radiusAxisIds } = useStore(store, selectorChartRadiusAxis);
 
   return { radiusAxis, radiusAxisIds };
 }
@@ -109,8 +110,8 @@ export function useRadiusAxes() {
 export function useRotationAxis(
   identifier?: number | string,
 ): PolarAxisDefaultized<ScaleName, any, ChartsRotationAxisProps> | undefined {
-  const store = useStore<[UseChartPolarAxisSignature]>();
-  const { axis: rotationAxis, axisIds: rotationAxisIds } = useSelector(
+  const store = useChartStore<[UseChartPolarAxisSignature]>();
+  const { axis: rotationAxis, axisIds: rotationAxisIds } = useStore(
     store,
     selectorChartRotationAxis,
   );
@@ -123,8 +124,8 @@ export function useRotationAxis(
 export function useRadiusAxis(
   identifier?: number | string,
 ): PolarAxisDefaultized<ScaleName, any, ChartsRadiusAxisProps> | undefined {
-  const store = useStore<[UseChartPolarAxisSignature]>();
-  const { axis: radiusAxis, axisIds: radiusAxisIds } = useSelector(store, selectorChartRadiusAxis);
+  const store = useChartStore<[UseChartPolarAxisSignature]>();
+  const { axis: radiusAxis, axisIds: radiusAxisIds } = useStore(store, selectorChartRadiusAxis);
 
   const id = typeof identifier === 'string' ? identifier : radiusAxisIds[identifier ?? 0];
 

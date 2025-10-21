@@ -3,10 +3,10 @@ import { styled, SxProps, Theme, useThemeProps } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
+import { useStore } from '@mui/x-internals/store';
 import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
 import { useSvgRef } from '../hooks/useSvgRef';
-import { useSelector } from '../internals/store/useSelector';
-import { useStore } from '../internals/store/useStore';
+import { useChartStore } from '../internals/store/useChartStore';
 import {
   selectorChartContainerSize,
   selectorChartPropsSize,
@@ -79,11 +79,11 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
   inProps: ChartsSurfaceProps,
   ref: React.Ref<SVGSVGElement>,
 ) {
-  const store = useStore();
-  const { width: svgWidth, height: svgHeight } = useSelector(store, selectorChartContainerSize);
-  const { width: propsWidth, height: propsHeight } = useSelector(store, selectorChartPropsSize);
-  const isKeyboardNavigationEnabled = useSelector(store, selectorChartsIsKeyboardNavigationEnabled);
-  const hasFocusedItem = useSelector(store, selectorChartsHasFocusedItem);
+  const store = useChartStore();
+  const { width: svgWidth, height: svgHeight } = useStore(store, selectorChartContainerSize);
+  const { width: propsWidth, height: propsHeight } = useStore(store, selectorChartPropsSize);
+  const isKeyboardNavigationEnabled = useStore(store, selectorChartsIsKeyboardNavigationEnabled);
+  const hasFocusedItem = useStore(store, selectorChartsHasFocusedItem);
   const svgRef = useSvgRef();
   const handleRef = useForkRef(svgRef, ref);
   const themeProps = useThemeProps({ props: inProps, name: 'MuiChartsSurface' });

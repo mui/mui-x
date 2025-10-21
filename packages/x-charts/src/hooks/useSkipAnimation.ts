@@ -1,7 +1,7 @@
 'use client';
+import { useStore } from '@mui/x-internals/store';
 import { selectorChartSkipAnimation } from '../internals/plugins/corePlugins/useChartAnimation';
-import { useStore } from '../internals/store/useStore';
-import { useSelector } from '../internals/store/useSelector';
+import { useChartStore } from '../internals/store/useChartStore';
 
 /**
  * A hook to get if chart animations should be skipped.
@@ -9,8 +9,8 @@ import { useSelector } from '../internals/store/useSelector';
  * @returns {boolean} whether to skip animations
  */
 export function useSkipAnimation(skipAnimation?: boolean): boolean {
-  const store = useStore();
-  const storeSkipAnimation = useSelector(store, selectorChartSkipAnimation);
+  const store = useChartStore();
+  const storeSkipAnimation = useStore(store, selectorChartSkipAnimation);
 
   return skipAnimation || storeSkipAnimation;
 }

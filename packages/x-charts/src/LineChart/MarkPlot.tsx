@@ -1,6 +1,7 @@
 'use client';
 import PropTypes from 'prop-types';
 import * as React from 'react';
+import { useStore } from '@mui/x-internals/store';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { useChartId } from '../hooks/useChartId';
@@ -18,7 +19,7 @@ import {
   selectorChartsHighlightXAxisIndex,
   UseChartCartesianAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
-import { useSelector } from '../internals/store/useSelector';
+
 import { AxisId } from '../models/axis';
 
 export interface MarkPlotSlots {
@@ -75,7 +76,7 @@ function MarkPlot(props: MarkPlotProps) {
   const chartId = useChartId();
   const { instance, store } = useChartContext<[UseChartCartesianAxisSignature]>();
   const { isFaded, isHighlighted } = useItemHighlightedGetter();
-  const xAxisHighlightIndexes = useSelector(store, selectorChartsHighlightXAxisIndex);
+  const xAxisHighlightIndexes = useStore(store, selectorChartsHighlightXAxisIndex);
 
   const highlightedItems = React.useMemo(() => {
     const rep: Record<AxisId, Set<number>> = {};

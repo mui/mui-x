@@ -1,4 +1,5 @@
 'use client';
+import { useStore } from '@mui/x-internals/store';
 import { useSeries } from '../hooks/useSeries';
 import { useColorProcessor } from '../internals/plugins/corePlugins/useChartSeries/useColorProcessor';
 import { SeriesId } from '../models/seriesType/common';
@@ -8,8 +9,7 @@ import {
   PolarChartSeriesType,
 } from '../models/seriesType/config';
 import { ComputedAxis, PolarAxisDefaultized, AxisId } from '../models/axis';
-import { useStore } from '../internals/store/useStore';
-import { useSelector } from '../internals/store/useSelector';
+import { useChartStore } from '../internals/store/useChartStore';
 import { getLabel } from '../internals/getLabel';
 import { isCartesianSeriesType } from '../internals/isCartesian';
 import { utcFormatter } from './utils';
@@ -113,12 +113,12 @@ export function useAxisTooltip(
   const defaultYAxis = useYAxis();
   const defaultRotationAxis = useRotationAxis();
 
-  const store = useStore<[UseChartCartesianAxisSignature]>();
+  const store = useChartStore<[UseChartCartesianAxisSignature]>();
 
-  const tooltipXAxes = useSelector(store, selectorChartsInteractionTooltipXAxes);
-  const tooltipYAxes = useSelector(store, selectorChartsInteractionTooltipYAxes);
+  const tooltipXAxes = useStore(store, selectorChartsInteractionTooltipXAxes);
+  const tooltipYAxes = useStore(store, selectorChartsInteractionTooltipYAxes);
 
-  const tooltipRotationAxes = useSelector(store, selectorChartsInteractionTooltipRotationAxes);
+  const tooltipRotationAxes = useStore(store, selectorChartsInteractionTooltipRotationAxes);
 
   const series = useSeries();
 

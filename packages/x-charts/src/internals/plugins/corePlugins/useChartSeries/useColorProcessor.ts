@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
+import { useStore } from '@mui/x-internals/store';
 import { ChartSeriesType } from '../../../../models/seriesType/config';
-import { useSelector } from '../../../store/useSelector';
-import { useStore } from '../../../store/useStore';
+import { useChartStore } from '../../../store/useChartStore';
 import { selectorChartSeriesConfig } from './useChartSeries.selectors';
 import { ColorProcessor } from '../../models/seriesConfig';
 
@@ -13,8 +13,8 @@ export type ColorProcessorsConfig<T extends ChartSeriesType> = {
 export function useColorProcessor<T extends ChartSeriesType>(seriesType: T): ColorProcessor<T>;
 export function useColorProcessor(): ColorProcessorsConfig<ChartSeriesType>;
 export function useColorProcessor(seriesType?: ChartSeriesType) {
-  const store = useStore();
-  const seriesConfig = useSelector(store, selectorChartSeriesConfig);
+  const store = useChartStore();
+  const seriesConfig = useStore(store, selectorChartSeriesConfig);
 
   const colorProcessors = React.useMemo(() => {
     const rep: ColorProcessorsConfig<ChartSeriesType> = {};

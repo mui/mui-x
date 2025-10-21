@@ -1,7 +1,8 @@
 'use client';
 
-import { useStore } from '../internals/store/useStore';
-import { useSelector } from '../internals/store/useSelector';
+import { useStore } from '@mui/x-internals/store';
+import { useChartStore } from '../internals/store/useChartStore';
+
 import {
   selectorChartsIsFaded,
   selectorChartsIsHighlighted,
@@ -34,10 +35,10 @@ type UseItemHighlightedParams = HighlightItemData | null;
  * @returns {UseItemHighlightedReturnType} the state of the item
  */
 export function useItemHighlighted(item: UseItemHighlightedParams): UseItemHighlightedReturnType {
-  const store = useStore<[UseChartHighlightSignature]>();
+  const store = useChartStore<[UseChartHighlightSignature]>();
 
-  const isHighlighted = useSelector(store, selectorChartsIsHighlighted, [item]);
-  const isFaded = useSelector(store, selectorChartsIsFaded, [item]);
+  const isHighlighted = useStore(store, selectorChartsIsHighlighted, [item]);
+  const isFaded = useStore(store, selectorChartsIsFaded, [item]);
 
   return { isHighlighted, isFaded: !isHighlighted && isFaded };
 }

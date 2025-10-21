@@ -1,6 +1,6 @@
 'use client';
-import { useStore } from '../internals/store/useStore';
-import { useSelector } from '../internals/store/useSelector';
+import { useStore } from '@mui/x-internals/store';
+import { useChartStore } from '../internals/store/useChartStore';
 import { selectorChartSeriesProcessed } from '../internals/plugins/corePlugins/useChartSeries/useChartSeries.selectors';
 import { UseChartSeriesSignature } from '../internals/plugins/corePlugins/useChartSeries';
 
@@ -11,6 +11,6 @@ import { UseChartSeriesSignature } from '../internals/plugins/corePlugins/useCha
  * @returns FormattedSeries series
  */
 export function useSeries() {
-  const store = useStore<[UseChartSeriesSignature]>();
-  return useSelector(store, selectorChartSeriesProcessed);
+  const store = useChartStore<[UseChartSeriesSignature]>();
+  return useStore(store, selectorChartSeriesProcessed);
 }

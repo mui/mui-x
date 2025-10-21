@@ -1,3 +1,4 @@
+import { useStore } from '@mui/x-internals/store';
 import { useRotationScale } from '../../hooks/useScale';
 import { useRadiusAxes } from '../../hooks';
 import {
@@ -5,14 +6,13 @@ import {
   UseChartPolarAxisSignature,
 } from '../../internals/plugins/featurePlugins/useChartPolarAxis';
 import { useChartContext } from '../../context/ChartProvider/useChartContext';
-import { useSelector } from '../../internals/store/useSelector';
 
 export function useRadarGridData() {
   const { instance, store } = useChartContext<[UseChartPolarAxisSignature]>();
   const rotationScale = useRotationScale<'point'>();
   const { radiusAxis } = useRadiusAxes();
 
-  const { cx, cy } = useSelector(store, selectorChartPolarCenter);
+  const { cx, cy } = useStore(store, selectorChartPolarCenter);
 
   if (!rotationScale || rotationScale.domain().length === 0) {
     return null;

@@ -1,4 +1,5 @@
 import { warnOnce } from '@mui/x-internals/warning';
+import { useStore } from '@mui/x-internals/store';
 import { useRadiusAxes } from '../../hooks/useAxis';
 import { useRotationScale } from '../../hooks/useScale';
 import { useChartContext } from '../../context/ChartProvider/useChartContext';
@@ -9,7 +10,7 @@ import {
 import { isOrdinalScale } from '../../internals/scaleGuards';
 import { degToRad } from '../../internals/degToRad';
 import { clampAngle } from '../../internals/clampAngle';
-import { useSelector } from '../../internals/store/useSelector';
+
 import { rad2deg } from '../../internals/angleConversion';
 
 export interface UseRadarAxisParams {
@@ -40,7 +41,7 @@ export function useRadarAxis(params: UseRadarAxisParams) {
   const rotationScale = useRotationScale<'point'>();
   const { radiusAxis } = useRadiusAxes();
 
-  const { cx, cy } = useSelector(store, selectorChartPolarCenter);
+  const { cx, cy } = useStore(store, selectorChartPolarCenter);
 
   if (metric === undefined || !rotationScale || rotationScale.domain().length === 0) {
     return null;

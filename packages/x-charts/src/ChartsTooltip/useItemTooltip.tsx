@@ -1,9 +1,10 @@
 'use client';
+import { useStore } from '@mui/x-internals/store';
 import { useSeries } from '../hooks/useSeries';
 import { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/config';
 import { selectorChartsInteractionItem } from '../internals/plugins/featurePlugins/useChartInteraction';
-import { useSelector } from '../internals/store/useSelector';
-import { useStore } from '../internals/store/useStore';
+
+import { useChartStore } from '../internals/store/useChartStore';
 import { useRadiusAxes, useRotationAxes, useXAxes, useYAxes } from '../hooks/useAxis';
 import { useZAxes } from '../hooks/useZAxis';
 import { selectorChartSeriesConfig } from '../internals/plugins/corePlugins/useChartSeries/useChartSeries.selectors';
@@ -21,9 +22,9 @@ export type UseRadarItemTooltipReturnValue = ItemTooltipWithMultipleValues<'rada
 export function useInternalItemTooltip<T extends ChartSeriesType>():
   | (T extends 'radar' ? ItemTooltipWithMultipleValues<T> : ItemTooltip<T>)
   | null {
-  const store = useStore();
-  const identifier = useSelector(store, selectorChartsInteractionItem);
-  const seriesConfig = useSelector(store, selectorChartSeriesConfig);
+  const store = useChartStore();
+  const identifier = useStore(store, selectorChartsInteractionItem);
+  const seriesConfig = useStore(store, selectorChartSeriesConfig);
 
   const series = useSeries();
 

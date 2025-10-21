@@ -1,13 +1,13 @@
 import * as React from 'react';
 import {
   AxisId,
-  useSelector,
-  useStore,
   useLinePlotData,
   selectorChartPreviewComputedXAxis,
   selectorChartPreviewComputedYAxis,
   SeriesId,
+  useChartStore,
 } from '@mui/x-charts/internals';
+import { useStore } from '@mui/x-internals/store';
 import { PreviewPlotProps } from './PreviewPlot.types';
 
 interface LinePreviewPlotProps extends PreviewPlotProps {}
@@ -57,10 +57,10 @@ function PreviewLineElement({ id, color, gradientId, onClick, ...other }: Previe
 }
 
 function useLinePreviewData(axisId: AxisId) {
-  const store = useStore();
+  const store = useChartStore();
 
-  const xAxes = useSelector(store, selectorChartPreviewComputedXAxis, [axisId]);
-  const yAxes = useSelector(store, selectorChartPreviewComputedYAxis, [axisId]);
+  const xAxes = useStore(store, selectorChartPreviewComputedXAxis, axisId);
+  const yAxes = useStore(store, selectorChartPreviewComputedYAxis, axisId);
 
   return useLinePlotData(xAxes, yAxes);
 }

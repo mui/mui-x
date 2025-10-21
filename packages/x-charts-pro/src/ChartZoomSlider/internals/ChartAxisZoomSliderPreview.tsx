@@ -1,13 +1,9 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import {
-  AxisId,
-  selectorChartAxisZoomOptionsLookup,
-  useSelector,
-  useStore,
-} from '@mui/x-charts/internals';
+import { AxisId, selectorChartAxisZoomOptionsLookup, useChartStore } from '@mui/x-charts/internals';
 import { alpha } from '@mui/system';
 import useId from '@mui/utils/useId';
+import { useStore } from '@mui/x-internals/store';
 import { selectorChartAxisZoomData } from '../../internals/plugins/useChartProZoom';
 import { ChartAxisZoomSliderPreviewContent } from './ChartAxisZoomSliderPreviewContent';
 
@@ -52,10 +48,10 @@ function PreviewRectangles(props: {
   width: number;
 }) {
   const { axisId, axisDirection } = props;
-  const store = useStore();
+  const store = useChartStore();
 
-  const zoomData = useSelector(store, selectorChartAxisZoomData, [axisId]);
-  const zoomOptions = useSelector(store, selectorChartAxisZoomOptionsLookup, [axisId]);
+  const zoomData = useStore(store, selectorChartAxisZoomData, axisId);
+  const zoomOptions = useStore(store, selectorChartAxisZoomOptionsLookup, axisId);
   const id = useId();
 
   if (!zoomData) {

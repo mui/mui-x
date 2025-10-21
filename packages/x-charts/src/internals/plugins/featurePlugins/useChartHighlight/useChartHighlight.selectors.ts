@@ -1,7 +1,7 @@
 import { SeriesId } from '../../../../models/seriesType/common';
 import { ChartSeriesType } from '../../../../models/seriesType/config';
 import { UseChartSeriesSignature } from '../../corePlugins/useChartSeries/useChartSeries.types';
-import { ChartRootSelector, createSelector } from '../../utils/selectors';
+import { ChartRootSelector, createChartSelector } from '../../utils/selectors';
 import { HighlightItemData, UseChartHighlightSignature } from './useChartHighlight.types';
 import { HighlightScope } from './highlightConfig.types';
 import { createIsHighlighted } from './createIsHighlighted';
@@ -18,7 +18,7 @@ const selectHighlight: ChartRootSelector<UseChartHighlightSignature> = (state) =
 
 const selectSeries: ChartRootSelector<UseChartSeriesSignature> = (state) => state.series;
 
-export const selectorChartsHighlightScopePerSeriesId = createSelector(
+export const selectorChartsHighlightScopePerSeriesId = createChartSelector(
   [selectSeries],
   (series): Map<SeriesId, Partial<HighlightScope> | undefined> => {
     const map = new Map<SeriesId, Partial<HighlightScope> | undefined>();
@@ -34,14 +34,14 @@ export const selectorChartsHighlightScopePerSeriesId = createSelector(
   },
 );
 
-export const selectorChartsHighlightedItem = createSelector(
+export const selectorChartsHighlightedItem = createChartSelector(
   [selectHighlight, selectorChartsKeyboardItem],
   function selectorChartsHighlightedItem(highlight, keyboardItem) {
     return highlight.lastUpdate === 'pointer' ? highlight.item : keyboardItem;
   },
 );
 
-export const selectorChartsHighlightScope = createSelector(
+export const selectorChartsHighlightScope = createChartSelector(
   [selectorChartsHighlightScopePerSeriesId, selectorChartsHighlightedItem],
   function selectorChartsHighlightScope(seriesIdToHighlightScope, highlightedItem) {
     if (!highlightedItem) {
@@ -57,17 +57,17 @@ export const selectorChartsHighlightScope = createSelector(
   },
 );
 
-export const selectorChartsIsHighlightedCallback = createSelector(
+export const selectorChartsIsHighlightedCallback = createChartSelector(
   [selectorChartsHighlightScope, selectorChartsHighlightedItem],
   createIsHighlighted,
 );
 
-export const selectorChartsIsFadedCallback = createSelector(
+export const selectorChartsIsFadedCallback = createChartSelector(
   [selectorChartsHighlightScope, selectorChartsHighlightedItem],
   createIsFaded,
 );
 
-export const selectorChartsIsHighlighted = createSelector(
+export const selectorChartsIsHighlighted = createChartSelector(
   [
     selectorChartsHighlightScope,
     selectorChartsHighlightedItem,
@@ -78,7 +78,7 @@ export const selectorChartsIsHighlighted = createSelector(
   },
 );
 
-export const selectorChartIsSeriesHighlighted = createSelector(
+export const selectorChartIsSeriesHighlighted = createChartSelector(
   [
     selectorChartsHighlightScope,
     selectorChartsHighlightedItem,
@@ -87,7 +87,7 @@ export const selectorChartIsSeriesHighlighted = createSelector(
   isSeriesHighlighted,
 );
 
-export const selectorChartIsSeriesFaded = createSelector(
+export const selectorChartIsSeriesFaded = createChartSelector(
   [
     selectorChartsHighlightScope,
     selectorChartsHighlightedItem,
@@ -96,7 +96,7 @@ export const selectorChartIsSeriesFaded = createSelector(
   isSeriesFaded,
 );
 
-export const selectorChartSeriesUnfadedItem = createSelector(
+export const selectorChartSeriesUnfadedItem = createChartSelector(
   [
     selectorChartsHighlightScope,
     selectorChartsHighlightedItem,
@@ -105,7 +105,7 @@ export const selectorChartSeriesUnfadedItem = createSelector(
   getSeriesUnfadedItem,
 );
 
-export const selectorChartSeriesHighlightedItem = createSelector(
+export const selectorChartSeriesHighlightedItem = createChartSelector(
   [
     selectorChartsHighlightScope,
     selectorChartsHighlightedItem,
@@ -114,7 +114,7 @@ export const selectorChartSeriesHighlightedItem = createSelector(
   getSeriesHighlightedItem,
 );
 
-export const selectorChartsIsFaded = createSelector(
+export const selectorChartsIsFaded = createChartSelector(
   [
     selectorChartsHighlightScope,
     selectorChartsHighlightedItem,

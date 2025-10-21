@@ -1,6 +1,7 @@
 'use client';
-import { useStore } from '../internals/store/useStore';
-import { useSelector } from '../internals/store/useSelector';
+import { useStore } from '@mui/x-internals/store';
+import { useChartStore } from '../internals/store/useChartStore';
+
 import { selectorChartDrawingArea } from '../internals/plugins/corePlugins/useChartDimensions/useChartDimensions.selectors';
 
 export type ChartDrawingArea = {
@@ -38,6 +39,6 @@ export type ChartDrawingArea = {
  * @returns The drawing area dimensions.
  */
 export function useDrawingArea(): ChartDrawingArea {
-  const store = useStore();
-  return useSelector(store, selectorChartDrawingArea);
+  const store = useChartStore();
+  return useStore(store, selectorChartDrawingArea);
 }

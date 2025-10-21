@@ -1,8 +1,9 @@
+import { useStore } from '@mui/x-internals/store';
 import { useRadiusAxes } from '../../hooks/useAxis';
 import { useRadarSeries } from '../../hooks/useRadarSeries';
 import { useRotationScale } from '../../hooks/useScale';
-import { useSelector } from '../../internals/store/useSelector';
-import { useStore } from '../../internals/store/useStore';
+
+import { useChartStore } from '../../internals/store/useChartStore';
 import { useChartContext } from '../../context/ChartProvider/useChartContext';
 import {
   selectorChartPolarCenter,
@@ -68,11 +69,11 @@ export function useRadarAxisHighlight(): UseRadarAxisHighlightReturnValue | null
 
   const { instance } = useChartContext<[UseChartPolarAxisSignature]>();
 
-  const store = useStore<[UseChartPolarAxisSignature]>();
-  const rotationAxisIndex = useSelector(store, selectorChartsInteractionRotationAxisIndex);
-  const rotationAxisValue = useSelector(store, selectorChartsInteractionRotationAxisValue);
+  const store = useChartStore<[UseChartPolarAxisSignature]>();
+  const rotationAxisIndex = useStore(store, selectorChartsInteractionRotationAxisIndex);
+  const rotationAxisValue = useStore(store, selectorChartsInteractionRotationAxisValue);
 
-  const center = useSelector(store, selectorChartPolarCenter);
+  const center = useStore(store, selectorChartPolarCenter);
 
   const highlightedIndex = rotationAxisIndex;
 

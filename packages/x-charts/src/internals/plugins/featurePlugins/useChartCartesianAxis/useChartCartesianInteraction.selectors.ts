@@ -1,5 +1,5 @@
-import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
-import { createSelector } from '../../utils/selectors';
+// import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
+import { createChartSelector } from '../../utils/selectors';
 import { AxisId, AxisItemIdentifier, ChartsAxisProps } from '../../../../models/axis';
 import {
   selectorChartsInteractionPointerX,
@@ -38,17 +38,17 @@ export const selectChartsInteractionAxisIndex = (
   return index === -1 ? null : index;
 };
 
-export const selectorChartsInteractionXAxisIndex = createSelector(
+export const selectorChartsInteractionXAxisIndex = createChartSelector(
   [selectorChartsInteractionPointerX, selectorChartXAxis, optionalGetAxisId],
   selectChartsInteractionAxisIndex,
 );
 
-export const selectorChartsInteractionYAxisIndex = createSelector(
+export const selectorChartsInteractionYAxisIndex = createChartSelector(
   [selectorChartsInteractionPointerY, selectorChartYAxis, optionalGetAxisId],
   selectChartsInteractionAxisIndex,
 );
 
-export const selectorChartAxisInteraction = createSelector(
+export const selectorChartAxisInteraction = createChartSelector(
   [
     selectorChartsInteractionPointerX,
     selectorChartsInteractionPointerY,
@@ -104,7 +104,7 @@ function valueGetter(
     : getAxisValue(axes.axis[ids].scale, axes.axis[ids].data, value, indexes as number | null);
 }
 
-export const selectorChartsInteractionXAxisValue = createSelector(
+export const selectorChartsInteractionXAxisValue = createChartSelector(
   [
     selectorChartsInteractionPointerX,
     selectorChartXAxis,
@@ -119,7 +119,7 @@ export const selectorChartsInteractionXAxisValue = createSelector(
   },
 );
 
-export const selectorChartsInteractionYAxisValue = createSelector(
+export const selectorChartsInteractionYAxisValue = createChartSelector(
   [
     selectorChartsInteractionPointerY,
     selectorChartYAxis,
@@ -137,7 +137,7 @@ export const selectorChartsInteractionYAxisValue = createSelector(
 /**
  * Get x-axis ids and corresponding data index that should be display in the tooltip.
  */
-export const selectorChartsInteractionTooltipXAxes = createSelector(
+export const selectorChartsInteractionTooltipXAxes = createChartSelector(
   [selectorChartsInteractionPointerX, selectorChartXAxis],
   (value, axes) => {
     if (value === null) {
@@ -154,20 +154,20 @@ export const selectorChartsInteractionTooltipXAxes = createSelector(
       )
       .filter(({ dataIndex }) => dataIndex >= 0);
   },
-  {
-    memoizeOptions: {
-      // Keep the same reference if array content is the same.
-      // If possible, avoid this pattern by creating selectors that
-      // uses string/number as arguments.
-      resultEqualityCheck: isDeepEqual,
-    },
-  },
+  // {
+  //   memoizeOptions: {
+  //     // Keep the same reference if array content is the same.
+  //     // If possible, avoid this pattern by creating selectors that
+  //     // uses string/number as arguments.
+  //     resultEqualityCheck: isDeepEqual,
+  //   },
+  // },
 );
 
 /**
  * Get y-axis ids and corresponding data index that should be display in the tooltip.
  */
-export const selectorChartsInteractionTooltipYAxes = createSelector(
+export const selectorChartsInteractionTooltipYAxes = createChartSelector(
   [selectorChartsInteractionPointerY, selectorChartYAxis],
   (value, axes) => {
     if (value === null) {
@@ -184,20 +184,20 @@ export const selectorChartsInteractionTooltipYAxes = createSelector(
       )
       .filter(({ dataIndex }) => dataIndex >= 0);
   },
-  {
-    memoizeOptions: {
-      // Keep the same reference if array content is the same.
-      // If possible, avoid this pattern by creating selectors that
-      // uses string/number as arguments.
-      resultEqualityCheck: isDeepEqual,
-    },
-  },
+  // {
+  //   memoizeOptions: {
+  //     // Keep the same reference if array content is the same.
+  //     // If possible, avoid this pattern by creating selectors that
+  //     // uses string/number as arguments.
+  //     resultEqualityCheck: isDeepEqual,
+  //   },
+  // },
 );
 
 /**
  * Return `true` if the axis tooltip has something to display.
  */
-export const selectorChartsInteractionAxisTooltip = createSelector(
+export const selectorChartsInteractionAxisTooltip = createChartSelector(
   [selectorChartsInteractionTooltipXAxes, selectorChartsInteractionTooltipYAxes],
   (xTooltip, yTooltip) => xTooltip.length > 0 || yTooltip.length > 0,
 );

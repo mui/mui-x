@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
+import { useStore } from '@mui/x-internals/store';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { isOrdinalScale } from '../internals/scaleGuards';
-import { useSelector } from '../internals/store/useSelector';
-import { useStore } from '../internals/store/useStore';
+import { useChartStore } from '../internals/store/useChartStore';
 import {
   selectorChartsHighlightXAxisValue,
   selectorChartXAxis,
@@ -25,9 +25,9 @@ export default function ChartsXHighlight(props: {
 
   const { top, height } = useDrawingArea();
 
-  const store = useStore<[UseChartCartesianAxisSignature]>();
-  const axisXValues = useSelector(store, selectorChartsHighlightXAxisValue);
-  const xAxes = useSelector(store, selectorChartXAxis);
+  const store = useChartStore<[UseChartCartesianAxisSignature]>();
+  const axisXValues = useStore(store, selectorChartsHighlightXAxisValue);
+  const xAxes = useStore(store, selectorChartXAxis);
 
   if (axisXValues.length === 0) {
     return null;

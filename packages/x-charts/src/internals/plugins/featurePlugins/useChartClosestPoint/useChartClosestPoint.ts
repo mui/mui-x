@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useStore } from '@mui/x-internals/store';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { PointerGestureEventData } from '@mui/x-internal-gestures/core';
@@ -7,7 +8,6 @@ import { ChartPlugin } from '../../models';
 import { SeriesId } from '../../../../models/seriesType/common';
 import { UseChartClosestPointSignature } from './useChartClosestPoint.types';
 import { getSVGPoint } from '../../../getSVGPoint';
-import { useSelector } from '../../../store/useSelector';
 import {
   selectorChartAxisZoomData,
   selectorChartSeriesEmptyFlatbushMap,
@@ -27,14 +27,14 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
   instance,
 }) => {
   const { disableVoronoi, voronoiMaxRadius, onItemClick } = params;
-  const drawingArea = useSelector(store, selectorChartDrawingArea);
+  const drawingArea = useStore(store, selectorChartDrawingArea);
 
-  const { axis: xAxis, axisIds: xAxisIds } = useSelector(store, selectorChartXAxis);
-  const { axis: yAxis, axisIds: yAxisIds } = useSelector(store, selectorChartYAxis);
-  const zoomIsInteracting = useSelector(store, selectorChartZoomIsInteracting);
+  const { axis: xAxis, axisIds: xAxisIds } = useStore(store, selectorChartXAxis);
+  const { axis: yAxis, axisIds: yAxisIds } = useStore(store, selectorChartYAxis);
+  const zoomIsInteracting = useStore(store, selectorChartZoomIsInteracting);
 
-  const { series, seriesOrder } = useSelector(store, selectorChartSeriesProcessed)?.scatter ?? {};
-  const flatbushMap = useSelector(
+  const { series, seriesOrder } = useStore(store, selectorChartSeriesProcessed)?.scatter ?? {};
+  const flatbushMap = useStore(
     store,
     zoomIsInteracting ? selectorChartSeriesEmptyFlatbushMap : selectorChartSeriesFlatbushMap,
   );

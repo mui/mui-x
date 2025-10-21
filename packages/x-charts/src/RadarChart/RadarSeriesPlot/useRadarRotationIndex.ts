@@ -1,10 +1,10 @@
 import * as React from 'react';
+import { useStore } from '@mui/x-internals/store';
 import { selectorChartPolarCenter } from '../../internals/plugins/featurePlugins/useChartPolarAxis';
 import { getSVGPoint } from '../../internals/getSVGPoint';
 import { generateSvg2rotation } from '../../internals/plugins/featurePlugins/useChartPolarAxis/coordinateTransformation';
-import { useSelector } from '../../internals/store/useSelector';
 import { getAxisIndex } from '../../internals/plugins/featurePlugins/useChartPolarAxis/getAxisIndex';
-import { useStore } from '../../internals/store/useStore';
+import { useChartStore } from '../../internals/store/useChartStore';
 import { useSvgRef } from '../../hooks/useSvgRef';
 import { useRotationAxis } from '../../hooks/useAxis';
 
@@ -15,10 +15,10 @@ import { useRotationAxis } from '../../hooks/useAxis';
 export function useRadarRotationIndex() {
   const svgRef = useSvgRef();
 
-  const store = useStore();
+  const store = useChartStore();
   const rotationAxis = useRotationAxis();
 
-  const center = useSelector(store, selectorChartPolarCenter);
+  const center = useStore(store, selectorChartPolarCenter);
 
   const rotationIndexGetter = React.useCallback(
     function rotationIndexGetter(event: { clientX: number; clientY: number }) {

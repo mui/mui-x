@@ -1,6 +1,7 @@
 'use client';
-import { useStore } from '../internals/store/useStore';
-import { useSelector } from '../internals/store/useSelector';
+import { useStore } from '@mui/x-internals/store';
+import { useChartStore } from '../internals/store/useChartStore';
+
 import { selectorChartId } from '../internals/plugins/corePlugins/useChartId/useChartId.selectors';
 
 /**
@@ -8,6 +9,6 @@ import { selectorChartId } from '../internals/plugins/corePlugins/useChartId/use
  * @returns chartId if it exists.
  */
 export function useChartId(): string | undefined {
-  const store = useStore();
-  return useSelector(store, selectorChartId);
+  const store = useChartStore();
+  return useStore(store, selectorChartId);
 }

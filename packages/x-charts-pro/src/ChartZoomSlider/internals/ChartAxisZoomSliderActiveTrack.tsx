@@ -8,15 +8,15 @@ import {
   selectorChartAxis,
   selectorChartAxisZoomOptionsLookup,
   useChartContext,
+  useChartStore,
   useDrawingArea,
-  useSelector,
-  useStore,
   ZoomData,
 } from '@mui/x-charts/internals';
 import * as React from 'react';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
 import { ChartDrawingArea } from '@mui/x-charts/hooks';
 import { shouldForwardProp } from '@mui/system';
+import { useStore } from '@mui/x-internals/store';
 import {
   selectorChartAxisZoomData,
   UseChartProZoomSignature,
@@ -74,8 +74,8 @@ export function ChartAxisZoomSliderActiveTrack({
   onPointerLeave,
 }: ChartAxisZoomSliderActiveTrackProps) {
   const { instance, svgRef } = useChartContext<[UseChartProZoomSignature]>();
-  const store = useStore<[UseChartProZoomSignature]>();
-  const axis = useSelector(store, selectorChartAxis, [axisId]);
+  const store = useChartStore<[UseChartProZoomSignature]>();
+  const axis = useStore(store, selectorChartAxis, axisId);
   const drawingArea = useDrawingArea();
   const activePreviewRectRef = React.useRef<SVGRectElement>(null);
   const [startThumbEl, setStartThumbEl] = React.useState<SVGRectElement | null>(null);

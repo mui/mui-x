@@ -63,9 +63,7 @@ export function useCharts<
   const innerChartRootRef = React.useRef<HTMLDivElement>(null);
   const innerSvgRef = React.useRef<SVGSVGElement>(null);
 
-  const storeRef = React.useRef<Store<ChartState<TSignaturesWithCorePluginSignatures>> | null>(
-    null,
-  );
+  const storeRef = React.useRef<Store<ChartState<TSignaturesWithCorePluginSignatures>>>(null);
   if (storeRef.current == null) {
     // eslint-disable-next-line react-compiler/react-compiler
     globalId += 1;
@@ -111,7 +109,7 @@ export function useCharts<
 
   const contextValue = React.useMemo(
     () => ({
-      store: storeRef.current,
+      store: storeRef.current!,
       publicAPI: publicAPI.current,
       instance,
       svgRef: innerSvgRef,

@@ -4,6 +4,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { useTheme } from '@mui/material/styles';
 
+import { useStore } from '@mui/x-internals/store';
 import { brushOverlayClasses } from './ChartsBrushOverlay.classes';
 import { selectorChartDrawingArea } from '../internals/plugins/corePlugins/useChartDimensions';
 import {
@@ -14,8 +15,8 @@ import {
   selectorBrushCurrentY,
   selectorBrushConfig,
 } from '../internals/plugins/featurePlugins/useChartBrush';
-import { useSelector } from '../internals/store/useSelector';
-import { useStore } from '../internals/store/useStore';
+
+import { useChartStore } from '../internals/store/useChartStore';
 
 function BrushRect(props: React.SVGProps<SVGRectElement>) {
   return (
@@ -35,16 +36,16 @@ export interface ChartsBrushOverlayProps {}
  * Component that renders visual feedback during brush interaction
  */
 export function ChartsBrushOverlay(props: ChartsBrushOverlayProps) {
-  const store = useStore<[UseChartBrushSignature]>();
-  const drawingArea = useSelector(store, selectorChartDrawingArea);
+  const store = useChartStore<[UseChartBrushSignature]>();
+  const drawingArea = useStore(store, selectorChartDrawingArea);
 
   const theme = useTheme();
 
-  const brushStartX = useSelector(store, selectorBrushStartX);
-  const brushStartY = useSelector(store, selectorBrushStartY);
-  const brushCurrentX = useSelector(store, selectorBrushCurrentX);
-  const brushCurrentY = useSelector(store, selectorBrushCurrentY);
-  const brushConfig = useSelector(store, selectorBrushConfig);
+  const brushStartX = useStore(store, selectorBrushStartX);
+  const brushStartY = useStore(store, selectorBrushStartY);
+  const brushCurrentX = useStore(store, selectorBrushCurrentX);
+  const brushCurrentY = useStore(store, selectorBrushCurrentY);
+  const brushConfig = useStore(store, selectorBrushConfig);
 
   if (
     brushStartX === null ||

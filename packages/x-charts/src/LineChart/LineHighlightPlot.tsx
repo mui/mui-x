@@ -2,8 +2,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import { useStore } from '../internals/store/useStore';
-import { useSelector } from '../internals/store/useSelector';
+import { useStore } from '@mui/x-internals/store';
+import { useChartStore } from '../internals/store/useChartStore';
+
 import { LineHighlightElement, LineHighlightElementProps } from './LineHighlightElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
@@ -56,8 +57,8 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
 
   const { instance } = useChartContext();
 
-  const store = useStore<[UseChartCartesianAxisSignature]>();
-  const highlightedIndexes = useSelector(store, selectorChartsHighlightXAxisIndex);
+  const store = useChartStore<[UseChartCartesianAxisSignature]>();
+  const highlightedIndexes = useStore(store, selectorChartsHighlightXAxisIndex);
 
   if (highlightedIndexes.length === 0) {
     return null;

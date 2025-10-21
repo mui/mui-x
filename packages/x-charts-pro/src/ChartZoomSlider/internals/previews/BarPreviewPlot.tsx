@@ -1,11 +1,11 @@
 import * as React from 'react';
+import { useStore } from '@mui/x-internals/store';
 import {
   AxisId,
   selectorChartPreviewComputedXAxis,
   selectorChartPreviewComputedYAxis,
   useBarPlotData,
-  useSelector,
-  useStore,
+  useChartStore,
 } from '@mui/x-charts/internals';
 import { ChartDrawingArea } from '@mui/x-charts/hooks';
 import { BarElement } from '@mui/x-charts/BarChart';
@@ -59,10 +59,10 @@ export function BarPreviewPlot(props: BarPreviewPlotProps) {
 }
 
 function useBarPreviewData(axisId: AxisId, drawingArea: ChartDrawingArea) {
-  const store = useStore();
+  const store = useChartStore();
 
-  const xAxes = useSelector(store, selectorChartPreviewComputedXAxis, [axisId]);
-  const yAxes = useSelector(store, selectorChartPreviewComputedYAxis, [axisId]);
+  const xAxes = useStore(store, selectorChartPreviewComputedXAxis, axisId);
+  const yAxes = useStore(store, selectorChartPreviewComputedYAxis, axisId);
 
   return useBarPlotData(drawingArea, xAxes, yAxes);
 }

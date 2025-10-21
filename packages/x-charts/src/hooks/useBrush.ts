@@ -1,9 +1,10 @@
+import { useStore } from '@mui/x-internals/store';
 import {
   selectorBrushState,
   type UseChartBrushSignature,
 } from '../internals/plugins/featurePlugins/useChartBrush';
-import { useSelector } from '../internals/store/useSelector';
-import { useStore } from '../internals/store/useStore';
+
+import { useChartStore } from '../internals/store/useChartStore';
 
 /**
  * Get the current brush state.
@@ -14,7 +15,7 @@ import { useStore } from '../internals/store/useStore';
  * @returns `{ start, current }` - The brush state.
  */
 export function useBrush() {
-  const store = useStore<[UseChartBrushSignature]>();
+  const store = useChartStore<[UseChartBrushSignature]>();
 
-  return useSelector(store, selectorBrushState);
+  return useStore(store, selectorBrushState);
 }

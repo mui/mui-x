@@ -1,15 +1,16 @@
-import { ChartRootSelector, createSelector } from '../../utils/selectors';
+import { createChartSelector } from '../../utils/selectors';
 import { UseChartSeriesSignature } from './useChartSeries.types';
+import { ChartState } from '../../models';
 
-export const selectorChartSeriesState: ChartRootSelector<UseChartSeriesSignature> = (state) =>
+export const selectorChartSeriesState = (state: ChartState<[UseChartSeriesSignature]>) =>
   state.series;
 
-export const selectorChartSeriesProcessed = createSelector(
+export const selectorChartSeriesProcessed = createChartSelector(
   [selectorChartSeriesState],
   (seriesState) => seriesState.processedSeries,
 );
 
-export const selectorChartSeriesConfig = createSelector(
+export const selectorChartSeriesConfig = createChartSelector(
   [selectorChartSeriesState],
   (seriesState) => seriesState.seriesConfig,
 );

@@ -2,11 +2,12 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled, SxProps, Theme } from '@mui/material/styles';
 import { shouldForwardProp } from '@mui/system/createStyled';
+import { useStore } from '@mui/x-internals/store';
 import { useChartRootRef } from '../hooks/useChartRootRef';
 import { Direction } from '../ChartsLegend';
 import { Position } from '../models';
-import { useStore } from '../internals/store/useStore';
-import { useSelector } from '../internals/store/useSelector';
+import { useChartStore } from '../internals/store/useChartStore';
+
 import { selectorChartPropsSize } from '../internals/plugins/corePlugins/useChartDimensions';
 import { chartsToolbarClasses } from '../Toolbar';
 
@@ -180,8 +181,8 @@ function ChartsWrapper(props: ChartsWrapperProps) {
   const { children, sx, extendVertically } = props;
   const chartRootRef = useChartRootRef();
 
-  const store = useStore();
-  const { width: propsWidth, height: propsHeight } = useSelector(store, selectorChartPropsSize);
+  const store = useChartStore();
+  const { width: propsWidth, height: propsHeight } = useStore(store, selectorChartPropsSize);
 
   return (
     <Root

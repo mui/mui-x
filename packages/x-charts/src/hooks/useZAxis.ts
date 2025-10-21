@@ -1,14 +1,14 @@
 'use client';
-import { useStore } from '../internals/store/useStore';
+import { useStore } from '@mui/x-internals/store';
+import { useChartStore } from '../internals/store/useChartStore';
 import {
   selectorChartZAxis,
   UseChartZAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartZAxis';
-import { useSelector } from '../internals/store/useSelector';
 
 export function useZAxes() {
-  const store = useStore<[UseChartZAxisSignature]>();
-  const { axis: zAxis, axisIds: zAxisIds } = useSelector(store, selectorChartZAxis) ?? {
+  const store = useChartStore<[UseChartZAxisSignature]>();
+  const { axis: zAxis, axisIds: zAxisIds } = useStore(store, selectorChartZAxis) ?? {
     axis: {},
     axisIds: [],
   };

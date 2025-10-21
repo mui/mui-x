@@ -1,4 +1,4 @@
-import { createSelector, type ChartOptionalRootSelector } from '../../utils/selectors';
+import { createChartSelector, type ChartOptionalRootSelector } from '../../utils/selectors';
 import { selectorChartZoomOptionsLookup } from '../useChartCartesianAxis';
 import type { UseChartBrushSignature } from './useChartBrush.types';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';
@@ -6,31 +6,31 @@ import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';
 export const selectorBrush: ChartOptionalRootSelector<UseChartBrushSignature> = (state) =>
   state.brush;
 
-export const selectorBrushStart = createSelector([selectorBrush], (brush) => brush?.start);
+export const selectorBrushStart = createChartSelector([selectorBrush], (brush) => brush?.start);
 
-export const selectorBrushCurrent = createSelector([selectorBrush], (brush) => brush?.current);
+export const selectorBrushCurrent = createChartSelector([selectorBrush], (brush) => brush?.current);
 
-export const selectorBrushStartX = createSelector(
+export const selectorBrushStartX = createChartSelector(
   [selectorBrush],
   (brush) => brush?.start?.x ?? null,
 );
 
-export const selectorBrushStartY = createSelector(
+export const selectorBrushStartY = createChartSelector(
   [selectorBrush],
   (brush) => brush?.start?.y ?? null,
 );
 
-export const selectorBrushCurrentX = createSelector(
+export const selectorBrushCurrentX = createChartSelector(
   [selectorBrush],
   (brush) => brush?.current?.x ?? null,
 );
 
-export const selectorBrushCurrentY = createSelector(
+export const selectorBrushCurrentY = createChartSelector(
   [selectorBrush],
   (brush) => brush?.current?.y ?? null,
 );
 
-export const selectorBrushState = createSelector(
+export const selectorBrushState = createChartSelector(
   [selectorBrushStartX, selectorBrushStartY, selectorBrushCurrentX, selectorBrushCurrentY],
   (startX, startY, currentX, currentY) => {
     if (startX === null || startY === null || currentX === null || currentY === null) {
@@ -43,7 +43,7 @@ export const selectorBrushState = createSelector(
   },
 );
 
-export const selectorBrushConfigNoZoom = createSelector(
+export const selectorBrushConfigNoZoom = createChartSelector(
   [selectorChartSeriesProcessed],
   (series) => {
     let hasHorizontal = false;
@@ -68,7 +68,7 @@ export const selectorBrushConfigNoZoom = createSelector(
   },
 );
 
-export const selectorBrushConfigZoom = createSelector(
+export const selectorBrushConfigZoom = createChartSelector(
   [selectorChartZoomOptionsLookup],
   (optionsLookup) => {
     let hasX = false;
@@ -94,23 +94,26 @@ export const selectorBrushConfigZoom = createSelector(
   },
 );
 
-export const selectorBrushConfig = createSelector(
+export const selectorBrushConfig = createChartSelector(
   [selectorBrushConfigNoZoom, selectorBrushConfigZoom],
   (configNoZoom, configZoom) => configZoom ?? configNoZoom,
 );
 
-export const selectorIsBrushEnabled = createSelector([selectorBrush], (brush) => brush?.enabled);
+export const selectorIsBrushEnabled = createChartSelector(
+  [selectorBrush],
+  (brush) => brush?.enabled,
+);
 
-export const selectorIsBrushSelectionActive = createSelector([selectorBrush], (brush) => {
+export const selectorIsBrushSelectionActive = createChartSelector([selectorBrush], (brush) => {
   return brush?.enabled && brush?.start !== null && brush?.current !== null;
 });
 
-export const selectorBrushShouldPreventAxisHighlight = createSelector(
+export const selectorBrushShouldPreventAxisHighlight = createChartSelector(
   [selectorBrush, selectorIsBrushSelectionActive],
   (brush, isBrushSelectionActive) => isBrushSelectionActive && brush?.preventHighlight,
 );
 
-export const selectorBrushShouldPreventTooltip = createSelector(
+export const selectorBrushShouldPreventTooltip = createChartSelector(
   [selectorBrush, selectorIsBrushSelectionActive],
   (brush, isBrushSelectionActive) => isBrushSelectionActive && brush?.preventTooltip,
 );

@@ -1,10 +1,10 @@
 'use client';
 import * as React from 'react';
+import { useStore } from '@mui/x-internals/store';
 import { warnOnce } from '@mui/x-internals/warning';
 import { PointerGestureEventData } from '@mui/x-internal-gestures/core';
 import { ChartPlugin } from '../../models';
 import { UseChartPolarAxisSignature } from './useChartPolarAxis.types';
-import { useSelector } from '../../../store/useSelector';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions/useChartDimensions.selectors';
 import { defaultizeAxis } from './defaultizeAxis';
 import { selectorChartsInteractionIsInitialized } from '../useChartInteraction';
@@ -48,15 +48,15 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
     }
   }
 
-  const drawingArea = useSelector(store, selectorChartDrawingArea);
-  const processedSeries = useSelector(store, selectorChartSeriesProcessed);
-  const center = useSelector(store, selectorChartPolarCenter);
-  const isInteractionEnabled = useSelector(store, selectorChartsInteractionIsInitialized);
-  const { axis: rotationAxisWithScale, axisIds: rotationAxisIds } = useSelector(
+  const drawingArea = useStore(store, selectorChartDrawingArea);
+  const processedSeries = useStore(store, selectorChartSeriesProcessed);
+  const center = useStore(store, selectorChartPolarCenter);
+  const isInteractionEnabled = useStore(store, selectorChartsInteractionIsInitialized);
+  const { axis: rotationAxisWithScale, axisIds: rotationAxisIds } = useStore(
     store,
     selectorChartRotationAxis,
   );
-  const { axis: radiusAxisWithScale, axisIds: radiusAxisIds } = useSelector(
+  const { axis: radiusAxisWithScale, axisIds: radiusAxisIds } = useStore(
     store,
     selectorChartRadiusAxis,
   );

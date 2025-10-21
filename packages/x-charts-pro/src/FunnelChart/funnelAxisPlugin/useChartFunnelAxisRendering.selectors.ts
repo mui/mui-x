@@ -1,5 +1,5 @@
 import {
-  createSelector,
+  createChartSelector,
   selectorChartSeriesConfig,
   selectorChartSeriesProcessed,
   selectorChartDrawingArea,
@@ -13,9 +13,12 @@ import { UseChartFunnelAxisSignature } from './useChartFunnelAxis.types';
 export const selectorFunnel = (state: ChartState<[], [UseChartFunnelAxisSignature]>) =>
   state.funnel;
 
-export const selectorFunnelGap = createSelector([selectorFunnel], (funnel) => funnel?.gap ?? 0);
+export const selectorFunnelGap = createChartSelector(
+  [selectorFunnel],
+  (funnel) => funnel?.gap ?? 0,
+);
 
-export const selectorChartXAxis = createSelector(
+export const selectorChartXAxis = createChartSelector(
   [
     selectorChartRawXAxis,
     selectorChartDrawingArea,
@@ -34,7 +37,7 @@ export const selectorChartXAxis = createSelector(
     }),
 );
 
-export const selectorChartYAxis = createSelector(
+export const selectorChartYAxis = createChartSelector(
   [
     selectorChartRawYAxis,
     selectorChartDrawingArea,

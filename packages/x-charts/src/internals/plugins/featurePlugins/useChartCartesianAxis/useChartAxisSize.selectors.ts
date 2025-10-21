@@ -2,9 +2,9 @@ import {
   selectorChartRawXAxis,
   selectorChartRawYAxis,
 } from './useChartCartesianAxisLayout.selectors';
-import { createSelector } from '../../utils/selectors';
+import { createChartSelector } from '../../utils/selectors';
 
-export const selectorChartLeftAxisSize = createSelector([selectorChartRawYAxis], (yAxis) =>
+export const selectorChartLeftAxisSize = createChartSelector([selectorChartRawYAxis], (yAxis) =>
   (yAxis ?? []).reduce(
     (acc, axis) =>
       axis.position === 'left'
@@ -14,7 +14,7 @@ export const selectorChartLeftAxisSize = createSelector([selectorChartRawYAxis],
   ),
 );
 
-export const selectorChartRightAxisSize = createSelector([selectorChartRawYAxis], (yAxis) =>
+export const selectorChartRightAxisSize = createChartSelector([selectorChartRawYAxis], (yAxis) =>
   (yAxis ?? []).reduce(
     (acc, axis) =>
       axis.position === 'right'
@@ -24,7 +24,7 @@ export const selectorChartRightAxisSize = createSelector([selectorChartRawYAxis]
   ),
 );
 
-export const selectorChartTopAxisSize = createSelector([selectorChartRawXAxis], (xAxis) =>
+export const selectorChartTopAxisSize = createChartSelector([selectorChartRawXAxis], (xAxis) =>
   (xAxis ?? []).reduce(
     (acc, axis) =>
       axis.position === 'top'
@@ -34,7 +34,7 @@ export const selectorChartTopAxisSize = createSelector([selectorChartRawXAxis], 
   ),
 );
 
-export const selectorChartBottomAxisSize = createSelector([selectorChartRawXAxis], (xAxis) =>
+export const selectorChartBottomAxisSize = createChartSelector([selectorChartRawXAxis], (xAxis) =>
   (xAxis ?? []).reduce(
     (acc, axis) =>
       axis.position === 'bottom'

@@ -1,10 +1,11 @@
 'use client';
-import { useSelector } from '../internals/store/useSelector';
-import { useStore } from '../internals/store/useStore';
+import { useStore } from '@mui/x-internals/store';
+import { useChartStore } from '../internals/store/useChartStore';
 import {
   selectorChartsIsFadedCallback,
   selectorChartsIsHighlightedCallback,
 } from '../internals/plugins/featurePlugins/useChartHighlight/useChartHighlight.selectors';
+import { UseChartHighlightSignature } from '../plugins';
 
 /**
  * A hook to check the highlighted state of multiple items.
@@ -15,10 +16,10 @@ import {
  * @returns {{ isHighlighted, isFaded }} callbacks to get the state of the item.
  */
 export function useItemHighlightedGetter() {
-  const store = useStore();
+  const store = useChartStore<[UseChartHighlightSignature]>();
 
-  const isHighlighted = useSelector(store, selectorChartsIsHighlightedCallback);
-  const isFaded = useSelector(store, selectorChartsIsFadedCallback);
+  const isHighlighted = useStore(store, selectorChartsIsHighlightedCallback);
+  const isFaded = useStore(store, selectorChartsIsFadedCallback);
   return {
     isHighlighted,
     isFaded,

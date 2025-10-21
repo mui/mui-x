@@ -1,13 +1,13 @@
 'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
+import { useStore } from '@mui/x-internals/store';
 import { DefaultizedScatterSeriesType } from '../models/seriesType/scatter';
 import { D3Scale } from '../models/axis';
 import { ScatterClasses, useUtilityClasses } from './scatterClasses';
 import { useChartContext } from '../context/ChartProvider';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { ColorGetter } from '../internals/plugins/models/seriesConfig';
-import { useSelector } from '../internals/store/useSelector';
 import {
   selectorChartIsSeriesFaded,
   selectorChartIsSeriesHighlighted,
@@ -147,10 +147,10 @@ export function BatchScatter(props: BatchScatterProps) {
   const { series, xScale, yScale, color, colorGetter, classes: inClasses } = props;
 
   const { store } = useChartContext<[UseChartHighlightSignature]>();
-  const isSeriesHighlighted = useSelector(store, selectorChartIsSeriesHighlighted, [series.id]);
-  const isSeriesFaded = useSelector(store, selectorChartIsSeriesFaded, [series.id]);
-  const seriesHighlightedItem = useSelector(store, selectorChartSeriesHighlightedItem, [series.id]);
-  const seriesUnfadedItem = useSelector(store, selectorChartSeriesUnfadedItem, [series.id]);
+  const isSeriesHighlighted = useStore(store, selectorChartIsSeriesHighlighted, [series.id]);
+  const isSeriesFaded = useStore(store, selectorChartIsSeriesFaded, [series.id]);
+  const seriesHighlightedItem = useStore(store, selectorChartSeriesHighlightedItem, [series.id]);
+  const seriesUnfadedItem = useStore(store, selectorChartSeriesUnfadedItem, [series.id]);
   const highlightedModifier = 1.2;
   const markerSize = series.markerSize * (isSeriesHighlighted ? highlightedModifier : 1);
   const classes = useUtilityClasses(inClasses);

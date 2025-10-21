@@ -1,11 +1,12 @@
 'use client';
+import { useStore } from '@mui/x-internals/store';
 import { selectorChartRawXAxis } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import {
   selectorChartRawRotationAxis,
   UseChartPolarAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartPolarAxis';
-import { useSelector } from '../internals/store/useSelector';
-import { useStore } from '../internals/store/useStore';
+
+import { useChartStore } from '../internals/store/useChartStore';
 
 /**
  * @internals
@@ -15,9 +16,9 @@ import { useStore } from '../internals/store/useStore';
  * @returns The coordinate system
  */
 export function useAxisSystem(): 'none' | 'polar' | 'cartesian' {
-  const store = useStore<[UseChartPolarAxisSignature]>();
-  const rawRotationAxis = useSelector(store, selectorChartRawRotationAxis);
-  const rawXAxis = useSelector(store, selectorChartRawXAxis);
+  const store = useChartStore<[UseChartPolarAxisSignature]>();
+  const rawRotationAxis = useStore(store, selectorChartRawRotationAxis);
+  const rawXAxis = useStore(store, selectorChartRawXAxis);
 
   if (rawRotationAxis !== undefined) {
     return 'polar';

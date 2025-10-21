@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
+import { useStore } from '@mui/x-internals/store';
 import {
   ChartPlugin,
-  useSelector,
   getSVGPoint,
   selectorChartDrawingArea,
   ZoomData,
@@ -27,11 +27,11 @@ export const useZoomOnWheel = (
   }: Pick<Parameters<ChartPlugin<UseChartProZoomSignature>>[0], 'store' | 'instance' | 'svgRef'>,
   setZoomDataCallback: React.Dispatch<ZoomData[] | ((prev: ZoomData[]) => ZoomData[])>,
 ) => {
-  const drawingArea = useSelector(store, selectorChartDrawingArea);
-  const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
+  const drawingArea = useStore(store, selectorChartDrawingArea);
+  const optionsLookup = useStore(store, selectorChartZoomOptionsLookup);
   const startedOutsideRef = React.useRef(false);
   const startedOutsideTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
-  const config = useSelector(store, selectorZoomInteractionConfig, ['wheel' as const]);
+  const config = useStore(store, selectorZoomInteractionConfig, ['wheel' as const]);
 
   const isZoomOnWheelEnabled = React.useMemo(
     () => (Object.keys(optionsLookup).length > 0 && config) || false,

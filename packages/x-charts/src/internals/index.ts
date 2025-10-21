@@ -38,8 +38,7 @@ export { getAxisTriggerTooltip as getCartesianAxisTriggerTooltip } from './plugi
 export { getAxisIndex as getCartesianAxisIndex } from './plugins/featurePlugins/useChartCartesianAxis/getAxisValue';
 
 export * from './store/useCharts';
-export * from './store/useStore';
-export * from './store/useSelector';
+export * from './store/useChartStore';
 
 // plugins configs
 
