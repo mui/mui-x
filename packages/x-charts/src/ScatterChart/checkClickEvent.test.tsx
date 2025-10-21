@@ -3,6 +3,7 @@ import { createRenderer } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { isJSDOM } from 'test/utils/skipIf';
+import { CHART_SELECTOR } from '../tests/constants';
 
 const config = {
   dataset: [
@@ -48,7 +49,7 @@ describe('ScatterChart - click event', () => {
           />
         </div>,
       );
-      const svg = document.querySelector<HTMLElement>('svg')!;
+      const svg = document.querySelector<HTMLElement>(CHART_SELECTOR)!;
 
       await user.pointer([
         {
@@ -134,7 +135,7 @@ describe('ScatterChart - click event', () => {
           />
         </div>,
       );
-      const svg = document.querySelector<HTMLElement>('svg')!;
+      const svg = document.querySelector<HTMLElement>(CHART_SELECTOR)!;
 
       await user.pointer([
         {

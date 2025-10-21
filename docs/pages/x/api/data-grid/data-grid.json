@@ -2090,6 +2090,24 @@
       "isGlobal": false
     },
     {
+      "key": "scrollShadow",
+      "className": "MuiDataGrid-scrollShadow",
+      "description": "Styles applied to the scroll shadow element.",
+      "isGlobal": false
+    },
+    {
+      "key": "scrollShadow--horizontal",
+      "className": "MuiDataGrid-scrollShadow--horizontal",
+      "description": "Styles applied to the horizontal scroll shadow element.",
+      "isGlobal": false
+    },
+    {
+      "key": "scrollShadow--vertical",
+      "className": "MuiDataGrid-scrollShadow--vertical",
+      "description": "Styles applied to the vertical scroll shadow element.",
+      "isGlobal": false
+    },
+    {
       "key": "selectedRowCount",
       "className": "MuiDataGrid-selectedRowCount",
       "description": "Styles applied to the footer selected row count element.",

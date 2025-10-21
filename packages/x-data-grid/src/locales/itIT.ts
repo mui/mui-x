@@ -331,6 +331,7 @@ const itITGrid: Partial<GridLocaleText> = {
   promptChangePivotValuesLabel: (count: number) => `Valori (${count})`,
   promptChangePivotValuesDescription: (column: string, aggregation: string) =>
     `${column} (${aggregation})`,
+  // promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) => `Dimensions (${dimensionsCount}), Values (${valuesCount})`,
 };
 
 export const itIT: Localization = getGridLocalization(itITGrid);

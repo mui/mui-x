@@ -680,6 +680,18 @@ export interface GridClasses {
    */
   'scrollbarFiller--pinnedRight': string;
   /**
+   * Styles applied to the scroll shadow element.
+   */
+  scrollShadow: string;
+  /**
+   * Styles applied to the horizontal scroll shadow element.
+   */
+  'scrollShadow--horizontal': string;
+  /**
+   * Styles applied to the vertical scroll shadow element.
+   */
+  'scrollShadow--vertical': string;
+  /**
    * Styles applied to the footer selected row count element.
    */
   selectedRowCount: string;
@@ -1083,6 +1095,9 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'scrollbar--horizontal',
   'scrollbarFiller',
   'scrollbarFiller--pinnedRight',
+  'scrollShadow',
+  'scrollShadow--vertical',
+  'scrollShadow--horizontal',
   'selectedRowCount',
   'sortButton',
   'sortIcon',

@@ -9,6 +9,8 @@ import {
   UseChartHighlightSignature,
   useChartKeyboardNavigation,
   UseChartKeyboardNavigationSignature,
+  useChartBrush,
+  UseChartBrushSignature,
   ConvertSignaturesIntoPlugins,
 } from '@mui/x-charts/internals';
 import {
@@ -19,6 +21,7 @@ import { useChartProZoom, UseChartProZoomSignature } from '../internals/plugins/
 
 export type LineChartProPluginSignatures = [
   UseChartZAxisSignature,
+  UseChartBrushSignature,
   UseChartCartesianAxisSignature<'line'>,
   UseChartInteractionSignature,
   UseChartHighlightSignature,
@@ -29,6 +32,7 @@ export type LineChartProPluginSignatures = [
 
 export const LINE_CHART_PRO_PLUGINS: ConvertSignaturesIntoPlugins<LineChartProPluginSignatures> = [
   useChartZAxis,
+  useChartBrush,
   useChartCartesianAxis,
   useChartInteraction,
   useChartHighlight,
