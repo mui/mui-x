@@ -89,105 +89,6 @@ export function getStyleString(style: React.CSSProperties) {
 }
 
 /**
- * Get (or create) a canvas context for text measurement.
- */
-function getCanvasContext() {
-  if (measurementCanvas === null) {
-    try {
-      measurementCanvas = document.createElement('canvas');
-      measurementContext = measurementCanvas.getContext('2d');
-    } catch (error) {
-      // Canvas not available (e.g., in test environments like jsdom)
-      measurementCanvas = null;
-      measurementContext = null;
-    }
-  }
-  return measurementContext;
-}
-
-/**
- * Check if the canvas rendering context supports letterSpacing.
- * This check is performed only once on the first measurement.
- */
-function checkLetterSpacingSupport(): boolean {
-  if (canvasSupportsLetterSpacing !== null) {
-    return canvasSupportsLetterSpacing;
-  }
-
-  try {
-    const ctx = getCanvasContext();
-    if (!ctx) {
-      canvasSupportsLetterSpacing = false;
-      return false;
-    }
-
-    // Test if letterSpacing property is supported
-    const testText = 'test';
-    const testStyle = { fontSize: 16, letterSpacing: '5px' };
-    
-    // Apply styles
-    ctx.font = `${testStyle.fontSize}px sans-serif`;
-    const widthWithoutLetterSpacing = ctx.measureText(testText).width;
-    
-    // Try to apply letterSpacing
-    (ctx as any).letterSpacing = testStyle.letterSpacing;
-    const widthWithLetterSpacing = ctx.measureText(testText).width;
-    
-    // If letterSpacing is supported, the widths should be different
-    // We expect approximately 15px difference (3 letter spacings * 5px)
-    const hasSupport = widthWithLetterSpacing > widthWithoutLetterSpacing;
-    
-    canvasSupportsLetterSpacing = hasSupport;
-    return hasSupport;
-  } catch (error) {
-    // Silently catch errors (e.g., canvas not supported in jsdom)
-    canvasSupportsLetterSpacing = false;
-    return false;
-  }
-}
-
-/**
- * Measure text using canvas API.
- * @param text The text to measure
- * @param style The style applied
- * @returns width and height of the text
- */
-function measureTextWithCanvas(text: string, style: React.CSSProperties) {
-  const ctx = getCanvasContext();
-  if (!ctx) {
-    throw new Error('Canvas context not available');
-  }
-
-  // Build font string from style
-  const fontSize = style.fontSize ? convertPixelValue('fontSize', style.fontSize) : '16px';
-  const fontFamily = style.fontFamily || 'sans-serif';
-  const fontWeight = style.fontWeight || 'normal';
-  const fontStyle = style.fontStyle || 'normal';
-  
-  ctx.font = `${fontStyle} ${fontWeight} ${fontSize} ${fontFamily}`;
-  
-  // Apply letterSpacing if supported and specified
-  if (style.letterSpacing) {
-    (ctx as any).letterSpacing = convertPixelValue('letterSpacing', style.letterSpacing);
-  } else {
-    // Reset letterSpacing to default
-    (ctx as any).letterSpacing = '0px';
-  }
-
-  const metrics = ctx.measureText(text);
-  
-  // Calculate height based on font size
-  // Canvas doesn't provide height directly, so we estimate from font metrics
-  const fontSizeNum = typeof style.fontSize === 'number' ? style.fontSize : 16;
-  const height = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent || fontSizeNum * 1.2;
-  
-  return {
-    width: metrics.width,
-    height,
-  };
-}
-
-/**
  *
  * @param text The string to estimate
  * @param style The style applied
@@ -364,4 +265,103 @@ function getMeasurementContainer() {
   }
 
   return measurementContainer;
+}
+
+/**
+ * Get (or create) a canvas context for text measurement.
+ */
+function getCanvasContext() {
+  if (measurementCanvas === null) {
+    try {
+      measurementCanvas = document.createElement('canvas');
+      measurementContext = measurementCanvas.getContext('2d');
+    } catch (error) {
+      // Canvas not available (e.g., in test environments like jsdom)
+      measurementCanvas = null;
+      measurementContext = null;
+    }
+  }
+  return measurementContext;
+}
+
+/**
+ * Check if the canvas rendering context supports letterSpacing.
+ * This check is performed only once on the first measurement.
+ */
+function checkLetterSpacingSupport(): boolean {
+  if (canvasSupportsLetterSpacing !== null) {
+    return canvasSupportsLetterSpacing;
+  }
+
+  try {
+    const ctx = getCanvasContext();
+    if (!ctx) {
+      canvasSupportsLetterSpacing = false;
+      return false;
+    }
+
+    // Test if letterSpacing property is supported
+    const testText = 'test';
+    const testStyle = { fontSize: 16, letterSpacing: '5px' };
+    
+    // Apply styles
+    ctx.font = `${testStyle.fontSize}px sans-serif`;
+    const widthWithoutLetterSpacing = ctx.measureText(testText).width;
+    
+    // Try to apply letterSpacing
+    (ctx as any).letterSpacing = testStyle.letterSpacing;
+    const widthWithLetterSpacing = ctx.measureText(testText).width;
+    
+    // If letterSpacing is supported, the widths should be different
+    // We expect approximately 15px difference (3 letter spacings * 5px)
+    const hasSupport = widthWithLetterSpacing > widthWithoutLetterSpacing;
+    
+    canvasSupportsLetterSpacing = hasSupport;
+    return hasSupport;
+  } catch (error) {
+    // Silently catch errors (e.g., canvas not supported in jsdom)
+    canvasSupportsLetterSpacing = false;
+    return false;
+  }
+}
+
+/**
+ * Measure text using canvas API.
+ * @param text The text to measure
+ * @param style The style applied
+ * @returns width and height of the text
+ */
+function measureTextWithCanvas(text: string, style: React.CSSProperties) {
+  const ctx = getCanvasContext();
+  if (!ctx) {
+    throw new Error('Canvas context not available');
+  }
+
+  // Build font string from style
+  const fontSize = style.fontSize ? convertPixelValue('fontSize', style.fontSize) : '16px';
+  const fontFamily = style.fontFamily || 'sans-serif';
+  const fontWeight = style.fontWeight || 'normal';
+  const fontStyle = style.fontStyle || 'normal';
+  
+  ctx.font = `${fontStyle} ${fontWeight} ${fontSize} ${fontFamily}`;
+  
+  // Apply letterSpacing if supported and specified
+  if (style.letterSpacing) {
+    (ctx as any).letterSpacing = convertPixelValue('letterSpacing', style.letterSpacing);
+  } else {
+    // Reset letterSpacing to default
+    (ctx as any).letterSpacing = '0px';
+  }
+
+  const metrics = ctx.measureText(text);
+  
+  // Calculate height based on font size
+  // Canvas doesn't provide height directly, so we estimate from font metrics
+  const fontSizeNum = typeof style.fontSize === 'number' ? style.fontSize : 16;
+  const height = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent || fontSizeNum * 1.2;
+  
+  return {
+    width: metrics.width,
+    height,
+  };
 }
