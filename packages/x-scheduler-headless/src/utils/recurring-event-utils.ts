@@ -188,7 +188,7 @@ export function getRecurringEventOccurrencesForVisibleDays(
 
     const key = `${event.id}::${getDateKey(occurrenceStart, adapter)}`;
 
-    if ((event.exDates ?? []).some((exDate) => adapter.isSameDay(exDate, occurrenceStart))) {
+    if (event.exDates?.some((exDate) => adapter.isSameDay(exDate, occurrenceStart))) {
       continue;
     }
 
