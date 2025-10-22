@@ -13,6 +13,7 @@ We'd like to extend a big thank you to the 13 contributors who made this release
 
 - 🖌️ Add new [`brush` charts interaction](https://mui.com/x/react-charts/brush/) for building custom behaviour.
   ![output (7)](https://github.com/user-attachments/assets/60c382a1-e418-4736-8dcb-1567c4e361e3)
+- ⚡️ Performance improvements for large bar charts
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
