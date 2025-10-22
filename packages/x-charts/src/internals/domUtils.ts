@@ -252,45 +252,9 @@ function measureTextWithCanvas(text: string, style: React.CSSProperties) {
   const fontStyle = style.fontStyle || 'normal';
 
   ctx.font = `${fontStyle} ${fontWeight} ${fontSize} ${fontFamily}`;
-  
-  // Apply additional text layout properties
   (ctx as any).letterSpacing = style.letterSpacing
     ? addPixelToValueIfNeeded(style.letterSpacing)
     : '0px';
-  
-  // Apply textAlign if specified
-  if (style.textAlign) {
-    ctx.textAlign = style.textAlign as CanvasTextAlign;
-  }
-  
-  // Apply textBaseline if specified (mapped from verticalAlign or explicit textBaseline)
-  const textBaseline = (style as any).textBaseline;
-  if (textBaseline) {
-    ctx.textBaseline = textBaseline as CanvasTextBaseline;
-  }
-  
-  // Apply direction if specified
-  if (style.direction) {
-    ctx.direction = style.direction as CanvasDirection;
-  }
-  
-  // Apply fontKerning if specified
-  const fontKerning = (style as any).fontKerning;
-  if (fontKerning) {
-    (ctx as any).fontKerning = fontKerning;
-  }
-  
-  // Apply fontStretch if specified
-  const fontStretch = (style as any).fontStretch;
-  if (fontStretch) {
-    (ctx as any).fontStretch = fontStretch;
-  }
-  
-  // Apply fontVariantCaps if specified
-  const fontVariantCaps = (style as any).fontVariantCaps;
-  if (fontVariantCaps) {
-    (ctx as any).fontVariantCaps = fontVariantCaps;
-  }
 
   const metrics = ctx.measureText(text);
 
