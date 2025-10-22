@@ -28,6 +28,8 @@ import { ChartsSurface } from '../ChartsSurface';
 import { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
 import { ChartsWrapper } from '../ChartsWrapper';
 import { BarChartPluginSignatures } from './BarChart.plugins';
+import { RangeBarPlot } from './RangeBarPlot';
+import { RangeBarSeriesType } from '../models/seriesType/rangeBar';
 
 export interface BarChartSlots
   extends ChartsAxisSlots,
@@ -47,6 +49,7 @@ export interface BarChartSlotProps
     Partial<ChartsSlotProps> {}
 
 export type BarSeries = MakeOptional<BarSeriesType, 'type'>;
+export type RangeBarSeries = RangeBarSeriesType;
 export interface BarChartProps
   extends Omit<
       ChartContainerProps<'bar', BarChartPluginSignatures>,
@@ -59,7 +62,7 @@ export interface BarChartProps
    * The series to display in the bar chart.
    * An array of [[BarSeries]] objects.
    */
-  series: Readonly<BarSeries[]>;
+  series: ReadonlyArray<BarSeries | RangeBarSeries>;
   /**
    * Option to display a cartesian grid in the background.
    */
@@ -118,6 +121,7 @@ const BarChart = React.forwardRef(function BarChart(
     chartsWrapperProps,
     chartContainerProps,
     barPlotProps,
+    rangeBarPlotProps,
     gridProps,
     clipPathProps,
     clipPathGroupProps,
@@ -144,6 +148,7 @@ const BarChart = React.forwardRef(function BarChart(
           <ChartsGrid {...gridProps} />
           <g {...clipPathGroupProps}>
             <BarPlot {...barPlotProps} />
+            <RangeBarPlot {...rangeBarPlotProps} />
             <ChartsOverlay {...overlayProps} />
             <ChartsAxisHighlight {...axisHighlightProps} />
           </g>
@@ -176,7 +181,9 @@ BarChart.propTypes = {
     y: PropTypes.oneOf(['band', 'line', 'none']),
   }),
   /**
-   * @deprecated Use `barLabel` in the chart series instead.
+   * @deprecated Use `barLabel` in the chart series instead. This prop only works for bar series; bar range series are not supported.
+   * For bar range series support, use `barLabel` in the chart series instead.
+   *
    * If provided, the function will be used to format the label of the bar.
    * It can be set to 'value' to display the current value.
    * @param {BarItem} item The item to format.

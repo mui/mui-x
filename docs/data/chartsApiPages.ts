@@ -300,6 +300,10 @@ const chartsApiPages: MuiPage[] = [
     title: 'RadarSeriesPlot',
   },
   {
+    pathname: '/x/api/charts/range-bar-plot',
+    title: 'RangeBarPlot',
+  },
+  {
     pathname: '/x/api/charts/sankey-chart',
     title: 'SankeyChart',
     plan: 'pro',
