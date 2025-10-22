@@ -14,6 +14,10 @@ export function getBarLabel(options: {
 
   if (barLabel === 'value') {
     // We don't want to show the label if the value is 0
+    if (!value) {
+      return null;
+    }
+
     return value ? value?.toString() : null;
   }
 
