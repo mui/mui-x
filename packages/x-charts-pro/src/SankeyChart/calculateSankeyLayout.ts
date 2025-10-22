@@ -9,6 +9,7 @@ import type {
   SankeyLayoutLink,
   SankeyLayoutNode,
   DefaultizedSankeySeriesType,
+  SankeyNodeId,
 } from './sankey.types';
 import { getNodeAlignFunction } from './utils';
 
@@ -47,13 +48,25 @@ export function calculateSankeyLayout(
   }
 
   // Prepare the data structure expected by d3-sankey
+  const nodesArray = data.nodes.values().toArray();
   const graph = {
-    nodes: data.nodes
-      .values()
-      .toArray()
-      .map((v) => ({ ...v })),
+    nodes: nodesArray.map((v) => ({ ...v })),
     links: data.links.map((v) => ({ ...v })),
   };
+
+  const nodeIndexMap = new Map<SankeyNodeId, number>();
+  for (let index = 0; index < nodesArray.length; index += 1) {
+    const node = nodesArray[index];
+    nodeIndexMap.set(node.id, index);
+  }
+
+  const defaultNodeSort = !nodeSort
+    ? (a: SankeyLayoutNode, b: SankeyLayoutNode) => {
+        const indexA = nodeIndexMap.get(a.id) ?? Infinity;
+        const indexB = nodeIndexMap.get(b.id) ?? Infinity;
+        return indexA - indexB;
+      }
+    : nodeSort;
 
   // Create the sankey layout generator
   let sankeyGenerator = sankey<typeof graph, SankeyLayoutNode, SankeyLayoutLink>()
@@ -67,9 +80,7 @@ export function calculateSankeyLayout(
     .nodeId((d) => d.id)
     .iterations(iterations);
 
-  if (nodeSort) {
-    sankeyGenerator = sankeyGenerator.nodeSort(nodeSort);
-  }
+  sankeyGenerator = sankeyGenerator.nodeSort(defaultNodeSort);
   if (linkSort) {
     sankeyGenerator = sankeyGenerator.linkSort(linkSort);
   }
