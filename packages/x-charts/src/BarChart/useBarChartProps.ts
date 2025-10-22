@@ -1,7 +1,8 @@
 'use client';
 import * as React from 'react';
 import useId from '@mui/utils/useId';
-import type { BarChartProps } from './BarChart';
+import { RangeBarSeriesType } from '../models';
+import { BarChartProps, BarSeries } from './BarChart';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import { ChartContainerProps } from '../ChartContainer';
 import { BarPlotProps } from './BarPlot';
@@ -15,6 +16,10 @@ import type { ChartsWrapperProps } from '../ChartsWrapper';
 import type { AxisConfig, ChartsXAxisProps, ChartsYAxisProps } from '../models/axis';
 import { BAR_CHART_PLUGINS, BarChartPluginSignatures } from './BarChart.plugins';
 
+interface UseBarChartProps extends Omit<BarChartProps, 'series'> {
+  series: ReadonlyArray<BarSeries | RangeBarSeriesType>;
+}
+
 /**
  * A helper function that extracts BarChartProps from the input props
  * and returns an object with props for the children components of BarChart.
@@ -22,7 +27,7 @@ import { BAR_CHART_PLUGINS, BarChartPluginSignatures } from './BarChart.plugins'
  * @param props The input props for BarChart
  * @returns An object with props for the children components of BarChart
  */
-export const useBarChartProps = (props: BarChartProps) => {
+export const useBarChartProps = (props: UseBarChartProps) => {
   const {
     xAxis,
     yAxis,

@@ -43,6 +43,7 @@ export type SeriesItemIdentifierWithData<T extends ChartSeriesType = ChartSeries
 export { type SeriesId } from './common';
 export * from './line';
 export * from './bar';
+export * from './rangeBar';
 export * from './scatter';
 export * from './pie';
 export * from './radar';

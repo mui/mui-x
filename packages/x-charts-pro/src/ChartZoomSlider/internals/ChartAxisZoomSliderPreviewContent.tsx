@@ -9,6 +9,7 @@ import { LinePreviewPlot } from './previews/LinePreviewPlot';
 import { AreaPreviewPlot } from './previews/AreaPreviewPlot';
 import { BarPreviewPlot } from './previews/BarPreviewPlot';
 import { ScatterPreviewPlot } from './previews/ScatterPreviewPlot';
+import { RangeBarPreviewPlot } from './previews/RangeBarPreviewPlot';
 
 interface ChartAxisZoomSliderPreviewContentProps {
   axisId: AxisId;
@@ -29,6 +30,7 @@ export function ChartAxisZoomSliderPreviewContent(props: ChartAxisZoomSliderPrev
 
   const hasLineSeries = (processedSeries.line?.seriesOrder?.length ?? 0) > 0;
   const hasBarSeries = (processedSeries.bar?.seriesOrder?.length ?? 0) > 0;
+  const hasRangeBarSeries = (processedSeries.rangeBar?.seriesOrder?.length ?? 0) > 0;
   const hasScatterSeries = (processedSeries.scatter?.seriesOrder?.length ?? 0) > 0;
 
   if (hasLineSeries) {
@@ -37,6 +39,10 @@ export function ChartAxisZoomSliderPreviewContent(props: ChartAxisZoomSliderPrev
 
   if (hasBarSeries) {
     children.push(<BarPreviewPlot key="bar" {...props} />);
+  }
+
+  if (hasRangeBarSeries) {
+    children.push(<RangeBarPreviewPlot key="range-bar" {...props} />);
   }
 
   if (hasLineSeries) {

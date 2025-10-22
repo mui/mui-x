@@ -1,6 +1,7 @@
 import { SeriesId } from '../../models/seriesType/common';
 import type { BarLabelClasses } from './barLabelClasses';
 import { BarValueType } from '../../models';
+import { RangeBarValueType } from '../../models/seriesType/rangeBar';
 
 export interface BarLabelOwnerState {
   seriesId: SeriesId;
@@ -13,7 +14,7 @@ export interface BarLabelOwnerState {
   classes?: Partial<BarLabelClasses>;
 }
 
-export type BarItem<V extends BarValueType | null = BarValueType | null> = {
+export type BarItem<V extends BarValueType | RangeBarValueType | null = BarValueType | null> = {
   /**
    * The series id of the bar.
    */
@@ -43,7 +44,6 @@ export type BarLabelContext = {
   };
 };
 
-export type BarLabelFunction<V extends BarValueType | null = BarValueType | null> = (
-  item: BarItem<V>,
-  context: BarLabelContext,
-) => string | null | undefined;
+export type BarLabelFunction<
+  V extends BarValueType | RangeBarValueType | null = BarValueType | null,
+> = (item: BarItem<V>, context: BarLabelContext) => string | null | undefined;

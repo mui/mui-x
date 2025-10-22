@@ -2,7 +2,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import { BarChartProps, BarChartSlotProps, BarChartSlots, BarPlot } from '@mui/x-charts/BarChart';
+import {
+  BarChartProps,
+  BarChartSlotProps,
+  BarChartSlots,
+  BarPlot,
+  BarSeries,
+} from '@mui/x-charts/BarChart';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
@@ -10,10 +16,10 @@ import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
-import { useBarChartProps } from '@mui/x-charts/internals';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
+import { RangeBarSeriesType } from '@mui/x-charts/models';
 import {
   ChartsToolbarProSlotProps,
   ChartsToolbarProSlots,
@@ -25,6 +31,8 @@ import { ChartContainerProProps } from '../ChartContainerPro';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
 import { BAR_CHART_PRO_PLUGINS, BarChartProPluginSignatures } from './BarChartPro.plugins';
+import { RangeBarPlot } from './RangeBar/RangeBarPlot';
+import { useBarChartProProps } from './useBarChartProProps';
 
 export interface BarChartProSlots
   extends Omit<BarChartSlots, 'toolbar'>,
@@ -35,12 +43,19 @@ export interface BarChartProSlotProps
     ChartsToolbarProSlotProps,
     Partial<ChartsSlotPropsPro> {}
 
+export type RangeBarSeries = RangeBarSeriesType;
+
 export interface BarChartProProps
-  extends Omit<BarChartProps, 'apiRef' | 'slots' | 'slotProps'>,
+  extends Omit<BarChartProps, 'apiRef' | 'series' | 'slots' | 'slotProps'>,
     Omit<
       ChartContainerProProps<'bar', BarChartProPluginSignatures>,
       'series' | 'plugins' | 'seriesConfig' | 'slots' | 'slotProps' | 'experimentalFeatures'
     > {
+  /**
+   * The series to display in the bar chart.
+   * An array of [[BarSeries]] or [[RangeBarSeries]] objects.
+   */
+  series: ReadonlyArray<BarSeries | RangeBarSeries>;
   /**
    * Overridable component slots.
    * @default {}
@@ -74,6 +89,7 @@ const BarChartPro = React.forwardRef(function BarChartPro(
     chartsWrapperProps,
     chartContainerProps,
     barPlotProps,
+    rangeBarPlotProps,
     gridProps,
     clipPathProps,
     clipPathGroupProps,
@@ -82,7 +98,7 @@ const BarChartPro = React.forwardRef(function BarChartPro(
     axisHighlightProps,
     legendProps,
     children,
-  } = useBarChartProps(other);
+  } = useBarChartProProps(other);
 
   const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps<
     'bar',
@@ -111,6 +127,7 @@ const BarChartPro = React.forwardRef(function BarChartPro(
           <ChartsGrid {...gridProps} />
           <g {...clipPathGroupProps}>
             <BarPlot {...barPlotProps} />
+            <RangeBarPlot {...rangeBarPlotProps} />
             <ChartsOverlay {...overlayProps} />
             <ChartsAxisHighlight {...axisHighlightProps} />
           </g>
@@ -151,6 +168,7 @@ BarChartPro.propTypes = {
   }),
   /**
    * @deprecated Use `barLabel` in the chart series instead.
+   *
    * If provided, the function will be used to format the label of the bar.
    * It can be set to 'value' to display the current value.
    * @param {BarItem} item The item to format.
@@ -302,7 +320,7 @@ BarChartPro.propTypes = {
   onZoomChange: PropTypes.func,
   /**
    * The series to display in the bar chart.
-   * An array of [[BarSeries]] objects.
+   * An array of [[BarSeries]] or [[RangeBarSeries]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**

@@ -1,6 +1,6 @@
 import { AllSeriesType } from '../../../models/seriesType';
 
-export function getSeriesWithDefaultValues<T extends 'bar'>(
+export function getSeriesWithDefaultValues<T extends 'bar' | 'rangeBar'>(
   seriesData: AllSeriesType<T>,
   seriesIndex: number,
   colors: readonly string[],
