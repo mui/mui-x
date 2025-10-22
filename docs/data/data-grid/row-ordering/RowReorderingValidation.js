@@ -6,6 +6,12 @@ const isValidRowReorder = (context) => {
   if (context.sourceNode.type === 'group') {
     return true;
   }
+  if (
+    context.targetNode.type === 'group' &&
+    context.targetNode.id !== context.sourceNode.parent
+  ) {
+    return true;
+  }
   if (context.targetNode.type === 'leaf') {
     return context.sourceNode.parent !== context.targetNode.parent;
   }
