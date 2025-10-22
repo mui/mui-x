@@ -1,3 +1,4 @@
+import { findMinMax } from '../../internals/findMinMax';
 import { getPercentageValue } from '../../internals/getPercentageValue';
 import type { TooltipItemPositionGetter } from '../../internals/plugins/models/seriesConfig/tooltipItemPositionGetter.types';
 import { getPieCoordinates } from '../getPieCoordinates';
@@ -44,22 +45,19 @@ const tooltipItemPositionGetter: TooltipItemPositionGetter<'pie'> = (params) => 
     y: cy - radius * Math.cos(angle),
   }));
 
-  const x0 = Math.min(...points.map((p) => p.x));
-  const x1 = Math.max(...points.map((p) => p.x));
-  const y0 = Math.min(...points.map((p) => p.y));
-  const y1 = Math.max(...points.map((p) => p.y));
+  const [x0, x1] = findMinMax(points.map((p) => p.x));
+  const [y0, y1] = findMinMax(points.map((p) => p.y));
 
   switch (placement) {
-    case 'top':
-      return { x: (x1 + x0) / 2, y: y0 };
     case 'bottom':
       return { x: (x1 + x0) / 2, y: y1 };
     case 'left':
       return { x: x0, y: (y1 + y0) / 2 };
     case 'right':
       return { x: x1, y: (y1 + y0) / 2 };
+    case 'top':
     default:
-      return { x: (x1 + x0) / 2, y: (y1 + y0) / 2 };
+      return { x: (x1 + x0) / 2, y: y0 };
   }
 };
 

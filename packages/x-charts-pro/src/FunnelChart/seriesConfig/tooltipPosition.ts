@@ -50,16 +50,15 @@ const tooltipItemPositionGetter: TooltipItemPositionGetter<'funnel'> = (params) 
   const [y0, y1] = findMinMax(allY);
 
   switch (placement) {
-    case 'top':
-      return { x: (x1 + x0) / 2, y: y0 };
     case 'bottom':
       return { x: (x1 + x0) / 2, y: y1 };
     case 'left':
       return { x: x0, y: (y1 + y0) / 2 };
     case 'right':
       return { x: x1, y: (y1 + y0) / 2 };
+    case 'top':
     default:
-      return { x: (x1 + x0) / 2, y: (y1 + y0) / 2 };
+      return { x: (x1 + x0) / 2, y: y0 };
   }
 };
 
