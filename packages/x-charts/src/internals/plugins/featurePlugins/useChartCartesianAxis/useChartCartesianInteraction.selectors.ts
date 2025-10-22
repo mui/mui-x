@@ -1,4 +1,4 @@
-import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
+// import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { createSelector } from '../../utils/selectors';
 import { AxisId, AxisItemIdentifier, ChartsAxisProps } from '../../../../models/axis';
 import {
@@ -154,14 +154,14 @@ export const selectorChartsInteractionTooltipXAxes = createSelector(
       )
       .filter(({ dataIndex }) => dataIndex >= 0);
   },
-  {
-    memoizeOptions: {
-      // Keep the same reference if array content is the same.
-      // If possible, avoid this pattern by creating selectors that
-      // uses string/number as arguments.
-      resultEqualityCheck: isDeepEqual,
-    },
-  },
+  // {
+  //   memoizeOptions: {
+  //     // Keep the same reference if array content is the same.
+  //     // If possible, avoid this pattern by creating selectors that
+  //     // uses string/number as arguments.
+  //     resultEqualityCheck: isDeepEqual,
+  //   },
+  // },
 );
 
 /**
@@ -184,14 +184,14 @@ export const selectorChartsInteractionTooltipYAxes = createSelector(
       )
       .filter(({ dataIndex }) => dataIndex >= 0);
   },
-  {
-    memoizeOptions: {
-      // Keep the same reference if array content is the same.
-      // If possible, avoid this pattern by creating selectors that
-      // uses string/number as arguments.
-      resultEqualityCheck: isDeepEqual,
-    },
-  },
+  // {
+  //   memoizeOptions: {
+  //     // Keep the same reference if array content is the same.
+  //     // If possible, avoid this pattern by creating selectors that
+  //     // uses string/number as arguments.
+  //     resultEqualityCheck: isDeepEqual,
+  //   },
+  // },
 );
 
 /**

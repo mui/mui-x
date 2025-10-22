@@ -1,4 +1,4 @@
-import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
+// import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { AxisId, ChartsAxisProps, AxisItemIdentifier } from '../../../../models/axis';
 import { createSelector } from '../../utils/selectors';
 import {
@@ -105,23 +105,23 @@ export const selectorChartsInteractionTooltipRotationAxes = createSelector(
       )
       .filter(({ axisId, dataIndex }) => axes.axis[axisId].triggerTooltip && dataIndex >= 0);
   },
-  {
-    memoizeOptions: {
-      // Keep the same reference if array content is the same.
-      // If possible, avoid this pattern by creating selectors that
-      // uses string/number as arguments.
-      resultEqualityCheck: isDeepEqual,
-    },
-  },
+  // {
+  //   memoizeOptions: {
+  //     // Keep the same reference if array content is the same.
+  //     // If possible, avoid this pattern by creating selectors that
+  //     // uses string/number as arguments.
+  //     resultEqualityCheck: isDeepEqual,
+  //   },
+  // },
 );
 
 /**
  * Get radius-axis ids and corresponding data index that should be displayed in the tooltip.
  */
-export const selectorChartsInteractionTooltipRadiusAxes = createSelector([], () => {
+export const selectorChartsInteractionTooltipRadiusAxes = () => {
   // TODO implement this selector and add it to the `selectorChartsInteractionPolarAxisTooltip`
   return [];
-});
+};
 
 /**
  * Return `true` if the axis tooltip has something to display.

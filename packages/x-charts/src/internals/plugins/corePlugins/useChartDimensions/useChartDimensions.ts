@@ -35,7 +35,7 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
     const newHeight = Math.floor(parseFloat(computedStyle.height)) || 0;
     const newWidth = Math.floor(parseFloat(computedStyle.width)) || 0;
 
-    if (store.state.dimensions.width !== newWidth && store.state.dimensions.height !== newHeight) {
+    if (store.state.dimensions.width !== newWidth || store.state.dimensions.height !== newHeight) {
       store.set('dimensions', {
         margin: {
           top: params.margin.top,

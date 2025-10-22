@@ -61,8 +61,8 @@ export function BarPreviewPlot(props: BarPreviewPlotProps) {
 function useBarPreviewData(axisId: AxisId, drawingArea: ChartDrawingArea) {
   const store = useStore();
 
-  const xAxes = useSelector(store, selectorChartPreviewComputedXAxis, [axisId]);
-  const yAxes = useSelector(store, selectorChartPreviewComputedYAxis, [axisId]);
+  const xAxes = useSelector(store, selectorChartPreviewComputedXAxis, axisId);
+  const yAxes = useSelector(store, selectorChartPreviewComputedYAxis, axisId);
 
   return useBarPlotData(drawingArea, xAxes, yAxes);
 }

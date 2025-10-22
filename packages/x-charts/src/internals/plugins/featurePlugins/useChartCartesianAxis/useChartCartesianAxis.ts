@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import { useStoreEffect } from '@mui/x-internals/store';
 import { useAssertModelConsistency } from '@mui/x-internals/useAssertModelConsistency';
 import { warnOnce } from '@mui/x-internals/warning';
 import { PointerGestureEventData } from '@mui/x-internal-gestures/core';
@@ -16,7 +17,6 @@ import { getAxisIndex } from './getAxisValue';
 import { getSVGPoint } from '../../../getSVGPoint';
 import { selectorChartsInteractionIsInitialized } from '../useChartInteraction';
 import { selectorChartAxisInteraction } from './useChartCartesianInteraction.selectors';
-import { useLazySelectorEffect } from '../../utils/useLazySelectorEffect';
 import { checkHasInteractionPlugin } from '../useChartInteraction/checkHasInteractionPlugin';
 
 export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<any>> = ({
@@ -81,13 +81,22 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
     });
   }, [seriesConfig, drawingArea, xAxis, yAxis, dataset, store]);
 
+  // React.useEffect(() => { console.log('seriesConfig') }, [seriesConfig])
+  // React.useEffect(() => { console.log('drawingArea') }, [drawingArea])
+  // React.useEffect(() => { console.log('xAxis') }, [xAxis])
+  // React.useEffect(() => { console.log('yAxis') }, [yAxis])
+  // React.useEffect(() => { console.log('dataset') }, [dataset])
+  // React.useEffect(() => { console.log('store') }, [store])
   const usedXAxis = xAxisIds[0];
   const usedYAxis = yAxisIds[0];
 
-  useLazySelectorEffect(
+  useStoreEffect(
     store,
     selectorChartAxisInteraction,
     (prevAxisInteraction, nextAxisInteraction) => {
+      if (!onHighlightedAxisChange) {
+        return;
+      }
       if (Object.is(prevAxisInteraction, nextAxisInteraction)) {
         return;
       }
@@ -106,7 +115,6 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
         onHighlightedAxisChange!(nextAxisInteraction);
       }
     },
-    !onHighlightedAxisChange,
   );
 
   const hasInteractionPlugin = checkHasInteractionPlugin(instance);
