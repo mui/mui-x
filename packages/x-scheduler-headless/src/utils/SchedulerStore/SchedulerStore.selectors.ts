@@ -108,8 +108,12 @@ export const selectors = {
       };
     },
   ),
-  canDragEventsFromTheOutside: createSelector((state: State) => state.canDragEventsFromTheOutside),
-  canDropEventsToTheOutside: createSelector((state: State) => state.canDropEventsToTheOutside),
+  canDragEventsFromTheOutside: createSelector(
+    (state: State) => state.canDragEventsFromTheOutside && !state.readOnly,
+  ),
+  canDropEventsToTheOutside: createSelector(
+    (state: State) => state.canDropEventsToTheOutside && !state.readOnly,
+  ),
   scopeDialogStatus: createSelector((state: State) => state.recurringScopeDialogStatus),
   isScopeDialogOpen: createSelector(
     (state: State) => state.recurringScopeDialogStatus === 'pending',
