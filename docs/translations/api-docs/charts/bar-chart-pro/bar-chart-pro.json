@@ -66,13 +66,10 @@
       }
     },
     "onItemClick": {
-      "description": "Callback fired when a bar item is clicked.",
+      "description": "Callback fired when a bar or range bar item is clicked.",
       "typeDescriptions": {
         "event": { "name": "event", "description": "The event source of the callback." },
-        "barItemIdentifier": {
-          "name": "barItemIdentifier",
-          "description": "The bar item identifier."
-        }
+        "itemIdentifier": { "name": "itemIdentifier", "description": "The item identifier." }
       }
     },
     "onZoomChange": {
@@ -82,7 +79,7 @@
       }
     },
     "series": {
-      "description": "The series to display in the bar chart. An array of <a href='/x/api/charts/bar-series/'>BarSeries</a> objects."
+      "description": "The series to display in the bar chart. An array of <a href='/x/api/charts/bar-series/'>BarSeries</a> or RangeBarSeries objects."
     },
     "showToolbar": { "description": "If true, shows the default chart toolbar." },
     "skipAnimation": {

@@ -97,6 +97,7 @@ export default chartsApiPages;
       'x-charts/src/LineChart/FocusedLineMark.tsx',
       'x-charts/src/PieChart/FocusedPieArc.tsx',
       'x-charts/src/ScatterChart/BatchScatter.tsx',
+      'x-charts-pro/src/BarChartPro/RangeBar/AnimatedRangeBarElement.tsx',
       'x-charts-premium/src/ChartsRenderer/ChartsRenderer.tsx',
       'x-charts-premium/src/ChartsRenderer/components/PaletteOption.tsx',
     ].some((invalidPath) => filename.endsWith(invalidPath));

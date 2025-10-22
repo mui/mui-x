@@ -7,6 +7,8 @@ import {
   type ChartAnyPluginSignature,
   type ChartProviderProps,
   ChartsSlotsProvider,
+  type ChartSeriesConfig,
+  defaultSeriesConfig,
 } from '@mui/x-charts/internals';
 import { type ChartDataProviderProps } from '@mui/x-charts/ChartDataProvider';
 import { ChartsLocalizationProvider } from '@mui/x-charts/ChartsLocalizationProvider';
@@ -18,6 +20,7 @@ import {
 } from '../internals/material';
 import { type AllPluginSignatures, DEFAULT_PLUGINS } from '../internals/plugins/allPlugins';
 import { useChartDataProviderProProps } from './useChartDataProviderProProps';
+import { rangeBarSeriesConfig } from '../BarChartPro/RangeBar/seriesConfig';
 
 const releaseInfo = '__RELEASE_INFO__';
 const packageIdentifier = 'x-charts-pro';
@@ -36,6 +39,13 @@ export type ChartDataProviderProProps<
      */
     slotProps?: Partial<ChartsSlotPropsPro>;
   };
+
+export const DEFAULT_SERIES_CONFIG_PRO: ChartSeriesConfig<
+  'bar' | 'rangeBar' | 'scatter' | 'line' | 'pie'
+> = {
+  ...defaultSeriesConfig,
+  rangeBar: rangeBarSeriesConfig,
+};
 
 /**
  * Orchestrates the data providers for the chart components and hooks.
@@ -71,6 +81,7 @@ function ChartDataProviderPro<
   const { children, localeText, chartProviderProps, slots, slotProps } =
     useChartDataProviderProProps({
       ...props,
+      seriesConfig: props.seriesConfig ?? DEFAULT_SERIES_CONFIG_PRO,
       plugins: props.plugins ?? DEFAULT_PLUGINS,
     });
 
