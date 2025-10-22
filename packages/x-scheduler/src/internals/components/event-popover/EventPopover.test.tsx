@@ -487,7 +487,7 @@ describe('<EventPopoverContent />', () => {
           rrule: { freq: 'DAILY' as const, interval: 1 },
         };
 
-        let updateRecurringEventSpy;
+        let updateRecurringEventSpy, selectRecurringEventUpdateScopeSpy;
         const containerRef = React.createRef<HTMLDivElement>();
 
         const { user } = render(
@@ -499,6 +499,13 @@ describe('<EventPopoverContent />', () => {
                 method="updateRecurringEvent"
                 onSpyReady={(sp) => {
                   updateRecurringEventSpy = sp;
+                }}
+              />
+              <StoreSpy
+                Context={EventCalendarStoreContext}
+                method="selectRecurringEventUpdateScope"
+                onSpyReady={(sp) => {
+                  selectRecurringEventUpdateScopeSpy = sp;
                 }}
               />
               <Popover.Root open>
@@ -519,7 +526,10 @@ describe('<EventPopoverContent />', () => {
         await user.click(screen.getByLabelText(/All events in the series/i));
         await user.click(screen.getByRole('button', { name: /Cancel/i }));
 
-        expect(updateRecurringEventSpy?.calledOnce).to.equal(false);
+        expect(updateRecurringEventSpy?.calledOnce).to.equal(true);
+        expect(selectRecurringEventUpdateScopeSpy?.called).to.equal(true);
+        expect(selectRecurringEventUpdateScopeSpy?.lastCall.firstArg).to.equal(null);
+        expect(updateRecurringEventSpy?.callCount).to.equal(1);
       });
 
       it("should call updateRecurringEvent with scope 'all' and not include rrule if not modified on Submit", async () => {
@@ -534,7 +544,7 @@ describe('<EventPopoverContent />', () => {
           rrule: { freq: 'DAILY' as const, interval: 1 },
         };
 
-        let updateRecurringEventSpy;
+        let updateRecurringEventSpy, selectRecurringEventUpdateScopeSpy;
         const containerRef = React.createRef<HTMLDivElement>();
 
         const { user } = render(
@@ -546,6 +556,13 @@ describe('<EventPopoverContent />', () => {
                 method="updateRecurringEvent"
                 onSpyReady={(sp) => {
                   updateRecurringEventSpy = sp;
+                }}
+              />
+              <StoreSpy
+                Context={EventCalendarStoreContext}
+                method="selectRecurringEventUpdateScope"
+                onSpyReady={(sp) => {
+                  selectRecurringEventUpdateScopeSpy = sp;
                 }}
               />
               <Popover.Root open>
@@ -567,16 +584,18 @@ describe('<EventPopoverContent />', () => {
         await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
         expect(updateRecurringEventSpy?.calledOnce).to.equal(true);
-        const payload = updateRecurringEventSpy.lastCall.firstArg;
+        const openPayload = updateRecurringEventSpy.lastCall.firstArg;
 
-        expect(payload.scope).to.equal('all');
-        expect(payload.changes.id).to.equal('recurring-1');
-        expect(payload.changes.title).to.equal('Daily standup');
-        expect(payload.changes.description).to.equal('sync');
-        expect(payload.changes.allDay).to.equal(false);
-        expect(payload.changes.start).to.toEqualDateTime(adapter.date('2025-06-11T10:05:00'));
-        expect(payload.changes.end).to.toEqualDateTime(adapter.date('2025-06-11T10:35:00'));
-        expect(payload.changes).to.not.have.property('rrule');
+        expect(openPayload.changes.id).to.equal('recurring-1');
+        expect(openPayload.changes.title).to.equal('Daily standup');
+        expect(openPayload.changes.description).to.equal('sync');
+        expect(openPayload.changes.allDay).to.equal(false);
+        expect(openPayload.changes.start).to.toEqualDateTime(adapter.date('2025-06-11T10:05:00'));
+        expect(openPayload.changes.end).to.toEqualDateTime(adapter.date('2025-06-11T10:35:00'));
+        expect(openPayload.changes).to.not.have.property('rrule');
+
+        expect(selectRecurringEventUpdateScopeSpy?.calledOnce).to.equal(true);
+        expect(selectRecurringEventUpdateScopeSpy?.lastCall.firstArg).to.equal('all');
       });
 
       it("should call updateRecurringEvent with scope 'only-this' and include rrule if modified on Submit", async () => {
@@ -591,7 +610,7 @@ describe('<EventPopoverContent />', () => {
           rrule: { freq: 'DAILY' as const, interval: 1 },
         };
 
-        let updateRecurringEventSpy;
+        let updateRecurringEventSpy, selectRecurringEventUpdateScopeSpy;
         const containerRef = React.createRef<HTMLDivElement>();
 
         const { user } = render(
@@ -603,6 +622,13 @@ describe('<EventPopoverContent />', () => {
                 method="updateRecurringEvent"
                 onSpyReady={(sp) => {
                   updateRecurringEventSpy = sp;
+                }}
+              />
+              <StoreSpy
+                Context={EventCalendarStoreContext}
+                method="selectRecurringEventUpdateScope"
+                onSpyReady={(sp) => {
+                  selectRecurringEventUpdateScopeSpy = sp;
                 }}
               />
               <Popover.Root open>
@@ -622,19 +648,19 @@ describe('<EventPopoverContent />', () => {
         await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
         expect(updateRecurringEventSpy?.calledOnce).to.equal(true);
+        const openPayload = updateRecurringEventSpy.lastCall.firstArg;
 
-        const payload = updateRecurringEventSpy.lastCall.firstArg;
-
-        expect(payload.scope).to.equal('only-this');
-        expect(payload.changes.id).to.equal('recurring-2');
-        expect(payload.changes.title).to.equal('Daily standup');
-        expect(payload.changes.description).to.equal('sync');
-        expect(payload.changes.allDay).to.equal(false);
-        expect(payload.changes.rrule).to.deep.equal({
+        expect(openPayload.changes.id).to.equal('recurring-2');
+        expect(openPayload.changes.title).to.equal('Daily standup');
+        expect(openPayload.changes.description).to.equal('sync');
+        expect(openPayload.changes.allDay).to.equal(false);
+        expect(openPayload.changes.rrule).to.deep.equal({
           freq: 'WEEKLY',
           interval: 1,
           byDay: ['WE'],
         });
+        expect(selectRecurringEventUpdateScopeSpy?.calledOnce).to.equal(true);
+        expect(selectRecurringEventUpdateScopeSpy?.lastCall.firstArg).to.equal('only-this');
       });
 
       it('should call updateRecurringEvent with scope "this-and-following" and send rrule as undefined when "no repeat" is selected on Submit', async () => {
@@ -649,7 +675,7 @@ describe('<EventPopoverContent />', () => {
           rrule: { freq: 'DAILY' as const, interval: 1 },
         };
 
-        let updateRecurringEventSpy;
+        let updateRecurringEventSpy, selectRecurringEventUpdateScopeSpy;
         const containerRef = React.createRef<HTMLDivElement>();
 
         const { user } = render(
@@ -661,6 +687,13 @@ describe('<EventPopoverContent />', () => {
                 method="updateRecurringEvent"
                 onSpyReady={(sp) => {
                   updateRecurringEventSpy = sp;
+                }}
+              />
+              <StoreSpy
+                Context={EventCalendarStoreContext}
+                method="selectRecurringEventUpdateScope"
+                onSpyReady={(sp) => {
+                  selectRecurringEventUpdateScopeSpy = sp;
                 }}
               />
               <Popover.Root open>
@@ -680,11 +713,15 @@ describe('<EventPopoverContent />', () => {
         await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
         expect(updateRecurringEventSpy?.calledOnce).to.equal(true);
-        const payload = updateRecurringEventSpy.lastCall.firstArg;
+        const openPayload = updateRecurringEventSpy.lastCall.firstArg;
 
-        expect(payload.scope).to.equal('this-and-following');
-        expect(payload.changes.id).to.equal('recurring-3');
-        expect(payload.changes.rrule).to.equal(undefined);
+        expect(openPayload.changes.id).to.equal('recurring-3');
+        expect(openPayload.changes.rrule).to.equal(undefined);
+
+        expect(selectRecurringEventUpdateScopeSpy?.calledOnce).to.equal(true);
+        expect(selectRecurringEventUpdateScopeSpy?.lastCall.firstArg).to.equal(
+          'this-and-following',
+        );
       });
     });
 
