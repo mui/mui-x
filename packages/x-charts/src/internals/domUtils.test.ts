@@ -21,7 +21,7 @@ describe('domUtils', () => {
     });
   });
 
-  describe('getStringSize', () => {
+  describe('measureText', () => {
     beforeEach(() => {
       clearStringMeasurementCache();
     });
@@ -72,7 +72,7 @@ describe('domUtils', () => {
     });
   });
 
-  describe('batchMeasureStrings', () => {
+  describe('measureTextBatch', () => {
     beforeEach(() => {
       clearStringMeasurementCache();
     });
