@@ -34,7 +34,7 @@ export const useZoomOnWheel = (
   const config = useSelector(store, selectorZoomInteractionConfig, ['wheel' as const]);
 
   const isZoomOnWheelEnabled: boolean = React.useMemo(
-    () => (Object.keys(optionsLookup).length > 0 && !!config) || false,
+    () => (Object.keys(optionsLookup).length > 0 && Boolean(config)) || false,
     [optionsLookup, config],
   );
 

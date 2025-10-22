@@ -27,7 +27,7 @@ export const usePanOnDrag = (
   const config = useSelector(store, selectorPanInteractionConfig, ['drag' as const]);
 
   const isPanOnDragEnabled: boolean = React.useMemo(
-    () => (Object.values(optionsLookup).some((v) => v.panning) && !!config) || false,
+    () => (Object.values(optionsLookup).some((v) => v.panning) && Boolean(config)) || false,
     [optionsLookup, config],
   );
 
