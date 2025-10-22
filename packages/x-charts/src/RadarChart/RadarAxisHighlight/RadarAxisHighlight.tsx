@@ -7,6 +7,7 @@ import {
   getRadarAxisHighlightUtilityClass,
   RadarAxisHighlightClasses,
 } from './radarAxisHighlightClasses';
+import { getSeriesColorFn } from '../../internals/getSeriesColorFn';
 
 const useUtilityClasses = (classes: RadarAxisHighlightProps['classes']) => {
   const slots = {
@@ -68,7 +69,7 @@ function RadarAxisHighlight(props: RadarAxisHighlightProps) {
         return (
           <circle
             key={series[seriesIndex].id}
-            fill={series[seriesIndex].color}
+            fill={getSeriesColorFn(series[seriesIndex].color)()}
             cx={point.x}
             cy={point.y}
             className={classes.dot}

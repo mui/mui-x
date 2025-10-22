@@ -26,8 +26,8 @@ export interface ScatterProps {
   series: DefaultizedScatterSeriesType;
   xScale: D3Scale;
   yScale: D3Scale;
-  color: string;
-  colorGetter?: ColorGetter<'scatter'>;
+  color: string | ((dataIndex?: number) => string);
+  colorGetter: ColorGetter<'scatter'>;
   /**
    * Callback fired when clicking on a scatter item.
    * @param {MouseEvent} event Mouse event recorded on the `<svg/>` element.
@@ -61,7 +61,6 @@ function Scatter(props: ScatterProps) {
     series,
     xScale,
     yScale,
-    color,
     colorGetter,
     onItemClick,
     classes: inClasses,
@@ -107,7 +106,7 @@ function Scatter(props: ScatterProps) {
           <Marker
             key={dataPoint.id ?? dataPoint.dataIndex}
             dataIndex={dataPoint.dataIndex}
-            color={colorGetter ? colorGetter(dataPoint.dataIndex) : color}
+            color={colorGetter(dataPoint.dataIndex)}
             isHighlighted={isItemHighlighted}
             isFaded={isItemFaded}
             x={dataPoint.x}
