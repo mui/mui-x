@@ -74,6 +74,7 @@ export class SchedulerStore<
       nowUpdatedEveryMinute: adapter.date(),
       isMultiDayEvent: DEFAULT_IS_MULTI_DAY_EVENT,
       pendingUpdateRecurringEventParameters: null,
+      recurringScopeDialogStatus: 'closed',
       visibleResources: new Map(),
       visibleDate:
         parameters.visibleDate ??
@@ -265,10 +266,18 @@ export class SchedulerStore<
   };
 
   /**
+   * Sets the status of the recurring scope dialog.
+   */
+  public setScopeDialogSubmit = (scopeStatus: SchedulerState['recurringScopeDialogStatus']) => {
+    this.set('recurringScopeDialogStatus', scopeStatus);
+  };
+
+  /**
    * Updates a recurring event in the calendar.
    */
   public updateRecurringEvent = async (params: UpdateRecurringEventParameters) => {
     this.set('pendingUpdateRecurringEventParameters', params);
+    this.set('recurringScopeDialogStatus', 'pending');
   };
 
   public selectRecurringEventUpdateScope = (scope: RecurringEventUpdateScope | null) => {
@@ -279,6 +288,7 @@ export class SchedulerStore<
 
     this.set('pendingUpdateRecurringEventParameters', null);
     if (scope == null) {
+      this.set('recurringScopeDialogStatus', 'closed');
       return;
     }
 
@@ -319,6 +329,7 @@ export class SchedulerStore<
     }
 
     this.updateEvents(updatedEvents);
+    this.set('recurringScopeDialogStatus', 'submitted');
   };
 
   /**

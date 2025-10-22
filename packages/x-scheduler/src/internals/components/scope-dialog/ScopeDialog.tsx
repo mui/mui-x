@@ -19,7 +19,7 @@ export const RecurringScopeDialog = React.forwardRef<HTMLDivElement, ScopePopove
     const { className, containerRef, ...other } = props;
     const translations = useTranslations();
     const store = useSchedulerStoreContext();
-    const open = useStore(store, selectors.hasPendingUpdateRecurringEventParameters);
+    const open = useStore(store, selectors.isScopeDialogOpen);
 
     const handleOpenChange = React.useCallback(
       (next: boolean) => {

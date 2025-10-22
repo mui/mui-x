@@ -62,6 +62,7 @@ export const EventPopoverContent = React.forwardRef(function EventPopoverContent
     occurrence.rrule,
     occurrence.start,
   );
+  const status = useStore(store, selectors.scopeDialogStatus);
 
   // State hooks
   const [errors, setErrors] = React.useState<Form.Props['errors']>({});
@@ -245,6 +246,13 @@ export const EventPopoverContent = React.forwardRef(function EventPopoverContent
     store.deleteEvent(occurrence.id);
     onClose();
   });
+
+  React.useEffect(() => {
+    if (status === 'submitted') {
+      onClose();
+      store.setScopeDialogSubmit('closed');
+    }
+  }, [onClose, status, store]);
 
   return (
     <div ref={forwardedRef} className={className} {...other}>
@@ -532,7 +540,7 @@ export const EventPopoverContent = React.forwardRef(function EventPopoverContent
 export function EventPopoverProvider(props: EventPopoverProviderProps) {
   const { containerRef, children } = props;
   const store = useEventCalendarStoreContext();
-  const isScopeDialogOpen = useStore(store, selectors.hasPendingUpdateRecurringEventParameters);
+  const isScopeDialogOpen = useStore(store, selectors.isScopeDialogOpen);
 
   return (
     <EventPopover.Provider

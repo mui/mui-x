@@ -110,8 +110,9 @@ export const selectors = {
   ),
   canDragEventsFromTheOutside: createSelector((state: State) => state.canDragEventsFromTheOutside),
   canDropEventsToTheOutside: createSelector((state: State) => state.canDropEventsToTheOutside),
-  hasPendingUpdateRecurringEventParameters: createSelector(
-    (state: State) => !!state.pendingUpdateRecurringEventParameters,
+  scopeDialogStatus: createSelector((state: State) => state.recurringScopeDialogStatus),
+  isScopeDialogOpen: createSelector(
+    (state: State) => state.recurringScopeDialogStatus === 'pending',
   ),
   isCurrentDay: createSelector(
     (state: State) => state.adapter,
