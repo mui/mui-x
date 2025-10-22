@@ -15,13 +15,14 @@ import {
   DefaultizedPieValueType,
 } from './pie';
 import { DefaultizedRadarSeriesType, RadarItemIdentifier, RadarSeriesType } from './radar';
+import { SeriesColorProp } from './common';
 
 export interface ChartsSeriesConfig {
   bar: {
     /**
      * Series type when passed to the formatter (some ids are given default values to simplify the DX)
      */
-    seriesInput: DefaultizedProps<BarSeriesType, 'id'> & { color: string };
+    seriesInput: DefaultizedProps<BarSeriesType, 'id'> & { color: SeriesColorProp };
     /**
      * Series type when stored in the context (with all the preprocessing added))
      */
@@ -37,7 +38,7 @@ export interface ChartsSeriesConfig {
     axisType: 'cartesian';
   };
   line: {
-    seriesInput: DefaultizedProps<LineSeriesType, 'id'> & { color: string };
+    seriesInput: DefaultizedProps<LineSeriesType, 'id'> & { color: SeriesColorProp };
     series: DefaultizedLineSeriesType;
     seriesProp: LineSeriesType;
     itemIdentifier: LineItemIdentifier;
@@ -47,7 +48,7 @@ export interface ChartsSeriesConfig {
     axisType: 'cartesian';
   };
   scatter: {
-    seriesInput: DefaultizedProps<ScatterSeriesType, 'id'> & { color: string };
+    seriesInput: DefaultizedProps<ScatterSeriesType, 'id'> & { color: SeriesColorProp };
     series: DefaultizedScatterSeriesType;
     seriesProp: ScatterSeriesType;
     valueType: ScatterValueType;
@@ -66,7 +67,7 @@ export interface ChartsSeriesConfig {
     valueType: DefaultizedPieValueType;
   };
   radar: {
-    seriesInput: DefaultizedProps<RadarSeriesType, 'id'> & { color: string };
+    seriesInput: DefaultizedProps<RadarSeriesType, 'id'> & { color: SeriesColorProp };
     series: DefaultizedRadarSeriesType;
     seriesProp: RadarSeriesType;
     itemIdentifier: RadarItemIdentifier;

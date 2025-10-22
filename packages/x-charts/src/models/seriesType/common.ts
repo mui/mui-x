@@ -17,6 +17,13 @@ export type SeriesValueFormatter<TValue> = (
   context: SeriesValueFormatterContext,
 ) => string | null;
 
+/**
+ * Color to use when displaying the series.
+ * It can be a string representing a color or a function that returns a color based on the data index.
+ * The data index can be undefined when the color is needed for the entire series (e.g., in legends, lines, areas).
+ */
+export type SeriesColorProp = string | ((dataIndex?: number) => string);
+
 export type CommonSeriesType<TValue> = {
   /**
    * The id of this series.
@@ -24,8 +31,10 @@ export type CommonSeriesType<TValue> = {
   id?: SeriesId;
   /**
    * Color to use when displaying the series.
+   * It can be a string representing a color or a function that returns a color based on the data index.
+   * The data index can be undefined when the color is needed for the entire series (e.g., in legends, lines, areas).
    */
-  color?: string;
+  color?: SeriesColorProp;
   /**
    * Formatter used to render values in tooltip or other data display.
    * @param {TValue} value The series' value to render.

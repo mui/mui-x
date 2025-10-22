@@ -10,6 +10,7 @@ import { useInteractionAllItemProps } from '../../hooks/useInteractionItemProps'
 import { SeriesId } from '../../models/seriesType/common';
 import { HighlightItemData } from '../../internals/plugins/featurePlugins/useChartHighlight';
 import { useRadarRotationIndex } from './useRadarRotationIndex';
+import { getSeriesColorFn } from '../../internals/getSeriesColorFn';
 
 interface GetPathPropsParams {
   seriesId: SeriesId;
@@ -58,7 +59,7 @@ function RadarSeriesArea(props: RadarSeriesAreaProps) {
             {...getPathProps({
               seriesId: id,
               points,
-              color,
+              color: getSeriesColorFn(color)(),
               fillArea,
               isFaded,
               isHighlighted,

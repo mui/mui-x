@@ -1,6 +1,7 @@
 import type { LegendItemParams } from '../../ChartsLegend';
 import { getLabel } from '../../internals/getLabel';
 import { LegendGetter } from '../../internals/plugins/models';
+import { getSeriesColorFn } from '../../internals/getSeriesColorFn';
 
 const legendGetter: LegendGetter<'line'> = (params) => {
   const { seriesOrder, series } = params;
@@ -15,7 +16,7 @@ const legendGetter: LegendGetter<'line'> = (params) => {
       markType: series[seriesId].labelMarkType,
       id: seriesId,
       seriesId,
-      color: series[seriesId].color,
+      color: getSeriesColorFn(series[seriesId].color)(),
       label: formattedLabel,
     });
     return acc;

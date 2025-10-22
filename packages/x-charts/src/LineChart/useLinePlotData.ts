@@ -128,8 +128,9 @@ export function useLinePlotData(
           .y((d) => yScale(d.y[1])!);
 
         const d = linePath.curve(getCurveFactory(curve))(d3Data) || '';
+        const seriesColor = series[seriesId].color;
         linePlotData.push({
-          color: series[seriesId].color,
+          color: typeof seriesColor === 'function' ? seriesColor() : seriesColor,
           gradientId,
           d,
           seriesId,
