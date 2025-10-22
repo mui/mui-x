@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
 import { useAdapter, diffIn } from '../../use-adapter';
-import { CalendarEvent, RecurringEventUpdateScope, SchedulerValidDate } from '../../models';
+import { CalendarEvent, SchedulerValidDate } from '../../models';
 import { mergeDateAndTime } from '../../utils/date-utils';
 import { useDropTarget } from '../../utils/useDropTarget';
 import { EVENT_CREATION_DEFAULT_LENGTH_MINUTE } from '../../constants';
