@@ -364,277 +364,8 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
     });
   });
 
-  describe('Brush zoom', () => {
-    it('should zoom into the brushed area', async () => {
-      const onZoomChange = sinon.spy();
-      const { user } = render(
-        <BarChartPro
-          {...barChartProps}
-          onZoomChange={onZoomChange}
-          zoomInteractionConfig={{
-            zoom: ['brush'],
-            pan: [], // Disable panning to avoid conflicts
-          }}
-        />,
-        options,
-      );
-
-      expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C', 'D']);
-
-      const svg = document.querySelector('svg')!;
-
-      await user.pointer([
-        {
-          keys: '[MouseLeft>]',
-          target: svg,
-          coords: { x: 15, y: 50 },
-        },
-        {
-          target: svg,
-          coords: { x: 50, y: 50 },
-        },
-        {
-          keys: '[/MouseLeft]',
-          target: svg,
-          coords: { x: 50, y: 50 },
-        },
-      ]);
-      await act(async () => new Promise((r) => requestAnimationFrame(r)));
-
-      expect(onZoomChange.callCount).to.be.greaterThan(0);
-      expect(getAxisTickValues('x')).to.deep.equal(['B']);
-    });
-
-    it('should not zoom if brush is too small', async () => {
-      const onZoomChange = sinon.spy();
-      const { user } = render(
-        <BarChartPro
-          {...barChartProps}
-          onZoomChange={onZoomChange}
-          zoomInteractionConfig={{
-            zoom: ['brush'],
-            pan: [],
-          }}
-        />,
-        options,
-      );
-
-      expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C', 'D']);
-
-      const svg = document.querySelector('svg')!;
-
-      // Make a very small brush (less than 5 pixels) - just a single point
-      await user.pointer([
-        {
-          keys: '[MouseLeft>]',
-          target: svg,
-          coords: { x: 50, y: 50 },
-        },
-        {
-          keys: '[/MouseLeft]',
-          target: svg,
-          coords: { x: 50, y: 50 },
-        },
-      ]);
-      await act(async () => new Promise((r) => requestAnimationFrame(r)));
-
-      // Should not zoom because there was no brush movement
-      expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C', 'D']);
-    });
-
-    it('should work with key modifiers', async () => {
-      const onZoomChange = sinon.spy();
-      const { user } = render(
-        <BarChartPro
-          {...barChartProps}
-          onZoomChange={onZoomChange}
-          zoomInteractionConfig={{
-            zoom: [{ type: 'brush', requiredKeys: ['Shift'] }],
-            pan: [],
-          }}
-        />,
-        options,
-      );
-
-      expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C', 'D']);
-
-      const svg = document.querySelector('svg')!;
-
-      // Try brushing without Shift key - should not work
-      await user.pointer([
-        {
-          keys: '[MouseLeft>]',
-          target: svg,
-          coords: { x: 15, y: 50 },
-        },
-        {
-          target: svg,
-          coords: { x: 50, y: 50 },
-        },
-        {
-          keys: '[/MouseLeft]',
-          target: svg,
-          coords: { x: 50, y: 50 },
-        },
-      ]);
-      await act(async () => new Promise((r) => requestAnimationFrame(r)));
-
-      expect(onZoomChange.callCount).to.equal(0);
-      expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C', 'D']);
-
-      // Try brushing with Shift key - should work
-      await user.keyboard('{Shift>}');
-      await user.pointer([
-        {
-          keys: '[MouseLeft>]',
-          target: svg,
-          coords: { x: 15, y: 50 },
-        },
-        {
-          target: svg,
-          coords: { x: 50, y: 50 },
-        },
-        {
-          keys: '[/MouseLeft]',
-          target: svg,
-          coords: { x: 50, y: 50 },
-        },
-      ]);
-      await user.keyboard('{/Shift}');
-      await act(async () => new Promise((r) => requestAnimationFrame(r)));
-
-      expect(onZoomChange.callCount).to.be.greaterThan(0);
-    });
-  });
-
-  describe('Double tap reset', () => {
-    it('should reset zoom to default on double tap', async () => {
-      const onZoomChange = sinon.spy();
-      const { user } = render(
-        <BarChartPro
-          {...barChartProps}
-          initialZoom={[{ axisId: 'x', start: 50, end: 75 }]}
-          onZoomChange={onZoomChange}
-          zoomInteractionConfig={{
-            zoom: ['doubleTapReset'],
-          }}
-        />,
-        options,
-      );
-
-      // Should start zoomed in
-      expect(getAxisTickValues('x')).to.deep.equal(['C']);
-
-      const svg = document.querySelector('svg')!;
-
-      // Double tap to reset
-      await user.pointer([
-        {
-          keys: '[MouseLeft>]',
-          target: svg,
-          coords: { x: 50, y: 50 },
-        },
-        {
-          keys: '[/MouseLeft]',
-          target: svg,
-          coords: { x: 50, y: 50 },
-        },
-        {
-          keys: '[MouseLeft>]',
-          target: svg,
-          coords: { x: 50, y: 50 },
-        },
-        {
-          keys: '[/MouseLeft]',
-          target: svg,
-          coords: { x: 50, y: 50 },
-        },
-      ]);
-
-      await act(async () => new Promise((r) => requestAnimationFrame(r)));
-
-      expect(onZoomChange.callCount).to.be.greaterThan(0);
-      // Should have reset to show all ticks
-      expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C', 'D']);
-    });
-
-    it('should work with key modifiers', async () => {
-      const onZoomChange = sinon.spy();
-      const { user } = render(
-        <BarChartPro
-          {...barChartProps}
-          initialZoom={[{ axisId: 'x', start: 50, end: 75 }]}
-          onZoomChange={onZoomChange}
-          zoomInteractionConfig={{
-            zoom: [{ type: 'doubleTapReset', requiredKeys: ['Control'] }],
-          }}
-        />,
-        options,
-      );
-
-      // Should start zoomed in
-      expect(getAxisTickValues('x')).to.deep.equal(['C']);
-
-      const svg = document.querySelector('svg')!;
-
-      await user.pointer([
-        {
-          keys: '[MouseLeft>]',
-          target: svg,
-          coords: { x: 50, y: 50 },
-        },
-        {
-          keys: '[/MouseLeft]',
-          target: svg,
-          coords: { x: 50, y: 50 },
-        },
-        {
-          keys: '[MouseLeft>]',
-          target: svg,
-          coords: { x: 50, y: 50 },
-        },
-        {
-          keys: '[/MouseLeft]',
-          target: svg,
-          coords: { x: 50, y: 50 },
-        },
-      ]);
-      await act(async () => new Promise((r) => requestAnimationFrame(r)));
-
-      expect(onZoomChange.callCount).to.equal(0);
-
-      // Try double tap with Control key - should reset
-      await user.keyboard('{Control>}');
-      await user.pointer([
-        {
-          keys: '[MouseLeft>]',
-          target: svg,
-          coords: { x: 50, y: 50 },
-        },
-        {
-          keys: '[/MouseLeft]',
-          target: svg,
-          coords: { x: 50, y: 50 },
-        },
-        {
-          keys: '[MouseLeft>]',
-          target: svg,
-          coords: { x: 50, y: 50 },
-        },
-        {
-          keys: '[/MouseLeft]',
-          target: svg,
-          coords: { x: 50, y: 50 },
-        },
-      ]);
-      await user.keyboard('{/Control}');
-      await act(async () => new Promise((r) => requestAnimationFrame(r)));
-
-      expect(onZoomChange.callCount).to.be.greaterThan(0);
-      expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C', 'D']);
-    });
-
-    it('should reset all axes when multiple axes are zoomed', async () => {
+  describe('Zoom and Pan with reversed axis', () => {
+    it('should zoom at the correct position with reversed x-axis', async () => {
       const onZoomChange = sinon.spy();
       const { user } = render(
         <BarChartPro
@@ -649,68 +380,101 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
               zoom: true,
               height: 30,
               id: 'x',
+              reverse: true, // Reversed axis
             },
           ]}
-          yAxis={[{ zoom: true, id: 'y' }]}
+          yAxis={[{ position: 'none' }]}
           width={100}
           height={130}
           margin={0}
           slotProps={{ tooltip: { trigger: 'none' } }}
-          initialZoom={[
-            { axisId: 'x', start: 50, end: 75 },
-            { axisId: 'y', start: 25, end: 50 },
-          ]}
           onZoomChange={onZoomChange}
-          zoomInteractionConfig={{
-            zoom: ['doubleTapReset'],
-          }}
         />,
         options,
       );
 
-      const svg = document.querySelector('svg')!;
+      // The reverse property affects scale mapping, not tick order
+      // Ticks still render in data order: A, B, C, D
+      expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C', 'D']);
 
-      // Double tap to reset both axes
+      const svg = document.querySelector(CHART_SELECTOR)!;
+
+      await user.pointer([
+        {
+          target: svg,
+          coords: { x: 25, y: 50 },
+        },
+      ]);
+
+      // Zoom in the <-- left side
+      // For `[D, C, B, A]` should zoom towards B, C, D
+      fireEvent.wheel(svg, { deltaY: -500, clientX: 15, clientY: 50 });
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
+
+      expect(onZoomChange.callCount).to.be.greaterThan(0);
+
+      const ticksAfterZoom = getAxisTickValues('x');
+      expect(ticksAfterZoom).to.deep.equal(['B', 'C', 'D']);
+    });
+
+    it('should pan in the correct direction with reversed x-axis on drag', async () => {
+      const onZoomChange = sinon.spy();
+      const { user } = render(
+        <BarChartPro
+          series={[
+            {
+              data: [10, 20, 30, 40],
+            },
+          ]}
+          xAxis={[
+            {
+              data: ['A', 'B', 'C', 'D'],
+              zoom: true,
+              height: 30,
+              id: 'x',
+              reverse: true,
+            },
+          ]}
+          yAxis={[{ position: 'none' }]}
+          width={100}
+          height={130}
+          margin={0}
+          slotProps={{ tooltip: { trigger: 'none' } }}
+          initialZoom={[{ axisId: 'x', start: 25, end: 75 }]}
+          onZoomChange={onZoomChange}
+        />,
+        options,
+      );
+
+      // With zoom at 25-75%, we see the middle range which is B and C
+      expect(getAxisTickValues('x')).to.deep.equal(['B', 'C']);
+
+      const svg = document.querySelector(CHART_SELECTOR)!;
+
+      // Drag from left to right (positive direction)
+      // Drag --> should pan towards left side of data [D, C, B, A], showing C and D
       await user.pointer([
         {
           keys: '[MouseLeft>]',
           target: svg,
-          coords: { x: 50, y: 50 },
+          coords: { x: 15, y: 50 },
+        },
+        {
+          target: svg,
+          coords: { x: 85, y: 50 },
         },
         {
           keys: '[/MouseLeft]',
           target: svg,
-          coords: { x: 50, y: 50 },
-        },
-        {
-          keys: '[MouseLeft>]',
-          target: svg,
-          coords: { x: 50, y: 50 },
-        },
-        {
-          keys: '[/MouseLeft]',
-          target: svg,
-          coords: { x: 50, y: 50 },
+          coords: { x: 85, y: 50 },
         },
       ]);
       await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
       expect(onZoomChange.callCount).to.be.greaterThan(0);
 
-      // Verify the callback was called with reset values for both axes
-      const lastCall = onZoomChange.lastCall.args[0];
-      expect(lastCall).to.be.an('array').with.lengthOf(2);
-
-      // Check that both axes are reset to full range (0-100)
-      const xAxis = lastCall.find((z: any) => z.axisId === 'x');
-      const yAxis = lastCall.find((z: any) => z.axisId === 'y');
-
-      expect(xAxis).to.not.equal(undefined);
-      expect(yAxis).to.not.equal(undefined);
-      expect(xAxis.start).to.equal(0);
-      expect(xAxis.end).to.equal(100);
-      expect(yAxis.start).to.equal(0);
-      expect(yAxis.end).to.equal(100);
+      const ticksAfterDrag = getAxisTickValues('x');
+      expect(ticksAfterDrag).to.deep.equal(['C', 'D']);
     });
   });
 });

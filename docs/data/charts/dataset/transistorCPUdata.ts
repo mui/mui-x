@@ -9,7 +9,7 @@ interface TransistorData {
   density: number | null;
 }
 
-const data: TransistorData[] = [
+const transistorCPUdata: TransistorData[] = [
   {
     name: 'MP944 (20-bit, 6-chip, 28 chips total)',
     number: 74_442,
@@ -1481,4 +1481,4 @@ const data: TransistorData[] = [
   },
 ].map((item, index) => ({ ...item, id: index }));
 
-export default data;
+export default transistorCPUdata;
