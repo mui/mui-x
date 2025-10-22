@@ -1,10 +1,13 @@
+import { gridExpandedSortedRowIndexLookupSelector, gridRowTreeSelector } from '@mui/x-data-grid';
 import { RowReorderValidator, type ValidationRule } from '../rowReorder/reorderValidator';
 import { commonReorderConditions as conditions } from '../rowReorder/commonReorderConditions';
 
 const validationRules: ValidationRule[] = [
   {
     name: 'same-position',
-    applies: (ctx) => ctx.sourceRowIndex === ctx.targetRowIndex,
+    applies: (ctx) =>
+      gridExpandedSortedRowIndexLookupSelector(ctx.apiRef)[ctx.sourceNode.id] ===
+      gridExpandedSortedRowIndexLookupSelector(ctx.apiRef)[ctx.targetNode.id],
     isInvalid: () => true,
     message: 'Source and target are the same',
   },
@@ -19,8 +22,9 @@ const validationRules: ValidationRule[] = [
     applies: (ctx) => conditions.isGroupToLeaf(ctx) || conditions.isGroupToGroup(ctx),
     isInvalid: (ctx) => {
       let currentNode = ctx.targetNode;
+      const rowTree = gridRowTreeSelector(ctx.apiRef);
       while (currentNode.parent) {
-        currentNode = ctx.rowTree[currentNode.parent];
+        currentNode = rowTree[currentNode.parent];
         if (currentNode.id === ctx.sourceNode.id) {
           return true;
         }

@@ -6,12 +6,9 @@ import {
   type GridEventListener,
   gridExpandedSortedRowIdsSelector,
   gridRowTreeSelector,
-} from '@mui/x-data-grid';
-import {
   gridExpandedSortedRowIndexLookupSelector,
-  useGridRegisterPipeProcessor,
-  type GridPipeProcessor,
-} from '@mui/x-data-grid/internals';
+} from '@mui/x-data-grid';
+import { useGridRegisterPipeProcessor, type GridPipeProcessor } from '@mui/x-data-grid/internals';
 import type { ReorderValidationContext } from '../rowReorder/reorderValidationTypes';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
@@ -57,8 +54,6 @@ export const useGridTreeData = (
       const expandedSortedRowIndexLookup = gridExpandedSortedRowIndexLookupSelector(apiRef);
       const expandedSortedRowIds = gridExpandedSortedRowIdsSelector(apiRef);
       const rowTree = gridRowTreeSelector(apiRef);
-
-      const sourceRowIndex = expandedSortedRowIndexLookup[sourceRowId];
       const targetRowIndex = expandedSortedRowIndexLookup[targetRowId];
       const sourceNode = rowTree[sourceRowId];
       const targetNode = rowTree[targetRowId];
@@ -76,16 +71,13 @@ export const useGridTreeData = (
 
       // Create context object
       const context: ReorderValidationContext = {
+        apiRef,
         sourceNode,
         targetNode,
         prevNode,
         nextNode,
-        rowTree,
         dropPosition,
         dragDirection,
-        targetRowIndex,
-        sourceRowIndex,
-        expandedSortedRowIndexLookup,
       };
 
       // First apply internal validation

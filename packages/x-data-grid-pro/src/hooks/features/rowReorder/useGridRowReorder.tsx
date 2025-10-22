@@ -18,11 +18,11 @@ import {
   useGridApiMethod,
   gridExpandedSortedRowIdsSelector,
   gridRowTreeSelector,
+  gridExpandedSortedRowIndexLookupSelector,
 } from '@mui/x-data-grid';
 import {
   gridEditRowsStateSelector,
   useGridRegisterPipeProcessor,
-  gridExpandedSortedRowIndexLookupSelector,
   type GridPipeProcessor,
   type GridStateInitializer,
 } from '@mui/x-data-grid/internals';
@@ -598,7 +598,6 @@ export const useGridRowReorder = (
 
       // Internal validation passed, now apply additional user validation if provided
       if (isValidRowReorder) {
-        const expandedSortedRowIndexLookup = gridExpandedSortedRowIndexLookupSelector(apiRef);
         const expandedSortedRowIds = gridExpandedSortedRowIdsSelector(apiRef);
         const rowTree = gridRowTreeSelector(apiRef);
 
@@ -612,16 +611,13 @@ export const useGridRowReorder = (
             : null;
 
         const context: ReorderValidationContext = {
+          apiRef,
           sourceNode,
           targetNode,
           prevNode,
           nextNode,
-          rowTree,
           dropPosition,
           dragDirection,
-          targetRowIndex,
-          sourceRowIndex,
-          expandedSortedRowIndexLookup,
         };
 
         if (!isValidRowReorder(context)) {

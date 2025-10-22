@@ -6,9 +6,9 @@ import {
   gridRowNodeSelector,
   useGridSelector,
   gridRowMaximumTreeDepthSelector,
+  gridExpandedSortedRowIndexLookupSelector,
 } from '@mui/x-data-grid';
 import {
-  gridExpandedSortedRowIndexLookupSelector,
   gridRowDropPositionSelector,
   gridRowDropTargetRowIdSelector,
   useGridRowsOverridableMethodsCommunity,
@@ -54,18 +54,6 @@ export const useGridRowsOverridableMethods = (
       if (sourceNode.type === 'footer') {
         throw new Error(`MUI X: The row reordering do not support reordering of footer rows.`);
       }
-
-      /**
-       * Tree Data Reordering Use Cases
-       * =================================
-       *
-       * | Case | Source Node | Target Node | Parent Relationship       | Action                                                                      |
-       * | :--- | :---------- | :---------- | :------------------------ | :-------------------------------------------------------------------------- |
-       * | A ✅ | Leaf        | Leaf        | Same parent               | Swap positions (similar to flat tree structure)                             |
-       * | B ✅ | Group       | Group       | Same parent               | Swap positions (along with their descendants)                               |
-       *
-       * Rest of the cases in progress!!!
-       */
 
       const executionContext: ReorderExecutionContext = {
         sourceRowId,

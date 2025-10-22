@@ -1,3 +1,4 @@
+import { gridExpandedSortedRowIndexLookupSelector } from '@mui/x-data-grid-pro';
 import {
   commonReorderConditions as conditions,
   RowReorderValidator,
@@ -8,7 +9,9 @@ const validationRules: ValidationRule[] = [
   // ===== Basic invalid cases =====
   {
     name: 'same-position',
-    applies: (ctx) => ctx.sourceRowIndex === ctx.targetRowIndex,
+    applies: (ctx) =>
+      gridExpandedSortedRowIndexLookupSelector(ctx.apiRef)[ctx.sourceNode.id] ===
+      gridExpandedSortedRowIndexLookupSelector(ctx.apiRef)[ctx.targetNode.id],
     isInvalid: () => true,
     message: 'Source and target are the same',
   },

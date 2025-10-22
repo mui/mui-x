@@ -1,4 +1,8 @@
-import type { GridGroupNode } from '@mui/x-data-grid-pro';
+import {
+  gridExpandedSortedRowIndexLookupSelector,
+  gridRowTreeSelector,
+  type GridGroupNode,
+} from '@mui/x-data-grid-pro';
 import type { ReorderValidationContext as Ctx } from './reorderValidationTypes';
 
 /**
@@ -60,7 +64,7 @@ export const commonReorderConditions = {
       if (currentId === ctx.sourceNode.id) {
         return true;
       }
-      const node = ctx.rowTree[currentId];
+      const node = gridRowTreeSelector(ctx.apiRef)[currentId];
       if (!node) {
         break;
       }
@@ -71,7 +75,10 @@ export const commonReorderConditions = {
 
   // Position checks
   isAdjacentPosition: (ctx: Ctx) => {
-    const { sourceRowIndex, targetRowIndex, dropPosition } = ctx;
+    const expandedSortedRowIndexLookup = gridExpandedSortedRowIndexLookupSelector(ctx.apiRef);
+    const sourceRowIndex = expandedSortedRowIndexLookup[ctx.sourceNode.id];
+    const targetRowIndex = expandedSortedRowIndexLookup[ctx.targetNode.id];
+    const dropPosition = ctx.dropPosition;
     return (
       (dropPosition === 'above' && targetRowIndex === sourceRowIndex + 1) ||
       (dropPosition === 'below' && targetRowIndex === sourceRowIndex - 1)
@@ -83,8 +90,9 @@ export const commonReorderConditions = {
     if (ctx.targetNode.type !== 'group') {
       return false;
     }
+    const rowTree = gridRowTreeSelector(ctx.apiRef);
     const targetGroup = ctx.targetNode as GridGroupNode;
-    const firstChild = targetGroup.children?.[0] ? ctx.rowTree[targetGroup.children[0]] : null;
+    const firstChild = targetGroup.children?.[0] ? rowTree[targetGroup.children[0]] : null;
     return firstChild?.type === 'group' && firstChild.depth === ctx.sourceNode.depth;
   },
 
@@ -92,8 +100,9 @@ export const commonReorderConditions = {
     if (ctx.targetNode.type !== 'group') {
       return false;
     }
+    const rowTree = gridRowTreeSelector(ctx.apiRef);
     const targetGroup = ctx.targetNode as GridGroupNode;
-    const firstChild = targetGroup.children?.[0] ? ctx.rowTree[targetGroup.children[0]] : null;
+    const firstChild = targetGroup.children?.[0] ? rowTree[targetGroup.children[0]] : null;
     return firstChild ? firstChild.depth === ctx.sourceNode.depth : false;
   },
 };

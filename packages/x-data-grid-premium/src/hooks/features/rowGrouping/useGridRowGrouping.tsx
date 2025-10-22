@@ -9,6 +9,7 @@ import {
   gridRowMaximumTreeDepthSelector,
   gridRowTreeSelector,
   gridExpandedSortedRowIdsSelector,
+  gridExpandedSortedRowIndexLookupSelector,
   type ReorderValidationContext,
 } from '@mui/x-data-grid-pro';
 import {
@@ -17,7 +18,6 @@ import {
   GridRestoreStatePreProcessingContext,
   GridStateInitializer,
   GridStrategyGroup,
-  gridExpandedSortedRowIndexLookupSelector,
   RowGroupingStrategy,
 } from '@mui/x-data-grid-pro/internals';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
@@ -302,7 +302,6 @@ export const useGridRowGrouping = (
       const expandedSortedRowIds = gridExpandedSortedRowIdsSelector(apiRef);
       const rowTree = gridRowTreeSelector(apiRef);
 
-      const sourceRowIndex = expandedSortedRowIndexLookup[sourceRowId];
       const targetRowIndex = expandedSortedRowIndexLookup[targetRowId];
       const sourceNode = rowTree[sourceRowId];
       const targetNode = rowTree[targetRowId];
@@ -320,16 +319,13 @@ export const useGridRowGrouping = (
 
       // Create context object
       const context: ReorderValidationContext = {
+        apiRef,
         sourceNode,
         targetNode,
         prevNode,
         nextNode,
-        rowTree,
         dropPosition,
         dragDirection,
-        targetRowIndex,
-        sourceRowIndex,
-        expandedSortedRowIndexLookup,
       };
 
       // First apply internal validation

@@ -354,6 +354,7 @@
   { "name": "gridExpandedRowCountSelector", "kind": "Variable" },
   { "name": "gridExpandedSortedRowEntriesSelector", "kind": "Variable" },
   { "name": "gridExpandedSortedRowIdsSelector", "kind": "Variable" },
+  { "name": "gridExpandedSortedRowIndexLookupSelector", "kind": "Variable" },
   { "name": "GridExpandLessIcon", "kind": "Variable" },
   { "name": "GridExpandMoreIcon", "kind": "Variable" },
   { "name": "GridExperimentalPremiumFeatures", "kind": "Interface" },

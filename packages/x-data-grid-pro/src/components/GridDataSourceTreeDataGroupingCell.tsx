@@ -47,7 +47,7 @@ interface GridTreeDataGroupingCellIconProps
 }
 
 function GridTreeDataGroupingCellIcon(props: GridTreeDataGroupingCellIconProps) {
-  const apiRef = useGridPrivateApiContext() as RefObject<GridPrivateApiPro>;
+  const apiRef = useGridPrivateApiContext() as unknown as RefObject<GridPrivateApiPro>;
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
   const { rowNode, id, field, descendantCount } = props;
