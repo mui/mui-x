@@ -10,7 +10,7 @@ const tooltipItemPositionGetter: TooltipItemPositionGetter<'pie'> = (params) => 
   }
   const itemSeries = series.pie?.series[identifier.seriesId];
 
-  if (series.pie == null || itemSeries == null) {
+  if (itemSeries == null) {
     return null;
   }
 

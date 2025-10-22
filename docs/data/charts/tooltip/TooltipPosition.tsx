@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { AxisValueFormatterContext } from '@mui/x-charts/models';
@@ -45,13 +46,16 @@ export default function TooltipPosition() {
       }
       renderDemo={(props) => (
         <Box sx={{ width: '100%' }}>
+          <Typography variant="h6" gutterBottom>
+            Monthly precipitation
+          </Typography>
           <BarChart
             dataset={dataset}
             xAxis={[
               {
                 dataKey: 'month',
                 label: 'months',
-                height: 60,
+                height: 50,
                 valueFormatter: (
                   value: string,
                   ctx: AxisValueFormatterContext<'band'>,
@@ -74,6 +78,7 @@ export default function TooltipPosition() {
                   props.placement === 'undefined' ? undefined : props.placement,
               },
             }}
+            enableKeyboardNavigation
             {...chartSetting}
           />
         </Box>

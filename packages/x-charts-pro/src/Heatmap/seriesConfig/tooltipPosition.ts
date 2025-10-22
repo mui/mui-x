@@ -8,7 +8,7 @@ const tooltipItemPositionGetter: TooltipItemPositionGetter<'heatmap'> = (params)
   }
   const itemSeries = series.heatmap?.series[identifier.seriesId];
 
-  if (series.heatmap == null || itemSeries == null) {
+  if (itemSeries == null) {
     return null;
   }
 
@@ -34,16 +34,15 @@ const tooltipItemPositionGetter: TooltipItemPositionGetter<'heatmap'> = (params)
   const height = axesConfig.y.scale.bandwidth();
 
   switch (placement) {
-    case 'top':
-      return { x: x + width / 2, y };
     case 'bottom':
       return { x: x + width / 2, y: y + height };
     case 'left':
       return { x, y: y + height / 2 };
     case 'right':
       return { x: x + width, y: y + height / 2 };
+    case 'top':
     default:
-      return { x, y };
+      return { x: x + width / 2, y };
   }
 };
 

@@ -27,5 +27,5 @@ export type TooltipItemPositionGetter<TSeriesType extends ChartSeriesType> = (pa
   /**
    * The preferred placement of the tooltip related to the element.
    */
-  placement?: 'top' | 'bottom' | 'left' | 'right';
+  placement: 'top' | 'bottom' | 'left' | 'right';
 }) => { x: number; y: number } | null;

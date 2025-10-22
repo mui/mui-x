@@ -1,4 +1,4 @@
-import { TooltipItemPositionGetter } from '@mui/x-charts/internals';
+import { findMinMax, TooltipItemPositionGetter } from '@mui/x-charts/internals';
 import { createPositionGetter } from '../coordinateMapper';
 
 const tooltipItemPositionGetter: TooltipItemPositionGetter<'funnel'> = (params) => {
@@ -9,7 +9,7 @@ const tooltipItemPositionGetter: TooltipItemPositionGetter<'funnel'> = (params) 
   }
   const itemSeries = series.funnel?.series[identifier.seriesId];
 
-  if (series.funnel == null || itemSeries == null) {
+  if (itemSeries == null) {
     return null;
   }
 
@@ -46,10 +46,8 @@ const tooltipItemPositionGetter: TooltipItemPositionGetter<'funnel'> = (params) 
     ),
   );
 
-  const x0 = Math.min(...allX);
-  const x1 = Math.max(...allX);
-  const y0 = Math.min(...allY);
-  const y1 = Math.max(...allY);
+  const [x0, x1] = findMinMax(allX);
+  const [y0, y1] = findMinMax(allY);
 
   switch (placement) {
     case 'top':

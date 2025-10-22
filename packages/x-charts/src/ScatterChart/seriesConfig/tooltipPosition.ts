@@ -8,7 +8,7 @@ const tooltipItemPositionGetter: TooltipItemPositionGetter<'scatter'> = (params)
   }
   const itemSeries = series.scatter?.series[identifier.seriesId];
 
-  if (series.scatter == null || itemSeries == null) {
+  if (itemSeries == null) {
     return null;
   }
 

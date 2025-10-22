@@ -9,12 +9,6 @@ import { ComputeResult } from '../useChartCartesianAxis/computeAxisValue';
 import { ChartSeriesType } from '../../../../models/seriesType/config';
 import { SeriesId } from '../../../../models/seriesType/common';
 import { AxisId, AxisItemIdentifier, ChartsAxisProps } from '../../../../models/axis';
-import {
-  BarItemIdentifier,
-  LineItemIdentifier,
-  PieItemIdentifier,
-  ScatterItemIdentifier,
-} from '../../../../models/seriesType';
 
 const selectKeyboardNavigation: ChartOptionalRootSelector<UseChartKeyboardNavigationSignature> = (
   state,
@@ -102,16 +96,17 @@ export const selectorChartsKeyboardYAxisIndex = createSelector(
 );
 
 export const selectorChartsKeyboardItem = createSelector(
-  [selectorChartsFocusedSeriesType, selectorChartsFocusedSeriesId, selectorChartsFocusedDataIndex],
-  function selectorChartsKeyboardItem(seriesType, seriesId, dataIndex) {
-    if (seriesType === undefined || seriesId === undefined) {
+  [selectKeyboardNavigation],
+  function selectorChartsKeyboardItem(keyboardState) {
+    if (keyboardState?.item == null) {
       return null;
     }
-    return {
-      type: seriesType,
-      seriesId,
-      dataIndex,
-    } as BarItemIdentifier | LineItemIdentifier | ScatterItemIdentifier | PieItemIdentifier;
+    const { type, seriesId } = keyboardState.item;
+
+    if (type === undefined || seriesId === undefined) {
+      return null;
+    }
+    return keyboardState.item;
   },
 );
 
