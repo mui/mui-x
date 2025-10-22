@@ -5,7 +5,9 @@ import {
   GridValidRowModel,
   useGridApiRef,
   type DataGridProProps,
+  type GridColDef,
 } from '@mui/x-data-grid-pro';
+import { TreeDataSyncRowDataGroupingCell } from './TreeDataSyncRowDataGroupingCell';
 
 const getTreeDataPath: DataGridProProps['getTreeDataPath'] = (row) => {
   return row.path;
@@ -19,84 +21,375 @@ const setTreeDataPath: DataGridProProps['setTreeDataPath'] = (path, row) => {
 };
 
 const initialRows = [
-  { id: 1, path: ['Documents'], name: 'Documents', size: '' },
-  { id: 2, path: ['Documents', 'Work'], name: 'Work', size: '' },
-  { id: 3, path: ['Documents', 'Work', 'Reports'], name: 'Reports', size: '' },
-  {
-    id: 4,
-    path: ['Documents', 'Work', 'Reports', 'Q1.pdf'],
-    name: 'Q1.pdf',
-    size: '120 kB',
-  },
+  // src folder
   {
     id: 5,
-    path: ['Documents', 'Work', 'Reports', 'Q2.pdf'],
-    name: 'Q2.pdf',
-    size: '98 kB',
+    path: ['src'],
+    name: 'src',
+    type: 'folder',
+    size: '',
+    modified: '2025-01-22',
   },
-  { id: 6, path: ['Documents', 'Work', 'Invoices'], name: 'Invoices', size: '' },
+
+  // src/components
   {
-    id: 7,
-    path: ['Documents', 'Work', 'Invoices', 'Invoice1.pdf'],
-    name: 'Invoice1.pdf',
-    size: '45 kB',
+    id: 9,
+    path: ['src', 'components'],
+    name: 'components',
+    type: 'folder',
+    size: '',
+    modified: '2025-01-21',
   },
-  {
-    id: 8,
-    path: ['Documents', 'Work', 'Invoices', 'Invoice2.pdf'],
-    name: 'Invoice2.pdf',
-    size: '47 kB',
-  },
-  { id: 9, path: ['Documents', 'Personal'], name: 'Personal', size: '' },
   {
     id: 10,
-    path: ['Documents', 'Personal', 'Resume.pdf'],
-    name: 'Resume.pdf',
-    size: '32 kB',
+    path: ['src', 'components', 'Button.tsx'],
+    name: 'Button.tsx',
+    type: 'tsx',
+    size: '2.4 KB',
+    modified: '2025-01-19',
   },
   {
     id: 11,
-    path: ['Documents', 'Personal', 'CoverLetter.docx'],
-    name: 'CoverLetter.docx',
-    size: '24 kB',
+    path: ['src', 'components', 'Drawer.tsx'],
+    name: 'Drawer.tsx',
+    type: 'tsx',
+    size: '5.8 KB',
+    modified: '2025-01-20',
   },
-  { id: 12, path: ['Documents', 'Personal', 'Taxes'], name: 'Taxes', size: '' },
+  {
+    id: 12,
+    path: ['src', 'components', 'Navbar.tsx'],
+    name: 'Navbar.tsx',
+    type: 'tsx',
+    size: '4.2 KB',
+    modified: '2025-01-21',
+  },
   {
     id: 13,
-    path: ['Documents', 'Personal', 'Taxes', '2022.pdf'],
-    name: '2022.pdf',
-    size: '210 kB',
+    path: ['src', 'components', 'TreeView.tsx'],
+    name: 'TreeView.tsx',
+    type: 'tsx',
+    size: '6.7 KB',
+    modified: '2025-01-18',
   },
   {
     id: 14,
-    path: ['Documents', 'Personal', 'Taxes', '2023.pdf'],
-    name: '2023.pdf',
-    size: '225 kB',
+    path: ['src', 'components', 'Modal.tsx'],
+    name: 'Modal.tsx',
+    type: 'tsx',
+    size: '3.1 KB',
+    modified: '2025-01-17',
   },
-  { id: 15, path: ['Pictures'], name: 'Pictures', size: '' },
-  { id: 16, path: ['Pictures', 'Vacation'], name: 'Vacation', size: '' },
+  {
+    id: 15,
+    path: ['src', 'components', 'index.ts'],
+    name: 'index.ts',
+    type: 'ts',
+    size: '842 B',
+    modified: '2025-01-21',
+  },
+
+  // src/hooks
+  {
+    id: 16,
+    path: ['src', 'hooks'],
+    name: 'hooks',
+    type: 'folder',
+    size: '',
+    modified: '2025-01-19',
+  },
   {
     id: 17,
-    path: ['Pictures', 'Vacation', 'Beach.jpg'],
-    name: 'Beach.jpg',
-    size: '2.1 MB',
+    path: ['src', 'hooks', 'useAuth.ts'],
+    name: 'useAuth.ts',
+    type: 'ts',
+    size: '2.8 KB',
+    modified: '2025-01-16',
   },
   {
     id: 18,
-    path: ['Pictures', 'Vacation', 'Mountains.jpg'],
-    name: 'Mountains.jpg',
-    size: '3.4 MB',
+    path: ['src', 'hooks', 'useLocalStorage.ts'],
+    name: 'useLocalStorage.ts',
+    type: 'ts',
+    size: '1.5 KB',
+    modified: '2025-01-14',
   },
-  { id: 19, path: ['Pictures', 'Family'], name: 'Family', size: '' },
+  {
+    id: 19,
+    path: ['src', 'hooks', 'useDebounce.ts'],
+    name: 'useDebounce.ts',
+    type: 'ts',
+    size: '948 B',
+    modified: '2025-01-12',
+  },
   {
     id: 20,
-    path: ['Pictures', 'Family', 'Birthday.png'],
-    name: 'Birthday.png',
-    size: '1.2 MB',
+    path: ['src', 'hooks', 'index.ts'],
+    name: 'index.ts',
+    type: 'ts',
+    size: '456 B',
+    modified: '2025-01-19',
+  },
+
+  // src/utils
+  {
+    id: 21,
+    path: ['src', 'utils'],
+    name: 'utils',
+    type: 'folder',
+    size: '',
+    modified: '2025-01-18',
+  },
+  {
+    id: 22,
+    path: ['src', 'utils', 'formatters.ts'],
+    name: 'formatters.ts',
+    type: 'ts',
+    size: '3.2 KB',
+    modified: '2025-01-15',
+  },
+  {
+    id: 23,
+    path: ['src', 'utils', 'validators.ts'],
+    name: 'validators.ts',
+    type: 'ts',
+    size: '2.1 KB',
+    modified: '2025-01-13',
+  },
+  {
+    id: 24,
+    path: ['src', 'utils', 'api.ts'],
+    name: 'api.ts',
+    type: 'ts',
+    size: '4.8 KB',
+    modified: '2025-01-18',
+  },
+
+  // src/types
+  {
+    id: 25,
+    path: ['src', 'types'],
+    name: 'types',
+    type: 'folder',
+    size: '',
+    modified: '2025-01-17',
+  },
+  {
+    id: 26,
+    path: ['src', 'types', 'user.ts'],
+    name: 'user.ts',
+    type: 'ts',
+    size: '1.6 KB',
+    modified: '2025-01-17',
+  },
+  {
+    id: 27,
+    path: ['src', 'types', 'api.ts'],
+    name: 'api.ts',
+    type: 'ts',
+    size: '2.3 KB',
+    modified: '2025-01-16',
+  },
+
+  // src/pages
+  {
+    id: 28,
+    path: ['src', 'pages'],
+    name: 'pages',
+    type: 'folder',
+    size: '',
+    modified: '2025-01-20',
+  },
+  {
+    id: 29,
+    path: ['src', 'pages', 'Home.tsx'],
+    name: 'Home.tsx',
+    type: 'tsx',
+    size: '5.4 KB',
+    modified: '2025-01-20',
+  },
+  {
+    id: 30,
+    path: ['src', 'pages', 'Dashboard.tsx'],
+    name: 'Dashboard.tsx',
+    type: 'tsx',
+    size: '7.9 KB',
+    modified: '2025-01-19',
+  },
+  {
+    id: 31,
+    path: ['src', 'pages', 'Settings.tsx'],
+    name: 'Settings.tsx',
+    type: 'tsx',
+    size: '4.6 KB',
+    modified: '2025-01-18',
+  },
+
+  // src/assets
+  {
+    id: 32,
+    path: ['src', 'assets'],
+    name: 'assets',
+    type: 'folder',
+    size: '',
+    modified: '2025-01-15',
+  },
+  {
+    id: 33,
+    path: ['src', 'assets', 'logo.svg'],
+    name: 'logo.svg',
+    type: 'svg',
+    size: '2.8 KB',
+    modified: '2025-01-10',
+  },
+  {
+    id: 34,
+    path: ['src', 'assets', 'icon.png'],
+    name: 'icon.png',
+    type: 'png',
+    size: '14.2 KB',
+    modified: '2025-01-10',
+  },
+
+  // src/files
+  {
+    id: 6,
+    path: ['src', 'index.tsx'],
+    name: 'index.tsx',
+    type: 'tsx',
+    size: '1.8 KB',
+    modified: '2025-01-18',
+  },
+  {
+    id: 7,
+    path: ['src', 'App.tsx'],
+    name: 'App.tsx',
+    type: 'tsx',
+    size: '3.4 KB',
+    modified: '2025-01-22',
+  },
+  {
+    id: 8,
+    path: ['src', 'App.css'],
+    name: 'App.css',
+    type: 'css',
+    size: '1.2 KB',
+    modified: '2025-01-21',
+  },
+
+  // public folder
+  {
+    id: 35,
+    path: ['public'],
+    name: 'public',
+    type: 'folder',
+    size: '',
+    modified: '2025-01-15',
+  },
+  {
+    id: 36,
+    path: ['public', 'index.html'],
+    name: 'index.html',
+    type: 'txt',
+    size: '1.8 KB',
+    modified: '2025-01-15',
+  },
+  {
+    id: 37,
+    path: ['public', 'favicon.ico'],
+    name: 'favicon.ico',
+    type: 'png',
+    size: '4.2 KB',
+    modified: '2025-01-08',
+  },
+  {
+    id: 38,
+    path: ['public', 'robots.txt'],
+    name: 'robots.txt',
+    type: 'txt',
+    size: '234 B',
+    modified: '2025-01-08',
+  },
+
+  // Root files
+  {
+    id: 1,
+    path: ['package.json'],
+    name: 'package.json',
+    type: 'json',
+    size: '2.1 KB',
+    modified: '2025-01-15',
+  },
+  {
+    id: 2,
+    path: ['tsconfig.json'],
+    name: 'tsconfig.json',
+    type: 'json',
+    size: '856 B',
+    modified: '2025-01-10',
+  },
+  {
+    id: 3,
+    path: ['README.md'],
+    name: 'README.md',
+    type: 'md',
+    size: '4.2 KB',
+    modified: '2025-01-20',
+  },
+  {
+    id: 4,
+    path: ['.gitignore'],
+    name: '.gitignore',
+    type: 'txt',
+    size: '428 B',
+    modified: '2025-01-08',
   },
 ];
 
-const columns = [{ field: 'size', headerName: 'Size', width: 100 }];
+const groupingColDef: DataGridProProps['groupingColDef'] = {
+  headerName: 'Name',
+  renderCell: TreeDataSyncRowDataGroupingCell as any,
+};
+
+const columns: DataGridProProps['columns'] = [
+  {
+    field: 'type',
+    headerName: 'Type',
+    width: 120,
+    valueGetter: (value) => {
+      const typeMap: Record<string, string> = {
+        folder: 'Folder',
+        tsx: 'TypeScript',
+        ts: 'TypeScript',
+        json: 'JSON',
+        md: 'Markdown',
+        css: 'CSS',
+        svg: 'SVG Image',
+        png: 'PNG Image',
+        jpg: 'JPEG Image',
+        txt: 'Text',
+      };
+      return typeMap[value] || 'File';
+    },
+  },
+  {
+    field: 'modified',
+    headerName: 'Modified',
+    width: 140,
+    valueFormatter: (value) => {
+      if (!value) {
+        return '';
+      }
+      const date = new Date(value);
+      return date.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      });
+    },
+  },
+  { field: 'size', headerName: 'Size', width: 100 },
+];
 
 const isValidRowReorder: DataGridProProps['isValidRowReorder'] = (context) => {
   if (context.targetNode.type === 'leaf' && context.dropPosition === 'over') {
@@ -135,6 +428,7 @@ export default function TreeDataSyncRowData() {
         onRowOrderChange={handleRowOrderChange}
         getTreeDataPath={getTreeDataPath}
         setTreeDataPath={setTreeDataPath}
+        groupingColDef={groupingColDef}
       />
     </div>
   );

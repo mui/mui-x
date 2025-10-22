@@ -10,4 +10,5 @@
   onRowOrderChange={handleRowOrderChange}
   getTreeDataPath={getTreeDataPath}
   setTreeDataPath={setTreeDataPath}
+  groupingColDef={groupingColDef}
 />
