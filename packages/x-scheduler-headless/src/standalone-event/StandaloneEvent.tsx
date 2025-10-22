@@ -5,7 +5,7 @@ import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/elem
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { useButton } from '../base-ui-copy/utils/useButton';
 import { useRenderElement } from '../base-ui-copy/utils/useRenderElement';
-import { BaseUIComponentProps } from '../base-ui-copy/utils/types';
+import { BaseUIComponentProps, NonNativeButtonProps } from '../base-ui-copy/utils/types';
 import { CalendarOccurrencePlaceholderExternalDragData } from '../models';
 import { useDragPreview } from '../utils/useDragPreview';
 
@@ -95,6 +95,7 @@ export namespace StandaloneEvent {
 
   export interface Props
     extends BaseUIComponentProps<'div', State>,
+      NonNativeButtonProps,
       Pick<useDragPreview.Parameters, 'renderDragPreview' | 'data'> {
     /**
      * Callback fired when the event is dropped into the Event Calendar.
