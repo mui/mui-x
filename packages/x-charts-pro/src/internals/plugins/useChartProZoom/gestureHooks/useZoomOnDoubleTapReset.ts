@@ -20,8 +20,8 @@ export const useZoomOnDoubleTapReset = (
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
   const config = useSelector(store, selectorZoomInteractionConfig, ['doubleTapReset' as const]);
 
-  const isZoomOnDoubleTapResetEnabled = React.useMemo(
-    () => (Object.keys(optionsLookup).length > 0 && config) || false,
+  const isZoomOnDoubleTapResetEnabled: boolean = React.useMemo(
+    () => (Object.keys(optionsLookup).length > 0 && Boolean(config)) || false,
     [optionsLookup, config],
   );
 
