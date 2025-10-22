@@ -44,13 +44,21 @@ function SingleSeriesExtremaLabels({ series }) {
         x={xAxis.data?.[min.index]}
         y={min.value}
         placement="below"
-        color={series.color}
+        color={
+          typeof series.color === 'function'
+            ? series.color({ value: min.value, dataIndex: min.index })
+            : series.color
+        }
       />
       <PointLabel
         x={xAxis.data?.[max.index]}
         y={max.value}
         placement="above"
-        color={series.color}
+        color={
+          typeof series.color === 'function'
+            ? series.color({ value: min.value, dataIndex: min.index })
+            : series.color
+        }
       />
     </React.Fragment>
   );

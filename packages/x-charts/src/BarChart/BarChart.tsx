@@ -28,6 +28,8 @@ import { ChartsSurface } from '../ChartsSurface';
 import { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
 import { ChartsWrapper } from '../ChartsWrapper';
 import { BarChartPluginSignatures } from './BarChart.plugins';
+import { BarRangePlot } from './BarRangePlot';
+import { BarRangeSeriesType } from '../models/seriesType/barRange';
 
 export interface BarChartSlots
   extends ChartsAxisSlots,
@@ -47,6 +49,7 @@ export interface BarChartSlotProps
     Partial<ChartsSlotProps> {}
 
 export type BarSeries = MakeOptional<BarSeriesType, 'type'>;
+export type BarRangeSeries = BarRangeSeriesType;
 export interface BarChartProps
   extends Omit<
       ChartContainerProps<'bar', BarChartPluginSignatures>,
@@ -59,7 +62,7 @@ export interface BarChartProps
    * The series to display in the bar chart.
    * An array of [[BarSeries]] objects.
    */
-  series: Readonly<BarSeries[]>;
+  series: ReadonlyArray<BarSeries | BarRangeSeries>;
   /**
    * Option to display a cartesian grid in the background.
    */
@@ -118,6 +121,7 @@ const BarChart = React.forwardRef(function BarChart(
     chartsWrapperProps,
     chartContainerProps,
     barPlotProps,
+    barRangePlotProps,
     gridProps,
     clipPathProps,
     clipPathGroupProps,
@@ -144,6 +148,7 @@ const BarChart = React.forwardRef(function BarChart(
           <ChartsGrid {...gridProps} />
           <g {...clipPathGroupProps}>
             <BarPlot {...barPlotProps} />
+            <BarRangePlot {...barRangePlotProps} />
             <ChartsOverlay {...overlayProps} />
             <ChartsAxisHighlight {...axisHighlightProps} />
           </g>

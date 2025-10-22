@@ -1,7 +1,7 @@
 ---
 title: React Bar chart
 productId: x-charts
-components: BarChart, BarChartPro, BarElement, BarPlot, ChartsGrid, BarLabel
+components: BarChart, BarChartPro, BarElement, BarPlot, ChartsGrid, BarLabel, BarRangePlot
 ---
 
 # Charts - Bars
@@ -56,10 +56,20 @@ And a value of `-1` will make bars overlap on top of each other.
 
 {{"demo": "BarGap.js", "hideToolbar": true, "bg": "playground"}}
 
+## Bar range
+
+You can create bar ranges by providing an array of two values for each data point and setting the series' `type` property to `'barRange'`.
+
+{{"demo": "BasicBarRange.js"}}
+
 ## Stacking
 
-Each bar series can get a `stack` property expecting a string value.
+Bar series accept a `stack` property that identifies a stack.
 Series with the same `stack` will be stacked on top of each other.
+
+:::info
+Bar range series cannot be stacked.
+:::
 
 {{"demo": "StackBars.js"}}
 
@@ -129,6 +139,10 @@ The bar charts use by priority:
 3. The series color
 
 Learn more about the `colorMap` properties in the [Styling docs](/x/react-charts/styling/#values-color).
+
+:::warning
+The `colorMap` property does not work for the numerical axis of bar range charts (i.e., the y-axis for vertical bar charts and the x-axis for horizontal bar charts).
+:::
 
 {{"demo": "ColorScale.js"}}
 
@@ -277,3 +291,7 @@ Here's how the Bar Chart is composed:
 ```
 
 {{"demo": "BarScatterCompostion.js"}}
+
+### Bar range
+
+TODO

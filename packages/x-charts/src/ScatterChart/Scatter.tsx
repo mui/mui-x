@@ -26,6 +26,9 @@ export interface ScatterProps {
   series: DefaultizedScatterSeriesType;
   xScale: D3Scale;
   yScale: D3Scale;
+  /**
+   * @deprecated Use `colorGetter` instead.
+   */
   color: string;
   /**
    * Function to get the color of a scatter item given its data index.
@@ -145,6 +148,9 @@ Scatter.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
+  /**
+   * @deprecated Use `colorGetter` instead.
+   */
   color: PropTypes.string.isRequired,
   /**
    * Function to get the color of a scatter item given its data index.

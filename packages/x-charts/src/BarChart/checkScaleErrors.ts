@@ -7,7 +7,6 @@ import {
   ComputedXAxis,
   ComputedYAxis,
 } from '../models/axis';
-import { DefaultizedBarSeriesType } from '../models/seriesType/bar';
 import { SeriesId } from '../models/seriesType/common';
 
 const getAxisMessage = (axisDirection: 'x' | 'y', axisId: AxisId) => {
@@ -22,7 +21,7 @@ const getAxisMessage = (axisDirection: 'x' | 'y', axisId: AxisId) => {
 export function checkScaleErrors(
   verticalLayout: boolean,
   seriesId: SeriesId,
-  series: DefaultizedBarSeriesType & { stackedData: [number, number][] },
+  seriesDataLength: number,
   xAxisId: AxisId,
   xAxis: { [axisId: AxisId]: ComputedXAxis },
   yAxisId: AxisId,
@@ -56,10 +55,10 @@ export function checkScaleErrors(
     );
   }
   if (process.env.NODE_ENV !== 'production') {
-    if (discreteAxisConfig.data.length < series.stackedData.length) {
+    if (discreteAxisConfig.data.length < seriesDataLength) {
       warnOnce(
         [
-          `MUI X Charts: ${getAxisMessage(discreteAxisDirection, discreteAxisId)} has less data (${discreteAxisConfig.data.length} values) than the bar series of id "${seriesId}" (${series.stackedData.length} values).`,
+          `MUI X Charts: ${getAxisMessage(discreteAxisDirection, discreteAxisId)} has less data (${discreteAxisConfig.data.length} values) than the bar series of id "${seriesId}" (${seriesDataLength} values).`,
           'The axis data should have at least the same length than the series using it.',
         ],
         'error',

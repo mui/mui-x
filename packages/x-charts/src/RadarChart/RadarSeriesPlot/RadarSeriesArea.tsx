@@ -10,6 +10,7 @@ import { useInteractionAllItemProps } from '../../hooks/useInteractionItemProps'
 import { SeriesId } from '../../models/seriesType/common';
 import { HighlightItemData } from '../../internals/plugins/featurePlugins/useChartHighlight';
 import { useRadarRotationIndex } from './useRadarRotationIndex';
+import { getSeriesColorFn } from '../../internals/getSeriesColorFn';
 
 interface GetPathPropsParams {
   seriesId: SeriesId;

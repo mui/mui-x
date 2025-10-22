@@ -44,6 +44,7 @@ class PolarSeriesTypes {
 export const cartesianSeriesTypes = new CartesianSeriesTypes();
 
 cartesianSeriesTypes.addType('bar');
+cartesianSeriesTypes.addType('barRange');
 cartesianSeriesTypes.addType('line');
 cartesianSeriesTypes.addType('scatter');
 

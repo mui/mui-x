@@ -39,3 +39,7 @@ components: BarChart, BarElement, BarPlot
 ## Population pyramid
 
 {{"demo": "PopulationPyramidBarChart.js"}}
+
+## Waterfall chart
+
+{{"demo": "WaterfallChart.js"}}

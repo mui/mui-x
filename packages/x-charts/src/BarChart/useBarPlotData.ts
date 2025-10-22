@@ -45,7 +45,15 @@ export function useBarPlotData(
       const verticalLayout = series[seriesId].layout === 'vertical';
       const reverse = (verticalLayout ? yAxisConfig.reverse : xAxisConfig.reverse) ?? false;
 
-      checkScaleErrors(verticalLayout, seriesId, series[seriesId], xAxisId, xAxes, yAxisId, yAxes);
+      checkScaleErrors(
+        verticalLayout,
+        seriesId,
+        series[seriesId].stackedData.length,
+        xAxisId,
+        xAxes,
+        yAxisId,
+        yAxes,
+      );
 
       const baseScaleConfig = (verticalLayout ? xAxisConfig : yAxisConfig) as ComputedAxis<'band'>;
 
