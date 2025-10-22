@@ -267,7 +267,7 @@ export class SchedulerStore<
   /**
    * Updates a recurring event in the calendar.
    */
-  public updateRecurringEvent = async (params: UpdateRecurringEventParameters) => {
+  public updateRecurringEvent = (params: UpdateRecurringEventParameters) => {
     this.set('pendingUpdateRecurringEventParameters', params);
   };
 
