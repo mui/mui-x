@@ -4,7 +4,7 @@ import { adapter, createSchedulerRenderer } from 'test/utils/scheduler';
 import { screen, within } from '@mui/internal-test-utils';
 import { WeekView } from '@mui/x-scheduler/week-view';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
-import { StandaloneView } from '@mui/x-scheduler/standalone-view';
+import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
 
 const allDayEvents = [
   {
@@ -36,9 +36,9 @@ describe('<WeekView />', () => {
   describe('All day events', () => {
     it('should render all-day events correctly with main event in start date cell', () => {
       render(
-        <StandaloneView events={allDayEvents} resources={[]}>
+        <EventCalendarProvider events={allDayEvents} resources={[]}>
           <WeekView />
-        </StandaloneView>,
+        </EventCalendarProvider>,
       );
       const allDayCells = screen.getAllByRole('gridcell');
       const may5Cell = allDayCells.find((cell) => {
@@ -62,9 +62,9 @@ describe('<WeekView />', () => {
 
     it('should render all-day event in first cell of week when event starts before the week', () => {
       render(
-        <StandaloneView events={allDayEvents} resources={[]}>
+        <EventCalendarProvider events={allDayEvents} resources={[]}>
           <WeekView />
-        </StandaloneView>,
+        </EventCalendarProvider>,
       );
 
       const allDayHeader = screen.getByRole('columnheader', { name: /all day/i });
@@ -80,9 +80,9 @@ describe('<WeekView />', () => {
 
     it('should place invisible events on the same grid row as the main event', () => {
       render(
-        <StandaloneView events={allDayEvents} resources={[]}>
+        <EventCalendarProvider events={allDayEvents} resources={[]}>
           <WeekView />
-        </StandaloneView>,
+        </EventCalendarProvider>,
       );
 
       const allEvents = screen.getAllByLabelText('Multi-day Conference');
@@ -128,9 +128,9 @@ describe('<WeekView />', () => {
       ];
 
       render(
-        <StandaloneView events={overlappingEvents} resources={[]}>
+        <EventCalendarProvider events={overlappingEvents} resources={[]}>
           <WeekView />
-        </StandaloneView>,
+        </EventCalendarProvider>,
       );
 
       const event1Elements = screen.getAllByLabelText('Event 1');
@@ -156,9 +156,9 @@ describe('<WeekView />', () => {
 
     it('should render all-day events with correct grid column span', () => {
       render(
-        <StandaloneView events={allDayEvents} resources={[]}>
+        <EventCalendarProvider events={allDayEvents} resources={[]}>
           <WeekView />
-        </StandaloneView>,
+        </EventCalendarProvider>,
       );
 
       const allDayHeader = screen.getByRole('columnheader', { name: /all day/i });
