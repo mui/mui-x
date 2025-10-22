@@ -250,9 +250,8 @@ export const EventPopoverContent = React.forwardRef(function EventPopoverContent
   React.useEffect(() => {
     if (status === 'submitted') {
       onClose();
-      store.setScopeDialogSubmit('closed');
     }
-  }, [onClose, status, store]);
+  }, [onClose, status]);
 
   return (
     <div ref={forwardedRef} className={className} {...other}>
@@ -555,6 +554,7 @@ export function EventPopoverProvider(props: EventPopoverProviderProps) {
       )}
       onClose={() => {
         store.setOccurrencePlaceholder(null);
+        store.setScopeDialogSubmit('closed');
       }}
       shouldBlockClose={isScopeDialogOpen}
     >
