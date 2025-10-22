@@ -10,11 +10,14 @@ import { warnOnce } from '@mui/x-internals/warning';
 import { getRichTreeViewUtilityClass } from './richTreeViewClasses';
 import { RichTreeViewProps } from './RichTreeView.types';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
-import { useTreeView } from '../internals/useTreeView';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
-import { RICH_TREE_VIEW_PLUGINS, RichTreeViewPluginSignatures } from './RichTreeView.plugins';
 import { RichTreeViewItems } from '../internals/components/RichTreeViewItems';
 import { lazyLoadingSelectors } from '../internals/plugins/useTreeViewLazyLoading';
+import {
+  useExtractRichTreeViewParameters,
+  useRichTreeViewStore,
+} from '../internals/RichTreeViewStore';
+import { TreeViewValidItem } from '../models';
 
 const useThemeProps = createUseThemeProps('MuiRichTreeView');
 
@@ -67,7 +70,7 @@ type RichTreeViewComponent = (<R extends {}, Multiple extends boolean | undefine
  * - [RichTreeView API](https://mui.com/x/api/tree-view/rich-tree-view/)
  */
 const RichTreeView = React.forwardRef(function RichTreeView<
-  R extends {},
+  R extends TreeViewValidItem<R>,
   Multiple extends boolean | undefined = undefined,
 >(inProps: RichTreeViewProps<R, Multiple>, ref: React.Ref<HTMLUListElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiRichTreeView' });
@@ -83,13 +86,16 @@ const RichTreeView = React.forwardRef(function RichTreeView<
     }
   }
 
-  const { getRootProps, contextValue } = useTreeView<RichTreeViewPluginSignatures, typeof props>({
-    plugins: RICH_TREE_VIEW_PLUGINS,
-    rootRef: ref,
-    props: other,
-  });
-  const isLoading = useStore(contextValue.store, lazyLoadingSelectors.isItemLoading, null);
-  const error = useStore(contextValue.store, lazyLoadingSelectors.itemError, null);
+  const { parameters, forwardedProps } = useExtractRichTreeViewParameters<
+    R,
+    Multiple,
+    typeof props
+  >(props);
+
+  const store = useRichTreeViewStore(parameters);
+
+  const isLoading = useStore(store, lazyLoadingSelectors.isItemLoading, null);
+  const error = useStore(store, lazyLoadingSelectors.itemError, null);
 
   const classes = useUtilityClasses(props);
 

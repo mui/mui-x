@@ -1,35 +1,36 @@
 import { createSelector } from '@mui/x-internals/store';
 import { TreeViewItemId } from '../../../models';
-import { UseTreeViewLazyLoadingSignature } from './useTreeViewLazyLoading.types';
-import { TreeViewState } from '../../models';
 import { TREE_VIEW_ROOT_PARENT_ID } from '../useTreeViewItems';
+import { RichTreeViewState } from '../../RichTreeViewStore';
+import { TREE_VIEW_LAZY_LOADED_ITEMS_INITIAL_STATE } from '../../RichTreeViewStore/RichTreeViewStore.utils';
 
 export const lazyLoadingSelectors = {
   /**
    * Gets the data source used to lazy load items.
    */
-  dataSource: createSelector(
-    (state: TreeViewState<[], [UseTreeViewLazyLoadingSignature]>) => state.lazyLoading?.dataSource,
+  isInitialState: createSelector(
+    (state: RichTreeViewState<any, any>) =>
+      state.lazyLoadedItems === TREE_VIEW_LAZY_LOADED_ITEMS_INITIAL_STATE,
   ),
   /**
    * Checks whether an item is loading.
    */
   isItemLoading: createSelector(
-    (state: TreeViewState<[], [UseTreeViewLazyLoadingSignature]>, itemId: TreeViewItemId | null) =>
-      state.lazyLoading?.dataSource.loading[itemId ?? TREE_VIEW_ROOT_PARENT_ID] ?? false,
+    (state: RichTreeViewState<any, any>, itemId: TreeViewItemId | null) =>
+      state.lazyLoadedItems?.loading[itemId ?? TREE_VIEW_ROOT_PARENT_ID] ?? false,
   ),
   /**
    * Checks whether an item has errors.
    */
   itemHasError: createSelector(
-    (state: TreeViewState<[], [UseTreeViewLazyLoadingSignature]>, itemId: TreeViewItemId | null) =>
-      !!state.lazyLoading?.dataSource.errors[itemId ?? TREE_VIEW_ROOT_PARENT_ID],
+    (state: RichTreeViewState<any, any>, itemId: TreeViewItemId | null) =>
+      !!state.lazyLoadedItems?.errors[itemId ?? TREE_VIEW_ROOT_PARENT_ID],
   ),
   /**
    * Get an item error.
    */
   itemError: createSelector(
-    (state: TreeViewState<[], [UseTreeViewLazyLoadingSignature]>, itemId: TreeViewItemId | null) =>
-      state.lazyLoading?.dataSource.errors[itemId ?? TREE_VIEW_ROOT_PARENT_ID],
+    (state: RichTreeViewState<any, any>, itemId: TreeViewItemId | null) =>
+      state.lazyLoadedItems?.errors[itemId ?? TREE_VIEW_ROOT_PARENT_ID],
   ),
 };

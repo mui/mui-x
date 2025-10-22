@@ -60,18 +60,6 @@ export interface UseTreeViewLazyLoadingInstance extends UseTreeViewLazyLoadingPu
     itemId: TreeViewItemId | null;
     forceRefresh?: boolean;
   }) => Promise<void>;
-  /**
-   * Set the loading state of an item.
-   * @param {TreeViewItemId} itemId The id of the item to set the loading state of. If `null` is passed, it will set the loading state of the root.
-   * @param {boolean} isLoading True if the item is loading.
-   */
-  setDataSourceLoading: (itemId: TreeViewItemId | null, isLoading: boolean) => void;
-  /**
-   * Set the error state of an item.
-   * @param {TreeViewItemId} itemId The id of the item to set the error state of. If `null` is passed, it will set the error state of the root.
-   * @param {Error | null} error The error caught on the item.
-   */
-  setDataSourceError: (itemId: TreeViewItemId | null, error: Error | null) => void;
 }
 
 export interface UseTreeViewLazyLoadingParameters<R extends {}> {
@@ -91,7 +79,6 @@ export type UseTreeViewLazyLoadingParametersWithDefaults<R extends {}> = Default
 
 export interface UseTreeViewLazyLoadingState {
   lazyLoading: {
-    enabled: boolean;
     dataSource: {
       loading: Record<TreeViewItemId, boolean>;
       errors: Record<TreeViewItemId, Error | null>;

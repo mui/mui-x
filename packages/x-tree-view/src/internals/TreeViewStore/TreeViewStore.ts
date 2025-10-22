@@ -43,6 +43,9 @@ export class TreeViewStore<
 
   private mapper: TreeViewParametersToStateMapper<R, Multiple, State, Parameters>;
 
+  // TODO: Move to state if needed in some selectors.
+  public isRtl: boolean;
+
   public timeoutManager = new TimeoutManager();
 
   private expansionManager = new TreeViewExpansionManager<this>(this);
@@ -54,6 +57,7 @@ export class TreeViewStore<
   public constructor(
     parameters: Parameters,
     instanceName: string,
+    isRtl: boolean,
     mapper: TreeViewParametersToStateMapper<R, Multiple, State, Parameters>,
   ) {
     const sharedInitialState: TreeViewState<R, Multiple> = {
@@ -87,6 +91,7 @@ export class TreeViewStore<
     this.parameters = parameters;
     this.instanceName = instanceName;
     this.mapper = mapper;
+    this.isRtl = isRtl;
 
     if (process.env.NODE_ENV !== 'production') {
       this.initialParameters = parameters;
@@ -96,7 +101,7 @@ export class TreeViewStore<
   /**
    * Updates the state of the tTree View based on the new parameters provided to the root component.
    */
-  public updateStateFromParameters = (parameters: Parameters) => {
+  public updateStateFromParameters = (parameters: Parameters, isRtl: boolean) => {
     const updateModel: TreeViewModelUpdater<State, Parameters> = (
       mutableNewState,
       controlledProp,
@@ -145,6 +150,7 @@ export class TreeViewStore<
       }
 
       this.update(newState);
+      this.isRtl = isRtl;
       this.parameters = parameters;
     };
   };
@@ -171,7 +177,7 @@ export class TreeViewStore<
    * Add an array of items to the tree.
    * @param {SetItemChildrenParameters<R>} args The items to add to the tree and information about their ancestors.
    */
-  protected setItemChildren = ({
+  public setItemChildren = ({
     items,
     parentId,
     getChildrenCount,
@@ -217,7 +223,7 @@ export class TreeViewStore<
    * Remove the children of an item.
    * @param {TreeViewItemId | null} parentId The id of the item to remove the children of.
    */
-  protected removeChildren = (parentId: string | null) => {
+  public removeChildren = (parentId: string | null) => {
     const newMetaMap = Object.keys(this.state.itemMetaLookup).reduce((acc, key) => {
       const item = this.state.itemMetaLookup[key];
       if (item.parentId === parentId) {
@@ -391,4 +397,12 @@ export class TreeViewStore<
    * @param {TreeViewItemId} itemId The id of the item that the event was triggered on.
    */
   protected handleItemKeyDown = this.keyboardNavigationManager.handleItemKeyDown;
+
+  /**
+   * Updates the `labelMap` to add/remove the first character of some item's labels.
+   * This map is used to navigate the tree using type-ahead search.
+   * This method is only used by the `useTreeViewJSXItems` plugin, otherwise the updates are handled internally.
+   * @param {(map: TreeViewLabelMap) => TreeViewLabelMap} updater The function to update the map.
+   */
+  protected updateLabelMap = this.keyboardNavigationManager.updateLabelMap;
 }

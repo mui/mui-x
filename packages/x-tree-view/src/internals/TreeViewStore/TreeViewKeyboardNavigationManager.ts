@@ -88,6 +88,10 @@ export class TreeViewKeyboardNavigationManager<Store extends TreeViewStore<any, 
     return null;
   };
 
+  public updateLabelMap = (callback: (labelMap: TreeViewLabelMap) => TreeViewLabelMap) => {
+    this.labelMap = callback(this.labelMap);
+  };
+
   // ARIA specification: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/#keyboardinteraction
   public handleItemKeyDown = async (
     event: React.KeyboardEvent<HTMLElement> & TreeViewCancellableEvent,
@@ -187,7 +191,8 @@ export class TreeViewKeyboardNavigationManager<Store extends TreeViewStore<any, 
 
       // If the focused item is expanded, we move the focus to its first child
       // If the focused item is collapsed and has children, we expand it
-      case (key === 'ArrowRight' && !isRtl) || (key === 'ArrowLeft' && isRtl): {
+      case (key === 'ArrowRight' && !this.store.isRtl) ||
+        (key === 'ArrowLeft' && this.store.isRtl): {
         if (ctrlPressed) {
           return;
         }
@@ -207,7 +212,8 @@ export class TreeViewKeyboardNavigationManager<Store extends TreeViewStore<any, 
 
       // If the focused item is expanded, we collapse it
       // If the focused item is collapsed and has a parent, we move the focus to this parent
-      case (key === 'ArrowLeft' && !isRtl) || (key === 'ArrowRight' && isRtl): {
+      case (key === 'ArrowLeft' && !this.store.isRtl) ||
+        (key === 'ArrowRight' && this.store.isRtl): {
         if (ctrlPressed) {
           return;
         }

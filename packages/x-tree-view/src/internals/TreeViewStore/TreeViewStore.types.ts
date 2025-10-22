@@ -176,16 +176,16 @@ export interface TreeViewParameters<
    */
   disableSelection?: boolean;
   /**
+   * Selected item ids. (Controlled)
+   * When `multiSelect` is true this takes an array of strings; when false (default) a string.
+   */
+  selectedItems?: TreeViewSelectionValue<Multiple>;
+  /**
    * Selected item ids. (Uncontrolled)
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.
    * @default []
    */
   defaultSelectedItems?: TreeViewSelectionValue<Multiple>;
-  /**
-   * Selected item ids. (Controlled)
-   * When `multiSelect` is true this takes an array of strings; when false (default) a string.
-   */
-  selectedItems?: TreeViewSelectionValue<Multiple>;
   /**
    * If `true`, `ctrl` and `shift` will trigger multiselect.
    * @default false
