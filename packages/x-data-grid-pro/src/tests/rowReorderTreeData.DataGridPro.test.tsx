@@ -153,21 +153,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
   }
 
   describe('Same-parent reordering', () => {
-    const originalError = console.error;
-    beforeEach(() => {
-      console.error = (...args: any[]) => {
-        if (typeof args[0] === 'string' && args[0].includes('not wrapped in act')) {
-          return; // Suppress act() warnings
-        }
-        originalError.call(console, ...args);
-      };
-    });
-
-    afterEach(() => {
-      console.error = originalError;
-    });
-
-    it('should reorder group nodes within same parent', () => {
+    it('should reorder group nodes within same parent', async () => {
       render(<Test />);
 
       // Initial order: Work, Personal under Documents
@@ -182,11 +168,13 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
 
       performDragOperation(sourceCell, targetCell, 'above');
 
-      // Verify new order
-      const newValues = getColumnValues(0);
-      const newWorkIndex = newValues.indexOf('Work');
-      const newPersonalIndex = newValues.indexOf('Personal');
-      expect(newPersonalIndex).to.be.lessThan(newWorkIndex);
+      // Wait for state updates to complete
+      await waitFor(() => {
+        const newValues = getColumnValues(0);
+        const newWorkIndex = newValues.indexOf('Work');
+        const newPersonalIndex = newValues.indexOf('Personal');
+        expect(newPersonalIndex).to.be.lessThan(newWorkIndex);
+      });
     });
   });
 
@@ -872,54 +860,39 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
         expect(beachUpdate!.fullPath).to.include('Documents');
       });
 
-      // TODO: Find a better solution
-      describe('with act() suppressed', () => {
-        const originalError = console.error;
-        beforeEach(() => {
-          console.error = (...args: any[]) => {
-            if (typeof args[0] === 'string' && args[0].includes('not wrapped in act')) {
-              return; // Suppress act() warnings
-            }
-            originalError.call(console, ...args);
-          };
-        });
+      it('should show warning when setTreeDataPath is missing', async () => {
+        const warnSpy = spy();
+        const handleRowOrderChange = spy();
+        const originalWarn = console.warn;
+        console.warn = warnSpy;
 
-        afterEach(() => {
-          console.error = originalError;
-        });
+        render(<Test setTreeDataPath={undefined} onRowOrderChange={handleRowOrderChange} />);
 
-        it('should show warning when setTreeDataPath is missing', async () => {
-          const warnSpy = spy();
-          const handleRowOrderChange = spy();
-          const originalWarn = console.warn;
-          console.warn = warnSpy;
+        // Attempt cross-parent reorder
+        const allValues = getColumnValues(0);
+        const beachIndex = findRowIndex(allValues, 'Beach.jpg', 10);
+        const documentsIndex = findRowIndex(allValues, 'Documents', 1);
 
-          render(<Test setTreeDataPath={undefined} onRowOrderChange={handleRowOrderChange} />);
+        const targetCell = getCell(beachIndex, 0);
+        const sourceCell = getCell(documentsIndex, 0).firstChild!;
 
-          // Attempt cross-parent reorder
-          const allValues = getColumnValues(0);
-          const beachIndex = findRowIndex(allValues, 'Beach.jpg', 10);
-          const documentsIndex = findRowIndex(allValues, 'Documents', 1);
+        fireDragStart(sourceCell);
+        fireEvent.dragEnter(targetCell);
+        const dragOverEvent = createDragOverEvent(targetCell, 'below');
+        fireEvent(targetCell, dragOverEvent);
+        const dragEndEvent = createDragEndEvent(sourceCell);
+        fireEvent(sourceCell, dragEndEvent);
 
-          const targetCell = getCell(beachIndex, 0);
-          const sourceCell = getCell(documentsIndex, 0).firstChild!;
-
-          fireDragStart(sourceCell);
-          fireEvent.dragEnter(targetCell);
-          const dragOverEvent = createDragOverEvent(targetCell, 'below');
-          fireEvent(targetCell, dragOverEvent);
-          const dragEndEvent = createDragEndEvent(sourceCell);
-          fireEvent(sourceCell, dragEndEvent);
-
-          console.warn = originalWarn;
-
-          // In development mode, check for the setTreeDataPath warning
+        // Wait for async state cleanup and warnings
+        await waitFor(() => {
           const warningCalls = warnSpy.getCalls();
           const hasSetTreeDataPathWarning = warningCalls.some((call) =>
             call.args.some((arg) => typeof arg === 'string' && arg.includes('setTreeDataPath')),
           );
           expect(hasSetTreeDataPathWarning).to.equal(true);
         });
+
+        console.warn = originalWarn;
       });
     });
   });
