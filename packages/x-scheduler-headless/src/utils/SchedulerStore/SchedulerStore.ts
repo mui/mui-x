@@ -271,6 +271,10 @@ export class SchedulerStore<
     this.set('pendingUpdateRecurringEventParameters', params);
   };
 
+  /**
+   * Applies the update to a recurring event after the user selects a scope.
+   * @param scope The selected update scope, or null if canceled.
+   */
   public selectRecurringEventUpdateScope = (scope: RecurringEventUpdateScope | null) => {
     const { pendingUpdateRecurringEventParameters, adapter } = this.state;
     if (pendingUpdateRecurringEventParameters == null) {
