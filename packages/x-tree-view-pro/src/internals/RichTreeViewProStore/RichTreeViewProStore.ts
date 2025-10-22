@@ -6,9 +6,17 @@ import {
 import { TreeViewValidItem } from '@mui/x-tree-view/models';
 import { RichTreeViewProParameters, RichTreeViewProState } from './RichTreeViewProStore.types';
 import { TreeViewLazyLoadingManager } from './TreeViewLazyLoadingManager';
+import { TreeViewItemsReorderingManager } from './TreeViewItemsReorderingManager';
 
-const deriveStateFromParameters = (_parameters: RichTreeViewProParameters<any, any>) => ({
+const DEFAULT_IS_ITEM_REORDERABLE_WHEN_ENABLED = () => true;
+const DEFAULT_IS_ITEM_REORDERABLE_WHEN_DISABLED = () => false;
+
+const deriveStateFromParameters = (parameters: RichTreeViewProParameters<any, any>) => ({
   lazyLoadedItems: TREE_VIEW_LAZY_LOADED_ITEMS_INITIAL_STATE,
+  currentReorder: null,
+  isItemReorderable: parameters.itemsReordering
+    ? (parameters.isItemReorderable ?? DEFAULT_IS_ITEM_REORDERABLE_WHEN_ENABLED)
+    : DEFAULT_IS_ITEM_REORDERABLE_WHEN_DISABLED,
 });
 
 const mapper: TreeViewParametersToStateMapper<
@@ -46,6 +54,8 @@ export class RichTreeViewProStore<
 > {
   private lazyLoadingManager = new TreeViewLazyLoadingManager(this);
 
+  private itemsReorderingManager = new TreeViewItemsReorderingManager(this);
+
   public constructor(parameters: RichTreeViewProParameters<R, Multiple>, isRtl: boolean) {
     super(parameters, 'RichTreeView', isRtl, mapper);
   }
@@ -78,4 +88,49 @@ export class RichTreeViewProStore<
    * @returns {Promise<void>} The promise resolved when the items are fetched.
    */
   protected updateItemChildren = this.lazyLoadingManager.updateItemChildren;
+
+  /**
+   * Check if a given item can be dragged.
+   * @param {TreeViewItemId} itemId The id of the item to check.
+   * @returns {boolean} `true` if the item can be dragged, `false` otherwise.
+   */
+  protected canItemBeDragged = this.itemsReorderingManager.canItemBeDragged;
+
+  /**
+   * Get the valid reordering action if a given item is the target of the ongoing reordering.
+   * @param {TreeViewItemId} itemId The id of the item to get the action of.
+   * @returns {TreeViewItemItemReorderingValidActions} The valid actions for the item.
+   */
+  protected getDroppingTargetValidActions =
+    this.itemsReorderingManager.getDroppingTargetValidActions;
+
+  /**
+   * Start a reordering for the given item.
+   * @param {TreeViewItemId} itemId The id of the item to start the reordering for.
+   */
+  protected startDraggingItem = this.itemsReorderingManager.startDraggingItem;
+
+  /**
+   * Complete the reordering of a given item.
+   * @param {TreeViewItemId} itemId The id of the item to complete the reordering for.
+   */
+  protected completeDraggingItem = this.itemsReorderingManager.completeDraggingItem;
+
+  /**
+   * Cancel the current reordering operation and reset the state.
+   */
+  protected cancelDraggingItem = this.itemsReorderingManager.cancelDraggingItem;
+
+  /**
+   * Set the new target item for the ongoing reordering.
+   * The action will be determined based on the position of the cursor inside the target and the valid actions for this target.
+   * @param {object} params The params describing the new target item.
+   * @param {TreeViewItemId} params.itemId The id of the new target item.
+   * @param {TreeViewItemItemReorderingValidActions} params.validActions The valid actions for the new target item.
+   * @param {number} params.targetHeight The height of the target item.
+   * @param {number} params.cursorY The Y coordinate of the mouse cursor.
+   * @param {number} params.cursorX The X coordinate of the mouse cursor.
+   * @param {HTMLDivElement} params.contentElement The DOM element rendered for the content slot.
+   */
+  protected setDragTargetItem = this.itemsReorderingManager.setDragTargetItem;
 }

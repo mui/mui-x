@@ -1,34 +1,11 @@
 import * as React from 'react';
 import { EventHandlers } from '@mui/utils/types';
-import { useStoreEffect } from '@mui/x-internals/store';
 import { TreeViewPlugin } from '../../models';
 import { UseTreeViewFocusSignature } from './useTreeViewFocus.types';
 import { TreeViewCancellableEvent } from '../../../models';
 import { focusSelectors } from './useTreeViewFocus.selectors';
-import { itemsSelectors } from '../useTreeViewItems/useTreeViewItems.selectors';
 
 export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({ store }) => {
-  // Whenever the items change, we need to ensure the focused item is still present.
-  useStoreEffect(store, itemsSelectors.itemMetaLookup, () => {
-    const focusedItemId = focusSelectors.focusedItemId(store.state);
-    if (focusedItemId == null) {
-      return;
-    }
-
-    const hasItemBeenRemoved = !itemsSelectors.itemMeta(store.state, focusedItemId);
-    if (!hasItemBeenRemoved) {
-      return;
-    }
-
-    const defaultFocusableItemId = focusSelectors.defaultFocusableItemId(store.state);
-    if (defaultFocusableItemId == null) {
-      setFocusedItemId(null);
-      return;
-    }
-
-    innerFocusItem(null, defaultFocusableItemId);
-  });
-
   const createRootHandleFocus =
     (otherHandlers: EventHandlers) =>
     (event: React.FocusEvent<HTMLUListElement> & TreeViewCancellableEvent) => {

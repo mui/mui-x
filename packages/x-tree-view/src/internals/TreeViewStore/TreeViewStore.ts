@@ -22,12 +22,12 @@ import {
   generateTreeItemIdAttribute,
 } from '../corePlugins/useTreeViewId/useTreeViewId.utils';
 import { idSelectors } from '../corePlugins/useTreeViewId';
-import { expansionSelectors } from '../plugins/useTreeViewExpansion';
-import { focusSelectors } from '../plugins/useTreeViewFocus';
 import { TreeViewSelectionManager } from './TreeViewSelectionManager';
 import { TreeViewExpansionManager } from './TreeViewExpansionManager';
 import { TimeoutManager } from './TimeoutManager';
 import { TreeViewKeyboardNavigationManager } from './TreeViewKeyboardNavigationManager';
+import { TreeViewStoreEffectManager } from './TreeViewStoreEffectManager';
+import { TreeViewFocusManager } from './TreeViewFocusManager';
 
 export class TreeViewStore<
   R extends TreeViewValidItem<R>,
@@ -47,6 +47,10 @@ export class TreeViewStore<
   public isRtl: boolean;
 
   public timeoutManager = new TimeoutManager();
+
+  private storeEffectManager = new TreeViewStoreEffectManager<State, this>(this);
+
+  private focusManager = new TreeViewFocusManager<this>(this);
 
   private expansionManager = new TreeViewExpansionManager<this>(this);
 
@@ -159,7 +163,9 @@ export class TreeViewStore<
     return this.timeoutManager.clearAll;
   };
 
-  protected getItemDOMElement = (itemId: string) => {
+  public registerEffect = this.storeEffectManager.registerEffect;
+
+  public getItemDOMElement = (itemId: string) => {
     const itemMeta = itemsSelectors.itemMeta(this.state, itemId);
     if (itemMeta == null) {
       return null;
@@ -244,6 +250,21 @@ export class TreeViewStore<
       itemChildrenIndexesLookup: newItemChildrenIndexesLookup,
     } as Partial<State>);
   };
+
+  /**
+   * Focus the item with the given id.
+   *
+   * If the item is the child of a collapsed item, then this method will do nothing.
+   * Make sure to expand the ancestors of the item before calling this method if needed.
+   * @param {React.SyntheticEvent | null} event The DOM event that triggered the change.
+   * @param {TreeViewItemId} itemId The id of the item to focus.
+   */
+  protected focusItem = this.focusManager.focusItem;
+
+  /**
+   * Remove the focus from the currently focused item (both from the internal state and the DOM).
+   */
+  protected removeFocusedItem = this.focusManager.removeFocusedItem;
 
   /**
    * Mark a list of items as expandable.
@@ -339,56 +360,6 @@ export class TreeViewStore<
    * @param {string} nextItemId The id of the active item after the keyboard navigation.
    */
   public selectItemFromArrowNavigation = this.selectionManager.selectItemFromArrowNavigation;
-
-  private setFocusedItemId = (itemId: string | null) => {
-    const focusedItemId = focusSelectors.focusedItemId(this.state);
-    if (focusedItemId === itemId) {
-      return;
-    }
-
-    this.set('focusedItemId', itemId);
-  };
-
-  // TODO: Rename
-  private innerFocusItem = (event: React.SyntheticEvent | null, itemId: string) => {
-    const itemElement = this.getItemDOMElement(itemId);
-    if (itemElement) {
-      itemElement.focus();
-    }
-
-    this.setFocusedItemId(itemId);
-    this.parameters.onItemFocus?.(event, itemId);
-  };
-
-  public focusItem = (event: React.SyntheticEvent | null, itemId: string) => {
-    // If we receive an itemId, and it is visible, the focus will be set to it
-    const itemMeta = itemsSelectors.itemMeta(this.state, itemId);
-    const isItemVisible =
-      itemMeta &&
-      (itemMeta.parentId == null ||
-        expansionSelectors.isItemExpanded(this.state, itemMeta.parentId));
-
-    if (isItemVisible) {
-      this.innerFocusItem(event, itemId);
-    }
-  };
-
-  protected removeFocusedItem = () => {
-    const focusedItemId = focusSelectors.focusedItemId(this.state);
-    if (focusedItemId == null) {
-      return;
-    }
-
-    const itemMeta = itemsSelectors.itemMeta(this.state, focusedItemId);
-    if (itemMeta) {
-      const itemElement = this.getItemDOMElement(focusedItemId);
-      if (itemElement) {
-        itemElement.blur();
-      }
-    }
-
-    this.setFocusedItemId(null);
-  };
 
   /**
    * Callback fired when a key is pressed on an item.

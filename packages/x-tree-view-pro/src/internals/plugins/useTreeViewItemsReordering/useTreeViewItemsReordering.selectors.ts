@@ -1,22 +1,18 @@
 import { createSelector } from '@mui/x-internals/store';
-import { TreeViewState, itemsSelectors, labelSelectors } from '@mui/x-tree-view/internals';
+import { itemsSelectors, labelSelectors } from '@mui/x-tree-view/internals';
 import { TreeViewItemId } from '@mui/x-tree-view/models';
-import { UseTreeViewItemsReorderingSignature } from './useTreeViewItemsReordering.types';
+import { RichTreeViewProState } from '../../RichTreeViewProStore';
 
 export const itemsReorderingSelectors = {
   /**
    * Gets the properties of the current reordering.
    */
-  currentReorder: createSelector(
-    (state: TreeViewState<[UseTreeViewItemsReorderingSignature]>) =>
-      state.itemsReordering.currentReorder,
-  ),
+  currentReorder: createSelector((state: RichTreeViewProState<any, any>) => state.currentReorder),
   /**
    * Gets the properties of the dragged item.
    */
   draggedItemProperties: createSelector(
-    (state: TreeViewState<[UseTreeViewItemsReorderingSignature]>) =>
-      state.itemsReordering.currentReorder,
+    (state: RichTreeViewProState<any, any>) => state.currentReorder,
     itemsSelectors.itemMetaLookup,
     (currentReorder, itemMetaLookup, itemId: TreeViewItemId) => {
       if (
@@ -44,8 +40,8 @@ export const itemsReorderingSelectors = {
    * Checks whether an item is a valid target for the dragged item.
    */
   isItemValidDropTarget: createSelector(
-    (state: TreeViewState<[UseTreeViewItemsReorderingSignature]>, itemId: TreeViewItemId) => {
-      const draggedItemId = state.itemsReordering.currentReorder?.draggedItemId;
+    (state: RichTreeViewProState<any, any>, itemId: TreeViewItemId) => {
+      const draggedItemId = state.currentReorder?.draggedItemId;
       return draggedItemId != null && draggedItemId !== itemId;
     },
   ),
@@ -53,8 +49,7 @@ export const itemsReorderingSelectors = {
    * Checks whether an item can be reordered.
    */
   canItemBeReordered: createSelector(
-    (state: TreeViewState<[UseTreeViewItemsReorderingSignature]>) =>
-      state.itemsReordering.isItemReorderable,
+    (state: RichTreeViewProState<any, any>) => state.isItemReorderable,
     labelSelectors.isAnyItemBeingEdited,
     (isItemReorderable, isEditing, itemId: TreeViewItemId) =>
       !isEditing && isItemReorderable(itemId),

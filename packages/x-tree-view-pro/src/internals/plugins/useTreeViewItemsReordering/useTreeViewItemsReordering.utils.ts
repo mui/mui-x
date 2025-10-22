@@ -1,22 +1,25 @@
 import {
-  TreeViewUsedStore,
-  UseTreeViewItemsState,
+  TREE_VIEW_DEFAULT_ITEM_CHILDREN_INDENTATION,
   buildSiblingIndexes,
   TREE_VIEW_ROOT_PARENT_ID,
   itemsSelectors,
 } from '@mui/x-tree-view/internals';
-import { TreeViewItemId, TreeViewItemsReorderingAction } from '@mui/x-tree-view/models';
+import {
+  TreeViewItemId,
+  TreeViewItemsReorderingAction,
+  TreeViewValidItem,
+} from '@mui/x-tree-view/models';
 import {
   TreeViewItemItemReorderingValidActions,
   TreeViewItemReorderPosition,
-  UseTreeViewItemsReorderingSignature,
 } from './useTreeViewItemsReordering.types';
+import { RichTreeViewProState, RichTreeViewProStore } from '../../RichTreeViewProStore';
 
 /**
  * Checks if the item with the id itemIdB is an ancestor of the item with the id itemIdA.
  */
 export const isAncestor = (
-  store: TreeViewUsedStore<UseTreeViewItemsReorderingSignature>,
+  store: RichTreeViewProStore<any, any>,
   itemIdA: string,
   itemIdB: string,
 ): boolean => {
@@ -62,7 +65,7 @@ const parseItemChildrenIndentation = (
 };
 
 interface GetNewPositionParams {
-  itemChildrenIndentation: string | number;
+  itemChildrenIndentation: string | number | undefined;
   validActions: TreeViewItemItemReorderingValidActions;
   targetHeight: number;
   targetDepth: number;
@@ -72,7 +75,7 @@ interface GetNewPositionParams {
 }
 
 export const chooseActionToApply = ({
-  itemChildrenIndentation,
+  itemChildrenIndentation = TREE_VIEW_DEFAULT_ITEM_CHILDREN_INDENTATION,
   validActions,
   targetHeight,
   targetDepth,
@@ -122,7 +125,7 @@ export const chooseActionToApply = ({
   return action;
 };
 
-export const moveItemInTree = <R extends {}>({
+export const moveItemInTree = <R extends TreeViewValidItem<R>>({
   itemToMoveId,
   oldPosition,
   newPosition,
@@ -131,8 +134,11 @@ export const moveItemInTree = <R extends {}>({
   itemToMoveId: TreeViewItemId;
   oldPosition: TreeViewItemReorderPosition;
   newPosition: TreeViewItemReorderPosition;
-  prevState: UseTreeViewItemsState<R>['items'];
-}): UseTreeViewItemsState<R>['items'] => {
+  prevState: RichTreeViewProState<R, any>;
+}): Pick<
+  RichTreeViewProState<R, any>,
+  'itemOrderedChildrenIdsLookup' | 'itemChildrenIndexesLookup' | 'itemMetaLookup'
+> => {
   const itemToMoveMeta = prevState.itemMetaLookup[itemToMoveId];
 
   const oldParentId = oldPosition.parentId ?? TREE_VIEW_ROOT_PARENT_ID;
@@ -199,7 +205,6 @@ export const moveItemInTree = <R extends {}>({
   );
 
   return {
-    ...prevState,
     itemOrderedChildrenIdsLookup: itemOrderedChildrenIds,
     itemChildrenIndexesLookup: itemChildrenIndexes,
     itemMetaLookup,

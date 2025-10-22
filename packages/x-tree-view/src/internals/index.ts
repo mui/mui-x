@@ -85,6 +85,7 @@ export type {
   TreeViewSlotProps,
 } from './TreeViewProvider/TreeViewStyleContext';
 
+export { TREE_VIEW_DEFAULT_ITEM_CHILDREN_INDENTATION } from './TreeViewStore';
 export type { TreeViewParametersToStateMapper } from './TreeViewStore';
 export {
   ExtandableRichTreeViewStore,
