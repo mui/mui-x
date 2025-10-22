@@ -102,6 +102,11 @@ This configuration can be used in Bar Charts to set colors according to string c
 }
 ```
 
+### Color callback
+
+
+{{"demo": "ColorCallback.js"}}
+
 ## Overlay
 
 Charts have a _loading_ and _noData_ overlays that appear if:

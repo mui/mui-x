@@ -8,6 +8,7 @@ import { ChartsXAxisProps, ChartsYAxisProps } from '../models';
 import { getValueToPositionMapper, useLineSeriesContext, useXAxes, useYAxes } from '../hooks';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { SeriesId } from '../models/seriesType/common';
+import { getSeriesColorFn } from '../internals/getSeriesColorFn';
 
 interface AreaPlotDataPoint {
   d: string;
@@ -148,7 +149,7 @@ export function useAreaPlotData(
         const d = areaPath.curve(getCurveFactory(curve))(d3Data) || '';
         areaPlotData.push({
           area: series[seriesId].area,
-          color: series[seriesId].color,
+          color: getSeriesColorFn(series[seriesId].color)(),
           gradientId,
           d,
           seriesId,
