@@ -1,4 +1,4 @@
-import { TreeViewItemId, TreeViewValidItem } from '../../models';
+import { TreeViewItemId } from '../../models';
 import { selectionSelectors } from '../plugins/useTreeViewSelection';
 import {
   getAddedAndRemovedItems,
@@ -16,9 +16,8 @@ import type { TreeViewStore } from './TreeViewStore';
 import { TreeViewSelectionValue } from './TreeViewStore.types';
 
 export class TreeViewSelectionManager<
-  R extends TreeViewValidItem<R>,
   Multiple extends boolean | undefined,
-  Store extends TreeViewStore<R, Multiple, any, any>,
+  Store extends TreeViewStore<any, Multiple, any, any>,
 > {
   private store: Store;
 
@@ -120,6 +119,11 @@ export class TreeViewSelectionManager<
     event = null,
     keepExistingSelection = false,
     shouldBeSelected,
+  }: {
+    itemId: string;
+    event?: React.SyntheticEvent | null;
+    shouldBeSelected?: boolean;
+    keepExistingSelection?: boolean;
   }) => {
     if (!selectionSelectors.enabled(this.store.state)) {
       return;

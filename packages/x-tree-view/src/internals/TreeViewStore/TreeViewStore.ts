@@ -23,8 +23,10 @@ import {
 } from '../corePlugins/useTreeViewId/useTreeViewId.utils';
 import { idSelectors } from '../corePlugins/useTreeViewId';
 import { expansionSelectors } from '../plugins/useTreeViewExpansion';
-import { TreeViewSelectionManager } from './TreeViewSelectionManager';
 import { focusSelectors } from '../plugins/useTreeViewFocus';
+import { TreeViewSelectionManager } from './TreeViewSelectionManager';
+import { TreeViewExpansionManager } from './TreeViewExpansionManager';
+import { TimeoutManager } from './TimeoutManager';
 
 export class TreeViewStore<
   R extends TreeViewValidItem<R>,
@@ -40,7 +42,11 @@ export class TreeViewStore<
 
   private mapper: TreeViewParametersToStateMapper<R, Multiple, State, Parameters>;
 
-  private selectionManager = new TreeViewSelectionManager<R, Multiple, this>(this);
+  public timeoutManager = new TimeoutManager();
+
+  private expansionManager = new TreeViewExpansionManager<this>(this);
+
+  private selectionManager = new TreeViewSelectionManager<Multiple, this>(this);
 
   public constructor(
     parameters: Parameters,
@@ -83,13 +89,6 @@ export class TreeViewStore<
       this.initialParameters = parameters;
     }
   }
-
-  private setExpandedItems = (event: React.SyntheticEvent | null, value: TreeViewItemId[]) => {
-    if (this.parameters.expandedItems === undefined) {
-      this.set('expandedItems', value);
-    }
-    this.parameters.onExpandedItemsChange?.(event, value);
-  };
 
   /**
    * Updates the state of the tTree View based on the new parameters provided to the root component.
@@ -145,6 +144,10 @@ export class TreeViewStore<
       this.update(newState);
       this.parameters = parameters;
     };
+  };
+
+  public disposeEffect = () => {
+    return this.timeoutManager.clearAll;
   };
 
   protected getItemDOMElement = (itemId: string) => {
@@ -263,26 +266,7 @@ export class TreeViewStore<
    * @param {React.SyntheticEvent} parameters.event The DOM event that triggered the change.
    * @param {boolean} parameters.shouldBeExpanded If `true` the item will be expanded. If `false` the item will be collapsed. If not defined, the item's expansion status will be the toggled.
    */
-  protected setItemExpansion = ({ itemId, event = null, shouldBeExpanded }) => {
-    const isExpandedBefore = expansionSelectors.isItemExpanded(this.state, itemId);
-    const cleanShouldBeExpanded = shouldBeExpanded ?? !isExpandedBefore;
-    if (isExpandedBefore === cleanShouldBeExpanded) {
-      return;
-    }
-
-    const eventParameters = {
-      isExpansionPrevented: false,
-      shouldBeExpanded: cleanShouldBeExpanded,
-      event,
-      itemId,
-    };
-    publishTreeViewEvent(instance, 'beforeItemToggleExpansion', eventParameters);
-    if (eventParameters.isExpansionPrevented) {
-      return;
-    }
-
-    this.applyItemExpansion({ itemId, event, shouldBeExpanded: cleanShouldBeExpanded });
-  };
+  public setItemExpansion = this.expansionManager.setItemExpansion;
 
   /**
    * Apply the new expansion status of a given item.
@@ -293,70 +277,59 @@ export class TreeViewStore<
    * @param {React.SyntheticEvent | null} parameters.event The DOM event that triggered the change.
    * @param {boolean} parameters.shouldBeExpanded If `true` the item will be expanded. If `false` the item will be collapsed.
    */
-  protected applyItemExpansion = ({
-    itemId,
-    event,
-    shouldBeExpanded,
-  }: {
-    itemId: string;
-    event: React.SyntheticEvent | null;
-    shouldBeExpanded: boolean;
-  }) => {
-    const oldExpanded = expansionSelectors.expandedItemsRaw(this.state);
-    let newExpanded: string[];
-    if (shouldBeExpanded) {
-      newExpanded = [itemId].concat(oldExpanded);
-    } else {
-      newExpanded = oldExpanded.filter((id) => id !== itemId);
-    }
-
-    this.parameters.onItemExpansionToggle?.(event, itemId, shouldBeExpanded);
-    this.setExpandedItems(event, newExpanded);
-  };
+  protected applyItemExpansion = this.expansionManager.applyItemExpansion;
 
   /**
    * Expand all the siblings (i.e.: the items that have the same parent) of a given item.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change.
    * @param {TreeViewItemId} itemId The id of the item whose siblings will be expanded.
    */
-  protected expandAllSiblings = (event: React.KeyboardEvent, itemId: TreeViewItemId) => {
-    const itemMeta = itemsSelectors.itemMeta(this.state, itemId);
-    if (itemMeta == null) {
-      return;
-    }
+  public expandAllSiblings = this.expansionManager.expandAllSiblings;
 
-    const siblings = itemsSelectors.itemOrderedChildrenIds(this.state, itemMeta.parentId);
+  /**
+   * Select or deselect an item.
+   * @param {object} parameters The parameters of the method.
+   * @param {string} parameters.itemId The id of the item to select or deselect.
+   * @param {React.SyntheticEvent} parameters.event The DOM event that triggered the change.
+   * @param {boolean} parameters.keepExistingSelection If `true`, the other already selected items will remain selected, otherwise, they will be deselected. This parameter is only relevant when `multiSelect` is `true`
+   * @param {boolean | undefined} parameters.shouldBeSelected If `true` the item will be selected. If `false` the item will be deselected. If not defined, the item's selection status will be toggled.
+   */
+  public setItemSelection = this.selectionManager.setItemSelection;
 
-    const diff = siblings.filter(
-      (child) =>
-        expansionSelectors.isItemExpandable(this.state, child) &&
-        !expansionSelectors.isItemExpanded(this.state, child),
-    );
+  /**
+   * Select all the navigable items in the tree.
+   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
+   */
+  public selectAllNavigableItems = this.selectionManager.selectAllNavigableItems;
 
-    const newExpanded = expansionSelectors.expandedItemsRaw(this.state).concat(diff);
+  /**
+   * Expand the current selection range up to the given item.
+   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
+   * @param {string} itemId The id of the item to expand the selection to.
+   */
+  public expandSelectionRange = this.selectionManager.expandSelectionRange;
 
-    if (diff.length > 0) {
-      if (this.parameters.onItemExpansionToggle) {
-        diff.forEach((newlyExpandedItemId) => {
-          this.parameters.onItemExpansionToggle!(event, newlyExpandedItemId, true);
-        });
-      }
+  /**
+   * Expand the current selection range from the first navigable item to the given item.
+   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
+   * @param {string} itemId The id of the item up to which the selection range should be expanded.
+   */
+  public selectRangeFromStartToItem = this.selectionManager.selectRangeFromStartToItem;
 
-      this.setExpandedItems(event, newExpanded);
-    }
-  };
+  /**
+   * Expand the current selection range from the given item to the last navigable item.
+   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
+   * @param {string} itemId The id of the item from which the selection range should be expanded.
+   */
+  public selectRangeFromItemToEnd = this.selectionManager.selectRangeFromItemToEnd;
 
-  protected setItemSelection = this.selectionManager.setItemSelection;
-
-  protected selectAllNavigableItems = this.selectionManager.selectAllNavigableItems;
-
-  protected expandSelectionRange = this.selectionManager.expandSelectionRange;
-
-  protected selectRangeFromStartToItem = this.selectionManager.selectRangeFromStartToItem;
-
-  protected selectRangeFromItemToEnd = this.selectionManager.selectRangeFromItemToEnd;
-
-  protected selectItemFromArrowNavigation = this.selectionManager.selectItemFromArrowNavigation;
+  /**
+   * Update the selection when navigating with ArrowUp / ArrowDown keys.
+   * @param {React.SyntheticEvent} event The DOM event that triggered the change.
+   * @param {string} currentItemId The id of the active item before the keyboard navigation.
+   * @param {string} nextItemId The id of the active item after the keyboard navigation.
+   */
+  public selectItemFromArrowNavigation = this.selectionManager.selectItemFromArrowNavigation;
 
   private setFocusedItemId = (itemId: string | null) => {
     const focusedItemId = focusSelectors.focusedItemId(this.state);
@@ -378,7 +351,7 @@ export class TreeViewStore<
     this.parameters.onItemFocus?.(event, itemId);
   };
 
-  protected focusItem = (event: React.SyntheticEvent | null, itemId: string) => {
+  public focusItem = (event: React.SyntheticEvent | null, itemId: string) => {
     // If we receive an itemId, and it is visible, the focus will be set to it
     const itemMeta = itemsSelectors.itemMeta(this.state, itemId);
     const isItemVisible =

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { EventHandlers } from '@mui/utils/types';
 import { useStoreEffect } from '@mui/x-internals/store';
 import { TreeViewPlugin } from '../../models';
@@ -8,10 +7,7 @@ import { TreeViewCancellableEvent } from '../../../models';
 import { focusSelectors } from './useTreeViewFocus.selectors';
 import { itemsSelectors } from '../useTreeViewItems/useTreeViewItems.selectors';
 
-export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
-  instance,
-  store,
-}) => {
+export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({ store }) => {
   // Whenever the items change, we need to ensure the focused item is still present.
   useStoreEffect(store, itemsSelectors.itemMetaLookup, () => {
     const focusedItemId = focusSelectors.focusedItemId(store.state);
@@ -67,16 +63,9 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
     publicAPI: {
       focusItem,
     },
-    instance: {
-      focusItem,
-      removeFocusedItem,
-    },
+    instance: {},
   };
 };
-
-useTreeViewFocus.getInitialState = () => ({
-  focus: { focusedItemId: null },
-});
 
 useTreeViewFocus.params = {
   onItemFocus: true,
