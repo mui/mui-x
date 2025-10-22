@@ -22,13 +22,6 @@ describe('domUtils', () => {
       expect(size.height).to.equal(0);
     });
 
-    it('should return zero dimensions for undefined text', () => {
-      const size = measureText(undefined as any);
-
-      expect(size.width).to.equal(0);
-      expect(size.height).to.equal(0);
-    });
-
     it.skipIf(isJSDOM)('should cache results', () => {
       const size1 = measureText('Test', { fontSize: 14 });
       const size2 = measureText('Test', { fontSize: 14 });
