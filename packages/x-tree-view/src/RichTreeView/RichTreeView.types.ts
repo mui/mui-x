@@ -3,7 +3,7 @@ import { Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/system/styleFunctionSx';
 import { SlotComponentProps } from '@mui/utils/types';
 import { RichTreeViewClasses } from './richTreeViewClasses';
-import { RichTreeViewPluginParameters, RichTreeViewPluginSignatures } from './RichTreeView.plugins';
+import { RichTreeViewPluginSignatures } from './RichTreeView.plugins';
 import { TreeViewPublicAPI } from '../internals/models';
 import {
   RichTreeViewItemsSlotProps,
@@ -13,6 +13,7 @@ import {
   TreeViewSlotProps,
   TreeViewSlots,
 } from '../internals/TreeViewProvider/TreeViewStyleContext';
+import { RichTreeViewParameters } from '../internals/RichTreeViewStore';
 
 export interface RichTreeViewSlots extends TreeViewSlots, RichTreeViewItemsSlots {
   /**
@@ -45,7 +46,7 @@ export interface RichTreeViewPropsBase extends React.HTMLAttributes<HTMLUListEle
 }
 
 export interface RichTreeViewProps<R extends {}, Multiple extends boolean | undefined>
-  extends RichTreeViewPluginParameters<R, Multiple>,
+  extends RichTreeViewParameters<R, Multiple>,
     RichTreeViewPropsBase {
   /**
    * Overridable component slots.

@@ -8,26 +8,17 @@ import {
   TreeViewSelectionValue,
   TreeViewState,
 } from './TreeViewStore.types';
-import {
-  BuildItemsLookupConfig,
-  buildItemsLookups,
-  buildItemsState,
-  TREE_VIEW_ROOT_PARENT_ID,
-} from '../plugins/useTreeViewItems/useTreeViewItems.utils';
+import { buildItemsState } from '../plugins/useTreeViewItems/useTreeViewItems.utils';
 import { TreeViewItemId, TreeViewValidItem } from '../../models';
 import { applyModelInitialValue, deriveStateFromParameters } from './TreeViewStore.utils';
-import { itemsSelectors } from '../plugins/useTreeViewItems';
-import {
-  createTreeViewDefaultId,
-  generateTreeItemIdAttribute,
-} from '../corePlugins/useTreeViewId/useTreeViewId.utils';
-import { idSelectors } from '../corePlugins/useTreeViewId';
+import { createTreeViewDefaultId } from '../corePlugins/useTreeViewId/useTreeViewId.utils';
 import { TreeViewSelectionManager } from './TreeViewSelectionManager';
 import { TreeViewExpansionManager } from './TreeViewExpansionManager';
 import { TimeoutManager } from './TimeoutManager';
 import { TreeViewKeyboardNavigationManager } from './TreeViewKeyboardNavigationManager';
 import { TreeViewStoreEffectManager } from './TreeViewStoreEffectManager';
 import { TreeViewFocusManager } from './TreeViewFocusManager';
+import { TreeViewItemsManager } from './TreeViewItemsManager';
 
 export class TreeViewStore<
   R extends TreeViewValidItem<R>,
@@ -50,6 +41,8 @@ export class TreeViewStore<
 
   private storeEffectManager = new TreeViewStoreEffectManager<State, this>(this);
 
+  private itemsManager = new TreeViewItemsManager<R, this>(this);
+
   private focusManager = new TreeViewFocusManager<this>(this);
 
   private expansionManager = new TreeViewExpansionManager<this>(this);
@@ -57,6 +50,8 @@ export class TreeViewStore<
   private selectionManager = new TreeViewSelectionManager<Multiple, this>(this);
 
   private keyboardNavigationManager = new TreeViewKeyboardNavigationManager<this>(this);
+
+  private propsBuilder: any[] = [];
 
   public constructor(
     parameters: Parameters,
@@ -163,93 +158,26 @@ export class TreeViewStore<
     return this.timeoutManager.clearAll;
   };
 
-  public registerEffect = this.storeEffectManager.registerEffect;
-
-  public getItemDOMElement = (itemId: string) => {
-    const itemMeta = itemsSelectors.itemMeta(this.state, itemId);
-    if (itemMeta == null) {
-      return null;
-    }
-
-    const idAttribute = generateTreeItemIdAttribute({
-      treeId: idSelectors.treeId(this.state),
-      itemId,
-      id: itemMeta.idAttribute,
-    });
-    return document.getElementById(idAttribute);
-  };
+  public registerStoreEffect = this.storeEffectManager.registerStoreEffect;
 
   /**
-   * Add an array of items to the tree.
-   * @param {SetItemChildrenParameters<R>} args The items to add to the tree and information about their ancestors.
+   * Get the DOM element of the item with the given id.
+   * @param {TreeViewItemId} itemId The id of the item to get the DOM element of.
+   * @returns {HTMLElement | null} The DOM element of the item with the given id.
    */
-  public setItemChildren = ({
-    items,
-    parentId,
-    getChildrenCount,
-  }: {
-    items: readonly R[];
-    parentId: TreeViewItemId | null;
-    getChildrenCount: (item: R) => number;
-  }) => {
-    const parentIdWithDefault = parentId ?? TREE_VIEW_ROOT_PARENT_ID;
-    const parentDepth = parentId == null ? -1 : itemsSelectors.itemDepth(this.state, parentId);
-
-    const itemsConfig: BuildItemsLookupConfig = {
-      isItemDisabled: this.parameters.isItemDisabled,
-      getItemLabel: this.parameters.getItemLabel,
-      getItemChildren: this.parameters.getItemChildren,
-      getItemId: this.parameters.getItemId,
-    };
-
-    const { metaLookup, modelLookup, orderedChildrenIds, childrenIndexes } = buildItemsLookups({
-      config: itemsConfig,
-      items,
-      parentId,
-      depth: parentDepth + 1,
-      isItemExpandable: getChildrenCount ? (item) => getChildrenCount(item) > 0 : () => false,
-      otherItemsMetaLookup: itemsSelectors.itemMetaLookup(this.state),
-    });
-
-    this.update({
-      itemModelLookup: { ...this.state.itemModelLookup, ...modelLookup },
-      itemMetaLookup: { ...this.state.itemMetaLookup, ...metaLookup },
-      itemOrderedChildrenIdsLookup: {
-        ...this.state.itemOrderedChildrenIdsLookup,
-        [parentIdWithDefault]: orderedChildrenIds,
-      },
-      itemChildrenIndexesLookup: {
-        ...this.state.itemChildrenIndexesLookup,
-        [parentIdWithDefault]: childrenIndexes,
-      },
-    } as Partial<State>);
-  };
+  public getItemDOMElement = this.itemsManager.getItemDOMElement;
 
   /**
    * Remove the children of an item.
    * @param {TreeViewItemId | null} parentId The id of the item to remove the children of.
    */
-  public removeChildren = (parentId: string | null) => {
-    const newMetaMap = Object.keys(this.state.itemMetaLookup).reduce((acc, key) => {
-      const item = this.state.itemMetaLookup[key];
-      if (item.parentId === parentId) {
-        return acc;
-      }
-      return { ...acc, [item.id]: item };
-    }, {});
+  public removeChildren = this.itemsManager.removeChildren;
 
-    const newItemOrderedChildrenIdsLookup = { ...this.state.itemOrderedChildrenIdsLookup };
-    const newItemChildrenIndexesLookup = { ...this.state.itemChildrenIndexesLookup };
-    const cleanId = parentId ?? TREE_VIEW_ROOT_PARENT_ID;
-    delete newItemChildrenIndexesLookup[cleanId];
-    delete newItemOrderedChildrenIdsLookup[cleanId];
-
-    this.update({
-      itemMetaLookup: newMetaMap,
-      itemOrderedChildrenIdsLookup: newItemOrderedChildrenIdsLookup,
-      itemChildrenIndexesLookup: newItemChildrenIndexesLookup,
-    } as Partial<State>);
-  };
+  /**
+   * Add an array of items to the tree.
+   * @param {SetItemChildrenParameters<R>} args The items to add to the tree and information about their ancestors.
+   */
+  public setItemChildren = this.itemsManager.setItemChildren;
 
   /**
    * Focus the item with the given id.
@@ -267,6 +195,18 @@ export class TreeViewStore<
   protected removeFocusedItem = this.focusManager.removeFocusedItem;
 
   /**
+   * Event handler to fire when the `root` slot of the Tree View is focused.
+   * @param {React.MouseEvent} event The DOM event that triggered the change.
+   */
+  public handleRootFocus = this.focusManager.handleRootFocus;
+
+  /**
+   * Event handler to fire when the `root` slot of the Tree View is blurred.
+   * @param {React.MouseEvent} event The DOM event that triggered the change.
+   */
+  public handleRootBlur = this.focusManager.handleRootBlur;
+
+  /**
    * Mark a list of items as expandable.
    * @param {TreeViewItemId[]} items The ids of the items to mark as expandable.
    */
@@ -279,15 +219,11 @@ export class TreeViewStore<
   };
 
   /**
-   * Event handler to fire when the `content` slot of a given Tree Item is clicked.
+   * Callback fired when the `content` slot of a given Tree Item is clicked.
    * @param {React.MouseEvent} event The DOM event that triggered the change.
    * @param {TreeViewItemId} itemId The id of the item being clicked.
    */
-  protected handleItemClick = (event: React.MouseEvent, itemId: TreeViewItemId) => {
-    if (this.parameters.onItemClick) {
-      this.parameters.onItemClick(event, itemId);
-    }
-  };
+  public handleItemClick = this.itemsManager.handleItemClick;
 
   /**
    * Change the expansion status of a given item.

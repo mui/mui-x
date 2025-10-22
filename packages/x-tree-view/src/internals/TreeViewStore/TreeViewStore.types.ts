@@ -37,6 +37,11 @@ export interface TreeViewState<
    */
   domStructure: 'flat' | 'nested';
   /**
+   * Horizontal indentation between an item and its children.
+   * Examples: 24, "24px", "2rem", "2em".
+   */
+  itemChildrenIndentation: string | number;
+  /**
    * The id of the Tree View as provided by the `id` parameter.
    */
   providedTreeId: string | undefined;

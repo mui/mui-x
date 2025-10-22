@@ -1,3 +1,4 @@
+import { TreeViewCancellableEvent } from '../../models';
 import type { TreeViewStore } from './TreeViewStore';
 import { expansionSelectors } from '../plugins/useTreeViewExpansion';
 import { focusSelectors } from '../plugins/useTreeViewFocus';
@@ -10,7 +11,7 @@ export class TreeViewFocusManager<Store extends TreeViewStore<any, any, any, any
     this.store = store;
 
     // Whenever the items change, we need to ensure the focused item is still present.
-    this.store.registerEffect(itemsSelectors.itemMetaLookup, () => {
+    this.store.registerStoreEffect(itemsSelectors.itemMetaLookup, () => {
       const focusedItemId = focusSelectors.focusedItemId(store.state);
       if (focusedItemId == null) {
         return;
@@ -76,6 +77,30 @@ export class TreeViewFocusManager<Store extends TreeViewStore<any, any, any, any
       if (itemElement) {
         itemElement.blur();
       }
+    }
+
+    this.setFocusedItemId(null);
+  };
+
+  public handleRootFocus = (
+    event: React.FocusEvent<HTMLUListElement> & TreeViewCancellableEvent,
+  ) => {
+    if (event.defaultMuiPrevented) {
+      return;
+    }
+
+    // if the event bubbled (which is React specific) we don't want to steal focus
+    const defaultFocusableItemId = focusSelectors.defaultFocusableItemId(this.store.state);
+    if (event.target === event.currentTarget && defaultFocusableItemId != null) {
+      this.innerFocusItem(event, defaultFocusableItemId);
+    }
+  };
+
+  public handleRootBlur = (
+    event: React.FocusEvent<HTMLUListElement> & TreeViewCancellableEvent,
+  ) => {
+    if (event.defaultMuiPrevented) {
+      return;
     }
 
     this.setFocusedItemId(null);

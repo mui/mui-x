@@ -87,4 +87,10 @@ export const itemsSelectors = {
     (state: TreeViewState<any, any>, itemId: TreeViewItemId) =>
       state.disabledItemsFocusable || !isItemDisabled(state.itemMetaLookup, itemId),
   ),
+  /**
+   * Gets the identation between an item and its children.
+   */
+  itemChildrenIndentation: createSelector(
+    (state: TreeViewState<any, any>) => state.itemChildrenIndentation,
+  ),
 };

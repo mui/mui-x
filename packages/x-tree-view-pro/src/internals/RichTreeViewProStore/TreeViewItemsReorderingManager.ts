@@ -210,7 +210,7 @@ export class TreeViewItemsReorderingManager<Store extends RichTreeViewProStore<a
     }
 
     const action = chooseActionToApply({
-      itemChildrenIndentation: this.store.parameters.itemChildrenIndentation,
+      itemChildrenIndentation: this.store.state.itemChildrenIndentation,
       validActions,
       targetHeight,
       targetDepth: this.store.state.itemMetaLookup[itemId].depth!,

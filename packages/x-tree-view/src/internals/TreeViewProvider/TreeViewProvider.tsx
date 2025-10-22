@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { TreeViewProviderProps } from './TreeViewProvider.types';
 import { TreeViewContext } from './TreeViewContext';
-import { TreeViewAnyPluginSignature } from '../models';
 import { TreeViewSlotProps, TreeViewSlots, TreeViewStyleContext } from './TreeViewStyleContext';
+import { TreeViewStore } from '../TreeViewStore';
 
 const EMPTY_OBJECT = {};
 
@@ -11,11 +11,11 @@ const EMPTY_OBJECT = {};
  *
  * @ignore - do not document.
  */
-export function TreeViewProvider<TSignatures extends readonly TreeViewAnyPluginSignature[]>(
-  props: TreeViewProviderProps<TSignatures>,
+export function TreeViewProvider<TStore extends TreeViewStore<any, any, any, any>>(
+  props: TreeViewProviderProps<TStore>,
 ) {
   const {
-    contextValue,
+    store,
     classes = EMPTY_OBJECT,
     slots = EMPTY_OBJECT as TreeViewSlots,
     slotProps = EMPTY_OBJECT as TreeViewSlotProps,

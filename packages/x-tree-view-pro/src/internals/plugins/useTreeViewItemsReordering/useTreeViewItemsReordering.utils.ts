@@ -1,5 +1,4 @@
 import {
-  TREE_VIEW_DEFAULT_ITEM_CHILDREN_INDENTATION,
   buildSiblingIndexes,
   TREE_VIEW_ROOT_PARENT_ID,
   itemsSelectors,
@@ -65,7 +64,7 @@ const parseItemChildrenIndentation = (
 };
 
 interface GetNewPositionParams {
-  itemChildrenIndentation: string | number | undefined;
+  itemChildrenIndentation: string | number;
   validActions: TreeViewItemItemReorderingValidActions;
   targetHeight: number;
   targetDepth: number;
@@ -75,7 +74,7 @@ interface GetNewPositionParams {
 }
 
 export const chooseActionToApply = ({
-  itemChildrenIndentation = TREE_VIEW_DEFAULT_ITEM_CHILDREN_INDENTATION,
+  itemChildrenIndentation,
   validActions,
   targetHeight,
   targetDepth,

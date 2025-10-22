@@ -3,8 +3,6 @@ import { TreeViewValidItem } from '../../models';
 import { getExpansionTrigger } from '../plugins/useTreeViewExpansion/useTreeViewExpansion.utils';
 import { TreeViewParameters } from './TreeViewStore.types';
 
-export const TREE_VIEW_DEFAULT_ITEM_CHILDREN_INDENTATION = '12px';
-
 /**
  * Returns the properties of the state that are derived from the parameters.
  * This do not contain state properties that don't update whenever the parameters update.
@@ -16,6 +14,7 @@ export function deriveStateFromParameters<
   return {
     disabledItemsFocusable: parameters.disabledItemsFocusable ?? false,
     domStructure: 'nested' as const,
+    itemChildrenIndentation: parameters.itemChildrenIndentation ?? '12px',
     providedTreeId: parameters.id,
     // TODO: Fix
     expansionTrigger: getExpansionTrigger({

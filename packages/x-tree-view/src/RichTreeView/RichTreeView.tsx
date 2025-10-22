@@ -18,6 +18,7 @@ import {
   useRichTreeViewStore,
 } from '../internals/RichTreeViewStore';
 import { TreeViewValidItem } from '../models';
+import { useRichTreeViewRootProps } from './useRichTreeViewRootProps';
 
 const useThemeProps = createUseThemeProps('MuiRichTreeView');
 
@@ -89,10 +90,11 @@ const RichTreeView = React.forwardRef(function RichTreeView<
   const { parameters, forwardedProps } = useExtractRichTreeViewParameters<
     R,
     Multiple,
-    typeof props
-  >(props);
+    typeof other
+  >(other);
 
   const store = useRichTreeViewStore(parameters);
+  const getRootProps = useRichTreeViewRootProps(store, forwardedProps, ref);
 
   const isLoading = useStore(store, lazyLoadingSelectors.isItemLoading, null);
   const error = useStore(store, lazyLoadingSelectors.itemError, null);
@@ -117,12 +119,7 @@ const RichTreeView = React.forwardRef(function RichTreeView<
   }
 
   return (
-    <TreeViewProvider
-      contextValue={contextValue}
-      classes={classes}
-      slots={slots}
-      slotProps={slotProps}
-    >
+    <TreeViewProvider store={store} classes={classes} slots={slots} slotProps={slotProps}>
       <Root {...rootProps}>
         <RichTreeViewItems slots={slots} slotProps={slotProps} />
       </Root>

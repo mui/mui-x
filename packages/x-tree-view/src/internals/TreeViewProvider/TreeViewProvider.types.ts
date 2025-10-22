@@ -11,6 +11,7 @@ import {
 import type { TreeItemProps } from '../../TreeItem/TreeItem.types';
 import { TreeViewClasses, TreeViewSlotProps, TreeViewSlots } from './TreeViewStyleContext';
 import { TreeViewCorePluginSignatures } from '../corePlugins';
+import { TreeViewStore } from '../TreeViewStore';
 
 export type TreeViewItemPluginsRunner = (
   props: TreeItemProps,
@@ -29,8 +30,8 @@ export interface TreeViewContextValue<
   runItemPlugins: TreeViewItemPluginsRunner;
 }
 
-export interface TreeViewProviderProps<TSignatures extends readonly TreeViewAnyPluginSignature[]> {
-  contextValue: TreeViewContextValue<TSignatures>;
+export interface TreeViewProviderProps<Store extends TreeViewStore<any, any, any, any>> {
+  store: Store;
   children: React.ReactNode;
   classes: Partial<TreeViewClasses> | undefined;
   slots: TreeViewSlots | undefined;

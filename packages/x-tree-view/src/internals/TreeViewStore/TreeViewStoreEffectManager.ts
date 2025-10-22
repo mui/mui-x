@@ -11,7 +11,7 @@ export class TreeViewStoreEffectManager<
     this.store = store;
   }
 
-  public registerEffect = <Value>(
+  public registerStoreEffect = <Value>(
     selector: (state: State) => Value,
     effect: (previous: Value, next: Value) => void,
   ) => {
