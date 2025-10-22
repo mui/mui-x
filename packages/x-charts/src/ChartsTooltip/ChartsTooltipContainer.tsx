@@ -20,9 +20,28 @@ import { selectorChartsInteractionPolarAxisTooltip } from '../internals/plugins/
 import { useAxisSystem } from '../hooks/useAxisSystem';
 import { useSvgRef } from '../hooks';
 import { selectorBrushShouldPreventTooltip } from '../internals/plugins/featurePlugins/useChartBrush';
-import { createSelector } from '../internals/plugins/utils/selectors';
 
 const selectorReturnFalse = () => false;
+
+function getIsOpenSelector(
+  trigger: TriggerOptions,
+  axisSystem: 'none' | 'polar' | 'cartesian',
+  shouldPreventBecauseOfBrush?: boolean,
+) {
+  if (shouldPreventBecauseOfBrush) {
+    return selectorReturnFalse;
+  }
+  if (trigger === 'item') {
+    return selectorChartsInteractionItemIsDefined;
+  }
+  if (axisSystem === 'polar') {
+    return selectorChartsInteractionPolarAxisTooltip;
+  }
+  if (axisSystem === 'cartesian') {
+    return selectorChartsInteractionAxisTooltip;
+  }
+  return selectorReturnFalse;
+}
 
 export interface ChartsTooltipContainerProps<T extends TriggerOptions = TriggerOptions>
   extends Partial<PopperProps> {
@@ -48,30 +67,6 @@ const ChartsTooltipRoot = styled(Popper, {
   pointerEvents: 'none',
   zIndex: theme.zIndex.modal,
 }));
-
-const selectorSelectIsOpenSelector = createSelector(
-  [
-    selectorBrushShouldPreventTooltip,
-    (_, trigger: TriggerOptions) => trigger,
-    (_, __, axisSystem: 'none' | 'polar' | 'cartesian') => axisSystem,
-  ],
-  (shouldPreventBecauseOfBrush, trigger, axisSystem) => {
-    if (shouldPreventBecauseOfBrush) {
-      return selectorReturnFalse;
-    }
-    if (trigger === 'item') {
-      return selectorChartsInteractionItemIsDefined;
-    }
-    if (axisSystem === 'polar') {
-      return selectorChartsInteractionPolarAxisTooltip;
-    }
-    if (axisSystem === 'cartesian') {
-      return selectorChartsInteractionAxisTooltip;
-    }
-    return selectorReturnFalse;
-  },
-);
-
 /**
  * Demos:
  *
@@ -100,9 +95,11 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
 
   const store = useStore<[UseChartCartesianAxisSignature]>();
 
-  const isOpenSelector = useSelector(store, selectorSelectIsOpenSelector, [trigger, axisSystem]);
-
-  const isOpen = useSelector(store, isOpenSelector);
+  const shouldPreventBecauseOfBrush = useSelector(store, selectorBrushShouldPreventTooltip);
+  const isOpen = useSelector(
+    store,
+    getIsOpenSelector(trigger, axisSystem, shouldPreventBecauseOfBrush),
+  );
 
   React.useEffect(() => {
     const element = svgRef.current;
