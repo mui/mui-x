@@ -48,7 +48,10 @@ export function createSeriesSelectorsOfType<T extends keyof ChartsSeriesConfig>(
   return (ids?: SeriesId | SeriesId[]) => {
     const store = useStore();
 
-    return useSelector(store, selectorSeriesWithIds, ids
+    return useSelector(
+      store,
+      selectorSeriesWithIds,
+      ids,
       // fastArrayCompare
     );
   };
