@@ -319,7 +319,10 @@ export class SchedulerStore<
     }
 
     this.updateEvents(updatedEvents);
-    onSubmit?.();
+    const submit = onSubmit;
+    if (submit) {
+      Promise.resolve().then(() => submit());
+    }
   };
 
   /**
