@@ -290,7 +290,7 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    */
   onDataSourceError?: (error: GridGetRowsError<GridGetRowsParams> | GridUpdateRowError) => void;
   /**
-   * Determines if a row is reorderable.
+   * Indicates whether a row is reorderable.
    * @param {object} params With all properties from the row.
    * @param {R} params.row The row model of the row that the current cell belongs to.
    * @param {GridTreeNode} params.rowNode The node of the row that the current cell belongs to.
@@ -298,9 +298,10 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    */
   isRowReorderable?: (params: IsRowReorderableParams) => boolean;
   /**
-   * Allows to disable certain row reorder operations based on the context.
-   * The internal validation is still applied which allows maximum supported use-cases.
-   * Use `isValidRowReorder()` to omit some of the default validation rules.
+   * Indicates if a row reorder attempt is valid.
+   * Can be used to disable certain row reorder operations based on the context.
+   * The internal validation is still applied, preventing unsupported use-cases.
+   * Use `isValidRowReorder()` to add additional validation rules to the default ones.
    * @param {ReorderValidationContext} context The context object containing all information about the reorder operation.
    * @returns {boolean} A boolean indicating if the reorder operation should go through.
    */

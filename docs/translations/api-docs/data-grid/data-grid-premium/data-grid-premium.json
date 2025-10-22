@@ -298,7 +298,7 @@
       }
     },
     "isRowReorderable": {
-      "description": "Determines if a row is reorderable.",
+      "description": "Indicates whether a row is reorderable.",
       "typeDescriptions": {
         "params": { "name": "params", "description": "With all properties from the row." },
         "params.row": {
@@ -329,7 +329,7 @@
       }
     },
     "isValidRowReorder": {
-      "description": "Allows to disable certain row reorder operations based on the context. The internal validation is still applied which allows maximum supported use-cases. Use <code>isValidRowReorder()</code> to omit some of the default validation rules.",
+      "description": "Indicates if a row reorder attempt is valid. Can be used to disable certain row reorder operations based on the context. The internal validation is still applied, preventing unsupported use-cases. Use <code>isValidRowReorder()</code> to add additional validation rules to the default ones.",
       "typeDescriptions": {
         "context": {
           "name": "context",
