@@ -40,7 +40,7 @@ export namespace useEventOccurrencesGroupedByDay {
      * If "first-day", the event appears only on its starting day.
      * If "every-day", the event appears on each day it spans.
      */
-    renderEventIn: 'first-day' | 'every-day';
+    renderEventIn: RenderIn;
   }
 
   export type ReturnValue = Map<string, CalendarEventOccurrence[]>;

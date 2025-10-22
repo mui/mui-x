@@ -8,7 +8,6 @@ import {
   CalendarEventUpdatedProperties,
   SchedulerValidDate,
   CalendarEventId,
-  RecurringEventUpdateScope,
 } from '../../models';
 import { Adapter } from '../../use-adapter/useAdapter.types';
 
@@ -80,6 +79,10 @@ export interface SchedulerState {
    * @default false
    */
   readOnly: boolean;
+  /**
+   * Pending parameters to use when the user selects the scope of a recurring event update.
+   */
+  pendingUpdateRecurringEventParameters: UpdateRecurringEventParameters | null;
 }
 
 export interface SchedulerParameters {
@@ -163,10 +166,6 @@ export type UpdateRecurringEventParameters = {
    * Requires `start` and `end`, all other properties are optional.
    */
   changes: CalendarEventUpdatedProperties;
-  /**
-   * The scope of the update.
-   */
-  scope: RecurringEventUpdateScope;
 };
 
 /**

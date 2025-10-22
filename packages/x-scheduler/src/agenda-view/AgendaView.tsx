@@ -17,7 +17,6 @@ import { AgendaViewProps, StandaloneAgendaViewProps } from './AgendaView.types';
 import { EventPopoverProvider, EventPopoverTrigger } from '../internals/components/event-popover';
 import { EventItem } from '../internals/components/event/event-item/EventItem';
 import './AgendaView.css';
-import { RecurringScopeDialogProvider } from '../internals/components/scope-dialog/ScopeDialog';
 import '../index.css';
 
 // TODO: Create a prop to allow users to customize the number of days in agenda view
@@ -69,50 +68,48 @@ export const AgendaView = React.memo(
         ref={handleRef}
         className={clsx('AgendaViewContainer', 'mui-x-scheduler', props.className)}
       >
-        <RecurringScopeDialogProvider containerRef={containerRef}>
-          <EventPopoverProvider containerRef={containerRef}>
-            {days.map((day) => (
-              <section
-                className="AgendaViewRow"
-                key={day.key}
-                id={`AgendaViewRow-${day.key}`}
-                aria-labelledby={`DayHeaderCell-${day.key}`}
+        <EventPopoverProvider containerRef={containerRef}>
+          {days.map((day) => (
+            <section
+              className="AgendaViewRow"
+              key={day.key}
+              id={`AgendaViewRow-${day.key}`}
+              aria-labelledby={`DayHeaderCell-${day.key}`}
+            >
+              <header
+                id={`DayHeaderCell-${day.key}`}
+                className="DayHeaderCell"
+                aria-label={`${adapter.format(day.value, 'weekday')} ${adapter.format(day.value, 'dayOfMonth')}`}
+                data-current={adapter.isSameDay(day.value, today) ? '' : undefined}
               >
-                <header
-                  id={`DayHeaderCell-${day.key}`}
-                  className="DayHeaderCell"
-                  aria-label={`${adapter.format(day.value, 'weekday')} ${adapter.format(day.value, 'dayOfMonth')}`}
-                  data-current={adapter.isSameDay(day.value, today) ? '' : undefined}
-                >
-                  <span className="DayNumberCell">{adapter.format(day.value, 'dayOfMonth')}</span>
-                  <div className="WeekDayCell">
-                    <span className={clsx('AgendaWeekDayNameLabel', 'LinesClamp')}>
-                      {adapter.format(day.value, 'weekday')}
-                    </span>
-                    <span className={clsx('AgendaYearAndMonthLabel', 'LinesClamp')}>
-                      {adapter.format(day.value, 'month')}, {adapter.format(day.value, 'year')}
-                    </span>
-                  </div>
-                </header>
-                <ul className="EventsList">
-                  {occurrences.get(day.key)!.map((occurrence) => (
-                    <li key={occurrence.key}>
-                      <EventPopoverTrigger
-                        occurrence={occurrence}
-                        render={
-                          <EventItem
-                            occurrence={occurrence}
-                            ariaLabelledBy={`DayHeaderCell-${day.key}`}
-                          />
-                        }
-                      />
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            ))}
-          </EventPopoverProvider>
-        </RecurringScopeDialogProvider>
+                <span className="DayNumberCell">{adapter.format(day.value, 'dayOfMonth')}</span>
+                <div className="WeekDayCell">
+                  <span className={clsx('AgendaWeekDayNameLabel', 'LinesClamp')}>
+                    {adapter.format(day.value, 'weekday')}
+                  </span>
+                  <span className={clsx('AgendaYearAndMonthLabel', 'LinesClamp')}>
+                    {adapter.format(day.value, 'month')}, {adapter.format(day.value, 'year')}
+                  </span>
+                </div>
+              </header>
+              <ul className="EventsList">
+                {occurrences.get(day.key)!.map((occurrence) => (
+                  <li key={occurrence.key}>
+                    <EventPopoverTrigger
+                      occurrence={occurrence}
+                      render={
+                        <EventItem
+                          occurrence={occurrence}
+                          ariaLabelledBy={`DayHeaderCell-${day.key}`}
+                        />
+                      }
+                    />
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))}
+        </EventPopoverProvider>
       </div>
     );
   }),

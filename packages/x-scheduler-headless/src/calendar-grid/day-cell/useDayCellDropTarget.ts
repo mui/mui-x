@@ -16,7 +16,7 @@ const isValidDropTarget = buildIsValidDropTarget([
 ]);
 
 export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters) {
-  const { value, addPropertiesToDroppedEvent, chooseRecurringEventScope } = parameters;
+  const { value, addPropertiesToDroppedEvent } = parameters;
 
   const adapter = useAdapter();
   const ref = React.useRef<HTMLDivElement>(null);
@@ -107,7 +107,6 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
     getEventDropData,
     isValidDropTarget,
     addPropertiesToDroppedEvent,
-    chooseRecurringEventScope,
   });
 
   return ref;
@@ -123,10 +122,5 @@ export namespace useDayCellDropTarget {
      * Add properties to the event dropped in the cell before storing it in the store.
      */
     addPropertiesToDroppedEvent?: () => Partial<CalendarEvent>;
-    /**
-     * Prompts the UI to choose the scope for a recurring event update.
-     * Return `null` to cancel the operation.
-     */
-    chooseRecurringEventScope?: () => Promise<RecurringEventUpdateScope | null>;
   }
 }

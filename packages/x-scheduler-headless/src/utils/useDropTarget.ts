@@ -9,7 +9,6 @@ import {
   EventSurfaceType,
   CalendarEventUpdatedProperties,
   SchedulerValidDate,
-  RecurringEventUpdateScope,
 } from '../models';
 import {
   EventDropData,
@@ -21,14 +20,8 @@ import { selectors } from './SchedulerStore';
 export function useDropTarget<Targets extends keyof EventDropDataLookup>(
   parameters: useDropTarget.Parameters<Targets>,
 ) {
-  const {
-    surfaceType,
-    ref,
-    getEventDropData,
-    isValidDropTarget,
-    addPropertiesToDroppedEvent,
-    chooseRecurringEventScope,
-  } = parameters;
+  const { surfaceType, ref, getEventDropData, isValidDropTarget, addPropertiesToDroppedEvent } =
+    parameters;
   const store = useSchedulerStoreContext();
 
   React.useEffect(() => {
@@ -100,7 +93,6 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
             store,
             placeholder,
             addPropertiesToDroppedEvent,
-            chooseRecurringEventScope,
           );
         } else if (placeholder?.type === 'external-drag') {
           applyExternalDragOccurrencePlaceholder(store, placeholder, addPropertiesToDroppedEvent);
@@ -122,15 +114,7 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
         }
       },
     });
-  }, [
-    ref,
-    surfaceType,
-    getEventDropData,
-    isValidDropTarget,
-    addPropertiesToDroppedEvent,
-    store,
-    chooseRecurringEventScope,
-  ]);
+  }, [ref, surfaceType, getEventDropData, isValidDropTarget, addPropertiesToDroppedEvent, store]);
 }
 
 export namespace useDropTarget {
@@ -143,11 +127,6 @@ export namespace useDropTarget {
      * Add properties to the event dropped in the element before storing it in the store.
      */
     addPropertiesToDroppedEvent?: () => Partial<CalendarEvent>;
-    /**
-     * Prompts the UI to choose the scope for a recurring event update.
-     * Return `null` to cancel the operation.
-     */
-    chooseRecurringEventScope?: () => Promise<RecurringEventUpdateScope | null>;
   }
 
   export type CreateDropData = (
@@ -170,7 +149,6 @@ async function applyInternalDragOrResizeOccurrencePlaceholder(
   store: SchedulerStoreInContext,
   placeholder: CalendarOccurrencePlaceholderInternalDragOrResize,
   addPropertiesToDroppedEvent?: () => Partial<CalendarEvent>,
-  chooseRecurringEventScope?: () => Promise<RecurringEventUpdateScope | null>,
 ): Promise<void> {
   // TODO: Try to do a single state update.
   store.setOccurrencePlaceholder(null);
@@ -188,16 +166,9 @@ async function applyInternalDragOrResizeOccurrencePlaceholder(
   }
 
   if (original.rrule) {
-    const scope = chooseRecurringEventScope ? await chooseRecurringEventScope() : null;
-
-    if (!scope) {
-      return;
-    }
-
     store.updateRecurringEvent({
       occurrenceStart: originalOccurrence.start,
       changes,
-      scope,
     });
     return;
   }

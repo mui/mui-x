@@ -108,11 +108,10 @@ export const selectors = {
       };
     },
   ),
-  canDragEventsFromTheOutside: createSelector(
-    (state: State) => state.canDragEventsFromTheOutside && !state.readOnly,
-  ),
-  canDropEventsToTheOutside: createSelector(
-    (state: State) => state.canDropEventsToTheOutside && !state.readOnly,
+  canDragEventsFromTheOutside: createSelector((state: State) => state.canDragEventsFromTheOutside),
+  canDropEventsToTheOutside: createSelector((state: State) => state.canDropEventsToTheOutside),
+  hasPendingUpdateRecurringEventParameters: createSelector(
+    (state: State) => !!state.pendingUpdateRecurringEventParameters,
   ),
   isCurrentDay: createSelector(
     (state: State) => state.adapter,
