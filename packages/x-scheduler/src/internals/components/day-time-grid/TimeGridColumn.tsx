@@ -19,7 +19,6 @@ import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
 import { EventPopoverTrigger } from '../event-popover';
 import { useEventPopoverContext } from '../event-popover/EventPopover';
 import './DayTimeGrid.css';
-import { useScopeDialogContext } from '../scope-dialog/ScopeDialogContext';
 
 export function TimeGridColumn(props: TimeGridColumnProps) {
   const { day, showCurrentTimeIndicator, index } = props;
@@ -31,14 +30,12 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
     occurrences: day.withoutPosition,
     maxSpan: Infinity,
   });
-  const { promptScope } = useScopeDialogContext();
 
   return (
     <CalendarGrid.TimeColumn
       start={start}
       end={end}
       addPropertiesToDroppedEvent={addPropertiesToDroppedEvent}
-      chooseRecurringEventScope={promptScope}
       className="DayTimeGridColumn"
       data-weekend={isWeekend(adapter, day.value) ? '' : undefined}
       style={{ '--columns-count': maxIndex } as React.CSSProperties}

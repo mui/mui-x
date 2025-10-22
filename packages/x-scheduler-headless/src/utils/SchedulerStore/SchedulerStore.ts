@@ -10,6 +10,7 @@ import {
   CalendarResourceId,
   SchedulerValidDate,
   CalendarEventUpdatedProperties,
+  RecurringEventUpdateScope,
 } from '../../models';
 import {
   SchedulerState,
@@ -72,6 +73,7 @@ export class SchedulerStore<
       occurrencePlaceholder: null,
       nowUpdatedEveryMinute: adapter.date(),
       isMultiDayEvent: DEFAULT_IS_MULTI_DAY_EVENT,
+      pendingUpdateRecurringEventParameters: null,
       visibleResources: new Map(),
       visibleDate:
         parameters.visibleDate ??
@@ -265,10 +267,22 @@ export class SchedulerStore<
   /**
    * Updates a recurring event in the calendar.
    */
-  public updateRecurringEvent = (params: UpdateRecurringEventParameters) => {
-    const { adapter } = this.state;
-    const { occurrenceStart, changes, scope } = params;
+  public updateRecurringEvent = async (params: UpdateRecurringEventParameters) => {
+    this.set('pendingUpdateRecurringEventParameters', params);
+  };
 
+  public selectRecurringEventUpdateScope = (scope: RecurringEventUpdateScope | null) => {
+    const { pendingUpdateRecurringEventParameters, adapter } = this.state;
+    if (pendingUpdateRecurringEventParameters == null) {
+      return;
+    }
+
+    this.set('pendingUpdateRecurringEventParameters', null);
+    if (scope == null) {
+      return;
+    }
+
+    const { changes, occurrenceStart } = pendingUpdateRecurringEventParameters;
     const original = selectors.event(this.state, changes.id);
     if (!original) {
       throw new Error(

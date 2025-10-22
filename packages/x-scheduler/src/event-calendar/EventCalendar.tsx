@@ -2,6 +2,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useStore } from '@base-ui-components/utils/store';
+import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { EventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import {
   useEventCalendar,
@@ -20,6 +21,7 @@ import { ResourceLegend } from '../internals/components/resource-legend';
 import '../index.css';
 import './EventCalendar.css';
 import { DateNavigator } from '../internals/components/date-navigator';
+import { RecurringScopeDialog } from '../internals/components/scope-dialog/ScopeDialog';
 
 export const EventCalendar = React.forwardRef(function EventCalendar(
   props: EventCalendarProps,
@@ -53,6 +55,9 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
       content = null;
   }
 
+  const rootRef = React.useRef<HTMLElement | null>(null);
+  const handleRootRef = useMergedRefs(forwardedRef, rootRef);
+
   return (
     <EventCalendarStoreContext.Provider value={store}>
       <SchedulerStoreContext.Provider value={store as any}>
@@ -60,7 +65,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
           <div
             {...other}
             className={clsx(forwardedProps.className, 'EventCalendarRoot', 'mui-x-scheduler')}
-            ref={forwardedRef}
+            ref={handleRootRef}
           >
             <DateNavigator />
 
@@ -91,6 +96,8 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
               >
                 {content}
               </section>
+
+              <RecurringScopeDialog containerRef={rootRef} />
             </div>
           </div>
         </TranslationsProvider>

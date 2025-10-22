@@ -30,7 +30,6 @@ import {
 import { getColorClassName } from '../../utils/color-utils';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { createPopover } from '../create-popover';
-import { useScopeDialogContext } from '../scope-dialog/ScopeDialogContext';
 import './EventPopover.css';
 
 const EventPopover = createPopover<CalendarEventOccurrence>({
@@ -57,7 +56,6 @@ export const EventPopoverContent = React.forwardRef(function EventPopoverContent
   const color = useStore(store, selectors.eventColor, occurrence.id);
   const rawPlaceholder = useStore(store, selectors.occurrencePlaceholder);
   const recurrencePresets = useStore(store, selectors.recurrencePresets, occurrence.start);
-  const { promptScope } = useScopeDialogContext();
   const defaultRecurrenceKey = useStore(
     store,
     selectors.defaultRecurrencePresetKey,
@@ -231,15 +229,10 @@ export const EventPopoverContent = React.forwardRef(function EventPopoverContent
         end,
         ...(recurrenceModified ? { rrule } : {}),
       };
-      const scope = await promptScope();
-      if (!scope) {
-        return;
-      }
 
-      store.updateRecurringEvent({
+      await store.updateRecurringEvent({
         occurrenceStart: occurrence.start,
         changes,
-        scope,
       });
     } else {
       store.updateEvent({ id: occurrence.id, ...metaChanges, start, end, rrule });
@@ -539,7 +532,8 @@ export const EventPopoverContent = React.forwardRef(function EventPopoverContent
 export function EventPopoverProvider(props: EventPopoverProviderProps) {
   const { containerRef, children } = props;
   const store = useEventCalendarStoreContext();
-  const { isOpen: isScopeDialogOpen } = useScopeDialogContext();
+  const isScopeDialogOpen = useStore(store, selectors.hasPendingUpdateRecurringEventParameters);
+
   return (
     <EventPopover.Provider
       containerRef={containerRef}

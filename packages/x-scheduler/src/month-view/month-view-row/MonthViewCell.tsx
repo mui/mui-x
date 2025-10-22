@@ -14,7 +14,6 @@ import { EventPopoverTrigger } from '../../internals/components/event-popover';
 import { MoreEventsPopoverTrigger } from '../../internals/components/more-events-popover/MoreEventsPopover';
 import { useEventPopoverContext } from '../../internals/components/event-popover/EventPopover';
 import './MonthViewWeekRow.css';
-import { useScopeDialogContext } from '../../internals/components/scope-dialog/ScopeDialogContext';
 
 export const MonthViewCell = React.forwardRef(function MonthViewCell(
   props: MonthViewCellProps,
@@ -42,7 +41,6 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const isCurrentMonth = adapter.isSameMonth(day.value, visibleDate);
   const isFirstDayOfMonth = adapter.isSameDay(day.value, adapter.startOfMonth(day.value));
   const isToday = React.useMemo(() => adapter.isSameDay(day.value, adapter.date()), [adapter, day]);
-  const { promptScope } = useScopeDialogContext();
 
   const visibleOccurrences =
     day.withPosition.length > maxEvents
@@ -95,7 +93,6 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
       )}
       style={{ '--row-count': rowCount } as React.CSSProperties}
       onDoubleClick={handleDoubleClick}
-      chooseRecurringEventScope={promptScope}
     >
       {hasDayView ? (
         <button
