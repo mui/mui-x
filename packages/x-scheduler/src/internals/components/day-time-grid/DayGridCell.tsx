@@ -26,6 +26,7 @@ export function DayGridCell(props: DayGridCellProps) {
   // Selector hooks
   const isCreation = useStore(store, selectors.isCreatingNewEventInDayCell, day.value);
   const { promptScope } = useScopeDialogContext();
+  const canCreateEvent = useStore(store, selectors.canCreateNewEvent);
 
   // Feature hooks
   const placeholder = CalendarGrid.usePlaceholderInDay(day.value, row);
@@ -33,6 +34,9 @@ export function DayGridCell(props: DayGridCellProps) {
   const { open: startEditing } = useEventPopoverContext();
 
   const handleDoubleClick = () => {
+    if (!canCreateEvent) {
+      return;
+    }
     store.setOccurrencePlaceholder({
       type: 'creation',
       surfaceType: 'day-grid',
