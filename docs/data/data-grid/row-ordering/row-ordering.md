@@ -91,7 +91,12 @@ To disable reordering of specific rows, you can pass a callback to the `isRowReo
 This callback is called with `row` and `rowNode` objects to allow disabling rows based on multiple criteria.
 
 ```tsx
-<DataGridPro isRowReorderable={isRowReorderable} />
+const isRowReorderable = (params: IsRowReorderableParams) => {
+  // Example: Disable reordering if the quantity is greater than 50000
+  return params.row.quantity > 50000;
+};
+
+<DataGridPro isRowReorderable={isRowReorderable} />;
 ```
 
 The demo below shows how to disable reordering of specific rows based on the row model.
