@@ -11,6 +11,7 @@ import {
   GridApi,
   useGridApiRef,
   type ReorderValidationContext,
+  type GridGroupNode,
 } from '@mui/x-data-grid-pro';
 import { isJSDOM } from 'test/utils/skipIf';
 
@@ -304,107 +305,370 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
   });
 
   describe('Drop "over" operations', () => {
-    it('should convert leaf to parent when item dropped over it', async () => {
-      const handleRowOrderChange = spy();
-      const processedRows: GridRowModel[] = [];
+    describe('Drop over leaf', () => {
+      it('should convert leaf to parent when item dropped over it', async () => {
+        const handleRowOrderChange = spy();
+        const processedRows: GridRowModel[] = [];
 
-      const handleProcessRowUpdate = (newRow: GridRowModel) => {
-        processedRows.push(newRow);
-        return newRow;
-      };
+        const handleProcessRowUpdate = (newRow: GridRowModel) => {
+          processedRows.push(newRow);
+          return newRow;
+        };
 
-      render(
-        <Test
-          onRowOrderChange={handleRowOrderChange}
-          processRowUpdate={handleProcessRowUpdate}
-          rows={[
-            { id: 1, path: ['Root'], name: 'Root' },
-            { id: 2, path: ['Root', 'LeafA'], name: 'LeafA' },
-            { id: 3, path: ['Root', 'LeafB'], name: 'LeafB' },
-          ]}
-        />,
-      );
+        render(
+          <Test
+            onRowOrderChange={handleRowOrderChange}
+            processRowUpdate={handleProcessRowUpdate}
+            rows={[
+              { id: 1, path: ['Root'], name: 'Root' },
+              { id: 2, path: ['Root', 'LeafA'], name: 'LeafA' },
+              { id: 3, path: ['Root', 'LeafB'], name: 'LeafB' },
+            ]}
+          />,
+        );
 
-      // Debug what's rendered
-      const allValues = getColumnValues(0);
+        // Debug what's rendered
+        const allValues = getColumnValues(0);
 
-      // Drop LeafA "over" LeafB to make LeafB a parent of LeafA
-      const leafAIndex = findRowIndex(allValues, 'LeafA', 2);
-      const leafBIndex = findRowIndex(allValues, 'LeafB', 3);
+        // Drop LeafA "over" LeafB to make LeafB a parent of LeafA
+        const leafAIndex = findRowIndex(allValues, 'LeafA', 2);
+        const leafBIndex = findRowIndex(allValues, 'LeafB', 3);
 
-      expect(leafAIndex).to.be.greaterThan(-1, `LeafA should be found in: ${allValues.join(', ')}`);
-      expect(leafBIndex).to.be.greaterThan(-1, `LeafB should be found in: ${allValues.join(', ')}`);
+        expect(leafAIndex).to.be.greaterThan(
+          -1,
+          `LeafA should be found in: ${allValues.join(', ')}`,
+        );
+        expect(leafBIndex).to.be.greaterThan(
+          -1,
+          `LeafB should be found in: ${allValues.join(', ')}`,
+        );
 
-      const sourceCell = getCell(leafAIndex, 0).firstChild!;
-      const targetCell = getCell(leafBIndex, 0);
+        const sourceCell = getCell(leafAIndex, 0).firstChild!;
+        const targetCell = getCell(leafBIndex, 0);
 
-      performDragOperation(sourceCell, targetCell, 'over');
+        performDragOperation(sourceCell, targetCell, 'over');
 
-      await waitFor(() => {
-        expect(handleRowOrderChange.callCount).to.equal(1);
+        await waitFor(() => {
+          expect(handleRowOrderChange.callCount).to.equal(1);
+        });
+
+        // Verify LeafB became a group and LeafA is its child
+        const rowTree = gridRowTreeSelector(apiRef!);
+        const leafANode = rowTree[2];
+        const leafBNode = rowTree[3];
+        expect(leafBNode.type).to.equal('group');
+        expect(leafANode.parent).to.equal(leafBNode.id);
       });
 
-      // Verify LeafB became a group and LeafA is its child
-      const rowTree = gridRowTreeSelector(apiRef!);
-      const leafANode = rowTree[2];
-      const leafBNode = rowTree[3];
-      expect(leafBNode.type).to.equal('group');
-      expect(leafANode.parent).to.equal(leafBNode.id);
+      it('should handle group dropped over leaf', async () => {
+        const handleRowOrderChange = spy();
+
+        render(
+          <Test
+            onRowOrderChange={handleRowOrderChange}
+            rows={[
+              { id: 1, path: ['Root'], name: 'Root' },
+              { id: 2, path: ['Root', 'Group'], name: 'Group' },
+              { id: 3, path: ['Root', 'Group', 'Child'], name: 'Child' },
+              { id: 4, path: ['Root', 'Leaf'], name: 'Leaf' },
+            ]}
+          />,
+        );
+
+        // Drop Group over Leaf to make Leaf a parent of Group
+        const allValues = getColumnValues(0);
+        const groupIndex = allValues.indexOf('Group');
+        const leafIndex = allValues.indexOf('Leaf');
+
+        // If not found by name, look for node IDs
+        const sourceIndex = groupIndex >= 0 ? groupIndex : allValues.indexOf('2');
+        const targetIndex = leafIndex >= 0 ? leafIndex : allValues.indexOf('4');
+
+        expect(sourceIndex).to.be.greaterThan(
+          -1,
+          `Group or ID 2 should be found in: ${allValues.join(', ')}`,
+        );
+        expect(targetIndex).to.be.greaterThan(
+          -1,
+          `Leaf or ID 4 should be found in: ${allValues.join(', ')}`,
+        );
+
+        const sourceCell = getCell(sourceIndex, 0).firstChild!;
+        const targetCell = getCell(targetIndex, 0);
+
+        fireDragStart(sourceCell);
+        fireEvent.dragEnter(targetCell);
+        const dragOverEvent = createDragOverEvent(targetCell, 'over');
+        fireEvent(targetCell, dragOverEvent);
+        const dragEndEvent = createDragEndEvent(sourceCell);
+        fireEvent(sourceCell, dragEndEvent);
+
+        await waitFor(() => {
+          expect(handleRowOrderChange.callCount).to.equal(1);
+        });
+
+        // Verify Leaf became a group and Group is its child
+        const rowTree = gridRowTreeSelector(apiRef!);
+        const groupNode = rowTree[2];
+        const leafNode = rowTree[4];
+        expect(leafNode.type).to.equal('group');
+        expect(groupNode.parent).to.equal(leafNode.id);
+      });
     });
 
-    it('should handle group dropped over leaf', async () => {
-      const handleRowOrderChange = spy();
+    describe('Drop over group', () => {
+      it('should drop leaf over expanded group as first child', async () => {
+        const handleRowOrderChange = spy();
 
-      render(
-        <Test
-          onRowOrderChange={handleRowOrderChange}
-          rows={[
-            { id: 1, path: ['Root'], name: 'Root' },
-            { id: 2, path: ['Root', 'Group'], name: 'Group' },
-            { id: 3, path: ['Root', 'Group', 'Child'], name: 'Child' },
-            { id: 4, path: ['Root', 'Leaf'], name: 'Leaf' },
-          ]}
-        />,
-      );
+        render(
+          <Test
+            onRowOrderChange={handleRowOrderChange}
+            rows={[
+              { id: 1, path: ['Root'], name: 'Root' },
+              { id: 2, path: ['Root', 'Folder'], name: 'Folder' },
+              { id: 3, path: ['Root', 'Folder', 'ExistingChild1'], name: 'ExistingChild1' },
+              { id: 4, path: ['Root', 'Folder', 'ExistingChild2'], name: 'ExistingChild2' },
+              { id: 5, path: ['Root', 'File.txt'], name: 'File.txt' },
+            ]}
+          />,
+        );
 
-      // Drop Group over Leaf to make Leaf a parent of Group
-      const allValues = getColumnValues(0);
-      const groupIndex = allValues.indexOf('Group');
-      const leafIndex = allValues.indexOf('Leaf');
+        // Drag File.txt "over" Folder
+        const allValues = getColumnValues(0);
+        const fileIndex = findRowIndex(allValues, 'File.txt', 5);
+        const folderIndex = findRowIndex(allValues, 'Folder', 2);
 
-      // If not found by name, look for node IDs
-      const sourceIndex = groupIndex >= 0 ? groupIndex : allValues.indexOf('2');
-      const targetIndex = leafIndex >= 0 ? leafIndex : allValues.indexOf('4');
+        expect(fileIndex).to.be.greaterThan(-1, 'File.txt should be found');
+        expect(folderIndex).to.be.greaterThan(-1, 'Folder should be found');
 
-      expect(sourceIndex).to.be.greaterThan(
-        -1,
-        `Group or ID 2 should be found in: ${allValues.join(', ')}`,
-      );
-      expect(targetIndex).to.be.greaterThan(
-        -1,
-        `Leaf or ID 4 should be found in: ${allValues.join(', ')}`,
-      );
+        const sourceCell = getCell(fileIndex, 0).firstChild!;
+        const targetCell = getCell(folderIndex, 0);
 
-      const sourceCell = getCell(sourceIndex, 0).firstChild!;
-      const targetCell = getCell(targetIndex, 0);
+        performDragOperation(sourceCell, targetCell, 'over');
 
-      fireDragStart(sourceCell);
-      fireEvent.dragEnter(targetCell);
-      const dragOverEvent = createDragOverEvent(targetCell, 'over');
-      fireEvent(targetCell, dragOverEvent);
-      const dragEndEvent = createDragEndEvent(sourceCell);
-      fireEvent(sourceCell, dragEndEvent);
+        await waitFor(() => {
+          expect(handleRowOrderChange.callCount).to.equal(1);
+        });
 
-      await waitFor(() => {
-        expect(handleRowOrderChange.callCount).to.equal(1);
+        // Verify File.txt is now a child of Folder
+        const rowTree = gridRowTreeSelector(apiRef!);
+        const fileNode = rowTree[5];
+        const folderNode = rowTree[2] as GridGroupNode;
+
+        expect(fileNode.parent).to.equal(folderNode.id);
+
+        // Verify File.txt is the first child (index 0)
+        expect(folderNode.children[0]).to.equal(5);
+
+        // Verify visual order: File.txt appears before ExistingChild1
+        const newValues = getColumnValues(0);
+        const newFileIndex = findRowIndex(newValues, 'File.txt', 5);
+        const existingChild1Index = findRowIndex(newValues, 'ExistingChild1', 3);
+        expect(newFileIndex).to.be.lessThan(existingChild1Index);
+
+        // Verify depth
+        expect(fileNode.depth).to.equal(folderNode.depth + 1);
       });
 
-      // Verify Leaf became a group and Group is its child
-      const rowTree = gridRowTreeSelector(apiRef!);
-      const groupNode = rowTree[2];
-      const leafNode = rowTree[4];
-      expect(leafNode.type).to.equal('group');
-      expect(groupNode.parent).to.equal(leafNode.id);
+      it('should drop group over group with all descendants', async () => {
+        const handleRowOrderChange = spy();
+        const processRowUpdateCalls: any[] = [];
+        const processRowUpdate = async (newRow: GridRowModel) => {
+          processRowUpdateCalls.push(newRow);
+          return newRow;
+        };
+
+        render(
+          <Test
+            onRowOrderChange={handleRowOrderChange}
+            processRowUpdate={processRowUpdate}
+            rows={[
+              { id: 1, path: ['Root'], name: 'Root' },
+              { id: 2, path: ['Root', 'TargetFolder'], name: 'TargetFolder' },
+              { id: 3, path: ['Root', 'TargetFolder', 'ExistingFile'], name: 'ExistingFile' },
+              { id: 4, path: ['Root', 'SourceFolder'], name: 'SourceFolder' },
+              { id: 5, path: ['Root', 'SourceFolder', 'Child1'], name: 'Child1' },
+              { id: 6, path: ['Root', 'SourceFolder', 'Subfolder'], name: 'Subfolder' },
+              { id: 7, path: ['Root', 'SourceFolder', 'Subfolder', 'DeepFile'], name: 'DeepFile' },
+            ]}
+          />,
+        );
+
+        // Drag SourceFolder "over" TargetFolder
+        const allValues = getColumnValues(0);
+        const sourceFolderIndex = findRowIndex(allValues, 'SourceFolder', 4);
+        const targetFolderIndex = findRowIndex(allValues, 'TargetFolder', 2);
+
+        expect(sourceFolderIndex).to.be.greaterThan(-1, 'SourceFolder should be found');
+        expect(targetFolderIndex).to.be.greaterThan(-1, 'TargetFolder should be found');
+
+        const sourceCell = getCell(sourceFolderIndex, 0).firstChild!;
+        const targetCell = getCell(targetFolderIndex, 0);
+
+        performDragOperation(sourceCell, targetCell, 'over');
+
+        await waitFor(() => {
+          expect(handleRowOrderChange.callCount).to.equal(1);
+        });
+
+        // Verify SourceFolder is now a child of TargetFolder
+        const rowTree = gridRowTreeSelector(apiRef!);
+        const sourceFolderNode = rowTree[4];
+        const targetFolderNode = rowTree[2] as GridGroupNode;
+
+        expect(sourceFolderNode.parent).to.equal(targetFolderNode.id);
+
+        // Verify SourceFolder is the first child (before ExistingFile)
+        expect(targetFolderNode.children[0]).to.equal(4);
+
+        // Verify all descendants maintain correct parent-child relationships
+        const child1Node = rowTree[5];
+        const subfolderNode = rowTree[6];
+        const deepFileNode = rowTree[7];
+
+        expect(child1Node.parent).to.equal(4, 'Child1 parent should be SourceFolder');
+        expect(subfolderNode.parent).to.equal(4, 'Subfolder parent should be SourceFolder');
+        expect(deepFileNode.parent).to.equal(6, 'DeepFile parent should be Subfolder');
+
+        // Verify all depths updated correctly
+        expect(sourceFolderNode.depth).to.equal(2, 'SourceFolder depth should be 2');
+        expect(child1Node.depth).to.equal(3, 'Child1 depth should be 3');
+        expect(subfolderNode.depth).to.equal(3, 'Subfolder depth should be 3');
+        expect(deepFileNode.depth).to.equal(4, 'DeepFile depth should be 4');
+
+        // Verify batch processing: processRowUpdate called for group + all descendants
+        // SourceFolder (1) + Child1 (1) + Subfolder (1) + DeepFile (1) = 4 total
+        expect(processRowUpdateCalls.length).to.equal(4);
+
+        // Verify all updated rows have correct paths
+        const sourceFolderUpdate = processRowUpdateCalls.find((row) => row.id === 4);
+        expect(sourceFolderUpdate).to.not.equal(undefined);
+        expect(JSON.stringify(sourceFolderUpdate!.path)).to.equal(
+          JSON.stringify(['Root', 'TargetFolder', 'SourceFolder']),
+        );
+
+        const deepFileUpdate = processRowUpdateCalls.find((row) => row.id === 7);
+        expect(deepFileUpdate).to.not.equal(undefined);
+        expect(JSON.stringify(deepFileUpdate!.path)).to.equal(
+          JSON.stringify(['Root', 'TargetFolder', 'SourceFolder', 'Subfolder', 'DeepFile']),
+        );
+      });
+
+      it('should prevent dropping group "over" its own descendant', () => {
+        const handleRowOrderChange = spy();
+
+        render(
+          <Test
+            onRowOrderChange={handleRowOrderChange}
+            rows={[
+              { id: 1, path: ['Root'], name: 'Root' },
+              { id: 2, path: ['Root', 'Parent'], name: 'Parent' },
+              { id: 3, path: ['Root', 'Parent', 'Child'], name: 'Child' },
+              { id: 4, path: ['Root', 'Parent', 'Child', 'Grandchild'], name: 'Grandchild' },
+            ]}
+          />,
+        );
+
+        // Try to drag Parent "over" Child (its direct descendant)
+        const allValues = getColumnValues(0);
+        const parentIndex = findRowIndex(allValues, 'Parent', 2);
+        const childIndex = findRowIndex(allValues, 'Child', 3);
+
+        expect(parentIndex).to.be.greaterThan(-1, 'Parent should be found');
+        expect(childIndex).to.be.greaterThan(-1, 'Child should be found');
+
+        const sourceCell = getCell(parentIndex, 0).firstChild!;
+        const targetCell = getCell(childIndex, 0);
+
+        performDragOperation(sourceCell, targetCell, 'over');
+
+        // Verify operation was blocked
+        expect(handleRowOrderChange.callCount).to.equal(0);
+
+        // Verify tree structure unchanged
+        const rowTree = gridRowTreeSelector(apiRef!);
+        const parentNode = rowTree[2];
+        const childNode = rowTree[3];
+
+        expect(parentNode.parent).to.equal(1); // Still under Root
+        expect(childNode.parent).to.equal(2); // Still under Parent
+
+        // Try to drag Parent "over" Grandchild (deeper descendant)
+        const grandchildIndex = findRowIndex(allValues, 'Grandchild', 4);
+        expect(grandchildIndex).to.be.greaterThan(-1, 'Grandchild should be found');
+
+        const grandchildCell = getCell(grandchildIndex, 0);
+        performDragOperation(sourceCell, grandchildCell, 'over');
+
+        // Verify this was also blocked
+        expect(handleRowOrderChange.callCount).to.equal(0);
+
+        // Verify tree structure still unchanged
+        const finalTree = gridRowTreeSelector(apiRef!);
+        expect(finalTree[2].parent).to.equal(1); // Parent still under Root
+      });
+
+      it('should update paths correctly for deep hierarchy moves', async () => {
+        const handleRowOrderChange = spy();
+        const updatedRows: GridRowModel[] = [];
+        const customSetTreeDataPath = (path: readonly string[], row: GridRowModel) => {
+          const updatedRow = {
+            ...row,
+            path,
+          };
+          updatedRows.push(updatedRow);
+          return updatedRow;
+        };
+
+        render(
+          <Test
+            onRowOrderChange={handleRowOrderChange}
+            setTreeDataPath={customSetTreeDataPath}
+            rows={[
+              { id: 1, path: ['Documents'], name: 'Documents' },
+              { id: 2, path: ['Documents', 'Work'], name: 'Work' },
+              { id: 3, path: ['Documents', 'Work', 'Project'], name: 'Project' },
+              { id: 4, path: ['Documents', 'Work', 'Project', 'File.doc'], name: 'File.doc' },
+              { id: 5, path: ['Pictures'], name: 'Pictures' },
+              { id: 6, path: ['Pictures', 'Vacation'], name: 'Vacation' },
+            ]}
+          />,
+        );
+
+        // Drag Project group "over" Vacation
+        const allValues = getColumnValues(0);
+        const projectIndex = findRowIndex(allValues, 'Project', 3);
+        const vacationIndex = findRowIndex(allValues, 'Vacation', 6);
+
+        expect(projectIndex).to.be.greaterThan(-1, 'Project should be found');
+        expect(vacationIndex).to.be.greaterThan(-1, 'Vacation should be found');
+
+        const sourceCell = getCell(projectIndex, 0).firstChild!;
+        const targetCell = getCell(vacationIndex, 0);
+
+        performDragOperation(sourceCell, targetCell, 'over');
+
+        await waitFor(() => {
+          expect(handleRowOrderChange.callCount).to.equal(1);
+        });
+
+        // Verify Project new path
+        const projectUpdate = updatedRows.find((row) => row.id === 3);
+        expect(projectUpdate).to.not.equal(undefined);
+        expect(JSON.stringify(projectUpdate!.path)).to.equal(
+          JSON.stringify(['Pictures', 'Vacation', 'Project']),
+        );
+
+        // Verify File.doc new path
+        const fileUpdate = updatedRows.find((row) => row.id === 4);
+        expect(fileUpdate).to.not.equal(undefined);
+        expect(JSON.stringify(fileUpdate!.path)).to.equal(
+          JSON.stringify(['Pictures', 'Vacation', 'Project', 'File.doc']),
+        );
+
+        // Verify all paths maintain correct hierarchy
+        expect(updatedRows.length).to.equal(2); // Project + File.doc
+      });
     });
   });
 
