@@ -29,7 +29,6 @@ describe('Core - TimelineStore', () => {
         visibleDate: adapter.startOfDay(adapter.date()),
         pendingUpdateRecurringEventParameters: null,
         preferences: DEFAULT_PREFERENCES,
-        recurringScopeDialogStatus: 'closed',
         view: 'time',
         views: ['time', 'days', 'weeks', 'months', 'years'],
         readOnly: false,

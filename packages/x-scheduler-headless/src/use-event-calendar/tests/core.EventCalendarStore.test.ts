@@ -41,7 +41,6 @@ describe('Core - EventCalendarStore', () => {
         occurrencePlaceholder: null,
         visibleDate: adapter.startOfDay(adapter.date()),
         readOnly: false,
-        recurringScopeDialogStatus: 'closed',
       };
 
       expect(store.state).to.deep.equal(expectedState);
