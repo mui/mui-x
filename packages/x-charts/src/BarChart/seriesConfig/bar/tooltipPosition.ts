@@ -1,7 +1,7 @@
 import { getBarDimensions } from '../../../internals/getBarDimensions';
 import type { TooltipItemPositionGetter } from '../../../internals/plugins/models/seriesConfig/tooltipItemPositionGetter.types';
 
-const tooltipItemPositionGetter: TooltipItemPositionGetter<'bar'> = (params) => {
+const tooltipItemPositionGetter: TooltipItemPositionGetter<'bar' | 'rangeBar'> = (params) => {
   const { series, identifier, axesConfig, placement } = params;
 
   if (!identifier || identifier.dataIndex === undefined) {
