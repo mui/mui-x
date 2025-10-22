@@ -83,13 +83,6 @@ export interface SchedulerState {
    * Pending parameters to use when the user selects the scope of a recurring event update.
    */
   pendingUpdateRecurringEventParameters: UpdateRecurringEventParameters | null;
-  /**
-   * The status of the recurring scope dialog.
-   * 'closed' means the dialog is not shown.
-   * 'pending' means the dialog is shown but the user has not submitted a choice yet.
-   * 'submitted' means the user has submitted a choice and the update is being applied.
-   */
-  recurringScopeDialogStatus: 'closed' | 'pending' | 'submitted';
 }
 
 export interface SchedulerParameters {
@@ -173,6 +166,10 @@ export type UpdateRecurringEventParameters = {
    * Requires `start` and `end`, all other properties are optional.
    */
   changes: CalendarEventUpdatedProperties;
+  /**
+   * Callback fired when the user submits the recurring scope dialog.
+   */
+  onSubmit?: () => void;
 };
 
 /**
