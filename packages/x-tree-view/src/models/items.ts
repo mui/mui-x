@@ -7,6 +7,8 @@ export type TreeViewBaseItem<R extends {} = TreeViewDefaultItemModelProperties> 
   children?: TreeViewBaseItem<R>[];
 };
 
+export type TreeViewValidItem<R extends {}> = { children?: R[] };
+
 export type TreeViewItemsReorderingAction =
   | 'reorder-above'
   | 'reorder-below'

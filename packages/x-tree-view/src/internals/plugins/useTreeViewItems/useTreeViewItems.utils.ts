@@ -1,9 +1,7 @@
-import { TreeViewBaseItem, TreeViewItemId } from '../../../models';
+import { TreeViewValidItem, TreeViewItemId } from '../../../models';
 import { TreeViewItemMeta } from '../../models';
-import {
-  UseTreeViewItemsParametersWithDefaults,
-  UseTreeViewItemsState,
-} from './useTreeViewItems.types';
+import type { TreeViewParameters } from '../../TreeViewStore';
+import { UseTreeViewItemsState } from './useTreeViewItems.types';
 
 export const TREE_VIEW_ROOT_PARENT_ID = '__TREE_VIEW_ROOT_PARENT_ID__';
 
@@ -55,20 +53,21 @@ export const isItemDisabled = (
   return false;
 };
 
-type State = UseTreeViewItemsState<any>['items'];
-export function buildItemsState(parameters: BuildItemsStateParameters): State {
-  const { config, items: itemsParam, disabledItemsFocusable } = parameters;
+type State<R extends TreeViewValidItem<R>> = Omit<
+  UseTreeViewItemsState<R>['items'],
+  'disabledItemsFocusable' | 'domStructure'
+>;
+export function buildItemsState<R extends TreeViewValidItem<R>>(
+  parameters: BuildItemsStateParameters,
+): State<R> {
+  const { config, items: itemsParam } = parameters;
 
-  const itemMetaLookup: State['itemMetaLookup'] = {};
-  const itemModelLookup: State['itemModelLookup'] = {};
-  const itemOrderedChildrenIdsLookup: State['itemOrderedChildrenIdsLookup'] = {};
-  const itemChildrenIndexesLookup: State['itemChildrenIndexesLookup'] = {};
+  const itemMetaLookup: State<R>['itemMetaLookup'] = {};
+  const itemModelLookup: State<R>['itemModelLookup'] = {};
+  const itemOrderedChildrenIdsLookup: State<R>['itemOrderedChildrenIdsLookup'] = {};
+  const itemChildrenIndexesLookup: State<R>['itemChildrenIndexesLookup'] = {};
 
-  function processSiblings(
-    items: readonly TreeViewBaseItem[],
-    parentId: string | null,
-    depth: number,
-  ) {
+  function processSiblings(items: readonly R[], parentId: string | null, depth: number) {
     const parentIdWithDefault = parentId ?? TREE_VIEW_ROOT_PARENT_ID;
     const { metaLookup, modelLookup, orderedChildrenIds, childrenIndexes, itemsChildren } =
       buildItemsLookups({
@@ -93,27 +92,26 @@ export function buildItemsState(parameters: BuildItemsStateParameters): State {
   processSiblings(itemsParam, null, 0);
 
   return {
-    disabledItemsFocusable,
     itemMetaLookup,
     itemModelLookup,
     itemOrderedChildrenIdsLookup,
     itemChildrenIndexesLookup,
-    domStructure: 'nested',
   };
 }
 
-interface BuildItemsStateParameters extends Pick<BuildItemsLookupsParameters, 'items' | 'config'> {
-  disabledItemsFocusable: boolean;
-}
+interface BuildItemsStateParameters
+  extends Pick<BuildItemsLookupsParameters<any>, 'items' | 'config'> {}
 
-export function buildItemsLookups(parameters: BuildItemsLookupsParameters) {
+export function buildItemsLookups<R extends TreeViewValidItem<R>>(
+  parameters: BuildItemsLookupsParameters<R>,
+) {
   const { config, items, parentId, depth, isItemExpandable, otherItemsMetaLookup } = parameters;
-  const metaLookup: State['itemMetaLookup'] = {};
-  const modelLookup: State['itemModelLookup'] = {};
+  const metaLookup: State<R>['itemMetaLookup'] = {};
+  const modelLookup: State<R>['itemModelLookup'] = {};
   const orderedChildrenIds: string[] = [];
-  const itemsChildren: { id: string | null; children: TreeViewBaseItem[] }[] = [];
+  const itemsChildren: { id: string | null; children: R[] }[] = [];
 
-  const processItem = (item: TreeViewBaseItem) => {
+  const processItem = (item: R) => {
     const id: string = config.getItemId ? config.getItemId(item) : (item as any).id;
     checkId({
       id,
@@ -122,9 +120,7 @@ export function buildItemsLookups(parameters: BuildItemsLookupsParameters) {
       itemMetaLookup: otherItemsMetaLookup,
       siblingsMetaLookup: metaLookup,
     });
-    const label = config.getItemLabel
-      ? config.getItemLabel(item)
-      : (item as { label: string }).label;
+    const label = config.getItemLabel ? config.getItemLabel(item) : (item as any).label;
     if (label == null) {
       throw new Error(
         [
@@ -139,7 +135,7 @@ export function buildItemsLookups(parameters: BuildItemsLookupsParameters) {
     const children =
       (config.getItemChildren
         ? config.getItemChildren(item)
-        : (item as { children?: TreeViewBaseItem[] }).children) || [];
+        : (item as { children?: R[] }).children) || [];
 
     itemsChildren.push({ id, children });
 
@@ -171,16 +167,16 @@ export function buildItemsLookups(parameters: BuildItemsLookupsParameters) {
   };
 }
 
-interface BuildItemsLookupsParameters {
-  items: readonly TreeViewBaseItem[];
+interface BuildItemsLookupsParameters<R extends TreeViewValidItem<R>> {
+  items: readonly R[];
   config: BuildItemsLookupConfig;
   parentId: string | null;
   depth: number;
-  isItemExpandable: (item: TreeViewBaseItem, children: TreeViewBaseItem[] | undefined) => boolean;
+  isItemExpandable: (item: R, children: R[] | undefined) => boolean;
   otherItemsMetaLookup: { [itemId: string]: TreeViewItemMeta };
 }
 
-function checkId({
+function checkId<R extends TreeViewValidItem<R>>({
   id,
   parentId,
   item,
@@ -189,7 +185,7 @@ function checkId({
 }: {
   id: TreeViewItemId | null;
   parentId: TreeViewItemId | null;
-  item: TreeViewBaseItem;
+  item: R;
   itemMetaLookup: { [itemId: string]: TreeViewItemMeta };
   siblingsMetaLookup: { [itemId: string]: TreeViewItemMeta };
 }) {
@@ -221,6 +217,6 @@ function checkId({
 
 export interface BuildItemsLookupConfig
   extends Pick<
-    UseTreeViewItemsParametersWithDefaults<TreeViewBaseItem>,
+    TreeViewParameters<any>,
     'isItemDisabled' | 'getItemLabel' | 'getItemChildren' | 'getItemId'
   > {}

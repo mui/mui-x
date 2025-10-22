@@ -1,12 +1,11 @@
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import { TreeViewItemId } from '../../../models';
-import { TreeViewState } from '../../models';
+import { TreeViewState } from '../../TreeViewStore';
 import { itemsSelectors } from '../useTreeViewItems/useTreeViewItems.selectors';
-import { UseTreeViewExpansionSignature } from './useTreeViewExpansion.types';
 import { TREE_VIEW_ROOT_PARENT_ID } from '../useTreeViewItems';
 
 const expandedItemMapSelector = createSelectorMemoized(
-  (state: TreeViewState<[UseTreeViewExpansionSignature]>) => state.expansion.expandedItems,
+  (state: TreeViewState<any, any>) => state.expandedItems,
   (expandedItems) => {
     const expandedItemsMap = new Map<TreeViewItemId, true>();
     expandedItems.forEach((id) => {
@@ -21,9 +20,7 @@ export const expansionSelectors = {
   /**
    * Gets the expanded items as provided to the component.
    */
-  expandedItemsRaw: createSelector(
-    (state: TreeViewState<[UseTreeViewExpansionSignature]>) => state.expansion.expandedItems,
-  ),
+  expandedItemsRaw: createSelector((state: TreeViewState<any, any>) => state.expandedItems),
   /**
    * Gets the expanded items as a Map.
    */
@@ -55,9 +52,7 @@ export const expansionSelectors = {
   /**
    * Gets the slot that triggers the item's expansion when clicked.
    */
-  triggerSlot: createSelector(
-    (state: TreeViewState<[UseTreeViewExpansionSignature]>) => state.expansion.expansionTrigger,
-  ),
+  triggerSlot: createSelector((state: TreeViewState<any, any>) => state.expansionTrigger),
   /**
    * Checks whether an item is expanded.
    */

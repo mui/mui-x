@@ -155,11 +155,7 @@ export type UseTreeViewSelectionSignature = TreeViewPluginSignature<{
   instance: UseTreeViewSelectionInstance;
   publicAPI: UseTreeViewSelectionPublicAPI;
   state: UseTreeViewSelectionState;
-  dependencies: [
-    UseTreeViewItemsSignature,
-    UseTreeViewExpansionSignature,
-    UseTreeViewItemsSignature,
-  ];
+  dependencies: [UseTreeViewItemsSignature, UseTreeViewExpansionSignature];
 }>;
 
 export interface UseTreeItemCheckboxSlotPropsFromSelection {

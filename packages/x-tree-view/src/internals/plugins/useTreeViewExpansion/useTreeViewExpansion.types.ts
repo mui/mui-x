@@ -49,10 +49,6 @@ export interface UseTreeViewExpansionInstance
     event: React.SyntheticEvent | null;
     shouldBeExpanded: boolean;
   }) => void;
-  /**
-   * Reset the expansion state of all items.
-   */
-  resetItemExpansion: () => void;
 }
 
 export interface UseTreeViewExpansionParameters {

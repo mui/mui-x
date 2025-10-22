@@ -5,6 +5,7 @@ import {
   TreeViewBaseItem,
   TreeViewDefaultItemModelProperties,
   TreeViewItemId,
+  TreeViewValidItem,
 } from '../../../models';
 
 export type SetItemChildrenParameters<R> = {
@@ -90,7 +91,7 @@ export interface UseTreeViewItemsInstance<R extends {}>
   addExpandableItems: (items: TreeViewItemId[]) => void;
 }
 
-export interface UseTreeViewItemsParameters<R extends { children?: R[] }> {
+export interface UseTreeViewItemsParameters<R extends TreeViewValidItem<R>> {
   /**
    * If `true`, will allow focus on disabled items.
    * @default false
@@ -150,7 +151,7 @@ export type UseTreeViewItemsParametersWithDefaults<R extends { children?: R[] }>
   'disabledItemsFocusable' | 'itemChildrenIndentation'
 >;
 
-export interface UseTreeViewItemsState<R extends {}> {
+export interface UseTreeViewItemsState<R extends TreeViewValidItem<R>> {
   items: {
     /**
      * If `true`, will allow focus on disabled items.
@@ -164,7 +165,7 @@ export interface UseTreeViewItemsState<R extends {}> {
      * - when the children of an item are updated, `itemOrderedChildrenIdsLookup` and `itemChildrenIndexesLookup` are updated, not `itemModelLookup`.
      * This means that the `children`, `label` or `id` properties of an item model should never be used directly, always use the structured sub-states instead.
      */
-    itemModelLookup: { [itemId: string]: TreeViewBaseItem<R> };
+    itemModelLookup: { [itemId: string]: R };
     /**
      * Meta data of each item.
      */
