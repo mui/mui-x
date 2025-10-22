@@ -5,6 +5,7 @@
   columns={columns}
   treeData
   rowReordering
+  isValidRowReorder={isValidRowReorder}
   disableRowSelectionOnClick
   onRowOrderChange={handleRowOrderChange}
   getTreeDataPath={getTreeDataPath}

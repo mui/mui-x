@@ -96,6 +96,13 @@ const initialRows = [
 
 const columns = [{ field: 'size', headerName: 'Size', width: 100 }];
 
+const isValidRowReorder = (context) => {
+  if (context.targetNode.type === 'leaf' && context.dropPosition === 'over') {
+    return false;
+  }
+  return true;
+};
+
 export default function TreeDataSyncRowData() {
   const apiRef = useGridApiRef();
   const [rows, setRows] = React.useState(initialRows);
@@ -120,6 +127,7 @@ export default function TreeDataSyncRowData() {
         columns={columns}
         treeData
         rowReordering
+        isValidRowReorder={isValidRowReorder}
         disableRowSelectionOnClick
         onRowOrderChange={handleRowOrderChange}
         getTreeDataPath={getTreeDataPath}

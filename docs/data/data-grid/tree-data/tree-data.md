@@ -195,6 +195,12 @@ If you want to update the external row data, for example, to persist it in the l
 
 {{"demo": "TreeDataSyncRowData.js", "bg": "inline", "defaultCodeOpen": false}}
 
+:::success
+The demo above uses the `isValidRowReorder()` prop to disable moving nodes "over" files (or leaf nodes) as it would convert them into parent groups.
+
+Check the [Row ordering—Disable specific reorder operations](/x/react-data-grid/row-ordering/#disable-specific-reorder-operations) documentation section for more details.
+:::
+
 ## Lazy-loading tree data children
 
 See [Server-side data—Tree data](/x/react-data-grid/server-side-data/tree-data/) for details on lazy-loading tree data children.
