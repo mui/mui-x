@@ -5,6 +5,104 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.15.0
+
+_Oct 22, 2025_
+
+We'd like to extend a big thank you to the 13 contributors who made this release possible. Here are some highlights ✨:
+
+- 🖌️ Add new [`brush` charts interaction](https://mui.com/x/react-charts/brush/) for building custom behaviour.
+  ![output (7)](https://github.com/user-attachments/assets/60c382a1-e418-4736-8dcb-1567c4e361e3)
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+The following are all team members who have contributed to this release:
+@alexfauquette, @bernardobelchior, @cherniavskii, @flaviendelangle, @Janpot, @JCQuintas, @KenanYusuf, @prakhargupta1, @rita-codes, @siriwatknp, @arminmeh, @brijeshb42, @noraleonte
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.15.0`
+
+- [DataGrid] Add loading state recipe (#19958) @siriwatknp
+
+#### `@mui/x-data-grid-pro@8.15.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.15.0`, plus:
+
+- [DataGridPro] Keep children in the tree after parent row is re-fetched with the data source (#19934) @arminmeh
+- [DataGridPro] Support scroll shadows customization (#19982) @KenanYusuf
+
+#### `@mui/x-data-grid-premium@8.15.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.15.0`, plus:
+
+- [DataGridPremium] Use Exceljs fork (#19796) @cherniavskii
+- [DataGridPremium] Support data visualization in AI Assistant (#19831) @arminmeh
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.15.0`
+
+Internal changes.
+
+#### `@mui/x-date-pickers-pro@8.15.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.15.0`.
+
+### Charts
+
+#### `@mui/x-charts@8.15.0`
+
+- [charts] Add `ChartsBrushOverlay` and allow brush configuration (#19956) @JCQuintas
+- [charts] Add `getStringSize` benchmark. Remove benchmarks from built package. (#19995) @bernardobelchior
+- [charts] Batch string size measurement (#19994) @bernardobelchior
+- [charts] Fix console issue (#20025) @JCQuintas
+- [charts] Fix is[ZoomFeature]Enabled type (#20058) @alexfauquette
+- [charts] Fix reference line middle spacing (#20004) @JCQuintas
+- [charts] Improve `getStringSize` and `batchMeasureStrings` performance (#19996) @bernardobelchior
+- [charts] Improve deep export script (#20007) @JCQuintas
+- [charts] Improve string measurement benchmarks (#19999) @bernardobelchior
+- [charts] Measure string sizes using SVG elements (#19981) @bernardobelchior
+
+#### `@mui/x-charts-pro@8.15.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.15.0`, plus:
+
+- [charts-pro] Fix pan with `axis.reverse` (#20031) @JCQuintas
+
+#### `@mui/x-charts-premium@8.15.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@8.15.0`.
+
+### Tree View
+
+#### `@mui/x-tree-view@8.15.0`
+
+- [tree view] Multi character type-ahead (#19942) @noraleonte
+
+#### `@mui/x-tree-view-pro@8.15.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.15.0`.
+
+### Codemod
+
+#### `@mui/x-codemod@8.14.0`
+
+Internal changes.
+
+### Docs
+
+- [docs] Add overview section for scatter chart and heatmap (#19888) @prakhargupta1
+- [docs] Add charts bell curve example (#20003) @JCQuintas
+- [docs] Add grouped multiple fields for Data Grid row grouping recipe (#19964) @siriwatknp
+
+### Core
+
+- [code-infra] Remove @mui/monorepo usage for react versioning (#19894) @Janpot
+- [code-infra] Remove invalid `environment: 'browser'` from vitest browser config (#19993) @bernardobelchior
+- [code-infra] Remove unused babel aliases (#19987) @Janpot
+- [code-infra] Turn on all testing-library eslint rules (#19946) @brijeshb42
+
 ## 8.14.1
 
 _Oct 16, 2025_
