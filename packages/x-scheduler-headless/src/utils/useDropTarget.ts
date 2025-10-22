@@ -79,7 +79,7 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
           store.setOccurrencePlaceholder(newPlaceholder);
         }
       },
-      onDrop: async ({ source, location }) => {
+      onDrop: ({ source, location }) => {
         const dropData = getEventDropData({
           data: source.data,
           createDropData,
