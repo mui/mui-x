@@ -103,6 +103,7 @@ Internal changes.
 - [code-infra] Remove invalid `environment: 'browser'` from vitest browser config (#19993) @bernardobelchior
 - [code-infra] Remove unused babel aliases (#19987) @Janpot
 - [code-infra] Turn on all testing-library eslint rules (#19946) @brijeshb42
+- [docs-infra] Fix broken hash link (#20062) @Janpot
 
 ## 8.14.1
 
