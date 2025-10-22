@@ -34,12 +34,14 @@ describe('Core - EventCalendarStore', () => {
         canDropEventsToTheOutside: false,
         showCurrentTimeIndicator: true,
         eventColor: 'jade',
+        pendingUpdateRecurringEventParameters: null,
         preferences: DEFAULT_PREFERENCES,
         preferencesMenuConfig: DEFAULT_PREFERENCES_MENU_CONFIG,
         viewConfig: null,
         occurrencePlaceholder: null,
         visibleDate: adapter.startOfDay(adapter.date()),
         readOnly: false,
+        recurringScopeDialogStatus: 'closed',
       };
 
       expect(store.state).to.deep.equal(expectedState);
