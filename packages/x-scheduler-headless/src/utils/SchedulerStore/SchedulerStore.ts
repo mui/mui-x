@@ -268,7 +268,7 @@ export class SchedulerStore<
   /**
    * Sets the status of the recurring scope dialog.
    */
-  public setScopeDialogSubmit = (scopeStatus: SchedulerState['recurringScopeDialogStatus']) => {
+  public setScopeDialogStatus = (scopeStatus: SchedulerState['recurringScopeDialogStatus']) => {
     this.set('recurringScopeDialogStatus', scopeStatus);
   };
 

@@ -554,7 +554,7 @@ export function EventPopoverProvider(props: EventPopoverProviderProps) {
       )}
       onClose={() => {
         store.setOccurrencePlaceholder(null);
-        store.setScopeDialogSubmit('closed');
+        store.setScopeDialogStatus('closed');
       }}
       shouldBlockClose={isScopeDialogOpen}
     >
