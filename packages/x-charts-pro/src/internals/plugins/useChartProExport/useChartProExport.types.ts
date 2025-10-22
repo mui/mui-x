@@ -28,6 +28,11 @@ export interface ChartExportOptions {
    * @default true
    */
   copyStyles?: boolean;
+  /**
+   * A nonce to be used for Content Security Policy (CSP) compliance.
+   * If provided, this nonce will be added to any style elements created during the export process.
+   */
+  nonce?: string;
 }
 
 /**

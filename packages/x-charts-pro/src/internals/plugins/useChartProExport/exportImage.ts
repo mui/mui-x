@@ -28,6 +28,7 @@ export async function exportImage(
     quality = 0.9,
     onBeforeExport = defaultOnBeforeExport,
     copyStyles = true,
+    nonce,
   } = params ?? {};
   const drawDocumentPromise = getDrawDocument();
   const doc = ownerDocument(element);
@@ -58,7 +59,7 @@ export async function exportImage(
       rootCandidate.constructor.name === 'ShadowRoot' ? (rootCandidate as ShadowRoot) : doc;
 
     if (copyStyles) {
-      await Promise.all(loadStyleSheets(exportDoc, root));
+      await Promise.all(loadStyleSheets(exportDoc, root, nonce));
     }
 
     resolve();
