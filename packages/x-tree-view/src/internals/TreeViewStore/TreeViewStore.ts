@@ -27,6 +27,7 @@ import { focusSelectors } from '../plugins/useTreeViewFocus';
 import { TreeViewSelectionManager } from './TreeViewSelectionManager';
 import { TreeViewExpansionManager } from './TreeViewExpansionManager';
 import { TimeoutManager } from './TimeoutManager';
+import { TreeViewKeyboardNavigationManager } from './TreeViewKeyboardNavigationManager';
 
 export class TreeViewStore<
   R extends TreeViewValidItem<R>,
@@ -47,6 +48,8 @@ export class TreeViewStore<
   private expansionManager = new TreeViewExpansionManager<this>(this);
 
   private selectionManager = new TreeViewSelectionManager<Multiple, this>(this);
+
+  private keyboardNavigationManager = new TreeViewKeyboardNavigationManager<this>(this);
 
   public constructor(
     parameters: Parameters,
@@ -380,4 +383,12 @@ export class TreeViewStore<
 
     this.setFocusedItemId(null);
   };
+
+  /**
+   * Callback fired when a key is pressed on an item.
+   * Handles all the keyboard navigation logic.
+   * @param {React.KeyboardEvent<HTMLElement> & TreeViewCancellableEvent} event The keyboard event that triggered the callback.
+   * @param {TreeViewItemId} itemId The id of the item that the event was triggered on.
+   */
+  protected handleItemKeyDown = this.keyboardNavigationManager.handleItemKeyDown;
 }
