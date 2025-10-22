@@ -173,8 +173,8 @@ describe.skipIf(isJSDOM)('ChartsTooltip', () => {
         {
           type: 'scatter',
           data: [
-            { x: 'Mon', y: 10 },
-            { x: 'Tue', y: 5 },
+            { x: 1, y: 10 },
+            { x: 2, y: 5 },
           ],
         },
       ] as const;
@@ -184,7 +184,7 @@ describe.skipIf(isJSDOM)('ChartsTooltip', () => {
           height={400}
           margin={0}
           series={series}
-          xAxis={[{ id: 'x', scaleType: 'band', data: ['Mon', 'Tue'], position: 'none' }]}
+          xAxis={[{ id: 'x', scaleType: 'band', data: [1, 2], position: 'none' }]}
           yAxis={[{ id: 'y', position: 'none' }]}
         >
           <ChartsSurface>
@@ -209,7 +209,7 @@ describe.skipIf(isJSDOM)('ChartsTooltip', () => {
 
       await waitFor(() => {
         const cells = document.querySelectorAll<HTMLElement>(cellSelector);
-        expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['Mon', '', '(Mon, 10)']);
+        expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['1', '', '(1, 10)']);
       });
     });
   });
