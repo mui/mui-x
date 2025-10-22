@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Typography from '@mui/material/Typography';
-import { styled, useThemeProps, CreateThemeComponent } from '@mui/material/stylesOptimized';
+import { styled, useThemeProps } from '@mui/material/stylesOptimized';
 import composeClasses from '@mui/utils/composeClasses';
 import {
   PickersToolbar,
@@ -40,7 +40,6 @@ export interface DateRangePickerToolbarProps
     Omit<BaseToolbarProps, 'onChange' | 'isLandscape'> {}
 
 export interface ExportedDateRangePickerToolbarProps extends ExportedBaseToolbarProps {
-export type DateRangePickerToolbarTheme = CreateThemeComponent<string, DateRangePickerToolbarProps>;
   /**
    * Override or extend the styles applied to the component.
    */

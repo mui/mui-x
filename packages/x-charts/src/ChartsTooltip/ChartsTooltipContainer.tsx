@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import HTMLElementType from '@mui/utils/HTMLElementType';
 import useLazyRef from '@mui/utils/useLazyRef';
-import { styled, useThemeProps, CreateThemeComponent } from '@mui/material/stylesOptimized';
+import { styled, useThemeProps } from '@mui/material/stylesOptimized';
 import Popper, { PopperProps } from '@mui/material/Popper';
 import NoSsr from '@mui/material/NoSsr';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
@@ -445,4 +445,3 @@ ChartsTooltipContainer.propTypes = {
 } as any;
 
 export { ChartsTooltipContainer };
-export type ChartsTooltipContainerTheme = CreateThemeComponent<string, ChartsTooltipContainerProps>;

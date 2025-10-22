@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { SxProps } from '@mui/system';
-import { Theme, CreateThemeComponent } from '@mui/material/stylesOptimized';
+import { Theme } from '@mui/material/stylesOptimized';
 import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { YearCalendarClasses } from './yearCalendarClasses';
 import { BaseDateValidationProps, YearValidationProps } from '../internals/models/validation';
@@ -43,7 +43,6 @@ export interface ExportedYearCalendarProps {
 }
 
 export interface YearCalendarProps
-export type ExportedYearCalendarTheme = CreateThemeComponent<string, ExportedYearCalendarProps>;
   extends ExportedYearCalendarProps,
     YearValidationProps,
     BaseDateValidationProps,

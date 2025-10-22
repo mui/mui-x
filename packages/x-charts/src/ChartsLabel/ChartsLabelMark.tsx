@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled, SxProps, Theme, CreateThemeComponent } from '@mui/material/stylesOptimized';
+import { styled, SxProps, Theme } from '@mui/material/stylesOptimized';
 import clsx from 'clsx';
 import { ChartsLabelMarkClasses, labelMarkClasses, useUtilityClasses } from './labelMarkClasses';
 import { consumeThemeProps } from '../internals/consumeThemeProps';
@@ -13,7 +13,6 @@ export interface ChartsLabelCustomMarkProps {
 }
 
 export type ChartsLabelMarkType =
-export type ChartsLabelCustomMarkTheme = CreateThemeComponent<string, ChartsLabelCustomMarkProps>;
   | 'square'
   | 'circle'
   | 'line'

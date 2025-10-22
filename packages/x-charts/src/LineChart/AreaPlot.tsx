@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled, CreateThemeComponent } from '@mui/material/stylesOptimized';
+import { styled } from '@mui/material/stylesOptimized';
 import {
   AreaElement,
   areaElementClasses,
@@ -118,4 +118,3 @@ AreaPlot.propTypes = {
 } as any;
 
 export { AreaPlot };
-export type AreaPlotTheme = CreateThemeComponent<string, AreaPlotProps>;

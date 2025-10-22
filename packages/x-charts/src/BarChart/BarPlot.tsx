@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled, CreateThemeComponent } from '@mui/material/stylesOptimized';
+import { styled } from '@mui/material/stylesOptimized';
 import { barElementClasses } from './barElementClasses';
 import { BarElement, BarElementSlotProps, BarElementSlots } from './BarElement';
 import { BarItemIdentifier } from '../models';
@@ -200,4 +200,3 @@ BarPlot.propTypes = {
 } as any;
 
 export { BarPlot };
-export type BarPlotTheme = CreateThemeComponent<string, BarPlotProps>;

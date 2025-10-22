@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useTheme, CreateThemeComponent } from '@mui/material/stylesOptimized';
+import { useTheme } from '@mui/material/stylesOptimized';
 import { useFocusedItem } from '../hooks/useFocusedItem';
 import { PieArc, PieArcProps, pieArcClasses } from './PieArc';
 import {
@@ -252,4 +252,3 @@ PieArcPlot.propTypes = {
 } as any;
 
 export { PieArcPlot };
-export type PieArcPlotTheme = CreateThemeComponent<string, PieArcPlotProps>;

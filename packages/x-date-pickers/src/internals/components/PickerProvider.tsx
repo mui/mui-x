@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { SxProps } from '@mui/system';
-import { Theme, CreateThemeComponent } from '@mui/material/stylesOptimized';
+import { Theme } from '@mui/material/stylesOptimized';
 
 import { PickerChangeImportance, PickerOwnerState, PickersTimezone } from '../../models';
 import { PickersInputLocaleText } from '../../locales';
@@ -93,7 +93,6 @@ export interface PickerProviderProps<TValue extends PickerValidValue> {
 }
 
 export interface PickerContextValue<
-export type PickerProviderTheme = CreateThemeComponent<string, PickerProviderProps>;
   TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
   TError,

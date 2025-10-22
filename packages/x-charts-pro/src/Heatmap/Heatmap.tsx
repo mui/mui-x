@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useThemeProps, CreateThemeComponent } from '@mui/material/stylesOptimized';
+import { useThemeProps } from '@mui/material/stylesOptimized';
 import useId from '@mui/utils/useId';
 import { MakeOptional } from '@mui/x-internals/types';
 import { interpolateRgbBasis } from '@mui/x-charts-vendor/d3-interpolate';
@@ -621,4 +621,3 @@ Heatmap.propTypes = {
 } as any;
 
 export { Heatmap };
-export type HeatmapTheme = CreateThemeComponent<string, HeatmapProps>;

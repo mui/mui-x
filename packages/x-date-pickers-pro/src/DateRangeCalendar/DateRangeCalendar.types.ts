@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { SxProps } from '@mui/system';
 import { SlotComponentProps } from '@mui/utils/types';
-import { Theme, CreateThemeComponent } from '@mui/material/stylesOptimized';
+import { Theme } from '@mui/material/stylesOptimized';
 import { DefaultizedProps } from '@mui/x-internals/types';
 import { PickerOwnerState, PickerValidDate, TimezoneProps } from '@mui/x-date-pickers/models';
 import {
@@ -91,7 +91,6 @@ export interface ExportedDateRangeCalendarProps
 }
 
 export interface DateRangeCalendarProps
-export type ExportedDateRangeCalendarTheme = CreateThemeComponent<string, ExportedDateRangeCalendarProps>;
   extends ExportedDateRangeCalendarProps,
     UseRangePositionProps,
     ExportedUseViewsOptions<PickerRangeValue, 'day'> {

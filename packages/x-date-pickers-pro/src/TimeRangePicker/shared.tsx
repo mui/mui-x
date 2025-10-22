@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useThemeProps, CreateThemeComponent } from '@mui/material/stylesOptimized';
+import { useThemeProps } from '@mui/material/stylesOptimized';
 import { DefaultizedProps } from '@mui/x-internals/types';
 import { LocalizedComponent, PickersInputLocaleText } from '@mui/x-date-pickers/locales';
 import { TimeStepOptions, TimeView } from '@mui/x-date-pickers/models';
@@ -125,7 +125,6 @@ type UseTimeRangePickerDefaultizedProps<Props extends BaseTimeRangePickerProps> 
   };
 
 export function useTimeRangePickerDefaultizedProps<Props extends BaseTimeRangePickerProps>(
-export type BaseTimeRangePickerTheme = CreateThemeComponent<string, BaseTimeRangePickerProps>;
   props: Props,
   name: string,
 ): UseTimeRangePickerDefaultizedProps<Props> {

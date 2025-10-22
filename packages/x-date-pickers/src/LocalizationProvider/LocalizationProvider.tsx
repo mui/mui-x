@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useThemeProps, CreateThemeComponent } from '@mui/material/stylesOptimized';
+import { useThemeProps } from '@mui/material/stylesOptimized';
 import { AdapterFormats, MuiPickersAdapter, PickerValidDate } from '../models';
 import { PickersInputLocaleText } from '../locales';
 
@@ -75,7 +75,6 @@ type LocalizationProviderComponent = (<TLocale>(
  * - [LocalizationProvider API](https://mui.com/x/api/date-pickers/localization-provider/)
  */
 export const LocalizationProvider = function LocalizationProvider<TLocale>(
-export type LocalizationProviderTheme = CreateThemeComponent<string, LocalizationProviderProps>;
   inProps: LocalizationProviderProps<TLocale>,
 ) {
   const { localeText: inLocaleText, ...otherInProps } = inProps;

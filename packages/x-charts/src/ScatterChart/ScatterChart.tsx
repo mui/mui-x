@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useThemeProps, CreateThemeComponent } from '@mui/material/stylesOptimized';
+import { useThemeProps } from '@mui/material/stylesOptimized';
 import { MakeOptional } from '@mui/x-internals/types';
 import { ChartsToolbarSlotProps, ChartsToolbarSlots } from '../Toolbar';
 import { ChartsSlots, ChartsSlotProps } from '../internals/material';
@@ -1634,4 +1634,3 @@ ScatterChart.propTypes = {
 } as any;
 
 export { ScatterChart };
-export type ScatterChartTheme = CreateThemeComponent<string, ScatterChartProps>;

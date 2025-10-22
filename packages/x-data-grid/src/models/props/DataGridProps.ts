@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { SxProps } from '@mui/system';
-import { Theme, CreateThemeComponent } from '@mui/material/stylesOptimized';
+import { Theme } from '@mui/material/stylesOptimized';
 import { GridDensity } from '../gridDensity';
 import { GridEditMode } from '../gridEditRowModel';
 import { GridFeatureMode } from '../gridFeatureMode';
@@ -92,7 +92,6 @@ export interface DataGridPropsWithComplexDefaultValueAfterProcessing {
  * The Data Grid options with a default value that must be merged with the value given through props.
  */
 export interface DataGridPropsWithComplexDefaultValueBeforeProcessing {
-export type DataGridTheme = CreateThemeComponent<string, DataGridProps>;
   /**
    * Overridable components.
    */

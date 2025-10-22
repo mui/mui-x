@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { DefaultizedProps } from '@mui/x-internals/types';
-import { useThemeProps, CreateThemeComponent } from '@mui/material/stylesOptimized';
+import { useThemeProps } from '@mui/material/stylesOptimized';
 import { LocalizedComponent, PickersInputLocaleText } from '@mui/x-date-pickers/locales';
 import {
   BasePickerInputProps,
@@ -64,7 +64,6 @@ type UseDateRangePickerDefaultizedProps<Props extends BaseDateRangePickerProps> 
   LocalizedComponent<DefaultizedProps<Props, ValidateDateRangePropsToDefault>>;
 
 export function useDateRangePickerDefaultizedProps<Props extends BaseDateRangePickerProps>(
-export type BaseDateRangePickerTheme = CreateThemeComponent<string, BaseDateRangePickerProps>;
   props: Props,
   name: string,
 ): UseDateRangePickerDefaultizedProps<Props> {

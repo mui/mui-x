@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useThemeProps, CreateThemeComponent } from '@mui/material/stylesOptimized';
+import { useThemeProps } from '@mui/material/stylesOptimized';
 import { DefaultizedProps } from '@mui/x-internals/types';
 import { TimeClockSlots, TimeClockSlotProps } from '../TimeClock/TimeClock.types';
 import { BasePickerInputProps } from '../internals/models/props/basePickerProps';
@@ -71,7 +71,6 @@ type UseTimePickerDefaultizedProps<
 >;
 
 export function useTimePickerDefaultizedProps<
-export type BaseTimePickerTheme = CreateThemeComponent<string, BaseTimePickerProps>;
   TView extends TimeViewWithMeridiem,
   Props extends BaseTimePickerProps<TView>,
 >(props: Props, name: string): UseTimePickerDefaultizedProps<TView, Props> {

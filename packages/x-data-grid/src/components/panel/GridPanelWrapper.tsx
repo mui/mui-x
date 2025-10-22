@@ -1,6 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { styled, Theme, CreateThemeComponent } from '@mui/material/stylesOptimized';
+import { styled, Theme } from '@mui/material/stylesOptimized';
 import { MUIStyledCommonProps } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
 import { forwardRef } from '@mui/x-internals/forwardRef';
@@ -55,4 +55,3 @@ const GridPanelWrapper = forwardRef<HTMLDivElement, GridPanelWrapperProps>(
 );
 
 export { GridPanelWrapper };
-export type GridPanelWrapperTheme = CreateThemeComponent<string, GridPanelWrapperProps>;

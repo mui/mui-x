@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled, SxProps, Theme, CreateThemeComponent } from '@mui/material/stylesOptimized';
+import { styled, SxProps, Theme } from '@mui/material/stylesOptimized';
 import { shouldForwardProp } from '@mui/system/createStyled';
 import { useChartRootRef } from '../hooks/useChartRootRef';
 import { Direction } from '../ChartsLegend';
@@ -233,4 +233,3 @@ ChartsWrapper.propTypes = {
 } as any;
 
 export { ChartsWrapper };
-export type ChartsWrapperTheme = CreateThemeComponent<string, ChartsWrapperProps>;

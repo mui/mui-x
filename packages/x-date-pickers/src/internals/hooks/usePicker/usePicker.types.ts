@@ -1,5 +1,5 @@
 import { SxProps } from '@mui/system';
-import { Theme, CreateThemeComponent } from '@mui/material/stylesOptimized';
+import { Theme } from '@mui/material/stylesOptimized';
 import {
   InferError,
   OnErrorProps,
@@ -92,7 +92,6 @@ export interface UsePickerBaseProps<
  * Props used to handle the value of non-static Pickers.
  */
 export interface UsePickerNonStaticProps extends Omit<PickerFieldPrivateContextValue, 'fieldRef'> {
-export type UsePickerBaseTheme = CreateThemeComponent<string, UsePickerBaseProps>;
   /**
    * If `true`, the Picker will close after submitting the full date.
    * @default false

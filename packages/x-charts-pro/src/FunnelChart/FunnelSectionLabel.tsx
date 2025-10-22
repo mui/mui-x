@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useTheme, CreateThemeComponent } from '@mui/material/stylesOptimized';
+import { useTheme } from '@mui/material/stylesOptimized';
 import { consumeSlots, SeriesId } from '@mui/x-charts/internals';
 import { FunnelSectionClasses, useLabelUtilityClasses } from './funnelSectionClasses';
 
@@ -64,4 +64,3 @@ const FunnelSectionLabel = consumeSlots(
 );
 
 export { FunnelSectionLabel };
-export type FunnelSectionLabelTheme = CreateThemeComponent<string, FunnelSectionLabelProps>;

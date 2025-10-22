@@ -1,5 +1,5 @@
 'use client';
-import { styled, SxProps, Theme, useThemeProps, CreateThemeComponent } from '@mui/material/stylesOptimized';
+import { styled, SxProps, Theme, useThemeProps } from '@mui/material/stylesOptimized';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
@@ -127,4 +127,3 @@ ChartsSurface.propTypes = {
 } as any;
 
 export { ChartsSurface };
-export type ChartsSurfaceTheme = CreateThemeComponent<string, ChartsSurfaceProps>;

@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Skeleton from '@mui/material/Skeleton';
-import { styled, useThemeProps, Theme, CreateThemeComponent } from '@mui/material/stylesOptimized';
+import { styled, useThemeProps, Theme } from '@mui/material/stylesOptimized';
 import { SxProps } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
 import { DAY_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';
@@ -133,4 +133,3 @@ DayCalendarSkeleton.propTypes = {
 } as any;
 
 export { DayCalendarSkeleton };
-export type DayCalendarSkeletonTheme = CreateThemeComponent<string, DayCalendarSkeletonProps>;

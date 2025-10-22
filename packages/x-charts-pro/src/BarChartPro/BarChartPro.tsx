@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useThemeProps, CreateThemeComponent } from '@mui/material/stylesOptimized';
+import { useThemeProps } from '@mui/material/stylesOptimized';
 import { BarChartProps, BarChartSlotProps, BarChartSlots, BarPlot } from '@mui/x-charts/BarChart';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
@@ -1994,4 +1994,3 @@ BarChartPro.propTypes = {
 } as any;
 
 export { BarChartPro };
-export type BarChartProTheme = CreateThemeComponent<string, BarChartProProps>;

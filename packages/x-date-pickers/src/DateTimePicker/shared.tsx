@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useThemeProps, CreateThemeComponent } from '@mui/material/stylesOptimized';
+import { useThemeProps } from '@mui/material/stylesOptimized';
 import { DefaultizedProps } from '@mui/x-internals/types';
 import { DateOrTimeView, DateTimeValidationError } from '../models';
 import { usePickerAdapter } from '../hooks/usePickerAdapter';
@@ -122,7 +122,6 @@ type UseDateTimePickerDefaultizedProps<Props extends BaseDateTimePickerProps> = 
 };
 
 export function useDateTimePickerDefaultizedProps<Props extends BaseDateTimePickerProps>(
-export type BaseDateTimePickerTheme = CreateThemeComponent<string, BaseDateTimePickerProps>;
   props: Props,
   name: string,
 ): UseDateTimePickerDefaultizedProps<Props> {

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useThemeProps, CreateThemeComponent } from '@mui/material/stylesOptimized';
+import { useThemeProps } from '@mui/material/stylesOptimized';
 import { DefaultizedProps } from '@mui/x-internals/types';
 import {
   DateCalendarSlots,
@@ -65,7 +65,6 @@ type UseDatePickerDefaultizedProps<Props extends BaseDatePickerProps> = Localize
 >;
 
 export function useDatePickerDefaultizedProps<Props extends BaseDatePickerProps>(
-export type BaseDatePickerTheme = CreateThemeComponent<string, BaseDatePickerProps>;
   props: Props,
   name: string,
 ): UseDatePickerDefaultizedProps<Props> {

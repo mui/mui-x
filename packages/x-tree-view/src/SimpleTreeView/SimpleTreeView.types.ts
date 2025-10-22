@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Theme, CreateThemeComponent } from '@mui/material/stylesOptimized';
+import { Theme } from '@mui/material/stylesOptimized';
 import { SlotComponentProps } from '@mui/utils/types';
 import { SxProps } from '@mui/system/styleFunctionSx';
 import { SimpleTreeViewClasses } from './simpleTreeViewClasses';
@@ -58,4 +58,3 @@ export interface SimpleTreeViewProps<Multiple extends boolean | undefined>
    */
   apiRef?: SimpleTreeViewApiRef;
 }
-export type SimpleTreeViewTheme = CreateThemeComponent<string, SimpleTreeViewProps>;

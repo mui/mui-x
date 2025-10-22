@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled, CreateThemeComponent } from '@mui/material/stylesOptimized';
+import { styled } from '@mui/material/stylesOptimized';
 import clsx from 'clsx';
 import { RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
 import { ToolbarContextProvider } from '@mui/x-internals/ToolbarContext';
@@ -32,7 +32,6 @@ export interface ToolbarProps extends React.ComponentProps<'div'> {
 }
 
 export const Toolbar = React.forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar(
-export type ToolbarTheme = CreateThemeComponent<string, ToolbarProps>;
   { className, render, ...other },
   ref,
 ) {

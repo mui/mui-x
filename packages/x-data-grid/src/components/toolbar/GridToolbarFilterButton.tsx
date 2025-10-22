@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled, CreateThemeComponent } from '@mui/material/stylesOptimized';
+import { styled } from '@mui/material/stylesOptimized';
 import composeClasses from '@mui/utils/composeClasses';
 import capitalize from '@mui/utils/capitalize';
 import useId from '@mui/utils/useId';
@@ -192,4 +192,3 @@ GridToolbarFilterButton.propTypes = {
 } as any;
 
 export { GridToolbarFilterButton };
-export type GridToolbarFilterButtonTheme = CreateThemeComponent<string, GridToolbarFilterButtonProps>;

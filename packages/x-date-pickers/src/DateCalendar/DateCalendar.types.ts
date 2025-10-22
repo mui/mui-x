@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { SxProps } from '@mui/system';
-import { Theme, CreateThemeComponent } from '@mui/material/stylesOptimized';
+import { Theme } from '@mui/material/stylesOptimized';
 import { SlotComponentProps } from '@mui/utils/types';
 import { DefaultizedProps } from '@mui/x-internals/types';
 import {
@@ -80,7 +80,6 @@ export interface ExportedDateCalendarProps
 }
 
 export interface DateCalendarProps
-export type ExportedDateCalendarTheme = CreateThemeComponent<string, ExportedDateCalendarProps>;
   extends ExportedDateCalendarProps,
     ExportedUseViewsOptions<PickerValue, DateView> {
   /**

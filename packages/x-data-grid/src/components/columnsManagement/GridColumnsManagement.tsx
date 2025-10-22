@@ -4,7 +4,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import debounce from '@mui/utils/debounce';
-import { styled, CreateThemeComponent } from '@mui/material/stylesOptimized';
+import { styled } from '@mui/material/stylesOptimized';
 import { inputBaseClasses } from '@mui/material/InputBase';
 import { TextFieldProps } from '../../models/gridBaseSlots';
 import { vars } from '../../constants/cssVariables';
@@ -463,4 +463,3 @@ const GridColumnsManagementRow = styled(NotRendered<GridSlotProps['baseCheckbox'
 })({});
 
 export { GridColumnsManagement };
-export type GridColumnsManagementTheme = CreateThemeComponent<string, GridColumnsManagementProps>;

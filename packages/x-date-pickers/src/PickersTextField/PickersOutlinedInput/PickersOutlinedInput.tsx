@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useFormControl } from '@mui/material/FormControl';
-import { styled, useThemeProps, CreateThemeComponent } from '@mui/material/stylesOptimized';
+import { styled, useThemeProps } from '@mui/material/stylesOptimized';
 import refType from '@mui/utils/refType';
 import composeClasses from '@mui/utils/composeClasses';
 import {
@@ -238,6 +238,5 @@ PickersOutlinedInput.propTypes = {
 } as any;
 
 export { PickersOutlinedInput };
-export type PickersOutlinedInputTheme = CreateThemeComponent<string, PickersOutlinedInputProps>;
 
 (PickersOutlinedInput as any).muiName = 'Input';

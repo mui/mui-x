@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useThemeProps, CreateThemeComponent } from '@mui/material/stylesOptimized';
+import { useThemeProps } from '@mui/material/stylesOptimized';
 import {
   AreaPlot,
   LineChartProps,
@@ -2007,4 +2007,3 @@ LineChartPro.propTypes = {
 } as any;
 
 export { LineChartPro };
-export type LineChartProTheme = CreateThemeComponent<string, LineChartProProps>;

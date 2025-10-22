@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import Typography, { TypographyProps } from '@mui/material/Typography';
-import { styled, useThemeProps, CreateThemeComponent } from '@mui/material/stylesOptimized';
+import { styled, useThemeProps } from '@mui/material/stylesOptimized';
 import composeClasses from '@mui/utils/composeClasses';
 import {
   getPickersToolbarTextUtilityClass,
@@ -14,7 +14,6 @@ export interface ExportedPickersToolbarTextProps
 }
 
 export interface PickersToolbarTextProps
-export type ExportedPickersToolbarTextTheme = CreateThemeComponent<string, ExportedPickersToolbarTextProps>;
   extends Omit<TypographyProps, 'classes'>,
     Pick<ExportedPickersToolbarTextProps, 'classes'> {
   selected?: boolean;

@@ -1,4 +1,4 @@
-import { Theme, CreateThemeComponent } from '@mui/material/stylesOptimized';
+import { Theme } from '@mui/material/stylesOptimized';
 import { SxProps } from '@mui/system';
 import { MakeOptional } from '@mui/x-internals/types';
 import { UsePickerBaseProps } from '../../hooks/usePicker';
@@ -32,7 +32,6 @@ export interface BasePickerProps<
  * Props common to all pickers before applying the default props on each Picker.
  */
 export interface BasePickerInputProps<
-export type BasePickerTheme = CreateThemeComponent<string, BasePickerProps>;
   TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
   TError,

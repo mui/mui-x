@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled, CreateThemeComponent } from '@mui/material/stylesOptimized';
+import { styled } from '@mui/material/stylesOptimized';
 import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
 import { GaugeProvider, GaugeProviderProps } from './GaugeProvider';
 import { ChartProvider } from '../context/ChartProvider';
@@ -195,4 +195,3 @@ GaugeContainer.propTypes = {
 } as any;
 
 export { GaugeContainer };
-export type GaugeContainerTheme = CreateThemeComponent<string, GaugeContainerProps>;

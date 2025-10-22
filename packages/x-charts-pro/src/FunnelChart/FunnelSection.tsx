@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { styled, CreateThemeComponent } from '@mui/material/stylesOptimized';
+import { styled } from '@mui/material/stylesOptimized';
 import { useInteractionItemProps, SeriesId, consumeSlots } from '@mui/x-charts/internals';
 import { useItemHighlighted } from '@mui/x-charts/hooks';
 import clsx from 'clsx';
@@ -15,7 +15,6 @@ export interface FunnelSectionProps extends Omit<React.SVGProps<SVGPathElement>,
 }
 
 export const FunnelSectionPath = styled('path')(() => ({
-export type FunnelSectionTheme = CreateThemeComponent<string, FunnelSectionProps>;
   transition:
     'opacity 0.2s ease-in, fill 0.2s ease-in, fill-opacity 0.2s ease-in, filter 0.2s ease-in',
 }));

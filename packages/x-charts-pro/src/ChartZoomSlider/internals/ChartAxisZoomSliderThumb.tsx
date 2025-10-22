@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { styled, CreateThemeComponent } from '@mui/material/stylesOptimized';
+import { styled } from '@mui/material/stylesOptimized';
 import useForkRef from '@mui/utils/useForkRef';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
@@ -45,7 +45,6 @@ export interface ChartZoomSliderThumbProps
  * @internal
  */
 export const ChartAxisZoomSliderThumb = React.forwardRef<SVGRectElement, ChartZoomSliderThumbProps>(
-export type ChartZoomSliderThumbTheme = CreateThemeComponent<string, ChartZoomSliderThumbProps>;
   function ChartAxisZoomSliderThumb(
     { className, onMove, orientation, placement, rx = 4, ry = 4, ...other },
     forwardedRef,

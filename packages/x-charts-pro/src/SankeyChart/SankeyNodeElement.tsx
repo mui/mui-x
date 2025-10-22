@@ -3,7 +3,7 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import type { SeriesId } from '@mui/x-charts/internals';
 import { useInteractionItemProps, useStore, useSelector } from '@mui/x-charts/internals';
-import { useTheme, CreateThemeComponent } from '@mui/material/stylesOptimized';
+import { useTheme } from '@mui/material/stylesOptimized';
 import type { SankeyLayoutNode, SankeyNodeIdentifierWithData } from './sankey.types';
 import { selectorIsNodeHighlighted } from './plugins';
 import { selectorIsSankeyItemFaded } from './plugins/useSankeyHighlight.selectors';
@@ -36,7 +36,6 @@ export interface SankeyNodeElementProps {
  * @ignore - internal component.
  */
 export const SankeyNodeElement = React.forwardRef<SVGGElement, SankeyNodeElementProps>(
-export type SankeyNodeElementTheme = CreateThemeComponent<string, SankeyNodeElementProps>;
   function SankeyNodeElement(props, ref) {
     const { node, showLabel = true, onClick, seriesId } = props;
     const theme = useTheme();

@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled, SxProps, Theme, CreateThemeComponent } from '@mui/material/stylesOptimized';
+import { styled, SxProps, Theme } from '@mui/material/stylesOptimized';
 import clsx from 'clsx';
 import { useRtl } from '@mui/system/RtlProvider';
 import {
@@ -174,4 +174,3 @@ ChartsLabelGradient.propTypes = {
 } as any;
 
 export { ChartsLabelGradient };
-export type ChartsLabelGradientTheme = CreateThemeComponent<string, ChartsLabelGradientProps>;

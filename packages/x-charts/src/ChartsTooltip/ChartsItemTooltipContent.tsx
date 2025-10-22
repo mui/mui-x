@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Typography from '@mui/material/Typography';
-import { SxProps, Theme, CreateThemeComponent } from '@mui/material/stylesOptimized';
+import { SxProps, Theme } from '@mui/material/stylesOptimized';
 import { ChartsTooltipClasses, useUtilityClasses } from './chartsTooltipClasses';
 import { useInternalItemTooltip } from './useItemTooltip';
 import {
@@ -100,4 +100,3 @@ ChartsItemTooltipContent.propTypes = {
 } as any;
 
 export { ChartsItemTooltipContent };
-export type ChartsItemTooltipContentTheme = CreateThemeComponent<string, ChartsItemTooltipContentProps>;

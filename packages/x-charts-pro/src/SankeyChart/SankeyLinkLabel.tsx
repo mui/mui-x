@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useTheme, CreateThemeComponent } from '@mui/material/stylesOptimized';
+import { useTheme } from '@mui/material/stylesOptimized';
 import { SankeyLayoutLink } from './sankey.types';
 import { useSankeySeriesContext } from '../hooks/useSankeySeries';
 
@@ -32,7 +32,6 @@ const getLinkMidpoint = (link: SankeyLayoutLink) => {
  * @ignore - internal component.
  */
 export const SankeyLinkLabel = React.forwardRef<SVGTextElement, SankeyLinkLabelProps>(
-export type SankeyLinkLabelTheme = CreateThemeComponent<string, SankeyLinkLabelProps>;
   function SankeyLinkLabel(props, ref) {
     const { link } = props;
     const theme = useTheme();

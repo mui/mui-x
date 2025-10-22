@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled, CreateThemeComponent } from '@mui/material/stylesOptimized';
+import { styled } from '@mui/material/stylesOptimized';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import { useItemHighlighted } from '@mui/x-charts/hooks';
@@ -41,7 +41,6 @@ export interface HeatmapItemProps {
 }
 
 export interface HeatmapItemOwnerState {
-export type HeatmapItemTheme = CreateThemeComponent<string, HeatmapItemProps>;
   seriesId: SeriesId;
   dataIndex: number;
   color: string;

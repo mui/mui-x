@@ -1,13 +1,12 @@
 import * as React from 'react';
 import { SxProps } from '@mui/system';
-import { Theme, CreateThemeComponent } from '@mui/material/stylesOptimized';
+import { Theme } from '@mui/material/stylesOptimized';
 
 export interface BaseToolbarProps extends ExportedBaseToolbarProps {
   titleId?: string;
 }
 
 export interface ExportedBaseToolbarProps {
-export type BaseToolbarTheme = CreateThemeComponent<string, BaseToolbarProps>;
   /**
    * Toolbar date format.
    */

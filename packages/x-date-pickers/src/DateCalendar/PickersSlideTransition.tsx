@@ -1,6 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { styled, useTheme, useThemeProps, CreateThemeComponent } from '@mui/material/stylesOptimized';
+import { styled, useTheme, useThemeProps } from '@mui/material/stylesOptimized';
 import composeClasses from '@mui/utils/composeClasses';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { CSSTransitionProps } from 'react-transition-group/CSSTransition';
@@ -26,7 +26,6 @@ export interface ExportedSlideTransitionProps {
   classes?: Partial<PickersSlideTransitionClasses>;
 }
 export interface SlideTransitionProps
-export type ExportedSlideTransitionTheme = CreateThemeComponent<string, ExportedSlideTransitionProps>;
   extends Omit<CSSTransitionProps, 'timeout'>,
     ExportedSlideTransitionProps {
   children: React.ReactElement<any>;

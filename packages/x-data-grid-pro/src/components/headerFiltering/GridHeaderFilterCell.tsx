@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled, CreateThemeComponent } from '@mui/material/stylesOptimized';
+import { styled } from '@mui/material/stylesOptimized';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
 import capitalize from '@mui/utils/capitalize';
@@ -48,7 +48,6 @@ export interface GridRenderHeaderFilterProps extends GridHeaderFilterCellProps {
 }
 
 export interface GridHeaderFilterCellProps extends Pick<GridStateColDef, 'headerClassName'> {
-export type GridRenderHeaderFilterTheme = CreateThemeComponent<string, GridRenderHeaderFilterProps>;
   colIndex: number;
   height: number;
   sortIndex?: number;
