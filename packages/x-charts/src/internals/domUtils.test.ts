@@ -64,6 +64,17 @@ describe('domUtils', () => {
       expect(sizeWithSpacing.width).to.be.greaterThan(0);
     });
 
+    it.skipIf(isJSDOM)('should handle additional canvas text properties', () => {
+      const size = measureText('Test', { 
+        fontSize: 16, 
+        textAlign: 'center',
+        direction: 'ltr',
+      });
+
+      expect(size.width).to.be.greaterThan(0);
+      expect(size.height).to.be.greaterThan(0);
+    });
+
     it.skipIf(isJSDOM)('should convert number text to string', () => {
       const size = measureText(123, { fontSize: 16 });
 
