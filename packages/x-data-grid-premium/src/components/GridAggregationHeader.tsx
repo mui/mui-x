@@ -1,6 +1,6 @@
 import * as React from 'react';
 import composeClasses from '@mui/utils/composeClasses';
-import { styled } from '@mui/material/styles';
+import { styled } from '@mui/material/stylesOptimized';
 import {
   getDataGridUtilityClass,
   gridClasses,

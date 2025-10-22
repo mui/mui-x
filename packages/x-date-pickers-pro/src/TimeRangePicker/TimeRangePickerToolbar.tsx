@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { styled, useThemeProps, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import composeClasses from '@mui/utils/composeClasses';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
@@ -55,6 +55,7 @@ export interface TimeRangePickerToolbarProps
 }
 
 export interface ExportedTimeRangePickerToolbarProps
+export type TimeRangePickerToolbarTheme = CreateThemeComponent<string, TimeRangePickerToolbarProps>;
   extends Omit<ExportedBaseToolbarProps, 'toolbarFormat'> {
   /**
    * Override or extend the styles applied to the component.

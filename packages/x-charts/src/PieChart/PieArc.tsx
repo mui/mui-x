@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
-import { styled, useTheme } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/stylesOptimized';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { useAnimatePieArc } from '../hooks';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';

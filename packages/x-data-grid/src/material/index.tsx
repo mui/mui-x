@@ -2,7 +2,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import useForkRef from '@mui/utils/useForkRef';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { styled } from '@mui/material/styles';
+import { styled } from '@mui/material/stylesOptimized';
 import MUIAutocomplete from '@mui/material/Autocomplete';
 import MUIBadge from '@mui/material/Badge';
 import MUICheckbox from '@mui/material/Checkbox';

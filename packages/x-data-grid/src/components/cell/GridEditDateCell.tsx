@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { styled } from '@mui/material/styles';
+import { styled, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import { NotRendered } from '../../utils/assert';
 import { GridSlotProps } from '../../models/gridSlotsComponent';
 import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
@@ -241,6 +241,7 @@ GridEditDateCell.propTypes = {
 } as any;
 
 export { GridEditDateCell };
+export type GridEditDateCellTheme = CreateThemeComponent<string, GridEditDateCellProps>;
 
 export const renderEditDateCell = (params: GridRenderEditCellParams) => (
   <GridEditDateCell {...params} />

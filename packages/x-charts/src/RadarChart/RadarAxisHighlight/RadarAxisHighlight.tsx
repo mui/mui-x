@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useTheme } from '@mui/material/styles';
+import { useTheme, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import composeClasses from '@mui/utils/composeClasses';
 import { useRadarAxisHighlight } from './useRadarAxisHighlight';
 
@@ -94,3 +94,4 @@ RadarAxisHighlight.propTypes = {
 } as any;
 
 export { RadarAxisHighlight };
+export type RadarAxisHighlightTheme = CreateThemeComponent<string, RadarAxisHighlightProps>;

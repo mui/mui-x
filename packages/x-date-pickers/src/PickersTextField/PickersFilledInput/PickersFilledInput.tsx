@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { styled, useThemeProps, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import { shouldForwardProp } from '@mui/system';
 import refType from '@mui/utils/refType';
 import composeClasses from '@mui/utils/composeClasses';
@@ -23,6 +23,7 @@ export interface PickersFilledInputProps extends PickersInputBaseProps {
 }
 
 export interface PickerFilledInputOwnerState extends PickerTextFieldOwnerState {
+export type PickersFilledInputTheme = CreateThemeComponent<string, PickersFilledInputProps>;
   /**
    * `true` if the input  has an underline, `false` otherwise.
    */

@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useThemeProps } from '@mui/material/styles';
+import { useThemeProps, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import PropTypes from 'prop-types';
 import { ChartsOverlay, ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
@@ -349,3 +349,4 @@ FunnelChart.propTypes = {
 } as any;
 
 export { FunnelChart };
+export type FunnelChartTheme = CreateThemeComponent<string, FunnelChartProps>;

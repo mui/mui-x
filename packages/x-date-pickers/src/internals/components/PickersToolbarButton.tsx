@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import Button, { ButtonProps } from '@mui/material/Button';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { styled, useThemeProps, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import composeClasses from '@mui/utils/composeClasses';
 import { TypographyProps } from '@mui/material/Typography';
 import { PickersToolbarText } from './PickersToolbarText';
@@ -37,6 +37,7 @@ const PickersToolbarButtonRoot = styled(Button, {
 });
 
 export const PickersToolbarButton = React.forwardRef(function PickersToolbarButton(
+export type PickersToolbarButtonTheme = CreateThemeComponent<string, PickersToolbarButtonProps>;
   inProps: PickersToolbarButtonProps,
   ref: React.Ref<HTMLButtonElement>,
 ) {

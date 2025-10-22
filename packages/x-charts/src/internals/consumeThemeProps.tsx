@@ -1,4 +1,4 @@
-import { useTheme, useThemeProps } from '@mui/material/styles';
+import { useTheme, useThemeProps } from '@mui/material/stylesOptimized';
 import resolveProps from '@mui/utils/resolveProps';
 import * as React from 'react';
 

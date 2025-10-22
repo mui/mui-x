@@ -1,5 +1,5 @@
 'use client';
-import { useTheme, useThemeProps } from '@mui/material/styles';
+import { useTheme, useThemeProps } from '@mui/material/stylesOptimized';
 import type { ChartDataProviderProps } from './ChartDataProvider';
 import { ChartProviderProps } from '../context/ChartProvider';
 import { ChartAnyPluginSignature, MergeSignaturesProperty } from '../internals/plugins/models';

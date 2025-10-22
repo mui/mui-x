@@ -2,7 +2,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { styled, useThemeProps, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import composeClasses from '@mui/utils/composeClasses';
 import { PickersToolbarText } from '../internals/components/PickersToolbarText';
 import { PickersToolbarButton } from '../internals/components/PickersToolbarButton';
@@ -30,6 +30,7 @@ export interface TimePickerToolbarProps extends BaseToolbarProps, ExportedTimePi
 }
 
 export interface ExportedTimePickerToolbarProps extends ExportedBaseToolbarProps {
+export type TimePickerToolbarTheme = CreateThemeComponent<string, TimePickerToolbarProps>;
   /**
    * Override or extend the styles applied to the component.
    */

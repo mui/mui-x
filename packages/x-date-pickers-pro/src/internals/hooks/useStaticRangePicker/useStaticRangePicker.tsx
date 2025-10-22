@@ -1,6 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { styled } from '@mui/material/styles';
+import { styled } from '@mui/material/stylesOptimized';
 import { PickersLayout } from '@mui/x-date-pickers/PickersLayout';
 import {
   usePicker,

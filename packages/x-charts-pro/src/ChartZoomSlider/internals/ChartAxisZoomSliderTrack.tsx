@@ -7,7 +7,7 @@ import {
   selectorChartAxisZoomOptionsLookup,
   useStore,
 } from '@mui/x-charts/internals';
-import { styled } from '@mui/material/styles';
+import { styled } from '@mui/material/stylesOptimized';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
 import { shouldForwardProp } from '@mui/system';
 import clsx from 'clsx';

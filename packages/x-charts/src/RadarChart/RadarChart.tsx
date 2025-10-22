@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useThemeProps } from '@mui/material/styles';
+import { useThemeProps, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import { RadarChartPluginSignatures } from './RadarChart.plugins';
 import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
 import {
@@ -286,3 +286,4 @@ RadarChart.propTypes = {
 } as any;
 
 export { RadarChart };
+export type RadarChartTheme = CreateThemeComponent<string, RadarChartProps>;

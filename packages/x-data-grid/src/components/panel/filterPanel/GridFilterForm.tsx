@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
 import useId from '@mui/utils/useId';
 import capitalize from '@mui/utils/capitalize';
-import { styled } from '@mui/material/styles';
+import { styled, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { vars } from '../../../constants/cssVariables';
 import {
@@ -704,3 +704,4 @@ GridFilterForm.propTypes = {
  * - [GridFilterForm API](https://mui.com/x/api/data-grid/grid-filter-form/)
  */
 export { GridFilterForm };
+export type GridFilterFormTheme = CreateThemeComponent<string, GridFilterFormProps>;

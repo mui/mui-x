@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { styled, useThemeProps, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import composeClasses from '@mui/utils/composeClasses';
 import { CLOCK_WIDTH, CLOCK_HOUR_WIDTH } from './shared';
 import { PickerOwnerState, TimeView } from '../models';
@@ -22,6 +22,7 @@ export interface ClockPointerProps extends React.HTMLAttributes<HTMLDivElement> 
 }
 
 export interface ClockPointerOwnerState extends PickerOwnerState {
+export type ClockPointerTheme = CreateThemeComponent<string, ClockPointerProps>;
   /**
    * `true` if the clock pointer should animate.
    */

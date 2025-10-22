@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled, useTheme } from '@mui/material/styles';
+import { styled, useTheme, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import { useDrawingArea } from '@mui/x-charts/hooks';
 import {
   SankeyLayout,
@@ -142,3 +142,4 @@ SankeyPlot.propTypes = {
 } as any;
 
 export { SankeyPlot };
+export type SankeyPlotTheme = CreateThemeComponent<string, SankeyPlotProps>;

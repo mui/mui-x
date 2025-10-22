@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import HTMLElementType from '@mui/utils/HTMLElementType';
-import { styled } from '@mui/material/styles';
+import { styled, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import { isHideMenuKey } from '../../utils/keyboardUtils';
 import { PopperProps } from '../../models/gridBaseSlots';
 import { GridSlotProps } from '../../models/gridSlotsComponent';
@@ -148,3 +148,4 @@ GridMenu.propTypes = {
 } as any;
 
 export { GridMenu };
+export type GridMenuTheme = CreateThemeComponent<string, GridMenuProps>;

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { alpha, styled, useThemeProps, CSSInterpolation } from '@mui/material/styles';
+import { alpha, styled, useThemeProps, CSSInterpolation } from '@mui/material/stylesOptimized';
 import ButtonBase from '@mui/material/ButtonBase';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';

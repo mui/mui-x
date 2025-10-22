@@ -3,7 +3,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { styled, useThemeProps, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import composeClasses from '@mui/utils/composeClasses';
 import { PickersToolbar } from '../internals/components/PickersToolbar';
 import { usePickerAdapter, usePickerContext, usePickerTranslations } from '../hooks';
@@ -23,6 +23,7 @@ import { PickerValue } from '../internals/models';
 export interface DatePickerToolbarProps extends BaseToolbarProps, ExportedDatePickerToolbarProps {}
 
 export interface ExportedDatePickerToolbarProps extends ExportedBaseToolbarProps {
+export type DatePickerToolbarTheme = CreateThemeComponent<string, DatePickerToolbarProps>;
   /**
    * Override or extend the styles applied to the component.
    */

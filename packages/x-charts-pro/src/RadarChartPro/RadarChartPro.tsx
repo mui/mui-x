@@ -12,7 +12,7 @@ import {
   RadarChartSlotProps,
   RadarChartSlots,
 } from '@mui/x-charts/RadarChart';
-import { useThemeProps } from '@mui/material/styles';
+import { useThemeProps, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import { useRadarChartProps } from '@mui/x-charts/internals';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
@@ -283,3 +283,4 @@ RadarChartPro.propTypes = {
 } as any;
 
 export { RadarChartPro };
+export type RadarChartProTheme = CreateThemeComponent<string, RadarChartProProps>;

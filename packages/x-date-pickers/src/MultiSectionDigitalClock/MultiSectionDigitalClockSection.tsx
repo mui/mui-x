@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { alpha, styled, useThemeProps } from '@mui/material/styles';
+import { alpha, styled, useThemeProps, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import composeClasses from '@mui/utils/composeClasses';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
@@ -34,6 +34,7 @@ export interface ExportedMultiSectionDigitalClockSectionProps {
 }
 
 export interface MultiSectionDigitalClockSectionProps<TSectionValue extends number | string>
+export type ExportedMultiSectionDigitalClockSectionTheme = CreateThemeComponent<string, ExportedMultiSectionDigitalClockSectionProps>;
   extends FormProps,
     ExportedMultiSectionDigitalClockSectionProps {
   autoFocus?: boolean;

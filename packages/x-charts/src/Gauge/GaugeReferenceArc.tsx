@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { arc as d3Arc } from '@mui/x-charts-vendor/d3-shape';
-import { styled } from '@mui/material/styles';
+import { styled } from '@mui/material/stylesOptimized';
 import clsx from 'clsx';
 import { useGaugeState } from './GaugeProvider';
 import { gaugeClasses } from './gaugeClasses';

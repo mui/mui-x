@@ -1,4 +1,4 @@
-import { styled } from '@mui/material/styles';
+import { styled } from '@mui/material/stylesOptimized';
 import Typography from '@mui/material/Typography';
 import { chartsTooltipClasses } from './chartsTooltipClasses';
 

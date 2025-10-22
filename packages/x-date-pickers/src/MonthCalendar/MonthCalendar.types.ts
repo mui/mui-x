@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { SxProps } from '@mui/system';
-import { Theme } from '@mui/material/styles';
+import { Theme, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { MonthCalendarClasses } from './monthCalendarClasses';
 import { BaseDateValidationProps, MonthValidationProps } from '../internals/models/validation';
@@ -36,6 +36,7 @@ export interface ExportedMonthCalendarProps {
   monthsPerRow?: 3 | 4;
 }
 export interface MonthCalendarProps
+export type ExportedMonthCalendarTheme = CreateThemeComponent<string, ExportedMonthCalendarProps>;
   extends ExportedMonthCalendarProps,
     MonthValidationProps,
     BaseDateValidationProps,

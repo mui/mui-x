@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/stylesOptimized';
 import refType from '@mui/utils/refType';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';

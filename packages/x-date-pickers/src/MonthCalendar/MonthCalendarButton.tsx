@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { styled, alpha } from '@mui/material/styles';
+import { styled, alpha, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
@@ -98,6 +98,7 @@ const DefaultMonthButton = styled('button', {
  * @ignore - do not document.
  */
 export const MonthCalendarButton = React.memo(function MonthCalendarButton(
+export type MonthCalendarButtonTheme = CreateThemeComponent<string, MonthCalendarButtonProps>;
   props: MonthCalendarButtonProps,
 ) {
   const {

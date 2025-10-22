@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { styled } from '@mui/material/styles';
+import { styled, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import { computeOffsetLeft } from '@mui/x-virtualizer';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { useGridSelector } from '../../utils';
@@ -70,6 +70,7 @@ export interface UseGridColumnHeadersProps {
 }
 
 export interface GetHeadersParams {
+export type UseGridColumnHeadersTheme = CreateThemeComponent<string, UseGridColumnHeadersProps>;
   position?: PinnedColumnPosition;
   renderContext?: GridColumnsRenderContext;
   maxLastColumn?: number;

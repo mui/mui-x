@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useThemeProps } from '@mui/material/styles';
+import { useThemeProps, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import type { ChartsLocaleText } from '../locales/utils/chartsLocaleTextApi';
 import { DEFAULT_LOCALE } from '../locales/enUS';
 
@@ -82,3 +82,4 @@ ChartsLocalizationProvider.propTypes = {
 } as any;
 
 export { ChartsLocalizationProvider };
+export type ChartsLocalizationProviderTheme = CreateThemeComponent<string, ChartsLocalizationProviderProps>;

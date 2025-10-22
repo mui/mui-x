@@ -1,4 +1,4 @@
-import { Theme } from '@mui/material/styles';
+import { Theme } from '@mui/material/stylesOptimized';
 import { SxProps, SystemStyleObject } from '@mui/system';
 import ownerDocument from '@mui/utils/ownerDocument';
 import * as React from 'react';

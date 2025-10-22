@@ -3,7 +3,7 @@ import NoSsr from '@mui/material/NoSsr';
 import Popper, { PopperProps } from '@mui/material/Popper';
 import { ChartsTooltipPaper } from '@mui/x-charts/ChartsTooltip';
 import Typography from '@mui/material/Typography';
-import { styled } from '@mui/material/styles';
+import { styled } from '@mui/material/stylesOptimized';
 
 /**
  * The root component of the zoom slider tooltip.

@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
-import { useThemeProps } from '@mui/material/styles';
+import { useThemeProps, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import { ChartsGridClasses, getChartsGridUtilityClass } from './chartsGridClasses';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 import { GridRoot } from './styledComponents';
@@ -100,3 +100,4 @@ ChartsGrid.propTypes = {
 } as any;
 
 export { ChartsGrid };
+export type ChartsGridTheme = CreateThemeComponent<string, ChartsGridProps>;

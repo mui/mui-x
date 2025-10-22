@@ -2,7 +2,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { styled, useThemeProps, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import composeClasses from '@mui/utils/composeClasses';
 import { shouldForwardProp } from '@mui/system/createStyled';
 import { PickersToolbarText } from '../internals/components/PickersToolbarText';
@@ -37,6 +37,7 @@ export interface ExportedDateTimePickerToolbarProps extends ExportedBaseToolbarP
 }
 
 export interface DateTimePickerToolbarProps
+export type ExportedDateTimePickerToolbarTheme = CreateThemeComponent<string, ExportedDateTimePickerToolbarProps>;
   extends ExportedDateTimePickerToolbarProps,
     BaseToolbarProps {
   /**

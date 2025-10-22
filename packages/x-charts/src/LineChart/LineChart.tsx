@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useThemeProps } from '@mui/material/styles';
+import { useThemeProps, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import { MakeOptional } from '@mui/x-internals/types';
 import { ChartsSlots, ChartsSlotProps } from '../internals/material';
 import { AreaPlot, AreaPlotProps, AreaPlotSlotProps, AreaPlotSlots } from './AreaPlot';
@@ -1626,3 +1626,4 @@ LineChart.propTypes = {
 } as any;
 
 export { LineChart };
+export type LineChartTheme = CreateThemeComponent<string, LineChartProps>;

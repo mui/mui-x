@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/stylesOptimized';
 import { useRadarMetricData } from './useRadarMetricData';
 import { getDefaultBaseline, getDefaultTextAnchor } from '../../ChartsText/defaultTextPlacement';
 import { ChartsText } from '../../ChartsText';

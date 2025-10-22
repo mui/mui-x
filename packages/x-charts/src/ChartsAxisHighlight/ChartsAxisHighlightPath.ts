@@ -1,5 +1,5 @@
 'use client';
-import { styled } from '@mui/material/styles';
+import { styled } from '@mui/material/stylesOptimized';
 import { ChartsAxisHighlightType } from './ChartsAxisHighlight.types';
 
 export const ChartsAxisHighlightPath = styled('path', {

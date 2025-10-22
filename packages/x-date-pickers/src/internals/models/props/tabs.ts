@@ -1,5 +1,5 @@
 import { SxProps } from '@mui/system';
-import { Theme } from '@mui/material/styles';
+import { Theme, CreateThemeComponent } from '@mui/material/stylesOptimized';
 
 export interface ExportedBaseTabsProps {
   className?: string;
@@ -8,3 +8,4 @@ export interface ExportedBaseTabsProps {
    */
   sx?: SxProps<Theme>;
 }
+export type ExportedBaseTabsTheme = CreateThemeComponent<string, ExportedBaseTabsProps>;

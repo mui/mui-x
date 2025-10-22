@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { useRtl } from '@mui/system/RtlProvider';
 import { shouldForwardProp } from '@mui/system/createStyled';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/stylesOptimized';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
 import useControlled from '@mui/utils/useControlled';

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { styled } from '@mui/material/styles';
+import { styled } from '@mui/material/stylesOptimized';
 import { GridRenderCellParams } from '@mui/x-data-grid-premium';
 
 const Value = styled('div')(({ theme }) => ({

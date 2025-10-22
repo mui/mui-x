@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { useLicenseVerifier } from '@mui/x-license';
-import { alpha, styled, useThemeProps } from '@mui/material/styles';
+import { alpha, styled, useThemeProps } from '@mui/material/stylesOptimized';
 import composeClasses from '@mui/utils/composeClasses';
 import { usePickerDayOwnerState } from '@mui/x-date-pickers/internals';
 import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';

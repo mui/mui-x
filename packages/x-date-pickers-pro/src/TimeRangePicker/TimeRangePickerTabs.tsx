@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import Tab from '@mui/material/Tab';
 import Tabs, { tabsClasses } from '@mui/material/Tabs';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { styled, useThemeProps, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import composeClasses from '@mui/utils/composeClasses';
 import { TimeIcon } from '@mui/x-date-pickers/icons';
 import { ExportedBaseTabsProps } from '@mui/x-date-pickers/internals';
@@ -34,6 +34,7 @@ export interface ExportedTimeRangePickerTabsProps extends ExportedBaseTabsProps 
 }
 
 export interface TimeRangePickerTabsProps extends ExportedTimeRangePickerTabsProps {}
+export type ExportedTimeRangePickerTabsTheme = CreateThemeComponent<string, ExportedTimeRangePickerTabsProps>;
 
 const useUtilityClasses = (classes: Partial<TimeRangePickerTabsClasses> | undefined) => {
   const slots = {

@@ -1,6 +1,6 @@
 import { RefObject } from '@mui/x-internals/types';
 import { CSSInterpolation } from '@mui/system';
-import { styled } from '@mui/material/styles';
+import { styled } from '@mui/material/stylesOptimized';
 import type {} from '../../themeAugmentation/overrides';
 import { gridClasses as c } from '../../constants/gridClasses';
 import { vars } from '../../constants/cssVariables';

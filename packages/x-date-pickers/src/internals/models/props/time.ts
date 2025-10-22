@@ -1,4 +1,4 @@
-import { SxProps, Theme } from '@mui/material/styles';
+import { SxProps, Theme, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import { PickerValidDate, TimeStepOptions, TimezoneProps } from '../../../models';
 import type { ExportedDigitalClockProps } from '../../../DigitalClock/DigitalClock.types';
 import type { ExportedMultiSectionDigitalClockProps } from '../../../MultiSectionDigitalClock/MultiSectionDigitalClock.types';
@@ -17,6 +17,7 @@ export interface AmPmProps {
 }
 
 export interface ExportedBaseClockProps
+export type AmPmTheme = CreateThemeComponent<string, AmPmProps>;
   extends ExportedValidateTimeProps,
     TimezoneProps,
     AmPmProps {}

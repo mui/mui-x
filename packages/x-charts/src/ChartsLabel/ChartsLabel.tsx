@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { SxProps, Theme } from '@mui/material/styles';
+import { SxProps, Theme, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import clsx from 'clsx';
 import { ChartsLabelClasses, useUtilityClasses } from './labelClasses';
 import { consumeThemeProps } from '../internals/consumeThemeProps';
@@ -49,3 +49,4 @@ ChartsLabel.propTypes = {
 } as any;
 
 export { ChartsLabel };
+export type ChartsLabelTheme = CreateThemeComponent<string, ChartsLabelProps>;

@@ -2,7 +2,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/stylesOptimized';
 import composeClasses from '@mui/utils/composeClasses';
 import useId from '@mui/utils/useId';
 import { usePickerAdapter, usePickerTranslations } from '../hooks';

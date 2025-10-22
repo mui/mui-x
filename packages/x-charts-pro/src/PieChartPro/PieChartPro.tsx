@@ -1,6 +1,6 @@
 import { DEFAULT_PIE_CHART_MARGIN, defaultizeMargin } from '@mui/x-charts/internals';
 import PropTypes from 'prop-types';
-import { useThemeProps } from '@mui/material/styles';
+import { useThemeProps, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import * as React from 'react';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
@@ -240,3 +240,4 @@ PieChartPro.propTypes = {
 } as any;
 
 export { PieChartPro };
+export type PieChartProTheme = CreateThemeComponent<string, PieChartProProps>;

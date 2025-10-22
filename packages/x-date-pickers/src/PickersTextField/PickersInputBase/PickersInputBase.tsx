@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useFormControl } from '@mui/material/FormControl';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/stylesOptimized';
 import useForkRef from '@mui/utils/useForkRef';
 import refType from '@mui/utils/refType';
 import composeClasses from '@mui/utils/composeClasses';

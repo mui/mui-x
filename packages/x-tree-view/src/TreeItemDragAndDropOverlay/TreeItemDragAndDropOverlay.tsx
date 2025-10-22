@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { alpha } from '@mui/material/styles';
+import { alpha } from '@mui/material/stylesOptimized';
 import { shouldForwardProp } from '@mui/system/createStyled';
 import { TreeItemDragAndDropOverlayProps } from './TreeItemDragAndDropOverlay.types';
 import { TreeViewItemsReorderingAction } from '../models';

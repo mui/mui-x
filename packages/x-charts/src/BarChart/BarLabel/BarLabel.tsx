@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/stylesOptimized';
 import PropTypes from 'prop-types';
 import { useAnimateBarLabel } from '../../hooks/animation/useAnimateBarLabel';
 import { barLabelClasses } from './barLabelClasses';

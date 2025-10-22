@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
+import { styled } from '@mui/material/stylesOptimized';
 import { GridRowId, gridRowNodeSelector } from '@mui/x-data-grid';
 import { vars } from '@mui/x-data-grid/internals';
 import { useResizeObserver } from '@mui/x-internals/useResizeObserver';

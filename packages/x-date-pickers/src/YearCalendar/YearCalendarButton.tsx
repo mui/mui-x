@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { styled, alpha } from '@mui/material/styles';
+import { styled, alpha, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
@@ -96,6 +96,7 @@ const DefaultYearButton = styled('button', {
  * @ignore - internal component.
  */
 export const YearCalendarButton = React.memo(function YearCalendarButton(
+export type YearCalendarButtonTheme = CreateThemeComponent<string, YearCalendarButtonProps>;
   props: YearCalendarButtonProps,
 ) {
   const {

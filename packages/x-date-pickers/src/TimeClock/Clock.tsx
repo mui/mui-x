@@ -2,7 +2,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import { styled, useThemeProps, Theme } from '@mui/material/styles';
+import { styled, useThemeProps, Theme, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import composeClasses from '@mui/utils/composeClasses';
 import { ClockPointer } from './ClockPointer';
@@ -48,6 +48,7 @@ export interface ClockProps extends ReturnType<typeof useMeridiemMode>, FormProp
 }
 
 export interface ClockOwnerState extends PickerOwnerState {
+export type ClockTheme = CreateThemeComponent<string, ClockProps>;
   /**
    * `true` if the clock is disabled, `false` otherwise.
    */

@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import refType from '@mui/utils/refType';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useThemeProps } from '@mui/material/styles';
+import { useThemeProps } from '@mui/material/stylesOptimized';
 import { DEFAULT_DESKTOP_MODE_MEDIA_QUERY } from '@mui/x-date-pickers/internals';
 import { DateTimeRangePickerProps } from './DateTimeRangePicker.types';
 import { DesktopDateTimeRangePicker } from '../DesktopDateTimeRangePicker';

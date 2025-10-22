@@ -1,5 +1,5 @@
 'use client';
-import { styled } from '@mui/material/styles';
+import { styled, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import {
   AxisId,
   ComputedAxis,
@@ -62,6 +62,7 @@ export interface ChartAxisZoomSliderActiveTrackProps {
 }
 
 export function ChartAxisZoomSliderActiveTrack({
+export type ChartAxisZoomSliderActiveTrackTheme = CreateThemeComponent<string, ChartAxisZoomSliderActiveTrackProps>;
   axisId,
   axisDirection,
   axisPosition,

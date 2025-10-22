@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled, SxProps, Theme } from '@mui/material/styles';
+import { styled, SxProps, Theme, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import clsx from 'clsx';
 import { AppendKeys } from '@mui/x-internals/types';
 import { ComputedAxis } from '../models/axis';
@@ -348,3 +348,4 @@ ContinuousColorLegend.propTypes = {
 } as any;
 
 export { ContinuousColorLegend };
+export type ContinuousColorLegendTheme = CreateThemeComponent<string, ContinuousColorLegendProps>;

@@ -3,7 +3,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { alpha, styled, useThemeProps } from '@mui/material/styles';
+import { alpha, styled, useThemeProps } from '@mui/material/stylesOptimized';
 import useEventCallback from '@mui/utils/useEventCallback';
 import composeClasses from '@mui/utils/composeClasses';
 import MenuItem from '@mui/material/MenuItem';

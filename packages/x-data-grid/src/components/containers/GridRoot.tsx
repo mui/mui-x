@@ -5,7 +5,7 @@ import useForkRef from '@mui/utils/useForkRef';
 import capitalize from '@mui/utils/capitalize';
 import composeClasses from '@mui/utils/composeClasses';
 import { SxProps } from '@mui/system';
-import { Theme } from '@mui/material/styles';
+import { Theme, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { GridRootStyles } from './GridRootStyles';
@@ -119,3 +119,4 @@ GridRoot.propTypes = {
 
 const MemoizedGridRoot = fastMemo(GridRoot);
 export { MemoizedGridRoot as GridRoot };
+export type GridRootTheme = CreateThemeComponent<string, GridRootProps>;

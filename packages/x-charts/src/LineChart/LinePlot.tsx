@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled } from '@mui/material/styles';
+import { styled, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import {
   LineElement,
   lineElementClasses,
@@ -115,3 +115,4 @@ LinePlot.propTypes = {
 } as any;
 
 export { LinePlot };
+export type LinePlotTheme = CreateThemeComponent<string, LinePlotProps>;

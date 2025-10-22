@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled } from '@mui/material/styles';
+import { styled, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import Button from '@mui/material/Button';
 import DialogActions, { DialogActionsProps } from '@mui/material/DialogActions';
 import { usePickerTranslations } from '../hooks/usePickerTranslations';
@@ -150,3 +150,4 @@ PickersActionBarComponent.propTypes = {
 const PickersActionBar = React.memo(PickersActionBarComponent);
 
 export { PickersActionBar };
+export type PickersActionBarTheme = CreateThemeComponent<string, PickersActionBarProps>;

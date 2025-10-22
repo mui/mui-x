@@ -1,4 +1,4 @@
-import { ComponentNameToClassKey, ComponentsPropsList } from '@mui/material/styles';
+import { ComponentNameToClassKey, ComponentsPropsList } from '@mui/material/stylesOptimized';
 import { CSSObject, CSSInterpolation, Interpolation } from '@mui/system';
 /**
  * All standard components exposed by `material-ui` are `StyledComponents` with
@@ -10,7 +10,7 @@ export type ExtendMui<C, Removals extends keyof C = never> = Omit<
   'classes' | 'theme' | Removals
 >;
 
-// This and `ComponentsOverrides` are extracted from the `@mui/material/styles` package
+// This and `ComponentsOverrides` are extracted from the `@mui/material/stylesOptimized` package
 // with the addition of supporting explicit `OwnerState` type.
 // https://github.com/mui/material-ui/blob/master/packages/mui-material/src/styles/overrides.ts
 type OverridesStyleRules<

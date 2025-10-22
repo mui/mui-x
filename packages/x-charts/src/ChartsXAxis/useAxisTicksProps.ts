@@ -1,6 +1,6 @@
 'use client';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { useThemeProps, useTheme } from '@mui/material/styles';
+import { useThemeProps, useTheme } from '@mui/material/stylesOptimized';
 import { useRtl } from '@mui/system/RtlProvider';
 import { ChartsXAxisProps } from '../models/axis';
 import { ChartsText, ChartsTextProps } from '../ChartsText';

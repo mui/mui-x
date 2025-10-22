@@ -2,7 +2,7 @@ import * as React from 'react';
 import { SlotComponentProps } from '@mui/utils/types';
 import IconButton from '@mui/material/IconButton';
 import SvgIcon from '@mui/material/SvgIcon';
-import { SxProps, Theme } from '@mui/material/styles';
+import { SxProps, Theme, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import {
   ExportedPickersArrowSwitcherProps,
   PickersArrowSwitcherSlots,
@@ -79,6 +79,7 @@ export interface PickersCalendarHeaderProps
 }
 
 export type ExportedPickersCalendarHeaderProps = Pick<
+export type PickersCalendarHeaderTheme = CreateThemeComponent<string, PickersCalendarHeaderProps>;
   PickersCalendarHeaderProps,
   'classes' | 'slots' | 'slotProps'
 >;

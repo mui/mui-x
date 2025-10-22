@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useThemeProps } from '@mui/material/styles';
+import { useThemeProps, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import { MakeOptional } from '@mui/x-internals/types';
 import { ChartsSlotProps, ChartsSlots } from '../internals/material';
 import { ChartsToolbarSlotProps, ChartsToolbarSlots } from '../Toolbar';
@@ -97,6 +97,7 @@ export interface BarChartProps
    */
   showToolbar?: boolean;
 }
+export type BarChartTheme = CreateThemeComponent<string, BarChartProps>;
 
 /**
  * Demos:

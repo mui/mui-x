@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Theme } from '@mui/material/styles';
+import { Theme, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import { SxProps } from '@mui/system/styleFunctionSx';
 import { SlotComponentProps } from '@mui/utils/types';
 import {
@@ -46,6 +46,7 @@ export interface RichTreeViewProPropsBase extends React.HTMLAttributes<HTMLUList
 }
 
 export interface RichTreeViewProProps<R extends {}, Multiple extends boolean | undefined>
+export type RichTreeViewProTheme = CreateThemeComponent<string, RichTreeViewProProps>;
   extends RichTreeViewProPluginParameters<R, Multiple>,
     RichTreeViewProPropsBase {
   /**

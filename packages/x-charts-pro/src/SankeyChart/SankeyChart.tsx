@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useThemeProps } from '@mui/material/styles';
+import { useThemeProps, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsOverlay, type ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
 import type { MakeOptional } from '@mui/x-internals/types';
@@ -221,3 +221,4 @@ SankeyChart.propTypes = {
 } as any;
 
 export { SankeyChart };
+export type SankeyChartTheme = CreateThemeComponent<string, SankeyChartProps>;

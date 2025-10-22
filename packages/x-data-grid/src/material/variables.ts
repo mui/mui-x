@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { alpha, darken, lighten, type Theme } from '@mui/material/styles';
-import { useTheme } from '@mui/material/styles';
+import { alpha, darken, lighten, type Theme } from '@mui/material/stylesOptimized';
+import { useTheme } from '@mui/material/stylesOptimized';
 import { hash } from '@mui/x-internals/hash';
 import { vars, type GridCSSVariablesInterface } from '../constants/cssVariables';
 

@@ -5,7 +5,7 @@ import AutorenewIcon from '@mui/icons-material/Autorenew';
 import DoneIcon from '@mui/icons-material/Done';
 import Chip from '@mui/material/Chip';
 import { GridRenderCellParams } from '@mui/x-data-grid-premium';
-import { styled } from '@mui/material/styles';
+import { styled } from '@mui/material/stylesOptimized';
 
 const StyledChip = styled(Chip)(({ theme }) => ({
   justifyContent: 'left',

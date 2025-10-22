@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SxProps, Theme } from '@mui/material/styles';
+import { SxProps, Theme, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import { SlotComponentProps } from '@mui/utils/types';
 import { PickersActionBar, PickersActionBarProps } from '../PickersActionBar';
 import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
@@ -112,6 +112,7 @@ export interface PickersLayoutProps<TValue extends PickerValidValue> {
 }
 
 export interface SubComponents<TValue extends PickerValidValue> {
+export type PickersLayoutTheme = CreateThemeComponent<string, PickersLayoutProps>;
   toolbar: React.ReactElement<ExportedBaseToolbarProps> | null;
   content: React.ReactNode;
   tabs: React.ReactElement<ExportedBaseTabsProps> | null;

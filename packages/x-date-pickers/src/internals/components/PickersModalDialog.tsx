@@ -4,7 +4,7 @@ import Fade from '@mui/material/Fade';
 import MuiDialog, { DialogProps as MuiDialogProps, dialogClasses } from '@mui/material/Dialog';
 import { PaperProps as MuiPaperProps } from '@mui/material/Paper';
 import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions';
-import { styled } from '@mui/material/styles';
+import { styled, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import { DIALOG_WIDTH } from '../constants/dimensions';
 import { usePickerContext } from '../../hooks';
 import { usePickerPrivateContext } from '../hooks/usePickerPrivateContext';
@@ -72,6 +72,7 @@ const PickersModalDialogContent = styled(DialogContent)({
 });
 
 export function PickersModalDialog(props: React.PropsWithChildren<PickersModalDialogProps>) {
+export type PickersModalDialogTheme = CreateThemeComponent<string, PickersModalDialogProps>;
   const { children, slots, slotProps } = props;
 
   const { open } = usePickerContext();

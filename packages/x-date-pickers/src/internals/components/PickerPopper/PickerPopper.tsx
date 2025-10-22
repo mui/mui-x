@@ -16,7 +16,7 @@ import useForkRef from '@mui/utils/useForkRef';
 import useEventCallback from '@mui/utils/useEventCallback';
 import ownerDocument from '@mui/utils/ownerDocument';
 import composeClasses from '@mui/utils/composeClasses';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { styled, useThemeProps, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions';
 import { MuiEvent, SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { getPickerPopperUtilityClass, PickerPopperClasses } from './pickerPopperClasses';
@@ -84,6 +84,7 @@ export interface ExportedPickerPopperProps {
 }
 
 export interface PickerPopperProps extends ExportedPickerPopperProps {
+export type ExportedPickerPopperTheme = CreateThemeComponent<string, ExportedPickerPopperProps>;
   children?: React.ReactNode;
   slots?: PickerPopperSlots;
   slotProps?: PickerPopperSlotProps;

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/stylesOptimized';
 import { useRadarGridData } from './useRadarGridData';
 import { SharpRadarGrid } from './SharpRadarGrid';
 import { RadarGridProps } from './RadarGrid.types';

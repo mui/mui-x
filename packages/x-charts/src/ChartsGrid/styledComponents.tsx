@@ -1,4 +1,4 @@
-import { styled } from '@mui/material/styles';
+import { styled } from '@mui/material/stylesOptimized';
 import { chartsGridClasses } from './chartsGridClasses';
 
 export const GridRoot = styled('g', {

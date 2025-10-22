@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
+import { styled, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import {
   AxisId,
   useSelector,
@@ -70,3 +70,4 @@ function useAreaPreviewData(axisId: AxisId) {
 
   return useAreaPlotData(xAxes, yAxes);
 }
+export type PreviewAreaElementTheme = CreateThemeComponent<string, PreviewAreaElementProps>;

@@ -4,7 +4,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import Typography from '@mui/material/Typography';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { useRtl } from '@mui/system/RtlProvider';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { styled, useThemeProps, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import composeClasses from '@mui/utils/composeClasses';
 import clsx from 'clsx';
 import { DefaultizedProps, SlotComponentPropsFromProps } from '@mui/x-internals/types';
@@ -78,6 +78,7 @@ export interface ExportedDayCalendarProps extends ExportedPickersDayProps {
 }
 
 export interface DayCalendarProps
+export type ExportedDayCalendarTheme = CreateThemeComponent<string, ExportedDayCalendarProps>;
   extends ExportedDayCalendarProps,
     DayValidationProps,
     MonthValidationProps,

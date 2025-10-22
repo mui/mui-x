@@ -1,7 +1,7 @@
 'use client';
 import { sankey, type SankeyGraph } from '@mui/x-charts-vendor/d3-sankey';
 import type { ChartDrawingArea } from '@mui/x-charts/hooks';
-import type { Theme } from '@mui/material/styles';
+import type { Theme } from '@mui/material/stylesOptimized';
 import { path } from '@mui/x-charts-vendor/d3-path';
 import type {
   SankeySeriesType,

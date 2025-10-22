@@ -1,4 +1,4 @@
-import { styled } from '@mui/material/styles';
+import { styled } from '@mui/material/stylesOptimized';
 import { axisClasses } from '../../ChartsAxis/axisClasses';
 
 export const AxisRoot = styled('g', {

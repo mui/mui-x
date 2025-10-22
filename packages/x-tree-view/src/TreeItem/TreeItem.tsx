@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import CircularProgress from '@mui/material/CircularProgress';
 import unsupportedProp from '@mui/utils/unsupportedProp';
-import { alpha } from '@mui/material/styles';
+import { alpha } from '@mui/material/stylesOptimized';
 import Collapse from '@mui/material/Collapse';
 import MuiCheckbox, { CheckboxProps } from '@mui/material/Checkbox';
 import useSlotProps from '@mui/utils/useSlotProps';

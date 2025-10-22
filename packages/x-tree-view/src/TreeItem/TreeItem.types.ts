@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { SxProps } from '@mui/system';
-import { Theme } from '@mui/material/styles';
+import { Theme, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { TransitionProps } from '@mui/material/transitions';
 import { SlotComponentProps } from '@mui/utils/types';
@@ -121,3 +121,4 @@ export interface TreeItemProps
 }
 
 export interface TreeItemOwnerState extends Omit<TreeItemProps, 'disabled'>, UseTreeItemStatus {}
+export type TreeItemTheme = CreateThemeComponent<string, TreeItemProps>;

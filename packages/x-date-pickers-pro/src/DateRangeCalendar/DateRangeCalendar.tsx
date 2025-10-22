@@ -6,7 +6,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/stylesOptimized';
 import composeClasses from '@mui/utils/composeClasses';
 import useId from '@mui/utils/useId';
 import { Watermark } from '@mui/x-license';

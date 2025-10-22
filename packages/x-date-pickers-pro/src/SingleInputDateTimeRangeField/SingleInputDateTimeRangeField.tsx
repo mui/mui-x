@@ -7,7 +7,7 @@ import {
   PickerFieldUIContextProvider,
   useFieldTextFieldProps,
 } from '@mui/x-date-pickers/internals';
-import { useThemeProps } from '@mui/material/styles';
+import { useThemeProps } from '@mui/material/stylesOptimized';
 import refType from '@mui/utils/refType';
 import { SingleInputDateTimeRangeFieldProps } from './SingleInputDateTimeRangeField.types';
 import { useSingleInputDateTimeRangeField } from './useSingleInputDateTimeRangeField';

@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { styled, SxProps, Theme } from '@mui/material/styles';
+import { styled, SxProps, Theme, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { useLegend } from '../hooks/useLegend';
@@ -176,3 +176,4 @@ ChartsLegend.propTypes = {
 } as any;
 
 export { ChartsLegend };
+export type ChartsLegendTheme = CreateThemeComponent<string, ChartsLegendProps>;

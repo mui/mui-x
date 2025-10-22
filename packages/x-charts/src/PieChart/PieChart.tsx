@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useThemeProps } from '@mui/material/styles';
+import { useThemeProps, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import { MakeOptional } from '@mui/x-internals/types';
 import { DEFAULT_PIE_CHART_MARGIN } from '../internals/constants';
 import { ChartsToolbarSlotProps, ChartsToolbarSlots } from '../Toolbar';
@@ -282,3 +282,4 @@ PieChart.propTypes = {
 } as any;
 
 export { PieChart };
+export type PieChartTheme = CreateThemeComponent<string, PieChartProps>;

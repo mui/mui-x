@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { SxProps, Theme } from '@mui/material/styles';
+import { SxProps, Theme, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import Typography from '@mui/material/Typography';
 import clsx from 'clsx';
 import { ChartsTooltipClasses, useUtilityClasses } from './chartsTooltipClasses';
@@ -91,3 +91,4 @@ ChartsAxisTooltipContent.propTypes = {
 } as any;
 
 export { ChartsAxisTooltipContent };
+export type ChartsAxisTooltipContentTheme = CreateThemeComponent<string, ChartsAxisTooltipContentProps>;

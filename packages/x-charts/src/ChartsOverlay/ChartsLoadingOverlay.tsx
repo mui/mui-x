@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
+import { styled } from '@mui/material/stylesOptimized';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 import type { CommonOverlayProps } from './ChartsOverlay';
 import { useChartsLocalization } from '../hooks/useChartsLocalization';

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled } from '@mui/material/styles';
+import { styled, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { vars, GridBaseColumnHeaders, UseGridColumnHeadersProps } from '@mui/x-data-grid/internals';
 import { useGridColumnHeadersPro } from '../hooks/features/columnHeaders/useGridColumnHeaders';
@@ -101,3 +101,4 @@ GridColumnHeaders.propTypes = {
 } as any;
 
 export { GridColumnHeaders };
+export type GridColumnHeadersTheme = CreateThemeComponent<string, GridColumnHeadersProps>;

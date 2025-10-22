@@ -3,7 +3,7 @@ import { GridRenderEditCellParams, useGridApiContext } from '@mui/x-data-grid-pr
 import Autocomplete, { autocompleteClasses, AutocompleteProps } from '@mui/material/Autocomplete';
 import InputBase from '@mui/material/InputBase';
 import Box from '@mui/material/Box';
-import { styled } from '@mui/material/styles';
+import { styled } from '@mui/material/stylesOptimized';
 import { COUNTRY_ISO_OPTIONS, CountryIsoOption } from '../services/static-data';
 
 const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({

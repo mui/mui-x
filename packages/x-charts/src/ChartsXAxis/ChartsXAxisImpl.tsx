@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { styled, useTheme, useThemeProps } from '@mui/material/styles';
+import { styled, useTheme, useThemeProps } from '@mui/material/stylesOptimized';
 import { AxisScaleConfig, ChartsXAxisProps, ComputedAxis } from '../models/axis';
 import { ChartsSingleXAxisTicks } from './ChartsSingleXAxisTicks';
 import { ChartsGroupedXAxisTicks } from './ChartsGroupedXAxisTicks';

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { styled, useThemeProps, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import composeClasses from '@mui/utils/composeClasses';
 import { CLOCK_WIDTH, CLOCK_HOUR_WIDTH } from './shared';
 import {
@@ -26,6 +26,7 @@ export interface ClockNumberProps extends React.HTMLAttributes<HTMLSpanElement> 
 }
 
 export interface ClockNumberOwnerState extends PickerOwnerState {
+export type ClockNumberTheme = CreateThemeComponent<string, ClockNumberProps>;
   /**
    * `true` if the clock number is in the inner clock ring.
    * When used with meridiem, all the hours are in the outer ring.

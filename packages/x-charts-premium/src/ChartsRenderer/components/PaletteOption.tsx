@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { styled, useTheme } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/stylesOptimized';
 import { GridChartsPaletteIcon } from '../icons';
 
 const PaletteOptionRoot = styled('div', {

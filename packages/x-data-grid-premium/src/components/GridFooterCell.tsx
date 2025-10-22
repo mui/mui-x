@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { getDataGridUtilityClass, GridRenderCellParams } from '@mui/x-data-grid';
 import { vars } from '@mui/x-data-grid/internals';
-import { styled, Theme } from '@mui/material/styles';
+import { styled, Theme } from '@mui/material/stylesOptimized';
 import { SxProps } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';

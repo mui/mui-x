@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import Typography from '@mui/material/Typography';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { styled, useThemeProps, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import composeClasses from '@mui/utils/composeClasses';
 import { shouldForwardProp } from '@mui/system/createStyled';
 import { BaseToolbarProps } from '../models/props/toolbar';
@@ -86,6 +86,7 @@ type PickersToolbarComponent = ((
 ) => React.JSX.Element) & { propTypes?: any };
 
 export const PickersToolbar = React.forwardRef(function PickersToolbar(
+export type PickersToolbarTheme = CreateThemeComponent<string, PickersToolbarProps>;
   inProps: React.PropsWithChildren<PickersToolbarProps>,
   ref: React.Ref<HTMLDivElement>,
 ) {

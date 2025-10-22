@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { SxProps, Theme } from '@mui/material/styles';
+import { SxProps, Theme, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { GridFilterItem, GridLogicOperator } from '../../../models/gridFilterItem';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
@@ -368,3 +368,4 @@ GridFilterPanel.propTypes = {
  * - [GridFilterPanel API](https://mui.com/x/api/data-grid/grid-filter-panel/)
  */
 export { GridFilterPanel, getGridFilter };
+export type GridFilterPanelTheme = CreateThemeComponent<string, GridFilterPanelProps>;

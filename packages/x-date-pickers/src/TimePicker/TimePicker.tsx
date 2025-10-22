@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useThemeProps } from '@mui/material/styles';
+import { useThemeProps } from '@mui/material/stylesOptimized';
 import refType from '@mui/utils/refType';
 import { DesktopTimePicker } from '../DesktopTimePicker';
 import { MobileTimePicker, MobileTimePickerProps } from '../MobileTimePicker';

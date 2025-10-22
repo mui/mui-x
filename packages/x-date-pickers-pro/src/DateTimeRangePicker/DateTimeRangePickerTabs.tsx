@@ -2,7 +2,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { styled, useThemeProps, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import composeClasses from '@mui/utils/composeClasses';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { TimeIcon, DateRangeIcon, ArrowLeftIcon, ArrowRightIcon } from '@mui/x-date-pickers/icons';
@@ -64,6 +64,7 @@ export interface ExportedDateTimeRangePickerTabsProps extends ExportedBaseTabsPr
 }
 
 export interface DateTimeRangePickerTabsProps extends ExportedDateTimeRangePickerTabsProps {}
+export type ExportedDateTimeRangePickerTabsTheme = CreateThemeComponent<string, ExportedDateTimeRangePickerTabsProps>;
 
 const useUtilityClasses = (classes: Partial<DateTimeRangePickerTabsClasses> | undefined) => {
   const slots = {

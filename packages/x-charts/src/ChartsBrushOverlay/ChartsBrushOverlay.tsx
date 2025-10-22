@@ -2,7 +2,7 @@
 import * as React from 'react';
 
 import clsx from 'clsx';
-import { useTheme } from '@mui/material/styles';
+import { useTheme, CreateThemeComponent } from '@mui/material/stylesOptimized';
 
 import { brushOverlayClasses } from './ChartsBrushOverlay.classes';
 import { selectorChartDrawingArea } from '../internals/plugins/corePlugins/useChartDimensions';
@@ -35,6 +35,7 @@ export interface ChartsBrushOverlayProps {}
  * Component that renders visual feedback during brush interaction
  */
 export function ChartsBrushOverlay(props: ChartsBrushOverlayProps) {
+export type ChartsBrushOverlayTheme = CreateThemeComponent<string, ChartsBrushOverlayProps>;
   const store = useStore<[UseChartBrushSignature]>();
   const drawingArea = useSelector(store, selectorChartDrawingArea);
 

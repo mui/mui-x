@@ -7,7 +7,7 @@ import ButtonBase from '@mui/material/ButtonBase';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import composeClasses from '@mui/utils/composeClasses';
 import useForkRef from '@mui/utils/useForkRef';
-import { alpha, styled, useThemeProps, Theme } from '@mui/material/styles';
+import { alpha, styled, useThemeProps, Theme } from '@mui/material/stylesOptimized';
 import { MuiEvent } from '@mui/x-internals/types';
 import { usePickerAdapter } from '../hooks/usePickerAdapter';
 import { DAY_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';

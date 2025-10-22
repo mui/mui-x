@@ -5,7 +5,7 @@ import { GridRenderEditCellParams, useGridApiContext } from '@mui/x-data-grid-pr
 import Slider, { SliderProps, sliderClasses } from '@mui/material/Slider';
 import Tooltip from '@mui/material/Tooltip';
 import debounce from '@mui/utils/debounce';
-import { alpha, styled } from '@mui/material/styles';
+import { alpha, styled } from '@mui/material/stylesOptimized';
 
 const StyledSlider = styled(Slider)(({ theme }) => ({
   display: 'flex',

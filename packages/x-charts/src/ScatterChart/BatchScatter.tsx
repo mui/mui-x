@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
+import { styled, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import { DefaultizedScatterSeriesType } from '../models/seriesType/scatter';
 import { D3Scale } from '../models/axis';
 import { ScatterClasses, useUtilityClasses } from './scatterClasses';
@@ -91,6 +91,7 @@ function useCreatePaths(
 }
 
 export interface BatchScatterPathsProps {
+export type BatchScatterTheme = CreateThemeComponent<string, BatchScatterProps>;
   series: DefaultizedScatterSeriesType;
   xScale: D3Scale;
   yScale: D3Scale;

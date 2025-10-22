@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
+import { styled, CreateThemeComponent } from '@mui/material/stylesOptimized';
 import PropTypes from 'prop-types';
 import List, { ListProps } from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -44,6 +44,7 @@ export interface ExportedPickersShortcutProps<TValue extends PickerValidValue>
 }
 
 export interface PickersShortcutsProps<TValue extends PickerValidValue>
+export type ExportedPickersShortcutTheme = CreateThemeComponent<string, ExportedPickersShortcutProps>;
   extends ExportedPickersShortcutProps<TValue> {}
 
 const PickersShortcutsRoot = styled(List, {
