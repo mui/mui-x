@@ -5,7 +5,6 @@ import {
   GridValidRowModel,
   useGridApiRef,
   type DataGridProProps,
-  type GridColDef,
 } from '@mui/x-data-grid-pro';
 import { TreeDataSyncRowDataGroupingCell } from './TreeDataSyncRowDataGroupingCell';
 
