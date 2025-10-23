@@ -2,16 +2,12 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
-import { useStore } from '@base-ui-components/utils/store';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventCalendarView } from '@mui/x-scheduler-headless/use-event-calendar-view';
 import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
-import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import {
-  selectors,
-  useExtractEventCalendarParameters,
-} from '@mui/x-scheduler-headless/use-event-calendar';
+import { useExtractEventCalendarParameters } from '@mui/x-scheduler-headless/use-event-calendar';
 import { useAgendaEventOccurrencesGroupedByDay } from '@mui/x-scheduler-headless/use-agenda-event-occurrences-grouped-by-day';
+import { AGENDA_VIEW_DAYS_AMOUNT } from '@mui/x-scheduler-headless/constants';
 import { AgendaViewProps, StandaloneAgendaViewProps } from './AgendaView.types';
 import { EventPopoverProvider, EventPopoverTrigger } from '../internals/components/event-popover';
 import { EventItem } from '../internals/components/event/event-item/EventItem';
@@ -28,25 +24,13 @@ export const AgendaView = React.memo(
   ) {
     // Context hooks
     const adapter = useAdapter();
-    const store = useEventCalendarStoreContext();
 
     // Ref hooks
     const containerRef = React.useRef<HTMLElement | null>(null);
     const handleRef = useMergedRefs(forwardedRef, containerRef);
 
-    // Selector hooks
-    const visibleDate = useStore(store, selectors.visibleDate);
-    const showWeekends = useStore(store, selectors.showWeekends);
-    const showEmptyDays = useStore(store, selectors.showEmptyDaysInAgenda);
-
     // Feature hooks
-    const { days, occurrencesMap } = useAgendaEventOccurrencesGroupedByDay({
-      date: visibleDate,
-      amount: AGENDA_VIEW_DAYS_AMOUNT,
-      excludeWeekends: !showWeekends,
-      showEmptyDays,
-      renderEventIn: 'every-day',
-    });
+    const { days, occurrencesMap } = useAgendaEventOccurrencesGroupedByDay();
     useEventCalendarView(() => ({
       siblingVisibleDateGetter: (date, delta) =>
         adapter.addDays(date, AGENDA_VIEW_DAYS_AMOUNT * delta),
