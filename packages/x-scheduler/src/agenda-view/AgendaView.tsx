@@ -18,9 +18,6 @@ import { EventItem } from '../internals/components/event/event-item/EventItem';
 import './AgendaView.css';
 import '../index.css';
 
-// TODO: Create a prop to allow users to customize the number of days in agenda view
-export const AGENDA_VIEW_DAYS_AMOUNT = 12;
-
 /**
  * An Agenda View to use inside the Event Calendar.
  */

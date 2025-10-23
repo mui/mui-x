@@ -6,9 +6,9 @@ import { useAdapter, diffIn } from '../use-adapter/useAdapter';
 import { useEventCalendarStoreContext } from '../use-event-calendar-store-context';
 import { selectors } from '../use-event-calendar';
 import { useDayList } from '../use-day-list';
-import { CalendarProcessedDate, CalendarEventOccurrence, SchedulerValidDate } from '../models';
+import { CalendarProcessedDate, CalendarEventOccurrence } from '../models';
 import { innerGetEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
-import { MAX_HORIZON_DAYS } from '../constants';
+import { AGENDA_VIEW_DAYS_AMOUNT, MAX_HORIZON_DAYS } from '../constants';
 
 /**
  * Agenda-specific hook that:
@@ -16,16 +16,18 @@ import { MAX_HORIZON_DAYS } from '../constants';
  *  - Groups event occurrences by day
  *  - If `showEmptyDays` is false, extends the range forward until it fills `amount` days that contain events (up to a horizon limit)
  */
-export function useAgendaEventOccurrencesGroupedByDay(
-  parameters: useAgendaEventOccurrencesGroupedByDayOptions.Parameters,
-): useAgendaEventOccurrencesGroupedByDayOptions.ReturnValue {
-  const { date, amount, excludeWeekends = false, showEmptyDays = true } = parameters;
-
+export function useAgendaEventOccurrencesGroupedByDay(): useAgendaEventOccurrencesGroupedByDayOptions.ReturnValue {
   const adapter = useAdapter();
+  const amount = AGENDA_VIEW_DAYS_AMOUNT;
+
   const store = useEventCalendarStoreContext();
-  const events = useStore(store, selectors.events);
-  const visibleResources = useStore(store, selectors.visibleResourcesMap);
   const getDayList = useDayList();
+
+  const events = useStore(store, selectors.events);
+  const visibleDate = useStore(store, selectors.visibleDate);
+  const showWeekends = useStore(store, selectors.showWeekends);
+  const showEmptyDays = useStore(store, selectors.showEmptyDaysInAgenda);
+  const visibleResources = useStore(store, selectors.visibleResourcesMap);
 
   return React.useMemo(() => {
     if (process.env.NODE_ENV !== 'production') {
@@ -38,9 +40,9 @@ export function useAgendaEventOccurrencesGroupedByDay(
 
     // 1) First chunk of days
     let accumulatedDays = getDayList({
-      date,
+      date: visibleDate,
       amount,
-      excludeWeekends,
+      excludeWeekends: !showWeekends,
     });
 
     // Compute occurrences for the current accumulated range
@@ -81,14 +83,14 @@ export function useAgendaEventOccurrencesGroupedByDay(
 
       // Extend forward by one more chunk and recompute occurrences over the accumulated range
       const nextStart = adapter.addDays(
-        accumulatedDays[accumulatedDays.length - 1]?.value ?? date,
+        accumulatedDays[accumulatedDays.length - 1]?.value ?? visibleDate,
         1,
       );
 
       const more = getDayList({
         date: nextStart,
         amount,
-        excludeWeekends,
+        excludeWeekends: !showWeekends,
       });
 
       accumulatedDays = accumulatedDays.concat(more);
@@ -108,32 +110,19 @@ export function useAgendaEventOccurrencesGroupedByDay(
     const finalOccurrences = new Map([...occurrenceMap].filter(([key]) => filledKeys.has(key)));
 
     return { days: filled, occurrencesMap: finalOccurrences };
-  }, [amount, getDayList, date, excludeWeekends, adapter, events, visibleResources, showEmptyDays]);
+  }, [
+    getDayList,
+    visibleDate,
+    amount,
+    showWeekends,
+    adapter,
+    events,
+    visibleResources,
+    showEmptyDays,
+  ]);
 }
 
 export namespace useAgendaEventOccurrencesGroupedByDayOptions {
-  export interface Parameters {
-    /**
-     * The start date to get the days for.
-     */
-    date: SchedulerValidDate;
-    /**
-     * The amount of days to display, we keep this stable when possible.
-     */
-    amount: number;
-    /**
-     * Whether to exclude weekends (Saturday and Sunday) from the returned days.
-     * @default false
-     */
-    excludeWeekends?: boolean;
-    /**
-     * Whether empty days (days without events) are shown.
-     * If false, the hook extends the forward range so the final list still contains `amount` days when possible.
-     * @default true
-     */
-    showEmptyDays?: boolean;
-  }
-
   export type ReturnValue = {
     /**
      * Final visible days in the agenda.
