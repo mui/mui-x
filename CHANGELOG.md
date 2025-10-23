@@ -9,7 +9,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Oct 23, 2025_
 
-We'd like to extend a big thank you to the 13 contributors who made this release possible. Here are some highlights ✨:
+We'd like to extend a big thank you to the 14 contributors who made this release possible. Here are some highlights ✨:
 
 - 🖌️ Add new [`brush` charts interaction](https://mui.com/x/react-charts/brush/) for building custom behavior.
   ![brush visualization example](https://github.com/user-attachments/assets/60c382a1-e418-4736-8dcb-1567c4e361e3)
@@ -18,6 +18,9 @@ We'd like to extend a big thank you to the 13 contributors who made this release
 - 📦 DataGrid uses an internal MUI fork of ExcelJS that does not depend on vulnerable versions of NPM packages
 - 🐞 Bugfixes
 - 📚 Documentation improvements
+
+Special thanks go out to the community members for their valuable contributions:
+@ZagrebaAlex
 
 The following are all team members who have contributed to this release:
 @alexfauquette, @bernardobelchior, @cherniavskii, @flaviendelangle, @Janpot, @JCQuintas, @KenanYusuf, @prakhargupta1, @rita-codes, @siriwatknp, @arminmeh, @brijeshb42, @noraleonte
@@ -66,6 +69,7 @@ Same changes as in `@mui/x-date-pickers@8.15.0`.
 - [charts] Improve deep export script (#20007) @JCQuintas
 - [charts] Improve string measurement benchmarks (#19999) @bernardobelchior
 - [charts] Measure string sizes using SVG elements (#19981) @bernardobelchior
+- [l10n] Improve Greek (gr-GR) locale (#20060) @ZagrebaAlex
 
 #### `@mui/x-charts-pro@8.15.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
