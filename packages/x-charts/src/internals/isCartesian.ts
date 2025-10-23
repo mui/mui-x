@@ -9,8 +9,8 @@ export function isCartesianSeriesType(seriesType: string): seriesType is Cartesi
   return cartesianSeriesTypes.getTypes().has(seriesType as CartesianChartSeriesType);
 }
 
-export function isCartesianSeries<T extends ChartSeriesType>(
-  series: ChartSeriesDefaultized<T>,
-): series is T extends CartesianChartSeriesType ? ChartSeriesDefaultized<T> : never {
+export function isCartesianSeries(
+  series: ChartSeriesDefaultized<ChartSeriesType>,
+): series is ChartSeriesDefaultized<CartesianChartSeriesType> {
   return isCartesianSeriesType(series.type);
 }
