@@ -14,6 +14,8 @@ We'd like to extend a big thank you to the 13 contributors who made this release
 - 🖌️ Add new [`brush` charts interaction](https://mui.com/x/react-charts/brush/) for building custom behaviour.
   ![output (7)](https://github.com/user-attachments/assets/60c382a1-e418-4736-8dcb-1567c4e361e3)
 - ⚡️ Performance improvements for large bar charts
+- 🤖 Data Grid AI assistant can now [visualize the query results](https://mui.com/x/react-data-grid/ai-assistant/#data-visualization) by controlling the chart integration settings
+- 📦 DataGrid uses an internal MUI fork of ExcelJS that does not depend on vulnerable versions of NPM packages
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
@@ -37,7 +39,7 @@ Same changes as in `@mui/x-data-grid@8.15.0`, plus:
 
 Same changes as in `@mui/x-data-grid-pro@8.15.0`, plus:
 
-- [DataGridPremium] Use Exceljs fork (#19796) @cherniavskii
+- [DataGridPremium] Use ExcelJS fork (#19796) @cherniavskii
 - [DataGridPremium] Support data visualization in AI Assistant (#19831) @arminmeh
 
 ### Date and Time Pickers
