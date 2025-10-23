@@ -7,9 +7,9 @@ import {
   RecurringEventPresetKey,
   RecurringEventRecurrenceRule,
   SchedulerValidDate,
-} from '../../models';
-import { SchedulerState as State } from './SchedulerStore.types';
-import { getWeekDayMaps } from '../recurring-event-utils';
+} from '../models';
+import { SchedulerState as State } from '../utils/SchedulerStore/SchedulerStore.types';
+import { getWeekDayMaps } from '../utils/recurring-event-utils';
 
 const eventByIdMapSelector = createSelectorMemoized(
   (state: State) => state.events,
