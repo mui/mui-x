@@ -43,7 +43,6 @@ describe('useAgendaEventOccurrencesGroupedByDay', () => {
       amount: 4,
       excludeWeekends: false,
       showEmptyDays: true,
-      renderEventIn: 'every-day',
     });
 
     expect(res.days).to.have.length(4);
@@ -67,7 +66,6 @@ describe('useAgendaEventOccurrencesGroupedByDay', () => {
         amount: 3,
         excludeWeekends: false,
         showEmptyDays: false,
-        renderEventIn: 'every-day',
       },
       events,
     );
@@ -100,7 +98,6 @@ describe('useAgendaEventOccurrencesGroupedByDay', () => {
         amount: 4,
         excludeWeekends: true,
         showEmptyDays: true,
-        renderEventIn: 'every-day',
       },
       events,
     );

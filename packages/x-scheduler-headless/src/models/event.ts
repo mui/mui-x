@@ -223,10 +223,3 @@ export type CalendarEventUpdatedProperties = Partial<CalendarEvent> &
  * The type of surface the event is being rendered on.
  */
 export type EventSurfaceType = 'day-grid' | 'time-grid';
-
-/**
- * The days a multi-day event should appear on.
- * Use "first-day" if you need the event to appear only on its starting day.
- * Use "every-day" if you need the event to appear on each day it spans.
- */
-export type RenderIn = 'first-day' | 'every-day';

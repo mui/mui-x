@@ -6,12 +6,7 @@ import { useAdapter, diffIn } from '../use-adapter/useAdapter';
 import { useEventCalendarStoreContext } from '../use-event-calendar-store-context';
 import { selectors } from '../use-event-calendar';
 import { useDayList } from '../use-day-list';
-import {
-  CalendarProcessedDate,
-  CalendarEventOccurrence,
-  SchedulerValidDate,
-  RenderIn,
-} from '../models';
+import { CalendarProcessedDate, CalendarEventOccurrence, SchedulerValidDate } from '../models';
 import { innerGetEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
 import { MAX_HORIZON_DAYS } from '../constants';
 
@@ -24,13 +19,7 @@ import { MAX_HORIZON_DAYS } from '../constants';
 export function useAgendaEventOccurrencesGroupedByDay(
   parameters: useAgendaEventOccurrencesGroupedByDayOptions.Parameters,
 ): useAgendaEventOccurrencesGroupedByDayOptions.ReturnValue {
-  const {
-    date,
-    amount,
-    excludeWeekends = false,
-    showEmptyDays = true,
-    renderEventIn = 'every-day',
-  } = parameters;
+  const { date, amount, excludeWeekends = false, showEmptyDays = true } = parameters;
 
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
@@ -58,7 +47,6 @@ export function useAgendaEventOccurrencesGroupedByDay(
     let occurrenceMap = innerGetEventOccurrencesGroupedByDay(
       adapter,
       accumulatedDays,
-      renderEventIn,
       events,
       visibleResources,
     );
@@ -108,7 +96,6 @@ export function useAgendaEventOccurrencesGroupedByDay(
       occurrenceMap = innerGetEventOccurrencesGroupedByDay(
         adapter,
         accumulatedDays,
-        renderEventIn,
         events,
         visibleResources,
       );
@@ -121,17 +108,7 @@ export function useAgendaEventOccurrencesGroupedByDay(
     const finalOccurrences = new Map([...occurrenceMap].filter(([key]) => filledKeys.has(key)));
 
     return { days: filled, occurrencesMap: finalOccurrences };
-  }, [
-    amount,
-    getDayList,
-    date,
-    excludeWeekends,
-    adapter,
-    renderEventIn,
-    events,
-    visibleResources,
-    showEmptyDays,
-  ]);
+  }, [amount, getDayList, date, excludeWeekends, adapter, events, visibleResources, showEmptyDays]);
 }
 
 export namespace useAgendaEventOccurrencesGroupedByDayOptions {
@@ -155,12 +132,6 @@ export namespace useAgendaEventOccurrencesGroupedByDayOptions {
      * @default true
      */
     showEmptyDays?: boolean;
-    /**
-     * The days a multi-day event should appear on.
-     * If "first-day", the event appears only on its starting day.
-     * If "every-day", the event appears on each day it spans.
-     */
-    renderEventIn: RenderIn;
   }
 
   export type ReturnValue = {
