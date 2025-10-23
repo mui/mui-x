@@ -1,5 +1,5 @@
 {
-  "version": "8.14.1",
+  "version": "8.15.0",
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
@@ -119,7 +119,7 @@
     "execa": "^9.6.0",
     "glob-gitignore": "^1.0.15",
     "globby": "^15.0.0",
-    "jsdom": "27.0.1",
+    "jsdom": "26.1.0",
     "lerna": "^9.0.0",
     "magic-string": "^0.30.19",
     "markdownlint-cli2": "^0.18.1",
