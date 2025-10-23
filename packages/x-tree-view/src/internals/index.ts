@@ -17,10 +17,7 @@ export type {
   TreeViewPluginSignature,
   ConvertPluginsIntoSignatures,
   MergeSignaturesProperty,
-  TreeViewPublicAPI,
-  TreeViewState,
   TreeViewItemMeta,
-  TreeViewInstance,
   TreeViewItemPlugin,
   TreeViewUsedStore,
   TreeViewUsedInstance,
@@ -85,9 +82,14 @@ export type {
   TreeViewSlotProps,
 } from './TreeViewProvider/TreeViewStyleContext';
 
-export type { TreeViewParametersToStateMapper } from './TreeViewStore';
+export type { TreeViewParametersToStateMapper } from './MinimalTreeViewStore';
 export {
-  ExtandableRichTreeViewStore,
+  ExtendableRichTreeViewStore,
   TREE_VIEW_LAZY_LOADED_ITEMS_INITIAL_STATE,
 } from './RichTreeViewStore';
-export type { RichTreeViewState, RichTreeViewParameters } from './RichTreeViewStore';
+export type {
+  RichTreeViewState,
+  RichTreeViewParameters,
+  RichTreeViewPublicAPI,
+} from './RichTreeViewStore';
+export { TreeViewItemDepthContext } from './TreeViewItemDepthContext';

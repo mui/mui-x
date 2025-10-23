@@ -14,7 +14,7 @@ import {
 } from '../../internals/plugins/useTreeViewLabel';
 import type { UseTreeItemStatus } from '../../useTreeItem';
 import { hasPlugin } from '../../internals/utils/plugins';
-import { TreeViewPublicAPI } from '../../internals/models';
+import { MinimalTreeViewPublicAPI } from '../../internals/models';
 import { expansionSelectors } from '../../internals/plugins/useTreeViewExpansion/useTreeViewExpansion.selectors';
 import { focusSelectors } from '../../internals/plugins/useTreeViewFocus/useTreeViewFocus.selectors';
 import { itemsSelectors } from '../../internals/plugins/useTreeViewItems/useTreeViewItems.selectors';
@@ -59,7 +59,7 @@ interface UseTreeItemUtilsReturnValue<
   /**
    * The object the allows Tree View manipulation.
    */
-  publicAPI: TreeViewPublicAPI<TSignatures, TOptionalSignatures>;
+  publicAPI: MinimalTreeViewPublicAPI<TSignatures, TOptionalSignatures>;
 }
 
 export const itemHasChildren = (reactChildren: React.ReactNode) => {

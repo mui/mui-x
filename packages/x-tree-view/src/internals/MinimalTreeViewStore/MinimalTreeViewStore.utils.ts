@@ -1,7 +1,7 @@
 import { EMPTY_OBJECT } from '@base-ui-components/utils/empty';
 import { TreeViewValidItem } from '../../models';
 import { getExpansionTrigger } from '../plugins/useTreeViewExpansion/useTreeViewExpansion.utils';
-import { TreeViewParameters } from './TreeViewStore.types';
+import { MinimalTreeViewParameters } from './MinimalTreeViewStore.types';
 
 /**
  * Returns the properties of the state that are derived from the parameters.
@@ -10,7 +10,7 @@ import { TreeViewParameters } from './TreeViewStore.types';
 export function deriveStateFromParameters<
   R extends TreeViewValidItem<R>,
   Multiple extends boolean | undefined,
->(parameters: TreeViewParameters<R, Multiple>) {
+>(parameters: MinimalTreeViewParameters<R, Multiple>) {
   return {
     disabledItemsFocusable: parameters.disabledItemsFocusable ?? false,
     domStructure: 'nested' as const,

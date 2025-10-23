@@ -1,10 +1,10 @@
-import { TreeViewCancellableEvent } from '../../models';
-import type { TreeViewStore } from './TreeViewStore';
+import { TreeViewCancellableEvent, TreeViewItemId } from '../../models';
+import type { MinimalTreeViewStore } from './MinimalTreeViewStore';
 import { expansionSelectors } from '../plugins/useTreeViewExpansion';
 import { focusSelectors } from '../plugins/useTreeViewFocus';
 import { itemsSelectors } from '../plugins/useTreeViewItems';
 
-export class TreeViewFocusManager<Store extends TreeViewStore<any, any, any, any>> {
+export class TreeViewFocusManager<Store extends MinimalTreeViewStore<any, any, any, any>> {
   private store: Store;
 
   constructor(store: Store) {
@@ -32,7 +32,7 @@ export class TreeViewFocusManager<Store extends TreeViewStore<any, any, any, any
     });
   }
 
-  private setFocusedItemId = (itemId: string | null) => {
+  private setFocusedItemId = (itemId: TreeViewItemId | null) => {
     const focusedItemId = focusSelectors.focusedItemId(this.store.state);
     if (focusedItemId === itemId) {
       return;
@@ -42,7 +42,7 @@ export class TreeViewFocusManager<Store extends TreeViewStore<any, any, any, any
   };
 
   // TODO: Rename
-  private innerFocusItem = (event: React.SyntheticEvent | null, itemId: string) => {
+  private innerFocusItem = (event: React.SyntheticEvent | null, itemId: TreeViewItemId) => {
     const itemElement = this.store.getItemDOMElement(itemId);
     if (itemElement) {
       itemElement.focus();
@@ -52,7 +52,7 @@ export class TreeViewFocusManager<Store extends TreeViewStore<any, any, any, any
     this.store.parameters.onItemFocus?.(event, itemId);
   };
 
-  public focusItem = (event: React.SyntheticEvent | null, itemId: string) => {
+  public focusItem = (event: React.SyntheticEvent | null, itemId: TreeViewItemId) => {
     // If we receive an itemId, and it is visible, the focus will be set to it
     const itemMeta = itemsSelectors.itemMeta(this.store.state, itemId);
     const isItemVisible =

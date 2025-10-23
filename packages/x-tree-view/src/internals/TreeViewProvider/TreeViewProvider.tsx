@@ -2,7 +2,9 @@ import * as React from 'react';
 import { TreeViewProviderProps } from './TreeViewProvider.types';
 import { TreeViewContext } from './TreeViewContext';
 import { TreeViewSlotProps, TreeViewSlots, TreeViewStyleContext } from './TreeViewStyleContext';
-import { TreeViewStore } from '../TreeViewStore';
+import { TreeViewValidItem } from '../../models';
+import { useTreeViewBuildContext } from './useTreeViewBuildContext';
+import { TreeViewStore } from '../models';
 
 const EMPTY_OBJECT = {};
 
@@ -11,16 +13,22 @@ const EMPTY_OBJECT = {};
  *
  * @ignore - do not document.
  */
-export function TreeViewProvider<TStore extends TreeViewStore<any, any, any, any>>(
-  props: TreeViewProviderProps<TStore>,
-) {
+export function TreeViewProvider<
+  R extends TreeViewValidItem<R>,
+  Multiple extends boolean | undefined,
+  TStore extends TreeViewStore<R, Multiple, any>,
+>(props: TreeViewProviderProps<TStore>) {
   const {
     store,
+    apiRef,
+    rootRef,
     classes = EMPTY_OBJECT,
     slots = EMPTY_OBJECT as TreeViewSlots,
     slotProps = EMPTY_OBJECT as TreeViewSlotProps,
     children,
   } = props;
+
+  const contextValue = useTreeViewBuildContext({ store, apiRef, rootRef });
 
   const styleContextValue = React.useMemo(
     () => ({

@@ -1,4 +1,4 @@
-export { useTreeViewJSXItems } from './useTreeViewJSXItems';
+export { useTreeViewJSXItems } from './useTreeViewJSXItems.itemPlugin';
 export type {
   UseTreeViewJSXItemsSignature,
   UseTreeViewJSXItemsParameters,

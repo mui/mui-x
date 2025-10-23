@@ -1,10 +1,15 @@
 import { TreeViewItemId, TreeViewValidItem } from '../../models';
-import { TreeViewParameters, TreeViewState } from '../TreeViewStore';
+import {
+  MinimalTreeViewParameters,
+  MinimalTreeViewPublicAPI,
+  MinimalTreeViewState,
+} from '../MinimalTreeViewStore';
+import type { RichTreeViewStore } from './RichTreeViewStore';
 
 export interface RichTreeViewState<
   R extends TreeViewValidItem<R>,
   Multiple extends boolean | undefined,
-> extends TreeViewState<R, Multiple> {
+> extends MinimalTreeViewState<R, Multiple> {
   /**
    * Determine if a given item can be edited.
    */
@@ -26,7 +31,7 @@ export interface RichTreeViewState<
 export interface RichTreeViewParameters<
   R extends TreeViewValidItem<R>,
   Multiple extends boolean | undefined,
-> extends TreeViewParameters<R, Multiple> {
+> extends MinimalTreeViewParameters<R, Multiple> {
   /**
    * Callback fired when the label of an item changes.
    * @param {TreeViewItemId} itemId The id of the item that was edited.
@@ -42,3 +47,9 @@ export interface RichTreeViewParameters<
    */
   isItemEditable?: boolean | ((item: R) => boolean);
 }
+
+export interface RichTreeViewPublicAPI<
+  R extends TreeViewValidItem<R>,
+  Multiple extends boolean | undefined,
+> extends MinimalTreeViewPublicAPI<R, Multiple>,
+    Pick<RichTreeViewStore<R, Multiple>, 'updateItemLabel' | 'setEditedItem'> {}

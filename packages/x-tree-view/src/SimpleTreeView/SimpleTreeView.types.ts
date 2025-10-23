@@ -4,14 +4,11 @@ import { SlotComponentProps } from '@mui/utils/types';
 import { SxProps } from '@mui/system/styleFunctionSx';
 import { SimpleTreeViewClasses } from './simpleTreeViewClasses';
 import {
-  SimpleTreeViewPluginParameters,
-  SimpleTreeViewPluginSignatures,
-} from './SimpleTreeView.plugins';
-import { TreeViewPublicAPI } from '../internals/models';
-import {
   TreeViewSlotProps,
   TreeViewSlots,
 } from '../internals/TreeViewProvider/TreeViewStyleContext';
+import { TreeViewPublicAPI } from '../internals/models';
+import { SimpleTreeViewParameters, SimpleTreeViewStore } from '../internals/SimpleTreeViewStore';
 
 export interface SimpleTreeViewSlots extends TreeViewSlots {
   /**
@@ -25,12 +22,12 @@ export interface SimpleTreeViewSlotProps extends TreeViewSlotProps {
   root?: SlotComponentProps<'ul', {}, {}>;
 }
 
-export type SimpleTreeViewApiRef = React.RefObject<
-  Partial<TreeViewPublicAPI<SimpleTreeViewPluginSignatures>> | undefined
+export type SimpleTreeViewApiRef<Multiple extends boolean | undefined = any> = React.RefObject<
+  TreeViewPublicAPI<SimpleTreeViewStore<Multiple>> | undefined
 >;
 
 export interface SimpleTreeViewProps<Multiple extends boolean | undefined>
-  extends SimpleTreeViewPluginParameters<Multiple>,
+  extends SimpleTreeViewParameters<Multiple>,
     React.HTMLAttributes<HTMLUListElement> {
   /**
    * The content of the component.

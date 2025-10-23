@@ -1,10 +1,14 @@
 import {
-  ExtandableRichTreeViewStore,
+  ExtendableRichTreeViewStore,
   TREE_VIEW_LAZY_LOADED_ITEMS_INITIAL_STATE,
   TreeViewParametersToStateMapper,
 } from '@mui/x-tree-view/internals';
 import { TreeViewValidItem } from '@mui/x-tree-view/models';
-import { RichTreeViewProParameters, RichTreeViewProState } from './RichTreeViewProStore.types';
+import {
+  RichTreeViewProParameters,
+  RichTreeViewProPublicAPI,
+  RichTreeViewProState,
+} from './RichTreeViewProStore.types';
 import { TreeViewLazyLoadingManager } from './TreeViewLazyLoadingManager';
 import { TreeViewItemsReorderingManager } from './TreeViewItemsReorderingManager';
 
@@ -26,12 +30,12 @@ const mapper: TreeViewParametersToStateMapper<
   RichTreeViewProParameters<any, any>
 > = {
   getInitialState: (schedulerInitialState, parameters) => ({
-    ...ExtandableRichTreeViewStore.rawMapper.getInitialState(schedulerInitialState, parameters),
+    ...ExtendableRichTreeViewStore.rawMapper.getInitialState(schedulerInitialState, parameters),
     ...deriveStateFromParameters(parameters),
   }),
   updateStateFromParameters: (newSharedState, parameters, updateModel) => {
     const newState: Partial<RichTreeViewProState<any, any>> = {
-      ...ExtandableRichTreeViewStore.rawMapper.updateStateFromParameters(
+      ...ExtendableRichTreeViewStore.rawMapper.updateStateFromParameters(
         newSharedState,
         parameters,
         updateModel,
@@ -41,12 +45,13 @@ const mapper: TreeViewParametersToStateMapper<
 
     return newState;
   },
+  ignoreItemsStateUpdateFromParams: false,
 };
 
 export class RichTreeViewProStore<
   R extends TreeViewValidItem<R>,
   Multiple extends boolean | undefined,
-> extends ExtandableRichTreeViewStore<
+> extends ExtendableRichTreeViewStore<
   R,
   Multiple,
   RichTreeViewProState<R, Multiple>,
@@ -56,8 +61,15 @@ export class RichTreeViewProStore<
 
   private itemsReorderingManager = new TreeViewItemsReorderingManager(this);
 
-  public constructor(parameters: RichTreeViewProParameters<R, Multiple>, isRtl: boolean) {
-    super(parameters, 'RichTreeView', isRtl, mapper);
+  private constructor(parameters: RichTreeViewProParameters<R, Multiple>, isRtl: boolean) {
+    super(parameters, 'RichTreeViewPro', isRtl, mapper);
+  }
+
+  public buildPublicAPI(): RichTreeViewProPublicAPI<R, Multiple> {
+    return {
+      ...super.buildPublicAPI(),
+      updateItemChildren: this.updateItemChildren,
+    };
   }
 
   /**
@@ -87,7 +99,7 @@ export class RichTreeViewProStore<
    * @param {TreeViewItemId} itemId The The id of the item to update the children of.
    * @returns {Promise<void>} The promise resolved when the items are fetched.
    */
-  protected updateItemChildren = this.lazyLoadingManager.updateItemChildren;
+  public updateItemChildren = this.lazyLoadingManager.updateItemChildren;
 
   /**
    * Check if a given item can be dragged.

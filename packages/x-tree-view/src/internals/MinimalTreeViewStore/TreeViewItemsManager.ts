@@ -1,4 +1,4 @@
-import { TreeViewItemId, TreeViewValidItem } from '../../models';
+import { TreeViewBaseItem, TreeViewItemId, TreeViewValidItem } from '../../models';
 import { idSelectors } from '../corePlugins/useTreeViewId';
 import { generateTreeItemIdAttribute } from '../corePlugins/useTreeViewId/useTreeViewId.utils';
 import { itemsSelectors, TREE_VIEW_ROOT_PARENT_ID } from '../plugins/useTreeViewItems';
@@ -6,11 +6,11 @@ import {
   BuildItemsLookupConfig,
   buildItemsLookups,
 } from '../plugins/useTreeViewItems/useTreeViewItems.utils';
-import type { TreeViewStore } from './TreeViewStore';
+import type { MinimalTreeViewStore } from './MinimalTreeViewStore';
 
 export class TreeViewItemsManager<
   R extends TreeViewValidItem<R>,
-  Store extends TreeViewStore<R, any, any, any>,
+  Store extends MinimalTreeViewStore<R, any, any, any>,
 > {
   private store: Store;
 
@@ -18,7 +18,34 @@ export class TreeViewItemsManager<
     this.store = store;
   }
 
-  public getItemDOMElement = (itemId: string) => {
+  public getItemTree = () => {
+    const getItemFromItemId = (itemId: TreeViewItemId): TreeViewBaseItem => {
+      const item = itemsSelectors.itemModel(this.store.state, itemId);
+      const itemToMutate = { ...item };
+      const newChildren = itemsSelectors.itemOrderedChildrenIds(this.store.state, itemId);
+      if (newChildren.length > 0) {
+        itemToMutate.children = newChildren.map(getItemFromItemId);
+      } else {
+        delete itemToMutate.children;
+      }
+
+      return itemToMutate;
+    };
+
+    return itemsSelectors.itemOrderedChildrenIds(this.store.state, null).map(getItemFromItemId);
+  };
+
+  public getItem = (itemId: TreeViewItemId) => itemsSelectors.itemModel(this.store.state, itemId);
+
+  public getParentId = (itemId: TreeViewItemId) => {
+    const itemMeta = itemsSelectors.itemMeta(this.store.state, itemId);
+    return itemMeta?.parentId || null;
+  };
+
+  public getItemOrderedChildrenIds = (itemId: TreeViewItemId | null) =>
+    itemsSelectors.itemOrderedChildrenIds(this.store.state, itemId);
+
+  public getItemDOMElement = (itemId: TreeViewItemId) => {
     const itemMeta = itemsSelectors.itemMeta(this.store.state, itemId);
     if (itemMeta == null) {
       return null;
@@ -75,7 +102,7 @@ export class TreeViewItemsManager<
     });
   };
 
-  public removeChildren = (parentId: string | null) => {
+  public removeChildren = (parentId: TreeViewItemId | null) => {
     const itemMetaLookup = this.store.state.itemMetaLookup;
     const newMetaMap = Object.keys(itemMetaLookup).reduce((acc, key) => {
       const item = itemMetaLookup[key];
@@ -96,6 +123,26 @@ export class TreeViewItemsManager<
       itemOrderedChildrenIdsLookup: newItemOrderedChildrenIdsLookup,
       itemChildrenIndexesLookup: newItemChildrenIndexesLookup,
     });
+  };
+
+  public setIsItemDisabled = ({
+    itemId,
+    shouldBeDisabled,
+  }: {
+    itemId: TreeViewItemId;
+    shouldBeDisabled?: boolean;
+  }) => {
+    if (!this.store.state.itemMetaLookup[itemId]) {
+      return;
+    }
+
+    const itemMetaLookup = { ...this.store.state.itemMetaLookup };
+    itemMetaLookup[itemId] = {
+      ...itemMetaLookup[itemId],
+      disabled: shouldBeDisabled ?? !itemMetaLookup[itemId].disabled,
+    };
+
+    this.store.set('itemMetaLookup', itemMetaLookup);
   };
 
   public handleItemClick = (event: React.MouseEvent, itemId: TreeViewItemId) => {

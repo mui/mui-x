@@ -1,5 +1,6 @@
 import { TreeViewItemId } from '../../models';
 import { selectionSelectors } from '../plugins/useTreeViewSelection';
+import { useTreeViewSelectionItemPlugin } from '../plugins/useTreeViewSelection/useTreeViewSelection.itemPlugin';
 import {
   getAddedAndRemovedItems,
   getLookupFromArray,
@@ -12,12 +13,12 @@ import {
   getLastNavigableItem,
   getNonDisabledItemsInRange,
 } from '../utils/tree';
-import type { TreeViewStore } from './TreeViewStore';
-import { TreeViewSelectionValue } from './TreeViewStore.types';
+import type { MinimalTreeViewStore } from './MinimalTreeViewStore';
+import { TreeViewSelectionValue } from './MinimalTreeViewStore.types';
 
 export class TreeViewSelectionManager<
   Multiple extends boolean | undefined,
-  Store extends TreeViewStore<any, Multiple, any, any>,
+  Store extends MinimalTreeViewStore<any, Multiple, any, any>,
 > {
   private store: Store;
 
@@ -27,6 +28,7 @@ export class TreeViewSelectionManager<
 
   constructor(store: Store) {
     this.store = store;
+    store.itemPluginManager.register(useTreeViewSelectionItemPlugin);
   }
 
   private setSelectedItems = (

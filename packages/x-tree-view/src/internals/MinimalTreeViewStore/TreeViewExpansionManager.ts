@@ -1,9 +1,9 @@
 import { TreeViewItemId } from '../../models';
-import type { TreeViewStore } from './TreeViewStore';
+import type { MinimalTreeViewStore } from './MinimalTreeViewStore';
 import { expansionSelectors } from '../plugins/useTreeViewExpansion/useTreeViewExpansion.selectors';
 import { itemsSelectors } from '../plugins/useTreeViewItems/useTreeViewItems.selectors';
 
-export class TreeViewExpansionManager<Store extends TreeViewStore<any, any, any, any>> {
+export class TreeViewExpansionManager<Store extends MinimalTreeViewStore<any, any, any, any>> {
   private store: Store;
 
   constructor(store: Store) {
@@ -17,12 +17,15 @@ export class TreeViewExpansionManager<Store extends TreeViewStore<any, any, any,
     this.store.parameters.onExpandedItemsChange?.(event, value);
   };
 
+  public isItemExpanded = (itemId: TreeViewItemId) =>
+    expansionSelectors.isItemExpanded(this.store.state, itemId);
+
   public setItemExpansion = ({
     itemId,
     event = null,
     shouldBeExpanded,
   }: {
-    itemId: string;
+    itemId: TreeViewItemId;
     event?: React.SyntheticEvent | null;
     shouldBeExpanded?: boolean;
   }) => {
@@ -51,12 +54,12 @@ export class TreeViewExpansionManager<Store extends TreeViewStore<any, any, any,
     event,
     shouldBeExpanded,
   }: {
-    itemId: string;
+    itemId: TreeViewItemId;
     event: React.SyntheticEvent | null;
     shouldBeExpanded: boolean;
   }) => {
     const oldExpanded = expansionSelectors.expandedItemsRaw(this.store.state);
-    let newExpanded: string[];
+    let newExpanded: TreeViewItemId[];
     if (shouldBeExpanded) {
       newExpanded = [itemId].concat(oldExpanded);
     } else {

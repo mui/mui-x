@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { TreeViewItemId, TreeViewCancellableEventHandler } from '../models';
-import { TreeViewPublicAPI } from '../internals/models';
+import { MinimalTreeViewPublicAPI } from '../internals/models';
 import { UseTreeViewSelectionSignature } from '../internals/plugins/useTreeViewSelection';
 import { UseTreeViewItemsSignature } from '../internals/plugins/useTreeViewItems';
 import { UseTreeViewFocusSignature } from '../internals/plugins/useTreeViewFocus';
@@ -247,7 +247,7 @@ export interface UseTreeItemReturnValue<
   /**
    * The object the allows Tree View manipulation.
    */
-  publicAPI: TreeViewPublicAPI<TSignatures, TOptionalSignatures>;
+  publicAPI: MinimalTreeViewPublicAPI<TSignatures, TOptionalSignatures>;
 }
 
 /**

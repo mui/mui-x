@@ -6,7 +6,10 @@ import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
-import { TreeViewAnyPluginSignature, TreeViewPublicAPI } from '@mui/x-tree-view/internals/models';
+import {
+  TreeViewAnyPluginSignature,
+  MinimalTreeViewPublicAPI,
+} from '@mui/x-tree-view/internals/models';
 import { MuiRenderResult } from '@mui/internal-test-utils/createRenderer';
 import {
   DescribeTreeViewTestRunner,
@@ -25,7 +28,7 @@ const innerDescribeTreeView = <TSignatures extends TreeViewAnyPluginSignature[]>
 
   const getUtils = (
     result: MuiRenderResult,
-    apiRef?: { current: TreeViewPublicAPI<TSignatures> },
+    apiRef?: { current: MinimalTreeViewPublicAPI<TSignatures> },
   ): DescribeTreeViewRendererUtils => {
     const getRoot = () => result.getByRole('tree');
 
@@ -160,8 +163,11 @@ const innerDescribeTreeView = <TSignatures extends TreeViewAnyPluginSignature[]>
       return {
         setProps: result.setProps,
         setItems: (newItems) => result.setProps({ items: newItems }),
-        apiRef: apiRef as unknown as { current: TreeViewPublicAPI<TSignatures> },
-        ...getUtils(result, apiRef as unknown as { current: TreeViewPublicAPI<TSignatures> }),
+        apiRef: apiRef as unknown as { current: MinimalTreeViewPublicAPI<TSignatures> },
+        ...getUtils(
+          result,
+          apiRef as unknown as { current: MinimalTreeViewPublicAPI<TSignatures> },
+        ),
       };
     };
 
@@ -207,7 +213,7 @@ const innerDescribeTreeView = <TSignatures extends TreeViewAnyPluginSignature[]>
       return {
         setProps: result.setProps,
         setItems: (newItems) => result.setProps({ children: newItems.map(renderItem) }),
-        apiRef: apiRef as unknown as { current: TreeViewPublicAPI<TSignatures> },
+        apiRef: apiRef as unknown as { current: MinimalTreeViewPublicAPI<TSignatures> },
         ...getUtils(result),
       };
     };

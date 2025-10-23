@@ -1,6 +1,6 @@
 import { TreeViewValidItem, TreeViewItemId } from '../../../models';
 import { TreeViewItemMeta } from '../../models';
-import type { TreeViewParameters } from '../../TreeViewStore';
+import type { MinimalTreeViewParameters } from '../../MinimalTreeViewStore';
 import { UseTreeViewItemsState } from './useTreeViewItems.types';
 
 export const TREE_VIEW_ROOT_PARENT_ID = '__TREE_VIEW_ROOT_PARENT_ID__';
@@ -217,6 +217,6 @@ function checkId<R extends TreeViewValidItem<R>>({
 
 export interface BuildItemsLookupConfig
   extends Pick<
-    TreeViewParameters<any>,
+    MinimalTreeViewParameters<any>,
     'isItemDisabled' | 'getItemLabel' | 'getItemChildren' | 'getItemId'
   > {}

@@ -11,12 +11,14 @@ import {
   isAncestor,
   moveItemInTree,
 } from '../plugins/useTreeViewItemsReordering/useTreeViewItemsReordering.utils';
+import { useTreeViewItemsReorderingItemPlugin } from '../plugins/useTreeViewItemsReordering/useTreeViewItemsReordering.itemPlugin';
 
 export class TreeViewItemsReorderingManager<Store extends RichTreeViewProStore<any, any>> {
   private store: Store;
 
   constructor(store: Store) {
     this.store = store;
+    store.itemPluginManager.register(useTreeViewItemsReorderingItemPlugin);
   }
 
   public canItemBeDragged = (itemId: string) => {

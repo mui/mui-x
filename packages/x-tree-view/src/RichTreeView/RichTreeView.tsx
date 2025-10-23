@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { useStore } from '@mui/x-internals/store';
 import Alert from '@mui/material/Alert';
 import Typography from '@mui/material/Typography';
@@ -13,12 +14,12 @@ import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { RichTreeViewItems } from '../internals/components/RichTreeViewItems';
 import { lazyLoadingSelectors } from '../internals/plugins/useTreeViewLazyLoading';
-import {
-  useExtractRichTreeViewParameters,
-  useRichTreeViewStore,
-} from '../internals/RichTreeViewStore';
 import { TreeViewValidItem } from '../models';
-import { useRichTreeViewRootProps } from './useRichTreeViewRootProps';
+import { useTreeViewRootProps } from '../internals/hooks/useTeeViewRootProps';
+import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
+import { useExtractRichTreeViewParameters } from './useExtractRichTreeViewParameters';
+import { useRichTreeViewStore } from './useRichTreeViewStore';
+import { itemsSelectors } from '../internals';
 
 const useThemeProps = createUseThemeProps('MuiRichTreeView');
 
@@ -73,9 +74,9 @@ type RichTreeViewComponent = (<R extends {}, Multiple extends boolean | undefine
 const RichTreeView = React.forwardRef(function RichTreeView<
   R extends TreeViewValidItem<R>,
   Multiple extends boolean | undefined = undefined,
->(inProps: RichTreeViewProps<R, Multiple>, ref: React.Ref<HTMLUListElement>) {
+>(inProps: RichTreeViewProps<R, Multiple>, forwardedRef: React.Ref<HTMLUListElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiRichTreeView' });
-  const { slots, slotProps, ...other } = props;
+  const { slots, slotProps, apiRef, ...other } = props;
 
   if (process.env.NODE_ENV !== 'production') {
     if ((props as any).children != null) {
@@ -93,8 +94,11 @@ const RichTreeView = React.forwardRef(function RichTreeView<
     typeof other
   >(other);
 
+  const ref = React.useRef<HTMLUListElement | null>(null);
+  const handleRef = useMergedRefs(forwardedRef, ref);
+
   const store = useRichTreeViewStore(parameters);
-  const getRootProps = useRichTreeViewRootProps(store, forwardedProps, ref);
+  const getRootProps = useTreeViewRootProps(store, forwardedProps, handleRef);
 
   const isLoading = useStore(store, lazyLoadingSelectors.isItemLoading, null);
   const error = useStore(store, lazyLoadingSelectors.itemError, null);
@@ -119,11 +123,20 @@ const RichTreeView = React.forwardRef(function RichTreeView<
   }
 
   return (
-    <TreeViewProvider store={store} classes={classes} slots={slots} slotProps={slotProps}>
-      <Root {...rootProps}>
-        <RichTreeViewItems slots={slots} slotProps={slotProps} />
-      </Root>
-    </TreeViewProvider>
+    <TreeViewItemDepthContext.Provider value={itemsSelectors.itemDepth}>
+      <TreeViewProvider
+        store={store}
+        classes={classes}
+        slots={slots}
+        slotProps={slotProps}
+        apiRef={apiRef}
+        rootRef={ref}
+      >
+        <Root {...rootProps}>
+          <RichTreeViewItems slots={slots} slotProps={slotProps} />
+        </Root>
+      </TreeViewProvider>
+    </TreeViewItemDepthContext.Provider>
   );
 }) as RichTreeViewComponent;
 

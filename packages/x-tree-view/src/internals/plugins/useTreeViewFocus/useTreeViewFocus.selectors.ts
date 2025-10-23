@@ -3,7 +3,7 @@ import { selectionSelectors } from '../useTreeViewSelection/useTreeViewSelection
 import { itemsSelectors } from '../useTreeViewItems/useTreeViewItems.selectors';
 import { isItemDisabled } from '../useTreeViewItems/useTreeViewItems.utils';
 import { expansionSelectors } from '../useTreeViewExpansion/useTreeViewExpansion.selectors';
-import { TreeViewState } from '../../TreeViewStore';
+import { MinimalTreeViewState } from '../../MinimalTreeViewStore';
 import { TreeViewItemId } from '../../../models';
 
 const defaultFocusableItemIdSelector = createSelectorMemoized(
@@ -11,7 +11,7 @@ const defaultFocusableItemIdSelector = createSelectorMemoized(
   expansionSelectors.expandedItemsMap,
   itemsSelectors.itemMetaLookup,
   itemsSelectors.disabledItemFocusable,
-  (state: TreeViewState<any, any>) => itemsSelectors.itemOrderedChildrenIds(state, null),
+  (state: MinimalTreeViewState<any, any>) => itemsSelectors.itemOrderedChildrenIds(state, null),
   (selectedItems, expandedItemsMap, itemMetaLookup, disabledItemsFocusable, orderedRootItemIds) => {
     const firstSelectedItem = selectedItems.find((itemId) => {
       if (!disabledItemsFocusable && isItemDisabled(itemMetaLookup, itemId)) {
@@ -55,11 +55,12 @@ export const focusSelectors = {
   /**
    * Gets the id of the item that is currently focused.
    */
-  focusedItemId: createSelector((state: TreeViewState<any, any>) => state.focusedItemId),
+  focusedItemId: createSelector((state: MinimalTreeViewState<any, any>) => state.focusedItemId),
   /**
    * Checks whether an item is focused.
    */
   isItemFocused: createSelector(
-    (state: TreeViewState<any, any>, itemId: TreeViewItemId) => state.focusedItemId === itemId,
+    (state: MinimalTreeViewState<any, any>, itemId: TreeViewItemId) =>
+      state.focusedItemId === itemId,
   ),
 };

@@ -1,12 +1,10 @@
 import * as React from 'react';
-import { RichTreeViewParameters } from './RichTreeViewStore.types';
-import { TreeViewValidItem } from '../../models';
+import { SimpleTreeViewParameters } from '../internals/SimpleTreeViewStore/SimpleTreeViewStore.types';
 
-export function useExtractRichTreeViewParameters<
-  R extends TreeViewValidItem<R>,
+export function useExtractSimpleTreeViewParameters<
   Multiple extends boolean | undefined,
-  P extends RichTreeViewParameters<R, Multiple>,
->(props: P): UseExtractRichTreeViewParametersReturnValue<R, Multiple, P> {
+  P extends SimpleTreeViewParameters<Multiple>,
+>(props: P): UseExtractSimpleTreeViewParametersReturnValue<Multiple, P> {
   const {
     // Shared parameters
     disabledItemsFocusable,
@@ -33,15 +31,13 @@ export function useExtractRichTreeViewParameters<
     onItemSelectionToggle,
     onItemFocus,
 
-    // RichTreeViewStore parameters
-    onItemLabelChange,
-    isItemEditable,
+    // SimpleTreeViewStore parameters
 
     // Forwarded props
     ...forwardedProps
   } = props;
 
-  const parameters: RichTreeViewParameters<R, Multiple> = React.useMemo(
+  const parameters: SimpleTreeViewParameters<Multiple> = React.useMemo(
     () => ({
       // Shared parameters
       disabledItemsFocusable,
@@ -68,9 +64,7 @@ export function useExtractRichTreeViewParameters<
       onItemSelectionToggle,
       onItemFocus,
 
-      // RichTreeViewStore parameters
-      onItemLabelChange,
-      isItemEditable,
+      // SimpleTreeViewStore parameters
     }),
     [
       // Shared parameters
@@ -98,23 +92,20 @@ export function useExtractRichTreeViewParameters<
       onItemSelectionToggle,
       onItemFocus,
 
-      // RichTreeViewStore parameters
-      onItemLabelChange,
-      isItemEditable,
+      // SimpleTreeViewStore parameters
     ],
   );
 
   return {
     parameters,
-    forwardedProps: forwardedProps as Omit<P, keyof RichTreeViewParameters<R, Multiple>>,
+    forwardedProps: forwardedProps as Omit<P, keyof SimpleTreeViewParameters<Multiple>>,
   };
 }
 
-interface UseExtractRichTreeViewParametersReturnValue<
-  R extends TreeViewValidItem<R>,
+interface UseExtractSimpleTreeViewParametersReturnValue<
   Multiple extends boolean | undefined,
-  P extends RichTreeViewParameters<R, Multiple>,
+  P extends SimpleTreeViewParameters<Multiple>,
 > {
-  parameters: RichTreeViewParameters<R, Multiple>;
-  forwardedProps: Omit<P, keyof RichTreeViewParameters<R, Multiple>>;
+  parameters: SimpleTreeViewParameters<Multiple>;
+  forwardedProps: Omit<P, keyof SimpleTreeViewParameters<Multiple>>;
 }

@@ -1,7 +1,11 @@
 import { TreeViewValidItem } from '../../models';
 import {} from '../plugins/useTreeViewLabel';
-import { TreeViewParametersToStateMapper, TreeViewStore } from '../TreeViewStore';
-import { RichTreeViewParameters, RichTreeViewState } from './RichTreeViewStore.types';
+import { TreeViewParametersToStateMapper, MinimalTreeViewStore } from '../MinimalTreeViewStore';
+import {
+  RichTreeViewParameters,
+  RichTreeViewPublicAPI,
+  RichTreeViewState,
+} from './RichTreeViewStore.types';
 import { TreeViewLabelEditingManager } from './TreeViewLabelEditingManager';
 
 const deriveStateFromParameters = (parameters: RichTreeViewParameters<any, any>) => ({
@@ -28,14 +32,15 @@ const mapper: TreeViewParametersToStateMapper<
 
     return newState;
   },
+  ignoreItemsStateUpdateFromParams: false,
 };
 
-export class ExtandableRichTreeViewStore<
+export class ExtendableRichTreeViewStore<
   R extends TreeViewValidItem<R>,
   Multiple extends boolean | undefined,
   State extends RichTreeViewState<R, Multiple>,
   Parameters extends RichTreeViewParameters<R, Multiple>,
-> extends TreeViewStore<R, Multiple, State, Parameters> {
+> extends MinimalTreeViewStore<R, Multiple, State, Parameters> {
   private labelEditingManager = new TreeViewLabelEditingManager<this>(this);
 
   /**
@@ -44,25 +49,33 @@ export class ExtandableRichTreeViewStore<
    */
   public static rawMapper = mapper;
 
+  public buildPublicAPI(): RichTreeViewPublicAPI<R, Multiple> {
+    return {
+      ...super.buildPublicAPI(),
+      setEditedItem: this.setEditedItem,
+      updateItemLabel: this.updateItemLabel,
+    };
+  }
+
   /**
    * Set which item is currently being edited.
    * You can pass `null` to exit editing mode.
    * @param {TreeViewItemId | null} itemId The id of the item to edit, or `null` to exit editing mode.
    */
-  protected setEditedItem = this.labelEditingManager.setEditedItem;
+  public setEditedItem = this.labelEditingManager.setEditedItem;
 
   /**
    * Used to update the label of an item.
    * @param {TreeViewItemId} itemId The id of the item to update the label of.
    * @param {string} newLabel The new label of the item.
    */
-  protected updateItemLabel = this.labelEditingManager.updateItemLabel;
+  public updateItemLabel = this.labelEditingManager.updateItemLabel;
 }
 
 export class RichTreeViewStore<
   R extends TreeViewValidItem<R>,
   Multiple extends boolean | undefined,
-> extends ExtandableRichTreeViewStore<
+> extends ExtendableRichTreeViewStore<
   R,
   Multiple,
   RichTreeViewState<R, Multiple>,

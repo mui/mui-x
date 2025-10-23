@@ -1,4 +1,4 @@
-import { TreeViewCancellableEvent } from '../../models';
+import { TreeViewCancellableEvent, TreeViewItemId } from '../../models';
 import { expansionSelectors } from '../plugins/useTreeViewExpansion';
 import { itemsSelectors } from '../plugins/useTreeViewItems';
 import { TreeViewLabelMap } from '../plugins/useTreeViewKeyboardNavigation/useTreeViewKeyboardNavigation.types';
@@ -10,11 +10,13 @@ import {
   getPreviousNavigableItem,
   isTargetInDescendants,
 } from '../utils/tree';
-import type { TreeViewStore } from './TreeViewStore';
+import type { MinimalTreeViewStore } from './MinimalTreeViewStore';
 
 const TYPEAHEAD_TIMEOUT = 500;
 
-export class TreeViewKeyboardNavigationManager<Store extends TreeViewStore<any, any, any, any>> {
+export class TreeViewKeyboardNavigationManager<
+  Store extends MinimalTreeViewStore<any, any, any, any>,
+> {
   private store: Store;
 
   private labelMap: TreeViewLabelMap = {};
@@ -25,19 +27,22 @@ export class TreeViewKeyboardNavigationManager<Store extends TreeViewStore<any, 
     this.store = store;
   }
 
-  private canToggleItemSelection = (itemId: string) =>
+  private canToggleItemSelection = (itemId: TreeViewItemId) =>
     selectionSelectors.enabled(this.store.state) &&
     !itemsSelectors.isItemDisabled(this.store.state, itemId);
 
-  private canToggleItemExpansion = (itemId: string) => {
+  private canToggleItemExpansion = (itemId: TreeViewItemId) => {
     return (
       !itemsSelectors.isItemDisabled(this.store.state, itemId) &&
       expansionSelectors.isItemExpandable(this.store.state, itemId)
     );
   };
 
-  private getFirstItemMatchingTypeaheadQuery = (itemId: string, newKey: string): string | null => {
-    const getNextItem = (itemIdToCheck: string) => {
+  private getFirstItemMatchingTypeaheadQuery = (
+    itemId: TreeViewItemId,
+    newKey: string,
+  ): TreeViewItemId | null => {
+    const getNextItem = (itemIdToCheck: TreeViewItemId) => {
       const nextItemId = getNextNavigableItem(this.store.state, itemIdToCheck);
       // We reached the end of the tree, check from the beginning
       if (nextItemId === null) {
@@ -47,11 +52,11 @@ export class TreeViewKeyboardNavigationManager<Store extends TreeViewStore<any, 
       return nextItemId;
     };
 
-    const getNextMatchingItemId = (query: string): string | null => {
-      let matchingItemId: string | null = null;
-      const checkedItems: Record<string, true> = {};
+    const getNextMatchingItemId = (query: string): TreeViewItemId | null => {
+      let matchingItemId: TreeViewItemId | null = null;
+      const checkedItems: Record<TreeViewItemId, true> = {};
       // If query length > 1, first check if current item matches
-      let currentItemId: string = query.length > 1 ? itemId : getNextItem(itemId);
+      let currentItemId: TreeViewItemId = query.length > 1 ? itemId : getNextItem(itemId);
       // The "!checkedItems[currentItemId]" condition avoids an infinite loop when there is no matching item.
       while (matchingItemId == null && !checkedItems[currentItemId]) {
         const itemLabel = this.labelMap[currentItemId];
@@ -95,7 +100,7 @@ export class TreeViewKeyboardNavigationManager<Store extends TreeViewStore<any, 
   // ARIA specification: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/#keyboardinteraction
   public handleItemKeyDown = async (
     event: React.KeyboardEvent<HTMLElement> & TreeViewCancellableEvent,
-    itemId: string,
+    itemId: TreeViewItemId,
   ) => {
     if (event.defaultMuiPrevented) {
       return;

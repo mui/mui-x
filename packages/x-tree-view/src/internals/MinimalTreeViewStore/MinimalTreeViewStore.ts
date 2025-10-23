@@ -2,15 +2,16 @@ import { Store } from '@mui/x-internals/store';
 import { warnOnce } from '@mui/x-internals/warning';
 import { EMPTY_OBJECT } from '@base-ui-components/utils/empty';
 import {
+  MinimalTreeViewPublicAPI,
   TreeViewModelUpdater,
-  TreeViewParameters,
+  MinimalTreeViewParameters,
   TreeViewParametersToStateMapper,
   TreeViewSelectionValue,
-  TreeViewState,
-} from './TreeViewStore.types';
+  MinimalTreeViewState,
+} from './MinimalTreeViewStore.types';
 import { buildItemsState } from '../plugins/useTreeViewItems/useTreeViewItems.utils';
 import { TreeViewItemId, TreeViewValidItem } from '../../models';
-import { applyModelInitialValue, deriveStateFromParameters } from './TreeViewStore.utils';
+import { applyModelInitialValue, deriveStateFromParameters } from './MinimalTreeViewStore.utils';
 import { createTreeViewDefaultId } from '../corePlugins/useTreeViewId/useTreeViewId.utils';
 import { TreeViewSelectionManager } from './TreeViewSelectionManager';
 import { TreeViewExpansionManager } from './TreeViewExpansionManager';
@@ -19,12 +20,13 @@ import { TreeViewKeyboardNavigationManager } from './TreeViewKeyboardNavigationM
 import { TreeViewStoreEffectManager } from './TreeViewStoreEffectManager';
 import { TreeViewFocusManager } from './TreeViewFocusManager';
 import { TreeViewItemsManager } from './TreeViewItemsManager';
+import { TreeViewItemPluginManager } from './TreeViewItemPluginManager';
 
-export class TreeViewStore<
+export class MinimalTreeViewStore<
   R extends TreeViewValidItem<R>,
   Multiple extends boolean | undefined,
-  State extends TreeViewState<R, Multiple>,
-  Parameters extends TreeViewParameters<R, Multiple>,
+  State extends MinimalTreeViewState<R, Multiple>,
+  Parameters extends MinimalTreeViewParameters<R, Multiple>,
 > extends Store<State> {
   public parameters: Parameters;
 
@@ -39,6 +41,8 @@ export class TreeViewStore<
 
   public timeoutManager = new TimeoutManager();
 
+  public itemPluginManager = new TreeViewItemPluginManager<this>(this);
+
   private storeEffectManager = new TreeViewStoreEffectManager<State, this>(this);
 
   private itemsManager = new TreeViewItemsManager<R, this>(this);
@@ -51,15 +55,13 @@ export class TreeViewStore<
 
   private keyboardNavigationManager = new TreeViewKeyboardNavigationManager<this>(this);
 
-  private propsBuilder: any[] = [];
-
   public constructor(
     parameters: Parameters,
     instanceName: string,
     isRtl: boolean,
     mapper: TreeViewParametersToStateMapper<R, Multiple, State, Parameters>,
   ) {
-    const sharedInitialState: TreeViewState<R, Multiple> = {
+    const sharedInitialState: MinimalTreeViewState<R, Multiple> = {
       treeId: undefined,
       focusedItemId: null,
       ...deriveStateFromParameters(parameters),
@@ -98,9 +100,27 @@ export class TreeViewStore<
   }
 
   /**
+   * Builds an object containing the method that should be exposed publicly by the Tree View components.
+   */
+  protected buildPublicAPI(): MinimalTreeViewPublicAPI<R, Multiple> {
+    return {
+      focusItem: this.focusItem,
+      getItem: this.getItem,
+      getItemDOMElement: this.getItemDOMElement,
+      getItemOrderedChildrenIds: this.getItemOrderedChildrenIds,
+      getItemTree: this.getItemTree,
+      getParentId: this.getParentId,
+      isItemExpanded: this.isItemExpanded,
+      setIsItemDisabled: this.setIsItemDisabled,
+      setItemExpansion: this.setItemExpansion,
+      setItemSelection: this.setItemSelection,
+    };
+  }
+
+  /**
    * Updates the state of the tTree View based on the new parameters provided to the root component.
    */
-  public updateStateFromParameters = (parameters: Parameters, isRtl: boolean) => {
+  public updateStateFromParameters(parameters: Parameters, isRtl: boolean) {
     const updateModel: TreeViewModelUpdater<State, Parameters> = (
       mutableNewState,
       controlledProp,
@@ -133,32 +153,85 @@ export class TreeViewStore<
           ]);
         }
       }
-
-      const newSchedulerState = deriveStateFromParameters(parameters) as Partial<State>;
-
-      updateModel(newSchedulerState, 'expandedItems', 'defaultExpandedItems');
-
-      const newState = this.mapper.updateStateFromParameters(
-        newSchedulerState,
-        parameters,
-        updateModel,
-      );
-
-      if (this.state.providedTreeId !== parameters.id || this.state.treeId === undefined) {
-        newSchedulerState.treeId = createTreeViewDefaultId();
-      }
-
-      this.update(newState);
-      this.isRtl = isRtl;
-      this.parameters = parameters;
     };
-  };
+
+    const newSchedulerState = deriveStateFromParameters(parameters) as Partial<State>;
+
+    updateModel(newSchedulerState, 'expandedItems', 'defaultExpandedItems');
+    updateModel(newSchedulerState, 'selectedItems', 'defaultSelectedItems');
+
+    const newState = this.mapper.updateStateFromParameters(
+      newSchedulerState,
+      parameters,
+      updateModel,
+    );
+
+    if (this.state.providedTreeId !== parameters.id || this.state.treeId === undefined) {
+      newSchedulerState.treeId = createTreeViewDefaultId();
+    }
+
+    const shouldUpdateItemsState =
+      !this.mapper.ignoreItemsStateUpdateFromParams &&
+      (parameters.items !== this.parameters.items ||
+        parameters.isItemDisabled !== this.parameters.isItemDisabled ||
+        parameters.getItemId !== this.parameters.getItemId ||
+        parameters.getItemLabel !== this.parameters.getItemLabel ||
+        parameters.getItemChildren !== this.parameters.getItemChildren);
+
+    if (shouldUpdateItemsState) {
+      Object.assign(
+        newSchedulerState,
+        buildItemsState({
+          items: parameters.items,
+          config: {
+            isItemDisabled: parameters.isItemDisabled,
+            getItemId: parameters.getItemId,
+            getItemLabel: parameters.getItemLabel,
+            getItemChildren: parameters.getItemChildren,
+          },
+        }),
+      );
+    }
+
+    this.update(newState);
+    this.isRtl = isRtl;
+    this.parameters = parameters;
+  }
 
   public disposeEffect = () => {
     return this.timeoutManager.clearAll;
   };
 
   public registerStoreEffect = this.storeEffectManager.registerStoreEffect;
+
+  /**
+   * Get all the items in the same format as provided by `props.items`.
+   * @returns {TreeViewBaseItem[]} The items in the tree.
+   */
+  public getItemTree = this.itemsManager.getItemTree;
+
+  /**
+   * Get the item with the given id.
+   * When used in the Simple Tree View, it returns an object with the `id` and `label` properties.
+   * @param {TreeViewItemId} itemId The id of the item to retrieve.
+   * @returns {R} The item with the given id.
+   */
+  public getItem = this.itemsManager.getItem;
+
+  /** * Get the id of the parent item.
+   * @param {TreeViewItemId} itemId The id of the item to whose parentId we want to retrieve.
+   * @returns {TreeViewItemId | null} The id of the parent item.
+   */
+  public getParentId = this.itemsManager.getParentId;
+
+  /**
+   * Get the ids of a given item's children.
+   * Those ids are returned in the order they should be rendered.
+   * To get the root items, pass `null` as the `itemId`.
+   * @param {TreeViewItemId | null} itemId The id of the item to get the children of.
+   * @returns {TreeViewItemId[]} The ids of the item's children.
+   */
+  public getItemOrderedChildrenIds = this.itemsManager.getItemOrderedChildrenIds;
 
   /**
    * Get the DOM element of the item with the given id.
@@ -168,16 +241,31 @@ export class TreeViewStore<
   public getItemDOMElement = this.itemsManager.getItemDOMElement;
 
   /**
+   * Add an array of items to the tree.
+   * @param {SetItemChildrenParameters<R>} args The items to add to the tree and information about their ancestors.
+   */
+  public setItemChildren = this.itemsManager.setItemChildren;
+
+  /**
    * Remove the children of an item.
    * @param {TreeViewItemId | null} parentId The id of the item to remove the children of.
    */
   public removeChildren = this.itemsManager.removeChildren;
 
   /**
-   * Add an array of items to the tree.
-   * @param {SetItemChildrenParameters<R>} args The items to add to the tree and information about their ancestors.
+   * Toggle the disabled state of the item with the given id.
+   * @param {object} parameters The params of the method.
+   * @param {TreeViewItemId } parameters.itemId The id of the item to get the children of.
+   * @param {boolean } parameters.shouldBeDisabled true if the item should be disabled.
    */
-  public setItemChildren = this.itemsManager.setItemChildren;
+  public setIsItemDisabled = this.itemsManager.setIsItemDisabled;
+
+  /**
+   * Callback fired when the `content` slot of a given Tree Item is clicked.
+   * @param {React.MouseEvent} event The DOM event that triggered the change.
+   * @param {TreeViewItemId} itemId The id of the item being clicked.
+   */
+  public handleItemClick = this.itemsManager.handleItemClick;
 
   /**
    * Focus the item with the given id.
@@ -187,7 +275,7 @@ export class TreeViewStore<
    * @param {React.SyntheticEvent | null} event The DOM event that triggered the change.
    * @param {TreeViewItemId} itemId The id of the item to focus.
    */
-  protected focusItem = this.focusManager.focusItem;
+  public focusItem = this.focusManager.focusItem;
 
   /**
    * Remove the focus from the currently focused item (both from the internal state and the DOM).
@@ -219,16 +307,16 @@ export class TreeViewStore<
   };
 
   /**
-   * Callback fired when the `content` slot of a given Tree Item is clicked.
-   * @param {React.MouseEvent} event The DOM event that triggered the change.
-   * @param {TreeViewItemId} itemId The id of the item being clicked.
+   * Check if an item is expanded.
+   * @param {TreeViewItemId} itemId The id of the item to check.
+   * @returns {boolean} `true` if the item is expanded, `false` otherwise.
    */
-  public handleItemClick = this.itemsManager.handleItemClick;
+  public isItemExpanded = this.expansionManager.isItemExpanded;
 
   /**
    * Change the expansion status of a given item.
    * @param {object} parameters The parameters of the method.
-   * @param {string} parameters.itemId The id of the item to expand of collapse.
+   * @param {TreeViewItemId} parameters.itemId The id of the item to expand of collapse.
    * @param {React.SyntheticEvent} parameters.event The DOM event that triggered the change.
    * @param {boolean} parameters.shouldBeExpanded If `true` the item will be expanded. If `false` the item will be collapsed. If not defined, the item's expansion status will be the toggled.
    */
@@ -239,7 +327,7 @@ export class TreeViewStore<
    * Is used by the `setItemExpansion` method and by the `useTreeViewLazyLoading` plugin.
    * Unlike `setItemExpansion`, this method does not trigger the lazy loading.
    * @param {object} parameters The parameters of the method.
-   * @param {string} parameters.itemId The id of the item to expand of collapse.
+   * @param {TreeViewItemId} parameters.itemId The id of the item to expand of collapse.
    * @param {React.SyntheticEvent | null} parameters.event The DOM event that triggered the change.
    * @param {boolean} parameters.shouldBeExpanded If `true` the item will be expanded. If `false` the item will be collapsed.
    */
@@ -255,7 +343,7 @@ export class TreeViewStore<
   /**
    * Select or deselect an item.
    * @param {object} parameters The parameters of the method.
-   * @param {string} parameters.itemId The id of the item to select or deselect.
+   * @param {TreeViewItemId} parameters.itemId The id of the item to select or deselect.
    * @param {React.SyntheticEvent} parameters.event The DOM event that triggered the change.
    * @param {boolean} parameters.keepExistingSelection If `true`, the other already selected items will remain selected, otherwise, they will be deselected. This parameter is only relevant when `multiSelect` is `true`
    * @param {boolean | undefined} parameters.shouldBeSelected If `true` the item will be selected. If `false` the item will be deselected. If not defined, the item's selection status will be toggled.
@@ -271,29 +359,29 @@ export class TreeViewStore<
   /**
    * Expand the current selection range up to the given item.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change.
-   * @param {string} itemId The id of the item to expand the selection to.
+   * @param {TreeViewItemId} itemId The id of the item to expand the selection to.
    */
   public expandSelectionRange = this.selectionManager.expandSelectionRange;
 
   /**
    * Expand the current selection range from the first navigable item to the given item.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change.
-   * @param {string} itemId The id of the item up to which the selection range should be expanded.
+   * @param {TreeViewItemId} itemId The id of the item up to which the selection range should be expanded.
    */
   public selectRangeFromStartToItem = this.selectionManager.selectRangeFromStartToItem;
 
   /**
    * Expand the current selection range from the given item to the last navigable item.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change.
-   * @param {string} itemId The id of the item from which the selection range should be expanded.
+   * @param {TreeViewItemId} itemId The id of the item from which the selection range should be expanded.
    */
   public selectRangeFromItemToEnd = this.selectionManager.selectRangeFromItemToEnd;
 
   /**
    * Update the selection when navigating with ArrowUp / ArrowDown keys.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change.
-   * @param {string} currentItemId The id of the active item before the keyboard navigation.
-   * @param {string} nextItemId The id of the active item after the keyboard navigation.
+   * @param {TreeViewItemId} currentItemId The id of the active item before the keyboard navigation.
+   * @param {TreeViewItemId} nextItemId The id of the active item after the keyboard navigation.
    */
   public selectItemFromArrowNavigation = this.selectionManager.selectItemFromArrowNavigation;
 

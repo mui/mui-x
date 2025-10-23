@@ -4,7 +4,7 @@ import type { TreeViewContextValue } from '../TreeViewProvider';
 import {
   TreeViewAnyPluginSignature,
   ConvertSignaturesIntoPlugins,
-  TreeViewPublicAPI,
+  MinimalTreeViewPublicAPI,
 } from '../models';
 
 export interface UseTreeViewParameters<
@@ -17,7 +17,7 @@ export interface UseTreeViewParameters<
 }
 
 export interface UseTreeViewBaseProps<TSignatures extends readonly TreeViewAnyPluginSignature[]> {
-  apiRef: React.RefObject<Partial<TreeViewPublicAPI<TSignatures>> | undefined> | undefined;
+  apiRef: React.RefObject<Partial<MinimalTreeViewPublicAPI<TSignatures>> | undefined> | undefined;
 }
 
 export interface UseTreeViewRootSlotProps

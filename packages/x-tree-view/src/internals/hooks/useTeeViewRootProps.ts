@@ -2,14 +2,14 @@
 import * as React from 'react';
 import { useStore } from '@mui/x-internals/store';
 import { EventHandlers } from '@mui/utils/types';
-import { TreeViewCancellableEvent } from '../models';
-import { idSelectors } from '../internals/corePlugins/useTreeViewId';
-import { selectionSelectors } from '../internals/plugins/useTreeViewSelection';
-import { itemsSelectors } from '../internals/plugins/useTreeViewItems';
-import { RichTreeViewStore } from '../internals/RichTreeViewStore';
+import { TreeViewCancellableEvent } from '../../models';
+import { idSelectors } from '../corePlugins/useTreeViewId';
+import { selectionSelectors } from '../plugins/useTreeViewSelection';
+import { itemsSelectors } from '../plugins/useTreeViewItems';
+import { TreeViewStore } from '../models';
 
-export function useRichTreeViewRootProps(
-  store: RichTreeViewStore<any, any>,
+export function useTreeViewRootProps<TStore extends TreeViewStore<any, any, any>>(
+  store: TStore,
   forwardedProps: React.HTMLAttributes<HTMLUListElement>,
   ref: React.Ref<HTMLUListElement | null> | undefined,
 ) {

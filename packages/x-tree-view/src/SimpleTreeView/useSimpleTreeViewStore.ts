@@ -2,15 +2,13 @@ import { useRefWithInit } from '@base-ui-components/utils/useRefWithInit';
 import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
 import { useOnMount } from '@base-ui-components/utils/useOnMount';
 import { useRtl } from '@mui/system/RtlProvider';
-import { TreeViewValidItem } from '../../models';
-import { RichTreeViewStore, RichTreeViewParameters } from '.';
+import { SimpleTreeViewStore, SimpleTreeViewParameters } from '../internals/SimpleTreeViewStore';
 
-export function useRichTreeViewStore<
-  R extends TreeViewValidItem<R>,
-  Multiple extends boolean | undefined,
->(parameters: RichTreeViewParameters<R, Multiple>) {
+export function useSimpleTreeViewStore<Multiple extends boolean | undefined>(
+  parameters: SimpleTreeViewParameters<Multiple>,
+) {
   const isRtl = useRtl();
-  const store = useRefWithInit(() => new RichTreeViewStore(parameters, isRtl)).current;
+  const store = useRefWithInit(() => new SimpleTreeViewStore(parameters, isRtl)).current;
 
   useIsoLayoutEffect(
     () => store.updateStateFromParameters(parameters, isRtl),

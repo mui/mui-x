@@ -1,22 +1,22 @@
 import * as React from 'react';
-import { TreeViewContextValue, TreeViewItemPluginsRunner } from '../TreeViewProvider';
+import { useRefWithInit } from '@base-ui-components/utils/useRefWithInit';
+import { TreeViewContextValue, TreeViewItemPluginsRunner } from '.';
 import {
-  ConvertSignaturesIntoPlugins,
   TreeItemWrapper,
   TreeRootWrapper,
-  TreeViewAnyPluginSignature,
-  TreeViewInstance,
-  TreeViewPublicAPI,
   TreeViewItemPluginSlotPropsEnhancers,
   TreeViewItemPluginSlotPropsEnhancerParams,
   TreeViewStore,
+  TreeViewPublicAPI,
 } from '../models';
-import { TreeViewCorePluginSignatures } from '../corePlugins';
 
-export const useTreeViewBuildContext = <TSignatures extends readonly TreeViewAnyPluginSignature[]>(
-  parameters: UseTreeViewBuildContextParameters<TSignatures>,
-): TreeViewContextValue<TSignatures> => {
-  const { plugins, instance, publicAPI, store, rootRef } = parameters;
+export const useTreeViewBuildContext = <TStore extends TreeViewStore<any, any, any>>(
+  parameters: UseTreeViewBuildContextParameters<TStore>,
+): TreeViewContextValue<TStore> => {
+  const { store, apiRef } = parameters;
+
+  const publicAPI = useRefWithInit(() => store.buildPublicAPI()).current;
+  initializeInputApiRef(publicAPI, apiRef);
 
   const runItemPlugins = React.useCallback<TreeViewItemPluginsRunner>(
     (itemPluginProps) => {
@@ -27,12 +27,8 @@ export const useTreeViewBuildContext = <TSignatures extends readonly TreeViewAny
         [key in keyof TreeViewItemPluginSlotPropsEnhancers]?: true;
       } = {};
 
-      plugins.forEach((plugin) => {
-        if (!plugin.itemPlugin) {
-          return;
-        }
-
-        const itemPluginResponse = plugin.itemPlugin({
+      store.itemPluginManager.list().forEach((itemPlugin) => {
+        const itemPluginResponse = itemPlugin({
           props: itemPluginProps,
           rootRef: finalRootRef,
           contentRef: finalContentRef,
@@ -86,7 +82,7 @@ export const useTreeViewBuildContext = <TSignatures extends readonly TreeViewAny
         propsEnhancers,
       };
     },
-    [plugins],
+    [store],
   );
 
   const wrapItem = React.useCallback<TreeItemWrapper<TSignatures>>(
@@ -142,12 +138,27 @@ export const useTreeViewBuildContext = <TSignatures extends readonly TreeViewAny
   );
 };
 
-interface UseTreeViewBuildContextParameters<
-  TSignatures extends readonly TreeViewAnyPluginSignature[],
-> {
-  plugins: ConvertSignaturesIntoPlugins<readonly [...TreeViewCorePluginSignatures, ...TSignatures]>;
-  instance: TreeViewInstance<TSignatures>;
-  publicAPI: TreeViewPublicAPI<TSignatures>;
-  store: TreeViewStore<readonly [...TreeViewCorePluginSignatures, ...TSignatures]>;
+function initializeInputApiRef<TStore extends TreeViewStore<any, any, any>>(
+  publicAPI: TreeViewPublicAPI<TStore>,
+  apiRef: React.RefObject<TreeViewPublicAPI<TStore> | undefined> | undefined,
+) {
+  if (apiRef != null && apiRef.current == null) {
+    apiRef.current = publicAPI;
+  }
+}
+
+export interface UseTreeViewBuildContextParameters<TStore extends TreeViewStore<any, any, any>> {
+  store: TStore;
   rootRef: React.RefObject<HTMLUListElement | null>;
+  apiRef: React.RefObject<TreeViewPublicAPI<TStore> | undefined> | undefined;
+}
+
+export interface UseTreeViewBuildContextReturnValue<TStore extends TreeViewStore<any, any, any>> {
+  publicAPI: TreeViewPublicAPI<TStore>;
+  // TODO: Use ReadonlyStore
+  store: TStore;
+  rootRef: React.RefObject<HTMLUListElement | null>;
+  wrapItem: TreeItemWrapper<TSignatures>;
+  wrapRoot: TreeRootWrapper;
+  runItemPlugins: TreeViewItemPluginsRunner;
 }

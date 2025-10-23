@@ -1,7 +1,8 @@
 import { TreeViewItemId, TreeViewSelectionPropagation, TreeViewValidItem } from '../../models';
 import { TreeViewItemMeta } from '../models';
+import type { MinimalTreeViewStore } from './MinimalTreeViewStore';
 
-export interface TreeViewState<
+export interface MinimalTreeViewState<
   R extends TreeViewValidItem<R>,
   Multiple extends boolean | undefined,
 > {
@@ -81,7 +82,7 @@ export interface TreeViewState<
   focusedItemId: string | null;
 }
 
-export interface TreeViewParameters<
+export interface MinimalTreeViewParameters<
   R extends TreeViewValidItem<R>,
   Multiple extends boolean | undefined,
 > {
@@ -247,6 +248,23 @@ export interface TreeViewParameters<
   onItemFocus?: (event: React.SyntheticEvent | null, itemId: string) => void;
 }
 
+export interface MinimalTreeViewPublicAPI<
+  R extends TreeViewValidItem<R>,
+  Multiple extends boolean | undefined,
+> extends Pick<
+    MinimalTreeViewStore<R, Multiple, any, any>,
+    | 'focusItem'
+    | 'getItem'
+    | 'getItemDOMElement'
+    | 'getItemOrderedChildrenIds'
+    | 'getItemTree'
+    | 'getParentId'
+    | 'isItemExpanded'
+    | 'setIsItemDisabled'
+    | 'setItemExpansion'
+    | 'setItemSelection'
+  > {}
+
 /**
  * Mapper between a Tree View instance's state and parameters.
  * Used by classes extending `TreeViewStore` to manage the state based on the parameters.
@@ -254,24 +272,28 @@ export interface TreeViewParameters<
 export interface TreeViewParametersToStateMapper<
   R extends TreeViewValidItem<R>,
   Multiple extends boolean | undefined,
-  State extends TreeViewState<R, Multiple>,
-  Parameters extends TreeViewParameters<R, Multiple>,
+  State extends MinimalTreeViewState<R, Multiple>,
+  Parameters extends MinimalTreeViewParameters<R, Multiple>,
 > {
   getInitialState: (
-    treeViewInitialState: TreeViewState<R, Multiple>,
+    treeViewInitialState: MinimalTreeViewState<R, Multiple>,
     parameters: Parameters,
   ) => State;
 
   updateStateFromParameters: (
-    newState: Partial<TreeViewState<R, Multiple>>,
+    newState: Partial<MinimalTreeViewState<R, Multiple>>,
     parameters: Parameters,
     updateModel: TreeViewModelUpdater<State, Parameters>,
   ) => Partial<State>;
+  /**
+   * Whether the items-related state should not be updated when the parameter change.
+   */
+  ignoreItemsStateUpdateFromParams: boolean;
 }
 
 export type TreeViewModelUpdater<
-  State extends TreeViewState<any, any>,
-  Parameters extends TreeViewParameters<any, any>,
+  State extends MinimalTreeViewState<any, any>,
+  Parameters extends MinimalTreeViewParameters<any, any>,
 > = (
   newState: Partial<State>,
   controlledProp: keyof Parameters & keyof State & string,

@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
   MergeSignaturesProperty,
   TreeViewAnyPluginSignature,
-  TreeViewPublicAPI,
+  MinimalTreeViewPublicAPI,
 } from '@mui/x-tree-view/internals/models';
 import { TreeViewItemId } from '@mui/x-tree-view/models';
 import { TreeItemProps } from '@mui/x-tree-view/TreeItem';
@@ -104,7 +104,7 @@ export interface DescribeTreeViewRendererReturnValue<
   /**
    * The ref object that allows Tree View manipulation.
    */
-  apiRef: { current: TreeViewPublicAPI<TSignatures> };
+  apiRef: { current: MinimalTreeViewPublicAPI<TSignatures> };
   /**
    * Passes new props to the Tree View.
    * @param {Partial<TreeViewUsedParams<TSignatures>>} props A subset of the props accepted by the Tree View.

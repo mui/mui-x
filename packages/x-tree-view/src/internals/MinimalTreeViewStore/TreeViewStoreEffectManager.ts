@@ -1,9 +1,9 @@
-import { TreeViewState } from './TreeViewStore.types';
-import type { TreeViewStore } from './TreeViewStore';
+import { MinimalTreeViewState } from './MinimalTreeViewStore.types';
+import type { MinimalTreeViewStore } from './MinimalTreeViewStore';
 
 export class TreeViewStoreEffectManager<
-  State extends TreeViewState<any, any>,
-  Store extends TreeViewStore<any, any, State, any>,
+  State extends MinimalTreeViewState<any, any>,
+  Store extends MinimalTreeViewStore<any, any, State, any>,
 > {
   private store: Store;
 

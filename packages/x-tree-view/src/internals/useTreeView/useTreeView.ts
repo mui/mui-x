@@ -2,12 +2,10 @@ import * as React from 'react';
 import { useRefWithInit } from '@base-ui-components/utils/useRefWithInit';
 import { Store } from '@mui/x-internals/store';
 import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
-import { EventHandlers } from '@mui/utils/types';
 import {
   TreeViewAnyPluginSignature,
   TreeViewInstance,
-  TreeViewPlugin,
-  TreeViewPublicAPI,
+  MinimalTreeViewPublicAPI,
   ConvertSignaturesIntoPlugins,
   TreeViewState,
 } from '../models';
@@ -15,11 +13,10 @@ import {
   UseTreeViewBaseProps,
   UseTreeViewParameters,
   UseTreeViewReturnValue,
-  UseTreeViewRootSlotProps,
 } from './useTreeView.types';
 import { TREE_VIEW_CORE_PLUGINS, TreeViewCorePluginSignatures } from '../corePlugins';
 import { useExtractPluginParamsFromProps } from './useExtractPluginParamsFromProps';
-import { useTreeViewBuildContext } from './useTreeViewBuildContext';
+import { useTreeViewBuildContext } from '../TreeViewProvider/useTreeViewBuildContext';
 
 function initializeInputApiRef<T>(inputApiRef: React.RefObject<Partial<T> | undefined>) {
   if (inputApiRef.current == null) {
@@ -79,7 +76,7 @@ export const useTreeView = <
   });
 
   const instance = useRefWithInit(() => ({}) as TreeViewInstance<TSignatures>).current;
-  const publicAPI = useTreeViewApiInitialization<TreeViewPublicAPI<TSignatures>>(apiRef);
+  const publicAPI = useTreeViewApiInitialization<MinimalTreeViewPublicAPI<TSignatures>>(apiRef);
   const innerRootRef = React.useRef<HTMLUListElement>(null);
   const handleRootRef = useMergedRefs(innerRootRef, rootRef);
 
@@ -101,53 +98,7 @@ export const useTreeView = <
     rootRef: innerRootRef,
   });
 
-  const rootPropsGetters: (<TOther extends EventHandlers = {}>(
-    otherHandlers: TOther,
-  ) => React.HTMLAttributes<HTMLUListElement>)[] = [];
-
-  const runPlugin = (plugin: TreeViewPlugin<TreeViewAnyPluginSignature>) => {
-    const pluginResponse = plugin({
-      instance,
-      params: pluginParams,
-      rootRef: innerRootRef,
-      plugins,
-      store,
-    });
-
-    if (pluginResponse.getRootProps) {
-      rootPropsGetters.push(pluginResponse.getRootProps);
-    }
-
-    if (pluginResponse.publicAPI) {
-      Object.assign(publicAPI.current, pluginResponse.publicAPI);
-    }
-
-    if (pluginResponse.instance) {
-      Object.assign(instance, pluginResponse.instance);
-    }
-  };
-
-  plugins.forEach(runPlugin);
-
-  const getRootProps = <TOther extends EventHandlers = {}>(
-    otherHandlers: TOther = {} as TOther,
-  ) => {
-    const rootProps: UseTreeViewRootSlotProps = {
-      role: 'tree',
-      ...forwardedProps,
-      ...otherHandlers,
-      ref: handleRootRef,
-    };
-
-    rootPropsGetters.forEach((rootPropsGetter) => {
-      Object.assign(rootProps, rootPropsGetter(otherHandlers));
-    });
-
-    return rootProps;
-  };
-
   return {
-    getRootProps,
     rootRef: handleRootRef,
     contextValue,
   };
