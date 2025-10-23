@@ -14,6 +14,8 @@ import {
   TooltipGetterAxesConfig,
 } from '../internals/plugins/models/seriesConfig/tooltipGetter.types';
 import { ColorProcessor } from '../internals/plugins/models/seriesConfig';
+import { isCartesianSeries } from '../internals/isCartesian';
+import { AxisId } from '../models/axis';
 
 export type UseItemTooltipReturnValue<T extends ChartSeriesType> = ItemTooltip<T>;
 export type UseRadarItemTooltipReturnValue = ItemTooltipWithMultipleValues<'radar'>;
@@ -33,12 +35,6 @@ export function useInternalItemTooltip<T extends ChartSeriesType>():
   const { rotationAxis, rotationAxisIds } = useRotationAxes();
   const { radiusAxis, radiusAxisIds } = useRadiusAxes();
 
-  const xAxisId = (series as any).xAxisId ?? xAxisIds[0];
-  const yAxisId = (series as any).yAxisId ?? yAxisIds[0];
-  const zAxisId = (series as any).zAxisId ?? zAxisIds[0];
-  const rotationAxisId = (series as any).rotationAxisId ?? rotationAxisIds[0];
-  const radiusAxisId = (series as any).radiusAxisId ?? radiusAxisIds[0];
-
   if (!identifier) {
     return null;
   }
@@ -47,6 +43,22 @@ export function useInternalItemTooltip<T extends ChartSeriesType>():
     | ChartSeriesDefaultized<T>
     | undefined;
 
+  const xAxisId: AxisId | undefined =
+    itemSeries && isCartesianSeries(itemSeries) ? (itemSeries.xAxisId ?? xAxisIds[0]) : undefined;
+  const yAxisId: AxisId | undefined =
+    itemSeries && isCartesianSeries(itemSeries) ? (itemSeries.yAxisId ?? yAxisIds[0]) : undefined;
+  const zAxisId: AxisId | undefined =
+    itemSeries && 'zAxisId' in itemSeries ? (itemSeries.zAxisId ?? zAxisIds[0]) : zAxisIds[0];
+
+  const rotationAxisId: AxisId | undefined =
+    itemSeries && 'rotationAxisId' in itemSeries
+      ? ((itemSeries.rotationAxisId as never) ?? rotationAxisIds[0])
+      : rotationAxisIds[0];
+  const radiusAxisId: AxisId | undefined =
+    itemSeries && 'radiusAxisId' in itemSeries
+      ? ((itemSeries.radiusAxisId as never) ?? radiusAxisIds[0])
+      : radiusAxisIds[0];
+
   if (!itemSeries) {
     return null;
   }
@@ -54,9 +66,9 @@ export function useInternalItemTooltip<T extends ChartSeriesType>():
   const getColor =
     (seriesConfig[itemSeries.type].colorProcessor as ColorProcessor<T>)?.(
       itemSeries as any,
-      xAxisId && xAxis[xAxisId],
-      yAxisId && yAxis[yAxisId],
-      zAxisId && zAxis[zAxisId],
+      xAxisId !== undefined ? xAxis[xAxisId] : undefined,
+      yAxisId !== undefined ? yAxis[yAxisId] : undefined,
+      zAxisId !== undefined ? zAxis[zAxisId] : undefined,
     ) ?? (() => '');
 
   const axesConfig: TooltipGetterAxesConfig = {};
