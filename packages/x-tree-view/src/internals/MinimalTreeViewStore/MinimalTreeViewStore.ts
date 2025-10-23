@@ -10,14 +10,14 @@ import {
   MinimalTreeViewState,
 } from './MinimalTreeViewStore.types';
 import { buildItemsState } from '../plugins/useTreeViewItems/useTreeViewItems.utils';
-import { TreeViewItemId, TreeViewValidItem } from '../../models';
+import { TreeViewValidItem } from '../../models';
 import { applyModelInitialValue, deriveStateFromParameters } from './MinimalTreeViewStore.utils';
 import { createTreeViewDefaultId } from '../corePlugins/useTreeViewId/useTreeViewId.utils';
 import { TreeViewSelectionManager } from './TreeViewSelectionManager';
 import { TreeViewExpansionManager } from './TreeViewExpansionManager';
 import { TimeoutManager } from './TimeoutManager';
 import { TreeViewKeyboardNavigationManager } from './TreeViewKeyboardNavigationManager';
-import { TreeViewStoreEffectManager } from './TreeViewStoreEffectManager';
+import { TreeViewInternalsManager } from './TreeViewInternalsManager';
 import { TreeViewFocusManager } from './TreeViewFocusManager';
 import { TreeViewItemsManager } from './TreeViewItemsManager';
 import { TreeViewItemPluginManager } from './TreeViewItemPluginManager';
@@ -43,7 +43,7 @@ export class MinimalTreeViewStore<
 
   public itemPluginManager = new TreeViewItemPluginManager<this>(this);
 
-  private storeEffectManager = new TreeViewStoreEffectManager<State, this>(this);
+  public $ = new TreeViewInternalsManager<State, this>(this);
 
   private itemsManager = new TreeViewItemsManager<R, this>(this);
 
@@ -171,7 +171,7 @@ export class MinimalTreeViewStore<
     }
 
     const shouldUpdateItemsState =
-      !this.mapper.ignoreItemsStateUpdateFromParams &&
+      !this.mapper.shouldIgnoreItemsStateUpdate(parameters) &&
       (parameters.items !== this.parameters.items ||
         parameters.isItemDisabled !== this.parameters.isItemDisabled ||
         parameters.getItemId !== this.parameters.getItemId ||
@@ -201,8 +201,6 @@ export class MinimalTreeViewStore<
   public disposeEffect = () => {
     return this.timeoutManager.clearAll;
   };
-
-  public registerStoreEffect = this.storeEffectManager.registerStoreEffect;
 
   /**
    * Get all the items in the same format as provided by `props.items`.
@@ -298,13 +296,7 @@ export class MinimalTreeViewStore<
    * Mark a list of items as expandable.
    * @param {TreeViewItemId[]} items The ids of the items to mark as expandable.
    */
-  protected addExpandableItems = (items: TreeViewItemId[]) => {
-    const newItemMetaLookup = { ...this.state.itemMetaLookup };
-    for (const itemId of items) {
-      newItemMetaLookup[itemId] = { ...newItemMetaLookup[itemId], expandable: true };
-    }
-    this.set('itemMetaLookup', newItemMetaLookup);
-  };
+  public addExpandableItems = this.expansionManager.addExpandableItems;
 
   /**
    * Check if an item is expanded.
@@ -331,7 +323,7 @@ export class MinimalTreeViewStore<
    * @param {React.SyntheticEvent | null} parameters.event The DOM event that triggered the change.
    * @param {boolean} parameters.shouldBeExpanded If `true` the item will be expanded. If `false` the item will be collapsed.
    */
-  protected applyItemExpansion = this.expansionManager.applyItemExpansion;
+  public applyItemExpansion = this.expansionManager.applyItemExpansion;
 
   /**
    * Expand all the siblings (i.e.: the items that have the same parent) of a given item.

@@ -96,4 +96,12 @@ export class TreeViewExpansionManager<Store extends MinimalTreeViewStore<any, an
       this.setExpandedItems(event, newExpanded);
     }
   };
+
+  public addExpandableItems = (items: TreeViewItemId[]) => {
+    const newItemMetaLookup = { ...this.store.state.itemMetaLookup };
+    for (const itemId of items) {
+      newItemMetaLookup[itemId] = { ...newItemMetaLookup[itemId], expandable: true };
+    }
+    this.store.set('itemMetaLookup', newItemMetaLookup);
+  };
 }

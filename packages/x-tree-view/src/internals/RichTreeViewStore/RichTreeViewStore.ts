@@ -32,7 +32,7 @@ const mapper: TreeViewParametersToStateMapper<
 
     return newState;
   },
-  ignoreItemsStateUpdateFromParams: false,
+  shouldIgnoreItemsStateUpdate: () => false,
 };
 
 export class ExtendableRichTreeViewStore<

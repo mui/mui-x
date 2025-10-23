@@ -1,12 +1,11 @@
 import * as React from 'react';
+import { EMPTY_OBJECT } from '@base-ui-components/utils/empty';
 import { TreeViewProviderProps } from './TreeViewProvider.types';
 import { TreeViewContext } from './TreeViewContext';
 import { TreeViewSlotProps, TreeViewSlots, TreeViewStyleContext } from './TreeViewStyleContext';
 import { TreeViewValidItem } from '../../models';
 import { useTreeViewBuildContext } from './useTreeViewBuildContext';
 import { TreeViewStore } from '../models';
-
-const EMPTY_OBJECT = {};
 
 /**
  * Sets up the contexts for the underlying Tree Item components.

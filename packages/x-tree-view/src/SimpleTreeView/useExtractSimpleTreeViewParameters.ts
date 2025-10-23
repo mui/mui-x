@@ -8,11 +8,6 @@ export function useExtractSimpleTreeViewParameters<
   const {
     // Shared parameters
     disabledItemsFocusable,
-    items,
-    isItemDisabled,
-    getItemLabel,
-    getItemChildren,
-    getItemId,
     onItemClick,
     itemChildrenIndentation,
     id,
@@ -41,11 +36,6 @@ export function useExtractSimpleTreeViewParameters<
     () => ({
       // Shared parameters
       disabledItemsFocusable,
-      items,
-      isItemDisabled,
-      getItemLabel,
-      getItemChildren,
-      getItemId,
       onItemClick,
       itemChildrenIndentation,
       id,
@@ -69,11 +59,6 @@ export function useExtractSimpleTreeViewParameters<
     [
       // Shared parameters
       disabledItemsFocusable,
-      items,
-      isItemDisabled,
-      getItemLabel,
-      getItemChildren,
-      getItemId,
       onItemClick,
       itemChildrenIndentation,
       id,

@@ -16,7 +16,7 @@ const DEFAULT_IS_ITEM_REORDERABLE_WHEN_ENABLED = () => true;
 const DEFAULT_IS_ITEM_REORDERABLE_WHEN_DISABLED = () => false;
 
 const deriveStateFromParameters = (parameters: RichTreeViewProParameters<any, any>) => ({
-  lazyLoadedItems: TREE_VIEW_LAZY_LOADED_ITEMS_INITIAL_STATE,
+  lazyLoadedItems: parameters.dataSource ? TREE_VIEW_LAZY_LOADED_ITEMS_INITIAL_STATE : null,
   currentReorder: null,
   isItemReorderable: parameters.itemsReordering
     ? (parameters.isItemReorderable ?? DEFAULT_IS_ITEM_REORDERABLE_WHEN_ENABLED)
@@ -45,7 +45,7 @@ const mapper: TreeViewParametersToStateMapper<
 
     return newState;
   },
-  ignoreItemsStateUpdateFromParams: false,
+  shouldIgnoreItemsStateUpdate: (parameters) => !!parameters.dataSource,
 };
 
 export class RichTreeViewProStore<
@@ -79,7 +79,7 @@ export class RichTreeViewProStore<
    * @param {TreeViewItemId[]} parentIds The ids of the items to fetch the children of.
    * @returns {Promise<void>} The promise resolved when the items are fetched.
    */
-  protected fetchItems = this.lazyLoadingManager.fetchItems;
+  public fetchItems = this.lazyLoadingManager.fetchItems;
 
   /**
    * Method used for fetching an item's children.
@@ -90,7 +90,7 @@ export class RichTreeViewProStore<
    * @param {boolean} [parameters.forceRefresh] Whether to force a refresh of the children when the cache already contains some data.
    * @returns {Promise<void>} The promise resolved when the items are fetched.
    */
-  protected fetchItemChildren = this.lazyLoadingManager.fetchItemChildren;
+  public fetchItemChildren = this.lazyLoadingManager.fetchItemChildren;
 
   /**
    * Method used for updating an item's children.

@@ -28,7 +28,7 @@ const mapper: TreeViewParametersToStateMapper<
 
     return newState;
   },
-  ignoreItemsStateUpdateFromParams: true,
+  shouldIgnoreItemsStateUpdate: () => true,
 };
 
 export class SimpleTreeViewStore<Multiple extends boolean | undefined> extends MinimalTreeViewStore<

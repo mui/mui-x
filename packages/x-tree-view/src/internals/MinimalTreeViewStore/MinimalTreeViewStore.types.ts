@@ -285,10 +285,7 @@ export interface TreeViewParametersToStateMapper<
     parameters: Parameters,
     updateModel: TreeViewModelUpdater<State, Parameters>,
   ) => Partial<State>;
-  /**
-   * Whether the items-related state should not be updated when the parameter change.
-   */
-  ignoreItemsStateUpdateFromParams: boolean;
+  shouldIgnoreItemsStateUpdate: (parameters: Parameters) => boolean;
 }
 
 export type TreeViewModelUpdater<

@@ -3,6 +3,9 @@ import {
   lazyLoadingSelectors,
   TREE_VIEW_ROOT_PARENT_ID,
   TREE_VIEW_LAZY_LOADED_ITEMS_INITIAL_STATE,
+  expansionSelectors,
+  DataSource,
+  selectionSelectors,
 } from '@mui/x-tree-view/internals';
 import { TreeViewItemId } from '@mui/x-tree-view/models';
 import { DataSourceCache, DataSourceCacheDefault } from '@mui/x-tree-view/utils';
@@ -19,6 +22,10 @@ export class TreeViewLazyLoadingManager<Store extends RichTreeViewProStore<any, 
   constructor(store: Store) {
     this.store = store;
     this.cache = store.parameters.dataSourceCache ?? new DataSourceCacheDefault({});
+
+    if (store.parameters.dataSource != null) {
+      lazyLoadingOnMount(store, store.parameters.dataSource);
+    }
   }
 
   private setItemLoading = (itemId: TreeViewItemId | null, isLoading: boolean) => {
@@ -67,7 +74,13 @@ export class TreeViewLazyLoadingManager<Store extends RichTreeViewProStore<any, 
   public updateItemChildren = (itemId: TreeViewItemId) =>
     this.fetchItemChildren({ itemId, forceRefresh: true });
 
-  public fetchItemChildren = async ({ itemId, forceRefresh }) => {
+  public fetchItemChildren = async ({
+    itemId,
+    forceRefresh,
+  }: {
+    itemId: TreeViewItemId | null;
+    forceRefresh?: boolean;
+  }) => {
     if (!this.store.parameters.dataSource) {
       return;
     }
@@ -137,4 +150,81 @@ export class TreeViewLazyLoadingManager<Store extends RichTreeViewProStore<any, 
       }
     }
   };
+}
+
+function getExpandableItemsFromDataSource(
+  store: RichTreeViewProStore<any, any>,
+  dataSource: DataSource<any>,
+): TreeViewItemId[] {
+  return Object.values(store.state.itemMetaLookup)
+    .filter(
+      (itemMeta) =>
+        !itemMeta.expandable &&
+        dataSource.getChildrenCount(store.state.itemModelLookup[itemMeta.id]) > 0,
+    )
+    .map((item) => item.id);
+}
+
+function lazyLoadingOnMount(store: RichTreeViewProStore<any, any>, dataSource: DataSource<any>) {
+  async function fetchAllExpandedItems() {
+    async function fetchChildrenIfExpanded(parentIds: TreeViewItemId[]) {
+      const expandedItems = parentIds.filter((id) =>
+        expansionSelectors.isItemExpanded(store.state, id),
+      );
+      if (expandedItems.length > 0) {
+        const itemsToLazyLoad = expandedItems.filter(
+          (id) => itemsSelectors.itemOrderedChildrenIds(store.state, id).length === 0,
+        );
+        if (itemsToLazyLoad.length > 0) {
+          await store.fetchItems(itemsToLazyLoad);
+        }
+        const childrenIds = expandedItems.flatMap((id) =>
+          itemsSelectors.itemOrderedChildrenIds(store.state, id),
+        );
+        await fetchChildrenIfExpanded(childrenIds);
+      }
+    }
+
+    if (store.parameters.items.length) {
+      const newlyExpandableItems = getExpandableItemsFromDataSource(store, dataSource);
+
+      if (newlyExpandableItems.length > 0) {
+        store.addExpandableItems(newlyExpandableItems);
+      }
+    } else {
+      await store.fetchItemChildren({ itemId: null });
+    }
+    await fetchChildrenIfExpanded(itemsSelectors.itemOrderedChildrenIds(store.state, null));
+  }
+
+  fetchAllExpandedItems();
+}
+
+function subscribeEvents(store: RichTreeViewProStore<any, any>) {
+  store.$.subscribeEvent('beforeItemToggleExpansion', async (eventParameters) => {
+    if (!params.dataSource || !eventParameters.shouldBeExpanded) {
+      return;
+    }
+
+    // prevent the default expansion behavior
+    eventParameters.isExpansionPrevented = true;
+    await store.fetchItems([eventParameters.itemId]);
+    const hasError = lazyLoadingSelectors.itemHasError(store.state, eventParameters.itemId);
+    if (!hasError) {
+      store.applyItemExpansion({
+        itemId: eventParameters.itemId,
+        shouldBeExpanded: true,
+        event: eventParameters.event,
+      });
+      if (selectionSelectors.isItemSelected(store.state, eventParameters.itemId)) {
+        // make sure selection propagation works correctly
+        store.setItemSelection({
+          event: eventParameters.event as React.SyntheticEvent,
+          itemId: eventParameters.itemId,
+          keepExistingSelection: true,
+          shouldBeSelected: true,
+        });
+      }
+    }
+  });
 }
