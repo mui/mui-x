@@ -31,6 +31,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
   const store = useEventCalendar(parameters);
   const view = useStore(store, selectors.view);
   const isSidePanelOpen = useStore(store, selectors.preferences).isSidePanelOpen;
+  const isScopeDialogOpen = useStore(store, selectors.isScopeDialogOpen);
   const {
     // TODO: Move inside useEventCalendar so that standalone view can benefit from it (#19293).
     translations,
@@ -97,7 +98,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
                 {content}
               </section>
 
-              <RecurringScopeDialog containerRef={rootRef} />
+              {isScopeDialogOpen && <RecurringScopeDialog containerRef={rootRef} />}
             </div>
           </div>
         </TranslationsProvider>
