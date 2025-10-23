@@ -30,6 +30,8 @@ export async function exportImage(
     copyStyles = true,
     nonce,
   } = params ?? {};
+  // eslint-disable-next-line no-console
+  console.log('export image');
   const drawDocumentPromise = getDrawDocument();
   const doc = ownerDocument(element);
 
@@ -85,6 +87,8 @@ export async function exportImage(
     await drawDocument(iframe.contentDocument!, canvas, {
       // Handle retina displays: https://github.com/cburgmer/rasterizeHTML.js/blob/262b3404d1c469ce4a7750a2976dec09b8ae2d6c/examples/retina.html#L71
       zoom: ratio,
+      // @ts-expect-error TODO: Fix
+      nonce,
     });
   } finally {
     doc.body.removeChild(iframe);
