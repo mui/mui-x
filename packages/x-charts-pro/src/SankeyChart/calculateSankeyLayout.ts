@@ -32,14 +32,10 @@ export function calculateSankeyLayout(
     width: nodeWidth = 15,
     padding: nodePadding = 10,
     align: nodeAlign = 'justify',
-    sort: nodeSort = null,
+    sort: nodeSort,
   } = nodeOptions ?? {};
 
-  const {
-    color: linkColor = 'source',
-    sort: linkSort = null,
-    curveCorrection = 10,
-  } = linkOptions ?? {};
+  const { color: linkColor = 'source', sort: linkSort, curveCorrection = 10 } = linkOptions ?? {};
 
   const { width, height, left, top, bottom, right } = drawingArea;
   if (!data || !data.links) {
@@ -56,7 +52,7 @@ export function calculateSankeyLayout(
   };
 
   // Create the sankey layout generator
-  let sankeyGenerator = sankey<typeof graph, SankeyLayoutNode, SankeyLayoutLink>()
+  const sankeyGenerator = sankey<typeof graph, SankeyLayoutNode, SankeyLayoutLink>()
     .nodeWidth(nodeWidth)
     .nodePadding(nodePadding)
     .nodeAlign(getNodeAlignFunction(nodeAlign))
@@ -67,11 +63,17 @@ export function calculateSankeyLayout(
     .nodeId((d) => d.id)
     .iterations(iterations);
 
-  if (nodeSort) {
-    sankeyGenerator = sankeyGenerator.nodeSort(nodeSort);
+  if (typeof nodeSort === 'function') {
+    sankeyGenerator.nodeSort(nodeSort);
+  } else {
+    // Null is not accepted by the types.
+    sankeyGenerator.nodeSort(null as any);
   }
-  if (linkSort) {
-    sankeyGenerator = sankeyGenerator.linkSort(linkSort);
+  if (typeof linkSort === 'function') {
+    sankeyGenerator.linkSort(linkSort);
+  } else {
+    // Null is not accepted by the types.
+    sankeyGenerator.linkSort(null as any);
   }
 
   // Generate the layout
