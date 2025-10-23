@@ -3,7 +3,7 @@
  *
  * This file determines which packages and components will have their bundle sizes measured.
  */
-import path from 'path';
+import path from 'node:path';
 import { globby } from 'globby';
 import { defineConfig } from '@mui/internal-bundle-size-checker';
 // eslint-disable-next-line import/no-relative-packages
@@ -78,6 +78,6 @@ export default defineConfig(async () => {
       // Stabilize release info string
       [JSON.stringify(generateReleaseInfo())]: JSON.stringify('__RELEASE_INFO__'),
     },
-    comment: false,
+    comment: true,
   };
 });
