@@ -202,7 +202,7 @@ export const getPropsOverrides = (
 export const fetchParents = (
   rowTree: GridRowTreeConfig,
   rowId: GridRowId,
-  fetchHandler: (id?: GridRowId) => void,
+  fetchHandler: (id?: GridRowId) => Promise<void>,
 ) => {
   const parents: GridRowId[] = [];
 
