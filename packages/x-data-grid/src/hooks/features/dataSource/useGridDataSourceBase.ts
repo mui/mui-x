@@ -92,7 +92,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
   );
 
   const fetchRows = React.useCallback<GridDataSourceApiBase['fetchRows']>(
-    async (parentId, params): Promise<void> => {
+    async (parentId, params) => {
       const getRows = props.dataSource?.getRows;
       if (!getRows) {
         return;
