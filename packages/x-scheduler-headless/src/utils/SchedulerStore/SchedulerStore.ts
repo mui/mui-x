@@ -325,7 +325,7 @@ export class SchedulerStore<
     this.updateEvents(updatedEvents);
     const submit = onSubmit;
     if (submit) {
-      Promise.resolve().then(() => submit());
+      queueMicrotask(() => submit());
     }
   };
 
