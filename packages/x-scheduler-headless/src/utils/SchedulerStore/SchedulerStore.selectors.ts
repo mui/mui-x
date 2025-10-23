@@ -45,9 +45,9 @@ const resourceSelector = createSelector(
 
 const isEventReadOnlySelector = createSelector(
   eventSelector,
-  (event, _eventId: CalendarEventId) => {
-    // TODO: Support putting the whole calendar as readOnly.
-    return !!event?.readOnly;
+  (state: State) => state.readOnly,
+  (event, readOnly, _eventId: CalendarEventId) => {
+    return !!event?.readOnly || readOnly;
   },
 );
 
@@ -59,6 +59,7 @@ export const selectors = {
   resources: createSelector((state: State) => state.resources),
   events: createSelector((state: State) => state.events),
   visibleResourcesMap: createSelector((state: State) => state.visibleResources),
+  canCreateNewEvent: createSelector((state: State) => !state.readOnly),
   resource: resourceSelector,
   eventColor: createSelector((state: State, eventId: CalendarEventId) => {
     const event = eventSelector(state, eventId);
@@ -107,8 +108,12 @@ export const selectors = {
       };
     },
   ),
-  canDragEventsFromTheOutside: createSelector((state: State) => state.canDragEventsFromTheOutside),
-  canDropEventsToTheOutside: createSelector((state: State) => state.canDropEventsToTheOutside),
+  canDragEventsFromTheOutside: createSelector(
+    (state: State) => state.canDragEventsFromTheOutside && !state.readOnly,
+  ),
+  canDropEventsToTheOutside: createSelector(
+    (state: State) => state.canDropEventsToTheOutside && !state.readOnly,
+  ),
   isCurrentDay: createSelector(
     (state: State) => state.adapter,
     (state: State) => state.nowUpdatedEveryMinute,
