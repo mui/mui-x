@@ -55,6 +55,7 @@ import {
   getAggregationFunctionLabel,
   getAvailableAggregationFunctions,
 } from '../aggregation/gridAggregationUtils';
+import type { GridAggregationModel } from '../aggregation/gridAggregationInterfaces';
 import { gridAggregationModelSelector } from '../aggregation/gridAggregationSelectors';
 import { gridPivotModelSelector } from '../pivoting/gridPivotingSelectors';
 import type { GridPivotModel } from '../pivoting/gridPivotingInterfaces';
@@ -284,21 +285,26 @@ export const useGridChartsIntegration = (
     if (!pivotActive && visibleValues.current[activeChartId] && rowGroupingModel.length > 0) {
       // with row grouping add the aggregation model to the newly added value dataset
       const aggregatedFields = Object.keys(aggregationModel);
+      const aggregationsToAdd: GridAggregationModel = {};
 
       visibleValues.current[activeChartId].forEach((item) => {
         const hasAggregation = aggregatedFields.includes(item.field);
         if (!hasAggregation) {
-          apiRef.current.setAggregationModel({
-            ...aggregationModel,
-            // use the first available aggregation function
-            [item.field]: getAvailableAggregationFunctions({
-              aggregationFunctions: props.aggregationFunctions,
-              colDef: item,
-              isDataSource: !!props.dataSource,
-            })[0],
-          });
+          // use the first available aggregation function
+          aggregationsToAdd[item.field] = getAvailableAggregationFunctions({
+            aggregationFunctions: props.aggregationFunctions,
+            colDef: item,
+            isDataSource: !!props.dataSource,
+          })[0];
         }
       });
+
+      if (Object.keys(aggregationsToAdd).length > 0) {
+        apiRef.current.setAggregationModel({
+          ...aggregationModel,
+          ...aggregationsToAdd,
+        });
+      }
     }
   }, [
     apiRef,
@@ -529,9 +535,16 @@ export const useGridChartsIntegration = (
       });
 
       updateOtherModels();
-      handleRowDataUpdate(chartIds);
+      debouncedHandleRowDataUpdate(chartIds);
     },
-    [apiRef, chartStateLookup, pivotActive, pivotModel, handleRowDataUpdate, updateOtherModels],
+    [
+      apiRef,
+      chartStateLookup,
+      pivotActive,
+      pivotModel,
+      debouncedHandleRowDataUpdate,
+      updateOtherModels,
+    ],
   );
 
   const debouncedHandleColumnDataUpdate = React.useMemo(
