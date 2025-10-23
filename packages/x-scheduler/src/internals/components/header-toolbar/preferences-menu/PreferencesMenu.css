@@ -18,7 +18,7 @@
   color: var(--secondary-text-color);
   font-size: var(--font-size-1);
 
-  &:first-letter {
+  &::first-letter {
     text-transform: uppercase;
   }
 }
