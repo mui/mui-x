@@ -5,9 +5,16 @@ import { ChartImageExportOptions } from './useChartProExport.types';
 import { defaultOnBeforeExport } from './defaults';
 
 export const getDrawDocument = async () => {
-  // Use the local TypeScript implementation instead of external dependency
-  const { drawDocument } = await import('./rasterizeHtml');
-  return drawDocument;
+  try {
+    const module = await import('rasterizehtml');
+
+    return (module.default || module).drawDocument;
+  } catch (error) {
+    throw new Error(
+      `MUI X Charts: Failed to import 'rasterizehtml' module. This dependency is mandatory when exporting a chart as an image. Make sure you have it installed as a dependency.`,
+      { cause: error },
+    );
+  }
 };
 
 export async function exportImage(
