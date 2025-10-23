@@ -702,7 +702,20 @@ export function realignWeeklyByDay(
   const newWeekDayCodes: RecurringEventWeekDayCode[] = [];
   for (let i = 0; i < NOT_LOCALIZED_WEEK_DAYS.length; i += 1) {
     const code = NOT_LOCALIZED_WEEK_DAYS[(i + mondayWeekDayNumber - 1) % 7];
-    if ((weekDayCodesSet.has(code) && code !== oldCode) || code === newCode) {
+
+    let shouldAddCode: boolean;
+    // Only add the newCode if the oldCode was present
+    if (code === newCode && weekDayCodesSet.has(oldCode)) {
+      shouldAddCode = true;
+    }
+    // Only add other codes if they were present originally and are not the oldCode
+    else if (weekDayCodesSet.has(code) && code !== oldCode) {
+      shouldAddCode = true;
+    } else {
+      shouldAddCode = false;
+    }
+
+    if (shouldAddCode) {
       newWeekDayCodes.push(code);
     }
   }
