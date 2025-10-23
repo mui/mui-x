@@ -22,10 +22,12 @@ import {
   gridColumnFieldsSelector,
   gridFilteredSortedDepthRowEntriesSelector,
   GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
+  GridRestoreStatePreProcessingContext,
 } from '@mui/x-data-grid-pro/internals';
 
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
-import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
+import type { GridInitialStatePremium } from '../../../models/gridStatePremium';
+import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import {
   ChartState,
   GridChartsIntegrationContextValue,
@@ -43,6 +45,7 @@ import {
   gridChartsValuesSelector,
   gridChartsIntegrationActiveChartIdSelector,
   gridChartableColumnsSelector,
+  gridChartsIntegrationChartsLookupSelector,
 } from './gridChartsIntegrationSelectors';
 import { useGridChartsIntegrationContext } from '../../utils/useGridChartIntegration';
 import { isBlockedForSection } from './utils';
@@ -879,6 +882,103 @@ export const useGridChartsIntegration = (
     'sortedRowsSet',
     runIf(isChartsIntegrationAvailable, () => debouncedHandleRowDataUpdate(syncedChartIds)),
   );
+
+  const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
+    (prevState, exportContext) => {
+      if (!props.chartsIntegration || !props.experimentalFeatures?.charts) {
+        return prevState;
+      }
+
+      const currentActiveChartId = gridChartsIntegrationActiveChartIdSelector(apiRef);
+      const chartsLookup = gridChartsIntegrationChartsLookupSelector(apiRef);
+      const integrationContextToExport = Object.fromEntries(
+        Object.entries(chartStateLookup).map(([chartId, chartState]) => [
+          chartId,
+          // keep only the state that is controlled by the user, drop the data and labels
+          {
+            synced: chartState.synced,
+            type: chartState.type,
+            configuration: chartState.configuration,
+          },
+        ]),
+      );
+
+      const shouldExportChartState =
+        // Always export if the `exportOnlyDirtyModels` property is not activated
+        !exportContext.exportOnlyDirtyModels ||
+        // Always export if the chart state has been initialized
+        props.initialState?.chartsIntegration != null ||
+        // Export if the chart model or context is not empty
+        Object.keys(chartsLookup).length > 0 ||
+        Object.keys(integrationContextToExport).length > 0;
+
+      if (!shouldExportChartState) {
+        return prevState;
+      }
+
+      const chartStateToExport = {
+        activeChartId: currentActiveChartId,
+        charts: chartsLookup,
+        // add a custom prop to keep the integration context in the exported state
+        integrationContext: integrationContextToExport,
+      };
+
+      return {
+        ...prevState,
+        chartsIntegration: chartStateToExport,
+      };
+    },
+    [
+      apiRef,
+      chartStateLookup,
+      props.chartsIntegration,
+      props.experimentalFeatures?.charts,
+      props.initialState?.chartsIntegration,
+    ],
+  );
+
+  const stateRestorePreProcessing = React.useCallback<GridPipeProcessor<'restoreState'>>(
+    (params, restoreContext) => {
+      const chartsRestoreState = (
+        restoreContext as GridRestoreStatePreProcessingContext<GridInitialStatePremium>
+      ).stateToRestore.chartsIntegration;
+
+      const {
+        activeChartId: activeChartIdToRestore,
+        charts: chartsToRestore,
+        integrationContext,
+      } = chartsRestoreState as GridChartsIntegrationState & {
+        integrationContext: Record<string, ChartState>;
+      };
+
+      if (
+        activeChartIdToRestore === undefined ||
+        chartsToRestore === undefined ||
+        Object.keys(chartsToRestore).length === 0
+      ) {
+        return params;
+      }
+
+      apiRef.current.setState({
+        ...apiRef.current.state,
+        chartsIntegration: {
+          activeChartId: activeChartIdToRestore,
+          charts: chartsToRestore,
+        },
+      });
+
+      // restore the integration context for each chart
+      Object.entries(integrationContext).forEach(([chartId, chartContextState]) => {
+        setChartState(chartId, chartContextState as ChartState);
+      });
+
+      return params;
+    },
+    [apiRef, setChartState],
+  );
+
+  useGridRegisterPipeProcessor(apiRef, 'exportState', stateExportPreProcessing);
+  useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
 
   React.useEffect(() => {
     if (!activeChartId && availableChartIds.length > 0) {
