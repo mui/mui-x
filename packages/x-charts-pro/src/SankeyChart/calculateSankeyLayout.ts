@@ -63,15 +63,16 @@ export function calculateSankeyLayout(
     .nodeId((d) => d.id)
     .iterations(iterations);
 
+  // For 'auto' or undefined, don't set anything (use d3-sankey default behavior)
   if (typeof nodeSort === 'function') {
     sankeyGenerator.nodeSort(nodeSort);
-  } else {
+  } else if (nodeSort === 'fixed') {
     // Null is not accepted by the types.
     sankeyGenerator.nodeSort(null as any);
   }
   if (typeof linkSort === 'function') {
     sankeyGenerator.linkSort(linkSort);
-  } else {
+  } else if (linkSort === 'fixed') {
     // Null is not accepted by the types.
     sankeyGenerator.linkSort(null as any);
   }
