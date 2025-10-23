@@ -18,9 +18,8 @@ import { AGENDA_VIEW_DAYS_AMOUNT, MAX_HORIZON_DAYS } from '../constants';
  */
 export function useAgendaEventOccurrencesGroupedByDay(): useAgendaEventOccurrencesGroupedByDayOptions.ReturnValue {
   const adapter = useAdapter();
-  const amount = AGENDA_VIEW_DAYS_AMOUNT;
-
   const store = useEventCalendarStoreContext();
+
   const getDayList = useDayList();
 
   const events = useStore(store, selectors.events);
@@ -28,6 +27,8 @@ export function useAgendaEventOccurrencesGroupedByDay(): useAgendaEventOccurrenc
   const showWeekends = useStore(store, selectors.showWeekends);
   const showEmptyDays = useStore(store, selectors.showEmptyDaysInAgenda);
   const visibleResources = useStore(store, selectors.visibleResourcesMap);
+
+  const amount = AGENDA_VIEW_DAYS_AMOUNT;
 
   return React.useMemo(() => {
     if (process.env.NODE_ENV !== 'production') {
