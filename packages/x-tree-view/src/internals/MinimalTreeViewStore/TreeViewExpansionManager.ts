@@ -38,10 +38,9 @@ export class TreeViewExpansionManager<Store extends MinimalTreeViewStore<any, an
     const eventParameters = {
       isExpansionPrevented: false,
       shouldBeExpanded: cleanShouldBeExpanded,
-      event,
       itemId,
     };
-    publishTreeViewEvent(instance, 'beforeItemToggleExpansion', eventParameters);
+    this.store.$.publishEvent('beforeItemToggleExpansion', eventParameters, event);
     if (eventParameters.isExpansionPrevented) {
       return;
     }

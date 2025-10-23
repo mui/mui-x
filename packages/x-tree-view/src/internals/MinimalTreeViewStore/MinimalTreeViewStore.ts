@@ -102,7 +102,7 @@ export class MinimalTreeViewStore<
   /**
    * Builds an object containing the method that should be exposed publicly by the Tree View components.
    */
-  protected buildPublicAPI(): MinimalTreeViewPublicAPI<R, Multiple> {
+  public buildPublicAPI(): MinimalTreeViewPublicAPI<R, Multiple> {
     return {
       focusItem: this.focusItem,
       getItem: this.getItem,

@@ -24,7 +24,8 @@ export class TreeViewLazyLoadingManager<Store extends RichTreeViewProStore<any, 
     this.cache = store.parameters.dataSourceCache ?? new DataSourceCacheDefault({});
 
     if (store.parameters.dataSource != null) {
-      lazyLoadingOnMount(store, store.parameters.dataSource);
+      lazyLoadingOnMount(store);
+      subscribeEvents(store);
     }
   }
 
@@ -165,7 +166,9 @@ function getExpandableItemsFromDataSource(
     .map((item) => item.id);
 }
 
-function lazyLoadingOnMount(store: RichTreeViewProStore<any, any>, dataSource: DataSource<any>) {
+function lazyLoadingOnMount(store: RichTreeViewProStore<any, any>) {
+  const dataSource = store.parameters.dataSource!;
+
   async function fetchAllExpandedItems() {
     async function fetchChildrenIfExpanded(parentIds: TreeViewItemId[]) {
       const expandedItems = parentIds.filter((id) =>
@@ -201,8 +204,8 @@ function lazyLoadingOnMount(store: RichTreeViewProStore<any, any>, dataSource: D
 }
 
 function subscribeEvents(store: RichTreeViewProStore<any, any>) {
-  store.$.subscribeEvent('beforeItemToggleExpansion', async (eventParameters) => {
-    if (!params.dataSource || !eventParameters.shouldBeExpanded) {
+  store.$.subscribeEvent('beforeItemToggleExpansion', async (eventParameters, event) => {
+    if (!store.parameters.dataSource || !eventParameters.shouldBeExpanded) {
       return;
     }
 
@@ -214,12 +217,12 @@ function subscribeEvents(store: RichTreeViewProStore<any, any>) {
       store.applyItemExpansion({
         itemId: eventParameters.itemId,
         shouldBeExpanded: true,
-        event: eventParameters.event,
+        event,
       });
       if (selectionSelectors.isItemSelected(store.state, eventParameters.itemId)) {
         // make sure selection propagation works correctly
         store.setItemSelection({
-          event: eventParameters.event as React.SyntheticEvent,
+          event,
           itemId: eventParameters.itemId,
           keepExistingSelection: true,
           shouldBeSelected: true,

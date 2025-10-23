@@ -12,7 +12,11 @@ interface RegistryContainer {
 }
 
 // We use class to make it easier to detect in heap snapshots by name
-class ObjectToBeRetainedByReact {}
+class ObjectToBeRetainedByReact {
+  static create() {
+    return new ObjectToBeRetainedByReact();
+  }
+}
 
 // Based on https://github.com/Bnaya/use-dispose-uncommitted/blob/main/src/finalization-registry-based-impl.ts
 // Check https://github.com/facebook/react/issues/15317 to get more information
@@ -38,7 +42,7 @@ export function createUseInstanceEventHandler(registryContainer: RegistryContain
           : new TimerBasedCleanupTracking();
     }
 
-    const [objectRetainedByReact] = React.useState(new ObjectToBeRetainedByReact());
+    const objectRetainedByReact = React.useState(ObjectToBeRetainedByReact.create)[0];
     const subscription = React.useRef<(() => void) | null>(null);
     const handlerRef = React.useRef<
       TreeViewEventListener<TreeViewUsedEvents<Signature>[E]> | undefined

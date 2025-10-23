@@ -1,6 +1,6 @@
 import { useRefWithInit } from '@base-ui-components/utils/useRefWithInit';
 import { TreeViewItemId, TreeViewSelectionPropagation } from '../models';
-import { getLookupFromArray } from '../internals/plugins/useTreeViewSelection/useTreeViewSelection.utils';
+import { getLookupFromArray } from '../internals/MinimalTreeViewStore/TreeViewSelectionManager';
 
 const defaultGetItemId = (item: any) => item.id;
 

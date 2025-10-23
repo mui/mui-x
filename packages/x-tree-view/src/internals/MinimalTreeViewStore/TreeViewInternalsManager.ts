@@ -1,11 +1,11 @@
 import { EventManager } from '@mui/x-internals/EventManager';
 import { MinimalTreeViewState } from './MinimalTreeViewStore.types';
-import type { MinimalTreeViewStore } from './MinimalTreeViewStore';
-import { TreeViewEventListener } from '../models/events';
+import { TreeViewEventListener, TreeViewEventLookup, TreeViewEvents } from '../models/events';
+import { TreeViewStore } from '../models';
 
 export class TreeViewInternalsManager<
   State extends MinimalTreeViewState<any, any>,
-  Store extends MinimalTreeViewStore<any, any, State, any>,
+  Store extends TreeViewStore<any, any, any>,
 > {
   private store: Store;
 
@@ -28,8 +28,13 @@ export class TreeViewInternalsManager<
     });
   };
 
-  public publishEvent = (...args: any[]) => {
-    const [name, params, event = {}] = args;
+  public publishEvent = <E extends TreeViewEvents>(
+    name: E,
+    params: TreeViewEventLookup[E] extends { params: any }
+      ? TreeViewEventLookup[E]['params']
+      : undefined,
+    event: TreeViewEventLookup[E] extends { event: any } ? TreeViewEventLookup[E]['event'] : null,
+  ) => {
     event.defaultMuiPrevented = false;
 
     if (isSyntheticEvent(event) && event.isPropagationStopped()) {
@@ -39,10 +44,19 @@ export class TreeViewInternalsManager<
     this.eventManager.emit(name, params, event);
   };
 
-  public subscribeEvent = (event: string, handler: TreeViewEventListener<any>) => {
-    this.eventManager.on(event, handler);
+  public subscribeEvent = <E extends TreeViewEvents>(
+    eventName: E,
+    handler: TreeViewEventListener<E>,
+  ) => {
+    const enhancedHandler: TreeViewEventListener<E> = (params, event) => {
+      if (!event.defaultMuiPrevented) {
+        handler(params, event);
+      }
+    };
+
+    this.eventManager.on(eventName, enhancedHandler);
     return () => {
-      this.eventManager.removeListener(event, handler);
+      this.eventManager.removeListener(eventName, enhancedHandler);
     };
   };
 }

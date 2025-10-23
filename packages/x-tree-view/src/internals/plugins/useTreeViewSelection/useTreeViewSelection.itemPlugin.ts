@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createSelector, useStore } from '@mui/x-internals/store';
 import { TreeViewItemId, TreeViewCancellableEvent } from '../../../models';
 import { useTreeViewContext } from '../../TreeViewProvider';
-import { TreeViewItemPlugin, TreeViewState } from '../../models';
+import { TreeViewItemPlugin } from '../../models';
 import {
   UseTreeItemCheckboxSlotPropsFromSelection,
   UseTreeViewSelectionSignature,
@@ -10,12 +10,10 @@ import {
 import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import { itemsSelectors } from '../useTreeViewItems/useTreeViewItems.selectors';
 import { selectionSelectors } from './useTreeViewSelection.selectors';
+import { MinimalTreeViewState } from '../../MinimalTreeViewStore';
 
 const selectorCheckboxSelectionStatus = createSelector(
-  (
-    state: TreeViewState<[UseTreeViewItemsSignature, UseTreeViewSelectionSignature]>,
-    itemId: TreeViewItemId,
-  ) => {
+  (state: MinimalTreeViewState<any, any>, itemId: TreeViewItemId) => {
     if (selectionSelectors.isItemSelected(state, itemId)) {
       return 'checked';
     }
