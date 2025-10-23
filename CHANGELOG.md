@@ -11,8 +11,8 @@ _Oct 23, 2025_
 
 We'd like to extend a big thank you to the 13 contributors who made this release possible. Here are some highlights ✨:
 
-- 🖌️ Add new [`brush` charts interaction](https://mui.com/x/react-charts/brush/) for building custom behaviour.
-  ![output (7)](https://github.com/user-attachments/assets/60c382a1-e418-4736-8dcb-1567c4e361e3)
+- 🖌️ Add new [`brush` charts interaction](https://mui.com/x/react-charts/brush/) for building custom behavior.
+  ![brush visualization example](https://github.com/user-attachments/assets/60c382a1-e418-4736-8dcb-1567c4e361e3)
 - ⚡️ Performance improvements for large bar charts
 - 🤖 Data Grid AI assistant can now [visualize the query results](https://mui.com/x/react-data-grid/ai-assistant/#data-visualization) by controlling the chart integration settings
 - 📦 DataGrid uses an internal MUI fork of ExcelJS that does not depend on vulnerable versions of NPM packages
@@ -26,7 +26,7 @@ The following are all team members who have contributed to this release:
 
 #### `@mui/x-data-grid@8.15.0`
 
-- [DataGrid] Add loading state recipe (#19958) @siriwatknp
+- [DataGrid] Fix `dataSource.fetchRows` API's return type (#20068) @arminmeh
 
 #### `@mui/x-data-grid-pro@8.15.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -98,6 +98,7 @@ Internal changes.
 - [docs] Add overview section for scatter chart and heatmap (#19888) @prakhargupta1
 - [docs] Add charts bell curve example (#20003) @JCQuintas
 - [docs] Add grouped multiple fields for Data Grid row grouping recipe (#19964) @siriwatknp
+- [docs] Add Data Grid loading state recipe (#19958) @siriwatknp
 
 ### Core
 
