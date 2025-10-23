@@ -46,6 +46,7 @@ export async function exportImage(
     resolve = res;
   });
 
+  iframe.nonce = nonce;
   iframe.onload = async () => {
     const exportDoc = iframe.contentDocument!;
     const elementClone = element.cloneNode(true) as HTMLElement;
