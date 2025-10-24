@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  code-infra: https://raw.githubusercontent.com/mui/mui-public/refs/heads/ci-orb/.circleci/orbs/code-infra.yaml
+
 parameters:
   browserstack-force:
     description: Whether to force browserstack usage. We have limited resources on browserstack so the pipeline might decide to skip browserstack if this parameter isn't set to true.
@@ -65,83 +68,22 @@ default-context: &default-context
   context:
     - org-global
 
-commands:
-  install_js:
-    parameters:
-      playwright:
-        description: If playwright should be installed.
-        type: boolean
-        default: false
-      react-version:
-        description: The version of React to use.
-        type: string
-        default: << pipeline.parameters.react-version >>
-      material-ui-version:
-        description: The version of material-ui to use.
-        type: string
-        default: << pipeline.parameters.material-ui-version >>
-    steps:
-      - when:
-          condition: << parameters.playwright >>
-          steps:
-            - run:
-                name: Install pnpm package manager
-                command: corepack enable
-      - when:
-          condition:
-            not: << parameters.playwright >>
-          steps:
-            - run:
-                name: Install pnpm package manager
-                # See https://stackoverflow.com/a/73411601
-                command: corepack enable --install-directory ~/bin
-      - run:
-          name: View install environment
-          command: |
-            node --version
-            pnpm --version
-
-      - run:
-          name: Install js dependencies
-          command: |
-            args=""
-            if [ -n "$REACT_VERSION" ] && [ "$REACT_VERSION" != "stable" ]; then
-              args="react@$REACT_VERSION"
-            fi
-            if [ -n "$MATERIAL_UI_VERSION" ] && [ "$MATERIAL_UI_VERSION" != "stable" ]; then
-              args="$args @mui/material@$MATERIAL_UI_VERSION"
-            fi
-            if [ -n "$args" ]; then
-              pnpm dlx @mui/internal-code-infra@canary set-version-overrides --pkg $args
-            else
-              pnpm install
-            fi
-
 jobs:
   checkout:
     <<: *default-job
     steps:
       - checkout
-      - install_js
+      - code-infra/install-deps
       - run:
           name: Should not have any git not staged
           command: git add -A && git diff --exit-code --staged
-      - run:
-          name: '`pnpm dedupe` was run?'
-          command: |
-            # #target-branch-reference
-            if [[ $(git diff --name-status master | grep pnpm-lock) == "" ]];
-            then
-                echo "No changes to dependencies detected. Skipping..."
-            else
-                pnpm dedupe --check
-            fi
+
   test_unit:
     <<: *default-job
     steps:
       - checkout
-      - install_js:
-          react-version: << parameters.react-version >>
+      - code-infra/install-deps:
+          package-overrides: react@<< parameters.react-version >>
       - run:
           name: Test JSDOM
           command: pnpm test:unit:jsdom
@@ -154,9 +96,9 @@ jobs:
     resource_class: large
     steps:
       - checkout
-      - install_js:
-          playwright: true
-          react-version: << parameters.react-version >>
+      - code-infra/install-deps:
+          package-overrides: react@<< parameters.react-version >>
+          browsers: true
       - when:
           condition:
             not:
@@ -180,50 +122,22 @@ jobs:
                   PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
                 command: |
                   node ./scripts/playwrightLaunchServer.mjs & pnpm test:unit:browser --coverage
-            - run:
-                name: Check coverage generated
-                command: |
-                  if ! [[ -s coverage/lcov.info ]]
-                  then
-                    exit 1
-                  fi
-            - run:
-                name: Coverage
-                command: |
-                  curl -Os https://uploader.codecov.io/latest/linux/codecov
-                  chmod +x codecov
-                  ./codecov -t ${CODECOV_TOKEN} -Z -F "$REACT_VERSION-browser"
+            - code-infra/upload-coverage:
+                key: browser
       - store_test_results:
           path: test-results
   test_lint:
     <<: *default-job
     steps:
       - checkout
-      - install_js
-      - run:
-          name: ESLint
-          command: pnpm eslint:ci
-      - run:
-          name: Stylelint
-          command: pnpm stylelint
-      - run:
-          name: Lint Markdown
-          command: pnpm markdownlint
+      - code-infra/install-deps
+      - code-infra/run-linters
   test_static:
     <<: *default-job
     steps:
       - checkout
-      - install_js
-      - run:
-          name: '`pnpm prettier` changes committed?'
-          command: |
-            # #target-branch-reference
-            if [[ $(git diff --name-status master | grep pnpm-lock) == "" ]];
-            then
-                pnpm prettier --check
-            else
-                pnpm exec prettier --check . --ignore-path .lintignore
-            fi
+      - code-infra/install-deps
+      - code-infra/check-static-changes
       - run:
           name: Generate PropTypes
           command: pnpm proptypes
@@ -281,7 +195,7 @@ jobs:
     <<: *default-job
     steps:
       - checkout
-      - install_js
+      - code-infra/install-deps
       - run:
           name: Transpile TypeScript demos
           command: pnpm docs:typescript:formatted --disable-cache
@@ -299,9 +213,9 @@ jobs:
       - image: mcr.microsoft.com/playwright:v1.55.1-noble
     steps:
       - checkout
-      - install_js:
-          playwright: true
-          react-version: << parameters.react-version >>
+      - code-infra/install-deps:
+          browsers: true
+          package-overrides: react@<< parameters.react-version >>
       - run:
           name: Run e2e tests
           command: pnpm test:e2e
@@ -311,8 +225,8 @@ jobs:
       - image: mcr.microsoft.com/playwright:v1.55.1-noble
     steps:
       - checkout
-      - install_js:
-          playwright: true
+      - code-infra/install-deps:
+          browsers: true
       - run:
           name: pnpm test:e2e-website
           command: pnpm test:e2e-website
@@ -322,37 +236,18 @@ jobs:
     <<: *default-job
     steps:
       - checkout
-      - install_js:
-          react-version: << parameters.react-version >>
-      - run:
-          name: prepare danger on PRs
-          command: pnpm danger ci
-          environment:
-            DANGER_COMMAND: prepareBundleSizeReport
-      - run:
-          name: Build packages
-          command: pnpm release:build
-      - run:
-          name: create and upload a size snapshot
-          command: |
-            export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID_ARTIFACTS
-            export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY_ARTIFACTS
-            export AWS_REGION=$AWS_REGION_ARTIFACTS
-            pnpm size:snapshot
-      - run:
-          name: Run danger on PRs
-          command: pnpm danger ci --fail-on-errors
-          environment:
-            DANGER_COMMAND: reportBundleSize
+      - code-infra/install-deps:
+          package-overrides: react@<< parameters.react-version >>
+      - code-infra/test-package
   test_regressions:
     <<: *default-job
     docker:
       - image: mcr.microsoft.com/playwright:v1.55.1-noble
     steps:
       - checkout
-      - install_js:
-          playwright: true
-          react-version: << parameters.react-version >>
+      - code-infra/install-deps:
+          browsers: true
+          package-overrides: react@<< parameters.react-version >>
       - run:
           name: Install ffmpeg
           command: apt update && apt upgrade -y && apt install ffmpeg -y
