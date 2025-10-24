@@ -8,6 +8,7 @@ import {
   getRadarAxisHighlightUtilityClass,
   RadarAxisHighlightClasses,
 } from './radarAxisHighlightClasses';
+import { getSeriesColorFn } from '../../internals/getSeriesColorFn';
 
 const useUtilityClasses = (classes: RadarAxisHighlightProps['classes']) => {
   const slots = {
@@ -52,7 +53,7 @@ function RadarAxisHighlight(props: RadarAxisHighlightProps) {
     return null;
   }
 
-  const { center, series, points, radius, highlightedAngle, instance } = data;
+  const { center, series, points, radius, highlightedAngle, highlightedIndex, instance } = data;
 
   const [x, y] = instance.polar2svg(radius, highlightedAngle);
   return (
@@ -69,7 +70,10 @@ function RadarAxisHighlight(props: RadarAxisHighlightProps) {
         return (
           <circle
             key={series[seriesIndex].id}
-            fill={series[seriesIndex].color}
+            fill={getSeriesColorFn(series[seriesIndex].color)({
+              value: point.value,
+              dataIndex: highlightedIndex,
+            })}
             cx={point.x}
             cy={point.y}
             className={classes.dot}

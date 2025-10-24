@@ -56,7 +56,7 @@ export function ScatterPreviewPlot({ axisId, x, y, height, width }: ScatterPrevi
             key={id}
             xScale={xScale}
             yScale={yScale}
-            color={color}
+            color={typeof color === 'function' ? color(null) : color}
             colorGetter={colorGetter}
             series={series[seriesId]}
             x={x}

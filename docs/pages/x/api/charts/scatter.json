@@ -1,5 +1,6 @@
 {
   "props": {
+    "colorGetter": { "type": { "name": "func" }, "required": true },
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {
