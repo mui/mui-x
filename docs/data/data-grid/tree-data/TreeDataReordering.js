@@ -29,6 +29,7 @@ export default function TreeDataReordering() {
         disableRowSelectionOnClick
         getTreeDataPath={getTreeDataPath}
         setTreeDataPath={setTreeDataPath}
+        onRowOrderChange={(params) => console.log(params)}
       />
     </div>
   );

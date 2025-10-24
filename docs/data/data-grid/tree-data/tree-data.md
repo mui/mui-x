@@ -187,11 +187,22 @@ You also need to pass the `setTreeDataPath()` prop to revert the operation done 
 
 ### Reordering persistance
 
-If you want to update the external row data, for example, to persist it in the local storage, you can use the `onRowOrderChange()` callback and the Data Grid selectors to get the new row order and sync with the external data.
+To sync the updated row order with an external store, use `processRowUpdate()` and `onRowOrderChange()` callbacks.
+
+The `processRowUpdate()` callback is triggered whenever a row is updated, so when doing a cross-parent reorder operation, some values like `path` need to be updated based on data which is a row update. In that case one or multiple (in case of moving a group node) `processRowUpdate()` callbacks are triggered.
+
+And when the reorder operation is successfully completed, the `onRowOrderChange()` callback is triggered, which contains information about the new row re-ordering of the format [`GridRowOrderChangeParams`](https://github.com/mui/mui-x/blob/master/packages/x-data-grid-pro/src/models/gridRowOrderChangeParams.ts).
 
 ```tsx
-<DataGridPro onRowOrderChange={handleRowOrderChange} />
+<DataGridPro
+  // Capture row updates (can be multiple in one reorder operation)
+  processRowUpdate={processRowUpdate}
+  // Capture row re-ordering operations
+  onRowOrderChange={handleRowOrderChange}
+/>
 ```
+
+The demo below uses a custom data store to persist the row data in the local storage and sync the updated row order with the external store. Try refreshing the page to see the persisted row order.
 
 {{"demo": "TreeDataSyncRowData.js", "bg": "inline", "defaultCodeOpen": false}}
 
