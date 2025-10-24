@@ -82,12 +82,12 @@ const innerDescribeTreeView = <TSignatures extends TreeViewAnyPluginSignature[]>
 
     const isItemExpanded = (id: string) => getItemRoot(id).getAttribute('aria-expanded') === 'true';
 
-    const isItemSelected = (id: string) => getItemRoot(id).getAttribute('aria-selected') === 'true';
+    const isItemSelected = (id: string) => getItemRoot(id).getAttribute('aria-checked') === 'true';
 
     const getSelectedTreeItems = () =>
       result
         .queryAllByRole('treeitem')
-        .filter((item) => item.getAttribute('aria-selected') === 'true')
+        .filter((item) => item.getAttribute('aria-checked') === 'true')
         .map((item) => item.dataset.testid!);
 
     return {
