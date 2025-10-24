@@ -44,6 +44,8 @@ type UseMockServerResponse<T> = {
   getChildrenCount?: (row: GridRowModel) => number;
   fetchRows: (url: string) => Promise<T>;
   editRow: (rowId: GridRowId, updatedRow: GridRowModel) => Promise<GridRowModel>;
+  deleteRow: (rowId: GridRowId) => Promise<GridRowId>;
+  insertRows?: (newRows: GridRowModel[], position?: number) => Promise<GridRowModel[]>;
   loadNewData: () => void;
   isReady: boolean;
 };
@@ -494,6 +496,116 @@ export const useMockServer = <T extends GridGetRowsResponse>(
     ],
   );
 
+  const deleteRow = React.useCallback(
+    async (rowId: GridRowId) => {
+      return new Promise<GridRowId>((resolve, reject) => {
+        const minDelay = serverOptions?.minDelay ?? DEFAULT_SERVER_OPTIONS.minDelay;
+        const maxDelay = serverOptions?.maxDelay ?? DEFAULT_SERVER_OPTIONS.maxDelay;
+        const delay = randomInt(minDelay, maxDelay);
+
+        const verbose = serverOptions?.verbose ?? true;
+        // eslint-disable-next-line no-console
+        const print = console.info;
+        if (verbose) {
+          print('MUI X: DATASOURCE DELETE ROW REQUEST', { rowId });
+        }
+
+        if (shouldRequestsFailRef.current) {
+          setTimeout(
+            () => reject(new Error(`Could not delete the row with the id ${rowId}`)),
+            delay,
+          );
+          if (verbose) {
+            print('MUI X: DATASOURCE DELETE ROW FAILURE', { rowId });
+          }
+          return;
+        }
+
+        const newRows = (dataRef.current?.rows || []).filter((row) => row.id !== rowId);
+        if (newRows.length === (dataRef.current?.rows || []).length) {
+          // Row not found
+          setTimeout(() => reject(new Error(`Row with id ${rowId} not found`)), delay);
+          return;
+        }
+        const newData = { ...dataRef.current, rows: newRows } as GridDemoData;
+        const cacheKey = `${options.dataSet}-${options.rowLength}-${index}-${options.maxColumns}`;
+        dataCache.set(cacheKey, newData!);
+        setTimeout(() => {
+          if (verbose) {
+            print('MUI X: DATASOURCE DELETE ROW SUCCESS', { rowId });
+          }
+          resolve(rowId);
+        }, delay);
+        dataRef.current = newData;
+      });
+    },
+    [
+      index,
+      options.dataSet,
+      options.maxColumns,
+      options.rowLength,
+      serverOptions?.maxDelay,
+      serverOptions?.minDelay,
+      serverOptions?.verbose,
+    ],
+  );
+
+  const insertRows = React.useCallback(
+    async (newRows: GridRowModel[], position?: number) => {
+      return new Promise<GridRowModel[]>((resolve, reject) => {
+        const minDelay = serverOptions?.minDelay ?? DEFAULT_SERVER_OPTIONS.minDelay;
+        const maxDelay = serverOptions?.maxDelay ?? DEFAULT_SERVER_OPTIONS.maxDelay;
+        const delay = randomInt(minDelay, maxDelay);
+
+        const verbose = serverOptions?.verbose ?? true;
+        // eslint-disable-next-line no-console
+        const print = console.info;
+        if (verbose) {
+          print('MUI X: DATASOURCE INSERT ROWS REQUEST', { newRows, position });
+        }
+
+        if (shouldRequestsFailRef.current) {
+          setTimeout(() => reject(new Error('Could not insert the new rows')), delay);
+          if (verbose) {
+            print('MUI X: DATASOURCE INSERT ROWS FAILURE', { newRows, position });
+          }
+          return;
+        }
+
+        const currentRows = dataRef.current?.rows || [];
+        let updatedRows: GridRowModel[];
+        if (typeof position === 'number' && position >= 0 && position <= currentRows.length) {
+          updatedRows = [
+            ...currentRows.slice(0, position),
+            ...newRows,
+            ...currentRows.slice(position),
+          ];
+        } else {
+          updatedRows = [...currentRows, ...newRows];
+        }
+        const newData = { ...dataRef.current, rows: updatedRows } as GridDemoData;
+        const cacheKey = `${options.dataSet}-${options.rowLength}-${index}-${options.maxColumns}`;
+        dataCache.set(cacheKey, newData!);
+        setTimeout(() => {
+          if (verbose) {
+            print('MUI X: DATASOURCE INSERT ROWS SUCCESS', { newRows, position });
+          }
+          resolve(newRows);
+        }, delay);
+        dataRef.current = newData;
+      });
+    },
+    [
+      index,
+      options.dataSet,
+      options.maxColumns,
+      options.rowLength,
+      serverOptions?.maxDelay,
+      serverOptions?.minDelay,
+      serverOptions?.verbose,
+    ],
+  );
+
   return {
     columns: columnsWithDefaultColDef,
     initialState: options.dataSet === 'Movies' ? {} : initialState,
@@ -501,6 +613,8 @@ export const useMockServer = <T extends GridGetRowsResponse>(
     getChildrenCount,
     fetchRows,
     editRow,
+    deleteRow,
+    insertRows,
     loadNewData: () => {
       setIndex((oldIndex) => oldIndex + 1);
     },
