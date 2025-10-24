@@ -191,7 +191,7 @@ To sync the updated row order with an external store, use `processRowUpdate()` a
 
 The `processRowUpdate()` callback is triggered whenever a row is updated, so when doing a cross-parent reorder operation, some values like `path` need to be updated based on data which is a row update. In that case one or multiple (in case of moving a group node) `processRowUpdate()` callbacks are triggered.
 
-And when the reorder operation is successfully completed, the `onRowOrderChange()` callback is triggered, which contains information about the new row re-ordering of the format [`GridRowOrderChangeParams`](/x/api/data-grid/grid-row-spacing-params/).
+And when the reorder operation is successfully completed, the `onRowOrderChange()` callback is triggered, which contains information about the new row re-ordering of the format [`GridRowOrderChangeParams`](/x/api/data-grid/grid-row-order-change-params/).
 
 ```tsx
 <DataGridPro
