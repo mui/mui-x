@@ -3,6 +3,14 @@ import { EventCalendarStore } from '../EventCalendarStore';
 
 const DEFAULT_PARAMS = { events: [] };
 
+const DEFAULT_PREFERENCES = {
+  showWeekends: true,
+  showWeekNumber: false,
+  showEmptyDaysInAgenda: true,
+  isSidePanelOpen: true,
+  ampm: true,
+};
+
 describe('Preferences - EventCalendarStore', () => {
   describe('Method: setPreferences', () => {
     it('should merge a partial: showWeekNumber=true keeps showWeekends=true', () => {
@@ -10,11 +18,8 @@ describe('Preferences - EventCalendarStore', () => {
       store.setPreferences({ showWeekNumber: true }, {} as any);
 
       expect(store.state.preferences).to.deep.equal({
-        showWeekends: true,
+        ...DEFAULT_PREFERENCES,
         showWeekNumber: true,
-        showEmptyDaysInAgenda: true,
-        isSidePanelOpen: true,
-        ampm: true,
       });
     });
 
@@ -23,11 +28,9 @@ describe('Preferences - EventCalendarStore', () => {
       store.setPreferences({ showWeekends: false, showWeekNumber: true }, {} as any);
 
       expect(store.state.preferences).to.deep.equal({
+        ...DEFAULT_PREFERENCES,
         showWeekends: false,
         showWeekNumber: true,
-        showEmptyDaysInAgenda: true,
-        isSidePanelOpen: true,
-        ampm: true,
       });
     });
 
@@ -37,11 +40,9 @@ describe('Preferences - EventCalendarStore', () => {
       store.setPreferences({ showWeekNumber: true }, {} as any);
 
       expect(store.state.preferences).to.deep.equal({
+        ...DEFAULT_PREFERENCES,
         showWeekends: false,
         showWeekNumber: true,
-        showEmptyDaysInAgenda: true,
-        isSidePanelOpen: true,
-        ampm: true,
       });
     });
   });
