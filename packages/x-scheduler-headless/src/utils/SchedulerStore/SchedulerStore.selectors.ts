@@ -4,12 +4,12 @@ import {
   CalendarEventId,
   CalendarResource,
   CalendarResourceId,
-  RecurrencePresetKey,
-  RRuleSpec,
+  RecurringEventPresetKey,
+  RecurringEventRecurrenceRule,
   SchedulerValidDate,
 } from '../../models';
 import { SchedulerState as State } from './SchedulerStore.types';
-import { getByDayMaps } from '../recurrence-utils';
+import { getWeekDayCode } from '../recurring-event-utils';
 
 const eventByIdMapSelector = createSelectorMemoized(
   (state: State) => state.events,
@@ -45,9 +45,9 @@ const resourceSelector = createSelector(
 
 const isEventReadOnlySelector = createSelector(
   eventSelector,
-  (event, _eventId: CalendarEventId) => {
-    // TODO: Support putting the whole calendar as readOnly.
-    return !!event?.readOnly;
+  (state: State) => state.readOnly,
+  (event, readOnly, _eventId: CalendarEventId) => {
+    return !!event?.readOnly || readOnly;
   },
 );
 
@@ -59,6 +59,7 @@ export const selectors = {
   resources: createSelector((state: State) => state.resources),
   events: createSelector((state: State) => state.events),
   visibleResourcesMap: createSelector((state: State) => state.visibleResources),
+  canCreateNewEvent: createSelector((state: State) => !state.readOnly),
   resource: resourceSelector,
   eventColor: createSelector((state: State, eventId: CalendarEventId) => {
     const event = eventSelector(state, eventId);
@@ -107,8 +108,15 @@ export const selectors = {
       };
     },
   ),
-  canDragEventsFromTheOutside: createSelector((state: State) => state.canDragEventsFromTheOutside),
-  canDropEventsToTheOutside: createSelector((state: State) => state.canDropEventsToTheOutside),
+  canDragEventsFromTheOutside: createSelector(
+    (state: State) => state.canDragEventsFromTheOutside && !state.readOnly,
+  ),
+  canDropEventsToTheOutside: createSelector(
+    (state: State) => state.canDropEventsToTheOutside && !state.readOnly,
+  ),
+  isScopeDialogOpen: createSelector(
+    (state: State) => state.pendingUpdateRecurringEventParameters != null,
+  ),
   isCurrentDay: createSelector(
     (state: State) => state.adapter,
     (state: State) => state.nowUpdatedEveryMinute,
@@ -119,11 +127,10 @@ export const selectors = {
    */
   recurrencePresets: createSelectorMemoized(
     (state: State) => state.adapter,
-    (adapter, date: SchedulerValidDate): Record<RecurrencePresetKey, RRuleSpec> => {
-      const { numToByDay: numToCode } = getByDayMaps(adapter);
-      const dateDowCode = numToCode[adapter.getDayOfWeek(date)];
-      const dateDayOfMonth = adapter.getDate(date);
-
+    (
+      adapter,
+      date: SchedulerValidDate,
+    ): Record<RecurringEventPresetKey, RecurringEventRecurrenceRule> => {
       return {
         daily: {
           freq: 'DAILY',
@@ -132,12 +139,12 @@ export const selectors = {
         weekly: {
           freq: 'WEEKLY',
           interval: 1,
-          byDay: [dateDowCode],
+          byDay: [getWeekDayCode(adapter, date)],
         },
         monthly: {
           freq: 'MONTHLY',
           interval: 1,
-          byMonthDay: [dateDayOfMonth],
+          byMonthDay: [adapter.getDate(date)],
         },
         yearly: {
           freq: 'YEARLY',
@@ -157,7 +164,7 @@ export const selectors = {
       adapter,
       rule: CalendarEvent['rrule'] | undefined,
       occurrenceStart: SchedulerValidDate,
-    ): RecurrencePresetKey | 'custom' | null => {
+    ): RecurringEventPresetKey | 'custom' | null => {
       if (!rule) {
         return null;
       }
@@ -169,7 +176,6 @@ export const selectors = {
         rule.byMonthDay?.length ||
         rule.byMonth?.length
       );
-      const { numToByDay: numToCode } = getByDayMaps(adapter);
 
       switch (rule.freq) {
         case 'DAILY': {
@@ -179,11 +185,11 @@ export const selectors = {
 
         case 'WEEKLY': {
           // Preset "Weekly" => FREQ=WEEKLY;INTERVAL=1;BYDAY=<weekday-of-start>; no COUNT/UNTIL;
-          const startDowCode = numToCode[adapter.getDayOfWeek(occurrenceStart)];
+          const occurrenceStartWeekDayCode = getWeekDayCode(adapter, occurrenceStart);
 
           const byDay = rule.byDay ?? [];
           const matchesDefaultByDay =
-            byDay.length === 0 || (byDay.length === 1 && byDay[0] === startDowCode);
+            byDay.length === 0 || (byDay.length === 1 && byDay[0] === occurrenceStartWeekDayCode);
           const isPresetWeekly =
             interval === 1 &&
             neverEnds &&

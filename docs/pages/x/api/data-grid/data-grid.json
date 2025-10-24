@@ -2078,6 +2078,24 @@
       "isGlobal": false
     },
     {
+      "key": "scrollShadow",
+      "className": "MuiDataGrid-scrollShadow",
+      "description": "Styles applied to the scroll shadow element.",
+      "isGlobal": false
+    },
+    {
+      "key": "scrollShadow--horizontal",
+      "className": "MuiDataGrid-scrollShadow--horizontal",
+      "description": "Styles applied to the horizontal scroll shadow element.",
+      "isGlobal": false
+    },
+    {
+      "key": "scrollShadow--vertical",
+      "className": "MuiDataGrid-scrollShadow--vertical",
+      "description": "Styles applied to the vertical scroll shadow element.",
+      "isGlobal": false
+    },
+    {
       "key": "selectedRowCount",
       "className": "MuiDataGrid-selectedRowCount",
       "description": "Styles applied to the footer selected row count element.",
@@ -2208,6 +2226,6 @@
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/x-data-grid/src/DataGrid/DataGrid.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-version\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#premium-version\">DataGridPremium</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-data-grid/#community-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-version\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#premium-version\">DataGridPremium</a></li></ul>",
   "cssComponent": false
 }

@@ -15,8 +15,7 @@ import {
   EventDropDataLookup,
 } from '../build-is-valid-drop-target/buildIsValidDropTarget';
 import { SchedulerStoreInContext, useSchedulerStoreContext } from '../use-scheduler-store-context';
-import { RecurringUpdateEventScope, selectors } from './SchedulerStore';
-import { SCHEDULER_RECURRING_EDITING_SCOPE } from '../constants';
+import { selectors } from './SchedulerStore';
 
 export function useDropTarget<Targets extends keyof EventDropDataLookup>(
   parameters: useDropTarget.Parameters<Targets>,
@@ -49,7 +48,7 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
         end: newEnd,
         eventId: data.eventId,
         occurrenceKey: data.occurrenceKey,
-        originalEvent: data.event,
+        originalOccurrence: data.originalOccurrence,
       };
     };
 
@@ -150,12 +149,11 @@ async function applyInternalDragOrResizeOccurrencePlaceholder(
   store: SchedulerStoreInContext,
   placeholder: CalendarOccurrencePlaceholderInternalDragOrResize,
   addPropertiesToDroppedEvent?: () => Partial<CalendarEvent>,
-  chooseRecurringEventScope?: () => Promise<RecurringUpdateEventScope>,
-) {
+): Promise<void> {
   // TODO: Try to do a single state update.
   store.setOccurrencePlaceholder(null);
 
-  const { eventId, start, end, originalEvent } = placeholder;
+  const { eventId, start, end, originalOccurrence } = placeholder;
 
   const original = selectors.event(store.state, eventId);
   if (!original) {
@@ -168,23 +166,14 @@ async function applyInternalDragOrResizeOccurrencePlaceholder(
   }
 
   if (original.rrule) {
-    let scope: RecurringUpdateEventScope;
-    if (chooseRecurringEventScope) {
-      // TODO: Issue #19440 + #19441 - Allow to edit all events or only this event.
-      scope = await chooseRecurringEventScope();
-    } else {
-      // TODO: Issue #19766 - Let the user choose the scope via UI.
-      scope = SCHEDULER_RECURRING_EDITING_SCOPE;
-    }
-
-    return store.updateRecurringEvent({
-      occurrenceStart: originalEvent.start,
+    store.updateRecurringEvent({
+      occurrenceStart: originalOccurrence.start,
       changes,
-      scope,
     });
+    return;
   }
 
-  return store.updateEvent(changes);
+  store.updateEvent(changes);
 }
 
 function applyExternalDragOccurrencePlaceholder(

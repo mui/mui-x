@@ -4,6 +4,7 @@ import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import * as sinon from 'sinon';
 import { ScatterChartPro } from './ScatterChartPro';
+import { CHART_SELECTOR } from '../tests/constants';
 
 const getAxisTickValues = (axis: 'x' | 'y'): string[] => {
   const axisData = Array.from(
@@ -84,7 +85,7 @@ describe.skipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
     expect(getAxisTickValues('x')).to.deep.equal(['1', '2', '3']);
     expect(getAxisTickValues('y')).to.deep.equal(['10', '20', '30']);
 
-    const svg = document.querySelector('svg')!;
+    const svg = document.querySelector(CHART_SELECTOR)!;
 
     await user.pointer([
       {
@@ -126,7 +127,7 @@ describe.skipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
         options,
       );
 
-      const svg = document.querySelector('svg')!;
+      const svg = document.querySelector(CHART_SELECTOR)!;
 
       expect(getAxisTickValues('x')).to.deep.equal(['2.6', '2.8', '3.0']);
       expect(getAxisTickValues('y')).to.deep.equal(['26', '28', '30']);
@@ -193,7 +194,7 @@ describe.skipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
     expect(getAxisTickValues('x')).to.deep.equal(['1', '2', '3']);
     expect(getAxisTickValues('y')).to.deep.equal(['10', '20', '30']);
 
-    const svg = document.querySelector('svg')!;
+    const svg = document.querySelector(CHART_SELECTOR)!;
 
     await user.pointer([
       {
@@ -249,7 +250,7 @@ describe.skipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
 
     expect(getAxisTickValues('x')).to.deep.equal(['1', '2', '3']);
 
-    const svg = document.querySelector('svg')!;
+    const svg = document.querySelector(CHART_SELECTOR)!;
 
     // Perform tap and drag gesture - tap once, then drag vertically up to zoom in
     await user.pointer([

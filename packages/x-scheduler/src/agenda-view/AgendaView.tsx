@@ -2,58 +2,47 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
-import { useStore } from '@base-ui-components/utils/store';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventCalendarView } from '@mui/x-scheduler-headless/use-event-calendar-view';
-import { useDayList } from '@mui/x-scheduler-headless/use-day-list';
-import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { selectors } from '@mui/x-scheduler-headless/use-event-calendar';
-import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-headless/use-event-occurrences-grouped-by-day';
-import { AgendaViewProps } from './AgendaView.types';
+import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
+import { useExtractEventCalendarParameters } from '@mui/x-scheduler-headless/use-event-calendar';
+import { useAgendaEventOccurrencesGroupedByDay } from '@mui/x-scheduler-headless/use-agenda-event-occurrences-grouped-by-day';
+import { AGENDA_VIEW_DAYS_AMOUNT } from '@mui/x-scheduler-headless/constants';
+import { AgendaViewProps, StandaloneAgendaViewProps } from './AgendaView.types';
 import { EventPopoverProvider, EventPopoverTrigger } from '../internals/components/event-popover';
 import { EventItem } from '../internals/components/event/event-item/EventItem';
 import './AgendaView.css';
+import '../index.css';
 
-// TODO: Create a prop to allow users to customize the number of days in agenda view
-export const AGENDA_VIEW_DAYS_AMOUNT = 12;
-
+/**
+ * An Agenda View to use inside the Event Calendar.
+ */
 export const AgendaView = React.memo(
   React.forwardRef(function AgendaView(
     props: AgendaViewProps,
     forwardedRef: React.ForwardedRef<HTMLDivElement>,
   ) {
+    // Context hooks
+    const adapter = useAdapter();
+
+    // Ref hooks
     const containerRef = React.useRef<HTMLElement | null>(null);
     const handleRef = useMergedRefs(forwardedRef, containerRef);
-    const { className, ...other } = props;
 
-    const adapter = useAdapter();
-    const store = useEventCalendarStoreContext();
-    const today = adapter.date();
-    const visibleDate = useStore(store, selectors.visibleDate);
-    const showWeekends = useStore(store, selectors.showWeekends);
-
-    const getDayList = useDayList();
-    const days = React.useMemo(
-      () =>
-        getDayList({
-          date: visibleDate,
-          amount: AGENDA_VIEW_DAYS_AMOUNT,
-          excludeWeekends: !showWeekends,
-        }),
-      [getDayList, showWeekends, visibleDate],
-    );
-    const occurrences = useEventOccurrencesGroupedByDay({ days, renderEventIn: 'every-day' });
-
+    // Feature hooks
+    const { days, occurrencesMap } = useAgendaEventOccurrencesGroupedByDay();
     useEventCalendarView(() => ({
       siblingVisibleDateGetter: (date, delta) =>
         adapter.addDays(date, AGENDA_VIEW_DAYS_AMOUNT * delta),
     }));
 
+    const today = adapter.date();
+
     return (
       <div
+        {...props}
         ref={handleRef}
-        className={clsx('AgendaViewContainer', 'mui-x-scheduler', className)}
-        {...other}
+        className={clsx('AgendaViewContainer', 'mui-x-scheduler', props.className)}
       >
         <EventPopoverProvider containerRef={containerRef}>
           {days.map((day) => (
@@ -80,7 +69,7 @@ export const AgendaView = React.memo(
                 </div>
               </header>
               <ul className="EventsList">
-                {occurrences.get(day.key)!.map((occurrence) => (
+                {occurrencesMap.get(day.key)!.map((occurrence) => (
                   <li key={occurrence.key}>
                     <EventPopoverTrigger
                       occurrence={occurrence}
@@ -101,3 +90,19 @@ export const AgendaView = React.memo(
     );
   }),
 );
+
+/**
+ * An Agenda View that can be used outside of the Event Calendar.
+ */
+export const StandaloneAgendaView = React.forwardRef(function StandaloneAgendaView(
+  props: StandaloneAgendaViewProps,
+  forwardedRef: React.ForwardedRef<HTMLDivElement>,
+) {
+  const { parameters, forwardedProps } = useExtractEventCalendarParameters(props);
+
+  return (
+    <EventCalendarProvider {...parameters}>
+      <AgendaView ref={forwardedRef} {...forwardedProps} />
+    </EventCalendarProvider>
+  );
+});

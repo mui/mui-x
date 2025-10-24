@@ -11,17 +11,14 @@ import { Input } from '@base-ui-components/react/input';
 import { useStore } from '@base-ui-components/utils/store';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { Select } from '@base-ui-components/react/select';
-import {
-  DEFAULT_EVENT_COLOR,
-  SCHEDULER_RECURRING_EDITING_SCOPE,
-} from '@mui/x-scheduler-headless/constants';
+import { DEFAULT_EVENT_COLOR } from '@mui/x-scheduler-headless/constants';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import {
   CalendarEventOccurrence,
   CalendarResourceId,
   CalendarEventUpdatedProperties,
   SchedulerValidDate,
-  RecurrencePresetKey,
+  RecurringEventPresetKey,
 } from '@mui/x-scheduler-headless/models';
 import { selectors } from '@mui/x-scheduler-headless/use-event-calendar';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
@@ -142,7 +139,7 @@ export const EventPopoverContent = React.forwardRef(function EventPopoverContent
 
   const recurrenceOptions: {
     label: string;
-    value: RecurrencePresetKey | null;
+    value: RecurringEventPresetKey | null;
   }[] = [
     { label: `${translations.recurrenceNoRepeat}`, value: null },
     { label: `${translations.recurrenceDailyPresetLabel}`, value: 'daily' },
@@ -197,7 +194,7 @@ export const EventPopoverContent = React.forwardRef(function EventPopoverContent
     const { start, end } = computeRange(when, isAllDay);
 
     const form = new FormData(event.currentTarget);
-    const recurrenceValue = form.get('recurrence') as RecurrencePresetKey;
+    const recurrenceValue = form.get('recurrence') as RecurringEventPresetKey;
     const recurrenceModified =
       defaultRecurrenceKey !== 'custom' && recurrenceValue !== defaultRecurrenceKey;
     // TODO: This will change after implementing the custom recurrence editing tab.
@@ -232,11 +229,11 @@ export const EventPopoverContent = React.forwardRef(function EventPopoverContent
         end,
         ...(recurrenceModified ? { rrule } : {}),
       };
-      store.updateRecurringEvent({
+
+      await store.updateRecurringEvent({
         occurrenceStart: occurrence.start,
         changes,
-        // TODO: Issue #19766 - Let the user choose the scope via UI.
-        scope: SCHEDULER_RECURRING_EDITING_SCOPE,
+        onSubmit: onClose,
       });
     } else {
       store.updateEvent({ id: occurrence.id, ...metaChanges, start, end, rrule });
@@ -536,6 +533,7 @@ export const EventPopoverContent = React.forwardRef(function EventPopoverContent
 export function EventPopoverProvider(props: EventPopoverProviderProps) {
   const { containerRef, children } = props;
   const store = useEventCalendarStoreContext();
+  const isScopeDialogOpen = useStore(store, selectors.isScopeDialogOpen);
 
   return (
     <EventPopover.Provider
@@ -551,6 +549,7 @@ export function EventPopoverProvider(props: EventPopoverProviderProps) {
       onClose={() => {
         store.setOccurrencePlaceholder(null);
       }}
+      shouldBlockClose={isScopeDialogOpen}
     >
       {children}
     </EventPopover.Provider>

@@ -74,6 +74,15 @@ export interface SchedulerState {
    * It can also be styled differently in the day grid.
    */
   isMultiDayEvent: (event: CalendarEvent | CalendarEventOccurrence) => boolean;
+  /**
+   * Whether the calendar is in read-only mode.
+   * @default false
+   */
+  readOnly: boolean;
+  /**
+   * Pending parameters to use when the user selects the scope of a recurring event update.
+   */
+  pendingUpdateRecurringEventParameters: UpdateRecurringEventParameters | null;
 }
 
 export interface SchedulerParameters {
@@ -137,17 +146,12 @@ export interface SchedulerParameters {
    * @default "jade"
    */
   eventColor?: CalendarEventColor;
+  /**
+   * Whether the calendar is in read-only mode.
+   * @default false
+   */
+  readOnly?: boolean;
 }
-
-/**
- * The scope of a recurring event update.
- *
- * - `only-this`: Updates only the selected occurrence of the recurring event.
- * - `this-and-following`: Updates the selected occurrence and all following occurrences,
- *   but leaves the previous ones untouched.
- * - `all`: Updates all occurrences in the recurring series, past, present, and future.
- */
-export type RecurringUpdateEventScope = 'this-and-following' | 'all' | 'only-this';
 
 /**
  * Parameters for updating a recurring event.
@@ -163,9 +167,9 @@ export type UpdateRecurringEventParameters = {
    */
   changes: CalendarEventUpdatedProperties;
   /**
-   * The scope of the update.
+   * Callback fired when the user submits the recurring scope dialog.
    */
-  scope: RecurringUpdateEventScope;
+  onSubmit?: () => void;
 };
 
 /**
