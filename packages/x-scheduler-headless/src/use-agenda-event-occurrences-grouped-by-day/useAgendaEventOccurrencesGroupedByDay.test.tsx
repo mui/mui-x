@@ -8,7 +8,7 @@ import {
   useAgendaEventOccurrencesGroupedByDayOptions,
 } from './useAgendaEventOccurrencesGroupedByDay';
 import { EventCalendarProvider } from '../event-calendar-provider/EventCalendarProvider';
-import { idsFromOccurrences } from '../utils/SchedulerStore/tests/utils';
+import { getIdsFromOccurrencesMap } from '../utils/SchedulerStore/tests/utils';
 import { AGENDA_VIEW_DAYS_AMOUNT } from '../constants';
 
 describe('useAgendaEventOccurrencesGroupedByDay', () => {
@@ -140,7 +140,7 @@ describe('useAgendaEventOccurrencesGroupedByDay', () => {
     });
     expect(res.days).to.have.length(12);
     const weekendIds = ['2', '3', '9', '10', '16', '17'];
-    const includedIds = idsFromOccurrences(res.occurrencesMap);
+    const includedIds = getIdsFromOccurrencesMap(res.occurrencesMap);
     for (const id of weekendIds) {
       expect(includedIds).to.not.include(id);
     }

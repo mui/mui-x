@@ -23,7 +23,7 @@ export function getIds<T extends { id: string | number }>(items: T[]): Array<T['
   return items.map((item) => item.id);
 }
 
-export function idsFromOccurrences(occMap: Map<string, any[]>) {
+export function getIdsFromOccurrencesMap(occMap: Map<string, any[]>) {
   return Array.from(occMap.values())
     .flat()
     .map((o) => o.id);
