@@ -254,14 +254,14 @@ importers:
         specifier: ^1.0.9-canary.51
         version: 1.0.9-canary.51(@types/node@22.18.11)(rollup@4.52.5)(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.1)
       '@mui/internal-code-infra':
-        specifier: ^0.0.3-canary.34
-        version: 0.0.3-canary.34(@types/node@22.18.11)(@typescript-eslint/parser@8.46.1(eslint@9.38.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.46.1(eslint@9.38.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.38.0))(eslint@9.38.0)(postcss@8.5.6)(prettier@3.6.2)(stylelint@16.25.0(typescript@5.9.3))(typescript@5.9.3)
+        specifier: ^0.0.3-canary.35
+        version: 0.0.3-canary.35(@types/node@22.18.11)(@typescript-eslint/parser@8.46.1(eslint@9.38.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.46.1(eslint@9.38.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.38.0))(eslint@9.38.0)(postcss@8.5.6)(prettier@3.6.2)(stylelint@16.25.0(typescript@5.9.3))(typescript@5.9.3)
       '@mui/internal-markdown':
         specifier: ^2.0.11
         version: 2.0.11
       '@mui/internal-netlify-cache':
-        specifier: ^0.0.2-canary.0
-        version: 0.0.2-canary.0
+        specifier: ^0.0.2-canary.1
+        version: 0.0.2-canary.1
       '@mui/internal-test-utils':
         specifier: 'catalog:'
         version: 2.0.14(@babel/core@7.28.4)(@playwright/test@1.55.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(chai@5.2.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -4239,8 +4239,8 @@ packages:
     resolution: {integrity: sha512-XjlTFsacsqUdU/Gtn9DvKlbJb3QQbN2QN7Y87na7kTuyCBqx1kxriihAMVYstfyI9gAQo1EFr9j78WmYGE4f2A==}
     hasBin: true
 
-  '@mui/internal-code-infra@0.0.3-canary.34':
-    resolution: {integrity: sha512-AllQ7C4LrkjdxMnPzPwYFOMZ5KWZODaqIhvtEf1nZmWQ+SC/YzF1ywAfZwDRuyei08amDo9Z/kvmBD34hr56tQ==}
+  '@mui/internal-code-infra@0.0.3-canary.35':
+    resolution: {integrity: sha512-8022SQoIIySou7hg6p3oVy0zq1AiAQU5NbjPya3MRvqIiNrbgLluunJC3k2y6uSrWVsGL4AOU4TGwSXpU/SXxg==}
     hasBin: true
     peerDependencies:
       eslint: ^9.0.0
@@ -4253,8 +4253,8 @@ packages:
   '@mui/internal-markdown@2.0.11':
     resolution: {integrity: sha512-AWjU0FJDbcKrP0xfNkswR3RJoPvW5O1eUywDppywXRktqmgNQObtCSvKJvS4FjbE/jSCWs+P/HjdJ/4i0qpNaA==}
 
-  '@mui/internal-netlify-cache@0.0.2-canary.0':
-    resolution: {integrity: sha512-3MtmhEBDf8O1ow95tC2ewbQgzctbWkCR3I4CA23CCfhUx3/9FqJNm+MI1NqReeQV5W7BDMsqKz1L2ps5sKt22A==}
+  '@mui/internal-netlify-cache@0.0.2-canary.1':
+    resolution: {integrity: sha512-d161tpMN7WJF2qxIoXt4hqNWVNAFjOJKj5xQNKOfap93YYtGXiDgHWcH76CJaSPK2PCzKDbsq7pkz5DyMo2IdQ==}
 
   '@mui/internal-scripts@2.0.14':
     resolution: {integrity: sha512-mVhPG7XCbvgUkYNn0pqbfAowvi7d5ug9g6eD1vHdTF5U70w372Cz8cx3VACpWVNAOv/TBwGkaZs8bvXTcHg/qw==}
@@ -15127,7 +15127,7 @@ snapshots:
       - tsx
       - yaml
 
-  '@mui/internal-code-infra@0.0.3-canary.34(@types/node@22.18.11)(@typescript-eslint/parser@8.46.1(eslint@9.38.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.46.1(eslint@9.38.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.38.0))(eslint@9.38.0)(postcss@8.5.6)(prettier@3.6.2)(stylelint@16.25.0(typescript@5.9.3))(typescript@5.9.3)':
+  '@mui/internal-code-infra@0.0.3-canary.35(@types/node@22.18.11)(@typescript-eslint/parser@8.46.1(eslint@9.38.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.46.1(eslint@9.38.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.38.0))(eslint@9.38.0)(postcss@8.5.6)(prettier@3.6.2)(stylelint@16.25.0(typescript@5.9.3))(typescript@5.9.3)':
     dependencies:
       '@argos-ci/core': 4.2.0
       '@babel/cli': 7.28.3(@babel/core@7.28.4)
@@ -15142,6 +15142,7 @@ snapshots:
       '@eslint/js': 9.38.0
       '@eslint/json': 0.13.2
       '@inquirer/confirm': 5.1.19(@types/node@22.18.11)
+      '@inquirer/select': 4.4.0(@types/node@22.18.11)
       '@mui/internal-babel-plugin-display-name': 1.0.4-canary.7(@babel/core@7.28.4)(@babel/preset-react@7.27.1(@babel/core@7.28.4))
       '@mui/internal-babel-plugin-minify-errors': 2.0.8-canary.10(@babel/core@7.28.4)
       '@mui/internal-babel-plugin-resolve-imports': 2.0.7-canary.25(@babel/core@7.28.4)
@@ -15157,6 +15158,7 @@ snapshots:
       babel-plugin-transform-remove-imports: 1.8.1(@babel/core@7.28.4)
       chalk: 5.6.2
       clipboardy: 4.0.0
+      env-ci: 11.2.0
       eslint: 9.38.0
       eslint-config-prettier: 10.1.8(eslint@9.38.0)
       eslint-import-resolver-typescript: 4.4.4(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.46.1(eslint@9.38.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.38.0))(eslint-plugin-import@2.32.0)(eslint@9.38.0)
@@ -15205,7 +15207,7 @@ snapshots:
       marked: 16.3.0
       prismjs: 1.30.0
 
-  '@mui/internal-netlify-cache@0.0.2-canary.0': {}
+  '@mui/internal-netlify-cache@0.0.2-canary.1': {}
 
   '@mui/internal-scripts@2.0.14':
     dependencies:
