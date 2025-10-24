@@ -88,11 +88,11 @@ describe('<MonthView />', () => {
 
   it('should show "+N more..." when there are more events than fit in a cell', () => {
     const manyEvents = [
-      EventBuilder.new().startAt('2025-05-01T08:00:00Z').build(),
-      EventBuilder.new().startAt('2025-05-01T14:09:00Z').build(),
-      EventBuilder.new().startAt('2025-05-01T14:11:00Z').build(),
-      EventBuilder.new().startAt('2025-05-01T13:09:00Z').build(),
-      EventBuilder.new().startAt('2025-05-01T15:09:00Z').build(),
+      EventBuilder.new().singleDay('2025-05-01T08:00:00').build(),
+      EventBuilder.new().singleDay('2025-05-01T14:09:00').build(),
+      EventBuilder.new().singleDay('2025-05-01T14:11:00').build(),
+      EventBuilder.new().singleDay('2025-05-01T13:09:00').build(),
+      EventBuilder.new().singleDay('2025-05-01T15:09:00').build(),
     ];
 
     render(
