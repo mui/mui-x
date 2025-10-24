@@ -27,20 +27,32 @@ const eventSelector = createSelector(
   (events, eventId: CalendarEventId | null | undefined) => events.get(eventId),
 );
 
-const resourcesByIdMapSelector = createSelectorMemoized(
+const resourcesByIdFlatMapSelector = createSelectorMemoized(
   (state: State) => state.resources,
   (resources) => {
     const map = new Map<CalendarResourceId | null | undefined, CalendarResource>();
+    const addResourceToMap = (resource: CalendarResource) => {
+      const { children, ...resourceWithoutChildren } = resource;
+      map.set(resource.id, resourceWithoutChildren);
+
+      if (children) {
+        for (const child of children) {
+          addResourceToMap(child);
+        }
+      }
+    };
+
     for (const resource of resources) {
-      map.set(resource.id, resource);
+      addResourceToMap(resource);
     }
     return map;
   },
 );
 
 const resourceSelector = createSelector(
-  resourcesByIdMapSelector,
-  (resourcesByIdMap, resourceId: string | null | undefined) => resourcesByIdMap.get(resourceId),
+  resourcesByIdFlatMapSelector,
+  (resourcesByIdFlatMap, resourceId: string | null | undefined) =>
+    resourcesByIdFlatMap.get(resourceId),
 );
 
 const isEventReadOnlySelector = createSelector(
@@ -57,6 +69,7 @@ export const selectors = {
   nowUpdatedEveryMinute: createSelector((state: State) => state.nowUpdatedEveryMinute),
   isMultiDayEvent: createSelector((state: State) => state.isMultiDayEvent),
   resources: createSelector((state: State) => state.resources),
+  resourcesFlatMap: resourcesByIdFlatMapSelector,
   events: createSelector((state: State) => state.events),
   visibleResourcesMap: createSelector((state: State) => state.visibleResources),
   canCreateNewEvent: createSelector((state: State) => !state.readOnly),
@@ -77,13 +90,30 @@ export const selectors = {
   visibleResourcesList: createSelectorMemoized(
     (state: State) => state.resources,
     (state: State) => state.visibleResources,
-    (resources, visibleResources) =>
-      resources
-        .filter(
-          (resource) =>
-            !visibleResources.has(resource.id) || visibleResources.get(resource.id) === true,
-        )
-        .map((resource) => resource.id),
+    (resources, visibleResources) => {
+      const result: CalendarResourceId[] = [];
+
+      const addResourceAndChildren = (resource: CalendarResource) => {
+        const isVisible =
+          !visibleResources.has(resource.id) || visibleResources.get(resource.id) === true;
+
+        if (isVisible) {
+          result.push(resource.id);
+
+          if (resource.children) {
+            for (const child of resource.children) {
+              addResourceAndChildren(child);
+            }
+          }
+        }
+      };
+
+      for (const resource of resources) {
+        addResourceAndChildren(resource);
+      }
+
+      return result;
+    },
   ),
   event: eventSelector,
   isEventReadOnly: isEventReadOnlySelector,

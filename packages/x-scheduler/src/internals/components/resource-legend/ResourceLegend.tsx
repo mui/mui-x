@@ -15,48 +15,91 @@ import { useTranslations } from '../../utils/TranslationsContext';
 import { getColorClassName } from '../../utils/color-utils';
 import './ResourceLegend.css';
 
-function ResourceLegendItem(props: { resource: CalendarResource }) {
-  const { resource } = props;
+function ResourceLegendItem(props: { resource: CalendarResource; children?: React.ReactNode }) {
+  const { resource, children } = props;
   const translations = useTranslations();
 
   return (
-    <label className="ResourceLegendItem">
-      <span
-        className={clsx(
-          'ResourceLegendColor',
-          getColorClassName(resource.eventColor ?? DEFAULT_EVENT_COLOR),
-        )}
-      />
-      <span className="ResourceLegendName">{resource.title}</span>
-      <Checkbox.Root
-        className={clsx('NeutralTextButton', 'Button', 'ResourceLegendButton')}
-        value={resource.id}
-        render={(rootProps, state) => (
-          <button
-            type="button"
-            aria-label={
-              state.checked
-                ? translations.hideEventsLabel(resource.title)
-                : translations.showEventsLabel(resource.title)
-            }
-            {...rootProps}
-          />
-        )}
-      >
-        <Checkbox.Indicator
-          keepMounted
-          render={(indicatorProps, state) =>
-            state.checked ? (
-              <Eye size={16} strokeWidth={1.5} {...indicatorProps} />
-            ) : (
-              <EyeClosed size={16} strokeWidth={1.5} {...indicatorProps} />
-            )
-          }
+    <React.Fragment>
+      <label className="ResourceLegendItem">
+        <span
+          className={clsx(
+            'ResourceLegendColor',
+            getColorClassName(resource.eventColor ?? DEFAULT_EVENT_COLOR),
+          )}
         />
-      </Checkbox.Root>
-    </label>
+        <span className="ResourceLegendName">{resource.title}</span>
+        <Checkbox.Root
+          className={clsx('NeutralTextButton', 'Button', 'ResourceLegendButton')}
+          value={resource.id}
+          render={(rootProps, state) => (
+            <button
+              type="button"
+              aria-label={
+                state.checked
+                  ? translations.hideEventsLabel(resource.title)
+                  : translations.showEventsLabel(resource.title)
+              }
+              {...rootProps}
+            />
+          )}
+        >
+          <Checkbox.Indicator
+            keepMounted
+            render={(indicatorProps, state) =>
+              state.checked ? (
+                <Eye size={16} strokeWidth={1.5} {...indicatorProps} />
+              ) : (
+                <EyeClosed size={16} strokeWidth={1.5} {...indicatorProps} />
+              )
+            }
+          />
+        </Checkbox.Root>
+      </label>
+      {children}
+    </React.Fragment>
   );
 }
+
+const getVisibilityDifferenceList = (
+  allResources: CalendarResource[],
+  oldValue: string[],
+  newValue: string[],
+  parentId?: string,
+) => {
+  const newVisibleResourcesSet = new Set(newValue);
+  const oldVisibleResourcesSet = new Set(oldValue);
+  const differenceList: string[] = [];
+
+  for (const resource of allResources) {
+    // // if the parent was added, add the children too
+    if (
+      !parentId &&
+      newVisibleResourcesSet.has(resource.id) &&
+      !oldVisibleResourcesSet.has(resource.id)
+    ) {
+      continue;
+    }
+    // when hiding parent, also hide children resources
+    if (
+      !newVisibleResourcesSet.has(resource.id) ||
+      (parentId && !newVisibleResourcesSet.has(parentId))
+    ) {
+      differenceList.push(resource.id);
+    }
+
+    if (resource.children && resource.children.length > 0) {
+      const childDifferences = getVisibilityDifferenceList(
+        resource.children,
+        oldValue,
+        newValue,
+        resource.id,
+      );
+      differenceList.push(...childDifferences);
+    }
+  }
+  return differenceList;
+};
 
 export const ResourceLegend = React.forwardRef(function ResourceLegend(
   props: ResourceLegendProps,
@@ -69,12 +112,9 @@ export const ResourceLegend = React.forwardRef(function ResourceLegend(
   const visibleResourcesList = useStore(store, selectors.visibleResourcesList);
 
   const handleVisibleResourcesChange = useEventCallback((value: string[]) => {
-    const valueSet = new Set(value);
-    const newVisibleResourcesMap = new Map(
-      store.state.resources
-        .filter((resource) => !valueSet.has(resource.id))
-        .map((resource) => [resource.id, false]),
-    );
+    const differenceList = getVisibilityDifferenceList(resources, visibleResourcesList, value);
+
+    const newVisibleResourcesMap = new Map(differenceList.map((resource) => [resource, false]));
 
     store.setVisibleResources(newVisibleResourcesMap);
   });
@@ -94,7 +134,17 @@ export const ResourceLegend = React.forwardRef(function ResourceLegend(
       {...other}
     >
       {resources.map((resource) => {
-        return <ResourceLegendItem key={resource.id} resource={resource} />;
+        return (
+          <ResourceLegendItem key={resource.id} resource={resource}>
+            {resource.children && resource.children.length > 0 && (
+              <div className="ResourceLegendChildren">
+                {resource.children.map((childResource) => (
+                  <ResourceLegendItem key={childResource.id} resource={childResource} />
+                ))}
+              </div>
+            )}
+          </ResourceLegendItem>
+        );
       })}
     </CheckboxGroup>
   );
