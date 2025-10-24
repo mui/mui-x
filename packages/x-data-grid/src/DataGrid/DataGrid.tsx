@@ -2,12 +2,14 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { forwardRef } from '@mui/x-internals/forwardRef';
+import { CreateThemeComponent } from '@mui/material/stylesOptimized';
 import { GridRoot } from '../components';
 import { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
 import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
 import { useGridRowsOverridableMethods } from '../hooks/features/rows/useGridRowsOverridableMethods';
 import { useGridParamsOverridableMethods } from '../hooks/features/rows/useGridParamsOverridableMethods';
 import { DataGridProps } from '../models/props/DataGridProps';
+import { GridClassKey } from '../constants/gridClasses';
 import { GridContextProvider } from '../context/GridContextProvider';
 import { useDataGridComponent } from './useDataGridComponent';
 import { useDataGridProps } from './useDataGridProps';
@@ -19,6 +21,10 @@ import type { GridApiCommunity, GridPrivateApiCommunity } from '../models/api/gr
 import { useGridApiInitialization } from '../hooks/core/useGridApiInitialization';
 
 export type { GridSlotsComponent as GridSlots } from '../models';
+
+export type DataGridTheme = {
+  MuiDataGrid: CreateThemeComponent<GridClassKey, DataGridProps>;
+};
 
 const configuration: GridConfiguration = {
   hooks: {
