@@ -2,7 +2,7 @@ import {
   gridExpandedSortedRowIndexLookupSelector,
   gridRowTreeSelector,
   type GridGroupNode,
-} from '@mui/x-data-grid-pro';
+} from '@mui/x-data-grid';
 import type { ReorderValidationContext as Ctx } from './reorderValidationTypes';
 
 /**
