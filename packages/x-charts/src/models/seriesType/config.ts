@@ -15,6 +15,12 @@ import {
   DefaultizedPieValueType,
 } from './pie';
 import { DefaultizedRadarSeriesType, RadarItemIdentifier, RadarSeriesType } from './radar';
+import {
+  BarRangeItemIdentifier,
+  BarRangeSeriesType,
+  BarRangeValueType,
+  DefaultizedBarRangeSeriesType,
+} from './barRange';
 
 export interface ChartsSeriesConfig {
   bar: {
@@ -34,6 +40,15 @@ export interface ChartsSeriesConfig {
     itemIdentifierWithData: BarItemIdentifier;
     valueType: number | null;
     canBeStacked: true;
+    axisType: 'cartesian';
+  };
+  barRange: {
+    seriesInput: DefaultizedProps<BarRangeSeriesType, 'id'> & { color: string };
+    series: DefaultizedBarRangeSeriesType;
+    seriesProp: BarRangeSeriesType;
+    itemIdentifier: BarRangeItemIdentifier;
+    itemIdentifierWithData: BarRangeItemIdentifier;
+    valueType: BarRangeValueType | null;
     axisType: 'cartesian';
   };
   line: {
