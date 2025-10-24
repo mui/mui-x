@@ -1,20 +1,9 @@
 'use client';
 import * as React from 'react';
 import type { CalendarGridDayEvent } from './CalendarGridDayEvent';
+import type { useDraggableEvent } from '../../utils/useDraggableEvent';
 
-export interface CalendarGridDayEventContext {
-  /**
-   * Whether this event is starting before the row starts.
-   */
-  doesEventStartBeforeRowStart: boolean;
-  /**
-   * Whether this event is ending after the row ends.
-   */
-  doesEventEndAfterRowEnd: boolean;
-  /**
-   * Sets whether the event is being resized.
-   */
-  setIsResizing: (isResizing: boolean) => void;
+export interface CalendarGridDayEventContext extends useDraggableEvent.ContextValue {
   /**
    * Gets the drag data shared by the CalendarGrid.DayEvent and CalendarGrid.DayEventResizeHandler parts.
    * @param {{ clientY: number }} input The input object provided by the drag and drop library for the current event.
