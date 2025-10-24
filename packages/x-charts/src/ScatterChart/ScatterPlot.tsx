@@ -87,7 +87,7 @@ function ScatterPlot(props: ScatterPlotProps) {
             key={id}
             xScale={xScale}
             yScale={yScale}
-            color={color}
+            color={typeof color === 'function' ? color(null) : color}
             colorGetter={colorGetter}
             series={series[seriesId]}
             onItemClick={onItemClick}
