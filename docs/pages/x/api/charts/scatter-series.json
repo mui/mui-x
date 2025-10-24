@@ -7,7 +7,7 @@
   ],
   "properties": {
     "type": { "type": { "description": "'scatter'" }, "required": true },
-    "color": { "type": { "description": "string" } },
+    "color": { "type": { "description": "SeriesColorProp&lt;TValue&gt;" } },
     "data": { "type": { "description": "readonly ScatterValueType[]" } },
     "datasetKeys": {
       "type": {

@@ -18,7 +18,7 @@
       "type": { "description": "number | string" },
       "default": "(innerRadius - outerRadius) / 2"
     },
-    "color": { "type": { "description": "string" } },
+    "color": { "type": { "description": "SeriesColorProp&lt;TValue&gt;" } },
     "cornerRadius": { "type": { "description": "number" }, "default": "0" },
     "cx": { "type": { "description": "number | string" }, "default": "'50%'" },
     "cy": { "type": { "description": "number | string" }, "default": "'50%'" },
