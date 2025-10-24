@@ -37,8 +37,8 @@ const mapper: TreeViewParametersToStateMapper<
 export class ExtendableRichTreeViewStore<
   R extends TreeViewValidItem<R>,
   Multiple extends boolean | undefined,
-  State extends RichTreeViewState<R, Multiple>,
-  Parameters extends RichTreeViewParameters<R, Multiple>,
+  State extends RichTreeViewState<R, Multiple> = RichTreeViewState<R, Multiple>,
+  Parameters extends RichTreeViewParameters<R, Multiple> = RichTreeViewParameters<R, Multiple>,
 > extends MinimalTreeViewStore<R, Multiple, State, Parameters> {
   private labelEditingPlugin = new TreeViewLabelEditingPlugin(this);
 

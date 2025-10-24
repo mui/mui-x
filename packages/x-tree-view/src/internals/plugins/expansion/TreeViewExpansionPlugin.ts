@@ -1,10 +1,10 @@
 import { TreeViewItemId } from '../../../models';
 import { expansionSelectors } from './selectors';
 import { itemsSelectors } from '../items/selectors';
-import { TreeViewAnyStore } from '../../models';
+import { MinimalTreeViewStore } from '../../MinimalTreeViewStore';
 
 export class TreeViewExpansionPlugin {
-  private store: TreeViewAnyStore;
+  private store: MinimalTreeViewStore<any, any>;
 
   // We can't type `store`, otherwise we get the following TS error:
   // 'expansion' implicitly has type 'any' because it does not have a type annotation and is referenced directly or indirectly in its own initializer.

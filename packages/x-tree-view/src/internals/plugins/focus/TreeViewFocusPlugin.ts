@@ -2,10 +2,10 @@ import { TreeViewCancellableEvent, TreeViewItemId } from '../../../models';
 import { expansionSelectors } from '../expansion';
 import { focusSelectors } from '.';
 import { itemsSelectors } from '../items';
-import { TreeViewAnyStore } from '../../models';
+import { MinimalTreeViewStore } from '../../MinimalTreeViewStore';
 
 export class TreeViewFocusPlugin {
-  private store: TreeViewAnyStore;
+  private store: MinimalTreeViewStore<any, any>;
 
   // We can't type `store`, otherwise we get the following TS error:
   // 'focus' implicitly has type 'any' because it does not have a type annotation and is referenced directly or indirectly in its own initializer.

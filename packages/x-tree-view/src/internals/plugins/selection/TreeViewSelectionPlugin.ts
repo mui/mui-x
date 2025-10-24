@@ -1,3 +1,4 @@
+import { EMPTY_OBJECT } from '@base-ui-components/utils/empty';
 import { TreeViewItemId, TreeViewSelectionPropagation } from '../../../models';
 import { TreeViewAnyStore } from '../../models';
 import { itemsSelectors } from '../items';
@@ -14,13 +15,13 @@ import type { MinimalTreeViewStore } from '../../MinimalTreeViewStore/MinimalTre
 import { TreeViewSelectionValue } from '../../MinimalTreeViewStore/MinimalTreeViewStore.types';
 
 export class TreeViewSelectionPlugin<Multiple extends boolean | undefined> {
-  private store: MinimalTreeViewStore<any, Multiple, any, any>;
+  private store: MinimalTreeViewStore<any, Multiple>;
 
   private lastSelectedItem: TreeViewItemId | null = null;
 
   private lastSelectedRange: Record<string, boolean> = {};
 
-  constructor(store: MinimalTreeViewStore<any, Multiple, any, any>) {
+  constructor(store: MinimalTreeViewStore<any, Multiple>) {
     this.store = store;
     store.itemPluginManager.register(useSelectionItemPlugin, null);
   }
@@ -30,8 +31,12 @@ export class TreeViewSelectionPlugin<Multiple extends boolean | undefined> {
     newModel: string[] | string | null,
     additionalItemsToPropagate?: TreeViewItemId[],
   ) => {
-    const { selectionPropagation, selectedItems, onItemSelectionToggle, onSelectedItemsChange } =
-      this.store.parameters;
+    const {
+      selectionPropagation = EMPTY_OBJECT as TreeViewSelectionPropagation,
+      selectedItems,
+      onItemSelectionToggle,
+      onSelectedItemsChange,
+    } = this.store.parameters;
 
     const oldModel = selectionSelectors.selectedItemsRaw(this.store.state);
     let cleanModel: string[] | string | null;
@@ -83,7 +88,7 @@ export class TreeViewSelectionPlugin<Multiple extends boolean | undefined> {
       this.store.set('selectedItems', cleanModel);
     }
 
-    onSelectedItemsChange?.(event, cleanModel);
+    onSelectedItemsChange?.(event, cleanModel as TreeViewSelectionValue<Multiple>);
   };
 
   private selectRange = (event: React.SyntheticEvent, [start, end]: [string, string]) => {

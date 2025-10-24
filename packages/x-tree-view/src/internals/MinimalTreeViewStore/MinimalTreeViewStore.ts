@@ -26,8 +26,11 @@ import { TreeViewEventListener, TreeViewEventLookup, TreeViewEvents } from '../m
 export class MinimalTreeViewStore<
   R extends TreeViewValidItem<R>,
   Multiple extends boolean | undefined,
-  State extends MinimalTreeViewState<R, Multiple>,
-  Parameters extends MinimalTreeViewParameters<R, Multiple>,
+  State extends MinimalTreeViewState<R, Multiple> = MinimalTreeViewState<R, Multiple>,
+  Parameters extends MinimalTreeViewParameters<R, Multiple> = MinimalTreeViewParameters<
+    R,
+    Multiple
+  >,
 > extends Store<State> {
   public parameters: Parameters;
 
@@ -168,12 +171,6 @@ export class MinimalTreeViewStore<
     updateModel(newSchedulerState, 'expandedItems', 'defaultExpandedItems');
     updateModel(newSchedulerState, 'selectedItems', 'defaultSelectedItems');
 
-    const newState = this.mapper.updateStateFromParameters(
-      newSchedulerState,
-      parameters,
-      updateModel,
-    );
-
     if (this.state.providedTreeId !== parameters.id || this.state.treeId === undefined) {
       newSchedulerState.treeId = createTreeViewDefaultId();
     }
@@ -200,6 +197,12 @@ export class MinimalTreeViewStore<
         }),
       );
     }
+
+    const newState = this.mapper.updateStateFromParameters(
+      newSchedulerState,
+      parameters,
+      updateModel,
+    );
 
     this.update(newState);
     this.isRtl = isRtl;

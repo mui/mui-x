@@ -6,9 +6,9 @@ import { BuildItemsLookupConfig, buildItemsLookups } from './utils';
 import type { MinimalTreeViewStore } from '../../MinimalTreeViewStore/MinimalTreeViewStore';
 
 export class TreeViewItemsPlugin<R extends TreeViewValidItem<R>> {
-  private store: MinimalTreeViewStore<R, any, any, any>;
+  private store: MinimalTreeViewStore<R, any>;
 
-  constructor(store: MinimalTreeViewStore<R, any, any, any>) {
+  constructor(store: MinimalTreeViewStore<R, any>) {
     this.store = store;
   }
 
