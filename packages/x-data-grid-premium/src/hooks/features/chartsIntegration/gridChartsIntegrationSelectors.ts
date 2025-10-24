@@ -19,6 +19,11 @@ export const gridChartsIntegrationActiveChartIdSelector = createSelector(
   (chartsIntegration) => chartsIntegration.activeChartId,
 );
 
+export const gridChartsIntegrationChartsLookupSelector = createSelector(
+  gridChartsIntegrationStateSelector,
+  (chartsIntegration) => chartsIntegration.charts,
+);
+
 export const gridChartsPanelOpenSelector = createSelector(
   gridSidebarStateSelector,
   (sidebar) => sidebar.value === GridSidebarValue.Charts && sidebar.open,
