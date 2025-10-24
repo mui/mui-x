@@ -32,8 +32,9 @@ import { itemsSelectors } from '../internals/plugins/items';
 import { idSelectors } from '../internals/corePlugins/useTreeViewId';
 import { expansionSelectors } from '../internals/plugins/expansion';
 import { selectionSelectors } from '../internals/plugins/selection';
+import { RichTreeViewStore } from '../internals/RichTreeViewStore';
 
-export const useTreeItem = <TStore extends TreeViewAnyStore>(
+export const useTreeItem = <TStore extends TreeViewAnyStore = RichTreeViewStore<any, any>>(
   parameters: UseTreeItemParameters,
 ): UseTreeItemReturnValue<TStore> => {
   const { runItemPlugins, publicAPI, store } = useTreeViewContext<TStore>();

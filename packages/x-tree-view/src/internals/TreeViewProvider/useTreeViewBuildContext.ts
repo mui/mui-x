@@ -7,6 +7,7 @@ import {
   TreeViewAnyStore,
   TreeViewPublicAPI,
   TreeItemWrapper,
+  TreeViewItemPlugin,
 } from '../models';
 
 export const useTreeViewBuildContext = <TStore extends TreeViewAnyStore>(
@@ -27,7 +28,7 @@ export const useTreeViewBuildContext = <TStore extends TreeViewAnyStore>(
         [key in keyof TreeViewItemPluginSlotPropsEnhancers]?: true;
       } = {};
 
-      store.itemPluginManager.listPlugins().forEach((itemPlugin) => {
+      store.itemPluginManager.listPlugins().forEach((itemPlugin: TreeViewItemPlugin) => {
         const itemPluginResponse = itemPlugin({
           props: itemPluginProps,
           rootRef: finalRootRef,

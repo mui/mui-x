@@ -46,15 +46,15 @@ export class MinimalTreeViewStore<
 
   public itemPluginManager = new TreeViewItemPluginManager<this>();
 
-  public items = new TreeViewItemsPlugin<R>(this);
+  public items: TreeViewItemsPlugin<R>;
 
-  public focus = new TreeViewFocusPlugin(this);
+  public focus: TreeViewFocusPlugin;
 
-  public expansion = new TreeViewExpansionPlugin(this);
+  public expansion: TreeViewExpansionPlugin;
 
-  public selection = new TreeViewSelectionPlugin<Multiple>(this);
+  public selection: TreeViewSelectionPlugin<Multiple>;
 
-  public keyboardNavigation = new TreeViewKeyboardNavigationPlugin(this);
+  public keyboardNavigation: TreeViewKeyboardNavigationPlugin;
 
   public constructor(
     parameters: Parameters,
@@ -94,6 +94,13 @@ export class MinimalTreeViewStore<
     this.instanceName = instanceName;
     this.mapper = mapper;
     this.isRtl = isRtl;
+
+    // We mount the plugins in the constructor to make sure all the methods of the store are available to the plugins during their construction.
+    this.items = new TreeViewItemsPlugin<R>(this);
+    this.focus = new TreeViewFocusPlugin(this);
+    this.expansion = new TreeViewExpansionPlugin(this);
+    this.selection = new TreeViewSelectionPlugin<Multiple>(this);
+    this.keyboardNavigation = new TreeViewKeyboardNavigationPlugin(this);
 
     if (process.env.NODE_ENV !== 'production') {
       this.initialParameters = parameters;
