@@ -20,7 +20,7 @@ export const DEFAULT_TESTING_VISIBLE_DATE = '2025-07-03T00:00:00Z';
  * Scope:
  * - Only sets fields and time ranges.
  * - Uses the provided (or default) adapter for all date ops.
- * - Returns a CalendarEventOccurrence to reduce test boilerplate.
+ * - Returns a CalendarEventOccurrence for reducing test boilerplate.
  */
 export class EventBuilder {
   /** Internal draft; only partial until `build()` time. */
