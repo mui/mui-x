@@ -1,12 +1,13 @@
 import * as React from 'react';
+import { Store } from '@mui/x-internals/store';
 import type {
   ChartAnyPluginSignature,
   ChartInstance,
   ChartPublicAPI,
+  ChartState,
   ConvertSignaturesIntoPlugins,
   MergeSignaturesProperty,
 } from '../../internals/plugins/models';
-import type { ChartStore } from '../../internals/plugins/utils/ChartStore';
 import type { ChartCorePluginSignatures } from '../../internals/plugins/corePlugins';
 import type { ChartSeriesConfig } from '../../internals/plugins/models/seriesConfig';
 import type { UseChartBaseProps } from '../../internals/store/useCharts.types';
@@ -27,7 +28,7 @@ export type ChartContextValue<
   /**
    * The internal state of the chart.
    */
-  store: ChartStore<TSignatures>;
+  store: Store<ChartState<TSignatures, TOptionalSignatures>>;
   /**
    * The ref to the <svg />.
    */

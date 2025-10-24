@@ -1,10 +1,10 @@
+import { createSelectorMemoized } from '@mui/x-internals/store';
 import {
   selectorChartRawXAxis,
   selectorChartRawYAxis,
 } from './useChartCartesianAxisLayout.selectors';
-import { createSelector } from '../../utils/selectors';
 
-export const selectorChartLeftAxisSize = createSelector([selectorChartRawYAxis], (yAxis) =>
+export const selectorChartLeftAxisSize = createSelectorMemoized(selectorChartRawYAxis, (yAxis) =>
   (yAxis ?? []).reduce(
     (acc, axis) =>
       axis.position === 'left'
@@ -14,7 +14,7 @@ export const selectorChartLeftAxisSize = createSelector([selectorChartRawYAxis],
   ),
 );
 
-export const selectorChartRightAxisSize = createSelector([selectorChartRawYAxis], (yAxis) =>
+export const selectorChartRightAxisSize = createSelectorMemoized(selectorChartRawYAxis, (yAxis) =>
   (yAxis ?? []).reduce(
     (acc, axis) =>
       axis.position === 'right'
@@ -24,7 +24,7 @@ export const selectorChartRightAxisSize = createSelector([selectorChartRawYAxis]
   ),
 );
 
-export const selectorChartTopAxisSize = createSelector([selectorChartRawXAxis], (xAxis) =>
+export const selectorChartTopAxisSize = createSelectorMemoized(selectorChartRawXAxis, (xAxis) =>
   (xAxis ?? []).reduce(
     (acc, axis) =>
       axis.position === 'top'
@@ -34,7 +34,7 @@ export const selectorChartTopAxisSize = createSelector([selectorChartRawXAxis], 
   ),
 );
 
-export const selectorChartBottomAxisSize = createSelector([selectorChartRawXAxis], (xAxis) =>
+export const selectorChartBottomAxisSize = createSelectorMemoized(selectorChartRawXAxis, (xAxis) =>
   (xAxis ?? []).reduce(
     (acc, axis) =>
       axis.position === 'bottom'
@@ -42,4 +42,17 @@ export const selectorChartBottomAxisSize = createSelector([selectorChartRawXAxis
         : acc,
     0,
   ),
+);
+
+export const selectorChartAxisSizes = createSelectorMemoized(
+  selectorChartLeftAxisSize,
+  selectorChartRightAxisSize,
+  selectorChartTopAxisSize,
+  selectorChartBottomAxisSize,
+  (left, right, top, bottom) => ({
+    left,
+    right,
+    top,
+    bottom,
+  }),
 );

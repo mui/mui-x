@@ -40,8 +40,8 @@ interface ChartZoomSliderProps {
 export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderProps) {
   const store = useStore();
   const drawingArea = useDrawingArea();
-  const zoomData = useSelector(store, selectorChartAxisZoomData, [axisId]);
-  const zoomOptions = useSelector(store, selectorChartAxisZoomOptionsLookup, [axisId]);
+  const zoomData = useSelector(store, selectorChartAxisZoomData, axisId);
+  const zoomOptions = useSelector(store, selectorChartAxisZoomOptionsLookup, axisId);
   const [showTooltip, setShowTooltip] = React.useState(false);
   const { xAxis } = useXAxes();
   const { yAxis } = useYAxes();

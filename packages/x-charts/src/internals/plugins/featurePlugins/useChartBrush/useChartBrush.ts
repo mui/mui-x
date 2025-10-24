@@ -14,16 +14,11 @@ export const useChartBrush: ChartPlugin<UseChartBrushSignature> = ({
   params,
 }) => {
   useEnhancedEffect(() => {
-    store.update((prev) => {
-      return {
-        ...prev,
-        brush: {
-          ...prev.brush,
-          enabled: params.brushConfig.enabled,
-          preventTooltip: params.brushConfig.preventTooltip,
-          preventHighlight: params.brushConfig.preventHighlight,
-        },
-      };
+    store.set('brush', {
+      ...store.state.brush,
+      enabled: params.brushConfig.enabled,
+      preventTooltip: params.brushConfig.preventTooltip,
+      preventHighlight: params.brushConfig.preventHighlight,
     });
   }, [
     store,
@@ -33,28 +28,18 @@ export const useChartBrush: ChartPlugin<UseChartBrushSignature> = ({
   ]);
 
   const setBrushCoordinates = useEventCallback(function setBrushCoordinates(point: Point | null) {
-    store.update((prev) => {
-      return {
-        ...prev,
-        brush: {
-          ...prev.brush,
-          start: prev.brush.start ?? point,
-          current: point,
-        },
-      };
+    store.set('brush', {
+      ...store.state.brush,
+      start: store.state.brush.start ?? point,
+      current: point,
     });
   });
 
   const clearBrush = useEventCallback(function clearBrush() {
-    store.update((prev) => {
-      return {
-        ...prev,
-        brush: {
-          ...prev.brush,
-          start: null,
-          current: null,
-        },
-      };
+    store.set('brush', {
+      ...store.state.brush,
+      start: null,
+      current: null,
     });
   });
 

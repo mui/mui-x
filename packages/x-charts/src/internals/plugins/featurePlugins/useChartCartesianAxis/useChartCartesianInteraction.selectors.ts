@@ -1,4 +1,4 @@
-import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
+// import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { createSelector } from '../../utils/selectors';
 import { AxisId, AxisItemIdentifier, ChartsAxisProps } from '../../../../models/axis';
 import {
@@ -8,8 +8,6 @@ import {
 import { getAxisIndex, getAxisValue } from './getAxisValue';
 import { selectorChartXAxis, selectorChartYAxis } from './useChartCartesianAxisRendering.selectors';
 import { ComputeResult } from './computeAxisValue';
-
-const optionalGetAxisId = (_: unknown, id?: AxisId) => id;
 
 /**
  * Get interaction indexes
@@ -39,12 +37,12 @@ export const selectChartsInteractionAxisIndex = (
 };
 
 export const selectorChartsInteractionXAxisIndex = createSelector(
-  [selectorChartsInteractionPointerX, selectorChartXAxis, optionalGetAxisId],
+  [selectorChartsInteractionPointerX, selectorChartXAxis],
   selectChartsInteractionAxisIndex,
 );
 
 export const selectorChartsInteractionYAxisIndex = createSelector(
-  [selectorChartsInteractionPointerY, selectorChartYAxis, optionalGetAxisId],
+  [selectorChartsInteractionPointerY, selectorChartYAxis],
   selectChartsInteractionAxisIndex,
 );
 
@@ -105,13 +103,8 @@ function valueGetter(
 }
 
 export const selectorChartsInteractionXAxisValue = createSelector(
-  [
-    selectorChartsInteractionPointerX,
-    selectorChartXAxis,
-    selectorChartsInteractionXAxisIndex,
-    optionalGetAxisId,
-  ],
-  (x, xAxes, xIndex, id) => {
+  [selectorChartsInteractionPointerX, selectorChartXAxis, selectorChartsInteractionXAxisIndex],
+  (x, xAxes, xIndex, id?: AxisId) => {
     if (x === null || xAxes.axisIds.length === 0) {
       return null;
     }
@@ -120,13 +113,8 @@ export const selectorChartsInteractionXAxisValue = createSelector(
 );
 
 export const selectorChartsInteractionYAxisValue = createSelector(
-  [
-    selectorChartsInteractionPointerY,
-    selectorChartYAxis,
-    selectorChartsInteractionYAxisIndex,
-    optionalGetAxisId,
-  ],
-  (y, yAxes, yIndex, id) => {
+  [selectorChartsInteractionPointerY, selectorChartYAxis, selectorChartsInteractionYAxisIndex],
+  (y, yAxes, yIndex, id?: AxisId) => {
     if (y === null || yAxes.axisIds.length === 0) {
       return null;
     }
@@ -154,14 +142,14 @@ export const selectorChartsInteractionTooltipXAxes = createSelector(
       )
       .filter(({ dataIndex }) => dataIndex >= 0);
   },
-  {
-    memoizeOptions: {
-      // Keep the same reference if array content is the same.
-      // If possible, avoid this pattern by creating selectors that
-      // uses string/number as arguments.
-      resultEqualityCheck: isDeepEqual,
-    },
-  },
+  // {
+  //   memoizeOptions: {
+  //     // Keep the same reference if array content is the same.
+  //     // If possible, avoid this pattern by creating selectors that
+  //     // uses string/number as arguments.
+  //     resultEqualityCheck: isDeepEqual,
+  //   },
+  // },
 );
 
 /**
@@ -184,14 +172,14 @@ export const selectorChartsInteractionTooltipYAxes = createSelector(
       )
       .filter(({ dataIndex }) => dataIndex >= 0);
   },
-  {
-    memoizeOptions: {
-      // Keep the same reference if array content is the same.
-      // If possible, avoid this pattern by creating selectors that
-      // uses string/number as arguments.
-      resultEqualityCheck: isDeepEqual,
-    },
-  },
+  // {
+  //   memoizeOptions: {
+  //     // Keep the same reference if array content is the same.
+  //     // If possible, avoid this pattern by creating selectors that
+  //     // uses string/number as arguments.
+  //     resultEqualityCheck: isDeepEqual,
+  //   },
+  // },
 );
 
 /**

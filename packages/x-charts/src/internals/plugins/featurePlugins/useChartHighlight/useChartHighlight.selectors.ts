@@ -68,59 +68,39 @@ export const selectorChartsIsFadedCallback = createSelector(
 );
 
 export const selectorChartsIsHighlighted = createSelector(
-  [
-    selectorChartsHighlightScope,
-    selectorChartsHighlightedItem,
-    (_, item: HighlightItemData | null) => item,
-  ],
-  function selectorChartsIsHighlighted(highlightScope, highlightedItem, item) {
+  [selectorChartsHighlightScope, selectorChartsHighlightedItem],
+  function selectorChartsIsHighlighted(
+    highlightScope,
+    highlightedItem,
+    item: HighlightItemData | null,
+  ) {
     return createIsHighlighted(highlightScope, highlightedItem)(item);
   },
 );
 
 export const selectorChartIsSeriesHighlighted = createSelector(
-  [
-    selectorChartsHighlightScope,
-    selectorChartsHighlightedItem,
-    (_, seriesId: SeriesId) => seriesId,
-  ],
+  [selectorChartsHighlightScope, selectorChartsHighlightedItem],
   isSeriesHighlighted,
 );
 
 export const selectorChartIsSeriesFaded = createSelector(
-  [
-    selectorChartsHighlightScope,
-    selectorChartsHighlightedItem,
-    (_, seriesId: SeriesId) => seriesId,
-  ],
+  [selectorChartsHighlightScope, selectorChartsHighlightedItem],
   isSeriesFaded,
 );
 
 export const selectorChartSeriesUnfadedItem = createSelector(
-  [
-    selectorChartsHighlightScope,
-    selectorChartsHighlightedItem,
-    (_, seriesId: SeriesId) => seriesId,
-  ],
+  [selectorChartsHighlightScope, selectorChartsHighlightedItem],
   getSeriesUnfadedItem,
 );
 
 export const selectorChartSeriesHighlightedItem = createSelector(
-  [
-    selectorChartsHighlightScope,
-    selectorChartsHighlightedItem,
-    (_, seriesId: SeriesId) => seriesId,
-  ],
+  [selectorChartsHighlightScope, selectorChartsHighlightedItem],
   getSeriesHighlightedItem,
 );
 
 export const selectorChartsIsFaded = createSelector(
-  [
-    selectorChartsHighlightScope,
-    selectorChartsHighlightedItem,
-    (_, item: HighlightItemData | null) => item,
-  ],
-  function selectorChartsIsFaded(highlightScope, highlightedItem, item) {
+  [selectorChartsHighlightScope, selectorChartsHighlightedItem],
+  function selectorChartsIsFaded(highlightScope, highlightedItem, item: HighlightItemData | null) {
     return createIsFaded(highlightScope, highlightedItem)(item);
   },
 );

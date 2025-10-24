@@ -3,7 +3,7 @@ import { useChartContext } from '../../context/ChartProvider';
 import { ChartAnyPluginSignature, ChartState } from '../plugins/models';
 
 // This hook should be removed because user and us should not interact with the store directly, but with public/private APIs
-export function useStore<TSignatures extends ChartAnyPluginSignature[] = []>(): Store<
+export function useChartStore<TSignatures extends ChartAnyPluginSignature[] = []>(): Store<
   ChartState<TSignatures>
 > {
   const context = useChartContext<TSignatures>();

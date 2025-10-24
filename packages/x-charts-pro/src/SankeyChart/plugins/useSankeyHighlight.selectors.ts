@@ -4,7 +4,7 @@ import {
   type UseChartSeriesSignature,
 } from '@mui/x-charts/internals';
 import type { UseSankeyHighlightSignature } from './useSankeyHighlight.types';
-import type { SankeyLayoutLink, SankeyLayoutNode } from '../sankey.types';
+import type { SankeyLayoutLink, SankeyNodeId } from '../sankey.types';
 import type {
   SankeyLinkFade,
   SankeyLinkHighlight,
@@ -79,13 +79,8 @@ export const selectorSankeyHighlightedItem = createSelector(
  * - It's connected to a highlighted link (based on linkOptions.highlight)
  */
 export const selectorIsNodeHighlighted = createSelector(
-  [
-    selectorSankeyHighlightedItem,
-    selectorNodeHighlightConfig,
-    selectorLinkHighlightConfig,
-    (_, node: SankeyLayoutNode) => node.id,
-  ],
-  (highlightedItem, nodeHighlight, linkHighlight, nodeId): boolean => {
+  [selectorSankeyHighlightedItem, selectorNodeHighlightConfig, selectorLinkHighlightConfig],
+  (highlightedItem, nodeHighlight, linkHighlight, nodeId: SankeyNodeId): boolean => {
     if (!highlightedItem) {
       return false;
     }
@@ -124,13 +119,8 @@ export const selectorIsNodeHighlighted = createSelector(
  * - It's connected to a highlighted node (based on nodeOptions.highlight)
  */
 export const selectorIsLinkHighlighted = createSelector(
-  [
-    selectorSankeyHighlightedItem,
-    selectorNodeHighlightConfig,
-    selectorLinkHighlightConfig,
-    (_, link: SankeyLayoutLink) => link,
-  ],
-  (highlightedItem, nodeHighlight, linkHighlight, link): boolean => {
+  [selectorSankeyHighlightedItem, selectorNodeHighlightConfig, selectorLinkHighlightConfig],
+  (highlightedItem, nodeHighlight, linkHighlight, link: SankeyLayoutLink): boolean => {
     if (!highlightedItem) {
       return false;
     }
@@ -174,13 +164,8 @@ export const selectorIsLinkHighlighted = createSelector(
  * - The fade mode is 'global' for the highlighted element type
  */
 export const selectorIsSankeyItemFaded = createSelector(
-  [
-    selectorSankeyHighlightedItem,
-    selectorNodeFadeConfig,
-    selectorLinkFadeConfig,
-    (_, isHighlighted) => isHighlighted,
-  ],
-  (highlightedItem, nodeFade, linkFade, isHighlighted): boolean => {
+  [selectorSankeyHighlightedItem, selectorNodeFadeConfig, selectorLinkFadeConfig],
+  (highlightedItem, nodeFade, linkFade, isHighlighted: boolean): boolean => {
     if (!highlightedItem || isHighlighted) {
       return false;
     }

@@ -1,4 +1,4 @@
-import { fastArrayCompare } from '@mui/x-internals/fastArrayCompare';
+// import { fastArrayCompare } from '@mui/x-internals/fastArrayCompare';
 import { warnOnce } from '@mui/x-internals/warning';
 import { ChartSeriesDefaultized, ChartsSeriesConfig } from '../models/seriesType/config';
 import { SeriesId } from '../models/seriesType/common';
@@ -9,8 +9,8 @@ import { useSelector } from './store/useSelector';
 
 export function createSeriesSelectorsOfType<T extends keyof ChartsSeriesConfig>(seriesType: T) {
   const selectorSeriesWithIds = createSelector(
-    [selectorChartSeriesProcessed, (_, ids?: SeriesId | SeriesId[]) => ids],
-    (processedSeries, ids) => {
+    [selectorChartSeriesProcessed],
+    (processedSeries, ids?: SeriesId | SeriesId[]) => {
       if (!ids || (Array.isArray(ids) && ids.length === 0)) {
         return (
           processedSeries[seriesType]?.seriesOrder?.map(
@@ -48,7 +48,12 @@ export function createSeriesSelectorsOfType<T extends keyof ChartsSeriesConfig>(
   return (ids?: SeriesId | SeriesId[]) => {
     const store = useStore();
 
-    return useSelector(store, selectorSeriesWithIds, [ids], fastArrayCompare);
+    return useSelector(
+      store,
+      selectorSeriesWithIds,
+      ids,
+      // fastArrayCompare
+    );
   };
 }
 

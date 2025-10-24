@@ -48,8 +48,8 @@ export const SankeyLinkElement = React.forwardRef<SVGPathElement, SankeyLinkElem
       link,
     };
 
-    const isHighlighted = useSelector(store, selectorIsLinkHighlighted, [link]);
-    const isFaded = useSelector(store, selectorIsSankeyItemFaded, [isHighlighted]);
+    const isHighlighted = useSelector(store, selectorIsLinkHighlighted, link);
+    const isFaded = useSelector(store, selectorIsSankeyItemFaded, isHighlighted);
 
     // Add interaction props for tooltips
     const interactionProps = useInteractionItemProps(identifier);

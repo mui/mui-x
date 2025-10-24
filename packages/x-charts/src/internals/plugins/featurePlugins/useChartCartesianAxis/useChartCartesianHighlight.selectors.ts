@@ -1,3 +1,4 @@
+import { createSelectorMemoized } from '@mui/x-internals/store';
 import { createSelector } from '../../utils/selectors';
 import { AxisItemIdentifier, ChartsAxisProps } from '../../../../models/axis';
 import { selectorChartXAxis, selectorChartYAxis } from './useChartCartesianAxisRendering.selectors';
@@ -38,13 +39,11 @@ const selectAxisHighlight = (
   return computedIndex === null ? [] : [{ axisId: axis.axisIds[0], dataIndex: computedIndex }];
 };
 
-export const selectorChartsHighlightXAxisIndex = createSelector(
-  [
-    selectorChartsInteractionXAxisIndex,
-    selectorChartXAxis,
-    selectorChartControlledCartesianAxisHighlight,
-    selectorBrushShouldPreventAxisHighlight,
-  ],
+export const selectorChartsHighlightXAxisIndex = createSelectorMemoized(
+  selectorChartsInteractionXAxisIndex,
+  selectorChartXAxis,
+  selectorChartControlledCartesianAxisHighlight,
+  selectorBrushShouldPreventAxisHighlight,
   selectAxisHighlight,
 );
 

@@ -1,5 +1,5 @@
 import { createSelector, type ChartOptionalRootSelector } from '../../utils/selectors';
-import { selectorChartZoomOptionsLookup } from '../useChartCartesianAxis';
+import { selectorChartZoomOptionsLookup } from '../useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
 import type { UseChartBrushSignature } from './useChartBrush.types';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';
 
@@ -70,7 +70,7 @@ export const selectorBrushConfigNoZoom = createSelector(
 
 export const selectorBrushConfigZoom = createSelector(
   [selectorChartZoomOptionsLookup],
-  (optionsLookup) => {
+  function selectorBrushConfigZoom(optionsLookup) {
     let hasX = false;
     let hasY = false;
     Object.values(optionsLookup).forEach((options) => {

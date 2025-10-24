@@ -8,8 +8,10 @@ import { useSvgRef } from '../hooks/useSvgRef';
 import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
 import {
-  selectorChartContainerSize,
-  selectorChartPropsSize,
+  selectorChartPropsHeight,
+  selectorChartPropsWidth,
+  selectorChartSvgWidth,
+  selectorChartSvgHeight,
 } from '../internals/plugins/corePlugins/useChartDimensions/useChartDimensions.selectors';
 import {
   selectorChartsHasFocusedItem,
@@ -80,8 +82,12 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
   ref: React.Ref<SVGSVGElement>,
 ) {
   const store = useStore();
-  const { width: svgWidth, height: svgHeight } = useSelector(store, selectorChartContainerSize);
-  const { width: propsWidth, height: propsHeight } = useSelector(store, selectorChartPropsSize);
+
+  const svgWidth = useSelector(store, selectorChartSvgWidth);
+  const svgHeight = useSelector(store, selectorChartSvgHeight);
+
+  const propsWidth = useSelector(store, selectorChartPropsWidth);
+  const propsHeight = useSelector(store, selectorChartPropsHeight);
   const isKeyboardNavigationEnabled = useSelector(store, selectorChartsIsKeyboardNavigationEnabled);
   const hasFocusedItem = useSelector(store, selectorChartsHasFocusedItem);
   const svgRef = useSvgRef();

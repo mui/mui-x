@@ -8,12 +8,7 @@ export const useChartExperimentalFeatures: ChartPlugin<UseChartExperimentalFeatu
   store,
 }) => {
   useEnhancedEffect(() => {
-    store.update((prevState) => {
-      return {
-        ...prevState,
-        experimentalFeatures: params.experimentalFeatures,
-      };
-    });
+    store.set('experimentalFeatures', params.experimentalFeatures);
   }, [store, params.experimentalFeatures]);
 
   return {};

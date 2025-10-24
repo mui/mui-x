@@ -15,17 +15,9 @@ export const useChartHighlight: ChartPlugin<UseChartHighlightSignature> = ({ sto
   });
 
   useEnhancedEffect(() => {
-    store.update((prevState) =>
-      prevState.highlight.item === params.highlightedItem
-        ? prevState
-        : {
-            ...prevState,
-            highlight: {
-              ...prevState.highlight,
-              item: params.highlightedItem,
-            },
-          },
-    );
+    if (store.state.highlight.item !== params.highlightedItem) {
+      store.set('highlight', { ...store.state.highlight, item: params.highlightedItem });
+    }
   }, [store, params.highlightedItem]);
 
   const clearHighlight = useEventCallback(() => {
@@ -35,7 +27,7 @@ export const useChartHighlight: ChartPlugin<UseChartHighlightSignature> = ({ sto
       return;
     }
 
-    store.update((prev) => ({ ...prev, highlight: { item: null, lastUpdate: 'pointer' } }));
+    store.set('highlight', { item: null, lastUpdate: 'pointer' });
   });
 
   const setHighlight = useEventCallback((newItem: HighlightItemData) => {
@@ -46,7 +38,7 @@ export const useChartHighlight: ChartPlugin<UseChartHighlightSignature> = ({ sto
     }
 
     params.onHighlightChange?.(newItem);
-    store.update((prev) => ({ ...prev, highlight: { item: newItem, lastUpdate: 'pointer' } }));
+    store.set('highlight', { item: newItem, lastUpdate: 'pointer' });
   });
 
   return {
