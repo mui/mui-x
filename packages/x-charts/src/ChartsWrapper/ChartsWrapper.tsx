@@ -145,6 +145,7 @@ const Root = styled('div', {
         props: { extendVertically: true },
         style: {
           height: '100%',
+          minHeight: 0,
         },
       },
     ],
