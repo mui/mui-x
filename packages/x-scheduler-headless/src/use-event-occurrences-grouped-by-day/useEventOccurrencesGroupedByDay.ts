@@ -16,16 +16,15 @@ import { Adapter } from '../use-adapter/useAdapter.types';
 export function useEventOccurrencesGroupedByDay(
   parameters: useEventOccurrencesGroupedByDay.Parameters,
 ): useEventOccurrencesGroupedByDay.ReturnValue {
-  const { days, renderEventIn } = parameters;
+  const { days } = parameters;
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
   const events = useStore(store, selectors.events);
   const visibleResources = useStore(store, selectors.visibleResourcesMap);
 
   return React.useMemo(
-    () =>
-      innerGetEventOccurrencesGroupedByDay(adapter, days, renderEventIn, events, visibleResources),
-    [adapter, days, renderEventIn, events, visibleResources],
+    () => innerGetEventOccurrencesGroupedByDay(adapter, days, events, visibleResources),
+    [adapter, days, events, visibleResources],
   );
 }
 
@@ -35,12 +34,6 @@ export namespace useEventOccurrencesGroupedByDay {
      * The days to get the occurrences for.
      */
     days: CalendarProcessedDate[];
-    /**
-     * The days a multi-day event should appear on.
-     * If "first-day", the event appears only on its starting day.
-     * If "every-day", the event appears on each day it spans.
-     */
-    renderEventIn: 'first-day' | 'every-day';
   }
 
   export type ReturnValue = Map<string, CalendarEventOccurrence[]>;
@@ -53,7 +46,6 @@ export namespace useEventOccurrencesGroupedByDay {
 export function innerGetEventOccurrencesGroupedByDay(
   adapter: Adapter,
   days: CalendarProcessedDate[],
-  renderEventIn: 'first-day' | 'every-day',
   events: CalendarEvent[],
   visibleResources: Map<string, boolean>,
 ): Map<string, CalendarEventOccurrence[]> {
@@ -68,7 +60,7 @@ export function innerGetEventOccurrencesGroupedByDay(
   const occurrences = getOccurrencesFromEvents({ adapter, start, end, events, visibleResources });
 
   for (const occurrence of occurrences) {
-    const eventDays = getDaysTheOccurrenceIsVisibleOn(occurrence, days, adapter, renderEventIn);
+    const eventDays = getDaysTheOccurrenceIsVisibleOn(occurrence, days, adapter);
     for (const dayKey of eventDays) {
       const occurrenceType = occurrence.allDay ? 'allDay' : 'nonAllDay';
       occurrencesGroupedByDay.get(dayKey)![occurrenceType].push(occurrence);

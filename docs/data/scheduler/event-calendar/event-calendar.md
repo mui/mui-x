@@ -171,6 +171,7 @@ Available properties:
 - `toggleWeekendVisibility`: show/hide the menu item that toggles weekend visibility.
 - `toggleWeekNumberVisibility`: show/hide the menu item that toggles week number visibility.
 - `toggleAmpm`: show/hide the menu item that toggles 12/24‑hour time format.
+- `toggleEmptyDaysInAgenda`: show/hide the menu item that toggles the visibility of days with no events in the Agenda view.
 
 ```ts
 // will hide the menu
