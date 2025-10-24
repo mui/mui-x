@@ -44,7 +44,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const showCurrentTimeIndicator = useStore(store, selectors.showCurrentTimeIndicator);
 
   // Feature hooks
-  const occurrencesMap = useEventOccurrencesGroupedByDay({ days, renderEventIn: 'every-day' });
+  const occurrencesMap = useEventOccurrencesGroupedByDay({ days });
   const occurrences = useEventOccurrencesWithDayGridPosition({
     days,
     occurrencesMap,

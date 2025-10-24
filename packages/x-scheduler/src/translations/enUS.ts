@@ -28,8 +28,10 @@ export const enUS: SchedulerTranslations = {
   hour24h: '24-hour (13:00)',
   preferencesMenu: 'Settings',
   showWeekends: 'Show weekends',
+  showEmptyDaysInAgenda: 'Show empty days',
   showWeekNumber: 'Show week number',
   timeFormat: 'Time format',
+  viewSpecificOptions: (view) => `${view} view options`,
 
   // WeekView
   allDay: 'All day',

@@ -30,7 +30,10 @@ export const StandaloneEvent = React.forwardRef(function StandaloneEvent(
   const isInteractive = true;
 
   const ref = React.useRef<HTMLDivElement>(null);
-  const { getButtonProps, buttonRef } = useButton({ disabled: !isInteractive, native: false });
+  const { getButtonProps, buttonRef } = useButton({
+    disabled: !isInteractive,
+    native: false,
+  });
 
   const preview = useDragPreview({
     type: 'standalone-event',
