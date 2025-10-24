@@ -278,7 +278,7 @@ export class MinimalTreeViewStore<
   /**
    * Remove the focus from the currently focused item (both from the internal state and the DOM).
    */
-  protected removeFocusedItem = this.focusManager.removeFocusedItem;
+  public removeFocusedItem = this.focusManager.removeFocusedItem;
 
   /**
    * Event handler to fire when the `root` slot of the Tree View is focused.
@@ -383,7 +383,7 @@ export class MinimalTreeViewStore<
    * @param {React.KeyboardEvent<HTMLElement> & TreeViewCancellableEvent} event The keyboard event that triggered the callback.
    * @param {TreeViewItemId} itemId The id of the item that the event was triggered on.
    */
-  protected handleItemKeyDown = this.keyboardNavigationManager.handleItemKeyDown;
+  public handleItemKeyDown = this.keyboardNavigationManager.handleItemKeyDown;
 
   /**
    * Updates the `labelMap` to add/remove the first character of some item's labels.

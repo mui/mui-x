@@ -1,6 +1,5 @@
-import { TreeViewItemPlugin } from '../models';
-import { TreeViewItemPluginsRunner } from '../TreeViewProvider';
-import { MinimalTreeViewStore } from './TreeViewStore';
+import { TreeItemWrapper, TreeViewItemPlugin } from '../models';
+import { MinimalTreeViewStore } from './MinimalTreeViewStore';
 
 /**
  * Manages the registration and application of plugins for the Tree Item.
@@ -11,13 +10,18 @@ export class TreeViewItemPluginManager<Store extends MinimalTreeViewStore<any, a
 
   private itemPlugins: TreeViewItemPlugin[] = [];
 
+  private itemWrappers: TreeItemWrapper<Store>[] = [];
+
   constructor(store: Store) {
     this.store = store;
   }
 
-  public register = (plugin: TreeViewItemPlugin) => {
+  public register = (plugin: TreeViewItemPlugin, wrapItem: TreeItemWrapper<Store>) => {
     this.itemPlugins.push(plugin);
+    this.itemWrappers.push(wrapItem);
   };
 
-  public list = () => this.itemPlugins;
+  public listPlugins = () => this.itemPlugins;
+
+  public listWrappers = () => this.itemWrappers;
 }

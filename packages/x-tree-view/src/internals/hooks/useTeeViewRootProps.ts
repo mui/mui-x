@@ -8,7 +8,7 @@ import { selectionSelectors } from '../plugins/useTreeViewSelection';
 import { itemsSelectors } from '../plugins/useTreeViewItems';
 import { TreeViewStore } from '../models';
 
-export function useTreeViewRootProps<TStore extends TreeViewStore<any, any, any>>(
+export function useTreeViewRootProps<TStore extends TreeViewStore<any, any>>(
   store: TStore,
   forwardedProps: React.HTMLAttributes<HTMLUListElement>,
   ref: React.Ref<HTMLUListElement | null> | undefined,

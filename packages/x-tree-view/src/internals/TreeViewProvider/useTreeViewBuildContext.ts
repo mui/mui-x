@@ -1,21 +1,21 @@
 import * as React from 'react';
 import { useRefWithInit } from '@base-ui-components/utils/useRefWithInit';
-import { TreeViewContextValue, TreeViewItemPluginsRunner } from '.';
+import { TreeViewContextValue, TreeViewItemPluginsRunner } from './TreeViewProvider.types';
 import {
-  TreeItemWrapper,
-  TreeRootWrapper,
   TreeViewItemPluginSlotPropsEnhancers,
   TreeViewItemPluginSlotPropsEnhancerParams,
   TreeViewStore,
   TreeViewPublicAPI,
+  TreeItemWrapper,
 } from '../models';
 
-export const useTreeViewBuildContext = <TStore extends TreeViewStore<any, any, any>>(
+export const useTreeViewBuildContext = <TStore extends TreeViewStore<any, any>>(
   parameters: UseTreeViewBuildContextParameters<TStore>,
 ): TreeViewContextValue<TStore> => {
-  const { store, apiRef } = parameters;
+  const { store, apiRef, rootRef } = parameters;
 
-  const publicAPI = useRefWithInit(() => store.buildPublicAPI()).current;
+  const publicAPI = useRefWithInit(() => store.buildPublicAPI())
+    .current as TreeViewPublicAPI<TStore>;
   initializeInputApiRef(publicAPI, apiRef);
 
   const runItemPlugins = React.useCallback<TreeViewItemPluginsRunner>(
@@ -27,7 +27,7 @@ export const useTreeViewBuildContext = <TStore extends TreeViewStore<any, any, a
         [key in keyof TreeViewItemPluginSlotPropsEnhancers]?: true;
       } = {};
 
-      store.itemPluginManager.list().forEach((itemPlugin) => {
+      store.itemPluginManager.listPlugins().forEach((itemPlugin) => {
         const itemPluginResponse = itemPlugin({
           props: itemPluginProps,
           rootRef: finalRootRef,
@@ -85,60 +85,40 @@ export const useTreeViewBuildContext = <TStore extends TreeViewStore<any, any, a
     [store],
   );
 
-  const wrapItem = React.useCallback<TreeItemWrapper<TSignatures>>(
+  const wrapItem = React.useCallback<TreeItemWrapper<TStore>>(
     ({ itemId, children, idAttribute }) => {
       let finalChildren: React.ReactNode = children;
+      const itemsWrapper = store.itemPluginManager.listWrappers();
+
       // The wrappers are reversed to ensure that the first wrapper is the outermost one.
-      for (let i = plugins.length - 1; i >= 0; i -= 1) {
-        const plugin = plugins[i];
-        if (plugin.wrapItem) {
-          finalChildren = plugin.wrapItem({
-            instance,
-            itemId,
-            children: finalChildren,
-            idAttribute,
-          });
-        }
+      for (let i = itemsWrapper.length - 1; i >= 0; i -= 1) {
+        const itemWrapper = itemsWrapper[i];
+        finalChildren = itemWrapper({
+          store: store as any,
+          itemId,
+          children: finalChildren,
+          idAttribute,
+        });
       }
 
       return finalChildren;
     },
-    [plugins, instance],
-  );
-
-  const wrapRoot = React.useCallback<TreeRootWrapper>(
-    ({ children }) => {
-      let finalChildren: React.ReactNode = children;
-      // The wrappers are reversed to ensure that the first wrapper is the outermost one.
-      for (let i = plugins.length - 1; i >= 0; i -= 1) {
-        const plugin = plugins[i];
-        if (plugin.wrapRoot) {
-          finalChildren = plugin.wrapRoot({
-            children: finalChildren,
-          });
-        }
-      }
-
-      return finalChildren;
-    },
-    [plugins],
+    [store],
   );
 
   return React.useMemo(
     () => ({
       runItemPlugins,
       wrapItem,
-      wrapRoot,
-      instance,
       publicAPI,
       store,
       rootRef,
     }),
-    [runItemPlugins, wrapItem, wrapRoot, instance, publicAPI, store, rootRef],
+    [runItemPlugins, wrapItem, publicAPI, store, rootRef],
   );
 };
 
-function initializeInputApiRef<TStore extends TreeViewStore<any, any, any>>(
+function initializeInputApiRef<TStore extends TreeViewStore<any, any>>(
   publicAPI: TreeViewPublicAPI<TStore>,
   apiRef: React.RefObject<TreeViewPublicAPI<TStore> | undefined> | undefined,
 ) {
@@ -147,18 +127,17 @@ function initializeInputApiRef<TStore extends TreeViewStore<any, any, any>>(
   }
 }
 
-export interface UseTreeViewBuildContextParameters<TStore extends TreeViewStore<any, any, any>> {
+export interface UseTreeViewBuildContextParameters<TStore extends TreeViewStore<any, any>> {
   store: TStore;
   rootRef: React.RefObject<HTMLUListElement | null>;
   apiRef: React.RefObject<TreeViewPublicAPI<TStore> | undefined> | undefined;
 }
 
-export interface UseTreeViewBuildContextReturnValue<TStore extends TreeViewStore<any, any, any>> {
+export interface UseTreeViewBuildContextReturnValue<TStore extends TreeViewStore<any, any>> {
   publicAPI: TreeViewPublicAPI<TStore>;
   // TODO: Use ReadonlyStore
   store: TStore;
   rootRef: React.RefObject<HTMLUListElement | null>;
-  wrapItem: TreeItemWrapper<TSignatures>;
-  wrapRoot: TreeRootWrapper;
+  wrapItem: TreeItemWrapper<TStore>;
   runItemPlugins: TreeViewItemPluginsRunner;
 }

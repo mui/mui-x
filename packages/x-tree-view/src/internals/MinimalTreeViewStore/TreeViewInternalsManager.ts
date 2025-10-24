@@ -5,7 +5,7 @@ import { TreeViewStore } from '../models';
 
 export class TreeViewInternalsManager<
   State extends MinimalTreeViewState<any, any>,
-  Store extends TreeViewStore<any, any, any>,
+  Store extends TreeViewStore<any, any>,
 > {
   private store: Store;
 

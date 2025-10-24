@@ -3,24 +3,17 @@ import * as React from 'react';
 import { useStore } from '@mui/x-internals/store';
 import { TreeViewCancellableEvent } from '../../models';
 import { useTreeViewContext } from '../../internals/TreeViewProvider';
-import type { UseTreeViewLazyLoadingSignature } from '../../internals/plugins/useTreeViewLazyLoading';
-import type { UseTreeViewSelectionSignature } from '../../internals/plugins/useTreeViewSelection';
-import type { UseTreeViewExpansionSignature } from '../../internals/plugins/useTreeViewExpansion';
-import type { UseTreeViewItemsSignature } from '../../internals/plugins/useTreeViewItems';
-import type { UseTreeViewFocusSignature } from '../../internals/plugins/useTreeViewFocus';
-import {
-  UseTreeViewLabelSignature,
-  useTreeViewLabel,
-} from '../../internals/plugins/useTreeViewLabel';
+import { useTreeViewLabel } from '../../internals/plugins/useTreeViewLabel';
 import type { UseTreeItemStatus } from '../../useTreeItem';
 import { hasPlugin } from '../../internals/utils/plugins';
-import { MinimalTreeViewPublicAPI } from '../../internals/models';
+import { TreeViewPublicAPI, TreeViewStore } from '../../internals/models';
 import { expansionSelectors } from '../../internals/plugins/useTreeViewExpansion/useTreeViewExpansion.selectors';
 import { focusSelectors } from '../../internals/plugins/useTreeViewFocus/useTreeViewFocus.selectors';
 import { itemsSelectors } from '../../internals/plugins/useTreeViewItems/useTreeViewItems.selectors';
 import { selectionSelectors } from '../../internals/plugins/useTreeViewSelection/useTreeViewSelection.selectors';
 import { lazyLoadingSelectors } from '../../internals/plugins/useTreeViewLazyLoading/useTreeViewLazyLoading.selectors';
 import { labelSelectors } from '../../internals/plugins/useTreeViewLabel/useTreeViewLabel.selectors';
+import { MinimalTreeViewStore } from '../../internals/MinimalTreeViewStore';
 
 export interface UseTreeItemInteractions {
   handleExpansion: (event: React.MouseEvent) => void;
@@ -31,35 +24,13 @@ export interface UseTreeItemInteractions {
   handleCancelItemLabelEditing: (event: React.SyntheticEvent) => void;
 }
 
-/**
- * Plugins that need to be present in the Tree View in order for `useTreeItemUtils` to work correctly.
- */
-type UseTreeItemUtilsMinimalPlugins = readonly [
-  UseTreeViewSelectionSignature,
-  UseTreeViewExpansionSignature,
-  UseTreeViewItemsSignature,
-  UseTreeViewFocusSignature,
-];
-
-/**
- * Plugins that `useTreeItemUtils` can use if they are present, but are not required.
- */
-
-export type UseTreeItemUtilsOptionalPlugins = readonly [
-  UseTreeViewLabelSignature,
-  UseTreeViewLazyLoadingSignature,
-];
-
-interface UseTreeItemUtilsReturnValue<
-  TSignatures extends UseTreeItemUtilsMinimalPlugins,
-  TOptionalSignatures extends UseTreeItemUtilsOptionalPlugins,
-> {
+interface UseTreeItemUtilsReturnValue<TStore extends TreeViewStore<any, any>> {
   interactions: UseTreeItemInteractions;
   status: UseTreeItemStatus;
   /**
    * The object the allows Tree View manipulation.
    */
-  publicAPI: MinimalTreeViewPublicAPI<TSignatures, TOptionalSignatures>;
+  publicAPI: TreeViewPublicAPI<TStore>;
 }
 
 export const itemHasChildren = (reactChildren: React.ReactNode) => {
@@ -70,16 +41,15 @@ export const itemHasChildren = (reactChildren: React.ReactNode) => {
 };
 
 export const useTreeItemUtils = <
-  TSignatures extends UseTreeItemUtilsMinimalPlugins = UseTreeItemUtilsMinimalPlugins,
-  TOptionalSignatures extends UseTreeItemUtilsOptionalPlugins = UseTreeItemUtilsOptionalPlugins,
+  TStore extends TreeViewStore<any, any> = MinimalTreeViewStore<any, any, any, any>,
 >({
   itemId,
   children,
 }: {
   itemId: string;
   children?: React.ReactNode;
-}): UseTreeItemUtilsReturnValue<TSignatures, TOptionalSignatures> => {
-  const { instance, store, publicAPI } = useTreeViewContext<TSignatures, TOptionalSignatures>();
+}): UseTreeItemUtilsReturnValue<TStore> => {
+  const { store, publicAPI } = useTreeViewContext<TStore>();
 
   const isItemExpandable = useStore(store, expansionSelectors.isItemExpandable, itemId);
   const isLoading = useStore(store, lazyLoadingSelectors.isItemLoading, itemId);
@@ -110,7 +80,7 @@ export const useTreeItemUtils = <
     }
 
     if (!status.focused) {
-      instance.focusItem(event, itemId);
+      store.focusItem(event, itemId);
     }
 
     const multiple =
@@ -123,7 +93,7 @@ export const useTreeItemUtils = <
       !(multiple && expansionSelectors.isItemExpanded(store.state, itemId))
     ) {
       // make sure the children selection is propagated again
-      instance.setItemExpansion({ event, itemId });
+      store.setItemExpansion({ event, itemId });
     }
   };
 
@@ -133,7 +103,7 @@ export const useTreeItemUtils = <
     }
 
     if (!status.focused && !status.editing) {
-      instance.focusItem(event, itemId);
+      store.focusItem(event, itemId);
     }
 
     const multiple =
@@ -142,12 +112,12 @@ export const useTreeItemUtils = <
 
     if (multiple) {
       if (event.shiftKey) {
-        instance.expandSelectionRange(event, itemId);
+        store.expandSelectionRange(event, itemId);
       } else {
-        instance.setItemSelection({ event, itemId, keepExistingSelection: true });
+        store.setItemSelection({ event, itemId, keepExistingSelection: true });
       }
     } else {
-      instance.setItemSelection({ event, itemId, shouldBeSelected: true });
+      store.setItemSelection({ event, itemId, shouldBeSelected: true });
     }
   };
 
@@ -155,9 +125,9 @@ export const useTreeItemUtils = <
     const hasShift = (event.nativeEvent as PointerEvent).shiftKey;
     const isMultiSelectEnabled = selectionSelectors.isMultiSelectEnabled(store.state);
     if (isMultiSelectEnabled && hasShift) {
-      instance.expandSelectionRange(event, itemId);
+      store.expandSelectionRange(event, itemId);
     } else {
-      instance.setItemSelection({
+      store.setItemSelection({
         event,
         itemId,
         keepExistingSelection: isMultiSelectEnabled,
@@ -192,7 +162,7 @@ export const useTreeItemUtils = <
     if (labelSelectors.isItemBeingEdited(store.state, itemId)) {
       instance.updateItemLabel(itemId, newLabel);
       toggleItemEditing();
-      instance.focusItem(event, itemId);
+      store.focusItem(event, itemId);
     }
   };
 
@@ -203,7 +173,7 @@ export const useTreeItemUtils = <
 
     if (labelSelectors.isItemBeingEdited(store.state, itemId)) {
       toggleItemEditing();
-      instance.focusItem(event, itemId);
+      store.focusItem(event, itemId);
     }
   };
 

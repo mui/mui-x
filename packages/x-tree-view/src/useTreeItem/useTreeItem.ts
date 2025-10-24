@@ -15,8 +15,6 @@ import {
   UseTreeItemIconContainerSlotProps,
   UseTreeItemCheckboxSlotProps,
   UseTreeItemLabelInputSlotProps,
-  UseTreeItemMinimalPlugins,
-  UseTreeItemOptionalPlugins,
   UseTreeItemDragAndDropOverlaySlotProps,
   UseTreeItemRootSlotPropsFromUseTreeItem,
   UseTreeItemContentSlotPropsFromUseTreeItem,
@@ -24,7 +22,7 @@ import {
   UseTreeItemLoadingContainerSlotProps,
 } from './useTreeItem.types';
 import { useTreeViewContext } from '../internals/TreeViewProvider';
-import { TreeViewItemPluginSlotPropsEnhancerParams } from '../internals/models';
+import { TreeViewItemPluginSlotPropsEnhancerParams, TreeViewStore } from '../internals/models';
 import { useTreeItemUtils } from '../hooks/useTreeItemUtils';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
 import { isTargetInDescendants } from '../internals/utils/tree';
@@ -35,16 +33,10 @@ import { idSelectors } from '../internals/corePlugins/useTreeViewId';
 import { expansionSelectors } from '../internals/plugins/useTreeViewExpansion';
 import { selectionSelectors } from '../internals/plugins/useTreeViewSelection';
 
-export const useTreeItem = <
-  TSignatures extends UseTreeItemMinimalPlugins = UseTreeItemMinimalPlugins,
-  TOptionalSignatures extends UseTreeItemOptionalPlugins = UseTreeItemOptionalPlugins,
->(
+export const useTreeItem = <TStore extends TreeViewStore<any, any>>(
   parameters: UseTreeItemParameters,
-): UseTreeItemReturnValue<TSignatures, TOptionalSignatures> => {
-  const { runItemPlugins, instance, publicAPI, store } = useTreeViewContext<
-    TSignatures,
-    TOptionalSignatures
-  >();
+): UseTreeItemReturnValue<TStore> => {
+  const { runItemPlugins, publicAPI, store } = useTreeViewContext<TStore>();
   const depthContext = React.useContext(TreeViewItemDepthContext);
 
   const depth = useStore(
@@ -97,7 +89,7 @@ export const useTreeItem = <
         itemsSelectors.canItemBeFocused(store.state, itemId) &&
         event.currentTarget === event.target
       ) {
-        instance.focusItem(event, itemId);
+        store.focusItem(event, itemId);
       }
     };
 
@@ -109,7 +101,7 @@ export const useTreeItem = <
         return;
       }
 
-      const rootElement = instance.getItemDOMElement(itemId);
+      const rootElement = store.getItemDOMElement(itemId);
 
       // Don't blur the root when switching to editing mode
       // the input that triggers the root blur can be either the relatedTarget (when entering editing state) or the target (when exiting editing state)
@@ -128,7 +120,7 @@ export const useTreeItem = <
         return;
       }
 
-      instance.removeFocusedItem();
+      store.removeFocusedItem();
     };
 
   const createRootHandleKeyDown =
@@ -142,7 +134,7 @@ export const useTreeItem = <
         return;
       }
 
-      instance.handleItemKeyDown(event, itemId);
+      store.handleItemKeyDown(event, itemId);
     };
 
   const createLabelHandleDoubleClick =
@@ -157,7 +149,7 @@ export const useTreeItem = <
   const createContentHandleClick =
     (otherHandlers: EventHandlers) => (event: React.MouseEvent & TreeViewCancellableEvent) => {
       otherHandlers.onClick?.(event);
-      instance.handleItemClick(event, itemId);
+      store.handleItemClick(event, itemId);
 
       if (event.defaultMuiPrevented || checkboxRef.current?.contains(event.target as HTMLElement)) {
         return;

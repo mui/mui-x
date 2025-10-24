@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { EventHandlers } from '@mui/utils/types';
+import { TreeViewItemId } from '../../models';
 import type {
   UseTreeItemContentSlotOwnProps,
   UseTreeItemDragAndDropOverlaySlotOwnProps,
@@ -10,6 +11,7 @@ import type {
 } from '../../useTreeItem';
 import type { UseTreeItemInteractions } from '../../hooks/useTreeItemUtils/useTreeItemUtils';
 import type { TreeItemProps } from '../../TreeItem/TreeItem.types';
+import { TreeViewStore } from './treeView';
 
 export interface TreeViewItemPluginSlotPropsEnhancerParams {
   rootRefObject: React.RefObject<HTMLLIElement | null>;
@@ -58,3 +60,10 @@ export interface TreeViewItemPluginOptions
 export type TreeViewItemPlugin = (
   options: TreeViewItemPluginOptions,
 ) => void | TreeViewItemPluginResponse;
+
+export type TreeItemWrapper<TStore extends TreeViewStore<any, any>> = (params: {
+  itemId: TreeViewItemId;
+  children: React.ReactNode;
+  store: TStore;
+  idAttribute: string;
+}) => React.ReactNode;
