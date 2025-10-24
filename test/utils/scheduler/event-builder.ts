@@ -9,6 +9,7 @@ import {
   CalendarEventOccurrence,
 } from '@mui/x-scheduler-headless/models/event';
 import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
+import { getWeekDayCode } from '@mui/x-scheduler-headless/utils/recurring-event-utils'; // ajusta el path
 import { adapter as defaultAdapter } from 'test/utils/scheduler';
 
 export const DEFAULT_TESTING_VISIBLE_DATE = '2025-07-03T00:00:00Z';
@@ -50,7 +51,7 @@ export class EventBuilder {
     return this;
   }
 
-  /** Set an optional description. */
+  /** Set a description. */
   description(description?: string) {
     this.event.description = description;
     return this;
@@ -172,8 +173,8 @@ export class EventBuilder {
     let base: RecurringEventRecurrenceRule = { freq: freqMap[kind], interval: 1 };
 
     if (kind === 'weekly') {
-      const dayOfWeek = this.adapter.getDayOfWeek(anchor);
-      base = { ...base, byDay: [weekNumToCode(dayOfWeek)] };
+      const code = getWeekDayCode(this.adapter, anchor);
+      base = { ...base, byDay: [code] };
     } else if (kind === 'monthly') {
       const dayOfMonth = this.adapter.getDate(anchor);
       base = { ...base, byMonthDay: [dayOfMonth] };
