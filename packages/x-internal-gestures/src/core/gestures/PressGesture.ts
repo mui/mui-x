@@ -179,26 +179,17 @@ export class PressGesture<GestureName extends string> extends PointerGesture<Ges
     event: PointerEvent,
   ): void => {
     const pointersArray = Array.from(pointers.values());
-
-    // Check for our forceCancel event to handle interrupted gestures (from contextmenu, blur)
-    if (event.type === 'forceCancel') {
-      // Reset all active press gestures when we get a force reset event
-      this.cancelPress(event.target as null, pointersArray, event);
-      return;
-    }
-
-    // Find which element (if any) is being targeted
     const targetElement = this.getTargetElement(event);
-    if (!targetElement) {
+
+    if (
+      event.type === 'forceCancel' ||
+      (targetElement && this.shouldPreventGesture(targetElement, event.pointerType))
+    ) {
+      this.cancel(targetElement, pointersArray, event);
       return;
     }
 
-    // Check if this gesture should be prevented by active gestures
-    if (this.shouldPreventGesture(targetElement, event.pointerType)) {
-      if (this.isActive) {
-        // If the gesture was active but now should be prevented, cancel it gracefully
-        this.cancelPress(targetElement, pointersArray, event);
-      }
+    if (!targetElement) {
       return;
     }
 
@@ -206,10 +197,7 @@ export class PressGesture<GestureName extends string> extends PointerGesture<Ges
     const relevantPointers = this.getRelevantPointers(pointersArray, targetElement);
 
     if (!this.isWithinPointerCount(relevantPointers, event.pointerType)) {
-      if (this.isActive) {
-        // Cancel or end the gesture if it was active
-        this.cancelPress(targetElement, relevantPointers, event);
-      }
+      this.cancel(targetElement, relevantPointers, event);
       return;
     }
 
@@ -253,7 +241,7 @@ export class PressGesture<GestureName extends string> extends PointerGesture<Ges
 
           // If moved too far, cancel the press gesture
           if (distance > this.maxDistance) {
-            this.cancelPress(targetElement, relevantPointers, event);
+            this.cancel(targetElement, relevantPointers, event);
           }
         }
         break;
@@ -272,9 +260,8 @@ export class PressGesture<GestureName extends string> extends PointerGesture<Ges
         break;
 
       case 'pointercancel':
-      case 'forceCancel':
         // Cancel the gesture
-        this.cancelPress(targetElement, relevantPointers, event);
+        this.cancel(targetElement, relevantPointers, event);
         break;
 
       default:
@@ -312,6 +299,7 @@ export class PressGesture<GestureName extends string> extends PointerGesture<Ges
       duration: currentDuration,
       activeGestures,
       customData: this.customData,
+      cancel: () => this.cancelGesture(pointers),
     };
 
     // Event names to trigger
@@ -338,18 +326,18 @@ export class PressGesture<GestureName extends string> extends PointerGesture<Ges
   }
 
   /**
-   * Cancel the current press gesture
+   * Cancel the current gesture
    */
-  private cancelPress(
+  private cancel(
     element: TargetElement | null,
     pointers: PointerData[],
     event: PointerEvent,
   ): void {
     if (this.isActive && this.state.pressThresholdReached) {
       const position = this.state.lastPosition || this.state.startCentroid!;
-
-      this.emitPressEvent(element ?? this.element, 'cancel', pointers, event, position);
-      this.emitPressEvent(element ?? this.element, 'end', pointers, event, position);
+      const el = element ?? this.element;
+      this.emitPressEvent(el, 'cancel', pointers, event, position);
+      this.emitPressEvent(el, 'end', pointers, event, position);
     }
 
     this.resetState();
