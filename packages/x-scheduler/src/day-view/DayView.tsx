@@ -38,15 +38,28 @@ export const DayView = React.memo(
 /**
  * A Day View that can be used outside of the Event Calendar.
  */
-export const StandaloneDayView = React.forwardRef(function StandaloneDayView(
-  props: StandaloneDayViewProps,
+export const StandaloneDayView = React.forwardRef(function StandaloneDayView<
+  TEvent extends object,
+  TResource extends object,
+>(
+  props: StandaloneDayViewProps<TEvent, TResource>,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { parameters, forwardedProps } = useExtractEventCalendarParameters(props);
+  const { parameters, forwardedProps } = useExtractEventCalendarParameters<
+    TEvent,
+    TResource,
+    typeof props
+  >(props);
 
   return (
     <EventCalendarProvider {...parameters}>
       <DayView ref={forwardedRef} {...forwardedProps} />
     </EventCalendarProvider>
   );
-});
+}) as StandaloneDayViewComponent;
+
+type StandaloneDayViewComponent = <TEvent extends object, TResource extends object>(
+  props: StandaloneDayViewProps<TEvent, TResource> & {
+    ref?: React.ForwardedRef<HTMLDivElement>;
+  },
+) => React.JSX.Element;
