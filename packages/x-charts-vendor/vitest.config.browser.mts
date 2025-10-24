@@ -1,18 +1,4 @@
 /// <reference types="@vitest/browser/providers/playwright" />
-import { mergeConfig } from 'vitest/config';
-import sharedConfig from '../../vitest.shared.mts';
-import { getTestName } from '../../scripts/getTestName.mts';
+import { xVitestConfig } from '../../vitest.shared.mts';
 
-export default mergeConfig(sharedConfig, {
-  test: {
-    name: getTestName(import.meta.url),
-    browser: {
-      enabled: true,
-      instances: [
-        {
-          browser: 'chromium',
-        },
-      ],
-    },
-  },
-});
+export default xVitestConfig('browser', { url: import.meta.url });
