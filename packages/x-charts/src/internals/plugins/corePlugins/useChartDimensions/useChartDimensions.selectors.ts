@@ -11,11 +11,6 @@ export const selectorChartDimensionsState: ChartRootSelector<UseChartDimensionsS
 export const selectorChartMargin = (state: ChartState<[UseChartDimensionsSignature]>) =>
   state.dimensions.margin;
 
-const selectorChartWidth = (state: ChartState<[UseChartDimensionsSignature]>) =>
-  state.dimensions.width;
-const selectorChartHeight = (state: ChartState<[UseChartDimensionsSignature]>) =>
-  state.dimensions.height;
-
 export const selectorChartDrawingArea = createSelectorMemoized(
   selectorChartDimensionsState,
   selectorChartMargin,
@@ -34,18 +29,22 @@ export const selectorChartDrawingArea = createSelectorMemoized(
   }),
 );
 
-export const selectorChartPropsSize = createSelector(
+export const selectorChartSvgWidth = createSelector(
   [selectorChartDimensionsState],
-  (dimensionsState) => ({
-    width: dimensionsState.propsWidth,
-    height: dimensionsState.propsHeight,
-  }),
+  (dimensionsState) => dimensionsState.width,
 );
 
-export const selectorChartContainerSize = createSelector(
-  [selectorChartWidth, selectorChartHeight],
-  (width, height) => ({
-    width,
-    height,
-  }),
+export const selectorChartSvgHeight = createSelector(
+  [selectorChartDimensionsState],
+  (dimensionsState) => dimensionsState.height,
+);
+
+export const selectorChartPropsWidth = createSelector(
+  [selectorChartDimensionsState],
+  (dimensionsState) => dimensionsState.propsWidth,
+);
+
+export const selectorChartPropsHeight = createSelector(
+  [selectorChartDimensionsState],
+  (dimensionsState) => dimensionsState.propsHeight,
 );
