@@ -1,67 +1,23 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import { adapter, createSchedulerRenderer } from 'test/utils/scheduler';
+import {
+  adapter,
+  createSchedulerRenderer,
+  DEFAULT_TESTING_VISIBLE_DATE,
+  EventBuilder,
+} from 'test/utils/scheduler';
 import { screen, within } from '@mui/internal-test-utils';
-import { CalendarEvent } from '@mui/x-scheduler-headless/models';
 import { MonthView } from '@mui/x-scheduler/month-view';
 import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
 import { EventCalendar } from '../event-calendar';
 
-const events: CalendarEvent[] = [
-  {
-    id: '1',
-    start: adapter.date('2025-05-01T09:00:00'),
-    end: adapter.date('2025-05-01T10:00:00'),
-    title: 'Meeting',
-  },
-  {
-    id: '2',
-    start: adapter.date('2025-05-15T14:00:00'),
-    end: adapter.date('2025-05-15T15:00:00'),
-    title: 'Doctor Appointment',
-  },
-];
-
-const allDayEvents: CalendarEvent[] = [
-  {
-    id: 'all-day-1',
-    start: adapter.date('2025-05-05T00:00:00'),
-    end: adapter.date('2025-05-07T23:59:59'),
-    title: 'Multi-day Conference',
-    allDay: true,
-  },
-  {
-    id: 'all-day-2',
-    start: adapter.date('2025-04-28T00:00:00'), // Previous week
-    end: adapter.date('2025-05-06T23:59:59'), // Current week
-    title: 'Long Event',
-    allDay: true,
-  },
-  {
-    id: 'all-day-3',
-    start: adapter.date('2025-05-12T00:00:00'),
-    end: adapter.date('2025-05-14T23:59:59'),
-    title: 'Grid Row Test',
-    allDay: true,
-  },
-  {
-    id: 'all-day-4',
-    start: adapter.date('2025-05-14T00:00:00'),
-    end: adapter.date('2025-05-16T23:59:59'),
-    title: 'Three Day Event',
-    allDay: true,
-  },
-  {
-    id: 'all-day-5',
-    start: adapter.date('2025-05-06T00:00:00'),
-    end: adapter.date('2025-05-16T23:59:59'),
-    title: 'Multiple week event',
-    allDay: true,
-  },
-];
-
 describe('<MonthView />', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-05-01') });
+
+  const events = [
+    EventBuilder.new().startAt('2025-05-01T09:00:00').title('Meeting').build(),
+    EventBuilder.new().startAt('2025-05-15T14:00:00').title('Doctor Appointment').build(),
+  ];
 
   const standaloneDefaults = {
     events,
@@ -132,37 +88,13 @@ describe('<MonthView />', () => {
 
   it('should show "+N more..." when there are more events than fit in a cell', () => {
     const manyEvents = [
-      {
-        id: '1',
-        start: adapter.date('2025-05-01T08:00:00'),
-        end: adapter.date('2025-05-01T09:00:00'),
-        title: 'Breakfast',
-      },
-      {
-        id: '2',
-        start: adapter.date('2025-05-01T09:30:00'),
-        end: adapter.date('2025-05-01T10:30:00'),
-        title: 'Team Standup',
-      },
-      {
-        id: '3',
-        start: adapter.date('2025-05-01T11:00:00'),
-        end: adapter.date('2025-05-01T12:00:00'),
-        title: 'Client Call',
-      },
-      {
-        id: '4',
-        start: adapter.date('2025-05-01T13:00:00'),
-        end: adapter.date('2025-05-01T14:00:00'),
-        title: 'Lunch',
-      },
-      {
-        id: '5',
-        start: adapter.date('2025-05-01T15:00:00'),
-        end: adapter.date('2025-05-01T16:00:00'),
-        title: 'Design Review',
-      },
+      EventBuilder.new().startAt('2025-05-01T08:00:00Z').build(),
+      EventBuilder.new().startAt('2025-05-01T14:09:00Z').build(),
+      EventBuilder.new().startAt('2025-05-01T14:11:00Z').build(),
+      EventBuilder.new().startAt('2025-05-01T13:09:00Z').build(),
+      EventBuilder.new().startAt('2025-05-01T15:09:00Z').build(),
     ];
+
     render(
       <EventCalendarProvider events={manyEvents} resources={[]}>
         <MonthView />
@@ -172,6 +104,28 @@ describe('<MonthView />', () => {
   });
 
   describe('All day events', () => {
+    const allDayEvents = [
+      EventBuilder.new()
+        .span('2025-05-05T00:00:00', '2025-05-07T23:59:59', { allDay: true })
+        .title('Multi-day Conference')
+        .build(),
+      EventBuilder.new()
+        .span('2025-04-28T00:00:00', '2025-05-06T23:59:59', { allDay: true }) // Previos week - Current week
+        .title('Long Event')
+        .build(),
+      EventBuilder.new()
+        .span('2025-05-12T00:00:00', '2025-05-14T23:59:59', { allDay: true })
+        .title('Grid Row Test')
+        .build(),
+      EventBuilder.new()
+        .span('2025-05-14T00:00:00', '2025-05-16T23:59:59', { allDay: true })
+        .title('Three Day Event')
+        .build(),
+      EventBuilder.new()
+        .span('2025-05-06T00:00:00', '2025-05-16T23:59:59', { allDay: true })
+        .title('Multiple week event')
+        .build(),
+    ];
     it('should render all-day events correctly with main event in start date cell', () => {
       render(
         <EventCalendarProvider events={allDayEvents} resources={[]}>
@@ -242,27 +196,18 @@ describe('<MonthView />', () => {
 
     it('should handle multiple overlapping all-day events with different grid rows', () => {
       const overlappingEvents = [
-        {
-          id: 'event-1',
-          start: adapter.date('2025-05-12T00:00:00'),
-          end: adapter.date('2025-05-14T23:59:59'),
-          title: 'Event 1',
-          allDay: true,
-        },
-        {
-          id: 'event-2',
-          start: adapter.date('2025-05-13T00:00:00'),
-          end: adapter.date('2025-05-15T23:59:59'),
-          title: 'Event 2',
-          allDay: true,
-        },
-        {
-          id: 'event-3',
-          start: adapter.date('2025-05-16T00:00:00'),
-          end: adapter.date('2025-05-17T23:59:59'),
-          title: 'Event 3',
-          allDay: true,
-        },
+        EventBuilder.new()
+          .span('2025-05-12T00:00:00', '2025-05-14T23:59:59', { allDay: true })
+          .title('Event 1')
+          .build(),
+        EventBuilder.new()
+          .span('2025-05-13T00:00:00', '2025-05-15T23:59:59', { allDay: true })
+          .title('Event 2')
+          .build(),
+        EventBuilder.new()
+          .span('2025-05-16T00:00:00', '2025-05-17T23:59:59', { allDay: true })
+          .title('Event 3')
+          .build(),
       ];
 
       render(
@@ -327,9 +272,10 @@ describe('<MonthView />', () => {
   });
 
   describe('time navigation', () => {
+    const visibleDate = adapter.date(DEFAULT_TESTING_VISIBLE_DATE);
+
     it('should go to start of previous month when clicking on the Previous Month button', async () => {
       const onVisibleDateChange = spy();
-      const visibleDate = adapter.date('2025-07-03T00:00:00Z');
 
       const { user } = render(
         <EventCalendar
@@ -348,7 +294,6 @@ describe('<MonthView />', () => {
 
     it('should go to start of next month when clicking on the Next Month button', async () => {
       const onVisibleDateChange = spy();
-      const visibleDate = adapter.date('2025-07-03T00:00:00Z');
 
       const { user } = render(
         <EventCalendar
