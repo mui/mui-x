@@ -4,7 +4,7 @@ import { useStore } from '@mui/x-internals/store';
 import { EventHandlers } from '@mui/utils/types';
 import extractEventHandlers from '@mui/utils/extractEventHandlers';
 import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
-import { TreeViewCancellableEvent } from '../models';
+import { TreeViewCancellableEvent, TreeViewItemId } from '../models';
 import {
   UseTreeItemParameters,
   UseTreeItemReturnValue,
@@ -32,9 +32,23 @@ import { itemsSelectors } from '../internals/plugins/items';
 import { idSelectors } from '../internals/corePlugins/useTreeViewId';
 import { expansionSelectors } from '../internals/plugins/expansion';
 import { selectionSelectors } from '../internals/plugins/selection';
-import { RichTreeViewStore } from '../internals/RichTreeViewStore';
+import { RichTreeViewPublicAPI, RichTreeViewStore } from '../internals/RichTreeViewStore';
 
-export const useTreeItem = <TStore extends TreeViewAnyStore = RichTreeViewStore<any, any>>(
+// TODO v8: Remove the lazy loading plugin from the typing on the community useTreeItem and ask users to pass the TStore generic.
+interface DefaultStore extends RichTreeViewStore<any, any> {
+  buildPublicAPI: () => RichTreeViewPublicAPI<any, any> & {
+    /**
+     * Method used for updating an item's children.
+     * Only relevant for lazy-loaded tree views.
+     *
+     * @param {TreeViewItemId} itemId The The id of the item to update the children of.
+     * @returns {Promise<void>} The promise resolved when the items are fetched.
+     */
+    updateItemChildren: (itemId: TreeViewItemId) => Promise<void>;
+  };
+}
+
+export const useTreeItem = <TStore extends TreeViewAnyStore = DefaultStore>(
   parameters: UseTreeItemParameters,
 ): UseTreeItemReturnValue<TStore> => {
   const { runItemPlugins, publicAPI, store } = useTreeViewContext<TStore>();

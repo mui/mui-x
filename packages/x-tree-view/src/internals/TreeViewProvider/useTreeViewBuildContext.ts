@@ -121,7 +121,7 @@ export const useTreeViewBuildContext = <TStore extends TreeViewAnyStore>(
 
 function initializeInputApiRef<TStore extends TreeViewAnyStore>(
   publicAPI: TreeViewPublicAPI<TStore>,
-  apiRef: React.RefObject<TreeViewPublicAPI<TStore> | undefined> | undefined,
+  apiRef: React.RefObject<Partial<TreeViewPublicAPI<TStore>> | undefined> | undefined,
 ) {
   if (apiRef != null && apiRef.current == null) {
     apiRef.current = publicAPI;
@@ -131,7 +131,7 @@ function initializeInputApiRef<TStore extends TreeViewAnyStore>(
 export interface UseTreeViewBuildContextParameters<TStore extends TreeViewAnyStore> {
   store: TStore;
   rootRef: React.RefObject<HTMLUListElement | null>;
-  apiRef: React.RefObject<TreeViewPublicAPI<TStore> | undefined> | undefined;
+  apiRef: React.RefObject<Partial<TreeViewPublicAPI<TStore>> | undefined> | undefined;
 }
 
 export interface UseTreeViewBuildContextReturnValue<TStore extends TreeViewAnyStore> {

@@ -31,7 +31,7 @@ export interface RichTreeViewSlotProps<R extends {}, Multiple extends boolean | 
 export type RichTreeViewApiRef<
   R extends TreeViewValidItem<R> = any,
   Multiple extends boolean | undefined = any,
-> = React.RefObject<RichTreeViewPublicAPI<R, Multiple> | undefined>;
+> = React.RefObject<Partial<RichTreeViewPublicAPI<R, Multiple>> | undefined>;
 
 export interface RichTreeViewPropsBase extends React.HTMLAttributes<HTMLUListElement> {
   className?: string;
