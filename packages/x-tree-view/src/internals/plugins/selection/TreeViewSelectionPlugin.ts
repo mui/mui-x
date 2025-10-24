@@ -21,7 +21,9 @@ export class TreeViewSelectionPlugin<Multiple extends boolean | undefined> {
 
   private lastSelectedRange: Record<string, boolean> = {};
 
-  constructor(store: MinimalTreeViewStore<any, Multiple>) {
+  // We can't type `store`, otherwise we get the following TS error:
+  // 'selection' implicitly has type 'any' because it does not have a type annotation and is referenced directly or indirectly in its own initializer.
+  constructor(store: any) {
     this.store = store;
     store.itemPluginManager.register(useSelectionItemPlugin, null);
   }
