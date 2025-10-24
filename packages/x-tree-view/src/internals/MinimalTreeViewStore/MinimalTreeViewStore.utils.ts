@@ -10,7 +10,7 @@ import { MinimalTreeViewParameters } from './MinimalTreeViewStore.types';
 export function deriveStateFromParameters<
   R extends TreeViewValidItem<R>,
   Multiple extends boolean | undefined,
->(parameters: MinimalTreeViewParameters<R, Multiple>) {
+>(parameters: MinimalTreeViewParameters<R, Multiple> & { isItemEditable?: any }) {
   return {
     disabledItemsFocusable: parameters.disabledItemsFocusable ?? false,
     domStructure: 'nested' as const,
