@@ -1,17 +1,14 @@
 import { EventManager } from '@mui/x-internals/EventManager';
 import { MinimalTreeViewState } from './MinimalTreeViewStore.types';
 import { TreeViewEventListener, TreeViewEventLookup, TreeViewEvents } from '../models/events';
-import { TreeViewStore } from '../models';
+import { TreeViewAnyStore } from '../models';
 
-export class TreeViewInternalsManager<
-  State extends MinimalTreeViewState<any, any>,
-  Store extends TreeViewStore<any, any>,
-> {
-  private store: Store;
+export class TreeViewInternalsManager<State extends MinimalTreeViewState<any, any>> {
+  private store: TreeViewAnyStore;
 
   private eventManager = new EventManager();
 
-  constructor(store: Store) {
+  constructor(store: TreeViewAnyStore) {
     this.store = store;
   }
 

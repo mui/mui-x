@@ -1,7 +1,6 @@
 import { TreeViewValidItem, TreeViewItemId } from '../../../models';
 import { TreeViewItemMeta } from '../../models';
-import type { MinimalTreeViewParameters } from '../../MinimalTreeViewStore';
-import { UseTreeViewItemsState } from './useTreeViewItems.types';
+import type { MinimalTreeViewParameters, MinimalTreeViewState } from '../../MinimalTreeViewStore';
 
 export const TREE_VIEW_ROOT_PARENT_ID = '__TREE_VIEW_ROOT_PARENT_ID__';
 
@@ -53,10 +52,14 @@ export const isItemDisabled = (
   return false;
 };
 
-type State<R extends TreeViewValidItem<R>> = Omit<
-  UseTreeViewItemsState<R>['items'],
-  'disabledItemsFocusable' | 'domStructure'
+type State<R extends TreeViewValidItem<R>> = Pick<
+  MinimalTreeViewState<R, any>,
+  | 'itemMetaLookup'
+  | 'itemModelLookup'
+  | 'itemOrderedChildrenIdsLookup'
+  | 'itemChildrenIndexesLookup'
 >;
+
 export function buildItemsState<R extends TreeViewValidItem<R>>(
   parameters: BuildItemsStateParameters,
 ): State<R> {
@@ -217,6 +220,6 @@ function checkId<R extends TreeViewValidItem<R>>({
 
 export interface BuildItemsLookupConfig
   extends Pick<
-    MinimalTreeViewParameters<any>,
+    MinimalTreeViewParameters<any, any>,
     'isItemDisabled' | 'getItemLabel' | 'getItemChildren' | 'getItemId'
   > {}

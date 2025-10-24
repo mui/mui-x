@@ -6,10 +6,7 @@ import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
-import {
-  TreeViewAnyPluginSignature,
-  MinimalTreeViewPublicAPI,
-} from '@mui/x-tree-view/internals/models';
+import { TreeViewAnyStore, TreeViewPublicAPI } from '@mui/x-tree-view/internals/models';
 import { MuiRenderResult } from '@mui/internal-test-utils/createRenderer';
 import {
   DescribeTreeViewTestRunner,
@@ -20,15 +17,15 @@ import {
   TreeViewItemIdTreeElement,
 } from './describeTreeView.types';
 
-const innerDescribeTreeView = <TSignatures extends TreeViewAnyPluginSignature[]>(
+const innerDescribeTreeView = <TStore extends TreeViewAnyStore>(
   message: string,
-  testRunner: DescribeTreeViewTestRunner<TSignatures>,
+  testRunner: DescribeTreeViewTestRunner<TStore>,
 ): void => {
   const { render } = createRenderer();
 
   const getUtils = (
     result: MuiRenderResult,
-    apiRef?: { current: MinimalTreeViewPublicAPI<TSignatures> },
+    apiRef?: { current: TreeViewPublicAPI<TStore> },
   ): DescribeTreeViewRendererUtils => {
     const getRoot = () => result.getByRole('tree');
 
@@ -119,7 +116,7 @@ const innerDescribeTreeView = <TSignatures extends TreeViewAnyPluginSignature[]>
   const createRendererForComponentWithItemsProp = (
     TreeViewComponent: typeof RichTreeView | typeof RichTreeViewPro,
   ) => {
-    const objectRenderer: DescribeTreeViewRenderer<TSignatures> = ({
+    const objectRenderer: DescribeTreeViewRenderer<TStore> = ({
       items: rawItems,
       withErrorBoundary,
       slotProps,
@@ -163,11 +160,8 @@ const innerDescribeTreeView = <TSignatures extends TreeViewAnyPluginSignature[]>
       return {
         setProps: result.setProps,
         setItems: (newItems) => result.setProps({ items: newItems }),
-        apiRef: apiRef as unknown as { current: MinimalTreeViewPublicAPI<TSignatures> },
-        ...getUtils(
-          result,
-          apiRef as unknown as { current: MinimalTreeViewPublicAPI<TSignatures> },
-        ),
+        apiRef: apiRef as { current: TreeViewPublicAPI<TStore> },
+        ...getUtils(result, apiRef as { current: TreeViewPublicAPI<TStore> }),
       };
     };
 
@@ -178,7 +172,7 @@ const innerDescribeTreeView = <TSignatures extends TreeViewAnyPluginSignature[]>
   };
 
   const createRenderersForComponentWithJSXItems = (TreeViewComponent: typeof SimpleTreeView) => {
-    const objectRenderer: DescribeTreeViewRenderer<TSignatures> = ({
+    const objectRenderer: DescribeTreeViewRenderer<TStore> = ({
       items: rawItems,
       withErrorBoundary,
       slots,
@@ -213,7 +207,7 @@ const innerDescribeTreeView = <TSignatures extends TreeViewAnyPluginSignature[]>
       return {
         setProps: result.setProps,
         setItems: (newItems) => result.setProps({ children: newItems.map(renderItem) }),
-        apiRef: apiRef as unknown as { current: MinimalTreeViewPublicAPI<TSignatures> },
+        apiRef: apiRef as { current: TreeViewPublicAPI<TStore> },
         ...getUtils(result),
       };
     };
@@ -254,15 +248,12 @@ const innerDescribeTreeView = <TSignatures extends TreeViewAnyPluginSignature[]>
   });
 };
 
-type Params<TSignatures extends TreeViewAnyPluginSignature[]> = [
-  string,
-  DescribeTreeViewTestRunner<TSignatures>,
-];
+type Params<TStore extends TreeViewAnyStore> = [string, DescribeTreeViewTestRunner<TStore>];
 
 type DescribeTreeView = {
-  <TSignatures extends TreeViewAnyPluginSignature[]>(...args: Params<TSignatures>): void;
-  skip: <TSignatures extends TreeViewAnyPluginSignature[]>(...args: Params<TSignatures>) => void;
-  only: <TSignatures extends TreeViewAnyPluginSignature[]>(...args: Params<TSignatures>) => void;
+  <TStore extends TreeViewAnyStore>(...args: Params<TStore>): void;
+  skip: <TStore extends TreeViewAnyStore>(...args: Params<TStore>) => void;
+  only: <TStore extends TreeViewAnyStore>(...args: Params<TStore>) => void;
 };
 
 /**

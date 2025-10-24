@@ -7,32 +7,19 @@ export type {
   RichTreeViewItemsSlotProps,
 } from './components/RichTreeViewItems';
 
-export {
-  unstable_resetCleanupTracking,
-  useInstanceEventHandler,
-} from './hooks/useInstanceEventHandler';
+export { unstable_resetCleanupTracking } from './hooks/useInstanceEventHandler';
 
-export type {
-  TreeViewPlugin,
-  TreeViewPluginSignature,
-  ConvertPluginsIntoSignatures,
-  MergeSignaturesProperty,
-  TreeViewItemMeta,
-  TreeViewItemPlugin,
-  TreeViewUsedStore,
-  TreeViewUsedInstance,
-  TreeViewUsedParamsWithDefaults,
-} from './models';
+export type { TreeViewItemMeta, TreeViewItemPlugin } from './models';
 
 // Plugins
-export { expansionSelectors } from './plugins/useTreeViewExpansion';
+export { expansionSelectors } from './plugins/TreeViewExpansionPlugin';
 export { selectionSelectors } from './plugins/useTreeViewSelection';
 export {
   buildSiblingIndexes,
   itemsSelectors,
   TREE_VIEW_ROOT_PARENT_ID,
 } from './plugins/useTreeViewItems';
-export { labelSelectors } from './plugins/useTreeViewLabel';
+export { labelSelectors } from './plugins/TreeViewLabelEditingPlugin';
 export type { DataSource } from './plugins/useTreeViewLazyLoading';
 export { lazyLoadingSelectors } from './plugins/useTreeViewLazyLoading';
 
@@ -55,3 +42,5 @@ export type {
   RichTreeViewPublicAPI,
 } from './RichTreeViewStore';
 export { TreeViewItemDepthContext } from './TreeViewItemDepthContext';
+export { useTreeViewRootProps } from './hooks/useTreeViewRootProps';
+export { MinimalTreeViewStore } from './MinimalTreeViewStore';

@@ -3,7 +3,7 @@ import { TreeViewPluginSignature } from '../../models';
 import { DataSourceCache } from '../../../utils';
 import { TreeViewItemId } from '../../../models';
 import { UseTreeViewItemsSignature } from '../useTreeViewItems';
-import { UseTreeViewExpansionSignature } from '../useTreeViewExpansion';
+import { UseTreeViewExpansionSignature } from '../TreeViewExpansionPlugin';
 import { UseTreeViewSelectionSignature } from '../useTreeViewSelection';
 
 export type DataSource<R extends {}> = {

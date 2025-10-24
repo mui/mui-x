@@ -13,12 +13,12 @@ import {
 } from '../plugins/useTreeViewItemsReordering/useTreeViewItemsReordering.utils';
 import { useTreeViewItemsReorderingItemPlugin } from '../plugins/useTreeViewItemsReordering/useTreeViewItemsReordering.itemPlugin';
 
-export class TreeViewItemsReorderingManager<Store extends RichTreeViewProStore<any, any>> {
-  private store: Store;
+export class TreeViewItemsReorderingManager {
+  private store: RichTreeViewProStore<any, any>;
 
-  constructor(store: Store) {
+  constructor(store: RichTreeViewProStore<any, any>) {
     this.store = store;
-    store.itemPluginManager.register(useTreeViewItemsReorderingItemPlugin);
+    store.itemPluginManager.register(useTreeViewItemsReorderingItemPlugin, null);
   }
 
   public canItemBeDragged = (itemId: string) => {

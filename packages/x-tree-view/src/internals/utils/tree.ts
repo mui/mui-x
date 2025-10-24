@@ -1,6 +1,6 @@
 import { MinimalTreeViewState } from '../MinimalTreeViewStore';
 import { TreeViewItemMeta } from '../models';
-import { expansionSelectors } from '../plugins/useTreeViewExpansion/useTreeViewExpansion.selectors';
+import { expansionSelectors } from '../plugins/TreeViewExpansionPlugin/selectors';
 import { itemsSelectors } from '../plugins/useTreeViewItems/useTreeViewItems.selectors';
 
 const getLastNavigableItemInArray = (state: MinimalTreeViewState<any, any>, items: string[]) => {

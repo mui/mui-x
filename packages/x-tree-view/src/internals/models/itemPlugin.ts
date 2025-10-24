@@ -11,7 +11,7 @@ import type {
 } from '../../useTreeItem';
 import type { UseTreeItemInteractions } from '../../hooks/useTreeItemUtils/useTreeItemUtils';
 import type { TreeItemProps } from '../../TreeItem/TreeItem.types';
-import { TreeViewStore } from './treeView';
+import { TreeViewAnyStore } from './treeView';
 
 export interface TreeViewItemPluginSlotPropsEnhancerParams {
   rootRefObject: React.RefObject<HTMLLIElement | null>;
@@ -61,7 +61,7 @@ export type TreeViewItemPlugin = (
   options: TreeViewItemPluginOptions,
 ) => void | TreeViewItemPluginResponse;
 
-export type TreeItemWrapper<TStore extends TreeViewStore<any, any>> = (params: {
+export type TreeItemWrapper<TStore extends TreeViewAnyStore> = (params: {
   itemId: TreeViewItemId;
   children: React.ReactNode;
   store: TStore;

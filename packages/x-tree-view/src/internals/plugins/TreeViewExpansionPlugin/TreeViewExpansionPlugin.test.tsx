@@ -1,18 +1,18 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
-import { UseTreeViewExpansionSignature } from '@mui/x-tree-view/internals';
 import { act, fireEvent } from '@mui/internal-test-utils';
 import { TreeItem, TreeItemProps } from '@mui/x-tree-view/TreeItem';
 import { UseTreeItemContentSlotOwnProps } from '@mui/x-tree-view/useTreeItem';
 import { useTreeItemUtils } from '@mui/x-tree-view/hooks';
 import { clearWarningsCache } from '@mui/x-internals/warning';
+import { TreeViewAnyStore } from '../../models';
 
 /**
  * All tests related to keyboard navigation (e.g.: expanding using "Enter" and "ArrowRight")
  * are located in the `useTreeViewKeyboardNavigation.test.tsx` file.
  */
-describeTreeView<[UseTreeViewExpansionSignature]>('useTreeViewExpansion plugin', ({ render }) => {
+describeTreeView<TreeViewAnyStore>('TreeViewExpansionPlugin', ({ render }) => {
   describe('model props (expandedItems, defaultExpandedItems, onExpandedItemsChange)', () => {
     beforeEach(() => {
       clearWarningsCache();

@@ -6,9 +6,9 @@ import { TreeViewCancellableEvent } from '../../models';
 import { idSelectors } from '../corePlugins/useTreeViewId';
 import { selectionSelectors } from '../plugins/useTreeViewSelection';
 import { itemsSelectors } from '../plugins/useTreeViewItems';
-import { TreeViewStore } from '../models';
+import { TreeViewAnyStore } from '../models';
 
-export function useTreeViewRootProps<TStore extends TreeViewStore<any, any>>(
+export function useTreeViewRootProps<TStore extends TreeViewAnyStore>(
   store: TStore,
   forwardedProps: React.HTMLAttributes<HTMLUListElement>,
   ref: React.Ref<HTMLUListElement | null> | undefined,

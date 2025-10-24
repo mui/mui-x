@@ -1,13 +1,13 @@
 import { TreeViewCancellableEvent, TreeViewItemId } from '../../models';
-import type { MinimalTreeViewStore } from './MinimalTreeViewStore';
-import { expansionSelectors } from '../plugins/useTreeViewExpansion';
+import { expansionSelectors } from '../plugins/TreeViewExpansionPlugin';
 import { focusSelectors } from '../plugins/useTreeViewFocus';
 import { itemsSelectors } from '../plugins/useTreeViewItems';
+import { TreeViewAnyStore } from '../models';
 
-export class TreeViewFocusManager<Store extends MinimalTreeViewStore<any, any, any, any>> {
-  private store: Store;
+export class TreeViewFocusManager {
+  private store: TreeViewAnyStore;
 
-  constructor(store: Store) {
+  constructor(store: TreeViewAnyStore) {
     this.store = store;
 
     // Whenever the items change, we need to ensure the focused item is still present.

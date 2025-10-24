@@ -61,7 +61,7 @@ export class RichTreeViewProStore<
 
   private itemsReorderingManager = new TreeViewItemsReorderingManager(this);
 
-  private constructor(parameters: RichTreeViewProParameters<R, Multiple>, isRtl: boolean) {
+  public constructor(parameters: RichTreeViewProParameters<R, Multiple>, isRtl: boolean) {
     super(parameters, 'RichTreeViewPro', isRtl, mapper);
   }
 
@@ -113,25 +113,24 @@ export class RichTreeViewProStore<
    * @param {TreeViewItemId} itemId The id of the item to get the action of.
    * @returns {TreeViewItemItemReorderingValidActions} The valid actions for the item.
    */
-  protected getDroppingTargetValidActions =
-    this.itemsReorderingManager.getDroppingTargetValidActions;
+  public getDroppingTargetValidActions = this.itemsReorderingManager.getDroppingTargetValidActions;
 
   /**
    * Start a reordering for the given item.
    * @param {TreeViewItemId} itemId The id of the item to start the reordering for.
    */
-  protected startDraggingItem = this.itemsReorderingManager.startDraggingItem;
+  public startDraggingItem = this.itemsReorderingManager.startDraggingItem;
 
   /**
    * Complete the reordering of a given item.
    * @param {TreeViewItemId} itemId The id of the item to complete the reordering for.
    */
-  protected completeDraggingItem = this.itemsReorderingManager.completeDraggingItem;
+  public completeDraggingItem = this.itemsReorderingManager.completeDraggingItem;
 
   /**
    * Cancel the current reordering operation and reset the state.
    */
-  protected cancelDraggingItem = this.itemsReorderingManager.cancelDraggingItem;
+  public cancelDraggingItem = this.itemsReorderingManager.cancelDraggingItem;
 
   /**
    * Set the new target item for the ongoing reordering.
@@ -144,5 +143,5 @@ export class RichTreeViewProStore<
    * @param {number} params.cursorX The X coordinate of the mouse cursor.
    * @param {HTMLDivElement} params.contentElement The DOM element rendered for the content slot.
    */
-  protected setDragTargetItem = this.itemsReorderingManager.setDragTargetItem;
+  public setDragTargetItem = this.itemsReorderingManager.setDragTargetItem;
 }

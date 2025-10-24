@@ -3,17 +3,15 @@ import * as React from 'react';
 import { useStore } from '@mui/x-internals/store';
 import { TreeViewCancellableEvent } from '../../models';
 import { useTreeViewContext } from '../../internals/TreeViewProvider';
-import { useTreeViewLabel } from '../../internals/plugins/useTreeViewLabel';
 import type { UseTreeItemStatus } from '../../useTreeItem';
-import { hasPlugin } from '../../internals/utils/plugins';
-import { TreeViewPublicAPI, TreeViewStore } from '../../internals/models';
-import { expansionSelectors } from '../../internals/plugins/useTreeViewExpansion/useTreeViewExpansion.selectors';
+import { TreeViewPublicAPI, TreeViewAnyStore } from '../../internals/models';
+import { expansionSelectors } from '../../internals/plugins/TreeViewExpansionPlugin/selectors';
 import { focusSelectors } from '../../internals/plugins/useTreeViewFocus/useTreeViewFocus.selectors';
 import { itemsSelectors } from '../../internals/plugins/useTreeViewItems/useTreeViewItems.selectors';
 import { selectionSelectors } from '../../internals/plugins/useTreeViewSelection/useTreeViewSelection.selectors';
 import { lazyLoadingSelectors } from '../../internals/plugins/useTreeViewLazyLoading/useTreeViewLazyLoading.selectors';
-import { labelSelectors } from '../../internals/plugins/useTreeViewLabel/useTreeViewLabel.selectors';
-import { MinimalTreeViewStore } from '../../internals/MinimalTreeViewStore';
+import { labelSelectors } from '../../internals/plugins/TreeViewLabelEditingPlugin/selectors';
+import { RichTreeViewStore } from '../../internals/RichTreeViewStore';
 
 export interface UseTreeItemInteractions {
   handleExpansion: (event: React.MouseEvent) => void;
@@ -24,7 +22,7 @@ export interface UseTreeItemInteractions {
   handleCancelItemLabelEditing: (event: React.SyntheticEvent) => void;
 }
 
-interface UseTreeItemUtilsReturnValue<TStore extends TreeViewStore<any, any>> {
+interface UseTreeItemUtilsReturnValue<TStore extends TreeViewAnyStore> {
   interactions: UseTreeItemInteractions;
   status: UseTreeItemStatus;
   /**
@@ -32,6 +30,9 @@ interface UseTreeItemUtilsReturnValue<TStore extends TreeViewStore<any, any>> {
    */
   publicAPI: TreeViewPublicAPI<TStore>;
 }
+
+type TreeViewStoreWithLabelEditing = TreeViewAnyStore &
+  Partial<Pick<RichTreeViewStore<any, any>, 'updateItemLabel' | 'setEditedItem'>>;
 
 export const itemHasChildren = (reactChildren: React.ReactNode) => {
   if (Array.isArray(reactChildren)) {
@@ -41,7 +42,7 @@ export const itemHasChildren = (reactChildren: React.ReactNode) => {
 };
 
 export const useTreeItemUtils = <
-  TStore extends TreeViewStore<any, any> = MinimalTreeViewStore<any, any, any, any>,
+  TStore extends TreeViewStoreWithLabelEditing = TreeViewStoreWithLabelEditing,
 >({
   itemId,
   children,
@@ -137,14 +138,15 @@ export const useTreeItemUtils = <
   };
 
   const toggleItemEditing = () => {
-    if (!hasPlugin(instance, useTreeViewLabel)) {
+    // If the store doesn't support label editing, do nothing
+    if (!store.setEditedItem) {
       return;
     }
 
     if (isEditing) {
-      instance.setEditedItem(null);
+      store.setEditedItem(null);
     } else {
-      instance.setEditedItem(itemId);
+      store.setEditedItem(itemId);
     }
   };
 
@@ -152,7 +154,8 @@ export const useTreeItemUtils = <
     event: React.SyntheticEvent & TreeViewCancellableEvent,
     newLabel: string,
   ) => {
-    if (!hasPlugin(instance, useTreeViewLabel)) {
+    // If the store doesn't support label editing, do nothing
+    if (!store.updateItemLabel) {
       return;
     }
 
@@ -160,14 +163,15 @@ export const useTreeItemUtils = <
     // The `onBlur` event is triggered, which calls `handleSaveItemLabel` again.
     // To avoid creating an unwanted behavior we need to check if the item is being edited before calling `updateItemLabel`
     if (labelSelectors.isItemBeingEdited(store.state, itemId)) {
-      instance.updateItemLabel(itemId, newLabel);
+      store.updateItemLabel(itemId, newLabel);
       toggleItemEditing();
       store.focusItem(event, itemId);
     }
   };
 
   const handleCancelItemLabelEditing = (event: React.SyntheticEvent) => {
-    if (!hasPlugin(instance, useTreeViewLabel)) {
+    // If the store doesn't support label editing, do nothing
+    if (!store.updateItemLabel) {
       return;
     }
 

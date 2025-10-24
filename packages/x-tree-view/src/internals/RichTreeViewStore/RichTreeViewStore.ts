@@ -1,12 +1,11 @@
 import { TreeViewValidItem } from '../../models';
-import {} from '../plugins/useTreeViewLabel';
+import { TreeViewLabelEditingPlugin } from '../plugins/TreeViewLabelEditingPlugin';
 import { TreeViewParametersToStateMapper, MinimalTreeViewStore } from '../MinimalTreeViewStore';
 import {
   RichTreeViewParameters,
   RichTreeViewPublicAPI,
   RichTreeViewState,
 } from './RichTreeViewStore.types';
-import { TreeViewLabelEditingManager } from './TreeViewLabelEditingManager';
 
 const deriveStateFromParameters = (parameters: RichTreeViewParameters<any, any>) => ({
   isItemEditable: parameters.isItemEditable ?? false,
@@ -41,7 +40,7 @@ export class ExtendableRichTreeViewStore<
   State extends RichTreeViewState<R, Multiple>,
   Parameters extends RichTreeViewParameters<R, Multiple>,
 > extends MinimalTreeViewStore<R, Multiple, State, Parameters> {
-  private labelEditingManager = new TreeViewLabelEditingManager<this>(this);
+  private labelEditingPlugin = new TreeViewLabelEditingPlugin(this);
 
   /**
    * Mapper of the RichTreeViewStore.
@@ -62,14 +61,14 @@ export class ExtendableRichTreeViewStore<
    * You can pass `null` to exit editing mode.
    * @param {TreeViewItemId | null} itemId The id of the item to edit, or `null` to exit editing mode.
    */
-  public setEditedItem = this.labelEditingManager.setEditedItem;
+  public setEditedItem = this.labelEditingPlugin.setEditedItem;
 
   /**
    * Used to update the label of an item.
    * @param {TreeViewItemId} itemId The id of the item to update the label of.
    * @param {string} newLabel The new label of the item.
    */
-  public updateItemLabel = this.labelEditingManager.updateItemLabel;
+  public updateItemLabel = this.labelEditingPlugin.updateItemLabel;
 }
 
 export class RichTreeViewStore<

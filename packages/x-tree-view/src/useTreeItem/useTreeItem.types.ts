@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { TreeViewItemId, TreeViewCancellableEventHandler } from '../models';
-import { TreeViewPublicAPI, TreeViewStore } from '../internals/models';
+import { TreeViewPublicAPI, TreeViewAnyStore } from '../internals/models';
 
 export interface UseTreeItemParameters {
   /**
@@ -137,7 +137,7 @@ export interface UseTreeItemStatus {
   error: boolean;
 }
 
-export interface UseTreeItemReturnValue<TStore extends TreeViewStore<any, any>> {
+export interface UseTreeItemReturnValue<TStore extends TreeViewAnyStore> {
   /**
    * Resolver for the context provider's props.
    * @returns {UseTreeItemContextProviderProps} Props that should be spread on the context provider slot.

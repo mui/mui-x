@@ -3,8 +3,8 @@ import { TreeViewPluginSignature } from '../../models';
 import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import { UseTreeViewSelectionSignature } from '../useTreeViewSelection';
 import { UseTreeViewFocusSignature } from '../useTreeViewFocus';
-import { UseTreeViewExpansionSignature } from '../useTreeViewExpansion';
-import { UseTreeViewLabelSignature } from '../useTreeViewLabel';
+import { UseTreeViewExpansionSignature } from '../TreeViewExpansionPlugin';
+import { UseTreeViewLabelSignature } from '../TreeViewLabelEditingPlugin';
 import { TreeViewItemId, TreeViewCancellableEvent } from '../../../models';
 
 export interface UseTreeViewKeyboardNavigationInstance {

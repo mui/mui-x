@@ -28,10 +28,4 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
     Object.values(itemMetaLookup).forEach(processItem);
     labelMap.current = newLabelMap;
   }, [itemMetaLookup, params.getItemId, instance]);
-
-  return {
-    instance: {},
-  };
 };
-
-useTreeViewKeyboardNavigation.params = {};

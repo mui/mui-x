@@ -12,14 +12,14 @@ import { DataSourceCache, DataSourceCacheDefault } from '@mui/x-tree-view/utils'
 import { RichTreeViewProStore } from './RichTreeViewProStore';
 import { NestedDataManager } from '../plugins/useTreeViewLazyLoading/utils';
 
-export class TreeViewLazyLoadingManager<Store extends RichTreeViewProStore<any, any>> {
-  private store: Store;
+export class TreeViewLazyLoadingManager {
+  private store: RichTreeViewProStore<any, any>;
 
   private nestedDataManager = new NestedDataManager(this);
 
   private cache: DataSourceCache;
 
-  constructor(store: Store) {
+  constructor(store: RichTreeViewProStore<any, any>) {
     this.store = store;
     this.cache = store.parameters.dataSourceCache ?? new DataSourceCacheDefault({});
 

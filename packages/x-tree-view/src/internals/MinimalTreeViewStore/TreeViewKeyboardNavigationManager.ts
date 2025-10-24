@@ -1,8 +1,11 @@
 import { TreeViewCancellableEvent, TreeViewItemId } from '../../models';
-import { expansionSelectors } from '../plugins/useTreeViewExpansion';
+import { TreeViewAnyStore, TreeViewItemMeta } from '../models';
+import { expansionSelectors } from '../plugins/TreeViewExpansionPlugin';
 import { itemsSelectors } from '../plugins/useTreeViewItems';
 import { TreeViewLabelMap } from '../plugins/useTreeViewKeyboardNavigation/useTreeViewKeyboardNavigation.types';
+import { labelSelectors } from '../plugins/TreeViewLabelEditingPlugin';
 import { selectionSelectors } from '../plugins/useTreeViewSelection/useTreeViewSelection.selectors';
+import { RichTreeViewStore } from '../RichTreeViewStore';
 import {
   getFirstNavigableItem,
   getLastNavigableItem,
@@ -10,21 +13,37 @@ import {
   getPreviousNavigableItem,
   isTargetInDescendants,
 } from '../utils/tree';
-import type { MinimalTreeViewStore } from './MinimalTreeViewStore';
 
 const TYPEAHEAD_TIMEOUT = 500;
 
-export class TreeViewKeyboardNavigationManager<
-  Store extends MinimalTreeViewStore<any, any, any, any>,
-> {
-  private store: Store;
+type TreeViewStoreWithLabelEditing = TreeViewAnyStore &
+  Partial<Pick<RichTreeViewStore<any, any>, 'updateItemLabel' | 'setEditedItem'>>;
+
+export class TreeViewKeyboardNavigationManager {
+  private store: TreeViewStoreWithLabelEditing;
 
   private labelMap: TreeViewLabelMap = {};
 
   private typeaheadQuery = '';
 
-  constructor(store: Store) {
+  constructor(store: TreeViewStoreWithLabelEditing) {
     this.store = store;
+
+    // Whenever the itemMetaLookup changes, we need to regen the label map.
+    this.store.$.registerStoreEffect(itemsSelectors.itemMetaLookup, (_, itemMetaLookup) => {
+      if (this.store.shouldIgnoreItemsStateUpdate()) {
+        return;
+      }
+
+      const newLabelMap: { [itemId: string]: string } = {};
+
+      const processItem = (item: TreeViewItemMeta) => {
+        newLabelMap[item.id] = item.label!.toLowerCase();
+      };
+
+      Object.values(itemMetaLookup).forEach(processItem);
+      this.labelMap = newLabelMap;
+    });
   }
 
   private canToggleItemSelection = (itemId: TreeViewItemId) =>
@@ -139,11 +158,11 @@ export class TreeViewKeyboardNavigationManager<
       // If the focused item has no children, we select it.
       case key === 'Enter': {
         if (
-          hasPlugin(instance, useTreeViewLabel) &&
+          this.store.setEditedItem &&
           labelSelectors.isItemEditable(this.store.state, itemId) &&
           !labelSelectors.isItemBeingEdited(this.store.state, itemId)
         ) {
-          instance.setEditedItem(itemId);
+          this.store.setEditedItem(itemId);
         } else if (this.canToggleItemExpansion(itemId)) {
           this.store.setItemExpansion({ event, itemId });
           event.preventDefault();

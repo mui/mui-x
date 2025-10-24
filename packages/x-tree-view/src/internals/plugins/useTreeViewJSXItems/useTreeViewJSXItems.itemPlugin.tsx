@@ -3,8 +3,7 @@ import * as React from 'react';
 import { useStore } from '@mui/x-internals/store';
 import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
-import { TreeViewItemPlugin, TreeViewPlugin } from '../../models';
-import { UseTreeViewJSXItemsSignature } from './useTreeViewJSXItems.types';
+import { TreeItemWrapper, TreeViewItemPlugin } from '../../models';
 import { useTreeViewContext } from '../../TreeViewProvider';
 import {
   TreeViewChildrenItemContext,
@@ -14,19 +13,10 @@ import { TreeViewItemDepthContext } from '../../TreeViewItemDepthContext';
 import { generateTreeItemIdAttribute } from '../../corePlugins/useTreeViewId/useTreeViewId.utils';
 import { itemHasChildren } from '../../../hooks/useTreeItemUtils/useTreeItemUtils';
 import { idSelectors } from '../../corePlugins/useTreeViewId';
+import { SimpleTreeViewStore } from '../../SimpleTreeViewStore';
 
-export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> = () => {
-  return {
-    instance: {},
-  };
-};
-
-export const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin = ({
-  props,
-  rootRef,
-  contentRef,
-}) => {
-  const { instance, store } = useTreeViewContext<[UseTreeViewJSXItemsSignature]>();
+export const useItemPlugin: TreeViewItemPlugin = ({ props, rootRef, contentRef }) => {
+  const { store } = useTreeViewContext<SimpleTreeViewStore<any>>();
   const { children, disabled = false, label, itemId, id } = props;
 
   const parentContext = React.useContext(TreeViewChildrenItemContext);
@@ -55,27 +45,27 @@ export const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin = ({
       unregisterChild(idAttribute);
       unregisterChild(idAttribute);
     };
-  }, [store, instance, registerChild, unregisterChild, itemId, id, treeId]);
+  }, [store, registerChild, unregisterChild, itemId, id, treeId]);
 
   useIsoLayoutEffect(() => {
-    return instance.insertJSXItem({
+    return store.insertJSXItem({
       id: itemId,
       idAttribute: id,
       parentId,
       expandable,
       disabled,
     });
-  }, [instance, parentId, itemId, expandable, disabled, id]);
+  }, [store, parentId, itemId, expandable, disabled, id]);
 
   React.useEffect(() => {
     if (label) {
-      return instance.mapLabelFromJSX(
+      return store.mapLabelFromJSX(
         itemId,
         (pluginContentRef.current?.textContent ?? '').toLowerCase(),
       );
     }
     return undefined;
-  }, [instance, itemId, label]);
+  }, [store, itemId, label]);
 
   return {
     contentRef: handleContentRef,
@@ -83,9 +73,11 @@ export const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin = ({
   };
 };
 
-useTreeViewJSXItems.itemPlugin = useTreeViewJSXItemsItemPlugin;
-
-useTreeViewJSXItems.wrapItem = ({ children, itemId, idAttribute }) => {
+export const itemWrapper: TreeItemWrapper<SimpleTreeViewStore<any>> = ({
+  children,
+  itemId,
+  idAttribute,
+}) => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const depthContext = React.useContext(TreeViewItemDepthContext);
 
@@ -97,11 +89,3 @@ useTreeViewJSXItems.wrapItem = ({ children, itemId, idAttribute }) => {
     </TreeViewChildrenItemProvider>
   );
 };
-
-useTreeViewJSXItems.wrapRoot = ({ children }) => (
-  <TreeViewChildrenItemProvider itemId={null} idAttribute={null}>
-    <TreeViewItemDepthContext.Provider value={0}>{children}</TreeViewItemDepthContext.Provider>
-  </TreeViewChildrenItemProvider>
-);
-
-useTreeViewJSXItems.params = {};

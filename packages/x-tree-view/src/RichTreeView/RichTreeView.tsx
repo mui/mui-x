@@ -15,11 +15,11 @@ import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { RichTreeViewItems } from '../internals/components/RichTreeViewItems';
 import { lazyLoadingSelectors } from '../internals/plugins/useTreeViewLazyLoading';
 import { TreeViewValidItem } from '../models';
-import { useTreeViewRootProps } from '../internals/hooks/useTeeViewRootProps';
+import { useTreeViewRootProps } from '../internals/hooks/useTreeViewRootProps';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
 import { useExtractRichTreeViewParameters } from './useExtractRichTreeViewParameters';
 import { useRichTreeViewStore } from './useRichTreeViewStore';
-import { itemsSelectors } from '../internals';
+import { itemsSelectors } from '../internals/plugins/useTreeViewItems';
 
 const useThemeProps = createUseThemeProps('MuiRichTreeView');
 
@@ -123,20 +123,20 @@ const RichTreeView = React.forwardRef(function RichTreeView<
   }
 
   return (
-    <TreeViewItemDepthContext.Provider value={itemsSelectors.itemDepth}>
-      <TreeViewProvider
-        store={store}
-        classes={classes}
-        slots={slots}
-        slotProps={slotProps}
-        apiRef={apiRef}
-        rootRef={ref}
-      >
+    <TreeViewProvider
+      store={store}
+      classes={classes}
+      slots={slots}
+      slotProps={slotProps}
+      apiRef={apiRef}
+      rootRef={ref}
+    >
+      <TreeViewItemDepthContext.Provider value={itemsSelectors.itemDepth}>
         <Root {...rootProps}>
           <RichTreeViewItems slots={slots} slotProps={slotProps} />
         </Root>
-      </TreeViewProvider>
-    </TreeViewItemDepthContext.Provider>
+      </TreeViewItemDepthContext.Provider>
+    </TreeViewProvider>
   );
 }) as RichTreeViewComponent;
 

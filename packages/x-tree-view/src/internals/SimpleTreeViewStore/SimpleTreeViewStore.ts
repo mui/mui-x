@@ -10,7 +10,7 @@ import {
 import { TreeViewItemId } from '../../models';
 import { TreeViewItemMeta } from '../models';
 import { buildSiblingIndexes, TREE_VIEW_ROOT_PARENT_ID } from '../plugins/useTreeViewItems';
-import { useTreeViewJSXItemsItemPlugin } from '../plugins/useTreeViewJSXItems/useTreeViewJSXItems.itemPlugin';
+import { useItemPlugin, itemWrapper } from '../plugins/useTreeViewJSXItems';
 
 const mapper: TreeViewParametersToStateMapper<
   any,
@@ -39,7 +39,7 @@ export class SimpleTreeViewStore<Multiple extends boolean | undefined> extends M
 > {
   public constructor(parameters: SimpleTreeViewParameters<Multiple>, isRtl: boolean) {
     super({ ...parameters, items: EMPTY_ARRAY }, 'SimpleTreeView', isRtl, mapper);
-    this.itemPluginManager.register(useTreeViewJSXItemsItemPlugin);
+    this.itemPluginManager.register(useItemPlugin, itemWrapper);
   }
 
   public updateStateFromParameters(parameters: SimpleTreeViewParameters<Multiple>, isRtl: boolean) {

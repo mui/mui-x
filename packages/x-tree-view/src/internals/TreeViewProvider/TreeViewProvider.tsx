@@ -3,20 +3,17 @@ import { EMPTY_OBJECT } from '@base-ui-components/utils/empty';
 import { TreeViewProviderProps } from './TreeViewProvider.types';
 import { TreeViewContext } from './TreeViewContext';
 import { TreeViewSlotProps, TreeViewSlots, TreeViewStyleContext } from './TreeViewStyleContext';
-import { TreeViewValidItem } from '../../models';
 import { useTreeViewBuildContext } from './useTreeViewBuildContext';
-import { TreeViewStore } from '../models';
+import { TreeViewAnyStore } from '../models';
 
 /**
  * Sets up the contexts for the underlying Tree Item components.
  *
  * @ignore - do not document.
  */
-export function TreeViewProvider<
-  R extends TreeViewValidItem<R>,
-  Multiple extends boolean | undefined,
-  TStore extends TreeViewStore<R, Multiple, any>,
->(props: TreeViewProviderProps<TStore>) {
+export function TreeViewProvider<TStore extends TreeViewAnyStore>(
+  props: TreeViewProviderProps<TStore>,
+) {
   const {
     store,
     apiRef,
@@ -57,7 +54,7 @@ export function TreeViewProvider<
   return (
     <TreeViewContext.Provider value={contextValue}>
       <TreeViewStyleContext.Provider value={styleContextValue}>
-        {contextValue.wrapRoot({ children })}
+        {children}
       </TreeViewStyleContext.Provider>
     </TreeViewContext.Provider>
   );

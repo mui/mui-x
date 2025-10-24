@@ -7,8 +7,10 @@ import {
   TreeViewSlotProps,
   TreeViewSlots,
 } from '../internals/TreeViewProvider/TreeViewStyleContext';
-import { TreeViewPublicAPI } from '../internals/models';
-import { SimpleTreeViewParameters, SimpleTreeViewStore } from '../internals/SimpleTreeViewStore';
+import {
+  SimpleTreeViewParameters,
+  SimpleTreeViewPublicAPI,
+} from '../internals/SimpleTreeViewStore';
 
 export interface SimpleTreeViewSlots extends TreeViewSlots {
   /**
@@ -23,7 +25,7 @@ export interface SimpleTreeViewSlotProps extends TreeViewSlotProps {
 }
 
 export type SimpleTreeViewApiRef<Multiple extends boolean | undefined = any> = React.RefObject<
-  TreeViewPublicAPI<SimpleTreeViewStore<Multiple>> | undefined
+  SimpleTreeViewPublicAPI<Multiple> | undefined
 >;
 
 export interface SimpleTreeViewProps<Multiple extends boolean | undefined>

@@ -1,9 +1,9 @@
 import { act, fireEvent } from '@mui/internal-test-utils';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
-import { UseTreeViewLabelSignature } from '@mui/x-tree-view/internals';
+import { ExtendableRichTreeViewStore } from '@mui/x-tree-view/internals';
 
-describeTreeView<[UseTreeViewLabelSignature]>(
-  'useTreeViewLabel plugin',
+describeTreeView<ExtendableRichTreeViewStore<any, any, any, any>>(
+  'TreeViewLabelEditingPlugin',
   ({ render, treeViewComponentName }) => {
     const isSimpleTreeView = treeViewComponentName.startsWith('SimpleTreeView');
 

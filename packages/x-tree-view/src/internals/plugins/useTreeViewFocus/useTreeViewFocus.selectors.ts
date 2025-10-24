@@ -2,7 +2,7 @@ import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import { selectionSelectors } from '../useTreeViewSelection/useTreeViewSelection.selectors';
 import { itemsSelectors } from '../useTreeViewItems/useTreeViewItems.selectors';
 import { isItemDisabled } from '../useTreeViewItems/useTreeViewItems.utils';
-import { expansionSelectors } from '../useTreeViewExpansion/useTreeViewExpansion.selectors';
+import { expansionSelectors } from '../TreeViewExpansionPlugin/selectors';
 import { MinimalTreeViewState } from '../../MinimalTreeViewStore';
 import { TreeViewItemId } from '../../../models';
 

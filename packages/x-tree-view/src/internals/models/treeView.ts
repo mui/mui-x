@@ -1,4 +1,3 @@
-import { TreeViewValidItem } from '../../models';
 import { MinimalTreeViewStore } from '../MinimalTreeViewStore';
 
 export interface TreeViewItemMeta {
@@ -17,9 +16,10 @@ export interface TreeViewItemMeta {
   label?: string;
 }
 
-export interface TreeViewStore<R extends TreeViewValidItem<R>, Multiple extends boolean | undefined>
-  extends MinimalTreeViewStore<R, Multiple, any, any> {}
+export interface TreeViewAnyStore extends MinimalTreeViewStore<any, any, any, any> {
+  itemPluginManager: any;
+}
 
-export type TreeViewPublicAPI<TStore extends TreeViewStore<any, any>> = ReturnType<
+export type TreeViewPublicAPI<TStore extends TreeViewAnyStore> = ReturnType<
   TStore['buildPublicAPI']
 >;

@@ -22,7 +22,7 @@ import {
   UseTreeItemLoadingContainerSlotProps,
 } from './useTreeItem.types';
 import { useTreeViewContext } from '../internals/TreeViewProvider';
-import { TreeViewItemPluginSlotPropsEnhancerParams, TreeViewStore } from '../internals/models';
+import { TreeViewItemPluginSlotPropsEnhancerParams, TreeViewAnyStore } from '../internals/models';
 import { useTreeItemUtils } from '../hooks/useTreeItemUtils';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
 import { isTargetInDescendants } from '../internals/utils/tree';
@@ -30,10 +30,10 @@ import { generateTreeItemIdAttribute } from '../internals/corePlugins/useTreeVie
 import { focusSelectors } from '../internals/plugins/useTreeViewFocus';
 import { itemsSelectors } from '../internals/plugins/useTreeViewItems';
 import { idSelectors } from '../internals/corePlugins/useTreeViewId';
-import { expansionSelectors } from '../internals/plugins/useTreeViewExpansion';
+import { expansionSelectors } from '../internals/plugins/TreeViewExpansionPlugin';
 import { selectionSelectors } from '../internals/plugins/useTreeViewSelection';
 
-export const useTreeItem = <TStore extends TreeViewStore<any, any>>(
+export const useTreeItem = <TStore extends TreeViewAnyStore>(
   parameters: UseTreeItemParameters,
 ): UseTreeItemReturnValue<TStore> => {
   const { runItemPlugins, publicAPI, store } = useTreeViewContext<TStore>();

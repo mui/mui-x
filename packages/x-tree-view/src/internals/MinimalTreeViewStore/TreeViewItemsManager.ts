@@ -8,13 +8,10 @@ import {
 } from '../plugins/useTreeViewItems/useTreeViewItems.utils';
 import type { MinimalTreeViewStore } from './MinimalTreeViewStore';
 
-export class TreeViewItemsManager<
-  R extends TreeViewValidItem<R>,
-  Store extends MinimalTreeViewStore<R, any, any, any>,
-> {
-  private store: Store;
+export class TreeViewItemsManager<R extends TreeViewValidItem<R>> {
+  private store: MinimalTreeViewStore<R, any, any, any>;
 
-  constructor(store: Store) {
+  constructor(store: MinimalTreeViewStore<R, any, any, any>) {
     this.store = store;
   }
 

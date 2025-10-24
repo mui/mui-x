@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { TreeViewStore } from '../models';
+import { TreeViewAnyStore } from '../models';
 import { TreeViewContextValue } from './TreeViewProvider.types';
 
 /**
@@ -8,7 +8,7 @@ import { TreeViewContextValue } from './TreeViewProvider.types';
  */
 export const TreeViewContext = React.createContext<TreeViewContextValue<any> | null>(null);
 
-export const useTreeViewContext = <TStore extends TreeViewStore<any, any>>() => {
+export const useTreeViewContext = <TStore extends TreeViewAnyStore>() => {
   const context = React.useContext(TreeViewContext) as TreeViewContextValue<TStore> | null;
   if (context == null) {
     throw new Error(

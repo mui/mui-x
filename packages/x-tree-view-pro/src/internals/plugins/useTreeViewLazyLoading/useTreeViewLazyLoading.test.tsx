@@ -1,10 +1,7 @@
 import { act, fireEvent } from '@mui/internal-test-utils';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
-import {
-  UseTreeViewExpansionSignature,
-  UseTreeViewLazyLoadingSignature,
-} from '@mui/x-tree-view/internals';
+import { RichTreeViewProStore } from '../../RichTreeViewProStore';
 
 type ItemType = TreeViewBaseItem<{
   id: string;
@@ -32,7 +29,7 @@ async function awaitMockFetch() {
   });
 }
 
-describeTreeView<[UseTreeViewLazyLoadingSignature, UseTreeViewExpansionSignature]>(
+describeTreeView<RichTreeViewProStore<any, any>>(
   'useTreeViewLabel plugin',
   ({ render, treeViewComponentName }) => {
     if (treeViewComponentName === 'SimpleTreeView' || treeViewComponentName === 'RichTreeView') {

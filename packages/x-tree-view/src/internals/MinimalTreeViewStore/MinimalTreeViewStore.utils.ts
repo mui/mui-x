@@ -1,6 +1,6 @@
 import { EMPTY_OBJECT } from '@base-ui-components/utils/empty';
 import { TreeViewValidItem } from '../../models';
-import { getExpansionTrigger } from '../plugins/useTreeViewExpansion/useTreeViewExpansion.utils';
+import { getExpansionTrigger } from '../plugins/TreeViewExpansionPlugin/useTreeViewExpansion.utils';
 import { MinimalTreeViewParameters } from './MinimalTreeViewStore.types';
 
 /**

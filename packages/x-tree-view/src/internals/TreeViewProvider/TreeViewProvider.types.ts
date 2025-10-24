@@ -3,7 +3,7 @@ import {
   TreeItemWrapper,
   TreeViewItemPluginResponse,
   TreeViewPublicAPI,
-  TreeViewStore,
+  TreeViewAnyStore,
 } from '../models';
 import type { TreeItemProps } from '../../TreeItem/TreeItem.types';
 import { TreeViewClasses, TreeViewSlotProps, TreeViewSlots } from './TreeViewStyleContext';
@@ -13,7 +13,7 @@ export type TreeViewItemPluginsRunner = (
   props: TreeItemProps,
 ) => Required<TreeViewItemPluginResponse>;
 
-export interface TreeViewContextValue<TStore extends TreeViewStore<any, any>> {
+export interface TreeViewContextValue<TStore extends TreeViewAnyStore> {
   publicAPI: TreeViewPublicAPI<TStore>;
   store: TStore;
   rootRef: React.RefObject<HTMLUListElement | null>;
@@ -21,7 +21,7 @@ export interface TreeViewContextValue<TStore extends TreeViewStore<any, any>> {
   runItemPlugins: TreeViewItemPluginsRunner;
 }
 
-export interface TreeViewProviderProps<TStore extends TreeViewStore<any, any>>
+export interface TreeViewProviderProps<TStore extends TreeViewAnyStore>
   extends UseTreeViewBuildContextParameters<TStore> {
   children: React.ReactNode;
   classes: Partial<TreeViewClasses> | undefined;

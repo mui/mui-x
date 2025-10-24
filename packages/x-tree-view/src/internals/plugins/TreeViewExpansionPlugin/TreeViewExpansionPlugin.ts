@@ -1,12 +1,12 @@
-import { TreeViewItemId } from '../../models';
-import type { MinimalTreeViewStore } from './MinimalTreeViewStore';
-import { expansionSelectors } from '../plugins/useTreeViewExpansion/useTreeViewExpansion.selectors';
-import { itemsSelectors } from '../plugins/useTreeViewItems/useTreeViewItems.selectors';
+import { TreeViewItemId } from '../../../models';
+import { expansionSelectors } from './selectors';
+import { itemsSelectors } from '../useTreeViewItems/useTreeViewItems.selectors';
+import { TreeViewAnyStore } from '../../models';
 
-export class TreeViewExpansionManager<Store extends MinimalTreeViewStore<any, any, any, any>> {
-  private store: Store;
+export class TreeViewExpansionPlugin {
+  private store: TreeViewAnyStore;
 
-  constructor(store: Store) {
+  constructor(store: TreeViewAnyStore) {
     this.store = store;
   }
 

@@ -4,26 +4,21 @@ import { TreeViewCancellableEvent } from '@mui/x-tree-view/models';
 import {
   TreeViewItemPlugin,
   useTreeViewContext,
-  UseTreeViewItemsSignature,
   isTargetInDescendants,
-  UseTreeViewLabelSignature,
 } from '@mui/x-tree-view/internals';
 import {
   UseTreeItemDragAndDropOverlaySlotPropsFromItemsReordering,
   UseTreeItemRootSlotPropsFromItemsReordering,
-  UseTreeViewItemsReorderingSignature,
   TreeViewItemItemReorderingValidActions,
   UseTreeItemContentSlotPropsFromItemsReordering,
 } from './useTreeViewItemsReordering.types';
 import { itemsReorderingSelectors } from './useTreeViewItemsReordering.selectors';
+import { RichTreeViewProStore } from '../../RichTreeViewProStore';
 
 export const isAndroid = () => navigator.userAgent.toLowerCase().includes('android');
 
 export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props }) => {
-  const { instance, store } = useTreeViewContext<
-    [UseTreeViewItemsSignature, UseTreeViewItemsReorderingSignature],
-    [UseTreeViewLabelSignature]
-  >();
+  const { store } = useTreeViewContext<RichTreeViewProStore<any, any>>();
   const { itemId } = props;
 
   const validActionsRef = React.useRef<TreeViewItemItemReorderingValidActions | null>(null);
@@ -72,7 +67,7 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props
           // iOS requires a media type to be defined
           event.dataTransfer.setData('application/mui-x', '');
 
-          instance.startDraggingItem(itemId);
+          store.startDraggingItem(itemId);
         };
 
         const handleRootDragOver = (event: React.DragEvent & TreeViewCancellableEvent) => {
@@ -92,11 +87,11 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props
 
           // Check if the drag-and-drop was cancelled, possibly by pressing Escape
           if (event.dataTransfer.dropEffect === 'none') {
-            instance.cancelDraggingItem();
+            store.cancelDraggingItem();
             return;
           }
 
-          instance.completeDraggingItem(itemId);
+          store.completeDraggingItem(itemId);
         };
 
         return {
@@ -123,7 +118,7 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props
           const rect = (event.target as HTMLDivElement).getBoundingClientRect();
           const y = event.clientY - rect.top;
           const x = event.clientX - rect.left;
-          instance.setDragTargetItem({
+          store.setDragTargetItem({
             itemId,
             validActions: validActionsRef.current,
             targetHeight: rect.height,
@@ -139,7 +134,7 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props
             return;
           }
 
-          validActionsRef.current = instance.getDroppingTargetValidActions(itemId);
+          validActionsRef.current = store.getDroppingTargetValidActions(itemId);
         };
 
         return {

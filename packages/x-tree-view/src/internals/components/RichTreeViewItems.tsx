@@ -6,9 +6,10 @@ import { SlotComponentProps } from '@mui/utils/types';
 import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
 import { TreeItem, TreeItemProps } from '../../TreeItem';
 import { TreeViewItemId } from '../../models';
-import { itemsSelectors, UseTreeViewItemsSignature } from '../plugins/useTreeViewItems';
+import { itemsSelectors } from '../plugins/useTreeViewItems';
 import { useTreeViewContext } from '../TreeViewProvider';
-import { expansionSelectors, UseTreeViewExpansionSignature } from '../plugins/useTreeViewExpansion';
+import { expansionSelectors } from '../plugins/TreeViewExpansionPlugin';
+import { RichTreeViewStore } from '../RichTreeViewStore';
 
 const RichTreeViewItemsContext = React.createContext<
   ((itemId: TreeViewItemId) => React.ReactNode) | null
@@ -24,7 +25,7 @@ const WrappedTreeItem = React.memo(function WrappedTreeItem({
   skipChildren,
 }: WrappedTreeItemProps) {
   const renderItemForRichTreeView = React.useContext(RichTreeViewItemsContext)!;
-  const { store } = useTreeViewContext<[UseTreeViewItemsSignature]>();
+  const { store } = useTreeViewContext<RichTreeViewStore<any, any>>();
 
   const itemMeta = useStore(store, itemsSelectors.itemMeta, itemId);
   const children = useStore(
@@ -46,8 +47,7 @@ const WrappedTreeItem = React.memo(function WrappedTreeItem({
 
 export function RichTreeViewItems(props: RichTreeViewItemsProps) {
   const { slots, slotProps } = props;
-  const { store } =
-    useTreeViewContext<[UseTreeViewItemsSignature, UseTreeViewExpansionSignature]>();
+  const { store } = useTreeViewContext<RichTreeViewStore<any, any>>();
 
   const itemSlot = slots?.item as React.JSXElementConstructor<TreeItemProps> | undefined;
   const itemSlotProps = slotProps?.item;

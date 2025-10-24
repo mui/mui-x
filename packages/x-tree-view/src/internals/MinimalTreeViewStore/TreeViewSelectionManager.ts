@@ -1,4 +1,5 @@
 import { TreeViewItemId, TreeViewSelectionPropagation } from '../../models';
+import { TreeViewAnyStore } from '../models';
 import { itemsSelectors } from '../plugins/useTreeViewItems';
 import { selectionSelectors } from '../plugins/useTreeViewSelection';
 import { useTreeViewSelectionItemPlugin } from '../plugins/useTreeViewSelection/useTreeViewSelection.itemPlugin';
@@ -12,19 +13,16 @@ import {
 import type { MinimalTreeViewStore } from './MinimalTreeViewStore';
 import { TreeViewSelectionValue } from './MinimalTreeViewStore.types';
 
-export class TreeViewSelectionManager<
-  Multiple extends boolean | undefined,
-  Store extends MinimalTreeViewStore<any, Multiple, any, any>,
-> {
-  private store: Store;
+export class TreeViewSelectionManager<Multiple extends boolean | undefined> {
+  private store: MinimalTreeViewStore<any, Multiple, any, any>;
 
   private lastSelectedItem: TreeViewItemId | null = null;
 
   private lastSelectedRange: Record<string, boolean> = {};
 
-  constructor(store: Store) {
+  constructor(store: MinimalTreeViewStore<any, Multiple, any, any>) {
     this.store = store;
-    store.itemPluginManager.register(useTreeViewSelectionItemPlugin);
+    store.itemPluginManager.register(useTreeViewSelectionItemPlugin, null);
   }
 
   private setSelectedItems = (
@@ -229,7 +227,7 @@ function propagateSelection({
   oldModel,
   additionalItemsToPropagate,
 }: {
-  store: MinimalTreeViewStore<any, any, any, any>;
+  store: TreeViewAnyStore;
   selectionPropagation: TreeViewSelectionPropagation;
   newModel: TreeViewItemId[];
   oldModel: TreeViewItemId[];
@@ -334,7 +332,7 @@ function getAddedAndRemovedItems({
   oldModel,
   newModel,
 }: {
-  store: MinimalTreeViewStore<any, any, any, any>;
+  store: TreeViewAnyStore;
   oldModel: TreeViewItemId[];
   newModel: TreeViewItemId[];
 }) {

@@ -4,12 +4,12 @@ import { TreeViewContextValue, TreeViewItemPluginsRunner } from './TreeViewProvi
 import {
   TreeViewItemPluginSlotPropsEnhancers,
   TreeViewItemPluginSlotPropsEnhancerParams,
-  TreeViewStore,
+  TreeViewAnyStore,
   TreeViewPublicAPI,
   TreeItemWrapper,
 } from '../models';
 
-export const useTreeViewBuildContext = <TStore extends TreeViewStore<any, any>>(
+export const useTreeViewBuildContext = <TStore extends TreeViewAnyStore>(
   parameters: UseTreeViewBuildContextParameters<TStore>,
 ): TreeViewContextValue<TStore> => {
   const { store, apiRef, rootRef } = parameters;
@@ -118,7 +118,7 @@ export const useTreeViewBuildContext = <TStore extends TreeViewStore<any, any>>(
   );
 };
 
-function initializeInputApiRef<TStore extends TreeViewStore<any, any>>(
+function initializeInputApiRef<TStore extends TreeViewAnyStore>(
   publicAPI: TreeViewPublicAPI<TStore>,
   apiRef: React.RefObject<TreeViewPublicAPI<TStore> | undefined> | undefined,
 ) {
@@ -127,13 +127,13 @@ function initializeInputApiRef<TStore extends TreeViewStore<any, any>>(
   }
 }
 
-export interface UseTreeViewBuildContextParameters<TStore extends TreeViewStore<any, any>> {
+export interface UseTreeViewBuildContextParameters<TStore extends TreeViewAnyStore> {
   store: TStore;
   rootRef: React.RefObject<HTMLUListElement | null>;
   apiRef: React.RefObject<TreeViewPublicAPI<TStore> | undefined> | undefined;
 }
 
-export interface UseTreeViewBuildContextReturnValue<TStore extends TreeViewStore<any, any>> {
+export interface UseTreeViewBuildContextReturnValue<TStore extends TreeViewAnyStore> {
   publicAPI: TreeViewPublicAPI<TStore>;
   // TODO: Use ReadonlyStore
   store: TStore;

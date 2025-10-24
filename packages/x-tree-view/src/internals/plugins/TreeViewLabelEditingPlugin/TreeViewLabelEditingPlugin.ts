@@ -1,16 +1,14 @@
-import { ExtendableRichTreeViewStore } from './RichTreeViewStore';
-import { TreeViewItemId } from '../../models';
-import { labelSelectors } from '../plugins/useTreeViewLabel';
-import { useTreeViewLabelItemPlugin } from '../plugins/useTreeViewLabel/useTreeViewLabel.itemPlugin';
+import { ExtendableRichTreeViewStore } from '../../RichTreeViewStore/RichTreeViewStore';
+import { TreeViewItemId } from '../../../models';
+import { labelSelectors } from '.';
+import { useTreeViewLabelItemPlugin } from './useTreeViewLabel.itemPlugin';
 
-export class TreeViewLabelEditingManager<
-  Store extends ExtendableRichTreeViewStore<any, any, any, any>,
-> {
-  private store: Store;
+export class TreeViewLabelEditingPlugin {
+  private store: ExtendableRichTreeViewStore<any, any, any, any>;
 
-  constructor(store: Store) {
+  constructor(store: ExtendableRichTreeViewStore<any, any, any, any>) {
     this.store = store;
-    store.itemPluginManager.register(useTreeViewLabelItemPlugin);
+    store.itemPluginManager.register(useTreeViewLabelItemPlugin, null);
   }
 
   public setEditedItem = (editedItemId: TreeViewItemId | null) => {

@@ -10,7 +10,7 @@ import { getSimpleTreeViewUtilityClass } from './simpleTreeViewClasses';
 import { SimpleTreeViewProps } from './SimpleTreeView.types';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { useExtractSimpleTreeViewParameters } from './useExtractSimpleTreeViewParameters';
-import { useTreeViewRootProps } from '../internals/hooks/useTeeViewRootProps';
+import { useTreeViewRootProps } from '../internals/hooks/useTreeViewRootProps';
 import { useSimpleTreeViewStore } from './useSimpleTreeViewStore';
 import { TreeViewChildrenItemProvider } from '../internals/TreeViewProvider/TreeViewChildrenItemProvider';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
@@ -103,20 +103,20 @@ const SimpleTreeView = React.forwardRef(function SimpleTreeView<
   });
 
   return (
-    <TreeViewChildrenItemProvider itemId={null} idAttribute={null}>
-      <TreeViewItemDepthContext.Provider value={0}>
-        <TreeViewProvider
-          store={store}
-          classes={classes}
-          slots={slots}
-          slotProps={slotProps}
-          apiRef={apiRef}
-          rootRef={ref}
-        >
+    <TreeViewProvider
+      store={store}
+      classes={classes}
+      slots={slots}
+      slotProps={slotProps}
+      apiRef={apiRef}
+      rootRef={ref}
+    >
+      <TreeViewChildrenItemProvider itemId={null} idAttribute={null}>
+        <TreeViewItemDepthContext.Provider value={0}>
           <Root {...rootProps} />
-        </TreeViewProvider>
-      </TreeViewItemDepthContext.Provider>
-    </TreeViewChildrenItemProvider>
+        </TreeViewItemDepthContext.Provider>
+      </TreeViewChildrenItemProvider>
+    </TreeViewProvider>
   );
 }) as SimpleTreeViewComponent;
 

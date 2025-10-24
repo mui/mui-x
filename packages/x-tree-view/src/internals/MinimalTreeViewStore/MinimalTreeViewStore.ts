@@ -14,7 +14,7 @@ import { TreeViewValidItem } from '../../models';
 import { applyModelInitialValue, deriveStateFromParameters } from './MinimalTreeViewStore.utils';
 import { createTreeViewDefaultId } from '../corePlugins/useTreeViewId/useTreeViewId.utils';
 import { TreeViewSelectionManager } from './TreeViewSelectionManager';
-import { TreeViewExpansionManager } from './TreeViewExpansionManager';
+import { TreeViewExpansionPlugin } from '../plugins/TreeViewExpansionPlugin/TreeViewExpansionPlugin';
 import { TimeoutManager } from './TimeoutManager';
 import { TreeViewKeyboardNavigationManager } from './TreeViewKeyboardNavigationManager';
 import { TreeViewInternalsManager } from './TreeViewInternalsManager';
@@ -41,19 +41,19 @@ export class MinimalTreeViewStore<
 
   public timeoutManager = new TimeoutManager();
 
-  public itemPluginManager = new TreeViewItemPluginManager<this>(this);
+  public itemPluginManager = new TreeViewItemPluginManager<this>();
 
-  public $ = new TreeViewInternalsManager<State, this>(this);
+  public $ = new TreeViewInternalsManager<State>(this);
 
-  private itemsManager = new TreeViewItemsManager<R, this>(this);
+  private itemsManager = new TreeViewItemsManager<R>(this);
 
-  private focusManager = new TreeViewFocusManager<this>(this);
+  private focusManager = new TreeViewFocusManager(this);
 
-  private expansionManager = new TreeViewExpansionManager<this>(this);
+  private expansionPlugin = new TreeViewExpansionPlugin(this);
 
-  private selectionManager = new TreeViewSelectionManager<Multiple, this>(this);
+  private selectionManager = new TreeViewSelectionManager<Multiple>(this);
 
-  private keyboardNavigationManager = new TreeViewKeyboardNavigationManager<this>(this);
+  private keyboardNavigationManager = new TreeViewKeyboardNavigationManager(this);
 
   public constructor(
     parameters: Parameters,
@@ -203,6 +203,13 @@ export class MinimalTreeViewStore<
   };
 
   /**
+   * Wheter updates based on `props.items` changes should be ignored.
+   */
+  public shouldIgnoreItemsStateUpdate = () => {
+    return this.mapper.shouldIgnoreItemsStateUpdate(this.parameters);
+  };
+
+  /**
    * Get all the items in the same format as provided by `props.items`.
    * @returns {TreeViewBaseItem[]} The items in the tree.
    */
@@ -296,14 +303,14 @@ export class MinimalTreeViewStore<
    * Mark a list of items as expandable.
    * @param {TreeViewItemId[]} items The ids of the items to mark as expandable.
    */
-  public addExpandableItems = this.expansionManager.addExpandableItems;
+  public addExpandableItems = this.expansionPlugin.addExpandableItems;
 
   /**
    * Check if an item is expanded.
    * @param {TreeViewItemId} itemId The id of the item to check.
    * @returns {boolean} `true` if the item is expanded, `false` otherwise.
    */
-  public isItemExpanded = this.expansionManager.isItemExpanded;
+  public isItemExpanded = this.expansionPlugin.isItemExpanded;
 
   /**
    * Change the expansion status of a given item.
@@ -312,7 +319,7 @@ export class MinimalTreeViewStore<
    * @param {React.SyntheticEvent} parameters.event The DOM event that triggered the change.
    * @param {boolean} parameters.shouldBeExpanded If `true` the item will be expanded. If `false` the item will be collapsed. If not defined, the item's expansion status will be the toggled.
    */
-  public setItemExpansion = this.expansionManager.setItemExpansion;
+  public setItemExpansion = this.expansionPlugin.setItemExpansion;
 
   /**
    * Apply the new expansion status of a given item.
@@ -323,14 +330,14 @@ export class MinimalTreeViewStore<
    * @param {React.SyntheticEvent | null} parameters.event The DOM event that triggered the change.
    * @param {boolean} parameters.shouldBeExpanded If `true` the item will be expanded. If `false` the item will be collapsed.
    */
-  public applyItemExpansion = this.expansionManager.applyItemExpansion;
+  public applyItemExpansion = this.expansionPlugin.applyItemExpansion;
 
   /**
    * Expand all the siblings (i.e.: the items that have the same parent) of a given item.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change.
    * @param {TreeViewItemId} itemId The id of the item whose siblings will be expanded.
    */
-  public expandAllSiblings = this.expansionManager.expandAllSiblings;
+  public expandAllSiblings = this.expansionPlugin.expandAllSiblings;
 
   /**
    * Select or deselect an item.
