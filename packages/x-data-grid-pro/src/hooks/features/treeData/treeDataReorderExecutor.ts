@@ -1,10 +1,5 @@
 import { gridRowNodeSelector, gridRowTreeSelector, gridRowsLookupSelector } from '@mui/x-data-grid';
-import type {
-  GridTreeNode,
-  GridGroupNode,
-  GridUpdateRowParams,
-  GridValidRowModel,
-} from '@mui/x-data-grid';
+import type { GridTreeNode, GridGroupNode, GridValidRowModel } from '@mui/x-data-grid';
 import { warnOnce } from '@mui/x-internals/warning';
 import { BaseReorderOperation, RowReorderExecutor } from '../rowReorder/reorderExecutor';
 import { type ReorderOperation, type ReorderExecutionContext } from '../rowReorder/types';
@@ -12,7 +7,6 @@ import {
   determineOperationType,
   calculateTargetIndex,
   BatchRowUpdater,
-  handleProcessRowUpdateError,
   collectAllDescendants,
   isDescendantOf,
   buildTreeDataPath,
@@ -258,23 +252,16 @@ class CrossParentLeafOperation extends BaseReorderOperation {
     const originalRow = dataRowIdToModelLookup[sourceNode.id];
     let updatedRow = setTreeDataPath!(newPath, originalRow);
 
-    // Process row update if needed
-    if (processRowUpdate) {
-      try {
-        apiRef.current.setLoading(true);
-        const processedRow = await processRowUpdate(updatedRow, originalRow, {
-          rowId: sourceNode.id,
-          previousRow: originalRow,
-          updatedRow,
-        } as GridUpdateRowParams);
-        updatedRow = processedRow || updatedRow;
-      } catch (error) {
-        handleProcessRowUpdateError(error, onProcessRowUpdateError);
-        return;
-      } finally {
-        apiRef.current.setLoading(false);
-      }
+    const updater = new BatchRowUpdater(apiRef, processRowUpdate, onProcessRowUpdateError);
+    updater.queueUpdate(sourceNode.id, originalRow, updatedRow);
+
+    const { successful, updates } = await updater.executeAll();
+
+    if (successful.length === 0) {
+      return;
     }
+
+    updatedRow = updates[0];
 
     // Update tree structure
     apiRef.current.setState((state: any) => {
@@ -415,27 +402,18 @@ class DropOnLeafOperation extends BaseReorderOperation {
       const newPath = [...targetPath, String(leafKey)];
 
       const originalRow = dataRowIdToModelLookup[sourceNode.id];
-      let updatedRow = setTreeDataPath!(newPath, originalRow);
+      const updatedRow = setTreeDataPath!(newPath, originalRow);
 
-      // Process row update if needed
-      if (processRowUpdate) {
-        try {
-          apiRef.current.setLoading(true);
-          const processedRow = await processRowUpdate(updatedRow, originalRow, {
-            rowId: sourceNode.id,
-            previousRow: originalRow,
-            updatedRow,
-          } as GridUpdateRowParams);
-          updatedRow = processedRow || updatedRow;
-        } catch (error) {
-          handleProcessRowUpdateError(error, onProcessRowUpdateError);
-          return;
-        } finally {
-          apiRef.current.setLoading(false);
-        }
+      const updater = new BatchRowUpdater(apiRef, processRowUpdate, onProcessRowUpdateError);
+      updater.queueUpdate(sourceNode.id, originalRow, updatedRow);
+
+      const { successful, updates } = await updater.executeAll();
+
+      if (successful.length === 0) {
+        return;
       }
 
-      rowsToUpdate.push(updatedRow);
+      rowsToUpdate.push(updates[0]);
     } else {
       // Group move - update entire hierarchy
       const nodesToUpdate = collectAllDescendants(sourceNode as GridGroupNode, rowTree);
@@ -469,20 +447,13 @@ class DropOnLeafOperation extends BaseReorderOperation {
         updater.queueUpdate(node.id, originalRow, updatedRow);
       }
 
-      try {
-        // Execute all batch updates
-        const { successful, updates } = await updater.executeAll();
+      const { successful, updates } = await updater.executeAll();
 
-        // Only proceed with tree updates if we have successful updates
-        if (successful.length === 0) {
-          return;
-        }
-
-        rowsToUpdate = updates;
-      } catch (error) {
-        handleProcessRowUpdateError(error, onProcessRowUpdateError);
+      if (successful.length === 0) {
         return;
       }
+
+      rowsToUpdate = updates;
     }
 
     // Update tree structure
@@ -636,27 +607,18 @@ class DropOnGroupOperation extends BaseReorderOperation {
       const newPath = [...targetPath, String(leafKey)];
 
       const originalRow = dataRowIdToModelLookup[sourceNode.id];
-      let updatedRow = setTreeDataPath!(newPath, originalRow);
+      const updatedRow = setTreeDataPath!(newPath, originalRow);
 
-      // Process row update if needed
-      if (processRowUpdate) {
-        try {
-          apiRef.current.setLoading(true);
-          const processedRow = await processRowUpdate(updatedRow, originalRow, {
-            rowId: sourceNode.id,
-            previousRow: originalRow,
-            updatedRow,
-          } as GridUpdateRowParams);
-          updatedRow = processedRow || updatedRow;
-        } catch (error) {
-          handleProcessRowUpdateError(error, onProcessRowUpdateError);
-          return;
-        } finally {
-          apiRef.current.setLoading(false);
-        }
+      const updater = new BatchRowUpdater(apiRef, processRowUpdate, onProcessRowUpdateError);
+      updater.queueUpdate(sourceNode.id, originalRow, updatedRow);
+
+      const { successful, updates } = await updater.executeAll();
+
+      if (successful.length === 0) {
+        return;
       }
 
-      rowsToUpdate.push(updatedRow);
+      rowsToUpdate.push(updates[0]);
     } else {
       // Group move - update entire hierarchy
       const nodesToUpdate = collectAllDescendants(sourceNode as GridGroupNode, rowTree);
@@ -678,20 +640,13 @@ class DropOnGroupOperation extends BaseReorderOperation {
         updater.queueUpdate(node.id, originalRow, updatedRow);
       }
 
-      try {
-        // Execute all batch updates
-        const { successful, updates } = await updater.executeAll();
+      const { successful, updates } = await updater.executeAll();
 
-        // Only proceed with tree updates if we have successful updates
-        if (successful.length === 0) {
-          return;
-        }
-
-        rowsToUpdate = updates;
-      } catch (error) {
-        handleProcessRowUpdateError(error, onProcessRowUpdateError);
+      if (successful.length === 0) {
         return;
       }
+
+      rowsToUpdate = updates;
     }
 
     // Update tree structure
@@ -873,73 +828,69 @@ class CrossParentGroupOperation extends BaseReorderOperation {
       updater.queueUpdate(node.id, originalRow, updatedRow);
     }
 
-    try {
-      // Execute all batch updates
-      const { successful, updates } = await updater.executeAll();
+    // Execute all batch updates
+    const { successful, updates } = await updater.executeAll();
 
-      // Only proceed with tree updates if we have successful updates
-      if (successful.length > 0) {
-        // Update tree structure (partial moves are allowed)
-        apiRef.current.setState((state: any) => {
-          const updatedTree = { ...state.rows.tree };
+    // Only proceed with tree updates if we have successful updates
+    if (successful.length > 0) {
+      // Update tree structure (partial moves are allowed)
+      apiRef.current.setState((state: any) => {
+        const updatedTree = { ...state.rows.tree };
 
-          // Remove from source parent
-          const sourceParent = updatedTree[sourceNode.parent!] as GridGroupNode;
-          const sourceChildren = sourceParent.children.filter((id) => id !== sourceNode.id);
+        // Remove from source parent
+        const sourceParent = updatedTree[sourceNode.parent!] as GridGroupNode;
+        const sourceChildren = sourceParent.children.filter((id) => id !== sourceNode.id);
 
-          // Convert source parent to leaf if now empty
-          if (sourceChildren.length === 0) {
-            updatedTree[sourceNode.parent!] = {
-              ...sourceParent,
-              type: 'leaf',
-              children: undefined,
-            };
-          } else {
-            updatedTree[sourceNode.parent!] = {
-              ...sourceParent,
-              children: sourceChildren,
-            };
-          }
-
-          // Add to target parent
-          const targetParent = updatedTree[targetNode.parent!] as GridGroupNode;
-          const targetChildren = [...targetParent.children];
-          targetChildren.splice(actualTargetIndex, 0, sourceNode.id);
-
-          updatedTree[targetNode.parent!] = {
-            ...targetParent,
-            children: targetChildren,
+        // Convert source parent to leaf if now empty
+        if (sourceChildren.length === 0) {
+          updatedTree[sourceNode.parent!] = {
+            ...sourceParent,
+            type: 'leaf',
+            children: undefined,
           };
-
-          // Update the group's parent reference and depth
-          const newParentNode = updatedTree[targetNode.parent!];
-          const newGroupDepth = newParentNode.depth + 1;
-
-          updatedTree[sourceNode.id] = {
-            ...sourceNode,
-            parent: targetNode.parent,
-            depth: newGroupDepth,
+        } else {
+          updatedTree[sourceNode.parent!] = {
+            ...sourceParent,
+            children: sourceChildren,
           };
+        }
 
-          // Update depths for all descendants
-          const depthDiff = newGroupDepth - sourceNode.depth;
-          updateDescendantDepths(sourceNode as GridGroupNode, updatedTree, depthDiff);
+        // Add to target parent
+        const targetParent = updatedTree[targetNode.parent!] as GridGroupNode;
+        const targetChildren = [...targetParent.children];
+        targetChildren.splice(actualTargetIndex, 0, sourceNode.id);
 
-          return {
-            ...state,
-            rows: {
-              ...state.rows,
-              tree: updatedTree,
-            },
-          };
-        });
+        updatedTree[targetNode.parent!] = {
+          ...targetParent,
+          children: targetChildren,
+        };
 
-        // Update all successful rows in the grid
-        apiRef.current.updateRows(updates);
-        apiRef.current.publishEvent('rowsSet');
-      }
-    } finally {
-      apiRef.current.setLoading(false);
+        // Update the group's parent reference and depth
+        const newParentNode = updatedTree[targetNode.parent!];
+        const newGroupDepth = newParentNode.depth + 1;
+
+        updatedTree[sourceNode.id] = {
+          ...sourceNode,
+          parent: targetNode.parent,
+          depth: newGroupDepth,
+        };
+
+        // Update depths for all descendants
+        const depthDiff = newGroupDepth - sourceNode.depth;
+        updateDescendantDepths(sourceNode as GridGroupNode, updatedTree, depthDiff);
+
+        return {
+          ...state,
+          rows: {
+            ...state.rows,
+            tree: updatedTree,
+          },
+        };
+      });
+
+      // Update all successful rows in the grid
+      apiRef.current.updateRows(updates);
+      apiRef.current.publishEvent('rowsSet');
     }
   }
 }

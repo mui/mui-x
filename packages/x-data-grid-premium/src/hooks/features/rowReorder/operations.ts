@@ -4,21 +4,13 @@ import {
   gridRowsLookupSelector,
   gridColumnLookupSelector,
 } from '@mui/x-data-grid-pro';
-import type {
-  GridRowId,
-  GridGroupNode,
-  GridLeafNode,
-  GridValidRowModel,
-  GridUpdateRowParams,
-} from '@mui/x-data-grid-pro';
+import type { GridRowId, GridGroupNode, GridLeafNode } from '@mui/x-data-grid-pro';
 import {
   BaseReorderOperation,
   rowReorderUtils,
   type ReorderOperation,
   type ReorderExecutionContext,
 } from '@mui/x-data-grid-pro/internals';
-import { warnOnce } from '@mui/x-internals/warning';
-import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { gridRowGroupingSanitizedModelSelector } from '../rowGrouping';
 import { getGroupingRules, getCellGroupingCriteria } from '../rowGrouping/gridRowGroupingUtils';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
@@ -175,105 +167,85 @@ export class CrossParentLeafOperation extends BaseReorderOperation {
       }
     }
 
-    const commitStateUpdate = (finalSourceRow: GridValidRowModel) => {
-      apiRef.current.setState((state: any) => {
-        const updatedSourceChildren = sourceChildren.filter((rowId) => rowId !== sourceRowId);
-        const updatedTree = { ...state.rows.tree };
-        const removedGroups = new Set<GridRowId>();
-        let rootLevelRemovals = 0;
+    const updater = new rowReorderUtils.BatchRowUpdater(
+      apiRef,
+      processRowUpdate,
+      onProcessRowUpdateError,
+    );
+    updater.queueUpdate(sourceRowId, originalSourceRow, updatedSourceRow);
 
-        if (updatedSourceChildren.length === 0) {
-          removedGroups.add(sourceGroup.id);
-          rootLevelRemovals = rowReorderUtils.removeEmptyAncestors(
-            sourceGroup.parent!,
-            updatedTree,
-            removedGroups,
-          );
-        }
+    const { successful, updates } = await updater.executeAll();
 
-        removedGroups.forEach((groupId) => {
-          const group = updatedTree[groupId] as GridGroupNode;
-          if (group && group.parent && updatedTree[group.parent]) {
-            const parent = updatedTree[group.parent] as GridGroupNode;
-            updatedTree[group.parent] = {
-              ...parent,
-              children: parent.children.filter((childId) => childId !== groupId),
-            };
-          }
-          delete updatedTree[groupId];
-        });
+    if (successful.length === 0) {
+      return;
+    }
 
-        if (!removedGroups.has(sourceGroup.id)) {
-          updatedTree[sourceNode.parent!] = {
-            ...sourceGroup,
-            children: updatedSourceChildren,
+    const finalSourceRow = updates[0];
+
+    apiRef.current.setState((state: any) => {
+      const updatedSourceChildren = sourceChildren.filter((rowId) => rowId !== sourceRowId);
+      const updatedTree = { ...state.rows.tree };
+      const removedGroups = new Set<GridRowId>();
+      let rootLevelRemovals = 0;
+
+      if (updatedSourceChildren.length === 0) {
+        removedGroups.add(sourceGroup.id);
+        rootLevelRemovals = rowReorderUtils.removeEmptyAncestors(
+          sourceGroup.parent!,
+          updatedTree,
+          removedGroups,
+        );
+      }
+
+      removedGroups.forEach((groupId) => {
+        const group = updatedTree[groupId] as GridGroupNode;
+        if (group && group.parent && updatedTree[group.parent]) {
+          const parent = updatedTree[group.parent] as GridGroupNode;
+          updatedTree[group.parent] = {
+            ...parent,
+            children: parent.children.filter((childId) => childId !== groupId),
           };
         }
-
-        const updatedTargetChildren = isLastChild
-          ? [...targetChildren, sourceRowId]
-          : [
-              ...targetChildren.slice(0, targetIndex),
-              sourceRowId,
-              ...targetChildren.slice(targetIndex),
-            ];
-
-        updatedTree[target.parent!] = {
-          ...targetGroup,
-          children: updatedTargetChildren,
-        };
-
-        updatedTree[sourceNode.id] = {
-          ...sourceNode,
-          parent: target.parent,
-        };
-
-        return {
-          ...state,
-          rows: {
-            ...state.rows,
-            totalTopLevelRowCount: state.rows.totalTopLevelRowCount - rootLevelRemovals,
-            tree: updatedTree,
-          },
-        };
+        delete updatedTree[groupId];
       });
 
-      apiRef.current.updateRows([finalSourceRow]);
-      apiRef.current.publishEvent('rowsSet');
-    };
-
-    if (processRowUpdate && !isDeepEqual(originalSourceRow, updatedSourceRow)) {
-      const params: GridUpdateRowParams = {
-        rowId: sourceRowId,
-        previousRow: originalSourceRow,
-        updatedRow: updatedSourceRow,
-      };
-      apiRef.current.setLoading(true);
-
-      try {
-        const processedRow = await processRowUpdate(updatedSourceRow, originalSourceRow, params);
-        const finalRow = processedRow || updatedSourceRow;
-        commitStateUpdate(finalRow);
-      } catch (error) {
-        apiRef.current.setLoading(false);
-        if (onProcessRowUpdateError) {
-          onProcessRowUpdateError(error);
-        } else if (process.env.NODE_ENV !== 'production') {
-          warnOnce(
-            [
-              'MUI X: A call to `processRowUpdate()` threw an error which was not handled because `onProcessRowUpdateError()` is missing.',
-              'To handle the error pass a callback to the `onProcessRowUpdateError()` prop, for example `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',
-              'For more detail, see https://mui.com/x/react-data-grid/editing/persistence/.',
-            ],
-            'error',
-          );
-        }
-      } finally {
-        apiRef.current.setLoading(false);
+      if (!removedGroups.has(sourceGroup.id)) {
+        updatedTree[sourceNode.parent!] = {
+          ...sourceGroup,
+          children: updatedSourceChildren,
+        };
       }
-    } else {
-      commitStateUpdate(updatedSourceRow);
-    }
+
+      const updatedTargetChildren = isLastChild
+        ? [...targetChildren, sourceRowId]
+        : [
+            ...targetChildren.slice(0, targetIndex),
+            sourceRowId,
+            ...targetChildren.slice(targetIndex),
+          ];
+
+      updatedTree[target.parent!] = {
+        ...targetGroup,
+        children: updatedTargetChildren,
+      };
+
+      updatedTree[sourceNode.id] = {
+        ...sourceNode,
+        parent: target.parent,
+      };
+
+      return {
+        ...state,
+        rows: {
+          ...state.rows,
+          totalTopLevelRowCount: state.rows.totalTopLevelRowCount - rootLevelRemovals,
+          tree: updatedTree,
+        },
+      };
+    });
+
+    apiRef.current.updateRows([finalSourceRow]);
+    apiRef.current.publishEvent('rowsSet');
   }
 }
 
@@ -421,22 +393,107 @@ export class CrossParentGroupOperation extends BaseReorderOperation {
       updater.queueUpdate(leafId, originalRow, updatedRow);
     }
 
-    apiRef.current.setLoading(true);
+    const { successful, failed, updates } = await updater.executeAll();
 
-    try {
-      const { successful, failed, updates } = await updater.executeAll();
+    if (successful.length > 0) {
+      apiRef.current.setState((state: any) => {
+        const updatedTree = { ...state.rows.tree };
+        const treeDepths = { ...state.rows.treeDepths };
+        let rootLevelRemovals = 0;
 
-      if (successful.length > 0) {
-        apiRef.current.setState((state: any) => {
-          const updatedTree = { ...state.rows.tree };
-          const treeDepths = { ...state.rows.treeDepths };
-          let rootLevelRemovals = 0;
+        if (failed.length === 0) {
+          const sourceParentNode = updatedTree[sourceNode.parent!] as GridGroupNode;
 
-          if (failed.length === 0) {
-            const sourceParentNode = updatedTree[sourceNode.parent!] as GridGroupNode;
+          if (!sourceParentNode) {
+            const targetParentNode = updatedTree[targetNode.parent!] as GridGroupNode;
+            const targetIndex = targetParentNode.children.indexOf(targetNode.id);
+            const newTargetChildren = [...targetParentNode.children];
 
-            if (!sourceParentNode) {
-              const targetParentNode = updatedTree[targetNode.parent!] as GridGroupNode;
+            if (isLastChild) {
+              newTargetChildren.push(sourceNode.id);
+            } else {
+              newTargetChildren.splice(targetIndex, 0, sourceNode.id);
+            }
+
+            updatedTree[targetNode.parent!] = {
+              ...targetParentNode,
+              children: newTargetChildren,
+            };
+
+            updatedTree[sourceNode.id] = {
+              ...sourceNode,
+              parent: targetNode.parent,
+            };
+          } else {
+            const updatedSourceParentChildren = sourceParentNode.children.filter(
+              (id) => id !== sourceNode.id,
+            );
+
+            if (updatedSourceParentChildren.length === 0) {
+              const removedGroups = new Set<GridRowId>();
+              removedGroups.add(sourceNode.parent!);
+
+              const parentOfSourceParent = (updatedTree[sourceNode.parent!] as GridGroupNode)
+                .parent;
+              if (parentOfSourceParent) {
+                rootLevelRemovals = rowReorderUtils.removeEmptyAncestors(
+                  parentOfSourceParent,
+                  updatedTree,
+                  removedGroups,
+                );
+              }
+
+              removedGroups.forEach((groupId) => {
+                const group = updatedTree[groupId] as GridGroupNode;
+                if (group && group.parent && updatedTree[group.parent]) {
+                  const parent = updatedTree[group.parent] as GridGroupNode;
+                  updatedTree[group.parent] = {
+                    ...parent,
+                    children: parent.children.filter((childId) => childId !== groupId),
+                  };
+                }
+                delete updatedTree[groupId];
+              });
+            } else {
+              updatedTree[sourceNode.parent!] = {
+                ...sourceParentNode,
+                children: updatedSourceParentChildren,
+              };
+            }
+
+            const targetParentNode = updatedTree[targetNode.parent!] as GridGroupNode;
+            const sourceGroupNode = sourceNode as GridGroupNode;
+
+            const existingGroup =
+              sourceGroupNode.groupingKey !== null && sourceGroupNode.groupingField !== null
+                ? rowReorderUtils.findExistingGroupWithSameKey(
+                    targetParentNode,
+                    sourceGroupNode.groupingKey,
+                    sourceGroupNode.groupingField,
+                    updatedTree,
+                  )
+                : null;
+
+            if (existingGroup) {
+              const updatedExistingGroup = {
+                ...existingGroup,
+                children: [...existingGroup.children, ...sourceGroupNode.children],
+              };
+
+              updatedTree[existingGroup.id] = updatedExistingGroup;
+
+              sourceGroupNode.children.forEach((childId) => {
+                const childNode = updatedTree[childId];
+                if (childNode) {
+                  updatedTree[childId] = {
+                    ...childNode,
+                    parent: existingGroup.id,
+                  };
+                }
+              });
+
+              delete updatedTree[sourceNode.id];
+            } else {
               const targetIndex = targetParentNode.children.indexOf(targetNode.id);
               const newTargetChildren = [...targetParentNode.children];
 
@@ -455,114 +512,23 @@ export class CrossParentGroupOperation extends BaseReorderOperation {
                 ...sourceNode,
                 parent: targetNode.parent,
               };
-            } else {
-              const updatedSourceParentChildren = sourceParentNode.children.filter(
-                (id) => id !== sourceNode.id,
-              );
-
-              if (updatedSourceParentChildren.length === 0) {
-                const removedGroups = new Set<GridRowId>();
-                removedGroups.add(sourceNode.parent!);
-
-                const parentOfSourceParent = (updatedTree[sourceNode.parent!] as GridGroupNode)
-                  .parent;
-                if (parentOfSourceParent) {
-                  rootLevelRemovals = rowReorderUtils.removeEmptyAncestors(
-                    parentOfSourceParent,
-                    updatedTree,
-                    removedGroups,
-                  );
-                }
-
-                removedGroups.forEach((groupId) => {
-                  const group = updatedTree[groupId] as GridGroupNode;
-                  if (group && group.parent && updatedTree[group.parent]) {
-                    const parent = updatedTree[group.parent] as GridGroupNode;
-                    updatedTree[group.parent] = {
-                      ...parent,
-                      children: parent.children.filter((childId) => childId !== groupId),
-                    };
-                  }
-                  delete updatedTree[groupId];
-                });
-              } else {
-                updatedTree[sourceNode.parent!] = {
-                  ...sourceParentNode,
-                  children: updatedSourceParentChildren,
-                };
-              }
-
-              const targetParentNode = updatedTree[targetNode.parent!] as GridGroupNode;
-              const sourceGroupNode = sourceNode as GridGroupNode;
-
-              const existingGroup =
-                sourceGroupNode.groupingKey !== null && sourceGroupNode.groupingField !== null
-                  ? rowReorderUtils.findExistingGroupWithSameKey(
-                      targetParentNode,
-                      sourceGroupNode.groupingKey,
-                      sourceGroupNode.groupingField,
-                      updatedTree,
-                    )
-                  : null;
-
-              if (existingGroup) {
-                const updatedExistingGroup = {
-                  ...existingGroup,
-                  children: [...existingGroup.children, ...sourceGroupNode.children],
-                };
-
-                updatedTree[existingGroup.id] = updatedExistingGroup;
-
-                sourceGroupNode.children.forEach((childId) => {
-                  const childNode = updatedTree[childId];
-                  if (childNode) {
-                    updatedTree[childId] = {
-                      ...childNode,
-                      parent: existingGroup.id,
-                    };
-                  }
-                });
-
-                delete updatedTree[sourceNode.id];
-              } else {
-                const targetIndex = targetParentNode.children.indexOf(targetNode.id);
-                const newTargetChildren = [...targetParentNode.children];
-
-                if (isLastChild) {
-                  newTargetChildren.push(sourceNode.id);
-                } else {
-                  newTargetChildren.splice(targetIndex, 0, sourceNode.id);
-                }
-
-                updatedTree[targetNode.parent!] = {
-                  ...targetParentNode,
-                  children: newTargetChildren,
-                };
-
-                updatedTree[sourceNode.id] = {
-                  ...sourceNode,
-                  parent: targetNode.parent,
-                };
-              }
             }
           }
+        }
 
-          return {
-            ...state,
-            rows: {
-              ...state.rows,
-              totalTopLevelRowCount: state.rows.totalTopLevelRowCount - rootLevelRemovals,
-              tree: updatedTree,
-              treeDepths,
-            },
-          };
-        });
+        return {
+          ...state,
+          rows: {
+            ...state.rows,
+            totalTopLevelRowCount: state.rows.totalTopLevelRowCount - rootLevelRemovals,
+            tree: updatedTree,
+            treeDepths,
+          },
+        };
+      });
 
-        apiRef.current.updateRows(updates);
-        apiRef.current.publishEvent('rowsSet');
-      }
-    } finally {
-      apiRef.current.setLoading(false);
+      apiRef.current.updateRows(updates);
+      apiRef.current.publishEvent('rowsSet');
     }
   }
 }
