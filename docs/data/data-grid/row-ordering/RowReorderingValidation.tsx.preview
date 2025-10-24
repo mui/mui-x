@@ -1,0 +1,8 @@
+<DataGridPro
+  {...data}
+  setTreeDataPath={setTreeDataPath}
+  getTreeDataPath={getTreeDataPath}
+  loading={loading}
+  rowReordering
+  isValidRowReorder={isValidRowReorder}
+/>

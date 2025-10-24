@@ -5,24 +5,29 @@ import {
   gridExpandedSortedRowIdsSelector,
   gridRowNodeSelector,
   gridRowMaximumTreeDepthSelector,
+  gridExpandedSortedRowIndexLookupSelector,
 } from '@mui/x-data-grid-pro';
 import {
-  gridExpandedSortedRowIndexLookupSelector,
-  useGridRowsOverridableMethods as useGridRowsOverridableMethodsCommunity,
+  useGridRowsOverridableMethodsCommunity,
+  useGridRowsOverridableMethodsPro,
   useGridSelector,
+  type ReorderExecutionContext,
 } from '@mui/x-data-grid-pro/internals';
 import type { RefObject } from '@mui/x-internals/types';
-import { rowGroupingReorderExecutor } from '../rowReorder/reorderExecutor';
+import { rowGroupingReorderExecutor } from '../rowReorder/rowGroupingReorderExecutor';
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
-import type { ReorderExecutionContext } from '../rowReorder/types';
 
 export const useGridRowsOverridableMethods = (
   apiRef: RefObject<GridPrivateApiPremium>,
-  props: Pick<DataGridPremiumProcessedProps, 'processRowUpdate' | 'onProcessRowUpdateError'>,
+  props: Pick<
+    DataGridPremiumProcessedProps,
+    'processRowUpdate' | 'onProcessRowUpdateError' | 'treeData'
+  >,
 ) => {
   const { processRowUpdate, onProcessRowUpdateError } = props;
   const { setRowIndex: setRowIndexPlain } = useGridRowsOverridableMethodsCommunity(apiRef);
+  const { setRowIndex: setRowIndexTreeData } = useGridRowsOverridableMethodsPro(apiRef, props);
 
   const flatTree = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector) === 1;
 
@@ -59,6 +64,8 @@ export const useGridRowsOverridableMethods = (
 
       const executionContext: ReorderExecutionContext = {
         sourceRowId,
+        // TODO: Use the correct drop position here
+        dropPosition: 'below',
         placeholderIndex: targetOriginalIndex,
         sortedFilteredRowIds,
         sortedFilteredRowIndexLookup,
@@ -68,12 +75,24 @@ export const useGridRowsOverridableMethods = (
         onProcessRowUpdateError,
       };
 
-      await rowGroupingReorderExecutor.execute(executionContext);
+      return rowGroupingReorderExecutor.execute(executionContext);
     },
     [apiRef, processRowUpdate, onProcessRowUpdateError],
   );
 
+  if (flatTree) {
+    return {
+      setRowIndex: setRowIndexPlain,
+    };
+  }
+
+  if (props.treeData) {
+    return {
+      setRowIndex: setRowIndexTreeData,
+    };
+  }
+
   return {
-    setRowIndex: flatTree ? setRowIndexPlain : setRowIndex,
+    setRowIndex,
   };
 };

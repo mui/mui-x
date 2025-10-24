@@ -165,6 +165,53 @@ const invalidRows = [{ path: ['X'] }, { path: ['Y'] }, { path: ['X', 'X'] }];
 
 :::
 
+## Drag-and-drop tree data reordering
+
+With row reordering, users can reorder tree data or move rows from one group to another.
+
+To enable this feature with tree data, pass the `rowReordering` prop to the Data Grid component.
+You also need to pass the `setTreeDataPath()` prop to revert the operation done by [`getTreeDataPath()`](/x/api/data-grid/data-grid-pro/#data-grid-pro-prop-getTreeDataPath) while building the tree as row reordering can change the path of the row.
+
+```tsx
+<DataGridPro
+  columns={columns}
+  rows={rows}
+  treeData
+  getTreeDataPath={getTreeDataPath}
+  setTreeDataPath={setTreeDataPath}
+  rowReordering
+/>
+```
+
+{{"demo": "TreeDataReordering.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Reordering persistance
+
+To sync the updated row order with an external store, use `processRowUpdate()` and `onRowOrderChange()` callbacks.
+
+The `processRowUpdate()` callback is triggered whenever a row is updated, so when doing a cross-parent reorder operation, some values like `path` need to be updated based on data which is a row update. In that case one or multiple (in case of moving a group node) `processRowUpdate()` callbacks are triggered.
+
+And when the reorder operation is successfully completed, the `onRowOrderChange()` callback is triggered, which contains information about the new row re-ordering of the format [`GridRowOrderChangeParams`](/x/api/data-grid/grid-row-order-change-params/).
+
+```tsx
+<DataGridPro
+  // Capture row updates (can be multiple in one reorder operation)
+  processRowUpdate={processRowUpdate}
+  // Capture row re-ordering operations
+  onRowOrderChange={handleRowOrderChange}
+/>
+```
+
+The demo below uses a custom data store to persist the row data in the local storage and sync the updated row order with the external store. Try refreshing the page to see the persisted row order.
+
+{{"demo": "TreeDataSyncRowData.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::success
+The demo above uses the `isValidRowReorder()` prop to disable moving nodes "over" files (or leaf nodes) as it would convert them into parent groups.
+
+Check the [Row ordering—Disable specific reorder operations](/x/react-data-grid/row-ordering/#disable-specific-reorder-operations) documentation section for more details.
+:::
+
 ## Lazy-loading tree data children
 
 See [Server-side data—Tree data](/x/react-data-grid/server-side-data/tree-data/) for details on lazy-loading tree data children.
@@ -174,3 +221,4 @@ See [Server-side data—Tree data](/x/react-data-grid/server-side-data/tree-data
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
 - [DataGridPremium](/x/api/data-grid/data-grid-premium/)
+- [GridRowOrderChangeParams](/x/api/data-grid/grid-row-order-change-params/)
