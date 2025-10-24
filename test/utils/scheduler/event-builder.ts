@@ -24,7 +24,7 @@ export const DEFAULT_TESTING_VISIBLE_DATE = '2025-07-03T00:00:00Z';
  */
 export class EventBuilder {
   /** Internal draft; only partial until `build()` time. */
-  protected event: Partial<CalendarEvent> = { id: crypto.randomUUID(), allDay: false };
+  protected event: Partial<CalendarEvent> = { id: crypto.randomUUID() };
 
   protected constructor(protected adapter: Adapter) {}
 
