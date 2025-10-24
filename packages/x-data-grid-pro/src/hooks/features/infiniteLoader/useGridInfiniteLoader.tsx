@@ -1,12 +1,11 @@
 import { RefObject } from '@mui/x-internals/types';
 import {
-  useGridSelector,
   useGridEventPriority,
   gridVisibleColumnDefinitionsSelector,
   useGridEvent,
   GridEventListener,
 } from '@mui/x-data-grid';
-import { useGridVisibleRows, runIf } from '@mui/x-data-grid/internals';
+import { runIf, getVisibleRows } from '@mui/x-data-grid/internals';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { GridRowScrollEndParams } from '../../../models';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
@@ -24,13 +23,12 @@ export const useGridInfiniteLoader = (
     'onRowsScrollEnd' | 'pagination' | 'paginationMode' | 'rowsLoadingMode'
   >,
 ): void => {
-  const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
-  const currentPage = useGridVisibleRows(apiRef, props);
-
   const isEnabled = props.rowsLoadingMode === 'client' && !!props.onRowsScrollEnd;
 
   const handleLoadMoreRows: GridEventListener<'rowsScrollEndIntersection'> = useEventCallback(
     () => {
+      const visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef);
+      const currentPage = getVisibleRows(apiRef);
       const viewportPageSize = apiRef.current.getViewportPageSize();
       const rowScrollEndParams: GridRowScrollEndParams = {
         visibleColumns,

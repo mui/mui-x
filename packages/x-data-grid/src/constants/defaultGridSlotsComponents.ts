@@ -24,6 +24,7 @@ import { GridNoResultsOverlay } from '../components/GridNoResultsOverlay';
 import materialSlots from '../material';
 import { GridBottomContainer } from '../components/virtualization/GridBottomContainer';
 import { GridToolbar } from '../components/toolbarV8/GridToolbar';
+import { GridVirtualScrollbar } from '../components/virtualization/GridVirtualScrollbar';
 
 // TODO: camelCase these key. It's a private helper now.
 // Remove then need to call `uncapitalizeObjectKeys`.
@@ -51,4 +52,5 @@ export const DATA_GRID_DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
   columnsManagement: GridColumnsManagement,
   panel: GridPanel,
   row: GridRow,
+  scrollbar: GridVirtualScrollbar,
 };

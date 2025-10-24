@@ -1,38 +1,42 @@
+'use client';
 import * as React from 'react';
 
-export function useRunOncePerLoop<T extends (...args: any[]) => void>(
-  callback: T,
-  nextFrame: boolean = false,
-) {
-  const scheduledRef = React.useRef(false);
+export function useRunOncePerLoop<T extends (...args: any[]) => void>(callback: T) {
+  const scheduledCallbackRef = React.useRef<(...args: any) => void>(null);
 
   const schedule = React.useCallback(
     (...args: Parameters<T>) => {
-      if (scheduledRef.current) {
-        return;
+      // for robustness, a fallback in case we don't react to state updates and layoutEffect is not run
+      // if we react to state updates, layoutEffect will run before microtasks
+      if (!scheduledCallbackRef.current) {
+        queueMicrotask(() => {
+          if (scheduledCallbackRef.current) {
+            scheduledCallbackRef.current();
+          }
+        });
       }
-      scheduledRef.current = true;
-
-      const runner = () => {
-        scheduledRef.current = false;
+      scheduledCallbackRef.current = () => {
+        scheduledCallbackRef.current = null;
         callback(...args);
       };
-
-      if (nextFrame) {
-        if (typeof requestAnimationFrame === 'function') {
-          requestAnimationFrame(runner);
-        }
-        return;
-      }
-
-      if (typeof queueMicrotask === 'function') {
-        queueMicrotask(runner);
-      } else {
-        Promise.resolve().then(runner);
-      }
     },
-    [callback, nextFrame],
+    [callback],
   );
 
-  return schedule;
+  React.useLayoutEffect(() => {
+    if (scheduledCallbackRef.current) {
+      scheduledCallbackRef.current();
+    }
+  });
+
+  return {
+    schedule,
+    cancel: () => {
+      if (scheduledCallbackRef.current) {
+        scheduledCallbackRef.current = null;
+        return true;
+      }
+      return false;
+    },
+  };
 }
