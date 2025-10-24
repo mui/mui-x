@@ -1,9 +1,5 @@
-import { RowReorderExecutor } from '@mui/x-data-grid-pro/internals';
-import {
-  SameParentSwapOperation,
-  CrossParentLeafOperation,
-  CrossParentGroupOperation,
-} from './operations';
+import { RowReorderExecutor, SameParentSwapOperation } from '@mui/x-data-grid-pro/internals';
+import { CrossParentLeafOperation, CrossParentGroupOperation } from './operations';
 
 export const rowGroupingReorderExecutor = new RowReorderExecutor([
   new SameParentSwapOperation(),

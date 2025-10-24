@@ -1,7 +1,6 @@
 import type { RefObject } from '@mui/x-internals/types';
 import {
   GRID_ROOT_GROUP_ID,
-  gridRowNodeSelector,
   type GridRowId,
   type GridTreeNode,
   type GridGroupNode,
@@ -203,81 +202,6 @@ export const updateDescendantDepths = (
 
   group.children.forEach(updateNodeDepth);
 };
-
-/**
- * Adjusts the target node based on specific reorder scenarios and constraints.
- *
- * This function applies scenario-specific logic to find the actual target node
- * for operations, handling cases like:
- * - Moving to collapsed groups
- * - Depth-based adjustments
- * - End-of-list positioning
- *
- * @param sourceNode The node being moved
- * @param targetNode The initial target node
- * @param targetIndex The index of the target node in the visible rows
- * @param placeholderIndex The index where the placeholder appears
- * @param sortedFilteredRowIds Array of visible row IDs in display order
- * @param apiRef Reference to the grid API
- * @returns Object containing the adjusted target node and last child flag
- */
-export function adjustTargetNode(
-  sourceNode: GridTreeNode,
-  targetNode: GridTreeNode,
-  targetIndex: number,
-  placeholderIndex: number,
-  sortedFilteredRowIds: GridRowId[],
-  apiRef: RefObject<GridPrivateApiPro>,
-): { adjustedTargetNode: GridTreeNode; isLastChild: boolean } {
-  let adjustedTargetNode: GridTreeNode = targetNode;
-  let isLastChild = false;
-
-  // Handle end-of-list case
-  if (placeholderIndex >= sortedFilteredRowIds.length && sortedFilteredRowIds.length > 0) {
-    isLastChild = true;
-  }
-
-  // Case A and B adjustment: Move to last child of parent where target should be the node above
-  if (
-    targetNode.type === 'group' &&
-    sourceNode.parent !== targetNode.parent &&
-    sourceNode.depth > targetNode.depth
-  ) {
-    // Find the first node with the same depth as source before target and quit early if a
-    // node with depth < source.depth is found
-    let i = targetIndex - 1;
-    while (i >= 0) {
-      const node = apiRef.current.getRowNode(sortedFilteredRowIds[i]);
-      if (node && node.depth < sourceNode.depth) {
-        break;
-      }
-      if (node && node.depth === sourceNode.depth) {
-        adjustedTargetNode = node;
-        break;
-      }
-      i -= 1;
-    }
-  }
-
-  // Case D adjustment: Leaf to group where we need previous leaf
-  if (
-    sourceNode.type === 'leaf' &&
-    targetNode.type === 'group' &&
-    targetNode.depth < sourceNode.depth
-  ) {
-    isLastChild = true;
-    const prevIndex = placeholderIndex - 1;
-    if (prevIndex >= 0) {
-      const prevRowId = sortedFilteredRowIds[prevIndex];
-      const leafTargetNode = gridRowNodeSelector(apiRef, prevRowId);
-      if (leafTargetNode && leafTargetNode.type === 'leaf') {
-        adjustedTargetNode = leafTargetNode;
-      }
-    }
-  }
-
-  return { adjustedTargetNode, isLastChild };
-}
 
 /**
  * Finds an existing group node with the same groupingKey and groupingField under a parent.

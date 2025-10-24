@@ -86,6 +86,7 @@ export {
   RowReorderExecutor,
   BaseReorderOperation,
 } from '../hooks/features/rowReorder/reorderExecutor';
+export { SameParentSwapOperation } from '../hooks/features/treeData/treeDataReorderExecutor';
 export type {
   ReorderExecutionContext,
   ReorderOperation,
