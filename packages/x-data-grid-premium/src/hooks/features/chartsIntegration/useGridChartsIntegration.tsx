@@ -956,6 +956,10 @@ export const useGridChartsIntegration = (
         restoreContext as GridRestoreStatePreProcessingContext<GridInitialStatePremium>
       ).stateToRestore.chartsIntegration;
 
+      if (!chartsRestoreState) {
+        return params;
+      }
+
       const {
         activeChartId: activeChartIdToRestore,
         charts: chartsToRestore,
