@@ -221,3 +221,4 @@ See [Server-side data—Tree data](/x/react-data-grid/server-side-data/tree-data
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
 - [DataGridPremium](/x/api/data-grid/data-grid-premium/)
+- [GridRowOrderChangeParams](/x/api/data-grid/grid-row-order-change-params/)

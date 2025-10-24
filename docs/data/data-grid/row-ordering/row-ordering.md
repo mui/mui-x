@@ -141,3 +141,4 @@ For more details, see [Row grouping—Drag-and-drop group reordering](/x/react-d
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
 - [DataGridPremium](/x/api/data-grid/data-grid-premium/)
+- [GridRowOrderChangeParams](/x/api/data-grid/grid-row-order-change-params/)
