@@ -1,5 +1,5 @@
 import { TreeViewValidItem } from '../../models';
-import { TreeViewLabelEditingPlugin } from '../plugins/TreeViewLabelEditingPlugin';
+import { TreeViewLabelEditingPlugin } from '../plugins/labelEditing';
 import { TreeViewParametersToStateMapper, MinimalTreeViewStore } from '../MinimalTreeViewStore';
 import {
   RichTreeViewParameters,

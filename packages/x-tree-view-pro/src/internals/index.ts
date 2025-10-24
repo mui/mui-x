@@ -1,1 +1,1 @@
-export type { UseTreeViewItemsReorderingSignature } from './plugins/useTreeViewItemsReordering';
+export type { UseTreeViewItemsReorderingSignature } from './plugins/itemsReordering';

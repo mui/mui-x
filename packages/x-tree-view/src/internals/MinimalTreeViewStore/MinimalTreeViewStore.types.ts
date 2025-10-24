@@ -1,6 +1,9 @@
 import { TreeViewItemId, TreeViewSelectionPropagation, TreeViewValidItem } from '../../models';
 import { TreeViewItemMeta } from '../models';
-import type { MinimalTreeViewStore } from './MinimalTreeViewStore';
+import type { TreeViewExpansionPlugin } from '../plugins/expansion';
+import type { TreeViewFocusPlugin } from '../plugins/focus';
+import type { TreeViewItemsPlugin } from '../plugins/items';
+import type { TreeViewSelectionPlugin } from '../plugins/selection';
 
 export interface MinimalTreeViewState<
   R extends TreeViewValidItem<R>,
@@ -251,19 +254,18 @@ export interface MinimalTreeViewParameters<
 export interface MinimalTreeViewPublicAPI<
   R extends TreeViewValidItem<R>,
   Multiple extends boolean | undefined,
-> extends Pick<
-    MinimalTreeViewStore<R, Multiple, any, any>,
-    | 'focusItem'
-    | 'getItem'
-    | 'getItemDOMElement'
-    | 'getItemOrderedChildrenIds'
-    | 'getItemTree'
-    | 'getParentId'
-    | 'isItemExpanded'
-    | 'setIsItemDisabled'
-    | 'setItemExpansion'
-    | 'setItemSelection'
-  > {}
+> extends Pick<TreeViewFocusPlugin, 'focusItem'>,
+    Pick<TreeViewExpansionPlugin, 'isItemExpanded' | 'setItemExpansion'>,
+    Pick<TreeViewSelectionPlugin<Multiple>, 'setItemSelection'>,
+    Pick<
+      TreeViewItemsPlugin<R>,
+      | 'getItem'
+      | 'getItemDOMElement'
+      | 'getItemOrderedChildrenIds'
+      | 'getItemTree'
+      | 'getParentId'
+      | 'setIsItemDisabled'
+    > {}
 
 /**
  * Mapper between a Tree View instance's state and parameters.

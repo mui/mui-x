@@ -13,13 +13,13 @@ import { RichTreeViewProps } from './RichTreeView.types';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { RichTreeViewItems } from '../internals/components/RichTreeViewItems';
-import { lazyLoadingSelectors } from '../internals/plugins/useTreeViewLazyLoading';
+import { lazyLoadingSelectors } from '../internals/plugins/lazyLoading';
 import { TreeViewValidItem } from '../models';
 import { useTreeViewRootProps } from '../internals/hooks/useTreeViewRootProps';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
 import { useExtractRichTreeViewParameters } from './useExtractRichTreeViewParameters';
 import { useRichTreeViewStore } from './useRichTreeViewStore';
-import { itemsSelectors } from '../internals/plugins/useTreeViewItems';
+import { itemsSelectors } from '../internals/plugins/items';
 
 const useThemeProps = createUseThemeProps('MuiRichTreeView');
 

@@ -27,11 +27,11 @@ import { useTreeItemUtils } from '../hooks/useTreeItemUtils';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
 import { isTargetInDescendants } from '../internals/utils/tree';
 import { generateTreeItemIdAttribute } from '../internals/corePlugins/useTreeViewId/useTreeViewId.utils';
-import { focusSelectors } from '../internals/plugins/useTreeViewFocus';
-import { itemsSelectors } from '../internals/plugins/useTreeViewItems';
+import { focusSelectors } from '../internals/plugins/focus';
+import { itemsSelectors } from '../internals/plugins/items';
 import { idSelectors } from '../internals/corePlugins/useTreeViewId';
-import { expansionSelectors } from '../internals/plugins/TreeViewExpansionPlugin';
-import { selectionSelectors } from '../internals/plugins/useTreeViewSelection';
+import { expansionSelectors } from '../internals/plugins/expansion';
+import { selectionSelectors } from '../internals/plugins/selection';
 
 export const useTreeItem = <TStore extends TreeViewAnyStore>(
   parameters: UseTreeItemParameters,
@@ -89,7 +89,7 @@ export const useTreeItem = <TStore extends TreeViewAnyStore>(
         itemsSelectors.canItemBeFocused(store.state, itemId) &&
         event.currentTarget === event.target
       ) {
-        store.focusItem(event, itemId);
+        store.focus.focusItem(event, itemId);
       }
     };
 
@@ -101,7 +101,7 @@ export const useTreeItem = <TStore extends TreeViewAnyStore>(
         return;
       }
 
-      const rootElement = store.getItemDOMElement(itemId);
+      const rootElement = store.items.getItemDOMElement(itemId);
 
       // Don't blur the root when switching to editing mode
       // the input that triggers the root blur can be either the relatedTarget (when entering editing state) or the target (when exiting editing state)
@@ -120,7 +120,7 @@ export const useTreeItem = <TStore extends TreeViewAnyStore>(
         return;
       }
 
-      store.removeFocusedItem();
+      store.focus.removeFocusedItem();
     };
 
   const createRootHandleKeyDown =
@@ -134,7 +134,7 @@ export const useTreeItem = <TStore extends TreeViewAnyStore>(
         return;
       }
 
-      store.handleItemKeyDown(event, itemId);
+      store.keyboardNavigation.handleItemKeyDown(event, itemId);
     };
 
   const createLabelHandleDoubleClick =
@@ -149,7 +149,7 @@ export const useTreeItem = <TStore extends TreeViewAnyStore>(
   const createContentHandleClick =
     (otherHandlers: EventHandlers) => (event: React.MouseEvent & TreeViewCancellableEvent) => {
       otherHandlers.onClick?.(event);
-      store.handleItemClick(event, itemId);
+      store.items.handleItemClick(event, itemId);
 
       if (event.defaultMuiPrevented || checkboxRef.current?.contains(event.target as HTMLElement)) {
         return;

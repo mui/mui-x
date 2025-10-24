@@ -6,8 +6,8 @@ import {
 } from '@mui/x-tree-view/internals';
 import { TreeViewItemsReorderingAction, TreeViewValidItem } from '@mui/x-tree-view/models';
 import { DataSourceCache } from '@mui/x-tree-view/utils';
-import { TreeViewItemReorderPosition } from '../plugins/useTreeViewItemsReordering';
-import { RichTreeViewProStore } from './RichTreeViewProStore';
+import { TreeViewItemReorderPosition } from '../plugins/itemsReordering';
+import { TreeViewLazyLoadingPlugin } from '../plugins/lazyLoading/TreeViewLazyLoadingPlugin';
 
 export interface RichTreeViewProState<
   R extends TreeViewValidItem<R>,
@@ -85,4 +85,4 @@ export interface RichTreeViewProPublicAPI<
   R extends TreeViewValidItem<R>,
   Multiple extends boolean | undefined,
 > extends RichTreeViewPublicAPI<R, Multiple>,
-    Pick<RichTreeViewProStore<R, Multiple>, 'updateItemChildren'> {}
+    Pick<TreeViewLazyLoadingPlugin, 'updateItemChildren'> {}

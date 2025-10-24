@@ -2,7 +2,7 @@
 import { useStore } from '@mui/x-internals/store';
 import { useTreeViewContext } from '../internals/TreeViewProvider';
 import { TreeViewBaseItem, TreeViewDefaultItemModelProperties, TreeViewItemId } from '../models';
-import { itemsSelectors } from '../internals/plugins/useTreeViewItems';
+import { itemsSelectors } from '../internals/plugins/items';
 import { TreeViewAnyStore } from '../internals/models';
 
 export const useTreeItemModel = <R extends {} = TreeViewDefaultItemModelProperties>(

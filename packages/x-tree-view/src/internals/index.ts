@@ -12,16 +12,12 @@ export { unstable_resetCleanupTracking } from './hooks/useInstanceEventHandler';
 export type { TreeViewItemMeta, TreeViewItemPlugin } from './models';
 
 // Plugins
-export { expansionSelectors } from './plugins/TreeViewExpansionPlugin';
-export { selectionSelectors } from './plugins/useTreeViewSelection';
-export {
-  buildSiblingIndexes,
-  itemsSelectors,
-  TREE_VIEW_ROOT_PARENT_ID,
-} from './plugins/useTreeViewItems';
-export { labelSelectors } from './plugins/TreeViewLabelEditingPlugin';
-export type { DataSource } from './plugins/useTreeViewLazyLoading';
-export { lazyLoadingSelectors } from './plugins/useTreeViewLazyLoading';
+export { expansionSelectors } from './plugins/expansion';
+export { selectionSelectors } from './plugins/selection';
+export { buildSiblingIndexes, itemsSelectors, TREE_VIEW_ROOT_PARENT_ID } from './plugins/items';
+export { labelSelectors } from './plugins/labelEditing';
+export type { DataSource } from './plugins/lazyLoading';
+export { lazyLoadingSelectors } from './plugins/lazyLoading';
 
 export { isTargetInDescendants } from './utils/tree';
 

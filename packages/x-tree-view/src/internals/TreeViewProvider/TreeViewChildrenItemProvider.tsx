@@ -3,9 +3,9 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useTreeViewContext } from './TreeViewContext';
 import { escapeOperandAttributeSelector } from '../utils/utils';
-import type { UseTreeViewJSXItemsSignature } from '../plugins/useTreeViewJSXItems';
-import type { UseTreeViewItemsSignature } from '../plugins/useTreeViewItems';
-import { itemsSelectors } from '../plugins/useTreeViewItems/useTreeViewItems.selectors';
+import type { UseTreeViewJSXItemsSignature } from '../plugins/jsxItems';
+import type { UseTreeViewItemsSignature } from '../plugins/items';
+import { itemsSelectors } from '../plugins/items/selectors';
 
 export const TreeViewChildrenItemContext =
   React.createContext<TreeViewChildrenItemContextValue | null>(null);

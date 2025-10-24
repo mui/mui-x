@@ -5,12 +5,12 @@ import { TreeViewCancellableEvent } from '../../models';
 import { useTreeViewContext } from '../../internals/TreeViewProvider';
 import type { UseTreeItemStatus } from '../../useTreeItem';
 import { TreeViewPublicAPI, TreeViewAnyStore } from '../../internals/models';
-import { expansionSelectors } from '../../internals/plugins/TreeViewExpansionPlugin/selectors';
-import { focusSelectors } from '../../internals/plugins/useTreeViewFocus/useTreeViewFocus.selectors';
-import { itemsSelectors } from '../../internals/plugins/useTreeViewItems/useTreeViewItems.selectors';
-import { selectionSelectors } from '../../internals/plugins/useTreeViewSelection/useTreeViewSelection.selectors';
-import { lazyLoadingSelectors } from '../../internals/plugins/useTreeViewLazyLoading/useTreeViewLazyLoading.selectors';
-import { labelSelectors } from '../../internals/plugins/TreeViewLabelEditingPlugin/selectors';
+import { expansionSelectors } from '../../internals/plugins/expansion/selectors';
+import { focusSelectors } from '../../internals/plugins/focus/selectors';
+import { itemsSelectors } from '../../internals/plugins/items/selectors';
+import { selectionSelectors } from '../../internals/plugins/selection/selectors';
+import { lazyLoadingSelectors } from '../../internals/plugins/lazyLoading/selectors';
+import { labelSelectors } from '../../internals/plugins/labelEditing/selectors';
 import { RichTreeViewStore } from '../../internals/RichTreeViewStore';
 
 export interface UseTreeItemInteractions {
@@ -81,7 +81,7 @@ export const useTreeItemUtils = <
     }
 
     if (!status.focused) {
-      store.focusItem(event, itemId);
+      store.focus.focusItem(event, itemId);
     }
 
     const multiple =
@@ -94,7 +94,7 @@ export const useTreeItemUtils = <
       !(multiple && expansionSelectors.isItemExpanded(store.state, itemId))
     ) {
       // make sure the children selection is propagated again
-      store.setItemExpansion({ event, itemId });
+      store.expansion.setItemExpansion({ event, itemId });
     }
   };
 
@@ -104,7 +104,7 @@ export const useTreeItemUtils = <
     }
 
     if (!status.focused && !status.editing) {
-      store.focusItem(event, itemId);
+      store.focus.focusItem(event, itemId);
     }
 
     const multiple =
@@ -113,12 +113,12 @@ export const useTreeItemUtils = <
 
     if (multiple) {
       if (event.shiftKey) {
-        store.expandSelectionRange(event, itemId);
+        store.selection.expandSelectionRange(event, itemId);
       } else {
-        store.setItemSelection({ event, itemId, keepExistingSelection: true });
+        store.selection.setItemSelection({ event, itemId, keepExistingSelection: true });
       }
     } else {
-      store.setItemSelection({ event, itemId, shouldBeSelected: true });
+      store.selection.setItemSelection({ event, itemId, shouldBeSelected: true });
     }
   };
 
@@ -126,9 +126,9 @@ export const useTreeItemUtils = <
     const hasShift = (event.nativeEvent as PointerEvent).shiftKey;
     const isMultiSelectEnabled = selectionSelectors.isMultiSelectEnabled(store.state);
     if (isMultiSelectEnabled && hasShift) {
-      store.expandSelectionRange(event, itemId);
+      store.selection.expandSelectionRange(event, itemId);
     } else {
-      store.setItemSelection({
+      store.selection.setItemSelection({
         event,
         itemId,
         keepExistingSelection: isMultiSelectEnabled,
@@ -165,7 +165,7 @@ export const useTreeItemUtils = <
     if (labelSelectors.isItemBeingEdited(store.state, itemId)) {
       store.updateItemLabel(itemId, newLabel);
       toggleItemEditing();
-      store.focusItem(event, itemId);
+      store.focus.focusItem(event, itemId);
     }
   };
 
@@ -177,7 +177,7 @@ export const useTreeItemUtils = <
 
     if (labelSelectors.isItemBeingEdited(store.state, itemId)) {
       toggleItemEditing();
-      store.focusItem(event, itemId);
+      store.focus.focusItem(event, itemId);
     }
   };
 

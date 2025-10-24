@@ -9,8 +9,8 @@ import {
   RichTreeViewProPublicAPI,
   RichTreeViewProState,
 } from './RichTreeViewProStore.types';
-import { TreeViewLazyLoadingManager } from './TreeViewLazyLoadingManager';
-import { TreeViewItemsReorderingManager } from './TreeViewItemsReorderingManager';
+import { TreeViewLazyLoadingPlugin } from '../plugins/lazyLoading';
+import { TreeViewItemsReorderingPlugin } from '../plugins/itemsReordering';
 
 const DEFAULT_IS_ITEM_REORDERABLE_WHEN_ENABLED = () => true;
 const DEFAULT_IS_ITEM_REORDERABLE_WHEN_DISABLED = () => false;
@@ -57,9 +57,9 @@ export class RichTreeViewProStore<
   RichTreeViewProState<R, Multiple>,
   RichTreeViewProParameters<R, Multiple>
 > {
-  private lazyLoadingManager = new TreeViewLazyLoadingManager(this);
+  public lazyLoading = new TreeViewLazyLoadingPlugin(this);
 
-  private itemsReorderingManager = new TreeViewItemsReorderingManager(this);
+  public itemsReordering = new TreeViewItemsReorderingPlugin(this);
 
   public constructor(parameters: RichTreeViewProParameters<R, Multiple>, isRtl: boolean) {
     super(parameters, 'RichTreeViewPro', isRtl, mapper);
@@ -68,80 +68,7 @@ export class RichTreeViewProStore<
   public buildPublicAPI(): RichTreeViewProPublicAPI<R, Multiple> {
     return {
       ...super.buildPublicAPI(),
-      updateItemChildren: this.updateItemChildren,
+      updateItemChildren: this.lazyLoading.updateItemChildren,
     };
   }
-
-  /**
-   * Method used for fetching multiple items concurrently.
-   * Only relevant for lazy-loaded tree views.
-   *
-   * @param {TreeViewItemId[]} parentIds The ids of the items to fetch the children of.
-   * @returns {Promise<void>} The promise resolved when the items are fetched.
-   */
-  public fetchItems = this.lazyLoadingManager.fetchItems;
-
-  /**
-   * Method used for fetching an item's children.
-   * Only relevant for lazy-loaded tree views.
-   *
-   * @param {object} parameters The parameters of the method.
-   * @param {TreeViewItemId} parameters.itemId The The id of the item to fetch the children of.
-   * @param {boolean} [parameters.forceRefresh] Whether to force a refresh of the children when the cache already contains some data.
-   * @returns {Promise<void>} The promise resolved when the items are fetched.
-   */
-  public fetchItemChildren = this.lazyLoadingManager.fetchItemChildren;
-
-  /**
-   * Method used for updating an item's children.
-   * Only relevant for lazy-loaded tree views.
-   *
-   * @param {TreeViewItemId} itemId The The id of the item to update the children of.
-   * @returns {Promise<void>} The promise resolved when the items are fetched.
-   */
-  public updateItemChildren = this.lazyLoadingManager.updateItemChildren;
-
-  /**
-   * Check if a given item can be dragged.
-   * @param {TreeViewItemId} itemId The id of the item to check.
-   * @returns {boolean} `true` if the item can be dragged, `false` otherwise.
-   */
-  protected canItemBeDragged = this.itemsReorderingManager.canItemBeDragged;
-
-  /**
-   * Get the valid reordering action if a given item is the target of the ongoing reordering.
-   * @param {TreeViewItemId} itemId The id of the item to get the action of.
-   * @returns {TreeViewItemItemReorderingValidActions} The valid actions for the item.
-   */
-  public getDroppingTargetValidActions = this.itemsReorderingManager.getDroppingTargetValidActions;
-
-  /**
-   * Start a reordering for the given item.
-   * @param {TreeViewItemId} itemId The id of the item to start the reordering for.
-   */
-  public startDraggingItem = this.itemsReorderingManager.startDraggingItem;
-
-  /**
-   * Complete the reordering of a given item.
-   * @param {TreeViewItemId} itemId The id of the item to complete the reordering for.
-   */
-  public completeDraggingItem = this.itemsReorderingManager.completeDraggingItem;
-
-  /**
-   * Cancel the current reordering operation and reset the state.
-   */
-  public cancelDraggingItem = this.itemsReorderingManager.cancelDraggingItem;
-
-  /**
-   * Set the new target item for the ongoing reordering.
-   * The action will be determined based on the position of the cursor inside the target and the valid actions for this target.
-   * @param {object} params The params describing the new target item.
-   * @param {TreeViewItemId} params.itemId The id of the new target item.
-   * @param {TreeViewItemItemReorderingValidActions} params.validActions The valid actions for the new target item.
-   * @param {number} params.targetHeight The height of the target item.
-   * @param {number} params.cursorY The Y coordinate of the mouse cursor.
-   * @param {number} params.cursorX The X coordinate of the mouse cursor.
-   * @param {HTMLDivElement} params.contentElement The DOM element rendered for the content slot.
-   */
-  public setDragTargetItem = this.itemsReorderingManager.setDragTargetItem;
 }

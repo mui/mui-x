@@ -1,7 +1,7 @@
 import { MinimalTreeViewState } from '../MinimalTreeViewStore';
 import { TreeViewItemMeta } from '../models';
-import { expansionSelectors } from '../plugins/TreeViewExpansionPlugin/selectors';
-import { itemsSelectors } from '../plugins/useTreeViewItems/useTreeViewItems.selectors';
+import { expansionSelectors } from '../plugins/expansion/selectors';
+import { itemsSelectors } from '../plugins/items/selectors';
 
 const getLastNavigableItemInArray = (state: MinimalTreeViewState<any, any>, items: string[]) => {
   // Equivalent to Array.prototype.findLastIndex

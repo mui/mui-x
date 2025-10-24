@@ -1,0 +1,127 @@
+import { TreeViewCancellableEvent, TreeViewItemId } from '../../../models';
+import { expansionSelectors } from '../expansion';
+import { focusSelectors } from '.';
+import { itemsSelectors } from '../items';
+import { TreeViewAnyStore } from '../../models';
+
+export class TreeViewFocusPlugin {
+  private store: TreeViewAnyStore;
+
+  constructor(store: TreeViewAnyStore) {
+    this.store = store;
+
+    // Whenever the items change, we need to ensure the focused item is still present.
+    this.store.$.registerStoreEffect(itemsSelectors.itemMetaLookup, () => {
+      const focusedItemId = focusSelectors.focusedItemId(store.state);
+      if (focusedItemId == null) {
+        return;
+      }
+
+      const hasItemBeenRemoved = !itemsSelectors.itemMeta(store.state, focusedItemId);
+      if (!hasItemBeenRemoved) {
+        return;
+      }
+
+      const defaultFocusableItemId = focusSelectors.defaultFocusableItemId(store.state);
+      if (defaultFocusableItemId == null) {
+        this.setFocusedItemId(null);
+        return;
+      }
+
+      this.innerFocusItem(null, defaultFocusableItemId);
+    });
+  }
+
+  private setFocusedItemId = (itemId: TreeViewItemId | null) => {
+    const focusedItemId = focusSelectors.focusedItemId(this.store.state);
+    if (focusedItemId === itemId) {
+      return;
+    }
+
+    this.store.set('focusedItemId', itemId);
+  };
+
+  // TODO: Rename
+  private innerFocusItem = (event: React.SyntheticEvent | null, itemId: TreeViewItemId) => {
+    const itemElement = this.store.items.getItemDOMElement(itemId);
+    if (itemElement) {
+      itemElement.focus();
+    }
+
+    this.setFocusedItemId(itemId);
+    this.store.parameters.onItemFocus?.(event, itemId);
+  };
+
+  /**
+   * Focus the item with the given id.
+   *
+   * If the item is the child of a collapsed item, then this method will do nothing.
+   * Make sure to expand the ancestors of the item before calling this method if needed.
+   * @param {React.SyntheticEvent | null} event The DOM event that triggered the change.
+   * @param {TreeViewItemId} itemId The id of the item to focus.
+   */
+  public focusItem = (event: React.SyntheticEvent | null, itemId: TreeViewItemId) => {
+    // If we receive an itemId, and it is visible, the focus will be set to it
+    const itemMeta = itemsSelectors.itemMeta(this.store.state, itemId);
+    const isItemVisible =
+      itemMeta &&
+      (itemMeta.parentId == null ||
+        expansionSelectors.isItemExpanded(this.store.state, itemMeta.parentId));
+
+    if (isItemVisible) {
+      this.innerFocusItem(event, itemId);
+    }
+  };
+
+  /**
+   * Remove the focus from the currently focused item (both from the internal state and the DOM).
+   */
+  public removeFocusedItem = () => {
+    const focusedItemId = focusSelectors.focusedItemId(this.store.state);
+    if (focusedItemId == null) {
+      return;
+    }
+
+    const itemMeta = itemsSelectors.itemMeta(this.store.state, focusedItemId);
+    if (itemMeta) {
+      const itemElement = this.store.items.getItemDOMElement(focusedItemId);
+      if (itemElement) {
+        itemElement.blur();
+      }
+    }
+
+    this.setFocusedItemId(null);
+  };
+
+  /**
+   * Event handler to fire when the `root` slot of the Tree View is focused.
+   * @param {React.MouseEvent} event The DOM event that triggered the change.
+   */
+  public handleRootFocus = (
+    event: React.FocusEvent<HTMLUListElement> & TreeViewCancellableEvent,
+  ) => {
+    if (event.defaultMuiPrevented) {
+      return;
+    }
+
+    // if the event bubbled (which is React specific) we don't want to steal focus
+    const defaultFocusableItemId = focusSelectors.defaultFocusableItemId(this.store.state);
+    if (event.target === event.currentTarget && defaultFocusableItemId != null) {
+      this.innerFocusItem(event, defaultFocusableItemId);
+    }
+  };
+
+  /**
+   * Event handler to fire when the `root` slot of the Tree View is blurred.
+   * @param {React.MouseEvent} event The DOM event that triggered the change.
+   */
+  public handleRootBlur = (
+    event: React.FocusEvent<HTMLUListElement> & TreeViewCancellableEvent,
+  ) => {
+    if (event.defaultMuiPrevented) {
+      return;
+    }
+
+    this.setFocusedItemId(null);
+  };
+}

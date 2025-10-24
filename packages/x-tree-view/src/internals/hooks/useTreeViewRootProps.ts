@@ -4,8 +4,8 @@ import { useStore } from '@mui/x-internals/store';
 import { EventHandlers } from '@mui/utils/types';
 import { TreeViewCancellableEvent } from '../../models';
 import { idSelectors } from '../corePlugins/useTreeViewId';
-import { selectionSelectors } from '../plugins/useTreeViewSelection';
-import { itemsSelectors } from '../plugins/useTreeViewItems';
+import { selectionSelectors } from '../plugins/selection';
+import { itemsSelectors } from '../plugins/items';
 import { TreeViewAnyStore } from '../models';
 
 export function useTreeViewRootProps<TStore extends TreeViewAnyStore>(
@@ -32,11 +32,11 @@ export function useTreeViewRootProps<TStore extends TreeViewAnyStore>(
     } as React.CSSProperties,
     onFocus: (event: React.FocusEvent<HTMLUListElement> & TreeViewCancellableEvent) => {
       otherHandlers.onFocus?.(event);
-      store.handleRootFocus(event);
+      store.focus.handleRootFocus(event);
     },
     onBlur: (event: React.FocusEvent<HTMLUListElement> & TreeViewCancellableEvent) => {
       otherHandlers.onBlur?.(event);
-      store.handleRootBlur(event);
+      store.focus.handleRootBlur(event);
     },
   });
 }
