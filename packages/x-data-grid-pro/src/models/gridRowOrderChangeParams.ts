@@ -2,6 +2,10 @@ import { GridRowModel, GridRowId } from '@mui/x-data-grid';
 
 /**
  * Object passed as parameter of the row order change event.
+ * @demos
+ *   - [Flat row reordering](/x/react-data-grid/row-ordering/#implementing-row-reordering)
+ *   - [Tree data reordering](/x/react-data-grid/tree-data/#drag-and-drop-tree-data-reordering)
+ *   - [Row grouping reordering](/x/react-data-grid/row-grouping/#drag-and-drop-group-reordering)
  */
 export interface GridRowOrderChangeParams {
   /**

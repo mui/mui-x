@@ -697,7 +697,7 @@
       "typeDescriptions": {
         "params": {
           "name": "params",
-          "description": "With all properties from GridRowOrderChangeParams."
+          "description": "With all properties from <a href='/x/api/data-grid/grid-row-order-change-params/'>GridRowOrderChangeParams</a>."
         },
         "event": { "name": "event", "description": "The event object." },
         "details": { "name": "details", "description": "Additional details for this callback." }
