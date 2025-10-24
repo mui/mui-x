@@ -6,8 +6,6 @@ export type {
   RichTreeViewItemsSlotProps,
 } from './components/RichTreeViewItems';
 
-export { unstable_resetCleanupTracking } from './hooks/useInstanceEventHandler';
-
 export type { TreeViewItemMeta, TreeViewItemPlugin } from './models';
 
 // Plugins

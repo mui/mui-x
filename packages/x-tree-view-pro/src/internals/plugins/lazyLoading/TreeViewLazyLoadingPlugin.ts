@@ -226,7 +226,7 @@ function lazyLoadingOnMount(store: RichTreeViewProStore<any, any>) {
 }
 
 function subscribeEvents(store: RichTreeViewProStore<any, any>) {
-  store.$.subscribeEvent('beforeItemToggleExpansion', async (eventParameters, event) => {
+  store.subscribeEvent('beforeItemToggleExpansion', async (eventParameters, event) => {
     if (!store.parameters.dataSource || !eventParameters.shouldBeExpanded) {
       return;
     }

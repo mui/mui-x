@@ -1,6 +1,7 @@
 import { Store } from '@mui/x-internals/store';
 import { warnOnce } from '@mui/x-internals/warning';
 import { EMPTY_OBJECT } from '@base-ui-components/utils/empty';
+import { EventManager } from '@mui/x-internals/EventManager';
 import {
   MinimalTreeViewPublicAPI,
   TreeViewModelUpdater,
@@ -15,12 +16,12 @@ import { applyModelInitialValue, deriveStateFromParameters } from './MinimalTree
 import { createTreeViewDefaultId } from '../corePlugins/useTreeViewId/useTreeViewId.utils';
 import { TimeoutManager } from './TimeoutManager';
 import { TreeViewKeyboardNavigationPlugin } from '../plugins/keyboardNavigation';
-import { TreeViewInternalsManager } from './TreeViewInternalsManager';
 import { TreeViewFocusPlugin } from '../plugins/focus/TreeViewFocusPlugin';
 import { TreeViewItemsPlugin } from '../plugins/items/TreeViewItemsPlugin';
 import { TreeViewSelectionPlugin } from '../plugins/selection/TreeViewSelectionPlugin';
 import { TreeViewExpansionPlugin } from '../plugins/expansion';
 import { TreeViewItemPluginManager } from './TreeViewItemPluginManager';
+import { TreeViewEventListener, TreeViewEventLookup, TreeViewEvents } from '../models/events';
 
 export class MinimalTreeViewStore<
   R extends TreeViewValidItem<R>,
@@ -36,14 +37,14 @@ export class MinimalTreeViewStore<
 
   private mapper: TreeViewParametersToStateMapper<R, Multiple, State, Parameters>;
 
+  private eventManager = new EventManager();
+
   // TODO: Move to state if needed in some selectors.
   public isRtl: boolean;
 
   public timeoutManager = new TimeoutManager();
 
   public itemPluginManager = new TreeViewItemPluginManager<this>();
-
-  public $ = new TreeViewInternalsManager<State>(this);
 
   public items = new TreeViewItemsPlugin<R>(this);
 
@@ -199,7 +200,10 @@ export class MinimalTreeViewStore<
   }
 
   public disposeEffect = () => {
-    return this.timeoutManager.clearAll;
+    return () => {
+      this.timeoutManager.clearAll();
+      this.eventManager.removeAllListeners();
+    };
   };
 
   /**
@@ -208,4 +212,53 @@ export class MinimalTreeViewStore<
   public shouldIgnoreItemsStateUpdate = () => {
     return this.mapper.shouldIgnoreItemsStateUpdate(this.parameters);
   };
+
+  public registerStoreEffect = <Value>(
+    selector: (state: State) => Value,
+    effect: (previous: Value, next: Value) => void,
+  ) => {
+    let previousValue = selector(this.state);
+
+    this.subscribe((state) => {
+      const nextValue = selector(state);
+      effect(previousValue, nextValue);
+      previousValue = nextValue;
+    });
+  };
+
+  public publishEvent = <E extends TreeViewEvents>(
+    name: E,
+    params: TreeViewEventLookup[E] extends { params: any }
+      ? TreeViewEventLookup[E]['params']
+      : undefined,
+    event: TreeViewEventLookup[E] extends { event: any } ? TreeViewEventLookup[E]['event'] : null,
+  ) => {
+    event.defaultMuiPrevented = false;
+
+    if (isSyntheticEvent(event) && event.isPropagationStopped()) {
+      return;
+    }
+
+    this.eventManager.emit(name, params, event);
+  };
+
+  public subscribeEvent = <E extends TreeViewEvents>(
+    eventName: E,
+    handler: TreeViewEventListener<E>,
+  ) => {
+    const enhancedHandler: TreeViewEventListener<E> = (params, event) => {
+      if (!event.defaultMuiPrevented) {
+        handler(params, event);
+      }
+    };
+
+    this.eventManager.on(eventName, enhancedHandler);
+    return () => {
+      this.eventManager.removeListener(eventName, enhancedHandler);
+    };
+  };
+}
+
+function isSyntheticEvent(event: any): event is React.SyntheticEvent {
+  return event.isPropagationStopped !== undefined;
 }

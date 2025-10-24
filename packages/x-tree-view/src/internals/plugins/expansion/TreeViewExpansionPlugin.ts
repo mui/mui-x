@@ -52,7 +52,7 @@ export class TreeViewExpansionPlugin {
       shouldBeExpanded: cleanShouldBeExpanded,
       itemId,
     };
-    this.store.$.publishEvent('beforeItemToggleExpansion', eventParameters, event);
+    this.store.publishEvent('beforeItemToggleExpansion', eventParameters, event);
     if (eventParameters.isExpansionPrevented) {
       return;
     }

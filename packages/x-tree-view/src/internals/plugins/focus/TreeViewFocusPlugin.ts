@@ -11,7 +11,7 @@ export class TreeViewFocusPlugin {
     this.store = store;
 
     // Whenever the items change, we need to ensure the focused item is still present.
-    this.store.$.registerStoreEffect(itemsSelectors.itemMetaLookup, () => {
+    this.store.registerStoreEffect(itemsSelectors.itemMetaLookup, () => {
       const focusedItemId = focusSelectors.focusedItemId(store.state);
       if (focusedItemId == null) {
         return;

@@ -6,14 +6,15 @@ import { TreeItemProviderProps } from './TreeItemProvider.types';
 import { useTreeViewContext } from '../internals/TreeViewProvider';
 import { generateTreeItemIdAttribute } from '../internals/corePlugins/useTreeViewId/useTreeViewId.utils';
 import { idSelectors } from '../internals/corePlugins/useTreeViewId';
+import { TreeViewAnyStore } from '../internals/models';
 
 function TreeItemProvider(props: TreeItemProviderProps) {
   const { children, itemId, id } = props;
-  const { wrapItem, instance, store } = useTreeViewContext<[]>();
+  const { wrapItem, store } = useTreeViewContext<TreeViewAnyStore>();
   const treeId = useStore(store, idSelectors.treeId);
   const idAttribute = generateTreeItemIdAttribute({ itemId, treeId, id });
 
-  return <React.Fragment>{wrapItem({ children, itemId, instance, idAttribute })}</React.Fragment>;
+  return <React.Fragment>{wrapItem({ children, itemId, store, idAttribute })}</React.Fragment>;
 }
 
 TreeItemProvider.propTypes = {

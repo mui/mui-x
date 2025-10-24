@@ -31,7 +31,7 @@ export class TreeViewKeyboardNavigationPlugin {
     this.store = store;
 
     // Whenever the itemMetaLookup changes, we need to regen the label map.
-    this.store.$.registerStoreEffect(itemsSelectors.itemMetaLookup, (_, itemMetaLookup) => {
+    this.store.registerStoreEffect(itemsSelectors.itemMetaLookup, (_, itemMetaLookup) => {
       if (this.store.shouldIgnoreItemsStateUpdate()) {
         return;
       }
