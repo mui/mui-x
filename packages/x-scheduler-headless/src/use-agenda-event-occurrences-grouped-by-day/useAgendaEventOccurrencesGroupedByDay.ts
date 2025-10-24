@@ -54,7 +54,7 @@ export function useAgendaEventOccurrencesGroupedByDay(): useAgendaEventOccurrenc
       visibleResources,
     );
 
-    const hasEvents = (d: CalendarProcessedDate) => (occurrenceMap.get(d.key)?.length ?? 0) > 0;
+    const hasEvents = (day: CalendarProcessedDate) => (occurrenceMap.get(day.key)?.length ?? 0) > 0;
 
     // 2) If we show empty days, just return the amount days
     if (showEmptyDays) {
@@ -65,9 +65,9 @@ export function useAgendaEventOccurrencesGroupedByDay(): useAgendaEventOccurrenc
     }
 
     // 3) If we hide empty days, keep extending forward in blocks until we fill `amount` days with events
-    let filled = accumulatedDays.filter(hasEvents).slice(0, amount);
+    let daysWithEvents = accumulatedDays.filter(hasEvents).slice(0, amount);
 
-    while (filled.length < amount) {
+    while (daysWithEvents.length < amount) {
       // Stop if the calendar span already reaches the horizon
       const first = accumulatedDays[0]?.value;
       const last = accumulatedDays[accumulatedDays.length - 1]?.value;
@@ -103,14 +103,14 @@ export function useAgendaEventOccurrencesGroupedByDay(): useAgendaEventOccurrenc
         visibleResources,
       );
 
-      filled = accumulatedDays.filter(hasEvents).slice(0, amount);
+      daysWithEvents = accumulatedDays.filter(hasEvents).slice(0, amount);
     }
 
     // Keep occurrences only for the final visible days
-    const filledKeys = new Set(filled.map((d) => d.key));
+    const filledKeys = new Set(daysWithEvents.map((d) => d.key));
     const finalOccurrences = new Map([...occurrenceMap].filter(([key]) => filledKeys.has(key)));
 
-    return { days: filled, occurrencesMap: finalOccurrences };
+    return { days: daysWithEvents, occurrencesMap: finalOccurrences };
   }, [
     getDayList,
     visibleDate,
