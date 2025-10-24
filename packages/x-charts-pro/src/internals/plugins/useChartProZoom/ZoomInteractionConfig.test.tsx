@@ -1,10 +1,11 @@
 /* eslint-disable no-promise-executor-return */
-/* eslint-disable no-await-in-loop */
+
 import * as React from 'react';
 import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import * as sinon from 'sinon';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
+import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
 import { CHART_SELECTOR } from '../../../tests/constants';
 
 describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
@@ -75,20 +76,16 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
       ]);
 
       // Wheel without modifier keys - should not zoom
-      for (let i = 0; i < 10; i += 1) {
-        fireEvent.wheel(svg, { deltaY: -1, clientX: 50, clientY: 50 });
-        await act(async () => new Promise((r) => requestAnimationFrame(r)));
-      }
+      fireEvent.wheel(svg, { deltaY: -10, clientX: 50, clientY: 50 });
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
       expect(onZoomChange.callCount).to.equal(0);
       expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C', 'D']);
 
       await user.keyboard('{Control>}');
       // Wheel with Control key - should zoom
-      for (let i = 0; i < 30; i += 1) {
-        fireEvent.wheel(svg, { deltaY: -1, clientX: 50, clientY: 50 });
-        await act(async () => new Promise((r) => requestAnimationFrame(r)));
-      }
+      fireEvent.wheel(svg, { deltaY: -30, clientX: 50, clientY: 50 });
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
       await user.keyboard('{/Control}');
 
       expect(onZoomChange.callCount).to.be.greaterThan(0);
@@ -315,10 +312,8 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
       const svg = document.querySelector('svg:not([aria-hidden="true"])')!;
 
       // Wheel - should not zoom since only pinch is enabled
-      for (let i = 0; i < 30; i += 1) {
-        fireEvent.wheel(svg, { deltaY: -1, clientX: 50, clientY: 50 });
-        await act(async () => new Promise((r) => requestAnimationFrame(r)));
-      }
+      fireEvent.wheel(svg, { deltaY: -30, clientX: 50, clientY: 50 });
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
       expect(onZoomChange.callCount).to.equal(0);
       expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C', 'D']);
@@ -475,6 +470,150 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
 
       const ticksAfterDrag = getAxisTickValues('x');
       expect(ticksAfterDrag).to.deep.equal(['C', 'D']);
+    });
+  });
+
+  describe('Pan on wheel (side scrolling)', () => {
+    it('should pan horizontally on wheel scroll', async () => {
+      const onZoomChange = sinon.spy();
+      render(
+        <BarChartPro
+          {...barChartProps}
+          initialZoom={[{ axisId: 'x', start: 25, end: 75 }]}
+          onZoomChange={onZoomChange}
+          zoomInteractionConfig={{
+            zoom: [], // Disable zoom to avoid conflict
+            pan: ['wheel'],
+          }}
+        />,
+        options,
+      );
+
+      const svg = document.querySelector(CHART_SELECTOR)!;
+      expect(getAxisTickValues('x')).to.deep.equal(['B', 'C']);
+
+      // Simulate wheel scroll
+      fireEvent.wheel(svg, { deltaX: 100, clientX: 50, clientY: 50 });
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
+
+      // Should trigger zoom change (pan)
+      expect(onZoomChange.callCount).to.be.greaterThan(0);
+      expect(getAxisTickValues('x')).to.deep.equal(['A', 'B']);
+    });
+
+    it('should pan diagonally on wheel scroll with xy', async () => {
+      const onZoomChange = sinon.spy();
+      render(
+        <ScatterChartPro
+          {...barChartProps}
+          initialZoom={[
+            { axisId: 'x', start: 25, end: 75 },
+            { axisId: 'y', start: 25, end: 75 },
+          ]}
+          series={[
+            {
+              data: [
+                { x: 10, y: 10 },
+                { x: 20, y: 20 },
+                { x: 30, y: 30 },
+                { x: 40, y: 40 },
+              ],
+            },
+          ]}
+          yAxis={[{ id: 'y', zoom: true, width: 30 }]}
+          onZoomChange={onZoomChange}
+          zoomInteractionConfig={{
+            zoom: [], // Disable zoom to avoid conflict
+            pan: [{ type: 'wheel', allowedDirection: 'xy' }],
+          }}
+        />,
+        options,
+      );
+
+      const svg = document.querySelector(CHART_SELECTOR)!;
+      expect(getAxisTickValues('x')).to.deep.equal(['10', '20']);
+      expect(getAxisTickValues('y')).to.deep.equal(['10', '20']);
+
+      // Simulate wheel scroll
+      fireEvent.wheel(svg, { deltaX: 100, deltaY: 100, clientX: 50, clientY: 50 });
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
+
+      // Should trigger zoom change (pan)
+      expect(onZoomChange.callCount).to.be.greaterThan(0);
+      expect(getAxisTickValues('x')).to.deep.equal(['0', '10']);
+      expect(getAxisTickValues('y')).to.deep.equal(['0', '10']);
+    });
+
+    it('should not pan when required keys are not pressed', async () => {
+      const onZoomChange = sinon.spy();
+      const { user } = render(
+        <BarChartPro
+          {...barChartProps}
+          initialZoom={[{ axisId: 'x', start: 25, end: 75 }]}
+          onZoomChange={onZoomChange}
+          zoomInteractionConfig={{
+            zoom: [], // Disable zoom to avoid conflict
+            pan: [{ type: 'wheel', requiredKeys: ['Alt'] }],
+          }}
+        />,
+        options,
+      );
+
+      const svg = document.querySelector(CHART_SELECTOR)!;
+      expect(getAxisTickValues('x')).to.deep.equal(['B', 'C']);
+
+      // Simulate wheel scroll without Alt key
+      fireEvent.wheel(svg, { deltaX: 100, clientX: 50, clientY: 50 });
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
+
+      // Should not trigger zoom change because Alt key is required but not pressed
+      expect(onZoomChange.callCount).to.equal(0);
+
+      // Simulate wheel scroll with Alt key
+      await user.keyboard('{Alt>}');
+      fireEvent.wheel(svg, { deltaX: 100, clientX: 50, clientY: 50 });
+      await user.keyboard('{/Alt}');
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
+
+      // Should trigger zoom change (pan)
+      expect(onZoomChange.callCount).to.be.greaterThan(0);
+      expect(getAxisTickValues('x')).to.deep.equal(['A', 'B']);
+    });
+
+    it('should pan to the correct side when axis is reversed', async () => {
+      const onZoomChange = sinon.spy();
+      render(
+        <BarChartPro
+          {...barChartProps}
+          initialZoom={[{ axisId: 'x', start: 25, end: 75 }]}
+          onZoomChange={onZoomChange}
+          zoomInteractionConfig={{
+            zoom: [], // Disable zoom to avoid conflict
+            pan: ['wheel'],
+          }}
+          xAxis={[
+            {
+              data: ['A', 'B', 'C', 'D'],
+              zoom: true,
+              height: 30,
+              id: 'x',
+              reverse: true,
+            },
+          ]}
+        />,
+        options,
+      );
+
+      const svg = document.querySelector(CHART_SELECTOR)!;
+      expect(getAxisTickValues('x')).to.deep.equal(['B', 'C']);
+
+      // Simulate wheel scroll to the right (positive deltaX)
+      fireEvent.wheel(svg, { deltaX: 100, clientX: 50, clientY: 50 });
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
+
+      // With reversed axis, should pan to show higher value ticks
+      expect(onZoomChange.callCount).to.be.greaterThan(0);
+      expect(getAxisTickValues('x')).to.deep.equal(['C', 'D']);
     });
   });
 });
