@@ -9,7 +9,7 @@
     "type": { "type": { "description": "'line'" }, "required": true },
     "area": { "type": { "description": "boolean" } },
     "baseline": { "type": { "description": "number | 'min' | 'max'" }, "default": "0" },
-    "color": { "type": { "description": "string" } },
+    "color": { "type": { "description": "SeriesColorProp&lt;TValue&gt;" } },
     "connectNulls": { "type": { "description": "boolean" }, "default": "false" },
     "curve": { "type": { "description": "CurveType" }, "default": "'monotoneX'" },
     "data": { "type": { "description": "readonly (number | null)[]" } },
