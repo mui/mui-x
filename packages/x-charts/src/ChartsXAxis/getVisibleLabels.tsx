@@ -3,7 +3,7 @@ import { TickItemType } from '../hooks/useTicks';
 import { ChartsXAxisProps, ComputedXAxis } from '../models/axis';
 import { getMinXTranslation } from '../internals/geometry';
 import { ChartsTextStyle } from '../internals/getWordsByLines';
-import { batchMeasureStrings } from '../internals/domUtils';
+import { measureTextBatch } from '../internals/domUtils';
 
 /* Returns a set of indices of the tick labels that should be visible.  */
 export function getVisibleLabels<T extends TickItemType>(
@@ -110,5 +110,5 @@ function measureTickLabels<T extends TickItemType>(ticks: T[], style: ChartsText
     }
   }
 
-  return batchMeasureStrings(strings, style);
+  return measureTextBatch(strings, style);
 }

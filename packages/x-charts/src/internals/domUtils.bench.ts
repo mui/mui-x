@@ -1,5 +1,5 @@
 import { bench, describe } from 'vitest';
-import { batchMeasureStrings, clearStringMeasurementCache, getStringSize } from './domUtils';
+import { measureTextBatch, clearStringMeasurementCache, measureText } from './domUtils';
 
 export const strings = [
   'Aruba',
@@ -231,15 +231,15 @@ for (let i = 0; i < 10_000; i += 1) {
 
 const setup = () => {
   // Call once to create the measuring dom element
-  getStringSize('Warmup');
+  measureText('Warmup');
   clearStringMeasurementCache();
 };
 
-describe('getStringSize', () => {
+describe('measureText', () => {
   bench(
     'without styles',
     () => {
-      strings.forEach((countryName) => getStringSize(countryName));
+      strings.forEach((countryName) => measureText(countryName));
     },
     { setup },
   );
@@ -252,18 +252,18 @@ describe('getStringSize', () => {
       const firstHalf = strings.filter((_, i) => i % 2 === 0);
       const secondHalf = strings.filter((_, i) => i % 2 !== 0);
 
-      firstHalf.forEach((countryName) => getStringSize(countryName, style1));
-      secondHalf.forEach((countryName) => getStringSize(countryName, style2));
+      firstHalf.forEach((countryName) => measureText(countryName, style1));
+      secondHalf.forEach((countryName) => measureText(countryName, style2));
     },
     { setup },
   );
 });
 
-describe('batchMeasureStrings', () => {
+describe('measureTextBatch', () => {
   bench(
     'without styles',
     () => {
-      batchMeasureStrings(strings);
+      measureTextBatch(strings);
     },
     { setup },
   );
@@ -276,8 +276,8 @@ describe('batchMeasureStrings', () => {
       const firstHalf = strings.filter((_, i) => i % 2 === 0);
       const secondHalf = strings.filter((_, i) => i % 2 !== 0);
 
-      batchMeasureStrings(firstHalf, style1);
-      batchMeasureStrings(secondHalf, style2);
+      measureTextBatch(firstHalf, style1);
+      measureTextBatch(secondHalf, style2);
     },
     { setup },
   );
