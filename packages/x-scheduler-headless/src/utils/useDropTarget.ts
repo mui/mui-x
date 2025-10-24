@@ -9,6 +9,7 @@ import {
   EventSurfaceType,
   CalendarEventUpdatedProperties,
   SchedulerValidDate,
+  CalendarResourceId,
   RecurringEventUpdateScope,
 } from '../models';
 import {
@@ -22,8 +23,14 @@ import { SCHEDULER_RECURRING_EDITING_SCOPE } from '../constants';
 export function useDropTarget<Targets extends keyof EventDropDataLookup>(
   parameters: useDropTarget.Parameters<Targets>,
 ) {
-  const { surfaceType, ref, getEventDropData, isValidDropTarget, addPropertiesToDroppedEvent } =
-    parameters;
+  const {
+    surfaceType,
+    ref,
+    resourceId = null,
+    getEventDropData,
+    isValidDropTarget,
+    addPropertiesToDroppedEvent,
+  } = parameters;
   const store = useSchedulerStoreContext();
 
   React.useEffect(() => {
@@ -40,6 +47,7 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
           end: newEnd,
           eventData: data.eventData,
           onEventDrop: data.onEventDrop,
+          resourceId: resourceId === null ? data.eventData.resource : resourceId,
         };
       }
 
@@ -51,6 +59,7 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
         eventId: data.eventId,
         occurrenceKey: data.occurrenceKey,
         originalEvent: data.event,
+        resourceId: resourceId === null ? data.event.resource : resourceId,
       };
     };
 
@@ -116,7 +125,15 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
         }
       },
     });
-  }, [ref, surfaceType, getEventDropData, isValidDropTarget, addPropertiesToDroppedEvent, store]);
+  }, [
+    ref,
+    surfaceType,
+    resourceId,
+    getEventDropData,
+    isValidDropTarget,
+    addPropertiesToDroppedEvent,
+    store,
+  ]);
 }
 
 export namespace useDropTarget {
@@ -129,6 +146,13 @@ export namespace useDropTarget {
      * Add properties to the event dropped in the element before storing it in the store.
      */
     addPropertiesToDroppedEvent?: () => Partial<CalendarEvent>;
+    /**
+     * The id of the resource onto which to drop the event.
+     * If null, the event will be dropped onto the resource it was originally in (if any).
+     * If undefined, the event will be dropped outside of any resource.
+     * @default null
+     */
+    resourceId?: CalendarResourceId | undefined | null;
   }
 
   export type CreateDropData = (
@@ -164,6 +188,11 @@ async function applyInternalDragOrResizeOccurrencePlaceholder(
   }
 
   const changes: CalendarEventUpdatedProperties = { id: eventId, start, end };
+
+  if (placeholder.resourceId != null) {
+    changes.resource = placeholder.resourceId;
+  }
+
   if (addPropertiesToDroppedEvent) {
     Object.assign(changes, addPropertiesToDroppedEvent());
   }
@@ -198,6 +227,10 @@ function applyExternalDragOccurrencePlaceholder(
     end: placeholder.end,
     ...placeholder.eventData,
   };
+
+  if (placeholder.resourceId != null) {
+    event.resource = placeholder.resourceId;
+  }
 
   if (addPropertiesToDroppedEvent) {
     Object.assign(event, addPropertiesToDroppedEvent());

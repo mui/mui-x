@@ -46,7 +46,7 @@ When `areEventsResizable` is `true`, the event extremities can be dragged to cha
 
 You can enable the dragging from and to the outside of the Event Calendar using the `canDragEventsFromTheOutside` and `canDropEventsToTheOutside` props.
 When `canDragEventsFromTheOutside` is `true`, the events created with `<StandaloneEvent />` can be dropped inside the Event Calendar.
-When `canDropEventsToTheOutside` is `true`, the events from within the Event Calendar can be dropped outside of it (not working yet).
+When `canDropEventsToTheOutside` is `true`, the events from within the Event Calendar can be dropped outside of it.
 
 :::success
 To be able to drag an event to the outside, your events must be draggable, so `areEventsDraggable` must be `true`.
