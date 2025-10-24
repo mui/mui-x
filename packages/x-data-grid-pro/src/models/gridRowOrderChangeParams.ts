@@ -1,19 +1,39 @@
-import { GridRowModel } from '@mui/x-data-grid';
+import { GridRowModel, GridRowId } from '@mui/x-data-grid';
 
 /**
  * Object passed as parameter of the row order change event.
  */
 export interface GridRowOrderChangeParams {
   /**
-   * The row data.
+   * The row data of the primary row being moved.
+   * For group moves, this represents the group row itself.
+   * Descendants move should be handled as data updates. e.g. using `processRowUpdate()`
    */
   row: GridRowModel;
   /**
-   * The target row index.
+   * The old index of the row.
+   * - For flat data: Position in the flat array.
+   * - For nested data: Position within oldParent's children array (0-based).
+   */
+  oldIndex: number;
+  /**
+   * The target index of the row.
+   * - For flat data: New position in the flat array.
+   * - For nested data: Position within newParent's children array (0-based).
    */
   targetIndex: number;
   /**
-   * The old row index.
+   * The parent row ID before the move.
+   * - For flat data: `null`
+   * - For nested row at root level: `null`.
+   * - For nested row at levels above root: Parent row's ID.
    */
-  oldIndex: number;
+  oldParent: GridRowId | null;
+  /**
+   * The parent row ID after the move.
+   * - For flat data: `null`.
+   * - For nested row at root level: `null`.
+   * - For nested row at levels above root: Parent row's ID.
+   */
+  newParent: GridRowId | null;
 }

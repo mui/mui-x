@@ -19,6 +19,7 @@ import {
   gridExpandedSortedRowIdsSelector,
   gridRowTreeSelector,
   gridExpandedSortedRowIndexLookupSelector,
+  GRID_ROOT_GROUP_ID,
 } from '@mui/x-data-grid';
 import {
   gridEditRowsStateSelector,
@@ -488,7 +489,6 @@ export const useGridRowReorder = (
         return;
       }
       if (dropTarget.current.targetRowIndex !== null && dropTarget.current.targetRowId !== null) {
-        const sourceRowIndex = originRowIndex.current!;
         const targetRowIndex = dropTarget.current.targetRowIndex;
 
         const validatedIndex = apiRef.current.unstable_applyPipeProcessors(
@@ -504,14 +504,40 @@ export const useGridRowReorder = (
 
         if (validatedIndex !== -1) {
           try {
+            const rowTree = gridRowTreeSelector(apiRef);
+            const sourceNode = gridRowNodeSelector(apiRef, dragRowId);
+
+            if (!sourceNode) {
+              throw new Error(`MUI X: No row node found for id #${dragRowId}`);
+            }
+
+            // Calculate oldParent and oldIndex
+            const oldParent = sourceNode.parent!;
+            const oldParentNode = rowTree[oldParent] as GridGroupNode;
+            const oldIndexInParent =
+              oldParentNode.children.indexOf(dragRowId) ?? originRowIndex.current;
+
             await applyRowAnimation(async () => {
               await apiRef.current.setRowIndex(dragRowId, validatedIndex);
+
+              const updatedTree = gridRowTreeSelector(apiRef);
+              const updatedNode = updatedTree[dragRowId];
+
+              if (!updatedNode) {
+                throw new Error(`MUI X: Row node for id #${dragRowId} not found after move`);
+              }
+
+              const newParent = updatedNode.parent!;
+              const newParentNode = updatedTree[newParent] as GridGroupNode;
+              const newIndexInParent = newParentNode.children.indexOf(dragRowId) ?? validatedIndex;
 
               // Only emit event and clear state after successful reorder
               const rowOrderChangeParams: GridRowOrderChangeParams = {
                 row: apiRef.current.getRow(dragRowId)!,
-                targetIndex: validatedIndex,
-                oldIndex: sourceRowIndex,
+                oldIndex: oldIndexInParent,
+                targetIndex: newIndexInParent,
+                oldParent: oldParent === GRID_ROOT_GROUP_ID ? null : oldParent,
+                newParent: newParent === GRID_ROOT_GROUP_ID ? null : newParent,
               };
 
               applyDraggedState(dragRowId, false);
