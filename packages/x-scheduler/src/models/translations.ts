@@ -27,9 +27,11 @@ export interface SchedulerTranslations {
   amPm12h: string;
   hour24h: string;
   preferencesMenu: string;
+  showEmptyDaysInAgenda: string;
   showWeekends: string;
   showWeekNumber: string;
   timeFormat: string;
+  viewSpecificOptions: (view: CalendarView) => string;
 
   // WeekView
   allDay: string;
