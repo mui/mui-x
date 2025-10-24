@@ -12,14 +12,14 @@ const getColor: ColorProcessor<'bar'> = (series, xAxis, yAxis) => {
   if (valueColorScale) {
     return (dataIndex?: number) => {
       if (dataIndex === undefined) {
-        return getSeriesColor(dataIndex);
+        return getSeriesColor(null);
       }
 
       const value = series.data[dataIndex];
-      const color = value === null ? getSeriesColor(dataIndex) : valueColorScale(value);
+      const color = value === null ? getSeriesColor({ value, dataIndex }) : valueColorScale(value);
 
       if (color === null) {
-        return getSeriesColor(dataIndex);
+        return getSeriesColor({ value, dataIndex });
       }
 
       return color;
@@ -28,21 +28,29 @@ const getColor: ColorProcessor<'bar'> = (series, xAxis, yAxis) => {
   if (bandColorScale && bandValues) {
     return (dataIndex?: number) => {
       if (dataIndex === undefined) {
-        return getSeriesColor(dataIndex);
+        return getSeriesColor(null);
       }
 
       const value = bandValues[dataIndex];
-      const color = value === null ? getSeriesColor(dataIndex) : bandColorScale(value);
+      const color = value === null ? getSeriesColor({ value, dataIndex }) : bandColorScale(value);
 
       if (color === null) {
-        return getSeriesColor(dataIndex);
+        return getSeriesColor({ value, dataIndex });
       }
 
       return color;
     };
   }
 
-  return getSeriesColor;
+  return (dataIndex?: number) => {
+    if (dataIndex === undefined) {
+      return getSeriesColor(null);
+    }
+
+    const value = series.data[dataIndex];
+
+    return getSeriesColor({ value, dataIndex });
+  };
 };
 
 export default getColor;

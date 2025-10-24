@@ -60,7 +60,10 @@ function RadarSeriesMarks(props: RadarSeriesMarksProps) {
                 {...getCircleProps({
                   seriesId: id,
                   point,
-                  color: getSeriesColorFn(color)(point.dataIndex),
+                  color: getSeriesColorFn(color)({
+                    value: point.value,
+                    dataIndex: point.dataIndex,
+                  }),
                   fillArea,
                   isFaded,
                   isHighlighted,

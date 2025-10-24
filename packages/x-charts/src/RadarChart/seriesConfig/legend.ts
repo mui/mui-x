@@ -15,7 +15,7 @@ const legendGetter: LegendGetter<'radar'> = (params) => {
     acc.push({
       id: seriesId,
       seriesId,
-      color: getSeriesColorFn(series[seriesId].color)(),
+      color: getSeriesColorFn(series[seriesId].color)(null),
       label: formattedLabel,
       markType: series[seriesId].labelMarkType ?? 'square',
     });
