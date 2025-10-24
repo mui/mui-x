@@ -26,10 +26,10 @@ import { TreeViewItemPluginSlotPropsEnhancerParams, TreeViewAnyStore } from '../
 import { useTreeItemUtils } from '../hooks/useTreeItemUtils';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
 import { isTargetInDescendants } from '../internals/utils/tree';
-import { generateTreeItemIdAttribute } from '../internals/corePlugins/useTreeViewId/useTreeViewId.utils';
+import { generateTreeItemIdAttribute } from '../internals/plugins/id/utils';
 import { focusSelectors } from '../internals/plugins/focus';
 import { itemsSelectors } from '../internals/plugins/items';
-import { idSelectors } from '../internals/corePlugins/useTreeViewId';
+import { idSelectors } from '../internals/plugins/id';
 import { expansionSelectors } from '../internals/plugins/expansion';
 import { selectionSelectors } from '../internals/plugins/selection';
 import { RichTreeViewPublicAPI, RichTreeViewStore } from '../internals/RichTreeViewStore';

@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useStore } from '@mui/x-internals/store';
 import { EventHandlers } from '@mui/utils/types';
 import { TreeViewCancellableEvent } from '../../models';
-import { idSelectors } from '../corePlugins/useTreeViewId';
+import { idSelectors } from '../plugins/id';
 import { selectionSelectors } from '../plugins/selection';
 import { itemsSelectors } from '../plugins/items';
 import { TreeViewAnyStore } from '../models';

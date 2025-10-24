@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 import { useStore } from '@mui/x-internals/store';
 import { TreeItemProviderProps } from './TreeItemProvider.types';
 import { useTreeViewContext } from '../internals/TreeViewProvider';
-import { generateTreeItemIdAttribute } from '../internals/corePlugins/useTreeViewId/useTreeViewId.utils';
-import { idSelectors } from '../internals/corePlugins/useTreeViewId';
+import { generateTreeItemIdAttribute } from '../internals/plugins/id/utils';
+import { idSelectors } from '../internals/plugins/id';
 import { TreeViewAnyStore } from '../internals/models';
 
 function TreeItemProvider(props: TreeItemProviderProps) {

@@ -13,7 +13,7 @@ import {
 import { buildItemsState } from '../plugins/items/utils';
 import { TreeViewValidItem } from '../../models';
 import { applyModelInitialValue, deriveStateFromParameters } from './MinimalTreeViewStore.utils';
-import { createTreeViewDefaultId } from '../corePlugins/useTreeViewId/useTreeViewId.utils';
+import { createTreeViewDefaultId } from '../plugins/id/utils';
 import { TimeoutManager } from './TimeoutManager';
 import { TreeViewKeyboardNavigationPlugin } from '../plugins/keyboardNavigation';
 import { TreeViewFocusPlugin } from '../plugins/focus/TreeViewFocusPlugin';

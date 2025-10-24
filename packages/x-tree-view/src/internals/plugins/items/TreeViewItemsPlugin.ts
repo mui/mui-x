@@ -1,6 +1,6 @@
 import { TreeViewBaseItem, TreeViewItemId, TreeViewValidItem } from '../../../models';
-import { idSelectors } from '../../corePlugins/useTreeViewId';
-import { generateTreeItemIdAttribute } from '../../corePlugins/useTreeViewId/useTreeViewId.utils';
+import { idSelectors } from '../id';
+import { generateTreeItemIdAttribute } from '../id/utils';
 import { itemsSelectors, TREE_VIEW_ROOT_PARENT_ID } from '.';
 import { BuildItemsLookupConfig, buildItemsLookups } from './utils';
 import type { MinimalTreeViewStore } from '../../MinimalTreeViewStore/MinimalTreeViewStore';

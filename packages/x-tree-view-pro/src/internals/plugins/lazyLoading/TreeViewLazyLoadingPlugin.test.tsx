@@ -1,12 +1,12 @@
 import { act, fireEvent } from '@mui/internal-test-utils';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
-import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 import { RichTreeViewProStore } from '../../RichTreeViewProStore';
 
-type ItemType = TreeViewBaseItem<{
+interface ItemType {
   id: string;
   childrenCount?: number;
-}>;
+  children?: ItemType[];
+}
 
 const mockFetchData = async (parentId): Promise<ItemType[]> => {
   const items = [

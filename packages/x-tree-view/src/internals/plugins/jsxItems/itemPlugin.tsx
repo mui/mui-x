@@ -10,9 +10,9 @@ import {
   TreeViewChildrenItemProvider,
 } from '../../TreeViewProvider/TreeViewChildrenItemProvider';
 import { TreeViewItemDepthContext } from '../../TreeViewItemDepthContext';
-import { generateTreeItemIdAttribute } from '../../corePlugins/useTreeViewId/useTreeViewId.utils';
+import { generateTreeItemIdAttribute } from '../id/utils';
 import { itemHasChildren } from '../../../hooks/useTreeItemUtils/useTreeItemUtils';
-import { idSelectors } from '../../corePlugins/useTreeViewId';
+import { idSelectors } from '../id';
 import { SimpleTreeViewStore } from '../../SimpleTreeViewStore';
 
 export const useJSXItemsItemPlugin: TreeViewItemPlugin = ({ props, rootRef, contentRef }) => {

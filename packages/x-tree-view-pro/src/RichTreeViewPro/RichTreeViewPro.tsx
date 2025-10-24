@@ -167,7 +167,7 @@ RichTreeViewPro.propTypes = {
    */
   canMoveItemToNewPosition: PropTypes.func,
   /**
-   * If `true`, the Tree View renders a checkbox at the left of its label that allows selecting it.
+   * Whether the Tree View renders a checkbox at the left of its label that allows selecting it.
    * @default false
    */
   checkboxSelection: PropTypes.bool,
@@ -209,7 +209,7 @@ RichTreeViewPro.propTypes = {
    */
   disabledItemsFocusable: PropTypes.bool,
   /**
-   * If `true` selection is disabled.
+   * Whether selection is disabled.
    * @default false
    */
   disableSelection: PropTypes.bool,
