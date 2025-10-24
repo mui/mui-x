@@ -96,11 +96,23 @@ export const selectorChartsKeyboardYAxisIndex = createSelector(
 );
 
 export const selectorChartsKeyboardItem = createSelector(
-  [selectorChartsFocusedSeriesType, selectorChartsFocusedSeriesId, selectorChartsFocusedDataIndex],
-  function selectorChartsKeyboardItem(seriesType, seriesId, dataIndex) {
-    if (seriesId === undefined) {
+  [selectKeyboardNavigation],
+  function selectorChartsKeyboardItem(keyboardState) {
+    if (keyboardState?.item == null) {
       return null;
     }
-    return { seriesId, dataIndex: seriesType === 'line' ? undefined : dataIndex };
+    const { type, seriesId } = keyboardState.item;
+
+    if (type === undefined || seriesId === undefined) {
+      return null;
+    }
+    return keyboardState.item;
+  },
+);
+
+export const selectorChartsKeyboardItemIsDefined = createSelector(
+  [selectorChartsFocusedSeriesType, selectorChartsFocusedSeriesId, selectorChartsFocusedDataIndex],
+  function selectorChartsKeyboardItemIsDefined(seriesType, seriesId, dataIndex) {
+    return seriesId !== undefined && dataIndex !== undefined;
   },
 );

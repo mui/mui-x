@@ -2,25 +2,20 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 
 import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
-import {
-  ComputedAxis,
-  cartesianSeriesTypes,
-  useSelector,
-  useStore,
-  isOrdinalScale,
-} from '@mui/x-charts/internals';
+import { cartesianSeriesTypes, useSelector, useStore } from '@mui/x-charts/internals';
 import { FunnelItemIdentifier } from './funnel.types';
 import { FunnelSection } from './FunnelSection';
 import { alignLabel, positionLabel } from './labelUtils';
 import { FunnelPlotSlotExtension } from './funnelPlotSlots.types';
 import { useFunnelSeriesContext } from '../hooks/useFunnelSeries';
-import { getFunnelCurve, Point, PositionGetter } from './curves';
+import { getFunnelCurve, Point } from './curves';
 import { FunnelSectionLabel } from './FunnelSectionLabel';
 import {
   selectorChartXAxis,
   selectorChartYAxis,
   selectorFunnelGap,
 } from './funnelAxisPlugin/useChartFunnelAxisRendering.selectors';
+import { createPositionGetter } from './coordinateMapper';
 
 cartesianSeriesTypes.addType('funnel');
 
@@ -63,50 +58,11 @@ const useAggregatedData = () => {
 
       const baseScaleConfig = isHorizontal ? xAxis[xAxisId] : yAxis[yAxisId];
 
-      const isXAxisBand = xAxis[xAxisId].scaleType === 'band';
-      const isYAxisBand = yAxis[yAxisId].scaleType === 'band';
-
-      const bandWidth =
-        ((isXAxisBand || isYAxisBand) &&
-          (baseScaleConfig as ComputedAxis<'band'>).scale?.bandwidth()) ||
-        0;
-
       const xScale = xAxis[xAxisId].scale;
       const yScale = yAxis[yAxisId].scale;
 
-      const xPosition: PositionGetter = (
-        value,
-        bandIndex,
-        bandIdentifier,
-        stackOffset,
-        useBand,
-      ) => {
-        if (isOrdinalScale(xScale)) {
-          const position = xScale(bandIdentifier)!;
-          return useBand ? position + bandWidth : position;
-        }
-        if (isHorizontal) {
-          return xScale(value + (stackOffset || 0))! + bandIndex * gap;
-        }
-        return xScale(value)!;
-      };
-
-      const yPosition: PositionGetter = (
-        value: number,
-        bandIndex: number,
-        bandIdentifier: string | number,
-        stackOffset?: number,
-        useBand?: boolean,
-      ) => {
-        if (isOrdinalScale(yScale)) {
-          const position = yScale(bandIdentifier);
-          return useBand ? position! + bandWidth : position!;
-        }
-        if (isHorizontal) {
-          return yScale(value)!;
-        }
-        return yScale(value + (stackOffset || 0))! + bandIndex * gap;
-      };
+      const xPosition = createPositionGetter(xScale, isHorizontal, gap);
+      const yPosition = createPositionGetter(yScale, !isHorizontal, gap);
 
       const allY = currentSeries.dataPoints.flatMap((d, dataIndex) =>
         d.flatMap((v) =>

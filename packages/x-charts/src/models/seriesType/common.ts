@@ -1,6 +1,7 @@
 import { HighlightScope } from '../../internals/plugins/featurePlugins/useChartHighlight/highlightConfig.types';
 import type { StackOffsetType, StackOrderType } from '../stacking';
 import type { ChartsLabelMarkType } from '../../ChartsLabel/ChartsLabelMark';
+import { AxisId } from '../axis';
 
 export type SeriesId = number | string;
 
@@ -50,11 +51,11 @@ export type CartesianSeriesType = {
   /**
    * The id of the x-axis used to render the series.
    */
-  xAxisId?: string;
+  xAxisId?: AxisId;
   /**
    * The id of the y-axis used to render the series.
    */
-  yAxisId?: string;
+  yAxisId?: AxisId;
 };
 
 export type StackableSeriesType = {
