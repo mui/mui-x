@@ -189,9 +189,10 @@ export class DataStore {
       const newParentNode = this.tree.get(newParentId);
       if (newParentNode) {
         if (!newParentNode.children) {
-          newParentNode.children = [];
+          newParentNode.children = [rowId];
+        } else {
+          newParentNode.children.splice(params.targetIndex, 0, rowId);
         }
-        newParentNode.children.splice(params.targetIndex, 0, rowId);
       }
 
       // Clear pending updates
