@@ -26,7 +26,15 @@ export interface ScatterProps {
   series: DefaultizedScatterSeriesType;
   xScale: D3Scale;
   yScale: D3Scale;
+  /**
+   * @deprecated Use `colorGetter` instead.
+   */
   color: string;
+  /**
+   * Function to get the color of a scatter item given its data index.
+   * The data index argument is optional. If not provided, the color for the entire series is returned.
+   * If provided, the color for the specific scatter item is returned.
+   */
   colorGetter: ColorGetter<'scatter'>;
   /**
    * Callback fired when clicking on a scatter item.
@@ -140,8 +148,16 @@ Scatter.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
+  /**
+   * @deprecated Use `colorGetter` instead.
+   */
   color: PropTypes.string.isRequired,
-  colorGetter: PropTypes.func,
+  /**
+   * Function to get the color of a scatter item given its data index.
+   * The data index argument is optional. If not provided, the color for the entire series is returned.
+   * If provided, the color for the specific scatter item is returned.
+   */
+  colorGetter: PropTypes.func.isRequired,
   /**
    * Callback fired when clicking on a scatter item.
    * @param {MouseEvent} event Mouse event recorded on the `<svg/>` element.
