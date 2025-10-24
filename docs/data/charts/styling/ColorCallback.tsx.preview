@@ -1,0 +1,5 @@
+<Typography variant="h6" textAlign="center">
+  Premier League Clubs Net Spend - Summer 2025
+</Typography>
+<BarChart {...chartsParams} />
+<Typography variant="caption">Source: squawka.com</Typography>
