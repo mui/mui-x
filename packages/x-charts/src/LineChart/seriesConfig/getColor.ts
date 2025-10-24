@@ -9,12 +9,12 @@ const getColor: ColorProcessor<'line'> = (series, xAxis, yAxis) => {
   if (yColorScale) {
     return (dataIndex?: number) => {
       if (dataIndex === undefined) {
-        return getSeriesColor(dataIndex);
+        return getSeriesColor(null);
       }
       const value = series.data[dataIndex];
-      const color = value === null ? getSeriesColor(dataIndex) : yColorScale(value);
+      const color = value === null ? getSeriesColor({ value, dataIndex }) : yColorScale(value);
       if (color === null) {
-        return getSeriesColor(dataIndex);
+        return getSeriesColor({ value, dataIndex });
       }
 
       return color;
@@ -24,19 +24,27 @@ const getColor: ColorProcessor<'line'> = (series, xAxis, yAxis) => {
   if (xColorScale) {
     return (dataIndex?: number) => {
       if (dataIndex === undefined) {
-        return getSeriesColor(dataIndex);
+        return getSeriesColor(null);
       }
       const value = xAxis.data?.[dataIndex];
-      const color = value === null ? getSeriesColor(dataIndex) : xColorScale(value);
+      const color = value === null ? getSeriesColor({ value, dataIndex }) : xColorScale(value);
       if (color === null) {
-        return getSeriesColor(dataIndex);
+        return getSeriesColor({ value, dataIndex });
       }
 
       return color;
     };
   }
 
-  return getSeriesColor;
+  return (dataIndex?: number) => {
+    if (dataIndex === undefined) {
+      return getSeriesColor(null);
+    }
+
+    const value = series.data[dataIndex];
+
+    return getSeriesColor({ value, dataIndex });
+  };
 };
 
 export default getColor;

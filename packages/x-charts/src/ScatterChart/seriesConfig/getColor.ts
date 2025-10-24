@@ -10,8 +10,9 @@ const getColor: ColorProcessor<'scatter'> = (series, xAxis, yAxis, zAxis) => {
   if (zColorScale) {
     return (dataIndex?: number) => {
       if (dataIndex === undefined) {
-        return getSeriesColor(dataIndex);
+        return getSeriesColor(null);
       }
+
       if (zAxis?.data?.[dataIndex] !== undefined) {
         const color = zColorScale(zAxis?.data?.[dataIndex]);
         if (color !== null) {
@@ -19,9 +20,9 @@ const getColor: ColorProcessor<'scatter'> = (series, xAxis, yAxis, zAxis) => {
         }
       }
       const value = series.data[dataIndex];
-      const color = value === null ? getSeriesColor(dataIndex) : zColorScale(value.z);
+      const color = value === null ? getSeriesColor({ value, dataIndex }) : zColorScale(value.z);
       if (color === null) {
-        return getSeriesColor(dataIndex);
+        return getSeriesColor({ value, dataIndex });
       }
       return color;
     };
@@ -30,12 +31,12 @@ const getColor: ColorProcessor<'scatter'> = (series, xAxis, yAxis, zAxis) => {
   if (yColorScale) {
     return (dataIndex?: number) => {
       if (dataIndex === undefined) {
-        return getSeriesColor(dataIndex);
+        return getSeriesColor(null);
       }
       const value = series.data[dataIndex];
-      const color = value === null ? getSeriesColor(dataIndex) : yColorScale(value.y);
+      const color = value === null ? getSeriesColor({ value, dataIndex }) : yColorScale(value.y);
       if (color === null) {
-        return getSeriesColor(dataIndex);
+        return getSeriesColor({ value, dataIndex });
       }
       return color;
     };
@@ -44,18 +45,26 @@ const getColor: ColorProcessor<'scatter'> = (series, xAxis, yAxis, zAxis) => {
   if (xColorScale) {
     return (dataIndex?: number) => {
       if (dataIndex === undefined) {
-        return getSeriesColor(dataIndex);
+        return getSeriesColor(null);
       }
       const value = series.data[dataIndex];
-      const color = value === null ? getSeriesColor(dataIndex) : xColorScale(value.x);
+      const color = value === null ? getSeriesColor({ value, dataIndex }) : xColorScale(value.x);
       if (color === null) {
-        return getSeriesColor(dataIndex);
+        return getSeriesColor({ value, dataIndex });
       }
       return color;
     };
   }
 
-  return getSeriesColor;
+  return (dataIndex?: number) => {
+    if (dataIndex === undefined) {
+      return getSeriesColor(null);
+    }
+
+    const value = series.data[dataIndex];
+
+    return getSeriesColor({ value, dataIndex });
+  };
 };
 
 export default getColor;

@@ -16,7 +16,7 @@ const legendGetter: LegendGetter<'scatter'> = (params) => {
       markType: series[seriesId].labelMarkType,
       id: seriesId,
       seriesId,
-      color: getSeriesColorFn(series[seriesId].color)(),
+      color: getSeriesColorFn(series[seriesId].color)(null),
       label: formattedLabel,
     });
     return acc;

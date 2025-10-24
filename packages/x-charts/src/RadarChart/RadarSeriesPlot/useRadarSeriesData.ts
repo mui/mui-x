@@ -47,6 +47,7 @@ export function useRadarSeriesData(querySeriesId?: SeriesId) {
           isItemHighlighted: highlighted,
           isItemFaded: faded,
           dataIndex,
+          value,
         };
       }),
     };

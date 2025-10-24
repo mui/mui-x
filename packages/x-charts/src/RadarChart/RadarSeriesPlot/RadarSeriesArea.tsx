@@ -59,7 +59,7 @@ function RadarSeriesArea(props: RadarSeriesAreaProps) {
             {...getPathProps({
               seriesId: id,
               points,
-              color: getSeriesColorFn(color)(),
+              color: getSeriesColorFn(color)(null),
               fillArea,
               isFaded,
               isHighlighted,
