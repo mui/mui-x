@@ -5,16 +5,17 @@ import {
   type GridTreeNode,
   type GridGroupNode,
   type GridRowTreeConfig,
-  type GridLeafNode,
   type GridKeyValue,
   type GridValidRowModel,
   type GridUpdateRowParams,
 } from '@mui/x-data-grid';
 import { warnOnce } from '@mui/x-internals/warning';
 import { type ReorderOperationType } from './types';
-import { RowTreeBuilderGroupingCriterion } from '../../../utils/tree/models';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
+
+// Re-export to be made part of `rowReorderUtils`
+export { getNodePathInTree } from '../../../utils/tree/utils';
 
 /**
  * Finds the closest cell element from the given event target.
@@ -80,31 +81,6 @@ export function calculateTargetIndex(
   const targetIndex = targetParent.children.findIndex((id) => id === targetNode.id);
   return targetIndex >= 0 ? targetIndex : 0;
 }
-
-// Get the path from a node to the root in the tree
-export const getNodePathInTree = ({
-  id,
-  tree,
-}: {
-  id: GridRowId;
-  tree: GridRowTreeConfig;
-}): RowTreeBuilderGroupingCriterion[] => {
-  const path: RowTreeBuilderGroupingCriterion[] = [];
-  let node = tree[id] as GridGroupNode | GridLeafNode;
-
-  while (node.id !== GRID_ROOT_GROUP_ID) {
-    path.push({
-      field: node.type === 'leaf' ? null : node.groupingField,
-      key: node.groupingKey,
-    });
-
-    node = tree[node.parent!] as GridGroupNode | GridLeafNode;
-  }
-
-  path.reverse();
-
-  return path;
-};
 
 // Recursively collect all leaf node IDs from a group
 export const collectAllLeafDescendants = (
