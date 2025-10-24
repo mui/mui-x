@@ -219,6 +219,11 @@ overrides:
 
 packageExtensionsChecksum: sha256-GmuHKPl+EPPmpH9o6dpG/x6YUd/4eHjpfdYnSqH1GqA=
 
+patchedDependencies:
+  inlineresources:
+    hash: 5ffcff57b6393e1e008d0cebc5de12bbcb7b8986aa0b5c5a26f2e5999cafa103
+    path: patches/inlineresources.patch
+
 importers:
 
   .:
@@ -20573,7 +20578,7 @@ snapshots:
       validate-npm-package-license: 3.0.4
       validate-npm-package-name: 6.0.2
 
-  inlineresources@1.0.1:
+  inlineresources@1.0.1(patch_hash=5ffcff57b6393e1e008d0cebc5de12bbcb7b8986aa0b5c5a26f2e5999cafa103):
     dependencies:
       css-font-face-src: 1.0.0
       url: 0.11.4
@@ -22908,7 +22913,7 @@ snapshots:
 
   rasterizehtml@1.3.1:
     dependencies:
-      inlineresources: 1.0.1
+      inlineresources: 1.0.1(patch_hash=5ffcff57b6393e1e008d0cebc5de12bbcb7b8986aa0b5c5a26f2e5999cafa103)
       sane-domparser-error: 0.2.0
       url: 0.11.4
       xmlserializer: 0.6.1
