@@ -1,5 +1,5 @@
-import { TreeViewInstance, UseTreeViewLazyLoadingSignature } from '@mui/x-tree-view/internals';
 import { TreeViewItemId } from '@mui/x-tree-view/models';
+import { TreeViewLazyLoadingPlugin } from './TreeViewLazyLoadingPlugin';
 
 const MAX_CONCURRENT_REQUESTS = Infinity;
 
@@ -9,17 +9,6 @@ export enum RequestStatus {
   SETTLED,
   UNKNOWN,
 }
-
-/**
- * Plugins that need to be present in the Tree View in order for the `NestedDataManager` class to work correctly.
- */
-type NestedDataManagerMinimalPlugins = readonly [UseTreeViewLazyLoadingSignature];
-
-/**
- * Plugins that the `NestedDataManager` class can use if they are present, but are not required.
- */
-
-export type NestedDataManagerOptionalPlugins = readonly [];
 
 /**
  * Fetches row children from the server with option to limit the number of concurrent requests
@@ -33,18 +22,15 @@ export class NestedDataManager {
 
   private settledRequests: Set<TreeViewItemId> = new Set();
 
-  private instance: TreeViewInstance<
-    NestedDataManagerMinimalPlugins,
-    NestedDataManagerOptionalPlugins
-  >;
+  private lazyLoadingPlugin: TreeViewLazyLoadingPlugin;
 
   private maxConcurrentRequests: number;
 
   constructor(
-    instance: TreeViewInstance<[UseTreeViewLazyLoadingSignature]>,
+    lazyLoadingPlugin: TreeViewLazyLoadingPlugin,
     maxConcurrentRequests = MAX_CONCURRENT_REQUESTS,
   ) {
-    this.instance = instance;
+    this.lazyLoadingPlugin = lazyLoadingPlugin;
     this.maxConcurrentRequests = maxConcurrentRequests;
   }
 
@@ -66,7 +52,7 @@ export class NestedDataManager {
       this.queuedRequests.delete(id);
       this.pendingRequests.add(id);
 
-      fetchPromises.push(this.instance.fetchItemChildren({ itemId: id }));
+      fetchPromises.push(this.lazyLoadingPlugin.fetchItemChildren({ itemId: id }));
     }
     await Promise.all(fetchPromises);
   };
