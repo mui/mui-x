@@ -1,18 +1,23 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import composeClasses from '@mui/utils/composeClasses';
 import { useLicenseVerifier, Watermark } from '@mui/x-license';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { useTreeView, TreeViewProvider, RichTreeViewItems } from '@mui/x-tree-view/internals';
+import {
+  TreeViewProvider,
+  RichTreeViewItems,
+  TreeViewItemDepthContext,
+  itemsSelectors,
+  useTreeViewRootProps,
+} from '@mui/x-tree-view/internals';
 import { warnOnce } from '@mui/x-internals/warning';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { getRichTreeViewProUtilityClass } from './richTreeViewProClasses';
 import { RichTreeViewProProps } from './RichTreeViewPro.types';
-import {
-  RICH_TREE_VIEW_PRO_PLUGINS,
-  RichTreeViewProPluginSignatures,
-} from './RichTreeViewPro.plugins';
+import { useExtractRichTreeViewProParameters } from './useExtractRichTreeViewProParameters';
+import { useRichTreeViewProStore } from './useRichTreeViewProStore';
 
 const useThemeProps = createUseThemeProps('MuiRichTreeViewPro');
 
@@ -69,9 +74,9 @@ const releaseInfo = '__RELEASE_INFO__';
 const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
   R extends {},
   Multiple extends boolean | undefined = undefined,
->(inProps: RichTreeViewProProps<R, Multiple>, ref: React.Ref<HTMLUListElement>) {
+>(inProps: RichTreeViewProProps<R, Multiple>, forwardedRef: React.Ref<HTMLUListElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiRichTreeViewPro' });
-  const { slots, slotProps, ...other } = props;
+  const { slots, slotProps, apiRef, ...other } = props;
 
   useLicenseVerifier('x-tree-view-pro', releaseInfo);
 
@@ -85,13 +90,17 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
     }
   }
 
-  const { getRootProps, contextValue } = useTreeView<RichTreeViewProPluginSignatures, typeof props>(
-    {
-      plugins: RICH_TREE_VIEW_PRO_PLUGINS,
-      rootRef: ref,
-      props: other,
-    },
-  );
+  const { parameters, forwardedProps } = useExtractRichTreeViewProParameters<
+    R,
+    Multiple,
+    typeof other
+  >(other);
+
+  const ref = React.useRef<HTMLUListElement | null>(null);
+  const handleRef = useMergedRefs(forwardedRef, ref);
+
+  const store = useRichTreeViewProStore(parameters);
+  const getRootProps = useTreeViewRootProps(store, forwardedProps, handleRef);
 
   const classes = useUtilityClasses(props);
 
@@ -106,15 +115,19 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
 
   return (
     <TreeViewProvider
-      contextValue={contextValue}
+      store={store}
       classes={classes}
       slots={slots}
       slotProps={slotProps}
+      apiRef={apiRef}
+      rootRef={ref}
     >
-      <Root {...rootProps}>
-        <RichTreeViewItems slots={slots} slotProps={slotProps} />
-        <Watermark packageName="x-tree-view-pro" releaseInfo={releaseInfo} />
-      </Root>
+      <TreeViewItemDepthContext.Provider value={itemsSelectors.itemDepth}>
+        <Root {...rootProps}>
+          <RichTreeViewItems slots={slots} slotProps={slotProps} />
+          <Watermark packageName="x-tree-view-pro" releaseInfo={releaseInfo} />
+        </Root>
+      </TreeViewItemDepthContext.Provider>
     </TreeViewProvider>
   );
 }) as RichTreeViewProComponent;
@@ -154,7 +167,7 @@ RichTreeViewPro.propTypes = {
    */
   canMoveItemToNewPosition: PropTypes.func,
   /**
-   * If `true`, the Tree View renders a checkbox at the left of its label that allows selecting it.
+   * Whether the Tree View renders a checkbox at the left of its label that allows selecting it.
    * @default false
    */
   checkboxSelection: PropTypes.bool,
@@ -196,7 +209,7 @@ RichTreeViewPro.propTypes = {
    */
   disabledItemsFocusable: PropTypes.bool,
   /**
-   * If `true` selection is disabled.
+   * Whether selection is disabled.
    * @default false
    */
   disableSelection: PropTypes.bool,

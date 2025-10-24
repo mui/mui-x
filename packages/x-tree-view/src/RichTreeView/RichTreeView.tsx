@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { useStore } from '@mui/x-internals/store';
 import Alert from '@mui/material/Alert';
 import Typography from '@mui/material/Typography';
@@ -10,11 +11,15 @@ import { warnOnce } from '@mui/x-internals/warning';
 import { getRichTreeViewUtilityClass } from './richTreeViewClasses';
 import { RichTreeViewProps } from './RichTreeView.types';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
-import { useTreeView } from '../internals/useTreeView';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
-import { RICH_TREE_VIEW_PLUGINS, RichTreeViewPluginSignatures } from './RichTreeView.plugins';
 import { RichTreeViewItems } from '../internals/components/RichTreeViewItems';
-import { lazyLoadingSelectors } from '../internals/plugins/useTreeViewLazyLoading';
+import { lazyLoadingSelectors } from '../internals/plugins/lazyLoading';
+import { TreeViewValidItem } from '../models';
+import { useTreeViewRootProps } from '../internals/hooks/useTreeViewRootProps';
+import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
+import { useExtractRichTreeViewParameters } from './useExtractRichTreeViewParameters';
+import { useRichTreeViewStore } from './useRichTreeViewStore';
+import { itemsSelectors } from '../internals/plugins/items';
 
 const useThemeProps = createUseThemeProps('MuiRichTreeView');
 
@@ -67,11 +72,11 @@ type RichTreeViewComponent = (<R extends {}, Multiple extends boolean | undefine
  * - [RichTreeView API](https://mui.com/x/api/tree-view/rich-tree-view/)
  */
 const RichTreeView = React.forwardRef(function RichTreeView<
-  R extends {},
+  R extends TreeViewValidItem<R>,
   Multiple extends boolean | undefined = undefined,
->(inProps: RichTreeViewProps<R, Multiple>, ref: React.Ref<HTMLUListElement>) {
+>(inProps: RichTreeViewProps<R, Multiple>, forwardedRef: React.Ref<HTMLUListElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiRichTreeView' });
-  const { slots, slotProps, ...other } = props;
+  const { slots, slotProps, apiRef, ...other } = props;
 
   if (process.env.NODE_ENV !== 'production') {
     if ((props as any).children != null) {
@@ -83,13 +88,20 @@ const RichTreeView = React.forwardRef(function RichTreeView<
     }
   }
 
-  const { getRootProps, contextValue } = useTreeView<RichTreeViewPluginSignatures, typeof props>({
-    plugins: RICH_TREE_VIEW_PLUGINS,
-    rootRef: ref,
-    props: other,
-  });
-  const isLoading = useStore(contextValue.store, lazyLoadingSelectors.isItemLoading, null);
-  const error = useStore(contextValue.store, lazyLoadingSelectors.itemError, null);
+  const { parameters, forwardedProps } = useExtractRichTreeViewParameters<
+    R,
+    Multiple,
+    typeof other
+  >(other);
+
+  const ref = React.useRef<HTMLUListElement | null>(null);
+  const handleRef = useMergedRefs(forwardedRef, ref);
+
+  const store = useRichTreeViewStore(parameters);
+  const getRootProps = useTreeViewRootProps(store, forwardedProps, handleRef);
+
+  const isLoading = useStore(store, lazyLoadingSelectors.isItemLoading, null);
+  const error = useStore(store, lazyLoadingSelectors.itemError, null);
 
   const classes = useUtilityClasses(props);
 
@@ -112,14 +124,18 @@ const RichTreeView = React.forwardRef(function RichTreeView<
 
   return (
     <TreeViewProvider
-      contextValue={contextValue}
+      store={store}
       classes={classes}
       slots={slots}
       slotProps={slotProps}
+      apiRef={apiRef}
+      rootRef={ref}
     >
-      <Root {...rootProps}>
-        <RichTreeViewItems slots={slots} slotProps={slotProps} />
-      </Root>
+      <TreeViewItemDepthContext.Provider value={itemsSelectors.itemDepth}>
+        <Root {...rootProps}>
+          <RichTreeViewItems slots={slots} slotProps={slotProps} />
+        </Root>
+      </TreeViewItemDepthContext.Provider>
     </TreeViewProvider>
   );
 }) as RichTreeViewComponent;
@@ -149,7 +165,7 @@ RichTreeView.propTypes = {
     }),
   }),
   /**
-   * If `true`, the Tree View renders a checkbox at the left of its label that allows selecting it.
+   * Whether the Tree View renders a checkbox at the left of its label that allows selecting it.
    * @default false
    */
   checkboxSelection: PropTypes.bool,
@@ -176,7 +192,7 @@ RichTreeView.propTypes = {
    */
   disabledItemsFocusable: PropTypes.bool,
   /**
-   * If `true` selection is disabled.
+   * Whether selection is disabled.
    * @default false
    */
   disableSelection: PropTypes.bool,
