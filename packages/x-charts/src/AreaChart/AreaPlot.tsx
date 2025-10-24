@@ -8,7 +8,7 @@ import {
   AreaElementProps,
   AreaElementSlotProps,
   AreaElementSlots,
-} from './AreaElement';
+} from '../LineChart/AreaElement';
 import { LineItemIdentifier } from '../models/seriesType/line';
 import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { useXAxes, useYAxes } from '../hooks/useAxis';
@@ -66,7 +66,7 @@ function AreaPlot(props: AreaPlotProps) {
   const skipAnimation = useSkipAnimation(isZoomInteracting || inSkipAnimation);
 
   const completedData = useAggregatedData();
-  console.log('line area plot', completedData);
+  console.log('area area plot', completedData);
 
   return (
     <AreaPlotRoot {...other}>

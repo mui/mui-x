@@ -41,6 +41,10 @@ You can fill the area of the line by setting the series' `area` property to `tru
 
 {{"demo": "BasicArea.js"}}
 
+### Area range
+
+{{"demo": "BasicAreaRange.js"}}
+
 ### Log scale
 
 A y-axis with a log scale cannot plot a line that crosses zero nor an area chart because the logarithm of zero is undefined.
