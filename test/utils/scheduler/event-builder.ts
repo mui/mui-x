@@ -9,8 +9,7 @@ import {
   CalendarEventOccurrence,
 } from '@mui/x-scheduler-headless/models/event';
 import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
-import { getWeekDayCode } from '@mui/x-scheduler-headless/utils/recurring-event-utils'; // ajusta el path
-import { adapter as defaultAdapter } from 'test/utils/scheduler';
+import { getWeekDayCode } from '@mui/x-scheduler-headless/utils/recurring-event-utils';
 
 export const DEFAULT_TESTING_VISIBLE_DATE = '2025-07-03T00:00:00Z';
 
