@@ -890,11 +890,9 @@ export function adjustRRuleForAllMove(
   let nextRRule: RecurringEventRecurrenceRule = { ...rrule };
 
   if (rrule.freq === 'WEEKLY') {
-    const { numToCode } = getWeekDayMaps(adapter);
-
-    const normalized = parsesByDayForWeeklyFrequency(rrule.byDay, [
-      numToCode[adapter.getDayOfWeek(occurrenceStart)],
-    ]);
+    const normalized = parsesByDayForWeeklyFrequency(rrule.byDay) ?? [
+      getWeekDayCode(adapter, occurrenceStart),
+    ];
 
     const swapped = realignWeeklyByDay(adapter, normalized, occurrenceStart, newStart);
     nextRRule = { ...nextRRule, byDay: swapped };
@@ -907,8 +905,7 @@ export function adjustRRuleForAllMove(
     }
     // Ordinal BYDAY → recompute ordinal + weekday for newStart
     if (rrule.byDay?.length) {
-      const { numToCode } = getWeekDayMaps(adapter);
-      const code = numToCode[adapter.getDayOfWeek(newStart)];
+      const code = getWeekDayCode(adapter, newStart);
       const ord = computeMonthlyOrdinal(adapter, newStart);
       nextRRule = { ...nextRRule, byDay: [`${ord}${code}` as RecurringEventByDayValue] };
     }
