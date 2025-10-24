@@ -135,6 +135,11 @@ interface CalendarOccurrencePlaceholderBase {
    */
   end: SchedulerValidDate;
   /**
+   * The id of the resource onto which to drop the event.
+   * If undefined, the event will be dropped outside of any resource.
+   */
+  resourceId: CalendarResourceId | undefined;
+  /**
    * Whether the occurrence placeholder should be hidden.
    * This is used when dragging an event outside of the calendar to avoid showing both the placeholder and the drag preview.
    */
@@ -219,7 +224,8 @@ export interface CalendarProcessedDate {
 export type CalendarEventUpdatedProperties = Partial<CalendarEvent> &
   Required<Pick<CalendarEvent, 'id'>>;
 
+// TODO: Consider splitting the interface in two, one for the Event Calendar and one for the Timeline.
 /**
  * The type of surface the event is being rendered on.
  */
-export type EventSurfaceType = 'day-grid' | 'time-grid';
+export type EventSurfaceType = 'day-grid' | 'time-grid' | 'timeline';
