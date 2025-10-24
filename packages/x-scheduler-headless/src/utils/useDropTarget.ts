@@ -189,7 +189,9 @@ async function applyInternalDragOrResizeOccurrencePlaceholder(
 
   const changes: CalendarEventUpdatedProperties = { id: eventId, start, end };
 
-  if (placeholder.resourceId != null) {
+  // If `null`, we want to set the event resource to `null` (no resource).
+  // If `undefined`, we want to keep the original event resource.
+  if (placeholder.resourceId !== undefined) {
     changes.resource = placeholder.resourceId;
   }
 
@@ -228,7 +230,9 @@ function applyExternalDragOccurrencePlaceholder(
     ...placeholder.eventData,
   };
 
-  if (placeholder.resourceId != null) {
+  // If `null`, we want to set the event resource to `null` (no resource).
+  // If `undefined`, we want to keep the original event resource.
+  if (placeholder.resourceId !== undefined) {
     event.resource = placeholder.resourceId;
   }
 
