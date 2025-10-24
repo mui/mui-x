@@ -21,7 +21,7 @@ describe('SankeyChart', () => {
         links.push({
           source: nodes[i],
           target: nodes[targetIndex],
-          value: Math.floor(Math.random() * 50) + 10,
+          value: i + j + 10,
         });
       }
     }
