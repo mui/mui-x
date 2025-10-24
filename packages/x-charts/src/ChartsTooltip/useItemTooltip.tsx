@@ -4,7 +4,7 @@ import { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/co
 import { selectorChartsTooltipItem } from '../internals/plugins/featurePlugins/useChartInteraction';
 import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
-import { useRadiusAxes, useRotationAxes, useXAxes, useYAxes } from '../hooks/useAxis';
+import { useRotationAxes, useXAxes, useYAxes } from '../hooks/useAxis';
 import { useZAxes } from '../hooks/useZAxis';
 import { selectorChartSeriesConfig } from '../internals/plugins/corePlugins/useChartSeries/useChartSeries.selectors';
 import {
@@ -33,7 +33,6 @@ export function useInternalItemTooltip<T extends ChartSeriesType>():
   const { yAxis, yAxisIds } = useYAxes();
   const { zAxis, zAxisIds } = useZAxes();
   const { rotationAxis, rotationAxisIds } = useRotationAxes();
-  const { radiusAxis, radiusAxisIds } = useRadiusAxes();
 
   if (!identifier) {
     return null;
@@ -50,14 +49,7 @@ export function useInternalItemTooltip<T extends ChartSeriesType>():
   const zAxisId: AxisId | undefined =
     itemSeries && 'zAxisId' in itemSeries ? (itemSeries.zAxisId ?? zAxisIds[0]) : zAxisIds[0];
 
-  const rotationAxisId: AxisId | undefined =
-    itemSeries && 'rotationAxisId' in itemSeries
-      ? ((itemSeries.rotationAxisId as never) ?? rotationAxisIds[0])
-      : rotationAxisIds[0];
-  const radiusAxisId: AxisId | undefined =
-    itemSeries && 'radiusAxisId' in itemSeries
-      ? ((itemSeries.radiusAxisId as never) ?? radiusAxisIds[0])
-      : radiusAxisIds[0];
+  const rotationAxisId: AxisId | undefined = rotationAxisIds[0];
 
   if (!itemSeries) {
     return null;
@@ -82,9 +74,6 @@ export function useInternalItemTooltip<T extends ChartSeriesType>():
 
   if (rotationAxisId !== undefined) {
     axesConfig.rotation = rotationAxis[rotationAxisId];
-  }
-  if (radiusAxisId !== undefined) {
-    axesConfig.radius = radiusAxis[radiusAxisId];
   }
 
   return (seriesConfig[itemSeries.type].tooltipGetter as unknown as TooltipGetter<T>)({
