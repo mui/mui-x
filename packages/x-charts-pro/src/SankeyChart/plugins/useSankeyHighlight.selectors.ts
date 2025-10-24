@@ -4,7 +4,7 @@ import {
   type UseChartSeriesSignature,
 } from '@mui/x-charts/internals';
 import type { UseSankeyHighlightSignature } from './useSankeyHighlight.types';
-import type { SankeyLayoutLink, SankeyLayoutNode, SankeyNodeId } from '../sankey.types';
+import type { SankeyLayoutLink, SankeyNodeId } from '../sankey.types';
 import type {
   SankeyLinkFade,
   SankeyLinkHighlight,
