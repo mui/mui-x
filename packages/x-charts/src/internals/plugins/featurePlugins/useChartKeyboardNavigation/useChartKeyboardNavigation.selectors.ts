@@ -15,14 +15,15 @@ const selectKeyboardNavigation: ChartOptionalRootSelector<UseChartKeyboardNaviga
   state,
 ) => state.keyboardNavigation;
 
-
 export const selectorChartsItemIsFocused = createSelector(
   [selectKeyboardNavigation],
   (keyboardNavigationState, item: FocusedItemData) => {
-    return keyboardNavigationState?.item != null &&
+    return (
+      keyboardNavigationState?.item != null &&
       keyboardNavigationState.item.type === item.seriesType &&
       keyboardNavigationState.item.seriesId === item.seriesId &&
       keyboardNavigationState.item.dataIndex === item.dataIndex
+    );
   },
 );
 
@@ -57,33 +58,33 @@ export const selectorChartsIsKeyboardNavigationEnabled = createSelector(
 
 const createSelectAxisHighlight =
   (direction: 'x' | 'y') =>
-    <T extends ChartSeriesType>(
-      type: T | undefined,
-      seriesId: SeriesId | undefined,
-      dataIndex: number | undefined,
-      axis: ComputeResult<ChartsAxisProps>,
-      series: ProcessedSeries<T>,
-    ): AxisItemIdentifier | undefined => {
-      if (type === undefined || seriesId === undefined || dataIndex === undefined) {
-        return undefined;
-      }
+  <T extends ChartSeriesType>(
+    type: T | undefined,
+    seriesId: SeriesId | undefined,
+    dataIndex: number | undefined,
+    axis: ComputeResult<ChartsAxisProps>,
+    series: ProcessedSeries<T>,
+  ): AxisItemIdentifier | undefined => {
+    if (type === undefined || seriesId === undefined || dataIndex === undefined) {
+      return undefined;
+    }
 
-      const seriesConfig = series[type]?.series[seriesId];
-      if (!seriesConfig) {
-        return undefined;
-      }
+    const seriesConfig = series[type]?.series[seriesId];
+    if (!seriesConfig) {
+      return undefined;
+    }
 
-      let axisId: AxisId | false | undefined =
-        direction === 'x'
-          ? 'xAxisId' in seriesConfig && seriesConfig.xAxisId
-          : 'yAxisId' in seriesConfig && seriesConfig.yAxisId;
+    let axisId: AxisId | false | undefined =
+      direction === 'x'
+        ? 'xAxisId' in seriesConfig && seriesConfig.xAxisId
+        : 'yAxisId' in seriesConfig && seriesConfig.yAxisId;
 
-      if (axisId === undefined || axisId === false) {
-        axisId = axis.axisIds[0];
-      }
+    if (axisId === undefined || axisId === false) {
+      axisId = axis.axisIds[0];
+    }
 
-      return { axisId, dataIndex };
-    };
+    return { axisId, dataIndex };
+  };
 
 export const selectorChartsKeyboardXAxisIndex = createSelector(
   [
