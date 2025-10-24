@@ -29,14 +29,37 @@ export default function SankeyLinkSorting() {
     >
       <div>
         <Typography variant="h6" gutterBottom>
-          Default Link Order
+          auto (default)
         </Typography>
-        <SankeyChart height={300} series={{ data }} />
+        <SankeyChart
+          height={300}
+          series={{
+            data,
+            linkOptions: {
+              sort: 'auto',
+            },
+          }}
+        />
       </div>
 
       <div>
         <Typography variant="h6" gutterBottom>
-          Links Sorted by Value
+          fixed
+        </Typography>
+        <SankeyChart
+          height={300}
+          series={{
+            data,
+            linkOptions: {
+              sort: 'fixed',
+            },
+          }}
+        />
+      </div>
+
+      <div>
+        <Typography variant="h6" gutterBottom>
+          Custom Function
         </Typography>
         <SankeyChart
           height={300}
