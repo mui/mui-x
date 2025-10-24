@@ -26,7 +26,7 @@ export interface ScatterProps {
   series: DefaultizedScatterSeriesType;
   xScale: D3Scale;
   yScale: D3Scale;
-  color: string | ((dataIndex?: number) => string);
+  color: string;
   colorGetter: ColorGetter<'scatter'>;
   /**
    * Callback fired when clicking on a scatter item.

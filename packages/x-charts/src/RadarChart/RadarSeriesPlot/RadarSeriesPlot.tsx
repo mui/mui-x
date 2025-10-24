@@ -31,7 +31,7 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
                 {...getPathProps({
                   seriesId,
                   points,
-                  color: getSeriesColorFn(color)(),
+                  color: getSeriesColorFn(color)(null),
                   fillArea,
                   isFaded,
                   isHighlighted,
@@ -55,7 +55,10 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
                   {...getCircleProps({
                     seriesId,
                     point,
-                    color: getSeriesColorFn(color)(point.dataIndex),
+                    color: getSeriesColorFn(color)({
+                      value: point.value,
+                      dataIndex: point.dataIndex,
+                    }),
                     fillArea,
                     isFaded,
                     isHighlighted,
