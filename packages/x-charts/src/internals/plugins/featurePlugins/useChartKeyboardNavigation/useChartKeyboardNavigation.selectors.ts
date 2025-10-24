@@ -1,3 +1,4 @@
+import { createSelector as createSelectorX } from '@mui/x-internals/store';
 import { ChartOptionalRootSelector, createSelector } from '../../utils/selectors';
 import { UseChartKeyboardNavigationSignature } from './useChartKeyboardNavigation.types';
 import { ProcessedSeries, selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';
@@ -7,6 +8,7 @@ import {
 } from '../useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
 import { ComputeResult } from '../useChartCartesianAxis/computeAxisValue';
 import { ChartSeriesType } from '../../../../models/seriesType/config';
+import { FocusedItemData } from '../../../../hooks/useFocusedItem';
 import { SeriesId } from '../../../../models/seriesType/common';
 import { AxisId, AxisItemIdentifier, ChartsAxisProps } from '../../../../models/axis';
 
@@ -37,6 +39,21 @@ export const selectorChartsFocusedDataIndex = createSelector(
 export const selectorChartsIsKeyboardNavigationEnabled = createSelector(
   [selectKeyboardNavigation],
   (keyboardNavigationState) => !!keyboardNavigationState?.enableKeyboardNavigation,
+);
+
+export const selectorChartsIsFocused = createSelectorX(
+  selectKeyboardNavigation,
+  (keyboardNavigationState, item: FocusedItemData) => {
+    const focusedItem = keyboardNavigationState?.item;
+
+    return Boolean(
+      item &&
+        focusedItem &&
+        focusedItem.type === item.seriesType &&
+        focusedItem.seriesId === item.seriesId &&
+        focusedItem.dataIndex === item.dataIndex,
+    );
+  },
 );
 
 /**
