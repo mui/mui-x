@@ -106,7 +106,7 @@ This configuration can be used in Bar Charts to set colors according to string c
 
 If you need more control over the color assignment, you can provide a `color` callback prop to the chart component.
 
-The callback can either receive `null` or `{ value, dataIndex }` and should return a color string. 
+The callback can either receive `null` or `{ value, dataIndex }` and should return a color string.
 
 If it is called with `null`, the callback should return a color to represent the whole series. This color is used in legends and other places where the series is represented as a whole.
 
