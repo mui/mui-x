@@ -11,10 +11,6 @@ import {
 import { SchedulerState as State } from './SchedulerStore.types';
 import { getWeekDayCode } from '../recurring-event-utils';
 
-interface CalendarResourceWithParentId extends CalendarResource {
-  parentId: null | CalendarResourceId;
-}
-
 const eventByIdMapSelector = createSelectorMemoized(
   (state: State) => state.events,
   (events) => {
@@ -34,20 +30,20 @@ const eventSelector = createSelector(
 const resourcesByIdFlatMapSelector = createSelectorMemoized(
   (state: State) => state.resources,
   (resources) => {
-    const map = new Map<CalendarResourceId | null | undefined, CalendarResourceWithParentId>();
-    const addResourceToMap = (resource: CalendarResource, parentId: null | CalendarResourceId) => {
+    const map = new Map<CalendarResourceId | null | undefined, CalendarResource>();
+    const addResourceToMap = (resource: CalendarResource) => {
       const { children, ...resourceWithoutChildren } = resource;
-      map.set(resource.id, { ...resourceWithoutChildren, parentId });
+      map.set(resource.id, resourceWithoutChildren);
 
       if (children) {
         for (const child of children) {
-          addResourceToMap(child, resource.id);
+          addResourceToMap(child);
         }
       }
     };
 
     for (const resource of resources) {
-      addResourceToMap(resource, null);
+      addResourceToMap(resource);
     }
     return map;
   },
