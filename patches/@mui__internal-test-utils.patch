@@ -1,0 +1,26 @@
+diff --git a/build/createRenderer.js b/build/createRenderer.js
+index 800cf1520c1457d76c2eba097e7ebcb86c28de81..be0cfd6a08cf077bef2dbcd0dbb934c3d8763c06 100644
+--- a/build/createRenderer.js
++++ b/build/createRenderer.js
+@@ -211,7 +211,8 @@ function renderToString(element, configuration) {
+         },
+     };
+ }
+-const isVitest = 
++const isVitest =
++    ('vi' in globalThis && vi != null) ||
+ // VITEST is present on the environment when not in browser mode.
+ process.env.VITEST === 'true' ||
+     // VITEST_BROWSER_DEBUG is present on vitest in browser mode.
+diff --git a/src/createRenderer.tsx b/src/createRenderer.tsx
+index 96d80d00c18a50f7e35c7a1bcba9e19314904e08..bc342082389b307c21363c4cd2e6d6042679306b 100644
+--- a/src/createRenderer.tsx
++++ b/src/createRenderer.tsx
+@@ -339,6 +339,7 @@ export interface Clock {
+ export type ClockConfig = undefined | number | Date;
+ 
+ const isVitest =
++  ('vi' in globalThis && vi != null) ||
+   // VITEST is present on the environment when not in browser mode.
+   process.env.VITEST === 'true' ||
+   // VITEST_BROWSER_DEBUG is present on vitest in browser mode.
