@@ -21,6 +21,7 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
   // States only used for the initialization of the size.
   const [innerWidth, setInnerWidth] = React.useState(0);
   const [innerHeight, setInnerHeight] = React.useState(0);
+  const isFirstRender = React.useRef(true);
 
   const computeSize = React.useCallback(() => {
     const mainEl = svgRef?.current;
@@ -66,6 +67,11 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
   ]);
 
   React.useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
     const width = params.width ?? store.state.dimensions.width;
     const height = params.height ?? store.state.dimensions.height;
     store.set('dimensions', {
