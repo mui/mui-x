@@ -30,6 +30,10 @@ export const useZoomOnBrush = (
     [optionsLookup, config],
   );
 
+  React.useEffect(() => {
+    instance.setZoomBrushEnabled(isZoomOnBrushEnabled);
+  }, [isZoomOnBrushEnabled, instance]);
+
   // Zoom on brush
   React.useEffect(() => {
     const element = svgRef.current;
