@@ -45,10 +45,10 @@ export class MinimalTreeViewStore<
   private eventManager = new EventManager();
 
   /**
-   * Whether the disposeEffect method has been called or not.
-   * This is useful to avoid loosing the event listeners when running React strict mode in development.
+   * List of event listeners registered.
+   * Used to re-register them in the onMount method to avoid loosing them in React strict mode.
    */
-  public hasBeenDisposed = false;
+  private eventListeners: Map<TreeViewEventListener<any>, TreeViewEvents> = new Map();
 
   public timeoutManager = new TimeoutManager();
 
@@ -126,7 +126,7 @@ export class MinimalTreeViewStore<
   }
 
   /**
-   * Updates the state of the tTree View based on the new parameters provided to the root component.
+   * Updates the state of the Tree View based on the new parameters provided to the root component.
    */
   public updateStateFromParameters(parameters: Parameters) {
     const updateModel: TreeViewModelUpdater<State, Parameters> = (
@@ -211,15 +211,18 @@ export class MinimalTreeViewStore<
     this.parameters = parameters;
   }
 
-  public disposeEffect = () => {
+  public onMount = () => {
+    // On React strict mode, the onMount method is called twice.
+    // On the 2nd call we need to re-register the events that have been destroyed on the 1st call.
+    if (this.eventListeners.size > 0 && Object.keys(this.eventManager.events).length === 0) {
+      this.eventListeners.forEach((eventName, listener) => {
+        this.eventManager.on(eventName, listener);
+      });
+    }
+
     return () => {
-      // On React strict mode, the disposeEffect is called twice.
-      // We want to avoid removing the event listeners the first time.
-      if (process.env.NODE_ENV === 'production' || this.hasBeenDisposed) {
-        this.timeoutManager.clearAll();
-        this.eventManager.removeAllListeners();
-      }
-      this.hasBeenDisposed = true;
+      this.timeoutManager.clearAll();
+      this.eventManager.removeAllListeners();
     };
   };
 
@@ -267,8 +270,11 @@ export class MinimalTreeViewStore<
       }
     };
 
+    this.eventListeners.set(enhancedHandler, eventName);
+
     this.eventManager.on(eventName, enhancedHandler);
     return () => {
+      this.eventListeners.delete(enhancedHandler);
       this.eventManager.removeListener(eventName, enhancedHandler);
     };
   };
