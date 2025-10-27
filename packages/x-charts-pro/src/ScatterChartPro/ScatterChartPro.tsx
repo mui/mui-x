@@ -1997,8 +1997,8 @@ ScatterChartPro.propTypes = {
           type: PropTypes.oneOf(['doubleTapReset']).isRequired,
         }),
         PropTypes.shape({
-          pointerMode: PropTypes.oneOf(['mouse', 'touch']),
-          requiredKeys: PropTypes.arrayOf(PropTypes.string),
+          pointerMode: PropTypes.any,
+          requiredKeys: PropTypes.array,
           type: PropTypes.oneOf(['brush']).isRequired,
         }),
       ]).isRequired,
