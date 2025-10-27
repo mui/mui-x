@@ -148,20 +148,26 @@ export class MinimalTreeViewStore<
         const initialIsControlled = this.initialParameters?.[controlledProp] !== undefined;
 
         if (initialIsControlled !== isControlled) {
-          warnOnce([
-            `Tree View: A component is changing the ${
-              initialIsControlled ? '' : 'un'
-            }controlled ${controlledProp} state of ${this.instanceName} to be ${initialIsControlled ? 'un' : ''}controlled.`,
-            'Elements should not switch from uncontrolled to controlled (or vice versa).',
-            `Decide between using a controlled or uncontrolled ${controlledProp} element for the lifetime of the component.`,
-            "The nature of the state is determined during the first render. It's considered controlled if the value is not `undefined`.",
-            'More info: https://fb.me/react-controlled-components',
-          ]);
+          warnOnce(
+            [
+              `MUI X Tree View: A component is changing the ${
+                initialIsControlled ? '' : 'un'
+              }controlled ${controlledProp} state of ${this.instanceName} to be ${initialIsControlled ? 'un' : ''}controlled.`,
+              'Elements should not switch from uncontrolled to controlled (or vice versa).',
+              `Decide between using a controlled or uncontrolled ${controlledProp} element for the lifetime of the component.`,
+              "The nature of the state is determined during the first render. It's considered controlled if the value is not `undefined`.",
+              'More info: https://fb.me/react-controlled-components',
+            ],
+            'error',
+          );
         } else if (JSON.stringify(initialDefaultValue) !== JSON.stringify(defaultValue)) {
-          warnOnce([
-            `Tree View: A component is changing the default ${controlledProp} state of an uncontrolled ${this.instanceName} after being initialized. `,
-            `To suppress this warning opt to use a controlled ${this.instanceName}.`,
-          ]);
+          warnOnce(
+            [
+              `MUI X Tree View: A component is changing the default ${controlledProp} state of an uncontrolled ${this.instanceName} after being initialized. `,
+              `To suppress this warning opt to use a controlled ${this.instanceName}.`,
+            ],
+            'error',
+          );
         }
       }
     };
