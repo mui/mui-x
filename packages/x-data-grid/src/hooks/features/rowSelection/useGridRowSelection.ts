@@ -836,9 +836,9 @@ export const useGridRowSelection = (
       }
 
       if (
-        String.fromCharCode(event.keyCode) === 'A' && 
-          (event.ctrlKey || event.metaKey) &&
-          canHaveMultipleSelection
+        String.fromCharCode(event.keyCode) === 'A' &&
+        (event.ctrlKey || event.metaKey) &&
+        canHaveMultipleSelection
       ) {
         event.preventDefault();
         toggleAllRows(true);
