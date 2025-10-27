@@ -23,6 +23,12 @@ export function getIds<T extends { id: string | number }>(items: T[]): Array<T['
   return items.map((item) => item.id);
 }
 
+export function getIdsFromOccurrencesMap(occMap: Map<string, any[]>) {
+  return Array.from(occMap.values())
+    .flat()
+    .map((o) => o.id);
+}
+
 export const storeClasses = [
   { name: 'EventCalendarStore', Value: EventCalendarStore },
   { name: 'TimelineStore', Value: TimelineStore },

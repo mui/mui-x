@@ -14,13 +14,7 @@ describe('useDayListEventOccurrencesWithPosition', () => {
 
   function testHook(events: CalendarEvent[]) {
     const { result } = renderHook(() => {
-      const occurrencesMap = innerGetEventOccurrencesGroupedByDay(
-        adapter,
-        days,
-        'every-day',
-        events,
-        new Map(),
-      );
+      const occurrencesMap = innerGetEventOccurrencesGroupedByDay(adapter, days, events, new Map());
       return useEventOccurrencesWithDayGridPosition({ days, occurrencesMap });
     });
 
