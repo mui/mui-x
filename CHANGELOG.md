@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## v7.29.10
+
+_Sep 25, 2025_
+
+We'd like to extend a big thank you to the 1 contributor who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+The following is the team member who have contributed to this release:
+@flaviendelangle
+
+### Tree View
+
+#### `@mui/x-tree-view@7.29.10`
+
+- [tree view] Fix the expansion toggle on icon container with old DOM structure (#19546) @flaviendelangle
+
+#### `@mui/x-tree-view-pro@7.29.10` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+
+Same changes as in `@mui/x-tree-view@7.29.10`.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
 ## 7.29.9
 
 _Aug 7, 2025_

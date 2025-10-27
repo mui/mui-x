@@ -1,5 +1,5 @@
 {
-  "version": "7.29.9",
+  "version": "7.29.10",
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
@@ -201,7 +201,8 @@
   },
   "resolutions": {
     "react-is": "^19.0.0",
-    "@types/node": "^20.16.11"
+    "@types/node": "^20.16.11",
+    "caniuse-lite": "1.0.30001745"
   },
   "packageManager": "pnpm@9.15.1",
   "engines": {
