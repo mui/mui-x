@@ -42,6 +42,7 @@ catalog:
   '@vitejs/plugin-react': ^5.0.4
   '@vitejs/plugin-react-swc': ^4.1.0
   '@vitest/browser': ^4.0.2
+  '@vitest/browser-playwright': 4.0.2
   '@vitest/coverage-v8': ^4.0.2
   '@vitest/ui': ^4.0.2
   autoprefixer: ^10.4.21
