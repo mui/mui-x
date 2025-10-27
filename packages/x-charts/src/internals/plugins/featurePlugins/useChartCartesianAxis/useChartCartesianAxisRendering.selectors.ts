@@ -566,14 +566,14 @@ export const selectorChartDefaultYAxisId = createSelector(
 const EMPTY_MAP = new Map<SeriesId, Flatbush>();
 export const selectorChartSeriesEmptyFlatbushMap = () => EMPTY_MAP;
 
-export const selectorChartSeriesFlatbushMap = createSelector(
-  [
-    selectorChartSeriesProcessed,
-    selectorChartNormalizedXScales,
-    selectorChartNormalizedYScales,
-    selectorChartDefaultXAxisId,
-    selectorChartDefaultYAxisId,
-  ],
+export const selectorChartSeriesFlatbushMap = createSelectorMemoized(
+
+  selectorChartSeriesProcessed,
+  selectorChartNormalizedXScales,
+  selectorChartNormalizedYScales,
+  selectorChartDefaultXAxisId,
+  selectorChartDefaultYAxisId,
+
   function selectChartSeriesFlatbushMap(
     allSeries,
     xAxesScaleMap,
