@@ -205,7 +205,7 @@ catalogs:
       specifier: ^1.6.0
       version: 1.6.0
     vite:
-      specifier: ^7.1.9
+      specifier: ^7.1.12
       version: 7.1.12
     vitest:
       specifier: 3.2.4
@@ -368,7 +368,7 @@ importers:
         specifier: ^1.40.0
         version: 1.40.0
       esbuild:
-        specifier: ^0.25.10
+        specifier: ^0.25.11
         version: 0.25.11
       eslint:
         specifier: ^9.37.0
