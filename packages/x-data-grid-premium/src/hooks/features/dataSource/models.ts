@@ -109,11 +109,12 @@ export interface GridDataSourceApiBasePremium extends Omit<GridDataSourceApiBase
    * Any missing parameter from `params` will be filled from the state (sorting, filtering, etc.).
    * @param {GridRowId} parentId The id of the parent node (default: `GRID_ROOT_GROUP_ID`).
    * @param {GridDataSourceFetchRowsParams<GridGetRowsParamsPremium>} params Request parameters override.
+   * @returns {Promise<void>} A promise that resolves when the rows are fetched.
    */
   fetchRows: (
     parentId?: GridRowId,
     params?: GridDataSourceFetchRowsParams<GridGetRowsParamsPremium>,
-  ) => void;
+  ) => Promise<void>;
 }
 
 export interface GridDataSourceApiPremium {
