@@ -10,6 +10,7 @@ import {
   CalendarResourceId,
   SchedulerValidDate,
   CalendarEventUpdatedProperties,
+  RecurringEventUpdateScope,
 } from '../../models';
 import {
   SchedulerState,
@@ -72,6 +73,7 @@ export class SchedulerStore<
       occurrencePlaceholder: null,
       nowUpdatedEveryMinute: adapter.date(),
       isMultiDayEvent: DEFAULT_IS_MULTI_DAY_EVENT,
+      pendingUpdateRecurringEventParameters: null,
       visibleResources: new Map(),
       visibleDate:
         parameters.visibleDate ??
@@ -266,9 +268,25 @@ export class SchedulerStore<
    * Updates a recurring event in the calendar.
    */
   public updateRecurringEvent = (params: UpdateRecurringEventParameters) => {
-    const { adapter } = this.state;
-    const { occurrenceStart, changes, scope } = params;
+    this.set('pendingUpdateRecurringEventParameters', params);
+  };
 
+  /**
+   * Applies the update to a recurring event after the user selects a scope.
+   * @param scope The selected update scope, or null if canceled.
+   */
+  public selectRecurringEventUpdateScope = (scope: RecurringEventUpdateScope | null) => {
+    const { pendingUpdateRecurringEventParameters, adapter } = this.state;
+    if (pendingUpdateRecurringEventParameters == null) {
+      return;
+    }
+
+    this.set('pendingUpdateRecurringEventParameters', null);
+    if (scope == null) {
+      return;
+    }
+
+    const { changes, occurrenceStart, onSubmit } = pendingUpdateRecurringEventParameters;
     const original = selectors.event(this.state, changes.id);
     if (!original) {
       throw new Error(
@@ -305,6 +323,10 @@ export class SchedulerStore<
     }
 
     this.updateEvents(updatedEvents);
+    const submit = onSubmit;
+    if (submit) {
+      queueMicrotask(() => submit());
+    }
   };
 
   /**
