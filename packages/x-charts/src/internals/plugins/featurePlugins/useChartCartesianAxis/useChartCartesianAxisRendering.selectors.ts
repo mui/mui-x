@@ -200,19 +200,18 @@ export const selectorChartYAxisWithDomains = createSelectorMemoized(
   },
 );
 
-export const selectorChartZoomAxisFilters = createSelector(
-  [
-    selectorChartZoomMap,
-    selectorChartZoomOptionsLookup,
-    selectorChartXAxisWithDomains,
-    selectorChartYAxisWithDomains,
-  ],
-  (
+export const selectorChartZoomAxisFilters = createSelectorMemoized(
+  selectorChartZoomMap,
+  selectorChartZoomOptionsLookup,
+  selectorChartXAxisWithDomains,
+  selectorChartYAxisWithDomains,
+
+  function selectorChartZoomAxisFilters(
     zoomMap,
     zoomOptions,
     { axes: xAxis, domains: xDomains },
     { axes: yAxis, domains: yDomains },
-  ) => {
+  ) {
     if (!zoomMap || !zoomOptions) {
       return undefined;
     }
