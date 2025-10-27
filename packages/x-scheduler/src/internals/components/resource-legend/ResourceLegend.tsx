@@ -15,8 +15,12 @@ import { useTranslations } from '../../utils/TranslationsContext';
 import { getColorClassName } from '../../utils/color-utils';
 import './ResourceLegend.css';
 
-function ResourceLegendItem(props: { resource: CalendarResource; children?: React.ReactNode }) {
-  const { resource, children } = props;
+interface ResourceLegendItemProps extends Omit<React.HTMLAttributes<HTMLElement>, 'resource'> {
+  resource: CalendarResource;
+}
+
+function ResourceLegendItem(props: ResourceLegendItemProps) {
+  const { resource } = props;
   const translations = useTranslations();
 
   return (
@@ -56,7 +60,13 @@ function ResourceLegendItem(props: { resource: CalendarResource; children?: Reac
           />
         </Checkbox.Root>
       </label>
-      {children}
+      {resource.children && resource.children.length > 0 && (
+        <div className="ResourceLegendChildren">
+          {resource.children.map((childResource) => (
+            <ResourceLegendItem key={childResource.id} resource={childResource} />
+          ))}
+        </div>
+      )}
     </React.Fragment>
   );
 }
@@ -65,40 +75,38 @@ const getVisibilityDifferenceList = (
   allResources: CalendarResource[],
   oldValue: string[],
   newValue: string[],
-  parentId?: string,
 ) => {
   const newVisibleResourcesSet = new Set(newValue);
   const oldVisibleResourcesSet = new Set(oldValue);
-  const differenceList: string[] = [];
+
+  const diffMap = new Map<string, boolean>();
+
+  const propagateChangeToChildren = (resource: CalendarResource, isVisible: boolean) => {
+    diffMap.set(resource.id, isVisible);
+    if (resource.children && resource.children.length > 0) {
+      for (const child of resource.children) {
+        diffMap.set(child.id, isVisible);
+        propagateChangeToChildren(child, isVisible);
+      }
+    }
+  };
 
   for (const resource of allResources) {
-    // // if the parent was added, add the children too
-    if (
-      !parentId &&
-      newVisibleResourcesSet.has(resource.id) &&
-      !oldVisibleResourcesSet.has(resource.id)
-    ) {
-      continue;
-    }
-    // when hiding parent, also hide children resources
-    if (
-      !newVisibleResourcesSet.has(resource.id) ||
-      (parentId && !newVisibleResourcesSet.has(parentId))
-    ) {
-      differenceList.push(resource.id);
-    }
+    // if the visibility of the resource has not changed, we need to check its children
+    if (newVisibleResourcesSet.has(resource.id) === oldVisibleResourcesSet.has(resource.id)) {
+      diffMap.set(resource.id, newVisibleResourcesSet.has(resource.id));
 
-    if (resource.children && resource.children.length > 0) {
-      const childDifferences = getVisibilityDifferenceList(
-        resource.children,
-        oldValue,
-        newValue,
-        resource.id,
-      );
-      differenceList.push(...childDifferences);
+      if (resource.children && resource.children.length > 0) {
+        const childDifferences = getVisibilityDifferenceList(resource.children, oldValue, newValue);
+        childDifferences?.forEach((value, key) => diffMap.set(key, value));
+      }
+
+      // if the visibility has changed, we can propagate the change to its children
+    } else {
+      propagateChangeToChildren(resource, newVisibleResourcesSet.has(resource.id));
     }
   }
-  return differenceList;
+  return diffMap;
 };
 
 export const ResourceLegend = React.forwardRef(function ResourceLegend(
@@ -112,11 +120,9 @@ export const ResourceLegend = React.forwardRef(function ResourceLegend(
   const visibleResourcesList = useStore(store, selectors.visibleResourcesList);
 
   const handleVisibleResourcesChange = useEventCallback((value: string[]) => {
-    const differenceList = getVisibilityDifferenceList(resources, visibleResourcesList, value);
+    const differenceMap = getVisibilityDifferenceList(resources, visibleResourcesList, value);
 
-    const newVisibleResourcesMap = new Map(differenceList.map((resource) => [resource, false]));
-
-    store.setVisibleResources(newVisibleResourcesMap);
+    store.setVisibleResources(differenceMap);
   });
 
   if (resources.length === 0) {
@@ -134,17 +140,7 @@ export const ResourceLegend = React.forwardRef(function ResourceLegend(
       {...other}
     >
       {resources.map((resource) => {
-        return (
-          <ResourceLegendItem key={resource.id} resource={resource}>
-            {resource.children && resource.children.length > 0 && (
-              <div className="ResourceLegendChildren">
-                {resource.children.map((childResource) => (
-                  <ResourceLegendItem key={childResource.id} resource={childResource} />
-                ))}
-              </div>
-            )}
-          </ResourceLegendItem>
-        );
+        return <ResourceLegendItem key={resource.id} resource={resource} />;
       })}
     </CheckboxGroup>
   );

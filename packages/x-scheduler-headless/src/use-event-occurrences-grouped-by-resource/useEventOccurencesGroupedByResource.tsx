@@ -47,6 +47,11 @@ export namespace useEventOccurrencesGroupedByResource {
   }[];
 }
 
+interface InnerGetEventOccurrencesGroupedByResourceReturnValue {
+  resource: CalendarResource;
+  occurrences: CalendarEventOccurrence[];
+}
+
 /**
  * Do not use directly, use the `useEventOccurrencesGroupedByResource` hook instead.
  * This is only exported for testing purposes.
@@ -58,7 +63,7 @@ export function innerGetEventOccurrencesGroupedByResource(
   resources: CalendarResource[],
   start: SchedulerValidDate,
   end: SchedulerValidDate,
-): { resource: CalendarResource; occurrences: CalendarEventOccurrence[] }[] {
+): InnerGetEventOccurrencesGroupedByResourceReturnValue[] {
   const occurrencesGroupedByResource = new Map<string, CalendarEventOccurrence[]>();
 
   const occurrences = getOccurrencesFromEvents({ adapter, start, end, events, visibleResources });
@@ -74,13 +79,19 @@ export function innerGetEventOccurrencesGroupedByResource(
     }
   }
 
-  return (
-    resources
-      // Sort by resource.title (localeCompare for stable alphabetical ordering).
-      .sort((a, b) => a.title.localeCompare(b.title))
-      .map((resource) => ({
-        resource,
-        occurrences: occurrencesGroupedByResource.get(resource.id) ?? [],
-      }))
-  );
+  const processResources = (innerResources: CalendarResource[]) => {
+    const sortedResources = innerResources.sort((a, b) => a.title.localeCompare(b.title));
+    return sortedResources.reduce(
+      (acc: InnerGetEventOccurrencesGroupedByResourceReturnValue[], resource: CalendarResource) => {
+        acc.push({ resource, occurrences: occurrencesGroupedByResource.get(resource.id) ?? [] });
+        if (resource.children && resource.children.length > 0) {
+          acc.push(...processResources(resource.children));
+        }
+        return acc;
+      },
+      [],
+    );
+  };
+
+  return processResources(resources);
 }

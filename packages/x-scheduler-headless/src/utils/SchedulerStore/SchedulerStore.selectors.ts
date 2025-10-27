@@ -11,6 +11,10 @@ import {
 import { SchedulerState as State } from './SchedulerStore.types';
 import { getWeekDayCode } from '../recurring-event-utils';
 
+interface CalendarResourceWithParentId extends CalendarResource {
+  parentId: null | CalendarResourceId;
+}
+
 const eventByIdMapSelector = createSelectorMemoized(
   (state: State) => state.events,
   (events) => {
@@ -30,22 +34,45 @@ const eventSelector = createSelector(
 const resourcesByIdFlatMapSelector = createSelectorMemoized(
   (state: State) => state.resources,
   (resources) => {
-    const map = new Map<CalendarResourceId | null | undefined, CalendarResource>();
-    const addResourceToMap = (resource: CalendarResource) => {
+    const map = new Map<CalendarResourceId | null | undefined, CalendarResourceWithParentId>();
+    const addResourceToMap = (resource: CalendarResource, parentId: null | CalendarResourceId) => {
       const { children, ...resourceWithoutChildren } = resource;
-      map.set(resource.id, resourceWithoutChildren);
+      map.set(resource.id, { ...resourceWithoutChildren, parentId });
 
       if (children) {
         for (const child of children) {
-          addResourceToMap(child);
+          addResourceToMap(child, resource.id);
         }
       }
     };
 
     for (const resource of resources) {
-      addResourceToMap(resource);
+      addResourceToMap(resource, null);
     }
     return map;
+  },
+);
+
+const resourcesFlatArraySelector = createSelectorMemoized(
+  (state: State) => state.resources,
+  (resources) => {
+    const flatArray: CalendarResource[] = [];
+
+    const addResourceAndChildren = (resource: CalendarResource) => {
+      const { children, ...resourceWithoutChildren } = resource;
+      flatArray.push(resourceWithoutChildren);
+
+      if (children) {
+        for (const child of children) {
+          addResourceAndChildren(child);
+        }
+      }
+    };
+
+    for (const resource of resources) {
+      addResourceAndChildren(resource);
+    }
+    return flatArray;
   },
 );
 
@@ -69,7 +96,7 @@ export const selectors = {
   nowUpdatedEveryMinute: createSelector((state: State) => state.nowUpdatedEveryMinute),
   isMultiDayEvent: createSelector((state: State) => state.isMultiDayEvent),
   resources: createSelector((state: State) => state.resources),
-  resourcesFlatMap: resourcesByIdFlatMapSelector,
+  resourcesFlatArray: resourcesFlatArraySelector,
   events: createSelector((state: State) => state.events),
   visibleResourcesMap: createSelector((state: State) => state.visibleResources),
   canCreateNewEvent: createSelector((state: State) => !state.readOnly),
@@ -99,7 +126,6 @@ export const selectors = {
 
         if (isVisible) {
           result.push(resource.id);
-
           if (resource.children) {
             for (const child of resource.children) {
               addResourceAndChildren(child);

@@ -46,7 +46,7 @@ export const initialEvents: CalendarEvent[] = [
     start: START_OF_FIRST_WEEK.set({ weekday: 4, hour: 10 }),
     end: START_OF_FIRST_WEEK.set({ weekday: 4, hour: 11 }),
     title: '1-on-1 with Abigail',
-    resource: 'work',
+    resource: 'project-a',
     rrule: { freq: 'WEEKLY', interval: 3, byDay: ['TH'] },
   },
   {
@@ -54,8 +54,24 @@ export const initialEvents: CalendarEvent[] = [
     start: START_OF_FIRST_WEEK.plus({ weeks: 1 }).set({ weekday: 1, hour: 10 }),
     end: START_OF_FIRST_WEEK.plus({ weeks: 1 }).set({ weekday: 1, hour: 11 }),
     title: '1-on-1 with Hailey',
-    resource: 'work',
+    resource: 'project-b',
     rrule: { freq: 'WEEKLY', interval: 3, byDay: ['MO'] },
+  },
+  {
+    id: 'weekly-planning-a',
+    start: START_OF_FIRST_WEEK.plus({ weeks: 1 }).set({ weekday: 2, hour: 10 }),
+    end: START_OF_FIRST_WEEK.plus({ weeks: 1 }).set({ weekday: 2, hour: 11 }),
+    title: 'Weekly planning',
+    resource: 'project-a',
+    rrule: { freq: 'WEEKLY', interval: 2, byDay: ['TU'] },
+  },
+  {
+    id: 'weekly-planning-b',
+    start: START_OF_FIRST_WEEK.set({ weekday: 5, hour: 10 }),
+    end: START_OF_FIRST_WEEK.set({ weekday: 5, hour: 11 }),
+    title: 'Weekly planning',
+    resource: 'project-b',
+    rrule: { freq: 'WEEKLY', interval: 2, byDay: ['FR'] },
   },
 
   // Non-recurring work events
@@ -252,7 +268,20 @@ export const initialEvents: CalendarEvent[] = [
 ];
 
 export const resources: CalendarResource[] = [
-  { title: 'Work', id: 'work', eventColor: 'violet' },
+  {
+    title: 'Work',
+    id: 'work',
+    eventColor: 'violet',
+    children: [
+      {
+        title: 'Project A',
+        id: 'project-a',
+        eventColor: 'pink',
+        children: [{ title: 'Subproject A1', id: 'subproject-a1', eventColor: 'red' }],
+      },
+      { title: 'Project B', id: 'project-b', eventColor: 'blue' },
+    ],
+  },
   { title: 'Holidays', id: 'holidays', eventColor: 'red' },
   { title: 'Workout', id: 'workout', eventColor: 'jade' },
   { title: 'Birthdays', id: 'birthdays', eventColor: 'lime' },

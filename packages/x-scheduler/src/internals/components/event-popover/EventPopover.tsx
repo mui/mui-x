@@ -52,7 +52,7 @@ export const EventPopoverContent = React.forwardRef(function EventPopoverContent
 
   // Selector hooks
   const isEventReadOnly = useStore(store, selectors.isEventReadOnly, occurrence.id);
-  const resources = useStore(store, selectors.resources);
+  const resources = useStore(store, selectors.resourcesFlatArray);
   const color = useStore(store, selectors.eventColor, occurrence.id);
   const rawPlaceholder = useStore(store, selectors.occurrencePlaceholder);
   const recurrencePresets = useStore(store, selectors.recurrencePresets, occurrence.start);
