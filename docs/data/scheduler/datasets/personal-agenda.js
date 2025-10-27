@@ -271,7 +271,7 @@ export const resources = [
         id: 'project-a',
         eventColor: 'pink',
         children: [
-          { title: 'Subproject A1', id: 'subproject-a1', eventColor: 'red' },
+          { title: 'Subproject A1', id: 'subproject-a1', eventColor: 'mauve' },
         ],
       },
       { title: 'Project B', id: 'project-b', eventColor: 'blue' },

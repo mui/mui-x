@@ -277,7 +277,7 @@ export const resources: CalendarResource[] = [
         title: 'Project A',
         id: 'project-a',
         eventColor: 'pink',
-        children: [{ title: 'Subproject A1', id: 'subproject-a1', eventColor: 'red' }],
+        children: [{ title: 'Subproject A1', id: 'subproject-a1', eventColor: 'mauve' }],
       },
       { title: 'Project B', id: 'project-b', eventColor: 'blue' },
     ],
