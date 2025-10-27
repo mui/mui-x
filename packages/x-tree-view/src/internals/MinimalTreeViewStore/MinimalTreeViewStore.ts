@@ -1,6 +1,6 @@
 import { Store } from '@mui/x-internals/store';
 import { warnOnce } from '@mui/x-internals/warning';
-import { EMPTY_OBJECT } from '@base-ui-components/utils/empty';
+import { EMPTY_ARRAY } from '@base-ui-components/utils/empty';
 import { EventManager } from '@mui/x-internals/EventManager';
 import {
   MinimalTreeViewPublicAPI,
@@ -86,7 +86,7 @@ export class MinimalTreeViewStore<
       selectedItems: applyModelInitialValue(
         parameters.selectedItems,
         parameters.defaultSelectedItems,
-        (parameters.multiSelect ? EMPTY_OBJECT : null) as TreeViewSelectionValue<Multiple>,
+        (parameters.multiSelect ? EMPTY_ARRAY : null) as TreeViewSelectionValue<Multiple>,
       ),
     };
 
@@ -115,16 +115,10 @@ export class MinimalTreeViewStore<
    */
   public buildPublicAPI(): MinimalTreeViewPublicAPI<R, Multiple> {
     return {
-      focusItem: this.focus.focusItem,
-      getItem: this.items.getItem,
-      getItemDOMElement: this.items.getItemDOMElement,
-      getItemOrderedChildrenIds: this.items.getItemOrderedChildrenIds,
-      getItemTree: this.items.getItemTree,
-      getParentId: this.items.getParentId,
-      setIsItemDisabled: this.items.setIsItemDisabled,
-      isItemExpanded: this.expansion.isItemExpanded,
-      setItemExpansion: this.expansion.setItemExpansion,
-      setItemSelection: this.selection.setItemSelection,
+      ...this.items.buildPublicAPI(),
+      ...this.focus.buildPublicAPI(),
+      ...this.expansion.buildPublicAPI(),
+      ...this.selection.buildPublicAPI(),
     };
   }
 

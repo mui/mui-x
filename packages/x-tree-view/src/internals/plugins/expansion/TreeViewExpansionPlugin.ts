@@ -27,6 +27,13 @@ export class TreeViewExpansionPlugin {
   public isItemExpanded = (itemId: TreeViewItemId) =>
     expansionSelectors.isItemExpanded(this.store.state, itemId);
 
+  public buildPublicAPI = () => {
+    return {
+      isItemExpanded: this.isItemExpanded,
+      setItemExpansion: this.setItemExpansion,
+    };
+  };
+
   /**
    * Change the expansion status of a given item.
    * @param {object} parameters The parameters of the method.

@@ -117,6 +117,12 @@ export class TreeViewSelectionPlugin<Multiple extends boolean | undefined> {
     this.lastSelectedRange = getLookupFromArray(range);
   };
 
+  public buildPublicAPI = () => {
+    return {
+      setItemSelection: this.setItemSelection,
+    };
+  };
+
   /**
    * Select or deselect an item.
    * @param {object} parameters The parameters of the method.

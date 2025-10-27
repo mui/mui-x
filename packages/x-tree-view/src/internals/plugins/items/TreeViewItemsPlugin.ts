@@ -15,10 +15,19 @@ export class TreeViewItemsPlugin<R extends TreeViewValidItem<R>> {
   }
 
   /**
+   * Get the item with the given id.
+   * When used in the Simple Tree View, it returns an object with the `id` and `label` properties.
+   * @param {TreeViewItemId} itemId The id of the item to retrieve.
+   * @returns {R} The item with the given id.
+   */
+  private getItem = (itemId: TreeViewItemId): R =>
+    itemsSelectors.itemModel(this.store.state, itemId);
+
+  /**
    * Get all the items in the same format as provided by `props.items`.
    * @returns {TreeViewBaseItem[]} The items in the tree.
    */
-  public getItemTree = (): TreeViewBaseItem[] => {
+  private getItemTree = (): TreeViewBaseItem[] => {
     const getItemFromItemId = (itemId: TreeViewItemId): TreeViewBaseItem => {
       const item = itemsSelectors.itemModel(this.store.state, itemId);
       const itemToMutate = { ...item };
@@ -36,32 +45,60 @@ export class TreeViewItemsPlugin<R extends TreeViewValidItem<R>> {
   };
 
   /**
-   * Get the item with the given id.
-   * When used in the Simple Tree View, it returns an object with the `id` and `label` properties.
-   * @param {TreeViewItemId} itemId The id of the item to retrieve.
-   * @returns {R} The item with the given id.
-   */
-  public getItem = (itemId: TreeViewItemId): R =>
-    itemsSelectors.itemModel(this.store.state, itemId);
-
-  /** * Get the id of the parent item.
-   * @param {TreeViewItemId} itemId The id of the item to whose parentId we want to retrieve.
-   * @returns {TreeViewItemId | null} The id of the parent item.
-   */
-  public getParentId = (itemId: TreeViewItemId): TreeViewItemId | null => {
-    const itemMeta = itemsSelectors.itemMeta(this.store.state, itemId);
-    return itemMeta?.parentId || null;
-  };
-
-  /**
    * Get the ids of a given item's children.
    * Those ids are returned in the order they should be rendered.
    * To get the root items, pass `null` as the `itemId`.
    * @param {TreeViewItemId | null} itemId The id of the item to get the children of.
    * @returns {TreeViewItemId[]} The ids of the item's children.
    */
-  public getItemOrderedChildrenIds = (itemId: TreeViewItemId | null): TreeViewItemId[] =>
+  private getItemOrderedChildrenIds = (itemId: TreeViewItemId | null): TreeViewItemId[] =>
     itemsSelectors.itemOrderedChildrenIds(this.store.state, itemId);
+
+  /** * Get the id of the parent item.
+   * @param {TreeViewItemId} itemId The id of the item to whose parentId we want to retrieve.
+   * @returns {TreeViewItemId | null} The id of the parent item.
+   */
+  private getParentId = (itemId: TreeViewItemId): TreeViewItemId | null => {
+    const itemMeta = itemsSelectors.itemMeta(this.store.state, itemId);
+    return itemMeta?.parentId || null;
+  };
+
+  /**
+   * Toggle the disabled state of the item with the given id.
+   * @param {object} parameters The params of the method.
+   * @param {TreeViewItemId } parameters.itemId The id of the item to get the children of.
+   * @param {boolean } parameters.shouldBeDisabled true if the item should be disabled.
+   */
+  private setIsItemDisabled = ({
+    itemId,
+    shouldBeDisabled,
+  }: {
+    itemId: TreeViewItemId;
+    shouldBeDisabled?: boolean;
+  }) => {
+    if (!this.store.state.itemMetaLookup[itemId]) {
+      return;
+    }
+
+    const itemMetaLookup = { ...this.store.state.itemMetaLookup };
+    itemMetaLookup[itemId] = {
+      ...itemMetaLookup[itemId],
+      disabled: shouldBeDisabled ?? !itemMetaLookup[itemId].disabled,
+    };
+
+    this.store.set('itemMetaLookup', itemMetaLookup);
+  };
+
+  public buildPublicAPI = () => {
+    return {
+      getItem: this.getItem,
+      getItemDOMElement: this.getItemDOMElement,
+      getItemOrderedChildrenIds: this.getItemOrderedChildrenIds,
+      getItemTree: this.getItemTree,
+      getParentId: this.getParentId,
+      setIsItemDisabled: this.setIsItemDisabled,
+    };
+  };
 
   /**
    * Get the DOM element of the item with the given id.
@@ -154,32 +191,6 @@ export class TreeViewItemsPlugin<R extends TreeViewValidItem<R>> {
       itemOrderedChildrenIdsLookup: newItemOrderedChildrenIdsLookup,
       itemChildrenIndexesLookup: newItemChildrenIndexesLookup,
     });
-  };
-
-  /**
-   * Toggle the disabled state of the item with the given id.
-   * @param {object} parameters The params of the method.
-   * @param {TreeViewItemId } parameters.itemId The id of the item to get the children of.
-   * @param {boolean } parameters.shouldBeDisabled true if the item should be disabled.
-   */
-  public setIsItemDisabled = ({
-    itemId,
-    shouldBeDisabled,
-  }: {
-    itemId: TreeViewItemId;
-    shouldBeDisabled?: boolean;
-  }) => {
-    if (!this.store.state.itemMetaLookup[itemId]) {
-      return;
-    }
-
-    const itemMetaLookup = { ...this.store.state.itemMetaLookup };
-    itemMetaLookup[itemId] = {
-      ...itemMetaLookup[itemId],
-      disabled: shouldBeDisabled ?? !itemMetaLookup[itemId].disabled,
-    };
-
-    this.store.set('itemMetaLookup', itemMetaLookup);
   };
 
   /**

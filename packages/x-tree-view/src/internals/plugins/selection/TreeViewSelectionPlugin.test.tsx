@@ -979,7 +979,7 @@ describeTreeView<TreeViewAnyStore>('TreeViewSelectionPlugin', ({ render }) => {
   });
 
   describe('onItemSelectionToggle prop', () => {
-    it('should call the onItemSelectionToggle callback when selecting an item', () => {
+    it.only('should call the onItemSelectionToggle callback when selecting an item', () => {
       const onItemSelectionToggle = spy();
 
       const view = render({

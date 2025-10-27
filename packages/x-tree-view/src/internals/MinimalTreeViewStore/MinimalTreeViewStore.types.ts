@@ -254,19 +254,10 @@ export interface MinimalTreeViewParameters<
 export interface MinimalTreeViewPublicAPI<
   R extends TreeViewValidItem<R>,
   Multiple extends boolean | undefined,
-> extends Pick<TreeViewFocusPlugin, 'focusItem'>,
-    Pick<TreeViewExpansionPlugin, 'isItemExpanded' | 'setItemExpansion'>,
-    Pick<TreeViewSelectionPlugin<Multiple>, 'setItemSelection'>,
-    Pick<
-      TreeViewItemsPlugin<R>,
-      | 'getItem'
-      | 'getItemDOMElement'
-      | 'getItemOrderedChildrenIds'
-      | 'getItemTree'
-      | 'getParentId'
-      | 'setIsItemDisabled'
-    > {}
-
+> extends ReturnType<TreeViewItemsPlugin<R>['buildPublicAPI']>,
+    ReturnType<TreeViewFocusPlugin['buildPublicAPI']>,
+    ReturnType<TreeViewExpansionPlugin['buildPublicAPI']>,
+    ReturnType<TreeViewSelectionPlugin<Multiple>['buildPublicAPI']> {}
 /**
  * Mapper between a Tree View instance's state and parameters.
  * Used by classes extending `TreeViewStore` to manage the state based on the parameters.

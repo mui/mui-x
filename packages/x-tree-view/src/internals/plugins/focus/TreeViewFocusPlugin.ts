@@ -62,7 +62,7 @@ export class TreeViewFocusPlugin {
    * @param {React.SyntheticEvent | null} event The DOM event that triggered the change.
    * @param {TreeViewItemId} itemId The id of the item to focus.
    */
-  public focusItem = (event: React.SyntheticEvent | null, itemId: TreeViewItemId) => {
+  private focusItem = (event: React.SyntheticEvent | null, itemId: TreeViewItemId) => {
     // If we receive an itemId, and it is visible, the focus will be set to it
     const itemMeta = itemsSelectors.itemMeta(this.store.state, itemId);
     const isItemVisible =
@@ -73,6 +73,12 @@ export class TreeViewFocusPlugin {
     if (isItemVisible) {
       this.innerFocusItem(event, itemId);
     }
+  };
+
+  public buildPublicAPI = () => {
+    return {
+      focusItem: this.focusItem,
+    };
   };
 
   /**
