@@ -71,7 +71,7 @@ export class TreeViewLazyLoadingPlugin {
 
   public buildPublicAPI = () => {
     return {
-      fetchItems: this.fetchItems,
+      updateItemChildren: this.updateItemChildren,
     };
   };
 
