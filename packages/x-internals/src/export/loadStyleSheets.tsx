@@ -9,9 +9,6 @@ export function loadStyleSheets(document: Document, root: Document | ShadowRoot,
   const stylesheetLoadPromises: Promise<void>[] = [];
   const headStyleElements = root.querySelectorAll("style, link[rel='stylesheet']");
 
-  // eslint-disable-next-line no-console
-  console.log('load stylesheets');
-
   for (let i = 0; i < headStyleElements.length; i += 1) {
     const node = headStyleElements[i];
     const newHeadStyleElements = document.createElement(node.tagName);
