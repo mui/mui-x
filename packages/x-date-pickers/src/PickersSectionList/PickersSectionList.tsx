@@ -98,23 +98,25 @@ function PickersSection(props: PickersSectionProps) {
   const sectionContentRef = React.useRef<HTMLSpanElement>(null);
   const handleSectionContentRef = useForkRef((sectionContentProps as any).ref, sectionContentRef);
 
+  const handleContentBlur = (event: React.FocusEvent<HTMLElement>) => {
+    const next = (event.relatedTarget as Node | null);
+    // If the next focused element stays within the whole field (root),
+    // do not propagate blur. We only want blur when leaving the field entirely.
+    const root = (event.currentTarget as HTMLElement).closest(`.${pickersSectionListClasses.root}`);
+    if (root && next instanceof Node && root.contains(next)) {
+      event.stopPropagation();
+      return;
+    }
+    // Otherwise, focus left the whole field; allow propagation.
+  };
+
   return (
     <Section {...sectionProps}>
       <SectionSeparator {...sectionSeparatorBeforeProps} />
       <SectionContent
         {...sectionContentProps}
         ref={handleSectionContentRef}
-        onBlur={(event) => {
-          const next = (event.relatedTarget as Node | null);
-          // If the next focused element stays within the whole field (root),
-          // do not propagate blur. We only want blur when leaving the field entirely.
-          const root = (event.currentTarget as HTMLElement).closest(`.${pickersSectionListClasses.root}`);
-          if (root && next instanceof Node && root.contains(next)) {
-            event.stopPropagation();
-            return;
-          }
-          // Otherwise, focus left the whole field; allow propagation.
-        }}
+        onBlur={handleContentBlur}
       />
       <SectionSeparator {...sectionSeparatorAfterProps} />
     </Section>
