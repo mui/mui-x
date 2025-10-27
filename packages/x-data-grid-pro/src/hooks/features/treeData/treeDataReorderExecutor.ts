@@ -111,10 +111,6 @@ export class SameParentSwapOperation extends BaseReorderOperation {
 
     targetNode = adjustedTargetNode;
 
-    if (sourceNode.type !== targetNode.type) {
-      return null;
-    }
-
     return {
       sourceNode,
       targetNode,
