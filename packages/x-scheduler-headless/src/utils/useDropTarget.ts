@@ -57,7 +57,7 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
         eventId: data.eventId,
         occurrenceKey: data.occurrenceKey,
         originalOccurrence: data.originalOccurrence,
-        resourceId: resourceId === null ? data.event.resource : resourceId,
+        resourceId: resourceId === null ? data.originalOccurrence.resource : resourceId,
       };
     };
 
