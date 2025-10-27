@@ -54,10 +54,10 @@ export const useInteractionItemProps = (
       skip
         ? {}
         : {
-          onPointerEnter,
-          onPointerLeave,
-          onPointerDown,
-        },
+            onPointerEnter,
+            onPointerLeave,
+            onPointerDown,
+          },
     [skip, onPointerEnter, onPointerLeave],
   );
 };

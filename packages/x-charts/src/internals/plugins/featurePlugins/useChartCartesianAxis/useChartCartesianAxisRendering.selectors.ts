@@ -1,6 +1,5 @@
 import { NumberValue } from '@mui/x-charts-vendor/d3-scale';
 import { createSelectorMemoized } from '@mui/x-internals/store';
-// import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions';
 import {
   selectorChartSeriesConfig,

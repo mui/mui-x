@@ -47,13 +47,11 @@ export const selectorChartsHighlightXAxisIndex = createSelectorMemoized(
   selectAxisHighlight,
 );
 
-export const selectorChartsHighlightYAxisIndex = createSelector(
-  [
-    selectorChartsInteractionYAxisIndex,
-    selectorChartYAxis,
-    selectorChartControlledCartesianAxisHighlight,
-    selectorBrushShouldPreventAxisHighlight,
-  ],
+export const selectorChartsHighlightYAxisIndex = createSelectorMemoized(
+  selectorChartsInteractionYAxisIndex,
+  selectorChartYAxis,
+  selectorChartControlledCartesianAxisHighlight,
+  selectorBrushShouldPreventAxisHighlight,
   selectAxisHighlight,
 );
 

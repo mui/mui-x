@@ -81,12 +81,6 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
     });
   }, [seriesConfig, drawingArea, xAxis, yAxis, dataset, store]);
 
-  // React.useEffect(() => { console.log('seriesConfig') }, [seriesConfig])
-  // React.useEffect(() => { console.log('drawingArea') }, [drawingArea])
-  // React.useEffect(() => { console.log('xAxis') }, [xAxis])
-  // React.useEffect(() => { console.log('yAxis') }, [yAxis])
-  // React.useEffect(() => { console.log('dataset') }, [dataset])
-  // React.useEffect(() => { console.log('store') }, [store])
   const usedXAxis = xAxisIds[0];
   const usedYAxis = yAxisIds[0];
 
