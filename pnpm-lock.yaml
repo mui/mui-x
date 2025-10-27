@@ -254,8 +254,8 @@ importers:
         specifier: ^1.0.9-canary.52
         version: 1.0.9-canary.52(@types/node@22.18.12)(rollup@4.52.5)(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.1)
       '@mui/internal-code-infra':
-        specifier: ^0.0.3-canary.36
-        version: 0.0.3-canary.36(@types/node@22.18.12)(@typescript-eslint/parser@8.46.2(eslint@9.38.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.46.2(eslint@9.38.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.38.0))(eslint@9.38.0)(postcss@8.5.6)(prettier@3.6.2)(stylelint@16.25.0(typescript@5.9.3))(typescript@5.9.3)
+        specifier: ^0.0.3-canary.37
+        version: 0.0.3-canary.37(@types/node@22.18.12)(@typescript-eslint/parser@8.46.2(eslint@9.38.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.46.2(eslint@9.38.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.38.0))(eslint@9.38.0)(postcss@8.5.6)(prettier@3.6.2)(stylelint@16.25.0(typescript@5.9.3))(typescript@5.9.3)
       '@mui/internal-markdown':
         specifier: ^2.0.11
         version: 2.0.11
@@ -4176,6 +4176,9 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
+  '@mdn/browser-compat-data@5.7.6':
+    resolution: {integrity: sha512-7xdrMX0Wk7grrTZQwAoy1GkvPMFoizStUoL+VmtUkAxegbCCec+3FKwOM6yc/uGU5+BEczQHXAlWiqvM8JeENg==}
+
   '@mui/base@5.0.0-beta.40-1':
     resolution: {integrity: sha512-agKXuNNy0bHUmeU7pNmoZwNFr7Hiyhojkb9+2PVyDG5+6RafYuyMgbrav8CndsB7KUc/U51JAw9vKNDLYBzaUA==}
     engines: {node: '>=12.0.0'}
@@ -4243,8 +4246,8 @@ packages:
     resolution: {integrity: sha512-eIXosVbUxcdq4fcBeXKgoMkPVtx/lamLXEqP6sq8uZeVAkG9gsZIsjVRJttkpSzfhvDBLYSNq9q4OIJsx6L15g==}
     hasBin: true
 
-  '@mui/internal-code-infra@0.0.3-canary.36':
-    resolution: {integrity: sha512-KMtvF+9sqJDeRmEV3dNGi8oIzeEerV9klcdwJ/Hh1wk5hHDjiEb7voWAurf8De44y110RXvtCDprlZAm8JO90Q==}
+  '@mui/internal-code-infra@0.0.3-canary.37':
+    resolution: {integrity: sha512-4gSQZpadJdiGxyXRSkDU5ZaYulxgG8QigewKt8mnolOyqIuO3vtB84r3AVFPZvprUpdf2crlOweO1k9z5pYLSA==}
     hasBin: true
     peerDependencies:
       eslint: ^9.0.0
@@ -6501,6 +6504,9 @@ packages:
     resolution: {integrity: sha512-Izi8RQcffqCeNVgFigKli1ssklIbpHnCYc6AknXGYoB6grJqyeby7jv12JUQgmTAnIDnbck1uxksT4dzN3PWBA==}
     engines: {node: '>=12'}
 
+  ast-metadata-inferer@0.8.1:
+    resolution: {integrity: sha512-ht3Dm6Zr7SXv6t1Ra6gFo0+kLDglHGrEbYihTkcycrbHw7WCcuhBzPlJYHEsIpycaUwzsJHje+vUcxXUX4ztTA==}
+
   ast-module-types@6.0.1:
     resolution: {integrity: sha512-WHw67kLXYbZuHTmcdbIrVArCq5wxo6NEuj3hiYAWr8mwJeC+C2mMCIBIWCiDoCye/OF/xelc+teJ1ERoWmnEIA==}
     engines: {node: '>=18'}
@@ -7867,6 +7873,12 @@ packages:
         optional: true
       eslint-import-resolver-webpack:
         optional: true
+
+  eslint-plugin-compat@6.0.2:
+    resolution: {integrity: sha512-1ME+YfJjmOz1blH0nPZpHgjMGK4kjgEeoYqGCqoBPQ/mGu/dJzdoP0f1C8H2jcWZjzhZjAMccbM/VdXhPORIfA==}
+    engines: {node: '>=18.x'}
+    peerDependencies:
+      eslint: ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0 || ^9.0.0
 
   eslint-plugin-consistent-default-export-name@0.0.15:
     resolution: {integrity: sha512-gqW7dnJbWMxI5H6/Pyz6Sl/vBMwOktePMI2iuuKPb4N82uvemUkfaWhsRZCKndSzpIVaCZ9wdspCVO1tm0wXJQ==}
@@ -14988,6 +15000,8 @@ snapshots:
       - encoding
       - supports-color
 
+  '@mdn/browser-compat-data@5.7.6': {}
+
   '@mui/base@5.0.0-beta.40-1(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)':
     dependencies:
       '@babel/runtime': 7.28.4
@@ -15085,7 +15099,7 @@ snapshots:
       - tsx
       - yaml
 
-  '@mui/internal-code-infra@0.0.3-canary.36(@types/node@22.18.12)(@typescript-eslint/parser@8.46.2(eslint@9.38.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.46.2(eslint@9.38.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.38.0))(eslint@9.38.0)(postcss@8.5.6)(prettier@3.6.2)(stylelint@16.25.0(typescript@5.9.3))(typescript@5.9.3)':
+  '@mui/internal-code-infra@0.0.3-canary.37(@types/node@22.18.12)(@typescript-eslint/parser@8.46.2(eslint@9.38.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.46.2(eslint@9.38.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.38.0))(eslint@9.38.0)(postcss@8.5.6)(prettier@3.6.2)(stylelint@16.25.0(typescript@5.9.3))(typescript@5.9.3)':
     dependencies:
       '@argos-ci/core': 4.2.0
       '@babel/cli': 7.28.3(@babel/core@7.28.4)
@@ -15121,6 +15135,7 @@ snapshots:
       eslint-config-prettier: 10.1.8(eslint@9.38.0)
       eslint-import-resolver-typescript: 4.4.4(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.46.2(eslint@9.38.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.38.0))(eslint-plugin-import@2.32.0)(eslint@9.38.0)
       eslint-module-utils: 2.12.1(@typescript-eslint/parser@8.46.2(eslint@9.38.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@4.4.4)(eslint-import-resolver-webpack@0.13.10)(eslint@9.38.0)
+      eslint-plugin-compat: 6.0.2(eslint@9.38.0)
       eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.46.2(eslint@9.38.0)(typescript@5.9.3))(eslint-import-resolver-typescript@4.4.4)(eslint-import-resolver-webpack@0.13.10)(eslint@9.38.0)
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.38.0)
       eslint-plugin-mocha: 11.2.0(eslint@9.38.0)
@@ -17832,6 +17847,10 @@ snapshots:
 
   assertion-error@2.0.1: {}
 
+  ast-metadata-inferer@0.8.1:
+    dependencies:
+      '@mdn/browser-compat-data': 5.7.6
+
   ast-module-types@6.0.1: {}
 
   ast-types-flow@0.0.8: {}
@@ -19391,6 +19410,18 @@ snapshots:
       eslint-import-resolver-webpack: 0.13.10(eslint-plugin-import@2.32.0)(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.11))
     transitivePeerDependencies:
       - supports-color
+
+  eslint-plugin-compat@6.0.2(eslint@9.38.0):
+    dependencies:
+      '@mdn/browser-compat-data': 5.7.6
+      ast-metadata-inferer: 0.8.1
+      browserslist: 4.25.1
+      caniuse-lite: 1.0.30001731
+      eslint: 9.38.0
+      find-up: 5.0.0
+      globals: 15.15.0
+      lodash.memoize: 4.1.2
+      semver: 7.7.3
 
   eslint-plugin-consistent-default-export-name@0.0.15:
     dependencies:
