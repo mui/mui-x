@@ -1,3 +1,4 @@
+import { createSelectorMemoized } from '@mui/x-internals/store';
 import { SeriesId } from '../../../../models/seriesType/common';
 import { ChartSeriesType } from '../../../../models/seriesType/config';
 import { UseChartSeriesSignature } from '../../corePlugins/useChartSeries/useChartSeries.types';
@@ -34,8 +35,8 @@ export const selectorChartsHighlightScopePerSeriesId = createSelector(
   },
 );
 
-export const selectorChartsHighlightedItem = createSelector(
-  [selectHighlight, selectorChartsKeyboardItem],
+export const selectorChartsHighlightedItem = createSelectorMemoized(
+  selectHighlight, selectorChartsKeyboardItem,
   function selectorChartsHighlightedItem(highlight, keyboardItem) {
     return highlight.lastUpdate === 'pointer' ? highlight.item : keyboardItem;
   },
