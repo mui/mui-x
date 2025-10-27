@@ -1,3 +1,4 @@
+import { createSelectorMemoized } from '@mui/x-internals/store';
 import {
   createSelector,
   selectorChartSeriesConfig,
