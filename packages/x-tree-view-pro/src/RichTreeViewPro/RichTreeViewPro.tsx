@@ -11,13 +11,14 @@ import {
   TreeViewItemDepthContext,
   itemsSelectors,
   useTreeViewRootProps,
+  useTreeViewStore,
 } from '@mui/x-tree-view/internals';
 import { warnOnce } from '@mui/x-internals/warning';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { getRichTreeViewProUtilityClass } from './richTreeViewProClasses';
 import { RichTreeViewProProps } from './RichTreeViewPro.types';
 import { useExtractRichTreeViewProParameters } from './useExtractRichTreeViewProParameters';
-import { useRichTreeViewProStore } from './useRichTreeViewProStore';
+import { RichTreeViewProStore } from '../internals/RichTreeViewProStore';
 
 const useThemeProps = createUseThemeProps('MuiRichTreeViewPro');
 
@@ -76,7 +77,6 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
   Multiple extends boolean | undefined = undefined,
 >(inProps: RichTreeViewProProps<R, Multiple>, forwardedRef: React.Ref<HTMLUListElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiRichTreeViewPro' });
-  const { slots, slotProps, apiRef, ...other } = props;
 
   useLicenseVerifier('x-tree-view-pro', releaseInfo);
 
@@ -90,18 +90,13 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
     }
   }
 
-  const { parameters, forwardedProps } = useExtractRichTreeViewProParameters<
-    R,
-    Multiple,
-    typeof other
-  >(other);
+  const { slots, slotProps, apiRef, parameters, forwardedProps } =
+    useExtractRichTreeViewProParameters(props);
+  const store = useTreeViewStore(RichTreeViewProStore, parameters);
 
   const ref = React.useRef<HTMLUListElement | null>(null);
   const handleRef = useMergedRefs(forwardedRef, ref);
-
-  const store = useRichTreeViewProStore(parameters);
   const getRootProps = useTreeViewRootProps(store, forwardedProps, handleRef);
-
   const classes = useUtilityClasses(props);
 
   const Root = slots?.root ?? RichTreeViewProRoot;

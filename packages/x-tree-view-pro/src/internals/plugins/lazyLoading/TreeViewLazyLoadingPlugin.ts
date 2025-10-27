@@ -69,6 +69,12 @@ export class TreeViewLazyLoadingPlugin {
     this.store.set('lazyLoadedItems', { ...this.store.state.lazyLoadedItems, errors });
   };
 
+  public buildPublicAPI = () => {
+    return {
+      fetchItems: this.fetchItems,
+    };
+  };
+
   /**
    * Method used for fetching multiple items concurrently.
    * Only relevant for lazy-loaded tree views.

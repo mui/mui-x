@@ -2,9 +2,8 @@ import { TreeViewCancellableEvent, TreeViewItemId } from '../../../models';
 import { TreeViewAnyStore, TreeViewItemMeta } from '../../models';
 import { expansionSelectors } from '../expansion';
 import { itemsSelectors } from '../items';
-import { labelSelectors } from '../labelEditing';
+import { labelSelectors, TreeViewLabelEditingPlugin } from '../labelEditing';
 import { selectionSelectors } from '../selection/selectors';
-import { RichTreeViewStore } from '../../RichTreeViewStore';
 import {
   getFirstNavigableItem,
   getLastNavigableItem,
@@ -15,8 +14,9 @@ import {
 
 const TYPEAHEAD_TIMEOUT = 500;
 
-type TreeViewStoreWithLabelEditing = TreeViewAnyStore &
-  Partial<Pick<RichTreeViewStore<any, any>, 'updateItemLabel' | 'setEditedItem'>>;
+type TreeViewStoreWithLabelEditing = TreeViewAnyStore & {
+  labelEditing?: TreeViewLabelEditingPlugin;
+};
 
 type TreeViewLabelMap = { [itemId: string]: string };
 
@@ -173,11 +173,11 @@ export class TreeViewKeyboardNavigationPlugin {
       // If the focused item has no children, we select it.
       case key === 'Enter': {
         if (
-          this.store.setEditedItem &&
+          this.store.labelEditing?.setEditedItem &&
           labelSelectors.isItemEditable(this.store.state, itemId) &&
           !labelSelectors.isItemBeingEdited(this.store.state, itemId)
         ) {
-          this.store.setEditedItem(itemId);
+          this.store.labelEditing.setEditedItem(itemId);
         } else if (this.canToggleItemExpansion(itemId)) {
           this.store.expansion.setItemExpansion({ event, itemId });
           event.preventDefault();
@@ -230,8 +230,8 @@ export class TreeViewKeyboardNavigationPlugin {
 
       // If the focused item is expanded, we move the focus to its first child
       // If the focused item is collapsed and has children, we expand it
-      case (key === 'ArrowRight' && !this.store.isRtl) ||
-        (key === 'ArrowLeft' && this.store.isRtl): {
+      case (key === 'ArrowRight' && !this.store.parameters.isRtl) ||
+        (key === 'ArrowLeft' && this.store.parameters.isRtl): {
         if (ctrlPressed) {
           return;
         }
@@ -251,8 +251,8 @@ export class TreeViewKeyboardNavigationPlugin {
 
       // If the focused item is expanded, we collapse it
       // If the focused item is collapsed and has a parent, we move the focus to this parent
-      case (key === 'ArrowLeft' && !this.store.isRtl) ||
-        (key === 'ArrowRight' && this.store.isRtl): {
+      case (key === 'ArrowLeft' && !this.store.parameters.isRtl) ||
+        (key === 'ArrowRight' && this.store.parameters.isRtl): {
         if (ctrlPressed) {
           return;
         }

@@ -18,8 +18,9 @@ import { TreeViewValidItem } from '../models';
 import { useTreeViewRootProps } from '../internals/hooks/useTreeViewRootProps';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
 import { useExtractRichTreeViewParameters } from './useExtractRichTreeViewParameters';
-import { useRichTreeViewStore } from './useRichTreeViewStore';
 import { itemsSelectors } from '../internals/plugins/items';
+import { useTreeViewStore } from '../internals/hooks/useTreeViewStore';
+import { RichTreeViewStore } from '../internals/RichTreeViewStore';
 
 const useThemeProps = createUseThemeProps('MuiRichTreeView');
 
@@ -76,8 +77,6 @@ const RichTreeView = React.forwardRef(function RichTreeView<
   Multiple extends boolean | undefined = undefined,
 >(inProps: RichTreeViewProps<R, Multiple>, forwardedRef: React.Ref<HTMLUListElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiRichTreeView' });
-  const { slots, slotProps, apiRef, ...other } = props;
-
   if (process.env.NODE_ENV !== 'production') {
     if ((props as any).children != null) {
       warnOnce([
@@ -88,22 +87,17 @@ const RichTreeView = React.forwardRef(function RichTreeView<
     }
   }
 
-  const { parameters, forwardedProps } = useExtractRichTreeViewParameters<
-    R,
-    Multiple,
-    typeof other
-  >(other);
+  const { slots, slotProps, apiRef, parameters, forwardedProps } =
+    useExtractRichTreeViewParameters(props);
+  const store = useTreeViewStore(RichTreeViewStore, parameters);
 
   const ref = React.useRef<HTMLUListElement | null>(null);
   const handleRef = useMergedRefs(forwardedRef, ref);
-
-  const store = useRichTreeViewStore(parameters);
   const getRootProps = useTreeViewRootProps(store, forwardedProps, handleRef);
+  const classes = useUtilityClasses(props);
 
   const isLoading = useStore(store, lazyLoadingSelectors.isItemLoading, null);
   const error = useStore(store, lazyLoadingSelectors.itemError, null);
-
-  const classes = useUtilityClasses(props);
 
   const Root = slots?.root ?? RichTreeViewRoot;
   const rootProps = useSlotProps({

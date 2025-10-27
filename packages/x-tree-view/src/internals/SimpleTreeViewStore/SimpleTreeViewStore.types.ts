@@ -10,7 +10,7 @@ export interface SimpleTreeViewState<Multiple extends boolean | undefined>
 export interface InnerSimpleTreeViewParameters<Multiple extends boolean | undefined>
   extends MinimalTreeViewParameters<SimpleTreeViewItem, Multiple> {}
 
-export interface SimpleTreeViewParameters<Multiple extends boolean | undefined>
+export interface SimpleTreeViewStoreParameters<Multiple extends boolean | undefined>
   extends Omit<
     InnerSimpleTreeViewParameters<Multiple>,
     'items' | 'isItemDisabled' | 'getItemLabel' | 'getItemChildren' | 'getItemId'

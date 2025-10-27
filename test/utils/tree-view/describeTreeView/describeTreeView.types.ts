@@ -2,7 +2,11 @@ import * as React from 'react';
 import { TreeViewAnyStore, TreeViewPublicAPI } from '@mui/x-tree-view/internals/models';
 import { TreeViewItemId } from '@mui/x-tree-view/models';
 import { TreeItemProps } from '@mui/x-tree-view/TreeItem';
-import { TreeViewSlotProps, TreeViewSlots } from '@mui/x-tree-view/internals';
+import {
+  TreeViewSlotProps,
+  TreeViewSlots,
+  UseTreeViewStoreParameters,
+} from '@mui/x-tree-view/internals';
 
 export type DescribeTreeViewTestRunner<TStore extends TreeViewAnyStore> = (
   params: DescribeTreeViewTestRunnerParams<TStore>,
@@ -121,7 +125,7 @@ export type DescribeTreeViewRenderer<TStore extends TreeViewAnyStore> = <
      * If `true`, the Tree View will be wrapped with an error boundary.
      */
     withErrorBoundary?: boolean;
-  } & TStore['parameters'] & {
+  } & UseTreeViewStoreParameters<TStore> & {
       slots?: TreeViewSlots & {
         item?: React.ElementType<TreeItemProps>;
       };

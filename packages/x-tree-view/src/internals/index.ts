@@ -31,9 +31,11 @@ export {
 } from './RichTreeViewStore';
 export type {
   RichTreeViewState,
-  RichTreeViewParameters,
+  RichTreeViewStoreParameters,
   RichTreeViewPublicAPI,
 } from './RichTreeViewStore';
 export { TreeViewItemDepthContext } from './TreeViewItemDepthContext';
 export { useTreeViewRootProps } from './hooks/useTreeViewRootProps';
 export { MinimalTreeViewStore } from './MinimalTreeViewStore';
+export { useTreeViewStore } from './hooks/useTreeViewStore';
+export type { UseTreeViewStoreParameters } from './hooks/useTreeViewStore';

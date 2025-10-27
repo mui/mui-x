@@ -1,13 +1,19 @@
 import * as React from 'react';
-import { RichTreeViewParameters } from '../internals/RichTreeViewStore/RichTreeViewStore.types';
 import { TreeViewValidItem } from '../models';
+import { RichTreeViewProps } from './RichTreeView.types';
+import { UseTreeViewStoreParameters } from '../internals/hooks/useTreeViewStore';
+import { RichTreeViewStore } from '../internals/RichTreeViewStore';
 
 export function useExtractRichTreeViewParameters<
   R extends TreeViewValidItem<R>,
   Multiple extends boolean | undefined,
-  P extends RichTreeViewParameters<R, Multiple>,
->(props: P): UseExtractRichTreeViewParametersReturnValue<R, Multiple, P> {
+>(props: RichTreeViewProps<R, Multiple>) {
   const {
+    // Props for Provider
+    apiRef,
+    slots,
+    slotProps,
+
     // Shared parameters
     disabledItemsFocusable,
     items,
@@ -41,7 +47,7 @@ export function useExtractRichTreeViewParameters<
     ...forwardedProps
   } = props;
 
-  const parameters: RichTreeViewParameters<R, Multiple> = React.useMemo(
+  const parameters: UseTreeViewStoreParameters<RichTreeViewStore<R, Multiple>> = React.useMemo(
     () => ({
       // Shared parameters
       disabledItemsFocusable,
@@ -105,16 +111,10 @@ export function useExtractRichTreeViewParameters<
   );
 
   return {
+    apiRef,
+    slots,
+    slotProps,
     parameters,
-    forwardedProps: forwardedProps as Omit<P, keyof RichTreeViewParameters<R, Multiple>>,
+    forwardedProps,
   };
-}
-
-interface UseExtractRichTreeViewParametersReturnValue<
-  R extends TreeViewValidItem<R>,
-  Multiple extends boolean | undefined,
-  P extends RichTreeViewParameters<R, Multiple>,
-> {
-  parameters: RichTreeViewParameters<R, Multiple>;
-  forwardedProps: Omit<P, keyof RichTreeViewParameters<R, Multiple>>;
 }

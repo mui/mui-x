@@ -11,7 +11,7 @@ import { itemsSelectors } from '../../internals/plugins/items/selectors';
 import { selectionSelectors } from '../../internals/plugins/selection/selectors';
 import { lazyLoadingSelectors } from '../../internals/plugins/lazyLoading/selectors';
 import { labelSelectors } from '../../internals/plugins/labelEditing/selectors';
-import { RichTreeViewStore } from '../../internals/RichTreeViewStore';
+import { TreeViewLabelEditingPlugin } from '../../internals/plugins/labelEditing';
 
 export interface UseTreeItemInteractions {
   handleExpansion: (event: React.MouseEvent) => void;
@@ -31,8 +31,9 @@ interface UseTreeItemUtilsReturnValue<TStore extends TreeViewAnyStore> {
   publicAPI: TreeViewPublicAPI<TStore>;
 }
 
-type TreeViewStoreWithLabelEditing = TreeViewAnyStore &
-  Partial<Pick<RichTreeViewStore<any, any>, 'updateItemLabel' | 'setEditedItem'>>;
+type TreeViewStoreWithLabelEditing = TreeViewAnyStore & {
+  labelEditing?: TreeViewLabelEditingPlugin;
+};
 
 export const itemHasChildren = (reactChildren: React.ReactNode) => {
   if (Array.isArray(reactChildren)) {
@@ -139,14 +140,14 @@ export const useTreeItemUtils = <
 
   const toggleItemEditing = () => {
     // If the store doesn't support label editing, do nothing
-    if (!store.setEditedItem) {
+    if (!store.labelEditing) {
       return;
     }
 
     if (isEditing) {
-      store.setEditedItem(null);
+      store.labelEditing.setEditedItem(null);
     } else {
-      store.setEditedItem(itemId);
+      store.labelEditing.setEditedItem(itemId);
     }
   };
 
@@ -155,7 +156,7 @@ export const useTreeItemUtils = <
     newLabel: string,
   ) => {
     // If the store doesn't support label editing, do nothing
-    if (!store.updateItemLabel) {
+    if (!store.labelEditing) {
       return;
     }
 
@@ -163,7 +164,7 @@ export const useTreeItemUtils = <
     // The `onBlur` event is triggered, which calls `handleSaveItemLabel` again.
     // To avoid creating an unwanted behavior we need to check if the item is being edited before calling `updateItemLabel`
     if (labelSelectors.isItemBeingEdited(store.state, itemId)) {
-      store.updateItemLabel(itemId, newLabel);
+      store.labelEditing.updateItemLabel(itemId, newLabel);
       toggleItemEditing();
       store.focus.focusItem(event, itemId);
     }
@@ -171,7 +172,7 @@ export const useTreeItemUtils = <
 
   const handleCancelItemLabelEditing = (event: React.SyntheticEvent) => {
     // If the store doesn't support label editing, do nothing
-    if (!store.updateItemLabel) {
+    if (!store.labelEditing) {
       return;
     }
 

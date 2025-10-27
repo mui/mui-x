@@ -4,7 +4,7 @@ import {
   MinimalTreeViewPublicAPI,
   MinimalTreeViewState,
 } from '../MinimalTreeViewStore';
-import type { RichTreeViewStore } from './RichTreeViewStore';
+import { TreeViewLabelEditingPlugin } from '../plugins/labelEditing';
 
 export interface RichTreeViewState<
   R extends TreeViewValidItem<R>,
@@ -28,7 +28,7 @@ export interface RichTreeViewState<
   } | null;
 }
 
-export interface RichTreeViewParameters<
+export interface RichTreeViewStoreParameters<
   R extends TreeViewValidItem<R>,
   Multiple extends boolean | undefined,
 > extends MinimalTreeViewParameters<R, Multiple> {
@@ -52,4 +52,4 @@ export interface RichTreeViewPublicAPI<
   R extends TreeViewValidItem<R>,
   Multiple extends boolean | undefined,
 > extends MinimalTreeViewPublicAPI<R, Multiple>,
-    Pick<RichTreeViewStore<R, Multiple>, 'updateItemLabel' | 'setEditedItem'> {}
+    ReturnType<TreeViewLabelEditingPlugin['buildPublicAPI']> {}

@@ -3,8 +3,7 @@ import { TreeViewParametersToStateMapper, MinimalTreeViewStore } from '../Minima
 import {
   InnerSimpleTreeViewParameters,
   SimpleTreeViewItem,
-  SimpleTreeViewParameters,
-  SimpleTreeViewPublicAPI,
+  SimpleTreeViewStoreParameters,
   SimpleTreeViewState,
 } from './SimpleTreeViewStore.types';
 import { TreeViewJSXItemsPlugin } from '../plugins/jsxItems';
@@ -36,17 +35,11 @@ export class SimpleTreeViewStore<Multiple extends boolean | undefined> extends M
 > {
   public jsxItems = new TreeViewJSXItemsPlugin(this);
 
-  public constructor(parameters: SimpleTreeViewParameters<Multiple>, isRtl: boolean) {
-    super({ ...parameters, items: EMPTY_ARRAY }, 'SimpleTreeView', isRtl, mapper);
+  public constructor(parameters: SimpleTreeViewStoreParameters<Multiple>) {
+    super({ ...parameters, items: EMPTY_ARRAY }, 'SimpleTreeView', mapper);
   }
 
-  public updateStateFromParameters(parameters: SimpleTreeViewParameters<Multiple>, isRtl: boolean) {
-    super.updateStateFromParameters({ ...parameters, items: EMPTY_ARRAY }, isRtl);
-  }
-
-  public buildPublicAPI(): SimpleTreeViewPublicAPI<Multiple> {
-    return {
-      ...super.buildPublicAPI(),
-    };
+  public updateStateFromParameters(parameters: SimpleTreeViewStoreParameters<Multiple>) {
+    super.updateStateFromParameters({ ...parameters, items: EMPTY_ARRAY });
   }
 }

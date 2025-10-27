@@ -24,7 +24,7 @@ export class TreeViewExpansionPlugin {
    * @param {TreeViewItemId} itemId The id of the item to check.
    * @returns {boolean} `true` if the item is expanded, `false` otherwise.
    */
-  public isItemExpanded = (itemId: TreeViewItemId) =>
+  private isItemExpanded = (itemId: TreeViewItemId) =>
     expansionSelectors.isItemExpanded(this.store.state, itemId);
 
   public buildPublicAPI = () => {

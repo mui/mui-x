@@ -1,6 +1,6 @@
 import {
   DataSource,
-  RichTreeViewParameters,
+  RichTreeViewStoreParameters,
   RichTreeViewState,
   RichTreeViewPublicAPI,
 } from '@mui/x-tree-view/internals';
@@ -30,10 +30,10 @@ export interface RichTreeViewProState<
   } | null;
 }
 
-export interface RichTreeViewProParameters<
+export interface RichTreeViewProStoreParameters<
   R extends TreeViewValidItem<R>,
   Multiple extends boolean | undefined,
-> extends RichTreeViewParameters<R, Multiple> {
+> extends RichTreeViewStoreParameters<R, Multiple> {
   /**
    * The data source object.
    */
@@ -85,4 +85,4 @@ export interface RichTreeViewProPublicAPI<
   R extends TreeViewValidItem<R>,
   Multiple extends boolean | undefined,
 > extends RichTreeViewPublicAPI<R, Multiple>,
-    Pick<TreeViewLazyLoadingPlugin, 'updateItemChildren'> {}
+    ReturnType<TreeViewLazyLoadingPlugin['buildPublicAPI']> {}

@@ -23,6 +23,8 @@ import { TreeViewExpansionPlugin } from '../plugins/expansion';
 import { TreeViewItemPluginManager } from './TreeViewItemPluginManager';
 import { TreeViewEventListener, TreeViewEventLookup, TreeViewEvents } from '../models/events';
 
+export class MuiXStore {}
+
 export class MinimalTreeViewStore<
   R extends TreeViewValidItem<R>,
   Multiple extends boolean | undefined,
@@ -41,9 +43,6 @@ export class MinimalTreeViewStore<
   private mapper: TreeViewParametersToStateMapper<R, Multiple, State, Parameters>;
 
   private eventManager = new EventManager();
-
-  // TODO: Move to state if needed in some selectors.
-  public isRtl: boolean;
 
   /**
    * Whether the disposeEffect method has been called or not.
@@ -68,7 +67,6 @@ export class MinimalTreeViewStore<
   public constructor(
     parameters: Parameters,
     instanceName: string,
-    isRtl: boolean,
     mapper: TreeViewParametersToStateMapper<R, Multiple, State, Parameters>,
   ) {
     const sharedInitialState: MinimalTreeViewState<R, Multiple> = {
@@ -102,7 +100,6 @@ export class MinimalTreeViewStore<
     this.parameters = parameters;
     this.instanceName = instanceName;
     this.mapper = mapper;
-    this.isRtl = isRtl;
 
     // We mount the plugins in the constructor to make sure all the methods of the store are available to the plugins during their construction.
     this.items = new TreeViewItemsPlugin<R>(this);
@@ -131,7 +128,7 @@ export class MinimalTreeViewStore<
   /**
    * Updates the state of the tTree View based on the new parameters provided to the root component.
    */
-  public updateStateFromParameters(parameters: Parameters, isRtl: boolean) {
+  public updateStateFromParameters(parameters: Parameters) {
     const updateModel: TreeViewModelUpdater<State, Parameters> = (
       mutableNewState,
       controlledProp,
@@ -211,7 +208,6 @@ export class MinimalTreeViewStore<
     );
 
     this.update(newState);
-    this.isRtl = isRtl;
     this.parameters = parameters;
   }
 

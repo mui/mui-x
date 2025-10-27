@@ -5,7 +5,7 @@ import {
 } from '@mui/x-tree-view/internals';
 import { TreeViewValidItem } from '@mui/x-tree-view/models';
 import {
-  RichTreeViewProParameters,
+  RichTreeViewProStoreParameters,
   RichTreeViewProPublicAPI,
   RichTreeViewProState,
 } from './RichTreeViewProStore.types';
@@ -15,7 +15,7 @@ import { TreeViewItemsReorderingPlugin } from '../plugins/itemsReordering';
 const DEFAULT_IS_ITEM_REORDERABLE_WHEN_ENABLED = () => true;
 const DEFAULT_IS_ITEM_REORDERABLE_WHEN_DISABLED = () => false;
 
-const deriveStateFromParameters = (parameters: RichTreeViewProParameters<any, any>) => ({
+const deriveStateFromParameters = (parameters: RichTreeViewProStoreParameters<any, any>) => ({
   lazyLoadedItems: parameters.dataSource ? TREE_VIEW_LAZY_LOADED_ITEMS_INITIAL_STATE : null,
   currentReorder: null,
   isItemReorderable: parameters.itemsReordering
@@ -27,7 +27,7 @@ const mapper: TreeViewParametersToStateMapper<
   any,
   any,
   RichTreeViewProState<any, any>,
-  RichTreeViewProParameters<any, any>
+  RichTreeViewProStoreParameters<any, any>
 > = {
   getInitialState: (schedulerInitialState, parameters) => ({
     ...ExtendableRichTreeViewStore.rawMapper.getInitialState(schedulerInitialState, parameters),
@@ -55,14 +55,14 @@ export class RichTreeViewProStore<
   R,
   Multiple,
   RichTreeViewProState<R, Multiple>,
-  RichTreeViewProParameters<R, Multiple>
+  RichTreeViewProStoreParameters<R, Multiple>
 > {
   public lazyLoading: TreeViewLazyLoadingPlugin;
 
   public itemsReordering = new TreeViewItemsReorderingPlugin(this);
 
-  public constructor(parameters: RichTreeViewProParameters<R, Multiple>, isRtl: boolean) {
-    super(parameters, 'RichTreeViewPro', isRtl, mapper);
+  public constructor(parameters: RichTreeViewProStoreParameters<R, Multiple>) {
+    super(parameters, 'RichTreeViewPro', mapper);
 
     this.lazyLoading = new TreeViewLazyLoadingPlugin(this);
   }
@@ -70,7 +70,7 @@ export class RichTreeViewProStore<
   public buildPublicAPI(): RichTreeViewProPublicAPI<R, Multiple> {
     return {
       ...super.buildPublicAPI(),
-      updateItemChildren: this.lazyLoading.updateItemChildren,
+      ...this.lazyLoading.buildPublicAPI(),
     };
   }
 }

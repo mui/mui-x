@@ -1,9 +1,9 @@
-import { RichTreeViewParameters } from '../../RichTreeViewStore';
+import { RichTreeViewStoreParameters } from '../../RichTreeViewStore';
 
 export const getExpansionTrigger = ({
   isItemEditable,
   expansionTrigger,
-}: Pick<RichTreeViewParameters<any, any>, 'isItemEditable' | 'expansionTrigger'>) => {
+}: Pick<RichTreeViewStoreParameters<any, any>, 'isItemEditable' | 'expansionTrigger'>) => {
   if (expansionTrigger) {
     return expansionTrigger;
   }

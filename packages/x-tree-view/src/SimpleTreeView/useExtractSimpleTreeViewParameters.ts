@@ -1,11 +1,17 @@
 import * as React from 'react';
-import { SimpleTreeViewParameters } from '../internals/SimpleTreeViewStore/SimpleTreeViewStore.types';
+import { SimpleTreeViewProps } from './SimpleTreeView.types';
+import { UseTreeViewStoreParameters } from '../internals/hooks/useTreeViewStore';
+import { SimpleTreeViewStore } from '../internals/SimpleTreeViewStore';
 
-export function useExtractSimpleTreeViewParameters<
-  Multiple extends boolean | undefined,
-  P extends SimpleTreeViewParameters<Multiple>,
->(props: P): UseExtractSimpleTreeViewParametersReturnValue<Multiple, P> {
+export function useExtractSimpleTreeViewParameters<Multiple extends boolean | undefined>(
+  props: SimpleTreeViewProps<Multiple>,
+) {
   const {
+    // Props for Provider
+    apiRef,
+    slots,
+    slotProps,
+
     // Shared parameters
     disabledItemsFocusable,
     onItemClick,
@@ -32,7 +38,7 @@ export function useExtractSimpleTreeViewParameters<
     ...forwardedProps
   } = props;
 
-  const parameters: SimpleTreeViewParameters<Multiple> = React.useMemo(
+  const parameters: UseTreeViewStoreParameters<SimpleTreeViewStore<Multiple>> = React.useMemo(
     () => ({
       // Shared parameters
       disabledItemsFocusable,
@@ -82,15 +88,10 @@ export function useExtractSimpleTreeViewParameters<
   );
 
   return {
+    apiRef,
+    slots,
+    slotProps,
     parameters,
-    forwardedProps: forwardedProps as Omit<P, keyof SimpleTreeViewParameters<Multiple>>,
+    forwardedProps,
   };
-}
-
-interface UseExtractSimpleTreeViewParametersReturnValue<
-  Multiple extends boolean | undefined,
-  P extends SimpleTreeViewParameters<Multiple>,
-> {
-  parameters: SimpleTreeViewParameters<Multiple>;
-  forwardedProps: Omit<P, keyof SimpleTreeViewParameters<Multiple>>;
 }

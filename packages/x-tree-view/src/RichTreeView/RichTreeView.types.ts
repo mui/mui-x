@@ -11,8 +11,9 @@ import {
   TreeViewSlotProps,
   TreeViewSlots,
 } from '../internals/TreeViewProvider/TreeViewStyleContext';
-import { RichTreeViewParameters, RichTreeViewPublicAPI } from '../internals/RichTreeViewStore';
+import { RichTreeViewPublicAPI, RichTreeViewStore } from '../internals/RichTreeViewStore';
 import { TreeViewValidItem } from '../models/items';
+import { UseTreeViewStoreParameters } from '../internals/hooks/useTreeViewStore';
 
 export interface RichTreeViewSlots extends TreeViewSlots, RichTreeViewItemsSlots {
   /**
@@ -46,7 +47,7 @@ export interface RichTreeViewPropsBase extends React.HTMLAttributes<HTMLUListEle
 }
 
 export interface RichTreeViewProps<R extends {}, Multiple extends boolean | undefined>
-  extends RichTreeViewParameters<R, Multiple>,
+  extends UseTreeViewStoreParameters<RichTreeViewStore<R, Multiple>>,
     RichTreeViewPropsBase {
   /**
    * Overridable component slots.

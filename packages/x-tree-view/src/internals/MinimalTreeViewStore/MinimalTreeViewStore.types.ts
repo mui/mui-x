@@ -90,6 +90,10 @@ export interface MinimalTreeViewParameters<
   Multiple extends boolean | undefined,
 > {
   /**
+   * Whether the layout is right-to-left.
+   */
+  isRtl: boolean;
+  /**
    * If `true`, will allow focus on disabled items.
    * @default false
    */
