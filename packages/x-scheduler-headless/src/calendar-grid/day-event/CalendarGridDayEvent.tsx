@@ -7,7 +7,7 @@ import { useButton } from '../../base-ui-copy/utils/useButton';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps, NonNativeButtonProps } from '../../base-ui-copy/utils/types';
 import { useDraggableEvent } from '../../utils/useDraggableEvent';
-import { CalendarEvent, CalendarEventId, SchedulerValidDate } from '../../models';
+import { CalendarEventId, CalendarEventOccurrence, SchedulerValidDate } from '../../models';
 import { useAdapter, diffIn } from '../../use-adapter';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
 import { selectors } from '../../use-event-calendar/EventCalendarStore.selectors';
@@ -76,11 +76,20 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     return adapter.addDays(eventStartInRow, Math.ceil(positionX * eventDayLengthInRow) - 1);
   });
 
+  const firstEventOfSeries = selectors.event(store.state, eventId)!;
+  const originalOccurrence: CalendarEventOccurrence = {
+    ...firstEventOfSeries,
+    id: eventId,
+    key: occurrenceKey,
+    start,
+    end,
+  };
+
   const getSharedDragData: CalendarGridDayEventContext['getSharedDragData'] = useEventCallback(
     () => ({
       eventId,
       occurrenceKey,
-      event: selectors.event(store.state, eventId)!,
+      originalOccurrence,
       start,
       end,
     }),
@@ -157,7 +166,7 @@ export namespace CalendarGridDayEvent {
   export interface SharedDragData {
     eventId: CalendarEventId;
     occurrenceKey: string;
-    event: CalendarEvent;
+    originalOccurrence: CalendarEventOccurrence;
     start: SchedulerValidDate;
     end: SchedulerValidDate;
   }

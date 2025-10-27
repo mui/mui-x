@@ -34,6 +34,7 @@ describe('Core - EventCalendarStore', () => {
         canDropEventsToTheOutside: false,
         showCurrentTimeIndicator: true,
         eventColor: 'jade',
+        pendingUpdateRecurringEventParameters: null,
         preferences: DEFAULT_PREFERENCES,
         preferencesMenuConfig: DEFAULT_PREFERENCES_MENU_CONFIG,
         viewConfig: null,

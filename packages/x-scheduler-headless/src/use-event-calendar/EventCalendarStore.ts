@@ -15,12 +15,14 @@ export const DEFAULT_VIEW: CalendarView = 'week';
 export const DEFAULT_PREFERENCES: EventCalendarPreferences = {
   showWeekends: true,
   showWeekNumber: false,
+  showEmptyDaysInAgenda: true,
   isSidePanelOpen: true,
   ampm: true,
 };
 export const DEFAULT_PREFERENCES_MENU_CONFIG: EventCalendarPreferencesMenuConfig = {
   toggleWeekendVisibility: true,
   toggleWeekNumberVisibility: true,
+  toggleEmptyDaysInAgenda: true,
   toggleAmpm: true,
 };
 
