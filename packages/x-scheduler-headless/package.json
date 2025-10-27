@@ -76,7 +76,7 @@
     "@floating-ui/utils": "^0.2.10",
     "@mui/x-internals": "workspace:*",
     "prop-types": "catalog:",
-    "tabbable": "^6.2.0"
+    "tabbable": "^6.3.0"
   },
   "peerDependencies": {
     "luxon": "^3.0.2",
