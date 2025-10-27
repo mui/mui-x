@@ -1,4 +1,5 @@
-import { cdp, server } from '@vitest/browser/context';
+import { cdp, server } from 'vitest/browser';
+import type {} from '@vitest/browser-playwright';
 
 const baseDir = './traces';
 

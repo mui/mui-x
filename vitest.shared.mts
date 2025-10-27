@@ -2,6 +2,7 @@ import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
+import { playwright } from '@vitest/browser-playwright';
 
 const CURRENT_DIR = dirname(fileURLToPath(import.meta.url));
 const WORKSPACE_ROOT = resolve(CURRENT_DIR, './');
@@ -64,7 +65,15 @@ export default defineConfig({
     },
     browser: {
       isolate: false,
-      provider: 'playwright',
+      provider: playwright({
+        ...(process.env.PLAYWRIGHT_SERVER_WS
+          ? {
+              connectOptions: {
+                wsEndpoint: process.env.PLAYWRIGHT_SERVER_WS,
+              },
+            }
+          : {}),
+      }),
       headless: true,
       screenshotFailures: false,
       orchestratorScripts: [
