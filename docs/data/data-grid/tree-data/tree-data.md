@@ -187,26 +187,34 @@ You also need to pass the `setTreeDataPath()` prop to revert the operation done 
 
 ### Reordering persistance
 
-To sync the updated row order with an external store, use `processRowUpdate()` and `onRowOrderChange()` callbacks.
+To sync the updated row order with an external store, depending on how you manage the order of rows in the external store, you can use either [`processRowUpdate()`](/x/api/data-grid/data-grid-pro/#data-grid-pro-prop-processRowUpdate) or the [`onRowOrderChange()`](/x/api/data-grid/data-grid-pro/#data-grid-pro-prop-onRowOrderChange) callback, or both.
 
-The `processRowUpdate()` callback is triggered whenever a row is updated, so when doing a cross-parent reorder operation, some values like `path` need to be updated based on data which is a row update. In that case one or multiple (in case of moving a group node) `processRowUpdate()` callbacks are triggered.
+The `processRowUpdate()` callback is triggered whenever a row is updated, so when doing a cross-parent reorder operation, the `path` value gets updated based on the new position of the row(s) which result in one or more `processRowUpdate()` calls. If the `path` value is part of the row data, you can use the `processRowUpdate()` callback to update the `path` value.
 
-And when the reorder operation is successfully completed, the `onRowOrderChange()` callback is triggered, which contains information about the new row re-ordering of the format [`GridRowOrderChangeParams`](/x/api/data-grid/grid-row-order-change-params/).
+After the reorder operation is successfully completed, the `onRowOrderChange()` callback is triggered, which contains information about the new row re-ordering of the format [`GridRowOrderChangeParams`](/x/api/data-grid/grid-row-order-change-params/).
 
 ```tsx
 <DataGridPro
-  // Capture row updates (can be multiple in one reorder operation)
+  // Capture row updates, can be multiple in one reorder operation, only triggered
+  // when one or more row updates (i.e. a cross parent reorder operation) are performed
   processRowUpdate={processRowUpdate}
-  // Capture row re-ordering operations
+  // Capture row re-ordering operations, always triggered once
+  // after the reorder operation is successfully completed
   onRowOrderChange={handleRowOrderChange}
 />
 ```
 
-The demo below uses a custom data store to persist the row data in the local storage and sync the updated row order with the external store. Try refreshing the page to see the persisted row order.
+The demo below uses a custom data store binded using `useSyncExternalStore()` to persist the row data in the local storage.
+
+It maintains a row tree structure which is used to recompute path values after a reorder operation is performed, so a `processRowUpdate()` is not needed and only the `onRowOrderChange()` is sufficient for syncing the updated row order with the external store. This could be different with your specific implementation of row order persistence.
+
+:::success
+**Tip**: After some reorders, try refreshing the demo/page to see the persisted row order.
+:::
 
 {{"demo": "TreeDataSyncRowData.js", "bg": "inline", "defaultCodeOpen": false}}
 
-:::success
+:::info
 The demo above uses the `isValidRowReorder()` prop to disable moving nodes "over" files (or leaf nodes) as it would convert them into parent groups.
 
 Check the [Row ordering—Disable specific reorder operations](/x/react-data-grid/row-ordering/#disable-specific-reorder-operations) documentation section for more details.
