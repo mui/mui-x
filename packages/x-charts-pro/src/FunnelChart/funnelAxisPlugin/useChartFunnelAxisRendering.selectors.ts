@@ -17,7 +17,6 @@ export const selectorFunnel = (state: ChartState<[], [UseChartFunnelAxisSignatur
 export const selectorFunnelGap = createSelector([selectorFunnel], (funnel) => funnel?.gap ?? 0);
 
 export const selectorChartXAxis = createSelectorMemoized(
-
   selectorChartRawXAxis,
   selectorChartDrawingArea,
   selectorChartSeriesProcessed,
@@ -36,7 +35,6 @@ export const selectorChartXAxis = createSelectorMemoized(
 );
 
 export const selectorChartYAxis = createSelectorMemoized(
-
   selectorChartRawYAxis,
   selectorChartDrawingArea,
   selectorChartSeriesProcessed,

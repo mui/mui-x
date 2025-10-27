@@ -15,18 +15,20 @@ export const selectorChartDrawingArea = createSelectorMemoized(
   selectorChartDimensionsState,
   selectorChartMargin,
   selectorChartAxisSizes,
-  (
+  function selectorChartDrawingArea(
     { width, height },
     { top: marginTop, right: marginRight, bottom: marginBottom, left: marginLeft },
     { left: axisSizeLeft, right: axisSizeRight, top: axisSizeTop, bottom: axisSizeBottom },
-  ) => ({
-    width: width - marginLeft - marginRight - axisSizeLeft - axisSizeRight,
-    left: marginLeft + axisSizeLeft,
-    right: marginRight + axisSizeRight,
-    height: height - marginTop - marginBottom - axisSizeTop - axisSizeBottom,
-    top: marginTop + axisSizeTop,
-    bottom: marginBottom + axisSizeBottom,
-  }),
+  ) {
+    return {
+      width: width - marginLeft - marginRight - axisSizeLeft - axisSizeRight,
+      left: marginLeft + axisSizeLeft,
+      right: marginRight + axisSizeRight,
+      height: height - marginTop - marginBottom - axisSizeTop - axisSizeBottom,
+      top: marginTop + axisSizeTop,
+      bottom: marginBottom + axisSizeBottom,
+    };
+  },
 );
 
 export const selectorChartSvgWidth = createSelector(

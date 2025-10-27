@@ -54,9 +54,10 @@ export const useInteractionItemProps = (
       skip
         ? {}
         : {
-            onPointerEnter,
-            onPointerLeave,
-          },
+          onPointerEnter,
+          onPointerLeave,
+          onPointerDown,
+        },
     [skip, onPointerEnter, onPointerLeave],
   );
 };
@@ -83,6 +84,7 @@ export function getInteractionItemProps(
 ): {
   onPointerEnter?: () => void;
   onPointerLeave?: () => void;
+  onPointerDown?: (event: React.PointerEvent) => void;
 } {
   function onPointerEnter() {
     if (!item) {
@@ -103,5 +105,6 @@ export function getInteractionItemProps(
   return {
     onPointerEnter,
     onPointerLeave,
+    onPointerDown,
   };
 }

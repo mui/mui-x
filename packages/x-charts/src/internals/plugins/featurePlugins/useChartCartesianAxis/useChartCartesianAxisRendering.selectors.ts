@@ -65,7 +65,9 @@ export const selectorChartZoomIsInteracting = createSelector(
 
 export const selectorChartZoomMap = createSelectorMemoized(
   selectorChartZoomState,
-  (zoom) => zoom?.zoomData && createZoomMap(zoom?.zoomData),
+  function selectorChartZoomMap(zoom) {
+    return zoom?.zoomData && createZoomMap(zoom?.zoomData);
+  },
 );
 
 export const selectorChartAxisZoomData = createSelector(
@@ -76,10 +78,12 @@ export const selectorChartAxisZoomData = createSelector(
 export const selectorChartZoomOptionsLookup = createSelectorMemoized(
   selectorChartRawXAxis,
   selectorChartRawYAxis,
-  (xAxis, yAxis) => ({
-    ...createZoomLookup('x')(xAxis),
-    ...createZoomLookup('y')(yAxis),
-  }),
+  function selectorChartZoomOptionsLookup(xAxis, yAxis) {
+    return {
+      ...createZoomLookup('x')(xAxis),
+      ...createZoomLookup('y')(yAxis),
+    };
+  },
 );
 
 export const selectorChartAxisZoomOptionsLookup = createSelector(
@@ -274,7 +278,7 @@ export const selectorChartFilteredXDomains = createSelectorMemoized(
   selectorPreferStrictDomainInLineCharts,
   selectorChartXAxisWithDomains,
 
-  (
+  function selectorChartFilteredXDomains(
     formattedSeries,
     seriesConfig,
     zoomMap,
@@ -282,7 +286,7 @@ export const selectorChartFilteredXDomains = createSelectorMemoized(
     getFilters,
     preferStrictDomainInLineCharts,
     { axes, domains },
-  ) => {
+  ) {
     const filteredDomains: Record<AxisId, ReadonlyArray<string | NumberValue>> = {};
 
     axes?.forEach((axis, axisIndex) => {
@@ -325,11 +329,6 @@ export const selectorChartFilteredXDomains = createSelectorMemoized(
 
     return filteredDomains;
   },
-  // {
-  //   memoizeOptions: {
-  //     resultEqualityCheck: (a: any, b: any) => isDeepEqual(a, b),
-  //   },
-  // },
 );
 
 export const selectorChartFilteredYDomains = createSelectorMemoized(
@@ -340,7 +339,7 @@ export const selectorChartFilteredYDomains = createSelectorMemoized(
   selectorChartZoomAxisFilters,
   selectorPreferStrictDomainInLineCharts,
   selectorChartYAxisWithDomains,
-  (
+  function selectorChartFilteredYDomains(
     formattedSeries,
     seriesConfig,
     zoomMap,
@@ -348,7 +347,7 @@ export const selectorChartFilteredYDomains = createSelectorMemoized(
     getFilters,
     preferStrictDomainInLineCharts,
     { axes, domains },
-  ) => {
+  ) {
     const filteredDomains: Record<AxisId, ReadonlyArray<string | NumberValue>> = {};
 
     axes?.forEach((axis, axisIndex) => {
@@ -391,11 +390,6 @@ export const selectorChartFilteredYDomains = createSelectorMemoized(
 
     return filteredDomains;
   },
-  // {
-  //   memoizeOptions: {
-  //     resultEqualityCheck: (a: any, b: any) => isDeepEqual(a, b),
-  //   },
-  // },
 );
 
 export const selectorChartNormalizedXScales = createSelectorMemoized(
@@ -500,8 +494,15 @@ export const selectorChartXAxis = createSelectorMemoized(
   selectorChartXAxisWithDomains,
   selectorChartXScales,
 
-  (drawingArea, formattedSeries, seriesConfig, zoomMap, { axes, domains }, scales) =>
-    computeAxisValue({
+  function selectorChartXAxis(
+    drawingArea,
+    formattedSeries,
+    seriesConfig,
+    zoomMap,
+    { axes, domains },
+    scales,
+  ) {
+    return computeAxisValue({
       scales,
       drawingArea,
       formattedSeries,
@@ -510,7 +511,8 @@ export const selectorChartXAxis = createSelectorMemoized(
       axisDirection: 'x',
       zoomMap,
       domains,
-    }),
+    });
+  },
 );
 
 export const selectorChartYAxis = createSelectorMemoized(
@@ -521,8 +523,15 @@ export const selectorChartYAxis = createSelectorMemoized(
   selectorChartYAxisWithDomains,
   selectorChartYScales,
 
-  (drawingArea, formattedSeries, seriesConfig, zoomMap, { axes, domains }, scales) =>
-    computeAxisValue({
+  function selectorChartYAxis(
+    drawingArea,
+    formattedSeries,
+    seriesConfig,
+    zoomMap,
+    { axes, domains },
+    scales,
+  ) {
+    return computeAxisValue({
       scales,
       drawingArea,
       formattedSeries,
@@ -531,7 +540,8 @@ export const selectorChartYAxis = createSelectorMemoized(
       axisDirection: 'y',
       zoomMap,
       domains,
-    }),
+    });
+  },
 );
 
 export const selectorChartAxis = createSelector(
@@ -566,7 +576,6 @@ const EMPTY_MAP = new Map<SeriesId, Flatbush>();
 export const selectorChartSeriesEmptyFlatbushMap = () => EMPTY_MAP;
 
 export const selectorChartSeriesFlatbushMap = createSelectorMemoized(
-
   selectorChartSeriesProcessed,
   selectorChartNormalizedXScales,
   selectorChartNormalizedYScales,
