@@ -10,7 +10,6 @@ import {
   CalendarEventId,
   SchedulerResourceModelStructure,
   SchedulerEventModelStructure,
-  RecurringEventUpdateScope,
 } from '../../models';
 import { Adapter } from '../../use-adapter/useAdapter.types';
 
@@ -105,6 +104,15 @@ export interface SchedulerState<TEvent extends object = any> {
    * It can also be styled differently in the day grid.
    */
   isMultiDayEvent: (event: CalendarEvent | CalendarEventOccurrence) => boolean;
+  /**
+   * Whether the calendar is in read-only mode.
+   * @default false
+   */
+  readOnly: boolean;
+  /**
+   * Pending parameters to use when the user selects the scope of a recurring event update.
+   */
+  pendingUpdateRecurringEventParameters: UpdateRecurringEventParameters | null;
 }
 
 export interface SchedulerParameters<TEvent extends object, TResource extends object> {
@@ -180,6 +188,11 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
    * @default "jade"
    */
   eventColor?: CalendarEventColor;
+  /**
+   * Whether the calendar is in read-only mode.
+   * @default false
+   */
+  readOnly?: boolean;
 }
 
 /**
@@ -196,9 +209,9 @@ export type UpdateRecurringEventParameters = {
    */
   changes: CalendarEventUpdatedProperties;
   /**
-   * The scope of the update.
+   * Callback fired when the user submits the recurring scope dialog.
    */
-  scope: RecurringEventUpdateScope;
+  onSubmit?: () => void;
 };
 
 /**

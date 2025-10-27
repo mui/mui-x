@@ -12,6 +12,7 @@ export const selectors = {
   ampm: createSelector((state: State) => state.preferences.ampm),
   showWeekends: createSelector((state: State) => state.preferences.showWeekends),
   showWeekNumber: createSelector((state: State) => state.preferences.showWeekNumber),
+  showEmptyDaysInAgenda: createSelector((state: State) => state.preferences.showEmptyDaysInAgenda),
   hasDayView: createSelector((state: State) => state.views.includes('day')),
   isEventDraggable: createSelector(
     schedulerSelectors.isEventReadOnly,

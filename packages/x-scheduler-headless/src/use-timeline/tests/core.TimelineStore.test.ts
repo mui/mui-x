@@ -33,9 +33,11 @@ describe('Core - TimelineStore', () => {
         showCurrentTimeIndicator: true,
         occurrencePlaceholder: null,
         visibleDate: adapter.startOfDay(adapter.date()),
+        pendingUpdateRecurringEventParameters: null,
         preferences: DEFAULT_PREFERENCES,
         view: 'time',
         views: ['time', 'days', 'weeks', 'months', 'years'],
+        readOnly: false,
       };
 
       expect(store.state).to.deep.equal(expectedState);

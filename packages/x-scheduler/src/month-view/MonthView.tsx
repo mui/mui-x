@@ -71,7 +71,7 @@ export const MonthView = React.memo(
       return { weeks: tempWeeks, days: tempWeeks.flat(1) };
     }, [adapter, getWeekList, getDayList, visibleDate, showWeekends]);
 
-    const occurrencesMap = useEventOccurrencesGroupedByDay({ days, renderEventIn: 'every-day' });
+    const occurrencesMap = useEventOccurrencesGroupedByDay({ days });
 
     useEventCalendarView(() => ({
       siblingVisibleDateGetter: (date, delta) =>

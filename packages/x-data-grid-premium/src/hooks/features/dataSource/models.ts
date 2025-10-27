@@ -9,6 +9,7 @@ import type {
   GridDataSourcePrivateApi,
   GridRowModel,
 } from '@mui/x-data-grid-pro';
+import type { GridDataSourceFetchRowsParams } from '@mui/x-data-grid-pro/internals';
 
 import type { GridAggregationModel } from '../aggregation/gridAggregationInterfaces';
 import type { GridPivotModel } from '../pivoting/gridPivotingInterfaces';
@@ -107,9 +108,13 @@ export interface GridDataSourceApiBasePremium extends Omit<GridDataSourceApiBase
    * If no `parentId` option is provided, it fetches the root rows.
    * Any missing parameter from `params` will be filled from the state (sorting, filtering, etc.).
    * @param {GridRowId} parentId The id of the parent node (default: `GRID_ROOT_GROUP_ID`).
-   * @param {Partial<GridGetRowsParamsPremium>} params Request parameters override.
+   * @param {GridDataSourceFetchRowsParams<GridGetRowsParamsPremium>} params Request parameters override.
+   * @returns {Promise<void>} A promise that resolves when the rows are fetched.
    */
-  fetchRows: (parentId?: GridRowId, params?: Partial<GridGetRowsParamsPremium>) => void;
+  fetchRows: (
+    parentId?: GridRowId,
+    params?: GridDataSourceFetchRowsParams<GridGetRowsParamsPremium>,
+  ) => Promise<void>;
 }
 
 export interface GridDataSourceApiPremium {

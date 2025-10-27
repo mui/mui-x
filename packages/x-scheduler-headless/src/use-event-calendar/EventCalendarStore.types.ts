@@ -61,7 +61,7 @@ export interface EventCalendarParameters<TEvent extends object, TResource extend
    * Config of the preferences menu.
    * Defines which options are visible in the menu.
    * If `false`, the menu will be entirely hidden.
-   * @default { toggleWeekendVisibility: true, toggleWeekNumberVisibility: true, toggleAmpm: true }
+   * @default { toggleWeekendVisibility: true, toggleWeekNumberVisibility: true, toggleAmpm: true, toggleEmptyDaysInAgenda: true }
    */
   preferencesMenuConfig?: Partial<EventCalendarPreferencesMenuConfig> | false;
 }

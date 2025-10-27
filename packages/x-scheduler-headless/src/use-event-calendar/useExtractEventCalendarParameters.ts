@@ -26,6 +26,7 @@ export function useExtractEventCalendarParameters<
     preferencesMenuConfig,
     eventColor,
     showCurrentTimeIndicator,
+    readOnly,
     ...forwardedProps
   } = props;
 
@@ -50,6 +51,7 @@ export function useExtractEventCalendarParameters<
       preferencesMenuConfig,
       eventColor,
       showCurrentTimeIndicator,
+      readOnly,
     }),
     [
       events,
@@ -71,6 +73,7 @@ export function useExtractEventCalendarParameters<
       preferencesMenuConfig,
       eventColor,
       showCurrentTimeIndicator,
+      readOnly,
     ],
   );
 
