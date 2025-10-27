@@ -86,6 +86,7 @@
     "@types/babel__core": "^7.20.5",
     "@types/babel__traverse": "^7.28.0",
     "@types/chai-dom": "^1.11.3",
+    "@types/mocha": "^10.0.10",
     "@types/node": "^22.18.12",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
