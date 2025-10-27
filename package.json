@@ -165,6 +165,10 @@
           "lodash.kebabcase": "^4.1.1"
         }
       }
+    },
+    "patchedDependencies": {
+      "inlineresources": "patches/inlineresources.patch",
+      "rasterizehtml": "patches/rasterizehtml.patch"
     }
   }
 }
