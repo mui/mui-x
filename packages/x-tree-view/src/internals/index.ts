@@ -6,6 +6,10 @@ export type {
   RichTreeViewItemsSlotProps,
 } from './components/RichTreeViewItems';
 
+export { useTreeViewRootProps } from './hooks/useTreeViewRootProps';
+export { useTreeViewStore } from './hooks/useTreeViewStore';
+export type { UseTreeViewStoreParameters } from './hooks/useTreeViewStore';
+
 export type { TreeViewItemMeta, TreeViewItemPlugin } from './models';
 
 // Plugins
@@ -24,7 +28,9 @@ export type {
   TreeViewSlotProps,
 } from './TreeViewProvider/TreeViewStyleContext';
 
+export { MinimalTreeViewStore } from './MinimalTreeViewStore';
 export type { TreeViewParametersToStateMapper } from './MinimalTreeViewStore';
+
 export {
   ExtendableRichTreeViewStore,
   TREE_VIEW_LAZY_LOADED_ITEMS_INITIAL_STATE,
@@ -34,8 +40,5 @@ export type {
   RichTreeViewStoreParameters,
   RichTreeViewPublicAPI,
 } from './RichTreeViewStore';
+
 export { TreeViewItemDepthContext } from './TreeViewItemDepthContext';
-export { useTreeViewRootProps } from './hooks/useTreeViewRootProps';
-export { MinimalTreeViewStore } from './MinimalTreeViewStore';
-export { useTreeViewStore } from './hooks/useTreeViewStore';
-export type { UseTreeViewStoreParameters } from './hooks/useTreeViewStore';
