@@ -36,7 +36,6 @@ export default function TreeDataSyncRowData() {
           rowReordering
           isValidRowReorder={isValidRowReorder}
           disableRowSelectionOnClick
-          processRowUpdate={dataStore.processRowUpdate}
           onRowOrderChange={dataStore.handleRowOrderChange}
           getTreeDataPath={getTreeDataPath}
           setTreeDataPath={setTreeDataPath}

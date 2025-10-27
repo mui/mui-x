@@ -29,8 +29,6 @@ export class DataStore {
 
   private tree: Map<GridRowId, TreeNode>;
 
-  private pendingUpdates: Map<GridRowId, RowWithPath>;
-
   private subscribers: Set<() => void>;
 
   private snapshot: {
@@ -58,7 +56,6 @@ export class DataStore {
       });
     }
 
-    this.pendingUpdates = new Map();
     this.subscribers = new Set();
     this.snapshot = {
       rows: [],
@@ -143,9 +140,6 @@ export class DataStore {
       this.tree.set(node.id, node);
     });
 
-    // Clear pending updates
-    this.pendingUpdates.clear();
-
     // Set loading state and reload
     this.snapshot = { ...this.snapshot, loading: true };
     this.notify();
@@ -191,12 +185,6 @@ export class DataStore {
     this.notify();
   }
 
-  processRowUpdate = (newRow: RowWithPath, _oldRow: RowWithPath): Promise<RowWithPath> => {
-    // Queue the update - will be committed when handleRowOrderChange is called
-    this.pendingUpdates.set(newRow.id, newRow);
-    return Promise.resolve(newRow);
-  };
-
   handleRowOrderChange = (params: GridRowOrderChangeParams): void => {
     // Set loading state
     this.snapshot = { ...this.snapshot, loading: true };
@@ -204,13 +192,6 @@ export class DataStore {
 
     // Apply updates asynchronously
     setTimeout(() => {
-      // Apply pending updates to rowLookup
-      this.pendingUpdates.forEach((updatedRow, rowId) => {
-        // Update rowLookup with new data (excluding path as it's computed)
-        const { path, ...rowData } = updatedRow;
-        this.rowLookup[rowId] = rowData as RowData;
-      });
-
       // Update tree structure
       const rowId = params.row.id;
       const oldParentId = params.oldParent ?? 'virtual-root-node';
@@ -231,9 +212,6 @@ export class DataStore {
           newParentNode.children.splice(params.targetIndex, 0, rowId);
         }
       }
-
-      // Clear pending updates
-      this.pendingUpdates.clear();
 
       // Regenerate rows with new paths
       const updatedRows = this.computeRowsWithPaths();
