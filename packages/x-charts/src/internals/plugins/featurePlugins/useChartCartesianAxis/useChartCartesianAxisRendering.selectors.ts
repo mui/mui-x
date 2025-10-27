@@ -328,6 +328,11 @@ export const selectorChartFilteredXDomains = createSelector(
 
     return filteredDomains;
   },
+  {
+    memoizeOptions: {
+      resultEqualityCheck: (a: any, b: any) => isDeepEqual(a, b),
+    },
+  },
 );
 
 export const selectorChartFilteredYDomains = createSelector(
@@ -393,6 +398,11 @@ export const selectorChartFilteredYDomains = createSelector(
 
     return filteredDomains;
   },
+  {
+    memoizeOptions: {
+      resultEqualityCheck: (a: any, b: any) => isDeepEqual(a, b),
+    },
+  },
 );
 
 export const selectorChartNormalizedXScales = createSelector(
@@ -409,11 +419,6 @@ export const selectorChartNormalizedXScales = createSelector(
 
     return scales;
   },
-  {
-    memoizeOptions: {
-      equalityCheck: isDeepEqual,
-    },
-  },
 );
 
 export const selectorChartNormalizedYScales = createSelector(
@@ -429,11 +434,6 @@ export const selectorChartNormalizedYScales = createSelector(
     });
 
     return scales;
-  },
-  {
-    memoizeOptions: {
-      equalityCheck: isDeepEqual,
-    },
   },
 );
 
