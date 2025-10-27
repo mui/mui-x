@@ -57,12 +57,14 @@ export class RichTreeViewProStore<
   RichTreeViewProState<R, Multiple>,
   RichTreeViewProParameters<R, Multiple>
 > {
-  public lazyLoading = new TreeViewLazyLoadingPlugin(this);
+  public lazyLoading: TreeViewLazyLoadingPlugin;
 
   public itemsReordering = new TreeViewItemsReorderingPlugin(this);
 
   public constructor(parameters: RichTreeViewProParameters<R, Multiple>, isRtl: boolean) {
     super(parameters, 'RichTreeViewPro', isRtl, mapper);
+
+    this.lazyLoading = new TreeViewLazyLoadingPlugin(this);
   }
 
   public buildPublicAPI(): RichTreeViewProPublicAPI<R, Multiple> {

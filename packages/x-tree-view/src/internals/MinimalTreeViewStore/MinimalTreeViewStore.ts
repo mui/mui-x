@@ -45,6 +45,12 @@ export class MinimalTreeViewStore<
   // TODO: Move to state if needed in some selectors.
   public isRtl: boolean;
 
+  /**
+   * Whether the disposeEffect method has been called or not.
+   * This is useful to avoid loosing the event listeners when running React strict mode in development.
+   */
+  public hasBeenDisposed = false;
+
   public timeoutManager = new TimeoutManager();
 
   public itemPluginManager = new TreeViewItemPluginManager<this>();
@@ -205,8 +211,13 @@ export class MinimalTreeViewStore<
 
   public disposeEffect = () => {
     return () => {
-      this.timeoutManager.clearAll();
-      this.eventManager.removeAllListeners();
+      // On React strict mode, the disposeEffect is called twice.
+      // We want to avoid removing the event listeners the first time.
+      if (process.env.NODE_ENV === 'production' || this.hasBeenDisposed) {
+        this.timeoutManager.clearAll();
+        this.eventManager.removeAllListeners();
+      }
+      this.hasBeenDisposed = true;
     };
   };
 
@@ -238,11 +249,9 @@ export class MinimalTreeViewStore<
     event: TreeViewEventLookup[E] extends { event: any } ? TreeViewEventLookup[E]['event'] : null,
   ) => {
     event.defaultMuiPrevented = false;
-
     if (isSyntheticEvent(event) && event.isPropagationStopped()) {
       return;
     }
-
     this.eventManager.emit(name, params, event);
   };
 

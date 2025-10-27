@@ -24,7 +24,7 @@ export class TreeViewLazyLoadingPlugin {
     this.cache = store.parameters.dataSourceCache ?? new DataSourceCacheDefault({});
 
     if (store.parameters.dataSource != null) {
-      lazyLoadingOnMount(store);
+      lazyLoadingOnMount(store, this);
       subscribeEvents(store);
     }
   }
@@ -188,7 +188,10 @@ function getExpandableItemsFromDataSource(
     .map((item) => item.id);
 }
 
-function lazyLoadingOnMount(store: RichTreeViewProStore<any, any>) {
+function lazyLoadingOnMount(
+  store: RichTreeViewProStore<any, any>,
+  plugin: TreeViewLazyLoadingPlugin,
+) {
   const dataSource = store.parameters.dataSource!;
 
   async function fetchAllExpandedItems() {
@@ -201,7 +204,7 @@ function lazyLoadingOnMount(store: RichTreeViewProStore<any, any>) {
           (id) => itemsSelectors.itemOrderedChildrenIds(store.state, id).length === 0,
         );
         if (itemsToLazyLoad.length > 0) {
-          await store.lazyLoading.fetchItems(itemsToLazyLoad);
+          await plugin.fetchItems(itemsToLazyLoad);
         }
         const childrenIds = expandedItems.flatMap((id) =>
           itemsSelectors.itemOrderedChildrenIds(store.state, id),
@@ -217,7 +220,7 @@ function lazyLoadingOnMount(store: RichTreeViewProStore<any, any>) {
         store.expansion.addExpandableItems(newlyExpandableItems);
       }
     } else {
-      await store.lazyLoading.fetchItemChildren({ itemId: null });
+      await plugin.fetchItemChildren({ itemId: null });
     }
     await fetchChildrenIfExpanded(itemsSelectors.itemOrderedChildrenIds(store.state, null));
   }
