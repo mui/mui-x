@@ -21,6 +21,11 @@ export async function toggleShowWeekNumber(user) {
   await user.click(menuItem);
 }
 
+export async function toggleShowEmptyDaysInAgenda(user) {
+  const menuItem = await screen.findByRole('menuitemcheckbox', { name: /show empty days/i });
+  await user.click(menuItem);
+}
+
 async function openTimeFormatSubmenu() {
   const trigger = await screen.findByRole('menuitem', { name: /Time format/i });
   fireEvent.click(trigger);

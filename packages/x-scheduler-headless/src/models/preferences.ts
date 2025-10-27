@@ -22,6 +22,11 @@ export interface EventCalendarPreferences extends SchedulerPreferences {
    * @default true
    */
   isSidePanelOpen: boolean;
+  /**
+   * Whether empty days are shown in the agenda view.
+   * @default true
+   */
+  showEmptyDaysInAgenda: boolean;
 }
 
 export interface TimelinePreferences extends SchedulerPreferences {}
@@ -42,4 +47,9 @@ export interface EventCalendarPreferencesMenuConfig {
    * @default false
    */
   toggleAmpm: boolean;
+  /**
+   * Whether the menu item to toggle empty days in agenda view is visible.
+   * @default true
+   */
+  toggleEmptyDaysInAgenda: boolean;
 }
