@@ -51,7 +51,7 @@
     "use-material-ui-next": "code-infra set-version-overrides --pkg @mui/material@next",
     "release:changelog": "node scripts/releaseChangelog.mjs",
     "release:version": "lerna version --exact --no-changelog --no-push --no-git-tag-version --no-private",
-    "release:build": "lerna run --scope '@mui/*' build",
+    "release:build": "lerna run --scope '@mui/*' --ignore '@mui/*-pro' --ignore '@mui/*-premium' --ignore '@mui/x-data-grid-generator' build",
     "release:publish": "pnpm publish --recursive --tag latest",
     "release:publish:dry-run": "pnpm publish --recursive --tag latest --registry=\"http://localhost:4873/\"",
     "release:tag": "node scripts/releaseTag.mjs",
@@ -77,7 +77,7 @@
     "@mui/internal-netlify-cache": "^0.0.2-canary.1",
     "@mui/internal-test-utils": "catalog:",
     "@mui/material": "catalog:",
-    "@mui/monorepo": "github:mui/material-ui#57ae83d02aecf2eeb8cff71cdf8c28ae7b6ea0e5",
+    "@mui/monorepo": "github:mui/material-ui#28befd2bf5106a3b309bb552d2c764ddbb6335ef",
     "@mui/utils": "catalog:",
     "@next/eslint-plugin-next": "15.5.6",
     "@octokit/plugin-retry": "^8.0.2",
@@ -159,6 +159,12 @@
     "node": ">=22.18"
   },
   "pnpm": {
+    "overrides": {
+      "@mui/material": "https://pkg.pr.new/mui/material-ui/@mui/material@28befd2",
+      "@mui/system": "https://pkg.pr.new/mui/material-ui/@mui/system@28befd2",
+      "@mui/utils": "https://pkg.pr.new/mui/material-ui/@mui/utils@28befd2",
+      "@mui/icons-material": "https://pkg.pr.new/mui/material-ui/@mui/icons-material@28befd2"
+    },
     "packageExtensions": {
       "@mui/internal-test-utils": {
         "dependencies": {
