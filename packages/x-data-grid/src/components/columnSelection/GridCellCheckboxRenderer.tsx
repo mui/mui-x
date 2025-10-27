@@ -13,8 +13,11 @@ import { checkboxPropsSelector } from '../../hooks/features/rowSelection/utils';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import type { GridRowSelectionCheckboxParams } from '../../models/params/gridRowSelectionCheckboxParams';
 import type { GridRenderCellParams } from '../../models/params/gridCellParams';
+import { GridColDef } from '../../models/colDef/gridColDef';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
+
+const EMPTY_ARRAY: GridColDef[] = [];
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -47,7 +50,18 @@ const GridCellCheckboxForwardRef = forwardRef<HTMLInputElement, GridRenderCellPa
     const ownerState = { classes: rootProps.classes };
     const classes = useUtilityClasses(ownerState);
 
-    const disabled = !apiRef.current.isRowSelectable(id);
+    const { isIndeterminate, isChecked, isSelectable } = useGridSelector(
+      apiRef,
+      checkboxPropsSelector,
+      {
+        groupId: id,
+        autoSelectParents: rootProps.rowSelectionPropagation?.parents ?? false,
+        isRowSelectable: rootProps.isRowSelectable,
+        columns: rootProps.columns ?? EMPTY_ARRAY,
+      },
+    );
+
+    const disabled = !isSelectable;
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       if (disabled) {
@@ -89,11 +103,6 @@ const GridCellCheckboxForwardRef = forwardRef<HTMLInputElement, GridRenderCellPa
       if (disabled) {
         return;
       }
-    });
-
-    const { isIndeterminate, isChecked } = useGridSelector(apiRef, checkboxPropsSelector, {
-      groupId: id,
-      autoSelectParents: rootProps.rowSelectionPropagation?.parents ?? false,
     });
 
     if (rowNode.type === 'footer' || rowNode.type === 'pinnedRow') {
