@@ -4,7 +4,7 @@ import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps, NonNativeButtonProps } from '../../base-ui-copy/utils/types';
 import { useButton } from '../../base-ui-copy/utils/useButton';
-import { CalendarEvent, CalendarEventId, SchedulerValidDate } from '../../models';
+import { CalendarEventId, CalendarEventOccurrence, SchedulerValidDate } from '../../models';
 import { useAdapter } from '../../use-adapter';
 import { useTimelineStoreContext } from '../../use-timeline-store-context';
 import { selectors } from '../../use-timeline';
@@ -56,11 +56,22 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
       adapter.toJsDate(rowStart).getTime() - adapter.toJsDate(start).getTime(),
       0,
     );
+
+    const event = selectors.event(store.state, eventId)!;
+
+    const originalOccurrence: CalendarEventOccurrence = {
+      ...event,
+      key: occurrenceKey,
+      id: eventId,
+      start,
+      end,
+    };
+
     const offsetInsideRow = getCursorPositionInElementMs({ input, elementRef: ref });
     return {
       eventId,
       occurrenceKey,
-      event: selectors.event(store.state, eventId)!,
+      originalOccurrence,
       start,
       end,
       initialCursorPositionInEventMs: offsetBeforeRowStart + offsetInsideRow,
@@ -143,7 +154,7 @@ export namespace TimelineEvent {
   export interface SharedDragData {
     eventId: CalendarEventId;
     occurrenceKey: string;
-    event: CalendarEvent;
+    originalOccurrence: CalendarEventOccurrence;
     start: SchedulerValidDate;
     end: SchedulerValidDate;
     initialCursorPositionInEventMs: number;

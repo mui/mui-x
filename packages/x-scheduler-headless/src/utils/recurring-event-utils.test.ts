@@ -27,6 +27,7 @@ import {
   NOT_LOCALIZED_WEEK_DAYS,
   getWeekDayCode,
   getWeekDayNumberFromCode,
+  adjustRRuleForAllMove,
 } from './recurring-event-utils';
 import { diffIn } from '../use-adapter';
 import { mergeDateAndTime } from './date-utils';
@@ -1462,6 +1463,62 @@ describe('recurring-event-utils', () => {
     });
   });
 
+  describe('adjustRRuleForAllMove', () => {
+    it('should realign BYDAY from Sunday to Saturday when destination day changes on a WEEKLY rule', () => {
+      const rrule = { freq: 'WEEKLY' as const, byDay: ['SU' as const] };
+      const occurrenceStart = adapter.date('2025-01-05T09:00:00Z'); // Sunday
+      const newStart = adapter.date('2025-01-11T11:00:00Z'); // Saturday
+
+      const next = adjustRRuleForAllMove(adapter, rrule, occurrenceStart, newStart);
+
+      expect(next).to.deep.equal({ freq: 'WEEKLY', byDay: ['SA'] });
+    });
+
+    it('should swap only the edited weekday and preserve the rest for WEEKLY with multiple BYDAY values', () => {
+      const rrule = {
+        freq: 'WEEKLY' as const,
+        byDay: ['MO', 'WE', 'SU'] as RecurringEventByDayValue[],
+      };
+      const occurrenceStart = adapter.date('2025-01-05T09:00:00Z'); // SU
+      const newStart = adapter.date('2025-01-11T11:00:00Z'); // SA
+
+      const next = adjustRRuleForAllMove(adapter, rrule, occurrenceStart, newStart);
+
+      expect(next).to.deep.equal({ freq: 'WEEKLY', byDay: ['WE', 'SA', 'MO'] });
+    });
+
+    it('should align the day-of-month to the destination date for MONTHLY (BYMONTHDAY)', () => {
+      const rrule = { freq: 'MONTHLY' as const, byMonthDay: [5] };
+      const occurrenceStart = adapter.date('2025-01-05T09:00:00Z');
+      const newStart = adapter.date('2025-01-12T11:00:00Z');
+
+      const next = adjustRRuleForAllMove(adapter, rrule, occurrenceStart, newStart);
+
+      expect(next).to.deep.equal({ freq: 'MONTHLY', byMonthDay: [12] });
+    });
+
+    it('should recompute ordinal + weekday based on destination date for MONTHLY (ordinal BYDAY)', () => {
+      // 2TU (second Tuesday) -> destination is 2025-01-18 (Saturday) which is 3rd Saturday in Jan 2025
+      const rrule = { freq: 'MONTHLY' as const, byDay: ['2TU' as const] };
+      const occurrenceStart = adapter.date('2025-01-14T09:00:00Z'); // second Tuesday
+      const newStart = adapter.date('2025-01-18T11:00:00Z'); // third Saturday
+
+      const next = adjustRRuleForAllMove(adapter, rrule, occurrenceStart, newStart);
+
+      expect(next).to.deep.equal({ freq: 'MONTHLY', byDay: ['3SA'] });
+    });
+
+    it('should return the same rule (no weekday pattern to adjust)', () => {
+      const rrule = { freq: 'DAILY' as const, interval: 1 };
+      const occurrenceStart = adapter.date('2025-01-05T09:00:00Z');
+      const newStart = adapter.date('2025-01-12T11:00:00Z');
+
+      const next = adjustRRuleForAllMove(adapter, rrule, occurrenceStart, newStart);
+
+      expect(next).to.deep.equal(rrule);
+    });
+  });
+
   describe('applyRecurringUpdateAll', () => {
     it('should replace exactly one event without creating duplicates', () => {
       const original = makeRecurringEvent({ id: 'rec-1' });
@@ -1514,7 +1571,7 @@ describe('recurring-event-utils', () => {
       expect(updatedEvents.updated).to.deep.equal([changes]);
     });
 
-    it('should keep the original date and just update hours/minutes when changing the time of a later occurrence', () => {
+    it('should keep the original date and just update hours/minutes when changing the time of a non-first occurrence', () => {
       const original = makeRecurringEvent();
 
       // Edited the Jan 05 occurrence and changed only the time
@@ -1542,11 +1599,33 @@ describe('recurring-event-utils', () => {
       ]);
     });
 
-    it('should move the series when the caller changes the date part (uses provided start/end as-is)', () => {
-      const original = makeRecurringEvent();
+    it('should update the rrule when editing a non-first occurrence with a different day', () => {
+      const original = makeRecurringEvent({ rrule: { byDay: ['SU'], freq: 'WEEKLY' } });
+      const occurrenceStart = adapter.date('2025-01-05T09:00:00Z'); // Jan 5, a Sunday
+      const changes: CalendarEventUpdatedProperties = {
+        id: original.id,
+        start: adapter.date('2025-01-11T11:00:00Z'), // Saturday
+        end: adapter.date('2025-01-11T12:00:00Z'),
+      };
 
-      // Edited the Jan 05 occurrence but explicitly picked a different date
-      const occurrenceStart = adapter.date('2025-01-05T09:00:00Z');
+      const updatedEvents = applyRecurringUpdateAll(adapter, original, occurrenceStart, changes);
+
+      expect(updatedEvents.deleted).to.equal(undefined);
+      expect(updatedEvents.created).to.equal(undefined);
+      expect(updatedEvents.updated).to.deep.equal([
+        {
+          ...changes,
+          start: mergeDateAndTime(adapter, original.start, changes.start!),
+          end: mergeDateAndTime(adapter, original.end, changes.end!),
+          rrule: { byDay: ['SA'], freq: 'WEEKLY' },
+        },
+      ]);
+    });
+
+    it('should update the start date of the original event when editing the first occurrence (DTSTART)', () => {
+      const original = makeRecurringEvent(); // DTSTART = 2025-01-01
+      const occurrenceStart = original.start;
+
       const changes: CalendarEventUpdatedProperties = {
         id: original.id,
         start: adapter.date('2025-01-12T11:00:00Z'),
@@ -1555,10 +1634,12 @@ describe('recurring-event-utils', () => {
 
       const updatedEvents = applyRecurringUpdateAll(adapter, original, occurrenceStart, changes);
 
-      expect(updatedEvents.deleted).to.equal(undefined);
-      expect(updatedEvents.created).to.equal(undefined);
-      // Uses the provided values as-is (new startDate on Jan 12)
-      expect(updatedEvents.updated).to.deep.equal([changes]);
+      expect(updatedEvents.updated).to.deep.equal([
+        {
+          ...changes,
+          rrule: original.rrule,
+        },
+      ]);
     });
   });
 
