@@ -9,7 +9,7 @@ import {
   SchedulerValidDate,
 } from '../../models';
 import { SchedulerState as State } from './SchedulerStore.types';
-import { getWeekDayMaps } from '../recurring-event-utils';
+import { getWeekDayCode } from '../recurring-event-utils';
 
 const eventByIdMapSelector = createSelectorMemoized(
   (state: State) => state.events,
@@ -144,6 +144,9 @@ export const selectors = {
   canDropEventsToTheOutside: createSelector(
     (state: State) => state.canDropEventsToTheOutside && !state.readOnly,
   ),
+  isScopeDialogOpen: createSelector(
+    (state: State) => state.pendingUpdateRecurringEventParameters != null,
+  ),
   isCurrentDay: createSelector(
     (state: State) => state.adapter,
     (state: State) => state.nowUpdatedEveryMinute,
@@ -158,10 +161,6 @@ export const selectors = {
       adapter,
       date: SchedulerValidDate,
     ): Record<RecurringEventPresetKey, RecurringEventRecurrenceRule> => {
-      const { numToCode } = getWeekDayMaps(adapter);
-      const dateDowCode = numToCode[adapter.getDayOfWeek(date)];
-      const dateDayOfMonth = adapter.getDate(date);
-
       return {
         daily: {
           freq: 'DAILY',
@@ -170,12 +169,12 @@ export const selectors = {
         weekly: {
           freq: 'WEEKLY',
           interval: 1,
-          byDay: [dateDowCode],
+          byDay: [getWeekDayCode(adapter, date)],
         },
         monthly: {
           freq: 'MONTHLY',
           interval: 1,
-          byMonthDay: [dateDayOfMonth],
+          byMonthDay: [adapter.getDate(date)],
         },
         yearly: {
           freq: 'YEARLY',
@@ -207,7 +206,6 @@ export const selectors = {
         rule.byMonthDay?.length ||
         rule.byMonth?.length
       );
-      const { numToCode } = getWeekDayMaps(adapter);
 
       switch (rule.freq) {
         case 'DAILY': {
@@ -217,11 +215,11 @@ export const selectors = {
 
         case 'WEEKLY': {
           // Preset "Weekly" => FREQ=WEEKLY;INTERVAL=1;BYDAY=<weekday-of-start>; no COUNT/UNTIL;
-          const startDowCode = numToCode[adapter.getDayOfWeek(occurrenceStart)];
+          const occurrenceStartWeekDayCode = getWeekDayCode(adapter, occurrenceStart);
 
           const byDay = rule.byDay ?? [];
           const matchesDefaultByDay =
-            byDay.length === 0 || (byDay.length === 1 && byDay[0] === startDowCode);
+            byDay.length === 0 || (byDay.length === 1 && byDay[0] === occurrenceStartWeekDayCode);
           const isPresetWeekly =
             interval === 1 &&
             neverEnds &&
