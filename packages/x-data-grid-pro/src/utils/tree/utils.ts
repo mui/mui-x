@@ -233,7 +233,7 @@ export const getVisibleRowsLookup = ({
 }: {
   tree: GridRowsState['tree'];
   filteredRowsLookup: GridFilterState['filteredRowsLookup'];
-}) => {
+}): GridStatePro['visibleRowsLookup'] => {
   if (!filteredRowsLookup) {
     return {};
   }
