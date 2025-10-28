@@ -49,15 +49,28 @@ export const WeekView = React.memo(
 /**
  * A Week View that can be used outside of the Event Calendar.
  */
-export const StandaloneWeekView = React.forwardRef(function StandaloneWeekView(
-  props: StandaloneWeekViewProps,
+export const StandaloneWeekView = React.forwardRef(function StandaloneWeekView<
+  TEvent extends object,
+  TResource extends object,
+>(
+  props: StandaloneWeekViewProps<TEvent, TResource>,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { parameters, forwardedProps } = useExtractEventCalendarParameters(props);
+  const { parameters, forwardedProps } = useExtractEventCalendarParameters<
+    TEvent,
+    TResource,
+    typeof props
+  >(props);
 
   return (
     <EventCalendarProvider {...parameters}>
       <WeekView ref={forwardedRef} {...forwardedProps} />
     </EventCalendarProvider>
   );
-});
+}) as StandaloneWeekViewComponent;
+
+type StandaloneWeekViewComponent = <TEvent extends object, TResource extends object>(
+  props: StandaloneWeekViewProps<TEvent, TResource> & {
+    ref?: React.ForwardedRef<HTMLDivElement>;
+  },
+) => React.JSX.Element;

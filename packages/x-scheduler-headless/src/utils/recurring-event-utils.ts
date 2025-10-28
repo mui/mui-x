@@ -871,10 +871,58 @@ export function applyRecurringUpdateFollowing(
 }
 
 /**
- * Applies a "all" update to a recurring series by updating the first event of the series.
- * Merges date and time parts of start/end according to what the caller touched.
- * If the caller changed the date part of start or end, uses the provided value as-is.
- * Otherwise, merges the new time part into the original start/end dates.
+ * Adjusts a recurring event's RRULE when applying an "all" update that changes the weekday.
+ *
+ * Rules:
+ * - WEEKLY: realign BYDAY by swapping the weekday of the edited occurrence
+ *   with the weekday of the destination.
+ * - MONTHLY:
+ *   - If BYMONTHDAY is used → set it to the new start date's day of month.
+ *   - If BYDAY (ordinal) is used → recompute the ordinal (e.g. 2TU → 3WE) based on the new start.
+ * @returns The adjusted RRULE object, or the original rrule if no change is needed.
+ */
+export function adjustRRuleForAllMove(
+  adapter: Adapter,
+  rrule: RecurringEventRecurrenceRule,
+  occurrenceStart: SchedulerValidDate,
+  newStart: SchedulerValidDate,
+): RecurringEventRecurrenceRule {
+  let nextRRule: RecurringEventRecurrenceRule = { ...rrule };
+
+  if (rrule.freq === 'WEEKLY') {
+    const normalized = parsesByDayForWeeklyFrequency(rrule.byDay) ?? [
+      getWeekDayCode(adapter, occurrenceStart),
+    ];
+
+    const swapped = realignWeeklyByDay(adapter, normalized, occurrenceStart, newStart);
+    nextRRule = { ...nextRRule, byDay: swapped };
+  }
+
+  if (rrule.freq === 'MONTHLY') {
+    // BYMONTHDAY → match the new calendar day
+    if (rrule.byMonthDay?.length) {
+      nextRRule = { ...nextRRule, byMonthDay: [adapter.getDate(newStart)] };
+    }
+    // Ordinal BYDAY → recompute ordinal + weekday for newStart
+    if (rrule.byDay?.length) {
+      const code = getWeekDayCode(adapter, newStart);
+      const ord = computeMonthlyOrdinal(adapter, newStart);
+      nextRRule = { ...nextRRule, byDay: [`${ord}${code}` as RecurringEventByDayValue] };
+    }
+  }
+
+  return nextRRule;
+}
+
+/**
+ * Applies an "all events" update to a recurring series.
+ *
+ * Rules:
+ * - If the edited occurrence is not the first, keeps the original DTSTART
+ *   and adjusts the RRULE pattern (e.g. weekday swap) so all past and future
+ *   events follow the new pattern.
+ * - If the edited occurrence is the first of the series, updates DTSTART/DTEND directly.
+ * - When only the time changes, merges the new time into the original date.
  * @returns The updated list of events.
  */
 export function applyRecurringUpdateAll(
@@ -885,31 +933,70 @@ export function applyRecurringUpdateAll(
 ): UpdateEventsParameters {
   const eventUpdatedProperties: CalendarEventUpdatedProperties = { ...changes };
 
-  // 2) If the caller touched the date part of start or end, use the provided values as-is.
-  // Otherwise, merge the new time part into the original start/end dates.
+  // 1) Detect if caller changed the date part of start or end (vs only time)
+  const occurrenceEnd = adapter.addMinutes(
+    occurrenceStart,
+    diffIn(adapter, originalEvent.end, originalEvent.start, 'minutes'),
+  );
+  const touchedStartDate =
+    changes.start != null && !adapter.isSameDay(occurrenceStart, changes.start);
+  const touchedEndDate = changes.end != null && !adapter.isSameDay(occurrenceEnd, changes.end);
+
+  // 2) Is the edited occurrence the first of the series (DTSTART)?
+  const editedIsDtstart = adapter.isSameDay(occurrenceStart, originalEvent.start);
+
+  // 3) Decide new start/end
   if (changes.start != null) {
-    if (adapter.isSameDay(occurrenceStart, changes.start)) {
-      eventUpdatedProperties.start = mergeDateAndTime(adapter, originalEvent.start, changes.start);
+    if (touchedStartDate) {
+      // Date changed
+      if (editedIsDtstart) {
+        // First occurrence: allow moving DTSTART date
+        eventUpdatedProperties.start = changes.start;
+      } else {
+        // Not first: keep original DTSTART date, merge only time
+        eventUpdatedProperties.start = mergeDateAndTime(
+          adapter,
+          originalEvent.start,
+          changes.start,
+        );
+      }
     } else {
-      eventUpdatedProperties.start = changes.start;
+      // Same day -> merge time into original date
+      eventUpdatedProperties.start = mergeDateAndTime(adapter, originalEvent.start, changes.start);
     }
   }
 
   if (changes.end != null) {
-    const occurrenceEnd = adapter.addMinutes(
-      occurrenceStart,
-      diffIn(adapter, originalEvent.end, originalEvent.start, 'minutes'),
-    );
-
-    if (adapter.isSameDay(occurrenceEnd, changes.end)) {
-      eventUpdatedProperties.end = mergeDateAndTime(adapter, originalEvent.end, changes.end);
+    if (touchedEndDate) {
+      if (editedIsDtstart) {
+        eventUpdatedProperties.end = changes.end;
+      } else {
+        eventUpdatedProperties.end = mergeDateAndTime(adapter, originalEvent.end, changes.end);
+      }
     } else {
-      eventUpdatedProperties.end = changes.end;
+      eventUpdatedProperties.end = mergeDateAndTime(adapter, originalEvent.end, changes.end);
     }
   }
 
-  // 4) Replace the series root in the list
-  return { updated: [eventUpdatedProperties] };
+  // 4) RRULE adjustment: only if day changed and the event is recurring
+  if ((touchedStartDate || touchedEndDate) && originalEvent.rrule) {
+    const newOccurrenceStart = changes.start ?? occurrenceStart;
+    eventUpdatedProperties.rrule = adjustRRuleForAllMove(
+      adapter,
+      originalEvent.rrule,
+      occurrenceStart,
+      newOccurrenceStart,
+    );
+  }
+
+  // 5) Return the updated event
+  return {
+    updated: [
+      {
+        ...eventUpdatedProperties,
+      },
+    ],
+  };
 }
 
 /**

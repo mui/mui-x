@@ -29,8 +29,8 @@ export const defaultSeriesConfig: ChartSeriesConfig<'bar' | 'scatter' | 'line' |
 // To remove them, you can provide a `plugins` props.
 const defaultPlugins = [
   useChartZAxis,
-  useChartCartesianAxis,
   useChartInteraction,
+  useChartCartesianAxis,
   useChartHighlight,
 ];
 
