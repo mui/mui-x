@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { createSchedulerRenderer } from 'test/utils/scheduler';
+import { createSchedulerRenderer, SchedulerStoreRunner } from 'test/utils/scheduler';
 import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
 import { screen } from '@mui/internal-test-utils';
+import { EventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { PreferencesMenu } from './PreferencesMenu';
 import { getPreferencesMenu, openPreferencesMenu } from '../../../utils/test-utils';
 
@@ -121,5 +122,58 @@ describe('<PreferencesMenu />', () => {
       null,
     );
     expect(screen.queryByRole('menuitem', { name: /time format/i })).to.equal(null);
+  });
+
+  it('should show "Show empty days" ONLY in Agenda view when enabled in config', async () => {
+    const { user } = render(
+      <EventCalendarProvider events={[]}>
+        <SchedulerStoreRunner
+          context={EventCalendarStoreContext}
+          onMount={(store) => store.setView('agenda', {} as any)}
+        />
+        <PreferencesMenu />
+      </EventCalendarProvider>,
+    );
+
+    await openPreferencesMenu(user);
+
+    expect(screen.queryByRole('menuitemcheckbox', { name: /show empty days/i })).not.to.equal(null);
+  });
+
+  it('should NOT show "Show empty days" in non-Agenda views even when enabled in config', async () => {
+    const { user } = render(
+      <EventCalendarProvider events={[]}>
+        <SchedulerStoreRunner
+          context={EventCalendarStoreContext}
+          onMount={(store) => store.setView('week', {} as any)}
+        />
+        <PreferencesMenu />
+      </EventCalendarProvider>,
+    );
+
+    await openPreferencesMenu(user);
+
+    expect(screen.queryByRole('menuitemcheckbox', { name: /show empty days/i })).to.equal(null);
+  });
+
+  it('should NOT show "Show empty days" in Agenda view when the config disables it', async () => {
+    const { user } = render(
+      <EventCalendarProvider
+        events={[]}
+        preferencesMenuConfig={{
+          toggleEmptyDaysInAgenda: false,
+        }}
+      >
+        <SchedulerStoreRunner
+          context={EventCalendarStoreContext}
+          onMount={(store) => store.setView('agenda', {} as any)}
+        />
+        <PreferencesMenu />
+      </EventCalendarProvider>,
+    );
+
+    await openPreferencesMenu(user);
+
+    expect(screen.queryByRole('menuitemcheckbox', { name: /show empty days/i })).to.equal(null);
   });
 });
