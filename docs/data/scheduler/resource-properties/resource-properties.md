@@ -17,7 +17,7 @@ This package is not published yet.
 
 ## Define the data in custom properties
 
-You can use the `resourceModelStructure` prop to define how to read properties of the resource model when they are not the one expected by the components:
+You can use the `resourceModelStructure` prop to define how to read properties of the resource model when they don't match the model expected by the components:
 
 ```tsx
 const resourceModelStructure = {
