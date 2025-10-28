@@ -8,10 +8,12 @@ import {
   CalendarEventUpdatedProperties,
   SchedulerValidDate,
   CalendarEventId,
+  SchedulerResourceModelStructure,
+  SchedulerEventModelStructure,
 } from '../../models';
 import { Adapter } from '../../use-adapter/useAdapter.types';
 
-export interface SchedulerState {
+export interface SchedulerState<TEvent extends object = any> {
   /**
    * The adapter of the date library.
    * Not publicly exposed, is only set in state to avoid passing it to the selectors.
@@ -22,13 +24,41 @@ export interface SchedulerState {
    */
   visibleDate: SchedulerValidDate;
   /**
-   * The events available in the calendar.
+   * The model of the events available in the calendar as provided to props.events.
    */
-  events: CalendarEvent[];
+  eventModelList: readonly TEvent[];
   /**
-   * The resources the events can be assigned to.
+   * The IDs of the events available in the calendar.
    */
-  resources: CalendarResource[];
+  eventIdList: CalendarEventId[];
+  /**
+   * A lookup to get the event model as provided to props.events from its ID.
+   */
+  eventModelLookup: Map<CalendarEventId, TEvent>;
+  /**
+   * A lookup to get the processed event from its ID.
+   */
+  processedEventLookup: Map<CalendarEventId, CalendarEvent>;
+  /**
+   * The structure of the event model.
+   * It defines how to read and write properties of the event model.
+   * If not provided, the event model is assumed to match the `CalendarEvent` interface.
+   */
+  eventModelStructure: SchedulerEventModelStructure<any> | undefined;
+  /**
+   * The IDs of the resources the events can be assigned to.
+   */
+  resourceIdList: readonly CalendarResourceId[];
+  /**
+   * A lookup to get the processed resource from its ID.
+   */
+  processedResourceLookup: Map<CalendarResourceId, CalendarResource>;
+  /**
+   * The structure of the resource model.
+   * It defines how to read properties of the resource model.
+   * If not provided, the resource model is assumed to match the `CalendarResource` interface.
+   */
+  resourceModelStructure: SchedulerResourceModelStructure<any> | undefined;
   /**
    * Visibility status for each resource.
    * A resource is visible if it is registered in this lookup with `true` value or if it is not registered at all.
@@ -85,19 +115,31 @@ export interface SchedulerState {
   pendingUpdateRecurringEventParameters: UpdateRecurringEventParameters | null;
 }
 
-export interface SchedulerParameters {
+export interface SchedulerParameters<TEvent extends object, TResource extends object> {
   /**
    * The events currently available in the calendar.
    */
-  events: CalendarEvent[];
+  events: readonly TEvent[];
   /**
    * Callback fired when some event of the calendar change.
    */
-  onEventsChange?: (value: CalendarEvent[]) => void;
+  onEventsChange?: (value: TEvent[]) => void;
+  /**
+   * The structure of the event model.
+   * It defines how to read and write the properties of the event model.
+   * If not provided, the event model is assumed to match the `CalendarEvent` interface.
+   */
+  eventModelStructure?: SchedulerEventModelStructure<TEvent>;
   /**
    * The resources the events can be assigned to.
    */
-  resources?: CalendarResource[];
+  resources?: readonly TResource[];
+  /**
+   * The structure of the resource model.
+   * It defines how to read and write the properties of the resource model.
+   * If not provided, the resource model is assumed to match the `CalendarResource` interface.
+   */
+  resourceModelStructure?: SchedulerResourceModelStructure<TResource>;
   /**
    * The date currently used to determine the visible date range in each view.
    */
@@ -178,7 +220,7 @@ export type UpdateRecurringEventParameters = {
  */
 export interface SchedulerParametersToStateMapper<
   State extends SchedulerState,
-  Parameters extends SchedulerParameters,
+  Parameters extends SchedulerParameters<any, any>,
 > {
   /**
    * Gets the initial state of the store based on the initial parameters.
@@ -200,7 +242,7 @@ export interface SchedulerParametersToStateMapper<
 
 export type SchedulerModelUpdater<
   State extends SchedulerState,
-  Parameters extends SchedulerParameters,
+  Parameters extends SchedulerParameters<any, any>,
 > = (
   newState: Partial<State>,
   controlledProp: keyof Parameters & keyof State & string,
