@@ -22,7 +22,7 @@ export interface ChartsSeriesConfig {
     /**
      * Series type when passed to the formatter (some ids are given default values to simplify the DX)
      */
-    seriesInput: DefaultizedProps<BarSeriesType, 'id'> & SeriesColor<number | null>;
+    seriesInput: DefaultizedProps<BarSeriesType, 'id'> & Required<SeriesColor<number | null>>;
     /**
      * Series type when stored in the context (with all the preprocessing added))
      */
@@ -38,7 +38,7 @@ export interface ChartsSeriesConfig {
     axisType: 'cartesian';
   };
   line: {
-    seriesInput: DefaultizedProps<LineSeriesType, 'id'> & SeriesColor<number | null>;
+    seriesInput: DefaultizedProps<LineSeriesType, 'id'> & Required<SeriesColor<number | null>>;
     series: DefaultizedLineSeriesType;
     seriesProp: LineSeriesType;
     itemIdentifier: LineItemIdentifier;
@@ -48,7 +48,8 @@ export interface ChartsSeriesConfig {
     axisType: 'cartesian';
   };
   scatter: {
-    seriesInput: DefaultizedProps<ScatterSeriesType, 'id'> & SeriesColor<ScatterValueType | null>;
+    seriesInput: DefaultizedProps<ScatterSeriesType, 'id'> &
+      Required<SeriesColor<ScatterValueType | null>>;
     series: DefaultizedScatterSeriesType;
     seriesProp: ScatterSeriesType;
     valueType: ScatterValueType;
@@ -58,7 +59,7 @@ export interface ChartsSeriesConfig {
   };
   pie: {
     seriesInput: Omit<DefaultizedProps<PieSeriesType, 'id'>, 'data'> & {
-      data: (MakeOptional<PieValueType, 'id'> & SeriesColor<PieValueType | null>)[];
+      data: (MakeOptional<PieValueType, 'id'> & Required<SeriesColor<PieValueType | null>>)[];
     };
     series: DefaultizedPieSeriesType;
     seriesProp: PieSeriesType<MakeOptional<PieValueType, 'id'>>;
@@ -67,7 +68,7 @@ export interface ChartsSeriesConfig {
     valueType: DefaultizedPieValueType;
   };
   radar: {
-    seriesInput: DefaultizedProps<RadarSeriesType, 'id'> & SeriesColor<number>;
+    seriesInput: DefaultizedProps<RadarSeriesType, 'id'> & Required<SeriesColor<number>>;
     series: DefaultizedRadarSeriesType;
     seriesProp: RadarSeriesType;
     itemIdentifier: RadarItemIdentifier;
