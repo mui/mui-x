@@ -2,7 +2,12 @@ import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { BarChart, BarChartProps, BarSeries } from '@mui/x-charts/BarChart';
-import type {} from '@mui/x-charts/typeAugmentation/colorCallback';
+
+declare module '@mui/x-charts/typeAugmentation' {
+  interface ChartsEnabledFeature {
+    colorCallback: true;
+  }
+}
 
 const clubs = [
   'Arsenal',
