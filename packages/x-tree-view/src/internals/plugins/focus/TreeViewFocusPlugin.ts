@@ -30,7 +30,7 @@ export class TreeViewFocusPlugin {
         return;
       }
 
-      this.innerFocusItem(null, defaultFocusableItemId);
+      this.applyItemFocus(null, defaultFocusableItemId);
     });
   }
 
@@ -43,13 +43,8 @@ export class TreeViewFocusPlugin {
     this.store.set('focusedItemId', itemId);
   };
 
-  // TODO: Rename
-  private innerFocusItem = (event: React.SyntheticEvent | null, itemId: TreeViewItemId) => {
-    const itemElement = this.store.items.getItemDOMElement(itemId);
-    if (itemElement) {
-      itemElement.focus();
-    }
-
+  private applyItemFocus = (event: React.SyntheticEvent | null, itemId: TreeViewItemId) => {
+    this.store.items.getItemDOMElement(itemId)?.focus();
     this.setFocusedItemId(itemId);
     this.store.parameters.onItemFocus?.(event, itemId);
   };
@@ -77,7 +72,7 @@ export class TreeViewFocusPlugin {
         expansionSelectors.isItemExpanded(this.store.state, itemMeta.parentId));
 
     if (isItemVisible) {
-      this.innerFocusItem(event, itemId);
+      this.applyItemFocus(event, itemId);
     }
   };
 
@@ -115,7 +110,7 @@ export class TreeViewFocusPlugin {
     // if the event bubbled (which is React specific) we don't want to steal focus
     const defaultFocusableItemId = focusSelectors.defaultFocusableItemId(this.store.state);
     if (event.target === event.currentTarget && defaultFocusableItemId != null) {
-      this.innerFocusItem(event, defaultFocusableItemId);
+      this.applyItemFocus(event, defaultFocusableItemId);
     }
   };
 
