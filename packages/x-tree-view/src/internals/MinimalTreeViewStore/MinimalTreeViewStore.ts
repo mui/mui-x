@@ -20,7 +20,12 @@ import { TreeViewItemsPlugin } from '../plugins/items/TreeViewItemsPlugin';
 import { TreeViewSelectionPlugin } from '../plugins/selection/TreeViewSelectionPlugin';
 import { TreeViewExpansionPlugin } from '../plugins/expansion';
 import { TreeViewItemPluginManager } from './TreeViewItemPluginManager';
-import { TreeViewEventListener, TreeViewEventLookup, TreeViewEvents } from '../models';
+import {
+  TreeViewEventEvent,
+  TreeViewEventListener,
+  TreeViewEventParameters,
+  TreeViewEvents,
+} from '../models';
 
 export class MuiXStore {}
 
@@ -45,7 +50,7 @@ export class MinimalTreeViewStore<
 
   public timeoutManager = new TimeoutManager();
 
-  public itemPluginManager = new TreeViewItemPluginManager();
+  public itemPluginManager = new TreeViewItemPluginManager<this>();
 
   public items: TreeViewItemsPlugin<R>;
 
@@ -162,13 +167,13 @@ export class MinimalTreeViewStore<
       }
     };
 
-    const newSchedulerState = deriveStateFromParameters(parameters) as Partial<State>;
+    const newMinimalState = deriveStateFromParameters(parameters) as Partial<State>;
 
-    updateModel(newSchedulerState, 'expandedItems', 'defaultExpandedItems');
-    updateModel(newSchedulerState, 'selectedItems', 'defaultSelectedItems');
+    updateModel(newMinimalState, 'expandedItems', 'defaultExpandedItems');
+    updateModel(newMinimalState, 'selectedItems', 'defaultSelectedItems');
 
     if (this.state.providedTreeId !== parameters.id || this.state.treeId === undefined) {
-      newSchedulerState.treeId = createTreeViewDefaultId();
+      newMinimalState.treeId = createTreeViewDefaultId();
     }
 
     const shouldUpdateItemsState =
@@ -181,7 +186,7 @@ export class MinimalTreeViewStore<
 
     if (shouldUpdateItemsState) {
       Object.assign(
-        newSchedulerState,
+        newMinimalState,
         buildItemsState({
           items: parameters.items,
           config: {
@@ -195,7 +200,7 @@ export class MinimalTreeViewStore<
     }
 
     const newState = this.mapper.updateStateFromParameters(
-      newSchedulerState,
+      newMinimalState,
       parameters,
       updateModel,
     );
@@ -238,12 +243,9 @@ export class MinimalTreeViewStore<
    */
   public publishEvent = <E extends TreeViewEvents>(
     name: E,
-    params: TreeViewEventLookup[E] extends { params: any }
-      ? TreeViewEventLookup[E]['parameters']
-      : undefined,
-    event: TreeViewEventLookup[E] extends { event: any } ? TreeViewEventLookup[E]['event'] : null,
+    params: TreeViewEventParameters<E>,
+    event: TreeViewEventEvent<E>,
   ) => {
-    event.defaultMuiPrevented = false;
     if (isSyntheticEvent(event) && event.isPropagationStopped()) {
       return;
     }
@@ -258,13 +260,8 @@ export class MinimalTreeViewStore<
     eventName: E,
     handler: TreeViewEventListener<E>,
   ) => {
-    const enhancedHandler: TreeViewEventListener<E> = (params, event) => {
-      if (!event.defaultMuiPrevented) {
-        handler(params, event);
-      }
-    };
-
-    this.eventManager.on(eventName, enhancedHandler);
+    // TODO: Add support for event.defaultMuiPrevented.
+    this.eventManager.on(eventName, handler);
   };
 }
 

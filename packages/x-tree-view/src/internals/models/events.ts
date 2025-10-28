@@ -1,7 +1,7 @@
 import { MuiEvent } from '@mui/x-internals/types';
 import { TreeViewItemId } from '../../models';
 
-export interface TreeViewEventLookup {
+interface TreeViewEventLookup {
   /**
    * Fired before an item is expanded or collapsed.
    */

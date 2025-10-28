@@ -284,5 +284,10 @@ export type TreeViewModelUpdater<
 ) => void;
 
 export type TreeViewSelectionValue<Multiple extends boolean | undefined> = Multiple extends true
-  ? string[]
-  : string | null;
+  ? Multiple extends false
+    ? // Multiple === boolean, the type cannot be simplified further
+      string | null | string[]
+    : // Multiple === true, the selection is multiple
+      string[]
+  : // Multiple === false | undefined, the selection is single
+    string | null;

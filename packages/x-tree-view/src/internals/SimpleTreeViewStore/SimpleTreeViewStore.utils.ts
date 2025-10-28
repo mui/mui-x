@@ -7,15 +7,7 @@ export const parametersToStateMapper: TreeViewParametersToStateMapper<
   SimpleTreeViewState<any>,
   InnerSimpleTreeViewParameters<any>
 > = {
-  getInitialState: (schedulerInitialState) => ({
-    ...schedulerInitialState,
-  }),
-  updateStateFromParameters: (newSharedState) => {
-    const newState: Partial<SimpleTreeViewState<any>> = {
-      ...newSharedState,
-    };
-
-    return newState;
-  },
+  getInitialState: (minimalInitialState) => minimalInitialState,
+  updateStateFromParameters: (newMinimalState) => newMinimalState,
   shouldIgnoreItemsStateUpdate: () => true,
 };

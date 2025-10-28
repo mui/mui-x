@@ -22,7 +22,11 @@ import {
   UseTreeItemLoadingContainerSlotProps,
 } from './useTreeItem.types';
 import { useTreeViewContext } from '../internals/TreeViewProvider';
-import { TreeViewItemPluginSlotPropsEnhancerParams, TreeViewAnyStore } from '../internals/models';
+import {
+  TreeViewItemPluginSlotPropsEnhancerParams,
+  TreeViewAnyStore,
+  TreeViewPublicAPI,
+} from '../internals/models';
 import { useTreeItemUtils } from '../hooks/useTreeItemUtils';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
 import { isTargetInDescendants } from '../internals/utils/tree';
@@ -32,11 +36,11 @@ import { itemsSelectors } from '../internals/plugins/items';
 import { idSelectors } from '../internals/plugins/id';
 import { expansionSelectors } from '../internals/plugins/expansion';
 import { selectionSelectors } from '../internals/plugins/selection';
-import { RichTreeViewPublicAPI, RichTreeViewStore } from '../internals/RichTreeViewStore';
+import { RichTreeViewStore } from '../internals/RichTreeViewStore';
 
 // TODO v8: Remove the lazy loading plugin from the typing on the community useTreeItem and ask users to pass the TStore generic.
 interface DefaultStore extends RichTreeViewStore<any, any> {
-  buildPublicAPI: () => RichTreeViewPublicAPI<any, any> & {
+  buildPublicAPI: () => TreeViewPublicAPI<RichTreeViewStore<any, any>> & {
     /**
      * Method used for updating an item's children.
      * Only relevant for lazy-loaded tree views.

@@ -11,15 +11,15 @@ export const parametersToStateMapper: TreeViewParametersToStateMapper<
   RichTreeViewState<any, any>,
   RichTreeViewStoreParameters<any, any>
 > = {
-  getInitialState: (schedulerInitialState, parameters) => ({
-    ...schedulerInitialState,
+  getInitialState: (minimalInitialState, parameters) => ({
+    ...minimalInitialState,
     ...deriveStateFromParameters(parameters),
     editedItemId: null,
     lazyLoadedItems: null,
   }),
-  updateStateFromParameters: (newSharedState, parameters) => {
+  updateStateFromParameters: (newMinimalState, parameters) => {
     const newState: Partial<RichTreeViewState<any, any>> = {
-      ...newSharedState,
+      ...newMinimalState,
       ...deriveStateFromParameters(parameters),
     };
 

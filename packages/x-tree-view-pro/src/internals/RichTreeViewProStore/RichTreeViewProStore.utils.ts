@@ -22,14 +22,14 @@ export const parametersToStateMapper: TreeViewParametersToStateMapper<
   RichTreeViewProState<any, any>,
   RichTreeViewProStoreParameters<any, any>
 > = {
-  getInitialState: (schedulerInitialState, parameters) => ({
-    ...ExtendableRichTreeViewStore.rawMapper.getInitialState(schedulerInitialState, parameters),
+  getInitialState: (minimalInitialState, parameters) => ({
+    ...ExtendableRichTreeViewStore.rawMapper.getInitialState(minimalInitialState, parameters),
     ...deriveStateFromParameters(parameters),
   }),
-  updateStateFromParameters: (newSharedState, parameters, updateModel) => {
+  updateStateFromParameters: (newMinimalState, parameters, updateModel) => {
     const newState: Partial<RichTreeViewProState<any, any>> = {
       ...ExtendableRichTreeViewStore.rawMapper.updateStateFromParameters(
-        newSharedState,
+        newMinimalState,
         parameters,
         updateModel,
       ),

@@ -23,18 +23,18 @@ export class TreeViewLabelEditingPlugin {
    * You can pass `null` to exit editing mode.
    * @param {TreeViewItemId | null} itemId The id of the item to edit, or `null` to exit editing mode.
    */
-  public setEditedItem = (editedItemId: TreeViewItemId | null) => {
-    if (editedItemId !== null && !labelSelectors.isItemEditable(this.store.state, editedItemId)) {
+  public setEditedItem = (itemId: TreeViewItemId | null) => {
+    if (itemId !== null && !labelSelectors.isItemEditable(this.store.state, itemId)) {
       return;
     }
 
-    this.store.set('editedItemId', editedItemId);
+    this.store.set('editedItemId', itemId);
   };
 
   /**
    * Used to update the label of an item.
    * @param {TreeViewItemId} itemId The id of the item to update the label of.
-   * @param {string} newLabel The new label of the item.
+   * @param {string} label The new label of the item.
    */
   public updateItemLabel = (itemId: TreeViewItemId, label: string) => {
     if (!label) {

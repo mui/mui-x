@@ -2,6 +2,7 @@ import { TreeViewItemId } from '../../../models';
 import { expansionSelectors } from './selectors';
 import { itemsSelectors } from '../items/selectors';
 import { MinimalTreeViewStore } from '../../MinimalTreeViewStore';
+import { TreeViewEventParameters } from '../../models';
 
 export class TreeViewExpansionPlugin {
   private store: MinimalTreeViewStore<any, any>;
@@ -56,7 +57,7 @@ export class TreeViewExpansionPlugin {
       return;
     }
 
-    const eventParameters = {
+    const eventParameters: TreeViewEventParameters<'beforeItemToggleExpansion'> = {
       isExpansionPrevented: false,
       shouldBeExpanded: cleanShouldBeExpanded,
       itemId,
