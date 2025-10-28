@@ -146,7 +146,7 @@ export namespace useDropTarget {
  * Applies the data from the placeholder occurrence to the event it represents.
  */
 async function applyInternalDragOrResizeOccurrencePlaceholder(
-  store: SchedulerStoreInContext,
+  store: SchedulerStoreInContext<any, any>,
   placeholder: CalendarOccurrencePlaceholderInternalDragOrResize,
   addPropertiesToDroppedEvent?: () => Partial<CalendarEvent>,
 ): Promise<void> {
@@ -177,7 +177,7 @@ async function applyInternalDragOrResizeOccurrencePlaceholder(
 }
 
 function applyExternalDragOccurrencePlaceholder(
-  store: SchedulerStoreInContext,
+  store: SchedulerStoreInContext<any, any>,
   placeholder: CalendarOccurrencePlaceholderExternalDrag,
   addPropertiesToDroppedEvent?: () => Partial<CalendarEvent>,
 ) {

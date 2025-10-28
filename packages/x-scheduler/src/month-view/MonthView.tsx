@@ -143,15 +143,28 @@ export const MonthView = React.memo(
 /**
  * A Month View that can be used outside of the Event Calendar.
  */
-export const StandaloneMonthView = React.forwardRef(function StandaloneMonthView(
-  props: StandaloneMonthViewProps,
+export const StandaloneMonthView = React.forwardRef(function StandaloneMonthView<
+  TEvent extends object,
+  TResource extends object,
+>(
+  props: StandaloneMonthViewProps<TEvent, TResource>,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { parameters, forwardedProps } = useExtractEventCalendarParameters(props);
+  const { parameters, forwardedProps } = useExtractEventCalendarParameters<
+    TEvent,
+    TResource,
+    typeof props
+  >(props);
 
   return (
     <EventCalendarProvider {...parameters}>
       <MonthView ref={forwardedRef} {...forwardedProps} />
     </EventCalendarProvider>
   );
-});
+}) as StandaloneMonthViewComponent;
+
+type StandaloneMonthViewComponent = <TEvent extends object, TResource extends object>(
+  props: StandaloneMonthViewProps<TEvent, TResource> & {
+    ref?: React.ForwardedRef<HTMLDivElement>;
+  },
+) => React.JSX.Element;
