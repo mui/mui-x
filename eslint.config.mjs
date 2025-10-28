@@ -200,6 +200,7 @@ export default defineConfig(
           paths: ['@testing-library/react', 'test/utils/index'],
         },
       ],
+      'compat/compat': 'off',
     },
   },
 
