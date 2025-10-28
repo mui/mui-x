@@ -2,7 +2,6 @@ import { HighlightScope } from '../../internals/plugins/featurePlugins/useChartH
 import type { StackOffsetType, StackOrderType } from '../stacking';
 import type { ChartsLabelMarkType } from '../../ChartsLabel/ChartsLabelMark';
 import { AxisId } from '../axis';
-import type { ChartsEnabledFeature } from '../../typeAugmentation';
 
 export type SeriesId = number | string;
 
@@ -18,22 +17,25 @@ export type SeriesValueFormatter<TValue> = (
   context: SeriesValueFormatterContext,
 ) => string | null;
 
-// /**
-//  * Color to use when displaying the series.
-//  * It can be a string representing a color or a function that returns a color based on the data index.
-//  * The data index can be undefined when the color is needed for the entire series (e.g., in legends, lines, areas).
-//  */
+/**
+ * Color to use when displaying the series.
+ * It can be a string representing a color or a function that returns a color based on the data index.
+ * The data index can be undefined when the color is needed for the entire series (e.g., in legends, lines, areas).
+ */
 export type SeriesColorPropValue<TValue> = { value: TValue; dataIndex: number };
 export type SeriesColorProp<TValue> =
   | string
   | ((data: SeriesColorPropValue<TValue> | null) => string);
 
+export interface ChartsEnabledFeatures {}
 
 export interface SeriesColor<TValue> {
   /**
    * Color to use when displaying the series.
    */
-  color?: (ChartsEnabledFeature extends { colorCallback: true } ? string | SeriesColorProp<TValue> : string);
+  color?: ChartsEnabledFeatures extends { colorCallback: true }
+    ? string | SeriesColorProp<TValue>
+    : string;
 }
 
 export interface CommonSeriesType<TValue> extends SeriesColor<TValue> {
