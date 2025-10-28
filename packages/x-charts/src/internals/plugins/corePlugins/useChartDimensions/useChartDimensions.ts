@@ -21,6 +21,7 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
   // States only used for the initialization of the size.
   const [innerWidth, setInnerWidth] = React.useState(0);
   const [innerHeight, setInnerHeight] = React.useState(0);
+  const isFirstRender = React.useRef(true);
 
   const computeSize = React.useCallback(() => {
     const mainEl = svgRef?.current;
@@ -35,27 +36,20 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
     const newHeight = Math.floor(parseFloat(computedStyle.height)) || 0;
     const newWidth = Math.floor(parseFloat(computedStyle.width)) || 0;
 
-    store.update((prev) => {
-      if (prev.dimensions.width === newWidth && prev.dimensions.height === newHeight) {
-        return prev;
-      }
-
-      return {
-        ...prev,
-        dimensions: {
-          margin: {
-            top: params.margin.top,
-            right: params.margin.right,
-            bottom: params.margin.bottom,
-            left: params.margin.left,
-          },
-          width: params.width ?? newWidth,
-          height: params.height ?? newHeight,
-          propsWidth: params.width,
-          propsHeight: params.height,
+    if (store.state.dimensions.width !== newWidth || store.state.dimensions.height !== newHeight) {
+      store.set('dimensions', {
+        margin: {
+          top: params.margin.top,
+          right: params.margin.right,
+          bottom: params.margin.bottom,
+          left: params.margin.left,
         },
-      };
-    });
+        width: params.width ?? newWidth,
+        height: params.height ?? newHeight,
+        propsWidth: params.width,
+        propsHeight: params.height,
+      });
+    }
     return {
       height: newHeight,
       width: newWidth,
@@ -73,25 +67,24 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
   ]);
 
   React.useEffect(() => {
-    store.update((prev) => {
-      const width = params.width ?? prev.dimensions.width;
-      const height = params.height ?? prev.dimensions.height;
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
 
-      return {
-        ...prev,
-        dimensions: {
-          margin: {
-            top: params.margin.top,
-            right: params.margin.right,
-            bottom: params.margin.bottom,
-            left: params.margin.left,
-          },
-          width,
-          height,
-          propsHeight: params.height,
-          propsWidth: params.width,
-        },
-      };
+    const width = params.width ?? store.state.dimensions.width;
+    const height = params.height ?? store.state.dimensions.height;
+    store.set('dimensions', {
+      margin: {
+        top: params.margin.top,
+        right: params.margin.right,
+        bottom: params.margin.bottom,
+        left: params.margin.left,
+      },
+      width,
+      height,
+      propsHeight: params.height,
+      propsWidth: params.width,
     });
   }, [
     store,
