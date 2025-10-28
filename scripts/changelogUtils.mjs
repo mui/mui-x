@@ -533,15 +533,19 @@ async function generateChangelog({
       a.toLowerCase().localeCompare(b.toLowerCase()),
     );
 
-    if (contributors.length > 0) {
+    if (contributors.length > 1) {
       lines.push(
-        `Special thanks go out to the community members for their valuable contributions:\n${contributors.join(', ')}`,
+        `Special thanks go out to these community members for their valuable contributions:\n${contributors.join(', ')}`,
+      );
+    } else if (contributors.length = 1 ) {
+      lines.push(
+        `Special thanks go out to community member ${contributors} for their valuable contribution.`,
       );
     }
 
     if (community.team.size > 0) {
       lines.push(
-        `The following are all team members who have contributed to this release:\n${teamMembers.join(', ')}`,
+        `The following team members contributed to this release:\n${teamMembers.join(', ')}`,
       );
     }
 
