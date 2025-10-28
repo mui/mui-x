@@ -22,7 +22,7 @@ export function useAgendaEventOccurrencesGroupedByDay(): useAgendaEventOccurrenc
 
   const getDayList = useDayList();
 
-  const events = useStore(store, selectors.events);
+  const events = useStore(store, selectors.processedEventList);
   const visibleDate = useStore(store, selectors.visibleDate);
   const showWeekends = useStore(store, selectors.showWeekends);
   const showEmptyDays = useStore(store, selectors.showEmptyDaysInAgenda);

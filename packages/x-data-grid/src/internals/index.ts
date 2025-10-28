@@ -102,6 +102,7 @@ export { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
 export { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
 export { useGridRowsOverridableMethods } from '../hooks/features/rows/useGridRowsOverridableMethods';
 export { useGridParamsOverridableMethods } from '../hooks/features/rows/useGridParamsOverridableMethods';
+export { useIsCellEditable } from '../hooks/features/editing/useGridCellEditable';
 export { useGridRowsPreProcessors } from '../hooks/features/rows/useGridRowsPreProcessors';
 export type {
   GridRowTreeCreationParams,
@@ -217,6 +218,7 @@ export * from './demo';
 export { GridSkeletonLoadingOverlayInner } from '../components/GridSkeletonLoadingOverlay';
 
 export type { GridConfiguration } from '../models/configuration/gridConfiguration';
+export type { CellEditableConditionFn } from '../models/configuration/gridCellEditableConfiguration';
 
 export * from '../hooks/features/pivoting';
 

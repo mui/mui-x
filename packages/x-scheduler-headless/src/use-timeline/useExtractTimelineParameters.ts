@@ -1,12 +1,15 @@
 import * as React from 'react';
 import { TimelineParameters } from './TimelineStore.types';
 
-export function useExtractTimelineParameters<P extends TimelineParameters>(
-  props: P,
-): UseExtractTimelineParametersReturnValue<P> {
+export function useExtractTimelineParameters<
+  TEvent extends object,
+  TResource extends object,
+  P extends TimelineParameters<TEvent, TResource>,
+>(props: P): UseExtractTimelineParametersReturnValue<TEvent, TResource, P> {
   const {
     events,
     onEventsChange,
+    eventModelStructure,
     resources,
     visibleDate,
     defaultVisibleDate,
@@ -26,10 +29,11 @@ export function useExtractTimelineParameters<P extends TimelineParameters>(
     ...forwardedProps
   } = props;
 
-  const parameters: TimelineParameters = React.useMemo(
+  const parameters: TimelineParameters<TEvent, TResource> = React.useMemo(
     () => ({
       events,
       onEventsChange,
+      eventModelStructure,
       resources,
       visibleDate,
       defaultVisibleDate,
@@ -50,6 +54,7 @@ export function useExtractTimelineParameters<P extends TimelineParameters>(
     [
       events,
       onEventsChange,
+      eventModelStructure,
       resources,
       visibleDate,
       defaultVisibleDate,
@@ -69,10 +74,17 @@ export function useExtractTimelineParameters<P extends TimelineParameters>(
     ],
   );
 
-  return { parameters, forwardedProps: forwardedProps as Omit<P, keyof TimelineParameters> };
+  return {
+    parameters,
+    forwardedProps: forwardedProps as Omit<P, keyof TimelineParameters<TEvent, TResource>>,
+  };
 }
 
-interface UseExtractTimelineParametersReturnValue<P extends TimelineParameters> {
-  parameters: TimelineParameters;
-  forwardedProps: Omit<P, keyof TimelineParameters>;
+interface UseExtractTimelineParametersReturnValue<
+  TEvent extends object,
+  TResource extends object,
+  P extends TimelineParameters<TEvent, TResource>,
+> {
+  parameters: TimelineParameters<TEvent, TResource>;
+  forwardedProps: Omit<P, keyof TimelineParameters<TEvent, TResource>>;
 }
