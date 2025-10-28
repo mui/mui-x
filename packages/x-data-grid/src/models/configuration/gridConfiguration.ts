@@ -4,6 +4,7 @@ import type {
   GridRowsOverridableMethodsInternalHook,
 } from './gridRowConfiguration';
 import type { GridAggregationInternalHooks } from './gridAggregationConfiguration';
+import type { GridCellEditableInternalHook } from './gridCellEditableConfiguration';
 import type { GridCSSVariablesInterface } from '../../constants/cssVariables';
 import { DataGridProcessedProps } from '../props/DataGridProps';
 import type { GridPrivateApiCommon } from '../api/gridApiCommon';
@@ -17,6 +18,7 @@ export interface GridAriaAttributesInternalHook {
 export interface GridInternalHook<Api, Props>
   extends GridAriaAttributesInternalHook,
     GridRowAriaAttributesInternalHook,
+    GridCellEditableInternalHook<Api, Props>,
     GridAggregationInternalHooks<Api, Props>,
     GridRowsOverridableMethodsInternalHook<Api>,
     GridParamsOverridableMethodsInternalHook<Api> {
