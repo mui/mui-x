@@ -27,7 +27,7 @@ MUI X Charts depends on Material UI, thus to set up a CSP, you need to follow Ma
 
 ### CSP for exporting
 
-MUI X Charts allow [exporting charts](/x/react-charts/export/) as images or PDFs. 
+MUI X Charts allow [exporting charts](/x/react-charts/export/) as images or PDFs.
 When a Content Security Policy is set, exporting requires additional configuration to function.
 
 To enable exporting with CSP, you need to allow the use of `data:` and `blob:` URIs for images. This can be done by adding the following directives to your CSP header:
@@ -36,7 +36,7 @@ To enable exporting with CSP, you need to allow the use of `data:` and `blob:` U
 Content-Security-Policy: img-src 'self' data: blob:;
 ```
 
-If your CSP defines a nonce for scripts or styles (e.g. `script-src 'nonce-<value>'`), you also need to provide the same nonce when exporting. 
+If your CSP defines a nonce for scripts or styles (e.g. `script-src 'nonce-<value>'`), you also need to provide the same nonce when exporting.
 
 This can be done by passing the nonce to the `printOptions` and `imageExportOptions` props of the `toolbar` slot.
 
@@ -48,9 +48,9 @@ This can be done by passing the nonce to the `printOptions` and `imageExportOpti
     toolbar: {
       printOptions: { nonce },
       imageExportOptions: [
-        { type: "image/png", nonce },
-        { type: "image/jpg", nonce },
-        { type: "image/webp", nonce },
+        { type: 'image/png', nonce },
+        { type: 'image/jpg', nonce },
+        { type: 'image/webp', nonce },
       ],
     },
   }}
