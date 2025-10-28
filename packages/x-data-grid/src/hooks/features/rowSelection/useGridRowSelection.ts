@@ -835,13 +835,11 @@ export const useGridRowSelection = (
         return;
       }
 
-      if (
-        String.fromCharCode(event.keyCode) === 'A' &&
-        (event.ctrlKey || event.metaKey) &&
-        canHaveMultipleSelection
-      ) {
+      if (String.fromCharCode(event.keyCode) === 'A' && (event.ctrlKey || event.metaKey)) {
         event.preventDefault();
-        toggleAllRows(true);
+        if (canHaveMultipleSelection) {
+          toggleAllRows(true);
+        }
       }
     },
     [apiRef, canHaveMultipleSelection, handleSingleRowSelection, toggleAllRows],
