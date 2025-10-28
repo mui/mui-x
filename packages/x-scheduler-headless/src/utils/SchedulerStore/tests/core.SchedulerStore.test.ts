@@ -45,8 +45,8 @@ storeClasses.forEach((storeClass) => {
             ),
           ],
           resources: [
-            { id: 'r1', name: 'Resource 1' },
-            { id: 'r2', name: 'Resource 2' },
+            { id: 'r1', title: 'Resource 1' },
+            { id: 'r2', title: 'Resource 2' },
           ],
           areEventsDraggable: true,
           areEventsResizable: true,
@@ -81,7 +81,7 @@ storeClasses.forEach((storeClass) => {
         store.updateStateFromParameters(
           {
             ...DEFAULT_PARAMS,
-            resources: [{ id: 'r1', name: 'Resource 1' }],
+            resources: [{ id: 'r1', title: 'Resource 1' }],
             visibleDate: store.state.visibleDate,
           },
           adapter,
@@ -102,7 +102,7 @@ storeClasses.forEach((storeClass) => {
           store.updateStateFromParameters(
             {
               ...DEFAULT_PARAMS,
-              resources: [{ id: 'r1', name: 'Resource 1' }],
+              resources: [{ id: 'r1', title: 'Resource 1' }],
               defaultVisibleDate: adapter.date('2025-12-30T00:00:00Z'),
             },
             adapter,
@@ -134,7 +134,7 @@ storeClasses.forEach((storeClass) => {
           store.updateStateFromParameters(
             {
               ...DEFAULT_PARAMS,
-              resources: [{ id: 'r1', name: 'Resource 1' }],
+              resources: [{ id: 'r1', title: 'Resource 1' }],
               visibleDate: undefined,
             },
             adapter,

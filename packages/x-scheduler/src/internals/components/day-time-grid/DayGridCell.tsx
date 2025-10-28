@@ -8,28 +8,38 @@ import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-even
 import { selectors } from '@mui/x-scheduler-headless/use-event-calendar';
 import { EventPopoverTrigger } from '../event-popover';
 import { DayGridEvent } from '../event';
+import { useEventPopoverContext } from '../event-popover/EventPopover';
 
 import './DayTimeGrid.css';
-import { useEventPopoverContext } from '../event-popover/EventPopoverContext';
 
 export function DayGridCell(props: DayGridCellProps) {
   const { day, row } = props;
-  const adapter = useAdapter();
-  const placeholder = CalendarGrid.usePlaceholderInDay(day.value, row);
-  const store = useEventCalendarStoreContext();
-  const cellRef = React.useRef<HTMLDivElement | null>(null);
-  const isCreation = useStore(store, selectors.isCreatingNewEventInDayCell, day.value);
 
-  const { startEditing } = useEventPopoverContext();
+  // Context hooks
+  const adapter = useAdapter();
+  const store = useEventCalendarStoreContext();
+
+  // Ref hooks
+  const cellRef = React.useRef<HTMLDivElement | null>(null);
+
+  // Selector hooks
+  const isCreation = useStore(store, selectors.isCreatingNewEventInDayCell, day.value);
+  const canCreateEvent = useStore(store, selectors.canCreateNewEvent);
+
+  // Feature hooks
+  const placeholder = CalendarGrid.usePlaceholderInDay(day.value, row);
+
+  const { open: startEditing } = useEventPopoverContext();
 
   const handleDoubleClick = () => {
+    if (!canCreateEvent) {
+      return;
+    }
     store.setOccurrencePlaceholder({
-      eventId: null,
-      occurrenceKey: 'create-placeholder',
+      type: 'creation',
       surfaceType: 'day-grid',
       start: adapter.startOfDay(day.value),
       end: adapter.endOfDay(day.value),
-      originalStart: null,
     });
   };
 
@@ -44,6 +54,7 @@ export function DayGridCell(props: DayGridCellProps) {
     <CalendarGrid.DayCell
       ref={cellRef}
       value={day.value}
+      addPropertiesToDroppedEvent={addPropertiesToDroppedEvent}
       className="DayTimeGridAllDayEventsCell"
       style={
         {
@@ -59,12 +70,7 @@ export function DayGridCell(props: DayGridCellProps) {
         {day.withPosition.map((occurrence) => {
           if (occurrence.position.isInvisible) {
             return (
-              <DayGridEvent
-                key={occurrence.key}
-                occurrence={occurrence}
-                variant="invisible"
-                ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
-              />
+              <DayGridEvent key={occurrence.key} occurrence={occurrence} variant="invisible" />
             );
           }
 
@@ -72,23 +78,13 @@ export function DayGridCell(props: DayGridCellProps) {
             <EventPopoverTrigger
               key={occurrence.key}
               occurrence={occurrence}
-              render={
-                <DayGridEvent
-                  occurrence={occurrence}
-                  variant="allDay"
-                  ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
-                />
-              }
+              render={<DayGridEvent occurrence={occurrence} variant="allDay" />}
             />
           );
         })}
         {placeholder != null && (
           <div className="DayTimeGridAllDayEventContainer">
-            <DayGridEvent
-              occurrence={placeholder}
-              variant="placeholder"
-              ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
-            />
+            <DayGridEvent occurrence={placeholder} variant="placeholder" />
           </div>
         )}
       </div>
@@ -99,4 +95,13 @@ export function DayGridCell(props: DayGridCellProps) {
 interface DayGridCellProps {
   day: useEventOccurrencesWithDayGridPosition.DayData;
   row: useEventOccurrencesWithDayGridPosition.ReturnValue;
+}
+
+/**
+ * Makes sure any event dropped in the day cell is turned into an all-day event.
+ */
+function addPropertiesToDroppedEvent() {
+  return {
+    allDay: true,
+  };
 }

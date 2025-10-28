@@ -12,6 +12,10 @@ export interface CalendarGridTimeColumnContext {
    */
   end: SchedulerValidDate;
   /**
+   * The index of the column in the grid.
+   */
+  index: number;
+  /**
    * Get the cursor position in the element in milliseconds.
    * @param {Object} parameters The parameters of the method.
    * @param {{ clientY: number }} parameters.input The input object provided by the drag and drop library for the current event.

@@ -10,4 +10,8 @@ export interface TimelineEventProps extends EventProps {
    * The variant of the event, which determines its styling.
    */
   variant: 'regular';
+  /**
+   * ID of the header this event is associated with (for aria-labelledby).
+   */
+  ariaLabelledBy: string;
 }

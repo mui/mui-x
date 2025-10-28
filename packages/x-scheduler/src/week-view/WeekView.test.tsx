@@ -1,31 +1,30 @@
 import * as React from 'react';
-import { DateTime } from 'luxon';
 import { spy } from 'sinon';
 import { adapter, createSchedulerRenderer } from 'test/utils/scheduler';
 import { screen, within } from '@mui/internal-test-utils';
 import { WeekView } from '@mui/x-scheduler/week-view';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
-import { StandaloneView } from '@mui/x-scheduler/standalone-view';
+import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
 
 const allDayEvents = [
   {
     id: 'all-day-1',
-    start: DateTime.fromISO('2025-05-05T00:00:00'),
-    end: DateTime.fromISO('2025-05-07T23:59:59'),
+    start: adapter.date('2025-05-05T00:00:00'),
+    end: adapter.date('2025-05-07T23:59:59'),
     title: 'Multi-day Conference',
     allDay: true,
   },
   {
     id: 'all-day-2',
-    start: DateTime.fromISO('2025-04-28T00:00:00'), // Previous week
-    end: DateTime.fromISO('2025-05-06T23:59:59'), // Current week
+    start: adapter.date('2025-04-28T00:00:00'), // Previous week
+    end: adapter.date('2025-05-06T23:59:59'), // Current week
     title: 'Long Event',
     allDay: true,
   },
   {
     id: 'all-day-3',
-    start: DateTime.fromISO('2025-05-04T00:00:00'),
-    end: DateTime.fromISO('2025-05-07T23:59:59'),
+    start: adapter.date('2025-05-04T00:00:00'),
+    end: adapter.date('2025-05-07T23:59:59'),
     title: 'Four day event',
     allDay: true,
   },
@@ -37,9 +36,9 @@ describe('<WeekView />', () => {
   describe('All day events', () => {
     it('should render all-day events correctly with main event in start date cell', () => {
       render(
-        <StandaloneView events={allDayEvents} resources={[]}>
+        <EventCalendarProvider events={allDayEvents} resources={[]}>
           <WeekView />
-        </StandaloneView>,
+        </EventCalendarProvider>,
       );
       const allDayCells = screen.getAllByRole('gridcell');
       const may5Cell = allDayCells.find((cell) => {
@@ -63,9 +62,9 @@ describe('<WeekView />', () => {
 
     it('should render all-day event in first cell of week when event starts before the week', () => {
       render(
-        <StandaloneView events={allDayEvents} resources={[]}>
+        <EventCalendarProvider events={allDayEvents} resources={[]}>
           <WeekView />
-        </StandaloneView>,
+        </EventCalendarProvider>,
       );
 
       const allDayHeader = screen.getByRole('columnheader', { name: /all day/i });
@@ -81,9 +80,9 @@ describe('<WeekView />', () => {
 
     it('should place invisible events on the same grid row as the main event', () => {
       render(
-        <StandaloneView events={allDayEvents} resources={[]}>
+        <EventCalendarProvider events={allDayEvents} resources={[]}>
           <WeekView />
-        </StandaloneView>,
+        </EventCalendarProvider>,
       );
 
       const allEvents = screen.getAllByLabelText('Multi-day Conference');
@@ -107,31 +106,31 @@ describe('<WeekView />', () => {
       const overlappingEvents = [
         {
           id: 'event-1',
-          start: DateTime.fromISO('2025-05-04T00:00:00'),
-          end: DateTime.fromISO('2025-05-06T23:59:59'),
+          start: adapter.date('2025-05-04T00:00:00'),
+          end: adapter.date('2025-05-06T23:59:59'),
           title: 'Event 1',
           allDay: true,
         },
         {
           id: 'event-2',
-          start: DateTime.fromISO('2025-05-05T00:00:00'),
-          end: DateTime.fromISO('2025-05-07T23:59:59'),
+          start: adapter.date('2025-05-05T00:00:00'),
+          end: adapter.date('2025-05-07T23:59:59'),
           title: 'Event 2',
           allDay: true,
         },
         {
           id: 'event-3',
-          start: DateTime.fromISO('2025-05-08T00:00:00'),
-          end: DateTime.fromISO('2025-05-09T23:59:59'),
+          start: adapter.date('2025-05-08T00:00:00'),
+          end: adapter.date('2025-05-09T23:59:59'),
           title: 'Event 3',
           allDay: true,
         },
       ];
 
       render(
-        <StandaloneView events={overlappingEvents} resources={[]}>
+        <EventCalendarProvider events={overlappingEvents} resources={[]}>
           <WeekView />
-        </StandaloneView>,
+        </EventCalendarProvider>,
       );
 
       const event1Elements = screen.getAllByLabelText('Event 1');
@@ -157,9 +156,9 @@ describe('<WeekView />', () => {
 
     it('should render all-day events with correct grid column span', () => {
       render(
-        <StandaloneView events={allDayEvents} resources={[]}>
+        <EventCalendarProvider events={allDayEvents} resources={[]}>
           <WeekView />
-        </StandaloneView>,
+        </EventCalendarProvider>,
       );
 
       const allDayHeader = screen.getByRole('columnheader', { name: /all day/i });
@@ -180,7 +179,7 @@ describe('<WeekView />', () => {
   describe('time navigation', () => {
     it('should go to start of previous week when clicking on the Previous Week button', async () => {
       const onVisibleDateChange = spy();
-      const visibleDate = DateTime.fromISO('2025-07-03T00:00:00Z'); // Thursday
+      const visibleDate = adapter.date('2025-07-03T00:00:00Z'); // Thursday
 
       const { user } = render(
         <EventCalendar
@@ -199,7 +198,7 @@ describe('<WeekView />', () => {
 
     it('should go to start of next week when clicking on the Next Week button', async () => {
       const onVisibleDateChange = spy();
-      const visibleDate = DateTime.fromISO('2025-07-03T00:00:00Z'); // Thursday
+      const visibleDate = adapter.date('2025-07-03T00:00:00Z'); // Thursday
 
       const { user } = render(
         <EventCalendar

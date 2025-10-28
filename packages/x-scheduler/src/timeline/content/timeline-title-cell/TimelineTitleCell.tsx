@@ -19,7 +19,7 @@ export default function TimelineTitleCell({ resource }: { resource: CalendarReso
           )}
         />
 
-        {resource!.name}
+        {resource!.title}
       </TimelinePrimitive.Cell>
     </TimelinePrimitive.Row>
   );

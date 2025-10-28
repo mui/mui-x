@@ -1,24 +1,23 @@
 import * as React from 'react';
-import { DateTime } from 'luxon';
+import { spy } from 'sinon';
 import { adapter, createSchedulerRenderer } from 'test/utils/scheduler';
 import { screen, within } from '@mui/internal-test-utils';
 import { CalendarEvent } from '@mui/x-scheduler-headless/models';
-import { spy } from 'sinon';
 import { MonthView } from '@mui/x-scheduler/month-view';
-import { StandaloneView } from '@mui/x-scheduler/standalone-view';
+import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
 import { EventCalendar } from '../event-calendar';
 
 const events: CalendarEvent[] = [
   {
     id: '1',
-    start: DateTime.fromISO('2025-05-01T09:00:00'),
-    end: DateTime.fromISO('2025-05-01T10:00:00'),
+    start: adapter.date('2025-05-01T09:00:00'),
+    end: adapter.date('2025-05-01T10:00:00'),
     title: 'Meeting',
   },
   {
     id: '2',
-    start: DateTime.fromISO('2025-05-15T14:00:00'),
-    end: DateTime.fromISO('2025-05-15T15:00:00'),
+    start: adapter.date('2025-05-15T14:00:00'),
+    end: adapter.date('2025-05-15T15:00:00'),
     title: 'Doctor Appointment',
   },
 ];
@@ -26,36 +25,36 @@ const events: CalendarEvent[] = [
 const allDayEvents: CalendarEvent[] = [
   {
     id: 'all-day-1',
-    start: DateTime.fromISO('2025-05-05T00:00:00'),
-    end: DateTime.fromISO('2025-05-07T23:59:59'),
+    start: adapter.date('2025-05-05T00:00:00'),
+    end: adapter.date('2025-05-07T23:59:59'),
     title: 'Multi-day Conference',
     allDay: true,
   },
   {
     id: 'all-day-2',
-    start: DateTime.fromISO('2025-04-28T00:00:00'), // Previous week
-    end: DateTime.fromISO('2025-05-06T23:59:59'), // Current week
+    start: adapter.date('2025-04-28T00:00:00'), // Previous week
+    end: adapter.date('2025-05-06T23:59:59'), // Current week
     title: 'Long Event',
     allDay: true,
   },
   {
     id: 'all-day-3',
-    start: DateTime.fromISO('2025-05-12T00:00:00'),
-    end: DateTime.fromISO('2025-05-14T23:59:59'),
+    start: adapter.date('2025-05-12T00:00:00'),
+    end: adapter.date('2025-05-14T23:59:59'),
     title: 'Grid Row Test',
     allDay: true,
   },
   {
     id: 'all-day-4',
-    start: DateTime.fromISO('2025-05-14T00:00:00'),
-    end: DateTime.fromISO('2025-05-16T23:59:59'),
+    start: adapter.date('2025-05-14T00:00:00'),
+    end: adapter.date('2025-05-16T23:59:59'),
     title: 'Three Day Event',
     allDay: true,
   },
   {
     id: 'all-day-5',
-    start: DateTime.fromISO('2025-05-06T00:00:00'),
-    end: DateTime.fromISO('2025-05-16T23:59:59'),
+    start: adapter.date('2025-05-06T00:00:00'),
+    end: adapter.date('2025-05-16T23:59:59'),
     title: 'Multiple week event',
     allDay: true,
   },
@@ -71,9 +70,9 @@ describe('<MonthView />', () => {
 
   it('should render the weekday headers, a cell for each day, and show the abbreviated month for day 1', () => {
     render(
-      <StandaloneView {...standaloneDefaults}>
+      <EventCalendarProvider {...standaloneDefaults}>
         <MonthView />
-      </StandaloneView>,
+      </EventCalendarProvider>,
     );
     const headerTexts = screen.getAllByRole('columnheader').map((header) => header.textContent);
     const gridCells = screen.getAllByRole('gridcell');
@@ -85,9 +84,9 @@ describe('<MonthView />', () => {
 
   it('should render events in the correct cell', () => {
     render(
-      <StandaloneView {...standaloneDefaults}>
+      <EventCalendarProvider {...standaloneDefaults}>
         <MonthView />
-      </StandaloneView>,
+      </EventCalendarProvider>,
     );
 
     const gridCells = screen.getAllByRole('gridcell');
@@ -102,13 +101,13 @@ describe('<MonthView />', () => {
     const handleViewChange = spy();
     const handleVisibleDateChange = spy();
     const { user } = render(
-      <StandaloneView
+      <EventCalendarProvider
         {...standaloneDefaults}
         onViewChange={handleViewChange}
         onVisibleDateChange={handleVisibleDateChange}
       >
         <MonthView />
-      </StandaloneView>,
+      </EventCalendarProvider>,
     );
     const button = screen.getByRole('button', { name: '15' });
     await user.click(button);
@@ -117,15 +116,15 @@ describe('<MonthView />', () => {
     expect(handleViewChange.firstCall.firstArg).to.equal('day');
     expect(handleVisibleDateChange.calledOnce).to.equal(true);
     expect(handleVisibleDateChange.firstCall.firstArg).toEqualDateTime(
-      DateTime.fromISO('2025-05-15T00:00:00'),
+      adapter.date('2025-05-15T00:00:00'),
     );
   });
 
   it('should render day numbers as plain text when the day view is not enabled', () => {
     render(
-      <StandaloneView {...standaloneDefaults} views={['week', 'month']}>
+      <EventCalendarProvider {...standaloneDefaults} views={['week', 'month']}>
         <MonthView />
-      </StandaloneView>,
+      </EventCalendarProvider>,
     );
     expect(screen.queryByRole('button', { name: '15' })).to.equal(null);
     expect(screen.getByText('15')).not.to.equal(null);
@@ -135,39 +134,39 @@ describe('<MonthView />', () => {
     const manyEvents = [
       {
         id: '1',
-        start: DateTime.fromISO('2025-05-01T08:00:00'),
-        end: DateTime.fromISO('2025-05-01T09:00:00'),
+        start: adapter.date('2025-05-01T08:00:00'),
+        end: adapter.date('2025-05-01T09:00:00'),
         title: 'Breakfast',
       },
       {
         id: '2',
-        start: DateTime.fromISO('2025-05-01T09:30:00'),
-        end: DateTime.fromISO('2025-05-01T10:30:00'),
+        start: adapter.date('2025-05-01T09:30:00'),
+        end: adapter.date('2025-05-01T10:30:00'),
         title: 'Team Standup',
       },
       {
         id: '3',
-        start: DateTime.fromISO('2025-05-01T11:00:00'),
-        end: DateTime.fromISO('2025-05-01T12:00:00'),
+        start: adapter.date('2025-05-01T11:00:00'),
+        end: adapter.date('2025-05-01T12:00:00'),
         title: 'Client Call',
       },
       {
         id: '4',
-        start: DateTime.fromISO('2025-05-01T13:00:00'),
-        end: DateTime.fromISO('2025-05-01T14:00:00'),
+        start: adapter.date('2025-05-01T13:00:00'),
+        end: adapter.date('2025-05-01T14:00:00'),
         title: 'Lunch',
       },
       {
         id: '5',
-        start: DateTime.fromISO('2025-05-01T15:00:00'),
-        end: DateTime.fromISO('2025-05-01T16:00:00'),
+        start: adapter.date('2025-05-01T15:00:00'),
+        end: adapter.date('2025-05-01T16:00:00'),
         title: 'Design Review',
       },
     ];
     render(
-      <StandaloneView events={manyEvents} resources={[]}>
+      <EventCalendarProvider events={manyEvents} resources={[]}>
         <MonthView />
-      </StandaloneView>,
+      </EventCalendarProvider>,
     );
     expect(screen.getByText(/more/i)).not.to.equal(null);
   });
@@ -175,9 +174,9 @@ describe('<MonthView />', () => {
   describe('All day events', () => {
     it('should render all-day events correctly with main event in start date cell', () => {
       render(
-        <StandaloneView events={allDayEvents} resources={[]}>
+        <EventCalendarProvider events={allDayEvents} resources={[]}>
           <MonthView />
-        </StandaloneView>,
+        </EventCalendarProvider>,
       );
 
       const gridCells = screen.getAllByRole('gridcell');
@@ -204,9 +203,9 @@ describe('<MonthView />', () => {
 
     it('should render all-day event in first cell of week when event starts before the week', () => {
       render(
-        <StandaloneView events={allDayEvents} resources={[]}>
+        <EventCalendarProvider events={allDayEvents} resources={[]}>
           <MonthView />
-        </StandaloneView>,
+        </EventCalendarProvider>,
       );
 
       const gridCells = screen.getAllByRole('gridcell');
@@ -219,9 +218,9 @@ describe('<MonthView />', () => {
 
     it('should place invisible events on the same grid row as the main event', () => {
       render(
-        <StandaloneView events={allDayEvents} resources={[]}>
+        <EventCalendarProvider events={allDayEvents} resources={[]}>
           <MonthView />
-        </StandaloneView>,
+        </EventCalendarProvider>,
       );
 
       const allEvents = screen.getAllByLabelText('Grid Row Test');
@@ -245,31 +244,31 @@ describe('<MonthView />', () => {
       const overlappingEvents = [
         {
           id: 'event-1',
-          start: DateTime.fromISO('2025-05-12T00:00:00'),
-          end: DateTime.fromISO('2025-05-14T23:59:59'),
+          start: adapter.date('2025-05-12T00:00:00'),
+          end: adapter.date('2025-05-14T23:59:59'),
           title: 'Event 1',
           allDay: true,
         },
         {
           id: 'event-2',
-          start: DateTime.fromISO('2025-05-13T00:00:00'),
-          end: DateTime.fromISO('2025-05-15T23:59:59'),
+          start: adapter.date('2025-05-13T00:00:00'),
+          end: adapter.date('2025-05-15T23:59:59'),
           title: 'Event 2',
           allDay: true,
         },
         {
           id: 'event-3',
-          start: DateTime.fromISO('2025-05-16T00:00:00'),
-          end: DateTime.fromISO('2025-05-17T23:59:59'),
+          start: adapter.date('2025-05-16T00:00:00'),
+          end: adapter.date('2025-05-17T23:59:59'),
           title: 'Event 3',
           allDay: true,
         },
       ];
 
       render(
-        <StandaloneView events={overlappingEvents} resources={[]}>
+        <EventCalendarProvider events={overlappingEvents} resources={[]}>
           <MonthView />
-        </StandaloneView>,
+        </EventCalendarProvider>,
       );
 
       const event1Elements = screen.getAllByLabelText('Event 1');
@@ -295,9 +294,9 @@ describe('<MonthView />', () => {
 
     it('should render all-day events with correct grid column span', () => {
       render(
-        <StandaloneView events={allDayEvents} resources={[]}>
+        <EventCalendarProvider events={allDayEvents} resources={[]}>
           <MonthView />
-        </StandaloneView>,
+        </EventCalendarProvider>,
       );
 
       const mainEvent = screen
@@ -312,9 +311,9 @@ describe('<MonthView />', () => {
 
     it('should render one visible event per row if event spans across multiple weeks', () => {
       render(
-        <StandaloneView events={allDayEvents} resources={[]}>
+        <EventCalendarProvider events={allDayEvents} resources={[]}>
           <MonthView />
-        </StandaloneView>,
+        </EventCalendarProvider>,
       );
 
       const eventInstances = screen.getAllByLabelText('Multiple week event');
@@ -330,7 +329,7 @@ describe('<MonthView />', () => {
   describe('time navigation', () => {
     it('should go to start of previous month when clicking on the Previous Month button', async () => {
       const onVisibleDateChange = spy();
-      const visibleDate = DateTime.fromISO('2025-07-03T00:00:00Z');
+      const visibleDate = adapter.date('2025-07-03T00:00:00Z');
 
       const { user } = render(
         <EventCalendar
@@ -349,7 +348,7 @@ describe('<MonthView />', () => {
 
     it('should go to start of next month when clicking on the Next Month button', async () => {
       const onVisibleDateChange = spy();
-      const visibleDate = DateTime.fromISO('2025-07-03T00:00:00Z');
+      const visibleDate = adapter.date('2025-07-03T00:00:00Z');
 
       const { user } = render(
         <EventCalendar

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
-import { DateTime } from 'luxon';
 import { spy } from 'sinon';
 import { adapter, createSchedulerRenderer } from 'test/utils/scheduler';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
@@ -11,7 +10,7 @@ describe('<AgendaView />', () => {
   describe('time navigation', () => {
     it('should go to previous agenda period (12 days) when clicking on the Previous Agenda button', async () => {
       const onVisibleDateChange = spy();
-      const visibleDate = DateTime.fromISO('2025-07-03T00:00:00Z');
+      const visibleDate = adapter.date('2025-07-03T00:00:00Z');
 
       const { user } = render(
         <EventCalendar
@@ -30,7 +29,7 @@ describe('<AgendaView />', () => {
 
     it('should go to next agenda period (12 days) when clicking on the Next Agenda button', async () => {
       const onVisibleDateChange = spy();
-      const visibleDate = DateTime.fromISO('2025-07-03T00:00:00Z');
+      const visibleDate = adapter.date('2025-07-03T00:00:00Z');
 
       const { user } = render(
         <EventCalendar

@@ -4,6 +4,8 @@ import { Adapter } from './useAdapter.types';
 
 export const DO_NOT_USE_THIS_VARIABLE_ADAPTER_CLASS = new AdapterLuxon();
 
+export const DO_NOT_USE_THIS_VARIABLE_ADAPTER_CLASS_FR = new AdapterLuxon({ locale: 'fr' });
+
 // TODO: Replace with Base UI adapter when available.
 export function useAdapter() {
   return DO_NOT_USE_THIS_VARIABLE_ADAPTER_CLASS;

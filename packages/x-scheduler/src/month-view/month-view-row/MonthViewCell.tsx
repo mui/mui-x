@@ -11,7 +11,8 @@ import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headles
 import { DayGridEvent } from '../../internals/components/event/day-grid-event/DayGridEvent';
 import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { EventPopoverTrigger } from '../../internals/components/event-popover';
-import { useEventPopoverContext } from '../../internals/components/event-popover/EventPopoverContext';
+import { MoreEventsPopoverTrigger } from '../../internals/components/more-events-popover/MoreEventsPopover';
+import { useEventPopoverContext } from '../../internals/components/event-popover/EventPopover';
 import './MonthViewWeekRow.css';
 
 export const MonthViewCell = React.forwardRef(function MonthViewCell(
@@ -19,18 +20,23 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   ref: React.ForwardedRef<HTMLDivElement>,
 ) {
   const { day, row, maxEvents } = props;
+
+  // Context hooks
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
   const translations = useTranslations();
-  const placeholder = CalendarGrid.usePlaceholderInDay(day.value, row);
+  const { open: startEditing } = useEventPopoverContext();
+
+  // Selector hooks
   const hasDayView = useStore(store, selectors.hasDayView);
   const visibleDate = useStore(store, selectors.visibleDate);
   const isCreation = useStore(store, selectors.isCreatingNewEventInDayCell, day.value);
+  const canCreateEvent = useStore(store, selectors.canCreateNewEvent);
+  const placeholder = CalendarGrid.usePlaceholderInDay(day.value, row);
 
+  // Ref hooks
   const cellRef = React.useRef<HTMLDivElement | null>(null);
   const handleRef = useMergedRefs(ref, cellRef);
-
-  const { startEditing } = useEventPopoverContext();
 
   const isCurrentMonth = adapter.isSameMonth(day.value, visibleDate);
   const isFirstDayOfMonth = adapter.isSameDay(day.value, adapter.startOfMonth(day.value));
@@ -54,13 +60,14 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const rowCount = 1 + maxEvents;
 
   const handleDoubleClick = () => {
+    if (!canCreateEvent) {
+      return;
+    }
     store.setOccurrencePlaceholder({
-      eventId: null,
-      occurrenceKey: 'create-placeholder',
+      type: 'creation',
       surfaceType: 'day-grid',
       start: adapter.startOfDay(day.value),
       end: adapter.endOfDay(day.value),
-      originalStart: null,
       lockSurfaceType: true,
     });
   };
@@ -103,12 +110,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
         {visibleOccurrences.map((occurrence) => {
           if (occurrence.position.isInvisible) {
             return (
-              <DayGridEvent
-                key={occurrence.key}
-                occurrence={occurrence}
-                variant="invisible"
-                ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
-              />
+              <DayGridEvent key={occurrence.key} occurrence={occurrence} variant="invisible" />
             );
           }
 
@@ -120,22 +122,30 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
                 <DayGridEvent
                   occurrence={occurrence}
                   variant={occurrence.allDay ? 'allDay' : 'compact'}
-                  ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
                 />
               }
             />
           );
         })}
         {hiddenCount > 0 && (
-          <p className="MonthViewMoreEvents">{translations.hiddenEvents(hiddenCount)}</p>
+          <MoreEventsPopoverTrigger
+            occurrences={day.withPosition}
+            day={day}
+            nativeButton={true}
+            render={
+              <button
+                type="button"
+                aria-label={translations.hiddenEvents(hiddenCount)}
+                className={clsx('MonthViewMoreEvents', 'Button--small', 'NeutralTextButton')}
+              >
+                {translations.hiddenEvents(hiddenCount)}
+              </button>
+            }
+          />
         )}
         {placeholder != null && (
           <div className="MonthViewPlaceholderEventContainer">
-            <DayGridEvent
-              occurrence={placeholder}
-              variant="placeholder"
-              ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
-            />
+            <DayGridEvent occurrence={placeholder} variant="placeholder" />
           </div>
         )}
       </div>

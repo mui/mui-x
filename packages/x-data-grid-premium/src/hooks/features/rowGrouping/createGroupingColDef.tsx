@@ -138,13 +138,13 @@ function getGroupingCriteriaProperties(
     valueFormatter = (value, row, column, apiRef) => {
       const rowId = gridRowIdSelector(apiRef, row);
       const rowNode = gridRowNodeSelector(apiRef, rowId);
-      if (rowNode.type === 'group') {
-        const originalColDef = columnsLookup[rowNode.groupingField!]!;
-        if (originalColDef.type === 'singleSelect') {
+      if (rowNode?.type === 'group') {
+        const originalColDef = rowNode.groupingField ? columnsLookup[rowNode.groupingField] : null;
+        if (originalColDef?.type === 'singleSelect') {
           // the default valueFormatter of a singleSelect colDef won't work with the grouping column values
           return value;
         }
-        const columnValueFormatter = originalColDef.valueFormatter;
+        const columnValueFormatter = originalColDef?.valueFormatter;
         if (typeof columnValueFormatter === 'function') {
           return columnValueFormatter(value as never, row, column, apiRef);
         }

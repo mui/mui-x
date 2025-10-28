@@ -73,15 +73,14 @@ export function innerGetEventOccurrencesGroupedByResource(
       occurrencesGroupedByResource.get(resourceId)!.push(occurrence);
     }
   }
-  const filteredResources = resources.filter((resource) =>
-    occurrencesGroupedByResource.has(resource.id),
+
+  return (
+    resources
+      // Sort by resource.title (localeCompare for stable alphabetical ordering).
+      .sort((a, b) => a.title.localeCompare(b.title))
+      .map((resource) => ({
+        resource,
+        occurrences: occurrencesGroupedByResource.get(resource.id) ?? [],
+      }))
   );
-
-  // Sort by resource.name (localeCompare for stable alphabetical ordering).
-  filteredResources.sort((a, b) => a.name.localeCompare(b.name));
-
-  return filteredResources.map((resource) => ({
-    resource,
-    occurrences: occurrencesGroupedByResource.get(resource.id)!,
-  }));
 }

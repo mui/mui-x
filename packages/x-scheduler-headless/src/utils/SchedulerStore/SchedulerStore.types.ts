@@ -1,13 +1,13 @@
 import {
   CalendarEvent,
   CalendarEventColor,
-  CalendarEventId,
   CalendarEventOccurrence,
   CalendarOccurrencePlaceholder,
   CalendarResource,
   CalendarResourceId,
-  RecurringEventUpdatedProperties,
+  CalendarEventUpdatedProperties,
   SchedulerValidDate,
+  CalendarEventId,
 } from '../../models';
 import { Adapter } from '../../use-adapter/useAdapter.types';
 
@@ -43,6 +43,16 @@ export interface SchedulerState {
    */
   areEventsResizable: boolean;
   /**
+   * Whether events can be dragged from outside of the calendar and dropped into it.
+   */
+  canDragEventsFromTheOutside: boolean;
+  /**
+   * Whether events can be dragged from inside of the calendar and dropped outside of it.
+   * If true, when the mouse leaves the calendar, the event won't be rendered inside the calendar anymore.
+   * If false, when the mouse leaves the calendar, the event will be rendered in its last valid position inside the calendar.
+   */
+  canDropEventsToTheOutside: boolean;
+  /**
    * The color palette used for all events.
    */
   eventColor: CalendarEventColor;
@@ -64,6 +74,15 @@ export interface SchedulerState {
    * It can also be styled differently in the day grid.
    */
   isMultiDayEvent: (event: CalendarEvent | CalendarEventOccurrence) => boolean;
+  /**
+   * Whether the calendar is in read-only mode.
+   * @default false
+   */
+  readOnly: boolean;
+  /**
+   * Pending parameters to use when the user selects the scope of a recurring event update.
+   */
+  pendingUpdateRecurringEventParameters: UpdateRecurringEventParameters | null;
 }
 
 export interface SchedulerParameters {
@@ -104,6 +123,18 @@ export interface SchedulerParameters {
    */
   areEventsResizable?: boolean;
   /**
+   * Whether events can be dragged from outside of the calendar and dropped into it.
+   * @default false
+   */
+  canDragEventsFromTheOutside?: boolean;
+  /**
+   * Whether events can be dragged from inside of the calendar and dropped outside of it.
+   * If true, when the mouse leaves the calendar, the event won't be rendered inside the calendar anymore.
+   * If false, when the mouse leaves the calendar, the event will be rendered in its last valid position inside the calendar.
+   * @default false
+   */
+  canDropEventsToTheOutside?: boolean;
+  /**
    * Whether the component should display the current time indicator.
    * @default true
    */
@@ -115,26 +146,17 @@ export interface SchedulerParameters {
    * @default "jade"
    */
   eventColor?: CalendarEventColor;
+  /**
+   * Whether the calendar is in read-only mode.
+   * @default false
+   */
+  readOnly?: boolean;
 }
-
-/**
- * The scope of a recurring event update.
- *
- * - `only-this`: Updates only the selected occurrence of the recurring event.
- * - `this-and-following`: Updates the selected occurrence and all following occurrences,
- *   but leaves the previous ones untouched.
- * - `all`: Updates all occurrences in the recurring series, past, present, and future.
- */
-export type RecurringUpdateEventScope = 'this-and-following' | 'all' | 'only-this';
 
 /**
  * Parameters for updating a recurring event.
  */
 export type UpdateRecurringEventParameters = {
-  /**
-   * The id of the recurring event to update.
-   */
-  eventId: CalendarEventId;
   /**
    * The start date of the occurrence affected by the update.
    */
@@ -143,11 +165,11 @@ export type UpdateRecurringEventParameters = {
    * The changes to apply.
    * Requires `start` and `end`, all other properties are optional.
    */
-  changes: RecurringEventUpdatedProperties;
+  changes: CalendarEventUpdatedProperties;
   /**
-   * The scope of the update.
+   * Callback fired when the user submits the recurring scope dialog.
    */
-  scope: RecurringUpdateEventScope;
+  onSubmit?: () => void;
 };
 
 /**
@@ -184,3 +206,9 @@ export type SchedulerModelUpdater<
   controlledProp: keyof Parameters & keyof State & string,
   defaultProp: keyof Parameters,
 ) => void;
+
+export interface UpdateEventsParameters {
+  deleted?: CalendarEventId[];
+  created?: CalendarEvent[];
+  updated?: CalendarEventUpdatedProperties[];
+}

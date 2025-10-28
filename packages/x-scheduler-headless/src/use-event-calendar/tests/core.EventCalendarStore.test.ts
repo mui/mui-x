@@ -30,13 +30,17 @@ describe('Core - EventCalendarStore', () => {
         isMultiDayEvent: DEFAULT_IS_MULTI_DAY_EVENT,
         areEventsDraggable: false,
         areEventsResizable: false,
+        canDragEventsFromTheOutside: false,
+        canDropEventsToTheOutside: false,
         showCurrentTimeIndicator: true,
         eventColor: 'jade',
+        pendingUpdateRecurringEventParameters: null,
         preferences: DEFAULT_PREFERENCES,
         preferencesMenuConfig: DEFAULT_PREFERENCES_MENU_CONFIG,
         viewConfig: null,
         occurrencePlaceholder: null,
         visibleDate: adapter.startOfDay(adapter.date()),
+        readOnly: false,
       };
 
       expect(store.state).to.deep.equal(expectedState);
@@ -70,7 +74,7 @@ describe('Core - EventCalendarStore', () => {
       store.updateStateFromParameters(
         {
           ...DEFAULT_PARAMS,
-          resources: [{ id: 'r1', name: 'Resource 1' }],
+          resources: [{ id: 'r1', title: 'Resource 1' }],
           view: store.state.view,
         },
         adapter,
@@ -87,7 +91,7 @@ describe('Core - EventCalendarStore', () => {
         store.updateStateFromParameters(
           {
             ...DEFAULT_PARAMS,
-            resources: [{ id: 'r1', name: 'Resource 1' }],
+            resources: [{ id: 'r1', title: 'Resource 1' }],
             defaultView: 'day',
           },
           adapter,
@@ -114,7 +118,7 @@ describe('Core - EventCalendarStore', () => {
         store.updateStateFromParameters(
           {
             ...DEFAULT_PARAMS,
-            resources: [{ id: 'r1', name: 'Resource 1' }],
+            resources: [{ id: 'r1', title: 'Resource 1' }],
           },
           adapter,
         );

@@ -17,10 +17,13 @@ export function useExtractEventCalendarParameters<P extends EventCalendarParamet
     onVisibleDateChange,
     areEventsDraggable,
     areEventsResizable,
+    canDragEventsFromTheOutside,
+    canDropEventsToTheOutside,
     preferences,
     preferencesMenuConfig,
     eventColor,
     showCurrentTimeIndicator,
+    readOnly,
     ...forwardedProps
   } = props;
 
@@ -38,10 +41,13 @@ export function useExtractEventCalendarParameters<P extends EventCalendarParamet
       onVisibleDateChange,
       areEventsDraggable,
       areEventsResizable,
+      canDragEventsFromTheOutside,
+      canDropEventsToTheOutside,
       preferences,
       preferencesMenuConfig,
       eventColor,
       showCurrentTimeIndicator,
+      readOnly,
     }),
     [
       events,
@@ -56,10 +62,13 @@ export function useExtractEventCalendarParameters<P extends EventCalendarParamet
       onVisibleDateChange,
       areEventsDraggable,
       areEventsResizable,
+      canDragEventsFromTheOutside,
+      canDropEventsToTheOutside,
       preferences,
       preferencesMenuConfig,
       eventColor,
       showCurrentTimeIndicator,
+      readOnly,
     ],
   );
 

@@ -22,4 +22,8 @@ export type GridColDefGenerator = GridColDef & {
    * If `true`, the column will be marked as hidden in the `columnVisibilityModel`.
    */
   hide?: boolean;
+  /**
+   * Reference to the field this column was derived from.
+   */
+  derivedFrom?: string;
 };

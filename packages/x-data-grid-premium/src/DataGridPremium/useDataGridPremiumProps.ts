@@ -59,7 +59,6 @@ export const DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES: DataGridPremiumPropsWithDef
     return text.split(/\r\n|\n|\r/).map((row) => row.split(delimiter));
   },
   disablePivoting: false,
-  getPivotDerivedColumns: defaultGetPivotDerivedColumns,
   aiAssistant: false,
   chartsIntegration: false,
 };
@@ -90,7 +89,9 @@ export const useDataGridPremiumProps = (inProps: DataGridPremiumProps) => {
   return React.useMemo<DataGridPremiumProcessedProps>(
     () => ({
       ...DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES,
-      ...(themedProps.dataSource ? { aggregationFunctions: {} } : {}),
+      ...(themedProps.dataSource
+        ? { aggregationFunctions: {} }
+        : { getPivotDerivedColumns: defaultGetPivotDerivedColumns }),
       ...themedProps,
       localeText,
       slots,

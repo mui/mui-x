@@ -1,4 +1,6 @@
 import type { SchedulerValidDate } from './date';
+import { RecurringEventRecurrenceRule } from './recurringEvent';
+import type { CalendarOccurrencePlaceholderExternalDragData } from './dragAndDrop';
 import type { CalendarResourceId } from './resource';
 
 export interface CalendarEvent {
@@ -30,7 +32,12 @@ export interface CalendarEvent {
    * The recurrence rule for the event.
    * If not defined, the event will have only one occurrence.
    */
-  rrule?: RRuleSpec;
+  rrule?: RecurringEventRecurrenceRule;
+  /**
+   * Exception dates for the event.
+   * These dates will be excluded from the recurrence.
+   */
+  exDates?: SchedulerValidDate[];
   /**
    * Whether the event is an all-day event.
    */
@@ -47,38 +54,6 @@ export interface CalendarEvent {
    * and no link to an original event will be created.
    */
   extractedFromId?: CalendarEventId;
-}
-
-/** Two-letter weekday codes as defined by RFC 5545 (`BYDAY`). */
-export type ByDayCode = 'MO' | 'TU' | 'WE' | 'TH' | 'FR' | 'SA' | 'SU';
-
-/**
- *  Ordinal prefix for BYDAY ordinals.
- *  Positive 1..5 for “Nth” weekday, negative for “last” (e.g. `-1` = last).
- */
-type Ordinal = `${'' | '-'}${1 | 2 | 3 | 4 | 5}`;
-
-/** A BYDAY entry: either a plain weekday (`'MO'`) or an ordinal + weekday (`'2TU'`, `'-1FR'`). */
-export type ByDayValue = ByDayCode | `${Ordinal}${ByDayCode}`;
-
-/**
- *  Minimal subset of RFC 5545 RRULE supported by the scheduler.
- */
-export interface RRuleSpec {
-  /** Base frequency of the rule. */
-  freq: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
-  /** Step between occurrences at the given frequency. Defaults to 1. */
-  interval?: number;
-  /** BYDAY: MO..SU or ordinals like 4SA, -1MO */
-  byDay?: ByDayValue[];
-  /** BYMONTHDAY: list of calendar days in the month (1..31). */
-  byMonthDay?: number[];
-  /** BYMONTH: list of months (1..12). */
-  byMonth?: number[];
-  /** COUNT: total number of occurrences, mutually exclusive with `until`. */
-  count?: number;
-  /** UNTIL: inclusive end boundary, mutually exclusive with `count`. */
-  until?: SchedulerValidDate;
 }
 
 /**
@@ -145,21 +120,7 @@ export type CalendarEventColor =
   | 'indigo'
   | 'blue';
 
-/**
- * Object representing the placeholder of an event occurrence.
- * It is used when creating a new event or when dragging an event occurrence.
- */
-export interface CalendarOccurrencePlaceholder {
-  /**
-   * The id of the event being changed.
-   * It can be null when creating a new event.
-   */
-  eventId: CalendarEventId | null;
-  /**
-   * The key of the event occurrence being changed.
-   * It can be null when creating a new event.
-   */
-  occurrenceKey: string | null;
+interface CalendarOccurrencePlaceholderBase {
   /**
    * The type of surface the draft should be rendered on.
    * This is useful to make sure the placeholder is only rendered in the correct grid.
@@ -174,16 +135,68 @@ export interface CalendarOccurrencePlaceholder {
    */
   end: SchedulerValidDate;
   /**
-   * The start date and time of the event occurrence before the change.
-   * It can be null when creating a new event.
+   * Whether the occurrence placeholder should be hidden.
+   * This is used when dragging an event outside of the calendar to avoid showing both the placeholder and the drag preview.
    */
-  originalStart: SchedulerValidDate | null;
+  isHidden?: boolean;
+}
+
+export interface CalendarOccurrencePlaceholderCreation extends CalendarOccurrencePlaceholderBase {
+  /**
+   * The type of placeholder.
+   */
+  type: 'creation';
   /**
    * Whether to lock the surface type of the placeholder.
    * When true, the surfaceType will not be updated when editing the placeholder.
    */
   lockSurfaceType?: boolean;
 }
+
+export interface CalendarOccurrencePlaceholderInternalDragOrResize
+  extends CalendarOccurrencePlaceholderBase {
+  /**
+   * The type of placeholder.
+   */
+  type: 'internal-drag-or-resize';
+  /**
+   * The id of the event being changed.
+   */
+  eventId: CalendarEventId;
+  /**
+   * The key of the event occurrence being changed.
+   */
+  occurrenceKey: string;
+  /**
+   * The data of the event to use when dropping the event outside of the Event Calendar.
+   */
+  originalOccurrence: CalendarEventOccurrence;
+}
+
+export interface CalendarOccurrencePlaceholderExternalDrag
+  extends CalendarOccurrencePlaceholderBase {
+  /**
+   * The type of placeholder.
+   */
+  type: 'external-drag';
+  /**
+   * The data of the event to insert in the Event Calendar when dropped.
+   */
+  eventData: CalendarOccurrencePlaceholderExternalDragData;
+  /**
+   * Callback fired when the event is dropped into the Event Calendar.
+   */
+  onEventDrop?: () => void;
+}
+
+/**
+ * Object representing the placeholder of an event occurrence.
+ * It is used when creating a new event or when dragging an event occurrence.
+ */
+export type CalendarOccurrencePlaceholder =
+  | CalendarOccurrencePlaceholderCreation
+  | CalendarOccurrencePlaceholderInternalDragOrResize
+  | CalendarOccurrencePlaceholderExternalDrag;
 
 export interface CalendarProcessedDate {
   /**
@@ -199,12 +212,12 @@ export interface CalendarProcessedDate {
 }
 
 /**
- * Helper type for `applyRecurringUpdateFollowing` and `updateRecurringEvent`.
- *  It requires `start` and `end` (always needed when updating an occurrence),
- *  and makes all other `CalendarEvent` properties optional.
+ * Properties to pass to the methods that update an event (recurring or not).
+ * The `id`, `start` and `end` properties are required in order to identify the event to update and the new dates.
+ * All other properties are optional and can be skipped if not modified.
  */
-export type RecurringEventUpdatedProperties = Partial<CalendarEvent> &
-  Required<Pick<CalendarEvent, 'start' | 'end'>>;
+export type CalendarEventUpdatedProperties = Partial<CalendarEvent> &
+  Required<Pick<CalendarEvent, 'id'>>;
 
 /**
  * The type of surface the event is being rendered on.

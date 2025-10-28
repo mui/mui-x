@@ -327,6 +327,7 @@ const nnNOGrid: Partial<GridLocaleText> = {
   promptChangePivotValuesLabel: (count: number) => `Verdiar (${count})`,
   promptChangePivotValuesDescription: (column: string, aggregation: string) =>
     `${column} (${aggregation})`,
+  // promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) => `Dimensions (${dimensionsCount}), Values (${valuesCount})`,
 };
 
 export const nnNO: Localization = getGridLocalization(nnNOGrid);

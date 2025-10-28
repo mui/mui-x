@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
-import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
+import { BaseUIComponentProps, NonNativeButtonProps } from '../../base-ui-copy/utils/types';
 import { useButton } from '../../base-ui-copy/utils/useButton';
 import { useTimelineEventRowContext } from '../event-row/TimelineEventRowContext';
 import { useEvent } from '../../utils/useEvent';
@@ -19,6 +19,7 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
     // Internal props
     start,
     end,
+    nativeButton = false,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
@@ -27,7 +28,10 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
   // to control whether the event should behave like a button
   const isInteractive = true;
 
-  const { getButtonProps, buttonRef } = useButton({ disabled: !isInteractive });
+  const { getButtonProps, buttonRef } = useButton({
+    disabled: !isInteractive,
+    native: nativeButton,
+  });
 
   const { start: rowStart, end: rowEnd } = useTimelineEventRowContext();
 
@@ -61,5 +65,8 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
 export namespace TimelineEvent {
   export interface State extends useEvent.State {}
 
-  export interface Props extends BaseUIComponentProps<'div', State>, useEvent.Parameters {}
+  export interface Props
+    extends BaseUIComponentProps<'div', State>,
+      NonNativeButtonProps,
+      useEvent.Parameters {}
 }
