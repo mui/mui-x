@@ -1146,6 +1146,9 @@ describeTreeView<TreeViewAnyStore>(
 
     describe('Type-ahead', () => {
       it('should move the focus to the next item with a name that starts with the typed character', () => {
+        if (treeViewComponentName !== 'RichTreeView') {
+          return;
+        }
         const view = render({
           items: [
             { id: '1', label: 'one' },

@@ -23,7 +23,7 @@ type TreeViewLabelMap = { [itemId: string]: string };
 export class TreeViewKeyboardNavigationPlugin {
   private store: TreeViewStoreWithLabelEditing;
 
-  private labelMap: TreeViewLabelMap = {};
+  private labelMap: TreeViewLabelMap;
 
   private typeaheadQuery = '';
 
@@ -32,20 +32,17 @@ export class TreeViewKeyboardNavigationPlugin {
   constructor(store: any) {
     this.store = store;
 
+    this.labelMap = createLabelMapFromItemMetaLookup(
+      itemsSelectors.itemMetaLookup(this.store.state),
+    );
+
     // Whenever the itemMetaLookup changes, we need to regen the label map.
     this.store.registerStoreEffect(itemsSelectors.itemMetaLookup, (_, itemMetaLookup) => {
       if (this.store.shouldIgnoreItemsStateUpdate()) {
         return;
       }
 
-      const newLabelMap: { [itemId: string]: string } = {};
-
-      const processItem = (item: TreeViewItemMeta) => {
-        newLabelMap[item.id] = item.label!.toLowerCase();
-      };
-
-      Object.values(itemMetaLookup).forEach(processItem);
-      this.labelMap = newLabelMap;
+      this.labelMap = createLabelMapFromItemMetaLookup(itemMetaLookup);
     });
   }
 
@@ -352,4 +349,18 @@ export class TreeViewKeyboardNavigationPlugin {
 
 function isPrintableKey(string: string) {
   return !!string && string.length === 1 && !!string.match(/\S/);
+}
+
+function createLabelMapFromItemMetaLookup(itemMetaLookup: {
+  [itemId: string]: TreeViewItemMeta;
+}): TreeViewLabelMap {
+  const labelMap: { [itemId: string]: string } = {};
+
+  const processItem = (item: TreeViewItemMeta) => {
+    labelMap[item.id] = item.label!.toLowerCase();
+  };
+
+  Object.values(itemMetaLookup).forEach(processItem);
+
+  return labelMap;
 }
