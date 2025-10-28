@@ -67,20 +67,19 @@ export const useZoomOnBrush = (
 
           let startRatio: number;
           let endRatio: number;
+          const reverse = option.reverse;
 
-          // Convert pixel coordinates to the drawing area
           if (option.axisDirection === 'x') {
-            startRatio = getHorizontalCenterRatio({ x: minX, y: 0 }, drawingArea);
-            endRatio = getHorizontalCenterRatio({ x: maxX, y: 0 }, drawingArea);
+            startRatio = getHorizontalCenterRatio({ x: minX, y: 0 }, drawingArea, reverse);
+            endRatio = getHorizontalCenterRatio({ x: maxX, y: 0 }, drawingArea, reverse);
           } else {
-            // For y-axis, we need to flip the coordinates
-            startRatio = getVerticalCenterRatio({ x: 0, y: maxY }, drawingArea);
-            endRatio = getVerticalCenterRatio({ x: 0, y: minY }, drawingArea);
+            startRatio = getVerticalCenterRatio({ x: 0, y: maxY }, drawingArea, reverse);
+            endRatio = getVerticalCenterRatio({ x: 0, y: minY }, drawingArea, reverse);
           }
 
-          // Clamp ratios to [0, 1]
-          startRatio = Math.max(0, Math.min(1, startRatio));
-          endRatio = Math.max(0, Math.min(1, endRatio));
+          // Ensure start < end regardless of reverse
+          const minRatio = Math.min(startRatio, endRatio);
+          const maxRatio = Math.max(startRatio, endRatio);
 
           // Calculate the new zoom range based on the current zoom state
           // This is important: we need to map the brush selection ratios to the current zoom range
@@ -88,8 +87,8 @@ export const useZoomOnBrush = (
           const currentEnd = zoom.end;
           const currentSpan = currentEnd - currentStart;
 
-          const newStart = currentStart + startRatio * currentSpan;
-          const newEnd = currentStart + endRatio * currentSpan;
+          const newStart = currentStart + minRatio * currentSpan;
+          const newEnd = currentStart + maxRatio * currentSpan;
 
           const clampedStart = Math.max(option.minStart, Math.min(option.maxEnd, newStart));
           const clampedEnd = Math.max(option.minStart, Math.min(option.maxEnd, newEnd));
