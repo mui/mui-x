@@ -1,11 +1,5 @@
-import {
-  // eslint-disable-next-line no-restricted-imports
-  scalePoint as d3ScalePoint,
-  type NumberValue,
-  type ScalePoint,
-} from '@mui/x-charts-vendor/d3-scale';
-import { ProxyArrayValueOf } from './ProxyArrayValueOf';
-import { ProxyScale } from './ProxyScale';
+import type { NumberValue, ScalePoint } from '@mui/x-charts-vendor/d3-scale';
+import { scaleBand } from './scaleBand';
 
 /**
  * Constructs a new point scale with the specified range, no padding, no rounding and center alignment.
@@ -32,16 +26,24 @@ export function scalePoint<Domain extends { toString(): string }>(
   domain: Iterable<Domain>,
   range: Iterable<NumberValue>,
 ): ScalePoint<Domain>;
-export function scalePoint(...args: any[]) {
-  const [arg0, arg1] = args;
+export function scalePoint(...args: any[]): ScalePoint<any> {
+  // ScalePoint is essentially ScaleBand with paddingInner(1)
+  const scale: any = scaleBand(...args).paddingInner(1);
 
-  if (args.length > 1) {
-    return ProxyScale(d3ScalePoint(ProxyArrayValueOf(arg0 as any) as any, arg1 as any));
-  }
+  // Remove paddingInner method and make padding alias to paddingOuter
+  const originalCopy = scale.copy;
+  scale.padding = scale.paddingOuter;
+  delete scale.paddingInner;
+  delete scale.paddingOuter;
 
-  if (arg0) {
-    return ProxyScale(d3ScalePoint(arg0 as any));
-  }
+  scale.copy = () => {
+    const copied = originalCopy();
+    copied.padding = copied.paddingOuter;
+    delete copied.paddingInner;
+    delete copied.paddingOuter;
+    copied.copy = scale.copy;
+    return copied;
+  };
 
-  return ProxyScale(d3ScalePoint());
+  return scale;
 }
