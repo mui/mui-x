@@ -5,7 +5,7 @@ async function main() {
   const { issues } = await crawl({
     startCommand: 'pnpm serve --no-request-logging -p 3001',
     host: 'http://localhost:3001/',
-    seedUrls: ['/x/'],
+    seedUrls: ['/x'],
     outPath: path.resolve(import.meta.url, '../export/x/link-structure.json'),
     // Target paths to ignore during link checking
     ignoredPaths: [
