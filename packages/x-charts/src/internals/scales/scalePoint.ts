@@ -5,7 +5,7 @@ import {
   type ScalePoint,
 } from '@mui/x-charts-vendor/d3-scale';
 import { ProxyArrayValueOf } from './ProxyArrayValueOf';
-import { ProxyScaleDomain } from './ProxyScaleDomain';
+import { ProxyScale } from './ProxyScale';
 
 /**
  * Constructs a new point scale with the specified range, no padding, no rounding and center alignment.
@@ -35,13 +35,13 @@ export function scalePoint<Domain extends { toString(): string }>(
 export function scalePoint(...args: any[]) {
   const [arg0, arg1] = args;
 
-  if (arg0 && arg1) {
-    return ProxyScaleDomain(d3ScalePoint(ProxyArrayValueOf(arg0 as any) as any, arg1 as any));
+  if (args.length > 1) {
+    return ProxyScale(d3ScalePoint(ProxyArrayValueOf(arg0 as any) as any, arg1 as any));
   }
 
   if (arg0) {
-    return ProxyScaleDomain(d3ScalePoint(arg0 as any));
+    return ProxyScale(d3ScalePoint(arg0 as any));
   }
 
-  return ProxyScaleDomain(d3ScalePoint());
+  return ProxyScale(d3ScalePoint());
 }

@@ -5,7 +5,7 @@ import {
   type ScaleBand,
 } from '@mui/x-charts-vendor/d3-scale';
 import { ProxyArrayValueOf } from './ProxyArrayValueOf';
-import { ProxyScaleDomain } from './ProxyScaleDomain';
+import { ProxyScale } from './ProxyScale';
 
 /**
  * Constructs a new band scale with the specified range, no padding, no rounding and center alignment.
@@ -34,13 +34,13 @@ export function scaleBand<Domain extends { toString(): string }>(
 export function scaleBand(...args: any[]) {
   const [arg0, arg1] = args;
 
-  if (arg0 && arg1) {
-    return ProxyScaleDomain(d3ScaleBand(ProxyArrayValueOf(arg0 as any) as any, arg1 as any));
+  if (args.length > 1) {
+    return ProxyScale(d3ScaleBand(ProxyArrayValueOf(arg0 as any) as any, arg1 as any));
   }
 
   if (arg0) {
-    return ProxyScaleDomain(d3ScaleBand(arg0 as any));
+    return ProxyScale(d3ScaleBand(arg0 as any));
   }
 
-  return ProxyScaleDomain(d3ScaleBand());
+  return ProxyScale(d3ScaleBand());
 }
