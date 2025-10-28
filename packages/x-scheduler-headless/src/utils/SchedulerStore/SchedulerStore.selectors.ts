@@ -17,8 +17,8 @@ const eventSelector = createSelector(
 
 const resourceSelector = createSelector(
   (state: State) => state.processedResourceLookup,
-  (resourcesByIdMap, resourceId: string | null | undefined) =>
-    resourceId == null ? null : resourcesByIdMap.get(resourceId),
+  (processedResourceLookup, resourceId: string | null | undefined) =>
+    resourceId == null ? null : processedResourceLookup.get(resourceId),
 );
 
 const isEventReadOnlySelector = createSelector(
