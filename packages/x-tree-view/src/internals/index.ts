@@ -15,6 +15,7 @@ export type {
   TreeViewItemPlugin,
   TreeViewEventParameters,
   TreeViewEventEvent,
+  TreeViewPublicAPI,
 } from './models';
 
 // Plugins
@@ -36,10 +37,6 @@ export { MinimalTreeViewStore } from './MinimalTreeViewStore';
 export type { TreeViewParametersToStateMapper } from './MinimalTreeViewStore';
 
 export { ExtendableRichTreeViewStore } from './RichTreeViewStore';
-export type {
-  RichTreeViewState,
-  RichTreeViewStoreParameters,
-  RichTreeViewPublicAPI,
-} from './RichTreeViewStore';
+export type { RichTreeViewState, RichTreeViewStoreParameters } from './RichTreeViewStore';
 
 export { TreeViewItemDepthContext } from './TreeViewItemDepthContext';

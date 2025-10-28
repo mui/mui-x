@@ -9,9 +9,10 @@ import {
   TreeViewSlots,
   TreeViewSlotProps,
   UseTreeViewStoreParameters,
+  TreeViewPublicAPI,
 } from '@mui/x-tree-view/internals';
 import { RichTreeViewProClasses } from './richTreeViewProClasses';
-import { RichTreeViewProPublicAPI, RichTreeViewProStore } from '../internals/RichTreeViewProStore';
+import { RichTreeViewProStore } from '../internals/RichTreeViewProStore';
 
 export interface RichTreeViewProSlots extends TreeViewSlots, RichTreeViewItemsSlots {
   /**
@@ -30,7 +31,7 @@ export interface RichTreeViewProSlotProps<R extends {}, Multiple extends boolean
 export type RichTreeViewProApiRef<
   R extends TreeViewValidItem<R> = any,
   Multiple extends boolean | undefined = any,
-> = React.RefObject<Partial<RichTreeViewProPublicAPI<R, Multiple>> | undefined>;
+> = React.RefObject<Partial<TreeViewPublicAPI<RichTreeViewProStore<R, Multiple>>> | undefined>;
 
 export interface RichTreeViewProPropsBase extends React.HTMLAttributes<HTMLUListElement> {
   className?: string;

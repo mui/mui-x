@@ -1,9 +1,5 @@
 import { TreeViewItemId, TreeViewSelectionPropagation, TreeViewValidItem } from '../../models';
 import { TreeViewItemMeta } from '../models';
-import type { TreeViewExpansionPlugin } from '../plugins/expansion';
-import type { TreeViewFocusPlugin } from '../plugins/focus';
-import type { TreeViewItemsPlugin } from '../plugins/items';
-import type { TreeViewSelectionPlugin } from '../plugins/selection';
 
 export interface MinimalTreeViewState<
   R extends TreeViewValidItem<R>,
@@ -255,13 +251,6 @@ export interface MinimalTreeViewParameters<
   onItemFocus?: (event: React.SyntheticEvent | null, itemId: string) => void;
 }
 
-export interface MinimalTreeViewPublicAPI<
-  R extends TreeViewValidItem<R>,
-  Multiple extends boolean | undefined,
-> extends ReturnType<TreeViewItemsPlugin<R>['buildPublicAPI']>,
-    ReturnType<TreeViewFocusPlugin['buildPublicAPI']>,
-    ReturnType<TreeViewExpansionPlugin['buildPublicAPI']>,
-    ReturnType<TreeViewSelectionPlugin<Multiple>['buildPublicAPI']> {}
 /**
  * Mapper between a Tree View instance's state and parameters.
  * Used by classes extending `TreeViewStore` to manage the state based on the parameters.

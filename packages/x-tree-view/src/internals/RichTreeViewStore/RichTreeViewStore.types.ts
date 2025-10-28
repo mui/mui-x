@@ -1,10 +1,5 @@
 import { TreeViewItemId, TreeViewValidItem } from '../../models';
-import {
-  MinimalTreeViewParameters,
-  MinimalTreeViewPublicAPI,
-  MinimalTreeViewState,
-} from '../MinimalTreeViewStore';
-import { TreeViewLabelEditingPlugin } from '../plugins/labelEditing';
+import { MinimalTreeViewParameters, MinimalTreeViewState } from '../MinimalTreeViewStore';
 import { RichTreeViewLazyLoadedItemsStatus } from '../plugins/lazyLoading';
 
 export interface RichTreeViewState<
@@ -45,9 +40,3 @@ export interface RichTreeViewStoreParameters<
    */
   isItemEditable?: boolean | ((item: R) => boolean);
 }
-
-export interface RichTreeViewPublicAPI<
-  R extends TreeViewValidItem<R>,
-  Multiple extends boolean | undefined,
-> extends MinimalTreeViewPublicAPI<R, Multiple>,
-    ReturnType<TreeViewLabelEditingPlugin['buildPublicAPI']> {}

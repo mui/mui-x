@@ -1,11 +1,7 @@
 import { TreeViewValidItem } from '../../models';
 import { TreeViewLabelEditingPlugin } from '../plugins/labelEditing';
 import { MinimalTreeViewStore } from '../MinimalTreeViewStore';
-import {
-  RichTreeViewStoreParameters,
-  RichTreeViewPublicAPI,
-  RichTreeViewState,
-} from './RichTreeViewStore.types';
+import { RichTreeViewStoreParameters, RichTreeViewState } from './RichTreeViewStore.types';
 import { parametersToStateMapper } from './RichTreeViewStore.utils';
 
 export class ExtendableRichTreeViewStore<
@@ -25,7 +21,7 @@ export class ExtendableRichTreeViewStore<
    */
   public static rawMapper = parametersToStateMapper;
 
-  public buildPublicAPI(): RichTreeViewPublicAPI<R, Multiple> {
+  public buildPublicAPI() {
     return {
       ...super.buildPublicAPI(),
       ...this.labelEditing.buildPublicAPI(),

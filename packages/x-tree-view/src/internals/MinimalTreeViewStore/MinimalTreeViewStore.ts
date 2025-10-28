@@ -3,7 +3,6 @@ import { warnOnce } from '@mui/x-internals/warning';
 import { EMPTY_ARRAY } from '@base-ui-components/utils/empty';
 import { EventManager } from '@mui/x-internals/EventManager';
 import {
-  MinimalTreeViewPublicAPI,
   TreeViewModelUpdater,
   MinimalTreeViewParameters,
   TreeViewParametersToStateMapper,
@@ -110,7 +109,7 @@ export class MinimalTreeViewStore<
   /**
    * Builds an object containing the method that should be exposed publicly by the Tree View components.
    */
-  public buildPublicAPI(): MinimalTreeViewPublicAPI<R, Multiple> {
+  public buildPublicAPI() {
     return {
       ...this.items.buildPublicAPI(),
       ...this.focus.buildPublicAPI(),

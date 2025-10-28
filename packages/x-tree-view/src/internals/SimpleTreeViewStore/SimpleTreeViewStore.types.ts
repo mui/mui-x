@@ -1,8 +1,4 @@
-import {
-  MinimalTreeViewParameters,
-  MinimalTreeViewPublicAPI,
-  MinimalTreeViewState,
-} from '../MinimalTreeViewStore';
+import { MinimalTreeViewParameters, MinimalTreeViewState } from '../MinimalTreeViewStore';
 
 export interface SimpleTreeViewState<Multiple extends boolean | undefined>
   extends MinimalTreeViewState<SimpleTreeViewItem, Multiple> {}
@@ -15,9 +11,6 @@ export interface SimpleTreeViewStoreParameters<Multiple extends boolean | undefi
     InnerSimpleTreeViewParameters<Multiple>,
     'items' | 'isItemDisabled' | 'getItemLabel' | 'getItemChildren' | 'getItemId'
   > {}
-
-export interface SimpleTreeViewPublicAPI<Multiple extends boolean | undefined>
-  extends MinimalTreeViewPublicAPI<SimpleTreeViewItem, Multiple> {}
 
 export interface SimpleTreeViewItem {
   id: string;

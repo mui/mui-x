@@ -1,13 +1,8 @@
-import {
-  DataSource,
-  RichTreeViewStoreParameters,
-  RichTreeViewState,
-  RichTreeViewPublicAPI,
-} from '@mui/x-tree-view/internals';
+import { RichTreeViewStoreParameters, RichTreeViewState } from '@mui/x-tree-view/internals';
 import { TreeViewItemsReorderingAction, TreeViewValidItem } from '@mui/x-tree-view/models';
 import { DataSourceCache } from '@mui/x-tree-view/utils';
 import { TreeViewItemReorderPosition } from '../plugins/itemsReordering';
-import { TreeViewLazyLoadingPlugin } from '../plugins/lazyLoading/TreeViewLazyLoadingPlugin';
+import { DataSource } from '../plugins/lazyLoading';
 
 export interface RichTreeViewProState<
   R extends TreeViewValidItem<R>,
@@ -62,7 +57,7 @@ export interface RichTreeViewProStoreParameters<
    * @param {TreeViewItemReorderPosition} parameters.newPosition The new position of the item.
    * @returns {boolean} `true` if the item can move to the new position.
    */
-  canMoveItemToNewPosition?: (params: {
+  canMoveItemToNewPosition?: (parameters: {
     itemId: string;
     oldPosition: TreeViewItemReorderPosition;
     newPosition: TreeViewItemReorderPosition;
@@ -74,15 +69,9 @@ export interface RichTreeViewProStoreParameters<
    * @param {TreeViewItemReorderPosition} parameters.oldPosition The old position of the item.
    * @param {TreeViewItemReorderPosition} parameters.newPosition The new position of the item.
    */
-  onItemPositionChange?: (params: {
+  onItemPositionChange?: (parameters: {
     itemId: string;
     oldPosition: TreeViewItemReorderPosition;
     newPosition: TreeViewItemReorderPosition;
   }) => void;
 }
-
-export interface RichTreeViewProPublicAPI<
-  R extends TreeViewValidItem<R>,
-  Multiple extends boolean | undefined,
-> extends RichTreeViewPublicAPI<R, Multiple>,
-    ReturnType<TreeViewLazyLoadingPlugin['buildPublicAPI']> {}
