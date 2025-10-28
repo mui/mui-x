@@ -2,16 +2,21 @@ import { createSelector } from '@mui/x-internals/store';
 import { TreeViewItemId } from '../../../models';
 import { TREE_VIEW_ROOT_PARENT_ID } from '../items';
 import { RichTreeViewState } from '../../RichTreeViewStore';
-import { TREE_VIEW_LAZY_LOADED_ITEMS_INITIAL_STATE } from '../../RichTreeViewStore/RichTreeViewStore.utils';
 
 export const lazyLoadingSelectors = {
   /**
-   * Gets the data source used to lazy load items.
+   * Checks if the lazy loaded state is empty.
    */
-  isInitialState: createSelector(
-    (state: RichTreeViewState<any, any>) =>
-      state.lazyLoadedItems === TREE_VIEW_LAZY_LOADED_ITEMS_INITIAL_STATE,
-  ),
+  isEmpty: createSelector((state: RichTreeViewState<any, any>) => {
+    if (state.lazyLoadedItems == null) {
+      return true;
+    }
+
+    return (
+      Object.keys(state.lazyLoadedItems.loading).length === 0 &&
+      Object.keys(state.lazyLoadedItems.errors).length === 0
+    );
+  }),
   /**
    * Checks whether an item is loading.
    */

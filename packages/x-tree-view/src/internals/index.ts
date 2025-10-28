@@ -31,10 +31,7 @@ export type {
 export { MinimalTreeViewStore } from './MinimalTreeViewStore';
 export type { TreeViewParametersToStateMapper } from './MinimalTreeViewStore';
 
-export {
-  ExtendableRichTreeViewStore,
-  TREE_VIEW_LAZY_LOADED_ITEMS_INITIAL_STATE,
-} from './RichTreeViewStore';
+export { ExtendableRichTreeViewStore } from './RichTreeViewStore';
 export type {
   RichTreeViewState,
   RichTreeViewStoreParameters,

@@ -13,6 +13,9 @@ export type UseTreeViewStoreParameters<TStore extends TreeViewAnyStore> = Omit<
   'isRtl'
 >;
 
+/**
+ * Creates a Tree View store and keep it in sync with the provided parameters.
+ */
 export function useTreeViewStore<TStore extends TreeViewAnyStore>(
   StoreClass: ValidTreeViewStoreConstructor<TStore>,
   parameters: UseTreeViewStoreParameters<TStore>,

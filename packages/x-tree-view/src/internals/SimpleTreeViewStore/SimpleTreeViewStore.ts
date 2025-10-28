@@ -1,5 +1,5 @@
 import { EMPTY_ARRAY } from '@base-ui-components/utils/empty';
-import { TreeViewParametersToStateMapper, MinimalTreeViewStore } from '../MinimalTreeViewStore';
+import { MinimalTreeViewStore } from '../MinimalTreeViewStore';
 import {
   InnerSimpleTreeViewParameters,
   SimpleTreeViewItem,
@@ -7,25 +7,7 @@ import {
   SimpleTreeViewState,
 } from './SimpleTreeViewStore.types';
 import { TreeViewJSXItemsPlugin } from '../plugins/jsxItems';
-
-const mapper: TreeViewParametersToStateMapper<
-  any,
-  any,
-  SimpleTreeViewState<any>,
-  InnerSimpleTreeViewParameters<any>
-> = {
-  getInitialState: (schedulerInitialState) => ({
-    ...schedulerInitialState,
-  }),
-  updateStateFromParameters: (newSharedState) => {
-    const newState: Partial<SimpleTreeViewState<any>> = {
-      ...newSharedState,
-    };
-
-    return newState;
-  },
-  shouldIgnoreItemsStateUpdate: () => true,
-};
+import { parametersToStateMapper } from './SimpleTreeViewStore.utils';
 
 export class SimpleTreeViewStore<Multiple extends boolean | undefined> extends MinimalTreeViewStore<
   SimpleTreeViewItem,
@@ -36,7 +18,7 @@ export class SimpleTreeViewStore<Multiple extends boolean | undefined> extends M
   public jsxItems = new TreeViewJSXItemsPlugin(this);
 
   public constructor(parameters: SimpleTreeViewStoreParameters<Multiple>) {
-    super({ ...parameters, items: EMPTY_ARRAY }, 'SimpleTreeView', mapper);
+    super({ ...parameters, items: EMPTY_ARRAY }, 'SimpleTreeView', parametersToStateMapper);
   }
 
   public updateStateFromParameters(parameters: SimpleTreeViewStoreParameters<Multiple>) {

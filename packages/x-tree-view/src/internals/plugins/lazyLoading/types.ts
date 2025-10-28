@@ -20,3 +20,8 @@ export type DataSource<R extends {}> = {
    */
   getTreeItems: (parentId?: TreeViewItemId) => Promise<R[]>;
 };
+
+export interface RichTreeViewLazyLoadedItemsStatus {
+  loading: Record<TreeViewItemId, boolean>;
+  errors: Record<TreeViewItemId, Error | null>;
+}

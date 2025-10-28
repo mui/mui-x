@@ -5,6 +5,7 @@ import {
   MinimalTreeViewState,
 } from '../MinimalTreeViewStore';
 import { TreeViewLabelEditingPlugin } from '../plugins/labelEditing';
+import { RichTreeViewLazyLoadedItemsStatus } from '../plugins/lazyLoading';
 
 export interface RichTreeViewState<
   R extends TreeViewValidItem<R>,
@@ -22,10 +23,7 @@ export interface RichTreeViewState<
    * The status of the items loaded using lazy loading.
    * Is null if lazy loading is not enabled.
    */
-  lazyLoadedItems: {
-    loading: Record<TreeViewItemId, boolean>;
-    errors: Record<TreeViewItemId, Error | null>;
-  } | null;
+  lazyLoadedItems: RichTreeViewLazyLoadedItemsStatus | null;
 }
 
 export interface RichTreeViewStoreParameters<

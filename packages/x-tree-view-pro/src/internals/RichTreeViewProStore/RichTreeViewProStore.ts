@@ -1,8 +1,4 @@
-import {
-  ExtendableRichTreeViewStore,
-  TREE_VIEW_LAZY_LOADED_ITEMS_INITIAL_STATE,
-  TreeViewParametersToStateMapper,
-} from '@mui/x-tree-view/internals';
+import { ExtendableRichTreeViewStore } from '@mui/x-tree-view/internals';
 import { TreeViewValidItem } from '@mui/x-tree-view/models';
 import {
   RichTreeViewProStoreParameters,
@@ -11,42 +7,7 @@ import {
 } from './RichTreeViewProStore.types';
 import { TreeViewLazyLoadingPlugin } from '../plugins/lazyLoading';
 import { TreeViewItemsReorderingPlugin } from '../plugins/itemsReordering';
-
-const DEFAULT_IS_ITEM_REORDERABLE_WHEN_ENABLED = () => true;
-const DEFAULT_IS_ITEM_REORDERABLE_WHEN_DISABLED = () => false;
-
-const deriveStateFromParameters = (parameters: RichTreeViewProStoreParameters<any, any>) => ({
-  lazyLoadedItems: parameters.dataSource ? TREE_VIEW_LAZY_LOADED_ITEMS_INITIAL_STATE : null,
-  currentReorder: null,
-  isItemReorderable: parameters.itemsReordering
-    ? (parameters.isItemReorderable ?? DEFAULT_IS_ITEM_REORDERABLE_WHEN_ENABLED)
-    : DEFAULT_IS_ITEM_REORDERABLE_WHEN_DISABLED,
-});
-
-const mapper: TreeViewParametersToStateMapper<
-  any,
-  any,
-  RichTreeViewProState<any, any>,
-  RichTreeViewProStoreParameters<any, any>
-> = {
-  getInitialState: (schedulerInitialState, parameters) => ({
-    ...ExtendableRichTreeViewStore.rawMapper.getInitialState(schedulerInitialState, parameters),
-    ...deriveStateFromParameters(parameters),
-  }),
-  updateStateFromParameters: (newSharedState, parameters, updateModel) => {
-    const newState: Partial<RichTreeViewProState<any, any>> = {
-      ...ExtendableRichTreeViewStore.rawMapper.updateStateFromParameters(
-        newSharedState,
-        parameters,
-        updateModel,
-      ),
-      ...deriveStateFromParameters(parameters),
-    };
-
-    return newState;
-  },
-  shouldIgnoreItemsStateUpdate: (parameters) => !!parameters.dataSource,
-};
+import { parametersToStateMapper } from './RichTreeViewProStore.utils';
 
 export class RichTreeViewProStore<
   R extends TreeViewValidItem<R>,
@@ -62,7 +23,7 @@ export class RichTreeViewProStore<
   public itemsReordering = new TreeViewItemsReorderingPlugin(this);
 
   public constructor(parameters: RichTreeViewProStoreParameters<R, Multiple>) {
-    super(parameters, 'RichTreeViewPro', mapper);
+    super(parameters, 'RichTreeViewPro', parametersToStateMapper);
 
     this.lazyLoading = new TreeViewLazyLoadingPlugin(this);
   }

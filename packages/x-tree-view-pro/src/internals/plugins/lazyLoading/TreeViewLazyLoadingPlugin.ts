@@ -2,7 +2,6 @@ import {
   itemsSelectors,
   lazyLoadingSelectors,
   TREE_VIEW_ROOT_PARENT_ID,
-  TREE_VIEW_LAZY_LOADED_ITEMS_INITIAL_STATE,
   expansionSelectors,
   DataSource,
   selectionSelectors,
@@ -11,6 +10,11 @@ import { TreeViewItemId } from '@mui/x-tree-view/models';
 import { DataSourceCache, DataSourceCacheDefault } from '@mui/x-tree-view/utils';
 import { RichTreeViewProStore } from '../../RichTreeViewProStore/RichTreeViewProStore';
 import { NestedDataManager } from './utils';
+
+export const TREE_VIEW_LAZY_LOADED_ITEMS_INITIAL_STATE = {
+  loading: {},
+  errors: {},
+};
 
 export class TreeViewLazyLoadingPlugin {
   private store: RichTreeViewProStore<any, any>;
@@ -121,7 +125,7 @@ export class TreeViewLazyLoadingPlugin {
     }
 
     // reset the state if we are fetching the root items
-    if (itemId == null && !lazyLoadingSelectors.isInitialState(this.store.state)) {
+    if (itemId == null && !lazyLoadingSelectors.isEmpty(this.store.state)) {
       this.store.set('lazyLoadedItems', TREE_VIEW_LAZY_LOADED_ITEMS_INITIAL_STATE);
     }
 

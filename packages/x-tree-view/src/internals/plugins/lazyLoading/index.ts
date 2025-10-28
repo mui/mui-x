@@ -1,2 +1,2 @@
-export type { DataSource } from './types';
+export * from './types';
 export * from './selectors';
