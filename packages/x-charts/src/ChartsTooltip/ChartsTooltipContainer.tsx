@@ -103,8 +103,10 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   const isOpenSelector = useSelector(store, selectorSelectIsOpenSelector, [trigger, axisSystem]);
 
   const isOpen = useSelector(store, isOpenSelector);
+  console.log('isOpen', isOpen);
 
   React.useEffect(() => {
+    console.log('setting up tooltip listeners');
     const element = svgRef.current;
     if (element === null) {
       return () => {};
@@ -113,6 +115,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
     const update = rafThrottle(() => popperRef.current?.update());
 
     const handlePointerEvent = (event: PointerEvent) => {
+      console.log('pointer event', event, popperRef.current);
       // eslint-disable-next-line react-compiler/react-compiler
       positionRef.current = { x: event.clientX, y: event.clientY };
       update();
@@ -121,6 +124,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
     element.addEventListener('pointerdown', handlePointerEvent);
     element.addEventListener('pointermove', handlePointerEvent);
     element.addEventListener('pointerenter', handlePointerEvent);
+    console.log('tooltip listeners set up');
 
     return () => {
       element.removeEventListener('pointerdown', handlePointerEvent);
