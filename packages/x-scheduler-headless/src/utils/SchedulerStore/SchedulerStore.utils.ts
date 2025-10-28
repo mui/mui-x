@@ -92,7 +92,36 @@ export function getUpdatedEventModelFromChanges<TEvent extends object>(
   changes: Partial<CalendarEvent>,
   eventModelStructure: SchedulerEventModelStructure<TEvent> | undefined,
 ): TEvent {
-  let updatedEventModel = { ...event };
+  return createOrUpdateEventModelFromProcessedEvent<TEvent, false>(
+    event,
+    changes,
+    eventModelStructure,
+  );
+}
+
+/**
+ * Create an event model from a processed event using the provided model structure.
+ */
+export function createEventModel<TEvent extends object>(
+  processedEvent: CalendarEvent,
+  eventModelStructure: SchedulerEventModelStructure<TEvent> | undefined,
+): TEvent {
+  return createOrUpdateEventModelFromProcessedEvent<TEvent, true>(
+    null,
+    processedEvent,
+    eventModelStructure,
+  );
+}
+
+function createOrUpdateEventModelFromProcessedEvent<
+  TEvent extends object,
+  TIsCreating extends boolean,
+>(
+  initialProcessedEvent: TIsCreating extends true ? null : TEvent,
+  changes: TIsCreating extends true ? CalendarEvent : Partial<CalendarEvent>,
+  eventModelStructure: SchedulerEventModelStructure<any> | undefined,
+) {
+  let eventModel = initialProcessedEvent == null ? {} : { ...initialProcessedEvent };
   const propertiesWithSetter: [AnyEventSetter<TEvent>, any][] = [];
 
   for (const key in changes) {
@@ -104,38 +133,7 @@ export function getUpdatedEventModelFromChanges<TEvent extends object>(
         propertiesWithSetter.push([setter, changes[key]]);
       } else {
         // @ts-ignore
-        updatedEventModel[key] = changes[key];
-      }
-    }
-  }
-
-  for (const [setter, value] of propertiesWithSetter) {
-    updatedEventModel = setter(updatedEventModel, value);
-  }
-
-  return updatedEventModel;
-}
-
-/**
- * Create an event model from a processed event using the provided model structure.
- */
-export function createEventModel<TEvent extends object>(
-  event: CalendarEvent,
-  eventModelStructure: SchedulerEventModelStructure<TEvent> | undefined,
-): TEvent {
-  let eventModel: Partial<TEvent> = {};
-  const propertiesWithSetter: [AnyEventSetter<TEvent>, any][] = [];
-
-  for (const key in event) {
-    if (event.hasOwnProperty(key)) {
-      const typedKey = key as keyof CalendarEvent;
-      const setter = eventModelStructure?.[typedKey]?.setter;
-      if (setter) {
-        // @ts-ignore
-        propertiesWithSetter.push([setter, event[key]]);
-      } else {
-        // @ts-ignore
-        eventModel[key] = event[key];
+        eventModel[key] = changes[key];
       }
     }
   }
