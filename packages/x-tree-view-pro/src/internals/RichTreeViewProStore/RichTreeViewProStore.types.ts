@@ -56,10 +56,10 @@ export interface RichTreeViewProStoreParameters<
   isItemReorderable?: (itemId: string) => boolean;
   /**
    * Used to determine if a given item can move to some new position.
-   * @param {object} params The params describing the item re-ordering.
-   * @param {string} params.itemId The id of the item that is being moved to a new position.
-   * @param {TreeViewItemReorderPosition} params.oldPosition The old position of the item.
-   * @param {TreeViewItemReorderPosition} params.newPosition The new position of the item.
+   * @param {object} parameters The params describing the item re-ordering.
+   * @param {string} parameters.itemId The id of the item that is being moved to a new position.
+   * @param {TreeViewItemReorderPosition} parameters.oldPosition The old position of the item.
+   * @param {TreeViewItemReorderPosition} parameters.newPosition The new position of the item.
    * @returns {boolean} `true` if the item can move to the new position.
    */
   canMoveItemToNewPosition?: (params: {
@@ -69,10 +69,10 @@ export interface RichTreeViewProStoreParameters<
   }) => boolean;
   /**
    * Callback fired when a Tree Item is moved in the tree.
-   * @param {object} params The params describing the item re-ordering.
-   * @param {string} params.itemId The id of the item moved.
-   * @param {TreeViewItemReorderPosition} params.oldPosition The old position of the item.
-   * @param {TreeViewItemReorderPosition} params.newPosition The new position of the item.
+   * @param {object} parameters The params describing the item re-ordering.
+   * @param {string} parameters.itemId The id of the item moved.
+   * @param {TreeViewItemReorderPosition} parameters.oldPosition The old position of the item.
+   * @param {TreeViewItemReorderPosition} parameters.newPosition The new position of the item.
    */
   onItemPositionChange?: (params: {
     itemId: string;

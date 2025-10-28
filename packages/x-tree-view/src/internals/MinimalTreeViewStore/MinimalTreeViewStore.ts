@@ -21,7 +21,7 @@ import { TreeViewItemsPlugin } from '../plugins/items/TreeViewItemsPlugin';
 import { TreeViewSelectionPlugin } from '../plugins/selection/TreeViewSelectionPlugin';
 import { TreeViewExpansionPlugin } from '../plugins/expansion';
 import { TreeViewItemPluginManager } from './TreeViewItemPluginManager';
-import { TreeViewEventListener, TreeViewEventLookup, TreeViewEvents } from '../models/events';
+import { TreeViewEventListener, TreeViewEventLookup, TreeViewEvents } from '../models';
 
 export class MuiXStore {}
 
@@ -43,12 +43,6 @@ export class MinimalTreeViewStore<
   private mapper: TreeViewParametersToStateMapper<R, Multiple, State, Parameters>;
 
   private eventManager = new EventManager();
-
-  /**
-   * List of event listeners registered.
-   * Used to re-register them in the onMount method to avoid loosing them in React strict mode.
-   */
-  private eventListeners: Map<TreeViewEventListener<any>, TreeViewEvents> = new Map();
 
   public timeoutManager = new TimeoutManager();
 
@@ -212,27 +206,19 @@ export class MinimalTreeViewStore<
   }
 
   public onMount = () => {
-    // On React strict mode, the onMount method is called twice.
-    // On the 2nd call we need to re-register the events that have been destroyed on the 1st call.
-    if (this.eventListeners.size > 0 && Object.keys(this.eventManager.events).length === 0) {
-      this.eventListeners.forEach((eventName, listener) => {
-        this.eventManager.on(eventName, listener);
-      });
-    }
-
-    return () => {
-      this.timeoutManager.clearAll();
-      this.eventManager.removeAllListeners();
-    };
+    return this.timeoutManager.clearAll;
   };
 
   /**
-   * Wheter updates based on `props.items` changes should be ignored.
+   * Whether updates based on `props.items` change should be ignored.
    */
   public shouldIgnoreItemsStateUpdate = () => {
     return this.mapper.shouldIgnoreItemsStateUpdate(this.parameters);
   };
 
+  /**
+   * Registers an effect to be run when the value returned by the selector changes.
+   */
   public registerStoreEffect = <Value>(
     selector: (state: State) => Value,
     effect: (previous: Value, next: Value) => void,
@@ -241,15 +227,20 @@ export class MinimalTreeViewStore<
 
     this.subscribe((state) => {
       const nextValue = selector(state);
-      effect(previousValue, nextValue);
-      previousValue = nextValue;
+      if (nextValue !== previousValue) {
+        effect(previousValue, nextValue);
+        previousValue = nextValue;
+      }
     });
   };
 
+  /**
+   * Publishes an event to all its subscribers.
+   */
   public publishEvent = <E extends TreeViewEvents>(
     name: E,
     params: TreeViewEventLookup[E] extends { params: any }
-      ? TreeViewEventLookup[E]['params']
+      ? TreeViewEventLookup[E]['parameters']
       : undefined,
     event: TreeViewEventLookup[E] extends { event: any } ? TreeViewEventLookup[E]['event'] : null,
   ) => {
@@ -260,6 +251,10 @@ export class MinimalTreeViewStore<
     this.eventManager.emit(name, params, event);
   };
 
+  /**
+   * Subscribe to an event emitted by the store.
+   * For now, the subscription is only removed when the store is destroyed.
+   */
   public subscribeEvent = <E extends TreeViewEvents>(
     eventName: E,
     handler: TreeViewEventListener<E>,
@@ -270,13 +265,7 @@ export class MinimalTreeViewStore<
       }
     };
 
-    this.eventListeners.set(enhancedHandler, eventName);
-
     this.eventManager.on(eventName, enhancedHandler);
-    return () => {
-      this.eventListeners.delete(enhancedHandler);
-      this.eventManager.removeListener(eventName, enhancedHandler);
-    };
   };
 }
 

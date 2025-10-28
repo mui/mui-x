@@ -5,6 +5,8 @@ import {
   expansionSelectors,
   DataSource,
   selectionSelectors,
+  TreeViewEventParameters,
+  TreeViewEventEvent,
 } from '@mui/x-tree-view/internals';
 import { TreeViewItemId } from '@mui/x-tree-view/models';
 import { DataSourceCache, DataSourceCacheDefault } from '@mui/x-tree-view/utils';
@@ -28,10 +30,82 @@ export class TreeViewLazyLoadingPlugin {
     this.cache = store.parameters.dataSourceCache ?? new DataSourceCacheDefault({});
 
     if (store.parameters.dataSource != null) {
-      lazyLoadingOnMount(store, this);
-      subscribeEvents(store);
+      this.init();
+      store.subscribeEvent('beforeItemToggleExpansion', this.handleBeforeItemToggleExpansion);
     }
   }
+
+  private init = () => {
+    const store = this.store;
+    // eslint-disable-next-line consistent-this
+    const plugin = this;
+
+    const fetchAllExpandedItems = async () => {
+      async function fetchChildrenIfExpanded(parentIds: TreeViewItemId[]) {
+        const expandedItems = parentIds.filter((id) =>
+          expansionSelectors.isItemExpanded(store.state, id),
+        );
+        if (expandedItems.length > 0) {
+          const itemsToLazyLoad = expandedItems.filter(
+            (id) => itemsSelectors.itemOrderedChildrenIds(store.state, id).length === 0,
+          );
+          if (itemsToLazyLoad.length > 0) {
+            await plugin.fetchItems(itemsToLazyLoad);
+          }
+          const childrenIds = expandedItems.flatMap((id) =>
+            itemsSelectors.itemOrderedChildrenIds(store.state, id),
+          );
+          await fetchChildrenIfExpanded(childrenIds);
+        }
+      }
+
+      if (store.parameters.items.length) {
+        const newlyExpandableItems = getExpandableItemsFromDataSource(
+          store,
+          store.parameters.dataSource!,
+        );
+
+        if (newlyExpandableItems.length > 0) {
+          store.expansion.addExpandableItems(newlyExpandableItems);
+        }
+      } else {
+        await plugin.fetchItemChildren({ itemId: null });
+      }
+      await fetchChildrenIfExpanded(itemsSelectors.itemOrderedChildrenIds(store.state, null));
+    };
+
+    fetchAllExpandedItems();
+  };
+
+  private handleBeforeItemToggleExpansion = async (
+    eventParameters: TreeViewEventParameters<'beforeItemToggleExpansion'>,
+    event: TreeViewEventEvent<'beforeItemToggleExpansion'>,
+  ) => {
+    if (!this.store.parameters.dataSource || !eventParameters.shouldBeExpanded) {
+      return;
+    }
+
+    // prevent the default expansion behavior
+    eventParameters.isExpansionPrevented = true;
+    await this.fetchItems([eventParameters.itemId]);
+    const hasError = lazyLoadingSelectors.itemHasError(this.store.state, eventParameters.itemId);
+    if (!hasError) {
+      this.store.expansion.applyItemExpansion({
+        itemId: eventParameters.itemId,
+        shouldBeExpanded: true,
+        event,
+      });
+      if (selectionSelectors.isItemSelected(this.store.state, eventParameters.itemId)) {
+        // make sure selection propagation works correctly
+        this.store.selection.setItemSelection({
+          event,
+          itemId: eventParameters.itemId,
+          keepExistingSelection: true,
+          shouldBeSelected: true,
+        });
+      }
+    }
+  };
 
   private setItemLoading = (itemId: TreeViewItemId | null, isLoading: boolean) => {
     if (!this.store.parameters.dataSource || !this.store.state.lazyLoadedItems) {
@@ -196,73 +270,4 @@ function getExpandableItemsFromDataSource(
         dataSource.getChildrenCount(store.state.itemModelLookup[itemMeta.id]) > 0,
     )
     .map((item) => item.id);
-}
-
-function lazyLoadingOnMount(
-  store: RichTreeViewProStore<any, any>,
-  plugin: TreeViewLazyLoadingPlugin,
-) {
-  const dataSource = store.parameters.dataSource!;
-
-  async function fetchAllExpandedItems() {
-    async function fetchChildrenIfExpanded(parentIds: TreeViewItemId[]) {
-      const expandedItems = parentIds.filter((id) =>
-        expansionSelectors.isItemExpanded(store.state, id),
-      );
-      if (expandedItems.length > 0) {
-        const itemsToLazyLoad = expandedItems.filter(
-          (id) => itemsSelectors.itemOrderedChildrenIds(store.state, id).length === 0,
-        );
-        if (itemsToLazyLoad.length > 0) {
-          await plugin.fetchItems(itemsToLazyLoad);
-        }
-        const childrenIds = expandedItems.flatMap((id) =>
-          itemsSelectors.itemOrderedChildrenIds(store.state, id),
-        );
-        await fetchChildrenIfExpanded(childrenIds);
-      }
-    }
-
-    if (store.parameters.items.length) {
-      const newlyExpandableItems = getExpandableItemsFromDataSource(store, dataSource);
-
-      if (newlyExpandableItems.length > 0) {
-        store.expansion.addExpandableItems(newlyExpandableItems);
-      }
-    } else {
-      await plugin.fetchItemChildren({ itemId: null });
-    }
-    await fetchChildrenIfExpanded(itemsSelectors.itemOrderedChildrenIds(store.state, null));
-  }
-
-  fetchAllExpandedItems();
-}
-
-function subscribeEvents(store: RichTreeViewProStore<any, any>) {
-  store.subscribeEvent('beforeItemToggleExpansion', async (eventParameters, event) => {
-    if (!store.parameters.dataSource || !eventParameters.shouldBeExpanded) {
-      return;
-    }
-
-    // prevent the default expansion behavior
-    eventParameters.isExpansionPrevented = true;
-    await store.lazyLoading.fetchItems([eventParameters.itemId]);
-    const hasError = lazyLoadingSelectors.itemHasError(store.state, eventParameters.itemId);
-    if (!hasError) {
-      store.expansion.applyItemExpansion({
-        itemId: eventParameters.itemId,
-        shouldBeExpanded: true,
-        event,
-      });
-      if (selectionSelectors.isItemSelected(store.state, eventParameters.itemId)) {
-        // make sure selection propagation works correctly
-        store.selection.setItemSelection({
-          event,
-          itemId: eventParameters.itemId,
-          keepExistingSelection: true,
-          shouldBeSelected: true,
-        });
-      }
-    }
-  });
 }

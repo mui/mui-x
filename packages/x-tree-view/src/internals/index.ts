@@ -10,7 +10,12 @@ export { useTreeViewRootProps } from './hooks/useTreeViewRootProps';
 export { useTreeViewStore } from './hooks/useTreeViewStore';
 export type { UseTreeViewStoreParameters } from './hooks/useTreeViewStore';
 
-export type { TreeViewItemMeta, TreeViewItemPlugin } from './models';
+export type {
+  TreeViewItemMeta,
+  TreeViewItemPlugin,
+  TreeViewEventParameters,
+  TreeViewEventEvent,
+} from './models';
 
 // Plugins
 export { expansionSelectors } from './plugins/expansion';

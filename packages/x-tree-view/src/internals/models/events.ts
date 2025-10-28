@@ -6,7 +6,7 @@ export interface TreeViewEventLookup {
    * Fired before an item is expanded or collapsed.
    */
   beforeItemToggleExpansion: {
-    params: {
+    parameters: {
       isExpansionPrevented: boolean;
       shouldBeExpanded: boolean;
       itemId: TreeViewItemId;
@@ -18,10 +18,20 @@ export interface TreeViewEventLookup {
 export type TreeViewEvents = keyof TreeViewEventLookup;
 
 export type TreeViewEventListener<E extends TreeViewEvents> = (
-  params: TreeViewEventLookup[E] extends { params: any }
-    ? TreeViewEventLookup[E]['params']
-    : undefined,
+  params: TreeViewEventParameters<E>,
   event: TreeViewEventLookup[E] extends { event: any }
     ? MuiEvent<TreeViewEventLookup[E]['event']>
     : MuiEvent<{}>,
 ) => void;
+
+export type TreeViewEventParameters<E extends TreeViewEvents> = TreeViewEventLookup[E] extends {
+  parameters: infer P;
+}
+  ? P
+  : undefined;
+
+export type TreeViewEventEvent<E extends TreeViewEvents> = TreeViewEventLookup[E] extends {
+  event: infer EV;
+}
+  ? EV
+  : undefined;
