@@ -9,7 +9,8 @@
     "emitDeclarationOnly": true,
     "outDir": "build/esm",
     "rootDir": "./src",
-    "types": ["../../mui-env.d.ts", "@mui/material/themeCssVarsAugmentation"]
+    "types": ["../../mui-env.d.ts", "@mui/material/themeCssVarsAugmentation"],
+    "jsx": "react-jsx"
   },
   "references": [
     { "path": "../x-date-pickers/tsconfig.build.json" },
