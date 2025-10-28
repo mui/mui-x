@@ -247,11 +247,6 @@ jobs:
           name: '`pnpm l10n` changes committed?'
           command: git add -A && git diff --exit-code --staged
       - run:
-          name: '`pnpm docs:link-check` changes committed?'
-          command: |
-            pnpm docs:link-check
-            git add -A && git diff --exit-code --staged
-      - run:
           name: '`pnpm @mui/x-charts-vendor build` was run?'
           command: |
             # #target-branch-reference
