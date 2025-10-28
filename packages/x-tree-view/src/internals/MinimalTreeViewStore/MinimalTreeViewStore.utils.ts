@@ -1,7 +1,12 @@
-import { EMPTY_OBJECT } from '@base-ui-components/utils/empty';
+import { EMPTY_ARRAY, EMPTY_OBJECT } from '@base-ui-components/utils/empty';
 import { TreeViewValidItem } from '../../models';
 import { getExpansionTrigger } from '../plugins/expansion/utils';
-import { MinimalTreeViewParameters } from './MinimalTreeViewStore.types';
+import {
+  MinimalTreeViewParameters,
+  MinimalTreeViewState,
+  TreeViewSelectionValue,
+} from './MinimalTreeViewStore.types';
+import { buildItemsState } from '../plugins/items/utils';
 
 /**
  * Returns the properties of the state that are derived from the parameters.
@@ -28,7 +33,7 @@ export function deriveStateFromParameters<
   };
 }
 
-export function applyModelInitialValue<T>(
+function applyModelInitialValue<T>(
   controlledValue: T | undefined,
   defaultValue: T | undefined,
   fallback: T,
@@ -40,4 +45,34 @@ export function applyModelInitialValue<T>(
     return defaultValue;
   }
   return fallback;
+}
+
+export function createMinimalInitialState<
+  R extends TreeViewValidItem<R>,
+  Multiple extends boolean | undefined,
+>(parameters: MinimalTreeViewParameters<R, Multiple>): MinimalTreeViewState<R, Multiple> {
+  return {
+    treeId: undefined,
+    focusedItemId: null,
+    ...deriveStateFromParameters(parameters),
+    ...buildItemsState({
+      items: parameters.items,
+      config: {
+        isItemDisabled: parameters.isItemDisabled,
+        getItemId: parameters.getItemId,
+        getItemLabel: parameters.getItemLabel,
+        getItemChildren: parameters.getItemChildren,
+      },
+    }),
+    expandedItems: applyModelInitialValue(
+      parameters.expandedItems,
+      parameters.defaultExpandedItems,
+      [],
+    ),
+    selectedItems: applyModelInitialValue(
+      parameters.selectedItems,
+      parameters.defaultSelectedItems,
+      (parameters.multiSelect ? EMPTY_ARRAY : null) as TreeViewSelectionValue<Multiple>,
+    ),
+  };
 }

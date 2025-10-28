@@ -1,17 +1,15 @@
 import { Store } from '@mui/x-internals/store';
 import { warnOnce } from '@mui/x-internals/warning';
-import { EMPTY_ARRAY } from '@base-ui-components/utils/empty';
 import { EventManager } from '@mui/x-internals/EventManager';
 import {
   TreeViewModelUpdater,
   MinimalTreeViewParameters,
   TreeViewParametersToStateMapper,
-  TreeViewSelectionValue,
   MinimalTreeViewState,
 } from './MinimalTreeViewStore.types';
 import { buildItemsState } from '../plugins/items/utils';
 import { TreeViewValidItem } from '../../models';
-import { applyModelInitialValue, deriveStateFromParameters } from './MinimalTreeViewStore.utils';
+import { createMinimalInitialState, deriveStateFromParameters } from './MinimalTreeViewStore.utils';
 import { createTreeViewDefaultId } from '../plugins/id/utils';
 import { TimeoutManager } from './TimeoutManager';
 import { TreeViewKeyboardNavigationPlugin } from '../plugins/keyboardNavigation';
@@ -67,34 +65,10 @@ export class MinimalTreeViewStore<
     instanceName: string,
     mapper: TreeViewParametersToStateMapper<R, Multiple, State, Parameters>,
   ) {
-    const sharedInitialState: MinimalTreeViewState<R, Multiple> = {
-      treeId: undefined,
-      focusedItemId: null,
-      ...deriveStateFromParameters(parameters),
-      ...buildItemsState({
-        items: parameters.items,
-        config: {
-          isItemDisabled: parameters.isItemDisabled,
-          getItemId: parameters.getItemId,
-          getItemLabel: parameters.getItemLabel,
-          getItemChildren: parameters.getItemChildren,
-        },
-      }),
-      expandedItems: applyModelInitialValue(
-        parameters.expandedItems,
-        parameters.defaultExpandedItems,
-        [],
-      ),
-      selectedItems: applyModelInitialValue(
-        parameters.selectedItems,
-        parameters.defaultSelectedItems,
-        (parameters.multiSelect ? EMPTY_ARRAY : null) as TreeViewSelectionValue<Multiple>,
-      ),
-    };
-
-    const initialState = mapper.getInitialState(sharedInitialState, parameters);
-
+    const minimalInitialState = createMinimalInitialState(parameters);
+    const initialState = mapper.getInitialState(minimalInitialState, parameters);
     super(initialState);
+
     this.parameters = parameters;
     this.instanceName = instanceName;
     this.mapper = mapper;
