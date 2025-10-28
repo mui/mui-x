@@ -84,8 +84,6 @@ export default defineConfig({
         },
       ],
     },
-    // Disable isolation to speed up the tests.
-    isolate: false,
     // Performance improvements for the tests.
     // https://vitest.dev/guide/improving-performance.html#improving-performance
     ...(process.env.CI && {
