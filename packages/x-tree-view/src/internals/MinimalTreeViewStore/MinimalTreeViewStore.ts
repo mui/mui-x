@@ -46,7 +46,7 @@ export class MinimalTreeViewStore<
 
   public timeoutManager = new TimeoutManager();
 
-  public itemPluginManager = new TreeViewItemPluginManager<this>();
+  public itemPluginManager = new TreeViewItemPluginManager();
 
   public items: TreeViewItemsPlugin<R>;
 
