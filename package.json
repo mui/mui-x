@@ -165,9 +165,6 @@
           "lodash.kebabcase": "^4.1.1"
         }
       }
-    },
-    "patchedDependencies": {
-      "@mui/internal-test-utils": "patches/@mui__internal-test-utils.patch"
     }
   }
 }
