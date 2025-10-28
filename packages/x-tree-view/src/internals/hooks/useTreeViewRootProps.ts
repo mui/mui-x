@@ -25,6 +25,7 @@ export function useTreeViewRootProps<TStore extends TreeViewAnyStore>(
     ...forwardedProps,
     ...otherHandlers,
     style: {
+      ...forwardedProps.style,
       '--TreeView-itemChildrenIndentation':
         typeof itemChildrenIndentation === 'number'
           ? `${itemChildrenIndentation}px`
