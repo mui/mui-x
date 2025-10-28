@@ -27,17 +27,18 @@ export type SeriesColorProp<TValue> =
   | string
   | ((data: SeriesColorPropValue<TValue> | null) => string);
 
-export type CommonSeriesType<TValue> = {
+export interface SeriesColor<TValue> {
+  /**
+   * Color to use when displaying the series.
+   */
+  color?: string;
+}
+
+export interface CommonSeriesType<TValue> extends SeriesColor<TValue> {
   /**
    * The id of this series.
    */
   id?: SeriesId;
-  /**
-   * Color to use when displaying the series.
-   * It can be a string representing a color or a function that returns a color based on the data index.
-   * The data index can be undefined when the color is needed for the entire series (e.g., in legends, lines, areas).
-   */
-  color?: SeriesColorProp<TValue>;
   /**
    * Formatter used to render values in tooltip or other data display.
    * @param {TValue} value The series' value to render.
@@ -55,7 +56,7 @@ export type CommonSeriesType<TValue> = {
    * There is a default mark type for each series type.
    */
   labelMarkType?: ChartsLabelMarkType;
-};
+}
 
 export type CommonDefaultizedProps = 'id' | 'valueFormatter' | 'data';
 
