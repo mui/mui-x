@@ -254,8 +254,8 @@ importers:
         specifier: ^1.0.9-canary.52
         version: 1.0.9-canary.52(@types/node@22.18.12)(rollup@4.52.5)(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.1)
       '@mui/internal-code-infra':
-        specifier: ^0.0.3-canary.37
-        version: 0.0.3-canary.37(@types/node@22.18.12)(@typescript-eslint/parser@8.46.2(eslint@9.38.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.46.2(eslint@9.38.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.38.0))(eslint@9.38.0)(postcss@8.5.6)(prettier@3.6.2)(stylelint@16.25.0(typescript@5.9.3))(typescript@5.9.3)
+        specifier: https://pkg.pr.new/mui/mui-public/@mui/internal-code-infra@23a7897
+        version: https://pkg.pr.new/mui/mui-public/@mui/internal-code-infra@23a7897(@next/eslint-plugin-next@15.5.6)(@types/node@22.18.12)(@typescript-eslint/parser@8.46.2(eslint@9.38.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.46.2(eslint@9.38.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.38.0))(eslint@9.38.0)(postcss@8.5.6)(prettier@3.6.2)(stylelint@16.25.0(typescript@5.9.3))(typescript@5.9.3)
       '@mui/internal-markdown':
         specifier: ^2.0.11
         version: 2.0.11
@@ -2377,8 +2377,8 @@ packages:
     resolution: {integrity: sha512-WfhI+StLJKIKERWQaIm7Kv1/k+YO/CYIp3djDVhZIU6mv/8yalyNXHnkRC6ofq1kPpmRvoag1KW79/C2WsB4Ag==}
     engines: {node: '>=20.0.0'}
 
-  '@argos-ci/core@4.2.0':
-    resolution: {integrity: sha512-3RNyBZ84pYfQ8dn/Ivv5ls2x2rgqFuh8wA8e4ugggA5lx2dE7a6yghJw8cPzud+zbHrpOntl/HBM3akh2SXLkw==}
+  '@argos-ci/core@4.3.1':
+    resolution: {integrity: sha512-9K1AN8RLXNmhr9JscvKHV4wzCSkZ4dh+CIi88Wrj8KvS4+vSXfy62pqjzgqxQ9d2JPBKxPObDempA2MoOZrS5A==}
     engines: {node: '>=20.0.0'}
 
   '@argos-ci/util@3.1.1':
@@ -4235,14 +4235,23 @@ packages:
       '@babel/core': '7'
       '@babel/preset-react': '7'
 
-  '@mui/internal-babel-plugin-minify-errors@2.0.8-canary.10':
-    resolution: {integrity: sha512-tDHS1Rw6ie50O/K+4Mf06bn0LZcJwt8i3wj2iwXVyI4f7kp8eEJUGutRu40HZlDZ6i9xb7yLNemhE8Ef1XkP4g==}
+  '@mui/internal-babel-plugin-display-name@https://pkg.pr.new/mui/mui-public/@mui/internal-babel-plugin-display-name@23a7897e2573a5678841939631f638bcf02d76b5':
+    resolution: {tarball: https://pkg.pr.new/mui/mui-public/@mui/internal-babel-plugin-display-name@23a7897e2573a5678841939631f638bcf02d76b5}
+    version: 1.0.2
+    peerDependencies:
+      '@babel/core': '7'
+      '@babel/preset-react': '7'
+
+  '@mui/internal-babel-plugin-minify-errors@https://pkg.pr.new/mui/mui-public/@mui/internal-babel-plugin-minify-errors@23a7897e2573a5678841939631f638bcf02d76b5':
+    resolution: {tarball: https://pkg.pr.new/mui/mui-public/@mui/internal-babel-plugin-minify-errors@23a7897e2573a5678841939631f638bcf02d76b5}
+    version: 2.0.6
     engines: {node: '>=14.0.0'}
     peerDependencies:
       '@babel/core': '7'
 
-  '@mui/internal-babel-plugin-resolve-imports@2.0.7-canary.26':
-    resolution: {integrity: sha512-jOr+/lKn26yOiHKB8vkNDKow8FjQRwVc6qHppaiW3EjAcKRgTtyyRVKfZhkzXpPw2eAuYCU/X5FY0f36LSfs2A==}
+  '@mui/internal-babel-plugin-resolve-imports@https://pkg.pr.new/mui/mui-public/@mui/internal-babel-plugin-resolve-imports@23a7897e2573a5678841939631f638bcf02d76b5':
+    resolution: {tarball: https://pkg.pr.new/mui/mui-public/@mui/internal-babel-plugin-resolve-imports@23a7897e2573a5678841939631f638bcf02d76b5}
+    version: 2.0.5
     peerDependencies:
       '@babel/core': '7'
 
@@ -4250,10 +4259,12 @@ packages:
     resolution: {integrity: sha512-eIXosVbUxcdq4fcBeXKgoMkPVtx/lamLXEqP6sq8uZeVAkG9gsZIsjVRJttkpSzfhvDBLYSNq9q4OIJsx6L15g==}
     hasBin: true
 
-  '@mui/internal-code-infra@0.0.3-canary.37':
-    resolution: {integrity: sha512-4gSQZpadJdiGxyXRSkDU5ZaYulxgG8QigewKt8mnolOyqIuO3vtB84r3AVFPZvprUpdf2crlOweO1k9z5pYLSA==}
+  '@mui/internal-code-infra@https://pkg.pr.new/mui/mui-public/@mui/internal-code-infra@23a7897':
+    resolution: {tarball: https://pkg.pr.new/mui/mui-public/@mui/internal-code-infra@23a7897}
+    version: 0.0.2
     hasBin: true
     peerDependencies:
+      '@next/eslint-plugin-next': '*'
       eslint: ^9.0.0
       prettier: ^3.5.3
       typescript: ^5.0.0
@@ -6705,6 +6716,9 @@ packages:
     resolution: {integrity: sha512-02qvAaxv8tp7fBa/mw1ga98OGm+eCbqzJOKoRt70sLmfEEi+jyBYVTDGfCL/k06/4EMk/z01gCe7HoCH/f2LTg==}
     engines: {node: '>=18'}
 
+  boolbase@1.0.0:
+    resolution: {integrity: sha512-JZOSA7Mo9sNGB8+UjSgzdLtokWAky1zbztM3WRLCbZ70/3cTANmQmOdR7y2g+J0e2WXywy1yS468tY+IruqEww==}
+
   bottleneck@2.19.5:
     resolution: {integrity: sha512-VHiNCbI1lKdl44tGrhNfU3lup0Tj/ZBMJB5/2ZbNXRCPuRCO7ed2mgcK4r17y+KB2EfuYuRaVlwNbAeaWGSpbw==}
 
@@ -7255,12 +7269,19 @@ packages:
     resolution: {integrity: sha512-IQOkD3hbR5KrN93MtcYuad6YPuTSUhntLHDuLEbFWE+ff2/XSZNdZG+LcbbIW5AXKg/WFIfYItIzVoHngHXZzA==}
     engines: {node: '>=12 || >=16'}
 
+  css-select@5.2.2:
+    resolution: {integrity: sha512-TizTzUddG/xYLA3NXodFM0fSbNizXjOKhqiQQwvhlspadZokn1KDy0NZFS0wuEubIYAV5/c1/lAr0TaaFXEXzw==}
+
   css-to-react-native@3.2.0:
     resolution: {integrity: sha512-e8RKaLXMOFii+02mOlqwjbD00KSEKqblnpO9e++1aXS1fPQOpS1YoqdVHBqPjHNoxeF2mimzVqawm2KCbEdtHQ==}
 
   css-tree@3.1.0:
     resolution: {integrity: sha512-0eW44TGN5SQXU1mWSkKwFstI/22X2bG1nYzZTYMAWjylYURhse752YgbE4Cx46AC+bAvI+/dYTPRk1LqSUnu6w==}
     engines: {node: ^10 || ^12.20.0 || ^14.13.0 || >=15.0.0}
+
+  css-what@6.2.2:
+    resolution: {integrity: sha512-u/O3vwbptzhMs3L1fQE82ZSLHQQfto5gyZzwteVIEyeaY5Fc7R4dapF/BvRoSYFeqfBk4m0V1Vafq5Pjv25wvA==}
+    engines: {node: '>= 6'}
 
   cssesc@3.0.0:
     resolution: {integrity: sha512-/Tb/JcjK111nNScGob5MNtsntNM1aCNUDipB/TkwZFhyDrrE47SOx/18wF2bbjgc3ZzCSKW1T5nt5EbFoAz/Vg==}
@@ -7607,6 +7628,19 @@ packages:
 
   dom-serialize@2.2.1:
     resolution: {integrity: sha512-Yra4DbvoW7/Z6LBN560ZwXMjoNOSAN2wRsKFGc4iBeso+mpIA6qj1vfdf9HpMaKAqG6wXTy+1SYEzmNpKXOSsQ==}
+
+  dom-serializer@2.0.0:
+    resolution: {integrity: sha512-wIkAryiqt/nV5EQKqQpo3SToSOV9J0DnbJqwK7Wv/Trc92zIAYZ4FlMu+JPFW1DfGFt81ZTCGgDEabffXeLyJg==}
+
+  domelementtype@2.3.0:
+    resolution: {integrity: sha512-OLETBj6w0OsagBwdXnPdN0cnMfF9opN69co+7ZrbfPGrdpPVNBUj02spi6B1N7wChLQiPn4CSH/zJvXw56gmHw==}
+
+  domhandler@5.0.3:
+    resolution: {integrity: sha512-cgwlv/1iFQiFnU96XXgROh8xTeetsnJiDsTc7TYCLFd9+/WNkIqPTxiM/8pSd8VIrhXGTf1Ny1q1hquVqDJB5w==}
+    engines: {node: '>= 4'}
+
+  domutils@3.2.2:
+    resolution: {integrity: sha512-6kZKyUajlDuqlHKVX1w7gyslj9MPIXzIFiz/rGu35uC1wMi+kMhQwGhl4lt9unC9Vb9INnY9Z3/ZA3+FhASLaw==}
 
   dot-prop@5.3.0:
     resolution: {integrity: sha512-QM8q3zDe58hqUqjraQOmzZ1LIH9SWQJTlEKCH4kJ2oQvLZk7RbQXvtDM2XEq3fwkV9CCvvH4LA0AV+ogFsBM2Q==}
@@ -10053,6 +10087,9 @@ packages:
     engines: {node: ^18.17.0 || >=20.5.0}
     hasBin: true
 
+  node-html-parser@7.0.1:
+    resolution: {integrity: sha512-KGtmPY2kS0thCWGK0VuPyOS+pBKhhe8gXztzA2ilAOhbUbxa9homF1bOyKvhGzMLXUoRds9IOmr/v5lr/lqNmA==}
+
   node-int64@0.4.0:
     resolution: {integrity: sha512-O5lz91xSOeoXP6DulyHfllpq+Eg00MWitZIbtPfoSEvqIHdl5gfcY6hYzDWnj0qD5tz52PI08u9qUvSVeUBeHw==}
 
@@ -10148,6 +10185,9 @@ packages:
 
   nprogress@0.2.0:
     resolution: {integrity: sha512-I19aIingLgR1fmhftnbWWO3dXc0hSxqHQHQb3H8m+K3TnEn/iSeTZZOyvKXWqQESMwuUVnatlCnZdLBZZt2VSA==}
+
+  nth-check@2.1.1:
+    resolution: {integrity: sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==}
 
   null-loader@4.0.1:
     resolution: {integrity: sha512-pxqVbi4U6N26lq+LmgIbB5XATP0VdZKOG25DhHi8btMmJJefGArFyDg1yc4U3hWCJbMqSrw0qyrz1UQX+qYXqg==}
@@ -11025,8 +11065,8 @@ packages:
     resolution: {integrity: sha512-OcXjMsGdhL4XnbShKpAcSqPMzQoYkYyhbEaeSko47MjRP9NfEQMhZkXL1DoFlt9LWQn4YttrdnV6X2OiyzBi+A==}
     engines: {node: '>=10'}
 
-  resolve@1.22.10:
-    resolution: {integrity: sha512-NPRy+/ncIMeDlTAsuqwKIiferiawhefFJtkNSW0qZJEqMEb+qBt/77B/jGeeek+F0uOeN05CDa6HXbbIgtVX4w==}
+  resolve@1.22.11:
+    resolution: {integrity: sha512-RfqAvLnMl313r7c9oclB1HhUEAezcpLjz95wFH4LVuhk9JF/r22qmVP9AMmOU4vMX7Q8pN8jwNg/CSpdFnMjTQ==}
     engines: {node: '>= 0.4'}
     hasBin: true
 
@@ -12683,7 +12723,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@argos-ci/core@4.2.0':
+  '@argos-ci/core@4.3.1':
     dependencies:
       '@argos-ci/api-client': 0.12.0
       '@argos-ci/util': 3.1.1
@@ -13351,7 +13391,7 @@ snapshots:
       '@babel/helper-plugin-utils': 7.27.1
       debug: 4.4.3(supports-color@8.1.1)
       lodash.debounce: 4.0.8
-      resolve: 1.22.10
+      resolve: 1.22.11
     transitivePeerDependencies:
       - supports-color
 
@@ -15065,7 +15105,16 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@mui/internal-babel-plugin-minify-errors@2.0.8-canary.10(@babel/core@7.28.5)':
+  '@mui/internal-babel-plugin-display-name@https://pkg.pr.new/mui/mui-public/@mui/internal-babel-plugin-display-name@23a7897e2573a5678841939631f638bcf02d76b5(@babel/core@7.28.5)(@babel/preset-react@7.27.1(@babel/core@7.28.5))':
+    dependencies:
+      '@babel/core': 7.28.5
+      '@babel/helper-module-imports': 7.27.1
+      '@babel/helper-plugin-utils': 7.27.1
+      '@babel/preset-react': 7.27.1(@babel/core@7.28.5)
+    transitivePeerDependencies:
+      - supports-color
+
+  '@mui/internal-babel-plugin-minify-errors@https://pkg.pr.new/mui/mui-public/@mui/internal-babel-plugin-minify-errors@23a7897e2573a5678841939631f638bcf02d76b5(@babel/core@7.28.5)':
     dependencies:
       '@babel/core': 7.28.5
       '@babel/helper-module-imports': 7.27.1
@@ -15073,10 +15122,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@mui/internal-babel-plugin-resolve-imports@2.0.7-canary.26(@babel/core@7.28.5)':
+  '@mui/internal-babel-plugin-resolve-imports@https://pkg.pr.new/mui/mui-public/@mui/internal-babel-plugin-resolve-imports@23a7897e2573a5678841939631f638bcf02d76b5(@babel/core@7.28.5)':
     dependencies:
       '@babel/core': 7.28.5
-      resolve: 1.22.10
+      resolve: 1.22.11
 
   '@mui/internal-bundle-size-checker@1.0.9-canary.52(@types/node@22.18.12)(rollup@4.52.5)(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.1)':
     dependencies:
@@ -15108,9 +15157,9 @@ snapshots:
       - tsx
       - yaml
 
-  '@mui/internal-code-infra@0.0.3-canary.37(@types/node@22.18.12)(@typescript-eslint/parser@8.46.2(eslint@9.38.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.46.2(eslint@9.38.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.38.0))(eslint@9.38.0)(postcss@8.5.6)(prettier@3.6.2)(stylelint@16.25.0(typescript@5.9.3))(typescript@5.9.3)':
+  '@mui/internal-code-infra@https://pkg.pr.new/mui/mui-public/@mui/internal-code-infra@23a7897(@next/eslint-plugin-next@15.5.6)(@types/node@22.18.12)(@typescript-eslint/parser@8.46.2(eslint@9.38.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.46.2(eslint@9.38.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.38.0))(eslint@9.38.0)(postcss@8.5.6)(prettier@3.6.2)(stylelint@16.25.0(typescript@5.9.3))(typescript@5.9.3)':
     dependencies:
-      '@argos-ci/core': 4.2.0
+      '@argos-ci/core': 4.3.1
       '@babel/cli': 7.28.3(@babel/core@7.28.5)
       '@babel/core': 7.28.5
       '@babel/plugin-syntax-jsx': 7.27.1(@babel/core@7.28.5)
@@ -15124,9 +15173,9 @@ snapshots:
       '@eslint/json': 0.13.2
       '@inquirer/confirm': 5.1.19(@types/node@22.18.12)
       '@inquirer/select': 4.4.0(@types/node@22.18.12)
-      '@mui/internal-babel-plugin-display-name': 1.0.4-canary.7(@babel/core@7.28.5)(@babel/preset-react@7.27.1(@babel/core@7.28.5))
-      '@mui/internal-babel-plugin-minify-errors': 2.0.8-canary.10(@babel/core@7.28.5)
-      '@mui/internal-babel-plugin-resolve-imports': 2.0.7-canary.26(@babel/core@7.28.5)
+      '@mui/internal-babel-plugin-display-name': https://pkg.pr.new/mui/mui-public/@mui/internal-babel-plugin-display-name@23a7897e2573a5678841939631f638bcf02d76b5(@babel/core@7.28.5)(@babel/preset-react@7.27.1(@babel/core@7.28.5))
+      '@mui/internal-babel-plugin-minify-errors': https://pkg.pr.new/mui/mui-public/@mui/internal-babel-plugin-minify-errors@23a7897e2573a5678841939631f638bcf02d76b5(@babel/core@7.28.5)
+      '@mui/internal-babel-plugin-resolve-imports': https://pkg.pr.new/mui/mui-public/@mui/internal-babel-plugin-resolve-imports@23a7897e2573a5678841939631f638bcf02d76b5(@babel/core@7.28.5)
       '@napi-rs/keyring': 1.2.0
       '@next/eslint-plugin-next': 15.5.6
       '@octokit/auth-action': 6.0.1
@@ -15157,6 +15206,7 @@ snapshots:
       globals: 16.4.0
       globby: 15.0.0
       minimatch: 10.0.3
+      node-html-parser: 7.0.1
       open: 10.2.0
       postcss-styled-syntax: 0.7.1(postcss@8.5.6)
       prettier: 3.6.2
@@ -17931,7 +17981,7 @@ snapshots:
     dependencies:
       '@babel/runtime': 7.28.4
       cosmiconfig: 7.1.0
-      resolve: 1.22.10
+      resolve: 1.22.11
 
   babel-plugin-module-resolver@5.0.2:
     dependencies:
@@ -17939,7 +17989,7 @@ snapshots:
       glob: 9.3.5
       pkg-up: 3.1.0
       reselect: 4.1.8
-      resolve: 1.22.10
+      resolve: 1.22.11
 
   babel-plugin-optimize-clsx@2.6.2:
     dependencies:
@@ -18088,6 +18138,8 @@ snapshots:
       type-is: 2.0.1
     transitivePeerDependencies:
       - supports-color
+
+  boolbase@1.0.0: {}
 
   bottleneck@2.19.5: {}
 
@@ -18683,6 +18735,14 @@ snapshots:
 
   css-functions-list@3.2.3: {}
 
+  css-select@5.2.2:
+    dependencies:
+      boolbase: 1.0.0
+      css-what: 6.2.2
+      domhandler: 5.0.3
+      domutils: 3.2.2
+      nth-check: 2.1.1
+
   css-to-react-native@3.2.0:
     dependencies:
       camelize: 1.0.1
@@ -18693,6 +18753,8 @@ snapshots:
     dependencies:
       mdn-data: 2.12.2
       source-map-js: 1.2.1
+
+  css-what@6.2.2: {}
 
   cssesc@3.0.0: {}
 
@@ -19043,6 +19105,24 @@ snapshots:
       extend: 3.0.2
       void-elements: 2.0.1
 
+  dom-serializer@2.0.0:
+    dependencies:
+      domelementtype: 2.3.0
+      domhandler: 5.0.3
+      entities: 4.5.0
+
+  domelementtype@2.3.0: {}
+
+  domhandler@5.0.3:
+    dependencies:
+      domelementtype: 2.3.0
+
+  domutils@3.2.2:
+    dependencies:
+      dom-serializer: 2.0.0
+      domelementtype: 2.3.0
+      domhandler: 5.0.3
+
   dot-prop@5.3.0:
     dependencies:
       is-obj: 2.0.0
@@ -19371,7 +19451,7 @@ snapshots:
     dependencies:
       debug: 3.2.7
       is-core-module: 2.16.1
-      resolve: 1.22.10
+      resolve: 1.22.11
     transitivePeerDependencies:
       - supports-color
 
@@ -22040,6 +22120,11 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  node-html-parser@7.0.1:
+    dependencies:
+      css-select: 5.2.2
+      he: 1.2.0
+
   node-int64@0.4.0: {}
 
   node-machine-id@1.1.12: {}
@@ -22061,7 +22146,7 @@ snapshots:
   normalize-package-data@2.5.0:
     dependencies:
       hosted-git-info: 2.8.9
-      resolve: 1.22.10
+      resolve: 1.22.11
       semver: 5.7.2
       validate-npm-package-license: 3.0.4
 
@@ -22161,6 +22246,10 @@ snapshots:
       unicorn-magic: 0.3.0
 
   nprogress@0.2.0: {}
+
+  nth-check@2.1.1:
+    dependencies:
+      boolbase: 1.0.0
 
   null-loader@4.0.1(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.11)):
     dependencies:
@@ -23161,7 +23250,7 @@ snapshots:
 
   resolve.exports@2.0.3: {}
 
-  resolve@1.22.10:
+  resolve@1.22.11:
     dependencies:
       is-core-module: 2.16.1
       path-parse: 1.0.7

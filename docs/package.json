@@ -3,7 +3,7 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "build": "rimraf ./export && cross-env NODE_ENV=production next build && pnpm build-sw",
+    "build": "rimraf ./export && cross-env NODE_ENV=production next build && pnpm build-sw && pnpm link-check",
     "build:clean": "rimraf .next && pnpm build",
     "build-sw": "node ./scripts/buildServiceWorker.js",
     "dev": "cross-env-shell 'next dev --port ${PORT:-3001}'",
@@ -14,7 +14,8 @@
     "typescript": "tsc -p tsconfig.json",
     "typescript:transpile": "cross-env BABEL_ENV=development node scripts/formattedTSDemos",
     "typescript:transpile:dev": "cross-env BABEL_ENV=development node scripts/formattedTSDemos --watch",
-    "populate:demos": "tsx scripts/populatePickersDemos"
+    "populate:demos": "tsx scripts/populatePickersDemos",
+    "link-check": "tsx ./scripts/reportBrokenLinks.mts"
   },
   "dependencies": {
     "@atlaskit/pragmatic-drag-and-drop": "^1.7.7",
