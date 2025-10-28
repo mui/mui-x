@@ -15,14 +15,14 @@ import {
   DefaultizedPieValueType,
 } from './pie';
 import { DefaultizedRadarSeriesType, RadarItemIdentifier, RadarSeriesType } from './radar';
-import { SeriesColorProp } from './common';
+import { SeriesColor } from './common';
 
 export interface ChartsSeriesConfig {
   bar: {
     /**
      * Series type when passed to the formatter (some ids are given default values to simplify the DX)
      */
-    seriesInput: DefaultizedProps<BarSeriesType, 'id'> & { color: SeriesColorProp<number | null> };
+    seriesInput: DefaultizedProps<BarSeriesType, 'id'> & SeriesColor<number | null>;
     /**
      * Series type when stored in the context (with all the preprocessing added))
      */
@@ -38,7 +38,7 @@ export interface ChartsSeriesConfig {
     axisType: 'cartesian';
   };
   line: {
-    seriesInput: DefaultizedProps<LineSeriesType, 'id'> & { color: SeriesColorProp<number | null> };
+    seriesInput: DefaultizedProps<LineSeriesType, 'id'> & SeriesColor<number | null>;
     series: DefaultizedLineSeriesType;
     seriesProp: LineSeriesType;
     itemIdentifier: LineItemIdentifier;
@@ -48,9 +48,7 @@ export interface ChartsSeriesConfig {
     axisType: 'cartesian';
   };
   scatter: {
-    seriesInput: DefaultizedProps<ScatterSeriesType, 'id'> & {
-      color: SeriesColorProp<ScatterValueType | null>;
-    };
+    seriesInput: DefaultizedProps<ScatterSeriesType, 'id'> & SeriesColor<ScatterValueType | null>;
     series: DefaultizedScatterSeriesType;
     seriesProp: ScatterSeriesType;
     valueType: ScatterValueType;
@@ -60,7 +58,7 @@ export interface ChartsSeriesConfig {
   };
   pie: {
     seriesInput: Omit<DefaultizedProps<PieSeriesType, 'id'>, 'data'> & {
-      data: (MakeOptional<PieValueType, 'id'> & { color: SeriesColorProp<PieValueType> })[];
+      data: (MakeOptional<PieValueType, 'id'> & SeriesColor<PieValueType | null>)[];
     };
     series: DefaultizedPieSeriesType;
     seriesProp: PieSeriesType<MakeOptional<PieValueType, 'id'>>;
@@ -69,7 +67,7 @@ export interface ChartsSeriesConfig {
     valueType: DefaultizedPieValueType;
   };
   radar: {
-    seriesInput: DefaultizedProps<RadarSeriesType, 'id'> & { color: SeriesColorProp<number> };
+    seriesInput: DefaultizedProps<RadarSeriesType, 'id'> & SeriesColor<number>;
     series: DefaultizedRadarSeriesType;
     seriesProp: RadarSeriesType;
     itemIdentifier: RadarItemIdentifier;

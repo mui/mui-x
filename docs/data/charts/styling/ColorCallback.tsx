@@ -1,7 +1,8 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { BarChart, BarChartProps } from '@mui/x-charts/BarChart';
+import { BarChart, BarChartProps, BarSeries } from '@mui/x-charts/BarChart';
+import type {} from '@mui/x-charts/typeAugmentation/colorCallback';
 
 const clubs = [
   'Arsenal',
@@ -76,7 +77,7 @@ const chartsParams = {
         return clubColors[data.dataIndex];
       },
       valueFormatter,
-    },
+    } satisfies BarSeries,
   ],
   height: 400,
 } satisfies BarChartProps;
