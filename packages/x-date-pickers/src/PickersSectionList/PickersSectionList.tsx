@@ -99,7 +99,7 @@ function PickersSection(props: PickersSectionProps) {
   const handleSectionContentRef = useForkRef((sectionContentProps as any).ref, sectionContentRef);
 
   const handleContentBlur = (event: React.FocusEvent<HTMLElement>) => {
-    const next = (event.relatedTarget as Node | null);
+    const next = event.relatedTarget as Node | null;
     // If the next focused element stays within the whole field (root),
     // do not propagate blur. We only want blur when leaving the field entirely.
     const root = (event.currentTarget as HTMLElement).closest(`.${pickersSectionListClasses.root}`);
