@@ -1,8 +1,8 @@
 diff --git a/dist/rasterizeHTML.d.ts b/dist/rasterizeHTML.d.ts
-index fa9940c72d1fa59f24d8004116932e7f11b6dd64..d567b608367c9ae1b86a0f0b7639782e8a08620c 100644
+index fa9940c72d1fa59f24d8004116932e7f11b6dd64..d525ccb371be39705f543141c9f6131bdd654b02 100644
 --- a/dist/rasterizeHTML.d.ts
 +++ b/dist/rasterizeHTML.d.ts
-@@ -89,6 +89,18 @@ export interface Options {
+@@ -89,6 +89,12 @@ export interface Options {
       * than none. Should be initialized with {}.
       */
      cacheBucket?: {};
@@ -12,12 +12,6 @@ index fa9940c72d1fa59f24d8004116932e7f11b6dd64..d567b608367c9ae1b86a0f0b7639782e
 +     * This is useful when a Content Security Policy is in place that requires a nonce on such elements.
 +     */
 +    nonce?: string;
-+
-+    /**
-+     * A hash value to be set on script and style elements created.
-+     * This is useful when a Content Security Policy is in place that requires an integrity attribute on such elements.
-+     */
-+    integrity?: string;
  }
  
  /** Describes a resource that failed to load during drawing. */
