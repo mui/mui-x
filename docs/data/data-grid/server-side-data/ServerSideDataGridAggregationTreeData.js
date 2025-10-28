@@ -5,6 +5,7 @@ import { useMockServer } from '@mui/x-data-grid-generator';
 const dataSetOptions = {
   dataSet: 'Employee',
   rowLength: 1000,
+  editable: true,
   treeData: { maxDepth: 3, groupingField: 'name', averageChildren: 5 },
 };
 
@@ -18,7 +19,8 @@ const aggregationFunctions = {
 
 export default function ServerSideDataGridAggregationTreeData() {
   const apiRef = useGridApiRef();
-  const { fetchRows, columns, initialState } = useMockServer(dataSetOptions);
+  const { fetchRows, editRow, columns, initialState } =
+    useMockServer(dataSetOptions);
 
   const dataSource = React.useMemo(
     () => ({
@@ -39,11 +41,12 @@ export default function ServerSideDataGridAggregationTreeData() {
           aggregateRow: getRowsResponse.aggregateRow,
         };
       },
+      updateRow: (params) => editRow(params.rowId, params.updatedRow),
       getGroupKey: (row) => row[dataSetOptions.treeData.groupingField],
       getChildrenCount: (row) => row.descendantCount,
-      getAggregatedValue: (row, field) => row[`${field}Aggregate`],
+      getAggregatedValue: (row, field) => row[field],
     }),
-    [fetchRows],
+    [fetchRows, editRow],
   );
 
   return (
@@ -60,6 +63,7 @@ export default function ServerSideDataGridAggregationTreeData() {
           },
         }}
         aggregationFunctions={aggregationFunctions}
+        disablePivoting
       />
     </div>
   );

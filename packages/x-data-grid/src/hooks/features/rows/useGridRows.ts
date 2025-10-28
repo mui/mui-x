@@ -174,7 +174,7 @@ export const useGridRows = (
   const setRows = React.useCallback<GridRowApi['setRows']>(
     (rows) => {
       logger.debug(`Updating all rows, new length ${rows.length}`);
-      if (gridPivotActiveSelector(apiRef)) {
+      if (!props.dataSource && gridPivotActiveSelector(apiRef)) {
         apiRef.current.updateNonPivotRows(rows, false);
         return;
       }
@@ -189,7 +189,15 @@ export const useGridRows = (
 
       throttledRowsChange({ cache, throttle: true });
     },
-    [logger, props.getRowId, props.loading, props.rowCount, throttledRowsChange, apiRef],
+    [
+      logger,
+      props.getRowId,
+      props.dataSource,
+      props.loading,
+      props.rowCount,
+      throttledRowsChange,
+      apiRef,
+    ],
   );
 
   const updateRows = React.useCallback<GridRowApi['updateRows']>(
@@ -203,7 +211,7 @@ export const useGridRows = (
         );
       }
 
-      if (gridPivotActiveSelector(apiRef)) {
+      if (!props.dataSource && gridPivotActiveSelector(apiRef)) {
         apiRef.current.updateNonPivotRows(updates);
         return;
       }
@@ -218,7 +226,7 @@ export const useGridRows = (
 
       throttledRowsChange({ cache, throttle: true });
     },
-    [props.signature, props.getRowId, throttledRowsChange, apiRef],
+    [props.signature, props.dataSource, props.getRowId, throttledRowsChange, apiRef],
   );
 
   const updateNestedRows = React.useCallback<GridRowProPrivateApi['updateNestedRows']>(

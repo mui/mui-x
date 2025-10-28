@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { Timeline } from '@mui/x-scheduler/material/timeline';
+import { Timeline } from '@mui/x-scheduler/timeline';
 import {
   defaultVisibleDate,
   initialEvents,

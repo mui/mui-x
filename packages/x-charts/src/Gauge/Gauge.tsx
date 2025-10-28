@@ -17,12 +17,7 @@ export interface GaugeProps extends GaugeContainerProps, Pick<GaugeValueTextProp
 const useUtilityClasses = (props: GaugeProps) => {
   const { classes } = props;
 
-  const slots = {
-    root: ['root'],
-    valueArc: ['valueArc'],
-    referenceArc: ['referenceArc'],
-    valueText: ['valueText'],
-  };
+  const slots = { root: ['root'] };
 
   return composeClasses(slots, getGaugeUtilityClass, classes);
 };
@@ -33,9 +28,9 @@ const Gauge = React.forwardRef(function Gauge(props: GaugeProps, ref: React.Ref<
 
   return (
     <GaugeContainer {...other} className={clsx(classes.root, className)} ref={ref}>
-      <GaugeReferenceArc className={classes.referenceArc} />
-      <GaugeValueArc className={classes.valueArc} skipAnimation={skipAnimation} />
-      <GaugeValueText className={classes.valueText} text={text} />
+      <GaugeReferenceArc />
+      <GaugeValueArc skipAnimation={skipAnimation} />
+      <GaugeValueText text={text} />
       {children}
     </GaugeContainer>
   );

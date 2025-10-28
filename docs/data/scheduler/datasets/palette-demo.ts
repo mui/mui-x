@@ -1,6 +1,6 @@
 // Fake data of an agenda with lots of different resources
 import { DateTime } from 'luxon';
-import { CalendarEvent, CalendarResource } from '@mui/x-scheduler/primitives/models';
+import { CalendarEvent, CalendarResource } from '@mui/x-scheduler/models';
 
 export const defaultVisibleDate = DateTime.fromISO('2025-07-01T00:00:00');
 
@@ -73,13 +73,13 @@ export const initialEvents: CalendarEvent[] = [
 ];
 
 export const resources: CalendarResource[] = [
-  { name: 'violet', id: 'violet', eventColor: 'violet' },
-  { name: 'jade', id: 'jade', eventColor: 'jade' },
-  { name: 'lime', id: 'lime', eventColor: 'lime' },
-  { name: 'orange', id: 'orange', eventColor: 'orange' },
-  { name: 'cyan', id: 'cyan', eventColor: 'cyan' },
-  { name: 'pink', id: 'pink', eventColor: 'pink' },
-  { name: 'indigo', id: 'indigo', eventColor: 'indigo' },
-  { name: 'yellow', id: 'yellow', eventColor: 'yellow' },
-  { name: 'blue', id: 'blue', eventColor: 'blue' },
+  { title: 'violet', id: 'violet', eventColor: 'violet' },
+  { title: 'jade', id: 'jade', eventColor: 'jade' },
+  { title: 'lime', id: 'lime', eventColor: 'lime' },
+  { title: 'orange', id: 'orange', eventColor: 'orange' },
+  { title: 'cyan', id: 'cyan', eventColor: 'cyan' },
+  { title: 'pink', id: 'pink', eventColor: 'pink' },
+  { title: 'indigo', id: 'indigo', eventColor: 'indigo' },
+  { title: 'yellow', id: 'yellow', eventColor: 'yellow' },
+  { title: 'blue', id: 'blue', eventColor: 'blue' },
 ];

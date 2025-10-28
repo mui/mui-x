@@ -9,21 +9,18 @@ import {
 } from '@mui/x-data-grid-premium';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import Snackbar from '@mui/material/Snackbar';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { alpha, styled, darken, lighten, Theme } from '@mui/material/styles';
 
 export default function ServerSideRowGroupingErrorHandling() {
   const apiRef = useGridApiRef();
-  const [rootError, setRootError] = React.useState<string>();
-  const [childrenError, setChildrenError] = React.useState<string>();
+  const [error, setError] = React.useState<string>();
   const [shouldRequestsFail, setShouldRequestsFail] = React.useState(false);
 
   const { fetchRows, columns } = useMockServer<GridGetRowsResponse>(
-    {
-      rowGrouping: true,
-    },
+    { dataSet: 'Movies' },
     {},
     shouldRequestsFail,
   );
@@ -65,7 +62,7 @@ export default function ServerSideRowGroupingErrorHandling() {
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <Button
           onClick={() => {
-            setRootError('');
+            setError('');
             apiRef.current?.dataSource.fetchRows();
           }}
         >
@@ -85,58 +82,48 @@ export default function ServerSideRowGroupingErrorHandling() {
         <DataGridPremium
           columns={columns}
           dataSource={dataSource}
-          onDataSourceError={(error) => {
-            if (error instanceof GridGetRowsError) {
-              if (!error.params.groupKeys || error.params.groupKeys.length === 0) {
-                setRootError(error.message);
+          onDataSourceError={(err) => {
+            if (err instanceof GridGetRowsError) {
+              if (!err.params.groupKeys || err.params.groupKeys.length === 0) {
+                setError(err.message);
               } else {
-                setChildrenError(
-                  `${error.message} (Requested level: ${error.params.groupKeys.join(' > ')})`,
+                setError(
+                  `${err.message} (Requested level: ${err.params.groupKeys.join(' > ')})`,
                 );
               }
             }
           }}
           dataSourceCache={null}
+          slots={{
+            noRowsOverlay: ErrorOverlay,
+            noResultsOverlay: ErrorOverlay,
+          }}
           apiRef={apiRef}
           initialState={initialState}
+          disablePivoting
         />
-        {rootError && <ErrorOverlay error={rootError} />}
         <Snackbar
-          open={!!childrenError}
+          open={!!error}
           autoHideDuration={3000}
-          onClose={() => setChildrenError('')}
-          message={childrenError}
+          onClose={() => setError('')}
+          message={error}
         />
       </div>
     </div>
   );
 }
 
-function getBorderColor(theme: Theme) {
-  if (theme.palette.mode === 'light') {
-    return lighten(alpha(theme.palette.divider, 1), 0.88);
-  }
-  return darken(alpha(theme.palette.divider, 1), 0.68);
-}
-
-const StyledDiv = styled('div')(({ theme: t }) => ({
-  position: 'absolute',
-  zIndex: 10,
-  fontSize: '0.875em',
-  top: 0,
-  height: '100%',
-  width: '100%',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  borderRadius: '4px',
-  border: `1px solid ${getBorderColor(t)}`,
-  backgroundColor: t.palette.background.default,
-}));
-
-function ErrorOverlay({ error }: { error: string }) {
-  if (!error) {
-    return null;
-  }
-  return <StyledDiv>{error}</StyledDiv>;
+function ErrorOverlay() {
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100%',
+      }}
+    >
+      Could not fetch the data
+    </Box>
+  );
 }

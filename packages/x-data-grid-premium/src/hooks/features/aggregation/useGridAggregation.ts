@@ -15,6 +15,7 @@ import {
   useGridRegisterPipeProcessor,
   GridStateInitializer,
   GridPipeProcessor,
+  gridPivotActiveSelector,
 } from '@mui/x-data-grid-pro/internals';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
@@ -247,6 +248,7 @@ export const useGridAggregation = (
    * EVENTS
    */
   const checkAggregationRulesDiff = React.useCallback(() => {
+    const pivotingActive = gridPivotActiveSelector(apiRef);
     const { rulesOnLastRowHydration, rulesOnLastColumnHydration } =
       apiRef.current.caches.aggregation;
 
@@ -260,7 +262,10 @@ export const useGridAggregation = (
         );
 
     // Re-apply the row hydration to add / remove the aggregation footers
-    if (!props.dataSource && !areAggregationRulesEqual(rulesOnLastRowHydration, aggregationRules)) {
+    if (
+      (!props.dataSource || pivotingActive) &&
+      !areAggregationRulesEqual(rulesOnLastRowHydration, aggregationRules)
+    ) {
       apiRef.current.requestPipeProcessorsApplication('hydrateRows');
       deferredApplyAggregation();
     }
