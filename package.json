@@ -167,7 +167,8 @@
       }
     },
     "patchedDependencies": {
-      "rasterizehtml": "patches/rasterizehtml.patch"
+      "rasterizehtml": "patches/rasterizehtml.patch",
+      "inlineresources": "patches/inlineresources.patch"
     }
   }
 }
