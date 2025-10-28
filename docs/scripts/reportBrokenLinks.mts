@@ -1,4 +1,3 @@
-import * as path from 'path';
 import { crawl } from '@mui/internal-code-infra/brokenLinksChecker';
 
 async function main() {
@@ -6,7 +5,6 @@ async function main() {
     startCommand: 'pnpm serve --no-request-logging -p 3001',
     host: 'http://localhost:3001/',
     seedUrls: ['/x'],
-    outPath: path.resolve(import.meta.url, '../export/x/link-structure.json'),
     // Target paths to ignore during link checking
     ignoredPaths: [
       // Internal links not on this server
