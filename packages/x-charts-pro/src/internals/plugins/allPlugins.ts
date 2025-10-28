@@ -22,9 +22,9 @@ import { useChartProZoom, UseChartProZoomSignature } from './useChartProZoom';
 export type AllPluginSignatures<TSeries extends ChartSeriesType = ChartSeriesType> = [
   UseChartZAxisSignature,
   UseChartBrushSignature,
+  UseChartInteractionSignature,
   UseChartCartesianAxisSignature<TSeries>,
   UseChartPolarAxisSignature<TSeries>,
-  UseChartInteractionSignature,
   UseChartHighlightSignature,
   UseChartProZoomSignature,
   UseChartProExportSignature,
@@ -36,9 +36,9 @@ export type AllPluginsType<TSeries extends ChartSeriesType = ChartSeriesType> =
 export const ALL_PLUGINS = [
   useChartZAxis,
   useChartBrush,
+  useChartInteraction,
   useChartCartesianAxis,
   useChartPolarAxis,
-  useChartInteraction,
   useChartHighlight,
   useChartProZoom,
   useChartProExport,
@@ -47,9 +47,9 @@ export const ALL_PLUGINS = [
 export type DefaultPluginSignatures<TSeries extends ChartSeriesType = ChartSeriesType> = [
   UseChartZAxisSignature,
   UseChartBrushSignature,
+  UseChartInteractionSignature,
   UseChartCartesianAxisSignature<TSeries>,
   UseChartPolarAxisSignature<TSeries>,
-  UseChartInteractionSignature,
   UseChartHighlightSignature,
   UseChartProZoomSignature,
   UseChartProExportSignature,
@@ -61,8 +61,8 @@ export type DefaultPluginsType<TSeries extends ChartSeriesType = ChartSeriesType
 export const DEFAULT_PLUGINS = [
   useChartZAxis,
   useChartBrush,
-  useChartCartesianAxis,
   useChartInteraction,
+  useChartCartesianAxis,
   useChartHighlight,
   useChartProZoom,
   useChartProExport,
