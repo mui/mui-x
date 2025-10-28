@@ -537,9 +537,9 @@ async function generateChangelog({
       lines.push(
         `Special thanks go out to these community members for their valuable contributions:\n${contributors.join(', ')}`,
       );
-    } else if (contributors.length = 1 ) {
+    } else if (contributors.length === 1) {
       lines.push(
-        `Special thanks go out to community member ${contributors} for their valuable contribution.`,
+        `Special thanks go out to community member ${contributors[0]} for their valuable contribution.`,
       );
     }
 
