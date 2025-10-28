@@ -5,7 +5,11 @@
     "x": { "type": { "name": "number" }, "required": true },
     "xOrigin": { "type": { "name": "number" }, "required": true },
     "y": { "type": { "name": "number" }, "required": true },
-    "yOrigin": { "type": { "name": "number" }, "required": true }
+    "yOrigin": { "type": { "name": "number" }, "required": true },
+    "barLabelPlacement": {
+      "type": { "name": "enum", "description": "'above'<br>&#124;&nbsp;'inside'" },
+      "default": "'inside'"
+    }
   },
   "name": "BarLabel",
   "imports": [

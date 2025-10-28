@@ -179,6 +179,14 @@ In the example below, the value of the first series is displayed using the defau
 
 {{"demo": "BarLabel.js"}}
 
+### Label placement
+
+You can also display the labels on top of the bars.
+To do so, provide the `barLabelPlacement` prop.
+This prop accepts two values: `'inside'` (default) and `'above'`.
+
+{{"demo": "BarLabelPlacement.js"}}
+
 ### Custom labels
 
 You can display, change, or hide labels based on conditional logic.

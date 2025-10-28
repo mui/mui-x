@@ -124,6 +124,7 @@ export function useBarPlotData(
       return {
         seriesId,
         barLabel: series[seriesId].barLabel,
+        barLabelPlacement: series[seriesId].barLabelPlacement,
         data: seriesDataPoints,
       };
     });

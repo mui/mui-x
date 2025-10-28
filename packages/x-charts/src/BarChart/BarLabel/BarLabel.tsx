@@ -57,6 +57,13 @@ export type BarLabelProps = Omit<
      * Height of the bar this label belongs to.
      */
     height: number;
+    /**
+     * The placement of the bar label.
+     * It controls whether the label is placed inside the bar or above it.
+     * @default 'inside'
+     */
+    barLabelPlacement?: 'inside' | 'above';
+    value: number | null;
   };
 
 function BarLabel(inProps: BarLabelProps) {
@@ -73,6 +80,8 @@ function BarLabel(inProps: BarLabelProps) {
     layout,
     xOrigin,
     yOrigin,
+    barLabelPlacement,
+    value,
     ...otherProps
   } = props;
 
@@ -86,6 +95,7 @@ BarLabel.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  barLabelPlacement: PropTypes.oneOf(['above', 'inside']),
   classes: PropTypes.object,
   dataIndex: PropTypes.number.isRequired,
   /**

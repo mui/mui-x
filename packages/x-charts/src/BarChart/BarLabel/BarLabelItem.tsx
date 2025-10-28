@@ -21,7 +21,7 @@ export interface BarLabelSlotProps {
 }
 
 export type BarLabelItemProps = Omit<BarLabelOwnerState, 'isFaded' | 'isHighlighted'> &
-  Pick<BarLabelProps, 'style'> & {
+  Pick<BarLabelProps, 'style' | 'barLabelPlacement'> & {
     /**
      * The props used for each component slot.
      * @default {}
@@ -99,6 +99,7 @@ function BarLabelItem(props: BarLabelItemProps) {
     value,
     skipAnimation,
     layout,
+    barLabelPlacement,
     ...other
   } = props;
   const { isFaded, isHighlighted } = useItemHighlighted({
@@ -115,6 +116,8 @@ function BarLabelItem(props: BarLabelItemProps) {
     dataIndex,
     skipAnimation,
     layout,
+    barLabelPlacement,
+    value,
   };
   const classes = useUtilityClasses(ownerState);
 

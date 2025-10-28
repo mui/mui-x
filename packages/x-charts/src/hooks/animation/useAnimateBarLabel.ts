@@ -5,7 +5,16 @@ import type { BarLabelProps } from '../../BarChart';
 
 type UseAnimateBarLabelParams = Pick<
   BarLabelProps,
-  'xOrigin' | 'yOrigin' | 'x' | 'y' | 'width' | 'height' | 'layout' | 'skipAnimation'
+  | 'xOrigin'
+  | 'yOrigin'
+  | 'x'
+  | 'y'
+  | 'width'
+  | 'height'
+  | 'layout'
+  | 'skipAnimation'
+  | 'barLabelPlacement'
+  | 'value'
 > & {
   ref?: React.Ref<SVGTextElement>;
 };
@@ -20,14 +29,12 @@ function barLabelPropsInterpolator(from: BarLabelInterpolatedProps, to: BarLabel
   const interpolateWidth = interpolateNumber(from.width, to.width);
   const interpolateHeight = interpolateNumber(from.height, to.height);
 
-  return (t: number) => {
-    return {
-      x: interpolateX(t),
-      y: interpolateY(t),
-      width: interpolateWidth(t),
-      height: interpolateHeight(t),
-    };
-  };
+  return (t: number) => ({
+    x: interpolateX(t),
+    y: interpolateY(t),
+    width: interpolateWidth(t),
+    height: interpolateHeight(t),
+  });
 }
 
 /**
@@ -40,15 +47,57 @@ function barLabelPropsInterpolator(from: BarLabelInterpolatedProps, to: BarLabel
  * pass the ref returned by this hook to the `path` element and the `ref` provided as argument will also be called.
  */
 export function useAnimateBarLabel(props: UseAnimateBarLabelParams): UseAnimateBarLabelReturn {
+  const isNegativeValue = props.value !== null && props.value < 0;
+  const isAbovePlacement = props.barLabelPlacement === 'above';
+
+  const shouldPlaceBelow = isNegativeValue && isAbovePlacement;
+  const shouldPlaceAbove = !isNegativeValue && isAbovePlacement;
+
+  let initialY = 0;
+  let currentY = 0;
+
+  let initialX = 0;
+  let currentX = 0;
+
+  if (props.layout === 'vertical') {
+    if (shouldPlaceBelow) {
+      initialY = props.yOrigin + 8;
+      currentY = props.y + props.height + 8;
+    } else if (shouldPlaceAbove) {
+      initialY = props.yOrigin - 8;
+      currentY = props.y - 8;
+    } else {
+      initialY = props.yOrigin;
+      currentY = props.y + props.height / 2;
+    }
+    initialX = props.x + props.width / 2;
+    currentX = props.x + props.width / 2;
+  }
+
+  if (props.layout === 'horizontal') {
+    if (shouldPlaceBelow) {
+      initialX = props.xOrigin;
+      currentX = props.x - 8;
+    } else if (shouldPlaceAbove) {
+      initialX = props.xOrigin;
+      currentX = props.x + props.width + 8;
+    } else {
+      initialX = props.xOrigin;
+      currentX = props.x + props.width / 2;
+    }
+    initialY = props.y + props.height / 2;
+    currentY = props.y + props.height / 2;
+  }
+
   const initialProps = {
-    x: props.layout === 'vertical' ? props.x + props.width / 2 : props.xOrigin,
-    y: props.layout === 'vertical' ? props.yOrigin : props.y + props.height / 2,
+    x: initialX,
+    y: initialY,
     width: props.width,
     height: props.height,
   };
   const currentProps = {
-    x: props.x + props.width / 2,
-    y: props.y + props.height / 2,
+    x: currentX,
+    y: currentY,
     width: props.width,
     height: props.height,
   };

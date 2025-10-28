@@ -25,7 +25,8 @@ function ChartsClipPath(props: ChartsClipPathProps) {
   const { id, offset: offsetProps } = props;
   const { left, top, width, height } = useDrawingArea();
 
-  const offset = { top: 0, right: 0, bottom: 0, left: 0, ...offsetProps };
+  const offset = { top: 30, right: 30, bottom: 30, left: 30, ...offsetProps };
+
   return (
     <clipPath id={id}>
       <rect
