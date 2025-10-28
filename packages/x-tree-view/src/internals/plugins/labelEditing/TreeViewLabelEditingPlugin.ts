@@ -1,6 +1,6 @@
 import { ExtendableRichTreeViewStore } from '../../RichTreeViewStore/RichTreeViewStore';
 import { TreeViewItemId } from '../../../models';
-import { labelSelectors } from '.';
+import { labelSelectors } from './selectors';
 import { useLabelEditingItemPlugin } from './itemPlugin';
 
 export class TreeViewLabelEditingPlugin {

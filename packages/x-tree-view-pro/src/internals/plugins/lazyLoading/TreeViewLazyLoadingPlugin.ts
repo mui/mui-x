@@ -3,7 +3,6 @@ import {
   lazyLoadingSelectors,
   TREE_VIEW_ROOT_PARENT_ID,
   expansionSelectors,
-  DataSource,
   selectionSelectors,
   TreeViewEventParameters,
   TreeViewEventEvent,
@@ -12,6 +11,7 @@ import { TreeViewItemId } from '@mui/x-tree-view/models';
 import { DataSourceCache, DataSourceCacheDefault } from '@mui/x-tree-view/utils';
 import { RichTreeViewProStore } from '../../RichTreeViewProStore/RichTreeViewProStore';
 import { NestedDataManager } from './utils';
+import { DataSource } from './types';
 
 export const TREE_VIEW_LAZY_LOADED_ITEMS_INITIAL_STATE = {
   loading: {},

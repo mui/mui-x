@@ -2,7 +2,7 @@ import { EMPTY_OBJECT } from '@base-ui-components/utils/empty';
 import { TreeViewItemId, TreeViewSelectionPropagation } from '../../../models';
 import { TreeViewAnyStore } from '../../models';
 import { itemsSelectors } from '../items';
-import { selectionSelectors } from '.';
+import { selectionSelectors } from './selectors';
 import { useSelectionItemPlugin } from './itemPlugin';
 import {
   findOrderInTremauxTree,

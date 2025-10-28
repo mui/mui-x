@@ -1,6 +1,6 @@
 import { TreeViewCancellableEvent, TreeViewItemId } from '../../../models';
 import { expansionSelectors } from '../expansion';
-import { focusSelectors } from '.';
+import { focusSelectors } from './selectors';
 import { itemsSelectors } from '../items';
 import { MinimalTreeViewStore } from '../../MinimalTreeViewStore';
 

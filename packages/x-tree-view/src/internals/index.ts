@@ -22,7 +22,6 @@ export { expansionSelectors } from './plugins/expansion';
 export { selectionSelectors } from './plugins/selection';
 export { buildSiblingIndexes, itemsSelectors, TREE_VIEW_ROOT_PARENT_ID } from './plugins/items';
 export { labelSelectors } from './plugins/labelEditing';
-export type { DataSource } from './plugins/lazyLoading';
 export { lazyLoadingSelectors } from './plugins/lazyLoading';
 
 export { isTargetInDescendants } from './utils/tree';
