@@ -24,8 +24,8 @@ import { useChartProZoom, UseChartProZoomSignature } from '../internals/plugins/
 export type ScatterChartProPluginSignatures = [
   UseChartZAxisSignature,
   UseChartBrushSignature,
-  UseChartCartesianAxisSignature<'scatter'>,
   UseChartInteractionSignature,
+  UseChartCartesianAxisSignature<'scatter'>,
   UseChartHighlightSignature,
   UseChartClosestPointSignature,
   UseChartKeyboardNavigationSignature,
@@ -37,8 +37,8 @@ export const SCATTER_CHART_PRO_PLUGINS: ConvertSignaturesIntoPlugins<ScatterChar
   [
     useChartZAxis,
     useChartBrush,
-    useChartCartesianAxis,
     useChartInteraction,
+    useChartCartesianAxis,
     useChartHighlight,
     useChartClosestPoint,
     useChartKeyboardNavigation,

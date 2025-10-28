@@ -22,8 +22,8 @@ import { useChartProZoom, UseChartProZoomSignature } from '../internals/plugins/
 export type LineChartProPluginSignatures = [
   UseChartZAxisSignature,
   UseChartBrushSignature,
-  UseChartCartesianAxisSignature<'line'>,
   UseChartInteractionSignature,
+  UseChartCartesianAxisSignature<'line'>,
   UseChartHighlightSignature,
   UseChartKeyboardNavigationSignature,
   UseChartProZoomSignature,
@@ -33,8 +33,8 @@ export type LineChartProPluginSignatures = [
 export const LINE_CHART_PRO_PLUGINS: ConvertSignaturesIntoPlugins<LineChartProPluginSignatures> = [
   useChartZAxis,
   useChartBrush,
-  useChartCartesianAxis,
   useChartInteraction,
+  useChartCartesianAxis,
   useChartHighlight,
   useChartKeyboardNavigation,
   useChartProZoom,
