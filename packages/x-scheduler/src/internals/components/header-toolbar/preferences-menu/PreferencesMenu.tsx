@@ -6,6 +6,7 @@ import { useStore } from '@base-ui-components/utils/store';
 import { CheckIcon, ChevronRight, Settings } from 'lucide-react';
 import { Menu } from '@base-ui-components/react/menu';
 import {
+  CalendarView,
   EventCalendarPreferences,
   EventCalendarPreferencesMenuConfig,
 } from '@mui/x-scheduler-headless/models';
@@ -25,6 +26,7 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
   const translations = useTranslations();
   const store = useEventCalendarStoreContext();
   const preferences = useStore(store, selectors.preferences);
+  const currentView = useStore(store, selectors.view);
   const preferencesMenuConfig = useStore(store, selectors.preferencesMenuConfig);
 
   const handleToggle = (key: keyof EventCalendarPreferences, checked: boolean, event: Event) => {
@@ -56,13 +58,32 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
     },
   ];
 
+  const viewSpecificPreferenceOptions: {
+    configKey: keyof EventCalendarPreferencesMenuConfig;
+    preferenceKey: keyof EventCalendarPreferences;
+    view: CalendarView;
+    label: string;
+  }[] = [
+    {
+      configKey: 'toggleEmptyDaysInAgenda',
+      preferenceKey: 'showEmptyDaysInAgenda',
+      view: 'agenda',
+      label: translations.showEmptyDaysInAgenda,
+    },
+  ];
+
   const visibleOptions = preferenceOptions.filter(
     (option) => !!preferencesMenuConfig?.[option.configKey],
   );
 
+  const visibleViewSpecificOptions = viewSpecificPreferenceOptions.filter(
+    (option) => !!preferencesMenuConfig?.[option.configKey] && option.view === currentView,
+  );
+
+  const showSpecificOptions = visibleViewSpecificOptions.length > 0;
   const showTimeFormatSubmenu = preferencesMenuConfig?.toggleAmpm;
 
-  if (!showTimeFormatSubmenu && visibleOptions.length === 0) {
+  if (!showTimeFormatSubmenu && visibleOptions.length === 0 && !showSpecificOptions) {
     return null;
   }
 
@@ -123,6 +144,31 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
                     </Menu.Positioner>
                   </Menu.Portal>
                 </Menu.SubmenuRoot>
+              )}
+              {showSpecificOptions && (
+                <React.Fragment>
+                  {visibleOptions.length > 0 && <Menu.Separator className="MenuSeparator" />}
+                  <Menu.Group>
+                    <Menu.GroupLabel className="MenuGroupLabel">
+                      {translations.viewSpecificOptions(currentView)}
+                    </Menu.GroupLabel>
+                    {visibleViewSpecificOptions.map((option) => (
+                      <Menu.CheckboxItem
+                        key={option.configKey}
+                        checked={preferences[option.preferenceKey]}
+                        onCheckedChange={(checked, eventDetails) =>
+                          handleToggle(option.preferenceKey, checked, eventDetails.event)
+                        }
+                        className="CheckboxItem"
+                      >
+                        <span>{option.label}</span>
+                        <Menu.CheckboxItemIndicator className="CheckboxIndicator">
+                          <CheckIcon size={16} strokeWidth={1.5} />
+                        </Menu.CheckboxItemIndicator>
+                      </Menu.CheckboxItem>
+                    ))}
+                  </Menu.Group>
+                </React.Fragment>
               )}
             </Menu.Popup>
           </Menu.Positioner>

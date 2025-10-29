@@ -99,11 +99,17 @@ export const selectorBrushConfig = createSelector(
   (configNoZoom, configZoom) => configZoom ?? configNoZoom,
 );
 
-export const selectorIsBrushEnabled = createSelector([selectorBrush], (brush) => brush?.enabled);
+export const selectorIsBrushEnabled = createSelector(
+  [selectorBrush],
+  (brush) => brush?.enabled || brush?.isZoomBrushEnabled,
+);
 
-export const selectorIsBrushSelectionActive = createSelector([selectorBrush], (brush) => {
-  return brush?.enabled && brush?.start !== null && brush?.current !== null;
-});
+export const selectorIsBrushSelectionActive = createSelector(
+  [selectorIsBrushEnabled, selectorBrush],
+  (isBrushEnabled, brush) => {
+    return isBrushEnabled && brush?.start !== null && brush?.current !== null;
+  },
+);
 
 export const selectorBrushShouldPreventAxisHighlight = createSelector(
   [selectorBrush, selectorIsBrushSelectionActive],

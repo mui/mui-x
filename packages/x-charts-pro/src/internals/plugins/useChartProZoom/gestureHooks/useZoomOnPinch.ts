@@ -31,10 +31,7 @@ export const useZoomOnPinch = (
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
   const config = useSelector(store, selectorZoomInteractionConfig, 'pinch' as const);
 
-  const isZoomOnPinchEnabled: boolean = React.useMemo(
-    () => (Object.keys(optionsLookup).length > 0 && Boolean(config)) || false,
-    [optionsLookup, config],
-  );
+  const isZoomOnPinchEnabled: boolean = Object.keys(optionsLookup).length > 0 && Boolean(config);
 
   React.useEffect(() => {
     if (!isZoomOnPinchEnabled) {

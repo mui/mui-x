@@ -8,6 +8,7 @@ import {
   openPreferencesMenu,
   toggleShowWeekends,
   toggleShowWeekNumber,
+  toggleShowEmptyDaysInAgenda,
 } from '../internals/utils/test-utils';
 
 describe('EventCalendar', () => {
@@ -277,6 +278,45 @@ describe('EventCalendar', () => {
       await user.click(document.body);
 
       expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0);
+    });
+
+    it('should allow to show / hide empty days using the UI in the agenda view', async () => {
+      const { user } = render(
+        <EventCalendar
+          events={[
+            {
+              id: '1',
+              start: adapter.date('2025-05-31'),
+              end: adapter.date('2025-05-31'),
+              title: 'Saturday event',
+            },
+            {
+              id: '2',
+              start: adapter.date('2025-06-02'),
+              end: adapter.date('2025-06-02'),
+              title: 'Monday event',
+            },
+          ]}
+          defaultView="agenda"
+        />,
+      );
+
+      // Empty days should be visible by default
+      expect(screen.getByLabelText(/Sunday 1/i)).not.to.equal(null);
+
+      // Hide empty days
+      await openPreferencesMenu(user);
+      await toggleShowEmptyDaysInAgenda(user);
+      await user.click(document.body);
+
+      expect(screen.queryByLabelText(/Sunday 1/i)).to.equal(null);
+
+      // Show empty days again
+      await openPreferencesMenu(user);
+      await toggleShowEmptyDaysInAgenda(user);
+      await user.click(document.body);
+
+      expect(screen.getByLabelText(/Sunday 1/i)).not.to.equal(null);
     });
   });
 });
