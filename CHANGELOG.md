@@ -31,6 +31,7 @@ The following are all team members who have contributed to this release:
 Same changes as in `@mui/x-data-grid@8.16.0`, plus:
 
 - [DataGridPro] Add explicit return type to `getVisibleRowsLookup()` to fix the build with `tsc` (#20116) @arminmeh
+- [DataGridPro] Retain the expansion state with expansion configuration props (#20126) @MBilalShafi
 
 #### `@mui/x-data-grid-premium@8.16.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
