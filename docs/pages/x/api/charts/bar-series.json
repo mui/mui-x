@@ -7,7 +7,11 @@
   ],
   "properties": {
     "type": { "type": { "description": "'bar'" }, "required": true },
-    "color": { "type": { "description": "SeriesColorProp&lt;TValue&gt;" } },
+    "color": {
+      "type": {
+        "description": "ChartsEnabledFeature extends { colorCallback: true } ? string | SeriesColorProp&lt;TValue&gt; : string"
+      }
+    },
     "data": { "type": { "description": "readonly (number | null)[]" } },
     "dataKey": { "type": { "description": "string" } },
     "highlightScope": { "type": { "description": "HighlightScope" } },

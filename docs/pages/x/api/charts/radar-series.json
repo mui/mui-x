@@ -8,7 +8,11 @@
   "properties": {
     "data": { "type": { "description": "number[]" }, "required": true },
     "type": { "type": { "description": "'radar'" }, "required": true },
-    "color": { "type": { "description": "SeriesColorProp&lt;TValue&gt;" } },
+    "color": {
+      "type": {
+        "description": "ChartsEnabledFeature extends { colorCallback: true } ? string | SeriesColorProp&lt;TValue&gt; : string"
+      }
+    },
     "fillArea": { "type": { "description": "boolean" } },
     "hideMark": { "type": { "description": "boolean" } },
     "highlightScope": { "type": { "description": "HighlightScope" } },
