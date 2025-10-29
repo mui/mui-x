@@ -192,7 +192,8 @@ const esESGrid: Partial<GridLocaleText> = {
     if (!estimated) {
       return `${from}–${to} de ${count !== -1 ? count : `más de ${to}`}`;
     }
-    const estimatedLabel = estimated && estimated > to ? `alrededor de ${estimated}` : `más de ${to}`;
+    const estimatedLabel =
+      estimated && estimated > to ? `alrededor de ${estimated}` : `más de ${to}`;
     return `${from}–${to} de ${count !== -1 ? count : estimatedLabel}`;
   },
   paginationItemAriaLabel: (type) => {
@@ -275,7 +276,8 @@ const esESGrid: Partial<GridLocaleText> = {
   chartsMenuRemove: 'Eliminar',
   chartsDragToDimensions: (dimensionLabel: string) =>
     `Arrastrar aquí para utilizar la columna como ${dimensionLabel}`,
-  chartsDragToValues: (valuesLabel: string) => `Arrastrar aquí para utilizar la columna como  ${valuesLabel}`,
+  chartsDragToValues: (valuesLabel: string) =>
+    `Arrastrar aquí para utilizar la columna como  ${valuesLabel}`,
 
   // AI Assistant panel
   aiAssistantPanelTitle: 'Asistente de IA',
@@ -290,7 +292,8 @@ const esESGrid: Partial<GridLocaleText> = {
   promptFieldPlaceholder: 'Escribe un prompt…',
   promptFieldPlaceholderWithRecording: 'Escriba o grabe un prompt…',
   promptFieldPlaceholderListening: 'Esperando por un prompt…',
-  promptFieldSpeechRecognitionNotSupported: 'El reconocimiento de voz no está soportado en este navegador',
+  promptFieldSpeechRecognitionNotSupported:
+    'El reconocimiento de voz no está soportado en este navegador',
   promptFieldSend: 'Enviar',
   promptFieldRecord: 'Grabar',
   promptFieldStopRecording: 'Parar de grabar',
