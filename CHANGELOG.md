@@ -12,6 +12,7 @@ _Oct 29, 2025_
 We'd like to extend a big thank you to the 12 contributors who made this release possible. Here are some highlights ✨:
 
 - 🖌️ Add `brush` zoom interaction to charts
+- 🔁 [Server-side update](https://mui.com/x/react-data-grid/server-side-data/#updating-server-side-data) in a grid with tree data/row grouping and aggregation will trigger re-fetch for all parent levels of that row to update aggregated values. See the [demo](https://mui.com/x/react-data-grid/server-side-data/aggregation/#usage-with-tree-data).
 
 Special thanks go out to the community members for their valuable contributions:
 @felix-wg, @frncesc
