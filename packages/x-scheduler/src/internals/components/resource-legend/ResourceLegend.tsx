@@ -58,22 +58,27 @@ function ResourceLegendItem(props: { resource: CalendarResource }) {
   );
 }
 
-const getVisibilityDifferenceMap = (allResources: CalendarResource[], newValue: string[]) => {
+const getVisibilityDifferenceMap = (
+  allResourceIds: readonly string[],
+  childrenIdsMap: Map<string, string[]>,
+  newValue: string[],
+) => {
   const newVisibleResourcesSet = new Set(newValue);
   const diffMap = new Map<string, boolean>();
 
-  const propagateChangeToChildren = (resource: CalendarResource, isVisible: boolean) => {
-    diffMap.set(resource.id, isVisible);
-    if (resource.children && resource.children.length > 0) {
-      for (const child of resource.children) {
-        diffMap.set(child.id, isVisible);
-        propagateChangeToChildren(child, isVisible);
+  const propagateChangeToChildren = (resourceId: string, isVisible: boolean) => {
+    diffMap.set(resourceId, isVisible);
+    const childIds = childrenIdsMap.get(resourceId) || [];
+    if (childIds.length > 0) {
+      for (const childId of childIds) {
+        diffMap.set(childId, isVisible);
+        propagateChangeToChildren(childId, isVisible);
       }
     }
   };
 
-  for (const resource of allResources) {
-    propagateChangeToChildren(resource, newVisibleResourcesSet.has(resource.id));
+  for (const resourceId of allResourceIds) {
+    propagateChangeToChildren(resourceId, newVisibleResourcesSet.has(resourceId));
   }
   return diffMap;
 };
@@ -87,10 +92,13 @@ export const ResourceLegend = React.forwardRef(function ResourceLegend(
   const store = useEventCalendarStoreContext();
   const resources = useStore(store, selectors.processedResourceList);
   const visibleResourcesList = useStore(store, selectors.visibleResourcesList);
+  const resourceIdList = useStore(store, selectors.resourceIdList);
+  const resourceChildrenIdsList = useStore(store, selectors.resourceChildrenIdMap);
 
   const handleVisibleResourcesChange = useEventCallback((value: string[]) => {
     const differenceMap = getVisibilityDifferenceMap(
-      selectors.processedResourceList(store.state),
+      resourceIdList,
+      resourceChildrenIdsList,
       value,
     );
 

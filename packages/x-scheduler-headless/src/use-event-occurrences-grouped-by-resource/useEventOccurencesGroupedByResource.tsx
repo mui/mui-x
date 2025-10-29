@@ -20,6 +20,7 @@ export function useEventOccurrencesGroupedByResource(
   const events = useStore(store, selectors.processedEventList);
   const visibleResources = useStore(store, selectors.visibleResourcesMap);
   const resources = useStore(store, selectors.processedResourceList);
+  const resourcesChildrenMap = useStore(store, selectors.processedResourceChildrenMap);
 
   return React.useMemo(
     () =>
@@ -28,10 +29,11 @@ export function useEventOccurrencesGroupedByResource(
         events,
         visibleResources,
         resources,
+        resourcesChildrenMap,
         start,
         end,
       ),
-    [adapter, events, visibleResources, resources, start, end],
+    [adapter, events, visibleResources, resources, resourcesChildrenMap, start, end],
   );
 }
 
@@ -61,6 +63,7 @@ export function innerGetEventOccurrencesGroupedByResource(
   events: CalendarEvent[],
   visibleResources: Map<string, boolean>,
   resources: readonly CalendarResource[],
+  resourcesChildrenMap: Map<string, readonly CalendarResource[]>,
   start: SchedulerValidDate,
   end: SchedulerValidDate,
 ): InnerGetEventOccurrencesGroupedByResourceReturnValue[] {
@@ -84,8 +87,9 @@ export function innerGetEventOccurrencesGroupedByResource(
     return sortedResources.reduce(
       (acc: InnerGetEventOccurrencesGroupedByResourceReturnValue[], resource: CalendarResource) => {
         acc.push({ resource, occurrences: occurrencesGroupedByResource.get(resource.id) ?? [] });
-        if (resource.children && resource.children.length > 0) {
-          acc.push(...processResources(resource.children));
+        const children = resourcesChildrenMap.get(resource.id) ?? [];
+        if (children.length > 0) {
+          acc.push(...processResources(children));
         }
         return acc;
       },

@@ -37,11 +37,31 @@ const processedResourceListSelector = createSelectorMemoized(
     resourceIds.map((id) => processedResourceLookup.get(id)!),
 );
 
+const resourceChildrenIdListSelector = createSelector(
+  (state: State, resourceId: string) => state.resourceChildrenIdMap.get(resourceId) || [],
+);
+
+const resourcesChildrenMapSelector = createSelectorMemoized(
+  (state: State) => state.processedResourceLookup,
+  (state: State) => state.resourceChildrenIdMap,
+  (processedResourceLookup, resourceChildrenIdMap) => {
+    const result: Map<string, CalendarResource[]> = new Map();
+
+    for (const [resourceId, childrenIds] of resourceChildrenIdMap) {
+      const children = childrenIds.map((id) => processedResourceLookup.get(id)!);
+      result.set(resourceId, children);
+    }
+
+    return result;
+  },
+);
+
 const resourcesFlatListSelector = createSelectorMemoized(
   (state: State) => state.resourceIdList,
   (state: State) => state.processedResourceLookup,
-  (resourceIds, processedResourceLookup) => {
-    const flatArray: CalendarResource[] = [];
+  (state: State) => state.resourceChildrenIdMap,
+  (resourceIds, processedResourceLookup, resourceChildrenIdMap) => {
+    const flatList: CalendarResource[] = [];
 
     const addResourceAndChildren = (resourceId: string) => {
       const resource = processedResourceLookup.get(resourceId);
@@ -49,12 +69,12 @@ const resourcesFlatListSelector = createSelectorMemoized(
         return;
       }
 
-      const { children, ...resourceWithoutChildren } = resource;
-      flatArray.push(resourceWithoutChildren);
+      flatList.push(resource);
 
-      if (children) {
-        for (const child of children) {
-          addResourceAndChildren(child.id);
+      const childrenIds = resourceChildrenIdMap.get(resourceId) || [];
+      if (childrenIds.length) {
+        for (const childId of childrenIds) {
+          addResourceAndChildren(childId);
         }
       }
     };
@@ -62,7 +82,7 @@ const resourcesFlatListSelector = createSelectorMemoized(
     for (const resourceId of resourceIds) {
       addResourceAndChildren(resourceId);
     }
-    return flatArray;
+    return flatList;
   },
 );
 
@@ -81,7 +101,10 @@ export const selectors = {
   eventModelLookup: createSelector((state: State) => state.eventModelLookup),
   processedResourceList: processedResourceListSelector,
   processedResourceFlatList: resourcesFlatListSelector,
+  processedResourceChildrenMap: resourcesChildrenMapSelector,
+  resourceChildrenIdMap: (state: State) => state.resourceChildrenIdMap,
   resourceIdList: createSelector((state: State) => state.resourceIdList),
+  resourceChildrenIdsList: resourceChildrenIdListSelector,
   visibleResourcesMap: createSelector((state: State) => state.visibleResources),
   canCreateNewEvent: createSelector((state: State) => !state.readOnly),
   resource: resourceSelector,
@@ -116,27 +139,18 @@ export const selectors = {
     },
   ),
   visibleResourcesList: createSelectorMemoized(
-    processedResourceListSelector,
+    resourcesFlatListSelector,
     (state: State) => state.visibleResources,
     (resources, visibleResources) => {
       const result: string[] = [];
 
-      const addResourceAndChildren = (resource: CalendarResource) => {
+      for (const resource of resources) {
         const isVisible =
           !visibleResources.has(resource.id) || visibleResources.get(resource.id) === true;
 
         if (isVisible) {
           result.push(resource.id);
-          if (resource.children) {
-            for (const child of resource.children) {
-              addResourceAndChildren(child);
-            }
-          }
         }
-      };
-
-      for (const resource of resources) {
-        addResourceAndChildren(resource);
       }
 
       return result;

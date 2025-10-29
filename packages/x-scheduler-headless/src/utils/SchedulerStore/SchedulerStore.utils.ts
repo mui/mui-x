@@ -205,21 +205,27 @@ export function buildResourcesState<TEvent extends object, TResource extends obj
   parameters: Pick<SchedulerParameters<TEvent, TResource>, 'resources' | 'resourceModelStructure'>,
 ): Pick<
   SchedulerState<TEvent>,
-  'resourceIdList' | 'processedResourceLookup' | 'resourceModelStructure'
+  'resourceIdList' | 'processedResourceLookup' | 'resourceModelStructure' | 'resourceChildrenIdMap'
 > {
   const { resources = EMPTY_ARRAY, resourceModelStructure } = parameters;
 
   const resourceIdList: string[] = [];
   const processedResourceLookup = new Map<CalendarResourceId, CalendarResource>();
+  const resourceChildrenIdMap = new Map<CalendarResourceId, CalendarResourceId[]>();
 
   const processResource = (processedResource: CalendarResource) => {
-    processedResourceLookup.set(processedResource.id, processedResource);
-    if (processedResource.children) {
-      for (const child of processedResource.children) {
+    const { children, ...resourceWithoutChildren } = processedResource;
+    processedResourceLookup.set(processedResource.id, resourceWithoutChildren);
+    if (children) {
+      for (const child of children) {
         const processedChild = getProcessedResourceFromModel(
           child as TResource,
           resourceModelStructure,
         );
+        if (!resourceChildrenIdMap.get(processedResource.id)) {
+          resourceChildrenIdMap.set(processedResource.id, []);
+        }
+        resourceChildrenIdMap.get(processedResource.id)?.push(processedChild.id);
         processResource(processedChild);
       }
     }
@@ -235,5 +241,6 @@ export function buildResourcesState<TEvent extends object, TResource extends obj
     resourceIdList,
     processedResourceLookup,
     resourceModelStructure,
+    resourceChildrenIdMap,
   };
 }

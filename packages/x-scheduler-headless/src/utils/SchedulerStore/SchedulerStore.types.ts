@@ -50,6 +50,10 @@ export interface SchedulerState<TEvent extends object = any> {
    */
   resourceIdList: readonly CalendarResourceId[];
   /**
+   * The IDs of the children for each resource.
+   */
+  resourceChildrenIdMap: Map<CalendarResourceId, CalendarResourceId[]>;
+  /**
    * A lookup to get the processed resource from its ID.
    */
   processedResourceLookup: Map<CalendarResourceId, CalendarResource>;
