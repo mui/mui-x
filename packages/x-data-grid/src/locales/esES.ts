@@ -249,7 +249,7 @@ const esESGrid: Partial<GridLocaleText> = {
   pivotDragToColumns: 'Arrastrar aquí para crear columnas',
   pivotDragToValues: 'Arrastrar aquí para crear valores',
   pivotYearColumnHeaderName: '(Año)',
-  pivotQuarterColumnHeaderName: '(Cuatrimestre)',
+  pivotQuarterColumnHeaderName: '(Trimestre)',
 
   // Charts configuration panel
   chartsNoCharts: 'No hay ningún gráfico disponible',
