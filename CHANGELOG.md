@@ -42,7 +42,7 @@ Same changes as in `@mui/x-data-grid-pro@8.16.0`, plus:
 
 #### `@mui/x-date-pickers@8.16.0`
 
-- [pickers] Prevent blur event propagation on individual Sections (#19825) @michelengelen
+- [pickers] Prevent blur event propagation on individual sections (#19825) @michelengelen
 
 #### `@mui/x-date-pickers-pro@8.16.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
