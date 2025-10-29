@@ -5,6 +5,102 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.16.0
+<!-- generated comparing v8.15.0..master -->
+_Oct 29, 2025_
+
+We'd like to extend a big thank you to the 12 contributors who made this release possible. Here are some highlights ✨:
+
+- 🖌️ Add `brush` zoom interaction to charts
+
+Special thanks go out to the community members for their valuable contributions:
+@felix-wg
+
+The following are all team members who have contributed to this release:
+@alexfauquette, @arminmeh, @bernardobelchior, @brijeshb42, @flaviendelangle, @JCQuintas, @michelengelen, @noraleonte, @rita-codes, @sai6855
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.16.0`
+
+- [DataGrid] Ignore `Ctrl+A` key combination for the row selection in the community version (#20110) @felix-wg
+
+#### `@mui/x-data-grid-pro@8.16.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.16.0`, plus:
+
+- [DataGridPro] Add explicit return type to `getVisibleRowsLookup()` to fix the build with `tsc` (#20116) @arminmeh
+
+#### `@mui/x-data-grid-premium@8.16.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.16.0`, plus:
+
+- [DataGridPremium] Export and restore chart integration state (#20079) @arminmeh
+- [DataGridPremium] Fix grouping column valueFormatter crash  (#20070) @sai6855
+- [DataGridPremium] Refetch aggregation data after row update with server-side aggregation (#20039) @arminmeh
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.16.0`
+
+- [pickers] Prevent blur event propagation on individual Sections (#19825) @michelengelen
+
+#### `@mui/x-date-pickers-pro@8.16.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.16.0`.
+
+### Charts
+
+From https://github.com/mui/mui-x/pull/19899
+
+- Add `brush` selection to the chart's zoom
+
+#### `@mui/x-charts@8.16.0`
+
+- [charts] Allow tooltip to anchor items (#19954) @alexfauquette
+- [charts] Fix AreaChartConnectNulls demo height not correctly resizing (#20078) @sai6855
+- [charts] Fix charts resizing overflow (#20080) @alexfauquette
+- [charts] Fix tooltip not showing on first render (#20115) @bernardobelchior
+- [charts] Handle `undefined` id and color in series (#20087) @bernardobelchior
+- [charts] Remove useMemo from isZoomOn*Enabled and isPanOn*Enabled hooks (#20132) @Copilot
+- [charts] Use static data for perf (#20072) @JCQuintas
+
+#### `@mui/x-charts-pro@8.16.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.16.0`, plus:
+
+- [charts-pro] Add `brush` zoom interaction (#19899) @JCQuintas
+- [charts-pro] Add sankey performance check (#20069) @JCQuintas
+
+#### `@mui/x-charts-premium@8.16.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@8.16.0`.
+
+### Tree View
+
+#### `@mui/x-tree-view@8.16.0`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@8.16.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.16.0`.
+
+### Codemod
+
+#### `@mui/x-codemod@8.16.0`
+
+Internal changes.
+
+### Core
+
+- [code-infra] Setup eslint compat plugin (#20105) @brijeshb42
+
+### Miscellaneous
+
+- [infra] Improve store types (#20129) @JCQuintas
+- [x-telemetry] Skip telemetry tests on browser mode (#20122) @bernardobelchior
+
 ## 8.15.0
 
 _Oct 23, 2025_
