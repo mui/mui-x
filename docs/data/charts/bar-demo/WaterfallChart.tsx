@@ -10,7 +10,7 @@ const dollarFormatter = new Intl.NumberFormat('en-US', {
   maximumFractionDigits: 0,
 });
 
-export default function BasicBarRange() {
+export default function WaterfallChart() {
   const theme = useTheme();
   const palette = rainbowSurgePalette(theme.palette.mode);
   const blue = palette[0];
