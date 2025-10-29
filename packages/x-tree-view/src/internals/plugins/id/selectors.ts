@@ -7,7 +7,6 @@ export const idSelectors = {
    * Get the id attribute of the tree view.
    */
   treeId: createSelector((state: MinimalTreeViewState<any, any>) => state.treeId),
-
   /**
    * Generate the id attribute (i.e.: the `id` attribute passed to the DOM element) of a Tree Item.
    * If the user explicitly defined an id attribute, it will be returned.
