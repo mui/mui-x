@@ -6,6 +6,10 @@ import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect
 import { useStore } from '@base-ui-components/utils/store';
 import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-headless/use-event-occurrences-grouped-by-day';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
+import {
+  eventCalendarPreferenceSelectors,
+  eventCalendarViewSelectors,
+} from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { CalendarProcessedDate } from '@mui/x-scheduler-headless/models';
 import { useAdapter, diffIn, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
@@ -37,10 +41,10 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 
   // Selector hooks
   const visibleDate = useStore(store, selectors.visibleDate);
-  const hasDayView = useStore(store, selectors.hasDayView);
+  const hasDayView = useStore(store, eventCalendarViewSelectors.hasDayView);
   const now = useStore(store, selectors.nowUpdatedEveryMinute);
   const isMultiDayEvent = useStore(store, selectors.isMultiDayEvent);
-  const ampm = useStore(store, selectors.ampm);
+  const ampm = useStore(store, eventCalendarPreferenceSelectors.ampm);
   const showCurrentTimeIndicator = useStore(store, selectors.showCurrentTimeIndicator);
 
   // Feature hooks

@@ -3,6 +3,7 @@ import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store';
 import { useDayList } from '@mui/x-scheduler-headless/use-day-list';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
+import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
 import {
@@ -25,7 +26,7 @@ export const WeekView = React.memo(
     const adapter = useAdapter();
     const store = useEventCalendarStoreContext();
     const visibleDate = useStore(store, selectors.visibleDate);
-    const showWeekends = useStore(store, selectors.showWeekends);
+    const showWeekends = useStore(store, eventCalendarPreferenceSelectors.showWeekends);
     const getDayList = useDayList();
 
     const days = React.useMemo(

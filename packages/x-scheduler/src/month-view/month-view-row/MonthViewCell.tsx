@@ -6,6 +6,10 @@ import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { useAdapter, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
+import {
+  eventCalendarOccurrencePlaceholderSelectors,
+  eventCalendarViewSelectors,
+} from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { selectors } from '@mui/x-scheduler-headless/use-event-calendar';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 import { DayGridEvent } from '../../internals/components/event/day-grid-event/DayGridEvent';
@@ -28,9 +32,13 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const { open: startEditing } = useEventPopoverContext();
 
   // Selector hooks
-  const hasDayView = useStore(store, selectors.hasDayView);
+  const hasDayView = useStore(store, eventCalendarViewSelectors.hasDayView);
   const visibleDate = useStore(store, selectors.visibleDate);
-  const isCreation = useStore(store, selectors.isCreatingNewEventInDayCell, day.value);
+  const isCreation = useStore(
+    store,
+    eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell,
+    day.value,
+  );
   const canCreateEvent = useStore(store, selectors.canCreateNewEvent);
   const placeholder = CalendarGrid.usePlaceholderInDay(day.value, row);
 

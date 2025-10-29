@@ -15,6 +15,10 @@ import { selectors } from '@mui/x-scheduler-headless/use-event-calendar';
 import { useAdapter, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-timeline-position';
+import {
+  eventCalendarOccurrencePlaceholderSelectors,
+  eventCalendarPreferenceSelectors,
+} from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
 import { EventPopoverTrigger } from '../event-popover';
 import { useEventPopoverContext } from '../event-popover/EventPopover';
@@ -76,7 +80,12 @@ function ColumnInteractiveLayer({
   const columnRef = React.useRef<HTMLDivElement | null>(null);
 
   // Selector hooks
-  const isCreation = useStore(store, selectors.isCreatingNewEventInTimeRange, start, end);
+  const isCreation = useStore(
+    store,
+    eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange,
+    start,
+    end,
+  );
   const placeholder = CalendarGrid.usePlaceholderInRange({ start, end, occurrences, maxIndex });
   const canCreateEvent = useStore(store, selectors.canCreateNewEvent);
 
@@ -142,7 +151,7 @@ function TimeGridCurrentTimeLabel() {
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
   const now = useStore(store, selectors.nowUpdatedEveryMinute);
-  const ampm = useStore(store, selectors.ampm);
+  const ampm = useStore(store, eventCalendarPreferenceSelectors.ampm);
   const timeFormat = ampm ? 'hoursMinutes12h' : 'hoursMinutes24h';
 
   const currentTimeLabel = React.useMemo(

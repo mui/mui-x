@@ -2,11 +2,8 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useStore } from '@base-ui-components/utils/store';
-import {
-  selectors,
-  useExtractTimelineParameters,
-  useTimeline,
-} from '@mui/x-scheduler-headless/use-timeline';
+import { useExtractTimelineParameters, useTimeline } from '@mui/x-scheduler-headless/use-timeline';
+import { timelineViewSelectors } from '@mui/x-scheduler-headless/timeline-selectors';
 import { TimelineStoreContext } from '@mui/x-scheduler-headless/use-timeline-store-context';
 import { TimelineView } from '@mui/x-scheduler-headless/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
@@ -27,8 +24,8 @@ export const Timeline = React.forwardRef(function Timeline<
   >(props);
   const store = useTimeline(parameters);
 
-  const view = useStore(store, selectors.view);
-  const views = useStore(store, selectors.views);
+  const view = useStore(store, timelineViewSelectors.view);
+  const views = useStore(store, timelineViewSelectors.views);
 
   return (
     <TimelineStoreContext.Provider value={store}>

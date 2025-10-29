@@ -7,6 +7,7 @@ import { Repeat } from 'lucide-react';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { selectors } from '@mui/x-scheduler-headless/use-event-calendar';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
+import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { EventItemProps } from './EventItem.types';
 import { getColorClassName } from '../../../utils/color-utils';
 import { useTranslations } from '../../../utils/TranslationsContext';
@@ -43,7 +44,7 @@ export const EventItem = React.forwardRef(function EventItem(
   const id = useId(idProp);
 
   // Selector hooks
-  const ampm = useStore(store, selectors.ampm);
+  const ampm = useStore(store, eventCalendarPreferenceSelectors.ampm);
   const resource = useStore(store, selectors.resource, occurrence.resource);
   const color = useStore(store, selectors.eventColor, occurrence.id);
 
