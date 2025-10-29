@@ -48,18 +48,12 @@ export const useChartBrush: ChartPlugin<UseChartBrushSignature> = ({
   });
 
   const setZoomBrushEnabled = useEventCallback(function setZoomBrushEnabled(enabled: boolean) {
-    store.update((prev) => {
-      if (prev.brush.isZoomBrushEnabled === enabled) {
-        return prev;
-      }
-
-      return {
-        ...prev,
-        brush: {
-          ...prev.brush,
-          isZoomBrushEnabled: enabled,
-        },
-      };
+    if (store.state.brush.isZoomBrushEnabled === enabled) {
+      return;
+    }
+    store.set('brush', {
+      ...store.state.brush,
+      isZoomBrushEnabled: enabled,
     });
   });
 
