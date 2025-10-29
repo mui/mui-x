@@ -95,10 +95,10 @@ Internal changes.
 ### Core
 
 - [code-infra] Setup eslint compat plugin (#20105) @brijeshb42
+- [code-infra] Improve store types (#20129) @JCQuintas
 
 ### Miscellaneous
 
-- [infra] Improve store types (#20129) @JCQuintas
 - [x-telemetry] Skip telemetry tests on browser mode (#20122) @bernardobelchior
 
 ## 8.15.0
