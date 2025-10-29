@@ -111,7 +111,6 @@ export function computeAxisValue<T extends ChartSeriesType>({
     const zoomRange: [number, number] = zoom ? [zoom.start, zoom.end] : [0, 100];
     const range = getRange(drawingArea, axisDirection, axis.reverse ?? false);
 
-
     const rawTickNumber = domains[axis.id].tickNumber!;
 
     const triggerTooltip = !axis.ignoreTooltip && axisIdsTriggeringTooltip.has(axis.id);

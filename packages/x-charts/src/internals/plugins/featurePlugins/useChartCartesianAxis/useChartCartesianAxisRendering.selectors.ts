@@ -129,7 +129,11 @@ export const selectorChartXDomains = createSelector(
         domains[axis.id] = { domain: axis.data! };
 
         if (axis.isNumerical) {
-          domains[axis.id].tickNumber = getTickNumber(axis, [axis.data?.find(d => d !== null), axis.data?.findLast(d => d !== null)], defaultTickNumber)
+          domains[axis.id].tickNumber = getTickNumber(
+            axis,
+            [axis.data?.find((d) => d !== null), axis.data?.findLast((d) => d !== null)],
+            defaultTickNumber,
+          );
         }
         return;
       }
@@ -182,7 +186,11 @@ export const selectorChartYDomains = createSelector(
         domains[axis.id] = { domain: axis.data! };
 
         if (axis.isNumerical) {
-          domains[axis.id].tickNumber = getTickNumber(axis, [axis.data?.find(d => d !== null), axis.data?.findLast(d => d !== null)], defaultTickNumber)
+          domains[axis.id].tickNumber = getTickNumber(
+            axis,
+            [axis.data?.find((d) => d !== null), axis.data?.findLast((d) => d !== null)],
+            defaultTickNumber,
+          );
         }
         return;
       }

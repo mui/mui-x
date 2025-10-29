@@ -27,11 +27,11 @@ export default function OrdinalTickPlacement() {
       />
       <BarChartPro
         {...barSettings}
-        xAxis={[{ ...xAxis, scaleType: 'band', zoom, tickNumber: 4, isNumerical }]}
+        xAxis={[{ ...xAxis, scaleType: 'band', zoom, tickNumber: 5, isNumerical }]}
       />
       <LineChartPro
         {...lineSettings}
-        xAxis={[{ ...xAxis, scaleType: 'point', zoom, tickNumber: 4, isNumerical }]}
+        xAxis={[{ ...xAxis, scaleType: 'point', zoom, tickNumber: 5, isNumerical }]}
       />
     </Box>
   );
@@ -44,7 +44,7 @@ const xAxis: XAxis = {
   data: alphabetStock.map((day) => new Date(day.date)),
   scaleType: 'band',
   zoom: true,
-  tickNumber: 4,
+  tickNumber: 10,
   valueFormatter: (value) => value.toLocaleDateString(),
   height: 30,
 };

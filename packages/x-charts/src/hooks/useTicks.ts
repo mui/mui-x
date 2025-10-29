@@ -1,11 +1,9 @@
 'use client';
 import * as React from 'react';
-import { NumberValue } from '@mui/x-charts-vendor/d3-scale';
 import { useChartContext } from '../context/ChartProvider';
 import { AxisConfig, D3ContinuousScale, D3Scale } from '../models/axis';
 import { isBandScale, isOrdinalScale } from '../internals/scaleGuards';
 import { isInfinity } from '../internals/isInfinity';
-import { getScale } from '../internals/getScale';
 
 export interface TickParams {
   /**
@@ -68,17 +66,112 @@ export type TickItemType = {
 
 interface GetTicksOptions
   extends Pick<TickParams, 'tickInterval' | 'tickPlacement' | 'tickLabelPlacement'>,
-  Required<Pick<TickParams, 'tickNumber'>> {
+    Required<Pick<TickParams, 'tickNumber'>> {
   scale: D3Scale;
   valueFormatter?: AxisConfig['valueFormatter'];
   isInside: (offset: number) => boolean;
   continuousTickPlacement?: boolean;
 }
 
-/*
- * The ratio between the number of ticks in a continuous scale vs an ordinal scale needed to apply the continuous ticks logic.
- */
-const CONTINUOUS_TICKS_RATIO = 3;
+type TicksDefinition = {
+  getTickNumber: (from: Date, to: Date) => number;
+  isTick: (prev: Date, value: Date) => boolean;
+  format: (d: Date) => string;
+};
+// Different ticks levels
+const tickSpaces: TicksDefinition[] = [
+  // years
+  {
+    getTickNumber: (from: Date, to: Date) => Math.abs(to.getFullYear() - from.getFullYear()),
+    isTick: (prev: Date, value: Date) => value.getFullYear() !== prev.getFullYear(),
+    format: (d: Date) => d.getFullYear().toString(),
+  },
+  // 3 months
+  {
+    getTickNumber: (from: Date, to: Date) =>
+      Math.floor(
+        Math.abs(
+          to.getFullYear() * 12 + to.getMonth() - 12 * from.getFullYear() - from.getMonth(),
+        ) / 3,
+      ),
+    isTick: (prev: Date, value: Date) =>
+      value.getMonth() !== prev.getMonth() && value.getMonth() % 3 === 0,
+    format: (d: Date) => d.toLocaleString('default', { month: 'short' }),
+  },
+  // months
+  {
+    getTickNumber: (from: Date, to: Date) =>
+      Math.abs(to.getFullYear() * 12 + to.getMonth() - 12 * from.getFullYear() - from.getMonth()),
+    isTick: (prev: Date, value: Date) => value.getMonth() !== prev.getMonth(),
+    format: (d: Date) => d.toLocaleString('default', { month: 'short' }),
+  },
+  // days
+  {
+    getTickNumber: (from: Date, to: Date) =>
+      Math.abs(to.getTime() - from.getTime()) / (1000 * 60 * 60 * 24),
+    isTick: (prev: Date, value: Date) => value.getDate() !== prev.getDate(),
+    format: (d: Date) => d.toLocaleDateString('default', { day: 'numeric' }),
+  },
+  // hours
+  {
+    getTickNumber: (from: Date, to: Date) =>
+      Math.abs(to.getTime() - from.getTime()) / (1000 * 60 * 60),
+    isTick: (prev: Date, value: Date) => value.getHours() !== prev.getHours(),
+    format: (d: Date) => d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+  },
+];
+
+function getTimeTicks(domain: Date[], tickNumber: number) {
+  const start = domain[0];
+  const end = domain[domain.length - 1];
+
+  let startSpaceIndex = 0;
+
+  while (
+    startSpaceIndex < tickSpaces.length &&
+    tickSpaces[startSpaceIndex].getTickNumber(start, end) === 0
+  ) {
+    startSpaceIndex += 1;
+  }
+  let endSpaceIndex = startSpaceIndex - 1;
+
+  while (
+    endSpaceIndex < tickSpaces.length &&
+    tickSpaces[endSpaceIndex + 1].getTickNumber(start, end) <= tickNumber
+  ) {
+    endSpaceIndex += 1;
+  }
+
+  const specialGroups = tickSpaces[endSpaceIndex].getTickNumber(start, end);
+  const subTicksPerGroup = Math.floor((tickNumber - specialGroups) / specialGroups);
+
+  const ticks: { index: number; formatter: (d: Date) => string }[] = [];
+  let prevIndex: number | null = null;
+  for (let tickIndex = 1; tickIndex < domain.length; tickIndex += 1) {
+    for (let i = startSpaceIndex; i <= endSpaceIndex; i += 1) {
+      const prevDate = domain[tickIndex - 1];
+      const currentDate = domain[tickIndex];
+      if (tickSpaces[i].isTick(prevDate, currentDate)) {
+        if (prevIndex !== null && tickIndex - prevIndex > subTicksPerGroup + 1) {
+          const step = Math.floor((tickIndex - prevIndex) / (subTicksPerGroup + 1));
+
+          for (let j = 1; j <= subTicksPerGroup; j += 1) {
+            ticks.push({
+              index: prevIndex + j * step,
+              formatter: (tickSpaces[endSpaceIndex + 1] ?? tickSpaces[endSpaceIndex]).format,
+            });
+          }
+        }
+
+        ticks.push({ index: tickIndex, formatter: tickSpaces[i].format });
+        prevIndex = tickIndex;
+        i = endSpaceIndex + 1; // break inner loop
+      }
+    }
+  }
+
+  return ticks;
+}
 
 export function getTicks(options: GetTicksOptions) {
   const {
@@ -95,106 +188,23 @@ export function getTicks(options: GetTicksOptions) {
   // ordinal scale with spaced ticks.
   if (isOrdinalScale(scale) && continuousTickPlacement) {
     const domain = scale.domain();
-    const range = scale.range();
 
-    const continuousScale = getScale(
-      typeof domain[0] === 'number' ? 'linear' : 'time',
-      [domain[0], domain[domain.length - 1]],
-      [range[0] + scale.bandwidth() / 2, range[1] - scale.bandwidth() / 2],
-    );
+    const tickPlacement = 'middle';
+    const ticksIndexes = getTimeTicks(domain as Date[], tickNumber);
 
-    const ticks =
-      typeof tickInterval === 'object'
-        ? tickInterval
-        : getDefaultTicks(continuousScale, tickNumber);
-
-    // If the ratio is not met we stop the computation and fallback on the default ordinal ticks computation.
-    if (ticks.length * CONTINUOUS_TICKS_RATIO < domain.length) {
-      const visibleTicks: TickItemType[] = [];
-
-      let bandIndex = 0;
-      let lastAddedBandIndex: number | undefined = undefined;
-      for (let i = 0; i < ticks.length; i += 1) {
-        while (domain[bandIndex].valueOf() < ticks[i] && bandIndex < domain.length - 1) {
-          bandIndex += 1;
-        }
-        const tickValue = ticks[i];
-        const bandValue = domain[bandIndex] as NumberValue;
-
-        // Compute the average band width based on the closest values.
-        let bandNumber = 0;
-        let minValue: NumberValue = bandValue;
-        let maxValue: NumberValue = bandValue;
-        if (bandIndex > 0) {
-          const prevValue = domain[bandIndex - 1];
-          if (prevValue !== null && typeof prevValue !== 'string') {
-            minValue = prevValue;
-            bandNumber += 1;
-          }
-        }
-        if (bandIndex < domain.length - 1) {
-          const nextValue = domain[bandIndex + 1];
-          if (nextValue !== null && typeof nextValue !== 'string') {
-            maxValue = nextValue;
-            bandNumber += 1;
-          }
-        }
-        const avgBandWidth = (maxValue.valueOf() - minValue.valueOf()) / bandNumber;
-
-        // If the tick is too far from the band value we skip it.
-        if (Math.abs(tickValue.valueOf() - bandValue.valueOf()) > 2 * avgBandWidth) {
-          continue;
-        }
-
-        // Deduce from average band width the position of the tick in the band.
-        const bandStart = scale(bandValue.valueOf())! - (scale.step() - scale.bandwidth()) / 2;
-        let offset = bandStart;
-
-        if (tickValue.valueOf() >= bandValue.valueOf() - avgBandWidth / 3) {
-          offset = bandStart + 0.5 * scale.step();
-        }
-        if (tickValue.valueOf() > bandValue.valueOf() + avgBandWidth / 3) {
-          offset = bandStart + scale.step();
-        }
-
-        offset = Math.round(offset); // Rounding offset to avoid subpixel errors. like 100.0000001 being refused cause it's larger than 100.
-        if (isInside(offset)) {
-          const defaultTickLabel = continuousScale.tickFormat(tickNumber)(tickValue);
-
-          if (lastAddedBandIndex !== undefined && bandIndex === lastAddedBandIndex) {
-            visibleTicks[visibleTicks.length - 1] = {
-              value: bandValue,
-              formattedValue:
-                valueFormatter?.(tickValue, {
-                  location: 'tick',
-                  scale,
-                  tickNumber,
-                  defaultTickLabel,
-                }) ?? defaultTickLabel,
-              offset,
-              labelOffset: 0,
-            };
-            continue;
-          }
-
-          visibleTicks.push({
-            value: bandValue,
-            formattedValue:
-              valueFormatter?.(tickValue, {
-                location: 'tick',
-                scale,
-                tickNumber,
-                defaultTickLabel,
-              }) ?? defaultTickLabel,
-            offset,
-            labelOffset: 0,
-          });
-          lastAddedBandIndex = bandIndex;
-        }
-      }
-
-      return visibleTicks;
-    }
+    return ticksIndexes.map(({ index, formatter }) => {
+      const value = domain[index];
+      const formattedValue = formatter(value as Date);
+      return {
+        value,
+        formattedValue,
+        offset:
+          scale(value)! -
+          (scale.step() - scale.bandwidth()) / 2 +
+          offsetRatio[tickPlacement] * scale.step(),
+        labelOffset: 0,
+      };
+    });
   }
 
   const tickPlacement = tickPlacementProp ?? 'extremities';
@@ -234,12 +244,12 @@ export function getTicks(options: GetTicksOptions) {
 
         ...(tickPlacement === 'extremities'
           ? [
-            {
-              formattedValue: undefined,
-              offset: scale.range()[1],
-              labelOffset: 0,
-            },
-          ]
+              {
+                formattedValue: undefined,
+                offset: scale.range()[1],
+                labelOffset: 0,
+              },
+            ]
           : []),
       ];
     }
