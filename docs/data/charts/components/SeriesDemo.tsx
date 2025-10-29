@@ -10,7 +10,7 @@ import Typography from '@mui/material/Typography';
 import { DefaultizedLineSeriesType } from '@mui/x-charts/models';
 
 declare module '@mui/x-charts/typeAugmentation' {
-  interface ChartsEnabledFeature {
+  interface ChartsEnabledFeatures {
     colorCallback: true;
   }
 }

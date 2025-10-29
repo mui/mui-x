@@ -11,7 +11,7 @@
     "baseline": { "type": { "description": "number | 'min' | 'max'" }, "default": "0" },
     "color": {
       "type": {
-        "description": "ChartsEnabledFeature extends { colorCallback: true } ? string | SeriesColorProp&lt;TValue&gt; : string"
+        "description": "ChartsEnabledFeatures extends { colorCallback: true } ? string | SeriesColorProp&lt;TValue&gt; : string"
       }
     },
     "connectNulls": { "type": { "description": "boolean" }, "default": "false" },
