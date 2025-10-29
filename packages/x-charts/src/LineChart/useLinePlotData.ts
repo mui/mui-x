@@ -10,6 +10,12 @@ import { getValueToPositionMapper, useLineSeriesContext, useXAxes, useYAxes } fr
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { SeriesId } from '../models/seriesType/common';
 
+declare module '@mui/x-charts/typeAugmentation' {
+  interface ChartsEnabledFeature {
+    colorCallback: true;
+  }
+}
+
 interface LinePlotDataPoint {
   d: string;
   seriesId: SeriesId;

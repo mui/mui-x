@@ -8,6 +8,12 @@ import { useZAxes } from '../hooks/useZAxis';
 import { scatterSeriesConfig as scatterSeriesConfig } from './seriesConfig';
 import { BatchScatter } from './BatchScatter';
 
+declare module '@mui/x-charts/typeAugmentation' {
+  interface ChartsEnabledFeature {
+    colorCallback: true;
+  }
+}
+
 export interface ScatterPlotSlots extends ScatterSlots {
   scatter?: React.JSXElementConstructor<ScatterProps>;
 }
