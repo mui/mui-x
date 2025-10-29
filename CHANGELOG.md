@@ -15,7 +15,7 @@ We'd like to extend a big thank you to the 12 contributors who made this release
 - 🔁 [Server-side update](https://mui.com/x/react-data-grid/server-side-data/#updating-server-side-data) in a grid with tree data/row grouping and aggregation will trigger re-fetch for all parent levels of that row to update aggregated values. See the [demo](https://mui.com/x/react-data-grid/server-side-data/aggregation/#usage-with-tree-data).
 
 Special thanks go out to the community members for their valuable contributions:
-@felix-wg, @frncesc
+@felix-wg, @frncesc, @sai6855
 
 The following are all team members who have contributed to this release:
 @alexfauquette, @arminmeh, @bernardobelchior, @brijeshb42, @flaviendelangle, @JCQuintas, @MBilalShafi, @michelengelen, @noraleonte, @rita-codes, @sai6855
