@@ -13,9 +13,21 @@ export type TreeViewItemPluginsRunner = (
   props: TreeItemProps,
 ) => Required<TreeViewItemPluginResponse>;
 
+export type TreeViewStoreInContext<TStore extends TreeViewAnyStore> = Omit<
+  TStore,
+  | 'setState'
+  | 'update'
+  | 'set'
+  | 'updateStateFromParameters'
+  | 'disposeEffect'
+  | 'registerStoreEffect'
+  | 'itemPluginManager'
+  | 'parameters'
+>;
+
 export interface TreeViewContextValue<TStore extends TreeViewAnyStore> {
   publicAPI: TreeViewPublicAPI<TStore>;
-  store: TStore;
+  store: TreeViewStoreInContext<TStore>;
   rootRef: React.RefObject<HTMLUListElement | null>;
   wrapItem: TreeItemWrapper<TStore>;
   runItemPlugins: TreeViewItemPluginsRunner;

@@ -2,8 +2,12 @@ import { TreeViewBaseItem, TreeViewItemId, TreeViewValidItem } from '../../../mo
 import { idSelectors } from '../id';
 import { generateTreeItemIdAttribute } from '../id/utils';
 import { itemsSelectors } from './selectors';
-import { BuildItemsLookupConfig, buildItemsLookups, TREE_VIEW_ROOT_PARENT_ID } from './utils';
+import { buildItemsLookups, TREE_VIEW_ROOT_PARENT_ID } from './utils';
 import type { MinimalTreeViewStore } from '../../MinimalTreeViewStore/MinimalTreeViewStore';
+import {
+  MinimalTreeViewParameters,
+  MinimalTreeViewState,
+} from '../../MinimalTreeViewStore/MinimalTreeViewStore.types';
 
 export class TreeViewItemsPlugin<R extends TreeViewValidItem<R>> {
   private store: MinimalTreeViewStore<R, any>;
@@ -13,6 +17,72 @@ export class TreeViewItemsPlugin<R extends TreeViewValidItem<R>> {
   constructor(store: any) {
     this.store = store;
   }
+
+  /**
+   * Determines if the items state should be rebuilt based on the new and previous parameters.
+   */
+  public static shouldRebuildItemsState = <R2 extends TreeViewValidItem<R2>>(
+    newParameters: MinimalTreeViewParameters<R2, any>,
+    previousParameters: MinimalTreeViewParameters<R2, any>,
+  ): boolean => {
+    return ['items', 'isItemDisabled', 'getItemId', 'getItemLabel', 'getItemChildren'].some(
+      (key) => {
+        const typedKey = key as keyof MinimalTreeViewParameters<R2, any>;
+        return newParameters[typedKey] !== previousParameters[typedKey];
+      },
+    );
+  };
+
+  /**
+   * Builds the state properties derived from the `items` prop.
+   */
+  public static buildItemsStateIfNeeded = <R2 extends TreeViewValidItem<R2>>(
+    parameters: Pick<
+      MinimalTreeViewParameters<R2, any>,
+      // When adding new parameters here, please also update the `shouldRebuildItemsState` method accordingly.
+      'items' | 'isItemDisabled' | 'getItemId' | 'getItemLabel' | 'getItemChildren'
+    >,
+  ) => {
+    const itemMetaLookup: MinimalTreeViewState<R2, any>['itemMetaLookup'] = {};
+    const itemModelLookup: MinimalTreeViewState<R2, any>['itemModelLookup'] = {};
+    const itemOrderedChildrenIdsLookup: MinimalTreeViewState<
+      R2,
+      any
+    >['itemOrderedChildrenIdsLookup'] = {};
+    const itemChildrenIndexesLookup: MinimalTreeViewState<R2, any>['itemChildrenIndexesLookup'] =
+      {};
+
+    function processSiblings(items: readonly R2[], parentId: string | null, depth: number) {
+      const parentIdWithDefault = parentId ?? TREE_VIEW_ROOT_PARENT_ID;
+      const { metaLookup, modelLookup, orderedChildrenIds, childrenIndexes, itemsChildren } =
+        buildItemsLookups({
+          storeParameters: parameters,
+          items,
+          parentId,
+          depth,
+          isItemExpandable: (item, children) => !!children && children.length > 0,
+          otherItemsMetaLookup: itemMetaLookup,
+        });
+
+      Object.assign(itemMetaLookup, metaLookup);
+      Object.assign(itemModelLookup, modelLookup);
+      itemOrderedChildrenIdsLookup[parentIdWithDefault] = orderedChildrenIds;
+      itemChildrenIndexesLookup[parentIdWithDefault] = childrenIndexes;
+
+      for (const item of itemsChildren) {
+        processSiblings(item.children || [], item.id, depth + 1);
+      }
+    }
+
+    processSiblings(parameters.items, null, 0);
+
+    return {
+      itemMetaLookup,
+      itemModelLookup,
+      itemOrderedChildrenIdsLookup,
+      itemChildrenIndexesLookup,
+    };
+  };
 
   /**
    * Get the item with the given id.
@@ -136,15 +206,8 @@ export class TreeViewItemsPlugin<R extends TreeViewValidItem<R>> {
     const parentDepth =
       parentId == null ? -1 : itemsSelectors.itemDepth(this.store.state, parentId);
 
-    const itemsConfig: BuildItemsLookupConfig = {
-      isItemDisabled: this.store.parameters.isItemDisabled,
-      getItemLabel: this.store.parameters.getItemLabel,
-      getItemChildren: this.store.parameters.getItemChildren,
-      getItemId: this.store.parameters.getItemId,
-    };
-
     const { metaLookup, modelLookup, orderedChildrenIds, childrenIndexes } = buildItemsLookups({
-      config: itemsConfig,
+      storeParameters: this.store.parameters,
       items,
       parentId,
       depth: parentDepth + 1,

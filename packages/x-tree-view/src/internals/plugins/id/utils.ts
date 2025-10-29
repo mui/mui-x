@@ -1,11 +1,5 @@
 import { TreeViewItemId } from '../../../models';
 
-let globalTreeViewDefaultId = 0;
-export const createTreeViewDefaultId = () => {
-  globalTreeViewDefaultId += 1;
-  return `mui-tree-view-${globalTreeViewDefaultId}`;
-};
-
 /**
  * Generate the id attribute (i.e.: the `id` attribute passed to the DOM element) of a Tree Item.
  * If the user explicitly defined an id attribute, it will be returned.

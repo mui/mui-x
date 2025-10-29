@@ -6,7 +6,7 @@ import {
   MinimalTreeViewState,
   TreeViewSelectionValue,
 } from './MinimalTreeViewStore.types';
-import { buildItemsState } from '../plugins/items/utils';
+import { TreeViewItemsPlugin } from '../plugins/items';
 
 /**
  * Returns the properties of the state that are derived from the parameters.
@@ -55,15 +55,7 @@ export function createMinimalInitialState<
     treeId: undefined,
     focusedItemId: null,
     ...deriveStateFromParameters(parameters),
-    ...buildItemsState({
-      items: parameters.items,
-      config: {
-        isItemDisabled: parameters.isItemDisabled,
-        getItemId: parameters.getItemId,
-        getItemLabel: parameters.getItemLabel,
-        getItemChildren: parameters.getItemChildren,
-      },
-    }),
+    ...TreeViewItemsPlugin.buildItemsStateIfNeeded(parameters),
     expandedItems: applyModelInitialValue(
       parameters.expandedItems,
       parameters.defaultExpandedItems,
@@ -76,3 +68,9 @@ export function createMinimalInitialState<
     ),
   };
 }
+
+let globalTreeViewDefaultId = 0;
+export const createTreeViewDefaultId = () => {
+  globalTreeViewDefaultId += 1;
+  return `mui-tree-view-${globalTreeViewDefaultId}`;
+};

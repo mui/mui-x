@@ -28,7 +28,7 @@ export function useTreeViewStore<TStore extends TreeViewAnyStore>(
     [store, isRtl, parameters],
   );
 
-  useOnMount(store.onMount);
+  useOnMount(store.disposeEffect);
 
   return store;
 }

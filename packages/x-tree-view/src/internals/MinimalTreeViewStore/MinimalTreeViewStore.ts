@@ -7,10 +7,12 @@ import {
   TreeViewParametersToStateMapper,
   MinimalTreeViewState,
 } from './MinimalTreeViewStore.types';
-import { buildItemsState } from '../plugins/items/utils';
 import { TreeViewValidItem } from '../../models';
-import { createMinimalInitialState, deriveStateFromParameters } from './MinimalTreeViewStore.utils';
-import { createTreeViewDefaultId } from '../plugins/id/utils';
+import {
+  createMinimalInitialState,
+  createTreeViewDefaultId,
+  deriveStateFromParameters,
+} from './MinimalTreeViewStore.utils';
 import { TimeoutManager } from './TimeoutManager';
 import { TreeViewKeyboardNavigationPlugin } from '../plugins/keyboardNavigation';
 import { TreeViewFocusPlugin } from '../plugins/focus/TreeViewFocusPlugin';
@@ -25,8 +27,6 @@ import {
   TreeViewEvents,
 } from '../models';
 
-export class MuiXStore {}
-
 export class MinimalTreeViewStore<
   R extends TreeViewValidItem<R>,
   Multiple extends boolean | undefined,
@@ -36,15 +36,15 @@ export class MinimalTreeViewStore<
     Multiple
   >,
 > extends Store<State> {
-  public parameters: Parameters;
-
   private initialParameters: Parameters | null = null;
-
-  public instanceName: string;
 
   private mapper: TreeViewParametersToStateMapper<R, Multiple, State, Parameters>;
 
   private eventManager = new EventManager();
+
+  public instanceName: string;
+
+  public parameters: Parameters;
 
   public timeoutManager = new TimeoutManager();
 
@@ -150,27 +150,11 @@ export class MinimalTreeViewStore<
       newMinimalState.treeId = createTreeViewDefaultId();
     }
 
-    const shouldUpdateItemsState =
+    if (
       !this.mapper.shouldIgnoreItemsStateUpdate(parameters) &&
-      (parameters.items !== this.parameters.items ||
-        parameters.isItemDisabled !== this.parameters.isItemDisabled ||
-        parameters.getItemId !== this.parameters.getItemId ||
-        parameters.getItemLabel !== this.parameters.getItemLabel ||
-        parameters.getItemChildren !== this.parameters.getItemChildren);
-
-    if (shouldUpdateItemsState) {
-      Object.assign(
-        newMinimalState,
-        buildItemsState({
-          items: parameters.items,
-          config: {
-            isItemDisabled: parameters.isItemDisabled,
-            getItemId: parameters.getItemId,
-            getItemLabel: parameters.getItemLabel,
-            getItemChildren: parameters.getItemChildren,
-          },
-        }),
-      );
+      TreeViewItemsPlugin.shouldRebuildItemsState(parameters, this.parameters)
+    ) {
+      Object.assign(newMinimalState, TreeViewItemsPlugin.buildItemsStateIfNeeded(parameters));
     }
 
     const newState = this.mapper.updateStateFromParameters(
@@ -183,7 +167,10 @@ export class MinimalTreeViewStore<
     this.parameters = parameters;
   }
 
-  public onMount = () => {
+  /**
+   * Returns a cleanup function that need to be called when the store is destroyed.
+   */
+  public disposeEffect = () => {
     return this.timeoutManager.clearAll;
   };
 
@@ -234,7 +221,6 @@ export class MinimalTreeViewStore<
     eventName: E,
     handler: TreeViewEventListener<E>,
   ) => {
-    // TODO: Add support for event.defaultMuiPrevented.
     this.eventManager.on(eventName, handler);
   };
 }
