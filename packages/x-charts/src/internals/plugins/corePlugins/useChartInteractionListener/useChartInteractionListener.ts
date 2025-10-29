@@ -27,6 +27,7 @@ type GestureManagerTyped = GestureManager<
   | MoveGesture<'move'>
   | PinchGesture<'zoomPinch'>
   | TurnWheelGesture<'zoomTurnWheel'>
+  | TurnWheelGesture<'panTurnWheel'>
   | TapGesture<'tap'>
   | PressGesture<'quickPress'>,
   | PanGesture<'pan'>
@@ -34,6 +35,7 @@ type GestureManagerTyped = GestureManager<
   | MoveGesture<'move'>
   | PinchGesture<'zoomPinch'>
   | TurnWheelGesture<'zoomTurnWheel'>
+  | TurnWheelGesture<'panTurnWheel'>
   | TapGesture<'tap'>
   | PressGesture<'quickPress'>
   | TapAndDragGesture<'zoomTapAndDrag'>
@@ -94,6 +96,11 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
             sensitivity: 0.01,
             initialDelta: 1,
           }),
+          new TurnWheelGesture({
+            name: 'panTurnWheel',
+            sensitivity: 0.5,
+            initialDelta: 1,
+          }),
           new TapAndDragGesture({
             name: 'zoomTapAndDrag',
             dragThreshold: 10,
@@ -125,6 +132,7 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
         'zoomPinch',
         'zoomPan',
         'zoomTurnWheel',
+        'panTurnWheel',
         'tap',
         'quickPress',
         'zoomTapAndDrag',
