@@ -178,6 +178,15 @@ export default defineConfig(
           additionalHooks: '(useEnhancedEffect|useIsoLayoutEffect|useEffectAfterFirstRender)',
         },
       ],
+
+      // TODO enable:
+      'react-hooks/refs': 'off',
+      'react-hooks/globals': 'off',
+      'react-hooks/immutability': 'off',
+      'react-hooks/preserve-manual-memoization': 'off',
+      'react-hooks/incompatible-library': 'off',
+      'react-hooks/static-components': 'off',
+      'react-hooks/purity': 'off',
     },
   },
   // Test start
