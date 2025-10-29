@@ -26,7 +26,7 @@ export const useZoomOnBrush = (
   const config = useSelector(store, selectorZoomInteractionConfig, ['brush' as const]);
 
   const isZoomOnBrushEnabled: boolean =
-    (Object.keys(optionsLookup).length > 0 && Boolean(config)) || false;
+    Object.keys(optionsLookup).length > 0 && Boolean(config);
 
   React.useEffect(() => {
     instance.setZoomBrushEnabled(isZoomOnBrushEnabled);

@@ -21,7 +21,7 @@ export const useZoomOnDoubleTapReset = (
   const config = useSelector(store, selectorZoomInteractionConfig, ['doubleTapReset' as const]);
 
   const isZoomOnDoubleTapResetEnabled: boolean =
-    (Object.keys(optionsLookup).length > 0 && Boolean(config)) || false;
+    Object.keys(optionsLookup).length > 0 && Boolean(config);
 
   React.useEffect(() => {
     if (!isZoomOnDoubleTapResetEnabled) {
