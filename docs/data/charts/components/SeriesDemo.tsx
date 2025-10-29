@@ -9,6 +9,12 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { DefaultizedLineSeriesType } from '@mui/x-charts/models';
 
+declare module '@mui/x-charts/typeAugmentation' {
+  interface ChartsEnabledFeature {
+    colorCallback: true;
+  }
+}
+
 function ExtremaLabels() {
   const lineSeries = useLineSeries();
 
@@ -49,13 +55,21 @@ function SingleSeriesExtremaLabels({
         x={xAxis.data?.[min.index]}
         y={min.value}
         placement="below"
-        color={series.color}
+        color={
+          typeof series.color === 'function'
+            ? series.color({ value: min.value, dataIndex: min.index })
+            : series.color
+        }
       />
       <PointLabel
         x={xAxis.data?.[max.index]}
         y={max.value}
         placement="above"
-        color={series.color}
+        color={
+          typeof series.color === 'function'
+            ? series.color({ value: min.value, dataIndex: min.index })
+            : series.color
+        }
       />
     </React.Fragment>
   );

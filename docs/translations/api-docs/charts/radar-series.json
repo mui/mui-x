@@ -3,9 +3,7 @@
   "propertiesDescriptions": {
     "data": { "description": "" },
     "type": { "description": "" },
-    "color": {
-      "description": "Color to use when displaying the series.<br />It can be a string representing a color or a function that returns a color based on the data index.<br />The data index can be undefined when the color is needed for the entire series (e.g., in legends, lines, areas)."
-    },
+    "color": { "description": "Color to use when displaying the series." },
     "fillArea": { "description": "If <code>true</code> fill the series area." },
     "hideMark": { "description": "If <code>true</code> hide marks at value position." },
     "highlightScope": { "description": "The scope to apply when the series is highlighted." },
