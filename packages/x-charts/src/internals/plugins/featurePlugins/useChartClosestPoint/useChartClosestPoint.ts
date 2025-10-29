@@ -178,7 +178,10 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
       }
 
       const { seriesId, dataIndex } = closestPoint;
-      instance.setItemInteraction?.({ type: 'scatter', seriesId, dataIndex });
+      instance.setItemInteraction?.(
+        { type: 'scatter', seriesId, dataIndex },
+        { interaction: 'pointer' },
+      );
       instance.setHighlight?.({
         seriesId,
         dataIndex,

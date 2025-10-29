@@ -10,12 +10,14 @@ import type { LegendGetter } from './legendGetter.types';
 import type { AxisTooltipGetter, TooltipGetter } from './tooltipGetter.types';
 import { PolarExtremumGetter } from './polarExtremumGetter.types';
 import { GetSeriesWithDefaultValues } from './getSeriesWithDefaultValues.types';
+import { TooltipItemPositionGetter } from './tooltipItemPositionGetter.types';
 
 export type ChartSeriesTypeConfig<TSeriesType extends ChartSeriesType> = {
   seriesProcessor: SeriesProcessor<TSeriesType>;
   colorProcessor: ColorProcessor<TSeriesType>;
   legendGetter: LegendGetter<TSeriesType>;
   tooltipGetter: TooltipGetter<TSeriesType>;
+  tooltipItemPositionGetter?: TooltipItemPositionGetter<TSeriesType>;
   getSeriesWithDefaultValues: GetSeriesWithDefaultValues<TSeriesType>;
 } & (TSeriesType extends CartesianChartSeriesType
   ? {
