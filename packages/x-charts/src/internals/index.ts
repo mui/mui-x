@@ -85,3 +85,4 @@ export * from './material';
 export * from './createSvgIcon';
 
 export * from './constants';
+export * from './scales';

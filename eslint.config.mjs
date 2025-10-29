@@ -385,10 +385,18 @@ export default defineConfig(
       'no-restricted-imports': [
         'error',
         {
-          paths: RESTRICTED_TOP_LEVEL_IMPORTS.map((pkName) => ({
-            name: pkName,
-            message: 'Use relative import instead',
-          })),
+          paths: [
+            ...RESTRICTED_TOP_LEVEL_IMPORTS.map((pkName) => ({
+              name: pkName,
+              message: 'Use relative import instead',
+            })),
+            {
+              name: '@mui/x-charts-vendor/d3-scale',
+              importNames: ['scaleBand', 'scalePoint'],
+              message:
+                'Use the scaleBand and scalePoint implementations from @mui/x-charts/internals/scales instead',
+            },
+          ],
           patterns: [
             {
               group: ['@mui/*/*/*'],
