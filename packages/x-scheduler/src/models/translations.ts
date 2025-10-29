@@ -27,9 +27,11 @@ export interface SchedulerTranslations {
   amPm12h: string;
   hour24h: string;
   preferencesMenu: string;
+  showEmptyDaysInAgenda: string;
   showWeekends: string;
   showWeekNumber: string;
   timeFormat: string;
+  viewSpecificOptions: (view: CalendarView) => string;
 
   // WeekView
   allDay: string;
@@ -66,4 +68,13 @@ export interface SchedulerTranslations {
   startDateAfterEndDateError: string;
   startDateLabel: string;
   startTimeLabel: string;
+
+  // ScopeDialog
+  all: string;
+  cancel: string;
+  confirm: string;
+  onlyThis: string;
+  radioGroupAriaLabel: string;
+  thisAndFollowing: string;
+  title: string;
 }

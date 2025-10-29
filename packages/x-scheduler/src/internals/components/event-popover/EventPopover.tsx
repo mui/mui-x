@@ -63,6 +63,7 @@ export const EventPopoverContent = React.forwardRef(function EventPopoverContent
 export function EventPopoverProvider(props: EventPopoverProviderProps) {
   const { containerRef, children } = props;
   const store = useEventCalendarStoreContext();
+  const isScopeDialogOpen = useStore(store, selectors.isScopeDialogOpen);
 
   return (
     <EventPopover.Provider
@@ -78,6 +79,7 @@ export function EventPopoverProvider(props: EventPopoverProviderProps) {
       onClose={() => {
         store.setOccurrencePlaceholder(null);
       }}
+      shouldBlockClose={isScopeDialogOpen}
     >
       {children}
     </EventPopover.Provider>

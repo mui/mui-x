@@ -24,6 +24,7 @@
     "./timeline": "./src/timeline/index.ts",
     "./timeline-provider": "./src/timeline-provider/index.ts",
     "./use-adapter": "./src/use-adapter/index.ts",
+    "./use-agenda-event-occurrences-grouped-by-day": "./src/use-agenda-event-occurrences-grouped-by-day/index.ts",
     "./use-day-list": "./src/use-day-list/index.ts",
     "./use-event-calendar": "./src/use-event-calendar/index.ts",
     "./use-event-calendar-store-context": "./src/use-event-calendar-store-context/index.ts",
@@ -76,7 +77,7 @@
     "@floating-ui/utils": "^0.2.10",
     "@mui/x-internals": "workspace:*",
     "prop-types": "catalog:",
-    "tabbable": "^6.2.0"
+    "tabbable": "^6.3.0"
   },
   "peerDependencies": {
     "luxon": "^3.0.2",

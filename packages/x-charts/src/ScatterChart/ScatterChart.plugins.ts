@@ -31,8 +31,8 @@ import {
 export type ScatterChartPluginSignatures = [
   UseChartZAxisSignature,
   UseChartBrushSignature,
-  UseChartCartesianAxisSignature<'scatter'>,
   UseChartInteractionSignature,
+  UseChartCartesianAxisSignature<'scatter'>,
   UseChartHighlightSignature,
   UseChartClosestPointSignature,
   UseChartKeyboardNavigationSignature,
@@ -41,8 +41,8 @@ export type ScatterChartPluginSignatures = [
 export const SCATTER_CHART_PLUGINS: ConvertSignaturesIntoPlugins<ScatterChartPluginSignatures> = [
   useChartZAxis,
   useChartBrush,
-  useChartCartesianAxis,
   useChartInteraction,
+  useChartCartesianAxis,
   useChartHighlight,
   useChartClosestPoint,
   useChartKeyboardNavigation,

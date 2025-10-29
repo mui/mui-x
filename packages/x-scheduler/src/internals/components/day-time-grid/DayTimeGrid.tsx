@@ -44,7 +44,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const showCurrentTimeIndicator = useStore(store, selectors.showCurrentTimeIndicator);
 
   // Feature hooks
-  const occurrencesMap = useEventOccurrencesGroupedByDay({ days, renderEventIn: 'every-day' });
+  const occurrencesMap = useEventOccurrencesGroupedByDay({ days });
   const occurrences = useEventOccurrencesWithDayGridPosition({
     days,
     occurrencesMap,
@@ -128,6 +128,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
             ))}
           </CalendarGrid.HeaderRow>
         </div>
+
         <div
           ref={allDayHeaderWrapperRef}
           className={clsx('DayTimeGridGridRow', 'DayTimeGridAllDayEventsGrid')}
@@ -153,11 +154,11 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
           </CalendarGrid.DayRow>
           <div className="ScrollablePlaceholder" />
         </div>
+
         <div className="DayTimeGridRoot">
           <div ref={bodyRef} className="DayTimeGridBody">
             <CalendarGrid.TimeScrollableContent className="DayTimeGridScrollableContent">
               <div className="DayTimeGridTimeAxis" aria-hidden="true">
-                {/* TODO: Handle DST days where there are not exactly 24 hours */}
                 {Array.from({ length: 24 }, (_, hour) => (
                   <div
                     key={hour}
@@ -177,6 +178,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                   </div>
                 ))}
               </div>
+
               <div className="DayTimeGridGrid">
                 {occurrences.days.map((day, index) => (
                   <TimeGridColumn

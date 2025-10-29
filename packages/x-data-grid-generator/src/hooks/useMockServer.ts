@@ -470,7 +470,8 @@ export const useMockServer = <T extends GridGetRowsResponse>(
         if (rowIndex === -1) {
           return;
         }
-        newRows[rowIndex] = updatedRow;
+        // keep the path from the original row if the updated row's path is `undefined`
+        newRows[rowIndex] = { ...updatedRow, path: updatedRow.path || newRows[rowIndex].path };
         const newData = { ...dataRef.current, rows: newRows } as GridDemoData;
         const cacheKey = `${options.dataSet}-${options.rowLength}-${index}-${options.maxColumns}`;
         dataCache.set(cacheKey, newData!);

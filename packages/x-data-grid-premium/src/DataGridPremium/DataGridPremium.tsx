@@ -34,6 +34,7 @@ import type { GridApiPremium, GridPrivateApiPremium } from '../models/gridApiPre
 import { useGridRowsOverridableMethods } from '../hooks/features/rows/useGridRowsOverridableMethods';
 import { useGridParamsOverridableMethods } from '../hooks/features/rows/useGridParamsOverridableMethods';
 import { gridSidebarOpenSelector } from '../hooks/features/sidebar';
+import { useIsCellEditable } from '../hooks/features/editing/useGridCellEditable';
 
 export type { GridPremiumSlotsComponent as GridSlots } from '../models';
 
@@ -53,6 +54,7 @@ const configuration: GridConfiguration<GridPrivateApiPremium, DataGridPremiumPro
 
       return getRowValue(row, column, apiRef);
     },
+    useIsCellEditable,
     useGridRowsOverridableMethods,
     useGridParamsOverridableMethods,
   },

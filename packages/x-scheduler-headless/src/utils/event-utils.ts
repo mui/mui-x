@@ -14,7 +14,6 @@ export function getDaysTheOccurrenceIsVisibleOn(
   event: CalendarEventOccurrence,
   days: CalendarProcessedDate[],
   adapter: Adapter,
-  renderEventIn: 'first-day' | 'every-day',
 ) {
   const dayKeys: string[] = [];
   for (const day of days) {
@@ -28,11 +27,6 @@ export function getDaysTheOccurrenceIsVisibleOn(
       break;
     }
     dayKeys.push(day.key);
-
-    // If the event should only be rendered on its first day, break after the first match
-    if (renderEventIn === 'first-day') {
-      break;
-    }
   }
   return dayKeys;
 }

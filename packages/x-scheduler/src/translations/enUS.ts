@@ -28,8 +28,10 @@ export const enUS: SchedulerTranslations = {
   hour24h: '24-hour (13:00)',
   preferencesMenu: 'Settings',
   showWeekends: 'Show weekends',
+  showEmptyDaysInAgenda: 'Show empty days',
   showWeekNumber: 'Show week number',
   timeFormat: 'Time format',
+  viewSpecificOptions: (view) => `${view} view options`,
 
   // WeekView
   allDay: 'All day',
@@ -66,4 +68,13 @@ export const enUS: SchedulerTranslations = {
   startDateAfterEndDateError: 'Start date/time must be before end date/time.',
   startDateLabel: 'Start date',
   startTimeLabel: 'Start time',
+
+  // ScopeDialog
+  all: 'All events in the series',
+  cancel: 'Cancel',
+  confirm: 'Confirm',
+  onlyThis: 'Only this event',
+  radioGroupAriaLabel: 'Editing recurring events scope',
+  thisAndFollowing: 'This and following events',
+  title: 'Apply this change to:',
 };
