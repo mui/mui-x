@@ -6,7 +6,6 @@ All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
 ## 8.16.0
-<!-- generated comparing v8.15.0..master -->
 _Oct 29, 2025_
 
 We'd like to extend a big thank you to the 12 contributors who made this release possible. Here are some highlights ✨:
