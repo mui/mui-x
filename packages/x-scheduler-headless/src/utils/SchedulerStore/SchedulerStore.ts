@@ -25,7 +25,7 @@ import {
   applyRecurringUpdateAll,
   applyRecurringUpdateOnlyThis,
 } from '../recurring-event-utils';
-import { selectors } from './SchedulerStore.selectors';
+import { selectors } from '../../scheduler-selectors';
 import {
   buildEventsState,
   buildResourcesState,

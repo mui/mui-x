@@ -9,6 +9,10 @@ export interface UseChartBrushState {
      */
     enabled: boolean;
     /**
+     * Whether the zoom brush interaction is enabled.
+     */
+    isZoomBrushEnabled: boolean;
+    /**
      * Whether to prevent tooltip from showing during brush interaction.
      */
     preventTooltip: boolean;
@@ -37,6 +41,11 @@ export interface UseChartBrushInstance {
    * Clear the brush coordinates.
    */
   clearBrush: () => void;
+  /**
+   * Enable or disable the zoom brush interaction.
+   * @param {boolean} enabled Whether to enable the zoom brush interaction.
+   */
+  setZoomBrushEnabled: (enabled: boolean) => void;
 }
 
 export interface BrushConfig {
@@ -47,12 +56,12 @@ export interface BrushConfig {
   enabled?: boolean;
   /**
    * Whether to prevent tooltip from showing during brush interaction.
-   * @default false
+   * @default true
    */
   preventTooltip?: boolean;
   /**
    * Whether to prevent highlighting during brush interaction.
-   * @default false
+   * @default true
    */
   preventHighlight?: boolean;
 }
