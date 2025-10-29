@@ -2,7 +2,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useStore } from '@base-ui-components/utils/store';
-import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { Checkbox } from '@base-ui-components/react/checkbox';
 import { Field } from '@base-ui-components/react/field';
 import { Form } from '@base-ui-components/react/form';
@@ -21,10 +20,10 @@ import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-schedule
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { DEFAULT_EVENT_COLOR } from '@mui/x-scheduler-headless/constants';
 import { selectors } from '@mui/x-scheduler-headless/scheduler-selectors';
-import { useTranslations } from '../../../utils/TranslationsContext';
-import { getColorClassName } from '../../../utils/color-utils';
-import { computeRange, validateRange } from '../utils';
-import EventPopoverHeader from '../header/EventPopoverHeader';
+import { useTranslations } from '../../utils/TranslationsContext';
+import { getColorClassName } from '../../utils/color-utils';
+import { computeRange, validateRange } from './utils';
+import EventPopoverHeader from './EventPopoverHeader';
 
 interface FormContentProps {
   occurrence: CalendarEventOccurrence;
@@ -85,7 +84,7 @@ export default function FormContent(props: FormContentProps) {
     });
   }
 
-  const handleChangeDateOrTimeField =
+  const createHandleChangeDateOrTimeField =
     (field: keyof typeof when) =>
     (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const value = event.currentTarget.value;
@@ -155,10 +154,10 @@ export default function FormContent(props: FormContentProps) {
     onClose();
   };
 
-  const handleDelete = useEventCallback(() => {
+  const handleDelete = () => {
     store.deleteEvent(occurrence.id);
     onClose();
-  });
+  };
 
   const resourcesOptions = React.useMemo(() => {
     return [
@@ -284,7 +283,7 @@ export default function FormContent(props: FormContentProps) {
                   className="EventPopoverInput"
                   type="date"
                   value={when.startDate}
-                  onChange={handleChangeDateOrTimeField('startDate')}
+                  onChange={createHandleChangeDateOrTimeField('startDate')}
                   aria-describedby="startDate-error"
                   required
                   readOnly={isPropertyReadOnly('start')}
@@ -299,7 +298,7 @@ export default function FormContent(props: FormContentProps) {
                     className="EventPopoverInput"
                     type="time"
                     value={when.startTime}
-                    onChange={handleChangeDateOrTimeField('startTime')}
+                    onChange={createHandleChangeDateOrTimeField('startTime')}
                     aria-describedby="startTime-error"
                     required
                     readOnly={isPropertyReadOnly('start')}
@@ -316,7 +315,7 @@ export default function FormContent(props: FormContentProps) {
                   className="EventPopoverInput"
                   type="date"
                   value={when.endDate}
-                  onChange={handleChangeDateOrTimeField('endDate')}
+                  onChange={createHandleChangeDateOrTimeField('endDate')}
                   required
                   readOnly={isPropertyReadOnly('end')}
                 />
@@ -330,7 +329,7 @@ export default function FormContent(props: FormContentProps) {
                     className="EventPopoverInput"
                     type="time"
                     value={when.endTime}
-                    onChange={handleChangeDateOrTimeField('endTime')}
+                    onChange={createHandleChangeDateOrTimeField('endTime')}
                     required
                     readOnly={isPropertyReadOnly('end')}
                   />

@@ -20,6 +20,7 @@
     "./event-calendar-provider": "./src/event-calendar-provider/index.ts",
     "./models": "./src/models/index.ts",
     "./process-date": "./src/process-date/index.ts",
+    "./scheduler-selectors": "./src/scheduler-selectors/index.ts",
     "./standalone-event": "./src/standalone-event/index.ts",
     "./timeline": "./src/timeline/index.ts",
     "./timeline-provider": "./src/timeline-provider/index.ts",
@@ -37,8 +38,7 @@
     "./use-scheduler-store-context": "./src/use-scheduler-store-context/index.ts",
     "./use-timeline": "./src/use-timeline/index.ts",
     "./use-timeline-store-context": "./src/use-timeline-store-context/index.ts",
-    "./use-week-list": "./src/use-week-list/index.ts",
-    "./scheduler-selectors": "./src/scheduler-selectors/index.ts"
+    "./use-week-list": "./src/use-week-list/index.ts"
   },
   "sideEffects": false,
   "publishConfig": {

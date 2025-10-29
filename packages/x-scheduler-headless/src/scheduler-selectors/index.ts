@@ -1,1 +1,1 @@
-export * from './SchedulerStore.selectors';
+export * from './schedulerSelectors';

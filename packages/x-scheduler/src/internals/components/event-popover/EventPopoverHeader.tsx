@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Popover } from '@base-ui-components/react';
 import { X } from 'lucide-react';
-import { useTranslations } from '../../../utils/TranslationsContext';
+import { useTranslations } from '../../utils/TranslationsContext';
 
 export default function EventPopoverHeader({ children }: React.PropsWithChildren) {
   const translations = useTranslations();

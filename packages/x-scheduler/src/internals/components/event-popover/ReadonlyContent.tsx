@@ -7,9 +7,10 @@ import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-schedule
 import { DEFAULT_EVENT_COLOR } from '@mui/x-scheduler-headless/constants';
 import { selectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
-import EventPopoverHeader from '../header/EventPopoverHeader';
-import { useTranslations } from '../../../utils/TranslationsContext';
-import { getColorClassName } from '../../../utils/color-utils';
+import EventPopoverHeader from './EventPopoverHeader';
+import { useTranslations } from '../../utils/TranslationsContext';
+import { getColorClassName } from '../../utils/color-utils';
+import { getRecurrenceLabel } from './utils';
 
 type ReadonlyContentProps = {
   occurrence: CalendarEventOccurrence;
@@ -21,7 +22,6 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
 
   // Context hooks
   const adapter = useAdapter();
-
   const translations = useTranslations();
   const store = useSchedulerStoreContext();
 
@@ -35,16 +35,12 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
     occurrence.start,
   );
 
-  const weekday = adapter.format(occurrence.start, 'weekday');
-  const normalDate = adapter.format(occurrence.start, 'normalDate');
-
-  const recurrenceLabelsMap: Record<string, string> = {
-    daily: translations.recurrenceDailyPresetLabel,
-    weekly: translations.recurrenceWeeklyPresetLabel(weekday),
-    monthly: translations.recurrenceMonthlyPresetLabel(adapter.getDate(occurrence.start)),
-    yearly: translations.recurrenceYearlyPresetLabel(normalDate),
-    custom: translations.recurrenceCustomRepeat,
-  };
+  const recurrenceLabel = getRecurrenceLabel(
+    adapter,
+    occurrence.start,
+    defaultRecurrenceKey,
+    translations,
+  );
 
   return (
     <React.Fragment>
@@ -83,11 +79,7 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
             )}
           </p>
         </div>
-        <p className="EventRecurrence">
-          {defaultRecurrenceKey
-            ? recurrenceLabelsMap[defaultRecurrenceKey]
-            : translations.recurrenceNoRepeat}
-        </p>
+        <p className="EventRecurrence">{recurrenceLabel}</p>
         <p className="EventDescription">{occurrence.description}</p>
       </div>
       <div className="EventPopoverActions">

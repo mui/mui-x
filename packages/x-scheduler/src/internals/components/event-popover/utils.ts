@@ -1,5 +1,6 @@
 import { SchedulerValidDate } from '@mui/x-scheduler-headless/models';
 import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
+import { SchedulerTranslations } from '../../../models';
 
 interface WhenType {
   startDate: string;
@@ -44,4 +45,36 @@ export function validateRange(
     }
   }
   return null;
+}
+
+export function getRecurrenceLabel(
+  adapter: Adapter,
+  start: any,
+  recurrenceKey: string | null,
+  translations: SchedulerTranslations,
+): string {
+  if (!recurrenceKey) {
+    return translations.recurrenceNoRepeat;
+  }
+
+  switch (recurrenceKey) {
+    case 'daily':
+      return translations.recurrenceDailyPresetLabel;
+    case 'weekly': {
+      const weekday = adapter.format(start, 'weekday');
+      return translations.recurrenceWeeklyPresetLabel(weekday);
+    }
+    case 'monthly': {
+      const date = adapter.getDate(start);
+      return translations.recurrenceMonthlyPresetLabel(date);
+    }
+    case 'yearly': {
+      const normalDate = adapter.format(start, 'normalDate');
+      return translations.recurrenceYearlyPresetLabel(normalDate);
+    }
+    case 'custom':
+      return translations.recurrenceCustomRepeat;
+    default:
+      return translations.recurrenceNoRepeat;
+  }
 }
