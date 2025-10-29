@@ -2,8 +2,6 @@ import { createSelector, createSelectorMemoized } from '@base-ui-components/util
 import {
   CalendarEvent,
   CalendarEventId,
-  CalendarResource,
-  CalendarResourceId,
   RecurringEventPresetKey,
   RecurringEventRecurrenceRule,
   SchedulerValidDate,
@@ -11,36 +9,16 @@ import {
 import { SchedulerState as State } from '../utils/SchedulerStore/SchedulerStore.types';
 import { getWeekDayCode } from '../utils/recurring-event-utils';
 
-const eventByIdMapSelector = createSelectorMemoized(
-  (state: State) => state.events,
-  (events) => {
-    const map = new Map<CalendarEventId | null | undefined, CalendarEvent>();
-    for (const event of events) {
-      map.set(event.id, event);
-    }
-    return map;
-  },
-);
-
 const eventSelector = createSelector(
-  eventByIdMapSelector,
-  (events, eventId: CalendarEventId | null | undefined) => events.get(eventId),
-);
-
-const resourcesByIdMapSelector = createSelectorMemoized(
-  (state: State) => state.resources,
-  (resources) => {
-    const map = new Map<CalendarResourceId | null | undefined, CalendarResource>();
-    for (const resource of resources) {
-      map.set(resource.id, resource);
-    }
-    return map;
-  },
+  (state: State) => state.processedEventLookup,
+  (processedEventLookup, eventId: CalendarEventId | null | undefined) =>
+    eventId == null ? null : processedEventLookup.get(eventId),
 );
 
 const resourceSelector = createSelector(
-  resourcesByIdMapSelector,
-  (resourcesByIdMap, resourceId: string | null | undefined) => resourcesByIdMap.get(resourceId),
+  (state: State) => state.processedResourceLookup,
+  (processedResourceLookup, resourceId: string | null | undefined) =>
+    resourceId == null ? null : processedResourceLookup.get(resourceId),
 );
 
 const isEventReadOnlySelector = createSelector(
@@ -56,8 +34,21 @@ export const selectors = {
   showCurrentTimeIndicator: createSelector((state: State) => state.showCurrentTimeIndicator),
   nowUpdatedEveryMinute: createSelector((state: State) => state.nowUpdatedEveryMinute),
   isMultiDayEvent: createSelector((state: State) => state.isMultiDayEvent),
-  resources: createSelector((state: State) => state.resources),
-  events: createSelector((state: State) => state.events),
+  processedEventList: createSelectorMemoized(
+    (state: State) => state.eventIdList,
+    (state: State) => state.processedEventLookup,
+    (eventIds, processedEventLookup) => eventIds.map((id) => processedEventLookup.get(id)!),
+  ),
+  eventIdList: createSelector((state: State) => state.eventIdList),
+  eventModelList: createSelector((state: State) => state.eventModelList),
+  eventModelLookup: createSelector((state: State) => state.eventModelLookup),
+  processedResourceList: createSelectorMemoized(
+    (state: State) => state.resourceIdList,
+    (state: State) => state.processedResourceLookup,
+    (resourceIds, processedResourceLookup) =>
+      resourceIds.map((id) => processedResourceLookup.get(id)!),
+  ),
+  resourceIdList: createSelector((state: State) => state.resourceIdList),
   visibleResourcesMap: createSelector((state: State) => state.visibleResources),
   canCreateNewEvent: createSelector((state: State) => !state.readOnly),
   resource: resourceSelector,
@@ -74,16 +65,33 @@ export const selectors = {
 
     return state.eventColor;
   }),
+  isEventPropertyReadOnly: createSelector(
+    isEventReadOnlySelector,
+    (state: State) => state.eventModelStructure,
+    (isEventReadOnly, eventModelStructure, _eventId: CalendarEventId) => {
+      if (isEventReadOnly) {
+        return () => true;
+      }
+
+      return (property: keyof CalendarEvent) => {
+        if (eventModelStructure?.[property] && !eventModelStructure?.[property].setter) {
+          return true;
+        }
+
+        return false;
+      };
+    },
+  ),
   visibleResourcesList: createSelectorMemoized(
-    (state: State) => state.resources,
+    (state: State) => state.resourceIdList,
     (state: State) => state.visibleResources,
     (resources, visibleResources) =>
       resources
         .filter(
-          (resource) =>
-            !visibleResources.has(resource.id) || visibleResources.get(resource.id) === true,
+          (resourceId) =>
+            !visibleResources.has(resourceId) || visibleResources.get(resourceId) === true,
         )
-        .map((resource) => resource.id),
+        .map((resourceId) => resourceId),
   ),
   event: eventSelector,
   isEventReadOnly: isEventReadOnlySelector,
