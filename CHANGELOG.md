@@ -37,7 +37,7 @@ Same changes as in `@mui/x-data-grid@8.16.0`, plus:
 Same changes as in `@mui/x-data-grid-pro@8.16.0`, plus:
 
 - [DataGridPremium] Export and restore chart integration state (#20079) @arminmeh
-- [DataGridPremium] Fix grouping column valueFormatter crash  (#20070) @sai6855
+- [DataGridPremium] Fix grouping column `valueFormatter()` crash  (#20070) @sai6855
 - [DataGridPremium] Refetch aggregation data after row update with server-side aggregation (#20039) @arminmeh
 
 ### Date and Time Pickers
