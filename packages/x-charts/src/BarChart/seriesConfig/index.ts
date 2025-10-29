@@ -10,6 +10,9 @@ import getColor from './bar/getColor';
 import tooltipGetter, { axisTooltipGetter } from './bar/tooltip';
 import tooltipItemPositionGetter from './bar/tooltipPosition';
 import { getSeriesWithDefaultValues } from './bar/getSeriesWithDefaultValues';
+import barRangeTooltipGetter, {
+  axisTooltipGetter as barRangeAxisTooltipGetter,
+} from './barRangeTooltip';
 import barRangeSeriesProcessor from './barRangeSeriesProcessor';
 import barRangeGetColor from './barRangeGetColor';
 
@@ -29,9 +32,9 @@ export const barRangeSeriesConfig: ChartSeriesTypeConfig<'barRange'> = {
   seriesProcessor: barRangeSeriesProcessor,
   colorProcessor: barRangeGetColor,
   legendGetter,
-  tooltipGetter,
+  tooltipGetter: barRangeTooltipGetter,
   tooltipItemPositionGetter,
-  axisTooltipGetter,
+  axisTooltipGetter: barRangeAxisTooltipGetter,
   xExtremumGetter: getBarRangeExtremumX,
   yExtremumGetter: getBarRangeExtremumY,
   getSeriesWithDefaultValues: (...args) => getSeriesWithDefaultValues<'barRange'>(...args),

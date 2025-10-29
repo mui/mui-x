@@ -6,6 +6,7 @@ import { checkScaleErrors } from './checkScaleErrors';
 import { SeriesProcessorResult } from '../internals/plugins/models/seriesConfig/seriesProcessor.types';
 import { ComputedAxisConfig } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxis.types';
 import { useBarRangeSeriesContext } from '../hooks/useBarRangeSeries';
+import barRangeGetColor from './seriesConfig/barRangeGetColor';
 
 export function useBarRangePlotData(
   drawingArea: ChartDrawingArea,
@@ -50,7 +51,7 @@ export function useBarRangePlotData(
     const xScale = xAxisConfig.scale;
     const yScale = yAxisConfig.scale;
 
-    const colorGetter = getColor(series[seriesId], xAxes[xAxisId], yAxes[yAxisId]);
+    const colorGetter = barRangeGetColor(series[seriesId], xAxes[xAxisId], yAxes[yAxisId]);
     const bandWidth = baseScaleConfig.scale.bandwidth();
 
     const { barWidth, offset } = getBandSize({
