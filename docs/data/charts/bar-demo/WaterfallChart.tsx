@@ -1,7 +1,22 @@
 import * as React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
+import { useTheme } from '@mui/system';
+import { rainbowSurgePalette } from '@mui/x-charts/colorPalettes';
+
+const dollarFormatter = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  compactDisplay: 'short',
+  currency: 'USD',
+  maximumFractionDigits: 0,
+});
 
 export default function BasicBarRange() {
+  const theme = useTheme();
+  const palette = rainbowSurgePalette(theme.palette.mode);
+  const blue = palette[0];
+  const red = palette[2];
+  const green = palette[4];
+
   return (
     <BarChart
       xAxis={[
@@ -18,53 +33,36 @@ export default function BasicBarRange() {
           ],
         },
       ]}
+      yAxis={[
+        {
+          width: 72,
+          valueFormatter: (value: number) => dollarFormatter.format(value),
+        },
+      ]}
       series={[
         {
           type: 'barRange',
           data: [
             { start: 0, end: 500_000 },
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            { start: 0, end: 280_000 },
-          ],
-          valueFormatter: (value) =>
-            value === null ? null : `$${(value.end - value.start).toLocaleString()}`,
-        },
-        {
-          type: 'barRange',
-          data: [
-            null,
             { start: 500_000, end: 650_000 },
             { start: 650_000, end: 730_000 },
-            null,
-            null,
-            null,
-            null,
-            null,
-          ],
-          color: 'green',
-          valueFormatter: (value) =>
-            value === null ? null : `$${(value.end - value.start).toLocaleString()}`,
-        },
-        {
-          type: 'barRange',
-          data: [
-            null,
-            null,
-            null,
             { start: 730_000, end: 530_000 },
             { start: 530_000, end: 455_000 },
             { start: 455_000, end: 335_000 },
             { start: 335_000, end: 280_000 },
-            null,
+            { start: 0, end: 280_000 },
           ],
-          color: 'red',
           valueFormatter: (value) =>
-            value === null ? null : `$${(value.end - value.start).toLocaleString()}`,
+            value === null ? null : dollarFormatter.format(value.end - value.start),
+          color: (data) => {
+            const value = data?.value;
+
+            if (value == null || value.start === 0) {
+              return blue;
+            }
+
+            return value.end - value.start >= 0 ? green : red;
+          },
         },
       ]}
       height={300}
