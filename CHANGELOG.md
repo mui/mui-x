@@ -26,6 +26,62 @@ Same changes as in `@mui/x-tree-view@7.29.10`.
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
+## 7.29.11
+<!-- generated comparing v7.29.10..v7.x -->
+_Oct 29, 2025_
+
+We'd like to extend a big thank you to the contributor who made this release possible.
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.29.9`
+
+- [data grid][docs] Revise the Pro filter docs (@mapache-salvaje) (#18815) @github-actions[bot]
+
+#### `@mui/x-data-grid-pro@7.29.9` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+
+Same changes as in `@mui/x-data-grid@7.29.9`.
+
+#### `@mui/x-data-grid-premium@7.29.9` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link "Premium plan")
+
+Same changes as in `@mui/x-data-grid-pro@7.29.9`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.29.4`
+
+Internal changes.
+
+#### `@mui/x-date-pickers-pro@7.29.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+
+Same changes as in `@mui/x-date-pickers@7.29.4`.
+
+### Charts
+
+#### `@mui/x-charts@7.29.1`
+
+Internal changes.
+
+#### `@mui/x-charts-pro@7.29.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+
+Same changes as in `@mui/x-charts@7.29.1`.
+
+### Tree View
+
+#### `@mui/x-tree-view@7.29.10`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@7.29.10` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+
+Same changes as in `@mui/x-tree-view@7.29.10`.
+
+### Codemod
+
+#### `@mui/x-codemod@7.23.6`
+
+Internal changes.
+
 ## 7.29.9
 
 _Aug 7, 2025_
