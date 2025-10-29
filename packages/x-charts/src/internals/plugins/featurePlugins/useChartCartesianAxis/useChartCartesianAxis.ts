@@ -75,7 +75,6 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
     }
 
     store.set('cartesianAxis', {
-      ...store.state.cartesianAxis,
       x: defaultizeXAxis(xAxis, dataset),
       y: defaultizeYAxis(yAxis, dataset),
     });
