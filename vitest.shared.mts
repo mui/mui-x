@@ -97,14 +97,7 @@ export default defineConfig({
       // Retry failed tests up to 3 times. This is useful for flaky tests.
       retry: 3,
       // Reduce the number of workers to avoid CI timeouts.
-      poolOptions: {
-        forks: {
-          singleFork: true,
-        },
-        threads: {
-          singleThread: true,
-        },
-      },
+      maxWorkers: 1,
     }),
     exclude: ['**/*.spec.{js,ts,tsx}', '**/node_modules/**', '**/dist/**'],
   },
