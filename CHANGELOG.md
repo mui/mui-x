@@ -58,7 +58,8 @@ From https://github.com/mui/mui-x/pull/19899
 #### `@mui/x-charts@8.16.0`
 
 - [charts] Allow tooltip to anchor items (#19954) @alexfauquette
-- [charts] Fix behaviour of grouped axis (#20118) @JCQuintas 
+- [charts] Fix behavior of grouped axis (#20118) @JCQuintas
+- [charts] Move scale symlog inside scales (#20137) @JCQuintas
 - [charts] Fix AreaChartConnectNulls demo height not correctly resizing (#20078) @sai6855
 - [charts] Fix charts resizing overflow (#20080) @alexfauquette
 - [charts] Fix tooltip not showing on first render (#20115) @bernardobelchior
