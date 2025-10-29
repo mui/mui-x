@@ -1,10 +1,12 @@
 /* eslint-disable func-names */
+// Adapted from d3-scale v4.0.2
+// https://github.com/d3/d3-scale/blob/d6904a4bde09e16005e0ad8ca3e25b10ce54fa0d/src/band.js
 import { InternMap, range as sequence } from '@mui/x-charts-vendor/d3-array';
 import type { NumberValue, ScaleBand } from '@mui/x-charts-vendor/d3-scale';
 
 export function keyof(value: any): string | number {
   if (Array.isArray(value)) {
-    return value.join(',');
+    return JSON.stringify(value);
   }
 
   if (typeof value === 'object' && value !== null) {
