@@ -30,7 +30,7 @@ export const useInteractionItemProps = (
   const interactionActive = React.useRef(false);
   const onPointerEnter = useEventCallback(() => {
     interactionActive.current = true;
-    instance.setItemInteraction(data);
+    instance.setItemInteraction(data, { interaction: 'pointer' });
     instance.setHighlight(data);
   });
 
@@ -88,7 +88,7 @@ export function getInteractionItemProps(
     if (!item) {
       return;
     }
-    instance.setItemInteraction(item);
+    instance.setItemInteraction(item, { interaction: 'pointer' });
     instance.setHighlight(item);
   }
 
