@@ -96,6 +96,7 @@ Internal changes.
 
 - [code-infra] Setup eslint compat plugin (#20105) @brijeshb42
 - [code-infra] Improve store types (#20129) @JCQuintas
+- [docs] Update the callout in `rows` prop documentation (#20127) @MBilalShafi
 
 ### Miscellaneous
 
