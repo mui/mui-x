@@ -31,10 +31,8 @@ export const useZoomOnTapAndDrag = (
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
   const config = useSelector(store, selectorZoomInteractionConfig, ['tapAndDrag' as const]);
 
-  const isZoomOnTapAndDragEnabled: boolean = React.useMemo(
-    () => (Object.keys(optionsLookup).length > 0 && Boolean(config)) || false,
-    [optionsLookup, config],
-  );
+  const isZoomOnTapAndDragEnabled: boolean =
+    (Object.keys(optionsLookup).length > 0 && Boolean(config)) || false;
 
   React.useEffect(() => {
     if (!isZoomOnTapAndDragEnabled) {

@@ -33,10 +33,8 @@ export const useZoomOnWheel = (
   const startedOutsideTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
   const config = useSelector(store, selectorZoomInteractionConfig, ['wheel' as const]);
 
-  const isZoomOnWheelEnabled: boolean = React.useMemo(
-    () => (Object.keys(optionsLookup).length > 0 && Boolean(config)) || false,
-    [optionsLookup, config],
-  );
+  const isZoomOnWheelEnabled: boolean =
+    (Object.keys(optionsLookup).length > 0 && Boolean(config)) || false;
 
   React.useEffect(() => {
     if (!isZoomOnWheelEnabled) {
