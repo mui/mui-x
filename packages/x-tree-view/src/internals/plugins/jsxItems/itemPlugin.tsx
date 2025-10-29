@@ -10,7 +10,6 @@ import {
   TreeViewChildrenItemProvider,
 } from '../../TreeViewProvider/TreeViewChildrenItemProvider';
 import { TreeViewItemDepthContext } from '../../TreeViewItemDepthContext';
-import { generateTreeItemIdAttribute } from '../id/utils';
 import { itemHasChildren } from '../../../hooks/useTreeItemUtils/useTreeItemUtils';
 import { idSelectors } from '../id';
 import { SimpleTreeViewStore } from '../../SimpleTreeViewStore';
@@ -38,7 +37,7 @@ export const useJSXItemsItemPlugin: TreeViewItemPlugin = ({ props, rootRef, cont
 
   // Prevent any flashing
   useIsoLayoutEffect(() => {
-    const idAttribute = generateTreeItemIdAttribute({ itemId, treeId, id });
+    const idAttribute = idSelectors.treeItemIdAttribute(store.state, itemId, id);
     registerChild(idAttribute, itemId);
 
     return () => {

@@ -4,15 +4,13 @@ import PropTypes from 'prop-types';
 import { useStore } from '@mui/x-internals/store';
 import { TreeItemProviderProps } from './TreeItemProvider.types';
 import { useTreeViewContext } from '../internals/TreeViewProvider';
-import { generateTreeItemIdAttribute } from '../internals/plugins/id/utils';
 import { idSelectors } from '../internals/plugins/id';
 import { TreeViewAnyStore } from '../internals/models';
 
 function TreeItemProvider(props: TreeItemProviderProps) {
   const { children, itemId, id } = props;
   const { wrapItem, store } = useTreeViewContext<TreeViewAnyStore>();
-  const treeId = useStore(store, idSelectors.treeId);
-  const idAttribute = generateTreeItemIdAttribute({ itemId, treeId, id });
+  const idAttribute = useStore(store, idSelectors.treeItemIdAttribute, itemId, id);
 
   return <React.Fragment>{wrapItem({ children, itemId, store, idAttribute })}</React.Fragment>;
 }

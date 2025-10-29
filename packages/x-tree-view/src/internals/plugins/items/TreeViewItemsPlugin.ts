@@ -1,6 +1,5 @@
 import { TreeViewBaseItem, TreeViewItemId, TreeViewValidItem } from '../../../models';
 import { idSelectors } from '../id';
-import { generateTreeItemIdAttribute } from '../id/utils';
 import { itemsSelectors } from './selectors';
 import { buildItemsLookups, TREE_VIEW_ROOT_PARENT_ID } from './utils';
 import type { MinimalTreeViewStore } from '../../MinimalTreeViewStore/MinimalTreeViewStore';
@@ -181,11 +180,11 @@ export class TreeViewItemsPlugin<R extends TreeViewValidItem<R>> {
       return null;
     }
 
-    const idAttribute = generateTreeItemIdAttribute({
-      treeId: idSelectors.treeId(this.store.state),
+    const idAttribute = idSelectors.treeItemIdAttribute(
+      this.store.state,
       itemId,
-      id: itemMeta.idAttribute,
-    });
+      itemMeta.idAttribute,
+    );
     return document.getElementById(idAttribute);
   };
 

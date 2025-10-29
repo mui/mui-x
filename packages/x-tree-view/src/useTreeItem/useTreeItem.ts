@@ -30,7 +30,6 @@ import {
 import { useTreeItemUtils } from '../hooks/useTreeItemUtils';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
 import { isTargetInDescendants } from '../internals/utils/tree';
-import { generateTreeItemIdAttribute } from '../internals/plugins/id/utils';
 import { focusSelectors } from '../internals/plugins/focus';
 import { itemsSelectors } from '../internals/plugins/items';
 import { idSelectors } from '../internals/plugins/id';
@@ -80,10 +79,9 @@ export const useTreeItem = <TStore extends TreeViewAnyStore = DefaultStore>(
   const handleContentRef = useMergedRefs(contentRef, contentRefObject)!;
   const checkboxRef = React.useRef<HTMLButtonElement>(null);
 
-  const treeId = useStore(store, idSelectors.treeId);
   const isSelectionEnabledForItem = useStore(store, selectionSelectors.canItemBeSelected, itemId);
   const isCheckboxSelectionEnabled = useStore(store, selectionSelectors.isCheckboxSelectionEnabled);
-  const idAttribute = generateTreeItemIdAttribute({ itemId, treeId, id });
+  const idAttribute = useStore(store, idSelectors.treeItemIdAttribute, itemId, id);
   const shouldBeAccessibleWithTab = useStore(
     store,
     focusSelectors.isItemTheDefaultFocusableItem,
