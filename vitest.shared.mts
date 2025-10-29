@@ -98,7 +98,6 @@ export default defineConfig({
       retry: 3,
       // Reduce the number of workers to avoid CI timeouts.
       maxWorkers: 1,
-      maxConcurrency: 1,
     }),
     exclude: ['**/*.spec.{js,ts,tsx}', '**/node_modules/**', '**/dist/**'],
   },
