@@ -63,7 +63,7 @@ Same changes as in `@mui/x-date-pickers@8.16.0`.
 - [charts] Fix charts resizing overflow (#20080) @alexfauquette
 - [charts] Fix tooltip not showing on first render (#20115) @bernardobelchior
 - [charts] Handle `undefined` id and color in series (#20087) @bernardobelchior
-- [charts] Remove useMemo from isZoomOn*Enabled and isPanOn*Enabled hooks (#20132) @Copilot
+- [charts] Remove `useMemo` from isZoomOn*Enabled and isPanOn*Enabled hooks (#20132) @Copilot
 - [charts] Use static data for perf (#20072) @JCQuintas
 - [charts] Move scale symlog inside scales (#20137) @JCQuintas
 
