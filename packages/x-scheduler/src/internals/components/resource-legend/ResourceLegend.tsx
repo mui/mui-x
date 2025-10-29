@@ -85,11 +85,14 @@ export const ResourceLegend = React.forwardRef(function ResourceLegend(
   const { className, ...other } = props;
   const translations = useTranslations();
   const store = useEventCalendarStoreContext();
-  const resources = useStore(store, selectors.resources);
+  const resources = useStore(store, selectors.processedResourceList);
   const visibleResourcesList = useStore(store, selectors.visibleResourcesList);
 
   const handleVisibleResourcesChange = useEventCallback((value: string[]) => {
-    const differenceMap = getVisibilityDifferenceMap(resources, value);
+    const differenceMap = getVisibilityDifferenceMap(
+      selectors.processedResourceList(store.state),
+      value,
+    );
 
     store.setVisibleResources(differenceMap);
   });

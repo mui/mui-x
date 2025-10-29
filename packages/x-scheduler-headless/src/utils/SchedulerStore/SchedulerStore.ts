@@ -6,7 +6,6 @@ import {
   CalendarEventId,
   CalendarEventOccurrence,
   CalendarOccurrencePlaceholder,
-  CalendarResource,
   CalendarResourceId,
   SchedulerValidDate,
   CalendarEventUpdatedProperties,
@@ -26,12 +25,16 @@ import {
   applyRecurringUpdateAll,
   applyRecurringUpdateOnlyThis,
 } from '../recurring-event-utils';
-import { selectors } from './SchedulerStore.selectors';
-import { shouldUpdateOccurrencePlaceholder } from './SchedulerStore.utils';
+import { selectors } from '../../scheduler-selectors';
+import {
+  buildEventsState,
+  buildResourcesState,
+  createEventModel,
+  getUpdatedEventModelFromChanges,
+  shouldUpdateOccurrencePlaceholder,
+} from './SchedulerStore.utils';
 import { TimeoutManager } from '../TimeoutManager';
 import { DEFAULT_EVENT_COLOR } from '../../constants';
-
-export const DEFAULT_RESOURCES: CalendarResource[] = [];
 
 // TODO: Add a prop to configure the behavior.
 export const DEFAULT_IS_MULTI_DAY_EVENT = (event: CalendarEvent | CalendarEventOccurrence) => {
@@ -48,8 +51,10 @@ const ONE_MINUTE_IN_MS = 60 * 1000;
  * Instance shared by the Event Calendar and the Timeline components.
  */
 export class SchedulerStore<
+  TEvent extends object,
+  TResource extends object,
   State extends SchedulerState,
-  Parameters extends SchedulerParameters,
+  Parameters extends SchedulerParameters<TEvent, TResource>,
 > extends Store<State> {
   protected parameters: Parameters;
 
@@ -67,8 +72,10 @@ export class SchedulerStore<
     instanceName: string,
     mapper: SchedulerParametersToStateMapper<State, Parameters>,
   ) {
-    const schedulerInitialState: SchedulerState = {
+    const schedulerInitialState: SchedulerState<TEvent> = {
       ...SchedulerStore.deriveStateFromParameters(parameters, adapter),
+      ...buildEventsState(parameters),
+      ...buildResourcesState(parameters),
       adapter,
       occurrencePlaceholder: null,
       nowUpdatedEveryMinute: adapter.date(),
@@ -108,11 +115,12 @@ export class SchedulerStore<
    * Returns the properties of the state that are derived from the parameters.
    * This do not contain state properties that don't update whenever the parameters update.
    */
-  private static deriveStateFromParameters(parameters: SchedulerParameters, adapter: Adapter) {
+  private static deriveStateFromParameters<TEvent extends object, TResource extends object>(
+    parameters: SchedulerParameters<TEvent, TResource>,
+    adapter: Adapter,
+  ) {
     return {
       adapter,
-      events: parameters.events,
-      resources: parameters.resources ?? DEFAULT_RESOURCES,
       areEventsDraggable: parameters.areEventsDraggable ?? false,
       areEventsResizable: parameters.areEventsResizable ?? false,
       canDragEventsFromTheOutside: parameters.canDragEventsFromTheOutside ?? false,
@@ -166,6 +174,20 @@ export class SchedulerStore<
       adapter,
     ) as Partial<State>;
 
+    if (
+      parameters.events !== this.parameters.events ||
+      parameters.eventModelStructure !== this.parameters.eventModelStructure
+    ) {
+      Object.assign(newSchedulerState, buildEventsState(parameters));
+    }
+
+    if (
+      parameters.resources !== this.parameters.resources ||
+      parameters.resourceModelStructure !== this.parameters.resourceModelStructure
+    ) {
+      Object.assign(newSchedulerState, buildResourcesState(parameters));
+    }
+
     updateModel(newSchedulerState, 'visibleDate', 'defaultVisibleDate');
 
     const newState = this.mapper.updateStateFromParameters(
@@ -175,6 +197,7 @@ export class SchedulerStore<
     );
 
     this.apply(newState);
+    this.parameters = parameters;
   };
 
   public disposeEffect = () => {
@@ -202,19 +225,26 @@ export class SchedulerStore<
 
     const updated = new Map(updatedParam.map((ev) => [ev.id, ev]));
     const deleted = new Set(deletedParam);
-    const originalEvents = selectors.events(this.state);
-    const newEvents: CalendarEvent[] = [];
+    const originalEventIds = selectors.eventIdList(this.state);
+    const originalEventModelLookup = selectors.eventModelLookup(this.state);
+    const newEvents: TEvent[] = [];
 
     if (deleted.size > 0 || updated.size > 0) {
-      for (const event of originalEvents) {
-        if (deleted.has(event.id)) {
+      for (const eventId of originalEventIds) {
+        if (deleted.has(eventId)) {
           continue;
         }
-        const newEvent = updated.has(event.id) ? { ...event, ...updated.get(event.id) } : event;
+        const newEvent = updated.has(eventId)
+          ? getUpdatedEventModelFromChanges<TEvent>(
+              originalEventModelLookup.get(eventId),
+              updated.get(eventId)!,
+              this.state.eventModelStructure,
+            )
+          : originalEventModelLookup.get(eventId);
         newEvents.push(newEvent);
       }
     } else {
-      newEvents.push(...originalEvents);
+      newEvents.push(...selectors.eventModelList(this.state));
     }
 
     for (const createdEvent of created) {
@@ -223,7 +253,7 @@ export class SchedulerStore<
           `${this.instanceName}: an event with id="${createdEvent.id}" already exists. Use updateEvent(...) instead.`,
         );
       }
-      newEvents.push(createdEvent);
+      newEvents.push(createEventModel(createdEvent, this.state.eventModelStructure));
     }
 
     this.parameters.onEventsChange?.(newEvents);

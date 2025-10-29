@@ -3,79 +3,23 @@ import {
   CalendarEvent,
   CalendarEventId,
   CalendarResource,
-  CalendarResourceId,
   RecurringEventPresetKey,
   RecurringEventRecurrenceRule,
   SchedulerValidDate,
-} from '../../models';
-import { SchedulerState as State } from './SchedulerStore.types';
-import { getWeekDayCode } from '../recurring-event-utils';
-
-const eventByIdMapSelector = createSelectorMemoized(
-  (state: State) => state.events,
-  (events) => {
-    const map = new Map<CalendarEventId | null | undefined, CalendarEvent>();
-    for (const event of events) {
-      map.set(event.id, event);
-    }
-    return map;
-  },
-);
+} from '../models';
+import { SchedulerState as State } from '../utils/SchedulerStore/SchedulerStore.types';
+import { getWeekDayCode } from '../utils/recurring-event-utils';
 
 const eventSelector = createSelector(
-  eventByIdMapSelector,
-  (events, eventId: CalendarEventId | null | undefined) => events.get(eventId),
-);
-
-const resourcesByIdFlatMapSelector = createSelectorMemoized(
-  (state: State) => state.resources,
-  (resources) => {
-    const map = new Map<CalendarResourceId | null | undefined, CalendarResource>();
-    const addResourceToMap = (resource: CalendarResource) => {
-      const { children, ...resourceWithoutChildren } = resource;
-      map.set(resource.id, resourceWithoutChildren);
-
-      if (children) {
-        for (const child of children) {
-          addResourceToMap(child);
-        }
-      }
-    };
-
-    for (const resource of resources) {
-      addResourceToMap(resource);
-    }
-    return map;
-  },
-);
-
-const resourcesFlatArraySelector = createSelectorMemoized(
-  (state: State) => state.resources,
-  (resources) => {
-    const flatArray: CalendarResource[] = [];
-
-    const addResourceAndChildren = (resource: CalendarResource) => {
-      const { children, ...resourceWithoutChildren } = resource;
-      flatArray.push(resourceWithoutChildren);
-
-      if (children) {
-        for (const child of children) {
-          addResourceAndChildren(child);
-        }
-      }
-    };
-
-    for (const resource of resources) {
-      addResourceAndChildren(resource);
-    }
-    return flatArray;
-  },
+  (state: State) => state.processedEventLookup,
+  (processedEventLookup, eventId: CalendarEventId | null | undefined) =>
+    eventId == null ? null : processedEventLookup.get(eventId),
 );
 
 const resourceSelector = createSelector(
-  resourcesByIdFlatMapSelector,
-  (resourcesByIdFlatMap, resourceId: string | null | undefined) =>
-    resourcesByIdFlatMap.get(resourceId),
+  (state: State) => state.processedResourceLookup,
+  (processedResourceLookup, resourceId: string | null | undefined) =>
+    resourceId == null ? null : processedResourceLookup.get(resourceId),
 );
 
 const isEventReadOnlySelector = createSelector(
@@ -86,14 +30,58 @@ const isEventReadOnlySelector = createSelector(
   },
 );
 
+const processedResourceListSelector = createSelectorMemoized(
+  (state: State) => state.resourceIdList,
+  (state: State) => state.processedResourceLookup,
+  (resourceIds, processedResourceLookup) =>
+    resourceIds.map((id) => processedResourceLookup.get(id)!),
+);
+
+const resourcesFlatListSelector = createSelectorMemoized(
+  (state: State) => state.resourceIdList,
+  (state: State) => state.processedResourceLookup,
+  (resourceIds, processedResourceLookup) => {
+    const flatArray: CalendarResource[] = [];
+
+    const addResourceAndChildren = (resourceId: string) => {
+      const resource = processedResourceLookup.get(resourceId);
+      if (!resource) {
+        return;
+      }
+
+      const { children, ...resourceWithoutChildren } = resource;
+      flatArray.push(resourceWithoutChildren);
+
+      if (children) {
+        for (const child of children) {
+          addResourceAndChildren(child.id);
+        }
+      }
+    };
+
+    for (const resourceId of resourceIds) {
+      addResourceAndChildren(resourceId);
+    }
+    return flatArray;
+  },
+);
+
 export const selectors = {
   visibleDate: createSelector((state: State) => state.visibleDate),
   showCurrentTimeIndicator: createSelector((state: State) => state.showCurrentTimeIndicator),
   nowUpdatedEveryMinute: createSelector((state: State) => state.nowUpdatedEveryMinute),
   isMultiDayEvent: createSelector((state: State) => state.isMultiDayEvent),
-  resources: createSelector((state: State) => state.resources),
-  resourcesFlatArray: resourcesFlatArraySelector,
-  events: createSelector((state: State) => state.events),
+  processedEventList: createSelectorMemoized(
+    (state: State) => state.eventIdList,
+    (state: State) => state.processedEventLookup,
+    (eventIds, processedEventLookup) => eventIds.map((id) => processedEventLookup.get(id)!),
+  ),
+  eventIdList: createSelector((state: State) => state.eventIdList),
+  eventModelList: createSelector((state: State) => state.eventModelList),
+  eventModelLookup: createSelector((state: State) => state.eventModelLookup),
+  processedResourceList: processedResourceListSelector,
+  processedResourceFlatList: resourcesFlatListSelector,
+  resourceIdList: createSelector((state: State) => state.resourceIdList),
   visibleResourcesMap: createSelector((state: State) => state.visibleResources),
   canCreateNewEvent: createSelector((state: State) => !state.readOnly),
   resource: resourceSelector,
@@ -110,11 +98,28 @@ export const selectors = {
 
     return state.eventColor;
   }),
+  isEventPropertyReadOnly: createSelector(
+    isEventReadOnlySelector,
+    (state: State) => state.eventModelStructure,
+    (isEventReadOnly, eventModelStructure, _eventId: CalendarEventId) => {
+      if (isEventReadOnly) {
+        return () => true;
+      }
+
+      return (property: keyof CalendarEvent) => {
+        if (eventModelStructure?.[property] && !eventModelStructure?.[property].setter) {
+          return true;
+        }
+
+        return false;
+      };
+    },
+  ),
   visibleResourcesList: createSelectorMemoized(
-    (state: State) => state.resources,
+    processedResourceListSelector,
     (state: State) => state.visibleResources,
     (resources, visibleResources) => {
-      const result: CalendarResourceId[] = [];
+      const result: string[] = [];
 
       const addResourceAndChildren = (resource: CalendarResource) => {
         const isVisible =

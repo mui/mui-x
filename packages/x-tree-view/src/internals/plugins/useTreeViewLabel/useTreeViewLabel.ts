@@ -45,7 +45,7 @@ export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({ st
   };
 
   useIsoLayoutEffect(() => {
-    store.set('label', { ...store.state.items, isItemEditable: params.isItemEditable });
+    store.set('label', { ...store.state.label, isItemEditable: params.isItemEditable });
   }, [store, params.isItemEditable]);
 
   return {

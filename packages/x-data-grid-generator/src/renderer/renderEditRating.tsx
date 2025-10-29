@@ -20,8 +20,8 @@ function EditRating(props: GridRenderEditCellParams<any, number>) {
 
   const handleRef = (element: HTMLElement | null) => {
     if (element) {
-      if (value !== 0) {
-        element.querySelector<HTMLElement>(`input[value="${value}"]`)!.focus();
+      if (value) {
+        element.querySelector<HTMLElement>(`input[value="${Math.round(value)}"]`)!.focus();
       } else {
         element.querySelector<HTMLElement>('input[value=""]')!.focus();
       }
