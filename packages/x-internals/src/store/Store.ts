@@ -60,7 +60,7 @@ export class Store<State> {
     }
   }
 
-  set<Key extends keyof State, T = State[Key]>(key: Key, value: T) {
+  set<Key extends keyof State, T extends State[Key]>(key: Key, value: T) {
     if (!Object.is(this.state[key], value)) {
       this.setState({ ...this.state, [key]: value });
     }
