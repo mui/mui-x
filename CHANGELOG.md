@@ -17,7 +17,7 @@ Special thanks go out to the community members for their valuable contributions:
 @felix-wg, @frncesc
 
 The following are all team members who have contributed to this release:
-@alexfauquette, @arminmeh, @bernardobelchior, @brijeshb42, @flaviendelangle, @JCQuintas, @michelengelen, @noraleonte, @rita-codes, @sai6855
+@alexfauquette, @arminmeh, @bernardobelchior, @brijeshb42, @flaviendelangle, @JCQuintas, @MBilalShafi, @michelengelen, @noraleonte, @rita-codes, @sai6855
 
 ### Data Grid
 
