@@ -2,7 +2,7 @@ import { adapter } from 'test/utils/scheduler';
 import { RecurringEventRecurrenceRule } from '@mui/x-scheduler-headless/models';
 import { storeClasses } from './utils';
 import { getWeekDayCode } from '../../recurring-event-utils';
-import { selectors } from '../SchedulerStore.selectors';
+import { selectors } from '../../../scheduler-selectors';
 import { SchedulerState as State } from '../SchedulerStore.types';
 
 const baseState = (overrides: Partial<State> = {}) =>
