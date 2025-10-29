@@ -9,7 +9,7 @@
     "type": { "type": { "description": "'bar'" }, "required": true },
     "color": {
       "type": {
-        "description": "ChartsEnabledFeature extends { colorCallback: true } ? string | SeriesColorProp&lt;TValue&gt; : string"
+        "description": "ChartsEnabledFeatures extends { colorCallback: true } ? string | SeriesColorProp&lt;TValue&gt; : string"
       }
     },
     "data": { "type": { "description": "readonly (number | null)[]" } },

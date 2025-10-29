@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import { BarChart, BarChartProps, BarSeries } from '@mui/x-charts/BarChart';
 
 declare module '@mui/x-charts/typeAugmentation' {
-  interface ChartsEnabledFeature {
+  interface ChartsEnabledFeatures {
     colorCallback: true;
   }
 }

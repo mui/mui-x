@@ -2,7 +2,7 @@ import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { useScatterSeries, useXScale, useYScale } from '@mui/x-charts/hooks';
 
 declare module '@mui/x-charts/typeAugmentation' {
-  interface ChartsEnabledFeature {
+  interface ChartsEnabledFeatures {
     colorCallback: true;
   }
 }

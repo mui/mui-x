@@ -1,1 +1,1 @@
-export interface ChartsEnabledFeature {}
+export interface ChartsEnabledFeatures {}

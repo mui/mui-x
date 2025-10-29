@@ -2,7 +2,7 @@ import { HighlightScope } from '../../internals/plugins/featurePlugins/useChartH
 import type { StackOffsetType, StackOrderType } from '../stacking';
 import type { ChartsLabelMarkType } from '../../ChartsLabel/ChartsLabelMark';
 import { AxisId } from '../axis';
-import type { ChartsEnabledFeature } from '../../typeAugmentation';
+import type { ChartsEnabledFeatures } from '../../typeAugmentation';
 
 export type SeriesId = number | string;
 
@@ -32,7 +32,7 @@ export interface SeriesColor<TValue> {
   /**
    * Color to use when displaying the series.
    */
-  color?: ChartsEnabledFeature extends { colorCallback: true }
+  color?: ChartsEnabledFeatures extends { colorCallback: true }
     ? string | SeriesColorProp<TValue>
     : string;
 }
