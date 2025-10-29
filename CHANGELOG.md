@@ -23,6 +23,7 @@ The following are all team members who have contributed to this release:
 #### `@mui/x-data-grid@8.16.0`
 
 - [DataGrid] Ignore `Ctrl+A` key combination for the row selection in the community version (#20110) @felix-wg
+- [DataGrid][l10n] Improve Spanish (es-ES) locale (#20134) @frncesc 
 
 #### `@mui/x-data-grid-pro@8.16.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
