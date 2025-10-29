@@ -7,7 +7,7 @@ import {
   scaleLinear,
 } from '@mui/x-charts-vendor/d3-scale';
 import { ContinuousScaleName, D3ContinuousScale } from '../models/axis';
-import { scaleSymlog } from './symlogScale';
+import { scaleSymlog } from './scales';
 
 export function getScale(
   scaleType: ContinuousScaleName,
