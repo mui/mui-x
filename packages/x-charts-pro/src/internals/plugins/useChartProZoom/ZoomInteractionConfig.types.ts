@@ -6,10 +6,12 @@ export type ZoomInteractionConfig = {
    * - `wheel`: Zooms in or out when the mouse wheel is scrolled.
    * - `pinch`: Zooms in or out when a pinch gesture is detected.
    * - `tapAndDrag`: Zooms in or out by tapping twice and then dragging vertically. Dragging up zooms in, dragging down zooms out.
+   * - `brush`: Zooms into a selected area by clicking and dragging to create a selection area. (Conflicts with `drag` pan interaction)
+   * - `doubleTapReset`: Resets the zoom level to the original state when double-tapping.
    *
    * @default ['wheel', 'pinch']
    */
-  zoom?: (ZoomInteraction | ZoomInteraction['type'])[];
+  zoom?: readonly (ZoomInteraction | ZoomInteraction['type'])[];
   /**
    * Defines the interactions that trigger panning.
    * - `drag`: Pans the chart when dragged with the mouse.
@@ -18,7 +20,7 @@ export type ZoomInteractionConfig = {
    *
    * @default ['drag', 'wheel']
    */
-  pan?: (PanInteraction | PanInteraction['type'])[];
+  pan?: readonly (PanInteraction | PanInteraction['type'])[];
 };
 
 type Entry<T extends AnyInteraction> = {
@@ -34,7 +36,12 @@ export type DefaultizedZoomInteractionConfig = {
   pan: Entry<PanInteraction>;
 };
 
-export type ZoomInteraction = WheelInteraction | PinchInteraction | TapAndDragInteraction;
+export type ZoomInteraction =
+  | WheelInteraction
+  | PinchInteraction
+  | TapAndDragInteraction
+  | DoubleTapResetInteraction
+  | BrushInteraction;
 export type PanInteraction = DragInteraction | PressAndDragInteraction | WheelPanInteraction;
 
 export type ZoomInteractionName = ZoomInteraction['type'];
@@ -124,6 +131,20 @@ export type WheelPanInteraction = Unpack<
     allowedDirection?: 'x' | 'y' | 'xy';
   } & NoModeProp &
     AllKeysProp
+>;
+
+export type DoubleTapResetInteraction = Unpack<
+  {
+    type: 'doubleTapReset';
+  } & AllModeProp &
+    AllKeysProp
+>;
+
+export type BrushInteraction = Unpack<
+  {
+    type: 'brush';
+  } & NoModeProp &
+    NoKeysProp
 >;
 
 export type AnyInteraction = {

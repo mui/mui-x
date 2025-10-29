@@ -473,6 +473,53 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
     });
   });
 
+  describe('Zoom on brush', () => {
+    it('should zoom into the brushed area on x-axis', async () => {
+      const onZoomChange = sinon.spy();
+      const { user } = render(
+        <BarChartPro
+          {...barChartProps}
+          onZoomChange={onZoomChange}
+          zoomInteractionConfig={{
+            zoom: ['brush'],
+            pan: [],
+          }}
+        />,
+        options,
+      );
+
+      const initialTicks = getAxisTickValues('x');
+      expect(initialTicks).to.deep.equal(['A', 'B', 'C', 'D']);
+
+      const svg = document.querySelector(CHART_SELECTOR)!;
+
+      // Brush from middle to right side
+      await user.pointer([
+        {
+          keys: '[MouseLeft>]',
+          target: svg,
+          coords: { x: 50, y: 50 },
+        },
+        {
+          target: svg,
+          coords: { x: 90, y: 50 },
+        },
+        {
+          keys: '[/MouseLeft]',
+          target: svg,
+          coords: { x: 90, y: 50 },
+        },
+      ]);
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
+
+      expect(onZoomChange.callCount).to.equal(1);
+
+      const ticksAfterZoom = getAxisTickValues('x');
+      // Should have zoomed in, so 'A' should not be visible anymore
+      expect(ticksAfterZoom).to.deep.equal(['C', 'D']);
+    });
+  });
+
   describe('Pan on wheel (side scrolling)', () => {
     it('should pan horizontally on wheel scroll', async () => {
       const onZoomChange = sinon.spy();

@@ -15,20 +15,27 @@ export const DEFAULT_VIEW: CalendarView = 'week';
 export const DEFAULT_PREFERENCES: EventCalendarPreferences = {
   showWeekends: true,
   showWeekNumber: false,
+  showEmptyDaysInAgenda: true,
   isSidePanelOpen: true,
   ampm: true,
 };
 export const DEFAULT_PREFERENCES_MENU_CONFIG: EventCalendarPreferencesMenuConfig = {
   toggleWeekendVisibility: true,
   toggleWeekNumberVisibility: true,
+  toggleEmptyDaysInAgenda: true,
   toggleAmpm: true,
 };
 
-const deriveStateFromParameters = (parameters: EventCalendarParameters) => ({
+const deriveStateFromParameters = <TEvent extends object, TResource extends object>(
+  parameters: EventCalendarParameters<TEvent, TResource>,
+) => ({
   views: parameters.views ?? DEFAULT_VIEWS,
 });
 
-const mapper: SchedulerParametersToStateMapper<EventCalendarState, EventCalendarParameters> = {
+const mapper: SchedulerParametersToStateMapper<
+  EventCalendarState,
+  EventCalendarParameters<any, any>
+> = {
   getInitialState: (schedulerInitialState, parameters) => ({
     ...schedulerInitialState,
     ...deriveStateFromParameters(parameters),
@@ -54,11 +61,16 @@ const mapper: SchedulerParametersToStateMapper<EventCalendarState, EventCalendar
   },
 };
 
-export class EventCalendarStore extends SchedulerStore<
+export class EventCalendarStore<
+  TEvent extends object,
+  TResource extends object,
+> extends SchedulerStore<
+  TEvent,
+  TResource,
   EventCalendarState,
-  EventCalendarParameters
+  EventCalendarParameters<TEvent, TResource>
 > {
-  public constructor(parameters: EventCalendarParameters, adapter: Adapter) {
+  public constructor(parameters: EventCalendarParameters<TEvent, TResource>, adapter: Adapter) {
     super(parameters, adapter, 'Event Calendar', mapper);
 
     if (process.env.NODE_ENV !== 'production') {

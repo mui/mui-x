@@ -1,7 +1,7 @@
 ---
 title: Charts - Zoom and pan
 productId: x-charts
-components: ScatterChartPro, BarChartPro, LineChartPro, ChartZoomSlider
+components: ScatterChartPro, BarChartPro, LineChartPro, ChartZoomSlider, ChartsBrushOverlay
 ---
 
 # Charts - Zoom and pan [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
@@ -157,17 +157,35 @@ The `zoomInteractionConfig` prop allows you to specify which interactions are en
 
 **Zoom** interactions:
 
-- `wheel` _(default)_: Zoom in/out by scrolling the mouse wheel
-- `pinch` _(default)_: Zoom in/out by pinching on touch devices
+- `wheel` (default): Zoom in/out by scrolling the mouse wheel
+- `pinch` (default): Zoom in/out by pinching on touch devices
 - `tapAndDrag`: Zoom in/out by tapping twice and then dragging vertically. Dragging up zooms in, dragging down zooms out.
+- `brush`: Zoom into a selected area by clicking and dragging to create a selection rectangle.
+- `doubleTapReset`: Reset the zoom level to the original state when double-tapping.
 
 **Pan** interactions:
 
-- `drag` _(default)_: Pan the chart by dragging with the mouse or touch
 - `wheel` _(default)_: Pan the chart by scrolling the mouse wheel . On a desktop trackpad, it enables pan using two fingers. Only pans the horizontal axis. Use `allowedDirection` to customize which axes are affected.
-- `pressAndDrag`: Pan the chart by long-pressing and dragging.
+- `drag` (default): Pan the chart by dragging with the mouse or touch
+- `pressAndDrag`: Pan the chart by pressing and holding, then dragging. Useful for avoiding conflicts with selection gestures.
+
+:::info
+When modifying the zoom interaction configuration, care should be taken as to not create a bad user experience.
+
+For example, the "drag" and "brush" interactions do not work well together.
+
+If both are needed, the `pointerMode` and `requiredKeys` options described in the next sections can help.
+
+:::
 
 {{"demo": "ZoomAndPanInteractions.js"}}
+
+### Brush zoom
+
+The brush zoom interaction allows users to select a specific area to zoom into by clicking and dragging to create a selection rectangle.
+This provides an intuitive way to focus on a particular region of interest in the chart.
+
+{{"demo": "BrushZoom.js"}}
 
 ### Key modifiers
 
