@@ -24,10 +24,11 @@ import {
   selectorChartsLastInteraction,
 } from './useChartInteraction.selectors';
 import { ChartSeriesConfig } from '../../models/seriesConfig/seriesConfig.types';
-import { ChartsXAxisProps, ChartsYAxisProps } from '../../../../models/axis';
+import { AxisId, ChartsXAxisProps, ChartsYAxisProps } from '../../../../models/axis';
 import { ComputeResult } from '../useChartCartesianAxis/computeAxisValue';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions/useChartDimensions.selectors';
 import { ChartDrawingArea } from '../../../../hooks/useDrawingArea';
+import { isCartesianSeries } from '../../../isCartesian';
 
 export const selectorChartsTooltipItem = createSelector(
   [selectorChartsLastInteraction, selectorChartsInteractionItem, selectorChartsKeyboardItem],
@@ -68,15 +69,19 @@ export const selectorChartsTooltipItemPosition = createSelector(
       return null;
     }
 
-    const xAxisId = (series as any).xAxisId ?? xAxisIds[0];
-    const yAxisId = (series as any).yAxisId ?? yAxisIds[0];
-
     const itemSeries = series[identifier.type as T]?.series[identifier.seriesId] as
       | ChartSeriesDefaultized<T>
       | undefined;
 
     if (itemSeries) {
       const axesConfig: TooltipPositionGetterAxesConfig = {};
+
+      const xAxisId: AxisId | undefined = isCartesianSeries(itemSeries)
+        ? (itemSeries.xAxisId ?? xAxisIds[0])
+        : undefined;
+      const yAxisId: AxisId | undefined = isCartesianSeries(itemSeries)
+        ? (itemSeries.yAxisId ?? yAxisIds[0])
+        : undefined;
 
       if (xAxisId !== undefined) {
         axesConfig.x = xAxis[xAxisId];

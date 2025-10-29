@@ -42,18 +42,20 @@ export function useInternalItemTooltip<T extends ChartSeriesType>():
     | ChartSeriesDefaultized<T>
     | undefined;
 
-  const xAxisId: AxisId | undefined =
-    itemSeries && isCartesianSeries(itemSeries) ? (itemSeries.xAxisId ?? xAxisIds[0]) : undefined;
-  const yAxisId: AxisId | undefined =
-    itemSeries && isCartesianSeries(itemSeries) ? (itemSeries.yAxisId ?? yAxisIds[0]) : undefined;
-  const zAxisId: AxisId | undefined =
-    itemSeries && 'zAxisId' in itemSeries ? (itemSeries.zAxisId ?? zAxisIds[0]) : zAxisIds[0];
-
-  const rotationAxisId: AxisId | undefined = rotationAxisIds[0];
-
   if (!itemSeries) {
     return null;
   }
+
+  const xAxisId: AxisId | undefined = isCartesianSeries(itemSeries)
+    ? (itemSeries.xAxisId ?? xAxisIds[0])
+    : undefined;
+  const yAxisId: AxisId | undefined = isCartesianSeries(itemSeries)
+    ? (itemSeries.yAxisId ?? yAxisIds[0])
+    : undefined;
+  const zAxisId: AxisId | undefined =
+    'zAxisId' in itemSeries ? (itemSeries.zAxisId ?? zAxisIds[0]) : zAxisIds[0];
+
+  const rotationAxisId: AxisId | undefined = rotationAxisIds[0];
 
   const getColor =
     (seriesConfig[itemSeries.type].colorProcessor as ColorProcessor<T>)?.(
