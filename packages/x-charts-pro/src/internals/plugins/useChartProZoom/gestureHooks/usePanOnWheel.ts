@@ -27,10 +27,7 @@ export const usePanOnWheel = (
   const startedOutsideTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
   const config = useSelector(store, selectorPanInteractionConfig, ['wheel' as const]);
 
-  const isPanOnWheelEnabled: boolean = React.useMemo(
-    () => (Object.keys(optionsLookup).length > 0 && Boolean(config)) || false,
-    [optionsLookup, config],
-  );
+  const isPanOnWheelEnabled: boolean = Object.keys(optionsLookup).length > 0 && Boolean(config);
 
   React.useEffect(() => {
     if (!isPanOnWheelEnabled) {
