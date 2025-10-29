@@ -2,12 +2,12 @@
 import * as React from 'react';
 import { RenderDragPreviewParameters } from '../models';
 import { useSchedulerStoreContext } from '../use-scheduler-store-context';
-import { selectors } from './SchedulerStore';
+import { selectors } from '../scheduler-selectors';
 
 /**
  * Returns the drag preview to render when the dragged event is not over a valid drop target.
  */
-export function useDragPreview(parameters: useDragPreview.Parameters) {
+export function useDragPreview(parameters: useDragPreview.Parameters): useDragPreview.ReturnValue {
   const { renderDragPreview, showPreviewOnDragStart, data, type } = parameters;
   const store = useSchedulerStoreContext(true);
 
@@ -83,6 +83,16 @@ export namespace useDragPreview {
      */
     renderDragPreview: (parameters: RenderDragPreviewParameters) => React.ReactNode;
   };
+
+  export interface ReturnValue {
+    element: React.ReactNode;
+    actions: {
+      onDragStart: (location: DragLocationHistory) => void;
+      onDrag: (location: DragLocationHistory) => void;
+      onDrop: () => void;
+    };
+    state: useDragPreview.State;
+  }
 
   export interface State {
     isDragging: boolean;

@@ -33,10 +33,7 @@ export const useZoomOnWheel = (
   const startedOutsideTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
   const config = useSelector(store, selectorZoomInteractionConfig, ['wheel' as const]);
 
-  const isZoomOnWheelEnabled = React.useMemo(
-    () => (Object.keys(optionsLookup).length > 0 && config) || false,
-    [optionsLookup, config],
-  );
+  const isZoomOnWheelEnabled: boolean = Object.keys(optionsLookup).length > 0 && Boolean(config);
 
   React.useEffect(() => {
     if (!isZoomOnWheelEnabled) {
@@ -88,8 +85,8 @@ export const useZoomOnWheel = (
           }
           const centerRatio =
             option.axisDirection === 'x'
-              ? getHorizontalCenterRatio(point, drawingArea)
-              : getVerticalCenterRatio(point, drawingArea);
+              ? getHorizontalCenterRatio(point, drawingArea, option.reverse)
+              : getVerticalCenterRatio(point, drawingArea, option.reverse);
 
           const { scaleRatio, isZoomIn } = getWheelScaleRatio(event.detail.srcEvent, option.step);
           const [newMinRange, newMaxRange] = zoomAtPoint(centerRatio, scaleRatio, zoom, option);

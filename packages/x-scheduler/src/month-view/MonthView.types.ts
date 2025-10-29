@@ -3,4 +3,6 @@ import { ExportedDayTimeGridProps } from '../internals/components/day-time-grid/
 
 export interface MonthViewProps extends ExportedDayTimeGridProps {}
 
-export interface StandaloneMonthViewProps extends MonthViewProps, EventCalendarParameters {}
+export interface StandaloneMonthViewProps<TEvent extends object, TResource extends object>
+  extends MonthViewProps,
+    EventCalendarParameters<TEvent, TResource> {}

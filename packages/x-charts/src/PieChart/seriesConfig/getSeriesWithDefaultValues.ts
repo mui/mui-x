@@ -6,11 +6,11 @@ const getSeriesWithDefaultValues: GetSeriesWithDefaultValues<'pie'> = (
   colors,
 ) => {
   return {
-    id: seriesData.id ?? `auto-generated-id-${seriesIndex}`,
     ...seriesData,
+    id: seriesData.id ?? `auto-generated-id-${seriesIndex}`,
     data: seriesData.data.map((d, index) => ({
-      color: colors[index % colors.length],
       ...d,
+      color: d.color ?? colors[index % colors.length],
     })),
   };
 };

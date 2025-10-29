@@ -23,6 +23,16 @@ const knobs = {
     knob: 'switch',
     defaultValue: false,
   },
+  brush: {
+    displayName: 'Brush',
+    knob: 'switch',
+    defaultValue: false,
+  },
+  doubleTapReset: {
+    displayName: 'Double tap reset',
+    knob: 'switch',
+    defaultValue: false,
+  },
   // Pan interactions
   pan: {
     knob: 'title',
@@ -56,6 +66,12 @@ export default function ZoomAndPanInteractions() {
         }
         if (props.tapAndDrag) {
           zoomInteractions.push('tapAndDrag');
+        }
+        if (props.brush) {
+          zoomInteractions.push('brush');
+        }
+        if (props.doubleTapReset) {
+          zoomInteractions.push('doubleTapReset');
         }
 
         // Build pan interactions array
@@ -105,6 +121,12 @@ export default function ZoomAndPanInteractions() {
         }
         if (props.tapAndDrag) {
           zoomInteractions.push('tapAndDrag');
+        }
+        if (props.brush) {
+          zoomInteractions.push('brush');
+        }
+        if (props.doubleTapReset) {
+          zoomInteractions.push('doubleTapReset');
         }
 
         // Build pan interactions array
