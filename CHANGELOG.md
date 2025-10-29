@@ -51,10 +51,6 @@ Same changes as in `@mui/x-date-pickers@8.16.0`.
 
 ### Charts
 
-From https://github.com/mui/mui-x/pull/19899
-
-- Add `brush` selection to the chart's zoom
-
 #### `@mui/x-charts@8.16.0`
 
 - [charts] Allow tooltip to anchor items (#19954) @alexfauquette
