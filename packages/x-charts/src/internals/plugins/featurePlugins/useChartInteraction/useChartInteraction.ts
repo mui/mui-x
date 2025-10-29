@@ -49,7 +49,11 @@ export const useChartInteraction: ChartPlugin<UseChartInteractionSignature> = ({
     context: { interaction: InteractionUpdateSource },
   ) {
     if (!fastObjectShallowCompare(store.state.interaction.item, newItem)) {
-      store.set('interaction', { ...store.state.interaction, lastUpdate: context.interaction, item: newItem });
+      store.set('interaction', {
+        ...store.state.interaction,
+        lastUpdate: context.interaction,
+        item: newItem,
+      });
     }
   });
 
