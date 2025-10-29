@@ -13,7 +13,7 @@ We'd like to extend a big thank you to the 12 contributors who made this release
 - 🖌️ Add `brush` zoom interaction to charts
 
 Special thanks go out to the community members for their valuable contributions:
-@felix-wg
+@felix-wg, @frncesc
 
 The following are all team members who have contributed to this release:
 @alexfauquette, @arminmeh, @bernardobelchior, @brijeshb42, @flaviendelangle, @JCQuintas, @michelengelen, @noraleonte, @rita-codes, @sai6855
