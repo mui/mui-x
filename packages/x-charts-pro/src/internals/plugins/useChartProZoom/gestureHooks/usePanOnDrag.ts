@@ -24,6 +24,7 @@ export const usePanOnDrag = (
   const drawingArea = useSelector(store, selectorChartDrawingArea);
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
   const startRef = React.useRef<readonly ZoomData[]>(null);
+  const deltaRef = React.useRef<{ x: number; y: number }>({ x: 0, y: 0 });
   const config = useSelector(store, selectorPanInteractionConfig, ['drag' as const]);
 
   const isPanOnDragEnabled: boolean =
@@ -59,28 +60,29 @@ export const usePanOnDrag = (
     };
     const handlePanEnd = () => {
       startRef.current = null;
+      deltaRef.current = { x: 0, y: 0 };
     };
 
-    const throttledCallback = rafThrottle((event: PanEvent, zoomData: readonly ZoomData[]) => {
-      const newZoomData = translateZoom(
-        zoomData,
-        { x: event.detail.activeDeltaX, y: -event.detail.activeDeltaY },
-        {
-          width: drawingArea.width,
-          height: drawingArea.height,
-        },
-        optionsLookup,
-      );
-
-      setZoomDataCallback(newZoomData);
+    const throttledCallback = rafThrottle(() => {
+      setZoomDataCallback((prev) => {
+        const newZoomData = translateZoom(
+          prev,
+          deltaRef.current,
+          {
+            width: drawingArea.width,
+            height: drawingArea.height,
+          },
+          optionsLookup,
+        );
+        deltaRef.current = { x: 0, y: 0 };
+        return newZoomData;
+      });
     });
 
     const handlePan = (event: PanEvent) => {
-      const zoomData = startRef.current;
-      if (!zoomData) {
-        return;
-      }
-      throttledCallback(event, zoomData);
+      deltaRef.current.x += event.detail.deltaX;
+      deltaRef.current.y -= event.detail.deltaY;
+      throttledCallback();
     };
 
     const panHandler = instance.addInteractionListener('zoomPan', handlePan);
