@@ -14,15 +14,7 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
   props: TimelineEventProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const {
-    occurrence,
-    ariaLabelledBy,
-    className,
-    onEventClick,
-    id: idProp,
-    style,
-    ...other
-  } = props;
+  const { occurrence, ariaLabelledBy, className, id: idProp, style, ...other } = props;
 
   const store = useTimelineStoreContext();
 

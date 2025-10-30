@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { Unstable_SankeyChart as SankeyChart } from '@mui/x-charts-pro/SankeyChart';
 import { Stack } from '@mui/system';
 import Typography from '@mui/material/Typography';

@@ -5,9 +5,9 @@ import {
   RecurringEventPresetKey,
   RecurringEventRecurrenceRule,
   SchedulerValidDate,
-} from '../../models';
-import { SchedulerState as State } from './SchedulerStore.types';
-import { getWeekDayCode } from '../recurring-event-utils';
+} from '../models';
+import { SchedulerState as State } from '../utils/SchedulerStore/SchedulerStore.types';
+import { getWeekDayCode } from '../utils/recurring-event-utils';
 
 const eventSelector = createSelector(
   (state: State) => state.processedEventLookup,
@@ -30,6 +30,7 @@ const isEventReadOnlySelector = createSelector(
 );
 
 export const selectors = {
+  ampm: createSelector((state: State) => state.preferences.ampm),
   visibleDate: createSelector((state: State) => state.visibleDate),
   showCurrentTimeIndicator: createSelector((state: State) => state.showCurrentTimeIndicator),
   nowUpdatedEveryMinute: createSelector((state: State) => state.nowUpdatedEveryMinute),

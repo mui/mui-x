@@ -43,16 +43,7 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
   const defaultYAxisId = yAxisIds[0];
 
   useEnhancedEffect(() => {
-    store.update((prev) =>
-      prev.voronoi.isVoronoiEnabled === !disableVoronoi
-        ? prev
-        : {
-            ...prev,
-            voronoi: {
-              isVoronoiEnabled: !disableVoronoi,
-            },
-          },
-    );
+    store.set('voronoi', { isVoronoiEnabled: !disableVoronoi });
   }, [store, disableVoronoi]);
 
   React.useEffect(() => {
@@ -178,7 +169,10 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
       }
 
       const { seriesId, dataIndex } = closestPoint;
-      instance.setItemInteraction?.({ type: 'scatter', seriesId, dataIndex });
+      instance.setItemInteraction?.(
+        { type: 'scatter', seriesId, dataIndex },
+        { interaction: 'pointer' },
+      );
       instance.setHighlight?.({
         seriesId,
         dataIndex,
@@ -226,23 +220,11 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
 
   // Instance implementation
   const enableVoronoiCallback = useEventCallback(() => {
-    store.update((prev) => ({
-      ...prev,
-      voronoi: {
-        ...prev.voronoi,
-        isVoronoiEnabled: true,
-      },
-    }));
+    store.set('voronoi', { isVoronoiEnabled: true });
   });
 
   const disableVoronoiCallback = useEventCallback(() => {
-    store.update((prev) => ({
-      ...prev,
-      voronoi: {
-        ...prev.voronoi,
-        isVoronoiEnabled: false,
-      },
-    }));
+    store.set('voronoi', { isVoronoiEnabled: false });
   });
 
   return {

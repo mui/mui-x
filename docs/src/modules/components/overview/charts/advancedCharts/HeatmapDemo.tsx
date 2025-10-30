@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { interpolateBlues } from 'd3-scale-chromatic';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';

@@ -5,7 +5,7 @@ import {
 } from '@mui/x-scheduler-headless/models';
 import { adapter } from 'test/utils/scheduler';
 import { storeClasses } from './utils';
-import { selectors } from '../SchedulerStore.selectors';
+import { selectors } from '../../../scheduler-selectors';
 
 const DEFAULT_PARAMS = { events: [] };
 

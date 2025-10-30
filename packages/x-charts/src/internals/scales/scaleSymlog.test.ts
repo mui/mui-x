@@ -1,4 +1,4 @@
-import { scaleSymlog } from './symlogScale';
+import { scaleSymlog } from './scaleSymlog';
 
 describe('symlogScale', () => {
   describe('copy', () => {

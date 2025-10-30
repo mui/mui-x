@@ -1,5 +1,4 @@
 // @ts-nocheck
-import * as React from 'react';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 
 // prettier-ignore
