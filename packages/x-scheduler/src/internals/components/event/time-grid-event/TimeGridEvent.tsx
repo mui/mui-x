@@ -6,6 +6,7 @@ import { Repeat } from 'lucide-react';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { selectors } from '@mui/x-scheduler-headless/use-event-calendar';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
+import { eventCalendarEventSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { TimeGridEventProps } from './TimeGridEvent.types';
 import { getColorClassName } from '../../../utils/color-utils';
@@ -23,8 +24,13 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   const store = useEventCalendarStoreContext();
   const adapter = useAdapter();
   const isRecurring = Boolean(occurrence.rrule);
-  const isDraggable = useStore(store, selectors.isEventDraggable, occurrence.id);
-  const isResizable = useStore(store, selectors.isEventResizable, occurrence.id, 'time-grid');
+  const isDraggable = useStore(store, eventCalendarEventSelectors.isDraggable, occurrence.id);
+  const isResizable = useStore(
+    store,
+    eventCalendarEventSelectors.isResizable,
+    occurrence.id,
+    'time-grid',
+  );
   const color = useStore(store, selectors.eventColor, occurrence.id);
   const formatTime = useFormatTime();
 
