@@ -9,7 +9,6 @@ export const selectors = {
   views: createSelector((state: State) => state.views),
   preferences: createSelector((state: State) => state.preferences),
   preferencesMenuConfig: createSelector((state: State) => state.preferencesMenuConfig),
-  ampm: createSelector((state: State) => state.preferences.ampm),
   showWeekends: createSelector((state: State) => state.preferences.showWeekends),
   showWeekNumber: createSelector((state: State) => state.preferences.showWeekNumber),
   showEmptyDaysInAgenda: createSelector((state: State) => state.preferences.showEmptyDaysInAgenda),

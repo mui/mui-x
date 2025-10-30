@@ -10,6 +10,7 @@ import {
   SchedulerValidDate,
   CalendarEventUpdatedProperties,
   RecurringEventUpdateScope,
+  SchedulerPreferences,
 } from '../../models';
 import {
   SchedulerState,
@@ -47,6 +48,10 @@ export const DEFAULT_IS_MULTI_DAY_EVENT = (event: CalendarEvent | CalendarEventO
 
 const ONE_MINUTE_IN_MS = 60 * 1000;
 
+export const DEFAULT_SCHEDULER_PREFERENCES: SchedulerPreferences = {
+  ampm: true,
+};
+
 /**
  * Instance shared by the Event Calendar and the Timeline components.
  */
@@ -76,6 +81,7 @@ export class SchedulerStore<
       ...SchedulerStore.deriveStateFromParameters(parameters, adapter),
       ...buildEventsState(parameters),
       ...buildResourcesState(parameters),
+      preferences: DEFAULT_SCHEDULER_PREFERENCES,
       adapter,
       occurrencePlaceholder: null,
       nowUpdatedEveryMinute: adapter.date(),
