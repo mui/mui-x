@@ -31,6 +31,7 @@ describe('Core - EventCalendarStore', () => {
         resourceIdList: [],
         processedResourceLookup: new Map(),
         resourceModelStructure: undefined,
+        resourceChildrenIdMap: new Map(),
         visibleResources: new Map(),
         nowUpdatedEveryMinute: adapter.date(),
         isMultiDayEvent: DEFAULT_IS_MULTI_DAY_EVENT,
