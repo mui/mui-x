@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { act, createRenderer, screen, waitFor, within } from '@mui/internal-test-utils';
 import { DataGrid, gridClasses, GridColDef } from '@mui/x-data-grid';
 import { getCell, getActiveCell, getColumnHeaderCell } from 'test/utils/helperFn';

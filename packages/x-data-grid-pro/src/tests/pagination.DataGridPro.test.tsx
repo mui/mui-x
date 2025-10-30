@@ -1,6 +1,5 @@
 import { createRenderer, act, waitFor } from '@mui/internal-test-utils';
 import { getColumnValues } from 'test/utils/helperFn';
-import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { DataGridPro, GridApi, useGridApiRef } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';

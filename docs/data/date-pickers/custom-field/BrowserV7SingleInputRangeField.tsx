@@ -1,4 +1,3 @@
-import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import { styled } from '@mui/material/styles';
 import { ClearIcon, DateRangeIcon } from '@mui/x-date-pickers/icons';

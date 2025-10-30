@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { createRenderer, screen } from '@mui/internal-test-utils';
 import { useChartGradientId, useChartGradientIdObjectBound } from './useChartGradientId';
 import { ChartDataProvider } from '../ChartDataProvider';
