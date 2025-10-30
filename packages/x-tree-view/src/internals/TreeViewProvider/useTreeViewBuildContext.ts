@@ -19,7 +19,8 @@ export const useTreeViewBuildContext = <TStore extends TreeViewAnyStore>(
 ): TreeViewContextValue<TStore> => {
   const { store, apiRef, rootRef } = parameters;
 
-  const publicAPI = useRefWithInit(store.buildPublicAPI).current as TreeViewPublicAPI<TStore>;
+  const publicAPI = useRefWithInit(() => store.buildPublicAPI())
+    .current as TreeViewPublicAPI<TStore>;
   initializeInputApiRef(publicAPI, apiRef);
 
   const runItemPlugins = React.useCallback<TreeViewItemPluginsRunner>(
