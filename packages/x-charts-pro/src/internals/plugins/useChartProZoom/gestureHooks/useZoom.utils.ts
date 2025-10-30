@@ -157,12 +157,8 @@ export function translateZoom(
     const rawDisplacement = options.axisDirection === 'x' ? movement.x : movement.y;
     const displacement = options.reverse ? -rawDisplacement : rawDisplacement;
     const dimension = options.axisDirection === 'x' ? drawingArea.width : drawingArea.height;
-    // Calculate displacement relative to the full data range (maxEnd - minStart)
-    // This ensures constant panning speed in visual space regardless of zoom level
-    const fullRange = MAX_PERCENT - MIN_PERCENT;
-    const displacementPercent = (displacement / dimension) * fullRange;
-    let newMinPercent = min - displacementPercent;
-    let newMaxPercent = max - displacementPercent;
+    let newMinPercent = min - (displacement / dimension) * span;
+    let newMaxPercent = max - (displacement / dimension) * span;
     if (newMinPercent < MIN_PERCENT) {
       newMinPercent = MIN_PERCENT;
       newMaxPercent = newMinPercent + span;
