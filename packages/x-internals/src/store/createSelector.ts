@@ -1,4 +1,9 @@
-import { lruMemoize, createSelectorCreator } from 'reselect';
+import {
+  lruMemoize,
+  createSelectorCreator,
+  OverrideMemoizeOptions,
+  UnknownMemoizer,
+} from 'reselect';
 import type { CreateSelectorFunction } from './createSelectorType';
 
 export type { CreateSelectorFunction } from './createSelectorType';
@@ -99,23 +104,25 @@ export const createSelector = ((
 }) as unknown as CreateSelectorFunction;
 /* eslint-enable id-denylist */
 
-export const createSelectorMemoized: CreateSelectorFunction = (...inputs: any[]) => {
-  type CacheKey = { id: number };
+export const createSelectorMemoizedWithOptions =
+  (options?: OverrideMemoizeOptions<UnknownMemoizer>): CreateSelectorFunction =>
+  (...inputs: any[]) => {
+    type CacheKey = { id: number };
 
-  const cache = new WeakMap<CacheKey, SelectorWithArgs>();
-  let nextCacheId = 1;
+    const cache = new WeakMap<CacheKey, SelectorWithArgs>();
+    let nextCacheId = 1;
 
-  const combiner = inputs[inputs.length - 1];
-  const nSelectors = inputs.length - 1 || 1;
-  // (s1, s2, ..., sN, a1, a2, a3) => { ... }
-  const argsLength = Math.max(combiner.length - nSelectors, 0);
+    const combiner = inputs[inputs.length - 1];
+    const nSelectors = inputs.length - 1 || 1;
+    // (s1, s2, ..., sN, a1, a2, a3) => { ... }
+    const argsLength = Math.max(combiner.length - nSelectors, 0);
 
-  if (argsLength > 3) {
-    throw new Error('Unsupported number of arguments');
-  }
+    if (argsLength > 3) {
+      throw new Error('Unsupported number of arguments');
+    }
 
-  // prettier-ignore
-  const selector = (state: any, a1: any, a2: any, a3: any) => {
+    // prettier-ignore
+    const selector = (state: any, a1: any, a2: any, a3: any) => {
     let cacheKey = state.__cacheKey__;
     if (!cacheKey) {
       cacheKey = { id: nextCacheId };
@@ -161,6 +168,9 @@ export const createSelectorMemoized: CreateSelectorFunction = (...inputs: any[])
         default:
           throw new Error('Unsupported number of arguments');
       }
+      if (options) {
+        reselectArgs = [...reselectArgs, options];
+      }
 
       fn = reselectCreateSelector(...(reselectArgs as any)) as unknown as SelectorWithArgs;
       fn.selectorArgs = selectorArgs;
@@ -187,5 +197,7 @@ export const createSelectorMemoized: CreateSelectorFunction = (...inputs: any[])
     }
   };
 
-  return selector as any;
-};
+    return selector as any;
+  };
+
+export const createSelectorMemoized = createSelectorMemoizedWithOptions();

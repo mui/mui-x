@@ -1,4 +1,5 @@
-// import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
+import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
+import { createSelectorMemoizedWithOptions } from '@mui/x-internals/store';
 import { AxisId, ChartsAxisProps, AxisItemIdentifier } from '../../../../models/axis';
 import { createSelector } from '../../utils/selectors';
 import {
@@ -89,31 +90,27 @@ export const selectorChartsInteractionRotationAxisValues = createSelector(
 /**
  * Get rotation-axis ids and corresponding data index that should be display in the tooltip.
  */
-export const selectorChartsInteractionTooltipRotationAxes = createSelector(
-  [selectorChartsInteractionRotationAxisIndexes, selectorChartRotationAxis],
-  (indexes, axes) => {
-    if (indexes === null) {
-      return [];
-    }
-
-    return axes.axisIds
-      .map(
-        (axisId, axisIndex): AxisItemIdentifier => ({
-          axisId,
-          dataIndex: indexes[axisIndex],
-        }),
-      )
-      .filter(({ axisId, dataIndex }) => axes.axis[axisId].triggerTooltip && dataIndex >= 0);
+export const selectorChartsInteractionTooltipRotationAxes = createSelectorMemoizedWithOptions({
+  memoizeOptions: {
+    // Keep the same reference if array content is the same.
+    // If possible, avoid this pattern by creating selectors that
+    // uses string/number as arguments.
+    resultEqualityCheck: isDeepEqual,
   },
-  // {
-  //   memoizeOptions: {
-  //     // Keep the same reference if array content is the same.
-  //     // If possible, avoid this pattern by creating selectors that
-  //     // uses string/number as arguments.
-  //     resultEqualityCheck: isDeepEqual,
-  //   },
-  // },
-);
+})(selectorChartsInteractionRotationAxisIndexes, selectorChartRotationAxis, (indexes, axes) => {
+  if (indexes === null) {
+    return [];
+  }
+
+  return axes.axisIds
+    .map(
+      (axisId, axisIndex): AxisItemIdentifier => ({
+        axisId,
+        dataIndex: indexes[axisIndex],
+      }),
+    )
+    .filter(({ axisId, dataIndex }) => axes.axis[axisId].triggerTooltip && dataIndex >= 0);
+});
 
 /**
  * Get radius-axis ids and corresponding data index that should be displayed in the tooltip.
