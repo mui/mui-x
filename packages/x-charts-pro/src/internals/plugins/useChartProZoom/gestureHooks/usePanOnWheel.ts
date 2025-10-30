@@ -80,7 +80,7 @@ export const usePanOnWheel = (
         let movementY = 0;
 
         if (allowedDirection === 'x' || allowedDirection === 'xy') {
-          movementX = wheelEvent.deltaX;
+          movementX = -wheelEvent.deltaX;
         }
 
         if (allowedDirection === 'y' || allowedDirection === 'xy') {
