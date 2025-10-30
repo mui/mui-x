@@ -85,7 +85,6 @@ function ColumnInteractiveLayer({
     end,
   );
   const placeholder = CalendarGrid.usePlaceholderInRange({ start, end, occurrences, maxIndex });
-  const canCreateEvent = useStore(store, selectors.canCreateNewEvent);
 
   // Feature hooks
   const getDateFromPosition = CalendarGrid.useGetDateFromPositionInColumn({
@@ -103,9 +102,10 @@ function ColumnInteractiveLayer({
   };
 
   const handleDoubleClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (!canCreateEvent) {
+    if (!selectors.canCreateNewEvent(store.state)) {
       return;
     }
+
     const draftRange = computeInitialRange(event);
     store.setOccurrencePlaceholder({
       type: 'creation',

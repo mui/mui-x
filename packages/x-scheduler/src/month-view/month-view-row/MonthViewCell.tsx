@@ -39,7 +39,6 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
     eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell,
     day.value,
   );
-  const canCreateEvent = useStore(store, selectors.canCreateNewEvent);
   const placeholder = CalendarGrid.usePlaceholderInDay(day.value, row);
 
   // Ref hooks
@@ -68,9 +67,10 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const rowCount = 1 + maxEvents;
 
   const handleDoubleClick = () => {
-    if (!canCreateEvent) {
+    if (!selectors.canCreateNewEvent(store.state)) {
       return;
     }
+
     store.setOccurrencePlaceholder({
       type: 'creation',
       surfaceType: 'day-grid',
