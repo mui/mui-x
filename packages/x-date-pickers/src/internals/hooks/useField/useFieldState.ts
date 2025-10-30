@@ -219,7 +219,11 @@ export const useFieldState = <
       state.sections[activeSectionIndex] as any,
     );
 
-    const dateFromSections = getDateFromDateSections(adapter, activeDateSections as any, localizedDigits);
+    const dateFromSections = getDateFromDateSections(
+      adapter,
+      activeDateSections as any,
+      localizedDigits,
+    );
     return !adapter.isValid(dateFromSections);
   }, [adapter, fieldValueManager, state.sections, activeSectionIndex, localizedDigits]);
 

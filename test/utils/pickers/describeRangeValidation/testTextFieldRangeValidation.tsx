@@ -18,7 +18,7 @@ const testInvalidStatus = (
 
     if (incompleteRange && fieldType === 'single-input') {
       expect(fieldRoot).to.have.attribute('aria-invalid', 'true');
-      return
+      return;
     }
     expect(fieldRoot).to.have.attribute('aria-invalid', answer ? 'true' : 'false');
   });
