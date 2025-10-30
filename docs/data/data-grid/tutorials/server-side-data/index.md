@@ -752,21 +752,20 @@ interface ApiResponse {
 
 ### 9. Define the grid columns
 
-Define how each column should appear and behave:
+Below the interfaces, define how each column should appear and behave:
 
 ```tsx
-const EmployeeDataGrid = () => {
-  const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', width: 80 },
-    { field: 'name', headerName: 'Name', width: 200 },
-    { field: 'email', headerName: 'Email', width: 250 },
-    { field: 'role', headerName: 'Role', width: 150 },
-    { field: 'department', headerName: 'Department', width: 150 },
-    { field: 'salary', headerName: 'Salary', width: 120 },
-    { field: 'startDate', headerName: 'Start Date', width: 130 },
-  ];
+const columns: GridColDef[] = [
+  { field: 'id', headerName: 'ID', width: 80 },
+  { field: 'name', headerName: 'Name', width: 200 },
+  { field: 'email', headerName: 'Email', width: 250 },
+  { field: 'role', headerName: 'Role', width: 150 },
+  { field: 'department', headerName: 'Department', width: 150 },
+  { field: 'salary', headerName: 'Salary', width: 120 },
+  { field: 'startDate', headerName: 'Start Date', width: 130 },
+];
 
-  return ( //...
+const EmployeeDataGrid = () => { //...
 ```
 
 **What's happening here:**
@@ -781,8 +780,7 @@ const EmployeeDataGrid = () => {
 The `GridDataSource` tells the Grid how to fetch data:
 
 ```tsx
-  const columns: GridColDef[] //...
-
+const EmployeeDataGrid = () => {
   const dataSource: GridDataSource = useMemo(
     () => ({
       getRows: async (params: GridGetRowsParams): Promise<GridGetRowsResponse> => {
@@ -955,7 +953,13 @@ Here is the complete `EmployeeDataGrid.tsx` component:
 
 ```tsx
 import { useMemo } from 'react';
-import { DataGrid, type GridColDef, type GridDataSource, type GridGetRowsParams, type GridGetRowsResponse } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  type GridColDef,
+  type GridDataSource,
+  type GridGetRowsParams,
+  type GridGetRowsResponse,
+} from '@mui/x-data-grid';
 import { Box, Typography } from '@mui/material';
 
 interface Employee {
@@ -975,40 +979,44 @@ interface ApiResponse {
   pageSize: number;
 }
 
+const columns: GridColDef[] = [
+  { field: 'id', headerName: 'ID', width: 80 },
+  { field: 'name', headerName: 'Name', width: 200 },
+  { field: 'email', headerName: 'Email', width: 250 },
+  { field: 'role', headerName: 'Role', width: 150 },
+  { field: 'department', headerName: 'Department', width: 150 },
+  { field: 'salary', headerName: 'Salary', width: 120 },
+  { field: 'startDate', headerName: 'Start Date', width: 130 },
+];
+
 const EmployeeDataGrid = () => {
-  const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', width: 80 },
-    { field: 'name', headerName: 'Name', width: 200 },
-    { field: 'email', headerName: 'Email', width: 250 },
-    { field: 'role', headerName: 'Role', width: 150 },
-    { field: 'department', headerName: 'Department', width: 150 },
-    { field: 'salary', headerName: 'Salary', width: 120 },
-    { field: 'startDate', headerName: 'Start Date', width: 130 },
-  ];
+  const dataSource: GridDataSource = useMemo(
+    () => ({
+      getRows: async (params: GridGetRowsParams): Promise<GridGetRowsResponse> => {
+        const urlParams = new URLSearchParams({
+          paginationModel: JSON.stringify(params.paginationModel),
+          sortModel: JSON.stringify(params.sortModel || []),
+          filterModel: JSON.stringify(params.filterModel || {}),
+        });
 
-  const dataSource: GridDataSource = useMemo(() => ({
-    getRows: async (params: GridGetRowsParams): Promise<GridGetRowsResponse> => {
-      const urlParams = new URLSearchParams({
-        page: params.paginationModel?.page?.toString() || '0',
-        pageSize: params.paginationModel?.pageSize?.toString() || '40',
-        sortModel: JSON.stringify(params.sortModel || []),
-        filterModel: JSON.stringify(params.filterModel || {}),
-      });
+        const response = await fetch(
+          `http://localhost:3001/api/employees?${urlParams.toString()}`,
+        );
 
-      const response = await fetch(`http://localhost:3001/api/employees?${urlParams.toString()}`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+        const result: ApiResponse = await response.json();
 
-      const result: ApiResponse = await response.json();
-
-      return {
-        rows: result.data,
-        rowCount: result.total,
-      };
-    },
-  }), []);
+        return {
+          rows: result.data,
+          rowCount: result.total,
+        };
+      },
+    }),
+    [],
+  );
 
   return (
     <Box sx={{ height: 600, width: '100%' }}>
