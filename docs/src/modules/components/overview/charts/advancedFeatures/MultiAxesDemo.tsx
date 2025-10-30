@@ -60,6 +60,7 @@ function MultiAxes() {
         xAxis={[
           {
             scaleType: 'band',
+            height: 50,
             dataKey: 'month',
             label: 'Month',
             valueFormatter: (value, context) =>
