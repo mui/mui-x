@@ -104,13 +104,11 @@ This configuration can be used in Bar Charts to set colors according to string c
 
 ### Color callback
 
-If you need more control over the color assignment, you can provide a `color` callback prop to the chart component.
+If you need more control over the color assignment, you can provide a `colorGetter` callback prop to the chart component.
 
-The callback can either receive `null` or `{ value, dataIndex }` and should return a color string.
+The callback receives a `{ value, dataIndex }` object and should return a color string for the provided data point.
 
-If it is called with `null`, the callback should return a color to represent the whole series. This color is used in legends and other places where the series is represented as a whole.
-
-Inversely, when receiving `{ value, dataIndex }`, the callback should return the color corresponding to the given value or data index.
+In components where a series-level color is required (e.g., the legend), the `color` prop will be used.
 
 {{"demo": "ColorCallback.js"}}
 
