@@ -69,13 +69,7 @@ const chartsParams = {
   series: [
     {
       data: netSpendInPounds,
-      color: (data) => {
-        if (data === null) {
-          return 'black';
-        }
-
-        return clubColors[data.dataIndex];
-      },
+      colorGetter: (data) => clubColors[data.dataIndex],
       valueFormatter,
     },
   ],
