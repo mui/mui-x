@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { renderHook } from '@mui/internal-test-utils';
-import { adapter } from 'test/utils/scheduler';
+import { adapter, createProcessedEvent } from 'test/utils/scheduler';
 import { processDate } from '../process-date';
-import { CalendarEvent, SchedulerValidDate } from '../models';
+import { SchedulerEvent, SchedulerProcessedEvent, SchedulerValidDate } from '../models';
 import {
   useAgendaEventOccurrencesGroupedByDay,
   useAgendaEventOccurrencesGroupedByDayOptions,
@@ -16,14 +16,15 @@ describe('useAgendaEventOccurrencesGroupedByDay', () => {
     id: string,
     startISO: string,
     endISO: string,
-    extra: Partial<CalendarEvent> = {},
-  ): CalendarEvent => ({
-    id,
-    start: adapter.date(startISO),
-    end: adapter.date(endISO),
-    title: `Event ${id}`,
-    ...extra,
-  });
+    extra: Partial<SchedulerEvent> = {},
+  ) =>
+    createProcessedEvent({
+      id,
+      start: adapter.date(startISO),
+      end: adapter.date(endISO),
+      title: `Event ${id}`,
+      ...extra,
+    });
 
   function testHook({
     events = [],
@@ -31,7 +32,7 @@ describe('useAgendaEventOccurrencesGroupedByDay', () => {
     showWeekends,
     showEmptyDaysInAgenda,
   }: {
-    events?: CalendarEvent[];
+    events?: SchedulerProcessedEvent[];
     visibleDate: SchedulerValidDate;
     showWeekends: boolean;
     showEmptyDaysInAgenda: boolean;
@@ -65,7 +66,7 @@ describe('useAgendaEventOccurrencesGroupedByDay', () => {
   });
 
   it('should extend forward until it fills AGENDA_VIEW_DAYS_AMOUNT days that contain events when showEmptyDays=false', () => {
-    const events: CalendarEvent[] = [
+    const events: SchedulerProcessedEvent[] = [
       createEvent('1', '2025-01-01', '2025-01-01'),
       createEvent('2', '2025-01-03', '2025-01-03'),
       createEvent('3', '2025-01-05', '2025-01-05'),
@@ -111,7 +112,7 @@ describe('useAgendaEventOccurrencesGroupedByDay', () => {
   });
 
   it('should respect showWeekends preference when building the day list', () => {
-    const events: CalendarEvent[] = [
+    const events: SchedulerProcessedEvent[] = [
       createEvent('1', '2025-10-03', '2025-10-03'), // Fri
       createEvent('2', '2025-10-04', '2025-10-04'), // Sat
       createEvent('3', '2025-10-05', '2025-10-05'), // Sun

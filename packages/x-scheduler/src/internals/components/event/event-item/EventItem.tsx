@@ -69,7 +69,10 @@ export const EventItem = React.forwardRef(function EventItem(
             >
               <time className="EventItemTime EventItemTime--compact">
                 <span>
-                  {adapter.format(occurrence.start, ampm ? 'hoursMinutes12h' : 'hoursMinutes24h')}
+                  {adapter.format(
+                    occurrence.start.value,
+                    ampm ? 'hoursMinutes12h' : 'hoursMinutes24h',
+                  )}
                 </span>
               </time>
 
@@ -127,11 +130,18 @@ export const EventItem = React.forwardRef(function EventItem(
               ) : (
                 <time className="EventItemTime">
                   <span>
-                    {adapter.format(occurrence.start, ampm ? 'hoursMinutes12h' : 'hoursMinutes24h')}
+                    {adapter.format(
+                      occurrence.start.value,
+                      ampm ? 'hoursMinutes12h' : 'hoursMinutes24h',
+                    )}
                   </span>
                   <span>
                     {' '}
-                    - {adapter.format(occurrence.end, ampm ? 'hoursMinutes12h' : 'hoursMinutes24h')}
+                    -{' '}
+                    {adapter.format(
+                      occurrence.end.value,
+                      ampm ? 'hoursMinutes12h' : 'hoursMinutes24h',
+                    )}
                   </span>
                 </time>
               )}

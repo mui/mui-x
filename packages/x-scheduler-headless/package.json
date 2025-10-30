@@ -20,6 +20,7 @@
     "./event-calendar-provider": "./src/event-calendar-provider/index.ts",
     "./models": "./src/models/index.ts",
     "./process-date": "./src/process-date/index.ts",
+    "./process-event": "./src/process-event/index.ts",
     "./scheduler-selectors": "./src/scheduler-selectors/index.ts",
     "./standalone-event": "./src/standalone-event/index.ts",
     "./timeline": "./src/timeline/index.ts",

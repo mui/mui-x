@@ -1,5 +1,5 @@
 import {
-  CalendarEvent,
+  SchedulerProcessedEvent,
   CalendarEventColor,
   CalendarEventOccurrence,
   CalendarOccurrencePlaceholder,
@@ -10,6 +10,7 @@ import {
   CalendarEventId,
   SchedulerResourceModelStructure,
   SchedulerEventModelStructure,
+  SchedulerEvent,
 } from '../../models';
 import { Adapter } from '../../use-adapter/useAdapter.types';
 
@@ -38,7 +39,7 @@ export interface SchedulerState<TEvent extends object = any> {
   /**
    * A lookup to get the processed event from its ID.
    */
-  processedEventLookup: Map<CalendarEventId, CalendarEvent>;
+  processedEventLookup: Map<CalendarEventId, SchedulerProcessedEvent>;
   /**
    * The structure of the event model.
    * It defines how to read and write properties of the event model.
@@ -103,7 +104,7 @@ export interface SchedulerState<TEvent extends object = any> {
    * A multi day event is rendered in the day grid instead of the time grid when both are available.
    * It can also be styled differently in the day grid.
    */
-  isMultiDayEvent: (event: CalendarEvent | CalendarEventOccurrence) => boolean;
+  isMultiDayEvent: (event: SchedulerProcessedEvent | CalendarEventOccurrence) => boolean;
   /**
    * Whether the calendar is in read-only mode.
    * @default false
@@ -251,6 +252,6 @@ export type SchedulerModelUpdater<
 
 export interface UpdateEventsParameters {
   deleted?: CalendarEventId[];
-  created?: CalendarEvent[];
+  created?: SchedulerEvent[];
   updated?: CalendarEventUpdatedProperties[];
 }

@@ -2,13 +2,14 @@
 import * as React from 'react';
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import {
-  CalendarEvent,
+  SchedulerProcessedEvent,
   CalendarOccurrencePlaceholder,
   CalendarOccurrencePlaceholderExternalDrag,
   CalendarOccurrencePlaceholderInternalDragOrResize,
   EventSurfaceType,
   CalendarEventUpdatedProperties,
   SchedulerValidDate,
+  SchedulerEvent,
 } from '../models';
 import {
   EventDropData,
@@ -126,7 +127,7 @@ export namespace useDropTarget {
     /**
      * Add properties to the event dropped in the element before storing it in the store.
      */
-    addPropertiesToDroppedEvent?: () => Partial<CalendarEvent>;
+    addPropertiesToDroppedEvent?: () => Partial<SchedulerProcessedEvent>;
   }
 
   export type CreateDropData = (
@@ -148,7 +149,7 @@ export namespace useDropTarget {
 async function applyInternalDragOrResizeOccurrencePlaceholder(
   store: SchedulerStoreInContext<any, any>,
   placeholder: CalendarOccurrencePlaceholderInternalDragOrResize,
-  addPropertiesToDroppedEvent?: () => Partial<CalendarEvent>,
+  addPropertiesToDroppedEvent?: () => Partial<SchedulerProcessedEvent>,
 ): Promise<void> {
   // TODO: Try to do a single state update.
   store.setOccurrencePlaceholder(null);
@@ -167,7 +168,7 @@ async function applyInternalDragOrResizeOccurrencePlaceholder(
 
   if (original.rrule) {
     store.updateRecurringEvent({
-      occurrenceStart: originalOccurrence.start,
+      occurrenceStart: originalOccurrence.start.value,
       changes,
     });
     return;
@@ -179,9 +180,9 @@ async function applyInternalDragOrResizeOccurrencePlaceholder(
 function applyExternalDragOccurrencePlaceholder(
   store: SchedulerStoreInContext<any, any>,
   placeholder: CalendarOccurrencePlaceholderExternalDrag,
-  addPropertiesToDroppedEvent?: () => Partial<CalendarEvent>,
+  addPropertiesToDroppedEvent?: () => Partial<SchedulerProcessedEvent>,
 ) {
-  const event: CalendarEvent = {
+  const event: SchedulerEvent = {
     start: placeholder.start,
     end: placeholder.end,
     ...placeholder.eventData,

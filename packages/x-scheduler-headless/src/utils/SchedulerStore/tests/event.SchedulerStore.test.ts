@@ -327,7 +327,8 @@ storeClasses.forEach((storeClass) => {
           { description: 'New event description', allDay: true },
         );
 
-        const created = store.createEvent(newEvent);
+        store.createEvent(newEvent);
+        const created = selectors.event(store.state, '2')!;
 
         expect(created.id).to.equal('2');
         expect(created.title).to.equal('New Event');

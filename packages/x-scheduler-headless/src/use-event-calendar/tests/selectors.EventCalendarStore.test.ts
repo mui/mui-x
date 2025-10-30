@@ -1,4 +1,4 @@
-import { adapter } from 'test/utils/scheduler';
+import { adapter, createOccurrenceFromEvent } from 'test/utils/scheduler';
 import { selectors } from './../EventCalendarStore.selectors';
 import { EventCalendarState as State } from '../EventCalendarStore.types';
 
@@ -54,13 +54,12 @@ describe('EventCalendarStore.selectors', () => {
           surfaceType: 'day-grid',
           start: adapter.startOfDay(day),
           end: adapter.endOfDay(day),
-          originalOccurrence: {
-            key: 'event-id-key',
+          originalOccurrence: createOccurrenceFromEvent({
             id: 'event-id',
             title: 'Event',
             start: adapter.startOfDay(day),
             end: adapter.endOfDay(day),
-          },
+          }),
         },
       });
       expect(selectors.isCreatingNewEventInDayCell(state, day)).to.equal(false);
@@ -123,13 +122,12 @@ describe('EventCalendarStore.selectors', () => {
           surfaceType: 'time-grid',
           start: adapter.startOfDay(day),
           end: adapter.endOfDay(day),
-          originalOccurrence: {
+          originalOccurrence: createOccurrenceFromEvent({
             id: 'event-id',
-            key: 'event-id-key',
             title: 'Event',
             start: adapter.startOfDay(day),
             end: adapter.endOfDay(day),
-          },
+          }),
         },
       });
       expect(selectors.isCreatingNewEventInTimeRange(state, dayStart, dayEnd)).to.equal(false);

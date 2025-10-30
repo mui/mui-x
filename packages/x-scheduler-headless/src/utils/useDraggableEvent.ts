@@ -84,8 +84,8 @@ export function useDraggableEvent(
   const contextValue: useDraggableEvent.ContextValue = React.useMemo(
     () => ({
       setIsResizing,
-      doesEventStartBeforeCollectionStart: adapter.isBefore(start, collectionStart),
-      doesEventEndAfterCollectionEnd: adapter.isAfter(end, collectionEnd),
+      doesEventStartBeforeCollectionStart: adapter.isBefore(start.value, collectionStart),
+      doesEventEndAfterCollectionEnd: adapter.isAfter(end.value, collectionEnd),
     }),
     [adapter, start, end, collectionStart, collectionEnd],
   );

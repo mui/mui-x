@@ -2,7 +2,7 @@ import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
 import { diffIn } from '@mui/x-scheduler-headless/use-adapter';
 import { Timeline } from '@mui/x-scheduler/timeline';
-import { CalendarEvent, CalendarResource, TimelineView } from '@mui/x-scheduler-headless/models';
+import { SchedulerEvent, CalendarResource, TimelineView } from '@mui/x-scheduler-headless/models';
 import { adapter, createSchedulerRenderer } from 'test/utils/scheduler';
 
 const baseResources: CalendarResource[] = [
@@ -10,7 +10,7 @@ const baseResources: CalendarResource[] = [
   { id: 'resource-2', title: 'Design', eventColor: 'jade' },
 ];
 
-const baseEvents: CalendarEvent[] = [
+const baseEvents: SchedulerEvent[] = [
   {
     id: 'event-1',
     title: 'Spec Review',
@@ -42,7 +42,7 @@ describe('<Timeline />', () => {
   const visibleDate = adapter.date('2025-07-03T00:00:00Z');
   function renderTimeline(options?: {
     resources?: CalendarResource[];
-    events?: CalendarEvent[];
+    events?: SchedulerEvent[];
     view?: TimelineView;
     views?: TimelineView[];
   }) {
@@ -88,7 +88,7 @@ describe('<Timeline />', () => {
     });
 
     it('does not render events out of range', () => {
-      const extendedEvents: CalendarEvent[] = [
+      const extendedEvents: SchedulerEvent[] = [
         ...baseEvents,
         {
           id: 'event-4',
@@ -172,7 +172,7 @@ describe('<Timeline />', () => {
     });
 
     it('should render events correctly in the month view', () => {
-      const extendedEvents: CalendarEvent[] = [
+      const extendedEvents: SchedulerEvent[] = [
         ...baseEvents,
         {
           id: 'event-4',
@@ -204,7 +204,7 @@ describe('<Timeline />', () => {
       expect(eventPosition2).to.be.lessThanOrEqual(360); // second month
     });
     it('should render events correctly in the month view', () => {
-      const extendedEvents: CalendarEvent[] = [
+      const extendedEvents: SchedulerEvent[] = [
         {
           id: 'event-1',
           title: 'This year',

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store';
 import {
-  CalendarEvent,
+  SchedulerProcessedEvent,
   CalendarEventOccurrence,
   CalendarResource,
   SchedulerValidDate,
@@ -53,7 +53,7 @@ export namespace useEventOccurrencesGroupedByResource {
  */
 export function innerGetEventOccurrencesGroupedByResource(
   adapter: Adapter,
-  events: CalendarEvent[],
+  events: SchedulerProcessedEvent[],
   visibleResources: Map<string, boolean>,
   resources: readonly CalendarResource[],
   start: SchedulerValidDate,

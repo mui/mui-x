@@ -28,8 +28,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   const ampm = useStore(store, selectors.ampm);
   const timeFormat = ampm ? 'hoursMinutes12h' : 'hoursMinutes24h';
 
-  const durationMs =
-    adapter.toJsDate(occurrence.end).getTime() - adapter.toJsDate(occurrence.start).getTime();
+  const durationMs = occurrence.end.timestamp - occurrence.start.timestamp;
   const durationMinutes = durationMs / 60000;
   const isBetween30and60Minutes = durationMinutes >= 30 && durationMinutes < 60;
   const isLessThan30Minutes = durationMinutes < 30;
@@ -48,7 +47,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
           style={{ '--number-of-lines': 1 } as React.CSSProperties}
         >
           <span className="EventTitle">{occurrence.title}</span>
-          <time className="EventTime">{adapter.format(occurrence.start, timeFormat)}</time>
+          <time className="EventTime">{adapter.format(occurrence.start.value, timeFormat)}</time>
           {isRecurring && (
             <Repeat size={12} strokeWidth={1.5} className="EventRecurringIcon" aria-hidden="true" />
           )}
@@ -67,8 +66,8 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
           className={clsx('EventTime', 'LinesClamp')}
           style={{ '--number-of-lines': 1 } as React.CSSProperties}
         >
-          {adapter.format(occurrence.start, timeFormat)} -{' '}
-          {adapter.format(occurrence.end, timeFormat)}
+          {adapter.format(occurrence.start.value, timeFormat)} -{' '}
+          {adapter.format(occurrence.end.value, timeFormat)}
         </time>
         {isRecurring && (
           <Repeat size={12} strokeWidth={1.5} className="EventRecurringIcon" aria-hidden="true" />

@@ -1,5 +1,6 @@
 import { adapter } from 'test/utils/scheduler';
 import { RecurringEventRecurrenceRule } from '@mui/x-scheduler-headless/models';
+import { processDate } from '@mui/x-scheduler-headless/process-date';
 import { storeClasses } from './utils';
 import { getWeekDayCode } from '../../recurring-event-utils';
 import { selectors } from '../../../scheduler-selectors';
@@ -16,7 +17,7 @@ storeClasses.forEach((storeClass) => {
     describe('Selector: recurrencePresets', () => {
       it('returns daily, weekly, monthly and yearly presets', () => {
         const state = baseState();
-        const start = adapter.date('2025-08-05T09:00:00Z'); // Tuesday
+        const start = processDate(adapter.date('2025-08-05T09:00:00Z'), adapter); // Tuesday
         const presets = selectors.recurrencePresets(state, start);
 
         expect(presets.daily).to.deep.equal({
@@ -26,7 +27,7 @@ storeClasses.forEach((storeClass) => {
         expect(presets.weekly).to.deep.equal({
           freq: 'WEEKLY',
           interval: 1,
-          byDay: [getWeekDayCode(adapter, start)],
+          byDay: [getWeekDayCode(adapter, start.value)],
         });
         expect(presets.monthly).to.deep.equal({
           freq: 'MONTHLY',
@@ -42,7 +43,7 @@ storeClasses.forEach((storeClass) => {
 
     describe('Selector: defaultRecurrencePresetKey', () => {
       const state = baseState();
-      const start = adapter.date('2025-08-05T09:00:00'); // Tuesday
+      const start = processDate(adapter.date('2025-08-05T09:00:00'), adapter); // Tuesday
       const presets = selectors.recurrencePresets(state, start);
 
       it('returns null when rule undefined', () => {

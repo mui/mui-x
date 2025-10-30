@@ -66,15 +66,18 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
             className={clsx('EventPopoverDateTime', 'LinesClamp')}
             style={{ '--number-of-lines': 1 } as React.CSSProperties}
           >
-            <time dateTime={adapter.format(occurrence.start, 'keyboardDate')} className="EventDate">
-              <span>{adapter.format(occurrence.start, 'fullDate')}, </span>
+            <time
+              dateTime={adapter.format(occurrence.start.value, 'keyboardDate')}
+              className="EventDate"
+            >
+              <span>{adapter.format(occurrence.start.value, 'fullDate')}, </span>
             </time>
             {occurrence.allDay ? (
               <span className="EventAllDay"> {translations.allDayLabel}</span>
             ) : (
               <time className="EventTime">
-                <span>{adapter.format(occurrence.start, 'fullTime24h')}</span>
-                <span> - {adapter.format(occurrence.end, 'fullTime24h')}</span>
+                <span>{adapter.format(occurrence.start.value, 'fullTime24h')}</span>
+                <span> - {adapter.format(occurrence.end.value, 'fullTime24h')}</span>
               </time>
             )}
           </p>

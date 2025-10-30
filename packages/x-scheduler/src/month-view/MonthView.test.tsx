@@ -2,12 +2,12 @@ import * as React from 'react';
 import { spy } from 'sinon';
 import { adapter, createSchedulerRenderer } from 'test/utils/scheduler';
 import { screen, within } from '@mui/internal-test-utils';
-import { CalendarEvent } from '@mui/x-scheduler-headless/models';
+import { SchedulerEvent } from '@mui/x-scheduler-headless/models';
 import { MonthView } from '@mui/x-scheduler/month-view';
 import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
 import { EventCalendar } from '../event-calendar';
 
-const events: CalendarEvent[] = [
+const events: SchedulerEvent[] = [
   {
     id: '1',
     start: adapter.date('2025-05-01T09:00:00'),
@@ -22,7 +22,7 @@ const events: CalendarEvent[] = [
   },
 ];
 
-const allDayEvents: CalendarEvent[] = [
+const allDayEvents: SchedulerEvent[] = [
   {
     id: 'all-day-1',
     start: adapter.date('2025-05-05T00:00:00'),

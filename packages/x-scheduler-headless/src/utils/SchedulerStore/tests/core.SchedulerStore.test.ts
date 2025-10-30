@@ -1,9 +1,9 @@
 import { adapter } from 'test/utils/scheduler';
-import { CalendarEvent } from '@mui/x-scheduler-headless/models';
+import { SchedulerEvent } from '@mui/x-scheduler-headless/models';
 import { storeClasses, buildEvent } from './utils';
 import { selectors } from '../../../scheduler-selectors';
 
-const DEFAULT_PARAMS = { events: [] as CalendarEvent[] };
+const DEFAULT_PARAMS = { events: [] as SchedulerEvent[] };
 
 storeClasses.forEach((storeClass) => {
   describe(`Core - ${storeClass.name}`, () => {
