@@ -116,7 +116,6 @@ export interface SchedulerState<TEvent extends object = any> {
   pendingUpdateRecurringEventParameters: UpdateRecurringEventParameters | null;
   /**
    * Preferences for the scheduler.
-   *
    */
   preferences: SchedulerPreferences;
 }
