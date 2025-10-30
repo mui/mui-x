@@ -24,7 +24,7 @@ export function DayGridCell(props: DayGridCellProps) {
   const cellRef = React.useRef<HTMLDivElement | null>(null);
 
   // Selector hooks
-  const isCreation = useStore(
+  const isCreatingAnEvent = useStore(
     store,
     eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell,
     day.value,
@@ -49,11 +49,11 @@ export function DayGridCell(props: DayGridCellProps) {
   };
 
   React.useEffect(() => {
-    if (!isCreation || !placeholder || !cellRef.current) {
+    if (!isCreatingAnEvent || !placeholder || !cellRef.current) {
       return;
     }
     startEditing(cellRef.current, placeholder);
-  }, [isCreation, placeholder, startEditing]);
+  }, [isCreatingAnEvent, placeholder, startEditing]);
 
   return (
     <CalendarGrid.DayCell

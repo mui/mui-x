@@ -34,7 +34,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   // Selector hooks
   const hasDayView = useStore(store, eventCalendarViewSelectors.hasDayView);
   const visibleDate = useStore(store, selectors.visibleDate);
-  const isCreation = useStore(
+  const isCreatingAnEvent = useStore(
     store,
     eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell,
     day.value,
@@ -81,11 +81,11 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   };
 
   React.useEffect(() => {
-    if (!isCreation || !placeholder || !cellRef.current) {
+    if (!isCreatingAnEvent || !placeholder || !cellRef.current) {
       return;
     }
     startEditing(cellRef.current, placeholder);
-  }, [isCreation, placeholder, startEditing]);
+  }, [isCreatingAnEvent, placeholder, startEditing]);
 
   return (
     <CalendarGrid.DayCell

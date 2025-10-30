@@ -78,7 +78,7 @@ function ColumnInteractiveLayer({
   const columnRef = React.useRef<HTMLDivElement | null>(null);
 
   // Selector hooks
-  const isCreation = useStore(
+  const isCreatingAnEvent = useStore(
     store,
     eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange,
     start,
@@ -116,11 +116,11 @@ function ColumnInteractiveLayer({
   };
 
   React.useEffect(() => {
-    if (!isCreation || !placeholder || !columnRef.current) {
+    if (!isCreatingAnEvent || !placeholder || !columnRef.current) {
       return;
     }
     startEditing(columnRef.current, placeholder);
-  }, [isCreation, placeholder, startEditing]);
+  }, [isCreatingAnEvent, placeholder, startEditing]);
 
   return (
     <div
