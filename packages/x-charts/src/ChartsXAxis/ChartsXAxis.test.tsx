@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { screen } from '@mui/internal-test-utils';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';

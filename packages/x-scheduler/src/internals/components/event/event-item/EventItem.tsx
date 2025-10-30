@@ -4,12 +4,12 @@ import clsx from 'clsx';
 import { useId } from '@base-ui-components/utils/useId';
 import { useStore } from '@base-ui-components/utils/store';
 import { Repeat } from 'lucide-react';
-import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { selectors } from '@mui/x-scheduler-headless/use-event-calendar';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { EventItemProps } from './EventItem.types';
 import { getColorClassName } from '../../../utils/color-utils';
 import { useTranslations } from '../../../utils/TranslationsContext';
+import { useFormatTime } from '../../../hooks/useFormatTime';
 import './EventItem.css';
 // TODO: Create a standalone component for the resource color pin instead of re-using another component's CSS classes
 import '../../resource-legend/ResourceLegend.css';
@@ -27,7 +27,6 @@ export const EventItem = React.forwardRef(function EventItem(
     occurrence,
     ariaLabelledBy,
     className,
-    onEventClick,
     id: idProp,
     style,
     variant = 'regular',
@@ -36,17 +35,16 @@ export const EventItem = React.forwardRef(function EventItem(
 
   // Context hooks
   const translations = useTranslations();
-  const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
 
   // State hooks
   const id = useId(idProp);
 
   // Selector hooks
-  const ampm = useStore(store, selectors.ampm);
   const resource = useStore(store, selectors.resource, occurrence.resource);
   const color = useStore(store, selectors.eventColor, occurrence.id);
 
+  const formatTime = useFormatTime();
   const isRecurring = Boolean(occurrence.rrule);
 
   const content = React.useMemo(() => {
@@ -68,9 +66,7 @@ export const EventItem = React.forwardRef(function EventItem(
               style={{ '--number-of-lines': 1 } as React.CSSProperties}
             >
               <time className="EventItemTime EventItemTime--compact">
-                <span>
-                  {adapter.format(occurrence.start, ampm ? 'hoursMinutes12h' : 'hoursMinutes24h')}
-                </span>
+                <span>{formatTime(occurrence.start)}</span>
               </time>
 
               <span className="EventItemTitle">{occurrence.title}</span>
@@ -126,13 +122,8 @@ export const EventItem = React.forwardRef(function EventItem(
                 <span className="EventItemTime">{translations.allDay}</span>
               ) : (
                 <time className="EventItemTime">
-                  <span>
-                    {adapter.format(occurrence.start, ampm ? 'hoursMinutes12h' : 'hoursMinutes24h')}
-                  </span>
-                  <span>
-                    {' '}
-                    - {adapter.format(occurrence.end, ampm ? 'hoursMinutes12h' : 'hoursMinutes24h')}
-                  </span>
+                  <span>{formatTime(occurrence.start)}</span>
+                  <span> - {formatTime(occurrence.end)}</span>
                 </time>
               )}
 
@@ -150,7 +141,6 @@ export const EventItem = React.forwardRef(function EventItem(
         );
     }
   }, [
-    adapter,
     variant,
     occurrence.title,
     occurrence?.allDay,
@@ -159,7 +149,7 @@ export const EventItem = React.forwardRef(function EventItem(
     isRecurring,
     resource?.title,
     translations,
-    ampm,
+    formatTime,
   ]);
 
   return (

@@ -7,17 +7,22 @@ import {
   EventCalendarPreferencesMenuConfig,
 } from '../models';
 import { Adapter } from '../use-adapter/useAdapter.types';
-import { SchedulerParametersToStateMapper, SchedulerStore } from '../utils/SchedulerStore';
+import {
+  DEFAULT_SCHEDULER_PREFERENCES,
+  SchedulerParametersToStateMapper,
+  SchedulerStore,
+} from '../utils/SchedulerStore';
 import { EventCalendarState, EventCalendarParameters } from './EventCalendarStore.types';
 
 export const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
 export const DEFAULT_VIEW: CalendarView = 'week';
-export const DEFAULT_PREFERENCES: EventCalendarPreferences = {
+
+export const DEFAULT_EVENT_CALENDAR_PREFERENCES: EventCalendarPreferences = {
+  ...DEFAULT_SCHEDULER_PREFERENCES,
   showWeekends: true,
   showWeekNumber: false,
   showEmptyDaysInAgenda: true,
   isSidePanelOpen: true,
-  ampm: true,
 };
 export const DEFAULT_PREFERENCES_MENU_CONFIG: EventCalendarPreferencesMenuConfig = {
   toggleWeekendVisibility: true,
@@ -39,7 +44,7 @@ const mapper: SchedulerParametersToStateMapper<
   getInitialState: (schedulerInitialState, parameters) => ({
     ...schedulerInitialState,
     ...deriveStateFromParameters(parameters),
-    preferences: { ...DEFAULT_PREFERENCES, ...parameters.preferences },
+    preferences: { ...DEFAULT_EVENT_CALENDAR_PREFERENCES, ...parameters.preferences },
     preferencesMenuConfig:
       parameters.preferencesMenuConfig === false
         ? parameters.preferencesMenuConfig
