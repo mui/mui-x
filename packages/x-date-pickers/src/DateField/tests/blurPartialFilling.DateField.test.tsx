@@ -13,13 +13,15 @@ describeAdapters('DateField - partial filling on blur', DateField, ({ adapter, r
     await view.user.keyboard('0');
     await view.user.keyboard('1');
 
+    const fieldRoot = getFieldInputRoot();
+
     // While focused and partially filled, it should not be invalid yet
-    expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
+    expect(fieldRoot).to.have.attribute('aria-invalid', 'false');
 
-    // Blur the sections container
-    fireEvent.blur(view.getSectionsContainer());
+    // Blur the sections container to trigger validation in accessible DOM
+    await view.user.tab();
 
-    expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'true');
+    expect(fieldRoot).to.have.attribute('aria-invalid', 'true');
 
     view.unmount();
   });
@@ -29,7 +31,7 @@ describeAdapters('DateField - partial filling on blur', DateField, ({ adapter, r
 
     // Focus a section then blur without typing
     await view.selectSectionAsync('month');
-    fireEvent.blur(view.getSectionsContainer());
+    await view.user.tab();
 
     expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
 
@@ -41,7 +43,7 @@ describeAdapters('DateField - partial filling on blur', DateField, ({ adapter, r
 
     // Focus and blur
     await view.selectSectionAsync('month');
-    fireEvent.blur(view.getSectionsContainer());
+    await view.user.tab();
 
     expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
 
@@ -55,7 +57,6 @@ describeAdapters('DateField - partial filling on blur', DateField, ({ adapter, r
     const input = getTextbox();
 
     // Partially fill the month: "01/DD/YYYY"
-    fireEvent.change(input, { target: { value: '0/DD/YYYY' } });
     fireEvent.change(input, { target: { value: '01/DD/YYYY' } });
 
     expect(input).to.have.attribute('aria-invalid', 'false');
