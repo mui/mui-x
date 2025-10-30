@@ -1340,7 +1340,7 @@ describe('recurring-event-utils', () => {
       ]);
       expect(updatedEvents.created).to.deep.equal([
         {
-          ...original,
+          ...original.modelInBuiltInFormat,
           ...changes,
           id: `${original.id}::${adapter.format(changes.start!, 'keyboardDate')}`,
           extractedFromId: original.id,
@@ -1380,7 +1380,7 @@ describe('recurring-event-utils', () => {
       expect(updatedEvents.updated).to.equal(undefined);
       expect(updatedEvents.created).to.deep.equal([
         {
-          ...original,
+          ...original.modelInBuiltInFormat,
           ...changes,
           id: `${original.id}::${adapter.format(changes.start!, 'keyboardDate')}`,
           extractedFromId: original.id,
@@ -1685,7 +1685,7 @@ describe('recurring-event-utils', () => {
       expect(updatedEvents.deleted).to.equal(undefined);
       expect(updatedEvents.created).to.deep.equal([
         {
-          ...original,
+          ...original.modelInBuiltInFormat,
           ...changes,
           id: `${original.id}::${adapter.format(changes.start!, 'keyboardDate')}`,
           extractedFromId: original.id,
@@ -1745,7 +1745,7 @@ describe('recurring-event-utils', () => {
       expect(updatedEvents.deleted).to.equal(undefined);
       expect(updatedEvents.created).to.deep.equal([
         {
-          ...original,
+          ...original.modelInBuiltInFormat,
           ...changes,
           id: `${original.id}::${adapter.format(changes.start!, 'keyboardDate')}`,
           extractedFromId: original.id,

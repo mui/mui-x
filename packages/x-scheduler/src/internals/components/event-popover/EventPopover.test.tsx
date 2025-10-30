@@ -10,7 +10,6 @@ import {
 } from 'test/utils/scheduler';
 import { screen } from '@mui/internal-test-utils';
 import {
-  CalendarEventOccurrence,
   CalendarOccurrencePlaceholderCreation,
   CalendarResource,
   SchedulerEvent,
