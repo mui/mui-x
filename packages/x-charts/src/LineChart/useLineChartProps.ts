@@ -51,6 +51,7 @@ export const useLineChartProps = (props: LineChartProps) => {
     onHighlightChange,
     className,
     showToolbar,
+    brushConfig,
     ...other
   } = props;
 
@@ -93,6 +94,7 @@ export const useLineChartProps = (props: LineChartProps) => {
       axisHighlight?.y === 'none',
     className,
     skipAnimation,
+    brushConfig,
     plugins: LINE_CHART_PLUGINS,
   };
 

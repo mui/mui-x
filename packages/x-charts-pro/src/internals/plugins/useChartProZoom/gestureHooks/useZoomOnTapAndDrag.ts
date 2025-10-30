@@ -31,10 +31,8 @@ export const useZoomOnTapAndDrag = (
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
   const config = useSelector(store, selectorZoomInteractionConfig, ['tapAndDrag' as const]);
 
-  const isZoomOnTapAndDragEnabled = React.useMemo(
-    () => (Object.keys(optionsLookup).length > 0 && config) || false,
-    [optionsLookup, config],
-  );
+  const isZoomOnTapAndDragEnabled: boolean =
+    Object.keys(optionsLookup).length > 0 && Boolean(config);
 
   React.useEffect(() => {
     if (!isZoomOnTapAndDragEnabled) {
@@ -81,8 +79,8 @@ export const useZoomOnTapAndDrag = (
 
           const centerRatio =
             option.axisDirection === 'x'
-              ? getHorizontalCenterRatio(point, drawingArea)
-              : getVerticalCenterRatio(point, drawingArea);
+              ? getHorizontalCenterRatio(point, drawingArea, option.reverse)
+              : getVerticalCenterRatio(point, drawingArea, option.reverse);
 
           const [newMinRange, newMaxRange] = zoomAtPoint(centerRatio, scaleRatio, zoom, option);
 

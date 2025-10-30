@@ -1,7 +1,10 @@
 import type { SchedulerValidDate } from './date';
+import { RecurringEventRecurrenceRule } from './recurringEvent';
 import type { CalendarOccurrencePlaceholderExternalDragData } from './dragAndDrop';
 import type { CalendarResourceId } from './resource';
 
+// TODO: Rename SchedulerProcessedEvent and replace the raw SchedulerValidDate with processed dates.
+// TODO: Create a new SchedulerDefaultEventModel to replace CalendarEvent on props.events.
 export interface CalendarEvent {
   /**
    * The unique identifier of the event.
@@ -31,7 +34,7 @@ export interface CalendarEvent {
    * The recurrence rule for the event.
    * If not defined, the event will have only one occurrence.
    */
-  rrule?: RRuleSpec;
+  rrule?: RecurringEventRecurrenceRule;
   /**
    * Exception dates for the event.
    * These dates will be excluded from the recurrence.
@@ -53,38 +56,6 @@ export interface CalendarEvent {
    * and no link to an original event will be created.
    */
   extractedFromId?: CalendarEventId;
-}
-
-/** Two-letter weekday codes as defined by RFC 5545 (`BYDAY`). */
-export type ByDayCode = 'MO' | 'TU' | 'WE' | 'TH' | 'FR' | 'SA' | 'SU';
-
-/**
- *  Ordinal prefix for BYDAY ordinals.
- *  Positive 1..5 for “Nth” weekday, negative for “last” (e.g. `-1` = last).
- */
-type Ordinal = `${'' | '-'}${1 | 2 | 3 | 4 | 5}`;
-
-/** A BYDAY entry: either a plain weekday (`'MO'`) or an ordinal + weekday (`'2TU'`, `'-1FR'`). */
-export type ByDayValue = ByDayCode | `${Ordinal}${ByDayCode}`;
-
-/**
- *  Minimal subset of RFC 5545 RRULE supported by the scheduler.
- */
-export interface RRuleSpec {
-  /** Base frequency of the rule. */
-  freq: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
-  /** Step between occurrences at the given frequency. Defaults to 1. */
-  interval?: number;
-  /** BYDAY: MO..SU or ordinals like 4SA, -1MO */
-  byDay?: ByDayValue[];
-  /** BYMONTHDAY: list of calendar days in the month (1..31). */
-  byMonthDay?: number[];
-  /** BYMONTH: list of months (1..12). */
-  byMonth?: number[];
-  /** COUNT: total number of occurrences, mutually exclusive with `until`. */
-  count?: number;
-  /** UNTIL: inclusive end boundary, mutually exclusive with `count`. */
-  until?: SchedulerValidDate;
 }
 
 /**
@@ -201,7 +172,7 @@ export interface CalendarOccurrencePlaceholderInternalDragOrResize
   /**
    * The data of the event to use when dropping the event outside of the Event Calendar.
    */
-  originalEvent: CalendarEvent;
+  originalOccurrence: CalendarEventOccurrence;
 }
 
 export interface CalendarOccurrencePlaceholderExternalDrag
@@ -254,3 +225,17 @@ export type CalendarEventUpdatedProperties = Partial<CalendarEvent> &
  * The type of surface the event is being rendered on.
  */
 export type EventSurfaceType = 'day-grid' | 'time-grid';
+
+export type SchedulerEventModelStructure<TEvent extends object> = {
+  [key in keyof CalendarEvent]?: {
+    getter: (event: TEvent) => CalendarEvent[key];
+    /**
+     * Setter for the event property.
+     * If not provided, the property won't be editable.
+     */
+    setter?: (
+      event: TEvent | Partial<TEvent>,
+      value: CalendarEvent[key],
+    ) => TEvent | Partial<TEvent>;
+  };
+};

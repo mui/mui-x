@@ -26,10 +26,8 @@ export const usePanOnPressAndDrag = (
   const startRef = React.useRef<readonly ZoomData[]>(null);
   const config = useSelector(store, selectorPanInteractionConfig, ['pressAndDrag' as const]);
 
-  const isPanOnPressAndDragEnabled = React.useMemo(
-    () => (Object.values(optionsLookup).some((v) => v.panning) && config) || false,
-    [optionsLookup, config],
-  );
+  const isPanOnPressAndDragEnabled: boolean =
+    Object.values(optionsLookup).some((v) => v.panning) && Boolean(config);
 
   React.useEffect(() => {
     if (!isPanOnPressAndDragEnabled) {
@@ -56,7 +54,7 @@ export const usePanOnPressAndDrag = (
 
     const handlePressAndDragStart = (event: PressAndDragEvent) => {
       if (!(event.detail.target as SVGElement)?.closest('[data-charts-zoom-slider]')) {
-        startRef.current = store.value.zoom.zoomData;
+        startRef.current = store.state.zoom.zoomData;
       }
     };
 

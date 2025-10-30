@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useDrawingArea } from '@mui/x-charts/hooks';
 import { LineChart } from '@mui/x-charts/LineChart';
 

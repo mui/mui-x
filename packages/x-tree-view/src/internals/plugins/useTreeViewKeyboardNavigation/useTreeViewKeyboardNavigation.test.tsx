@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { spy } from 'sinon';
 import { act, fireEvent } from '@mui/internal-test-utils';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
@@ -1167,6 +1166,9 @@ describeTreeView<
       expect(view.getFocusedItemId()).to.equal('4');
 
       fireEvent.keyDown(view.getItemRoot('4'), { key: 'o' });
+      expect(view.getFocusedItemId()).to.equal('4');
+
+      fireEvent.keyDown(view.getItemRoot('4'), { key: 'o' });
       expect(view.getFocusedItemId()).to.equal('1');
     });
 
@@ -1215,6 +1217,9 @@ describeTreeView<
       expect(view.getFocusedItemId()).to.equal('4');
 
       fireEvent.keyDown(view.getItemRoot('4'), { key: 'o' });
+      expect(view.getFocusedItemId()).to.equal('4');
+
+      fireEvent.keyDown(view.getItemRoot('4'), { key: 'o' });
       expect(view.getFocusedItemId()).to.equal('1');
     });
 
@@ -1240,6 +1245,9 @@ describeTreeView<
         expect(view.getFocusedItemId()).to.equal('2');
 
         fireEvent.keyDown(view.getItemRoot('2'), { key: 'f' });
+        expect(view.getFocusedItemId()).to.equal('4');
+
+        fireEvent.keyDown(view.getItemRoot('4'), { key: 'o' });
         expect(view.getFocusedItemId()).to.equal('4');
 
         fireEvent.keyDown(view.getItemRoot('4'), { key: 'o' });
@@ -1335,6 +1343,64 @@ describeTreeView<
 
       fireEvent.keyDown(view.getItemRoot('1'), { key: 't' });
       expect(view.getFocusedItemId()).to.equal('1');
+    });
+  });
+
+  describe('Multi-character type-ahead', () => {
+    it('should move the focus to the next item when typing multiple characters quickly', async () => {
+      const view = render({
+        items: [
+          { id: '1', label: 'apple' },
+          { id: '2', label: 'apricot' },
+          { id: '3', label: 'banana' },
+          { id: '4', label: 'blueberry' },
+        ],
+      });
+
+      act(() => {
+        view.getItemRoot('1').focus();
+      });
+      expect(view.getFocusedItemId()).to.equal('1');
+
+      fireEvent.keyDown(view.getItemRoot('1'), { key: 'a' });
+      fireEvent.keyDown(view.getItemRoot('2'), { key: 'p' });
+      fireEvent.keyDown(view.getItemRoot('2'), { key: 'r' });
+      expect(view.getFocusedItemId()).to.equal('2');
+    });
+
+    it('should work after adding / removing items', () => {
+      const view = render({
+        items: [
+          { id: '1', label: 'apple' },
+          { id: '2', label: 'apricot' },
+          { id: '3', label: 'banana' },
+        ],
+      });
+
+      act(() => {
+        view.getItemRoot('3').focus();
+      });
+
+      fireEvent.keyDown(view.getItemRoot('3'), { key: 'a' });
+      expect(view.getFocusedItemId()).to.equal('1');
+      fireEvent.keyDown(view.getItemRoot('1'), { key: 'p' });
+      expect(view.getFocusedItemId()).to.equal('1');
+
+      fireEvent.keyDown(view.getItemRoot('1'), { key: 'r' });
+      expect(view.getFocusedItemId()).to.equal('2');
+      fireEvent.keyDown(view.getItemRoot('2'), { key: 'a' });
+      expect(view.getFocusedItemId()).to.equal('1');
+
+      view.setItems([
+        { id: '1', label: 'apple' },
+        { id: '3', label: 'banana' },
+      ]);
+      expect(view.getFocusedItemId()).to.equal('1');
+
+      fireEvent.keyDown(view.getItemRoot('1'), { key: 'b' });
+      expect(view.getFocusedItemId()).to.equal('3');
+      fireEvent.keyDown(view.getItemRoot('3'), { key: 'a' });
+      expect(view.getFocusedItemId()).to.equal('3');
     });
   });
 

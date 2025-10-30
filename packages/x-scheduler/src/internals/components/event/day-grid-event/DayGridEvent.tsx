@@ -33,7 +33,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   const adapter = useAdapter();
   const translations = useTranslations();
   const store = useEventCalendarStoreContext();
-  const isDraggable = useStore(store, selectors.isEventDraggable);
+  const isDraggable = useStore(store, selectors.isEventDraggable, occurrence.id);
   const isResizable = useStore(store, selectors.isEventResizable, occurrence.id, 'day-grid');
   const ampm = useStore(store, selectors.ampm);
   const resource = useStore(store, selectors.resource, occurrence.resource);
@@ -122,6 +122,8 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   ]);
 
   const sharedProps = {
+    start: occurrence.start,
+    end: occurrence.end,
     ref: forwardedRef,
     className: clsx(
       classNameProp,
@@ -150,8 +152,6 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     <CalendarGrid.DayEvent
       eventId={occurrence.id}
       occurrenceKey={occurrence.key}
-      start={occurrence.start}
-      end={occurrence.end}
       isDraggable={isDraggable}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       aria-hidden={variant === 'invisible'}

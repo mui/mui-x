@@ -18,7 +18,8 @@ export interface TimelineState extends SchedulerState {
   preferences: TimelinePreferences;
 }
 
-export interface TimelineParameters extends SchedulerParameters {
+export interface TimelineParameters<TEvent extends object, TResource extends object>
+  extends SchedulerParameters<TEvent, TResource> {
   /**
    * The view currently displayed in the timeline.
    */

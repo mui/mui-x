@@ -435,6 +435,7 @@ export const useGridRowSelection = (
       if (
         !isNestedData ||
         !applyAutoSelection ||
+        inputSelectionModel.type === 'exclude' ||
         (inputSelectionModel.ids.size === 0 && inputSelectionModel.type === 'include')
       ) {
         return inputSelectionModel;
@@ -835,7 +836,9 @@ export const useGridRowSelection = (
 
       if (String.fromCharCode(event.keyCode) === 'A' && (event.ctrlKey || event.metaKey)) {
         event.preventDefault();
-        toggleAllRows(true);
+        if (canHaveMultipleSelection) {
+          toggleAllRows(true);
+        }
       }
     },
     [apiRef, canHaveMultipleSelection, handleSingleRowSelection, toggleAllRows],
