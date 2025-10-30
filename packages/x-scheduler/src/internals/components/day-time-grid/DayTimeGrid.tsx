@@ -17,6 +17,7 @@ import { EventPopoverProvider } from '../event-popover';
 import { TimeGridColumn } from './TimeGridColumn';
 import { DayGridCell } from './DayGridCell';
 import './DayTimeGrid.css';
+import { useFormatTime } from '../../hooks/useFormatTime';
 
 export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   props: DayTimeGridProps,
@@ -40,7 +41,6 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const hasDayView = useStore(store, selectors.hasDayView);
   const now = useStore(store, selectors.nowUpdatedEveryMinute);
   const isMultiDayEvent = useStore(store, selectors.isMultiDayEvent);
-  const ampm = useStore(store, selectors.ampm);
   const showCurrentTimeIndicator = useStore(store, selectors.showCurrentTimeIndicator);
 
   // Feature hooks
@@ -51,7 +51,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     shouldAddPosition: isMultiDayEvent,
   });
 
-  const timeFormat = ampm ? 'hoursMinutes12h' : 'hoursMinutes24h';
+  const formatTime = useFormatTime();
 
   const { start, end } = React.useMemo(
     () => ({
@@ -171,9 +171,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                         shouldHideHour(hour) ? 'HiddenHourLabel' : undefined,
                       )}
                     >
-                      {hour === 0
-                        ? null
-                        : adapter.format(adapter.setHours(visibleDate, hour), timeFormat)}
+                      {hour === 0 ? null : formatTime(adapter.setHours(visibleDate, hour))}
                     </time>
                   </div>
                 ))}
