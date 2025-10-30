@@ -1,5 +1,5 @@
-import type { TooltipItemPositionGetter } from '../../internals/plugins/models/seriesConfig/tooltipItemPositionGetter.types';
-import { getBarDimensions } from '../useBarPlotData';
+import type { TooltipItemPositionGetter } from '../../../internals/plugins/models/seriesConfig/tooltipItemPositionGetter.types';
+import { getBarDimensions } from '../../useBarPlotData';
 
 const tooltipItemPositionGetter: TooltipItemPositionGetter<'bar'> = (params) => {
   const { series, identifier, axesConfig, placement } = params;

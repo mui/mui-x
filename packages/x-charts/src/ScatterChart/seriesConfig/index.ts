@@ -7,7 +7,7 @@ import tooltipGetter from './tooltip';
 import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
 import tooltipItemPositionGetter from './tooltipPosition';
 
-export const seriesConfig: ChartSeriesTypeConfig<'scatter'> = {
+export const scatterSeriesConfig: ChartSeriesTypeConfig<'scatter'> = {
   seriesProcessor,
   colorProcessor: getColor,
   legendGetter,
