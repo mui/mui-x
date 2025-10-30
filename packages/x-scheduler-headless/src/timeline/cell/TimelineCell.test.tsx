@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { Timeline } from '@mui/x-scheduler-headless/timeline';
 import { createSchedulerRenderer, describeConformance } from 'test/utils/scheduler';
 import { TimelineProvider } from '@mui/x-scheduler-headless/timeline-provider';

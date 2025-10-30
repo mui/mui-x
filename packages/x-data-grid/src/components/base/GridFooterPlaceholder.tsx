@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 export function GridFooterPlaceholder() {

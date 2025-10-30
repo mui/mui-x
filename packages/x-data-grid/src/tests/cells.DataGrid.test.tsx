@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { spy } from 'sinon';
 import { createRenderer, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { DataGrid, GridValueFormatter } from '@mui/x-data-grid';
