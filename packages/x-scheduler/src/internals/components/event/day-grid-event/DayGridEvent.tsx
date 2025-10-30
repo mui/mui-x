@@ -24,7 +24,6 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     occurrence,
     variant,
     className: classNameProp,
-    onEventClick,
     id: idProp,
     style: styleProp,
     ...other
