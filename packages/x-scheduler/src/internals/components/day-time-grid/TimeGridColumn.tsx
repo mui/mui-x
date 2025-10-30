@@ -15,14 +15,12 @@ import { selectors } from '@mui/x-scheduler-headless/use-event-calendar';
 import { useAdapter, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-timeline-position';
-import {
-  eventCalendarOccurrencePlaceholderSelectors,
-  eventCalendarPreferenceSelectors,
-} from '@mui/x-scheduler-headless/event-calendar-selectors';
+import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
 import { EventPopoverTrigger } from '../event-popover';
 import { useEventPopoverContext } from '../event-popover/EventPopover';
 import './DayTimeGrid.css';
+import { useFormatTime } from '../../hooks/useFormatTime';
 
 export function TimeGridColumn(props: TimeGridColumnProps) {
   const { day, showCurrentTimeIndicator, index } = props;
@@ -148,16 +146,11 @@ function ColumnInteractiveLayer({
 }
 
 function TimeGridCurrentTimeLabel() {
-  const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
   const now = useStore(store, selectors.nowUpdatedEveryMinute);
-  const ampm = useStore(store, eventCalendarPreferenceSelectors.ampm);
-  const timeFormat = ampm ? 'hoursMinutes12h' : 'hoursMinutes24h';
+  const formatTime = useFormatTime();
 
-  const currentTimeLabel = React.useMemo(
-    () => adapter.format(now, timeFormat),
-    [now, timeFormat, adapter],
-  );
+  const currentTimeLabel = React.useMemo(() => formatTime(now), [now, formatTime]);
 
   return (
     <span className="DayTimeGridCurrentTimeLabel" aria-hidden="true">

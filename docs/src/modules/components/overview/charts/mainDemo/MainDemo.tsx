@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { ThemeOptions, createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { GridRenderEditCellParams, useGridApiContext } from '@mui/x-data-grid-premium';
 import Select, { SelectProps } from '@mui/material/Select';
 import { MenuProps } from '@mui/material/Menu';

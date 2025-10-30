@@ -1,7 +1,7 @@
 import { adapter } from 'test/utils/scheduler';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import {
-  DEFAULT_PREFERENCES,
+  DEFAULT_EVENT_CALENDAR_PREFERENCES,
   DEFAULT_PREFERENCES_MENU_CONFIG,
   DEFAULT_VIEW,
   DEFAULT_VIEWS,
@@ -41,7 +41,7 @@ describe('Core - EventCalendarStore', () => {
         showCurrentTimeIndicator: true,
         eventColor: 'jade',
         pendingUpdateRecurringEventParameters: null,
-        preferences: DEFAULT_PREFERENCES,
+        preferences: DEFAULT_EVENT_CALENDAR_PREFERENCES,
         preferencesMenuConfig: DEFAULT_PREFERENCES_MENU_CONFIG,
         viewConfig: null,
         occurrencePlaceholder: null,

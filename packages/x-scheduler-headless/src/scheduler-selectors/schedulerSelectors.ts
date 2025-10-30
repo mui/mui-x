@@ -30,6 +30,7 @@ const isEventReadOnlySelector = createSelector(
 );
 
 export const selectors = {
+  ampm: createSelector((state: State) => state.preferences.ampm),
   visibleDate: createSelector((state: State) => state.visibleDate),
   showCurrentTimeIndicator: createSelector((state: State) => state.showCurrentTimeIndicator),
   nowUpdatedEveryMinute: createSelector((state: State) => state.nowUpdatedEveryMinute),

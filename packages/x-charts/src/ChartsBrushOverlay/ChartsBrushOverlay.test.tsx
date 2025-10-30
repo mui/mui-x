@@ -1,5 +1,4 @@
 /* eslint-disable no-promise-executor-return */
-import * as React from 'react';
 import { act, createRenderer } from '@mui/internal-test-utils';
 import { describe, it, expect } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
