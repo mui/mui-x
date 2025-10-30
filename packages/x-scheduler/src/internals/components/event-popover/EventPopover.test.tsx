@@ -13,6 +13,7 @@ import {
   CalendarEventOccurrence,
   CalendarOccurrencePlaceholderCreation,
   CalendarResource,
+  SchedulerEvent,
 } from '@mui/x-scheduler-headless/models';
 import { DEFAULT_EVENT_COLOR } from '@mui/x-scheduler-headless/constants';
 import { Popover } from '@base-ui-components/react/popover';
@@ -22,14 +23,14 @@ import { EventPopoverContent } from './EventPopover';
 import { getColorClassName } from '../../utils/color-utils';
 import { RecurringScopeDialog } from '../scope-dialog/ScopeDialog';
 
-const occurrence = createOccurrenceFromEvent({
+const DEFAULT_EVENT = {
   id: '1',
   start: adapter.date('2025-05-26T07:30:00'),
   end: adapter.date('2025-05-26T08:15:00'),
   title: 'Running',
   description: 'Morning run',
   resource: 'r2',
-});
+};
 
 const resources: CalendarResource[] = [
   {
@@ -51,7 +52,7 @@ describe('<EventPopoverContent />', () => {
   const defaultProps = {
     anchor,
     container: document.body,
-    occurrence,
+    occurrence: createOccurrenceFromEvent(DEFAULT_EVENT),
     onClose: () => {},
   };
 
@@ -59,7 +60,7 @@ describe('<EventPopoverContent />', () => {
 
   it('should render the event data in the form fields', () => {
     render(
-      <EventCalendarProvider events={[occurrence]} resources={resources}>
+      <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
         <Popover.Root open>
           <EventPopoverContent {...defaultProps} />
         </Popover.Root>
@@ -85,7 +86,7 @@ describe('<EventPopoverContent />', () => {
     const onEventsChange = spy();
     const { user } = render(
       <EventCalendarProvider
-        events={[occurrence]}
+        events={[DEFAULT_EVENT]}
         onEventsChange={onEventsChange}
         resources={resources}
       >
@@ -105,13 +106,12 @@ describe('<EventPopoverContent />', () => {
     expect(onEventsChange.calledOnce).to.equal(true);
     const updated = onEventsChange.firstCall.firstArg[0];
 
-    const expectedUpdatedEvent = {
+    const expectedUpdatedEvent: SchedulerEvent = {
       id: '1',
-      key: '1',
       title: 'Running test',
       description: 'Morning run',
-      start: adapter.startOfDay(occurrence.start.value),
-      end: adapter.endOfDay(occurrence.end.value),
+      start: adapter.startOfDay(DEFAULT_EVENT.start),
+      end: adapter.endOfDay(DEFAULT_EVENT.end),
       allDay: true,
       rrule: { freq: 'DAILY', interval: 1 },
       resource: 'r1',
@@ -122,7 +122,7 @@ describe('<EventPopoverContent />', () => {
 
   it('should show error if start date is after end date', async () => {
     const { user } = render(
-      <EventCalendarProvider events={[occurrence]}>
+      <EventCalendarProvider events={[DEFAULT_EVENT]}>
         <Popover.Root open>
           <EventPopoverContent {...defaultProps} />
         </Popover.Root>
@@ -142,7 +142,7 @@ describe('<EventPopoverContent />', () => {
   it('should call "onEventsChange" with the updated values when delete button is clicked', async () => {
     const onEventsChange = spy();
     const { user } = render(
-      <EventCalendarProvider events={[occurrence]} onEventsChange={onEventsChange}>
+      <EventCalendarProvider events={[DEFAULT_EVENT]} onEventsChange={onEventsChange}>
         <Popover.Root open>
           <EventPopoverContent {...defaultProps} />
         </Popover.Root>
@@ -154,11 +154,14 @@ describe('<EventPopoverContent />', () => {
   });
 
   it('should handle read-only events and render ReadonlyContent', () => {
-    const readOnlyOccurrence = { ...occurrence, readOnly: true };
+    const readOnlyEvent = { ...DEFAULT_EVENT, readOnly: true };
     render(
-      <EventCalendarProvider events={[readOnlyOccurrence]} resources={resources}>
+      <EventCalendarProvider events={[readOnlyEvent]} resources={resources}>
         <Popover.Root open>
-          <EventPopoverContent {...defaultProps} occurrence={readOnlyOccurrence} />
+          <EventPopoverContent
+            {...defaultProps}
+            occurrence={createOccurrenceFromEvent(readOnlyEvent)}
+          />
         </Popover.Root>
       </EventCalendarProvider>,
     );
@@ -185,11 +188,13 @@ describe('<EventPopoverContent />', () => {
   });
 
   it('should handle read-only events if EventCalendar is read-only', () => {
-    const readOnlyOccurrence = { ...occurrence };
     render(
-      <EventCalendarProvider events={[readOnlyOccurrence]} resources={resources} readOnly>
+      <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources} readOnly>
         <Popover.Root open>
-          <EventPopoverContent {...defaultProps} occurrence={readOnlyOccurrence} />
+          <EventPopoverContent
+            {...defaultProps}
+            occurrence={createOccurrenceFromEvent(DEFAULT_EVENT)}
+          />
         </Popover.Root>
       </EventCalendarProvider>,
     );
@@ -224,19 +229,22 @@ describe('<EventPopoverContent />', () => {
       { id: 'r3', title: 'NoColor' },
     ];
 
-    const occurrenceWithNoColorResource: CalendarEventOccurrence = {
-      ...occurrence,
+    const eventWithNoResourceColor: SchedulerEvent = {
+      ...DEFAULT_EVENT,
       resource: 'r3',
     };
 
     render(
       <EventCalendarProvider
-        events={[occurrenceWithNoColorResource]}
+        events={[eventWithNoResourceColor]}
         onEventsChange={onEventsChange}
         resources={resourcesNoColor}
       >
         <Popover.Root open>
-          <EventPopoverContent {...defaultProps} occurrence={occurrenceWithNoColorResource} />
+          <EventPopoverContent
+            {...defaultProps}
+            occurrence={createOccurrenceFromEvent(eventWithNoResourceColor)}
+          />
         </Popover.Root>
       </EventCalendarProvider>,
     );
@@ -250,19 +258,22 @@ describe('<EventPopoverContent />', () => {
   it('should fallback to "No resource" with default color when the event has no resource', async () => {
     const onEventsChange = spy();
 
-    const occurrenceWithoutResource: CalendarEventOccurrence = {
-      ...occurrence,
+    const eventWithoutResource: SchedulerEvent = {
+      ...DEFAULT_EVENT,
       resource: undefined,
     };
 
     const { user } = render(
       <EventCalendarProvider
-        events={[occurrenceWithoutResource]}
+        events={[eventWithoutResource]}
         onEventsChange={onEventsChange}
         resources={resources}
       >
         <Popover.Root open>
-          <EventPopoverContent {...defaultProps} occurrence={occurrenceWithoutResource} />
+          <EventPopoverContent
+            {...defaultProps}
+            occurrence={createOccurrenceFromEvent(eventWithoutResource)}
+          />
         </Popover.Root>
       </EventCalendarProvider>,
     );
@@ -380,15 +391,14 @@ describe('<EventPopoverContent />', () => {
       const end = adapter.date('2025-05-26T08:30:00');
       const handleSurfaceChange = spy();
 
-      const creationOccurrence = {
+      const creationOccurrence = createOccurrenceFromEvent({
         id: 'tmp',
-        key: 'tmp',
         start,
         end,
         title: '',
         description: '',
         allDay: false,
-      };
+      });
 
       const { user } = render(
         <EventCalendarProvider events={[]} resources={resources}>
@@ -488,7 +498,7 @@ describe('<EventPopoverContent />', () => {
   describe('Event editing', () => {
     describe('Recurring events', () => {
       it('should not call updateRecurringEvent if the user cancels the scope dialog', async () => {
-        const originalRecurringEvent = createOccurrenceFromEvent({
+        const originalRecurringEvent = {
           id: 'recurring-1',
           title: 'Daily standup',
           description: 'sync',
@@ -496,7 +506,7 @@ describe('<EventPopoverContent />', () => {
           end: adapter.date('2025-06-11T10:30:00'),
           allDay: false,
           rrule: { freq: 'DAILY' as const, interval: 1 },
-        });
+        };
 
         let updateRecurringEventSpy, selectRecurringEventUpdateScopeSpy;
         const containerRef = React.createRef<HTMLDivElement>();
@@ -520,7 +530,10 @@ describe('<EventPopoverContent />', () => {
                 }}
               />
               <Popover.Root open>
-                <EventPopoverContent {...defaultProps} occurrence={originalRecurringEvent} />
+                <EventPopoverContent
+                  {...defaultProps}
+                  occurrence={createOccurrenceFromEvent(originalRecurringEvent)}
+                />
               </Popover.Root>
               <RecurringScopeDialog containerRef={containerRef} />
             </EventCalendarProvider>
@@ -544,7 +557,7 @@ describe('<EventPopoverContent />', () => {
       });
 
       it("should call updateRecurringEvent with scope 'all' and not include rrule if not modified on Submit", async () => {
-        const originalRecurringEvent = createOccurrenceFromEvent({
+        const originalRecurringEvent = {
           id: 'recurring-1',
           title: 'Daily standup',
           description: 'sync',
@@ -552,7 +565,7 @@ describe('<EventPopoverContent />', () => {
           end: adapter.date('2025-06-11T10:30:00'),
           allDay: false,
           rrule: { freq: 'DAILY' as const, interval: 1 },
-        });
+        };
 
         let updateRecurringEventSpy, selectRecurringEventUpdateScopeSpy;
         const containerRef = React.createRef<HTMLDivElement>();
@@ -576,7 +589,10 @@ describe('<EventPopoverContent />', () => {
                 }}
               />
               <Popover.Root open>
-                <EventPopoverContent {...defaultProps} occurrence={originalRecurringEvent} />
+                <EventPopoverContent
+                  {...defaultProps}
+                  occurrence={createOccurrenceFromEvent(originalRecurringEvent)}
+                />
               </Popover.Root>
               <RecurringScopeDialog containerRef={containerRef} />
             </EventCalendarProvider>
@@ -609,7 +625,7 @@ describe('<EventPopoverContent />', () => {
       });
 
       it("should call updateRecurringEvent with scope 'only-this' and include rrule if modified on Submit", async () => {
-        const originalRecurringEvent = createOccurrenceFromEvent({
+        const originalRecurringEvent: SchedulerEvent = {
           id: 'recurring-2',
           title: 'Daily standup',
           description: 'sync',
@@ -617,7 +633,7 @@ describe('<EventPopoverContent />', () => {
           end: adapter.date('2025-06-11T10:30:00'),
           allDay: false,
           rrule: { freq: 'DAILY' as const, interval: 1 },
-        });
+        };
 
         let updateRecurringEventSpy, selectRecurringEventUpdateScopeSpy;
         const containerRef = React.createRef<HTMLDivElement>();
@@ -641,7 +657,10 @@ describe('<EventPopoverContent />', () => {
                 }}
               />
               <Popover.Root open>
-                <EventPopoverContent {...defaultProps} occurrence={originalRecurringEvent} />
+                <EventPopoverContent
+                  {...defaultProps}
+                  occurrence={createOccurrenceFromEvent(originalRecurringEvent)}
+                />
               </Popover.Root>
               <RecurringScopeDialog containerRef={containerRef} />
             </EventCalendarProvider>
@@ -673,7 +692,7 @@ describe('<EventPopoverContent />', () => {
       });
 
       it('should call updateRecurringEvent with scope "this-and-following" and send rrule as undefined when "no repeat" is selected on Submit', async () => {
-        const originalRecurringEvent = createOccurrenceFromEvent({
+        const originalRecurringEvent = {
           id: 'recurring-3',
           title: 'Daily standup',
           description: 'sync',
@@ -681,7 +700,7 @@ describe('<EventPopoverContent />', () => {
           end: adapter.date('2025-06-11T10:30:00'),
           allDay: false,
           rrule: { freq: 'DAILY' as const, interval: 1 },
-        });
+        };
 
         let updateRecurringEventSpy, selectRecurringEventUpdateScopeSpy;
         const containerRef = React.createRef<HTMLDivElement>();
@@ -705,7 +724,10 @@ describe('<EventPopoverContent />', () => {
                 }}
               />
               <Popover.Root open>
-                <EventPopoverContent {...defaultProps} occurrence={originalRecurringEvent} />
+                <EventPopoverContent
+                  {...defaultProps}
+                  occurrence={createOccurrenceFromEvent(originalRecurringEvent)}
+                />
               </Popover.Root>
               <RecurringScopeDialog containerRef={containerRef} />
             </EventCalendarProvider>
@@ -735,14 +757,14 @@ describe('<EventPopoverContent />', () => {
 
     describe('Non-recurring events', () => {
       it('should call updateEvent with updated values on Submit', async () => {
-        const nonRecurringEvent = createOccurrenceFromEvent({
+        const nonRecurringEvent: SchedulerEvent = {
           id: 'non-recurring-1',
           title: 'Task',
           description: 'description',
           start: adapter.date('2025-06-12T14:00:00'),
           end: adapter.date('2025-06-12T15:00:00'),
           allDay: false,
-        });
+        };
 
         let updateEventSpy;
 
@@ -756,7 +778,10 @@ describe('<EventPopoverContent />', () => {
               }}
             />
             <Popover.Root open>
-              <EventPopoverContent {...defaultProps} occurrence={nonRecurringEvent} />
+              <EventPopoverContent
+                {...defaultProps}
+                occurrence={createOccurrenceFromEvent(nonRecurringEvent)}
+              />
             </Popover.Root>
           </EventCalendarProvider>,
         );
@@ -781,13 +806,13 @@ describe('<EventPopoverContent />', () => {
       });
 
       it('should call updateEvent with updated values and send rrule if recurrence was selected on Submit', async () => {
-        const nonRecurringEvent = createOccurrenceFromEvent({
+        const nonRecurringEvent: SchedulerEvent = {
           id: 'non-recurring-1',
           title: 'Task',
           description: 'description',
           start: adapter.date('2025-06-12T14:00:00'),
           end: adapter.date('2025-06-12T15:00:00'),
-        });
+        };
 
         let updateEventSpy;
 
@@ -801,7 +826,10 @@ describe('<EventPopoverContent />', () => {
               }}
             />
             <Popover.Root open>
-              <EventPopoverContent {...defaultProps} occurrence={nonRecurringEvent} />
+              <EventPopoverContent
+                {...defaultProps}
+                occurrence={createOccurrenceFromEvent(nonRecurringEvent)}
+              />
             </Popover.Root>
           </EventCalendarProvider>,
         );

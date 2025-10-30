@@ -30,7 +30,6 @@ export const EventPopoverContent = React.forwardRef(function EventPopoverContent
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const { className, style, container, anchor, occurrence, onClose, ...other } = props;
-
   // Context hooks
   const store = useSchedulerStoreContext();
 
