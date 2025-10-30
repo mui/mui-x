@@ -27,7 +27,6 @@ export const EventItem = React.forwardRef(function EventItem(
     occurrence,
     ariaLabelledBy,
     className,
-    onEventClick,
     id: idProp,
     style,
     variant = 'regular',
