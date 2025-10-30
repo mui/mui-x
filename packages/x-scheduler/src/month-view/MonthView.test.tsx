@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { spy } from 'sinon';
 import { adapter, createSchedulerRenderer } from 'test/utils/scheduler';
 import { screen, within } from '@mui/internal-test-utils';

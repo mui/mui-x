@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { RadarChart } from '@mui/x-charts/RadarChart';
 
 export default function RadarAxis() {

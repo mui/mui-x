@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { ChartContainer } from '@mui/x-charts/ChartContainer';
 import { ScatterPlot } from '@mui/x-charts/ScatterChart';
 import { LinePlot } from '@mui/x-charts/LineChart';
