@@ -16,13 +16,17 @@ import { seriesConfig as barSeriesConfig } from '../../BarChart/seriesConfig';
 import { seriesConfig as scatterSeriesConfig } from '../../ScatterChart/seriesConfig';
 import { seriesConfig as lineSeriesConfig } from '../../LineChart/seriesConfig';
 import { seriesConfig as pieSeriesConfig } from '../../PieChart/seriesConfig';
+import { seriesConfig as areaRangeSeriesConfig } from '../../AreaChart/seriesConfig';
 import { ChartSeriesType } from '../../models/seriesType/config';
 
-export const defaultSeriesConfig: ChartSeriesConfig<'bar' | 'scatter' | 'line' | 'pie'> = {
+export const defaultSeriesConfig: ChartSeriesConfig<
+  'bar' | 'scatter' | 'line' | 'pie' | 'areaRange'
+> = {
   bar: barSeriesConfig,
   scatter: scatterSeriesConfig,
   line: lineSeriesConfig,
   pie: pieSeriesConfig,
+  areaRange: areaRangeSeriesConfig,
 };
 
 // For consistency with the v7, the cartesian axes are set by default.

@@ -46,6 +46,7 @@ export const cartesianSeriesTypes = new CartesianSeriesTypes();
 cartesianSeriesTypes.addType('bar');
 cartesianSeriesTypes.addType('line');
 cartesianSeriesTypes.addType('scatter');
+cartesianSeriesTypes.addType('areaRange');
 
 export const polarSeriesTypes = new PolarSeriesTypes();
 

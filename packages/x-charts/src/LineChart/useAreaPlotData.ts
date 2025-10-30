@@ -59,6 +59,7 @@ export function useAreaPlotData(
         const xScale = xAxes[xAxisId].scale;
         const xPosition = getValueToPositionMapper(xScale);
         const yScale = yAxes[yAxisId].scale;
+        console.log('line yScale', yScale.domain(), yScale.range());
         const xData = xAxes[xAxisId].data;
 
         const gradientId: string | undefined =
@@ -73,7 +74,7 @@ export function useAreaPlotData(
                 xAxisId === DEFAULT_X_AXIS_KEY
                   ? 'The first `xAxis`'
                   : `The x-axis with id "${xAxisId}"`
-              } should have data property to be able to display a line plot.`,
+              } should have data property to be able to display an area plot.`,
             );
           }
           if (xData.length < stackedData.length) {
@@ -117,6 +118,7 @@ export function useAreaPlotData(
           }) ?? [];
 
         const d3Data = connectNulls ? formattedData.filter((d) => !d.nullData) : formattedData;
+        console.log('line', d3Data);
 
         const areaPath = d3Area<{
           x: any;

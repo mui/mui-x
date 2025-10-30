@@ -15,6 +15,12 @@ import {
   DefaultizedPieValueType,
 } from './pie';
 import { DefaultizedRadarSeriesType, RadarItemIdentifier, RadarSeriesType } from './radar';
+import {
+  AreaRangeItemIdentifier,
+  AreaRangeSeriesType,
+  AreaRangeValueType,
+  DefaultizedAreaRangeSeriesType,
+} from './area-range';
 
 export interface ChartsSeriesConfig {
   bar: {
@@ -73,6 +79,15 @@ export interface ChartsSeriesConfig {
     itemIdentifierWithData: RadarItemIdentifier;
     valueType: number;
     axisType: 'polar';
+  };
+  areaRange: {
+    seriesInput: DefaultizedProps<AreaRangeSeriesType, 'id'> & { color: string };
+    series: DefaultizedAreaRangeSeriesType;
+    seriesProp: AreaRangeSeriesType;
+    itemIdentifier: AreaRangeItemIdentifier;
+    itemIdentifierWithData: AreaRangeItemIdentifier;
+    valueType: AreaRangeValueType | null;
+    axisType: 'cartesian';
   };
 }
 
