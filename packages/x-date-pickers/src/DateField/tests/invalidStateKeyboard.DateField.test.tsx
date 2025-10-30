@@ -1,7 +1,5 @@
 import { DateField } from '@mui/x-date-pickers/DateField';
 import { describeAdapters , getTextbox , getFieldInputRoot } from 'test/utils/pickers';
-import { fireEvent } from '@mui/internal-test-utils';
-import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 // Regression: invalid state should not temporarily clear during keyboard spin when sections are still invalid
 // Reproduction steps covered:
