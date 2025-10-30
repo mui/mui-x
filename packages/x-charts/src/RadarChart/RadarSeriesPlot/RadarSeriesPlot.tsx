@@ -7,7 +7,6 @@ import { useUtilityClasses } from './radarSeriesPlotClasses';
 import { getPathProps } from './RadarSeriesArea';
 import { getCircleProps } from './RadarSeriesMarks';
 import { useRadarRotationIndex } from './useRadarRotationIndex';
-import { getSeriesColorFn } from '../../internals/getSeriesColorFn';
 
 function RadarSeriesPlot(props: RadarSeriesPlotProps) {
   const { seriesId: inSeriesId, classes: inClasses, onAreaClick, onMarkClick } = props;
@@ -21,10 +20,7 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
 
   return (
     <g className={classes.root}>
-      {seriesCoordinates?.map((series, seriesIndex) => {
-        const { seriesId, points, color, hideMark, fillArea } = series;
-        const getColor = getSeriesColorFn(series);
-
+      {seriesCoordinates?.map(({ seriesId, points, color, hideMark, fillArea }, seriesIndex) => {
         return (
           <g key={seriesId}>
             {
@@ -57,7 +53,7 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
                   {...getCircleProps({
                     seriesId,
                     point,
-                    color: getColor({ value: point.value, dataIndex: point.dataIndex }),
+                    color: point.color,
                     fillArea,
                     isFaded,
                     isHighlighted,

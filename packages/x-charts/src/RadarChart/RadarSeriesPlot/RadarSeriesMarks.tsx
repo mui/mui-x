@@ -7,7 +7,6 @@ import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
 import { RadarSeriesPlotClasses, useUtilityClasses } from './radarSeriesPlotClasses';
 import { SeriesId } from '../../models/seriesType/common';
 import { HighlightItemData } from '../../internals/plugins/featurePlugins/useChartHighlight';
-import { getSeriesColorFn } from '../../internals/getSeriesColorFn';
 
 interface GetCirclePropsParams {
   seriesId: SeriesId;
@@ -47,13 +46,10 @@ function RadarSeriesMarks(props: RadarSeriesMarksProps) {
 
   return (
     <React.Fragment>
-      {seriesCoordinates?.map((series) => {
-        if (series.hideMark) {
+      {seriesCoordinates?.map(({ seriesId: id, points, hideMark, fillArea }) => {
+        if (hideMark) {
           return null;
         }
-
-        const { seriesId: id, points, fillArea } = series;
-        const getColor = getSeriesColorFn(series);
 
         return (
           <g key={id}>
@@ -63,7 +59,7 @@ function RadarSeriesMarks(props: RadarSeriesMarksProps) {
                 {...getCircleProps({
                   seriesId: id,
                   point,
-                  color: getColor({ value: point.value, dataIndex: point.dataIndex }),
+                  color: point.color,
                   fillArea,
                   isFaded,
                   isHighlighted,
