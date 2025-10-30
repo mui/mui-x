@@ -2,7 +2,7 @@ import { spy } from 'sinon';
 import { adapter } from 'test/utils/scheduler';
 import { SchedulerEventModelStructure, SchedulerValidDate } from '@mui/x-scheduler-headless/models';
 import { buildEvent, storeClasses, getIds } from './utils';
-import { selectors } from '../SchedulerStore.selectors';
+import { selectors } from '../../../scheduler-selectors';
 
 storeClasses.forEach((storeClass) => {
   describe(`Event - ${storeClass.name}`, () => {

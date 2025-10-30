@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
 import {
   randomInt,

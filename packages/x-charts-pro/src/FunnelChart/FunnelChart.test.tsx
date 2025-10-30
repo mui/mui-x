@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { createRenderer, describeConformance, screen } from '@mui/internal-test-utils';
 import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';
 import { isJSDOM } from 'test/utils/skipIf';

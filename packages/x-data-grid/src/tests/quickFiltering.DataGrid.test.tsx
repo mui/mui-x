@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { createRenderer, screen, reactMajor, waitFor, act } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import {

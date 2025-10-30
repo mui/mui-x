@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
-import { useStore } from '@mui/x-charts/internals';
+import { UseChartBrushSignature, useStore } from '@mui/x-charts/internals';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
 
 const dataset = [
@@ -15,17 +15,19 @@ const dataset = [
 ];
 
 function BrushSimulator() {
-  const store = useStore();
+  const store = useStore<[UseChartBrushSignature]>();
 
   React.useEffect(() => {
     // Simulate brush selection for visual regression test
-    store.update((prevState) => ({
-      ...prevState,
+    store.update({
       brush: {
+        enabled: true,
+        preventTooltip: true,
+        preventHighlight: true,
         start: { x: 100, y: 50 },
         current: { x: 300, y: 300 },
       },
-    }));
+    });
   }, [store]);
 
   return <ChartsBrushOverlay />;

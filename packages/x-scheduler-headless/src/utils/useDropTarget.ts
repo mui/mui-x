@@ -15,7 +15,7 @@ import {
   EventDropDataLookup,
 } from '../build-is-valid-drop-target/buildIsValidDropTarget';
 import { SchedulerStoreInContext, useSchedulerStoreContext } from '../use-scheduler-store-context';
-import { selectors } from './SchedulerStore';
+import { selectors } from '../scheduler-selectors';
 
 export function useDropTarget<Targets extends keyof EventDropDataLookup>(
   parameters: useDropTarget.Parameters<Targets>,

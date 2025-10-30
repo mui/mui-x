@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 
 export default function ScatterDataset() {
