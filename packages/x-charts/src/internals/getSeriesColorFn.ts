@@ -1,7 +1,8 @@
-import { CommonSeriesType, SeriesColorPropValue } from '../models/seriesType/common';
+import { CommonSeriesType, SeriesColorGetterValue } from '../models/seriesType/common';
 
-export function getSeriesColorFn<TValue>(
-  seriesColor: NonNullable<CommonSeriesType<TValue>['color']>,
-): (data: SeriesColorPropValue<TValue> | null) => string {
-  return typeof seriesColor === 'function' ? seriesColor : () => seriesColor;
+export function getSeriesColorFn<TValue>(series: {
+  color: NonNullable<CommonSeriesType<TValue>['color']>;
+  colorGetter?: CommonSeriesType<TValue>['colorGetter'];
+}): (data: SeriesColorGetterValue<TValue>) => string {
+  return series.colorGetter ? series.colorGetter : () => series.color;
 }

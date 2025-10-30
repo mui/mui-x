@@ -7,7 +7,6 @@ import { useXAxes, useYAxes } from '../hooks';
 import { useZAxes } from '../hooks/useZAxis';
 import { scatterSeriesConfig as scatterSeriesConfig } from './seriesConfig';
 import { BatchScatter } from './BatchScatter';
-import { SeriesColorProp } from '../models/seriesType/common';
 
 export interface ScatterPlotSlots extends ScatterSlots {
   scatter?: React.JSXElementConstructor<ScatterProps>;
@@ -75,9 +74,6 @@ function ScatterPlot(props: ScatterPlotProps) {
       {seriesOrder.map((seriesId) => {
         const { id, xAxisId, yAxisId, zAxisId, color } = series[seriesId];
 
-        // FIXME: V9: remove this cast as it will no longer be necessary
-        const seriesColor = color as SeriesColorProp<number | null>;
-
         const colorGetter = scatterSeriesConfig.colorProcessor(
           series[seriesId],
           xAxis[xAxisId ?? defaultXAxisId],
@@ -91,7 +87,7 @@ function ScatterPlot(props: ScatterPlotProps) {
             key={id}
             xScale={xScale}
             yScale={yScale}
-            color={typeof seriesColor === 'function' ? seriesColor(null) : seriesColor}
+            color={color}
             colorGetter={colorGetter}
             series={series[seriesId]}
             onItemClick={onItemClick}

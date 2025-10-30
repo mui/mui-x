@@ -2,7 +2,6 @@ import { HighlightScope } from '../../internals/plugins/featurePlugins/useChartH
 import type { StackOffsetType, StackOrderType } from '../stacking';
 import type { ChartsLabelMarkType } from '../../ChartsLabel/ChartsLabelMark';
 import { AxisId } from '../axis';
-import type { ChartsEnabledFeatures } from '../../typeAugmentation';
 
 export type SeriesId = number | string;
 
@@ -18,23 +17,23 @@ export type SeriesValueFormatter<TValue> = (
   context: SeriesValueFormatterContext,
 ) => string | null;
 
-/**
- * Color to use when displaying the series.
- * It can be a string representing a color or a function that returns a color based on the data index.
- * The data index can be undefined when the color is needed for the entire series (e.g., in legends, lines, areas).
- */
-export type SeriesColorPropValue<TValue> = { value: TValue; dataIndex: number };
-export type SeriesColorProp<TValue> =
-  | string
-  | ((data: SeriesColorPropValue<TValue> | null) => string);
+export type SeriesColorGetterValue<TValue> = { value: TValue; dataIndex: number };
 
 export interface SeriesColor<TValue> {
   /**
    * Color to use when displaying the series.
+   * If `colorGetter` is provided, it will be used to get the color for each data point instead.
+   * Otherwise, this color will be used for all data points in the series.
    */
-  color?: ChartsEnabledFeatures extends { colorCallback: true }
-    ? string | SeriesColorProp<TValue>
-    : string;
+  color?: string;
+  /**
+   * A function that returns a color based on the value and/or the data index of a point.
+   * The returned color is used when displaying the specific data point, e.g., a marker in a line chart.
+   * When the color of the entire series is required, e.g., in legends, the `color` property is used instead.
+   * @param {SeriesColorGetterValue<TValue>} data  An object containing data point's `dataIndex` and `value`.
+   * @returns {string} The color to use for the specific data point.
+   */
+  colorGetter?: (data: SeriesColorGetterValue<TValue>) => string;
 }
 
 export interface CommonSeriesType<TValue> extends SeriesColor<TValue> {

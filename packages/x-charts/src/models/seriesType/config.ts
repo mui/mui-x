@@ -1,4 +1,4 @@
-import { DefaultizedProps, MakeOptional } from '@mui/x-internals/types';
+import { DefaultizedProps, MakeOptional, MakeRequired } from '@mui/x-internals/types';
 import {
   ScatterSeriesType,
   DefaultizedScatterSeriesType,
@@ -22,7 +22,8 @@ export interface ChartsSeriesConfig {
     /**
      * Series type when passed to the formatter (some ids are given default values to simplify the DX)
      */
-    seriesInput: DefaultizedProps<BarSeriesType, 'id'> & Required<SeriesColor<number | null>>;
+    seriesInput: DefaultizedProps<BarSeriesType, 'id'> &
+      MakeRequired<SeriesColor<number | null>, 'color'>;
     /**
      * Series type when stored in the context (with all the preprocessing added))
      */
@@ -38,7 +39,8 @@ export interface ChartsSeriesConfig {
     axisType: 'cartesian';
   };
   line: {
-    seriesInput: DefaultizedProps<LineSeriesType, 'id'> & Required<SeriesColor<number | null>>;
+    seriesInput: DefaultizedProps<LineSeriesType, 'id'> &
+      MakeRequired<SeriesColor<number | null>, 'color'>;
     series: DefaultizedLineSeriesType;
     seriesProp: LineSeriesType;
     itemIdentifier: LineItemIdentifier;
@@ -49,7 +51,7 @@ export interface ChartsSeriesConfig {
   };
   scatter: {
     seriesInput: DefaultizedProps<ScatterSeriesType, 'id'> &
-      Required<SeriesColor<ScatterValueType | null>>;
+      MakeRequired<SeriesColor<ScatterValueType | null>, 'color'>;
     series: DefaultizedScatterSeriesType;
     seriesProp: ScatterSeriesType;
     valueType: ScatterValueType;
@@ -59,7 +61,9 @@ export interface ChartsSeriesConfig {
   };
   pie: {
     seriesInput: Omit<DefaultizedProps<PieSeriesType, 'id'>, 'data'> & {
-      data: (MakeOptional<PieValueType, 'id'> & Required<SeriesColor<PieValueType | null>>)[];
+      data: Array<
+        MakeOptional<PieValueType, 'id'> & MakeRequired<SeriesColor<PieValueType | null>, 'color'>
+      >;
     };
     series: DefaultizedPieSeriesType;
     seriesProp: PieSeriesType<MakeOptional<PieValueType, 'id'>>;
@@ -68,7 +72,8 @@ export interface ChartsSeriesConfig {
     valueType: DefaultizedPieValueType;
   };
   radar: {
-    seriesInput: DefaultizedProps<RadarSeriesType, 'id'> & Required<SeriesColor<number>>;
+    seriesInput: DefaultizedProps<RadarSeriesType, 'id'> &
+      MakeRequired<SeriesColor<number>, 'color'>;
     series: DefaultizedRadarSeriesType;
     seriesProp: RadarSeriesType;
     itemIdentifier: RadarItemIdentifier;

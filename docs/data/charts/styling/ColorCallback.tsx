@@ -3,12 +3,6 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { BarChart, BarChartProps, BarSeries } from '@mui/x-charts/BarChart';
 
-declare module '@mui/x-charts/typeAugmentation' {
-  interface ChartsEnabledFeatures {
-    colorCallback: true;
-  }
-}
-
 const clubs = [
   'Arsenal',
   'Liverpool',

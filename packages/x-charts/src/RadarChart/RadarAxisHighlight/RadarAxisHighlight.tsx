@@ -66,13 +66,12 @@ function RadarAxisHighlight(props: RadarAxisHighlightProps) {
         strokeDasharray="4 4"
       />
       {points.map((point, seriesIndex) => {
+        const colorGetter = getSeriesColorFn(series[seriesIndex]);
+
         return (
           <circle
             key={series[seriesIndex].id}
-            fill={getSeriesColorFn(series[seriesIndex].color)({
-              value: point.value,
-              dataIndex: highlightedIndex,
-            })}
+            fill={colorGetter({ value: point.value, dataIndex: highlightedIndex })}
             cx={point.x}
             cy={point.y}
             className={classes.dot}

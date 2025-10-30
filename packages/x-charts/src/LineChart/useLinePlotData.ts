@@ -8,7 +8,7 @@ import { getCurveFactory } from '../internals/getCurve';
 import { ChartsXAxisProps, ChartsYAxisProps } from '../models';
 import { getValueToPositionMapper, useLineSeriesContext, useXAxes, useYAxes } from '../hooks';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
-import { SeriesColorProp, SeriesId } from '../models/seriesType/common';
+import { SeriesId } from '../models/seriesType/common';
 
 interface LinePlotDataPoint {
   d: string;
@@ -128,10 +128,8 @@ export function useLinePlotData(
           .y((d) => yScale(d.y[1])!);
 
         const d = linePath.curve(getCurveFactory(curve))(d3Data) || '';
-        // FIXME: V9: remove this cast as it will no longer be necessary
-        const seriesColor = series[seriesId].color as SeriesColorProp<number | null>;
         linePlotData.push({
-          color: typeof seriesColor === 'function' ? seriesColor(null) : seriesColor,
+          color: series[seriesId].color,
           gradientId,
           d,
           seriesId,

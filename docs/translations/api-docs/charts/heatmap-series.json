@@ -2,6 +2,9 @@
   "interfaceDescription": "",
   "propertiesDescriptions": {
     "type": { "description": "" },
+    "colorGetter": {
+      "description": "A function that returns a color based on the value and/or the data index of a point.<br />The returned color is used when displaying the specific data point, e.g., a marker in a line chart.<br />When the color of the entire series is required, e.g., in legends, the <code>color</code> property is used instead."
+    },
     "data": { "description": "Data associated to each bar." },
     "dataKey": { "description": "The key used to retrieve data from the dataset." },
     "highlightScope": { "description": "The scope to apply when the series is highlighted." },

@@ -7,12 +7,12 @@ const getColor: ColorProcessor<'bar'> = (series, xAxis, yAxis) => {
   const bandColorScale = verticalLayout ? xAxis?.colorScale : yAxis?.colorScale;
   const valueColorScale = verticalLayout ? yAxis?.colorScale : xAxis?.colorScale;
   const bandValues = verticalLayout ? xAxis?.data : yAxis?.data;
-  const getSeriesColor = getSeriesColorFn(series.color);
+  const getSeriesColor = getSeriesColorFn(series);
 
   if (valueColorScale) {
     return (dataIndex?: number) => {
       if (dataIndex === undefined) {
-        return getSeriesColor(null);
+        return series.color;
       }
 
       const value = series.data[dataIndex];
@@ -28,7 +28,7 @@ const getColor: ColorProcessor<'bar'> = (series, xAxis, yAxis) => {
   if (bandColorScale && bandValues) {
     return (dataIndex?: number) => {
       if (dataIndex === undefined) {
-        return getSeriesColor(null);
+        return series.color;
       }
 
       const value = bandValues[dataIndex];
@@ -44,7 +44,7 @@ const getColor: ColorProcessor<'bar'> = (series, xAxis, yAxis) => {
 
   return (dataIndex?: number) => {
     if (dataIndex === undefined) {
-      return getSeriesColor(null);
+      return series.color;
     }
 
     const value = series.data[dataIndex];

@@ -21,7 +21,10 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
 
   return (
     <g className={classes.root}>
-      {seriesCoordinates?.map(({ seriesId, points, color, hideMark, fillArea }, seriesIndex) => {
+      {seriesCoordinates?.map((series, seriesIndex) => {
+        const { seriesId, points, color, hideMark, fillArea } = series;
+        const getColor = getSeriesColorFn(series);
+
         return (
           <g key={seriesId}>
             {
@@ -30,7 +33,7 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
                 {...getPathProps({
                   seriesId,
                   points,
-                  color: getSeriesColorFn(color)(null),
+                  color,
                   fillArea,
                   isFaded,
                   isHighlighted,
@@ -54,10 +57,7 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
                   {...getCircleProps({
                     seriesId,
                     point,
-                    color: getSeriesColorFn(color)({
-                      value: point.value,
-                      dataIndex: point.dataIndex,
-                    }),
+                    color: getColor({ value: point.value, dataIndex: point.dataIndex }),
                     fillArea,
                     isFaded,
                     isHighlighted,

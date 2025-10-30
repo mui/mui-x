@@ -1,7 +1,6 @@
 import { LegendItemParams } from '../../ChartsLegend/legendContext.types';
 import { getLabel } from '../../internals/getLabel';
 import { LegendGetter } from '../../internals/plugins/models/seriesConfig';
-import { getSeriesColorFn } from '../../internals/getSeriesColorFn';
 
 const legendGetter: LegendGetter<'radar'> = (params) => {
   const { seriesOrder, series } = params;
@@ -15,7 +14,7 @@ const legendGetter: LegendGetter<'radar'> = (params) => {
     acc.push({
       id: seriesId,
       seriesId,
-      color: getSeriesColorFn(series[seriesId].color)(null),
+      color: series[seriesId].color,
       label: formattedLabel,
       markType: series[seriesId].labelMarkType ?? 'square',
     });

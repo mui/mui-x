@@ -12,6 +12,10 @@
     },
     "type": { "type": { "description": "'funnel'" }, "required": true, "isProPlan": true },
     "borderRadius": { "type": { "description": "number" }, "default": "8", "isProPlan": true },
+    "colorGetter": {
+      "type": { "description": "(data: SeriesColorGetterValue&lt;TValue&gt;) =&gt; string" },
+      "isProPlan": true
+    },
     "curve": {
       "type": { "description": "FunnelCurveType" },
       "default": "'linear'",

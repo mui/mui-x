@@ -1,12 +1,6 @@
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { useScatterSeries, useXScale, useYScale } from '@mui/x-charts/hooks';
 
-declare module '@mui/x-charts/typeAugmentation' {
-  interface ChartsEnabledFeatures {
-    colorCallback: true;
-  }
-}
-
 const data1 = [
   { x: 95, y: 200, id: 1 },
   { x: 120, y: 100, id: 2 },

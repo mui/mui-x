@@ -6,6 +6,9 @@
     "borderRadius": {
       "description": "The radius, in pixels, of the corners of the funnel sections."
     },
+    "colorGetter": {
+      "description": "A function that returns a color based on the value and/or the data index of a point.<br />The returned color is used when displaying the specific data point, e.g., a marker in a line chart.<br />When the color of the entire series is required, e.g., in legends, the <code>color</code> property is used instead."
+    },
     "curve": {
       "description": "<p>The type of curve to use for the line.<br /><br />- <code>bump</code>: A curve that creates a smooth transition between points, with a bump in the middle.<br />- <code>linear</code>: A straight line between points.<br />- <code>linear-sharp</code>: A straight line between points, the smaller end of the funnel is a triangle.<br />- <code>step</code>: A step line that creates a staircase effect.<br />- <code>pyramid</code>: A pyramid shape that connects the points.<br />- <code>step-pyramid</code>: A step line that creates a staircase effect, with a pyramid shape.<br /><br />Read more about curves at <a href=\"https://mui.com/x/react-charts/funnel/#curve-interpolation\">curve interpolation</a>.</p>\n"
     },

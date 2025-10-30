@@ -149,7 +149,7 @@ export function useAreaPlotData(
         const d = areaPath.curve(getCurveFactory(curve))(d3Data) || '';
         areaPlotData.push({
           area: series[seriesId].area,
-          color: getSeriesColorFn(series[seriesId].color)(null),
+          color: series[seriesId].color,
           gradientId,
           d,
           seriesId,

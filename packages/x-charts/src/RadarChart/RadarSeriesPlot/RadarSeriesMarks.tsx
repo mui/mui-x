@@ -47,10 +47,13 @@ function RadarSeriesMarks(props: RadarSeriesMarksProps) {
 
   return (
     <React.Fragment>
-      {seriesCoordinates?.map(({ seriesId: id, points, color, hideMark, fillArea }) => {
-        if (hideMark) {
+      {seriesCoordinates?.map((series) => {
+        if (series.hideMark) {
           return null;
         }
+
+        const { seriesId: id, points, fillArea } = series;
+        const getColor = getSeriesColorFn(series);
 
         return (
           <g key={id}>
@@ -60,10 +63,7 @@ function RadarSeriesMarks(props: RadarSeriesMarksProps) {
                 {...getCircleProps({
                   seriesId: id,
                   point,
-                  color: getSeriesColorFn(color)({
-                    value: point.value,
-                    dataIndex: point.dataIndex,
-                  }),
+                  color: getColor({ value: point.value, dataIndex: point.dataIndex }),
                   fillArea,
                   isFaded,
                   isHighlighted,

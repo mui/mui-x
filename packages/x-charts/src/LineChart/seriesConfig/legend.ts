@@ -16,7 +16,7 @@ const legendGetter: LegendGetter<'line'> = (params) => {
       markType: series[seriesId].labelMarkType,
       id: seriesId,
       seriesId,
-      color: getSeriesColorFn(series[seriesId].color)(null),
+      color: series[seriesId].color,
       label: formattedLabel,
     });
     return acc;

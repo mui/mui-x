@@ -18,10 +18,9 @@
       "type": { "description": "number | string" },
       "default": "(innerRadius - outerRadius) / 2"
     },
-    "color": {
-      "type": {
-        "description": "ChartsEnabledFeatures extends { colorCallback: true } ? string | SeriesColorProp&lt;TValue&gt; : string"
-      }
+    "color": { "type": { "description": "string" } },
+    "colorGetter": {
+      "type": { "description": "(data: SeriesColorGetterValue&lt;TValue&gt;) =&gt; string" }
     },
     "cornerRadius": { "type": { "description": "number" }, "default": "0" },
     "cx": { "type": { "description": "number | string" }, "default": "'50%'" },
