@@ -1,4 +1,3 @@
-import * as React from 'react';
 import clsx from 'clsx';
 import { Timeline as TimelinePrimitive } from '@mui/x-scheduler-headless/timeline';
 import { DEFAULT_EVENT_COLOR } from '@mui/x-scheduler-headless/constants';

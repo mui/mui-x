@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { createPickerRenderer } from 'test/utils/pickers';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
 import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';

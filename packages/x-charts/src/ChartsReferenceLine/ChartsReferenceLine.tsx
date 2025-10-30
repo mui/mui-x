@@ -1,5 +1,4 @@
 'use client';
-import * as React from 'react';
 import PropTypes from 'prop-types';
 import { ChartsXReferenceLine, ChartsXReferenceLineProps } from './ChartsXReferenceLine';
 import { ChartsYReferenceLine, ChartsYReferenceLineProps } from './ChartsYReferenceLine';
