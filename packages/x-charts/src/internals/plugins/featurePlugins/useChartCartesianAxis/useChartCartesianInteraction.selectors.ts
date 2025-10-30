@@ -123,7 +123,7 @@ export const selectorChartsInteractionYAxisValue = createSelector(
   },
 );
 
-const noop: AxisItemIdentifier[] = [];
+const EMPTY_ARRAY: AxisItemIdentifier[] = [];
 
 /**
  * Get x-axis ids and corresponding data index that should be display in the tooltip.
@@ -137,7 +137,7 @@ export const selectorChartsInteractionTooltipXAxes = createSelectorMemoizedWithO
   },
 })(selectorChartsInteractionPointerX, selectorChartXAxis, (value, axes) => {
   if (value === null) {
-    return noop;
+    return EMPTY_ARRAY;
   }
 
   return axes.axisIds
@@ -163,7 +163,7 @@ export const selectorChartsInteractionTooltipYAxes = createSelectorMemoizedWithO
   },
 })(selectorChartsInteractionPointerY, selectorChartYAxis, (value, axes) => {
   if (value === null) {
-    return noop;
+    return EMPTY_ARRAY;
   }
 
   return axes.axisIds
