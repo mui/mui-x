@@ -40,7 +40,7 @@ function LinkPoints({ seriesId, close }) {
   return (
     <path
       fill="none"
-      stroke={typeof color === 'function' ? color(null) : color}
+      stroke={color}
       strokeWidth={2}
       d={`M ${data.map(({ x, y }) => `${xScale(x)}, ${yScale(y)}`).join(' L')}${
         close ? 'Z' : ''

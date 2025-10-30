@@ -8,7 +8,6 @@ import { ChartsXAxisProps, ChartsYAxisProps } from '../models';
 import { getValueToPositionMapper, useLineSeriesContext, useXAxes, useYAxes } from '../hooks';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { SeriesId } from '../models/seriesType/common';
-import { getSeriesColorFn } from '../internals/getSeriesColorFn';
 
 interface AreaPlotDataPoint {
   d: string;
