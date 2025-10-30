@@ -9,7 +9,7 @@ export { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 export { useDrawingArea } from '../hooks/useDrawingArea';
 export { useScatterChartProps } from '../ScatterChart/useScatterChartProps';
 export { useScatterPlotData } from '../ScatterChart/useScatterPlotData';
-export { seriesConfig as scatterSeriesConfig } from '../ScatterChart/seriesConfig';
+export { scatterSeriesConfig as scatterSeriesConfig } from '../ScatterChart/seriesConfig';
 export { useLineChartProps } from '../LineChart/useLineChartProps';
 export { useAreaPlotData } from '../LineChart/useAreaPlotData';
 export { useLinePlotData } from '../LineChart/useLinePlotData';
