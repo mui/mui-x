@@ -12,10 +12,10 @@ import { useChartCartesianAxis } from '../../internals/plugins/featurePlugins/us
 import { useChartInteraction } from '../../internals/plugins/featurePlugins/useChartInteraction';
 import { useChartZAxis } from '../../internals/plugins/featurePlugins/useChartZAxis';
 import { useChartHighlight } from '../../internals/plugins/featurePlugins/useChartHighlight/useChartHighlight';
-import { seriesConfig as barSeriesConfig } from '../../BarChart/seriesConfig';
-import { seriesConfig as scatterSeriesConfig } from '../../ScatterChart/seriesConfig';
-import { seriesConfig as lineSeriesConfig } from '../../LineChart/seriesConfig';
-import { seriesConfig as pieSeriesConfig } from '../../PieChart/seriesConfig';
+import { barSeriesConfig } from '../../BarChart/seriesConfig';
+import { scatterSeriesConfig } from '../../ScatterChart/seriesConfig';
+import { lineSeriesConfig } from '../../LineChart/seriesConfig';
+import { pieSeriesConfig } from '../../PieChart/seriesConfig';
 import { ChartSeriesType } from '../../models/seriesType/config';
 
 export const defaultSeriesConfig: ChartSeriesConfig<'bar' | 'scatter' | 'line' | 'pie'> = {

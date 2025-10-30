@@ -6,7 +6,7 @@ import tooltipGetter from './tooltip';
 import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
 import tooltipItemPositionGetter from './tooltipPosition';
 
-export const seriesConfig: ChartSeriesTypeConfig<'heatmap'> = {
+export const heatmapSeriesConfig: ChartSeriesTypeConfig<'heatmap'> = {
   seriesProcessor,
   colorProcessor: getColor,
   legendGetter: () => [],
