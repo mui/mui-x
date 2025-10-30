@@ -22,18 +22,15 @@ export const useChartSeries: ChartPlugin<UseChartSeriesSignature> = ({
       return;
     }
 
-    store.update((prev) => ({
-      ...prev,
-      series: {
-        ...prev.series,
-        processedSeries: preprocessSeries({
-          series,
-          colors: typeof colors === 'function' ? colors(theme) : colors,
-          seriesConfig,
-          dataset,
-        }),
-      },
-    }));
+    store.set('series', {
+      ...store.state.series,
+      processedSeries: preprocessSeries({
+        series,
+        colors: typeof colors === 'function' ? colors(theme) : colors,
+        seriesConfig,
+        dataset,
+      }),
+    });
   }, [colors, dataset, series, theme, seriesConfig, store]);
 
   return {};

@@ -54,7 +54,7 @@ export const usePanOnPressAndDrag = (
 
     const handlePressAndDragStart = (event: PressAndDragEvent) => {
       if (!(event.detail.target as SVGElement)?.closest('[data-charts-zoom-slider]')) {
-        startRef.current = store.value.zoom.zoomData;
+        startRef.current = store.state.zoom.zoomData;
       }
     };
 

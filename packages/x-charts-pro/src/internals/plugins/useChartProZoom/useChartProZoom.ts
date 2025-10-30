@@ -12,7 +12,6 @@ import {
 import debounce from '@mui/utils/debounce';
 import { useEffectAfterFirstRender } from '@mui/x-internals/useEffectAfterFirstRender';
 import { useEventCallback } from '@mui/material/utils';
-import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { calculateZoom } from './calculateZoom';
 import { UseChartProZoomSignature } from './useChartProZoom.types';
 import { useZoomOnWheel } from './gestureHooks/useZoomOnWheel';
@@ -38,14 +37,9 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginDat
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
 
   useEffectAfterFirstRender(() => {
-    store.update((prevState) => {
-      return {
-        ...prevState,
-        zoom: {
-          ...prevState.zoom,
-          zoomInteractionConfig: initializeZoomInteractionConfig(zoomInteractionConfig),
-        },
-      };
+    store.set('zoom', {
+      ...store.state.zoom,
+      zoomInteractionConfig: initializeZoomInteractionConfig(zoomInteractionConfig),
     });
   }, [store, zoomInteractionConfig]);
 
@@ -54,38 +48,28 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginDat
     if (paramsZoomData === undefined) {
       return undefined;
     }
-    store.update((prevState) => {
-      if (process.env.NODE_ENV !== 'production' && !prevState.zoom.isControlled) {
-        console.error(
-          [
-            `MUI X Charts: A chart component is changing the \`zoomData\` from uncontrolled to controlled.`,
-            'Elements should not switch from uncontrolled to controlled (or vice versa).',
-            'Decide between using a controlled or uncontrolled for the lifetime of the component.',
-            "The nature of the state is determined during the first render. It's considered controlled if the value is not `undefined`.",
-            'More info: https://fb.me/react-controlled-components',
-          ].join('\n'),
-        );
-      }
 
-      return {
-        ...prevState,
-        zoom: {
-          ...prevState.zoom,
-          isInteracting: true,
-          zoomData: paramsZoomData,
-        },
-      };
+    if (process.env.NODE_ENV !== 'production' && !store.state.zoom.isControlled) {
+      console.error(
+        [
+          `MUI X Charts: A chart component is changing the \`zoomData\` from uncontrolled to controlled.`,
+          'Elements should not switch from uncontrolled to controlled (or vice versa).',
+          'Decide between using a controlled or uncontrolled for the lifetime of the component.',
+          "The nature of the state is determined during the first render. It's considered controlled if the value is not `undefined`.",
+          'More info: https://fb.me/react-controlled-components',
+        ].join('\n'),
+      );
+    }
+    store.set('zoom', {
+      ...store.state.zoom,
+      isInteracting: true,
+      zoomData: paramsZoomData,
     });
 
     const timeout = setTimeout(() => {
-      store.update((prevState) => {
-        return {
-          ...prevState,
-          zoom: {
-            ...prevState.zoom,
-            isInteracting: false,
-          },
-        };
+      store.set('zoom', {
+        ...store.state.zoom,
+        isInteracting: false,
       });
     }, 166);
 
@@ -99,14 +83,9 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginDat
     () =>
       debounce(
         () =>
-          store.update((prevState) => {
-            return {
-              ...prevState,
-              zoom: {
-                ...prevState.zoom,
-                isInteracting: false,
-              },
-            };
+          store.set('zoom', {
+            ...store.state.zoom,
+            isInteracting: false,
           }),
         166,
       ),
@@ -115,29 +94,19 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginDat
 
   const setZoomDataCallback = React.useCallback(
     (zoomData: ZoomData[] | ((prev: ZoomData[]) => ZoomData[])) => {
-      store.update((prevState) => {
-        const newZoomData =
-          typeof zoomData === 'function' ? zoomData([...prevState.zoom.zoomData]) : zoomData;
+      const newZoomData =
+        typeof zoomData === 'function' ? zoomData([...store.state.zoom.zoomData]) : zoomData;
 
-        if (isDeepEqual(newZoomData, prevState.zoom.zoomData)) {
-          return prevState;
-        }
-
+      if (store.state.zoom.isControlled) {
         onZoomChange?.(newZoomData);
-        if (prevState.zoom.isControlled) {
-          return prevState;
-        }
-
+      } else {
         removeIsInteracting();
-        return {
-          ...prevState,
-          zoom: {
-            ...prevState.zoom,
-            isInteracting: true,
-            zoomData: newZoomData,
-          },
-        };
-      });
+        store.set('zoom', {
+          ...store.state.zoom,
+          isInteracting: true,
+          zoomData: newZoomData,
+        });
+      }
     },
     [onZoomChange, store, removeIsInteracting],
   );
