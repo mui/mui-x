@@ -1,5 +1,4 @@
 import { BarChart } from '@mui/x-charts/BarChart';
-import * as React from 'react';
 import { ChartsLabelCustomMarkProps } from '@mui/x-charts/ChartsLabel';
 
 function HTMLCircle({ className, color }: ChartsLabelCustomMarkProps) {

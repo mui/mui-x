@@ -26,10 +26,8 @@ export const usePanOnDrag = (
   const startRef = React.useRef<readonly ZoomData[]>(null);
   const config = useSelector(store, selectorPanInteractionConfig, ['drag' as const]);
 
-  const isPanOnDragEnabled: boolean = React.useMemo(
-    () => (Object.values(optionsLookup).some((v) => v.panning) && Boolean(config)) || false,
-    [optionsLookup, config],
-  );
+  const isPanOnDragEnabled: boolean =
+    Object.values(optionsLookup).some((v) => v.panning) && Boolean(config);
 
   React.useEffect(() => {
     if (!isPanOnDragEnabled) {
@@ -56,7 +54,7 @@ export const usePanOnDrag = (
 
     const handlePanStart = (event: PanEvent) => {
       if (!(event.detail.target as SVGElement)?.closest('[data-charts-zoom-slider]')) {
-        startRef.current = store.value.zoom.zoomData;
+        startRef.current = store.state.zoom.zoomData;
       }
     };
     const handlePanEnd = () => {

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { describeConformance } from '@mui/internal-test-utils';
 import { createPickerRenderer, describePicker } from 'test/utils/pickers';
 import { DesktopDateTimeRangePicker } from '../DesktopDateTimeRangePicker';

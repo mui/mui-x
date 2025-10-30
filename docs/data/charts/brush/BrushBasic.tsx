@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
 import Box from '@mui/material/Box';
