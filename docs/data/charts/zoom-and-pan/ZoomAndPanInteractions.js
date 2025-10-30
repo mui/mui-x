@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 
@@ -20,6 +19,16 @@ const knobs = {
   },
   tapAndDrag: {
     displayName: 'Tap and drag',
+    knob: 'switch',
+    defaultValue: false,
+  },
+  brush: {
+    displayName: 'Brush',
+    knob: 'switch',
+    defaultValue: false,
+  },
+  doubleTapReset: {
+    displayName: 'Double tap reset',
     knob: 'switch',
     defaultValue: false,
   },
@@ -56,6 +65,12 @@ export default function ZoomAndPanInteractions() {
         }
         if (props.tapAndDrag) {
           zoomInteractions.push('tapAndDrag');
+        }
+        if (props.brush) {
+          zoomInteractions.push('brush');
+        }
+        if (props.doubleTapReset) {
+          zoomInteractions.push('doubleTapReset');
         }
 
         // Build pan interactions array
@@ -105,6 +120,12 @@ export default function ZoomAndPanInteractions() {
         }
         if (props.tapAndDrag) {
           zoomInteractions.push('tapAndDrag');
+        }
+        if (props.brush) {
+          zoomInteractions.push('brush');
+        }
+        if (props.doubleTapReset) {
+          zoomInteractions.push('doubleTapReset');
         }
 
         // Build pan interactions array

@@ -1,7 +1,7 @@
 import { adapter } from 'test/utils/scheduler';
 import { CalendarEvent } from '@mui/x-scheduler-headless/models';
 import { storeClasses, buildEvent } from './utils';
-import { selectors } from '../SchedulerStore.selectors';
+import { selectors } from '../../../scheduler-selectors';
 
 const DEFAULT_PARAMS = { events: [] as CalendarEvent[] };
 

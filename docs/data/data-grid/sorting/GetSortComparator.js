@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { DataGrid, gridStringOrNumberComparator } from '@mui/x-data-grid';
 import {
   randomQuantity,

@@ -1,4 +1,3 @@
-import { scaleBand } from '@mui/x-charts-vendor/d3-scale';
 import { ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
 import { ChartDrawingArea } from '@mui/x-charts/hooks';
 import {
@@ -23,6 +22,7 @@ import {
   isDateData,
   createDateFormatter,
   getDefaultTickNumber,
+  scaleBand,
 } from '@mui/x-charts/internals';
 import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '@mui/x-charts/models';
 

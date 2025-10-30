@@ -1,4 +1,3 @@
-import * as React from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
