@@ -5,6 +5,10 @@ import { ChevronLeft, ChevronRight, PanelLeftClose, PanelLeftOpen } from 'lucide
 import { useStore } from '@base-ui-components/utils/store';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
+import {
+  eventCalendarPreferenceSelectors,
+  eventCalendarViewSelectors,
+} from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { selectors } from '@mui/x-scheduler-headless/use-event-calendar';
 import { DateNavigatorProps } from './DateNavigator.types';
 import { useTranslations } from '../../utils/TranslationsContext';
@@ -22,9 +26,9 @@ export const DateNavigator = React.forwardRef(function DateNavigator(
   const translations = useTranslations();
 
   // Selector hooks
-  const view = useStore(store, selectors.view);
+  const view = useStore(store, eventCalendarViewSelectors.view);
   const visibleDate = useStore(store, selectors.visibleDate);
-  const isSidePanelOpen = useStore(store, selectors.preferences).isSidePanelOpen;
+  const isSidePanelOpen = useStore(store, eventCalendarPreferenceSelectors.isSidePanelOpen);
 
   return (
     <header
