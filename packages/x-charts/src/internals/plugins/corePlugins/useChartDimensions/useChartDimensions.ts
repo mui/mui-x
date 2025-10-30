@@ -127,13 +127,13 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
 
   useEnhancedEffect(() => {
     if (hasInSize) {
-      return () => { };
+      return () => {};
     }
     computeSize();
 
     const elementToObserve = svgRef.current;
     if (typeof ResizeObserver === 'undefined') {
-      return () => { };
+      return () => {};
     }
 
     let animationFrame: number;
