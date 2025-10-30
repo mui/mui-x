@@ -5,6 +5,7 @@ import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { useAdapter, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
+import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { selectors } from '@mui/x-scheduler-headless/use-event-calendar';
 import { EventPopoverTrigger } from '../event-popover';
 import { DayGridEvent } from '../event';
@@ -23,8 +24,11 @@ export function DayGridCell(props: DayGridCellProps) {
   const cellRef = React.useRef<HTMLDivElement | null>(null);
 
   // Selector hooks
-  const isCreation = useStore(store, selectors.isCreatingNewEventInDayCell, day.value);
-  const canCreateEvent = useStore(store, selectors.canCreateNewEvent);
+  const isCreatingAnEvent = useStore(
+    store,
+    eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell,
+    day.value,
+  );
 
   // Feature hooks
   const placeholder = CalendarGrid.usePlaceholderInDay(day.value, row);
@@ -32,9 +36,10 @@ export function DayGridCell(props: DayGridCellProps) {
   const { open: startEditing } = useEventPopoverContext();
 
   const handleDoubleClick = () => {
-    if (!canCreateEvent) {
+    if (!selectors.canCreateNewEvent(store.state)) {
       return;
     }
+
     store.setOccurrencePlaceholder({
       type: 'creation',
       surfaceType: 'day-grid',
@@ -44,11 +49,11 @@ export function DayGridCell(props: DayGridCellProps) {
   };
 
   React.useEffect(() => {
-    if (!isCreation || !placeholder || !cellRef.current) {
+    if (!isCreatingAnEvent || !placeholder || !cellRef.current) {
       return;
     }
     startEditing(cellRef.current, placeholder);
-  }, [isCreation, placeholder, startEditing]);
+  }, [isCreatingAnEvent, placeholder, startEditing]);
 
   return (
     <CalendarGrid.DayCell

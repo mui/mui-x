@@ -8,6 +8,7 @@ import { useTimelineStoreContext } from '@mui/x-scheduler-headless/use-timeline-
 import { useEventOccurrencesGroupedByResource } from '@mui/x-scheduler-headless/use-event-occurrences-grouped-by-resource';
 import { useAdapter, diffIn, Adapter } from '@mui/x-scheduler-headless/use-adapter';
 import { SchedulerValidDate, TimelineView } from '@mui/x-scheduler-headless/models';
+import { timelineViewSelectors } from '@mui/x-scheduler-headless/timeline-selectors';
 import { DaysHeader, MonthsHeader, TimeHeader, WeeksHeader, YearHeader } from './view-header';
 import { TimelineContentProps } from './TimelineContent.types';
 import TimelineEventRow from './timeline-event-row/TimelineEventRow';
@@ -49,7 +50,7 @@ export const TimelineContent = React.forwardRef(function TimelineContent(
   const store = useTimelineStoreContext();
   const resources = useStore(store, selectors.processedResourceList);
   const visibleDate = useStore(store, selectors.visibleDate);
-  const view = useStore(store, selectors.view);
+  const view = useStore(store, timelineViewSelectors.view);
 
   const start = React.useMemo(
     () => getStartDate(adapter, view, visibleDate),

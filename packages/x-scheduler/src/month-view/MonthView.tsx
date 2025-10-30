@@ -13,7 +13,7 @@ import {
   selectors,
   useExtractEventCalendarParameters,
 } from '@mui/x-scheduler-headless/use-event-calendar';
-
+import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { useWeekList } from '@mui/x-scheduler-headless/use-week-list';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-headless/use-event-occurrences-grouped-by-day';
@@ -49,8 +49,8 @@ export const MonthView = React.memo(
     const cellRef = React.useRef<HTMLDivElement>(null);
 
     // Selector hooks
-    const showWeekends = useStore(store, selectors.showWeekends);
-    const showWeekNumber = useStore(store, selectors.showWeekNumber);
+    const showWeekends = useStore(store, eventCalendarPreferenceSelectors.showWeekends);
+    const showWeekNumber = useStore(store, eventCalendarPreferenceSelectors.showWeekNumber);
     const visibleDate = useStore(store, selectors.visibleDate);
 
     // State hooks
