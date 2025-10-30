@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { chartsGridClasses } from '@mui/x-charts/ChartsGrid';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { dataset, valueFormatter } from '../dataset/weather';

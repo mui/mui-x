@@ -20,22 +20,5 @@
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
     }
   },
-  "classDescriptions": {
-    "dense": {
-      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
-      "nodeName": "the root element",
-      "conditions": "dense"
-    },
-    "padding": {
-      "description": "Styles applied to {{nodeName}} unless {{conditions}}.",
-      "nodeName": "the root element",
-      "conditions": "<code>disablePadding={true}</code>"
-    },
-    "root": { "description": "Styles applied to the root element." },
-    "subheader": {
-      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
-      "nodeName": "the root element",
-      "conditions": "a <code>subheader</code> is provided"
-    }
-  }
+  "classDescriptions": {}
 }

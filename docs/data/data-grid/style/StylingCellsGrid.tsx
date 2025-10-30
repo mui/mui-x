@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Box from '@mui/material/Box';
 import clsx from 'clsx';
 import { GridColDef, DataGrid, GridCellParams } from '@mui/x-data-grid';

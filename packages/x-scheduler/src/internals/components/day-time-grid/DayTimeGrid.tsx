@@ -6,6 +6,7 @@ import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect
 import { useStore } from '@base-ui-components/utils/store';
 import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-headless/use-event-occurrences-grouped-by-day';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
+import { eventCalendarViewSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { CalendarProcessedDate } from '@mui/x-scheduler-headless/models';
 import { useAdapter, diffIn, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
@@ -17,6 +18,7 @@ import { EventPopoverProvider } from '../event-popover';
 import { TimeGridColumn } from './TimeGridColumn';
 import { DayGridCell } from './DayGridCell';
 import './DayTimeGrid.css';
+import { useFormatTime } from '../../hooks/useFormatTime';
 
 export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   props: DayTimeGridProps,
@@ -37,10 +39,9 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 
   // Selector hooks
   const visibleDate = useStore(store, selectors.visibleDate);
-  const hasDayView = useStore(store, selectors.hasDayView);
+  const hasDayView = useStore(store, eventCalendarViewSelectors.hasDayView);
   const now = useStore(store, selectors.nowUpdatedEveryMinute);
   const isMultiDayEvent = useStore(store, selectors.isMultiDayEvent);
-  const ampm = useStore(store, selectors.ampm);
   const showCurrentTimeIndicator = useStore(store, selectors.showCurrentTimeIndicator);
 
   // Feature hooks
@@ -51,7 +52,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     shouldAddPosition: isMultiDayEvent,
   });
 
-  const timeFormat = ampm ? 'hoursMinutes12h' : 'hoursMinutes24h';
+  const formatTime = useFormatTime();
 
   const { start, end } = React.useMemo(
     () => ({
@@ -171,9 +172,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                         shouldHideHour(hour) ? 'HiddenHourLabel' : undefined,
                       )}
                     >
-                      {hour === 0
-                        ? null
-                        : adapter.format(adapter.setHours(visibleDate, hour), timeFormat)}
+                      {hour === 0 ? null : formatTime(adapter.setHours(visibleDate, hour))}
                     </time>
                   </div>
                 ))}
