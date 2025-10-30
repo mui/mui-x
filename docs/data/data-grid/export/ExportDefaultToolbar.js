@@ -5,7 +5,7 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 export default function ExportDefaultToolbar() {
   const { data, loading } = useDemoData({
     dataSet: 'Commodity',
-    rowLength: 4,
+    rowLength: 50,
     maxColumns: 6,
   });
 
