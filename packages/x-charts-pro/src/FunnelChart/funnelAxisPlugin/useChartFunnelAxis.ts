@@ -57,7 +57,6 @@ export const useChartFunnelAxis: ChartPlugin<UseChartFunnelAxisSignature> = ({
         gap: gap ?? 0,
       },
       cartesianAxis: {
-        ...store.state.cartesianAxis,
         x: defaultizeXAxis(xAxis, dataset),
         y: defaultizeYAxis(yAxis, dataset),
       },

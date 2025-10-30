@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useEffectAfterFirstRender } from '@mui/x-internals/useEffectAfterFirstRender';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import ownerWindow from '@mui/utils/ownerWindow';
 import { useSelector } from '../../../store/useSelector';
@@ -21,7 +22,6 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
   // States only used for the initialization of the size.
   const [innerWidth, setInnerWidth] = React.useState(0);
   const [innerHeight, setInnerHeight] = React.useState(0);
-  const isFirstRender = React.useRef(true);
 
   const computeSize = React.useCallback(() => {
     const mainEl = svgRef?.current;
@@ -66,12 +66,7 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
     params.margin.bottom,
   ]);
 
-  React.useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
-
+  useEffectAfterFirstRender(() => {
     const width = params.width ?? store.state.dimensions.width;
     const height = params.height ?? store.state.dimensions.height;
     store.set('dimensions', {
@@ -132,13 +127,13 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
 
   useEnhancedEffect(() => {
     if (hasInSize) {
-      return () => {};
+      return () => { };
     }
     computeSize();
 
     const elementToObserve = svgRef.current;
     if (typeof ResizeObserver === 'undefined') {
-      return () => {};
+      return () => { };
     }
 
     let animationFrame: number;
