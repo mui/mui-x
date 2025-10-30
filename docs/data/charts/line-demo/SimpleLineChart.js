@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Box from '@mui/material/Box';
 import { LineChart } from '@mui/x-charts/LineChart';
 

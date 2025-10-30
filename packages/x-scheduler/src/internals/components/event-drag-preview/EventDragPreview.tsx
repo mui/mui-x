@@ -1,4 +1,3 @@
-import * as React from 'react';
 import clsx from 'clsx';
 import { Store, useStore } from '@base-ui-components/utils/store';
 import './EventDragPreview.css';
