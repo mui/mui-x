@@ -67,8 +67,8 @@ function MultiAxes() {
           },
         ]}
         yAxis={[
-          { id: 'leftAxis', width: 50 },
-          { id: 'rightAxis', position: 'right', width: 50 },
+          { id: 'leftAxis', width: 54 },
+          { id: 'rightAxis', position: 'right', width: 54 },
         ]}
         dataset={dataset}
       >
