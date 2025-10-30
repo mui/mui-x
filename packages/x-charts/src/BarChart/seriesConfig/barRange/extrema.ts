@@ -1,5 +1,5 @@
-import { CartesianExtremumGetter } from '../../internals/plugins/models/seriesConfig';
-import { findMinMax } from '../../internals/findMinMax';
+import { CartesianExtremumGetter } from '../../../internals/plugins/models/seriesConfig';
+import { findMinMax } from '../../../internals/findMinMax';
 
 const createResult = (data: any, direction: 'x' | 'y') => {
   if (direction === 'x') {

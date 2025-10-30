@@ -1,9 +1,9 @@
 import { warnOnce } from '@mui/x-internals/warning';
 import { DefaultizedProps } from '@mui/x-internals/types';
-import { ChartSeries } from '../../models/seriesType/config';
-import { SeriesId } from '../../models/seriesType/common';
-import { SeriesProcessor } from '../../internals/plugins/models';
-import { defaultizeValueFormatter } from '../../internals/defaultizeValueFormatter';
+import { ChartSeries } from '../../../models/seriesType/config';
+import { SeriesId } from '../../../models/seriesType/common';
+import { SeriesProcessor } from '../../../internals/plugins/models';
+import { defaultizeValueFormatter } from '../../../internals/defaultizeValueFormatter';
 
 const seriesProcessor: SeriesProcessor<'barRange'> = (params, dataset) => {
   const { seriesOrder, series } = params;

@@ -1,5 +1,5 @@
-import { getLabel } from '../../internals/getLabel';
-import type { AxisTooltipGetter, TooltipGetter } from '../../internals/plugins/models';
+import { getLabel } from '../../../internals/getLabel';
+import type { AxisTooltipGetter, TooltipGetter } from '../../../internals/plugins/models';
 
 const tooltipGetter: TooltipGetter<'barRange'> = (params) => {
   const { series, getColor, identifier } = params;

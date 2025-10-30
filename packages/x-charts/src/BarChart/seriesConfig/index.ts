@@ -3,7 +3,7 @@ import { getExtremumX, getExtremumY } from './bar/extremums';
 import {
   getExtremumX as getBarRangeExtremumX,
   getExtremumY as getBarRangeExtremumY,
-} from './barRangeExtrema';
+} from './barRange/barRangeExtrema';
 import seriesProcessor from './bar/seriesProcessor';
 import legendGetter from './bar/legend';
 import getColor from './bar/getColor';
@@ -12,9 +12,9 @@ import tooltipItemPositionGetter from './bar/tooltipPosition';
 import { getSeriesWithDefaultValues } from './bar/getSeriesWithDefaultValues';
 import barRangeTooltipGetter, {
   axisTooltipGetter as barRangeAxisTooltipGetter,
-} from './barRangeTooltip';
-import barRangeSeriesProcessor from './barRangeSeriesProcessor';
-import barRangeGetColor from './barRangeGetColor';
+} from './barRange/barRangeTooltip';
+import barRangeSeriesProcessor from './barRange/barRangeSeriesProcessor';
+import barRangeGetColor from './barRange/barRangeGetColor';
 
 export const barSeriesConfig: ChartSeriesTypeConfig<'bar'> = {
   seriesProcessor,
