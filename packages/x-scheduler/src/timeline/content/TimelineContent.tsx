@@ -3,7 +3,10 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { useStore } from '@base-ui-components/utils/store';
 import { Timeline as TimelinePrimitive } from '@mui/x-scheduler-headless/timeline';
-import { selectors } from '@mui/x-scheduler-headless/use-timeline';
+import {
+  schedulerOtherSelectors,
+  schedulerResourceSelectors,
+} from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useTimelineStoreContext } from '@mui/x-scheduler-headless/use-timeline-store-context';
 import { useEventOccurrencesGroupedByResource } from '@mui/x-scheduler-headless/use-event-occurrences-grouped-by-resource';
 import { useAdapter, diffIn, Adapter } from '@mui/x-scheduler-headless/use-adapter';
@@ -48,8 +51,8 @@ export const TimelineContent = React.forwardRef(function TimelineContent(
 
   const adapter = useAdapter();
   const store = useTimelineStoreContext();
-  const resources = useStore(store, selectors.processedResourceList);
-  const visibleDate = useStore(store, selectors.visibleDate);
+  const resources = useStore(store, schedulerResourceSelectors.processedResourceList);
+  const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
   const view = useStore(store, timelineViewSelectors.view);
 
   const start = React.useMemo(

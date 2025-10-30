@@ -8,7 +8,7 @@ import { Form } from '@base-ui-components/react/form';
 import { Field } from '@base-ui-components/react/field';
 import { RadioGroup } from '@base-ui-components/react/radio-group';
 import { RecurringEventUpdateScope } from '@mui/x-scheduler-headless/models';
-import { selectors } from '@mui/x-scheduler-headless/use-event-calendar';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { ScopePopoverProps } from './ScopeDialog.types';
 import { useTranslations } from '../../utils/TranslationsContext';
@@ -19,7 +19,7 @@ export const RecurringScopeDialog = React.forwardRef<HTMLDivElement, ScopePopove
     const { className, containerRef, ...other } = props;
     const translations = useTranslations();
     const store = useSchedulerStoreContext();
-    const open = useStore(store, selectors.isScopeDialogOpen);
+    const open = useStore(store, schedulerOtherSelectors.isScopeDialogOpen);
 
     const handleOpenChange = React.useCallback(
       (next: boolean) => {

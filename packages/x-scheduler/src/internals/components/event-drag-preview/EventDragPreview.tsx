@@ -2,8 +2,7 @@ import clsx from 'clsx';
 import { Store, useStore } from '@base-ui-components/utils/store';
 import './EventDragPreview.css';
 import { RenderDragPreviewParameters } from '@mui/x-scheduler-headless/models';
-// TODO: Expose Scheduler selectors from the headless package
-import { selectors } from '@mui/x-scheduler-headless/use-event-calendar';
+import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { getColorClassName } from '../../utils/color-utils';
 
@@ -16,7 +15,7 @@ export function EventDragPreview(props: RenderDragPreviewParameters) {
   const store = useSchedulerStoreContext(true);
   const color = useStore(
     store ?? fakeStore,
-    store ? selectors.eventColor : () => 'jade' as const,
+    store ? schedulerEventSelectors.color : () => 'jade' as const,
     props.data.id,
   );
 

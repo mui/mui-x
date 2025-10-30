@@ -11,7 +11,10 @@ import {
 } from '@mui/x-scheduler-headless/constants';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { selectors } from '@mui/x-scheduler-headless/use-event-calendar';
+import {
+  schedulerEventSelectors,
+  schedulerOtherSelectors,
+} from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useAdapter, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-timeline-position';
@@ -102,7 +105,7 @@ function ColumnInteractiveLayer({
   };
 
   const handleDoubleClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (!selectors.canCreateNewEvent(store.state)) {
+    if (!schedulerEventSelectors.canCreateNewEvent(store.state)) {
       return;
     }
 
@@ -147,7 +150,7 @@ function ColumnInteractiveLayer({
 
 function TimeGridCurrentTimeLabel() {
   const store = useEventCalendarStoreContext();
-  const now = useStore(store, selectors.nowUpdatedEveryMinute);
+  const now = useStore(store, schedulerOtherSelectors.nowUpdatedEveryMinute);
   const formatTime = useFormatTime();
 
   const currentTimeLabel = React.useMemo(() => formatTime(now), [now, formatTime]);
