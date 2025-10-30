@@ -2,14 +2,13 @@
 import * as React from 'react';
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import {
-  SchedulerProcessedEvent,
+  SchedulerEvent,
   CalendarOccurrencePlaceholder,
   CalendarOccurrencePlaceholderExternalDrag,
   CalendarOccurrencePlaceholderInternalDragOrResize,
   EventSurfaceType,
   CalendarEventUpdatedProperties,
   SchedulerValidDate,
-  SchedulerEvent,
 } from '../models';
 import {
   EventDropData,
@@ -127,7 +126,7 @@ export namespace useDropTarget {
     /**
      * Add properties to the event dropped in the element before storing it in the store.
      */
-    addPropertiesToDroppedEvent?: () => Partial<SchedulerProcessedEvent>;
+    addPropertiesToDroppedEvent?: () => Partial<SchedulerEvent>;
   }
 
   export type CreateDropData = (
@@ -149,7 +148,7 @@ export namespace useDropTarget {
 async function applyInternalDragOrResizeOccurrencePlaceholder(
   store: SchedulerStoreInContext<any, any>,
   placeholder: CalendarOccurrencePlaceholderInternalDragOrResize,
-  addPropertiesToDroppedEvent?: () => Partial<SchedulerProcessedEvent>,
+  addPropertiesToDroppedEvent?: () => Partial<SchedulerEvent>,
 ): Promise<void> {
   // TODO: Try to do a single state update.
   store.setOccurrencePlaceholder(null);
@@ -180,7 +179,7 @@ async function applyInternalDragOrResizeOccurrencePlaceholder(
 function applyExternalDragOccurrencePlaceholder(
   store: SchedulerStoreInContext<any, any>,
   placeholder: CalendarOccurrencePlaceholderExternalDrag,
-  addPropertiesToDroppedEvent?: () => Partial<SchedulerProcessedEvent>,
+  addPropertiesToDroppedEvent?: () => Partial<SchedulerEvent>,
 ) {
   const event: SchedulerEvent = {
     start: placeholder.start,

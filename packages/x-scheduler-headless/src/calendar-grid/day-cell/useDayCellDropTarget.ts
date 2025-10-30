@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
 import { useAdapter, diffIn } from '../../use-adapter';
-import { SchedulerProcessedEvent, SchedulerValidDate } from '../../models';
+import { SchedulerEvent, SchedulerValidDate } from '../../models';
 import { mergeDateAndTime } from '../../utils/date-utils';
 import { useDropTarget } from '../../utils/useDropTarget';
 import { EVENT_CREATION_DEFAULT_LENGTH_MINUTE } from '../../constants';
@@ -121,6 +121,6 @@ export namespace useDayCellDropTarget {
     /**
      * Add properties to the event dropped in the cell before storing it in the store.
      */
-    addPropertiesToDroppedEvent?: () => Partial<SchedulerProcessedEvent>;
+    addPropertiesToDroppedEvent?: () => Partial<SchedulerEvent>;
   }
 }
