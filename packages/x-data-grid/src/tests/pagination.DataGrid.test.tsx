@@ -609,7 +609,7 @@ describe('<DataGrid /> - Pagination', () => {
     });
   });
 
-  it('should reset page to 0 and scroll to top if sort or filter is applied', () => {
+  it('should reset page to 0 and scroll to top if sort or filter is applied', async () => {
     render(
       <BaselineTestCase
         initialState={{ pagination: { paginationModel: { page: 0, pageSize: 50 }, rowCount: 0 } }}
@@ -630,7 +630,9 @@ describe('<DataGrid /> - Pagination', () => {
       apiRef.current!.sortColumn('id', 'asc');
     });
     // page is reset to 0 after sorting
-    expect(apiRef.current!.state.pagination.paginationModel.page).to.equal(0);
+    await waitFor(() => {
+      expect(apiRef.current!.state.pagination.paginationModel.page).to.equal(0);
+    });
     expect(apiRef.current!.getScrollPosition().top).to.equal(0);
 
     // scroll but stay on the same page
@@ -642,7 +644,9 @@ describe('<DataGrid /> - Pagination', () => {
     act(() => {
       apiRef.current!.sortColumn('id', 'desc');
     });
-    expect(apiRef.current!.getScrollPosition().top).to.equal(0);
+    await waitFor(() => {
+      expect(apiRef.current!.getScrollPosition().top).to.equal(0);
+    });
 
     // move to the next page again and scroll
     act(() => {
@@ -664,7 +668,9 @@ describe('<DataGrid /> - Pagination', () => {
     });
 
     // page and scroll position are reset filtering
-    expect(apiRef.current!.state.pagination.paginationModel.page).to.equal(0);
+    await waitFor(() => {
+      expect(apiRef.current!.state.pagination.paginationModel.page).to.equal(0);
+    });
     expect(apiRef.current!.getScrollPosition().top).to.equal(0);
   });
 
