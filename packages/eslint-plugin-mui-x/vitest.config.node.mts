@@ -1,7 +1,3 @@
-import { defineConfig } from 'vitest/config';
+import { xVitestConfig } from '../../vitest.shared.mts';
 
-export default defineConfig({
-  test: {
-    environment: 'node',
-  },
-});
+export default xVitestConfig('node', { url: import.meta.url });
