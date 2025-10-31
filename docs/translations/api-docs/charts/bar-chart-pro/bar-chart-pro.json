@@ -5,9 +5,6 @@
       "description": "The configuration of axes highlight. Default is set to &#39;band&#39; in the bar direction. Depends on <code>layout</code> prop.",
       "seeMoreText": "See {{link}} for more details."
     },
-    "barLabel": {
-      "description": "If provided, the function will be used to format the label of the bar. It can be set to &#39;value&#39; to display the current value."
-    },
     "borderRadius": { "description": "Defines the border radius of the bar element." },
     "brushConfig": { "description": "Configuration for the brush interaction." },
     "colors": { "description": "Color palette used to colorize multiple series." },
@@ -85,7 +82,7 @@
       }
     },
     "series": {
-      "description": "The series to display in the bar chart. An array of <a href='/x/api/charts/bar-series/'>BarSeries</a> objects."
+      "description": "The series to display in the bar chart. An array of [[BarSeries]] objects."
     },
     "showToolbar": { "description": "If true, shows the default chart toolbar." },
     "skipAnimation": {
@@ -97,10 +94,10 @@
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
     },
     "xAxis": {
-      "description": "The configuration of the x-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."
+      "description": "The configuration of the x-axes. If not provided, a default axis config is used. An array of [[AxisConfig]] objects."
     },
     "yAxis": {
-      "description": "The configuration of the y-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."
+      "description": "The configuration of the y-axes. If not provided, a default axis config is used. An array of [[AxisConfig]] objects."
     },
     "zAxis": { "description": "The configuration of the z-axes." },
     "zoomData": { "description": "The list of zoom data related to each axis." },

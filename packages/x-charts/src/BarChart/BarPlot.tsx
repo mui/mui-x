@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { barElementClasses } from './barElementClasses';
 import { BarElement, BarElementSlotProps, BarElementSlots } from './BarElement';
-import { BarItemIdentifier } from '../models';
+import { BarItemIdentifier, BarValueType } from '../models';
 import { useDrawingArea, useXAxes, useYAxes } from '../hooks';
 import { BarClipPath } from './BarClipPath';
 import { BarLabelItemProps, BarLabelSlotProps, BarLabelSlots } from './BarLabel/BarLabelItem';
@@ -18,7 +18,7 @@ export interface BarPlotSlots extends BarElementSlots, BarLabelSlots {}
 
 export interface BarPlotSlotProps extends BarElementSlotProps, BarLabelSlotProps {}
 
-export interface BarPlotProps extends Pick<BarLabelItemProps, 'barLabel'> {
+export interface BarPlotProps extends Pick<BarLabelItemProps<BarValueType>, 'barLabel'> {
   /**
    * If `true`, animations are skipped.
    * @default undefined

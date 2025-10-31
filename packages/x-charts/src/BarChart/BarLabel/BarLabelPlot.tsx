@@ -1,18 +1,37 @@
 import * as React from 'react';
-import type { ProcessedBarSeriesData } from '../types';
+import { AnimationData } from '../types';
 import { BarLabelItem, BarLabelItemProps } from './BarLabelItem';
 import { useUtilityClasses } from '../barClasses';
+import type { SeriesId } from '../../models/seriesType/common';
+import { BarValueType } from '../../models/seriesType/bar';
+import { BarRangeValueType } from '../../models/seriesType/barRange';
 
-type BarLabelPlotProps = {
-  bars: ProcessedBarSeriesData[];
+interface BarLabelPlotProps<
+  V extends BarValueType | BarRangeValueType | null = BarValueType | null,
+> {
+  bars: ProcessedBarLabelSeriesData<V>[];
   skipAnimation?: boolean;
-  barLabel?: BarLabelItemProps['barLabel'];
-};
+  barLabel?: BarLabelItemProps<V | null>['barLabel'];
+}
+
+export interface ProcessedBarLabelSeriesData<V> {
+  seriesId: SeriesId;
+  data: ProcessedBarLabelData<V>[];
+}
+
+export interface ProcessedBarLabelData<V> extends AnimationData {
+  seriesId: SeriesId;
+  dataIndex: number;
+  color: string;
+  value: V;
+}
 
 /**
  * @ignore - internal component.
  */
-function BarLabelPlot(props: BarLabelPlotProps) {
+function BarLabelPlot<V extends BarValueType | BarRangeValueType | null>(
+  props: BarLabelPlotProps<V | null>,
+) {
   const { bars, skipAnimation, ...other } = props;
   const classes = useUtilityClasses();
 

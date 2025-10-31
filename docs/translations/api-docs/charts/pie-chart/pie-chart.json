@@ -31,7 +31,7 @@
     },
     "onItemClick": { "description": "Callback fired when a pie arc is clicked." },
     "series": {
-      "description": "The series to display in the pie chart. An array of <a href='/x/api/charts/pie-series/'>PieSeries</a> objects."
+      "description": "The series to display in the pie chart. An array of [[PieSeries]] objects."
     },
     "showToolbar": { "description": "If true, shows the default chart toolbar." },
     "skipAnimation": {
