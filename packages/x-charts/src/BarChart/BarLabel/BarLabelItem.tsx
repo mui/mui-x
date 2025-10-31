@@ -22,7 +22,10 @@ export interface BarLabelSlotProps {
   barLabel?: SlotComponentPropsFromProps<BarLabelProps, {}, BarLabelOwnerState>;
 }
 
-export type BarLabelItemProps<V> = Omit<BarLabelOwnerState, 'isFaded' | 'isHighlighted'> &
+export type BarLabelItemProps<V extends BarValueType | BarRangeValueType> = Omit<
+  BarLabelOwnerState,
+  'isFaded' | 'isHighlighted'
+> &
   Pick<BarLabelProps, 'style'> & {
     /**
      * The props used for each component slot.
@@ -77,7 +80,9 @@ export type BarLabelItemProps<V> = Omit<BarLabelOwnerState, 'isFaded' | 'isHighl
      * @param {BarLabelContext} context data about the bar.
      * @returns {string} The formatted label.
      */
-    barLabel?: 'value' | ((item: BarItem, context: BarLabelContext) => string | null | undefined);
+    barLabel?:
+      | 'value'
+      | ((item: BarItem<V>, context: BarLabelContext) => string | null | undefined);
   };
 
 /**

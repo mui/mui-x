@@ -3,14 +3,14 @@ import { BarLabelFunction } from './BarLabel.types';
 import { BarRangeValueType } from '../../models/seriesType/barRange';
 import { BarValueType } from '../../models/seriesType/bar';
 
-export const getBarLabel = (options: {
-  barLabel: 'value' | BarLabelFunction;
+export function getBarLabel<V extends BarValueType | BarRangeValueType = BarValueType>(options: {
+  barLabel: 'value' | BarLabelFunction<V>;
   value: BarValueType | BarRangeValueType;
   dataIndex: number;
   seriesId: SeriesId;
   height: number;
   width: number;
-}): string | null | undefined => {
+}): string | null | undefined {
   const { barLabel, value, dataIndex, seriesId, height, width } = options;
 
   if (barLabel === 'value') {
@@ -29,4 +29,4 @@ export const getBarLabel = (options: {
 
   // FIXME:
   return barLabel({ seriesId, dataIndex, value }, { bar: { height, width } });
-};
+}

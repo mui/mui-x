@@ -11,12 +11,13 @@ import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
 import { useUtilityClasses } from './barClasses';
 import { useBarRangePlotData } from './useBarRangePlotData';
+import { BarRangeValueType } from '../models/seriesType/barRange';
 
 export interface BarRangePlotSlots extends BarElementSlots, BarLabelSlots {}
 
 export interface BarRangePlotSlotProps extends BarElementSlotProps, BarLabelSlotProps {}
 
-export interface BarRangePlotProps extends Pick<BarLabelItemProps, 'barLabel'> {
+export interface BarRangePlotProps extends Pick<BarLabelItemProps<BarRangeValueType>, 'barLabel'> {
   /**
    * If `true`, animations are skipped.
    * @default undefined

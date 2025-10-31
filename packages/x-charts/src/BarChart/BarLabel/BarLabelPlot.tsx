@@ -6,23 +6,22 @@ import type { SeriesId } from '../../models/seriesType/common';
 import { BarValueType } from '../../models/seriesType/bar';
 import { BarRangeValueType } from '../../models/seriesType/barRange';
 
-interface BarLabelPlotProps<V> {
-  bars: ProcessedBarSeriesData<V>[];
+interface BarLabelPlotProps<V extends BarValueType | BarRangeValueType = BarValueType> {
+  bars: ProcessedBarLabelSeriesData<V>[];
   skipAnimation?: boolean;
   barLabel?: BarLabelItemProps<V>['barLabel'];
 }
 
-export interface ProcessedBarSeriesData<V> {
+export interface ProcessedBarLabelSeriesData<V> {
   seriesId: SeriesId;
-  data: ProcessedBarData<V>[];
+  data: ProcessedBarLabelData<V>[];
 }
 
-export interface ProcessedBarData<V> extends AnimationData {
+export interface ProcessedBarLabelData<V> extends AnimationData {
   seriesId: SeriesId;
   dataIndex: number;
   color: string;
   value: V;
-  maskId: string;
 }
 
 /**
