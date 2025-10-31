@@ -39,6 +39,10 @@ const chartsApiPages: MuiPage[] = [
     title: 'BarPlot',
   },
   {
+    pathname: '/x/api/charts/bar-range-plot',
+    title: 'BarRangePlot',
+  },
+  {
     pathname: '/x/api/charts/chart-container',
     title: 'ChartContainer',
   },

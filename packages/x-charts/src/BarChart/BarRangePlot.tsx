@@ -47,8 +47,8 @@ export interface BarRangePlotProps extends Pick<BarLabelItemProps, 'barLabel'> {
   slots?: BarRangePlotSlots;
 }
 
-const BarPlotRoot = styled('g', {
-  name: 'MuiBarPlot',
+const BarRangePlotRoot = styled('g', {
+  name: 'MuiBarRangePlot',
   slot: 'Root',
 })({
   [`& .${barElementClasses.root}`]: {
@@ -61,11 +61,10 @@ const BarPlotRoot = styled('g', {
  *
  * - [Bars](https://mui.com/x/react-charts/bars/)
  * - [Bar demonstration](https://mui.com/x/react-charts/bar-demo/)
- * - [Stacking](https://mui.com/x/react-charts/stacking/)
  *
  * API:
  *
- * - [BarPlot API](https://mui.com/x/api/charts/bar-plot/)
+ * - [BarRangePlot API](https://mui.com/x/api/charts/bar-range-plot/)
  */
 function BarRangePlot(props: BarRangePlotProps) {
   const { skipAnimation: inSkipAnimation, onItemClick, borderRadius, barLabel, ...other } = props;
@@ -78,7 +77,7 @@ function BarRangePlot(props: BarRangePlotProps) {
   const classes = useUtilityClasses();
 
   return (
-    <BarPlotRoot className={classes.root}>
+    <BarRangePlotRoot className={classes.root}>
       {completedData.map(({ seriesId, data }) => {
         return (
           <g key={seriesId} data-series={seriesId} className={classes.series}>
@@ -116,7 +115,7 @@ function BarRangePlot(props: BarRangePlotProps) {
           {...other}
         />
       )}
-    </BarPlotRoot>
+    </BarRangePlotRoot>
   );
 }
 
