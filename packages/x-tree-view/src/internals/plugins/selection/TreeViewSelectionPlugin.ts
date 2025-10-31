@@ -41,7 +41,7 @@ export class TreeViewSelectionPlugin<Multiple extends boolean | undefined> {
     } = this.store.parameters;
 
     const oldModel = selectionSelectors.selectedItemsRaw(this.store.state);
-    let cleanModel: string[] | string | null;
+    let cleanModel: TreeViewSelectionValue<Multiple>;
     const isMultiSelectEnabled = selectionSelectors.isMultiSelectEnabled(this.store.state);
 
     if (
@@ -54,9 +54,9 @@ export class TreeViewSelectionPlugin<Multiple extends boolean | undefined> {
         newModel: newModel as string[],
         oldModel: oldModel as string[],
         additionalItemsToPropagate,
-      });
+      }) as TreeViewSelectionValue<Multiple>;
     } else {
-      cleanModel = newModel;
+      cleanModel = newModel as TreeViewSelectionValue<Multiple>;
     }
 
     if (onItemSelectionToggle) {
