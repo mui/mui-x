@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { useStore } from '@base-ui-components/utils/store';
 import { Repeat } from 'lucide-react';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
-import { selectors } from '@mui/x-scheduler-headless/use-event-calendar';
+import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { eventCalendarEventSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
@@ -31,7 +31,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
     occurrence.id,
     'time-grid',
   );
-  const color = useStore(store, selectors.eventColor, occurrence.id);
+  const color = useStore(store, schedulerEventSelectors.color, occurrence.id);
   const formatTime = useFormatTime();
 
   const durationMs =

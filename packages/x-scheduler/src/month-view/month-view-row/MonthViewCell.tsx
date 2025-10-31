@@ -10,7 +10,10 @@ import {
   eventCalendarOccurrencePlaceholderSelectors,
   eventCalendarViewSelectors,
 } from '@mui/x-scheduler-headless/event-calendar-selectors';
-import { selectors } from '@mui/x-scheduler-headless/use-event-calendar';
+import {
+  schedulerEventSelectors,
+  schedulerOtherSelectors,
+} from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 import { DayGridEvent } from '../../internals/components/event/day-grid-event/DayGridEvent';
 import { useTranslations } from '../../internals/utils/TranslationsContext';
@@ -33,7 +36,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
 
   // Selector hooks
   const hasDayView = useStore(store, eventCalendarViewSelectors.hasDayView);
-  const visibleDate = useStore(store, selectors.visibleDate);
+  const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
   const isCreatingAnEvent = useStore(
     store,
     eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell,
@@ -67,7 +70,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const rowCount = 1 + maxEvents;
 
   const handleDoubleClick = () => {
-    if (!selectors.canCreateNewEvent(store.state)) {
+    if (!schedulerEventSelectors.canCreateNewEvent(store.state)) {
       return;
     }
 

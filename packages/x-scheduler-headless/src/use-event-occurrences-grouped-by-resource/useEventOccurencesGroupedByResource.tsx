@@ -9,7 +9,7 @@ import {
 import { getOccurrencesFromEvents } from '../utils/event-utils';
 import { useAdapter, Adapter } from '../use-adapter';
 import { useTimelineStoreContext } from '../use-timeline-store-context';
-import { selectors } from '../use-timeline';
+import { schedulerEventSelectors, schedulerResourceSelectors } from '../scheduler-selectors';
 
 export function useEventOccurrencesGroupedByResource(
   parameters: useEventOccurrencesGroupedByResource.Parameters,
@@ -17,9 +17,9 @@ export function useEventOccurrencesGroupedByResource(
   const { start, end } = parameters;
   const adapter = useAdapter();
   const store = useTimelineStoreContext();
-  const events = useStore(store, selectors.processedEventList);
-  const visibleResources = useStore(store, selectors.visibleResourcesMap);
-  const resources = useStore(store, selectors.processedResourceList);
+  const events = useStore(store, schedulerEventSelectors.processedEventList);
+  const visibleResources = useStore(store, schedulerResourceSelectors.visibleMap);
+  const resources = useStore(store, schedulerResourceSelectors.processedResourceList);
 
   return React.useMemo(
     () =>

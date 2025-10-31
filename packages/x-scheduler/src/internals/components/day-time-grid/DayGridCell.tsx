@@ -6,7 +6,7 @@ import { useAdapter, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
-import { selectors } from '@mui/x-scheduler-headless/use-event-calendar';
+import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { EventPopoverTrigger } from '../event-popover';
 import { DayGridEvent } from '../event';
 import { useEventPopoverContext } from '../event-popover/EventPopover';
@@ -36,7 +36,7 @@ export function DayGridCell(props: DayGridCellProps) {
   const { open: startEditing } = useEventPopoverContext();
 
   const handleDoubleClick = () => {
-    if (!selectors.canCreateNewEvent(store.state)) {
+    if (!schedulerEventSelectors.canCreateNewEvent(store.state)) {
       return;
     }
 
