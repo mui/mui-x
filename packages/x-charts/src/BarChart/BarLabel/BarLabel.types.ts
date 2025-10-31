@@ -14,7 +14,7 @@ export interface BarLabelOwnerState {
   classes?: Partial<BarLabelClasses>;
 }
 
-export type BarItem<V extends BarValueType | BarRangeValueType = BarValueType> = {
+export type BarItem<V extends BarValueType | BarRangeValueType | null = BarValueType | null> = {
   /**
    * The series id of the bar.
    */

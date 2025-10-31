@@ -6,10 +6,12 @@ import type { SeriesId } from '../../models/seriesType/common';
 import { BarValueType } from '../../models/seriesType/bar';
 import { BarRangeValueType } from '../../models/seriesType/barRange';
 
-interface BarLabelPlotProps<V extends BarValueType | BarRangeValueType | null = BarValueType> {
+interface BarLabelPlotProps<
+  V extends BarValueType | BarRangeValueType | null = BarValueType | null,
+> {
   bars: ProcessedBarLabelSeriesData<V>[];
   skipAnimation?: boolean;
-  barLabel?: BarLabelItemProps<V>['barLabel'];
+  barLabel?: BarLabelItemProps<V | null>['barLabel'];
 }
 
 export interface ProcessedBarLabelSeriesData<V> {
@@ -28,7 +30,7 @@ export interface ProcessedBarLabelData<V> extends AnimationData {
  * @ignore - internal component.
  */
 function BarLabelPlot<V extends BarValueType | BarRangeValueType | null>(
-  props: BarLabelPlotProps<V>,
+  props: BarLabelPlotProps<V | null>,
 ) {
   const { bars, skipAnimation, ...other } = props;
   const classes = useUtilityClasses();

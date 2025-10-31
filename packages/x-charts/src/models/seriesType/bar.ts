@@ -8,17 +8,17 @@ import {
   SeriesId,
 } from './common';
 
-export type BarValueType = number | null;
+export type BarValueType = number;
 
 export interface BarSeriesType
-  extends CommonSeriesType<BarValueType>,
+  extends CommonSeriesType<BarValueType | null>,
     CartesianSeriesType,
     StackableSeriesType {
   type: 'bar';
   /**
    * Data associated to each bar.
    */
-  data?: ReadonlyArray<BarValueType>;
+  data?: ReadonlyArray<BarValueType | null>;
   /**
    * The key used to retrieve data from the dataset.
    */
