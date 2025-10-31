@@ -8,7 +8,12 @@
     "arcLabelRadius": {
       "description": "The radius between circle center and the arc label.<br />Can be a number (in px) or a string with a percentage such as &#39;50%&#39;.<br />The &#39;100%&#39; is the maximal radius that fit into the drawing area."
     },
-    "color": { "description": "Color to use when displaying the series." },
+    "color": {
+      "description": "Color to use when displaying the series.<br />If <code>colorGetter</code> is provided, it will be used to get the color for each data point instead.<br />Otherwise, this color will be used for all data points in the series."
+    },
+    "colorGetter": {
+      "description": "A function that returns a color based on the value and/or the data index of a point.<br />The returned color is used when displaying the specific data point, e.g., a marker in a line chart.<br />When the color of the entire series is required, e.g., in legends, the <code>color</code> property is used instead."
+    },
     "cornerRadius": {
       "description": "The radius applied to arc corners (similar to border radius)."
     },

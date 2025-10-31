@@ -5,6 +5,7 @@ import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
 import { SeriesId } from '../../models/seriesType/common';
 import { UseChartPolarAxisSignature } from '../../internals/plugins/featurePlugins/useChartPolarAxis';
 import { useChartContext } from '../../context/ChartProvider/useChartContext';
+import { getSeriesColorFn } from '../../internals/getSeriesColorFn';
 
 /**
  * This hook provides all the data needed to display radar series.
@@ -28,6 +29,7 @@ export function useRadarSeriesData(querySeriesId?: SeriesId) {
     const seriesId = series.id;
     const isSeriesHighlighted = isItemHighlighted({ seriesId });
     const isSeriesFaded = !isSeriesHighlighted && isItemFaded({ seriesId });
+    const getColor = getSeriesColorFn(series);
 
     return {
       ...series,
@@ -47,6 +49,8 @@ export function useRadarSeriesData(querySeriesId?: SeriesId) {
           isItemHighlighted: highlighted,
           isItemFaded: faded,
           dataIndex,
+          value,
+          color: getColor({ value, dataIndex }),
         };
       }),
     };
