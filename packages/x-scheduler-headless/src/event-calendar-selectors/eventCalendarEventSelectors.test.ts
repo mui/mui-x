@@ -144,7 +144,7 @@ describe('eventCalendarEventSelectors', () => {
       expect(eventCalendarEventSelectors.isResizable(state, 'event-1', 'day-grid')).to.equal(false);
     });
 
-    it.only('should return true when areEventsResizable is true and the event is not read-only', () => {
+    it('should return true when areEventsResizable is true and the event is not read-only', () => {
       const state = getEventCalendarStateFromParameters({
         events: [SINGLE_DAY_EVENT],
         view: 'week',
