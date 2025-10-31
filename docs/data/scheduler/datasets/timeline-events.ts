@@ -1,11 +1,11 @@
 import { DateTime } from 'luxon';
-import { CalendarEvent, CalendarResource } from '@mui/x-scheduler/models';
+import { SchedulerEvent, CalendarResource } from '@mui/x-scheduler/models';
 
 // Timeline starts July 1, 2025
 export const defaultVisibleDate = DateTime.fromISO('2025-07-01T00:00:00');
 const START = defaultVisibleDate.startOf('week');
 
-export const initialEvents: CalendarEvent[] = [
+export const initialEvents: SchedulerEvent[] = [
   // Project
   {
     id: 'meeting-1',

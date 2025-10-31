@@ -1,6 +1,6 @@
-import { adapter } from 'test/utils/scheduler';
-import { eventCalendarOccurrencePlaceholderSelectors } from './eventCalendarOccurrencePlaceholderSelectors';
+import { adapter, createOccurrenceFromEvent } from 'test/utils/scheduler';
 import { EventCalendarState as State } from '../use-event-calendar/EventCalendarStore.types';
+import { eventCalendarOccurrencePlaceholderSelectors } from './eventCalendarOccurrencePlaceholderSelectors';
 
 describe('EventCalendarStore.selectors', () => {
   const baseState = (overrides: Partial<State> = {}) =>
@@ -58,13 +58,12 @@ describe('EventCalendarStore.selectors', () => {
           surfaceType: 'day-grid',
           start: adapter.startOfDay(day),
           end: adapter.endOfDay(day),
-          originalOccurrence: {
-            key: 'event-id-key',
+          originalOccurrence: createOccurrenceFromEvent({
             id: 'event-id',
             title: 'Event',
             start: adapter.startOfDay(day),
             end: adapter.endOfDay(day),
-          },
+          }),
         },
       });
       expect(eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell(state, day)).to.equal(
@@ -137,13 +136,12 @@ describe('EventCalendarStore.selectors', () => {
           surfaceType: 'time-grid',
           start: adapter.startOfDay(day),
           end: adapter.endOfDay(day),
-          originalOccurrence: {
+          originalOccurrence: createOccurrenceFromEvent({
             id: 'event-id',
-            key: 'event-id-key',
             title: 'Event',
             start: adapter.startOfDay(day),
             end: adapter.endOfDay(day),
-          },
+          }),
         },
       });
       expect(

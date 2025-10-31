@@ -1,21 +1,16 @@
-import { adapter } from 'test/utils/scheduler';
-import { CalendarEventOccurrence } from '@mui/x-scheduler-headless/models';
+import { adapter, createOccurrenceFromEvent } from 'test/utils/scheduler';
 import { getDaysTheOccurrenceIsVisibleOn } from './event-utils';
 import { processDate } from '../process-date';
 
 describe('event-utils', () => {
-  const createEventOccurrence = (
-    id: string,
-    start: string,
-    end: string,
-  ): CalendarEventOccurrence => ({
-    id,
-    key: id,
-    start: adapter.date(start),
-    end: adapter.date(end),
-    title: `Event ${id}`,
-    allDay: true,
-  });
+  const createEventOccurrence = (id: string, start: string, end: string) =>
+    createOccurrenceFromEvent({
+      id,
+      start: adapter.date(start),
+      end: adapter.date(end),
+      title: `Event ${id}`,
+      allDay: true,
+    });
 
   describe('getDaysTheOccurrenceIsVisibleOn', () => {
     const days = [

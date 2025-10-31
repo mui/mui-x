@@ -63,7 +63,7 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
   const getSharedDragData: CalendarGridTimeEventContext['getSharedDragData'] = useEventCallback(
     (input) => {
       const offsetBeforeColumnStart = Math.max(
-        adapter.toJsDate(columnStart).getTime() - adapter.toJsDate(start).getTime(),
+        adapter.toJsDate(columnStart).getTime() - start.timestamp,
         0,
       );
 
@@ -82,8 +82,8 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
         eventId,
         occurrenceKey,
         originalOccurrence,
-        start,
-        end,
+        start: start.value,
+        end: end.value,
         initialCursorPositionInEventMs: offsetBeforeColumnStart + offsetInsideColumn,
       };
     },

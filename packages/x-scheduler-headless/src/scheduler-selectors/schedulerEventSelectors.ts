@@ -1,5 +1,5 @@
 import { createSelector, createSelectorMemoized } from '@base-ui-components/utils/store';
-import { CalendarEvent, CalendarEventId } from '../models';
+import { SchedulerEvent, CalendarEventId } from '../models';
 import { SchedulerState as State } from '../utils/SchedulerStore/SchedulerStore.types';
 import { schedulerResourceSelectors } from './schedulerResourceSelectors';
 
@@ -45,7 +45,7 @@ export const schedulerEventSelectors = {
         return () => true;
       }
 
-      return (property: keyof CalendarEvent) => {
+      return (property: keyof SchedulerEvent) => {
         if (eventModelStructure?.[property] && !eventModelStructure?.[property].setter) {
           return true;
         }

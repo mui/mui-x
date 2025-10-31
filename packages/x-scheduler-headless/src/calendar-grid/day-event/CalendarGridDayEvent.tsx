@@ -64,11 +64,11 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
   // Feature hooks
   const getDraggedDay = useEventCallback((input: { clientX: number }) => {
     if (!ref.current) {
-      return start;
+      return start.value;
     }
 
-    const eventStartInRow = adapter.isBefore(start, rowStart) ? rowStart : start;
-    const eventEndInRow = adapter.isAfter(end, rowEnd) ? rowEnd : end;
+    const eventStartInRow = adapter.isBefore(start.value, rowStart) ? rowStart : start.value;
+    const eventEndInRow = adapter.isAfter(end.value, rowEnd) ? rowEnd : end.value;
     const eventDayLengthInRow = diffIn(adapter, eventEndInRow, eventStartInRow, 'days') + 1;
     const clientX = input.clientX;
     const elementPosition = ref.current.getBoundingClientRect();
@@ -91,8 +91,8 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
       eventId,
       occurrenceKey,
       originalOccurrence,
-      start,
-      end,
+      start: start.value,
+      end: end.value,
     }),
   );
 

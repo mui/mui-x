@@ -1,6 +1,6 @@
 export * from './translations';
 export type {
-  CalendarEvent,
+  SchedulerEvent,
   CalendarResource,
   CalendarEventColor,
   SchedulerEventModelStructure,

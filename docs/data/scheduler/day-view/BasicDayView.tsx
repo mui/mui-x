@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { CalendarEvent } from '@mui/x-scheduler/models';
+import { SchedulerEvent } from '@mui/x-scheduler/models';
 import { StandaloneDayView } from '@mui/x-scheduler/day-view';
 import {
   initialEvents,
@@ -8,7 +8,7 @@ import {
 } from '../datasets/personal-agenda';
 
 export default function BasicDayView() {
-  const [events, setEvents] = React.useState<CalendarEvent[]>(initialEvents);
+  const [events, setEvents] = React.useState<SchedulerEvent[]>(initialEvents);
 
   return (
     <div style={{ height: '500px', width: '100%' }}>

@@ -1,6 +1,11 @@
 import { spy } from 'sinon';
 import { adapter } from 'test/utils/scheduler';
-import { SchedulerEventModelStructure, SchedulerValidDate } from '@mui/x-scheduler-headless/models';
+import {
+  SchedulerEvent,
+  SchedulerEventModelStructure,
+  SchedulerValidDate,
+} from '@mui/x-scheduler-headless/models';
+import { processDate } from '@mui/x-scheduler-headless/process-date';
 import { buildEvent, storeClasses, getIds } from './utils';
 import { schedulerEventSelectors } from '../../../scheduler-selectors';
 
@@ -63,8 +68,8 @@ storeClasses.forEach((storeClass) => {
         expect(event).to.deep.contain({
           id: '1',
           title: 'Event 1',
-          start: adapter.date('2025-07-01T09:00:00.000+00:00'),
-          end: adapter.date('2025-07-01T10:00:00.000+00:00'),
+          start: processDate(adapter.date('2025-07-01T09:00:00.000+00:00'), adapter),
+          end: processDate(adapter.date('2025-07-01T10:00:00.000+00:00'), adapter),
           allDay: false,
         });
       });
@@ -327,11 +332,14 @@ storeClasses.forEach((storeClass) => {
           { description: 'New event description', allDay: true },
         );
 
-        const created = store.createEvent(newEvent);
+        store.createEvent(newEvent);
 
+        expect(onEventsChange.calledOnce).to.equal(true);
+        const created = onEventsChange.lastCall.firstArg.find(
+          (event: SchedulerEvent) => event.id === '2',
+        );
         expect(created.id).to.equal('2');
         expect(created.title).to.equal('New Event');
-        expect(onEventsChange.calledOnce).to.equal(true);
         const updated = onEventsChange.lastCall.firstArg;
         expect(getIds(updated)).to.deep.equal(['1', '2']);
 

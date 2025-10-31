@@ -1,9 +1,8 @@
 import { createSelectorMemoized } from '@base-ui-components/utils/store';
 import {
-  CalendarEvent,
   RecurringEventPresetKey,
   RecurringEventRecurrenceRule,
-  SchedulerValidDate,
+  CalendarProcessedDate,
 } from '../models';
 import { SchedulerState as State } from '../utils/SchedulerStore/SchedulerStore.types';
 import { getWeekDayCode } from '../utils/recurring-event-utils';
@@ -16,7 +15,7 @@ export const schedulerRecurringEventSelectors = {
     (state: State) => state.adapter,
     (
       adapter,
-      date: SchedulerValidDate,
+      date: CalendarProcessedDate,
     ): Record<RecurringEventPresetKey, RecurringEventRecurrenceRule> => {
       return {
         daily: {
@@ -26,12 +25,12 @@ export const schedulerRecurringEventSelectors = {
         weekly: {
           freq: 'WEEKLY',
           interval: 1,
-          byDay: [getWeekDayCode(adapter, date)],
+          byDay: [getWeekDayCode(adapter, date.value)],
         },
         monthly: {
           freq: 'MONTHLY',
           interval: 1,
-          byMonthDay: [adapter.getDate(date)],
+          byMonthDay: [adapter.getDate(date.value)],
         },
         yearly: {
           freq: 'YEARLY',
@@ -49,8 +48,8 @@ export const schedulerRecurringEventSelectors = {
     (state: State) => state.adapter,
     (
       adapter,
-      rule: CalendarEvent['rrule'] | undefined,
-      occurrenceStart: SchedulerValidDate,
+      rule: RecurringEventRecurrenceRule | undefined,
+      occurrenceStart: CalendarProcessedDate,
     ): RecurringEventPresetKey | 'custom' | null => {
       if (!rule) {
         return null;
@@ -72,7 +71,7 @@ export const schedulerRecurringEventSelectors = {
 
         case 'WEEKLY': {
           // Preset "Weekly" => FREQ=WEEKLY;INTERVAL=1;BYDAY=<weekday-of-start>; no COUNT/UNTIL;
-          const occurrenceStartWeekDayCode = getWeekDayCode(adapter, occurrenceStart);
+          const occurrenceStartWeekDayCode = getWeekDayCode(adapter, occurrenceStart.value);
 
           const byDay = rule.byDay ?? [];
           const matchesDefaultByDay =
@@ -88,7 +87,7 @@ export const schedulerRecurringEventSelectors = {
 
         case 'MONTHLY': {
           // Preset "Monthly" => FREQ=MONTHLY;INTERVAL=1;BYMONTHDAY=<start-day>; no COUNT/UNTIL;
-          const day = adapter.getDate(occurrenceStart);
+          const day = adapter.getDate(occurrenceStart.value);
           const byMonthDay = rule.byMonthDay ?? [];
           const matchesDefaultByMonthDay =
             byMonthDay.length === 0 || (byMonthDay.length === 1 && byMonthDay[0] === day);
