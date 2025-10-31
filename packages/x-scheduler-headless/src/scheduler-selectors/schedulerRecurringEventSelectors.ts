@@ -1,6 +1,5 @@
 import { createSelectorMemoized } from '@base-ui-components/utils/store';
 import {
-  SchedulerEvent,
   RecurringEventPresetKey,
   RecurringEventRecurrenceRule,
   CalendarProcessedDate,
@@ -49,7 +48,7 @@ export const schedulerRecurringEventSelectors = {
     (state: State) => state.adapter,
     (
       adapter,
-      rule: SchedulerEvent['rrule'] | undefined,
+      rule: RecurringEventRecurrenceRule | undefined,
       occurrenceStart: CalendarProcessedDate,
     ): RecurringEventPresetKey | 'custom' | null => {
       if (!rule) {
