@@ -1,4 +1,4 @@
-import { server } from '@vitest/browser/context';
+import { server } from 'vitest/browser';
 import { afterEach, beforeEach, describe, expect, it, Mock, vi } from 'vitest';
 import { PointerManager } from '../PointerManager';
 import { pan } from './PanUserGesture';
