@@ -9,7 +9,7 @@ import { useElementPositionInCollection } from '../../utils/useElementPositionIn
 import { CalendarGridCurrentTimeIndicatorCssVars } from './CalendarGridCurrentTimeIndicatorCssVars';
 import { mergeDateAndTime } from '../../utils/date-utils';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
-import { schedulerOtherSelectors } from '../../scheduler-selectors';
+import { schedulerNowSelectors } from '../../scheduler-selectors';
 
 export const CalendarGridCurrentTimeIndicator = React.forwardRef(
   function CalendarGridCurrentTimeIndicator(
@@ -28,7 +28,7 @@ export const CalendarGridCurrentTimeIndicator = React.forwardRef(
 
     const { start: columnStart, end: columnEnd } = useCalendarGridTimeColumnContext();
     const store = useEventCalendarStoreContext();
-    const now = useStore(store, schedulerOtherSelectors.nowUpdatedEveryMinute);
+    const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
 
     const nowForColumn = React.useMemo(
       () => mergeDateAndTime(adapter, columnStart, now),

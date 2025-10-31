@@ -13,7 +13,7 @@ import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import {
   schedulerEventSelectors,
-  schedulerOtherSelectors,
+  schedulerNowSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useAdapter, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
@@ -150,7 +150,7 @@ function ColumnInteractiveLayer({
 
 function TimeGridCurrentTimeLabel() {
   const store = useEventCalendarStoreContext();
-  const now = useStore(store, schedulerOtherSelectors.nowUpdatedEveryMinute);
+  const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
   const formatTime = useFormatTime();
 
   const currentTimeLabel = React.useMemo(() => formatTime(now), [now, formatTime]);

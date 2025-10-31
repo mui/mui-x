@@ -13,6 +13,7 @@ import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import {
   schedulerEventSelectors,
+  schedulerNowSelectors,
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { DayTimeGridProps } from './DayTimeGrid.types';
@@ -43,12 +44,9 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   // Selector hooks
   const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
   const hasDayView = useStore(store, eventCalendarViewSelectors.hasDayView);
-  const now = useStore(store, schedulerOtherSelectors.nowUpdatedEveryMinute);
+  const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
   const isMultiDayEvent = useStore(store, schedulerEventSelectors.isMultiDayEvent);
-  const showCurrentTimeIndicator = useStore(
-    store,
-    schedulerOtherSelectors.showCurrentTimeIndicator,
-  );
+  const showCurrentTimeIndicator = useStore(store, schedulerNowSelectors.showCurrentTimeIndicator);
 
   // Feature hooks
   const occurrencesMap = useEventOccurrencesGroupedByDay({ days });

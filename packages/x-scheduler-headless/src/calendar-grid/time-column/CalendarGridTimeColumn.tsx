@@ -5,7 +5,7 @@ import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
 import { useCompositeListItem } from '../../base-ui-copy/composite/list/useCompositeListItem';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
-import { schedulerOtherSelectors } from '../../scheduler-selectors';
+import { schedulerNowSelectors } from '../../scheduler-selectors';
 import { CalendarGridTimeColumnContext } from './CalendarGridTimeColumnContext';
 import { useTimeDropTarget } from './useTimeDropTarget';
 
@@ -26,7 +26,7 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
   } = componentProps;
 
   const store = useEventCalendarStoreContext();
-  const isCurrentDay = useStore(store, schedulerOtherSelectors.isCurrentDay, start);
+  const isCurrentDay = useStore(store, schedulerNowSelectors.isCurrentDay, start);
   const { ref: listItemRef, index } = useCompositeListItem();
 
   const { getCursorPositionInElementMs, ref: dropTargetRef } = useTimeDropTarget({
