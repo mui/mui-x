@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
+import { runIf } from '../../../utils/utils';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPaginationModelApi, GridPaginationState } from './gridPaginationInterfaces';
@@ -303,8 +304,8 @@ export const useGridPaginationModel = (
   useGridEvent(apiRef, 'viewportInnerSizeChange', handleUpdateAutoPageSize);
   useGridEvent(apiRef, 'paginationModelChange', handlePaginationModelChange);
   useGridEvent(apiRef, 'rowCountChange', handleRowCountChange);
-  useGridEvent(apiRef, 'sortModelChange', navigateToStart);
-  useGridEvent(apiRef, 'filterModelChange', handleFilterModelChange);
+  useGridEvent(apiRef, 'sortModelChange', runIf(!props.paginationModel, navigateToStart));
+  useGridEvent(apiRef, 'filterModelChange', runIf(!props.paginationModel, handleFilterModelChange));
 
   /**
    * EFFECTS
