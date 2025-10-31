@@ -33,18 +33,17 @@ export const useJSXItemsItemPlugin: TreeViewItemPlugin = ({ props, rootRef, cont
   const expandable = itemHasChildren(children);
   const pluginContentRef = React.useRef<HTMLDivElement>(null);
   const handleContentRef = useMergedRefs(pluginContentRef, contentRef);
-  const treeId = useStore(store, idSelectors.treeId);
+  const idAttribute = useStore(store, idSelectors.treeItemIdAttribute, itemId, id);
 
   // Prevent any flashing
   useIsoLayoutEffect(() => {
-    const idAttribute = idSelectors.treeItemIdAttribute(store.state, itemId, id);
     registerChild(idAttribute, itemId);
 
     return () => {
       unregisterChild(idAttribute);
       unregisterChild(idAttribute);
     };
-  }, [store, registerChild, unregisterChild, itemId, id, treeId]);
+  }, [store, registerChild, unregisterChild, idAttribute, itemId]);
 
   useIsoLayoutEffect(() => {
     return store.jsxItems.insertJSXItem({
