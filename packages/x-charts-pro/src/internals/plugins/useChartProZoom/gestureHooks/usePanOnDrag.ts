@@ -23,7 +23,8 @@ export const usePanOnDrag = (
 ) => {
   const drawingArea = useSelector(store, selectorChartDrawingArea);
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
-  const startRef = React.useRef<readonly ZoomData[]>(null);
+  const isInteracting = React.useRef<boolean>(false);
+  const accumulatedChange = React.useRef<{ x: number; y: number }>({ x: 0, y: 0 });
   const config = useSelector(store, selectorPanInteractionConfig, ['drag' as const]);
 
   const isPanOnDragEnabled: boolean =
@@ -54,33 +55,39 @@ export const usePanOnDrag = (
 
     const handlePanStart = (event: PanEvent) => {
       if (!(event.detail.target as SVGElement)?.closest('[data-charts-zoom-slider]')) {
-        startRef.current = store.state.zoom.zoomData;
+        isInteracting.current = true;
       }
     };
     const handlePanEnd = () => {
-      startRef.current = null;
+      isInteracting.current = false;
+      accumulatedChange.current = { x: 0, y: 0 };
     };
 
-    const throttledCallback = rafThrottle((event: PanEvent, zoomData: readonly ZoomData[]) => {
-      const newZoomData = translateZoom(
-        zoomData,
-        { x: event.detail.activeDeltaX, y: -event.detail.activeDeltaY },
-        {
-          width: drawingArea.width,
-          height: drawingArea.height,
-        },
-        optionsLookup,
+    const throttledCallback = rafThrottle(() => {
+      const x = accumulatedChange.current.x;
+      const y = accumulatedChange.current.y;
+      accumulatedChange.current.x = 0;
+      accumulatedChange.current.y = 0;
+      setZoomDataCallback((prev) =>
+        translateZoom(
+          prev,
+          { x, y: -y },
+          {
+            width: drawingArea.width,
+            height: drawingArea.height,
+          },
+          optionsLookup,
+        ),
       );
-
-      setZoomDataCallback(newZoomData);
     });
 
     const handlePan = (event: PanEvent) => {
-      const zoomData = startRef.current;
-      if (!zoomData) {
+      if (!isInteracting.current) {
         return;
       }
-      throttledCallback(event, zoomData);
+      accumulatedChange.current.x += event.detail.deltaX;
+      accumulatedChange.current.y += event.detail.deltaY;
+      throttledCallback();
     };
 
     const panHandler = instance.addInteractionListener('zoomPan', handlePan);
@@ -102,6 +109,6 @@ export const usePanOnDrag = (
     drawingArea.height,
     setZoomDataCallback,
     store,
-    startRef,
+    isInteracting,
   ]);
 };
