@@ -23,7 +23,6 @@ export default mergeConfig(
           // },
         ],
       },
-      sequence: { groupOrder: 74 },
     },
   }),
 );

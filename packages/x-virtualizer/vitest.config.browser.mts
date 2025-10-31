@@ -14,23 +14,14 @@ export default mergeConfig(
           {
             browser: 'chromium',
             provider: playwright({
-              ...(process.env.PLAYWRIGHT_SERVER_WS
-                ? {
-                    connectOptions: {
-                      wsEndpoint: process.env.PLAYWRIGHT_SERVER_WS,
-                    },
-                  }
-                : {
-                    launchOptions: {
-                      // Required for tests which use scrollbars.
-                      ignoreDefaultArgs: ['--hide-scrollbars'],
-                    },
-                  }),
+              launchOptions: {
+                // Required for tests which use scrollbars.
+                ignoreDefaultArgs: ['--hide-scrollbars'],
+              },
             }),
           },
         ],
       },
-      sequence: { groupOrder: 61 },
     },
   }),
 );

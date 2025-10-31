@@ -6,6 +6,5 @@ export default mergeConfig(sharedConfig, {
   test: {
     name: getTestName(import.meta.url),
     environment: 'jsdom',
-    sequence: { groupOrder: 20 },
   },
 });

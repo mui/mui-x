@@ -8,7 +8,6 @@ export default mergeConfig(
     test: {
       name: getTestName(import.meta.url),
       environment: 'jsdom',
-      sequence: { groupOrder: 100 },
     },
   }),
 );
