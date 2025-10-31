@@ -17,8 +17,6 @@ import { useEventCalendarStoreContext } from '../../use-event-calendar-store-con
 import { useCalendarGridDayCellContext } from '../day-cell/CalendarGridDayCellContext';
 import { useCalendarGridRootContext } from '../root/CalendarGridRootContext';
 
-const EVENT_STYLE_WHILE_DRAGGING = { pointerEvents: 'none' as const };
-
 export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEvent(
   componentProps: CalendarGridDayEvent.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
@@ -127,14 +125,11 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
 
   const columnHeaderId = getCalendarGridHeaderCellId(rootId, cellIndex);
 
-  const props = React.useMemo(
-    () => ({
-      id,
-      'aria-labelledby': `${columnHeaderId} ${id}`,
-      style: hasPlaceholder ? EVENT_STYLE_WHILE_DRAGGING : undefined,
-    }),
-    [hasPlaceholder, columnHeaderId, id],
-  );
+  const props = {
+    id,
+    'aria-labelledby': `${columnHeaderId} ${id}`,
+    style: hasPlaceholder ? { pointerEvents: 'none' as const } : undefined,
+  };
 
   const contextValue: CalendarGridDayEventContext = React.useMemo(
     () => ({ ...draggableEventContextValue, getSharedDragData }),

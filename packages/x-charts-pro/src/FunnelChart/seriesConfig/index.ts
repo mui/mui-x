@@ -7,7 +7,7 @@ import tooltipGetter from './tooltip';
 import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
 import tooltipItemPositionGetter from './tooltipPosition';
 
-export const seriesConfig: ChartSeriesTypeConfig<'funnel'> = {
+export const funnelSeriesConfig: ChartSeriesTypeConfig<'funnel'> = {
   seriesProcessor,
   colorProcessor: getColor,
   legendGetter,

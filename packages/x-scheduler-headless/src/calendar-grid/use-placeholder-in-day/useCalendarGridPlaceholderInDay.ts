@@ -6,6 +6,7 @@ import { useEventCalendarStoreContext } from '../../use-event-calendar-store-con
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
 import type { useEventOccurrencesWithDayGridPosition } from '../../use-event-occurrences-with-day-grid-position';
 import { useAdapter, diffIn } from '../../use-adapter/useAdapter';
+import { eventCalendarOccurrencePlaceholderSelectors } from '../../event-calendar-selectors';
 import { processDate } from '../../process-date';
 
 export function useCalendarGridPlaceholderInDay(
@@ -18,7 +19,7 @@ export function useCalendarGridPlaceholderInDay(
 
   const rawPlaceholder = useStore(
     store,
-    selectors.occurrencePlaceholderToRenderInDayCell,
+    eventCalendarOccurrencePlaceholderSelectors.placeholderInDayCell,
     day,
     rowStart,
   );

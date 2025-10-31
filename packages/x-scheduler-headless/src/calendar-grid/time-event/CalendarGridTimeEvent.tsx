@@ -135,10 +135,7 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
 
   const columnHeaderId = getCalendarGridHeaderCellId(rootId, columnIndex);
 
-  const props = React.useMemo(
-    () => ({ id, style, 'aria-labelledby': `${columnHeaderId} ${id}` }),
-    [style, columnHeaderId, id],
-  );
+  const props = { id, style, 'aria-labelledby': `${columnHeaderId} ${id}` };
 
   const contextValue: CalendarGridTimeEventContext = React.useMemo(
     () => ({ ...draggableEventContextValue, getSharedDragData }),

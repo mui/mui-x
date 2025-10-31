@@ -4,6 +4,7 @@ import { CalendarEventOccurrenceWithTimePosition, SchedulerValidDate } from '../
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { selectors } from '../../use-event-calendar';
 import { useEventOccurrencesWithTimelinePosition } from '../../use-event-occurrences-with-timeline-position';
+import { eventCalendarOccurrencePlaceholderSelectors } from '../../event-calendar-selectors';
 import { processDate } from '../../process-date';
 import { useAdapter } from '../../use-adapter';
 
@@ -17,7 +18,7 @@ export function useCalendarGridPlaceholderInRange(
 
   const rawPlaceholder = useStore(
     store,
-    selectors.occurrencePlaceholderToRenderInTimeRange,
+    eventCalendarOccurrencePlaceholderSelectors.placeholderInTimeRange,
     start,
     end,
   );

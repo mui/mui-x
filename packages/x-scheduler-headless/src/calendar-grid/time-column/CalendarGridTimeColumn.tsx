@@ -42,7 +42,7 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
     [isCurrentDay],
   );
 
-  const props = React.useMemo(() => ({ role: 'gridcell' }), []);
+  const props = { role: 'gridcell' };
 
   const contextValue: CalendarGridTimeColumnContext = React.useMemo(
     () => ({

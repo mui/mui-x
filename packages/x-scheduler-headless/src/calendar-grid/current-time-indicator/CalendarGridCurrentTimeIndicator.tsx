@@ -56,7 +56,7 @@ export const CalendarGridCurrentTimeIndicator = React.forwardRef(
       [position],
     );
 
-    const props = React.useMemo(() => ({ style }), [style]);
+    const props = { style };
 
     const isOutOfRange =
       adapter.isBefore(nowForColumn.value, columnStart) ||
