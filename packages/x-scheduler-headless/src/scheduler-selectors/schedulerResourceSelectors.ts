@@ -1,6 +1,7 @@
 import { createSelector, createSelectorMemoized } from '@base-ui-components/utils/store';
+import { EMPTY_ARRAY } from '@base-ui-components/utils/empty';
 import { SchedulerState as State } from '../utils/SchedulerStore/SchedulerStore.types';
-import { CalendarResource } from '../models';
+import { CalendarResource, CalendarResourceId } from '../models';
 
 const processedResourceSelector = createSelector(
   (state: State) => state.processedResourceLookup,
@@ -16,14 +17,15 @@ const processedResourceListSelector = createSelectorMemoized(
 );
 
 const resourceChildrenIdListSelector = createSelector(
-  (state: State, resourceId: string) => state.resourceChildrenIdMap.get(resourceId) || [],
+  (state: State, resourceId: CalendarResourceId) =>
+    state.resourceChildrenIdMap.get(resourceId) ?? EMPTY_ARRAY,
 );
 
 const resourcesChildrenMapSelector = createSelectorMemoized(
   (state: State) => state.processedResourceLookup,
   (state: State) => state.resourceChildrenIdMap,
   (processedResourceLookup, resourceChildrenIdMap) => {
-    const result: Map<string, CalendarResource[]> = new Map();
+    const result: Map<CalendarResourceId, CalendarResource[]> = new Map();
 
     for (const [resourceId, childrenIds] of resourceChildrenIdMap) {
       const children = childrenIds.map((id) => processedResourceLookup.get(id)!);
@@ -49,8 +51,8 @@ const resourcesFlatListSelector = createSelectorMemoized(
 
       flatList.push(resource);
 
-      const childrenIds = resourceChildrenIdMap.get(resourceId) || [];
-      if (childrenIds.length) {
+      const childrenIds = resourceChildrenIdMap.get(resourceId);
+      if (childrenIds?.length) {
         for (const childId of childrenIds) {
           addResourceAndChildren(childId);
         }
