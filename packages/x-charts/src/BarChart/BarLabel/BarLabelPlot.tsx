@@ -1,18 +1,34 @@
 import * as React from 'react';
-import type { ProcessedBarSeriesData } from '../types';
+import { AnimationData } from '../types';
 import { BarLabelItem, BarLabelItemProps } from './BarLabelItem';
 import { useUtilityClasses } from '../barClasses';
+import type { SeriesId } from '../../models/seriesType/common';
+import { BarValueType } from '../../models/seriesType/bar';
+import { BarRangeValueType } from '../../models/seriesType/barRange';
 
-type BarLabelPlotProps = {
-  bars: ProcessedBarSeriesData[];
+interface BarLabelPlotProps<V> {
+  bars: ProcessedBarSeriesData<V>[];
   skipAnimation?: boolean;
-  barLabel?: BarLabelItemProps['barLabel'];
-};
+  barLabel?: BarLabelItemProps<V>['barLabel'];
+}
+
+export interface ProcessedBarSeriesData<V> {
+  seriesId: SeriesId;
+  data: ProcessedBarData<V>[];
+}
+
+export interface ProcessedBarData<V> extends AnimationData {
+  seriesId: SeriesId;
+  dataIndex: number;
+  color: string;
+  value: V;
+  maskId: string;
+}
 
 /**
  * @ignore - internal component.
  */
-function BarLabelPlot(props: BarLabelPlotProps) {
+function BarLabelPlot<V extends BarValueType | BarRangeValueType>(props: BarLabelPlotProps<V>) {
   const { bars, skipAnimation, ...other } = props;
   const classes = useUtilityClasses();
 

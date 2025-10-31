@@ -7,6 +7,8 @@ import { BarLabelOwnerState, BarItem, BarLabelContext } from './BarLabel.types';
 import { getBarLabel } from './getBarLabel';
 import { BarLabel, BarLabelProps } from './BarLabel';
 import { useItemHighlighted } from '../../hooks/useItemHighlighted';
+import { BarValueType } from '../../models';
+import { BarRangeValueType } from '../../models/seriesType/barRange';
 
 export interface BarLabelSlots {
   /**
@@ -20,7 +22,7 @@ export interface BarLabelSlotProps {
   barLabel?: SlotComponentPropsFromProps<BarLabelProps, {}, BarLabelOwnerState>;
 }
 
-export type BarLabelItemProps = Omit<BarLabelOwnerState, 'isFaded' | 'isHighlighted'> &
+export type BarLabelItemProps<V> = Omit<BarLabelOwnerState, 'isFaded' | 'isHighlighted'> &
   Pick<BarLabelProps, 'style'> & {
     /**
      * The props used for each component slot.
@@ -63,7 +65,7 @@ export type BarLabelItemProps = Omit<BarLabelOwnerState, 'isFaded' | 'isHighligh
     /**
      * The value of the data point.
      */
-    value: number | null;
+    value: V;
     /**
      * If true, no animations should be applied.
      */
@@ -81,7 +83,9 @@ export type BarLabelItemProps = Omit<BarLabelOwnerState, 'isFaded' | 'isHighligh
 /**
  * @ignore - internal component.
  */
-function BarLabelItem(props: BarLabelItemProps) {
+function BarLabelItem<V extends BarValueType | BarRangeValueType = BarValueType>(
+  props: BarLabelItemProps<V>,
+) {
   const {
     seriesId,
     classes: innerClasses,
