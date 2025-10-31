@@ -68,11 +68,16 @@ function BarElement(props: BarElementProps) {
     seriesId: id,
     dataIndex,
   });
-  const isFocused = useIsItemFocused({
-    seriesType: 'bar',
-    seriesId: id,
-    dataIndex,
-  });
+  const isFocused = useIsItemFocused(
+    React.useMemo(
+      () => ({
+        seriesType: 'bar',
+        seriesId: id,
+        dataIndex,
+      }),
+      [id, dataIndex],
+    ),
+  );
 
   const ownerState = {
     id,
