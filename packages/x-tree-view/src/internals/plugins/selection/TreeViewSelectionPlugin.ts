@@ -90,7 +90,7 @@ export class TreeViewSelectionPlugin<Multiple extends boolean | undefined> {
       this.store.set('selectedItems', cleanModel);
     }
 
-    onSelectedItemsChange?.(event, cleanModel as TreeViewSelectionValue<Multiple>);
+    onSelectedItemsChange?.(event, cleanModel);
   };
 
   private selectRange = (event: React.SyntheticEvent, [start, end]: [string, string]) => {
