@@ -217,13 +217,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
 
   const { hasFocus, isEditable = false, value } = cellParams;
 
-  const canManageOwnFocus =
-    column.type === 'actions' &&
-    'getActions' in column &&
-    typeof column.getActions === 'function' &&
-    column.getActions(apiRef.current.getRowParams(rowId)).some((action) => !action.props.disabled);
-  const tabIndex =
-    (cellMode === 'view' || !isEditable) && !canManageOwnFocus ? cellParams.tabIndex : -1;
+  const tabIndex = cellMode === 'view' || !isEditable ? cellParams.tabIndex : -1;
 
   const { classes: rootClasses, getCellClassName } = rootProps;
 
@@ -451,10 +445,6 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
     const valueString = valueToRender?.toString();
     children = valueString;
     title = valueString;
-  }
-
-  if (React.isValidElement(children) && canManageOwnFocus) {
-    children = React.cloneElement<any>(children, { focusElementRef });
   }
 
   const draggableEventHandlers = disableDragEvents
