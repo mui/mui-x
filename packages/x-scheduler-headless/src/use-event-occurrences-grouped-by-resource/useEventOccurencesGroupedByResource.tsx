@@ -20,6 +20,7 @@ export function useEventOccurrencesGroupedByResource(
   const events = useStore(store, selectors.processedEventList);
   const visibleResources = useStore(store, selectors.visibleResourcesMap);
   const resources = useStore(store, selectors.processedResourceList);
+  const resourcesChildrenMap = useStore(store, selectors.processedResourceChildrenMap);
 
   return React.useMemo(
     () =>
@@ -28,10 +29,11 @@ export function useEventOccurrencesGroupedByResource(
         events,
         visibleResources,
         resources,
+        resourcesChildrenMap,
         start,
         end,
       ),
-    [adapter, events, visibleResources, resources, start, end],
+    [adapter, events, visibleResources, resources, resourcesChildrenMap, start, end],
   );
 }
 
@@ -47,6 +49,11 @@ export namespace useEventOccurrencesGroupedByResource {
   }[];
 }
 
+interface InnerGetEventOccurrencesGroupedByResourceReturnValue {
+  resource: CalendarResource;
+  occurrences: CalendarEventOccurrence[];
+}
+
 /**
  * Do not use directly, use the `useEventOccurrencesGroupedByResource` hook instead.
  * This is only exported for testing purposes.
@@ -56,9 +63,10 @@ export function innerGetEventOccurrencesGroupedByResource(
   events: CalendarEvent[],
   visibleResources: Map<string, boolean>,
   resources: readonly CalendarResource[],
+  resourcesChildrenMap: Map<string, readonly CalendarResource[]>,
   start: SchedulerValidDate,
   end: SchedulerValidDate,
-): { resource: CalendarResource; occurrences: CalendarEventOccurrence[] }[] {
+): InnerGetEventOccurrencesGroupedByResourceReturnValue[] {
   const occurrencesGroupedByResource = new Map<string, CalendarEventOccurrence[]>();
 
   const occurrences = getOccurrencesFromEvents({ adapter, start, end, events, visibleResources });
@@ -74,13 +82,20 @@ export function innerGetEventOccurrencesGroupedByResource(
     }
   }
 
-  return (
-    resources
-      // Sort by resource.title (localeCompare for stable alphabetical ordering).
-      .toSorted((a, b) => a.title.localeCompare(b.title))
-      .map((resource) => ({
-        resource,
-        occurrences: occurrencesGroupedByResource.get(resource.id) ?? [],
-      }))
-  );
+  const processResources = (innerResources: readonly CalendarResource[]) => {
+    const sortedResources = innerResources.toSorted((a, b) => a.title.localeCompare(b.title));
+    return sortedResources.reduce(
+      (acc: InnerGetEventOccurrencesGroupedByResourceReturnValue[], resource: CalendarResource) => {
+        acc.push({ resource, occurrences: occurrencesGroupedByResource.get(resource.id) ?? [] });
+        const children = resourcesChildrenMap.get(resource.id) ?? [];
+        if (children.length > 0) {
+          acc.push(...processResources(children));
+        }
+        return acc;
+      },
+      [],
+    );
+  };
+
+  return processResources(resources);
 }

@@ -61,6 +61,7 @@ const RESOURCE_PROPERTIES_LOOKUP: { [P in keyof CalendarResource]-?: true } = {
   id: true,
   title: true,
   eventColor: true,
+  children: true,
 };
 
 const RESOURCE_PROPERTIES = Object.keys(RESOURCE_PROPERTIES_LOOKUP) as (keyof CalendarResource)[];
@@ -204,21 +205,42 @@ export function buildResourcesState<TEvent extends object, TResource extends obj
   parameters: Pick<SchedulerParameters<TEvent, TResource>, 'resources' | 'resourceModelStructure'>,
 ): Pick<
   SchedulerState<TEvent>,
-  'resourceIdList' | 'processedResourceLookup' | 'resourceModelStructure'
+  'resourceIdList' | 'processedResourceLookup' | 'resourceModelStructure' | 'resourceChildrenIdMap'
 > {
   const { resources = EMPTY_ARRAY, resourceModelStructure } = parameters;
 
   const resourceIdList: string[] = [];
   const processedResourceLookup = new Map<CalendarResourceId, CalendarResource>();
+  const resourceChildrenIdMap = new Map<CalendarResourceId, CalendarResourceId[]>();
+
+  const processResource = (processedResource: CalendarResource) => {
+    const { children, ...resourceWithoutChildren } = processedResource;
+    processedResourceLookup.set(processedResource.id, resourceWithoutChildren);
+    if (children) {
+      for (const child of children) {
+        const processedChild = getProcessedResourceFromModel(
+          child as TResource,
+          resourceModelStructure,
+        );
+        if (!resourceChildrenIdMap.get(processedResource.id)) {
+          resourceChildrenIdMap.set(processedResource.id, []);
+        }
+        resourceChildrenIdMap.get(processedResource.id)?.push(processedChild.id);
+        processResource(processedChild);
+      }
+    }
+  };
+
   for (const resource of resources) {
     const processedResource = getProcessedResourceFromModel(resource, resourceModelStructure);
     resourceIdList.push(processedResource.id);
-    processedResourceLookup.set(processedResource.id, processedResource);
+    processResource(processedResource);
   }
 
   return {
     resourceIdList,
     processedResourceLookup,
     resourceModelStructure,
+    resourceChildrenIdMap,
   };
 }

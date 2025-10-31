@@ -41,7 +41,7 @@ export default function FormContent(props: FormContentProps) {
   // Selector hooks
   const isPropertyReadOnly = useStore(store, selectors.isEventPropertyReadOnly, occurrence.id);
   const rawPlaceholder = useStore(store, selectors.occurrencePlaceholder);
-  const resources = useStore(store, selectors.processedResourceList);
+  const resources = useStore(store, selectors.processedResourceFlatList);
   const recurrencePresets = useStore(store, selectors.recurrencePresets, occurrence.start);
   const defaultRecurrenceKey = useStore(
     store,

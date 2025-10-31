@@ -48,7 +48,7 @@ export const TimelineContent = React.forwardRef(function TimelineContent(
 
   const adapter = useAdapter();
   const store = useTimelineStoreContext();
-  const resources = useStore(store, selectors.processedResourceList);
+  const resources = useStore(store, selectors.processedResourceFlatList);
   const visibleDate = useStore(store, selectors.visibleDate);
   const view = useStore(store, timelineViewSelectors.view);
 

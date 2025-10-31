@@ -58,6 +58,31 @@ function ResourceLegendItem(props: { resource: CalendarResource }) {
   );
 }
 
+const getVisibilityDifferenceMap = (
+  allResourceIds: readonly string[],
+  childrenIdsMap: Map<string, string[]>,
+  newValue: string[],
+) => {
+  const newVisibleResourcesSet = new Set(newValue);
+  const diffMap = new Map<string, boolean>();
+
+  const propagateChangeToChildren = (resourceId: string, isVisible: boolean) => {
+    diffMap.set(resourceId, isVisible);
+    const childIds = childrenIdsMap.get(resourceId) || [];
+    if (childIds.length > 0) {
+      for (const childId of childIds) {
+        diffMap.set(childId, isVisible);
+        propagateChangeToChildren(childId, isVisible);
+      }
+    }
+  };
+
+  for (const resourceId of allResourceIds) {
+    propagateChangeToChildren(resourceId, newVisibleResourcesSet.has(resourceId));
+  }
+  return diffMap;
+};
+
 export const ResourceLegend = React.forwardRef(function ResourceLegend(
   props: ResourceLegendProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
@@ -67,17 +92,17 @@ export const ResourceLegend = React.forwardRef(function ResourceLegend(
   const store = useEventCalendarStoreContext();
   const resources = useStore(store, selectors.processedResourceList);
   const visibleResourcesList = useStore(store, selectors.visibleResourcesList);
+  const resourceIdList = useStore(store, selectors.resourceIdList);
+  const resourceChildrenIdsList = useStore(store, selectors.resourceChildrenIdMap);
 
   const handleVisibleResourcesChange = useEventCallback((value: string[]) => {
-    const valueSet = new Set(value);
-    const newVisibleResourcesMap = new Map(
-      selectors
-        .processedResourceList(store.state)
-        .filter((resource) => !valueSet.has(resource.id))
-        .map((resource) => [resource.id, false]),
+    const differenceMap = getVisibilityDifferenceMap(
+      resourceIdList,
+      resourceChildrenIdsList,
+      value,
     );
 
-    store.setVisibleResources(newVisibleResourcesMap);
+    store.setVisibleResources(differenceMap);
   });
 
   if (resources.length === 0) {

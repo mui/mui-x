@@ -2,6 +2,7 @@ import { createSelector, createSelectorMemoized } from '@base-ui-components/util
 import {
   CalendarEvent,
   CalendarEventId,
+  CalendarResource,
   RecurringEventPresetKey,
   RecurringEventRecurrenceRule,
   SchedulerValidDate,
@@ -29,6 +30,62 @@ const isEventReadOnlySelector = createSelector(
   },
 );
 
+const processedResourceListSelector = createSelectorMemoized(
+  (state: State) => state.resourceIdList,
+  (state: State) => state.processedResourceLookup,
+  (resourceIds, processedResourceLookup) =>
+    resourceIds.map((id) => processedResourceLookup.get(id)!),
+);
+
+const resourceChildrenIdListSelector = createSelector(
+  (state: State, resourceId: string) => state.resourceChildrenIdMap.get(resourceId) || [],
+);
+
+const resourcesChildrenMapSelector = createSelectorMemoized(
+  (state: State) => state.processedResourceLookup,
+  (state: State) => state.resourceChildrenIdMap,
+  (processedResourceLookup, resourceChildrenIdMap) => {
+    const result: Map<string, CalendarResource[]> = new Map();
+
+    for (const [resourceId, childrenIds] of resourceChildrenIdMap) {
+      const children = childrenIds.map((id) => processedResourceLookup.get(id)!);
+      result.set(resourceId, children);
+    }
+
+    return result;
+  },
+);
+
+const resourcesFlatListSelector = createSelectorMemoized(
+  (state: State) => state.resourceIdList,
+  (state: State) => state.processedResourceLookup,
+  (state: State) => state.resourceChildrenIdMap,
+  (resourceIds, processedResourceLookup, resourceChildrenIdMap) => {
+    const flatList: CalendarResource[] = [];
+
+    const addResourceAndChildren = (resourceId: string) => {
+      const resource = processedResourceLookup.get(resourceId);
+      if (!resource) {
+        return;
+      }
+
+      flatList.push(resource);
+
+      const childrenIds = resourceChildrenIdMap.get(resourceId) || [];
+      if (childrenIds.length) {
+        for (const childId of childrenIds) {
+          addResourceAndChildren(childId);
+        }
+      }
+    };
+
+    for (const resourceId of resourceIds) {
+      addResourceAndChildren(resourceId);
+    }
+    return flatList;
+  },
+);
+
 export const selectors = {
   ampm: createSelector((state: State) => state.preferences.ampm),
   visibleDate: createSelector((state: State) => state.visibleDate),
@@ -43,13 +100,12 @@ export const selectors = {
   eventIdList: createSelector((state: State) => state.eventIdList),
   eventModelList: createSelector((state: State) => state.eventModelList),
   eventModelLookup: createSelector((state: State) => state.eventModelLookup),
-  processedResourceList: createSelectorMemoized(
-    (state: State) => state.resourceIdList,
-    (state: State) => state.processedResourceLookup,
-    (resourceIds, processedResourceLookup) =>
-      resourceIds.map((id) => processedResourceLookup.get(id)!),
-  ),
+  processedResourceList: processedResourceListSelector,
+  processedResourceFlatList: resourcesFlatListSelector,
+  processedResourceChildrenMap: resourcesChildrenMapSelector,
+  resourceChildrenIdMap: (state: State) => state.resourceChildrenIdMap,
   resourceIdList: createSelector((state: State) => state.resourceIdList),
+  resourceChildrenIdsList: resourceChildrenIdListSelector,
   visibleResourcesMap: createSelector((state: State) => state.visibleResources),
   canCreateNewEvent: createSelector((state: State) => !state.readOnly),
   resource: resourceSelector,
@@ -84,15 +140,22 @@ export const selectors = {
     },
   ),
   visibleResourcesList: createSelectorMemoized(
-    (state: State) => state.resourceIdList,
+    resourcesFlatListSelector,
     (state: State) => state.visibleResources,
-    (resources, visibleResources) =>
-      resources
-        .filter(
-          (resourceId) =>
-            !visibleResources.has(resourceId) || visibleResources.get(resourceId) === true,
-        )
-        .map((resourceId) => resourceId),
+    (resources, visibleResources) => {
+      const result: string[] = [];
+
+      for (const resource of resources) {
+        const isVisible =
+          !visibleResources.has(resource.id) || visibleResources.get(resource.id) === true;
+
+        if (isVisible) {
+          result.push(resource.id);
+        }
+      }
+
+      return result;
+    },
   ),
   event: eventSelector,
   isEventReadOnly: isEventReadOnlySelector,
