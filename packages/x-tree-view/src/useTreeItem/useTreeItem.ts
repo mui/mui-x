@@ -4,7 +4,7 @@ import { useStore } from '@mui/x-internals/store';
 import { EventHandlers } from '@mui/utils/types';
 import extractEventHandlers from '@mui/utils/extractEventHandlers';
 import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
-import { TreeViewCancellableEvent } from '../models';
+import { TreeViewCancellableEvent, TreeViewItemId } from '../models';
 import {
   UseTreeItemParameters,
   UseTreeItemReturnValue,
@@ -15,8 +15,6 @@ import {
   UseTreeItemIconContainerSlotProps,
   UseTreeItemCheckboxSlotProps,
   UseTreeItemLabelInputSlotProps,
-  UseTreeItemMinimalPlugins,
-  UseTreeItemOptionalPlugins,
   UseTreeItemDragAndDropOverlaySlotProps,
   UseTreeItemRootSlotPropsFromUseTreeItem,
   UseTreeItemContentSlotPropsFromUseTreeItem,
@@ -24,27 +22,39 @@ import {
   UseTreeItemLoadingContainerSlotProps,
 } from './useTreeItem.types';
 import { useTreeViewContext } from '../internals/TreeViewProvider';
-import { TreeViewItemPluginSlotPropsEnhancerParams } from '../internals/models';
+import {
+  TreeViewItemPluginSlotPropsEnhancerParams,
+  TreeViewAnyStore,
+  TreeViewPublicAPI,
+} from '../internals/models';
 import { useTreeItemUtils } from '../hooks/useTreeItemUtils';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
 import { isTargetInDescendants } from '../internals/utils/tree';
-import { generateTreeItemIdAttribute } from '../internals/corePlugins/useTreeViewId/useTreeViewId.utils';
-import { focusSelectors } from '../internals/plugins/useTreeViewFocus';
-import { itemsSelectors } from '../internals/plugins/useTreeViewItems';
-import { idSelectors } from '../internals/corePlugins/useTreeViewId';
-import { expansionSelectors } from '../internals/plugins/useTreeViewExpansion';
-import { selectionSelectors } from '../internals/plugins/useTreeViewSelection';
+import { focusSelectors } from '../internals/plugins/focus';
+import { itemsSelectors } from '../internals/plugins/items';
+import { idSelectors } from '../internals/plugins/id';
+import { expansionSelectors } from '../internals/plugins/expansion';
+import { selectionSelectors } from '../internals/plugins/selection';
+import { RichTreeViewStore } from '../internals/RichTreeViewStore';
 
-export const useTreeItem = <
-  TSignatures extends UseTreeItemMinimalPlugins = UseTreeItemMinimalPlugins,
-  TOptionalSignatures extends UseTreeItemOptionalPlugins = UseTreeItemOptionalPlugins,
->(
+// TODO v8: Remove the lazy loading plugin from the typing on the community useTreeItem and ask users to pass the TStore generic.
+interface DefaultStore extends RichTreeViewStore<any, any> {
+  buildPublicAPI: () => TreeViewPublicAPI<RichTreeViewStore<any, any>> & {
+    /**
+     * Method used for updating an item's children.
+     * Only relevant for lazy-loaded tree views.
+     *
+     * @param {TreeViewItemId} itemId The The id of the item to update the children of.
+     * @returns {Promise<void>} The promise resolved when the items are fetched.
+     */
+    updateItemChildren: (itemId: TreeViewItemId) => Promise<void>;
+  };
+}
+
+export const useTreeItem = <TStore extends TreeViewAnyStore = DefaultStore>(
   parameters: UseTreeItemParameters,
-): UseTreeItemReturnValue<TSignatures, TOptionalSignatures> => {
-  const { runItemPlugins, instance, publicAPI, store } = useTreeViewContext<
-    TSignatures,
-    TOptionalSignatures
-  >();
+): UseTreeItemReturnValue<TStore> => {
+  const { runItemPlugins, publicAPI, store } = useTreeViewContext<TStore>();
   const depthContext = React.useContext(TreeViewItemDepthContext);
 
   const depth = useStore(
@@ -69,10 +79,9 @@ export const useTreeItem = <
   const handleContentRef = useMergedRefs(contentRef, contentRefObject)!;
   const checkboxRef = React.useRef<HTMLButtonElement>(null);
 
-  const treeId = useStore(store, idSelectors.treeId);
   const isSelectionEnabledForItem = useStore(store, selectionSelectors.canItemBeSelected, itemId);
   const isCheckboxSelectionEnabled = useStore(store, selectionSelectors.isCheckboxSelectionEnabled);
-  const idAttribute = generateTreeItemIdAttribute({ itemId, treeId, id });
+  const idAttribute = useStore(store, idSelectors.treeItemIdAttribute, itemId, id);
   const shouldBeAccessibleWithTab = useStore(
     store,
     focusSelectors.isItemTheDefaultFocusableItem,
@@ -97,7 +106,7 @@ export const useTreeItem = <
         itemsSelectors.canItemBeFocused(store.state, itemId) &&
         event.currentTarget === event.target
       ) {
-        instance.focusItem(event, itemId);
+        store.focus.focusItem(event, itemId);
       }
     };
 
@@ -109,7 +118,7 @@ export const useTreeItem = <
         return;
       }
 
-      const rootElement = instance.getItemDOMElement(itemId);
+      const rootElement = store.items.getItemDOMElement(itemId);
 
       // Don't blur the root when switching to editing mode
       // the input that triggers the root blur can be either the relatedTarget (when entering editing state) or the target (when exiting editing state)
@@ -128,7 +137,7 @@ export const useTreeItem = <
         return;
       }
 
-      instance.removeFocusedItem();
+      store.focus.removeFocusedItem();
     };
 
   const createRootHandleKeyDown =
@@ -142,7 +151,7 @@ export const useTreeItem = <
         return;
       }
 
-      instance.handleItemKeyDown(event, itemId);
+      store.keyboardNavigation.handleItemKeyDown(event, itemId);
     };
 
   const createLabelHandleDoubleClick =
@@ -157,7 +166,7 @@ export const useTreeItem = <
   const createContentHandleClick =
     (otherHandlers: EventHandlers) => (event: React.MouseEvent & TreeViewCancellableEvent) => {
       otherHandlers.onClick?.(event);
-      instance.handleItemClick(event, itemId);
+      store.items.handleItemClick(event, itemId);
 
       if (event.defaultMuiPrevented || checkboxRef.current?.contains(event.target as HTMLElement)) {
         return;
