@@ -133,7 +133,7 @@ RichTreeViewPro.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * The ref object that allows Tree View manipulation. Can be instantiated with `useTreeViewApiRef()`.
+   * The ref object that allows Tree View manipulation. Can be instantiated with `useRichTreeViewApiProRef()`.
    */
   apiRef: PropTypes.shape({
     current: PropTypes.shape({

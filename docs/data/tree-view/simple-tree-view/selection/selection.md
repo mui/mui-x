@@ -77,12 +77,12 @@ Use the `onItemSelectionToggle` prop if you want to react to an item selection c
 ## Imperative API
 
 :::success
-To use the `apiRef` object, you need to initialize it using the `useTreeViewApiRef` hook as follows:
+To use the `apiRef` object, you need to initialize it using the `useSimpleTreeViewApiRef` hook as follows:
 
 ```tsx
-const apiRef = useTreeViewApiRef();
+const apiRef = useSimpleTreeViewApiRef();
 
-return <SimpleTreeView apiRef={apiRef}>{children}</SimpleTreeView>;
+return <SimpleTreeView apiRef={apiRef} items={ITEMS} />;
 ```
 
 When your component first renders, `apiRef` will be `undefined`.

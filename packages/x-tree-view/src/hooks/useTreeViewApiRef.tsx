@@ -1,11 +1,8 @@
 'use client';
-import * as React from 'react';
-import { TreeViewAnyStore, TreeViewPublicAPI } from '../internals/models';
-import { RichTreeViewStore } from '../internals/RichTreeViewStore';
+import { useRichTreeViewApiRef } from './useRichTreeViewApiRef';
 
 /**
  * Hook that instantiates a [[TreeViewApiRef]].
+ * @deprecated Use `useRichTreeViewApiRef`, `useRichTreeViewProApiRef` or `useSimpleTreeViewApiRef` instead.
  */
-export const useTreeViewApiRef = <
-  TStore extends TreeViewAnyStore = RichTreeViewStore<any, any>,
->() => React.useRef(undefined) as React.RefObject<TreeViewPublicAPI<TStore> | undefined>;
+export const useTreeViewApiRef = useRichTreeViewApiRef;

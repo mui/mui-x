@@ -52,7 +52,7 @@ export interface SimpleTreeViewProps<Multiple extends boolean | undefined>
    */
   sx?: SxProps<Theme>;
   /**
-   * The ref object that allows Tree View manipulation. Can be instantiated with `useTreeViewApiRef()`.
+   * The ref object that allows Tree View manipulation. Can be instantiated with `useSimpleTreeViewApiRef()`.
    */
   apiRef?: SimpleTreeViewApiRef;
 }

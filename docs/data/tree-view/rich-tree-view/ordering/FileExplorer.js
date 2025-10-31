@@ -19,7 +19,8 @@ import {
 import { TreeItemIcon } from '@mui/x-tree-view/TreeItemIcon';
 import { TreeItemProvider } from '@mui/x-tree-view/TreeItemProvider';
 import { TreeItemDragAndDropOverlay } from '@mui/x-tree-view/TreeItemDragAndDropOverlay';
-import { useTreeItemModel, useTreeViewApiRef } from '@mui/x-tree-view/hooks';
+import { useTreeItemModel } from '@mui/x-tree-view/hooks';
+import { useRichTreeViewProApiRef } from '@mui/x-tree-view-pro/hooks';
 
 const ITEMS = [
   {
@@ -234,7 +235,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
 });
 
 export default function FileExplorer() {
-  const apiRef = useTreeViewApiRef();
+  const apiRef = useRichTreeViewProApiRef();
 
   return (
     <RichTreeViewPro

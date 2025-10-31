@@ -59,7 +59,7 @@ export interface RichTreeViewProProps<R extends {}, Multiple extends boolean | u
    */
   slotProps?: RichTreeViewProSlotProps<R, Multiple>;
   /**
-   * The ref object that allows Tree View manipulation. Can be instantiated with `useTreeViewApiRef()`.
+   * The ref object that allows Tree View manipulation. Can be instantiated with `useRichTreeViewApiProRef()`.
    */
   apiRef?: RichTreeViewProApiRef;
 }

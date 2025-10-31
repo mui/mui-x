@@ -2,7 +2,7 @@
   "componentDescription": "",
   "propDescriptions": {
     "apiRef": {
-      "description": "The ref object that allows Tree View manipulation. Can be instantiated with <code>useTreeViewApiRef()</code>."
+      "description": "The ref object that allows Tree View manipulation. Can be instantiated with <code>useRichTreeViewApiRef()</code>."
     },
     "checkboxSelection": {
       "description": "Whether the Tree View renders a checkbox at the left of its label that allows selecting it."
