@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store/useStore';
 import { CalendarEventOccurrenceWithTimePosition, SchedulerValidDate } from '../../models';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
-import { selectors } from '../../use-event-calendar';
+import { schedulerEventSelectors } from '../../scheduler-selectors';
 import { useEventOccurrencesWithTimelinePosition } from '../../use-event-occurrences-with-timeline-position';
 import { eventCalendarOccurrencePlaceholderSelectors } from '../../event-calendar-selectors';
 import { processDate } from '../../process-date';
@@ -25,7 +25,7 @@ export function useCalendarGridPlaceholderInRange(
 
   const originalEventId =
     rawPlaceholder?.type === 'internal-drag-or-resize' ? rawPlaceholder.eventId : null;
-  const originalEvent = useStore(store, selectors.event, originalEventId);
+  const originalEvent = useStore(store, schedulerEventSelectors.processedEvent, originalEventId);
 
   return React.useMemo(() => {
     if (!rawPlaceholder) {

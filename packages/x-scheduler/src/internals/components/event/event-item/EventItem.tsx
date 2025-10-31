@@ -4,7 +4,10 @@ import clsx from 'clsx';
 import { useId } from '@base-ui-components/utils/useId';
 import { useStore } from '@base-ui-components/utils/store';
 import { Repeat } from 'lucide-react';
-import { selectors } from '@mui/x-scheduler-headless/use-event-calendar';
+import {
+  schedulerEventSelectors,
+  schedulerResourceSelectors,
+} from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { EventItemProps } from './EventItem.types';
 import { getColorClassName } from '../../../utils/color-utils';
@@ -41,8 +44,12 @@ export const EventItem = React.forwardRef(function EventItem(
   const id = useId(idProp);
 
   // Selector hooks
-  const resource = useStore(store, selectors.resource, occurrence.resource);
-  const color = useStore(store, selectors.eventColor, occurrence.id);
+  const resource = useStore(
+    store,
+    schedulerResourceSelectors.processedResource,
+    occurrence.resource,
+  );
+  const color = useStore(store, schedulerEventSelectors.color, occurrence.id);
 
   const formatTime = useFormatTime();
   const isRecurring = Boolean(occurrence.rrule);

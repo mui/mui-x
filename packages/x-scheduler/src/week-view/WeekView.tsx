@@ -6,10 +6,8 @@ import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
-import {
-  selectors,
-  useExtractEventCalendarParameters,
-} from '@mui/x-scheduler-headless/use-event-calendar';
+import { useExtractEventCalendarParameters } from '@mui/x-scheduler-headless/use-event-calendar';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventCalendarView } from '@mui/x-scheduler-headless/use-event-calendar-view';
 import { StandaloneWeekViewProps, WeekViewProps } from './WeekView.types';
 import { DayTimeGrid } from '../internals/components/day-time-grid/DayTimeGrid';
@@ -25,7 +23,7 @@ export const WeekView = React.memo(
   ) {
     const adapter = useAdapter();
     const store = useEventCalendarStoreContext();
-    const visibleDate = useStore(store, selectors.visibleDate);
+    const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
     const showWeekends = useStore(store, eventCalendarPreferenceSelectors.showWeekends);
     const getDayList = useDayList();
 

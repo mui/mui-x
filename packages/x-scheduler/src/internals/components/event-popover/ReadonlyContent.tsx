@@ -5,7 +5,11 @@ import { useStore } from '@base-ui-components/utils/store';
 import { CalendarEventOccurrence } from '@mui/x-scheduler-headless/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { DEFAULT_EVENT_COLOR } from '@mui/x-scheduler-headless/constants';
-import { selectors } from '@mui/x-scheduler-headless/scheduler-selectors';
+import {
+  schedulerEventSelectors,
+  schedulerRecurringEventSelectors,
+  schedulerResourceSelectors,
+} from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import EventPopoverHeader from './EventPopoverHeader';
 import { useTranslations } from '../../utils/TranslationsContext';
@@ -26,11 +30,15 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
   const store = useSchedulerStoreContext();
 
   // Selector hooks
-  const color = useStore(store, selectors.eventColor, occurrence.id);
-  const resource = useStore(store, selectors.resource, occurrence.resource);
+  const color = useStore(store, schedulerEventSelectors.color, occurrence.id);
+  const resource = useStore(
+    store,
+    schedulerResourceSelectors.processedResource,
+    occurrence.resource,
+  );
   const defaultRecurrenceKey = useStore(
     store,
-    selectors.defaultRecurrencePresetKey,
+    schedulerRecurringEventSelectors.defaultPresetKey,
     occurrence.rrule,
     occurrence.start,
   );

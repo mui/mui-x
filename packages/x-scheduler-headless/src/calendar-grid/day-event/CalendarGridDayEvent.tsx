@@ -10,7 +10,10 @@ import { useDraggableEvent } from '../../utils/useDraggableEvent';
 import { CalendarEventId, CalendarEventOccurrence, SchedulerValidDate } from '../../models';
 import { useAdapter, diffIn } from '../../use-adapter';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
-import { selectors } from '../../use-event-calendar/EventCalendarStore.selectors';
+import {
+  schedulerEventSelectors,
+  schedulerOccurrencePlaceholderSelectors,
+} from '../../scheduler-selectors';
 import { getCalendarGridHeaderCellId } from '../../utils/accessibility-utils';
 import { CalendarGridDayEventContext } from './CalendarGridDayEventContext';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
@@ -53,7 +56,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
   const ref = React.useRef<HTMLDivElement>(null);
 
   // Selector hooks
-  const hasPlaceholder = useStore(store, selectors.hasOccurrencePlaceholder);
+  const hasPlaceholder = useStore(store, schedulerOccurrencePlaceholderSelectors.isDefined);
 
   // State hooks
   const id = useId(idProp);
@@ -74,7 +77,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     return adapter.addDays(eventStartInRow, Math.ceil(positionX * eventDayLengthInRow) - 1);
   });
 
-  const firstEventOfSeries = selectors.event(store.state, eventId)!;
+  const firstEventOfSeries = schedulerEventSelectors.processedEvent(store.state, eventId)!;
   const originalOccurrence: CalendarEventOccurrence = {
     ...firstEventOfSeries,
     id: eventId,

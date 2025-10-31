@@ -27,7 +27,7 @@ import {
   applyRecurringUpdateAll,
   applyRecurringUpdateOnlyThis,
 } from '../recurring-event-utils';
-import { selectors } from '../../scheduler-selectors';
+import { schedulerEventSelectors } from '../../scheduler-selectors';
 import {
   buildEventsState,
   buildResourcesState,
@@ -235,8 +235,8 @@ export class SchedulerStore<
 
     const updated = new Map(updatedParam.map((ev) => [ev.id, ev]));
     const deleted = new Set(deletedParam);
-    const originalEventIds = selectors.eventIdList(this.state);
-    const originalEventModelLookup = selectors.eventModelLookup(this.state);
+    const originalEventIds = schedulerEventSelectors.idList(this.state);
+    const originalEventModelLookup = schedulerEventSelectors.modelLookup(this.state);
     const newEvents: TEvent[] = [];
 
     if (deleted.size > 0 || updated.size > 0) {
@@ -254,11 +254,11 @@ export class SchedulerStore<
         newEvents.push(newEvent);
       }
     } else {
-      newEvents.push(...selectors.eventModelList(this.state));
+      newEvents.push(...schedulerEventSelectors.modelList(this.state));
     }
 
     for (const createdEvent of created) {
-      if (selectors.event(this.state, createdEvent.id)) {
+      if (schedulerEventSelectors.processedEvent(this.state, createdEvent.id)) {
         throw new Error(
           `${this.instanceName}: an event with id="${createdEvent.id}" already exists. Use updateEvent(...) instead.`,
         );
@@ -288,7 +288,7 @@ export class SchedulerStore<
    * Updates an event in the calendar.
    */
   public updateEvent = (calendarEvent: CalendarEventUpdatedProperties) => {
-    const original = selectors.event(this.state, calendarEvent.id);
+    const original = schedulerEventSelectors.processedEvent(this.state, calendarEvent.id);
     if (!original) {
       throw new Error(
         `${this.instanceName}: the original event was not found (id="${calendarEvent.id}").`,
@@ -326,7 +326,7 @@ export class SchedulerStore<
     }
 
     const { changes, occurrenceStart, onSubmit } = pendingUpdateRecurringEventParameters;
-    const original = selectors.event(this.state, changes.id);
+    const original = schedulerEventSelectors.processedEvent(this.state, changes.id);
     if (!original) {
       throw new Error(
         `${this.instanceName}: the original event was not found (id="${changes.id}").`,
