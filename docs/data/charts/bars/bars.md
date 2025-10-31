@@ -62,10 +62,9 @@ You can create bar ranges by providing an array of two values for each data poin
 
 {{"demo": "BasicBarRange.js"}}
 
-
 ## Stacking
 
-Bar series accept a `stack` property that identifies a stack. 
+Bar series accept a `stack` property that identifies a stack.
 Series with the same `stack` will be stacked on top of each other.
 
 :::info

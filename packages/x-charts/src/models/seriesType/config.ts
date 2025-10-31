@@ -44,7 +44,8 @@ export interface ChartsSeriesConfig {
     axisType: 'cartesian';
   };
   barRange: {
-    seriesInput: DefaultizedProps<BarRangeSeriesType, 'id'> & Required<SeriesColor<BarRangeValueType | null>>;
+    seriesInput: DefaultizedProps<BarRangeSeriesType, 'id'> &
+      Required<SeriesColor<BarRangeValueType | null>>;
     series: DefaultizedBarRangeSeriesType;
     seriesProp: BarRangeSeriesType;
     itemIdentifier: BarRangeItemIdentifier;
