@@ -1,5 +1,6 @@
 import { createSelector, createSelectorMemoized } from '@base-ui-components/utils/store';
 import { SchedulerState as State } from '../utils/SchedulerStore/SchedulerStore.types';
+import { CalendarResource } from '../models';
 
 const processedResourceSelector = createSelector(
   (state: State) => state.processedResourceLookup,
@@ -7,14 +8,69 @@ const processedResourceSelector = createSelector(
     resourceId == null ? null : processedResourceLookup.get(resourceId),
 );
 
+const processedResourceListSelector = createSelectorMemoized(
+  (state: State) => state.resourceIdList,
+  (state: State) => state.processedResourceLookup,
+  (resourceIds, processedResourceLookup) =>
+    resourceIds.map((id) => processedResourceLookup.get(id)!),
+);
+
+const resourceChildrenIdListSelector = createSelector(
+  (state: State, resourceId: string) => state.resourceChildrenIdMap.get(resourceId) || [],
+);
+
+const resourcesChildrenMapSelector = createSelectorMemoized(
+  (state: State) => state.processedResourceLookup,
+  (state: State) => state.resourceChildrenIdMap,
+  (processedResourceLookup, resourceChildrenIdMap) => {
+    const result: Map<string, CalendarResource[]> = new Map();
+
+    for (const [resourceId, childrenIds] of resourceChildrenIdMap) {
+      const children = childrenIds.map((id) => processedResourceLookup.get(id)!);
+      result.set(resourceId, children);
+    }
+
+    return result;
+  },
+);
+
+const resourcesFlatListSelector = createSelectorMemoized(
+  (state: State) => state.resourceIdList,
+  (state: State) => state.processedResourceLookup,
+  (state: State) => state.resourceChildrenIdMap,
+  (resourceIds, processedResourceLookup, resourceChildrenIdMap) => {
+    const flatList: CalendarResource[] = [];
+
+    const addResourceAndChildren = (resourceId: string) => {
+      const resource = processedResourceLookup.get(resourceId);
+      if (!resource) {
+        return;
+      }
+
+      flatList.push(resource);
+
+      const childrenIds = resourceChildrenIdMap.get(resourceId) || [];
+      if (childrenIds.length) {
+        for (const childId of childrenIds) {
+          addResourceAndChildren(childId);
+        }
+      }
+    };
+
+    for (const resourceId of resourceIds) {
+      addResourceAndChildren(resourceId);
+    }
+    return flatList;
+  },
+);
+
 export const schedulerResourceSelectors = {
   processedResource: processedResourceSelector,
-  processedResourceList: createSelectorMemoized(
-    (state: State) => state.resourceIdList,
-    (state: State) => state.processedResourceLookup,
-    (resourceIds, processedResourceLookup) =>
-      resourceIds.map((id) => processedResourceLookup.get(id)!),
-  ),
+  processedResourceList: processedResourceListSelector,
+  processedResourceFlatList: resourcesFlatListSelector,
+  processedResourceChildrenMap: resourcesChildrenMapSelector,
+  childrenIdMap: (state: State) => state.resourceChildrenIdMap,
+  childrenIdsList: resourceChildrenIdListSelector,
   idList: createSelector((state: State) => state.resourceIdList),
   visibleMap: createSelector((state: State) => state.visibleResources),
   visibleIdList: createSelectorMemoized(
