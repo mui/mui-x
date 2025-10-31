@@ -1,10 +1,10 @@
-import { createSelectorMemoized } from '@mui/x-internals/store';
+import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import {
   selectorChartRawXAxis,
   selectorChartRawYAxis,
 } from './useChartCartesianAxisLayout.selectors';
 
-export const selectorChartLeftAxisSize = createSelectorMemoized(
+export const selectorChartLeftAxisSize = createSelector(
   selectorChartRawYAxis,
   function selectorChartLeftAxisSize(yAxis) {
     return (yAxis ?? []).reduce(
@@ -17,7 +17,7 @@ export const selectorChartLeftAxisSize = createSelectorMemoized(
   },
 );
 
-export const selectorChartRightAxisSize = createSelectorMemoized(
+export const selectorChartRightAxisSize = createSelector(
   selectorChartRawYAxis,
   function selectorChartRightAxisSize(yAxis) {
     return (yAxis ?? []).reduce(
@@ -30,7 +30,7 @@ export const selectorChartRightAxisSize = createSelectorMemoized(
   },
 );
 
-export const selectorChartTopAxisSize = createSelectorMemoized(
+export const selectorChartTopAxisSize = createSelector(
   selectorChartRawXAxis,
   function selectorChartTopAxisSize(xAxis) {
     return (xAxis ?? []).reduce(
@@ -43,7 +43,7 @@ export const selectorChartTopAxisSize = createSelectorMemoized(
   },
 );
 
-export const selectorChartBottomAxisSize = createSelectorMemoized(
+export const selectorChartBottomAxisSize = createSelector(
   selectorChartRawXAxis,
   function selectorChartBottomAxisSize(xAxis) {
     return (xAxis ?? []).reduce(
