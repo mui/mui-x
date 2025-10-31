@@ -13,6 +13,7 @@ export default mergeConfig(
         enabled: true,
         instances: [{ browser: 'chromium' }],
       },
+      sequence: { groupOrder: 33 },
     },
   }),
 );

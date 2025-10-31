@@ -26,5 +26,6 @@ export default mergeConfig(sharedConfig, {
     name: getTestName(import.meta.url),
     environment: 'jsdom',
     setupFiles: [fileURLToPath(new URL('../../test/utils/setupPickers.js', import.meta.url))],
+    sequence: { groupOrder: 30 },
   },
 });
