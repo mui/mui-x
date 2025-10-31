@@ -372,7 +372,7 @@ export const useFieldState = <
     }
 
     /**
-     * If all the sections are filled but the date is invalid and the previous date is valid or null,
+     * If all the sections are filled but the date is invalid and the previous date is invalid or null,
      * Then we publish an invalid date.
      */
     if (
