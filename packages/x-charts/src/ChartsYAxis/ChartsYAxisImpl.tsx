@@ -11,7 +11,7 @@ import { isInfinity } from '../internals/isInfinity';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 import { useIsHydrated } from '../hooks/useIsHydrated';
 import { isOrdinalScale } from '../internals/scaleGuards';
-import { getStringSize } from '../internals/domUtils';
+import { measureText } from '../internals/domUtils';
 import { AxisRoot } from '../internals/components/AxisSharedComponents';
 
 const YAxisRoot = styled(AxisRoot, {
@@ -92,7 +92,7 @@ export function ChartsYAxisImpl({ axis, ...inProps }: ChartsYAxisImplProps) {
     y: top + height / 2,
   };
 
-  const axisLabelHeight = label == null ? 0 : getStringSize(label, axisLabelProps.style).height;
+  const axisLabelHeight = label == null ? 0 : measureText(label, axisLabelProps.style).height;
 
   const domain = yScale.domain();
   const isScaleOrdinal = isOrdinalScale(yScale);
