@@ -42,10 +42,24 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginDat
     });
   }, [store, zoomInteractionConfig]);
 
+  // This is debounced. We want to run it only once after the interaction ends.
+  const removeIsInteracting = React.useMemo(
+    () =>
+      debounce(
+        () =>
+          store.set('zoom', {
+            ...store.state.zoom,
+            isInteracting: false,
+          }),
+        166,
+      ),
+    [store],
+  );
+
   // Manage controlled state
   React.useEffect(() => {
     if (paramsZoomData === undefined) {
-      return undefined;
+      return;
     }
 
     if (process.env.NODE_ENV !== 'production' && !store.state.zoom.isControlled) {
@@ -64,47 +78,28 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginDat
       isInteracting: true,
       zoomData: paramsZoomData,
     });
-
-    const timeout = setTimeout(() => {
-      store.set('zoom', {
-        ...store.state.zoom,
-        isInteracting: false,
-      });
-    }, 166);
-
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [store, paramsZoomData]);
-
-  // This is debounced. We want to run it only once after the interaction ends.
-  const removeIsInteracting = React.useMemo(
-    () =>
-      debounce(
-        () =>
-          store.set('zoom', {
-            ...store.state.zoom,
-            isInteracting: false,
-          }),
-        166,
-      ),
-    [store],
-  );
+    removeIsInteracting();
+  }, [store, paramsZoomData, removeIsInteracting]);
 
   const setZoomDataCallback = React.useCallback(
     (zoomData: ZoomData[] | ((prev: ZoomData[]) => ZoomData[])) => {
       const newZoomData =
         typeof zoomData === 'function' ? zoomData([...store.state.zoom.zoomData]) : zoomData;
-      onZoomChange?.(newZoomData);
+
+      onZoomChange(newZoomData);
       if (store.state.zoom.isControlled) {
-        return;
+        store.set('zoom', {
+          ...store.state.zoom,
+          isInteracting: true,
+        });
+      } else {
+        store.set('zoom', {
+          ...store.state.zoom,
+          isInteracting: true,
+          zoomData: newZoomData,
+        });
+        removeIsInteracting();
       }
-      removeIsInteracting();
-      store.set('zoom', {
-        ...store.state.zoom,
-        isInteracting: true,
-        zoomData: newZoomData,
-      });
     },
     [onZoomChange, store, removeIsInteracting],
   );
