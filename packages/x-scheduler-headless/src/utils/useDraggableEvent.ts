@@ -4,7 +4,10 @@ import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/disable-native-drag-preview';
 import { useStore } from '@base-ui-components/utils/store';
 import { useSchedulerStoreContext } from '../use-scheduler-store-context';
-import { selectors } from '../scheduler-selectors';
+import {
+  schedulerEventSelectors,
+  schedulerOccurrencePlaceholderSelectors,
+} from '../scheduler-selectors';
 import { CalendarEventId, SchedulerValidDate } from '../models';
 import { useDragPreview } from './useDragPreview';
 import { useEvent } from './useEvent';
@@ -31,8 +34,12 @@ export function useDraggableEvent(
   const store = useSchedulerStoreContext();
 
   // Selector hooks
-  const isDragging = useStore(store, selectors.isOccurrenceMatchingThePlaceholder, occurrenceKey);
-  const event = useStore(store, selectors.event, eventId)!;
+  const isDragging = useStore(
+    store,
+    schedulerOccurrencePlaceholderSelectors.isMatchingOccurrence,
+    occurrenceKey,
+  );
+  const event = useStore(store, schedulerEventSelectors.processedEvent, eventId)!;
 
   // State hooks
   const [isResizing, setIsResizing] = React.useState(false);

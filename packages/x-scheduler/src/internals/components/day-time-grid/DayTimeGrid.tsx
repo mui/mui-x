@@ -11,7 +11,11 @@ import { CalendarProcessedDate } from '@mui/x-scheduler-headless/models';
 import { useAdapter, diffIn, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { selectors } from '@mui/x-scheduler-headless/use-event-calendar';
+import {
+  schedulerEventSelectors,
+  schedulerNowSelectors,
+  schedulerOtherSelectors,
+} from '@mui/x-scheduler-headless/scheduler-selectors';
 import { DayTimeGridProps } from './DayTimeGrid.types';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { EventPopoverProvider } from '../event-popover';
@@ -38,11 +42,11 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const handleRef = useMergedRefs(forwardedRef, containerRef);
 
   // Selector hooks
-  const visibleDate = useStore(store, selectors.visibleDate);
+  const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
   const hasDayView = useStore(store, eventCalendarViewSelectors.hasDayView);
-  const now = useStore(store, selectors.nowUpdatedEveryMinute);
-  const isMultiDayEvent = useStore(store, selectors.isMultiDayEvent);
-  const showCurrentTimeIndicator = useStore(store, selectors.showCurrentTimeIndicator);
+  const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
+  const isMultiDayEvent = useStore(store, schedulerEventSelectors.isMultiDayEvent);
+  const showCurrentTimeIndicator = useStore(store, schedulerNowSelectors.showCurrentTimeIndicator);
 
   // Feature hooks
   const occurrencesMap = useEventOccurrencesGroupedByDay({ days });

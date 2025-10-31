@@ -9,10 +9,8 @@ import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventCalendarView } from '@mui/x-scheduler-headless/use-event-calendar-view';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
-import {
-  selectors,
-  useExtractEventCalendarParameters,
-} from '@mui/x-scheduler-headless/use-event-calendar';
+import { useExtractEventCalendarParameters } from '@mui/x-scheduler-headless/use-event-calendar';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { useWeekList } from '@mui/x-scheduler-headless/use-week-list';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
@@ -51,7 +49,7 @@ export const MonthView = React.memo(
     // Selector hooks
     const showWeekends = useStore(store, eventCalendarPreferenceSelectors.showWeekends);
     const showWeekNumber = useStore(store, eventCalendarPreferenceSelectors.showWeekNumber);
-    const visibleDate = useStore(store, selectors.visibleDate);
+    const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
 
     // State hooks
     const [maxEvents, setMaxEvents] = React.useState<number>(4);

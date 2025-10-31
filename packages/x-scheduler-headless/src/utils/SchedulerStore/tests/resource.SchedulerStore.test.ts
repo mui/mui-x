@@ -5,7 +5,7 @@ import {
 } from '@mui/x-scheduler-headless/models';
 import { adapter } from 'test/utils/scheduler';
 import { storeClasses } from './utils';
-import { selectors } from '../../../scheduler-selectors';
+import { schedulerResourceSelectors } from '../../../scheduler-selectors';
 
 const DEFAULT_PARAMS = { events: [] };
 
@@ -38,7 +38,7 @@ storeClasses.forEach((storeClass) => {
           { events: [], resources, resourceModelStructure },
           adapter,
         );
-        const resource = selectors.resource(store.state, '1');
+        const resource = schedulerResourceSelectors.processedResource(store.state, '1');
 
         expect(resource).to.deep.contain({
           id: '1',
