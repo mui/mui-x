@@ -56,11 +56,11 @@ export const usePanOnDrag = (
     const handlePanStart = (event: PanEvent) => {
       if (!(event.detail.target as SVGElement)?.closest('[data-charts-zoom-slider]')) {
         isInteracting.current = true;
+        accumulatedChange.current = { x: 0, y: 0 };
       }
     };
     const handlePanEnd = () => {
       isInteracting.current = false;
-      accumulatedChange.current = { x: 0, y: 0 };
     };
 
     const throttledCallback = rafThrottle(() => {
