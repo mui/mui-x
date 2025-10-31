@@ -4,7 +4,11 @@ import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store';
 import { useAdapter, diffIn } from '../use-adapter/useAdapter';
 import { useEventCalendarStoreContext } from '../use-event-calendar-store-context';
-import { selectors } from '../use-event-calendar';
+import {
+  schedulerEventSelectors,
+  schedulerOtherSelectors,
+  schedulerResourceSelectors,
+} from '../scheduler-selectors';
 import { useDayList } from '../use-day-list';
 import { CalendarProcessedDate, CalendarEventOccurrence } from '../models';
 import { innerGetEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
@@ -23,11 +27,11 @@ export function useAgendaEventOccurrencesGroupedByDay(): useAgendaEventOccurrenc
 
   const getDayList = useDayList();
 
-  const events = useStore(store, selectors.processedEventList);
-  const visibleDate = useStore(store, selectors.visibleDate);
+  const events = useStore(store, schedulerEventSelectors.processedEventList);
+  const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
   const showWeekends = useStore(store, eventCalendarPreferenceSelectors.showWeekends);
   const showEmptyDays = useStore(store, eventCalendarPreferenceSelectors.showEmptyDaysInAgenda);
-  const visibleResources = useStore(store, selectors.visibleResourcesMap);
+  const visibleResources = useStore(store, schedulerResourceSelectors.visibleMap);
 
   const amount = AGENDA_VIEW_DAYS_AMOUNT;
 

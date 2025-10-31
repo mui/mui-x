@@ -2,9 +2,9 @@ import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store/useStore';
 import { CalendarEventOccurrenceWithTimePosition, SchedulerValidDate } from '../../models';
 import { useTimelineStoreContext } from '../../use-timeline-store-context';
-import { selectors } from '../../use-timeline';
 import { useEventOccurrencesWithTimelinePosition } from '../../use-event-occurrences-with-timeline-position';
 import { timelineOccurrencePlaceholderSelectors } from '../../timeline-selectors';
+import { schedulerEventSelectors } from '../../scheduler-selectors';
 
 export function useTimelinePlaceholderInRange(
   parameters: useTimelinePlaceholderInRange.Parameters,
@@ -22,7 +22,7 @@ export function useTimelinePlaceholderInRange(
 
   const originalEventId =
     rawPlaceholder?.type === 'internal-drag-or-resize' ? rawPlaceholder.eventId : null;
-  const originalEvent = useStore(store, selectors.event, originalEventId);
+  const originalEvent = useStore(store, schedulerEventSelectors.processedEvent, originalEventId);
 
   return React.useMemo(() => {
     if (!rawPlaceholder) {

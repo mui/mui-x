@@ -19,7 +19,12 @@ import {
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { DEFAULT_EVENT_COLOR } from '@mui/x-scheduler-headless/constants';
-import { selectors } from '@mui/x-scheduler-headless/scheduler-selectors';
+import {
+  schedulerEventSelectors,
+  schedulerOccurrencePlaceholderSelectors,
+  schedulerRecurringEventSelectors,
+  schedulerResourceSelectors,
+} from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { getColorClassName } from '../../utils/color-utils';
 import { computeRange, ControlledValue, validateRange } from './utils';
@@ -39,13 +44,21 @@ export default function FormContent(props: FormContentProps) {
   const store = useSchedulerStoreContext();
 
   // Selector hooks
-  const isPropertyReadOnly = useStore(store, selectors.isEventPropertyReadOnly, occurrence.id);
-  const rawPlaceholder = useStore(store, selectors.occurrencePlaceholder);
-  const resources = useStore(store, selectors.processedResourceList);
-  const recurrencePresets = useStore(store, selectors.recurrencePresets, occurrence.start);
+  const isPropertyReadOnly = useStore(
+    store,
+    schedulerEventSelectors.isPropertyReadOnly,
+    occurrence.id,
+  );
+  const rawPlaceholder = useStore(store, schedulerOccurrencePlaceholderSelectors.value);
+  const resources = useStore(store, schedulerResourceSelectors.processedResourceList);
+  const recurrencePresets = useStore(
+    store,
+    schedulerRecurringEventSelectors.presets,
+    occurrence.start,
+  );
   const defaultRecurrenceKey = useStore(
     store,
-    selectors.defaultRecurrencePresetKey,
+    schedulerRecurringEventSelectors.defaultPresetKey,
     occurrence.rrule,
     occurrence.start,
   );

@@ -7,7 +7,7 @@ import { useButton } from '../../base-ui-copy/utils/useButton';
 import { CalendarEventId, CalendarEventOccurrence, SchedulerValidDate } from '../../models';
 import { useAdapter } from '../../use-adapter';
 import { useTimelineStoreContext } from '../../use-timeline-store-context';
-import { selectors } from '../../use-timeline';
+import { schedulerEventSelectors } from '../../scheduler-selectors';
 import { useTimelineEventRowContext } from '../event-row/TimelineEventRowContext';
 import { useDraggableEvent } from '../../utils/useDraggableEvent';
 import { TimelineEventCssVars } from './TimelineEventCssVars';
@@ -57,7 +57,7 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
       0,
     );
 
-    const event = selectors.event(store.state, eventId)!;
+    const event = schedulerEventSelectors.processedEvent(store.state, eventId)!;
 
     const originalOccurrence: CalendarEventOccurrence = {
       ...event,
