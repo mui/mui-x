@@ -18,7 +18,6 @@ describeAdapters(
 
       await view.selectSectionAsync('month');
       view.pressKey(0, '0');
-      view.pressKey(0, '0');
 
       expect(handleChange.callCount).to.be.greaterThan(0);
 
@@ -42,7 +41,6 @@ describeAdapters(
       });
 
       await view.selectSectionAsync('month');
-      view.pressKey(0, '0');
       view.pressKey(0, '0');
 
       handleChange.resetHistory();
