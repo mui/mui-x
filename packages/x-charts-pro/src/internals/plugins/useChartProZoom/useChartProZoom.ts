@@ -87,8 +87,8 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginDat
       const newZoomData =
         typeof zoomData === 'function' ? zoomData([...store.state.zoom.zoomData]) : zoomData;
 
+      onZoomChange(newZoomData);
       if (store.state.zoom.isControlled) {
-        onZoomChange?.(newZoomData);
         store.set('zoom', {
           ...store.state.zoom,
           isInteracting: true,
