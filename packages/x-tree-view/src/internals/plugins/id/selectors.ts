@@ -19,7 +19,7 @@ export const idSelectors = {
         return providedIdAttribute;
       }
 
-      return `${treeId}-${itemId}`;
+      return `${treeId ?? ''}-${itemId}`;
     },
   ),
 };
