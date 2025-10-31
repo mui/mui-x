@@ -8,7 +8,10 @@ import { defaultizeValueFormatter } from '../../../internals/defaultizeValueForm
 const seriesProcessor: SeriesProcessor<'barRange'> = (params, dataset) => {
   const { seriesOrder, series } = params;
 
-  const completedSeries: Record<SeriesId, DefaultizedProps<ChartSeries<'barRange'>, 'data'>> = {};
+  const completedSeries: Record<
+    SeriesId,
+    DefaultizedProps<ChartSeries<'barRange'>, 'data' | 'layout'>
+  > = {};
 
   for (const id of seriesOrder) {
     const seriesData = series[id];
@@ -16,7 +19,7 @@ const seriesProcessor: SeriesProcessor<'barRange'> = (params, dataset) => {
 
     if (
       seriesData.data === undefined &&
-      seriesData.dataset === undefined &&
+      dataset === undefined &&
       process.env.NODE_ENV !== 'production'
     ) {
       throw new Error(
@@ -31,16 +34,17 @@ const seriesProcessor: SeriesProcessor<'barRange'> = (params, dataset) => {
       (key) => typeof datasetKeys?.[key] !== 'string',
     );
 
-    if (seriesData?.datasetKeys && missingKeys.length > 0) {
+    if (datasetKeys && missingKeys.length > 0) {
       throw new Error(
         [
-          `MUI X Charts: scatter series with id='${id}' has incomplete datasetKeys.`,
+          `MUI X Charts: bar range series with id='${id}' has incomplete datasetKeys.`,
           `Properties ${missingKeys.map((key) => `"${key}"`).join(', ')} are missing.`,
         ].join('\n'),
       );
     }
 
     completedSeries[id] = {
+      layout: 'vertical',
       ...series[id],
       data: datasetKeys
         ? dataset!.map((data) => {
@@ -52,14 +56,14 @@ const seriesProcessor: SeriesProcessor<'barRange'> = (params, dataset) => {
                 if (start !== null) {
                   warnOnce([
                     `MUI X Charts: Your dataset key "start" is used for plotting an bar range, but contains nonnumerical elements.`,
-                    'Area plots only support numbers and null values.',
+                    'Bar ranges only support numbers.',
                   ]);
                 }
 
                 if (end !== null) {
                   warnOnce([
                     `MUI X Charts: Your dataset key "end" is used for plotting an bar range, but contains nonnumerical elements.`,
-                    'Area plots only support numbers and null values.',
+                    'Bar ranges only support numbers.',
                   ]);
                 }
               }
@@ -69,7 +73,7 @@ const seriesProcessor: SeriesProcessor<'barRange'> = (params, dataset) => {
             return { start, end };
           })
         : series[id].data!,
-    } satisfies DefaultizedProps<ChartSeries<'barRange'>, 'data'>;
+    };
   }
 
   return {
