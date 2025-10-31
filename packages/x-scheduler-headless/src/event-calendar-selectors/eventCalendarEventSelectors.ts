@@ -26,7 +26,7 @@ export const eventCalendarEventSelectors = {
   ),
   isResizable: createSelector(
     (state: State, eventId: CalendarEventId, surfaceType: EventSurfaceType) => {
-      if (schedulerEventSelectors.isReadOnly(state, eventId) || !state.areEventsDraggable) {
+      if (schedulerEventSelectors.isReadOnly(state, eventId) || !state.areEventsResizable) {
         return false;
       }
 
