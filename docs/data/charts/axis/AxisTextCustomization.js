@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Box from '@mui/material/Box';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import { BarChart } from '@mui/x-charts/BarChart';
@@ -63,7 +62,7 @@ export default function AxisTextCustomization() {
       )}
       getCode={({ props }) => `import { BarChart } from '@mui/x-charts/BarChart';
 
-<ScatterChart
+<BarChart
   // ...
   xAxis={[
     {

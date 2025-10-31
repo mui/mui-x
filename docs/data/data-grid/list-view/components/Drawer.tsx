@@ -1,4 +1,3 @@
-import * as React from 'react';
 import MUISwipeableDrawer, {
   SwipeableDrawerProps as MUISwipeableDrawerProps,
 } from '@mui/material/SwipeableDrawer';

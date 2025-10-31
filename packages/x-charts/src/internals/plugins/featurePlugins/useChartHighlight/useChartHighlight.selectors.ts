@@ -1,3 +1,4 @@
+import { createSelectorMemoized } from '@mui/x-internals/store';
 import { SeriesId } from '../../../../models/seriesType/common';
 import { ChartSeriesType } from '../../../../models/seriesType/config';
 import { UseChartSeriesSignature } from '../../corePlugins/useChartSeries/useChartSeries.types';
@@ -34,8 +35,9 @@ export const selectorChartsHighlightScopePerSeriesId = createSelector(
   },
 );
 
-export const selectorChartsHighlightedItem = createSelector(
-  [selectHighlight, selectorChartsKeyboardItem],
+export const selectorChartsHighlightedItem = createSelectorMemoized(
+  selectHighlight,
+  selectorChartsKeyboardItem,
   function selectorChartsHighlightedItem(highlight, keyboardItem) {
     return highlight.lastUpdate === 'pointer' ? highlight.item : keyboardItem;
   },
@@ -68,59 +70,39 @@ export const selectorChartsIsFadedCallback = createSelector(
 );
 
 export const selectorChartsIsHighlighted = createSelector(
-  [
-    selectorChartsHighlightScope,
-    selectorChartsHighlightedItem,
-    (_, item: HighlightItemData | null) => item,
-  ],
-  function selectorChartsIsHighlighted(highlightScope, highlightedItem, item) {
+  [selectorChartsHighlightScope, selectorChartsHighlightedItem],
+  function selectorChartsIsHighlighted(
+    highlightScope,
+    highlightedItem,
+    item: HighlightItemData | null,
+  ) {
     return createIsHighlighted(highlightScope, highlightedItem)(item);
   },
 );
 
 export const selectorChartIsSeriesHighlighted = createSelector(
-  [
-    selectorChartsHighlightScope,
-    selectorChartsHighlightedItem,
-    (_, seriesId: SeriesId) => seriesId,
-  ],
+  [selectorChartsHighlightScope, selectorChartsHighlightedItem],
   isSeriesHighlighted,
 );
 
 export const selectorChartIsSeriesFaded = createSelector(
-  [
-    selectorChartsHighlightScope,
-    selectorChartsHighlightedItem,
-    (_, seriesId: SeriesId) => seriesId,
-  ],
+  [selectorChartsHighlightScope, selectorChartsHighlightedItem],
   isSeriesFaded,
 );
 
 export const selectorChartSeriesUnfadedItem = createSelector(
-  [
-    selectorChartsHighlightScope,
-    selectorChartsHighlightedItem,
-    (_, seriesId: SeriesId) => seriesId,
-  ],
+  [selectorChartsHighlightScope, selectorChartsHighlightedItem],
   getSeriesUnfadedItem,
 );
 
 export const selectorChartSeriesHighlightedItem = createSelector(
-  [
-    selectorChartsHighlightScope,
-    selectorChartsHighlightedItem,
-    (_, seriesId: SeriesId) => seriesId,
-  ],
+  [selectorChartsHighlightScope, selectorChartsHighlightedItem],
   getSeriesHighlightedItem,
 );
 
 export const selectorChartsIsFaded = createSelector(
-  [
-    selectorChartsHighlightScope,
-    selectorChartsHighlightedItem,
-    (_, item: HighlightItemData | null) => item,
-  ],
-  function selectorChartsIsFaded(highlightScope, highlightedItem, item) {
+  [selectorChartsHighlightScope, selectorChartsHighlightedItem],
+  function selectorChartsIsFaded(highlightScope, highlightedItem, item: HighlightItemData | null) {
     return createIsFaded(highlightScope, highlightedItem)(item);
   },
 );

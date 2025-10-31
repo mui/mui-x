@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { spy } from 'sinon';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { ChartsRenderer } from '@mui/x-charts-premium/ChartsRenderer';
