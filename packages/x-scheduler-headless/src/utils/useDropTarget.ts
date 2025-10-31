@@ -15,7 +15,10 @@ import {
   EventDropDataLookup,
 } from '../build-is-valid-drop-target/buildIsValidDropTarget';
 import { SchedulerStoreInContext, useSchedulerStoreContext } from '../use-scheduler-store-context';
-import { selectors } from '../scheduler-selectors';
+import {
+  schedulerEventSelectors,
+  schedulerOccurrencePlaceholderSelectors,
+} from '../scheduler-selectors';
 
 export function useDropTarget<Targets extends keyof EventDropDataLookup>(
   parameters: useDropTarget.Parameters<Targets>,
@@ -62,7 +65,7 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
 
         if (
           source.data.source === 'StandaloneEvent' &&
-          !selectors.canDragEventsFromTheOutside(store.state)
+          !schedulerEventSelectors.canDragEventsFromTheOutside(store.state)
         ) {
           return false;
         }
@@ -86,7 +89,7 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
           input: location.current.input,
         });
 
-        const placeholder = dropData ?? selectors.occurrencePlaceholder(store.state);
+        const placeholder = dropData ?? schedulerOccurrencePlaceholderSelectors.value(store.state);
 
         if (placeholder?.type === 'internal-drag-or-resize') {
           applyInternalDragOrResizeOccurrencePlaceholder(
@@ -99,7 +102,7 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
         }
       },
       onDragLeave: () => {
-        const currentPlaceholder = selectors.occurrencePlaceholder(store.state);
+        const currentPlaceholder = schedulerOccurrencePlaceholderSelectors.value(store.state);
         if (currentPlaceholder?.surfaceType !== surfaceType) {
           return;
         }
@@ -107,7 +110,8 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
         const type = currentPlaceholder.type;
         const shouldHidePlaceholder =
           type === 'external-drag' ||
-          (type === 'internal-drag-or-resize' && selectors.canDropEventsToTheOutside(store.state));
+          (type === 'internal-drag-or-resize' &&
+            schedulerEventSelectors.canDropEventsToTheOutside(store.state));
 
         if (shouldHidePlaceholder) {
           store.setOccurrencePlaceholder({ ...currentPlaceholder, isHidden: true });
@@ -155,7 +159,7 @@ async function applyInternalDragOrResizeOccurrencePlaceholder(
 
   const { eventId, start, end, originalOccurrence } = placeholder;
 
-  const original = selectors.event(store.state, eventId);
+  const original = schedulerEventSelectors.processedEvent(store.state, eventId);
   if (!original) {
     throw new Error(`Scheduler: the original event was not found (id="${eventId}").`);
   }

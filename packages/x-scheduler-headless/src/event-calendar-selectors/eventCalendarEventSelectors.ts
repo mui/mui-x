@@ -1,11 +1,11 @@
 import { createSelector } from '@base-ui-components/utils/store';
-import { selectors as schedulerSelectors } from '../scheduler-selectors';
+import { schedulerEventSelectors } from '../scheduler-selectors';
 import { EventCalendarState as State } from '../use-event-calendar';
 import { CalendarEventId, EventSurfaceType } from '../models';
 
 export const eventCalendarEventSelectors = {
   isDraggable: createSelector(
-    schedulerSelectors.isEventReadOnly,
+    schedulerEventSelectors.isReadOnly,
     (state: State) => state.areEventsDraggable,
     (state: State) => state.eventModelStructure,
     (isEventReadOnly, areEventsDraggable, eventModelStructure, _eventId: CalendarEventId) => {
@@ -26,11 +26,11 @@ export const eventCalendarEventSelectors = {
   ),
   isResizable: createSelector(
     (state: State, eventId: CalendarEventId, surfaceType: EventSurfaceType) => {
-      if (schedulerSelectors.isEventReadOnly(state, eventId) || !state.areEventsDraggable) {
+      if (schedulerEventSelectors.isReadOnly(state, eventId) || !state.areEventsDraggable) {
         return false;
       }
 
-      const event = schedulerSelectors.event(state, eventId);
+      const event = schedulerEventSelectors.processedEvent(state, eventId);
       const { view, eventModelStructure, isMultiDayEvent } = state;
 
       // There is only one day cell in the day view
