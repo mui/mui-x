@@ -1,5 +1,5 @@
 import { ChartsXAxisProps, ChartsYAxisProps, ComputedAxis, ScaleName } from '../models/axis';
-import getColor from './seriesConfig/getColor';
+import getColor from './seriesConfig/bar/getColor';
 import { ChartDrawingArea, useChartId, useXAxes, useYAxes } from '../hooks';
 import { MaskData, ProcessedBarData, ProcessedBarSeriesData } from './types';
 import { checkScaleErrors } from './checkScaleErrors';
