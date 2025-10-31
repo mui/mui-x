@@ -13,7 +13,7 @@ import { getCalendarGridHeaderCellId } from '../../utils/accessibility-utils';
 import { CalendarGridTimeEventContext } from './CalendarGridTimeEventContext';
 import { useAdapter } from '../../use-adapter/useAdapter';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
-import { selectors } from '../../use-event-calendar';
+import { schedulerEventSelectors } from '../../scheduler-selectors';
 import { CalendarEventId, CalendarEventOccurrence, SchedulerValidDate } from '../../models';
 import { useCalendarGridRootContext } from '../root/CalendarGridRootContext';
 
@@ -67,7 +67,7 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
         0,
       );
 
-      const event = selectors.event(store.state, eventId)!;
+      const event = schedulerEventSelectors.processedEvent(store.state, eventId)!;
 
       const originalOccurrence: CalendarEventOccurrence = {
         ...event,

@@ -2,7 +2,7 @@ import { spy } from 'sinon';
 import { adapter } from 'test/utils/scheduler';
 import { SchedulerEventModelStructure, SchedulerValidDate } from '@mui/x-scheduler-headless/models';
 import { buildEvent, storeClasses, getIds } from './utils';
-import { selectors } from '../../../scheduler-selectors';
+import { schedulerEventSelectors } from '../../../scheduler-selectors';
 
 storeClasses.forEach((storeClass) => {
   describe(`Event - ${storeClass.name}`, () => {
@@ -58,7 +58,7 @@ storeClasses.forEach((storeClass) => {
         ];
 
         const store = new storeClass.Value({ events, eventModelStructure }, adapter);
-        const event = selectors.event(store.state, '1');
+        const event = schedulerEventSelectors.processedEvent(store.state, '1');
 
         expect(event).to.deep.contain({
           id: '1',

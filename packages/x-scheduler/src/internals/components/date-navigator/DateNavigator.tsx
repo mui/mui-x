@@ -9,7 +9,7 @@ import {
   eventCalendarPreferenceSelectors,
   eventCalendarViewSelectors,
 } from '@mui/x-scheduler-headless/event-calendar-selectors';
-import { selectors } from '@mui/x-scheduler-headless/use-event-calendar';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { DateNavigatorProps } from './DateNavigator.types';
 import { useTranslations } from '../../utils/TranslationsContext';
 import './DateNavigator.css';
@@ -27,7 +27,7 @@ export const DateNavigator = React.forwardRef(function DateNavigator(
 
   // Selector hooks
   const view = useStore(store, eventCalendarViewSelectors.view);
-  const visibleDate = useStore(store, selectors.visibleDate);
+  const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
   const isSidePanelOpen = useStore(store, eventCalendarPreferenceSelectors.isSidePanelOpen);
 
   return (
