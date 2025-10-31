@@ -4,6 +4,7 @@ import { CalendarEventOccurrenceWithTimePosition, SchedulerValidDate } from '../
 import { useTimelineStoreContext } from '../../use-timeline-store-context';
 import { selectors } from '../../use-timeline';
 import { useEventOccurrencesWithTimelinePosition } from '../../use-event-occurrences-with-timeline-position';
+import { timelineOccurrencePlaceholderSelectors } from '../../timeline-selectors';
 
 export function useTimelinePlaceholderInRange(
   parameters: useTimelinePlaceholderInRange.Parameters,
@@ -13,7 +14,7 @@ export function useTimelinePlaceholderInRange(
 
   const rawPlaceholder = useStore(
     store,
-    selectors.occurrencePlaceholderToRenderInTimeRange,
+    timelineOccurrencePlaceholderSelectors.placeholderInTimeRange,
     start,
     end,
     resourceId,

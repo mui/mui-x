@@ -4,9 +4,11 @@ import { useStore } from '@base-ui-components/utils/store/useStore';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { useDayList } from '@mui/x-scheduler-headless/use-day-list';
 import { selectors } from '@mui/x-scheduler-headless/use-timeline';
+
 import { useTimelineStoreContext } from '@mui/x-scheduler-headless/use-timeline-store-context';
 import { HeaderProps } from './Headers.types';
 import { TIME_UNITS_COUNT } from '../../constants';
+import { useFormatTime } from '../../../internals/hooks/useFormatTime';
 import './Headers.css';
 
 export function TimeHeader(props: HeaderProps) {
@@ -17,9 +19,7 @@ export function TimeHeader(props: HeaderProps) {
   const store = useTimelineStoreContext();
 
   const visibleDate = useStore(store, selectors.visibleDate);
-  const ampm = useStore(store, selectors.ampm);
-
-  const timeFormat = ampm ? 'hoursMinutes12h' : 'hoursMinutes24h';
+  const formatTime = useFormatTime();
 
   const days = React.useMemo(
     () =>
@@ -45,9 +45,7 @@ export function TimeHeader(props: HeaderProps) {
                 className="TimeCell"
                 style={{ '--hour': hour } as React.CSSProperties}
               >
-                <time className="TimeLabel">
-                  {adapter.format(adapter.setHours(day.value, hour), timeFormat)}
-                </time>
+                <time className="TimeLabel">{formatTime(adapter.setHours(day.value, hour))}</time>
               </div>
             ))}
           </div>

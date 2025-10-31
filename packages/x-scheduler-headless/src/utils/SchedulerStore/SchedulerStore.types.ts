@@ -10,6 +10,7 @@ import {
   CalendarEventId,
   SchedulerResourceModelStructure,
   SchedulerEventModelStructure,
+  SchedulerPreferences,
 } from '../../models';
 import { Adapter } from '../../use-adapter/useAdapter.types';
 
@@ -113,6 +114,10 @@ export interface SchedulerState<TEvent extends object = any> {
    * Pending parameters to use when the user selects the scope of a recurring event update.
    */
   pendingUpdateRecurringEventParameters: UpdateRecurringEventParameters | null;
+  /**
+   * Preferences for the scheduler.
+   */
+  preferences: SchedulerPreferences;
 }
 
 export interface SchedulerParameters<TEvent extends object, TResource extends object> {
@@ -234,7 +239,7 @@ export interface SchedulerParametersToStateMapper<
    * Updates the state based on the new parameters.
    */
   updateStateFromParameters: (
-    newState: Partial<SchedulerState>,
+    newState: Omit<Partial<SchedulerState>, 'preferences'>,
     parameters: Parameters,
     updateModel: SchedulerModelUpdater<State, Parameters>,
   ) => Partial<State>;

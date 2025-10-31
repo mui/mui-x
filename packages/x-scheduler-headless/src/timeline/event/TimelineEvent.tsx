@@ -122,7 +122,7 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
     [position, duration],
   );
 
-  const props = React.useMemo(() => ({ style }), [style]);
+  const props = { style };
 
   const contextValue: TimelineEventContext = React.useMemo(
     () => ({ ...draggableEventContextValue, getSharedDragData }),

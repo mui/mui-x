@@ -30,7 +30,7 @@ export const TimelineEventRow = React.forwardRef(function TimelineEventRow(
   });
 
   // TODO: Add aria-rowindex using Composite.
-  const props = React.useMemo(() => ({ role: 'row' }), []);
+  const props = { role: 'row' };
 
   const contextValue: TimelineEventRowContext = React.useMemo(
     () => ({ start, end, getCursorPositionInElementMs }),

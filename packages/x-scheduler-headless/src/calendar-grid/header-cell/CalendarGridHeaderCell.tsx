@@ -40,14 +40,11 @@ export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHead
   const { ref: listItemRef, index } = useCompositeListItem();
   const id = getCalendarGridHeaderCellId(rootId, index);
 
-  const props = React.useMemo(
-    () => ({
-      role: 'columnheader',
-      id,
-      'aria-label': `${adapter.formatByString(date.value, ariaLabelFormat)}`,
-    }),
-    [adapter, date, id, ariaLabelFormat],
-  );
+  const props = {
+    role: 'columnheader',
+    id,
+    'aria-label': `${adapter.formatByString(date.value, ariaLabelFormat)}`,
+  };
 
   const state: CalendarGridHeaderCell.State = React.useMemo(
     () => ({

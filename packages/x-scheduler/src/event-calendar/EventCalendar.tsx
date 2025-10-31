@@ -9,6 +9,10 @@ import {
   selectors,
   useExtractEventCalendarParameters,
 } from '@mui/x-scheduler-headless/use-event-calendar';
+import {
+  eventCalendarPreferenceSelectors,
+  eventCalendarViewSelectors,
+} from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { EventCalendarProps } from './EventCalendar.types';
 import { WeekView } from '../week-view/WeekView';
@@ -33,8 +37,8 @@ export const EventCalendar = React.forwardRef(function EventCalendar<
     typeof props
   >(props);
   const store = useEventCalendar(parameters);
-  const view = useStore(store, selectors.view);
-  const isSidePanelOpen = useStore(store, selectors.preferences).isSidePanelOpen;
+  const view = useStore(store, eventCalendarViewSelectors.view);
+  const isSidePanelOpen = useStore(store, eventCalendarPreferenceSelectors.isSidePanelOpen);
   const isScopeDialogOpen = useStore(store, selectors.isScopeDialogOpen);
   const {
     // TODO: Move inside useEventCalendar so that standalone view can benefit from it (#19293).

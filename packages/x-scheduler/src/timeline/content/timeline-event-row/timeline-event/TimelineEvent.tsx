@@ -5,6 +5,7 @@ import { useId } from '@base-ui-components/utils/useId';
 import { Timeline } from '@mui/x-scheduler-headless/timeline';
 import { selectors } from '@mui/x-scheduler-headless/use-timeline';
 import { useTimelineStoreContext } from '@mui/x-scheduler-headless/use-timeline-store-context';
+import { timelineEventSelectors } from '@mui/x-scheduler-headless/timeline-selectors';
 import { getColorClassName } from '../../../../internals/utils/color-utils';
 import { EventDragPreview } from '../../../../internals/components/event-drag-preview';
 import { TimelineEventProps } from './TimelineEvent.types';
@@ -14,22 +15,18 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
   props: TimelineEventProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const {
-    occurrence,
-    ariaLabelledBy,
-    className,
-    variant,
-    onEventClick,
-    id: idProp,
-    style,
-    ...other
-  } = props;
+  const { occurrence, ariaLabelledBy, className, variant, id: idProp, style, ...other } = props;
 
   const store = useTimelineStoreContext();
 
   const id = useId(idProp);
-  const isDraggable = useStore(store, selectors.isEventDraggable);
-  const isResizable = useStore(store, selectors.isEventResizable, occurrence.id, 'timeline');
+  const isDraggable = useStore(store, timelineEventSelectors.isDraggable);
+  const isResizable = useStore(
+    store,
+    timelineEventSelectors.isResizable,
+    occurrence.id,
+    'timeline',
+  );
   const color = useStore(store, selectors.eventColor, occurrence.id);
 
   const sharedProps = {

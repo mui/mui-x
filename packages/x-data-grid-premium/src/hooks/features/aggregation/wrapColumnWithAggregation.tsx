@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { GridColDef, GridRowId, gridRowNodeSelector } from '@mui/x-data-grid-pro';
 import type { GridBaseColDef } from '@mui/x-data-grid-pro/internals';
