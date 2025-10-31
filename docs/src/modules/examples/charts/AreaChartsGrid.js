@@ -1,4 +1,3 @@
-import * as React from 'react';
 import SimpleAreaChart from 'docsx/data/charts/areas-demo/SimpleAreaChart';
 import StackedAreaChart from 'docsx/data/charts/areas-demo/StackedAreaChart';
 import PercentAreaChart from 'docsx/data/charts/areas-demo/PercentAreaChart';

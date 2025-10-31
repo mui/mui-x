@@ -1,4 +1,3 @@
-import * as React from 'react';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import { PieChart } from '@mui/x-charts/PieChart';
 import { desktopOS, valueFormatter } from './webUsageStats';

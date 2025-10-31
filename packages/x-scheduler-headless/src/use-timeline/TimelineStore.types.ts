@@ -13,7 +13,6 @@ export interface TimelineState extends SchedulerState {
   views: TimelineView[];
   /**
    * Preferences for the timeline.
-   *
    */
   preferences: TimelinePreferences;
 }

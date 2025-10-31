@@ -1,7 +1,7 @@
+import * as React from 'react';
 import { CalendarEventOccurrenceWithDayGridPosition } from '@mui/x-scheduler-headless/models';
-import { EventProps } from '../Event.types';
 
-export interface DayGridEventProps extends EventProps {
+export interface DayGridEventProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * The event occurrence to render.
    */

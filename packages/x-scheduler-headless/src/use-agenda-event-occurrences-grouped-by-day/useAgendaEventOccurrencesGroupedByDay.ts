@@ -9,6 +9,7 @@ import { useDayList } from '../use-day-list';
 import { CalendarProcessedDate, CalendarEventOccurrence } from '../models';
 import { innerGetEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
 import { AGENDA_VIEW_DAYS_AMOUNT, AGENDA_MAX_HORIZON_DAYS } from '../constants';
+import { eventCalendarPreferenceSelectors } from '../event-calendar-selectors';
 
 /**
  * Agenda-specific hook that:
@@ -24,8 +25,8 @@ export function useAgendaEventOccurrencesGroupedByDay(): useAgendaEventOccurrenc
 
   const events = useStore(store, selectors.processedEventList);
   const visibleDate = useStore(store, selectors.visibleDate);
-  const showWeekends = useStore(store, selectors.showWeekends);
-  const showEmptyDays = useStore(store, selectors.showEmptyDaysInAgenda);
+  const showWeekends = useStore(store, eventCalendarPreferenceSelectors.showWeekends);
+  const showEmptyDays = useStore(store, eventCalendarPreferenceSelectors.showEmptyDaysInAgenda);
   const visibleResources = useStore(store, selectors.visibleResourcesMap);
 
   const amount = AGENDA_VIEW_DAYS_AMOUNT;
