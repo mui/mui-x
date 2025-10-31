@@ -4,7 +4,7 @@ import { GRID_ROOT_GROUP_ID } from '../rows/gridRowsUtils';
 import { gridFilteredRowsLookupSelector } from '../filter/gridFilterSelector';
 import { gridSortedRowIdsSelector } from '../sorting/gridSortingSelector';
 import { gridRowSelectionManagerSelector } from './gridRowSelectionSelector';
-import { gridRowTreeSelector } from '../rows/gridRowsSelector';
+import { gridRowsLookupSelector, gridRowTreeSelector } from '../rows/gridRowsSelector';
 import { createSelector } from '../../../utils/createSelector';
 import type { GridGroupNode, GridRowId, GridRowTreeConfig } from '../../../models/gridRows';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -14,6 +14,7 @@ import type {
 } from '../../../models/api/gridApiCommunity';
 import { type GridRowSelectionPropagation } from '../../../models/gridRowSelectionModel';
 import { type RowSelectionManager } from '../../../models/gridRowSelectionManager';
+import { GridRowParams } from '../../../models/params/gridRowParams';
 
 export const ROW_SELECTION_PROPAGATION_DEFAULT: GridRowSelectionPropagation = {
   parents: true,
@@ -52,17 +53,42 @@ export const checkboxPropsSelector = createSelector(
   gridRowTreeSelector,
   gridFilteredRowsLookupSelector,
   gridRowSelectionManagerSelector,
+  gridRowsLookupSelector,
   (
     rowTree,
     filteredRowsLookup,
     rowSelectionManager,
-    { groupId, autoSelectParents }: { groupId: GridRowId; autoSelectParents: boolean },
+    rowsLookup,
+    {
+      groupId,
+      autoSelectParents,
+      isRowSelectable,
+      columns,
+    }: {
+      groupId: GridRowId;
+      autoSelectParents: boolean;
+      isRowSelectable: ((params: GridRowParams) => boolean) | undefined;
+      columns: DataGridProcessedProps['columns'];
+    },
   ) => {
     const groupNode = rowTree[groupId];
+
+    const rowParams: GridRowParams = {
+      id: groupId,
+      row: rowsLookup[groupId],
+      columns: columns.slice(),
+    };
+
+    let isSelectable = true;
+    if (typeof isRowSelectable === 'function') {
+      isSelectable = isRowSelectable(rowParams);
+    }
+
     if (!groupNode || groupNode.type !== 'group' || rowSelectionManager.has(groupId)) {
       return {
         isIndeterminate: false,
         isChecked: rowSelectionManager.has(groupId),
+        isSelectable,
       };
     }
 
@@ -94,6 +120,7 @@ export const checkboxPropsSelector = createSelector(
     return {
       isIndeterminate: hasSelectedDescendant && hasUnSelectedDescendant,
       isChecked: autoSelectParents ? hasSelectedDescendant && !hasUnSelectedDescendant : false,
+      isSelectable,
     };
   },
 );
