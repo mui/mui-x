@@ -18,7 +18,7 @@ export const useZoomOnDoubleTapReset = (
   setZoomDataCallback: React.Dispatch<ZoomData[] | ((prev: ZoomData[]) => ZoomData[])>,
 ) => {
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
-  const config = useSelector(store, selectorZoomInteractionConfig, ['doubleTapReset' as const]);
+  const config = useSelector(store, selectorZoomInteractionConfig, 'doubleTapReset' as const);
 
   const isZoomOnDoubleTapResetEnabled: boolean =
     Object.keys(optionsLookup).length > 0 && Boolean(config);
