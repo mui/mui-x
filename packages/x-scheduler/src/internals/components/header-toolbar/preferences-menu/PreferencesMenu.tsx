@@ -11,7 +11,10 @@ import {
   EventCalendarPreferencesMenuConfig,
 } from '@mui/x-scheduler-headless/models';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { selectors } from '@mui/x-scheduler-headless/use-event-calendar';
+import {
+  eventCalendarPreferenceSelectors,
+  eventCalendarViewSelectors,
+} from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { useTranslations } from '../../../utils/TranslationsContext';
 import './PreferencesMenu.css';
 
@@ -21,13 +24,18 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
 ) {
   const { className, ...other } = props;
 
-  const containerRef = React.useRef<HTMLElement | null>(null);
-  const handleRef = useMergedRefs(forwardedRef, containerRef);
+  // Context hooks
   const translations = useTranslations();
   const store = useEventCalendarStoreContext();
-  const preferences = useStore(store, selectors.preferences);
-  const currentView = useStore(store, selectors.view);
-  const preferencesMenuConfig = useStore(store, selectors.preferencesMenuConfig);
+
+  // Ref hooks
+  const containerRef = React.useRef<HTMLElement | null>(null);
+  const handleRef = useMergedRefs(forwardedRef, containerRef);
+
+  // Selector hooks
+  const currentView = useStore(store, eventCalendarViewSelectors.view);
+  const preferences = useStore(store, eventCalendarPreferenceSelectors.all);
+  const preferencesMenuConfig = useStore(store, eventCalendarPreferenceSelectors.menuConfig);
 
   const handleToggle = (key: keyof EventCalendarPreferences, checked: boolean, event: Event) => {
     store.setPreferences({ [key]: checked }, event);

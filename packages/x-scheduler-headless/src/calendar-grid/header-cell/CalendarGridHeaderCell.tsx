@@ -9,7 +9,7 @@ import { useEventCalendarStoreContext } from '../../use-event-calendar-store-con
 import { CalendarProcessedDate } from '../../models';
 import { getCalendarGridHeaderCellId } from '../../utils/accessibility-utils';
 import { useCalendarGridRootContext } from '../root/CalendarGridRootContext';
-import { selectors } from '../../scheduler-selectors';
+import { schedulerNowSelectors } from '../../scheduler-selectors';
 
 export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHeaderCell(
   componentProps: CalendarGridHeaderCell.Props,
@@ -33,21 +33,18 @@ export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHead
   const { id: rootId } = useCalendarGridRootContext();
   const isCurrentDay = useStore(
     store,
-    skipDataCurrent ? () => false : selectors.isCurrentDay,
+    skipDataCurrent ? () => false : schedulerNowSelectors.isCurrentDay,
     date.value,
   );
 
   const { ref: listItemRef, index } = useCompositeListItem();
   const id = getCalendarGridHeaderCellId(rootId, index);
 
-  const props = React.useMemo(
-    () => ({
-      role: 'columnheader',
-      id,
-      'aria-label': `${adapter.formatByString(date.value, ariaLabelFormat)}`,
-    }),
-    [adapter, date, id, ariaLabelFormat],
-  );
+  const props = {
+    role: 'columnheader',
+    id,
+    'aria-label': `${adapter.formatByString(date.value, ariaLabelFormat)}`,
+  };
 
   const state: CalendarGridHeaderCell.State = React.useMemo(
     () => ({
