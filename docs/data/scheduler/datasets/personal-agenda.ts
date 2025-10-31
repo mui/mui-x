@@ -274,12 +274,12 @@ export const resources: CalendarResource[] = [
     eventColor: 'violet',
     children: [
       {
-        title: 'Project A',
-        id: 'project-a',
+        title: 'eXplore Team',
+        id: 'explore',
         eventColor: 'pink',
-        children: [{ title: 'Subproject A1', id: 'subproject-a1', eventColor: 'mauve' }],
+        children: [{ title: 'Design meetings', id: 'design-meetings', eventColor: 'mauve' }],
       },
-      { title: 'Project B', id: 'project-b', eventColor: 'blue' },
+      { title: 'Data Grid Team', id: 'data-grid', eventColor: 'blue' },
     ],
   },
   { title: 'Holidays', id: 'holidays', eventColor: 'red' },
