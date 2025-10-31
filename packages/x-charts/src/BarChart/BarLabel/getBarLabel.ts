@@ -5,7 +5,7 @@ import { BarValueType } from '../../models/seriesType/bar';
 
 export function getBarLabel<V extends BarValueType | BarRangeValueType = BarValueType>(options: {
   barLabel: 'value' | BarLabelFunction<V>;
-  value: BarValueType | BarRangeValueType;
+  value: V;
   dataIndex: number;
   seriesId: SeriesId;
   height: number;

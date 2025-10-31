@@ -109,7 +109,7 @@ function BarRangePlot(props: BarRangePlotProps) {
         );
       })}
       {barLabel && (
-        <BarLabelPlot
+        <BarLabelPlot<BarRangeValueType | null>
           bars={completedData}
           skipAnimation={skipAnimation}
           barLabel={barLabel}
