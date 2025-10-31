@@ -107,16 +107,6 @@ export const useFieldState = <
     onError: internalPropsWithDefaults.onError,
   });
 
-  const error = React.useMemo(() => {
-    // only override when `error` is undefined.
-    // in case of multi input fields, the `error` value is provided externally and will always be defined.
-    if (errorProp !== undefined) {
-      return errorProp;
-    }
-
-    return hasValidationError;
-  }, [hasValidationError, errorProp]);
-
   const localizedDigits = React.useMemo(() => getLocalizedDigits(adapter), [adapter]);
 
   const sectionsValueBoundaries = React.useMemo(
@@ -208,6 +198,55 @@ export const useFieldState = <
     () => state.sections.every((section) => section.value === ''),
     [state.sections],
   );
+
+  // Keep invalid state "sticky" while sections still represent an invalid date.
+  const hasInvalidSectionValue = React.useMemo(() => {
+    if (state.sections.every((s) => s.value === '')) {
+      return false;
+    }
+
+    const allFilled = state.sections.every((s) => s.value !== '');
+    if (!allFilled) {
+      return false;
+    }
+
+    if (activeSectionIndex == null) {
+      return false;
+    }
+
+    const activeDateSections = fieldValueManager.getDateSectionsFromValue(
+      state.sections,
+      state.sections[activeSectionIndex] as any,
+    );
+
+    const dateFromSections = getDateFromDateSections(
+      adapter,
+      activeDateSections as any,
+      localizedDigits,
+    );
+    return !adapter.isValid(dateFromSections);
+  }, [adapter, fieldValueManager, state.sections, activeSectionIndex, localizedDigits]);
+
+  // When the field loses focus (no active section), consider partially filled sections as invalid.
+  // This enforces that the field must be entirely filled or entirely empty on blur.
+  const hasPartiallyFilledSectionsOnBlur = React.useMemo(() => {
+    if (activeSectionIndex != null) {
+      return false;
+    }
+
+    const someFilled = state.sections.some((s) => s.value !== '');
+    const someEmpty = state.sections.some((s) => s.value === '');
+
+    return someFilled && someEmpty;
+  }, [state.sections, activeSectionIndex]);
+
+  const error = React.useMemo(() => {
+    if (errorProp !== undefined) {
+      return errorProp;
+    }
+
+    return hasValidationError || hasInvalidSectionValue || hasPartiallyFilledSectionsOnBlur;
+  }, [hasValidationError, hasInvalidSectionValue, hasPartiallyFilledSectionsOnBlur, errorProp]);
 
   const publishValue = (newValue: TValue) => {
     const context: FieldChangeHandlerContext<TError> = {
