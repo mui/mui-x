@@ -6,7 +6,6 @@ import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { EventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import {
   useEventCalendar,
-  selectors,
   useExtractEventCalendarParameters,
 } from '@mui/x-scheduler-headless/use-event-calendar';
 import {
@@ -14,6 +13,7 @@ import {
   eventCalendarViewSelectors,
 } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { EventCalendarProps } from './EventCalendar.types';
 import { WeekView } from '../week-view/WeekView';
 import { AgendaView } from '../agenda-view';
@@ -39,7 +39,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar<
   const store = useEventCalendar(parameters);
   const view = useStore(store, eventCalendarViewSelectors.view);
   const isSidePanelOpen = useStore(store, eventCalendarPreferenceSelectors.isSidePanelOpen);
-  const isScopeDialogOpen = useStore(store, selectors.isScopeDialogOpen);
+  const isScopeDialogOpen = useStore(store, schedulerOtherSelectors.isScopeDialogOpen);
   const {
     // TODO: Move inside useEventCalendar so that standalone view can benefit from it (#19293).
     translations,
