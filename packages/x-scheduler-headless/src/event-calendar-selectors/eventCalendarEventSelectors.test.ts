@@ -2,25 +2,18 @@ import { adapter, getEventCalendarStateFromParameters } from 'test/utils/schedul
 import { eventCalendarEventSelectors } from './eventCalendarEventSelectors';
 import { CalendarEvent } from '../models';
 
-const SINGLE_DAY_EVENT: CalendarEvent = {
+const DEFAULT_EVENT: CalendarEvent = {
   id: 'event-1',
   title: 'Event 1',
   start: adapter.date(),
   end: adapter.addHours(adapter.date(), 1),
 };
 
-const MULTI_DAY_EVENT: CalendarEvent = {
-  id: 'event-2',
-  title: 'Event 2',
-  start: adapter.date(),
-  end: adapter.addDays(adapter.date(), 1),
-};
-
 describe('eventCalendarEventSelectors', () => {
   describe('isDraggable', () => {
     it('should return false when areEventsDraggable is not defined', () => {
       const state = getEventCalendarStateFromParameters({
-        events: [SINGLE_DAY_EVENT],
+        events: [DEFAULT_EVENT],
         areEventsDraggable: undefined,
       });
       expect(eventCalendarEventSelectors.isDraggable(state, 'event-1')).to.equal(false);
@@ -28,7 +21,7 @@ describe('eventCalendarEventSelectors', () => {
 
     it('should return false when areEventsDraggable is false', () => {
       const state = getEventCalendarStateFromParameters({
-        events: [SINGLE_DAY_EVENT],
+        events: [DEFAULT_EVENT],
         areEventsDraggable: false,
       });
       expect(eventCalendarEventSelectors.isDraggable(state, 'event-1')).to.equal(false);
@@ -36,7 +29,7 @@ describe('eventCalendarEventSelectors', () => {
 
     it('should return false when the event is read-only', () => {
       const state = getEventCalendarStateFromParameters({
-        events: [{ ...SINGLE_DAY_EVENT, readOnly: true }],
+        events: [{ ...DEFAULT_EVENT, readOnly: true }],
         areEventsDraggable: true,
       });
       expect(eventCalendarEventSelectors.isDraggable(state, 'event-1')).to.equal(false);
@@ -44,7 +37,7 @@ describe('eventCalendarEventSelectors', () => {
 
     it('should return false when the calendar is read-only', () => {
       const state = getEventCalendarStateFromParameters({
-        events: [SINGLE_DAY_EVENT],
+        events: [DEFAULT_EVENT],
         areEventsDraggable: true,
         readOnly: true,
       });
@@ -53,7 +46,7 @@ describe('eventCalendarEventSelectors', () => {
 
     it('should return false when the event start property is read-only', () => {
       const state = getEventCalendarStateFromParameters({
-        events: [SINGLE_DAY_EVENT],
+        events: [DEFAULT_EVENT],
         areEventsDraggable: true,
         eventModelStructure: {
           start: { getter: (event) => event.start },
@@ -64,7 +57,7 @@ describe('eventCalendarEventSelectors', () => {
 
     it('should return false when the event end property is read-only', () => {
       const state = getEventCalendarStateFromParameters({
-        events: [SINGLE_DAY_EVENT],
+        events: [DEFAULT_EVENT],
         areEventsDraggable: true,
         eventModelStructure: {
           end: { getter: (event) => event.end },
@@ -75,7 +68,7 @@ describe('eventCalendarEventSelectors', () => {
 
     it('should return true when areEventsDraggable is true and the event is not read-only', () => {
       const state = getEventCalendarStateFromParameters({
-        events: [SINGLE_DAY_EVENT],
+        events: [DEFAULT_EVENT],
         areEventsDraggable: true,
       });
       expect(eventCalendarEventSelectors.isDraggable(state, 'event-1')).to.equal(true);
@@ -85,7 +78,7 @@ describe('eventCalendarEventSelectors', () => {
   describe('isResizable', () => {
     it('should return false when areEventsResizable is not defined', () => {
       const state = getEventCalendarStateFromParameters({
-        events: [SINGLE_DAY_EVENT],
+        events: [DEFAULT_EVENT],
         view: 'week',
         areEventsResizable: undefined,
       });
@@ -94,7 +87,7 @@ describe('eventCalendarEventSelectors', () => {
 
     it('should return false when areEventsResizable is false', () => {
       const state = getEventCalendarStateFromParameters({
-        events: [SINGLE_DAY_EVENT],
+        events: [DEFAULT_EVENT],
         view: 'week',
         areEventsResizable: false,
       });
@@ -103,7 +96,7 @@ describe('eventCalendarEventSelectors', () => {
 
     it('should return false when the event is read-only', () => {
       const state = getEventCalendarStateFromParameters({
-        events: [{ ...SINGLE_DAY_EVENT, readOnly: true }],
+        events: [{ ...DEFAULT_EVENT, readOnly: true }],
         view: 'week',
         areEventsResizable: true,
       });
@@ -112,7 +105,7 @@ describe('eventCalendarEventSelectors', () => {
 
     it('should return false when the calendar is read-only', () => {
       const state = getEventCalendarStateFromParameters({
-        events: [SINGLE_DAY_EVENT],
+        events: [DEFAULT_EVENT],
         view: 'week',
         areEventsResizable: true,
         readOnly: true,
@@ -122,7 +115,7 @@ describe('eventCalendarEventSelectors', () => {
 
     it('should return false when the event start property is read-only', () => {
       const state = getEventCalendarStateFromParameters({
-        events: [SINGLE_DAY_EVENT],
+        events: [DEFAULT_EVENT],
         view: 'week',
         areEventsResizable: true,
         eventModelStructure: {
@@ -134,7 +127,7 @@ describe('eventCalendarEventSelectors', () => {
 
     it('should return false when the event end property is read-only', () => {
       const state = getEventCalendarStateFromParameters({
-        events: [SINGLE_DAY_EVENT],
+        events: [DEFAULT_EVENT],
         view: 'week',
         areEventsResizable: true,
         eventModelStructure: {
@@ -146,7 +139,7 @@ describe('eventCalendarEventSelectors', () => {
 
     it('should return true when areEventsResizable is true and the event is not read-only', () => {
       const state = getEventCalendarStateFromParameters({
-        events: [SINGLE_DAY_EVENT],
+        events: [DEFAULT_EVENT],
         view: 'week',
         areEventsResizable: true,
       });
@@ -155,7 +148,7 @@ describe('eventCalendarEventSelectors', () => {
 
     it('should return false in day view on day-grid surface', () => {
       const state = getEventCalendarStateFromParameters({
-        events: [SINGLE_DAY_EVENT],
+        events: [DEFAULT_EVENT],
         view: 'day',
         areEventsResizable: true,
       });
@@ -164,7 +157,7 @@ describe('eventCalendarEventSelectors', () => {
 
     it('should return true in day view on time-grid surface', () => {
       const state = getEventCalendarStateFromParameters({
-        events: [SINGLE_DAY_EVENT],
+        events: [DEFAULT_EVENT],
         view: 'day',
         areEventsResizable: true,
       });
@@ -173,7 +166,7 @@ describe('eventCalendarEventSelectors', () => {
 
     it('should return false in month view on day-grid surface for single-day events', () => {
       const state = getEventCalendarStateFromParameters({
-        events: [SINGLE_DAY_EVENT],
+        events: [DEFAULT_EVENT],
         view: 'month',
         areEventsResizable: true,
       });
@@ -182,11 +175,11 @@ describe('eventCalendarEventSelectors', () => {
 
     it('should return true in month view on day-grid surface for multi-day events', () => {
       const state = getEventCalendarStateFromParameters({
-        events: [MULTI_DAY_EVENT],
+        events: [{ ...DEFAULT_EVENT, allDay: true }],
         view: 'month',
         areEventsResizable: true,
       });
-      expect(eventCalendarEventSelectors.isResizable(state, 'event-2', 'day-grid')).to.equal(true);
+      expect(eventCalendarEventSelectors.isResizable(state, 'event-1', 'day-grid')).to.equal(true);
     });
   });
 });
