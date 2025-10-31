@@ -12,8 +12,8 @@ import { computeAxisValue } from './computeAxisValue';
 import {
   selectorChartNormalizedXScales,
   selectorChartNormalizedYScales,
-  selectorChartXDomains,
-  selectorChartYDomains,
+  selectorChartXAxisWithDomains,
+  selectorChartYAxisWithDomains,
   selectorChartZoomOptionsLookup,
 } from './useChartCartesianAxisRendering.selectors';
 import {
@@ -59,14 +59,13 @@ export const selectorChartPreviewXScales = createSelector(
     selectorChartDrawingArea,
     selectorChartZoomOptionsLookup,
     selectorChartNormalizedXScales,
-    (_, axisId: AxisId) => axisId,
   ],
   function selectorChartPreviewXScales(
     xAxes,
     chartDrawingArea,
     zoomOptions,
     normalizedXScales,
-    axisId,
+    axisId: AxisId,
   ) {
     const hasAxis = xAxes?.some((axis) => axis.id === axisId);
     const drawingArea = createPreviewDrawingArea(hasAxis ? 'x' : 'y', chartDrawingArea);
@@ -92,27 +91,24 @@ export const selectorChartPreviewXScales = createSelector(
 
 export const selectorChartPreviewComputedXAxis = createSelector(
   [
-    selectorChartRawXAxis,
     selectorChartSeriesProcessed,
     selectorChartSeriesConfig,
     selectorChartZoomOptionsLookup,
     selectorChartDrawingArea,
     selectorChartPreviewXScales,
-    selectorChartXDomains,
-    (_, axisId: AxisId) => axisId,
+    selectorChartXAxisWithDomains,
   ],
 
   (
-    xAxes,
     formattedSeries,
     seriesConfig,
     zoomOptions,
     chartDrawingArea,
     scales,
-    domains,
-    axisId,
+    { axes, domains },
+    axisId: AxisId,
   ) => {
-    const hasAxis = xAxes?.some((axis) => axis.id === axisId);
+    const hasAxis = axes?.some((axis) => axis.id === axisId);
     const drawingArea = createPreviewDrawingArea(hasAxis ? 'x' : 'y', chartDrawingArea);
 
     const options = zoomOptions[axisId];
@@ -124,7 +120,7 @@ export const selectorChartPreviewComputedXAxis = createSelector(
       scales,
       drawingArea,
       formattedSeries,
-      axis: xAxes,
+      axis: axes,
       seriesConfig,
       axisDirection: 'x',
       zoomMap,
@@ -145,14 +141,13 @@ export const selectorChartPreviewYScales = createSelector(
     selectorChartDrawingArea,
     selectorChartZoomOptionsLookup,
     selectorChartNormalizedYScales,
-    (_, axisId: AxisId) => axisId,
   ],
   function selectorChartPreviewYScales(
     yAxes,
     chartDrawingArea,
     zoomOptions,
     normalizedYScales,
-    axisId,
+    axisId: AxisId,
   ) {
     const hasAxis = yAxes?.some((axis) => axis.id === axisId);
     const drawingArea = createPreviewDrawingArea(hasAxis ? 'y' : 'x', chartDrawingArea);
@@ -183,26 +178,23 @@ export const selectorChartPreviewYScales = createSelector(
 
 export const selectorChartPreviewComputedYAxis = createSelector(
   [
-    selectorChartRawYAxis,
     selectorChartSeriesProcessed,
     selectorChartSeriesConfig,
     selectorChartZoomOptionsLookup,
     selectorChartDrawingArea,
     selectorChartPreviewYScales,
-    selectorChartYDomains,
-    (_, axisId: AxisId) => axisId,
+    selectorChartYAxisWithDomains,
   ],
   (
-    yAxes,
     formattedSeries,
     seriesConfig,
     zoomOptions,
     chartDrawingArea,
     scales,
-    domains,
-    axisId,
+    { axes, domains },
+    axisId: AxisId,
   ) => {
-    const hasAxis = yAxes?.some((axis) => axis.id === axisId);
+    const hasAxis = axes?.some((axis) => axis.id === axisId);
     const drawingArea = createPreviewDrawingArea(hasAxis ? 'y' : 'x', chartDrawingArea);
 
     const options = zoomOptions[axisId];
@@ -214,7 +206,7 @@ export const selectorChartPreviewComputedYAxis = createSelector(
       scales,
       drawingArea,
       formattedSeries,
-      axis: yAxes,
+      axis: axes,
       seriesConfig,
       axisDirection: 'y',
       zoomMap,
