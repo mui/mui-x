@@ -76,7 +76,7 @@ export class TreeViewSelectionPlugin<Multiple extends boolean | undefined> {
             onItemSelectionToggle!(event, itemId, false);
           });
         }
-      } else if (onItemSelectionToggle && cleanModel !== oldModel) {
+      } else if (cleanModel !== oldModel) {
         if (oldModel != null) {
           onItemSelectionToggle(event, oldModel as string, false);
         }
