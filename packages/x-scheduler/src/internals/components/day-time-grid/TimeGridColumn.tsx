@@ -15,6 +15,7 @@ import { selectors } from '@mui/x-scheduler-headless/use-event-calendar';
 import { useAdapter, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-timeline-position';
+import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
 import { EventPopoverTrigger } from '../event-popover';
 import { useEventPopoverContext } from '../event-popover/EventPopover';
@@ -77,9 +78,13 @@ function ColumnInteractiveLayer({
   const columnRef = React.useRef<HTMLDivElement | null>(null);
 
   // Selector hooks
-  const isCreation = useStore(store, selectors.isCreatingNewEventInTimeRange, start, end);
+  const isCreatingAnEvent = useStore(
+    store,
+    eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange,
+    start,
+    end,
+  );
   const placeholder = CalendarGrid.usePlaceholderInRange({ start, end, occurrences, maxIndex });
-  const canCreateEvent = useStore(store, selectors.canCreateNewEvent);
 
   // Feature hooks
   const getDateFromPosition = CalendarGrid.useGetDateFromPositionInColumn({
@@ -97,9 +102,10 @@ function ColumnInteractiveLayer({
   };
 
   const handleDoubleClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (!canCreateEvent) {
+    if (!selectors.canCreateNewEvent(store.state)) {
       return;
     }
+
     const draftRange = computeInitialRange(event);
     store.setOccurrencePlaceholder({
       type: 'creation',
@@ -110,11 +116,11 @@ function ColumnInteractiveLayer({
   };
 
   React.useEffect(() => {
-    if (!isCreation || !placeholder || !columnRef.current) {
+    if (!isCreatingAnEvent || !placeholder || !columnRef.current) {
       return;
     }
     startEditing(columnRef.current, placeholder);
-  }, [isCreation, placeholder, startEditing]);
+  }, [isCreatingAnEvent, placeholder, startEditing]);
 
   return (
     <div

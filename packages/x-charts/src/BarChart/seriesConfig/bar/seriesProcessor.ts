@@ -1,10 +1,10 @@
 import { stack as d3Stack } from '@mui/x-charts-vendor/d3-shape';
 import { warnOnce } from '@mui/x-internals/warning';
-import type { DefaultizedBarSeriesType } from '../../models';
-import { getStackingGroups } from '../../internals/stackSeries';
-import { DatasetElementType, DatasetType } from '../../models/seriesType/config';
-import { SeriesId } from '../../models/seriesType/common';
-import { SeriesProcessor } from '../../internals/plugins/models';
+import type { DefaultizedBarSeriesType } from '../../../models';
+import { getStackingGroups } from '../../../internals/stackSeries';
+import { DatasetElementType, DatasetType } from '../../../models/seriesType/config';
+import { SeriesId } from '../../../models/seriesType/common';
+import { SeriesProcessor } from '../../../internals/plugins/models';
 
 type BarDataset = DatasetType<number | null>;
 

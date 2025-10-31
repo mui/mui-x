@@ -6,6 +6,10 @@ import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { useAdapter, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
+import {
+  eventCalendarOccurrencePlaceholderSelectors,
+  eventCalendarViewSelectors,
+} from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { selectors } from '@mui/x-scheduler-headless/use-event-calendar';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 import { DayGridEvent } from '../../internals/components/event/day-grid-event/DayGridEvent';
@@ -28,10 +32,13 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const { open: startEditing } = useEventPopoverContext();
 
   // Selector hooks
-  const hasDayView = useStore(store, selectors.hasDayView);
+  const hasDayView = useStore(store, eventCalendarViewSelectors.hasDayView);
   const visibleDate = useStore(store, selectors.visibleDate);
-  const isCreation = useStore(store, selectors.isCreatingNewEventInDayCell, day.value);
-  const canCreateEvent = useStore(store, selectors.canCreateNewEvent);
+  const isCreatingAnEvent = useStore(
+    store,
+    eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell,
+    day.value,
+  );
   const placeholder = CalendarGrid.usePlaceholderInDay(day.value, row);
 
   // Ref hooks
@@ -60,9 +67,10 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const rowCount = 1 + maxEvents;
 
   const handleDoubleClick = () => {
-    if (!canCreateEvent) {
+    if (!selectors.canCreateNewEvent(store.state)) {
       return;
     }
+
     store.setOccurrencePlaceholder({
       type: 'creation',
       surfaceType: 'day-grid',
@@ -73,11 +81,11 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   };
 
   React.useEffect(() => {
-    if (!isCreation || !placeholder || !cellRef.current) {
+    if (!isCreatingAnEvent || !placeholder || !cellRef.current) {
       return;
     }
     startEditing(cellRef.current, placeholder);
-  }, [isCreation, placeholder, startEditing]);
+  }, [isCreatingAnEvent, placeholder, startEditing]);
 
   return (
     <CalendarGrid.DayCell
