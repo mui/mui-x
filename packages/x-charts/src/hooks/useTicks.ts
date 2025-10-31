@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useChartContext } from '../context/ChartProvider';
 import { AxisConfig, D3ContinuousScale, D3Scale } from '../models/axis';
-import { isOrdinalScale } from '../internals/scaleGuards';
+import { isBandScale, isOrdinalScale } from '../internals/scaleGuards';
 import { isInfinity } from '../internals/isInfinity';
 
 export interface TickParams {
@@ -64,31 +64,158 @@ export type TickItemType = {
   labelOffset: number;
 };
 
-export function getTicks(
-  options: {
-    scale: D3Scale;
-    valueFormatter?: AxisConfig['valueFormatter'];
-    isInside: (offset: number) => boolean;
-  } & Pick<TickParams, 'tickInterval' | 'tickPlacement' | 'tickLabelPlacement'> &
-    Required<Pick<TickParams, 'tickNumber'>>,
-) {
+interface GetTicksOptions
+  extends Pick<TickParams, 'tickInterval' | 'tickPlacement' | 'tickLabelPlacement'>,
+    Required<Pick<TickParams, 'tickNumber'>> {
+  scale: D3Scale;
+  valueFormatter?: AxisConfig['valueFormatter'];
+  isInside: (offset: number) => boolean;
+  continuousTickPlacement?: boolean;
+}
+
+type TicksDefinition = {
+  getTickNumber: (from: Date, to: Date) => number;
+  isTick: (prev: Date, value: Date) => boolean;
+  format: (d: Date) => string;
+};
+// Different ticks levels
+const tickSpaces: TicksDefinition[] = [
+  // years
+  {
+    getTickNumber: (from: Date, to: Date) => Math.abs(to.getFullYear() - from.getFullYear()),
+    isTick: (prev: Date, value: Date) => value.getFullYear() !== prev.getFullYear(),
+    format: (d: Date) => d.getFullYear().toString(),
+  },
+  // 3 months
+  {
+    getTickNumber: (from: Date, to: Date) =>
+      Math.floor(
+        Math.abs(
+          to.getFullYear() * 12 + to.getMonth() - 12 * from.getFullYear() - from.getMonth(),
+        ) / 3,
+      ),
+    isTick: (prev: Date, value: Date) =>
+      value.getMonth() !== prev.getMonth() && value.getMonth() % 3 === 0,
+    format: (d: Date) => d.toLocaleString('default', { month: 'short' }),
+  },
+  // months
+  {
+    getTickNumber: (from: Date, to: Date) =>
+      Math.abs(to.getFullYear() * 12 + to.getMonth() - 12 * from.getFullYear() - from.getMonth()),
+    isTick: (prev: Date, value: Date) => value.getMonth() !== prev.getMonth(),
+    format: (d: Date) => d.toLocaleString('default', { month: 'short' }),
+  },
+  // days
+  {
+    getTickNumber: (from: Date, to: Date) =>
+      Math.abs(to.getTime() - from.getTime()) / (1000 * 60 * 60 * 24),
+    isTick: (prev: Date, value: Date) => value.getDate() !== prev.getDate(),
+    format: (d: Date) => d.toLocaleDateString('default', { day: 'numeric' }),
+  },
+  // hours
+  {
+    getTickNumber: (from: Date, to: Date) =>
+      Math.abs(to.getTime() - from.getTime()) / (1000 * 60 * 60),
+    isTick: (prev: Date, value: Date) => value.getHours() !== prev.getHours(),
+    format: (d: Date) => d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+  },
+];
+
+function getTimeTicks(domain: Date[], tickNumber: number) {
+  const start = domain[0];
+  const end = domain[domain.length - 1];
+
+  let startSpaceIndex = 0;
+
+  while (
+    startSpaceIndex < tickSpaces.length &&
+    tickSpaces[startSpaceIndex].getTickNumber(start, end) === 0
+  ) {
+    startSpaceIndex += 1;
+  }
+  let endSpaceIndex = startSpaceIndex - 1;
+
+  while (
+    endSpaceIndex < tickSpaces.length &&
+    tickSpaces[endSpaceIndex + 1].getTickNumber(start, end) <= tickNumber
+  ) {
+    endSpaceIndex += 1;
+  }
+
+  const specialGroups = tickSpaces[endSpaceIndex].getTickNumber(start, end);
+  const subTicksPerGroup = Math.floor((tickNumber - specialGroups) / specialGroups);
+
+  const ticks: { index: number; formatter: (d: Date) => string }[] = [];
+  let prevIndex: number | null = null;
+  for (let tickIndex = 1; tickIndex < domain.length; tickIndex += 1) {
+    for (let i = startSpaceIndex; i <= endSpaceIndex; i += 1) {
+      const prevDate = domain[tickIndex - 1];
+      const currentDate = domain[tickIndex];
+      if (tickSpaces[i].isTick(prevDate, currentDate)) {
+        if (prevIndex !== null && tickIndex - prevIndex > subTicksPerGroup + 1) {
+          const step = Math.floor((tickIndex - prevIndex) / (subTicksPerGroup + 1));
+
+          for (let j = 1; j <= subTicksPerGroup; j += 1) {
+            ticks.push({
+              index: prevIndex + j * step,
+              formatter: (tickSpaces[endSpaceIndex + 1] ?? tickSpaces[endSpaceIndex]).format,
+            });
+          }
+        }
+
+        ticks.push({ index: tickIndex, formatter: tickSpaces[i].format });
+        prevIndex = tickIndex;
+        i = endSpaceIndex + 1; // break inner loop
+      }
+    }
+  }
+
+  return ticks;
+}
+
+export function getTicks(options: GetTicksOptions) {
   const {
     scale,
     tickNumber,
     valueFormatter,
     tickInterval,
-    tickPlacement = 'extremities',
+    tickPlacement: tickPlacementProp,
     tickLabelPlacement: tickLabelPlacementProp,
     isInside,
+    continuousTickPlacement = false,
   } = options;
 
-  // band scale
+  // ordinal scale with spaced ticks.
+  if (isOrdinalScale(scale) && continuousTickPlacement) {
+    const domain = scale.domain();
+
+    const tickPlacement = 'middle';
+    const ticksIndexes = getTimeTicks(domain as Date[], tickNumber);
+
+    return ticksIndexes.map(({ index, formatter }) => {
+      const value = domain[index];
+      const formattedValue = formatter(value as Date);
+      return {
+        value,
+        formattedValue,
+        offset:
+          scale(value)! -
+          (scale.step() - scale.bandwidth()) / 2 +
+          offsetRatio[tickPlacement] * scale.step(),
+        labelOffset: 0,
+      };
+    });
+  }
+
+  const tickPlacement = tickPlacementProp ?? 'extremities';
+
+  // Standard ordinal scale: 1 item =1 tick
   if (isOrdinalScale(scale)) {
     const domain = scale.domain();
 
     const tickLabelPlacement = tickLabelPlacementProp ?? 'middle';
 
-    if (scale.bandwidth() > 0) {
+    if (isBandScale(scale)) {
       // scale type = 'band'
       const filteredDomain =
         (typeof tickInterval === 'function' && domain.filter(tickInterval)) ||
@@ -204,12 +331,7 @@ function getDefaultTicks(scale: D3ContinuousScale, tickNumber: number) {
 }
 
 export function useTicks(
-  options: {
-    scale: D3Scale;
-    valueFormatter?: AxisConfig['valueFormatter'];
-    direction: 'x' | 'y';
-  } & Pick<TickParams, 'tickInterval' | 'tickPlacement' | 'tickLabelPlacement'> &
-    Required<Pick<TickParams, 'tickNumber'>>,
+  options: Omit<GetTicksOptions, 'isInside'> & { direction: 'x' | 'y' },
 ): TickItemType[] {
   const {
     scale,
@@ -219,6 +341,7 @@ export function useTicks(
     tickPlacement = 'extremities',
     tickLabelPlacement,
     direction,
+    continuousTickPlacement,
   } = options;
   const { instance } = useChartContext();
   const isInside = direction === 'x' ? instance.isXInside : instance.isYInside;
@@ -233,7 +356,17 @@ export function useTicks(
         tickLabelPlacement,
         valueFormatter,
         isInside,
+        continuousTickPlacement,
       }),
-    [scale, tickNumber, tickPlacement, tickInterval, tickLabelPlacement, valueFormatter, isInside],
+    [
+      scale,
+      tickNumber,
+      tickPlacement,
+      tickInterval,
+      tickLabelPlacement,
+      valueFormatter,
+      isInside,
+      continuousTickPlacement,
+    ],
   );
 }
