@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { RadarChart } from '@mui/x-charts/RadarChart';
 
 // Data from https://ourworldindata.org/emissions-by-fuel

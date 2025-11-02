@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem, treeItemClasses as classes } from '@mui/x-tree-view/TreeItem';

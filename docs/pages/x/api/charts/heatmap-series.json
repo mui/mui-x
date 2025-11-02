@@ -19,7 +19,7 @@
       "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" },
       "isProPlan": true
     },
-    "xAxisId": { "type": { "description": "string" }, "isProPlan": true },
-    "yAxisId": { "type": { "description": "string" }, "isProPlan": true }
+    "xAxisId": { "type": { "description": "AxisId" }, "isProPlan": true },
+    "yAxisId": { "type": { "description": "AxisId" }, "isProPlan": true }
   }
 }

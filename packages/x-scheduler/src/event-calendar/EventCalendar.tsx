@@ -6,10 +6,14 @@ import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { EventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import {
   useEventCalendar,
-  selectors,
   useExtractEventCalendarParameters,
 } from '@mui/x-scheduler-headless/use-event-calendar';
+import {
+  eventCalendarPreferenceSelectors,
+  eventCalendarViewSelectors,
+} from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { EventCalendarProps } from './EventCalendar.types';
 import { WeekView } from '../week-view/WeekView';
 import { AgendaView } from '../agenda-view';
@@ -18,20 +22,24 @@ import { TranslationsProvider } from '../internals/utils/TranslationsContext';
 import { MonthView } from '../month-view';
 import { HeaderToolbar } from '../internals/components/header-toolbar';
 import { ResourceLegend } from '../internals/components/resource-legend';
+import { DateNavigator } from '../internals/components/date-navigator';
 import '../index.css';
 import './EventCalendar.css';
-import { DateNavigator } from '../internals/components/date-navigator';
 import { RecurringScopeDialog } from '../internals/components/scope-dialog/ScopeDialog';
 
-export const EventCalendar = React.forwardRef(function EventCalendar(
-  props: EventCalendarProps,
-  forwardedRef: React.ForwardedRef<HTMLDivElement>,
-) {
-  const { parameters, forwardedProps } = useExtractEventCalendarParameters(props);
+export const EventCalendar = React.forwardRef(function EventCalendar<
+  TEvent extends object,
+  TResource extends object,
+>(props: EventCalendarProps<TEvent, TResource>, forwardedRef: React.ForwardedRef<HTMLDivElement>) {
+  const { parameters, forwardedProps } = useExtractEventCalendarParameters<
+    TEvent,
+    TResource,
+    typeof props
+  >(props);
   const store = useEventCalendar(parameters);
-  const view = useStore(store, selectors.view);
-  const isSidePanelOpen = useStore(store, selectors.preferences).isSidePanelOpen;
-  const isScopeDialogOpen = useStore(store, selectors.isScopeDialogOpen);
+  const view = useStore(store, eventCalendarViewSelectors.view);
+  const isSidePanelOpen = useStore(store, eventCalendarPreferenceSelectors.isSidePanelOpen);
+  const isScopeDialogOpen = useStore(store, schedulerOtherSelectors.isScopeDialogOpen);
   const {
     // TODO: Move inside useEventCalendar so that standalone view can benefit from it (#19293).
     translations,
@@ -105,4 +113,8 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
       </SchedulerStoreContext.Provider>
     </EventCalendarStoreContext.Provider>
   );
-});
+}) as EventCalendarComponent;
+
+type EventCalendarComponent = <TEvent extends object, TResource extends object>(
+  props: EventCalendarProps<TEvent, TResource> & { ref?: React.ForwardedRef<HTMLDivElement> },
+) => React.JSX.Element;

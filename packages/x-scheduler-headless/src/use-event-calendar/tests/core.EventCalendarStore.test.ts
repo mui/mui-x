@@ -1,14 +1,14 @@
 import { adapter } from 'test/utils/scheduler';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import {
-  DEFAULT_PREFERENCES,
+  DEFAULT_EVENT_CALENDAR_PREFERENCES,
   DEFAULT_PREFERENCES_MENU_CONFIG,
   DEFAULT_VIEW,
   DEFAULT_VIEWS,
   EventCalendarStore,
 } from '../EventCalendarStore';
 import { CalendarView } from '../../models';
-import { DEFAULT_IS_MULTI_DAY_EVENT, DEFAULT_RESOURCES } from '../../utils/SchedulerStore';
+import { DEFAULT_IS_MULTI_DAY_EVENT } from '../../utils/SchedulerStore';
 
 const DEFAULT_PARAMS = { events: [] };
 
@@ -23,8 +23,14 @@ describe('Core - EventCalendarStore', () => {
         adapter,
         view: DEFAULT_VIEW,
         views: DEFAULT_VIEWS,
-        resources: DEFAULT_RESOURCES,
-        events: [],
+        eventIdList: [],
+        eventModelList: [],
+        eventModelLookup: new Map(),
+        processedEventLookup: new Map(),
+        eventModelStructure: undefined,
+        resourceIdList: [],
+        processedResourceLookup: new Map(),
+        resourceModelStructure: undefined,
         visibleResources: new Map(),
         nowUpdatedEveryMinute: adapter.date(),
         isMultiDayEvent: DEFAULT_IS_MULTI_DAY_EVENT,
@@ -35,7 +41,7 @@ describe('Core - EventCalendarStore', () => {
         showCurrentTimeIndicator: true,
         eventColor: 'jade',
         pendingUpdateRecurringEventParameters: null,
-        preferences: DEFAULT_PREFERENCES,
+        preferences: DEFAULT_EVENT_CALENDAR_PREFERENCES,
         preferencesMenuConfig: DEFAULT_PREFERENCES_MENU_CONFIG,
         viewConfig: null,
         occurrencePlaceholder: null,

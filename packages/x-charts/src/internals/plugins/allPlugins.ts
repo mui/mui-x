@@ -35,8 +35,8 @@ export type AllPluginSignatures<TSeries extends ChartSeriesType = ChartSeriesTyp
 export type DefaultPluginSignatures<TSeries extends ChartSeriesType = ChartSeriesType> = [
   UseChartZAxisSignature,
   UseChartBrushSignature,
-  UseChartCartesianAxisSignature<TSeries>,
   UseChartInteractionSignature,
+  UseChartCartesianAxisSignature<TSeries>,
   UseChartHighlightSignature,
   UseChartClosestPointSignature,
   UseChartKeyboardNavigationSignature,
@@ -45,8 +45,8 @@ export type DefaultPluginSignatures<TSeries extends ChartSeriesType = ChartSerie
 export const DEFAULT_PLUGINS = [
   useChartZAxis,
   useChartBrush,
-  useChartCartesianAxis,
   useChartInteraction,
+  useChartCartesianAxis,
   useChartHighlight,
   useChartClosestPoint,
   useChartKeyboardNavigation,

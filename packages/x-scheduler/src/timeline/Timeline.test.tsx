@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
 import { diffIn } from '@mui/x-scheduler-headless/use-adapter';
 import { Timeline } from '@mui/x-scheduler/timeline';
