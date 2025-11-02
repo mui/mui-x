@@ -40,12 +40,6 @@ const validationRules: ValidationRule[] = [
     isInvalid: conditions.prevBelongsToSource,
     message: 'Previous leaf belongs to source group or its descendants',
   },
-  {
-    name: 'leaf-to-group-below-collapsed',
-    applies: (ctx) => conditions.isLeafToGroup(ctx) && conditions.isDropBelow(ctx),
-    isInvalid: conditions.targetGroupCollapsed,
-    message: 'Cannot drop below collapsed group',
-  },
 ];
 
 export const treeDataReorderValidator = new RowReorderValidator(validationRules);
