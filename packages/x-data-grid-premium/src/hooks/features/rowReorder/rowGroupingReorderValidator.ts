@@ -9,9 +9,7 @@ const validationRules: ValidationRule[] = [
   // ===== Basic invalid cases =====
   {
     name: 'same-position',
-    applies: (ctx) =>
-      gridExpandedSortedRowIndexLookupSelector(ctx.apiRef)[ctx.sourceNode.id] ===
-      gridExpandedSortedRowIndexLookupSelector(ctx.apiRef)[ctx.targetNode.id],
+    applies: (ctx) => ctx.sourceNode.id === ctx.targetNode.id,
     isInvalid: () => true,
     message: 'Source and target are the same',
   },

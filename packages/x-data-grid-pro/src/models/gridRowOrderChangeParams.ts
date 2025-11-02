@@ -30,14 +30,14 @@ export interface GridRowOrderChangeParams {
    * The parent row ID before the move.
    * - For flat data: `null`
    * - For nested row at root level: `null`.
-   * - For nested row at levels above root: Parent row's ID.
+   * - For nested row at levels below root: Parent row's ID.
    */
   oldParent: GridRowId | null;
   /**
    * The parent row ID after the move.
    * - For flat data: `null`.
    * - For nested row at root level: `null`.
-   * - For nested row at levels above root: Parent row's ID.
+   * - For nested row at levels below root: Parent row's ID.
    */
   newParent: GridRowId | null;
 }

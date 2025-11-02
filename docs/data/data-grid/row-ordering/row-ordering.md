@@ -117,11 +117,11 @@ The demo below prohibits reordering leaf rows under the same parent and only all
 
 :::warning
 The row reorder feature has an internal validation ruleset that makes sure that only the supported use-cases are allowed.
-`isValidRowReorder()` should only be used to omit some of the supported use-cases, not add new ones.
+`isValidRowReorder()` should only be used to add more validation rules.
 :::
 
 :::info
-The above demo uses row grouping to demonstrate the concept. You can check more about this in the [Tree data—Drag-and-drop tree data reordering](/x/react-data-grid/tree-data/#drag-and-drop-tree-data-reordering) documentation section.
+The above demo uses tree data to demonstrate the concept. You can check more about this in the [Tree data—Drag-and-drop tree data reordering](/x/react-data-grid/tree-data/#drag-and-drop-tree-data-reordering) documentation section.
 :::
 
 ## Row reordering with tree data
