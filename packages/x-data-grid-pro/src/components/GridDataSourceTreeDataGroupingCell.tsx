@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
 import composeClasses from '@mui/utils/composeClasses';
 import {
   getDataGridUtilityClass,
@@ -11,7 +10,6 @@ import { vars, gridRowSelector } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
-import { GridPrivateApiPro } from '../models/gridApiPro';
 import {
   gridDataSourceErrorSelector,
   gridDataSourceLoadingIdSelector,
@@ -47,7 +45,7 @@ interface GridTreeDataGroupingCellIconProps
 }
 
 function GridTreeDataGroupingCellIcon(props: GridTreeDataGroupingCellIconProps) {
-  const apiRef = useGridPrivateApiContext() as unknown as RefObject<GridPrivateApiPro>;
+  const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
   const { rowNode, id, field, descendantCount } = props;

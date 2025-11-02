@@ -1,4 +1,3 @@
-import { gridExpandedSortedRowIndexLookupSelector } from '@mui/x-data-grid-pro';
 import {
   commonReorderConditions as conditions,
   RowReorderValidator,
