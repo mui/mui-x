@@ -23,16 +23,8 @@ const preventDefault = (event: Event) => event.preventDefault();
 type GestureManagerTyped = GestureManager<
   string,
   | PanGesture<'pan'>
-  | PanGesture<'zoomPan'>
   | MoveGesture<'move'>
-  | PinchGesture<'zoomPinch'>
-  | TurnWheelGesture<'zoomTurnWheel'>
-  | TurnWheelGesture<'panTurnWheel'>
-  | TapGesture<'tap'>
-  | PressGesture<'quickPress'>,
-  | PanGesture<'pan'>
   | PanGesture<'zoomPan'>
-  | MoveGesture<'move'>
   | PinchGesture<'zoomPinch'>
   | TurnWheelGesture<'zoomTurnWheel'>
   | TurnWheelGesture<'panTurnWheel'>
