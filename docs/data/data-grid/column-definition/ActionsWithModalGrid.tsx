@@ -21,58 +21,48 @@ const initialRows = [
   { id: 3, name: randomUserName() },
 ];
 
-function DeleteUserActionItem({
-  deleteUser,
-  ...props
-}: GridActionsCellItemProps & { deleteUser: () => void }) {
-  const [open, setOpen] = React.useState(false);
+type Row = (typeof initialRows)[number];
 
+function DeleteUserActionItem({
+  rowId,
+  onConfirm,
+  label,
+  icon,
+  ...props
+}: GridActionsCellItemProps & {
+  rowId: GridRowId;
+  onConfirm: (id: GridRowId) => void;
+}) {
   return (
-    <React.Fragment>
-      <GridActionsCellItem {...props} onClick={() => setOpen(true)} />
-      <Dialog
-        open={open}
-        onClose={() => setOpen(false)}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">Delete this user?</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            This action cannot be undone.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpen(false)}>Cancel</Button>
-          <Button
-            onClick={() => {
-              setOpen(false);
-              deleteUser();
-            }}
-            color="warning"
-            autoFocus
-          >
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </React.Fragment>
+    <GridActionsCellItem
+      {...(props as any)}
+      showInMenu={true}
+      label={label}
+      icon={icon}
+      onClick={() => onConfirm(rowId)}
+      closeMenuOnClick={false}
+    />
   );
 }
 
-type Row = (typeof initialRows)[number];
-
 export default function ActionsWithModalGrid() {
   const [rows, setRows] = React.useState<Row[]>(initialRows);
+  const [actionRowId, setActionRowId] = React.useState<GridRowId | null>(null);
 
-  const deleteUser = React.useCallback(
-    (id: GridRowId) => () => {
-      setTimeout(() => {
-        setRows((prevRows) => prevRows.filter((row) => row.id !== id));
-      });
-    },
+  const deleteActiveRow = React.useCallback(
+    (rowId: GridRowId) =>
+      setRows((prevRows) => prevRows.filter((row) => row.id !== rowId)),
     [],
   );
+
+  const handleCloseDialog = React.useCallback(() => {
+    setActionRowId(null);
+  }, []);
+
+  const handleConfirmDelete = React.useCallback(() => {
+    deleteActiveRow(actionRowId!);
+    handleCloseDialog();
+  }, [actionRowId, deleteActiveRow, handleCloseDialog]);
 
   const columns = React.useMemo<GridColDef<Row>[]>(
     () => [
@@ -86,18 +76,37 @@ export default function ActionsWithModalGrid() {
             label="Delete"
             showInMenu
             icon={<DeleteIcon />}
-            deleteUser={deleteUser(params.id)}
-            closeMenuOnClick={false}
+            rowId={params.id}
+            onConfirm={setActionRowId}
           />,
         ],
       },
     ],
-    [deleteUser],
+    [],
   );
 
   return (
     <div style={{ height: 300, width: '100%' }}>
       <DataGrid columns={columns} rows={rows} />
+      <Dialog
+        open={actionRowId !== null}
+        onClose={handleCloseDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Delete this user?</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            This action cannot be undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog}>Cancel</Button>
+          <Button onClick={handleConfirmDelete} color="warning" autoFocus>
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }
