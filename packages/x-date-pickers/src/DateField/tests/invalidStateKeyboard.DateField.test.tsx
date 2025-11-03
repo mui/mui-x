@@ -11,7 +11,7 @@ import { describeAdapters, getTextbox, getFieldInputRoot } from 'test/utils/pick
 describeAdapters(
   'DateField - sticky invalid state during keyboard spin',
   DateField,
-  ({ renderWithProps, adapter }) => {
+  ({ renderWithProps }) => {
     it('keeps aria-invalid=true while spinning year when month is invalid (accessible DOM)', async () => {
       const view = renderWithProps({ enableAccessibleFieldDOMStructure: true }); // default format is numeric, e.g. MM/DD/YYYY
 
@@ -35,11 +35,6 @@ describeAdapters(
     });
 
     it('keeps aria-invalid=true while spinning year when month is invalid (non-accessible DOM)', async () => {
-      // moment and luxon validation seem to not work
-      if (['luxon', 'moment'].includes(adapter.lib)) {
-        return;
-      }
-
       const view = renderWithProps({ enableAccessibleFieldDOMStructure: false }); // default format is numeric, e.g. MM/DD/YYYY
 
       await view.selectSectionAsync('month');

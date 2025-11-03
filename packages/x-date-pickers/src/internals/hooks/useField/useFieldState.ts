@@ -201,12 +201,14 @@ export const useFieldState = <
 
   // Keep invalid state "sticky" while sections still represent an invalid date.
   const hasInvalidSectionValue = React.useMemo(() => {
-    if (state.sections.every((s) => s.value === '')) {
+    const filledSections = state.sections.filter((s) => s.value !== '');
+    // all values are empty
+    if (filledSections.length === 0) {
       return false;
     }
 
-    const allFilled = state.sections.every((s) => s.value !== '');
-    if (!allFilled) {
+    // all values are filled
+    if (filledSections.length === state.sections.length) {
       return false;
     }
 
@@ -234,10 +236,9 @@ export const useFieldState = <
       return false;
     }
 
-    const someFilled = state.sections.some((s) => s.value !== '');
-    const someEmpty = state.sections.some((s) => s.value === '');
+    const filledSections = state.sections.filter((s) => s.value !== '');
 
-    return someFilled && someEmpty;
+    return filledSections.length > 0 && state.sections.length - filledSections.length > 0;
   }, [state.sections, activeSectionIndex]);
 
   const error = React.useMemo(() => {
