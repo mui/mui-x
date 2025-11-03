@@ -27,7 +27,7 @@ const resourcesChildrenMapSelector = createSelectorMemoized(
   (processedResourceLookup, resourceChildrenIdLookup) => {
     const result: Map<CalendarResourceId, CalendarResource[]> = new Map();
 
-    for (const [resourceId, childrenIds] of resourceChildrenIdLookup) {
+    for (const [resourceId, childrenIds] of Array.from(resourceChildrenIdLookup.entries())) {
       const children = childrenIds.map((id) => processedResourceLookup.get(id)!);
       result.set(resourceId, children);
     }
