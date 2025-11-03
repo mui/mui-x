@@ -106,6 +106,10 @@ export function MoreEventsPopoverTrigger(props: MoreEventsPopoverTriggerProps) {
   const { occurrences, day, ...other } = props;
 
   return (
-    <MoreEventsPopover.Trigger data={{ occurrences, count: occurrences.length, day }} {...other} />
+    <MoreEventsPopover.Trigger
+      nativeButton={true}
+      data={{ occurrences, count: occurrences.length, day }}
+      {...other}
+    />
   );
 }
