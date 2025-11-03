@@ -153,7 +153,7 @@ Your resolver should return `Promise<PromptResponse>`.
 
 <details>
 <summary>With MUI service, where are the AI Assistant queries processed?</summary>
-<div style="margin-left: 0.5em">
+<div>
  The queries are partially processed on MUI servers and partially processed by the third-party provider (currently Anthropic). That said, only the query itself is sent and customer data is anonymized.
 </div>
 </details>
