@@ -25,7 +25,7 @@ export const usePanOnWheel = (
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
   const startedOutsideRef = React.useRef(false);
   const startedOutsideTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
-  const config = useSelector(store, selectorPanInteractionConfig, ['wheel' as const]);
+  const config = useSelector(store, selectorPanInteractionConfig, 'wheel' as const);
 
   const isPanOnWheelEnabled: boolean = Object.keys(optionsLookup).length > 0 && Boolean(config);
 
