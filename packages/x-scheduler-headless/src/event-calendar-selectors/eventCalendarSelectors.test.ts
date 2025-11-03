@@ -42,6 +42,7 @@ describe('EventCalendarStore.selectors', () => {
           surfaceType: 'time-grid',
           start: adapter.startOfDay(day),
           end: adapter.endOfDay(day),
+          resourceId: null,
         },
       });
       expect(eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell(state, day)).to.equal(
@@ -52,12 +53,13 @@ describe('EventCalendarStore.selectors', () => {
     it('should return false when the placeholder type is not "creation"', () => {
       const state = baseState({
         occurrencePlaceholder: {
-          type: 'internal-drag-or-resize',
+          type: 'internal-drag',
           eventId: 'event-id',
           occurrenceKey: 'event-id-key',
           surfaceType: 'day-grid',
           start: adapter.startOfDay(day),
           end: adapter.endOfDay(day),
+          resourceId: null,
           originalOccurrence: createOccurrenceFromEvent({
             id: 'event-id',
             title: 'Event',
@@ -78,6 +80,7 @@ describe('EventCalendarStore.selectors', () => {
           surfaceType: 'day-grid',
           start: adapter.startOfDay(day),
           end: adapter.endOfDay(day),
+          resourceId: null,
         },
       });
       expect(eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell(state, day)).to.equal(
@@ -93,6 +96,7 @@ describe('EventCalendarStore.selectors', () => {
           surfaceType: 'day-grid',
           start: adapter.startOfDay(otherDay),
           end: adapter.endOfDay(otherDay),
+          resourceId: null,
         },
       });
       expect(eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell(state, day)).to.equal(
@@ -120,6 +124,7 @@ describe('EventCalendarStore.selectors', () => {
           surfaceType: 'day-grid',
           start: adapter.setHours(dayStart, 10),
           end: adapter.setHours(dayStart, 11),
+          resourceId: null,
         },
       });
       expect(
@@ -127,15 +132,16 @@ describe('EventCalendarStore.selectors', () => {
       ).to.equal(false);
     });
 
-    it('should return false when eventId is not null (editing mode)', () => {
+    it('should return false when the type is not "creating"', () => {
       const state = baseState({
         occurrencePlaceholder: {
-          type: 'internal-drag-or-resize',
+          type: 'internal-drag',
           eventId: 'event-id',
           occurrenceKey: 'event-id-key',
           surfaceType: 'time-grid',
           start: adapter.startOfDay(day),
           end: adapter.endOfDay(day),
+          resourceId: null,
           originalOccurrence: createOccurrenceFromEvent({
             id: 'event-id',
             title: 'Event',
@@ -157,6 +163,7 @@ describe('EventCalendarStore.selectors', () => {
           surfaceType: 'time-grid',
           start: adapter.setHours(adapter.startOfDay(nextDay), 9),
           end: adapter.setHours(adapter.startOfDay(nextDay), 10),
+          resourceId: null,
         },
       });
       expect(
@@ -171,6 +178,7 @@ describe('EventCalendarStore.selectors', () => {
           surfaceType: 'time-grid',
           start: adapter.setHours(dayStart, 10), // < dayEnd
           end: adapter.setHours(dayStart, 11), // > dayStart
+          resourceId: null,
         },
       });
       expect(
@@ -185,6 +193,7 @@ describe('EventCalendarStore.selectors', () => {
           surfaceType: 'time-grid',
           start: dayEnd, // start < dayEnd is false
           end: adapter.addMinutes(dayEnd, 30),
+          resourceId: null,
         },
       });
       expect(
@@ -199,6 +208,7 @@ describe('EventCalendarStore.selectors', () => {
           surfaceType: 'time-grid',
           start: adapter.addMinutes(dayStart, -60),
           end: dayStart, // end > dayStart is false
+          resourceId: null,
         },
       });
       expect(

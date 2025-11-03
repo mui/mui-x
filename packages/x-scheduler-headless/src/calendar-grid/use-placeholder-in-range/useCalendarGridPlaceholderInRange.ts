@@ -7,6 +7,7 @@ import { useEventOccurrencesWithTimelinePosition } from '../../use-event-occurre
 import { eventCalendarOccurrencePlaceholderSelectors } from '../../event-calendar-selectors';
 import { processDate } from '../../process-date';
 import { useAdapter } from '../../use-adapter';
+import { isInternalDragOrResizePlaceholder } from '../../utils/drag-utils';
 
 export function useCalendarGridPlaceholderInRange(
   parameters: useCalendarGridPlaceholderInRange.Parameters,
@@ -23,8 +24,9 @@ export function useCalendarGridPlaceholderInRange(
     end,
   );
 
-  const originalEventId =
-    rawPlaceholder?.type === 'internal-drag-or-resize' ? rawPlaceholder.eventId : null;
+  const originalEventId = isInternalDragOrResizePlaceholder(rawPlaceholder)
+    ? rawPlaceholder.eventId
+    : null;
   const originalEvent = useStore(store, schedulerEventSelectors.processedEvent, originalEventId);
 
   return React.useMemo(() => {

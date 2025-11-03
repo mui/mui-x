@@ -34,15 +34,12 @@ export function useDraggableEvent(
   const store = useSchedulerStoreContext();
 
   // Selector hooks
-  const isDragging = useStore(
+  const placeholderAction = useStore(
     store,
-    schedulerOccurrencePlaceholderSelectors.isMatchingOccurrence,
+    schedulerOccurrencePlaceholderSelectors.actionForOccurrence,
     occurrenceKey,
   );
   const event = useStore(store, schedulerEventSelectors.processedEvent, eventId)!;
-
-  // State hooks
-  const [isResizing, setIsResizing] = React.useState(false);
 
   // Feature hooks
   const { state: eventState } = useEvent({ start, end });
@@ -57,10 +54,10 @@ export function useDraggableEvent(
   const state = React.useMemo(
     () => ({
       ...eventState,
-      dragging: isDragging,
-      resizing: isResizing,
+      dragging: placeholderAction === 'internal-drag',
+      resizing: placeholderAction === 'internal-resize',
     }),
-    [eventState, isDragging, isResizing],
+    [eventState, placeholderAction],
   );
 
   React.useEffect(() => {
@@ -90,7 +87,6 @@ export function useDraggableEvent(
 
   const contextValue: useDraggableEvent.ContextValue = React.useMemo(
     () => ({
-      setIsResizing,
       doesEventStartBeforeCollectionStart: adapter.isBefore(start.value, collectionStart),
       doesEventEndAfterCollectionEnd: adapter.isAfter(end.value, collectionEnd),
     }),
@@ -167,10 +163,6 @@ export namespace useDraggableEvent {
   }
 
   export interface ContextValue {
-    /**
-     * Sets whether the event is being resized.
-     */
-    setIsResizing: (isResizing: boolean) => void;
     /**
      * Whether the event starts before the collection starts.
      */

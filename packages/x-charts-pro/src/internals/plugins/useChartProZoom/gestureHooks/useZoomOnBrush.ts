@@ -23,7 +23,7 @@ export const useZoomOnBrush = (
 ) => {
   const drawingArea = useSelector(store, selectorChartDrawingArea);
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
-  const config = useSelector(store, selectorZoomInteractionConfig, ['brush' as const]);
+  const config = useSelector(store, selectorZoomInteractionConfig, 'brush' as const);
 
   const isZoomOnBrushEnabled: boolean = Object.keys(optionsLookup).length > 0 && Boolean(config);
 

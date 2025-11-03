@@ -119,7 +119,7 @@ export default function ExternalDragAndDrop() {
           </div>
         )}
       </div>
-      <div style={{ flexGrow: 1 }}>
+      <div style={{ flexGrow: 1, height: 600 }}>
         <EventCalendar
           events={events}
           resources={resources}
@@ -129,7 +129,6 @@ export default function ExternalDragAndDrop() {
           canDragEventsFromTheOutside
           canDropEventsToTheOutside
           preferences={{ isSidePanelOpen: false }}
-          className={classes.EventCalendar}
         />
       </div>
     </div>
