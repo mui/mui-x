@@ -269,8 +269,8 @@ importers:
         specifier: 'catalog:'
         version: 7.3.4(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@mui/monorepo':
-        specifier: github:mui/material-ui#16873e721ac8c7fcfff4a0c298469efd3ccac64e
-        version: https://codeload.github.com/mui/material-ui/tar.gz/16873e721ac8c7fcfff4a0c298469efd3ccac64e(@babel/core@7.28.5)(@types/express@5.0.3)(karma@6.4.4)
+        specifier: github:mui/material-ui#035815b7834f7714e00fb776caa5c26006bf350d
+        version: https://codeload.github.com/mui/material-ui/tar.gz/035815b7834f7714e00fb776caa5c26006bf350d(@babel/core@7.28.5)(@types/express@5.0.3)(karma@6.4.4)
       '@mui/utils':
         specifier: 'catalog:'
         version: 7.3.3(@types/react@19.2.2)(react@19.2.0)
@@ -4185,8 +4185,8 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/16873e721ac8c7fcfff4a0c298469efd3ccac64e':
-    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/16873e721ac8c7fcfff4a0c298469efd3ccac64e}
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/035815b7834f7714e00fb776caa5c26006bf350d':
+    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/035815b7834f7714e00fb776caa5c26006bf350d}
     version: 7.3.4
     engines: {node: '>=22.18.0', pnpm: 10.19.0}
 
@@ -14640,7 +14640,7 @@ snapshots:
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0)
       '@types/react': 19.2.2
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/16873e721ac8c7fcfff4a0c298469efd3ccac64e(@babel/core@7.28.5)(@types/express@5.0.3)(karma@6.4.4)':
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/035815b7834f7714e00fb776caa5c26006bf350d(@babel/core@7.28.5)(@types/express@5.0.3)(karma@6.4.4)':
     dependencies:
       '@netlify/functions': 5.0.1
       '@slack/bolt': 4.5.0(@types/express@5.0.3)
