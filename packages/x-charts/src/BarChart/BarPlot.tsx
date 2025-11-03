@@ -7,18 +7,19 @@ import { BarElement, BarElementSlotProps, BarElementSlots } from './BarElement';
 import { BarItemIdentifier } from '../models';
 import { useDrawingArea, useXAxes, useYAxes } from '../hooks';
 import { BarClipPath } from './BarClipPath';
-import { BarLabelItemProps, BarLabelSlotProps, BarLabelSlots } from './BarLabel/BarLabelItem';
+import { BarLabelSlotProps, BarLabelSlots } from './BarLabel/BarLabelItem';
 import { BarLabelPlot } from './BarLabel/BarLabelPlot';
 import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
 import { useBarPlotData } from './useBarPlotData';
 import { useUtilityClasses } from './barClasses';
+import { BarItem, BarLabelContext } from './BarLabel';
 
 export interface BarPlotSlots extends BarElementSlots, BarLabelSlots {}
 
 export interface BarPlotSlotProps extends BarElementSlotProps, BarLabelSlotProps {}
 
-export interface BarPlotProps extends Pick<BarLabelItemProps, 'barLabel'> {
+export interface BarPlotProps {
   /**
    * If `true`, animations are skipped.
    * @default undefined
@@ -37,6 +38,15 @@ export interface BarPlotProps extends Pick<BarLabelItemProps, 'barLabel'> {
    * Defines the border radius of the bar element.
    */
   borderRadius?: number;
+  /**
+   * @deprecated Use `barLabel` in the chart series instead.
+   * If provided, the function will be used to format the label of the bar.
+   * It can be set to 'value' to display the current value.
+   * @param {BarItem} item The item to format.
+   * @param {BarLabelContext} context data about the bar.
+   * @returns {string} The formatted label.
+   */
+  barLabel?: 'value' | ((item: BarItem, context: BarLabelContext) => string | null | undefined);
   /**
    * The props used for each component slot.
    * @default {}
@@ -104,57 +114,59 @@ function BarPlot(props: BarPlotProps) {
             );
           },
         )}
-      {completedData.map(({ seriesId, data }) => {
+      {completedData.map((processedSeries) => {
+        const { seriesId, data } = processedSeries;
+
         return (
-          <g key={seriesId} data-series={seriesId} className={classes.series}>
-            {data.map(
-              ({ dataIndex, color, maskId, layout, x, xOrigin, y, yOrigin, width, height }) => {
-                const barElement = (
-                  <BarElement
-                    key={dataIndex}
-                    id={seriesId}
-                    dataIndex={dataIndex}
-                    color={color}
-                    skipAnimation={skipAnimation ?? false}
-                    layout={layout ?? 'vertical'}
-                    x={x}
-                    xOrigin={xOrigin}
-                    y={y}
-                    yOrigin={yOrigin}
-                    width={width}
-                    height={height}
-                    {...other}
-                    onClick={
-                      onItemClick &&
-                      ((event) => {
-                        onItemClick(event, { type: 'bar', seriesId, dataIndex });
-                      })
-                    }
-                  />
-                );
+          <React.Fragment key={seriesId}>
+            <g data-series={seriesId} className={classes.series}>
+              {data.map(
+                ({ dataIndex, color, maskId, layout, x, xOrigin, y, yOrigin, width, height }) => {
+                  const barElement = (
+                    <BarElement
+                      key={dataIndex}
+                      id={seriesId}
+                      dataIndex={dataIndex}
+                      color={color}
+                      skipAnimation={skipAnimation ?? false}
+                      layout={layout ?? 'vertical'}
+                      x={x}
+                      xOrigin={xOrigin}
+                      y={y}
+                      yOrigin={yOrigin}
+                      width={width}
+                      height={height}
+                      {...other}
+                      onClick={
+                        onItemClick &&
+                        ((event) => {
+                          onItemClick(event, { type: 'bar', seriesId, dataIndex });
+                        })
+                      }
+                    />
+                  );
 
-                if (withoutBorderRadius) {
-                  return barElement;
-                }
+                  if (withoutBorderRadius) {
+                    return barElement;
+                  }
 
-                return (
-                  <g key={dataIndex} clipPath={`url(#${maskId})`}>
-                    {barElement}
-                  </g>
-                );
-              },
-            )}
-          </g>
+                  return (
+                    <g key={dataIndex} clipPath={`url(#${maskId})`}>
+                      {barElement}
+                    </g>
+                  );
+                },
+              )}
+            </g>
+            <BarLabelPlot
+              processedSeries={processedSeries}
+              skipAnimation={skipAnimation}
+              barLabel={barLabel}
+              {...other}
+            />
+          </React.Fragment>
         );
       })}
-      {barLabel && (
-        <BarLabelPlot
-          bars={completedData}
-          skipAnimation={skipAnimation}
-          barLabel={barLabel}
-          {...other}
-        />
-      )}
     </BarPlotRoot>
   );
 }
