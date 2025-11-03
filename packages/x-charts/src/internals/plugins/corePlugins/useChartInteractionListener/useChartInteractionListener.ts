@@ -83,13 +83,11 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
           new PanGesture({
             name: 'zoomPan',
             threshold: 0,
-            maxPointers: 1,
             preventIf: ['zoomTapAndDrag', 'zoomPressAndDrag'],
           }),
           new PinchGesture({
             name: 'zoomPinch',
             threshold: 5,
-            preventIf: ['pan', 'zoomPan'],
           }),
           new TurnWheelGesture({
             name: 'zoomTurnWheel',

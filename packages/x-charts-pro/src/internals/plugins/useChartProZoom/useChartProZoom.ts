@@ -79,7 +79,6 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginDat
       isInteracting: true,
       zoomData: paramsZoomData,
     });
-
     removeIsInteracting();
   }, [store, paramsZoomData, removeIsInteracting]);
 
@@ -88,19 +87,19 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginDat
       const newZoomData =
         typeof zoomData === 'function' ? zoomData([...store.state.zoom.zoomData]) : zoomData;
 
+      onZoomChange(newZoomData);
       if (store.state.zoom.isControlled) {
-        onZoomChange?.(newZoomData);
         store.set('zoom', {
           ...store.state.zoom,
           isInteracting: true,
         });
       } else {
-        removeIsInteracting();
         store.set('zoom', {
           ...store.state.zoom,
           isInteracting: true,
           zoomData: newZoomData,
         });
+        removeIsInteracting();
       }
     },
     [onZoomChange, store, removeIsInteracting],

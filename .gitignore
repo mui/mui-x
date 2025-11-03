@@ -7,7 +7,6 @@
 __diff_output__
 .DS_STORE
 *.log
-*.tsbuildinfo
 /.eslintcache
 /.nyc_output
 /coverage
@@ -28,3 +27,7 @@ performance-snapshot.json
 .github/styles/
 test-results
 CLAUDE.md
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts

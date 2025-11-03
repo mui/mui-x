@@ -7,6 +7,7 @@ import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowConte
 import type { useEventOccurrencesWithDayGridPosition } from '../../use-event-occurrences-with-day-grid-position';
 import { useAdapter, diffIn } from '../../use-adapter/useAdapter';
 import { eventCalendarOccurrencePlaceholderSelectors } from '../../event-calendar-selectors';
+import { isInternalDragOrResizePlaceholder } from '../../utils/drag-utils';
 
 export function useCalendarGridPlaceholderInDay(
   day: SchedulerValidDate,
@@ -23,8 +24,9 @@ export function useCalendarGridPlaceholderInDay(
     rowStart,
   );
 
-  const originalEventId =
-    rawPlaceholder?.type === 'internal-drag-or-resize' ? rawPlaceholder.eventId : null;
+  const originalEventId = isInternalDragOrResizePlaceholder(rawPlaceholder)
+    ? rawPlaceholder.eventId
+    : null;
   const originalEvent = useStore(store, schedulerEventSelectors.processedEvent, originalEventId);
 
   return React.useMemo(() => {

@@ -23,9 +23,7 @@ export const usePanOnDrag = (
 ) => {
   const drawingArea = useSelector(store, selectorChartDrawingArea);
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
-  const isInteracting = React.useRef<boolean>(false);
-  const accumulatedChange = React.useRef<{ x: number; y: number }>({ x: 0, y: 0 });
-  const config = useSelector(store, selectorPanInteractionConfig, ['drag' as const]);
+  const config = useSelector(store, selectorPanInteractionConfig, 'drag' as const);
 
   const isPanOnDragEnabled: boolean =
     Object.values(optionsLookup).some((v) => v.panning) && Boolean(config);
@@ -48,6 +46,8 @@ export const usePanOnDrag = (
   // Add event for chart panning
   React.useEffect(() => {
     const element = svgRef.current;
+    let isInteracting = false;
+    const accumulatedChange = { x: 0, y: 0 };
 
     if (element === null || !isPanOnDragEnabled) {
       return () => {};
@@ -55,19 +55,18 @@ export const usePanOnDrag = (
 
     const handlePanStart = (event: PanEvent) => {
       if (!(event.detail.target as SVGElement)?.closest('[data-charts-zoom-slider]')) {
-        isInteracting.current = true;
+        isInteracting = true;
       }
     };
     const handlePanEnd = () => {
-      isInteracting.current = false;
-      accumulatedChange.current = { x: 0, y: 0 };
+      isInteracting = false;
     };
 
     const throttledCallback = rafThrottle(() => {
-      const x = accumulatedChange.current.x;
-      const y = accumulatedChange.current.y;
-      accumulatedChange.current.x = 0;
-      accumulatedChange.current.y = 0;
+      const x = accumulatedChange.x;
+      const y = accumulatedChange.y;
+      accumulatedChange.x = 0;
+      accumulatedChange.y = 0;
       setZoomDataCallback((prev) =>
         translateZoom(
           prev,
@@ -82,11 +81,11 @@ export const usePanOnDrag = (
     });
 
     const handlePan = (event: PanEvent) => {
-      if (!isInteracting.current) {
+      if (!isInteracting) {
         return;
       }
-      accumulatedChange.current.x += event.detail.deltaX;
-      accumulatedChange.current.y += event.detail.deltaY;
+      accumulatedChange.x += event.detail.deltaX;
+      accumulatedChange.y += event.detail.deltaY;
       throttledCallback();
     };
 
@@ -109,6 +108,5 @@ export const usePanOnDrag = (
     drawingArea.height,
     setZoomDataCallback,
     store,
-    isInteracting,
   ]);
 };
