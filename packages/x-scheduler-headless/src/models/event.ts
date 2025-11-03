@@ -166,7 +166,7 @@ export interface CalendarOccurrencePlaceholderInternalDragOrResize
   /**
    * The type of placeholder.
    */
-  type: 'internal-drag-or-resize';
+  type: 'internal-drag' | 'internal-resize';
   /**
    * The id of the event being changed.
    */
