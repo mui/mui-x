@@ -12,7 +12,8 @@ import { getWeekDayCode } from '@mui/x-scheduler-headless/utils/recurring-event-
 import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
 import { adapter as defaultAdapter } from './adapters';
 
-export const DEFAULT_TESTING_VISIBLE_DATE = '2025-07-03T00:00:00Z';
+const DEFAULT_TESTING_VISIBLE_DATE_STR = '2025-07-03T00:00:00Z';
+export const DEFAULT_TESTING_VISIBLE_DATE = defaultAdapter.date(DEFAULT_TESTING_VISIBLE_DATE_STR);
 
 /**
  * Minimal event builder for tests.
@@ -161,7 +162,7 @@ export class EventBuilder {
    * - If kind + rule: merges your rrule over the preset.
    */
   recurrent(kind: RecurringEventPresetKey, rrule?: Omit<RecurringEventRecurrenceRule, 'freq'>) {
-    const anchor = this.event.start ?? this.adapter.date(DEFAULT_TESTING_VISIBLE_DATE);
+    const anchor = this.event.start ?? DEFAULT_TESTING_VISIBLE_DATE;
 
     const freqMap: Record<RecurringEventPresetKey, RecurringEventRecurrenceRule['freq']> = {
       daily: 'DAILY',
@@ -188,7 +189,7 @@ export class EventBuilder {
    * Build a CalendarEventOccurrence from the current draft.
    */
   build(): CalendarEventOccurrence {
-    const defaultStartDate = this.adapter.date(DEFAULT_TESTING_VISIBLE_DATE);
+    const defaultStartDate = DEFAULT_TESTING_VISIBLE_DATE;
     const defaultEndDate = this.adapter.addMinutes(defaultStartDate, 60);
 
     return {

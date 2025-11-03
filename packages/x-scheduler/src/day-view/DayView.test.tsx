@@ -11,7 +11,7 @@ describe('<DayView />', () => {
   const { render } = createSchedulerRenderer();
 
   describe('time navigation', () => {
-    const visibleDate = adapter.date(DEFAULT_TESTING_VISIBLE_DATE);
+    const visibleDate = DEFAULT_TESTING_VISIBLE_DATE;
 
     it('should go to start of previous day when clicking on the Previous Day button', async () => {
       const onVisibleDateChange = spy();

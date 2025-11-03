@@ -9,7 +9,7 @@ import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 
 describe('<AgendaView />', () => {
   const { render } = createSchedulerRenderer();
-  const visibleDate = adapter.date(DEFAULT_TESTING_VISIBLE_DATE);
+  const visibleDate = DEFAULT_TESTING_VISIBLE_DATE;
 
   describe('time navigation', () => {
     it('should go to previous agenda period (12 days) when clicking on the Previous Agenda button', async () => {

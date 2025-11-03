@@ -271,7 +271,7 @@ describe('<MonthView />', () => {
   });
 
   describe('time navigation', () => {
-    const visibleDate = adapter.date(DEFAULT_TESTING_VISIBLE_DATE);
+    const visibleDate = DEFAULT_TESTING_VISIBLE_DATE;
 
     it('should go to start of previous month when clicking on the Previous Month button', async () => {
       const onVisibleDateChange = spy();
