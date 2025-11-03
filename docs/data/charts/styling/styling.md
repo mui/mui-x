@@ -108,7 +108,7 @@ If you need more control over the color assignment, you can provide a `colorGett
 
 The callback receives a `{ value, dataIndex }` object and should return a color string for the provided data point.
 
-In components where a series-level color is required (e.g., the legend), the `color` prop will be used.
+In components where a series-level color is required (for example, the legend), the `color` prop is used instead.
 
 {{"demo": "ColorCallback.js"}}
 
