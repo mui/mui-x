@@ -145,10 +145,9 @@ jobs:
       - run:
           name: Test JSDOM
           command: |
-            # medium resource class has 2 CPUs. We can try to fully saturate them by running 2 shards in parallel
-            # Avoid exiting immediately to be able to merge the reports
+            # medium resource class has 2 CPUs. We can fully saturate them by running 2 shards in parallel
+            # Avoid exiting immediately to be able to merge the reports and show output even when tests fail
             pnpm exec concurrently "pnpm test:unit:jsdom --reporter=blob --shard=1/2" "pnpm test:unit:jsdom --reporter=blob --shard=2/2" || TEST_EXIT_CODE=$?
-            # requires the blob reporter:
             pnpm exec vitest run --merge-reports
             # Reports merged, we can now exit with the right code
             exit ${TEST_EXIT_CODE:-0}
