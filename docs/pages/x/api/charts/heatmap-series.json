@@ -6,10 +6,6 @@
   ],
   "properties": {
     "type": { "type": { "description": "'heatmap'" }, "required": true, "isProPlan": true },
-    "colorGetter": {
-      "type": { "description": "(data: SeriesColorGetterValue&lt;TValue&gt;) =&gt; string" },
-      "isProPlan": true
-    },
     "data": { "type": { "description": "readonly HeatmapValueType[]" }, "isProPlan": true },
     "dataKey": { "type": { "description": "string" }, "isProPlan": true },
     "highlightScope": { "type": { "description": "HighlightScope" }, "isProPlan": true },

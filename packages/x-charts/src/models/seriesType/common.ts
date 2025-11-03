@@ -17,7 +17,7 @@ export type SeriesValueFormatter<TValue> = (
   context: SeriesValueFormatterContext,
 ) => string | null;
 
-export type SeriesColorGetterValue<TValue> = { value: TValue; dataIndex: number };
+export type ColorCallbackValue<TValue> = { value: TValue; dataIndex: number };
 
 export interface SeriesColor<TValue> {
   /**
@@ -30,10 +30,10 @@ export interface SeriesColor<TValue> {
    * A function that returns a color based on the value and/or the data index of a point.
    * The returned color is used when displaying the specific data point, e.g., a marker in a line chart.
    * When the color of the entire series is required, e.g., in legends, the `color` property is used instead.
-   * @param {SeriesColorGetterValue<TValue>} data  An object containing data point's `dataIndex` and `value`.
+   * @param {ColorCallbackValue<TValue>} data  An object containing data point's `dataIndex` and `value`.
    * @returns {string} The color to use for the specific data point.
    */
-  colorGetter?: (data: SeriesColorGetterValue<TValue>) => string;
+  colorGetter?: (data: ColorCallbackValue<TValue>) => string;
 }
 
 export interface CommonSeriesType<TValue> extends SeriesColor<TValue> {

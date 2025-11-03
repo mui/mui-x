@@ -10,7 +10,7 @@
     "type": { "type": { "description": "'radar'" }, "required": true },
     "color": { "type": { "description": "string" } },
     "colorGetter": {
-      "type": { "description": "(data: SeriesColorGetterValue&lt;TValue&gt;) =&gt; string" }
+      "type": { "description": "(data: ColorCallbackValue&lt;TValue&gt;) =&gt; string" }
     },
     "fillArea": { "type": { "description": "boolean" } },
     "hideMark": { "type": { "description": "boolean" } },
