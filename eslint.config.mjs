@@ -443,13 +443,6 @@ export default defineConfig(
       'react-hooks/static-components': 'off',
     },
   })),
-  ...['x-charts-pro', 'x-charts-premium', 'x-data-grid'].map((pkgName) => ({
-    files: [`packages/${pkgName}/src/**/*${EXTENSION_TS}`],
-    ignores: ['**/*.d.ts'],
-    rules: {
-      'import/export': 'off',
-    },
-  })),
   {
     files: [
       `test/utils/**/*${EXTENSION_TS}`,
