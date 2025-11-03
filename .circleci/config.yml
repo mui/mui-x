@@ -138,13 +138,14 @@ jobs:
             fi
   test_unit:
     <<: *default-job
+    parallelism: 2
     steps:
       - checkout
       - install_js:
           react-version: << parameters.react-version >>
       - run:
           name: Test JSDOM
-          command: pnpm test:unit:jsdom
+          command: pnpm test:unit:jsdom --shard=${SHARD}/${CIRCLE_NODE_TOTAL}
       - store_test_results:
           path: test-results
   test_browser:
