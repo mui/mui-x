@@ -310,6 +310,7 @@ describe('<EventPopoverContent />', () => {
                 start,
                 end,
                 lockSurfaceType: false,
+                resourceId: null,
               })
             }
           />
@@ -357,6 +358,7 @@ describe('<EventPopoverContent />', () => {
                 start,
                 end,
                 lockSurfaceType: false,
+                resourceId: null,
               })
             }
           />
@@ -404,6 +406,7 @@ describe('<EventPopoverContent />', () => {
                 start,
                 end,
                 lockSurfaceType: true,
+                resourceId: null,
               })
             }
           />
@@ -433,6 +436,7 @@ describe('<EventPopoverContent />', () => {
         start,
         end,
         lockSurfaceType: false,
+        resourceId: null,
       };
 
       const creationOccurrence = {

@@ -42,6 +42,7 @@ describe('EventCalendarStore.selectors', () => {
           surfaceType: 'time-grid',
           start: adapter.startOfDay(day),
           end: adapter.endOfDay(day),
+          resourceId: null,
         },
       });
       expect(eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell(state, day)).to.equal(
@@ -58,6 +59,7 @@ describe('EventCalendarStore.selectors', () => {
           surfaceType: 'day-grid',
           start: adapter.startOfDay(day),
           end: adapter.endOfDay(day),
+          resourceId: null,
           originalOccurrence: {
             key: 'event-id-key',
             id: 'event-id',
@@ -79,6 +81,7 @@ describe('EventCalendarStore.selectors', () => {
           surfaceType: 'day-grid',
           start: adapter.startOfDay(day),
           end: adapter.endOfDay(day),
+          resourceId: null,
         },
       });
       expect(eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell(state, day)).to.equal(
@@ -94,6 +97,7 @@ describe('EventCalendarStore.selectors', () => {
           surfaceType: 'day-grid',
           start: adapter.startOfDay(otherDay),
           end: adapter.endOfDay(otherDay),
+          resourceId: null,
         },
       });
       expect(eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell(state, day)).to.equal(
@@ -121,6 +125,7 @@ describe('EventCalendarStore.selectors', () => {
           surfaceType: 'day-grid',
           start: adapter.setHours(dayStart, 10),
           end: adapter.setHours(dayStart, 11),
+          resourceId: null,
         },
       });
       expect(
@@ -137,6 +142,7 @@ describe('EventCalendarStore.selectors', () => {
           surfaceType: 'time-grid',
           start: adapter.startOfDay(day),
           end: adapter.endOfDay(day),
+          resourceId: null,
           originalOccurrence: {
             id: 'event-id',
             key: 'event-id-key',
@@ -159,6 +165,7 @@ describe('EventCalendarStore.selectors', () => {
           surfaceType: 'time-grid',
           start: adapter.setHours(adapter.startOfDay(nextDay), 9),
           end: adapter.setHours(adapter.startOfDay(nextDay), 10),
+          resourceId: null,
         },
       });
       expect(
@@ -173,6 +180,7 @@ describe('EventCalendarStore.selectors', () => {
           surfaceType: 'time-grid',
           start: adapter.setHours(dayStart, 10), // < dayEnd
           end: adapter.setHours(dayStart, 11), // > dayStart
+          resourceId: null,
         },
       });
       expect(
@@ -187,6 +195,7 @@ describe('EventCalendarStore.selectors', () => {
           surfaceType: 'time-grid',
           start: dayEnd, // start < dayEnd is false
           end: adapter.addMinutes(dayEnd, 30),
+          resourceId: null,
         },
       });
       expect(
@@ -201,6 +210,7 @@ describe('EventCalendarStore.selectors', () => {
           surfaceType: 'time-grid',
           start: adapter.addMinutes(dayStart, -60),
           end: dayStart, // end > dayStart is false
+          resourceId: null,
         },
       });
       expect(
