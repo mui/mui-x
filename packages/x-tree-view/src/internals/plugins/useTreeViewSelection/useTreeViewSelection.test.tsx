@@ -943,6 +943,15 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
 
           expect(view.getItemRoot('1')).to.have.attribute('aria-checked', 'true');
         });
+
+        it('should have the attribute `aria-cheded="mixed"` if partially selected', () => {
+          const view = render({
+            items: [{ id: '1', children: [{ id: '1.1' }, { id: '1.2' }] }, { id: '2' }],
+            defaultSelectedItems: '1.1',
+            defaultExpandedItems: ['1'],
+          });
+          expect(view.getItemRoot('1')).to.have.attribute('aria-checked', 'mixed');
+        });
       });
 
       describe('multi selection', () => {
