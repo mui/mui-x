@@ -13,13 +13,13 @@ import { EventCalendar } from '../event-calendar';
 describe('<MonthView />', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-05-01') });
 
-  const events = [
+  const eventOccurrences = [
     EventBuilder.new().startAt('2025-05-01T09:00:00').title('Meeting').buildOccurrence(),
     EventBuilder.new().startAt('2025-05-15T14:00:00').title('Doctor Appointment').buildOccurrence(),
   ];
 
   const standaloneDefaults = {
-    events,
+    events: eventOccurrences,
     resources: [],
   };
 
@@ -86,7 +86,7 @@ describe('<MonthView />', () => {
   });
 
   it('should show "+N more..." when there are more events than fit in a cell', () => {
-    const manyEvents = [
+    const manyEventOccurrences = [
       EventBuilder.new().singleDay('2025-05-01T08:00:00').buildOccurrence(),
       EventBuilder.new().singleDay('2025-05-01T14:09:00').buildOccurrence(),
       EventBuilder.new().singleDay('2025-05-01T14:11:00').buildOccurrence(),
@@ -95,7 +95,7 @@ describe('<MonthView />', () => {
     ];
 
     render(
-      <EventCalendarProvider events={manyEvents} resources={[]}>
+      <EventCalendarProvider events={manyEventOccurrences} resources={[]}>
         <MonthView />
       </EventCalendarProvider>,
     );
@@ -103,7 +103,7 @@ describe('<MonthView />', () => {
   });
 
   describe('All day events', () => {
-    const allDayEvents = [
+    const allDayEventOccurrences = [
       EventBuilder.new()
         .span('2025-05-05T00:00:00', '2025-05-07T23:59:59', { allDay: true })
         .title('Multi-day Conference')
@@ -127,7 +127,7 @@ describe('<MonthView />', () => {
     ];
     it('should render all-day events correctly with main event in start date cell', () => {
       render(
-        <EventCalendarProvider events={allDayEvents} resources={[]}>
+        <EventCalendarProvider events={allDayEventOccurrences} resources={[]}>
           <MonthView />
         </EventCalendarProvider>,
       );
@@ -138,25 +138,25 @@ describe('<MonthView />', () => {
       // Main event should render in the start date cell
       expect(within(may5Cell!).getByText('Multi-day Conference')).not.to.equal(null);
 
-      // Invisible events should exist in the spanned cells
+      // Invisible event occurrences should exist in the spanned cells
       const eventInstances = screen.getAllByLabelText('Multi-day Conference');
       expect(eventInstances.length).to.be.greaterThan(1);
 
-      // Check that invisible events have aria-hidden attribute
-      const hiddenEvents = eventInstances.filter(
+      // Check that invisible event occurrences have aria-hidden attribute
+      const hiddenEventOccurrences = eventInstances.filter(
         (event) => event.getAttribute('aria-hidden') === 'true',
       );
-      expect(hiddenEvents.length).to.be.greaterThan(0);
+      expect(hiddenEventOccurrences.length).to.be.greaterThan(0);
 
-      const visibleEvents = eventInstances.filter(
+      const visibleEventOccurrences = eventInstances.filter(
         (event) => event.getAttribute('aria-hidden') !== 'true',
       );
-      expect(visibleEvents).to.have.length(1);
+      expect(visibleEventOccurrences).to.have.length(1);
     });
 
     it('should render all-day event in first cell of week when event starts before the week', () => {
       render(
-        <EventCalendarProvider events={allDayEvents} resources={[]}>
+        <EventCalendarProvider events={allDayEventOccurrences} resources={[]}>
           <MonthView />
         </EventCalendarProvider>,
       );
@@ -171,14 +171,16 @@ describe('<MonthView />', () => {
 
     it('should place invisible events on the same grid row as the main event', () => {
       render(
-        <EventCalendarProvider events={allDayEvents} resources={[]}>
+        <EventCalendarProvider events={allDayEventOccurrences} resources={[]}>
           <MonthView />
         </EventCalendarProvider>,
       );
 
-      const allEvents = screen.getAllByLabelText('Grid Row Test');
-      const mainEvent = allEvents.find((event) => event.getAttribute('aria-hidden') !== 'true');
-      const invisibleEvents = allEvents.filter(
+      const allEventOccurrences = screen.getAllByLabelText('Grid Row Test');
+      const mainEvent = allEventOccurrences.find(
+        (event) => event.getAttribute('aria-hidden') !== 'true',
+      );
+      const invisibleEventOccurrences = allEventOccurrences.filter(
         (event) => event.getAttribute('aria-hidden') === 'true',
       );
 
@@ -186,15 +188,15 @@ describe('<MonthView />', () => {
       const mainEventStyle = mainEvent?.getAttribute('style') || '';
       const mainGridRow = mainEventStyle.match(/--grid-row:\s*(\d+)/)?.[1];
 
-      invisibleEvents.forEach((invisibleEvent) => {
-        const invisibleStyle = invisibleEvent.getAttribute('style') || '';
+      invisibleEventOccurrences.forEach((invisibleOccurrence) => {
+        const invisibleStyle = invisibleOccurrence.getAttribute('style') || '';
         const invisibleGridRow = invisibleStyle.match(/--grid-row:\s*(\d+)/)?.[1];
         expect(invisibleGridRow).to.equal(mainGridRow);
       });
     });
 
     it('should handle multiple overlapping all-day events with different grid rows', () => {
-      const overlappingEvents = [
+      const overlappingEventOccurrences = [
         EventBuilder.new()
           .span('2025-05-12T00:00:00', '2025-05-14T23:59:59', { allDay: true })
           .title('Event 1')
@@ -210,7 +212,7 @@ describe('<MonthView />', () => {
       ];
 
       render(
-        <EventCalendarProvider events={overlappingEvents} resources={[]}>
+        <EventCalendarProvider events={overlappingEventOccurrences} resources={[]}>
           <MonthView />
         </EventCalendarProvider>,
       );
@@ -238,7 +240,7 @@ describe('<MonthView />', () => {
 
     it('should render all-day events with correct grid column span', () => {
       render(
-        <EventCalendarProvider events={allDayEvents} resources={[]}>
+        <EventCalendarProvider events={allDayEventOccurrences} resources={[]}>
           <MonthView />
         </EventCalendarProvider>,
       );
@@ -255,7 +257,7 @@ describe('<MonthView />', () => {
 
     it('should render one visible event per row if event spans across multiple weeks', () => {
       render(
-        <EventCalendarProvider events={allDayEvents} resources={[]}>
+        <EventCalendarProvider events={allDayEventOccurrences} resources={[]}>
           <MonthView />
         </EventCalendarProvider>,
       );
