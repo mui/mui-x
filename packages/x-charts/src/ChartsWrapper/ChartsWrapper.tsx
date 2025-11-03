@@ -170,7 +170,7 @@ const Root = styled('div', {
       gridArea: 'toolbar',
       justifySelf: 'center',
     },
-    justifyContent: 'center',
+    justifyContent: 'safe center',
     justifyItems: getJustifyItems(ownerState.legendPosition),
     alignItems: getAlignItems(ownerState.legendPosition),
   };
