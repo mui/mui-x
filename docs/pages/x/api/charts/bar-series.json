@@ -8,6 +8,9 @@
   "properties": {
     "type": { "type": { "description": "'bar'" }, "required": true },
     "color": { "type": { "description": "string" } },
+    "colorGetter": {
+      "type": { "description": "(data: ColorCallbackValue&lt;TValue&gt;) =&gt; string" }
+    },
     "data": { "type": { "description": "readonly (number | null)[]" } },
     "dataKey": { "type": { "description": "string" } },
     "highlightScope": { "type": { "description": "HighlightScope" } },
