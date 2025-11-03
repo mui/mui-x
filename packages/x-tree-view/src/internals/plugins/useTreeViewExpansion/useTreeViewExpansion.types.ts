@@ -98,7 +98,7 @@ export type UseTreeViewExpansionParametersWithDefaults = DefaultizedProps<
 
 export interface UseTreeViewExpansionState {
   expansion: {
-    expandedItems: string[];
+    expandedItems: readonly string[];
     expansionTrigger: 'content' | 'iconContainer';
   };
 }
