@@ -1,14 +1,12 @@
 @import '../../../styles/tokens.css';
 
-.PopoverPositioner {
+p {
+  margin: 0;
+}
+
+.EventPopoverPositioner {
   max-width: 460px;
-  width: 100%;
-  background-color: var(--panel);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-4);
   overflow: hidden;
-  z-index: 1300;
-  box-shadow: var(--shadow-4);
 }
 
 .EventPopoverHeader {
@@ -49,10 +47,6 @@
 .mui-x-scheduler .PopoverPositioner .PrimaryButton:focus-visible,
 .mui-x-scheduler .PopoverPositioner .SecondaryErrorButton:focus-visible {
   outline: 2px solid var(--event-color-5);
-}
-
-.EventPopoverTitle {
-  flex: 1;
 }
 
 .mui-x-scheduler .EventPopoverTitleInput {
@@ -324,4 +318,49 @@
   color: var(--event-color-9);
   border: 1px solid var(--event-color-6);
   border-radius: var(--radius-4);
+}
+
+.EventPopoverTitle {
+  flex: 1;
+  color: var(--event-color-12);
+  font-size: var(--font-size-3);
+  line-height: var(--line-height-3);
+  font-weight: var(--font-weight-2);
+  margin: 0;
+}
+
+.EventPopoverResourceContainer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.EventPopoverResourceTitle {
+  font-size: var(--font-size-2);
+  color: var(--event-color-11);
+}
+
+.ReadonlyContent {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-4) var(--space-4);
+  color: var(--default-text-color);
+  gap: var(--space-2);
+}
+
+.EventPopoverDateTimeContainer {
+  display: flex;
+  gap: var(--space-1);
+  align-items: center;
+}
+
+.EventPopoverDateTimeContainer .EventDate,
+.EventPopoverDateTimeContainer .EventTime,
+.EventPopoverDateTimeContainer .EventAllDay {
+  font-size: var(--font-size-2);
+}
+
+.EventRecurrence {
+  font-size: var(--font-size-2);
+  color: var(--secondary-text-color);
 }

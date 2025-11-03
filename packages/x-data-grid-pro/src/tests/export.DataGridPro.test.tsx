@@ -7,7 +7,6 @@ import {
 } from '@mui/x-data-grid-pro';
 import { RefObject } from '@mui/x-internals/types';
 import { createRenderer, act } from '@mui/internal-test-utils';
-import * as React from 'react';
 import { includeRowSelection } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);

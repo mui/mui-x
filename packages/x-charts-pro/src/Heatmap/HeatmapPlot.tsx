@@ -1,5 +1,4 @@
 'use client';
-import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useXScale, useYScale, useZColorScale } from '@mui/x-charts/hooks';
 import { useHeatmapSeriesContext } from '../hooks/useHeatmapSeries';

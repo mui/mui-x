@@ -1,7 +1,5 @@
-import * as React from 'react';
-import { DateTime } from 'luxon';
 import { screen } from '@mui/internal-test-utils';
-import { createSchedulerRenderer } from 'test/utils/scheduler';
+import { adapter, createSchedulerRenderer } from 'test/utils/scheduler';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import {
   changeTo24HoursFormat,
@@ -9,6 +7,7 @@ import {
   openPreferencesMenu,
   toggleShowWeekends,
   toggleShowWeekNumber,
+  toggleShowEmptyDaysInAgenda,
 } from '../internals/utils/test-utils';
 
 describe('EventCalendar', () => {
@@ -21,14 +20,14 @@ describe('EventCalendar', () => {
         events={[
           {
             id: '1',
-            start: DateTime.fromISO('2025-05-26T07:30:00'),
-            end: DateTime.fromISO('2025-05-26T08:15:00'),
+            start: adapter.date('2025-05-26T07:30:00'),
+            end: adapter.date('2025-05-26T08:15:00'),
             title: 'Running',
           },
           {
             id: '2',
-            start: DateTime.fromISO('2025-05-27T16:00:00'),
-            end: DateTime.fromISO('2025-05-27T17:00:00'),
+            start: adapter.date('2025-05-27T16:00:00'),
+            end: adapter.date('2025-05-27T17:00:00'),
             title: 'Weekly',
           },
         ]}
@@ -44,8 +43,8 @@ describe('EventCalendar', () => {
     expect(mondayEvent.textContent).to.equal('Running7:30 AM');
     expect(tuesdayEvent.textContent).to.equal('Weekly4:00 PM - 5:00 PM');
 
-    expect(mondayEvent.getAttribute('aria-labelledby')).to.include('DayTimeGridHeaderCell-26');
-    expect(tuesdayEvent.getAttribute('aria-labelledby')).to.include('DayTimeGridHeaderCell-27');
+    expect(mondayEvent.getAttribute('aria-labelledby')).to.include('header-cell-1');
+    expect(tuesdayEvent.getAttribute('aria-labelledby')).to.include('header-cell-2');
 
     expect(screen.getByRole('columnheader', { name: /Monday 26/i })).not.to.equal(null);
     expect(screen.getByRole('columnheader', { name: /Tuesday 27/i })).not.to.equal(null);
@@ -57,22 +56,22 @@ describe('EventCalendar', () => {
         events={[
           {
             id: '1',
-            start: DateTime.fromISO('2025-05-26T07:30:00'),
-            end: DateTime.fromISO('2025-05-26T08:15:00'),
+            start: adapter.date('2025-05-26T07:30:00'),
+            end: adapter.date('2025-05-26T08:15:00'),
             title: 'Running',
             resource: '1',
           },
           {
             id: '2',
-            start: DateTime.fromISO('2025-05-27T16:00:00'),
-            end: DateTime.fromISO('2025-05-27T17:00:00'),
+            start: adapter.date('2025-05-27T16:00:00'),
+            end: adapter.date('2025-05-27T17:00:00'),
             title: 'Weekly',
             resource: '2',
           },
         ]}
         resources={[
-          { id: '1', name: 'Sport' },
-          { id: '2', name: 'Work' },
+          { id: '1', title: 'Sport' },
+          { id: '2', title: 'Work' },
         ]}
       />,
     );
@@ -220,8 +219,8 @@ describe('EventCalendar', () => {
           events={[
             {
               id: '1',
-              start: DateTime.fromISO('2025-05-26T07:30:00'),
-              end: DateTime.fromISO('2025-05-26T08:15:00'),
+              start: adapter.date('2025-05-26T07:30:00'),
+              end: adapter.date('2025-05-26T08:15:00'),
               title: 'Running',
             },
           ]}
@@ -253,8 +252,8 @@ describe('EventCalendar', () => {
           events={[
             {
               id: '1',
-              start: DateTime.fromISO('2025-05-26T07:30:00'),
-              end: DateTime.fromISO('2025-05-26T08:15:00'),
+              start: adapter.date('2025-05-26T07:30:00'),
+              end: adapter.date('2025-05-26T08:15:00'),
               title: 'Running',
             },
           ]}
@@ -278,6 +277,45 @@ describe('EventCalendar', () => {
       await user.click(document.body);
 
       expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0);
+    });
+
+    it('should allow to show / hide empty days using the UI in the agenda view', async () => {
+      const { user } = render(
+        <EventCalendar
+          events={[
+            {
+              id: '1',
+              start: adapter.date('2025-05-31'),
+              end: adapter.date('2025-05-31'),
+              title: 'Saturday event',
+            },
+            {
+              id: '2',
+              start: adapter.date('2025-06-02'),
+              end: adapter.date('2025-06-02'),
+              title: 'Monday event',
+            },
+          ]}
+          defaultView="agenda"
+        />,
+      );
+
+      // Empty days should be visible by default
+      expect(screen.getByLabelText(/Sunday 1/i)).not.to.equal(null);
+
+      // Hide empty days
+      await openPreferencesMenu(user);
+      await toggleShowEmptyDaysInAgenda(user);
+      await user.click(document.body);
+
+      expect(screen.queryByLabelText(/Sunday 1/i)).to.equal(null);
+
+      // Show empty days again
+      await openPreferencesMenu(user);
+      await toggleShowEmptyDaysInAgenda(user);
+      await user.click(document.body);
+
+      expect(screen.getByLabelText(/Sunday 1/i)).not.to.equal(null);
     });
   });
 });

@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { createRenderer, describeConformance } from '@mui/internal-test-utils';
+import { createRenderer, describeConformance, screen } from '@mui/internal-test-utils';
 import { PiecewiseColorLegend, piecewiseColorLegendClasses } from '@mui/x-charts/ChartsLegend';
 import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
@@ -51,7 +50,7 @@ describe('<PiecewiseColorLegend />', () => {
   }));
 
   it('should apply inline-start class when labelPosition="inline-start"', () => {
-    const { container } = render(
+    render(
       <ChartDataProvider
         height={50}
         width={50}
@@ -77,13 +76,11 @@ describe('<PiecewiseColorLegend />', () => {
       </ChartDataProvider>,
     );
 
-    expect(container.querySelector(`.${piecewiseColorLegendClasses.inlineStart}`)).not.to.equal(
-      null,
-    );
+    expect(screen.getByRole('list').className).contains(piecewiseColorLegendClasses.inlineStart);
   });
 
   it('should apply inline-end class when labelPosition="inline-end"', () => {
-    const { container } = render(
+    render(
       <ChartDataProvider
         height={50}
         width={50}
@@ -109,6 +106,6 @@ describe('<PiecewiseColorLegend />', () => {
       </ChartDataProvider>,
     );
 
-    expect(container.querySelector(`.${piecewiseColorLegendClasses.inlineEnd}`)).not.to.equal(null);
+    expect(screen.getByRole('list').className).contains(piecewiseColorLegendClasses.inlineEnd);
   });
 });

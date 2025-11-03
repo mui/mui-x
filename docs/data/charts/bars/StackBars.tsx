@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Typography from '@mui/material/Typography';
 import { BarChart, BarChartProps } from '@mui/x-charts/BarChart';
 import { addLabels, balanceSheet, valueFormatter } from './netflixsBalanceSheet';

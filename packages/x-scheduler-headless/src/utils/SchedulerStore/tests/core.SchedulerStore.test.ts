@@ -1,7 +1,9 @@
 import { adapter } from 'test/utils/scheduler';
-import { storeClasses, buildEvent, getIds } from './utils';
+import { CalendarEvent } from '@mui/x-scheduler-headless/models';
+import { storeClasses, buildEvent } from './utils';
+import { schedulerEventSelectors, schedulerResourceSelectors } from '../../../scheduler-selectors';
 
-const DEFAULT_PARAMS = { events: [] };
+const DEFAULT_PARAMS = { events: [] as CalendarEvent[] };
 
 storeClasses.forEach((storeClass) => {
   describe(`Core - ${storeClass.name}`, () => {
@@ -24,10 +26,10 @@ storeClasses.forEach((storeClass) => {
 
         const store = new storeClass.Value({ events }, adapter);
 
-        expect(store.state.events).to.have.length(2);
-        expect(store.state.events[0].title).to.equal('Event 1');
-        expect(store.state.events[1].title).to.equal('Event 2');
-        expect(store.state.events).to.equal(events);
+        expect(schedulerEventSelectors.idList(store.state)).to.deep.equal(['1', '2']);
+        expect(schedulerEventSelectors.processedEvent(store.state, '1')!.title).to.equal('Event 1');
+        expect(schedulerEventSelectors.processedEvent(store.state, '2')!.title).to.equal('Event 2');
+        expect(schedulerEventSelectors.modelList(store.state)).to.equal(events);
       });
     });
 
@@ -45,8 +47,8 @@ storeClasses.forEach((storeClass) => {
             ),
           ],
           resources: [
-            { id: 'r1', name: 'Resource 1' },
-            { id: 'r2', name: 'Resource 2' },
+            { id: 'r1', title: 'Resource 1' },
+            { id: 'r2', title: 'Resource 2' },
           ],
           areEventsDraggable: true,
           areEventsResizable: true,
@@ -54,8 +56,10 @@ storeClasses.forEach((storeClass) => {
         };
 
         store.updateStateFromParameters(newParams, adapter);
-        expect(getIds(store.state.events)).to.deep.equal(['1']);
-        expect(getIds(store.state.resources)).to.deep.equal(['r1', 'r2']);
+
+        expect(schedulerEventSelectors.idList(store.state)).to.deep.equal(['1']);
+        expect(schedulerResourceSelectors.idList(store.state)).to.deep.equal(['r1', 'r2']);
+
         expect(store.state.areEventsDraggable).to.equal(true);
         expect(store.state.areEventsResizable).to.equal(true);
         expect(store.state.showCurrentTimeIndicator).to.equal(false);
@@ -81,7 +85,7 @@ storeClasses.forEach((storeClass) => {
         store.updateStateFromParameters(
           {
             ...DEFAULT_PARAMS,
-            resources: [{ id: 'r1', name: 'Resource 1' }],
+            resources: [{ id: 'r1', title: 'Resource 1' }],
             visibleDate: store.state.visibleDate,
           },
           adapter,
@@ -102,7 +106,7 @@ storeClasses.forEach((storeClass) => {
           store.updateStateFromParameters(
             {
               ...DEFAULT_PARAMS,
-              resources: [{ id: 'r1', name: 'Resource 1' }],
+              resources: [{ id: 'r1', title: 'Resource 1' }],
               defaultVisibleDate: adapter.date('2025-12-30T00:00:00Z'),
             },
             adapter,
@@ -134,7 +138,7 @@ storeClasses.forEach((storeClass) => {
           store.updateStateFromParameters(
             {
               ...DEFAULT_PARAMS,
-              resources: [{ id: 'r1', name: 'Resource 1' }],
+              resources: [{ id: 'r1', title: 'Resource 1' }],
               visibleDate: undefined,
             },
             adapter,
