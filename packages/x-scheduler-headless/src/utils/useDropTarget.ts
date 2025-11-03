@@ -20,6 +20,7 @@ import {
   schedulerEventSelectors,
   schedulerOccurrencePlaceholderSelectors,
 } from '../scheduler-selectors';
+import { isInternalDragOrResizePlaceholder } from './drag-utils';
 
 export function useDropTarget<Targets extends keyof EventDropDataLookup>(
   parameters: useDropTarget.Parameters<Targets>,
@@ -48,19 +49,26 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
           end: newEnd,
           eventData: data.eventData,
           onEventDrop: data.onEventDrop,
-          resourceId: resourceId === null ? data.eventData.resource : resourceId,
+          resourceId: resourceId === undefined ? (data.eventData.resource ?? null) : resourceId,
         };
       }
 
+      const type =
+        data.source === 'CalendarGridDayEventResizeHandler' ||
+        data.source === 'CalendarGridTimeEventResizeHandler'
+          ? 'internal-resize'
+          : 'internal-drag';
+
       return {
-        type: 'internal-drag-or-resize',
+        type,
         surfaceType,
         start: newStart,
         end: newEnd,
         eventId: data.eventId,
         occurrenceKey: data.occurrenceKey,
         originalOccurrence: data.originalOccurrence,
-        resourceId: resourceId === null ? data.originalOccurrence.resource : resourceId,
+        resourceId:
+          resourceId === undefined ? (data.originalOccurrence.resource ?? null) : resourceId,
       };
     };
 
@@ -100,7 +108,7 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
 
         const placeholder = dropData ?? schedulerOccurrencePlaceholderSelectors.value(store.state);
 
-        if (placeholder?.type === 'internal-drag-or-resize') {
+        if (isInternalDragOrResizePlaceholder(placeholder)) {
           applyInternalDragOrResizeOccurrencePlaceholder(
             store,
             placeholder,
@@ -119,7 +127,7 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
         const type = currentPlaceholder.type;
         const shouldHidePlaceholder =
           type === 'external-drag' ||
-          (type === 'internal-drag-or-resize' &&
+          (isInternalDragOrResizePlaceholder(currentPlaceholder) &&
             schedulerEventSelectors.canDropEventsToTheOutside(store.state));
 
         if (shouldHidePlaceholder) {
@@ -150,11 +158,10 @@ export namespace useDropTarget {
     addPropertiesToDroppedEvent?: () => Partial<CalendarEvent>;
     /**
      * The id of the resource onto which to drop the event.
-     * If null, the event will be dropped onto the resource it was originally in (if any).
-     * If undefined, the event will be dropped outside of any resource.
-     * @default null
+     * If null, the event will be dropped outside of any resource.
+     * If not defined, the event will be dropped onto the resource it was originally in (if any).
      */
-    resourceId?: CalendarResourceId | undefined | null;
+    resourceId?: CalendarResourceId | null;
   }
 
   export type CreateDropData = (
@@ -190,9 +197,9 @@ async function applyInternalDragOrResizeOccurrencePlaceholder(
 
   const changes: CalendarEventUpdatedProperties = { id: eventId, start, end };
 
-  // If `null`, we want to set the event resource to `null` (no resource).
-  // If `undefined`, we want to keep the original event resource.
-  if (placeholder.resourceId !== undefined) {
+  // If `undefined`, we want to set the event resource to `undefined` (no resource).
+  // If `null`, we want to keep the original event resource.
+  if (placeholder.resourceId !== null) {
     changes.resource = placeholder.resourceId;
   }
 
@@ -222,9 +229,9 @@ function applyExternalDragOccurrencePlaceholder(
     ...placeholder.eventData,
   };
 
-  // If `null`, we want to set the event resource to `null` (no resource).
-  // If `undefined`, we want to keep the original event resource.
-  if (placeholder.resourceId !== undefined) {
+  // If `undefined`, we want to set the event resource to `undefined` (no resource).
+  // If `null`, we want to keep the original event resource.
+  if (placeholder.resourceId !== null) {
     event.resource = placeholder.resourceId;
   }
 

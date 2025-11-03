@@ -5,6 +5,7 @@ import { useTimelineStoreContext } from '../../use-timeline-store-context';
 import { useEventOccurrencesWithTimelinePosition } from '../../use-event-occurrences-with-timeline-position';
 import { timelineOccurrencePlaceholderSelectors } from '../../timeline-selectors';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
+import { isInternalDragOrResizePlaceholder } from '../../utils/drag-utils';
 
 export function useTimelinePlaceholderInRange(
   parameters: useTimelinePlaceholderInRange.Parameters,
@@ -20,8 +21,9 @@ export function useTimelinePlaceholderInRange(
     resourceId,
   );
 
-  const originalEventId =
-    rawPlaceholder?.type === 'internal-drag-or-resize' ? rawPlaceholder.eventId : null;
+  const originalEventId = isInternalDragOrResizePlaceholder(rawPlaceholder)
+    ? rawPlaceholder.eventId
+    : null;
   const originalEvent = useStore(store, schedulerEventSelectors.processedEvent, originalEventId);
 
   return React.useMemo(() => {

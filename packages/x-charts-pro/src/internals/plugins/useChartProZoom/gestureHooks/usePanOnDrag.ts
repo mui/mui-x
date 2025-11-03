@@ -24,7 +24,7 @@ export const usePanOnDrag = (
   const drawingArea = useSelector(store, selectorChartDrawingArea);
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
   const startRef = React.useRef<readonly ZoomData[]>(null);
-  const config = useSelector(store, selectorPanInteractionConfig, ['drag' as const]);
+  const config = useSelector(store, selectorPanInteractionConfig, 'drag' as const);
 
   const isPanOnDragEnabled: boolean =
     Object.values(optionsLookup).some((v) => v.panning) && Boolean(config);
@@ -77,6 +77,7 @@ export const usePanOnDrag = (
 
     const handlePan = (event: PanEvent) => {
       const zoomData = startRef.current;
+
       if (!zoomData) {
         return;
       }
