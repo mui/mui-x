@@ -93,7 +93,7 @@ export const ResourceLegend = React.forwardRef(function ResourceLegend(
   const resources = useStore(store, schedulerResourceSelectors.processedResourceList);
   const visibleResourcesList = useStore(store, schedulerResourceSelectors.visibleIdList);
   const resourceIdList = useStore(store, schedulerResourceSelectors.idList);
-  const resourceChildrenIdsList = useStore(store, schedulerResourceSelectors.childrenIdMap);
+  const resourceChildrenIdsList = useStore(store, schedulerResourceSelectors.childrenIdLookup);
 
   const handleVisibleResourcesChange = useEventCallback((value: string[]) => {
     const differenceMap = getVisibilityDifferenceMap(

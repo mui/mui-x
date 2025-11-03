@@ -23,7 +23,7 @@ describe('Core - TimelineStore', () => {
         resourceIdList: [],
         processedResourceLookup: new Map(),
         resourceModelStructure: undefined,
-        resourceChildrenIdMap: new Map(),
+        resourceChildrenIdLookup: new Map(),
         nowUpdatedEveryMinute: adapter.date(),
         isMultiDayEvent: DEFAULT_IS_MULTI_DAY_EVENT,
         areEventsDraggable: false,

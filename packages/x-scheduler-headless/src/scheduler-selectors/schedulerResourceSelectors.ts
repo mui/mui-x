@@ -18,16 +18,16 @@ const processedResourceListSelector = createSelectorMemoized(
 
 const resourceChildrenIdListSelector = createSelector(
   (state: State, resourceId: CalendarResourceId) =>
-    state.resourceChildrenIdMap.get(resourceId) ?? EMPTY_ARRAY,
+    state.resourceChildrenIdLookup.get(resourceId) ?? EMPTY_ARRAY,
 );
 
 const resourcesChildrenMapSelector = createSelectorMemoized(
   (state: State) => state.processedResourceLookup,
-  (state: State) => state.resourceChildrenIdMap,
-  (processedResourceLookup, resourceChildrenIdMap) => {
+  (state: State) => state.resourceChildrenIdLookup,
+  (processedResourceLookup, resourceChildrenIdLookup) => {
     const result: Map<CalendarResourceId, CalendarResource[]> = new Map();
 
-    for (const [resourceId, childrenIds] of resourceChildrenIdMap) {
+    for (const [resourceId, childrenIds] of resourceChildrenIdLookup) {
       const children = childrenIds.map((id) => processedResourceLookup.get(id)!);
       result.set(resourceId, children);
     }
@@ -39,8 +39,8 @@ const resourcesChildrenMapSelector = createSelectorMemoized(
 const resourcesFlatListSelector = createSelectorMemoized(
   (state: State) => state.resourceIdList,
   (state: State) => state.processedResourceLookup,
-  (state: State) => state.resourceChildrenIdMap,
-  (resourceIds, processedResourceLookup, resourceChildrenIdMap) => {
+  (state: State) => state.resourceChildrenIdLookup,
+  (resourceIds, processedResourceLookup, resourceChildrenIdLookup) => {
     const flatList: CalendarResource[] = [];
 
     const addResourceAndChildren = (resourceId: string) => {
@@ -51,7 +51,7 @@ const resourcesFlatListSelector = createSelectorMemoized(
 
       flatList.push(resource);
 
-      const childrenIds = resourceChildrenIdMap.get(resourceId);
+      const childrenIds = resourceChildrenIdLookup.get(resourceId);
       if (childrenIds?.length) {
         for (const childId of childrenIds) {
           addResourceAndChildren(childId);
@@ -71,7 +71,7 @@ export const schedulerResourceSelectors = {
   processedResourceList: processedResourceListSelector,
   processedResourceFlatList: resourcesFlatListSelector,
   processedResourceChildrenMap: resourcesChildrenMapSelector,
-  childrenIdMap: (state: State) => state.resourceChildrenIdMap,
+  childrenIdLookup: (state: State) => state.resourceChildrenIdLookup,
   childrenIdsList: resourceChildrenIdListSelector,
   idList: createSelector((state: State) => state.resourceIdList),
   visibleMap: createSelector((state: State) => state.visibleResources),

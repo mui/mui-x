@@ -87,17 +87,21 @@ export function innerGetEventOccurrencesGroupedByResource(
 
   const processResources = (innerResources: readonly CalendarResource[]) => {
     const sortedResources = innerResources.toSorted((a, b) => a.title.localeCompare(b.title));
-    return sortedResources.reduce(
-      (acc: InnerGetEventOccurrencesGroupedByResourceReturnValue[], resource: CalendarResource) => {
-        acc.push({ resource, occurrences: occurrencesGroupedByResource.get(resource.id) ?? [] });
-        const children = resourcesChildrenMap.get(resource.id) ?? [];
-        if (children.length > 0) {
-          acc.push(...processResources(children));
-        }
-        return acc;
-      },
-      [],
-    );
+    const result: InnerGetEventOccurrencesGroupedByResourceReturnValue[] = [];
+
+    for (const resource of sortedResources) {
+      result.push({
+        resource,
+        occurrences: occurrencesGroupedByResource.get(resource.id) ?? [],
+      });
+
+      const children = resourcesChildrenMap.get(resource.id) ?? [];
+      if (children.length > 0) {
+        result.push(...processResources(children));
+      }
+    }
+
+    return result;
   };
 
   return processResources(resources);

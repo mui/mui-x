@@ -158,8 +158,20 @@ export function getProcessedResourceFromModel<TResource extends object>(
   for (const key of RESOURCE_PROPERTIES) {
     const getter = resourceModelStructure?.[key]?.getter;
 
+    const resourceProperty = getter ? getter(resource) : resource[key];
+
+    if (key === 'children' && Array.isArray(resourceProperty)) {
+      // Process children recursively
+      const children = resourceProperty.map((child) =>
+        getProcessedResourceFromModel(child as TResource, resourceModelStructure),
+      );
+      // @ts-ignore
+      processedResource[key] = children;
+      continue;
+    }
+
     // @ts-ignore
-    processedResource[key] = getter ? getter(resource) : resource[key];
+    processedResource[key] = resourceProperty;
   }
 
   return processedResource;
@@ -205,28 +217,27 @@ export function buildResourcesState<TEvent extends object, TResource extends obj
   parameters: Pick<SchedulerParameters<TEvent, TResource>, 'resources' | 'resourceModelStructure'>,
 ): Pick<
   SchedulerState<TEvent>,
-  'resourceIdList' | 'processedResourceLookup' | 'resourceModelStructure' | 'resourceChildrenIdMap'
+  | 'resourceIdList'
+  | 'processedResourceLookup'
+  | 'resourceModelStructure'
+  | 'resourceChildrenIdLookup'
 > {
   const { resources = EMPTY_ARRAY, resourceModelStructure } = parameters;
 
   const resourceIdList: string[] = [];
   const processedResourceLookup = new Map<CalendarResourceId, CalendarResource>();
-  const resourceChildrenIdMap = new Map<CalendarResourceId, CalendarResourceId[]>();
+  const resourceChildrenIdLookup = new Map<CalendarResourceId, CalendarResourceId[]>();
 
-  const processResource = (processedResource: CalendarResource) => {
+  const addResourceToState = (processedResource: CalendarResource) => {
     const { children, ...resourceWithoutChildren } = processedResource;
     processedResourceLookup.set(processedResource.id, resourceWithoutChildren);
     if (children) {
       for (const child of children) {
-        const processedChild = getProcessedResourceFromModel(
-          child as TResource,
-          resourceModelStructure,
-        );
-        if (!resourceChildrenIdMap.get(processedResource.id)) {
-          resourceChildrenIdMap.set(processedResource.id, []);
+        if (!resourceChildrenIdLookup.get(processedResource.id)) {
+          resourceChildrenIdLookup.set(processedResource.id, []);
         }
-        resourceChildrenIdMap.get(processedResource.id)?.push(processedChild.id);
-        processResource(processedChild);
+        resourceChildrenIdLookup.get(processedResource.id)?.push(child.id);
+        addResourceToState(child);
       }
     }
   };
@@ -234,13 +245,13 @@ export function buildResourcesState<TEvent extends object, TResource extends obj
   for (const resource of resources) {
     const processedResource = getProcessedResourceFromModel(resource, resourceModelStructure);
     resourceIdList.push(processedResource.id);
-    processResource(processedResource);
+    addResourceToState(processedResource);
   }
 
   return {
     resourceIdList,
     processedResourceLookup,
     resourceModelStructure,
-    resourceChildrenIdMap,
+    resourceChildrenIdLookup,
   };
 }

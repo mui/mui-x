@@ -23,7 +23,7 @@ export interface CalendarResource {
   /**
    * The child resources of this resource.
    */
-  children?: object[];
+  children?: CalendarResource[];
 }
 
 export type SchedulerResourceModelStructure<TResource extends object> = {
