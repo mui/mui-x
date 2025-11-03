@@ -146,7 +146,8 @@ jobs:
           name: Test JSDOM
           command: |
             # medium resource class has 2 CPUs. We can try to fully saturate them by running 2 shards in parallel
-            pnpm exec concurrently "pnpm test:unit:jsdom --reporter=blob --shard=1/2" "pnpm test:unit:jsdom --reporter=blob --shard=2/2"
+            pnpm exec concurrently "pnpm test:unit:jsdom --shard=1/2" "pnpm test:unit:jsdom --shard=2/2"
+            # requires the blob reporter:
             pnpm exec vitest run --merge-reports
       - store_test_results:
           path: test-results

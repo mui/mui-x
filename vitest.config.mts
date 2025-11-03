@@ -52,7 +52,7 @@ export default defineConfig({
       : ['default'],
     coverage: {
       provider: 'v8',
-      reporter: process.env.CI ? ['lcovonly'] : ['text'],
+      reporter: process.env.CI ? ['lcovonly', 'blob'] : ['text'],
       reportsDirectory: resolve(WORKSPACE_ROOT, 'coverage'),
       include: ['packages/*/src/**/*.{ts,tsx}'],
       exclude: ['**/*.{test,spec}.{js,ts,tsx}'],
