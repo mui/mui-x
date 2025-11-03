@@ -19,6 +19,7 @@ import {
   schedulerEventSelectors,
   schedulerOccurrencePlaceholderSelectors,
 } from '../scheduler-selectors';
+import { isInternalDragOrResizePlaceholder } from './drag-utils';
 
 export function useDropTarget<Targets extends keyof EventDropDataLookup>(
   parameters: useDropTarget.Parameters<Targets>,
@@ -44,8 +45,14 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
         };
       }
 
+      const type =
+        data.source === 'CalendarGridDayEventResizeHandler' ||
+        data.source === 'CalendarGridTimeEventResizeHandler'
+          ? 'internal-resize'
+          : 'internal-drag';
+
       return {
-        type: 'internal-drag-or-resize',
+        type,
         surfaceType,
         start: newStart,
         end: newEnd,
@@ -91,7 +98,7 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
 
         const placeholder = dropData ?? schedulerOccurrencePlaceholderSelectors.value(store.state);
 
-        if (placeholder?.type === 'internal-drag-or-resize') {
+        if (isInternalDragOrResizePlaceholder(placeholder)) {
           applyInternalDragOrResizeOccurrencePlaceholder(
             store,
             placeholder,
@@ -110,7 +117,7 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
         const type = currentPlaceholder.type;
         const shouldHidePlaceholder =
           type === 'external-drag' ||
-          (type === 'internal-drag-or-resize' &&
+          (isInternalDragOrResizePlaceholder(currentPlaceholder) &&
             schedulerEventSelectors.canDropEventsToTheOutside(store.state));
 
         if (shouldHidePlaceholder) {

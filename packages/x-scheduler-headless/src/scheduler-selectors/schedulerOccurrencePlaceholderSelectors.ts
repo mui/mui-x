@@ -1,15 +1,19 @@
 import { createSelector } from '@base-ui-components/utils/store';
 import { SchedulerState as State } from '../utils/SchedulerStore/SchedulerStore.types';
+import { isInternalDragOrResizePlaceholder } from '../utils/drag-utils';
 
 export const schedulerOccurrencePlaceholderSelectors = {
   value: createSelector((state: State) => state.occurrencePlaceholder),
   isDefined: createSelector((state: State) => state.occurrencePlaceholder !== null),
-  isMatchingOccurrence: createSelector((state: State, occurrenceKey: string) => {
+  actionForOccurrence: createSelector((state: State, occurrenceKey: string) => {
     const placeholder = state.occurrencePlaceholder;
-    if (placeholder?.type !== 'internal-drag-or-resize') {
-      return false;
+    if (
+      isInternalDragOrResizePlaceholder(placeholder) &&
+      placeholder.occurrenceKey === occurrenceKey
+    ) {
+      return placeholder.type;
     }
 
-    return placeholder.occurrenceKey === occurrenceKey;
+    return null;
   }),
 };
