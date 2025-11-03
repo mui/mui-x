@@ -92,7 +92,7 @@ export default function FormContent(props: FormContentProps) {
     store.setOccurrencePlaceholder({
       type: 'creation',
       surfaceType: surfaceTypeToUse,
-      resourceId: next.resourceId === null ? undefined : next.resourceId,
+      resourceId: next.resourceId,
       start,
       end,
       lockSurfaceType: rawPlaceholder.lockSurfaceType,

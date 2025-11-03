@@ -48,7 +48,7 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
           end: newEnd,
           eventData: data.eventData,
           onEventDrop: data.onEventDrop,
-          resourceId: resourceId === null ? data.eventData.resource : resourceId,
+          resourceId: resourceId === undefined ? (data.eventData.resource ?? null) : resourceId,
         };
       }
 
@@ -60,7 +60,8 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
         eventId: data.eventId,
         occurrenceKey: data.occurrenceKey,
         originalOccurrence: data.originalOccurrence,
-        resourceId: resourceId === null ? data.originalOccurrence.resource : resourceId,
+        resourceId:
+          resourceId === undefined ? (data.originalOccurrence.resource ?? null) : resourceId,
       };
     };
 
@@ -190,9 +191,9 @@ async function applyInternalDragOrResizeOccurrencePlaceholder(
 
   const changes: CalendarEventUpdatedProperties = { id: eventId, start, end };
 
-  // If `null`, we want to set the event resource to `null` (no resource).
-  // If `undefined`, we want to keep the original event resource.
-  if (placeholder.resourceId !== undefined) {
+  // If `undefined`, we want to set the event resource to `undefined` (no resource).
+  // If `null`, we want to keep the original event resource.
+  if (placeholder.resourceId !== null) {
     changes.resource = placeholder.resourceId;
   }
 
@@ -222,9 +223,9 @@ function applyExternalDragOccurrencePlaceholder(
     ...placeholder.eventData,
   };
 
-  // If `null`, we want to set the event resource to `null` (no resource).
-  // If `undefined`, we want to keep the original event resource.
-  if (placeholder.resourceId !== undefined) {
+  // If `undefined`, we want to set the event resource to `undefined` (no resource).
+  // If `null`, we want to keep the original event resource.
+  if (placeholder.resourceId !== null) {
     event.resource = placeholder.resourceId;
   }
 
