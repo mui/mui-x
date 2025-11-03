@@ -4,12 +4,7 @@
     "skipLibCheck": true,
     "incremental": true,
     "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "jsx": "preserve"
+    "resolveJsonModule": true
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx"
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
 }
