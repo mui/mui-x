@@ -28,8 +28,9 @@ export interface CalendarEvent {
   end: SchedulerValidDate;
   /**
    * The id of the resource this event is associated with.
+   * @default null
    */
-  resource?: CalendarResourceId;
+  resource?: CalendarResourceId | null;
   /**
    * The recurrence rule for the event.
    * If not defined, the event will have only one occurrence.
@@ -137,6 +138,11 @@ interface CalendarOccurrencePlaceholderBase {
    */
   end: SchedulerValidDate;
   /**
+   * The id of the resource onto which to drop the event.
+   * If null, the event will be dropped outside of any resource.
+   */
+  resourceId: CalendarResourceId | null;
+  /**
    * Whether the occurrence placeholder should be hidden.
    * This is used when dragging an event outside of the calendar to avoid showing both the placeholder and the drag preview.
    */
@@ -160,7 +166,7 @@ export interface CalendarOccurrencePlaceholderInternalDragOrResize
   /**
    * The type of placeholder.
    */
-  type: 'internal-drag-or-resize';
+  type: 'internal-drag' | 'internal-resize';
   /**
    * The id of the event being changed.
    */

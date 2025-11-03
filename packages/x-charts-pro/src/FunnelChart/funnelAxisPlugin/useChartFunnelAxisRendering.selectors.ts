@@ -1,3 +1,4 @@
+import { createSelectorMemoized } from '@mui/x-internals/store';
 import {
   createSelector,
   selectorChartSeriesConfig,
@@ -15,14 +16,13 @@ export const selectorFunnel = (state: ChartState<[], [UseChartFunnelAxisSignatur
 
 export const selectorFunnelGap = createSelector([selectorFunnel], (funnel) => funnel?.gap ?? 0);
 
-export const selectorChartXAxis = createSelector(
-  [
-    selectorChartRawXAxis,
-    selectorChartDrawingArea,
-    selectorChartSeriesProcessed,
-    selectorChartSeriesConfig,
-    selectorFunnelGap,
-  ],
+export const selectorChartXAxis = createSelectorMemoized(
+  selectorChartRawXAxis,
+  selectorChartDrawingArea,
+  selectorChartSeriesProcessed,
+  selectorChartSeriesConfig,
+  selectorFunnelGap,
+
   (axis, drawingArea, formattedSeries, seriesConfig, gap) =>
     computeAxisValue({
       drawingArea,
@@ -34,14 +34,13 @@ export const selectorChartXAxis = createSelector(
     }),
 );
 
-export const selectorChartYAxis = createSelector(
-  [
-    selectorChartRawYAxis,
-    selectorChartDrawingArea,
-    selectorChartSeriesProcessed,
-    selectorChartSeriesConfig,
-    selectorFunnelGap,
-  ],
+export const selectorChartYAxis = createSelectorMemoized(
+  selectorChartRawYAxis,
+  selectorChartDrawingArea,
+  selectorChartSeriesProcessed,
+  selectorChartSeriesConfig,
+  selectorFunnelGap,
+
   (axis, drawingArea, formattedSeries, seriesConfig, gap) =>
     computeAxisValue({
       drawingArea,

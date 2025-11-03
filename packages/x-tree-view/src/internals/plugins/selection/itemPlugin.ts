@@ -60,10 +60,31 @@ export const useSelectionItemPlugin: TreeViewItemPlugin = ({ props }) => {
 
   const isCheckboxSelectionEnabled = useStore(store, selectionSelectors.isCheckboxSelectionEnabled);
   const isItemSelectionEnabled = useStore(store, selectionSelectors.canItemBeSelected, itemId);
-  const checkboxSelectionStatus = useStore(store, selectorCheckboxSelectionStatus, itemId);
+  const selectionStatus = useStore(store, selectorCheckboxSelectionStatus, itemId);
+  const isSelectionEnabledForItem = useStore(store, selectionSelectors.canItemBeSelected, itemId);
 
   return {
     propsEnhancers: {
+      root: (): UseTreeItemRootSlotPropsFromSelection => {
+        // https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
+        let ariaChecked: React.AriaAttributes['aria-checked'];
+        if (selectionStatus === 'checked') {
+          // - each selected node has aria-checked set to true.
+          ariaChecked = true;
+        } else if (selectionStatus === 'indeterminate') {
+          ariaChecked = 'mixed';
+        } else if (!isSelectionEnabledForItem) {
+          // - if the tree contains nodes that are not selectable, aria-checked is not present on those nodes.
+          ariaChecked = undefined;
+        } else {
+          // - all nodes that are selectable but not selected have aria-checked set to false.
+          ariaChecked = false;
+        }
+
+        return {
+          'aria-checked': ariaChecked,
+        };
+      },
       checkbox: ({
         externalEventHandlers,
         interactions,
@@ -88,13 +109,17 @@ export const useSelectionItemPlugin: TreeViewItemPlugin = ({ props }) => {
           onChange: handleChange,
           visible: isCheckboxSelectionEnabled,
           disabled: !isItemSelectionEnabled,
-          checked: checkboxSelectionStatus === 'checked',
-          indeterminate: checkboxSelectionStatus === 'indeterminate',
+          checked: selectionStatus === 'checked',
+          indeterminate: selectionStatus === 'indeterminate',
         };
       },
     },
   };
 };
+
+interface UseTreeItemRootSlotPropsFromSelection {
+  'aria-checked': React.AriaAttributes['aria-checked'];
+}
 
 interface UseTreeItemCheckboxSlotPropsFromSelection {
   visible?: boolean;
@@ -106,5 +131,7 @@ interface UseTreeItemCheckboxSlotPropsFromSelection {
 }
 
 declare module '@mui/x-tree-view/useTreeItem' {
+  interface UseTreeItemRootSlotOwnProps extends UseTreeItemRootSlotPropsFromSelection {}
+
   interface UseTreeItemCheckboxSlotOwnProps extends UseTreeItemCheckboxSlotPropsFromSelection {}
 }
