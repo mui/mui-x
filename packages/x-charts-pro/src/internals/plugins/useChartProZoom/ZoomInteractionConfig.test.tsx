@@ -545,7 +545,7 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
 
       // Should trigger zoom change (pan)
       expect(onZoomChange.callCount).to.be.greaterThan(0);
-      expect(getAxisTickValues('x')).to.deep.equal(['A', 'B']);
+      expect(getAxisTickValues('x')).to.deep.equal(['C', 'D']);
     });
 
     it('should pan diagonally on wheel scroll with xy', async () => {
@@ -582,7 +582,14 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
       expect(getAxisTickValues('y')).to.deep.equal(['10', '20']);
 
       // Simulate wheel scroll
-      fireEvent.wheel(svg, { deltaX: 100, deltaY: 100, clientX: 50, clientY: 50 });
+      fireEvent.wheel(svg, {
+        // X <-- scroll right
+        deltaX: -100,
+        // Y v-- scroll down
+        deltaY: 100,
+        clientX: 50,
+        clientY: 50,
+      });
       await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
       // Should trigger zoom change (pan)
@@ -624,7 +631,7 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
 
       // Should trigger zoom change (pan)
       expect(onZoomChange.callCount).to.be.greaterThan(0);
-      expect(getAxisTickValues('x')).to.deep.equal(['A', 'B']);
+      expect(getAxisTickValues('x')).to.deep.equal(['C', 'D']);
     });
 
     it('should pan to the correct side when axis is reversed', async () => {
@@ -660,7 +667,7 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
 
       // With reversed axis, should pan to show higher value ticks
       expect(onZoomChange.callCount).to.be.greaterThan(0);
-      expect(getAxisTickValues('x')).to.deep.equal(['C', 'D']);
+      expect(getAxisTickValues('x')).to.deep.equal(['A', 'B']);
     });
   });
 });

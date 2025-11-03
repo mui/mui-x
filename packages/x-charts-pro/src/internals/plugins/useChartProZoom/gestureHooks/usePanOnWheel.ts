@@ -73,6 +73,10 @@ export const usePanOnWheel = (
 
       const allowedDirection = config?.allowedDirection ?? 'x';
 
+      if (event.detail.deltaX === 0 && event.detail.deltaY === 0) {
+        return;
+      }
+
       rafThrottledSetZoomData((prev) => {
         const wheelEvent = event.detail;
 
@@ -85,6 +89,10 @@ export const usePanOnWheel = (
 
         if (allowedDirection === 'y' || allowedDirection === 'xy') {
           movementY = wheelEvent.deltaY;
+        }
+
+        if (movementX === 0 && movementY === 0) {
+          return prev;
         }
 
         return translateZoom(
