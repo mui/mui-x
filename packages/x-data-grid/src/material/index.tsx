@@ -33,7 +33,11 @@ import MUIGrow from '@mui/material/Grow';
 import MUIPaper from '@mui/material/Paper';
 import MUIInputLabel from '@mui/material/InputLabel';
 import MUISkeleton from '@mui/material/Skeleton';
+import MUITabs from '@mui/material/Tabs';
+import MUITab from '@mui/material/Tab';
+import MUIToggleButton from '@mui/material/ToggleButton';
 import { forwardRef } from '@mui/x-internals/forwardRef';
+import useId from '@mui/utils/useId';
 import {
   GridAddIcon,
   GridArrowDownwardIcon,
@@ -305,6 +309,18 @@ const BaseButton = forwardRef<any, P['baseButton']>(function BaseButton(props, r
   const { material, ...other } = props;
   return <MUIButton {...other} {...material} ref={ref} />;
 });
+
+const StyledToggleButton = styled(MUIToggleButton)(({ theme }) => ({
+  gap: theme.spacing(1),
+  border: 0,
+}));
+
+const BaseToggleButton = forwardRef<any, P['baseToggleButton']>(
+  function BaseToggleButton(props, ref) {
+    const { material, ...rest } = props;
+    return <StyledToggleButton size="small" color="primary" {...rest} {...material} ref={ref} />;
+  },
+);
 
 const BaseChip = forwardRef<any, P['baseChip']>(function BaseChip(props, ref) {
   const { material, ...other } = props;
@@ -626,6 +642,79 @@ function BaseSelectOption({ native, ...props }: NonNullable<P['baseSelectOption'
   return <MUIMenuItem {...props} />;
 }
 
+const StyledTabs = styled(MUITabs, {
+  name: 'MuiDataGrid',
+  slot: 'Tabs',
+})(({ theme }) => ({
+  borderBottom: `1px solid ${theme.palette.divider}`,
+}));
+
+const StyledTab = styled(MUITab, {
+  name: 'MuiDataGrid',
+  slot: 'Tab',
+})({
+  flex: 1,
+  minWidth: 'fit-content',
+});
+
+const StyledTabPanel = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'TabPanel',
+})({
+  flex: 1,
+  display: 'flex',
+  flexDirection: 'column',
+  overflow: 'hidden',
+});
+
+function TabPanel(
+  props: {
+    children?: React.ReactNode;
+    value: string;
+    active: boolean;
+  } & React.HTMLAttributes<HTMLDivElement>,
+) {
+  const { children, value, active, ...other } = props;
+
+  return (
+    <StyledTabPanel role="tabpanel" style={{ display: active ? 'flex' : 'none' }} {...other}>
+      {children}
+    </StyledTabPanel>
+  );
+}
+
+function BaseTabs({ items, value, material, ...props }: P['baseTabs']) {
+  const id = useId();
+  const labelId = `${id}-tab-${value}`;
+  const panelId = `${id}-tabpanel-${value}`;
+  return (
+    <React.Fragment>
+      <StyledTabs {...props} value={value} variant="scrollable" scrollButtons="auto" {...material}>
+        {items.map((item) => (
+          <StyledTab
+            key={item.value}
+            value={item.value}
+            label={item.label}
+            id={labelId}
+            aria-controls={panelId}
+          />
+        ))}
+      </StyledTabs>
+      {items.map((item) => (
+        <TabPanel
+          key={item.value}
+          value={item.value}
+          active={value === item.value}
+          id={panelId}
+          aria-labelledby={labelId}
+        >
+          {item.children}
+        </TabPanel>
+      ))}
+    </React.Fragment>
+  );
+}
+
 const iconSlots: GridIconSlotsComponent = {
   booleanCellTrueIcon: GridCheckIcon,
   booleanCellFalseIcon: GridCloseIcon,
@@ -680,7 +769,9 @@ const baseSlots: GridBaseSlots = {
   baseTextField: BaseTextField,
   baseButton: BaseButton,
   baseIconButton: BaseIconButton,
+  baseToggleButton: BaseToggleButton,
   baseTooltip: BaseTooltip,
+  baseTabs: BaseTabs,
   basePagination: BasePagination,
   basePopper: BasePopper,
   baseSelect: BaseSelect,

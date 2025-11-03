@@ -61,6 +61,8 @@ export type {
   DataGridProPropsWithDefaultValue,
 } from '../models/dataGridProProps';
 
+export type { GridProSlotProps } from '../models/gridProSlotProps';
+
 export { createRowTree } from '../utils/tree/createRowTree';
 export { updateRowTree } from '../utils/tree/updateRowTree';
 export { sortRowTree } from '../utils/tree/sortRowTree';

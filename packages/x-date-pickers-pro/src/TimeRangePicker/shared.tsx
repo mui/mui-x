@@ -121,6 +121,7 @@ type UseTimeRangePickerDefaultizedProps<Props extends BaseTimeRangePickerProps> 
   > & {
     shouldRenderTimeInASingleColumn: boolean;
     views: readonly TimeViewWithMeridiem[];
+    viewsForFormatting: readonly TimeViewWithMeridiem[];
   };
 
 export function useTimeRangePickerDefaultizedProps<Props extends BaseTimeRangePickerProps>(
@@ -166,6 +167,11 @@ export function useTimeRangePickerDefaultizedProps<Props extends BaseTimeRangePi
     views: defaultViews,
   });
 
+  // Keep the original views for format calculation (before filtering)
+  const viewsForFormatting: readonly TimeViewWithMeridiem[] = ampm
+    ? [...defaultViews, 'meridiem']
+    : defaultViews;
+
   return {
     ...themeProps,
     ...validationProps,
@@ -175,6 +181,7 @@ export function useTimeRangePickerDefaultizedProps<Props extends BaseTimeRangePi
     shouldRenderTimeInASingleColumn,
     thresholdToRenderTimeInASingleColumn,
     views,
+    viewsForFormatting,
     ampm,
     slots: {
       tabs: TimeRangePickerTabs,

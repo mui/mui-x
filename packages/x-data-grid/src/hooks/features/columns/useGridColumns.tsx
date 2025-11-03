@@ -39,8 +39,11 @@ import {
 } from './gridColumnsUtils';
 import { GridPreferencePanelsValue } from '../preferencesPanel';
 import { GridColumnOrderChangeParams } from '../../../models/params/gridColumnOrderChangeParams';
-import type { GridStateColDef } from '../../../models/colDef/gridColDef';
-import { gridPivotActiveSelector } from '../pivoting';
+import type { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
+import {
+  gridPivotActiveSelector,
+  gridPivotInitialColumnsSelector,
+} from '../pivoting/gridPivotingSelectors';
 
 export const columnsStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'columnVisibilityModel' | 'initialState' | 'columns'>
@@ -164,13 +167,34 @@ export function useGridColumns(
 
   const updateColumns = React.useCallback<GridColumnApi['updateColumns']>(
     (columns) => {
+      let columnsToUpdate = columns;
+
       if (gridPivotActiveSelector(apiRef)) {
-        apiRef.current.updateNonPivotColumns(columns);
-        return;
+        const nonPivotColumns: GridColDef[] = [];
+        const pivotColumns: GridColDef[] = [];
+        const pivotInitialColumns = gridPivotInitialColumnsSelector(apiRef);
+        columns.forEach((column) => {
+          const isNonPivotColumn = pivotInitialColumns.has(column.field);
+          if (isNonPivotColumn) {
+            nonPivotColumns.push(column);
+          } else {
+            pivotColumns.push(column);
+          }
+        });
+
+        if (nonPivotColumns.length > 0) {
+          apiRef.current.updateNonPivotColumns(nonPivotColumns);
+        }
+
+        if (pivotColumns.length === 0) {
+          return;
+        }
+        columnsToUpdate = pivotColumns;
       }
+
       const columnsState = createColumnsState({
         apiRef,
-        columnsToUpsert: columns,
+        columnsToUpsert: columnsToUpdate,
         initialState: undefined,
         keepOnlyColumnsToUpsert: false,
         updateInitialVisibilityModel: true,

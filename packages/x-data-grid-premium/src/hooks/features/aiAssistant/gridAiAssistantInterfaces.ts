@@ -51,6 +51,11 @@ type Pivoting =
     }
   | {};
 
+type Chart = {
+  dimensions: string[];
+  values: string[];
+};
+
 export type PromptResponse = {
   conversationId: string;
   select: number;
@@ -60,6 +65,7 @@ export type PromptResponse = {
   sorting: ColumnSort[];
   grouping: Grouping[];
   pivoting: Pivoting;
+  chart: Chart | null;
 };
 
 export type PromptResolverOptions = {
@@ -72,6 +78,15 @@ export type PromptResolverOptions = {
    * Additional context to make the processing results more accurate.
    */
   additionalContext?: string;
+  /**
+   * Additional metadata to track the usage for each unique user.
+   */
+  metadata?: {
+    /**
+     * The reference ID that would be stored for you to identify the entity that made the request and then to be able to track the usage for each unique user/entity.
+     */
+    referenceId?: string;
+  };
 };
 
 /**

@@ -2,7 +2,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { ClockIcon } from '@mui/x-date-pickers/icons';
-import { PickerFieldUI, useFieldTextFieldProps } from '@mui/x-date-pickers/internals';
+import {
+  PickerFieldUI,
+  PickerFieldUIContextProvider,
+  useFieldTextFieldProps,
+} from '@mui/x-date-pickers/internals';
 import { useThemeProps } from '@mui/material/styles';
 import refType from '@mui/utils/refType';
 import { SingleInputTimeRangeFieldProps } from './SingleInputTimeRangeField.types';
@@ -51,12 +55,9 @@ const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRange
   >(textFieldProps);
 
   return (
-    <PickerFieldUI
-      slots={slots}
-      slotProps={slotProps}
-      fieldResponse={fieldResponse}
-      defaultOpenPickerIcon={ClockIcon}
-    />
+    <PickerFieldUIContextProvider slots={slots} slotProps={slotProps} inputRef={other.inputRef}>
+      <PickerFieldUI fieldResponse={fieldResponse} defaultOpenPickerIcon={ClockIcon} />
+    </PickerFieldUIContextProvider>
   );
 }) as DateRangeFieldComponent;
 

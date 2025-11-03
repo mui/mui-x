@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { DateOrTimeViewWithMeridiem, isDatePickerView } from '@mui/x-date-pickers/internals';
 import { DateRangeCalendar, DateRangeCalendarProps } from '../DateRangeCalendar';
 

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import { LineChart } from '@mui/x-charts/LineChart';
 import {
@@ -22,7 +21,7 @@ export default function PiecewiseInteractiveDemo() {
           labelPosition: {
             knob: 'select',
             defaultValue: 'extremes',
-            options: ['start', 'end', 'extremes'],
+            options: ['start', 'end', 'extremes', 'inline-start', 'inline-end'],
           },
           markType: {
             knob: 'select',

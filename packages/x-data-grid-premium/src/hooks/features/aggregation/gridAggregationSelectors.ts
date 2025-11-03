@@ -30,6 +30,10 @@ export const gridCellAggregationResultSelector = createSelector(
   gridRowTreeSelector,
   gridAggregationLookupSelector,
   (rowTree, aggregationLookup, { id, field }: { id: GridRowId; field: string }) => {
+    if (!aggregationLookup) {
+      return null;
+    }
+
     let cellAggregationPosition: GridAggregationPosition | null = null;
     const rowNode = rowTree[id];
 

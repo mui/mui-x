@@ -6,7 +6,7 @@ import {
   selectorChartPolarCenter,
   UseChartPolarAxisSignature,
 } from '../../internals/plugins/featurePlugins/useChartPolarAxis';
-import { isBandScale } from '../../internals/isBandScale';
+import { isOrdinalScale } from '../../internals/scaleGuards';
 import { degToRad } from '../../internals/degToRad';
 import { clampAngle } from '../../internals/clampAngle';
 import { useSelector } from '../../internals/store/useSelector';
@@ -62,7 +62,7 @@ export function useRadarAxis(params: UseRadarAxisParams) {
   const radiusScale = radiusAxis[metric].scale;
   const R = radiusScale.range()[1];
 
-  if (isBandScale(radiusScale)) {
+  if (isOrdinalScale(radiusScale)) {
     if (process.env.NODE_ENV !== 'production') {
       console.error('MUI X Charts: Radar chart does not support ordinal axes');
     }

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { area as d3Area } from '@mui/x-charts-vendor/d3-shape';
 import { useChartGradientIdBuilder } from '../hooks/useChartGradientId';
-import { isBandScale } from '../internals/isBandScale';
+import { isOrdinalScale } from '../internals/scaleGuards';
 import { ComputedAxisConfig } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { getCurveFactory } from '../internals/getCurve';
 import { ChartsXAxisProps, ChartsYAxisProps } from '../models';
@@ -83,7 +83,7 @@ export function useAreaPlotData(
           }
         }
 
-        const shouldExpand = curve?.includes('step') && !strictStepCurve && isBandScale(xScale);
+        const shouldExpand = curve?.includes('step') && !strictStepCurve && isOrdinalScale(xScale);
 
         const formattedData: {
           x: any;

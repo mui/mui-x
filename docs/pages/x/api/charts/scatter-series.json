@@ -1,6 +1,7 @@
 {
   "name": "ScatterSeries",
   "imports": [
+    "import { ScatterSeries } from '@mui/x-charts-premium'",
     "import { ScatterSeries } from '@mui/x-charts-pro'",
     "import { ScatterSeries } from '@mui/x-charts'"
   ],
@@ -27,8 +28,8 @@
       }
     },
     "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" } },
-    "xAxisId": { "type": { "description": "string" } },
-    "yAxisId": { "type": { "description": "string" } },
+    "xAxisId": { "type": { "description": "AxisId" } },
+    "yAxisId": { "type": { "description": "AxisId" } },
     "zAxisId": { "type": { "description": "string" } }
   }
 }

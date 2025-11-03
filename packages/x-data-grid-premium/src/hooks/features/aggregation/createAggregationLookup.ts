@@ -7,6 +7,7 @@ import {
   gridRowTreeSelector,
   GRID_ROOT_GROUP_ID,
   gridRowsLookupSelector,
+  GridColumnLookup,
 } from '@mui/x-data-grid-pro';
 import { getVisibleRows } from '@mui/x-data-grid/internals';
 import { GridApiPremium, GridPrivateApiPremium } from '../../../models/gridApiPremium';
@@ -38,6 +39,7 @@ const getGroupAggregatedValue = (
   valueGetters: Record<string, (row: any) => any>,
   publicApi: GridApiPremium,
   groupAggregatedValuesLookup: Map<GridRowId, AggregatedValues>,
+  columnsLookup: GridColumnLookup,
 ) => {
   const groupAggregationLookup: GridAggregationLookup[GridRowId] = {};
   const aggregatedValues: AggregatedValues = [];
@@ -119,12 +121,21 @@ const getGroupAggregatedValue = (
       },
       publicApi,
     );
+    const formattedValue = aggregationFunction.valueFormatter
+      ? aggregationFunction.valueFormatter(
+          value as never,
+          rowLookup[groupId],
+          columnsLookup[aggregatedField],
+          apiRef,
+        )
+      : undefined;
 
     // Only add to groupAggregationLookup if position is not null
     if (position !== null) {
       groupAggregationLookup[aggregatedField] = {
         position,
         value,
+        formattedValue,
       };
     }
   }
@@ -225,6 +236,7 @@ export const createAggregationLookup = ({
         valueGetters,
         apiRef.current,
         groupAggregatedValuesLookup,
+        columnsLookup,
       );
       // Always populate groupAggregatedValuesLookup for groups with children
       // This ensures parent groups can access child aggregated values even when position is null

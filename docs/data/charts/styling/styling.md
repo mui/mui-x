@@ -170,6 +170,15 @@ From here, you can target any subcomponents with its class name.
 
 {{"demo": "SxStyling.js"}}
 
+### Drawing area background
+
+To set a background color in the drawing area, you should create a dedicated `<rect />`.
+This is only doable with [composition](/x/react-charts/composition/) because you have to place this new component before all plot components.
+
+The following demo defines a basic `<Background />` component that adds a light gray background.
+
+{{"demo": "BackgroundStyling.js"}}
+
 ### Gradients and patterns
 
 It is possible to use gradients and patterns to fill the charts.

@@ -15,10 +15,20 @@ githubLabel: 'scope: scheduler'
 This package is not published yet.
 :::
 
+## Common features
+
+- [Event properties](/x/react-scheduler/event-properties/)
+- [Resource properties](/x/react-scheduler/resource-properties/)
+- [Recurring events](/x/react-scheduler/recurring-events/)
+
+## Event Calendar
+
 - [Event Calendar](/x/react-scheduler/event-calendar/) ([full screen demo](/x/react-scheduler/full-screen-event-calendar/))
 - [Week View](/x/react-scheduler/week-view/)
 - [Day View](/x/react-scheduler/day-view/)
 - [Month View](/x/react-scheduler/month-view/)
 - [Agenda View](/x/react-scheduler/agenda-view/)
-- [Timeline View](/x/react-scheduler/timeline-view/)
-- [Primitives](/x/react-scheduler/primitives/)
+
+## Timeline
+
+- [Timeline](/x/react-scheduler/timeline/) ([full screen demo](/x/react-scheduler/full-screen-timeline/))

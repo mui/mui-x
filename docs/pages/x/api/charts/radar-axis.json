@@ -25,7 +25,8 @@
   "imports": [
     "import { RadarAxis } from '@mui/x-charts/RadarChart';",
     "import { RadarAxis } from '@mui/x-charts';",
-    "import { RadarAxis } from '@mui/x-charts-pro';"
+    "import { RadarAxis } from '@mui/x-charts-pro';",
+    "import { RadarAxis } from '@mui/x-charts-premium';"
   ],
   "classes": [
     {

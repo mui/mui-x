@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-telemetry",
-  "version": "8.11.2",
+  "version": "8.16.0",
   "author": "MUI Team",
   "description": "MUI X Telemetry.",
   "license": "SEE LICENSE IN LICENSE",
@@ -14,8 +14,8 @@
   },
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "code-infra build && pnpm build:copy-files",
-    "build:copy-files": "code-infra copy-files && node ./scripts/addPackageScripts.js",
+    "build": "code-infra build && pnpm build:update-pkg-json",
+    "build:update-pkg-json": "node ./scripts/addPackageScripts.js",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "sideEffects": false,
@@ -30,9 +30,9 @@
   "dependencies": {
     "@babel/runtime": "catalog:",
     "@fingerprintjs/fingerprintjs": "^3.4.2",
-    "ci-info": "^4.3.0",
+    "ci-info": "^4.3.1",
     "conf": "^11.0.2",
-    "is-docker": "^3.0.0",
+    "is-docker": "^4.0.0",
     "node-machine-id": "^1.1.12"
   },
   "devDependencies": {

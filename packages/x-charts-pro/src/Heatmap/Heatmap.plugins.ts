@@ -14,18 +14,18 @@ import {
   UseChartProExportSignature,
 } from '../internals/plugins/useChartProExport';
 
-export type HeatmapPluginsSignatures = [
+export type HeatmapPluginSignatures = [
   UseChartZAxisSignature,
-  UseChartCartesianAxisSignature<'heatmap'>,
   UseChartInteractionSignature,
+  UseChartCartesianAxisSignature<'heatmap'>,
   UseChartHighlightSignature,
   UseChartProExportSignature,
 ];
 
 export const HEATMAP_PLUGINS = [
   useChartZAxis,
-  useChartCartesianAxis,
   useChartInteraction,
+  useChartCartesianAxis,
   useChartHighlight,
   useChartProExport,
-] as ConvertSignaturesIntoPlugins<HeatmapPluginsSignatures>;
+] as ConvertSignaturesIntoPlugins<HeatmapPluginSignatures>;

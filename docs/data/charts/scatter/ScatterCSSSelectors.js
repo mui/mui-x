@@ -1,6 +1,5 @@
-import * as React from 'react';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
-import { data } from './randomData';
+import data from '../dataset/random/scatterParallel.json';
 
 const series = [
   {
@@ -12,7 +11,7 @@ const series = [
   {
     id: 'series-2',
     label: 'Series B',
-    data: data.map((v) => ({ x: v.x1, y: v.y2, id: v.id })),
+    data: data.map((v) => ({ x: v.x2, y: v.y2, id: v.id })),
     highlightScope: { highlight: 'item', fade: 'global' },
   },
 ];

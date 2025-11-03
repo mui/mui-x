@@ -4,7 +4,8 @@
   "imports": [
     "import { ChartsSurface } from '@mui/x-charts/ChartsSurface';",
     "import { ChartsSurface } from '@mui/x-charts';",
-    "import { ChartsSurface } from '@mui/x-charts-pro';"
+    "import { ChartsSurface } from '@mui/x-charts-pro';",
+    "import { ChartsSurface } from '@mui/x-charts-premium';"
   ],
   "classes": [],
   "spread": true,

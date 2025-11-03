@@ -1,6 +1,9 @@
 {
   "name": "FunnelSeries",
-  "imports": ["import { FunnelSeries } from '@mui/x-charts-pro'"],
+  "imports": [
+    "import { FunnelSeries } from '@mui/x-charts-premium'",
+    "import { FunnelSeries } from '@mui/x-charts-pro'"
+  ],
   "properties": {
     "data": {
       "type": { "description": "Readonly&lt;FunnelValueType[]&gt;" },
@@ -47,7 +50,7 @@
       "default": "'filled'",
       "isProPlan": true
     },
-    "xAxisId": { "type": { "description": "string" }, "isProPlan": true },
-    "yAxisId": { "type": { "description": "string" }, "isProPlan": true }
+    "xAxisId": { "type": { "description": "AxisId" }, "isProPlan": true },
+    "yAxisId": { "type": { "description": "AxisId" }, "isProPlan": true }
   }
 }

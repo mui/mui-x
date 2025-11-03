@@ -45,6 +45,17 @@ Default styles can be applied to all links using the `linkOptions` prop:
 
 {{"demo": "SankeyLinkStyling.js"}}
 
+### Link color keywords
+
+Link colors can use special keyword values to automatically inherit colors from their connected nodes:
+
+- `'source'` - The link inherits the color of its source node
+- `'target'` - The link inherits the color of its target node
+
+This feature works for both individual link colors and the default link color in `linkOptions`:
+
+{{"demo": "SankeyLinkKeywordColors.js"}}
+
 ### Node alignment
 
 The node alignment determines how nodes are positioned within the Sankey chart. The layout follows these principles:
@@ -69,6 +80,23 @@ In some instances, this creates better-looking connections but is dependent on t
 Higher values create plumper links, while lower values create thinner connections. The default value is `10`.
 
 {{"demo": "SankeyCurveCorrection.js"}}
+
+## Value formatting
+
+You can customize how values are displayed in tooltips and labels using the `valueFormatter` prop.
+This function receives the numeric value and a context object that provides information about what type of element is being formatted.
+
+The context object contains:
+
+- `location`: either `'tooltip'` or `'label'` to indicate where the formatted value is used
+- `type`: either `'node'` or `'link'` to indicate what is being formatted
+- `nodeId`: for nodes, the ID of the node being formatted
+- `sourceId` and `targetId`: for links, the IDs of the source and target nodes
+
+In the following demo, the value formatter adds relevant units to the values.
+And when pointer is on top of a node, it display "total" to the tooltip.
+
+{{"demo": "SankeyValueFormatter.js"}}
 
 ## Sorting
 
@@ -106,6 +134,75 @@ You can use the `onNodeClick` and `onLinkClick` props to handle click events on 
 The `SankeyItemIdentifierWithData` type is a union of `SankeyNodeIdentifierWithData` and `SankeyLinkIdentifierWithData`, allowing you to handle both types of items in a single callback if needed.
 
 {{"demo": "SankeyClick.js"}}
+
+### Highlighting
+
+You can highlight nodes and links by hovering over them or by controlling the highlighting programmatically. When an item is highlighted, other items can be faded out to improve focus.
+
+{{"demo": "SankeyHighlighting.js"}}
+
+The highlighting behavior is configured separately for nodes and links through their respective options:
+
+#### Node highlighting
+
+Configure node highlighting behavior using `nodeOptions.highlight` and `nodeOptions.fade`:
+
+- `nodeOptions.highlight`: Controls what gets highlighted when selecting a node
+  - `'nodes'`: Highlight only the selected node
+  - `'links'`: Highlight all links connected to the selected node
+  - `'incoming'`: Highlight only incoming links to the selected node
+  - `'outgoing'`: Highlight only outgoing links from the selected node
+  - `'none'`: Disable node highlighting
+- `nodeOptions.fade`: Controls the fade effect
+  - `'global'`: Fade all non-highlighted items when a node is highlighted
+  - `'none'`: No fade effect
+
+#### Link highlighting
+
+Configure link highlighting behavior using `linkOptions.highlight` and `linkOptions.fade`:
+
+- `linkOptions.highlight`: Controls what gets highlighted when selecting a link
+  - `'links'`: Highlight only the selected link
+  - `'nodes'`: Highlight both source and target nodes of the selected link
+  - `'source'`: Highlight only the source node of the selected link
+  - `'target'`: Highlight only the target node of the selected link
+  - `'none'`: Disable link highlighting
+- `linkOptions.fade`: Controls the fade effect
+  - `'global'`: Fade all non-highlighted items when a link is highlighted
+  - `'none'`: No fade effect
+
+### Controlled highlighting
+
+You can control the highlighting externally using the `highlightedItem` and `onHighlightChange` props. This is useful when you want to programmatically highlight specific nodes or links, or synchronize highlighting with other UI elements.
+
+The `highlightedItem` prop accepts either a `SankeyNodeIdentifier` or a `SankeyLinkIdentifier`:
+
+For nodes:
+
+```ts
+{
+  type: 'sankey',
+  seriesId: string,
+  subType: 'node',
+  nodeId: string | number,
+}
+```
+
+For links:
+
+```ts
+{
+  type: 'sankey',
+  seriesId: string,
+  subType: 'link',
+  sourceId: string | number,
+  targetId: string | number,
+}
+```
+
+The `onHighlightChange` callback is called whenever the highlighted item changes (either through user interaction or programmatic control), allowing you to keep your state synchronized.
+
+{{"demo": "SankeyControlledHighlight.js"}}
 
 ## Tooltip
 

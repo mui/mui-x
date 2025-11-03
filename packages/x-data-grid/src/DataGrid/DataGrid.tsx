@@ -6,6 +6,8 @@ import { GridRoot } from '../components';
 import { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
 import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
 import { useGridRowsOverridableMethods } from '../hooks/features/rows/useGridRowsOverridableMethods';
+import { useGridParamsOverridableMethods } from '../hooks/features/rows/useGridParamsOverridableMethods';
+import { useIsCellEditable } from '../hooks/features/editing/useGridCellEditable';
 import { DataGridProps } from '../models/props/DataGridProps';
 import { GridContextProvider } from '../context/GridContextProvider';
 import { useDataGridComponent } from './useDataGridComponent';
@@ -25,7 +27,10 @@ const configuration: GridConfiguration = {
     useGridAriaAttributes,
     useGridRowAriaAttributes,
     useGridRowsOverridableMethods,
+    useGridParamsOverridableMethods,
+    useIsCellEditable,
     useCellAggregationResult: () => null,
+    useFilterValueGetter: (apiRef) => apiRef.current.getRowValue,
   },
 };
 

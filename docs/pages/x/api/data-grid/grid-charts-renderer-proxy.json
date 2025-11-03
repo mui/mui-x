@@ -1,0 +1,20 @@
+{
+  "props": {
+    "id": { "type": { "name": "string" }, "required": true },
+    "renderer": { "type": { "name": "func" }, "required": true },
+    "label": { "type": { "name": "string" } },
+    "onRender": { "type": { "name": "func" } }
+  },
+  "name": "GridChartsRendererProxy",
+  "imports": [
+    "import { GridChartsRendererProxy } from '@mui/x-data-grid-premium/context';",
+    "import { GridChartsRendererProxy } from '@mui/x-data-grid-premium';"
+  ],
+  "classes": [],
+  "muiName": "MuiGridChartsRendererProxy",
+  "forwardsRefTo": "GridRoot",
+  "filename": "/packages/x-data-grid-premium/src/context/GridChartsRendererProxy.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-data-grid/#community-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-version\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#premium-version\">DataGridPremium</a></li></ul>",
+  "cssComponent": false
+}

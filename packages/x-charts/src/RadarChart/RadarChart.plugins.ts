@@ -11,10 +11,10 @@ import {
   UseChartHighlightSignature,
 } from '../internals/plugins/featurePlugins/useChartHighlight';
 
-export const RADAR_PLUGINS = [useChartPolarAxis, useChartInteraction, useChartHighlight] as const;
+export const RADAR_PLUGINS = [useChartInteraction, useChartPolarAxis, useChartHighlight] as const;
 
-export type RadarChartPluginsSignatures = [
-  UseChartPolarAxisSignature,
+export type RadarChartPluginSignatures = [
   UseChartInteractionSignature,
+  UseChartPolarAxisSignature,
   UseChartHighlightSignature,
 ];

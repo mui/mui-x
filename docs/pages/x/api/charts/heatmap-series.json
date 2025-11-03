@@ -1,6 +1,9 @@
 {
   "name": "HeatmapSeries",
-  "imports": ["import { HeatmapSeries } from '@mui/x-charts-pro'"],
+  "imports": [
+    "import { HeatmapSeries } from '@mui/x-charts-premium'",
+    "import { HeatmapSeries } from '@mui/x-charts-pro'"
+  ],
   "properties": {
     "type": { "type": { "description": "'heatmap'" }, "required": true, "isProPlan": true },
     "data": { "type": { "description": "readonly HeatmapValueType[]" }, "isProPlan": true },
@@ -16,7 +19,7 @@
       "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" },
       "isProPlan": true
     },
-    "xAxisId": { "type": { "description": "string" }, "isProPlan": true },
-    "yAxisId": { "type": { "description": "string" }, "isProPlan": true }
+    "xAxisId": { "type": { "description": "AxisId" }, "isProPlan": true },
+    "yAxisId": { "type": { "description": "AxisId" }, "isProPlan": true }
   }
 }

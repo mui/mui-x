@@ -1,0 +1,15 @@
+<DataGridPro
+  {...data}
+  loading={isLoading}
+  rows={rows}
+  rowCount={rowCount}
+  pagination
+  paginationModel={paginationModel}
+  pageSizeOptions={[5]}
+  paginationMode="server"
+  onPaginationModelChange={setPaginationModel}
+  showToolbar
+  slots={{
+    toolbar: CustomToolbar,
+  }}
+/>

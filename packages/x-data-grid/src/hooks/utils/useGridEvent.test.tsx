@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { spy } from 'sinon';
 import { createRenderer, reactMajor } from '@mui/internal-test-utils';
 import { sleep } from 'test/utils/helperFn';

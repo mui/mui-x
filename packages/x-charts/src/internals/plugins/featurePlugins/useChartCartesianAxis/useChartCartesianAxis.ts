@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import { useStoreEffect } from '@mui/x-internals/store';
 import { useAssertModelConsistency } from '@mui/x-internals/useAssertModelConsistency';
 import { warnOnce } from '@mui/x-internals/warning';
 import { PointerGestureEventData } from '@mui/x-internal-gestures/core';
@@ -16,7 +17,7 @@ import { getAxisIndex } from './getAxisValue';
 import { getSVGPoint } from '../../../getSVGPoint';
 import { selectorChartsInteractionIsInitialized } from '../useChartInteraction';
 import { selectorChartAxisInteraction } from './useChartCartesianInteraction.selectors';
-import { useLazySelectorEffect } from '../../utils/useLazySelectorEffect';
+import { checkHasInteractionPlugin } from '../useChartInteraction/checkHasInteractionPlugin';
 
 export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<any>> = ({
   params,
@@ -60,16 +61,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
 
   useEnhancedEffect(() => {
     if (params.highlightedAxis !== undefined) {
-      store.update((prevState) => {
-        if (prevState.controlledCartesianAxisHighlight === params.highlightedAxis) {
-          return prevState;
-        }
-
-        return {
-          ...prevState,
-          controlledCartesianAxisHighlight: params.highlightedAxis,
-        };
-      });
+      store.set('controlledCartesianAxisHighlight', params.highlightedAxis);
     }
   }, [store, params.highlightedAxis]);
 
@@ -82,23 +74,22 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
       return;
     }
 
-    store.update((prev) => ({
-      ...prev,
-      cartesianAxis: {
-        ...prev.cartesianAxis,
-        x: defaultizeXAxis(xAxis, dataset),
-        y: defaultizeYAxis(yAxis, dataset),
-      },
-    }));
+    store.set('cartesianAxis', {
+      x: defaultizeXAxis(xAxis, dataset),
+      y: defaultizeYAxis(yAxis, dataset),
+    });
   }, [seriesConfig, drawingArea, xAxis, yAxis, dataset, store]);
 
   const usedXAxis = xAxisIds[0];
   const usedYAxis = yAxisIds[0];
 
-  useLazySelectorEffect(
+  useStoreEffect(
     store,
     selectorChartAxisInteraction,
     (prevAxisInteraction, nextAxisInteraction) => {
+      if (!onHighlightedAxisChange) {
+        return;
+      }
       if (Object.is(prevAxisInteraction, nextAxisInteraction)) {
         return;
       }
@@ -117,29 +108,30 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
         onHighlightedAxisChange!(nextAxisInteraction);
       }
     },
-    !onHighlightedAxisChange,
   );
+
+  const hasInteractionPlugin = checkHasInteractionPlugin(instance);
 
   React.useEffect(() => {
     const element = svgRef.current;
-    if (!isInteractionEnabled || !element || params.disableAxisListener) {
+    if (!isInteractionEnabled || !hasInteractionPlugin || !element || params.disableAxisListener) {
       return () => {};
     }
 
     // Clean the interaction when the mouse leaves the chart.
     const moveEndHandler = instance.addInteractionListener('moveEnd', (event) => {
       if (!event.detail.activeGestures.pan) {
-        instance.cleanInteraction?.();
+        instance.cleanInteraction();
       }
     });
     const panEndHandler = instance.addInteractionListener('panEnd', (event) => {
       if (!event.detail.activeGestures.move) {
-        instance.cleanInteraction?.();
+        instance.cleanInteraction();
       }
     });
     const pressEndHandler = instance.addInteractionListener('quickPressEnd', (event) => {
       if (!event.detail.activeGestures.move && !event.detail.activeGestures.pan) {
-        instance.cleanInteraction?.();
+        instance.cleanInteraction();
       }
     });
 
@@ -162,7 +154,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
 
         return;
       }
-      instance.setPointerCoordinate?.(svgPoint);
+      instance.setPointerCoordinate(svgPoint);
     };
 
     const moveHandler = instance.addInteractionListener('move', gestureHandler);
@@ -187,6 +179,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
     instance,
     params.disableAxisListener,
     isInteractionEnabled,
+    hasInteractionPlugin,
   ]);
 
   React.useEffect(() => {

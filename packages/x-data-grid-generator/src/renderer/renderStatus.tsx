@@ -42,19 +42,16 @@ const Status = React.memo((props: StatusProps) => {
     icon = <ReportProblemIcon className="icon" />;
   } else if (status === 'Open') {
     icon = <InfoIcon className="icon" />;
-  } else if (status === 'PartiallyFilled') {
+  } else if (status === 'Partially Filled') {
     icon = <AutorenewIcon className="icon" />;
   } else if (status === 'Filled') {
     icon = <DoneIcon className="icon" />;
   }
 
-  let label: string = status;
-  if (status === 'PartiallyFilled') {
-    label = 'Partially Filled';
-  }
+  const className = status.replace(' ', '');
 
   return (
-    <StyledChip className={status} icon={icon} size="small" label={label} variant="outlined" />
+    <StyledChip className={className} icon={icon} size="small" label={status} variant="outlined" />
   );
 });
 

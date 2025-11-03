@@ -17,6 +17,7 @@ import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsTooltip, ChartsTooltipProps } from '@mui/x-charts/ChartsTooltip';
 import { useScatterChartProps } from '@mui/x-charts/internals';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
+import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
 import { ChartsSlotPropsPro, ChartsSlotsPro } from '../internals/material';
 import { ChartZoomSlider } from '../ChartZoomSlider';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
@@ -25,7 +26,7 @@ import { ChartContainerProProps } from '../ChartContainerPro/ChartContainerPro';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
 import {
   SCATTER_CHART_PRO_PLUGINS,
-  ScatterChartProPluginsSignatures,
+  ScatterChartProPluginSignatures,
 } from './ScatterChartPro.plugins';
 import {
   ChartsToolbarProSlots,
@@ -50,7 +51,7 @@ export interface ScatterChartProSlotProps
 export interface ScatterChartProProps
   extends Omit<ScatterChartProps, 'apiRef' | 'slots' | 'slotProps'>,
     Omit<
-      ChartContainerProProps<'scatter', ScatterChartProPluginsSignatures>,
+      ChartContainerProProps<'scatter', ScatterChartProPluginSignatures>,
       | 'series'
       | 'plugins'
       | 'seriesConfig'
@@ -102,7 +103,7 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
   } = useScatterChartProps(other);
   const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps<
     'scatter',
-    ScatterChartProPluginsSignatures
+    ScatterChartProPluginSignatures
   >(
     {
       ...chartContainerProps,
@@ -133,6 +134,7 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
           </g>
           <ChartsOverlay {...overlayProps} />
           <ChartsAxisHighlight {...axisHighlightProps} />
+          <ChartsBrushOverlay />
           {children}
         </ChartsSurface>
         {!props.loading && <Tooltip trigger="item" {...props.slotProps?.tooltip} />}
@@ -163,6 +165,14 @@ ScatterChartPro.propTypes = {
     x: PropTypes.oneOf(['band', 'line', 'none']),
     y: PropTypes.oneOf(['band', 'line', 'none']),
   }),
+  /**
+   * Configuration for the brush interaction.
+   */
+  brushConfig: PropTypes.shape({
+    enabled: PropTypes.bool,
+    preventHighlight: PropTypes.bool,
+    preventTooltip: PropTypes.bool,
+  }),
   children: PropTypes.node,
   className: PropTypes.string,
   /**
@@ -186,6 +196,7 @@ ScatterChartPro.propTypes = {
    * @default false
    */
   disableVoronoi: PropTypes.bool,
+  enableKeyboardNavigation: PropTypes.bool,
   /**
    * Option to display a cartesian grid in the background.
    */
@@ -275,6 +286,15 @@ ScatterChartPro.propTypes = {
    */
   onZoomChange: PropTypes.func,
   /**
+   * The type of renderer to use for the scatter plot.
+   * - `svg-single`: Renders every scatter item in a `<circle />` element.
+   * - `svg-batch`: Batch renders scatter items in `<path />` elements for better performance with large datasets, at the cost of some limitations.
+   *                Read more: https://mui.com/x/react-charts/scatter/#performance
+   *
+   * @default 'svg-single'
+   */
+  renderer: PropTypes.oneOf(['svg-batch', 'svg-single']),
+  /**
    * The series to display in the scatter chart.
    * An array of [[ScatterSeries]] objects.
    */
@@ -307,10 +327,11 @@ ScatterChartPro.propTypes = {
   theme: PropTypes.oneOf(['dark', 'light']),
   title: PropTypes.string,
   /**
-   * Defines the maximal distance between a scatter point and the pointer that triggers the interaction.
+   * Defines the maximum distance between a scatter point and the pointer that triggers the interaction.
+   * If set to `'item'`, the radius is the `markerSize`.
    * If `undefined`, the radius is assumed to be infinite.
    */
-  voronoiMaxRadius: PropTypes.number,
+  voronoiMaxRadius: PropTypes.oneOfType([PropTypes.oneOf(['item']), PropTypes.number]),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */
@@ -372,8 +393,6 @@ ScatterChartPro.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
         offset: PropTypes.number,
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
@@ -469,8 +488,6 @@ ScatterChartPro.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
         offset: PropTypes.number,
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
@@ -550,8 +567,8 @@ ScatterChartPro.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.number,
+        min: PropTypes.number,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
@@ -632,8 +649,8 @@ ScatterChartPro.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.number,
+        min: PropTypes.number,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
@@ -713,8 +730,8 @@ ScatterChartPro.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.number,
+        min: PropTypes.number,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
@@ -794,8 +811,8 @@ ScatterChartPro.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.number,
+        min: PropTypes.number,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
@@ -875,8 +892,18 @@ ScatterChartPro.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
+        min: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
         offset: PropTypes.number,
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
@@ -956,8 +983,18 @@ ScatterChartPro.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
+        min: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
         offset: PropTypes.number,
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
@@ -1037,8 +1074,8 @@ ScatterChartPro.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.number,
+        min: PropTypes.number,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
@@ -1144,8 +1181,6 @@ ScatterChartPro.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
         offset: PropTypes.number,
         position: PropTypes.oneOf(['left', 'none', 'right']),
         reverse: PropTypes.bool,
@@ -1240,8 +1275,6 @@ ScatterChartPro.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
         offset: PropTypes.number,
         position: PropTypes.oneOf(['left', 'none', 'right']),
         reverse: PropTypes.bool,
@@ -1320,8 +1353,8 @@ ScatterChartPro.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.number,
+        min: PropTypes.number,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['left', 'none', 'right']),
         reverse: PropTypes.bool,
@@ -1401,8 +1434,8 @@ ScatterChartPro.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.number,
+        min: PropTypes.number,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['left', 'none', 'right']),
         reverse: PropTypes.bool,
@@ -1481,8 +1514,8 @@ ScatterChartPro.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.number,
+        min: PropTypes.number,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['left', 'none', 'right']),
         reverse: PropTypes.bool,
@@ -1561,8 +1594,8 @@ ScatterChartPro.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.number,
+        min: PropTypes.number,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['left', 'none', 'right']),
         reverse: PropTypes.bool,
@@ -1641,8 +1674,18 @@ ScatterChartPro.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
+        min: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
         offset: PropTypes.number,
         position: PropTypes.oneOf(['left', 'none', 'right']),
         reverse: PropTypes.bool,
@@ -1721,8 +1764,18 @@ ScatterChartPro.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
+        min: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
         offset: PropTypes.number,
         position: PropTypes.oneOf(['left', 'none', 'right']),
         reverse: PropTypes.bool,
@@ -1801,8 +1854,8 @@ ScatterChartPro.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.number,
+        min: PropTypes.number,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['left', 'none', 'right']),
         reverse: PropTypes.bool,
@@ -1901,6 +1954,56 @@ ScatterChartPro.propTypes = {
       start: PropTypes.number.isRequired,
     }),
   ),
+  /**
+   * Configuration for zoom interactions.
+   */
+  zoomInteractionConfig: PropTypes.shape({
+    pan: PropTypes.arrayOf(
+      PropTypes.oneOfType([
+        PropTypes.oneOf(['drag', 'pressAndDrag']),
+        PropTypes.shape({
+          pointerMode: PropTypes.oneOf(['mouse', 'touch']),
+          requiredKeys: PropTypes.arrayOf(PropTypes.string),
+          type: PropTypes.oneOf(['drag']).isRequired,
+        }),
+        PropTypes.shape({
+          pointerMode: PropTypes.oneOf(['mouse', 'touch']),
+          requiredKeys: PropTypes.arrayOf(PropTypes.string),
+          type: PropTypes.oneOf(['pressAndDrag']).isRequired,
+        }),
+      ]).isRequired,
+    ),
+    zoom: PropTypes.arrayOf(
+      PropTypes.oneOfType([
+        PropTypes.oneOf(['brush', 'doubleTapReset', 'pinch', 'tapAndDrag', 'wheel']),
+        PropTypes.shape({
+          pointerMode: PropTypes.any,
+          requiredKeys: PropTypes.arrayOf(PropTypes.string),
+          type: PropTypes.oneOf(['wheel']).isRequired,
+        }),
+        PropTypes.shape({
+          pointerMode: PropTypes.any,
+          requiredKeys: PropTypes.array,
+          type: PropTypes.oneOf(['pinch']).isRequired,
+        }),
+        PropTypes.shape({
+          pointerMode: PropTypes.oneOf(['mouse', 'touch']),
+          requiredKeys: PropTypes.arrayOf(PropTypes.string),
+          type: PropTypes.oneOf(['tapAndDrag']).isRequired,
+        }),
+        PropTypes.shape({
+          pointerMode: PropTypes.oneOf(['mouse', 'touch']),
+          requiredKeys: PropTypes.arrayOf(PropTypes.string),
+          type: PropTypes.oneOf(['doubleTapReset']).isRequired,
+        }),
+        PropTypes.shape({
+          pointerMode: PropTypes.any,
+          requiredKeys: PropTypes.array,
+          type: PropTypes.oneOf(['brush']).isRequired,
+        }),
+      ]).isRequired,
+    ),
+  }),
 } as any;
 
 export { ScatterChartPro };

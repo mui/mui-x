@@ -8,9 +8,15 @@ import { useSvgRef } from '../hooks/useSvgRef';
 import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
 import {
-  selectorChartContainerSize,
-  selectorChartPropsSize,
+  selectorChartPropsHeight,
+  selectorChartPropsWidth,
+  selectorChartSvgWidth,
+  selectorChartSvgHeight,
 } from '../internals/plugins/corePlugins/useChartDimensions/useChartDimensions.selectors';
+import {
+  selectorChartsHasFocusedItem,
+  selectorChartsIsKeyboardNavigationEnabled,
+} from '../internals/plugins/featurePlugins/useChartKeyboardNavigation';
 
 export interface ChartsSurfaceProps
   extends Omit<
@@ -27,7 +33,7 @@ export interface ChartsSurfaceProps
 const ChartsSurfaceStyles = styled('svg', {
   name: 'MuiChartsSurface',
   slot: 'Root',
-})<{ ownerState: { width?: number; height?: number } }>(({ ownerState }) => ({
+})<{ ownerState: { width?: number; height?: number } }>(({ ownerState, theme }) => ({
   width: ownerState.width ?? '100%',
   height: ownerState.height ?? '100%',
   display: 'flex',
@@ -40,6 +46,21 @@ const ChartsSurfaceStyles = styled('svg', {
   // For example, prevent page scroll & zoom.
   touchAction: 'pan-y',
   userSelect: 'none',
+  gridArea: 'chart',
+  '&:focus': {
+    outline: 'none', // By default don't show focus on the SVG container
+  },
+  '&:focus-visible': {
+    // Show focus outline on the SVG container only when using keyboard navigation
+    outline: `${(theme.vars ?? theme).palette.text.primary} solid 2px`,
+    '&[data-has-focused-item=true]': {
+      // But not if the chart has a focused children item
+      outline: 'none',
+    },
+  },
+  '& [data-focused=true]': {
+    outline: `${(theme.vars ?? theme).palette.text.primary} solid 2px`,
+  },
 }));
 
 /**
@@ -61,8 +82,14 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
   ref: React.Ref<SVGSVGElement>,
 ) {
   const store = useStore();
-  const { width: svgWidth, height: svgHeight } = useSelector(store, selectorChartContainerSize);
-  const { width: propsWidth, height: propsHeight } = useSelector(store, selectorChartPropsSize);
+
+  const svgWidth = useSelector(store, selectorChartSvgWidth);
+  const svgHeight = useSelector(store, selectorChartSvgHeight);
+
+  const propsWidth = useSelector(store, selectorChartPropsWidth);
+  const propsHeight = useSelector(store, selectorChartPropsHeight);
+  const isKeyboardNavigationEnabled = useSelector(store, selectorChartsIsKeyboardNavigationEnabled);
+  const hasFocusedItem = useSelector(store, selectorChartsHasFocusedItem);
   const svgRef = useSvgRef();
   const handleRef = useForkRef(svgRef, ref);
   const themeProps = useThemeProps({ props: inProps, name: 'MuiChartsSurface' });
@@ -76,6 +103,8 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
       ownerState={{ width: propsWidth, height: propsHeight }}
       viewBox={`${0} ${0} ${svgWidth} ${svgHeight}`}
       className={className}
+      tabIndex={isKeyboardNavigationEnabled ? 0 : undefined}
+      data-has-focused-item={hasFocusedItem || undefined}
       {...other}
       ref={handleRef}
     >

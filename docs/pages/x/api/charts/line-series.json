@@ -1,6 +1,7 @@
 {
   "name": "LineSeries",
   "imports": [
+    "import { LineSeries } from '@mui/x-charts-premium'",
     "import { LineSeries } from '@mui/x-charts-pro'",
     "import { LineSeries } from '@mui/x-charts'"
   ],
@@ -32,7 +33,7 @@
     "stackOrder": { "type": { "description": "StackOrderType" }, "default": "'none'" },
     "strictStepCurve": { "type": { "description": "boolean" } },
     "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" } },
-    "xAxisId": { "type": { "description": "string" } },
-    "yAxisId": { "type": { "description": "string" } }
+    "xAxisId": { "type": { "description": "AxisId" } },
+    "yAxisId": { "type": { "description": "AxisId" } }
   }
 }

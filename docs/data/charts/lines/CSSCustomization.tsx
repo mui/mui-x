@@ -1,10 +1,9 @@
-import * as React from 'react';
 import {
   areaElementClasses,
   LineChart,
   lineElementClasses,
 } from '@mui/x-charts/LineChart';
-import { dataset } from './GDPperCapita';
+import { dataset } from '../dataset/gdpPerCapitaEvolution';
 
 export default function CSSCustomization() {
   return (
@@ -36,6 +35,7 @@ export default function CSSCustomization() {
       series={[
         {
           id: 'France',
+          label: 'France',
           dataKey: 'fr',
           stack: 'total',
           area: true,
@@ -43,6 +43,7 @@ export default function CSSCustomization() {
         },
         {
           id: 'Germany',
+          label: 'Germany',
           dataKey: 'dl',
           stack: 'total',
           area: true,
@@ -50,6 +51,7 @@ export default function CSSCustomization() {
         },
         {
           id: 'United Kingdom',
+          label: 'United Kingdom',
           dataKey: 'gb',
           stack: 'total',
           area: true,

@@ -12,7 +12,8 @@
   "imports": [
     "import { LineElement } from '@mui/x-charts/LineChart';",
     "import { LineElement } from '@mui/x-charts';",
-    "import { LineElement } from '@mui/x-charts-pro';"
+    "import { LineElement } from '@mui/x-charts-pro';",
+    "import { LineElement } from '@mui/x-charts-premium';"
   ],
   "slots": [
     {

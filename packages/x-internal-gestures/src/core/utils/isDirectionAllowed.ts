@@ -1,4 +1,4 @@
-import type { Direction } from '../gestures/PanGesture';
+import type { Direction } from '../types/Direction';
 
 /**
  * Check if a direction matches one of the allowed directions

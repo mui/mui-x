@@ -1,6 +1,8 @@
 import type { GetSeriesWithDefaultValues } from '@mui/x-charts/internals';
 import type { SankeyNodeId, SankeyNode } from '../sankey.types';
 
+const defaultSankeyValueFormatter = (v: number) => (v == null ? '' : v.toLocaleString());
+
 export const getSeriesWithDefaultValues: GetSeriesWithDefaultValues<'sankey'> = (
   seriesData,
   seriesIndex,
@@ -51,6 +53,7 @@ export const getSeriesWithDefaultValues: GetSeriesWithDefaultValues<'sankey'> = 
   return {
     id: seriesData.id ?? `auto-generated-id-${seriesIndex}`,
     ...seriesData,
+    valueFormatter: seriesData.valueFormatter ?? defaultSankeyValueFormatter,
     data: {
       links: data.links,
       nodes: nodeMap,

@@ -124,6 +124,7 @@ export const getCommodityColumns = (editable = false): GridColDefGenerator[] => 
     renderEditCell: renderEditStatus,
     type: 'singleSelect',
     valueOptions: STATUS_OPTIONS,
+    valueFormatter: (value) => (value === 'PartiallyFilled' ? 'Partially Filled' : value),
     width: 150,
     editable,
   },

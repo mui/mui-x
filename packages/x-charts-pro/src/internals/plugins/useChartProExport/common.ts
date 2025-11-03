@@ -6,3 +6,23 @@ export function createExportIframe(title?: string): HTMLIFrameElement {
   iframeEl.title = title || document.title;
   return iframeEl;
 }
+
+/**
+ * Applies styles to an element and returns the previous styles.
+ */
+export function applyStyles(
+  element: HTMLElement | SVGElement,
+  styles: Record<string, string | null>,
+) {
+  const previousStyles: Record<string, string | null> = {};
+
+  Object.entries(styles).forEach(([key, value]) => {
+    const prev = element.style.getPropertyValue(key);
+
+    previousStyles[key] = prev;
+
+    element.style.setProperty(key, value);
+  });
+
+  return previousStyles;
+}

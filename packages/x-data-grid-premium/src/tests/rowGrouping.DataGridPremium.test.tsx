@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { config } from 'react-transition-group';
 import { RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/internal-test-utils';

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { GridPanel } from '@mui/x-data-grid';
 
 function MyPanel() {

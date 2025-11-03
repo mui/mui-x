@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useAssertModelConsistency } from '@mui/x-internals/useAssertModelConsistency';
-import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
 import { TreeViewPlugin } from '../../models';
 import { TreeViewItemId } from '../../../models';
 import {
@@ -224,7 +224,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     setSelectedItems(event, newSelectedItems);
   };
 
-  useEnhancedEffect(() => {
+  useIsoLayoutEffect(() => {
     store.set('selection', {
       selectedItems:
         params.selectedItems === undefined

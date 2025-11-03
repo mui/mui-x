@@ -146,6 +146,7 @@ const PieChart = React.forwardRef(function PieChart(
         legendPosition={props.slotProps?.legend?.position}
         legendDirection={props.slotProps?.legend?.direction ?? 'vertical'}
         sx={sx}
+        hideLegend={hideLegend ?? false}
       >
         {showToolbar && Toolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!hideLegend && (
@@ -186,6 +187,7 @@ PieChart.propTypes = {
    */
   dataset: PropTypes.arrayOf(PropTypes.object),
   desc: PropTypes.string,
+  enableKeyboardNavigation: PropTypes.bool,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */

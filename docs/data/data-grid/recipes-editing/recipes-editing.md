@@ -11,6 +11,21 @@ To persist the changes, use <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">En
 
 {{"demo": "MultilineEditing.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## Autocomplete editing
+
+To enhance the editing experience for columns with many options, you can create a custom edit component using Material UI [`Autocomplete`](/material-ui/react-autocomplete/) component.
+This allows users to search for desired values by typing while preserving keyboard navigation.
+
+For a consistent editing experience, configure the Autocomplete with `openOnFocus` and set `autoFocus: true` on the HTML input element through the `slotProps`.
+This ensures that when users enter edit mode, the Autocomplete automatically receives focus and displays the available options immediately.
+
+The component integrates with the Data Grid's state management through the editing API:
+
+- Use `apiRef.current.setEditCellValue()` to update the cell value when the user makes a selection
+- Call `apiRef.current.stopCellEditMode()` to exit edit mode after a value is selected
+
+{{"demo": "AutocompleteEditing.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Conditional validation
 
 When all cells in a row are in edit mode, you can validate fields by comparing their values against one another.

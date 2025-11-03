@@ -65,22 +65,6 @@ function getIsTelemetryCollecting(): boolean | undefined {
   }
 
   try {
-    // e.g. Vite.js
-    // eslint-disable-next-line global-require
-    const { importMetaEnv } = require('./config.import-meta');
-    if (importMetaEnv) {
-      const result = getBooleanEnvFromEnvObject('MUI_X_TELEMETRY_DISABLED', importMetaEnv);
-      if (typeof result === 'boolean') {
-        // If disabled=true, telemetry is disabled
-        // If disabled=false, telemetry is enabled
-        return !result;
-      }
-    }
-  } catch (_) {
-    // If there is an error, return the default value
-  }
-
-  try {
     // Some build tools replace env variables on compilation
     // e.g. Next.js, webpack EnvironmentPlugin
     const envValue =
@@ -121,20 +105,6 @@ function getIsDebugModeEnabled(): boolean {
     // e.g. Webpack EnvironmentPlugin
     if (process.env.MUI_X_TELEMETRY_DEBUG) {
       const result = getBooleanEnv(process.env.MUI_X_TELEMETRY_DEBUG);
-      if (typeof result === 'boolean') {
-        return result;
-      }
-    }
-  } catch (_) {
-    // If there is an error, return the default value
-  }
-
-  try {
-    // e.g. Vite.js
-    // eslint-disable-next-line global-require
-    const { importMetaEnv } = require('./config.import-meta');
-    if (importMetaEnv) {
-      const result = getBooleanEnvFromEnvObject('MUI_X_TELEMETRY_DEBUG', importMetaEnv);
       if (typeof result === 'boolean') {
         return result;
       }

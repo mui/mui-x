@@ -117,12 +117,16 @@ export interface GridParamsPrivateApi {
       hasFocus,
       rowNode,
       tabIndex,
+      value,
+      formattedValue,
     }: {
       cellMode: GridCellMode;
       colDef: GridStateColDef;
       hasFocus: boolean;
       rowNode: N;
       tabIndex: 0 | -1;
+      value?: V;
+      formattedValue?: F;
     },
   ) => GridCellParams<R, V, F, N>;
 }

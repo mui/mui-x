@@ -234,7 +234,7 @@ It must be rendered inside the Data Provider to get access to the data, but outs
   <ChartsSurface>{/* SVG components */}</ChartsSurface>
 </ChartDataProvider>
 
-// ❌ Wrong
+// ❌ Incorrect
 <ChartContainer>
   <ChartsLegend />
 </ChartContainer>
@@ -248,6 +248,8 @@ See [HTML components](/x/react-charts/components/#html-components) documentation
 
 You can also add interactive elements such as `<ChartsAxisHighlight />` and `<ChartsTooltip />`.
 
+{{"demo": "LegendTooltipComposition.js" }}
+
 :::info
 By default, the container listens to mouse events to keep track of where the mouse is located on the chart.
 
@@ -258,3 +260,12 @@ If you are not using the axis highlight or the tooltip, consider disabling this 
 ```
 
 :::
+
+## Examples
+
+### Bell curve
+
+This example demonstrates how to combine scatter and line plots to overlay a normal distribution curve (bell curve) over scattered data points.
+The bell curve is calculated based on the mean and standard deviation of the data.
+
+{{"demo": "BellCurveOverlay.js" }}

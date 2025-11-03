@@ -26,6 +26,13 @@ For example, if the chart is not zoomable, the zoom buttons will not be displaye
 
 The toolbar is highly customizable, built to integrate with any design system.
 
+:::info
+If you're replacing the toolbar by a custom one, the container should have the CSS class `chartsToolbarClasses.root`.
+
+This class is used by the `<ChartsWrapper />` to place the toolbar relatively to the legend and the chart.
+If you use composition without `<ChartsWrapper />` you can ignore this info.
+:::
+
 ### Slots
 
 You can customize basic components, such as buttons and tooltips, by passing custom elements to the `slots` prop of the chart.

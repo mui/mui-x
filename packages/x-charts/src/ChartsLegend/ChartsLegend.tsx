@@ -74,6 +74,7 @@ const RootElement = styled('ul', {
     alignItems: 'center',
     gap: theme.spacing(1),
   },
+  gridArea: 'legend',
 }));
 
 const ChartsLegend = consumeSlots(

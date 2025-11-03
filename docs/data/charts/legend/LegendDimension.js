@@ -1,4 +1,3 @@
-import * as React from 'react';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import { PieChart } from '@mui/x-charts/PieChart';
 import { legendClasses } from '@mui/x-charts/ChartsLegend';
@@ -11,10 +10,7 @@ const data = [
   { id: 4, value: 15, label: 'Series E' },
   { id: 5, value: 20, label: 'Series F' },
   { id: 6, value: 10, label: 'Series G' },
-  { id: 7, value: 15, label: 'Series H' },
 ];
-
-const itemsNumber = 8;
 
 export default function LegendDimension() {
   return (
@@ -32,11 +28,7 @@ export default function LegendDimension() {
       }}
       renderDemo={(props) => (
         <PieChart
-          series={[
-            {
-              data: data.slice(0, itemsNumber),
-            },
-          ]}
+          series={[{ data }]}
           slotProps={{
             legend: {
               direction: props.direction,

@@ -25,7 +25,7 @@ const excludeLabels = ['dependencies', 'scope: scheduler'];
  * @type {string[]}
  * Tags found in title to exclude the commit from the changelog
  */
-const excludeTitleTags = ['[charts-premium]'];
+const excludeTitleTags = [];
 
 /**
  * @type {string}
@@ -109,14 +109,30 @@ function parseTags(commitMessage) {
 
 /**
  * Find the latest tagged version from GitHub
+ * @param {number} major - The major version to find the latest tagged version for
  * @returns {Promise<string>} The latest tagged version
  */
-async function findLatestTaggedVersion() {
-  // fetch tags from the GitHub API and return the last one
-  const { data: tags } = await octokit.rest.repos.listTags({
+async function findLatestTaggedVersionForMajor(major) {
+  // Fetch all tags from the GitHub API (pagination > 100) and return the last one after optional filtering
+  const tags = await octokit.paginate(octokit.rest.repos.listTags, {
     owner: ORG,
     repo: REPO,
+    per_page: 100,
   });
+
+  if (!tags || tags.length === 0) {
+    throw new Error('No tags found in repository');
+  }
+
+  if (major != null) {
+    const majorStr = String(major);
+    const filteredTags = tags.filter((tag) => tag.name && tag.name.startsWith(`v${majorStr}.`));
+    if (filteredTags.length > 0) {
+      // GitHub returns tags in reverse chronological order, so first is the latest
+      return filteredTags[0].name.trim();
+    }
+  }
+
   return tags[0].name.trim();
 }
 
@@ -162,7 +178,7 @@ async function generateChangelog({
   returnEntry = false,
 }) {
   // fetch the last tag and chose the one to use for the release
-  const latestTaggedVersion = await findLatestTaggedVersion();
+  const latestTaggedVersion = await findLatestTaggedVersionForMajor();
   const lastRelease = lastReleaseInput !== undefined ? lastReleaseInput : latestTaggedVersion;
   if (lastRelease !== latestTaggedVersion) {
     console.warn(
@@ -272,6 +288,7 @@ async function generateChangelog({
   const pickersProCommits = [];
   const chartsCommits = [];
   const chartsProCommits = [];
+  const chartsPremiumCommits = [];
   const treeViewCommits = [];
   const treeViewProCommits = [];
   const schedulerCommits = [];
@@ -310,6 +327,9 @@ async function generateChangelog({
         case 'DateTimeRangePicker':
         case 'TimeRangePicker':
           pickersProCommits.push(commitItem);
+          break;
+        case 'charts-premium':
+          chartsPremiumCommits.push(commitItem);
           break;
         case 'charts-pro':
           chartsProCommits.push(commitItem);
@@ -400,10 +420,8 @@ async function generateChangelog({
       .join('\n');
   };
 
-  const proIcon =
-    '[![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")';
-  const premiumIcon =
-    '[![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link "Premium plan")';
+  const proIcon = `[![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')`;
+  const premiumIcon = `[![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')`;
 
   /**
    * Generates a changelog section for a product
@@ -515,15 +533,19 @@ async function generateChangelog({
       a.toLowerCase().localeCompare(b.toLowerCase()),
     );
 
-    if (contributors.length > 0) {
+    if (contributors.length > 1) {
       lines.push(
-        `Special thanks go out to the community members for their valuable contributions:\n${contributors.join(', ')}`,
+        `Special thanks go out to these community members for their valuable contributions:\n${contributors.join(', ')}`,
+      );
+    } else if (contributors.length === 1) {
+      lines.push(
+        `Special thanks go out to community member ${contributors[0]} for their valuable contribution.`,
       );
     }
 
     if (community.team.size > 0) {
       lines.push(
-        `The following are all team members who have contributed to this release:\n${teamMembers.join(', ')}`,
+        `The following team members contributed to this release:\n${teamMembers.join(', ')}`,
       );
     }
 
@@ -559,6 +581,7 @@ ${logProductSection({
   packageName: 'x-charts',
   baseCommits: chartsCommits,
   proCommits: chartsProCommits,
+  premiumCommits: chartsPremiumCommits,
   changelogKey: 'charts',
 })}
 
@@ -614,12 +637,12 @@ ${logOtherSection({
 /**
  * Used to pass in the octokit instance from outside the module and return ready to use functions
  * @param {import('@octokit/rest').Octokit} octokitInstance - The Octokit instance to use for GitHub API calls
- * @returns {{generateChangelog: ((function({octokit: import('@octokit/rest').Octokit, lastRelease?: string, release: string, nextVersion?: string, returnEntry?: boolean}): Promise<string|null>)|*), findLatestTaggedVersion: (function(): Promise<string>)}}
+ * @returns {{generateChangelog: ((function({octokit: import('@octokit/rest').Octokit, lastRelease?: string, release: string, nextVersion?: string, returnEntry?: boolean}): Promise<string|null>)|*), findLatestTaggedVersionForMajor: (function(): Promise<string>)}}
  */
 export function getChangelogUtils(octokitInstance) {
   octokit = octokitInstance;
   return {
     generateChangelog,
-    findLatestTaggedVersion,
+    findLatestTaggedVersionForMajor,
   };
 }

@@ -6,7 +6,7 @@ import { AxisScaleConfig, ChartsXAxisProps, ComputedAxis } from '../models/axis'
 import { ChartsSingleXAxisTicks } from './ChartsSingleXAxisTicks';
 import { ChartsGroupedXAxisTicks } from './ChartsGroupedXAxisTicks';
 import { ChartsText, ChartsTextProps } from '../ChartsText';
-import { isBandScale } from '../internals/isBandScale';
+import { isOrdinalScale } from '../internals/scaleGuards';
 import { isInfinity } from '../internals/isInfinity';
 import { defaultProps, useUtilityClasses } from './utilities';
 import { useDrawingArea } from '../hooks';
@@ -75,9 +75,8 @@ export function ChartsXAxisImpl({ axis, ...inProps }: ChartsXAxisImplProps) {
   const labelHeight = label ? getStringSize(label, axisLabelProps.style).height : 0;
 
   const domain = xScale.domain();
-  const isScaleBand = isBandScale(xScale);
-  const skipTickRendering =
-    (isScaleBand && domain.length === 0) || (!isScaleBand && domain.some(isInfinity));
+  const isScaleOrdinal = isOrdinalScale(xScale);
+  const skipTickRendering = isScaleOrdinal ? domain.length === 0 : domain.some(isInfinity);
   let children: React.ReactNode = null;
 
   if (!skipTickRendering) {

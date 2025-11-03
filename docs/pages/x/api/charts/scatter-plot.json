@@ -7,6 +7,10 @@
         "describedArgs": ["event", "scatterItemIdentifier"]
       }
     },
+    "renderer": {
+      "type": { "name": "enum", "description": "'svg-batch'<br>&#124;&nbsp;'svg-single'" },
+      "default": "'svg-single'"
+    },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },
@@ -18,7 +22,8 @@
   "imports": [
     "import { ScatterPlot } from '@mui/x-charts/ScatterChart';",
     "import { ScatterPlot } from '@mui/x-charts';",
-    "import { ScatterPlot } from '@mui/x-charts-pro';"
+    "import { ScatterPlot } from '@mui/x-charts-pro';",
+    "import { ScatterPlot } from '@mui/x-charts-premium';"
   ],
   "slots": [
     {

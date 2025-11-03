@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { spy } from 'sinon';
 import { createRenderer, waitFor } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
@@ -16,8 +15,8 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
   it('should call onHighlightedAxisChange when crossing any value', async () => {
     const onHighlightedAxisChange = spy();
     const { user } = render(
-      <ChartDataProvider<'bar', [UseChartCartesianAxisSignature, UseChartInteractionSignature]>
-        plugins={[useChartCartesianAxis, useChartInteraction]}
+      <ChartDataProvider<'bar', [UseChartInteractionSignature, UseChartCartesianAxisSignature]>
+        plugins={[useChartInteraction, useChartCartesianAxis]}
         xAxis={[{ id: 'x-axis', scaleType: 'band', data: ['A', 'B'], position: 'none' }]}
         yAxis={[{ id: 'y-axis', min: 0, max: 1, data: [0, 0.5], position: 'none' }]}
         width={100}
@@ -74,8 +73,8 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
   it('should call onHighlightedAxisChange when axis got modified', async () => {
     const onHighlightedAxisChange = spy();
     const { user, setProps } = render(
-      <ChartDataProvider<'bar', [UseChartCartesianAxisSignature, UseChartInteractionSignature]>
-        plugins={[useChartCartesianAxis, useChartInteraction]}
+      <ChartDataProvider<'bar', [UseChartInteractionSignature, UseChartCartesianAxisSignature]>
+        plugins={[useChartInteraction, useChartCartesianAxis]}
         xAxis={[{ id: 'x-axis', scaleType: 'band', data: ['A', 'B'], position: 'none' }]}
         yAxis={[{ position: 'none' }]}
         width={100}
@@ -109,8 +108,8 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
   it('should not call onHighlightedAxisChange when axis got modified but highlighted item stay the same', async () => {
     const onHighlightedAxisChange = spy();
     const { user, setProps } = render(
-      <ChartDataProvider<'bar', [UseChartCartesianAxisSignature, UseChartInteractionSignature]>
-        plugins={[useChartCartesianAxis, useChartInteraction]}
+      <ChartDataProvider<'bar', [UseChartInteractionSignature, UseChartCartesianAxisSignature]>
+        plugins={[useChartInteraction, useChartCartesianAxis]}
         xAxis={[{ id: 'x-axis', scaleType: 'band', data: ['A', 'B'], position: 'none' }]}
         yAxis={[{ position: 'none' }]}
         width={100}
@@ -141,8 +140,8 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
   it('should call onHighlightedAxisChange when highlighted axis got removed', async () => {
     const onHighlightedAxisChange = spy();
     const { user, setProps } = render(
-      <ChartDataProvider<'bar', [UseChartCartesianAxisSignature, UseChartInteractionSignature]>
-        plugins={[useChartCartesianAxis, useChartInteraction]}
+      <ChartDataProvider<'bar', [UseChartInteractionSignature, UseChartCartesianAxisSignature]>
+        plugins={[useChartInteraction, useChartCartesianAxis]}
         xAxis={[{ id: 'x-axis', scaleType: 'band', data: ['A', 'B'], position: 'none' }]}
         yAxis={[{ position: 'none' }]}
         width={100}
@@ -175,8 +174,8 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
 
   it('should allow to highlight axes without data', async () => {
     const { user } = render(
-      <ChartDataProvider<'bar', [UseChartCartesianAxisSignature, UseChartInteractionSignature]>
-        plugins={[useChartCartesianAxis, useChartInteraction]}
+      <ChartDataProvider<'bar', [UseChartInteractionSignature, UseChartCartesianAxisSignature]>
+        plugins={[useChartInteraction, useChartCartesianAxis]}
         xAxis={[{ id: 'x-axis', scaleType: 'band', data: ['A', 'B'], position: 'none' }]}
         yAxis={[{ position: 'none', min: 0, max: 100 }]}
         width={100}
@@ -200,8 +199,8 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
 
   it('should allow to highlight axes with data', async () => {
     const { user } = render(
-      <ChartDataProvider<'bar', [UseChartCartesianAxisSignature, UseChartInteractionSignature]>
-        plugins={[useChartCartesianAxis, useChartInteraction]}
+      <ChartDataProvider<'bar', [UseChartInteractionSignature, UseChartCartesianAxisSignature]>
+        plugins={[useChartInteraction, useChartCartesianAxis]}
         xAxis={[{ id: 'x-axis', scaleType: 'band', data: ['A', 'B'], position: 'none' }]}
         yAxis={[{ position: 'none', min: 0, max: 100 }]}
         width={100}

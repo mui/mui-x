@@ -1,12 +1,11 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@mui/x-internals/store';
-import useEventCallback from '@mui/utils/useEventCallback';
-import useForkRef from '@mui/utils/useForkRef';
-import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
+import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
+import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
 import { TreeViewItemPlugin, TreeViewItemMeta, TreeViewPlugin } from '../../models';
 import { UseTreeViewJSXItemsSignature } from './useTreeViewJSXItems.types';
-import { publishTreeViewEvent } from '../../utils/publishTreeViewEvent';
 import { useTreeViewContext } from '../../TreeViewProvider';
 import {
   TreeViewChildrenItemContext,
@@ -59,7 +58,6 @@ export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> =
         itemMetaLookup: newItemMetaLookup,
         itemModelLookup: newItemModelLookup,
       });
-      publishTreeViewEvent(instance, 'removeItem', { id: item.id });
     };
   });
 
@@ -79,15 +77,15 @@ export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> =
     });
   };
 
-  const mapFirstCharFromJSX = useEventCallback((itemId: string, firstChar: string) => {
-    instance.updateFirstCharMap((firstCharMap) => {
-      firstCharMap[itemId] = firstChar;
-      return firstCharMap;
+  const mapLabelFromJSX = useEventCallback((itemId: string, label: string) => {
+    instance.updateLabelMap((labelMap) => {
+      labelMap[itemId] = label;
+      return labelMap;
     });
 
     return () => {
-      instance.updateFirstCharMap((firstCharMap) => {
-        const newMap = { ...firstCharMap };
+      instance.updateLabelMap((labelMap) => {
+        const newMap = { ...labelMap };
         delete newMap[itemId];
         return newMap;
       });
@@ -98,7 +96,7 @@ export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> =
     instance: {
       insertJSXItem,
       setJSXItemsOrderedChildrenIds,
-      mapFirstCharFromJSX,
+      mapLabelFromJSX,
     },
   };
 };
@@ -121,11 +119,11 @@ const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin = ({ props, rootRef, con
 
   const expandable = itemHasChildren(children);
   const pluginContentRef = React.useRef<HTMLDivElement>(null);
-  const handleContentRef = useForkRef(pluginContentRef, contentRef);
+  const handleContentRef = useMergedRefs(pluginContentRef, contentRef);
   const treeId = useStore(store, idSelectors.treeId);
 
   // Prevent any flashing
-  useEnhancedEffect(() => {
+  useIsoLayoutEffect(() => {
     const idAttribute = generateTreeItemIdAttribute({ itemId, treeId, id });
     registerChild(idAttribute, itemId);
 
@@ -135,7 +133,7 @@ const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin = ({ props, rootRef, con
     };
   }, [store, instance, registerChild, unregisterChild, itemId, id, treeId]);
 
-  useEnhancedEffect(() => {
+  useIsoLayoutEffect(() => {
     return instance.insertJSXItem({
       id: itemId,
       idAttribute: id,
@@ -147,9 +145,9 @@ const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin = ({ props, rootRef, con
 
   React.useEffect(() => {
     if (label) {
-      return instance.mapFirstCharFromJSX(
+      return instance.mapLabelFromJSX(
         itemId,
-        (pluginContentRef.current?.textContent ?? '').substring(0, 1).toLowerCase(),
+        (pluginContentRef.current?.textContent ?? '').toLowerCase(),
       );
     }
     return undefined;

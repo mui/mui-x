@@ -655,10 +655,11 @@ function createPrBody(newVersion) {
 
 ### Release the packages
 
-- [ ] Checkout the last version of the working branch
-- [ ] Run \`pnpm i && pnpm release:build\`
-- [ ] Run \`pnpm release:publish\`
-- [ ] Run \`pnpm release:tag\`
+- [ ] Go to the [publish action](https://github.com/mui/mui-x/actions/workflows/publish.yml).
+- [ ] Choose "Run workflow" dropdown
+  > **Branch:** master
+  > **Commit SHA to release from:** the commit that contains the merged release on master. This commit is linked to the GitHub release.
+- [ ] Click "Run workflow"
 
 ### Publish the documentation
 
@@ -666,7 +667,7 @@ function createPrBody(newVersion) {
 
 ### Publish GitHub release
 
-- [ ] Create a new release on GitHub releases page
+- [ ] Go to the new release on [GitHub releases](https://github.com/mui/mui-x/releases) page and publish the draft.
 
 ### Announce
 
@@ -859,7 +860,8 @@ async function main({ githubToken }) {
       auth: githubToken,
     });
 
-    const { findLatestTaggedVersion, generateChangelog: generator } = getChangelogUtils(octokit);
+    const { findLatestTaggedVersionForMajor, generateChangelog: generator } =
+      getChangelogUtils(octokit);
 
     // Find the upstream remote
     const upstreamRemote = await findMuiXRemote();
@@ -891,7 +893,7 @@ async function main({ githubToken }) {
     // Always prompt for major version first
     const majorVersion = await selectMajorVersion(latestMajorVersion);
 
-    const latestTag = await findLatestTaggedVersion();
+    const latestTag = await findLatestTaggedVersionForMajor(majorVersion);
     const previousVersion = latestTag.startsWith('v') ? latestTag.slice(1) : latestTag;
     console.log(`Latest tag for major version ${majorVersion}: ${previousVersion}`);
 

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -43,7 +42,7 @@ function DashedLine({ color, className }: ChartsLabelCustomMarkProps) {
 function MyCustomLegend() {
   const { items } = useLegend();
   return (
-    <Stack direction="column" alignSelf={'flex-start'} marginLeft={9}>
+    <Stack direction="column" justifySelf={'start'} marginLeft={9}>
       {items.map((item) => {
         const { label, id, color, seriesId, markType } = item;
         return (

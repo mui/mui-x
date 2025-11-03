@@ -1,7 +1,6 @@
-import * as React from 'react';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 
-import { data } from './randomData';
+import data from '../dataset/random/scatterParallel.json';
 
 export default function ScatterCustomShape() {
   return (
@@ -18,7 +17,7 @@ export default function ScatterCustomShape() {
         {
           id: '2',
           label: 'Series B',
-          data: data.map((v) => ({ x: v.x1, y: v.y2, id: v.id })),
+          data: data.map((v) => ({ x: v.x2, y: v.y2, id: v.id })),
           markerSize: 1,
           labelMarkType: DiamondLabelMark,
         },

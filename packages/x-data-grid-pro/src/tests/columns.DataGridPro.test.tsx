@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { RefObject } from '@mui/x-internals/types';
@@ -55,9 +54,9 @@ describe('<DataGridPro /> - Columns', () => {
       await act(() => apiRef.current?.showColumnMenu('brand'));
       const menu = screen.getByRole('menu');
       await waitFor(() => {
-        expect(menu.id).to.match(/[«|:]r[0-9a-z]+[»|:]/);
+        expect(menu.id).to.match(/[«|:|_]r_?[0-9a-z]+[»|:|_]/);
       });
-      expect(menu.getAttribute('aria-labelledby')).to.match(/[«|:]r[0-9a-z]+[»|:]/);
+      expect(menu.getAttribute('aria-labelledby')).to.match(/[«|:|_]r_?[0-9a-z]+[»|:|_]/);
     });
   });
 
