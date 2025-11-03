@@ -17,7 +17,10 @@ export class DataStore {
       this.rowLookup = { ...initialRowLookup };
       this.tree = new Map();
       initialTree.forEach((node) => {
-        this.tree.set(node.id, node);
+        this.tree.set(node.id, {
+          ...node,
+          children: node.children ? [...node.children] : undefined,
+        });
       });
     }
 
@@ -102,7 +105,10 @@ export class DataStore {
     this.rowLookup = { ...initialRowLookup };
     this.tree = new Map();
     initialTree.forEach((node) => {
-      this.tree.set(node.id, node);
+      this.tree.set(node.id, {
+        ...node,
+        children: node.children ? [...node.children] : undefined,
+      });
     });
 
     // Set loading state and reload
