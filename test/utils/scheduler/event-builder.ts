@@ -2,6 +2,7 @@ import {
   CalendarResourceId,
   RecurringEventPresetKey,
   RecurringEventRecurrenceRule,
+  SchedulerValidDate,
 } from '@mui/x-scheduler-headless/models';
 import {
   CalendarEvent,
@@ -19,15 +20,26 @@ export const DEFAULT_TESTING_VISIBLE_DATE = defaultAdapter.date(DEFAULT_TESTING_
  * Minimal event builder for tests.
  *
  * Scope:
- * - Only sets fields and time ranges.
+ * - Builds a valid CalendarEvent.
  * - Uses the provided (or default) adapter for all date ops.
- * - Returns a CalendarEventOccurrence for reducing test boilerplate.
+ * - Can optionally derive a CalendarEventOccurrence via .buildOccurrence().
  */
 export class EventBuilder {
-  /** Internal draft; only partial until `build()` time. */
-  protected event: Partial<CalendarEvent> = { id: crypto.randomUUID() };
+  protected event: CalendarEvent;
 
-  protected constructor(protected adapter: Adapter) {}
+  protected constructor(protected adapter: Adapter) {
+    const id = crypto.randomUUID();
+    const start = DEFAULT_TESTING_VISIBLE_DATE;
+    const end = this.adapter.addMinutes(start, 60);
+
+    this.event = {
+      id,
+      title: `Event ${id}`,
+      start,
+      end,
+      description: `Event ${id} description`,
+    };
+  }
 
   /**
    * Create a new builder with a given adapter (defaults to the shared test adapter).
@@ -185,26 +197,29 @@ export class EventBuilder {
     return this;
   }
 
+  // ─────────────────────────────────────────────
+  // Build methods
+  // ─────────────────────────────────────────────
   /**
-   * Build a CalendarEventOccurrence from the current draft.
+   * Returns the built CalendarEvent.
    */
-  build(): CalendarEventOccurrence {
-    const defaultStartDate = DEFAULT_TESTING_VISIBLE_DATE;
-    const defaultEndDate = this.adapter.addMinutes(defaultStartDate, 60);
+  build(): CalendarEvent {
+    return this.event;
+  }
+
+  /**
+   * Derives a CalendarEventOccurrence from the built event.
+   * @param occurrenceStartDate Start date of the recurrence occurrence.
+   * Defaults to the event start date.
+   */
+  buildOccurrence(occurrenceStartDate?: SchedulerValidDate): CalendarEventOccurrence {
+    const event = this.event;
+    const effectiveDate = occurrenceStartDate ?? event.start;
+    const key = `${event.id}::${this.adapter.format(effectiveDate, 'keyboardDate')}`;
 
     return {
-      id: this.event.id!,
-      key: `${this.event.id}::${this.adapter.format(this.event.start ?? defaultStartDate, 'keyboardDate')}`,
-      title: this.event.title ?? `Event ${this.event.id}`,
-      start: this.event.start ?? defaultStartDate,
-      end: this.event.end ?? defaultEndDate,
-      description: this.event.description ?? `Event ${this.event.id} description`,
-      resource: this.event.resource,
-      rrule: this.event.rrule,
-      exDates: this.event.exDates,
-      allDay: this.event.allDay,
-      readOnly: this.event.readOnly,
-      extractedFromId: this.event.extractedFromId,
+      ...event,
+      key,
     };
   }
 }

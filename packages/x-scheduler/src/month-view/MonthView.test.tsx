@@ -14,8 +14,8 @@ describe('<MonthView />', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-05-01') });
 
   const events = [
-    EventBuilder.new().startAt('2025-05-01T09:00:00').title('Meeting').build(),
-    EventBuilder.new().startAt('2025-05-15T14:00:00').title('Doctor Appointment').build(),
+    EventBuilder.new().startAt('2025-05-01T09:00:00').title('Meeting').buildOccurrence(),
+    EventBuilder.new().startAt('2025-05-15T14:00:00').title('Doctor Appointment').buildOccurrence(),
   ];
 
   const standaloneDefaults = {
@@ -87,11 +87,11 @@ describe('<MonthView />', () => {
 
   it('should show "+N more..." when there are more events than fit in a cell', () => {
     const manyEvents = [
-      EventBuilder.new().singleDay('2025-05-01T08:00:00').build(),
-      EventBuilder.new().singleDay('2025-05-01T14:09:00').build(),
-      EventBuilder.new().singleDay('2025-05-01T14:11:00').build(),
-      EventBuilder.new().singleDay('2025-05-01T13:09:00').build(),
-      EventBuilder.new().singleDay('2025-05-01T15:09:00').build(),
+      EventBuilder.new().singleDay('2025-05-01T08:00:00').buildOccurrence(),
+      EventBuilder.new().singleDay('2025-05-01T14:09:00').buildOccurrence(),
+      EventBuilder.new().singleDay('2025-05-01T14:11:00').buildOccurrence(),
+      EventBuilder.new().singleDay('2025-05-01T13:09:00').buildOccurrence(),
+      EventBuilder.new().singleDay('2025-05-01T15:09:00').buildOccurrence(),
     ];
 
     render(
@@ -107,23 +107,23 @@ describe('<MonthView />', () => {
       EventBuilder.new()
         .span('2025-05-05T00:00:00', '2025-05-07T23:59:59', { allDay: true })
         .title('Multi-day Conference')
-        .build(),
+        .buildOccurrence(),
       EventBuilder.new()
         .span('2025-04-28T00:00:00', '2025-05-06T23:59:59', { allDay: true }) // Previos week - Current week
         .title('Long Event')
-        .build(),
+        .buildOccurrence(),
       EventBuilder.new()
         .span('2025-05-12T00:00:00', '2025-05-14T23:59:59', { allDay: true })
         .title('Grid Row Test')
-        .build(),
+        .buildOccurrence(),
       EventBuilder.new()
         .span('2025-05-14T00:00:00', '2025-05-16T23:59:59', { allDay: true })
         .title('Three Day Event')
-        .build(),
+        .buildOccurrence(),
       EventBuilder.new()
         .span('2025-05-06T00:00:00', '2025-05-16T23:59:59', { allDay: true })
         .title('Multiple week event')
-        .build(),
+        .buildOccurrence(),
     ];
     it('should render all-day events correctly with main event in start date cell', () => {
       render(
@@ -198,15 +198,15 @@ describe('<MonthView />', () => {
         EventBuilder.new()
           .span('2025-05-12T00:00:00', '2025-05-14T23:59:59', { allDay: true })
           .title('Event 1')
-          .build(),
+          .buildOccurrence(),
         EventBuilder.new()
           .span('2025-05-13T00:00:00', '2025-05-15T23:59:59', { allDay: true })
           .title('Event 2')
-          .build(),
+          .buildOccurrence(),
         EventBuilder.new()
           .span('2025-05-16T00:00:00', '2025-05-17T23:59:59', { allDay: true })
           .title('Event 3')
-          .build(),
+          .buildOccurrence(),
       ];
 
       render(

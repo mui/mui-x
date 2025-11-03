@@ -16,12 +16,12 @@ describe('EventCalendar', () => {
   const event1 = EventBuilder.new()
     .title('Running')
     .span('2025-05-26T07:30:00', '2025-05-26T08:15:00')
-    .build();
+    .buildOccurrence();
 
   const event2 = EventBuilder.new()
     .title('Weekly')
     .span('2025-05-27T16:00:00', '2025-05-27T17:00:00')
-    .build();
+    .buildOccurrence();
 
   // TODO: Move in a test file specific to the TimeGrid component.
   it('should render events in the correct column', () => {
@@ -48,13 +48,13 @@ describe('EventCalendar', () => {
       .title('Running')
       .span('2025-05-26T07:30:00', '2025-05-26T08:15:00')
       .resource('1')
-      .build();
+      .buildOccurrence();
 
     const event2WithResource = EventBuilder.new()
       .title('Weekly')
       .span('2025-05-27T16:00:00', '2025-05-27T17:00:00')
       .resource('2')
-      .build();
+      .buildOccurrence();
 
     const { user } = render(
       <EventCalendar
