@@ -271,15 +271,13 @@ describe('<MonthView />', () => {
   });
 
   describe('time navigation', () => {
-    const visibleDate = DEFAULT_TESTING_VISIBLE_DATE;
-
     it('should go to start of previous month when clicking on the Previous Month button', async () => {
       const onVisibleDateChange = spy();
 
       const { user } = render(
         <EventCalendar
           events={[]}
-          visibleDate={visibleDate}
+          visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
           onVisibleDateChange={onVisibleDateChange}
           view="month"
         />,
@@ -287,7 +285,7 @@ describe('<MonthView />', () => {
 
       await user.click(screen.getByRole('button', { name: /previous month/i }));
       expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
-        adapter.addMonths(adapter.startOfMonth(visibleDate), -1),
+        adapter.addMonths(adapter.startOfMonth(DEFAULT_TESTING_VISIBLE_DATE), -1),
       );
     });
 
@@ -297,7 +295,7 @@ describe('<MonthView />', () => {
       const { user } = render(
         <EventCalendar
           events={[]}
-          visibleDate={visibleDate}
+          visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
           onVisibleDateChange={onVisibleDateChange}
           view="month"
         />,
@@ -305,7 +303,7 @@ describe('<MonthView />', () => {
 
       await user.click(screen.getByRole('button', { name: /next month/i }));
       expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
-        adapter.addMonths(adapter.startOfMonth(visibleDate), 1),
+        adapter.addMonths(adapter.startOfMonth(DEFAULT_TESTING_VISIBLE_DATE), 1),
       );
     });
   });

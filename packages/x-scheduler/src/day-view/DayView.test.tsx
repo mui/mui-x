@@ -11,15 +11,13 @@ describe('<DayView />', () => {
   const { render } = createSchedulerRenderer();
 
   describe('time navigation', () => {
-    const visibleDate = DEFAULT_TESTING_VISIBLE_DATE;
-
     it('should go to start of previous day when clicking on the Previous Day button', async () => {
       const onVisibleDateChange = spy();
 
       const { user } = render(
         <EventCalendar
           events={[]}
-          visibleDate={visibleDate}
+          visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
           onVisibleDateChange={onVisibleDateChange}
           view="day"
         />,
@@ -27,7 +25,7 @@ describe('<DayView />', () => {
 
       await user.click(screen.getByRole('button', { name: /previous day/i }));
       expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
-        adapter.addDays(visibleDate, -1),
+        adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, -1),
       );
     });
 
@@ -37,7 +35,7 @@ describe('<DayView />', () => {
       const { user } = render(
         <EventCalendar
           events={[]}
-          visibleDate={visibleDate}
+          visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
           onVisibleDateChange={onVisibleDateChange}
           view="day"
         />,
@@ -45,7 +43,7 @@ describe('<DayView />', () => {
 
       await user.click(screen.getByRole('button', { name: /next day/i }));
       expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
-        adapter.addDays(visibleDate, 1),
+        adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 1),
       );
     });
   });

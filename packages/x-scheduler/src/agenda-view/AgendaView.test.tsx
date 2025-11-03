@@ -9,7 +9,6 @@ import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 
 describe('<AgendaView />', () => {
   const { render } = createSchedulerRenderer();
-  const visibleDate = DEFAULT_TESTING_VISIBLE_DATE;
 
   describe('time navigation', () => {
     it('should go to previous agenda period (12 days) when clicking on the Previous Agenda button', async () => {
@@ -18,7 +17,7 @@ describe('<AgendaView />', () => {
       const { user } = render(
         <EventCalendar
           events={[]}
-          visibleDate={visibleDate}
+          visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
           onVisibleDateChange={onVisibleDateChange}
           view="agenda"
         />,
@@ -26,7 +25,7 @@ describe('<AgendaView />', () => {
 
       await user.click(screen.getByRole('button', { name: /previous agenda/i }));
       expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
-        adapter.addDays(visibleDate, -12),
+        adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, -12),
       );
     });
 
@@ -36,7 +35,7 @@ describe('<AgendaView />', () => {
       const { user } = render(
         <EventCalendar
           events={[]}
-          visibleDate={visibleDate}
+          visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
           onVisibleDateChange={onVisibleDateChange}
           view="agenda"
         />,
@@ -44,7 +43,7 @@ describe('<AgendaView />', () => {
 
       await user.click(screen.getByRole('button', { name: /next agenda/i }));
       expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
-        adapter.addDays(visibleDate, 12),
+        adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 12),
       );
     });
   });
