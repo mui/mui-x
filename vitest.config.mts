@@ -48,7 +48,7 @@ export default defineConfig({
   test: {
     projects: getProjects(),
     reporters: process.env.CI
-      ? ['default', ['junit', { outputFile: './test-results/junit.xml' }], 'blob']
+      ? ['default', ['junit', { outputFile: './test-results/junit.xml' }]]
       : ['default'],
     coverage: {
       provider: 'v8',
