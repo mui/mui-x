@@ -138,14 +138,15 @@ jobs:
             fi
   test_unit:
     <<: *default-job
-    parallelism: 2
     steps:
       - checkout
       - install_js:
           react-version: << parameters.react-version >>
       - run:
           name: Test JSDOM
-          command: pnpm test:unit:jsdom --shard=$((CIRCLE_NODE_INDEX+1))/${CIRCLE_NODE_TOTAL}
+          command: |
+            pnpm test:unit:jsdom --reporter=blob --shard=1/2 & pnpm test:unit:jsdom --reporter=blob --shard=2/2
+            pnpm exec vitest run --merge-reports
       - store_test_results:
           path: test-results
   test_browser:
