@@ -1,3 +1,4 @@
+/// <reference types="next" />
 import * as React from 'react';
 import clsx from 'clsx';
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';

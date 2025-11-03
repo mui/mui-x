@@ -11,7 +11,6 @@
     "icons": "rimraf public/static/icons/* && node ./scripts/buildIcons.js",
     "serve": "serve ./export -l 3010",
     "create-playground": "node ./scripts/createPlayground.js",
-    "pretypescript": "next typegen",
     "typescript": "tsc -p tsconfig.json",
     "typescript:transpile": "cross-env BABEL_ENV=development node scripts/formattedTSDemos",
     "typescript:transpile:dev": "cross-env BABEL_ENV=development node scripts/formattedTSDemos --watch",
