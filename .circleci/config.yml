@@ -145,7 +145,7 @@ jobs:
           react-version: << parameters.react-version >>
       - run:
           name: Test JSDOM
-          command: pnpm test:unit:jsdom --shard=${SHARD}/${CIRCLE_NODE_TOTAL}
+          command: pnpm test:unit:jsdom --shard=${(${CIRCLE_NODE_INDEX}+1)}/${CIRCLE_NODE_TOTAL}
       - store_test_results:
           path: test-results
   test_browser:
