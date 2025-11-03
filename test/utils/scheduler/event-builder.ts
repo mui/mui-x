@@ -199,12 +199,12 @@ export class EventBuilder {
       start: this.event.start ?? defaultStartDate,
       end: this.event.end ?? defaultEndDate,
       description: this.event.description ?? `Event ${this.event.id} description`,
-      resource: this.event.resource ?? undefined,
-      rrule: this.event.rrule ?? undefined,
-      exDates: this.event.exDates ?? undefined,
-      allDay: this.event.allDay ?? false,
-      readOnly: this.event.readOnly ?? false,
-      extractedFromId: this.event.extractedFromId ?? undefined,
+      resource: this.event.resource,
+      rrule: this.event.rrule,
+      exDates: this.event.exDates,
+      allDay: this.event.allDay,
+      readOnly: this.event.readOnly,
+      extractedFromId: this.event.extractedFromId,
     };
   }
 }
