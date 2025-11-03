@@ -55,8 +55,8 @@ catalogs:
       specifier: ^7.3.3
       version: 7.3.3
     '@mui/x-internal-exceljs-fork':
-      specifier: ^4.4.1
-      version: 4.4.1
+      specifier: ^4.4.2
+      version: 4.4.2
     '@playwright/test':
       specifier: ^1.55.1
       version: 1.55.1
@@ -1259,7 +1259,7 @@ importers:
         version: link:../x-data-grid-pro/build
       '@mui/x-internal-exceljs-fork':
         specifier: 'catalog:'
-        version: 4.4.1
+        version: 4.4.2
       '@mui/x-internals':
         specifier: workspace:*
         version: link:../x-internals/build
@@ -4310,8 +4310,8 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/x-internal-exceljs-fork@4.4.1':
-    resolution: {integrity: sha512-tTOoBaDDN9xfBcXp/v5sN0cH7rUBokKuqaGOWkOtSLkza9XDcHFebW7G3JVwdNfjjZgdOyfZUyHtg90MaN4QSA==}
+  '@mui/x-internal-exceljs-fork@4.4.2':
+    resolution: {integrity: sha512-3EkQsOzEjac1NCbbLUp7oFMGPkoJCEMt9hTeiRJGuMKRaQ5q7oXpPGIVpUiXvXmXa0yQU+zACw8me6tf/4QYaA==}
     engines: {node: '>=8.3.0'}
 
   '@napi-rs/keyring-darwin-arm64@1.2.0':
@@ -6426,9 +6426,6 @@ packages:
 
   bluebird@3.4.7:
     resolution: {integrity: sha512-iD3898SR7sWVRHbiQv+sHUtHnMvC1o3nW5rAcqnq3uOn07DSAppZYUkIGslDz6gXC7HfunPe7YVBgoEJASPcHA==}
-
-  bluebird@3.7.2:
-    resolution: {integrity: sha512-XpNj6GDQzdfW+r2Wnn7xiSAd7TM3jzkxGXBGTtWKuSXv1xUV+azxAm8jdWZN06QTQk+2N2XB9jRDkvbmQmcRtg==}
 
   body-parser@1.20.3:
     resolution: {integrity: sha512-7rAxByjUMqQ3/bHJy7D6OGXvx/MMc4IqBn/X0fcM1QUcAItpZrBEYhWGem+tzXH90c+G01ypMcYJBO9Y30203g==}
@@ -11457,8 +11454,8 @@ packages:
   unzipper@0.10.14:
     resolution: {integrity: sha512-ti4wZj+0bQTiX2KmKWuwj7lhV+2n//uXEotUmGuQqrbVZSEGFMbI68+c6JCQ8aAmUWYvtHEz2A8K6wXvueR/6g==}
 
-  unzipper@0.12.3:
-    resolution: {integrity: sha512-PZ8hTS+AqcGxsaQntl3IRBw65QrBI6lxzqDEL7IAo/XCEqRTKGfOX56Vea5TH9SZczRVxuzk1re04z/YjuYCJA==}
+  unzipper@0.12.1:
+    resolution: {integrity: sha512-wjYe5XddA387WIAZbEMWOT0U8kw9yf1MdfLHccJer1y7a80t3DqVv0SHOAWV5NDBD2TUPj/pFYmK9tCeY6l9UQ==}
 
   upath@2.0.1:
     resolution: {integrity: sha512-1uEe95xksV1O0CYKXo8vQvN1JEbtJp7lb7C5U9HMsIp6IVwntkH/oNUzyVNQSd4S1sYk2FpSSW44FqMc8qee5w==}
@@ -14765,7 +14762,7 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.2.2
 
-  '@mui/x-internal-exceljs-fork@4.4.1':
+  '@mui/x-internal-exceljs-fork@4.4.2':
     dependencies:
       archiver: 7.0.1
       dayjs: 1.11.18
@@ -14774,7 +14771,7 @@ snapshots:
       readable-stream: 3.6.2
       saxes: 5.0.1
       tmp: 0.2.5
-      unzipper: 0.12.3
+      unzipper: 0.12.1
       uuid: 8.3.2
 
   '@napi-rs/keyring-darwin-arm64@1.2.0':
@@ -17190,8 +17187,6 @@ snapshots:
       readable-stream: 3.6.2
 
   bluebird@3.4.7: {}
-
-  bluebird@3.7.2: {}
 
   body-parser@1.20.3:
     dependencies:
@@ -23167,9 +23162,9 @@ snapshots:
       readable-stream: 2.3.8
       setimmediate: 1.0.5
 
-  unzipper@0.12.3:
+  unzipper@0.12.1:
     dependencies:
-      bluebird: 3.7.2
+      bluebird: 3.4.7
       duplexer2: 0.1.4
       fs-extra: 11.3.2
       graceful-fs: 4.2.11
