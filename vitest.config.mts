@@ -48,11 +48,11 @@ export default defineConfig({
   test: {
     projects: getProjects(),
     reporters: process.env.CI
-      ? ['default', ['junit', { outputFile: './test-results/junit.xml' }]]
+      ? ['default', ['junit', { outputFile: './test-results/junit.xml' }], 'blob']
       : ['default'],
     coverage: {
       provider: 'v8',
-      reporter: process.env.CI ? ['lcovonly', 'blob'] : ['text'],
+      reporter: process.env.CI ? ['lcovonly'] : ['text'],
       reportsDirectory: resolve(WORKSPACE_ROOT, 'coverage'),
       include: ['packages/*/src/**/*.{ts,tsx}'],
       exclude: ['**/*.{test,spec}.{js,ts,tsx}'],
