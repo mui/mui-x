@@ -412,7 +412,6 @@ export default defineConfig(
       ],
     },
   })),
-  // FIXME: Remove these exceptions once the migration is complete
   ...[
     'x-charts',
     'x-charts-pro',
@@ -444,7 +443,6 @@ export default defineConfig(
       'react-hooks/static-components': 'off',
     },
   })),
-  // FIXME: Remove these exceptions once the migration is complete
   ...['x-charts-pro', 'x-charts-premium', 'x-data-grid'].map((pkgName) => ({
     files: [`packages/${pkgName}/src/**/*${EXTENSION_TS}`],
     ignores: ['**/*.d.ts'],
