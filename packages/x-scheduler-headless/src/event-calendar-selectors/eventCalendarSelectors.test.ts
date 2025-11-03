@@ -53,7 +53,7 @@ describe('EventCalendarStore.selectors', () => {
     it('should return false when the placeholder type is not "creation"', () => {
       const state = baseState({
         occurrencePlaceholder: {
-          type: 'internal-drag-or-resize',
+          type: 'internal-drag',
           eventId: 'event-id',
           occurrenceKey: 'event-id-key',
           surfaceType: 'day-grid',
@@ -133,10 +133,10 @@ describe('EventCalendarStore.selectors', () => {
       ).to.equal(false);
     });
 
-    it('should return false when eventId is not null (editing mode)', () => {
+    it('should return false when the type is not "creating"', () => {
       const state = baseState({
         occurrencePlaceholder: {
-          type: 'internal-drag-or-resize',
+          type: 'internal-drag',
           eventId: 'event-id',
           occurrenceKey: 'event-id-key',
           surfaceType: 'time-grid',
