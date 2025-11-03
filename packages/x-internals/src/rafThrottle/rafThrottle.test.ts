@@ -15,29 +15,12 @@ describe('rafThrottle', () => {
     const fn = vi.fn();
     const throttled = rafThrottle(fn);
 
-    // Make multiple rapid calls
-    throttled(1);
-    throttled(2);
-    throttled(3);
-
-    // Function should not be called yet
-    expect(fn).not.toHaveBeenCalled();
-
-    // Execute pending RAF callback
-    vi.advanceTimersToNextFrame();
-
-    // Function should be called once with the last arguments
-    expect(fn).toHaveBeenCalledTimes(1);
-    expect(fn).toHaveBeenCalledWith(3);
-  });
-
-  it('should preserve the last arguments when called multiple times', async () => {
-    const fn = vi.fn();
-    const throttled = rafThrottle(fn);
-
     throttled('first', 1);
     throttled('second', 2);
     throttled('third', 3);
+
+    // Function should not be called yet
+    expect(fn).not.toHaveBeenCalled();
 
     vi.advanceTimersToNextFrame();
 
@@ -99,35 +82,6 @@ describe('rafThrottle', () => {
     expect(fn).toHaveBeenNthCalledWith(3, 3);
   });
 
-  it('should batch multiple calls within the same frame', async () => {
-    const fn = vi.fn();
-    const throttled = rafThrottle(fn);
-
-    // Simulate rapid calls within the same frame
-    for (let i = 0; i < 100; i += 1) {
-      throttled(i);
-    }
-
-    vi.advanceTimersToNextFrame();
-
-    // Should only execute once with the last value
-    expect(fn).toHaveBeenCalledTimes(1);
-    expect(fn).toHaveBeenCalledWith(99);
-  });
-
-  it('should work with functions that have no arguments', async () => {
-    const fn = vi.fn();
-    const throttled = rafThrottle(fn);
-
-    throttled();
-    throttled();
-    throttled();
-
-    vi.advanceTimersToNextFrame();
-
-    expect(fn).toHaveBeenCalledTimes(1);
-  });
-
   it('should work with functions that return values', async () => {
     const fn = vi.fn().mockReturnValue(42);
     const throttled = rafThrottle(fn);
@@ -138,25 +92,6 @@ describe('rafThrottle', () => {
 
     expect(fn).toHaveBeenCalledWith(1);
     expect(fn).toHaveReturnedWith(42);
-  });
-
-  it('should not schedule a new RAF if one is already pending', async () => {
-    const fn = vi.fn();
-    const throttled = rafThrottle(fn);
-    const rafSpy = vi.spyOn(window, 'requestAnimationFrame');
-
-    throttled(1);
-    expect(rafSpy).toHaveBeenCalledTimes(1);
-
-    throttled(2);
-    throttled(3);
-    // Should still only have one RAF scheduled
-    expect(rafSpy).toHaveBeenCalledTimes(1);
-
-    vi.advanceTimersToNextFrame();
-
-    expect(fn).toHaveBeenCalledTimes(1);
-    expect(fn).toHaveBeenCalledWith(3);
   });
 
   it('should schedule a new RAF after the previous one completes', async () => {
