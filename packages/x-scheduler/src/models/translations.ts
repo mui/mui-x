@@ -48,6 +48,7 @@ export interface SchedulerTranslations {
   // EventPopover
   allDayLabel: string;
   closeButtonAriaLabel: string;
+  closeButtonLabel: string;
   deleteEvent: string;
   descriptionLabel: string;
   editDisabledNotice: string;
@@ -57,6 +58,7 @@ export interface SchedulerTranslations {
   labelNoResource: string;
   recurrenceLabel: string;
   recurrenceNoRepeat: string;
+  recurrenceCustomRepeat: string;
   recurrenceDailyPresetLabel: string;
   recurrenceWeeklyPresetLabel: (weekday: string) => string;
   recurrenceMonthlyPresetLabel: (dayNumber: number) => string;
@@ -66,4 +68,13 @@ export interface SchedulerTranslations {
   startDateAfterEndDateError: string;
   startDateLabel: string;
   startTimeLabel: string;
+
+  // ScopeDialog
+  all: string;
+  cancel: string;
+  confirm: string;
+  onlyThis: string;
+  radioGroupAriaLabel: string;
+  thisAndFollowing: string;
+  title: string;
 }

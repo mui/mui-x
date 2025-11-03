@@ -48,6 +48,7 @@ export const enUS: SchedulerTranslations = {
   // EventPopover
   allDayLabel: 'All Day',
   closeButtonAriaLabel: 'Close modal',
+  closeButtonLabel: 'Close',
   deleteEvent: 'Delete event',
   descriptionLabel: 'Description',
   editDisabledNotice: 'Editing is currently unavailable for recurrent events',
@@ -57,6 +58,7 @@ export const enUS: SchedulerTranslations = {
   labelNoResource: 'No resource',
   recurrenceLabel: 'Recurrence',
   recurrenceNoRepeat: "Don't repeat",
+  recurrenceCustomRepeat: 'Custom repeat rule',
   recurrenceDailyPresetLabel: 'Repeats daily',
   recurrenceWeeklyPresetLabel: (weekday) => `Repeats weekly on ${weekday}`,
   recurrenceMonthlyPresetLabel: (dayNumber) => `Repeats monthly on day ${dayNumber}`,
@@ -66,4 +68,13 @@ export const enUS: SchedulerTranslations = {
   startDateAfterEndDateError: 'Start date/time must be before end date/time.',
   startDateLabel: 'Start date',
   startTimeLabel: 'Start time',
+
+  // ScopeDialog
+  all: 'All events in the series',
+  cancel: 'Cancel',
+  confirm: 'Confirm',
+  onlyThis: 'Only this event',
+  radioGroupAriaLabel: 'Editing recurring events scope',
+  thisAndFollowing: 'This and following events',
+  title: 'Apply this change to:',
 };

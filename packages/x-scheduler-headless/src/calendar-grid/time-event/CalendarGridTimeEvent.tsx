@@ -13,8 +13,8 @@ import { getCalendarGridHeaderCellId } from '../../utils/accessibility-utils';
 import { CalendarGridTimeEventContext } from './CalendarGridTimeEventContext';
 import { useAdapter } from '../../use-adapter/useAdapter';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
-import { selectors } from '../../use-event-calendar';
-import { CalendarEvent, CalendarEventId, SchedulerValidDate } from '../../models';
+import { schedulerEventSelectors } from '../../scheduler-selectors';
+import { CalendarEventId, CalendarEventOccurrence, SchedulerValidDate } from '../../models';
 import { useCalendarGridRootContext } from '../root/CalendarGridRootContext';
 
 export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeEvent(
@@ -66,11 +66,22 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
         adapter.toJsDate(columnStart).getTime() - adapter.toJsDate(start).getTime(),
         0,
       );
+
+      const event = schedulerEventSelectors.processedEvent(store.state, eventId)!;
+
+      const originalOccurrence: CalendarEventOccurrence = {
+        ...event,
+        key: occurrenceKey,
+        id: eventId,
+        start,
+        end,
+      };
+
       const offsetInsideColumn = getCursorPositionInElementMs({ input, elementRef: ref });
       return {
         eventId,
         occurrenceKey,
-        event: selectors.event(store.state, eventId)!,
+        originalOccurrence,
         start,
         end,
         initialCursorPositionInEventMs: offsetBeforeColumnStart + offsetInsideColumn,
@@ -124,10 +135,7 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
 
   const columnHeaderId = getCalendarGridHeaderCellId(rootId, columnIndex);
 
-  const props = React.useMemo(
-    () => ({ id, style, 'aria-labelledby': `${columnHeaderId} ${id}` }),
-    [style, columnHeaderId, id],
-  );
+  const props = { id, style, 'aria-labelledby': `${columnHeaderId} ${id}` };
 
   const contextValue: CalendarGridTimeEventContext = React.useMemo(
     () => ({ ...draggableEventContextValue, getSharedDragData }),
@@ -159,7 +167,7 @@ export namespace CalendarGridTimeEvent {
   export interface SharedDragData {
     eventId: CalendarEventId;
     occurrenceKey: string;
-    event: CalendarEvent;
+    originalOccurrence: CalendarEventOccurrence;
     start: SchedulerValidDate;
     end: SchedulerValidDate;
     initialCursorPositionInEventMs: number;

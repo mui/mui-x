@@ -7,17 +7,22 @@ import {
   EventCalendarPreferencesMenuConfig,
 } from '../models';
 import { Adapter } from '../use-adapter/useAdapter.types';
-import { SchedulerParametersToStateMapper, SchedulerStore } from '../utils/SchedulerStore';
+import {
+  DEFAULT_SCHEDULER_PREFERENCES,
+  SchedulerParametersToStateMapper,
+  SchedulerStore,
+} from '../utils/SchedulerStore';
 import { EventCalendarState, EventCalendarParameters } from './EventCalendarStore.types';
 
 export const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
 export const DEFAULT_VIEW: CalendarView = 'week';
-export const DEFAULT_PREFERENCES: EventCalendarPreferences = {
+
+export const DEFAULT_EVENT_CALENDAR_PREFERENCES: EventCalendarPreferences = {
+  ...DEFAULT_SCHEDULER_PREFERENCES,
   showWeekends: true,
   showWeekNumber: false,
   showEmptyDaysInAgenda: true,
   isSidePanelOpen: true,
-  ampm: true,
 };
 export const DEFAULT_PREFERENCES_MENU_CONFIG: EventCalendarPreferencesMenuConfig = {
   toggleWeekendVisibility: true,
@@ -26,15 +31,20 @@ export const DEFAULT_PREFERENCES_MENU_CONFIG: EventCalendarPreferencesMenuConfig
   toggleAmpm: true,
 };
 
-const deriveStateFromParameters = (parameters: EventCalendarParameters) => ({
+const deriveStateFromParameters = <TEvent extends object, TResource extends object>(
+  parameters: EventCalendarParameters<TEvent, TResource>,
+) => ({
   views: parameters.views ?? DEFAULT_VIEWS,
 });
 
-const mapper: SchedulerParametersToStateMapper<EventCalendarState, EventCalendarParameters> = {
+const mapper: SchedulerParametersToStateMapper<
+  EventCalendarState,
+  EventCalendarParameters<any, any>
+> = {
   getInitialState: (schedulerInitialState, parameters) => ({
     ...schedulerInitialState,
     ...deriveStateFromParameters(parameters),
-    preferences: { ...DEFAULT_PREFERENCES, ...parameters.preferences },
+    preferences: { ...DEFAULT_EVENT_CALENDAR_PREFERENCES, ...parameters.preferences },
     preferencesMenuConfig:
       parameters.preferencesMenuConfig === false
         ? parameters.preferencesMenuConfig
@@ -56,11 +66,16 @@ const mapper: SchedulerParametersToStateMapper<EventCalendarState, EventCalendar
   },
 };
 
-export class EventCalendarStore extends SchedulerStore<
+export class EventCalendarStore<
+  TEvent extends object,
+  TResource extends object,
+> extends SchedulerStore<
+  TEvent,
+  TResource,
   EventCalendarState,
-  EventCalendarParameters
+  EventCalendarParameters<TEvent, TResource>
 > {
-  public constructor(parameters: EventCalendarParameters, adapter: Adapter) {
+  public constructor(parameters: EventCalendarParameters<TEvent, TResource>, adapter: Adapter) {
     super(parameters, adapter, 'Event Calendar', mapper);
 
     if (process.env.NODE_ENV !== 'production') {

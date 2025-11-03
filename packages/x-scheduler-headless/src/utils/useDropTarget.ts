@@ -9,15 +9,16 @@ import {
   EventSurfaceType,
   CalendarEventUpdatedProperties,
   SchedulerValidDate,
-  RecurringEventUpdateScope,
 } from '../models';
 import {
   EventDropData,
   EventDropDataLookup,
 } from '../build-is-valid-drop-target/buildIsValidDropTarget';
 import { SchedulerStoreInContext, useSchedulerStoreContext } from '../use-scheduler-store-context';
-import { selectors } from './SchedulerStore';
-import { SCHEDULER_RECURRING_EDITING_SCOPE } from '../constants';
+import {
+  schedulerEventSelectors,
+  schedulerOccurrencePlaceholderSelectors,
+} from '../scheduler-selectors';
 
 export function useDropTarget<Targets extends keyof EventDropDataLookup>(
   parameters: useDropTarget.Parameters<Targets>,
@@ -50,7 +51,7 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
         end: newEnd,
         eventId: data.eventId,
         occurrenceKey: data.occurrenceKey,
-        originalEvent: data.event,
+        originalOccurrence: data.originalOccurrence,
       };
     };
 
@@ -64,7 +65,7 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
 
         if (
           source.data.source === 'StandaloneEvent' &&
-          !selectors.canDragEventsFromTheOutside(store.state)
+          !schedulerEventSelectors.canDragEventsFromTheOutside(store.state)
         ) {
           return false;
         }
@@ -88,7 +89,7 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
           input: location.current.input,
         });
 
-        const placeholder = dropData ?? selectors.occurrencePlaceholder(store.state);
+        const placeholder = dropData ?? schedulerOccurrencePlaceholderSelectors.value(store.state);
 
         if (placeholder?.type === 'internal-drag-or-resize') {
           applyInternalDragOrResizeOccurrencePlaceholder(
@@ -101,7 +102,7 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
         }
       },
       onDragLeave: () => {
-        const currentPlaceholder = selectors.occurrencePlaceholder(store.state);
+        const currentPlaceholder = schedulerOccurrencePlaceholderSelectors.value(store.state);
         if (currentPlaceholder?.surfaceType !== surfaceType) {
           return;
         }
@@ -109,7 +110,8 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
         const type = currentPlaceholder.type;
         const shouldHidePlaceholder =
           type === 'external-drag' ||
-          (type === 'internal-drag-or-resize' && selectors.canDropEventsToTheOutside(store.state));
+          (type === 'internal-drag-or-resize' &&
+            schedulerEventSelectors.canDropEventsToTheOutside(store.state));
 
         if (shouldHidePlaceholder) {
           store.setOccurrencePlaceholder({ ...currentPlaceholder, isHidden: true });
@@ -148,17 +150,16 @@ export namespace useDropTarget {
  * Applies the data from the placeholder occurrence to the event it represents.
  */
 async function applyInternalDragOrResizeOccurrencePlaceholder(
-  store: SchedulerStoreInContext,
+  store: SchedulerStoreInContext<any, any>,
   placeholder: CalendarOccurrencePlaceholderInternalDragOrResize,
   addPropertiesToDroppedEvent?: () => Partial<CalendarEvent>,
-  chooseRecurringEventScope?: () => Promise<RecurringEventUpdateScope>,
-) {
+): Promise<void> {
   // TODO: Try to do a single state update.
   store.setOccurrencePlaceholder(null);
 
-  const { eventId, start, end, originalEvent } = placeholder;
+  const { eventId, start, end, originalOccurrence } = placeholder;
 
-  const original = selectors.event(store.state, eventId);
+  const original = schedulerEventSelectors.processedEvent(store.state, eventId);
   if (!original) {
     throw new Error(`Scheduler: the original event was not found (id="${eventId}").`);
   }
@@ -169,27 +170,18 @@ async function applyInternalDragOrResizeOccurrencePlaceholder(
   }
 
   if (original.rrule) {
-    let scope: RecurringEventUpdateScope;
-    if (chooseRecurringEventScope) {
-      // TODO: Issue #19440 + #19441 - Allow to edit all events or only this event.
-      scope = await chooseRecurringEventScope();
-    } else {
-      // TODO: Issue #19766 - Let the user choose the scope via UI.
-      scope = SCHEDULER_RECURRING_EDITING_SCOPE;
-    }
-
-    return store.updateRecurringEvent({
-      occurrenceStart: originalEvent.start,
+    store.updateRecurringEvent({
+      occurrenceStart: originalOccurrence.start,
       changes,
-      scope,
     });
+    return;
   }
 
-  return store.updateEvent(changes);
+  store.updateEvent(changes);
 }
 
 function applyExternalDragOccurrencePlaceholder(
-  store: SchedulerStoreInContext,
+  store: SchedulerStoreInContext<any, any>,
   placeholder: CalendarOccurrencePlaceholderExternalDrag,
   addPropertiesToDroppedEvent?: () => Partial<CalendarEvent>,
 ) {
