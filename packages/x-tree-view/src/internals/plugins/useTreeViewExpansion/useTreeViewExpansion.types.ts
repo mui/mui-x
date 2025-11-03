@@ -60,13 +60,13 @@ export interface UseTreeViewExpansionParameters {
    * Expanded item ids.
    * Used when the item's expansion is controlled.
    */
-  expandedItems?: string[];
+  expandedItems?: readonly string[];
   /**
    * Expanded item ids.
    * Used when the item's expansion is not controlled.
    * @default []
    */
-  defaultExpandedItems?: string[];
+  defaultExpandedItems?: readonly string[];
   /**
    * Callback fired when Tree Items are expanded/collapsed.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemExpansion()` method.
