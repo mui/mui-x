@@ -1,16 +1,18 @@
-import { SchedulerValidDate } from '@mui/x-scheduler-headless/models';
+import { CalendarResourceId, SchedulerValidDate } from '@mui/x-scheduler-headless/models';
 import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
 import { SchedulerTranslations } from '../../../models';
 
-interface WhenType {
+export interface ControlledValue {
   startDate: string;
-  endDate: string;
   startTime: string;
+  endDate: string;
   endTime: string;
+  resourceId: CalendarResourceId | null;
+  allDay: boolean;
 }
 
-export function computeRange(adapter: Adapter, next: WhenType, nextIsAllDay: boolean) {
-  if (nextIsAllDay) {
+export function computeRange(adapter: Adapter, next: ControlledValue) {
+  if (next.allDay) {
     const newStart = adapter.startOfDay(adapter.date(next.startDate));
     const newEnd = adapter.endOfDay(adapter.date(next.endDate));
     return { start: newStart, end: newEnd, surfaceType: 'day-grid' as const };
