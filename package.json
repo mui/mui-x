@@ -114,7 +114,7 @@
     "eslint": "^9.38.0",
     "eslint-import-resolver-webpack": "^0.13.10",
     "eslint-plugin-consistent-default-export-name": "^0.0.15",
-    "eslint-plugin-jsdoc": "^61.1.7",
+    "eslint-plugin-jsdoc": "^61.1.11",
     "eslint-plugin-mui-x": "workspace:^",
     "execa": "^9.6.0",
     "glob-gitignore": "^1.0.15",
