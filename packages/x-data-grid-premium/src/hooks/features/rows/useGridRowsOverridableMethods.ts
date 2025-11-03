@@ -12,6 +12,8 @@ import {
   useGridRowsOverridableMethodsPro,
   useGridSelector,
   type ReorderExecutionContext,
+  gridRowDropTargetRowIdSelector,
+  gridRowDropPositionSelector,
 } from '@mui/x-data-grid-pro/internals';
 import type { RefObject } from '@mui/x-internals/types';
 import { rowGroupingReorderExecutor } from '../rowReorder/rowGroupingReorderExecutor';
@@ -43,6 +45,12 @@ export const useGridRowsOverridableMethods = (
         throw new Error(`MUI X: No row with id #${sourceRowId} found.`);
       }
 
+      const targetRowId = gridRowDropTargetRowIdSelector(apiRef);
+      if (!targetRowId) {
+        throw new Error(`MUI X: No target row id found.`);
+      }
+      const dropPosition = gridRowDropPositionSelector(apiRef, targetRowId)!;
+
       if (sourceNode.type === 'footer') {
         throw new Error(`MUI X: The row reordering do not support reordering of footer rows.`);
       }
@@ -64,8 +72,7 @@ export const useGridRowsOverridableMethods = (
 
       const executionContext: ReorderExecutionContext = {
         sourceRowId,
-        // TODO: Use the correct drop position here
-        dropPosition: 'below',
+        dropPosition,
         placeholderIndex: targetOriginalIndex,
         sortedFilteredRowIds,
         sortedFilteredRowIndexLookup,
