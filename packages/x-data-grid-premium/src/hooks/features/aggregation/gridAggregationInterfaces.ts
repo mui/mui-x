@@ -85,21 +85,7 @@ export interface GridAggregationFunction<V = any, AV = V> {
    * @returns {V} The value of the cell that will be passed to the aggregation `apply` function
    */
   getCellValue?: (params: GridAggregationGetCellValueParams) => V;
-  /**
-   * Indicates if the aggregation function depends on rows being in a sorted order.
-   * If `true`, the values provided to `apply` will be sorted.
-   * @default false
-   */
-  applySorting?: boolean;
 }
-
-/**
- * Grid aggregation function data source definition interface.
- * @demos
- *   - [Server-side aggregation](/x/react-data-grid/server-side-data/aggregation/)
- */
-export interface GridAggregationFunctionDataSource
-  extends Omit<GridAggregationFunction, 'apply' | 'getCellValue'> {}
 
 export interface GridAggregationParams<V = any> {
   values: (V | undefined)[];
