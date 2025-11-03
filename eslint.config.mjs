@@ -412,6 +412,60 @@ export default defineConfig(
       ],
     },
   })),
+  // FIXME: Remove these exceptions once the migration is complete
+  ...[
+    'x-charts',
+    'x-charts-pro',
+    'x-charts-premium',
+    'x-codemod',
+    'x-data-grid',
+    'x-data-grid-pro',
+    'x-data-grid-premium',
+    'x-data-grid-generator',
+    'x-date-pickers',
+    'x-date-pickers-pro',
+    'x-internals',
+    'x-scheduler',
+    'x-scheduler-headless',
+    'x-tree-view',
+    'x-tree-view-pro',
+    'x-virtualizer',
+    'x-license',
+    'x-telemetry',
+  ].map((pkgName) => ({
+    files: [`packages/${pkgName}/src/**/*${EXTENSION_TS}`],
+    ignores: ['**/*.d.ts'],
+    rules: {
+      'react-hooks/immutability': 'off',
+      'react-hooks/globals': 'off',
+      'react-hooks/refs': 'off',
+      'react-hooks/preserve-manual-memoization': 'off',
+      'react-hooks/purity': 'off',
+      'react-hooks/static-components': 'off',
+    },
+  })),
+  // FIXME: Remove these exceptions once the migration is complete
+  ...['x-charts-pro', 'x-charts-premium', 'x-data-grid'].map((pkgName) => ({
+    files: [`packages/${pkgName}/src/**/*${EXTENSION_TS}`],
+    ignores: ['**/*.d.ts'],
+    rules: {
+      'import/export': 'off',
+    },
+  })),
+  {
+    files: [
+      `test/utils/**/*${EXTENSION_TS}`,
+      `docs/src/**/*${EXTENSION_TS}`,
+      `docs/data/**/*${EXTENSION_TS}`,
+    ],
+    ignores: ['**/*.d.ts', '**/*.spec{.ts,.tsx}', '**/*.test{.ts,.tsx}'],
+    rules: {
+      'react-hooks/immutability': 'off',
+      'react-hooks/globals': 'off',
+      'react-hooks/refs': 'off',
+      'react-hooks/static-components': 'off',
+    },
+  },
   ...[
     packageFilesWithReactCompiler.length > 0
       ? {
