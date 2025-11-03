@@ -17,7 +17,6 @@ describe.runIf(isJSDOM)('Telemetry: getTelemetryConfig', () => {
   });
 
   it('should be disabled by default', () => {
-    throw new Error('KABOOM');
     expect(getTelemetryEnvConfig(true).IS_COLLECTING).not.equal(true);
   });
 
