@@ -11,11 +11,7 @@ export function useEventResizeHandler(
     ref,
     side,
     getDragData,
-    contextValue: {
-      setIsResizing,
-      doesEventStartBeforeCollectionStart,
-      doesEventEndAfterCollectionEnd,
-    },
+    contextValue: { doesEventStartBeforeCollectionStart, doesEventEndAfterCollectionEnd },
   } = parameters;
 
   const enabled =
@@ -38,10 +34,8 @@ export function useEventResizeHandler(
       onGenerateDragPreview: ({ nativeSetDragImage }) => {
         disableNativeDragPreview({ nativeSetDragImage });
       },
-      onDragStart: () => setIsResizing(true),
-      onDrop: () => setIsResizing(false),
     });
-  }, [ref, enabled, side, getDragData, setIsResizing]);
+  }, [ref, enabled, side, getDragData]);
 
   return { state, enabled };
 }
