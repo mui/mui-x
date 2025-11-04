@@ -215,7 +215,7 @@ export const useFieldState = <
       return errorProp;
     }
 
-    return hasValidationError || hasPartiallyFilledSectionsOnBlur
+    return hasValidationError || hasPartiallyFilledSectionsOnBlur;
   }, [hasValidationError, hasPartiallyFilledSectionsOnBlur, errorProp]);
 
   const publishValue = (newValue: TValue) => {
