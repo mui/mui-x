@@ -15,13 +15,10 @@ const initialRows = [
   { id: 3, name: randomUserName() },
 ];
 
-function DeleteUserActionItem({ rowId, onConfirm, label, icon, ...props }) {
+function DeleteUserActionItem({ rowId, onConfirm, ...props }) {
   return (
     <GridActionsCellItem
       {...props}
-      showInMenu={true}
-      label={label}
-      icon={icon}
       onClick={() => onConfirm(rowId)}
       closeMenuOnClick={false}
     />

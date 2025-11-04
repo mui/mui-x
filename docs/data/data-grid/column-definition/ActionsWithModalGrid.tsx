@@ -26,8 +26,6 @@ type Row = (typeof initialRows)[number];
 function DeleteUserActionItem({
   rowId,
   onConfirm,
-  label,
-  icon,
   ...props
 }: GridActionsCellItemProps & {
   rowId: GridRowId;
@@ -36,9 +34,6 @@ function DeleteUserActionItem({
   return (
     <GridActionsCellItem
       {...(props as any)}
-      showInMenu={true}
-      label={label}
-      icon={icon}
       onClick={() => onConfirm(rowId)}
       closeMenuOnClick={false}
     />
