@@ -5,7 +5,7 @@ import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';
-import { TreeViewBaseItem } from '@mui/x-tree-view/models';
+import { TreeViewDefaultItemModelProperties } from '@mui/x-tree-view/models';
 import { TreeViewAnyStore, TreeViewPublicAPI } from '@mui/x-tree-view/internals/models';
 import { MuiRenderResult } from '@mui/internal-test-utils/createRenderer';
 import {
@@ -39,7 +39,7 @@ const innerDescribeTreeView = <TStore extends TreeViewAnyStore>(
         );
       }
 
-      const cleanItem = (item: TreeViewBaseItem): { id: any; children?: any } => {
+      const cleanItem = (item: TreeViewDefaultItemModelProperties): { id: any; children?: any } => {
         if (item.children) {
           return { id: item.id, children: item.children.map(cleanItem) };
         }

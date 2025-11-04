@@ -7,6 +7,9 @@ export type TreeViewDefaultItemModelProperties = {
   children?: TreeViewDefaultItemModelProperties[];
 };
 
+/**
+ * @deprecated Use `TreeViewDefaultItemModelProperties` instead, or define your own item model interface.
+ */
 export type TreeViewBaseItem<R extends {} = TreeViewDefaultItemModelProperties> = R & {
   children?: TreeViewBaseItem<R>[];
 };
