@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { useStore } from '@base-ui-components/utils/store/useStore';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { useDayList } from '@mui/x-scheduler-headless/use-day-list';
-import { selectors } from '@mui/x-scheduler-headless/use-timeline';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useTimelineStoreContext } from '@mui/x-scheduler-headless/use-timeline-store-context';
 import { HeaderProps } from './Headers.types';
 import { TIME_UNITS_COUNT } from '../../constants';
@@ -17,7 +17,7 @@ export function TimeHeader(props: HeaderProps) {
   const getDayList = useDayList();
   const store = useTimelineStoreContext();
 
-  const visibleDate = useStore(store, selectors.visibleDate);
+  const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
   const formatTime = useFormatTime();
 
   const days = React.useMemo(

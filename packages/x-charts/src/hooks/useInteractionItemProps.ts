@@ -49,15 +49,17 @@ export const useInteractionItemProps = (
     };
   }, [onPointerLeave]);
 
-  if (skip) {
-    return {};
-  }
-
-  return {
-    onPointerEnter,
-    onPointerLeave,
-    onPointerDown,
-  };
+  return React.useMemo(
+    () =>
+      skip
+        ? {}
+        : {
+            onPointerEnter,
+            onPointerLeave,
+            onPointerDown,
+          },
+    [skip, onPointerEnter, onPointerLeave],
+  );
 };
 
 export const useInteractionAllItemProps = (

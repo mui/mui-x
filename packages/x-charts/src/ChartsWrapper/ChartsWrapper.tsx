@@ -7,7 +7,10 @@ import { Direction } from '../ChartsLegend';
 import { Position } from '../models';
 import { useStore } from '../internals/store/useStore';
 import { useSelector } from '../internals/store/useSelector';
-import { selectorChartPropsSize } from '../internals/plugins/corePlugins/useChartDimensions';
+import {
+  selectorChartPropsHeight,
+  selectorChartPropsWidth,
+} from '../internals/plugins/corePlugins/useChartDimensions';
 import { chartsToolbarClasses } from '../Toolbar';
 
 export interface ChartsWrapperProps {
@@ -167,7 +170,7 @@ const Root = styled('div', {
       gridArea: 'toolbar',
       justifySelf: 'center',
     },
-    justifyContent: 'center',
+    justifyContent: 'safe center',
     justifyItems: getJustifyItems(ownerState.legendPosition),
     alignItems: getAlignItems(ownerState.legendPosition),
   };
@@ -182,7 +185,9 @@ function ChartsWrapper(props: ChartsWrapperProps) {
   const chartRootRef = useChartRootRef();
 
   const store = useStore();
-  const { width: propsWidth, height: propsHeight } = useSelector(store, selectorChartPropsSize);
+
+  const propsWidth = useSelector(store, selectorChartPropsWidth);
+  const propsHeight = useSelector(store, selectorChartPropsHeight);
 
   return (
     <Root

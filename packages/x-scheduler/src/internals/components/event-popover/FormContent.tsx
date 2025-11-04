@@ -19,10 +19,15 @@ import {
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { DEFAULT_EVENT_COLOR } from '@mui/x-scheduler-headless/constants';
-import { selectors } from '@mui/x-scheduler-headless/scheduler-selectors';
+import {
+  schedulerEventSelectors,
+  schedulerOccurrencePlaceholderSelectors,
+  schedulerRecurringEventSelectors,
+  schedulerResourceSelectors,
+} from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { getColorClassName } from '../../utils/color-utils';
-import { computeRange, validateRange } from './utils';
+import { computeRange, ControlledValue, validateRange } from './utils';
 import EventPopoverHeader from './EventPopoverHeader';
 
 interface FormContentProps {
@@ -39,21 +44,28 @@ export default function FormContent(props: FormContentProps) {
   const store = useSchedulerStoreContext();
 
   // Selector hooks
-  const isPropertyReadOnly = useStore(store, selectors.isEventPropertyReadOnly, occurrence.id);
-  const rawPlaceholder = useStore(store, selectors.occurrencePlaceholder);
-  const resources = useStore(store, selectors.processedResourceList);
-  const recurrencePresets = useStore(store, selectors.recurrencePresets, occurrence.start);
+  const isPropertyReadOnly = useStore(
+    store,
+    schedulerEventSelectors.isPropertyReadOnly,
+    occurrence.id,
+  );
+  const rawPlaceholder = useStore(store, schedulerOccurrencePlaceholderSelectors.value);
+  const resources = useStore(store, schedulerResourceSelectors.processedResourceList);
+  const recurrencePresets = useStore(
+    store,
+    schedulerRecurringEventSelectors.presets,
+    occurrence.start,
+  );
   const defaultRecurrenceKey = useStore(
     store,
-    selectors.defaultRecurrencePresetKey,
+    schedulerRecurringEventSelectors.defaultPresetKey,
     occurrence.rrule,
     occurrence.start,
   );
 
   // State hooks
   const [errors, setErrors] = React.useState<Form.Props['errors']>({});
-  const [isAllDay, setIsAllDay] = React.useState<boolean>(Boolean(occurrence.allDay));
-  const [when, setWhen] = React.useState(() => {
+  const [controlled, setControlled] = React.useState<ControlledValue>(() => {
     const fmtDate = (d: SchedulerValidDate) => adapter.formatByString(d, 'yyyy-MM-dd');
     const fmtTime = (d: SchedulerValidDate) => adapter.formatByString(d, 'HH:mm');
 
@@ -62,15 +74,17 @@ export default function FormContent(props: FormContentProps) {
       endDate: fmtDate(occurrence.end),
       startTime: fmtTime(occurrence.start),
       endTime: fmtTime(occurrence.end),
+      resourceId: occurrence.resource ?? null,
+      allDay: !!occurrence.allDay,
     };
   });
 
-  function pushPlaceholder(next: typeof when, nextIsAllDay = isAllDay) {
+  function pushPlaceholder(next: ControlledValue) {
     if (rawPlaceholder?.type !== 'creation') {
       return;
     }
 
-    const { start, end, surfaceType } = computeRange(adapter, next, nextIsAllDay);
+    const { start, end, surfaceType } = computeRange(adapter, next);
     const surfaceTypeToUse = rawPlaceholder.lockSurfaceType
       ? rawPlaceholder.surfaceType
       : surfaceType;
@@ -78,6 +92,7 @@ export default function FormContent(props: FormContentProps) {
     store.setOccurrencePlaceholder({
       type: 'creation',
       surfaceType: surfaceTypeToUse,
+      resourceId: next.resourceId,
       start,
       end,
       lockSurfaceType: rawPlaceholder.lockSurfaceType,
@@ -85,25 +100,30 @@ export default function FormContent(props: FormContentProps) {
   }
 
   const createHandleChangeDateOrTimeField =
-    (field: keyof typeof when) =>
+    (field: keyof ControlledValue) =>
     (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const value = event.currentTarget.value;
       setErrors({});
-      setWhen((prev) => {
-        const next = { ...prev, [field]: value };
-        pushPlaceholder(next);
-        return next;
-      });
+      const newState = { ...controlled, [field]: value };
+      pushPlaceholder(newState);
+      setControlled(newState);
     };
 
+  const handleResourceChange = (value: CalendarResourceId | null) => {
+    const newState = { ...controlled, resourceId: value };
+    pushPlaceholder(newState);
+    setControlled(newState);
+  };
+
   const handleToggleAllDay = (checked: boolean) => {
-    setIsAllDay(checked);
-    pushPlaceholder(when, checked);
+    const newState = { ...controlled, allDay: checked };
+    pushPlaceholder(newState);
+    setControlled(newState);
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const { start, end } = computeRange(adapter, when, isAllDay);
+    const { start, end } = computeRange(adapter, controlled);
 
     const form = new FormData(event.currentTarget);
     const recurrenceValue = form.get('recurrence') as RecurringEventPresetKey;
@@ -113,12 +133,8 @@ export default function FormContent(props: FormContentProps) {
     const rrule =
       recurrenceModified && recurrenceValue ? recurrencePresets[recurrenceValue] : undefined;
 
-    const resourceRawValue = form.get('resource');
-    const resourceValue =
-      resourceRawValue === '' ? undefined : (resourceRawValue as CalendarResourceId);
-
     setErrors({});
-    const err = validateRange(adapter, start, end, isAllDay);
+    const err = validateRange(adapter, start, end, controlled.allDay);
     if (err) {
       setErrors({ [err.field]: translations.startDateAfterEndDateError });
       return;
@@ -127,8 +143,8 @@ export default function FormContent(props: FormContentProps) {
     const metaChanges = {
       title: (form.get('title') as string).trim(),
       description: (form.get('description') as string).trim(),
-      allDay: isAllDay,
-      resource: resourceValue,
+      allDay: controlled.allDay,
+      resource: controlled.resourceId === null ? undefined : controlled.resourceId,
     };
 
     if (rawPlaceholder?.type === 'creation') {
@@ -212,7 +228,8 @@ export default function FormContent(props: FormContentProps) {
         <Field.Root className="EventPopoverFieldRoot" name="resource">
           <Select.Root
             items={resourcesOptions}
-            defaultValue={occurrence.resource}
+            value={controlled.resourceId}
+            onValueChange={handleResourceChange}
             readOnly={isPropertyReadOnly('resource')}
           >
             <Select.Trigger
@@ -282,7 +299,7 @@ export default function FormContent(props: FormContentProps) {
                 <Input
                   className="EventPopoverInput"
                   type="date"
-                  value={when.startDate}
+                  value={controlled.startDate}
                   onChange={createHandleChangeDateOrTimeField('startDate')}
                   aria-describedby="startDate-error"
                   required
@@ -290,14 +307,14 @@ export default function FormContent(props: FormContentProps) {
                 />
               </Field.Label>
             </Field.Root>
-            {!isAllDay && (
+            {!controlled.allDay && (
               <Field.Root className="EventPopoverFieldRoot" name="startTime">
                 <Field.Label className="EventPopoverFormLabel">
                   {translations.startTimeLabel}
                   <Input
                     className="EventPopoverInput"
                     type="time"
-                    value={when.startTime}
+                    value={controlled.startTime}
                     onChange={createHandleChangeDateOrTimeField('startTime')}
                     aria-describedby="startTime-error"
                     required
@@ -314,21 +331,21 @@ export default function FormContent(props: FormContentProps) {
                 <Input
                   className="EventPopoverInput"
                   type="date"
-                  value={when.endDate}
+                  value={controlled.endDate}
                   onChange={createHandleChangeDateOrTimeField('endDate')}
                   required
                   readOnly={isPropertyReadOnly('end')}
                 />
               </Field.Label>
             </Field.Root>
-            {!isAllDay && (
+            {!controlled.allDay && (
               <Field.Root className="EventPopoverFieldRoot" name="endTime">
                 <Field.Label className="EventPopoverFormLabel">
                   {translations.endTimeLabel}
                   <Input
                     className="EventPopoverInput"
                     type="time"
-                    value={when.endTime}
+                    value={controlled.endTime}
                     onChange={createHandleChangeDateOrTimeField('endTime')}
                     required
                     readOnly={isPropertyReadOnly('end')}
@@ -358,7 +375,7 @@ export default function FormContent(props: FormContentProps) {
               <Checkbox.Root
                 className="AllDayCheckboxRoot"
                 id="enable-all-day-checkbox"
-                checked={isAllDay}
+                checked={controlled.allDay}
                 onCheckedChange={handleToggleAllDay}
                 readOnly={isPropertyReadOnly('allDay')}
               >

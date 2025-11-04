@@ -4,8 +4,12 @@ import clsx from 'clsx';
 import { useStore } from '@base-ui-components/utils/store';
 import { Repeat } from 'lucide-react';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
-import { selectors } from '@mui/x-scheduler-headless/use-event-calendar';
+import {
+  schedulerEventSelectors,
+  schedulerResourceSelectors,
+} from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
+import { eventCalendarEventSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { DayGridEventProps } from './DayGridEvent.types';
 import { getColorClassName } from '../../../utils/color-utils';
 import { useTranslations } from '../../../utils/TranslationsContext';
@@ -24,7 +28,6 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     occurrence,
     variant,
     className: classNameProp,
-    onEventClick,
     id: idProp,
     style: styleProp,
     ...other
@@ -32,10 +35,19 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
 
   const translations = useTranslations();
   const store = useEventCalendarStoreContext();
-  const isDraggable = useStore(store, selectors.isEventDraggable, occurrence.id);
-  const isResizable = useStore(store, selectors.isEventResizable, occurrence.id, 'day-grid');
-  const resource = useStore(store, selectors.resource, occurrence.resource);
-  const color = useStore(store, selectors.eventColor, occurrence.id);
+  const isDraggable = useStore(store, eventCalendarEventSelectors.isDraggable, occurrence.id);
+  const isResizable = useStore(
+    store,
+    eventCalendarEventSelectors.isResizable,
+    occurrence.id,
+    'day-grid',
+  );
+  const resource = useStore(
+    store,
+    schedulerResourceSelectors.processedResource,
+    occurrence.resource,
+  );
+  const color = useStore(store, schedulerEventSelectors.color, occurrence.id);
   const isRecurring = Boolean(occurrence.rrule);
   const formatTime = useFormatTime();
 

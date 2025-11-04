@@ -162,6 +162,10 @@ export type UseTreeViewSelectionSignature = TreeViewPluginSignature<{
   ];
 }>;
 
+export interface UseTreeItemRootSlotPropsFromSelection {
+  'aria-checked': React.AriaAttributes['aria-checked'];
+}
+
 export interface UseTreeItemCheckboxSlotPropsFromSelection {
   visible?: boolean;
   checked?: boolean;
@@ -172,5 +176,7 @@ export interface UseTreeItemCheckboxSlotPropsFromSelection {
 }
 
 declare module '@mui/x-tree-view/useTreeItem' {
+  interface UseTreeItemRootSlotOwnProps extends UseTreeItemRootSlotPropsFromSelection {}
+
   interface UseTreeItemCheckboxSlotOwnProps extends UseTreeItemCheckboxSlotPropsFromSelection {}
 }
