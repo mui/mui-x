@@ -175,7 +175,7 @@ You can display labels on the bars. This can be useful to show the value of each
 If you provide `'value'` to the `barLabel` property of a bar series, the value of that bar is shown.
 Alternatively, the `barLabel` property accepts a function that is called with the bar item and context about the bar.
 
-In the example below, we display the value of the first series using the default formatter, and format the value of the second series as US dollars. The labels of the third series are hidden.
+In the example below, the value of the first series is displayed using the default formatter, and format the value of the second series as US dollars. The labels of the third series are hidden.
 
 {{"demo": "BarLabel.js"}}
 
