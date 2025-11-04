@@ -42,7 +42,7 @@ const PIXEL_STYLES = new Set([
 ]);
 
 export function measureText(text: string | number, style: React.CSSProperties = {}) {
-  if (isSsr) {
+  if (isSsr || text === '') {
     return { width: 0, height: 0 };
   }
 
