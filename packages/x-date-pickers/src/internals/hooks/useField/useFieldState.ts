@@ -208,7 +208,7 @@ export const useFieldState = <
     }
 
     // all values are filled
-    if (filledSections.length === state.sections.length) {
+    if (filledSections.length !== state.sections.length) {
       return false;
     }
 
@@ -236,9 +236,10 @@ export const useFieldState = <
       return false;
     }
 
-    const filledSections = state.sections.filter((s) => s.value !== '');
+    const someFilled = state.sections.some((s) => s.value !== '');
+    const someEmpty = state.sections.some((s) => s.value === '');
 
-    return filledSections.length > 0 && state.sections.length - filledSections.length > 0;
+    return someFilled && someEmpty;
   }, [state.sections, activeSectionIndex]);
 
   const error = React.useMemo(() => {
