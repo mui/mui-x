@@ -45,6 +45,7 @@ export const SankeyNodeLabel = React.forwardRef<SVGTextElement, SankeyNodeLabelP
         fontSize={theme.typography.caption.fontSize}
         fontFamily={theme.typography.fontFamily}
         pointerEvents="none"
+        dominantBaseline="central"
         data-node={node.id}
       >
         {node.label}
