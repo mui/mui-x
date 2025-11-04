@@ -1,4 +1,4 @@
-import { TreeViewBaseItem, TreeViewItemId, TreeViewValidItem } from '../../../models';
+import { TreeViewItemId, TreeViewValidItem } from '../../../models';
 import { idSelectors } from '../id';
 import { itemsSelectors } from './selectors';
 import { buildItemsLookups, TREE_VIEW_ROOT_PARENT_ID } from './utils';
@@ -94,10 +94,10 @@ export class TreeViewItemsPlugin<R extends TreeViewValidItem<R>> {
 
   /**
    * Get all the items in the same format as provided by `props.items`.
-   * @returns {TreeViewBaseItem[]} The items in the tree.
+   * @returns {R[]} The items in the tree.
    */
-  private getItemTree = (): TreeViewBaseItem[] => {
-    const getItemFromItemId = (itemId: TreeViewItemId): TreeViewBaseItem => {
+  private getItemTree = (): R[] => {
+    const getItemFromItemId = (itemId: TreeViewItemId): R => {
       const item = itemsSelectors.itemModel(this.store.state, itemId);
       const itemToMutate = { ...item };
       const newChildren = itemsSelectors.itemOrderedChildrenIds(this.store.state, itemId);
