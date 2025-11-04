@@ -110,7 +110,7 @@ function SankeyPlot(props: SankeyPlotProps) {
         </g>
       )}
 
-      {nodeOptions?.showLabels && (
+      {nodeOptions?.showLabels !== false && (
         <g className={classes.nodeLabels}>
           {layout.nodes.map((node) => (
             <SankeyNodeLabel key={`node-label-${node.id}`} node={node} />

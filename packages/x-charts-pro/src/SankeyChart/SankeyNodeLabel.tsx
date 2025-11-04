@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { SankeyLayoutNode } from './sankey.types';
-import { useSankeySeriesContext } from '../hooks/useSankeySeries';
 
 export interface SankeyNodeLabelProps {
   /**
@@ -18,7 +17,6 @@ export const SankeyNodeLabel = React.forwardRef<SVGTextElement, SankeyNodeLabelP
   function SankeyNodeLabel(props, ref) {
     const { node } = props;
     const theme = useTheme();
-    const seriesContext = useSankeySeriesContext();
 
     if (!node.label || node.y0 === undefined || node.y1 === undefined) {
       return null; // No label or invalid coordinates, nothing to render
@@ -37,16 +35,6 @@ export const SankeyNodeLabel = React.forwardRef<SVGTextElement, SankeyNodeLabelP
 
     const labelAnchor = node.depth === 0 ? 'start' : 'end';
 
-    // Get the series data and valueFormatter if needed for the label
-    const series = seriesContext?.series[seriesContext.seriesOrder?.[0]];
-    const formattedLabel = series?.valueFormatter
-      ? series.valueFormatter(node.value, {
-          type: 'node',
-          nodeId: node.id,
-          location: 'label',
-        })
-      : node.label;
-
     return (
       <text
         ref={ref}
@@ -59,7 +47,7 @@ export const SankeyNodeLabel = React.forwardRef<SVGTextElement, SankeyNodeLabelP
         pointerEvents="none"
         data-node={node.id}
       >
-        {formattedLabel}
+        {node.label}
       </text>
     );
   },
