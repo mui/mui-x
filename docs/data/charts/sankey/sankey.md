@@ -12,6 +12,8 @@ components: SankeyChart, SankeyPlot, SankeyTooltip, SankeyTooltipContent
 This feature is in preview. It is ready for production use, but its API, visuals and behavior may change in future minor or patch releases.
 :::
 
+{{"demo": "SankeyNodeLongLabels.js"}}
+
 ## Basics
 
 The Sankey chart requires a specific data structure with two main parts: `nodes` and `links`.
