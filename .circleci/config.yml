@@ -144,9 +144,11 @@ jobs:
           react-version: << parameters.react-version >>
       - run:
           name: Test JSDOM
+          # test output is buffered until all tests are completed
+          no_output_timeout: 30m
           command: |
             # Fully saturate all the available CPUs by splitting the tests in 1 shard per CPU
-            pnpm exec concurrently "pnpm test:unit:jsdom --reporter=blob --shard=1/2" "pnpm test:unit:jsdom --reporter=blob --shard=2/2" || TEST_EXIT_CODE=$?
+            pnpm exec concurrently "pnpm test:unit:jsdom --reporter=blob  --reporter=dot --shard=1/2" "pnpm test:unit:jsdom --reporter=blob  --reporter=dot --shard=2/2" || TEST_EXIT_CODE=$?
             pnpm exec vitest run --merge-reports
             # Reports merged, we can now exit with the stored code
             exit ${TEST_EXIT_CODE:-0}
