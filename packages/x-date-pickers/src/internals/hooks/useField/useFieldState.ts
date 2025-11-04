@@ -199,36 +199,6 @@ export const useFieldState = <
     [state.sections],
   );
 
-  // Keep invalid state "sticky" while sections still represent an invalid date.
-  const hasInvalidSectionValue = React.useMemo(() => {
-    const filledSections = state.sections.filter((s) => s.value !== '');
-    // all values are empty
-    if (filledSections.length === 0) {
-      return false;
-    }
-
-    // all values are filled
-    if (filledSections.length === state.sections.length) {
-      return false;
-    }
-
-    if (activeSectionIndex == null) {
-      return false;
-    }
-
-    const activeDateSections = fieldValueManager.getDateSectionsFromValue(
-      state.sections,
-      state.sections[activeSectionIndex] as any,
-    );
-
-    const dateFromSections = getDateFromDateSections(
-      adapter,
-      activeDateSections as any,
-      localizedDigits,
-    );
-    return adapter.isValid(dateFromSections);
-  }, [adapter, fieldValueManager, state.sections, activeSectionIndex, localizedDigits]);
-
   // When the field loses focus (no active section), consider partially filled sections as invalid.
   // This enforces that the field must be entirely filled or entirely empty on blur.
   const hasPartiallyFilledSectionsOnBlur = React.useMemo(() => {
@@ -236,10 +206,8 @@ export const useFieldState = <
       return false;
     }
 
-    const someFilled = state.sections.some((s) => s.value !== '');
-    const someEmpty = state.sections.some((s) => s.value === '');
-
-    return someFilled && someEmpty;
+    const filledSections = state.sections.filter((s) => s.value !== '');
+    return filledSections.length > 0 && state.sections.length - filledSections.length > 0;
   }, [state.sections, activeSectionIndex]);
 
   const error = React.useMemo(() => {
@@ -247,8 +215,8 @@ export const useFieldState = <
       return errorProp;
     }
 
-    return hasValidationError || hasInvalidSectionValue || hasPartiallyFilledSectionsOnBlur;
-  }, [hasValidationError, hasInvalidSectionValue, hasPartiallyFilledSectionsOnBlur, errorProp]);
+    return hasValidationError || hasPartiallyFilledSectionsOnBlur
+  }, [hasValidationError, hasPartiallyFilledSectionsOnBlur, errorProp]);
 
   const publishValue = (newValue: TValue) => {
     const context: FieldChangeHandlerContext<TError> = {
@@ -417,8 +385,9 @@ export const useFieldState = <
      * Then we publish an invalid date.
      */
     if (
-      newActiveDateSections.every((sectionBis) => sectionBis.value !== '') &&
-      (activeDate == null || adapter.isValid(activeDate))
+      // All sections are filled but the composed date is still invalid →
+      // publish the invalid date consistently regardless of previous value to avoid oscillation
+      newActiveDateSections.every((sectionBis) => sectionBis.value !== '')
     ) {
       setSectionUpdateToApplyOnNextInvalidDate(newSectionValue);
       return publishValue(fieldValueManager.updateDateInValue(value, section, newActiveDate));
