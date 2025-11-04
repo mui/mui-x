@@ -273,7 +273,7 @@ function canvasMeasureText(text: string) {
 
   return {
     width: metrics.width,
-    height: metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent,
+    height: metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent,
   };
 }
 
