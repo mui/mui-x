@@ -243,6 +243,7 @@ describe.skipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
         onZoomChange={onZoomChange}
         zoomInteractionConfig={{
           zoom: ['tapAndDrag'],
+          pan: [],
         }}
       />,
       options,
