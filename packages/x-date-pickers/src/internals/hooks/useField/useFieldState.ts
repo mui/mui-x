@@ -208,7 +208,7 @@ export const useFieldState = <
     }
 
     // all values are filled
-    if (filledSections.length !== state.sections.length) {
+    if (filledSections.length === state.sections.length) {
       return false;
     }
 
@@ -226,7 +226,7 @@ export const useFieldState = <
       activeDateSections as any,
       localizedDigits,
     );
-    return !adapter.isValid(dateFromSections);
+    return adapter.isValid(dateFromSections);
   }, [adapter, fieldValueManager, state.sections, activeSectionIndex, localizedDigits]);
 
   // When the field loses focus (no active section), consider partially filled sections as invalid.
