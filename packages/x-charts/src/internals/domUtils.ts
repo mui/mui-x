@@ -230,9 +230,7 @@ function canvasPrepare(style: React.CSSProperties) {
 
   ctx.font = `${fontStyle} ${fontWeight} ${fontSize} ${fontFamily}`;
 
-  (ctx as any).letterSpacing = style.letterSpacing
-    ? addPixelToValueIfNeeded(style.letterSpacing)
-    : '0px';
+  ctx.letterSpacing = style.letterSpacing ? addPixelToValueIfNeeded(style.letterSpacing) : '0px';
 
   switch (style.textAlign) {
     case 'left':
@@ -275,7 +273,7 @@ function canvasMeasureText(text: string) {
 
   return {
     width: metrics.width,
-    height: metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent,
+    height: metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent,
   };
 }
 
@@ -298,10 +296,6 @@ function checkLetterSpacingSupport(): boolean {
 
   try {
     const ctx = getCanvasContext();
-    if (!ctx) {
-      canvasSupportsLetterSpacing = false;
-      return false;
-    }
 
     // Test if letterSpacing property is supported
     const testText = 'test';
@@ -312,7 +306,7 @@ function checkLetterSpacingSupport(): boolean {
     const widthWithoutLetterSpacing = ctx.measureText(testText).width;
 
     // Try to apply letterSpacing
-    (ctx as any).letterSpacing = testStyle.letterSpacing;
+    ctx.letterSpacing = testStyle.letterSpacing;
     const widthWithLetterSpacing = ctx.measureText(testText).width;
 
     // If letterSpacing is supported, the widths should be different
