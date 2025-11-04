@@ -8,7 +8,6 @@ const stringCache = new Map<string, { width: number; height: number }>();
 let canvasSupportsLetterSpacing: boolean | null = null;
 let measurementCanvas: HTMLCanvasElement | null = null;
 let measurementContext: CanvasRenderingContext2D | null = null;
-let measurementContainer: SVGSVGElement | null = null;
 
 const shouldUseCanvas = checkLetterSpacingSupport();
 
@@ -56,12 +55,21 @@ export function measureText(text: string | number, style: React.CSSProperties = 
     return size;
   }
 
-  let result: { width: number; height: number };
+  let result: { width: number; height: number } | null = null;
 
   if (shouldUseCanvas) {
-    canvasPrepare(style);
-    result = canvasMeasureText(string);
-  } else {
+    try {
+      canvasPrepare(style);
+      result = canvasMeasureText(string);
+    } catch (error) {
+      console.warn(
+        'MUI X Charts: Canvas measurement failed, falling back to SVG measurement.',
+        error,
+      );
+    }
+  }
+
+  if (!result) {
     // Fall back to SVG-based measurement
     const container = svgPrepareContainer();
     const element = document.createElementNS('http://www.w3.org/2000/svg', 'text');
@@ -118,17 +126,29 @@ export function measureTextBatch(
     return sizeMap;
   }
 
+  let shouldUseSVG = !shouldUseCanvas;
+
   if (shouldUseCanvas) {
-    canvasPrepare(style);
+    try {
+      canvasPrepare(style);
 
-    for (const text of textToMeasure) {
-      const result = canvasMeasureText(String(text));
-      const cacheKey = `${text}-${styleString}`;
+      for (const text of textToMeasure) {
+        const result = canvasMeasureText(String(text));
+        const cacheKey = `${text}-${styleString}`;
 
-      stringCache.set(cacheKey, result);
-      sizeMap.set(text, result);
+        stringCache.set(cacheKey, result);
+        sizeMap.set(text, result);
+      }
+    } catch (error) {
+      console.warn(
+        'MUI X Charts: Canvas batch measurement failed, falling back to SVG measurement.',
+        error,
+      );
+      shouldUseSVG = true;
     }
-  } else {
+  }
+
+  if (shouldUseSVG) {
     const measurementContainer = svgPrepareContainer();
 
     svgPrepareNode(measurementContainer, style);
@@ -166,6 +186,7 @@ export function measureTextBatch(
   return sizeMap;
 }
 
+let measurementContainer: SVGSVGElement | null = null;
 function svgPrepareContainer() {
   if (measurementContainer === null) {
     measurementContainer = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
