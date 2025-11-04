@@ -28,7 +28,7 @@ export const TimelineEventResizeHandler = React.forwardRef(function TimelineEven
   const ref = React.useRef<HTMLDivElement>(null);
 
   // Feature hooks
-  const getDragData = useEventCallback(({ input }) => ({
+  const getDragData = useEventCallback((input) => ({
     ...contextValue.getSharedDragData(input),
     source: 'TimelineEventResizeHandler',
     side,
