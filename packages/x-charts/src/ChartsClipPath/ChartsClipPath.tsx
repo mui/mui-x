@@ -14,6 +14,7 @@ export type ChartsClipPathProps = {
    * A positive value will move the rectangle outside the drawing area.
    */
   offset?: { top?: number; right?: number; bottom?: number; left?: number };
+  isBarChart?: boolean;
 };
 
 /**
@@ -22,10 +23,18 @@ export type ChartsClipPathProps = {
  * - [ChartsClipPath API](https://mui.com/x/api/charts/charts-clip-path/)
  */
 function ChartsClipPath(props: ChartsClipPathProps) {
-  const { id, offset: offsetProps } = props;
+  const { id, offset: offsetProps, isBarChart = false } = props;
   const { left, top, width, height } = useDrawingArea();
 
-  const offset = { top: 30, right: 30, bottom: 30, left: 30, ...offsetProps };
+  const adjustedOffset = isBarChart ? 30 : 0;
+
+  const offset = {
+    top: adjustedOffset,
+    right: adjustedOffset,
+    bottom: adjustedOffset,
+    left: adjustedOffset,
+    ...offsetProps,
+  };
 
   return (
     <clipPath id={id}>
