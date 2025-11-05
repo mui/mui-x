@@ -1,15 +1,14 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import { ChartContainer } from '@mui/x-charts/ChartContainer';
 import { BarPlot } from '@mui/x-charts/BarChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 
 const iconMap = {
-  Apple: './apple-logo.png',
-  Alphabet: './google-logo.png',
-  Microsoft: './microsoft-logo.png',
+  Apple: '/static/x/charts/netflix-logo.png',
+  Alphabet: '/static/x/charts/google-logo.png',
+  Microsoft: '/static/x/charts/microsoft-logo.png',
 };
 
 function CustomTick(props) {
@@ -18,7 +17,7 @@ function CustomTick(props) {
 
   return (
     <g transform={`translate(${x},${y})`}>
-      <foreignObject x={-20} y={0} width={60} height={50}>
+      <foreignObject x={-20} y={-10} width={60} height={50}>
         <div
           style={{
             display: 'flex',
@@ -34,24 +33,17 @@ function CustomTick(props) {
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: 0.3,
             }}
           >
-            <Typography
-              variant="body2"
-              sx={{ color: 'text.secondary', lineHeight: 1 }}
-            >
-              {text}
-            </Typography>
             {logo && (
-              <img 
-                src={logo} 
-                alt={text} 
-                style={{ 
-                  width: '24px', 
-                  height: '24px',
-                  objectFit: 'contain' 
-                }} 
+              <img
+                src={logo}
+                alt={text}
+                style={{
+                  width: '40px',
+                  height: '40px',
+                  objectFit: 'contain',
+                }}
               />
             )}
           </Box>
@@ -77,7 +69,7 @@ export default function TickLabelSVG() {
           {
             type: 'bar',
             yAxisId: 'revenue',
-            data: [391, 350, 245.1],
+            data: [39, 350, 245.1],
           },
         ]}
         height={300}
