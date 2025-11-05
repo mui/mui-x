@@ -19,21 +19,21 @@ export const schedulerRecurringEventSelectors = {
       date: SchedulerValidDate,
     ): Record<RecurringEventPresetKey, RecurringEventRecurrenceRule> => {
       return {
-        daily: {
+        DAILY: {
           freq: 'DAILY',
           interval: 1,
         },
-        weekly: {
+        WEEKLY: {
           freq: 'WEEKLY',
           interval: 1,
           byDay: [getWeekDayCode(adapter, date)],
         },
-        monthly: {
+        MONTHLY: {
           freq: 'MONTHLY',
           interval: 1,
           byMonthDay: [adapter.getDate(date)],
         },
-        yearly: {
+        YEARLY: {
           freq: 'YEARLY',
           interval: 1,
         },
@@ -67,7 +67,7 @@ export const schedulerRecurringEventSelectors = {
       switch (rule.freq) {
         case 'DAILY': {
           // Preset "Daily" => FREQ=DAILY;INTERVAL=1; no COUNT/UNTIL;
-          return interval === 1 && neverEnds && !hasSelectors ? 'daily' : 'custom';
+          return interval === 1 && neverEnds && !hasSelectors ? 'DAILY' : 'custom';
         }
 
         case 'WEEKLY': {
@@ -83,7 +83,7 @@ export const schedulerRecurringEventSelectors = {
             matchesDefaultByDay &&
             !(rule.byMonthDay?.length || rule.byMonth?.length);
 
-          return isPresetWeekly ? 'weekly' : 'custom';
+          return isPresetWeekly ? 'WEEKLY' : 'custom';
         }
 
         case 'MONTHLY': {
@@ -98,12 +98,12 @@ export const schedulerRecurringEventSelectors = {
             matchesDefaultByMonthDay &&
             !(rule.byDay?.length || rule.byMonth?.length);
 
-          return isPresetMonthly ? 'monthly' : 'custom';
+          return isPresetMonthly ? 'MONTHLY' : 'custom';
         }
 
         case 'YEARLY': {
           // Preset "Yearly" => FREQ=YEARLY;INTERVAL=1; no COUNT/UNTIL;
-          return interval === 1 && neverEnds && !hasSelectors ? 'yearly' : 'custom';
+          return interval === 1 && neverEnds && !hasSelectors ? 'YEARLY' : 'custom';
         }
 
         default:

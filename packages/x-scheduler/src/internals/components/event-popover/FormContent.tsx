@@ -155,7 +155,8 @@ export default function FormContent(props: FormContentProps) {
     );
 
     // Detect preset change vs initial default key
-    const presetChanged = presetFromForm !== defaultRecurrencePresetKey;
+    const presetChanged =
+      defaultRecurrencePresetKey !== 'custom' && presetFromForm !== defaultRecurrencePresetKey;
 
     let rruleToSubmit: RecurringEventRecurrenceRule | undefined;
     let recurrenceModified = false;
