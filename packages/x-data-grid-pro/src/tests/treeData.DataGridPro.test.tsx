@@ -509,6 +509,21 @@ describe('<DataGridPro /> - Tree data', () => {
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       expect(getColumnValues(1)).to.deep.equal(['B', 'B.A', 'B.B']);
     });
+
+    it('should not crash when switching treeData with pagination enabled', () => {
+      const { setProps } = render(<PaginatedTest initialModel={{ pageSize: 2, page: 0 }} />);
+      expect(getColumnValues(1)).to.deep.equal(['A', 'B']);
+
+      // Toggle treeData off - this should not crash even if visible rows are temporarily empty
+      expect(() => {
+        setProps({ treeData: false });
+      }).not.to.throw();
+
+      // Toggle treeData back on - this should also not crash
+      expect(() => {
+        setProps({ treeData: true });
+      }).not.to.throw();
+    });
   });
 
   describe('filter', () => {
