@@ -9,7 +9,7 @@ productId: x-charts
 
 The `useDataset` hook provides access to the dataset array that was passed to the chart. This is useful when you need to access the raw data for custom components or calculations.
 
-To access the computed series and axes data, use the [useSeries](/x/react-charts/hooks/use-series/) and [useAxes](/x/react-charts/hooks/use-axes/) hooks instead.
+To access the computed series and axes data, use the [useSeries](/x/react-charts/hooks/use-series/) and `useAxes` hooks instead.
 
 ## Usage
 
