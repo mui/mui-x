@@ -5,7 +5,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## 8.16.1
+## 8.17.0
 
 _Nov 5, 2025_
 
@@ -24,7 +24,7 @@ The following team members contributed to this release:
 
 ### Data Grid
 
-#### `@mui/x-data-grid@8.16.1`
+#### `@mui/x-data-grid@8.17.0`
 
 - [DataGrid] Stop event propagation on data grid action buttons (GridActionsCellItem) (#19513) @Copilot
 - [DataGrid] Update cell editable state if `editable` prop is updated in the column definition (#20147) @arminmeh
@@ -32,27 +32,27 @@ The following team members contributed to this release:
 - [l10n] Add Catalan (ca-ES) locale (#20154) @frncesc
 - [l10n] Improve Arabic (ar-SD) locale (#20185) @samuelwalk
 
-#### `@mui/x-data-grid-pro@8.16.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-data-grid-pro@8.17.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-data-grid@8.16.1`.
+Same changes as in `@mui/x-data-grid@8.17.0`.
 
-#### `@mui/x-data-grid-premium@8.16.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-data-grid-premium@8.17.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-data-grid-pro@8.16.1`.
+Same changes as in `@mui/x-data-grid-pro@8.17.0`.
 
 ### Date and Time Pickers
 
-#### `@mui/x-date-pickers@8.16.1`
+#### `@mui/x-date-pickers@8.17.0`
 
 Internal changes.
 
-#### `@mui/x-date-pickers-pro@8.16.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-date-pickers-pro@8.17.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-date-pickers@8.16.1`.
+Same changes as in `@mui/x-date-pickers@8.17.0`.
 
 ### Charts
 
-#### `@mui/x-charts@8.16.1`
+#### `@mui/x-charts@8.17.0`
 
 - [charts] Add `barLabel` to bar series. Deprecate `barLabel` in `BarPlot`. (#20184) @bernardobelchior
 - [charts] Add series color callback (#20084) @bernardobelchior
@@ -65,30 +65,30 @@ Same changes as in `@mui/x-date-pickers@8.16.1`.
 - [charts] Add `useDataset` hook (#20205) @JCQuintas
 - [l10n] Add Norwegian Bokmål (nb-NO) locale (#20197) @htollefsen
 
-#### `@mui/x-charts-pro@8.16.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-charts-pro@8.17.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-charts@8.16.1`, plus:
+Same changes as in `@mui/x-charts@8.17.0`, plus:
 
 - [charts-pro] Fix zoom pan issue when controlled (#20163) @JCQuintas
 
-#### `@mui/x-charts-premium@8.16.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-charts-premium@8.17.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-charts-pro@8.16.1`.
+Same changes as in `@mui/x-charts-pro@8.17.0`.
 
 ### Tree View
 
-#### `@mui/x-tree-view@8.16.1`
+#### `@mui/x-tree-view@8.17.0`
 
 - [tree view] Accept read only arrays in `expandedItems` prop (#20181) @Methuselah96
 - [tree view] Use `aria-checked` instead of `aria-selected` on items (#19851) @flaviendelangle
 
-#### `@mui/x-tree-view-pro@8.16.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-tree-view-pro@8.17.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-tree-view@8.16.1`.
+Same changes as in `@mui/x-tree-view@8.17.0`.
 
 ### Codemod
 
-#### `@mui/x-codemod@8.16.1`
+#### `@mui/x-codemod@8.17.0`
 
 Internal changes.
 
