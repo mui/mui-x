@@ -20,6 +20,7 @@ import {
   GridRowsProp,
   useGridApiRef,
   GridPaginationModel,
+  GridColDef,
 } from '@mui/x-data-grid-pro';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -510,19 +511,49 @@ describe('<DataGridPro /> - Tree data', () => {
       expect(getColumnValues(1)).to.deep.equal(['B', 'B.A', 'B.B']);
     });
 
-    it('should not crash when switching treeData with pagination enabled', () => {
-      const { setProps } = render(<PaginatedTest initialModel={{ pageSize: 2, page: 0 }} />);
-      expect(getColumnValues(1)).to.deep.equal(['A', 'B']);
+    // https://github.com/mui/mui-x/issues/20202
+    it('should not crash when switching rows with pagination enabled', () => {
+      const rowsA: GridRowsProp = [
+        { name: 'A', id: '0', path: ['0'] },
+        { name: 'B', id: '1', path: ['0', '1'] },
+        { name: 'C', id: '2', path: ['0', '1', '2'] },
+      ];
 
-      // Toggle treeData off - this should not crash even if visible rows are temporarily empty
-      expect(() => {
-        setProps({ treeData: false });
-      }).not.to.throw();
+      const rowsB: GridRowsProp = [
+        { name: 'D', id: '1', path: ['1'] },
+        { name: 'E', id: '2', path: ['1', '2'] },
+      ];
 
-      // Toggle treeData back on - this should also not crash
-      expect(() => {
-        setProps({ treeData: true });
-      }).not.to.throw();
+      const columns: GridColDef[] = [{ field: 'name', width: 150 }];
+
+      const getTreeDataPath: DataGridProProps['getTreeDataPath'] = (row) => row.path;
+      function TestCase() {
+        const [rows, setRows] = React.useState(rowsA);
+        return (
+          <div>
+            <button onClick={() => setRows((prev) => (prev === rowsA ? rowsB : rowsA))}>
+              Toggle
+            </button>
+            <div style={{ width: 300, height: 800 }}>
+              <DataGridPro
+                treeData
+                rows={rows}
+                columns={columns}
+                getTreeDataPath={getTreeDataPath}
+                pagination
+              />
+            </div>
+          </div>
+        );
+      }
+      render(<TestCase />);
+      expect(getColumnValues(1)).to.deep.equal(['A']);
+
+      fireEvent.click(screen.getByRole('button', { name: /toggle/i }));
+      expect(getColumnValues(1)).to.deep.equal(['D']);
+
+      fireEvent.click(screen.getByRole('button', { name: /toggle/i }));
+      expect(getColumnValues(1)).to.deep.equal(['A']);
     });
   });
 
