@@ -9,6 +9,7 @@ export interface ControlledValue {
   endTime: string;
   resourceId: CalendarResourceId | null;
   allDay: boolean;
+  recurrenceUnit?: 'day' | 'week' | 'month' | 'year';
 }
 
 export function computeRange(adapter: Adapter, next: ControlledValue) {

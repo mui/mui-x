@@ -80,17 +80,8 @@ export default function FormContent(props: FormContentProps) {
       endTime: fmtTime(occurrence.end),
       resourceId: occurrence.resource ?? null,
       allDay: !!occurrence.allDay,
+      recurrenceUnit: 'day',
     };
-  });
-
-  const [controlledRecurrence, setControlledRecurrence] = React.useState({
-    every: 1,
-    unit: 'week',
-    weekdays: [0],
-    monthMode: 'day',
-    ends: 'never',
-    afterTimes: 10,
-    until: adapter.formatByString(occurrence.end, 'yyyy-MM-dd'),
   });
 
   function pushPlaceholder(next: ControlledValue) {
@@ -146,6 +137,15 @@ export default function FormContent(props: FormContentProps) {
     // TODO: This will change after implementing the custom recurrence editing tab.
     const rrule =
       recurrenceModified && recurrenceValue ? recurrencePresets[recurrenceValue] : undefined;
+
+    const customRecurrence = {
+      every: Number(form.get('every')),
+      unit: controlled.recurrenceUnit,
+      ends: form.get('ends'),
+      afterTimes: Number(form.get('afterTimes')),
+      until: form.get('until'),
+    };
+    console.log('customRecurrence', customRecurrence);
 
     setErrors({});
     const err = validateRange(adapter, start, end, controlled.allDay);
@@ -476,15 +476,10 @@ export default function FormContent(props: FormContentProps) {
               <div className="EventPopoverInputsRow">
                 Every
                 <Input
+                  name="every"
                   type="number"
                   min={1}
-                  value={controlledRecurrence.every}
-                  onChange={(event) =>
-                    setControlledRecurrence((prev) => ({
-                      ...prev,
-                      every: Math.max(1, Number(event.target.value)),
-                    }))
-                  }
+                  defaultValue={1}
                   className="EventPopoverInput RecurrenceEveryInput"
                 />
                 <Select.Root
@@ -494,9 +489,9 @@ export default function FormContent(props: FormContentProps) {
                     { label: 'months', value: 'month' },
                     { label: 'years', value: 'year' },
                   ]}
-                  value={controlledRecurrence.unit}
+                  value={controlled.recurrenceUnit}
                   onValueChange={(val) =>
-                    setControlledRecurrence((prev) => ({ ...prev, unit: val as any }))
+                    setControlled((prev) => ({ ...prev, recurrenceUnit: val as any }))
                   }
                 >
                   <Select.Trigger className="EventPopoverSelectTrigger">
@@ -531,23 +526,21 @@ export default function FormContent(props: FormContentProps) {
               </div>
             </Field.Root>
 
+            {controlled.recurrenceUnit === 'week' && <p>TODO: Weekly Fields</p>}
+            {controlled.recurrenceUnit === 'month' && <p>TODO: Monthly Fields</p>}
+
             <Separator className="EventPopoverSeparator" />
 
-            <Field.Root className="EventPopoverFieldRoot" name="ends">
+            <Field.Root className="EventPopoverFieldRoot">
               <Field.Label className="EventPopoverRecurrenceFormLabel">Ends</Field.Label>
 
-              <RadioGroup
-                value={controlledRecurrence.ends}
-                onValueChange={(val) =>
-                  setControlledRecurrence((prev) => ({ ...prev, ends: val as any }))
-                }
-              >
-                <Field.Label htmlFor="ends-never" className="RadioItem ">
+              <RadioGroup name="ends" defaultValue="never">
+                <div className="RadioItem ">
                   <Radio.Root id="ends-never" className="EventPopoverRadioRoot" value="never">
                     <Radio.Indicator className="RadioItemIndicator" />
                     <span className="EventPopoverRadioItemText">Never</span>
                   </Radio.Root>
-                </Field.Label>
+                </div>
 
                 <Field.Label htmlFor="ends-after" className="RadioItem RadioItemWithInput">
                   <Radio.Root id="ends-after" className="EventPopoverRadioRoot" value="after">
@@ -556,16 +549,10 @@ export default function FormContent(props: FormContentProps) {
                   </Radio.Root>
                   <div className="EventPopoverAfterTimesInputWrapper">
                     <Input
+                      name="afterTimes"
                       type="number"
                       min={1}
-                      value={controlledRecurrence.afterTimes}
-                      onChange={(event) =>
-                        setControlledRecurrence((prev) => ({
-                          ...prev,
-                          ends: 'after',
-                          afterTimes: Math.max(1, Number(event.target.value)),
-                        }))
-                      }
+                      defaultValue={10}
                       className="EventPopoverInput RecurrenceEveryInput"
                     />
                     times
@@ -578,15 +565,9 @@ export default function FormContent(props: FormContentProps) {
                     <span className="EventPopoverRadioItemText">Until</span>
                   </Radio.Root>
                   <Input
+                    name="until"
                     type="date"
-                    value={controlledRecurrence.until}
-                    onChange={(event) =>
-                      setControlledRecurrence((prev) => ({
-                        ...prev,
-                        ends: 'until',
-                        until: event.target.value,
-                      }))
-                    }
+                    defaultValue={adapter.formatByString(occurrence.end, 'yyyy-MM-dd')}
                     className="EventPopoverInput"
                   />
                 </Field.Label>
