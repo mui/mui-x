@@ -9,14 +9,15 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Nov 5, 2025_
 
-We'd like to extend a big thank you to the 12 contributors who made this release possible. Here are some highlights ✨:
+We'd like to extend a big thank you to the 13 contributors who made this release possible. Here are some highlights ✨:
 
 - 🌎 Add Catalan (ca-ES) locale on the Data Grid
+- 🌎 Add Norwegian Bokmål (nb-NO) locale on the Charts
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
 Special thanks go out to these community members for their valuable contributions:
-@frncesc, @Methuselah96, @samuelwalk
+@frncesc, @Methuselah96, @samuelwalk, @htollefsen
 
 The following team members contributed to this release:
 @alexfauquette, @bernardobelchior, @flaviendelangle, @Janpot, @JCQuintas, @mnajdova, @rita-codes, @arminmeh, @brijeshb42
@@ -61,6 +62,8 @@ Same changes as in `@mui/x-date-pickers@8.16.1`.
 - [charts] Organize series config (#20155) @bernardobelchior
 - [charts] Use selectors from `@mui/x-internals` (#20052) @alexfauquette
 - [charts] Use store from `@mui/x-internals` (#20121) @alexfauquette
+- [charts] Add `useDataset` hook (#20205) @JCQuintas
+- [l10n] Add Norwegian Bokmål (nb-NO) locale (#20197) @htollefsen
 
 #### `@mui/x-charts-pro@8.16.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -93,6 +96,7 @@ Internal changes.
 
 - [docs] Fix focus issues in the action column demo (#20178) @arminmeh
 - [docs] Remove hidden Tree View headless page (#20119) @flaviendelangle
+- [docs] Fix some external redirects (#20211) @Janpot
 
 ### Core
 
@@ -102,6 +106,7 @@ Internal changes.
 - [code-infra] Remove React import requirement for jsx (#20144) @brijeshb42
 - [code-infra] Replace `getInitialProps` with `getStaticProps` (#20192) @Janpot
 - [code-infra] git-ignore next-env.d.ts (#20177) @Janpot
+- [code-infra] Stabilize screenshot testing (#19868) @Janpot
 
 ## 8.16.0
 
