@@ -33,11 +33,11 @@ import { useTranslations } from '../../utils/TranslationsContext';
 import { getColorClassName } from '../../utils/color-utils';
 import {
   buildCustomRRuleFromForm,
-  buildInitialCustomSnapshot,
+  buildInitialCustomSnapshot as buildInitialCustomRecurrenceSnapshot,
   computeRange,
   ControlledValue,
   getEndsSelectionFromRRule,
-  isSameCustomSnapshot,
+  isSameCustomSnapshot as isSameCustomRecurrenceSnapshot,
   validateRange,
 } from './utils';
 
@@ -145,9 +145,13 @@ export default function FormContent(props: FormContentProps) {
     const presetFromForm = form.get('recurrencePreset') as RecurringEventPresetKey;
 
     // Build custom snapshot from Recurrence tab
-    const customSnapshot = buildCustomRRuleFromForm(adapter, controlled, form);
-    const initialSnapshot = buildInitialCustomSnapshot(occurrence);
-    const customChanged = !isSameCustomSnapshot(adapter, customSnapshot, initialSnapshot);
+    const customRecurrenceSnapshot = buildCustomRRuleFromForm(adapter, controlled, form);
+    const initialRecurrenceSnapshot = buildInitialCustomRecurrenceSnapshot(occurrence);
+    const customRecurrenceChanged = !isSameCustomRecurrenceSnapshot(
+      adapter,
+      customRecurrenceSnapshot,
+      initialRecurrenceSnapshot,
+    );
 
     // Detect preset change vs initial default key
     const presetChanged = presetFromForm !== defaultRecurrencePresetKey;
@@ -159,12 +163,12 @@ export default function FormContent(props: FormContentProps) {
     // 1) Recurrence tab changes (custom) override preset.
     // 2) Else, preset change applies.
     // 3) Else, unchanged -> omit rrule.
-    if (customChanged) {
+    if (customRecurrenceChanged) {
       rruleToSubmit = {
-        freq: customSnapshot.freq,
-        interval: customSnapshot.interval,
-        ...(customSnapshot.count ? { count: customSnapshot.count } : {}),
-        ...(customSnapshot.until ? { until: customSnapshot.until } : {}),
+        freq: customRecurrenceSnapshot.freq,
+        interval: customRecurrenceSnapshot.interval,
+        ...(customRecurrenceSnapshot.count ? { count: customRecurrenceSnapshot.count } : {}),
+        ...(customRecurrenceSnapshot.until ? { until: customRecurrenceSnapshot.until } : {}),
       };
       recurrenceModified = true;
     } else if (presetChanged) {
