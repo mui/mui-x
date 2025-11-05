@@ -76,30 +76,15 @@ describe('splitStringForSvg', () => {
     });
 
     it('should not create single-character lines from multi-character words', () => {
-      // "Commercial" = 10 chars = 100px
       // If we try to split at "C" + "ommercial", "C" should be merged back
       const result = splitStringForSvg('Commercial', 25, true, mockStyles);
-
-      // The function should avoid leaving just "C" on a line
-      // All lines should have more than 1 character unless it's a standalone word
-      result.lines.forEach((line) => {
-        if (line.trim().length === 1) {
-          // If there's a single character, it should be a complete word
-          // (preceded or followed by space/hyphen in original text)
-          // In this case, "Commercial" has no spaces, so no single chars should appear
-          expect(line.trim().length).toBeGreaterThan(1);
-        }
-      });
+      expect(result.lines).toEqual(['Comme', 'rcial']);
     });
 
     it('should allow single-character standalone words like "a" or "I"', () => {
       const result = splitStringForSvg('I am a developer', 200, true, mockStyles);
 
-      // When maxWidth is large enough, the whole phrase should fit
-      // This tests that single characters aren't incorrectly merged when they're valid words
-      const allText = result.lines.join(' ');
-      expect(allText).toContain('I');
-      expect(allText).toContain('a');
+      expect(result.lines).toEqual(['I am a developer']);
     });
 
     it('should merge single-character fragments with previous line', () => {
@@ -113,20 +98,16 @@ describe('splitStringForSvg', () => {
 
       const result = splitStringForSvg('Test C Word', 50, true, mockStyles);
 
-      // Should not have a line with just "C"
-      expect(result.lines.every((line) => line.trim() !== 'C')).toBe(true);
+      // Should not have a line with just "C" - single character fragments should be merged
+      expect(result.lines).toEqual(['Test', 'C Word']);
     });
 
     it('should handle very long words that need to be force-split', () => {
       const longWord = 'Supercalifragilisticexpialidocious';
       const result = splitStringForSvg(longWord, 100, true, mockStyles);
 
-      // Should split the word somehow
-      expect(result.lines.length).toBeGreaterThan(1);
-      // Should not have single character lines
-      result.lines.forEach((line) => {
-        expect(line.length).toBeGreaterThan(1);
-      });
+      // With 10px per char and 100px maxWidth, should split into 10-char chunks
+      expect(result.lines).toEqual(['Supercalif', 'ragilistic', 'expialidoc', 'ious']);
     });
 
     it('should preserve multiple words on same line if they fit', () => {
@@ -148,21 +129,12 @@ describe('splitStringForSvg', () => {
     });
 
     it('should backtrack to find natural split points', () => {
-      // "Energy Generation Commercial"
-      // Should try to split at spaces rather than in the middle of words
+      // "Energy Generation Commercial" = 29 chars with spaces
+      // With maxWidth of 120px (12 chars), should split at word boundaries
       const result = splitStringForSvg('Energy Generation Commercial', 120, true, mockStyles);
 
-      // Each line should be a complete word or set of words
-      result.lines.forEach((line) => {
-        const trimmed = line.trim();
-        // Check that we're not breaking words inappropriately
-        if (trimmed.length > 1) {
-          // Words should either end naturally or with proper break characters
-          const lastChar = trimmed[trimmed.length - 1];
-          const isNaturalEnd = /[a-zA-Z0-9]/.test(lastChar) || lastChar === '-';
-          expect(isNaturalEnd).toBe(true);
-        }
-      });
+      // Should split at spaces, keeping words intact
+      expect(result.lines).toEqual(['Energy', 'Generation', 'Commercial']);
     });
   });
 });
