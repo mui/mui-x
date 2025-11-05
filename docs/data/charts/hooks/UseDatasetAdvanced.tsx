@@ -88,8 +88,8 @@ function DataTable({
           {chartDataset.map((row, index) => (
             <TableRow
               key={String(row.product)}
-              onMouseEnter={() => onHighlightedIndexChange(index)}
-              onMouseLeave={() => onHighlightedIndexChange(null)}
+              onPointerEnter={() => onHighlightedIndexChange(index)}
+              onPointerLeave={() => onHighlightedIndexChange(null)}
               sx={{
                 backgroundColor:
                   highlightedIndex === index ? 'action.hover' : 'transparent',
