@@ -349,12 +349,6 @@ function isConsoleWarningIgnored(msg?: string) {
       'MUI: The Experimental_CssVarsProvider component has been ported into ThemeProvider.',
     );
 
-  const isMuiLoadingButtonWarning =
-    (isMaterialUIv6 || isMaterialUIv7) &&
-    msg?.includes(
-      'MUI: The LoadingButton component functionality is now part of the Button component from Material UI.',
-    );
-
   const isReactRouterFlagsError = msg?.includes('React Router Future Flag Warning');
 
   const isNoDevRoute = msg?.includes('No routes matched location "/#no-dev"');
@@ -368,8 +362,7 @@ function isConsoleWarningIgnored(msg?: string) {
     isMuiV6Error ||
     isReactRouterFlagsError ||
     isNoDevRoute ||
-    isTailwindCdnWarning ||
-    isMuiLoadingButtonWarning
+    isTailwindCdnWarning
   ) {
     return true;
   }
