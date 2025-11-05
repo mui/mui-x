@@ -134,5 +134,11 @@ describe('splitStringForSvg', () => {
 
       expect(result.lines).toEqual(['Gas']);
     });
+
+    it('should not leave a dangling single character', () => {
+      const result = splitStringForSvg('Gas', 20, true, mockStyles);
+
+      expect(result.lines).toEqual(['Gas']);
+    });
   });
 });
