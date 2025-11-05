@@ -18,7 +18,7 @@ The primary purpose is to demonstrate the use of the [Data Source layer](/x/reac
 
 ### Relevant documentation
 
-The docs listed below may be useful if you're new to the MUI X Data Grid:
+The docs listed below may be useful if you're new to the MUI X Data Grid:
 
 - [Server-side data with the Data Source layer](/x/react-data-grid/server-side-data/)
 - [Column definition](/x/react-data-grid/column-definition/)
