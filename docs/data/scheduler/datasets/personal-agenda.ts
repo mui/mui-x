@@ -46,7 +46,7 @@ export const initialEvents: CalendarEvent[] = [
     start: START_OF_FIRST_WEEK.set({ weekday: 4, hour: 10 }),
     end: START_OF_FIRST_WEEK.set({ weekday: 4, hour: 11 }),
     title: '1-on-1 with Abigail',
-    resource: 'project-a',
+    resource: 'explore',
     rrule: { freq: 'WEEKLY', interval: 3, byDay: ['TH'] },
   },
   {
@@ -54,7 +54,7 @@ export const initialEvents: CalendarEvent[] = [
     start: START_OF_FIRST_WEEK.plus({ weeks: 1 }).set({ weekday: 1, hour: 10 }),
     end: START_OF_FIRST_WEEK.plus({ weeks: 1 }).set({ weekday: 1, hour: 11 }),
     title: '1-on-1 with Hailey',
-    resource: 'project-b',
+    resource: 'data-grid',
     rrule: { freq: 'WEEKLY', interval: 3, byDay: ['MO'] },
   },
   {
@@ -62,7 +62,7 @@ export const initialEvents: CalendarEvent[] = [
     start: START_OF_FIRST_WEEK.plus({ weeks: 1 }).set({ weekday: 2, hour: 10 }),
     end: START_OF_FIRST_WEEK.plus({ weeks: 1 }).set({ weekday: 2, hour: 11 }),
     title: 'Weekly planning',
-    resource: 'project-a',
+    resource: 'explore',
     rrule: { freq: 'WEEKLY', interval: 2, byDay: ['TU'] },
   },
   {
@@ -70,7 +70,7 @@ export const initialEvents: CalendarEvent[] = [
     start: START_OF_FIRST_WEEK.set({ weekday: 5, hour: 10 }),
     end: START_OF_FIRST_WEEK.set({ weekday: 5, hour: 11 }),
     title: 'Weekly planning',
-    resource: 'project-b',
+    resource: 'data-grid',
     rrule: { freq: 'WEEKLY', interval: 2, byDay: ['FR'] },
   },
 
