@@ -1,7 +1,7 @@
-import * as React from 'react';
-import { createSchedulerRenderer } from 'test/utils/scheduler';
-import { StandaloneView } from '@mui/x-scheduler/standalone-view';
+import { createSchedulerRenderer, SchedulerStoreRunner } from 'test/utils/scheduler';
+import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
 import { screen } from '@mui/internal-test-utils';
+import { EventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { PreferencesMenu } from './PreferencesMenu';
 import { getPreferencesMenu, openPreferencesMenu } from '../../../utils/test-utils';
 
@@ -13,9 +13,9 @@ describe('<PreferencesMenu />', () => {
 
   it('should render the menu when no config is provided', async () => {
     render(
-      <StandaloneView events={[]}>
+      <EventCalendarProvider events={[]}>
         <PreferencesMenu />
-      </StandaloneView>,
+      </EventCalendarProvider>,
     );
 
     expect(getPreferencesMenu()).not.to.equal(null);
@@ -23,9 +23,9 @@ describe('<PreferencesMenu />', () => {
 
   it('should render the menu when preferencesMenuConfig has no disabled items', async () => {
     render(
-      <StandaloneView events={[]} preferencesMenuConfig={{}}>
+      <EventCalendarProvider events={[]} preferencesMenuConfig={{}}>
         <PreferencesMenu />
-      </StandaloneView>,
+      </EventCalendarProvider>,
     );
 
     expect(getPreferencesMenu()).not.to.equal(null);
@@ -33,9 +33,9 @@ describe('<PreferencesMenu />', () => {
 
   it('should not render the menu when the config equals false', async () => {
     render(
-      <StandaloneView events={[]} preferencesMenuConfig={false}>
+      <EventCalendarProvider events={[]} preferencesMenuConfig={false}>
         <PreferencesMenu />
-      </StandaloneView>,
+      </EventCalendarProvider>,
     );
 
     expect(getPreferencesMenu()).to.equal(null);
@@ -43,7 +43,7 @@ describe('<PreferencesMenu />', () => {
 
   it('should not render the menu when all the items are disabled', async () => {
     render(
-      <StandaloneView
+      <EventCalendarProvider
         events={[]}
         preferencesMenuConfig={{
           toggleWeekendVisibility: false,
@@ -52,7 +52,7 @@ describe('<PreferencesMenu />', () => {
         }}
       >
         <PreferencesMenu />
-      </StandaloneView>,
+      </EventCalendarProvider>,
     );
 
     expect(getPreferencesMenu()).to.equal(null);
@@ -60,7 +60,7 @@ describe('<PreferencesMenu />', () => {
 
   it('should hide showWeekends option when toggleWeekendVisibility is false', async () => {
     const { user } = render(
-      <StandaloneView
+      <EventCalendarProvider
         events={[]}
         preferencesMenuConfig={{
           toggleWeekendVisibility: false,
@@ -69,7 +69,7 @@ describe('<PreferencesMenu />', () => {
         }}
       >
         <PreferencesMenu />
-      </StandaloneView>,
+      </EventCalendarProvider>,
     );
 
     await openPreferencesMenu(user);
@@ -82,7 +82,7 @@ describe('<PreferencesMenu />', () => {
 
   it('should hide showWeekNumber option when toggleWeekNumberVisibility is false', async () => {
     const { user } = render(
-      <StandaloneView
+      <EventCalendarProvider
         events={[]}
         preferencesMenuConfig={{
           toggleWeekendVisibility: true,
@@ -91,7 +91,7 @@ describe('<PreferencesMenu />', () => {
         }}
       >
         <PreferencesMenu />
-      </StandaloneView>,
+      </EventCalendarProvider>,
     );
 
     await openPreferencesMenu(user);
@@ -102,7 +102,7 @@ describe('<PreferencesMenu />', () => {
 
   it('should hide ampm option when toggleAmpm is false', async () => {
     const { user } = render(
-      <StandaloneView
+      <EventCalendarProvider
         events={[]}
         preferencesMenuConfig={{
           toggleWeekendVisibility: true,
@@ -111,7 +111,7 @@ describe('<PreferencesMenu />', () => {
         }}
       >
         <PreferencesMenu />
-      </StandaloneView>,
+      </EventCalendarProvider>,
     );
 
     await openPreferencesMenu(user);
@@ -121,5 +121,58 @@ describe('<PreferencesMenu />', () => {
       null,
     );
     expect(screen.queryByRole('menuitem', { name: /time format/i })).to.equal(null);
+  });
+
+  it('should show "Show empty days" ONLY in Agenda view when enabled in config', async () => {
+    const { user } = render(
+      <EventCalendarProvider events={[]}>
+        <SchedulerStoreRunner
+          context={EventCalendarStoreContext}
+          onMount={(store) => store.setView('agenda', {} as any)}
+        />
+        <PreferencesMenu />
+      </EventCalendarProvider>,
+    );
+
+    await openPreferencesMenu(user);
+
+    expect(screen.queryByRole('menuitemcheckbox', { name: /show empty days/i })).not.to.equal(null);
+  });
+
+  it('should NOT show "Show empty days" in non-Agenda views even when enabled in config', async () => {
+    const { user } = render(
+      <EventCalendarProvider events={[]}>
+        <SchedulerStoreRunner
+          context={EventCalendarStoreContext}
+          onMount={(store) => store.setView('week', {} as any)}
+        />
+        <PreferencesMenu />
+      </EventCalendarProvider>,
+    );
+
+    await openPreferencesMenu(user);
+
+    expect(screen.queryByRole('menuitemcheckbox', { name: /show empty days/i })).to.equal(null);
+  });
+
+  it('should NOT show "Show empty days" in Agenda view when the config disables it', async () => {
+    const { user } = render(
+      <EventCalendarProvider
+        events={[]}
+        preferencesMenuConfig={{
+          toggleEmptyDaysInAgenda: false,
+        }}
+      >
+        <SchedulerStoreRunner
+          context={EventCalendarStoreContext}
+          onMount={(store) => store.setView('agenda', {} as any)}
+        />
+        <PreferencesMenu />
+      </EventCalendarProvider>,
+    );
+
+    await openPreferencesMenu(user);
+
+    expect(screen.queryByRole('menuitemcheckbox', { name: /show empty days/i })).to.equal(null);
   });
 });

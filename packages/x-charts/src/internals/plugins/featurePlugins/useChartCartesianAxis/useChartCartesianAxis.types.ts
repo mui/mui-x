@@ -15,6 +15,7 @@ import type { UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
 import type { ZoomData, ZoomOptions, ZoomSliderShowTooltip } from './zoom.types';
 import type { UseChartInteractionSignature } from '../useChartInteraction';
 import type { ChartsAxisProps } from '../../../../ChartsAxis';
+import type { UseChartBrushSignature } from '../useChartBrush';
 
 /**
  * The axes' configuration after computing.
@@ -84,6 +85,7 @@ export interface DefaultizedZoomOptions extends Required<Omit<ZoomOptions, 'slid
   axisId: AxisId;
   axisDirection: 'x' | 'y';
   slider: DefaultedZoomSliderOptions;
+  reverse: boolean;
 }
 
 export interface UseChartCartesianAxisState {
@@ -115,5 +117,5 @@ export type UseChartCartesianAxisSignature<SeriesType extends ChartSeriesType = 
     defaultizedParams: UseChartCartesianAxisDefaultizedParameters;
     state: UseChartCartesianAxisState;
     dependencies: [UseChartSeriesSignature<SeriesType>];
-    optionalDependencies: [UseChartInteractionSignature];
+    optionalDependencies: [UseChartInteractionSignature, UseChartBrushSignature];
   }>;

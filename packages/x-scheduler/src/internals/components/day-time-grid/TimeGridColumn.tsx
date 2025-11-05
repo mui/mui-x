@@ -11,17 +11,22 @@ import {
 } from '@mui/x-scheduler-headless/constants';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { selectors } from '@mui/x-scheduler-headless/use-event-calendar';
+import {
+  schedulerEventSelectors,
+  schedulerNowSelectors,
+} from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useAdapter, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-timeline-position';
+import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
 import { EventPopoverTrigger } from '../event-popover';
-import { useEventPopoverContext } from '../event-popover/EventPopoverContext';
+import { useEventPopoverContext } from '../event-popover/EventPopover';
 import './DayTimeGrid.css';
+import { useFormatTime } from '../../hooks/useFormatTime';
 
 export function TimeGridColumn(props: TimeGridColumnProps) {
-  const { day, isToday, showCurrentTimeIndicator, index } = props;
+  const { day, showCurrentTimeIndicator, index } = props;
 
   const adapter = useAdapter();
   const start = React.useMemo(() => adapter.startOfDay(day.value), [adapter, day]);
@@ -38,11 +43,9 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
       addPropertiesToDroppedEvent={addPropertiesToDroppedEvent}
       className="DayTimeGridColumn"
       data-weekend={isWeekend(adapter, day.value) ? '' : undefined}
-      data-current={isToday ? '' : undefined}
       style={{ '--columns-count': maxIndex } as React.CSSProperties}
     >
       <ColumnInteractiveLayer
-        day={day}
         start={start}
         end={end}
         showCurrentTimeIndicator={showCurrentTimeIndicator}
@@ -55,7 +58,6 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
 }
 
 function ColumnInteractiveLayer({
-  day,
   start,
   end,
   showCurrentTimeIndicator,
@@ -63,7 +65,6 @@ function ColumnInteractiveLayer({
   occurrences,
   maxIndex,
 }: {
-  day: useEventOccurrencesWithDayGridPosition.DayData;
   start: SchedulerValidDate;
   end: SchedulerValidDate;
   showCurrentTimeIndicator: boolean;
@@ -71,17 +72,28 @@ function ColumnInteractiveLayer({
   occurrences: CalendarEventOccurrenceWithTimePosition[];
   maxIndex: number;
 }) {
+  // Context hooks
   const adapter = useAdapter();
-
-  const placeholder = CalendarGrid.usePlaceholderInRange({ start, end, occurrences, maxIndex });
   const store = useEventCalendarStoreContext();
+  const { open: startEditing } = useEventPopoverContext();
+
+  // Ref hooks
   const columnRef = React.useRef<HTMLDivElement | null>(null);
+
+  // Selector hooks
+  const isCreatingAnEvent = useStore(
+    store,
+    eventCalendarOccurrencePlaceholderSelectors.isCreatingInTimeRange,
+    start,
+    end,
+  );
+  const placeholder = CalendarGrid.usePlaceholderInRange({ start, end, occurrences, maxIndex });
+
+  // Feature hooks
   const getDateFromPosition = CalendarGrid.useGetDateFromPositionInColumn({
     elementRef: columnRef,
     snapMinutes: EVENT_CREATION_PRECISION_MINUTE,
   });
-  const { startEditing } = useEventPopoverContext();
-  const isCreation = useStore(store, selectors.isCreatingNewEventInTimeRange, start, end);
 
   const computeInitialRange = (event: React.MouseEvent<HTMLDivElement>) => {
     const startDateFromPosition = getDateFromPosition(event.clientY);
@@ -93,21 +105,26 @@ function ColumnInteractiveLayer({
   };
 
   const handleDoubleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (!schedulerEventSelectors.canCreateNewEvent(store.state)) {
+      return;
+    }
+
     const draftRange = computeInitialRange(event);
     store.setOccurrencePlaceholder({
       type: 'creation',
       surfaceType: 'time-grid',
       start: draftRange.start,
       end: draftRange.end,
+      resourceId: null,
     });
   };
 
   React.useEffect(() => {
-    if (!isCreation || !placeholder || !columnRef.current) {
+    if (!isCreatingAnEvent || !placeholder || !columnRef.current) {
       return;
     }
     startEditing(columnRef.current, placeholder);
-  }, [isCreation, placeholder, startEditing]);
+  }, [isCreatingAnEvent, placeholder, startEditing]);
 
   return (
     <div
@@ -119,22 +136,10 @@ function ColumnInteractiveLayer({
         <EventPopoverTrigger
           key={occurrence.key}
           occurrence={occurrence}
-          render={
-            <TimeGridEvent
-              occurrence={occurrence}
-              variant="regular"
-              ariaLabelledBy={`DayTimeGridHeaderCell-${adapter.getDate(day.value)}`}
-            />
-          }
+          render={<TimeGridEvent occurrence={occurrence} variant="regular" />}
         />
       ))}
-      {placeholder != null && (
-        <TimeGridEvent
-          occurrence={placeholder}
-          variant="placeholder"
-          ariaLabelledBy={`DayTimeGridHeaderCell-${day.key}`}
-        />
-      )}
+      {placeholder != null && <TimeGridEvent occurrence={placeholder} variant="placeholder" />}
       {showCurrentTimeIndicator ? (
         <CalendarGrid.CurrentTimeIndicator className="DayTimeGridCurrentTimeIndicator">
           {index === 0 && <TimeGridCurrentTimeLabel />}
@@ -145,16 +150,11 @@ function ColumnInteractiveLayer({
 }
 
 function TimeGridCurrentTimeLabel() {
-  const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
-  const now = useStore(store, selectors.nowUpdatedEveryMinute);
-  const ampm = useStore(store, selectors.ampm);
-  const timeFormat = ampm ? 'hoursMinutes12h' : 'hoursMinutes24h';
+  const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
+  const formatTime = useFormatTime();
 
-  const currentTimeLabel = React.useMemo(
-    () => adapter.format(now, timeFormat),
-    [now, timeFormat, adapter],
-  );
+  const currentTimeLabel = React.useMemo(() => formatTime(now), [now, formatTime]);
 
   return (
     <span className="DayTimeGridCurrentTimeLabel" aria-hidden="true">
@@ -165,7 +165,6 @@ function TimeGridCurrentTimeLabel() {
 
 interface TimeGridColumnProps {
   day: useEventOccurrencesWithDayGridPosition.DayData;
-  isToday: boolean;
   index: number;
   showCurrentTimeIndicator: boolean;
 }

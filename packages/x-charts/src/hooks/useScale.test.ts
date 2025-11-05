@@ -1,13 +1,29 @@
-import { scaleBand, scaleLinear } from '@mui/x-charts-vendor/d3-scale';
+import { scaleBand } from '@mui/x-charts/internals';
+import { scaleLinear } from '@mui/x-charts-vendor/d3-scale';
 import { getValueToPositionMapper } from './useScale';
 
 describe('getValueToPositionMapper', () => {
   it('returns a function that maps values to their position for ordinal scales', () => {
-    const scale = scaleBand<string | number | Date>(['A', 'B', 'C'], [0, 1]);
+    const scale = scaleBand(['A', 'B', 'C'], [0, 1]);
 
     const mapper = getValueToPositionMapper(scale);
 
     expect(mapper('B')).toBeCloseTo(0.5);
+  });
+
+  it('properly handles array of arrays as input for band scales', () => {
+    const scale = scaleBand(
+      [
+        [0, 0],
+        [2, 8],
+        [10, 10],
+      ],
+      [0, 1],
+    );
+
+    const mapper = getValueToPositionMapper(scale);
+
+    expect(mapper([2, 8])).toEqual(0.5);
   });
 
   it('returns a function that maps values to their position for continuous scales', () => {

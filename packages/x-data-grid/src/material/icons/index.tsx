@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { createSvgIcon } from './createSvgIcon';
 
 export const GridArrowUpwardIcon = createSvgIcon(

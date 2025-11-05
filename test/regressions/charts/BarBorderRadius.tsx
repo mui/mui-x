@@ -83,6 +83,18 @@ export default function BarBorderRadius() {
       </Typography>
       <BarChart {...chartSettingsV} borderRadius={100} />
       <BarChart {...chartSettingsH} borderRadius={100} />
+      <Typography
+        sx={{
+          writingMode: 'vertical-lr',
+          rotate: '180deg',
+          alignSelf: 'center',
+          justifySelf: 'center',
+        }}
+      >
+        Axis Reversed + Border Radius: 16px
+      </Typography>
+      <BarChart {...chartSettingsV} yAxis={[{ reverse: true }]} borderRadius={16} />
+      <BarChart {...chartSettingsH} xAxis={[{ reverse: true }]} borderRadius={16} />
     </div>
   );
 }

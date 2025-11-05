@@ -24,8 +24,8 @@ interface ScatterPreviewPlotProps extends PreviewPlotProps {
 export function ScatterPreviewPlot({ axisId, x, y, height, width }: ScatterPreviewPlotProps) {
   const store = useStore();
   const seriesData = useScatterSeriesContext();
-  const xAxes = useSelector(store, selectorChartPreviewComputedXAxis, [axisId]);
-  const yAxes = useSelector(store, selectorChartPreviewComputedYAxis, [axisId]);
+  const xAxes = useSelector(store, selectorChartPreviewComputedXAxis, axisId);
+  const yAxes = useSelector(store, selectorChartPreviewComputedYAxis, axisId);
   const defaultXAxisId = useXAxes().xAxisIds[0];
   const defaultYAxisId = useYAxes().yAxisIds[0];
   const { zAxis: zAxes, zAxisIds } = useZAxes();

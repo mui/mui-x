@@ -21,10 +21,6 @@ export interface EventPopoverProps extends React.HTMLAttributes<HTMLDivElement> 
   onClose: () => void;
 }
 
-export interface EventPopoverContextValue {
-  startEditing: (currentTarget: HTMLElement, occurrence: CalendarEventOccurrence) => void;
-}
-
 export interface EventPopoverProviderProps {
   containerRef: React.RefObject<HTMLElement | null>;
   children: React.ReactNode;

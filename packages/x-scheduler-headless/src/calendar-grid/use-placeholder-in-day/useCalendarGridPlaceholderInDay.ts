@@ -1,11 +1,13 @@
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store/useStore';
 import { CalendarEventOccurrenceWithDayGridPosition, SchedulerValidDate } from '../../models';
-import { selectors } from '../../use-event-calendar';
+import { schedulerEventSelectors } from '../../scheduler-selectors';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
 import type { useEventOccurrencesWithDayGridPosition } from '../../use-event-occurrences-with-day-grid-position';
 import { useAdapter, diffIn } from '../../use-adapter/useAdapter';
+import { eventCalendarOccurrencePlaceholderSelectors } from '../../event-calendar-selectors';
+import { isInternalDragOrResizePlaceholder } from '../../utils/drag-utils';
 
 export function useCalendarGridPlaceholderInDay(
   day: SchedulerValidDate,
@@ -17,14 +19,15 @@ export function useCalendarGridPlaceholderInDay(
 
   const rawPlaceholder = useStore(
     store,
-    selectors.occurrencePlaceholderToRenderInDayCell,
+    eventCalendarOccurrencePlaceholderSelectors.placeholderInDayCell,
     day,
     rowStart,
   );
 
-  const originalEventId =
-    rawPlaceholder?.type === 'internal-drag-or-resize' ? rawPlaceholder.eventId : null;
-  const originalEvent = useStore(store, selectors.event, originalEventId);
+  const originalEventId = isInternalDragOrResizePlaceholder(rawPlaceholder)
+    ? rawPlaceholder.eventId
+    : null;
+  const originalEvent = useStore(store, schedulerEventSelectors.processedEvent, originalEventId);
 
   return React.useMemo(() => {
     if (!rawPlaceholder) {
@@ -46,6 +49,18 @@ export function useCalendarGridPlaceholderInDay(
         allDay: true,
         start: day,
         end: adapter.isAfter(rawPlaceholder.end, rowEnd) ? rowEnd : rawPlaceholder.end,
+        position: {
+          index: 1,
+          daySpan: diffIn(adapter, rawPlaceholder.end, day, 'days') + 1,
+        },
+      };
+    }
+
+    if (rawPlaceholder.type === 'external-drag') {
+      return {
+        ...sharedProperties,
+        id: 'occurrence-placeholder',
+        title: rawPlaceholder.eventData.title ?? '',
         position: {
           index: 1,
           daySpan: diffIn(adapter, rawPlaceholder.end, day, 'days') + 1,

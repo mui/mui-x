@@ -34,6 +34,7 @@ import type { GridApiPremium, GridPrivateApiPremium } from '../models/gridApiPre
 import { useGridRowsOverridableMethods } from '../hooks/features/rows/useGridRowsOverridableMethods';
 import { useGridParamsOverridableMethods } from '../hooks/features/rows/useGridParamsOverridableMethods';
 import { gridSidebarOpenSelector } from '../hooks/features/sidebar';
+import { useIsCellEditable } from '../hooks/features/editing/useGridCellEditable';
 
 export type { GridPremiumSlotsComponent as GridSlots } from '../models';
 
@@ -53,6 +54,7 @@ const configuration: GridConfiguration<GridPrivateApiPremium, DataGridPremiumPro
 
       return getRowValue(row, column, apiRef);
     },
+    useIsCellEditable,
     useGridRowsOverridableMethods,
     useGridParamsOverridableMethods,
   },
@@ -152,6 +154,7 @@ DataGridPremiumRaw.propTypes = {
           helperText: PropTypes.string,
           response: PropTypes.shape({
             aggregation: PropTypes.object.isRequired,
+            chart: PropTypes.object,
             conversationId: PropTypes.string.isRequired,
             filterOperator: PropTypes.oneOf(['and', 'or']),
             filters: PropTypes.arrayOf(PropTypes.object).isRequired,

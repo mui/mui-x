@@ -5,38 +5,56 @@ import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { useAdapter, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { selectors } from '@mui/x-scheduler-headless/use-event-calendar';
+import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
+import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { EventPopoverTrigger } from '../event-popover';
 import { DayGridEvent } from '../event';
+import { useEventPopoverContext } from '../event-popover/EventPopover';
 
 import './DayTimeGrid.css';
-import { useEventPopoverContext } from '../event-popover/EventPopoverContext';
 
 export function DayGridCell(props: DayGridCellProps) {
   const { day, row } = props;
-  const adapter = useAdapter();
-  const placeholder = CalendarGrid.usePlaceholderInDay(day.value, row);
-  const store = useEventCalendarStoreContext();
-  const cellRef = React.useRef<HTMLDivElement | null>(null);
-  const isCreation = useStore(store, selectors.isCreatingNewEventInDayCell, day.value);
 
-  const { startEditing } = useEventPopoverContext();
+  // Context hooks
+  const adapter = useAdapter();
+  const store = useEventCalendarStoreContext();
+
+  // Ref hooks
+  const cellRef = React.useRef<HTMLDivElement | null>(null);
+
+  // Selector hooks
+  const isCreatingAnEvent = useStore(
+    store,
+    eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell,
+    day.value,
+  );
+
+  // Feature hooks
+  const placeholder = CalendarGrid.usePlaceholderInDay(day.value, row);
+
+  const { open: startEditing } = useEventPopoverContext();
 
   const handleDoubleClick = () => {
+    if (!schedulerEventSelectors.canCreateNewEvent(store.state)) {
+      return;
+    }
+
     store.setOccurrencePlaceholder({
       type: 'creation',
       surfaceType: 'day-grid',
       start: adapter.startOfDay(day.value),
       end: adapter.endOfDay(day.value),
+      resourceId: null,
     });
   };
 
   React.useEffect(() => {
-    if (!isCreation || !placeholder || !cellRef.current) {
+    if (!isCreatingAnEvent || !placeholder || !cellRef.current) {
       return;
     }
     startEditing(cellRef.current, placeholder);
-  }, [isCreation, placeholder, startEditing]);
+  }, [isCreatingAnEvent, placeholder, startEditing]);
 
   return (
     <CalendarGrid.DayCell
@@ -58,12 +76,7 @@ export function DayGridCell(props: DayGridCellProps) {
         {day.withPosition.map((occurrence) => {
           if (occurrence.position.isInvisible) {
             return (
-              <DayGridEvent
-                key={occurrence.key}
-                occurrence={occurrence}
-                variant="invisible"
-                ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
-              />
+              <DayGridEvent key={occurrence.key} occurrence={occurrence} variant="invisible" />
             );
           }
 
@@ -71,23 +84,13 @@ export function DayGridCell(props: DayGridCellProps) {
             <EventPopoverTrigger
               key={occurrence.key}
               occurrence={occurrence}
-              render={
-                <DayGridEvent
-                  occurrence={occurrence}
-                  variant="allDay"
-                  ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
-                />
-              }
+              render={<DayGridEvent occurrence={occurrence} variant="allDay" />}
             />
           );
         })}
         {placeholder != null && (
           <div className="DayTimeGridAllDayEventContainer">
-            <DayGridEvent
-              occurrence={placeholder}
-              variant="placeholder"
-              ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
-            />
+            <DayGridEvent occurrence={placeholder} variant="placeholder" />
           </div>
         )}
       </div>
