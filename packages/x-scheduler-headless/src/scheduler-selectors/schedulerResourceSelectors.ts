@@ -36,6 +36,21 @@ const resourcesChildrenMapSelector = createSelectorMemoized(
   },
 );
 
+const resourceParentIdsSelector = createSelectorMemoized(
+  (state: State) => state.resourceChildrenIdLookup,
+  (resourceChildrenIdLookup) => {
+    const result: Map<CalendarResourceId, CalendarResourceId | null> = new Map();
+
+    for (const [resourceId, childrenIds] of Array.from(resourceChildrenIdLookup.entries())) {
+      for (const childId of childrenIds) {
+        result.set(childId, resourceId);
+      }
+    }
+
+    return result;
+  },
+);
+
 const resourcesFlatListSelector = createSelectorMemoized(
   (state: State) => state.resourceIdList,
   (state: State) => state.processedResourceLookup,
@@ -73,6 +88,7 @@ export const schedulerResourceSelectors = {
   processedResourceChildrenMap: resourcesChildrenMapSelector,
   childrenIdLookup: (state: State) => state.resourceChildrenIdLookup,
   childrenIdsList: resourceChildrenIdListSelector,
+  resourceParentIds: resourceParentIdsSelector,
   idList: createSelector((state: State) => state.resourceIdList),
   visibleMap: createSelector((state: State) => state.visibleResources),
   visibleIdList: createSelectorMemoized(

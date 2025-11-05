@@ -24,6 +24,7 @@ export function useEventOccurrencesGroupedByResource(
     store,
     schedulerResourceSelectors.processedResourceChildrenMap,
   );
+  const resourceParentIds = useStore(store, schedulerResourceSelectors.resourceParentIds);
 
   return React.useMemo(
     () =>
@@ -33,10 +34,20 @@ export function useEventOccurrencesGroupedByResource(
         visibleResources,
         resources,
         resourcesChildrenMap,
+        resourceParentIds,
         start,
         end,
       ),
-    [adapter, events, visibleResources, resources, resourcesChildrenMap, start, end],
+    [
+      adapter,
+      events,
+      visibleResources,
+      resources,
+      resourcesChildrenMap,
+      resourceParentIds,
+      start,
+      end,
+    ],
   );
 }
 
@@ -67,12 +78,20 @@ export function innerGetEventOccurrencesGroupedByResource(
   visibleResources: Map<string, boolean>,
   resources: readonly CalendarResource[],
   resourcesChildrenMap: Map<string, readonly CalendarResource[]>,
+  resourceParentIds: Map<string, string | null>,
   start: SchedulerValidDate,
   end: SchedulerValidDate,
 ): InnerGetEventOccurrencesGroupedByResourceReturnValue[] {
   const occurrencesGroupedByResource = new Map<string, CalendarEventOccurrence[]>();
 
-  const occurrences = getOccurrencesFromEvents({ adapter, start, end, events, visibleResources });
+  const occurrences = getOccurrencesFromEvents({
+    adapter,
+    start,
+    end,
+    events,
+    visibleResources,
+    resourceParentIds,
+  });
 
   for (const occurrence of occurrences) {
     const resourceId = occurrence.resource;

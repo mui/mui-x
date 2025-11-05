@@ -58,31 +58,6 @@ function ResourceLegendItem(props: { resource: CalendarResource }) {
   );
 }
 
-const getVisibilityDifferenceMap = (
-  allResourceIds: readonly string[],
-  childrenIdsMap: Map<string, string[]>,
-  newValue: string[],
-) => {
-  const newVisibleResourcesSet = new Set(newValue);
-  const diffMap = new Map<string, boolean>();
-
-  const propagateChangeToChildren = (resourceId: string, isVisible: boolean) => {
-    diffMap.set(resourceId, isVisible);
-    const childIds = childrenIdsMap.get(resourceId) || [];
-    if (childIds.length > 0) {
-      for (const childId of childIds) {
-        diffMap.set(childId, isVisible);
-        propagateChangeToChildren(childId, isVisible);
-      }
-    }
-  };
-
-  for (const resourceId of allResourceIds) {
-    propagateChangeToChildren(resourceId, newVisibleResourcesSet.has(resourceId));
-  }
-  return diffMap;
-};
-
 export const ResourceLegend = React.forwardRef(function ResourceLegend(
   props: ResourceLegendProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
@@ -92,17 +67,17 @@ export const ResourceLegend = React.forwardRef(function ResourceLegend(
   const store = useEventCalendarStoreContext();
   const resources = useStore(store, schedulerResourceSelectors.processedResourceList);
   const visibleResourcesList = useStore(store, schedulerResourceSelectors.visibleIdList);
-  const resourceIdList = useStore(store, schedulerResourceSelectors.idList);
-  const resourceChildrenIdsList = useStore(store, schedulerResourceSelectors.childrenIdLookup);
 
   const handleVisibleResourcesChange = useEventCallback((value: string[]) => {
-    const differenceMap = getVisibilityDifferenceMap(
-      resourceIdList,
-      resourceChildrenIdsList,
-      value,
+    const valueSet = new Set(value);
+    const newVisibleResourcesMap = new Map(
+      schedulerResourceSelectors
+        .processedResourceList(store.state)
+        .filter((resource) => !valueSet.has(resource.id))
+        .map((resource) => [resource.id, false]),
     );
 
-    store.setVisibleResources(differenceMap);
+    store.setVisibleResources(newVisibleResourcesMap);
   });
 
   if (resources.length === 0) {

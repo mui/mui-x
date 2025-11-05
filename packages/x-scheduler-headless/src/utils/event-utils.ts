@@ -31,16 +31,41 @@ export function getDaysTheOccurrenceIsVisibleOn(
   return dayKeys;
 }
 
+const checkResourceVisibility = (
+  resourceId: string,
+  visibleResources: Map<string, boolean>,
+  resourceParentIds: Map<string, string | null>,
+): boolean => {
+  if (!resourceId) {
+    return true;
+  }
+
+  const isResourceVisible = visibleResources.get(resourceId) !== false;
+
+  if (isResourceVisible) {
+    const parentId = resourceParentIds.get(resourceId);
+    if (!parentId) {
+      return isResourceVisible;
+    }
+    return checkResourceVisibility(parentId, visibleResources, resourceParentIds);
+  }
+
+  return isResourceVisible;
+};
+
 /**
  * Returns the occurrences to render in the given date range, expanding recurring events.
  */
 export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsParameters) {
-  const { adapter, start, end, events, visibleResources } = parameters;
+  const { adapter, start, end, events, visibleResources, resourceParentIds } = parameters;
   const occurrences: CalendarEventOccurrence[] = [];
 
   for (const event of events) {
     // STEP 1: Skip events from resources that are not visible
-    if (event.resource && visibleResources.get(event.resource) === false) {
+    if (
+      event.resource &&
+      checkResourceVisibility(event.resource, visibleResources, resourceParentIds) === false
+    ) {
       continue;
     }
 
@@ -81,4 +106,5 @@ interface GetOccurrencesFromEventsParameters {
   end: SchedulerValidDate;
   events: CalendarEvent[];
   visibleResources: Map<string, boolean>;
+  resourceParentIds: Map<string, string | null>;
 }

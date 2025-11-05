@@ -158,12 +158,13 @@ export function getProcessedResourceFromModel<TResource extends object>(
   for (const key of RESOURCE_PROPERTIES) {
     const getter = resourceModelStructure?.[key]?.getter;
 
+    // @ts-ignore
     const resourceProperty = getter ? getter(resource) : resource[key];
 
     if (key === 'children' && Array.isArray(resourceProperty)) {
       // Process children recursively
       const children = resourceProperty.map((child) =>
-        getProcessedResourceFromModel(child as TResource, resourceModelStructure),
+        getProcessedResourceFromModel(child, resourceModelStructure),
       );
       // @ts-ignore
       processedResource[key] = children;
