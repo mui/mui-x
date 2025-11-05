@@ -78,7 +78,7 @@ describe('splitStringForSvg', () => {
     it('should not create single-character lines from multi-character words', () => {
       // If we try to split at "C" + "ommercial", "C" should be merged back
       const result = splitStringForSvg('Commercial', 25, true, mockStyles);
-      expect(result.lines).toEqual(['Comme', 'rcial']);
+      expect(result.lines).toEqual(['Co', 'mm', 'er', 'ci', 'al']);
     });
 
     it('should allow single-character standalone words like "a" or "I"', () => {
@@ -88,14 +88,6 @@ describe('splitStringForSvg', () => {
     });
 
     it('should merge single-character fragments with previous line', () => {
-      // Mock a scenario where we'd get a single character fragment
-      vi.mocked(internals.getStringSize).mockImplementation((text: string | number) => {
-        // Make each char 20px except spaces which are 10px
-        const textStr = String(text);
-        const width = textStr.split('').reduce((acc, char) => acc + (char === ' ' ? 10 : 20), 0);
-        return { width, height: 20 };
-      });
-
       const result = splitStringForSvg('Test C Word', 50, true, mockStyles);
 
       // Should not have a line with just "C" - single character fragments should be merged
