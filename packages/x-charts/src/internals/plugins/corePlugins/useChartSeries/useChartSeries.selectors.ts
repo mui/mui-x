@@ -13,3 +13,13 @@ export const selectorChartSeriesConfig = createSelector(
   [selectorChartSeriesState],
   (seriesState) => seriesState.seriesConfig,
 );
+
+/**
+ * Get the dataset from the series state.
+ * @param {ChartState<[UseChartSeriesSignature]>} state The state of the chart.
+ * @returns {DatasetType | undefined} The dataset.
+ */
+export const selectorChartDataset = createSelector(
+  [selectorChartSeriesState],
+  (seriesState) => seriesState.dataset,
+);
