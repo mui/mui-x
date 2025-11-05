@@ -57,6 +57,12 @@ export const checkGroupChildrenExpansion = (
     return false;
   }
 
+  // If group existed in previous tree, preserve its expansion state
+  if (prevChildrenExpanded !== undefined) {
+    return prevChildrenExpanded;
+  }
+
+  // For new groups, apply default expansion configuration
   let childrenExpanded: boolean;
   if (node.id === GRID_ROOT_GROUP_ID) {
     childrenExpanded = true;
@@ -64,9 +70,7 @@ export const checkGroupChildrenExpansion = (
     childrenExpanded = isGroupExpandedByDefault(node);
   } else {
     childrenExpanded =
-      defaultGroupingExpansionDepth === -1 ||
-      defaultGroupingExpansionDepth > node.depth ||
-      (prevChildrenExpanded ?? false);
+      defaultGroupingExpansionDepth === -1 || defaultGroupingExpansionDepth > node.depth;
   }
 
   return childrenExpanded;
@@ -233,7 +237,7 @@ export const getVisibleRowsLookup = ({
 }: {
   tree: GridRowsState['tree'];
   filteredRowsLookup: GridFilterState['filteredRowsLookup'];
-}) => {
+}): GridStatePro['visibleRowsLookup'] => {
   if (!filteredRowsLookup) {
     return {};
   }

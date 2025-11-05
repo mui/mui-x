@@ -102,6 +102,16 @@ This configuration can be used in Bar Charts to set colors according to string c
 }
 ```
 
+### Color callback
+
+If you need more control over the color assignment, you can provide a `colorGetter` callback prop to the chart component.
+
+The callback receives a `{ value, dataIndex }` object and should return a color string for the provided data point.
+
+In components where a series-level color is required (for example, the legend), the `color` prop is used instead.
+
+{{"demo": "ColorCallback.js"}}
+
 ## Overlay
 
 Charts have a _loading_ and _noData_ overlays that appear if:

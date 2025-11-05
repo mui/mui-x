@@ -9,7 +9,7 @@ import { useElementPositionInCollection } from '../../utils/useElementPositionIn
 import { CalendarGridCurrentTimeIndicatorCssVars } from './CalendarGridCurrentTimeIndicatorCssVars';
 import { mergeDateAndTime } from '../../utils/date-utils';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
-import { selectors } from '../../use-event-calendar';
+import { schedulerNowSelectors } from '../../scheduler-selectors';
 
 export const CalendarGridCurrentTimeIndicator = React.forwardRef(
   function CalendarGridCurrentTimeIndicator(
@@ -28,7 +28,7 @@ export const CalendarGridCurrentTimeIndicator = React.forwardRef(
 
     const { start: columnStart, end: columnEnd } = useCalendarGridTimeColumnContext();
     const store = useEventCalendarStoreContext();
-    const now = useStore(store, selectors.nowUpdatedEveryMinute);
+    const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
 
     const nowForColumn = React.useMemo(
       () => mergeDateAndTime(adapter, columnStart, now),
@@ -55,7 +55,7 @@ export const CalendarGridCurrentTimeIndicator = React.forwardRef(
       [position],
     );
 
-    const props = React.useMemo(() => ({ style }), [style]);
+    const props = { style };
 
     const isOutOfRange =
       adapter.isBefore(nowForColumn, columnStart) || adapter.isAfter(nowForColumn, columnEnd);

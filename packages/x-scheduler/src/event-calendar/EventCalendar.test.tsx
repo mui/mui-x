@@ -1,6 +1,5 @@
-import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
-import { adapter, createSchedulerRenderer } from 'test/utils/scheduler';
+import { adapter, createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import {
   changeTo24HoursFormat,
@@ -8,31 +7,25 @@ import {
   openPreferencesMenu,
   toggleShowWeekends,
   toggleShowWeekNumber,
+  toggleShowEmptyDaysInAgenda,
 } from '../internals/utils/test-utils';
 
 describe('EventCalendar', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-05-26') });
 
+  const event1 = EventBuilder.new()
+    .title('Running')
+    .span('2025-05-26T07:30:00', '2025-05-26T08:15:00')
+    .buildOccurrence();
+
+  const event2 = EventBuilder.new()
+    .title('Weekly')
+    .span('2025-05-27T16:00:00', '2025-05-27T17:00:00')
+    .buildOccurrence();
+
   // TODO: Move in a test file specific to the TimeGrid component.
   it('should render events in the correct column', () => {
-    render(
-      <EventCalendar
-        events={[
-          {
-            id: '1',
-            start: adapter.date('2025-05-26T07:30:00'),
-            end: adapter.date('2025-05-26T08:15:00'),
-            title: 'Running',
-          },
-          {
-            id: '2',
-            start: adapter.date('2025-05-27T16:00:00'),
-            end: adapter.date('2025-05-27T17:00:00'),
-            title: 'Weekly',
-          },
-        ]}
-      />,
-    );
+    render(<EventCalendar events={[event1, event2]} />);
 
     const mondayEvent = screen.getByRole('button', { name: /Running/i });
     const tuesdayEvent = screen.getByRole('button', { name: /Weekly/i });
@@ -51,24 +44,21 @@ describe('EventCalendar', () => {
   });
 
   it('should allow to show / hide resources using the UI', async () => {
+    const event1WithResource = EventBuilder.new()
+      .title('Running')
+      .span('2025-05-26T07:30:00', '2025-05-26T08:15:00')
+      .resource('1')
+      .buildOccurrence();
+
+    const event2WithResource = EventBuilder.new()
+      .title('Weekly')
+      .span('2025-05-27T16:00:00', '2025-05-27T17:00:00')
+      .resource('2')
+      .buildOccurrence();
+
     const { user } = render(
       <EventCalendar
-        events={[
-          {
-            id: '1',
-            start: adapter.date('2025-05-26T07:30:00'),
-            end: adapter.date('2025-05-26T08:15:00'),
-            title: 'Running',
-            resource: '1',
-          },
-          {
-            id: '2',
-            start: adapter.date('2025-05-27T16:00:00'),
-            end: adapter.date('2025-05-27T17:00:00'),
-            title: 'Weekly',
-            resource: '2',
-          },
-        ]}
+        events={[event1WithResource, event2WithResource]}
         resources={[
           { id: '1', title: 'Sport' },
           { id: '2', title: 'Work' },
@@ -214,19 +204,7 @@ describe('EventCalendar', () => {
     });
 
     it('should allow to change the time format using the UI in the month view', async () => {
-      const { user } = render(
-        <EventCalendar
-          events={[
-            {
-              id: '1',
-              start: adapter.date('2025-05-26T07:30:00'),
-              end: adapter.date('2025-05-26T08:15:00'),
-              title: 'Running',
-            },
-          ]}
-          defaultView="month"
-        />,
-      );
+      const { user } = render(<EventCalendar events={[event1]} defaultView="month" />);
 
       // 12 hours format should be visible by default
       expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0);
@@ -247,19 +225,7 @@ describe('EventCalendar', () => {
     });
 
     it('should allow to change the time format using the UI in the agenda view', async () => {
-      const { user } = render(
-        <EventCalendar
-          events={[
-            {
-              id: '1',
-              start: adapter.date('2025-05-26T07:30:00'),
-              end: adapter.date('2025-05-26T08:15:00'),
-              title: 'Running',
-            },
-          ]}
-          defaultView="agenda"
-        />,
-      );
+      const { user } = render(<EventCalendar events={[event1]} defaultView="agenda" />);
 
       // 12 hours format should be visible by default
       expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0);
@@ -277,6 +243,45 @@ describe('EventCalendar', () => {
       await user.click(document.body);
 
       expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0);
+    });
+
+    it('should allow to show / hide empty days using the UI in the agenda view', async () => {
+      const { user } = render(
+        <EventCalendar
+          events={[
+            {
+              id: '1',
+              start: adapter.date('2025-05-31'),
+              end: adapter.date('2025-05-31'),
+              title: 'Saturday event',
+            },
+            {
+              id: '2',
+              start: adapter.date('2025-06-02'),
+              end: adapter.date('2025-06-02'),
+              title: 'Monday event',
+            },
+          ]}
+          defaultView="agenda"
+        />,
+      );
+
+      // Empty days should be visible by default
+      expect(screen.getByLabelText(/Sunday 1/i)).not.to.equal(null);
+
+      // Hide empty days
+      await openPreferencesMenu(user);
+      await toggleShowEmptyDaysInAgenda(user);
+      await user.click(document.body);
+
+      expect(screen.queryByLabelText(/Sunday 1/i)).to.equal(null);
+
+      // Show empty days again
+      await openPreferencesMenu(user);
+      await toggleShowEmptyDaysInAgenda(user);
+      await user.click(document.body);
+
+      expect(screen.getByLabelText(/Sunday 1/i)).not.to.equal(null);
     });
   });
 });

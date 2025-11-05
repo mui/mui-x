@@ -16,16 +16,16 @@ import {
 
 export type HeatmapPluginSignatures = [
   UseChartZAxisSignature,
-  UseChartCartesianAxisSignature<'heatmap'>,
   UseChartInteractionSignature,
+  UseChartCartesianAxisSignature<'heatmap'>,
   UseChartHighlightSignature,
   UseChartProExportSignature,
 ];
 
 export const HEATMAP_PLUGINS = [
   useChartZAxis,
-  useChartCartesianAxis,
   useChartInteraction,
+  useChartCartesianAxis,
   useChartHighlight,
   useChartProExport,
 ] as ConvertSignaturesIntoPlugins<HeatmapPluginSignatures>;

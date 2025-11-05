@@ -1,4 +1,3 @@
-import * as React from 'react';
 import InstallationInstructions from './InstallationInstructions';
 
 // #npm-tag-reference

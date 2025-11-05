@@ -1,4 +1,3 @@
-import * as React from 'react';
 import dayjs from 'dayjs';
 import Typography from '@mui/material/Typography';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';

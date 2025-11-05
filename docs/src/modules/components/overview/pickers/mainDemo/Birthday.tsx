@@ -1,4 +1,3 @@
-import * as React from 'react';
 import dayjs from 'dayjs';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';

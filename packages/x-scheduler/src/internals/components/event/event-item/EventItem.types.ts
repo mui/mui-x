@@ -1,7 +1,7 @@
+import * as React from 'react';
 import { CalendarEventOccurrence } from '@mui/x-scheduler-headless/models';
-import { EventProps } from '../Event.types';
 
-export interface EventItemProps extends EventProps {
+export interface EventItemProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * The event occurrence to render.
    */

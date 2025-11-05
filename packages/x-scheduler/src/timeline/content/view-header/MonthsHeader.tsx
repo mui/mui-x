@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { useStore } from '@base-ui-components/utils/store/useStore';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { useMonthList } from '@mui/x-scheduler-headless/use-month-list';
-import { selectors } from '@mui/x-scheduler-headless/use-timeline';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useTimelineStoreContext } from '@mui/x-scheduler-headless/use-timeline-store-context';
 import { MONTHS_UNIT_COUNT } from '../../constants';
 import { HeaderProps } from './Headers.types';
@@ -16,7 +16,7 @@ export function MonthsHeader(props: HeaderProps) {
   const getMonthList = useMonthList();
   const store = useTimelineStoreContext();
 
-  const visibleDate = useStore(store, selectors.visibleDate);
+  const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
 
   const months = React.useMemo(
     () =>
