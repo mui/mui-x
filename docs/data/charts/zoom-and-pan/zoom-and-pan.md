@@ -26,6 +26,12 @@ Additional zoom interactions can be enabled through configuration:
 
 - **Tap and drag**: Zoom in/out by tapping twice and then dragging vertically.
 
+:::warning
+Enabling zoom adds `touch-action: pan-y` to allow panning on touch devices. This interferes with other touch interactions, such as scrolling horizontally. 
+
+If you want to add `pan-x`, consider customizing the zoom interactions .
+:::
+
 {{"demo": "ZoomScatterChart.js"}}
 {{"demo": "ZoomBarChart.js"}}
 {{"demo": "ZoomLineChart.js"}}

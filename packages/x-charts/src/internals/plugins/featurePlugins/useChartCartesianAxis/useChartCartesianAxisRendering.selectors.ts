@@ -53,6 +53,11 @@ export const createZoomMap = (zoom: readonly ZoomData[]) => {
 const selectorChartZoomState = (state: ChartState<[], [UseChartCartesianAxisSignature]>) =>
   state.zoom;
 
+export const selectorChartHasZoom = createSelector(
+  [selectorChartZoomState],
+  (zoom) => (zoom?.zoomData?.length ?? 0) > 0,
+);
+
 /**
  * Following selectors are not exported because they exist in the MIT chart only to ba able to reuse the Zoom state from the pro.
  */

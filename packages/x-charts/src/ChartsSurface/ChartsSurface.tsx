@@ -19,6 +19,7 @@ import {
   selectorChartsIsKeyboardNavigationEnabled,
 } from '../internals/plugins/featurePlugins/useChartKeyboardNavigation';
 import { useUtilityClasses } from './chartsSurfaceClasses';
+import { selectorChartHasZoom } from '../internals';
 
 export interface ChartsSurfaceProps
   extends Omit<
@@ -35,35 +36,37 @@ export interface ChartsSurfaceProps
 const ChartsSurfaceStyles = styled('svg', {
   name: 'MuiChartsSurface',
   slot: 'Root',
-})<{ ownerState: { width?: number; height?: number } }>(({ ownerState, theme }) => ({
-  width: ownerState.width ?? '100%',
-  height: ownerState.height ?? '100%',
-  display: 'flex',
-  position: 'relative',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  overflow: 'hidden',
-  // This prevents default touch actions when using the svg on mobile devices.
-  // For example, prevent page scroll & zoom.
-  touchAction: 'pan-y',
-  userSelect: 'none',
-  gridArea: 'chart',
-  '&:focus': {
-    outline: 'none', // By default don't show focus on the SVG container
-  },
-  '&:focus-visible': {
-    // Show focus outline on the SVG container only when using keyboard navigation
-    outline: `${(theme.vars ?? theme).palette.text.primary} solid 2px`,
-    '&[data-has-focused-item=true]': {
-      // But not if the chart has a focused children item
-      outline: 'none',
+})<{ ownerState: { width?: number; height?: number; hasZoom: boolean } }>(
+  ({ ownerState, theme }) => ({
+    width: ownerState.width ?? '100%',
+    height: ownerState.height ?? '100%',
+    display: 'flex',
+    position: 'relative',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+    // This prevents default touch actions when using the svg on mobile devices.
+    // For example, prevent page scroll & zoom.
+    touchAction: ownerState.hasZoom ? 'pan-y' : undefined,
+    userSelect: 'none',
+    gridArea: 'chart',
+    '&:focus': {
+      outline: 'none', // By default don't show focus on the SVG container
     },
-  },
-  '& [data-focused=true]': {
-    outline: `${(theme.vars ?? theme).palette.text.primary} solid 2px`,
-  },
-}));
+    '&:focus-visible': {
+      // Show focus outline on the SVG container only when using keyboard navigation
+      outline: `${(theme.vars ?? theme).palette.text.primary} solid 2px`,
+      '&[data-has-focused-item=true]': {
+        // But not if the chart has a focused children item
+        outline: 'none',
+      },
+    },
+    '& [data-focused=true]': {
+      outline: `${(theme.vars ?? theme).palette.text.primary} solid 2px`,
+    },
+  }),
+);
 
 /**
  * It provides the drawing area for the chart elements.
@@ -92,6 +95,8 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
   const propsHeight = useSelector(store, selectorChartPropsHeight);
   const isKeyboardNavigationEnabled = useSelector(store, selectorChartsIsKeyboardNavigationEnabled);
   const hasFocusedItem = useSelector(store, selectorChartsHasFocusedItem);
+  const hasZoom = useSelector(store, selectorChartHasZoom);
+
   const svgRef = useSvgRef();
   const handleRef = useForkRef(svgRef, ref);
   const themeProps = useThemeProps({ props: inProps, name: 'MuiChartsSurface' });
@@ -103,7 +108,7 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
 
   return (
     <ChartsSurfaceStyles
-      ownerState={{ width: propsWidth, height: propsHeight }}
+      ownerState={{ width: propsWidth, height: propsHeight, hasZoom }}
       viewBox={`${0} ${0} ${svgWidth} ${svgHeight}`}
       className={clsx(classes.root, className)}
       tabIndex={isKeyboardNavigationEnabled ? 0 : undefined}
