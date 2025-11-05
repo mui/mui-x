@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useDataset } from '@mui/x-charts/hooks';
 import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
-import { LinePlot } from '@mui/x-charts/LineChart';
+import { LinePlot, MarkPlot } from '@mui/x-charts/LineChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
@@ -30,11 +30,11 @@ function DatasetStats() {
   }
 
   const totalRevenue = chartDataset.reduce(
-    (sum, item) => sum + (item.revenue || 0),
+    (sum, item) => sum + (typeof item.revenue === 'number' ? item.revenue : 0),
     0,
   );
   const totalExpenses = chartDataset.reduce(
-    (sum, item) => sum + (item.expenses || 0),
+    (sum, item) => sum + (typeof item.expenses === 'number' ? item.expenses : 0),
     0,
   );
   const profit = totalRevenue - totalExpenses;
@@ -109,6 +109,7 @@ export default function UseDataset() {
         <DatasetStats />
         <ChartsSurface>
           <LinePlot />
+          <MarkPlot />
           <ChartsXAxis />
           <ChartsYAxis />
           <ChartsAxisHighlight x="line" />
