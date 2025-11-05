@@ -458,6 +458,7 @@
   { "name": "useDataset", "kind": "Function" },
   { "name": "useDrawingArea", "kind": "Function" },
   { "name": "useGaugeState", "kind": "Function" },
+  { "name": "useIsHydrated", "kind": "Function" },
   { "name": "useItemHighlighted", "kind": "Function" },
   { "name": "useItemHighlightedGetter", "kind": "Function" },
   { "name": "useItemTooltip", "kind": "Variable" },

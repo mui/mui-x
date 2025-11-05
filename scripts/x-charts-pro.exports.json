@@ -591,6 +591,7 @@
   { "name": "useHeatmapSeriesContext", "kind": "Function" },
   { "name": "UseHeatmapSeriesContextReturnValue", "kind": "TypeAlias" },
   { "name": "UseHeatmapSeriesReturnValue", "kind": "TypeAlias" },
+  { "name": "useIsHydrated", "kind": "Function" },
   { "name": "useIsZoomInteracting", "kind": "Function" },
   { "name": "useItemHighlighted", "kind": "Function" },
   { "name": "useItemHighlightedGetter", "kind": "Function" },
