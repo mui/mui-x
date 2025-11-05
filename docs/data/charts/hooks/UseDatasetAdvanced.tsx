@@ -8,6 +8,7 @@ import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
+import { AxisItemIdentifier } from '@mui/x-charts/models';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -26,12 +27,20 @@ const dataset = [
   { product: 'Product E', q1: 1890, q2: 4800, q3: 2390, q4: 3800 },
 ];
 
-function DataTable() {
+function DataTable({
+  highlightedAxis,
+  onHighlightedAxisChange,
+}: {
+  highlightedAxis: AxisItemIdentifier[] | undefined;
+  onHighlightedAxisChange: (axis: AxisItemIdentifier[]) => void;
+}) {
   const chartDataset = useDataset();
 
   if (!chartDataset) {
     return null;
   }
+
+  const highlightedIndex = highlightedAxis?.[0]?.dataIndex;
 
   const calculateTotal = (item: any) => {
     return ['q1', 'q2', 'q3', 'q4'].reduce((sum, quarter) => {
@@ -78,8 +87,20 @@ function DataTable() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {chartDataset.map((row) => (
-            <TableRow key={String(row.product)}>
+          {chartDataset.map((row, index) => (
+            <TableRow
+              key={String(row.product)}
+              onMouseEnter={() =>
+                onHighlightedAxisChange([{ axisId: 'x-axis-id', dataIndex: index }])
+              }
+              onMouseLeave={() => onHighlightedAxisChange([])}
+              sx={{
+                backgroundColor:
+                  highlightedIndex === index ? 'action.hover' : 'transparent',
+                transition: 'background-color 0.2s',
+                cursor: 'pointer',
+              }}
+            >
               <TableCell component="th" scope="row">
                 {String(row.product)}
               </TableCell>
@@ -127,10 +148,14 @@ function DataTable() {
 }
 
 export default function UseDatasetAdvanced() {
+  const [highlightedAxis, setHighlightedAxis] = React.useState<AxisItemIdentifier[]>(
+    [],
+  );
+
   return (
     <ChartDataProvider
       dataset={dataset}
-      xAxis={[{ dataKey: 'product', scaleType: 'band' }]}
+      xAxis={[{ id: 'x-axis-id', dataKey: 'product', scaleType: 'band' }]}
       series={[
         { dataKey: 'q1', label: 'Q1', stack: 'total', type: 'bar' },
         { dataKey: 'q2', label: 'Q2', stack: 'total', type: 'bar' },
@@ -138,6 +163,8 @@ export default function UseDatasetAdvanced() {
         { dataKey: 'q4', label: 'Q4', stack: 'total', type: 'bar' },
       ]}
       height={300}
+      highlightedAxis={highlightedAxis}
+      onHighlightedAxisChange={setHighlightedAxis}
     >
       <Box sx={{ width: '100%' }}>
         <Typography variant="h6" gutterBottom>
@@ -153,7 +180,10 @@ export default function UseDatasetAdvanced() {
         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
           <ChartsLegend direction="horizontal" />
         </Box>
-        <DataTable />
+        <DataTable
+          highlightedAxis={highlightedAxis}
+          onHighlightedAxisChange={setHighlightedAxis}
+        />
       </Box>
     </ChartDataProvider>
   );
