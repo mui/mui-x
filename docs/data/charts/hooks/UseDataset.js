@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useDataset } from '@mui/x-charts/hooks';
 import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
-import { LinePlot, MarkPlot } from '@mui/x-charts/LineChart';
+import { LineHighlightPlot, LinePlot } from '@mui/x-charts/LineChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
@@ -109,11 +109,11 @@ export default function UseDataset() {
         <DatasetStats />
         <ChartsSurface>
           <LinePlot />
-          <MarkPlot />
           <ChartsXAxis />
           <ChartsYAxis />
           <ChartsAxisHighlight x="line" />
           <ChartsTooltip />
+          <LineHighlightPlot />
         </ChartsSurface>
         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
           <ChartsLegend direction="horizontal" />
