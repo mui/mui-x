@@ -5,7 +5,7 @@ import { barElementClasses } from './barElementClasses';
 import { BarElement, BarElementSlotProps, BarElementSlots } from './BarElement';
 import { BarItemIdentifier } from '../models';
 import { useDrawingArea, useXAxes, useYAxes } from '../hooks';
-import { BarLabelItemProps, BarLabelSlotProps, BarLabelSlots } from './BarLabel/BarLabelItem';
+import { BarLabelSlotProps, BarLabelSlots } from './BarLabel/BarLabelItem';
 import { BarLabelPlot } from './BarLabel/BarLabelPlot';
 import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
@@ -17,7 +17,7 @@ export interface BarRangePlotSlots extends BarElementSlots, BarLabelSlots {}
 
 export interface BarRangePlotSlotProps extends BarElementSlotProps, BarLabelSlotProps {}
 
-export interface BarRangePlotProps extends Pick<BarLabelItemProps<BarRangeValueType>, 'barLabel'> {
+export interface BarRangePlotProps {
   /**
    * If `true`, animations are skipped.
    * @default undefined
@@ -68,7 +68,7 @@ const BarRangePlotRoot = styled('g', {
  * - [BarRangePlot API](https://mui.com/x/api/charts/bar-range-plot/)
  */
 function BarRangePlot(props: BarRangePlotProps) {
-  const { skipAnimation: inSkipAnimation, onItemClick, borderRadius, barLabel, ...other } = props;
+  const { skipAnimation: inSkipAnimation, onItemClick, borderRadius, ...other } = props;
   const isZoomInteracting = useInternalIsZoomInteracting();
   const skipAnimation = useSkipAnimation(isZoomInteracting || inSkipAnimation);
   const { xAxis: xAxes } = useXAxes();
