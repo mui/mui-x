@@ -10,6 +10,7 @@ import { Select } from '@base-ui-components/react/select';
 import { Separator } from '@base-ui-components/react/separator';
 import { CheckIcon, ChevronDown } from 'lucide-react';
 import {
+  CalendarEventColor,
   CalendarEventOccurrence,
   CalendarEventUpdatedProperties,
   CalendarResourceId,
@@ -18,17 +19,15 @@ import {
 } from '@mui/x-scheduler-headless/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
-import { DEFAULT_EVENT_COLOR } from '@mui/x-scheduler-headless/constants';
 import {
   schedulerEventSelectors,
   schedulerOccurrencePlaceholderSelectors,
   schedulerRecurringEventSelectors,
-  schedulerResourceSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useTranslations } from '../../utils/TranslationsContext';
-import { getColorClassName } from '../../utils/color-utils';
 import { computeRange, ControlledValue, validateRange } from './utils';
 import EventPopoverHeader from './EventPopoverHeader';
+import ResourceMenu from './ResourceMenu';
 
 interface FormContentProps {
   occurrence: CalendarEventOccurrence;
@@ -50,7 +49,6 @@ export default function FormContent(props: FormContentProps) {
     occurrence.id,
   );
   const rawPlaceholder = useStore(store, schedulerOccurrencePlaceholderSelectors.value);
-  const resources = useStore(store, schedulerResourceSelectors.processedResourceList);
   const recurrencePresets = useStore(
     store,
     schedulerRecurringEventSelectors.presets,
@@ -62,6 +60,7 @@ export default function FormContent(props: FormContentProps) {
     occurrence.rrule,
     occurrence.start,
   );
+  const color = useStore(store, schedulerEventSelectors.color, occurrence.id);
 
   // State hooks
   const [errors, setErrors] = React.useState<Form.Props['errors']>({});
@@ -76,6 +75,7 @@ export default function FormContent(props: FormContentProps) {
       endTime: fmtTime(occurrence.end),
       resourceId: occurrence.resource ?? null,
       allDay: !!occurrence.allDay,
+      colorId: color,
     };
   });
 
@@ -114,6 +114,11 @@ export default function FormContent(props: FormContentProps) {
     pushPlaceholder(newState);
     setControlled(newState);
   };
+  const handleColorChange = (value: CalendarEventColor) => {
+    const newState = { ...controlled, colorId: value };
+    pushPlaceholder(newState);
+    setControlled(newState);
+  };
 
   const handleToggleAllDay = (checked: boolean) => {
     const newState = { ...controlled, allDay: checked };
@@ -145,6 +150,7 @@ export default function FormContent(props: FormContentProps) {
       description: (form.get('description') as string).trim(),
       allDay: controlled.allDay,
       resource: controlled.resourceId === null ? undefined : controlled.resourceId,
+      color: controlled.colorId === null ? undefined : controlled.colorId,
     };
 
     if (rawPlaceholder?.type === 'creation') {
@@ -174,17 +180,6 @@ export default function FormContent(props: FormContentProps) {
     store.deleteEvent(occurrence.id);
     onClose();
   };
-
-  const resourcesOptions = React.useMemo(() => {
-    return [
-      { label: translations.labelNoResource, value: null, eventColor: DEFAULT_EVENT_COLOR },
-      ...resources.map((resource) => ({
-        label: resource.title,
-        value: resource.id,
-        eventColor: resource.eventColor,
-      })),
-    ];
-  }, [resources, translations.labelNoResource]);
 
   const weekday = adapter.format(occurrence.start, 'weekday');
   const normalDate = adapter.format(occurrence.start, 'normalDate');
@@ -225,69 +220,13 @@ export default function FormContent(props: FormContentProps) {
           </Field.Label>
           <Field.Error className="EventPopoverRequiredFieldError" />
         </Field.Root>
-        <Field.Root className="EventPopoverFieldRoot" name="resource">
-          <Select.Root
-            items={resourcesOptions}
-            value={controlled.resourceId}
-            onValueChange={handleResourceChange}
-            readOnly={isPropertyReadOnly('resource')}
-          >
-            <Select.Trigger
-              className="EventPopoverSelectTrigger Ghost"
-              aria-label={translations.resourceLabel}
-            >
-              <Select.Value>
-                {(value: string | null) => {
-                  const selected = resourcesOptions.find((option) => option.value === value);
-
-                  return (
-                    <div className="EventPopoverSelectItemTitleWrapper">
-                      <span
-                        className={clsx(
-                          'ResourceLegendColor',
-                          getColorClassName(selected?.eventColor ?? DEFAULT_EVENT_COLOR),
-                        )}
-                      />
-                      <span>{value ? selected?.label : translations.labelNoResource}</span>
-                    </div>
-                  );
-                }}
-              </Select.Value>
-              <Select.Icon className="EventPopoverSelectIcon">
-                <ChevronDown size={14} />
-              </Select.Icon>
-            </Select.Trigger>
-            <Select.Portal>
-              <Select.Positioner
-                alignItemWithTrigger={false}
-                align="start"
-                className="EventPopoverSelectPositioner"
-              >
-                <Select.Popup className="EventPopoverSelectPopup">
-                  {resourcesOptions.map((resource) => (
-                    <Select.Item
-                      key={resource.value}
-                      value={resource.value}
-                      className="EventPopoverSelectItem"
-                    >
-                      <div className="EventPopoverSelectItemTitleWrapper">
-                        <span
-                          className={clsx(
-                            'ResourceLegendColor',
-                            getColorClassName(resource.eventColor ?? DEFAULT_EVENT_COLOR),
-                          )}
-                        />
-                        <Select.ItemText className="EventPopoverSelectItemText">
-                          {resource.label}
-                        </Select.ItemText>
-                      </div>
-                    </Select.Item>
-                  ))}
-                </Select.Popup>
-              </Select.Positioner>
-            </Select.Portal>
-          </Select.Root>
-        </Field.Root>
+        <ResourceMenu
+          readOnly={isPropertyReadOnly('resource')}
+          resourceId={controlled.resourceId}
+          handleResourceChange={handleResourceChange}
+          handleColorChange={handleColorChange}
+          colorId={controlled.colorId}
+        />
       </EventPopoverHeader>
       <Separator className="EventPopoverSeparator" />
       <div className="EventPopoverMainContent">

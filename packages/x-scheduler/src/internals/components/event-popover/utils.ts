@@ -1,4 +1,8 @@
-import { CalendarResourceId, SchedulerValidDate } from '@mui/x-scheduler-headless/models';
+import {
+  CalendarEventColor,
+  CalendarResourceId,
+  SchedulerValidDate,
+} from '@mui/x-scheduler-headless/models';
 import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
 import { SchedulerTranslations } from '../../../models';
 
@@ -9,6 +13,7 @@ export interface ControlledValue {
   endTime: string;
   resourceId: CalendarResourceId | null;
   allDay: boolean;
+  colorId: CalendarEventColor;
 }
 
 export function computeRange(adapter: Adapter, next: ControlledValue) {
