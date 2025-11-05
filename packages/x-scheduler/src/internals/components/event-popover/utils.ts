@@ -125,7 +125,7 @@ export function buildCustomRRuleFromForm(
 }
 
 // Create a normalized snapshot from the original event rrule
-export function buildInitialCustomSnapshot(occurrence: CalendarEventOccurrence) {
+export function buildInitialCustomRecurrenceSnapshot(occurrence: CalendarEventOccurrence) {
   const rrule = occurrence.rrule;
   return {
     freq: rrule?.freq ?? 'DAILY',
@@ -136,7 +136,7 @@ export function buildInitialCustomSnapshot(occurrence: CalendarEventOccurrence) 
 }
 
 // Shallow-equal on fields and same-day check for "until"
-export function isSameCustomSnapshot(
+export function isSameCustomRecurrenceSnapshot(
   adapter: Adapter,
   a: RecurringEventRecurrenceRule,
   b: RecurringEventRecurrenceRule,
@@ -146,7 +146,7 @@ export function isSameCustomSnapshot(
   return (
     a.freq === b.freq &&
     a.interval === b.interval &&
-    (a.count ?? undefined) === (b.count ?? undefined) &&
+    (a.count || undefined) === (b.count || undefined) &&
     sameUntil
   );
 }

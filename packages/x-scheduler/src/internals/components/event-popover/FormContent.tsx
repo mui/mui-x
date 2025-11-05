@@ -34,11 +34,11 @@ import { useTranslations } from '../../utils/TranslationsContext';
 import { getColorClassName } from '../../utils/color-utils';
 import {
   buildCustomRRuleFromForm,
-  buildInitialCustomSnapshot as buildInitialCustomRecurrenceSnapshot,
+  buildInitialCustomRecurrenceSnapshot,
   computeRange,
   ControlledValue,
   getEndsSelectionFromRRule,
-  isSameCustomSnapshot as isSameCustomRecurrenceSnapshot,
+  isSameCustomRecurrenceSnapshot,
   validateRange,
 } from './utils';
 
@@ -612,7 +612,9 @@ export default function FormContent(props: FormContentProps) {
                 <Field.Label htmlFor="ends-until" className="RadioItem RadioItemWithInput">
                   <Radio.Root id="ends-until" className="EventPopoverRadioRoot" value="until">
                     <Radio.Indicator className="RadioItemIndicator" />
-                    <span className="EventPopoverRadioItemText">Until</span>
+                    <span className="EventPopoverRadioItemText">
+                      {translations.recurrenceEndsUntilLabel}
+                    </span>
                   </Radio.Root>
                   <Input
                     name="until"
