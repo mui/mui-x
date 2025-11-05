@@ -12,8 +12,6 @@ import {
   useGridRowsOverridableMethodsPro,
   useGridSelector,
   type ReorderExecutionContext,
-  gridRowDropTargetRowIdSelector,
-  gridRowDropPositionSelector,
 } from '@mui/x-data-grid-pro/internals';
 import type { RefObject } from '@mui/x-internals/types';
 import { rowGroupingReorderExecutor } from '../rowReorder/rowGroupingReorderExecutor';

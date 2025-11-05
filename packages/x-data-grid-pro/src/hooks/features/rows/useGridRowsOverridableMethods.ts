@@ -8,11 +8,7 @@ import {
   gridRowMaximumTreeDepthSelector,
   gridExpandedSortedRowIndexLookupSelector,
 } from '@mui/x-data-grid';
-import {
-  gridRowDropPositionSelector,
-  gridRowDropTargetRowIdSelector,
-  useGridRowsOverridableMethodsCommunity,
-} from '@mui/x-data-grid/internals';
+import { useGridRowsOverridableMethodsCommunity } from '@mui/x-data-grid/internals';
 import type { RefObject } from '@mui/x-internals/types';
 import type { ReorderExecutionContext } from '../rowReorder/types';
 import { treeDataReorderExecutor } from '../treeData/treeDataReorderExecutor';
