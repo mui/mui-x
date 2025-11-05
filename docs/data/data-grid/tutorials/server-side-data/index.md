@@ -26,7 +26,6 @@ The docs listed below may be useful if you're new to the MUI X Data Grid:
 - [Sorting](/x/react-data-grid/sorting/)
 - [Server-side filtering](/x/react-data-grid/filtering/server-side/)
 
-
 ## Part one: app setup
 
 In part one, you'll set up the basic scaffold for a full-stack React app using Vite on the front end and Express.js for the back end.
