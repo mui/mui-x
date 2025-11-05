@@ -111,7 +111,6 @@ export const gridPaginationRowRangeSelector = createSelectorMemoized(
       return null;
     }
 
-    // Defensive: if there are no visible rows at all, don't attempt to access row properties
     if (!visibleSortedRowEntries || visibleSortedRowEntries.length === 0) {
       return null;
     }
@@ -140,18 +139,11 @@ export const gridPaginationRowRangeSelector = createSelectorMemoized(
     }
 
     const topLevelFirstRow = visibleSortedTopLevelRowEntries[topLevelFirstRowIndex];
-
-    // Defensive: if the top level first row can't be found (e.g., during tree rebuilding or with empty data), bail out
-    if (!topLevelFirstRow) {
-      return null;
-    }
-
     const topLevelRowsInCurrentPageCount = topLevelLastRowIndex - topLevelFirstRowIndex + 1;
     const firstRowIndex = visibleSortedRowEntries.findIndex(
       (row) => row.id === topLevelFirstRow.id,
     );
 
-    // Defensive: if the matching first row wasn't found in the flattened visible entries, bail out
     if (firstRowIndex === -1) {
       return null;
     }
