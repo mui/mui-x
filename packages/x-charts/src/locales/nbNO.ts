@@ -88,7 +88,7 @@ export const nbNOLocaleText: Partial<ChartsLocaleText> = {
   chartConfigurationOptionValue: 'Verdi',
   chartConfigurationOptionAuto: 'Automatisk',
   chartConfigurationOptionTop: 'Topp',
-  chartConfigurationOptionTopLeft: 'Topp Venster',
+  chartConfigurationOptionTopLeft: 'Topp Venstre',
   chartConfigurationOptionTopRight: 'Topp Høyre',
   chartConfigurationOptionBottom: 'Bunn',
   chartConfigurationOptionBottomLeft: 'Bunn Venstre',
