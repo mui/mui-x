@@ -1,18 +1,12 @@
 import { getStringSize } from '@mui/x-charts/internals';
 
-const isSplit = (char: string) => /\s/.test(char) || char === '-';
-
 /**
  * Splits a string into multiple lines based on spaces, hyphens, or hard splits to fit within a specified maximum width for SVG rendering.
- *
- * It attempts to avoid leaving very short words at the end of lines by backtracking a few characters to find a better split point.
- * Single-character lines from multi-character words are automatically merged with adjacent lines.
  *
  * @param text The input string to be split.
  * @param maxWidth The maximum width allowed for each line in pixels.
  * @param compute Whether to compute the actual string widths. If false, returns the text as a single line.
  * @param styles The CSS styles to apply when measuring text width.
- * @param backtrack Number of characters to backtrack when splitting to avoid breaking words. We try to find the last space or hyphen within the backtrack range before forcing a split.
  * @returns An object containing the split lines array and the line height.
  */
 export function splitStringForSvg(
@@ -20,136 +14,149 @@ export function splitStringForSvg(
   maxWidth: number,
   compute: boolean,
   styles: React.CSSProperties,
-  backtrack?: number,
 ): { lines: string[]; lineHeight: number } {
-  const words: string[] = [];
-  let currentLine = '';
-  const bt = backtrack ?? Math.min(5, Math.floor(maxWidth / 10));
-  let height = 0;
-
   if (!compute) {
     return { lines: [text], lineHeight: 0 };
   }
 
-  for (let i = 0; i < text.length; i += 1) {
-    const char = text[i];
-    const testLine = currentLine + char;
-    const { width: testWidth, height: lineHeight } = getStringSize(testLine, styles);
-    height = lineHeight;
+  const paragraphs = text.split('\n');
+  const lines: string[] = [];
+  let lineHeight = 0;
 
-    if (char === '\n') {
-      words.push(currentLine.trim());
-      currentLine = '';
-    } else if (testWidth > maxWidth) {
-      // Line exceeds max width, need to split
-      let splitIndex = testLine.length - 1;
+  for (let p = 0; p < paragraphs.length; p += 1) {
+    const paragraph = paragraphs[p].trim();
+    if (paragraph.length === 0) {
+      continue;
+    }
 
-      // Backtrack to find a space or hyphen to split on
-      for (let j = 0; j < bt && splitIndex > 0; j += 1) {
-        const backChar = testLine[splitIndex - 1];
-        if (isSplit(backChar)) {
+    let pos = 0;
+
+    while (pos < paragraph.length) {
+      // Build the line by finding the longest substring that fits
+      let testEnd = pos + 1;
+      let bestEnd = pos + 1;
+      let bestBoundaryEnd = -1;
+
+      // Forward scan to find where line should end
+      while (testEnd <= paragraph.length) {
+        const testLine = paragraph.substring(pos, testEnd);
+        const { width, height } = getStringSize(testLine, styles);
+        lineHeight = height;
+
+        if (width <= maxWidth) {
+          bestEnd = testEnd;
+          // Track word boundaries (after space or hyphen)
+          if (testEnd < paragraph.length) {
+            const char = paragraph[testEnd - 1];
+            if (char === ' ' || char === '-') {
+              bestBoundaryEnd = testEnd;
+            }
+          }
+          testEnd += 1;
+        } else {
           break;
         }
-        splitIndex -= 1;
       }
 
-      // Check if we are leaving a single letter at the end of the line and pull that in
-      if (splitIndex === testLine.length - 1 - bt) {
-        if (isSplit(testLine[splitIndex - 2])) {
-          splitIndex -= 2;
+      // Use word boundary if we found one and we need to split (not at end)
+      let splitAt = bestEnd;
+      if (bestEnd < paragraph.length && bestBoundaryEnd > pos) {
+        splitAt = bestBoundaryEnd;
+      }
+
+      // Check if splitting here would leave a single trailing character
+      if (splitAt < paragraph.length) {
+        const remaining = paragraph.substring(splitAt).trim();
+        if (remaining.length === 1) {
+          // Would leave single char, keep the whole word together
+          splitAt = paragraph.length;
         }
       }
 
-      // If we found a suitable split point
-      if (splitIndex < testLine.length - 1) {
-        const lineToPush = testLine.slice(0, splitIndex).trimEnd();
-        const remainder = testLine.slice(splitIndex).trimStart();
-        const lineToPushTrimmed = lineToPush.trim();
-        const remainderTrimmed = remainder.trim();
+      // Extract the line
+      let line = paragraph.substring(pos, splitAt).trim();
 
-        // Get the last word in lineToPush to check if it's being broken
-        const lastSpaceInLine = lineToPush.lastIndexOf(' ');
-        const lastHyphenInLine = lineToPush.lastIndexOf('-');
-        const lastSplitInLine = Math.max(lastSpaceInLine, lastHyphenInLine);
-        const lastWordInLine =
-          lastSplitInLine >= 0 ? lineToPush.slice(lastSplitInLine + 1).trim() : lineToPushTrimmed;
-
-        // Check if we're breaking a word and creating a single character
-        const isBreakingWord = lastSplitInLine < lineToPush.trimEnd().length - 2;
-        const lastWordIsSingleChar = lastWordInLine.length === 1;
-        const remainderIsSingleChar = remainderTrimmed.length === 1 && !isSplit(remainder[0]);
-
-        if (isBreakingWord && lastWordIsSingleChar && lastSplitInLine >= 0) {
-          // We're breaking a word and leaving a single character at the end
-          // Move the whole word to the next line
-          const lineWithoutLastWord = lineToPush.slice(0, lastSplitInLine + 1).trimEnd();
-          words.push(lineWithoutLastWord);
-          currentLine = (lineToPush.slice(lastSplitInLine + 1) + remainder).trimStart();
-        } else if (remainderIsSingleChar) {
-          // The remainder would be a single character
-          // Include it in the current line instead
-          words.push(testLine.trim());
-          currentLine = '';
-        } else {
-          words.push(lineToPushTrimmed);
-          currentLine = remainder;
+      // If the current line is just one character and we haven't made progress,
+      // it means even one char doesn't fit - just take the whole word
+      if (line.length === 1 && pos === 0 && splitAt < paragraph.length) {
+        // Find end of first word
+        let wordEnd = 1;
+        while (
+          wordEnd < paragraph.length &&
+          paragraph[wordEnd] !== ' ' &&
+          paragraph[wordEnd] !== '-'
+        ) {
+          wordEnd += 1;
         }
-      } else {
-        // No suitable split point found, need to force split
-        // Push what we have and continue
-        const currentLineTrimmed = currentLine.trim();
-        if (currentLineTrimmed.length > 0) {
-          words.push(currentLineTrimmed);
+
+        // If the first word is longer than 1 char, take the whole word
+        if (wordEnd > 1) {
+          line = paragraph.substring(0, wordEnd).trim();
+          splitAt = wordEnd;
         }
-        currentLine = char;
       }
-    } else {
-      currentLine = testLine;
+
+      // Check if this would leave a single-character fragment
+      // A fragment is a single char that's part of a larger word
+      if (line.length === 1 && splitAt < paragraph.length) {
+        const nextPos = splitAt;
+        // Skip spaces
+        let nextNonSpace = nextPos;
+        while (nextNonSpace < paragraph.length && paragraph[nextNonSpace] === ' ') {
+          nextNonSpace += 1;
+        }
+
+        // If there's content after and our char is not after a space/hyphen, it's a fragment
+        if (nextNonSpace < paragraph.length) {
+          const prevChar = pos > 0 ? paragraph[pos - 1] : ' ';
+          const isStandalone = prevChar === ' ' || prevChar === '-' || pos === 0;
+
+          if (!isStandalone) {
+            // It's a fragment, try to add next char
+            splitAt = Math.min(splitAt + 1, paragraph.length);
+            line = paragraph.substring(pos, splitAt).trim();
+          }
+        }
+      }
+
+      lines.push(line);
+      pos = splitAt;
+
+      // Skip whitespace after split
+      while (pos < paragraph.length && paragraph[pos] === ' ') {
+        pos += 1;
+      }
     }
   }
 
-  if (currentLine) {
-    words.push(currentLine.trim());
-  }
+  // Post-process: merge single-character fragments that slipped through
+  const result: string[] = [];
+  let i = 0;
+  while (i < lines.length) {
+    const line = lines[i];
 
-  // Filter out empty lines
-  const nonEmptyLines = words.filter((line) => line.length > 0);
+    if (line.length === 1 && i < lines.length - 1) {
+      const prevLine = i > 0 ? lines[i - 1] : '';
+      const nextLine = lines[i + 1];
 
-  // Post-process to merge single-character lines with adjacent lines
-  // A single character should only exist as its own line if it's a complete word (like "a" or "I")
-  const mergedLines: string[] = [];
-  for (let i = 0; i < nonEmptyLines.length; i += 1) {
-    const line = nonEmptyLines[i];
+      // Check if this single char is a fragment by looking at adjacent lines
+      const prevEndsWithBoundary =
+        prevLine.length === 0 ||
+        prevLine[prevLine.length - 1] === ' ' ||
+        prevLine[prevLine.length - 1] === '-';
 
-    if (line.length === 1) {
-      // Check if this is a standalone word or part of a broken word
-      const prevLine = i > 0 ? nonEmptyLines[i - 1] : '';
-      const nextLine = i < nonEmptyLines.length - 1 ? nonEmptyLines[i + 1] : '';
-
-      // If previous line doesn't end with a space/hyphen, this is a broken word fragment
-      const prevEndsWithSplit = prevLine.length > 0 && isSplit(prevLine[prevLine.length - 1]);
-      // If next line doesn't start with a space/hyphen, this is a broken word fragment
-      const nextStartsWithSplit = nextLine.length > 0 && isSplit(nextLine[0]);
-
-      if (!prevEndsWithSplit && prevLine.length > 0) {
-        // Merge with previous line
-        if (mergedLines.length > 0) {
-          mergedLines[mergedLines.length - 1] += line;
-        } else {
-          mergedLines.push(line);
-        }
-      } else if (!nextStartsWithSplit && nextLine.length > 0) {
-        // Merge with next line
-        mergedLines.push(line + nextLine);
-        i += 1; // Skip the next line since we merged it
-      } else {
-        // It's a standalone single character word
-        mergedLines.push(line);
+      if (!prevEndsWithBoundary) {
+        // Fragment detected, merge with next line, preserving space if needed
+        const merged = `${line} ${nextLine}`;
+        result.push(merged);
+        i += 2; // Skip both current and next
+        continue;
       }
-    } else {
-      mergedLines.push(line);
     }
+
+    result.push(line);
+    i += 1;
   }
 
-  return { lines: mergedLines, lineHeight: height };
+  return { lines: result, lineHeight };
 }
