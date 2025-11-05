@@ -8,6 +8,7 @@ import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
+
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -26,24 +27,24 @@ const dataset = [
   { product: 'Product E', q1: 1890, q2: 4800, q3: 2390, q4: 3800 },
 ];
 
-function DataTable({ highlightedAxis, onHighlightedAxisChange }) {
+function DataTable({ highlightedIndex, onHighlightedIndexChange }) {
   const chartDataset = useDataset();
 
   if (!chartDataset) {
     return null;
   }
 
-  const highlightedIndex = highlightedAxis?.[0]?.dataIndex;
-
   const calculateTotal = (item) => {
     return ['q1', 'q2', 'q3', 'q4'].reduce((sum, quarter) => {
-      return sum + (item[quarter] || 0);
+      const value = item[quarter];
+      return sum + (typeof value === 'number' ? value : 0);
     }, 0);
   };
 
   const calculateQuarterTotal = (quarter) => {
     return chartDataset.reduce((sum, item) => {
-      return sum + (item[quarter] || 0);
+      const value = item[quarter];
+      return sum + (typeof value === 'number' ? value : 0);
     }, 0);
   };
 
@@ -80,11 +81,9 @@ function DataTable({ highlightedAxis, onHighlightedAxisChange }) {
         <TableBody>
           {chartDataset.map((row, index) => (
             <TableRow
-              key={row.product}
-              onMouseEnter={() =>
-                onHighlightedAxisChange([{ axisId: 'x-axis-id', dataIndex: index }])
-              }
-              onMouseLeave={() => onHighlightedAxisChange([])}
+              key={String(row.product)}
+              onMouseEnter={() => onHighlightedIndexChange(index)}
+              onMouseLeave={() => onHighlightedIndexChange(null)}
               sx={{
                 backgroundColor:
                   highlightedIndex === index ? 'action.hover' : 'transparent',
@@ -93,12 +92,20 @@ function DataTable({ highlightedAxis, onHighlightedAxisChange }) {
               }}
             >
               <TableCell component="th" scope="row">
-                {row.product}
+                {String(row.product)}
               </TableCell>
-              <TableCell align="right">${(row.q1 || 0).toLocaleString()}</TableCell>
-              <TableCell align="right">${(row.q2 || 0).toLocaleString()}</TableCell>
-              <TableCell align="right">${(row.q3 || 0).toLocaleString()}</TableCell>
-              <TableCell align="right">${(row.q4 || 0).toLocaleString()}</TableCell>
+              <TableCell align="right">
+                ${typeof row.q1 === 'number' ? row.q1.toLocaleString() : 0}
+              </TableCell>
+              <TableCell align="right">
+                ${typeof row.q2 === 'number' ? row.q2.toLocaleString() : 0}
+              </TableCell>
+              <TableCell align="right">
+                ${typeof row.q3 === 'number' ? row.q3.toLocaleString() : 0}
+              </TableCell>
+              <TableCell align="right">
+                ${typeof row.q4 === 'number' ? row.q4.toLocaleString() : 0}
+              </TableCell>
               <TableCell align="right">
                 <strong>${calculateTotal(row).toLocaleString()}</strong>
               </TableCell>
@@ -133,6 +140,14 @@ function DataTable({ highlightedAxis, onHighlightedAxisChange }) {
 export default function UseDatasetAdvanced() {
   const [highlightedAxis, setHighlightedAxis] = React.useState([]);
 
+  const setHighlightedIndexCallback = React.useCallback((index) => {
+    if (index === null) {
+      setHighlightedAxis([]);
+    } else {
+      setHighlightedAxis([{ axisId: 'x-axis-id', dataIndex: index }]);
+    }
+  }, []);
+
   return (
     <ChartDataProvider
       dataset={dataset}
@@ -162,8 +177,8 @@ export default function UseDatasetAdvanced() {
           <ChartsLegend direction="horizontal" />
         </Box>
         <DataTable
-          highlightedAxis={highlightedAxis}
-          onHighlightedAxisChange={setHighlightedAxis}
+          highlightedIndex={highlightedAxis[0]?.dataIndex}
+          onHighlightedIndexChange={setHighlightedIndexCallback}
         />
       </Box>
     </ChartDataProvider>

@@ -28,19 +28,17 @@ const dataset = [
 ];
 
 function DataTable({
-  highlightedAxis,
-  onHighlightedAxisChange,
+  highlightedIndex,
+  onHighlightedIndexChange,
 }: {
-  highlightedAxis: AxisItemIdentifier[] | undefined;
-  onHighlightedAxisChange: (axis: AxisItemIdentifier[]) => void;
+  highlightedIndex: number | undefined;
+  onHighlightedIndexChange: (index: number | null) => void;
 }) {
   const chartDataset = useDataset();
 
   if (!chartDataset) {
     return null;
   }
-
-  const highlightedIndex = highlightedAxis?.[0]?.dataIndex;
 
   const calculateTotal = (item: any) => {
     return ['q1', 'q2', 'q3', 'q4'].reduce((sum, quarter) => {
@@ -90,10 +88,8 @@ function DataTable({
           {chartDataset.map((row, index) => (
             <TableRow
               key={String(row.product)}
-              onMouseEnter={() =>
-                onHighlightedAxisChange([{ axisId: 'x-axis-id', dataIndex: index }])
-              }
-              onMouseLeave={() => onHighlightedAxisChange([])}
+              onMouseEnter={() => onHighlightedIndexChange(index)}
+              onMouseLeave={() => onHighlightedIndexChange(null)}
               sx={{
                 backgroundColor:
                   highlightedIndex === index ? 'action.hover' : 'transparent',
@@ -152,6 +148,14 @@ export default function UseDatasetAdvanced() {
     [],
   );
 
+  const setHighlightedIndexCallback = React.useCallback((index: number | null) => {
+    if (index === null) {
+      setHighlightedAxis([]);
+    } else {
+      setHighlightedAxis([{ axisId: 'x-axis-id', dataIndex: index }]);
+    }
+  }, []);
+
   return (
     <ChartDataProvider
       dataset={dataset}
@@ -181,8 +185,8 @@ export default function UseDatasetAdvanced() {
           <ChartsLegend direction="horizontal" />
         </Box>
         <DataTable
-          highlightedAxis={highlightedAxis}
-          onHighlightedAxisChange={setHighlightedAxis}
+          highlightedIndex={highlightedAxis[0]?.dataIndex}
+          onHighlightedIndexChange={setHighlightedIndexCallback}
         />
       </Box>
     </ChartDataProvider>
