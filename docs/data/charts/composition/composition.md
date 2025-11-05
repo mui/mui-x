@@ -269,3 +269,7 @@ This example demonstrates how to combine scatter and line plots to overlay a nor
 The bell curve is calculated based on the mean and standard deviation of the data.
 
 {{"demo": "BellCurveOverlay.js" }}
+
+### MarkPlot
+
+{{"demo": "MarkPlot.js"}}
