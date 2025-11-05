@@ -1,0 +1,46 @@
+{
+  "props": {
+    "borderRadius": { "type": { "name": "number" } },
+    "onItemClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.MouseEvent<SVGElement, MouseEvent>, barItemIdentifier: BarItemIdentifier) => void",
+        "describedArgs": ["event", "barItemIdentifier"]
+      }
+    },
+    "skipAnimation": { "type": { "name": "bool" }, "default": "undefined" },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
+  "name": "BarRangePlot",
+  "imports": [
+    "import { BarRangePlot } from '@mui/x-charts/BarChart';",
+    "import { BarRangePlot } from '@mui/x-charts';",
+    "import { BarRangePlot } from '@mui/x-charts-pro';",
+    "import { BarRangePlot } from '@mui/x-charts-premium';"
+  ],
+  "slots": [
+    {
+      "name": "bar",
+      "description": "The component that renders the bar.",
+      "default": "BarElementPath",
+      "class": null
+    },
+    {
+      "name": "barLabel",
+      "description": "The component that renders the bar label.",
+      "default": "BarLabel",
+      "class": null
+    }
+  ],
+  "classes": [],
+  "muiName": "MuiBarRangePlot",
+  "filename": "/packages/x-charts/src/BarChart/BarRangePlot.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/bars/\">Charts - Bars</a></li></ul>",
+  "cssComponent": false
+}
