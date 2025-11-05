@@ -54,8 +54,9 @@ const selectorChartZoomState = (state: ChartState<[], [UseChartCartesianAxisSign
   state.zoom;
 
 export const selectorChartHasZoom = createSelector(
-  [selectorChartZoomState],
-  (zoom) => (zoom?.zoomData?.length ?? 0) > 0,
+  [selectorChartRawXAxis, selectorChartRawYAxis],
+  (xAxes, yAxes) =>
+    xAxes?.some((axis) => Boolean(axis.zoom)) || yAxes?.some((axis) => Boolean(axis.zoom)) || false,
 );
 
 /**
