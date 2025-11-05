@@ -11,6 +11,10 @@ _Nov 5, 2025_
 
 We'd like to extend a big thank you to the 13 contributors who made this release possible. Here are some highlights ✨:
 
+- Add `colorGetter` prop to cartesian charts series
+  
+  <img width="400" alt="Image" src="https://github.com/user-attachments/assets/d8b1263f-794e-4939-b17e-87350fdd1746" />
+
 - 🌎 Add Catalan (ca-ES) locale on the Data Grid
 - 🌎 Add Norwegian Bokmål (nb-NO) locale on the Charts
 - 🐞 Bugfixes
