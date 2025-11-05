@@ -38,6 +38,7 @@ type GestureManagerTyped = GestureManager<
   | PressGesture<'quickPress'>
   | TapAndDragGesture<'zoomTapAndDrag'>
   | PressAndDragGesture<'zoomPressAndDrag'>
+  | TapGesture<'zoomDoubleTapReset'>
   | PanGesture<'brush'>
 >;
 
@@ -80,13 +81,11 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
           new PanGesture({
             name: 'zoomPan',
             threshold: 0,
-            maxPointers: 1,
             preventIf: ['zoomTapAndDrag', 'zoomPressAndDrag'],
           }),
           new PinchGesture({
             name: 'zoomPinch',
             threshold: 5,
-            preventIf: ['pan', 'zoomPan'],
           }),
           new TurnWheelGesture({
             name: 'zoomTurnWheel',
@@ -101,6 +100,10 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
             name: 'zoomPressAndDrag',
             dragThreshold: 10,
             preventIf: ['zoomPinch'],
+          }),
+          new TapGesture({
+            name: 'zoomDoubleTapReset',
+            taps: 2,
           }),
         ],
       });
@@ -124,6 +127,7 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
         'quickPress',
         'zoomTapAndDrag',
         'zoomPressAndDrag',
+        'zoomDoubleTapReset',
         'brush',
       ],
       svg,

@@ -6,7 +6,7 @@ import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
-import { selectors } from '@mui/x-scheduler-headless/use-event-calendar';
+import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { MonthViewWeekRowProps } from './MonthViewWeekRow.types';
 import { MonthViewCell } from './MonthViewCell';
@@ -17,7 +17,7 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
 
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
-  const showWeekNumber = useStore(store, selectors.showWeekNumber);
+  const showWeekNumber = useStore(store, eventCalendarPreferenceSelectors.showWeekNumber);
   const translations = useTranslations();
   const occurrences = useEventOccurrencesWithDayGridPosition({ days, occurrencesMap });
   const weekNumber = adapter.getWeekNumber(days[0].value);

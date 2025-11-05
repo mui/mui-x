@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useLegend } from '@mui/x-charts/hooks';
 import { PieChart } from '@mui/x-charts/PieChart';
 

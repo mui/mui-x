@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { createRenderer, describeConformance, screen } from '@mui/internal-test-utils';
 import { PiecewiseColorLegend, piecewiseColorLegendClasses } from '@mui/x-charts/ChartsLegend';
 import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';

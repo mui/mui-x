@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { createSvgIcon } from '@mui/x-data-grid/internals';
 
 export const GridWorkspacesIcon = createSvgIcon(

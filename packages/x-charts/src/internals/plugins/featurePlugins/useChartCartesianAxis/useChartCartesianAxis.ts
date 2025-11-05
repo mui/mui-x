@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import { useStoreEffect } from '@mui/x-internals/store';
 import { useAssertModelConsistency } from '@mui/x-internals/useAssertModelConsistency';
 import { warnOnce } from '@mui/x-internals/warning';
 import { PointerGestureEventData } from '@mui/x-internal-gestures/core';
@@ -16,7 +17,6 @@ import { getAxisIndex } from './getAxisValue';
 import { getSVGPoint } from '../../../getSVGPoint';
 import { selectorChartsInteractionIsInitialized } from '../useChartInteraction';
 import { selectorChartAxisInteraction } from './useChartCartesianInteraction.selectors';
-import { useLazySelectorEffect } from '../../utils/useLazySelectorEffect';
 import { checkHasInteractionPlugin } from '../useChartInteraction/checkHasInteractionPlugin';
 
 export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<any>> = ({
@@ -61,16 +61,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
 
   useEnhancedEffect(() => {
     if (params.highlightedAxis !== undefined) {
-      store.update((prevState) => {
-        if (prevState.controlledCartesianAxisHighlight === params.highlightedAxis) {
-          return prevState;
-        }
-
-        return {
-          ...prevState,
-          controlledCartesianAxisHighlight: params.highlightedAxis,
-        };
-      });
+      store.set('controlledCartesianAxisHighlight', params.highlightedAxis);
     }
   }, [store, params.highlightedAxis]);
 
@@ -83,23 +74,22 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
       return;
     }
 
-    store.update((prev) => ({
-      ...prev,
-      cartesianAxis: {
-        ...prev.cartesianAxis,
-        x: defaultizeXAxis(xAxis, dataset),
-        y: defaultizeYAxis(yAxis, dataset),
-      },
-    }));
+    store.set('cartesianAxis', {
+      x: defaultizeXAxis(xAxis, dataset),
+      y: defaultizeYAxis(yAxis, dataset),
+    });
   }, [seriesConfig, drawingArea, xAxis, yAxis, dataset, store]);
 
   const usedXAxis = xAxisIds[0];
   const usedYAxis = yAxisIds[0];
 
-  useLazySelectorEffect(
+  useStoreEffect(
     store,
     selectorChartAxisInteraction,
     (prevAxisInteraction, nextAxisInteraction) => {
+      if (!onHighlightedAxisChange) {
+        return;
+      }
       if (Object.is(prevAxisInteraction, nextAxisInteraction)) {
         return;
       }
@@ -118,7 +108,6 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
         onHighlightedAxisChange!(nextAxisInteraction);
       }
     },
-    !onHighlightedAxisChange,
   );
 
   const hasInteractionPlugin = checkHasInteractionPlugin(instance);

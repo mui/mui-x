@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 import { dataset, valueFormatter } from './letterFrequency';
 

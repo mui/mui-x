@@ -109,7 +109,7 @@ export function getWheelScaleRatio(event: WheelEvent, step: number) {
 export function getHorizontalCenterRatio(
   point: { x: number; y: number },
   area: { left: number; width: number },
-  reverse = false,
+  reverse: boolean,
 ) {
   const { left, width } = area;
   const ratio = (point.x - left) / width;
@@ -122,7 +122,7 @@ export function getHorizontalCenterRatio(
 export function getVerticalCenterRatio(
   point: { x: number; y: number },
   area: { top: number; height: number },
-  reverse = false,
+  reverse: boolean,
 ) {
   const { top, height } = area;
   const ratio = (top - point.y) / height + 1;
