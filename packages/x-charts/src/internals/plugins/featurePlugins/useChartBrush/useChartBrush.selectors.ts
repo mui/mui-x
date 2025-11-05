@@ -1,5 +1,5 @@
 import { createSelector, type ChartOptionalRootSelector } from '../../utils/selectors';
-import { selectorChartZoomOptionsLookup } from '../useChartCartesianAxis';
+import { selectorChartZoomOptionsLookup } from '../useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
 import type { UseChartBrushSignature } from './useChartBrush.types';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';
 
@@ -70,7 +70,7 @@ export const selectorBrushConfigNoZoom = createSelector(
 
 export const selectorBrushConfigZoom = createSelector(
   [selectorChartZoomOptionsLookup],
-  (optionsLookup) => {
+  function selectorBrushConfigZoom(optionsLookup) {
     let hasX = false;
     let hasY = false;
     Object.values(optionsLookup).forEach((options) => {
@@ -99,11 +99,17 @@ export const selectorBrushConfig = createSelector(
   (configNoZoom, configZoom) => configZoom ?? configNoZoom,
 );
 
-export const selectorIsBrushEnabled = createSelector([selectorBrush], (brush) => brush?.enabled);
+export const selectorIsBrushEnabled = createSelector(
+  [selectorBrush],
+  (brush) => brush?.enabled || brush?.isZoomBrushEnabled,
+);
 
-export const selectorIsBrushSelectionActive = createSelector([selectorBrush], (brush) => {
-  return brush?.enabled && brush?.start !== null && brush?.current !== null;
-});
+export const selectorIsBrushSelectionActive = createSelector(
+  [selectorIsBrushEnabled, selectorBrush],
+  (isBrushEnabled, brush) => {
+    return isBrushEnabled && brush?.start !== null && brush?.current !== null;
+  },
+);
 
 export const selectorBrushShouldPreventAxisHighlight = createSelector(
   [selectorBrush, selectorIsBrushSelectionActive],

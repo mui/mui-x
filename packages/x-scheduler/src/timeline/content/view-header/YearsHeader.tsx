@@ -2,7 +2,7 @@ import * as React from 'react';
 import { clsx } from 'clsx';
 import { useStore } from '@base-ui-components/utils/store/useStore';
 import { useAdapter, Adapter } from '@mui/x-scheduler-headless/use-adapter';
-import { selectors } from '@mui/x-scheduler-headless/use-timeline';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useTimelineStoreContext } from '@mui/x-scheduler-headless/use-timeline-store-context';
 import { SchedulerValidDate } from '@mui/x-scheduler-headless/models';
 import { HeaderProps } from './Headers.types';
@@ -30,7 +30,7 @@ export function YearHeader(props: HeaderProps) {
   const adapter = useAdapter();
   const store = useTimelineStoreContext();
 
-  const visibleDate = useStore(store, selectors.visibleDate);
+  const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
 
   const years = React.useMemo(
     () => getYears(adapter, visibleDate, amount || YEARS_UNIT_COUNT),

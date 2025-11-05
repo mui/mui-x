@@ -3,6 +3,8 @@ import { RecurringEventRecurrenceRule } from './recurringEvent';
 import type { CalendarOccurrencePlaceholderExternalDragData } from './dragAndDrop';
 import type { CalendarResourceId } from './resource';
 
+// TODO: Rename SchedulerProcessedEvent and replace the raw SchedulerValidDate with processed dates.
+// TODO: Create a new SchedulerDefaultEventModel to replace CalendarEvent on props.events.
 export interface CalendarEvent {
   /**
    * The unique identifier of the event.
@@ -26,8 +28,9 @@ export interface CalendarEvent {
   end: SchedulerValidDate;
   /**
    * The id of the resource this event is associated with.
+   * @default null
    */
-  resource?: CalendarResourceId;
+  resource?: CalendarResourceId | null;
   /**
    * The recurrence rule for the event.
    * If not defined, the event will have only one occurrence.
@@ -135,6 +138,11 @@ interface CalendarOccurrencePlaceholderBase {
    */
   end: SchedulerValidDate;
   /**
+   * The id of the resource onto which to drop the event.
+   * If null, the event will be dropped outside of any resource.
+   */
+  resourceId: CalendarResourceId | null;
+  /**
    * Whether the occurrence placeholder should be hidden.
    * This is used when dragging an event outside of the calendar to avoid showing both the placeholder and the drag preview.
    */
@@ -158,7 +166,7 @@ export interface CalendarOccurrencePlaceholderInternalDragOrResize
   /**
    * The type of placeholder.
    */
-  type: 'internal-drag-or-resize';
+  type: 'internal-drag' | 'internal-resize';
   /**
    * The id of the event being changed.
    */
@@ -170,7 +178,7 @@ export interface CalendarOccurrencePlaceholderInternalDragOrResize
   /**
    * The data of the event to use when dropping the event outside of the Event Calendar.
    */
-  originalEvent: CalendarEvent;
+  originalOccurrence: CalendarEventOccurrence;
 }
 
 export interface CalendarOccurrencePlaceholderExternalDrag
@@ -223,3 +231,17 @@ export type CalendarEventUpdatedProperties = Partial<CalendarEvent> &
  * The type of surface the event is being rendered on.
  */
 export type EventSurfaceType = 'day-grid' | 'time-grid';
+
+export type SchedulerEventModelStructure<TEvent extends object> = {
+  [key in keyof CalendarEvent]?: {
+    getter: (event: TEvent) => CalendarEvent[key];
+    /**
+     * Setter for the event property.
+     * If not provided, the property won't be editable.
+     */
+    setter?: (
+      event: TEvent | Partial<TEvent>,
+      value: CalendarEvent[key],
+    ) => TEvent | Partial<TEvent>;
+  };
+};
