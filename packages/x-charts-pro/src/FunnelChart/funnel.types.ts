@@ -36,7 +36,7 @@ export type FunnelValueType = {
 };
 
 export interface FunnelSeriesType
-  extends Omit<CommonSeriesType<FunnelValueType>, 'color'>,
+  extends Omit<CommonSeriesType<FunnelValueType>, 'color' | 'colorGetter'>,
     CartesianSeriesType {
   type: 'funnel';
   /**
