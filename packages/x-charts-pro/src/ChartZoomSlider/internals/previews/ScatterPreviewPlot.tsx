@@ -8,7 +8,6 @@ import {
   scatterSeriesConfig,
   selectorChartPreviewComputedXAxis,
   selectorChartPreviewComputedYAxis,
-  SeriesColorProp,
 } from '@mui/x-charts/internals';
 import { useScatterSeriesContext, useXAxes, useYAxes, useZAxes } from '@mui/x-charts/hooks';
 import { ScatterMarker } from '@mui/x-charts/ScatterChart';
@@ -43,9 +42,6 @@ export function ScatterPreviewPlot({ axisId, x, y, height, width }: ScatterPrevi
       {seriesOrder.map((seriesId) => {
         const { id, xAxisId, yAxisId, zAxisId, color } = series[seriesId];
 
-        // FIXME: V9: remove this cast as it will no longer be necessary
-        const seriesColor = color as SeriesColorProp<number | null>;
-
         const colorGetter = scatterSeriesConfig.colorProcessor(
           series[seriesId],
           xAxes[xAxisId ?? defaultXAxisId],
@@ -60,7 +56,7 @@ export function ScatterPreviewPlot({ axisId, x, y, height, width }: ScatterPrevi
             key={id}
             xScale={xScale}
             yScale={yScale}
-            color={typeof seriesColor === 'function' ? seriesColor(null) : seriesColor}
+            color={color}
             colorGetter={colorGetter}
             series={series[seriesId]}
             x={x}
