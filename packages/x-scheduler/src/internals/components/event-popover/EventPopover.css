@@ -364,3 +364,61 @@ p {
   font-size: var(--font-size-2);
   color: var(--secondary-text-color);
 }
+
+.EventPopoverTabsList {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  background-color: var(--event-color-3);
+  padding-inline: var(--space-6);
+}
+
+.EventPopoverTabTrigger.Ghost {
+  border-radius: var(--radius-3) var(--radius-3) 0 0;
+  padding: var(--space-2) var(--space-3);
+  color: var(--event-color-12);
+  font-size: var(--font-size-2);
+  line-height: var(--line-height-1);
+}
+
+.EventPopoverTabTrigger.Ghost[data-selected] {
+  background-color: var(--surface);
+}
+
+.EventPopoverRecurrenceFormLabel {
+  display: inline-block;
+  font-size: var(--font-size-2);
+  font-weight: var(--font-weight-2);
+  margin-block-end: var(--space-3);
+}
+
+.EventPopoverInputsRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.EventPopoverAfterTimesInputWrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.RecurrenceEveryInput {
+  max-width: var(--space-10);
+}
+
+.EventPopoverRadioRoot {
+  display: grid;
+  grid-template-columns: 16px auto;
+  gap: var(--space-2);
+}
+
+.EventPopoverRadioItemText {
+  grid-column: 2 / 3;
+}
+
+.RadioItem.RadioItemWithInput {
+  justify-content: flex-start;
+  gap: var(--space-2);
+}

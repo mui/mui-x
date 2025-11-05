@@ -7,6 +7,8 @@ import { Field } from '@base-ui-components/react/field';
 import { Form } from '@base-ui-components/react/form';
 import { Input } from '@base-ui-components/react/input';
 import { Select } from '@base-ui-components/react/select';
+import { RadioGroup } from '@base-ui-components/react/radio-group';
+import { Radio } from '@base-ui-components/react/radio';
 import { Separator } from '@base-ui-components/react/separator';
 import { CheckIcon, ChevronDown } from 'lucide-react';
 import {
@@ -25,9 +27,11 @@ import {
   schedulerRecurringEventSelectors,
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
+import { Tabs } from '@base-ui-components/react/tabs';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { getColorClassName } from '../../utils/color-utils';
 import { computeRange, ControlledValue, validateRange } from './utils';
+
 import EventPopoverHeader from './EventPopoverHeader';
 
 interface FormContentProps {
@@ -77,6 +81,16 @@ export default function FormContent(props: FormContentProps) {
       resourceId: occurrence.resource ?? null,
       allDay: !!occurrence.allDay,
     };
+  });
+
+  const [controlledRecurrence, setControlledRecurrence] = React.useState({
+    every: 1,
+    unit: 'week',
+    weekdays: [0],
+    monthMode: 'day',
+    ends: 'never',
+    afterTimes: 10,
+    until: adapter.formatByString(occurrence.end, 'yyyy-MM-dd'),
   });
 
   function pushPlaceholder(next: ControlledValue) {
@@ -289,162 +303,298 @@ export default function FormContent(props: FormContentProps) {
           </Select.Root>
         </Field.Root>
       </EventPopoverHeader>
-      <Separator className="EventPopoverSeparator" />
-      <div className="EventPopoverMainContent">
-        <div className="EventPopoverDateTimeFields">
-          <div className="EventPopoverDateTimeFieldsStartRow">
-            <Field.Root className="EventPopoverFieldRoot" name="startDate">
-              <Field.Label className="EventPopoverFormLabel">
-                {translations.startDateLabel}
-                <Input
-                  className="EventPopoverInput"
-                  type="date"
-                  value={controlled.startDate}
-                  onChange={createHandleChangeDateOrTimeField('startDate')}
-                  aria-describedby="startDate-error"
-                  required
-                  readOnly={isPropertyReadOnly('start')}
-                />
-              </Field.Label>
-            </Field.Root>
-            {!controlled.allDay && (
-              <Field.Root className="EventPopoverFieldRoot" name="startTime">
-                <Field.Label className="EventPopoverFormLabel">
-                  {translations.startTimeLabel}
-                  <Input
-                    className="EventPopoverInput"
-                    type="time"
-                    value={controlled.startTime}
-                    onChange={createHandleChangeDateOrTimeField('startTime')}
-                    aria-describedby="startTime-error"
-                    required
-                    readOnly={isPropertyReadOnly('start')}
-                  />
+      <Tabs.Root defaultValue="general-tab">
+        <Tabs.List className="EventPopoverTabsList">
+          <Tabs.Tab value="general-tab" className="EventPopoverTabTrigger Ghost">
+            General
+          </Tabs.Tab>
+          <Tabs.Tab value="recurrence-tab" className="EventPopoverTabTrigger Ghost">
+            Recurrence
+          </Tabs.Tab>
+        </Tabs.List>
+        <Tabs.Panel value="general-tab" keepMounted>
+          <div className="EventPopoverMainContent">
+            <div className="EventPopoverDateTimeFields">
+              <div className="EventPopoverDateTimeFieldsStartRow">
+                <Field.Root className="EventPopoverFieldRoot" name="startDate">
+                  <Field.Label className="EventPopoverFormLabel">
+                    {translations.startDateLabel}
+                    <Input
+                      className="EventPopoverInput"
+                      type="date"
+                      value={controlled.startDate}
+                      onChange={createHandleChangeDateOrTimeField('startDate')}
+                      aria-describedby="startDate-error"
+                      required
+                      readOnly={isPropertyReadOnly('start')}
+                    />
+                  </Field.Label>
+                </Field.Root>
+                {!controlled.allDay && (
+                  <Field.Root className="EventPopoverFieldRoot" name="startTime">
+                    <Field.Label className="EventPopoverFormLabel">
+                      {translations.startTimeLabel}
+                      <Input
+                        className="EventPopoverInput"
+                        type="time"
+                        value={controlled.startTime}
+                        onChange={createHandleChangeDateOrTimeField('startTime')}
+                        aria-describedby="startTime-error"
+                        required
+                        readOnly={isPropertyReadOnly('start')}
+                      />
+                    </Field.Label>
+                  </Field.Root>
+                )}
+              </div>
+              <div className="EventPopoverDateTimeFieldsEndRow">
+                <Field.Root className="EventPopoverFieldRoot" name="endDate">
+                  <Field.Label className="EventPopoverFormLabel">
+                    {translations.endDateLabel}
+                    <Input
+                      className="EventPopoverInput"
+                      type="date"
+                      value={controlled.endDate}
+                      onChange={createHandleChangeDateOrTimeField('endDate')}
+                      required
+                      readOnly={isPropertyReadOnly('end')}
+                    />
+                  </Field.Label>
+                </Field.Root>
+                {!controlled.allDay && (
+                  <Field.Root className="EventPopoverFieldRoot" name="endTime">
+                    <Field.Label className="EventPopoverFormLabel">
+                      {translations.endTimeLabel}
+                      <Input
+                        className="EventPopoverInput"
+                        type="time"
+                        value={controlled.endTime}
+                        onChange={createHandleChangeDateOrTimeField('endTime')}
+                        required
+                        readOnly={isPropertyReadOnly('end')}
+                      />
+                    </Field.Label>
+                  </Field.Root>
+                )}
+              </div>
+              <Field.Root
+                name="startDate"
+                className="EventPopoverDateTimeFieldsError"
+                id="startDate-error"
+                aria-live="polite"
+              >
+                <Field.Error />
+              </Field.Root>
+              <Field.Root
+                name="startTime"
+                className="EventPopoverDateTimeFieldsError"
+                id="startTime-error"
+                aria-live="polite"
+              >
+                <Field.Error />
+              </Field.Root>
+              <Field.Root className="EventPopoverFieldRoot" name="allDay">
+                <Field.Label className="AllDayCheckboxLabel">
+                  <Checkbox.Root
+                    className="AllDayCheckboxRoot"
+                    id="enable-all-day-checkbox"
+                    checked={controlled.allDay}
+                    onCheckedChange={handleToggleAllDay}
+                    readOnly={isPropertyReadOnly('allDay')}
+                  >
+                    <Checkbox.Indicator className="AllDayCheckboxIndicator">
+                      <CheckIcon className="AllDayCheckboxIcon" />
+                    </Checkbox.Indicator>
+                  </Checkbox.Root>
+                  {translations.allDayLabel}
                 </Field.Label>
               </Field.Root>
-            )}
-          </div>
-          <div className="EventPopoverDateTimeFieldsEndRow">
-            <Field.Root className="EventPopoverFieldRoot" name="endDate">
-              <Field.Label className="EventPopoverFormLabel">
-                {translations.endDateLabel}
-                <Input
-                  className="EventPopoverInput"
-                  type="date"
-                  value={controlled.endDate}
-                  onChange={createHandleChangeDateOrTimeField('endDate')}
-                  required
-                  readOnly={isPropertyReadOnly('end')}
-                />
-              </Field.Label>
-            </Field.Root>
-            {!controlled.allDay && (
-              <Field.Root className="EventPopoverFieldRoot" name="endTime">
-                <Field.Label className="EventPopoverFormLabel">
-                  {translations.endTimeLabel}
-                  <Input
-                    className="EventPopoverInput"
-                    type="time"
-                    value={controlled.endTime}
-                    onChange={createHandleChangeDateOrTimeField('endTime')}
-                    required
-                    readOnly={isPropertyReadOnly('end')}
-                  />
-                </Field.Label>
-              </Field.Root>
-            )}
-          </div>
-          <Field.Root
-            name="startDate"
-            className="EventPopoverDateTimeFieldsError"
-            id="startDate-error"
-            aria-live="polite"
-          >
-            <Field.Error />
-          </Field.Root>
-          <Field.Root
-            name="startTime"
-            className="EventPopoverDateTimeFieldsError"
-            id="startTime-error"
-            aria-live="polite"
-          >
-            <Field.Error />
-          </Field.Root>
-          <Field.Root className="EventPopoverFieldRoot" name="allDay">
-            <Field.Label className="AllDayCheckboxLabel">
-              <Checkbox.Root
-                className="AllDayCheckboxRoot"
-                id="enable-all-day-checkbox"
-                checked={controlled.allDay}
-                onCheckedChange={handleToggleAllDay}
-                readOnly={isPropertyReadOnly('allDay')}
-              >
-                <Checkbox.Indicator className="AllDayCheckboxIndicator">
-                  <CheckIcon className="AllDayCheckboxIcon" />
-                </Checkbox.Indicator>
-              </Checkbox.Root>
-              {translations.allDayLabel}
-            </Field.Label>
-          </Field.Root>
-        </div>
-        <Field.Root className="EventPopoverFieldRoot" name="recurrence">
-          {defaultRecurrenceKey === 'custom' ? (
-            // TODO: Issue #19137 - Display the actual custom recurrence rule (e.g. "Repeats every 2 weeks on Monday")
-            <p className="EventPopoverFormLabel">{`Custom ${occurrence.rrule?.freq.toLowerCase()} recurrence`}</p>
-          ) : (
-            <Select.Root
-              items={recurrenceOptions}
-              defaultValue={defaultRecurrenceKey}
-              readOnly={isPropertyReadOnly('rrule')}
-            >
-              <Select.Trigger
-                className="EventPopoverSelectTrigger"
-                aria-label={translations.recurrenceLabel}
-              >
-                <Select.Value />
-                <Select.Icon className="EventPopoverSelectIcon">
-                  <ChevronDown size={14} />
-                </Select.Icon>
-              </Select.Trigger>
-              <Select.Portal>
-                <Select.Positioner
-                  alignItemWithTrigger={false}
-                  align="start"
-                  className="EventPopoverSelectPositioner"
+            </div>
+            <Field.Root className="EventPopoverFieldRoot" name="recurrence">
+              {defaultRecurrenceKey === 'custom' ? (
+                // TODO: Issue #19137 - Display the actual custom recurrence rule (e.g. "Repeats every 2 weeks on Monday")
+                <p className="EventPopoverFormLabel">{`Custom ${occurrence.rrule?.freq.toLowerCase()} recurrence`}</p>
+              ) : (
+                <Select.Root
+                  items={recurrenceOptions}
+                  defaultValue={defaultRecurrenceKey}
+                  readOnly={isPropertyReadOnly('rrule')}
                 >
-                  <Select.Popup className="EventPopoverSelectPopup">
-                    {recurrenceOptions.map(({ label, value }) => (
-                      <Select.Item key={label} value={value} className="EventPopoverSelectItem">
-                        <Select.ItemText className="EventPopoverSelectItemText">
-                          {label}
-                        </Select.ItemText>
-                      </Select.Item>
-                    ))}
-                  </Select.Popup>
-                </Select.Positioner>
-              </Select.Portal>
-            </Select.Root>
-          )}
-        </Field.Root>
-        <Separator className="EventPopoverSeparator" />
-        <div>
-          <Field.Root className="EventPopoverFieldRoot" name="description">
-            <Field.Label className="EventPopoverFormLabel">
-              {translations.descriptionLabel}
-              <Input
-                render={
-                  <textarea
-                    className="EventPopoverTextarea"
-                    defaultValue={occurrence.description}
-                    rows={5}
+                  <Select.Trigger
+                    className="EventPopoverSelectTrigger"
+                    aria-label={translations.recurrenceLabel}
+                  >
+                    <Select.Value />
+                    <Select.Icon className="EventPopoverSelectIcon">
+                      <ChevronDown size={14} />
+                    </Select.Icon>
+                  </Select.Trigger>
+                  <Select.Portal>
+                    <Select.Positioner
+                      alignItemWithTrigger={false}
+                      align="start"
+                      className="EventPopoverSelectPositioner"
+                    >
+                      <Select.Popup className="EventPopoverSelectPopup">
+                        {recurrenceOptions.map(({ label, value }) => (
+                          <Select.Item key={label} value={value} className="EventPopoverSelectItem">
+                            <Select.ItemText className="EventPopoverSelectItemText">
+                              {label}
+                            </Select.ItemText>
+                          </Select.Item>
+                        ))}
+                      </Select.Popup>
+                    </Select.Positioner>
+                  </Select.Portal>
+                </Select.Root>
+              )}
+            </Field.Root>
+            <Separator className="EventPopoverSeparator" />
+            <div>
+              <Field.Root className="EventPopoverFieldRoot" name="description">
+                <Field.Label className="EventPopoverFormLabel">
+                  {translations.descriptionLabel}
+                  <Input
+                    render={
+                      <textarea
+                        className="EventPopoverTextarea"
+                        defaultValue={occurrence.description}
+                        rows={5}
+                      />
+                    }
+                    readOnly={isPropertyReadOnly('description')}
                   />
+                </Field.Label>
+              </Field.Root>
+            </div>
+          </div>
+        </Tabs.Panel>
+        <Tabs.Panel value="recurrence-tab" keepMounted>
+          <div className="EventPopoverMainContent">
+            <Field.Root className="EventPopoverFieldRoot">
+              <Field.Label className="EventPopoverRecurrenceFormLabel">Repeat</Field.Label>
+              <div className="EventPopoverInputsRow">
+                Every
+                <Input
+                  type="number"
+                  min={1}
+                  value={controlledRecurrence.every}
+                  onChange={(event) =>
+                    setControlledRecurrence((prev) => ({
+                      ...prev,
+                      every: Math.max(1, Number(event.target.value)),
+                    }))
+                  }
+                  className="EventPopoverInput RecurrenceEveryInput"
+                />
+                <Select.Root
+                  items={[
+                    { label: 'days', value: 'day' },
+                    { label: 'weeks', value: 'week' },
+                    { label: 'months', value: 'month' },
+                    { label: 'years', value: 'year' },
+                  ]}
+                  value={controlledRecurrence.unit}
+                  onValueChange={(val) =>
+                    setControlledRecurrence((prev) => ({ ...prev, unit: val as any }))
+                  }
+                >
+                  <Select.Trigger className="EventPopoverSelectTrigger">
+                    <Select.Value />
+                    <Select.Icon className="EventPopoverSelectIcon">
+                      <ChevronDown size={14} />
+                    </Select.Icon>
+                  </Select.Trigger>
+                  <Select.Portal>
+                    <Select.Positioner
+                      alignItemWithTrigger={false}
+                      align="start"
+                      className="EventPopoverSelectPositioner"
+                    >
+                      <Select.Popup className="EventPopoverSelectPopup">
+                        <Select.Item value="day" className="EventPopoverSelectItem">
+                          <Select.ItemText>days</Select.ItemText>
+                        </Select.Item>
+                        <Select.Item value="week" className="EventPopoverSelectItem">
+                          <Select.ItemText>weeks</Select.ItemText>
+                        </Select.Item>
+                        <Select.Item value="month" className="EventPopoverSelectItem">
+                          <Select.ItemText>months</Select.ItemText>
+                        </Select.Item>
+                        <Select.Item value="year" className="EventPopoverSelectItem">
+                          <Select.ItemText>years</Select.ItemText>
+                        </Select.Item>
+                      </Select.Popup>
+                    </Select.Positioner>
+                  </Select.Portal>
+                </Select.Root>
+              </div>
+            </Field.Root>
+
+            <Separator className="EventPopoverSeparator" />
+
+            <Field.Root className="EventPopoverFieldRoot" name="ends">
+              <Field.Label className="EventPopoverRecurrenceFormLabel">Ends</Field.Label>
+
+              <RadioGroup
+                value={controlledRecurrence.ends}
+                onValueChange={(val) =>
+                  setControlledRecurrence((prev) => ({ ...prev, ends: val as any }))
                 }
-                readOnly={isPropertyReadOnly('description')}
-              />
-            </Field.Label>
-          </Field.Root>
-        </div>
-      </div>
+              >
+                <Field.Label htmlFor="ends-never" className="RadioItem ">
+                  <Radio.Root id="ends-never" className="EventPopoverRadioRoot" value="never">
+                    <Radio.Indicator className="RadioItemIndicator" />
+                    <span className="EventPopoverRadioItemText">Never</span>
+                  </Radio.Root>
+                </Field.Label>
+
+                <Field.Label htmlFor="ends-after" className="RadioItem RadioItemWithInput">
+                  <Radio.Root id="ends-after" className="EventPopoverRadioRoot" value="after">
+                    <Radio.Indicator className="RadioItemIndicator" />
+                    <span className="EventPopoverRadioItemText">After</span>
+                  </Radio.Root>
+                  <div className="EventPopoverAfterTimesInputWrapper">
+                    <Input
+                      type="number"
+                      min={1}
+                      value={controlledRecurrence.afterTimes}
+                      onChange={(event) =>
+                        setControlledRecurrence((prev) => ({
+                          ...prev,
+                          ends: 'after',
+                          afterTimes: Math.max(1, Number(event.target.value)),
+                        }))
+                      }
+                      className="EventPopoverInput RecurrenceEveryInput"
+                    />
+                    times
+                  </div>
+                </Field.Label>
+
+                <Field.Label htmlFor="ends-until" className="RadioItem RadioItemWithInput">
+                  <Radio.Root id="ends-until" className="EventPopoverRadioRoot" value="until">
+                    <Radio.Indicator className="RadioItemIndicator" />
+                    <span className="EventPopoverRadioItemText">Until</span>
+                  </Radio.Root>
+                  <Input
+                    type="date"
+                    value={controlledRecurrence.until}
+                    onChange={(event) =>
+                      setControlledRecurrence((prev) => ({
+                        ...prev,
+                        ends: 'until',
+                        until: event.target.value,
+                      }))
+                    }
+                    className="EventPopoverInput"
+                  />
+                </Field.Label>
+              </RadioGroup>
+            </Field.Root>
+          </div>
+        </Tabs.Panel>
+      </Tabs.Root>
       <Separator className="EventPopoverSeparator" />
       <div className="EventPopoverActions">
         <button
