@@ -601,6 +601,9 @@ export default function PopularFeaturesDemo() {
             sortModel: [{ field: 'plan', sort: 'asc' }],
           },
         }}
+        // Using deprecated `autoHeight` to fix layout shift on load.
+        // See https://github.com/mui/material-ui/pull/47183
+        autoHeight
         getCellClassName={getCellClassName}
         sx={{
           fontFamily: 'IBM Plex Sans',
