@@ -1,17 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import * as internals from '@mui/x-charts/internals';
+import { isJSDOM } from 'test/utils/skipIf';
 import { splitStringForSvg } from './splitStringForSvg';
 
-// Mock getStringSize to have predictable behavior
-vi.mock('@mui/x-charts/internals', async () => {
-  const actual = await vi.importActual('@mui/x-charts/internals');
-  return {
-    ...actual,
-    getStringSize: vi.fn(),
-  };
-});
-
-describe('splitStringForSvg', () => {
+describe.skipIf(!isJSDOM)('splitStringForSvg', () => {
   const mockStyles: React.CSSProperties = {
     fontSize: '12px',
     fontFamily: 'Arial',
@@ -19,7 +11,7 @@ describe('splitStringForSvg', () => {
 
   beforeEach(() => {
     // Default mock: each character is 10px wide, height is 20px
-    vi.mocked(internals.getStringSize).mockImplementation((text: string | number) => ({
+    vi.spyOn(internals, 'getStringSize').mockImplementation((text: string | number) => ({
       width: String(text).length * 10,
       height: 20,
     }));
