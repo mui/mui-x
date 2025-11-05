@@ -60,8 +60,18 @@ export interface SchedulerTranslations {
   recurrenceNoRepeat: string;
   recurrenceCustomRepeat: string;
   recurrenceDailyPresetLabel: string;
+  recurrenceDailyFrequencyLabel: string;
+  recurrenceEndsLabel: string;
+  recurrenceEndsAfterLabel: string;
+  recurrenceEndsNeverLabel: string;
+  recurrenceEndsUntilLabel: string;
+  recurrenceEndsTimesLabel: string;
+  recurrenceEveryLabel: string;
+  recurrenceWeeklyFrequencyLabel: string;
   recurrenceWeeklyPresetLabel: (weekday: string) => string;
+  recurrenceMonthlyFrequencyLabel: string;
   recurrenceMonthlyPresetLabel: (dayNumber: number) => string;
+  recurrenceYearlyFrequencyLabel: string;
   recurrenceYearlyPresetLabel: (date: string) => string;
   resourceLabel: string;
   saveChanges: string;

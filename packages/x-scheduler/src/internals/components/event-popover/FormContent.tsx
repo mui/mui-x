@@ -15,6 +15,7 @@ import {
   CalendarEventOccurrence,
   CalendarEventUpdatedProperties,
   CalendarResourceId,
+  RecurringEventFrequency,
   RecurringEventPresetKey,
   RecurringEventRecurrenceRule,
   SchedulerValidDate,
@@ -255,6 +256,25 @@ export default function FormContent(props: FormContentProps) {
     {
       label: `${translations.recurrenceYearlyPresetLabel(normalDate)}`,
       value: 'yearly',
+    },
+  ];
+
+  const recurrenceFrequencyOptions: {
+    label: string;
+    value: RecurringEventFrequency;
+  }[] = [
+    { label: `${translations.recurrenceDailyFrequencyLabel}`, value: 'DAILY' },
+    {
+      label: `${translations.recurrenceWeeklyFrequencyLabel}`,
+      value: 'WEEKLY',
+    },
+    {
+      label: `${translations.recurrenceMonthlyFrequencyLabel}`,
+      value: 'MONTHLY',
+    },
+    {
+      label: `${translations.recurrenceYearlyFrequencyLabel}`,
+      value: 'YEARLY',
     },
   ];
 
@@ -509,7 +529,7 @@ export default function FormContent(props: FormContentProps) {
             <Field.Root className="EventPopoverFieldRoot">
               <Field.Label className="EventPopoverRecurrenceFormLabel">Repeat</Field.Label>
               <div className="EventPopoverInputsRow">
-                Every
+                {translations.recurrenceEveryLabel}
                 <Input
                   name="interval"
                   type="number"
@@ -519,12 +539,7 @@ export default function FormContent(props: FormContentProps) {
                   className="EventPopoverInput RecurrenceNumberInput"
                 />
                 <Select.Root
-                  items={[
-                    { label: 'days', value: 'DAILY' },
-                    { label: 'weeks', value: 'WEEKLY' },
-                    { label: 'months', value: 'MONTHLY' },
-                    { label: 'years', value: 'YEARLY' },
-                  ]}
+                  items={recurrenceFrequencyOptions}
                   value={controlled.freq}
                   onValueChange={(val) => setControlled((prev) => ({ ...prev, freq: val as any }))}
                 >
@@ -541,18 +556,13 @@ export default function FormContent(props: FormContentProps) {
                       className="EventPopoverSelectPositioner"
                     >
                       <Select.Popup className="EventPopoverSelectPopup">
-                        <Select.Item value="DAILY" className="EventPopoverSelectItem">
-                          <Select.ItemText>days</Select.ItemText>
-                        </Select.Item>
-                        <Select.Item value="WEEKLY" className="EventPopoverSelectItem">
-                          <Select.ItemText>weeks</Select.ItemText>
-                        </Select.Item>
-                        <Select.Item value="MONTHLY" className="EventPopoverSelectItem">
-                          <Select.ItemText>months</Select.ItemText>
-                        </Select.Item>
-                        <Select.Item value="YEARLY" className="EventPopoverSelectItem">
-                          <Select.ItemText>years</Select.ItemText>
-                        </Select.Item>
+                        {recurrenceFrequencyOptions.map(({ label, value }) => (
+                          <Select.Item key={label} value={value} className="EventPopoverSelectItem">
+                            <Select.ItemText className="EventPopoverSelectItemText">
+                              {label}
+                            </Select.ItemText>
+                          </Select.Item>
+                        ))}
                       </Select.Popup>
                     </Select.Positioner>
                   </Select.Portal>
@@ -566,20 +576,26 @@ export default function FormContent(props: FormContentProps) {
             <Separator className="EventPopoverSeparator" />
 
             <Field.Root className="EventPopoverFieldRoot">
-              <Field.Label className="EventPopoverRecurrenceFormLabel">Ends</Field.Label>
+              <Field.Label className="EventPopoverRecurrenceFormLabel">
+                {translations.recurrenceEndsLabel}
+              </Field.Label>
 
               <RadioGroup name="ends" defaultValue={getEndsSelectionFromRRule(occurrence.rrule)}>
                 <div className="RadioItem ">
                   <Radio.Root id="ends-never" className="EventPopoverRadioRoot" value="never">
                     <Radio.Indicator className="RadioItemIndicator" />
-                    <span className="EventPopoverRadioItemText">Never</span>
+                    <span className="EventPopoverRadioItemText">
+                      {translations.recurrenceEndsNeverLabel}
+                    </span>
                   </Radio.Root>
                 </div>
 
                 <Field.Label htmlFor="ends-after" className="RadioItem RadioItemWithInput">
                   <Radio.Root id="ends-after" className="EventPopoverRadioRoot" value="after">
                     <Radio.Indicator className="RadioItemIndicator" />
-                    <span className="EventPopoverRadioItemText">After</span>
+                    <span className="EventPopoverRadioItemText">
+                      {translations.recurrenceEndsAfterLabel}
+                    </span>
                   </Radio.Root>
                   <div className="EventPopoverAfterTimesInputWrapper">
                     <Input
@@ -589,7 +605,7 @@ export default function FormContent(props: FormContentProps) {
                       defaultValue={occurrence.rrule?.count || 1}
                       className="EventPopoverInput RecurrenceNumberInput"
                     />
-                    times
+                    {translations.recurrenceEndsTimesLabel}
                   </div>
                 </Field.Label>
 
