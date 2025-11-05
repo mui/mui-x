@@ -8,7 +8,7 @@ export default function Page(props) {
   return <ApiPage descriptions={descriptions} pageContent={pageContent} />;
 }
 
-export async function getStaticProps() {
+Page.getInitialProps = () => {
   const req = require.context(
     'docsx/translations/api-docs/charts/pie-arc',
     false,
@@ -17,9 +17,7 @@ export async function getStaticProps() {
   const descriptions = mapApiPageTranslations(req);
 
   return {
-    props: {
-      descriptions,
-      pageContent: jsonPageContent,
-    },
+    descriptions,
+    pageContent: jsonPageContent,
   };
-}
+};
