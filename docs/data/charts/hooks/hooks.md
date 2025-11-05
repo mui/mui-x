@@ -11,6 +11,10 @@ productId: x-charts
 
 The charts package provides several categories of hooks:
 
+### Data hooks
+
+- [**useDataset**](/x/react-charts/hooks/use-dataset/) - Access the dataset used to populate series and axes data
+
 ### Series hooks
 
 - [**useSeries**](/x/react-charts/hooks/use-series/) - Access raw series data for all chart types
