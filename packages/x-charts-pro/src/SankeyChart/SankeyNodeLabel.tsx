@@ -139,25 +139,43 @@ function splitStringOnSpaceHyphenOrHardSplit(
       if (splitIndex < testLine.length - 1) {
         const lineToPush = testLine.slice(0, splitIndex).trimEnd();
         const remainder = testLine.slice(splitIndex).trimStart();
+        const lineToPushTrimmed = lineToPush.trim();
+        const remainderTrimmed = remainder.trim();
 
-        // Prevent single character lines when the word has more than 1 character
-        if (lineToPush.trim().length === 1 && currentLine.trim().length > 1) {
-          // The line would be a single character from a multi-character word
-          // Push nothing and keep building the current line
-          words.push('');
-          currentLine = testLine.trimStart();
-        } else if (remainder.length === 1 && testLine.trim().length > 1) {
-          // The remainder would be a single character from a multi-character word
+        // Get the last word in lineToPush to check if it's being broken
+        const lastSpaceInLine = lineToPush.lastIndexOf(' ');
+        const lastHyphenInLine = lineToPush.lastIndexOf('-');
+        const lastSplitInLine = Math.max(lastSpaceInLine, lastHyphenInLine);
+        const lastWordInLine =
+          lastSplitInLine >= 0 ? lineToPush.slice(lastSplitInLine + 1).trim() : lineToPushTrimmed;
+
+        // Check if we're breaking a word and creating a single character
+        const isBreakingWord = lastSplitInLine < lineToPush.trimEnd().length - 2;
+        const lastWordIsSingleChar = lastWordInLine.length === 1;
+        const remainderIsSingleChar = remainderTrimmed.length === 1 && !isSplit(remainder[0]);
+
+        if (isBreakingWord && lastWordIsSingleChar && lastSplitInLine >= 0) {
+          // We're breaking a word and leaving a single character at the end
+          // Move the whole word to the next line
+          const lineWithoutLastWord = lineToPush.slice(0, lastSplitInLine + 1).trimEnd();
+          words.push(lineWithoutLastWord);
+          currentLine = (lineToPush.slice(lastSplitInLine + 1) + remainder).trimStart();
+        } else if (remainderIsSingleChar) {
+          // The remainder would be a single character
           // Include it in the current line instead
           words.push(testLine.trim());
           currentLine = '';
         } else {
-          words.push(lineToPush.trim());
+          words.push(lineToPushTrimmed);
           currentLine = remainder;
         }
       } else {
-        // No suitable split point found, force split
-        words.push(currentLine.trim());
+        // No suitable split point found, need to force split
+        // Push what we have and continue
+        const currentLineTrimmed = currentLine.trim();
+        if (currentLineTrimmed.length > 0) {
+          words.push(currentLineTrimmed);
+        }
         currentLine = char;
       }
     } else {
@@ -169,5 +187,44 @@ function splitStringOnSpaceHyphenOrHardSplit(
     words.push(currentLine.trim());
   }
 
-  return { lines: words, lineHeight: height };
+  // Filter out empty lines
+  const nonEmptyLines = words.filter((line) => line.length > 0);
+
+  // Post-process to merge single-character lines with adjacent lines
+  // A single character should only exist as its own line if it's a complete word (like "a" or "I")
+  const mergedLines: string[] = [];
+  for (let i = 0; i < nonEmptyLines.length; i += 1) {
+    const line = nonEmptyLines[i];
+
+    if (line.length === 1) {
+      // Check if this is a standalone word or part of a broken word
+      const prevLine = i > 0 ? nonEmptyLines[i - 1] : '';
+      const nextLine = i < nonEmptyLines.length - 1 ? nonEmptyLines[i + 1] : '';
+
+      // If previous line doesn't end with a space/hyphen, this is a broken word fragment
+      const prevEndsWithSplit = prevLine.length > 0 && isSplit(prevLine[prevLine.length - 1]);
+      // If next line doesn't start with a space/hyphen, this is a broken word fragment
+      const nextStartsWithSplit = nextLine.length > 0 && isSplit(nextLine[0]);
+
+      if (!prevEndsWithSplit && prevLine.length > 0) {
+        // Merge with previous line
+        if (mergedLines.length > 0) {
+          mergedLines[mergedLines.length - 1] += line;
+        } else {
+          mergedLines.push(line);
+        }
+      } else if (!nextStartsWithSplit && nextLine.length > 0) {
+        // Merge with next line
+        mergedLines.push(line + nextLine);
+        i += 1; // Skip the next line since we merged it
+      } else {
+        // It's a standalone single character word
+        mergedLines.push(line);
+      }
+    } else {
+      mergedLines.push(line);
+    }
+  }
+
+  return { lines: mergedLines, lineHeight: height };
 }
