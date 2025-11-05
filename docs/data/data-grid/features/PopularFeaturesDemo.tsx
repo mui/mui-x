@@ -580,6 +580,7 @@ export default function PopularFeaturesDemo() {
       sx={{
         display: 'flex',
         flexDirection: 'column',
+        minHeight: 1000,
         width: '100%',
       }}
     >
@@ -601,9 +602,7 @@ export default function PopularFeaturesDemo() {
             sortModel: [{ field: 'plan', sort: 'asc' }],
           },
         }}
-        // Using deprecated `autoHeight` to fix layout shift on load.
-        // See https://github.com/mui/material-ui/pull/47183
-        autoHeight
+        scrollbarSize={0}
         getCellClassName={getCellClassName}
         sx={{
           fontFamily: 'IBM Plex Sans',
