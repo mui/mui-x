@@ -54,16 +54,16 @@ storeClasses.forEach((storeClass) => {
       it('detects daily, weekly, monthly and yearly presets', () => {
         expect(
           schedulerRecurringEventSelectors.defaultPresetKey(state, presets.DAILY, start),
-        ).to.equal('daily');
+        ).to.equal('DAILY');
         expect(
           schedulerRecurringEventSelectors.defaultPresetKey(state, presets.WEEKLY, start),
-        ).to.equal('weekly');
+        ).to.equal('WEEKLY');
         expect(
           schedulerRecurringEventSelectors.defaultPresetKey(state, presets.MONTHLY, start),
-        ).to.equal('monthly');
+        ).to.equal('MONTHLY');
         expect(
           schedulerRecurringEventSelectors.defaultPresetKey(state, presets.YEARLY, start),
-        ).to.equal('yearly');
+        ).to.equal('YEARLY');
       });
 
       it('classifies daily interval>1 or with finite end (count) as custom', () => {
