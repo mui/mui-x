@@ -128,5 +128,11 @@ describe('splitStringForSvg', () => {
       // Should split at spaces, keeping words intact
       expect(result.lines).toEqual(['Energy', 'Generation', 'Commercial']);
     });
+
+    it('should not add random spaces when splitting', () => {
+      const result = splitStringForSvg('Gas', 10, true, mockStyles);
+
+      expect(result.lines).toEqual(['Gas']);
+    });
   });
 });
