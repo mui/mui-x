@@ -57,6 +57,11 @@ export interface CalendarEvent {
    * and no link to an original event will be created.
    */
   extractedFromId?: CalendarEventId;
+  /**
+   * The color of the event.
+   * Takes precedence over resource color if both are defined.
+   */
+  color?: CalendarEventColor;
 }
 
 /**
