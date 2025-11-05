@@ -48,7 +48,9 @@ export const useGridRowsOverridableMethods = (
       const targetRowId = gridRowDropTargetRowIdSelector(apiRef);
       // TODO v9: Use the updated function arguments instead of these selectors to be able to use in the userland
       // Fallback for the userland usecases when proper state is not set
-      const dropPosition = targetRowId ? gridRowDropPositionSelector(apiRef, targetRowId) : 'below';
+      const dropPosition = targetRowId
+        ? gridRowDropPositionSelector(apiRef, targetRowId)!
+        : 'below';
 
       if (sourceNode.type === 'footer') {
         throw new Error(`MUI X: The row reordering do not support reordering of footer rows.`);
