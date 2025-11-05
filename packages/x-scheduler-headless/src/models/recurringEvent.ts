@@ -6,6 +6,8 @@ import type { SchedulerValidDate } from './date';
  */
 export type RecurringEventPresetKey = 'daily' | 'weekly' | 'monthly' | 'yearly';
 
+export type RecurringEventFrequency = 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
+
 /**
  * The scope of a recurring event update.
  *
@@ -47,7 +49,7 @@ export interface RecurringEventRecurrenceRule {
    * Base frequency of the rule.
    * Corresponds to the FREQ property of the string-based RRULE.
    */
-  freq: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
+  freq: RecurringEventFrequency;
   /**
    * Positive integer representing at which intervals the recurrence rule repeats.
    * For example, within a DAILY rule, a value of "8" means every eight days.

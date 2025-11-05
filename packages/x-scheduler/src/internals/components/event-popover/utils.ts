@@ -9,7 +9,7 @@ export interface ControlledValue {
   endTime: string;
   resourceId: CalendarResourceId | null;
   allDay: boolean;
-  freq?: 'day' | 'week' | 'month' | 'year';
+  freq?: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
 }
 
 export function computeRange(adapter: Adapter, next: ControlledValue) {
@@ -80,4 +80,20 @@ export function getRecurrenceLabel(
     default:
       return translations.recurrenceNoRepeat;
   }
+}
+
+export function getEndsSelectionFromRRule(rrule?: {
+  count?: number | null;
+  until?: SchedulerValidDate | null;
+}): 'never' | 'after' | 'until' {
+  if (!rrule) {
+    return 'never';
+  }
+  if (rrule.until) {
+    return 'until';
+  }
+  if (rrule.count && rrule.count > 0) {
+    return 'after';
+  }
+  return 'never';
 }

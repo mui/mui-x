@@ -30,7 +30,7 @@ import {
 import { Tabs } from '@base-ui-components/react/tabs';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { getColorClassName } from '../../utils/color-utils';
-import { computeRange, ControlledValue, validateRange } from './utils';
+import { computeRange, ControlledValue, getEndsSelectionFromRRule, validateRange } from './utils';
 
 import EventPopoverHeader from './EventPopoverHeader';
 
@@ -60,7 +60,7 @@ export default function FormContent(props: FormContentProps) {
     schedulerRecurringEventSelectors.presets,
     occurrence.start,
   );
-  const defaultRecurrenceKey = useStore(
+  const defaultRecurrencePresetKey = useStore(
     store,
     schedulerRecurringEventSelectors.defaultPresetKey,
     occurrence.rrule,
@@ -80,7 +80,7 @@ export default function FormContent(props: FormContentProps) {
       endTime: fmtTime(occurrence.end),
       resourceId: occurrence.resource ?? null,
       allDay: !!occurrence.allDay,
-      freq: 'day',
+      freq: occurrence.rrule?.freq ?? 'DAILY',
     };
   });
 
@@ -133,7 +133,7 @@ export default function FormContent(props: FormContentProps) {
     const form = new FormData(event.currentTarget);
     const recurrenceValue = form.get('recurrence') as RecurringEventPresetKey;
     const recurrenceModified =
-      defaultRecurrenceKey !== 'custom' && recurrenceValue !== defaultRecurrenceKey;
+      defaultRecurrencePresetKey !== 'custom' && recurrenceValue !== defaultRecurrencePresetKey;
     // TODO: This will change after implementing the custom recurrence editing tab.
     const rrule =
       recurrenceModified && recurrenceValue ? recurrencePresets[recurrenceValue] : undefined;
@@ -417,13 +417,13 @@ export default function FormContent(props: FormContentProps) {
               </Field.Root>
             </div>
             <Field.Root className="EventPopoverFieldRoot" name="recurrence">
-              {defaultRecurrenceKey === 'custom' ? (
+              {defaultRecurrencePresetKey === 'custom' ? (
                 // TODO: Issue #19137 - Display the actual custom recurrence rule (e.g. "Repeats every 2 weeks on Monday")
                 <p className="EventPopoverFormLabel">{`Custom ${occurrence.rrule?.freq.toLowerCase()} recurrence`}</p>
               ) : (
                 <Select.Root
                   items={recurrenceOptions}
-                  defaultValue={defaultRecurrenceKey}
+                  defaultValue={defaultRecurrencePresetKey}
                   readOnly={isPropertyReadOnly('rrule')}
                 >
                   <Select.Trigger
@@ -485,15 +485,15 @@ export default function FormContent(props: FormContentProps) {
                   name="interval"
                   type="number"
                   min={1}
-                  defaultValue={1}
+                  defaultValue={occurrence.rrule ? occurrence.rrule.interval : 1}
                   className="EventPopoverInput RecurrenceNumberInput"
                 />
                 <Select.Root
                   items={[
-                    { label: 'days', value: 'day' },
-                    { label: 'weeks', value: 'week' },
-                    { label: 'months', value: 'month' },
-                    { label: 'years', value: 'year' },
+                    { label: 'days', value: 'DAILY' },
+                    { label: 'weeks', value: 'WEEKLY' },
+                    { label: 'months', value: 'MONTHLY' },
+                    { label: 'years', value: 'YEARLY' },
                   ]}
                   value={controlled.freq}
                   onValueChange={(val) => setControlled((prev) => ({ ...prev, freq: val as any }))}
@@ -511,16 +511,16 @@ export default function FormContent(props: FormContentProps) {
                       className="EventPopoverSelectPositioner"
                     >
                       <Select.Popup className="EventPopoverSelectPopup">
-                        <Select.Item value="day" className="EventPopoverSelectItem">
+                        <Select.Item value="DAILY" className="EventPopoverSelectItem">
                           <Select.ItemText>days</Select.ItemText>
                         </Select.Item>
-                        <Select.Item value="week" className="EventPopoverSelectItem">
+                        <Select.Item value="WEEKLY" className="EventPopoverSelectItem">
                           <Select.ItemText>weeks</Select.ItemText>
                         </Select.Item>
-                        <Select.Item value="month" className="EventPopoverSelectItem">
+                        <Select.Item value="MONTHLY" className="EventPopoverSelectItem">
                           <Select.ItemText>months</Select.ItemText>
                         </Select.Item>
-                        <Select.Item value="year" className="EventPopoverSelectItem">
+                        <Select.Item value="YEARLY" className="EventPopoverSelectItem">
                           <Select.ItemText>years</Select.ItemText>
                         </Select.Item>
                       </Select.Popup>
@@ -530,15 +530,15 @@ export default function FormContent(props: FormContentProps) {
               </div>
             </Field.Root>
 
-            {controlled.freq === 'week' && <p>TODO: Weekly Fields</p>}
-            {controlled.freq === 'month' && <p>TODO: Monthly Fields</p>}
+            {controlled.freq === 'WEEKLY' && <p>TODO: Weekly Fields</p>}
+            {controlled.freq === 'MONTHLY' && <p>TODO: Monthly Fields</p>}
 
             <Separator className="EventPopoverSeparator" />
 
             <Field.Root className="EventPopoverFieldRoot">
               <Field.Label className="EventPopoverRecurrenceFormLabel">Ends</Field.Label>
 
-              <RadioGroup name="ends" defaultValue="never">
+              <RadioGroup name="ends" defaultValue={getEndsSelectionFromRRule(occurrence.rrule)}>
                 <div className="RadioItem ">
                   <Radio.Root id="ends-never" className="EventPopoverRadioRoot" value="never">
                     <Radio.Indicator className="RadioItemIndicator" />
@@ -556,7 +556,7 @@ export default function FormContent(props: FormContentProps) {
                       name="count"
                       type="number"
                       min={1}
-                      defaultValue={10}
+                      defaultValue={occurrence.rrule?.count || 1}
                       className="EventPopoverInput RecurrenceNumberInput"
                     />
                     times
@@ -571,7 +571,11 @@ export default function FormContent(props: FormContentProps) {
                   <Input
                     name="until"
                     type="date"
-                    defaultValue={adapter.formatByString(occurrence.end, 'yyyy-MM-dd')}
+                    defaultValue={
+                      occurrence.rrule?.until
+                        ? adapter.formatByString(occurrence.rrule.until, 'yyyy-MM-dd')
+                        : ''
+                    }
                     className="EventPopoverInput"
                   />
                 </Field.Label>
