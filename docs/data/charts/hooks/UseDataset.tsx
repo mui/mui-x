@@ -6,6 +6,8 @@ import { LinePlot } from '@mui/x-charts/LineChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
+import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
+import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
@@ -109,8 +111,12 @@ export default function UseDataset() {
           <LinePlot />
           <ChartsXAxis />
           <ChartsYAxis />
+          <ChartsAxisHighlight x="line" />
+          <ChartsTooltip />
         </ChartsSurface>
-        <ChartsLegend />
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          <ChartsLegend direction="horizontal" />
+        </Box>
       </Box>
     </ChartDataProvider>
   );

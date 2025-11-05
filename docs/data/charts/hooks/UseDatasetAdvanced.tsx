@@ -6,6 +6,8 @@ import { BarPlot } from '@mui/x-charts/BarChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
+import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
+import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -145,8 +147,12 @@ export default function UseDatasetAdvanced() {
           <BarPlot />
           <ChartsXAxis />
           <ChartsYAxis />
+          <ChartsAxisHighlight x="band" />
+          <ChartsTooltip />
         </ChartsSurface>
-        <ChartsLegend />
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          <ChartsLegend direction="horizontal" />
+        </Box>
         <DataTable />
       </Box>
     </ChartDataProvider>
