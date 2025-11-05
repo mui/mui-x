@@ -1,7 +1,7 @@
 ---
 title: React Bar chart
 productId: x-charts
-components: BarChart, BarChartPro, BarElement, BarPlot, ChartsGrid, BarLabel, BarRangePlot
+components: BarChart, BarChartPro, BarElement, BarPlot, ChartsGrid, BarLabel
 ---
 
 # Charts - Bars
