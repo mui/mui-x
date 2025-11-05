@@ -16,9 +16,16 @@ The primary purpose is to demonstrate the use of the [Data Source layer](/x/reac
 - Understanding of TypeScript interfaces
 - Familiarity with async/await and fetch API
 
-:::success
-While it isn't necesary to read the documentation on [server-side data in the Data Grid](/x/react-data-grid/server-side-data/) before proceeding, you may want to familiarize yourself with the key concepts there to better understand how and why to use the Data Source layer.
-:::
+### Relevant documentation
+
+The docs listed below may be useful if you're new to the MUI X Data Grid:
+
+- [Server-side data with the Data Source layer](/x/react-data-grid/server-side-data/)
+- [Column definition](/x/react-data-grid/column-definition/)
+- [Pagination](/x/react-data-grid/pagination/)
+- [Sorting](/x/react-data-grid/sorting/)
+- [Server-side filtering](/x/react-data-grid/filtering/server-side/)
+
 
 ## Part one: app setup
 
