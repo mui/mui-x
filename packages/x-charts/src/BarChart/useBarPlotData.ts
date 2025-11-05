@@ -123,6 +123,7 @@ export function useBarPlotData(
 
       return {
         seriesId,
+        barLabel: series[seriesId].barLabel,
         data: seriesDataPoints,
       };
     });
