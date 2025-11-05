@@ -215,7 +215,6 @@ export class EventBuilder {
    */
   buildOccurrence(occurrenceStartDate?: SchedulerValidDate): CalendarEventOccurrence {
     const event = this.event;
-    console.log(this.event);
     const effectiveDate = occurrenceStartDate ?? event.start;
     const key = `${event.id}::${this.adapter.format(effectiveDate, 'keyboardDate')}`;
     const processedEvent = processEvent(event, this.adapter);
