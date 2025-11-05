@@ -105,7 +105,3 @@ Hence, they should be:
 - Inside the `<ChartDataProvider />` component to get access to the data.
 
 :::
-
-Similarly, using foreignObject, you can create SVG components that interact with the charts data. Like in the demo below, custom tick labels are built by combining SVG icon with the bar label.
-
-{{"demo": "TickLabelSVG.js"}}

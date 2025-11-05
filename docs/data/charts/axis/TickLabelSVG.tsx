@@ -9,13 +9,19 @@ import { BarPlot } from '@mui/x-charts/BarChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 
-const iconMap = {
+interface CustomTickProps {
+  x: number;
+  y: number;
+  text: string;
+}
+
+const iconMap: Record<string, React.ElementType> = {
   Apple: AppleIcon,
   Alphabet: GoogleIcon,
   Microsoft: MicrosoftIcon,
 };
 
-function CustomTick(props) {
+function CustomTick(props: CustomTickProps) {
   const { x, y, text } = props;
   const IconComponent = iconMap[text];
 
@@ -23,7 +29,6 @@ function CustomTick(props) {
     <g transform={`translate(${x},${y})`}>
       <foreignObject x={-20} y={0} width={60} height={50}>
         <div
-          xmlns="http://www.w3.org/1999/xhtml"
           style={{
             display: 'flex',
             justifyContent: 'center',
@@ -74,7 +79,7 @@ export default function TickLabelSVG() {
             data: [391, 350, 245.1],
           },
         ]}
-        height={500}
+        height={300}
       >
         <BarPlot />
         <ChartsXAxis
@@ -85,7 +90,6 @@ export default function TickLabelSVG() {
         <ChartsYAxis
           axisId="revenue"
           label="FY 2024 revenue in USD Billions"
-          width={70}
         />
       </ChartContainer>
     </Box>

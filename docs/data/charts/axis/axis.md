@@ -270,6 +270,12 @@ You can test how these values behave and relate to one another in the demo below
 
 {{"demo": "AxisTextCustomization.js", "hideToolbar": true, "bg": "playground"}}
 
+### Adding SVG icons
+
+Using foreignObject, you can create SVG components that interact with the charts data. Like in the demo below, custom labels are built by combining SVG icon with the bar label.
+
+{{"demo": "TickLabelSVG.js"}}
+
 ## Symlog scale
 
 A log scale cannot plot zero because log(0) is undefined.
