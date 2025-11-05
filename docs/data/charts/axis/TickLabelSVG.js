@@ -23,7 +23,6 @@ function CustomTick(props) {
     <g transform={`translate(${x},${y})`}>
       <foreignObject x={-20} y={0} width={60} height={50}>
         <div
-          xmlns="http://www.w3.org/1999/xhtml"
           style={{
             display: 'flex',
             justifyContent: 'center',
@@ -77,15 +76,8 @@ export default function TickLabelSVG() {
         height={300}
       >
         <BarPlot />
-        <ChartsXAxis
-          axisId="companies"
-          slots={{ axisTickLabel: CustomTick }}
-          height={80}
-        />
-        <ChartsYAxis
-          axisId="revenue"
-          label="FY 2024 revenue in USD Billions"
-        />
+        <ChartsXAxis axisId="companies" slots={{ axisTickLabel: CustomTick }} />
+        <ChartsYAxis axisId="revenue" label="FY 2024 revenue in USD Billions" />
       </ChartContainer>
     </Box>
   );

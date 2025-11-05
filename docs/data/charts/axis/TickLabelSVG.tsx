@@ -8,12 +8,7 @@ import { ChartContainer } from '@mui/x-charts/ChartContainer';
 import { BarPlot } from '@mui/x-charts/BarChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
-
-interface CustomTickProps {
-  x: number;
-  y: number;
-  text: string;
-}
+import { ChartsTextProps } from '@mui/x-charts/ChartsText';
 
 const iconMap: Record<string, React.ElementType> = {
   Apple: AppleIcon,
@@ -21,7 +16,7 @@ const iconMap: Record<string, React.ElementType> = {
   Microsoft: MicrosoftIcon,
 };
 
-function CustomTick(props: CustomTickProps) {
+function CustomTick(props: ChartsTextProps) {
   const { x, y, text } = props;
   const IconComponent = iconMap[text];
 
@@ -82,15 +77,8 @@ export default function TickLabelSVG() {
         height={300}
       >
         <BarPlot />
-        <ChartsXAxis
-          axisId="companies"
-          slots={{ axisTickLabel: CustomTick }}
-          height={80}
-        />
-        <ChartsYAxis
-          axisId="revenue"
-          label="FY 2024 revenue in USD Billions"
-        />
+        <ChartsXAxis axisId="companies" slots={{ axisTickLabel: CustomTick }} />
+        <ChartsYAxis axisId="revenue" label="FY 2024 revenue in USD Billions" />
       </ChartContainer>
     </Box>
   );
