@@ -527,6 +527,7 @@
   { "name": "useChartProApiRef", "kind": "Variable" },
   { "name": "useChartRootRef", "kind": "Function" },
   { "name": "useChartsLocalization", "kind": "Variable" },
+  { "name": "useDataset", "kind": "Function" },
   { "name": "useDrawingArea", "kind": "Function" },
   { "name": "useFunnelSeries", "kind": "Function" },
   { "name": "useFunnelSeriesContext", "kind": "Function" },
