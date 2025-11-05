@@ -29,7 +29,7 @@ Additional zoom interactions can be enabled through configuration:
 :::warning
 Enabling zoom adds `touch-action: pan-y` to allow panning on touch devices. This interferes with other touch interactions, such as scrolling horizontally. 
 
-If you want to add `pan-x`, consider customizing the zoom interactions .
+If you want to customize the touch-action behavior, you can override it by targeting the `chartsSurfaceClasses.root` class in your CSS.
 :::
 
 {{"demo": "ZoomScatterChart.js"}}
