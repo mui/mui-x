@@ -1,8 +1,5 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import GoogleIcon from '@mui/icons-material/Google';
-import MicrosoftIcon from '@mui/icons-material/Microsoft';
-import AppleIcon from '@mui/icons-material/Apple';
 import Typography from '@mui/material/Typography';
 import { ChartContainer } from '@mui/x-charts/ChartContainer';
 import { BarPlot } from '@mui/x-charts/BarChart';
@@ -10,14 +7,14 @@ import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 
 const iconMap = {
-  Apple: AppleIcon,
-  Alphabet: GoogleIcon,
-  Microsoft: MicrosoftIcon,
+  Apple: './apple-logo.png',
+  Alphabet: './google-logo.png',
+  Microsoft: './microsoft-logo.png',
 };
 
 function CustomTick(props) {
   const { x, y, text } = props;
-  const IconComponent = iconMap[text];
+  const logo = iconMap[text];
 
   return (
     <g transform={`translate(${x},${y})`}>
@@ -46,7 +43,17 @@ function CustomTick(props) {
             >
               {text}
             </Typography>
-            {IconComponent ? <IconComponent sx={{ fontSize: 18 }} /> : null}
+            {logo && (
+              <img 
+                src={logo} 
+                alt={text} 
+                style={{ 
+                  width: '24px', 
+                  height: '24px',
+                  objectFit: 'contain' 
+                }} 
+              />
+            )}
           </Box>
         </div>
       </foreignObject>
