@@ -33,15 +33,27 @@ export const SankeyNodeLabel = React.forwardRef<SVGTextElement, SankeyNodeLabelP
         ? x1 + NODE_PADDING // Right side for first column
         : x0 - NODE_PADDING; // Left side for other columns
 
-    const labelAnchor = node.depth === 0 ? 'start' : 'end';
+    const labelAnchor = node.depth === 0 ? ('start' as const) : ('end' as const);
     const areaWidth = node.nodeDistance - NODE_PADDING * 2;
+    const styles = React.useMemo(
+      () =>
+        ({
+          textAnchor: labelAnchor,
+          fill: (theme.vars || theme).palette.text.primary,
+          fontSize: theme.typography.caption.fontSize,
+          fontFamily: theme.typography.fontFamily,
+          pointerEvents: 'none',
+          dominantBaseline: 'central',
+        }) as const,
+      [labelAnchor, theme],
+    );
 
     const texts = React.useMemo(
       () =>
         !node.label
           ? { lines: [], lineHeight: 0 }
-          : splitStringOnSpaceHyphenOrHardSplit(node.label, areaWidth, isHydrated),
-      [node.label, areaWidth, isHydrated],
+          : splitStringOnSpaceHyphenOrHardSplit(node.label, areaWidth, isHydrated, styles),
+      [node.label, areaWidth, isHydrated, styles],
     );
 
     if (!node.label) {
@@ -49,18 +61,7 @@ export const SankeyNodeLabel = React.forwardRef<SVGTextElement, SankeyNodeLabelP
     }
 
     return (
-      <text
-        ref={ref}
-        x={labelX}
-        y={(y0 + y1) / 2}
-        textAnchor={labelAnchor}
-        fill={(theme.vars || theme).palette.text.primary}
-        fontSize={theme.typography.caption.fontSize}
-        fontFamily={theme.typography.fontFamily}
-        pointerEvents="none"
-        dominantBaseline="central"
-        data-node={node.id}
-      >
+      <text {...styles} ref={ref} x={labelX} y={(y0 + y1) / 2} data-node={node.id}>
         {texts.lines.map((text, index) => (
           <tspan
             key={index}
@@ -93,6 +94,7 @@ function splitStringOnSpaceHyphenOrHardSplit(
   text: string,
   maxWidth: number,
   compute: boolean,
+  styles: React.CSSProperties,
   backtrack?: number,
 ): { lines: string[]; lineHeight: number } {
   const words: string[] = [];
@@ -107,7 +109,7 @@ function splitStringOnSpaceHyphenOrHardSplit(
   for (let i = 0; i < text.length; i += 1) {
     const char = text[i];
     const testLine = currentLine + char;
-    const { width: testWidth, height: lineHeight } = getStringSize(testLine);
+    const { width: testWidth, height: lineHeight } = getStringSize(testLine, styles);
     height = lineHeight;
 
     if (char === '\n') {
