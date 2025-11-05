@@ -59,7 +59,6 @@ The `useDataset` hook is particularly useful when:
 - Creating custom components that need access to the raw data
 - Building data tables or summaries alongside your charts
 - Performing calculations on the full dataset
-- Synchronizing custom UI elements with chart data
 
 ## Caveats
 
