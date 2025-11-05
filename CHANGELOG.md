@@ -55,7 +55,7 @@ Same changes as in `@mui/x-date-pickers@8.16.1`.
 
 - [charts] Add `barLabel` to bar series. Deprecate `barLabel` in `BarPlot`. (#20184) @bernardobelchior
 - [charts] Add series color callback (#20084) @bernardobelchior
-- [charts] Expose ChartsSurface classes (#20180) @bernardobelchior
+- [charts] Expose `ChartsSurface` classes (#20180) @bernardobelchior
 - [charts] Fix chart cut off when inside `overflow: scroll` container (#20182) @bernardobelchior
 - [charts] Fix tick label overflow on multiple axes and series demo (#20152) @bernardobelchior
 - [charts] Organize series config (#20155) @bernardobelchior
@@ -100,7 +100,7 @@ Internal changes.
 - [code-infra] Fix publish workflow (#20140) @bernardobelchior
 - [code-infra] Increase JSDOM test parallelism (#20179) @Janpot
 - [code-infra] Remove React import requirement for jsx (#20144) @brijeshb42
-- [code-infra] Replace getInitialProps with getStaticProps (#20192) @Janpot
+- [code-infra] Replace `getInitialProps` with `getStaticProps` (#20192) @Janpot
 - [code-infra] git-ignore next-env.d.ts (#20177) @Janpot
 
 ## 8.16.0
