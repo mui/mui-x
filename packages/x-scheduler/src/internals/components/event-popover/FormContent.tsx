@@ -244,18 +244,18 @@ export default function FormContent(props: FormContentProps) {
     value: RecurringEventPresetKey | null;
   }[] = [
     { label: `${translations.recurrenceNoRepeat}`, value: null },
-    { label: `${translations.recurrenceDailyPresetLabel}`, value: 'daily' },
+    { label: `${translations.recurrenceDailyPresetLabel}`, value: 'DAILY' },
     {
       label: `${translations.recurrenceWeeklyPresetLabel(weekday)}`,
-      value: 'weekly',
+      value: 'WEEKLY',
     },
     {
       label: `${translations.recurrenceMonthlyPresetLabel(adapter.getDate(occurrence.start))}`,
-      value: 'monthly',
+      value: 'MONTHLY',
     },
     {
       label: `${translations.recurrenceYearlyPresetLabel(normalDate)}`,
-      value: 'yearly',
+      value: 'YEARLY',
     },
   ];
 

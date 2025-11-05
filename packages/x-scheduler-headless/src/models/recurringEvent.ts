@@ -1,12 +1,11 @@
 import type { SchedulerValidDate } from './date';
 
+export type RecurringEventFrequency = 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
 /**
  * The preset recurrence options available in the UI.
  * Only recurring events created from a preset can be edited with the "this-and-following" and "all" scopes.
  */
-export type RecurringEventPresetKey = 'daily' | 'weekly' | 'monthly' | 'yearly';
-
-export type RecurringEventFrequency = 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
+export type RecurringEventPresetKey = RecurringEventFrequency;
 
 /**
  * The scope of a recurring event update.
