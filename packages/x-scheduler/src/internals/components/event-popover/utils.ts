@@ -1,4 +1,10 @@
-import { CalendarResourceId, SchedulerValidDate } from '@mui/x-scheduler-headless/models';
+import {
+  CalendarEventOccurrence,
+  CalendarResourceId,
+  RecurringEventFrequency,
+  RecurringEventRecurrenceRule,
+  SchedulerValidDate,
+} from '@mui/x-scheduler-headless/models';
 import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
 import { SchedulerTranslations } from '../../../models';
 
@@ -9,7 +15,7 @@ export interface ControlledValue {
   endTime: string;
   resourceId: CalendarResourceId | null;
   allDay: boolean;
-  freq?: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
+  freq: RecurringEventFrequency;
 }
 
 export function computeRange(adapter: Adapter, next: ControlledValue) {
@@ -96,4 +102,51 @@ export function getEndsSelectionFromRRule(rrule?: {
     return 'after';
   }
   return 'never';
+}
+
+// Normalize a recurrence snapshot built from the current form values
+export function buildCustomRRuleFromForm(
+  adapter: Adapter,
+  controlled: ControlledValue,
+  form: FormData,
+) {
+  const freq = controlled.freq;
+  const interval = form.get('interval') ? Number(form.get('interval')) : undefined;
+  const untilValue = form.get('until');
+  const ends = form.get('ends') as 'never' | 'after' | 'until';
+
+  const count = ends === 'after' ? Number(form.get('count') ?? 1) : undefined;
+
+  const until =
+    ends === 'until' && untilValue !== null
+      ? adapter.startOfDay(adapter.parse(String(untilValue), 'yyyy-MM-dd') as SchedulerValidDate)
+      : undefined;
+  return { freq, interval, count, until } as const;
+}
+
+// Create a normalized snapshot from the original event rrule
+export function buildInitialCustomSnapshot(occurrence: CalendarEventOccurrence) {
+  const rrule = occurrence.rrule;
+  return {
+    freq: rrule?.freq ?? 'DAILY',
+    interval: rrule?.interval,
+    count: rrule?.count,
+    until: rrule?.until,
+  } as const;
+}
+
+// Shallow-equal on fields and same-day check for "until"
+export function isSameCustomSnapshot(
+  adapter: Adapter,
+  a: RecurringEventRecurrenceRule,
+  b: RecurringEventRecurrenceRule,
+) {
+  const sameUntil =
+    (!a.until && !b.until) || (a.until && b.until && adapter.isSameDay(a.until, b.until));
+  return (
+    a.freq === b.freq &&
+    a.interval === b.interval &&
+    (a.count ?? undefined) === (b.count ?? undefined) &&
+    sameUntil
+  );
 }

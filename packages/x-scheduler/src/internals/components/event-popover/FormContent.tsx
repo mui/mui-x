@@ -16,6 +16,7 @@ import {
   CalendarEventUpdatedProperties,
   CalendarResourceId,
   RecurringEventPresetKey,
+  RecurringEventRecurrenceRule,
   SchedulerValidDate,
 } from '@mui/x-scheduler-headless/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
@@ -30,7 +31,15 @@ import {
 import { Tabs } from '@base-ui-components/react/tabs';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { getColorClassName } from '../../utils/color-utils';
-import { computeRange, ControlledValue, getEndsSelectionFromRRule, validateRange } from './utils';
+import {
+  buildCustomRRuleFromForm,
+  buildInitialCustomSnapshot,
+  computeRange,
+  ControlledValue,
+  getEndsSelectionFromRRule,
+  isSameCustomSnapshot,
+  validateRange,
+} from './utils';
 
 import EventPopoverHeader from './EventPopoverHeader';
 
@@ -131,27 +140,37 @@ export default function FormContent(props: FormContentProps) {
     const { start, end } = computeRange(adapter, controlled);
 
     const form = new FormData(event.currentTarget);
-    const recurrenceValue = form.get('recurrence') as RecurringEventPresetKey;
-    const recurrenceModified =
-      defaultRecurrencePresetKey !== 'custom' && recurrenceValue !== defaultRecurrencePresetKey;
-    // TODO: This will change after implementing the custom recurrence editing tab.
-    const rrule =
-      recurrenceModified && recurrenceValue ? recurrencePresets[recurrenceValue] : undefined;
 
-    const freq = controlled.freq;
-    const interval = Number(form.get('interval'));
-    const ends = form.get('ends');
-    const count = Number(form.get('count'));
-    const until = form.get('until');
+    // Read preset choice from the General tab
+    const presetFromForm = form.get('recurrencePreset') as RecurringEventPresetKey;
 
-    const customRecurrence = {
-      freq,
-      interval,
-      count: ends === 'after' ? count : undefined,
-      until: ends === 'until' ? until : undefined,
-    };
+    // Build custom snapshot from Recurrence tab
+    const customSnapshot = buildCustomRRuleFromForm(adapter, controlled, form);
+    const initialSnapshot = buildInitialCustomSnapshot(occurrence);
+    const customChanged = !isSameCustomSnapshot(adapter, customSnapshot, initialSnapshot);
 
-    console.log('Custom Recurrence to be implemented:', customRecurrence);
+    // Detect preset change vs initial default key
+    const presetChanged = presetFromForm !== defaultRecurrencePresetKey;
+
+    let rruleToSubmit: RecurringEventRecurrenceRule | undefined;
+    let recurrenceModified = false;
+
+    // Precedence:
+    // 1) Recurrence tab changes (custom) override preset.
+    // 2) Else, preset change applies.
+    // 3) Else, unchanged -> omit rrule.
+    if (customChanged) {
+      rruleToSubmit = {
+        freq: customSnapshot.freq,
+        interval: customSnapshot.interval,
+        ...(customSnapshot.count ? { count: customSnapshot.count } : {}),
+        ...(customSnapshot.until ? { until: customSnapshot.until } : {}),
+      };
+      recurrenceModified = true;
+    } else if (presetChanged) {
+      rruleToSubmit = presetFromForm ? recurrencePresets[presetFromForm] : undefined;
+      recurrenceModified = true;
+    }
 
     setErrors({});
     const err = validateRange(adapter, start, end, controlled.allDay);
@@ -168,14 +187,20 @@ export default function FormContent(props: FormContentProps) {
     };
 
     if (rawPlaceholder?.type === 'creation') {
-      store.createEvent({ id: crypto.randomUUID(), ...metaChanges, start, end, rrule });
+      store.createEvent({
+        id: crypto.randomUUID(),
+        ...metaChanges,
+        start,
+        end,
+        rrule: rruleToSubmit,
+      });
     } else if (occurrence.rrule) {
       const changes: CalendarEventUpdatedProperties = {
         ...metaChanges,
         id: occurrence.id,
         start,
         end,
-        ...(recurrenceModified ? { rrule } : {}),
+        ...(recurrenceModified ? { rrule: rruleToSubmit } : {}),
       };
 
       await store.updateRecurringEvent({
@@ -184,7 +209,7 @@ export default function FormContent(props: FormContentProps) {
         onSubmit: onClose,
       });
     } else {
-      store.updateEvent({ id: occurrence.id, ...metaChanges, start, end, rrule });
+      store.updateEvent({ id: occurrence.id, ...metaChanges, start, end, rrule: rruleToSubmit });
     }
 
     onClose();
@@ -416,7 +441,7 @@ export default function FormContent(props: FormContentProps) {
                 </Field.Label>
               </Field.Root>
             </div>
-            <Field.Root className="EventPopoverFieldRoot" name="recurrence">
+            <Field.Root className="EventPopoverFieldRoot" name="recurrencePreset">
               {defaultRecurrencePresetKey === 'custom' ? (
                 // TODO: Issue #19137 - Display the actual custom recurrence rule (e.g. "Repeats every 2 weeks on Monday")
                 <p className="EventPopoverFormLabel">{`Custom ${occurrence.rrule?.freq.toLowerCase()} recurrence`}</p>
@@ -485,7 +510,8 @@ export default function FormContent(props: FormContentProps) {
                   name="interval"
                   type="number"
                   min={1}
-                  defaultValue={occurrence.rrule ? occurrence.rrule.interval : 1}
+                  defaultValue={occurrence.rrule?.interval}
+                  placeholder="1"
                   className="EventPopoverInput RecurrenceNumberInput"
                 />
                 <Select.Root
