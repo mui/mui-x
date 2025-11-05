@@ -5,7 +5,6 @@ import { major } from '@mui/material/version';
 import fs from 'node:fs/promises';
 
 const isMaterialUIv6 = major === 6;
-const isMaterialUIv7 = major === 7;
 
 // Tests that need a longer timeout.
 const timeSensitiveSuites = [
