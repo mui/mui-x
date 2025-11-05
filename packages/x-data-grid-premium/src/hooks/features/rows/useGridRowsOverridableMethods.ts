@@ -34,7 +34,11 @@ export const useGridRowsOverridableMethods = (
   const flatTree = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector) === 1;
 
   const setRowIndex = React.useCallback(
-    async (sourceRowId: GridRowId, targetOriginalIndex: number) => {
+    async (
+      sourceRowId: GridRowId,
+      targetOriginalIndex: number,
+      dropPosition: 'above' | 'below' | 'over' = 'below',
+    ) => {
       const sortedFilteredRowIds = gridExpandedSortedRowIdsSelector(apiRef);
       const sortedFilteredRowIndexLookup = gridExpandedSortedRowIndexLookupSelector(apiRef);
       const rowTree = gridRowTreeSelector(apiRef);
@@ -44,13 +48,6 @@ export const useGridRowsOverridableMethods = (
       if (!sourceNode) {
         throw new Error(`MUI X: No row with id #${sourceRowId} found.`);
       }
-
-      const targetRowId = gridRowDropTargetRowIdSelector(apiRef);
-      // TODO v9: Use the updated function arguments instead of these selectors to be able to use in the userland
-      // Fallback for the userland usecases when proper state is not set
-      const dropPosition = targetRowId
-        ? gridRowDropPositionSelector(apiRef, targetRowId)!
-        : 'below';
 
       if (sourceNode.type === 'footer') {
         throw new Error(`MUI X: The row reordering do not support reordering of footer rows.`);

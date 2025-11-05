@@ -518,7 +518,11 @@ export const useGridRowReorder = (
               oldParentNode.children.indexOf(dragRowId) ?? originRowIndex.current;
 
             await applyRowAnimation(async () => {
-              await apiRef.current.setRowIndex(dragRowId, validatedIndex);
+              await apiRef.current.setRowIndex(
+                dragRowId,
+                validatedIndex,
+                dropTarget.current.dropPosition!,
+              );
 
               const updatedTree = gridRowTreeSelector(apiRef);
               const updatedNode = updatedTree[dragRowId];

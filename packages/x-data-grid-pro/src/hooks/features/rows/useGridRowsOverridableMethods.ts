@@ -32,18 +32,20 @@ export const useGridRowsOverridableMethods = (
   const flatTree = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector) === 1;
 
   const setRowIndex = React.useCallback(
-    async (sourceRowId: GridRowId, targetOriginalIndex: number) => {
+    async (
+      sourceRowId: GridRowId,
+      targetOriginalIndex: number,
+      dropPosition?: 'above' | 'below' | 'over',
+    ) => {
       const sortedFilteredRowIds = gridExpandedSortedRowIdsSelector(apiRef);
       const sortedFilteredRowIndexLookup = gridExpandedSortedRowIndexLookupSelector(apiRef);
       const rowTree = gridRowTreeSelector(apiRef);
 
-      const targetRowId = gridRowDropTargetRowIdSelector(apiRef);
-
-      if (!targetRowId) {
-        throw new Error(`MUI X: No target row id found.`);
+      if (!dropPosition) {
+        throw new Error(
+          `MUI X: \`dropPosition\` must be provided for the tree data reordering to work.`,
+        );
       }
-
-      const dropPosition = gridRowDropPositionSelector(apiRef, targetRowId)!;
 
       const sourceNode = gridRowNodeSelector(apiRef, sourceRowId);
 

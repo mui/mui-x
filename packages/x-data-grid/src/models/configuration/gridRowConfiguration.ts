@@ -25,6 +25,10 @@ export interface GridRowsOverridableMethodsInternalHook<Api, Props> {
     apiRef: RefObject<Api>,
     props: Props,
   ) => {
-    setRowIndex: (rowId: GridRowId, targetIndex: number) => void;
+    setRowIndex: (
+      rowId: GridRowId,
+      targetIndex: number,
+      dropPosition?: 'above' | 'below' | 'over',
+    ) => void | Promise<void>;
   };
 }
