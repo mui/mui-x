@@ -270,9 +270,11 @@ You can test how these values behave and relate to one another in the demo below
 
 {{"demo": "AxisTextCustomization.js", "hideToolbar": true, "bg": "playground"}}
 
-### Adding SVG icons
+### Adding tick label icons
 
-Using foreignObject, you can create SVG components that interact with the charts data. Like in the demo below, custom labels are built by combining SVG icon with the bar label.
+A `foreignObject` element can be used to render non-SVG elements inside SVGs. You can leverage this to create components that interact with the charts data. In the demo below, custom tick labels are built by displaying an icon below the text.
+
+Bear in mind that using `foreignObject` might prevent charts from being [exported](/x/react-charts/export/). 
 
 {{"demo": "TickLabelSVG.js"}}
 
