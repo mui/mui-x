@@ -80,7 +80,7 @@ export default function FormContent(props: FormContentProps) {
       endTime: fmtTime(occurrence.end),
       resourceId: occurrence.resource ?? null,
       allDay: !!occurrence.allDay,
-      recurrenceUnit: 'day',
+      freq: 'day',
     };
   });
 
@@ -138,14 +138,20 @@ export default function FormContent(props: FormContentProps) {
     const rrule =
       recurrenceModified && recurrenceValue ? recurrencePresets[recurrenceValue] : undefined;
 
+    const freq = controlled.freq;
+    const interval = Number(form.get('interval'));
+    const ends = form.get('ends');
+    const count = Number(form.get('count'));
+    const until = form.get('until');
+
     const customRecurrence = {
-      every: Number(form.get('every')),
-      unit: controlled.recurrenceUnit,
-      ends: form.get('ends'),
-      afterTimes: Number(form.get('afterTimes')),
-      until: form.get('until'),
+      freq,
+      interval,
+      count: ends === 'after' ? count : undefined,
+      until: ends === 'until' ? until : undefined,
     };
-    console.log('customRecurrence', customRecurrence);
+
+    console.log('Custom Recurrence to be implemented:', customRecurrence);
 
     setErrors({});
     const err = validateRange(adapter, start, end, controlled.allDay);
@@ -476,11 +482,11 @@ export default function FormContent(props: FormContentProps) {
               <div className="EventPopoverInputsRow">
                 Every
                 <Input
-                  name="every"
+                  name="interval"
                   type="number"
                   min={1}
                   defaultValue={1}
-                  className="EventPopoverInput RecurrenceEveryInput"
+                  className="EventPopoverInput RecurrenceNumberInput"
                 />
                 <Select.Root
                   items={[
@@ -489,10 +495,8 @@ export default function FormContent(props: FormContentProps) {
                     { label: 'months', value: 'month' },
                     { label: 'years', value: 'year' },
                   ]}
-                  value={controlled.recurrenceUnit}
-                  onValueChange={(val) =>
-                    setControlled((prev) => ({ ...prev, recurrenceUnit: val as any }))
-                  }
+                  value={controlled.freq}
+                  onValueChange={(val) => setControlled((prev) => ({ ...prev, freq: val as any }))}
                 >
                   <Select.Trigger className="EventPopoverSelectTrigger">
                     <Select.Value />
@@ -526,8 +530,8 @@ export default function FormContent(props: FormContentProps) {
               </div>
             </Field.Root>
 
-            {controlled.recurrenceUnit === 'week' && <p>TODO: Weekly Fields</p>}
-            {controlled.recurrenceUnit === 'month' && <p>TODO: Monthly Fields</p>}
+            {controlled.freq === 'week' && <p>TODO: Weekly Fields</p>}
+            {controlled.freq === 'month' && <p>TODO: Monthly Fields</p>}
 
             <Separator className="EventPopoverSeparator" />
 
@@ -549,11 +553,11 @@ export default function FormContent(props: FormContentProps) {
                   </Radio.Root>
                   <div className="EventPopoverAfterTimesInputWrapper">
                     <Input
-                      name="afterTimes"
+                      name="count"
                       type="number"
                       min={1}
                       defaultValue={10}
-                      className="EventPopoverInput RecurrenceEveryInput"
+                      className="EventPopoverInput RecurrenceNumberInput"
                     />
                     times
                   </div>

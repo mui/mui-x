@@ -404,7 +404,7 @@ p {
   gap: var(--space-2);
 }
 
-.RecurrenceEveryInput {
+.RecurrenceNumberInput {
   max-width: var(--space-10);
 }
 
