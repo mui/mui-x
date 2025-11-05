@@ -6,7 +6,7 @@ import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 
 const iconMap = {
-  Apple: '/static/x/charts/netflix-logo.png',
+  Netflix: '/static/x/charts/netflix-logo.png',
   Alphabet: '/static/x/charts/google-logo.png',
   Microsoft: '/static/x/charts/microsoft-logo.png',
 };
@@ -60,7 +60,7 @@ export default function TickLabelSVG() {
         xAxis={[
           {
             scaleType: 'band',
-            data: ['Apple', 'Alphabet', 'Microsoft'],
+            data: ['Netflix', 'Alphabet', 'Microsoft'],
             id: 'companies',
           },
         ]}
