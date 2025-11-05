@@ -138,8 +138,23 @@ function splitStringOnSpaceHyphenOrHardSplit(
       // If we found a suitable split point
       if (splitIndex < testLine.length - 1) {
         const lineToPush = testLine.slice(0, splitIndex).trimEnd();
-        words.push(lineToPush.trim());
-        currentLine = testLine.slice(splitIndex).trimStart();
+        const remainder = testLine.slice(splitIndex).trimStart();
+
+        // Prevent single character lines when the word has more than 1 character
+        if (lineToPush.trim().length === 1 && currentLine.trim().length > 1) {
+          // The line would be a single character from a multi-character word
+          // Push nothing and keep building the current line
+          words.push('');
+          currentLine = testLine.trimStart();
+        } else if (remainder.length === 1 && testLine.trim().length > 1) {
+          // The remainder would be a single character from a multi-character word
+          // Include it in the current line instead
+          words.push(testLine.trim());
+          currentLine = '';
+        } else {
+          words.push(lineToPush.trim());
+          currentLine = remainder;
+        }
       } else {
         // No suitable split point found, force split
         words.push(currentLine.trim());
