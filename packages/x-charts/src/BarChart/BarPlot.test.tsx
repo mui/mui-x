@@ -1,9 +1,11 @@
-import { render, screen } from '@mui/internal-test-utils';
+import { screen, createRenderer } from '@mui/internal-test-utils';
 import * as React from 'react';
 import { ChartContainer } from '../ChartContainer';
 import { BarPlot } from './BarPlot';
 
 describe('BarPlot', () => {
+  const { render } = createRenderer();
+
   it('`barLabel` prop works', () => {
     render(
       <ChartContainer
