@@ -6,6 +6,7 @@ export * from './useZAxis';
 export * from './useColorScale';
 export * from './useSvgRef';
 export * from './useSeries';
+export * from './useDataset';
 export * from './useScatterSeries';
 export * from './usePieSeries';
 export * from './useBarSeries';
