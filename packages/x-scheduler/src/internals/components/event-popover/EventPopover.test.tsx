@@ -76,7 +76,7 @@ describe('<EventPopoverContent />', () => {
       'aria-checked',
       'false',
     );
-    expect(screen.getByRole('combobox', { name: /resource/i }).textContent).to.match(/personal/i);
+    expect(screen.getByRole('button', { name: /resource/i }).textContent).to.match(/personal/i);
     expect(screen.getByRole('combobox', { name: /recurrence/i }).textContent).to.match(
       /don't repeat/i,
     );
@@ -99,8 +99,8 @@ describe('<EventPopoverContent />', () => {
     await user.click(screen.getByRole('checkbox', { name: /all day/i }));
     await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
     await user.click(await screen.findByRole('option', { name: /repeats daily/i }));
-    await user.click(screen.getByRole('combobox', { name: /resource/i }));
-    await user.click(await screen.findByRole('option', { name: /work/i }));
+    await user.click(screen.getByRole('button', { name: /resource/i }));
+    await user.click(await screen.findByRole('menuitemradio', { name: /work/i }));
     await user.click(screen.getByRole('button', { name: /save changes/i }));
 
     expect(onEventsChange.calledOnce).to.equal(true);
@@ -181,7 +181,7 @@ describe('<EventPopoverContent />', () => {
     expect(screen.queryByRole('checkbox', { name: /all day/i })).to.equal(null);
 
     // Should not have resource/recurrence comboboxes
-    expect(screen.queryByRole('combobox', { name: /resource/i })).to.equal(null);
+    expect(screen.queryByRole('button', { name: /resource/i })).to.equal(null);
     expect(screen.queryByRole('combobox', { name: /recurrence/i })).to.equal(null);
   });
 
@@ -212,7 +212,7 @@ describe('<EventPopoverContent />', () => {
     expect(screen.queryByRole('checkbox', { name: /all day/i })).to.equal(null);
 
     // Should not have resource/recurrence comboboxes
-    expect(screen.queryByRole('combobox', { name: /resource/i })).to.equal(null);
+    expect(screen.queryByRole('button', { name: /resource/i })).to.equal(null);
     expect(screen.queryByRole('combobox', { name: /recurrence/i })).to.equal(null);
   });
 
@@ -242,7 +242,7 @@ describe('<EventPopoverContent />', () => {
       </EventCalendarProvider>,
     );
 
-    expect(screen.getByRole('combobox', { name: /resource/i }).textContent).to.match(/NoColor/i);
+    expect(screen.getByRole('button', { name: /resource/i }).textContent).to.match(/NoColor/i);
     expect(document.querySelector('.ResourceLegendColor')).to.have.class(
       getColorClassName(DEFAULT_EVENT_COLOR),
     );
@@ -268,9 +268,7 @@ describe('<EventPopoverContent />', () => {
       </EventCalendarProvider>,
     );
 
-    expect(screen.getByRole('combobox', { name: /resource/i }).textContent).to.match(
-      /no resource/i,
-    );
+    expect(screen.getByRole('button', { name: /resource/i }).textContent).to.match(/no resource/i);
 
     expect(document.querySelector('.ResourceLegendColor')).to.have.class(
       getColorClassName(DEFAULT_EVENT_COLOR),
@@ -474,8 +472,8 @@ describe('<EventPopoverContent />', () => {
 
       await user.type(screen.getByLabelText(/event title/i), ' New title ');
       await user.type(screen.getByLabelText(/description/i), ' Some details ');
-      await user.click(screen.getByRole('combobox', { name: /resource/i }));
-      await user.click(await screen.findByRole('option', { name: /work/i }));
+      await user.click(screen.getByRole('button', { name: /resource/i }));
+      await user.click(await screen.findByRole('menuitemradio', { name: /work/i }));
       await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
       await user.click(await screen.findByRole('option', { name: /daily/i }));
       await user.click(screen.getByRole('button', { name: /save changes/i }));
@@ -776,8 +774,8 @@ describe('<EventPopoverContent />', () => {
         await user.type(screen.getByLabelText(/event title/i), ' updated ');
         await user.clear(screen.getByLabelText(/description/i));
         await user.type(screen.getByLabelText(/description/i), '  new description  ');
-        await user.click(screen.getByRole('combobox', { name: /resource/i }));
-        await user.click(await screen.findByRole('option', { name: /work/i }));
+        await user.click(screen.getByRole('button', { name: /resource/i }));
+        await user.click(await screen.findByRole('menuitemradio', { name: /work/i }));
         await user.click(screen.getByRole('button', { name: /save changes/i }));
 
         expect(updateEventSpy?.calledOnce).to.equal(true);
