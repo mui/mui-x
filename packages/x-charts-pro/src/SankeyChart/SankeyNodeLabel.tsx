@@ -60,7 +60,6 @@ export const SankeyNodeLabel = React.forwardRef<SVGTextElement, SankeyNodeLabelP
         pointerEvents="none"
         dominantBaseline="central"
         data-node={node.id}
-        width={node.nodeDistance}
       >
         {texts.lines.map((text, index) => (
           <tspan
