@@ -30,6 +30,7 @@ export const useChartSeries: ChartPlugin<UseChartSeriesSignature> = ({
         seriesConfig,
         dataset,
       }),
+      dataset,
     });
   }, [colors, dataset, series, theme, seriesConfig, store]);
 
@@ -62,6 +63,7 @@ useChartSeries.getInitialState = ({ series = [], colors, theme, dataset }, _, se
         seriesConfig,
         dataset,
       }),
+      dataset,
     },
   };
 };
