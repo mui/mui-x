@@ -272,4 +272,4 @@ The bell curve is calculated based on the mean and standard deviation of the dat
 
 ### MarkPlot
 
-{{"demo": "MarkPlot.js"}}
+{{"demo": "MarkPlotWithConnectingBars.js"}}
