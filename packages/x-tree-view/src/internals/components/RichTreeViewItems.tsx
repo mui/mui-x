@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { EMPTY_ARRAY } from '@base-ui-components/utils/empty';
 import { useStore } from '@mui/x-internals/store';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { SlotComponentProps } from '@mui/utils/types';
@@ -15,7 +16,6 @@ const RichTreeViewItemsContext = React.createContext<
   ((itemId: TreeViewItemId) => React.ReactNode) | null
 >(null);
 
-const EMPTY_ARRAY: any[] = [];
 const selectorNoChildren = () => EMPTY_ARRAY;
 
 const WrappedTreeItem = React.memo(function WrappedTreeItem({

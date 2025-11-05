@@ -53,7 +53,7 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
                   {...getCircleProps({
                     seriesId,
                     point,
-                    color,
+                    color: point.color,
                     fillArea,
                     isFaded,
                     isHighlighted,

@@ -52,13 +52,15 @@ export interface MinimalTreeViewState<
   /**
    * The ids of the items currently expanded.
    */
-  expandedItems: TreeViewItemId[];
+  expandedItems: readonly TreeViewItemId[];
   /**
    * The slot that triggers the item's expansion when clicked.
    */
   expansionTrigger: 'content' | 'iconContainer';
-
-  selectedItems: TreeViewSelectionValue<Multiple>;
+  /**
+   * The ids of the items currently selected.
+   */
+  selectedItems: TreeViewSelectionReadonlyValue<Multiple>;
   /**
    * Whether selection is disabled.
    */
@@ -78,7 +80,7 @@ export interface MinimalTreeViewState<
   /**
    * The id of the currently focused item.
    */
-  focusedItemId: string | null;
+  focusedItemId: TreeViewItemId | null;
 }
 
 export interface MinimalTreeViewParameters<
@@ -125,16 +127,16 @@ export interface MinimalTreeViewParameters<
    *
    * @template R
    * @param {R} item The item to check.
-   * @returns {string} The id of the item.
+   * @returns {TreeViewItemId} The id of the item.
    * @default (item) => item.id
    */
   getItemId?: (item: R) => TreeViewItemId;
   /**
    * Callback fired when the `content` slot of a given Tree Item is clicked.
    * @param {React.MouseEvent} event The DOM event that triggered the change.
-   * @param {string} itemId The id of the focused item.
+   * @param {TreeViewItemId} itemId The id of the focused item.
    */
-  onItemClick?: (event: React.MouseEvent, itemId: string) => void;
+  onItemClick?: (event: React.MouseEvent, itemId: TreeViewItemId) => void;
   /**
    * Horizontal indentation between an item and its children.
    * Examples: 24, "24px", "2rem", "2em".
@@ -150,28 +152,28 @@ export interface MinimalTreeViewParameters<
    * Expanded item ids.
    * Used when the item's expansion is controlled.
    */
-  expandedItems?: string[];
+  expandedItems?: readonly TreeViewItemId[];
   /**
    * Expanded item ids.
    * Used when the item's expansion is not controlled.
    * @default []
    */
-  defaultExpandedItems?: string[];
+  defaultExpandedItems?: readonly TreeViewItemId[];
   /**
    * Callback fired when Tree Items are expanded/collapsed.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemExpansion()` method.
-   * @param {array} itemIds The ids of the expanded items.
+   * @param {TreeViewItemId[]} itemIds The ids of the expanded items.
    */
-  onExpandedItemsChange?: (event: React.SyntheticEvent | null, itemIds: string[]) => void;
+  onExpandedItemsChange?: (event: React.SyntheticEvent | null, itemIds: TreeViewItemId[]) => void;
   /**
    * Callback fired when a Tree Item is expanded or collapsed.
    * @param {React.SyntheticEvent | null} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemExpansion()` method.
-   * @param {array} itemId The itemId of the modified item.
+   * @param {TreeViewItemId} itemId The itemId of the modified item.
    * @param {boolean} isExpanded `true` if the item has just been expanded, `false` if it has just been collapsed.
    */
   onItemExpansionToggle?: (
     event: React.SyntheticEvent | null,
-    itemId: string,
+    itemId: TreeViewItemId,
     isExpanded: boolean,
   ) => void;
   /**
@@ -188,13 +190,13 @@ export interface MinimalTreeViewParameters<
    * Selected item ids. (Controlled)
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.
    */
-  selectedItems?: TreeViewSelectionValue<Multiple>;
+  selectedItems?: TreeViewSelectionReadonlyValue<Multiple>;
   /**
    * Selected item ids. (Uncontrolled)
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.
    * @default []
    */
-  defaultSelectedItems?: TreeViewSelectionValue<Multiple>;
+  defaultSelectedItems?: TreeViewSelectionReadonlyValue<Multiple>;
   /**
    * If `true`, `ctrl` and `shift` will trigger multiselect.
    * @default false
@@ -225,7 +227,7 @@ export interface MinimalTreeViewParameters<
   /**
    * Callback fired when Tree Items are selected/deselected.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemSelection()` method.
-   * @param {string[] | string} itemIds The ids of the selected items.
+   * @param {TreeViewItemId[] | TreeViewItemId} itemIds The ids of the selected items.
    * When `multiSelect` is `true`, this is an array of strings; when false (default) a string.
    */
   onSelectedItemsChange?: (
@@ -235,20 +237,20 @@ export interface MinimalTreeViewParameters<
   /**
    * Callback fired when a Tree Item is selected or deselected.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemSelection()` method.
-   * @param {array} itemId The itemId of the modified item.
+   * @param {TreeViewItemId} itemId The itemId of the modified item.
    * @param {boolean} isSelected `true` if the item has just been selected, `false` if it has just been deselected.
    */
   onItemSelectionToggle?: (
     event: React.SyntheticEvent | null,
-    itemId: string,
+    itemId: TreeViewItemId,
     isSelected: boolean,
   ) => void;
   /**
    * Callback fired when a given Tree Item is focused.
    * @param {React.SyntheticEvent | null} event The DOM event that triggered the change. **Warning**: This is a generic event not a focus event.
-   * @param {string} itemId The id of the focused item.
+   * @param {TreeViewItemId} itemId The id of the focused item.
    */
-  onItemFocus?: (event: React.SyntheticEvent | null, itemId: string) => void;
+  onItemFocus?: (event: React.SyntheticEvent | null, itemId: TreeViewItemId) => void;
 }
 
 /**
@@ -283,11 +285,21 @@ export type TreeViewModelUpdater<
   defaultProp: keyof Parameters,
 ) => void;
 
+export type TreeViewSelectionReadonlyValue<Multiple extends boolean | undefined> =
+  Multiple extends true
+    ? Multiple extends false
+      ? // Multiple === boolean, the type cannot be simplified further
+        TreeViewItemId | null | readonly TreeViewItemId[]
+      : // Multiple === true, the selection is multiple
+        readonly TreeViewItemId[]
+    : // Multiple === false | undefined, the selection is single
+      TreeViewItemId | null;
+
 export type TreeViewSelectionValue<Multiple extends boolean | undefined> = Multiple extends true
   ? Multiple extends false
     ? // Multiple === boolean, the type cannot be simplified further
-      string | null | string[]
+      TreeViewItemId | null | TreeViewItemId[]
     : // Multiple === true, the selection is multiple
-      string[]
+      TreeViewItemId[]
   : // Multiple === false | undefined, the selection is single
-    string | null;
+    TreeViewItemId | null;

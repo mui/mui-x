@@ -3,6 +3,7 @@ import { styled, SxProps, Theme, useThemeProps } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
+import clsx from 'clsx';
 import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
 import { useSvgRef } from '../hooks/useSvgRef';
 import { useSelector } from '../internals/store/useSelector';
@@ -17,6 +18,7 @@ import {
   selectorChartsHasFocusedItem,
   selectorChartsIsKeyboardNavigationEnabled,
 } from '../internals/plugins/featurePlugins/useChartKeyboardNavigation';
+import { useUtilityClasses } from './chartsSurfaceClasses';
 
 export interface ChartsSurfaceProps
   extends Omit<
@@ -96,13 +98,14 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
 
   const { children, className, title, desc, ...other } = themeProps;
 
+  const classes = useUtilityClasses();
   const hasIntrinsicSize = svgHeight > 0 && svgWidth > 0;
 
   return (
     <ChartsSurfaceStyles
       ownerState={{ width: propsWidth, height: propsHeight }}
       viewBox={`${0} ${0} ${svgWidth} ${svgHeight}`}
-      className={className}
+      className={clsx(classes.root, className)}
       tabIndex={isKeyboardNavigationEnabled ? 0 : undefined}
       data-has-focused-item={hasFocusedItem || undefined}
       {...other}
