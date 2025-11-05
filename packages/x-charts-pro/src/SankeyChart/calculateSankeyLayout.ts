@@ -1,7 +1,6 @@
 'use client';
 import { sankey, type SankeyGraph } from '@mui/x-charts-vendor/d3-sankey';
 import type { ChartDrawingArea } from '@mui/x-charts/hooks';
-import type { Theme } from '@mui/material/styles';
 import { path } from '@mui/x-charts-vendor/d3-path';
 import type {
   SankeySeriesType,
@@ -24,7 +23,6 @@ import { getNodeAlignFunction } from './utils';
 export function calculateSankeyLayout(
   data: DefaultizedSankeySeriesType['data'],
   drawingArea: ChartDrawingArea,
-  theme: Theme,
   series: Pick<SankeySeriesType, 'nodeOptions' | 'linkOptions' | 'iterations'> = {},
 ): SankeyLayout {
   const { iterations = 6, nodeOptions, linkOptions } = series;
@@ -116,10 +114,21 @@ export function calculateSankeyLayout(
 
   const layoutNodes = nodes.map((node) => {
     const originalNode = data.nodes.get(node.id) || {};
+    const nodeDistance =
+      node.targetLinks.length !== 0
+        ? node.targetLinks.reduce(
+            (acc, link) => Math.min(acc, Math.abs(link.source.x1! - node.x0!)),
+            Infinity,
+          )
+        : node.sourceLinks.reduce(
+            (acc, link) => Math.min(acc, Math.abs(node.x1! - link.target.x0!)),
+            Infinity,
+          );
 
     return {
       ...originalNode,
       ...node,
+      nodeDistance: nodeDistance === Infinity ? 0 : nodeDistance,
     };
   });
 

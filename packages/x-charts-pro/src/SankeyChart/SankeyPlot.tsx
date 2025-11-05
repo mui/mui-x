@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled, useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { useDrawingArea } from '@mui/x-charts/hooks';
 import {
   SankeyLayout,
@@ -69,12 +69,11 @@ function SankeyPlot(props: SankeyPlotProps) {
   const classes = useUtilityClasses({ classes: inputClasses });
   const drawingArea = useDrawingArea();
   const { data, linkOptions, nodeOptions } = series;
-  const theme = useTheme();
 
   // Calculate layout based on data and dimensions
   const layout: SankeyLayout = React.useMemo(
-    () => calculateSankeyLayout(data, drawingArea, theme, series),
-    [drawingArea, data, series, theme],
+    () => calculateSankeyLayout(data, drawingArea, series),
+    [drawingArea, data, series],
   );
 
   // Early return if no data or dimensions
