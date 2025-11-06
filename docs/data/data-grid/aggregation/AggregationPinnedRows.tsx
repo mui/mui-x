@@ -129,9 +129,7 @@ Object.keys(GRID_AGGREGATION_FUNCTIONS).forEach((name) => {
       }
     }
 
-    params.values = values;
-
-    return aggFunc.apply(params);
+    return aggFunc.apply({ ...params, values });
   };
 
   aggregationFunctionsWithPinnedRows[name] = {
