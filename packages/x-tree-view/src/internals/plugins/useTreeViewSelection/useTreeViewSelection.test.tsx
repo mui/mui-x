@@ -1,19 +1,20 @@
 import { spy } from 'sinon';
 import { fireEvent, act } from '@mui/internal-test-utils';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
-import {
-  UseTreeViewExpansionSignature,
-  UseTreeViewSelectionSignature,
-} from '@mui/x-tree-view/internals';
 import { clearWarningsCache } from '@mui/x-internals/warning';
+
+// TODO #20051: Replace with imported type
+type TreeViewAnyStore = { parameters: any };
 
 /**
  * All tests related to keyboard navigation (e.g.: selection using "Space")
  * are located in the `useTreeViewKeyboardNavigation.test.tsx` file.
  */
-describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>(
-  'useTreeViewSelection plugin',
-  ({ render }) => {
+describeTreeView<TreeViewAnyStore>(
+  'TreeViewSelectionPlugin',
+  // TODO #20051: Remove next line
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  ({ render, treeViewComponentName }) => {
     describe('model props (selectedItems, defaultSelectedItems, onSelectedItemsChange)', () => {
       beforeEach(() => {
         clearWarningsCache();
