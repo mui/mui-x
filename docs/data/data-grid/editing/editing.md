@@ -48,21 +48,20 @@ const columns: GridColDef[] = [
 ];
 ```
 
-By default, pressing <kbd class="key">Enter</kbd> will save the changes and exit edit mode.
-If you want to preserve <kbd class="key">Enter</kbd> for creating line breaks, use <kbd class="key">Ctrl</kbd>+<kbd class="key">Enter</kbd> (or <kbd class="key">Cmd</kbd>+<kbd class="key">Enter</kbd> on macOS) to save.
-You can implement this behavior by preventing the default action when <kbd class="key">Enter</kbd> is pressed without modifier keys:
+By default, pressing <kbd class="key">Enter</kbd> creates a new line, and <kbd class="key">Ctrl</kbd>+<kbd class="key">Enter</kbd> (or <kbd class="key">Cmd</kbd>+<kbd class="key">Enter</kbd> on macOS) saves the changes and exits edit mode.
+
+If you want <kbd class="key">Enter</kbd> to save changes instead (like other column types), you can disable the multiline behavior by setting `ignoreEnterKeySave` to `false`:
 
 ```tsx
-<DataGrid
-  onCellEditStop={(params, event) => {
-    if (params.reason !== GridCellEditStopReasons.enterKeyDown) {
-      return;
-    }
-    if (isKeyboardEvent(event) && !event.ctrlKey && !event.metaKey) {
-      event.defaultMuiPrevented = true;
-    }
-  }}
-/>
+const columns: GridColDef[] = [
+  {
+    field: 'bio',
+    type: 'text',
+    editable: true,
+    // @ts-ignore
+    ignoreEnterKeySave: false, // Enter will save instead of creating a new line
+  },
+];
 ```
 
 The following demo shows the `'text'` column type in action.

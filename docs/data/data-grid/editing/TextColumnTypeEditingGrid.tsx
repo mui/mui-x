@@ -3,7 +3,6 @@ import {
   DataGrid,
   GridColDef,
   GridRowModel,
-  GridCellEditStopReasons,
 } from '@mui/x-data-grid';
 import {
   randomInt,
@@ -26,10 +25,6 @@ const lines = [
   'Vestibulum in massa nibh.',
   'Vestibulum pulvinar aliquam turpis, ac faucibus risus varius a.',
 ];
-
-function isKeyboardEvent(event: any): event is React.KeyboardEvent {
-  return !!event.key;
-}
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID' },
@@ -64,18 +59,7 @@ for (let i = 0; i < 50; i += 1) {
 export default function TextColumnTypeEditingGrid() {
   return (
     <div style={{ height: 300, width: '100%' }}>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        onCellEditStop={(params, event) => {
-          if (params.reason !== GridCellEditStopReasons.enterKeyDown) {
-            return;
-          }
-          if (isKeyboardEvent(event) && !event.ctrlKey && !event.metaKey) {
-            event.defaultMuiPrevented = true;
-          }
-        }}
-      />
+      <DataGrid rows={rows} columns={columns} />
     </div>
   );
 }

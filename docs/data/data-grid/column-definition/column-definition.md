@@ -328,7 +328,9 @@ The `'text'` column type is designed for editing long or multiline text content.
 It provides a textarea-based editor that opens in a popover, making it ideal for fields like descriptions, comments, or biographies.
 
 Unlike the default `'string'` type which uses a single-line input, the `'text'` type allows users to enter multiple lines of text.
-By default, pressing <kbd class="key">Enter</kbd> saves the changes, but you can configure it to create line breaks instead—see the [editing multiline text](/x/react-data-grid/editing/#editing-multiline-text) section for details.
+By default, pressing <kbd class="key">Enter</kbd> creates a new line, and you can use <kbd class="key">Ctrl</kbd>+<kbd class="key">Enter</kbd> (or <kbd class="key">Cmd</kbd>+<kbd class="key">Enter</kbd> on macOS) to save changes.
+
+If you prefer <kbd class="key">Enter</kbd> to save changes instead, set `ignoreEnterKeySave` to `false`:
 
 ```tsx
 {
@@ -336,8 +338,12 @@ By default, pressing <kbd class="key">Enter</kbd> saves the changes, but you can
   type: 'text',
   editable: true,
   width: 400,
+  // @ts-ignore
+  ignoreEnterKeySave: false, // Enter will save instead of creating a new line
 }
 ```
+
+For more information, see the [editing multiline text](/x/react-data-grid/editing/#editing-multiline-text) section.
 
 #### Actions
 

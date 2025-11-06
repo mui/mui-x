@@ -106,6 +106,20 @@ const GridEditTextareaCell = forwardRef<HTMLDivElement, GridEditTextareaCellProp
     [apiRef, debounceMs, field, id, onValueChange],
   );
 
+  const handleKeyDown = React.useCallback(
+    (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+      // Check if ignoreEnterKeySave is set on the column definition
+      // @ts-ignore - This is a custom property specific to the text column type
+      const ignoreEnterKeySave = colDef.ignoreEnterKeySave ?? true;
+
+      if (event.key === 'Enter' && ignoreEnterKeySave && !event.ctrlKey && !event.metaKey) {
+        // Prevent the default behavior (stopping edit mode)
+        event.stopPropagation();
+      }
+    },
+    [colDef],
+  );
+
   const meta = apiRef.current.unstable_getEditCellMeta(id, field);
 
   React.useEffect(() => {
@@ -143,6 +157,7 @@ const GridEditTextareaCell = forwardRef<HTMLDivElement, GridEditTextareaCellProp
               value={valueState ?? ''}
               sx={{ textarea: { resize: 'both' }, width: '100%' }}
               onChange={handleChange}
+              onKeyDown={handleKeyDown}
               inputRef={(el) => setInputRef(el)}
               endAdornment={
                 isProcessingProps ? (
