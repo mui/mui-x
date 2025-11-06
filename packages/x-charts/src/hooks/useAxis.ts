@@ -135,7 +135,7 @@ export function useYAxis<T extends keyof AxisScaleConfig>(
  * Get all the rotation axes for polar charts.
  *
  * Returns all rotation axes configured in polar charts along with their IDs.
- * Rotation axes are used in charts like `PolarChart` to define angular positioning.
+ * Rotation axes are used in charts like `RadarChart` to define angular positioning.
  *
  * @returns An object containing:
  *   - `rotationAxis`: An object mapping axis IDs to their configurations `{ [axisId]: axis }`
