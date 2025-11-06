@@ -394,7 +394,8 @@ export const useFieldState = <
 
     /**
      * If the previous date is not null,
-     * Then we publish the date as `null`.
+     * Then we publish the date as `newActiveDate to prevent error state oscillation`.
+     * @link: https://github.com/mui/mui-x/issues/17967
      */
     if (activeDate != null) {
       setSectionUpdateToApplyOnNextInvalidDate(newSectionValue);
