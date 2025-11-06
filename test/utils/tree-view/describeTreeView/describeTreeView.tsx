@@ -138,8 +138,7 @@ const innerDescribeTreeView = <TStore extends TreeViewAnyStore>(
                 'data-testid': ownerState.itemId,
               }) as any,
           }}
-          // TODO #20051: Remove any
-          getItemLabel={(item: any) => {
+          getItemLabel={(item) => {
             if (item.label) {
               if (typeof item.label !== 'string') {
                 throw new Error('Only use string labels when testing RichTreeView(Pro)');
@@ -150,8 +149,7 @@ const innerDescribeTreeView = <TStore extends TreeViewAnyStore>(
 
             return item.id;
           }}
-          // TODO #20051: Remove any
-          isItemDisabled={(item: any) => !!item.disabled}
+          isItemDisabled={(item) => !!item.disabled}
           {...other}
         />
       );

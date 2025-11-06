@@ -14,8 +14,6 @@ import { TreeViewAnyStore } from '../../models';
  */
 describeTreeView<TreeViewAnyStore>(
   'TreeViewExpansionPlugin',
-  // TODO #20051: Remove next line
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ({ render, treeViewComponentName }) => {
     describe('model props (expandedItems, defaultExpandedItems, onExpandedItemsChange)', () => {
       beforeEach(() => {
