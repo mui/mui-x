@@ -1,7 +1,6 @@
 import {
-  CalendarEventOccurrence,
   CalendarResourceId,
-  RecurringEventFrequency,
+  RecurringEventPresetKey,
   RecurringEventRecurrenceRule,
   SchedulerValidDate,
 } from '@mui/x-scheduler-headless/models';
@@ -15,7 +14,8 @@ export interface ControlledValue {
   endTime: string;
   resourceId: CalendarResourceId | null;
   allDay: boolean;
-  freq: RecurringEventFrequency;
+  recurrenceSelection: RecurringEventPresetKey | null | 'custom';
+  rruleDraft: RecurringEventRecurrenceRule;
 }
 
 export function computeRange(adapter: Adapter, next: ControlledValue) {
@@ -104,49 +104,40 @@ export function getEndsSelectionFromRRule(rrule?: {
   return 'never';
 }
 
-// Normalize a recurrence snapshot built from the current form values
-export function buildCustomRRuleFromForm(
+export function isSameRRule(
   adapter: Adapter,
-  controlled: ControlledValue,
-  form: FormData,
+  rruleA?: RecurringEventRecurrenceRule,
+  rruleB?: RecurringEventRecurrenceRule,
 ) {
-  const freq = controlled.freq;
-  const interval = form.get('interval') ? Number(form.get('interval')) : undefined;
-  const untilValue = form.get('until');
-  const ends = form.get('ends') as 'never' | 'after' | 'until';
+  if (!rruleA && !rruleB) {
+    return true;
+  }
+  if (!rruleA || !rruleB) {
+    return false;
+  }
 
-  const count = ends === 'after' ? Number(form.get('count') ?? 1) : undefined;
+  const scalarsEqual =
+    rruleA.freq === rruleB.freq &&
+    (rruleA.interval ?? 1) === (rruleB.interval ?? 1) &&
+    (rruleA.count ?? undefined) === (rruleB.count ?? undefined) &&
+    adapter.isEqual(rruleA.until ?? null, rruleB.until ?? null);
 
-  const until =
-    ends === 'until' && untilValue !== null
-      ? adapter.startOfDay(adapter.parse(String(untilValue), 'yyyy-MM-dd') as SchedulerValidDate)
-      : undefined;
-  return { freq, interval, count, until } as const;
-}
+  if (!scalarsEqual) {
+    return false;
+  }
 
-// Create a normalized snapshot from the original event rrule
-export function buildInitialCustomRecurrenceSnapshot(occurrence: CalendarEventOccurrence) {
-  const rrule = occurrence.rrule;
-  return {
-    freq: rrule?.freq ?? 'DAILY',
-    interval: rrule?.interval,
-    count: rrule?.count,
-    until: rrule?.until,
-  } as const;
-}
+  const sameArray = (arrayX?: unknown[] | null, arrayY?: unknown[] | null) => {
+    const sortedArrayX = (arrayX ?? []).map(String).sort();
+    const sortedArrayY = (arrayY ?? []).map(String).sort();
+    return (
+      sortedArrayX.length === sortedArrayY.length &&
+      sortedArrayX.every((v, i) => v === sortedArrayY[i])
+    );
+  };
 
-// Shallow-equal on fields and same-day check for "until"
-export function isSameCustomRecurrenceSnapshot(
-  adapter: Adapter,
-  a: RecurringEventRecurrenceRule,
-  b: RecurringEventRecurrenceRule,
-) {
-  const sameUntil =
-    (!a.until && !b.until) || (a.until && b.until && adapter.isSameDay(a.until, b.until));
   return (
-    a.freq === b.freq &&
-    a.interval === b.interval &&
-    (a.count || undefined) === (b.count || undefined) &&
-    sameUntil
+    sameArray(rruleA.byDay, rruleB.byDay) &&
+    sameArray(rruleA.byMonthDay, rruleB.byMonthDay) &&
+    sameArray(rruleA.byMonth, rruleB.byMonth)
   );
 }

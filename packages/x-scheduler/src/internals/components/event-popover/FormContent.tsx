@@ -34,12 +34,10 @@ import { Tabs } from '@base-ui-components/react/tabs';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { getColorClassName } from '../../utils/color-utils';
 import {
-  buildCustomRRuleFromForm,
-  buildInitialCustomRecurrenceSnapshot,
   computeRange,
   ControlledValue,
   getEndsSelectionFromRRule,
-  isSameCustomRecurrenceSnapshot,
+  isSameRRule,
   validateRange,
 } from './utils';
 
@@ -84,6 +82,8 @@ export default function FormContent(props: FormContentProps) {
     const fmtDate = (d: SchedulerValidDate) => adapter.formatByString(d, 'yyyy-MM-dd');
     const fmtTime = (d: SchedulerValidDate) => adapter.formatByString(d, 'HH:mm');
 
+    const base = defaultRecurrencePresetKey === 'custom' ? occurrence.rrule : undefined;
+
     return {
       startDate: fmtDate(occurrence.start),
       endDate: fmtDate(occurrence.end),
@@ -91,7 +91,15 @@ export default function FormContent(props: FormContentProps) {
       endTime: fmtTime(occurrence.end),
       resourceId: occurrence.resource ?? null,
       allDay: !!occurrence.allDay,
-      freq: occurrence.rrule?.freq ?? 'DAILY',
+      recurrenceSelection: defaultRecurrencePresetKey,
+      rruleDraft: {
+        freq: (base?.freq ?? 'DAILY') as RecurringEventFrequency,
+        interval: base?.interval ?? 1,
+        byDay: base?.byDay ?? [],
+        byMonthDay: base?.byMonthDay ?? [],
+        ...(base?.count ? { count: base.count } : {}),
+        ...(base?.until ? { until: base.until } : {}),
+      },
     };
   });
 
@@ -137,47 +145,42 @@ export default function FormContent(props: FormContentProps) {
     setControlled(newState);
   };
 
+  const recurrenceReadOnly = isPropertyReadOnly('rrule');
+  const customDisabled = controlled.recurrenceSelection !== 'custom' || recurrenceReadOnly;
+
+  const handleRecurrenceSelectionChange = (value: RecurringEventPresetKey | null | 'custom') => {
+    if (value === 'custom') {
+      const base = occurrence.rrule;
+      setControlled((prev) => ({
+        ...prev,
+        recurrenceSelection: 'custom',
+        rruleDraft: {
+          freq: base?.freq ?? prev.rruleDraft.freq ?? 'DAILY',
+          interval: base?.interval ?? prev.rruleDraft.interval ?? 1,
+          byDay: base?.byDay ?? prev.rruleDraft.byDay ?? [],
+          byMonthDay: base?.byMonthDay ?? prev.rruleDraft.byMonthDay ?? [],
+          ...(base?.count ? { count: base.count } : {}),
+          ...(base?.until ? { until: base.until } : {}),
+        },
+      }));
+    } else {
+      setControlled((prev) => ({
+        ...prev,
+        recurrenceSelection: value,
+        rruleDraft: { freq: 'DAILY', interval: 1, byDay: [], byMonthDay: [] },
+      }));
+    }
+  };
+
+  const customEndsValue: 'never' | 'after' | 'until' = getEndsSelectionFromRRule(
+    controlled.rruleDraft,
+  );
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const { start, end } = computeRange(adapter, controlled);
 
     const form = new FormData(event.currentTarget);
-
-    // Read preset choice from the General tab
-    const presetFromForm = form.get('recurrencePreset') as RecurringEventPresetKey;
-
-    // Build custom snapshot from Recurrence tab
-    const customRecurrenceSnapshot = buildCustomRRuleFromForm(adapter, controlled, form);
-    const initialRecurrenceSnapshot = buildInitialCustomRecurrenceSnapshot(occurrence);
-    const customRecurrenceChanged = !isSameCustomRecurrenceSnapshot(
-      adapter,
-      customRecurrenceSnapshot,
-      initialRecurrenceSnapshot,
-    );
-
-    // Detect preset change vs initial default key
-    const presetChanged =
-      defaultRecurrencePresetKey !== 'custom' && presetFromForm !== defaultRecurrencePresetKey;
-
-    let rruleToSubmit: RecurringEventRecurrenceRule | undefined;
-    let recurrenceModified = false;
-
-    // Precedence:
-    // 1) Recurrence tab changes (custom) override preset.
-    // 2) Else, preset change applies.
-    // 3) Else, unchanged -> omit rrule.
-    if (customRecurrenceChanged) {
-      rruleToSubmit = {
-        freq: customRecurrenceSnapshot.freq,
-        interval: customRecurrenceSnapshot.interval,
-        ...(customRecurrenceSnapshot.count ? { count: customRecurrenceSnapshot.count } : {}),
-        ...(customRecurrenceSnapshot.until ? { until: customRecurrenceSnapshot.until } : {}),
-      };
-      recurrenceModified = true;
-    } else if (presetChanged) {
-      rruleToSubmit = presetFromForm ? recurrencePresets[presetFromForm] : undefined;
-      recurrenceModified = true;
-    }
 
     setErrors({});
     const err = validateRange(adapter, start, end, controlled.allDay);
@@ -193,6 +196,17 @@ export default function FormContent(props: FormContentProps) {
       resource: controlled.resourceId === null ? undefined : controlled.resourceId,
     };
 
+    let rruleToSubmit: RecurringEventRecurrenceRule | undefined;
+    if (controlled.recurrenceSelection === null) {
+      rruleToSubmit = undefined;
+    } else if (controlled.recurrenceSelection === 'custom') {
+      rruleToSubmit = {
+        ...controlled.rruleDraft,
+      };
+    } else {
+      rruleToSubmit = recurrencePresets[controlled.recurrenceSelection];
+    }
+
     if (rawPlaceholder?.type === 'creation') {
       store.createEvent({
         id: crypto.randomUUID(),
@@ -202,6 +216,7 @@ export default function FormContent(props: FormContentProps) {
         rrule: rruleToSubmit,
       });
     } else if (occurrence.rrule) {
+      const recurrenceModified = !isSameRRule(adapter, occurrence.rrule, rruleToSubmit);
       const changes: CalendarEventUpdatedProperties = {
         ...metaChanges,
         id: occurrence.id,
@@ -495,11 +510,12 @@ export default function FormContent(props: FormContentProps) {
           <div className="EventPopoverMainContent">
             <Field.Root className="EventPopoverFieldRoot" name="recurrencePreset">
               <Field.Label className="EventPopoverRecurrenceFormLabel">
-                Recurrence Presets
+                Select your recurrence pattern
               </Field.Label>
               <Select.Root
                 items={recurrenceOptions}
-                defaultValue={defaultRecurrencePresetKey}
+                value={controlled.recurrenceSelection}
+                onValueChange={(val) => handleRecurrenceSelectionChange(val)}
                 readOnly={isPropertyReadOnly('rrule')}
               >
                 <Select.Trigger
@@ -530,7 +546,11 @@ export default function FormContent(props: FormContentProps) {
                 </Select.Portal>
               </Select.Root>
             </Field.Root>
-            <Fieldset.Root className="EventPopoverRecurrenceFieldset">
+            <Fieldset.Root
+              className="EventPopoverRecurrenceFieldset"
+              disabled={customDisabled}
+              aria-disabled={customDisabled}
+            >
               <Fieldset.Legend className="EventPopoverRecurrenceFormLabel">Repeat</Fieldset.Legend>
               <Field.Root className="EventPopoverInputsRow">
                 {translations.recurrenceEveryLabel}
@@ -538,16 +558,31 @@ export default function FormContent(props: FormContentProps) {
                   name="interval"
                   type="number"
                   min={1}
-                  defaultValue={occurrence.rrule?.interval}
-                  placeholder="1"
+                  value={controlled.rruleDraft.interval}
+                  onChange={(event) => {
+                    const value = Number(event.currentTarget.value || 1);
+                    setControlled((prev) => ({
+                      ...prev,
+                      rruleDraft: {
+                        ...prev.rruleDraft,
+                        interval: value,
+                      },
+                    }));
+                  }}
+                  disabled={customDisabled}
                   className="EventPopoverInput RecurrenceNumberInput"
                 />
                 <Select.Root
                   items={recurrenceFrequencyOptions}
-                  value={controlled.freq}
-                  onValueChange={(val) => setControlled((prev) => ({ ...prev, freq: val as any }))}
+                  value={controlled.rruleDraft.freq}
+                  onValueChange={(val) =>
+                    setControlled((prev) => ({
+                      ...prev,
+                      rruleDraft: { ...prev.rruleDraft, freq: val as RecurringEventFrequency },
+                    }))
+                  }
                 >
-                  <Select.Trigger className="EventPopoverSelectTrigger">
+                  <Select.Trigger className="EventPopoverSelectTrigger" disabled={customDisabled}>
                     <Select.Value />
                     <Select.Icon className="EventPopoverSelectIcon">
                       <ChevronDown size={14} />
@@ -573,23 +608,70 @@ export default function FormContent(props: FormContentProps) {
                 </Select.Root>
               </Field.Root>
             </Fieldset.Root>
-            {controlled.freq === 'WEEKLY' && (
-              <p className="EventPopoverRecurrenceFieldset">TODO: Weekly Fields</p>
-            )}
-            {controlled.freq === 'MONTHLY' && (
-              <p className="EventPopoverRecurrenceFieldset">TODO: Monthly Fields</p>
-            )}
+            {controlled.recurrenceSelection === 'custom' &&
+              controlled.rruleDraft.freq === 'WEEKLY' && (
+                <p className="EventPopoverRecurrenceFieldset">TODO: Weekly Fields</p>
+              )}
+            {controlled.recurrenceSelection === 'custom' &&
+              controlled.rruleDraft.freq === 'MONTHLY' && (
+                <p className="EventPopoverRecurrenceFieldset">TODO: Monthly Fields</p>
+              )}
 
             <Separator className="EventPopoverSeparator" />
 
-            <Fieldset.Root className="EventPopoverRecurrenceFieldset">
+            <Fieldset.Root
+              className="EventPopoverRecurrenceFieldset"
+              disabled={customDisabled}
+              aria-disabled={customDisabled}
+            >
               <Fieldset.Legend className="EventPopoverRecurrenceFormLabel">
                 {translations.recurrenceEndsLabel}
               </Fieldset.Legend>
               <Field.Root className="EventPopoverFieldRoot">
-                <RadioGroup name="ends" defaultValue={getEndsSelectionFromRRule(occurrence.rrule)}>
+                <RadioGroup
+                  value={customEndsValue}
+                  onValueChange={(val) => {
+                    if (customDisabled) {
+                      return;
+                    }
+                    if (val === 'never') {
+                      setControlled((prev) => {
+                        const { count, until, ...rest } = prev.rruleDraft;
+                        return { ...prev, rruleDraft: rest };
+                      });
+                    } else if (val === 'after') {
+                      setControlled((prev) => ({
+                        ...prev,
+                        rruleDraft: {
+                          ...prev.rruleDraft,
+                          count:
+                            prev.rruleDraft.count && prev.rruleDraft.count >= 1
+                              ? prev.rruleDraft.count
+                              : 1,
+                          until: undefined,
+                        },
+                      }));
+                    } else {
+                      setControlled((prev) => ({
+                        ...prev,
+                        rruleDraft: {
+                          ...prev.rruleDraft,
+                          until:
+                            prev.rruleDraft?.until ??
+                            adapter.startOfDay(adapter.date(prev.endDate)),
+                          count: undefined,
+                        },
+                      }));
+                    }
+                  }}
+                >
                   <Field.Label htmlFor="ends-never" className="RadioItem RadioItemWithInput">
-                    <Radio.Root id="ends-never" className="EventPopoverRadioRoot" value="never">
+                    <Radio.Root
+                      id="ends-never"
+                      className="EventPopoverRadioRoot"
+                      value="never"
+                      disabled={customDisabled}
+                    >
                       <Radio.Indicator className="RadioItemIndicator" />
                       <span className="EventPopoverRadioItemText">
                         {translations.recurrenceEndsNeverLabel}
@@ -598,7 +680,12 @@ export default function FormContent(props: FormContentProps) {
                   </Field.Label>
 
                   <Field.Label htmlFor="ends-after" className="RadioItem RadioItemWithInput">
-                    <Radio.Root id="ends-after" className="EventPopoverRadioRoot" value="after">
+                    <Radio.Root
+                      id="ends-after"
+                      className="EventPopoverRadioRoot"
+                      value="after"
+                      disabled={customDisabled}
+                    >
                       <Radio.Indicator className="RadioItemIndicator" />
                       <span className="EventPopoverRadioItemText">
                         {translations.recurrenceEndsAfterLabel}
@@ -609,7 +696,18 @@ export default function FormContent(props: FormContentProps) {
                         name="count"
                         type="number"
                         min={1}
-                        defaultValue={occurrence.rrule?.count || 1}
+                        value={customEndsValue === 'after' ? (controlled.rruleDraft.count ?? 1) : 1}
+                        onChange={(event) => {
+                          const value = Number(event.currentTarget.value || 1);
+                          setControlled((prev) => ({
+                            ...prev,
+                            rruleDraft: {
+                              ...prev.rruleDraft,
+                              count: Math.max(1, value),
+                            },
+                          }));
+                        }}
+                        disabled={customDisabled || customEndsValue !== 'after'}
                         className="EventPopoverInput RecurrenceNumberInput"
                       />
                       {translations.recurrenceEndsTimesLabel}
@@ -617,7 +715,12 @@ export default function FormContent(props: FormContentProps) {
                   </Field.Label>
 
                   <Field.Label htmlFor="ends-until" className="RadioItem RadioItemWithInput">
-                    <Radio.Root id="ends-until" className="EventPopoverRadioRoot" value="until">
+                    <Radio.Root
+                      id="ends-until"
+                      className="EventPopoverRadioRoot"
+                      value="until"
+                      disabled={customDisabled}
+                    >
                       <Radio.Indicator className="RadioItemIndicator" />
                       <span className="EventPopoverRadioItemText">
                         {translations.recurrenceEndsUntilLabel}
@@ -626,11 +729,25 @@ export default function FormContent(props: FormContentProps) {
                     <Input
                       name="until"
                       type="date"
-                      defaultValue={
-                        occurrence.rrule?.until
-                          ? adapter.formatByString(occurrence.rrule.until, 'yyyy-MM-dd')
+                      value={
+                        customEndsValue === 'until' && controlled.rruleDraft.until
+                          ? adapter.formatByString(controlled.rruleDraft.until, 'yyyy-MM-dd')
                           : ''
                       }
+                      onChange={(event) => {
+                        const v = event.currentTarget.value;
+                        setControlled((prev) => {
+                          const parsed = v ? adapter.parse(v, 'yyyy-MM-dd') : undefined;
+                          return {
+                            ...prev,
+                            rruleDraft: {
+                              ...prev.rruleDraft,
+                              until: parsed ? adapter.startOfDay(parsed) : undefined,
+                            },
+                          };
+                        });
+                      }}
+                      disabled={customDisabled || customEndsValue !== 'until'}
                       className="EventPopoverInput"
                     />
                   </Field.Label>
