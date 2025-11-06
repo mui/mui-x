@@ -7,6 +7,11 @@
   ],
   "properties": {
     "type": { "type": { "description": "'bar'" }, "required": true },
+    "barLabel": {
+      "type": {
+        "description": "'value' | ((item: BarItem, context: BarLabelContext) =&gt; string | null | undefined)"
+      }
+    },
     "color": { "type": { "description": "string" } },
     "colorGetter": {
       "type": { "description": "(data: ColorCallbackValue&lt;TValue&gt;) =&gt; string" }
