@@ -83,7 +83,7 @@ function CustomComponent() {
 
 ## Usage example
 
-The following example demonstrates using `useXAxes` and `useYAxes` to access all axes in a chart with dual y-axes.
+The following example demonstrates the use of `useXAxes` and `useYAxes` to access all axes in a chart with dual y-axes.
 The custom components use these hooks to draw visual indicators showing the axis ranges and display axis metadata:
 
 {{"demo": "UseAxes.js"}}
