@@ -131,6 +131,13 @@ const columns: GridColDef[] = [
 
       return new Date(params.value);
     },
+    valueFormatter: (params) => {
+      if (params.value == null) {
+        return '';
+      }
+
+      return params.value.toLocaleString();
+    },
   },
 ];
 
