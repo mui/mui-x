@@ -62,7 +62,7 @@
       "description": "Used to determine the id of a given item.",
       "typeDescriptions": {
         "item": { "name": "item", "description": "The item to check." },
-        "string": { "name": "string", "description": "The id of the item." }
+        "TreeViewItemId": { "name": "TreeViewItemId", "description": "The id of the item." }
       }
     },
     "getItemLabel": {

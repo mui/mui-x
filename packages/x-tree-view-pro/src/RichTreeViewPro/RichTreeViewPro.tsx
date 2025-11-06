@@ -147,7 +147,7 @@ RichTreeViewPro.propTypes = {
   /**
    * Used to determine if a given item can move to some new position.
    * @param {object} params The params describing the item re-ordering.
-   * @param {string} params.itemId The id of the item that is being moved to a new position.
+   * @param {TreeViewItemId} params.itemId The id of the item that is being moved to a new position.
    * @param {TreeViewItemReorderPosition} params.oldPosition The old position of the item.
    * @param {TreeViewItemReorderPosition} params.newPosition The new position of the item.
    * @returns {boolean} `true` if the item can move to the new position.
@@ -224,7 +224,7 @@ RichTreeViewPro.propTypes = {
    *
    * @template R
    * @param {R} item The item to check.
-   * @returns {string} The id of the item.
+   * @returns {TreeViewItemId} The id of the item.
    * @default (item) => item.id
    */
   getItemId: PropTypes.func,
@@ -259,7 +259,7 @@ RichTreeViewPro.propTypes = {
   isItemEditable: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   /**
    * Determine if a given item can be reordered.
-   * @param {string} itemId The id of the item to check.
+   * @param {TreeViewItemId} itemId The id of the item to check.
    * @returns {boolean} `true` if the item can be reordered.
    * @default () => true
    */
@@ -284,26 +284,26 @@ RichTreeViewPro.propTypes = {
   /**
    * Callback fired when Tree Items are expanded/collapsed.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemExpansion()` method.
-   * @param {array} itemIds The ids of the expanded items.
+   * @param {TreeViewItemId} itemIds The ids of the expanded items.
    */
   onExpandedItemsChange: PropTypes.func,
   /**
    * Callback fired when the `content` slot of a given Tree Item is clicked.
    * @param {React.MouseEvent} event The DOM event that triggered the change.
-   * @param {string} itemId The id of the focused item.
+   * @param {TreeViewItemId} itemId The id of the focused item.
    */
   onItemClick: PropTypes.func,
   /**
    * Callback fired when a Tree Item is expanded or collapsed.
    * @param {React.SyntheticEvent | null} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemExpansion()` method.
-   * @param {array} itemId The itemId of the modified item.
+   * @param {TreeViewItemId} itemId The itemId of the modified item.
    * @param {boolean} isExpanded `true` if the item has just been expanded, `false` if it has just been collapsed.
    */
   onItemExpansionToggle: PropTypes.func,
   /**
    * Callback fired when a given Tree Item is focused.
    * @param {React.SyntheticEvent | null} event The DOM event that triggered the change. **Warning**: This is a generic event not a focus event.
-   * @param {string} itemId The id of the focused item.
+   * @param {TreeViewItemId} itemId The id of the focused item.
    */
   onItemFocus: PropTypes.func,
   /**
@@ -315,7 +315,7 @@ RichTreeViewPro.propTypes = {
   /**
    * Callback fired when a Tree Item is moved in the tree.
    * @param {object} params The params describing the item re-ordering.
-   * @param {string} params.itemId The id of the item moved.
+   * @param {TreeViewItemId} params.itemId The id of the item moved.
    * @param {TreeViewItemReorderPosition} params.oldPosition The old position of the item.
    * @param {TreeViewItemReorderPosition} params.newPosition The new position of the item.
    */
@@ -323,14 +323,14 @@ RichTreeViewPro.propTypes = {
   /**
    * Callback fired when a Tree Item is selected or deselected.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemSelection()` method.
-   * @param {array} itemId The itemId of the modified item.
+   * @param {TreeViewItemId} itemId The itemId of the modified item.
    * @param {boolean} isSelected `true` if the item has just been selected, `false` if it has just been deselected.
    */
   onItemSelectionToggle: PropTypes.func,
   /**
    * Callback fired when Tree Items are selected/deselected.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemSelection()` method.
-   * @param {string[] | string} itemIds The ids of the selected items.
+   * @param {TreeViewItemId[] | TreeViewItemId} itemIds The ids of the selected items.
    * When `multiSelect` is `true`, this is an array of strings; when false (default) a string.
    */
   onSelectedItemsChange: PropTypes.func,
