@@ -29,7 +29,7 @@ function AxisRangeIndicators() {
 
   return (
     <g>
-      {allSeries.map((series, index) => {
+      {allSeries.map((series) => {
         const axis = yAxis[series.yAxisId ?? yAxisIds[0]];
         const [seriesMin, seriesMax] = findMinMax(
           series.data.filter((v) => v != null) as number[],
@@ -37,7 +37,7 @@ function AxisRangeIndicators() {
         const yMin = axis.scale(seriesMin) ?? 0;
         const yMax = axis.scale(seriesMax) ?? 0;
 
-        const color = series.color ?? (index === 0 ? '#1976d2' : '#dc004e');
+        const color = series.color;
 
         return (
           <g key={series.id}>
