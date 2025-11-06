@@ -9,6 +9,7 @@ import {
   CalendarEventOccurrence,
 } from '@mui/x-scheduler-headless/models/event';
 import { processEvent } from '@mui/x-scheduler-headless/process-event';
+import { processDate } from '@mui/x-scheduler-headless/process-date';
 import { getWeekDayCode } from '@mui/x-scheduler-headless/utils/recurring-event-utils';
 import { Adapter, diffIn } from '@mui/x-scheduler-headless/use-adapter';
 import { adapter as defaultAdapter } from './adapters';
@@ -222,8 +223,8 @@ export class EventBuilder {
 
     return {
       ...processedEvent,
-      start: effectiveDate,
-      end,
+      start: processDate(effectiveDate, this.adapter),
+      end: processDate(end, this.adapter),
       key,
     };
   }
