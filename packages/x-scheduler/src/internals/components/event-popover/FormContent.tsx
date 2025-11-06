@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { useStore } from '@base-ui-components/utils/store';
 import { Checkbox } from '@base-ui-components/react/checkbox';
 import { Field } from '@base-ui-components/react/field';
+import { Fieldset } from '@base-ui-components/react/fieldset';
 import { Form } from '@base-ui-components/react/form';
 import { Input } from '@base-ui-components/react/input';
 import { Select } from '@base-ui-components/react/select';
@@ -527,57 +528,49 @@ export default function FormContent(props: FormContentProps) {
         </Tabs.Panel>
         <Tabs.Panel value="recurrence-tab" keepMounted>
           <div className="EventPopoverMainContent">
-            <Field.Root className="EventPopoverFieldRoot">
-              <fieldset className="EventPopoverRecurrenceFieldset">
-                <legend className="EventPopoverRecurrenceFormLabel">Repeat</legend>
-                <div className="EventPopoverInputsRow">
-                  {translations.recurrenceEveryLabel}
-                  <Input
-                    name="interval"
-                    type="number"
-                    min={1}
-                    defaultValue={occurrence.rrule?.interval}
-                    placeholder="1"
-                    className="EventPopoverInput RecurrenceNumberInput"
-                  />
-                  <Select.Root
-                    items={recurrenceFrequencyOptions}
-                    value={controlled.freq}
-                    onValueChange={(val) =>
-                      setControlled((prev) => ({ ...prev, freq: val as any }))
-                    }
-                  >
-                    <Select.Trigger className="EventPopoverSelectTrigger">
-                      <Select.Value />
-                      <Select.Icon className="EventPopoverSelectIcon">
-                        <ChevronDown size={14} />
-                      </Select.Icon>
-                    </Select.Trigger>
-                    <Select.Portal>
-                      <Select.Positioner
-                        alignItemWithTrigger={false}
-                        align="start"
-                        className="EventPopoverSelectPositioner"
-                      >
-                        <Select.Popup className="EventPopoverSelectPopup">
-                          {recurrenceFrequencyOptions.map(({ label, value }) => (
-                            <Select.Item
-                              key={label}
-                              value={value}
-                              className="EventPopoverSelectItem"
-                            >
-                              <Select.ItemText className="EventPopoverSelectItemText">
-                                {label}
-                              </Select.ItemText>
-                            </Select.Item>
-                          ))}
-                        </Select.Popup>
-                      </Select.Positioner>
-                    </Select.Portal>
-                  </Select.Root>
-                </div>
-              </fieldset>
-            </Field.Root>
+            <Fieldset.Root className="EventPopoverRecurrenceFieldset">
+              <Fieldset.Legend className="EventPopoverRecurrenceFormLabel">Repeat</Fieldset.Legend>
+              <Field.Root className="EventPopoverInputsRow">
+                {translations.recurrenceEveryLabel}
+                <Input
+                  name="interval"
+                  type="number"
+                  min={1}
+                  defaultValue={occurrence.rrule?.interval}
+                  placeholder="1"
+                  className="EventPopoverInput RecurrenceNumberInput"
+                />
+                <Select.Root
+                  items={recurrenceFrequencyOptions}
+                  value={controlled.freq}
+                  onValueChange={(val) => setControlled((prev) => ({ ...prev, freq: val as any }))}
+                >
+                  <Select.Trigger className="EventPopoverSelectTrigger">
+                    <Select.Value />
+                    <Select.Icon className="EventPopoverSelectIcon">
+                      <ChevronDown size={14} />
+                    </Select.Icon>
+                  </Select.Trigger>
+                  <Select.Portal>
+                    <Select.Positioner
+                      alignItemWithTrigger={false}
+                      align="start"
+                      className="EventPopoverSelectPositioner"
+                    >
+                      <Select.Popup className="EventPopoverSelectPopup">
+                        {recurrenceFrequencyOptions.map(({ label, value }) => (
+                          <Select.Item key={label} value={value} className="EventPopoverSelectItem">
+                            <Select.ItemText className="EventPopoverSelectItemText">
+                              {label}
+                            </Select.ItemText>
+                          </Select.Item>
+                        ))}
+                      </Select.Popup>
+                    </Select.Positioner>
+                  </Select.Portal>
+                </Select.Root>
+              </Field.Root>
+            </Fieldset.Root>
             {controlled.freq === 'WEEKLY' && (
               <p className="EventPopoverRecurrenceFieldset">TODO: Weekly Fields</p>
             )}
@@ -587,12 +580,11 @@ export default function FormContent(props: FormContentProps) {
 
             <Separator className="EventPopoverSeparator" />
 
-            <Field.Root className="EventPopoverFieldRoot">
-              <fieldset className="EventPopoverRecurrenceFieldset">
-                <legend className="EventPopoverRecurrenceFormLabel">
-                  {translations.recurrenceEndsLabel}
-                </legend>
-
+            <Fieldset.Root className="EventPopoverRecurrenceFieldset">
+              <Fieldset.Legend className="EventPopoverRecurrenceFormLabel">
+                {translations.recurrenceEndsLabel}
+              </Fieldset.Legend>
+              <Field.Root className="EventPopoverFieldRoot">
                 <RadioGroup name="ends" defaultValue={getEndsSelectionFromRRule(occurrence.rrule)}>
                   <Field.Label htmlFor="ends-never" className="RadioItem RadioItemWithInput">
                     <Radio.Root id="ends-never" className="EventPopoverRadioRoot" value="never">
@@ -641,8 +633,8 @@ export default function FormContent(props: FormContentProps) {
                     />
                   </Field.Label>
                 </RadioGroup>
-              </fieldset>
-            </Field.Root>
+              </Field.Root>
+            </Fieldset.Root>
           </div>
         </Tabs.Panel>
       </Tabs.Root>
