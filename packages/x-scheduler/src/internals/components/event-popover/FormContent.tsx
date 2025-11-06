@@ -36,6 +36,7 @@ import { getColorClassName } from '../../utils/color-utils';
 import {
   computeRange,
   ControlledValue,
+  EndsSelection,
   getEndsSelectionFromRRule,
   isSameRRule,
   validateRange,
@@ -170,6 +171,64 @@ export default function FormContent(props: FormContentProps) {
         rruleDraft: { freq: 'DAILY', interval: 1, byDay: [], byMonthDay: [] },
       }));
     }
+  };
+
+  const handleChangeInterval = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Number(event.currentTarget.value || 1);
+    setControlled((prev) => ({
+      ...prev,
+      rruleDraft: { ...prev.rruleDraft, interval: value },
+    }));
+  };
+
+  const handleChangeFrequency = (value: RecurringEventFrequency) => {
+    setControlled((prev) => ({
+      ...prev,
+      rruleDraft: { ...prev.rruleDraft, freq: value },
+    }));
+  };
+
+  const handleEndsChange = (value: EndsSelection) => {
+    if (value === 'never') {
+      setControlled((prev) => {
+        const { count, until, ...rest } = prev.rruleDraft;
+        return { ...prev, rruleDraft: rest };
+      });
+    } else if (value === 'after') {
+      setControlled((prev) => ({
+        ...prev,
+        rruleDraft: {
+          ...prev.rruleDraft,
+          count: 1,
+          until: undefined,
+        },
+      }));
+    } else {
+      setControlled((prev) => ({
+        ...prev,
+        rruleDraft: {
+          ...prev.rruleDraft,
+          until: adapter.date(prev.endDate),
+          count: undefined,
+        },
+      }));
+    }
+  };
+
+  const handleChangeCount = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Number(event.currentTarget.value || 1);
+    setControlled((prev) => ({
+      ...prev,
+      rruleDraft: { ...prev.rruleDraft, count: value },
+    }));
+  };
+
+  const handleChangeUntil = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.currentTarget.value;
+    setControlled((prev) => ({
+      ...prev,
+      rruleDraft: { ...prev.rruleDraft, until: adapter.date(value) },
+    }));
   };
 
   const customEndsValue: 'never' | 'after' | 'until' = getEndsSelectionFromRRule(
@@ -559,28 +618,14 @@ export default function FormContent(props: FormContentProps) {
                   type="number"
                   min={1}
                   value={controlled.rruleDraft.interval}
-                  onChange={(event) => {
-                    const value = Number(event.currentTarget.value || 1);
-                    setControlled((prev) => ({
-                      ...prev,
-                      rruleDraft: {
-                        ...prev.rruleDraft,
-                        interval: value,
-                      },
-                    }));
-                  }}
+                  onChange={handleChangeInterval}
                   disabled={customDisabled}
                   className="EventPopoverInput RecurrenceNumberInput"
                 />
                 <Select.Root
                   items={recurrenceFrequencyOptions}
                   value={controlled.rruleDraft.freq}
-                  onValueChange={(val) =>
-                    setControlled((prev) => ({
-                      ...prev,
-                      rruleDraft: { ...prev.rruleDraft, freq: val as RecurringEventFrequency },
-                    }))
-                  }
+                  onValueChange={handleChangeFrequency}
                 >
                   <Select.Trigger className="EventPopoverSelectTrigger" disabled={customDisabled}>
                     <Select.Value />
@@ -630,40 +675,7 @@ export default function FormContent(props: FormContentProps) {
               <Field.Root className="EventPopoverFieldRoot">
                 <RadioGroup
                   value={customEndsValue}
-                  onValueChange={(val) => {
-                    if (customDisabled) {
-                      return;
-                    }
-                    if (val === 'never') {
-                      setControlled((prev) => {
-                        const { count, until, ...rest } = prev.rruleDraft;
-                        return { ...prev, rruleDraft: rest };
-                      });
-                    } else if (val === 'after') {
-                      setControlled((prev) => ({
-                        ...prev,
-                        rruleDraft: {
-                          ...prev.rruleDraft,
-                          count:
-                            prev.rruleDraft.count && prev.rruleDraft.count >= 1
-                              ? prev.rruleDraft.count
-                              : 1,
-                          until: undefined,
-                        },
-                      }));
-                    } else {
-                      setControlled((prev) => ({
-                        ...prev,
-                        rruleDraft: {
-                          ...prev.rruleDraft,
-                          until:
-                            prev.rruleDraft?.until ??
-                            adapter.startOfDay(adapter.date(prev.endDate)),
-                          count: undefined,
-                        },
-                      }));
-                    }
-                  }}
+                  onValueChange={(value) => handleEndsChange(value as EndsSelection)}
                 >
                   <Field.Label htmlFor="ends-never" className="RadioItem RadioItemWithInput">
                     <Radio.Root
@@ -697,16 +709,7 @@ export default function FormContent(props: FormContentProps) {
                         type="number"
                         min={1}
                         value={customEndsValue === 'after' ? (controlled.rruleDraft.count ?? 1) : 1}
-                        onChange={(event) => {
-                          const value = Number(event.currentTarget.value || 1);
-                          setControlled((prev) => ({
-                            ...prev,
-                            rruleDraft: {
-                              ...prev.rruleDraft,
-                              count: Math.max(1, value),
-                            },
-                          }));
-                        }}
+                        onChange={handleChangeCount}
                         disabled={customDisabled || customEndsValue !== 'after'}
                         className="EventPopoverInput RecurrenceNumberInput"
                       />
@@ -734,19 +737,7 @@ export default function FormContent(props: FormContentProps) {
                           ? adapter.formatByString(controlled.rruleDraft.until, 'yyyy-MM-dd')
                           : ''
                       }
-                      onChange={(event) => {
-                        const v = event.currentTarget.value;
-                        setControlled((prev) => {
-                          const parsed = v ? adapter.parse(v, 'yyyy-MM-dd') : undefined;
-                          return {
-                            ...prev,
-                            rruleDraft: {
-                              ...prev.rruleDraft,
-                              until: parsed ? adapter.startOfDay(parsed) : undefined,
-                            },
-                          };
-                        });
-                      }}
+                      onChange={handleChangeUntil}
                       disabled={customDisabled || customEndsValue !== 'until'}
                       className="EventPopoverInput"
                     />

@@ -390,6 +390,11 @@ p {
   padding: 0;
   margin: 0;
   font-size: var(--font-size-2);
+
+  &[data-disabled] {
+    color: var(--disabled-text-color);
+    pointer-events: none;
+  }
 }
 
 .EventPopoverRecurrenceFormLabel {

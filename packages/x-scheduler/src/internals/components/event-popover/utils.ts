@@ -18,6 +18,8 @@ export interface ControlledValue {
   rruleDraft: RecurringEventRecurrenceRule;
 }
 
+export type EndsSelection = 'never' | 'after' | 'until';
+
 export function computeRange(adapter: Adapter, next: ControlledValue) {
   if (next.allDay) {
     const newStart = adapter.startOfDay(adapter.date(next.startDate));
@@ -91,7 +93,7 @@ export function getRecurrenceLabel(
 export function getEndsSelectionFromRRule(rrule?: {
   count?: number | null;
   until?: SchedulerValidDate | null;
-}): 'never' | 'after' | 'until' {
+}): EndsSelection {
   if (!rrule) {
     return 'never';
   }
