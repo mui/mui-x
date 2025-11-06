@@ -255,6 +255,7 @@ The following are the native column types with their required value types:
 | Column type          | Value type                 |
 | :------------------- | :------------------------- |
 | `'string'` (default) | `string`                   |
+| `'text'`             | `string`                   |
 | `'number'`           | `number`                   |
 | `'date'`             | `Date() object`            |
 | `'dateTime'`         | `Date() object`            |
@@ -320,6 +321,23 @@ However, you can customize which attribute is used as value and label by using `
 ```
 
 :::
+
+#### Text
+
+The `'text'` column type is designed for editing long or multiline text content. 
+It provides a textarea-based editor that opens in a popover, making it ideal for fields like descriptions, comments, or biographies.
+
+Unlike the default `'string'` type which uses a single-line input, the `'text'` type allows users to enter multiple lines of text.
+By default, pressing <kbd class="key">Enter</kbd> saves the changes, but you can configure it to create line breaks instead—see the [editing multiline text](/x/react-data-grid/editing/#editing-multiline-text) section for details.
+
+```tsx
+{
+  field: 'description',
+  type: 'text',
+  editable: true,
+  width: 400,
+}
+```
 
 #### Actions
 

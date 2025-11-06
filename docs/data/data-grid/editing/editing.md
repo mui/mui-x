@@ -29,6 +29,47 @@ Play with it by double-clicking or pressing <kbd class="key">Enter</kbd> on any 
 
 {{"demo": "BasicEditingGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## Editing multiline text
+
+For cells containing long or multiline text, you can use the built-in `'text'` column type.
+This type provides a textarea-based editor that opens in a popover, allowing users to edit content with line breaks.
+
+To use it, set the column `type` to `'text'` and enable `editable`:
+
+```tsx
+const columns: GridColDef[] = [
+  {
+    field: 'bio',
+    headerName: 'Biography',
+    type: 'text',
+    editable: true,
+    width: 400,
+  },
+];
+```
+
+By default, pressing <kbd class="key">Enter</kbd> will save the changes and exit edit mode.
+If you want to preserve <kbd class="key">Enter</kbd> for creating line breaks, use <kbd class="key">Ctrl</kbd>+<kbd class="key">Enter</kbd> (or <kbd class="key">Cmd</kbd>+<kbd class="key">Enter</kbd> on macOS) to save.
+You can implement this behavior by preventing the default action when <kbd class="key">Enter</kbd> is pressed without modifier keys:
+
+```tsx
+<DataGrid
+  onCellEditStop={(params, event) => {
+    if (params.reason !== GridCellEditStopReasons.enterKeyDown) {
+      return;
+    }
+    if (isKeyboardEvent(event) && !event.ctrlKey && !event.metaKey) {
+      event.defaultMuiPrevented = true;
+    }
+  }}
+/>
+```
+
+The following demo shows the `'text'` column type in action.
+Double-click a cell in the **Bio** column to start editing:
+
+{{"demo": "TextColumnTypeEditingGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Row editing
 
 By default, only one cell can be editable at a time.
