@@ -1,4 +1,3 @@
-import * as React from 'react';
 import createDescribe from '@mui/internal-test-utils/createDescribe';
 import { createRenderer, ErrorBoundary } from '@mui/internal-test-utils';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
@@ -139,7 +138,8 @@ const innerDescribeTreeView = <TStore extends TreeViewAnyStore>(
                 'data-testid': ownerState.itemId,
               }) as any,
           }}
-          getItemLabel={(item) => {
+          // TODO #20051: Remove any
+          getItemLabel={(item: any) => {
             if (item.label) {
               if (typeof item.label !== 'string') {
                 throw new Error('Only use string labels when testing RichTreeView(Pro)');
@@ -150,7 +150,8 @@ const innerDescribeTreeView = <TStore extends TreeViewAnyStore>(
 
             return item.id;
           }}
-          isItemDisabled={(item) => !!item.disabled}
+          // TODO #20051: Remove any
+          isItemDisabled={(item: any) => !!item.disabled}
           {...other}
         />
       );
