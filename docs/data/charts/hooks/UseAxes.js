@@ -6,6 +6,7 @@ import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { findMinMax } from '@mui/x-charts/internals';
+import { useTheme } from '@mui/material/styles';
 
 const dataset = [
   { month: 'Jan', temperature: 5, rainfall: 45 },
@@ -20,6 +21,7 @@ function AxisRangeIndicators() {
   const { yAxis, yAxisIds } = useYAxes();
   const xAxis = useXAxis();
   const allSeries = useLineSeries();
+  const theme = useTheme();
 
   const xDomain = xAxis.scale.domain();
   const xStart = xAxis.scale(xDomain[0]) ?? 0;
@@ -63,25 +65,49 @@ function AxisRangeIndicators() {
             />
             {/* Min value label */}
             <text
-              x={xEnd + 5}
-              y={yMin}
-              fontSize="11"
-              fill={color}
+              x={(xStart + xEnd) / 2}
+              y={yMin - 6}
+              fontSize="12"
+              fill={theme.palette.text.secondary}
               fontWeight="bold"
               alignmentBaseline="middle"
+              textAnchor="middle"
             >
-              min: {seriesMin}
+              {axis.id}
+            </text>
+            <text
+              x={xEnd + 6}
+              y={yMin - 6}
+              fontSize="12"
+              fill={theme.palette.text.secondary}
+              fontWeight="bold"
+              alignmentBaseline="middle"
+              textAnchor="start"
+            >
+              min
             </text>
             {/* Max value label */}
             <text
-              x={xEnd + 5}
-              y={yMax}
-              fontSize="11"
-              fill={color}
+              x={(xStart + xEnd) / 2}
+              y={yMax - 6}
+              fontSize="12"
+              fill={theme.palette.text.secondary}
               fontWeight="bold"
               alignmentBaseline="middle"
+              textAnchor="middle"
             >
-              max: {seriesMax}
+              {axis.id}
+            </text>
+            <text
+              x={xEnd + 6}
+              y={yMax - 6}
+              fontSize="12"
+              fill={theme.palette.text.secondary}
+              fontWeight="bold"
+              alignmentBaseline="middle"
+              textAnchor="start"
+            >
+              max
             </text>
           </g>
         );
@@ -109,13 +135,23 @@ export default function UseAxes() {
             min: 0,
             max: 30,
             position: 'left',
+            label: 'Temperature (°C)',
+            width: 50,
+            labelStyle: {
+              translate: '5px',
+            },
           },
           {
             id: 'rainfall',
             scaleType: 'linear',
             min: 0,
             max: 50,
-            position: 'right',
+            position: 'left',
+            label: 'Rainfall (mm)',
+            width: 50,
+            labelStyle: {
+              translate: '5px',
+            },
           },
         ]}
         series={[
@@ -135,6 +171,7 @@ export default function UseAxes() {
           },
         ]}
         height={300}
+        margin={{ right: 40, left: 0 }}
       >
         <ChartsSurface>
           <LinePlot />

@@ -73,7 +73,18 @@ function AxisRangeIndicators() {
               alignmentBaseline="middle"
               textAnchor="middle"
             >
-              {axis.id} min
+              {axis.id}
+            </text>
+            <text
+              x={xEnd + 6}
+              y={yMin - 6}
+              fontSize="12"
+              fill={theme.palette.text.secondary}
+              fontWeight="bold"
+              alignmentBaseline="middle"
+              textAnchor="start"
+            >
+              min
             </text>
             {/* Max value label */}
             <text
@@ -85,7 +96,18 @@ function AxisRangeIndicators() {
               alignmentBaseline="middle"
               textAnchor="middle"
             >
-              {axis.id} max
+              {axis.id}
+            </text>
+            <text
+              x={xEnd + 6}
+              y={yMax - 6}
+              fontSize="12"
+              fill={theme.palette.text.secondary}
+              fontWeight="bold"
+              alignmentBaseline="middle"
+              textAnchor="start"
+            >
+              max
             </text>
           </g>
         );
@@ -113,13 +135,23 @@ export default function UseAxes() {
             min: 0,
             max: 30,
             position: 'left',
+            label: 'Temperature (°C)',
+            width: 50,
+            labelStyle: {
+              translate: '5px',
+            },
           },
           {
             id: 'rainfall',
             scaleType: 'linear',
             min: 0,
             max: 50,
-            position: 'right',
+            position: 'left',
+            label: 'Rainfall (mm)',
+            width: 50,
+            labelStyle: {
+              translate: '5px',
+            },
           },
         ]}
         series={[
@@ -139,6 +171,7 @@ export default function UseAxes() {
           },
         ]}
         height={300}
+        margin={{ right: 40, left: 0 }}
       >
         <ChartsSurface>
           <LinePlot />
