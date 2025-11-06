@@ -1,19 +1,43 @@
+import { type UseChartBrushSignature } from '../internals/plugins/featurePlugins/useChartBrush';
 import {
-  selectorBrushShouldPreventAxisHighlight,
-  type UseChartBrushSignature,
-} from '../internals/plugins/featurePlugins/useChartBrush';
+  selectorChartsHighlightXAxisValue,
+  selectorChartsHighlightYAxisValue,
+} from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
 
 /**
- * Returns whether the highlight is currently active.
- * The highlight is considered inactive when interactions like brush are preventing it.
+ * Returns whether the X axis highlight is currently active.
+ *
+ * @returns `true` if the highlight is active, `false` otherwise.
+ */
+export function useIsXHighlightActive(): boolean {
+  const store = useStore<[UseChartBrushSignature]>();
+  const xValue = useSelector(store, selectorChartsHighlightXAxisValue);
+
+  return xValue.length > 0;
+}
+
+/**
+ * Returns whether the Y axis highlight is currently active.
+ *
+ * @returns `true` if the highlight is active, `false` otherwise.
+ */
+export function useIsYHighlightActive(): boolean {
+  const store = useStore<[UseChartBrushSignature]>();
+  const yValue = useSelector(store, selectorChartsHighlightYAxisValue);
+
+  return yValue.length > 0;
+}
+
+/**
+ * Returns whether any highlight is currently active.
  *
  * @returns `true` if the highlight is active, `false` otherwise.
  */
 export function useIsHighlightActive(): boolean {
-  const store = useStore<[UseChartBrushSignature]>();
-  const shouldPreventHighlight = useSelector(store, selectorBrushShouldPreventAxisHighlight);
+  const x = useIsXHighlightActive();
+  const y = useIsYHighlightActive();
 
-  return !shouldPreventHighlight;
+  return x || y;
 }
