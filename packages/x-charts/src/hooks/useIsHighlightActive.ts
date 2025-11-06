@@ -11,7 +11,7 @@ import { useStore } from '../internals/store/useStore';
  *
  * @returns `true` if the highlight is active, `false` otherwise.
  */
-export function useIsXHighlightActive(): boolean {
+export function useIsXAxisHighlightActive(): boolean {
   const store = useStore<[UseChartBrushSignature]>();
   const xValue = useSelector(store, selectorChartsHighlightXAxisValue);
 
@@ -23,7 +23,7 @@ export function useIsXHighlightActive(): boolean {
  *
  * @returns `true` if the highlight is active, `false` otherwise.
  */
-export function useIsYHighlightActive(): boolean {
+export function useIsYAxisHighlightActive(): boolean {
   const store = useStore<[UseChartBrushSignature]>();
   const yValue = useSelector(store, selectorChartsHighlightYAxisValue);
 
@@ -35,9 +35,9 @@ export function useIsYHighlightActive(): boolean {
  *
  * @returns `true` if the highlight is active, `false` otherwise.
  */
-export function useIsHighlightActive(): boolean {
-  const x = useIsXHighlightActive();
-  const y = useIsYHighlightActive();
+export function useIsAnyAxisHighlightActive(): boolean {
+  const x = useIsXAxisHighlightActive();
+  const y = useIsYAxisHighlightActive();
 
   return x || y;
 }
