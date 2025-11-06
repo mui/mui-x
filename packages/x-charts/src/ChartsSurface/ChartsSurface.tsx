@@ -19,7 +19,7 @@ import {
   selectorChartsIsKeyboardNavigationEnabled,
 } from '../internals/plugins/featurePlugins/useChartKeyboardNavigation';
 import { useUtilityClasses } from './chartsSurfaceClasses';
-import { selectorChartHasZoom } from '../internals';
+import { selectorChartHasZoom } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
 
 export interface ChartsSurfaceProps
   extends Omit<

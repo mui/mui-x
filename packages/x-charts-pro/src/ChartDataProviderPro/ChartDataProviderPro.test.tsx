@@ -1,4 +1,4 @@
-import { createRenderer, describeConformance, waitFor } from '@mui/internal-test-utils';
+import { createRenderer, describeConformance } from '@mui/internal-test-utils';
 import { ChartDataProviderPro } from '@mui/x-charts-pro/ChartDataProviderPro';
 import { ChartsSurface, chartsSurfaceClasses } from '@mui/x-charts/ChartsSurface';
 import { isJSDOM } from '@mui/x-internals/platform';
