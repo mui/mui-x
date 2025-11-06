@@ -56,7 +56,20 @@ export const getCellValue = (
     return null;
   }
 
-  return colDef.rowSpanValueGetter
-    ? colDef.rowSpanValueGetter(row[colDef.field] as never, row, colDef, apiRef)
-    : apiRef.current.getRowValue(row, colDef);
+  const cellValue = row[colDef.field];
+  if (colDef.rowSpanValueGetter) {
+    return colDef.rowSpanValueGetter(cellValue as never, row, colDef, apiRef);
+  }
+
+  // This util is also called during the state initialization
+  // If row value getter api is not available, use column value getter
+  if (apiRef.current.getRowValue) {
+    return apiRef.current.getRowValue(row, colDef);
+  }
+
+  if (colDef.valueGetter) {
+    return colDef.valueGetter(cellValue as never, row, colDef, apiRef);
+  }
+
+  return cellValue;
 };
