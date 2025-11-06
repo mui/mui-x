@@ -25,8 +25,6 @@ describeAdapters(
       await view.user.tab();
 
       expect(fieldRoot).to.have.attribute('aria-invalid', 'true');
-
-      view.unmount();
     });
 
     it('does not mark invalid on blur when all sections are empty (accessible DOM)', async () => {
@@ -37,8 +35,6 @@ describeAdapters(
       await view.user.tab();
 
       expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
-
-      view.unmount();
     });
 
     it('does not mark invalid on blur when value is fully valid (accessible DOM)', async () => {
@@ -52,8 +48,6 @@ describeAdapters(
       await view.user.tab();
 
       expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
-
-      view.unmount();
     });
 
     it('marks field invalid on blur when only some sections are filled (non-accessible DOM)', async () => {
@@ -71,8 +65,6 @@ describeAdapters(
       fireEvent.blur(input);
 
       expect(input).to.have.attribute('aria-invalid', 'true');
-
-      view.unmount();
     });
   },
 );
