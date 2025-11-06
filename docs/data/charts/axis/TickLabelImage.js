@@ -5,7 +5,7 @@ import { BarPlot } from '@mui/x-charts/BarChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 
-import { iconMap } from './TickLabelImage.icons';
+import { iconMap } from '../dataset/company.icons';
 
 function CustomTick(props) {
   const { x, y, text } = props;
