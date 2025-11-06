@@ -243,7 +243,7 @@ export default function FormContent(props: FormContentProps) {
 
   const recurrenceOptions: {
     label: string;
-    value: RecurringEventPresetKey | null;
+    value: RecurringEventPresetKey | null | 'custom';
   }[] = [
     { label: `${translations.recurrenceNoRepeat}`, value: null },
     { label: `${translations.recurrenceDailyPresetLabel}`, value: 'DAILY' },
@@ -258,6 +258,10 @@ export default function FormContent(props: FormContentProps) {
     {
       label: `${translations.recurrenceYearlyPresetLabel(normalDate)}`,
       value: 'YEARLY',
+    },
+    {
+      label: `${translations.recurrenceCustomRepeat}`,
+      value: 'custom',
     },
   ];
 
@@ -467,45 +471,6 @@ export default function FormContent(props: FormContentProps) {
                 </Field.Label>
               </Field.Root>
             </div>
-            <Field.Root className="EventPopoverFieldRoot" name="recurrencePreset">
-              {defaultRecurrencePresetKey === 'custom' ? (
-                // TODO: Issue #19137 - Display the actual custom recurrence rule (e.g. "Repeats every 2 weeks on Monday")
-                <p className="EventPopoverFormLabel">{`Custom ${occurrence.rrule?.freq.toLowerCase()} recurrence`}</p>
-              ) : (
-                <Select.Root
-                  items={recurrenceOptions}
-                  defaultValue={defaultRecurrencePresetKey}
-                  readOnly={isPropertyReadOnly('rrule')}
-                >
-                  <Select.Trigger
-                    className="EventPopoverSelectTrigger"
-                    aria-label={translations.recurrenceLabel}
-                  >
-                    <Select.Value />
-                    <Select.Icon className="EventPopoverSelectIcon">
-                      <ChevronDown size={14} />
-                    </Select.Icon>
-                  </Select.Trigger>
-                  <Select.Portal>
-                    <Select.Positioner
-                      alignItemWithTrigger={false}
-                      align="start"
-                      className="EventPopoverSelectPositioner"
-                    >
-                      <Select.Popup className="EventPopoverSelectPopup">
-                        {recurrenceOptions.map(({ label, value }) => (
-                          <Select.Item key={label} value={value} className="EventPopoverSelectItem">
-                            <Select.ItemText className="EventPopoverSelectItemText">
-                              {label}
-                            </Select.ItemText>
-                          </Select.Item>
-                        ))}
-                      </Select.Popup>
-                    </Select.Positioner>
-                  </Select.Portal>
-                </Select.Root>
-              )}
-            </Field.Root>
             <Separator className="EventPopoverSeparator" />
             <div>
               <Field.Root className="EventPopoverFieldRoot" name="description">
@@ -528,6 +493,43 @@ export default function FormContent(props: FormContentProps) {
         </Tabs.Panel>
         <Tabs.Panel value="recurrence-tab" keepMounted>
           <div className="EventPopoverMainContent">
+            <Field.Root className="EventPopoverFieldRoot" name="recurrencePreset">
+              <Field.Label className="EventPopoverRecurrenceFormLabel">
+                Recurrence Presets
+              </Field.Label>
+              <Select.Root
+                items={recurrenceOptions}
+                defaultValue={defaultRecurrencePresetKey}
+                readOnly={isPropertyReadOnly('rrule')}
+              >
+                <Select.Trigger
+                  className="EventPopoverSelectTrigger"
+                  aria-label={translations.recurrenceLabel}
+                >
+                  <Select.Value />
+                  <Select.Icon className="EventPopoverSelectIcon">
+                    <ChevronDown size={14} />
+                  </Select.Icon>
+                </Select.Trigger>
+                <Select.Portal>
+                  <Select.Positioner
+                    alignItemWithTrigger={false}
+                    align="start"
+                    className="EventPopoverSelectPositioner"
+                  >
+                    <Select.Popup className="EventPopoverSelectPopup">
+                      {recurrenceOptions.map(({ label, value }) => (
+                        <Select.Item key={label} value={value} className="EventPopoverSelectItem">
+                          <Select.ItemText className="EventPopoverSelectItemText">
+                            {label}
+                          </Select.ItemText>
+                        </Select.Item>
+                      ))}
+                    </Select.Popup>
+                  </Select.Positioner>
+                </Select.Portal>
+              </Select.Root>
+            </Field.Root>
             <Fieldset.Root className="EventPopoverRecurrenceFieldset">
               <Fieldset.Legend className="EventPopoverRecurrenceFormLabel">Repeat</Fieldset.Legend>
               <Field.Root className="EventPopoverInputsRow">
