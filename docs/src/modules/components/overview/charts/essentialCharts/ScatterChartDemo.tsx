@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { ScatterChart, ScatterSeries } from '@mui/x-charts/ScatterChart';
 import { ChartsTooltipContainer, useItemTooltip } from '@mui/x-charts/ChartsTooltip';
 import { styled } from '@mui/material/styles';
@@ -6,7 +5,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
-import data from '../data/transistorCPU';
+import data from 'docsx/data/charts/dataset/transistorCPUdata';
 import ChartDemoWrapper from '../ChartDemoWrapper';
 
 const chartSetting = {

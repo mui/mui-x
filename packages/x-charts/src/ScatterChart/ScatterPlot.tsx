@@ -5,7 +5,7 @@ import { Scatter, ScatterProps, ScatterSlotProps, ScatterSlots } from './Scatter
 import { useScatterSeriesContext } from '../hooks/useScatterSeries';
 import { useXAxes, useYAxes } from '../hooks';
 import { useZAxes } from '../hooks/useZAxis';
-import { seriesConfig as scatterSeriesConfig } from './seriesConfig';
+import { scatterSeriesConfig as scatterSeriesConfig } from './seriesConfig';
 import { BatchScatter } from './BatchScatter';
 
 export interface ScatterPlotSlots extends ScatterSlots {

@@ -1,9 +1,4 @@
-import {
-  NumberValue,
-  scaleBand,
-  scalePoint,
-  type ScaleSymLog,
-} from '@mui/x-charts-vendor/d3-scale';
+import { NumberValue, type ScaleSymLog } from '@mui/x-charts-vendor/d3-scale';
 import {
   AxisConfig,
   ChartsAxisProps,
@@ -17,6 +12,7 @@ import {
 } from '../../../../models/axis';
 import { getScale } from '../../../getScale';
 import { ChartDrawingArea } from '../../../../hooks/useDrawingArea';
+import { scaleBand, scalePoint } from '../../../scales';
 
 const DEFAULT_CATEGORY_GAP_RATIO = 0.2;
 

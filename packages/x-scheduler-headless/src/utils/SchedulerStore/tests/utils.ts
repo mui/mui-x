@@ -19,8 +19,16 @@ export function buildEvent(
   };
 }
 
-export function getIds<T extends { id: string | number }>(items: T[]): Array<T['id']> {
+export function getIds<T extends { id: string | number }>(
+  items: T[] | readonly T[],
+): Array<T['id']> {
   return items.map((item) => item.id);
+}
+
+export function getIdsFromOccurrencesMap(occMap: Map<string, any[]>) {
+  return Array.from(occMap.values())
+    .flat()
+    .map((o) => o.id);
 }
 
 export const storeClasses = [

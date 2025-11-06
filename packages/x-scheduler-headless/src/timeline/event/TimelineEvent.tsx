@@ -51,7 +51,7 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
     [position, duration],
   );
 
-  const props = React.useMemo(() => ({ style }), [style]);
+  const props = { style };
 
   const { state } = useEvent({ start, end });
 

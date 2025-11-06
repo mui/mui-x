@@ -57,7 +57,7 @@ export interface UseTreeViewItemsReorderingInstance {
 }
 
 export interface TreeViewItemReorderPosition {
-  parentId: string | null;
+  parentId: TreeViewItemId | null;
   index: number;
 }
 
@@ -73,33 +73,33 @@ export interface UseTreeViewItemsReorderingParameters {
   itemsReordering?: boolean;
   /**
    * Determine if a given item can be reordered.
-   * @param {string} itemId The id of the item to check.
+   * @param {TreeViewItemId} itemId The id of the item to check.
    * @returns {boolean} `true` if the item can be reordered.
    * @default () => true
    */
-  isItemReorderable?: (itemId: string) => boolean;
+  isItemReorderable?: (itemId: TreeViewItemId) => boolean;
   /**
    * Used to determine if a given item can move to some new position.
-   * @param {object} params The params describing the item re-ordering.
-   * @param {string} params.itemId The id of the item that is being moved to a new position.
-   * @param {TreeViewItemReorderPosition} params.oldPosition The old position of the item.
-   * @param {TreeViewItemReorderPosition} params.newPosition The new position of the item.
+   * @param {object} parameters The params describing the item re-ordering.
+   * @param {TreeViewItemId} parameters.itemId The id of the item that is being moved to a new position.
+   * @param {TreeViewItemReorderPosition} parameters.oldPosition The old position of the item.
+   * @param {TreeViewItemReorderPosition} parameters.newPosition The new position of the item.
    * @returns {boolean} `true` if the item can move to the new position.
    */
-  canMoveItemToNewPosition?: (params: {
-    itemId: string;
+  canMoveItemToNewPosition?: (parameters: {
+    itemId: TreeViewItemId;
     oldPosition: TreeViewItemReorderPosition;
     newPosition: TreeViewItemReorderPosition;
   }) => boolean;
   /**
    * Callback fired when a Tree Item is moved in the tree.
-   * @param {object} params The params describing the item re-ordering.
-   * @param {string} params.itemId The id of the item moved.
-   * @param {TreeViewItemReorderPosition} params.oldPosition The old position of the item.
-   * @param {TreeViewItemReorderPosition} params.newPosition The new position of the item.
+   * @param {object} parameters The params describing the item re-ordering.
+   * @param {TreeViewItemId} parameters.itemId The id of the item moved.
+   * @param {TreeViewItemReorderPosition} parameters.oldPosition The old position of the item.
+   * @param {TreeViewItemReorderPosition} parameters.newPosition The new position of the item.
    */
-  onItemPositionChange?: (params: {
-    itemId: string;
+  onItemPositionChange?: (parameters: {
+    itemId: TreeViewItemId;
     oldPosition: TreeViewItemReorderPosition;
     newPosition: TreeViewItemReorderPosition;
   }) => void;
@@ -112,10 +112,10 @@ export type UseTreeViewItemsReorderingParametersWithDefaults = DefaultizedProps<
 
 export interface UseTreeViewItemsReorderingState {
   itemsReordering: {
-    isItemReorderable: (itemId: string) => boolean;
+    isItemReorderable: (itemId: TreeViewItemId) => boolean;
     currentReorder: {
-      draggedItemId: string;
-      targetItemId: string;
+      draggedItemId: TreeViewItemId;
+      targetItemId: TreeViewItemId;
       newPosition: TreeViewItemReorderPosition | null;
       action: TreeViewItemsReorderingAction | null;
     } | null;
