@@ -385,9 +385,8 @@ export const useFieldState = <
      * Then we publish an invalid date.
      */
     if (
-      // All sections are filled but the composed date is still invalid →
-      // publish the invalid date consistently regardless of previous value to avoid oscillation
-      newActiveDateSections.every((sectionBis) => sectionBis.value !== '')
+      newActiveDateSections.every((sectionBis) => sectionBis.value !== '') &&
+      (activeDate == null || adapter.isValid(activeDate))
     ) {
       setSectionUpdateToApplyOnNextInvalidDate(newSectionValue);
       return publishValue(fieldValueManager.updateDateInValue(value, section, newActiveDate));
@@ -399,7 +398,7 @@ export const useFieldState = <
      */
     if (activeDate != null) {
       setSectionUpdateToApplyOnNextInvalidDate(newSectionValue);
-      return publishValue(fieldValueManager.updateDateInValue(value, section, null));
+      publishValue(fieldValueManager.updateDateInValue(value, section, null));
     }
 
     /**
