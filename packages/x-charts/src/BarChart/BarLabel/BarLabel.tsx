@@ -59,10 +59,10 @@ export type BarLabelProps = Omit<
     height: number;
     /**
      * The placement of the bar label.
-     * It controls whether the label is placed inside the bar or above it.
+     * It controls whether the label is rendered inside or outside the bar.
      * @default 'inside'
      */
-    barLabelPlacement?: 'inside' | 'above';
+    barLabelPlacement?: 'inside' | 'outside';
     value: number | null;
   };
 
@@ -95,7 +95,7 @@ BarLabel.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  barLabelPlacement: PropTypes.oneOf(['above', 'inside']),
+  barLabelPlacement: PropTypes.oneOf(['outside', 'inside']),
   classes: PropTypes.object,
   dataIndex: PropTypes.number.isRequired,
   /**

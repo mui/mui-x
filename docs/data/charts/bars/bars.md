@@ -183,7 +183,7 @@ In the example below, the value of the first series is displayed using the defau
 
 You can also display the labels on top of the bars.
 To do so, provide the `barLabelPlacement` prop.
-This prop accepts two values: `'inside'` (default) and `'above'`.
+This prop accepts two values: `'inside'` (default) and `'outside'`.
 
 {{"demo": "BarLabelPlacement.js"}}
 

@@ -6,7 +6,7 @@
       "description": "If provided, the function will be used to format the label of the bar.<br />It can be set to &#39;value&#39; to display the current value."
     },
     "barLabelPlacement": {
-      "description": "The placement of the bar label.<br />It controls whether the label is placed inside the bar or above it."
+      "description": "The placement of the bar label.<br />It controls whether the label is rendered inside or outside the bar."
     },
     "color": {
       "description": "Color to use when displaying the series.<br />If <code>colorGetter</code> is provided, it will be used to get the color for each data point instead.<br />Otherwise, this color will be used for all data points in the series."

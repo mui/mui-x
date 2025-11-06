@@ -48,10 +48,10 @@ function barLabelPropsInterpolator(from: BarLabelInterpolatedProps, to: BarLabel
  */
 export function useAnimateBarLabel(props: UseAnimateBarLabelParams): UseAnimateBarLabelReturn {
   const isNegativeValue = props.value !== null && props.value < 0;
-  const isAbovePlacement = props.barLabelPlacement === 'above';
+  const isOutsidePlacement = props.barLabelPlacement === 'outside';
 
-  const shouldPlaceBelow = isNegativeValue && isAbovePlacement;
-  const shouldPlaceAbove = !isNegativeValue && isAbovePlacement;
+  const shouldPlaceBelow = isNegativeValue && isOutsidePlacement;
+  const shouldPlaceAbove = !isNegativeValue && isOutsidePlacement;
 
   let initialY = 0;
   let currentY = 0;

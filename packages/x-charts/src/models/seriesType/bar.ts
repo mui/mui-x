@@ -56,10 +56,10 @@ export interface BarSeriesType
   barLabel?: 'value' | ((item: BarItem, context: BarLabelContext) => string | null | undefined);
   /**
    * The placement of the bar label.
-   * It controls whether the label is placed inside the bar or above it.
+   * It controls whether the label is rendered inside or outside the bar.
    * @default 'inside'
    */
-  barLabelPlacement?: 'inside' | 'above';
+  barLabelPlacement?: 'inside' | 'outside';
 }
 
 /**

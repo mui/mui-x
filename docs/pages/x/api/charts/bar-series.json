@@ -12,7 +12,10 @@
         "description": "'value' | ((item: BarItem, context: BarLabelContext) =&gt; string | null | undefined)"
       }
     },
-    "barLabelPlacement": { "type": { "description": "'inside' | 'above'" }, "default": "'inside'" },
+    "barLabelPlacement": {
+      "type": { "description": "'inside' | 'outside'" },
+      "default": "'inside'"
+    },
     "color": { "type": { "description": "string" } },
     "colorGetter": {
       "type": { "description": "(data: ColorCallbackValue&lt;TValue&gt;) =&gt; string" }

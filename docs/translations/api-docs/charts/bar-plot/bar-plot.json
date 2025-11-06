@@ -5,7 +5,7 @@
       "description": "If provided, the function will be used to format the label of the bar. It can be set to &#39;value&#39; to display the current value."
     },
     "barLabelPlacement": {
-      "description": "The placement of the bar label. It controls whether the label is placed inside the bar or above it."
+      "description": "The placement of the bar label. It controls whether the label is rendered inside or outside the bar."
     },
     "borderRadius": { "description": "Defines the border radius of the bar element." },
     "onItemClick": {
