@@ -3,92 +3,80 @@ import { EMPTY_ARRAY } from '@base-ui-components/utils/empty';
 import { SchedulerState as State } from '../utils/SchedulerStore/SchedulerStore.types';
 import { CalendarResource, CalendarResourceId } from '../models';
 
-const processedResourceSelector = createSelector(
-  (state: State) => state.processedResourceLookup,
-  (processedResourceLookup, resourceId: string | null | undefined) =>
-    resourceId == null ? null : processedResourceLookup.get(resourceId),
-);
+export const schedulerResourceSelectors = {
+  processedResource: createSelector(
+    (state: State) => state.processedResourceLookup,
+    (processedResourceLookup, resourceId: string | null | undefined) =>
+      resourceId == null ? null : processedResourceLookup.get(resourceId),
+  ),
+  processedResourceList: createSelectorMemoized(
+    (state: State) => state.resourceIdList,
+    (state: State) => state.processedResourceLookup,
+    (resourceIds, processedResourceLookup) =>
+      resourceIds.map((id) => processedResourceLookup.get(id)!),
+  ),
+  processedResourceFlatList: createSelectorMemoized(
+    (state: State) => state.resourceIdList,
+    (state: State) => state.processedResourceLookup,
+    (state: State) => state.resourceChildrenIdLookup,
+    (resourceIds, processedResourceLookup, resourceChildrenIdLookup) => {
+      const flatList: CalendarResource[] = [];
 
-const processedResourceListSelector = createSelectorMemoized(
-  (state: State) => state.resourceIdList,
-  (state: State) => state.processedResourceLookup,
-  (resourceIds, processedResourceLookup) =>
-    resourceIds.map((id) => processedResourceLookup.get(id)!),
-);
+      const addResourceAndChildren = (resourceId: string) => {
+        const resource = processedResourceLookup.get(resourceId);
+        if (!resource) {
+          return;
+        }
 
-const resourceChildrenIdListSelector = createSelector(
-  (state: State, resourceId: CalendarResourceId) =>
-    state.resourceChildrenIdLookup.get(resourceId) ?? EMPTY_ARRAY,
-);
+        flatList.push(resource);
 
-const resourcesChildrenMapSelector = createSelectorMemoized(
-  (state: State) => state.processedResourceLookup,
-  (state: State) => state.resourceChildrenIdLookup,
-  (processedResourceLookup, resourceChildrenIdLookup) => {
-    const result: Map<CalendarResourceId, CalendarResource[]> = new Map();
+        const childrenIds = resourceChildrenIdLookup.get(resourceId);
+        if (childrenIds?.length) {
+          for (const childId of childrenIds) {
+            addResourceAndChildren(childId);
+          }
+        }
+      };
 
-    for (const [resourceId, childrenIds] of Array.from(resourceChildrenIdLookup.entries())) {
-      const children = childrenIds.map((id) => processedResourceLookup.get(id)!);
-      result.set(resourceId, children);
-    }
-
-    return result;
-  },
-);
-
-const resourceParentIdsSelector = createSelectorMemoized(
-  (state: State) => state.resourceChildrenIdLookup,
-  (resourceChildrenIdLookup) => {
-    const result: Map<CalendarResourceId, CalendarResourceId | null> = new Map();
-
-    for (const [resourceId, childrenIds] of Array.from(resourceChildrenIdLookup.entries())) {
-      for (const childId of childrenIds) {
-        result.set(childId, resourceId);
+      for (const resourceId of resourceIds) {
+        addResourceAndChildren(resourceId);
       }
-    }
+      return flatList;
+    },
+  ),
+  processedResourceChildrenMap: createSelectorMemoized(
+    (state: State) => state.processedResourceLookup,
+    (state: State) => state.resourceChildrenIdLookup,
+    (processedResourceLookup, resourceChildrenIdLookup) => {
+      const result: Map<CalendarResourceId, CalendarResource[]> = new Map();
 
-    return result;
-  },
-);
-
-const resourcesFlatListSelector = createSelectorMemoized(
-  (state: State) => state.resourceIdList,
-  (state: State) => state.processedResourceLookup,
-  (state: State) => state.resourceChildrenIdLookup,
-  (resourceIds, processedResourceLookup, resourceChildrenIdLookup) => {
-    const flatList: CalendarResource[] = [];
-
-    const addResourceAndChildren = (resourceId: string) => {
-      const resource = processedResourceLookup.get(resourceId);
-      if (!resource) {
-        return;
+      for (const [resourceId, childrenIds] of Array.from(resourceChildrenIdLookup.entries())) {
+        const children = childrenIds.map((id) => processedResourceLookup.get(id)!);
+        result.set(resourceId, children);
       }
 
-      flatList.push(resource);
+      return result;
+    },
+  ),
+  childrenIdLookup: (state: State) => state.resourceChildrenIdLookup,
+  resourceChildrenIds: createSelector(
+    (state: State, resourceId: CalendarResourceId) =>
+      state.resourceChildrenIdLookup.get(resourceId) ?? EMPTY_ARRAY,
+  ),
+  resourceParentIdLookup: createSelectorMemoized(
+    (state: State) => state.resourceChildrenIdLookup,
+    (resourceChildrenIdLookup) => {
+      const result: Map<CalendarResourceId, CalendarResourceId | null> = new Map();
 
-      const childrenIds = resourceChildrenIdLookup.get(resourceId);
-      if (childrenIds?.length) {
+      for (const [resourceId, childrenIds] of Array.from(resourceChildrenIdLookup.entries())) {
         for (const childId of childrenIds) {
-          addResourceAndChildren(childId);
+          result.set(childId, resourceId);
         }
       }
-    };
 
-    for (const resourceId of resourceIds) {
-      addResourceAndChildren(resourceId);
-    }
-    return flatList;
-  },
-);
-
-export const schedulerResourceSelectors = {
-  processedResource: processedResourceSelector,
-  processedResourceList: processedResourceListSelector,
-  processedResourceFlatList: resourcesFlatListSelector,
-  processedResourceChildrenMap: resourcesChildrenMapSelector,
-  childrenIdLookup: (state: State) => state.resourceChildrenIdLookup,
-  childrenIdsList: resourceChildrenIdListSelector,
-  resourceParentIds: resourceParentIdsSelector,
+      return result;
+    },
+  ),
   idList: createSelector((state: State) => state.resourceIdList),
   visibleMap: createSelector((state: State) => state.visibleResources),
   visibleIdList: createSelectorMemoized(

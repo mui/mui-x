@@ -21,7 +21,7 @@ export function useEventOccurrencesGroupedByDay(
   const store = useEventCalendarStoreContext();
   const events = useStore(store, schedulerEventSelectors.processedEventList);
   const visibleResources = useStore(store, schedulerResourceSelectors.visibleMap);
-  const resourceParentIds = useStore(store, schedulerResourceSelectors.resourceParentIds);
+  const resourceParentIds = useStore(store, schedulerResourceSelectors.resourceParentIdLookup);
 
   return React.useMemo(
     () =>

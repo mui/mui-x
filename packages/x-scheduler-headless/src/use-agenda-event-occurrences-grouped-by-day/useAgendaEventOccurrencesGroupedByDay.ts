@@ -32,7 +32,7 @@ export function useAgendaEventOccurrencesGroupedByDay(): useAgendaEventOccurrenc
   const showWeekends = useStore(store, eventCalendarPreferenceSelectors.showWeekends);
   const showEmptyDays = useStore(store, eventCalendarPreferenceSelectors.showEmptyDaysInAgenda);
   const visibleResources = useStore(store, schedulerResourceSelectors.visibleMap);
-  const resourceParentIds = useStore(store, schedulerResourceSelectors.resourceParentIds);
+  const resourceParentIds = useStore(store, schedulerResourceSelectors.resourceParentIdLookup);
 
   const amount = AGENDA_VIEW_DAYS_AMOUNT;
 

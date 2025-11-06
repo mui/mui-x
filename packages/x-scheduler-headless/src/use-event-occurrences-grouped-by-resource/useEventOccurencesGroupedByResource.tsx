@@ -24,7 +24,7 @@ export function useEventOccurrencesGroupedByResource(
     store,
     schedulerResourceSelectors.processedResourceChildrenMap,
   );
-  const resourceParentIds = useStore(store, schedulerResourceSelectors.resourceParentIds);
+  const resourceParentIds = useStore(store, schedulerResourceSelectors.resourceParentIdLookup);
 
   return React.useMemo(
     () =>
