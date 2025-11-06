@@ -44,7 +44,7 @@ export const schedulerResourceSelectors = {
       return flatList;
     },
   ),
-  processedResourceChildrenMap: createSelectorMemoized(
+  processedResourceChildrenLookup: createSelectorMemoized(
     (state: State) => state.processedResourceLookup,
     (state: State) => state.resourceChildrenIdLookup,
     (processedResourceLookup, resourceChildrenIdLookup) => {

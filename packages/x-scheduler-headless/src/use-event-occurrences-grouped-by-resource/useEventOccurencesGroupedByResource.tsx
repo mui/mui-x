@@ -22,7 +22,7 @@ export function useEventOccurrencesGroupedByResource(
   const resources = useStore(store, schedulerResourceSelectors.processedResourceList);
   const resourcesChildrenMap = useStore(
     store,
-    schedulerResourceSelectors.processedResourceChildrenMap,
+    schedulerResourceSelectors.processedResourceChildrenLookup,
   );
   const resourceParentIds = useStore(store, schedulerResourceSelectors.resourceParentIdLookup);
 
