@@ -28,6 +28,20 @@ export type GridActionsCellItemProps = GridActionsCellItemCommonProps &
       } & Omit<GridSlotProps['baseMenuItem'], 'component'>)
   );
 
+/**
+ * Checks if the component should allow default behavior for the click event.
+ * Returns true for anchor elements
+ */
+function shouldAllowDefaultBehavior(event: React.MouseEvent): boolean {
+  // Check if the event is coming from an anchor tag
+  const target = event.currentTarget as HTMLElement;
+  if (target.tagName === 'A' || target.getAttribute('href') !== null) {
+    return true;
+  }
+
+  return false;
+}
+
 const GridActionsCellItem = forwardRef<HTMLElement, GridActionsCellItemProps>((props, ref) => {
   const rootProps = useGridRootProps();
 
@@ -35,6 +49,13 @@ const GridActionsCellItem = forwardRef<HTMLElement, GridActionsCellItemProps>((p
     const { label, icon, showInMenu, onClick, ...other } = props;
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+      const allowDefault = shouldAllowDefaultBehavior(event);
+
+      if (!allowDefault) {
+        event.stopPropagation();
+        event.preventDefault();
+      }
+
       onClick?.(event);
     };
 
@@ -56,6 +77,13 @@ const GridActionsCellItem = forwardRef<HTMLElement, GridActionsCellItemProps>((p
   const { label, icon, showInMenu, onClick, closeMenuOnClick = true, closeMenu, ...other } = props;
 
   const handleClick = (event: React.MouseEvent<HTMLLIElement>) => {
+    const allowDefault = shouldAllowDefaultBehavior(event);
+
+    if (!allowDefault) {
+      event.stopPropagation();
+      event.preventDefault();
+    }
+
     onClick?.(event);
     if (closeMenuOnClick) {
       closeMenu?.();
