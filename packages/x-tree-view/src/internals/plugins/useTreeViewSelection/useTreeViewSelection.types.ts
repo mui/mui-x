@@ -3,19 +3,23 @@ import type { DefaultizedProps } from '@mui/x-internals/types';
 import type { TreeViewPluginSignature } from '../../models';
 import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import { UseTreeViewExpansionSignature } from '../useTreeViewExpansion';
-import { TreeViewSelectionPropagation, TreeViewCancellableEventHandler } from '../../../models';
+import {
+  TreeViewSelectionPropagation,
+  TreeViewCancellableEventHandler,
+  TreeViewItemId,
+} from '../../../models';
 
 export interface UseTreeViewSelectionPublicAPI {
   /**
    * Select or deselect an item.
    * @param {object} parameters The parameters of the method.
-   * @param {string} parameters.itemId The id of the item to select or deselect.
+   * @param {TreeViewItemId} parameters.itemId The id of the item to select or deselect.
    * @param {React.SyntheticEvent} parameters.event The DOM event that triggered the change.
    * @param {boolean} parameters.keepExistingSelection If `true`, the other already selected items will remain selected, otherwise, they will be deselected. This parameter is only relevant when `multiSelect` is `true`
    * @param {boolean | undefined} parameters.shouldBeSelected If `true` the item will be selected. If `false` the item will be deselected. If not defined, the item's selection status will be toggled.
    */
   setItemSelection: (parameters: {
-    itemId: string;
+    itemId: TreeViewItemId;
     event?: React.SyntheticEvent;
     shouldBeSelected?: boolean;
     keepExistingSelection?: boolean;
@@ -31,37 +35,37 @@ export interface UseTreeViewSelectionInstance extends UseTreeViewSelectionPublic
   /**
    * Expand the current selection range up to the given item.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change.
-   * @param {string} itemId The id of the item to expand the selection to.
+   * @param {TreeViewItemId} itemId The id of the item to expand the selection to.
    */
-  expandSelectionRange: (event: React.SyntheticEvent, itemId: string) => void;
+  expandSelectionRange: (event: React.SyntheticEvent, itemId: TreeViewItemId) => void;
   /**
    * Expand the current selection range from the first navigable item to the given item.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change.
-   * @param {string} itemId The id of the item up to which the selection range should be expanded.
+   * @param {TreeViewItemId} itemId The id of the item up to which the selection range should be expanded.
    */
-  selectRangeFromStartToItem: (event: React.SyntheticEvent, itemId: string) => void;
+  selectRangeFromStartToItem: (event: React.SyntheticEvent, itemId: TreeViewItemId) => void;
   /**
    * Expand the current selection range from the given item to the last navigable item.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change.
-   * @param {string} itemId The id of the item from which the selection range should be expanded.
+   * @param {TreeViewItemId} itemId The id of the item from which the selection range should be expanded.
    */
-  selectRangeFromItemToEnd: (event: React.SyntheticEvent, itemId: string) => void;
+  selectRangeFromItemToEnd: (event: React.SyntheticEvent, itemId: TreeViewItemId) => void;
   /**
    * Update the selection when navigating with ArrowUp / ArrowDown keys.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change.
-   * @param {string} currentItemId The id of the active item before the keyboard navigation.
-   * @param {string} nextItemId The id of the active item after the keyboard navigation.
+   * @param {TreeViewItemId} currentItemId The id of the active item before the keyboard navigation.
+   * @param {TreeViewItemId} nextItemId The id of the active item after the keyboard navigation.
    */
   selectItemFromArrowNavigation: (
     event: React.SyntheticEvent,
-    currentItemId: string,
-    nextItemId: string,
+    currentItemId: TreeViewItemId,
+    nextItemId: TreeViewItemId,
   ) => void;
 }
 
 export type TreeViewSelectionValue<Multiple extends boolean | undefined> = Multiple extends true
-  ? string[]
-  : string | null;
+  ? TreeViewItemId[]
+  : TreeViewItemId | null;
 
 export interface UseTreeViewSelectionParameters<Multiple extends boolean | undefined> {
   /**
@@ -110,7 +114,7 @@ export interface UseTreeViewSelectionParameters<Multiple extends boolean | undef
   /**
    * Callback fired when Tree Items are selected/deselected.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemSelection()` method.
-   * @param {string[] | string} itemIds The ids of the selected items.
+   * @param {TreeViewItemId[] | TreeViewItemId} itemIds The ids of the selected items.
    * When `multiSelect` is `true`, this is an array of strings; when false (default) a string.
    */
   onSelectedItemsChange?: (
@@ -120,12 +124,12 @@ export interface UseTreeViewSelectionParameters<Multiple extends boolean | undef
   /**
    * Callback fired when a Tree Item is selected or deselected.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemSelection()` method.
-   * @param {array} itemId The itemId of the modified item.
+   * @param {TreeViewItemId} itemId The itemId of the modified item.
    * @param {boolean} isSelected `true` if the item has just been selected, `false` if it has just been deselected.
    */
   onItemSelectionToggle?: (
     event: React.SyntheticEvent | null,
-    itemId: string,
+    itemId: TreeViewItemId,
     isSelected: boolean,
   ) => void;
 }
