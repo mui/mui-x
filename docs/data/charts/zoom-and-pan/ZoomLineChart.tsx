@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 
 export default function ZoomLineChart() {

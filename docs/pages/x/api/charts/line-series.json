@@ -10,6 +10,9 @@
     "area": { "type": { "description": "boolean" } },
     "baseline": { "type": { "description": "number | 'min' | 'max'" }, "default": "0" },
     "color": { "type": { "description": "string" } },
+    "colorGetter": {
+      "type": { "description": "(data: ColorCallbackValue&lt;TValue&gt;) =&gt; string" }
+    },
     "connectNulls": { "type": { "description": "boolean" }, "default": "false" },
     "curve": { "type": { "description": "CurveType" }, "default": "'monotoneX'" },
     "data": { "type": { "description": "readonly (number | null)[]" } },
@@ -33,7 +36,7 @@
     "stackOrder": { "type": { "description": "StackOrderType" }, "default": "'none'" },
     "strictStepCurve": { "type": { "description": "boolean" } },
     "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" } },
-    "xAxisId": { "type": { "description": "string" } },
-    "yAxisId": { "type": { "description": "string" } }
+    "xAxisId": { "type": { "description": "AxisId" } },
+    "yAxisId": { "type": { "description": "AxisId" } }
   }
 }

@@ -9,7 +9,7 @@ import {
 import { getOccurrencesFromEvents } from '../utils/event-utils';
 import { useAdapter, Adapter } from '../use-adapter';
 import { useTimelineStoreContext } from '../use-timeline-store-context';
-import { selectors } from '../use-timeline';
+import { schedulerEventSelectors, schedulerResourceSelectors } from '../scheduler-selectors';
 
 export function useEventOccurrencesGroupedByResource(
   parameters: useEventOccurrencesGroupedByResource.Parameters,
@@ -17,9 +17,9 @@ export function useEventOccurrencesGroupedByResource(
   const { start, end } = parameters;
   const adapter = useAdapter();
   const store = useTimelineStoreContext();
-  const events = useStore(store, selectors.events);
-  const visibleResources = useStore(store, selectors.visibleResourcesMap);
-  const resources = useStore(store, selectors.resources);
+  const events = useStore(store, schedulerEventSelectors.processedEventList);
+  const visibleResources = useStore(store, schedulerResourceSelectors.visibleMap);
+  const resources = useStore(store, schedulerResourceSelectors.processedResourceList);
 
   return React.useMemo(
     () =>
@@ -55,7 +55,7 @@ export function innerGetEventOccurrencesGroupedByResource(
   adapter: Adapter,
   events: CalendarEvent[],
   visibleResources: Map<string, boolean>,
-  resources: CalendarResource[],
+  resources: readonly CalendarResource[],
   start: SchedulerValidDate,
   end: SchedulerValidDate,
 ): { resource: CalendarResource; occurrences: CalendarEventOccurrence[] }[] {
@@ -73,15 +73,14 @@ export function innerGetEventOccurrencesGroupedByResource(
       occurrencesGroupedByResource.get(resourceId)!.push(occurrence);
     }
   }
-  const filteredResources = resources.filter((resource) =>
-    occurrencesGroupedByResource.has(resource.id),
+
+  return (
+    resources
+      // Sort by resource.title (localeCompare for stable alphabetical ordering).
+      .toSorted((a, b) => a.title.localeCompare(b.title))
+      .map((resource) => ({
+        resource,
+        occurrences: occurrencesGroupedByResource.get(resource.id) ?? [],
+      }))
   );
-
-  // Sort by resource.title (localeCompare for stable alphabetical ordering).
-  filteredResources.sort((a, b) => a.title.localeCompare(b.title));
-
-  return filteredResources.map((resource) => ({
-    resource,
-    occurrences: occurrencesGroupedByResource.get(resource.id)!,
-  }));
 }

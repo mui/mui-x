@@ -56,7 +56,7 @@ export default function TicksWithoutLabels() {
               scaleType: 'log',
               valueFormatter: tickFormatter,
               label: 'Number of events (Log scale)',
-              width: 48,
+              width: 50,
             },
           ]}
           series={[{ data }]}

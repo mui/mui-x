@@ -1,5 +1,4 @@
 'use client';
-import * as React from 'react';
 import { Timeline as TimelinePrimitive } from '@mui/x-scheduler-headless/timeline';
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-timeline-position';
 import { TimelineEvent } from './timeline-event';

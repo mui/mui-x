@@ -3,18 +3,22 @@ import { styled, SxProps, Theme, useThemeProps } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
+import clsx from 'clsx';
 import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
 import { useSvgRef } from '../hooks/useSvgRef';
 import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
 import {
-  selectorChartContainerSize,
-  selectorChartPropsSize,
+  selectorChartPropsHeight,
+  selectorChartPropsWidth,
+  selectorChartSvgWidth,
+  selectorChartSvgHeight,
 } from '../internals/plugins/corePlugins/useChartDimensions/useChartDimensions.selectors';
 import {
   selectorChartsHasFocusedItem,
   selectorChartsIsKeyboardNavigationEnabled,
 } from '../internals/plugins/featurePlugins/useChartKeyboardNavigation';
+import { useUtilityClasses } from './chartsSurfaceClasses';
 
 export interface ChartsSurfaceProps
   extends Omit<
@@ -80,8 +84,12 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
   ref: React.Ref<SVGSVGElement>,
 ) {
   const store = useStore();
-  const { width: svgWidth, height: svgHeight } = useSelector(store, selectorChartContainerSize);
-  const { width: propsWidth, height: propsHeight } = useSelector(store, selectorChartPropsSize);
+
+  const svgWidth = useSelector(store, selectorChartSvgWidth);
+  const svgHeight = useSelector(store, selectorChartSvgHeight);
+
+  const propsWidth = useSelector(store, selectorChartPropsWidth);
+  const propsHeight = useSelector(store, selectorChartPropsHeight);
   const isKeyboardNavigationEnabled = useSelector(store, selectorChartsIsKeyboardNavigationEnabled);
   const hasFocusedItem = useSelector(store, selectorChartsHasFocusedItem);
   const svgRef = useSvgRef();
@@ -90,13 +98,14 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
 
   const { children, className, title, desc, ...other } = themeProps;
 
+  const classes = useUtilityClasses();
   const hasIntrinsicSize = svgHeight > 0 && svgWidth > 0;
 
   return (
     <ChartsSurfaceStyles
       ownerState={{ width: propsWidth, height: propsHeight }}
       viewBox={`${0} ${0} ${svgWidth} ${svgHeight}`}
-      className={className}
+      className={clsx(classes.root, className)}
       tabIndex={isKeyboardNavigationEnabled ? 0 : undefined}
       data-has-focused-item={hasFocusedItem || undefined}
       {...other}

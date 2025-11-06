@@ -8,10 +8,13 @@ import {
   CalendarEventUpdatedProperties,
   SchedulerValidDate,
   CalendarEventId,
+  SchedulerResourceModelStructure,
+  SchedulerEventModelStructure,
+  SchedulerPreferences,
 } from '../../models';
 import { Adapter } from '../../use-adapter/useAdapter.types';
 
-export interface SchedulerState {
+export interface SchedulerState<TEvent extends object = any> {
   /**
    * The adapter of the date library.
    * Not publicly exposed, is only set in state to avoid passing it to the selectors.
@@ -22,13 +25,41 @@ export interface SchedulerState {
    */
   visibleDate: SchedulerValidDate;
   /**
-   * The events available in the calendar.
+   * The model of the events available in the calendar as provided to props.events.
    */
-  events: CalendarEvent[];
+  eventModelList: readonly TEvent[];
   /**
-   * The resources the events can be assigned to.
+   * The IDs of the events available in the calendar.
    */
-  resources: CalendarResource[];
+  eventIdList: CalendarEventId[];
+  /**
+   * A lookup to get the event model as provided to props.events from its ID.
+   */
+  eventModelLookup: Map<CalendarEventId, TEvent>;
+  /**
+   * A lookup to get the processed event from its ID.
+   */
+  processedEventLookup: Map<CalendarEventId, CalendarEvent>;
+  /**
+   * The structure of the event model.
+   * It defines how to read and write properties of the event model.
+   * If not provided, the event model is assumed to match the `CalendarEvent` interface.
+   */
+  eventModelStructure: SchedulerEventModelStructure<any> | undefined;
+  /**
+   * The IDs of the resources the events can be assigned to.
+   */
+  resourceIdList: readonly CalendarResourceId[];
+  /**
+   * A lookup to get the processed resource from its ID.
+   */
+  processedResourceLookup: Map<CalendarResourceId, CalendarResource>;
+  /**
+   * The structure of the resource model.
+   * It defines how to read properties of the resource model.
+   * If not provided, the resource model is assumed to match the `CalendarResource` interface.
+   */
+  resourceModelStructure: SchedulerResourceModelStructure<any> | undefined;
   /**
    * Visibility status for each resource.
    * A resource is visible if it is registered in this lookup with `true` value or if it is not registered at all.
@@ -42,6 +73,16 @@ export interface SchedulerState {
    * Whether the event start or end can be dragged to change its duration without changing its other date.
    */
   areEventsResizable: boolean;
+  /**
+   * Whether events can be dragged from outside of the calendar and dropped into it.
+   */
+  canDragEventsFromTheOutside: boolean;
+  /**
+   * Whether events can be dragged from inside of the calendar and dropped outside of it.
+   * If true, when the mouse leaves the calendar, the event won't be rendered inside the calendar anymore.
+   * If false, when the mouse leaves the calendar, the event will be rendered in its last valid position inside the calendar.
+   */
+  canDropEventsToTheOutside: boolean;
   /**
    * The color palette used for all events.
    */
@@ -64,21 +105,46 @@ export interface SchedulerState {
    * It can also be styled differently in the day grid.
    */
   isMultiDayEvent: (event: CalendarEvent | CalendarEventOccurrence) => boolean;
+  /**
+   * Whether the calendar is in read-only mode.
+   * @default false
+   */
+  readOnly: boolean;
+  /**
+   * Pending parameters to use when the user selects the scope of a recurring event update.
+   */
+  pendingUpdateRecurringEventParameters: UpdateRecurringEventParameters | null;
+  /**
+   * Preferences for the scheduler.
+   */
+  preferences: SchedulerPreferences;
 }
 
-export interface SchedulerParameters {
+export interface SchedulerParameters<TEvent extends object, TResource extends object> {
   /**
    * The events currently available in the calendar.
    */
-  events: CalendarEvent[];
+  events: readonly TEvent[];
   /**
    * Callback fired when some event of the calendar change.
    */
-  onEventsChange?: (value: CalendarEvent[]) => void;
+  onEventsChange?: (value: TEvent[]) => void;
+  /**
+   * The structure of the event model.
+   * It defines how to read and write the properties of the event model.
+   * If not provided, the event model is assumed to match the `CalendarEvent` interface.
+   */
+  eventModelStructure?: SchedulerEventModelStructure<TEvent>;
   /**
    * The resources the events can be assigned to.
    */
-  resources?: CalendarResource[];
+  resources?: readonly TResource[];
+  /**
+   * The structure of the resource model.
+   * It defines how to read and write the properties of the resource model.
+   * If not provided, the resource model is assumed to match the `CalendarResource` interface.
+   */
+  resourceModelStructure?: SchedulerResourceModelStructure<TResource>;
   /**
    * The date currently used to determine the visible date range in each view.
    */
@@ -104,6 +170,18 @@ export interface SchedulerParameters {
    */
   areEventsResizable?: boolean;
   /**
+   * Whether events can be dragged from outside of the calendar and dropped into it.
+   * @default false
+   */
+  canDragEventsFromTheOutside?: boolean;
+  /**
+   * Whether events can be dragged from inside of the calendar and dropped outside of it.
+   * If true, when the mouse leaves the calendar, the event won't be rendered inside the calendar anymore.
+   * If false, when the mouse leaves the calendar, the event will be rendered in its last valid position inside the calendar.
+   * @default false
+   */
+  canDropEventsToTheOutside?: boolean;
+  /**
    * Whether the component should display the current time indicator.
    * @default true
    */
@@ -115,17 +193,12 @@ export interface SchedulerParameters {
    * @default "jade"
    */
   eventColor?: CalendarEventColor;
+  /**
+   * Whether the calendar is in read-only mode.
+   * @default false
+   */
+  readOnly?: boolean;
 }
-
-/**
- * The scope of a recurring event update.
- *
- * - `only-this`: Updates only the selected occurrence of the recurring event.
- * - `this-and-following`: Updates the selected occurrence and all following occurrences,
- *   but leaves the previous ones untouched.
- * - `all`: Updates all occurrences in the recurring series, past, present, and future.
- */
-export type RecurringUpdateEventScope = 'this-and-following' | 'all' | 'only-this';
 
 /**
  * Parameters for updating a recurring event.
@@ -141,9 +214,9 @@ export type UpdateRecurringEventParameters = {
    */
   changes: CalendarEventUpdatedProperties;
   /**
-   * The scope of the update.
+   * Callback fired when the user submits the recurring scope dialog.
    */
-  scope: RecurringUpdateEventScope;
+  onSubmit?: () => void;
 };
 
 /**
@@ -152,7 +225,7 @@ export type UpdateRecurringEventParameters = {
  */
 export interface SchedulerParametersToStateMapper<
   State extends SchedulerState,
-  Parameters extends SchedulerParameters,
+  Parameters extends SchedulerParameters<any, any>,
 > {
   /**
    * Gets the initial state of the store based on the initial parameters.
@@ -166,7 +239,7 @@ export interface SchedulerParametersToStateMapper<
    * Updates the state based on the new parameters.
    */
   updateStateFromParameters: (
-    newState: Partial<SchedulerState>,
+    newState: Omit<Partial<SchedulerState>, 'preferences'>,
     parameters: Parameters,
     updateModel: SchedulerModelUpdater<State, Parameters>,
   ) => Partial<State>;
@@ -174,7 +247,7 @@ export interface SchedulerParametersToStateMapper<
 
 export type SchedulerModelUpdater<
   State extends SchedulerState,
-  Parameters extends SchedulerParameters,
+  Parameters extends SchedulerParameters<any, any>,
 > = (
   newState: Partial<State>,
   controlledProp: keyof Parameters & keyof State & string,

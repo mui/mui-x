@@ -13,7 +13,7 @@ It replaces the previous values. This approach has some drawbacks:
 {{"demo": "UpdateRowsProp.js", "bg": "inline"}}
 
 :::warning
-Updating the `rows` prop causes the Data Grid to recompute the row tree, resulting in losing the current tree information like the expanded rows state.
+Updating the `rows` prop causes the Data Grid to recompute the row tree, which may result in losing some tree information, however the expansion state of the groups is preserved for the rows with same IDs across rerenders.
 Unless the recomputation is explicitly required, the API method `updateRows()` should be used.
 :::
 

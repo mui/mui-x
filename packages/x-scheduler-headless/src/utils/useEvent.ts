@@ -2,13 +2,13 @@
 import { useStore } from '@base-ui-components/utils/store';
 import { SchedulerValidDate } from '../models';
 import { useSchedulerStoreContext } from '../use-scheduler-store-context/useSchedulerStoreContext';
-import { selectors } from './SchedulerStore';
+import { schedulerOccurrenceSelectors } from '../scheduler-selectors';
 
 export function useEvent(parameters: useEvent.Parameters): useEvent.ReturnValue {
   const { start, end } = parameters;
 
   const store = useSchedulerStoreContext();
-  const state = useStore(store, selectors.isOccurrenceStartedOrEnded, start, end);
+  const state = useStore(store, schedulerOccurrenceSelectors.isStartedOrEnded, start, end);
 
   return { state };
 }

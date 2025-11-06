@@ -1,7 +1,7 @@
+import * as React from 'react';
 import { CalendarEventOccurrenceWithTimePosition } from '@mui/x-scheduler-headless/models';
-import { EventProps } from '../Event.types';
 
-export interface TimeGridEventProps extends EventProps {
+export interface TimeGridEventProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * The event occurrence to render.
    */

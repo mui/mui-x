@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { adapter, createSchedulerRenderer, describeConformance } from 'test/utils/scheduler';
 import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
@@ -15,6 +14,7 @@ describe('<CalendarGrid.TimeEvent />', () => {
       occurrenceKey="fake-key"
       start={eventStart}
       end={eventEnd}
+      renderDragPreview={() => null}
     />,
     () => ({
       refInstanceof: window.HTMLDivElement,

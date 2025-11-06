@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { TimeClock, TimeClockProps } from '../TimeClock';
 import { TimeView } from '../models';
 import { DigitalClock, DigitalClockProps } from '../DigitalClock';

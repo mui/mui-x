@@ -7,7 +7,7 @@ const seriesProcessor = (series: any) => series;
 const colorProcessor = (series: any) => series;
 const legendGetter = () => [];
 
-export const seriesConfig: ChartSeriesTypeConfig<'sankey'> = {
+export const sankeySeriesConfig: ChartSeriesTypeConfig<'sankey'> = {
   seriesProcessor,
   colorProcessor,
   legendGetter,

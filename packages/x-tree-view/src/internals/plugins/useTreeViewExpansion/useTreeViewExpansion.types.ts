@@ -60,13 +60,13 @@ export interface UseTreeViewExpansionParameters {
    * Expanded item ids.
    * Used when the item's expansion is controlled.
    */
-  expandedItems?: string[];
+  expandedItems?: readonly string[];
   /**
    * Expanded item ids.
    * Used when the item's expansion is not controlled.
    * @default []
    */
-  defaultExpandedItems?: string[];
+  defaultExpandedItems?: readonly string[];
   /**
    * Callback fired when Tree Items are expanded/collapsed.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemExpansion()` method.
@@ -77,7 +77,7 @@ export interface UseTreeViewExpansionParameters {
    * Callback fired when a Tree Item is expanded or collapsed.
    * @param {React.SyntheticEvent | null} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemExpansion()` method.
    * @param {array} itemId The itemId of the modified item.
-   * @param {array} isExpanded `true` if the item has just been expanded, `false` if it has just been collapsed.
+   * @param {boolean} isExpanded `true` if the item has just been expanded, `false` if it has just been collapsed.
    */
   onItemExpansionToggle?: (
     event: React.SyntheticEvent | null,
@@ -98,7 +98,7 @@ export type UseTreeViewExpansionParametersWithDefaults = DefaultizedProps<
 
 export interface UseTreeViewExpansionState {
   expansion: {
-    expandedItems: string[];
+    expandedItems: readonly string[];
     expansionTrigger: 'content' | 'iconContainer';
   };
 }
