@@ -71,8 +71,7 @@ export function useYAxes() {
  * Get a specific X axis or the default X axis.
  *
  * @param {AxisId} [axisId] - The axis identifier. Can be:
- *   - A string matching the axis ID defined in the chart's `xAxis` prop
- *   - A number representing the index in the xAxis array (e.g., 0 for first axis)
+ *   - A string or number matching the axis ID defined in the chart's `xAxis` prop
  *   - Undefined to get the default (first) X axis
  * @returns The configuration for a single X axis.
  *
@@ -94,7 +93,7 @@ export function useXAxis<T extends keyof AxisScaleConfig>(
   const store = useStore<[UseChartCartesianAxisSignature]>();
   const { axis: xAxis, axisIds: xAxisIds } = useSelector(store, selectorChartXAxis);
 
-  const id = typeof axisId === 'string' ? axisId : xAxisIds[axisId ?? 0];
+  const id = axisId ?? xAxisIds[0];
 
   return xAxis[id] as ComputedAxis<T, any, ChartsXAxisProps>;
 }
@@ -103,8 +102,7 @@ export function useXAxis<T extends keyof AxisScaleConfig>(
  * Get a specific Y axis or the default Y axis.
  *
  * @param {AxisId} [axisId] - The axis identifier. Can be:
- *   - A string matching the axis ID defined in the chart's `yAxis` prop
- *   - A number representing the index in the yAxis array (e.g., 0 for first axis)
+ *   - A string or number matching the axis ID defined in the chart's `yAxis` prop
  *   - Undefined to get the default (first) Y axis
  * @returns The configuration for a single Y axis.
  *
@@ -126,7 +124,7 @@ export function useYAxis<T extends keyof AxisScaleConfig>(
   const store = useStore<[UseChartCartesianAxisSignature]>();
   const { axis: yAxis, axisIds: yAxisIds } = useSelector(store, selectorChartYAxis);
 
-  const id = typeof axisId === 'string' ? axisId : yAxisIds[axisId ?? 0];
+  const id = axisId ?? yAxisIds[0];
 
   return yAxis[id] as ComputedAxis<T, any, ChartsYAxisProps>;
 }
@@ -185,8 +183,7 @@ export function useRadiusAxes() {
  * The rotation axis controls the angular positioning of data points around the circle.
  *
  * @param {AxisId} [axisId] - The axis identifier. Can be:
- *   - A string matching the axis ID defined in the chart's rotation axis configuration
- *   - A number representing the index in the rotationAxisIds array (e.g., 0 for first axis)
+ *   - A string or number matching the axis ID defined in the chart's rotation axis configuration
  *   - Undefined to get the default (first) rotation axis
  * @returns The rotation axis configuration, or undefined if not found
  *
@@ -211,7 +208,7 @@ export function useRotationAxis(
     selectorChartRotationAxis,
   );
 
-  const id = typeof axisId === 'string' ? axisId : rotationAxisIds[axisId ?? 0];
+  const id = axisId ?? rotationAxisIds[0];
 
   return rotationAxis[id];
 }
@@ -223,8 +220,7 @@ export function useRotationAxis(
  * The radius axis controls the radial distance of data points from the center of the circle.
  *
  * @param {AxisId} [axisId] - The axis identifier. Can be:
- *   - A string matching the axis ID defined in the chart's radius axis configuration
- *   - A number representing the index in the radiusAxisIds array (e.g., 0 for first axis)
+ *   - A string or number matching the axis ID defined in the chart's radius axis configuration
  *   - Undefined to get the default (first) radius axis
  * @returns The radius axis configuration, or undefined if not found
  *
@@ -246,7 +242,7 @@ export function useRadiusAxis(
   const store = useStore<[UseChartPolarAxisSignature]>();
   const { axis: radiusAxis, axisIds: radiusAxisIds } = useSelector(store, selectorChartRadiusAxis);
 
-  const id = typeof axisId === 'string' ? axisId : radiusAxisIds[axisId ?? 0];
+  const id = axisId ?? radiusAxisIds[0];
 
   return radiusAxis[id];
 }
