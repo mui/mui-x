@@ -14,7 +14,7 @@ export interface TimelineEventRowContext {
   /**
    * Gets the cursor position in the element in milliseconds.
    * @param {Object} parameters The parameters of the method.
-   * @param {{ clientY: number }} parameters.input The input object provided by the drag and drop library for the current event.
+   * @param {{ clientX: number }} parameters.input The input object provided by the drag and drop library for the current event.
    * @param {React.RefObject<HTMLElement | null>} parameters.elementRef The ref of the element on which the event has been triggered.
    * @returns {number} The cursor position in milliseconds.
    */
