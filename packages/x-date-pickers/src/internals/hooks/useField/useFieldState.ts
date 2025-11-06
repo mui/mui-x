@@ -398,7 +398,7 @@ export const useFieldState = <
      */
     if (activeDate != null) {
       setSectionUpdateToApplyOnNextInvalidDate(newSectionValue);
-      publishValue(fieldValueManager.updateDateInValue(value, section, null));
+      publishValue(fieldValueManager.updateDateInValue(value, section, newActiveDate));
     }
 
     /**
