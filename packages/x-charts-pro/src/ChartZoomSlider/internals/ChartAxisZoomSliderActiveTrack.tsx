@@ -30,10 +30,10 @@ import { useUtilityClasses } from './chartAxisZoomSliderTrackClasses';
 const ZoomSliderActiveTrackRect = styled('rect', {
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'preview',
 })<{ preview: boolean }>(({ theme }) => ({
-  fill:
-    theme.palette.mode === 'dark'
-      ? (theme.vars || theme).palette.grey[500]
-      : (theme.vars || theme).palette.grey[600],
+  fill: (theme.vars || theme).palette.grey[600],
+  ...theme.applyStyles('dark', {
+    fill: (theme.vars || theme).palette.grey[500],
+  }),
   cursor: 'grab',
   variants: [
     {
