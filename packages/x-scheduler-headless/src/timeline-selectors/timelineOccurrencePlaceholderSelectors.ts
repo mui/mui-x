@@ -8,7 +8,7 @@ export const timelineOccurrencePlaceholderSelectors = {
       state: State,
       start: SchedulerValidDate,
       end: SchedulerValidDate,
-      resourceId: CalendarResourceId | undefined,
+      resourceId: CalendarResourceId | null,
     ) => {
       if (
         state.occurrencePlaceholder === null ||

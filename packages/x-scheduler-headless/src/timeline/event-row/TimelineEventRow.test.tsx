@@ -8,7 +8,7 @@ describe('<Timeline.EventRow />', () => {
   const start = adapter.startOfDay(adapter.date());
   const end = adapter.endOfDay(adapter.date());
 
-  describeConformance(<Timeline.EventRow start={start} end={end} resourceId={undefined} />, () => ({
+  describeConformance(<Timeline.EventRow start={start} end={end} resourceId={null} />, () => ({
     refInstanceof: window.HTMLDivElement,
     render(node) {
       return render(

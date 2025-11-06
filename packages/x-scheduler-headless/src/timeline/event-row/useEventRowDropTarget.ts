@@ -152,9 +152,9 @@ export namespace useEventRowDropTarget {
     end: SchedulerValidDate;
     /**
      * The id of the resource to drop the event onto.
-     * If undefined, the event will be dropped outside of any resource.
+     * If null, the event will be dropped outside of any resource.
      */
-    resourceId: CalendarResourceId | undefined;
+    resourceId: CalendarResourceId | null;
     /**
      * Add properties to the event dropped in the row before storing it in the store.
      */

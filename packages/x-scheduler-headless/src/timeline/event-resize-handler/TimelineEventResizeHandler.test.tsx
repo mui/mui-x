@@ -15,7 +15,7 @@ describe('<Timeline.EventResizeHandler />', () => {
       return render(
         <TimelineProvider events={[]}>
           <Timeline.Root items={[]}>
-            <Timeline.EventRow start={start} end={end} resourceId={undefined}>
+            <Timeline.EventRow start={start} end={end} resourceId={null}>
               <Timeline.Event
                 eventId="fake-id"
                 occurrenceKey="fake-key"
