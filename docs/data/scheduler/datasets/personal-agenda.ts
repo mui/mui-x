@@ -58,7 +58,7 @@ export const initialEvents: CalendarEvent[] = [
     rrule: { freq: 'WEEKLY', interval: 3, byDay: ['MO'] },
   },
   {
-    id: 'weekly-planning-a',
+    id: 'weekly-planning-explore',
     start: START_OF_FIRST_WEEK.plus({ weeks: 1 }).set({ weekday: 2, hour: 10 }),
     end: START_OF_FIRST_WEEK.plus({ weeks: 1 }).set({ weekday: 2, hour: 11 }),
     title: 'Weekly planning',
@@ -66,7 +66,7 @@ export const initialEvents: CalendarEvent[] = [
     rrule: { freq: 'WEEKLY', interval: 2, byDay: ['TU'] },
   },
   {
-    id: 'weekly-planning-b',
+    id: 'weekly-planning-data-grid',
     start: START_OF_FIRST_WEEK.set({ weekday: 5, hour: 10 }),
     end: START_OF_FIRST_WEEK.set({ weekday: 5, hour: 11 }),
     title: 'Weekly planning',
