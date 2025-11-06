@@ -18,7 +18,7 @@ function CustomTick(props: ChartsTextProps) {
 
   return (
     <g transform={`translate(${x},${y})`}>
-      <foreignObject x={-20} y={-10} width={60} height={50}>
+      <foreignObject x={-30} y={-10} width={60} height={50}>
         <div
           style={{
             display: 'flex',
