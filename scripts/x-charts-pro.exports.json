@@ -580,6 +580,7 @@
   { "name": "useChartsLocalization", "kind": "Variable" },
   { "name": "useChartZAxis", "kind": "Variable" },
   { "name": "UseChartZAxisSignature", "kind": "TypeAlias" },
+  { "name": "useDataset", "kind": "Function" },
   { "name": "useDrawingArea", "kind": "Function" },
   { "name": "useFunnelSeries", "kind": "Function" },
   { "name": "useFunnelSeriesContext", "kind": "Function" },
