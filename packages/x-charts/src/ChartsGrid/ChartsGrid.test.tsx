@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartContainer } from '@mui/x-charts/ChartContainer';

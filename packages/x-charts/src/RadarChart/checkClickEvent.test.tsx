@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { RadarChart, RadarChartProps } from '@mui/x-charts/RadarChart';

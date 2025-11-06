@@ -3,31 +3,22 @@ import clsx from 'clsx';
 import { useStore } from '@base-ui-components/utils/store';
 import { useId } from '@base-ui-components/utils/useId';
 import { Timeline } from '@mui/x-scheduler-headless/timeline';
-import { selectors } from '@mui/x-scheduler-headless/use-timeline';
+import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useTimelineStoreContext } from '@mui/x-scheduler-headless/use-timeline-store-context';
 import { getColorClassName } from '../../../../internals/utils/color-utils';
 import { TimelineEventProps } from './TimelineEvent.types';
-
 import './TimelineEvent.css';
 
 export const TimelineEvent = React.forwardRef(function TimelineEvent(
   props: TimelineEventProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const {
-    occurrence,
-    ariaLabelledBy,
-    className,
-    onEventClick,
-    id: idProp,
-    style,
-    ...other
-  } = props;
+  const { occurrence, ariaLabelledBy, className, id: idProp, style, ...other } = props;
 
   const store = useTimelineStoreContext();
 
   const id = useId(idProp);
-  const color = useStore(store, selectors.eventColor, occurrence.id);
+  const color = useStore(store, schedulerEventSelectors.color, occurrence.id);
 
   return (
     <Timeline.Event

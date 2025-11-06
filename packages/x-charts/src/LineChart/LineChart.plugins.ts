@@ -27,8 +27,8 @@ import {
 export type LineChartPluginSignatures = [
   UseChartZAxisSignature,
   UseChartBrushSignature,
-  UseChartCartesianAxisSignature<'line'>,
   UseChartInteractionSignature,
+  UseChartCartesianAxisSignature<'line'>,
   UseChartHighlightSignature,
   UseChartKeyboardNavigationSignature,
 ];
@@ -36,8 +36,8 @@ export type LineChartPluginSignatures = [
 export const LINE_CHART_PLUGINS: ConvertSignaturesIntoPlugins<LineChartPluginSignatures> = [
   useChartZAxis,
   useChartBrush,
-  useChartCartesianAxis,
   useChartInteraction,
+  useChartCartesianAxis,
   useChartHighlight,
   useChartKeyboardNavigation,
 ];

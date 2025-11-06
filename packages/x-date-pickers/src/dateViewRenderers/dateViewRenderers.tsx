@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { DateCalendar, DateCalendarProps } from '../DateCalendar';
 import { DateView } from '../models';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';

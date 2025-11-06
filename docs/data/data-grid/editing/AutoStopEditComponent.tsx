@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import {
   DataGrid,
