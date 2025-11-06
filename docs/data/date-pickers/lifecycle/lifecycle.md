@@ -206,8 +206,15 @@ The `onAccept` callback lets you get the final value selected by the user withou
 <DatePicker onAccept={(value) => sendValueToServer(value)} />
 ```
 
-:::success
-You can use the second argument passed to the `onAccept` callback to get the validation error associated with the current value:
+The `onAccept` callback receives a second argument `context` with extra information about why and how the value was accepted.
+
+- `validationError`: the validation result of the accepted value.
+- `source`: where the acceptance originated from. Possible values are:
+    - `"picker"`: acceptance initiated from the picker overlay UI (calendar/clock, toolbar, action bar, shortcuts) or from picker-level interactions like clicking outside or pressing Escape.
+    - `"field"`: acceptance initiated from the input field (for example, pressing Enter in the field when the value is complete and the picker is open).
+- `shortcut` (optional): the shortcut metadata when the value was accepted via a shortcut selection.
+
+For custom error handling, you can use the `validationError` property of the `context` object.
 
 ```tsx
 <DatePicker
@@ -219,7 +226,23 @@ You can use the second argument passed to the `onAccept` callback to get the val
 />
 ```
 
-:::
+The `source` property allows you to implement different behaviors depending on the source of the acceptance.
+
+```tsx
+<DatePicker
+  onAccept={(newValue, context) => {
+    if (context.validationError != null) {
+      return; // ignore invalid values
+    }
+
+    if (context.source === 'picker') {
+      analytics.track('date_accepted_from_picker', { value: newValue, shortcut: context.shortcut?.id });
+    } else {
+      analytics.track('date_accepted_from_field', { value: newValue });
+    }
+  }}
+/>
+```
 
 ### When is "onAccept" called?
 

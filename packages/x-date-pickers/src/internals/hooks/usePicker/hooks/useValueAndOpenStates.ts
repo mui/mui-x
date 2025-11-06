@@ -125,6 +125,7 @@ export function useValueAndOpenStates<
       skipPublicationIfPristine = false,
       validationError,
       shortcut,
+      source,
       shouldClose = changeImportance === 'accept',
     } = options ?? {};
 
@@ -153,9 +154,11 @@ export function useValueAndOpenStates<
     let cachedContext: PickerChangeHandlerContext<TError> | null = null;
     const getContext = (): PickerChangeHandlerContext<TError> => {
       if (!cachedContext) {
+        const inferredSource: 'picker' | 'field' = source ?? (shortcut ? 'picker' : 'field');
         cachedContext = {
           validationError:
             validationError == null ? getValidationErrorForNewValue(newValue) : validationError,
+          source: inferredSource,
         };
 
         if (shortcut) {
@@ -203,6 +206,7 @@ export function useValueAndOpenStates<
 
       setValue(newValue, {
         changeImportance: selectionState === 'finish' && closeOnSelect ? 'accept' : 'set',
+        source: 'picker',
       });
     },
   );

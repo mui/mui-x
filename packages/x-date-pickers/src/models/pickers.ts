@@ -4,6 +4,12 @@ import type { PickersShortcutsItemContext } from '../PickersShortcuts';
 export interface PickerChangeHandlerContext<TError> {
   validationError: TError;
   /**
+   * Source of the change that triggered `onChange` or `onAccept`.
+   * - "picker": change initiated from the picker overlay UI (calendar/clock, toolbar, action bar, shortcuts).
+   * - "field": change initiated from typing or interactions in the input field.
+   */
+  source: 'picker' | 'field';
+  /**
    * Shortcut causing this `onChange` or `onAccept` call.
    * If the call has not been caused by a shortcut selection, this property will be `undefined`.
    */

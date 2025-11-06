@@ -309,6 +309,11 @@ export interface SetValueActionOptions<TError = string | null> {
    */
   shortcut?: PickersShortcutsItemContext;
   /**
+   * Source of the change.
+   * If not provided, it will be inferred as "picker" when a `shortcut` is present, otherwise defaults to "field".
+   */
+  source?: 'picker' | 'field';
+  /**
    * Whether the value should call `onChange` and `onAccept` when the value is not controlled and has never been modified.
    * If `true`, the `onChange` and `onAccept` callback will only be fired if the value has been modified (and is not equal to the last published value).
    * If `false`, the `onChange` and `onAccept` callback will be fired when the value has never been modified (`onAccept` only if `changeImportance` is set to "accept").
