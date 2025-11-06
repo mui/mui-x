@@ -160,7 +160,7 @@ export function useRotationAxes() {
  * Get all the radius axes for polar charts.
  *
  * Returns all radial axes configured in polar charts along with their IDs.
- * Radius axes are used in charts like `PolarChart` to define radial positioning and scaling.
+ * Radius axes are used in charts like `RadarChart` to define radial positioning and scaling.
  *
  * @returns An object containing:
  *   - `radiusAxis`: An object mapping axis IDs to their configurations `{ [axisId]: axis }`
