@@ -528,107 +528,120 @@ export default function FormContent(props: FormContentProps) {
         <Tabs.Panel value="recurrence-tab" keepMounted>
           <div className="EventPopoverMainContent">
             <Field.Root className="EventPopoverFieldRoot">
-              <Field.Label className="EventPopoverRecurrenceFormLabel">Repeat</Field.Label>
-              <div className="EventPopoverInputsRow">
-                {translations.recurrenceEveryLabel}
-                <Input
-                  name="interval"
-                  type="number"
-                  min={1}
-                  defaultValue={occurrence.rrule?.interval}
-                  placeholder="1"
-                  className="EventPopoverInput RecurrenceNumberInput"
-                />
-                <Select.Root
-                  items={recurrenceFrequencyOptions}
-                  value={controlled.freq}
-                  onValueChange={(val) => setControlled((prev) => ({ ...prev, freq: val as any }))}
-                >
-                  <Select.Trigger className="EventPopoverSelectTrigger">
-                    <Select.Value />
-                    <Select.Icon className="EventPopoverSelectIcon">
-                      <ChevronDown size={14} />
-                    </Select.Icon>
-                  </Select.Trigger>
-                  <Select.Portal>
-                    <Select.Positioner
-                      alignItemWithTrigger={false}
-                      align="start"
-                      className="EventPopoverSelectPositioner"
-                    >
-                      <Select.Popup className="EventPopoverSelectPopup">
-                        {recurrenceFrequencyOptions.map(({ label, value }) => (
-                          <Select.Item key={label} value={value} className="EventPopoverSelectItem">
-                            <Select.ItemText className="EventPopoverSelectItemText">
-                              {label}
-                            </Select.ItemText>
-                          </Select.Item>
-                        ))}
-                      </Select.Popup>
-                    </Select.Positioner>
-                  </Select.Portal>
-                </Select.Root>
-              </div>
+              <fieldset className="EventPopoverRecurrenceFieldset">
+                <legend className="EventPopoverRecurrenceFormLabel">Repeat</legend>
+                <div className="EventPopoverInputsRow">
+                  {translations.recurrenceEveryLabel}
+                  <Input
+                    name="interval"
+                    type="number"
+                    min={1}
+                    defaultValue={occurrence.rrule?.interval}
+                    placeholder="1"
+                    className="EventPopoverInput RecurrenceNumberInput"
+                  />
+                  <Select.Root
+                    items={recurrenceFrequencyOptions}
+                    value={controlled.freq}
+                    onValueChange={(val) =>
+                      setControlled((prev) => ({ ...prev, freq: val as any }))
+                    }
+                  >
+                    <Select.Trigger className="EventPopoverSelectTrigger">
+                      <Select.Value />
+                      <Select.Icon className="EventPopoverSelectIcon">
+                        <ChevronDown size={14} />
+                      </Select.Icon>
+                    </Select.Trigger>
+                    <Select.Portal>
+                      <Select.Positioner
+                        alignItemWithTrigger={false}
+                        align="start"
+                        className="EventPopoverSelectPositioner"
+                      >
+                        <Select.Popup className="EventPopoverSelectPopup">
+                          {recurrenceFrequencyOptions.map(({ label, value }) => (
+                            <Select.Item
+                              key={label}
+                              value={value}
+                              className="EventPopoverSelectItem"
+                            >
+                              <Select.ItemText className="EventPopoverSelectItemText">
+                                {label}
+                              </Select.ItemText>
+                            </Select.Item>
+                          ))}
+                        </Select.Popup>
+                      </Select.Positioner>
+                    </Select.Portal>
+                  </Select.Root>
+                </div>
+              </fieldset>
             </Field.Root>
-
-            {controlled.freq === 'WEEKLY' && <p>TODO: Weekly Fields</p>}
-            {controlled.freq === 'MONTHLY' && <p>TODO: Monthly Fields</p>}
+            {controlled.freq === 'WEEKLY' && (
+              <p className="EventPopoverRecurrenceFieldset">TODO: Weekly Fields</p>
+            )}
+            {controlled.freq === 'MONTHLY' && (
+              <p className="EventPopoverRecurrenceFieldset">TODO: Monthly Fields</p>
+            )}
 
             <Separator className="EventPopoverSeparator" />
 
             <Field.Root className="EventPopoverFieldRoot">
-              <Field.Label className="EventPopoverRecurrenceFormLabel">
-                {translations.recurrenceEndsLabel}
-              </Field.Label>
+              <fieldset className="EventPopoverRecurrenceFieldset">
+                <legend className="EventPopoverRecurrenceFormLabel">
+                  {translations.recurrenceEndsLabel}
+                </legend>
 
-              <RadioGroup name="ends" defaultValue={getEndsSelectionFromRRule(occurrence.rrule)}>
-                <div className="RadioItem ">
-                  <Radio.Root id="ends-never" className="EventPopoverRadioRoot" value="never">
-                    <Radio.Indicator className="RadioItemIndicator" />
-                    <span className="EventPopoverRadioItemText">
-                      {translations.recurrenceEndsNeverLabel}
-                    </span>
-                  </Radio.Root>
-                </div>
+                <RadioGroup name="ends" defaultValue={getEndsSelectionFromRRule(occurrence.rrule)}>
+                  <Field.Label htmlFor="ends-never" className="RadioItem RadioItemWithInput">
+                    <Radio.Root id="ends-never" className="EventPopoverRadioRoot" value="never">
+                      <Radio.Indicator className="RadioItemIndicator" />
+                      <span className="EventPopoverRadioItemText">
+                        {translations.recurrenceEndsNeverLabel}
+                      </span>
+                    </Radio.Root>
+                  </Field.Label>
 
-                <Field.Label htmlFor="ends-after" className="RadioItem RadioItemWithInput">
-                  <Radio.Root id="ends-after" className="EventPopoverRadioRoot" value="after">
-                    <Radio.Indicator className="RadioItemIndicator" />
-                    <span className="EventPopoverRadioItemText">
-                      {translations.recurrenceEndsAfterLabel}
-                    </span>
-                  </Radio.Root>
-                  <div className="EventPopoverAfterTimesInputWrapper">
+                  <Field.Label htmlFor="ends-after" className="RadioItem RadioItemWithInput">
+                    <Radio.Root id="ends-after" className="EventPopoverRadioRoot" value="after">
+                      <Radio.Indicator className="RadioItemIndicator" />
+                      <span className="EventPopoverRadioItemText">
+                        {translations.recurrenceEndsAfterLabel}
+                      </span>
+                    </Radio.Root>
+                    <div className="EventPopoverAfterTimesInputWrapper">
+                      <Input
+                        name="count"
+                        type="number"
+                        min={1}
+                        defaultValue={occurrence.rrule?.count || 1}
+                        className="EventPopoverInput RecurrenceNumberInput"
+                      />
+                      {translations.recurrenceEndsTimesLabel}
+                    </div>
+                  </Field.Label>
+
+                  <Field.Label htmlFor="ends-until" className="RadioItem RadioItemWithInput">
+                    <Radio.Root id="ends-until" className="EventPopoverRadioRoot" value="until">
+                      <Radio.Indicator className="RadioItemIndicator" />
+                      <span className="EventPopoverRadioItemText">
+                        {translations.recurrenceEndsUntilLabel}
+                      </span>
+                    </Radio.Root>
                     <Input
-                      name="count"
-                      type="number"
-                      min={1}
-                      defaultValue={occurrence.rrule?.count || 1}
-                      className="EventPopoverInput RecurrenceNumberInput"
+                      name="until"
+                      type="date"
+                      defaultValue={
+                        occurrence.rrule?.until
+                          ? adapter.formatByString(occurrence.rrule.until, 'yyyy-MM-dd')
+                          : ''
+                      }
+                      className="EventPopoverInput"
                     />
-                    {translations.recurrenceEndsTimesLabel}
-                  </div>
-                </Field.Label>
-
-                <Field.Label htmlFor="ends-until" className="RadioItem RadioItemWithInput">
-                  <Radio.Root id="ends-until" className="EventPopoverRadioRoot" value="until">
-                    <Radio.Indicator className="RadioItemIndicator" />
-                    <span className="EventPopoverRadioItemText">
-                      {translations.recurrenceEndsUntilLabel}
-                    </span>
-                  </Radio.Root>
-                  <Input
-                    name="until"
-                    type="date"
-                    defaultValue={
-                      occurrence.rrule?.until
-                        ? adapter.formatByString(occurrence.rrule.until, 'yyyy-MM-dd')
-                        : ''
-                    }
-                    className="EventPopoverInput"
-                  />
-                </Field.Label>
-              </RadioGroup>
+                  </Field.Label>
+                </RadioGroup>
+              </fieldset>
             </Field.Root>
           </div>
         </Tabs.Panel>

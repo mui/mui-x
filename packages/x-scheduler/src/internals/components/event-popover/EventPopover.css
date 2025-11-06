@@ -385,6 +385,13 @@ p {
   background-color: var(--surface);
 }
 
+.EventPopoverRecurrenceFieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+  font-size: var(--font-size-2);
+}
+
 .EventPopoverRecurrenceFormLabel {
   display: inline-block;
   font-size: var(--font-size-2);
