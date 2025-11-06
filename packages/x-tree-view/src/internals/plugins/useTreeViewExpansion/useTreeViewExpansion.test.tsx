@@ -16,6 +16,8 @@ type TreeViewAnyStore = { parameters: any };
  */
 describeTreeView<TreeViewAnyStore>(
   'TreeViewExpansionPlugin',
+  // TODO #20051: Remove next line
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ({ render, treeViewComponentName }) => {
     describe('model props (expandedItems, defaultExpandedItems, onExpandedItemsChange)', () => {
       beforeEach(() => {
@@ -130,7 +132,7 @@ describeTreeView<TreeViewAnyStore>(
         expect(() => {
           view.setProps({ expandedItems: undefined });
         }).toErrorDev(
-          `MUI X Tree View: A component is changing the controlled expandedItems state of ${treeViewComponentName} to be uncontrolled.`,
+          'MUI X: A component is changing the controlled expandedItems state of Tree View to be uncontrolled.',
         );
       });
 
@@ -145,7 +147,7 @@ describeTreeView<TreeViewAnyStore>(
           expect(view.isItemExpanded('1')).to.equal(true);
           expect(view.isItemExpanded('2')).to.equal(false);
         }).toErrorDev(
-          `MUI X Tree View: A component is changing the default expandedItems state of an uncontrolled ${treeViewComponentName} after being initialized.`,
+          'MUI X: A component is changing the default expandedItems state of an uncontrolled Tree View after being initialized',
         );
       });
     });
