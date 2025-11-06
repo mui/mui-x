@@ -1,0 +1,29 @@
+import { renderEditTextareaCell } from '../components/cell/GridEditTextareaCell';
+import { gridStringOrNumberComparator } from '../hooks/features/sorting/gridSortingUtils';
+import { GridColTypeDef } from '../models/colDef/gridColDef';
+import { getGridStringOperators, getGridStringQuickFilterFn } from './gridStringOperators';
+
+/**
+ * TODO: Move pro and premium properties outside of this Community file
+ */
+export const GRID_TEXT_COL_DEF: GridColTypeDef<any, any> = {
+  width: 100,
+  minWidth: 50,
+  maxWidth: Infinity,
+  hideable: true,
+  sortable: true,
+  resizable: true,
+  filterable: true,
+  groupable: true,
+  pinnable: true,
+  // @ts-ignore
+  aggregable: true,
+  chartable: true,
+  editable: false,
+  sortComparator: gridStringOrNumberComparator,
+  type: 'text',
+  align: 'left',
+  filterOperators: getGridStringOperators(),
+  renderEditCell: renderEditTextareaCell,
+  getApplyQuickFilterFn: getGridStringQuickFilterFn,
+};

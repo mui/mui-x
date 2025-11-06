@@ -1,5 +1,6 @@
 export interface GridColumnTypes {
   string: 'string';
+  text: 'text';
   number: 'number';
   date: 'date';
   dateTime: 'dateTime';

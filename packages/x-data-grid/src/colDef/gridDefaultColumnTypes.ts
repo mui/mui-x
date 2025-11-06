@@ -1,5 +1,6 @@
 import type { GridColumnTypesRecord } from '../models/colDef/gridColumnTypesRecord';
 import { GRID_STRING_COL_DEF } from './gridStringColDef';
+import { GRID_TEXT_COL_DEF } from './gridTextColDef';
 import { GRID_NUMERIC_COL_DEF } from './gridNumericColDef';
 import { GRID_DATE_COL_DEF, GRID_DATETIME_COL_DEF } from './gridDateColDef';
 import { GRID_BOOLEAN_COL_DEF } from './gridBooleanColDef';
@@ -10,6 +11,7 @@ export const DEFAULT_GRID_COL_TYPE_KEY = 'string';
 export const getGridDefaultColumnTypes = () => {
   const nativeColumnTypes: GridColumnTypesRecord = {
     string: GRID_STRING_COL_DEF,
+    text: GRID_TEXT_COL_DEF,
     number: GRID_NUMERIC_COL_DEF,
     date: GRID_DATE_COL_DEF,
     dateTime: GRID_DATETIME_COL_DEF,

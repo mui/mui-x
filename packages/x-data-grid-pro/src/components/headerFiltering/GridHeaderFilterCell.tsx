@@ -134,6 +134,7 @@ const DEFAULT_INPUT_COMPONENTS: {
   [key in GridColType]: React.JSXElementConstructor<GridFilterInputValueProps> | null;
 } = {
   string: GridFilterInputValue,
+  text: GridFilterInputValue,
   number: GridFilterInputValue,
   date: GridFilterInputDate,
   dateTime: GridFilterInputDate,

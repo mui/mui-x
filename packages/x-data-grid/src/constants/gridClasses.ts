@@ -440,6 +440,10 @@ export interface GridClasses {
    */
   editInputCell: string;
   /**
+   * Styles applied to the root of the textarea component.
+   */
+  editTextareaCell: string;
+  /**
    * Styles applied to the filter icon element.
    */
   filterIcon: string;
@@ -1033,6 +1037,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'paper',
   'editBooleanCell',
   'editInputCell',
+  'editTextareaCell',
   'filler',
   'filler--borderBottom',
   'filler--pinnedLeft',
