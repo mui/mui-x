@@ -55,10 +55,8 @@ export const getCellValue = (
   if (!row) {
     return null;
   }
-  let cellValue = row[colDef.field];
-  const valueGetter = colDef.rowSpanValueGetter ?? colDef.valueGetter;
-  if (valueGetter) {
-    cellValue = valueGetter(cellValue as never, row, colDef, apiRef);
-  }
-  return cellValue;
+
+  return colDef.rowSpanValueGetter
+    ? colDef.rowSpanValueGetter(row[colDef.field] as never, row, colDef, apiRef)
+    : apiRef.current.getRowValue(row, colDef);
 };
