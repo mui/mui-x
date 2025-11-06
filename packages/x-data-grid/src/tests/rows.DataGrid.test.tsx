@@ -279,7 +279,7 @@ describe('<DataGrid /> - Rows', () => {
         <TestCase getActions={() => [<GridActionsCellItem label="print" showInMenu />]} />,
       );
       expect(screen.queryByText('print')).to.equal(null);
-      await user.click(screen.getByRole('menuitem', { name: 'more' }));
+      await user.click(screen.getByRole('button', { name: 'more' }));
       expect(screen.queryByText('print')).not.to.equal(null);
     });
 
@@ -288,7 +288,7 @@ describe('<DataGrid /> - Rows', () => {
         <TestCase getActions={() => [<GridActionsCellItem icon={<span />} label="print" />]} />,
       );
       expect(getRow(0)).not.to.have.class('Mui-selected');
-      await user.click(screen.getByRole('menuitem', { name: 'print' }));
+      await user.click(screen.getByRole('button', { name: 'print' }));
       expect(getRow(0)).not.to.have.class('Mui-selected');
     });
 
@@ -299,7 +299,7 @@ describe('<DataGrid /> - Rows', () => {
         />,
       );
       expect(getRow(0)).not.to.have.class('Mui-selected');
-      await user.click(screen.getByRole('menuitem', { name: 'more' }));
+      await user.click(screen.getByRole('button', { name: 'more' }));
       expect(screen.queryByText('print')).not.to.equal(null);
 
       await user.click(screen.getByText('print'));
@@ -311,7 +311,7 @@ describe('<DataGrid /> - Rows', () => {
         <TestCase getActions={() => [<GridActionsCellItem label="print" showInMenu />]} />,
       );
       expect(getRow(0)).not.to.have.class('Mui-selected');
-      await user.click(screen.getByRole('menuitem', { name: 'more' }));
+      await user.click(screen.getByRole('button', { name: 'more' }));
       expect(getRow(0)).not.to.have.class('Mui-selected');
     });
 
@@ -319,7 +319,10 @@ describe('<DataGrid /> - Rows', () => {
       const { user } = render(
         <TestCase
           rows={[{ id: 1 }, { id: 2 }]}
-          getActions={() => [<GridActionsCellItem label="print" showInMenu />]}
+          getActions={() => [
+            <GridActionsCellItem icon={<span />} label="delete" />,
+            <GridActionsCellItem label="print" showInMenu />,
+          ]}
         />,
       );
       expect(screen.queryAllByRole('menu')).to.have.length(2);
@@ -345,7 +348,7 @@ describe('<DataGrid /> - Rows', () => {
       expect(getActiveCell()).to.equal('0-0');
 
       await user.keyboard('{ArrowRight}');
-      const printButton = screen.getByRole('menuitem', { name: 'print' });
+      const printButton = screen.getByRole('button', { name: 'print' });
       expect(printButton).toHaveFocus();
 
       await user.keyboard('{ArrowLeft}');
@@ -361,7 +364,7 @@ describe('<DataGrid /> - Rows', () => {
           ]}
         />,
       );
-      const moreButton = screen.getByRole('menuitem', { name: 'more' });
+      const moreButton = screen.getByRole('button', { name: 'more' });
       await user.click(moreButton);
 
       const printButton = screen.queryByRole('menuitem', { name: 'print' });
@@ -461,7 +464,7 @@ describe('<DataGrid /> - Rows', () => {
       }
       const { user } = render(<Test />);
       await user.click(screen.getByRole('menuitem', { name: 'delete' }));
-      expect(screen.getByRole('menuitem', { name: 'print' })).toHaveFocus();
+      expect(screen.getByRole('button', { name: 'print' })).toHaveFocus();
     });
 
     it('should focus the last button if the currently focused button is removed', async () => {
@@ -476,7 +479,28 @@ describe('<DataGrid /> - Rows', () => {
       await user.click(screen.getByRole('menuitem', { name: 'delete' })); // Sets focusedButtonIndex=1
       expect(screen.getByRole('menuitem', { name: 'delete' })).toHaveFocus();
       setProps({ getActions: () => [<GridActionsCellItem icon={<span />} label="print" />] }); // Sets focusedButtonIndex=0
-      expect(screen.getByRole('menuitem', { name: 'print' })).toHaveFocus();
+      expect(screen.getByRole('button', { name: 'print' })).toHaveFocus();
+    });
+
+    it('should not contain a menu if there is only one action and showInMenu is false', () => {
+      render(
+        <TestCase getActions={() => [<GridActionsCellItem icon={<span />} label="print" />]} />,
+      );
+      expect(screen.queryByRole('menu')).to.equal(null);
+      expect(screen.getByRole('button', { name: 'print' })).not.to.equal(null);
+    });
+
+    it('should not contain a menu if there are only showInMenu actions', () => {
+      render(
+        <TestCase
+          getActions={() => [
+            <GridActionsCellItem icon={<span />} label="print" showInMenu />,
+            <GridActionsCellItem icon={<span />} label="delete" showInMenu />,
+          ]}
+        />,
+      );
+      expect(screen.queryByRole('menu')).to.equal(null);
+      expect(screen.getByRole('button', { name: 'more' })).not.to.equal(null);
     });
   });
 

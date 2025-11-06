@@ -191,7 +191,7 @@ function GridActionsCell(props: GridActionsCellProps) {
   const attributes =
     numberOfButtons > 0
       ? {
-          role: 'menu',
+          role: numberOfButtons > 1 ? 'menu' : undefined,
           onKeyDown: handleRootKeyDown,
         }
       : undefined;
@@ -204,6 +204,7 @@ function GridActionsCell(props: GridActionsCellProps) {
           touchRippleRef: handleTouchRippleRef(index),
           onClick: handleButtonClick(index, button.props.onClick),
           tabIndex: focusedButtonIndex === index ? tabIndex : -1,
+          role: numberOfButtons === 1 ? 'button' : 'menuitem',
         }),
       )}
 
@@ -215,7 +216,7 @@ function GridActionsCell(props: GridActionsCellProps) {
           aria-haspopup="menu"
           aria-expanded={open}
           aria-controls={open ? menuId : undefined}
-          role="menuitem"
+          role={iconButtons.length > 0 ? 'menuitem' : 'button'}
           size="small"
           onClick={toggleMenu}
           touchRippleRef={handleTouchRippleRef(buttonId)}
