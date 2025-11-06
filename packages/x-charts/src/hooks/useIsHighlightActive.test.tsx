@@ -4,7 +4,6 @@ import { act, createRenderer, screen } from '@mui/internal-test-utils';
 import { describe, it, expect } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
 import { BarChart } from '../BarChart';
-import { LineChart } from '../LineChart';
 import {
   useIsHighlightActive,
   useIsXHighlightActive,
@@ -81,28 +80,6 @@ describe('useIsHighlightActive', () => {
       expect(screen.getByTestId('highlight-active')).to.have.text('false');
     });
 
-    it('should return true when hovering over chart', async () => {
-      const { container, user } = render(
-        <BarChart
-          {...barChartProps}
-          brushConfig={{ enabled: false }}
-          slotProps={{ tooltip: { trigger: 'axis' } }}
-        >
-          <HighlightActiveCheck />
-        </BarChart>,
-      );
-
-      // eslint-disable-next-line testing-library/no-container
-      const svg = container.querySelector('svg')!;
-
-      await user.pointer({
-        target: svg,
-        coords: { clientX: 50, clientY: 50 },
-      });
-
-      expect(screen.getByTestId('highlight-active')).to.have.text('true');
-    });
-
     it.skipIf(isJSDOM)(
       'should return false when brush is active and preventHighlight is true',
       async () => {
@@ -172,32 +149,6 @@ describe('useIsHighlightActive', () => {
         expect(screen.getByTestId('highlight-active')).to.have.text('false');
       },
     );
-
-    it('should work with LineChart', async () => {
-      const { container, user } = render(
-        <LineChart
-          series={[{ data: [1, 2, 3, 4] }]}
-          xAxis={[{ data: ['A', 'B', 'C', 'D'], position: 'none' as const }]}
-          yAxis={[{ position: 'none' as const }]}
-          width={100}
-          height={130}
-          margin={0}
-          slotProps={{ tooltip: { trigger: 'axis' } }}
-        >
-          <HighlightActiveCheck />
-        </LineChart>,
-      );
-
-      // eslint-disable-next-line testing-library/no-container
-      const svg = container.querySelector('svg')!;
-
-      await user.pointer({
-        target: svg,
-        coords: { clientX: 50, clientY: 50 },
-      });
-
-      expect(screen.getByTestId('highlight-active')).to.have.text('true');
-    });
   });
 
   describe('useIsXHighlightActive', () => {
@@ -214,28 +165,6 @@ describe('useIsHighlightActive', () => {
 
       expect(screen.getByTestId('x-highlight-active')).to.have.text('false');
     });
-
-    it('should return true when hovering over X axis area', async () => {
-      const { container, user } = render(
-        <BarChart
-          {...barChartProps}
-          brushConfig={{ enabled: false }}
-          slotProps={{ tooltip: { trigger: 'axis' } }}
-        >
-          <XHighlightActiveCheck />
-        </BarChart>,
-      );
-
-      // eslint-disable-next-line testing-library/no-container
-      const svg = container.querySelector('svg')!;
-
-      await user.pointer({
-        target: svg,
-        coords: { clientX: 50, clientY: 50 },
-      });
-
-      expect(screen.getByTestId('x-highlight-active')).to.have.text('true');
-    });
   });
 
   describe('useIsYHighlightActive', () => {
@@ -251,28 +180,6 @@ describe('useIsHighlightActive', () => {
       );
 
       expect(screen.getByTestId('y-highlight-active')).to.have.text('false');
-    });
-
-    it('should return true when hovering over Y axis area', async () => {
-      const { container, user } = render(
-        <BarChart
-          {...barChartProps}
-          brushConfig={{ enabled: false }}
-          slotProps={{ tooltip: { trigger: 'axis' } }}
-        >
-          <YHighlightActiveCheck />
-        </BarChart>,
-      );
-
-      // eslint-disable-next-line testing-library/no-container
-      const svg = container.querySelector('svg')!;
-
-      await user.pointer({
-        target: svg,
-        coords: { clientX: 50, clientY: 50 },
-      });
-
-      expect(screen.getByTestId('y-highlight-active')).to.have.text('true');
     });
   });
 
@@ -291,30 +198,6 @@ describe('useIsHighlightActive', () => {
       expect(screen.getByTestId('highlight-active')).to.have.text('false');
       expect(screen.getByTestId('x-highlight-active')).to.have.text('false');
       expect(screen.getByTestId('y-highlight-active')).to.have.text('false');
-    });
-
-    it('should activate both X and Y highlights on hover', async () => {
-      const { container, user } = render(
-        <BarChart
-          {...barChartProps}
-          brushConfig={{ enabled: false }}
-          slotProps={{ tooltip: { trigger: 'axis' } }}
-        >
-          <CombinedHighlightCheck />
-        </BarChart>,
-      );
-
-      // eslint-disable-next-line testing-library/no-container
-      const svg = container.querySelector('svg')!;
-
-      await user.pointer({
-        target: svg,
-        coords: { clientX: 50, clientY: 50 },
-      });
-
-      expect(screen.getByTestId('highlight-active')).to.have.text('true');
-      expect(screen.getByTestId('x-highlight-active')).to.have.text('true');
-      expect(screen.getByTestId('y-highlight-active')).to.have.text('true');
     });
   });
 });

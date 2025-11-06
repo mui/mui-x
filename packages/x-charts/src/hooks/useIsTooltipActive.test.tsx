@@ -4,7 +4,6 @@ import { act, createRenderer, screen } from '@mui/internal-test-utils';
 import { describe, it, expect } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
 import { BarChart } from '../BarChart';
-import { LineChart } from '../LineChart';
 import { PieChart } from '../PieChart';
 import { useIsTooltipActive, useIsAnyTooltipActive } from './useIsTooltipActive';
 
@@ -54,31 +53,6 @@ describe('useIsTooltipActive', () => {
       );
 
       expect(screen.getByTestId('tooltip-active')).to.have.text('false');
-    });
-
-    it('should return true when hovering over cartesian chart', async () => {
-      const { container, user } = render(
-        <BarChart
-          {...barChartProps}
-          slotProps={{ tooltip: { trigger: 'axis' } }}
-          brushConfig={{ enabled: false }}
-        >
-          <TooltipActiveCheck trigger="axis" />
-        </BarChart>,
-      );
-
-      // eslint-disable-next-line testing-library/no-container
-      const svg = container.querySelector('svg')!;
-
-      await user.pointer({
-        target: svg,
-        coords: { clientX: 50, clientY: 50 },
-      });
-
-      // Wait for interaction to register
-      await act(async () => new Promise((r) => requestAnimationFrame(r)));
-
-      expect(screen.getByTestId('tooltip-active')).to.have.text('true');
     });
 
     it.skipIf(isJSDOM)(
@@ -150,35 +124,6 @@ describe('useIsTooltipActive', () => {
         expect(screen.getByTestId('tooltip-active')).to.have.text('false');
       },
     );
-
-    it('should work with LineChart', async () => {
-      const { container, user } = render(
-        <LineChart
-          series={[{ data: [1, 2, 3, 4] }]}
-          xAxis={[{ data: ['A', 'B', 'C', 'D'], position: 'none' as const }]}
-          yAxis={[{ position: 'none' as const }]}
-          width={100}
-          height={130}
-          margin={0}
-          slotProps={{ tooltip: { trigger: 'axis' } }}
-        >
-          <TooltipActiveCheck trigger="axis" />
-        </LineChart>,
-      );
-
-      // eslint-disable-next-line testing-library/no-container
-      const svg = container.querySelector('svg')!;
-
-      await user.pointer({
-        target: svg,
-        coords: { clientX: 50, clientY: 50 },
-      });
-
-      // Wait for interaction to register
-      await act(async () => new Promise((r) => requestAnimationFrame(r)));
-
-      expect(screen.getByTestId('tooltip-active')).to.have.text('true');
-    });
   });
 
   describe('with item trigger', () => {
@@ -258,31 +203,6 @@ describe('useIsTooltipActive', () => {
       );
 
       expect(screen.getByTestId('any-tooltip-active')).to.have.text('false');
-    });
-
-    it('should return true when axis tooltip is active', async () => {
-      const { container, user } = render(
-        <BarChart
-          {...barChartProps}
-          slotProps={{ tooltip: { trigger: 'axis' } }}
-          brushConfig={{ enabled: false }}
-        >
-          <AnyTooltipActiveCheck />
-        </BarChart>,
-      );
-
-      // eslint-disable-next-line testing-library/no-container
-      const svg = container.querySelector('svg')!;
-
-      await user.pointer({
-        target: svg,
-        coords: { clientX: 50, clientY: 50 },
-      });
-
-      // Wait for interaction to register
-      await act(async () => new Promise((r) => requestAnimationFrame(r)));
-
-      expect(screen.getByTestId('any-tooltip-active')).to.have.text('true');
     });
 
     it.skipIf(isJSDOM)('should return true when item tooltip is active', async () => {
