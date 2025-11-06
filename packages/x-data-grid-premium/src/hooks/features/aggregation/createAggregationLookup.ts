@@ -80,6 +80,9 @@ const getGroupAggregatedValue = (
     }
 
     const row = rowLookup[rowId];
+    if (!row) {
+      continue;
+    }
 
     for (let j = 0; j < aggregatedFields.length; j += 1) {
       const aggregatedField = aggregatedFields[j];
@@ -96,9 +99,6 @@ const getGroupAggregatedValue = (
         // Since we know that pivoted fields are flat, we can use the row directly, and save lots of processing time
         value = row[field];
       } else {
-        if (!row) {
-          continue;
-        }
         const valueGetter = valueGetters[aggregatedField]!;
         value = valueGetter(row);
       }
