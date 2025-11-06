@@ -33,6 +33,8 @@ const GridEditTextareaCellRoot = styled('div', {
   alignSelf: 'flex-start',
 });
 
+const TEXTAREA_DEFAULT_ROWS = 4;
+
 export interface GridEditTextareaCellProps extends GridRenderEditCellParams {
   debounceMs?: number;
   /**
@@ -120,6 +122,8 @@ const GridEditTextareaCell = forwardRef<HTMLDivElement, GridEditTextareaCellProp
 
   return (
     <GridEditTextareaCellRoot className={classes.root} ownerState={rootProps} ref={ref}>
+      {/* Anchor element for positioning the popper. Height is set to 1px to minimize 
+          visual impact while providing a positioning reference */}
       <div
         ref={handleRef}
         style={{
@@ -135,7 +139,7 @@ const GridEditTextareaCell = forwardRef<HTMLDivElement, GridEditTextareaCellProp
           <Paper elevation={1} sx={{ p: 1, minWidth: colDef.computedWidth }}>
             <InputBase
               multiline
-              rows={4}
+              rows={TEXTAREA_DEFAULT_ROWS}
               value={valueState ?? ''}
               sx={{ textarea: { resize: 'both' }, width: '100%' }}
               onChange={handleChange}
