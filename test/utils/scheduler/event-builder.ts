@@ -2,7 +2,6 @@ import {
   CalendarResourceId,
   RecurringEventPresetKey,
   RecurringEventRecurrenceRule,
-  SchedulerValidDate,
 } from '@mui/x-scheduler-headless/models';
 import {
   CalendarEvent,
@@ -212,9 +211,9 @@ export class EventBuilder {
    * @param occurrenceStartDate Start date of the recurrence occurrence.
    * Defaults to the event start date.
    */
-  buildOccurrence(occurrenceStartDate?: SchedulerValidDate): CalendarEventOccurrence {
+  buildOccurrence(occurrenceStartDate?: string): CalendarEventOccurrence {
     const event = this.event;
-    const effectiveDate = occurrenceStartDate ?? event.start;
+    const effectiveDate = this.adapter.date(occurrenceStartDate) ?? event.start;
     const duration = diffIn(this.adapter, event.end, event.start, 'minutes');
     const end = this.adapter.addMinutes(effectiveDate, duration);
     const key = `${event.id}::${this.adapter.format(effectiveDate, 'keyboardDate')}`;
