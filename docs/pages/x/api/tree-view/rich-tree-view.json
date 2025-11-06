@@ -68,7 +68,7 @@
     "onExpandedItemsChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.SyntheticEvent, itemIds: TreeViewItemId) => void",
+        "type": "function(event: React.SyntheticEvent, itemIds: Array<TreeViewItemId>) => void",
         "describedArgs": ["event", "itemIds"]
       }
     },

@@ -9,8 +9,13 @@
     "canMoveItemToNewPosition": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(params: object, params.itemId: TreeViewItemId, params.oldPosition: TreeViewItemReorderPosition, params.newPosition: TreeViewItemReorderPosition) => boolean",
-        "describedArgs": ["params", "params.itemId", "params.oldPosition", "params.newPosition"],
+        "type": "function(parameters: object, parameters.itemId: TreeViewItemId, parameters.oldPosition: TreeViewItemReorderPosition, parameters.newPosition: TreeViewItemReorderPosition) => boolean",
+        "describedArgs": [
+          "parameters",
+          "parameters.itemId",
+          "parameters.oldPosition",
+          "parameters.newPosition"
+        ],
         "returned": "boolean"
       }
     },
@@ -92,7 +97,7 @@
     "onExpandedItemsChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.SyntheticEvent, itemIds: TreeViewItemId) => void",
+        "type": "function(event: React.SyntheticEvent, itemIds: Array<TreeViewItemId>) => void",
         "describedArgs": ["event", "itemIds"]
       }
     },
@@ -127,8 +132,13 @@
     "onItemPositionChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(params: object, params.itemId: TreeViewItemId, params.oldPosition: TreeViewItemReorderPosition, params.newPosition: TreeViewItemReorderPosition) => void",
-        "describedArgs": ["params", "params.itemId", "params.oldPosition", "params.newPosition"]
+        "type": "function(parameters: object, parameters.itemId: TreeViewItemId, parameters.oldPosition: TreeViewItemReorderPosition, parameters.newPosition: TreeViewItemReorderPosition) => void",
+        "describedArgs": [
+          "parameters",
+          "parameters.itemId",
+          "parameters.oldPosition",
+          "parameters.newPosition"
+        ]
       }
     },
     "onItemSelectionToggle": {

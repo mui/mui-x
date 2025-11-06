@@ -252,7 +252,7 @@ RichTreeView.propTypes = {
   /**
    * Callback fired when Tree Items are expanded/collapsed.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemExpansion()` method.
-   * @param {TreeViewItemId} itemIds The ids of the expanded items.
+   * @param {TreeViewItemId[]} itemIds The ids of the expanded items.
    */
   onExpandedItemsChange: PropTypes.func,
   /**
