@@ -396,7 +396,8 @@ p {
   display: inline-block;
   font-size: var(--font-size-2);
   font-weight: var(--font-weight-2);
-  margin-block-end: var(--space-3);
+  padding: 0;
+  margin: 0 0 var(--space-3) 0;
 }
 
 .EventPopoverInputsRow {
