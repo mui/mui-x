@@ -155,7 +155,7 @@ RichTreeViewPro.propTypes = {
   /**
    * Used to determine if a given item can move to some new position.
    * @param {object} parameters The params describing the item re-ordering.
-   * @param {string} parameters.itemId The id of the item that is being moved to a new position.
+   * @param {TreeViewItemId} parameters.itemId The id of the item that is being moved to a new position.
    * @param {TreeViewItemReorderPosition} parameters.oldPosition The old position of the item.
    * @param {TreeViewItemReorderPosition} parameters.newPosition The new position of the item.
    * @returns {boolean} `true` if the item can move to the new position.
@@ -267,7 +267,7 @@ RichTreeViewPro.propTypes = {
   isItemEditable: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   /**
    * Determine if a given item can be reordered.
-   * @param {string} itemId The id of the item to check.
+   * @param {TreeViewItemId} itemId The id of the item to check.
    * @returns {boolean} `true` if the item can be reordered.
    * @default () => true
    */
@@ -323,7 +323,7 @@ RichTreeViewPro.propTypes = {
   /**
    * Callback fired when a Tree Item is moved in the tree.
    * @param {object} parameters The params describing the item re-ordering.
-   * @param {string} parameters.itemId The id of the item moved.
+   * @param {TreeViewItemId} parameters.itemId The id of the item moved.
    * @param {TreeViewItemReorderPosition} parameters.oldPosition The old position of the item.
    * @param {TreeViewItemReorderPosition} parameters.newPosition The new position of the item.
    */

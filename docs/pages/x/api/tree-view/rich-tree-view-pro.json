@@ -9,7 +9,7 @@
     "canMoveItemToNewPosition": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(parameters: object, parameters.itemId: string, parameters.oldPosition: TreeViewItemReorderPosition, parameters.newPosition: TreeViewItemReorderPosition) => boolean",
+        "type": "function(parameters: object, parameters.itemId: TreeViewItemId, parameters.oldPosition: TreeViewItemReorderPosition, parameters.newPosition: TreeViewItemReorderPosition) => boolean",
         "describedArgs": [
           "parameters",
           "parameters.itemId",
@@ -83,7 +83,7 @@
       "type": { "name": "func" },
       "default": "() => true",
       "signature": {
-        "type": "function(itemId: string) => boolean",
+        "type": "function(itemId: TreeViewItemId) => boolean",
         "describedArgs": ["itemId"],
         "returned": "boolean"
       }
@@ -132,7 +132,7 @@
     "onItemPositionChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(parameters: object, parameters.itemId: string, parameters.oldPosition: TreeViewItemReorderPosition, parameters.newPosition: TreeViewItemReorderPosition) => void",
+        "type": "function(parameters: object, parameters.itemId: TreeViewItemId, parameters.oldPosition: TreeViewItemReorderPosition, parameters.newPosition: TreeViewItemReorderPosition) => void",
         "describedArgs": [
           "parameters",
           "parameters.itemId",
