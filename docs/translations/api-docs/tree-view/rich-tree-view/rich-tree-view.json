@@ -2,10 +2,10 @@
   "componentDescription": "",
   "propDescriptions": {
     "apiRef": {
-      "description": "The ref object that allows Tree View manipulation. Can be instantiated with <code>useTreeViewApiRef()</code>."
+      "description": "The ref object that allows Tree View manipulation. Can be instantiated with <code>useRichTreeViewApiRef()</code>."
     },
     "checkboxSelection": {
-      "description": "If <code>true</code>, the Tree View renders a checkbox at the left of its label that allows selecting it."
+      "description": "Whether the Tree View renders a checkbox at the left of its label that allows selecting it."
     },
     "classes": { "description": "Override or extend the styles applied to the component." },
     "defaultExpandedItems": {
@@ -17,7 +17,7 @@
     "disabledItemsFocusable": {
       "description": "If <code>true</code>, will allow focus on disabled items."
     },
-    "disableSelection": { "description": "If <code>true</code> selection is disabled." },
+    "disableSelection": { "description": "Whether selection is disabled." },
     "expandedItems": {
       "description": "Expanded item ids. Used when the item&#39;s expansion is controlled."
     },
