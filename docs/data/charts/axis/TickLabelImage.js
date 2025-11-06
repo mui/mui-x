@@ -4,21 +4,16 @@ import { ChartContainer } from '@mui/x-charts/ChartContainer';
 import { BarPlot } from '@mui/x-charts/BarChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
-import { ChartsTextProps } from '@mui/x-charts/ChartsText';
 
-const iconMap: Record<string, string> = {
-  Netflix: '/static/x/charts/netflix-logo.png',
-  Alphabet: '/static/x/charts/google-logo.png',
-  Microsoft: '/static/x/charts/microsoft-logo.png',
-};
+import { iconMap } from './TickLabelImage.icons';
 
-function CustomTick(props: ChartsTextProps) {
+function CustomTick(props) {
   const { x, y, text } = props;
   const logo = iconMap[text];
 
   return (
     <g transform={`translate(${x},${y})`}>
-      <foreignObject x={-30} y={-10} width={60} height={50}>
+      <foreignObject x={-20} y={-10} width={40} height={40}>
         <div
           style={{
             display: 'flex',
@@ -54,7 +49,7 @@ function CustomTick(props: ChartsTextProps) {
   );
 }
 
-export default function TickLabelSVG() {
+export default function TickLabelImage() {
   return (
     <Box sx={{ width: '100%', maxWidth: 600 }}>
       <ChartContainer
