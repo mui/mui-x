@@ -291,10 +291,11 @@ export type CalendarEventUpdatedProperties = Partial<SchedulerEvent> & {
   id: CalendarEventId;
 };
 
+// TODO: Consider splitting the interface in two, one for the Event Calendar and one for the Timeline.
 /**
  * The type of surface the event is being rendered on.
  */
-export type EventSurfaceType = 'day-grid' | 'time-grid';
+export type EventSurfaceType = 'day-grid' | 'time-grid' | 'timeline';
 
 export type SchedulerEventModelStructure<TEvent extends object> = {
   [key in keyof SchedulerEvent]?: {
