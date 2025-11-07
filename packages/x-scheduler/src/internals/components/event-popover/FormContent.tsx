@@ -693,6 +693,7 @@ export default function FormContent(props: FormContentProps) {
                       className="EventPopoverRadioRoot"
                       value="never"
                       disabled={customDisabled}
+                      aria-label={translations.recurrenceEndsNeverLabel}
                     >
                       <Radio.Indicator className="RadioItemIndicator" />
                       <span className="EventPopoverRadioItemText">
@@ -707,6 +708,7 @@ export default function FormContent(props: FormContentProps) {
                       className="EventPopoverRadioRoot"
                       value="after"
                       disabled={customDisabled}
+                      aria-label={translations.recurrenceEndsAfterLabel}
                     >
                       <Radio.Indicator className="RadioItemIndicator" />
                       <span className="EventPopoverRadioItemText">
@@ -733,6 +735,7 @@ export default function FormContent(props: FormContentProps) {
                       className="EventPopoverRadioRoot"
                       value="until"
                       disabled={customDisabled}
+                      aria-label={translations.recurrenceEndsUntilLabel}
                     >
                       <Radio.Indicator className="RadioItemIndicator" />
                       <span className="EventPopoverRadioItemText">

@@ -8,7 +8,7 @@ import {
   StoreSpy,
 } from 'test/utils/scheduler';
 
-import { screen } from '@mui/internal-test-utils';
+import { screen, within } from '@mui/internal-test-utils';
 import {
   CalendarEventOccurrence,
   CalendarOccurrencePlaceholderCreation,
@@ -747,6 +747,217 @@ describe('<EventPopoverContent />', () => {
         expect(selectRecurringEventUpdateScopeSpy?.lastCall.firstArg).to.equal(
           'this-and-following',
         );
+      });
+
+      describe('Recurrence Custom behavior', () => {
+        it('should render recurrence fields as disabled when not recurrent', async () => {
+          const { user } = render(
+            <EventCalendarProvider events={[occurrence]} resources={resources}>
+              <Popover.Root open>
+                <EventPopoverContent {...defaultProps} />
+              </Popover.Root>
+            </EventCalendarProvider>,
+          );
+
+          await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+
+          expect(screen.getByRole('combobox', { name: /recurrence/i }).textContent).to.match(
+            /don't repeat/i,
+          );
+
+          expect(screen.getByLabelText(/repeat/i)).to.have.attribute('aria-disabled', 'true');
+          expect(screen.getByLabelText(/ends/i)).to.have.attribute('aria-disabled', 'true');
+        });
+
+        it('should keep recurrence fields disabled when a preset is selected', async () => {
+          const { user } = render(
+            <EventCalendarProvider events={[occurrence]} resources={resources}>
+              <Popover.Root open>
+                <EventPopoverContent {...defaultProps} />
+              </Popover.Root>
+            </EventCalendarProvider>,
+          );
+
+          await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+          await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+          await user.click(await screen.findByRole('option', { name: /repeats daily/i }));
+
+          expect(screen.getByLabelText(/repeat/i)).to.have.attribute('aria-disabled', 'true');
+          expect(screen.getByLabelText(/ends/i)).to.have.attribute('aria-disabled', 'true');
+        });
+
+        it('should enable recurrence fields when selecting the custom repeat rule option', async () => {
+          const { user } = render(
+            <EventCalendarProvider events={[occurrence]} resources={resources}>
+              <Popover.Root open>
+                <EventPopoverContent {...defaultProps} />
+              </Popover.Root>
+            </EventCalendarProvider>,
+          );
+
+          await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+          await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+          await user.click(await screen.findByRole('option', { name: /custom repeat rule/i }));
+
+          expect(screen.getByLabelText(/repeat/i)).not.to.have.attribute('disabled');
+          expect(screen.getByLabelText(/ends/i)).not.to.have.attribute('disabled');
+        });
+
+        it('should submit custom recurrence with Ends: after', async () => {
+          const onEventsChange = spy();
+
+          const { user } = render(
+            <EventCalendarProvider
+              events={[occurrence]}
+              resources={resources}
+              onEventsChange={onEventsChange}
+            >
+              <Popover.Root open>
+                <EventPopoverContent {...defaultProps} />
+              </Popover.Root>
+            </EventCalendarProvider>,
+          );
+
+          await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+          await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+          await user.click(await screen.findByRole('option', { name: /custom/i }));
+
+          // Every: set interval = 2
+          const repeatGroup = screen.getByRole('group', { name: /repeat/i });
+          const intervalInput = within(repeatGroup).getByRole('spinbutton');
+          await user.click(intervalInput);
+          await user.keyboard('{Control>}a{/Control}2');
+
+          // Frequency: weeks
+          const freqCombo = within(repeatGroup).getByRole('combobox');
+          await user.click(freqCombo);
+          await user.click(await screen.findByRole('option', { name: /weeks/i }));
+
+          // Ends: select "After"
+          const endsFieldset = screen.getByRole('group', { name: /ends/i });
+          const afterRadio = within(endsFieldset).getByRole('radio', { name: /after/i });
+          await user.click(afterRadio);
+
+          // Set count = 5
+          const countInput = within(endsFieldset).getByRole('spinbutton');
+          await user.click(countInput);
+          await user.keyboard('{Control>}a{/Control}5');
+
+          await user.click(screen.getByRole('button', { name: /save changes/i }));
+
+          expect(onEventsChange.calledOnce).to.equal(true);
+          const updated = onEventsChange.firstCall.firstArg[0];
+
+          expect(updated.rrule).to.deep.equal({
+            freq: 'WEEKLY',
+            byDay: [],
+            byMonthDay: [],
+            interval: 2,
+            count: 5,
+            until: undefined,
+          });
+        });
+
+        it('should submit custom recurrence with Ends: never', async () => {
+          const onEventsChange = spy();
+
+          const { user } = render(
+            <EventCalendarProvider
+              events={[occurrence]}
+              resources={resources}
+              onEventsChange={onEventsChange}
+            >
+              <Popover.Root open>
+                <EventPopoverContent {...defaultProps} />
+              </Popover.Root>
+            </EventCalendarProvider>,
+          );
+
+          await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+          await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+          await user.click(await screen.findByRole('option', { name: /custom/i }));
+
+          // Every: set interval = 2, frequency = months
+          const repeatGroup = screen.getByRole('group', { name: /repeat/i });
+          const intervalInput = within(repeatGroup).getByRole('spinbutton');
+          await user.click(intervalInput);
+          await user.keyboard('{Control>}a{/Control}2');
+
+          const freqCombo = within(repeatGroup).getByRole('combobox');
+          await user.click(freqCombo);
+          await user.click(await screen.findByRole('option', { name: /months/i }));
+
+          // Ends: keep Never (default)
+          const endsFieldset = screen.getByRole('group', { name: /ends/i });
+          expect(within(endsFieldset).getByRole('radio', { name: /never/i })).to.have.attribute(
+            'aria-checked',
+            'true',
+          );
+
+          await user.click(screen.getByRole('button', { name: /save changes/i }));
+
+          expect(onEventsChange.calledOnce).to.equal(true);
+          const updated = onEventsChange.firstCall.firstArg[0];
+
+          expect(updated.rrule).to.deep.equal({
+            freq: 'MONTHLY',
+            byDay: [],
+            byMonthDay: [],
+            interval: 2,
+          });
+        });
+
+        it('should submit custom recurrence with Ends: until and selected date', async () => {
+          const onEventsChange = spy();
+
+          const { user } = render(
+            <EventCalendarProvider
+              events={[occurrence]}
+              resources={resources}
+              onEventsChange={onEventsChange}
+            >
+              <Popover.Root open>
+                <EventPopoverContent {...defaultProps} />
+              </Popover.Root>
+            </EventCalendarProvider>,
+          );
+
+          await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+          await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+          await user.click(await screen.findByRole('option', { name: /custom/i }));
+
+          // Every: set interval = 3, frequency = years
+          const repeatGroup = screen.getByRole('group', { name: /repeat/i });
+          const intervalInput = within(repeatGroup).getByRole('spinbutton');
+          await user.click(intervalInput);
+          await user.keyboard('{Control>}a{/Control}3');
+
+          const freqCombo = within(repeatGroup).getByRole('combobox');
+          await user.click(freqCombo);
+          await user.click(await screen.findByRole('option', { name: /years/i }));
+
+          const endsGroup = screen.getByRole('group', { name: /ends/i });
+
+          // Ends: "Until" and date 2025-07-20
+          const untilRadio = within(endsGroup).getByRole('radio', { name: /until/i });
+          await user.click(untilRadio);
+          const labelEl = untilRadio.closest('label');
+          const dateInput = labelEl?.querySelector('input[type="date"]') as HTMLInputElement;
+          await user.click(dateInput);
+          await user.clear(dateInput);
+          await user.type(dateInput, '2025-07-20');
+
+          await user.click(screen.getByRole('button', { name: /save changes/i }));
+
+          expect(onEventsChange.calledOnce).to.equal(true);
+          const updated = onEventsChange.firstCall.firstArg[0];
+
+          expect(updated.rrule).to.deep.include({ freq: 'YEARLY', interval: 3 });
+          expect(updated.rrule?.count ?? undefined).to.equal(undefined);
+          expect(updated.rrule?.until).toEqualDateTime(
+            adapter.startOfDay(adapter.date('2025-07-20T00:00:00')),
+          );
+        });
       });
     });
 
