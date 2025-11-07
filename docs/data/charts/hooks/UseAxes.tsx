@@ -5,7 +5,6 @@ import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
-import { findMinMax } from '@mui/x-charts/internals';
 import { useTheme } from '@mui/material/styles';
 
 const dataset = [
@@ -19,21 +18,26 @@ const dataset = [
 
 function AxisRangeIndicators() {
   const { yAxis, yAxisIds } = useYAxes();
-  const xAxis = useXAxis();
+  const xAxis = useXAxis<'band'>();
   const allSeries = useLineSeries();
   const theme = useTheme();
 
   const xDomain = xAxis.scale.domain();
-  const xStart = xAxis.scale(xDomain[0] as any) ?? 0;
-  const xEnd = xAxis.scale(xDomain[xDomain.length - 1] as any) ?? 0;
+  const xStart = xAxis.scale(xDomain[0]) ?? 0;
+  const xEnd = xAxis.scale(xDomain[xDomain.length - 1]) ?? 0;
 
   return (
     <g>
       {allSeries.map((series) => {
         const axis = yAxis[series.yAxisId ?? yAxisIds[0]];
-        const [seriesMin, seriesMax] = findMinMax(
-          series.data.filter((v) => v != null) as number[],
+
+        const seriesMin = Math.min(
+          ...(series.data.filter((v) => v != null) as number[]),
         );
+        const seriesMax = Math.max(
+          ...(series.data.filter((v) => v != null) as number[]),
+        );
+
         const yMin = axis.scale(seriesMin) ?? 0;
         const yMax = axis.scale(seriesMax) ?? 0;
 

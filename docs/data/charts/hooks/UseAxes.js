@@ -5,7 +5,6 @@ import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
-import { findMinMax } from '@mui/x-charts/internals';
 import { useTheme } from '@mui/material/styles';
 
 const dataset = [
@@ -31,9 +30,10 @@ function AxisRangeIndicators() {
     <g>
       {allSeries.map((series) => {
         const axis = yAxis[series.yAxisId ?? yAxisIds[0]];
-        const [seriesMin, seriesMax] = findMinMax(
-          series.data.filter((v) => v != null),
-        );
+
+        const seriesMin = Math.min(...series.data.filter((v) => v != null));
+        const seriesMax = Math.max(...series.data.filter((v) => v != null));
+
         const yMin = axis.scale(seriesMin) ?? 0;
         const yMax = axis.scale(seriesMax) ?? 0;
 
