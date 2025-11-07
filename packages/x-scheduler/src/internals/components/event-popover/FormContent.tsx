@@ -189,29 +189,37 @@ export default function FormContent(props: FormContentProps) {
   };
 
   const handleEndsChange = (value: EndsSelection) => {
-    if (value === 'never') {
-      setControlled((prev) => {
-        const { count, until, ...rest } = prev.rruleDraft;
-        return { ...prev, rruleDraft: rest };
-      });
-    } else if (value === 'after') {
-      setControlled((prev) => ({
-        ...prev,
-        rruleDraft: {
-          ...prev.rruleDraft,
-          count: 1,
-          until: undefined,
-        },
-      }));
-    } else {
-      setControlled((prev) => ({
-        ...prev,
-        rruleDraft: {
-          ...prev.rruleDraft,
-          until: adapter.date(prev.endDate),
-          count: undefined,
-        },
-      }));
+    switch (value) {
+      case 'until': {
+        setControlled((prev) => ({
+          ...prev,
+          rruleDraft: {
+            ...prev.rruleDraft,
+            until: adapter.date(prev.endDate),
+            count: undefined,
+          },
+        }));
+        break;
+      }
+      case 'after': {
+        setControlled((prev) => ({
+          ...prev,
+          rruleDraft: {
+            ...prev.rruleDraft,
+            count: 1,
+            until: undefined,
+          },
+        }));
+        break;
+      }
+      case 'never':
+      default: {
+        setControlled((prev) => {
+          const { count, until, ...rest } = prev.rruleDraft;
+          return { ...prev, rruleDraft: rest };
+        });
+        break;
+      }
     }
   };
 
