@@ -129,27 +129,3 @@ export type UseTreeViewItemsReorderingSignature = TreeViewPluginSignature<{
   state: UseTreeViewItemsReorderingState;
   dependencies: [UseTreeViewItemsSignature];
 }>;
-
-export interface UseTreeItemRootSlotPropsFromItemsReordering {
-  draggable?: true;
-  onDragStart?: TreeViewCancellableEventHandler<React.DragEvent>;
-  onDragOver?: TreeViewCancellableEventHandler<React.DragEvent>;
-  onDragEnd?: TreeViewCancellableEventHandler<React.DragEvent>;
-}
-
-export interface UseTreeItemContentSlotPropsFromItemsReordering {
-  onDragEnter?: TreeViewCancellableEventHandler<React.DragEvent>;
-  onDragOver?: TreeViewCancellableEventHandler<React.DragEvent>;
-}
-
-export interface UseTreeItemDragAndDropOverlaySlotPropsFromItemsReordering
-  extends TreeItemDragAndDropOverlayProps {}
-
-declare module '@mui/x-tree-view/useTreeItem' {
-  interface UseTreeItemRootSlotOwnProps extends UseTreeItemRootSlotPropsFromItemsReordering {}
-
-  interface UseTreeItemContentSlotOwnProps extends UseTreeItemContentSlotPropsFromItemsReordering {}
-
-  interface UseTreeItemDragAndDropOverlaySlotOwnProps
-    extends UseTreeItemDragAndDropOverlaySlotPropsFromItemsReordering {}
-}
