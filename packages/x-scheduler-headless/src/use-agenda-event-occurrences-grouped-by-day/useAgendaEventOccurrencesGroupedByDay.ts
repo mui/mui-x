@@ -14,6 +14,7 @@ import { CalendarProcessedDate, CalendarEventOccurrence } from '../models';
 import { innerGetEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
 import { AGENDA_VIEW_DAYS_AMOUNT, AGENDA_MAX_HORIZON_DAYS } from '../constants';
 import { eventCalendarPreferenceSelectors } from '../event-calendar-selectors';
+import { sortEventOccurrences } from '../utils/event-utils';
 
 /**
  * Agenda-specific hook that:
@@ -63,10 +64,10 @@ export function useAgendaEventOccurrencesGroupedByDay(): useAgendaEventOccurrenc
 
     // 2) If we show empty days, just return the amount days
     if (showEmptyDays) {
-      const finalOccurrences = new Map(
-        accumulatedDays.map((d) => [d.key, occurrenceMap.get(d.key) ?? []]),
-      );
-      return { days: accumulatedDays, occurrencesMap: finalOccurrences };
+      return accumulatedDays.map((date) => ({
+        date,
+        occurrences: sortEventOccurrences(occurrenceMap.get(date.key) ?? [], adapter),
+      }));
     }
 
     // 3) If we hide empty days, keep extending forward in blocks until we fill `amount` days with events
@@ -111,11 +112,10 @@ export function useAgendaEventOccurrencesGroupedByDay(): useAgendaEventOccurrenc
       daysWithEvents = accumulatedDays.filter(hasEvents).slice(0, amount);
     }
 
-    // Keep occurrences only for the final visible days
-    const filledKeys = new Set(daysWithEvents.map((d) => d.key));
-    const finalOccurrences = new Map([...occurrenceMap].filter(([key]) => filledKeys.has(key)));
-
-    return { days: daysWithEvents, occurrencesMap: finalOccurrences };
+    return daysWithEvents.map((date) => ({
+      date,
+      occurrences: sortEventOccurrences(occurrenceMap.get(date.key) ?? [], adapter),
+    }));
   }, [
     getDayList,
     visibleDate,
@@ -131,13 +131,12 @@ export function useAgendaEventOccurrencesGroupedByDay(): useAgendaEventOccurrenc
 export namespace useAgendaEventOccurrencesGroupedByDayOptions {
   export type ReturnValue = {
     /**
-     * Final visible days in the agenda.
+     * The processed date.
      */
-    days: CalendarProcessedDate[];
+    date: CalendarProcessedDate;
     /**
-     * The occurrences Map as returned by `useEventOccurrences()`.
-     * It should contain the occurrences for each requested day but can also contain occurrences for other days.
+     * The occurrences for the day.
      */
-    occurrencesMap: Map<string, CalendarEventOccurrence[]>;
-  };
+    occurrences: CalendarEventOccurrence[];
+  }[];
 }
