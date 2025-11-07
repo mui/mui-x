@@ -2,8 +2,10 @@ import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store/useStore';
 import { CalendarEventOccurrenceWithTimePosition, SchedulerValidDate } from '../../models';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
-import { selectors } from '../../use-event-calendar';
+import { schedulerEventSelectors } from '../../scheduler-selectors';
 import { useEventOccurrencesWithTimelinePosition } from '../../use-event-occurrences-with-timeline-position';
+import { eventCalendarOccurrencePlaceholderSelectors } from '../../event-calendar-selectors';
+import { isInternalDragOrResizePlaceholder } from '../../utils/drag-utils';
 
 export function useCalendarGridPlaceholderInRange(
   parameters: useCalendarGridPlaceholderInRange.Parameters,
@@ -13,15 +15,49 @@ export function useCalendarGridPlaceholderInRange(
 
   const rawPlaceholder = useStore(
     store,
-    selectors.occurrencePlaceholderToRenderInTimeRange,
+    eventCalendarOccurrencePlaceholderSelectors.placeholderInTimeRange,
     start,
     end,
   );
-  const originalEvent = useStore(store, selectors.event, rawPlaceholder?.eventId ?? null);
+
+  const originalEventId = isInternalDragOrResizePlaceholder(rawPlaceholder)
+    ? rawPlaceholder.eventId
+    : null;
+  const originalEvent = useStore(store, schedulerEventSelectors.processedEvent, originalEventId);
 
   return React.useMemo(() => {
     if (!rawPlaceholder) {
       return null;
+    }
+
+    const sharedProperties = {
+      key: 'occurrence-placeholder',
+      start: rawPlaceholder.start,
+      end: rawPlaceholder.end,
+    };
+
+    if (rawPlaceholder.type === 'creation') {
+      return {
+        ...sharedProperties,
+        id: 'occurrence-placeholder',
+        title: '',
+        position: {
+          firstIndex: 1,
+          lastIndex: maxIndex,
+        },
+      };
+    }
+
+    if (rawPlaceholder.type === 'external-drag') {
+      return {
+        ...sharedProperties,
+        id: 'occurrence-placeholder',
+        title: rawPlaceholder.eventData.title ?? '',
+        position: {
+          firstIndex: 1,
+          lastIndex: maxIndex,
+        },
+      };
     }
 
     const position = occurrences.find(
@@ -31,23 +67,9 @@ export function useCalendarGridPlaceholderInRange(
       lastIndex: maxIndex,
     };
 
-    // Creation mode
-    if (!originalEvent) {
-      return {
-        id: `placeholder-${rawPlaceholder.occurrenceKey}`,
-        key: `placeholder-${rawPlaceholder.occurrenceKey}`,
-        title: '',
-        start: rawPlaceholder.start,
-        end: rawPlaceholder.end,
-        position,
-      };
-    }
-
     return {
-      ...originalEvent,
-      key: `placeholder-${rawPlaceholder.occurrenceKey}`,
-      start: rawPlaceholder.start,
-      end: rawPlaceholder.end,
+      ...originalEvent!,
+      ...sharedProperties,
       position,
     };
   }, [rawPlaceholder, occurrences, maxIndex, originalEvent]);

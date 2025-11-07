@@ -1,15 +1,15 @@
 import { act, fireEvent } from '@mui/internal-test-utils';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
-import { TreeViewBaseItem } from '@mui/x-tree-view/models';
-import {
-  UseTreeViewExpansionSignature,
-  UseTreeViewLazyLoadingSignature,
-} from '@mui/x-tree-view/internals';
 
-type ItemType = TreeViewBaseItem<{
+// TODO #20051: Replace with imported type
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+type RichTreeViewProStore<A, B> = any;
+
+interface ItemType {
   id: string;
   childrenCount?: number;
-}>;
+  children?: ItemType[];
+}
 
 const mockFetchData = async (parentId): Promise<ItemType[]> => {
   const items = [
@@ -32,8 +32,8 @@ async function awaitMockFetch() {
   });
 }
 
-describeTreeView<[UseTreeViewLazyLoadingSignature, UseTreeViewExpansionSignature]>(
-  'useTreeViewLabel plugin',
+describeTreeView<RichTreeViewProStore<any, any>>(
+  'TreeViewLazyLoadingPlugin',
   ({ render, treeViewComponentName }) => {
     if (treeViewComponentName === 'SimpleTreeView' || treeViewComponentName === 'RichTreeView') {
       return;

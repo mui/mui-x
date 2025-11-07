@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useBarSeries } from '@mui/x-charts/hooks';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { useTheme } from '@mui/material/styles';

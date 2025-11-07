@@ -6,6 +6,7 @@ import type {
   SankeyLink as D3SankeyLink,
   SankeyNode as D3SankeyNode,
 } from '@mui/x-charts-vendor/d3-sankey';
+import type { SankeyLinkHighlightScope, SankeyNodeHighlightScope } from './sankey.highlight.types';
 
 export type SankeyNodeId = string | number;
 
@@ -95,7 +96,7 @@ export type SankeyNodeOptions = {
    * @returns {number} Comparison result
    */
   sort?: (a: SankeyLayoutNode, b: SankeyLayoutNode) => number | null;
-};
+} & SankeyNodeHighlightScope;
 
 export type SankeyLinkOptions = {
   /**
@@ -128,7 +129,7 @@ export type SankeyLinkOptions = {
    * @default 10
    */
   curveCorrection?: number;
-};
+} & SankeyLinkHighlightScope;
 
 export interface SankeyData {
   /**

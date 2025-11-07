@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import dayjs from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';

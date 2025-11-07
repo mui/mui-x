@@ -176,6 +176,7 @@ BarChart.propTypes = {
     y: PropTypes.oneOf(['band', 'line', 'none']),
   }),
   /**
+   * @deprecated Use `barLabel` in the chart series instead.
    * If provided, the function will be used to format the label of the bar.
    * It can be set to 'value' to display the current value.
    * @param {BarItem} item The item to format.
@@ -187,6 +188,14 @@ BarChart.propTypes = {
    * Defines the border radius of the bar element.
    */
   borderRadius: PropTypes.number,
+  /**
+   * Configuration for the brush interaction.
+   */
+  brushConfig: PropTypes.shape({
+    enabled: PropTypes.bool,
+    preventHighlight: PropTypes.bool,
+    preventTooltip: PropTypes.bool,
+  }),
   children: PropTypes.node,
   className: PropTypes.string,
   /**

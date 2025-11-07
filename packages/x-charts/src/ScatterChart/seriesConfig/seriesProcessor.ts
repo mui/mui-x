@@ -6,7 +6,7 @@ const seriesProcessor: SeriesProcessor<'scatter'> = ({ series, seriesOrder }, da
     Object.entries(series).map(([seriesId, seriesData]) => {
       const datasetKeys = seriesData?.datasetKeys;
 
-      const missingKeys = (['x', 'y', 'id'] as const).filter(
+      const missingKeys = (['x', 'y'] as const).filter(
         (key) => typeof datasetKeys?.[key] !== 'string',
       );
 

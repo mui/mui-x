@@ -342,6 +342,14 @@ SparkLineChart.propTypes = {
    * @default 0
    */
   baseline: PropTypes.oneOfType([PropTypes.oneOf(['max', 'min']), PropTypes.number]),
+  /**
+   * Configuration for the brush interaction.
+   */
+  brushConfig: PropTypes.shape({
+    enabled: PropTypes.bool,
+    preventHighlight: PropTypes.bool,
+    preventTooltip: PropTypes.bool,
+  }),
   children: PropTypes.node,
   className: PropTypes.string,
   /**

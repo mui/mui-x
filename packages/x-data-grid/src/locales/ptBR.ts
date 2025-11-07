@@ -332,6 +332,7 @@ const ptBRGrid: Partial<GridLocaleText> = {
   promptChangePivotValuesLabel: (count: number) => `Valores (${count})`,
   promptChangePivotValuesDescription: (column: string, aggregation: string) =>
     `${column} (${aggregation})`,
+  // promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) => `Dimensions (${dimensionsCount}), Values (${valuesCount})`,
 };
 
 export const ptBR: Localization = getGridLocalization(ptBRGrid);
