@@ -154,7 +154,7 @@ RichTreeViewPro.propTypes = {
    */
   canMoveItemToNewPosition: PropTypes.func,
   /**
-   * If `true`, the Tree View renders a checkbox at the left of its label that allows selecting it.
+   * Whether the Tree View renders a checkbox at the left of its label that allows selecting it.
    * @default false
    */
   checkboxSelection: PropTypes.bool,
@@ -196,7 +196,7 @@ RichTreeViewPro.propTypes = {
    */
   disabledItemsFocusable: PropTypes.bool,
   /**
-   * If `true` selection is disabled.
+   * Whether selection is disabled.
    * @default false
    */
   disableSelection: PropTypes.bool,
@@ -277,7 +277,7 @@ RichTreeViewPro.propTypes = {
    */
   itemsReordering: PropTypes.bool,
   /**
-   * If `true`, `ctrl` and `shift` will trigger multiselect.
+   * Whether multiple items can be selected.
    * @default false
    */
   multiSelect: PropTypes.bool,
