@@ -151,9 +151,9 @@ export const EventItem = React.forwardRef(function EventItem(
   }, [
     variant,
     occurrence.title,
+    occurrence.allDay,
     occurrence.start,
     occurrence.end,
-    occurrence.allDay,
     isRecurring,
     resource?.title,
     translations,

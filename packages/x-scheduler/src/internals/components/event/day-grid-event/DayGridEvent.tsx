@@ -102,7 +102,6 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
         );
 
       case 'compact':
-      default:
         return (
           <div className="DayGridEventCardWrapper">
             <span
@@ -134,6 +133,8 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
             )}
           </div>
         );
+      default:
+        throw new Error('Unsupported variant provided to EventItem component.');
     }
   }, [
     formatTime,
