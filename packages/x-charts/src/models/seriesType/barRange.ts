@@ -15,17 +15,15 @@ export interface BarRangeSeriesType
    */
   data?: ReadonlyArray<BarRangeValueType | null>;
   /**
-   * The keys used to retrieve data from the dataset.
-   *
-   * When this prop is provided, both `start` and `end` are mandatory.
+   * The keys used to retrieve data from the dataset. Must be provided if the `dataset` prop is used.
    */
   datasetKeys?: {
     /**
-     * The key used to retrieve data from the dataset for the start of the area.
+     * The key used to retrieve the start of the range from the dataset.
      */
     start: string;
     /**
-     * The key used to retrieve data from the dataset for the end of the area.
+     * The key used to retrieve the end of the range from the dataset.
      */
     end: string;
   };
@@ -41,7 +39,7 @@ export interface BarRangeSeriesType
 }
 
 /**
- * An object that allows to identify a single bar.
+ * An object that allows to identify a bar range.
  * Used for item interaction
  */
 export type BarRangeItemIdentifier = {
