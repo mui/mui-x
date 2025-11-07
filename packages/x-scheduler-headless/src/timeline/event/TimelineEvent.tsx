@@ -53,7 +53,7 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
   // Feature hooks
   const getSharedDragData: TimelineEventContext['getSharedDragData'] = useEventCallback((input) => {
     const offsetBeforeRowStart = Math.max(
-      adapter.toJsDate(rowStart).getTime() - adapter.toJsDate(start).getTime(),
+      adapter.toJsDate(rowStart).getTime() - start.timestamp,
       0,
     );
 
@@ -72,8 +72,8 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
       eventId,
       occurrenceKey,
       originalOccurrence,
-      start,
-      end,
+      start: start.value,
+      end: end.value,
       initialCursorPositionInEventMs: offsetBeforeRowStart + offsetInsideRow,
     };
   });

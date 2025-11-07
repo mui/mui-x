@@ -1,12 +1,13 @@
 import { Timeline } from '@mui/x-scheduler-headless/timeline';
 import { TimelineProvider } from '@mui/x-scheduler-headless/timeline-provider';
 import { adapter, createSchedulerRenderer, describeConformance } from 'test/utils/scheduler';
+import { processDate } from '@mui/x-scheduler-headless/process-date';
 
 describe('<Timeline.Event />', () => {
   const { render } = createSchedulerRenderer();
 
-  const start = adapter.startOfDay(adapter.date());
-  const end = adapter.endOfDay(adapter.date());
+  const start = processDate(adapter.startOfDay(adapter.date()), adapter);
+  const end = processDate(adapter.endOfDay(adapter.date()), adapter);
 
   describeConformance(
     <Timeline.Event
@@ -22,7 +23,7 @@ describe('<Timeline.Event />', () => {
         return render(
           <TimelineProvider events={[]}>
             <Timeline.Root items={[]}>
-              <Timeline.EventRow start={start} end={end} resourceId={null}>
+              <Timeline.EventRow start={start.value} end={end.value} resourceId={null}>
                 {node}
               </Timeline.EventRow>
             </Timeline.Root>

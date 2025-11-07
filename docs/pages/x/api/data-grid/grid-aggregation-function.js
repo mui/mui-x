@@ -11,7 +11,7 @@ export default function Page(props) {
   );
 }
 
-Page.getInitialProps = () => {
+export async function getStaticProps() {
   const req = require.context(
     'docsx/translations/api-docs/data-grid/',
     false,
@@ -20,7 +20,9 @@ Page.getInitialProps = () => {
   const descriptions = mapApiPageTranslations(req);
 
   return {
-    descriptions,
-    pageContent: jsonPageContent,
+    props: {
+      descriptions,
+      pageContent: jsonPageContent,
+    },
   };
-};
+}

@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { useAdapter } from '../../use-adapter/useAdapter';
-import { CalendarEvent, CalendarResourceId, SchedulerValidDate } from '../../models';
+import { CalendarResourceId, SchedulerEvent, SchedulerValidDate } from '../../models';
 import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
 import { TimelineEventRowContext } from './TimelineEventRowContext';
 import { useDropTarget } from '../../utils/useDropTarget';
@@ -158,7 +158,7 @@ export namespace useEventRowDropTarget {
     /**
      * Add properties to the event dropped in the row before storing it in the store.
      */
-    addPropertiesToDroppedEvent?: () => Partial<CalendarEvent>;
+    addPropertiesToDroppedEvent?: () => Partial<SchedulerEvent>;
   }
 
   export interface ReturnValue

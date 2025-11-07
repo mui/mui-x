@@ -6,11 +6,15 @@ import { useEventOccurrencesWithTimelinePosition } from '../../use-event-occurre
 import { timelineOccurrencePlaceholderSelectors } from '../../timeline-selectors';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
 import { isInternalDragOrResizePlaceholder } from '../../utils/drag-utils';
+import { processDate } from '../../process-date';
+import { useAdapter } from '../../use-adapter';
 
 export function useTimelinePlaceholderInRange(
   parameters: useTimelinePlaceholderInRange.Parameters,
 ): useTimelinePlaceholderInRange.ReturnValue {
   const { start, end, occurrences, maxIndex, resourceId } = parameters;
+
+  const adapter = useAdapter();
   const store = useTimelineStoreContext();
 
   const rawPlaceholder = useStore(
@@ -33,8 +37,9 @@ export function useTimelinePlaceholderInRange(
 
     const sharedProperties = {
       key: 'occurrence-placeholder',
-      start: rawPlaceholder.start,
-      end: rawPlaceholder.end,
+      start: processDate(rawPlaceholder.start, adapter),
+      end: processDate(rawPlaceholder.end, adapter),
+      modelInBuiltInFormat: null,
     };
 
     if (rawPlaceholder.type === 'creation') {
@@ -73,7 +78,7 @@ export function useTimelinePlaceholderInRange(
       ...sharedProperties,
       position,
     };
-  }, [rawPlaceholder, occurrences, maxIndex, originalEvent]);
+  }, [adapter, rawPlaceholder, occurrences, maxIndex, originalEvent]);
 }
 
 export namespace useTimelinePlaceholderInRange {

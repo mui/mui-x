@@ -3,9 +3,66 @@ import { RecurringEventRecurrenceRule } from './recurringEvent';
 import type { CalendarOccurrencePlaceholderExternalDragData } from './dragAndDrop';
 import type { CalendarResourceId } from './resource';
 
-// TODO: Rename SchedulerProcessedEvent and replace the raw SchedulerValidDate with processed dates.
-// TODO: Create a new SchedulerDefaultEventModel to replace CalendarEvent on props.events.
-export interface CalendarEvent {
+export interface SchedulerProcessedEvent {
+  /**
+   * The unique identifier of the event.
+   */
+  id: CalendarEventId;
+  /**
+   * The title of the event.
+   */
+  title: string;
+  /**
+   * The description of the event.
+   */
+  description?: string;
+  /**
+   * The start date and time of the event.
+   */
+  start: CalendarProcessedDate;
+  /**
+   * The end date and time of the event.
+   */
+  end: CalendarProcessedDate;
+  /**
+   * The id of the resource this event is associated with.
+   */
+  resource?: CalendarResourceId | null;
+  /**
+   * The recurrence rule for the event.
+   * If not defined, the event will have only one occurrence.
+   */
+  rrule?: RecurringEventRecurrenceRule;
+  /**
+   * Exception dates for the event.
+   * These dates will be excluded from the recurrence.
+   */
+  exDates?: SchedulerValidDate[];
+  /**
+   * Whether the event is an all-day event.
+   * @default false
+   */
+  allDay?: boolean;
+  /**
+   * Whether the event is read-only.
+   * Readonly events cannot be modified using UI features such as popover editing or drag and drop.
+   * @default false
+   */
+  readOnly?: boolean;
+  /**
+   * The id of the original event from which this event was split.
+   * If provided, it must reference an existing event in the calendar.
+   * If it does not match any existing event, the value will be ignored
+   * and no link to an original event will be created.
+   */
+  extractedFromId?: CalendarEventId;
+  /**
+   * The event model in the `SchedulerEvent` format.
+   */
+  modelInBuiltInFormat: SchedulerEvent | null;
+}
+
+export interface SchedulerEvent {
   /**
    * The unique identifier of the event.
    */
@@ -43,11 +100,13 @@ export interface CalendarEvent {
   exDates?: SchedulerValidDate[];
   /**
    * Whether the event is an all-day event.
+   * @default false
    */
   allDay?: boolean;
   /**
    * Whether the event is read-only.
    * Readonly events cannot be modified using UI features such as popover editing or drag and drop.
+   * @default false
    */
   readOnly?: boolean;
   /**
@@ -62,7 +121,7 @@ export interface CalendarEvent {
 /**
  *  A concrete occurrence derived from a `CalendarEvent` (recurring or single).
  */
-export interface CalendarEventOccurrence extends CalendarEvent {
+export interface CalendarEventOccurrence extends SchedulerProcessedEvent {
   /**
    * Unique key that can be passed to the React `key` property when looping through events.
    */
@@ -217,6 +276,10 @@ export interface CalendarProcessedDate {
    * It only contains date information, two dates representing the same day but with different time will have the same key.
    */
   key: string;
+  /**
+   * The timestamp of the date.
+   */
+  timestamp: number;
 }
 
 /**
@@ -224,8 +287,9 @@ export interface CalendarProcessedDate {
  * The `id`, `start` and `end` properties are required in order to identify the event to update and the new dates.
  * All other properties are optional and can be skipped if not modified.
  */
-export type CalendarEventUpdatedProperties = Partial<CalendarEvent> &
-  Required<Pick<CalendarEvent, 'id'>>;
+export type CalendarEventUpdatedProperties = Partial<SchedulerEvent> & {
+  id: CalendarEventId;
+};
 
 // TODO: Consider splitting the interface in two, one for the Event Calendar and one for the Timeline.
 /**
@@ -234,15 +298,15 @@ export type CalendarEventUpdatedProperties = Partial<CalendarEvent> &
 export type EventSurfaceType = 'day-grid' | 'time-grid' | 'timeline';
 
 export type SchedulerEventModelStructure<TEvent extends object> = {
-  [key in keyof CalendarEvent]?: {
-    getter: (event: TEvent) => CalendarEvent[key];
+  [key in keyof SchedulerEvent]?: {
+    getter: (event: TEvent) => SchedulerEvent[key];
     /**
      * Setter for the event property.
      * If not provided, the property won't be editable.
      */
     setter?: (
       event: TEvent | Partial<TEvent>,
-      value: CalendarEvent[key],
+      value: SchedulerEvent[key],
     ) => TEvent | Partial<TEvent>;
   };
 };

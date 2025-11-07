@@ -5,12 +5,16 @@ import { useEventCalendarStoreContext } from '../../use-event-calendar-store-con
 import { schedulerEventSelectors } from '../../scheduler-selectors';
 import { useEventOccurrencesWithTimelinePosition } from '../../use-event-occurrences-with-timeline-position';
 import { eventCalendarOccurrencePlaceholderSelectors } from '../../event-calendar-selectors';
+import { processDate } from '../../process-date';
+import { useAdapter } from '../../use-adapter';
 import { isInternalDragOrResizePlaceholder } from '../../utils/drag-utils';
 
 export function useCalendarGridPlaceholderInRange(
   parameters: useCalendarGridPlaceholderInRange.Parameters,
 ): useCalendarGridPlaceholderInRange.ReturnValue {
   const { start, end, occurrences, maxIndex } = parameters;
+
+  const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
 
   const rawPlaceholder = useStore(
@@ -32,8 +36,9 @@ export function useCalendarGridPlaceholderInRange(
 
     const sharedProperties = {
       key: 'occurrence-placeholder',
-      start: rawPlaceholder.start,
-      end: rawPlaceholder.end,
+      start: processDate(rawPlaceholder.start, adapter),
+      end: processDate(rawPlaceholder.end, adapter),
+      modelInBuiltInFormat: null,
     };
 
     if (rawPlaceholder.type === 'creation') {
@@ -72,7 +77,7 @@ export function useCalendarGridPlaceholderInRange(
       ...sharedProperties,
       position,
     };
-  }, [rawPlaceholder, occurrences, maxIndex, originalEvent]);
+  }, [adapter, rawPlaceholder, occurrences, maxIndex, originalEvent]);
 }
 
 export namespace useCalendarGridPlaceholderInRange {
