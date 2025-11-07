@@ -9,20 +9,27 @@ describe('<Timeline.Event />', () => {
   const start = processDate(adapter.startOfDay(adapter.date()), adapter);
   const end = processDate(adapter.endOfDay(adapter.date()), adapter);
 
-  describeConformance(<Timeline.Event start={start} end={end} />, () => ({
-    refInstanceof: window.HTMLDivElement,
-    render(node) {
-      return render(
-        <TimelineProvider events={[]}>
-          <Timeline.Root items={[]}>
-            <Timeline.EventRow start={start.value} end={end.value}>
-              <Timeline.Event start={start} end={end}>
+  describeConformance(
+    <Timeline.Event
+      eventId="fake-id"
+      occurrenceKey="fake-key"
+      start={start}
+      end={end}
+      renderDragPreview={() => null}
+    />,
+    () => ({
+      refInstanceof: window.HTMLDivElement,
+      render(node) {
+        return render(
+          <TimelineProvider events={[]}>
+            <Timeline.Root items={[]}>
+              <Timeline.EventRow start={start.value} end={end.value} resourceId={null}>
                 {node}
-              </Timeline.Event>
-            </Timeline.EventRow>
-          </Timeline.Root>
-        </TimelineProvider>,
-      );
-    },
-  }));
+              </Timeline.EventRow>
+            </Timeline.Root>
+          </TimelineProvider>,
+        );
+      },
+    }),
+  );
 });
