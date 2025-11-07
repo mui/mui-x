@@ -76,18 +76,14 @@ export function sortEventOccurrences(
 ): CalendarEventOccurrence[] {
   return occurrences
     .map((occurrence) => {
-      // If we sort by date only, we normalize the start to be the start of the day
-      const occurrenceStart = occurrence.allDay
-        ? adapter.startOfDay(occurrence.start)
-        : occurrence.start;
-
-      const occurrenceEnd = occurrence.allDay ? adapter.endOfDay(occurrence.end) : occurrence.end;
+      const start = occurrence.allDay ? adapter.startOfDay(occurrence.start) : occurrence.start;
+      const end = occurrence.allDay ? adapter.endOfDay(occurrence.end) : occurrence.end;
 
       return {
         occurrence,
         // TODO: Avoid JS Date conversion
-        start: adapter.toJsDate(occurrenceStart).getTime(),
-        end: adapter.toJsDate(occurrenceEnd).getTime(),
+        start: adapter.toJsDate(start).getTime(),
+        end: adapter.toJsDate(end).getTime(),
       };
     })
     .sort((a, b) => a.start - b.start || b.end - a.end)
