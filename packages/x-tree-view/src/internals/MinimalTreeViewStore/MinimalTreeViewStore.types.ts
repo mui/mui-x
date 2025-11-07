@@ -6,7 +6,7 @@ export interface MinimalTreeViewState<
   Multiple extends boolean | undefined,
 > {
   /**
-   * If `true`, will allow focus on disabled items.
+   * Whether the button should be focusable when disabled.
    * Always equal to `props.disabledItemsFocusable` (or `false` if not provided).
    */
   disabledItemsFocusable: boolean;
@@ -92,9 +92,10 @@ export interface MinimalTreeViewParameters<
    */
   isRtl: boolean;
   /**
-   * If `true`, will allow focus on disabled items.
+   * Whether the items should be focusable when disabled.
    * @default false
    */
+  // TODO Base UI: Rename focusableWhenDisabled.
   disabledItemsFocusable?: boolean;
   items: readonly R[];
   /**
@@ -198,7 +199,7 @@ export interface MinimalTreeViewParameters<
    */
   defaultSelectedItems?: TreeViewSelectionReadonlyValue<Multiple>;
   /**
-   * If `true`, `ctrl` and `shift` will trigger multiselect.
+   * Whether multiple items can be selected.
    * @default false
    */
   multiSelect?: Multiple;

@@ -15,7 +15,7 @@
       "description": "Selected item ids. (Uncontrolled) When <code>multiSelect</code> is true this takes an array of strings; when false (default) a string."
     },
     "disabledItemsFocusable": {
-      "description": "If <code>true</code>, will allow focus on disabled items."
+      "description": "Whether the items should be focusable when disabled."
     },
     "disableSelection": { "description": "Whether selection is disabled." },
     "expandedItems": {
@@ -62,9 +62,7 @@
     "itemChildrenIndentation": {
       "description": "Horizontal indentation between an item and its children. Examples: 24, &quot;24px&quot;, &quot;2rem&quot;, &quot;2em&quot;."
     },
-    "multiSelect": {
-      "description": "If <code>true</code>, <code>ctrl</code> and <code>shift</code> will trigger multiselect."
-    },
+    "multiSelect": { "description": "Whether multiple items can be selected." },
     "onExpandedItemsChange": {
       "description": "Callback fired when Tree Items are expanded/collapsed.",
       "typeDescriptions": {
