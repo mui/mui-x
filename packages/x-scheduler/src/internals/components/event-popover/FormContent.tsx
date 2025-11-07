@@ -574,7 +574,7 @@ export default function FormContent(props: FormContentProps) {
               <Select.Root
                 items={recurrenceOptions}
                 value={controlled.recurrenceSelection}
-                onValueChange={(val) => handleRecurrenceSelectionChange(val)}
+                onValueChange={(value) => handleRecurrenceSelectionChange(value)}
                 readOnly={isPropertyReadOnly('rrule')}
               >
                 <Select.Trigger
