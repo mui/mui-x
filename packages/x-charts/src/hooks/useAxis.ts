@@ -82,10 +82,6 @@ export function useYAxes() {
  * @example
  * // Get a specific X axis by string ID
  * const xAxis = useXAxis('revenue');
- *
- * @example
- * // Get the second X axis by index
- * const xAxis = useXAxis(1);
  */
 export function useXAxis<T extends keyof AxisScaleConfig>(
   axisId?: AxisId,
@@ -113,10 +109,6 @@ export function useXAxis<T extends keyof AxisScaleConfig>(
  * @example
  * // Get a specific Y axis by string ID
  * const yAxis = useYAxis('temperature');
- *
- * @example
- * // Get the second Y axis by index
- * const yAxis = useYAxis(1);
  */
 export function useYAxis<T extends keyof AxisScaleConfig>(
   axisId?: AxisId,
@@ -194,10 +186,6 @@ export function useRadiusAxes() {
  * @example
  * // Get a specific rotation axis by string ID
  * const rotationAxis = useRotationAxis('categories');
- *
- * @example
- * // Get the second rotation axis by index
- * const rotationAxis = useRotationAxis(1);
  */
 export function useRotationAxis(
   axisId?: AxisId,
@@ -231,10 +219,6 @@ export function useRotationAxis(
  * @example
  * // Get a specific radius axis by string ID
  * const radiusAxis = useRadiusAxis('magnitude');
- *
- * @example
- * // Get the second radius axis by index
- * const radiusAxis = useRadiusAxis(1);
  */
 export function useRadiusAxis(
   axisId?: AxisId,
