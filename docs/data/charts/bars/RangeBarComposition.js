@@ -10,10 +10,11 @@ import {
   useXScale,
   useYScale,
 } from '@mui/x-charts/hooks';
-import { nice } from '@mui/x-charts-vendor/es/d3-array';
 import { useTheme, styled } from '@mui/system';
 import { ChartsTooltipContainer, useAxesTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
+
+import { niceDomain } from '@mui/x-charts/utils';
 import originalDataset from '../dataset/sp500-intraday.json'; // Source: Yahoo Finance
 
 const tickLabelDateFormatter = new Intl.DateTimeFormat(undefined, {
@@ -37,54 +38,60 @@ const tooltipDollarFormatter = new Intl.NumberFormat(undefined, {
   maximumFractionDigits: 2,
 });
 
+const min = originalDataset.reduce((acc, cur) => Math.min(acc, cur.low), Infinity);
+const max = originalDataset.reduce((acc, cur) => Math.max(acc, cur.high), -Infinity);
+
+const xAxis = [
+  {
+    id: 'x',
+    scaleType: 'band',
+    dataKey: 'date',
+    zoom: { minSpan: 1, filterMode: 'discard' },
+    valueFormatter: (date, context) => {
+      const formatter =
+        context.location === 'tick' ? tickLabelDateFormatter : tooltipDateFormatter;
+
+      return formatter.format(Date.parse(date));
+    },
+  },
+];
+
+const yAxis = [
+  {
+    id: 'y',
+    scaleType: 'linear',
+    domainLimit: () => {
+      const domain = niceDomain('linear', [min, max]);
+
+      return { min: domain[0].valueOf(), max: domain[1].valueOf() };
+    },
+    valueFormatter: (value) => tickLabelDollarFormatter.format(value),
+  },
+];
+
+const series = [
+  {
+    type: 'barRange',
+    datasetKeys: { start: 'open', end: 'close' },
+    xAxisId: 'x',
+    yAxisId: 'y',
+    colorGetter: (data) => {
+      const value = originalDataset[data.dataIndex];
+
+      return value.close > value.open ? 'green' : 'red';
+    },
+  },
+];
+
 export default function RangeBarComposition() {
   const clipPathId = React.useId();
-  const min = originalDataset.reduce((acc, cur) => Math.min(acc, cur.low), Infinity);
-  const max = originalDataset.reduce(
-    (acc, cur) => Math.max(acc, cur.high),
-    -Infinity,
-  );
 
   return (
     <ChartContainerPro
       dataset={originalDataset}
-      xAxis={[
-        {
-          id: 'x',
-          scaleType: 'band',
-          dataKey: 'date',
-          zoom: { minSpan: 1, filterMode: 'discard' },
-          valueFormatter: (date, context) => {
-            const formatter =
-              context.location === 'tick'
-                ? tickLabelDateFormatter
-                : tooltipDateFormatter;
-
-            return formatter.format(Date.parse(date));
-          },
-        },
-      ]}
-      yAxis={[
-        {
-          id: 'y',
-          scaleType: 'linear',
-          domainLimit: nice([min, max]),
-          valueFormatter: (value) => tickLabelDollarFormatter.format(value),
-        },
-      ]}
-      series={[
-        {
-          type: 'barRange',
-          datasetKeys: { start: 'open', end: 'close' },
-          xAxisId: 'x',
-          yAxisId: 'y',
-          colorGetter: (data) => {
-            const value = originalDataset[data.dataIndex];
-
-            return value.close > value.open ? 'green' : 'red';
-          },
-        },
-      ]}
+      xAxis={xAxis}
+      yAxis={yAxis}
+      series={series}
       height={300}
     >
       <ChartsXAxis />
