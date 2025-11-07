@@ -37,7 +37,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 
   // Ref hooks
   const bodyRef = React.useRef<HTMLDivElement>(null);
-  const multiDayHeaderWrapperRef = React.useRef<HTMLDivElement>(null);
+  const allDayHeaderWrapperRef = React.useRef<HTMLDivElement>(null);
   const containerRef = React.useRef<HTMLElement | null>(null);
   const handleRef = useMergedRefs(forwardedRef, containerRef);
 
@@ -77,12 +77,12 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 
   useIsoLayoutEffect(() => {
     const body = bodyRef.current;
-    const multiDayHeader = multiDayHeaderWrapperRef.current;
-    if (!body || !multiDayHeader) {
+    const allDayHeader = allDayHeaderWrapperRef.current;
+    if (!body || !allDayHeader) {
       return;
     }
     const hasScroll = body.scrollHeight > body.clientHeight;
-    multiDayHeader.style.setProperty('--has-scroll', hasScroll ? '1' : '0');
+    allDayHeader.style.setProperty('--has-scroll', hasScroll ? '1' : '0');
   }, [occurrencesMap]);
 
   const lastIsWeekend = isWeekend(adapter, days[days.length - 1].value);
@@ -112,7 +112,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
       <EventPopoverProvider containerRef={containerRef}>
         <div className="DayTimeGridHeader">
           <CalendarGrid.HeaderRow className="DayTimeGridGridRow DayTimeGridHeaderRow">
-            <div className="DayTimeGridMultiDayEventsCell" />
+            <div className="DayTimeGridAllDayEventsCell" />
             {days.map((day) => (
               <CalendarGrid.HeaderCell
                 key={day.key}
@@ -137,20 +137,21 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
         </div>
 
         <div
-          ref={multiDayHeaderWrapperRef}
-          className={clsx('DayTimeGridGridRow', 'DayTimeGridMultiDayEventsGrid')}
+          ref={allDayHeaderWrapperRef}
+          className={clsx('DayTimeGridGridRow', 'DayTimeGridAllDayEventsGrid')}
           data-weekend={lastIsWeekend ? '' : undefined}
         >
           <div
-            className="DayTimeGridMultiDayEventsCell DayTimeGridMultiDayEventsHeaderCell"
-            id="DayTimeGridMultiDayEventsHeaderCell"
+            className="DayTimeGridAllDayEventsCell DayTimeGridAllDayEventsHeaderCell"
+            id="DayTimeGridAllDayEventsHeaderCell"
             role="columnheader"
-            aria-label={translations.allDay}
-          />
+          >
+            {translations.allDay}
+          </div>
           <CalendarGrid.DayRow
             start={start}
             end={end}
-            className="DayTimeGridMultiDayEventsRow"
+            className="DayTimeGridAllDayEventsRow"
             role="row"
             style={{ '--column-count': days.length } as React.CSSProperties}
           >

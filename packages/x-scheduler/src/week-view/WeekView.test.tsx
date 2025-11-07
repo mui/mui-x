@@ -35,28 +35,43 @@ describe('<WeekView />', () => {
   describe('All day events', () => {
     it('should render all-day events correctly with main event in start date cell', () => {
       render(
-        <EventCalendarProvider events={allDayEvents} resources={[]}>
+        <EventCalendarProvider
+          events={[
+            {
+              id: '1',
+              start: adapter.date('2025-05-05T00:00:00'),
+              end: adapter.date('2025-05-07T23:59:59'),
+              title: 'Test event',
+              allDay: true,
+            },
+          ]}
+          resources={[]}
+        >
           <WeekView />
         </EventCalendarProvider>,
       );
-      const allDayCells = screen.getAllByRole('gridcell');
-      const may5Cell = allDayCells.find((cell) => {
-        const labelledBy = cell.getAttribute('aria-labelledby');
-        return labelledBy?.includes('DayTimeGridHeaderCell-5 DayTimeGridMultiDayEventsHeaderCell');
-      });
+
+      const getEventsFromWeekDay = (weekDay: number) => {
+        const allDayCells = screen.getAllByRole('gridcell');
+        return allDayCells
+          .find((cell) => {
+            const labelledBy = cell.getAttribute('aria-labelledby');
+            return labelledBy?.includes(
+              `DayTimeGridHeaderCell-${weekDay} DayTimeGridAllDayEventsHeaderCell`,
+            );
+          })!
+          .querySelectorAll('.EventContainer');
+      };
 
       // Main event should render in the start date cell
-      expect(within(may5Cell!).getByText('Multi-day Conference')).not.to.equal(null);
+      expect(getEventsFromWeekDay(5)).toHaveLength(1);
 
       // Invisible events should exist in the spanned cells
-      const allEvents = screen.getAllByLabelText('Multi-day Conference');
-      expect(allEvents.length).to.be.greaterThan(1);
-
-      // Check that invisible events have aria-hidden attribute
-      const hiddenEvents = allEvents.filter(
-        (event) => event.getAttribute('aria-hidden') === 'true',
-      );
-      expect(hiddenEvents.length).to.be.greaterThan(0);
+      // Also check that invisible events have aria-hidden attribute
+      expect(getEventsFromWeekDay(6)).toHaveLength(1);
+      expect(getEventsFromWeekDay(6)[0]).to.have.attribute('aria-hidden', 'true');
+      expect(getEventsFromWeekDay(7)).toHaveLength(1);
+      expect(getEventsFromWeekDay(7)[0]).to.have.attribute('aria-hidden', 'true');
     });
 
     it('should render all-day event in first cell of week when event starts before the week', () => {
@@ -66,10 +81,10 @@ describe('<WeekView />', () => {
         </EventCalendarProvider>,
       );
 
-      const multiDayHeader = screen.getByRole('columnheader', { name: /all day/i });
-      const multiDayGrid = multiDayHeader.closest('[class*="MultiDayEventsGrid"]') as HTMLElement;
-      const multiDayRow = within(multiDayGrid).getByRole('row');
-      const gridCells = within(multiDayRow).getAllByRole('gridcell');
+      const allDayHeader = screen.getByRole('columnheader', { name: /all day/i });
+      const allDayGrid = allDayHeader.closest('[class*="AllDayEventsGrid"]') as HTMLElement;
+      const allDayRow = within(allDayGrid).getByRole('row');
+      const gridCells = within(allDayRow).getAllByRole('gridcell');
       // Find the first cell of the first week in May 2025
       const firstCell = gridCells[0];
 
@@ -160,11 +175,11 @@ describe('<WeekView />', () => {
         </EventCalendarProvider>,
       );
 
-      const multiDayHeader = screen.getByRole('columnheader', { name: /all day/i });
-      const multiDayGrid = multiDayHeader.closest('[class*="MultiDayEventsGrid"]') as HTMLElement;
-      const multiDayRow = within(multiDayGrid).getByRole('row');
+      const allDayHeader = screen.getByRole('columnheader', { name: /all day/i });
+      const allDayGrid = allDayHeader.closest('[class*="AllDayEventsGrid"]') as HTMLElement;
+      const allDayRow = within(allDayGrid).getByRole('row');
 
-      const mainEvent = within(multiDayRow)
+      const mainEvent = within(allDayRow)
         .getAllByLabelText('Four day event')
         .find((el) => el.getAttribute('aria-hidden') !== 'true');
       const eventStyle = mainEvent?.getAttribute('style') || '';

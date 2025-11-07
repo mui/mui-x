@@ -61,18 +61,18 @@ export function DayGridCell(props: DayGridCellProps) {
       ref={cellRef}
       value={day.value}
       addPropertiesToDroppedEvent={addPropertiesToDroppedEvent}
-      className="DayTimeGridMultiDayEventsCell"
+      className="DayTimeGridAllDayEventsCell"
       style={
         {
           '--row-count': row.maxIndex,
         } as React.CSSProperties
       }
-      aria-labelledby={`DayTimeGridHeaderCell-${adapter.getDate(day.value)} DayTimeGridMultiDayEventsHeaderCell`}
+      aria-labelledby={`DayTimeGridHeaderCell-${adapter.getDate(day.value)} DayTimeGridAllDayEventsHeaderCell`}
       role="gridcell"
       data-weekend={isWeekend(adapter, day.value) ? '' : undefined}
       onDoubleClick={handleDoubleClick}
     >
-      <div className="DayTimeGridMultiDayEventsCellEvents">
+      <div className="DayTimeGridAllDayEventsCellEvents">
         {day.withPosition.map((occurrence) => {
           if (occurrence.position.isInvisible) {
             return (
@@ -89,7 +89,7 @@ export function DayGridCell(props: DayGridCellProps) {
           );
         })}
         {placeholder != null && (
-          <div className="DayTimeGridMultiDayEventContainer">
+          <div className="DayTimeGridAllDayEventContainer">
             <DayGridEvent occurrence={placeholder} variant="placeholder" />
           </div>
         )}
