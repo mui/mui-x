@@ -569,7 +569,7 @@ export default function FormContent(props: FormContentProps) {
           <div className="EventPopoverMainContent">
             <Field.Root className="EventPopoverFieldRoot" name="recurrencePreset">
               <Field.Label className="EventPopoverRecurrenceFormLabel">
-                Select your recurrence pattern
+                {translations.recurrenceMainSelectCustomLabel}
               </Field.Label>
               <Select.Root
                 items={recurrenceOptions}
@@ -610,7 +610,9 @@ export default function FormContent(props: FormContentProps) {
               disabled={customDisabled}
               aria-disabled={customDisabled}
             >
-              <Fieldset.Legend className="EventPopoverRecurrenceFormLabel">Repeat</Fieldset.Legend>
+              <Fieldset.Legend className="EventPopoverRecurrenceFormLabel">
+                {translations.recurrenceRepeatLabel}
+              </Fieldset.Legend>
               <Field.Root className="EventPopoverInputsRow">
                 {translations.recurrenceEveryLabel}
                 <Input

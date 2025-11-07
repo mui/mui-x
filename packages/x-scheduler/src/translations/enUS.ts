@@ -67,6 +67,8 @@ export const enUS: SchedulerTranslations = {
   recurrenceEndsUntilLabel: 'Until',
   recurrenceEndsTimesLabel: 'times',
   recurrenceEveryLabel: 'Every',
+  recurrenceRepeatLabel: 'Repeat',
+  recurrenceMainSelectCustomLabel: 'Select your recurrence pattern',
   recurrenceWeeklyFrequencyLabel: 'weeks',
   recurrenceWeeklyPresetLabel: (weekday) => `Repeats weekly on ${weekday}`,
   recurrenceMonthlyFrequencyLabel: 'months',
