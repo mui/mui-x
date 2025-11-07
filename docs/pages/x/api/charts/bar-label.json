@@ -7,8 +7,8 @@
     "y": { "type": { "name": "number" }, "required": true },
     "yOrigin": { "type": { "name": "number" }, "required": true },
     "barLabelPlacement": {
-      "type": { "name": "enum", "description": "'above'<br>&#124;&nbsp;'inside'" },
-      "default": "'inside'"
+      "type": { "name": "enum", "description": "'outside'<br>&#124;&nbsp;'inside'" },
+      "default": "'center'"
     }
   },
   "name": "BarLabel",

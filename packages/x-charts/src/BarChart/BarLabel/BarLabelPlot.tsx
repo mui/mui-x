@@ -41,7 +41,7 @@ function BarLabelPlot(props: BarLabelPlotProps) {
           layout={layout ?? 'vertical'}
           {...other}
           barLabel={barLabel}
-          barLabelPlacement={processedSeries.barLabelPlacement || 'inside'}
+          barLabelPlacement={processedSeries.barLabelPlacement || 'center'}
         />
       ))}
     </g>
