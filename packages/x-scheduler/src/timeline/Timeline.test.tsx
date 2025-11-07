@@ -2,7 +2,13 @@ import { screen } from '@mui/internal-test-utils';
 import { diffIn } from '@mui/x-scheduler-headless/use-adapter';
 import { Timeline } from '@mui/x-scheduler/timeline';
 import { CalendarEvent, CalendarResource, TimelineView } from '@mui/x-scheduler-headless/models';
-import { adapter, createSchedulerRenderer } from 'test/utils/scheduler';
+import {
+  adapter,
+  createSchedulerRenderer,
+  DEFAULT_TESTING_VISIBLE_DATE,
+  DEFAULT_TESTING_VISIBLE_DATE_STR,
+  EventBuilder,
+} from 'test/utils/scheduler';
 
 const baseResources: CalendarResource[] = [
   { id: 'resource-1', title: 'Engineering', eventColor: 'blue' },
@@ -10,35 +16,28 @@ const baseResources: CalendarResource[] = [
 ];
 
 const baseEvents: CalendarEvent[] = [
-  {
-    id: 'event-1',
-    title: 'Spec Review',
-    start: adapter.date('2025-07-03T09:00:00Z'),
-    end: adapter.date('2025-07-03T10:00:00Z'),
-    resource: 'resource-1',
-  },
-  {
-    id: 'event-2',
-    title: 'UX Sync',
-    start: adapter.date('2025-07-03T11:00:00Z'),
-    end: adapter.date('2025-07-06T12:00:00Z'),
-    resource: 'resource-2',
-  },
-  {
-    id: 'event-3',
-    title: 'Architecture Session',
-    start: adapter.date('2025-07-04T13:00:00Z'),
-    end: adapter.date('2025-08-04T14:30:00Z'),
-    resource: 'resource-1',
-  },
+  EventBuilder.new()
+    .title('Spec Review')
+    .singleDay('2025-07-03T09:00:00Z')
+    .resource('resource-1')
+    .build(),
+  EventBuilder.new()
+    .title('UX Sync')
+    .span('2025-07-03T11:00:00Z', '2025-07-06T12:00:00Z')
+    .resource('resource-2')
+    .build(),
+  EventBuilder.new()
+    .title('Architecture Session')
+    .span('2025-07-04T13:00:00Z', '2025-08-04T14:30:00Z')
+    .resource('resource-1')
+    .build(),
 ];
 
 describe('<Timeline />', () => {
   const { render } = createSchedulerRenderer({
-    clockConfig: new Date('2025-07-03T00:00:00Z'),
+    clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
   });
 
-  const visibleDate = adapter.date('2025-07-03T00:00:00Z');
   function renderTimeline(options?: {
     resources?: CalendarResource[];
     events?: CalendarEvent[];
@@ -49,7 +48,7 @@ describe('<Timeline />', () => {
       <Timeline
         resources={options?.resources ?? baseResources}
         events={options?.events ?? baseEvents}
-        visibleDate={visibleDate}
+        visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
         view={options?.view ?? 'days'}
         views={options?.views ?? ['time', 'days', 'weeks', 'months', 'years']}
       />,
@@ -89,13 +88,10 @@ describe('<Timeline />', () => {
     it('does not render events out of range', () => {
       const extendedEvents: CalendarEvent[] = [
         ...baseEvents,
-        {
-          id: 'event-4',
-          title: 'Out of range',
-          start: adapter.date('2050-07-04T13:00:00Z'),
-          end: adapter.date('2050-08-04T14:30:00Z'),
-          resource: 'resource-1',
-        },
+        EventBuilder.new()
+          .title('Out of range')
+          .span('2050-07-04T13:00:00Z', '2050-08-04T14:30:00Z')
+          .build(),
       ];
 
       renderTimeline({ events: extendedEvents });
@@ -112,7 +108,7 @@ describe('<Timeline />', () => {
         <Timeline
           resources={baseResources}
           events={baseEvents}
-          visibleDate={visibleDate}
+          visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
           view="days"
           views={['days', 'weeks']}
         />,
@@ -154,7 +150,7 @@ describe('<Timeline />', () => {
 
     it('should render events correctly in the weeks view', () => {
       const totalWidth = 3584; // 64px * 7 days * 8 weeks
-      const startOfWeek = adapter.startOfWeek(visibleDate);
+      const startOfWeek = adapter.startOfWeek(DEFAULT_TESTING_VISIBLE_DATE);
       const weekDayNumber = diffIn(adapter, baseEvents[0].start, startOfWeek, 'days');
       const dayBoundaries = { start: weekDayNumber * 64, end: (weekDayNumber + 1) * 64 };
 
@@ -173,13 +169,11 @@ describe('<Timeline />', () => {
     it('should render events correctly in the month view', () => {
       const extendedEvents: CalendarEvent[] = [
         ...baseEvents,
-        {
-          id: 'event-4',
-          title: 'Next month',
-          start: adapter.date('2025-08-04T13:00:00Z'),
-          end: adapter.date('2025-09-04T14:30:00Z'),
-          resource: 'resource-1',
-        },
+        EventBuilder.new()
+          .title('Next month')
+          .span('2025-08-04T13:00:00Z', '2025-09-04T14:30:00Z')
+          .resource('resource-1')
+          .build(),
       ];
 
       renderTimeline({ events: extendedEvents, view: 'months' });
@@ -204,20 +198,16 @@ describe('<Timeline />', () => {
     });
     it('should render events correctly in the month view', () => {
       const extendedEvents: CalendarEvent[] = [
-        {
-          id: 'event-1',
-          title: 'This year',
-          start: adapter.date('2025-08-03T13:00:00Z'),
-          end: adapter.date('2025-09-04T14:30:00Z'),
-          resource: 'resource-1',
-        },
-        {
-          id: 'event-2',
-          title: 'Next year',
-          start: adapter.date('2026-08-03T13:00:00Z'),
-          end: adapter.date('2026-09-04T14:30:00Z'),
-          resource: 'resource-1',
-        },
+        EventBuilder.new()
+          .title('This year')
+          .span('2025-08-03T13:00:00Z', '2025-09-04T14:30:00Z')
+          .resource('resource-1')
+          .build(),
+        EventBuilder.new()
+          .title('Next year')
+          .span('2026-08-03T13:00:00Z', '2026-09-04T14:30:00Z')
+          .resource('resource-1')
+          .build(),
       ];
 
       renderTimeline({ events: extendedEvents, view: 'years' });
