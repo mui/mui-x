@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useStore } from '@mui/x-internals/store';
-import { TreeViewCancellableEvent } from '@mui/x-tree-view/models';
+import { TreeViewCancellableEvent, TreeViewCancellableEventHandler } from '@mui/x-tree-view/models';
 import {
   TreeViewItemPlugin,
   useTreeViewContext,
@@ -8,12 +8,10 @@ import {
   isTargetInDescendants,
   UseTreeViewLabelSignature,
 } from '@mui/x-tree-view/internals';
+import { TreeItemDragAndDropOverlayProps } from '@mui/x-tree-view/TreeItemDragAndDropOverlay';
 import {
-  UseTreeItemDragAndDropOverlaySlotPropsFromItemsReordering,
-  UseTreeItemRootSlotPropsFromItemsReordering,
   UseTreeViewItemsReorderingSignature,
   TreeViewItemItemReorderingValidActions,
-  UseTreeItemContentSlotPropsFromItemsReordering,
 } from './useTreeViewItemsReordering.types';
 import { itemsReorderingSelectors } from './useTreeViewItemsReordering.selectors';
 
@@ -162,3 +160,27 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props
     },
   };
 };
+
+interface UseTreeItemRootSlotPropsFromItemsReordering {
+  draggable?: true;
+  onDragStart?: TreeViewCancellableEventHandler<React.DragEvent>;
+  onDragOver?: TreeViewCancellableEventHandler<React.DragEvent>;
+  onDragEnd?: TreeViewCancellableEventHandler<React.DragEvent>;
+}
+
+interface UseTreeItemContentSlotPropsFromItemsReordering {
+  onDragEnter?: TreeViewCancellableEventHandler<React.DragEvent>;
+  onDragOver?: TreeViewCancellableEventHandler<React.DragEvent>;
+}
+
+interface UseTreeItemDragAndDropOverlaySlotPropsFromItemsReordering
+  extends TreeItemDragAndDropOverlayProps {}
+
+declare module '@mui/x-tree-view/useTreeItem' {
+  interface UseTreeItemRootSlotOwnProps extends UseTreeItemRootSlotPropsFromItemsReordering {}
+
+  interface UseTreeItemContentSlotOwnProps extends UseTreeItemContentSlotPropsFromItemsReordering {}
+
+  interface UseTreeItemDragAndDropOverlaySlotOwnProps
+    extends UseTreeItemDragAndDropOverlaySlotPropsFromItemsReordering {}
+}

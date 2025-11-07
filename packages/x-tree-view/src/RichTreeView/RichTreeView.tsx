@@ -149,7 +149,7 @@ RichTreeView.propTypes = {
     }),
   }),
   /**
-   * If `true`, the Tree View renders a checkbox at the left of its label that allows selecting it.
+   * Whether the Tree View renders a checkbox at the left of its label that allows selecting it.
    * @default false
    */
   checkboxSelection: PropTypes.bool,
@@ -171,12 +171,12 @@ RichTreeView.propTypes = {
    */
   defaultSelectedItems: PropTypes.any,
   /**
-   * If `true`, will allow focus on disabled items.
+   * Whether the items should be focusable when disabled.
    * @default false
    */
   disabledItemsFocusable: PropTypes.bool,
   /**
-   * If `true` selection is disabled.
+   * Whether selection is disabled.
    * @default false
    */
   disableSelection: PropTypes.bool,
@@ -245,7 +245,7 @@ RichTreeView.propTypes = {
   itemChildrenIndentation: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   items: PropTypes.array.isRequired,
   /**
-   * If `true`, `ctrl` and `shift` will trigger multiselect.
+   * Whether multiple items can be selected.
    * @default false
    */
   multiSelect: PropTypes.bool,
