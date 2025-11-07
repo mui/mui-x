@@ -43,7 +43,7 @@ export function useEventOccurrencesWithDayGridPosition(
       }
 
       // 2. Sort the withPosition occurrences by start and end date
-      const sortedNeedsPosition = sortEventOccurrences(needsPosition, adapter, 'date');
+      const sortedNeedsPosition = sortEventOccurrences(needsPosition, adapter);
 
       // 3. Assign position to each occurrence
       const withPosition: CalendarEventOccurrenceWithDayGridPosition[] = [];

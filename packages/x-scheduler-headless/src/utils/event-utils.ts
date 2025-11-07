@@ -73,20 +73,13 @@ export interface GetOccurrencesFromEventsParameters {
 export function sortEventOccurrences(
   occurrences: CalendarEventOccurrence[],
   adapter: Adapter,
-  /**
-   * Defines how the occurrences are sorted.
-   * - "date": sorts by start and end date only (ignores time).
-   * - "date-time": sorts by start and end date and time.
-   */
-  sortingCriteria: 'date' | 'date-time',
 ): CalendarEventOccurrence[] {
   return occurrences
     .map((occurrence) => {
       // If we sort by date only, we normalize the start to be the start of the day
-      const occurrenceStart =
-        occurrence.allDay || sortingCriteria === 'date'
-          ? adapter.startOfDay(occurrence.start)
-          : occurrence.start;
+      const occurrenceStart = occurrence.allDay
+        ? adapter.startOfDay(occurrence.start)
+        : occurrence.start;
 
       const occurrenceEnd = occurrence.allDay ? adapter.endOfDay(occurrence.end) : occurrence.end;
 
