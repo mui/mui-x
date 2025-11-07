@@ -1,12 +1,6 @@
 import { warnOnce } from '@mui/x-internals/warning';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
-import {
-  AxisId,
-  isBandScaleConfig,
-  isPointScaleConfig,
-  ComputedXAxis,
-  ComputedYAxis,
-} from '../models/axis';
+import { AxisId, ComputedXAxis, ComputedYAxis } from '../models/axis';
 import { SeriesId } from '../models/seriesType/common';
 
 const getAxisMessage = (axisDirection: 'x' | 'y', axisId: AxisId) => {
@@ -23,9 +17,9 @@ export function checkScaleErrors(
   seriesId: SeriesId,
   seriesDataLength: number,
   xAxisId: AxisId,
-  xAxis: { [axisId: AxisId]: ComputedXAxis },
+  xAxis: { [axisId: AxisId]: Pick<ComputedXAxis, 'scaleType' | 'data'> },
   yAxisId: AxisId,
-  yAxis: { [axisId: AxisId]: ComputedYAxis },
+  yAxis: { [axisId: AxisId]: Pick<ComputedYAxis, 'scaleType' | 'data'> },
 ): void {
   const xAxisConfig = xAxis[xAxisId];
   const yAxisConfig = yAxis[yAxisId];
@@ -39,7 +33,7 @@ export function checkScaleErrors(
   const discreteAxisDirection = verticalLayout ? 'x' : 'y';
   const continuousAxisDirection = verticalLayout ? 'y' : 'x';
 
-  if (!isBandScaleConfig(discreteAxisConfig)) {
+  if (discreteAxisConfig.scaleType !== 'band') {
     throw new Error(
       `MUI X Charts: ${getAxisMessage(discreteAxisDirection, discreteAxisId)} should be of type "band" to display the bar series of id "${seriesId}".`,
     );
@@ -49,7 +43,7 @@ export function checkScaleErrors(
       `MUI X Charts: ${getAxisMessage(discreteAxisDirection, discreteAxisId)} should have data property.`,
     );
   }
-  if (isBandScaleConfig(continuousAxisConfig) || isPointScaleConfig(continuousAxisConfig)) {
+  if (continuousAxisConfig.scaleType === 'band' || continuousAxisConfig.scaleType === 'point') {
     throw new Error(
       `MUI X Charts: ${getAxisMessage(continuousAxisDirection, continuousAxisId)} should be a continuous type to display the bar series of id "${seriesId}".`,
     );
