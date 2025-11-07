@@ -58,8 +58,8 @@ describe('<EventPopoverContent />', () => {
 
   const { render } = createSchedulerRenderer();
 
-  it('should render the event data in the form fields', () => {
-    render(
+  it('should render the event data in the form fields', async () => {
+    const { user } = render(
       <EventCalendarProvider events={[occurrence]} resources={resources}>
         <Popover.Root open>
           <EventPopoverContent {...defaultProps} />
@@ -77,6 +77,7 @@ describe('<EventPopoverContent />', () => {
       'false',
     );
     expect(screen.getByRole('combobox', { name: /resource/i }).textContent).to.match(/personal/i);
+    await user.click(screen.getByRole('tab', { name: /recurrence/i }));
     expect(screen.getByRole('combobox', { name: /recurrence/i }).textContent).to.match(
       /don't repeat/i,
     );
@@ -97,6 +98,7 @@ describe('<EventPopoverContent />', () => {
     );
     await user.type(screen.getByLabelText(/event title/i), ' test');
     await user.click(screen.getByRole('checkbox', { name: /all day/i }));
+    await user.click(screen.getByRole('tab', { name: /recurrence/i }));
     await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
     await user.click(await screen.findByRole('option', { name: /repeats daily/i }));
     await user.click(screen.getByRole('combobox', { name: /resource/i }));
@@ -476,6 +478,7 @@ describe('<EventPopoverContent />', () => {
       await user.type(screen.getByLabelText(/description/i), ' Some details ');
       await user.click(screen.getByRole('combobox', { name: /resource/i }));
       await user.click(await screen.findByRole('option', { name: /work/i }));
+      await user.click(screen.getByRole('tab', { name: /recurrence/i }));
       await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
       await user.click(await screen.findByRole('option', { name: /daily/i }));
       await user.click(screen.getByRole('button', { name: /save changes/i }));
@@ -659,6 +662,7 @@ describe('<EventPopoverContent />', () => {
           </React.Fragment>,
         );
         // We update the recurrence from daily to weekly
+        await user.click(screen.getByRole('tab', { name: /recurrence/i }));
         await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
         await user.click(await screen.findByRole('option', { name: /repeats weekly/i }));
         await user.click(screen.getByRole('button', { name: /save changes/i }));
@@ -724,6 +728,7 @@ describe('<EventPopoverContent />', () => {
           </React.Fragment>,
         );
 
+        await user.click(screen.getByRole('tab', { name: /recurrence/i }));
         await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
         await user.click(await screen.findByRole('option', { name: /don.?t repeat/i }));
         await user.click(screen.getByRole('button', { name: /save changes/i }));
@@ -819,6 +824,7 @@ describe('<EventPopoverContent />', () => {
             </Popover.Root>
           </EventCalendarProvider>,
         );
+        await user.click(screen.getByRole('tab', { name: /recurrence/i }));
         await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
         await user.click(await screen.findByRole('option', { name: /repeats daily/i }));
         await user.click(screen.getByRole('button', { name: /save changes/i }));
