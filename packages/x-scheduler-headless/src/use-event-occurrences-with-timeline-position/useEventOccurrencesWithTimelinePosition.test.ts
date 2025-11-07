@@ -1,14 +1,14 @@
-import { adapter } from 'test/utils/scheduler';
+import { adapter, createProcessedEvent } from 'test/utils/scheduler';
 import { renderHook } from '@mui/internal-test-utils';
 import { useEventOccurrencesWithTimelinePosition } from './useEventOccurrencesWithTimelinePosition';
 import { getOccurrencesFromEvents } from '../utils/event-utils';
-import { CalendarEvent } from '../models';
+import { SchedulerProcessedEvent } from '../models';
 
 describe('useDayListEventOccurrencesWithPosition', () => {
   const collectionStart = adapter.date('2024-01-15');
   const collectionEnd = adapter.endOfDay(adapter.date('2024-01-15'));
 
-  function testHook(events: CalendarEvent[], maxSpan: number) {
+  function testHook(events: SchedulerProcessedEvent[], maxSpan: number) {
     const { result } = renderHook(() => {
       const occurrences = getOccurrencesFromEvents({
         adapter,
@@ -23,12 +23,13 @@ describe('useDayListEventOccurrencesWithPosition', () => {
     return result.current;
   }
 
-  const createEvent = (id: string, start: string, end: string): CalendarEvent => ({
-    id,
-    start: adapter.date(start),
-    end: adapter.date(end),
-    title: `Event ${id}`,
-  });
+  const createEvent = (id: string, start: string, end: string) =>
+    createProcessedEvent({
+      id,
+      start: adapter.date(start),
+      end: adapter.date(end),
+      title: `Event ${id}`,
+    });
 
   it('should set firstIndex and lastIndex to all events when no events are overlapping', () => {
     const result = testHook(
