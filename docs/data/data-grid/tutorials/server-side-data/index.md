@@ -621,6 +621,16 @@ app.listen(PORT, () => {
 - Results are paginated using `page` and `pageSize` parameters
 - Data is returned in the format expected by the Data Grid
 
+:::info
+This tutorial's backend server implements basic server-side functionality:
+
+- Pagination: Index-based pagination with `page` and `pageSize` parameters
+- Sorting: Single-column sorting in ascending or descending order
+- Filtering: Supports operators like `contains`, `equals`, `startsWith`, `endsWith`, `isEmpty`, and `isNotEmpty` with `And`/`Or` logic operators
+
+If your app requires additional features (such as multi-column sorting, advanced filtering operators, cursor-based pagination, or other server-side operations), you'll need to implement them in your backend accordingly.
+:::
+
 ### 5. Add scripts to package.json files
 
 In `server/package.json`, add:
