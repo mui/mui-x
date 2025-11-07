@@ -92,7 +92,7 @@ export interface UseTreeViewItemsInstance<R extends {}>
 
 export interface UseTreeViewItemsParameters<R extends { children?: R[] }> {
   /**
-   * If `true`, will allow focus on disabled items.
+   * Whether the items should be focusable when disabled.
    * @default false
    */
   disabledItemsFocusable?: boolean;
@@ -153,7 +153,7 @@ export type UseTreeViewItemsParametersWithDefaults<R extends { children?: R[] }>
 export interface UseTreeViewItemsState<R extends {}> {
   items: {
     /**
-     * If `true`, will allow focus on disabled items.
+     * Whether the items should be focusable when disabled.
      * Always equal to `props.disabledItemsFocusable` (or `false` if not provided).
      */
     disabledItemsFocusable: boolean;
