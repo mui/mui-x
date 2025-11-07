@@ -1,32 +1,31 @@
 import { spy } from 'sinon';
-import { adapter, createSchedulerRenderer } from 'test/utils/scheduler';
+import {
+  adapter,
+  createSchedulerRenderer,
+  DEFAULT_TESTING_VISIBLE_DATE,
+  EventBuilder,
+} from 'test/utils/scheduler';
 import { screen, within } from '@mui/internal-test-utils';
 import { WeekView } from '@mui/x-scheduler/week-view';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
 
 const allDayEvents = [
-  {
-    id: 'all-day-1',
-    start: adapter.date('2025-05-05T00:00:00'),
-    end: adapter.date('2025-05-07T23:59:59'),
-    title: 'Multi-day Conference',
-    allDay: true,
-  },
-  {
-    id: 'all-day-2',
-    start: adapter.date('2025-04-28T00:00:00'), // Previous week
-    end: adapter.date('2025-05-06T23:59:59'), // Current week
-    title: 'Long Event',
-    allDay: true,
-  },
-  {
-    id: 'all-day-3',
-    start: adapter.date('2025-05-04T00:00:00'),
-    end: adapter.date('2025-05-07T23:59:59'),
-    title: 'Four day event',
-    allDay: true,
-  },
+  EventBuilder.new()
+    .title('Multi-day Conference')
+    .span('2025-05-05T00:00:00', '2025-05-07T23:59:59')
+    .allDay()
+    .build(),
+  EventBuilder.new()
+    .title('Long Event')
+    .span('2025-04-28T00:00:00', '2025-05-06T23:59:59') // Previous - current week
+    .allDay()
+    .build(),
+  EventBuilder.new()
+    .title('Four day event')
+    .span('2025-05-04T00:00:00', '2025-05-07T23:59:59')
+    .allDay()
+    .build(),
 ];
 
 describe('<WeekView />', () => {
@@ -103,27 +102,21 @@ describe('<WeekView />', () => {
 
     it('should handle multiple overlapping all-day events with different grid rows', () => {
       const overlappingEvents = [
-        {
-          id: 'event-1',
-          start: adapter.date('2025-05-04T00:00:00'),
-          end: adapter.date('2025-05-06T23:59:59'),
-          title: 'Event 1',
-          allDay: true,
-        },
-        {
-          id: 'event-2',
-          start: adapter.date('2025-05-05T00:00:00'),
-          end: adapter.date('2025-05-07T23:59:59'),
-          title: 'Event 2',
-          allDay: true,
-        },
-        {
-          id: 'event-3',
-          start: adapter.date('2025-05-08T00:00:00'),
-          end: adapter.date('2025-05-09T23:59:59'),
-          title: 'Event 3',
-          allDay: true,
-        },
+        EventBuilder.new()
+          .title('Event 1')
+          .span('2025-05-04T00:00:00', '2025-05-06T23:59:59')
+          .allDay()
+          .build(),
+        EventBuilder.new()
+          .title('Event 2')
+          .span('2025-05-05T00:00:00', '2025-05-07T23:59:59')
+          .allDay()
+          .build(),
+        EventBuilder.new()
+          .title('Event 3')
+          .span('2025-05-08T00:00:00', '2025-05-09T23:59:59')
+          .allDay()
+          .build(),
       ];
 
       render(
@@ -178,12 +171,11 @@ describe('<WeekView />', () => {
   describe('time navigation', () => {
     it('should go to start of previous week when clicking on the Previous Week button', async () => {
       const onVisibleDateChange = spy();
-      const visibleDate = adapter.date('2025-07-03T00:00:00Z'); // Thursday
 
       const { user } = render(
         <EventCalendar
           events={[]}
-          visibleDate={visibleDate}
+          visibleDate={DEFAULT_TESTING_VISIBLE_DATE} // Thursday
           onVisibleDateChange={onVisibleDateChange}
           view="week"
         />,
@@ -191,18 +183,17 @@ describe('<WeekView />', () => {
 
       await user.click(screen.getByRole('button', { name: /previous week/i }));
       expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
-        adapter.addWeeks(adapter.startOfWeek(visibleDate), -1),
+        adapter.addWeeks(adapter.startOfWeek(DEFAULT_TESTING_VISIBLE_DATE), -1),
       );
     });
 
     it('should go to start of next week when clicking on the Next Week button', async () => {
       const onVisibleDateChange = spy();
-      const visibleDate = adapter.date('2025-07-03T00:00:00Z'); // Thursday
 
       const { user } = render(
         <EventCalendar
           events={[]}
-          visibleDate={visibleDate}
+          visibleDate={DEFAULT_TESTING_VISIBLE_DATE} // Thursday
           onVisibleDateChange={onVisibleDateChange}
           view="week"
         />,
@@ -210,7 +201,7 @@ describe('<WeekView />', () => {
 
       await user.click(screen.getByRole('button', { name: /next week/i }));
       expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
-        adapter.addWeeks(adapter.startOfWeek(visibleDate), 1),
+        adapter.addWeeks(adapter.startOfWeek(DEFAULT_TESTING_VISIBLE_DATE), 1),
       );
     });
   });

@@ -3,6 +3,7 @@ import { spy } from 'sinon';
 import {
   adapter,
   createSchedulerRenderer,
+  EventBuilder,
   SchedulerStoreRunner,
   StateWatcher,
   StoreSpy,
@@ -22,15 +23,12 @@ import { EventPopoverContent } from './EventPopover';
 import { getColorClassName } from '../../utils/color-utils';
 import { RecurringScopeDialog } from '../scope-dialog/ScopeDialog';
 
-const occurrence: CalendarEventOccurrence = {
-  id: '1',
-  key: '1',
-  start: adapter.date('2025-05-26T07:30:00'),
-  end: adapter.date('2025-05-26T08:15:00'),
-  title: 'Running',
-  description: 'Morning run',
-  resource: 'r2',
-};
+const occurrence: CalendarEventOccurrence = EventBuilder.new()
+  .title('Running')
+  .description('Morning run')
+  .singleDay('2025-05-26T07:30:00', 45)
+  .resource('r2')
+  .buildOccurrence('2025-05-26T07:30:00');
 
 const resources: CalendarResource[] = [
   {
@@ -107,8 +105,8 @@ describe('<EventPopoverContent />', () => {
     const updated = onEventsChange.firstCall.firstArg[0];
 
     const expectedUpdatedEvent = {
-      id: '1',
-      key: '1',
+      id: occurrence.id,
+      key: occurrence.key,
       title: 'Running test',
       description: 'Morning run',
       start: adapter.startOfDay(occurrence.start),
@@ -495,18 +493,14 @@ describe('<EventPopoverContent />', () => {
   });
   describe('Event editing', () => {
     describe('Recurring events', () => {
+      const originalRecurringEvent = EventBuilder.new()
+        .title('Daily standup')
+        .description('sync')
+        .singleDay('2025-06-11T10:00:00', 30)
+        .resource('r2')
+        .recurrent('daily')
+        .buildOccurrence();
       it('should not call updateRecurringEvent if the user cancels the scope dialog', async () => {
-        const originalRecurringEvent = {
-          id: 'recurring-1',
-          key: 'recurring-1-key',
-          title: 'Daily standup',
-          description: 'sync',
-          start: adapter.date('2025-06-11T10:00:00'),
-          end: adapter.date('2025-06-11T10:30:00'),
-          allDay: false,
-          rrule: { freq: 'DAILY' as const, interval: 1 },
-        };
-
         let updateRecurringEventSpy, selectRecurringEventUpdateScopeSpy;
         const containerRef = React.createRef<HTMLDivElement>();
 
@@ -553,17 +547,6 @@ describe('<EventPopoverContent />', () => {
       });
 
       it("should call updateRecurringEvent with scope 'all' and not include rrule if not modified on Submit", async () => {
-        const originalRecurringEvent = {
-          id: 'recurring-1',
-          key: 'recurring-1-key',
-          title: 'Daily standup',
-          description: 'sync',
-          start: adapter.date('2025-06-11T10:00:00'),
-          end: adapter.date('2025-06-11T10:30:00'),
-          allDay: false,
-          rrule: { freq: 'DAILY' as const, interval: 1 },
-        };
-
         let updateRecurringEventSpy, selectRecurringEventUpdateScopeSpy;
         const containerRef = React.createRef<HTMLDivElement>();
 
@@ -606,7 +589,7 @@ describe('<EventPopoverContent />', () => {
         expect(updateRecurringEventSpy?.calledOnce).to.equal(true);
         const openPayload = updateRecurringEventSpy.lastCall.firstArg;
 
-        expect(openPayload.changes.id).to.equal('recurring-1');
+        expect(openPayload.changes.id).to.equal(originalRecurringEvent.id);
         expect(openPayload.changes.title).to.equal('Daily standup');
         expect(openPayload.changes.description).to.equal('sync');
         expect(openPayload.changes.allDay).to.equal(false);
@@ -619,17 +602,6 @@ describe('<EventPopoverContent />', () => {
       });
 
       it("should call updateRecurringEvent with scope 'only-this' and include rrule if modified on Submit", async () => {
-        const originalRecurringEvent = {
-          id: 'recurring-2',
-          key: 'recurring-2-key',
-          title: 'Daily standup',
-          description: 'sync',
-          start: adapter.date('2025-06-11T10:00:00'),
-          end: adapter.date('2025-06-11T10:30:00'),
-          allDay: false,
-          rrule: { freq: 'DAILY' as const, interval: 1 },
-        };
-
         let updateRecurringEventSpy, selectRecurringEventUpdateScopeSpy;
         const containerRef = React.createRef<HTMLDivElement>();
 
@@ -670,7 +642,7 @@ describe('<EventPopoverContent />', () => {
         expect(updateRecurringEventSpy?.calledOnce).to.equal(true);
         const openPayload = updateRecurringEventSpy.lastCall.firstArg;
 
-        expect(openPayload.changes.id).to.equal('recurring-2');
+        expect(openPayload.changes.id).to.equal(originalRecurringEvent.id);
         expect(openPayload.changes.title).to.equal('Daily standup');
         expect(openPayload.changes.description).to.equal('sync');
         expect(openPayload.changes.allDay).to.equal(false);
@@ -684,17 +656,6 @@ describe('<EventPopoverContent />', () => {
       });
 
       it('should call updateRecurringEvent with scope "this-and-following" and send rrule as undefined when "no repeat" is selected on Submit', async () => {
-        const originalRecurringEvent = {
-          id: 'recurring-3',
-          key: 'recurring-3-key',
-          title: 'Daily standup',
-          description: 'sync',
-          start: adapter.date('2025-06-11T10:00:00'),
-          end: adapter.date('2025-06-11T10:30:00'),
-          allDay: false,
-          rrule: { freq: 'DAILY' as const, interval: 1 },
-        };
-
         let updateRecurringEventSpy, selectRecurringEventUpdateScopeSpy;
         const containerRef = React.createRef<HTMLDivElement>();
 
@@ -735,7 +696,7 @@ describe('<EventPopoverContent />', () => {
         expect(updateRecurringEventSpy?.calledOnce).to.equal(true);
         const openPayload = updateRecurringEventSpy.lastCall.firstArg;
 
-        expect(openPayload.changes.id).to.equal('recurring-3');
+        expect(openPayload.changes.id).to.equal(originalRecurringEvent.id);
         expect(openPayload.changes.rrule).to.equal(undefined);
 
         expect(selectRecurringEventUpdateScopeSpy?.calledOnce).to.equal(true);
@@ -746,21 +707,16 @@ describe('<EventPopoverContent />', () => {
     });
 
     describe('Non-recurring events', () => {
+      const nonRecurringEventOccurrence: CalendarEventOccurrence = EventBuilder.new()
+        .title('Task')
+        .description('description')
+        .singleDay('2025-06-12T14:00:00')
+        .buildOccurrence();
       it('should call updateEvent with updated values on Submit', async () => {
-        const nonRecurringEvent = {
-          id: 'non-recurring-1',
-          key: 'non-recurring-1-key',
-          title: 'Task',
-          description: 'description',
-          start: adapter.date('2025-06-12T14:00:00'),
-          end: adapter.date('2025-06-12T15:00:00'),
-          allDay: false,
-        };
-
         let updateEventSpy;
 
         const { user } = render(
-          <EventCalendarProvider events={[nonRecurringEvent]} resources={resources}>
+          <EventCalendarProvider events={[nonRecurringEventOccurrence]} resources={resources}>
             <StoreSpy
               Context={EventCalendarStoreContext}
               method="updateEvent"
@@ -769,7 +725,7 @@ describe('<EventPopoverContent />', () => {
               }}
             />
             <Popover.Root open>
-              <EventPopoverContent {...defaultProps} occurrence={nonRecurringEvent} />
+              <EventPopoverContent {...defaultProps} occurrence={nonRecurringEventOccurrence} />
             </Popover.Root>
           </EventCalendarProvider>,
         );
@@ -783,7 +739,7 @@ describe('<EventPopoverContent />', () => {
         expect(updateEventSpy?.calledOnce).to.equal(true);
         const payload = updateEventSpy.lastCall.firstArg;
 
-        expect(payload.id).to.equal('non-recurring-1');
+        expect(payload.id).to.equal(nonRecurringEventOccurrence.id);
         expect(payload.title).to.equal('Task updated');
         expect(payload.description).to.equal('new description');
         expect(payload.resource).to.equal('r1');
@@ -794,19 +750,10 @@ describe('<EventPopoverContent />', () => {
       });
 
       it('should call updateEvent with updated values and send rrule if recurrence was selected on Submit', async () => {
-        const nonRecurringEvent = {
-          id: 'non-recurring-1',
-          key: 'non-recurring-1-key',
-          title: 'Task',
-          description: 'description',
-          start: adapter.date('2025-06-12T14:00:00'),
-          end: adapter.date('2025-06-12T15:00:00'),
-        };
-
         let updateEventSpy;
 
         const { user } = render(
-          <EventCalendarProvider events={[nonRecurringEvent]} resources={resources}>
+          <EventCalendarProvider events={[nonRecurringEventOccurrence]} resources={resources}>
             <StoreSpy
               Context={EventCalendarStoreContext}
               method="updateEvent"
@@ -815,7 +762,7 @@ describe('<EventPopoverContent />', () => {
               }}
             />
             <Popover.Root open>
-              <EventPopoverContent {...defaultProps} occurrence={nonRecurringEvent} />
+              <EventPopoverContent {...defaultProps} occurrence={nonRecurringEventOccurrence} />
             </Popover.Root>
           </EventCalendarProvider>,
         );
@@ -826,7 +773,7 @@ describe('<EventPopoverContent />', () => {
         expect(updateEventSpy?.calledOnce).to.equal(true);
         const payload = updateEventSpy.lastCall.firstArg;
 
-        expect(payload.id).to.equal('non-recurring-1');
+        expect(payload.id).to.equal(nonRecurringEventOccurrence.id);
         expect(payload.rrule).to.deep.equal({
           freq: 'DAILY',
           interval: 1,
