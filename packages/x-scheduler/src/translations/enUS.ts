@@ -34,7 +34,7 @@ export const enUS: SchedulerTranslations = {
   viewSpecificOptions: (view) => `${view} view options`,
 
   // WeekView
-  allDay: 'All day',
+  multiDayHeader: 'All day',
 
   // MonthView
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} more..`,

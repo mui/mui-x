@@ -143,9 +143,8 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
             className="DayTimeGridMultiDayEventsCell DayTimeGridMultiDayEventsHeaderCell"
             id="DayTimeGridMultiDayEventsHeaderCell"
             role="columnheader"
-          >
-            {translations.allDay}
-          </div>
+            aria-label={translations.multiDayHeader}
+          />
           <CalendarGrid.DayRow
             start={start}
             end={end}

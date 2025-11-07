@@ -10,5 +10,5 @@ export const frFR: Partial<SchedulerTranslations> = {
   week: 'Semaine',
 
   // WeekView
-  allDay: 'Toute la journée',
+  multiDayHeader: 'Toute la journée',
 };
