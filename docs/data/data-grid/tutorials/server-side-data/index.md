@@ -24,7 +24,6 @@ The docs listed below may be useful if you're new to the MUI X Data Grid:
 - [Column definition](/x/react-data-grid/column-definition/)
 - [Pagination](/x/react-data-grid/pagination/)
 - [Sorting](/x/react-data-grid/sorting/)
-- [Server-side filtering](/x/react-data-grid/filtering/server-side/)
 
 ## Part one: app setup
 
