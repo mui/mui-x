@@ -54,7 +54,7 @@ export default function WaterfallChart() {
           ],
           valueFormatter: (value) =>
             value === null ? null : dollarFormatter.format(value.end - value.start),
-          color: (data) => {
+          colorGetter: (data) => {
             const value = data?.value;
 
             if (value == null || value.start === 0) {

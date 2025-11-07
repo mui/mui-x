@@ -2,6 +2,7 @@ import * as React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
+import { AxisValueFormatterContext } from '@mui/x-charts/models';
 
 const months = [
   'January',
@@ -28,11 +29,11 @@ export default function BasicBarRange() {
         xAxis={[
           {
             data: months,
-            valueFormatter: (v, context) =>
+            valueFormatter: (v: string, context: AxisValueFormatterContext) =>
               context.location === 'tick' ? v.slice(0, 3) : v,
           },
         ]}
-        yAxis={[{ valueFormatter: (value) => `${value}°C` }]}
+        yAxis={[{ valueFormatter: (value: number) => `${value}°C` }]}
         series={[
           {
             id: 'porto',
