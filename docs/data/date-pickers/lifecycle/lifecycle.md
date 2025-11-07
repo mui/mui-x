@@ -210,7 +210,7 @@ The `onAccept` callback receives a second argument `context` with extra informat
 
 - `validationError`: the validation result of the accepted value.
 - `source`: compound source describing where the acceptance originated from. It uses `source:origin` for picker-side interactions and `"field"` for input-side commits. Typical values include:
-    - `"field"`, `"picker:view"`, `"picker:toolbar"`, `"picker:actionBar:ok", "picker:actionBar:clear", "picker:actionBar:today", "picker:actionBar:cancel"`, `"picker:close:dismiss"`, `"picker:shortcut"`.
+  - `"field"`, `"picker:view"`, `"picker:toolbar"`, `"picker:actionBar:ok", "picker:actionBar:clear", "picker:actionBar:today", "picker:actionBar:cancel"`, `"picker:close:dismiss"`, `"picker:shortcut"`.
 - `shortcut` (optional): the shortcut metadata when the value was accepted via a shortcut selection.
 
 For custom error handling, you can use the `validationError` property of the `context` object.
@@ -235,7 +235,10 @@ The `source` property allows you to implement different behaviors depending on t
     }
 
     if (context.source.startsWith('picker')) {
-      analytics.track('date_accepted_from_picker', { value: newValue, shortcut: context.shortcut?.id });
+      analytics.track('date_accepted_from_picker', {
+        value: newValue,
+        shortcut: context.shortcut?.id,
+      });
     } else {
       analytics.track('date_accepted_from_field', { value: newValue });
     }
@@ -421,7 +424,6 @@ The following demo shows how to extend the Date Field component by adding an `on
 You can find more information about the `onAccept` prop [in the dedicated doc section](/x/react-date-pickers/lifecycle/#lifecycle-on-pickers-quot-onaccept-quot).
 
 {{"demo": "ServerInteraction.js"}}
-
 
 ### Compound source values in `context.source`
 
