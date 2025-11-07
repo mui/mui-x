@@ -9,7 +9,7 @@
   --compact-accepted-bg: transparent;
   --compact-circle-bg: var(--event-color-9);
 
-  /* Multi Day */
+  /* Filled */
   --filled-accepted-bg: var(--event-color-5);
   --filled-accepted-primary-text: var(--event-color-12);
 }
