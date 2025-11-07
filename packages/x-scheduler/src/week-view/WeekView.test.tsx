@@ -51,27 +51,27 @@ describe('<WeekView />', () => {
         </EventCalendarProvider>,
       );
 
-      const getEventsFromWeekDay = (weekDay: number) => {
-        const allDayCells = screen.getAllByRole('gridcell');
-        return allDayCells
+      const getEventsFromDate = (date: number) => {
+        return screen
+          .getAllByRole('gridcell')
           .find((cell) => {
             const labelledBy = cell.getAttribute('aria-labelledby');
             return labelledBy?.includes(
-              `DayTimeGridHeaderCell-${weekDay} DayTimeGridAllDayEventsHeaderCell`,
+              `DayTimeGridHeaderCell-${date} DayTimeGridAllDayEventsHeaderCell`,
             );
           })!
           .querySelectorAll('.EventContainer');
       };
 
       // Main event should render in the start date cell
-      expect(getEventsFromWeekDay(5)).toHaveLength(1);
+      expect(getEventsFromDate(5)).toHaveLength(1);
 
       // Invisible events should exist in the spanned cells
       // Also check that invisible events have aria-hidden attribute
-      expect(getEventsFromWeekDay(6)).toHaveLength(1);
-      expect(getEventsFromWeekDay(6)[0]).to.have.attribute('aria-hidden', 'true');
-      expect(getEventsFromWeekDay(7)).toHaveLength(1);
-      expect(getEventsFromWeekDay(7)[0]).to.have.attribute('aria-hidden', 'true');
+      expect(getEventsFromDate(6)).toHaveLength(1);
+      expect(getEventsFromDate(6)[0]).to.have.attribute('aria-hidden', 'true');
+      expect(getEventsFromDate(7)).toHaveLength(1);
+      expect(getEventsFromDate(7)[0]).to.have.attribute('aria-hidden', 'true');
     });
 
     it('should render all-day event in first cell of week when event starts before the week', () => {
