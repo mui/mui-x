@@ -5,10 +5,26 @@ export interface PickerChangeHandlerContext<TError> {
   validationError: TError;
   /**
    * Source of the change that triggered `onChange` or `onAccept`.
-   * - "picker": change initiated from the picker overlay UI (calendar/clock, toolbar, action bar, shortcuts).
-   * - "field": change initiated from typing or interactions in the input field.
+   * Uses a compound pattern `source:origin` for picker-side interactions and `"field"` for input-side interactions.
+   * Typical values used by MUI X:
+   * - 'field' (committed from the input field: typing, paste, arrow keys, clear, Enter, etc.)
+   * - 'picker:view' (calendar/clock view selection)
+   * - 'picker:toolbar'
+   * - 'picker:actionBar:ok' | 'picker:actionBar:clear' | 'picker:actionBar:today' | 'picker:actionBar:cancel'
+   * - 'picker:close:dismiss' (closing via outside click or Escape)
+   * - 'picker:shortcut' (PickersShortcuts selection)
    */
-  source: 'picker' | 'field';
+  source:
+    | 'field'
+    | 'picker:view'
+    | 'picker:toolbar'
+    | 'picker:actionBar:ok'
+    | 'picker:actionBar:clear'
+    | 'picker:actionBar:today'
+    | 'picker:actionBar:cancel'
+    | 'picker:close:dismiss'
+    | 'picker:shortcut'
+    | (string & {});
   /**
    * Shortcut causing this `onChange` or `onAccept` call.
    * If the call has not been caused by a shortcut selection, this property will be `undefined`.

@@ -76,7 +76,7 @@ function PickersShortcuts<TValue extends PickerValidValue>(props: PickersShortcu
       ...item,
       label: item.label,
       onClick: () => {
-        setValue(newValue, { changeImportance, shortcut: item });
+        setValue(newValue, { changeImportance, shortcut: item, source: 'picker:shortcut' });
       },
       disabled: !isValidValue(newValue),
     };

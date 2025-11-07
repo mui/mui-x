@@ -58,7 +58,8 @@ export interface UsePickerBaseProps<
    * @param {TValue} value The new value.
    * @param {FieldChangeHandlerContext<TError>} context Context about this change:
    * - `validationError`: validation result of the current value
-   * - `source`: where the change originated from (`'picker'` for overlay UI such as calendar/clock/action bar/shortcuts, or `'field'` for input edits)
+   * - `source`: compound source of the change. Typical values:
+   *    'field' | 'picker:view' | 'picker:toolbar' | 'picker:actionBar:ok' | 'picker:actionBar:clear' | 'picker:actionBar:today' | 'picker:actionBar:cancel' | 'picker:close:dismiss' | 'picker:shortcut'
    * - `shortcut` (optional): the shortcut metadata if the change was triggered by a shortcut selection
    */
   onChange?: (value: TValue, context: PickerChangeHandlerContext<TError>) => void;
@@ -69,7 +70,8 @@ export interface UsePickerBaseProps<
    * @param {TValue} value The value that was just accepted.
    * @param {FieldChangeHandlerContext<TError>} context Context about this acceptance:
    * - `validationError`: validation result of the current value
-   * - `source`: where the change originated from (`'picker'` for overlay UI such as calendar/clock/action bar/shortcuts, or `'field'` for input edits)
+   * - `source`: compound source of the acceptance. Typical values:
+   *    'field' | 'picker:view' | 'picker:toolbar' | 'picker:actionBar:ok' | 'picker:actionBar:clear' | 'picker:actionBar:today' | 'picker:actionBar:cancel' | 'picker:close:dismiss' | 'picker:shortcut'
    * - `shortcut` (optional): the shortcut metadata if the value was accepted via a shortcut selection
    */
   onAccept?: (value: TValue, context: PickerChangeHandlerContext<TError>) => void;

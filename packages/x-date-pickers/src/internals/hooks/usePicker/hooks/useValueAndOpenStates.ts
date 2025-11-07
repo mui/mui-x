@@ -154,7 +154,15 @@ export function useValueAndOpenStates<
     let cachedContext: PickerChangeHandlerContext<TError> | null = null;
     const getContext = (): PickerChangeHandlerContext<TError> => {
       if (!cachedContext) {
-        const inferredSource: 'picker' | 'field' = source ?? (shortcut ? 'picker' : 'field');
+        let inferredSource: PickerChangeHandlerContext<TError>['source'];
+        if (source) {
+          inferredSource = source as PickerChangeHandlerContext<TError>['source'];
+        } else if (shortcut) {
+          inferredSource = 'picker:shortcut';
+        } else {
+          // Default path is field when not explicitly tagged by a picker call site
+          inferredSource = 'field';
+        }
         cachedContext = {
           validationError:
             validationError == null ? getValidationErrorForNewValue(newValue) : validationError,
@@ -206,7 +214,7 @@ export function useValueAndOpenStates<
 
       setValue(newValue, {
         changeImportance: selectionState === 'finish' && closeOnSelect ? 'accept' : 'set',
-        source: 'picker',
+        source: 'picker:view',
       });
     },
   );

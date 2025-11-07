@@ -159,7 +159,7 @@ function TimePickerToolbar(inProps: TimePickerToolbarProps) {
 
   const showAmPmControl = Boolean(ampm && !ampmInClock && views.includes('hours'));
   const { meridiemMode, handleMeridiemChange } = useMeridiemMode(value, ampm, (newValue) =>
-    setValue(newValue, { changeImportance: 'set', source: 'picker' }),
+    setValue(newValue, { changeImportance: 'set', source: 'picker:toolbar' }),
   );
 
   const formatSection = (format: keyof AdapterFormats) => {
