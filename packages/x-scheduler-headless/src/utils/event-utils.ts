@@ -80,27 +80,23 @@ export function sortEventOccurrences(
    */
   sortingCriteria: 'date' | 'date-time',
 ): CalendarEventOccurrence[] {
-  return (
-    occurrences
-      // TODO: Avoid JS Date conversion
-      .map((occurrence) => {
-        const occurrenceStart =
-          occurrence.allDay || sortingCriteria === 'date'
-            ? adapter.startOfDay(occurrence.start)
-            : occurrence.start;
+  return occurrences
+    .map((occurrence) => {
+      // If we sort by date only, we normalize the start to be the start of the day
+      const occurrenceStart =
+        occurrence.allDay || sortingCriteria === 'date'
+          ? adapter.startOfDay(occurrence.start)
+          : occurrence.start;
 
-        const occurrenceEnd =
-          occurrence.allDay || sortingCriteria === 'date'
-            ? adapter.endOfDay(occurrence.end)
-            : occurrence.end;
+      const occurrenceEnd = occurrence.allDay ? adapter.endOfDay(occurrence.end) : occurrence.end;
 
-        return {
-          occurrence,
-          start: adapter.toJsDate(occurrenceStart).getTime(),
-          end: adapter.toJsDate(occurrenceEnd).getTime(),
-        };
-      })
-      .sort((a, b) => a.start - b.start || b.end - a.end)
-      .map((item) => item.occurrence)
-  );
+      return {
+        occurrence,
+        // TODO: Avoid JS Date conversion
+        start: adapter.toJsDate(occurrenceStart).getTime(),
+        end: adapter.toJsDate(occurrenceEnd).getTime(),
+      };
+    })
+    .sort((a, b) => a.start - b.start || b.end - a.end)
+    .map((item) => item.occurrence);
 }
