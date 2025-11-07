@@ -276,7 +276,7 @@ A `foreignObject` element can be used to render non-SVG elements inside SVGs. Yo
 
 Bear in mind that using `foreignObject` might prevent charts from being [exported](/x/react-charts/export/).
 
-{{"demo": "TickLabelSVG.js"}}
+{{"demo": "TickLabelImage.js"}}
 
 ## Symlog scale
 
