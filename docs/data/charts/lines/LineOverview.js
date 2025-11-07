@@ -183,20 +183,20 @@ export default function LineOverview() {
               id: 'unemployment-axis',
               scaleType: 'linear',
               valueFormatter: (value) => `${value.toFixed(1)}%`,
-              width: 70,
+              width: 60,
               position: 'left',
             },
             {
               id: 'gdp-axis',
               scaleType: 'linear',
-              width: 70,
+              width: 50,
               position: 'right',
               valueFormatter: (value) => `${(value / 1000).toLocaleString()}k`,
             },
           ]}
           sx={{
             '.MuiLineElement-root': {
-              strokeWidth: 1,
+              strokeWidth: 1.5,
             },
           }}
           zoomInteractionConfig={{
