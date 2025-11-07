@@ -3,11 +3,7 @@ import type { DefaultizedProps } from '@mui/x-internals/types';
 import type { TreeViewPluginSignature } from '../../models';
 import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import { UseTreeViewExpansionSignature } from '../useTreeViewExpansion';
-import {
-  TreeViewSelectionPropagation,
-  TreeViewCancellableEventHandler,
-  TreeViewItemId,
-} from '../../../models';
+import { TreeViewSelectionPropagation, TreeViewItemId } from '../../../models';
 
 export interface UseTreeViewSelectionPublicAPI {
   /**
@@ -69,7 +65,7 @@ export type TreeViewSelectionValue<Multiple extends boolean | undefined> = Multi
 
 export interface UseTreeViewSelectionParameters<Multiple extends boolean | undefined> {
   /**
-   * If `true` selection is disabled.
+   * Whether selection is disabled.
    * @default false
    */
   disableSelection?: boolean;
@@ -85,12 +81,12 @@ export interface UseTreeViewSelectionParameters<Multiple extends boolean | undef
    */
   selectedItems?: TreeViewSelectionValue<Multiple>;
   /**
-   * If `true`, `ctrl` and `shift` will trigger multiselect.
+   * Whether multiple items can be selected.
    * @default false
    */
   multiSelect?: Multiple;
   /**
-   * If `true`, the Tree View renders a checkbox at the left of its label that allows selecting it.
+   * Whether the Tree View renders a checkbox at the left of its label that allows selecting it.
    * @default false
    */
   checkboxSelection?: boolean;
@@ -165,22 +161,3 @@ export type UseTreeViewSelectionSignature = TreeViewPluginSignature<{
     UseTreeViewItemsSignature,
   ];
 }>;
-
-export interface UseTreeItemRootSlotPropsFromSelection {
-  'aria-checked': React.AriaAttributes['aria-checked'];
-}
-
-export interface UseTreeItemCheckboxSlotPropsFromSelection {
-  visible?: boolean;
-  checked?: boolean;
-  indeterminate?: boolean;
-  disabled?: boolean;
-  tabIndex?: -1;
-  onChange?: TreeViewCancellableEventHandler<React.ChangeEvent<HTMLInputElement>>;
-}
-
-declare module '@mui/x-tree-view/useTreeItem' {
-  interface UseTreeItemRootSlotOwnProps extends UseTreeItemRootSlotPropsFromSelection {}
-
-  interface UseTreeItemCheckboxSlotOwnProps extends UseTreeItemCheckboxSlotPropsFromSelection {}
-}
