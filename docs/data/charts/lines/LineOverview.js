@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import { alpha, useTheme } from '@mui/material/styles';
 import { ChartContainerPro } from '@mui/x-charts-pro/ChartContainerPro';
 import { LinePlot } from '@mui/x-charts-pro/LineChart';
 import { ChartsXAxis } from '@mui/x-charts-pro/ChartsXAxis';
@@ -39,6 +40,8 @@ const recessions = [
 function RecessionBands({ periods }) {
   const { top, left, width, height } = useDrawingArea();
   const xScale = useXScale();
+  const theme = useTheme();
+  const labelFill = alpha(theme.palette.text.primary, 0.7);
 
   return (
     <g>
@@ -81,7 +84,7 @@ function RecessionBands({ periods }) {
               transform={`rotate(-90, ${textX}, ${textY})`}
               textAnchor="middle"
               dominantBaseline="central"
-              fill="rgba(0, 0, 0, 0.6)"
+              fill={labelFill}
               style={{
                 fontSize: '0.6rem',
                 fontWeight: 500,
@@ -123,11 +126,11 @@ function MaxUnemploymentLabel() {
 
   return (
     <g pointerEvents="none">
-      <circle cx={x} cy={y} r={3} fill="#345da7" stroke="#fff" strokeWidth={1.5} />
+      <circle cx={x} cy={y} r={3} fill="#af3838" stroke="#fff" strokeWidth={1} />
       <text
         x={x + 6}
         y={y - 6}
-        fill="#345da7"
+        fill="#af3838"
         style={{ fontSize: 12, fontWeight: 600 }}
       >
         {`${maxValue.toFixed(1)}%`}
@@ -152,7 +155,7 @@ export default function LineOverview() {
               id: 'unemployment',
               data: unemploymentData,
               label: 'Unemployment rate',
-              color: '#345da7',
+              color: '#af3838',
               showMark: false,
               yAxisId: 'unemployment-axis',
             },
@@ -183,7 +186,7 @@ export default function LineOverview() {
               id: 'unemployment-axis',
               scaleType: 'linear',
               valueFormatter: (value) => `${value.toFixed(1)}%`,
-              width: 60,
+              width: 65,
               position: 'left',
             },
             {
