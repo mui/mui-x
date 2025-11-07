@@ -1,7 +1,6 @@
 import {
   CalendarEvent,
   CalendarEventColor,
-  CalendarEventOccurrence,
   CalendarOccurrencePlaceholder,
   CalendarResource,
   CalendarResourceId,
