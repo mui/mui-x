@@ -294,4 +294,4 @@ Here's how the Bar Chart is composed:
 
 ### Bar range
 
-TODO
+{{"demo": "RangeBarComposition.js"}}
