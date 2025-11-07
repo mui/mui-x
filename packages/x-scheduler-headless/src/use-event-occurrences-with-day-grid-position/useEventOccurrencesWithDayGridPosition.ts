@@ -7,6 +7,7 @@ import {
 } from '../models';
 import { useEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
 import { useAdapter, diffIn } from '../use-adapter/useAdapter';
+import { sortEventOccurrences } from '../utils/event-utils';
 
 /**
  * Places event occurrences for a list of days, where if an event is rendered in a day, it fills the entire day cell (no notion of time).
@@ -28,44 +29,54 @@ export function useEventOccurrencesWithDayGridPosition(
 
     const processedDays = days.map((day, dayIndex) => {
       indexLookup[day.key] = { occurrencesIndex: {}, usedIndexes: new Set() };
-      const withPosition: CalendarEventOccurrenceWithDayGridPosition[] = [];
+      const needsPosition: CalendarEventOccurrence[] = [];
       const withoutPosition: CalendarEventOccurrence[] = [];
 
+      // 1. Split occurrences into withPosition and withoutPosition
       for (const occurrence of occurrencesMap.get(day.key) ?? []) {
         const hasPosition = shouldAddPosition ? shouldAddPosition(occurrence) : true;
         if (hasPosition) {
-          let position: CalendarEventOccurrenceDayGridPosition;
-
-          const occurrenceIndexInPreviousDay =
-            dayIndex === 0
-              ? null
-              : indexLookup[days[dayIndex - 1].key].occurrencesIndex[occurrence.key];
-
-          // If the event is present in the previous day, we keep the same index
-          if (occurrenceIndexInPreviousDay != null) {
-            position = { index: occurrenceIndexInPreviousDay, daySpan: 1, isInvisible: true };
-          }
-          // Otherwise, we find the smallest available index
-          else {
-            const usedIndexes = indexLookup[day.key].usedIndexes;
-            let i = 1;
-            while (usedIndexes.has(i)) {
-              i += 1;
-            }
-
-            const durationInDays = diffIn(adapter, occurrence.end, day.value, 'days') + 1;
-            position = {
-              index: i,
-              daySpan: Math.min(durationInDays, dayListSize - dayIndex), // Don't go past the day list end
-            };
-          }
-
-          indexLookup[day.key].occurrencesIndex[occurrence.key] = position.index;
-          indexLookup[day.key].usedIndexes.add(position.index);
-          withPosition.push({ ...occurrence, position });
+          needsPosition.push(occurrence);
         } else {
           withoutPosition.push(occurrence);
         }
+      }
+
+      // 2. Sort the withPosition occurrences by start and end date
+      const sortedNeedsPosition = sortEventOccurrences(needsPosition, adapter, 'date');
+
+      // 3. Assign position to each occurrence
+      const withPosition: CalendarEventOccurrenceWithDayGridPosition[] = [];
+      for (const occurrence of sortedNeedsPosition) {
+        let position: CalendarEventOccurrenceDayGridPosition;
+
+        const occurrenceIndexInPreviousDay =
+          dayIndex === 0
+            ? null
+            : indexLookup[days[dayIndex - 1].key].occurrencesIndex[occurrence.key];
+
+        // If the event is present in the previous day, we keep the same index
+        if (occurrenceIndexInPreviousDay != null) {
+          position = { index: occurrenceIndexInPreviousDay, daySpan: 1, isInvisible: true };
+        }
+        // Otherwise, we find the smallest available index
+        else {
+          const usedIndexes = indexLookup[day.key].usedIndexes;
+          let i = 1;
+          while (usedIndexes.has(i)) {
+            i += 1;
+          }
+
+          const durationInDays = diffIn(adapter, occurrence.end, day.value, 'days') + 1;
+          position = {
+            index: i,
+            daySpan: Math.min(durationInDays, dayListSize - dayIndex), // Don't go past the day list end
+          };
+        }
+
+        indexLookup[day.key].occurrencesIndex[occurrence.key] = position.index;
+        indexLookup[day.key].usedIndexes.add(position.index);
+        withPosition.push({ ...occurrence, position });
       }
 
       // Sort the occurrences by their index to make sure they are in the order they should be rendered in.

@@ -52,12 +52,12 @@ export function useAgendaEventOccurrencesGroupedByDay(): useAgendaEventOccurrenc
     });
 
     // Compute occurrences for the current accumulated range
-    let occurrenceMap = innerGetEventOccurrencesGroupedByDay(
+    let occurrenceMap = innerGetEventOccurrencesGroupedByDay({
       adapter,
-      accumulatedDays,
+      days: accumulatedDays,
       events,
       visibleResources,
-    );
+    });
 
     const hasEvents = (day: CalendarProcessedDate) => (occurrenceMap.get(day.key)?.length ?? 0) > 0;
 
@@ -101,12 +101,12 @@ export function useAgendaEventOccurrencesGroupedByDay(): useAgendaEventOccurrenc
 
       accumulatedDays = accumulatedDays.concat(more);
 
-      occurrenceMap = innerGetEventOccurrencesGroupedByDay(
+      occurrenceMap = innerGetEventOccurrencesGroupedByDay({
         adapter,
-        accumulatedDays,
+        days: accumulatedDays,
         events,
         visibleResources,
-      );
+      });
 
       daysWithEvents = accumulatedDays.filter(hasEvents).slice(0, amount);
     }

@@ -43,6 +43,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
     day.value,
   );
   const placeholder = CalendarGrid.usePlaceholderInDay(day.value, row);
+  const isMultiDayEvent = useStore(store, schedulerEventSelectors.isMultiDayEvent);
 
   // Ref hooks
   const cellRef = React.useRef<HTMLDivElement | null>(null);
@@ -133,7 +134,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
               render={
                 <DayGridEvent
                   occurrence={occurrence}
-                  variant={occurrence.allDay ? 'allDay' : 'compact'}
+                  variant={isMultiDayEvent(occurrence) ? 'multiDay' : 'compact'}
                 />
               }
             />

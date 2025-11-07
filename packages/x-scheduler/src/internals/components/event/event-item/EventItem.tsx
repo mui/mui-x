@@ -89,7 +89,7 @@ export const EventItem = React.forwardRef(function EventItem(
           </React.Fragment>
         );
 
-      case 'allDay':
+      case 'multiDay':
         return (
           <React.Fragment>
             <p
@@ -125,15 +125,10 @@ export const EventItem = React.forwardRef(function EventItem(
               className={clsx('EventItemCardContent', 'LinesClamp')}
               style={{ '--number-of-lines': 1 } as React.CSSProperties}
             >
-              {occurrence?.allDay ? (
-                <span className="EventItemTime">{translations.allDay}</span>
-              ) : (
-                <time className="EventItemTime">
-                  <span>{formatTime(occurrence.start)}</span>
-                  <span> - {formatTime(occurrence.end)}</span>
-                </time>
-              )}
-
+              <time className="EventItemTime">
+                <span>{formatTime(occurrence.start)}</span>
+                <span> - {formatTime(occurrence.end)}</span>
+              </time>
               <span className="EventItemTitle">{occurrence.title}</span>
             </p>
             {isRecurring && (
@@ -150,7 +145,6 @@ export const EventItem = React.forwardRef(function EventItem(
   }, [
     variant,
     occurrence.title,
-    occurrence?.allDay,
     occurrence.start,
     occurrence.end,
     isRecurring,

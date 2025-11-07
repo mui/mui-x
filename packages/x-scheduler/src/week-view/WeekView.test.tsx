@@ -42,7 +42,7 @@ describe('<WeekView />', () => {
       const allDayCells = screen.getAllByRole('gridcell');
       const may5Cell = allDayCells.find((cell) => {
         const labelledBy = cell.getAttribute('aria-labelledby');
-        return labelledBy?.includes('DayTimeGridHeaderCell-5 DayTimeGridAllDayEventsHeaderCell');
+        return labelledBy?.includes('DayTimeGridHeaderCell-5 DayTimeGridMultiDayEventsHeaderCell');
       });
 
       // Main event should render in the start date cell
@@ -66,10 +66,10 @@ describe('<WeekView />', () => {
         </EventCalendarProvider>,
       );
 
-      const allDayHeader = screen.getByRole('columnheader', { name: /all day/i });
-      const allDayGrid = allDayHeader.closest('[class*="AllDayEventsGrid"]') as HTMLElement;
-      const allDayRow = within(allDayGrid).getByRole('row');
-      const gridCells = within(allDayRow).getAllByRole('gridcell');
+      const multiDayHeader = screen.getByRole('columnheader', { name: /all day/i });
+      const multiDayGrid = multiDayHeader.closest('[class*="MultiDayEventsGrid"]') as HTMLElement;
+      const multiDayRow = within(multiDayGrid).getByRole('row');
+      const gridCells = within(multiDayRow).getAllByRole('gridcell');
       // Find the first cell of the first week in May 2025
       const firstCell = gridCells[0];
 
@@ -160,11 +160,11 @@ describe('<WeekView />', () => {
         </EventCalendarProvider>,
       );
 
-      const allDayHeader = screen.getByRole('columnheader', { name: /all day/i });
-      const allDayGrid = allDayHeader.closest('[class*="AllDayEventsGrid"]') as HTMLElement;
-      const allDayRow = within(allDayGrid).getByRole('row');
+      const multiDayHeader = screen.getByRole('columnheader', { name: /all day/i });
+      const multiDayGrid = multiDayHeader.closest('[class*="MultiDayEventsGrid"]') as HTMLElement;
+      const multiDayRow = within(multiDayGrid).getByRole('row');
 
-      const mainEvent = within(allDayRow)
+      const mainEvent = within(multiDayRow)
         .getAllByLabelText('Four day event')
         .find((el) => el.getAttribute('aria-hidden') !== 'true');
       const eventStyle = mainEvent?.getAttribute('style') || '';

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { CalendarEventOccurrence, CalendarEventOccurrenceWithTimePosition } from '../models';
 import { useAdapter } from '../use-adapter/useAdapter';
 import { Adapter } from '../use-adapter/useAdapter.types';
+import { sortEventOccurrences } from '../utils/event-utils';
 
 /**
  * Places event occurrences for a timeline UI.
@@ -13,13 +14,14 @@ export function useEventOccurrencesWithTimelinePosition(
   const adapter = useAdapter();
 
   return React.useMemo(() => {
-    const conflicts = buildOccurrenceConflicts(adapter, occurrences);
+    const sortedOccurrences = sortEventOccurrences(occurrences, adapter, 'date-time');
+    const conflicts = buildOccurrenceConflicts(adapter, sortedOccurrences);
 
     const { firstIndexLookup, maxIndex } = buildFirstIndexLookup(conflicts);
 
     const lastIndexLookup = buildLastIndexLookup(conflicts, firstIndexLookup, maxIndex, maxSpan);
 
-    const occurrencesWithPosition = occurrences.map((occurrence) => ({
+    const occurrencesWithPosition = sortedOccurrences.map((occurrence) => ({
       ...occurrence,
       position: {
         firstIndex: firstIndexLookup[occurrence.key],

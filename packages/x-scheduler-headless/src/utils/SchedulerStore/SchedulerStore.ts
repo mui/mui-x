@@ -4,7 +4,6 @@ import { warnOnce } from '@mui/x-internals/warning';
 import {
   CalendarEvent,
   CalendarEventId,
-  CalendarEventOccurrence,
   CalendarOccurrencePlaceholder,
   CalendarResourceId,
   SchedulerValidDate,
@@ -36,15 +35,6 @@ import {
 } from './SchedulerStore.utils';
 import { TimeoutManager } from '../TimeoutManager';
 import { DEFAULT_EVENT_COLOR } from '../../constants';
-
-// TODO: Add a prop to configure the behavior.
-export const DEFAULT_IS_MULTI_DAY_EVENT = (event: CalendarEvent | CalendarEventOccurrence) => {
-  if (event.allDay) {
-    return true;
-  }
-
-  return false;
-};
 
 const ONE_MINUTE_IN_MS = 60 * 1000;
 
@@ -85,7 +75,6 @@ export class SchedulerStore<
       adapter,
       occurrencePlaceholder: null,
       nowUpdatedEveryMinute: adapter.date(),
-      isMultiDayEvent: DEFAULT_IS_MULTI_DAY_EVENT,
       pendingUpdateRecurringEventParameters: null,
       visibleResources: new Map(),
       visibleDate:

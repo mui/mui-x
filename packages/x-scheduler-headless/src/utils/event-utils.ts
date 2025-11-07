@@ -59,26 +59,48 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
     occurrences.push({ ...event, key: String(event.id) });
   }
 
-  // STEP 3: Sort by the actual start date of each occurrence
-  // If two events have the same start date, put the longest one first
-  // We sort here so that events are processed in the correct order
-  return (
-    occurrences
-      // TODO: Avoid JS Date conversion
-      .map((occurrence) => ({
-        occurrence,
-        start: adapter.toJsDate(occurrence.start).getTime(),
-        end: adapter.toJsDate(occurrence.end).getTime(),
-      }))
-      .sort((a, b) => a.start - b.start || b.end - a.end)
-      .map((item) => item.occurrence)
-  );
+  return occurrences;
 }
 
-interface GetOccurrencesFromEventsParameters {
+export interface GetOccurrencesFromEventsParameters {
   adapter: Adapter;
   start: SchedulerValidDate;
   end: SchedulerValidDate;
   events: CalendarEvent[];
   visibleResources: Map<string, boolean>;
+}
+
+export function sortEventOccurrences(
+  occurrences: CalendarEventOccurrence[],
+  adapter: Adapter,
+  /**
+   * Defines how the occurrences are sorted.
+   * - "date": sorts by start and end date only (ignores time).
+   * - "date-time": sorts by start and end date and time.
+   */
+  sortingCriteria: 'date' | 'date-time',
+): CalendarEventOccurrence[] {
+  return (
+    occurrences
+      // TODO: Avoid JS Date conversion
+      .map((occurrence) => {
+        const occurrenceStart =
+          occurrence.allDay || sortingCriteria === 'date'
+            ? adapter.startOfDay(occurrence.start)
+            : occurrence.start;
+
+        const occurrenceEnd =
+          occurrence.allDay || sortingCriteria === 'date'
+            ? adapter.endOfDay(occurrence.end)
+            : occurrence.end;
+
+        return {
+          occurrence,
+          start: adapter.toJsDate(occurrenceStart).getTime(),
+          end: adapter.toJsDate(occurrenceEnd).getTime(),
+        };
+      })
+      .sort((a, b) => a.start - b.start || b.end - a.end)
+      .map((item) => item.occurrence)
+  );
 }

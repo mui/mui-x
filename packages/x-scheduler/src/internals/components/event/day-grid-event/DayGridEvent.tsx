@@ -53,7 +53,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
 
   const content = React.useMemo(() => {
     switch (variant) {
-      case 'allDay':
+      case 'multiDay':
       case 'invisible':
       case 'placeholder':
         return (
@@ -92,15 +92,10 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
               className={clsx('DayGridEventCardContent', 'LinesClamp')}
               style={{ '--number-of-lines': 1 } as React.CSSProperties}
             >
-              {occurrence?.allDay ? (
-                <span className="DayGridEventTime">{translations.allDay}</span>
-              ) : (
-                <time className="DayGridEventTime">
-                  <span>{formatTime(occurrence.start)}</span>
-                  <span> - {formatTime(occurrence.end)}</span>
-                </time>
-              )}
-
+              <time className="DayGridEventTime">
+                <span>{formatTime(occurrence.start)}</span>
+                <span> - {formatTime(occurrence.end)}</span>
+              </time>
               <span className="DayGridEventTitle">{occurrence.title}</span>
             </p>
             {isRecurring && (
@@ -118,7 +113,6 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     formatTime,
     variant,
     occurrence.title,
-    occurrence?.allDay,
     occurrence.start,
     occurrence.end,
     isRecurring,

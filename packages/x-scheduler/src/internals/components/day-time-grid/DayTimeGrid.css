@@ -40,7 +40,7 @@
   scrollbar-color: transparent transparent;
 }
 
-.DayTimeGridAllDayEventsRow {
+.DayTimeGridMultiDayEventsRow {
   position: relative;
   background-color: transparent;
   display: grid;
@@ -53,24 +53,24 @@
   }
 }
 
-.DayTimeGridAllDayEventsGrid {
+.DayTimeGridMultiDayEventsGrid {
   border-bottom: 1px solid var(--border-color);
   grid-template-columns: var(--fixed-cell-width) minmax(0, 1fr) fit-content(100%);
 }
 
-.DayTimeGridAllDayEventsGrid[style*='--has-scroll: 1'] .ScrollablePlaceholder {
+.DayTimeGridMultiDayEventsGrid[style*='--has-scroll: 1'] .ScrollablePlaceholder {
   overflow-y: scroll;
   scrollbar-gutter: stable;
   height: 100%;
   scrollbar-color: var(--weekend-background) var(--weekend-background);
 }
 
-.DayTimeGridAllDayEventsCell {
+.DayTimeGridMultiDayEventsCell {
   padding: var(--space-1);
   background-color: var(--surface);
 }
 
-.DayTimeGridAllDayEventsCellEvents {
+.DayTimeGridMultiDayEventsCellEvents {
   position: relative;
   display: grid;
   grid-template-columns: 1fr;
@@ -79,15 +79,15 @@
   gap: var(--space-1);
 }
 
-.DayTimeGridAllDayEventsGrid[data-weekend][style*='--has-scroll: 1'] .ScrollablePlaceholder {
+.DayTimeGridMultiDayEventsGrid[data-weekend][style*='--has-scroll: 1'] .ScrollablePlaceholder {
   scrollbar-color: var(--weekend-background) var(--weekend-background);
 }
 /* Webkit (Chrome, Safari, Edge) */
-.DayTimeGridAllDayEventsGrid[style*='--has-scroll: 1'] .ScrollablePlaceholder::-webkit-scrollbar {
+.DayTimeGridMultiDayEventsGrid[style*='--has-scroll: 1'] .ScrollablePlaceholder::-webkit-scrollbar {
   background: transparent;
 }
 
-.DayTimeGridAllDayEventsGrid[data-weekend][style*='--has-scroll: 1']
+.DayTimeGridMultiDayEventsGrid[data-weekend][style*='--has-scroll: 1']
   .ScrollablePlaceholder::-webkit-scrollbar {
   background: var(--weekend-background);
 }
@@ -114,7 +114,7 @@
   border-radius: var(--radius-3);
 }
 
-.DayTimeGridAllDayEventsHeaderCell {
+.DayTimeGridMultiDayEventsHeaderCell {
   font-size: var(--font-size-1);
   font-style: var(--em-font-style);
   padding: var(--space-2);
@@ -208,7 +208,7 @@
 }
 
 .DayTimeGridColumn[data-weekend],
-.DayTimeGridAllDayEventsCell[data-weekend] {
+.DayTimeGridMultiDayEventsCell[data-weekend] {
   background: var(--weekend-background);
 }
 
@@ -255,7 +255,7 @@
   white-space: nowrap;
 }
 
-.DayTimeGridAllDayEventContainer {
+.DayTimeGridMultiDayEventContainer {
   position: absolute;
   top: 0;
   bottom: 0;

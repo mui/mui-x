@@ -31,7 +31,7 @@ export const eventCalendarEventSelectors = {
       }
 
       const event = schedulerEventSelectors.processedEvent(state, eventId);
-      const { view, eventModelStructure, isMultiDayEvent } = state;
+      const { view, eventModelStructure } = state;
 
       // There is only one day cell in the day view
       if (view === 'day' && surfaceType === 'day-grid') {
@@ -39,7 +39,11 @@ export const eventCalendarEventSelectors = {
       }
 
       // In month view, only multi-day events can be resized
-      if (view === 'month' && surfaceType === 'day-grid' && !isMultiDayEvent(event!)) {
+      if (
+        view === 'month' &&
+        surfaceType === 'day-grid' &&
+        !schedulerEventSelectors.isMultiDayEvent(state)(event!)
+      ) {
         return false;
       }
 

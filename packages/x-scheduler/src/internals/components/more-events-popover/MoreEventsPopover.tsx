@@ -1,9 +1,12 @@
 import * as React from 'react';
 import { X } from 'lucide-react';
 import { Popover } from '@base-ui-components/react';
+import { useStore } from '@base-ui-components/utils/store';
 import { CalendarEventOccurrence } from '@mui/x-scheduler-headless/models';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
+import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
+import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { MoreEventsPopoverProps, MoreEventsPopoverProviderProps } from './MoreEventsPopover.types';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { EventItem } from '../event/event-item/EventItem';
@@ -27,9 +30,13 @@ export const useMoreEventsPopoverContext = MoreEventsPopover.useContext;
 export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) {
   const { anchor, container, occurrences, day } = props;
 
-  // Feature hooks
+  // Context hooks
   const translations = useTranslations();
   const adapter = useAdapter();
+  const store = useEventCalendarStoreContext();
+
+  // Select hooks
+  const isMultiDayEvent = useStore(store, schedulerEventSelectors.isMultiDayEvent);
 
   return (
     <Popover.Portal container={container}>
@@ -61,7 +68,7 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
           <div className="MoreEventsPopoverContent">
             {occurrences.map((occurrence) => (
               <EventItem
-                variant={occurrence.allDay ? 'allDay' : 'compact'}
+                variant={isMultiDayEvent(occurrence) ? 'multiDay' : 'compact'}
                 key={occurrence.key}
                 occurrence={occurrence}
                 ariaLabelledBy={`PopoverHeader-${day.key}`}
