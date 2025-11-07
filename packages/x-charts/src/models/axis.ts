@@ -19,6 +19,11 @@ import type { TickParams } from '../hooks/useTicks';
 import { ChartsTextProps } from '../ChartsText';
 import { ContinuousColorConfig, OrdinalColorConfig, PiecewiseColorConfig } from './colorMapping';
 
+export type DomainLimit =
+  | 'nice'
+  | 'strict'
+  | ((min: NumberValue, max: NumberValue) => { min: NumberValue; max: NumberValue });
+
 export type AxisId = string | number;
 
 export type D3Scale<
@@ -498,10 +503,7 @@ type CommonAxisConfig<S extends ScaleName = ScaleName, V = any> = {
    * - 'strict': Set the domain to the min/max value provided. No extra space is added.
    * - function: Receives the calculated extremums as parameters, and should return the axis domain.
    */
-  domainLimit?:
-    | 'nice'
-    | 'strict'
-    | ((min: NumberValue, max: NumberValue) => { min: NumberValue; max: NumberValue });
+  domainLimit?: DomainLimit;
   /**
    * If `true`, the axis will be ignored by the tooltip with `trigger='axis'`.
    */
