@@ -1,7 +1,7 @@
 import { createSelector } from '@base-ui-components/utils/store';
 import { schedulerEventSelectors } from '../scheduler-selectors';
 import { EventCalendarState as State } from '../use-event-calendar';
-import { CalendarEventId, EventSurfaceType } from '../models';
+import { CalendarEventId } from '../models';
 
 export const eventCalendarEventSelectors = {
   isDraggable: createSelector(
@@ -25,25 +25,11 @@ export const eventCalendarEventSelectors = {
     },
   ),
   isResizable: createSelector(
-    (state: State, eventId: CalendarEventId, surfaceType: EventSurfaceType) => {
-      if (schedulerEventSelectors.isReadOnly(state, eventId) || !state.areEventsResizable) {
-        return false;
-      }
-
-      const event = schedulerEventSelectors.processedEvent(state, eventId);
-      const { view, eventModelStructure } = state;
-
-      // There is only one day cell in the day view
-      if (view === 'day' && surfaceType === 'day-grid') {
-        return false;
-      }
-
-      // In month view, only multi-day events can be resized
-      if (
-        view === 'month' &&
-        surfaceType === 'day-grid' &&
-        !schedulerEventSelectors.isMultiDayEvent(state)(event!)
-      ) {
+    schedulerEventSelectors.isReadOnly,
+    (state: State) => state.areEventsResizable,
+    (state: State) => state.eventModelStructure,
+    (isEventReadonly, areEventsResizable, eventModelStructure, _eventId: CalendarEventId) => {
+      if (isEventReadonly || !areEventsResizable) {
         return false;
       }
 

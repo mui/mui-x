@@ -10,8 +10,8 @@
   --compact-circle-bg: var(--event-color-9);
 
   /* Multi Day */
-  --multiDay-accepted-bg: var(--event-color-5);
-  --multiDay-accepted-primary-text: var(--event-color-12);
+  --filled-accepted-bg: var(--event-color-5);
+  --filled-accepted-primary-text: var(--event-color-12);
 }
 
 .EventCard--regular {
@@ -26,10 +26,10 @@
   --event-secondary-text: var(--secondary-text-color);
 }
 
-.EventCard--multiDay,
+.EventCard--filled,
 .EventCard--placeholder {
-  --event-background: var(--multiDay-accepted-bg);
-  --event-primary-text: var(--multiDay-accepted-primary-text);
+  --event-background: var(--filled-accepted-bg);
+  --event-primary-text: var(--filled-accepted-primary-text);
 }
 
 .EventRecurringIcon {

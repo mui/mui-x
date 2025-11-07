@@ -8,12 +8,11 @@ export interface EventItemProps extends React.HTMLAttributes<HTMLDivElement> {
   occurrence: CalendarEventOccurrence;
   /**
    * The event variant.
-   * 'regular' does not make the styling distinction between all day events and timed events, expect for the time display. Used in <AgendaView />.
-   * 'multiDay' is styled to fit in smaller spaces. Displays the event title only on a solid background. Used in <MoreEventsPopover /> for multi-day events.
-   * 'compact' is styled to fit in smaller spaces. Displays the resource legend, event title alongside the event time on a neutral background. Used in <MoreEventsPopover /> for timed events.
-   * @default 'regular'
+   * 'regular' does not make the styling distinction between all day events and timed events, expect for the time display.
+   * 'filled': displays the event title only on a solid background.
+   * 'compact': displays the resource legend, event title alongside the event time on a neutral background.
    */
-  variant?: 'regular' | 'multiDay' | 'compact';
+  variant: 'filled' | 'compact' | 'regular';
   /**
    * ID of the header this event is associated with (for aria-labelledby).
    */

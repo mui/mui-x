@@ -44,7 +44,7 @@
   padding: var(--space-1) var(--space-2);
 }
 .EventItemCardWrapper--compact,
-.EventItemCardWrapper--multiDay {
+.EventItemCardWrapper--allDay {
   padding: 0 var(--space-1);
 }
 
@@ -54,7 +54,7 @@
 }
 
 .EventItemCard--compact,
-.EventItemCard--multiDay {
+.EventItemCard--allDay {
   padding: 0;
   border-radius: var(--radius-3);
 }
@@ -69,7 +69,7 @@
   background-color: var(--interactive-hover-bg);
 }
 
-.EventItemCard--multiDay {
-  --event-background: var(--multiDay-accepted-bg);
-  color: var(--multiDay-accepted-primary-text);
+.EventItemCard--allDay {
+  --event-background: var(--allDay-accepted-bg);
+  color: var(--allDay-accepted-primary-text);
 }

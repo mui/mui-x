@@ -20,6 +20,7 @@ import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { EventPopoverTrigger } from '../../internals/components/event-popover';
 import { MoreEventsPopoverTrigger } from '../../internals/components/more-events-popover/MoreEventsPopover';
 import { useEventPopoverContext } from '../../internals/components/event-popover/EventPopover';
+import { isEventAllDayOrMultipleDay } from '../../internals/utils/event-utils';
 import './MonthViewWeekRow.css';
 
 export const MonthViewCell = React.forwardRef(function MonthViewCell(
@@ -43,7 +44,6 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
     day.value,
   );
   const placeholder = CalendarGrid.usePlaceholderInDay(day.value, row);
-  const isMultiDayEvent = useStore(store, schedulerEventSelectors.isMultiDayEvent);
 
   // Ref hooks
   const cellRef = React.useRef<HTMLDivElement | null>(null);
@@ -134,7 +134,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
               render={
                 <DayGridEvent
                   occurrence={occurrence}
-                  variant={isMultiDayEvent(occurrence) ? 'multiDay' : 'compact'}
+                  variant={isEventAllDayOrMultipleDay(occurrence, adapter) ? 'filled' : 'compact'}
                 />
               }
             />

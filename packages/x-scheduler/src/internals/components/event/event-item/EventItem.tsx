@@ -89,7 +89,7 @@ export const EventItem = React.forwardRef(function EventItem(
           </React.Fragment>
         );
 
-      case 'multiDay':
+      case 'filled':
         return (
           <React.Fragment>
             <p
@@ -109,7 +109,6 @@ export const EventItem = React.forwardRef(function EventItem(
           </React.Fragment>
         );
       case 'regular':
-      default:
         return (
           <div className="EventItemCardWrapper">
             <span
@@ -125,10 +124,15 @@ export const EventItem = React.forwardRef(function EventItem(
               className={clsx('EventItemCardContent', 'LinesClamp')}
               style={{ '--number-of-lines': 1 } as React.CSSProperties}
             >
-              <time className="EventItemTime">
-                <span>{formatTime(occurrence.start)}</span>
-                <span> - {formatTime(occurrence.end)}</span>
-              </time>
+              {occurrence.allDay ? (
+                <span className="EventItemTime">{translations.allDay}</span>
+              ) : (
+                <time className="EventItemTime">
+                  <span>{formatTime(occurrence.start)}</span>
+                  <span> - {formatTime(occurrence.end)}</span>
+                </time>
+              )}
+
               <span className="EventItemTitle">{occurrence.title}</span>
             </p>
             {isRecurring && (
@@ -141,12 +145,15 @@ export const EventItem = React.forwardRef(function EventItem(
             )}
           </div>
         );
+      default:
+        throw new Error('Unsupported variant provided to EventItem component.');
     }
   }, [
     variant,
     occurrence.title,
     occurrence.start,
     occurrence.end,
+    occurrence.allDay,
     isRecurring,
     resource?.title,
     translations,

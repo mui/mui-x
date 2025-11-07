@@ -1,5 +1,5 @@
 import { createSelector, createSelectorMemoized } from '@base-ui-components/utils/store';
-import { CalendarEvent, CalendarEventId, CalendarEventOccurrence } from '../models';
+import { CalendarEvent, CalendarEventId } from '../models';
 import { SchedulerState as State } from '../utils/SchedulerStore/SchedulerStore.types';
 import { schedulerResourceSelectors } from './schedulerResourceSelectors';
 
@@ -51,19 +51,6 @@ export const schedulerEventSelectors = {
         }
 
         return false;
-      };
-    },
-  ),
-  // TODO: Add a prop to configure the behavior.
-  isMultiDayEvent: createSelector(
-    (state: State) => state.adapter,
-    (adapter) => {
-      return (event: CalendarEvent | CalendarEventOccurrence) => {
-        if (event.allDay) {
-          return true;
-        }
-
-        return !adapter.isSameDay(event.start, event.end);
       };
     },
   ),

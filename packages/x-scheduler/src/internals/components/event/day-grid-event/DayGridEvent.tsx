@@ -1,17 +1,23 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { useStore } from '@base-ui-components/utils/store';
+import { createSelector, useStore } from '@base-ui-components/utils/store';
 import { Repeat } from 'lucide-react';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
+import { CalendarEventOccurrence } from '@mui/x-scheduler-headless/models';
+import { EventCalendarState } from '@mui/x-scheduler-headless/use-event-calendar';
 import {
   schedulerEventSelectors,
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { eventCalendarEventSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
+import {
+  eventCalendarEventSelectors,
+  eventCalendarViewSelectors,
+} from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { DayGridEventProps } from './DayGridEvent.types';
 import { getColorClassName } from '../../../utils/color-utils';
+import { isEventAllDayOrMultipleDay } from '../../../utils/event-utils';
 import { useTranslations } from '../../../utils/TranslationsContext';
 import { EventDragPreview } from '../../event-drag-preview';
 import { useFormatTime } from '../../../hooks/useFormatTime';
@@ -19,6 +25,29 @@ import './DayGridEvent.css';
 // TODO: Create a standalone component for the resource color pin instead of re-using another component's CSS classes
 import '../../resource-legend/ResourceLegend.css';
 import '../index.css';
+
+const isResizableSelector = createSelector(
+  (state: EventCalendarState) => state.adapter,
+  eventCalendarEventSelectors.isResizable,
+  eventCalendarViewSelectors.view,
+  (adapter, isResizable, view, occurrence: CalendarEventOccurrence) => {
+    if (!isResizable) {
+      return false;
+    }
+
+    // There is only one day cell in the day view
+    if (view === 'day') {
+      return false;
+    }
+
+    // In month view, only multi-day and all-day events can be resized
+    if (view === 'month') {
+      return isEventAllDayOrMultipleDay(occurrence, adapter);
+    }
+
+    return true;
+  },
+);
 
 export const DayGridEvent = React.forwardRef(function DayGridEvent(
   props: DayGridEventProps,
@@ -36,12 +65,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   const translations = useTranslations();
   const store = useEventCalendarStoreContext();
   const isDraggable = useStore(store, eventCalendarEventSelectors.isDraggable, occurrence.id);
-  const isResizable = useStore(
-    store,
-    eventCalendarEventSelectors.isResizable,
-    occurrence.id,
-    'day-grid',
-  );
+  const isResizable = useStore(store, isResizableSelector, occurrence);
   const resource = useStore(
     store,
     schedulerResourceSelectors.processedResource,
@@ -53,8 +77,10 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
 
   const content = React.useMemo(() => {
     switch (variant) {
-      case 'multiDay':
-      case 'invisible':
+      case 'invisible': {
+        return null;
+      }
+      case 'filled':
       case 'placeholder':
         return (
           <React.Fragment>
