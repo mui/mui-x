@@ -171,7 +171,7 @@ RichTreeView.propTypes = {
    */
   defaultSelectedItems: PropTypes.any,
   /**
-   * If `true`, will allow focus on disabled items.
+   * Whether the items should be focusable when disabled.
    * @default false
    */
   disabledItemsFocusable: PropTypes.bool,

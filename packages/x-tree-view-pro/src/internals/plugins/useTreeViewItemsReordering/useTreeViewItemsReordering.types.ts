@@ -1,12 +1,6 @@
-import * as React from 'react';
 import { DefaultizedProps } from '@mui/x-internals/types';
 import { TreeViewPluginSignature, UseTreeViewItemsSignature } from '@mui/x-tree-view/internals';
-import {
-  TreeViewItemId,
-  TreeViewItemsReorderingAction,
-  TreeViewCancellableEventHandler,
-} from '@mui/x-tree-view/models';
-import { TreeItemDragAndDropOverlayProps } from '@mui/x-tree-view/TreeItemDragAndDropOverlay';
+import { TreeViewItemId, TreeViewItemsReorderingAction } from '@mui/x-tree-view/models';
 
 export interface UseTreeViewItemsReorderingInstance {
   /**
