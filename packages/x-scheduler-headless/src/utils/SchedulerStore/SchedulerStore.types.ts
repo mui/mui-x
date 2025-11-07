@@ -1,5 +1,5 @@
 import {
-  CalendarEvent,
+  SchedulerProcessedEvent,
   CalendarEventColor,
   CalendarOccurrencePlaceholder,
   CalendarResource,
@@ -9,6 +9,7 @@ import {
   CalendarEventId,
   SchedulerResourceModelStructure,
   SchedulerEventModelStructure,
+  SchedulerEvent,
   SchedulerPreferences,
 } from '../../models';
 import { Adapter } from '../../use-adapter/useAdapter.types';
@@ -38,7 +39,7 @@ export interface SchedulerState<TEvent extends object = any> {
   /**
    * A lookup to get the processed event from its ID.
    */
-  processedEventLookup: Map<CalendarEventId, CalendarEvent>;
+  processedEventLookup: Map<CalendarEventId, SchedulerProcessedEvent>;
   /**
    * The structure of the event model.
    * It defines how to read and write properties of the event model.
@@ -249,6 +250,6 @@ export type SchedulerModelUpdater<
 
 export interface UpdateEventsParameters {
   deleted?: CalendarEventId[];
-  created?: CalendarEvent[];
+  created?: SchedulerEvent[];
   updated?: CalendarEventUpdatedProperties[];
 }

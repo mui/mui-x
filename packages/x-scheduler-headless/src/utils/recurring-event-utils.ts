@@ -2,15 +2,17 @@ import { Adapter } from '../use-adapter/useAdapter.types';
 import {
   RecurringEventWeekDayCode,
   RecurringEventByDayValue,
-  CalendarEvent,
+  SchedulerProcessedEvent,
   CalendarEventOccurrence,
   CalendarEventUpdatedProperties,
   RecurringEventRecurrenceRule,
   SchedulerValidDate,
+  SchedulerEvent,
 } from '../models';
 import { mergeDateAndTime, getDateKey } from './date-utils';
 import { diffIn } from '../use-adapter';
 import { UpdateEventsParameters } from './SchedulerStore';
+import { processDate } from '../process-date';
 
 /**
  * The week day codes for all 7 days of the week.
@@ -131,10 +133,15 @@ export function parsesByDayForMonthlyFrequency(ruleByDay: RecurringEventByDayVal
  *  Duration of the event in days.
  *  @returns At least 1, start==end yields 1.
  */
-export function getEventDurationInDays(adapter: Adapter, event: CalendarEvent): number {
+export function getEventDurationInDays(adapter: Adapter, event: SchedulerProcessedEvent): number {
   // +1 so start/end same day = 1 day, spans include last day
   return (
-    diffIn(adapter, adapter.startOfDay(event.end), adapter.startOfDay(event.start), 'days') + 1
+    diffIn(
+      adapter,
+      adapter.startOfDay(event.end.value),
+      adapter.startOfDay(event.start.value),
+      'days',
+    ) + 1
   );
 }
 
@@ -145,7 +152,7 @@ export function getEventDurationInDays(adapter: Adapter, event: CalendarEvent): 
  *  @returns Sorted list (by start) of concrete occurrences.
  */
 export function getRecurringEventOccurrencesForVisibleDays(
-  event: CalendarEvent,
+  event: SchedulerProcessedEvent,
   start: SchedulerValidDate,
   end: SchedulerValidDate,
   adapter: Adapter,
@@ -153,8 +160,8 @@ export function getRecurringEventOccurrencesForVisibleDays(
   const rule = event.rrule!;
   const occurrences: CalendarEventOccurrence[] = [];
 
-  const endGuard = buildEndGuard(rule, event.start, adapter);
-  const durationMinutes = diffIn(adapter, event.end, event.start, 'minutes');
+  const endGuard = buildEndGuard(rule, event.start.value, adapter);
+  const durationMinutes = diffIn(adapter, event.end.value, event.start.value, 'minutes');
 
   const eventDuration = getEventDurationInDays(adapter, event);
   const scanStart = adapter.addDays(start, -(eventDuration - 1));
@@ -175,7 +182,7 @@ export function getRecurringEventOccurrencesForVisibleDays(
 
     const occurrenceStart = event.allDay
       ? adapter.startOfDay(day)
-      : mergeDateAndTime(adapter, day, event.start);
+      : mergeDateAndTime(adapter, day, event.start.value);
 
     const occurrenceEnd = event.allDay
       ? adapter.endOfDay(adapter.addDays(occurrenceStart, eventDuration - 1))
@@ -190,8 +197,8 @@ export function getRecurringEventOccurrencesForVisibleDays(
     occurrences.push({
       ...event,
       key,
-      start: occurrenceStart,
-      end: occurrenceEnd,
+      start: processDate(occurrenceStart, adapter),
+      end: processDate(occurrenceEnd, adapter),
     });
   }
 
@@ -299,10 +306,10 @@ export function matchesRecurrence(
   rule: RecurringEventRecurrenceRule,
   date: SchedulerValidDate,
   adapter: Adapter,
-  event: CalendarEvent,
+  event: SchedulerProcessedEvent,
 ): boolean {
   const interval = Math.max(1, rule.interval ?? 1);
-  const seriesStartDay = adapter.startOfDay(event.start);
+  const seriesStartDay = adapter.startOfDay(event.start.value);
   const candidateDay = adapter.startOfDay(date);
 
   if (adapter.isBefore(candidateDay, seriesStartDay)) {
@@ -740,7 +747,7 @@ export function decideSplitRRule(
   originalRule: RecurringEventRecurrenceRule,
   originalSeriesStart: SchedulerValidDate,
   splitStart: SchedulerValidDate,
-  changes: Partial<CalendarEvent>,
+  changes: Partial<SchedulerEvent>,
 ): RecurringEventRecurrenceRule | undefined {
   // Normalize base pattern (drop COUNT/UNTIL)
   const { count, until, ...baseRule } = originalRule;
@@ -818,11 +825,11 @@ export function decideSplitRRule(
  */
 export function applyRecurringUpdateFollowing(
   adapter: Adapter,
-  originalEvent: CalendarEvent,
+  originalEvent: SchedulerProcessedEvent,
   occurrenceStart: SchedulerValidDate,
   changes: CalendarEventUpdatedProperties,
 ): UpdateEventsParameters {
-  const newStart = changes.start ?? originalEvent.start;
+  const newStart = changes.start ?? originalEvent.start.value;
 
   // 1) Old series: truncate rule to end the day before the edited occurrence
   const occurrenceDayStart = adapter.startOfDay(occurrenceStart);
@@ -835,14 +842,14 @@ export function applyRecurringUpdateFollowing(
   const newRRule = decideSplitRRule(
     adapter,
     originalRule,
-    originalEvent.start,
+    originalEvent.start.value,
     occurrenceStart,
     changes,
   );
   const newEventId = `${originalEvent.id}::${getDateKey(newStart, adapter)}`;
 
-  const newEvent: CalendarEvent = {
-    ...originalEvent,
+  const newEvent: SchedulerEvent = {
+    ...originalEvent.modelInBuiltInFormat!,
     ...changes,
     id: newEventId,
     rrule: newRRule,
@@ -852,7 +859,7 @@ export function applyRecurringUpdateFollowing(
   // 3) If UNTIL falls before DTSTART, the original series has no remaining occurrences -> drop it, otherwise truncate it.
   const shouldDropOldSeries = adapter.isBefore(
     adapter.endOfDay(untilDate),
-    adapter.startOfDay(originalEvent.start),
+    adapter.startOfDay(originalEvent.start.value),
   );
 
   if (shouldDropOldSeries) {
@@ -922,7 +929,7 @@ export function adjustRRuleForAllMove(
  */
 export function applyRecurringUpdateAll(
   adapter: Adapter,
-  originalEvent: CalendarEvent,
+  originalEvent: SchedulerProcessedEvent,
   occurrenceStart: SchedulerValidDate,
   changes: CalendarEventUpdatedProperties,
 ): UpdateEventsParameters {
@@ -931,14 +938,14 @@ export function applyRecurringUpdateAll(
   // 1) Detect if caller changed the date part of start or end (vs only time)
   const occurrenceEnd = adapter.addMinutes(
     occurrenceStart,
-    diffIn(adapter, originalEvent.end, originalEvent.start, 'minutes'),
+    diffIn(adapter, originalEvent.end.value, originalEvent.start.value, 'minutes'),
   );
   const touchedStartDate =
     changes.start != null && !adapter.isSameDay(occurrenceStart, changes.start);
   const touchedEndDate = changes.end != null && !adapter.isSameDay(occurrenceEnd, changes.end);
 
   // 2) Is the edited occurrence the first of the series (DTSTART)?
-  const editedIsDtstart = adapter.isSameDay(occurrenceStart, originalEvent.start);
+  const editedIsDtstart = adapter.isSameDay(occurrenceStart, originalEvent.start.value);
 
   // 3) Decide new start/end
   if (changes.start != null) {
@@ -951,13 +958,17 @@ export function applyRecurringUpdateAll(
         // Not first: keep original DTSTART date, merge only time
         eventUpdatedProperties.start = mergeDateAndTime(
           adapter,
-          originalEvent.start,
+          originalEvent.start.value,
           changes.start,
         );
       }
     } else {
       // Same day -> merge time into original date
-      eventUpdatedProperties.start = mergeDateAndTime(adapter, originalEvent.start, changes.start);
+      eventUpdatedProperties.start = mergeDateAndTime(
+        adapter,
+        originalEvent.start.value,
+        changes.start,
+      );
     }
   }
 
@@ -966,10 +977,14 @@ export function applyRecurringUpdateAll(
       if (editedIsDtstart) {
         eventUpdatedProperties.end = changes.end;
       } else {
-        eventUpdatedProperties.end = mergeDateAndTime(adapter, originalEvent.end, changes.end);
+        eventUpdatedProperties.end = mergeDateAndTime(
+          adapter,
+          originalEvent.end.value,
+          changes.end,
+        );
       }
     } else {
-      eventUpdatedProperties.end = mergeDateAndTime(adapter, originalEvent.end, changes.end);
+      eventUpdatedProperties.end = mergeDateAndTime(adapter, originalEvent.end.value, changes.end);
     }
   }
 
@@ -1002,14 +1017,14 @@ export function applyRecurringUpdateAll(
  */
 export function applyRecurringUpdateOnlyThis(
   adapter: Adapter,
-  originalEvent: CalendarEvent,
+  originalEvent: SchedulerProcessedEvent,
   occurrenceStart: SchedulerValidDate,
   changes: CalendarEventUpdatedProperties,
 ): UpdateEventsParameters {
-  const detachedId = `${originalEvent.id}::${getDateKey(changes.start ?? originalEvent.start, adapter)}`;
+  const detachedId = `${originalEvent.id}::${getDateKey(changes.start ?? originalEvent.start.value, adapter)}`;
 
-  const detachedEvent: CalendarEvent = {
-    ...originalEvent,
+  const detachedEvent: SchedulerEvent = {
+    ...originalEvent.modelInBuiltInFormat!,
     ...changes,
     id: detachedId,
     rrule: undefined,

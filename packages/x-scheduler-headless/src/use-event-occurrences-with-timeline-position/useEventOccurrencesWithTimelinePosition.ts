@@ -75,8 +75,8 @@ function buildOccurrenceConflicts(
   // Computes the properties needed for each occurrence.
   for (const occurrence of occurrences) {
     // TODO: Avoid JS Date conversion
-    const startTimestamp = adapter.toJsDate(occurrence.start).getTime();
-    const endTimestamp = adapter.toJsDate(occurrence.end).getTime();
+    const startTimestamp = occurrence.start.timestamp;
+    const endTimestamp = occurrence.end.timestamp;
     const occurrenceDurationMs = endTimestamp - startTimestamp;
 
     if (startTimestamp >= lastEndTimestamp) {

@@ -118,8 +118,8 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
               style={{ '--number-of-lines': 1 } as React.CSSProperties}
             >
               <time className="DayGridEventTime">
-                <span>{formatTime(occurrence.start)}</span>
-                <span> - {formatTime(occurrence.end)}</span>
+                <span>{formatTime(occurrence.start.value)}</span>
+                <span> - {formatTime(occurrence.end.value)}</span>
               </time>
               <span className="DayGridEventTitle">{occurrence.title}</span>
             </p>

@@ -1,6 +1,6 @@
 import {
   SchedulerValidDate,
-  CalendarEvent,
+  SchedulerProcessedEvent,
   CalendarProcessedDate,
   CalendarEventOccurrence,
 } from '../models';
@@ -18,12 +18,12 @@ export function getDaysTheOccurrenceIsVisibleOn(
   const dayKeys: string[] = [];
   for (const day of days) {
     // If the day is before the event start, skip to the next day
-    if (adapter.isBeforeDay(day.value, event.start)) {
+    if (adapter.isBeforeDay(day.value, event.start.value)) {
       continue;
     }
 
     // If the day is after the event end, break as the days are sorted by start date
-    if (adapter.isAfterDay(day.value, event.end)) {
+    if (adapter.isAfterDay(day.value, event.end.value)) {
       break;
     }
     dayKeys.push(day.key);
@@ -52,7 +52,7 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
     }
 
     // STEP 2-B: Non-recurring event processing, skip events that are not within the visible days
-    if (adapter.isAfter(event.start, end) || adapter.isBefore(event.end, start)) {
+    if (adapter.isAfter(event.start.value, end) || adapter.isBefore(event.end.value, start)) {
       continue;
     }
 
@@ -66,7 +66,7 @@ export interface GetOccurrencesFromEventsParameters {
   adapter: Adapter;
   start: SchedulerValidDate;
   end: SchedulerValidDate;
-  events: CalendarEvent[];
+  events: SchedulerProcessedEvent[];
   visibleResources: Map<string, boolean>;
 }
 
@@ -76,14 +76,15 @@ export function sortEventOccurrences(
 ): CalendarEventOccurrence[] {
   return occurrences
     .map((occurrence) => {
-      const start = occurrence.allDay ? adapter.startOfDay(occurrence.start) : occurrence.start;
-      const end = occurrence.allDay ? adapter.endOfDay(occurrence.end) : occurrence.end;
-
       return {
         occurrence,
         // TODO: Avoid JS Date conversion
-        start: adapter.toJsDate(start).getTime(),
-        end: adapter.toJsDate(end).getTime(),
+        start: occurrence.allDay
+          ? adapter.toJsDate(adapter.startOfDay(occurrence.start.value)).getTime()
+          : occurrence.start.timestamp,
+        end: occurrence.allDay
+          ? adapter.toJsDate(adapter.endOfDay(occurrence.end.value)).getTime()
+          : occurrence.end.timestamp,
       };
     })
     .sort((a, b) => a.start - b.start || b.end - a.end)

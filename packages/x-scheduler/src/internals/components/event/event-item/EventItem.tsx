@@ -73,7 +73,7 @@ export const EventItem = React.forwardRef(function EventItem(
               style={{ '--number-of-lines': 1 } as React.CSSProperties}
             >
               <time className="EventItemTime EventItemTime--compact">
-                <span>{formatTime(occurrence.start)}</span>
+                <span>{formatTime(occurrence.start.value)}</span>
               </time>
 
               <span className="EventItemTitle">{occurrence.title}</span>
@@ -128,8 +128,8 @@ export const EventItem = React.forwardRef(function EventItem(
                 <span className="EventItemTime">{translations.allDay}</span>
               ) : (
                 <time className="EventItemTime">
-                  <span>{formatTime(occurrence.start)}</span>
-                  <span> - {formatTime(occurrence.end)}</span>
+                  <span>{formatTime(occurrence.start.value)}</span>
+                  <span> - {formatTime(occurrence.end.value)}</span>
                 </time>
               )}
 

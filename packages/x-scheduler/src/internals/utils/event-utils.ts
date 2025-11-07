@@ -6,5 +6,5 @@ export function isEventAllDayOrMultipleDay(event: CalendarEventOccurrence, adapt
     return true;
   }
 
-  return !adapter.isSameDay(event.start, event.end);
+  return !adapter.isSameDay(event.start.value, event.end.value);
 }
