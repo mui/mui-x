@@ -1,12 +1,10 @@
-import * as React from 'react';
 import createDescribe from '@mui/internal-test-utils/createDescribe';
 import { createRenderer, ErrorBoundary } from '@mui/internal-test-utils';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';
-import { TreeViewBaseItem } from '@mui/x-tree-view/models';
-import { TreeViewAnyPluginSignature, TreeViewPublicAPI } from '@mui/x-tree-view/internals/models';
+import { TreeViewDefaultItemModelProperties } from '@mui/x-tree-view/models';
 import { MuiRenderResult } from '@mui/internal-test-utils/createRenderer';
 import {
   DescribeTreeViewTestRunner,
@@ -17,15 +15,22 @@ import {
   TreeViewItemIdTreeElement,
 } from './describeTreeView.types';
 
-const innerDescribeTreeView = <TSignatures extends TreeViewAnyPluginSignature[]>(
+// TODO #20051: Replace with imported type
+type TreeViewAnyStore = { parameters: any };
+
+// TODO #20051: Replace with imported type
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+type TreeViewPublicAPI<TStore extends TreeViewAnyStore> = any;
+
+const innerDescribeTreeView = <TStore extends TreeViewAnyStore>(
   message: string,
-  testRunner: DescribeTreeViewTestRunner<TSignatures>,
+  testRunner: DescribeTreeViewTestRunner<TStore>,
 ): void => {
   const { render } = createRenderer();
 
   const getUtils = (
     result: MuiRenderResult,
-    apiRef?: { current: TreeViewPublicAPI<TSignatures> },
+    apiRef?: { current: TreeViewPublicAPI<TStore> },
   ): DescribeTreeViewRendererUtils => {
     const getRoot = () => result.getByRole('tree');
 
@@ -39,7 +44,7 @@ const innerDescribeTreeView = <TSignatures extends TreeViewAnyPluginSignature[]>
         );
       }
 
-      const cleanItem = (item: TreeViewBaseItem): { id: any; children?: any } => {
+      const cleanItem = (item: TreeViewDefaultItemModelProperties): { id: any; children?: any } => {
         if (item.children) {
           return { id: item.id, children: item.children.map(cleanItem) };
         }
@@ -116,7 +121,7 @@ const innerDescribeTreeView = <TSignatures extends TreeViewAnyPluginSignature[]>
   const createRendererForComponentWithItemsProp = (
     TreeViewComponent: typeof RichTreeView | typeof RichTreeViewPro,
   ) => {
-    const objectRenderer: DescribeTreeViewRenderer<TSignatures> = ({
+    const objectRenderer: DescribeTreeViewRenderer<TStore> = ({
       items: rawItems,
       withErrorBoundary,
       slotProps,
@@ -139,7 +144,8 @@ const innerDescribeTreeView = <TSignatures extends TreeViewAnyPluginSignature[]>
                 'data-testid': ownerState.itemId,
               }) as any,
           }}
-          getItemLabel={(item) => {
+          // TODO #20051: Remove any
+          getItemLabel={(item: any) => {
             if (item.label) {
               if (typeof item.label !== 'string') {
                 throw new Error('Only use string labels when testing RichTreeView(Pro)');
@@ -150,7 +156,8 @@ const innerDescribeTreeView = <TSignatures extends TreeViewAnyPluginSignature[]>
 
             return item.id;
           }}
-          isItemDisabled={(item) => !!item.disabled}
+          // TODO #20051: Remove any
+          isItemDisabled={(item: any) => !!item.disabled}
           {...other}
         />
       );
@@ -160,8 +167,8 @@ const innerDescribeTreeView = <TSignatures extends TreeViewAnyPluginSignature[]>
       return {
         setProps: result.setProps,
         setItems: (newItems) => result.setProps({ items: newItems }),
-        apiRef: apiRef as unknown as { current: TreeViewPublicAPI<TSignatures> },
-        ...getUtils(result, apiRef as unknown as { current: TreeViewPublicAPI<TSignatures> }),
+        apiRef: apiRef as { current: TreeViewPublicAPI<TStore> },
+        ...getUtils(result, apiRef as { current: TreeViewPublicAPI<TStore> }),
       };
     };
 
@@ -172,7 +179,7 @@ const innerDescribeTreeView = <TSignatures extends TreeViewAnyPluginSignature[]>
   };
 
   const createRenderersForComponentWithJSXItems = (TreeViewComponent: typeof SimpleTreeView) => {
-    const objectRenderer: DescribeTreeViewRenderer<TSignatures> = ({
+    const objectRenderer: DescribeTreeViewRenderer<TStore> = ({
       items: rawItems,
       withErrorBoundary,
       slots,
@@ -207,7 +214,7 @@ const innerDescribeTreeView = <TSignatures extends TreeViewAnyPluginSignature[]>
       return {
         setProps: result.setProps,
         setItems: (newItems) => result.setProps({ children: newItems.map(renderItem) }),
-        apiRef: apiRef as unknown as { current: TreeViewPublicAPI<TSignatures> },
+        apiRef: apiRef as { current: TreeViewPublicAPI<TStore> },
         ...getUtils(result),
       };
     };
@@ -248,15 +255,12 @@ const innerDescribeTreeView = <TSignatures extends TreeViewAnyPluginSignature[]>
   });
 };
 
-type Params<TSignatures extends TreeViewAnyPluginSignature[]> = [
-  string,
-  DescribeTreeViewTestRunner<TSignatures>,
-];
+type Params<TStore extends TreeViewAnyStore> = [string, DescribeTreeViewTestRunner<TStore>];
 
 type DescribeTreeView = {
-  <TSignatures extends TreeViewAnyPluginSignature[]>(...args: Params<TSignatures>): void;
-  skip: <TSignatures extends TreeViewAnyPluginSignature[]>(...args: Params<TSignatures>) => void;
-  only: <TSignatures extends TreeViewAnyPluginSignature[]>(...args: Params<TSignatures>) => void;
+  <TStore extends TreeViewAnyStore>(...args: Params<TStore>): void;
+  skip: <TStore extends TreeViewAnyStore>(...args: Params<TStore>) => void;
+  only: <TStore extends TreeViewAnyStore>(...args: Params<TStore>) => void;
 };
 
 /**
