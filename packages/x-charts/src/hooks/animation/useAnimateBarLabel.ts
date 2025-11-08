@@ -47,47 +47,7 @@ function barLabelPropsInterpolator(from: BarLabelInterpolatedProps, to: BarLabel
  * pass the ref returned by this hook to the `path` element and the `ref` provided as argument will also be called.
  */
 export function useAnimateBarLabel(props: UseAnimateBarLabelParams): UseAnimateBarLabelReturn {
-  const isNegativeValue = props.value !== null && props.value < 0;
-  const isOutsidePlacement = props.barLabelPlacement === 'outside';
-
-  const shouldPlaceBelow = isNegativeValue && isOutsidePlacement;
-  const shouldPlaceAbove = !isNegativeValue && isOutsidePlacement;
-
-  let initialY = 0;
-  let currentY = 0;
-
-  let initialX = 0;
-  let currentX = 0;
-
-  if (props.layout === 'vertical') {
-    if (shouldPlaceBelow) {
-      initialY = props.yOrigin + 8;
-      currentY = props.y + props.height + 8;
-    } else if (shouldPlaceAbove) {
-      initialY = props.yOrigin - 8;
-      currentY = props.y - 8;
-    } else {
-      initialY = props.yOrigin;
-      currentY = props.y + props.height / 2;
-    }
-    initialX = props.x + props.width / 2;
-    currentX = props.x + props.width / 2;
-  }
-
-  if (props.layout === 'horizontal') {
-    if (shouldPlaceBelow) {
-      initialX = props.xOrigin;
-      currentX = props.x - 8;
-    } else if (shouldPlaceAbove) {
-      initialX = props.xOrigin;
-      currentX = props.x + props.width + 8;
-    } else {
-      initialX = props.xOrigin;
-      currentX = props.x + props.width / 2;
-    }
-    initialY = props.y + props.height / 2;
-    currentY = props.y + props.height / 2;
-  }
+  const { initialX, currentX, initialY, currentY } = getPlacement(props);
 
   const initialProps = {
     x: initialX,
@@ -115,4 +75,52 @@ export function useAnimateBarLabel(props: UseAnimateBarLabelParams): UseAnimateB
     skip: props.skipAnimation,
     ref: props.ref,
   });
+}
+
+const LABEL_OFFSET = 8;
+
+function getPlacement(props: UseAnimateBarLabelParams) {
+  const isNegativeValue = props.value !== null && props.value < 0;
+  const isOutsidePlacement = props.barLabelPlacement === 'outside';
+
+  const shouldPlaceBelow = isNegativeValue && isOutsidePlacement;
+  const shouldPlaceAbove = !isNegativeValue && isOutsidePlacement;
+
+  let initialY = 0;
+  let currentY = 0;
+
+  let initialX = 0;
+  let currentX = 0;
+
+  if (props.layout === 'vertical') {
+    if (shouldPlaceBelow) {
+      initialY = props.yOrigin + LABEL_OFFSET;
+      currentY = props.y + props.height + LABEL_OFFSET;
+    } else if (shouldPlaceAbove) {
+      initialY = props.yOrigin - LABEL_OFFSET;
+      currentY = props.y - LABEL_OFFSET;
+    } else {
+      initialY = props.yOrigin;
+      currentY = props.y + props.height / 2;
+    }
+    initialX = props.x + props.width / 2;
+    currentX = props.x + props.width / 2;
+  }
+
+  if (props.layout === 'horizontal') {
+    if (shouldPlaceBelow) {
+      initialX = props.xOrigin;
+      currentX = props.x - LABEL_OFFSET;
+    } else if (shouldPlaceAbove) {
+      initialX = props.xOrigin;
+      currentX = props.x + props.width + LABEL_OFFSET;
+    } else {
+      initialX = props.xOrigin;
+      currentX = props.x + props.width / 2;
+    }
+    initialY = props.y + props.height / 2;
+    currentY = props.y + props.height / 2;
+  }
+
+  return { initialX, currentX, initialY, currentY };
 }
