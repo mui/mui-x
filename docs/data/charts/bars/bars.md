@@ -181,9 +181,14 @@ In the example below, the value of the first series is displayed using the defau
 
 ### Label placement
 
-You can also display the labels on top of the bars.
+<!--You can also display the labels on top of the bars.
 To do so, provide the `barLabelPlacement` prop.
-This prop accepts two values: `'center'` (default) and `'outside'`.
+This prop accepts two values: `'center'` (default) and `'outside'`.-->
+
+The position of the bar label can be customized. 
+To do so, set a series' `barLabelPlacement` property to one of the following values: 
+   * - 'center': the label is centered on the bar;
+   * - 'outside': the label is placed after the end of the bar, from the point of the view of the origin. For a vertical positive bar, the label is above its top edge; for a horizontal negative bar, the label is placed to the left of its leftmost limit. 
 
 {{"demo": "BarLabelPlacement.js"}}
 

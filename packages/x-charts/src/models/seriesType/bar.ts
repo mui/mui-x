@@ -55,8 +55,9 @@ export interface BarSeriesType
    */
   barLabel?: 'value' | ((item: BarItem, context: BarLabelContext) => string | null | undefined);
   /**
-   * The placement of the bar label.
-   * It controls whether the label is rendered center or outside the bar.
+   * The placement of the bar label. It accepts the following values:
+   * - 'center': the label is centered on the bar
+   * - 'outside': the label is placed after the end of the bar, from the point of the view of the origin. For a vertical positive bar, the label is above its top edge; for a horizontal negative bar, the label is placed to the left of its leftmost limit.
    * @default 'center'
    */
   barLabelPlacement?: 'center' | 'outside';
