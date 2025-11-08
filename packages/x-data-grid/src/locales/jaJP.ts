@@ -121,7 +121,7 @@ const jaJPGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'メニュー',
-  // columnMenuAriaLabel: (columnName: string) => `${columnName}メニュー`,
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: '列表示',
   columnMenuManageColumns: '列管理',
   columnMenuFilter: 'フィルター',
@@ -183,12 +183,7 @@ const jaJPGrid: Partial<GridLocaleText> = {
 
   // Pagination
   paginationRowsPerPage: 'ページあたりの行数:',
-  paginationDisplayedRows: ({
-    from,
-    to,
-    count,
-    estimated
-  }) => {
+  paginationDisplayedRows: ({ from, to, count, estimated }) => {
     if (!estimated) {
       return `${from}–${to} of ${count !== -1 ? count : `${to}以上`}`;
     }
