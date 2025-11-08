@@ -148,7 +148,7 @@ const BarChart = React.forwardRef(function BarChart(
             <ChartsAxisHighlight {...axisHighlightProps} />
           </g>
           <ChartsAxis {...chartsAxisProps} />
-          <ChartsClipPath {...clipPathProps} isBarChart />
+          <ChartsClipPath {...clipPathProps} />
           {children}
         </ChartsSurface>
         {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
