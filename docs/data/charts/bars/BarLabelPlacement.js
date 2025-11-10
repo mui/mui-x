@@ -10,7 +10,7 @@ export default function BarLabelPlacement() {
         { data: [3, -1, 4], barLabel: 'value' },
       ]}
       height={300}
-      yAxis={[{ width: 30 }]}
+      yAxis={[{ width: 30, min: -5 }]}
     />
   );
 }
