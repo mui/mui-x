@@ -56,7 +56,7 @@ Such that all subcomponents are placed in a 3 by 3 [CSS grid](https://developer.
 
 ## CSS customization
 
-To move an element, you can override its position in the layout with [`gridColumn`](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-column) and [`gridRow`](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-row) properties.
+To move an element, you can override its position in the layout with [`gridColumn`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/grid-column) and [`gridRow`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/grid-row) properties.
 
 In the next example, the action bar is replaced by a list and then placed on the left side of the content.
 It's achieved by applying the `{ gridColumn: 1, gridRow: 2 }` style.

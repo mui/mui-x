@@ -1,6 +1,6 @@
 'use client';
 import { useStore } from '@base-ui-components/utils/store';
-import { SchedulerValidDate } from '../models';
+import { CalendarProcessedDate } from '../models';
 import { useSchedulerStoreContext } from '../use-scheduler-store-context/useSchedulerStoreContext';
 import { schedulerOccurrenceSelectors } from '../scheduler-selectors';
 
@@ -18,11 +18,11 @@ export namespace useEvent {
     /**
      * The time at which the event starts.
      */
-    start: SchedulerValidDate;
+    start: CalendarProcessedDate;
     /**
      * The time at which the event ends.
      */
-    end: SchedulerValidDate;
+    end: CalendarProcessedDate;
   }
 
   export interface ReturnValue {

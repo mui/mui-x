@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store';
-import { CalendarEvent, CalendarEventOccurrence, CalendarProcessedDate } from '../models';
+import { SchedulerProcessedEvent, CalendarEventOccurrence, CalendarProcessedDate } from '../models';
 import { getDaysTheOccurrenceIsVisibleOn, getOccurrencesFromEvents } from '../utils/event-utils';
 import { useAdapter } from '../use-adapter/useAdapter';
 import { useEventCalendarStoreContext } from '../use-event-calendar-store-context';
@@ -54,7 +54,7 @@ export namespace useEventOccurrencesGroupedByDay {
 export function innerGetEventOccurrencesGroupedByDay(
   adapter: Adapter,
   days: CalendarProcessedDate[],
-  events: CalendarEvent[],
+  events: SchedulerProcessedEvent[],
   visibleResources: Map<string, boolean>,
   resourceParentIds: Map<string, string | null>,
 ): Map<string, CalendarEventOccurrence[]> {

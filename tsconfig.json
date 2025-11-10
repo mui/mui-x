@@ -70,7 +70,7 @@
       "docs/*": ["./node_modules/@mui/monorepo/docs/*"],
       "docsx/*": ["./docs/*"]
     },
-    "types": ["@vitest/browser/providers/playwright"]
+    "types": []
   },
   "exclude": ["**/node_modules/!(@mui)/**", "**/build/**/*", "docs/export/**/*"]
 }

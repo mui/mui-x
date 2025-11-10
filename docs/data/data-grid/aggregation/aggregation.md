@@ -284,6 +284,13 @@ const aggregationFunction: GridAggregationFunction = {
 
 {{"demo": "AggregationValueFormatter.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### Including pinned rows in the aggregation
+
+By default, pinned rows are not included in the top-level aggregation calculation.
+The demo below overrides the default aggregation functions to include values from the pinned rows in the top-level total aggreagation.
+
+{{"demo": "AggregationPinnedRows.js", "bg": "inline"}}
+
 ## Custom rendering
 
 If the column used to display aggregation has a `renderCell()` property, then the aggregated cell calls it with a `params.aggregation` object to let you decide how you want to render it.

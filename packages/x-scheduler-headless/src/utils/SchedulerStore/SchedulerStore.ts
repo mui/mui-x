@@ -2,7 +2,7 @@ import { Store } from '@base-ui-components/utils/store';
 // TODO: Use the Base UI warning utility once it supports cleanup in tests.
 import { warnOnce } from '@mui/x-internals/warning';
 import {
-  CalendarEvent,
+  SchedulerProcessedEvent,
   CalendarEventId,
   CalendarEventOccurrence,
   CalendarOccurrencePlaceholder,
@@ -10,6 +10,7 @@ import {
   SchedulerValidDate,
   CalendarEventUpdatedProperties,
   RecurringEventUpdateScope,
+  SchedulerEvent,
   SchedulerPreferences,
 } from '../../models';
 import {
@@ -38,7 +39,9 @@ import { TimeoutManager } from '../TimeoutManager';
 import { DEFAULT_EVENT_COLOR } from '../../constants';
 
 // TODO: Add a prop to configure the behavior.
-export const DEFAULT_IS_MULTI_DAY_EVENT = (event: CalendarEvent | CalendarEventOccurrence) => {
+export const DEFAULT_IS_MULTI_DAY_EVENT = (
+  event: SchedulerProcessedEvent | CalendarEventOccurrence,
+) => {
   if (event.allDay) {
     return true;
   }
@@ -79,7 +82,7 @@ export class SchedulerStore<
   ) {
     const schedulerInitialState: SchedulerState<TEvent> = {
       ...SchedulerStore.deriveStateFromParameters(parameters, adapter),
-      ...buildEventsState(parameters),
+      ...buildEventsState(parameters, adapter),
       ...buildResourcesState(parameters),
       preferences: DEFAULT_SCHEDULER_PREFERENCES,
       adapter,
@@ -182,9 +185,10 @@ export class SchedulerStore<
 
     if (
       parameters.events !== this.parameters.events ||
-      parameters.eventModelStructure !== this.parameters.eventModelStructure
+      parameters.eventModelStructure !== this.parameters.eventModelStructure ||
+      adapter !== this.state.adapter
     ) {
-      Object.assign(newSchedulerState, buildEventsState(parameters));
+      Object.assign(newSchedulerState, buildEventsState(parameters, adapter));
     }
 
     if (
@@ -276,9 +280,8 @@ export class SchedulerStore<
   /**
    * Creates a new event in the calendar.
    */
-  public createEvent = (calendarEvent: CalendarEvent): CalendarEvent => {
+  public createEvent = (calendarEvent: SchedulerEvent) => {
     this.updateEvents({ created: [calendarEvent] });
-    return calendarEvent;
   };
 
   /**
