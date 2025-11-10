@@ -26,30 +26,46 @@ export const useGridRowsOverridableMethods = (
   >,
 ) => {
   const { processRowUpdate, onProcessRowUpdateError } = props;
-  const { setRowIndex: setRowIndexPlain } = useGridRowsOverridableMethodsCommunity(apiRef);
-  const { setRowIndex: setRowIndexTreeData } = useGridRowsOverridableMethodsPro(apiRef, props);
+  const { setRowIndex: setRowIndexPlain, setRowPosition: setRowPositionPlain } =
+    useGridRowsOverridableMethodsCommunity(apiRef);
+  const { setRowIndex: setRowIndexTreeData, setRowPosition: setRowPositionTreeData } =
+    useGridRowsOverridableMethodsPro(apiRef, props);
 
   const flatTree = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector) === 1;
 
-  const setRowIndex = React.useCallback(
+  const setRowPosition = React.useCallback(
     async (
       sourceRowId: GridRowId,
-      targetOriginalIndex: number,
-      dropPosition: 'above' | 'below' | 'over' = 'below',
+      targetRowId: GridRowId,
+      position: 'above' | 'below' | 'over',
     ) => {
       const sortedFilteredRowIds = gridExpandedSortedRowIdsSelector(apiRef);
       const sortedFilteredRowIndexLookup = gridExpandedSortedRowIndexLookupSelector(apiRef);
       const rowTree = gridRowTreeSelector(apiRef);
 
       const sourceNode = gridRowNodeSelector(apiRef, sourceRowId);
+      const targetNode = gridRowNodeSelector(apiRef, targetRowId);
 
       if (!sourceNode) {
         throw new Error(`MUI X: No row with id #${sourceRowId} found.`);
       }
 
+      if (!targetNode) {
+        throw new Error(`MUI X: No row with id #${targetRowId} found.`);
+      }
+
       if (sourceNode.type === 'footer') {
         throw new Error(`MUI X: The row reordering do not support reordering of footer rows.`);
       }
+
+      // Get the target index from the targetRowId using the lookup selector
+      const targetIndexUnadjusted = sortedFilteredRowIndexLookup[targetRowId];
+
+      if (targetIndexUnadjusted === undefined) {
+        throw new Error(`MUI X: Target row with id #${targetRowId} not found in current view.`);
+      }
+
+      const targetIndex = position === 'below' ? targetIndexUnadjusted + 1 : targetIndexUnadjusted;
 
       /**
        * Row Grouping Reordering Use Cases
@@ -68,8 +84,8 @@ export const useGridRowsOverridableMethods = (
 
       const executionContext: ReorderExecutionContext = {
         sourceRowId,
-        dropPosition,
-        placeholderIndex: targetOriginalIndex,
+        dropPosition: position,
+        placeholderIndex: targetIndex,
         sortedFilteredRowIds,
         sortedFilteredRowIndexLookup,
         rowTree,
@@ -83,19 +99,49 @@ export const useGridRowsOverridableMethods = (
     [apiRef, processRowUpdate, onProcessRowUpdateError],
   );
 
+  // Delegate method: setRowIndex calls setRowPosition
+  const setRowIndex = React.useCallback(
+    async (
+      sourceRowId: GridRowId,
+      targetOriginalIndex: number,
+      dropPosition: 'above' | 'below' | 'over' = 'below',
+    ) => {
+      // Get all row IDs to find the targetRowId at the given targetIndex
+      const sortedFilteredRowIds = gridExpandedSortedRowIdsSelector(apiRef);
+
+      if (targetOriginalIndex === sortedFilteredRowIds.length) {
+        // "below" position on last node will end up index to be equal to the length of array
+        targetOriginalIndex = targetOriginalIndex - 1;
+      }
+      if (targetOriginalIndex > sortedFilteredRowIds.length) {
+        throw new Error(
+          `MUI X: Target index ${targetOriginalIndex} is out of bounds. Maximum index is ${sortedFilteredRowIds.length - 1}.`,
+        );
+      }
+
+      const targetRowId = sortedFilteredRowIds[targetOriginalIndex];
+
+      return setRowPosition(sourceRowId, targetRowId, dropPosition);
+    },
+    [apiRef, setRowPosition],
+  );
+
   if (flatTree) {
     return {
       setRowIndex: setRowIndexPlain,
+      setRowPosition: setRowPositionPlain,
     };
   }
 
   if (props.treeData) {
     return {
       setRowIndex: setRowIndexTreeData,
+      setRowPosition: setRowPositionTreeData,
     };
   }
 
   return {
     setRowIndex,
+    setRowPosition,
   };
 };

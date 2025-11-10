@@ -105,7 +105,7 @@ export const useGridRows = (
   const timeout = useTimeout();
 
   // Get overridable methods from configuration
-  const { setRowIndex } = configuration.hooks.useGridRowsOverridableMethods(
+  const { setRowIndex, setRowPosition } = configuration.hooks.useGridRowsOverridableMethods(
     apiRef,
     props as DataGridProcessedProps,
   );
@@ -503,6 +503,7 @@ export const useGridRows = (
 
   const rowProApi: GridRowProApi = {
     setRowIndex,
+    setRowPosition,
     setRowChildrenExpansion,
     getRowGroupChildren,
     expandAllRows,

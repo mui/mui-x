@@ -79,8 +79,8 @@ export interface GridPipeProcessingLookup {
    *   - For example before first row is `0` and after the last row is `rows.length`.
    * If the reorder is invalid, it returns `-1`.
    */
-  getRowReorderTargetIndex: {
-    value: number;
+  isRowReorderValid: {
+    value: boolean;
     context: {
       sourceRowId: GridRowId;
       targetRowId: GridRowId;

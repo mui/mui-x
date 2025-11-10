@@ -378,9 +378,9 @@ export const useGridRowReorder = (
           (dropPosition === 'above' && targetRowIndex === sourceRowIndex + 1) ||
           (dropPosition === 'below' && targetRowIndex === sourceRowIndex - 1);
 
-        const validatedIndex = apiRef.current.unstable_applyPipeProcessors(
-          'getRowReorderTargetIndex',
-          -1,
+        const isRowReorderValid = apiRef.current.unstable_applyPipeProcessors(
+          'isRowReorderValid',
+          false,
           {
             sourceRowId: dragRowId,
             targetRowId: params.id,
@@ -390,7 +390,7 @@ export const useGridRowReorder = (
         );
 
         // Show drop indicator for valid drops OR adjacent positions OR same node
-        if (validatedIndex !== -1 || isAdjacentPosition || isSameNode) {
+        if (isRowReorderValid || isAdjacentPosition || isSameNode) {
           dropTarget.current = {
             targetRowId: params.id,
             targetRowIndex,
@@ -489,11 +489,9 @@ export const useGridRowReorder = (
         return;
       }
       if (dropTarget.current.targetRowIndex !== null && dropTarget.current.targetRowId !== null) {
-        const targetRowIndex = dropTarget.current.targetRowIndex;
-
-        const validatedIndex = apiRef.current.unstable_applyPipeProcessors(
-          'getRowReorderTargetIndex',
-          targetRowIndex,
+        const isRowReorderValid = apiRef.current.unstable_applyPipeProcessors(
+          'isRowReorderValid',
+          false,
           {
             sourceRowId: dragRowId,
             targetRowId: dropTarget.current.targetRowId,
@@ -502,7 +500,7 @@ export const useGridRowReorder = (
           },
         );
 
-        if (validatedIndex !== -1) {
+        if (isRowReorderValid) {
           try {
             const rowTree = gridRowTreeSelector(apiRef);
             const sourceNode = gridRowNodeSelector(apiRef, dragRowId);
@@ -518,10 +516,10 @@ export const useGridRowReorder = (
               oldParentNode.children.indexOf(dragRowId) ?? originRowIndex.current;
 
             await applyRowAnimation(async () => {
-              await apiRef.current.setRowIndex(
+              await apiRef.current.setRowPosition(
                 dragRowId,
-                validatedIndex,
-                dropTarget.current.dropPosition!,
+                dropTarget.current.targetRowId!,
+                dropTarget.current.dropPosition as 'above' | 'below' | 'over',
               );
 
               const updatedTree = gridRowTreeSelector(apiRef);
@@ -533,7 +531,7 @@ export const useGridRowReorder = (
 
               const newParent = updatedNode.parent!;
               const newParentNode = updatedTree[newParent] as GridGroupNode;
-              const newIndexInParent = newParentNode.children.indexOf(dragRowId) ?? validatedIndex;
+              const newIndexInParent = newParentNode.children.indexOf(dragRowId);
 
               // Only emit event and clear state after successful reorder
               const rowOrderChangeParams: GridRowOrderChangeParams = {
@@ -606,8 +604,8 @@ export const useGridRowReorder = (
     ],
   );
 
-  const isValidRowReorder = props.isValidRowReorder;
-  const getRowReorderTargetIndex = React.useCallback<GridPipeProcessor<'getRowReorderTargetIndex'>>(
+  const isValidRowReorderProp = props.isValidRowReorder;
+  const isRowReorderValid = React.useCallback<GridPipeProcessor<'isRowReorderValid'>>(
     (initialValue, { sourceRowId, targetRowId, dropPosition, dragDirection }) => {
       if (gridRowMaximumTreeDepthSelector(apiRef) > 1) {
         return initialValue;
@@ -622,12 +620,11 @@ export const useGridRowReorder = (
         (dropPosition === 'below' && targetRowIndex === sourceRowIndex - 1); // dragging to immediately above (below previous row)
 
       if (isAdjacentNode || sourceRowIndex === targetRowIndex) {
-        // Return -1 to prevent actual movement (indicators handled separately)
-        return -1;
+        return false;
       }
 
       // Internal validation passed, now apply additional user validation if provided
-      if (isValidRowReorder) {
+      if (isValidRowReorderProp) {
         const expandedSortedRowIds = gridExpandedSortedRowIdsSelector(apiRef);
         const rowTree = gridRowTreeSelector(apiRef);
 
@@ -650,23 +647,17 @@ export const useGridRowReorder = (
           dragDirection,
         };
 
-        if (!isValidRowReorder(context)) {
-          return -1;
+        if (!isValidRowReorderProp(context)) {
+          return false;
         }
       }
 
-      let finalTargetIndex;
-      if (dragDirection === 'up') {
-        finalTargetIndex = dropPosition === 'above' ? targetRowIndex : targetRowIndex + 1;
-      } else {
-        finalTargetIndex = dropPosition === 'above' ? targetRowIndex - 1 : targetRowIndex;
-      }
-      return finalTargetIndex;
+      return true;
     },
-    [apiRef, sortedRowIndexLookup, isValidRowReorder],
+    [apiRef, sortedRowIndexLookup, isValidRowReorderProp],
   );
 
-  useGridRegisterPipeProcessor(apiRef, 'getRowReorderTargetIndex', getRowReorderTargetIndex);
+  useGridRegisterPipeProcessor(apiRef, 'isRowReorderValid', isRowReorderValid);
   useGridEvent(apiRef, 'rowDragStart', handleDragStart);
   useGridEvent(apiRef, 'rowDragOver', handleDragOver);
   useGridEvent(apiRef, 'rowDragEnd', handleDragEnd);

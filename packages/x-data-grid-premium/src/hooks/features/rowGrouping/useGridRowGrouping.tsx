@@ -291,8 +291,8 @@ export const useGridRowGrouping = (
     }
   }, [apiRef, props.disableRowGrouping]);
 
-  const isValidRowReorder = props.isValidRowReorder;
-  const getRowReorderTargetIndex = React.useCallback<GridPipeProcessor<'getRowReorderTargetIndex'>>(
+  const isValidRowReorderProp = props.isValidRowReorder;
+  const isRowReorderValid = React.useCallback<GridPipeProcessor<'isRowReorderValid'>>(
     (initialValue, { sourceRowId, targetRowId, dropPosition, dragDirection }) => {
       if (gridRowMaximumTreeDepthSelector(apiRef) === 1 || props.treeData) {
         return initialValue;
@@ -314,7 +314,7 @@ export const useGridRowGrouping = (
 
       // Basic validity checks
       if (!sourceNode || !targetNode) {
-        return -1;
+        return false;
       }
 
       // Create context object
@@ -332,20 +332,20 @@ export const useGridRowGrouping = (
       let isValid = rowGroupingReorderValidator.validate(context);
 
       // If internal validation passes AND user provided additional validation
-      if (isValid && isValidRowReorder) {
+      if (isValid && isValidRowReorderProp) {
         // Apply additional user restrictions
-        isValid = isValidRowReorder(context);
+        isValid = isValidRowReorderProp(context);
       }
 
       if (isValid) {
-        return dropPosition === 'below' ? targetRowIndex + 1 : targetRowIndex;
+        return true;
       }
-      return -1;
+      return false;
     },
-    [apiRef, props.treeData, isValidRowReorder],
+    [apiRef, props.treeData, isValidRowReorderProp],
   );
 
-  useGridRegisterPipeProcessor(apiRef, 'getRowReorderTargetIndex', getRowReorderTargetIndex);
+  useGridRegisterPipeProcessor(apiRef, 'isRowReorderValid', isRowReorderValid);
   useGridEvent(apiRef, 'cellKeyDown', handleCellKeyDown);
   useGridEvent(apiRef, 'columnsChange', checkGroupingColumnsModelDiff);
   useGridEvent(apiRef, 'rowGroupingModelChange', checkGroupingColumnsModelDiff);

@@ -194,7 +194,7 @@ class CrossParentLeafOperation extends BaseReorderOperation {
 
     // Find target node
     let targetIndex = placeholderIndex;
-    if (targetIndex >= sortedFilteredRowIds.length && sortedFilteredRowIds.length > 0) {
+    if (targetIndex === sortedFilteredRowIds.length && sortedFilteredRowIds.length > 0) {
       targetIndex = sortedFilteredRowIds.length - 1;
     }
 
@@ -355,7 +355,7 @@ class DropOnLeafOperation extends BaseReorderOperation {
 
     // Find target node
     let targetIndex = placeholderIndex;
-    if (targetIndex >= sortedFilteredRowIds.length && sortedFilteredRowIds.length > 0) {
+    if (targetIndex === sortedFilteredRowIds.length && sortedFilteredRowIds.length > 0) {
       targetIndex = sortedFilteredRowIds.length - 1;
     }
 
@@ -555,7 +555,7 @@ class DropOnGroupOperation extends BaseReorderOperation {
 
     // Find target node
     let targetIndex = placeholderIndex;
-    if (targetIndex >= sortedFilteredRowIds.length && sortedFilteredRowIds.length > 0) {
+    if (targetIndex === sortedFilteredRowIds.length && sortedFilteredRowIds.length > 0) {
       targetIndex = sortedFilteredRowIds.length - 1;
     }
 
@@ -742,7 +742,7 @@ class CrossParentGroupOperation extends BaseReorderOperation {
 
     // Find target node
     let targetIndex = placeholderIndex;
-    if (targetIndex >= sortedFilteredRowIds.length && sortedFilteredRowIds.length > 0) {
+    if (targetIndex === sortedFilteredRowIds.length && sortedFilteredRowIds.length > 0) {
       targetIndex = sortedFilteredRowIds.length - 1;
     }
 

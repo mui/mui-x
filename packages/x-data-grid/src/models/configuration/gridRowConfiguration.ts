@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
-import { GridTreeNode, GridRowId } from '../gridRows';
+import { GridTreeNode } from '../gridRows';
+import { GridRowProApi } from '../api';
 
 /**
  * Get the ARIA attributes for a row
@@ -25,10 +26,7 @@ export interface GridRowsOverridableMethodsInternalHook<Api, Props> {
     apiRef: RefObject<Api>,
     props: Props,
   ) => {
-    setRowIndex: (
-      rowId: GridRowId,
-      targetIndex: number,
-      dropPosition?: 'above' | 'below' | 'over',
-    ) => void | Promise<void>;
+    setRowIndex: GridRowProApi['setRowIndex'];
+    setRowPosition: GridRowProApi['setRowPosition'];
   };
 }
