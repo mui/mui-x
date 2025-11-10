@@ -1,7 +1,6 @@
 import { screen } from '@mui/internal-test-utils';
 import { diffIn } from '@mui/x-scheduler-headless/use-adapter';
 import { Timeline } from '@mui/x-scheduler/timeline';
-import { CalendarEvent, CalendarResource, TimelineView } from '@mui/x-scheduler-headless/models';
 import {
   adapter,
   createSchedulerRenderer,
@@ -9,13 +8,14 @@ import {
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   EventBuilder,
 } from 'test/utils/scheduler';
+import { SchedulerEvent, CalendarResource, TimelineView } from '@mui/x-scheduler-headless/models';
 
 const baseResources: CalendarResource[] = [
   { id: 'resource-1', title: 'Engineering', eventColor: 'blue' },
   { id: 'resource-2', title: 'Design', eventColor: 'jade' },
 ];
 
-const baseEvents: CalendarEvent[] = [
+const baseEvents: SchedulerEvent[] = [
   EventBuilder.new()
     .title('Spec Review')
     .singleDay('2025-07-03T09:00:00Z')
@@ -40,7 +40,7 @@ describe('<Timeline />', () => {
 
   function renderTimeline(options?: {
     resources?: CalendarResource[];
-    events?: CalendarEvent[];
+    events?: SchedulerEvent[];
     view?: TimelineView;
     views?: TimelineView[];
   }) {
@@ -86,7 +86,7 @@ describe('<Timeline />', () => {
     });
 
     it('does not render events out of range', () => {
-      const extendedEvents: CalendarEvent[] = [
+      const extendedEvents: SchedulerEvent[] = [
         ...baseEvents,
         EventBuilder.new()
           .title('Out of range')
@@ -167,7 +167,7 @@ describe('<Timeline />', () => {
     });
 
     it('should render events correctly in the month view', () => {
-      const extendedEvents: CalendarEvent[] = [
+      const extendedEvents: SchedulerEvent[] = [
         ...baseEvents,
         EventBuilder.new()
           .title('Next month')
@@ -197,7 +197,7 @@ describe('<Timeline />', () => {
       expect(eventPosition2).to.be.lessThanOrEqual(360); // second month
     });
     it('should render events correctly in the month view', () => {
-      const extendedEvents: CalendarEvent[] = [
+      const extendedEvents: SchedulerEvent[] = [
         EventBuilder.new()
           .title('This year')
           .span('2025-08-03T13:00:00Z', '2025-09-04T14:30:00Z')

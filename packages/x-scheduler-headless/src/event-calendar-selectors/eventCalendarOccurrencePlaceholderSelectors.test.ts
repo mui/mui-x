@@ -1,4 +1,8 @@
-import { adapter, DEFAULT_EVENT_CALENDAR_STATE } from 'test/utils/scheduler';
+import {
+  adapter,
+  createOccurrenceFromEvent,
+  DEFAULT_EVENT_CALENDAR_STATE,
+} from 'test/utils/scheduler';
 import { eventCalendarOccurrencePlaceholderSelectors } from './eventCalendarOccurrencePlaceholderSelectors';
 import { EventCalendarState } from '../use-event-calendar';
 
@@ -48,13 +52,12 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
           start: adapter.startOfDay(day),
           end: adapter.endOfDay(day),
           resourceId: null,
-          originalOccurrence: {
-            key: 'event-id-key',
+          originalOccurrence: createOccurrenceFromEvent({
             id: 'event-id',
             title: 'Event',
             start: adapter.startOfDay(day),
             end: adapter.endOfDay(day),
-          },
+          }),
         },
       };
       expect(eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell(state, day)).to.equal(
@@ -135,13 +138,12 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
           start: adapter.startOfDay(day),
           end: adapter.endOfDay(day),
           resourceId: null,
-          originalOccurrence: {
+          originalOccurrence: createOccurrenceFromEvent({
             id: 'event-id',
-            key: 'event-id-key',
             title: 'Event',
             start: adapter.startOfDay(day),
             end: adapter.endOfDay(day),
-          },
+          }),
         },
       };
       expect(
