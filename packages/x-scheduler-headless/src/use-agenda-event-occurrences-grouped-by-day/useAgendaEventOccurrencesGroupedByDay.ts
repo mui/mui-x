@@ -32,6 +32,7 @@ export function useAgendaEventOccurrencesGroupedByDay(): useAgendaEventOccurrenc
   const showWeekends = useStore(store, eventCalendarPreferenceSelectors.showWeekends);
   const showEmptyDays = useStore(store, eventCalendarPreferenceSelectors.showEmptyDaysInAgenda);
   const visibleResources = useStore(store, schedulerResourceSelectors.visibleMap);
+  const resourceParentIds = useStore(store, schedulerResourceSelectors.resourceParentIdLookup);
 
   const amount = AGENDA_VIEW_DAYS_AMOUNT;
 
@@ -57,6 +58,7 @@ export function useAgendaEventOccurrencesGroupedByDay(): useAgendaEventOccurrenc
       accumulatedDays,
       events,
       visibleResources,
+      resourceParentIds,
     );
 
     const hasEvents = (day: SchedulerProcessedDate) =>
@@ -107,6 +109,7 @@ export function useAgendaEventOccurrencesGroupedByDay(): useAgendaEventOccurrenc
         accumulatedDays,
         events,
         visibleResources,
+        resourceParentIds,
       );
 
       daysWithEvents = accumulatedDays.filter(hasEvents).slice(0, amount);
@@ -126,6 +129,7 @@ export function useAgendaEventOccurrencesGroupedByDay(): useAgendaEventOccurrenc
     events,
     visibleResources,
     showEmptyDays,
+    resourceParentIds,
   ]);
 }
 

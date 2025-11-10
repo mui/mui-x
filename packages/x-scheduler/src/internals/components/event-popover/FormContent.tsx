@@ -50,7 +50,7 @@ export default function FormContent(props: FormContentProps) {
     occurrence.id,
   );
   const rawPlaceholder = useStore(store, schedulerOccurrencePlaceholderSelectors.value);
-  const resources = useStore(store, schedulerResourceSelectors.processedResourceList);
+  const resources = useStore(store, schedulerResourceSelectors.processedResourceFlatList);
   const recurrencePresets = useStore(
     store,
     schedulerRecurringEventSelectors.presets,
