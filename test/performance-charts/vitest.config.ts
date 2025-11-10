@@ -14,7 +14,6 @@ export default defineConfig({
     environment: isTrace ? 'node' : 'jsdom',
     execArgv: [
       // Suggested by Codspeed: https://github.com/CodSpeedHQ/codspeed-node/blob/174369c7c28b320f79cabd4bd7fb2b6a3cdef6dd/packages/core/src/introspection.ts#L57
-      '--disable-web-security',
       '--interpreted-frames-native-stack',
       '--allow-natives-syntax',
       '--hash-seed=1',
