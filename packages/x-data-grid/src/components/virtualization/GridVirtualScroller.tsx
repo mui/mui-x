@@ -21,7 +21,7 @@ import { GridTopContainer as TopContainer } from './GridTopContainer';
 import { GridVirtualScrollerContent as Content } from './GridVirtualScrollerContent';
 import { GridVirtualScrollerFiller as SpaceFiller } from './GridVirtualScrollerFiller';
 import { GridVirtualScrollerRenderZone as RenderZone } from './GridVirtualScrollerRenderZone';
-import { ScrollbarCorner } from './GridVirtualScrollbar';
+import { GridVirtualScrollbar as Scrollbar, ScrollbarCorner } from './GridVirtualScrollbar';
 import { GridScrollShadows as ScrollShadows } from '../GridScrollShadows';
 import { GridOverlayWrapper } from '../base/GridOverlays';
 import type {
@@ -153,7 +153,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
           {rootProps.pinnedColumnsSectionSeparator?.endsWith('shadow') && (
             <ScrollShadows position="horizontal" />
           )}
-          <rootProps.slots.scrollbar position="horizontal" {...getScrollbarHorizontalProps()} />
+          <Scrollbar position="horizontal" {...getScrollbarHorizontalProps()} />
         </React.Fragment>
       )}
       {hasScrollY && (
@@ -161,7 +161,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
           {rootProps.pinnedRowsSectionSeparator?.endsWith('shadow') && (
             <ScrollShadows position="vertical" />
           )}
-          <rootProps.slots.scrollbar position="vertical" {...getScrollbarVerticalProps()} />
+          <Scrollbar position="vertical" {...getScrollbarVerticalProps()} />
         </React.Fragment>
       )}
       {hasScrollX && hasScrollY && <ScrollbarCorner aria-hidden="true" />}

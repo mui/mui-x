@@ -14,7 +14,7 @@ import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 type Position = 'vertical' | 'horizontal';
 type OwnerState = DataGridProcessedProps;
-export type GridVirtualScrollbarProps = {
+type GridVirtualScrollbarProps = {
   position: Position;
   scrollPosition: React.RefObject<{
     left: number;
