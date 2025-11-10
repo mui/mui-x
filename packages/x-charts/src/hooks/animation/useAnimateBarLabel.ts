@@ -5,18 +5,10 @@ import type { BarLabelProps } from '../../BarChart';
 
 type UseAnimateBarLabelParams = Pick<
   BarLabelProps,
-  | 'xOrigin'
-  | 'yOrigin'
-  | 'x'
-  | 'y'
-  | 'width'
-  | 'height'
-  | 'layout'
-  | 'skipAnimation'
-  | 'barLabelPlacement'
-  | 'value'
+  'xOrigin' | 'yOrigin' | 'x' | 'y' | 'width' | 'height' | 'layout' | 'skipAnimation' | 'value'
 > & {
   ref?: React.Ref<SVGTextElement>;
+  placement?: BarLabelProps['barLabelPlacement'];
 };
 type UseAnimateBarLabelReturn = {
   ref: React.Ref<SVGTextElement>;
@@ -81,7 +73,7 @@ const LABEL_OFFSET = 8;
 
 function getPlacement(props: UseAnimateBarLabelParams) {
   const isNegativeValue = props.value !== null && props.value < 0;
-  const isOutsidePlacement = props.barLabelPlacement === 'outside';
+  const isOutsidePlacement = props.placement === 'outside';
 
   const shouldPlaceBelow = isNegativeValue && isOutsidePlacement;
   const shouldPlaceAbove = !isNegativeValue && isOutsidePlacement;
