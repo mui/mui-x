@@ -77,7 +77,7 @@ export default function GeneralTab(props: GeneralTabProps) {
   };
 
   return (
-    <Tabs.Panel value="general-tab" keepMounted>
+    <Tabs.Panel value="general" keepMounted>
       <div className="EventPopoverMainContent">
         <div className="EventPopoverDateTimeFields">
           <div className="EventPopoverDateTimeFieldsStartRow">

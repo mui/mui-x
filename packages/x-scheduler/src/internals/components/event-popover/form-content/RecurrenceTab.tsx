@@ -184,7 +184,7 @@ export default function RecurrenceTab(props: RecurrenceTabProps) {
   ];
 
   return (
-    <Tabs.Panel value="recurrence-tab" keepMounted>
+    <Tabs.Panel value="recurrence" keepMounted>
       <div className="EventPopoverMainContent">
         <Field.Root className="EventPopoverFieldRoot" name="recurrencePreset">
           <Field.Label className="EventPopoverRecurrenceFormLabel">

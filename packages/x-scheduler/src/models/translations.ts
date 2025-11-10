@@ -55,6 +55,7 @@ export interface SchedulerTranslations {
   endDateLabel: string;
   endTimeLabel: string;
   eventTitleAriaLabel: string;
+  generalTabLabel: string;
   labelNoResource: string;
   recurrenceLabel: string;
   recurrenceNoRepeat: string;
@@ -68,6 +69,7 @@ export interface SchedulerTranslations {
   recurrenceEndsTimesLabel: string;
   recurrenceEveryLabel: string;
   recurrenceRepeatLabel: string;
+  recurrenceTabLabel: string;
   recurrenceMainSelectCustomLabel: string;
   recurrenceWeeklyFrequencyLabel: string;
   recurrenceWeeklyPresetLabel: (weekday: string) => string;

@@ -277,13 +277,13 @@ export default function FormContent(props: FormContentProps) {
           </Select.Root>
         </Field.Root>
       </EventPopoverHeader>
-      <Tabs.Root defaultValue="general-tab">
+      <Tabs.Root defaultValue="general">
         <Tabs.List className="EventPopoverTabsList">
-          <Tabs.Tab value="general-tab" className="EventPopoverTabTrigger Ghost">
-            General
+          <Tabs.Tab value="general" className="EventPopoverTabTrigger Ghost">
+            {translations.generalTabLabel}
           </Tabs.Tab>
-          <Tabs.Tab value="recurrence-tab" className="EventPopoverTabTrigger Ghost">
-            Recurrence
+          <Tabs.Tab value="recurrence" className="EventPopoverTabTrigger Ghost">
+            {translations.recurrenceTabLabel}
           </Tabs.Tab>
         </Tabs.List>
         <GeneralTab
