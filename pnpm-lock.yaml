@@ -356,8 +356,8 @@ importers:
         specifier: 'catalog:'
         version: 10.1.0
       danger:
-        specifier: ^13.0.4
-        version: 13.0.4(encoding@0.1.13)
+        specifier: ^13.0.5
+        version: 13.0.5(encoding@0.1.13)
       date-fns-jalali-v2:
         specifier: npm:date-fns-jalali@2.30.0-0
         version: date-fns-jalali@2.30.0-0
@@ -1906,7 +1906,7 @@ importers:
         specifier: 'catalog:'
         version: 19.2.0(react@19.2.0)
       rimraf:
-        specifier: ^6.0.1
+        specifier: ^6.1.0
         version: 6.1.0
     publishDirectory: build
 
@@ -7082,8 +7082,8 @@ packages:
   damerau-levenshtein@1.0.8:
     resolution: {integrity: sha512-sdQSFB7+llfUcQHUQO3+B8ERRj0Oa4w9POWMI/puGtuf7gFywGmkaLCElnudfTiKZV+NvHqL0ifzdrI8Ro7ESA==}
 
-  danger@13.0.4:
-    resolution: {integrity: sha512-IAdQ5nSJyIs4zKj6AN35ixt2B0Ce3WZUm3IFe/CMnL/Op7wV7IGg4D348U0EKNaNPP58QgXbdSk9pM+IXP1QXg==}
+  danger@13.0.5:
+    resolution: {integrity: sha512-XTaUxdKA4JICqt2lnl58jSxl2k9GpX6RrjuI4UOK6lJSiexX1Fmh39aBB/FnAwBCIUEbc5DVz7C8Yr5xoU57Jw==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -8030,10 +8030,6 @@ packages:
   get-proto@1.0.1:
     resolution: {integrity: sha512-sTSfBjoXBp89JvIKIefqw7U2CCebsc74kiY6awiGogKtoSGbgjYE/G/+l9sF3MWFPNc9IcoOC4ODfKHfxFmp0g==}
     engines: {node: '>= 0.4'}
-
-  get-stdin@6.0.0:
-    resolution: {integrity: sha512-jp4tHawyV7+fkkSKyvjuLZswblUtz+SQKzSWnBbii16BuZksJlU1wuBYXY75r+duh/llF1ur6oNwi+2ZzjKZ7g==}
-    engines: {node: '>=4'}
 
   get-stream@6.0.0:
     resolution: {integrity: sha512-A1B3Bh1UmL0bidM/YX2NsCOTnGJePL9rO/M+Mw3m9f2gUpfokS0hi5Eah0WSUEWZdZhIZtMjkIYS7mDfOqNHbg==}
@@ -9050,9 +9046,6 @@ packages:
   lodash.escaperegexp@4.1.2:
     resolution: {integrity: sha512-TM9YBvyC84ZxE3rgfefxUWiQKLilstD6k7PTGt6wfbtXF8ixIJLOL3VYyV/z+ZiPLsVxAsKAFVwWlWeb2Y8Yyw==}
 
-  lodash.find@4.6.0:
-    resolution: {integrity: sha512-yaRZoAV3Xq28F1iafWN1+a0rflOej93l1DQUejs3SZ41h2O9UJBoS9aueGjPDgAl4B6tPC0NuuchLKaDQQ3Isg==}
-
   lodash.flattendeep@4.4.0:
     resolution: {integrity: sha512-uHaJFihxmJcEX3kT4I23ABqKKalJ/zDrDg0lsFtc1h+3uw49SIJ5beyhx5ExVRti3AvKoOJngIj7xz3oylPdWQ==}
 
@@ -9098,9 +9091,6 @@ packages:
 
   lodash.kebabcase@4.1.1:
     resolution: {integrity: sha512-N8XRTIMMqqDgSy4VLKPnJ/+hpGZN+PHQiJnSenYqPaVV/NCqEogTnAdZLQiGKhxX+JCs8waWq2t1XHWKOmlY8g==}
-
-  lodash.keys@4.2.0:
-    resolution: {integrity: sha512-J79MkJcp7Df5mizHiVNpjoHXLi4HLjh9VLS/M7lQSGoQ+0oQ+lWEigREkqKyizPB1IawvQLLKY8mzEcm1tkyxQ==}
 
   lodash.mapvalues@4.6.0:
     resolution: {integrity: sha512-JPFqXFeZQ7BfS00H58kClY7SPVeHertPE0lNuCyZ26/XlN8TvakYD7b9bGyNmXbT/D3BbtPAAmq90gPWqLkxlQ==}
@@ -18090,7 +18080,7 @@ snapshots:
 
   damerau-levenshtein@1.0.8: {}
 
-  danger@13.0.4(encoding@0.1.13):
+  danger@13.0.5(encoding@0.1.13):
     dependencies:
       '@gitbeaker/rest': 38.12.1
       '@octokit/rest': 20.1.2
@@ -18100,7 +18090,6 @@ snapshots:
       core-js: 3.45.0
       debug: 4.4.3(supports-color@8.1.1)
       fast-json-patch: 3.1.1
-      get-stdin: 6.0.0
       http-proxy-agent: 5.0.0
       https-proxy-agent: 5.0.1
       hyperlinker: 1.0.0
@@ -18108,10 +18097,8 @@ snapshots:
       json5: 2.2.3
       jsonpointer: 5.0.1
       jsonwebtoken: 9.0.2
-      lodash.find: 4.6.0
       lodash.includes: 4.3.0
       lodash.isobject: 3.0.2
-      lodash.keys: 4.2.0
       lodash.mapvalues: 4.6.0
       lodash.memoize: 4.1.2
       memfs-or-file-map-to-github-branch: 1.3.0
@@ -19290,8 +19277,6 @@ snapshots:
     dependencies:
       dunder-proto: 1.0.1
       es-object-atoms: 1.1.1
-
-  get-stdin@6.0.0: {}
 
   get-stream@6.0.0: {}
 
@@ -20509,8 +20494,6 @@ snapshots:
 
   lodash.escaperegexp@4.1.2: {}
 
-  lodash.find@4.6.0: {}
-
   lodash.flattendeep@4.4.0: {}
 
   lodash.groupby@4.6.0: {}
@@ -20540,8 +20523,6 @@ snapshots:
   lodash.isundefined@3.0.1: {}
 
   lodash.kebabcase@4.1.1: {}
-
-  lodash.keys@4.2.0: {}
 
   lodash.mapvalues@4.6.0: {}
 
