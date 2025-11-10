@@ -1,6 +1,6 @@
 import {
   SchedulerValidDate,
-  CalendarEvent,
+  SchedulerProcessedEvent,
   CalendarProcessedDate,
   CalendarEventOccurrence,
 } from '../models';
@@ -18,12 +18,12 @@ export function getDaysTheOccurrenceIsVisibleOn(
   const dayKeys: string[] = [];
   for (const day of days) {
     // If the day is before the event start, skip to the next day
-    if (adapter.isBeforeDay(day.value, event.start)) {
+    if (adapter.isBeforeDay(day.value, event.start.value)) {
       continue;
     }
 
     // If the day is after the event end, break as the days are sorted by start date
-    if (adapter.isAfterDay(day.value, event.end)) {
+    if (adapter.isAfterDay(day.value, event.end.value)) {
       break;
     }
     dayKeys.push(day.key);
@@ -31,16 +31,41 @@ export function getDaysTheOccurrenceIsVisibleOn(
   return dayKeys;
 }
 
+const checkResourceVisibility = (
+  resourceId: string,
+  visibleResources: Map<string, boolean>,
+  resourceParentIds: Map<string, string | null>,
+): boolean => {
+  if (!resourceId) {
+    return true;
+  }
+
+  const isResourceVisible = visibleResources.get(resourceId) !== false;
+
+  if (isResourceVisible) {
+    const parentId = resourceParentIds.get(resourceId);
+    if (!parentId) {
+      return isResourceVisible;
+    }
+    return checkResourceVisibility(parentId, visibleResources, resourceParentIds);
+  }
+
+  return isResourceVisible;
+};
+
 /**
  * Returns the occurrences to render in the given date range, expanding recurring events.
  */
 export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsParameters) {
-  const { adapter, start, end, events, visibleResources } = parameters;
+  const { adapter, start, end, events, visibleResources, resourceParentIds } = parameters;
   const occurrences: CalendarEventOccurrence[] = [];
 
   for (const event of events) {
     // STEP 1: Skip events from resources that are not visible
-    if (event.resource && visibleResources.get(event.resource) === false) {
+    if (
+      event.resource &&
+      checkResourceVisibility(event.resource, visibleResources, resourceParentIds) === false
+    ) {
       continue;
     }
 
@@ -52,7 +77,7 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
     }
 
     // STEP 2-B: Non-recurring event processing, skip events that are not within the visible days
-    if (adapter.isAfter(event.start, end) || adapter.isBefore(event.end, start)) {
+    if (adapter.isAfter(event.start.value, end) || adapter.isBefore(event.end.value, start)) {
       continue;
     }
 
@@ -67,8 +92,8 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
       // TODO: Avoid JS Date conversion
       .map((occurrence) => ({
         occurrence,
-        start: adapter.toJsDate(occurrence.start).getTime(),
-        end: adapter.toJsDate(occurrence.end).getTime(),
+        start: adapter.toJsDate(occurrence.start.value).getTime(),
+        end: adapter.toJsDate(occurrence.end.value).getTime(),
       }))
       .sort((a, b) => a.start - b.start || b.end - a.end)
       .map((item) => item.occurrence)
@@ -79,6 +104,7 @@ interface GetOccurrencesFromEventsParameters {
   adapter: Adapter;
   start: SchedulerValidDate;
   end: SchedulerValidDate;
-  events: CalendarEvent[];
+  events: SchedulerProcessedEvent[];
   visibleResources: Map<string, boolean>;
+  resourceParentIds: Map<string, string | null>;
 }

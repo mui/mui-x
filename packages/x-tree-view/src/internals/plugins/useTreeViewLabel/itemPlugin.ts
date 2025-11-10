@@ -5,11 +5,9 @@ import { useTreeViewContext } from '../../TreeViewProvider';
 import { TreeViewCancellableEvent } from '../../../models';
 import { TreeViewItemPlugin } from '../../models';
 import { UseTreeViewItemsSignature } from '../useTreeViewItems';
-import {
-  UseTreeItemLabelInputSlotPropsFromLabelEditing,
-  UseTreeViewLabelSignature,
-} from './useTreeViewLabel.types';
+import { UseTreeViewLabelSignature } from './useTreeViewLabel.types';
 import { labelSelectors } from './useTreeViewLabel.selectors';
+import { TreeItemLabelInputProps } from '../../../TreeItemLabelInput';
 
 export const useTreeViewLabelItemPlugin: TreeViewItemPlugin = ({ props }) => {
   const { store } = useTreeViewContext<[UseTreeViewItemsSignature, UseTreeViewLabelSignature]>();
@@ -84,3 +82,16 @@ export const useTreeViewLabelItemPlugin: TreeViewItemPlugin = ({ props }) => {
     },
   };
 };
+
+export interface UseTreeItemLabelInputSlotPropsFromLabelEditing extends TreeItemLabelInputProps {}
+
+export interface UseTreeItemLabelSlotPropsFromLabelEditing {
+  editable?: boolean;
+}
+
+declare module '@mui/x-tree-view/useTreeItem' {
+  interface UseTreeItemLabelInputSlotOwnProps
+    extends UseTreeItemLabelInputSlotPropsFromLabelEditing {}
+
+  interface UseTreeItemLabelSlotOwnProps extends UseTreeItemLabelSlotPropsFromLabelEditing {}
+}

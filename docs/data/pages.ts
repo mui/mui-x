@@ -666,6 +666,8 @@ const pages: MuiPage[] = [
                   { pathname: '/x/react-charts/hooks/use-legend', title: 'useLegend' },
                   { pathname: '/x/react-charts/hooks/use-drawing-area', title: 'useDrawingArea' },
                   { pathname: '/x/react-charts/hooks/use-scale', title: 'useScale' },
+                  { pathname: '/x/react-charts/hooks/use-axes', title: 'useAxes' },
+                  { pathname: '/x/react-charts/hooks/use-dataset', title: 'useDataset' },
                 ],
               },
               { pathname: '/x/react-charts/plugins', title: 'Plugins' },

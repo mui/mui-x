@@ -5,7 +5,10 @@ import {
   DescribeTreeViewRendererUtils,
 } from 'test/utils/tree-view/describeTreeView';
 
-describeTreeView<[]>(
+// TODO #20051: Replace with imported type
+type TreeViewAnyStore = { parameters: any };
+
+describeTreeView<TreeViewAnyStore>(
   'useTreeView hook',
   ({ render, renderFromJSX, treeViewComponentName, TreeViewComponent, TreeItemComponent }) => {
     it('should have the role="tree" on the root slot', () => {

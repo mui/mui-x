@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { createSelector, useStore } from '@mui/x-internals/store';
-import { TreeViewItemId, TreeViewCancellableEvent } from '../../../models';
+import {
+  TreeViewItemId,
+  TreeViewCancellableEvent,
+  TreeViewCancellableEventHandler,
+} from '../../../models';
 import { useTreeViewContext } from '../../TreeViewProvider';
 import { TreeViewItemPlugin, TreeViewState } from '../../models';
-import {
-  UseTreeItemCheckboxSlotPropsFromSelection,
-  UseTreeItemRootSlotPropsFromSelection,
-  UseTreeViewSelectionSignature,
-} from './useTreeViewSelection.types';
+import { UseTreeViewSelectionSignature } from './useTreeViewSelection.types';
 import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import { itemsSelectors } from '../useTreeViewItems/useTreeViewItems.selectors';
 import { selectionSelectors } from './useTreeViewSelection.selectors';
@@ -121,3 +121,22 @@ export const useTreeViewSelectionItemPlugin: TreeViewItemPlugin = ({ props }) =>
     },
   };
 };
+
+interface UseTreeItemRootSlotPropsFromSelection {
+  'aria-checked': React.AriaAttributes['aria-checked'];
+}
+
+interface UseTreeItemCheckboxSlotPropsFromSelection {
+  visible?: boolean;
+  checked?: boolean;
+  indeterminate?: boolean;
+  disabled?: boolean;
+  tabIndex?: -1;
+  onChange?: TreeViewCancellableEventHandler<React.ChangeEvent<HTMLInputElement>>;
+}
+
+declare module '@mui/x-tree-view/useTreeItem' {
+  interface UseTreeItemRootSlotOwnProps extends UseTreeItemRootSlotPropsFromSelection {}
+
+  interface UseTreeItemCheckboxSlotOwnProps extends UseTreeItemCheckboxSlotPropsFromSelection {}
+}
