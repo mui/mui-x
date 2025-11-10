@@ -23,11 +23,11 @@ You can read more about CSP on the [MDN Web Docs](https://developer.mozilla.org/
 
 ## Setting up a CSP
 
-MUI X Charts depends on Material UI, thus to set up a CSP, you need to follow Material UI's [CSP implementation guide](/material-ui/guides/content-security-policy/#how-does-one-implement-csp).
+MUI X Charts depends on Material UI, thus to set up a CSP, you need to follow Material UI's [CSP implementation guide](/material-ui/guides/content-security-policy/#how-does-one-implement-csp).
 
 ### CSP for exporting
 
-MUI X Charts allow [exporting charts](/x/react-charts/export/) as images or PDFs.
+MUI X Charts allow [exporting charts](/x/react-charts/export/) as images or PDFs.
 When a Content Security Policy is set, exporting requires additional configuration to function.
 
 To enable exporting with CSP, you need to allow the use of `data:` and `blob:` URIs for images. This can be done by adding the following directives to your CSP header:
@@ -36,7 +36,7 @@ To enable exporting with CSP, you need to allow the use of `data:` and `blob:` U
 Content-Security-Policy: img-src 'self' data: blob:;
 ```
 
-If your CSP defines a nonce for scripts or styles (e.g. `script-src 'nonce-<value>'`), you also need to provide the same nonce when exporting.
+If your CSP defines a nonce for scripts or styles (for example, `script-src 'nonce-<value>'`), you also need to provide the same nonce when exporting.
 
 This can be done by passing the nonce to the `printOptions` and `imageExportOptions` props of the `toolbar` slot.
 
