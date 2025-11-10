@@ -63,15 +63,9 @@ export type BarLabelProps = Omit<
      * @default 'center'
      */
     placement?: 'center' | 'outside';
-    /**
-     * The value of the data point.
-     * This property is optional when placement is 'center', but required when placement is 'outside'.
-     * This property will become required in the next major release.
-     */
-    value?: number | null;
   };
 
-function BarLabel(inProps: BarLabelProps) {
+function BarLabel(inProps: BarLabelProps): React.JSX.Element {
   const props = useThemeProps({ props: inProps, name: 'MuiBarLabel' });
 
   const {
@@ -86,7 +80,6 @@ function BarLabel(inProps: BarLabelProps) {
     xOrigin,
     yOrigin,
     placement,
-    value,
     ...otherProps
   } = props;
 
@@ -100,7 +93,6 @@ BarLabel.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  barLabelPlacement: PropTypes.oneOf(['outside', 'inside']),
   classes: PropTypes.object,
   dataIndex: PropTypes.number.isRequired,
   /**
@@ -110,6 +102,12 @@ BarLabel.propTypes = {
   isFaded: PropTypes.bool.isRequired,
   isHighlighted: PropTypes.bool.isRequired,
   layout: PropTypes.oneOf(['horizontal', 'vertical']).isRequired,
+  /**
+   * The placement of the bar label.
+   * It controls whether the label is rendered center or outside the bar.
+   * @default 'center'
+   */
+  placement: PropTypes.oneOf(['center', 'outside']),
   seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   skipAnimation: PropTypes.bool.isRequired,
   /**

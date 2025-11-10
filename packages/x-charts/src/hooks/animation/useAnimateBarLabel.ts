@@ -5,10 +5,9 @@ import type { BarLabelProps } from '../../BarChart';
 
 type UseAnimateBarLabelParams = Pick<
   BarLabelProps,
-  'xOrigin' | 'yOrigin' | 'x' | 'y' | 'width' | 'height' | 'layout' | 'skipAnimation'
+  'xOrigin' | 'yOrigin' | 'x' | 'y' | 'width' | 'height' | 'layout' | 'skipAnimation' | 'placement'
 > & {
   ref?: React.Ref<SVGTextElement>;
-  placement?: BarLabelProps['placement'];
 };
 type UseAnimateBarLabelReturn = {
   ref: React.Ref<SVGTextElement>;

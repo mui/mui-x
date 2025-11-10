@@ -122,7 +122,6 @@ function BarLabelItem(props: BarLabelItemProps) {
     dataIndex,
     skipAnimation,
     layout,
-    value,
   };
   const classes = useUtilityClasses(ownerState);
 

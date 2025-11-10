@@ -1,10 +1,10 @@
 {
   "componentDescription": "",
   "propDescriptions": {
-    "barLabelPlacement": {
+    "height": { "description": "Height of the bar this label belongs to." },
+    "placement": {
       "description": "The placement of the bar label. It controls whether the label is rendered center or outside the bar."
     },
-    "height": { "description": "Height of the bar this label belongs to." },
     "width": { "description": "Width of the bar this label belongs to." },
     "x": { "description": "Position in the x-axis of the bar this label belongs to." },
     "xOrigin": { "description": "The x-coordinate of the stack this bar label belongs to." },
