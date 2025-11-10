@@ -64,8 +64,8 @@ describe('<EventPopoverContent />', () => {
         </Popover.Root>
       </EventCalendarProvider>,
     );
-    expect(screen.getByDisplayValue('Running')).not.to.equal(null);
-    expect(screen.getByDisplayValue('Morning run')).not.to.equal(null);
+    expect(screen.getByDisplayValue(DEFAULT_EVENT.title)).not.to.equal(null);
+    expect(screen.getByDisplayValue(DEFAULT_EVENT.description ?? '')).not.to.equal(null);
     expect(screen.getByLabelText(/start date/i)).to.have.value('2025-05-26');
     expect(screen.getByLabelText(/end date/i)).to.have.value('2025-05-26');
     expect(screen.getByLabelText(/start time/i)).to.have.value('07:30');
@@ -107,7 +107,7 @@ describe('<EventPopoverContent />', () => {
     const expectedUpdatedEvent = {
       id: DEFAULT_EVENT.id,
       title: 'Running test',
-      description: 'Morning run',
+      description: DEFAULT_EVENT.description,
       start: adapter.startOfDay(DEFAULT_EVENT.start),
       end: adapter.endOfDay(DEFAULT_EVENT.end),
       allDay: true,
@@ -164,11 +164,11 @@ describe('<EventPopoverContent />', () => {
       </EventCalendarProvider>,
     );
     // Should display title as text, not in an input
-    expect(screen.getByText('Running')).not.to.equal(null);
+    expect(screen.getByText(DEFAULT_EVENT.title)).not.to.equal(null);
     expect(screen.queryByLabelText(/event title/i)).to.equal(null);
 
     // Should display description as text, not in an input
-    expect(screen.getByText('Morning run')).not.to.equal(null);
+    expect(screen.getByText(DEFAULT_EVENT.description ?? '')).not.to.equal(null);
     expect(screen.queryByLabelText(/description/i)).to.equal(null);
 
     // Should not have date/time inputs
@@ -197,11 +197,11 @@ describe('<EventPopoverContent />', () => {
       </EventCalendarProvider>,
     );
     // Should display title as text, not in an input
-    expect(screen.getByText('Running')).not.to.equal(null);
+    expect(screen.getByText(DEFAULT_EVENT.title)).not.to.equal(null);
     expect(screen.queryByLabelText(/event title/i)).to.equal(null);
 
     // Should display description as text, not in an input
-    expect(screen.getByText('Morning run')).not.to.equal(null);
+    expect(screen.getByText(DEFAULT_EVENT.description ?? '')).not.to.equal(null);
     expect(screen.queryByLabelText(/description/i)).to.equal(null);
 
     // Should not have date/time inputs
@@ -660,9 +660,11 @@ describe('<EventPopoverContent />', () => {
         const openPayload = updateRecurringEventSpy.lastCall.firstArg;
 
         expect(openPayload.changes.id).to.equal(originalRecurringEvent.id);
-        expect(openPayload.changes.title).to.equal('Daily standup');
-        expect(openPayload.changes.description).to.equal('sync');
-        expect(openPayload.changes.allDay).to.equal(false);
+        expect(openPayload.changes.title).to.equal(originalRecurringEventOccurrence.title);
+        expect(openPayload.changes.description).to.equal(
+          originalRecurringEventOccurrence.description,
+        );
+        expect(openPayload.changes.allDay).to.equal(originalRecurringEventOccurrence.allDay);
         expect(openPayload.changes.rrule).to.deep.equal({
           freq: 'WEEKLY',
           interval: 1,
