@@ -9,5 +9,6 @@ export function processDate(date: SchedulerValidDate, adapter: Adapter): Calenda
   return {
     value: date,
     key: getDateKey(date, adapter),
+    timestamp: adapter.toJsDate(date).getTime(),
   };
 }

@@ -2,12 +2,12 @@
 // Non-realistic set focused on edge cases of RRULE handling.
 
 import { DateTime } from 'luxon';
-import { CalendarEvent, CalendarResource } from '@mui/x-scheduler/models';
+import { SchedulerEvent, CalendarResource } from '@mui/x-scheduler/models';
 
 export const defaultVisibleDate = DateTime.fromISO('2025-07-01T00:00:00');
 const START = defaultVisibleDate.startOf('week');
 
-export const initialEvents: CalendarEvent[] = [
+export const initialEvents: SchedulerEvent[] = [
   // WEEKLY PATTERNS
   {
     id: 'weekly-weekdays-only',

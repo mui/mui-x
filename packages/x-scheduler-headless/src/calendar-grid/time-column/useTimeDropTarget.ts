@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { useAdapter } from '../../use-adapter/useAdapter';
-import { CalendarEvent, SchedulerValidDate } from '../../models';
+import { SchedulerEvent, SchedulerValidDate } from '../../models';
 import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
 import { CalendarGridTimeColumnContext } from './CalendarGridTimeColumnContext';
 import { useDropTarget } from '../../utils/useDropTarget';
@@ -161,7 +161,7 @@ export namespace useTimeDropTarget {
     /**
      * Add properties to the event dropped in the column before storing it in the store.
      */
-    addPropertiesToDroppedEvent?: () => Partial<CalendarEvent>;
+    addPropertiesToDroppedEvent?: () => Partial<SchedulerEvent>;
   }
 
   export interface ReturnValue

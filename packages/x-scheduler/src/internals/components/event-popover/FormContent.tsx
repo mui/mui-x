@@ -15,11 +15,11 @@ import { CheckIcon, ChevronDown } from 'lucide-react';
 import {
   CalendarEventOccurrence,
   CalendarEventUpdatedProperties,
+  CalendarProcessedDate,
   CalendarResourceId,
   RecurringEventFrequency,
   RecurringEventPresetKey,
   RecurringEventRecurrenceRule,
-  SchedulerValidDate,
 } from '@mui/x-scheduler-headless/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
@@ -80,8 +80,8 @@ export default function FormContent(props: FormContentProps) {
   // State hooks
   const [errors, setErrors] = React.useState<Form.Props['errors']>({});
   const [controlled, setControlled] = React.useState<ControlledValue>(() => {
-    const fmtDate = (d: SchedulerValidDate) => adapter.formatByString(d, 'yyyy-MM-dd');
-    const fmtTime = (d: SchedulerValidDate) => adapter.formatByString(d, 'HH:mm');
+    const fmtDate = (d: CalendarProcessedDate) => adapter.formatByString(d.value, 'yyyy-MM-dd');
+    const fmtTime = (d: CalendarProcessedDate) => adapter.formatByString(d.value, 'HH:mm');
 
     const base = defaultRecurrencePresetKey === 'custom' ? occurrence.rrule : undefined;
 
@@ -293,7 +293,7 @@ export default function FormContent(props: FormContentProps) {
       };
 
       await store.updateRecurringEvent({
-        occurrenceStart: occurrence.start,
+        occurrenceStart: occurrence.start.value,
         changes,
         onSubmit: onClose,
       });
@@ -320,8 +320,8 @@ export default function FormContent(props: FormContentProps) {
     ];
   }, [resources, translations.labelNoResource]);
 
-  const weekday = adapter.format(occurrence.start, 'weekday');
-  const normalDate = adapter.format(occurrence.start, 'normalDate');
+  const weekday = adapter.format(occurrence.start.value, 'weekday');
+  const normalDate = adapter.format(occurrence.start.value, 'normalDate');
 
   const recurrenceOptions: {
     label: string;
@@ -334,7 +334,7 @@ export default function FormContent(props: FormContentProps) {
       value: 'WEEKLY',
     },
     {
-      label: `${translations.recurrenceMonthlyPresetLabel(adapter.getDate(occurrence.start))}`,
+      label: `${translations.recurrenceMonthlyPresetLabel(adapter.getDate(occurrence.start.value))}`,
       value: 'MONTHLY',
     },
     {
