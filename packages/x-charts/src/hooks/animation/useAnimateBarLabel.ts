@@ -88,18 +88,14 @@ function getOutsidePlacement(props: UseAnimateBarLabelParams) {
   let currentX = 0;
 
   if (props.layout === 'vertical') {
-    const shouldPlaceBelow = props.y > props.yOrigin;
     const shouldPlaceAbove = props.y < props.yOrigin;
 
-    if (shouldPlaceBelow) {
-      initialY = props.yOrigin + LABEL_OFFSET;
-      currentY = props.y + props.height + LABEL_OFFSET;
-    } else if (shouldPlaceAbove) {
+    if (shouldPlaceAbove) {
       initialY = props.yOrigin - LABEL_OFFSET;
       currentY = props.y - LABEL_OFFSET;
     } else {
-      initialY = props.yOrigin;
-      currentY = props.y + props.height / 2;
+      initialY = props.yOrigin + LABEL_OFFSET;
+      currentY = props.y + props.height + LABEL_OFFSET;
     }
 
     return {
@@ -111,17 +107,13 @@ function getOutsidePlacement(props: UseAnimateBarLabelParams) {
   }
 
   const shouldPlaceToTheLeft = props.x < props.xOrigin;
-  const shouldPlaceToTheRight = props.x > props.xOrigin;
 
   if (shouldPlaceToTheLeft) {
     initialX = props.xOrigin;
     currentX = props.x - LABEL_OFFSET;
-  } else if (shouldPlaceToTheRight) {
-    initialX = props.xOrigin;
-    currentX = props.x + props.width + LABEL_OFFSET;
   } else {
     initialX = props.xOrigin;
-    currentX = props.x + props.width / 2;
+    currentX = props.x + props.width + LABEL_OFFSET;
   }
 
   return {

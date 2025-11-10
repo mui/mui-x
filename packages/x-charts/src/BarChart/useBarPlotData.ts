@@ -218,8 +218,8 @@ export function getBarDimensions(params: {
   const values = series.stackedData[dataIndex];
   const valueCoordinates = values.map((v) => (verticalLayout ? yScale(v)! : xScale(v)!));
 
-  const minValueCoord = Math.round(Math.min(...valueCoordinates));
-  const maxValueCoord = Math.round(Math.max(...valueCoordinates));
+  const minValueCoord = Math.min(...valueCoordinates);
+  const maxValueCoord = Math.max(...valueCoordinates);
 
   const barSize =
     seriesValue === 0 ? 0 : Math.max(series.minBarSize, maxValueCoord - minValueCoord);

@@ -2,9 +2,10 @@ import { XAxis, YAxis } from '@mui/x-charts/models';
 import { BarChart, BarSeries } from '@mui/x-charts/BarChart';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
+import { ChartsReferenceLine } from '@mui/x-charts/ChartsReferenceLine';
 
 const bandAxis = { data: ['2', '1', '4', '0', 'null', '-1', '-4'] } satisfies XAxis;
-const linearAxis = { width: 30, min: -4, max: 4 } satisfies YAxis;
+const linearAxis = { id: 'linear', width: 30, min: -4, max: 4 } satisfies YAxis;
 const seriesVertical = [
   { data: [2, 1, 4, 0, null, -1, -4], barLabel: 'value', barLabelPlacement: 'outside' },
   { data: [2, 1, 4, 0, null, -1, -4], barLabel: 'value', barLabelPlacement: 'center' },
@@ -47,8 +48,12 @@ export default function BarLabelPlacement() {
       >
         Reverse: false
       </Typography>
-      <BarChart xAxis={[bandAxis]} yAxis={[linearAxis]} series={seriesVertical} height={400} />
-      <BarChart xAxis={[linearAxis]} yAxis={[bandAxis]} series={seriesHorizontal} height={400} />
+      <BarChart xAxis={[bandAxis]} yAxis={[linearAxis]} series={seriesVertical} height={400}>
+        <ChartsReferenceLine axisId="linear" y={0} />
+      </BarChart>
+      <BarChart xAxis={[linearAxis]} yAxis={[bandAxis]} series={seriesHorizontal} height={400}>
+        <ChartsReferenceLine axisId="linear" x={0} />
+      </BarChart>
       <Typography
         sx={{
           writingMode: 'vertical-lr',
@@ -64,13 +69,17 @@ export default function BarLabelPlacement() {
         yAxis={[{ ...linearAxis, reverse: true }]}
         series={seriesVertical}
         height={400}
-      />
+      >
+        <ChartsReferenceLine axisId="linear" y={0} />
+      </BarChart>
       <BarChart
-        xAxis={[linearAxis]}
-        yAxis={[{ ...bandAxis, reverse: true }]}
+        xAxis={[{ ...linearAxis, reverse: true }]}
+        yAxis={[bandAxis]}
         series={seriesHorizontal}
         height={400}
-      />
+      >
+        <ChartsReferenceLine axisId="linear" x={0} />
+      </BarChart>
     </div>
   );
 }
