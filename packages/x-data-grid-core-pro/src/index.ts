@@ -1,2 +1,1 @@
-// @mui/x-data-grid-core-pro placeholder
-export {};
+export const useDataGridPro = () => {};
