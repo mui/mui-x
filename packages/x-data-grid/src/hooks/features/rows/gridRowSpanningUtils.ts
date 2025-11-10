@@ -1,4 +1,5 @@
 import { RefObject } from '@mui/x-internals/types';
+import { getRowValue } from './gridRowsUtils';
 import type { GridRenderContext } from '../../../models';
 import type { GridValidRowModel } from '../../../models/gridRows';
 import type { GridColDef } from '../../../models/colDef';
@@ -62,14 +63,6 @@ export const getCellValue = (
   }
 
   // This util is also called during the state initialization
-  // If row value getter api is not available, use column value getter
-  if (apiRef.current.getRowValue) {
-    return apiRef.current.getRowValue(row, colDef);
-  }
-
-  if (colDef.valueGetter) {
-    return colDef.valueGetter(cellValue as never, row, colDef, apiRef);
-  }
-
-  return cellValue;
+  // Use util method directly instead of calling apiRef.current.getRowValue
+  return getRowValue(row, colDef, apiRef);
 };
