@@ -1,8 +1,68 @@
 import type { SchedulerValidDate } from './date';
+import { RecurringEventRecurrenceRule } from './recurringEvent';
 import type { CalendarOccurrencePlaceholderExternalDragData } from './dragAndDrop';
 import type { CalendarResourceId } from './resource';
 
-export interface CalendarEvent {
+export interface SchedulerProcessedEvent {
+  /**
+   * The unique identifier of the event.
+   */
+  id: CalendarEventId;
+  /**
+   * The title of the event.
+   */
+  title: string;
+  /**
+   * The description of the event.
+   */
+  description?: string;
+  /**
+   * The start date and time of the event.
+   */
+  start: CalendarProcessedDate;
+  /**
+   * The end date and time of the event.
+   */
+  end: CalendarProcessedDate;
+  /**
+   * The id of the resource this event is associated with.
+   */
+  resource?: CalendarResourceId | null;
+  /**
+   * The recurrence rule for the event.
+   * If not defined, the event will have only one occurrence.
+   */
+  rrule?: RecurringEventRecurrenceRule;
+  /**
+   * Exception dates for the event.
+   * These dates will be excluded from the recurrence.
+   */
+  exDates?: SchedulerValidDate[];
+  /**
+   * Whether the event is an all-day event.
+   * @default false
+   */
+  allDay?: boolean;
+  /**
+   * Whether the event is read-only.
+   * Readonly events cannot be modified using UI features such as popover editing or drag and drop.
+   * @default false
+   */
+  readOnly?: boolean;
+  /**
+   * The id of the original event from which this event was split.
+   * If provided, it must reference an existing event in the calendar.
+   * If it does not match any existing event, the value will be ignored
+   * and no link to an original event will be created.
+   */
+  extractedFromId?: CalendarEventId;
+  /**
+   * The event model in the `SchedulerEvent` format.
+   */
+  modelInBuiltInFormat: SchedulerEvent | null;
+}
+
+export interface SchedulerEvent {
   /**
    * The unique identifier of the event.
    */
@@ -25,13 +85,14 @@ export interface CalendarEvent {
   end: SchedulerValidDate;
   /**
    * The id of the resource this event is associated with.
+   * @default null
    */
-  resource?: CalendarResourceId;
+  resource?: CalendarResourceId | null;
   /**
    * The recurrence rule for the event.
    * If not defined, the event will have only one occurrence.
    */
-  rrule?: RRuleSpec;
+  rrule?: RecurringEventRecurrenceRule;
   /**
    * Exception dates for the event.
    * These dates will be excluded from the recurrence.
@@ -39,11 +100,13 @@ export interface CalendarEvent {
   exDates?: SchedulerValidDate[];
   /**
    * Whether the event is an all-day event.
+   * @default false
    */
   allDay?: boolean;
   /**
    * Whether the event is read-only.
    * Readonly events cannot be modified using UI features such as popover editing or drag and drop.
+   * @default false
    */
   readOnly?: boolean;
   /**
@@ -55,42 +118,10 @@ export interface CalendarEvent {
   extractedFromId?: CalendarEventId;
 }
 
-/** Two-letter weekday codes as defined by RFC 5545 (`BYDAY`). */
-export type ByDayCode = 'MO' | 'TU' | 'WE' | 'TH' | 'FR' | 'SA' | 'SU';
-
-/**
- *  Ordinal prefix for BYDAY ordinals.
- *  Positive 1..5 for “Nth” weekday, negative for “last” (e.g. `-1` = last).
- */
-type Ordinal = `${'' | '-'}${1 | 2 | 3 | 4 | 5}`;
-
-/** A BYDAY entry: either a plain weekday (`'MO'`) or an ordinal + weekday (`'2TU'`, `'-1FR'`). */
-export type ByDayValue = ByDayCode | `${Ordinal}${ByDayCode}`;
-
-/**
- *  Minimal subset of RFC 5545 RRULE supported by the scheduler.
- */
-export interface RRuleSpec {
-  /** Base frequency of the rule. */
-  freq: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
-  /** Step between occurrences at the given frequency. Defaults to 1. */
-  interval?: number;
-  /** BYDAY: MO..SU or ordinals like 4SA, -1MO */
-  byDay?: ByDayValue[];
-  /** BYMONTHDAY: list of calendar days in the month (1..31). */
-  byMonthDay?: number[];
-  /** BYMONTH: list of months (1..12). */
-  byMonth?: number[];
-  /** COUNT: total number of occurrences, mutually exclusive with `until`. */
-  count?: number;
-  /** UNTIL: inclusive end boundary, mutually exclusive with `count`. */
-  until?: SchedulerValidDate;
-}
-
 /**
  *  A concrete occurrence derived from a `CalendarEvent` (recurring or single).
  */
-export interface CalendarEventOccurrence extends CalendarEvent {
+export interface CalendarEventOccurrence extends SchedulerProcessedEvent {
   /**
    * Unique key that can be passed to the React `key` property when looping through events.
    */
@@ -166,6 +197,11 @@ interface CalendarOccurrencePlaceholderBase {
    */
   end: SchedulerValidDate;
   /**
+   * The id of the resource onto which to drop the event.
+   * If null, the event will be dropped outside of any resource.
+   */
+  resourceId: CalendarResourceId | null;
+  /**
    * Whether the occurrence placeholder should be hidden.
    * This is used when dragging an event outside of the calendar to avoid showing both the placeholder and the drag preview.
    */
@@ -189,7 +225,7 @@ export interface CalendarOccurrencePlaceholderInternalDragOrResize
   /**
    * The type of placeholder.
    */
-  type: 'internal-drag-or-resize';
+  type: 'internal-drag' | 'internal-resize';
   /**
    * The id of the event being changed.
    */
@@ -201,7 +237,7 @@ export interface CalendarOccurrencePlaceholderInternalDragOrResize
   /**
    * The data of the event to use when dropping the event outside of the Event Calendar.
    */
-  originalEvent: CalendarEvent;
+  originalOccurrence: CalendarEventOccurrence;
 }
 
 export interface CalendarOccurrencePlaceholderExternalDrag
@@ -240,6 +276,10 @@ export interface CalendarProcessedDate {
    * It only contains date information, two dates representing the same day but with different time will have the same key.
    */
   key: string;
+  /**
+   * The timestamp of the date.
+   */
+  timestamp: number;
 }
 
 /**
@@ -247,10 +287,26 @@ export interface CalendarProcessedDate {
  * The `id`, `start` and `end` properties are required in order to identify the event to update and the new dates.
  * All other properties are optional and can be skipped if not modified.
  */
-export type CalendarEventUpdatedProperties = Partial<CalendarEvent> &
-  Required<Pick<CalendarEvent, 'id'>>;
+export type CalendarEventUpdatedProperties = Partial<SchedulerEvent> & {
+  id: CalendarEventId;
+};
 
+// TODO: Consider splitting the interface in two, one for the Event Calendar and one for the Timeline.
 /**
  * The type of surface the event is being rendered on.
  */
-export type EventSurfaceType = 'day-grid' | 'time-grid';
+export type EventSurfaceType = 'day-grid' | 'time-grid' | 'timeline';
+
+export type SchedulerEventModelStructure<TEvent extends object> = {
+  [key in keyof SchedulerEvent]?: {
+    getter: (event: TEvent) => SchedulerEvent[key];
+    /**
+     * Setter for the event property.
+     * If not provided, the property won't be editable.
+     */
+    setter?: (
+      event: TEvent | Partial<TEvent>,
+      value: SchedulerEvent[key],
+    ) => TEvent | Partial<TEvent>;
+  };
+};

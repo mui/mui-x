@@ -11,10 +11,17 @@ productId: x-charts
 
 The charts package provides several categories of hooks:
 
-### Series hooks
+### Series and Data hooks
 
 - [**useSeries**](/x/react-charts/hooks/use-series/) - Access raw series data for all chart types
 - Specific series hooks for individual chart types (`useBarSeries`, `useLineSeries`, etc.)
+- [**useDataset**](/x/react-charts/hooks/use-dataset/) - Access the dataset used to populate series and axes data, only if `dataset` prop is used.
+
+### Axes hooks
+
+- [**useAxes**](/x/react-charts/hooks/use-axes/) - Access axis configuration and properties for cartesian and polar charts
+  - Cartesian axes hooks (`useXAxes`, `useYAxes`, `useXAxis`, `useYAxis`)
+  - Polar axes hooks (`useRotationAxes`, `useRadiusAxes`, `useRotationAxis`, `useRadiusAxis`)
 
 ### Legend hooks
 

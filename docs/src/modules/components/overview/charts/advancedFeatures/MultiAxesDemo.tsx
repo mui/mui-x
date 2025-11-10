@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import { ChartContainer } from '@mui/x-charts/ChartContainer';
@@ -61,6 +60,7 @@ function MultiAxes() {
         xAxis={[
           {
             scaleType: 'band',
+            height: 50,
             dataKey: 'month',
             label: 'Month',
             valueFormatter: (value, context) =>
@@ -68,8 +68,8 @@ function MultiAxes() {
           },
         ]}
         yAxis={[
-          { id: 'leftAxis', width: 50 },
-          { id: 'rightAxis', position: 'right', width: 50 },
+          { id: 'leftAxis', width: 54 },
+          { id: 'rightAxis', position: 'right', width: 54 },
         ]}
         dataset={dataset}
       >

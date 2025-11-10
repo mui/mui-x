@@ -1,8 +1,7 @@
-import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
 import { diffIn } from '@mui/x-scheduler-headless/use-adapter';
 import { Timeline } from '@mui/x-scheduler/timeline';
-import { CalendarEvent, CalendarResource, TimelineView } from '@mui/x-scheduler-headless/models';
+import { SchedulerEvent, CalendarResource, TimelineView } from '@mui/x-scheduler-headless/models';
 import { adapter, createSchedulerRenderer } from 'test/utils/scheduler';
 
 const baseResources: CalendarResource[] = [
@@ -10,7 +9,7 @@ const baseResources: CalendarResource[] = [
   { id: 'resource-2', title: 'Design', eventColor: 'jade' },
 ];
 
-const baseEvents: CalendarEvent[] = [
+const baseEvents: SchedulerEvent[] = [
   {
     id: 'event-1',
     title: 'Spec Review',
@@ -42,7 +41,7 @@ describe('<Timeline />', () => {
   const visibleDate = adapter.date('2025-07-03T00:00:00Z');
   function renderTimeline(options?: {
     resources?: CalendarResource[];
-    events?: CalendarEvent[];
+    events?: SchedulerEvent[];
     view?: TimelineView;
     views?: TimelineView[];
   }) {
@@ -68,14 +67,14 @@ describe('<Timeline />', () => {
       expect(resourceTitleCells.length).to.equal(baseResources.length);
     });
 
-    it('does not render resources with no events', () => {
+    it('does render resources with no events', () => {
       const extendedResources: CalendarResource[] = [
         ...baseResources,
         { id: 'resource-3', title: 'QA', eventColor: 'red' },
       ];
       renderTimeline({ resources: extendedResources });
 
-      expect(screen.queryByText('QA')).to.equal(null);
+      expect(screen.queryByText('QA')).to.not.equal(null);
     });
   });
 
@@ -88,7 +87,7 @@ describe('<Timeline />', () => {
     });
 
     it('does not render events out of range', () => {
-      const extendedEvents: CalendarEvent[] = [
+      const extendedEvents: SchedulerEvent[] = [
         ...baseEvents,
         {
           id: 'event-4',
@@ -172,7 +171,7 @@ describe('<Timeline />', () => {
     });
 
     it('should render events correctly in the month view', () => {
-      const extendedEvents: CalendarEvent[] = [
+      const extendedEvents: SchedulerEvent[] = [
         ...baseEvents,
         {
           id: 'event-4',
@@ -204,7 +203,7 @@ describe('<Timeline />', () => {
       expect(eventPosition2).to.be.lessThanOrEqual(360); // second month
     });
     it('should render events correctly in the month view', () => {
-      const extendedEvents: CalendarEvent[] = [
+      const extendedEvents: SchedulerEvent[] = [
         {
           id: 'event-1',
           title: 'This year',
@@ -245,29 +244,27 @@ describe('<Timeline />', () => {
 
   describe('views', () => {
     it('should render the correct header and updates CSS variable when switching views', async () => {
-      const { container: firstContainer } = renderTimeline({
+      renderTimeline({
         view: 'time',
         views: ['days', 'time'],
       });
 
-      const rootElement = firstContainer.querySelector('.TimelineRoot') as HTMLElement;
-      expect(firstContainer.querySelector('.TimeHeader')).not.to.equal(null);
+      let rootElement = screen.getByRole('grid');
+      expect(rootElement.querySelector('.TimeHeader')).not.to.equal(null);
 
       expect(rootElement.style.getPropertyValue('--unit-width')).to.contain('time-cell-width');
 
       const daysSwitchControl = screen.getByRole('button', { name: /days/i });
       expect(daysSwitchControl).not.to.equal(null);
 
-      const { container: secondContainer } = renderTimeline({
+      renderTimeline({
         view: 'days',
         views: ['days', 'time'],
       });
 
-      const updatedRootElement = secondContainer.querySelector('.TimelineRoot') as HTMLElement;
-      expect(secondContainer.querySelector('.DaysHeader')).not.to.equal(null);
-      expect(updatedRootElement.style.getPropertyValue('--unit-width')).to.contain(
-        'days-cell-width',
-      );
+      rootElement = screen.getAllByRole('grid').at(-1) as HTMLElement;
+      expect(rootElement.querySelector('.DaysHeader')).not.to.equal(null);
+      expect(rootElement.style.getPropertyValue('--unit-width')).to.contain('days-cell-width');
     });
   });
 });

@@ -2,8 +2,7 @@
 import * as React from 'react';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
-
-const EVENT_PLACEHOLDER_PROPS = { style: { pointerEvents: 'none' as const } };
+import { useEvent } from '../../utils/useEvent';
 
 export const CalendarGridDayEventPlaceholder = React.forwardRef(
   function CalendarGridDayEventPlaceholder(
@@ -14,19 +13,25 @@ export const CalendarGridDayEventPlaceholder = React.forwardRef(
       // Rendering props
       className,
       render,
+      // Internal props
+      start,
+      end,
       // Props forwarded to the DOM element
       ...elementProps
     } = componentProps;
 
+    const { state } = useEvent({ start, end });
+
     return useRenderElement('div', componentProps, {
+      state,
       ref: [forwardedRef],
-      props: [elementProps, EVENT_PLACEHOLDER_PROPS],
+      props: [elementProps, { style: { pointerEvents: 'none' as const } }],
     });
   },
 );
 
 export namespace CalendarGridDayEventPlaceholder {
-  export interface State {}
+  export interface State extends useEvent.State {}
 
-  export interface Props extends BaseUIComponentProps<'div', State> {}
+  export interface Props extends BaseUIComponentProps<'div', State>, useEvent.Parameters {}
 }

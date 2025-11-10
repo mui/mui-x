@@ -1,7 +1,7 @@
+import * as React from 'react';
 import { CalendarEventOccurrenceWithTimePosition } from '@mui/x-scheduler-headless/models';
-import { EventProps } from '../../../../internals/components/event/Event.types';
 
-export interface TimelineEventProps extends EventProps {
+export interface TimelineEventProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * The event occurrence to render.
    */
@@ -9,7 +9,7 @@ export interface TimelineEventProps extends EventProps {
   /**
    * The variant of the event, which determines its styling.
    */
-  variant: 'regular';
+  variant: 'regular' | 'placeholder';
   /**
    * ID of the header this event is associated with (for aria-labelledby).
    */

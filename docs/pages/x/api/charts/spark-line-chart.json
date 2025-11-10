@@ -12,6 +12,12 @@
       },
       "default": "0"
     },
+    "brushConfig": {
+      "type": {
+        "name": "shape",
+        "description": "{ enabled?: bool, preventHighlight?: bool, preventTooltip?: bool }"
+      }
+    },
     "clipAreaOffset": {
       "type": {
         "name": "shape",

@@ -70,14 +70,11 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
       return;
     }
 
-    store.update((prev) => ({
-      ...prev,
-      polarAxis: {
-        ...prev.polarAxis,
-        rotation: defaultizeAxis(rotationAxis, dataset, 'rotation'),
-        radius: defaultizeAxis(radiusAxis, dataset, 'radius'),
-      },
-    }));
+    store.set('polarAxis', {
+      ...store.state.polarAxis,
+      rotation: defaultizeAxis(rotationAxis, dataset, 'rotation'),
+      radius: defaultizeAxis(radiusAxis, dataset, 'radius'),
+    });
   }, [seriesConfig, drawingArea, rotationAxis, radiusAxis, dataset, store]);
 
   const svg2rotation = React.useMemo(

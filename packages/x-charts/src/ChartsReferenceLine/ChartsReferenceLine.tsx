@@ -1,5 +1,4 @@
 'use client';
-import * as React from 'react';
 import PropTypes from 'prop-types';
 import { ChartsXReferenceLine, ChartsXReferenceLineProps } from './ChartsXReferenceLine';
 import { ChartsYReferenceLine, ChartsYReferenceLineProps } from './ChartsYReferenceLine';
@@ -64,7 +63,7 @@ ChartsReferenceLine.propTypes = {
   /**
    * Additional space around the label in px.
    * Can be a number or an object `{ x, y }` to distinguish space with the reference line and space with axes.
-   * @default 5
+   * @default { x: 0, y: 5 } on a horizontal line and { x: 5, y: 0 } on a vertical line.
    */
   spacing: PropTypes.oneOfType([
     PropTypes.number,

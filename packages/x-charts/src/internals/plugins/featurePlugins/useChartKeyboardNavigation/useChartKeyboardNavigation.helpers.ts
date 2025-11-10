@@ -1,6 +1,8 @@
 import { ChartSeriesType, ChartsSeriesConfig } from '../../../../models/seriesType/config';
 import { SeriesId } from '../../../../models/seriesType/common';
 import { ProcessedSeries } from '../../corePlugins/useChartSeries';
+import { FocusableSeriesTypes } from './useChartKeyboardNavigation.types';
+import { isFocusableSeriesType } from './isFocusableSeriesType';
 
 /**
  * Returns the next series type and id that contains some data.
@@ -8,22 +10,19 @@ import { ProcessedSeries } from '../../corePlugins/useChartSeries';
  */
 export function getNextSeriesWithData(
   series: ProcessedSeries<keyof ChartsSeriesConfig>,
-  type?: ChartSeriesType,
+  type?: FocusableSeriesTypes,
   seriesId?: SeriesId,
 ): {
-  type: Exclude<ChartSeriesType, 'sankey'>;
+  type: FocusableSeriesTypes;
   seriesId: SeriesId;
 } | null {
-  const startingTypeIndex =
-    type !== undefined && series[type] ? Object.keys(series).indexOf(type) : 0;
+  const seriesType = Object.keys(series) as Array<ChartSeriesType>;
+  const startingTypeIndex = type !== undefined && series[type] ? seriesType.indexOf(type) : 0;
   const currentSeriesIndex =
     type !== undefined && seriesId !== undefined && series[type] && series[type].series[seriesId]
       ? series[type].seriesOrder.indexOf(seriesId)
       : -1;
-  const typesAvailable = Object.keys(series).filter((t) => t !== 'sankey') as Exclude<
-    ChartSeriesType,
-    'sankey'
-  >[];
+  const typesAvailable = seriesType.filter(isFocusableSeriesType);
 
   // Loop over all series types starting with the current seriesType
   for (let typeGap = 0; typeGap < typesAvailable.length; typeGap += 1) {
@@ -71,23 +70,20 @@ export function getNextSeriesWithData(
  */
 export function getPreviousSeriesWithData(
   series: ProcessedSeries<keyof ChartsSeriesConfig>,
-  type?: ChartSeriesType,
+  type?: FocusableSeriesTypes,
   seriesId?: SeriesId,
 ): {
-  type: Exclude<ChartSeriesType, 'sankey'>;
+  type: FocusableSeriesTypes;
   seriesId: SeriesId;
 } | null {
-  const startingTypeIndex =
-    type !== undefined && series[type] ? Object.keys(series).indexOf(type) : 0;
+  const seriesType = Object.keys(series) as Array<ChartSeriesType>;
+  const startingTypeIndex = type !== undefined && series[type] ? seriesType.indexOf(type) : 0;
   const startingSeriesIndex =
     type !== undefined && seriesId !== undefined && series[type] && series[type].series[seriesId]
       ? series[type].seriesOrder.indexOf(seriesId)
       : 1;
 
-  const typesAvailable = Object.keys(series).filter((t) => t !== 'sankey') as Exclude<
-    ChartSeriesType,
-    'sankey'
-  >[];
+  const typesAvailable = seriesType.filter(isFocusableSeriesType);
 
   // Loop over all series types starting with the current seriesType
   for (let typeGap = 0; typeGap < typesAvailable.length; typeGap += 1) {

@@ -1,0 +1,6 @@
+<DataGrid
+  columns={columns}
+  rows={rows}
+  slots={{ toolbar: CustomToolbar }}
+  showToolbar
+/>

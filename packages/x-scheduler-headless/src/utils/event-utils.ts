@@ -1,11 +1,11 @@
 import {
   SchedulerValidDate,
-  CalendarEvent,
+  SchedulerProcessedEvent,
   CalendarProcessedDate,
   CalendarEventOccurrence,
 } from '../models';
 import { Adapter } from '../use-adapter/useAdapter.types';
-import { getRecurringEventOccurrencesForVisibleDays } from './recurrence-utils';
+import { getRecurringEventOccurrencesForVisibleDays } from './recurring-event-utils';
 
 /**
  *  Returns the key of the days an event occurrence should be visible on.
@@ -14,25 +14,19 @@ export function getDaysTheOccurrenceIsVisibleOn(
   event: CalendarEventOccurrence,
   days: CalendarProcessedDate[],
   adapter: Adapter,
-  renderEventIn: 'first-day' | 'every-day',
 ) {
   const dayKeys: string[] = [];
   for (const day of days) {
     // If the day is before the event start, skip to the next day
-    if (adapter.isBeforeDay(day.value, event.start)) {
+    if (adapter.isBeforeDay(day.value, event.start.value)) {
       continue;
     }
 
     // If the day is after the event end, break as the days are sorted by start date
-    if (adapter.isAfterDay(day.value, event.end)) {
+    if (adapter.isAfterDay(day.value, event.end.value)) {
       break;
     }
     dayKeys.push(day.key);
-
-    // If the event should only be rendered on its first day, break after the first match
-    if (renderEventIn === 'first-day') {
-      break;
-    }
   }
   return dayKeys;
 }
@@ -58,7 +52,7 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
     }
 
     // STEP 2-B: Non-recurring event processing, skip events that are not within the visible days
-    if (adapter.isAfter(event.start, end) || adapter.isBefore(event.end, start)) {
+    if (adapter.isAfter(event.start.value, end) || adapter.isBefore(event.end.value, start)) {
       continue;
     }
 
@@ -73,8 +67,8 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
       // TODO: Avoid JS Date conversion
       .map((occurrence) => ({
         occurrence,
-        start: adapter.toJsDate(occurrence.start).getTime(),
-        end: adapter.toJsDate(occurrence.end).getTime(),
+        start: adapter.toJsDate(occurrence.start.value).getTime(),
+        end: adapter.toJsDate(occurrence.end.value).getTime(),
       }))
       .sort((a, b) => a.start - b.start || b.end - a.end)
       .map((item) => item.occurrence)
@@ -85,6 +79,6 @@ interface GetOccurrencesFromEventsParameters {
   adapter: Adapter;
   start: SchedulerValidDate;
   end: SchedulerValidDate;
-  events: CalendarEvent[];
+  events: SchedulerProcessedEvent[];
   visibleResources: Map<string, boolean>;
 }

@@ -4,11 +4,15 @@ import clsx from 'clsx';
 import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { useStore } from '@base-ui-components/utils/store';
 import { Timeline as TimelinePrimitive } from '@mui/x-scheduler-headless/timeline';
-import { selectors } from '@mui/x-scheduler-headless/use-timeline';
+import {
+  schedulerOtherSelectors,
+  schedulerResourceSelectors,
+} from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useTimelineStoreContext } from '@mui/x-scheduler-headless/use-timeline-store-context';
 import { useEventOccurrencesGroupedByResource } from '@mui/x-scheduler-headless/use-event-occurrences-grouped-by-resource';
 import { useAdapter, diffIn, Adapter } from '@mui/x-scheduler-headless/use-adapter';
 import { SchedulerValidDate, TimelineView } from '@mui/x-scheduler-headless/models';
+import { timelineViewSelectors } from '@mui/x-scheduler-headless/timeline-selectors';
 import { DaysHeader, MonthsHeader, TimeHeader, WeeksHeader, YearHeader } from './view-header';
 import { TimelineContentProps } from './TimelineContent.types';
 import TimelineEventRow from './timeline-event-row/TimelineEventRow';
@@ -51,9 +55,9 @@ export const TimelineContent = React.forwardRef(function TimelineContent(
 
   const adapter = useAdapter();
   const store = useTimelineStoreContext();
-  const resources = useStore(store, selectors.resources);
-  const visibleDate = useStore(store, selectors.visibleDate);
-  const view = useStore(store, selectors.view);
+  const resources = useStore(store, schedulerResourceSelectors.processedResourceList);
+  const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
+  const view = useStore(store, timelineViewSelectors.view);
 
   const start = React.useMemo(
     () => getStartDate(adapter, view, visibleDate),
@@ -122,6 +126,7 @@ export const TimelineContent = React.forwardRef(function TimelineContent(
                   start={start}
                   end={end}
                   occurrences={occurrences}
+                  resourceId={resource.id}
                 />
               )}
             </TimelinePrimitive.SubGrid>

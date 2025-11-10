@@ -1,4 +1,3 @@
-import * as React from 'react';
 import MUISwipeableDrawer from '@mui/material/SwipeableDrawer';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';

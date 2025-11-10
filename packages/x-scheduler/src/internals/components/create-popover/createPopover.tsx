@@ -33,7 +33,15 @@ export function createPopover<TAnchorData>(config: CreatePopoverConfig) {
   }
 
   function Provider(props: ProviderProps<TAnchorData>) {
-    const { containerRef, children, renderPopover, onClose: onCloseProp, modal = true } = props;
+    const {
+      containerRef,
+      children,
+      renderPopover,
+      onClose: onCloseProp,
+      shouldBlockClose,
+      modal = true,
+    } = props;
+
     const [state, setState] = React.useState<PopoverState<TAnchorData>>({
       isOpen: false,
       anchor: null,
@@ -45,10 +53,14 @@ export function createPopover<TAnchorData>(config: CreatePopoverConfig) {
     });
 
     const close = useEventCallback(() => {
+      if (shouldBlockClose) {
+        return;
+      }
+
+      onCloseProp?.();
       if (!state.isOpen) {
         return;
       }
-      onCloseProp?.();
       setState({ isOpen: false, anchor: null, data: null });
     });
 
