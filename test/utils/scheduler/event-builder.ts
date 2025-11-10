@@ -231,12 +231,4 @@ export class EventBuilder {
       key,
     };
   }
-
-  /**
-   * Derives a CalendarEventOccurrence from the built event using the utility function.
-   
-   */
-  buildOccurrenceFromEvent(): CalendarEventOccurrence {
-    return createOccurrenceFromEvent(this.event);
-  }
 }
