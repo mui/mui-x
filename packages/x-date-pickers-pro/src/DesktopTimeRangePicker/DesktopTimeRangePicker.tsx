@@ -287,8 +287,7 @@ DesktopTimeRangePicker.propTypes = {
    * @param {TValue} value The value that was just accepted.
    * @param {FieldChangeHandlerContext<TError>} context Context about this acceptance:
    * - `validationError`: validation result of the current value
-   * - `source`: compound source of the acceptance. Typical values:
-   *    'field' | 'picker:view' | 'picker:toolbar' | 'picker:actionBar:ok' | 'picker:actionBar:clear' | 'picker:actionBar:today' | 'picker:actionBar:cancel' | 'picker:close:dismiss' | 'picker:shortcut'
+   * - `source`: source of the acceptance. One of 'field' | 'picker' | 'unknown'
    * - `shortcut` (optional): the shortcut metadata if the value was accepted via a shortcut selection
    */
   onAccept: PropTypes.func,
@@ -299,8 +298,7 @@ DesktopTimeRangePicker.propTypes = {
    * @param {TValue} value The new value.
    * @param {FieldChangeHandlerContext<TError>} context Context about this change:
    * - `validationError`: validation result of the current value
-   * - `source`: compound source of the change. Typical values:
-   *    'field' | 'picker:view' | 'picker:toolbar' | 'picker:actionBar:ok' | 'picker:actionBar:clear' | 'picker:actionBar:today' | 'picker:actionBar:cancel' | 'picker:close:dismiss' | 'picker:shortcut'
+   * - `source`: source of the change. One of 'field' | 'picker' | 'unknown'
    * - `shortcut` (optional): the shortcut metadata if the change was triggered by a shortcut selection
    */
   onChange: PropTypes.func,
