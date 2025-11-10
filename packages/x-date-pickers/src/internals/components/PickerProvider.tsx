@@ -310,26 +310,12 @@ export interface SetValueActionOptions<TError = string | null> {
   shortcut?: PickersShortcutsItemContext;
   /**
    * Source of the change.
-   * Uses a compound pattern `source:origin` for picker-side interactions and `"field"` for input-side interactions.
-   * Typical values used by MUI X:
-   * - 'field' (committed from the input field)
-   * - 'picker:view' (calendar/clock view selection)
-   * - 'picker:toolbar'
-   * - 'picker:actionBar:ok' | 'picker:actionBar:clear' | 'picker:actionBar:today' | 'picker:actionBar:cancel'
-   * - 'picker:close:dismiss' (outside click or Escape)
-   * - 'picker:shortcut' (PickersShortcuts selection)
+   * Simplified to one of the following values:
+   * - 'field' (changes coming from the text field)
+   * - 'picker' (any interaction inside the picker UI: views, toolbar, action bar, shortcuts, etc.)
+   * - 'unknown' (unspecified or third-party triggers)
    */
-  source?:
-    | 'field'
-    | 'picker:view'
-    | 'picker:toolbar'
-    | 'picker:actionBar:ok'
-    | 'picker:actionBar:clear'
-    | 'picker:actionBar:today'
-    | 'picker:actionBar:cancel'
-    | 'picker:close:dismiss'
-    | 'picker:shortcut'
-    | (string & {});
+  source?: 'field' | 'picker' | 'unknown';
   /**
    * Whether the value should call `onChange` and `onAccept` when the value is not controlled and has never been modified.
    * If `true`, the `onChange` and `onAccept` callback will only be fired if the value has been modified (and is not equal to the last published value).

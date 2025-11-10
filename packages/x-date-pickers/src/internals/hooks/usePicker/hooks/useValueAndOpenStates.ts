@@ -158,10 +158,10 @@ export function useValueAndOpenStates<
         if (source) {
           inferredSource = source as PickerChangeHandlerContext<TError>['source'];
         } else if (shortcut) {
-          inferredSource = 'picker:shortcut';
+          inferredSource = 'picker';
         } else {
-          // Default path is field when not explicitly tagged by a picker call site
-          inferredSource = 'field';
+          // Default to unknown when not explicitly tagged by a picker call site
+          inferredSource = 'unknown';
         }
         cachedContext = {
           validationError:
@@ -214,7 +214,7 @@ export function useValueAndOpenStates<
 
       setValue(newValue, {
         changeImportance: selectionState === 'finish' && closeOnSelect ? 'accept' : 'set',
-        source: 'picker:view',
+        source: 'picker',
       });
     },
   );

@@ -209,8 +209,8 @@ The `onAccept` callback lets you get the final value selected by the user withou
 The `onAccept` callback receives a second argument `context` with extra information about why and how the value was accepted.
 
 - `validationError`: the validation result of the accepted value.
-- `source`: compound source describing where the acceptance originated from. It uses `source:origin` for picker-side interactions and `"field"` for input-side commits. Typical values include:
-  - `"field"`, `"picker:view"`, `"picker:toolbar"`, `"picker:actionBar:ok", "picker:actionBar:clear", "picker:actionBar:today", "picker:actionBar:cancel"`, `"picker:close:dismiss"`, `"picker:shortcut"`.
+- `source`: compound source describing where the acceptance originated from. Typical values include:
+  - `"field"`, `"picker"` and `"unknown"`.
 - `shortcut` (optional): the shortcut metadata when the value was accepted via a shortcut selection.
 
 For custom error handling, you can use the `validationError` property of the `context` object.
@@ -234,13 +234,19 @@ The `source` property allows you to implement different behaviors depending on t
       return; // ignore invalid values
     }
 
-    if (context.source.startsWith('picker')) {
-      analytics.track('date_accepted_from_picker', {
-        value: newValue,
-        shortcut: context.shortcut?.id,
-      });
-    } else {
-      analytics.track('date_accepted_from_field', { value: newValue });
+    switch (context.source) {
+      case 'picker':
+        analytics.track('date_accepted_from_picker', {
+          value: newValue,
+          shortcut: context.shortcut?.id,
+        });
+        break;
+      case 'field':
+        analytics.track('date_accepted_from_field', { value: newValue });
+        break;
+      case 'unknown':
+      default:
+        analytics.track('date_accepted_from_unknown', { value: newValue });
     }
   }}
 />
@@ -425,19 +431,14 @@ You can find more information about the `onAccept` prop [in the dedicated doc se
 
 {{"demo": "ServerInteraction.js"}}
 
-### Compound source values in `context.source`
+### Source values in `context.source`
 
-Pickers expose a single `context.source` string that encodes both the high‑level origin and the sub‑origin.
-It uses the pattern `source:origin` for picker‑side interactions and simply `"field"` for input‑side commits.
+Pickers expose a simplified `context.source` string that indicates where a change or acceptance originated from.
+The value is one of:
 
-Typical values:
-
-- `"field"` — committed from the input field (typing, paste, arrow keys, clear, Enter, etc.).
-- `"picker:view"` — selection made from a calendar/clock view.
-- `"picker:toolbar"` — change initiated from the picker toolbar (e.g., AM/PM toggle).
-- `"picker:actionBar:ok" | "picker:actionBar:clear" | "picker:actionBar:today" | "picker:actionBar:cancel"` — action bar buttons.
-- `"picker:close:dismiss"` — acceptance triggered by closing the picker (outside click or Escape) based on the current/last accepted value per lifecycle rules.
-- `"picker:shortcut"` — selection made via a shortcut item. In this case, `context.shortcut` is also set with the shortcut metadata.
+- `'field'` — committed from the input field (typing, paste, arrow keys, clear, Enter, etc.).
+- `'picker'` — any interaction inside the picker UI (calendar/clock views, toolbar, action bar, shortcuts, dismiss, etc.).
+- `'unknown'` — unspecified or third‑party triggers.
 
 Example usage:
 
@@ -447,21 +448,18 @@ Example usage:
     if (context.validationError) return;
 
     switch (context.source) {
-      case 'picker:shortcut':
-        analytics.track('date_accept_shortcut', { id: context.shortcut?.id, value });
-        break;
-      case 'picker:actionBar:ok':
-        analytics.track('date_accept_ok', { value });
-        break;
-      case 'picker:view':
-        analytics.track('date_accept_from_view', { value });
-        break;
-      case 'picker:close:dismiss':
-        analytics.track('date_accept_on_close', { value });
+      case 'picker':
+        analytics.track('date_accept_from_picker', {
+          value,
+          shortcut: context.shortcut?.id,
+        });
         break;
       case 'field':
+        analytics.track('date_accept_from_field', { value });
+        break;
+      case 'unknown':
       default:
-        analytics.track('date_accept_other', { value, source: context.source });
+        analytics.track('date_accept_from_unknown', { value });
     }
   }}
 />
