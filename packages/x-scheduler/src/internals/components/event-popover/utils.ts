@@ -128,13 +128,18 @@ export function isSameRRule(
     return false;
   }
 
-  const sameArray = (arrayX?: unknown[] | null, arrayY?: unknown[] | null) => {
-    const sortedArrayX = (arrayX ?? []).map(String).sort();
-    const sortedArrayY = (arrayY ?? []).map(String).sort();
-    return (
-      sortedArrayX.length === sortedArrayY.length &&
-      sortedArrayX.every((v, i) => v === sortedArrayY[i])
-    );
+  const sameArray = (arrayX: unknown[] = [], arrayY: unknown[] = []) => {
+    if (arrayX === arrayY) {
+      return true;
+    }
+
+    if (arrayX.length !== arrayY.length) {
+      return false;
+    }
+
+    const sortedArrayX = arrayX.map(String).sort();
+    const sortedArrayY = arrayY.map(String).sort();
+    return sortedArrayX.every((v, i) => v === sortedArrayY[i]);
   };
 
   return (
