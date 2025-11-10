@@ -64,6 +64,7 @@ const RESOURCE_PROPERTIES_LOOKUP: { [P in keyof CalendarResource]-?: true } = {
   id: true,
   title: true,
   eventColor: true,
+  children: true,
 };
 
 const RESOURCE_PROPERTIES = Object.keys(RESOURCE_PROPERTIES_LOOKUP) as (keyof CalendarResource)[];
@@ -165,7 +166,20 @@ export function getProcessedResourceFromModel<TResource extends object>(
     const getter = resourceModelStructure?.[key]?.getter;
 
     // @ts-ignore
-    processedResource[key] = getter ? getter(resource) : resource[key];
+    const resourceProperty = getter ? getter(resource) : resource[key];
+
+    if (key === 'children' && Array.isArray(resourceProperty)) {
+      // Process children recursively
+      const children = resourceProperty.map((child) =>
+        getProcessedResourceFromModel(child, resourceModelStructure),
+      );
+      // @ts-ignore
+      processedResource[key] = children;
+      continue;
+    }
+
+    // @ts-ignore
+    processedResource[key] = resourceProperty;
   }
 
   return processedResource;
@@ -212,21 +226,41 @@ export function buildResourcesState<TEvent extends object, TResource extends obj
   parameters: Pick<SchedulerParameters<TEvent, TResource>, 'resources' | 'resourceModelStructure'>,
 ): Pick<
   SchedulerState<TEvent>,
-  'resourceIdList' | 'processedResourceLookup' | 'resourceModelStructure'
+  | 'resourceIdList'
+  | 'processedResourceLookup'
+  | 'resourceModelStructure'
+  | 'resourceChildrenIdLookup'
 > {
   const { resources = EMPTY_ARRAY, resourceModelStructure } = parameters;
 
   const resourceIdList: string[] = [];
   const processedResourceLookup = new Map<CalendarResourceId, CalendarResource>();
+  const resourceChildrenIdLookup = new Map<CalendarResourceId, CalendarResourceId[]>();
+
+  const addResourceToState = (processedResource: CalendarResource) => {
+    const { children, ...resourceWithoutChildren } = processedResource;
+    processedResourceLookup.set(processedResource.id, resourceWithoutChildren);
+    if (children) {
+      for (const child of children) {
+        if (!resourceChildrenIdLookup.get(processedResource.id)) {
+          resourceChildrenIdLookup.set(processedResource.id, []);
+        }
+        resourceChildrenIdLookup.get(processedResource.id)?.push(child.id);
+        addResourceToState(child);
+      }
+    }
+  };
+
   for (const resource of resources) {
     const processedResource = getProcessedResourceFromModel(resource, resourceModelStructure);
     resourceIdList.push(processedResource.id);
-    processedResourceLookup.set(processedResource.id, processedResource);
+    addResourceToState(processedResource);
   }
 
   return {
     resourceIdList,
     processedResourceLookup,
     resourceModelStructure,
+    resourceChildrenIdLookup,
   };
 }

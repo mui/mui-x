@@ -54,7 +54,7 @@ export default function ResourceMenu(props: ResourceSelectProps) {
   const store = useSchedulerStoreContext();
 
   // Selector hooks
-  const resources = useStore(store, schedulerResourceSelectors.processedResourceList);
+  const resources = useStore(store, schedulerResourceSelectors.processedResourceFlatList);
 
   const resourcesOptions = React.useMemo((): ResourceOptionType[] => {
     return [
