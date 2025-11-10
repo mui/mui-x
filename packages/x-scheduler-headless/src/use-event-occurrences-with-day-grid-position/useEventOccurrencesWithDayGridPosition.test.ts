@@ -19,6 +19,7 @@ describe('useDayListEventOccurrencesWithPosition', () => {
         days,
         events,
         visibleResources: new Map(),
+        resourceParentIds: new Map(),
       });
       return useEventOccurrencesWithDayGridPosition({ days, occurrencesMap });
     });

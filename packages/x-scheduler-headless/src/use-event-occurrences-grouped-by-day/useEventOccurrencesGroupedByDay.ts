@@ -24,6 +24,7 @@ export function useEventOccurrencesGroupedByDay(
   const store = useEventCalendarStoreContext();
   const events = useStore(store, schedulerEventSelectors.processedEventList);
   const visibleResources = useStore(store, schedulerResourceSelectors.visibleMap);
+  const resourceParentIds = useStore(store, schedulerResourceSelectors.resourceParentIdLookup);
 
   return React.useMemo(
     () =>
@@ -32,8 +33,9 @@ export function useEventOccurrencesGroupedByDay(
         days,
         events,
         visibleResources,
+        resourceParentIds,
       }),
-    [adapter, days, events, visibleResources],
+    [adapter, days, events, visibleResources, resourceParentIds],
   );
 }
 
@@ -55,10 +57,10 @@ export namespace useEventOccurrencesGroupedByDay {
 export function innerGetEventOccurrencesGroupedByDay(
   parameters: Pick<
     GetOccurrencesFromEventsParameters,
-    'adapter' | 'visibleResources' | 'events'
+    'adapter' | 'visibleResources' | 'events' | 'resourceParentIds'
   > & { days: CalendarProcessedDate[] },
 ): Map<string, CalendarEventOccurrence[]> {
-  const { adapter, days, events, visibleResources } = parameters;
+  const { adapter, days, events, visibleResources, resourceParentIds } = parameters;
 
   const occurrenceMap = new Map<string, CalendarEventOccurrence[]>(
     days.map((day) => [day.key, []]),
@@ -72,6 +74,7 @@ export function innerGetEventOccurrencesGroupedByDay(
     end,
     events,
     visibleResources,
+    resourceParentIds,
   });
 
   for (const occurrence of occurrences) {
