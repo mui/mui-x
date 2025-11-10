@@ -49,7 +49,7 @@ This can be done by passing the nonce to the `printOptions` and `imageExportOpti
       printOptions: { nonce },
       imageExportOptions: [
         { type: 'image/png', nonce },
-        { type: 'image/jpg', nonce },
+        { type: 'image/jpeg', nonce },
         { type: 'image/webp', nonce },
       ],
     },
