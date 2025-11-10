@@ -94,7 +94,6 @@ export interface PinnedRowsPropsOverrides {}
 export interface SkeletonCellPropsOverrides {}
 export interface RowPropsOverrides {}
 export interface BottomContainerPropsOverrides {}
-export interface VirtualScrollbarPropsOverrides {}
 
 interface BaseSlotProps {
   baseAutocomplete: AutocompleteProps<string, true, false, true> & BaseAutocompletePropsOverrides;
