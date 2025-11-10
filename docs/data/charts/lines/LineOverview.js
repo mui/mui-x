@@ -14,7 +14,7 @@ import {
 } from '@mui/x-charts-pro/hooks';
 import { ChartsTooltip } from '@mui/x-charts-pro/ChartsTooltip';
 import { ChartsGrid } from '@mui/x-charts-pro/ChartsGrid';
-import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
+import { ChartZoomSlider } from '@mui/x-charts-pro/ChartZoomSlider';
 import { ChartsClipPath } from '@mui/x-charts-pro/ChartsClipPath';
 import { DATA } from '../dataset/usUnempGdp';
 
@@ -110,7 +110,7 @@ function MaxUnemploymentLabel() {
   const { value: maxValue, index: maxIndex } = React.useMemo(() => {
     const { value, index } = unemploymentSeries.data.reduce(
       (acc, v, i) => (v > acc.value ? { value: v, index: i } : acc),
-      { value: -Infinity, index: -1 },
+      { value: 0, index: -1 },
     );
     return { value, index };
   }, [unemploymentSeries]);
@@ -177,7 +177,9 @@ export default function LineOverview() {
                   year: 'numeric',
                   month: 'short',
                 }),
-              zoom: true,
+              zoom: {
+                slider: { enabled: true },
+              },
             },
           ]}
           yAxis={[
@@ -201,11 +203,6 @@ export default function LineOverview() {
               strokeWidth: 1.5,
             },
           }}
-          zoomInteractionConfig={{
-          zoom: ['brush', 'doubleTapReset', 'wheel'],
-          pan: ['drag'],
-          }}
-          showToolbar
         >
           <ChartsClipPath id={clipPathId} />
           <RecessionBands periods={recessions} />
@@ -221,7 +218,7 @@ export default function LineOverview() {
             trigger="axis"
             valueFormatter={(value) => `${value.toFixed(2)}%`}
           />
-          <ChartsBrushOverlay />
+          <ChartZoomSlider />
         </ChartContainerPro>
       </Box>
       <Box sx={{ mt: 1, textAlign: 'right' }}>
