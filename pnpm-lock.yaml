@@ -788,21 +788,21 @@ importers:
 
   examples/data-grid-core:
     dependencies:
+      '@mui/x-data-grid-core':
+        specifier: workspace:@mui/x-data-grid-core@*
+        version: link:../../packages/x-data-grid-core/build
+      '@mui/x-data-grid-core-premium':
+        specifier: workspace:@mui/x-data-grid-core-premium@*
+        version: link:../../packages/x-data-grid-core-premium/build
+      '@mui/x-data-grid-core-pro':
+        specifier: workspace:@mui/x-data-grid-core-pro@*
+        version: link:../../packages/x-data-grid-core-pro/build
       react:
         specifier: 'catalog:'
         version: 19.2.0
       react-dom:
         specifier: 'catalog:'
         version: 19.2.0(react@19.2.0)
-      x-data-grid-core:
-        specifier: workspace:@mui/x-data-grid-core@*
-        version: link:../../packages/x-data-grid-core/build
-      x-data-grid-core-premium:
-        specifier: workspace:@mui/x-data-grid-core-premium@*
-        version: link:../../packages/x-data-grid-core-premium/build
-      x-data-grid-core-pro:
-        specifier: workspace:@mui/x-data-grid-core-pro@*
-        version: link:../../packages/x-data-grid-core-pro/build
     devDependencies:
       '@types/react':
         specifier: 'catalog:'
