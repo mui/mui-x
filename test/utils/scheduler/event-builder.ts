@@ -2,15 +2,16 @@ import {
   CalendarResourceId,
   RecurringEventPresetKey,
   RecurringEventRecurrenceRule,
-  SchedulerValidDate,
 } from '@mui/x-scheduler-headless/models';
 import {
-  CalendarEvent,
+  SchedulerEvent,
   CalendarEventId,
   CalendarEventOccurrence,
 } from '@mui/x-scheduler-headless/models/event';
+import { processEvent } from '@mui/x-scheduler-headless/process-event';
+import { processDate } from '@mui/x-scheduler-headless/process-date';
 import { getWeekDayCode } from '@mui/x-scheduler-headless/utils/recurring-event-utils';
-import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
+import { Adapter, diffIn } from '@mui/x-scheduler-headless/use-adapter';
 import { adapter as defaultAdapter } from './adapters';
 
 const DEFAULT_TESTING_VISIBLE_DATE_STR = '2025-07-03T00:00:00Z';
@@ -20,12 +21,12 @@ export const DEFAULT_TESTING_VISIBLE_DATE = defaultAdapter.date(DEFAULT_TESTING_
  * Minimal event builder for tests.
  *
  * Scope:
- * - Builds a valid CalendarEvent.
+ * - Builds a valid SchedulerEvent.
  * - Uses the provided (or default) adapter for all date ops.
  * - Can optionally derive a CalendarEventOccurrence via .buildOccurrence().
  */
 export class EventBuilder {
-  protected event: CalendarEvent;
+  protected event: SchedulerEvent;
 
   protected constructor(protected adapter: Adapter) {
     const id = crypto.randomUUID();
@@ -201,9 +202,9 @@ export class EventBuilder {
   // Build methods
   // ─────────────────────────────────────────────
   /**
-   * Returns the built CalendarEvent.
+   * Returns the built SchedulerEvent.
    */
-  build(): CalendarEvent {
+  build(): SchedulerEvent {
     return this.event;
   }
 
@@ -212,13 +213,18 @@ export class EventBuilder {
    * @param occurrenceStartDate Start date of the recurrence occurrence.
    * Defaults to the event start date.
    */
-  buildOccurrence(occurrenceStartDate?: SchedulerValidDate): CalendarEventOccurrence {
+  buildOccurrence(occurrenceStartDate?: string): CalendarEventOccurrence {
     const event = this.event;
-    const effectiveDate = occurrenceStartDate ?? event.start;
+    const effectiveDate = this.adapter.date(occurrenceStartDate) ?? event.start;
+    const duration = diffIn(this.adapter, event.end, event.start, 'minutes');
+    const end = this.adapter.addMinutes(effectiveDate, duration);
     const key = `${event.id}::${this.adapter.format(effectiveDate, 'keyboardDate')}`;
+    const processedEvent = processEvent(event, this.adapter);
 
     return {
-      ...event,
+      ...processedEvent,
+      start: processDate(effectiveDate, this.adapter),
+      end: processDate(end, this.adapter),
       key,
     };
   }

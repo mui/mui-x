@@ -7,6 +7,7 @@ import {
   StackableSeriesType,
   SeriesId,
 } from './common';
+import { BarItem, BarLabelContext } from '../../BarChart';
 
 export interface BarSeriesType
   extends CommonSeriesType<number | null>,
@@ -45,6 +46,14 @@ export interface BarSeriesType
    * @default 0px
    */
   minBarSize?: number;
+  /**
+   * If provided, the function will be used to format the label of the bar.
+   * It can be set to 'value' to display the current value.
+   * @param {BarItem} item The item to format.
+   * @param {BarLabelContext} context data about the bar.
+   * @returns {string} The formatted label.
+   */
+  barLabel?: 'value' | ((item: BarItem, context: BarLabelContext) => string | null | undefined);
 }
 
 /**

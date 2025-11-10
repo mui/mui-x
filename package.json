@@ -1,5 +1,5 @@
 {
-  "version": "8.16.0",
+  "version": "8.17.0",
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
@@ -77,11 +77,11 @@
     "@mui/internal-netlify-cache": "^0.0.2-canary.1",
     "@mui/internal-test-utils": "catalog:",
     "@mui/material": "catalog:",
-    "@mui/monorepo": "github:mui/material-ui#035815b7834f7714e00fb776caa5c26006bf350d",
+    "@mui/monorepo": "github:mui/material-ui#3cddd14593b0d9f7dff75b6a0d409cc2d5e086c7",
     "@mui/utils": "catalog:",
     "@next/eslint-plugin-next": "15.5.6",
     "@octokit/plugin-retry": "^8.0.3",
-    "@octokit/rest": "^22.0.0",
+    "@octokit/rest": "^22.0.1",
     "@playwright/test": "catalog:",
     "@types/babel__core": "^7.20.5",
     "@types/babel__traverse": "^7.28.0",
@@ -94,7 +94,7 @@
     "@types/yargs": "^17.0.34",
     "@typescript-eslint/parser": "catalog:",
     "@vitejs/plugin-react": "catalog:",
-    "@vitest/browser": "catalog:",
+    "@vitest/browser-playwright": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "@vvago/vale": "^3.12.0",
     "axe-core": "4.11.0",
@@ -119,7 +119,7 @@
     "execa": "^9.6.0",
     "glob-gitignore": "^1.0.15",
     "globby": "^15.0.0",
-    "jsdom": "26.1.0",
+    "jsdom": "27.1.0",
     "lerna": "^9.0.0",
     "magic-string": "^0.30.21",
     "markdownlint-cli2": "^0.18.1",
@@ -153,9 +153,9 @@
   "resolutions": {
     "ast-types": "^0.14.2"
   },
-  "packageManager": "pnpm@10.19.0",
+  "packageManager": "pnpm@10.20.0",
   "engines": {
-    "pnpm": "10.19.0",
+    "pnpm": "10.20.0",
     "node": ">=22.18"
   },
   "pnpm": {
