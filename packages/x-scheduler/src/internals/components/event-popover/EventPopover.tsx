@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import { useStore } from '@base-ui-components/utils/store';
 import { Popover } from '@base-ui-components/react/popover';
 import { CalendarEventOccurrence } from '@mui/x-scheduler-headless/models';
-import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import {
   schedulerEventSelectors,
   schedulerOtherSelectors,
@@ -64,7 +63,7 @@ export const EventPopoverContent = React.forwardRef(function EventPopoverContent
 
 export function EventPopoverProvider(props: EventPopoverProviderProps) {
   const { containerRef, children } = props;
-  const store = useEventCalendarStoreContext();
+  const store = useSchedulerStoreContext();
   const isScopeDialogOpen = useStore(store, schedulerOtherSelectors.isScopeDialogOpen);
 
   return (
