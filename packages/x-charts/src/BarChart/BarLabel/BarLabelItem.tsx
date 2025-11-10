@@ -21,7 +21,7 @@ export interface BarLabelSlotProps {
 }
 
 export type BarLabelItemProps = Omit<BarLabelOwnerState, 'isFaded' | 'isHighlighted'> &
-  Pick<BarLabelProps, 'style' | 'barLabelPlacement'> & {
+  Pick<BarLabelProps, 'style'> & {
     /**
      * The props used for each component slot.
      * @default {}
@@ -76,6 +76,12 @@ export type BarLabelItemProps = Omit<BarLabelOwnerState, 'isFaded' | 'isHighligh
      * @returns {string} The formatted label.
      */
     barLabel?: 'value' | ((item: BarItem, context: BarLabelContext) => string | null | undefined);
+    /**
+     * The placement of the bar label.
+     * It controls whether the label is rendered center or outside the bar.
+     * @default 'center'
+     */
+    barLabelPlacement?: BarLabelProps['placement'];
   };
 
 /**
@@ -116,7 +122,6 @@ function BarLabelItem(props: BarLabelItemProps) {
     dataIndex,
     skipAnimation,
     layout,
-    barLabelPlacement,
     value,
   };
   const classes = useUtilityClasses(ownerState);
@@ -134,6 +139,7 @@ function BarLabelItem(props: BarLabelItemProps) {
       y,
       width,
       height,
+      placement: barLabelPlacement,
       className: classes.root,
     },
     ownerState,

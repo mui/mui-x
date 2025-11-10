@@ -59,7 +59,6 @@ function AnimatedBarLabel(props) {
     height,
     layout,
     skipAnimation,
-    value,
     ...otherProps
   } = props;
 
@@ -72,7 +71,6 @@ function AnimatedBarLabel(props) {
     height,
     layout,
     skipAnimation,
-    value,
   });
 
   return (

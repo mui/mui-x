@@ -62,8 +62,13 @@ export type BarLabelProps = Omit<
      * It controls whether the label is rendered center or outside the bar.
      * @default 'center'
      */
-    barLabelPlacement?: 'center' | 'outside';
-    value: number | null;
+    placement?: 'center' | 'outside';
+    /**
+     * The value of the data point.
+     * This property is optional when placement is 'center', but required when placement is 'outside'.
+     * This property will become required in the next major release.
+     */
+    value?: number | null;
   };
 
 function BarLabel(inProps: BarLabelProps) {
@@ -80,7 +85,7 @@ function BarLabel(inProps: BarLabelProps) {
     layout,
     xOrigin,
     yOrigin,
-    barLabelPlacement,
+    placement,
     value,
     ...otherProps
   } = props;

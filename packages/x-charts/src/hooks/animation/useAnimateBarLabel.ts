@@ -5,10 +5,10 @@ import type { BarLabelProps } from '../../BarChart';
 
 type UseAnimateBarLabelParams = Pick<
   BarLabelProps,
-  'xOrigin' | 'yOrigin' | 'x' | 'y' | 'width' | 'height' | 'layout' | 'skipAnimation' | 'value'
+  'xOrigin' | 'yOrigin' | 'x' | 'y' | 'width' | 'height' | 'layout' | 'skipAnimation'
 > & {
   ref?: React.Ref<SVGTextElement>;
-  placement?: BarLabelProps['barLabelPlacement'];
+  placement?: BarLabelProps['placement'];
 };
 type UseAnimateBarLabelReturn = {
   ref: React.Ref<SVGTextElement>;
@@ -39,7 +39,8 @@ function barLabelPropsInterpolator(from: BarLabelInterpolatedProps, to: BarLabel
  * pass the ref returned by this hook to the `path` element and the `ref` provided as argument will also be called.
  */
 export function useAnimateBarLabel(props: UseAnimateBarLabelParams): UseAnimateBarLabelReturn {
-  const { initialX, currentX, initialY, currentY } = getPlacement(props);
+  const { initialX, currentX, initialY, currentY } =
+    props.placement === 'outside' ? getOutsidePlacement(props) : getCenterPlacement(props);
 
   const initialProps = {
     x: initialX,
@@ -71,13 +72,16 @@ export function useAnimateBarLabel(props: UseAnimateBarLabelParams): UseAnimateB
 
 const LABEL_OFFSET = 8;
 
-function getPlacement(props: UseAnimateBarLabelParams) {
-  const isNegativeValue = props.value !== null && props.value < 0;
-  const isOutsidePlacement = props.placement === 'outside';
+function getCenterPlacement(props: UseAnimateBarLabelParams) {
+  return {
+    initialX: props.layout === 'vertical' ? props.x + props.width / 2 : props.xOrigin,
+    initialY: props.layout === 'vertical' ? props.yOrigin : props.y + props.height / 2,
+    currentX: props.x + props.width / 2,
+    currentY: props.y + props.height / 2,
+  };
+}
 
-  const shouldPlaceBelow = isNegativeValue && isOutsidePlacement;
-  const shouldPlaceAbove = !isNegativeValue && isOutsidePlacement;
-
+function getOutsidePlacement(props: UseAnimateBarLabelParams) {
   let initialY = 0;
   let currentY = 0;
 
@@ -85,6 +89,9 @@ function getPlacement(props: UseAnimateBarLabelParams) {
   let currentX = 0;
 
   if (props.layout === 'vertical') {
+    const shouldPlaceBelow = props.y > props.yOrigin;
+    const shouldPlaceAbove = props.y < props.yOrigin;
+
     if (shouldPlaceBelow) {
       initialY = props.yOrigin + LABEL_OFFSET;
       currentY = props.y + props.height + LABEL_OFFSET;
@@ -95,24 +102,33 @@ function getPlacement(props: UseAnimateBarLabelParams) {
       initialY = props.yOrigin;
       currentY = props.y + props.height / 2;
     }
-    initialX = props.x + props.width / 2;
+
+    return {
+      initialX: props.x + props.width / 2,
+      currentX: props.x + props.width / 2,
+      initialY,
+      currentY,
+    };
+  }
+
+  const shouldPlaceToTheLeft = props.x < props.xOrigin;
+  const shouldPlaceToTheRight = props.x > props.xOrigin;
+
+  if (shouldPlaceToTheLeft) {
+    initialX = props.xOrigin;
+    currentX = props.x - LABEL_OFFSET;
+  } else if (shouldPlaceToTheRight) {
+    initialX = props.xOrigin;
+    currentX = props.x + props.width + LABEL_OFFSET;
+  } else {
+    initialX = props.xOrigin;
     currentX = props.x + props.width / 2;
   }
 
-  if (props.layout === 'horizontal') {
-    if (shouldPlaceBelow) {
-      initialX = props.xOrigin;
-      currentX = props.x - LABEL_OFFSET;
-    } else if (shouldPlaceAbove) {
-      initialX = props.xOrigin;
-      currentX = props.x + props.width + LABEL_OFFSET;
-    } else {
-      initialX = props.xOrigin;
-      currentX = props.x + props.width / 2;
-    }
-    initialY = props.y + props.height / 2;
-    currentY = props.y + props.height / 2;
-  }
-
-  return { initialX, currentX, initialY, currentY };
+  return {
+    initialX,
+    currentX,
+    initialY: props.y + props.height / 2,
+    currentY: props.y + props.height / 2,
+  };
 }
