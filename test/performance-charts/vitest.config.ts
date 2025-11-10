@@ -1,11 +1,13 @@
 import { defineConfig } from 'vitest/config';
 import codspeedPlugin from '@codspeed/vitest-plugin';
 import react from '@vitejs/plugin-react';
+import { playwright } from '@vitest/browser-playwright';
 
 const isCI = process.env.CI === 'true';
 const isTrace = !isCI && process.env.TRACE === 'true';
 
 export default defineConfig({
+  // @ts-expect-error
   plugins: [...(isCI ? [codspeedPlugin()] : []), react()],
   test: {
     setupFiles: ['./setup.ts'],
@@ -14,20 +16,17 @@ export default defineConfig({
     browser: {
       enabled: isTrace,
       headless: true,
-      instances: [
-        {
-          browser: 'chromium',
-          testTimeout: 60_000,
-          launch: {
-            args: [
-              '--enable-precise-memory-info',
-              '--enable-devtools-experiments',
-              '--disable-web-security',
-            ],
-          },
+      instances: [{ browser: 'chromium', testTimeout: 60_000 }],
+      // @ts-expect-error
+      provider: playwright({
+        launchOptions: {
+          args: [
+            '--enable-precise-memory-info',
+            '--enable-devtools-experiments',
+            '--disable-web-security',
+          ],
         },
-      ],
-      provider: 'playwright',
+      }),
     },
   },
 });
