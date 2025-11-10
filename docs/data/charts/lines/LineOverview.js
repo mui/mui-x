@@ -16,6 +16,7 @@ import { ChartsTooltip } from '@mui/x-charts-pro/ChartsTooltip';
 import { ChartsGrid } from '@mui/x-charts-pro/ChartsGrid';
 import { ChartZoomSlider } from '@mui/x-charts-pro/ChartZoomSlider';
 import { ChartsClipPath } from '@mui/x-charts-pro/ChartsClipPath';
+import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { DATA } from '../dataset/usUnempGdp';
 
 const dates = DATA.map((d) => new Date(d.date));
@@ -172,6 +173,7 @@ export default function LineOverview() {
             {
               scaleType: 'time',
               data: dates,
+              triggerTooltip: 'true',
               valueFormatter: (date) =>
                 date.toLocaleDateString('en-US', {
                   year: 'numeric',
@@ -218,6 +220,7 @@ export default function LineOverview() {
             trigger="axis"
             valueFormatter={(value) => `${value.toFixed(2)}%`}
           />
+          <ChartsAxisHighlight x="line" />
           <ChartZoomSlider />
         </ChartContainerPro>
       </Box>
