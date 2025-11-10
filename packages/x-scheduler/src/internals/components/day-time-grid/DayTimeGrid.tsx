@@ -6,17 +6,23 @@ import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect
 import { useStore } from '@base-ui-components/utils/store';
 import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-headless/use-event-occurrences-grouped-by-day';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
+import { eventCalendarViewSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { CalendarProcessedDate } from '@mui/x-scheduler-headless/models';
 import { useAdapter, diffIn, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { selectors } from '@mui/x-scheduler-headless/use-event-calendar';
+import {
+  schedulerEventSelectors,
+  schedulerNowSelectors,
+  schedulerOtherSelectors,
+} from '@mui/x-scheduler-headless/scheduler-selectors';
 import { DayTimeGridProps } from './DayTimeGrid.types';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { EventPopoverProvider } from '../event-popover';
 import { TimeGridColumn } from './TimeGridColumn';
 import { DayGridCell } from './DayGridCell';
 import './DayTimeGrid.css';
+import { useFormatTime } from '../../hooks/useFormatTime';
 
 export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   props: DayTimeGridProps,
@@ -36,12 +42,11 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const handleRef = useMergedRefs(forwardedRef, containerRef);
 
   // Selector hooks
-  const visibleDate = useStore(store, selectors.visibleDate);
-  const hasDayView = useStore(store, selectors.hasDayView);
-  const now = useStore(store, selectors.nowUpdatedEveryMinute);
-  const isMultiDayEvent = useStore(store, selectors.isMultiDayEvent);
-  const ampm = useStore(store, selectors.ampm);
-  const showCurrentTimeIndicator = useStore(store, selectors.showCurrentTimeIndicator);
+  const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
+  const hasDayView = useStore(store, eventCalendarViewSelectors.hasDayView);
+  const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
+  const isMultiDayEvent = useStore(store, schedulerEventSelectors.isMultiDayEvent);
+  const showCurrentTimeIndicator = useStore(store, schedulerNowSelectors.showCurrentTimeIndicator);
 
   // Feature hooks
   const occurrencesMap = useEventOccurrencesGroupedByDay({ days });
@@ -51,7 +56,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     shouldAddPosition: isMultiDayEvent,
   });
 
-  const timeFormat = ampm ? 'hoursMinutes12h' : 'hoursMinutes24h';
+  const formatTime = useFormatTime();
 
   const { start, end } = React.useMemo(
     () => ({
@@ -171,9 +176,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                         shouldHideHour(hour) ? 'HiddenHourLabel' : undefined,
                       )}
                     >
-                      {hour === 0
-                        ? null
-                        : adapter.format(adapter.setHours(visibleDate, hour), timeFormat)}
+                      {hour === 0 ? null : formatTime(adapter.setHours(visibleDate, hour))}
                     </time>
                   </div>
                 ))}

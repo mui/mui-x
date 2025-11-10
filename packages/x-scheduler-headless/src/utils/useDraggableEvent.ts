@@ -4,7 +4,10 @@ import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/disable-native-drag-preview';
 import { useStore } from '@base-ui-components/utils/store';
 import { useSchedulerStoreContext } from '../use-scheduler-store-context';
-import { selectors } from '../scheduler-selectors';
+import {
+  schedulerEventSelectors,
+  schedulerOccurrencePlaceholderSelectors,
+} from '../scheduler-selectors';
 import { CalendarEventId, SchedulerValidDate } from '../models';
 import { useDragPreview } from './useDragPreview';
 import { useEvent } from './useEvent';
@@ -31,11 +34,12 @@ export function useDraggableEvent(
   const store = useSchedulerStoreContext();
 
   // Selector hooks
-  const isDragging = useStore(store, selectors.isOccurrenceMatchingThePlaceholder, occurrenceKey);
-  const event = useStore(store, selectors.event, eventId)!;
-
-  // State hooks
-  const [isResizing, setIsResizing] = React.useState(false);
+  const placeholderAction = useStore(
+    store,
+    schedulerOccurrencePlaceholderSelectors.actionForOccurrence,
+    occurrenceKey,
+  );
+  const event = useStore(store, schedulerEventSelectors.processedEvent, eventId)!;
 
   // Feature hooks
   const { state: eventState } = useEvent({ start, end });
@@ -50,10 +54,10 @@ export function useDraggableEvent(
   const state = React.useMemo(
     () => ({
       ...eventState,
-      dragging: isDragging,
-      resizing: isResizing,
+      dragging: placeholderAction === 'internal-drag',
+      resizing: placeholderAction === 'internal-resize',
     }),
-    [eventState, isDragging, isResizing],
+    [eventState, placeholderAction],
   );
 
   React.useEffect(() => {
@@ -83,9 +87,8 @@ export function useDraggableEvent(
 
   const contextValue: useDraggableEvent.ContextValue = React.useMemo(
     () => ({
-      setIsResizing,
-      doesEventStartBeforeCollectionStart: adapter.isBefore(start, collectionStart),
-      doesEventEndAfterCollectionEnd: adapter.isAfter(end, collectionEnd),
+      doesEventStartBeforeCollectionStart: adapter.isBefore(start.value, collectionStart),
+      doesEventEndAfterCollectionEnd: adapter.isAfter(end.value, collectionEnd),
     }),
     [adapter, start, end, collectionStart, collectionEnd],
   );
@@ -160,10 +163,6 @@ export namespace useDraggableEvent {
   }
 
   export interface ContextValue {
-    /**
-     * Sets whether the event is being resized.
-     */
-    setIsResizing: (isResizing: boolean) => void;
     /**
      * Whether the event starts before the collection starts.
      */

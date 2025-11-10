@@ -20,6 +20,10 @@ export interface CalendarResource {
    * @default "jade"
    */
   eventColor?: CalendarEventColor;
+  /**
+   * The child resources of this resource.
+   */
+  children?: CalendarResource[];
 }
 
 export type SchedulerResourceModelStructure<TResource extends object> = {

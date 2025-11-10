@@ -15,7 +15,7 @@ import { FunnelPlot, FunnelPlotProps } from './FunnelPlot';
 import { FunnelSeriesType } from './funnel.types';
 import { useFunnelChartProps } from './useFunnelChartProps';
 import { ChartContainerProProps } from '../ChartContainerPro';
-import { seriesConfig as funnelSeriesConfig } from './seriesConfig';
+import { funnelSeriesConfig } from './seriesConfig';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
 import { FunnelChartSlotExtension } from './funnelSlots.types';

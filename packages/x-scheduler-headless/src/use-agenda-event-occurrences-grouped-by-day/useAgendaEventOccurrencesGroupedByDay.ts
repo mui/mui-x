@@ -4,11 +4,16 @@ import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store';
 import { useAdapter, diffIn } from '../use-adapter/useAdapter';
 import { useEventCalendarStoreContext } from '../use-event-calendar-store-context';
-import { selectors } from '../use-event-calendar';
+import {
+  schedulerEventSelectors,
+  schedulerOtherSelectors,
+  schedulerResourceSelectors,
+} from '../scheduler-selectors';
 import { useDayList } from '../use-day-list';
 import { CalendarProcessedDate, CalendarEventOccurrence } from '../models';
 import { innerGetEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
 import { AGENDA_VIEW_DAYS_AMOUNT, AGENDA_MAX_HORIZON_DAYS } from '../constants';
+import { eventCalendarPreferenceSelectors } from '../event-calendar-selectors';
 
 /**
  * Agenda-specific hook that:
@@ -22,11 +27,12 @@ export function useAgendaEventOccurrencesGroupedByDay(): useAgendaEventOccurrenc
 
   const getDayList = useDayList();
 
-  const events = useStore(store, selectors.processedEventList);
-  const visibleDate = useStore(store, selectors.visibleDate);
-  const showWeekends = useStore(store, selectors.showWeekends);
-  const showEmptyDays = useStore(store, selectors.showEmptyDaysInAgenda);
-  const visibleResources = useStore(store, selectors.visibleResourcesMap);
+  const events = useStore(store, schedulerEventSelectors.processedEventList);
+  const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
+  const showWeekends = useStore(store, eventCalendarPreferenceSelectors.showWeekends);
+  const showEmptyDays = useStore(store, eventCalendarPreferenceSelectors.showEmptyDaysInAgenda);
+  const visibleResources = useStore(store, schedulerResourceSelectors.visibleMap);
+  const resourceParentIds = useStore(store, schedulerResourceSelectors.resourceParentIdLookup);
 
   const amount = AGENDA_VIEW_DAYS_AMOUNT;
 
@@ -52,6 +58,7 @@ export function useAgendaEventOccurrencesGroupedByDay(): useAgendaEventOccurrenc
       accumulatedDays,
       events,
       visibleResources,
+      resourceParentIds,
     );
 
     const hasEvents = (day: CalendarProcessedDate) => (occurrenceMap.get(day.key)?.length ?? 0) > 0;
@@ -101,6 +108,7 @@ export function useAgendaEventOccurrencesGroupedByDay(): useAgendaEventOccurrenc
         accumulatedDays,
         events,
         visibleResources,
+        resourceParentIds,
       );
 
       daysWithEvents = accumulatedDays.filter(hasEvents).slice(0, amount);
@@ -120,6 +128,7 @@ export function useAgendaEventOccurrencesGroupedByDay(): useAgendaEventOccurrenc
     events,
     visibleResources,
     showEmptyDays,
+    resourceParentIds,
   ]);
 }
 

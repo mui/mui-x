@@ -140,7 +140,11 @@ export default function ResourceProperty() {
         resource: {
           getter: (event) => event[resourceProperty],
           setter: (event, newValue) => {
-            event[resourceProperty] = newValue;
+            if (newValue == null) {
+              delete event[resourceProperty];
+            } else {
+              event[resourceProperty] = newValue;
+            }
             return event;
           },
         },

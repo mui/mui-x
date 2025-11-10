@@ -2,7 +2,7 @@ import { Store } from '@base-ui-components/utils/store';
 // TODO: Use the Base UI warning utility once it supports cleanup in tests.
 import { warnOnce } from '@mui/x-internals/warning';
 import {
-  CalendarEvent,
+  SchedulerProcessedEvent,
   CalendarEventId,
   CalendarEventOccurrence,
   CalendarOccurrencePlaceholder,
@@ -10,6 +10,8 @@ import {
   SchedulerValidDate,
   CalendarEventUpdatedProperties,
   RecurringEventUpdateScope,
+  SchedulerEvent,
+  SchedulerPreferences,
 } from '../../models';
 import {
   SchedulerState,
@@ -25,7 +27,7 @@ import {
   applyRecurringUpdateAll,
   applyRecurringUpdateOnlyThis,
 } from '../recurring-event-utils';
-import { selectors } from '../../scheduler-selectors';
+import { schedulerEventSelectors } from '../../scheduler-selectors';
 import {
   buildEventsState,
   buildResourcesState,
@@ -37,7 +39,9 @@ import { TimeoutManager } from '../TimeoutManager';
 import { DEFAULT_EVENT_COLOR } from '../../constants';
 
 // TODO: Add a prop to configure the behavior.
-export const DEFAULT_IS_MULTI_DAY_EVENT = (event: CalendarEvent | CalendarEventOccurrence) => {
+export const DEFAULT_IS_MULTI_DAY_EVENT = (
+  event: SchedulerProcessedEvent | CalendarEventOccurrence,
+) => {
   if (event.allDay) {
     return true;
   }
@@ -46,6 +50,10 @@ export const DEFAULT_IS_MULTI_DAY_EVENT = (event: CalendarEvent | CalendarEventO
 };
 
 const ONE_MINUTE_IN_MS = 60 * 1000;
+
+export const DEFAULT_SCHEDULER_PREFERENCES: SchedulerPreferences = {
+  ampm: true,
+};
 
 /**
  * Instance shared by the Event Calendar and the Timeline components.
@@ -74,8 +82,9 @@ export class SchedulerStore<
   ) {
     const schedulerInitialState: SchedulerState<TEvent> = {
       ...SchedulerStore.deriveStateFromParameters(parameters, adapter),
-      ...buildEventsState(parameters),
+      ...buildEventsState(parameters, adapter),
       ...buildResourcesState(parameters),
+      preferences: DEFAULT_SCHEDULER_PREFERENCES,
       adapter,
       occurrencePlaceholder: null,
       nowUpdatedEveryMinute: adapter.date(),
@@ -176,9 +185,10 @@ export class SchedulerStore<
 
     if (
       parameters.events !== this.parameters.events ||
-      parameters.eventModelStructure !== this.parameters.eventModelStructure
+      parameters.eventModelStructure !== this.parameters.eventModelStructure ||
+      adapter !== this.state.adapter
     ) {
-      Object.assign(newSchedulerState, buildEventsState(parameters));
+      Object.assign(newSchedulerState, buildEventsState(parameters, adapter));
     }
 
     if (
@@ -225,8 +235,8 @@ export class SchedulerStore<
 
     const updated = new Map(updatedParam.map((ev) => [ev.id, ev]));
     const deleted = new Set(deletedParam);
-    const originalEventIds = selectors.eventIdList(this.state);
-    const originalEventModelLookup = selectors.eventModelLookup(this.state);
+    const originalEventIds = schedulerEventSelectors.idList(this.state);
+    const originalEventModelLookup = schedulerEventSelectors.modelLookup(this.state);
     const newEvents: TEvent[] = [];
 
     if (deleted.size > 0 || updated.size > 0) {
@@ -244,11 +254,11 @@ export class SchedulerStore<
         newEvents.push(newEvent);
       }
     } else {
-      newEvents.push(...selectors.eventModelList(this.state));
+      newEvents.push(...schedulerEventSelectors.modelList(this.state));
     }
 
     for (const createdEvent of created) {
-      if (selectors.event(this.state, createdEvent.id)) {
+      if (schedulerEventSelectors.processedEvent(this.state, createdEvent.id)) {
         throw new Error(
           `${this.instanceName}: an event with id="${createdEvent.id}" already exists. Use updateEvent(...) instead.`,
         );
@@ -270,16 +280,15 @@ export class SchedulerStore<
   /**
    * Creates a new event in the calendar.
    */
-  public createEvent = (calendarEvent: CalendarEvent): CalendarEvent => {
+  public createEvent = (calendarEvent: SchedulerEvent) => {
     this.updateEvents({ created: [calendarEvent] });
-    return calendarEvent;
   };
 
   /**
    * Updates an event in the calendar.
    */
   public updateEvent = (calendarEvent: CalendarEventUpdatedProperties) => {
-    const original = selectors.event(this.state, calendarEvent.id);
+    const original = schedulerEventSelectors.processedEvent(this.state, calendarEvent.id);
     if (!original) {
       throw new Error(
         `${this.instanceName}: the original event was not found (id="${calendarEvent.id}").`,
@@ -317,7 +326,7 @@ export class SchedulerStore<
     }
 
     const { changes, occurrenceStart, onSubmit } = pendingUpdateRecurringEventParameters;
-    const original = selectors.event(this.state, changes.id);
+    const original = schedulerEventSelectors.processedEvent(this.state, changes.id);
     if (!original) {
       throw new Error(
         `${this.instanceName}: the original event was not found (id="${changes.id}").`,

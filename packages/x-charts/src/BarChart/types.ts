@@ -14,6 +14,7 @@ export type AnimationData = {
 export interface ProcessedBarSeriesData {
   seriesId: SeriesId;
   data: ProcessedBarData[];
+  barLabel?: BarSeriesType['barLabel'];
 }
 
 export interface ProcessedBarData extends AnimationData {

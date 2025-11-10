@@ -29,7 +29,7 @@ export const useZoomOnPinch = (
 ) => {
   const drawingArea = useSelector(store, selectorChartDrawingArea);
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
-  const config = useSelector(store, selectorZoomInteractionConfig, ['pinch' as const]);
+  const config = useSelector(store, selectorZoomInteractionConfig, 'pinch' as const);
 
   const isZoomOnPinchEnabled: boolean = Object.keys(optionsLookup).length > 0 && Boolean(config);
 

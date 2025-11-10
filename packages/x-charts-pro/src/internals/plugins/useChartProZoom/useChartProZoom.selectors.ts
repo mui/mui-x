@@ -22,8 +22,8 @@ export const selectorChartZoomIsEnabled = createSelector(
 );
 
 export const selectorChartAxisZoomData = createSelector(
-  [selectorChartZoomMap, (state, axisId: AxisId) => axisId],
-  (zoomMap, axisId) => zoomMap?.get(axisId),
+  [selectorChartZoomMap],
+  (zoomMap, axisId: AxisId) => zoomMap?.get(axisId),
 );
 
 export const selectorChartCanZoomOut = createSelector(
