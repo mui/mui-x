@@ -13,7 +13,7 @@ import {
   isAncestor,
   moveItemInTree,
 } from './useTreeViewItemsReordering.utils';
-import { useTreeViewItemsReorderingItemPlugin } from './useTreeViewItemsReordering.itemPlugin';
+import { useTreeViewItemsReorderingItemPlugin } from './itemPlugin';
 import { itemsReorderingSelectors } from './useTreeViewItemsReordering.selectors';
 
 export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderingSignature> = ({

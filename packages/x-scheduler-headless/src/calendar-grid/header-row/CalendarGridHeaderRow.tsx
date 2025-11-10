@@ -16,7 +16,7 @@ export const CalendarGridHeaderRow = React.forwardRef(function CalendarGridHeade
     ...elementProps
   } = componentProps;
 
-  const props = React.useMemo(() => ({ role: 'row' }), []);
+  const props = { role: 'row' };
   const cellsRefs = React.useRef<(HTMLDivElement | null)[]>([]);
 
   const element = useRenderElement('div', componentProps, {

@@ -10,14 +10,15 @@ import { useDraggableEvent } from '../../utils/useDraggableEvent';
 import { CalendarEventId, CalendarEventOccurrence, SchedulerValidDate } from '../../models';
 import { useAdapter, diffIn } from '../../use-adapter';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
-import { selectors } from '../../use-event-calendar/EventCalendarStore.selectors';
+import {
+  schedulerEventSelectors,
+  schedulerOccurrencePlaceholderSelectors,
+} from '../../scheduler-selectors';
 import { getCalendarGridHeaderCellId } from '../../utils/accessibility-utils';
 import { CalendarGridDayEventContext } from './CalendarGridDayEventContext';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { useCalendarGridDayCellContext } from '../day-cell/CalendarGridDayCellContext';
 import { useCalendarGridRootContext } from '../root/CalendarGridRootContext';
-
-const EVENT_STYLE_WHILE_DRAGGING = { pointerEvents: 'none' as const };
 
 export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEvent(
   componentProps: CalendarGridDayEvent.Props,
@@ -55,7 +56,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
   const ref = React.useRef<HTMLDivElement>(null);
 
   // Selector hooks
-  const hasPlaceholder = useStore(store, selectors.hasOccurrencePlaceholder);
+  const hasPlaceholder = useStore(store, schedulerOccurrencePlaceholderSelectors.isDefined);
 
   // State hooks
   const id = useId(idProp);
@@ -63,11 +64,11 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
   // Feature hooks
   const getDraggedDay = useEventCallback((input: { clientX: number }) => {
     if (!ref.current) {
-      return start;
+      return start.value;
     }
 
-    const eventStartInRow = adapter.isBefore(start, rowStart) ? rowStart : start;
-    const eventEndInRow = adapter.isAfter(end, rowEnd) ? rowEnd : end;
+    const eventStartInRow = adapter.isBefore(start.value, rowStart) ? rowStart : start.value;
+    const eventEndInRow = adapter.isAfter(end.value, rowEnd) ? rowEnd : end.value;
     const eventDayLengthInRow = diffIn(adapter, eventEndInRow, eventStartInRow, 'days') + 1;
     const clientX = input.clientX;
     const elementPosition = ref.current.getBoundingClientRect();
@@ -76,7 +77,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     return adapter.addDays(eventStartInRow, Math.ceil(positionX * eventDayLengthInRow) - 1);
   });
 
-  const firstEventOfSeries = selectors.event(store.state, eventId)!;
+  const firstEventOfSeries = schedulerEventSelectors.processedEvent(store.state, eventId)!;
   const originalOccurrence: CalendarEventOccurrence = {
     ...firstEventOfSeries,
     id: eventId,
@@ -90,8 +91,8 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
       eventId,
       occurrenceKey,
       originalOccurrence,
-      start,
-      end,
+      start: start.value,
+      end: end.value,
     }),
   );
 
@@ -127,14 +128,11 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
 
   const columnHeaderId = getCalendarGridHeaderCellId(rootId, cellIndex);
 
-  const props = React.useMemo(
-    () => ({
-      id,
-      'aria-labelledby': `${columnHeaderId} ${id}`,
-      style: hasPlaceholder ? EVENT_STYLE_WHILE_DRAGGING : undefined,
-    }),
-    [hasPlaceholder, columnHeaderId, id],
-  );
+  const props = {
+    id,
+    'aria-labelledby': `${columnHeaderId} ${id}`,
+    style: hasPlaceholder ? { pointerEvents: 'none' as const } : undefined,
+  };
 
   const contextValue: CalendarGridDayEventContext = React.useMemo(
     () => ({ ...draggableEventContextValue, getSharedDragData }),

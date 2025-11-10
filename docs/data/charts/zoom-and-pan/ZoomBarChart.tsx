@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 
 export default function ZoomBarChart() {

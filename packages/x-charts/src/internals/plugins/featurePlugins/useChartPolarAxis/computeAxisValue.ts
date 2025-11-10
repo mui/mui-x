@@ -1,4 +1,3 @@
-import { scaleBand, scalePoint } from '@mui/x-charts-vendor/d3-scale';
 import { AxisConfig, ScaleName } from '../../../../models';
 import {
   ChartsAxisProps,
@@ -22,6 +21,7 @@ import { ChartSeriesConfig } from '../../models/seriesConfig';
 import { ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
 import { deg2rad } from '../../../angleConversion';
 import { getAxisTriggerTooltip } from './getAxisTriggerTooltip';
+import { scaleBand, scalePoint } from '../../../scales';
 
 export type DefaultizedAxisConfig<
   AxisProps extends ChartsRotationAxisProps | ChartsRadiusAxisProps,

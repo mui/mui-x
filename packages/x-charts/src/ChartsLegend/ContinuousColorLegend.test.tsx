@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { createRenderer, describeConformance } from '@mui/internal-test-utils';
 import { ContinuousColorLegend, continuousColorLegendClasses } from '@mui/x-charts/ChartsLegend';
 import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';

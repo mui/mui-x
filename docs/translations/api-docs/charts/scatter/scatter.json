@@ -1,6 +1,9 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "colorGetter": {
+      "description": "Function to get the color of a scatter item given its data index. The data index argument is optional. If not provided, the color for the entire series is returned. If provided, the color for the specific scatter item is returned."
+    },
     "onItemClick": {
       "description": "Callback fired when clicking on a scatter item.",
       "typeDescriptions": {

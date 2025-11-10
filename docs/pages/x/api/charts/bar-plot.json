@@ -39,6 +39,8 @@
     }
   ],
   "classes": [],
+  "spread": true,
+  "themeDefaultProps": null,
   "muiName": "MuiBarPlot",
   "filename": "/packages/x-charts/src/BarChart/BarPlot.tsx",
   "inheritance": null,

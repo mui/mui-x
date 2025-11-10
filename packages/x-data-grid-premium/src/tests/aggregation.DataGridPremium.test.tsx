@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { createRenderer, screen, within, act, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { getCell, getColumnHeaderCell, getColumnValues, microtasks } from 'test/utils/helperFn';

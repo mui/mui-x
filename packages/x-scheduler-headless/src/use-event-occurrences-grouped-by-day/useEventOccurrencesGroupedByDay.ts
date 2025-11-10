@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store';
-import { CalendarEvent, CalendarEventOccurrence, CalendarProcessedDate } from '../models';
+import { SchedulerProcessedEvent, CalendarEventOccurrence, CalendarProcessedDate } from '../models';
 import { getDaysTheOccurrenceIsVisibleOn, getOccurrencesFromEvents } from '../utils/event-utils';
 import { useAdapter } from '../use-adapter/useAdapter';
 import { useEventCalendarStoreContext } from '../use-event-calendar-store-context';
-import { selectors } from '../use-event-calendar';
+import { schedulerEventSelectors, schedulerResourceSelectors } from '../scheduler-selectors';
 import { Adapter } from '../use-adapter/useAdapter.types';
 
 /**
@@ -19,8 +19,8 @@ export function useEventOccurrencesGroupedByDay(
   const { days } = parameters;
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
-  const events = useStore(store, selectors.events);
-  const visibleResources = useStore(store, selectors.visibleResourcesMap);
+  const events = useStore(store, schedulerEventSelectors.processedEventList);
+  const visibleResources = useStore(store, schedulerResourceSelectors.visibleMap);
 
   return React.useMemo(
     () => innerGetEventOccurrencesGroupedByDay(adapter, days, events, visibleResources),
@@ -46,7 +46,7 @@ export namespace useEventOccurrencesGroupedByDay {
 export function innerGetEventOccurrencesGroupedByDay(
   adapter: Adapter,
   days: CalendarProcessedDate[],
-  events: CalendarEvent[],
+  events: SchedulerProcessedEvent[],
   visibleResources: Map<string, boolean>,
 ): Map<string, CalendarEventOccurrence[]> {
   // STEP 4: Create a Map of the occurrences grouped by day

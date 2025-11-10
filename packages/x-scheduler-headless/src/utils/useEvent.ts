@@ -1,14 +1,14 @@
 'use client';
 import { useStore } from '@base-ui-components/utils/store';
-import { SchedulerValidDate } from '../models';
+import { CalendarProcessedDate } from '../models';
 import { useSchedulerStoreContext } from '../use-scheduler-store-context/useSchedulerStoreContext';
-import { selectors } from './SchedulerStore';
+import { schedulerOccurrenceSelectors } from '../scheduler-selectors';
 
 export function useEvent(parameters: useEvent.Parameters): useEvent.ReturnValue {
   const { start, end } = parameters;
 
   const store = useSchedulerStoreContext();
-  const state = useStore(store, selectors.isOccurrenceStartedOrEnded, start, end);
+  const state = useStore(store, schedulerOccurrenceSelectors.isStartedOrEnded, start, end);
 
   return { state };
 }
@@ -18,11 +18,11 @@ export namespace useEvent {
     /**
      * The time at which the event starts.
      */
-    start: SchedulerValidDate;
+    start: CalendarProcessedDate;
     /**
      * The time at which the event ends.
      */
-    end: SchedulerValidDate;
+    end: CalendarProcessedDate;
   }
 
   export interface ReturnValue {

@@ -41,7 +41,7 @@ export const CalendarGridTimeEventPlaceholder = React.forwardRef(
       [position, duration],
     );
 
-    const props = React.useMemo(() => ({ style }), [style]);
+    const props = { style };
 
     const { state } = useEvent({ start, end });
 
