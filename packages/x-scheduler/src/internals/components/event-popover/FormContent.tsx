@@ -154,7 +154,6 @@ export default function FormContent(props: FormContentProps) {
       resource: controlled.resourceId === null ? undefined : controlled.resourceId,
       color: controlled.colorId === null ? undefined : controlled.colorId,
     };
-
     if (rawPlaceholder?.type === 'creation') {
       store.createEvent({
         id: crypto.randomUUID(),
