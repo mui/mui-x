@@ -1,19 +1,14 @@
 import * as React from 'react';
 import { DataGridPremium, useGridApiRef } from '@mui/x-data-grid-premium';
-import type { GridColDef, GridInitialState } from '@mui/x-data-grid-premium';
+
 import Button from '@mui/material/Button';
 import { ErrorBoundary } from './ErrorBoundary';
-
-interface RowType {
-  id: number;
-  questionIds: number[];
-}
 
 export default function SecureInitialState() {
   const apiRef = useGridApiRef();
   const gridStateKey = 'testDataGridState';
 
-  const [initialGridState, setInitialGridState] = React.useState<GridInitialState>();
+  const [initialGridState, setInitialGridState] = React.useState();
 
   const saveSnapshot = React.useCallback(() => {
     if (apiRef?.current?.exportState && localStorage) {
@@ -40,7 +35,7 @@ export default function SecureInitialState() {
 
   const questions = [{ fieldId: 1, fieldName: 'Do you like pizza?' }];
 
-  const columns: GridColDef[] = [
+  const columns = [
     {
       field: 'name',
       headerName: 'name',
@@ -52,7 +47,7 @@ export default function SecureInitialState() {
       headerName: 'questions',
       minWidth: 150,
       flex: 1,
-      valueGetter: (_, row: RowType) => {
+      valueGetter: (_, row) => {
         console.log('row', row);
         // Extract fieldNames from all questions based on the questionIds in the row
         const questionNames = questions
