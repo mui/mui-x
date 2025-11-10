@@ -7,7 +7,6 @@ const isCI = process.env.CI === 'true';
 const isTrace = !isCI && process.env.TRACE === 'true';
 
 export default defineConfig({
-  // @ts-expect-error
   plugins: [...(isCI ? [codspeedPlugin()] : []), react()],
   test: {
     setupFiles: ['./setup.ts'],
@@ -32,7 +31,6 @@ export default defineConfig({
       enabled: isTrace,
       headless: true,
       instances: [{ browser: 'chromium', testTimeout: 60_000 }],
-      // @ts-expect-error
       provider: playwright({
         launchOptions: {
           args: [
