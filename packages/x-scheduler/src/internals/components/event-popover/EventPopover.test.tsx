@@ -506,6 +506,8 @@ describe('<EventPopoverContent />', () => {
         .resource('r2')
         .recurrent('daily')
         .build();
+      const originalRecurringEventOccurrence = createOccurrenceFromEvent(originalRecurringEvent);
+
       it('should not call updateRecurringEvent if the user cancels the scope dialog', async () => {
         let updateRecurringEventSpy, selectRecurringEventUpdateScopeSpy;
         const containerRef = React.createRef<HTMLDivElement>();
@@ -531,7 +533,7 @@ describe('<EventPopoverContent />', () => {
               <Popover.Root open>
                 <EventPopoverContent
                   {...defaultProps}
-                  occurrence={createOccurrenceFromEvent(originalRecurringEvent)}
+                  occurrence={originalRecurringEventOccurrence}
                 />
               </Popover.Root>
               <RecurringScopeDialog containerRef={containerRef} />
@@ -580,7 +582,7 @@ describe('<EventPopoverContent />', () => {
               <Popover.Root open>
                 <EventPopoverContent
                   {...defaultProps}
-                  occurrence={createOccurrenceFromEvent(originalRecurringEvent)}
+                  occurrence={originalRecurringEventOccurrence}
                 />
               </Popover.Root>
               <RecurringScopeDialog containerRef={containerRef} />
@@ -638,7 +640,7 @@ describe('<EventPopoverContent />', () => {
               <Popover.Root open>
                 <EventPopoverContent
                   {...defaultProps}
-                  occurrence={createOccurrenceFromEvent(originalRecurringEvent)}
+                  occurrence={originalRecurringEventOccurrence}
                 />
               </Popover.Root>
               <RecurringScopeDialog containerRef={containerRef} />
@@ -695,7 +697,7 @@ describe('<EventPopoverContent />', () => {
               <Popover.Root open>
                 <EventPopoverContent
                   {...defaultProps}
-                  occurrence={createOccurrenceFromEvent(originalRecurringEvent)}
+                  occurrence={originalRecurringEventOccurrence}
                 />
               </Popover.Root>
               <RecurringScopeDialog containerRef={containerRef} />
@@ -731,6 +733,8 @@ describe('<EventPopoverContent />', () => {
         .description('description')
         .singleDay('2025-06-12T14:00:00')
         .build();
+      const nonRecurringEventOccurrence = createOccurrenceFromEvent(nonRecurringEvent);
+
       it('should call updateEvent with updated values on Submit', async () => {
         let updateEventSpy;
 
@@ -744,10 +748,7 @@ describe('<EventPopoverContent />', () => {
               }}
             />
             <Popover.Root open>
-              <EventPopoverContent
-                {...defaultProps}
-                occurrence={createOccurrenceFromEvent(nonRecurringEvent)}
-              />
+              <EventPopoverContent {...defaultProps} occurrence={nonRecurringEventOccurrence} />
             </Popover.Root>
           </EventCalendarProvider>,
         );
@@ -784,10 +785,7 @@ describe('<EventPopoverContent />', () => {
               }}
             />
             <Popover.Root open>
-              <EventPopoverContent
-                {...defaultProps}
-                occurrence={createOccurrenceFromEvent(nonRecurringEvent)}
-              />
+              <EventPopoverContent {...defaultProps} occurrence={nonRecurringEventOccurrence} />
             </Popover.Root>
           </EventCalendarProvider>,
         );
