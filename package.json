@@ -119,7 +119,7 @@
     "execa": "^9.6.0",
     "glob-gitignore": "^1.0.15",
     "globby": "^15.0.0",
-    "jsdom": "26.1.0",
+    "jsdom": "27.1.0",
     "lerna": "^9.0.0",
     "magic-string": "^0.30.21",
     "markdownlint-cli2": "^0.18.1",
