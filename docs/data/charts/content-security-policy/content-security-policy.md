@@ -32,7 +32,7 @@ When a Content Security Policy is set, exporting requires additional configurati
 
 To enable exporting with CSP, you need to allow the use of `data:` and `blob:` URIs for images. This can be done by adding the following directives to your CSP header:
 
-```http
+```text
 Content-Security-Policy: img-src 'self' data: blob:;
 ```
 
