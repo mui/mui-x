@@ -27,7 +27,7 @@ interface RecurrenceTabProps {
   setControlled: React.Dispatch<React.SetStateAction<ControlledValue>>;
 }
 
-export default function RecurrenceTab(props: RecurrenceTabProps) {
+export function RecurrenceTab(props: RecurrenceTabProps) {
   const { occurrence, controlled, setControlled } = props;
 
   // Context hooks

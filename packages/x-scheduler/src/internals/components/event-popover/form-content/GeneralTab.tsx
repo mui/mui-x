@@ -25,7 +25,7 @@ interface GeneralTabProps {
   setControlled: React.Dispatch<React.SetStateAction<ControlledValue>>;
 }
 
-export default function GeneralTab(props: GeneralTabProps) {
+export function GeneralTab(props: GeneralTabProps) {
   const { occurrence, setErrors, controlled, setControlled } = props;
 
   // Context hooks

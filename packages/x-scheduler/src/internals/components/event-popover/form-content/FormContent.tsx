@@ -31,15 +31,15 @@ import { getColorClassName } from '../../../utils/color-utils';
 import { computeRange, ControlledValue, isSameRRule, validateRange } from '../utils';
 
 import EventPopoverHeader from '../EventPopoverHeader';
-import GeneralTab from './GeneralTab';
-import RecurrenceTab from './RecurrenceTab';
+import { GeneralTab } from './GeneralTab';
+import { RecurrenceTab } from './RecurrenceTab';
 
 interface FormContentProps {
   occurrence: CalendarEventOccurrence;
   onClose: () => void;
 }
 
-export default function FormContent(props: FormContentProps) {
+export function FormContent(props: FormContentProps) {
   const { occurrence, onClose } = props;
 
   // Context hooks

@@ -18,8 +18,8 @@ import {
 import { getColorClassName } from '../../utils/color-utils';
 import { createPopover } from '../create-popover';
 import './EventPopover.css';
-import FormContent from './form-content/FormContent';
 import ReadonlyContent from './ReadonlyContent';
+import { FormContent } from './form-content';
 
 const EventPopover = createPopover<CalendarEventOccurrence>({
   contextName: 'EventPopoverContext',
