@@ -18,8 +18,8 @@ import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-schedule
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { Tabs } from '@base-ui-components/react/tabs';
-import { useTranslations } from '../../../utils/TranslationsContext';
-import { ControlledValue, EndsSelection, getEndsSelectionFromRRule } from '../utils';
+import { useTranslations } from '../../utils/TranslationsContext';
+import { ControlledValue, EndsSelection, getEndsSelectionFromRRule } from './utils';
 
 interface RecurrenceTabProps {
   occurrence: CalendarEventOccurrence;

@@ -15,8 +15,8 @@ import {
   schedulerOccurrencePlaceholderSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { Tabs } from '@base-ui-components/react/tabs';
-import { useTranslations } from '../../../utils/TranslationsContext';
-import { computeRange, ControlledValue } from '../utils';
+import { useTranslations } from '../../utils/TranslationsContext';
+import { computeRange, ControlledValue } from './utils';
 
 interface GeneralTabProps {
   occurrence: CalendarEventOccurrence;

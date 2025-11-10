@@ -26,11 +26,10 @@ import {
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { Tabs } from '@base-ui-components/react/tabs';
-import { useTranslations } from '../../../utils/TranslationsContext';
-import { getColorClassName } from '../../../utils/color-utils';
-import { computeRange, ControlledValue, isSameRRule, validateRange } from '../utils';
-
-import EventPopoverHeader from '../EventPopoverHeader';
+import { useTranslations } from '../../utils/TranslationsContext';
+import { getColorClassName } from '../../utils/color-utils';
+import { computeRange, ControlledValue, isSameRRule, validateRange } from './utils';
+import EventPopoverHeader from './EventPopoverHeader';
 import { GeneralTab } from './GeneralTab';
 import { RecurrenceTab } from './RecurrenceTab';
 
