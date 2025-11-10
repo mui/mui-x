@@ -15,6 +15,8 @@ import type {
 import { type GridRowSelectionPropagation } from '../../../models/gridRowSelectionModel';
 import { type RowSelectionManager } from '../../../models/gridRowSelectionManager';
 import { GridRowParams } from '../../../models/params/gridRowParams';
+import { gridColumnDefinitionsSelector } from '../columns';
+import { gridRowSelectableSelector } from '../../core/gridPropsSelectors';
 
 export const ROW_SELECTION_PROPAGATION_DEFAULT: GridRowSelectionPropagation = {
   parents: true,
@@ -50,25 +52,25 @@ function getGridRowGroupSelectableDescendants(
 }
 
 export const checkboxPropsSelector = createSelector(
+  gridColumnDefinitionsSelector,
   gridRowTreeSelector,
   gridFilteredRowsLookupSelector,
   gridRowSelectionManagerSelector,
   gridRowsLookupSelector,
+  gridRowSelectableSelector,
   (
+    columns,
     rowTree,
     filteredRowsLookup,
     rowSelectionManager,
     rowsLookup,
+    isRowSelectable,
     {
       groupId,
       autoSelectParents,
-      isRowSelectable,
-      columns,
     }: {
       groupId: GridRowId;
       autoSelectParents: boolean;
-      isRowSelectable: ((params: GridRowParams) => boolean) | undefined;
-      columns: DataGridProcessedProps['columns'];
     },
   ) => {
     const groupNode = rowTree[groupId];
@@ -76,7 +78,7 @@ export const checkboxPropsSelector = createSelector(
     const rowParams: GridRowParams = {
       id: groupId,
       row: rowsLookup[groupId],
-      columns: columns.slice(),
+      columns,
     };
 
     let isSelectable = true;

@@ -13,11 +13,8 @@ import { checkboxPropsSelector } from '../../hooks/features/rowSelection/utils';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import type { GridRowSelectionCheckboxParams } from '../../models/params/gridRowSelectionCheckboxParams';
 import type { GridRenderCellParams } from '../../models/params/gridCellParams';
-import { GridColDef } from '../../models/colDef/gridColDef';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
-
-const EMPTY_ARRAY: GridColDef[] = [];
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -56,8 +53,6 @@ const GridCellCheckboxForwardRef = forwardRef<HTMLInputElement, GridRenderCellPa
       {
         groupId: id,
         autoSelectParents: rootProps.rowSelectionPropagation?.parents ?? false,
-        isRowSelectable: rootProps.isRowSelectable,
-        columns: rootProps.columns ?? EMPTY_ARRAY,
       },
     );
 
