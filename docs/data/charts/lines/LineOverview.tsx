@@ -23,6 +23,12 @@ const dates = DATA.map((d) => new Date(d.date));
 const unemploymentData = DATA.map((d) => d.UNRATE);
 const gdpData = DATA.map((d) => d.GDP_per_capita);
 
+type RecessionPeriod = {
+  start: Date;
+  end: Date;
+  label: string;
+};
+
 const recessions = [
   {
     start: new Date('2001-03-01'),
@@ -37,7 +43,7 @@ const recessions = [
   { start: new Date('2020-02-01'), end: new Date('2020-04-01'), label: 'COVID-19' },
 ];
 
-function RecessionBands({ periods }) {
+function RecessionBands({ periods }: { periods: RecessionPeriod[] }) {
   const { top, left, width, height } = useDrawingArea();
   const xScale = useXScale();
   const theme = useTheme();
@@ -109,18 +115,30 @@ function MaxUnemploymentLabel() {
   const unemploymentSeries = useLineSeries('unemployment');
 
   const { value: maxValue, index: maxIndex } = React.useMemo(() => {
-    const { value, index } = unemploymentSeries.data.reduce(
-      (acc, v, i) => (v > acc.value ? { value: v, index: i } : acc),
+    type Acc = { value: number; index: number };
+    const { value, index } = (unemploymentSeries?.data ?? []).reduce<Acc>(
+      (acc, v, i) => (v != null && v > acc.value ? { value: v, index: i } : acc),
       { value: 0, index: -1 },
     );
     return { value, index };
   }, [unemploymentSeries]);
 
+  if (maxIndex < 0) {
+    return null;
+  }
+
   const x = xScale(dates[maxIndex].getTime());
   const y = yScale(maxValue);
 
   // Ensure the marker is within the drawing area
-  if (x < left || x > left + width || y < top || y > top + height) {
+  if (
+    x == null ||
+    y == null ||
+    x < left ||
+    x > left + width ||
+    y < top ||
+    y > top + height
+  ) {
     return null;
   }
 
