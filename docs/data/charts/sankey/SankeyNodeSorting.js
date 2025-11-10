@@ -4,8 +4,8 @@ import Typography from '@mui/material/Typography';
 const data = {
   nodes: [
     { id: 'C' },
-    { id: 'A' },
     { id: 'B' },
+    { id: 'A' },
     { id: 'X' },
     { id: 'Y' },
     { id: 'Z' },
@@ -24,7 +24,7 @@ const data = {
 const nodeSortFunction = (a, b) => {
   const labelA = a.label || a.id;
   const labelB = b.label || b.id;
-  return labelA.localeCompare(labelB);
+  return labelB.localeCompare(labelA);
 };
 
 export default function SankeyNodeSorting() {
