@@ -94,7 +94,7 @@
     "@types/yargs": "^17.0.34",
     "@typescript-eslint/parser": "catalog:",
     "@vitejs/plugin-react": "catalog:",
-    "@vitest/browser": "catalog:",
+    "@vitest/browser-playwright": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "@vvago/vale": "^3.12.0",
     "axe-core": "4.11.0",
