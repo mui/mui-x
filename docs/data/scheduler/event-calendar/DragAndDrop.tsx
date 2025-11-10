@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { CalendarEvent } from '@mui/x-scheduler/models';
+import { SchedulerEvent } from '@mui/x-scheduler/models';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import {
   initialEvents,
@@ -8,7 +8,7 @@ import {
 } from '../datasets/personal-agenda';
 
 export default function DragAndDrop() {
-  const [events, setEvents] = React.useState<CalendarEvent[]>(initialEvents);
+  const [events, setEvents] = React.useState<SchedulerEvent[]>(initialEvents);
 
   return (
     <div style={{ height: '600px', width: '100%' }}>
