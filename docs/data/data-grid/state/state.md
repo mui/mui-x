@@ -17,6 +17,10 @@ You can find more information on the corresponding feature documentation page.
 
 {{"demo": "InitialState.js", "bg": "inline"}}
 
+## Secure initializing state with an ErrorBoundary
+
+{{"demo": "ErrorBoundary.js", "bg": "inline"}}
+
 ## Access the state
 
 The state is exposed on the `apiRef` object.
