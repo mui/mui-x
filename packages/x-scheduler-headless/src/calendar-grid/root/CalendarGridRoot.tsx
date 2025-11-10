@@ -20,7 +20,7 @@ export const CalendarGridRoot = React.forwardRef(function CalendarGridRoot(
 
   const id = useId(idProp);
 
-  const props = React.useMemo(() => ({ role: 'grid', id }), [id]);
+  const props = { role: 'grid', id };
 
   const contextValue: CalendarGridRootContext = React.useMemo(() => ({ id }), [id]);
 

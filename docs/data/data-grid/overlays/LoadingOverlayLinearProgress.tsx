@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Box from '@mui/material/Box';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import { DataGrid } from '@mui/x-data-grid';

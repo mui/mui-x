@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { PieChart } from '@mui/x-charts/PieChart';

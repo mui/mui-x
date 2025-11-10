@@ -69,16 +69,17 @@ export default function ExternalDragAndDrop() {
     return dropTargetForElements({
       element: externalEventsContainerRef.current,
       canDrop: (arg) => isValidDropTarget(arg.source.data),
-      onDragEnter: ({ source: { data } }) => {
+      onDragEnter: (args) => {
+        const data = args.source.data as any;
         if (!isValidDropTarget(data)) {
           return;
         }
 
-        const { start, end, ...eventData } = data.event;
+        const { start, end, ...eventData } = data.originalOccurrence;
 
         setPlaceholder({
           ...eventData,
-          duration: end.diff(start).as('minutes'),
+          duration: end.value.diff(start.value).as('minutes'),
         });
       },
       onDragLeave: () => {
@@ -118,7 +119,7 @@ export default function ExternalDragAndDrop() {
           </div>
         )}
       </div>
-      <div style={{ flexGrow: 1 }}>
+      <div style={{ flexGrow: 1, height: 600 }}>
         <EventCalendar
           events={events}
           resources={resources}
@@ -128,7 +129,6 @@ export default function ExternalDragAndDrop() {
           canDragEventsFromTheOutside
           canDropEventsToTheOutside
           preferences={{ isSidePanelOpen: false }}
-          className={classes.EventCalendar}
         />
       </div>
     </div>

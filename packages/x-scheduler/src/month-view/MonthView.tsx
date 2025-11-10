@@ -9,11 +9,9 @@ import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventCalendarView } from '@mui/x-scheduler-headless/use-event-calendar-view';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
-import {
-  selectors,
-  useExtractEventCalendarParameters,
-} from '@mui/x-scheduler-headless/use-event-calendar';
-
+import { useExtractEventCalendarParameters } from '@mui/x-scheduler-headless/use-event-calendar';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
+import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { useWeekList } from '@mui/x-scheduler-headless/use-week-list';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-headless/use-event-occurrences-grouped-by-day';
@@ -49,9 +47,9 @@ export const MonthView = React.memo(
     const cellRef = React.useRef<HTMLDivElement>(null);
 
     // Selector hooks
-    const showWeekends = useStore(store, selectors.showWeekends);
-    const showWeekNumber = useStore(store, selectors.showWeekNumber);
-    const visibleDate = useStore(store, selectors.visibleDate);
+    const showWeekends = useStore(store, eventCalendarPreferenceSelectors.showWeekends);
+    const showWeekNumber = useStore(store, eventCalendarPreferenceSelectors.showWeekNumber);
+    const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
 
     // State hooks
     const [maxEvents, setMaxEvents] = React.useState<number>(4);
@@ -71,7 +69,7 @@ export const MonthView = React.memo(
       return { weeks: tempWeeks, days: tempWeeks.flat(1) };
     }, [adapter, getWeekList, getDayList, visibleDate, showWeekends]);
 
-    const occurrencesMap = useEventOccurrencesGroupedByDay({ days, renderEventIn: 'every-day' });
+    const occurrencesMap = useEventOccurrencesGroupedByDay({ days });
 
     useEventCalendarView(() => ({
       siblingVisibleDateGetter: (date, delta) =>
@@ -143,15 +141,28 @@ export const MonthView = React.memo(
 /**
  * A Month View that can be used outside of the Event Calendar.
  */
-export const StandaloneMonthView = React.forwardRef(function StandaloneMonthView(
-  props: StandaloneMonthViewProps,
+export const StandaloneMonthView = React.forwardRef(function StandaloneMonthView<
+  TEvent extends object,
+  TResource extends object,
+>(
+  props: StandaloneMonthViewProps<TEvent, TResource>,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { parameters, forwardedProps } = useExtractEventCalendarParameters(props);
+  const { parameters, forwardedProps } = useExtractEventCalendarParameters<
+    TEvent,
+    TResource,
+    typeof props
+  >(props);
 
   return (
     <EventCalendarProvider {...parameters}>
       <MonthView ref={forwardedRef} {...forwardedProps} />
     </EventCalendarProvider>
   );
-});
+}) as StandaloneMonthViewComponent;
+
+type StandaloneMonthViewComponent = <TEvent extends object, TResource extends object>(
+  props: StandaloneMonthViewProps<TEvent, TResource> & {
+    ref?: React.ForwardedRef<HTMLDivElement>;
+  },
+) => React.JSX.Element;
