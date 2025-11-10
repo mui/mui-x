@@ -106,6 +106,8 @@ export function getEndsSelectionFromRRule(rrule?: {
   return 'never';
 }
 
+// TODO: Once we can convert an rrule object to string, replace this logic with:
+// stringifyRrule(rruleA, adapter) === stringifyRrule(rruleB, adapter)
 export function isSameRRule(
   adapter: Adapter,
   rruleA?: RecurringEventRecurrenceRule,
