@@ -53,7 +53,7 @@ export function useEventOccurrencesWithDayGridPosition(
               i += 1;
             }
 
-            const durationInDays = diffIn(adapter, occurrence.end, day.value, 'days') + 1;
+            const durationInDays = diffIn(adapter, occurrence.end.value, day.value, 'days') + 1;
             position = {
               index: i,
               daySpan: Math.min(durationInDays, dayListSize - dayIndex), // Don't go past the day list end
