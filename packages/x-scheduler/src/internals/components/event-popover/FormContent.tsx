@@ -60,7 +60,6 @@ export default function FormContent(props: FormContentProps) {
     occurrence.rrule,
     occurrence.start,
   );
-  const color = useStore(store, schedulerEventSelectors.color, occurrence.id);
 
   // State hooks
   const [errors, setErrors] = React.useState<Form.Props['errors']>({});
@@ -75,7 +74,7 @@ export default function FormContent(props: FormContentProps) {
       endTime: fmtTime(occurrence.end),
       resourceId: occurrence.resource ?? null,
       allDay: !!occurrence.allDay,
-      colorId: color,
+      colorId: occurrence.color ?? null,
     };
   });
 
@@ -115,6 +114,9 @@ export default function FormContent(props: FormContentProps) {
     setControlled(newState);
   };
   const handleColorChange = (value: CalendarEventColor) => {
+    if (!value || value === controlled.colorId) {
+      return;
+    }
     const newState = { ...controlled, colorId: value };
     pushPlaceholder(newState);
     setControlled(newState);

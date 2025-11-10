@@ -101,6 +101,7 @@ describe('<EventPopoverContent />', () => {
     await user.click(await screen.findByRole('option', { name: /repeats daily/i }));
     await user.click(screen.getByRole('button', { name: /resource/i }));
     await user.click(await screen.findByRole('menuitemradio', { name: /work/i }));
+    await user.click(await screen.findByRole('menuitemradio', { name: /pink/i }));
     await user.click(screen.getByRole('button', { name: /save changes/i }));
 
     expect(onEventsChange.calledOnce).to.equal(true);
@@ -116,6 +117,7 @@ describe('<EventPopoverContent />', () => {
       allDay: true,
       rrule: { freq: 'DAILY', interval: 1 },
       resource: 'r1',
+      color: 'pink',
     };
 
     expect(updated).to.deep.equal(expectedUpdatedEvent);

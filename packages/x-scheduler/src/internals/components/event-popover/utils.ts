@@ -13,7 +13,7 @@ export interface ControlledValue {
   endTime: string;
   resourceId: CalendarResourceId | null;
   allDay: boolean;
-  colorId: CalendarEventColor;
+  colorId: CalendarEventColor | null;
 }
 
 export function computeRange(adapter: Adapter, next: ControlledValue) {

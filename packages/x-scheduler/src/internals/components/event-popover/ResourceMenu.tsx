@@ -16,7 +16,7 @@ interface ResourceSelectProps {
   resourceId: string | null;
   handleResourceChange: (value: CalendarResourceId) => void;
   handleColorChange: (value: CalendarEventColor) => void;
-  colorId: CalendarEventColor;
+  colorId: CalendarEventColor | null;
 }
 
 interface ResourceMenuTriggerContentProps {
@@ -101,6 +101,7 @@ export default function ResourceMenu(props: ResourceSelectProps) {
                     key={resource.value}
                     value={resource.value}
                     className="EventPopoverMenuItem"
+                    aria-label={resource.label}
                   >
                     <div className="EventPopoverMenuItemTitleWrapper">
                       <span
@@ -127,7 +128,12 @@ export default function ResourceMenu(props: ResourceSelectProps) {
                 className="ColorRadioGroup"
               >
                 {EVENT_COLORS.map((color) => (
-                  <Menu.RadioItem key={color} value={color} className="EventPopoverColorMenuItem">
+                  <Menu.RadioItem
+                    key={color}
+                    value={color}
+                    className="EventPopoverColorMenuItem"
+                    aria-label={color}
+                  >
                     <div
                       className={clsx(
                         'ColorRadioItemCircle',
