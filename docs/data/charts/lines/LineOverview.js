@@ -15,7 +15,6 @@ import {
 import { ChartsTooltip } from '@mui/x-charts-pro/ChartsTooltip';
 import { ChartsGrid } from '@mui/x-charts-pro/ChartsGrid';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
-import { ChartZoomSlider } from '@mui/x-charts-pro/ChartZoomSlider';
 import { ChartsClipPath } from '@mui/x-charts-pro/ChartsClipPath';
 import { DATA } from '../dataset/usUnempGdp';
 
@@ -178,7 +177,7 @@ export default function LineOverview() {
                   year: 'numeric',
                   month: 'short',
                 }),
-              zoom: { slider: { enabled: true } },
+              zoom: true,
             },
           ]}
           yAxis={[
@@ -203,9 +202,10 @@ export default function LineOverview() {
             },
           }}
           zoomInteractionConfig={{
-            zoom: ['brush', 'pinch', 'tapAndDrag'],
-            pan: ['drag', 'pressAndDrag'],
+          zoom: ['brush', 'doubleTapReset', 'wheel'],
+          pan: ['drag'],
           }}
+          showToolbar
         >
           <ChartsClipPath id={clipPathId} />
           <RecessionBands periods={recessions} />
@@ -221,7 +221,6 @@ export default function LineOverview() {
             trigger="axis"
             valueFormatter={(value) => `${value.toFixed(2)}%`}
           />
-          <ChartZoomSlider />
           <ChartsBrushOverlay />
         </ChartContainerPro>
       </Box>
