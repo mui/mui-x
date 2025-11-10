@@ -3,7 +3,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { useStore } from '@base-ui-components/utils/store';
 import { Popover } from '@base-ui-components/react/popover';
-import { CalendarEventOccurrence } from '@mui/x-scheduler-headless/models';
+import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import {
   schedulerEventSelectors,
@@ -21,7 +21,7 @@ import './EventPopover.css';
 import FormContent from './FormContent';
 import ReadonlyContent from './ReadonlyContent';
 
-const EventPopover = createPopover<CalendarEventOccurrence>({
+const EventPopover = createPopover<SchedulerEventOccurrence>({
   contextName: 'EventPopoverContext',
 });
 

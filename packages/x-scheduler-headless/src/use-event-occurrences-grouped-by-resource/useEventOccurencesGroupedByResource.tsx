@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store';
 import {
   SchedulerProcessedEvent,
-  CalendarEventOccurrence,
+  SchedulerEventOccurrence,
   CalendarResource,
   SchedulerValidDate,
 } from '../models';
@@ -43,7 +43,7 @@ export namespace useEventOccurrencesGroupedByResource {
 
   export type ReturnValue = {
     resource: CalendarResource;
-    occurrences: CalendarEventOccurrence[];
+    occurrences: SchedulerEventOccurrence[];
   }[];
 }
 
@@ -58,8 +58,8 @@ export function innerGetEventOccurrencesGroupedByResource(
   resources: readonly CalendarResource[],
   start: SchedulerValidDate,
   end: SchedulerValidDate,
-): { resource: CalendarResource; occurrences: CalendarEventOccurrence[] }[] {
-  const occurrencesGroupedByResource = new Map<string, CalendarEventOccurrence[]>();
+): { resource: CalendarResource; occurrences: SchedulerEventOccurrence[] }[] {
+  const occurrencesGroupedByResource = new Map<string, SchedulerEventOccurrence[]>();
 
   const occurrences = getOccurrencesFromEvents({ adapter, start, end, events, visibleResources });
 
