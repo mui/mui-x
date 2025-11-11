@@ -76,8 +76,8 @@ export function useBarPlotData(
           seriesId,
           dataIndex,
           layout: series[seriesId].layout,
-          xOrigin: xScale(0) ?? 0,
-          yOrigin: yScale(0) ?? 0,
+          xOrigin: Math.round(xScale(0) ?? 0),
+          yOrigin: Math.round(yScale(0) ?? 0),
           ...barDimensions,
           color: colorGetter(dataIndex),
           value: series[seriesId].data[dataIndex],
@@ -218,8 +218,8 @@ export function getBarDimensions(params: {
   const values = series.stackedData[dataIndex];
   const valueCoordinates = values.map((v) => (verticalLayout ? yScale(v)! : xScale(v)!));
 
-  const minValueCoord = Math.min(...valueCoordinates);
-  const maxValueCoord = Math.max(...valueCoordinates);
+  const minValueCoord = Math.round(Math.min(...valueCoordinates));
+  const maxValueCoord = Math.round(Math.max(...valueCoordinates));
 
   const barSize =
     seriesValue === 0 ? 0 : Math.max(series.minBarSize, maxValueCoord - minValueCoord);
