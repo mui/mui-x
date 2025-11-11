@@ -1842,7 +1842,7 @@ describe('recurring-event-utils', () => {
 
     it('should throw when the RRULE contains unsupported properties', () => {
       expect(() => parseRRuleString(adapter, 'FREQ=DAILY;FOO=bar')).to.throw(
-        'Scheduler:Unsupported RRULE property: "FOO"',
+        'Scheduler: Unsupported RRULE property: "FOO"',
       );
     });
 
