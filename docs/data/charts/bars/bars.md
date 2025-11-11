@@ -58,7 +58,7 @@ And a value of `-1` will make bars overlap on top of each other.
 
 ## Range bar
 
-You can create bar ranges by providing an array of two values for each data point and setting the series' `type` property to `'rangeBar'`.
+You can create range bars by providing an array of two values for each data point and setting the series' `type` property to `'rangeBar'`.
 
 {{"demo": "BasicRangeBar.js"}}
 
@@ -141,7 +141,7 @@ The bar charts use by priority:
 Learn more about the `colorMap` properties in the [Styling docs](/x/react-charts/styling/#values-color).
 
 :::warning
-The `colorMap` property does not work for the numerical axis of bar range charts (that is, the y-axis for vertical bar charts and the x-axis for horizontal bar charts).
+The `colorMap` property does not work for the numerical axis of range bar charts (that is, the y-axis for vertical bar charts and the x-axis for horizontal bar charts).
 :::
 
 {{"demo": "ColorScale.js"}}
@@ -309,8 +309,8 @@ Here's how the Bar Chart is composed:
 
 ### Range bar
 
-Similarly, you can use the `<RangeBarPlot />` component to render bar range series in a composed chart.
+Similarly, you can use the `<RangeBarPlot />` component to render range bar series in a composed chart.
 
-In the example below, we create a project schedule chart using bar ranges to represent task durations.
+In the example below, we create a project schedule chart using range bars to represent task durations.
 
 {{"demo": "RangeBarProjectSchedule.js"}}

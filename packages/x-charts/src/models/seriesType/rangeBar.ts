@@ -11,7 +11,7 @@ export interface RangeBarSeriesType
     CartesianSeriesType {
   type: 'rangeBar';
   /**
-   * Data associated to each bar range.
+   * Data associated to each range bar.
    */
   data?: ReadonlyArray<RangeBarValueType | null>;
   /**
@@ -39,7 +39,7 @@ export interface RangeBarSeriesType
 }
 
 /**
- * An object that allows to identify a bar range.
+ * An object that allows to identify a range bar.
  * Used for item interaction
  */
 export type RangeBarItemIdentifier = {

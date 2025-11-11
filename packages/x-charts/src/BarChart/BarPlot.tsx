@@ -39,8 +39,8 @@ export interface BarPlotProps {
    */
   borderRadius?: number;
   /**
-   * @deprecated Use `barLabel` in the chart series instead. This prop only works for bar series; bar range series are not supported.
-   * For bar range series support, use `barLabel` in the chart series instead.
+   * @deprecated Use `barLabel` in the chart series instead. This prop only works for bar series; range bar series are not supported.
+   * For range bar series support, use `barLabel` in the chart series instead.
    *
    * If provided, the function will be used to format the label of the bar.
    * It can be set to 'value' to display the current value.
