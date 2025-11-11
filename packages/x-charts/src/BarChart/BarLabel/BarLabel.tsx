@@ -99,9 +99,7 @@ function getTextAnchor({
   placement,
   layout,
   xOrigin,
-  yOrigin,
   x,
-  y,
 }: Pick<
   BarLabelProps,
   'layout' | 'placement' | 'x' | 'y' | 'xOrigin' | 'yOrigin'
