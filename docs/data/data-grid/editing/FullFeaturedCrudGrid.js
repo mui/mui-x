@@ -110,39 +110,39 @@ function ActionsCell(props) {
 
   return (
     <GridActionsCell {...props}>
-      {isInEditMode
-        ? [
-            <GridActionsCell.Item
-              icon={<SaveIcon />}
-              label="Save"
-              sx={{
-                color: 'primary.main',
-              }}
-              onClick={() => handleSaveClick(props.id)}
-            />,
-            <GridActionsCell.Item
-              icon={<CancelIcon />}
-              label="Cancel"
-              className="textPrimary"
-              onClick={() => handleCancelClick(props.id)}
-              color="inherit"
-            />,
-          ]
-        : [
-            <GridActionsCell.Item
-              icon={<EditIcon />}
-              label="Edit"
-              className="textPrimary"
-              onClick={() => handleEditClick(props.id)}
-              color="inherit"
-            />,
-            <GridActionsCell.Item
-              icon={<DeleteIcon />}
-              label="Delete"
-              onClick={() => handleDeleteClick(props.id)}
-              color="inherit"
-            />,
-          ]}
+      {isInEditMode ? (
+        <React.Fragment>
+          <GridActionsCell.Item
+            icon={<SaveIcon />}
+            label="Save"
+            material={{ sx: { color: 'primary.main' } }}
+            onClick={() => handleSaveClick(props.id)}
+          />
+          <GridActionsCell.Item
+            icon={<CancelIcon />}
+            label="Cancel"
+            className="textPrimary"
+            onClick={() => handleCancelClick(props.id)}
+            color="inherit"
+          />
+        </React.Fragment>
+      ) : (
+        <React.Fragment>
+          <GridActionsCell.Item
+            icon={<EditIcon />}
+            label="Edit"
+            className="textPrimary"
+            onClick={() => handleEditClick(props.id)}
+            color="inherit"
+          />
+          <GridActionsCell.Item
+            icon={<DeleteIcon />}
+            label="Delete"
+            onClick={() => handleDeleteClick(props.id)}
+            color="inherit"
+          />
+        </React.Fragment>
+      )}
     </GridActionsCell>
   );
 }

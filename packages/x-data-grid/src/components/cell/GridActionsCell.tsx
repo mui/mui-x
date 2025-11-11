@@ -21,7 +21,7 @@ interface TouchRippleActions {
 interface GridActionsCellProps extends Omit<GridRenderCellParams, 'api'> {
   api?: GridRenderCellParams['api'];
   position?: GridMenuProps['position'];
-  children: readonly React.ReactElement<GridActionsCellItemProps>[];
+  children: React.ReactNode;
 }
 
 function GridActionsCell(props: GridActionsCellProps) {
@@ -55,9 +55,24 @@ function GridActionsCell(props: GridActionsCellProps) {
   const buttonId = useId();
   const rootProps = useGridRootProps();
 
-  const actions =
-    children ??
-    (hasActions(colDef) ? colDef.getActions(apiRef.current.getRowParams(id)) : undefined);
+  const actions = React.useMemo(() => {
+    const actionsArray: React.ReactElement<GridActionsCellItemProps>[] = [];
+    React.Children.forEach(children, (child) => {
+      // Unwrap React.Fragment
+      if (React.isValidElement<GridActionsCellItemProps>(child)) {
+        if (child.type === React.Fragment) {
+          React.Children.forEach(child.props.children, (fragChild) => {
+            if (React.isValidElement<GridActionsCellItemProps>(fragChild)) {
+              actionsArray.push(fragChild);
+            }
+          });
+        } else {
+          actionsArray.push(child);
+        }
+      }
+    });
+    return actionsArray;
+  }, [children]);
 
   if (!actions) {
     throw new Error(
@@ -340,6 +355,19 @@ GridActionsCell.propTypes = {
 GridActionsCell.Item = GridActionsCellItem as React.FC<GridActionsCellItemProps>;
 export { GridActionsCell };
 
+// Temporary wrapper for backward compatibility.
+// Only used to support `getActions` method in `GridColDef`.
+// TODO(v9): Remove this wrapper and the default `renderCell` in gridActionsColDef
+function GridActionsCellWrapper(props: GridRenderCellParams) {
+  const { colDef, id } = props;
+  const apiRef = useGridApiContext();
+  const actions = hasActions(colDef)
+    ? colDef.getActions(apiRef.current.getRowParams(id))
+    : undefined;
+
+  return <GridActionsCell {...props}>{actions}</GridActionsCell>;
+}
+
 export const renderActionsCell = (params: GridRenderCellParams) => (
-  <GridActionsCell {...params}>{null as any}</GridActionsCell>
+  <GridActionsCellWrapper {...params} />
 );
