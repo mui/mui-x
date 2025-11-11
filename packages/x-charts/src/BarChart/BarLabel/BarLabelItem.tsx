@@ -78,7 +78,7 @@ export type BarLabelItemProps = Omit<BarLabelOwnerState, 'isFaded' | 'isHighligh
     barLabel?: 'value' | ((item: BarItem, context: BarLabelContext) => string | null | undefined);
     /**
      * The placement of the bar label.
-     * It controls whether the label is rendered center or outside the bar.
+     * It controls whether the label is rendered in the center or outside the bar.
      * @default 'center'
      */
     barLabelPlacement?: BarLabelProps['placement'];

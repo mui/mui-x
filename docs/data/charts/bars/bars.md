@@ -191,7 +191,7 @@ To do so, set a series' `barLabelPlacement` property to one of the following val
 
 :::info
 When using `outside` placement, if the label does not fit in the chart area, it will be clipped.
-To avoid this, you can decrease/increase the min/max respectively so that there's enough space for the labels.
+To avoid this, you can decrease/increase the axis min/max respectively so that there's enough space for the labels.
 :::
 
 ### Custom labels

@@ -57,7 +57,7 @@ export type BarLabelProps = Omit<
     height: number;
     /**
      * The placement of the bar label.
-     * It controls whether the label is rendered center or outside the bar.
+     * It controls whether the label is rendered in the center or outside the bar.
      * @default 'center'
      */
     placement?: 'center' | 'outside';
@@ -153,7 +153,7 @@ BarLabel.propTypes = {
   layout: PropTypes.oneOf(['horizontal', 'vertical']).isRequired,
   /**
    * The placement of the bar label.
-   * It controls whether the label is rendered center or outside the bar.
+   * It controls whether the label is rendered in the center or outside the bar.
    * @default 'center'
    */
   placement: PropTypes.oneOf(['center', 'outside']),
