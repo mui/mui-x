@@ -30,6 +30,7 @@ import {
   getWeekDayNumberFromCode,
   adjustRRuleForAllMove,
   parseRRuleString,
+  serializeRRule,
 } from './recurring-event-utils';
 import { diffIn } from '../use-adapter';
 import { mergeDateAndTime } from './date-utils';
@@ -1759,7 +1760,7 @@ describe('recurring-event-utils', () => {
     });
   });
 
-  describe('normalizeRRule', () => {
+  describe('parseRRuleString', () => {
     it('should return the same object if the input is already an object', () => {
       const input = { freq: 'DAILY', interval: 2 } as RecurringEventRecurrenceRule;
       const result = parseRRuleString(adapter, input);
@@ -1806,7 +1807,7 @@ describe('recurring-event-utils', () => {
     });
 
     it('should parse UNTIL correctly', () => {
-      const result = parseRRuleString(adapter, 'FREQ=DAILY;UNTIL=2025-03-15T00:00:00Z');
+      const result = parseRRuleString(adapter, 'FREQ=DAILY;UNTIL=20250315T000000Z');
       expect(adapter.isValid(result.until!)).to.equal(true);
     });
 
@@ -1874,6 +1875,92 @@ describe('recurring-event-utils', () => {
         byDay: ['MO', 'TU'],
         interval: 3,
       });
+    });
+  });
+
+  describe('serializeRRule', () => {
+    it('should serialize a simple DAILY rule', () => {
+      const rule = { freq: 'DAILY' as const };
+      const result = serializeRRule(adapter, rule);
+      expect(result).to.equal('FREQ=DAILY');
+    });
+
+    it('should include INTERVAL only when different from 1', () => {
+      const ruleWithInterval1 = { freq: 'DAILY' as const, interval: 1 };
+      const resultWithoutInterval = serializeRRule(adapter, ruleWithInterval1);
+      expect(resultWithoutInterval).to.equal('FREQ=DAILY');
+
+      const ruleWithInterval2 = { freq: 'DAILY' as const, interval: 2 };
+      const resultWithInterval = serializeRRule(adapter, ruleWithInterval2);
+      expect(resultWithInterval).to.equal('FREQ=DAILY;INTERVAL=2');
+    });
+
+    it('should serialize BYDAY correctly', () => {
+      const rule = {
+        freq: 'WEEKLY' as const,
+        byDay: ['MO', 'WE', 'FR'] as RecurringEventByDayValue[],
+      };
+      const result = serializeRRule(adapter, rule);
+      expect(result).to.equal('FREQ=WEEKLY;BYDAY=MO,WE,FR');
+    });
+
+    it('should serialize BYMONTHDAY correctly', () => {
+      const rule = { freq: 'MONTHLY' as const, byMonthDay: [5, 15, 28] };
+      const result = serializeRRule(adapter, rule);
+      expect(result).to.equal('FREQ=MONTHLY;BYMONTHDAY=5,15,28');
+    });
+
+    it('should serialize BYMONTH correctly', () => {
+      const rule = { freq: 'YEARLY' as const, byMonth: [1, 6, 12] };
+      const result = serializeRRule(adapter, rule);
+      expect(result).to.equal('FREQ=YEARLY;BYMONTH=1,6,12');
+    });
+
+    it('should serialize COUNT correctly', () => {
+      const rule = { freq: 'DAILY' as const, count: 5 };
+      const result = serializeRRule(adapter, rule);
+      expect(result).to.equal('FREQ=DAILY;COUNT=5');
+    });
+
+    it('should serialize UNTIL in RFC5545 UTC format', () => {
+      const until = adapter.date('2025-03-15T00:00:00');
+      const rule = { freq: 'DAILY' as const, until };
+      const result = serializeRRule(adapter, rule);
+      expect(result).to.equal('FREQ=DAILY;UNTIL=20250315T000000Z');
+    });
+
+    it('should combine multiple properties correctly', () => {
+      const until = adapter.date('2025-03-15T00:00:00Z');
+      const rule = {
+        freq: 'WEEKLY' as const,
+        interval: 2,
+        byDay: ['MO', 'FR'] as RecurringEventByDayValue[],
+        until,
+      };
+
+      const result = serializeRRule(adapter, rule);
+      expect(result).to.equal('FREQ=WEEKLY;INTERVAL=2;BYDAY=MO,FR;UNTIL=20250315T000000Z');
+    });
+
+    it('should handle empty BYDAY, BYMONTHDAY AND BYMONTHgracefully', () => {
+      const ruleWithEmptyByDay = { freq: 'WEEKLY' as const, byDay: [] };
+      const resultWithoutByDay = serializeRRule(adapter, ruleWithEmptyByDay);
+      expect(resultWithoutByDay).to.equal('FREQ=WEEKLY');
+
+      const ruleWithEmptyByMonthDay = { freq: 'MONTHLY' as const, byMonthDay: [] };
+      const resultWithoutByMonthDay = serializeRRule(adapter, ruleWithEmptyByMonthDay);
+      expect(resultWithoutByMonthDay).to.equal('FREQ=MONTHLY');
+
+      const ruleWithEmptyByMonth = { freq: 'YEARLY' as const, byMonth: [] };
+      const resultWithoutByMonth = serializeRRule(adapter, ruleWithEmptyByMonth);
+      expect(resultWithoutByMonth).to.equal('FREQ=YEARLY');
+    });
+
+    it('should round-trip correctly (parseRRuleString - serializeRRule)', () => {
+      const input = 'FREQ=WEEKLY;INTERVAL=2;BYDAY=MO,FR;UNTIL=20250315T000000Z';
+      const parsed = parseRRuleString(adapter, input);
+      const serialized = serializeRRule(adapter, parsed);
+      expect(serialized).to.equal(input);
     });
   });
 });

@@ -1147,3 +1147,45 @@ export function parseRRuleString(
 
   return rrule;
 }
+
+/**
+ * Serializes a RecurringEventRecurrenceRule object
+ * into a RRULE string (RFC5545).
+ */
+export function serializeRRule(adapter: Adapter, rule: RecurringEventRecurrenceRule): string {
+  const parts: string[] = [];
+
+  parts.push(`FREQ=${rule.freq}`);
+
+  const interval = rule.interval ?? 1;
+  if (interval !== 1) {
+    parts.push(`INTERVAL=${interval}`);
+  }
+
+  if (rule.byDay?.length) {
+    parts.push(`BYDAY=${rule.byDay.join(',')}`);
+  }
+
+  if (rule.byMonthDay?.length) {
+    parts.push(`BYMONTHDAY=${rule.byMonthDay.join(',')}`);
+  }
+
+  if (rule.byMonth?.length) {
+    parts.push(`BYMONTH=${rule.byMonth.join(',')}`);
+  }
+
+  if (typeof rule.count === 'number') {
+    parts.push(`COUNT=${rule.count}`);
+  }
+
+  if (rule.until) {
+    const utcDate = adapter.setTimezone(rule.until, 'UTC');
+
+    // RFC5545 format: YYYYMMDDTHHmmssZ
+    const untilIso = adapter.formatByString(utcDate, "yyyyMMdd'T'HHmmss'Z'");
+
+    parts.push(`UNTIL=${untilIso}`);
+  }
+
+  return parts.join(';');
+}
