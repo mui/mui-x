@@ -12,12 +12,12 @@ import {
   UseChartProExportSignature,
 } from '../internals/plugins/useChartProExport';
 
-export type RadarChartProPluginsSignatures = [
-  UseChartPolarAxisSignature,
+export type RadarChartProPluginSignatures = [
   UseChartInteractionSignature,
+  UseChartPolarAxisSignature,
   UseChartHighlightSignature,
   UseChartProExportSignature,
 ];
 
-export const RADAR_CHART_PRO_PLUGINS: ConvertSignaturesIntoPlugins<RadarChartProPluginsSignatures> =
-  [useChartPolarAxis, useChartInteraction, useChartHighlight, useChartProExport];
+export const RADAR_CHART_PRO_PLUGINS: ConvertSignaturesIntoPlugins<RadarChartProPluginSignatures> =
+  [useChartInteraction, useChartPolarAxis, useChartHighlight, useChartProExport];

@@ -173,6 +173,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
   const cellAggregationResult = config.hooks.useCellAggregationResult(rowId, field);
   const cellMode: GridCellModes = editCellState ? GridCellModes.Edit : GridCellModes.View;
 
+  const { value: forcedValue, formattedValue: forcedFormattedValue } = cellAggregationResult || {};
   const cellParams: GridCellParams<any, any, any, any> = apiRef.current.getCellParamsForRow<
     any,
     any,
@@ -190,15 +191,18 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
       const focus = gridFocusCellSelector(apiRef);
       return focus?.id === rowId && focus.field === field;
     }),
+    value: forcedValue,
+    formattedValue: forcedFormattedValue,
   });
   cellParams.api = apiRef.current;
 
-  if (cellAggregationResult) {
-    cellParams.value = cellAggregationResult.value;
-    cellParams.formattedValue = column.valueFormatter
-      ? column.valueFormatter(cellParams.value as never, row, column, apiRef)
-      : cellParams.value;
-  }
+  // Subscribe to changes of the `isCellEditable` API result to ensure cells re-render.
+  // We don't use the result.
+  // Subscription will trigger a new call of `getCellParamsForRow` above which will recompute the correct value of `isEditable`.
+  // This is to ensure both of the following cases work:
+  // - https://github.com/mui/mui-x/issues/19732
+  // - https://github.com/mui/mui-x/issues/20143
+  useGridSelector(apiRef, () => apiRef.current.isCellEditable(cellParams));
 
   const isSelected = useGridSelector(apiRef, () =>
     apiRef.current.unstable_applyPipeProcessors('isCellSelected', false, {

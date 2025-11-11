@@ -5,10 +5,8 @@
       "description": "The configuration of axes highlight. Default is set to &#39;band&#39; in the bar direction. Depends on <code>layout</code> prop.",
       "seeMoreText": "See {{link}} for more details."
     },
-    "barLabel": {
-      "description": "If provided, the function will be used to format the label of the bar. It can be set to &#39;value&#39; to display the current value."
-    },
     "borderRadius": { "description": "Defines the border radius of the bar element." },
+    "brushConfig": { "description": "Configuration for the brush interaction." },
     "colors": { "description": "Color palette used to colorize multiple series." },
     "dataset": {
       "description": "An array of objects that can be used to populate series and axes data using their <code>dataKey</code> property."

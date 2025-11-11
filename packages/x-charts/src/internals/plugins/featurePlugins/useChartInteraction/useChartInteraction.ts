@@ -1,7 +1,11 @@
 import useEventCallback from '@mui/utils/useEventCallback';
 import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
 import { ChartPlugin } from '../../models';
-import { Coordinate, UseChartInteractionSignature } from './useChartInteraction.types';
+import {
+  Coordinate,
+  InteractionUpdateSource,
+  UseChartInteractionSignature,
+} from './useChartInteraction.types';
 import {
   ChartItemIdentifier,
   ChartSeriesType,
@@ -10,83 +14,57 @@ import {
 
 export const useChartInteraction: ChartPlugin<UseChartInteractionSignature> = ({ store }) => {
   const cleanInteraction = useEventCallback(function cleanInteraction() {
-    store.update((prev) => {
-      return {
-        ...prev,
-        interaction: { pointer: null, item: null },
-      };
-    });
+    store.set('interaction', { ...store.state.interaction, pointer: null, item: null });
   });
 
   const removeItemInteraction = useEventCallback(function removeItemInteraction(
     itemToRemove?: ChartItemIdentifier<ChartSeriesType>,
   ) {
-    store.update((prev) => {
-      const prevItem = prev.interaction.item;
+    const prevItem = store.state.interaction.item;
 
-      if (!itemToRemove) {
-        // Remove without taking care of the current item
-        return prevItem === null
-          ? prev
-          : {
-              ...prev,
-              interaction: {
-                ...prev.interaction,
-                item: null,
-              },
-            };
+    if (!itemToRemove) {
+      // Remove without taking care of the current item
+      if (prevItem !== null) {
+        store.set('interaction', { ...store.state.interaction, item: null });
       }
+      return;
+    }
 
-      if (
-        prevItem === null ||
-        Object.keys(itemToRemove).some(
-          (key) =>
-            itemToRemove[key as keyof typeof itemToRemove] !==
-            prevItem[key as keyof typeof prevItem],
-        )
-      ) {
-        // The current item is already different from the one to remove. No need to clean it.
-        return prev;
-      }
+    if (
+      prevItem === null ||
+      Object.keys(itemToRemove).some(
+        (key) =>
+          itemToRemove[key as keyof typeof itemToRemove] !== prevItem[key as keyof typeof prevItem],
+      )
+    ) {
+      // The current item is already different from the one to remove. No need to clean it.
+      return;
+    }
 
-      return {
-        ...prev,
-        interaction: {
-          ...prev.interaction,
-          item: null,
-        },
-      };
-    });
+    store.set('interaction', { ...store.state.interaction, item: null });
   });
 
   const setItemInteraction = useEventCallback(function setItemInteraction(
     newItem: ChartItemIdentifierWithData<ChartSeriesType>,
+    context: { interaction: InteractionUpdateSource },
   ) {
-    store.update((prev) => {
-      if (fastObjectShallowCompare(prev.interaction.item, newItem)) {
-        return prev;
-      }
-
-      return {
-        ...prev,
-        interaction: {
-          ...prev.interaction,
-          item: newItem,
-        },
-      };
-    });
+    if (!fastObjectShallowCompare(store.state.interaction.item, newItem)) {
+      store.set('interaction', {
+        ...store.state.interaction,
+        lastUpdate: context.interaction,
+        item: newItem,
+      });
+    }
   });
 
   const setPointerCoordinate = useEventCallback(function setPointerCoordinate(
     coordinate: Coordinate | null,
   ) {
-    store.update((prev) => ({
-      ...prev,
-      interaction: {
-        ...prev.interaction,
-        pointer: coordinate,
-      },
-    }));
+    store.set('interaction', {
+      ...store.state.interaction,
+      pointer: coordinate,
+      lastUpdate: coordinate !== null ? 'pointer' : store.state.interaction.lastUpdate,
+    });
   });
 
   return {
@@ -100,7 +78,7 @@ export const useChartInteraction: ChartPlugin<UseChartInteractionSignature> = ({
 };
 
 useChartInteraction.getInitialState = () => ({
-  interaction: { item: null, pointer: null },
+  interaction: { item: null, pointer: null, lastUpdate: 'pointer' },
 });
 
 useChartInteraction.params = {};

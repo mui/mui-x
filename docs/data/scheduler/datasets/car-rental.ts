@@ -1,12 +1,12 @@
 // Fake data of a car rental company
 import { DateTime } from 'luxon';
-import { CalendarEvent, CalendarResource } from '@mui/x-scheduler/primitives/models';
+import { SchedulerEvent, CalendarResource } from '@mui/x-scheduler/models';
 
 export const defaultVisibleDate = DateTime.fromISO('2025-07-01T00:00:00');
 
 const START_OF_FIRST_WEEK = defaultVisibleDate.startOf('week');
 
-export const initialEvents: CalendarEvent[] = [
+export const initialEvents: SchedulerEvent[] = [
   {
     id: 'rental-1',
     start: START_OF_FIRST_WEEK.set({ hour: 9 }),
@@ -66,8 +66,8 @@ export const initialEvents: CalendarEvent[] = [
 ];
 
 export const resources: CalendarResource[] = [
-  { name: 'Fiat 500', id: 'fiat-500', eventColor: 'indigo' },
-  { name: 'Volkswagen ID3', id: 'volkswagen-id3', eventColor: 'blue' },
-  { name: 'Peugeot 3008', id: 'peugeot-3008', eventColor: 'jade' },
-  { name: 'Cupra Leon', id: 'cupra-leon', eventColor: 'orange' },
+  { title: 'Fiat 500', id: 'fiat-500', eventColor: 'indigo' },
+  { title: 'Volkswagen ID3', id: 'volkswagen-id3', eventColor: 'blue' },
+  { title: 'Peugeot 3008', id: 'peugeot-3008', eventColor: 'jade' },
+  { title: 'Cupra Leon', id: 'cupra-leon', eventColor: 'orange' },
 ];

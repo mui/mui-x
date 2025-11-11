@@ -27,7 +27,7 @@ import { ChartDataProvider } from '../ChartDataProvider';
 import { ChartsSurface } from '../ChartsSurface';
 import { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
 import { ChartsWrapper } from '../ChartsWrapper';
-import { BarChartPluginsSignatures } from './BarChart.plugins';
+import { BarChartPluginSignatures } from './BarChart.plugins';
 
 export interface BarChartSlots
   extends ChartsAxisSlots,
@@ -49,7 +49,7 @@ export interface BarChartSlotProps
 export type BarSeries = MakeOptional<BarSeriesType, 'type'>;
 export interface BarChartProps
   extends Omit<
-      ChartContainerProps<'bar', BarChartPluginsSignatures>,
+      ChartContainerProps<'bar', BarChartPluginSignatures>,
       'series' | 'plugins' | 'zAxis' | 'experimentalFeatures'
     >,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
@@ -136,7 +136,7 @@ const BarChart = React.forwardRef(function BarChart(
   const Toolbar = props.slots?.toolbar;
 
   return (
-    <ChartDataProvider<'bar', BarChartPluginsSignatures> {...chartDataProviderProps}>
+    <ChartDataProvider<'bar', BarChartPluginSignatures> {...chartDataProviderProps}>
       <ChartsWrapper {...chartsWrapperProps}>
         {props.showToolbar && Toolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
@@ -176,6 +176,7 @@ BarChart.propTypes = {
     y: PropTypes.oneOf(['band', 'line', 'none']),
   }),
   /**
+   * @deprecated Use `barLabel` in the chart series instead.
    * If provided, the function will be used to format the label of the bar.
    * It can be set to 'value' to display the current value.
    * @param {BarItem} item The item to format.
@@ -187,6 +188,14 @@ BarChart.propTypes = {
    * Defines the border radius of the bar element.
    */
   borderRadius: PropTypes.number,
+  /**
+   * Configuration for the brush interaction.
+   */
+  brushConfig: PropTypes.shape({
+    enabled: PropTypes.bool,
+    preventHighlight: PropTypes.bool,
+    preventTooltip: PropTypes.bool,
+  }),
   children: PropTypes.node,
   className: PropTypes.string,
   /**
@@ -205,6 +214,7 @@ BarChart.propTypes = {
    * @default false
    */
   disableAxisListener: PropTypes.bool,
+  enableKeyboardNavigation: PropTypes.bool,
   /**
    * Option to display a cartesian grid in the background.
    */
@@ -392,8 +402,6 @@ BarChart.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
         offset: PropTypes.number,
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
@@ -471,8 +479,6 @@ BarChart.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
         offset: PropTypes.number,
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
@@ -534,8 +540,8 @@ BarChart.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.number,
+        min: PropTypes.number,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
@@ -598,8 +604,8 @@ BarChart.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.number,
+        min: PropTypes.number,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
@@ -661,8 +667,8 @@ BarChart.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.number,
+        min: PropTypes.number,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
@@ -724,8 +730,8 @@ BarChart.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.number,
+        min: PropTypes.number,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
@@ -787,8 +793,18 @@ BarChart.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
+        min: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
         offset: PropTypes.number,
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
@@ -850,8 +866,18 @@ BarChart.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
+        min: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
         offset: PropTypes.number,
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
@@ -913,8 +939,8 @@ BarChart.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.number,
+        min: PropTypes.number,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
@@ -1002,8 +1028,6 @@ BarChart.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
         offset: PropTypes.number,
         position: PropTypes.oneOf(['left', 'none', 'right']),
         reverse: PropTypes.bool,
@@ -1080,8 +1104,6 @@ BarChart.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
         offset: PropTypes.number,
         position: PropTypes.oneOf(['left', 'none', 'right']),
         reverse: PropTypes.bool,
@@ -1142,8 +1164,8 @@ BarChart.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.number,
+        min: PropTypes.number,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['left', 'none', 'right']),
         reverse: PropTypes.bool,
@@ -1205,8 +1227,8 @@ BarChart.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.number,
+        min: PropTypes.number,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['left', 'none', 'right']),
         reverse: PropTypes.bool,
@@ -1267,8 +1289,8 @@ BarChart.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.number,
+        min: PropTypes.number,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['left', 'none', 'right']),
         reverse: PropTypes.bool,
@@ -1329,8 +1351,8 @@ BarChart.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.number,
+        min: PropTypes.number,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['left', 'none', 'right']),
         reverse: PropTypes.bool,
@@ -1391,8 +1413,18 @@ BarChart.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
+        min: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
         offset: PropTypes.number,
         position: PropTypes.oneOf(['left', 'none', 'right']),
         reverse: PropTypes.bool,
@@ -1453,8 +1485,18 @@ BarChart.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
+        min: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
         offset: PropTypes.number,
         position: PropTypes.oneOf(['left', 'none', 'right']),
         reverse: PropTypes.bool,
@@ -1515,8 +1557,8 @@ BarChart.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.number,
+        min: PropTypes.number,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['left', 'none', 'right']),
         reverse: PropTypes.bool,

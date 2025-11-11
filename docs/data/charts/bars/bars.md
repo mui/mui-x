@@ -8,6 +8,20 @@ components: BarChart, BarChartPro, BarElement, BarPlot, ChartsGrid, BarLabel
 
 <p class="description">Bar charts express quantities through a bar's length, using a common baseline.</p>
 
+## Overview
+
+Bar charts are ideal for comparing discrete categories.
+They excel at visualizing differences in magnitude across categories (or a group of categories), highlight trends, and compare proportions at a glance.
+The categories can represent progressive values such as time periods, or independent groups such as products, countries, age brackets, etc.
+Here are the basic requirements to create a bar chart:
+
+- One categorical dimension (x-axis for vertical bars, y-axis for horizontal bars)
+- One or more numerical metric for length of each bar
+
+The horizontal bar chart below compares voter turnout in some European countries:
+
+{{"demo": "ShinyBarChartHorizontal.js"}}
+
 ## Basics
 
 Bar charts series should contain a `data` property containing an array of values.
@@ -156,10 +170,12 @@ The second one is shown in the bars themselves that display the part of the grad
 
 ## Labels
 
-You can display labels on the bars.
-To do so, the `BarChart` or `BarPlot` accepts a `barLabel` prop.
-It can either get a function that gets the bar item and some context.
-Or you can pass `'value'` to display the raw value of the bar.
+You can display labels on the bars. This can be useful to show the value of each bar directly on the chart.
+
+If you provide `'value'` to the `barLabel` property of a bar series, the value of that bar is shown.
+Alternatively, the `barLabel` property accepts a function that is called with the bar item and context about the bar.
+
+In the example below, the value of the first series is displayed using the default formatter, and format the value of the second series as US dollars. The labels of the third series are hidden.
 
 {{"demo": "BarLabel.js"}}
 
@@ -217,7 +233,7 @@ Note that `onAxisClick` can handle both bar and line series if you mix them.
 
 ## Animation
 
-Chart containers respect [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion), but you can also disable animations manually by setting the `skipAnimation` prop to `true`.
+Chart containers respect [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/prefers-reduced-motion), but you can also disable animations manually by setting the `skipAnimation` prop to `true`.
 
 When `skipAnimation` is enabled, the chart renders without any animations.
 
@@ -259,3 +275,5 @@ Here's how the Bar Chart is composed:
   </ChartsWrapper>
 </ChartDataProvider>
 ```
+
+{{"demo": "BarScatterCompostion.js"}}

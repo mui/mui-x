@@ -1,3 +1,5 @@
+import { GridBaseColDef } from './colDef/gridColDef';
+
 /**
  * Filter item definition interface.
  * @demos
@@ -12,7 +14,7 @@ export interface GridFilterItem {
   /**
    * The column from which we want to filter the rows.
    */
-  field: string;
+  field: GridBaseColDef['field'];
   /**
    * The filtering value.
    * The operator filtering function will decide for each row if the row values is correct compared to this value.
@@ -20,8 +22,31 @@ export interface GridFilterItem {
   value?: any;
   /**
    * The name of the operator we want to apply.
+   * A custom operator is supported by providing any string value.
    */
-  operator: string;
+  operator:
+    | 'contains'
+    | 'doesNotContain'
+    | 'equals'
+    | 'doesNotEqual'
+    | 'startsWith'
+    | 'endsWith'
+    | '='
+    | '!='
+    | '>'
+    | '>='
+    | '<'
+    | '<='
+    | 'is'
+    | 'not'
+    | 'after'
+    | 'onOrAfter'
+    | 'before'
+    | 'onOrBefore'
+    | 'isEmpty'
+    | 'isNotEmpty'
+    | 'isAnyOf'
+    | (string & {});
 }
 
 enum GridLogicOperator {

@@ -1,7 +1,8 @@
 <ScatterChart
   series={[
-    { type: 'scatter', label: 'Var A', data: data.slice(0, 25) },
-    { type: 'scatter', label: 'Var B', data: data.slice(25) },
+    { label: 'Var A', datasetKeys: { id: 'id', x: 'x1', y: 'y1' } },
+    { label: 'Var B', datasetKeys: { id: 'id', x: 'x2', y: 'y2' } },
   ]}
+  dataset={dataset}
   height={300}
 />

@@ -1,8 +1,9 @@
 import type { GridGetRowsParams, GridGetRowsResponse } from '../../../models/gridDataSource';
 
 export enum DataSourceRowsUpdateStrategy {
-  Default = 'set-new-rows',
+  Default = 'set-flat-rows',
   LazyLoading = 'replace-row-range',
+  GroupedData = 'set-grouped-rows',
 }
 
 /**
@@ -80,9 +81,8 @@ export class CacheChunkManager {
 
     return responses.reduce(
       (acc, response) => ({
+        ...response,
         rows: [...acc.rows, ...response.rows],
-        rowCount: response.rowCount,
-        pageInfo: response.pageInfo,
       }),
       { rows: [], rowCount: 0, pageInfo: {} },
     );

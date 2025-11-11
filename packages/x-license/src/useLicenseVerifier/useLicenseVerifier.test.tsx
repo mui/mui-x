@@ -96,89 +96,92 @@ describe.skipIf(!isJSDOM)('useLicenseVerifier', () => {
           </ErrorBoundary>,
         );
       }).to.toErrorDev([
-        'MUI X: Expired license key',
-        reactMajor < 19 && 'MUI X: Expired license key',
+        reactMajor >= 19 && 'MUI X: Expired license key',
         reactMajor < 19 && 'The above error occurred in the <TestComponent> component',
       ]);
       expect((errorRef.current as any).errors[0].toString()).to.match(/MUI X: Expired license key/);
     });
 
-    it('should throw if the license is not covering charts and tree-view', () => {
-      // Avoid Karma "Invalid left-hand side in assignment" SyntaxError
-      // eslint-disable-next-line no-useless-concat
-      process.env['NODE_' + 'ENV'] = 'development';
-
-      const licenseKey = generateLicense({
-        expiryDate: new Date(3001, 0, 0, 0, 0, 0, 0),
-        orderNumber: '123',
-        planScope: 'pro',
-        licenseModel: 'subscription',
+    const planCombinations = [
+      {
         planVersion: 'initial',
-      });
-
-      LicenseInfo.setLicenseKey(licenseKey);
-
-      expect(() => {
-        render(<TestComponent packageName={'x-charts-pro'} />);
-      }).to.toErrorDev(['MUI X: Component not included in your license.']);
-
-      // TODO: CHARTS-PREMIUM: Define how license will work for x-charts-premium
-
-      expect(() => {
-        render(<TestComponent packageName={'x-tree-view-pro'} />);
-      }).to.toErrorDev(['MUI X: Component not included in your license.']);
-    });
-
-    it('should not throw if the license is covering charts and tree-view', () => {
-      // Avoid Karma "Invalid left-hand side in assignment" SyntaxError
-      // eslint-disable-next-line no-useless-concat
-      process.env['NODE_' + 'ENV'] = 'development';
-
-      const licenseKey = generateLicense({
-        expiryDate: new Date(3001, 0, 0, 0, 0, 0, 0),
-        orderNumber: '123',
         planScope: 'pro',
-        licenseModel: 'subscription',
-        planVersion: 'Q3-2024',
-      });
-
-      LicenseInfo.setLicenseKey(licenseKey);
-
-      expect(() => {
-        render(<TestComponent packageName={'x-charts-pro'} />);
-      }).not.toErrorDev();
-
-      expect(() => {
-        render(<TestComponent packageName={'x-tree-view-pro'} />);
-      }).not.toErrorDev();
-    });
-
-    it('should not throw for existing pro and premium packages', () => {
-      // Avoid Karma "Invalid left-hand side in assignment" SyntaxError
-      // eslint-disable-next-line no-useless-concat
-      process.env['NODE_' + 'ENV'] = 'development';
-
-      const licenseKey = generateLicense({
-        expiryDate: new Date(3001, 0, 0, 0, 0, 0, 0),
-        orderNumber: '123',
+        ok: ['x-data-grid-pro', 'x-date-pickers-pro'],
+        notOk: ['x-charts-premium', 'x-data-grid-premium'],
+        notInInitial: ['x-charts-pro', 'x-tree-view-pro'],
+      },
+      {
+        planVersion: 'initial',
         planScope: 'premium',
-        licenseModel: 'subscription',
+        ok: [
+          'x-data-grid-pro',
+          'x-data-grid-premium',
+          'x-date-pickers-pro',
+          'x-charts-pro',
+          'x-charts-premium',
+          'x-tree-view-pro',
+        ],
+        notOk: [],
+        notInInitial: [],
+      },
+      {
         planVersion: 'Q3-2024',
-      });
+        planScope: 'pro',
+        ok: ['x-data-grid-pro', 'x-date-pickers-pro', 'x-charts-pro', 'x-tree-view-pro'],
+        notOk: ['x-charts-premium', 'x-data-grid-premium'],
+        notInInitial: [],
+      },
+      {
+        planVersion: 'Q3-2024',
+        planScope: 'premium',
+        ok: [
+          'x-data-grid-pro',
+          'x-data-grid-premium',
+          'x-date-pickers-pro',
+          'x-charts-pro',
+          'x-charts-premium',
+          'x-tree-view-pro',
+        ],
+        notOk: [],
+        notInInitial: [],
+      },
+    ] as const;
 
-      LicenseInfo.setLicenseKey(licenseKey);
+    it.each(planCombinations)(
+      'should work for plan $planVersion with scope $planScope',
+      ({ planVersion, planScope, ok, notOk, notInInitial }) => {
+        // Avoid Karma "Invalid left-hand side in assignment" SyntaxError
+        // eslint-disable-next-line no-useless-concat
+        process.env['NODE_' + 'ENV'] = 'development';
 
-      expect(() => {
-        render(<TestComponent packageName={'x-data-grid-pro'} />);
-      }).not.toErrorDev();
+        const licenseKey = generateLicense({
+          expiryDate: new Date(3001, 0, 0, 0, 0, 0, 0),
+          orderNumber: '123',
+          planScope,
+          licenseModel: 'subscription',
+          planVersion,
+        });
 
-      expect(() => {
-        render(<TestComponent packageName={'x-data-grid-premium'} />);
-      }).not.toErrorDev();
+        LicenseInfo.setLicenseKey(licenseKey);
 
-      expect(() => {
-        render(<TestComponent packageName={'x-date-pickers-pro'} />);
-      }).not.toErrorDev();
-    });
+        ok.forEach((packageName) => {
+          expect(() => {
+            render(<TestComponent packageName={packageName} />);
+          }, packageName).not.toErrorDev();
+        });
+
+        notOk.forEach((packageName) => {
+          expect(() => {
+            render(<TestComponent packageName={packageName} />);
+          }, packageName).to.toErrorDev(['MUI X: License key plan mismatch.']);
+        });
+
+        notInInitial.forEach((packageName) => {
+          expect(() => {
+            render(<TestComponent packageName={packageName} />);
+          }, packageName).to.toErrorDev(['MUI X: Component not included in your license.']);
+        });
+      },
+    );
   });
 });

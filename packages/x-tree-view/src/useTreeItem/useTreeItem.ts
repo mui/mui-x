@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useStore } from '@mui/x-internals/store';
 import { EventHandlers } from '@mui/utils/types';
 import extractEventHandlers from '@mui/utils/extractEventHandlers';
-import useForkRef from '@mui/utils/useForkRef';
+import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { TreeViewCancellableEvent } from '../models';
 import {
   UseTreeItemParameters,
@@ -65,12 +65,11 @@ export const useTreeItem = <
   const { interactions, status } = useTreeItemUtils({ itemId, children });
   const rootRefObject = React.useRef<HTMLLIElement>(null);
   const contentRefObject = React.useRef<HTMLDivElement>(null);
-  const handleRootRef = useForkRef(rootRef, pluginRootRef, rootRefObject)!;
-  const handleContentRef = useForkRef(contentRef, contentRefObject)!;
+  const handleRootRef = useMergedRefs(rootRef, pluginRootRef, rootRefObject)!;
+  const handleContentRef = useMergedRefs(contentRef, contentRefObject)!;
   const checkboxRef = React.useRef<HTMLButtonElement>(null);
 
   const treeId = useStore(store, idSelectors.treeId);
-  const isSelectionEnabledForItem = useStore(store, selectionSelectors.canItemBeSelected, itemId);
   const isCheckboxSelectionEnabled = useStore(store, selectionSelectors.isCheckboxSelectionEnabled);
   const idAttribute = generateTreeItemIdAttribute({ itemId, treeId, id });
   const shouldBeAccessibleWithTab = useStore(
@@ -205,19 +204,6 @@ export const useTreeItem = <
       ...extractEventHandlers(externalProps),
     };
 
-    // https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
-    let ariaSelected: boolean | undefined;
-    if (status.selected) {
-      // - each selected node has aria-selected set to true.
-      ariaSelected = true;
-    } else if (!isSelectionEnabledForItem) {
-      // - if the tree contains nodes that are not selectable, aria-selected is not present on those nodes.
-      ariaSelected = undefined;
-    } else {
-      // - all nodes that are selectable but not selected have aria-selected set to false.
-      ariaSelected = false;
-    }
-
     const props: UseTreeItemRootSlotPropsFromUseTreeItem = {
       ...externalEventHandlers,
       ref: handleRootRef,
@@ -225,7 +211,6 @@ export const useTreeItem = <
       tabIndex: shouldBeAccessibleWithTab ? 0 : -1,
       id: idAttribute,
       'aria-expanded': status.expandable ? status.expanded : undefined,
-      'aria-selected': ariaSelected,
       'aria-disabled': status.disabled || undefined,
       ...externalProps,
       style: {

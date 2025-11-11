@@ -10,9 +10,9 @@ import { useSelector } from '../internals/store/useSelector';
 import { D3Scale } from '../models/axis';
 import { useItemHighlightedGetter } from '../hooks/useItemHighlightedGetter';
 import {
-  selectorChartsVoronoiIsVoronoiEnabled,
-  UseChartVoronoiSignature,
-} from '../internals/plugins/featurePlugins/useChartVoronoi';
+  selectorChartsIsVoronoiEnabled,
+  UseChartClosestPointSignature,
+} from '../internals/plugins/featurePlugins/useChartClosestPoint';
 import { ScatterMarker } from './ScatterMarker';
 import { ColorGetter } from '../internals/plugins/models/seriesConfig';
 import { ScatterClasses, useUtilityClasses } from './scatterClasses';
@@ -20,13 +20,19 @@ import { useScatterPlotData } from './useScatterPlotData';
 import { useChartContext } from '../context/ChartProvider';
 import { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
 import { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
+import { useIsItemFocusedGetter } from '../hooks/useIsItemFocusedGetter';
 
 export interface ScatterProps {
   series: DefaultizedScatterSeriesType;
   xScale: D3Scale;
   yScale: D3Scale;
   color: string;
-  colorGetter?: ColorGetter<'scatter'>;
+  /**
+   * Function to get the color of a scatter item given its data index.
+   * The data index argument is optional. If not provided, the color for the entire series is returned.
+   * If provided, the color for the specific scatter item is returned.
+   */
+  colorGetter: ColorGetter<'scatter'>;
   /**
    * Callback fired when clicking on a scatter item.
    * @param {MouseEvent} event Mouse event recorded on the `<svg/>` element.
@@ -60,7 +66,6 @@ function Scatter(props: ScatterProps) {
     series,
     xScale,
     yScale,
-    color,
     colorGetter,
     onItemClick,
     classes: inClasses,
@@ -70,11 +75,12 @@ function Scatter(props: ScatterProps) {
 
   const { instance } =
     useChartContext<[UseChartInteractionSignature, UseChartHighlightSignature]>();
-  const store = useStore<[UseChartVoronoiSignature]>();
-  const isVoronoiEnabled = useSelector(store, selectorChartsVoronoiIsVoronoiEnabled);
+  const store = useStore<[UseChartClosestPointSignature]>();
+  const isVoronoiEnabled = useSelector(store, selectorChartsIsVoronoiEnabled);
 
   const skipInteractionHandlers = isVoronoiEnabled || series.disableHover;
   const { isFaded, isHighlighted } = useItemHighlightedGetter();
+  const isFocused = useIsItemFocusedGetter();
 
   const scatterPlotData = useScatterPlotData(series, xScale, yScale, instance.isPointInside);
 
@@ -93,15 +99,19 @@ function Scatter(props: ScatterProps) {
 
   return (
     <g data-series={series.id} className={classes.root}>
-      {scatterPlotData.map((dataPoint, i) => {
+      {scatterPlotData.map((dataPoint) => {
         const isItemHighlighted = isHighlighted(dataPoint);
         const isItemFaded = !isItemHighlighted && isFaded(dataPoint);
-
+        const isItemFocused = isFocused({
+          seriesType: 'scatter',
+          seriesId: series.id,
+          dataIndex: dataPoint.dataIndex,
+        });
         return (
           <Marker
             key={dataPoint.id ?? dataPoint.dataIndex}
             dataIndex={dataPoint.dataIndex}
-            color={colorGetter ? colorGetter(i) : color}
+            color={colorGetter(dataPoint.dataIndex)}
             isHighlighted={isItemHighlighted}
             isFaded={isItemFaded}
             x={dataPoint.x}
@@ -117,6 +127,7 @@ function Scatter(props: ScatterProps) {
             }
             data-highlighted={isItemHighlighted || undefined}
             data-faded={isItemFaded || undefined}
+            data-focused={isItemFocused || undefined}
             {...(skipInteractionHandlers
               ? undefined
               : getInteractionItemProps(instance, dataPoint))}
@@ -135,7 +146,12 @@ Scatter.propTypes = {
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
   color: PropTypes.string.isRequired,
-  colorGetter: PropTypes.func,
+  /**
+   * Function to get the color of a scatter item given its data index.
+   * The data index argument is optional. If not provided, the color for the entire series is returned.
+   * If provided, the color for the specific scatter item is returned.
+   */
+  colorGetter: PropTypes.func.isRequired,
   /**
    * Callback fired when clicking on a scatter item.
    * @param {MouseEvent} event Mouse event recorded on the `<svg/>` element.

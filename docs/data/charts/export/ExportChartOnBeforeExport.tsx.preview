@@ -1,4 +1,4 @@
-<Typography sx={{ alignSelf: 'center', my: 1 }}>
+<Typography ref={titleRef} sx={{ alignSelf: 'center', my: 1 }}>
   Inflation rate in France, Germany and the UK, 1960-2024
 </Typography>
 <LineChartPro
@@ -10,6 +10,7 @@
       imageExportOptions: [{ type: 'image/png', onBeforeExport }],
     },
   }}
-  sx={{ [`& .${legendClasses.root}`]: { display: 'none' } }}
 />
-<Typography variant="caption">Source: World Bank</Typography>
+<Typography ref={captionRef} variant="caption">
+  Source: World Bank
+</Typography>

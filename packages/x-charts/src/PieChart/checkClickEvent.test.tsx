@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { PieChart } from '@mui/x-charts/PieChart';
@@ -30,6 +29,7 @@ describe('PieChart - click event', () => {
           onItemClick={() => {}}
         />,
       );
+      // eslint-disable-next-line testing-library/no-container
       const slices = container.querySelectorAll<HTMLElement>('path.MuiPieArc-root');
 
       expect(Array.from(slices).map((slice) => slice.getAttribute('cursor'))).to.deep.equal([

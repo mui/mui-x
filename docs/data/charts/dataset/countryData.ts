@@ -174,7 +174,7 @@ export const countryData = {
   PYF: { country: 'French Polynesia', continent: 'Oceania' },
   QAT: { country: 'Qatar', continent: 'Asia' },
   ROU: { country: 'Romania', continent: 'Europe' },
-  RUS: { country: 'Russian Federation', continent: 'Europe' },
+  RUS: { country: 'Russia', continent: 'Europe' },
   RWA: { country: 'Rwanda', continent: 'Africa' },
   SAU: { country: 'Saudi Arabia', continent: 'Asia' },
   SDN: { country: 'Sudan', continent: 'Africa' },
@@ -273,3 +273,17 @@ export const oecdCountries = [
   'GBR',
   'USA',
 ] as const;
+
+export const flags = {
+  BEL: '🇧🇪',
+  CHE: '🇨🇭',
+  DEU: '🇩🇪',
+  DNK: '🇩🇰',
+  ESP: '🇪🇸',
+  FRA: '🇫🇷',
+  ITA: '🇮🇹',
+  NOR: '🇳🇴',
+  POL: '🇵🇱',
+  PRT: '🇵🇹',
+  SWE: '🇸🇪',
+} as const;

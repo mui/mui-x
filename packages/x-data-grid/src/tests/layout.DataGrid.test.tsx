@@ -96,15 +96,21 @@ describe('<DataGrid /> - Layout & warnings', () => {
         );
       }
 
-      const { container, setProps } = render(<TestCase width={300} />);
+      const { setProps } = render(<TestCase width={300} />);
       let rect;
-      rect = container.querySelector('[role="row"][data-rowindex="0"]')!.getBoundingClientRect();
+      rect = screen
+        .getAllByRole('row')
+        .find((el) => el.dataset.rowindex === '0')!
+        .getBoundingClientRect();
       expect(rect.width).to.equal(300 - 2);
 
       setProps({ width: 400 });
 
       await waitFor(() => {
-        rect = container.querySelector('[role="row"][data-rowindex="0"]')!.getBoundingClientRect();
+        rect = screen
+          .getAllByRole('row')
+          .find((el) => el.dataset.rowindex === '0')!
+          .getBoundingClientRect();
         expect(rect.width).to.equal(400 - 2);
       });
     });
@@ -948,8 +954,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
           </ErrorBoundary>,
         );
       }).toErrorDev([
-        'The Data Grid component requires all rows to have a unique `id` property',
-        reactMajor < 19 &&
+        reactMajor >= 19 &&
           'The Data Grid component requires all rows to have a unique `id` property',
         reactMajor < 19 && 'The above error occurred in the <ForwardRef(DataGrid2)> component',
       ]);

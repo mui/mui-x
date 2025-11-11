@@ -1,0 +1,25 @@
+{
+  "props": {
+    "getColumnName": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(field: string) => string | undefined",
+        "describedArgs": ["field"],
+        "returned": "string | undefined"
+      }
+    },
+    "schema": { "type": { "name": "object" }, "default": "{}" }
+  },
+  "name": "GridChartsPanel",
+  "imports": [
+    "import { GridChartsPanel } from '@mui/x-data-grid-premium/components';",
+    "import { GridChartsPanel } from '@mui/x-data-grid-premium';"
+  ],
+  "classes": [],
+  "muiName": "MuiGridChartsPanel",
+  "forwardsRefTo": "GridRoot",
+  "filename": "/packages/x-data-grid-premium/src/components/chartsPanel/GridChartsPanel.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-data-grid/#community-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-version\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#premium-version\">DataGridPremium</a></li></ul>",
+  "cssComponent": false
+}

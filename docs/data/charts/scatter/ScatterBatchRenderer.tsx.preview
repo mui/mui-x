@@ -1,0 +1,5 @@
+<Typography variant="h6" sx={{ alignSelf: 'center', textAlign: 'center' }}>
+  Life-cycle Carbon Intensity of Electricity Generation - 2024
+</Typography>
+<ScatterChart {...scatterChartsParams} renderer="svg-batch" />
+<Typography variant="caption">Source: ENTSO-E, ElectricityMaps.com</Typography>

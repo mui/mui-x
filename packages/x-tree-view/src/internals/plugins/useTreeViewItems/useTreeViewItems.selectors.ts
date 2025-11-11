@@ -8,15 +8,11 @@ const EMPTY_CHILDREN: TreeViewItemId[] = [];
 
 export const itemsSelectors = {
   /**
-   * Gets the loading state for the Tree View.
+   * Gets the DOM structure of the Tree View.
    */
-  isLoading: createSelector(
-    (state: TreeViewState<[UseTreeViewItemsSignature]>) => state.items.loading,
+  domStructure: createSelector(
+    (state: TreeViewState<[UseTreeViewItemsSignature]>) => state.items.domStructure,
   ),
-  /**
-   * Gets the error state for the Tree View.
-   */
-  error: createSelector((state: TreeViewState<[UseTreeViewItemsSignature]>) => state.items.error),
   /**
    * Checks whether the disabled items are focusable.
    */
@@ -28,6 +24,12 @@ export const itemsSelectors = {
    */
   itemMetaLookup: createSelector(
     (state: TreeViewState<[UseTreeViewItemsSignature]>) => state.items.itemMetaLookup,
+  ),
+  /**
+   * Gets the ordered children ids of all items.
+   */
+  itemOrderedChildrenIdsLookup: createSelector(
+    (state: TreeViewState<[UseTreeViewItemsSignature]>) => state.items.itemOrderedChildrenIdsLookup,
   ),
   /**
    * Gets the meta-information of an item.

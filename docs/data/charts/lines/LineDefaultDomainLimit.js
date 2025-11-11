@@ -3,7 +3,7 @@ import Stack from '@mui/material/Stack';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { LineChart } from '@mui/x-charts/LineChart';
-import { dataset } from './GDPperCapita';
+import { dataset } from '../dataset/gdpPerCapitaEvolution';
 
 export default function LineDefaultDomainLimit() {
   const [preferStrictDomainInLineCharts, setPreferStrictDomainInLineCharts] =

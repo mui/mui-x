@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { CalendarEvent } from '@mui/x-scheduler/primitives/models';
-import { WeekView } from '@mui/x-scheduler/material/week-view';
-import { StandaloneView } from '@mui/x-scheduler/material/standalone-view';
+import { SchedulerEvent } from '@mui/x-scheduler/models';
+import { StandaloneWeekView } from '@mui/x-scheduler/week-view';
 import {
   initialEvents,
   defaultVisibleDate,
@@ -9,18 +8,16 @@ import {
 } from '../datasets/personal-agenda';
 
 export default function BasicWeekView() {
-  const [events, setEvents] = React.useState<CalendarEvent[]>(initialEvents);
+  const [events, setEvents] = React.useState<SchedulerEvent[]>(initialEvents);
 
   return (
     <div style={{ height: '500px', width: '100%' }}>
-      <StandaloneView
+      <StandaloneWeekView
         events={events}
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
-      >
-        <WeekView />
-      </StandaloneView>
+      />
     </div>
   );
 }

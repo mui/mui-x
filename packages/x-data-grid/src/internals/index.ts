@@ -74,6 +74,7 @@ export {
   gridFilteredChildrenCountLookupSelector,
   gridExpandedSortedRowTreeLevelPositionLookupSelector,
   gridExpandedSortedRowIndexLookupSelector,
+  gridFilteredSortedDepthRowEntriesSelector,
 } from '../hooks/features/filter/gridFilterSelector';
 export { isSingleSelectColDef } from '../components/panel/filterPanel/filterPanelUtils';
 export type {
@@ -100,6 +101,8 @@ export {
 export { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
 export { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
 export { useGridRowsOverridableMethods } from '../hooks/features/rows/useGridRowsOverridableMethods';
+export { useGridParamsOverridableMethods } from '../hooks/features/rows/useGridParamsOverridableMethods';
+export { useIsCellEditable } from '../hooks/features/editing/useGridCellEditable';
 export { useGridRowsPreProcessors } from '../hooks/features/rows/useGridRowsPreProcessors';
 export type {
   GridRowTreeCreationParams,
@@ -108,8 +111,6 @@ export type {
   GridRowsPartialUpdates,
   GridRowsPartialUpdateAction,
   GridTreeDepths,
-  GridRowTreeUpdatedGroupsManager,
-  GridRowTreeUpdateGroupAction,
   GridPinnedRowsState,
 } from '../hooks/features/rows/gridRowsInterfaces';
 export { getTreeNodeDescendants, buildRootGroup } from '../hooks/features/rows/gridRowsUtils';
@@ -171,6 +172,7 @@ export type {
   GridDataSourceApiBase,
   GridDataSourceApi,
   GridDataSourceBaseOptions,
+  GridDataSourceFetchRowsParams,
 } from '../hooks/features/dataSource/models';
 export { DataSourceRowsUpdateStrategy } from '../hooks/features/dataSource/utils';
 export { useGridDataSourceBase } from '../hooks/features/dataSource/useGridDataSourceBase';
@@ -216,6 +218,7 @@ export * from './demo';
 export { GridSkeletonLoadingOverlayInner } from '../components/GridSkeletonLoadingOverlay';
 
 export type { GridConfiguration } from '../models/configuration/gridConfiguration';
+export type { CellEditableConditionFn } from '../models/configuration/gridCellEditableConfiguration';
 
 export * from '../hooks/features/pivoting';
 

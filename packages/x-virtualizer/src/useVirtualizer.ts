@@ -59,6 +59,8 @@ export type VirtualizerParams = {
   pinnedColumns?: PinnedColumns;
 
   autoHeight: boolean;
+  disableHorizontalScroll?: boolean;
+  disableVerticalScroll?: boolean;
   minimalContentHeight?: number | string;
   getRowHeight?: (row: RowEntry) => number | null | undefined | 'auto';
   /**

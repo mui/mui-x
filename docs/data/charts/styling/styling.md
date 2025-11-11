@@ -102,6 +102,16 @@ This configuration can be used in Bar Charts to set colors according to string c
 }
 ```
 
+### Color callback
+
+If you need more control over the color assignment, you can provide a `colorGetter` callback prop to the chart component.
+
+The callback receives a `{ value, dataIndex }` object and should return a color string for the provided data point.
+
+In components where a series-level color is required (for example, the legend), the `color` prop is used instead.
+
+{{"demo": "ColorCallback.js"}}
+
 ## Overlay
 
 Charts have a _loading_ and _noData_ overlays that appear if:
@@ -169,6 +179,15 @@ Chart components accept the `sx` props.
 From here, you can target any subcomponents with its class name.
 
 {{"demo": "SxStyling.js"}}
+
+### Drawing area background
+
+To set a background color in the drawing area, you should create a dedicated `<rect />`.
+This is only doable with [composition](/x/react-charts/composition/) because you have to place this new component before all plot components.
+
+The following demo defines a basic `<Background />` component that adds a light gray background.
+
+{{"demo": "BackgroundStyling.js"}}
 
 ### Gradients and patterns
 

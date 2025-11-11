@@ -202,9 +202,19 @@ const pages: MuiPage[] = [
                 plan: 'premium',
               },
               {
+                pathname: '/x/react-data-grid/server-side-data/pivoting',
+                plan: 'premium',
+              },
+              {
                 pathname: '/x/react-data-grid/server-side-data/recipes',
               },
             ],
+          },
+          {
+            pathname: '/x/react-data-grid/charts-integration',
+            plan: 'premium',
+            unstable: true,
+            title: 'Charts integration',
           },
           {
             pathname: '/x/react-data-grid/ai-assistant',
@@ -241,6 +251,12 @@ const pages: MuiPage[] = [
           {
             pathname: '/x/react-data-grid/components/pivot-panel',
             title: 'Pivot Panel',
+            planned: true,
+            plan: 'premium',
+          },
+          {
+            pathname: '/x/react-data-grid/components/charts-panel',
+            title: 'Charts Panel',
             planned: true,
             plan: 'premium',
           },
@@ -501,6 +517,7 @@ const pages: MuiPage[] = [
     children: [
       { pathname: '/x/react-charts', title: 'Overview' },
       { pathname: '/x/react-charts/quickstart', title: 'Quickstart' },
+      { pathname: '/x/react-charts/examples', title: 'Examples' },
       {
         pathname: '/x/react-chart-components',
         subheader: 'Components',
@@ -579,6 +596,7 @@ const pages: MuiPage[] = [
               { pathname: '/x/react-charts/styling' },
               { pathname: '/x/react-charts/tooltip' },
               { pathname: '/x/react-charts/highlighting' },
+              { pathname: '/x/react-charts/brush' },
               {
                 pathname: '/x/react-charts/zoom-and-pan',
                 title: 'Zoom and pan',
@@ -590,6 +608,16 @@ const pages: MuiPage[] = [
                 plan: 'pro',
               },
               { pathname: '/x/react-charts/toolbar', title: 'Toolbar' },
+              {
+                pathname: '/x/react-charts/data-grid-integration',
+                title: 'Data Grid integration',
+                plan: 'premium',
+                unstable: true,
+              },
+              {
+                pathname: '/x/react-charts/content-security-policy',
+                title: 'Content Security Policy',
+              },
             ],
           },
           {
@@ -614,6 +642,10 @@ const pages: MuiPage[] = [
                       { pathname: '/x/api/charts/radar-series', title: 'RadarSeries' },
                       { pathname: '/x/api/charts/scatter-series', title: 'ScatterSeries' },
                       {
+                        pathname: '/x/api/charts/legend-item-params',
+                        title: 'LegendItemParams',
+                      },
+                      {
                         pathname: '/x/api/charts/chart-image-export-options',
                         title: 'ChartImageExportOptions',
                       },
@@ -625,6 +657,20 @@ const pages: MuiPage[] = [
                   },
                 ],
               },
+              {
+                pathname: '/x/react-charts/hooks-group',
+                title: 'Hooks',
+                children: [
+                  { pathname: '/x/react-charts/hooks', title: 'Overview' },
+                  { pathname: '/x/react-charts/hooks/use-series', title: 'useSeries' },
+                  { pathname: '/x/react-charts/hooks/use-legend', title: 'useLegend' },
+                  { pathname: '/x/react-charts/hooks/use-drawing-area', title: 'useDrawingArea' },
+                  { pathname: '/x/react-charts/hooks/use-scale', title: 'useScale' },
+                  { pathname: '/x/react-charts/hooks/use-axes', title: 'useAxes' },
+                  { pathname: '/x/react-charts/hooks/use-dataset', title: 'useDataset' },
+                ],
+              },
+              { pathname: '/x/react-charts/plugins', title: 'Plugins' },
             ],
           },
         ],

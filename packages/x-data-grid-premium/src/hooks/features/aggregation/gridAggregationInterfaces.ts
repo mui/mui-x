@@ -116,6 +116,7 @@ export type GridAggregationLookup = {
     [field: string]: {
       position: GridAggregationPosition;
       value: any;
+      formattedValue?: any;
     };
   };
 };

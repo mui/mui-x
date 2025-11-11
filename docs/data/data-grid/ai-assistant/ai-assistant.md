@@ -31,13 +31,17 @@ To increase the accuracy of the language processing, provide example values for 
 ### Provide custom examples
 
 Use the `examples` property on items of the `columns` array to provide custom examples as context for prompt processing.
-The `examples` property should contain an array of possible values for its respective column.
+The `examples` property should contain an array of possible values for each respective column.
 
 :::info
-AI Assistant demos use limited [MUI's processing service](/x/react-data-grid/ai-assistant/#with-muis-service).
+AI Assistant demos use a limited version of [MUI's processing service](/x/react-data-grid/ai-assistant/#with-muis-service).
 :::
 
 {{"demo": "AssistantWithExamples.js", "bg": "inline"}}
+
+:::success
+Provide examples for the [derived columns](/x/react-data-grid/pivoting/#derived-columns-in-pivot-mode) using the `getPivotDerivedColumns()` prop.
+:::
 
 ### Use row data for examples
 
@@ -53,6 +57,14 @@ Data is collected randomly at the cell level, which means that the examples for 
 The example below shows how to combine the AI Assistant with [server-side data](/x/react-data-grid/server-side-data/).
 
 {{"demo": "AssistantWithDataSource.js", "bg": "inline"}}
+
+### Data visualization
+
+AI Assistant analyzes the query to determine if it is helpful to visualize the results.
+
+[Integrate](/x/react-data-grid/charts-integration/) the Data Grid with [MUI X Charts](/x/react-charts/) to enable the Data Grid to apply the visualization instructions.
+
+{{"demo": "AssistantWithCharts.js", "bg": "inline"}}
 
 ## Processing service integration
 
@@ -138,6 +150,30 @@ The Data Grid provides all the necessary elements for integration with MUI's ser
 5. Provide data examples in either of the following ways:
    - Fill the `examples` prop in the `columns` array – this is recommended if you want to avoid exposing the row data to the AI Assistant.
    - Provide access to the row data with `allowAiAssistantDataSampling` prop – since this uses real data, it may lead to better processing results.
+
+6. Optionally, provide `referenceId` in the metadata to track spending and set limits for each entity sharing your API key.
+   The MUI Service supports `metadata` property through which you can send the reference that will be stored with the request.
+   Later, use that reference in the request history analysis.
+
+   ::warning
+   The `metadata` object would store only `referenceId` property. If you are interested in storing more data, please [contact our support team](mailto:support@mui.com).
+   ::
+
+   ```ts
+   function processPrompt(query: string, context: string, conversationId?: string) {
+     return unstable_gridDefaultPromptResolver(
+       `${PROMPT_RESOLVER_PROXY_BASE_URL}/api/my-custom-path`,
+       query,
+       context,
+       conversationId,
+       {
+         metadata: {
+           referenceId: 'example-user-reference',
+         },
+       },
+     );
+   }
+   ```
 
 ### With a custom service
 

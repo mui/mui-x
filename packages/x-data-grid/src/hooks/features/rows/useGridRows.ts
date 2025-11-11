@@ -174,7 +174,7 @@ export const useGridRows = (
   const setRows = React.useCallback<GridRowApi['setRows']>(
     (rows) => {
       logger.debug(`Updating all rows, new length ${rows.length}`);
-      if (gridPivotActiveSelector(apiRef)) {
+      if (!props.dataSource && gridPivotActiveSelector(apiRef)) {
         apiRef.current.updateNonPivotRows(rows, false);
         return;
       }
@@ -189,7 +189,15 @@ export const useGridRows = (
 
       throttledRowsChange({ cache, throttle: true });
     },
-    [logger, props.getRowId, props.loading, props.rowCount, throttledRowsChange, apiRef],
+    [
+      logger,
+      props.getRowId,
+      props.dataSource,
+      props.loading,
+      props.rowCount,
+      throttledRowsChange,
+      apiRef,
+    ],
   );
 
   const updateRows = React.useCallback<GridRowApi['updateRows']>(
@@ -203,7 +211,7 @@ export const useGridRows = (
         );
       }
 
-      if (gridPivotActiveSelector(apiRef)) {
+      if (!props.dataSource && gridPivotActiveSelector(apiRef)) {
         apiRef.current.updateNonPivotRows(updates);
         return;
       }
@@ -218,7 +226,7 @@ export const useGridRows = (
 
       throttledRowsChange({ cache, throttle: true });
     },
-    [props.signature, props.getRowId, throttledRowsChange, apiRef],
+    [props.signature, props.dataSource, props.getRowId, throttledRowsChange, apiRef],
   );
 
   const updateNestedRows = React.useCallback<GridRowProPrivateApi['updateNestedRows']>(
@@ -301,6 +309,45 @@ export const useGridRows = (
     },
     [apiRef],
   );
+
+  const expandAllRows = React.useCallback<GridRowProApi['expandAllRows']>(() => {
+    const tree = { ...gridRowTreeSelector(apiRef) };
+
+    const traverse = (nodeId: GridRowId) => {
+      const node = tree[nodeId];
+      if (node?.type === 'group') {
+        tree[nodeId] = { ...node, childrenExpanded: true };
+        node.children.forEach(traverse);
+      }
+    };
+    traverse(GRID_ROOT_GROUP_ID);
+
+    apiRef.current.setState((state) => ({
+      ...state,
+      rows: { ...state.rows, tree },
+    }));
+    apiRef.current.publishEvent('rowExpansionChange', tree[GRID_ROOT_GROUP_ID] as GridGroupNode);
+  }, [apiRef]);
+
+  const collapseAllRows = React.useCallback<GridRowProApi['collapseAllRows']>(() => {
+    const tree = { ...gridRowTreeSelector(apiRef) };
+
+    const traverse = (nodeId: GridRowId) => {
+      const node = tree[nodeId];
+      if (node?.type === 'group') {
+        tree[nodeId] = { ...node, childrenExpanded: false };
+        node.children.forEach(traverse);
+      }
+    };
+    traverse(GRID_ROOT_GROUP_ID);
+
+    apiRef.current.setState((state) => ({
+      ...state,
+      rows: { ...state.rows, tree },
+    }));
+
+    apiRef.current.publishEvent('rowExpansionChange', tree[GRID_ROOT_GROUP_ID] as GridGroupNode);
+  }, [apiRef]);
 
   const getRowNode = React.useCallback<GridRowApi['getRowNode']>(
     (id) => (gridRowNodeSelector(apiRef, id) as any) ?? null,
@@ -455,6 +502,8 @@ export const useGridRows = (
     setRowIndex,
     setRowChildrenExpansion,
     getRowGroupChildren,
+    expandAllRows,
+    collapseAllRows,
   };
 
   const rowProPrivateApi: GridRowProPrivateApi = {

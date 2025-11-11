@@ -9,7 +9,7 @@ export default function Page(props) {
   return <ApiPage {...layoutConfig} descriptions={descriptions} pageContent={pageContent} />;
 }
 
-Page.getInitialProps = () => {
+export async function getStaticProps() {
   const req = require.context(
     'docsx/translations/api-docs/data-grid/pivot-panel-trigger',
     false,
@@ -18,7 +18,9 @@ Page.getInitialProps = () => {
   const descriptions = mapApiPageTranslations(req);
 
   return {
-    descriptions,
-    pageContent: jsonPageContent,
+    props: {
+      descriptions,
+      pageContent: jsonPageContent,
+    },
   };
-};
+}

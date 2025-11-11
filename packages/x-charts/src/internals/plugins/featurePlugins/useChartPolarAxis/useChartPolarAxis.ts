@@ -21,6 +21,7 @@ import {
 } from './coordinateTransformation';
 import { getAxisIndex } from './getAxisIndex';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';
+import { checkHasInteractionPlugin } from '../useChartInteraction/checkHasInteractionPlugin';
 
 export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = ({
   params,
@@ -69,14 +70,11 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
       return;
     }
 
-    store.update((prev) => ({
-      ...prev,
-      polarAxis: {
-        ...prev.polarAxis,
-        rotation: defaultizeAxis(rotationAxis, dataset, 'rotation'),
-        radius: defaultizeAxis(radiusAxis, dataset, 'radius'),
-      },
-    }));
+    store.set('polarAxis', {
+      ...store.state.polarAxis,
+      rotation: defaultizeAxis(rotationAxis, dataset, 'rotation'),
+      radius: defaultizeAxis(radiusAxis, dataset, 'radius'),
+    });
   }, [seriesConfig, drawingArea, rotationAxis, radiusAxis, dataset, store]);
 
   const svg2rotation = React.useMemo(
@@ -102,9 +100,16 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
     isInChart: false,
   });
 
+  const hasInteractionPlugin = checkHasInteractionPlugin(instance);
+
   React.useEffect(() => {
     const element = svgRef.current;
-    if (!isInteractionEnabled || element === null || params.disableAxisListener) {
+    if (
+      !isInteractionEnabled ||
+      !hasInteractionPlugin ||
+      element === null ||
+      params.disableAxisListener
+    ) {
       return () => {};
     }
 
@@ -118,13 +123,13 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
     const panEndHandler = instance.addInteractionListener('panEnd', (event) => {
       if (!event.detail.activeGestures.move) {
         mousePosition.current.isInChart = false;
-        instance.cleanInteraction();
+        instance.cleanInteraction?.();
       }
     });
     const pressEndHandler = instance.addInteractionListener('quickPressEnd', (event) => {
       if (!event.detail.activeGestures.move && !event.detail.activeGestures.pan) {
         mousePosition.current.isInChart = false;
-        instance.cleanInteraction();
+        instance.cleanInteraction?.();
       }
     });
 
@@ -143,14 +148,14 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
           srcEvent.clientY > svgRect.bottom
         ) {
           mousePosition.current.isInChart = false;
-          instance.cleanInteraction();
+          instance.cleanInteraction?.();
           return;
         }
 
         const svgPoint = getSVGPoint(element, srcEvent);
 
         mousePosition.current.isInChart = true;
-        instance.setPointerCoordinate(svgPoint);
+        instance.setPointerCoordinate?.(svgPoint);
         return;
       }
 
@@ -161,7 +166,7 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
       // Test if it's in the drawing area
       if (!instance.isPointInside(svgPoint.x, svgPoint.y, event.detail.target)) {
         if (mousePosition.current.isInChart) {
-          instance?.cleanInteraction();
+          instance.cleanInteraction?.();
           mousePosition.current.isInChart = false;
         }
         return;
@@ -173,7 +178,7 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
 
       if (radiusSquare > maxRadius ** 2) {
         if (mousePosition.current.isInChart) {
-          instance?.cleanInteraction();
+          instance.cleanInteraction?.();
           mousePosition.current.isInChart = false;
         }
         return;
@@ -207,6 +212,7 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
     params.disableAxisListener,
     isInteractionEnabled,
     svg2rotation,
+    hasInteractionPlugin,
   ]);
 
   React.useEffect(() => {

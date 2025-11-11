@@ -43,6 +43,9 @@ const arSDGrid: Partial<GridLocaleText> = {
   // Toolbar pivot button
   // toolbarPivot: 'Pivot',
 
+  // Toolbar charts button
+  // toolbarCharts: 'Charts',
+
   // Toolbar AI Assistant button
   // toolbarAssistant: 'AI Assistant',
 
@@ -128,6 +131,7 @@ const arSDGrid: Partial<GridLocaleText> = {
   columnMenuSortAsc: 'الفرز تصاعدياً',
   columnMenuSortDesc: 'الفرز تنازلياً',
   // columnMenuManagePivot: 'Manage pivot',
+  // columnMenuManageCharts: 'Manage charts',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -182,18 +186,13 @@ const arSDGrid: Partial<GridLocaleText> = {
 
   // Pagination
   paginationRowsPerPage: 'عدد الصفوف في الصفحة:',
-  // paginationDisplayedRows: ({
-  //   from,
-  //   to,
-  //   count,
-  //   estimated
-  // }) => {
-  //   if (!estimated) {
-  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
-  //   }
-  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
-  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
-  // },
+  paginationDisplayedRows: ({ from, to, count, estimated }) => {
+    if (!estimated) {
+      return `\u200E${to}-${from}\u200E من ${count !== -1 ? count : `أكثر من ${to}`}`;
+    }
+    const estimatedLabel = estimated && estimated > to ? `حوالي ${estimated}` : `أكثر من ${to}`;
+    return `\u200E${to}-${from}\u200E من ${count !== -1 ? count : estimatedLabel}`;
+  },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {
       return 'انتقل إلى الصفحة الأولى';
@@ -213,6 +212,7 @@ const arSDGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: 'الدلالات الحسابية',
+  // aggregationFunctionLabelNone: 'none',
   aggregationFunctionLabelSum: 'مجموع',
   aggregationFunctionLabelAvg: 'معدل',
   aggregationFunctionLabelMin: 'الحد الادنى',
@@ -247,6 +247,32 @@ const arSDGrid: Partial<GridLocaleText> = {
   // pivotDragToValues: 'Drag here to create values',
   // pivotYearColumnHeaderName: '(Year)',
   // pivotQuarterColumnHeaderName: '(Quarter)',
+
+  // Charts configuration panel
+  // chartsNoCharts: 'There are no charts available',
+  // chartsChartNotSelected: 'Select a chart type to configure its options',
+  // chartsTabChart: 'Chart',
+  // chartsTabFields: 'Fields',
+  // chartsTabCustomize: 'Customize',
+  // chartsCloseButton: 'Close charts configuration',
+  // chartsSyncButtonLabel: 'Sync chart',
+  // chartsSearchPlaceholder: 'Search fields',
+  // chartsSearchLabel: 'Search fields',
+  // chartsSearchClear: 'Clear search',
+  // chartsNoFields: 'No fields',
+  // chartsFieldBlocked: 'This field cannot be added to any section',
+  // chartsCategories: 'Categories',
+  // chartsSeries: 'Series',
+  // chartsMenuAddToDimensions: (dimensionLabel: string) => `Add to ${dimensionLabel}`,
+  // chartsMenuAddToValues: (valuesLabel: string) => `Add to ${valuesLabel}`,
+  // chartsMenuMoveUp: 'Move up',
+  // chartsMenuMoveDown: 'Move down',
+  // chartsMenuMoveToTop: 'Move to top',
+  // chartsMenuMoveToBottom: 'Move to bottom',
+  // chartsMenuOptions: 'Field options',
+  // chartsMenuRemove: 'Remove',
+  // chartsDragToDimensions: (dimensionLabel: string) => `Drag here to use column as ${dimensionLabel}`,
+  // chartsDragToValues: (valuesLabel: string) => `Drag here to use column as ${valuesLabel}`,
 
   // AI Assistant panel
   // aiAssistantPanelTitle: 'AI Assistant',
@@ -295,6 +321,7 @@ const arSDGrid: Partial<GridLocaleText> = {
   // promptChangePivotRowsLabel: (count: number) => `Rows (${count})`,
   // promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
   // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
+  // promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) => `Dimensions (${dimensionsCount}), Values (${valuesCount})`,
 };
 
 export const arSD: Localization = getGridLocalization(arSDGrid);

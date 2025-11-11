@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { createRenderer, screen } from '@mui/internal-test-utils';
 import { clearLicenseStatusCache, LicenseInfo } from '@mui/x-license';
 import { BarChartPro } from './BarChartPro';

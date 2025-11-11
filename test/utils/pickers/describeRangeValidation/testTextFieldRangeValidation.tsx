@@ -7,6 +7,7 @@ import { DescribeRangeValidationTestSuite } from './describeRangeValidation.type
 const testInvalidStatus = (
   expectedAnswer: boolean[],
   fieldType: 'single-input' | 'multi-input' | 'no-input',
+  incompleteRange?: boolean,
 ) => {
   const answers =
     fieldType === 'multi-input' ? expectedAnswer : [expectedAnswer[0] || expectedAnswer[1]];
@@ -15,6 +16,10 @@ const testInvalidStatus = (
   answers.forEach((answer, index) => {
     const fieldRoot = fields[index];
 
+    if (incompleteRange && fieldType === 'single-input') {
+      expect(fieldRoot).to.have.attribute('aria-invalid', 'true');
+      return;
+    }
     expect(fieldRoot).to.have.attribute('aria-invalid', answer ? 'true' : 'false');
   });
 };
@@ -315,7 +320,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
 
       expect(onErrorMock.callCount).to.equal(1);
       expect(onErrorMock.lastCall.args[0]).to.deep.equal(['minDate', null]);
-      testInvalidStatus([true, false], fieldType);
+      testInvalidStatus([true, false], fieldType, true);
 
       setProps({
         value: [adapterToUse.date('2018-03-16'), null],
@@ -323,7 +328,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
 
       expect(onErrorMock.callCount).to.equal(2);
       expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, null]);
-      testInvalidStatus([false, false], fieldType);
+      testInvalidStatus([false, false], fieldType, true);
     });
 
     it.skipIf(!withDate)('should apply minDate when only second field is filled', () => {
@@ -338,7 +343,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
 
       expect(onErrorMock.callCount).to.equal(1);
       expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, 'minDate']);
-      testInvalidStatus([false, true], fieldType);
+      testInvalidStatus([false, true], fieldType, true);
 
       setProps({
         value: [null, adapterToUse.date('2018-03-16')],
@@ -346,7 +351,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
 
       expect(onErrorMock.callCount).to.equal(2);
       expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, null]);
-      testInvalidStatus([false, false], fieldType);
+      testInvalidStatus([false, false], fieldType, true);
     });
 
     it.skipIf(!withDate)('should apply maxDate', () => {
@@ -449,7 +454,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       );
 
       expect(onErrorMock.callCount).to.equal(0);
-      testInvalidStatus([false, false], fieldType);
+      testInvalidStatus([false, false], fieldType, true);
 
       setProps({
         value: [adapterToUse.date('2018-02-01T05:00:00'), null],
@@ -457,7 +462,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
 
       expect(onErrorMock.callCount).to.equal(1);
       expect(onErrorMock.lastCall.args[0]).to.deep.equal(['minTime', null]);
-      testInvalidStatus([true, false], fieldType);
+      testInvalidStatus([true, false], fieldType, true);
     });
 
     it.skipIf(!withTime)('should apply minTime when only second field is filled', () => {
@@ -471,7 +476,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       );
 
       expect(onErrorMock.callCount).to.equal(0);
-      testInvalidStatus([false, false], fieldType);
+      testInvalidStatus([false, false], fieldType, true);
 
       setProps({
         value: [null, adapterToUse.date('2018-02-01T05:00:00')],
@@ -479,7 +484,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
 
       expect(onErrorMock.callCount).to.equal(1);
       expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, 'minTime']);
-      testInvalidStatus([false, true], fieldType);
+      testInvalidStatus([false, true], fieldType, true);
     });
 
     it.skipIf(!withTime)('should apply maxTime', () => {

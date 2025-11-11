@@ -9,7 +9,7 @@ export { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 export { useDrawingArea } from '../hooks/useDrawingArea';
 export { useScatterChartProps } from '../ScatterChart/useScatterChartProps';
 export { useScatterPlotData } from '../ScatterChart/useScatterPlotData';
-export { seriesConfig as scatterSeriesConfig } from '../ScatterChart/seriesConfig';
+export { scatterSeriesConfig as scatterSeriesConfig } from '../ScatterChart/seriesConfig';
 export { useLineChartProps } from '../LineChart/useLineChartProps';
 export { useAreaPlotData } from '../LineChart/useAreaPlotData';
 export { useLinePlotData } from '../LineChart/useLinePlotData';
@@ -30,7 +30,9 @@ export * from './plugins/featurePlugins/useChartCartesianAxis';
 export * from './plugins/featurePlugins/useChartPolarAxis';
 export * from './plugins/featurePlugins/useChartInteraction';
 export * from './plugins/featurePlugins/useChartHighlight';
-export * from './plugins/featurePlugins/useChartVoronoi';
+export * from './plugins/featurePlugins/useChartKeyboardNavigation';
+export * from './plugins/featurePlugins/useChartClosestPoint';
+export * from './plugins/featurePlugins/useChartBrush';
 export * from './plugins/utils/selectors';
 export { getAxisTriggerTooltip as getCartesianAxisTriggerTooltip } from './plugins/featurePlugins/useChartCartesianAxis/getAxisTriggerTooltip';
 export { getAxisIndex as getCartesianAxisIndex } from './plugins/featurePlugins/useChartCartesianAxis/getAxisValue';
@@ -67,7 +69,7 @@ export * from './scaleGuards';
 export * from './findMinMax';
 
 // contexts
-export { getAxisExtremum } from './plugins/featurePlugins/useChartCartesianAxis/getAxisExtremum';
+export { getAxisExtrema } from './plugins/featurePlugins/useChartCartesianAxis/getAxisExtrema';
 export * from '../context/ChartProvider';
 export * from '../context/ChartsSlotsContext';
 
@@ -83,3 +85,4 @@ export * from './material';
 export * from './createSvgIcon';
 
 export * from './constants';
+export * from './scales';

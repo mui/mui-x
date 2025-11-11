@@ -10,6 +10,7 @@ export function printChart(
     fileName,
     onBeforeExport = defaultOnBeforeExport,
     copyStyles = true,
+    nonce,
   }: ChartPrintExportOptions = {},
 ) {
   const printWindow = createExportIframe(fileName);
@@ -18,16 +19,15 @@ export function printChart(
   printWindow.onload = async () => {
     const printDoc = printWindow.contentDocument!;
     const elementClone = element!.cloneNode(true) as HTMLElement | SVGElement;
-    const container = document.createElement('div');
-    container.appendChild(elementClone);
-    printDoc.body.innerHTML = container.innerHTML;
+    printDoc.body.replaceChildren(elementClone);
+    printDoc.body.style.margin = '0px';
 
     const rootCandidate = element.getRootNode();
     const root =
       rootCandidate.constructor.name === 'ShadowRoot' ? (rootCandidate as ShadowRoot) : doc;
 
     if (copyStyles) {
-      await Promise.all(loadStyleSheets(printDoc, root));
+      await Promise.all(loadStyleSheets(printDoc, root, nonce));
     }
 
     const mediaQueryList = printWindow.contentWindow!.matchMedia('print');

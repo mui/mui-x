@@ -62,6 +62,7 @@ export function isSpanValid(
   const newSpanPercent = maxRange - minRange;
 
   if (
+    newSpanPercent < 0 ||
     (isZoomIn && newSpanPercent < option.minSpan) ||
     (!isZoomIn && newSpanPercent > option.maxSpan)
   ) {
@@ -108,9 +109,11 @@ export function getWheelScaleRatio(event: WheelEvent, step: number) {
 export function getHorizontalCenterRatio(
   point: { x: number; y: number },
   area: { left: number; width: number },
+  reverse: boolean,
 ) {
   const { left, width } = area;
-  return (point.x - left) / width;
+  const ratio = (point.x - left) / width;
+  return reverse ? 1 - ratio : ratio;
 }
 
 /**
@@ -119,9 +122,11 @@ export function getHorizontalCenterRatio(
 export function getVerticalCenterRatio(
   point: { x: number; y: number },
   area: { top: number; height: number },
+  reverse: boolean,
 ) {
   const { top, height } = area;
-  return ((point.y - top) / height) * -1 + 1;
+  const ratio = (top - point.y) / height + 1;
+  return reverse ? 1 - ratio : ratio;
 }
 
 /**
@@ -143,7 +148,8 @@ export function translateZoom(
     const span = max - min;
     const MIN_PERCENT = options.minStart;
     const MAX_PERCENT = options.maxEnd;
-    const displacement = options.axisDirection === 'x' ? movement.x : movement.y;
+    const rawDisplacement = options.axisDirection === 'x' ? movement.x : movement.y;
+    const displacement = options.reverse ? -rawDisplacement : rawDisplacement;
     const dimension = options.axisDirection === 'x' ? drawingArea.width : drawingArea.height;
     let newMinPercent = min - (displacement / dimension) * span;
     let newMaxPercent = max - (displacement / dimension) * span;

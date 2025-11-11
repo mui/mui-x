@@ -4,7 +4,8 @@
   "imports": [
     "import { RadarMetricLabels } from '@mui/x-charts/RadarChart';",
     "import { RadarMetricLabels } from '@mui/x-charts';",
-    "import { RadarMetricLabels } from '@mui/x-charts-pro';"
+    "import { RadarMetricLabels } from '@mui/x-charts-pro';",
+    "import { RadarMetricLabels } from '@mui/x-charts-premium';"
   ],
   "classes": [],
   "muiName": "MuiRadarMetricLabels",
