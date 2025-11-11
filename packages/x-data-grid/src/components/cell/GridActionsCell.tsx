@@ -74,12 +74,6 @@ function GridActionsCell(props: GridActionsCellProps) {
     return actionsArray;
   }, [children]);
 
-  if (!actions) {
-    throw new Error(
-      'MUI X: Missing the `getActions` property in the `GridColDef` or `children` prop in the `GridActionsCell` component.',
-    );
-  }
-
   const iconButtons = actions.filter((option) => !option.props.showInMenu);
   const menuButtons = actions.filter((option) => option.props.showInMenu);
   const numberOfButtons = iconButtons.length + (menuButtons.length ? 1 : 0);
@@ -360,9 +354,12 @@ export { GridActionsCell };
 function GridActionsCellWrapper(props: GridRenderCellParams) {
   const { colDef, id } = props;
   const apiRef = useGridApiContext();
-  const actions = hasActions(colDef)
-    ? colDef.getActions(apiRef.current.getRowParams(id))
-    : undefined;
+
+  if (!hasActions(colDef)) {
+    throw new Error('MUI X: Missing the `getActions` property in the `GridColDef`.');
+  }
+
+  const actions = colDef.getActions(apiRef.current.getRowParams(id));
 
   return <GridActionsCell {...props}>{actions}</GridActionsCell>;
 }

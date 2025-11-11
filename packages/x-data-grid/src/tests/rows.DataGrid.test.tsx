@@ -248,7 +248,7 @@ describe('<DataGrid /> - Rows', () => {
           </ErrorBoundary>,
         );
       }).toErrorDev([
-        reactMajor >= 19 && 'MUI X: Missing the `getActions` property in the `GridColDef` or `children` prop in the `GridActionsCell` component.',
+        reactMajor >= 19 && 'MUI X: Missing the `getActions` property in the `GridColDef`.',
         reactMajor < 19 && 'The above error occurred in the <GridActionsCell> component',
       ]);
     });
