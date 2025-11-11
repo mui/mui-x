@@ -58,6 +58,9 @@
       "description": "The placement of ticks in regard to the band interval.<br />Only used if scale is &#39;band&#39;."
     },
     "tickSize": { "description": "The size of the ticks." },
+    "tickSpacing": {
+      "description": "The space between ticks when using an ordinal scale. It defines the minimum distance in pixels between two ticks."
+    },
     "valueFormatter": { "description": "Formats the axis value." },
     "zoom": { "description": "" }
   }
