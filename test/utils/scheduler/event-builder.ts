@@ -14,7 +14,7 @@ import { getWeekDayCode } from '@mui/x-scheduler-headless/utils/recurring-event-
 import { Adapter, diffIn } from '@mui/x-scheduler-headless/use-adapter';
 import { adapter as defaultAdapter } from './adapters';
 
-const DEFAULT_TESTING_VISIBLE_DATE_STR = '2025-07-03T00:00:00Z';
+export const DEFAULT_TESTING_VISIBLE_DATE_STR = '2025-07-03T00:00:00Z';
 export const DEFAULT_TESTING_VISIBLE_DATE = defaultAdapter.date(DEFAULT_TESTING_VISIBLE_DATE_STR);
 
 /**
@@ -208,7 +208,9 @@ export class EventBuilder {
    */
   buildOccurrence(occurrenceStartDate?: string): CalendarEventOccurrence {
     const event = this.event;
-    const effectiveDate = this.adapter.date(occurrenceStartDate) ?? event.start;
+    const effectiveDate = occurrenceStartDate
+      ? this.adapter.date(occurrenceStartDate)
+      : event.start;
     const duration = diffIn(this.adapter, event.end, event.start, 'minutes');
     const end = this.adapter.addMinutes(effectiveDate, duration);
     const key = `${event.id}::${this.adapter.format(effectiveDate, 'keyboardDate')}`;

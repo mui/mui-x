@@ -2,7 +2,7 @@ import { EventBuilder, getEventCalendarStateFromParameters } from 'test/utils/sc
 import { eventCalendarEventSelectors } from './eventCalendarEventSelectors';
 
 const defaultEvent = EventBuilder.new().id('event-1').build();
-const readOnlyEvent = EventBuilder.new().id('event-1').readOnly(true).build();
+const readOnlyEvent = EventBuilder.new().id('event-1').readOnly().build();
 
 describe('eventCalendarEventSelectors', () => {
   describe('isDraggable', () => {
