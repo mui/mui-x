@@ -69,7 +69,7 @@ export function useAnimateBarLabel(props: UseAnimateBarLabelParams): UseAnimateB
   });
 }
 
-const LABEL_OFFSET = 8;
+const LABEL_OFFSET = 4;
 
 function getCenterPlacement(props: UseAnimateBarLabelParams) {
   return {

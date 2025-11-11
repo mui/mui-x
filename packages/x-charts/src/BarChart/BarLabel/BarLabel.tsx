@@ -19,8 +19,6 @@ export const BarLabelComponent = styled('text', {
   stroke: 'none',
   fill: (theme.vars || theme)?.palette?.text?.primary,
   transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
-  textAnchor: 'middle',
-  dominantBaseline: 'central',
   pointerEvents: 'none',
   opacity: 1,
   [`&.${barLabelClasses.faded}`]: {
@@ -84,8 +82,59 @@ function BarLabel(inProps: BarLabelProps): React.JSX.Element {
   } = props;
 
   const animatedProps = useAnimateBarLabel(props);
+  const textAnchor = getTextAnchor(props);
+  const dominantBaseline = getDominantBaseline(props);
 
-  return <BarLabelComponent {...otherProps} {...animatedProps} />;
+  return (
+    <BarLabelComponent
+      textAnchor={textAnchor}
+      dominantBaseline={dominantBaseline}
+      {...otherProps}
+      {...animatedProps}
+    />
+  );
+}
+
+function getTextAnchor({
+  placement,
+  layout,
+  xOrigin,
+  yOrigin,
+  x,
+  y,
+}: Pick<
+  BarLabelProps,
+  'layout' | 'placement' | 'x' | 'y' | 'xOrigin' | 'yOrigin'
+>): React.SVGAttributes<SVGTextElement>['textAnchor'] {
+  if (placement === 'outside') {
+    if (layout === 'horizontal') {
+      return x < xOrigin ? 'end' : 'start';
+    }
+
+    return 'middle';
+  }
+
+  return 'middle';
+}
+
+function getDominantBaseline({
+  placement,
+  layout,
+  yOrigin,
+  y,
+}: Pick<
+  BarLabelProps,
+  'layout' | 'placement' | 'x' | 'y' | 'xOrigin' | 'yOrigin'
+>): React.SVGAttributes<SVGTextElement>['dominantBaseline'] {
+  if (placement === 'outside') {
+    if (layout === 'horizontal') {
+      return 'central';
+    }
+
+    return y < yOrigin ? 'auto' : 'hanging';
+  }
+
+  return 'central';
 }
 
 BarLabel.propTypes = {
