@@ -71,6 +71,7 @@ ChartsToolbarImageExportTrigger.propTypes = {
   options: PropTypes.shape({
     copyStyles: PropTypes.bool,
     fileName: PropTypes.string,
+    nonce: PropTypes.string,
     onBeforeExport: PropTypes.func,
     quality: PropTypes.number,
     type: PropTypes.string.isRequired,
