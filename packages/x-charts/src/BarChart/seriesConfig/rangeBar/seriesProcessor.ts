@@ -24,7 +24,7 @@ const seriesProcessor: SeriesProcessor<'rangeBar'> = (params, dataset) => {
     ) {
       throw new Error(
         [
-          `MUI X Charts: bar range series with id='${id}' has no data.`,
+          `MUI X Charts: range bar series with id='${id}' has no data.`,
           'Either provide a data property to the series or use the dataset prop.',
         ].join('\n'),
       );
@@ -37,7 +37,7 @@ const seriesProcessor: SeriesProcessor<'rangeBar'> = (params, dataset) => {
     if (datasetKeys && missingKeys.length > 0) {
       throw new Error(
         [
-          `MUI X Charts: bar range series with id='${id}' has incomplete datasetKeys.`,
+          `MUI X Charts: range bar series with id='${id}' has incomplete datasetKeys.`,
           `Properties ${missingKeys.map((key) => `"${key}"`).join(', ')} are missing.`,
         ].join('\n'),
       );
@@ -55,14 +55,14 @@ const seriesProcessor: SeriesProcessor<'rangeBar'> = (params, dataset) => {
               if (process.env.NODE_ENV !== 'production') {
                 if (start !== null) {
                   warnOnce([
-                    `MUI X Charts: Your dataset key "start" is used for plotting an bar range, but contains nonnumerical elements.`,
+                    `MUI X Charts: Your dataset key "start" is used for plotting an range bar, but contains nonnumerical elements.`,
                     'Range bars only support numbers.',
                   ]);
                 }
 
                 if (end !== null) {
                   warnOnce([
-                    `MUI X Charts: Your dataset key "end" is used for plotting an bar range, but contains nonnumerical elements.`,
+                    `MUI X Charts: Your dataset key "end" is used for plotting an range bar, but contains nonnumerical elements.`,
                     'Range bars only support numbers.',
                   ]);
                 }

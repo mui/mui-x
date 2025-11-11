@@ -22,7 +22,7 @@ export function getBarLabel<
     }
 
     if (typeof value === 'object') {
-      // For bar range, we show the range as "start - end"
+      // For range bars, we show the range as "start - end"
       return `${value.start} - ${value.end}`;
     }
 
