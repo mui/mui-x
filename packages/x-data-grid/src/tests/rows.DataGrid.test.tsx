@@ -437,8 +437,9 @@ describe('<DataGrid /> - Rows', () => {
     });
 
     it('should focus the last button if the clicked button removes itself', async () => {
-      let canDelete = true;
       function Test() {
+        const [canDelete, setCanDelete] = React.useState(true);
+
         return (
           <TestCase
             getActions={() =>
@@ -449,7 +450,7 @@ describe('<DataGrid /> - Rows', () => {
                       icon={<span />}
                       label="delete"
                       onClick={() => {
-                        canDelete = false;
+                        setCanDelete(false);
                       }}
                     />,
                   ]
