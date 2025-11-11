@@ -125,28 +125,28 @@ export const usePicker = <
   });
 
   const clearValue = useEventCallback(() =>
-    setValue(valueManager.emptyValue, { source: 'picker' }),
+    setValue(valueManager.emptyValue, { source: 'view' }),
   );
 
   const setValueToToday = useEventCallback(() =>
     setValue(valueManager.getTodayValue(adapter, timezone, valueType), {
-      source: 'picker',
+      source: 'view',
     }),
   );
 
-  const acceptValueChanges = useEventCallback(() => setValue(value, { source: 'picker' }));
+  const acceptValueChanges = useEventCallback(() => setValue(value, { source: 'view' }));
 
   const cancelValueChanges = useEventCallback(() =>
     setValue(state.lastCommittedValue, {
       skipPublicationIfPristine: true,
-      source: 'picker',
+      source: 'view',
     }),
   );
 
   const dismissViews = useEventCallback(() => {
     setValue(value, {
       skipPublicationIfPristine: true,
-      source: 'picker',
+      source: 'view',
     });
   });
 

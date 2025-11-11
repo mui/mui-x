@@ -312,10 +312,10 @@ export interface SetValueActionOptions<TError = string | null> {
    * Source of the change.
    * Simplified to one of the following values:
    * - 'field' (changes coming from the text field)
-   * - 'picker' (any interaction inside the picker UI: views, toolbar, action bar, shortcuts, etc.)
+   * - 'view' (any interaction inside the picker UI: views, toolbar, action bar, shortcuts, etc.)
    * - 'unknown' (unspecified or third-party triggers)
    */
-  source?: 'field' | 'picker' | 'unknown';
+  source?: 'field' | 'view' | 'unknown';
   /**
    * Whether the value should call `onChange` and `onAccept` when the value is not controlled and has never been modified.
    * If `true`, the `onChange` and `onAccept` callback will only be fired if the value has been modified (and is not equal to the last published value).

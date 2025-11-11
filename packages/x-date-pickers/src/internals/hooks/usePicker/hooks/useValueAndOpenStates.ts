@@ -158,7 +158,7 @@ export function useValueAndOpenStates<
         if (source) {
           inferredSource = source as PickerChangeHandlerContext<TError>['source'];
         } else if (shortcut) {
-          inferredSource = 'picker';
+          inferredSource = 'view';
         } else {
           // Default to unknown when not explicitly tagged by a picker call site
           inferredSource = 'unknown';
@@ -214,7 +214,7 @@ export function useValueAndOpenStates<
 
       setValue(newValue, {
         changeImportance: selectionState === 'finish' && closeOnSelect ? 'accept' : 'set',
-        source: 'picker',
+        source: 'view',
       });
     },
   );

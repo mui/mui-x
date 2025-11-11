@@ -210,7 +210,7 @@ The `onAccept` callback receives a second argument `context` with extra informat
 
 - `validationError`: the validation result of the accepted value.
 - `source`: compound source describing where the acceptance originated from. Typical values include:
-  - `"field"`, `"picker"` and `"unknown"`.
+  - `"field"`, `"view"` and `"unknown"`.
 - `shortcut` (optional): the shortcut metadata when the value was accepted via a shortcut selection.
 
 For custom error handling, you can use the `validationError` property of the `context` object.
@@ -235,8 +235,8 @@ The `source` property allows you to implement different behaviors depending on t
     }
 
     switch (context.source) {
-      case 'picker':
-        analytics.track('date_accepted_from_picker', {
+      case 'view':
+        analytics.track('date_accepted_from_view', {
           value: newValue,
           shortcut: context.shortcut?.id,
         });
