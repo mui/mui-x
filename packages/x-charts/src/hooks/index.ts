@@ -10,6 +10,7 @@ export * from './useDataset';
 export * from './useScatterSeries';
 export * from './usePieSeries';
 export * from './useBarSeries';
+export * from './useBarRangeSeries';
 export * from './useLineSeries';
 export * from './useRadarSeries';
 export * from './useItemHighlighted';

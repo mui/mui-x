@@ -1,5 +1,6 @@
 import type { BarSeriesType } from '../models';
 import type { SeriesId } from '../models/seriesType/common';
+import { BarRangeValueType } from '../models/seriesType/barRange';
 
 export type AnimationData = {
   x: number;
@@ -29,4 +30,16 @@ export interface MaskData extends AnimationData {
   id: string;
   hasNegative: boolean;
   hasPositive: boolean;
+}
+
+export interface ProcessedBarRangeSeriesData {
+  seriesId: SeriesId;
+  data: ProcessedBarRangeData[];
+}
+
+export interface ProcessedBarRangeData extends AnimationData {
+  seriesId: SeriesId;
+  dataIndex: number;
+  color: string;
+  value: BarRangeValueType | null;
 }

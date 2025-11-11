@@ -16,7 +16,7 @@
     "colorGetter": {
       "type": { "description": "(data: ColorCallbackValue&lt;TValue&gt;) =&gt; string" }
     },
-    "data": { "type": { "description": "readonly (number | null)[]" } },
+    "data": { "type": { "description": "ReadonlyArray&lt;BarValueType | null&gt;" } },
     "dataKey": { "type": { "description": "string" } },
     "highlightScope": { "type": { "description": "HighlightScope" } },
     "id": { "type": { "description": "SeriesId" } },

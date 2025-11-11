@@ -12,14 +12,17 @@ import { useChartCartesianAxis } from '../../internals/plugins/featurePlugins/us
 import { useChartInteraction } from '../../internals/plugins/featurePlugins/useChartInteraction';
 import { useChartZAxis } from '../../internals/plugins/featurePlugins/useChartZAxis';
 import { useChartHighlight } from '../../internals/plugins/featurePlugins/useChartHighlight/useChartHighlight';
-import { barSeriesConfig } from '../../BarChart/seriesConfig';
+import { barSeriesConfig, barRangeSeriesConfig } from '../../BarChart/seriesConfig';
 import { scatterSeriesConfig } from '../../ScatterChart/seriesConfig';
 import { lineSeriesConfig } from '../../LineChart/seriesConfig';
 import { pieSeriesConfig } from '../../PieChart/seriesConfig';
 import { ChartSeriesType } from '../../models/seriesType/config';
 
-export const defaultSeriesConfig: ChartSeriesConfig<'bar' | 'scatter' | 'line' | 'pie'> = {
+export const defaultSeriesConfig: ChartSeriesConfig<
+  'bar' | 'barRange' | 'scatter' | 'line' | 'pie'
+> = {
   bar: barSeriesConfig,
+  barRange: barRangeSeriesConfig,
   scatter: scatterSeriesConfig,
   line: lineSeriesConfig,
   pie: pieSeriesConfig,
