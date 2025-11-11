@@ -176,7 +176,7 @@ TimeRangePicker.propTypes = {
    * @param {TValue} value The new value.
    * @param {FieldChangeHandlerContext<TError>} context Context about this change:
    * - `validationError`: validation result of the current value
-   * - `source`: source of the change. One of 'field' | 'picker' | 'unknown'
+   * - `source`: source of the change. One of 'field' | 'view' | 'unknown'
    * - `shortcut` (optional): the shortcut metadata if the change was triggered by a shortcut selection
    */
   onChange: PropTypes.func,
