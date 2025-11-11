@@ -124,9 +124,7 @@ export const usePicker = <
     getStepNavigation,
   });
 
-  const clearValue = useEventCallback(() =>
-    setValue(valueManager.emptyValue, { source: 'view' }),
-  );
+  const clearValue = useEventCallback(() => setValue(valueManager.emptyValue, { source: 'view' }));
 
   const setValueToToday = useEventCallback(() =>
     setValue(valueManager.getTodayValue(adapter, timezone, valueType), {
