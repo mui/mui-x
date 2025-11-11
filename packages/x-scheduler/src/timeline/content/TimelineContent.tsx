@@ -51,7 +51,7 @@ export const TimelineContent = React.forwardRef(function TimelineContent(
 
   const adapter = useAdapter();
   const store = useTimelineStoreContext();
-  const resources = useStore(store, schedulerResourceSelectors.processedResourceList);
+  const resources = useStore(store, schedulerResourceSelectors.processedResourceFlatList);
   const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
   const view = useStore(store, timelineViewSelectors.view);
 
@@ -121,6 +121,7 @@ export const TimelineContent = React.forwardRef(function TimelineContent(
                 start={start}
                 end={end}
                 occurrences={occurrences}
+                resourceId={resource.id}
               />
             )}
           </TimelinePrimitive.SubGrid>

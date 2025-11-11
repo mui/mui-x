@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useAdapter } from '../use-adapter/useAdapter';
-import { SchedulerValidDate } from '../models';
+import { CalendarProcessedDate, SchedulerValidDate } from '../models';
 
 export function useElementPositionInCollection(
   parameters: useElementPositionInCollection.Parameters,
@@ -16,8 +16,8 @@ export function useElementPositionInCollection(
     const collectionStartTimestamp = getTimestamp(collectionStart);
     const collectionEndTimestamp = getTimestamp(collectionEnd);
     const collectionDurationMs = collectionEndTimestamp - collectionStartTimestamp;
-    const startTimestamp = Math.max(getTimestamp(start), collectionStartTimestamp);
-    const endTimestamp = Math.min(getTimestamp(end), collectionEndTimestamp);
+    const startTimestamp = Math.max(start.timestamp, collectionStartTimestamp);
+    const endTimestamp = Math.min(end.timestamp, collectionEndTimestamp);
 
     return {
       position: (startTimestamp - collectionStartTimestamp) / collectionDurationMs,
@@ -28,8 +28,8 @@ export function useElementPositionInCollection(
 
 namespace useElementPositionInCollection {
   export interface Parameters {
-    start: SchedulerValidDate;
-    end: SchedulerValidDate;
+    start: CalendarProcessedDate;
+    end: CalendarProcessedDate;
     collectionStart: SchedulerValidDate;
     collectionEnd: SchedulerValidDate;
   }
