@@ -27,7 +27,7 @@ describe('LineChart', () => {
         />,
       );
 
-      expect(page.getByText(dataLength.toLocaleString())).toBeInTheDocument();
+      expect(page.getByText(dataLength.toLocaleString()).first()).toBeInTheDocument();
     },
     options,
   );
@@ -44,7 +44,7 @@ describe('LineChart', () => {
         />,
       );
 
-      expect(page.getByText(dataLength.toLocaleString())).toBeInTheDocument();
+      expect(page.getByText(dataLength.toLocaleString()).first()).toBeInTheDocument();
     },
     options,
   );

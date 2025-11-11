@@ -26,7 +26,7 @@ describe('ScatterChart', () => {
         />,
       );
 
-      expect(page.getByText(dataLength.toLocaleString('en-US'))).toBeInTheDocument();
+      expect(page.getByText(dataLength.toLocaleString('en-US')).first()).toBeInTheDocument();
     },
     options,
   );

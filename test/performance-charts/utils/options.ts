@@ -1,6 +1,6 @@
 import type { BenchOptions } from 'vitest';
 import { cleanup } from 'vitest-browser-react/pure';
-import { commands } from '@vitest/browser/context';
+import { commands } from 'vitest/browser';
 import { isTrace } from './env';
 
 const defaultIterations = isTrace ? 1 : 100;

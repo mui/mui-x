@@ -18,7 +18,7 @@ describe('FunnelChart', () => {
     async () => {
       const page = render(<FunnelChart series={series} width={500} height={300} />);
 
-      expect(page.getByText(dataLength.toLocaleString())).toBeInTheDocument();
+      expect(page.getByText(dataLength.toLocaleString()).first()).toBeInTheDocument();
     },
     options,
   );
