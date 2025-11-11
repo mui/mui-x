@@ -32,7 +32,7 @@ describe('BarChartPro', () => {
         />,
       );
 
-      expect(page.getByText('60')).toBeInTheDocument();
+      expect(page.getByText('60').first()).toBeInTheDocument();
     },
     options,
   );

@@ -34,7 +34,7 @@ describe('ScatterChartPro', () => {
         />,
       );
 
-      expect(page.getByText('60', { exact: true })).toBeInTheDocument();
+      expect(page.getByText('60', { exact: true }).first()).toBeInTheDocument();
     },
     options,
   );
@@ -72,7 +72,7 @@ describe('ScatterChartPro', () => {
     bench(
       'ScatterChartPro with big data amount (batch renderer)',
       async () => {
-        const { findByText } = render(
+        const page = render(
           <ScatterChartPro
             xAxis={[
               {
@@ -90,9 +90,7 @@ describe('ScatterChartPro', () => {
           />,
         );
 
-        await findByText('60', { ignore: 'span' });
-
-        cleanup();
+        expect(page.getByText('60').first()).toBeInTheDocument();
       },
       options,
     );
@@ -100,7 +98,7 @@ describe('ScatterChartPro', () => {
     bench(
       'ScatterChartPro with big data amount and zoomed in (batch renderer)',
       async () => {
-        const { findByText } = render(
+        const page = render(
           <ScatterChartPro
             xAxis={[
               {
@@ -122,9 +120,7 @@ describe('ScatterChartPro', () => {
           />,
         );
 
-        await findByText('50.06', { ignore: 'span' });
-
-        cleanup();
+        expect(page.getByText('50.06').first()).toBeInTheDocument();
       },
       options,
     );

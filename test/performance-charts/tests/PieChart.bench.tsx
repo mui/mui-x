@@ -27,7 +27,7 @@ describe('PieChart', () => {
         />,
       );
 
-      expect(page.getByText('50', { exact: true })).toBeInTheDocument();
+      expect(page.getByText('50', { exact: true }).first()).toBeInTheDocument();
     },
     options,
   );
