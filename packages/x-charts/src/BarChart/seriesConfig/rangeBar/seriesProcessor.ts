@@ -56,14 +56,14 @@ const seriesProcessor: SeriesProcessor<'rangeBar'> = (params, dataset) => {
                 if (start !== null) {
                   warnOnce([
                     `MUI X Charts: Your dataset key "start" is used for plotting an bar range, but contains nonnumerical elements.`,
-                    'Bar ranges only support numbers.',
+                    'Range bars only support numbers.',
                   ]);
                 }
 
                 if (end !== null) {
                   warnOnce([
                     `MUI X Charts: Your dataset key "end" is used for plotting an bar range, but contains nonnumerical elements.`,
-                    'Bar ranges only support numbers.',
+                    'Range bars only support numbers.',
                   ]);
                 }
               }
