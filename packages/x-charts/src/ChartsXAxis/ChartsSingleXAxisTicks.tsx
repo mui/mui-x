@@ -46,6 +46,7 @@ function ChartsSingleXAxisTicks(inProps: ChartsSingleXAxisProps) {
     tickPlacement,
     tickLabelPlacement,
     tickLabelMinGap,
+    tickSpacing,
     height: axisHeight,
   } = defaultizedProps;
 
@@ -62,6 +63,7 @@ function ChartsSingleXAxisTicks(inProps: ChartsSingleXAxisProps) {
     tickInterval,
     tickPlacement,
     tickLabelPlacement,
+    tickSpacing,
     direction: 'x',
   });
 
