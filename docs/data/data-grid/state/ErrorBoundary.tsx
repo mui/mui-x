@@ -49,4 +49,6 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
   }
 }
 
-export { ErrorBoundary };
+export { ErrorBoundary, type ErrorBoundaryState, type FallbackRender };
+
+export default ErrorBoundary;
