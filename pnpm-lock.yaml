@@ -269,8 +269,8 @@ importers:
         specifier: 'catalog:'
         version: 7.3.5(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@mui/monorepo':
-        specifier: github:mui/material-ui#3cddd14593b0d9f7dff75b6a0d409cc2d5e086c7
-        version: https://codeload.github.com/mui/material-ui/tar.gz/3cddd14593b0d9f7dff75b6a0d409cc2d5e086c7(@babel/core@7.28.5)(@types/express@5.0.3)(karma@6.4.4)
+        specifier: github:mui/material-ui#15ff3955e950f3d1ee70b0ea9d9fd8c1057ee0cb
+        version: https://codeload.github.com/mui/material-ui/tar.gz/15ff3955e950f3d1ee70b0ea9d9fd8c1057ee0cb(@babel/core@7.28.5)(@types/express@5.0.3)(karma@6.4.4)
       '@mui/utils':
         specifier: 'catalog:'
         version: 7.3.5(@types/react@19.2.2)(react@19.2.0)
@@ -4220,10 +4220,10 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/3cddd14593b0d9f7dff75b6a0d409cc2d5e086c7':
-    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/3cddd14593b0d9f7dff75b6a0d409cc2d5e086c7}
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/15ff3955e950f3d1ee70b0ea9d9fd8c1057ee0cb':
+    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/15ff3955e950f3d1ee70b0ea9d9fd8c1057ee0cb}
     version: 7.3.5
-    engines: {node: '>=22.18.0', pnpm: 10.19.0}
+    engines: {node: '>=22.18.0', pnpm: 10.20.0}
 
   '@mui/private-theming@5.17.1':
     resolution: {integrity: sha512-XMxU0NTYcKqdsG8LRmSoxERPXwMbp16sIXPcLVgLGII/bVNagX0xaheWAwFv8+zDK7tI3ajllkuD3GZZE++ICQ==}
@@ -4531,12 +4531,12 @@ packages:
   '@napi-rs/wasm-runtime@0.2.4':
     resolution: {integrity: sha512-9zESzOO5aDByvhIAsOy9TbpZ0Ur2AJbUI7UT73kcUTS2mxAMHOBaa1st/jAymNoCtvrit99kkzT1FZuXVcgfIQ==}
 
-  '@netlify/functions@5.0.1':
-    resolution: {integrity: sha512-olCwsnp0GDpjSYPfWrtUIvOsZcrRta6lxwZWfl3XxucXOw5AcGDKSqKGRElzyyZoRA8OXVh5B5NHj5Jd4PRx+A==}
+  '@netlify/functions@5.1.0':
+    resolution: {integrity: sha512-LZtiQtf/QzPHIeNDZuIBxx04kmU7lCipWqZ26ejX7mYSB3yj2wvpZfF49kD8B8FoKTydSvgFmBpIcCO5FvpEXA==}
     engines: {node: '>=18.0.0'}
 
-  '@netlify/types@2.1.0':
-    resolution: {integrity: sha512-ktUb5d58pt1lQGXO5E9S0F1ljM0g+CoQuGTVII0IxBc0apmPq5RI0o3OWLY7U3ZERRiYTg5UfjiMihBEzuZsuw==}
+  '@netlify/types@2.2.0':
+    resolution: {integrity: sha512-XOWlZ2wPpdRKkAOcQbjIf/Qz7L4RjcSVINVNQ9p3F6U8V6KSEOsB3fPrc6Ly8EOeJioHUepRPuzHzJE/7V5EsA==}
     engines: {node: ^18.14.0 || >=20}
 
   '@next/env@15.5.6':
@@ -5126,8 +5126,8 @@ packages:
   '@sinonjs/samsam@8.0.3':
     resolution: {integrity: sha512-hw6HbX+GyVZzmaYNh82Ecj1vdGZrqVIn/keDTg63IgAwiQPO+xCz99uG6Woqgb4tM0mUiFENKZ4cqd7IX94AXQ==}
 
-  '@slack/bolt@4.5.0':
-    resolution: {integrity: sha512-1YbgO/UDLYa0vOtGsTohpnl/dSKwo7RbUd29IJMfqNDLn+t81MmIL0w2KPNjZJQLsoevTRNCdHDeh4PJyY8DIA==}
+  '@slack/bolt@4.6.0':
+    resolution: {integrity: sha512-xPgfUs2+OXSugz54Ky07pA890+Qydk22SYToi8uGpXeHSt1JWwFJkRyd/9Vlg5I1AdfdpGXExDpwnbuN9Q/2dQ==}
     engines: {node: '>=18', npm: '>=8.6.0'}
     peerDependencies:
       '@types/express': ^5.0.0
@@ -14809,10 +14809,10 @@ snapshots:
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0)
       '@types/react': 19.2.2
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/3cddd14593b0d9f7dff75b6a0d409cc2d5e086c7(@babel/core@7.28.5)(@types/express@5.0.3)(karma@6.4.4)':
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/15ff3955e950f3d1ee70b0ea9d9fd8c1057ee0cb(@babel/core@7.28.5)(@types/express@5.0.3)(karma@6.4.4)':
     dependencies:
-      '@netlify/functions': 5.0.1
-      '@slack/bolt': 4.5.0(@types/express@5.0.3)
+      '@netlify/functions': 5.1.0
+      '@slack/bolt': 4.6.0(@types/express@5.0.3)
       babel-plugin-transform-import-meta: 2.3.3(@babel/core@7.28.5)
       execa: 9.6.0
       karma-spec-reporter: 0.0.36(karma@6.4.4)
@@ -15085,11 +15085,11 @@ snapshots:
       '@emnapi/runtime': 1.5.0
       '@tybys/wasm-util': 0.9.0
 
-  '@netlify/functions@5.0.1':
+  '@netlify/functions@5.1.0':
     dependencies:
-      '@netlify/types': 2.1.0
+      '@netlify/types': 2.2.0
 
-  '@netlify/types@2.1.0': {}
+  '@netlify/types@2.2.0': {}
 
   '@next/env@15.5.6': {}
 
@@ -15707,7 +15707,7 @@ snapshots:
       '@sinonjs/commons': 3.0.1
       type-detect: 4.1.0
 
-  '@slack/bolt@4.5.0(@types/express@5.0.3)':
+  '@slack/bolt@4.6.0(@types/express@5.0.3)':
     dependencies:
       '@slack/logger': 4.0.0
       '@slack/oauth': 3.0.4
