@@ -2,7 +2,8 @@ import * as React from 'react';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { alpha, useTheme } from '@mui/material/styles';
-import { ChartContainerPro } from '@mui/x-charts-pro/ChartContainerPro';
+import { ChartDataProviderPro } from '@mui/x-charts-pro/ChartDataProviderPro';
+import { ChartsSurface } from '@mui/x-charts-pro/ChartsSurface';
 import { LinePlot } from '@mui/x-charts-pro/LineChart';
 import { ChartsXAxis } from '@mui/x-charts-pro/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts-pro/ChartsYAxis';
@@ -17,6 +18,7 @@ import { ChartsGrid } from '@mui/x-charts-pro/ChartsGrid';
 import { ChartZoomSlider } from '@mui/x-charts-pro/ChartZoomSlider';
 import { ChartsClipPath } from '@mui/x-charts-pro/ChartsClipPath';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
+import { ChartsLegend } from '@mui/x-charts-pro/ChartsLegend';
 import { DATA } from '../dataset/usUnempGdp';
 
 const dates = DATA.map((d) => new Date(d.date));
@@ -71,8 +73,8 @@ function RecessionBands({ periods }: { periods: RecessionPeriod[] }) {
           return null;
         }
 
-        const textX = x + w / 2;
-        const textY = top + height / 3;
+        const textX = x - 5;
+        const textY = top + height / 5;
 
         return (
           <React.Fragment key={index}>
@@ -160,12 +162,20 @@ function MaxUnemploymentLabel() {
 export default function LineOverview() {
   const clipPathId = React.useId();
   return (
-    <Box width="100%">
-      <Box sx={{ mb: 2 }}>
+    <Box sx={{ width: '100%' }}>
+      <Box
+        sx={{
+          width: '100%',
+          overflow: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
         <Typography>US unemployment rate comparison with GDP per capita</Typography>
       </Box>
       <Box sx={{ width: '100%', height: 400 }}>
-        <ChartContainerPro
+        <ChartDataProviderPro
           experimentalFeatures={{ preferStrictDomainInLineCharts: true }}
           series={[
             {
@@ -210,7 +220,7 @@ export default function LineOverview() {
               id: 'unemployment-axis',
               scaleType: 'linear',
               valueFormatter: (value) => `${value}%`,
-              width: 65,
+              width: 55,
               position: 'left',
             },
             {
@@ -221,28 +231,28 @@ export default function LineOverview() {
               valueFormatter: (value) => `${(value / 1000).toLocaleString()}k`,
             },
           ]}
-          sx={{
-            '.MuiLineElement-root': {
-              strokeWidth: 1.5,
-            },
-          }}
         >
-          <ChartsClipPath id={clipPathId} />
-          <RecessionBands periods={recessions} />
-          <ChartsGrid horizontal />
-          <g clipPath={`url(#${clipPathId})`}>
-            <LinePlot />
-            <MaxUnemploymentLabel />
-          </g>
-          <ChartsXAxis />
-          <ChartsYAxis axisId="unemployment-axis" label="Unemployment Rate" />
-          <ChartsYAxis axisId="gdp-axis" label="GDP per capita in US$" />
+          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 1 }}>
+            <ChartsLegend />
+          </Box>
+          <ChartsSurface>
+            <ChartsClipPath id={clipPathId} />
+            <RecessionBands periods={recessions} />
+            <ChartsGrid horizontal />
+            <g clipPath={`url(#${clipPathId})`}>
+              <LinePlot />
+              <MaxUnemploymentLabel />
+            </g>
+            <ChartsXAxis />
+            <ChartsYAxis axisId="unemployment-axis" label="Unemployment Rate" />
+            <ChartsYAxis axisId="gdp-axis" label="GDP per capita in US$" />
+            <ChartsAxisHighlight x="line" />
+            <ChartZoomSlider />
+          </ChartsSurface>
           <ChartsTooltip />
-          <ChartsAxisHighlight x="line" />
-          <ChartZoomSlider />
-        </ChartContainerPro>
+        </ChartDataProviderPro>
       </Box>
-      <Box sx={{ mt: 1, textAlign: 'right' }}>
+      <Box sx={{ mt: 1, textAlign: 'left' }}>
         <Typography variant="caption" color="text.secondary">
           Source: FRED
         </Typography>
