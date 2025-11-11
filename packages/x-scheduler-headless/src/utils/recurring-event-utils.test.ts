@@ -1813,7 +1813,7 @@ describe('recurring-event-utils', () => {
       expect(adapter.isValid(result.until!)).to.equal(true);
     });
 
-    it('should throw when the the input is empty', () => {
+    it('should throw when the input is empty', () => {
       expect(() => parseRRuleString(adapter, '')).to.throw(
         'Scheduler: RRULE must include a FREQ property.',
       );

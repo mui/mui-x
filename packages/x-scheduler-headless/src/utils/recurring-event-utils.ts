@@ -1085,7 +1085,7 @@ export function parseRRuleString(
     }
 
     if (!SUPPORTED_RRULE_KEYS.includes(key as any)) {
-      throw new Error(`Scheduler:Unsupported RRULE property: "${key}"`);
+      throw new Error(`Scheduler: Unsupported RRULE property: "${key}"`);
     }
 
     rruleObject[key] = value;
