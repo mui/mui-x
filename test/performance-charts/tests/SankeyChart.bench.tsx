@@ -1,7 +1,6 @@
 import * as React from 'react';
-// eslint-disable-next-line no-restricted-imports
-import { render, cleanup } from '@testing-library/react';
-import { describe } from 'vitest';
+import { render } from 'vitest-browser-react/pure';
+import { describe, expect } from 'vitest';
 import { Unstable_SankeyChart as SankeyChart } from '@mui/x-charts-pro/SankeyChart';
 import { options } from '../utils/options';
 import { bench } from '../utils/bench';
@@ -30,7 +29,7 @@ describe('SankeyChart', () => {
   bench(
     'SankeyChart with big data amount',
     async () => {
-      const { findByText } = render(
+      const page = render(
         <SankeyChart
           series={{
             data: {
@@ -43,9 +42,7 @@ describe('SankeyChart', () => {
       );
 
       // Wait for SVG to be rendered
-      await findByText('node0');
-
-      cleanup();
+      expect(page.getByText('node0')).toBeInTheDocument();
     },
     options,
   );
