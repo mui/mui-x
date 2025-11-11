@@ -619,6 +619,13 @@
       },
       "additionalInfo": { "sx": true }
     },
+    "tabbing": {
+      "type": {
+        "name": "enum",
+        "description": "'all'<br>&#124;&nbsp;'content'<br>&#124;&nbsp;'header'<br>&#124;&nbsp;'none'"
+      },
+      "default": "\"none\""
+    },
     "throttleRowsMs": { "type": { "name": "number" }, "default": "0" },
     "treeData": { "type": { "name": "bool" }, "default": "false" },
     "virtualizeColumnsWithAutoRowHeight": { "type": { "name": "bool" }, "default": "false" }

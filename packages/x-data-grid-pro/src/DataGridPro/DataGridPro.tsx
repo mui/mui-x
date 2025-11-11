@@ -1071,6 +1071,15 @@ DataGridProRaw.propTypes = {
     PropTypes.object,
   ]),
   /**
+   * Sets the tabbing behavior for the Data Grid.
+   * - "none": No Data Grid specific tabbing behavior. Pressing the tab key will move the focus to the next element in the tab sequence.
+   * - "content": Pressing the tab key will move the focus to the next cell in the same row or the first cell in the next row. Shift+Tab will move the focus to the previous cell in the same row or the last cell in the previous row. Tabbing is not enabled for the header.
+   * - "header": Pressing the tab key will move the focus to the next column group, column header or header filter. Shift+Tab will move the focus to the previous column group, column header or header filter. Tabbing is not enabled for the content.
+   * - "all": Combines the "content" and "header" behavior.
+   * @default "none"
+   */
+  tabbing: PropTypes.oneOf(['all', 'content', 'header', 'none']),
+  /**
    * If positive, the Data Grid will throttle updates coming from `apiRef.current.updateRows` and `apiRef.current.setRows`.
    * It can be useful if you have a high update rate but do not want to do heavy work like filtering / sorting or rendering on each  individual update.
    * @default 0
