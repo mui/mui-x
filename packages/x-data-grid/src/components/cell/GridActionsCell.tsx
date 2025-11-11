@@ -9,7 +9,7 @@ import { GridMenu, GridMenuProps } from '../menu/GridMenu';
 import { GridActionsColDef } from '../../models/colDef/gridColDef';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
-import { GridActionsCellItem, type GridActionsCellItemProps } from './GridActionsCellItem';
+import type { GridActionsCellItemProps } from './GridActionsCellItem';
 
 const hasActions = (colDef: any): colDef is GridActionsColDef =>
   typeof colDef.getActions === 'function';
@@ -352,7 +352,6 @@ GridActionsCell.propTypes = {
   value: PropTypes.any,
 } as any;
 
-GridActionsCell.Item = GridActionsCellItem as React.FC<GridActionsCellItemProps>;
 export { GridActionsCell };
 
 // Temporary wrapper for backward compatibility.

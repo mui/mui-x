@@ -16,6 +16,7 @@ import {
   useGridSelector,
   useGridApiContext,
   GridActionsCell,
+  GridActionsCellItem,
 } from '@mui/x-data-grid';
 import {
   randomCreatedDate,
@@ -112,13 +113,13 @@ function ActionsCell(props) {
     <GridActionsCell {...props}>
       {isInEditMode ? (
         <React.Fragment>
-          <GridActionsCell.Item
+          <GridActionsCellItem
             icon={<SaveIcon />}
             label="Save"
             material={{ sx: { color: 'primary.main' } }}
             onClick={() => handleSaveClick(props.id)}
           />
-          <GridActionsCell.Item
+          <GridActionsCellItem
             icon={<CancelIcon />}
             label="Cancel"
             className="textPrimary"
@@ -128,14 +129,14 @@ function ActionsCell(props) {
         </React.Fragment>
       ) : (
         <React.Fragment>
-          <GridActionsCell.Item
+          <GridActionsCellItem
             icon={<EditIcon />}
             label="Edit"
             className="textPrimary"
             onClick={() => handleEditClick(props.id)}
             color="inherit"
           />
-          <GridActionsCell.Item
+          <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
             onClick={() => handleDeleteClick(props.id)}
