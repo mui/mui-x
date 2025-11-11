@@ -29,6 +29,7 @@ import {
   getWeekDayCode,
   getWeekDayNumberFromCode,
   adjustRRuleForAllMove,
+  parseRRuleString,
 } from './recurring-event-utils';
 import { diffIn } from '../use-adapter';
 import { mergeDateAndTime } from './date-utils';
@@ -1755,6 +1756,124 @@ describe('recurring-event-utils', () => {
       expect(updatedEvents.updated).to.deep.equal([
         { id: original.id, exDates: [adapter.startOfDay(occurrenceStart)] },
       ]);
+    });
+  });
+
+  describe('normalizeRRule', () => {
+    it('should return the same object if the input is already an object', () => {
+      const input = { freq: 'DAILY', interval: 2 } as RecurringEventRecurrenceRule;
+      const result = parseRRuleString(adapter, input);
+      expect(result).to.equal(input);
+    });
+
+    it('should parse a simple RRULE string into an object', () => {
+      const result = parseRRuleString(adapter, 'FREQ=DAILY;INTERVAL=2;COUNT=5');
+      expect(result).to.deep.equal({
+        freq: 'DAILY',
+        interval: 2,
+        count: 5,
+      });
+    });
+
+    it('should parse BYDAY correctly', () => {
+      const result = parseRRuleString(adapter, 'FREQ=WEEKLY;BYDAY=MO,WE,FR');
+      expect(result).to.deep.equal({
+        freq: 'WEEKLY',
+        byDay: ['MO', 'WE', 'FR'],
+      });
+
+      const resultWithOrdinals = parseRRuleString(adapter, 'FREQ=MONTHLY;BYDAY=-1FR');
+      expect(resultWithOrdinals).to.deep.equal({
+        freq: 'MONTHLY',
+        byDay: ['-1FR'],
+      });
+    });
+
+    it('should parse BYMONTHDAY correctly', () => {
+      const result = parseRRuleString(adapter, 'FREQ=WEEKLY;BYMONTHDAY=15, 28');
+      expect(result).to.deep.equal({
+        freq: 'WEEKLY',
+        byMonthDay: [15, 28],
+      });
+    });
+
+    it('should parse BYMONTH correctly', () => {
+      const result = parseRRuleString(adapter, 'FREQ=YEARLY;BYMONTH=1,6,12');
+      expect(result).to.deep.equal({
+        freq: 'YEARLY',
+        byMonth: [1, 6, 12],
+      });
+    });
+
+    it('should parse UNTIL correctly', () => {
+      const result = parseRRuleString(adapter, 'FREQ=DAILY;UNTIL=2025-03-15T00:00:00Z');
+      expect(adapter.isValid(result.until!)).to.equal(true);
+    });
+
+    it('should throw when the the input is empty', () => {
+      expect(() => parseRRuleString(adapter, '')).to.throw(
+        'Scheduler: RRULE must include a FREQ property.',
+      );
+    });
+
+    it('should throw when the key or the value are empty', () => {
+      expect(() => parseRRuleString(adapter, 'FREQ=DAILY;=2')).to.throw(
+        'Scheduler: Invalid RRULE part: "=2"',
+      );
+      expect(() => parseRRuleString(adapter, 'FREQ=DAILY;INTERVAL=')).to.throw(
+        'Scheduler: Invalid RRULE part: "INTERVAL="',
+      );
+    });
+
+    it('should throw when UNTIL is invalid', () => {
+      expect(() => parseRRuleString(adapter, 'FREQ=DAILY;UNTIL=not-a-date')).to.throw(
+        'Scheduler: Invalid UNTIL date: "NOT-A-DATE"',
+      );
+    });
+
+    it('should throw when FREQ is missing', () => {
+      expect(() => parseRRuleString(adapter, 'INTERVAL=2')).to.throw(
+        'Scheduler: RRULE must include a FREQ property.',
+      );
+    });
+
+    it('should throw when the RRULE contains unsupported properties', () => {
+      expect(() => parseRRuleString(adapter, 'FREQ=DAILY;FOO=bar')).to.throw(
+        'Scheduler:Unsupported RRULE property: "FOO"',
+      );
+    });
+
+    it('should throw for invalid INTERVAL value', () => {
+      expect(() => parseRRuleString(adapter, 'FREQ=DAILY;INTERVAL=zero')).to.throw(
+        'Scheduler: Invalid INTERVAL value: "ZERO"',
+      );
+    });
+
+    it('should throw for invalid BYMONTHDAY values', () => {
+      expect(() => parseRRuleString(adapter, 'FREQ=MONTHLY;BYMONTHDAY=0,50')).to.throw(
+        'Scheduler: Invalid BYMONTHDAY values: "0,50"',
+      );
+    });
+
+    it('should throw for invalid BYMONTH values', () => {
+      expect(() => parseRRuleString(adapter, 'FREQ=YEARLY;BYMONTH=0,13')).to.throw(
+        'Scheduler: Invalid BYMONTH values: "0,13"',
+      );
+    });
+
+    it('should throw for invalid COUNT value', () => {
+      expect(() => parseRRuleString(adapter, 'FREQ=DAILY;COUNT=-2')).to.throw(
+        'Scheduler: Invalid COUNT value: "-2"',
+      );
+    });
+
+    it('should trim whitespace and handle lowercase properties', () => {
+      const result = parseRRuleString(adapter, '  freq=weekly ; byday= mo, tu  ; interval= 3 ');
+      expect(result).to.deep.equal({
+        freq: 'WEEKLY',
+        byDay: ['MO', 'TU'],
+        interval: 3,
+      });
     });
   });
 });
