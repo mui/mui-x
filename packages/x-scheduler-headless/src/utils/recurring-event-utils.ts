@@ -763,7 +763,7 @@ export function decideSplitRRule(
 
   // Case A — user provided a new RRULE → respect it (including COUNT/UNTIL)
   if (hasRRuleProp && changesRRule) {
-    return changesRRule;
+    return changesRRule as RecurringEventRecurrenceRule;
   }
 
   // Case B — user explicitly removed recurrence → one-off

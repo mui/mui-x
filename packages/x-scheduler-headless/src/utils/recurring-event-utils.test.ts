@@ -1466,7 +1466,9 @@ describe('recurring-event-utils', () => {
       // Original series is truncated with UNTIL = day(occurrenceStart) - 1
       const expectedUntil = adapter.addDays(adapter.startOfDay(occurrenceStart), -1);
       expect(updatedEvents.updated).to.have.length(1);
-      expect(updatedEvents.updated![0].rrule!.until).toEqualDateTime(expectedUntil);
+      expect(
+        (updatedEvents.updated![0].rrule as RecurringEventRecurrenceRule)!.until,
+      ).toEqualDateTime(expectedUntil);
     });
   });
 
