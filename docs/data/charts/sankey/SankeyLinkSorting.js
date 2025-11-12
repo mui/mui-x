@@ -3,12 +3,12 @@ import Typography from '@mui/material/Typography';
 
 const data = {
   links: [
-    { source: 'B', target: 'Y', value: 5 },
-    { source: 'Y', target: 'Z', value: 8 },
-    { source: 'X', target: 'Z', value: 25 },
-    { source: 'B', target: 'X', value: 10 },
-    { source: 'A', target: 'X', value: 25 },
     { source: 'C', target: 'Y', value: 10 },
+    { source: 'B', target: 'X', value: 10 },
+    { source: 'B', target: 'Y', value: 5 },
+    { source: 'X', target: 'Z', value: 25 },
+    { source: 'Y', target: 'Z', value: 8 },
+    { source: 'A', target: 'X', value: 25 },
   ],
 };
 
