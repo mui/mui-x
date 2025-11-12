@@ -12,7 +12,7 @@ export default function MultiInputFieldSeparatorSlotProps() {
           slotProps={{ separator: { sx: { opacity: 0.5 } } }}
         />
         <DateRangePicker
-          slotProps={{ separator: { sx: { opacity: 0.5 } } }}
+          slotProps={{ separator: { sx: { opacity: 0.5 } } } as any}
           slots={{ field: MultiInputDateRangeField }}
         />
       </DemoContainer>
