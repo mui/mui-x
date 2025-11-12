@@ -3,8 +3,8 @@ import {
   RecurringEventWeekDayCode,
   RecurringEventByDayValue,
   SchedulerProcessedEvent,
-  CalendarEventOccurrence,
-  CalendarEventUpdatedProperties,
+  SchedulerEventOccurrence,
+  SchedulerEventUpdatedProperties,
   RecurringEventRecurrenceRule,
   SchedulerValidDate,
   SchedulerEvent,
@@ -161,9 +161,9 @@ export function getRecurringEventOccurrencesForVisibleDays(
   start: SchedulerValidDate,
   end: SchedulerValidDate,
   adapter: Adapter,
-): CalendarEventOccurrence[] {
+): SchedulerEventOccurrence[] {
   const rule = event.rrule!;
-  const occurrences: CalendarEventOccurrence[] = [];
+  const occurrences: SchedulerEventOccurrence[] = [];
 
   const endGuard = buildEndGuard(rule, event.start.value, adapter);
   const durationMinutes = diffIn(adapter, event.end.value, event.start.value, 'minutes');
@@ -832,7 +832,7 @@ export function applyRecurringUpdateFollowing(
   adapter: Adapter,
   originalEvent: SchedulerProcessedEvent,
   occurrenceStart: SchedulerValidDate,
-  changes: CalendarEventUpdatedProperties,
+  changes: SchedulerEventUpdatedProperties,
 ): UpdateEventsParameters {
   const newStart = changes.start ?? originalEvent.start.value;
 
@@ -936,9 +936,9 @@ export function applyRecurringUpdateAll(
   adapter: Adapter,
   originalEvent: SchedulerProcessedEvent,
   occurrenceStart: SchedulerValidDate,
-  changes: CalendarEventUpdatedProperties,
+  changes: SchedulerEventUpdatedProperties,
 ): UpdateEventsParameters {
-  const eventUpdatedProperties: CalendarEventUpdatedProperties = { ...changes };
+  const eventUpdatedProperties: SchedulerEventUpdatedProperties = { ...changes };
 
   // 1) Detect if caller changed the date part of start or end (vs only time)
   const occurrenceEnd = adapter.addMinutes(
@@ -1024,7 +1024,7 @@ export function applyRecurringUpdateOnlyThis(
   adapter: Adapter,
   originalEvent: SchedulerProcessedEvent,
   occurrenceStart: SchedulerValidDate,
-  changes: CalendarEventUpdatedProperties,
+  changes: SchedulerEventUpdatedProperties,
 ): UpdateEventsParameters {
   const detachedId = `${originalEvent.id}::${getDateKey(changes.start ?? originalEvent.start.value, adapter)}`;
 
