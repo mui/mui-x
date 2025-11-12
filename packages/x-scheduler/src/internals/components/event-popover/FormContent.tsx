@@ -159,7 +159,11 @@ export function FormContent(props: FormContentProps) {
         rrule: rruleToSubmit,
       });
     } else if (occurrence.rrule) {
-      const recurrenceModified = !isSameRRule(adapter, occurrence.rrule, rruleToSubmit);
+      const recurrenceModified = !schedulerRecurringEventSelectors.isSameRRule(
+        adapter,
+        occurrence.rrule,
+        rruleToSubmit,
+      );
       const changes: SchedulerEventUpdatedProperties = {
         ...metaChanges,
         id: occurrence.id,

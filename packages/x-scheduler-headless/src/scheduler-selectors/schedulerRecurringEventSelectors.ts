@@ -5,7 +5,7 @@ import {
   SchedulerProcessedDate,
 } from '../models';
 import { SchedulerState as State } from '../utils/SchedulerStore/SchedulerStore.types';
-import { getWeekDayCode } from '../utils/recurring-event-utils';
+import { getWeekDayCode, serializeRRule } from '../utils/recurring-event-utils';
 
 export const schedulerRecurringEventSelectors = {
   /**
@@ -110,4 +110,20 @@ export const schedulerRecurringEventSelectors = {
       }
     },
   ),
+  /**
+   * Returns true if both recurrence rules are equivalent.
+   */
+  isSameRRule: (
+    adapter,
+    rruleA?: RecurringEventRecurrenceRule,
+    rruleB?: RecurringEventRecurrenceRule,
+  ): boolean => {
+    if (!rruleA && !rruleB) {
+      return true;
+    } // Both undefined -> same
+    if (!rruleA || !rruleB) {
+      return false;
+    } // One missing -> different
+    return serializeRRule(adapter, rruleA) === serializeRRule(adapter, rruleB);
+  },
 };

@@ -5,8 +5,6 @@ import {
   SchedulerValidDate,
 } from '@mui/x-scheduler-headless/models';
 import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
-// eslint-disable-next-line no-restricted-imports
-import { serializeRRule } from '@mui/x-scheduler-headless/utils/recurring-event-utils';
 import { SchedulerTranslations } from '../../../models';
 
 export interface ControlledValue {
@@ -106,21 +104,4 @@ export function getEndsSelectionFromRRule(rrule?: {
     return 'after';
   }
   return 'never';
-}
-
-/**
- * Returns true if both recurrence rules are equivalent.
- */
-export function isSameRRule(
-  adapter: Adapter,
-  rruleA?: RecurringEventRecurrenceRule,
-  rruleB?: RecurringEventRecurrenceRule,
-): boolean {
-  if (!rruleA && !rruleB) {
-    return true;
-  } // Both undefined -> same
-  if (!rruleA || !rruleB) {
-    return false;
-  } // One missing -> different
-  return serializeRRule(adapter, rruleA) === serializeRRule(adapter, rruleB);
 }
