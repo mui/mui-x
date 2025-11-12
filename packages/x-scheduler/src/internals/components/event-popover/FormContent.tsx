@@ -13,7 +13,7 @@ import {
   SchedulerEventOccurrence,
   SchedulerEventUpdatedProperties,
   SchedulerProcessedDate,
-  CalendarResourceId,
+  SchedulerResourceId,
   RecurringEventPresetKey,
 } from '@mui/x-scheduler-headless/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
@@ -109,7 +109,7 @@ export default function FormContent(props: FormContentProps) {
       setControlled(newState);
     };
 
-  const handleResourceChange = (value: CalendarResourceId | null) => {
+  const handleResourceChange = (value: SchedulerResourceId | null) => {
     const newState = { ...controlled, resourceId: value };
     pushPlaceholder(newState);
     setControlled(newState);
