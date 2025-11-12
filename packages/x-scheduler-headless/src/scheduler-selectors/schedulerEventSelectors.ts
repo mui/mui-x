@@ -27,7 +27,7 @@ export const schedulerEventSelectors = {
       return state.eventColor;
     }
 
-    if (event?.color) {
+    if (event.color) {
       return event.color;
     }
 
