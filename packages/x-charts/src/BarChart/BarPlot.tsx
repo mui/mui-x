@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { barElementClasses } from './barElementClasses';
-import { BarElement, type BarElementSlotProps, type BarElementSlots } from './BarElement';
+import { type BarElementSlotProps, type BarElementSlots } from './BarElement';
 import { type BarItemIdentifier } from '../models';
 import { useDrawingArea, useXAxes, useYAxes } from '../hooks';
 import { BarClipPath } from './BarClipPath';
@@ -15,6 +15,7 @@ import { useBarPlotData } from './useBarPlotData';
 import { useUtilityClasses } from './barClasses';
 import type { BarItem, BarLabelContext } from './BarLabel';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
+import { IndividualBarPlot } from './IndividualBarPlot';
 
 export interface BarPlotSlots extends BarElementSlots, BarLabelSlots {}
 
@@ -94,6 +95,8 @@ function BarPlot(props: BarPlotProps) {
   const withoutBorderRadius = !borderRadius || borderRadius <= 0;
   const classes = useUtilityClasses();
 
+  const BarElementPlot = IndividualBarPlot;
+
   return (
     <BarPlotRoot className={classes.root}>
       {!withoutBorderRadius &&
@@ -118,47 +121,13 @@ function BarPlot(props: BarPlotProps) {
             );
           },
         )}
-      {completedData.map(({ seriesId, layout, xOrigin, yOrigin, data }) => {
-        return (
-          <g key={seriesId} data-series={seriesId} className={classes.series}>
-            {data.map(({ dataIndex, color, maskId, x, y, width, height }) => {
-              const barElement = (
-                <BarElement
-                  key={dataIndex}
-                  id={seriesId}
-                  dataIndex={dataIndex}
-                  color={color}
-                  skipAnimation={skipAnimation ?? false}
-                  layout={layout ?? 'vertical'}
-                  x={x}
-                  xOrigin={xOrigin}
-                  y={y}
-                  yOrigin={yOrigin}
-                  width={width}
-                  height={height}
-                  {...other}
-                  onClick={
-                    onItemClick &&
-                    ((event) => {
-                      onItemClick(event, { type: 'bar', seriesId, dataIndex });
-                    })
-                  }
-                />
-              );
-
-              if (withoutBorderRadius) {
-                return barElement;
-              }
-
-              return (
-                <g key={dataIndex} clipPath={`url(#${maskId})`}>
-                  {barElement}
-                </g>
-              );
-            })}
-          </g>
-        );
-      })}
+      <BarElementPlot
+        completedData={completedData}
+        skipAnimation={skipAnimation}
+        onItemClick={onItemClick}
+        borderRadius={borderRadius}
+        {...other}
+      />
       {completedData.map((processedSeries) => (
         <BarLabelPlot
           key={processedSeries.seriesId}
