@@ -19,6 +19,12 @@ describe('niceDomain', () => {
     expect(nice).toEqual([new Date('2023-01-01'), new Date('2023-04-01')]);
   });
 
+  it('should return a nice domain for time scale when timestamps are provided', () => {
+    const domain = [new Date('2023-01-15').getTime(), new Date('2023-03-20').getTime()];
+    const nice: Date[] = niceDomain('time', domain, 4);
+    expect(nice).toEqual([new Date('2023-01-01'), new Date('2023-04-01')]);
+  });
+
   it('should return a nice domain for utc scale', () => {
     const domain = [new Date('2023-01-15'), new Date('2023-03-20')];
     const nice: Date[] = niceDomain('utc', domain, 4);

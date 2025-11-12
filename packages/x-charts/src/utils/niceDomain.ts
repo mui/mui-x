@@ -34,8 +34,8 @@ export function niceDomain<Domain extends NumberValue>(
   domain: Iterable<Domain>,
   count: number = 5,
 ): Domain[] {
-  const scale = getScale<Domain, any>(scaleType, domain, [0, 1]);
-
+  const scale = getScale(scaleType, domain, [0, 1]);
   scale.nice(count);
-  return scale.domain() as any;
+
+  return scale.domain() as Domain[];
 }
