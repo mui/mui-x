@@ -431,7 +431,7 @@ p {
   grid-column: 2 / 3;
 }
 
-.RadioItem.RadioItemWithInput {
+.RadioItem.EventPopoverRecurrenceEndItem {
   justify-content: flex-start;
   gap: var(--space-2);
 }

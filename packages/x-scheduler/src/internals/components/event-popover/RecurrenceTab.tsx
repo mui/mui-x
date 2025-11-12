@@ -297,7 +297,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
               value={customEndsValue}
               onValueChange={(value) => handleEndsChange(value as EndsSelection)}
             >
-              <Field.Label htmlFor="ends-never" className="RadioItem RadioItemWithInput">
+              <Field.Label htmlFor="ends-never" className="RadioItem EventPopoverRecurrenceEndItem">
                 <Radio.Root
                   id="ends-never"
                   className="EventPopoverRadioRoot"
@@ -312,7 +312,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
                 </Radio.Root>
               </Field.Label>
 
-              <Field.Label htmlFor="ends-after" className="RadioItem RadioItemWithInput">
+              <Field.Label htmlFor="ends-after" className="RadioItem EventPopoverRecurrenceEndItem">
                 <Radio.Root
                   id="ends-after"
                   className="EventPopoverRadioRoot"
@@ -339,7 +339,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
                 </div>
               </Field.Label>
 
-              <Field.Label htmlFor="ends-until" className="RadioItem RadioItemWithInput">
+              <Field.Label htmlFor="ends-until" className="RadioItem EventPopoverRecurrenceEndItem">
                 <Radio.Root
                   id="ends-until"
                   className="EventPopoverRadioRoot"
