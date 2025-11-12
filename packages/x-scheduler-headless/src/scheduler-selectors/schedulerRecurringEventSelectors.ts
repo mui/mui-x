@@ -116,8 +116,8 @@ export const schedulerRecurringEventSelectors = {
    */
   isSameRRule: (
     adapter: Adapter,
-    rruleA?: RecurringEventRecurrenceRule,
-    rruleB?: RecurringEventRecurrenceRule,
+    rruleA: RecurringEventRecurrenceRule | undefined,
+    rruleB: RecurringEventRecurrenceRule | undefined,
   ): boolean => {
     if (!rruleA && !rruleB) {
       return true;
