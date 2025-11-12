@@ -1,5 +1,5 @@
 import {
-  CalendarResourceId,
+  SchedulerResourceId,
   RecurringEventPresetKey,
   RecurringEventRecurrenceRule,
 } from '@mui/x-scheduler-headless/models';
@@ -72,7 +72,7 @@ export class EventBuilder {
   }
 
   /** Associate a resource id. */
-  resource(resourceId?: CalendarResourceId) {
+  resource(resourceId?: SchedulerResourceId) {
     this.event.resource = resourceId;
     return this;
   }
