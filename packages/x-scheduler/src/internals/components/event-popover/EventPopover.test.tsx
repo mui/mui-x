@@ -12,7 +12,7 @@ import {
 import { screen } from '@mui/internal-test-utils';
 import {
   SchedulerOccurrencePlaceholderCreation,
-  CalendarResource,
+  SchedulerResource,
   SchedulerEvent,
 } from '@mui/x-scheduler-headless/models';
 import { DEFAULT_EVENT_COLOR } from '@mui/x-scheduler-headless/constants';
@@ -30,7 +30,7 @@ const DEFAULT_EVENT: SchedulerEvent = EventBuilder.new()
   .resource('r2')
   .build();
 
-const resources: CalendarResource[] = [
+const resources: SchedulerResource[] = [
   {
     id: 'r1',
     title: 'Work',
@@ -221,7 +221,7 @@ describe('<EventPopoverContent />', () => {
   it('should handle a resource without an eventColor (fallback to default)', async () => {
     const onEventsChange = spy();
 
-    const resourcesNoColor: CalendarResource[] = [
+    const resourcesNoColor: SchedulerResource[] = [
       { id: 'r1', title: 'Work', eventColor: 'blue' },
       { id: 'r2', title: 'Personal', eventColor: 'cyan' },
       { id: 'r3', title: 'NoColor' },

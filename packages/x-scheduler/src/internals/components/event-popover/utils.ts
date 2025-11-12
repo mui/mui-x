@@ -1,4 +1,4 @@
-import { CalendarResourceId, SchedulerValidDate } from '@mui/x-scheduler-headless/models';
+import { SchedulerResourceId, SchedulerValidDate } from '@mui/x-scheduler-headless/models';
 import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
 import { SchedulerTranslations } from '../../../models';
 
@@ -7,7 +7,7 @@ export interface ControlledValue {
   startTime: string;
   endDate: string;
   endTime: string;
-  resourceId: CalendarResourceId | null;
+  resourceId: SchedulerResourceId | null;
   allDay: boolean;
 }
 
