@@ -6,6 +6,7 @@ import {
 } from '../models';
 import { SchedulerState as State } from '../utils/SchedulerStore/SchedulerStore.types';
 import { getWeekDayCode, serializeRRule } from '../utils/recurring-event-utils';
+import { Adapter } from '../use-adapter';
 
 export const schedulerRecurringEventSelectors = {
   /**
@@ -114,7 +115,7 @@ export const schedulerRecurringEventSelectors = {
    * Returns true if both recurrence rules are equivalent.
    */
   isSameRRule: (
-    adapter,
+    adapter: Adapter,
     rruleA?: RecurringEventRecurrenceRule,
     rruleB?: RecurringEventRecurrenceRule,
   ): boolean => {
