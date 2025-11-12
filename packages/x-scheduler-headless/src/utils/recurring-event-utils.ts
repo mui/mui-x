@@ -1134,7 +1134,7 @@ export function parseRRuleString(
     if (months.some((m) => Number.isNaN(m) || m < 1 || m > 12)) {
       throw new Error(`Scheduler: Invalid BYMONTH values: "${rruleObject.BYMONTH}"`);
     }
-    rrule.byMonth = months.sort((a, b) => a - b);
+    rrule.byMonth = months.toSorted((a, b) => a - b);
   }
 
   if (rruleObject.COUNT) {
