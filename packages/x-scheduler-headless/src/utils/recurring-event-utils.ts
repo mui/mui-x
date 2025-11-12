@@ -1126,7 +1126,7 @@ export function parseRRuleString(
     if (days.some((d) => Number.isNaN(d) || d < 1 || d > 31)) {
       throw new Error(`Scheduler: Invalid BYMONTHDAY values: "${rruleObject.BYMONTHDAY}"`);
     }
-    rrule.byMonthDay = days.sort((a, b) => a - b);
+    rrule.byMonthDay = days.toSorted((a, b) => a - b);
   }
 
   if (rruleObject.BYMONTH) {
@@ -1173,10 +1173,11 @@ export function serializeRRule(adapter: Adapter, rule: RecurringEventRecurrenceR
   }
 
   if (rule.byDay?.length) {
-    const order: RecurringEventWeekDayCode[] = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
     const normalized = [...rule.byDay]
       .map((t) => tokenizeByDay(t))
-      .sort((a, b) => order.indexOf(a.code) - order.indexOf(b.code))
+      .sort(
+        (a, b) => NOT_LOCALIZED_WEEK_DAYS.indexOf(a.code) - NOT_LOCALIZED_WEEK_DAYS.indexOf(b.code),
+      )
       .map((t) => (t.ord != null ? (`${t.ord}${t.code}` as RecurringEventByDayValue) : t.code));
     parts.push(`BYDAY=${normalized.join(',')}`);
   }
