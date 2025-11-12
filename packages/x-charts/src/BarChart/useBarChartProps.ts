@@ -150,6 +150,7 @@ export const useBarChartProps = (props: BarChartProps) => {
     borderRadius,
     renderer,
     barLabel,
+    renderer: 'svg-batch',
   };
 
   const gridProps: ChartsGridProps = {
