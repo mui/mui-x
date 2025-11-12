@@ -13,7 +13,7 @@ _Nov 12, 2025_
 
 We'd like to extend a big thank you to the 14 contributors who made this release possible. Here are some highlights ✨:
 
-- Add `barLabelPlacement` property to customize bar label position in bar charts
+- Add `barLabelPlacement` property to customize the bar label position in bar charts, enabling labels to be placed above bars.
 
   ![image](https://github.com/user-attachments/assets/4bc3a75b-74b8-4c6d-896b-5f5bf837bcda)
 
