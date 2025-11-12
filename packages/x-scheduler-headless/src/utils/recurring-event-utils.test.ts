@@ -1813,6 +1813,26 @@ describe('recurring-event-utils', () => {
       expect(adapter.isValid(result.until!)).to.equal(true);
     });
 
+    it('should sort BYDAY values in standard order regardless of input order', () => {
+      const result = parseRRuleString(adapter, 'FREQ=WEEKLY;BYDAY=FR,MO,WE');
+      expect(result.byDay).to.deep.equal(['MO', 'WE', 'FR']);
+    });
+
+    it('should sort BYDAY with ordinals correctly', () => {
+      const result = parseRRuleString(adapter, 'FREQ=MONTHLY;BYDAY=2TU,-1FR,1MO');
+      expect(result.byDay).to.deep.equal(['1MO', '2TU', '-1FR']);
+    });
+
+    it('should sort BYMONTHDAY numerically', () => {
+      const result = parseRRuleString(adapter, 'FREQ=MONTHLY;BYMONTHDAY=28,5,15');
+      expect(result.byMonthDay).to.deep.equal([5, 15, 28]);
+    });
+
+    it('should sort BYMONTH numerically', () => {
+      const result = parseRRuleString(adapter, 'FREQ=YEARLY;BYMONTH=12,1,6');
+      expect(result.byMonth).to.deep.equal([1, 6, 12]);
+    });
+
     it('should throw when the input is empty', () => {
       expect(() => parseRRuleString(adapter, '')).to.throw(
         'Scheduler: RRULE must include a FREQ property.',
@@ -1958,11 +1978,50 @@ describe('recurring-event-utils', () => {
       expect(resultWithoutByMonth).to.equal('FREQ=YEARLY');
     });
 
+    it('should serialize BYDAY values in correct order regardless of input order', () => {
+      const rule = {
+        freq: 'WEEKLY' as const,
+        byDay: ['FR', 'MO', 'WE'] as RecurringEventByDayValue[],
+      };
+      const result = serializeRRule(adapter, rule);
+      expect(result).to.equal('FREQ=WEEKLY;BYDAY=MO,WE,FR');
+    });
+
+    it('should serialize BYDAY with ordinals in correct order', () => {
+      const rule = {
+        freq: 'MONTHLY' as const,
+        byDay: ['2TU', '-1FR', '1MO'] as RecurringEventByDayValue[],
+      };
+      const result = serializeRRule(adapter, rule);
+      expect(result).to.equal('FREQ=MONTHLY;BYDAY=1MO,2TU,-1FR');
+    });
+
+    it('should serialize BYMONTHDAY and BYMONTH sorted numerically', () => {
+      const rule = { freq: 'YEARLY' as const, byMonthDay: [28, 5, 15], byMonth: [12, 1, 6] };
+      const result = serializeRRule(adapter, rule);
+      expect(result).to.equal('FREQ=YEARLY;BYMONTHDAY=5,15,28;BYMONTH=1,6,12');
+    });
+
+    it('should normalize equivalent RRULE strings with different BYDAY order', () => {
+      const inputA = 'FREQ=WEEKLY;BYDAY=MO,WE,FR';
+      const inputB = 'FREQ=WEEKLY;BYDAY=FR,MO,WE';
+      const parsedA = parseRRuleString(adapter, inputA);
+      const parsedB = parseRRuleString(adapter, inputB);
+      expect(serializeRRule(adapter, parsedA)).to.equal(serializeRRule(adapter, parsedB));
+    });
+
     it('should round-trip correctly (parseRRuleString - serializeRRule)', () => {
       const input = 'FREQ=WEEKLY;INTERVAL=2;BYDAY=MO,FR;UNTIL=20250315T000000Z';
       const parsed = parseRRuleString(adapter, input);
       const serialized = serializeRRule(adapter, parsed);
       expect(serialized).to.equal(input);
+    });
+
+    it('should round-trip even if BYDAY order differs in input', () => {
+      const input = 'FREQ=WEEKLY;BYDAY=FR,MO,WE';
+      const parsed = parseRRuleString(adapter, input);
+      const serialized = serializeRRule(adapter, parsed);
+      expect(serialized).to.equal('FREQ=WEEKLY;BYDAY=MO,WE,FR');
     });
   });
 });

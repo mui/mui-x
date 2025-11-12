@@ -1046,6 +1046,7 @@ export function applyRecurringUpdateOnlyThis(
     ],
   };
 }
+
 const SUPPORTED_RRULE_KEYS = [
   'FREQ',
   'INTERVAL',
@@ -1111,12 +1112,21 @@ export function parseRRuleString(
     rrule.byDay = rruleObject.BYDAY.split(',').map((v) => v.trim()) as RecurringEventByDayValue[];
   }
 
+  if (rruleObject.BYDAY) {
+    const order: RecurringEventWeekDayCode[] = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
+    const tokens = rruleObject.BYDAY.split(',').map((v) => v.trim()) as RecurringEventByDayValue[];
+    rrule.byDay = tokens
+      .map((t) => tokenizeByDay(t))
+      .sort((a, b) => order.indexOf(a.code) - order.indexOf(b.code))
+      .map((t) => (t.ord != null ? (`${t.ord}${t.code}` as RecurringEventByDayValue) : t.code));
+  }
+
   if (rruleObject.BYMONTHDAY) {
     const days = rruleObject.BYMONTHDAY.split(',').map((d) => Number(d.trim()));
     if (days.some((d) => Number.isNaN(d) || d < 1 || d > 31)) {
       throw new Error(`Scheduler: Invalid BYMONTHDAY values: "${rruleObject.BYMONTHDAY}"`);
     }
-    rrule.byMonthDay = days;
+    rrule.byMonthDay = days.sort((a, b) => a - b);
   }
 
   if (rruleObject.BYMONTH) {
@@ -1124,7 +1134,7 @@ export function parseRRuleString(
     if (months.some((m) => Number.isNaN(m) || m < 1 || m > 12)) {
       throw new Error(`Scheduler: Invalid BYMONTH values: "${rruleObject.BYMONTH}"`);
     }
-    rrule.byMonth = months;
+    rrule.byMonth = months.sort((a, b) => a - b);
   }
 
   if (rruleObject.COUNT) {
@@ -1163,15 +1173,20 @@ export function serializeRRule(adapter: Adapter, rule: RecurringEventRecurrenceR
   }
 
   if (rule.byDay?.length) {
-    parts.push(`BYDAY=${rule.byDay.join(',')}`);
+    const order: RecurringEventWeekDayCode[] = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
+    const normalized = [...rule.byDay]
+      .map((t) => tokenizeByDay(t))
+      .sort((a, b) => order.indexOf(a.code) - order.indexOf(b.code))
+      .map((t) => (t.ord != null ? (`${t.ord}${t.code}` as RecurringEventByDayValue) : t.code));
+    parts.push(`BYDAY=${normalized.join(',')}`);
   }
 
   if (rule.byMonthDay?.length) {
-    parts.push(`BYMONTHDAY=${rule.byMonthDay.join(',')}`);
+    parts.push(`BYMONTHDAY=${[...rule.byMonthDay].sort((a, b) => a - b).join(',')}`);
   }
 
   if (rule.byMonth?.length) {
-    parts.push(`BYMONTH=${rule.byMonth.join(',')}`);
+    parts.push(`BYMONTH=${[...rule.byMonth].sort((a, b) => a - b).join(',')}`);
   }
 
   if (typeof rule.count === 'number') {
