@@ -1,5 +1,6 @@
 'use client';
 
+import type { AxisId, DefaultizedZoomOptions } from '@mui/x-charts/internals';
 import type {
   ZoomInteractionConfig,
   DefaultizedZoomInteractionConfig,
@@ -9,9 +10,11 @@ import type {
 
 export const initializeZoomInteractionConfig = (
   zoomInteractionConfig?: ZoomInteractionConfig,
+  optionsLookup?: Record<AxisId, DefaultizedZoomOptions>,
 ): DefaultizedZoomInteractionConfig => {
   const defaultizedConfig: DefaultizedZoomInteractionConfig = { zoom: {}, pan: {} };
 
+  // Config for zoom
   if (!zoomInteractionConfig?.zoom) {
     defaultizedConfig.zoom = {
       wheel: { type: 'wheel', requiredKeys: [], mouse: {}, touch: {} },
@@ -21,11 +24,37 @@ export const initializeZoomInteractionConfig = (
     defaultizedConfig.zoom = initializeFor('zoom', zoomInteractionConfig.zoom);
   }
 
+  // Config for pan
   if (!zoomInteractionConfig?.pan) {
     defaultizedConfig.pan = {
       drag: { type: 'drag', requiredKeys: [], mouse: {}, touch: {} },
-      wheel: { type: 'wheel', requiredKeys: [], mouse: {}, touch: {}, allowedDirection: 'x' },
     };
+
+    let hasXZoom = false;
+    let hasYZoom = false;
+    if (optionsLookup) {
+      Object.values(optionsLookup).forEach((options) => {
+        if (options.axisDirection === 'x') {
+          hasXZoom = true;
+        }
+        if (options.axisDirection === 'y') {
+          hasYZoom = true;
+        }
+      });
+    }
+
+    // Only add pan on wheel if the x-axis can pan (has zoom enabled) but the y-axis cannot
+    // This provides a consistent horizontal panning experience that aligns with typical scrolling behavior
+    // When both axes can pan, we avoid wheel interactions to prevent conflicts with vertical scrolling
+    if (hasXZoom && !hasYZoom) {
+      defaultizedConfig.pan.wheel = {
+        type: 'wheel',
+        requiredKeys: [],
+        allowedDirection: 'x',
+        mouse: {},
+        touch: {},
+      };
+    }
   } else {
     defaultizedConfig.pan = initializeFor('pan', zoomInteractionConfig.pan);
   }

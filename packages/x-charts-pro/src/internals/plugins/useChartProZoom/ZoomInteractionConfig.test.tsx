@@ -669,5 +669,105 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
       expect(onZoomChange.callCount).to.be.greaterThan(0);
       expect(getAxisTickValues('x')).to.deep.equal(['A', 'B']);
     });
+
+    it('should be enabled by default when only x-axis has zoom', async () => {
+      const onZoomChange = sinon.spy();
+      render(
+        <BarChartPro
+          {...barChartProps}
+          initialZoom={[{ axisId: 'x', start: 25, end: 75 }]}
+          onZoomChange={onZoomChange}
+        />,
+        options,
+      );
+
+      const svg = document.querySelector(CHART_SELECTOR)!;
+      expect(getAxisTickValues('x')).to.deep.equal(['B', 'C']);
+
+      // Simulate wheel scroll - should pan because only x-axis has zoom
+      fireEvent.wheel(svg, { deltaX: 100, clientX: 50, clientY: 50 });
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
+
+      // Should trigger pan
+      expect(onZoomChange.callCount).to.be.greaterThan(0);
+      expect(getAxisTickValues('x')).to.not.deep.equal(['B', 'C']);
+    });
+
+    it('should be disabled by default when both axes have zoom', async () => {
+      const onZoomChange = sinon.spy();
+      render(
+        <ScatterChartPro
+          series={[
+            {
+              data: [
+                { x: 10, y: 10 },
+                { x: 20, y: 20 },
+                { x: 30, y: 30 },
+                { x: 40, y: 40 },
+              ],
+            },
+          ]}
+          xAxis={[{ id: 'x', zoom: true, height: 30 }]}
+          yAxis={[{ id: 'y', zoom: true, width: 30 }]}
+          initialZoom={[
+            { axisId: 'x', start: 25, end: 75 },
+            { axisId: 'y', start: 25, end: 75 },
+          ]}
+          onZoomChange={onZoomChange}
+          width={130}
+          height={130}
+          margin={10}
+        />,
+        options,
+      );
+
+      const svg = document.querySelector(CHART_SELECTOR)!;
+      const initialXTicks = getAxisTickValues('x');
+
+      // Simulate wheel scroll - should NOT pan because both axes have zoom
+      fireEvent.wheel(svg, { deltaX: 100, clientX: 50, clientY: 50 });
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
+
+      // Should not trigger pan
+      expect(onZoomChange.callCount).to.equal(0);
+      expect(getAxisTickValues('x')).to.deep.equal(initialXTicks);
+    });
+
+    it('should be disabled by default when only y-axis has zoom', async () => {
+      const onZoomChange = sinon.spy();
+      render(
+        <BarChartPro
+          {...barChartProps}
+          xAxis={[
+            {
+              data: ['A', 'B', 'C', 'D'],
+              height: 30,
+              id: 'x',
+            },
+          ]}
+          yAxis={[
+            {
+              zoom: true,
+              width: 30,
+              id: 'y',
+            },
+          ]}
+          initialZoom={[{ axisId: 'y', start: 25, end: 75 }]}
+          onZoomChange={onZoomChange}
+        />,
+        options,
+      );
+
+      const svg = document.querySelector(CHART_SELECTOR)!;
+      const initialXTicks = getAxisTickValues('x');
+
+      // Simulate wheel scroll - should NOT pan because x-axis doesn't have zoom
+      fireEvent.wheel(svg, { deltaX: 100, clientX: 50, clientY: 50 });
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
+
+      // Should not trigger pan
+      expect(onZoomChange.callCount).to.equal(0);
+      expect(getAxisTickValues('x')).to.deep.equal(initialXTicks);
+    });
   });
 });

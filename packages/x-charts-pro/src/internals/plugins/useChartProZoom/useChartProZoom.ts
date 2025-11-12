@@ -40,9 +40,9 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginDat
   useEffectAfterFirstRender(() => {
     store.set('zoom', {
       ...store.state.zoom,
-      zoomInteractionConfig: initializeZoomInteractionConfig(zoomInteractionConfig),
+      zoomInteractionConfig: initializeZoomInteractionConfig(zoomInteractionConfig, optionsLookup),
     });
-  }, [store, zoomInteractionConfig]);
+  }, [store, zoomInteractionConfig, optionsLookup]);
 
   // This is debounced. We want to run it only once after the interaction ends.
   const removeIsInteracting = React.useMemo(
@@ -241,7 +241,10 @@ useChartProZoom.getInitialState = (params) => {
       zoomData: initializeZoomData(optionsLookup, userZoomData),
       isInteracting: false,
       isControlled: zoomData !== undefined,
-      zoomInteractionConfig: initializeZoomInteractionConfig(params.zoomInteractionConfig),
+      zoomInteractionConfig: initializeZoomInteractionConfig(
+        params.zoomInteractionConfig,
+        optionsLookup,
+      ),
     },
   };
 };

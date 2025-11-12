@@ -165,9 +165,14 @@ The `zoomInteractionConfig` prop allows you to specify which interactions are en
 
 **Pan** interactions:
 
-- `wheel` _(default)_: Pan the chart by scrolling the mouse wheel. On a desktop trackpad, it enables pan using two fingers. Only pans the horizontal axis by default. Use `allowedDirection` to customize which axes are affected.
+- `wheel` (default\*): Pan the chart by scrolling the mouse wheel. On a desktop trackpad, it enables pan using two fingers. Only pans the horizontal axis by default. Use `allowedDirection` to customize which axes are affected.
 - `drag` (default): Pan the chart by dragging with the mouse or touch
 - `pressAndDrag`: Pan the chart by pressing and holding, then dragging. Useful for avoiding conflicts with selection gestures.
+
+:::warning
+
+\* The `wheel` pan interaction is only added automatically if pan is enabled for at least one of the x-axis and none of the y-axis.
+:::
 
 :::info
 When modifying the zoom interaction configuration, care should be taken as to not create a bad user experience.
