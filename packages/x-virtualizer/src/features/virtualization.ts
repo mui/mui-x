@@ -9,6 +9,7 @@ import type { integer } from '@mui/x-internals/types';
 import * as platform from '@mui/x-internals/platform';
 import { useRunOnce } from '@mui/x-internals/useRunOnce';
 import { createSelector, useStore, useStoreEffect, Store } from '@mui/x-internals/store';
+import reactMajor from '@mui/x-internals/reactMajor';
 import { PinnedRows, PinnedColumns, Size } from '../models/core';
 import type { CellColSpanInfo } from '../models/colspan';
 import { Dimensions, observeRootNode } from './dimensions';
@@ -23,7 +24,6 @@ import {
   ScrollPosition,
   ScrollDirection,
 } from '../models';
-import reactMajor from '@mui/x-internals/reactMajor';
 
 /* eslint-disable import/export, @typescript-eslint/no-redeclare */
 
@@ -640,34 +640,36 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     if (!node) {
       // Cleanup for R18
       containerCleanup.current?.();
-    } else {
-      refs.container.current = node;
-      const unsubscribe = observeRootNode(node, store, (rootSize: Size) => {
-        if (
-          rootSize.width === 0 &&
-          rootSize.height === 0 &&
-          store.state.rootSize.height !== 0 &&
-          store.state.rootSize.width !== 0
-        ) {
-          return;
-        }
-        store.state.rootSize = rootSize;
-        if (isFirstSizing.current || !api.debouncedUpdateDimensions) {
-          // We want to initialize the grid dimensions as soon as possible to avoid flickering
-          api.updateDimensions(isFirstSizing.current);
-          isFirstSizing.current = false;
-        } else {
-          api.debouncedUpdateDimensions();
-        }
-      });
-      containerCleanup.current = () => {
-        unsubscribe?.();
-        refs.container.current = null;
-      };
+      return;
+    }
 
-      if (reactMajor >= 19) {
-        return containerCleanup.current;
+    refs.container.current = node;
+    const unsubscribe = observeRootNode(node, store, (rootSize: Size) => {
+      if (
+        rootSize.width === 0 &&
+        rootSize.height === 0 &&
+        store.state.rootSize.height !== 0 &&
+        store.state.rootSize.width !== 0
+      ) {
+        return;
       }
+      store.state.rootSize = rootSize;
+      if (isFirstSizing.current || !api.debouncedUpdateDimensions) {
+        // We want to initialize the grid dimensions as soon as possible to avoid flickering
+        api.updateDimensions(isFirstSizing.current);
+        isFirstSizing.current = false;
+      } else {
+        api.debouncedUpdateDimensions();
+      }
+    });
+    containerCleanup.current = () => {
+      unsubscribe?.();
+      refs.container.current = null;
+    };
+
+    if (reactMajor >= 19) {
+      /* eslint-disable-next-line consistent-return */
+      return containerCleanup.current;
     }
   });
 
@@ -676,23 +678,25 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     if (!node) {
       // Cleanup for R18
       scrollerCleanup.current?.();
-    } else {
-      scrollerCleanup.current?.();
-      refs.scroller.current = node;
-      const opts: AddEventListenerOptions = { passive: true };
-      node.addEventListener('scroll', handleScroll, opts);
-      node.addEventListener('wheel', onWheel as any, opts);
-      node.addEventListener('touchmove', onTouchMove as any, opts);
-      scrollerCleanup.current = () => {
-        node.removeEventListener('scroll', handleScroll, opts);
-        node.removeEventListener('wheel', onWheel as any, opts);
-        node.removeEventListener('touchmove', onTouchMove as any, opts);
-        refs.scroller.current = null;
-      };
+      return;
+    }
 
-      if (reactMajor >= 19) {
-        return scrollerCleanup.current;
-      }
+    scrollerCleanup.current?.();
+    refs.scroller.current = node;
+    const opts: AddEventListenerOptions = { passive: true };
+    node.addEventListener('scroll', handleScroll, opts);
+    node.addEventListener('wheel', onWheel as any, opts);
+    node.addEventListener('touchmove', onTouchMove as any, opts);
+    scrollerCleanup.current = () => {
+      node.removeEventListener('scroll', handleScroll, opts);
+      node.removeEventListener('wheel', onWheel as any, opts);
+      node.removeEventListener('touchmove', onTouchMove as any, opts);
+      refs.scroller.current = null;
+    };
+
+    if (reactMajor >= 19) {
+      /* eslint-disable-next-line consistent-return */
+      return scrollerCleanup.current;
     }
   });
 
