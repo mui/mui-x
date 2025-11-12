@@ -1,24 +1,15 @@
 'use client';
 import * as React from 'react';
-import { useStore } from '@mui/x-internals/store';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
-import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
-import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
-import { TreeViewItemPlugin, TreeViewItemMeta, TreeViewPlugin } from '../../models';
+import { TreeViewItemMeta, TreeViewPlugin } from '../../models';
 import { UseTreeViewJSXItemsSignature } from './useTreeViewJSXItems.types';
-import { useTreeViewContext } from '../../TreeViewProvider';
-import {
-  TreeViewChildrenItemContext,
-  TreeViewChildrenItemProvider,
-} from '../../TreeViewProvider/TreeViewChildrenItemProvider';
+import { TreeViewChildrenItemProvider } from '../../TreeViewProvider/TreeViewChildrenItemProvider';
 import {
   buildSiblingIndexes,
   TREE_VIEW_ROOT_PARENT_ID,
 } from '../useTreeViewItems/useTreeViewItems.utils';
 import { TreeViewItemDepthContext } from '../../TreeViewItemDepthContext';
-import { generateTreeItemIdAttribute } from '../../corePlugins/useTreeViewId/useTreeViewId.utils';
-import { itemHasChildren } from '../../../hooks/useTreeItemUtils/useTreeItemUtils';
-import { idSelectors } from '../../corePlugins/useTreeViewId';
+import { useTreeViewJSXItemsItemPlugin } from './itemPlugin';
 
 export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> = ({
   instance,
@@ -77,15 +68,15 @@ export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> =
     });
   };
 
-  const mapFirstCharFromJSX = useEventCallback((itemId: string, firstChar: string) => {
-    instance.updateFirstCharMap((firstCharMap) => {
-      firstCharMap[itemId] = firstChar;
-      return firstCharMap;
+  const mapLabelFromJSX = useEventCallback((itemId: string, label: string) => {
+    instance.updateLabelMap((labelMap) => {
+      labelMap[itemId] = label;
+      return labelMap;
     });
 
     return () => {
-      instance.updateFirstCharMap((firstCharMap) => {
-        const newMap = { ...firstCharMap };
+      instance.updateLabelMap((labelMap) => {
+        const newMap = { ...labelMap };
         delete newMap[itemId];
         return newMap;
       });
@@ -96,66 +87,8 @@ export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> =
     instance: {
       insertJSXItem,
       setJSXItemsOrderedChildrenIds,
-      mapFirstCharFromJSX,
+      mapLabelFromJSX,
     },
-  };
-};
-
-const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin = ({ props, rootRef, contentRef }) => {
-  const { instance, store } = useTreeViewContext<[UseTreeViewJSXItemsSignature]>();
-  const { children, disabled = false, label, itemId, id } = props;
-
-  const parentContext = React.useContext(TreeViewChildrenItemContext);
-  if (parentContext == null) {
-    throw new Error(
-      [
-        'MUI X: Could not find the Tree View Children Item context.',
-        'It looks like you rendered your component outside of a SimpleTreeView parent component.',
-        'This can also happen if you are bundling multiple versions of the Tree View.',
-      ].join('\n'),
-    );
-  }
-  const { registerChild, unregisterChild, parentId } = parentContext;
-
-  const expandable = itemHasChildren(children);
-  const pluginContentRef = React.useRef<HTMLDivElement>(null);
-  const handleContentRef = useMergedRefs(pluginContentRef, contentRef);
-  const treeId = useStore(store, idSelectors.treeId);
-
-  // Prevent any flashing
-  useIsoLayoutEffect(() => {
-    const idAttribute = generateTreeItemIdAttribute({ itemId, treeId, id });
-    registerChild(idAttribute, itemId);
-
-    return () => {
-      unregisterChild(idAttribute);
-      unregisterChild(idAttribute);
-    };
-  }, [store, instance, registerChild, unregisterChild, itemId, id, treeId]);
-
-  useIsoLayoutEffect(() => {
-    return instance.insertJSXItem({
-      id: itemId,
-      idAttribute: id,
-      parentId,
-      expandable,
-      disabled,
-    });
-  }, [instance, parentId, itemId, expandable, disabled, id]);
-
-  React.useEffect(() => {
-    if (label) {
-      return instance.mapFirstCharFromJSX(
-        itemId,
-        (pluginContentRef.current?.textContent ?? '').substring(0, 1).toLowerCase(),
-      );
-    }
-    return undefined;
-  }, [instance, itemId, label]);
-
-  return {
-    contentRef: handleContentRef,
-    rootRef,
   };
 };
 

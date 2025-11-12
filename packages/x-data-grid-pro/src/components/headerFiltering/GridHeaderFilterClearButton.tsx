@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { GridSlotProps } from '@mui/x-data-grid';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 

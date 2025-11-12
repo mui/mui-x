@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { GridPanelWrapper, GridPanelWrapperProps } from './GridPanelWrapper';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 

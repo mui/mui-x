@@ -1,11 +1,11 @@
-import { CalendarEventOccurrence } from '@mui/x-scheduler-headless/models';
-import { EventProps } from '../Event.types';
+import * as React from 'react';
+import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
 
-export interface EventItemProps extends EventProps {
+export interface EventItemProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * The event occurrence to render.
    */
-  occurrence: CalendarEventOccurrence;
+  occurrence: SchedulerEventOccurrence;
   /**
    * The event variant.
    * 'regular' does not make the styling distinction between all day events and timed events, expect for the time display. Used in <AgendaView />.

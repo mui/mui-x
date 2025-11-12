@@ -3,13 +3,18 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { useStore } from '@base-ui-components/utils/store';
 import { Repeat } from 'lucide-react';
-import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
-import { selectors } from '@mui/x-scheduler-headless/use-event-calendar';
+import {
+  schedulerEventSelectors,
+  schedulerResourceSelectors,
+} from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
+import { eventCalendarEventSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { DayGridEventProps } from './DayGridEvent.types';
 import { getColorClassName } from '../../../utils/color-utils';
 import { useTranslations } from '../../../utils/TranslationsContext';
+import { EventDragPreview } from '../../event-drag-preview';
+import { useFormatTime } from '../../../hooks/useFormatTime';
 import './DayGridEvent.css';
 // TODO: Create a standalone component for the resource color pin instead of re-using another component's CSS classes
 import '../../resource-legend/ResourceLegend.css';
@@ -23,21 +28,28 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     occurrence,
     variant,
     className: classNameProp,
-    onEventClick,
     id: idProp,
     style: styleProp,
     ...other
   } = props;
 
-  const adapter = useAdapter();
   const translations = useTranslations();
   const store = useEventCalendarStoreContext();
-  const isDraggable = useStore(store, selectors.isEventDraggable);
-  const isResizable = useStore(store, selectors.isEventResizable, occurrence.id, 'day-grid');
-  const ampm = useStore(store, selectors.ampm);
-  const resource = useStore(store, selectors.resource, occurrence.resource);
-  const color = useStore(store, selectors.eventColor, occurrence.id);
+  const isDraggable = useStore(store, eventCalendarEventSelectors.isDraggable, occurrence.id);
+  const isResizable = useStore(
+    store,
+    eventCalendarEventSelectors.isResizable,
+    occurrence.id,
+    'day-grid',
+  );
+  const resource = useStore(
+    store,
+    schedulerResourceSelectors.processedResource,
+    occurrence.resource,
+  );
+  const color = useStore(store, schedulerEventSelectors.color, occurrence.id);
   const isRecurring = Boolean(occurrence.rrule);
+  const formatTime = useFormatTime();
 
   const content = React.useMemo(() => {
     switch (variant) {
@@ -84,13 +96,8 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
                 <span className="DayGridEventTime">{translations.allDay}</span>
               ) : (
                 <time className="DayGridEventTime">
-                  <span>
-                    {adapter.format(occurrence.start, ampm ? 'hoursMinutes12h' : 'hoursMinutes24h')}
-                  </span>
-                  <span>
-                    {' '}
-                    - {adapter.format(occurrence.end, ampm ? 'hoursMinutes12h' : 'hoursMinutes24h')}
-                  </span>
+                  <span>{formatTime(occurrence.start.value)}</span>
+                  <span> - {formatTime(occurrence.end.value)}</span>
                 </time>
               )}
 
@@ -108,7 +115,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
         );
     }
   }, [
-    adapter,
+    formatTime,
     variant,
     occurrence.title,
     occurrence?.allDay,
@@ -117,10 +124,11 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     isRecurring,
     resource?.title,
     translations,
-    ampm,
   ]);
 
   const sharedProps = {
+    start: occurrence.start,
+    end: occurrence.end,
     ref: forwardedRef,
     className: clsx(
       classNameProp,
@@ -149,9 +157,8 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     <CalendarGrid.DayEvent
       eventId={occurrence.id}
       occurrenceKey={occurrence.key}
-      start={occurrence.start}
-      end={occurrence.end}
       isDraggable={isDraggable}
+      renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       aria-hidden={variant === 'invisible'}
       {...sharedProps}
     >

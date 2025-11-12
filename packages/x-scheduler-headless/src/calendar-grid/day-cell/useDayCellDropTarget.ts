@@ -1,16 +1,18 @@
 'use client';
 import * as React from 'react';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
-import { buildIsValidDropTarget } from '../../utils/drag-utils';
+import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
 import { useAdapter, diffIn } from '../../use-adapter';
-import { CalendarEvent, SchedulerValidDate } from '../../models';
+import { SchedulerEvent, SchedulerValidDate } from '../../models';
 import { mergeDateAndTime } from '../../utils/date-utils';
 import { useDropTarget } from '../../utils/useDropTarget';
+import { EVENT_CREATION_DEFAULT_LENGTH_MINUTE } from '../../constants';
 
 const isValidDropTarget = buildIsValidDropTarget([
   'CalendarGridDayEvent',
   'CalendarGridDayEventResizeHandler',
   'CalendarGridTimeEvent',
+  'StandaloneEvent',
 ]);
 
 export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters) {
@@ -82,6 +84,19 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
         );
       }
 
+      // Move an Standalone Event into the Time Grid
+      if (data.source === 'StandaloneEvent') {
+        // TODO: Improve the start and end time of a non all-day event dropped in the Month View.
+        return createDropData(
+          data,
+          value,
+          adapter.addMinutes(
+            value,
+            data.eventData.duration ?? EVENT_CREATION_DEFAULT_LENGTH_MINUTE,
+          ),
+        );
+      }
+
       return undefined;
     },
   );
@@ -106,6 +121,6 @@ export namespace useDayCellDropTarget {
     /**
      * Add properties to the event dropped in the cell before storing it in the store.
      */
-    addPropertiesToDroppedEvent?: () => Partial<CalendarEvent>;
+    addPropertiesToDroppedEvent?: () => Partial<SchedulerEvent>;
   }
 }

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import SimpleBarChart from 'docsx/data/charts/bar-demo/SimpleBarChart';
 import StackedBarChart from 'docsx/data/charts/bar-demo/StackedBarChart';
 import MixedBarChart from 'docsx/data/charts/bar-demo/MixedBarChart';

@@ -41,3 +41,17 @@ In the demo below, a `CustomFooterRowCount` component is added to the `footerRow
 ## Styling row groups based on child conditions
 
 You can check the [styling row groups](/x/react-data-grid/style/#styling-row-groups) section for more information.
+
+## Grouping multiple fields into a single column
+
+Provide [`groupingValueGetter()`](/x/react-data-grid/row-grouping/#using-groupingvaluegetter-for-complex-grouping-value) with a separator constant to combine multiple columns into one and provide a custom [`renderCell()`](/x/react-data-grid/cells/#rendercell) to control the output interface.
+
+The following demo shows how to create multiple grouping columns (`label` and `priority`) into a single grouping column.
+
+Take a look at the second column definition in the `columns` array:
+
+- The `field` is set to `label`, which is one of the grouping columns.
+- The `groupingValueGetter` combines the `label` and `priority` fields into a single string separated by a constant effectively changing the grouping criteria for this column.
+- The `renderCell` splits the string and displays the `priority` field as a colored `Chip` when the row type is a group.
+
+{{"demo": "RowGroupingMultipleFields.js", "bg": "inline"}}

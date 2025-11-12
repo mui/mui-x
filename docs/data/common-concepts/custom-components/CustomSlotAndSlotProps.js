@@ -1,4 +1,3 @@
-import * as React from 'react';
 import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';

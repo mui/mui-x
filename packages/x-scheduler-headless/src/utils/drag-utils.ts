@@ -1,23 +1,12 @@
-import type { CalendarGridDayEvent } from '../calendar-grid/day-event/CalendarGridDayEvent';
-import type { CalendarGridDayEventResizeHandler } from '../calendar-grid/day-event-resize-handler/CalendarGridDayEventResizeHandler';
-import type { CalendarGridTimeEvent } from '../calendar-grid/time-event/CalendarGridTimeEvent';
-import type { CalendarGridTimeEventResizeHandler } from '../calendar-grid/time-event-resize-handler/CalendarGridTimeEventResizeHandler';
+import {
+  SchedulerOccurrencePlaceholder,
+  SchedulerOccurrencePlaceholderInternalDragOrResize,
+} from '../models';
 
-export const EVENT_DRAG_PRECISION_MINUTE = 15;
-export const EVENT_DRAG_PRECISION_MS = EVENT_DRAG_PRECISION_MINUTE * 60 * 1000;
+const INTERNAL_DRAG_OR_RESIZE_PLACEHOLDER_TYPES = new Set(['internal-drag', 'internal-resize']);
 
-export interface EventDropDataLookup {
-  CalendarGridTimeEvent: CalendarGridTimeEvent.DragData;
-  CalendarGridTimeEventResizeHandler: CalendarGridTimeEventResizeHandler.DragData;
-  CalendarGridDayEvent: CalendarGridDayEvent.DragData;
-  CalendarGridDayEventResizeHandler: CalendarGridDayEventResizeHandler.DragData;
-}
-
-export type EventDropData = EventDropDataLookup[keyof EventDropDataLookup];
-
-export function buildIsValidDropTarget<Targets extends keyof EventDropDataLookup>(
-  targets: Targets[],
-) {
-  const targetsSet = new Set(targets);
-  return (data: any): data is EventDropDataLookup[Targets] => targetsSet.has(data.source);
+export function isInternalDragOrResizePlaceholder(
+  placeholder: SchedulerOccurrencePlaceholder | null,
+): placeholder is SchedulerOccurrencePlaceholderInternalDragOrResize {
+  return placeholder !== null && INTERNAL_DRAG_OR_RESIZE_PLACEHOLDER_TYPES.has(placeholder.type);
 }

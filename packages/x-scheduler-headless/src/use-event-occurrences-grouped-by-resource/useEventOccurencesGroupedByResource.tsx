@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store';
 import {
-  CalendarEvent,
-  CalendarEventOccurrence,
+  SchedulerProcessedEvent,
+  SchedulerEventOccurrence,
   CalendarResource,
   SchedulerValidDate,
 } from '../models';
 import { getOccurrencesFromEvents } from '../utils/event-utils';
 import { useAdapter, Adapter } from '../use-adapter';
 import { useTimelineStoreContext } from '../use-timeline-store-context';
-import { selectors } from '../use-timeline';
+import { schedulerEventSelectors, schedulerResourceSelectors } from '../scheduler-selectors';
 
 export function useEventOccurrencesGroupedByResource(
   parameters: useEventOccurrencesGroupedByResource.Parameters,
@@ -17,9 +17,14 @@ export function useEventOccurrencesGroupedByResource(
   const { start, end } = parameters;
   const adapter = useAdapter();
   const store = useTimelineStoreContext();
-  const events = useStore(store, selectors.events);
-  const visibleResources = useStore(store, selectors.visibleResourcesMap);
-  const resources = useStore(store, selectors.resources);
+  const events = useStore(store, schedulerEventSelectors.processedEventList);
+  const visibleResources = useStore(store, schedulerResourceSelectors.visibleMap);
+  const resources = useStore(store, schedulerResourceSelectors.processedResourceList);
+  const resourcesChildrenMap = useStore(
+    store,
+    schedulerResourceSelectors.processedResourceChildrenLookup,
+  );
+  const resourceParentIds = useStore(store, schedulerResourceSelectors.resourceParentIdLookup);
 
   return React.useMemo(
     () =>
@@ -28,10 +33,21 @@ export function useEventOccurrencesGroupedByResource(
         events,
         visibleResources,
         resources,
+        resourcesChildrenMap,
+        resourceParentIds,
         start,
         end,
       ),
-    [adapter, events, visibleResources, resources, start, end],
+    [
+      adapter,
+      events,
+      visibleResources,
+      resources,
+      resourcesChildrenMap,
+      resourceParentIds,
+      start,
+      end,
+    ],
   );
 }
 
@@ -43,8 +59,13 @@ export namespace useEventOccurrencesGroupedByResource {
 
   export type ReturnValue = {
     resource: CalendarResource;
-    occurrences: CalendarEventOccurrence[];
+    occurrences: SchedulerEventOccurrence[];
   }[];
+}
+
+interface InnerGetEventOccurrencesGroupedByResourceReturnValue {
+  resource: CalendarResource;
+  occurrences: SchedulerEventOccurrence[];
 }
 
 /**
@@ -53,15 +74,24 @@ export namespace useEventOccurrencesGroupedByResource {
  */
 export function innerGetEventOccurrencesGroupedByResource(
   adapter: Adapter,
-  events: CalendarEvent[],
+  events: SchedulerProcessedEvent[],
   visibleResources: Map<string, boolean>,
-  resources: CalendarResource[],
+  resources: readonly CalendarResource[],
+  resourcesChildrenMap: Map<string, readonly CalendarResource[]>,
+  resourceParentIds: Map<string, string | null>,
   start: SchedulerValidDate,
   end: SchedulerValidDate,
-): { resource: CalendarResource; occurrences: CalendarEventOccurrence[] }[] {
-  const occurrencesGroupedByResource = new Map<string, CalendarEventOccurrence[]>();
+): InnerGetEventOccurrencesGroupedByResourceReturnValue[] {
+  const occurrencesGroupedByResource = new Map<string, SchedulerEventOccurrence[]>();
 
-  const occurrences = getOccurrencesFromEvents({ adapter, start, end, events, visibleResources });
+  const occurrences = getOccurrencesFromEvents({
+    adapter,
+    start,
+    end,
+    events,
+    visibleResources,
+    resourceParentIds,
+  });
 
   for (const occurrence of occurrences) {
     const resourceId = occurrence.resource;
@@ -73,15 +103,25 @@ export function innerGetEventOccurrencesGroupedByResource(
       occurrencesGroupedByResource.get(resourceId)!.push(occurrence);
     }
   }
-  const filteredResources = resources.filter((resource) =>
-    occurrencesGroupedByResource.has(resource.id),
-  );
 
-  // Sort by resource.title (localeCompare for stable alphabetical ordering).
-  filteredResources.sort((a, b) => a.title.localeCompare(b.title));
+  const processResources = (innerResources: readonly CalendarResource[]) => {
+    const sortedResources = innerResources.toSorted((a, b) => a.title.localeCompare(b.title));
+    const result: InnerGetEventOccurrencesGroupedByResourceReturnValue[] = [];
 
-  return filteredResources.map((resource) => ({
-    resource,
-    occurrences: occurrencesGroupedByResource.get(resource.id)!,
-  }));
+    for (const resource of sortedResources) {
+      result.push({
+        resource,
+        occurrences: occurrencesGroupedByResource.get(resource.id) ?? [],
+      });
+
+      const children = resourcesChildrenMap.get(resource.id) ?? [];
+      if (children.length > 0) {
+        result.push(...processResources(children));
+      }
+    }
+
+    return result;
+  };
+
+  return processResources(resources);
 }
