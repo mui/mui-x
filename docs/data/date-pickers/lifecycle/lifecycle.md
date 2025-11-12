@@ -437,7 +437,7 @@ Pickers expose a simplified `context.source` string that indicates where a chang
 The value is one of:
 
 - `'field'` — committed from the input field (typing, paste, arrow keys, clear, Enter, etc.).
-- `'picker'` — any interaction inside the picker UI (calendar/clock views, toolbar, action bar, shortcuts, dismiss, etc.).
+- `'view'` — any interaction inside the picker's view
 - `'unknown'` — unspecified or third‑party triggers.
 
 Example usage:
