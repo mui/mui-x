@@ -655,18 +655,19 @@ export const useGridKeyboardNavigation = (
       // Get the most recent params because the cell mode may have changed by another listener
       const cellParams = apiRef.current.getCellParams(params.id, params.field);
 
-      if (cellParams.cellMode !== GridCellModes.Edit) {
-        if (!isNavigationKey(event.key) && event.key !== 'Tab') {
-          return;
-        }
+      if (
+        cellParams.cellMode === GridCellModes.Edit ||
+        (!isNavigationKey(event.key) && event.key !== 'Tab')
+      ) {
+        return;
+      }
 
-        // Tab key is only allowed if tabNavigation is enabled or if we are tabNavigation to the header area while tabNavigation is enabled for header only (with Shift+Tab)
-        if (
-          event.key === 'Tab' &&
-          (props.tabNavigation === 'none' || (props.tabNavigation === 'header' && !event.shiftKey))
-        ) {
-          return;
-        }
+      // Tab key is only allowed if tabNavigation is enabled or if we are tabNavigation to the header area while tabNavigation is enabled for header only (with Shift+Tab)
+      if (
+        event.key === 'Tab' &&
+        (props.tabNavigation === 'none' || (props.tabNavigation === 'header' && !event.shiftKey))
+      ) {
+        return;
       }
 
       const canUpdateFocus = apiRef.current.unstable_applyPipeProcessors('canUpdateFocus', true, {
