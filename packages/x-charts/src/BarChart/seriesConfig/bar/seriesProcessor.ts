@@ -35,6 +35,33 @@ const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset) => {
         ].join('\n'),
       );
     }
+
+    if (process.env.NODE_ENV !== 'production') {
+      if (dataset) {
+        const dataKey = series[id].dataKey;
+
+        if (!dataKey) {
+          throw new Error(
+            [
+              `MUI X Charts: bar series with id='${id}' has no data and no dataKey.`,
+              'You must provide a dataKey when using the dataset prop.',
+            ].join('\n'),
+          );
+        }
+
+        dataset.forEach((entry, index) => {
+          const value = entry[dataKey];
+          if (value !== null && typeof value?.valueOf() !== 'number') {
+            warnOnce(
+              [
+                `MUI X Charts: your dataset key "${dataKey}" is used for plotting bars, but the dataset contains the non-null non-numerical element "${value}" at index ${index}.`,
+                'Bar plots only support numeric and null values.',
+              ].join('\n'),
+            );
+          }
+        });
+      }
+    }
   });
 
   const completedSeries: {
@@ -69,18 +96,8 @@ const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset) => {
         data: dataKey
           ? dataset!.map((data) => {
               const value = data[dataKey];
-              if (typeof value !== 'number') {
-                if (process.env.NODE_ENV !== 'production') {
-                  if (value !== null) {
-                    warnOnce([
-                      `MUI X Charts: your dataset key "${dataKey}" is used for plotting bars, but contains nonnumerical elements.`,
-                      'Bar plots only support numbers and null values.',
-                    ]);
-                  }
-                }
-                return null;
-              }
-              return value;
+
+              return typeof value === 'number' ? value : null;
             })
           : series[id].data!,
         stackedData: stackedSeries[index].map(([a, b]) => [a, b]),
