@@ -51,7 +51,7 @@ const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset) => {
 
         dataset.forEach((entry, index) => {
           const value = entry[dataKey];
-          if (value !== null && typeof value?.valueOf() !== 'number') {
+          if (value != null && typeof value !== 'number') {
             warnOnce(
               [
                 `MUI X Charts: your dataset key "${dataKey}" is used for plotting bars, but the dataset contains the non-null non-numerical element "${value}" at index ${index}.`,

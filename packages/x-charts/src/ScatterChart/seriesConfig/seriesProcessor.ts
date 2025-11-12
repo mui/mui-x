@@ -29,7 +29,7 @@ const seriesProcessor: SeriesProcessor<'scatter'> = ({ series, seriesOrder }, da
           dataset.forEach((entry, index) => {
             const x = entry[xDataKey];
 
-            if (x != null && typeof x?.valueOf() !== 'number') {
+            if (x != null && typeof x !== 'number') {
               warnOnce(
                 [
                   `MUI X Charts: your dataset key "${xDataKey}" is used for a scatter plot, but the dataset contains the non-null non-numerical element "${x}" at index ${index}.`,
@@ -40,7 +40,7 @@ const seriesProcessor: SeriesProcessor<'scatter'> = ({ series, seriesOrder }, da
 
             const y = entry[yDataKey];
 
-            if (y != null && typeof y?.valueOf() !== 'number') {
+            if (y != null && typeof y !== 'number') {
               warnOnce(
                 [
                   `MUI X Charts: your dataset key "${yDataKey}" is used for a scatter plot, but the dataset contains the non-null non-numerical element "${y}" at index ${index}.`,
