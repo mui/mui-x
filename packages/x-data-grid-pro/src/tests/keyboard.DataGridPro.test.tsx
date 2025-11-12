@@ -52,10 +52,10 @@ const columnGroupingModel: GridColumnGroupingModel = [
   },
 ];
 
-describe('<DataGridPro /> - Tabbing', () => {
+describe('<DataGridPro /> - Tab navigation', () => {
   const { render } = createRenderer();
 
-  describe('default - tabbing="none"', () => {
+  describe('default - tabNavigation="none"', () => {
     it('should not handle Tab key in cells', async () => {
       const { user } = render(
         <div style={{ width: 600, height: 400 }}>
@@ -120,11 +120,11 @@ describe('<DataGridPro /> - Tabbing', () => {
     });
   });
 
-  describe('tabbing="content"', () => {
+  describe('tabNavigation="content"', () => {
     it('should move to next cell in same row when pressing Tab', async () => {
       const { user } = render(
         <div style={{ width: 600, height: 400 }}>
-          <DataGridPro rows={rows} columns={columns} tabbing="content" />
+          <DataGridPro rows={rows} columns={columns} tabNavigation="content" />
         </div>,
       );
 
@@ -139,7 +139,7 @@ describe('<DataGridPro /> - Tabbing', () => {
     it('should move to first cell of next row when pressing Tab on last cell of row', async () => {
       const { user } = render(
         <div style={{ width: 600, height: 400 }}>
-          <DataGridPro rows={rows} columns={columns} tabbing="content" />
+          <DataGridPro rows={rows} columns={columns} tabNavigation="content" />
         </div>,
       );
 
@@ -154,7 +154,7 @@ describe('<DataGridPro /> - Tabbing', () => {
     it('should move to previous cell in same row when pressing Shift+Tab', async () => {
       const { user } = render(
         <div style={{ width: 600, height: 400 }}>
-          <DataGridPro rows={rows} columns={columns} tabbing="content" />
+          <DataGridPro rows={rows} columns={columns} tabNavigation="content" />
         </div>,
       );
 
@@ -169,7 +169,7 @@ describe('<DataGridPro /> - Tabbing', () => {
     it('should move to last cell of previous row when pressing Shift+Tab on first cell of row', async () => {
       const { user } = render(
         <div style={{ width: 600, height: 400 }}>
-          <DataGridPro rows={rows} columns={columns} tabbing="content" />
+          <DataGridPro rows={rows} columns={columns} tabNavigation="content" />
         </div>,
       );
 
@@ -181,10 +181,10 @@ describe('<DataGridPro /> - Tabbing', () => {
       expect(getActiveCell()).to.equal('0-3');
     });
 
-    it('should focus outside of the grid when tabbing at the first or the last cell', async () => {
+    it('should focus outside of the grid when tabNavigation at the first or the last cell', async () => {
       const { user } = render(
         <div style={{ width: 600, height: 400 }}>
-          <DataGridPro rows={rows} columns={columns} tabbing="content" />
+          <DataGridPro rows={rows} columns={columns} tabNavigation="content" />
         </div>,
       );
 
@@ -206,7 +206,7 @@ describe('<DataGridPro /> - Tabbing', () => {
     it('should move to the first cell when pressing Tab in column header', async () => {
       const { user } = render(
         <div style={{ width: 600, height: 400 }}>
-          <DataGridPro rows={rows} columns={columns} tabbing="content" />
+          <DataGridPro rows={rows} columns={columns} tabNavigation="content" />
         </div>,
       );
 
@@ -215,14 +215,14 @@ describe('<DataGridPro /> - Tabbing', () => {
       expect(getActiveColumnHeader()).to.equal('0');
 
       await user.keyboard('{Tab}');
-      // With tabbing="content", Tab should move to the first cell
+      // With tabNavigation="content", Tab should move to the first cell
       expect(getActiveCell()).to.equal('0-0');
     });
 
     it('should move outside of the grid when pressing Shift+Tab in column header', async () => {
       const { user } = render(
         <div style={{ width: 600, height: 400 }}>
-          <DataGridPro rows={rows} columns={columns} tabbing="content" />
+          <DataGridPro rows={rows} columns={columns} tabNavigation="content" />
         </div>,
       );
 
@@ -235,11 +235,11 @@ describe('<DataGridPro /> - Tabbing', () => {
     });
   });
 
-  describe('tabbing="header"', () => {
+  describe('tabNavigation="header"', () => {
     it('should move to next column header when pressing Tab', async () => {
       const { user } = render(
         <div style={{ width: 600, height: 400 }}>
-          <DataGridPro rows={rows} columns={columns} tabbing="header" />
+          <DataGridPro rows={rows} columns={columns} tabNavigation="header" />
         </div>,
       );
 
@@ -254,7 +254,7 @@ describe('<DataGridPro /> - Tabbing', () => {
     it('should move to previous column header when pressing Shift+Tab', async () => {
       const { user } = render(
         <div style={{ width: 600, height: 400 }}>
-          <DataGridPro rows={rows} columns={columns} tabbing="header" />
+          <DataGridPro rows={rows} columns={columns} tabNavigation="header" />
         </div>,
       );
 
@@ -269,7 +269,7 @@ describe('<DataGridPro /> - Tabbing', () => {
     it('should move to header filter when pressing Tab on last column header', async () => {
       const { user } = render(
         <div style={{ width: 600, height: 400 }}>
-          <DataGridPro rows={rows} columns={columns} tabbing="header" headerFilters />
+          <DataGridPro rows={rows} columns={columns} tabNavigation="header" headerFilters />
         </div>,
       );
 
@@ -286,7 +286,7 @@ describe('<DataGridPro /> - Tabbing', () => {
     it('should move to column header when pressing Shift+Tab on first header filter', async () => {
       const { user } = render(
         <div style={{ width: 600, height: 400 }}>
-          <DataGridPro rows={rows} columns={columns} tabbing="header" headerFilters />
+          <DataGridPro rows={rows} columns={columns} tabNavigation="header" headerFilters />
         </div>,
       );
 
@@ -301,7 +301,7 @@ describe('<DataGridPro /> - Tabbing', () => {
     it('should navigate through header filters with Tab', async () => {
       const { user } = render(
         <div style={{ width: 600, height: 400 }}>
-          <DataGridPro rows={rows} columns={columns} tabbing="header" headerFilters />
+          <DataGridPro rows={rows} columns={columns} tabNavigation="header" headerFilters />
         </div>,
       );
 
@@ -321,7 +321,7 @@ describe('<DataGridPro /> - Tabbing', () => {
             rows={rows}
             columns={columns}
             columnGroupingModel={columnGroupingModel}
-            tabbing="header"
+            tabNavigation="header"
           />
         </div>,
       );
@@ -349,7 +349,7 @@ describe('<DataGridPro /> - Tabbing', () => {
     it('should not handle Tab key in cells', async () => {
       const { user } = render(
         <div style={{ width: 600, height: 400 }}>
-          <DataGridPro rows={rows} columns={columns} tabbing="header" />
+          <DataGridPro rows={rows} columns={columns} tabNavigation="header" />
         </div>,
       );
 
@@ -364,7 +364,7 @@ describe('<DataGridPro /> - Tabbing', () => {
     it('should move to last header filter when pressing Shift+Tab in cell', async () => {
       const { user } = render(
         <div style={{ width: 600, height: 400 }}>
-          <DataGridPro rows={rows} columns={columns} tabbing="header" headerFilters />
+          <DataGridPro rows={rows} columns={columns} tabNavigation="header" headerFilters />
         </div>,
       );
 
@@ -379,14 +379,14 @@ describe('<DataGridPro /> - Tabbing', () => {
     });
   });
 
-  describe('tabbing="all"', () => {
+  describe('tabNavigation="all"', () => {
     it('should navigate through all elements', async () => {
       const { user } = render(
         <div style={{ width: 600, height: 400 }}>
           <DataGridPro
             rows={rows}
             columns={columns}
-            tabbing="all"
+            tabNavigation="all"
             headerFilters
             columnGroupingModel={columnGroupingModel}
           />
@@ -450,7 +450,7 @@ describe('<DataGridPro /> - Tabbing', () => {
     it('should navigate between cells and column headers if there are no header filters', async () => {
       const { user } = render(
         <div style={{ width: 600, height: 400 }}>
-          <DataGridPro rows={rows} columns={columns} tabbing="all" />
+          <DataGridPro rows={rows} columns={columns} tabNavigation="all" />
         </div>,
       );
 
@@ -476,7 +476,7 @@ describe('<DataGridPro /> - Tabbing', () => {
             rows={rows}
             columns={columns}
             columnGroupingModel={columnGroupingModel}
-            tabbing="all"
+            tabNavigation="all"
           />
         </div>,
       );
