@@ -1182,11 +1182,11 @@ export function serializeRRule(adapter: Adapter, rule: RecurringEventRecurrenceR
   }
 
   if (rule.byMonthDay?.length) {
-    parts.push(`BYMONTHDAY=${[...rule.byMonthDay].sort((a, b) => a - b).join(',')}`);
+    parts.push(`BYMONTHDAY=${rule.byMonthDay.toSorted((a, b) => a - b).join(',')}`);
   }
 
   if (rule.byMonth?.length) {
-    parts.push(`BYMONTH=${[...rule.byMonth].sort((a, b) => a - b).join(',')}`);
+    parts.push(`BYMONTH=${rule.byMonth.toSorted((a, b) => a - b).join(',')}`);
   }
 
   if (typeof rule.count === 'number') {
