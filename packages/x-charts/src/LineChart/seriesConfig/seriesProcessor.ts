@@ -33,7 +33,7 @@ const seriesProcessor: SeriesProcessor<'line'> = (params, dataset) => {
     }
 
     if (process.env.NODE_ENV !== 'production') {
-      if (dataset) {
+      if (!data && dataset) {
         const dataKey = series[id].dataKey;
 
         if (!dataKey) {
