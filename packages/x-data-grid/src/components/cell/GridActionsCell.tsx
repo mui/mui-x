@@ -273,7 +273,7 @@ GridActionsCell.propTypes = {
    * The mode of the cell.
    */
   cellMode: PropTypes.oneOf(['edit', 'view']).isRequired,
-  children: PropTypes /* @typescript-to-proptypes-ignore */.arrayOf(PropTypes.element),
+  children: PropTypes.node.isRequired,
   /**
    * The column of the row that the current cell belongs to.
    */
