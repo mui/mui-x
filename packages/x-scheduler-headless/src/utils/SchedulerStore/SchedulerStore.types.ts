@@ -1,5 +1,7 @@
 import {
   SchedulerProcessedEvent,
+  SchedulerEventColor,
+  SchedulerOccurrencePlaceholder,
   CalendarResource,
   CalendarResourceId,
   SchedulerEventUpdatedProperties,

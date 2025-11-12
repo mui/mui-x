@@ -97,9 +97,9 @@ export interface GetOccurrencesFromEventsParameters {
 }
 
 export function sortEventOccurrences(
-  occurrences: CalendarEventOccurrence[],
+  occurrences: SchedulerEventOccurrence[],
   adapter: Adapter,
-): CalendarEventOccurrence[] {
+): SchedulerEventOccurrence[] {
   return occurrences
     .map((occurrence) => {
       return {

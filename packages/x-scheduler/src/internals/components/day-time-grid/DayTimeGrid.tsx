@@ -7,7 +7,7 @@ import { useStore } from '@base-ui-components/utils/store';
 import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-headless/use-event-occurrences-grouped-by-day';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 import { eventCalendarViewSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
-import { CalendarEventOccurrence, SchedulerProcessedDate } from '@mui/x-scheduler-headless/models';
+import { SchedulerEventOccurrence, SchedulerProcessedDate } from '@mui/x-scheduler-headless/models';
 import { useAdapter, diffIn, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
@@ -53,7 +53,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     days,
     occurrencesMap,
     shouldAddPosition: React.useCallback(
-      (occurrence: CalendarEventOccurrence) => isEventAllDayOrMultipleDay(occurrence, adapter),
+      (occurrence: SchedulerEventOccurrence) => isEventAllDayOrMultipleDay(occurrence, adapter),
       [adapter],
     ),
   });

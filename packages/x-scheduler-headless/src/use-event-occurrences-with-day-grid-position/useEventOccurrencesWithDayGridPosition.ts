@@ -24,7 +24,7 @@ export function useEventOccurrencesWithDayGridPosition(
 
     const processedDays = days.map((day, dayIndex) => {
       indexLookup[day.key] = { occurrencesIndex: {}, usedIndexes: new Set() };
-      const needsPosition: useEventOccurrences.EventOccurrenceWithPosition[] = [];
+      const needsPosition: SchedulerEventOccurrence[] = [];
       const withoutPosition: SchedulerEventOccurrence[] = [];
 
       // 1. Split occurrences into withPosition and withoutPosition
@@ -41,7 +41,7 @@ export function useEventOccurrencesWithDayGridPosition(
       const sortedNeedsPosition = sortEventOccurrences(needsPosition, adapter);
 
       // 3. Assign position to each occurrence
-      const withPosition: CalendarEventOccurrenceWithDayGridPosition[] = [];
+      const withPosition: useEventOccurrencesWithDayGridPosition.EventOccurrenceWithPosition[] = [];
       for (const occurrence of sortedNeedsPosition) {
         let position: useEventOccurrencesWithDayGridPosition.EventOccurrencePosition;
 

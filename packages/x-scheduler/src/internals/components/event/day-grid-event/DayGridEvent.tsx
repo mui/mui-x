@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { createSelector, useStore } from '@base-ui-components/utils/store';
 import { Repeat } from 'lucide-react';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
-import { CalendarEventOccurrence } from '@mui/x-scheduler-headless/models';
+import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
 import { EventCalendarState } from '@mui/x-scheduler-headless/use-event-calendar';
 import {
   schedulerEventSelectors,
@@ -30,7 +30,7 @@ const isResizableSelector = createSelector(
   (state: EventCalendarState) => state.adapter,
   eventCalendarEventSelectors.isResizable,
   eventCalendarViewSelectors.view,
-  (adapter, isResizable, view, occurrence: CalendarEventOccurrence) => {
+  (adapter, isResizable, view, occurrence: SchedulerEventOccurrence) => {
     if (!isResizable) {
       return false;
     }
