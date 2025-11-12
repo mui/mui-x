@@ -2,6 +2,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
+import { EventCalendarViewConfig } from '@mui/x-scheduler-headless/models';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventCalendarView } from '@mui/x-scheduler-headless/use-event-calendar-view';
 import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
@@ -13,6 +14,11 @@ import { EventPopoverProvider, EventPopoverTrigger } from '../internals/componen
 import { EventItem } from '../internals/components/event/event-item/EventItem';
 import './AgendaView.css';
 import '../index.css';
+
+const AGENDA_VIEW_CONFIG: EventCalendarViewConfig = {
+  siblingVisibleDateGetter: ({ state, delta }) =>
+    state.adapter.addDays(state.visibleDate, AGENDA_VIEW_DAYS_AMOUNT * delta),
+};
 
 /**
  * An Agenda View to use inside the Event Calendar.
@@ -30,12 +36,9 @@ export const AgendaView = React.memo(
     const handleRef = useMergedRefs(forwardedRef, containerRef);
 
     // Feature hooks
-    const { days, occurrencesMap } = useAgendaEventOccurrencesGroupedByDay();
-    useEventCalendarView(() => ({
-      siblingVisibleDateGetter: (date, delta) =>
-        adapter.addDays(date, AGENDA_VIEW_DAYS_AMOUNT * delta),
-    }));
+    useEventCalendarView(AGENDA_VIEW_CONFIG);
 
+    const { days, occurrencesMap } = useAgendaEventOccurrencesGroupedByDay();
     const today = adapter.date();
 
     return (
