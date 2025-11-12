@@ -1,8 +1,8 @@
 import { EMPTY_ARRAY } from '@base-ui-components/utils/empty';
 import {
   SchedulerProcessedEvent,
-  CalendarEventId,
-  CalendarOccurrencePlaceholder,
+  SchedulerEventId,
+  SchedulerOccurrencePlaceholder,
   CalendarResource,
   CalendarResourceId,
   SchedulerEventModelStructure,
@@ -18,8 +18,8 @@ import { SchedulerParameters, SchedulerState } from './SchedulerStore.types';
  */
 export function shouldUpdateOccurrencePlaceholder(
   adapter: Adapter,
-  previous: CalendarOccurrencePlaceholder | null,
-  next: CalendarOccurrencePlaceholder | null,
+  previous: SchedulerOccurrencePlaceholder | null,
+  next: SchedulerOccurrencePlaceholder | null,
 ): boolean {
   if (next == null || previous == null) {
     return next !== previous;
@@ -63,6 +63,7 @@ const RESOURCE_PROPERTIES_LOOKUP: { [P in keyof CalendarResource]-?: true } = {
   id: true,
   title: true,
   eventColor: true,
+  children: true,
 };
 
 const RESOURCE_PROPERTIES = Object.keys(RESOURCE_PROPERTIES_LOOKUP) as (keyof CalendarResource)[];
@@ -164,7 +165,20 @@ export function getProcessedResourceFromModel<TResource extends object>(
     const getter = resourceModelStructure?.[key]?.getter;
 
     // @ts-ignore
-    processedResource[key] = getter ? getter(resource) : resource[key];
+    const resourceProperty = getter ? getter(resource) : resource[key];
+
+    if (key === 'children' && Array.isArray(resourceProperty)) {
+      // Process children recursively
+      const children = resourceProperty.map((child) =>
+        getProcessedResourceFromModel(child, resourceModelStructure),
+      );
+      // @ts-ignore
+      processedResource[key] = children;
+      continue;
+    }
+
+    // @ts-ignore
+    processedResource[key] = resourceProperty;
   }
 
   return processedResource;
@@ -188,9 +202,9 @@ export function buildEventsState<TEvent extends object, TResource extends object
 > {
   const { events, eventModelStructure } = parameters;
 
-  const eventIdList: CalendarEventId[] = [];
-  const eventModelLookup = new Map<CalendarEventId, TEvent>();
-  const processedEventLookup = new Map<CalendarEventId, SchedulerProcessedEvent>();
+  const eventIdList: SchedulerEventId[] = [];
+  const eventModelLookup = new Map<SchedulerEventId, TEvent>();
+  const processedEventLookup = new Map<SchedulerEventId, SchedulerProcessedEvent>();
   for (const event of events) {
     const processedEvent = getProcessedEventFromModel(event, adapter, eventModelStructure);
     eventIdList.push(processedEvent.id);
@@ -211,21 +225,41 @@ export function buildResourcesState<TEvent extends object, TResource extends obj
   parameters: Pick<SchedulerParameters<TEvent, TResource>, 'resources' | 'resourceModelStructure'>,
 ): Pick<
   SchedulerState<TEvent>,
-  'resourceIdList' | 'processedResourceLookup' | 'resourceModelStructure'
+  | 'resourceIdList'
+  | 'processedResourceLookup'
+  | 'resourceModelStructure'
+  | 'resourceChildrenIdLookup'
 > {
   const { resources = EMPTY_ARRAY, resourceModelStructure } = parameters;
 
   const resourceIdList: string[] = [];
   const processedResourceLookup = new Map<CalendarResourceId, CalendarResource>();
+  const resourceChildrenIdLookup = new Map<CalendarResourceId, CalendarResourceId[]>();
+
+  const addResourceToState = (processedResource: CalendarResource) => {
+    const { children, ...resourceWithoutChildren } = processedResource;
+    processedResourceLookup.set(processedResource.id, resourceWithoutChildren);
+    if (children) {
+      for (const child of children) {
+        if (!resourceChildrenIdLookup.get(processedResource.id)) {
+          resourceChildrenIdLookup.set(processedResource.id, []);
+        }
+        resourceChildrenIdLookup.get(processedResource.id)?.push(child.id);
+        addResourceToState(child);
+      }
+    }
+  };
+
   for (const resource of resources) {
     const processedResource = getProcessedResourceFromModel(resource, resourceModelStructure);
     resourceIdList.push(processedResource.id);
-    processedResourceLookup.set(processedResource.id, processedResource);
+    addResourceToState(processedResource);
   }
 
   return {
     resourceIdList,
     processedResourceLookup,
     resourceModelStructure,
+    resourceChildrenIdLookup,
   };
 }

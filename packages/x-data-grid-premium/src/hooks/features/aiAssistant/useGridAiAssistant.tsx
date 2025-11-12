@@ -145,10 +145,7 @@ export const useGridAiAssistant = (
         length: Math.min(DEFAULT_SAMPLE_COUNT, rows.length),
       }).map(() => {
         const row = rows[Math.floor(Math.random() * rows.length)];
-        if (column.valueGetter) {
-          return column.valueGetter(row[column.field] as never, row, column, apiRef);
-        }
-        return row[column.field];
+        return apiRef.current.getRowValue(row, column);
       });
     });
 

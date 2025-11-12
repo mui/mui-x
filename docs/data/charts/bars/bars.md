@@ -179,6 +179,21 @@ In the example below, the value of the first series is displayed using the defau
 
 {{"demo": "BarLabel.js"}}
 
+### Label placement
+
+The position of the bar label can be customized.
+To do so, set a series' `barLabelPlacement` property to one of the following values:
+
+- `center`: the label is centered on the bar;
+- `outside`: the label is placed after the end of the bar, from the point of the view of the origin. For a vertical positive bar, the label is above its top edge; for a horizontal negative bar, the label is placed to the left of its leftmost limit.
+
+{{"demo": "BarLabelPlacement.js"}}
+
+:::info
+When using `outside` placement, if the label does not fit in the chart area, it will be clipped.
+To avoid this, you can decrease/increase the axis min/max respectively so that there's enough space for the labels.
+:::
+
 ### Custom labels
 
 You can display, change, or hide labels based on conditional logic.

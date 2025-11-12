@@ -1,14 +1,14 @@
 import { createSelector } from '@base-ui-components/utils/store';
 import { TimelineState as State } from '../use-timeline';
 import { schedulerEventSelectors } from '../scheduler-selectors';
-import { CalendarEventId } from '../models';
+import { SchedulerEventId } from '../models';
 
 export const timelineEventSelectors = {
   isDraggable: createSelector(
     schedulerEventSelectors.isReadOnly,
     (state: State) => state.areEventsDraggable,
     (state: State) => state.view,
-    (isEventReadOnly, areEventsDraggable, _eventId: CalendarEventId) => {
+    (isEventReadOnly, areEventsDraggable, _eventId: SchedulerEventId) => {
       if (isEventReadOnly || !areEventsDraggable) {
         return false;
       }
@@ -19,7 +19,7 @@ export const timelineEventSelectors = {
   isResizable: createSelector(
     schedulerEventSelectors.isReadOnly,
     (state: State) => state.areEventsResizable,
-    (isEventReadOnly, areEventsResizable, _eventId: CalendarEventId) => {
+    (isEventReadOnly, areEventsResizable, _eventId: SchedulerEventId) => {
       if (isEventReadOnly || !areEventsResizable) {
         return false;
       }
