@@ -1,4 +1,4 @@
-import { createSelectorMemoized } from '@base-ui-components/utils/store';
+import { createSelector, createSelectorMemoized } from '@base-ui-components/utils/store';
 import {
   RecurringEventPresetKey,
   RecurringEventRecurrenceRule,
@@ -6,7 +6,6 @@ import {
 } from '../models';
 import { SchedulerState as State } from '../utils/SchedulerStore/SchedulerStore.types';
 import { getWeekDayCode, serializeRRule } from '../utils/recurring-event-utils';
-import { Adapter } from '../use-adapter';
 
 export const schedulerRecurringEventSelectors = {
   /**
@@ -114,17 +113,20 @@ export const schedulerRecurringEventSelectors = {
   /**
    * Returns true if both recurrence rules are equivalent.
    */
-  isSameRRule: (
-    adapter: Adapter,
-    rruleA: RecurringEventRecurrenceRule | undefined,
-    rruleB: RecurringEventRecurrenceRule | undefined,
-  ): boolean => {
-    if (!rruleA && !rruleB) {
-      return true;
-    } // Both undefined -> same
-    if (!rruleA || !rruleB) {
-      return false;
-    } // One missing -> different
-    return serializeRRule(adapter, rruleA) === serializeRRule(adapter, rruleB);
-  },
+  isSameRRule: createSelector(
+    (state: State) => state.adapter,
+    (
+      adapter,
+      rruleA: RecurringEventRecurrenceRule | undefined,
+      rruleB: RecurringEventRecurrenceRule | undefined,
+    ): boolean => {
+      if (!rruleA && !rruleB) {
+        return true;
+      } // Both undefined -> same
+      if (!rruleA || !rruleB) {
+        return false;
+      } // One missing -> different
+      return serializeRRule(adapter, rruleA) === serializeRRule(adapter, rruleB);
+    },
+  ),
 };
