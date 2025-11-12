@@ -4,7 +4,7 @@ import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps, NonNativeButtonProps } from '../../base-ui-copy/utils/types';
 import { useButton } from '../../base-ui-copy/utils/useButton';
-import { CalendarEventId, CalendarEventOccurrence, SchedulerValidDate } from '../../models';
+import { SchedulerEventId, SchedulerEventOccurrence, SchedulerValidDate } from '../../models';
 import { useAdapter } from '../../use-adapter';
 import { useTimelineStoreContext } from '../../use-timeline-store-context';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
@@ -59,7 +59,7 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
 
     const event = schedulerEventSelectors.processedEvent(store.state, eventId)!;
 
-    const originalOccurrence: CalendarEventOccurrence = {
+    const originalOccurrence: SchedulerEventOccurrence = {
       ...event,
       key: occurrenceKey,
       id: eventId,
@@ -152,9 +152,9 @@ export namespace TimelineEvent {
       useDraggableEvent.PublicParameters {}
 
   export interface SharedDragData {
-    eventId: CalendarEventId;
+    eventId: SchedulerEventId;
     occurrenceKey: string;
-    originalOccurrence: CalendarEventOccurrence;
+    originalOccurrence: SchedulerEventOccurrence;
     start: SchedulerValidDate;
     end: SchedulerValidDate;
     initialCursorPositionInEventMs: number;

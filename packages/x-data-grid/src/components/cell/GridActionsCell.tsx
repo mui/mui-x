@@ -139,8 +139,6 @@ function GridActionsCell(props: GridActionsCellProps) {
   const handleButtonClick =
     (index: number, onClick?: React.MouseEventHandler): React.MouseEventHandler =>
     (event) => {
-      event.stopPropagation();
-      event.preventDefault();
       setFocusedButtonIndex(index);
       ignoreCallToFocus.current = true;
 

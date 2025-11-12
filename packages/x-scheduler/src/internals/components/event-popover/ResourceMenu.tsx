@@ -6,7 +6,7 @@ import { Menu } from '@base-ui-components/react/menu';
 import { DEFAULT_EVENT_COLOR, EVENT_COLORS } from '@mui/x-scheduler-headless/constants';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { schedulerResourceSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
-import { CalendarEventColor, CalendarResourceId } from '@mui/x-scheduler-headless/models';
+import { SchedulerEventColor, CalendarResourceId } from '@mui/x-scheduler-headless/models';
 import { useStore } from '@base-ui-components/utils/store';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { getColorClassName } from '../../utils/color-utils';
@@ -15,19 +15,19 @@ interface ResourceSelectProps {
   readOnly?: boolean;
   resourceId: string | null;
   handleResourceChange: (value: CalendarResourceId) => void;
-  handleColorChange: (value: CalendarEventColor) => void;
-  colorId: CalendarEventColor | null;
+  handleColorChange: (value: SchedulerEventColor) => void;
+  colorId: SchedulerEventColor | null;
 }
 
 interface ResourceMenuTriggerContentProps {
   resource: ResourceOptionType | null;
-  color: CalendarEventColor | null;
+  color: SchedulerEventColor | null;
 }
 
 interface ResourceOptionType {
   label: string;
   value: string | null;
-  eventColor?: CalendarEventColor;
+  eventColor?: SchedulerEventColor;
 }
 
 function ResourceMenuTriggerContent(props: ResourceMenuTriggerContentProps) {

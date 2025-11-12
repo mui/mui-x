@@ -1,13 +1,13 @@
-import { CalendarEventColor } from '../models';
+import { SchedulerEventColor } from '../models';
 
 export const EVENT_CREATION_PRECISION_MINUTE = 30;
 
 export const EVENT_CREATION_DEFAULT_LENGTH_MINUTE = 30;
 
 // TODO: Add a color prop to the SchedulerStore and move DEFAULT_EVENT_COLOR there.
-export const DEFAULT_EVENT_COLOR: CalendarEventColor = 'jade';
+export const DEFAULT_EVENT_COLOR: SchedulerEventColor = 'jade';
 
-export const EVENT_COLORS: CalendarEventColor[] = [
+export const EVENT_COLORS: SchedulerEventColor[] = [
   'primary',
   'mauve',
   'cyan',

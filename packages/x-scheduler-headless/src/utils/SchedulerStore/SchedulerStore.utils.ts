@@ -1,8 +1,8 @@
 import { EMPTY_ARRAY } from '@base-ui-components/utils/empty';
 import {
   SchedulerProcessedEvent,
-  CalendarEventId,
-  CalendarOccurrencePlaceholder,
+  SchedulerEventId,
+  SchedulerOccurrencePlaceholder,
   CalendarResource,
   CalendarResourceId,
   SchedulerEventModelStructure,
@@ -18,8 +18,8 @@ import { SchedulerParameters, SchedulerState } from './SchedulerStore.types';
  */
 export function shouldUpdateOccurrencePlaceholder(
   adapter: Adapter,
-  previous: CalendarOccurrencePlaceholder | null,
-  next: CalendarOccurrencePlaceholder | null,
+  previous: SchedulerOccurrencePlaceholder | null,
+  next: SchedulerOccurrencePlaceholder | null,
 ): boolean {
   if (next == null || previous == null) {
     return next !== previous;
@@ -203,9 +203,9 @@ export function buildEventsState<TEvent extends object, TResource extends object
 > {
   const { events, eventModelStructure } = parameters;
 
-  const eventIdList: CalendarEventId[] = [];
-  const eventModelLookup = new Map<CalendarEventId, TEvent>();
-  const processedEventLookup = new Map<CalendarEventId, SchedulerProcessedEvent>();
+  const eventIdList: SchedulerEventId[] = [];
+  const eventModelLookup = new Map<SchedulerEventId, TEvent>();
+  const processedEventLookup = new Map<SchedulerEventId, SchedulerProcessedEvent>();
   for (const event of events) {
     const processedEvent = getProcessedEventFromModel(event, adapter, eventModelStructure);
     eventIdList.push(processedEvent.id);
