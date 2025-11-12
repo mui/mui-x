@@ -209,8 +209,10 @@ The `onAccept` callback lets you get the final value selected by the user withou
 The `onAccept` callback receives a second argument `context` with extra information about why and how the value was accepted.
 
 - `validationError`: the validation result of the accepted value.
-- `source`: compound source describing where the acceptance originated from. Typical values include:
-  - `"field"`, `"view"` and `"unknown"`.
+- `source`: string that indicates where a change or acceptance originated from. The value is one of:
+  - `'field'`: committed from the input field (typing, paste, arrow keys, clear, Enter, etc.).
+  - `'view'`: any interaction inside the picker's view
+  - `'unknown'`: unspecified or third‑party triggers.
 - `shortcut` (optional): the shortcut metadata when the value was accepted via a shortcut selection.
 
 For custom error handling, you can use the `validationError` property of the `context` object.
@@ -436,9 +438,9 @@ You can find more information about the `onAccept` prop [in the dedicated doc se
 Pickers expose a simplified `context.source` string that indicates where a change or acceptance originated from.
 The value is one of:
 
-- `'field'` — committed from the input field (typing, paste, arrow keys, clear, Enter, etc.).
-- `'view'` — any interaction inside the picker's view
-- `'unknown'` — unspecified or third‑party triggers.
+- `'field'`: committed from the input field (typing, paste, arrow keys, clear, Enter, etc.).
+- `'view'`: any interaction inside the picker's view
+- `'unknown'`: unspecified or third‑party triggers.
 
 Example usage:
 
