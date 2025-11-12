@@ -11,7 +11,7 @@ import {
 } from 'test/utils/scheduler';
 import { screen } from '@mui/internal-test-utils';
 import {
-  CalendarOccurrencePlaceholderCreation,
+  SchedulerOccurrencePlaceholderCreation,
   CalendarResource,
   SchedulerEvent,
 } from '@mui/x-scheduler-headless/models';
@@ -435,7 +435,7 @@ describe('<EventPopoverContent />', () => {
     it('should call createEvent with metaChanges + computed start/end on Submit', async () => {
       const start = adapter.date('2025-06-10T09:00:00');
       const end = adapter.date('2025-06-10T09:30:00');
-      const placeholder: CalendarOccurrencePlaceholderCreation = {
+      const placeholder: SchedulerOccurrencePlaceholderCreation = {
         type: 'creation',
         surfaceType: 'time-grid' as const,
         start,

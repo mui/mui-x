@@ -2,9 +2,9 @@ export * from './translations';
 export type {
   SchedulerEvent,
   CalendarResource,
-  CalendarEventColor,
+  SchedulerEventColor as CalendarEventColor,
   SchedulerEventModelStructure,
   SchedulerResourceModelStructure,
   RecurringEventRecurrenceRule,
-  CalendarOccurrencePlaceholderExternalDragData,
+  SchedulerOccurrencePlaceholderExternalDragData as CalendarOccurrencePlaceholderExternalDragData,
 } from '@mui/x-scheduler-headless/models';
