@@ -4,16 +4,22 @@ import { Flatbush } from '../../../Flatbush';
 import { findClosestPoints } from './findClosestPoints';
 import { type D3Scale } from '../../../../models/axis';
 import { zoomScaleRange } from '../useChartCartesianAxis/zoom';
-import { type ScatterValueType } from '../../../../models/seriesType/scatter';
+import { scaleBand } from '../../../scales';
 
-function prepareFlatbush(seriesData: ScatterValueType[], xScale: D3Scale, yScale: D3Scale) {
+function prepareFlatbush(
+  seriesData: Array<{ x: number | null; y: number | null }>,
+  xScale: D3Scale,
+  yScale: D3Scale,
+) {
   const flatbush = new Flatbush(seriesData.length);
   const normalizedXScale = xScale.copy();
   const normalizedYScale = yScale.copy();
   normalizedXScale.range([0, 1]);
   normalizedYScale.range([0, 1]);
 
-  seriesData.forEach((point) => flatbush.add(normalizedXScale(point.x), normalizedYScale(point.y)));
+  seriesData.forEach((point) =>
+    flatbush.add(normalizedXScale(point.x ?? 0), normalizedYScale(point.y ?? 0)),
+  );
   flatbush.finish();
 
   return flatbush;
@@ -23,6 +29,14 @@ const noZoom = { start: 0, end: 1 };
 const drawingArea = { left: 0, top: 0, width: 1000, height: 1000 };
 const infiniteMaxRadius = Infinity;
 const returnAllResults = Infinity;
+
+function createGetX(data: Array<{ x: number | null; y: number | null }>) {
+  return (index: number) => data[index].x ?? 0;
+}
+
+function createGetY(data: Array<{ x: number | null; y: number | null }>) {
+  return (index: number) => data[index].y ?? 0;
+}
 
 describe('findClosestPoints', () => {
   it('finds the closest points without zoom and using two linear scales', () => {
@@ -41,7 +55,8 @@ describe('findClosestPoints', () => {
 
     const closestPoint = findClosestPoints(
       flatbush,
-      seriesData,
+      createGetX(seriesData),
+      createGetY(seriesData),
       xScale,
       yScale,
       noZoom.start, // x
@@ -75,7 +90,8 @@ describe('findClosestPoints', () => {
 
       const closestPoint = findClosestPoints(
         flatbush,
-        seriesData,
+        createGetX(seriesData),
+        createGetY(seriesData),
         xScale,
         yScale,
         noZoom.start, // x
@@ -119,7 +135,8 @@ describe('findClosestPoints', () => {
         expect(
           findClosestPoints(
             flatbush,
-            seriesData,
+            createGetX(seriesData),
+            createGetY(seriesData),
             xScale,
             yScale,
             xZoom.start,
@@ -147,7 +164,8 @@ describe('findClosestPoints', () => {
         expect(
           findClosestPoints(
             flatbush,
-            seriesData,
+            createGetX(seriesData),
+            createGetY(seriesData),
             xScale,
             yScale,
             xZoom.start,
@@ -182,7 +200,8 @@ describe('findClosestPoints', () => {
         expect(
           findClosestPoints(
             flatbush,
-            seriesData,
+            createGetX(seriesData),
+            createGetY(seriesData),
             xScale,
             yScale,
             xZoom.start,
@@ -217,7 +236,8 @@ describe('findClosestPoints', () => {
 
       const closestPoint = findClosestPoints(
         flatbush,
-        seriesData,
+        createGetX(seriesData),
+        createGetY(seriesData),
         xScale,
         yScale,
         noZoom.start, // x
@@ -230,5 +250,69 @@ describe('findClosestPoints', () => {
 
       expect(closestPoint).to.deep.eq([1]);
     });
+  });
+
+  it('ignores values when `getX` or `getY` return null', () => {
+    const svgPoint = { x: 400, y: 500 };
+    const seriesData = [
+      { x: 40, y: 10 },
+      { x: 60, y: null },
+      { x: 60, y: 999 },
+    ];
+    const xScale = scaleLinear()
+      .domain([0, 100])
+      .range([drawingArea.left, drawingArea.left + drawingArea.width].reverse());
+    const yScale = scaleLog()
+      .domain([1, 10_000])
+      .range([drawingArea.top, drawingArea.top + drawingArea.height].reverse());
+    const flatbush = prepareFlatbush(seriesData, xScale, yScale);
+
+    const closestPoints = findClosestPoints(
+      flatbush,
+      createGetX(seriesData),
+      createGetY(seriesData),
+      xScale,
+      yScale,
+      noZoom.start, // x
+      noZoom.end, // x
+      noZoom.start, // y
+      noZoom.end, // y
+      svgPoint.x,
+      svgPoint.y,
+    );
+
+    expect(closestPoints).to.deep.eq([2]);
+  });
+
+  it('returns an empty array when inverting a band scale yields null', () => {
+    const svgPoint = { x: 400, y: 500 };
+    const seriesData = [
+      { x: 40, y: 10 },
+      { x: 60, y: null },
+      { x: 60, y: 999 },
+    ];
+    const xScale = scaleBand<{ toString(): string }>()
+      .domain(['A', 'B', 'C'])
+      .range([drawingArea.left, drawingArea.left + drawingArea.width].reverse());
+    const yScale = scaleLinear()
+      .domain([0, 100])
+      .range([drawingArea.top, drawingArea.top + drawingArea.height].reverse());
+    const flatbush = prepareFlatbush(seriesData, xScale, yScale);
+
+    const closestPoints = findClosestPoints(
+      flatbush,
+      createGetX(seriesData),
+      createGetY(seriesData),
+      xScale,
+      yScale,
+      noZoom.start, // x
+      noZoom.end, // x
+      noZoom.start, // y
+      noZoom.end, // y
+      svgPoint.x,
+      svgPoint.y,
+    );
+
+    expect(closestPoints).to.deep.eq([]);
   });
 });
