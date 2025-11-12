@@ -2,7 +2,7 @@ import { createSelectorMemoized } from '@base-ui-components/utils/store';
 import {
   RecurringEventPresetKey,
   RecurringEventRecurrenceRule,
-  CalendarProcessedDate,
+  SchedulerProcessedDate,
 } from '../models';
 import { SchedulerState as State } from '../utils/SchedulerStore/SchedulerStore.types';
 import { getWeekDayCode } from '../utils/recurring-event-utils';
@@ -15,7 +15,7 @@ export const schedulerRecurringEventSelectors = {
     (state: State) => state.adapter,
     (
       adapter,
-      date: CalendarProcessedDate,
+      date: SchedulerProcessedDate,
     ): Record<RecurringEventPresetKey, RecurringEventRecurrenceRule> => {
       return {
         daily: {
@@ -49,7 +49,7 @@ export const schedulerRecurringEventSelectors = {
     (
       adapter,
       rule: RecurringEventRecurrenceRule | undefined,
-      occurrenceStart: CalendarProcessedDate,
+      occurrenceStart: SchedulerProcessedDate,
     ): RecurringEventPresetKey | 'custom' | null => {
       if (!rule) {
         return null;

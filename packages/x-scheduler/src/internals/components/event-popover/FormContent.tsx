@@ -10,10 +10,10 @@ import { Select } from '@base-ui-components/react/select';
 import { Separator } from '@base-ui-components/react/separator';
 import { CheckIcon, ChevronDown } from 'lucide-react';
 import {
-  CalendarEventOccurrence,
-  CalendarEventUpdatedProperties,
-  CalendarProcessedDate,
-  CalendarResourceId,
+  SchedulerEventOccurrence,
+  SchedulerEventUpdatedProperties,
+  SchedulerProcessedDate,
+  SchedulerResourceId,
   RecurringEventPresetKey,
 } from '@mui/x-scheduler-headless/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
@@ -31,7 +31,7 @@ import { computeRange, ControlledValue, validateRange } from './utils';
 import EventPopoverHeader from './EventPopoverHeader';
 
 interface FormContentProps {
-  occurrence: CalendarEventOccurrence;
+  occurrence: SchedulerEventOccurrence;
   onClose: () => void;
 }
 
@@ -66,8 +66,8 @@ export default function FormContent(props: FormContentProps) {
   // State hooks
   const [errors, setErrors] = React.useState<Form.Props['errors']>({});
   const [controlled, setControlled] = React.useState<ControlledValue>(() => {
-    const fmtDate = (d: CalendarProcessedDate) => adapter.formatByString(d.value, 'yyyy-MM-dd');
-    const fmtTime = (d: CalendarProcessedDate) => adapter.formatByString(d.value, 'HH:mm');
+    const fmtDate = (d: SchedulerProcessedDate) => adapter.formatByString(d.value, 'yyyy-MM-dd');
+    const fmtTime = (d: SchedulerProcessedDate) => adapter.formatByString(d.value, 'HH:mm');
 
     return {
       startDate: fmtDate(occurrence.start),
@@ -109,7 +109,7 @@ export default function FormContent(props: FormContentProps) {
       setControlled(newState);
     };
 
-  const handleResourceChange = (value: CalendarResourceId | null) => {
+  const handleResourceChange = (value: SchedulerResourceId | null) => {
     const newState = { ...controlled, resourceId: value };
     pushPlaceholder(newState);
     setControlled(newState);
@@ -156,7 +156,7 @@ export default function FormContent(props: FormContentProps) {
         rrule,
       });
     } else if (occurrence.rrule) {
-      const changes: CalendarEventUpdatedProperties = {
+      const changes: SchedulerEventUpdatedProperties = {
         ...metaChanges,
         id: occurrence.id,
         start,
