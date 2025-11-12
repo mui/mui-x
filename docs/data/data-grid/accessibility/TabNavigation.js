@@ -56,6 +56,12 @@ const columnGroupingModel = [
 export default function TabNavigation() {
   const [tabNavigation, setTabNavigation] = React.useState('none');
 
+  const preventKeyDown = (key, shiftKey) => (event) => {
+    if (event.key === key && event.shiftKey === shiftKey) {
+      event.preventDefault();
+    }
+  };
+
   return (
     <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 4 }}>
       <FormControl component="fieldset">
@@ -88,6 +94,21 @@ export default function TabNavigation() {
         </RadioGroup>
       </FormControl>
 
+      {/* Top tab barrier */}
+      <div
+        role="button"
+        tabIndex={0}
+        onKeyDown={preventKeyDown('Tab', true)}
+        style={{
+          width: '100%',
+          padding: '8px',
+          textAlign: 'center',
+          fontSize: '12px',
+        }}
+      >
+        Tab Barrier (prevents Shift+Tab)
+      </div>
+
       <Box style={{ height: 500, width: '100%' }}>
         <DataGridPro
           rows={rows}
@@ -97,6 +118,21 @@ export default function TabNavigation() {
           headerFilters
         />
       </Box>
+
+      {/* Bottom tab barrier */}
+      <div
+        role="button"
+        tabIndex={0}
+        onKeyDown={preventKeyDown('Tab', false)}
+        style={{
+          width: '100%',
+          padding: '8px',
+          textAlign: 'center',
+          fontSize: '12px',
+        }}
+      >
+        Tab Barrier (prevents Tab)
+      </div>
     </div>
   );
 }
