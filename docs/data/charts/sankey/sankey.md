@@ -121,7 +121,7 @@ It accepts three types of values:
 
 The `linkOptions.sort` property controls the order of links emanating from each node.
 
-It accepts the same three types of values:
+It accepts the following values:
 
 - A **function** that receives two `SankeyLayoutLink` objects and returns a number
 - `'auto'` (default): Uses the automatic sorting behavior
