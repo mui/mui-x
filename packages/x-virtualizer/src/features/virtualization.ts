@@ -683,7 +683,6 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
         node.removeEventListener('scroll', handleScroll, opts);
         node.removeEventListener('wheel', onWheel as any, opts);
         node.removeEventListener('touchmove', onTouchMove as any, opts);
-        // refs.scroller.current = null;
       };
     }
   });
