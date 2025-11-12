@@ -18,13 +18,24 @@ import { getScale } from '../internals/getScale';
  * @param domain The domain to be made nicer.
  * @param count An optional number of ticks to improve the nice domain calculation. Defaults to 5.
  */
+
+export function niceDomain<Domain extends NumberValue>(
+  scaleType: Exclude<ContinuousScaleName, 'time' | 'utc'>,
+  domain: Iterable<Domain>,
+  count?: number,
+): Domain[];
+export function niceDomain<Domain extends NumberValue>(
+  scaleType: 'time' | 'utc',
+  domain: Iterable<Domain>,
+  count?: number,
+): Date[];
 export function niceDomain<Domain extends NumberValue>(
   scaleType: ContinuousScaleName,
   domain: Iterable<Domain>,
   count: number = 5,
-): number[] | Date[] {
+): Domain[] {
   const scale = getScale<Domain, any>(scaleType, domain, [0, 1]);
 
   scale.nice(count);
-  return scale.domain();
+  return scale.domain() as any;
 }
