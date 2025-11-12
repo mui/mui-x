@@ -217,7 +217,8 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
 
   const { hasFocus, isEditable = false, value } = cellParams;
 
-  const tabIndex = cellMode === 'view' || !isEditable ? cellParams.tabIndex : -1;
+  const tabIndex =
+    (cellMode === 'view' || !isEditable) && column.type !== 'actions' ? cellParams.tabIndex : -1;
 
   const { classes: rootClasses, getCellClassName } = rootProps;
 

@@ -423,7 +423,7 @@ describe('<DataGrid /> - Rows', () => {
       await user.click(firstCell);
 
       await user.keyboard('{ArrowRight}');
-      expect(secondCell).to.have.property('tabIndex', 0);
+      expect(secondCell).to.have.property('tabIndex', -1);
 
       const printButton = screen.getByRole('menuitem', { name: 'print' });
       const menuButton = screen.getByRole('menuitem', { name: 'more' });
