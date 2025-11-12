@@ -1764,7 +1764,7 @@ describe('recurring-event-utils', () => {
 
   describe('parseRRuleString', () => {
     it('should return the same object if the input is already an object', () => {
-      const input = { freq: 'DAILY', interval: 2 } as RecurringEventRecurrenceRule;
+      const input: RecurringEventRecurrenceRule = { freq: 'DAILY', interval: 2 };
       const result = parseRRuleString(adapter, input);
       expect(result).to.equal(input);
     });
