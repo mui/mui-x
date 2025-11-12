@@ -6,7 +6,9 @@ All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
 ## 8.18.0
+
 <!-- generated comparing v8.17.0..master -->
+
 _Nov 12, 2025_
 
 We'd like to extend a big thank you to the 14 contributors who made this release possible. Here are some highlights ✨:
@@ -36,7 +38,6 @@ Same changes as in `@mui/x-data-grid@8.18.0`.
 
 Same changes as in `@mui/x-data-grid-pro@8.18.0`, plus:
 
-- [DataGridPremium] Add a demo for pinned rows aggregation (#20198) @cherniavskii
 - [DataGridPremium] Return the correct `cellParams` value from the aggregation cells (#20224) @arminmeh
 
 ### Date and Time Pickers
@@ -54,16 +55,14 @@ Same changes as in `@mui/x-date-pickers@8.18.0`.
 #### `@mui/x-charts@8.18.0`
 
 - [charts] Add prop for positioning a bar label (#20194) @Sigdriv
-- [charts] Create `useAxes` hook documentation page (#20229) @JCQuintas
 - [charts] Fix applying dark mode styles in ChartAxisZoomSliderThumb (#20232) @sai6855
-- [charts][docs] Fix logo alignment (#20228) @JCQuintas
-- [charts][docs] Fixes typo in import example (#20236) @htollefsen
 
 #### `@mui/x-charts-pro@8.18.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-charts@8.18.0`, plus:
 
 - [charts-pro] Allow specifying Content Security Policy nonce on export (#20053) @bernardobelchior
+- [charts-pro] Fix applying dark mode styles to slider (#20220) @sai6855
 
 #### `@mui/x-charts-premium@8.18.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
@@ -89,16 +88,16 @@ Internal changes.
 
 ### Docs
 
-- [docs] Add a demo for a custom tick label (#20073) @prakhargupta1
+- [charts] Add a demo for a custom tick label (#20073) @prakhargupta1
+- [charts] Create `useAxes` hook documentation page (#20229) @JCQuintas
+- [charts] Fix logo alignment (#20228) @JCQuintas
+- [charts] Fixes typo in import example (#20236) @htollefsen
+- [Data Grid] Add recipe for cursor pagination with data source (#19700) @siriwatknp
+- [Data Grid] Add a demo for pinned rows aggregation (#20198) @cherniavskii
 
 ### Core
 
 - [docs-infra] Use deployment config from docs-infra package (#20243) @brijeshb42
-
-### Miscellaneous
-
-- [Data Grid] Add recipe for cursor pagination with data source (#19700) @siriwatknp
-- [x-charts] Fix applying dark mode styles to slider (#20220) @sai6855
 
 ## 8.17.0
 
