@@ -323,19 +323,25 @@ However, you can customize which attribute is used as value and label by using `
 
 #### Actions
 
-If the column type is `'actions'`, you need to provide a `getActions` function that returns an array of actions available for each row (React elements).
-You can add the `showInMenu` prop on the returned React elements to signal the Data Grid to group these actions inside a row menu.
+If the column type is `'actions'`, you need to provide a `renderCell` function that renders a `GridActionsCell` component with `GridActionsCellItem` elements as children.
+You can add the `showInMenu` prop on the `GridActionsCellItem` elements to signal the Data Grid to group these actions inside a row menu.
 
 ```tsx
 {
   field: 'actions',
   type: 'actions',
-  getActions: (params: GridRowParams) => [
-    <GridActionsCellItem icon={...} onClick={...} label="Delete" />,
-    <GridActionsCellItem icon={...} onClick={...} label="Print" showInMenu />,
-  ]
+  renderCell: (params) => (
+    <GridActionsCell {...params}>
+      <GridActionsCellItem icon={...} onClick={...} label="Delete" />
+      <GridActionsCellItem icon={...} onClick={...} label="Print" showInMenu />
+    </GridActionsCell>
+  )
 }
 ```
+
+:::info
+The deprecated `getActions` function that returned an array of actions is still supported, but will be removed in a future version.
+:::
 
 By default, actions shown in the menu will close the menu on click.
 But in some cases, you might want to keep the menu open after clicking an action.

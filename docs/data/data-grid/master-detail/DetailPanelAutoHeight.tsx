@@ -12,6 +12,8 @@ import {
   DataGridProProps,
   useGridApiContext,
   GridActionsCellItem,
+  GridActionsCell,
+  GridRenderCellParams,
 } from '@mui/x-data-grid-pro';
 import {
   randomId,
@@ -33,6 +35,29 @@ function generateProduct() {
     quantity: randomInt(1, 5),
     unitPrice: randomPrice(1, 1000),
   };
+}
+
+interface DetailPanelActionHandlers {
+  deleteProduct: (productId: string) => void;
+}
+
+const DetailPanelActionHandlersContext =
+  React.createContext<DetailPanelActionHandlers>({
+    deleteProduct: () => {},
+  });
+
+function DetailPanelActionsCell(props: GridRenderCellParams) {
+  const { deleteProduct } = React.useContext(DetailPanelActionHandlersContext);
+
+  return (
+    <GridActionsCell {...props}>
+      <GridActionsCellItem
+        icon={<DeleteIcon />}
+        label="delete"
+        onClick={() => deleteProduct(props.row.id)}
+      />
+    </GridActionsCell>
+  );
 }
 
 function DetailPanelContent({ row: rowProp }: { row: Customer }) {
@@ -78,15 +103,16 @@ function DetailPanelContent({ row: rowProp }: { row: Customer }) {
         headerName: '',
         type: 'actions',
         width: 50,
-        getActions: ({ row }) => [
-          <GridActionsCellItem
-            icon={<DeleteIcon />}
-            label="delete"
-            onClick={deleteProduct(row.id)}
-          />,
-        ],
+        renderCell: (params) => <DetailPanelActionsCell {...params} />,
       },
     ],
+    [],
+  );
+
+  const actionHandlers = React.useMemo<DetailPanelActionHandlers>(
+    () => ({
+      deleteProduct,
+    }),
     [deleteProduct],
   );
 
@@ -122,12 +148,14 @@ function DetailPanelContent({ row: rowProp }: { row: Customer }) {
             </Button>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-            <DataGridPro
-              density="compact"
-              columns={columns}
-              rows={rowProp.products}
-              hideFooter
-            />
+            <DetailPanelActionHandlersContext.Provider value={actionHandlers}>
+              <DataGridPro
+                density="compact"
+                columns={columns}
+                rows={rowProp.products}
+                hideFooter
+              />
+            </DetailPanelActionHandlersContext.Provider>
           </div>
         </Stack>
       </Paper>
