@@ -5,6 +5,101 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.18.0
+<!-- generated comparing v8.17.0..master -->
+_Nov 12, 2025_
+
+We'd like to extend a big thank you to the 14 contributors who made this release possible. Here are some highlights ✨:
+
+- Add `barLabelPlacement` property to customize bar label position in bar charts
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+Special thanks go out to these community members for their valuable contributions:
+@arminmeh, @brijeshb42, @htollefsen, @noraleonte, @sai6855, @Sigdriv
+
+The following team members contributed to this release:
+@bernardobelchior, @cherniavskii, @flaviendelangle, @JCQuintas, @michelengelen, @prakhargupta1, @rita-codes, @siriwatknp
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.18.0`
+
+- [DataGrid] Allow default event in the column action cell item click event handler (#20272) @arminmeh
+- [DataGrid] Remove unnecessary generic from `useGridApiRef` (#20277) @cherniavskii
+
+#### `@mui/x-data-grid-pro@8.18.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.18.0`.
+
+#### `@mui/x-data-grid-premium@8.18.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.18.0`, plus:
+
+- [DataGridPremium] Add a demo for pinned rows aggregation (#20198) @cherniavskii
+- [DataGridPremium] Return the correct `cellParams` value from the aggregation cells (#20224) @arminmeh
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.18.0`
+
+- [pickers] Keep invalid date state consistent (#20040) @michelengelen
+
+#### `@mui/x-date-pickers-pro@8.18.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.18.0`.
+
+### Charts
+
+#### `@mui/x-charts@8.18.0`
+
+- [charts] Add prop for positioning a bar label (#20194) @Sigdriv
+- [charts] Create `useAxes` hook documentation page (#20229) @JCQuintas
+- [charts] Fix applying dark mode styles in ChartAxisZoomSliderThumb (#20232) @sai6855
+- [charts][docs] Fix logo alignment (#20228) @JCQuintas
+- [charts][docs] Fixes typo in import example (#20236) @htollefsen
+
+#### `@mui/x-charts-pro@8.18.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.18.0`, plus:
+
+- [charts-pro] Allow specifying Content Security Policy nonce on export (#20053) @bernardobelchior
+
+#### `@mui/x-charts-premium@8.18.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@8.18.0`.
+
+### Tree View
+
+#### `@mui/x-tree-view@8.18.0`
+
+- [tree view] Prepare tests for the new store structure (#20225) @flaviendelangle
+- [tree view] Prepare the item plugin files for the store migration (#20240) @flaviendelangle
+- [tree view] Use `TreeItemId` type instead of raw string (#20233) @flaviendelangle
+
+#### `@mui/x-tree-view-pro@8.18.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.18.0`.
+
+### Codemod
+
+#### `@mui/x-codemod@8.18.0`
+
+Internal changes.
+
+### Docs
+
+- [docs] Add a demo for a custom tick label (#20073) @prakhargupta1
+
+### Core
+
+- [docs-infra] Use deployment config from docs-infra package (#20243) @brijeshb42
+
+### Miscellaneous
+
+- [Data Grid] Add recipe for cursor pagination with data source (#19700) @siriwatknp
+- [x-charts] Fix applying dark mode styles to slider (#20220) @sai6855
+
 ## 8.17.0
 
 _Nov 5, 2025_
