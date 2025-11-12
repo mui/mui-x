@@ -59,15 +59,25 @@ const columnGroupingModel: GridColumnGroupingModel = [
 ];
 
 export default function TabNavigation() {
+  const keyPressCount = React.useRef(0);
   const [tabNavigation, setTabNavigation] =
     React.useState<DataGridProProps['tabNavigation']>('none');
 
   const preventKeyDown =
     (key: string, shiftKey: boolean) => (event: React.KeyboardEvent) => {
+      if (keyPressCount.current > 2) {
+        return;
+      }
+
       if (event.key === key && event.shiftKey === shiftKey) {
         event.preventDefault();
+        keyPressCount.current += 1;
       }
     };
+
+  const resetKeyPressCount = () => {
+    keyPressCount.current = 0;
+  };
 
   return (
     <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 4 }}>
@@ -108,6 +118,7 @@ export default function TabNavigation() {
         role="button"
         tabIndex={0}
         onKeyDown={preventKeyDown('Tab', true)}
+        onBlur={resetKeyPressCount}
         style={{
           width: '100%',
           padding: '8px',
@@ -115,7 +126,7 @@ export default function TabNavigation() {
           fontSize: '12px',
         }}
       >
-        Tab Barrier (prevents Shift+Tab)
+        Tab Barrier (prevents Shift+Tab 3 times)
       </div>
 
       <Box style={{ height: 500, width: '100%' }}>
@@ -133,6 +144,7 @@ export default function TabNavigation() {
         role="button"
         tabIndex={0}
         onKeyDown={preventKeyDown('Tab', false)}
+        onBlur={resetKeyPressCount}
         style={{
           width: '100%',
           padding: '8px',
@@ -140,7 +152,7 @@ export default function TabNavigation() {
           fontSize: '12px',
         }}
       >
-        Tab Barrier (prevents Tab)
+        Tab Barrier (prevents Tab 3 times)
       </div>
     </div>
   );
