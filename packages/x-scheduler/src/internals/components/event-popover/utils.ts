@@ -5,6 +5,8 @@ import {
   SchedulerValidDate,
 } from '@mui/x-scheduler-headless/models';
 import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
+// eslint-disable-next-line no-restricted-imports
+import { serializeRRule } from '@mui/x-scheduler-headless/utils/recurring-event-utils';
 import { SchedulerTranslations } from '../../../models';
 
 export interface ControlledValue {
@@ -106,47 +108,19 @@ export function getEndsSelectionFromRRule(rrule?: {
   return 'never';
 }
 
-// TODO: Once we can convert an rrule object to string, replace this logic with:
-// stringifyRrule(rruleA, adapter) === stringifyRrule(rruleB, adapter)
+/**
+ * Returns true if both recurrence rules are equivalent.
+ */
 export function isSameRRule(
   adapter: Adapter,
   rruleA?: RecurringEventRecurrenceRule,
   rruleB?: RecurringEventRecurrenceRule,
-) {
+): boolean {
   if (!rruleA && !rruleB) {
     return true;
-  }
+  } // Both undefined -> same
   if (!rruleA || !rruleB) {
     return false;
-  }
-
-  const scalarsEqual =
-    rruleA.freq === rruleB.freq &&
-    (rruleA.interval ?? 1) === (rruleB.interval ?? 1) &&
-    (rruleA.count ?? undefined) === (rruleB.count ?? undefined) &&
-    adapter.isEqual(rruleA.until ?? null, rruleB.until ?? null);
-
-  if (!scalarsEqual) {
-    return false;
-  }
-
-  const sameArray = (arrayX: unknown[] = [], arrayY: unknown[] = []) => {
-    if (arrayX === arrayY) {
-      return true;
-    }
-
-    if (arrayX.length !== arrayY.length) {
-      return false;
-    }
-
-    const sortedArrayX = arrayX.map(String).sort();
-    const sortedArrayY = arrayY.map(String).sort();
-    return sortedArrayX.every((v, i) => v === sortedArrayY[i]);
-  };
-
-  return (
-    sameArray(rruleA.byDay, rruleB.byDay) &&
-    sameArray(rruleA.byMonthDay, rruleB.byMonthDay) &&
-    sameArray(rruleA.byMonth, rruleB.byMonth)
-  );
+  } // One missing -> different
+  return serializeRRule(adapter, rruleA) === serializeRRule(adapter, rruleB);
 }
