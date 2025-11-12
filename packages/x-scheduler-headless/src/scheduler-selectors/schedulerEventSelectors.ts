@@ -1,18 +1,18 @@
 import { createSelector, createSelectorMemoized } from '@base-ui-components/utils/store';
-import { CalendarEvent, CalendarEventId } from '../models';
+import { SchedulerEvent, SchedulerEventId } from '../models';
 import { SchedulerState as State } from '../utils/SchedulerStore/SchedulerStore.types';
 import { schedulerResourceSelectors } from './schedulerResourceSelectors';
 
 const processedEventSelector = createSelector(
   (state: State) => state.processedEventLookup,
-  (processedEventLookup, eventId: CalendarEventId | null | undefined) =>
+  (processedEventLookup, eventId: SchedulerEventId | null | undefined) =>
     eventId == null ? null : processedEventLookup.get(eventId),
 );
 
 const isEventReadOnlySelector = createSelector(
   processedEventSelector,
   (state: State) => state.readOnly,
-  (event, readOnly, _eventId: CalendarEventId) => {
+  (event, readOnly, _eventId: SchedulerEventId) => {
     return !!event?.readOnly || readOnly;
   },
 );
@@ -21,7 +21,7 @@ export const schedulerEventSelectors = {
   canCreateNewEvent: createSelector((state: State) => !state.readOnly),
   processedEvent: processedEventSelector,
   isReadOnly: isEventReadOnlySelector,
-  color: createSelector((state: State, eventId: CalendarEventId) => {
+  color: createSelector((state: State, eventId: SchedulerEventId) => {
     const event = processedEventSelector(state, eventId);
     if (!event) {
       return state.eventColor;
@@ -40,12 +40,12 @@ export const schedulerEventSelectors = {
   isPropertyReadOnly: createSelector(
     isEventReadOnlySelector,
     (state: State) => state.eventModelStructure,
-    (isEventReadOnly, eventModelStructure, _eventId: CalendarEventId) => {
+    (isEventReadOnly, eventModelStructure, _eventId: SchedulerEventId) => {
       if (isEventReadOnly) {
         return () => true;
       }
 
-      return (property: keyof CalendarEvent) => {
+      return (property: keyof SchedulerEvent) => {
         if (eventModelStructure?.[property] && !eventModelStructure?.[property].setter) {
           return true;
         }

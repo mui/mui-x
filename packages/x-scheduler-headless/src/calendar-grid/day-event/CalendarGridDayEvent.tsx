@@ -7,7 +7,7 @@ import { useButton } from '../../base-ui-copy/utils/useButton';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps, NonNativeButtonProps } from '../../base-ui-copy/utils/types';
 import { useDraggableEvent } from '../../utils/useDraggableEvent';
-import { CalendarEventId, CalendarEventOccurrence, SchedulerValidDate } from '../../models';
+import { SchedulerEventId, SchedulerEventOccurrence, SchedulerValidDate } from '../../models';
 import { useAdapter, diffIn } from '../../use-adapter';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
 import {
@@ -64,11 +64,11 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
   // Feature hooks
   const getDraggedDay = useEventCallback((input: { clientX: number }) => {
     if (!ref.current) {
-      return start;
+      return start.value;
     }
 
-    const eventStartInRow = adapter.isBefore(start, rowStart) ? rowStart : start;
-    const eventEndInRow = adapter.isAfter(end, rowEnd) ? rowEnd : end;
+    const eventStartInRow = adapter.isBefore(start.value, rowStart) ? rowStart : start.value;
+    const eventEndInRow = adapter.isAfter(end.value, rowEnd) ? rowEnd : end.value;
     const eventDayLengthInRow = diffIn(adapter, eventEndInRow, eventStartInRow, 'days') + 1;
     const clientX = input.clientX;
     const elementPosition = ref.current.getBoundingClientRect();
@@ -78,7 +78,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
   });
 
   const firstEventOfSeries = schedulerEventSelectors.processedEvent(store.state, eventId)!;
-  const originalOccurrence: CalendarEventOccurrence = {
+  const originalOccurrence: SchedulerEventOccurrence = {
     ...firstEventOfSeries,
     id: eventId,
     key: occurrenceKey,
@@ -91,8 +91,8 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
       eventId,
       occurrenceKey,
       originalOccurrence,
-      start,
-      end,
+      start: start.value,
+      end: end.value,
     }),
   );
 
@@ -162,9 +162,9 @@ export namespace CalendarGridDayEvent {
       useDraggableEvent.PublicParameters {}
 
   export interface SharedDragData {
-    eventId: CalendarEventId;
+    eventId: SchedulerEventId;
     occurrenceKey: string;
-    originalOccurrence: CalendarEventOccurrence;
+    originalOccurrence: SchedulerEventOccurrence;
     start: SchedulerValidDate;
     end: SchedulerValidDate;
   }

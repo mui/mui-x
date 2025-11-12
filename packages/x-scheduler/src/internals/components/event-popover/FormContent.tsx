@@ -10,11 +10,11 @@ import { Select } from '@base-ui-components/react/select';
 import { Separator } from '@base-ui-components/react/separator';
 import { CheckIcon, ChevronDown } from 'lucide-react';
 import {
-  CalendarEventOccurrence,
-  CalendarEventUpdatedProperties,
+  SchedulerEventOccurrence,
+  SchedulerEventUpdatedProperties,
+  SchedulerProcessedDate,
   CalendarResourceId,
   RecurringEventPresetKey,
-  SchedulerValidDate,
 } from '@mui/x-scheduler-headless/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
@@ -31,7 +31,7 @@ import { computeRange, ControlledValue, validateRange } from './utils';
 import EventPopoverHeader from './EventPopoverHeader';
 
 interface FormContentProps {
-  occurrence: CalendarEventOccurrence;
+  occurrence: SchedulerEventOccurrence;
   onClose: () => void;
 }
 
@@ -50,7 +50,7 @@ export default function FormContent(props: FormContentProps) {
     occurrence.id,
   );
   const rawPlaceholder = useStore(store, schedulerOccurrencePlaceholderSelectors.value);
-  const resources = useStore(store, schedulerResourceSelectors.processedResourceList);
+  const resources = useStore(store, schedulerResourceSelectors.processedResourceFlatList);
   const recurrencePresets = useStore(
     store,
     schedulerRecurringEventSelectors.presets,
@@ -66,8 +66,8 @@ export default function FormContent(props: FormContentProps) {
   // State hooks
   const [errors, setErrors] = React.useState<Form.Props['errors']>({});
   const [controlled, setControlled] = React.useState<ControlledValue>(() => {
-    const fmtDate = (d: SchedulerValidDate) => adapter.formatByString(d, 'yyyy-MM-dd');
-    const fmtTime = (d: SchedulerValidDate) => adapter.formatByString(d, 'HH:mm');
+    const fmtDate = (d: SchedulerProcessedDate) => adapter.formatByString(d.value, 'yyyy-MM-dd');
+    const fmtTime = (d: SchedulerProcessedDate) => adapter.formatByString(d.value, 'HH:mm');
 
     return {
       startDate: fmtDate(occurrence.start),
@@ -148,9 +148,15 @@ export default function FormContent(props: FormContentProps) {
     };
 
     if (rawPlaceholder?.type === 'creation') {
-      store.createEvent({ id: crypto.randomUUID(), ...metaChanges, start, end, rrule });
+      store.createEvent({
+        id: crypto.randomUUID(),
+        ...metaChanges,
+        start,
+        end,
+        rrule,
+      });
     } else if (occurrence.rrule) {
-      const changes: CalendarEventUpdatedProperties = {
+      const changes: SchedulerEventUpdatedProperties = {
         ...metaChanges,
         id: occurrence.id,
         start,
@@ -159,7 +165,7 @@ export default function FormContent(props: FormContentProps) {
       };
 
       await store.updateRecurringEvent({
-        occurrenceStart: occurrence.start,
+        occurrenceStart: occurrence.start.value,
         changes,
         onSubmit: onClose,
       });
@@ -186,8 +192,8 @@ export default function FormContent(props: FormContentProps) {
     ];
   }, [resources, translations.labelNoResource]);
 
-  const weekday = adapter.format(occurrence.start, 'weekday');
-  const normalDate = adapter.format(occurrence.start, 'normalDate');
+  const weekday = adapter.format(occurrence.start.value, 'weekday');
+  const normalDate = adapter.format(occurrence.start.value, 'normalDate');
 
   const recurrenceOptions: {
     label: string;
@@ -200,7 +206,7 @@ export default function FormContent(props: FormContentProps) {
       value: 'weekly',
     },
     {
-      label: `${translations.recurrenceMonthlyPresetLabel(adapter.getDate(occurrence.start))}`,
+      label: `${translations.recurrenceMonthlyPresetLabel(adapter.getDate(occurrence.start.value))}`,
       value: 'monthly',
     },
     {

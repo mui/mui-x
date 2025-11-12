@@ -72,20 +72,12 @@ export function useGridParamsApi(
         formattedValue: forcedFormattedValue,
       },
     ) => {
-      let value = row[field];
-
-      if (forcedValue !== undefined) {
-        value = forcedValue;
-      } else if (colDef?.valueGetter) {
-        value = colDef.valueGetter(value as never, row, colDef, apiRef);
-      }
-
-      let formattedValue = value;
-      if (forcedFormattedValue !== undefined) {
-        formattedValue = forcedFormattedValue;
-      } else if (colDef?.valueFormatter) {
-        formattedValue = colDef.valueFormatter(value as never, row, colDef, apiRef);
-      }
+      const value =
+        forcedValue !== undefined ? forcedValue : apiRef.current.getRowValue(row, colDef);
+      const formattedValue =
+        forcedFormattedValue !== undefined
+          ? forcedFormattedValue
+          : apiRef.current.getRowFormattedValue(row, colDef);
 
       const params: GridCellParams<any, any, any, any> = {
         id,
