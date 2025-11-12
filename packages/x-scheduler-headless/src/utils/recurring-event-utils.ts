@@ -1113,11 +1113,12 @@ export function parseRRuleString(
   }
 
   if (rruleObject.BYDAY) {
-    const order: RecurringEventWeekDayCode[] = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
     const tokens = rruleObject.BYDAY.split(',').map((v) => v.trim()) as RecurringEventByDayValue[];
     rrule.byDay = tokens
       .map((t) => tokenizeByDay(t))
-      .sort((a, b) => order.indexOf(a.code) - order.indexOf(b.code))
+      .sort(
+        (a, b) => NOT_LOCALIZED_WEEK_DAYS.indexOf(a.code) - NOT_LOCALIZED_WEEK_DAYS.indexOf(b.code),
+      )
       .map((t) => (t.ord != null ? (`${t.ord}${t.code}` as RecurringEventByDayValue) : t.code));
   }
 
