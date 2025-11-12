@@ -339,8 +339,9 @@ You can add the `showInMenu` prop on the `GridActionsCellItem` elements to signa
 }
 ```
 
-:::info
-The deprecated `getActions` function that returned an array of actions is still supported, but will be removed in a future version.
+:::warning
+This is the recommended way to define actions in the column definition starting from v8.18.0.
+The `getActions` method that returned an array of actions is deprecated, and will be removed in a future version.
 :::
 
 By default, actions shown in the menu will close the menu on click.
@@ -350,6 +351,11 @@ You can achieve this by setting the `closeMenuOnClick` prop to `false`.
 In the following example, the "Delete" action opens a confirmation dialog and therefore needs to keep the menu mounted:
 
 {{"demo": "ActionsWithModalGrid.js", "bg": "inline"}}
+
+:::success
+In the example above, the React Context API is used to pass the action handlers to the `ActionsCell` component.
+This is a recommended pattern to keep the column definitions stable.
+:::
 
 ### Custom column types
 
