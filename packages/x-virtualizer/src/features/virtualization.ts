@@ -9,7 +9,6 @@ import type { integer } from '@mui/x-internals/types';
 import * as platform from '@mui/x-internals/platform';
 import { useRunOnce } from '@mui/x-internals/useRunOnce';
 import { createSelector, useStore, useStoreEffect, Store } from '@mui/x-internals/store';
-import useOnMount from '@mui/utils/useOnMount';
 import { PinnedRows, PinnedColumns, Size } from '../models/core';
 import type { CellColSpanInfo } from '../models/colspan';
 import { Dimensions, observeRootNode } from './dimensions';
@@ -24,6 +23,7 @@ import {
   ScrollPosition,
   ScrollDirection,
 } from '../models';
+import reactMajor from '@mui/x-internals/reactMajor';
 
 /* eslint-disable import/export, @typescript-eslint/no-redeclare */
 
@@ -635,13 +635,12 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
   const isFirstSizing = React.useRef(true);
 
   const containerCleanup = React.useRef<() => void | undefined>(undefined);
-  useOnMount(() => {
-    return () => containerCleanup.current?.();
-  });
 
   const containerRef = useEventCallback((node: HTMLDivElement | null) => {
-    if (node && refs.container.current !== node) {
+    if (!node) {
+      // Cleanup for R18
       containerCleanup.current?.();
+    } else {
       refs.container.current = node;
       const unsubscribe = observeRootNode(node, store, (rootSize: Size) => {
         if (
@@ -663,16 +662,21 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
       });
       containerCleanup.current = () => {
         unsubscribe?.();
+        refs.container.current = null;
       };
+
+      if (reactMajor >= 19) {
+        return containerCleanup.current;
+      }
     }
   });
 
   const scrollerCleanup = React.useRef<() => void | undefined>(undefined);
-  useOnMount(() => {
-    return () => scrollerCleanup.current?.();
-  });
   const scrollerRef = useEventCallback((node: HTMLDivElement | null) => {
-    if (node && refs.scroller.current !== node) {
+    if (!node) {
+      // Cleanup for R18
+      scrollerCleanup.current?.();
+    } else {
       scrollerCleanup.current?.();
       refs.scroller.current = node;
       const opts: AddEventListenerOptions = { passive: true };
@@ -683,7 +687,12 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
         node.removeEventListener('scroll', handleScroll, opts);
         node.removeEventListener('wheel', onWheel as any, opts);
         node.removeEventListener('touchmove', onTouchMove as any, opts);
+        refs.scroller.current = null;
       };
+
+      if (reactMajor >= 19) {
+        return scrollerCleanup.current;
+      }
     }
   });
 
