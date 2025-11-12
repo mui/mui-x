@@ -90,6 +90,43 @@ renderCell: (params) => (
 );
 ```
 
+### Tab navigation
+
+While the default tab sequence behavior works well for most use cases, you may want to customize how the <kbd class="key">Tab</kbd> key navigates within the grid.
+The Data Grid provides the `tabNavigation` prop to control this behavior.
+
+```tsx
+<DataGrid rows={rows} columns={columns} tabNavigation="content" />
+```
+
+The `tabNavigation` prop supports the following values:
+
+- **`"none"`** (default): This is the standard tab sequence behavior described above.
+  The Data Grid does not handle <kbd class="key">Tab</kbd> key presses, allowing the browser's default tab sequence to control focus movement.
+  Pressing <kbd class="key">Tab</kbd> or <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Tab</kbd></kbd> will move focus to the next or previous element in the page's tab sequence, which may move focus outside of the grid.
+
+- **`"content"`**: <kbd class="key">Tab</kbd> navigation is enabled only for grid cells (content area).
+  Pressing <kbd class="key">Tab</kbd> moves focus to the next cell in the same row, or to the first cell of the next row if the key is pressed at the end of a row.
+  Pressing <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Tab</kbd></kbd> moves focus to the previous cell in the same row, or to the last cell of the previous row if the key is pressed at the start of a row.
+  When focus is on a column header and <kbd class="key">Tab</kbd> is pressed, focus moves to the first cell.
+  Tab navigation is not enabled for headers, header filters, or column groups.
+
+- **`"header"`**: <kbd class="key">Tab</kbd> navigation is enabled only for the header area (column groups, column headers, and header filters).
+  Pressing <kbd class="key">Tab</kbd> moves focus to the next header element, and <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Tab</kbd></kbd> moves focus to the previous header element.
+  When focus is on a cell and <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Tab</kbd></kbd> is pressed, focus moves to the last header filter or column header.
+  Tab navigation is not enabled for grid cells.
+
+- **`"all"`**: Combines both `"content"` and `"header"` behaviors.
+
+The demo below demonstrates how each `tabNavigation` mode affects keyboard navigation:
+
+:::info
+The tab barriers above and below the grid in the demo are included to make it easier to track navigation outside of the grid without leaving the demo area.
+Press <kbd class="key">Tab</kbd> key multiple times to pass the barrier.
+:::
+
+{{"demo": "TabNavigation.js", "bg": "inline"}}
+
 ### Navigation
 
 :::info

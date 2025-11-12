@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
@@ -55,7 +56,7 @@ const columnGroupingModel = [
 
 export default function TabNavigation() {
   const keyPressCount = React.useRef(0);
-  const [tabNavigation, setTabNavigation] = React.useState('none');
+  const [tabNavigation, setTabNavigation] = React.useState('all');
 
   const preventKeyDown = (key, shiftKey) => (event) => {
     if (keyPressCount.current > 2) {
@@ -74,12 +75,16 @@ export default function TabNavigation() {
 
   return (
     <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 4 }}>
+      <FormLabel id="tab-navigation-radio-buttons-group-label">
+        Tab Navigation
+      </FormLabel>
       <FormControl component="fieldset">
         <RadioGroup
           row
           value={tabNavigation}
           onChange={(event) => setTabNavigation(event.target.value)}
           name="grid-tab-navigation"
+          aria-labelledby="tab-navigation-radio-buttons-group-label"
         >
           <FormControlLabel
             value="none"
