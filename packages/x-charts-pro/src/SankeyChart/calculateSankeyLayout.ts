@@ -68,6 +68,7 @@ export function calculateSankeyLayout(
     sankeyGenerator.nodeSort(nodeSort);
   } else if (nodeSort === 'fixed') {
     // Null is not accepted by the types.
+    // https://github.com/DefinitelyTyped/DefinitelyTyped/pull/73953
     sankeyGenerator.nodeSort(null as any);
   }
   if (typeof linkSort === 'function') {
