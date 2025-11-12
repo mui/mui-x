@@ -42,6 +42,7 @@ export const usePanOnWheel = (
   // Add event for chart pan on wheel
   React.useEffect(() => {
     const element = svgRef.current;
+    const accumulatedChange = { x: 0, y: 0 };
     if (element === null || !isPanOnWheelEnabled) {
       return () => {};
     }
@@ -77,18 +78,24 @@ export const usePanOnWheel = (
         return;
       }
 
+      accumulatedChange.x += event.detail.deltaX;
+      accumulatedChange.y += event.detail.deltaY;
+
       rafThrottledSetZoomData((prev) => {
-        const wheelEvent = event.detail;
+        const x = accumulatedChange.x;
+        const y = accumulatedChange.y;
+        accumulatedChange.x = 0;
+        accumulatedChange.y = 0;
 
         let movementX = 0;
         let movementY = 0;
 
         if (allowedDirection === 'x' || allowedDirection === 'xy') {
-          movementX = -wheelEvent.deltaX;
+          movementX = -x;
         }
 
         if (allowedDirection === 'y' || allowedDirection === 'xy') {
-          movementY = wheelEvent.deltaY;
+          movementY = y;
         }
 
         if (movementX === 0 && movementY === 0) {
