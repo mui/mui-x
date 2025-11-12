@@ -1,5 +1,5 @@
 import {
-  CalendarResourceId,
+  SchedulerResourceId,
   RecurringEventPresetKey,
   RecurringEventRecurrenceRule,
   SchedulerValidDate,
@@ -12,7 +12,7 @@ export interface ControlledValue {
   startTime: string;
   endDate: string;
   endTime: string;
-  resourceId: CalendarResourceId | null;
+  resourceId: SchedulerResourceId | null;
   allDay: boolean;
   recurrenceSelection: RecurringEventPresetKey | null | 'custom';
   rruleDraft: RecurringEventRecurrenceRule;

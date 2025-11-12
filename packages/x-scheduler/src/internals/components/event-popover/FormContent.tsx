@@ -9,10 +9,10 @@ import { Select } from '@base-ui-components/react/select';
 import { Separator } from '@base-ui-components/react/separator';
 import { ChevronDown } from 'lucide-react';
 import {
-  CalendarEventOccurrence,
-  CalendarEventUpdatedProperties,
-  CalendarProcessedDate,
-  CalendarResourceId,
+  SchedulerEventOccurrence,
+  SchedulerEventUpdatedProperties,
+  SchedulerProcessedDate,
+  SchedulerResourceId,
   RecurringEventFrequency,
   RecurringEventRecurrenceRule,
 } from '@mui/x-scheduler-headless/models';
@@ -34,7 +34,7 @@ import { GeneralTab } from './GeneralTab';
 import { RecurrenceTab } from './RecurrenceTab';
 
 interface FormContentProps {
-  occurrence: CalendarEventOccurrence;
+  occurrence: SchedulerEventOccurrence;
   onClose: () => void;
 }
 
@@ -69,8 +69,8 @@ export function FormContent(props: FormContentProps) {
   // State hooks
   const [errors, setErrors] = React.useState<Form.Props['errors']>({});
   const [controlled, setControlled] = React.useState<ControlledValue>(() => {
-    const fmtDate = (d: CalendarProcessedDate) => adapter.formatByString(d.value, 'yyyy-MM-dd');
-    const fmtTime = (d: CalendarProcessedDate) => adapter.formatByString(d.value, 'HH:mm');
+    const fmtDate = (d: SchedulerProcessedDate) => adapter.formatByString(d.value, 'yyyy-MM-dd');
+    const fmtTime = (d: SchedulerProcessedDate) => adapter.formatByString(d.value, 'HH:mm');
 
     const base = defaultRecurrencePresetKey === 'custom' ? occurrence.rrule : undefined;
 
@@ -113,7 +113,7 @@ export function FormContent(props: FormContentProps) {
     });
   }
 
-  const handleResourceChange = (value: CalendarResourceId | null) => {
+  const handleResourceChange = (value: SchedulerResourceId | null) => {
     const newState = { ...controlled, resourceId: value };
     pushPlaceholder(newState);
     setControlled(newState);
@@ -160,7 +160,7 @@ export function FormContent(props: FormContentProps) {
       });
     } else if (occurrence.rrule) {
       const recurrenceModified = !isSameRRule(adapter, occurrence.rrule, rruleToSubmit);
-      const changes: CalendarEventUpdatedProperties = {
+      const changes: SchedulerEventUpdatedProperties = {
         ...metaChanges,
         id: occurrence.id,
         start,

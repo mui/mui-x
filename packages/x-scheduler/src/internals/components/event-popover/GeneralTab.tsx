@@ -7,7 +7,7 @@ import { Form } from '@base-ui-components/react/form';
 import { Input } from '@base-ui-components/react/input';
 import { Separator } from '@base-ui-components/react/separator';
 import { CheckIcon } from 'lucide-react';
-import { CalendarEventOccurrence } from '@mui/x-scheduler-headless/models';
+import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import {
@@ -19,7 +19,7 @@ import { useTranslations } from '../../utils/TranslationsContext';
 import { computeRange, ControlledValue } from './utils';
 
 interface GeneralTabProps {
-  occurrence: CalendarEventOccurrence;
+  occurrence: SchedulerEventOccurrence;
   setErrors: (errors: Form.Props['errors']) => void;
   controlled: ControlledValue;
   setControlled: React.Dispatch<React.SetStateAction<ControlledValue>>;

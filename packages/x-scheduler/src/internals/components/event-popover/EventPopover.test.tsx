@@ -12,8 +12,8 @@ import {
 
 import { screen, within } from '@mui/internal-test-utils';
 import {
-  CalendarOccurrencePlaceholderCreation,
-  CalendarResource,
+  SchedulerOccurrencePlaceholderCreation,
+  SchedulerResource,
   SchedulerEvent,
 } from '@mui/x-scheduler-headless/models';
 import { DEFAULT_EVENT_COLOR } from '@mui/x-scheduler-headless/constants';
@@ -31,7 +31,7 @@ const DEFAULT_EVENT: SchedulerEvent = EventBuilder.new()
   .resource('r2')
   .build();
 
-const resources: CalendarResource[] = [
+const resources: SchedulerResource[] = [
   {
     id: 'r1',
     title: 'Work',
@@ -224,7 +224,7 @@ describe('<EventPopoverContent />', () => {
   it('should handle a resource without an eventColor (fallback to default)', async () => {
     const onEventsChange = spy();
 
-    const resourcesNoColor: CalendarResource[] = [
+    const resourcesNoColor: SchedulerResource[] = [
       { id: 'r1', title: 'Work', eventColor: 'blue' },
       { id: 'r2', title: 'Personal', eventColor: 'cyan' },
       { id: 'r3', title: 'NoColor' },
@@ -438,7 +438,7 @@ describe('<EventPopoverContent />', () => {
     it('should call createEvent with metaChanges + computed start/end on Submit', async () => {
       const start = adapter.date('2025-06-10T09:00:00');
       const end = adapter.date('2025-06-10T09:30:00');
-      const placeholder: CalendarOccurrencePlaceholderCreation = {
+      const placeholder: SchedulerOccurrencePlaceholderCreation = {
         type: 'creation',
         surfaceType: 'time-grid' as const,
         start,

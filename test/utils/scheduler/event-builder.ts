@@ -1,12 +1,12 @@
 import {
-  CalendarResourceId,
+  SchedulerResourceId,
   RecurringEventPresetKey,
   RecurringEventRecurrenceRule,
 } from '@mui/x-scheduler-headless/models';
 import {
   SchedulerEvent,
-  CalendarEventId,
-  CalendarEventOccurrence,
+  SchedulerEventId,
+  SchedulerEventOccurrence,
 } from '@mui/x-scheduler-headless/models/event';
 import { processEvent } from '@mui/x-scheduler-headless/process-event';
 import { processDate } from '@mui/x-scheduler-headless/process-date';
@@ -23,7 +23,7 @@ export const DEFAULT_TESTING_VISIBLE_DATE = defaultAdapter.date(DEFAULT_TESTING_
  * Scope:
  * - Builds a valid SchedulerEvent.
  * - Uses the provided (or default) adapter for all date ops.
- * - Can optionally derive a CalendarEventOccurrence via .buildOccurrence().
+ * - Can optionally derive a SchedulerEventOccurrence via .buildOccurrence().
  */
 export class EventBuilder {
   protected event: SchedulerEvent;
@@ -54,7 +54,7 @@ export class EventBuilder {
   // ─────────────────────────────────────────────
 
   /** Set a custom id. */
-  id(id: CalendarEventId) {
+  id(id: SchedulerEventId) {
     this.event.id = id;
     return this;
   }
@@ -72,7 +72,7 @@ export class EventBuilder {
   }
 
   /** Associate a resource id. */
-  resource(resourceId?: CalendarResourceId) {
+  resource(resourceId?: SchedulerResourceId) {
     this.event.resource = resourceId;
     return this;
   }
@@ -102,7 +102,7 @@ export class EventBuilder {
   }
 
   /** Reference an original event id (split origin). */
-  extractedFromId(id?: CalendarEventId) {
+  extractedFromId(id?: SchedulerEventId) {
     this.event.extractedFromId = id;
     return this;
   }
@@ -202,11 +202,11 @@ export class EventBuilder {
   }
 
   /**
-   * Derives a CalendarEventOccurrence from the built event.
+   * Derives a SchedulerEventOccurrence from the built event.
    * @param occurrenceStartDate Start date of the recurrence occurrence.
    * Defaults to the event start date.
    */
-  buildOccurrence(occurrenceStartDate?: string): CalendarEventOccurrence {
+  buildOccurrence(occurrenceStartDate?: string): SchedulerEventOccurrence {
     const event = this.event;
     const effectiveDate = occurrenceStartDate
       ? this.adapter.date(occurrenceStartDate)

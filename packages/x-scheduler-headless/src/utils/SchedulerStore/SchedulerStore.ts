@@ -3,12 +3,12 @@ import { Store } from '@base-ui-components/utils/store';
 import { warnOnce } from '@mui/x-internals/warning';
 import {
   SchedulerProcessedEvent,
-  CalendarEventId,
-  CalendarEventOccurrence,
-  CalendarOccurrencePlaceholder,
-  CalendarResourceId,
+  SchedulerEventId,
+  SchedulerEventOccurrence,
+  SchedulerOccurrencePlaceholder,
+  SchedulerResourceId,
   SchedulerValidDate,
-  CalendarEventUpdatedProperties,
+  SchedulerEventUpdatedProperties,
   RecurringEventUpdateScope,
   SchedulerEvent,
   SchedulerPreferences,
@@ -40,7 +40,7 @@ import { DEFAULT_EVENT_COLOR } from '../../constants';
 
 // TODO: Add a prop to configure the behavior.
 export const DEFAULT_IS_MULTI_DAY_EVENT = (
-  event: SchedulerProcessedEvent | CalendarEventOccurrence,
+  event: SchedulerProcessedEvent | SchedulerEventOccurrence,
 ) => {
   if (event.allDay) {
     return true;
@@ -287,7 +287,7 @@ export class SchedulerStore<
   /**
    * Updates an event in the calendar.
    */
-  public updateEvent = (calendarEvent: CalendarEventUpdatedProperties) => {
+  public updateEvent = (calendarEvent: SchedulerEventUpdatedProperties) => {
     const original = schedulerEventSelectors.processedEvent(this.state, calendarEvent.id);
     if (!original) {
       throw new Error(
@@ -371,14 +371,14 @@ export class SchedulerStore<
   /**
    * Deletes an event from the calendar.
    */
-  public deleteEvent = (eventId: CalendarEventId) => {
+  public deleteEvent = (eventId: SchedulerEventId) => {
     this.updateEvents({ deleted: [eventId] });
   };
 
   /**
    * Updates the visible resources.
    */
-  public setVisibleResources = (visibleResources: Map<CalendarResourceId, boolean>) => {
+  public setVisibleResources = (visibleResources: Map<SchedulerResourceId, boolean>) => {
     if (this.state.visibleResources !== visibleResources) {
       this.set('visibleResources', visibleResources);
     }
@@ -387,7 +387,7 @@ export class SchedulerStore<
   /**
    * Sets the occurrence placeholder to render while creating a new event or dragging an existing event occurrence.
    */
-  public setOccurrencePlaceholder = (newPlaceholder: CalendarOccurrencePlaceholder | null) => {
+  public setOccurrencePlaceholder = (newPlaceholder: SchedulerOccurrencePlaceholder | null) => {
     const { adapter, occurrencePlaceholder: previous } = this.state;
     if (shouldUpdateOccurrencePlaceholder(adapter, previous, newPlaceholder)) {
       this.set('occurrencePlaceholder', newPlaceholder);
