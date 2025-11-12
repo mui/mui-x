@@ -10,7 +10,7 @@ import { Radio } from '@base-ui-components/react/radio';
 import { Separator } from '@base-ui-components/react/separator';
 import { ChevronDown } from 'lucide-react';
 import {
-  CalendarEventOccurrence,
+  SchedulerEventOccurrence,
   RecurringEventFrequency,
   RecurringEventPresetKey,
 } from '@mui/x-scheduler-headless/models';
@@ -22,7 +22,7 @@ import { useTranslations } from '../../utils/TranslationsContext';
 import { ControlledValue, EndsSelection, getEndsSelectionFromRRule } from './utils';
 
 interface RecurrenceTabProps {
-  occurrence: CalendarEventOccurrence;
+  occurrence: SchedulerEventOccurrence;
   controlled: ControlledValue;
   setControlled: React.Dispatch<React.SetStateAction<ControlledValue>>;
 }

@@ -508,7 +508,7 @@ describe('<EventPopoverContent />', () => {
         .description('sync')
         .singleDay('2025-06-11T10:00:00', 30)
         .resource('r2')
-        .recurrent('daily')
+        .recurrent('DAILY')
         .build();
       const originalRecurringEventOccurrence = createOccurrenceFromEvent(originalRecurringEvent);
 
