@@ -28,7 +28,7 @@ import {
 import { Tabs } from '@base-ui-components/react/tabs';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { getColorClassName } from '../../utils/color-utils';
-import { computeRange, ControlledValue, isSameRRule, validateRange } from './utils';
+import { computeRange, ControlledValue, validateRange } from './utils';
 import EventPopoverHeader from './EventPopoverHeader';
 import { GeneralTab } from './GeneralTab';
 import { RecurrenceTab } from './RecurrenceTab';
