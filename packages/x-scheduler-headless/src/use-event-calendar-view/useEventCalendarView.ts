@@ -1,14 +1,15 @@
-import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
+import { useOnMount } from '@base-ui-components/utils/useOnMount';
 import { EventCalendarViewConfig } from '../models';
 import { useEventCalendarStoreContext } from '../use-event-calendar-store-context';
 
 /**
- * Defines the view on the event calendar.
+ * Initializes the view on the event calendar.
+ * The initialization is only done during the 1st render, the config should be defined statically.
+ * ```
+ * @param parameters Parameters for the view.
  */
 export function useEventCalendarView(config: EventCalendarViewConfig) {
   const store = useEventCalendarStoreContext();
 
-  useIsoLayoutEffect(() => {
-    return store.setViewConfig(config);
-  }, [store, config]);
+  useOnMount(() => store.setViewConfig(config));
 }
