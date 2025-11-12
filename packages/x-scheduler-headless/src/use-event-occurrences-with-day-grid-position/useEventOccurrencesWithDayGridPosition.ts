@@ -1,10 +1,5 @@
 import * as React from 'react';
-import {
-  CalendarEventOccurrence,
-  CalendarEventOccurrenceDayGridPosition,
-  CalendarEventOccurrenceWithDayGridPosition,
-  CalendarProcessedDate,
-} from '../models';
+import { SchedulerEventOccurrence, SchedulerProcessedDate } from '../models';
 import { useEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
 import { useAdapter, diffIn } from '../use-adapter/useAdapter';
 import { sortEventOccurrences } from '../utils/event-utils';
@@ -29,8 +24,8 @@ export function useEventOccurrencesWithDayGridPosition(
 
     const processedDays = days.map((day, dayIndex) => {
       indexLookup[day.key] = { occurrencesIndex: {}, usedIndexes: new Set() };
-      const needsPosition: CalendarEventOccurrence[] = [];
-      const withoutPosition: CalendarEventOccurrence[] = [];
+      const needsPosition: useEventOccurrences.EventOccurrenceWithPosition[] = [];
+      const withoutPosition: SchedulerEventOccurrence[] = [];
 
       // 1. Split occurrences into withPosition and withoutPosition
       for (const occurrence of occurrencesMap.get(day.key) ?? []) {
@@ -48,7 +43,7 @@ export function useEventOccurrencesWithDayGridPosition(
       // 3. Assign position to each occurrence
       const withPosition: CalendarEventOccurrenceWithDayGridPosition[] = [];
       for (const occurrence of sortedNeedsPosition) {
-        let position: CalendarEventOccurrenceDayGridPosition;
+        let position: useEventOccurrencesWithDayGridPosition.EventOccurrencePosition;
 
         const occurrenceIndexInPreviousDay =
           dayIndex === 0
@@ -103,7 +98,7 @@ export namespace useEventOccurrencesWithDayGridPosition {
     /**
      * The days to add the occurrences to.
      */
-    days: CalendarProcessedDate[];
+    days: SchedulerProcessedDate[];
     /**
      * The occurrences Map as returned by `useEventOccurrences()`.
      * It should contain the occurrences for each requested day but can also contain occurrences for other days.
@@ -113,18 +108,38 @@ export namespace useEventOccurrencesWithDayGridPosition {
      * Whether the position should be computed for this event occurrence.
      * @default () => true
      */
-    shouldAddPosition?: (occurrence: CalendarEventOccurrence) => boolean;
+    shouldAddPosition?: (occurrence: SchedulerEventOccurrence) => boolean;
   }
 
-  export interface DayData extends CalendarProcessedDate {
+  export interface EventOccurrencePosition {
+    /**
+     * The 1-based index of the row the event should be rendered in.
+     */
+    index: number;
+    /**
+     * The number of days the event should span across.
+     */
+    daySpan: number;
+    /**
+     * Whether the event should be rendered as invisible.
+     * Invisible events are used to reserve space for events that started on a previous day.
+     */
+    isInvisible?: boolean;
+  }
+
+  export interface EventOccurrenceWithPosition extends SchedulerEventOccurrence {
+    position: EventOccurrencePosition;
+  }
+
+  export interface DayData extends SchedulerProcessedDate {
     /**
      * Occurrences that have been augmented with position information.
      */
-    withPosition: CalendarEventOccurrenceWithDayGridPosition[];
+    withPosition: EventOccurrenceWithPosition[];
     /**
      * Occurrences that do not need position information.
      */
-    withoutPosition: CalendarEventOccurrence[];
+    withoutPosition: SchedulerEventOccurrence[];
   }
 
   export type ReturnValue = {

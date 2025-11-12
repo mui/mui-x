@@ -3,7 +3,7 @@ import {
   RecurringEventWeekDayCode,
   RecurringEventByDayValue,
   SchedulerProcessedEvent,
-  CalendarEventUpdatedProperties,
+  SchedulerEventUpdatedProperties,
   RecurringEventRecurrenceRule,
   SchedulerValidDate,
   SchedulerEvent,
@@ -1287,7 +1287,7 @@ describe('recurring-event-utils', () => {
       const original = createRecurringEvent();
 
       const occurrenceStart = adapter.date('2025-01-07T09:00:00Z');
-      const changes: CalendarEventUpdatedProperties = {
+      const changes: SchedulerEventUpdatedProperties = {
         id: original.id,
         start: adapter.date('2025-01-07T10:00:00Z'),
         end: adapter.date('2025-01-07T11:00:00Z'),
@@ -1310,7 +1310,7 @@ describe('recurring-event-utils', () => {
 
       // Edit an occurrence on Jan 05
       const occurrenceStart = adapter.date('2025-01-05T09:00:00Z');
-      const changes: CalendarEventUpdatedProperties = {
+      const changes: SchedulerEventUpdatedProperties = {
         id: original.id,
         // New timing for the split series
         start: adapter.date('2025-01-05T11:00:00Z'),
@@ -1359,7 +1359,7 @@ describe('recurring-event-utils', () => {
 
       // occurrenceStart same calendar day as DTSTART → shouldDropOldSeries = true
       const occurrenceStart = adapter.date('2025-01-10T09:00:00Z');
-      const changes: CalendarEventUpdatedProperties = {
+      const changes: SchedulerEventUpdatedProperties = {
         id: original.id,
         start: adapter.date('2025-01-10T12:00:00Z'),
         end: adapter.date('2025-01-10T13:00:00Z'),
@@ -1394,7 +1394,7 @@ describe('recurring-event-utils', () => {
       // Original: daily from Jan 01
       const original = createRecurringEvent();
       const occurrenceStart = adapter.date('2025-01-03T09:00:00Z');
-      const changes: CalendarEventUpdatedProperties = {
+      const changes: SchedulerEventUpdatedProperties = {
         id: original.id,
         start: adapter.date('2025-01-03T10:00:00Z'),
         end: adapter.date('2025-01-03T11:00:00Z'),
@@ -1443,7 +1443,7 @@ describe('recurring-event-utils', () => {
       const original = createRecurringEvent({ rrule: { freq: 'DAILY', interval: 2 } });
 
       const occurrenceStart = adapter.date('2025-01-06T09:00:00Z');
-      const changes: CalendarEventUpdatedProperties = {
+      const changes: SchedulerEventUpdatedProperties = {
         id: original.id,
         start: adapter.date('2025-01-06T15:00:00Z'),
         end: adapter.date('2025-01-06T16:00:00Z'),
@@ -1543,7 +1543,7 @@ describe('recurring-event-utils', () => {
       const original = createRecurringEvent();
 
       const occurrenceStart = original.start;
-      const changes: CalendarEventUpdatedProperties = {
+      const changes: SchedulerEventUpdatedProperties = {
         id: original.id,
         title: 'Now Weekly',
         rrule: { freq: 'WEEKLY', interval: 2, byDay: ['MO'] },
@@ -1567,7 +1567,7 @@ describe('recurring-event-utils', () => {
       const original = createRecurringEvent();
 
       const occurrenceStart = original.start;
-      const changes: CalendarEventUpdatedProperties = {
+      const changes: SchedulerEventUpdatedProperties = {
         id: original.id,
         title: 'One-off',
         rrule: undefined,
@@ -1592,7 +1592,7 @@ describe('recurring-event-utils', () => {
       const occurrenceStart = adapter.date('2025-01-05T09:00:00Z');
       const newStart = adapter.date('2025-01-05T11:15:00Z');
       const newEnd = adapter.date('2025-01-05T12:15:00Z');
-      const changes: CalendarEventUpdatedProperties = {
+      const changes: SchedulerEventUpdatedProperties = {
         id: original.id,
         start: newStart,
         end: newEnd,
@@ -1616,7 +1616,7 @@ describe('recurring-event-utils', () => {
     it('should update the rrule when editing a non-first occurrence with a different day', () => {
       const original = createRecurringEvent({ rrule: { byDay: ['SU'], freq: 'WEEKLY' } });
       const occurrenceStart = adapter.date('2025-01-05T09:00:00Z'); // Jan 5, a Sunday
-      const changes: CalendarEventUpdatedProperties = {
+      const changes: SchedulerEventUpdatedProperties = {
         id: original.id,
         start: adapter.date('2025-01-11T11:00:00Z'), // Saturday
         end: adapter.date('2025-01-11T12:00:00Z'),
@@ -1640,7 +1640,7 @@ describe('recurring-event-utils', () => {
       const original = createRecurringEvent(); // DTSTART = 2025-01-01
       const occurrenceStart = original.start;
 
-      const changes: CalendarEventUpdatedProperties = {
+      const changes: SchedulerEventUpdatedProperties = {
         id: original.id,
         start: adapter.date('2025-01-12T11:00:00Z'),
         end: adapter.date('2025-01-12T12:00:00Z'),
@@ -1667,7 +1667,7 @@ describe('recurring-event-utils', () => {
       const original = createRecurringEvent();
 
       const occurrenceStart = adapter.date('2025-01-05T09:00:00Z');
-      const changes: CalendarEventUpdatedProperties = {
+      const changes: SchedulerEventUpdatedProperties = {
         id: original.id,
         title: 'Only-this edited',
         start: adapter.date('2025-01-05T11:00:00Z'),
@@ -1701,7 +1701,7 @@ describe('recurring-event-utils', () => {
       const original = createRecurringEvent({ exDates: [prevEx] });
 
       const occurrenceStart = adapter.date('2025-01-05T09:00:00Z');
-      const changes: CalendarEventUpdatedProperties = {
+      const changes: SchedulerEventUpdatedProperties = {
         id: original.id,
         title: 'Another only-this',
         start: adapter.date('2025-01-05T11:00:00Z'),
@@ -1727,7 +1727,7 @@ describe('recurring-event-utils', () => {
       const original = createRecurringEvent();
 
       const occurrenceStart = adapter.date('2025-01-07T09:00:00Z');
-      const changes: CalendarEventUpdatedProperties = {
+      const changes: SchedulerEventUpdatedProperties = {
         id: original.id,
         title: 'Only-this changed date',
         start: adapter.date('2025-01-08T11:00:00Z'),

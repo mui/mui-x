@@ -2,11 +2,11 @@ import { Store } from '@base-ui-components/utils/store';
 // TODO: Use the Base UI warning utility once it supports cleanup in tests.
 import { warnOnce } from '@mui/x-internals/warning';
 import {
-  CalendarEventId,
-  CalendarOccurrencePlaceholder,
+  SchedulerEventId,
+  SchedulerOccurrencePlaceholder,
   CalendarResourceId,
   SchedulerValidDate,
-  CalendarEventUpdatedProperties,
+  SchedulerEventUpdatedProperties,
   RecurringEventUpdateScope,
   SchedulerEvent,
   SchedulerPreferences,
@@ -273,7 +273,7 @@ export class SchedulerStore<
   /**
    * Updates an event in the calendar.
    */
-  public updateEvent = (calendarEvent: CalendarEventUpdatedProperties) => {
+  public updateEvent = (calendarEvent: SchedulerEventUpdatedProperties) => {
     const original = schedulerEventSelectors.processedEvent(this.state, calendarEvent.id);
     if (!original) {
       throw new Error(
@@ -357,7 +357,7 @@ export class SchedulerStore<
   /**
    * Deletes an event from the calendar.
    */
-  public deleteEvent = (eventId: CalendarEventId) => {
+  public deleteEvent = (eventId: SchedulerEventId) => {
     this.updateEvents({ deleted: [eventId] });
   };
 
@@ -373,7 +373,7 @@ export class SchedulerStore<
   /**
    * Sets the occurrence placeholder to render while creating a new event or dragging an existing event occurrence.
    */
-  public setOccurrencePlaceholder = (newPlaceholder: CalendarOccurrencePlaceholder | null) => {
+  public setOccurrencePlaceholder = (newPlaceholder: SchedulerOccurrencePlaceholder | null) => {
     const { adapter, occurrencePlaceholder: previous } = this.state;
     if (shouldUpdateOccurrencePlaceholder(adapter, previous, newPlaceholder)) {
       this.set('occurrencePlaceholder', newPlaceholder);

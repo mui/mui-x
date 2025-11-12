@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store';
-import { CalendarEventOccurrence, CalendarProcessedDate } from '../models';
+import { SchedulerEventOccurrence, SchedulerProcessedDate } from '../models';
 import {
   getDaysTheOccurrenceIsVisibleOn,
   getOccurrencesFromEvents,
@@ -44,10 +44,10 @@ export namespace useEventOccurrencesGroupedByDay {
     /**
      * The days to get the occurrences for.
      */
-    days: CalendarProcessedDate[];
+    days: SchedulerProcessedDate[];
   }
 
-  export type ReturnValue = Map<string, CalendarEventOccurrence[]>;
+  export type ReturnValue = Map<string, SchedulerEventOccurrence[]>;
 }
 
 /**
@@ -58,11 +58,11 @@ export function innerGetEventOccurrencesGroupedByDay(
   parameters: Pick<
     GetOccurrencesFromEventsParameters,
     'adapter' | 'visibleResources' | 'events' | 'resourceParentIds'
-  > & { days: CalendarProcessedDate[] },
-): Map<string, CalendarEventOccurrence[]> {
+  > & { days: SchedulerProcessedDate[] },
+): Map<string, SchedulerEventOccurrence[]> {
   const { adapter, days, events, visibleResources, resourceParentIds } = parameters;
 
-  const occurrenceMap = new Map<string, CalendarEventOccurrence[]>(
+  const occurrenceMap = new Map<string, SchedulerEventOccurrence[]>(
     days.map((day) => [day.key, []]),
   );
 

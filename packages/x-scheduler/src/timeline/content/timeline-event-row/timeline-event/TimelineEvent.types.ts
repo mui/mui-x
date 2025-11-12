@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { CalendarEventOccurrenceWithTimePosition } from '@mui/x-scheduler-headless/models';
+import type { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-timeline-position';
 
 export interface TimelineEventProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * The event occurrence to render.
    */
-  occurrence: CalendarEventOccurrenceWithTimePosition;
+  occurrence: useEventOccurrencesWithTimelinePosition.EventOccurrenceWithPosition;
   /**
    * The variant of the event, which determines its styling.
    */

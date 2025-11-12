@@ -1,12 +1,10 @@
 import {
   SchedulerProcessedEvent,
-  CalendarEventColor,
-  CalendarOccurrencePlaceholder,
   CalendarResource,
   CalendarResourceId,
-  CalendarEventUpdatedProperties,
+  SchedulerEventUpdatedProperties,
   SchedulerValidDate,
-  CalendarEventId,
+  SchedulerEventId,
   SchedulerResourceModelStructure,
   SchedulerEventModelStructure,
   SchedulerEvent,
@@ -31,15 +29,15 @@ export interface SchedulerState<TEvent extends object = any> {
   /**
    * The IDs of the events available in the calendar.
    */
-  eventIdList: CalendarEventId[];
+  eventIdList: SchedulerEventId[];
   /**
    * A lookup to get the event model as provided to props.events from its ID.
    */
-  eventModelLookup: Map<CalendarEventId, TEvent>;
+  eventModelLookup: Map<SchedulerEventId, TEvent>;
   /**
    * A lookup to get the processed event from its ID.
    */
-  processedEventLookup: Map<CalendarEventId, SchedulerProcessedEvent>;
+  processedEventLookup: Map<SchedulerEventId, SchedulerProcessedEvent>;
   /**
    * The structure of the event model.
    * It defines how to read and write properties of the event model.
@@ -90,7 +88,7 @@ export interface SchedulerState<TEvent extends object = any> {
   /**
    * The color palette used for all events.
    */
-  eventColor: CalendarEventColor;
+  eventColor: SchedulerEventColor;
   /**
    * Whether the component should display the current time indicator.
    */
@@ -98,7 +96,7 @@ export interface SchedulerState<TEvent extends object = any> {
   /**
    * The placeholder occurrence of the event being created or the event occurrences being dragged
    */
-  occurrencePlaceholder: CalendarOccurrencePlaceholder | null;
+  occurrencePlaceholder: SchedulerOccurrencePlaceholder | null;
   /**
    * The current date and time, updated every minute.
    */
@@ -190,7 +188,7 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
    * Can be overridden per event using the `color` property on the event model. (TODO: not implemented yet)
    * @default "jade"
    */
-  eventColor?: CalendarEventColor;
+  eventColor?: SchedulerEventColor;
   /**
    * Whether the calendar is in read-only mode.
    * @default false
@@ -210,7 +208,7 @@ export type UpdateRecurringEventParameters = {
    * The changes to apply.
    * Requires `start` and `end`, all other properties are optional.
    */
-  changes: CalendarEventUpdatedProperties;
+  changes: SchedulerEventUpdatedProperties;
   /**
    * Callback fired when the user submits the recurring scope dialog.
    */
@@ -253,7 +251,7 @@ export type SchedulerModelUpdater<
 ) => void;
 
 export interface UpdateEventsParameters {
-  deleted?: CalendarEventId[];
+  deleted?: SchedulerEventId[];
   created?: SchedulerEvent[];
-  updated?: CalendarEventUpdatedProperties[];
+  updated?: SchedulerEventUpdatedProperties[];
 }

@@ -1,14 +1,14 @@
 import { createSelector } from '@base-ui-components/utils/store';
 import { schedulerEventSelectors } from '../scheduler-selectors';
 import { EventCalendarState as State } from '../use-event-calendar';
-import { CalendarEventId } from '../models';
+import { SchedulerEventId } from '../models';
 
 export const eventCalendarEventSelectors = {
   isDraggable: createSelector(
     schedulerEventSelectors.isReadOnly,
     (state: State) => state.areEventsDraggable,
     (state: State) => state.eventModelStructure,
-    (isEventReadOnly, areEventsDraggable, eventModelStructure, _eventId: CalendarEventId) => {
+    (isEventReadOnly, areEventsDraggable, eventModelStructure, _eventId: SchedulerEventId) => {
       if (isEventReadOnly || !areEventsDraggable) {
         return false;
       }
@@ -28,7 +28,7 @@ export const eventCalendarEventSelectors = {
     schedulerEventSelectors.isReadOnly,
     (state: State) => state.areEventsResizable,
     (state: State) => state.eventModelStructure,
-    (isEventReadonly, areEventsResizable, eventModelStructure, _eventId: CalendarEventId) => {
+    (isEventReadonly, areEventsResizable, eventModelStructure, _eventId: SchedulerEventId) => {
       if (isEventReadonly || !areEventsResizable) {
         return false;
       }

@@ -7,7 +7,7 @@ import { useStore } from '@base-ui-components/utils/store';
 import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-headless/use-event-occurrences-grouped-by-day';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 import { eventCalendarViewSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
-import { CalendarEventOccurrence, CalendarProcessedDate } from '@mui/x-scheduler-headless/models';
+import { CalendarEventOccurrence, SchedulerProcessedDate } from '@mui/x-scheduler-headless/models';
 import { useAdapter, diffIn, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
@@ -95,7 +95,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     return Math.abs(diffIn(adapter, now, slotCenter, 'minutes')) <= 25;
   };
 
-  const renderHeaderContent = (day: CalendarProcessedDate) => (
+  const renderHeaderContent = (day: SchedulerProcessedDate) => (
     <span className="DayTimeGridHeaderContent">
       {/* TODO: Add the 3 letter week day format to the adapter */}
       <span className="DayTimeGridHeaderDayName">{adapter.formatByString(day.value, 'ccc')}</span>
