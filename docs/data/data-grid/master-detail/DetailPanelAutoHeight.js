@@ -34,12 +34,14 @@ function generateProduct() {
   };
 }
 
-const DetailPanelActionHandlersContext = React.createContext({
-  deleteProduct: () => {},
-});
+const DetailPanelActionHandlersContext = React.createContext(undefined);
 
 function DetailPanelActionsCell(props) {
-  const { deleteProduct } = React.useContext(DetailPanelActionHandlersContext);
+  const deleteProduct = React.useContext(DetailPanelActionHandlersContext);
+
+  if (!deleteProduct) {
+    throw new Error('DetailPanelActionHandlersContext is empty');
+  }
 
   return (
     <GridActionsCell {...props}>
@@ -101,13 +103,6 @@ function DetailPanelContent({ row: rowProp }) {
     [],
   );
 
-  const actionHandlers = React.useMemo(
-    () => ({
-      deleteProduct,
-    }),
-    [deleteProduct],
-  );
-
   return (
     <Stack sx={{ py: 2, height: 1, boxSizing: 'border-box' }} direction="column">
       <Paper sx={{ flex: 1, mx: 'auto', width: '90%', p: 1 }}>
@@ -139,7 +134,7 @@ function DetailPanelContent({ row: rowProp }) {
             </Button>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-            <DetailPanelActionHandlersContext.Provider value={actionHandlers}>
+            <DetailPanelActionHandlersContext.Provider value={deleteProduct}>
               <DataGridPro
                 density="compact"
                 columns={columns}

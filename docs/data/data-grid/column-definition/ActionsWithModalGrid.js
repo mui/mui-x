@@ -15,12 +15,14 @@ const initialRows = [
   { id: 3, name: randomUserName() },
 ];
 
-const ActionHandlersContext = React.createContext({
-  setActionRowId: () => {},
-});
+const ActionHandlersContext = React.createContext(undefined);
 
 function ActionsCell(props) {
-  const { setActionRowId } = React.useContext(ActionHandlersContext);
+  const setActionRowId = React.useContext(ActionHandlersContext);
+
+  if (!setActionRowId) {
+    throw new Error('ActionHandlersContext is empty');
+  }
 
   return (
     <GridActionsCell {...props}>
@@ -63,16 +65,9 @@ export default function ActionsWithModalGrid() {
     handleCloseDialog();
   }, [actionRowId, deleteActiveRow, handleCloseDialog]);
 
-  const actionHandlers = React.useMemo(
-    () => ({
-      setActionRowId,
-    }),
-    [],
-  );
-
   return (
     <div style={{ height: 300, width: '100%' }}>
-      <ActionHandlersContext.Provider value={actionHandlers}>
+      <ActionHandlersContext.Provider value={setActionRowId}>
         <DataGrid columns={columns} rows={rows} />
       </ActionHandlersContext.Provider>
       <Dialog
