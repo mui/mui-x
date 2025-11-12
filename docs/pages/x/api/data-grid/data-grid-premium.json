@@ -796,7 +796,7 @@
       },
       "additionalInfo": { "sx": true }
     },
-    "tabbing": {
+    "tabNavigation": {
       "type": {
         "name": "enum",
         "description": "'all'<br>&#124;&nbsp;'content'<br>&#124;&nbsp;'header'<br>&#124;&nbsp;'none'"

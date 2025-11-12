@@ -4,14 +4,9 @@ import FormControl from '@mui/material/FormControl';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
-import {
-  DataGridPro,
-  DataGridProProps,
-  GridColDef,
-  GridColumnGroupingModel,
-} from '@mui/x-data-grid-pro';
+import { DataGridPro } from '@mui/x-data-grid-pro';
 
-const columns: GridColDef[] = [
+const columns = [
   { field: 'id', headerName: 'ID', width: 120 },
   {
     field: 'firstName',
@@ -40,7 +35,7 @@ const rows = [
   { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
 ];
 
-const columnGroupingModel: GridColumnGroupingModel = [
+const columnGroupingModel = [
   {
     groupId: 'Internal',
     description: '',
@@ -58,19 +53,17 @@ const columnGroupingModel: GridColumnGroupingModel = [
   },
 ];
 
-export default function Tabbing() {
-  const [tabbing, setTabbing] = React.useState<DataGridProProps['tabbing']>('none');
+export default function TabNavigation() {
+  const [tabNavigation, setTabNavigation] = React.useState('none');
 
   return (
     <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 4 }}>
       <FormControl component="fieldset">
         <RadioGroup
           row
-          value={tabbing}
-          onChange={(event) =>
-            setTabbing(event.target.value as DataGridProProps['tabbing'])
-          }
-          name="grid-tabbing"
+          value={tabNavigation}
+          onChange={(event) => setTabNavigation(event.target.value)}
+          name="grid-tab-navigation"
         >
           <FormControlLabel
             value="none"
@@ -100,7 +93,7 @@ export default function Tabbing() {
           rows={rows}
           columns={columns}
           columnGroupingModel={columnGroupingModel}
-          tabbing={tabbing}
+          tabNavigation={tabNavigation}
           headerFilters
         />
       </Box>
