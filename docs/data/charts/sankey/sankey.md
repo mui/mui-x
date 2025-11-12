@@ -112,7 +112,7 @@ The `nodeOptions.sort` property controls the vertical order of nodes within each
 It accepts the following values:
 
 - A **function** that receives two `SankeyLayoutNode` objects and returns a number (similar to [`Array.sort()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#comparefn))
-- `'auto'` (default): Uses the automatic sorting behavior
+- `'auto'` (default): Uses the automatic sorting behavior, which aims to minimize links crossing each other
 - `'fixed'`: Preserves the order from the `nodes` array, disabling automatic sorting
 
 {{"demo": "SankeyNodeSorting.js"}}
@@ -124,7 +124,7 @@ The `linkOptions.sort` property controls the order of links emanating from each 
 It accepts the following values:
 
 - A **function** that receives two `SankeyLayoutLink` objects and returns a number
-- `'auto'` (default): Uses the automatic sorting behavior
+- `'auto'` (default): Uses the automatic sorting behavior, which aims to minimize links crossing each other
 - `'fixed'`: Preserves the order from the `links` array, disabling automatic sorting
 
 {{"demo": "SankeyLinkSorting.js"}}
