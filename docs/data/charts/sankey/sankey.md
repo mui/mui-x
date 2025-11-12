@@ -109,7 +109,7 @@ To dynamically customize the order, use the sorting functions for the element th
 
 The `nodeOptions.sort` property controls the vertical order of nodes within each column.
 
-It accepts three types of values:
+It accepts the following values:
 
 - A **function** that receives two `SankeyLayoutNode` objects and returns a number (similar to [`Array.sort()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#comparefn))
 - `'auto'` (default): Uses the automatic sorting behavior
