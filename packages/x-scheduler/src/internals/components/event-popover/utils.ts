@@ -1,4 +1,8 @@
-import { CalendarResourceId, SchedulerValidDate } from '@mui/x-scheduler-headless/models';
+import {
+  CalendarResourceId,
+  SchedulerProcessedDate,
+  SchedulerValidDate,
+} from '@mui/x-scheduler-headless/models';
 import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
 import { SchedulerTranslations } from '../../../models';
 
@@ -51,7 +55,7 @@ export function validateRange(
 
 export function getRecurrenceLabel(
   adapter: Adapter,
-  start: any,
+  start: SchedulerProcessedDate,
   recurrenceKey: string | null,
   translations: SchedulerTranslations,
 ): string {
@@ -63,15 +67,15 @@ export function getRecurrenceLabel(
     case 'daily':
       return translations.recurrenceDailyPresetLabel;
     case 'weekly': {
-      const weekday = adapter.format(start, 'weekday');
+      const weekday = adapter.format(start.value, 'weekday');
       return translations.recurrenceWeeklyPresetLabel(weekday);
     }
     case 'monthly': {
-      const date = adapter.getDate(start);
+      const date = adapter.getDate(start.value);
       return translations.recurrenceMonthlyPresetLabel(date);
     }
     case 'yearly': {
-      const normalDate = adapter.format(start, 'normalDate');
+      const normalDate = adapter.format(start.value, 'normalDate');
       return translations.recurrenceYearlyPresetLabel(normalDate);
     }
     case 'custom':
