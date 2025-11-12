@@ -634,14 +634,14 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
 
   const isFirstSizing = React.useRef(true);
 
-  const cleanup = React.useRef<() => void | undefined>(undefined);
+  const containerCleanup = React.useRef<() => void | undefined>(undefined);
   useOnMount(() => {
-    return cleanup.current;
+    return () => containerCleanup.current?.();
   });
 
   const containerRef = useEventCallback((node: HTMLDivElement | null) => {
     if (node && refs.container.current !== node) {
-      cleanup.current?.();
+      containerCleanup.current?.();
       refs.container.current = node;
       const unsubscribe = observeRootNode(node, store, (rootSize: Size) => {
         if (
@@ -661,33 +661,31 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
           api.debouncedUpdateDimensions();
         }
       });
-      cleanup.current = () => {
+      containerCleanup.current = () => {
         unsubscribe?.();
-        refs.container.current = null;
       };
     }
   });
 
-  const scrollerCleanupRef = React.useRef<() => void | undefined>(undefined);
+  const scrollerCleanup = React.useRef<() => void | undefined>(undefined);
+  useOnMount(() => {
+    return () => scrollerCleanup.current?.();
+  });
   const scrollerRef = useEventCallback((node: HTMLDivElement | null) => {
     if (node && refs.scroller.current !== node) {
-      scrollerCleanupRef.current?.();
+      scrollerCleanup.current?.();
       refs.scroller.current = node;
       const opts: AddEventListenerOptions = { passive: true };
       node.addEventListener('scroll', handleScroll, opts);
       node.addEventListener('wheel', onWheel as any, opts);
       node.addEventListener('touchmove', onTouchMove as any, opts);
-      scrollerCleanupRef.current = () => {
+      scrollerCleanup.current = () => {
         node.removeEventListener('scroll', handleScroll, opts);
         node.removeEventListener('wheel', onWheel as any, opts);
         node.removeEventListener('touchmove', onTouchMove as any, opts);
-        refs.scroller.current = null;
+        // refs.scroller.current = null;
       };
     }
-  });
-
-  useOnMount(() => {
-    return scrollerCleanupRef.current;
   });
 
   const scrollbarVerticalRef = useEventCallback(refSetter('scrollbarVertical'));
