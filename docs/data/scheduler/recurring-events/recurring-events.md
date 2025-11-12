@@ -24,14 +24,8 @@ const event = {
 };
 ```
 
+:::success
 The `rrule` property also accepts a string value in [RFC 5545 RRULE](https://datatracker.ietf.org/doc/html/rfc5545#section-3.3.10) format.
-
-```ts
-const event = {
-  rrule: 'FREQ=WEEKLY;INTERVAL=2;BYDAY=TH',
-};
-```
-
 Internally, string-based rules are automatically parsed into the same object structure shown above,
 so both forms are fully equivalent:
 
@@ -40,6 +34,8 @@ so both forms are fully equivalent:
 rrule: 'FREQ=WEEKLY;INTERVAL=2;BYDAY=TH'
 rrule: { freq: 'WEEKLY', interval: 2, byDay: ['TH'] }
 ```
+
+:::
 
 :::info
 **Standards compliance**: This scheduler follows the iCalendar **RRULE** standard from **RFC 5545**. We do not support every rule or combination yet. If you want more information about a specific rule, see **[RFC 5545 §3.3.10 Recurrence Rule](https://datatracker.ietf.org/doc/html/rfc5545#section-3.3.10)**.
