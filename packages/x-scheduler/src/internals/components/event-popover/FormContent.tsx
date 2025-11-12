@@ -160,10 +160,11 @@ export function FormContent(props: FormContentProps) {
       });
     } else if (occurrence.rrule) {
       const recurrenceModified = !schedulerRecurringEventSelectors.isSameRRule(
-        adapter,
+        store.state,
         occurrence.rrule,
         rruleToSubmit,
       );
+
       const changes: SchedulerEventUpdatedProperties = {
         ...metaChanges,
         id: occurrence.id,
