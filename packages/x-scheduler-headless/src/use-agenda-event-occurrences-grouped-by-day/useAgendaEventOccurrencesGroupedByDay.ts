@@ -10,7 +10,7 @@ import {
   schedulerResourceSelectors,
 } from '../scheduler-selectors';
 import { useDayList } from '../use-day-list';
-import { CalendarProcessedDate, CalendarEventOccurrence } from '../models';
+import { SchedulerProcessedDate, SchedulerEventOccurrence } from '../models';
 import { innerGetEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
 import { AGENDA_VIEW_DAYS_AMOUNT, AGENDA_MAX_HORIZON_DAYS } from '../constants';
 import { eventCalendarPreferenceSelectors } from '../event-calendar-selectors';
@@ -61,7 +61,8 @@ export function useAgendaEventOccurrencesGroupedByDay(): useAgendaEventOccurrenc
       resourceParentIds,
     );
 
-    const hasEvents = (day: CalendarProcessedDate) => (occurrenceMap.get(day.key)?.length ?? 0) > 0;
+    const hasEvents = (day: SchedulerProcessedDate) =>
+      (occurrenceMap.get(day.key)?.length ?? 0) > 0;
 
     // 2) If we show empty days, just return the amount days
     if (showEmptyDays) {
@@ -137,11 +138,11 @@ export namespace useAgendaEventOccurrencesGroupedByDayOptions {
     /**
      * Final visible days in the agenda.
      */
-    days: CalendarProcessedDate[];
+    days: SchedulerProcessedDate[];
     /**
      * The occurrences Map as returned by `useEventOccurrences()`.
      * It should contain the occurrences for each requested day but can also contain occurrences for other days.
      */
-    occurrencesMap: Map<string, CalendarEventOccurrence[]>;
+    occurrencesMap: Map<string, SchedulerEventOccurrence[]>;
   };
 }

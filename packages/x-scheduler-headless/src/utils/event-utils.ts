@@ -1,8 +1,8 @@
 import {
   SchedulerValidDate,
   SchedulerProcessedEvent,
-  CalendarProcessedDate,
-  CalendarEventOccurrence,
+  SchedulerProcessedDate,
+  SchedulerEventOccurrence,
 } from '../models';
 import { Adapter } from '../use-adapter/useAdapter.types';
 import { getRecurringEventOccurrencesForVisibleDays } from './recurring-event-utils';
@@ -11,8 +11,8 @@ import { getRecurringEventOccurrencesForVisibleDays } from './recurring-event-ut
  *  Returns the key of the days an event occurrence should be visible on.
  */
 export function getDaysTheOccurrenceIsVisibleOn(
-  event: CalendarEventOccurrence,
-  days: CalendarProcessedDate[],
+  event: SchedulerEventOccurrence,
+  days: SchedulerProcessedDate[],
   adapter: Adapter,
 ) {
   const dayKeys: string[] = [];
@@ -58,7 +58,7 @@ const checkResourceVisibility = (
  */
 export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsParameters) {
   const { adapter, start, end, events, visibleResources, resourceParentIds } = parameters;
-  const occurrences: CalendarEventOccurrence[] = [];
+  const occurrences: SchedulerEventOccurrence[] = [];
 
   for (const event of events) {
     // STEP 1: Skip events from resources that are not visible
