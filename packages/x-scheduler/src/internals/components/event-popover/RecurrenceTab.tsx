@@ -327,8 +327,6 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
             <p className="EventPopoverRecurrenceFieldset">TODO: Monthly Fields</p>
           )}
 
-        <Separator className="EventPopoverSeparator" />
-
         <Fieldset.Root
           className="EventPopoverRecurrenceFieldset"
           disabled={customDisabled}
