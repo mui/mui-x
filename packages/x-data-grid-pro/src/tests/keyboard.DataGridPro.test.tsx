@@ -218,6 +218,43 @@ describe('<DataGridPro /> - Tab navigation', () => {
       expect(getActiveCell()).to.equal('0-0');
     });
 
+    it('should move to the first cell when pressing Tab in header filter', async () => {
+      const { user } = render(
+        <div style={{ width: 600, height: 400 }}>
+          <DataGridPro rows={rows} columns={columns} tabNavigation="content" headerFilters />
+        </div>,
+      );
+
+      const headerFilterCell = getColumnHeaderCell(0, 1);
+      await act(async () => headerFilterCell.focus());
+      expect(document.activeElement).to.equal(headerFilterCell);
+
+      await user.keyboard('{Tab}');
+      // With tabNavigation="content", Tab should move to the first cell
+      expect(getActiveCell()).to.equal('0-0');
+    });
+
+    it('should move to the first cell when pressing Tab in column group header', async () => {
+      const { user } = render(
+        <div style={{ width: 600, height: 400 }}>
+          <DataGridPro
+            rows={rows}
+            columns={columns}
+            tabNavigation="content"
+            columnGroupingModel={columnGroupingModel}
+          />
+        </div>,
+      );
+
+      const columnGroupHeader = getColumnHeaderCell(0);
+      await act(async () => columnGroupHeader.focus());
+      expect(document.activeElement).to.equal(columnGroupHeader);
+
+      await user.keyboard('{Tab}');
+      // With tabNavigation="content", Tab should move to the first cell
+      expect(getActiveCell()).to.equal('0-0');
+    });
+
     it('should move outside of the grid when pressing Shift+Tab in column header', async () => {
       const { user } = render(
         <div style={{ width: 600, height: 400 }}>

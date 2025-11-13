@@ -168,7 +168,7 @@ export const useGridKeyboardNavigation = (
         return;
       }
 
-      // Tab key is only allowed if tabNavigation is enabled for header/all, or if we are tabNavigation to the content area while tabNavigation is enabled for content only
+      // Tab key is only allowed if tabbing is enabled for header/all, or if we are tabbing to the content area while `tabNavigation` is enabled for content only
       if (
         event.key === 'Tab' &&
         (props.tabNavigation === 'none' || (props.tabNavigation === 'content' && event.shiftKey))
@@ -187,9 +187,8 @@ export const useGridKeyboardNavigation = (
       const columnGroupMaxDepth = gridColumnGroupsHeaderMaxDepthSelector(apiRef);
       let shouldPreventDefault = true;
 
-      // If we are tabNavigation inside the header area while only content tabNavigation is enabled, go to the first cell
-      // at this point, it is known that Shift key, because of the check above `props.tabNavigation === 'content'`
-      if (event.key === 'Tab' && props.tabNavigation === 'content') {
+      // If we are tabbing inside the header area while only content `tabNavigation` is enabled, go to the first cell
+      if (event.key === 'Tab' && props.tabNavigation === 'content' && !event.shiftKey) {
         if (firstRowIndexInPage !== null) {
           goToCell(firstColIndex, getRowIdFromIndex(firstRowIndexInPage));
           event.preventDefault();
@@ -289,7 +288,7 @@ export const useGridKeyboardNavigation = (
             if (headerFilteringEnabled) {
               goToHeaderFilter(firstColIndex, event);
             }
-            // this point can be reached if tabNavigation is enabled for all content or just header.
+            // this point can be reached if tabbing is enabled for all content or just header.
             // if it is not enabled for all content or there is no data, then do not focus on the first cell
             else if (props.tabNavigation === 'all' && firstRowIndexInPage !== null) {
               goToCell(firstColIndex, getRowIdFromIndex(firstRowIndexInPage));
@@ -344,7 +343,7 @@ export const useGridKeyboardNavigation = (
         return;
       }
 
-      // Tab key is only allowed if tabNavigation is enabled for header/all, or if we are tabNavigation to the content area while tabNavigation is enabled for content only
+      // Tab key is only allowed if tabbing is enabled for header/all, or if we are tabbing to the content area while `tabNavigation` is enabled for content only
       if (
         event.key === 'Tab' &&
         (props.tabNavigation === 'none' || (props.tabNavigation === 'content' && event.shiftKey))
@@ -362,9 +361,8 @@ export const useGridKeyboardNavigation = (
       const lastColIndex = Math.max(0, gridVisibleColumnDefinitionsSelector(apiRef).length - 1);
       let shouldPreventDefault = true;
 
-      // If we are tabNavigation inside the header area while only content tabNavigation is enabled, go to the first cell
-      // at this point, it is known that the key is Tab, because of the check above `props.tabNavigation === 'content'`
-      if (event.key === 'Tab' && props.tabNavigation === 'content') {
+      // If we are tabbing inside the header area while only content `tabNavigation` is enabled, go to the first cell
+      if (event.key === 'Tab' && props.tabNavigation === 'content' && !event.shiftKey) {
         if (firstRowIndexInPage !== null) {
           goToCell(firstColIndex, getRowIdFromIndex(firstRowIndexInPage));
           event.preventDefault();
@@ -447,7 +445,7 @@ export const useGridKeyboardNavigation = (
             }
           } else if (colIndexBefore === lastColIndex) {
             // the key is pressed at the last header filter.
-            // this point can be reached if tabNavigation is enabled for all content or just header.
+            // this point can be reached if `tabNavigation` is enabled for all content or just header.
             // if it is not enabled for all content or there is no data, then do not focus on the first cell
             if (props.tabNavigation === 'all' && firstRowIndexInPage !== null) {
               goToCell(firstColIndex, getRowIdFromIndex(firstRowIndexInPage));
@@ -503,7 +501,7 @@ export const useGridKeyboardNavigation = (
         return;
       }
 
-      // Tab key is only allowed if tabNavigation is enabled for header/all, or if we are tabNavigation to the content area while tabNavigation is enabled for content only
+      // Tab key is only allowed if tabbing is enabled for header/all, or if we are tabbing to the content area while `tabNavigation` is enabled for content only
       if (
         event.key === 'Tab' &&
         (props.tabNavigation === 'none' || (props.tabNavigation === 'content' && event.shiftKey))
@@ -523,9 +521,8 @@ export const useGridKeyboardNavigation = (
 
       let shouldPreventDefault = true;
 
-      // If we are tabNavigation inside the header area while only content tabNavigation is enabled, go to the first cell
-      // at this point, it is known that the key is Tab, because of the check above `props.tabNavigation === 'content'`
-      if (event.key === 'Tab' && props.tabNavigation === 'content') {
+      // If we are tabbing inside the header area while only content `tabNavigation` is enabled, go to the first cell
+      if (event.key === 'Tab' && props.tabNavigation === 'content' && !event.shiftKey) {
         if (firstRowIndexInPage !== null) {
           goToCell(firstColIndex, getRowIdFromIndex(firstRowIndexInPage));
           event.preventDefault();
@@ -662,7 +659,7 @@ export const useGridKeyboardNavigation = (
         return;
       }
 
-      // Tab key is only allowed if tabNavigation is enabled or if we are tabNavigation to the header area while tabNavigation is enabled for header only (with Shift+Tab)
+      // Tab key is only allowed if tabbing is enabled or if we are tabbing to the header area while `tabNavigation` is enabled for header only (with Shift+Tab)
       if (
         event.key === 'Tab' &&
         (props.tabNavigation === 'none' || (props.tabNavigation === 'header' && !event.shiftKey))
@@ -696,9 +693,8 @@ export const useGridKeyboardNavigation = (
       const lastColIndex = Math.max(0, gridVisibleColumnDefinitionsSelector(apiRef).length - 1);
       let shouldPreventDefault = true;
 
-      // If we are tabNavigation inside the content area while only header tabNavigation is enabled, go to the last header filter or column header
-      // at this point, it is known that the key is Shift+Tab, because of the check above `props.tabNavigation === 'header' && !event.shiftKey`
-      if (event.key === 'Tab' && props.tabNavigation === 'header') {
+      // If we are tabbing inside the content area while only header `tabNavigation` is enabled, go to the last header filter or column header
+      if (event.key === 'Tab' && props.tabNavigation === 'header' && event.shiftKey) {
         previousAreaNavigationFn(lastColIndex, event);
         event.preventDefault();
         return;
@@ -756,7 +752,7 @@ export const useGridKeyboardNavigation = (
         case 'Tab': {
           if (event.shiftKey) {
             // if the key is pressed on the first cell, Shift+Tab should go to the last column header
-            // same is if tabNavigation is enabled for header only
+            // same is if `tabNavigation` is enabled for header only
             if (colIndexBefore === firstColIndex && rowIndexBefore === firstRowIndexInPage) {
               if (props.tabNavigation === 'all') {
                 previousAreaNavigationFn(lastColIndex, event);
