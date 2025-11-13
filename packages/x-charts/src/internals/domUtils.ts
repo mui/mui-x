@@ -211,8 +211,7 @@ export function batchMeasureStrings(
  */
 function measureSVGTextElement(element: SVGTextElement): { width: number; height: number } {
   // getBBox() is more reliable across browsers for SVG elements
-  const result = element.getBBox();
-  return { width: result.width, height: result.height };
+  return element.getBBox();
 }
 
 let measurementContainer: SVGSVGElement | null = null;
