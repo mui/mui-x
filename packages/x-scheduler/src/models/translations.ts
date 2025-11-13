@@ -75,6 +75,7 @@ export interface SchedulerTranslations {
   recurrenceWeeklyPresetLabel: (weekday: string) => string;
   recurrenceMonthlyFrequencyLabel: string;
   recurrenceMonthlyPresetLabel: (dayNumber: number) => string;
+  recurrenceWeeklyDaysLabel: string;
   recurrenceYearlyFrequencyLabel: string;
   recurrenceYearlyPresetLabel: (date: string) => string;
   resourceLabel: string;

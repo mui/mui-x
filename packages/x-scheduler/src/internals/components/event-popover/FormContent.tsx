@@ -119,6 +119,30 @@ export function FormContent(props: FormContentProps) {
     setControlled(newState);
   };
 
+  const sanitizeRRule = (rule: RecurringEventRecurrenceRule): RecurringEventRecurrenceRule => {
+    const clean: RecurringEventRecurrenceRule = { ...rule };
+
+    switch (clean.freq) {
+      case 'DAILY':
+        delete clean.byDay;
+        delete clean.byMonthDay;
+        break;
+      case 'YEARLY':
+        delete clean.byDay;
+        delete clean.byMonthDay;
+        break;
+      case 'WEEKLY':
+        delete clean.byMonthDay;
+        break;
+      case 'MONTHLY':
+        delete clean.byDay;
+        break;
+      default:
+        break;
+    }
+    return clean;
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const { start, end } = computeRange(adapter, controlled);
@@ -143,9 +167,7 @@ export function FormContent(props: FormContentProps) {
     if (controlled.recurrenceSelection === null) {
       rruleToSubmit = undefined;
     } else if (controlled.recurrenceSelection === 'custom') {
-      rruleToSubmit = {
-        ...controlled.rruleDraft,
-      };
+      rruleToSubmit = sanitizeRRule(controlled.rruleDraft);
     } else {
       rruleToSubmit = recurrencePresets[controlled.recurrenceSelection];
     }

@@ -75,6 +75,7 @@ export const enUS: SchedulerTranslations = {
   recurrenceWeeklyPresetLabel: (weekday) => `Repeats weekly on ${weekday}`,
   recurrenceMonthlyFrequencyLabel: 'months',
   recurrenceMonthlyPresetLabel: (dayNumber) => `Repeats monthly on day ${dayNumber}`,
+  recurrenceWeeklyDaysLabel: 'On',
   recurrenceYearlyFrequencyLabel: 'years',
   recurrenceYearlyPresetLabel: (date) => `Repeats annually on ${date}`,
   resourceLabel: 'Resource',

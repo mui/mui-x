@@ -2,7 +2,9 @@ import { createSelector, createSelectorMemoized } from '@base-ui-components/util
 import {
   RecurringEventPresetKey,
   RecurringEventRecurrenceRule,
+  RecurringEventWeekDayCode,
   SchedulerProcessedDate,
+  SchedulerValidDate,
 } from '../models';
 import { SchedulerState as State } from '../utils/SchedulerStore/SchedulerStore.types';
 import { getWeekDayCode, serializeRRule } from '../utils/recurring-event-utils';
@@ -127,6 +129,20 @@ export const schedulerRecurringEventSelectors = {
         return false;
       } // One missing -> different
       return serializeRRule(adapter, rruleA) === serializeRRule(adapter, rruleB);
+    },
+  ),
+  /**
+   * Returns the 7 week days with code and date, starting at startOfWeek(visibleDate).
+   */
+  weeklyDays: createSelectorMemoized(
+    (state: State) => state.adapter,
+    (state: State) => state.visibleDate,
+    (adapter, visibleDate): { code: RecurringEventWeekDayCode; date: SchedulerValidDate }[] => {
+      const start = adapter.startOfWeek(visibleDate);
+      return Array.from({ length: 7 }, (_, i) => {
+        const date = adapter.addDays(start, i);
+        return { code: getWeekDayCode(adapter, date), date };
+      });
     },
   ),
 };
