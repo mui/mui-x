@@ -164,12 +164,11 @@ export const schedulerRecurringEventSelectors = {
       ord: number;
       date: SchedulerValidDate;
     } => {
-      const d = adapter.startOfDay(date.value);
       return {
-        dayOfMonth: adapter.getDate(d),
-        code: getWeekDayCode(adapter, d),
-        ord: computeMonthlyOrdinal(adapter, d),
-        date: d,
+        dayOfMonth: adapter.getDate(date.value),
+        code: getWeekDayCode(adapter, date.value),
+        ord: computeMonthlyOrdinal(adapter, date.value),
+        date: date.value,
       };
     },
   ),
