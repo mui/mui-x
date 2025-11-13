@@ -13,10 +13,11 @@ _Nov 12, 2025_
 
 We'd like to extend a big thank you to the 14 contributors who made this release possible. Here are some highlights ✨:
 
-- Add `barLabelPlacement` property to customize bar label position in bar charts
+- Add `barLabelPlacement` property to customize bar label position in bar charts.
 
   ![image](https://github.com/user-attachments/assets/4bc3a75b-74b8-4c6d-896b-5f5bf837bcda)
 
+- Add `source` property to the date/time picker lifecycle and event handler context, enabling clearer differentiation between changes initiated by the picker UI and those from direct field input.
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
@@ -48,6 +49,7 @@ Same changes as in `@mui/x-data-grid-pro@8.18.0`, plus:
 #### `@mui/x-date-pickers@8.18.0`
 
 - [pickers] Keep invalid date state consistent (#20040) @michelengelen
+- [pickers] Adds new `source` property to `onChange` and `onAccept` context object
 
 #### `@mui/x-date-pickers-pro@8.18.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
