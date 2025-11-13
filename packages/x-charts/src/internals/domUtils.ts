@@ -172,14 +172,14 @@ export function batchMeasureStrings(
     return styleKey;
   });
 
-  const measurementElems: SVGTextElement[] = [];
+  const measurementElements: SVGTextElement[] = [];
   for (const string of textToMeasure) {
     const measurementElem = document.createElementNS('http://www.w3.org/2000/svg', 'text');
     measurementElem.textContent = `${string}`;
-    measurementElems.push(measurementElem);
+    measurementElements.push(measurementElem);
   }
 
-  measurementContainer.replaceChildren(...measurementElems);
+  measurementContainer.replaceChildren(...measurementElements);
 
   for (let i = 0; i < textToMeasure.length; i += 1) {
     const text = textToMeasure[i];
@@ -210,16 +210,9 @@ export function batchMeasureStrings(
  * @returns width and height of the text element
  */
 function measureSVGTextElement(element: SVGTextElement): { width: number; height: number } {
-  // Use getBBox() for SVG text elements instead of getBoundingClientRect()
   // getBBox() is more reliable across browsers for SVG elements
-  try {
-    const bbox = element.getBBox();
-    return { width: bbox.width, height: bbox.height };
-  } catch {
-    // Fallback to getBoundingClientRect if getBBox fails
-    const rect = element.getBoundingClientRect();
-    return { width: rect.width, height: rect.height };
-  }
+  const result = element.getBBox();
+  return { width: result.width, height: result.height };
 }
 
 let measurementContainer: SVGSVGElement | null = null;
