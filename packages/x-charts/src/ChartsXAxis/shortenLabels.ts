@@ -1,6 +1,6 @@
 import { clampAngle } from '../internals/clampAngle';
 import { doesTextFitInRect, ellipsize } from '../internals/ellipsize';
-import { getStringSize } from '../internals/domUtils';
+import { measureText } from '../internals/domUtils';
 import { TickItemType } from '../hooks/useTicks';
 import { ChartsXAxisProps } from '../models/axis';
 import { ChartDrawingArea } from '../hooks/useDrawingArea';
@@ -57,7 +57,7 @@ export function shortenLabels(
           width,
           height: maxHeight,
           angle,
-          measureText: (string: string) => getStringSize(string, tickLabelStyle),
+          measureText: (string: string) => measureText(string, tickLabelStyle),
         });
 
       shortenedLabels.set(item, ellipsize(item.formattedValue.toString(), doesTextFit));
