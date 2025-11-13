@@ -75,7 +75,7 @@ export const enUS: SchedulerTranslations = {
   recurrenceWeeklyPresetLabel: (weekday) => `Repeats weekly on ${weekday}`,
   recurrenceMonthlyFrequencyLabel: 'months',
   recurrenceMonthlyDayOfMonthLabel: (dayNumber) => `Day ${dayNumber}`,
-  recurrenceMonthlyLastWeekLabel: (weekDay) => `${weekDay} the last week of the month`,
+  recurrenceMonthlyLastWeekLabel: (weekDay) => `${weekDay} of the last week of the month`,
   recurrenceMonthlyLastWeekShort: (weekDay) => `${weekDay} last week`,
   recurrenceMonthlyPresetLabel: (dayNumber) => `Repeats monthly on day ${dayNumber}`,
   recurrenceMonthlyWeekNumberLabel: (ord, weekDay) => `${weekDay} week ${ord} of the month`,

@@ -124,14 +124,11 @@ export function FormContent(props: FormContentProps) {
 
     switch (clean.freq) {
       case 'DAILY':
+      case 'YEARLY':
         clean.byDay = [];
         clean.byMonthDay = [];
         break;
       case 'WEEKLY':
-        clean.byMonthDay = [];
-        break;
-      case 'YEARLY':
-        clean.byDay = [];
         clean.byMonthDay = [];
         break;
       default:
