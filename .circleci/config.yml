@@ -117,420 +117,336 @@ commands:
               pnpm install
             fi
 
-  install_js_windows:
-    parameters:
-      playwright:
-        description: If playwright should be installed.
-        type: boolean
-        default: false
-      react-version:
-        description: The version of React to use.
-        type: string
-        default: << pipeline.parameters.react-version >>
-      material-ui-version:
-        description: The version of material-ui to use.
-        type: string
-        default: << pipeline.parameters.material-ui-version >>
-    steps:
-      - run:
-          name: Install Node.js
-          shell: powershell.exe
-          command: |
-            choco install nodejs --version=22.18.0 -y
-            refreshenv
-      - run:
-          name: Install pnpm package manager
-          shell: powershell.exe
-          command: |
-            corepack enable
-            corepack prepare pnpm@latest --activate
-      - when:
-          condition: << parameters.playwright >>
-          steps:
-            - run:
-                name: Install Playwright browsers
-                shell: powershell.exe
-                command: |
-                  # Playwright will be installed as part of pnpm install
-                  # We'll install browsers after pnpm install
-                  echo "Playwright browsers will be installed after dependencies"
-      - run:
-          name: View install environment
-          shell: powershell.exe
-          command: |
-            node --version
-            pnpm --version
-      - run:
-          name: Install js dependencies
-          shell: powershell.exe
-          command: |
-            $args = ""
-            if ($env:REACT_VERSION -and $env:REACT_VERSION -ne "stable") {
-              $args = "react@$env:REACT_VERSION"
-            }
-            if ($env:MATERIAL_UI_VERSION -and $env:MATERIAL_UI_VERSION -ne "stable") {
-              if ($args) {
-                $args = "$args @mui/material@$env:MATERIAL_UI_VERSION"
-              } else {
-                $args = "@mui/material@$env:MATERIAL_UI_VERSION"
-              }
-            }
-            if ($args) {
-              pnpm dlx @mui/internal-code-infra@canary set-version-overrides --pkg $args
-            } else {
-              pnpm install
-            }
-      - when:
-          condition: << parameters.playwright >>
-          steps:
-            - run:
-                name: Install Playwright browsers
-                shell: powershell.exe
-                command: |
-                  pnpm exec playwright install --with-deps chromium
-
 jobs:
-  # checkout:
-  #   <<: *default-job
-  #   steps:
-  #     - checkout
-  #     - install_js
-  #     - run:
-  #         name: Should not have any git not staged
-  #         command: git add -A && git diff --exit-code --staged
-  #     - run:
-  #         name: '`pnpm dedupe` was run?'
-  #         command: |
-  #           # #target-branch-reference
-  #           if [[ $(git diff --name-status master | grep pnpm-lock) == "" ]];
-  #           then
-  #               echo "No changes to dependencies detected. Skipping..."
-  #           else
-  #               pnpm dedupe --check
-  #           fi
-  # test_unit:
-  #   <<: *default-job
-  #   steps:
-  #     - checkout
-  #     - install_js:
-  #         react-version: << parameters.react-version >>
-  #     - run:
-  #         name: Test JSDOM
-  #         command: |
-  #           # Fully saturate all the available CPUs by splitting the tests in 1 shard per CPU
-  #           pnpm exec concurrently "pnpm test:unit:jsdom --reporter=blob  --reporter=dot --shard=1/2" "pnpm test:unit:jsdom --reporter=blob  --reporter=dot --shard=2/2" || TEST_EXIT_CODE=$?
-  #           pnpm exec vitest run --merge-reports
-  #           # Reports merged, we can now exit with the stored code
-  #           exit ${TEST_EXIT_CODE:-0}
-  #     - store_test_results:
-  #         path: test-results
-  # test_browser:
-  #   <<: *default-job
-  #   docker:
-  #     - image: mcr.microsoft.com/playwright:v1.56.1-noble
-  #   resource_class: large
-  #   steps:
-  #     - checkout
-  #     - install_js:
-  #         playwright: true
-  #         react-version: << parameters.react-version >>
-  #     - when:
-  #         condition:
-  #           not:
-  #             equal: ['stable', << parameters.react-version >>]
-  #         steps:
-  #           - run:
-  #               environment:
-  #                 TZ: UTC
-  #                 PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
-  #               name: Test Browser
-  #               command: |
-  #                 node ./scripts/playwrightLaunchServer.mjs & pnpm test:unit:browser
-  #     - when:
-  #         condition:
-  #           equal: ['stable', << parameters.react-version >>]
-  #         steps:
-  #           - run:
-  #               name: Test Browser + Coverage
-  #               environment:
-  #                 TZ: UTC
-  #                 PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
-  #               command: |
-  #                 node ./scripts/playwrightLaunchServer.mjs & pnpm test:unit:browser --coverage
-  #           - run:
-  #               name: Check coverage generated
-  #               command: |
-  #                 if ! [[ -s coverage/lcov.info ]]
-  #                 then
-  #                   exit 1
-  #                 fi
-  #           - run:
-  #               name: Coverage
-  #               command: |
-  #                 curl -Os https://uploader.codecov.io/latest/linux/codecov
-  #                 chmod +x codecov
-  #                 ./codecov -t ${CODECOV_TOKEN} -Z -F "$REACT_VERSION-browser"
-  #     - store_test_results:
-  #         path: test-results
-  # test_lint:
-  #   <<: *default-job
-  #   steps:
-  #     - checkout
-  #     - install_js
-  #     - run:
-  #         name: ESLint
-  #         command: pnpm eslint:ci
-  #     - run:
-  #         name: Stylelint
-  #         command: pnpm stylelint
-  #     - run:
-  #         name: Lint Markdown
-  #         command: pnpm markdownlint
-  # test_static:
-  #   <<: *default-job
-  #   steps:
-  #     - checkout
-  #     - install_js
-  #     - run:
-  #         name: '`pnpm prettier` changes committed?'
-  #         command: |
-  #           # #target-branch-reference
-  #           if [[ $(git diff --name-status master | grep pnpm-lock) == "" ]];
-  #           then
-  #               pnpm prettier --check
-  #           else
-  #               pnpm exec prettier --check . --ignore-path .lintignore
-  #           fi
-  #     - run:
-  #         name: Generate PropTypes
-  #         command: pnpm proptypes
-  #         environment:
-  #           NODE_OPTIONS: --max-old-space-size=3584
-  #     - run:
-  #         name: '`pnpm proptypes` changes committed?'
-  #         command: git add -A && git diff --exit-code --staged
-  #     - run:
-  #         name: Generate the documentation
-  #         command: pnpm docs:api
-  #         environment:
-  #           NODE_OPTIONS: --max-old-space-size=3584
-  #     - run:
-  #         name: '`pnpm docs:api` changes committed?'
-  #         command: git add -A && git diff --exit-code --staged
-  #     - run:
-  #         name: Sync locale files
-  #         command: pnpm l10n
-  #     - run:
-  #         name: '`pnpm l10n` changes committed?'
-  #         command: git add -A && git diff --exit-code --staged
-  #     - run:
-  #         name: '`pnpm docs:link-check` changes committed?'
-  #         command: |
-  #           pnpm docs:link-check
-  #           git add -A && git diff --exit-code --staged
-  #     - run:
-  #         name: '`pnpm @mui/x-charts-vendor build` was run?'
-  #         command: |
-  #           # #target-branch-reference
-  #           if [[ $(git diff --name-status master | grep pnpm-lock) == "" ]];
-  #           then
-  #             echo "No changes to dependencies detected. Skipping..."
-  #           else
-  #             pnpm --filter @mui/x-charts-vendor build
-  #             git add -A && git diff --exit-code --staged
-  #           fi
-  #     - run:
-  #         name: 'No dynamic date library import in the Pickers built types?'
-  #         command: |
-  #           pnpm lerna run --include-dependencies --scope "@mui/x-date-pickers*" build
-  #           if grep -nr 'import("luxon")\|import("dayjs")\|import("moment")' --exclude Adapter*.d.ts packages/{x-date-pickers,x-date-pickers-pro}/build
-  #           then
-  #               exit 1
-  #           else
-  #               exit 0
-  #           fi
-  #     - run:
-  #         name: '`pnpm generate:exports` was run?'
-  #         command: |
-  #           pnpm generate:exports
-  #           git add -A && git diff --exit-code --staged
-  # test_types:
-  #   <<: *default-job
-  #   steps:
-  #     - checkout
-  #     - install_js
-  #     - run:
-  #         name: Transpile TypeScript demos
-  #         command: pnpm docs:typescript:formatted --disable-cache
-  #     - run:
-  #         name: '`pnpm docs:typescript:formatted` changes committed?'
-  #         command: git add -A && git diff --exit-code --staged docs/src docs/data
-  #     - run:
-  #         name: Tests TypeScript definitions
-  #         command: pnpm typescript:ci
-  #         environment:
-  #           NODE_OPTIONS: --max-old-space-size=3584
-  # test_e2e:
-  #   <<: *default-job
-  #   docker:
-  #     - image: mcr.microsoft.com/playwright:v1.56.1-noble
-  #   steps:
-  #     - checkout
-  #     - install_js:
-  #         playwright: true
-  #         react-version: << parameters.react-version >>
-  #     - run:
-  #         name: Run e2e tests
-  #         command: pnpm test:e2e
-  # test_e2e_website:
-  #   <<: *default-job
-  #   docker:
-  #     - image: mcr.microsoft.com/playwright:v1.56.1-noble
-  #   steps:
-  #     - checkout
-  #     - install_js:
-  #         playwright: true
-  #     - run:
-  #         name: pnpm test:e2e-website
-  #         command: pnpm test:e2e-website
-  #         environment:
-  #           PLAYWRIGHT_TEST_BASE_URL: << parameters.e2e-base-url >>
-  # test_package:
-  #   <<: *default-job
-  #   steps:
-  #     - checkout
-  #     - install_js:
-  #         react-version: << parameters.react-version >>
-  #     - run:
-  #         name: prepare danger on PRs
-  #         command: pnpm danger ci
-  #         environment:
-  #           DANGER_COMMAND: prepareBundleSizeReport
-  #     - run:
-  #         name: Build packages
-  #         command: pnpm release:build
-  #     - run:
-  #         name: create and upload a size snapshot
-  #         command: |
-  #           export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID_ARTIFACTS
-  #           export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY_ARTIFACTS
-  #           export AWS_REGION=$AWS_REGION_ARTIFACTS
-  #           pnpm size:snapshot
-  #     - run:
-  #         name: Run danger on PRs
-  #         command: pnpm danger ci --fail-on-errors
-  #         environment:
-  #           DANGER_COMMAND: reportBundleSize
-  test_regressions:
-    parameters:
-      <<: *default-parameters
-    environment:
-      BROWSERSTACK_FORCE: << pipeline.parameters.browserstack-force >>
-      REACT_VERSION: << parameters.react-version >>
-      MATERIAL_UI_VERSION: << parameters.material-ui-version >>
-      COREPACK_ENABLE_DOWNLOAD_PROMPT: '0'
-    working_directory: C:\Users\circleci\project
-    machine:
-      image: windows-server-2022-gui:current
-    resource_class: windows.medium
+  checkout:
+    <<: *default-job
     steps:
       - checkout
-      - install_js_windows:
+      - install_js
+      - run:
+          name: Should not have any git not staged
+          command: git add -A && git diff --exit-code --staged
+      - run:
+          name: '`pnpm dedupe` was run?'
+          command: |
+            # #target-branch-reference
+            if [[ $(git diff --name-status master | grep pnpm-lock) == "" ]];
+            then
+                echo "No changes to dependencies detected. Skipping..."
+            else
+                pnpm dedupe --check
+            fi
+  test_unit:
+    <<: *default-job
+    steps:
+      - checkout
+      - install_js:
+          react-version: << parameters.react-version >>
+      - run:
+          name: Test JSDOM
+          command: |
+            # Fully saturate all the available CPUs by splitting the tests in 1 shard per CPU
+            pnpm exec concurrently "pnpm test:unit:jsdom --reporter=blob  --reporter=dot --shard=1/2" "pnpm test:unit:jsdom --reporter=blob  --reporter=dot --shard=2/2" || TEST_EXIT_CODE=$?
+            pnpm exec vitest run --merge-reports
+            # Reports merged, we can now exit with the stored code
+            exit ${TEST_EXIT_CODE:-0}
+      - store_test_results:
+          path: test-results
+  test_browser:
+    <<: *default-job
+    docker:
+      - image: mcr.microsoft.com/playwright:v1.56.1-noble
+    resource_class: large
+    steps:
+      - checkout
+      - install_js:
           playwright: true
           react-version: << parameters.react-version >>
-          material-ui-version: << parameters.material-ui-version >>
+      - when:
+          condition:
+            not:
+              equal: ['stable', << parameters.react-version >>]
+          steps:
+            - run:
+                environment:
+                  TZ: UTC
+                  PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
+                name: Test Browser
+                command: |
+                  node ./scripts/playwrightLaunchServer.mjs & pnpm test:unit:browser
+      - when:
+          condition:
+            equal: ['stable', << parameters.react-version >>]
+          steps:
+            - run:
+                name: Test Browser + Coverage
+                environment:
+                  TZ: UTC
+                  PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
+                command: |
+                  node ./scripts/playwrightLaunchServer.mjs & pnpm test:unit:browser --coverage
+            - run:
+                name: Check coverage generated
+                command: |
+                  if ! [[ -s coverage/lcov.info ]]
+                  then
+                    exit 1
+                  fi
+            - run:
+                name: Coverage
+                command: |
+                  curl -Os https://uploader.codecov.io/latest/linux/codecov
+                  chmod +x codecov
+                  ./codecov -t ${CODECOV_TOKEN} -Z -F "$REACT_VERSION-browser"
+      - store_test_results:
+          path: test-results
+  test_lint:
+    <<: *default-job
+    steps:
+      - checkout
+      - install_js
+      - run:
+          name: ESLint
+          command: pnpm eslint:ci
+      - run:
+          name: Stylelint
+          command: pnpm stylelint
+      - run:
+          name: Lint Markdown
+          command: pnpm markdownlint
+  test_static:
+    <<: *default-job
+    steps:
+      - checkout
+      - install_js
+      - run:
+          name: '`pnpm prettier` changes committed?'
+          command: |
+            # #target-branch-reference
+            if [[ $(git diff --name-status master | grep pnpm-lock) == "" ]];
+            then
+                pnpm prettier --check
+            else
+                pnpm exec prettier --check . --ignore-path .lintignore
+            fi
+      - run:
+          name: Generate PropTypes
+          command: pnpm proptypes
+          environment:
+            NODE_OPTIONS: --max-old-space-size=3584
+      - run:
+          name: '`pnpm proptypes` changes committed?'
+          command: git add -A && git diff --exit-code --staged
+      - run:
+          name: Generate the documentation
+          command: pnpm docs:api
+          environment:
+            NODE_OPTIONS: --max-old-space-size=3584
+      - run:
+          name: '`pnpm docs:api` changes committed?'
+          command: git add -A && git diff --exit-code --staged
+      - run:
+          name: Sync locale files
+          command: pnpm l10n
+      - run:
+          name: '`pnpm l10n` changes committed?'
+          command: git add -A && git diff --exit-code --staged
+      - run:
+          name: '`pnpm docs:link-check` changes committed?'
+          command: |
+            pnpm docs:link-check
+            git add -A && git diff --exit-code --staged
+      - run:
+          name: '`pnpm @mui/x-charts-vendor build` was run?'
+          command: |
+            # #target-branch-reference
+            if [[ $(git diff --name-status master | grep pnpm-lock) == "" ]];
+            then
+              echo "No changes to dependencies detected. Skipping..."
+            else
+              pnpm --filter @mui/x-charts-vendor build
+              git add -A && git diff --exit-code --staged
+            fi
+      - run:
+          name: 'No dynamic date library import in the Pickers built types?'
+          command: |
+            pnpm lerna run --include-dependencies --scope "@mui/x-date-pickers*" build
+            if grep -nr 'import("luxon")\|import("dayjs")\|import("moment")' --exclude Adapter*.d.ts packages/{x-date-pickers,x-date-pickers-pro}/build
+            then
+                exit 1
+            else
+                exit 0
+            fi
+      - run:
+          name: '`pnpm generate:exports` was run?'
+          command: |
+            pnpm generate:exports
+            git add -A && git diff --exit-code --staged
+  test_types:
+    <<: *default-job
+    steps:
+      - checkout
+      - install_js
+      - run:
+          name: Transpile TypeScript demos
+          command: pnpm docs:typescript:formatted --disable-cache
+      - run:
+          name: '`pnpm docs:typescript:formatted` changes committed?'
+          command: git add -A && git diff --exit-code --staged docs/src docs/data
+      - run:
+          name: Tests TypeScript definitions
+          command: pnpm typescript:ci
+          environment:
+            NODE_OPTIONS: --max-old-space-size=3584
+  test_e2e:
+    <<: *default-job
+    docker:
+      - image: mcr.microsoft.com/playwright:v1.56.1-noble
+    steps:
+      - checkout
+      - install_js:
+          playwright: true
+          react-version: << parameters.react-version >>
+      - run:
+          name: Run e2e tests
+          command: pnpm test:e2e
+  test_e2e_website:
+    <<: *default-job
+    docker:
+      - image: mcr.microsoft.com/playwright:v1.56.1-noble
+    steps:
+      - checkout
+      - install_js:
+          playwright: true
+      - run:
+          name: pnpm test:e2e-website
+          command: pnpm test:e2e-website
+          environment:
+            PLAYWRIGHT_TEST_BASE_URL: << parameters.e2e-base-url >>
+  test_package:
+    <<: *default-job
+    steps:
+      - checkout
+      - install_js:
+          react-version: << parameters.react-version >>
+      - run:
+          name: prepare danger on PRs
+          command: pnpm danger ci
+          environment:
+            DANGER_COMMAND: prepareBundleSizeReport
+      - run:
+          name: Build packages
+          command: pnpm release:build
+      - run:
+          name: create and upload a size snapshot
+          command: |
+            export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID_ARTIFACTS
+            export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY_ARTIFACTS
+            export AWS_REGION=$AWS_REGION_ARTIFACTS
+            pnpm size:snapshot
+      - run:
+          name: Run danger on PRs
+          command: pnpm danger ci --fail-on-errors
+          environment:
+            DANGER_COMMAND: reportBundleSize
+  test_regressions:
+    <<: *default-job
+    docker:
+      - image: mcr.microsoft.com/playwright:v1.56.1-noble
+    steps:
+      - checkout
+      - install_js:
+          playwright: true
+          react-version: << parameters.react-version >>
       - run:
           name: Install ffmpeg
-          command: choco install ffmpeg -y
-          shell: powershell.exe
+          command: apt update && apt upgrade -y && apt install ffmpeg -y
       - run:
           name: Run visual regression tests
-          command: pnpm test:regressions
-          shell: powershell.exe
+          command: xvfb-run pnpm test:regressions
       - run:
           name: Upload screenshots to Argos CI
           command: pnpm test:argos
-          shell: powershell.exe
 
 workflows:
   pipeline:
     when:
       equal: [pipeline, << pipeline.parameters.workflow >>]
     jobs:
-      # - checkout:
-      #     <<: *default-context
-      # - test_unit:
-      #     <<: *default-context
-      # - test_browser:
-      #     <<: *default-context
-      # - test_lint:
-      #     <<: *default-context
-      # - test_static:
-      #     <<: *default-context
-      # - test_types:
-      #     <<: *default-context
-      # - test_e2e:
-      #     <<: *default-context
+      - checkout:
+          <<: *default-context
+      - test_unit:
+          <<: *default-context
+      - test_browser:
+          <<: *default-context
+      - test_lint:
+          <<: *default-context
+      - test_static:
+          <<: *default-context
+      - test_types:
+          <<: *default-context
+      - test_e2e:
+          <<: *default-context
       - test_regressions:
           <<: *default-context
-      # - test_package:
-      #     <<: *default-context
-  # e2e-website:
-  #   when:
-  #     equal: [e2e-website, << pipeline.parameters.workflow >>]
-  #   jobs:
-  #     - checkout:
-  #         <<: *default-context
-  #     - test_e2e_website
-  # additional-tests:
-  #   when:
-  #     and:
-  #       - equal: [additional, << pipeline.parameters.workflow >>]
-  #       - or:
-  #           - not:
-  #               equal: ['stable', << pipeline.parameters.material-ui-version >>]
-  #           - not:
-  #               equal: ['stable', << pipeline.parameters.with-react-version >>]
-  #   jobs:
-  #     - test_unit:
-  #         <<: *default-context
-  #         name: test_unit_additional
-  #         react-version: << pipeline.parameters.with-react-version >>
-  #     - test_browser:
-  #         <<: *default-context
-  #         name: test_browser_additional
-  #         react-version: << pipeline.parameters.with-react-version >>
-  #     - test_regressions:
-  #         <<: *default-context
-  #         name: test_regressions_additional
-  #         react-version: << pipeline.parameters.with-react-version >>
-  #     - test_e2e:
-  #         <<: *default-context
-  #         name: test_e2e_additional
-  #         react-version: << pipeline.parameters.with-react-version >>
-  # additional-checks:
-  #   when:
-  #     and:
-  #       - equal: [additional, << pipeline.parameters.workflow >>]
-  #       - not:
-  #           equal: ['stable', << pipeline.parameters.material-ui-version >>]
-  #   jobs:
-  #     - test_types:
-  #         <<: *default-context
-  #         name: test_types_additional
-  # test-react-18:
-  #   when:
-  #     equal: [pipeline, << pipeline.parameters.workflow >>]
-  #   jobs:
-  #     - test_unit:
-  #         <<: *default-context
-  #         name: test_unit_react_18
-  #         react-version: ^18
-  #     - test_browser:
-  #         <<: *default-context
-  #         name: test_browser_react_18
-  #         react-version: ^18
-  #     - test_e2e:
-  #         <<: *default-context
-  #         name: test_e2e_react_18
-  #         react-version: ^18
+      - test_package:
+          <<: *default-context
+  e2e-website:
+    when:
+      equal: [e2e-website, << pipeline.parameters.workflow >>]
+    jobs:
+      - checkout:
+          <<: *default-context
+      - test_e2e_website
+  additional-tests:
+    when:
+      and:
+        - equal: [additional, << pipeline.parameters.workflow >>]
+        - or:
+            - not:
+                equal: ['stable', << pipeline.parameters.material-ui-version >>]
+            - not:
+                equal: ['stable', << pipeline.parameters.with-react-version >>]
+    jobs:
+      - test_unit:
+          <<: *default-context
+          name: test_unit_additional
+          react-version: << pipeline.parameters.with-react-version >>
+      - test_browser:
+          <<: *default-context
+          name: test_browser_additional
+          react-version: << pipeline.parameters.with-react-version >>
+      - test_regressions:
+          <<: *default-context
+          name: test_regressions_additional
+          react-version: << pipeline.parameters.with-react-version >>
+      - test_e2e:
+          <<: *default-context
+          name: test_e2e_additional
+          react-version: << pipeline.parameters.with-react-version >>
+  additional-checks:
+    when:
+      and:
+        - equal: [additional, << pipeline.parameters.workflow >>]
+        - not:
+            equal: ['stable', << pipeline.parameters.material-ui-version >>]
+    jobs:
+      - test_types:
+          <<: *default-context
+          name: test_types_additional
+  test-react-18:
+    when:
+      equal: [pipeline, << pipeline.parameters.workflow >>]
+    jobs:
+      - test_unit:
+          <<: *default-context
+          name: test_unit_react_18
+          react-version: ^18
+      - test_browser:
+          <<: *default-context
+          name: test_browser_react_18
+          react-version: ^18
+      - test_e2e:
+          <<: *default-context
+          name: test_e2e_react_18
+          react-version: ^18
