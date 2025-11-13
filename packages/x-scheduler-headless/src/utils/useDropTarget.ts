@@ -9,7 +9,7 @@ import {
   EventSurfaceType,
   SchedulerEventUpdatedProperties,
   SchedulerValidDate,
-  CalendarResourceId,
+  SchedulerResourceId,
 } from '../models';
 import {
   EventDropData,
@@ -161,7 +161,7 @@ export namespace useDropTarget {
      * If null, the event will be dropped outside of any resource.
      * If not defined, the event will be dropped onto the resource it was originally in (if any).
      */
-    resourceId?: CalendarResourceId | null;
+    resourceId?: SchedulerResourceId | null;
   }
 
   export type CreateDropData = (
