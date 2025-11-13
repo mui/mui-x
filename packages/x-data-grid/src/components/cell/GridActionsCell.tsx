@@ -342,7 +342,11 @@ function GridActionsCellWrapper(props: GridRenderCellParams) {
 
   const actions = colDef.getActions(apiRef.current.getRowParams(id));
 
-  return <GridActionsCell {...props}>{actions}</GridActionsCell>;
+  return (
+    <GridActionsCell suppressChildrenValidation {...props}>
+      {actions}
+    </GridActionsCell>
+  );
 }
 
 export const renderActionsCell = (params: GridRenderCellParams) => (
