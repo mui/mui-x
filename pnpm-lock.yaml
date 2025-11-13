@@ -873,6 +873,68 @@ importers:
         version: 6.1.0
     publishDirectory: build
 
+  packages/x-charts-base:
+    dependencies:
+      '@babel/runtime':
+        specifier: 'catalog:'
+        version: 7.28.4
+      '@mui/utils':
+        specifier: 'catalog:'
+        version: 7.3.5(@types/react@19.2.2)(react@19.2.0)
+      '@mui/x-charts':
+        specifier: workspace:^
+        version: link:../x-charts/build
+      '@mui/x-charts-vendor':
+        specifier: workspace:^
+        version: link:../x-charts-vendor
+      '@mui/x-internals':
+        specifier: workspace:^
+        version: link:../x-internals/build
+      clsx:
+        specifier: 'catalog:'
+        version: 2.1.1
+      react:
+        specifier: ^17.0.0 || ^18.0.0 || ^19.0.0
+        version: 19.2.0
+      react-dom:
+        specifier: ^17.0.0 || ^18.0.0 || ^19.0.0
+        version: 19.2.0(react@19.2.0)
+    publishDirectory: build
+
+  packages/x-charts-material:
+    dependencies:
+      '@babel/runtime':
+        specifier: 'catalog:'
+        version: 7.28.4
+      '@emotion/react':
+        specifier: ^11.13.3
+        version: 11.14.0(@types/react@19.2.2)(react@19.2.0)
+      '@emotion/styled':
+        specifier: ^11.13.0
+        version: 11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0)
+      '@mui/material':
+        specifier: 'catalog:'
+        version: 7.3.5(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      '@mui/utils':
+        specifier: 'catalog:'
+        version: 7.3.5(@types/react@19.2.2)(react@19.2.0)
+      '@mui/x-charts-base':
+        specifier: workspace:^
+        version: link:../x-charts-base/build
+      '@mui/x-internals':
+        specifier: workspace:^
+        version: link:../x-internals/build
+      clsx:
+        specifier: 'catalog:'
+        version: 2.1.1
+      react:
+        specifier: ^17.0.0 || ^18.0.0 || ^19.0.0
+        version: 19.2.0
+      react-dom:
+        specifier: ^17.0.0 || ^18.0.0 || ^19.0.0
+        version: 19.2.0(react@19.2.0)
+    publishDirectory: build
+
   packages/x-charts-premium:
     dependencies:
       '@babel/runtime':
