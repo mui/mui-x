@@ -236,11 +236,11 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     const isLast = ordinal === -1;
     const weekdayShort = adapter.formatByString(monthlyRef.date, 'ccc');
     const weekAriaLabel = isLast
-      ? translations.recurrenceMonthlyLastWeekLabel(weekday)
-      : translations.recurrenceMonthlyWeekNumberLabel?.(ordinal, weekday);
+      ? translations.recurrenceMonthlyLastWeekAriaLabel(weekday)
+      : translations.recurrenceMonthlyWeekNumberAriaLabel?.(ordinal, weekday);
     const weekLabel = isLast
-      ? translations.recurrenceMonthlyLastWeekShort(weekdayShort)
-      : translations.recurrenceMonthlyWeekNumberShort?.(ordinal, weekdayShort);
+      ? translations.recurrenceMonthlyLastWeekLabel(weekdayShort)
+      : translations.recurrenceMonthlyWeekNumberLabel?.(ordinal, weekdayShort);
 
     return [
       {
