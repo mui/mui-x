@@ -38,6 +38,10 @@ export const schedulerEventSelectors = {
       };
     },
   ),
+  /**
+   * Gets the default duration (in minutes) for newly created events.
+   * This can be used when you need the value event on read-only calendar.
+   */
   defaultEventDuration: createSelector(
     (state: State) => state.eventCreation,
     (eventCreation) => {
