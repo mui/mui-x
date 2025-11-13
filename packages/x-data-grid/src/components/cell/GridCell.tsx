@@ -20,11 +20,7 @@ import {
   GridRowId,
   GridEditCellProps,
 } from '../../models';
-import {
-  GridRenderEditCellParams,
-  FocusElement,
-  GridCellParams,
-} from '../../models/params/gridCellParams';
+import { GridRenderEditCellParams, GridCellParams } from '../../models/params/gridCellParams';
 import { GridAlignment, GridStateColDef } from '../../models/colDef/gridColDef';
 import { GridRowModel, GridTreeNode, GridTreeNodeWithRender } from '../../models/gridRows';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
@@ -254,7 +250,6 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
   const valueToRender = cellParams.formattedValue ?? value;
   const cellRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(ref, cellRef);
-  const focusElementRef = React.useRef<FocusElement>(null);
   const isSelectionMode = rootProps.cellSelection ?? false;
 
   const ownerState = {
@@ -361,7 +356,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
 
     if (cellRef.current && !cellRef.current.contains(doc.activeElement!)) {
       const focusableElement = cellRef.current!.querySelector<HTMLElement>('[tabindex="0"]');
-      const elementToFocus = focusElementRef.current || focusableElement || cellRef.current;
+      const elementToFocus = focusableElement || cellRef.current;
 
       if (doesSupportPreventScroll()) {
         elementToFocus.focus({ preventScroll: true });

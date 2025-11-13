@@ -39,7 +39,6 @@ function GridActionsCell(props: GridActionsCellProps) {
     cellMode,
     tabIndex,
     position = 'bottom-end',
-    focusElementRef,
     children,
     ...other
   } = props;
@@ -111,21 +110,6 @@ function GridActionsCell(props: GridActionsCellProps) {
       ignoreCallToFocus.current = false;
     }
   }, [hasFocus, focusedButtonIndex, firstFocusableButtonIndex]);
-
-  React.useImperativeHandle(
-    focusElementRef,
-    () => ({
-      focus() {
-        // If ignoreCallToFocus is true, then one of the buttons was clicked and the focus is already set
-        if (!ignoreCallToFocus.current) {
-          // find the first focusable button and pass the index to the state
-          const focusableButtonIndex = actions.findIndex((o) => !o.props.disabled);
-          setFocusedButtonIndex(focusableButtonIndex);
-        }
-      },
-    }),
-    [actions],
-  );
 
   React.useEffect(() => {
     if (focusedButtonIndex >= numberOfButtons) {
@@ -282,19 +266,6 @@ GridActionsCell.propTypes = {
    * The column field of the cell that triggered the event.
    */
   field: PropTypes.string.isRequired,
-  /**
-   * A ref allowing to set imperative focus.
-   * It can be passed to the element that should receive focus.
-   * @ignore - do not document.
-   */
-  focusElementRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.shape({
-        focus: PropTypes.func.isRequired,
-      }),
-    }),
-  ]),
   /**
    * The cell value formatted with the column valueFormatter.
    */
