@@ -13,7 +13,7 @@ _Nov 12, 2025_
 
 We'd like to extend a big thank you to the 14 contributors who made this release possible. Here are some highlights ✨:
 
-- Add `barLabelPlacement` property to customize bar label position in bar charts.
+- Add `barLabelPlacement` property to customize the bar label position in bar charts, enabling labels to be placed above bars.
 
   ![image](https://github.com/user-attachments/assets/4bc3a75b-74b8-4c6d-896b-5f5bf837bcda)
 
@@ -22,10 +22,10 @@ We'd like to extend a big thank you to the 14 contributors who made this release
 - 📚 Documentation improvements
 
 Special thanks go out to these community members for their valuable contributions:
-@arminmeh, @brijeshb42, @htollefsen, @noraleonte, @sai6855, @Sigdriv
+@htollefsen, @sai6855, @Sigdriv
 
 The following team members contributed to this release:
-@bernardobelchior, @cherniavskii, @flaviendelangle, @JCQuintas, @michelengelen, @prakhargupta1, @rita-codes, @siriwatknp
+@arminmeh, @bernardobelchior, @brijeshb42, @cherniavskii, @flaviendelangle, @JCQuintas, @michelengelen, @noraleonte, @prakhargupta1, @rita-codes, @siriwatknp
 
 ### Data Grid
 
