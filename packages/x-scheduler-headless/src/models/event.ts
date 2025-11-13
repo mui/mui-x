@@ -1,7 +1,7 @@
 import type { SchedulerValidDate } from './date';
 import { RecurringEventRecurrenceRule } from './recurringEvent';
 import type { SchedulerOccurrencePlaceholderExternalDragData } from './dragAndDrop';
-import type { CalendarResourceId } from './resource';
+import type { SchedulerResourceId } from './resource';
 
 export interface SchedulerProcessedEvent {
   /**
@@ -27,7 +27,7 @@ export interface SchedulerProcessedEvent {
   /**
    * The id of the resource this event is associated with.
    */
-  resource?: CalendarResourceId | null;
+  resource?: SchedulerResourceId | null;
   /**
    * The recurrence rule for the event.
    * If not defined, the event will have only one occurrence.
@@ -87,12 +87,14 @@ export interface SchedulerEvent {
    * The id of the resource this event is associated with.
    * @default null
    */
-  resource?: CalendarResourceId | null;
+  resource?: SchedulerResourceId | null;
   /**
    * The recurrence rule for the event.
+   * It can be provided either as a string (RFC5545 RRULE format)
+   * or as a RecurringEventRecurrenceRule object.
    * If not defined, the event will have only one occurrence.
    */
-  rrule?: RecurringEventRecurrenceRule;
+  rrule?: RecurringEventRecurrenceRule | string;
   /**
    * Exception dates for the event.
    * These dates will be excluded from the recurrence.
@@ -162,7 +164,7 @@ interface SchedulerOccurrencePlaceholderBase {
    * The id of the resource onto which to drop the event.
    * If null, the event will be dropped outside of any resource.
    */
-  resourceId: CalendarResourceId | null;
+  resourceId: SchedulerResourceId | null;
   /**
    * Whether the occurrence placeholder should be hidden.
    * This is used when dragging an event outside of the calendar to avoid showing both the placeholder and the drag preview.
