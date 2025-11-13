@@ -1,0 +1,67 @@
+name: Regression Tests (Windows)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  regression-tests:
+    name: Visual Regression Tests
+    runs-on: windows-latest
+    timeout-minutes: 60
+    env:
+      COREPACK_ENABLE_DOWNLOAD_PROMPT: "0"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.18.0"
+          cache: "pnpm"
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install pnpm
+        run: corepack prepare pnpm@latest --activate
+
+      - name: Verify installation
+        run: |
+          node --version
+          pnpm --version
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Install ffmpeg
+        run: choco install ffmpeg -y
+        shell: pwsh
+
+      - name: Run visual regression tests
+        run: pnpm test:regressions
+        shell: pwsh
+
+      - name: Upload screenshots to Argos CI
+        if: always()
+        run: pnpm test:argos
+        shell: pwsh
+        env:
+          ARGOS_TOKEN: ${{ secrets.ARGOS_TOKEN }}
+
+      - name: Upload test artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: regression-test-results
+          path: test/regressions/screenshots/
+          retention-days: 7
