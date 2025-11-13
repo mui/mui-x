@@ -312,7 +312,6 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
           <Field.Root className="EventPopoverInputsRow">
             {translations.recurrenceEveryLabel}
             <Input
-              name="interval"
               type="number"
               min={1}
               value={controlled.rruleDraft.interval}
@@ -429,7 +428,6 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
                 </Radio.Root>
                 <div className="EventPopoverAfterTimesInputWrapper">
                   <Input
-                    name="count"
                     type="number"
                     min={1}
                     value={customEndsValue === 'after' ? (controlled.rruleDraft.count ?? 1) : 1}
@@ -455,7 +453,6 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
                   </span>
                 </Radio.Root>
                 <Input
-                  name="until"
                   type="date"
                   value={
                     customEndsValue === 'until' && controlled.rruleDraft.until
