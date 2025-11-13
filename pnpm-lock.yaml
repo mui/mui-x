@@ -395,8 +395,8 @@ importers:
         specifier: ^15.0.0
         version: 15.0.0
       jsdom:
-        specifier: 27.1.0
-        version: 27.1.0
+        specifier: ^26.1.0
+        version: 26.1.0
       lerna:
         specifier: ^9.0.0
         version: 9.0.0(@swc/core@1.13.5)(@types/node@22.18.13)(babel-plugin-macros@3.1.0)
@@ -477,7 +477,7 @@ importers:
         version: 7.2.2(@types/node@22.18.13)(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.1)
       vitest:
         specifier: 'catalog:'
-        version: 4.0.8(@types/debug@4.1.12)(@types/node@22.18.13)(@vitest/browser-playwright@4.0.8)(@vitest/ui@4.0.8)(jsdom@27.1.0)(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.1)
+        version: 4.0.8(@types/debug@4.1.12)(@types/node@22.18.13)(@vitest/browser-playwright@4.0.8)(@vitest/ui@4.0.8)(jsdom@26.1.0)(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.1)
       vitest-fail-on-console:
         specifier: ^0.10.1
         version: 0.10.1(@vitest/utils@4.0.8)(vite@7.2.2(@types/node@22.18.13)(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.1))(vitest@4.0.8)
@@ -2168,9 +2168,6 @@ importers:
       '@vitest/ui':
         specifier: 'catalog:'
         version: 4.0.8(vitest@4.0.8)
-      jsdom:
-        specifier: ^27.1.0
-        version: 27.1.0
       react:
         specifier: 'catalog:'
         version: 19.2.0
@@ -12109,7 +12106,8 @@ packages:
 
 snapshots:
 
-  '@acemir/cssom@0.9.23': {}
+  '@acemir/cssom@0.9.23':
+    optional: true
 
   '@ai-sdk/gateway@1.0.29(zod@4.1.11)':
     dependencies:
@@ -12281,6 +12279,7 @@ snapshots:
       '@csstools/css-parser-algorithms': 3.0.5(@csstools/css-tokenizer@3.0.4)
       '@csstools/css-tokenizer': 3.0.4
       lru-cache: 11.2.2
+    optional: true
 
   '@asamuzakjp/dom-selector@6.7.4':
     dependencies:
@@ -12289,8 +12288,10 @@ snapshots:
       css-tree: 3.1.0
       is-potential-custom-element-name: 1.0.1
       lru-cache: 11.2.2
+    optional: true
 
-  '@asamuzakjp/nwsapi@2.3.9': {}
+  '@asamuzakjp/nwsapi@2.3.9':
+    optional: true
 
   '@atlaskit/pragmatic-drag-and-drop-auto-scroll@2.1.2':
     dependencies:
@@ -13739,7 +13740,8 @@ snapshots:
     dependencies:
       '@csstools/css-tokenizer': 3.0.4
 
-  '@csstools/css-syntax-patches-for-csstree@1.0.15': {}
+  '@csstools/css-syntax-patches-for-csstree@1.0.15':
+    optional: true
 
   '@csstools/css-tokenizer@3.0.4': {}
 
@@ -16745,7 +16747,7 @@ snapshots:
       '@vitest/mocker': 4.0.8(vite@7.2.2(@types/node@22.18.13)(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.1))
       playwright: 1.56.1
       tinyrainbow: 3.0.3
-      vitest: 4.0.8(@types/debug@4.1.12)(@types/node@22.18.13)(@vitest/browser-playwright@4.0.8)(@vitest/ui@4.0.8)(jsdom@27.1.0)(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.1)
+      vitest: 4.0.8(@types/debug@4.1.12)(@types/node@22.18.13)(@vitest/browser-playwright@4.0.8)(@vitest/ui@4.0.8)(jsdom@26.1.0)(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.1)
     transitivePeerDependencies:
       - bufferutil
       - msw
@@ -16774,7 +16776,7 @@ snapshots:
       pngjs: 7.0.0
       sirv: 3.0.2
       tinyrainbow: 3.0.3
-      vitest: 4.0.8(@types/debug@4.1.12)(@types/node@22.18.13)(@vitest/browser-playwright@4.0.8)(@vitest/ui@4.0.8)(jsdom@27.1.0)(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.1)
+      vitest: 4.0.8(@types/debug@4.1.12)(@types/node@22.18.13)(@vitest/browser-playwright@4.0.8)(@vitest/ui@4.0.8)(jsdom@26.1.0)(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.1)
       ws: 8.18.3
     transitivePeerDependencies:
       - bufferutil
@@ -16812,7 +16814,7 @@ snapshots:
       magicast: 0.5.1
       std-env: 3.10.0
       tinyrainbow: 3.0.3
-      vitest: 4.0.8(@types/debug@4.1.12)(@types/node@22.18.13)(@vitest/browser-playwright@4.0.8)(@vitest/ui@4.0.8)(jsdom@27.1.0)(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.1)
+      vitest: 4.0.8(@types/debug@4.1.12)(@types/node@22.18.13)(@vitest/browser-playwright@4.0.8)(@vitest/ui@4.0.8)(jsdom@26.1.0)(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.1)
     optionalDependencies:
       '@vitest/browser': 4.0.8(vite@7.2.2(@types/node@22.18.13)(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.1))(vitest@4.0.8)
     transitivePeerDependencies:
@@ -17416,6 +17418,7 @@ snapshots:
   bidi-js@1.0.3:
     dependencies:
       require-from-string: 2.0.2
+    optional: true
 
   big-integer@1.6.52: {}
 
@@ -18068,6 +18071,7 @@ snapshots:
       '@asamuzakjp/css-color': 4.0.5
       '@csstools/css-syntax-patches-for-csstree': 1.0.15
       css-tree: 3.1.0
+    optional: true
 
   csstype@3.1.3: {}
 
@@ -18182,6 +18186,7 @@ snapshots:
     dependencies:
       whatwg-mimetype: 4.0.0
       whatwg-url: 15.1.0
+    optional: true
 
   data-view-buffer@1.0.2:
     dependencies:
@@ -20226,6 +20231,7 @@ snapshots:
       - bufferutil
       - supports-color
       - utf-8-validate
+    optional: true
 
   jsesc@3.0.2: {}
 
@@ -21831,6 +21837,7 @@ snapshots:
   parse5@8.0.0:
     dependencies:
       entities: 6.0.1
+    optional: true
 
   parseurl@1.3.3: {}
 
@@ -23296,7 +23303,8 @@ snapshots:
 
   tldts-core@6.1.86: {}
 
-  tldts-core@7.0.17: {}
+  tldts-core@7.0.17:
+    optional: true
 
   tldts@6.1.86:
     dependencies:
@@ -23305,6 +23313,7 @@ snapshots:
   tldts@7.0.17:
     dependencies:
       tldts-core: 7.0.17
+    optional: true
 
   tmp@0.2.5: {}
 
@@ -23328,6 +23337,7 @@ snapshots:
   tough-cookie@6.0.0:
     dependencies:
       tldts: 7.0.17
+    optional: true
 
   tr46@0.0.3: {}
 
@@ -23338,6 +23348,7 @@ snapshots:
   tr46@6.0.0:
     dependencies:
       punycode: 2.3.1
+    optional: true
 
   traverse@0.3.9: {}
 
@@ -23728,9 +23739,9 @@ snapshots:
       '@vitest/utils': 4.0.8
       chalk: 5.6.2
       vite: 7.2.2(@types/node@22.18.13)(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.1)
-      vitest: 4.0.8(@types/debug@4.1.12)(@types/node@22.18.13)(@vitest/browser-playwright@4.0.8)(@vitest/ui@4.0.8)(jsdom@27.1.0)(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.1)
+      vitest: 4.0.8(@types/debug@4.1.12)(@types/node@22.18.13)(@vitest/browser-playwright@4.0.8)(@vitest/ui@4.0.8)(jsdom@26.1.0)(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.1)
 
-  vitest@4.0.8(@types/debug@4.1.12)(@types/node@22.18.13)(@vitest/browser-playwright@4.0.8)(@vitest/ui@4.0.8)(jsdom@27.1.0)(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.1):
+  vitest@4.0.8(@types/debug@4.1.12)(@types/node@22.18.13)(@vitest/browser-playwright@4.0.8)(@vitest/ui@4.0.8)(jsdom@26.1.0)(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.1):
     dependencies:
       '@vitest/expect': 4.0.8
       '@vitest/mocker': 4.0.8(vite@7.2.2(@types/node@22.18.13)(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.1))
@@ -23757,7 +23768,7 @@ snapshots:
       '@types/node': 22.18.13
       '@vitest/browser-playwright': 4.0.8(playwright@1.56.1)(vite@7.2.2(@types/node@22.18.13)(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.1))(vitest@4.0.8)
       '@vitest/ui': 4.0.8(vitest@4.0.8)
-      jsdom: 27.1.0
+      jsdom: 26.1.0
     transitivePeerDependencies:
       - jiti
       - less
@@ -23839,7 +23850,8 @@ snapshots:
 
   webidl-conversions@7.0.0: {}
 
-  webidl-conversions@8.0.0: {}
+  webidl-conversions@8.0.0:
+    optional: true
 
   webpack-bundle-analyzer@4.10.2:
     dependencies:
@@ -23908,6 +23920,7 @@ snapshots:
     dependencies:
       tr46: 6.0.0
       webidl-conversions: 8.0.0
+    optional: true
 
   whatwg-url@5.0.0:
     dependencies:
