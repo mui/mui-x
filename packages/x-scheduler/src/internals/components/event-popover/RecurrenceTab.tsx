@@ -232,26 +232,26 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
 
   const monthlyItems = React.useMemo(() => {
     const ord = monthlyRef.ord;
-    const dayOfMonth = translations.recurrenceMonthlyDayOfMonthLabel?.(monthlyRef.dayOfMonth);
+    const dayOfMonthLabel = translations.recurrenceMonthlyDayOfMonthLabel?.(monthlyRef.dayOfMonth);
     const isLast = ord === -1;
     const weekdayShort = adapter.formatByString(monthlyRef.date, 'ccc');
     const weekAriaLabel = isLast
       ? translations.recurrenceMonthlyLastWeekLabel(weekday)
       : translations.recurrenceMonthlyWeekNumberLabel?.(ord, weekday);
-    const weekText = isLast
+    const weekLabel = isLast
       ? translations.recurrenceMonthlyLastWeekShort(weekdayShort)
       : translations.recurrenceMonthlyWeekNumberShort?.(ord, weekdayShort);
 
     return [
       {
         value: 'byMonthDay',
-        ariaLabel: `${dayOfMonth}`,
-        label: dayOfMonth,
+        ariaLabel: dayOfMonthLabel,
+        label: dayOfMonthLabel,
       },
       {
         value: 'byDay',
         ariaLabel: weekAriaLabel,
-        label: weekText,
+        label: weekLabel,
       },
     ];
   }, [adapter, monthlyRef.date, monthlyRef.dayOfMonth, monthlyRef.ord, translations, weekday]);
