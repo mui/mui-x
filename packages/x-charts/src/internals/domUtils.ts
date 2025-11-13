@@ -117,8 +117,7 @@ export const getStringSize = (text: string | number, style: React.CSSProperties 
 
     measurementSpanContainer.replaceChildren(measurementElem);
 
-    const rect = measurementElem.getBoundingClientRect();
-    const result = { width: rect.width, height: rect.height };
+    const result = measureSVGTextElement(measurementElem);
 
     stringCache.set(cacheKey, result);
 
@@ -173,20 +172,20 @@ export function batchMeasureStrings(
     return styleKey;
   });
 
-  const measurementElems: SVGTextElement[] = [];
+  const measurementElements: SVGTextElement[] = [];
   for (const string of textToMeasure) {
     const measurementElem = document.createElementNS('http://www.w3.org/2000/svg', 'text');
     measurementElem.textContent = `${string}`;
-    measurementElems.push(measurementElem);
+    measurementElements.push(measurementElem);
   }
 
-  measurementContainer.replaceChildren(...measurementElems);
+  measurementContainer.replaceChildren(...measurementElements);
 
   for (let i = 0; i < textToMeasure.length; i += 1) {
     const text = textToMeasure[i];
-    const measurementSpan = measurementContainer.children[i] as HTMLSpanElement;
-    const rect = measurementSpan.getBoundingClientRect();
-    const result = { width: rect.width, height: rect.height };
+    const measurementElem = measurementContainer.children[i] as SVGTextElement;
+
+    const result = measureSVGTextElement(measurementElem);
     const cacheKey = `${text}-${styleString}`;
 
     stringCache.set(cacheKey, result);
@@ -203,6 +202,24 @@ export function batchMeasureStrings(
   }
 
   return sizeMap;
+}
+
+/**
+ * Measures an SVG text element using getBBox() with fallback to getBoundingClientRect()
+ * @param element SVG text element to measure
+ * @returns width and height of the text element
+ */
+function measureSVGTextElement(element: SVGTextElement): { width: number; height: number } {
+  // getBBox() is more reliable across browsers for SVG elements
+  try {
+    const result = element.getBBox();
+    return { width: result.width, height: result.height };
+  } catch {
+    // Fallback to getBoundingClientRect if getBBox fails
+    // This can happen in tests
+    const result = element.getBoundingClientRect();
+    return { width: result.width, height: result.height };
+  }
 }
 
 let measurementContainer: SVGSVGElement | null = null;
