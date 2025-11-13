@@ -38,6 +38,16 @@ export const schedulerEventSelectors = {
       };
     },
   ),
+  defaultEventDuration: createSelector(
+    (state: State) => state.eventCreation,
+    (eventCreation) => {
+      if (typeof eventCreation === 'boolean') {
+        return DEFAULT_EVENT_CREATION_CONFIG.duration;
+      }
+
+      return eventCreation?.duration ?? DEFAULT_EVENT_CREATION_CONFIG.duration;
+    },
+  ),
   processedEvent: processedEventSelector,
   isReadOnly: isEventReadOnlySelector,
   color: createSelector((state: State, eventId: SchedulerEventId) => {

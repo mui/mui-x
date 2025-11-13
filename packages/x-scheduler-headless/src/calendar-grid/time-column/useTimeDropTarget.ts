@@ -7,6 +7,8 @@ import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
 import { CalendarGridTimeColumnContext } from './CalendarGridTimeColumnContext';
 import { useDropTarget } from '../../utils/useDropTarget';
 import { EVENT_DRAG_PRECISION_MINUTE, EVENT_DRAG_PRECISION_MS } from '../../constants';
+import { schedulerEventSelectors } from '../../scheduler-selectors';
+import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 
 const isValidDropTarget = buildIsValidDropTarget([
   'CalendarGridTimeEvent',
@@ -18,7 +20,11 @@ const isValidDropTarget = buildIsValidDropTarget([
 export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
   const { start, end, addPropertiesToDroppedEvent } = parameters;
 
+  // Context hooks
   const adapter = useAdapter();
+  const store = useEventCalendarStoreContext();
+
+  // Ref hooks
   const ref = React.useRef<HTMLDivElement>(null);
 
   // TODO: Avoid JS date conversion
@@ -111,7 +117,10 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
       // Move a Day Grid Event into the Time Grid
       if (data.source === 'CalendarGridDayEvent') {
         const newStartDate = addOffsetToDate(start, cursorOffsetMs);
-        const newEndDate = adapter.addMinutes(newStartDate, 60);
+        const newEndDate = adapter.addMinutes(
+          newStartDate,
+          schedulerEventSelectors.defaultEventDuration(store.state),
+        );
 
         return getDataFromInside(data, newStartDate, newEndDate);
       }
