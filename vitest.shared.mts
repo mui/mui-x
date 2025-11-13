@@ -7,14 +7,6 @@ import { playwright } from '@vitest/browser-playwright';
 const CURRENT_DIR = dirname(fileURLToPath(import.meta.url));
 const WORKSPACE_ROOT = resolve(CURRENT_DIR, './');
 
-/**
- * Packages referenced in tests that run both in Node.js and the browser.
- * The tests are excluded in the browser at runtime using conditional skips,
- * but Vitest still tries to bundle them, which can lead to issues.
- * To avoid this, we externalize them from the browser build.
- */
-const EXTERNALIZED_PACKAGES = ['execa'];
-
 export const alias = [
   // Generates resolver aliases for all packages and their plans.
   ...[
@@ -112,13 +104,5 @@ export default defineConfig({
       maxWorkers: 1,
     }),
     exclude: ['**/*.spec.{js,ts,tsx}', '**/node_modules/**', '**/dist/**'],
-  },
-  optimizeDeps: {
-    exclude: EXTERNALIZED_PACKAGES,
-  },
-  build: {
-    rollupOptions: {
-      external: EXTERNALIZED_PACKAGES,
-    },
   },
 });
