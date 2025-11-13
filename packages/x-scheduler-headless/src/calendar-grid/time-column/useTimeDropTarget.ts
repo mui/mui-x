@@ -6,11 +6,7 @@ import { SchedulerEvent, SchedulerValidDate } from '../../models';
 import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
 import { CalendarGridTimeColumnContext } from './CalendarGridTimeColumnContext';
 import { useDropTarget } from '../../utils/useDropTarget';
-import {
-  EVENT_CREATION_DEFAULT_LENGTH_MINUTE,
-  EVENT_DRAG_PRECISION_MINUTE,
-  EVENT_DRAG_PRECISION_MS,
-} from '../../constants';
+import { EVENT_DRAG_PRECISION_MINUTE, EVENT_DRAG_PRECISION_MS } from '../../constants';
 
 const isValidDropTarget = buildIsValidDropTarget([
   'CalendarGridTimeEvent',
@@ -45,7 +41,7 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
     });
 
   const getEventDropData: useDropTarget.GetEventDropData = useEventCallback(
-    ({ data, createDropData, input }) => {
+    ({ data, dropFromInside, dropFromOutside, input }) => {
       if (!isValidDropTarget(data)) {
         return undefined;
       }
@@ -74,7 +70,7 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
 
         const newEndDate = adapter.addMinutes(newStartDate, eventDurationMinute);
 
-        return createDropData(data, newStartDate, newEndDate);
+        return dropFromInside(data, newStartDate, newEndDate);
       }
 
       // Resize a Time Grid Event
@@ -91,7 +87,7 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
             ? cursorDate
             : maxStartDate;
 
-          return createDropData(data, newStartDate, data.end);
+          return dropFromInside(data, newStartDate, data.end);
         }
 
         if (data.side === 'end') {
@@ -108,7 +104,7 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
           const minEndDate = adapter.addMinutes(data.start, EVENT_DRAG_PRECISION_MINUTE);
           const newEndDate = adapter.isAfter(cursorDate, minEndDate) ? cursorDate : minEndDate;
 
-          return createDropData(data, data.start, newEndDate);
+          return dropFromInside(data, data.start, newEndDate);
         }
       }
 
@@ -117,20 +113,12 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
         const newStartDate = addOffsetToDate(start, cursorOffsetMs);
         const newEndDate = adapter.addMinutes(newStartDate, 60);
 
-        return createDropData(data, newStartDate, newEndDate);
+        return dropFromInside(data, newStartDate, newEndDate);
       }
 
       // Move a Standalone Event into the Time Grid
       if (data.source === 'StandaloneEvent') {
-        const cursorDate = addOffsetToDate(start, cursorOffsetMs);
-        return createDropData(
-          data,
-          cursorDate,
-          adapter.addMinutes(
-            cursorDate,
-            data.eventData.duration ?? EVENT_CREATION_DEFAULT_LENGTH_MINUTE,
-          ),
-        );
+        return dropFromOutside(data, addOffsetToDate(start, cursorOffsetMs));
       }
 
       return undefined;

@@ -31,6 +31,7 @@ describe('Core - TimelineStore', () => {
         canDragEventsFromTheOutside: false,
         canDropEventsToTheOutside: false,
         eventColor: 'jade',
+        eventCreation: true,
         showCurrentTimeIndicator: true,
         occurrencePlaceholder: null,
         visibleDate: adapter.startOfDay(adapter.date()),
