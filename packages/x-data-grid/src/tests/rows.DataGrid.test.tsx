@@ -769,6 +769,110 @@ describe('<DataGrid /> - Rows', () => {
         }); // Sets focusedButtonIndex=0
         expect(screen.getByRole('menuitem', { name: 'print' })).toHaveFocus();
       });
+
+      it('should show a warning when using invalid child types without `suppressChildrenValidation`', () => {
+        function CustomComponent() {
+          return <div>Custom</div>;
+        }
+
+        expect(() => {
+          render(
+            <TestCase
+              renderCell={(params) => (
+                <GridActionsCell {...params}>
+                  <CustomComponent />
+                </GridActionsCell>
+              )}
+            />,
+          );
+        }).toErrorDev(
+          'MUI X: Invalid child type in `GridActionsCell`. Expected `GridActionsCellItem` or `React.Fragment`, got `CustomComponent`.',
+        );
+      });
+
+      it('should allow custom components when `suppressChildrenValidation` is true', () => {
+        function CustomComponent() {
+          return <button type="button">Custom Action</button>;
+        }
+
+        render(
+          <TestCase
+            renderCell={(params) => (
+              <GridActionsCell {...params} suppressChildrenValidation>
+                <CustomComponent />
+                <GridActionsCellItem icon={<span />} label="print" />
+              </GridActionsCell>
+            )}
+          />,
+        );
+        expect(screen.queryByText('Custom Action')).not.to.equal(null);
+        expect(screen.queryByRole('menuitem', { name: 'print' })).not.to.equal(null);
+      });
+
+      it('should allow mixing custom elements with GridActionsCellItem when `suppressChildrenValidation` is true', () => {
+        function CustomIcon() {
+          return <span>O</span>;
+        }
+
+        function CustomElement() {
+          return <div>Custom</div>;
+        }
+
+        render(
+          <TestCase
+            renderCell={(params) => (
+              <GridActionsCell {...params} suppressChildrenValidation>
+                <CustomIcon />
+                <CustomElement />
+                <GridActionsCellItem icon={<span />} label="delete" />
+                <GridActionsCellItem label="print" showInMenu />
+              </GridActionsCell>
+            )}
+          />,
+        );
+        expect(screen.queryByText('O')).not.to.equal(null);
+        expect(screen.queryByText('Custom')).not.to.equal(null);
+        expect(screen.queryByRole('menuitem', { name: 'delete' })).not.to.equal(null);
+        expect(screen.queryByRole('menuitem', { name: 'more' })).not.to.equal(null);
+      });
+
+      it('should allow React.Fragment as children', () => {
+        render(
+          <TestCase
+            renderCell={(params) => (
+              <GridActionsCell {...params}>
+                <React.Fragment>
+                  <GridActionsCellItem icon={<span />} label="print" />
+                  <GridActionsCellItem icon={<span />} label="delete" />
+                </React.Fragment>
+              </GridActionsCell>
+            )}
+          />,
+        );
+        expect(screen.queryByRole('menuitem', { name: 'print' })).not.to.equal(null);
+        expect(screen.queryByRole('menuitem', { name: 'delete' })).not.to.equal(null);
+      });
+
+      it('should allow nested React.Fragment as children', () => {
+        render(
+          <TestCase
+            renderCell={(params) => (
+              <GridActionsCell {...params}>
+                <React.Fragment>
+                  <GridActionsCellItem icon={<span />} label="print" />
+                  <React.Fragment>
+                    <GridActionsCellItem icon={<span />} label="delete" />
+                    <GridActionsCellItem icon={<span />} label="copy" />
+                  </React.Fragment>
+                </React.Fragment>
+              </GridActionsCell>
+            )}
+          />,
+        );
+        expect(screen.queryByRole('menuitem', { name: 'print' })).not.to.equal(null);
+        expect(screen.queryByRole('menuitem', { name: 'delete' })).not.to.equal(null);
+        expect(screen.queryByRole('menuitem', { name: 'copy' })).not.to.equal(null);
+      });
     });
   });
 
