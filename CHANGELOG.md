@@ -60,7 +60,7 @@ Same changes as in `@mui/x-date-pickers@8.18.0`.
 #### `@mui/x-charts@8.18.0`
 
 - [charts] Add prop for positioning a bar label (#20194) @Sigdriv
-- [charts] Fix applying dark mode styles in ChartAxisZoomSliderThumb (#20232) @sai6855
+- [charts] Fix applying dark mode styles in `ChartAxisZoomSliderThumb` (#20232) @sai6855
 
 #### `@mui/x-charts-pro@8.18.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -68,6 +68,7 @@ Same changes as in `@mui/x-charts@8.18.0`, plus:
 
 - [charts-pro] Allow specifying Content Security Policy nonce on export (#20053) @bernardobelchior
 - [charts-pro] Fix applying dark mode styles to slider (#20220) @sai6855
+- [charts-pro] Sankey should respect node order (#20065) @JCQuintas
 
 #### `@mui/x-charts-premium@8.18.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
@@ -94,7 +95,7 @@ Internal changes.
 ### Docs
 
 - [charts] Add a demo for a custom tick label (#20073) @prakhargupta1
-- [charts] Create `useAxes` hook documentation page (#20229) @JCQuintas
+- [charts] Create `useAxes()` hook documentation page (#20229) @JCQuintas
 - [charts] Fix logo alignment (#20228) @JCQuintas
 - [charts] Fixes typo in import example (#20236) @htollefsen
 - [Data Grid] Add recipe for cursor pagination with data source (#19700) @siriwatknp
