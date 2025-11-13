@@ -25,7 +25,7 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
 
   // Feature hooks
   const getEventDropData: useDropTarget.GetEventDropData = useEventCallback(
-    ({ data, dropFromInside, dropFromOutside }) => {
+    ({ data, getDataFromInside, getDataFromOutside }) => {
       if (!isValidDropTarget(data)) {
         return undefined;
       }
@@ -33,7 +33,7 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
       // Move a Day Grid Event within the Day Grid
       if (data.source === 'CalendarGridDayEvent') {
         const offset = diffIn(adapter, value, data.draggedDay, 'days');
-        return dropFromInside(
+        return getDataFromInside(
           data,
           offset === 0 ? data.start : adapter.addDays(data.start, offset),
           offset === 0 ? data.end : adapter.addDays(data.end, offset),
@@ -53,7 +53,7 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
           } else {
             newStart = mergeDateAndTime(adapter, value, data.start);
           }
-          return dropFromInside(data, newStart, data.end);
+          return getDataFromInside(data, newStart, data.end);
         }
 
         if (data.side === 'end') {
@@ -68,7 +68,7 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
             draggedDay = mergeDateAndTime(adapter, value, data.end);
           }
 
-          return dropFromInside(data, data.start, draggedDay);
+          return getDataFromInside(data, data.start, draggedDay);
         }
       }
 
@@ -80,7 +80,7 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
           data.initialCursorPositionInEventMs / 1000,
         );
         const offset = diffIn(adapter, value, cursorDate, 'days');
-        return dropFromInside(
+        return getDataFromInside(
           data,
           offset === 0 ? data.start : adapter.addDays(data.start, offset),
           offset === 0 ? data.end : adapter.addDays(data.end, offset),
@@ -89,7 +89,7 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
 
       // Move an Standalone Event into the Time Grid
       if (data.source === 'StandaloneEvent') {
-        return dropFromOutside(data, value);
+        return getDataFromOutside(data, value);
       }
 
       return undefined;

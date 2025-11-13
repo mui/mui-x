@@ -44,7 +44,7 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
       return undefined;
     }
 
-    const dropFromInside: useDropTarget.DropFromInside = (data, newStart, newEnd) => {
+    const getDataFromInside: useDropTarget.GetDataFromInside = (data, newStart, newEnd) => {
       const type =
         data.source === 'CalendarGridDayEventResizeHandler' ||
         data.source === 'CalendarGridTimeEventResizeHandler'
@@ -64,7 +64,7 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
       };
     };
 
-    const dropFromOutside: useDropTarget.DropFromOutside = (data, start) => {
+    const getDataFromOutside: useDropTarget.GetDataFromOutside = (data, start) => {
       const eventCreationConfig = schedulerEventSelectors.creationConfig(store.state);
       if (eventCreationConfig === false) {
         return undefined;
@@ -102,8 +102,8 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
       onDrag: ({ source, location }) => {
         const newPlaceholder = getEventDropData({
           data: source.data,
-          dropFromInside,
-          dropFromOutside,
+          getDataFromInside,
+          getDataFromOutside,
           input: location.current.input,
         });
         if (newPlaceholder) {
@@ -113,8 +113,8 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
       onDrop: ({ source, location }) => {
         const dropData = getEventDropData({
           data: source.data,
-          dropFromInside,
-          dropFromOutside,
+          getDataFromInside,
+          getDataFromOutside,
           input: location.current.input,
         });
 
@@ -177,13 +177,13 @@ export namespace useDropTarget {
     resourceId?: SchedulerResourceId | null;
   }
 
-  export type DropFromInside = (
+  export type GetDataFromInside = (
     data: Exclude<EventDropData, StandaloneEvent.DragData>,
     newStart: SchedulerValidDate,
     newEnd: SchedulerValidDate,
   ) => SchedulerOccurrencePlaceholderInternalDragOrResize;
 
-  export type DropFromOutside = (
+  export type GetDataFromOutside = (
     data: StandaloneEvent.DragData,
     start: SchedulerValidDate,
   ) => SchedulerOccurrencePlaceholderExternalDrag | undefined;
@@ -191,8 +191,8 @@ export namespace useDropTarget {
   export type GetEventDropData = (parameters: {
     data: any;
     input: { clientX: number; clientY: number };
-    dropFromInside: DropFromInside;
-    dropFromOutside: DropFromOutside;
+    getDataFromInside: GetDataFromInside;
+    getDataFromOutside: GetDataFromOutside;
   }) => SchedulerOccurrencePlaceholder | undefined;
 }
 

@@ -40,7 +40,7 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
     });
 
   const getEventDropData: useDropTarget.GetEventDropData = useEventCallback(
-    ({ data, dropFromInside, dropFromOutside, input }) => {
+    ({ data, getDataFromInside, getDataFromOutside, input }) => {
       if (!isValidDropTarget(data)) {
         return undefined;
       }
@@ -69,7 +69,7 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
 
         const newEndDate = adapter.addMinutes(newStartDate, eventDurationMinute);
 
-        return dropFromInside(data, newStartDate, newEndDate);
+        return getDataFromInside(data, newStartDate, newEndDate);
       }
 
       // Resize a Timeline Event
@@ -86,7 +86,7 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
             ? cursorDate
             : maxStartDate;
 
-          return dropFromInside(data, newStartDate, data.end);
+          return getDataFromInside(data, newStartDate, data.end);
         }
 
         if (data.side === 'end') {
@@ -103,13 +103,13 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
           const minEndDate = adapter.addMinutes(data.start, EVENT_DRAG_PRECISION_MINUTE);
           const newEndDate = adapter.isAfter(cursorDate, minEndDate) ? cursorDate : minEndDate;
 
-          return dropFromInside(data, data.start, newEndDate);
+          return getDataFromInside(data, data.start, newEndDate);
         }
       }
 
       // Move a Standalone Event into the Time Grid
       if (data.source === 'StandaloneEvent') {
-        return dropFromOutside(data, addOffsetToDate(start, cursorOffsetMs));
+        return getDataFromOutside(data, addOffsetToDate(start, cursorOffsetMs));
       }
 
       return undefined;
