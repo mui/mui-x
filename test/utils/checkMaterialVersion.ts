@@ -1,5 +1,4 @@
 import semver from 'semver';
-import { execa } from 'execa';
 import { isJSDOM } from 'test/utils/skipIf';
 
 type PackageJson = {
@@ -11,6 +10,7 @@ let catalogCache: Record<string, string> | null = null;
 
 async function getCatalog(): Promise<Record<string, string>> {
   if (!catalogCache) {
+    const { execa } = await import('execa');
     const { stdout } = await execa('pnpm', ['config', 'list', '--json']);
     const pnpmWorkspaceConfig = JSON.parse(stdout);
     catalogCache = pnpmWorkspaceConfig.catalog as Record<string, string>;
