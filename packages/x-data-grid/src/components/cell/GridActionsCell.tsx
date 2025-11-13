@@ -54,24 +54,21 @@ function GridActionsCell(props: GridActionsCellProps) {
   const buttonId = useId();
   const rootProps = useGridRootProps();
 
-  const actions = React.useMemo(() => {
-    const actionsArray: React.ReactElement<GridActionsCellItemProps>[] = [];
-    React.Children.forEach(children, (child) => {
-      // Unwrap React.Fragment
-      if (React.isValidElement<GridActionsCellItemProps>(child)) {
-        if (child.type === React.Fragment) {
-          React.Children.forEach(child.props.children, (fragChild) => {
-            if (React.isValidElement<GridActionsCellItemProps>(fragChild)) {
-              actionsArray.push(fragChild);
-            }
-          });
-        } else {
-          actionsArray.push(child);
-        }
+  const actions: React.ReactElement<GridActionsCellItemProps>[] = [];
+  React.Children.forEach(children, (child) => {
+    // Unwrap React.Fragment
+    if (React.isValidElement<GridActionsCellItemProps>(child)) {
+      if (child.type === React.Fragment) {
+        React.Children.forEach(child.props.children, (fragChild) => {
+          if (React.isValidElement<GridActionsCellItemProps>(fragChild)) {
+            actions.push(fragChild);
+          }
+        });
+      } else {
+        actions.push(child);
       }
-    });
-    return actionsArray;
-  }, [children]);
+    }
+  });
 
   const iconButtons = actions.filter((option) => !option.props.showInMenu);
   const menuButtons = actions.filter((option) => option.props.showInMenu);
