@@ -15,11 +15,11 @@ Common conformance guidelines for accessibility include:
 WCAG 2.1 has three levels of conformance: A, AA, and AAA.
 Level AA exceeds the basic criteria for accessibility and is a common target for most organizations, so this is what we aim to support.
 
-The [WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) provide valuable information on how to optimize the accessibility of a Data Grid.
+The [WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) provide valuable information on how to optimize the accessibility of a `DataGrid`.
 
 ## Density
 
-The Data Grid exposes the `density` prop which supports the following values:
+`DataGrid` exposes the `density` prop which supports the following values:
 
 - `standard` (default)
 - `compact`
@@ -55,7 +55,7 @@ You can set the density programmatically in one of the following ways:
 The `density` prop applies the values determined by the `rowHeight` and `columnHeaderHeight` props, if supplied.
 The user can override this setting with the optional toolbar density selector.
 
-You can create a custom toolbar with a density selector that lets users change the density of the Data Grid, as shown in the demo below.
+You can create a custom toolbar with a density selector that lets users change the density of the `DataGrid`, as shown in the demo below.
 
 {{"demo": "DensitySelectorGrid.js", "bg": "inline"}}
 
@@ -63,22 +63,22 @@ See the [Toolbar component—Settings menu](/x/react-data-grid/components/toolba
 
 ## Keyboard navigation
 
-The Data Grid listens for keyboard interactions from the user and emits events in response to key presses within cells.
+`DataGrid` listens for keyboard interactions from the user and emits events in response to key presses within cells.
 
 ### Tab sequence
 
 According to [WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/patterns/grid/), only one of the focusable elements contained by a composite widget should be included in the page tab sequence.
 For an element to be included in the tab sequence, it needs to have a `tabIndex` value of zero or greater.
 
-When a user focuses on a Data Grid cell, the first inner element with `tabIndex={0}` receives the focus.
+When a user focuses on a `DataGrid` cell, the first inner element with `tabIndex={0}` receives the focus.
 If there is no element with `tabIndex={0}`, the focus is set on the cell itself.
 
-The two Data Grids below illustrate how the user experience is impacted by improper management of the page tab sequence, making it difficult to navigate through the data set:
+The two data grids below illustrate how the user experience is impacted by improper management of the page tab sequence, making it difficult to navigate through the data set:
 
 {{"demo": "FocusManagement.js", "bg": "inline", "defaultCodeOpen": false}}
 
 If you customize cell rendering with the [`renderCell`](/x/react-data-grid/column-definition/#rendering-cells) method, you become responsible for removing focusable elements from the page tab sequence.
-Use the `tabIndex` prop passed to the `renderCell` params to determine if the rendered cell has focus and if, as a result, the inner elements should be removed from the tab sequence:
+Use the `tabIndex` prop passed to the `renderCell` params to determine if the rendered cell has focus and, as a result, whether the inner elements should be removed from the tab sequence:
 
 ```jsx
 renderCell: (params) => (
@@ -93,7 +93,7 @@ renderCell: (params) => (
 ### Tab navigation
 
 While the default tab sequence behavior works well for most use cases, you may want to customize how the <kbd class="key">Tab</kbd> key navigates within the grid.
-The Data Grid provides the `tabNavigation` prop to control this behavior.
+`DataGrid` provides the `tabNavigation` prop to control this behavior.
 
 ```tsx
 <DataGrid rows={rows} columns={columns} tabNavigation="content" />
@@ -101,8 +101,8 @@ The Data Grid provides the `tabNavigation` prop to control this behavior.
 
 The `tabNavigation` prop supports the following values:
 
-- **`"none"`** (default): This is the standard tab sequence behavior described above.
-  The Data Grid does not handle <kbd class="key">Tab</kbd> key presses, allowing the browser's default tab sequence to control focus movement.
+- **`"none"`** (default): This is the standard tab sequence behavior described above, and it is in line with the [`grid` composite widget pattern](https://www.w3.org/WAI/ARIA/apg/patterns/grid/), which states that only one of the focusable elements contained by the grid is included in the page tab sequence.
+  In this case, `DataGrid` does not handle <kbd class="key">Tab</kbd> key presses, allowing the browser's default tab sequence to control focus movement.
   Pressing <kbd class="key">Tab</kbd> or <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Tab</kbd></kbd> will move focus to the next or previous element in the page's tab sequence, which may move focus outside of the grid.
 
 - **`"content"`**: <kbd class="key">Tab</kbd> navigation is enabled only for grid cells (content area).
@@ -122,7 +122,7 @@ The demo below demonstrates how each `tabNavigation` mode affects keyboard navig
 
 :::info
 The tab barriers above and below the grid in the demo are included to make it easier to track navigation outside of the grid without leaving the demo area.
-Press <kbd class="key">Tab</kbd> key multiple times to pass the barrier.
+Press the <kbd class="key">Tab</kbd> key multiple times to pass the barrier.
 :::
 
 {{"demo": "TabNavigation.js", "bg": "inline"}}
