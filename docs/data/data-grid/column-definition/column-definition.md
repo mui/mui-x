@@ -339,8 +339,10 @@ You can add the `showInMenu` prop on the `GridActionsCellItem` elements to signa
 }
 ```
 
+<!-- TODO(v9): remove the warning below -->
+
 :::warning
-This is the recommended way to define actions in the column definition starting from v8.18.0.
+This is the recommended way to define actions in the column definition starting from v8.19.0.
 The `getActions` method that returned an array of actions is deprecated, and will be removed in a future version.
 :::
 
