@@ -9,7 +9,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 <!-- generated comparing v8.17.0..master -->
 
-_Nov 12, 2025_
+_Nov 13, 2025_
 
 We'd like to extend a big thank you to the 14 contributors who made this release possible. Here are some highlights ✨:
 
