@@ -1027,13 +1027,6 @@ export function applyRecurringUpdateOnlyThis(
   occurrenceStart: SchedulerValidDate,
   changes: SchedulerEventUpdatedProperties,
 ): UpdateEventsParameters {
-  const propertiesToCopyFromModel: Partial<SchedulerEvent> = {
-    ...originalEvent.modelInBuiltInFormat!,
-  };
-  delete propertiesToCopyFromModel.id;
-  delete propertiesToCopyFromModel.rrule;
-  delete propertiesToCopyFromModel.exDates;
-
   return {
     created: [createEventFromRecurringEvent(originalEvent, changes)],
     updated: [
@@ -1045,6 +1038,9 @@ export function applyRecurringUpdateOnlyThis(
   };
 }
 
+/**
+ * Generates the property to pass to `store.updateEvents()` to create an event extracted from a potentially recurring event.
+ */
 export function createEventFromRecurringEvent(
   originalEvent: SchedulerProcessedEvent,
   changes: Partial<SchedulerEvent>,
