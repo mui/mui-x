@@ -8,6 +8,8 @@ import {
   SchedulerEventModelStructure,
   SchedulerResourceModelStructure,
   SchedulerEvent,
+  SchedulerEventCreationProperties,
+  SchedulerEventUpdatedProperties,
 } from '../../models';
 import { processEvent } from '../../process-event';
 import { Adapter } from '../../use-adapter/useAdapter.types';
@@ -96,10 +98,10 @@ export function getProcessedEventFromModel<TEvent extends object>(
  */
 export function getUpdatedEventModelFromChanges<TEvent extends object>(
   oldModel: TEvent,
-  changes: Partial<SchedulerEvent>,
+  changes: SchedulerEventUpdatedProperties,
   eventModelStructure: SchedulerEventModelStructure<TEvent> | undefined,
 ): TEvent {
-  return createOrUpdateEventModelFromBuiltInEvnetModel<TEvent, false>(
+  return createOrUpdateEventModelFromBuiltInEventModel<TEvent, false>(
     oldModel,
     changes,
     eventModelStructure,
@@ -110,22 +112,25 @@ export function getUpdatedEventModelFromChanges<TEvent extends object>(
  * Create an event model from a processed event using the provided model structure.
  */
 export function createEventModel<TEvent extends object>(
-  event: SchedulerEvent,
+  event: SchedulerEventCreationProperties,
   eventModelStructure: SchedulerEventModelStructure<TEvent> | undefined,
-): TEvent {
-  return createOrUpdateEventModelFromBuiltInEvnetModel<TEvent, true>(
+) {
+  const id = crypto.randomUUID();
+  const model = createOrUpdateEventModelFromBuiltInEventModel<TEvent, true>(
     null,
-    event,
+    { ...event, id },
     eventModelStructure,
   );
+
+  return { id, model };
 }
 
-function createOrUpdateEventModelFromBuiltInEvnetModel<
+function createOrUpdateEventModelFromBuiltInEventModel<
   TEvent extends object,
   TIsCreating extends boolean,
 >(
   oldModel: TIsCreating extends true ? null : TEvent,
-  changes: TIsCreating extends true ? SchedulerEvent : Partial<SchedulerEvent>,
+  changes: TIsCreating extends true ? SchedulerEvent : SchedulerEventUpdatedProperties,
   eventModelStructure: SchedulerEventModelStructure<any> | undefined,
 ) {
   let eventModel = oldModel == null ? {} : { ...oldModel };
@@ -138,6 +143,14 @@ function createOrUpdateEventModelFromBuiltInEvnetModel<
       if (setter) {
         // @ts-ignore
         propertiesWithSetter.push([setter, changes[key]]);
+      } else if (changes[key] === undefined) {
+        // @ts-ignore
+        delete eventModel[key];
+      }
+      // If the property was set to its default value, remove it from the model
+      else if (oldModel != null && key === 'allDay' && changes[key] === false) {
+        // @ts-ignore
+        delete eventModel[key];
       } else {
         // @ts-ignore
         eventModel[key] = changes[key];
