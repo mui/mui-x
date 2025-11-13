@@ -70,10 +70,9 @@ describe('<DataGridPro /> - Tab navigation', () => {
       expect(initialActiveCell).to.equal('0-0');
 
       // Tab should not be handled by the grid - should allow default browser behavior
-      // We verify this by checking that the focus doesn't move to the next cell
       await user.keyboard('{Tab}');
-      const afterTabActiveCell = getActiveCell();
-      expect(afterTabActiveCell).to.equal(null);
+      // Active element is body
+      expect(document.activeElement).to.equal(document.body);
     });
 
     it('should not handle Tab key in headers', async () => {
@@ -181,7 +180,7 @@ describe('<DataGridPro /> - Tab navigation', () => {
       expect(getActiveCell()).to.equal('0-3');
     });
 
-    it('should focus outside of the grid when tabNavigation at the first or the last cell', async () => {
+    it('should focus outside of the grid when navigating with tab key at the first or the last cell', async () => {
       const { user } = render(
         <div style={{ width: 600, height: 400 }}>
           <DataGridPro rows={rows} columns={columns} tabNavigation="content" />
