@@ -7,7 +7,11 @@ import {
   SchedulerValidDate,
 } from '../models';
 import { SchedulerState as State } from '../utils/SchedulerStore/SchedulerStore.types';
-import { getWeekDayCode, serializeRRule } from '../utils/recurring-event-utils';
+import {
+  computeMonthlyOrdinal,
+  getWeekDayCode,
+  serializeRRule,
+} from '../utils/recurring-event-utils';
 
 export const schedulerRecurringEventSelectors = {
   /**
@@ -143,6 +147,30 @@ export const schedulerRecurringEventSelectors = {
         const date = adapter.addDays(start, i);
         return { code: getWeekDayCode(adapter, date), date };
       });
+    },
+  ),
+
+  /**
+   * Returns month reference for the given occurrence: dayOfMonth, weekday code and ordinal.
+   */
+  monthlyReference: createSelectorMemoized(
+    (state: State) => state.adapter,
+    (
+      adapter,
+      date: SchedulerProcessedDate,
+    ): {
+      dayOfMonth: number;
+      code: RecurringEventWeekDayCode;
+      ord: number;
+      date: SchedulerValidDate;
+    } => {
+      const d = adapter.startOfDay(date.value);
+      return {
+        dayOfMonth: adapter.getDate(d),
+        code: getWeekDayCode(adapter, d),
+        ord: computeMonthlyOrdinal(adapter, d),
+        date: d,
+      };
     },
   ),
 };

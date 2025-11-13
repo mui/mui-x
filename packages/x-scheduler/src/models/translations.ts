@@ -73,9 +73,14 @@ export interface SchedulerTranslations {
   recurrenceMainSelectCustomLabel: string;
   recurrenceWeeklyFrequencyLabel: string;
   recurrenceWeeklyPresetLabel: (weekday: string) => string;
+  recurrenceMonthlyDayOfMonthLabel: (dayNumber: number) => string;
   recurrenceMonthlyFrequencyLabel: string;
+  recurrenceMonthlyLastWeekLabel: (weekDay: string) => string;
+  recurrenceMonthlyLastWeekShort: (weekDay: string) => string;
   recurrenceMonthlyPresetLabel: (dayNumber: number) => string;
-  recurrenceWeeklyDaysLabel: string;
+  recurrenceMonthlyWeekNumberLabel: (ord: number, weekDay: string) => string;
+  recurrenceMonthlyWeekNumberShort: (ord: number, weekDay: string) => string;
+  recurrenceWeeklyMonthlySpecificInputsLabel: string;
   recurrenceYearlyFrequencyLabel: string;
   recurrenceYearlyPresetLabel: (date: string) => string;
   resourceLabel: string;

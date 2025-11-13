@@ -7,7 +7,6 @@ import { Input } from '@base-ui-components/react/input';
 import { Select } from '@base-ui-components/react/select';
 import { RadioGroup } from '@base-ui-components/react/radio-group';
 import { Radio } from '@base-ui-components/react/radio';
-import { Separator } from '@base-ui-components/react/separator';
 import { ChevronDown } from 'lucide-react';
 import { Toggle } from '@base-ui-components/react/toggle';
 import { ToggleGroup } from '@base-ui-components/react/toggle-group';
@@ -15,6 +14,7 @@ import {
   SchedulerEventOccurrence,
   RecurringEventFrequency,
   RecurringEventPresetKey,
+  RecurringEventByDayValue,
   RecurringEventWeekDayCode,
 } from '@mui/x-scheduler-headless/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
@@ -48,6 +48,11 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     occurrence.id,
   );
   const customDisabled = controlled.recurrenceSelection !== 'custom' || isPropertyReadOnly('rrule');
+  const monthlyRef = useStore(
+    store,
+    schedulerRecurringEventSelectors.monthlyReference,
+    occurrence.start,
+  );
 
   const handleRecurrenceSelectionChange = (value: RecurringEventPresetKey | null | 'custom') => {
     if (value === 'custom') {
@@ -139,18 +144,29 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     }));
   };
 
-  const handleChangeWeeklyDays = React.useCallback(
-    (next: string[] | RecurringEventWeekDayCode[]) => {
-      setControlled((prev) => ({
-        ...prev,
-        rruleDraft: {
-          ...prev.rruleDraft,
-          byDay: next as RecurringEventWeekDayCode[],
-        },
-      }));
-    },
-    [setControlled],
-  );
+  const handleChangeWeeklyDays = (next: RecurringEventWeekDayCode[]) => {
+    setControlled((prev) => ({
+      ...prev,
+      rruleDraft: {
+        ...prev.rruleDraft,
+        byDay: next,
+      },
+    }));
+  };
+
+  const handleChangeMonthlyGroup = (next: string[]) => {
+    const nextKey = next[0];
+
+    setControlled((prev) => {
+      if (nextKey === 'byDay') {
+        const value = `${monthlyRef.ord}${monthlyRef.code}` as RecurringEventByDayValue;
+        const { byMonthDay, ...rest } = prev.rruleDraft;
+        return { ...prev, rruleDraft: { ...rest, byDay: [value] } };
+      }
+      const { byDay, ...rest } = prev.rruleDraft;
+      return { ...prev, rruleDraft: { ...rest, byMonthDay: [monthlyRef.dayOfMonth] } };
+    });
+  };
 
   const customEndsValue: 'never' | 'after' | 'until' = getEndsSelectionFromRRule(
     controlled.rruleDraft,
@@ -207,12 +223,42 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
   const weeklyDayItems = React.useMemo(
     () =>
       weeklyDays.map(({ code, date }) => ({
-        code,
+        value: code,
         ariaLabel: adapter.format(date, 'weekday'),
-        text: adapter.format(date, 'weekdayShort'),
+        label: adapter.format(date, 'weekdayShort'),
       })),
     [adapter, weeklyDays],
   );
+
+  const monthlyItems = React.useMemo(() => {
+    const ord = monthlyRef.ord;
+    const dayOfMonth = translations.recurrenceMonthlyDayOfMonthLabel?.(monthlyRef.dayOfMonth);
+    const isLast = ord === -1;
+    const weekdayShort = adapter.formatByString(monthlyRef.date, 'ccc');
+    const weekAriaLabel = isLast
+      ? translations.recurrenceMonthlyLastWeekLabel(weekday)
+      : translations.recurrenceMonthlyWeekNumberLabel?.(ord, weekday);
+    const weekText = isLast
+      ? translations.recurrenceMonthlyLastWeekShort(weekdayShort)
+      : translations.recurrenceMonthlyWeekNumberShort?.(ord, weekdayShort);
+
+    return [
+      {
+        value: 'byMonthDay',
+        ariaLabel: `${dayOfMonth}`,
+        label: dayOfMonth,
+      },
+      {
+        value: 'byDay',
+        ariaLabel: weekAriaLabel,
+        label: weekText,
+      },
+    ];
+  }, [adapter, monthlyRef.date, monthlyRef.dayOfMonth, monthlyRef.ord, translations, weekday]);
+
+  const monthlyMode: 'byMonthDay' | 'byDay' = controlled.rruleDraft.byDay?.length
+    ? 'byDay'
+    : 'byMonthDay';
 
   return (
     <Tabs.Panel value="recurrence" keepMounted>
@@ -306,17 +352,17 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
           </Field.Root>
         </Fieldset.Root>
         {controlled.recurrenceSelection === 'custom' && controlled.rruleDraft.freq === 'WEEKLY' && (
-          <Field.Root className="EventPopoverInputsRow" name="recurrenceWeeklyDays">
-            <Field.Label>{translations.recurrenceWeeklyDaysLabel}</Field.Label>
+          <Field.Root className="EventPopoverInputsRow">
+            <Field.Label>{translations.recurrenceWeeklyMonthlySpecificInputsLabel}</Field.Label>
             <ToggleGroup
               className="ToggleGroup"
               multiple
               value={controlled.rruleDraft.byDay}
               onValueChange={handleChangeWeeklyDays}
             >
-              {weeklyDayItems.map(({ code, ariaLabel, text }) => (
-                <Toggle key={code} aria-label={ariaLabel} value={code} className="ToggleItem">
-                  {text}
+              {weeklyDayItems.map(({ value, ariaLabel, label }) => (
+                <Toggle key={value} aria-label={ariaLabel} value={value} className="ToggleItem">
+                  {label}
                 </Toggle>
               ))}
             </ToggleGroup>
@@ -324,7 +370,20 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
         )}
         {controlled.recurrenceSelection === 'custom' &&
           controlled.rruleDraft.freq === 'MONTHLY' && (
-            <p className="EventPopoverRecurrenceFieldset">TODO: Monthly Fields</p>
+            <Field.Root className="EventPopoverInputsRow">
+              <Field.Label>{translations.recurrenceWeeklyMonthlySpecificInputsLabel}</Field.Label>
+              <ToggleGroup
+                className="ToggleGroup"
+                value={[monthlyMode]}
+                onValueChange={handleChangeMonthlyGroup}
+              >
+                {monthlyItems.map(({ value, ariaLabel, label }) => (
+                  <Toggle key={value} aria-label={ariaLabel} value={value} className="ToggleItem">
+                    {label}
+                  </Toggle>
+                ))}
+              </ToggleGroup>
+            </Field.Root>
           )}
 
         <Fieldset.Root
