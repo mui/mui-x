@@ -1,0 +1,22 @@
+{
+  "name": "jsdom-regression-repro",
+  "version": "1.0.0",
+  "description": "Minimal reproduction for jsdom getByRole performance regression",
+  "type": "module",
+  "scripts": {
+    "test": "node compare-versions.js",
+    "test:native": "node compare-native.js",
+    "test:getComputedStyle": "node compare-getComputedStyle.js",
+    "test:react-render": "node compare-react-render.js",
+    "test:dom-styles": "node compare-dom-styles.js"
+  },
+  "dependencies": {
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/react": "^16.1.0",
+    "dom-accessibility-api": "^0.5.9",
+    "jsdom-26": "npm:jsdom@26.0.0",
+    "jsdom-27": "npm:jsdom@27.1.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
+}
