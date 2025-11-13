@@ -3,13 +3,14 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useRtl } from '@mui/system/RtlProvider';
 import useId from '@mui/utils/useId';
+import { warnOnce } from '@mui/x-internals/warning';
 import { GridRenderCellParams } from '../../models/params/gridCellParams';
 import { gridClasses } from '../../constants/gridClasses';
 import { GridMenu, GridMenuProps } from '../menu/GridMenu';
 import { GridActionsColDef } from '../../models/colDef/gridColDef';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
-import type { GridActionsCellItemProps } from './GridActionsCellItem';
+import { GridActionsCellItem, type GridActionsCellItemProps } from './GridActionsCellItem';
 
 const hasActions = (colDef: any): colDef is GridActionsColDef =>
   typeof colDef.getActions === 'function';
@@ -22,6 +23,13 @@ interface GridActionsCellProps extends Omit<GridRenderCellParams, 'api'> {
   api?: GridRenderCellParams['api'];
   position?: GridMenuProps['position'];
   children: React.ReactNode;
+  /**
+   * If true, the children passed to the component will not be validated.
+   * If false, only `GridActionsCellItem` and `React.Fragment` are allowed as children.
+   * Only use this prop if you know what you are doing.
+   * @default false
+   */
+  suppressChildrenValidation?: boolean;
 }
 
 function GridActionsCell(props: GridActionsCellProps) {
@@ -40,6 +48,7 @@ function GridActionsCell(props: GridActionsCellProps) {
     tabIndex,
     position = 'bottom-end',
     children,
+    suppressChildrenValidation,
     ...other
   } = props;
   const [focusedButtonIndex, setFocusedButtonIndex] = React.useState(-1);
@@ -64,8 +73,14 @@ function GridActionsCell(props: GridActionsCellProps) {
             actions.push(fragChild);
           }
         });
-      } else {
+      } else if (child.type === GridActionsCellItem || suppressChildrenValidation) {
         actions.push(child);
+      } else {
+        const childType = typeof child.type === 'function' ? child.type.name : child.type;
+        warnOnce(
+          `MUI X: Invalid child type in \`GridActionsCell\`. Expected \`GridActionsCellItem\` or \`React.Fragment\`, got \`${childType}\`.`,
+          'error',
+        );
       }
     }
   });
