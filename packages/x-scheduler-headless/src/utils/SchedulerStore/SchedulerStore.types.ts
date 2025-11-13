@@ -2,8 +2,8 @@ import {
   SchedulerProcessedEvent,
   SchedulerEventColor,
   SchedulerOccurrencePlaceholder,
-  CalendarResource,
-  CalendarResourceId,
+  SchedulerResource,
+  SchedulerResourceId,
   SchedulerEventUpdatedProperties,
   SchedulerValidDate,
   SchedulerEventId,
@@ -49,15 +49,15 @@ export interface SchedulerState<TEvent extends object = any> {
   /**
    * The IDs of the resources the events can be assigned to.
    */
-  resourceIdList: readonly CalendarResourceId[];
+  resourceIdList: readonly SchedulerResourceId[];
   /**
    * A lookup to get the children of a resource from its ID.
    */
-  resourceChildrenIdLookup: Map<CalendarResourceId, CalendarResourceId[]>;
+  resourceChildrenIdLookup: Map<SchedulerResourceId, SchedulerResourceId[]>;
   /**
    * A lookup to get the processed resource from its ID.
    */
-  processedResourceLookup: Map<CalendarResourceId, CalendarResource>;
+  processedResourceLookup: Map<SchedulerResourceId, SchedulerResource>;
   /**
    * The structure of the resource model.
    * It defines how to read properties of the resource model.
@@ -68,7 +68,7 @@ export interface SchedulerState<TEvent extends object = any> {
    * Visibility status for each resource.
    * A resource is visible if it is registered in this lookup with `true` value or if it is not registered at all.
    */
-  visibleResources: Map<CalendarResourceId, boolean>;
+  visibleResources: Map<SchedulerResourceId, boolean>;
   /**
    * Whether the event can be dragged to change its start and end dates without changing the duration.
    */
