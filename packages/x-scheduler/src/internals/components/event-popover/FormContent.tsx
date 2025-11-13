@@ -121,7 +121,7 @@ export function FormContent(props: FormContentProps) {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const { start, end } = computeRange(store, controlled);
+    const { start, end } = computeRange(adapter, controlled);
 
     const form = new FormData(event.currentTarget);
 
