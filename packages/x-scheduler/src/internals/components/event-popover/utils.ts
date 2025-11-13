@@ -1,4 +1,9 @@
-import { CalendarResourceId, SchedulerValidDate } from '@mui/x-scheduler-headless/models';
+import {
+  SchedulerResourceId,
+  RecurringEventPresetKey,
+  RecurringEventRecurrenceRule,
+  SchedulerValidDate,
+} from '@mui/x-scheduler-headless/models';
 import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
 import { SchedulerTranslations } from '../../../models';
 
@@ -7,9 +12,13 @@ export interface ControlledValue {
   startTime: string;
   endDate: string;
   endTime: string;
-  resourceId: CalendarResourceId | null;
+  resourceId: SchedulerResourceId | null;
   allDay: boolean;
+  recurrenceSelection: RecurringEventPresetKey | null | 'custom';
+  rruleDraft: RecurringEventRecurrenceRule;
 }
+
+export type EndsSelection = 'never' | 'after' | 'until';
 
 export function computeRange(adapter: Adapter, next: ControlledValue) {
   if (next.allDay) {
@@ -79,4 +88,20 @@ export function getRecurrenceLabel(
     default:
       return translations.recurrenceNoRepeat;
   }
+}
+
+export function getEndsSelectionFromRRule(rrule?: {
+  count?: number | null;
+  until?: SchedulerValidDate | null;
+}): EndsSelection {
+  if (!rrule) {
+    return 'never';
+  }
+  if (rrule.until) {
+    return 'until';
+  }
+  if (rrule.count && rrule.count > 0) {
+    return 'after';
+  }
+  return 'never';
 }

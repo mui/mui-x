@@ -124,21 +124,27 @@ export const usePicker = <
     getStepNavigation,
   });
 
-  const clearValue = useEventCallback(() => setValue(valueManager.emptyValue));
+  const clearValue = useEventCallback(() => setValue(valueManager.emptyValue, { source: 'view' }));
 
   const setValueToToday = useEventCallback(() =>
-    setValue(valueManager.getTodayValue(adapter, timezone, valueType)),
+    setValue(valueManager.getTodayValue(adapter, timezone, valueType), {
+      source: 'view',
+    }),
   );
 
-  const acceptValueChanges = useEventCallback(() => setValue(value));
+  const acceptValueChanges = useEventCallback(() => setValue(value, { source: 'view' }));
 
   const cancelValueChanges = useEventCallback(() =>
-    setValue(state.lastCommittedValue, { skipPublicationIfPristine: true }),
+    setValue(state.lastCommittedValue, {
+      skipPublicationIfPristine: true,
+      source: 'view',
+    }),
   );
 
   const dismissViews = useEventCallback(() => {
     setValue(value, {
       skipPublicationIfPristine: true,
+      source: 'view',
     });
   });
 
