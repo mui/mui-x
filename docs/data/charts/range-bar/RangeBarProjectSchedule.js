@@ -5,7 +5,11 @@ import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import * as React from 'react';
 import { useDataset } from '@mui/x-charts/hooks';
 import { useTheme, styled } from '@mui/system';
-import { ChartsTooltipContainer, useAxesTooltip } from '@mui/x-charts/ChartsTooltip';
+import {
+  ChartsTooltipContainer,
+  useAxesTooltip,
+  useItemTooltip,
+} from '@mui/x-charts/ChartsTooltip';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 
 import { rainbowSurgePalette } from '@mui/x-charts/colorPalettes';
@@ -14,6 +18,36 @@ import { ChartsWrapper } from '@mui/x-charts-pro/ChartsWrapper';
 import { ChartsSurface } from '@mui/x-charts-pro/ChartsSurface';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+
+import { ScatterPlot } from '@mui/x-charts/ScatterChart';
+
+const importantHappeningsLabels = [
+  'Final design process under way.\nExploratory archaeology digs begin.',
+  'South Boston Haul Road opens',
+  'New Broadway Bridge opens.\nLeverett Circle Connector Bridge opens.',
+  'Leonard P. Zakim Bunker Hill Bridge completed',
+  'I-90 Connector from South Boston to Rt. 1A in East Boston opens in January.\nI-93 Northbound opens in March.\nI-93 Southbound opens in December.',
+  'Tunnel from Storrow Drive to Leverett Circle Connector opens.',
+  [
+    'Full opening of I-93 South.',
+    'Opening of Dewey Square Tunnel, including new entrance and exit ramps.',
+    'Opening of the two cantilevered lanes on Leonard P. Zakim Bunker Hill Bridge.',
+    'Opening of permanent ramps and roadways at I-90/I-93 Interchange and in other areas.',
+  ].join('\n'),
+  'Spectacle Island Park opens to the public.',
+  'Restoration of Boston city streets.',
+];
+
+const importantHappenings = [
+  { x: 1988, y: 3 },
+  { x: 1993, y: 4 },
+  { x: 1999, y: 5 },
+  { x: 2002, y: 5 },
+  { x: 2003, y: 5 },
+  { x: 2004, y: 6 },
+  { x: 2006, y: 7 },
+  { x: 2007, y: 8 },
+];
 
 // Source: https://www.mass.gov/info-details/the-big-dig-project-background
 const bigDigDataset = [
@@ -173,6 +207,11 @@ export default function RangeBarProjectSchedule() {
         return colors[2];
       },
     },
+    {
+      type: 'scatter',
+      data: importantHappenings,
+      color: palette[2],
+    },
   ];
 
   return (
@@ -190,6 +229,7 @@ export default function RangeBarProjectSchedule() {
           <ChartsClipPath id={clipPathId} />
           <g clipPath={`url(#${clipPathId})`}>
             <RangeBarPlot skipAnimation />
+            <ScatterPlot />
             <ChartsAxisHighlight y="band" />
           </g>
           <ChartsTooltipContainer>
@@ -226,8 +266,14 @@ const TooltipContainer = styled('div')(({ theme }) => ({
 
 function TooltipContent() {
   const dataset = useDataset();
-  const tooltipData = useAxesTooltip();
-  const dataIndex = tooltipData?.[0]?.dataIndex;
+  const itemTooltipData = useItemTooltip();
+  const axesTooltipData = useAxesTooltip();
+
+  if (itemTooltipData) {
+    return <HappeningTooltip />;
+  }
+
+  const dataIndex = axesTooltipData?.[0]?.dataIndex;
 
   if (dataIndex === undefined) {
     return null;
@@ -249,6 +295,25 @@ function TooltipContent() {
           </li>
         ))}
       </ul>
+    </TooltipContainer>
+  );
+}
+
+function HappeningTooltip() {
+  const tooltipData = useItemTooltip();
+  const dataIndex = tooltipData?.identifier.dataIndex;
+
+  if (dataIndex === undefined) {
+    return null;
+  }
+
+  const happening = importantHappenings[dataIndex];
+
+  return (
+    <TooltipContainer>
+      <Typography>
+        {happening.x}: {importantHappeningsLabels[dataIndex]}
+      </Typography>
     </TooltipContainer>
   );
 }
