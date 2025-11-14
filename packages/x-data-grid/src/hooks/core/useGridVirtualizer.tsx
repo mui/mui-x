@@ -322,7 +322,7 @@ export function useGridVirtualizer() {
     ),
 
     renderInfiniteLoadingTrigger: React.useCallback(
-      (id) => (apiRef as any).current.getInfiniteLoadingTriggerElement?.({ lastRowId: id }),
+      (id: any) => (apiRef as any).current.getInfiniteLoadingTriggerElement?.({ lastRowId: id }),
       [apiRef],
     ),
   });
