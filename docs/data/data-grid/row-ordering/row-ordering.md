@@ -88,7 +88,7 @@ For now, row reordering is disabled if sorting is applied to the Data Grid.
 ## Disable reordering of specific rows
 
 To disable reordering of specific rows, you can pass a callback to the `isRowReorderable()` prop.
-This callback is called with `row` and `rowNode` objects to allow disabling rows based on multiple criteria.
+This callback is called with `row` and `rowNode` objects so that rows can be disabled based on multiple criteria.
 
 ```tsx
 const isRowReorderable = (params: IsRowReorderableParams) => {
@@ -108,15 +108,15 @@ The demo below shows how to disable reordering of specific rows based on the row
 Sometimes, the information provided by the source row isn't enough to determine if a reorder operation is valid.
 In these cases, you can pass a callback to the `isValidRowReorder()` prop.
 
-This callback is fired _during_ the drag operation so it provides information about the dragged row and potential row where it is being dropped.
-It is called with a `ReorderValidationContext` object to allow disabling specific reorder operations based on the context.
+This callback is fired _during_ the drag operation so it provides information about the dragged row and the potential position for it to be dropped.
+It is called with a `ReorderValidationContext` object so that specific reorder operations can be disabled based on the context.
 
 The demo below prohibits reordering leaf rows under the same parent and only allows cross-parent operations.
 
 {{"demo": "RowReorderingValidation.js", "bg": "inline"}}
 
 :::warning
-The row reorder feature has an internal validation ruleset that makes sure that only the supported use-cases are allowed.
+The row reorder feature has an internal validation ruleset to ensure that only the supported use cases are allowed.
 `isValidRowReorder()` should only be used to add more validation rules.
 :::
 
