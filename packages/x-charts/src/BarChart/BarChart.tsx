@@ -28,8 +28,7 @@ import { ChartsSurface } from '../ChartsSurface';
 import { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
 import { ChartsWrapper } from '../ChartsWrapper';
 import { BarChartPluginSignatures } from './BarChart.plugins';
-import { RangeBarPlot } from './RangeBarPlot';
-import { RangeBarSeriesType } from '../models/seriesType/rangeBar';
+import { RangeBarSeriesType } from '../models';
 
 export interface BarChartSlots
   extends ChartsAxisSlots,
@@ -50,6 +49,7 @@ export interface BarChartSlotProps
 
 export type BarSeries = MakeOptional<BarSeriesType, 'type'>;
 export type RangeBarSeries = RangeBarSeriesType;
+
 export interface BarChartProps
   extends Omit<
       ChartContainerProps<'bar', BarChartPluginSignatures>,
@@ -121,7 +121,6 @@ const BarChart = React.forwardRef(function BarChart(
     chartsWrapperProps,
     chartContainerProps,
     barPlotProps,
-    rangeBarPlotProps,
     gridProps,
     clipPathProps,
     clipPathGroupProps,
@@ -148,7 +147,6 @@ const BarChart = React.forwardRef(function BarChart(
           <ChartsGrid {...gridProps} />
           <g {...clipPathGroupProps}>
             <BarPlot {...barPlotProps} />
-            <RangeBarPlot {...rangeBarPlotProps} />
             <ChartsOverlay {...overlayProps} />
             <ChartsAxisHighlight {...axisHighlightProps} />
           </g>

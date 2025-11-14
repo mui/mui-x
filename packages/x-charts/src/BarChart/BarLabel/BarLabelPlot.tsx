@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { AnimationData } from '../types';
 import { BarLabelItem, BarLabelItemProps } from './BarLabelItem';
-import { useUtilityClasses } from '../barClasses';
 import type { SeriesId } from '../../models/seriesType/common';
 import { BarSeriesType, BarValueType } from '../../models/seriesType/bar';
 import { RangeBarValueType } from '../../models/seriesType/rangeBar';
@@ -11,6 +10,7 @@ interface BarLabelPlotProps<
   V extends BarValueType | RangeBarValueType | null = BarValueType | null,
 > {
   processedSeries: ProcessedBarLabelSeriesData<V>;
+  className: string;
   skipAnimation?: boolean;
   barLabel?: BarLabelItemProps<V | null>['barLabel'];
 }
@@ -36,9 +36,8 @@ export interface ProcessedBarLabelData<V extends BarValueType | RangeBarValueTyp
 function BarLabelPlot<V extends BarValueType | RangeBarValueType | null = BarValueType | null>(
   props: BarLabelPlotProps<V>,
 ) {
-  const { processedSeries, skipAnimation, ...other } = props;
+  const { processedSeries, className, skipAnimation, ...other } = props;
   const { seriesId, data } = processedSeries;
-  const classes = useUtilityClasses();
 
   const barLabel = processedSeries.barLabel ?? props.barLabel;
 
@@ -47,7 +46,7 @@ function BarLabelPlot<V extends BarValueType | RangeBarValueType | null = BarVal
   }
 
   return (
-    <g key={seriesId} className={classes.seriesLabels} data-series={seriesId}>
+    <g key={seriesId} className={className} data-series={seriesId}>
       {data.map(({ xOrigin, yOrigin, x, y, dataIndex, color, value, width, height, layout }) => (
         <BarLabelItem
           key={dataIndex}

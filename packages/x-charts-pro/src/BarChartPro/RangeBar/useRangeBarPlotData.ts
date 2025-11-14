@@ -1,20 +1,24 @@
-import { ChartsXAxisProps, ChartsYAxisProps, ComputedAxis } from '../models/axis';
-import getColor from './seriesConfig/rangeBar/getColor';
-import { ChartDrawingArea, useXAxes, useYAxes } from '../hooks';
+import {
+  useRangeBarSeriesContext,
+  ChartDrawingArea,
+  useXAxes,
+  useYAxes,
+} from '@mui/x-charts/hooks';
+import getColor from '@mui/x-charts/BarChart/seriesConfig/rangeBar/getColor';
+import {
+  checkBarChartScaleErrors,
+  ComputedAxis,
+  ComputedAxisConfig,
+} from '@mui/x-charts/internals';
+import { ChartsXAxisProps, ChartsYAxisProps } from '@mui/x-charts/models';
 import { ProcessedRangeBarData, ProcessedRangeBarSeriesData } from './types';
-import { checkScaleErrors } from './checkScaleErrors';
-import { SeriesProcessorResult } from '../internals/plugins/models/seriesConfig/seriesProcessor.types';
-import { ComputedAxisConfig } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxis.types';
-import { useRangeBarSeriesContext } from '../hooks/useRangeBarSeries';
 
 export function useRangeBarPlotData(
   drawingArea: ChartDrawingArea,
   xAxes: ComputedAxisConfig<ChartsXAxisProps>,
   yAxes: ComputedAxisConfig<ChartsYAxisProps>,
 ): ProcessedRangeBarSeriesData[] {
-  const seriesData =
-    useRangeBarSeriesContext() ??
-    ({ series: {}, seriesOrder: [] } satisfies SeriesProcessorResult<'rangeBar'>);
+  const seriesData = useRangeBarSeriesContext() ?? { series: {}, seriesOrder: [] };
   const defaultXAxisId = useXAxes().xAxisIds[0];
   const defaultYAxisId = useYAxes().yAxisIds[0];
 
@@ -35,7 +39,7 @@ export function useRangeBarPlotData(
 
     const verticalLayout = series[seriesId].layout === 'vertical';
 
-    checkScaleErrors(
+    checkBarChartScaleErrors(
       verticalLayout,
       seriesId,
       series[seriesId].data.length,

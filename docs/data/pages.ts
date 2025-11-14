@@ -561,6 +561,7 @@ const pages: MuiPage[] = [
           },
           { pathname: '/x/react-charts/gauge' },
           { pathname: '/x/react-charts/radar' },
+          { pathname: '/x/react-charts/range-bar', title: 'Range bar', plan: 'pro' },
           {
             pathname: '/x/react-charts/heatmap',
             title: 'Heatmap',

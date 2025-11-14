@@ -1,4 +1,4 @@
-import { RangeBarPlot } from '@mui/x-charts/BarChart';
+import { RangeBarPlot } from '@mui/x-charts-pro/BarChartPro';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
@@ -7,13 +7,14 @@ import { useDataset } from '@mui/x-charts/hooks';
 import { useTheme, styled } from '@mui/system';
 import { ChartsTooltipContainer, useAxesTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
-
+import { XAxis, YAxis } from '@mui/x-charts/models';
 import { rainbowSurgePalette } from '@mui/x-charts/colorPalettes';
 import { ChartDataProviderPro } from '@mui/x-charts-pro/ChartDataProviderPro';
 import { ChartsWrapper } from '@mui/x-charts-pro/ChartsWrapper';
 import { ChartsSurface } from '@mui/x-charts-pro/ChartsSurface';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import { RangeBarSeries } from '@mui/x-charts/BarChart';
 
 // Source: https://www.mass.gov/info-details/the-big-dig-project-background
 const bigDigDataset = [
@@ -136,8 +137,7 @@ const xAxis = [
     valueFormatter: (value) => value.toString(),
     label: 'Year',
   },
-];
-
+] satisfies XAxis[];
 const yAxis = [
   {
     id: 'y',
@@ -146,7 +146,7 @@ const yAxis = [
     label: 'Project Phase',
     width: 40,
   },
-];
+] satisfies YAxis[];
 
 export default function RangeBarProjectSchedule() {
   const clipPathId = React.useId();
@@ -173,7 +173,7 @@ export default function RangeBarProjectSchedule() {
         return colors[2];
       },
     },
-  ];
+  ] satisfies RangeBarSeries[];
 
   return (
     <ChartDataProviderPro
@@ -225,7 +225,7 @@ const TooltipContainer = styled('div')(({ theme }) => ({
 }));
 
 function TooltipContent() {
-  const dataset = useDataset();
+  const dataset = useDataset<typeof bigDigDataset>();
   const tooltipData = useAxesTooltip();
   const dataIndex = tooltipData?.[0]?.dataIndex;
 
@@ -233,7 +233,7 @@ function TooltipContent() {
     return null;
   }
 
-  const phase = dataset[dataIndex];
+  const phase = dataset![dataIndex];
 
   return (
     <TooltipContainer>
@@ -253,7 +253,7 @@ function TooltipContent() {
   );
 }
 
-function Legend({ series }) {
+function Legend({ series }: { series: { label: string; color: string }[] }) {
   return (
     <Stack direction="row" flexWrap="wrap" columnGap={2} justifyContent="center">
       {series.map((aSeries, index) => (
