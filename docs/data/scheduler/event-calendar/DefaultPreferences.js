@@ -6,7 +6,6 @@ import { initialEvents, resources } from '../datasets/personal-agenda';
 const defaultPreferences = {
   ampm: false,
   showWeekends: false,
-  showWeekNumber: true,
   isSidePanelOpen: false,
 };
 

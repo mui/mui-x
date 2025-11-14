@@ -128,6 +128,60 @@ return (
 
 :::
 
+### Default preferences
+
+```tsx
+const defaultPreferences = {
+  ampm: false,
+  showWeekends: false,
+  isSidePanelOpen: false,
+}
+
+<EventCalendar defaultPreferences={defaultPreferences} />;
+```
+
+{{"demo": "DefaultPreferences.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::success
+You can also control the preferences using `preferences` and `onPreferencesChange` props:
+
+```tsx
+const [preferences, setPreferences] = React.useState<
+  EventCalendarPreferences | undefined
+>(undefined);
+
+return (
+  <EventCalendar preferences={preferences} onPreferencesChange={setPreferences} />
+);
+```
+
+:::
+
+### Preferences menu
+
+You can customize the preferences menu using the `preferencesMenuConfig` prop:
+
+Available properties:
+
+- `toggleWeekendVisibility`: show/hide the menu item that toggles weekend visibility.
+- `toggleWeekNumberVisibility`: show/hide the menu item that toggles week number visibility.
+- `toggleAmpm`: show/hide the menu item that toggles 12/24‑hour time format.
+- `toggleEmptyDaysInAgenda`: show/hide the menu item that toggles the visibility of days with no events in the Agenda view.
+
+```ts
+// will hide the menu
+preferencesMenuConfig={false}
+
+// will hide the menu item responsible for toggling the weekend visibility
+// the other preferences remain visible
+preferencesMenuConfig={{ toggleWeekendVisibility: false }}
+
+// will hide the menu items for toggling weekend and week number visibility
+preferencesMenuConfig={{ toggleWeekendVisibility: false, toggleWeekNumberVisibility: false }}
+```
+
+{{"demo": "PreferencesMenu.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ### Color palettes
 
 The Event Calendar supports several color palettes.
@@ -161,56 +215,3 @@ import { frFR } from '@mui/x-scheduler/translations';
 ```
 
 {{"demo": "Translations.js", "bg": "inline", "defaultCodeOpen": false}}
-
-### Default preferences
-
-```tsx
-const defaultPreferences = {
-  ampm: false,
-  showWeekends: false,
-  showWeekNumber: true,
-  isSidePanelOpen: false,
-}
-
-<EventCalendar defaultPreferences={defaultPreferences} />;
-```
-
-{{"demo": "DefaultPreferences.js", "bg": "inline", "defaultCodeOpen": false}}
-
-:::success
-You can also control the preferences using `preferences` and `onPreferencesChange` props:
-
-```tsx
-const [preferences, setPreferences] = React.useState();
-
-return (
-  <EventCalendar preferences={preferences} onPreferencesChange={setPreferences} />
-);
-```
-
-:::
-
-### Preferences menu
-
-You can customize the preferences menu using the `preferencesMenuConfig` prop:
-
-Available properties:
-
-- `toggleWeekendVisibility`: show/hide the menu item that toggles weekend visibility.
-- `toggleWeekNumberVisibility`: show/hide the menu item that toggles week number visibility.
-- `toggleAmpm`: show/hide the menu item that toggles 12/24‑hour time format.
-- `toggleEmptyDaysInAgenda`: show/hide the menu item that toggles the visibility of days with no events in the Agenda view.
-
-```ts
-// will hide the menu
-preferencesMenuConfig={false}
-
-// will hide the menu item responsible for toggling the weekend visibility
-// the other preferences remain visible
-preferencesMenuConfig={{ toggleWeekendVisibility: false }}
-
-// will hide the menu items for toggling weekend and week number visibility
-preferencesMenuConfig={{ toggleWeekendVisibility: false, toggleWeekNumberVisibility: false }}
-```
-
-{{"demo": "PreferencesMenu.js", "bg": "inline", "defaultCodeOpen": false}}
