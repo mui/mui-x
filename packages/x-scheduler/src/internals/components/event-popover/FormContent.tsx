@@ -114,10 +114,11 @@ export default function FormContent(props: FormContentProps) {
     setControlled(newState);
   };
   const handleColorChange = (value: SchedulerEventColor) => {
-    if (!value || value === controlled.colorId) {
+    if (!value) {
       return;
     }
-    const newState = { ...controlled, colorId: value };
+
+    const newState = { ...controlled, colorId: value === controlled.colorId ? null : value };
     pushPlaceholder(newState);
     setControlled(newState);
   };
