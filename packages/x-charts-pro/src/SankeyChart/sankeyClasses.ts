@@ -11,6 +11,8 @@ export interface SankeyPlotClasses {
   links: string;
   /** Styles applied to the link label container. */
   linkLabels: string;
+  /** Styles applied to the node label container. */
+  nodeLabels: string;
 }
 
 export function getSankeyPlotUtilityClass(slot: string) {
@@ -22,6 +24,7 @@ export const sankeyPlotClasses: SankeyPlotClasses = generateUtilityClasses('MuiS
   'nodes',
   'links',
   'linkLabels',
+  'nodeLabels',
 ]);
 
 export const useUtilityClasses = (ownerState: { classes?: Partial<SankeyPlotClasses> }) => {
@@ -32,6 +35,7 @@ export const useUtilityClasses = (ownerState: { classes?: Partial<SankeyPlotClas
     nodes: ['nodes'],
     links: ['links'],
     linkLabels: ['linkLabels'],
+    nodeLabels: ['nodeLabels'],
   };
 
   return composeClasses(slots, getSankeyPlotUtilityClass, classes);

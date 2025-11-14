@@ -67,6 +67,8 @@ export * from './dateHelpers';
 export * from './invertScale';
 export * from './scaleGuards';
 export * from './findMinMax';
+export * from './domUtils';
+export * from './getWordsByLines';
 
 // contexts
 export { getAxisExtrema } from './plugins/featurePlugins/useChartCartesianAxis/getAxisExtrema';
