@@ -9,18 +9,18 @@ import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { roundToDecimalPlaces } from '@mui/x-internals/math';
 import { Store, useStore, createSelectorMemoized } from '@mui/x-internals/store';
 import { ColumnWithWidth, DimensionsState, RowId, RowEntry, RowsMetaState, Size } from '../models';
-import type { BaseState, VirtualizerParams } from '../useVirtualizer';
+import type { BaseState, ParamsWithDefaults } from '../useVirtualizer';
 
 /* eslint-disable import/export, @typescript-eslint/no-redeclare */
 /* eslint-disable no-underscore-dangle */
 
 export type DimensionsParams = {
   rowHeight: number;
-  columnsTotalWidth: number;
-  leftPinnedWidth: number;
-  rightPinnedWidth: number;
-  topPinnedHeight: number;
-  bottomPinnedHeight: number;
+  columnsTotalWidth?: number;
+  leftPinnedWidth?: number;
+  rightPinnedWidth?: number;
+  topPinnedHeight?: number;
+  bottomPinnedHeight?: number;
   scrollbarSize?: number;
 };
 
@@ -49,6 +49,7 @@ const selectors = {
   rowHeight: (state: BaseState) => state.dimensions.rowHeight,
   contentHeight: (state: BaseState) => state.dimensions.contentSize.height,
   rowsMeta: (state: BaseState) => state.rowsMeta,
+  rowPositions: (state: BaseState) => state.rowsMeta.positions,
   columnPositions: createSelectorMemoized((_, columns: ColumnWithWidth[]) => {
     const positions: number[] = [];
     let currentPosition = 0;
@@ -80,7 +81,7 @@ export namespace Dimensions {
   export type API = ReturnType<typeof useDimensions>;
 }
 
-function initializeState(params: VirtualizerParams): Dimensions.State {
+function initializeState(params: ParamsWithDefaults): Dimensions.State {
   const dimensions = {
     ...EMPTY_DIMENSIONS,
     ...params.dimensions,
@@ -106,18 +107,18 @@ function initializeState(params: VirtualizerParams): Dimensions.State {
   };
 }
 
-function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api: {}) {
+function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api: {}) {
   const isFirstSizing = React.useRef(true);
 
   const {
     refs,
     dimensions: {
       rowHeight,
-      columnsTotalWidth,
-      leftPinnedWidth,
-      rightPinnedWidth,
-      topPinnedHeight,
-      bottomPinnedHeight,
+      columnsTotalWidth = 0,
+      leftPinnedWidth = 0,
+      rightPinnedWidth = 0,
+      topPinnedHeight = 0,
+      bottomPinnedHeight = 0,
     },
     onResize,
   } = params;
@@ -265,7 +266,7 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
     ],
   );
 
-  const { resizeThrottleMs } = params;
+  const { resizeThrottleMs = 100 } = params;
   const updateDimensionCallback = useEventCallback(updateDimensions);
   const debouncedUpdateDimensions = React.useMemo(
     () => (resizeThrottleMs > 0 ? throttle(updateDimensionCallback, resizeThrottleMs) : undefined),
@@ -286,7 +287,7 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
 
 function useRowsMeta(
   store: Store<BaseState>,
-  params: VirtualizerParams,
+  params: ParamsWithDefaults,
   updateDimensions: Function,
 ) {
   const heightCache = store.state.rowHeights;

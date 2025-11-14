@@ -13,7 +13,8 @@ import reactMajor from '@mui/x-internals/reactMajor';
 import { PinnedRows, PinnedColumns, Size } from '../models/core';
 import type { CellColSpanInfo } from '../models/colspan';
 import { Dimensions, observeRootNode } from './dimensions';
-import type { BaseState, VirtualizerParams } from '../useVirtualizer';
+import { LayoutMode } from '../constants';
+import type { BaseState, ParamsWithDefaults } from '../useVirtualizer';
 import {
   PinnedRowPosition,
   RenderContext,
@@ -60,12 +61,22 @@ export const EMPTY_RENDER_CONTEXT = {
   lastColumnIndex: 0,
 };
 
-const selectors = {
-  store: createSelector((state: BaseState) => state.virtualization),
-  renderContext: createSelector((state: BaseState) => state.virtualization.renderContext),
-  enabledForRows: createSelector((state: BaseState) => state.virtualization.enabledForRows),
-  enabledForColumns: createSelector((state: BaseState) => state.virtualization.enabledForColumns),
-};
+const selectors = (() => {
+  const firstRowIndexSelector = createSelector(
+    (state: BaseState) => state.virtualization.renderContext.firstRowIndex,
+  );
+  return {
+    store: createSelector((state: BaseState) => state.virtualization),
+    renderContext: createSelector((state: BaseState) => state.virtualization.renderContext),
+    enabledForRows: createSelector((state: BaseState) => state.virtualization.enabledForRows),
+    enabledForColumns: createSelector((state: BaseState) => state.virtualization.enabledForColumns),
+    offsetTop: createSelector(
+      Dimensions.selectors.rowPositions,
+      firstRowIndexSelector,
+      (rowPositions, firstRowIndex) => rowPositions[firstRowIndex] ?? 0,
+    ),
+  };
+})();
 
 export const Virtualization = {
   initialize: initializeState,
@@ -80,7 +91,7 @@ export namespace Virtualization {
   export type API = ReturnType<typeof useVirtualization>;
 }
 
-function initializeState(params: VirtualizerParams) {
+function initializeState(params: ParamsWithDefaults) {
   const state: Virtualization.State = {
     virtualization: {
       enabled: !platform.isJSDOM,
@@ -109,10 +120,10 @@ type AbstractAPI = {
 
 type RequiredAPI = Dimensions.API & AbstractAPI;
 
-function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, api: RequiredAPI) {
+function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, api: RequiredAPI) {
   const {
     refs,
-    dimensions: { rowHeight, columnsTotalWidth },
+    dimensions: { rowHeight, columnsTotalWidth = 0 },
     virtualization: { isRtl = false, rowBufferPx = 150, columnBufferPx = 150 },
     colspan,
     initialState,
@@ -147,7 +158,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
   const renderContext = useStore(store, selectors.renderContext);
   const enabledForRows = useStore(store, selectors.enabledForRows);
   const enabledForColumns = useStore(store, selectors.enabledForColumns);
-  const rowsMeta = useStore(store, Dimensions.selectors.rowsMeta);
+  const offsetTop = useStore(store, selectors.offsetTop);
 
   const contentHeight = useStore(store, Dimensions.selectors.contentHeight);
 
@@ -337,10 +348,6 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     }
   });
 
-  const getOffsetTop = () => {
-    return rowsMeta.positions[renderContext.firstRowIndex] ?? 0;
-  };
-
   /**
    * HACK: unstable_rowTree fixes the issue described below, but does it by tightly coupling this
    * section of code to the DataGrid's rowTree model. The `unstable_rowTree` param is a temporary
@@ -518,35 +525,16 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
       if (panel) {
         rowElements.push(panel);
       }
-      if (rowParams.position === undefined && isLastVisibleInSection) {
+      if (
+        rowParams.position === undefined &&
+        isLastVisibleInSection &&
+        renderInfiniteLoadingTrigger
+      ) {
         rowElements.push(renderInfiniteLoadingTrigger(id));
       }
     });
     return rowElements;
   };
-
-  const scrollerStyle = React.useMemo(
-    () =>
-      ({
-        overflowX: !needsHorizontalScrollbar ? 'hidden' : undefined,
-        overflowY: autoHeight ? 'hidden' : undefined,
-      }) as React.CSSProperties,
-    [needsHorizontalScrollbar, autoHeight],
-  );
-
-  const contentSize = React.useMemo(() => {
-    const size: React.CSSProperties = {
-      width: needsHorizontalScrollbar ? columnsTotalWidth : 'auto',
-      flexBasis: contentHeight,
-      flexShrink: 0,
-    };
-
-    if (size.flexBasis === 0) {
-      size.flexBasis = minimalContentHeight; // Give room to show the overlay when there no rows.
-    }
-
-    return size;
-  }, [columnsTotalWidth, contentHeight, needsHorizontalScrollbar, minimalContentHeight]);
 
   const scrollRestoreCallback = React.useRef<Function | null>(null);
   const contentNodeRef = React.useCallback(
@@ -558,6 +546,73 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     },
     [columnsTotalWidth, contentHeight],
   );
+
+  const scrollerStyle = React.useMemo(
+    () =>
+      ({
+        overflowX: !needsHorizontalScrollbar ? 'hidden' : undefined,
+        overflowY: autoHeight ? 'hidden' : undefined,
+        position: params.layout === LayoutMode.ListSimple ? 'relative' : undefined,
+      }) as React.CSSProperties,
+    [needsHorizontalScrollbar, autoHeight, params.layout],
+  );
+
+  const contentStyle = React.useMemo(() => {
+    switch (params.layout) {
+      case LayoutMode.DataGrid: {
+        const style: React.CSSProperties = {
+          width: needsHorizontalScrollbar ? columnsTotalWidth : 'auto',
+          flexBasis: contentHeight,
+          flexShrink: 0,
+        };
+
+        if (style.flexBasis === 0) {
+          style.flexBasis = minimalContentHeight; // Give room to show the overlay when there no rows.
+        }
+
+        return style;
+      }
+      case LayoutMode.ListSimple: {
+        const style: React.CSSProperties = {
+          position: 'absolute',
+          display: 'inline-block',
+          width: '100%',
+          height: contentHeight,
+          top: 0,
+          left: 0,
+          zIndex: -1,
+        };
+        return style;
+      }
+      default:
+        throw new Error(`MUI: Unsupported layout: ${params.layout}`);
+    }
+  }, [
+    columnsTotalWidth,
+    contentHeight,
+    needsHorizontalScrollbar,
+    minimalContentHeight,
+    params.layout,
+  ]);
+
+  const positionerStyle = React.useMemo(() => {
+    switch (params.layout) {
+      case LayoutMode.DataGrid: {
+        const style: React.CSSProperties = {
+          transform: `translate3d(0, ${offsetTop}px, 0)`,
+        };
+        return style;
+      }
+      case LayoutMode.ListSimple: {
+        const style: React.CSSProperties = {
+          height: offsetTop,
+        };
+        return style;
+      }
+      default:
+        throw new Error(`MUI: Unsupported layout: ${params.layout}`);
+    }
+  }, [offsetTop, params.layout]);
 
   useEnhancedEffect(() => {
     if (!isRenderContextReady.current) {
@@ -705,7 +760,6 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
 
   const getters = {
     setPanels,
-    getOffsetTop,
     getRows,
     rows: params.rows,
     getContainerProps: () => ({
@@ -721,8 +775,11 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     }),
     getContentProps: () => ({
       ref: contentNodeRef,
-      style: contentSize,
+      style: contentStyle,
       role: 'presentation',
+    }),
+    getPositionerProps: () => ({
+      style: positionerStyle,
     }),
     getScrollbarVerticalProps: () => ({
       ref: scrollbarVerticalRef,
@@ -737,29 +794,13 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     }),
   };
 
-  /* Placeholder API functions for colspan & rowspan to re-implement */
-
-  const getCellColSpanInfo: AbstractAPI['getCellColSpanInfo'] = () => {
-    throw new Error('Unimplemented: colspan feature is required');
-  };
-
-  const calculateColSpan: AbstractAPI['calculateColSpan'] = () => {
-    throw new Error('Unimplemented: colspan feature is required');
-  };
-
-  const getHiddenCellsOrigin: AbstractAPI['getHiddenCellsOrigin'] = () => {
-    throw new Error('Unimplemented: rowspan feature is required');
-  };
-
   return {
     getters,
     useVirtualization: () => useStore(store, (state) => state),
     setPanels,
     forceUpdateRenderContext,
     scheduleUpdateRenderContext,
-    getCellColSpanInfo,
-    calculateColSpan,
-    getHiddenCellsOrigin,
+    ...createSpanningAPI(),
   };
 }
 
@@ -767,7 +808,7 @@ type RenderContextInputs = ReturnType<typeof inputsSelector>;
 
 function inputsSelector(
   store: Store<BaseState>,
-  params: VirtualizerParams,
+  params: ParamsWithDefaults,
   api: RequiredAPI,
   enabledForRows: boolean,
   enabledForColumns: boolean,
@@ -1234,6 +1275,23 @@ function getFirstNonSpannedColumnToRender({
   }
 
   return firstNonSpannedColumnToRender;
+}
+
+/** Placeholder API functions for colspan & rowspan to re-implement */
+function createSpanningAPI(): AbstractAPI {
+  const getCellColSpanInfo: AbstractAPI['getCellColSpanInfo'] = () => {
+    throw new Error('Unimplemented: colspan feature is required');
+  };
+
+  const calculateColSpan: AbstractAPI['calculateColSpan'] = () => {
+    throw new Error('Unimplemented: colspan feature is required');
+  };
+
+  const getHiddenCellsOrigin: AbstractAPI['getHiddenCellsOrigin'] = () => {
+    throw new Error('Unimplemented: rowspan feature is required');
+  };
+
+  return { getCellColSpanInfo, calculateColSpan, getHiddenCellsOrigin };
 }
 
 export function roundToDecimalPlaces(value: number, decimals: number) {

@@ -8,6 +8,7 @@ import { useStoreEffect } from '@mui/x-internals/store';
 import {
   useVirtualizer,
   Dimensions,
+  LayoutMode,
   VirtualizerParams,
   Virtualization,
   EMPTY_RENDER_CONTEXT,
@@ -167,6 +168,9 @@ export function useGridVirtualizer() {
   eslintUseValue(focusedVirtualCell);
 
   const virtualizer = useVirtualizer({
+    legacy: true,
+    layout: LayoutMode.DataGrid,
+
     refs: {
       container: apiRef.current.mainElementRef,
       scroller: apiRef.current.virtualScrollerRef,
@@ -318,7 +322,7 @@ export function useGridVirtualizer() {
     ),
 
     renderInfiniteLoadingTrigger: React.useCallback(
-      (id) => (apiRef as any).current.getInfiniteLoadingTriggerElement?.({ lastRowId: id }),
+      (id: any) => (apiRef as any).current.getInfiniteLoadingTriggerElement?.({ lastRowId: id }),
       [apiRef],
     ),
   });
