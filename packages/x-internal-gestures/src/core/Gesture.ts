@@ -70,7 +70,10 @@ export type BaseGestureOptions = {
 /**
  * Configuration options for creating a gesture instance.
  */
-export type GestureOptions<GestureName extends string> = {
+export type GestureOptions<
+  GestureName extends string,
+  FineGrainedGestureOptions extends BaseGestureOptions = BaseGestureOptions,
+> = {
   /** Unique name identifying this gesture type */
   name: GestureName;
   /** Whether to prevent default browser action for gesture events */
@@ -100,7 +103,7 @@ export type GestureOptions<GestureName extends string> = {
    * @default [] (all pointer types allowed)
    */
   pointerMode?: PointerMode[];
-} & BaseGestureOptions & {
+} & FineGrainedGestureOptions & {
     /**
      * Pointer mode-specific configuration overrides.
      * Options defined here will override any option defined in the base root options.
@@ -115,7 +118,7 @@ export type GestureOptions<GestureName extends string> = {
      * }
      * ```
      */
-    pointerOptions?: Partial<Record<PointerMode, BaseGestureOptions>>;
+    pointerOptions?: Partial<Record<PointerMode, FineGrainedGestureOptions>>;
   };
 
 // eslint-disable-next-line no-underscore-dangle, @typescript-eslint/naming-convention
@@ -305,16 +308,27 @@ export abstract class Gesture<GestureName extends string> {
   }
 
   /**
+   * Get the default configuration for the pointer specific options.
+   * Change this function in child classes to provide different defaults.
+   */
+  protected getBaseConfig() {
+    return {
+      requiredKeys: this.requiredKeys,
+    };
+  }
+
+  /**
    * Get the effective configuration for a specific pointer mode.
    * This merges the base configuration with pointer mode-specific overrides.
    *
    * @param pointerType - The pointer type to get configuration for
    * @returns The effective configuration object
    */
-  protected getEffectiveConfig(pointerType: PointerMode): Required<BaseGestureOptions> {
-    const baseConfig = {
-      requiredKeys: this.requiredKeys,
-    };
+  protected getEffectiveConfig<T>(pointerType: PointerMode, baseConfig: T): T {
+    if (pointerType !== 'mouse' && pointerType !== 'touch' && pointerType !== 'pen') {
+      // Unknown pointer type, return base config
+      return baseConfig;
+    }
 
     // Apply pointer mode-specific overrides
     const pointerModeOverrides = this.pointerOptions[pointerType];
@@ -399,7 +413,10 @@ export abstract class Gesture<GestureName extends string> {
    */
   protected shouldPreventGesture(element: TargetElement, pointerType: string): boolean {
     // Get effective configuration for this pointer type
-    const effectiveConfig = this.getEffectiveConfig(pointerType as PointerMode);
+    const effectiveConfig = this.getEffectiveConfig(
+      pointerType as PointerMode,
+      this.getBaseConfig(),
+    );
 
     // First check if required keyboard keys are pressed
     if (!this.keyboardManager.areKeysPressed(effectiveConfig.requiredKeys)) {

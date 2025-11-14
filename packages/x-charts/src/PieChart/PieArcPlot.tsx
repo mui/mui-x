@@ -132,7 +132,9 @@ function PieArcPlot(props: PieArcPlotProps) {
           endAngle={focusedItem.endAngle}
           paddingAngle={focusedItem.paddingAngle}
           innerRadius={focusedItem.innerRadius}
-          color={focusedItem.color}
+          color="transparent"
+          pointerEvents="none"
+          skipInteraction
           outerRadius={focusedItem.outerRadius}
           cornerRadius={focusedItem.cornerRadius}
           skipAnimation

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { createRenderer, screen, act } from '@mui/internal-test-utils';
 import { describeConformance } from 'test/utils/describeConformance';
 import { pieArcClasses, PieChart } from '@mui/x-charts/PieChart';
@@ -96,6 +95,7 @@ describe('<PieChart />', () => {
     );
 
     // by default does not show focus indicator
+    /* eslint-disable testing-library/no-container */
     expect(container.querySelector(`.${pieArcClasses.focusIndicator}`)).not.toBeTruthy();
 
     // focus the chart
@@ -112,5 +112,6 @@ describe('<PieChart />', () => {
     expect(
       container.querySelector(`.${pieArcClasses.focusIndicator}.MuiPieArc-data-index-1`),
     ).toBeTruthy();
+    /* eslint-enable testing-library/no-container */
   });
 });

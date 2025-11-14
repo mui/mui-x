@@ -28,9 +28,11 @@ const ignoreSsrWarning =
   '/* emotion-disable-server-rendering-unsafe-selector-warning-please-do-not-use-this-the-warning-exists-for-a-reason */';
 
 const shouldShowBorderTopRightRadiusSelector = (apiRef: RefObject<GridApiCommunity>) =>
-  apiRef.current.state.dimensions.hasScrollX &&
-  (!apiRef.current.state.dimensions.hasScrollY ||
-    apiRef.current.state.dimensions.scrollbarSize === 0);
+  !apiRef.current.state.dimensions.isReady
+    ? apiRef.current.state.dimensions.scrollbarSize === 0
+    : apiRef.current.state.dimensions.hasScrollX &&
+      (!apiRef.current.state.dimensions.hasScrollY ||
+        apiRef.current.state.dimensions.scrollbarSize === 0);
 
 export const GridRootStyles = styled('div', {
   name: 'MuiDataGrid',

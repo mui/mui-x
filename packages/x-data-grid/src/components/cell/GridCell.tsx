@@ -11,6 +11,7 @@ import { useRtl } from '@mui/system/RtlProvider';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useStore } from '@mui/x-internals/store';
 import { Rowspan } from '@mui/x-virtualizer';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { doesSupportPreventScroll } from '../../utils/doesSupportPreventScroll';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
 import {
@@ -196,6 +197,14 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
   });
   cellParams.api = apiRef.current;
 
+  // Subscribe to changes of the `isCellEditable` API result to ensure cells re-render.
+  // We don't use the result.
+  // Subscription will trigger a new call of `getCellParamsForRow` above which will recompute the correct value of `isEditable`.
+  // This is to ensure both of the following cases work:
+  // - https://github.com/mui/mui-x/issues/19732
+  // - https://github.com/mui/mui-x/issues/20143
+  useGridSelector(apiRef, () => apiRef.current.isCellEditable(cellParams));
+
   const isSelected = useGridSelector(apiRef, () =>
     apiRef.current.unstable_applyPipeProcessors('isCellSelected', false, {
       id: rowId,
@@ -349,7 +358,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
     return cellStyle;
   }, [width, isNotVisible, styleProp, pinnedOffset, pinnedPosition, isRtl, rowSpan]);
 
-  React.useEffect(() => {
+  useEnhancedEffect(() => {
     if (!hasFocus || cellMode === GridCellModes.Edit) {
       return;
     }

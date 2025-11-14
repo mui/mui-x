@@ -45,7 +45,7 @@ export const initialEvents = [
     start: START_OF_FIRST_WEEK.set({ weekday: 4, hour: 10 }),
     end: START_OF_FIRST_WEEK.set({ weekday: 4, hour: 11 }),
     title: '1-on-1 with Abigail',
-    resource: 'work',
+    resource: 'explore',
     rrule: { freq: 'WEEKLY', interval: 3, byDay: ['TH'] },
   },
   {
@@ -53,8 +53,24 @@ export const initialEvents = [
     start: START_OF_FIRST_WEEK.plus({ weeks: 1 }).set({ weekday: 1, hour: 10 }),
     end: START_OF_FIRST_WEEK.plus({ weeks: 1 }).set({ weekday: 1, hour: 11 }),
     title: '1-on-1 with Hailey',
-    resource: 'work',
+    resource: 'data-grid',
     rrule: { freq: 'WEEKLY', interval: 3, byDay: ['MO'] },
+  },
+  {
+    id: 'weekly-planning-explore',
+    start: START_OF_FIRST_WEEK.plus({ weeks: 1 }).set({ weekday: 2, hour: 10 }),
+    end: START_OF_FIRST_WEEK.plus({ weeks: 1 }).set({ weekday: 2, hour: 11 }),
+    title: 'Weekly planning',
+    resource: 'explore',
+    rrule: { freq: 'WEEKLY', interval: 2, byDay: ['TU'] },
+  },
+  {
+    id: 'weekly-planning-data-grid',
+    start: START_OF_FIRST_WEEK.set({ weekday: 5, hour: 10 }),
+    end: START_OF_FIRST_WEEK.set({ weekday: 5, hour: 11 }),
+    title: 'Weekly planning',
+    resource: 'data-grid',
+    rrule: { freq: 'WEEKLY', interval: 2, byDay: ['FR'] },
   },
   // Non-recurring work events
   {
@@ -245,10 +261,25 @@ export const initialEvents = [
 ];
 
 export const resources = [
-  { name: 'Work', id: 'work', eventColor: 'violet' },
-  { name: 'Holidays', id: 'holidays', eventColor: 'red' },
-  { name: 'Workout', id: 'workout', eventColor: 'jade' },
-  { name: 'Birthdays', id: 'birthdays', eventColor: 'lime' },
-  { name: 'Personal', id: 'personal', eventColor: 'orange' },
-  { name: 'Medical', id: 'medical', eventColor: 'indigo' },
+  {
+    title: 'Work',
+    id: 'work',
+    eventColor: 'violet',
+    children: [
+      {
+        title: 'eXplore Team',
+        id: 'explore',
+        eventColor: 'pink',
+        children: [
+          { title: 'Design meetings', id: 'design-meetings', eventColor: 'mauve' },
+        ],
+      },
+      { title: 'Data Grid Team', id: 'data-grid', eventColor: 'blue' },
+    ],
+  },
+  { title: 'Holidays', id: 'holidays', eventColor: 'red' },
+  { title: 'Workout', id: 'workout', eventColor: 'jade' },
+  { title: 'Birthdays', id: 'birthdays', eventColor: 'lime' },
+  { title: 'Personal', id: 'personal', eventColor: 'orange' },
+  { title: 'Medical', id: 'medical', eventColor: 'indigo' },
 ];

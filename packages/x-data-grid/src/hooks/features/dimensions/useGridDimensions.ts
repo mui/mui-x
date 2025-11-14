@@ -74,18 +74,21 @@ export const dimensionsStateInitializer: GridStateInitializer<RootProps> = (
   const dimensions = EMPTY_DIMENSIONS;
 
   const density = gridDensityFactorSelector(apiRef);
+  const dimensionsWithStatic = {
+    ...dimensions,
+    ...getStaticDimensions(
+      props,
+      apiRef,
+      density,
+      gridVisiblePinnedColumnDefinitionsSelector(apiRef),
+    ),
+  };
+
+  apiRef.current.store.state.dimensions = dimensionsWithStatic;
 
   return {
     ...state,
-    dimensions: {
-      ...dimensions,
-      ...getStaticDimensions(
-        props,
-        apiRef,
-        density,
-        gridVisiblePinnedColumnDefinitionsSelector(apiRef),
-      ),
-    },
+    dimensions: dimensionsWithStatic,
   };
 };
 
@@ -105,10 +108,6 @@ const columnsTotalWidthSelector = createSelector(
 );
 
 export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, props: RootProps) {
-  const virtualizer = apiRef.current.virtualizer;
-  const updateDimensions = virtualizer.api.updateDimensions;
-  const getViewportPageSize = virtualizer.api.getViewportPageSize;
-
   const getRootDimensions = React.useCallback(() => gridDimensionsSelector(apiRef), [apiRef]);
 
   const apiPublic: GridDimensionsApi = {
@@ -116,8 +115,12 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
   };
 
   const apiPrivate: GridDimensionsPrivateApi = {
-    updateDimensions,
-    getViewportPageSize,
+    updateDimensions: () => {
+      return apiRef.current.virtualizer.api.updateDimensions();
+    },
+    getViewportPageSize: () => {
+      return apiRef.current.virtualizer.api.getViewportPageSize();
+    },
   };
 
   useGridApiMethod(apiRef, apiPublic, 'public');
@@ -171,6 +174,10 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
     apiRef.current.store,
     (s) => s.dimensions,
     (previous, next) => {
+      if (!next.isReady) {
+        return;
+      }
+
       if (apiRef.current.rootElementRef.current) {
         setCSSVariables(apiRef.current.rootElementRef.current, next);
       }

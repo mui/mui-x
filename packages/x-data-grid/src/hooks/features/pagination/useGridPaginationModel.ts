@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import debounce from '@mui/utils/debounce';
 import { RefObject } from '@mui/x-internals/types';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -254,7 +255,9 @@ export const useGridPaginationModel = (
 
       const pageCount = gridPageCountSelector(apiRef);
       if (paginationModel.page > pageCount - 1) {
-        apiRef.current.setPage(Math.max(0, pageCount - 1));
+        queueMicrotask(() => {
+          apiRef.current.setPage(Math.max(0, pageCount - 1));
+        });
       }
     },
     [apiRef],
@@ -276,6 +279,11 @@ export const useGridPaginationModel = (
     }
   }, [apiRef]);
 
+  const debouncedNavigateToStart = React.useMemo(
+    () => debounce(navigateToStart, 0),
+    [navigateToStart],
+  );
+
   /**
    * Resets the page only if the active items or quick filter has changed from the last time.
    * This is to avoid resetting the page when the filter model is changed
@@ -295,15 +303,15 @@ export const useGridPaginationModel = (
       }
 
       previousFilterModel.current = currentActiveFilters;
-      navigateToStart();
+      debouncedNavigateToStart();
     },
-    [apiRef, navigateToStart],
+    [apiRef, debouncedNavigateToStart],
   );
 
   useGridEvent(apiRef, 'viewportInnerSizeChange', handleUpdateAutoPageSize);
   useGridEvent(apiRef, 'paginationModelChange', handlePaginationModelChange);
   useGridEvent(apiRef, 'rowCountChange', handleRowCountChange);
-  useGridEvent(apiRef, 'sortModelChange', navigateToStart);
+  useGridEvent(apiRef, 'sortModelChange', debouncedNavigateToStart);
   useGridEvent(apiRef, 'filterModelChange', handleFilterModelChange);
 
   /**

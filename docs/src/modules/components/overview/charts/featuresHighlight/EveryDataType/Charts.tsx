@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { BarPlot } from '@mui/x-charts/BarChart';
 import { LinePlot, MarkPlot } from '@mui/x-charts/LineChart';
 import { RadarChart } from '@mui/x-charts/RadarChart';

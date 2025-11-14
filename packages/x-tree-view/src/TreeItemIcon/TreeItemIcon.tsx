@@ -54,7 +54,7 @@ function TreeItemIcon(props: TreeItemIconProps) {
   }
 
   const Icon = slots[iconName];
-  const iconProps = useSlotProps({
+  const { ownerState, ...iconProps } = useSlotProps({
     elementType: Icon as NonNullable<typeof Icon>,
     externalSlotProps: (tempOwnerState: any) => ({
       ...resolveComponentProps(

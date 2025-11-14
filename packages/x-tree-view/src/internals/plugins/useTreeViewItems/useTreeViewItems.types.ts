@@ -7,18 +7,17 @@ import {
   TreeViewItemId,
 } from '../../../models';
 
-export type AddItemsParameters<R> = {
+export type SetItemChildrenParameters<R> = {
   items: readonly R[];
-  parentId?: TreeViewItemId;
-  depth: number;
-  getChildrenCount?: (item: R) => number;
+  parentId: TreeViewItemId | null;
+  getChildrenCount: (item: R) => number;
 };
 
 export interface UseTreeViewItemsPublicAPI<R extends {}> {
   /**
    * Get the item with the given id.
    * When used in the Simple Tree View, it returns an object with the `id` and `label` properties.
-   * @param {string} itemId The id of the item to retrieve.
+   * @param {TreeViewItemId} itemId The id of the item to retrieve.
    * @returns {R} The item with the given id.
    */
   getItem: (itemId: TreeViewItemId) => R;
@@ -49,7 +48,7 @@ export interface UseTreeViewItemsPublicAPI<R extends {}> {
    */
   setIsItemDisabled: (parameters: { itemId: TreeViewItemId; shouldBeDisabled?: boolean }) => void;
   /** * Get the id of the parent item.
-   * @param {string} itemId The id of the item to whose parentId we want to retrieve.
+   * @param {TreeViewItemId} itemId The id of the item to whose parentId we want to retrieve.
    * @returns {TreeViewItemId | null} The id of the parent item.
    */
   getParentId: (itemId: TreeViewItemId) => TreeViewItemId | null;
@@ -70,35 +69,30 @@ export interface UseTreeViewItemsInstance<R extends {}>
   areItemUpdatesPrevented: () => boolean;
   /**
    * Add an array of items to the tree.
-   * @param {AddItemsParameters<R>} args The items to add to the tree and information about their ancestors.
+   * @param {SetItemChildrenParameters<R>} args The items to add to the tree and information about their ancestors.
    */
-  addItems: (args: AddItemsParameters<R>) => void;
+  setItemChildren: (args: SetItemChildrenParameters<R>) => void;
   /**
    * Remove the children of an item.
-   * @param {TreeViewItemId} parentId The id of the item to remove the children of.
+   * @param {TreeViewItemId | null} parentId The id of the item to remove the children of.
    */
-  removeChildren: (parentId?: TreeViewItemId) => void;
-  /**
-   * Set the loading state of the tree.
-   * @param {boolean} loading True if the tree view is loading.
-   */
-  setTreeViewLoading: (loading: boolean) => void;
-  /**
-   * Set the error state of the tree.
-   * @param {Error | null} error The error on the tree view.
-   */
-  setTreeViewError: (error: Error | null) => void;
+  removeChildren: (parentId: TreeViewItemId | null) => void;
   /**
    * Event handler to fire when the `content` slot of a given Tree Item is clicked.
    * @param {React.MouseEvent} event The DOM event that triggered the change.
    * @param {TreeViewItemId} itemId The id of the item being clicked.
    */
   handleItemClick: (event: React.MouseEvent, itemId: TreeViewItemId) => void;
+  /**
+   * Mark a list of items as expandable.
+   * @param {TreeViewItemId[]} items The ids of the items to mark as expandable.
+   */
+  addExpandableItems: (items: TreeViewItemId[]) => void;
 }
 
 export interface UseTreeViewItemsParameters<R extends { children?: R[] }> {
   /**
-   * If `true`, will allow focus on disabled items.
+   * Whether the items should be focusable when disabled.
    * @default false
    */
   disabledItemsFocusable?: boolean;
@@ -133,16 +127,16 @@ export interface UseTreeViewItemsParameters<R extends { children?: R[] }> {
    *
    * @template R
    * @param {R} item The item to check.
-   * @returns {string} The id of the item.
+   * @returns {TreeViewItemId} The id of the item.
    * @default (item) => item.id
    */
   getItemId?: (item: R) => TreeViewItemId;
   /**
    * Callback fired when the `content` slot of a given Tree Item is clicked.
    * @param {React.MouseEvent} event The DOM event that triggered the change.
-   * @param {string} itemId The id of the focused item.
+   * @param {TreeViewItemId} itemId The id of the focused item.
    */
-  onItemClick?: (event: React.MouseEvent, itemId: string) => void;
+  onItemClick?: (event: React.MouseEvent, itemId: TreeViewItemId) => void;
   /**
    * Horizontal indentation between an item and its children.
    * Examples: 24, "24px", "2rem", "2em".
@@ -159,7 +153,7 @@ export type UseTreeViewItemsParametersWithDefaults<R extends { children?: R[] }>
 export interface UseTreeViewItemsState<R extends {}> {
   items: {
     /**
-     * If `true`, will allow focus on disabled items.
+     * Whether the items should be focusable when disabled.
      * Always equal to `props.disabledItemsFocusable` (or `false` if not provided).
      */
     disabledItemsFocusable: boolean;
@@ -183,14 +177,6 @@ export interface UseTreeViewItemsState<R extends {}> {
      * Index of each child in the ordered children ids of its parent.
      */
     itemChildrenIndexesLookup: { [parentItemId: string]: { [itemId: string]: number } };
-    /**
-     * The loading state of the tree.
-     */
-    loading: boolean;
-    /**
-     * The error state of the tree.
-     */
-    error: Error | null;
     /**
      * When equal to 'flat', the tree is rendered as a flat list (children are rendered as siblings of their parents).
      * When equal to 'nested', the tree is rendered with nested children (children are rendered inside the groupTransition slot of their children).

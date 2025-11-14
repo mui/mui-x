@@ -9,10 +9,23 @@ import { ComputeResult } from '../useChartCartesianAxis/computeAxisValue';
 import { ChartSeriesType } from '../../../../models/seriesType/config';
 import { SeriesId } from '../../../../models/seriesType/common';
 import { AxisId, AxisItemIdentifier, ChartsAxisProps } from '../../../../models/axis';
+import { FocusedItemData } from '../../../../hooks/useFocusedItem';
 
 const selectKeyboardNavigation: ChartOptionalRootSelector<UseChartKeyboardNavigationSignature> = (
   state,
 ) => state.keyboardNavigation;
+
+export const selectorChartsItemIsFocused = createSelector(
+  [selectKeyboardNavigation],
+  (keyboardNavigationState, item: FocusedItemData) => {
+    return (
+      keyboardNavigationState?.item != null &&
+      keyboardNavigationState.item.type === item.seriesType &&
+      keyboardNavigationState.item.seriesId === item.seriesId &&
+      keyboardNavigationState.item.dataIndex === item.dataIndex
+    );
+  },
+);
 
 export const selectorChartsHasFocusedItem = createSelector(
   [selectKeyboardNavigation],
@@ -93,4 +106,26 @@ export const selectorChartsKeyboardYAxisIndex = createSelector(
     selectorChartSeriesProcessed,
   ],
   createSelectAxisHighlight('y'),
+);
+
+export const selectorChartsKeyboardItem = createSelector(
+  [selectKeyboardNavigation],
+  function selectorChartsKeyboardItem(keyboardState) {
+    if (keyboardState?.item == null) {
+      return null;
+    }
+    const { type, seriesId } = keyboardState.item;
+
+    if (type === undefined || seriesId === undefined) {
+      return null;
+    }
+    return keyboardState.item;
+  },
+);
+
+export const selectorChartsKeyboardItemIsDefined = createSelector(
+  [selectorChartsFocusedSeriesType, selectorChartsFocusedSeriesId, selectorChartsFocusedDataIndex],
+  function selectorChartsKeyboardItemIsDefined(seriesType, seriesId, dataIndex) {
+    return seriesId !== undefined && dataIndex !== undefined;
+  },
 );

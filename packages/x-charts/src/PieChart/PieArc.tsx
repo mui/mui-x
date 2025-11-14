@@ -86,8 +86,15 @@ export type PieArcProps = Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> &
     outerRadius: number;
     paddingAngle: number;
     startAngle: number;
-    /** @default false */
-    skipAnimation: boolean;
+    /**
+     * If `true`, the animation is disabled.
+     */
+    skipAnimation?: boolean;
+    /**
+     * If `true`, the default event handlers are disabled.
+     * Those are used, for example, to display a tooltip or highlight the arc on hover.
+     */
+    skipInteraction?: boolean;
   };
 
 const PieArc = React.forwardRef<SVGPathElement, PieArcProps>(function PieArc(props, ref) {
@@ -109,6 +116,7 @@ const PieArc = React.forwardRef<SVGPathElement, PieArcProps>(function PieArc(pro
     paddingAngle,
     skipAnimation,
     stroke: strokeProp,
+    skipInteraction,
     ...other
   } = props;
 
@@ -126,7 +134,10 @@ const PieArc = React.forwardRef<SVGPathElement, PieArcProps>(function PieArc(pro
   };
   const classes = useUtilityClasses(ownerState);
 
-  const interactionProps = useInteractionItemProps({ type: 'pie', seriesId: id, dataIndex });
+  const interactionProps = useInteractionItemProps(
+    { type: 'pie', seriesId: id, dataIndex },
+    skipInteraction,
+  );
   const animatedProps = useAnimatePieArc({
     cornerRadius,
     startAngle,
@@ -176,9 +187,14 @@ PieArc.propTypes = {
   outerRadius: PropTypes.number.isRequired,
   paddingAngle: PropTypes.number.isRequired,
   /**
-   * @default false
+   * If `true`, the animation is disabled.
    */
-  skipAnimation: PropTypes.bool.isRequired,
+  skipAnimation: PropTypes.bool,
+  /**
+   * If `true`, the default event handlers are disabled.
+   * Those are used, for example, to display a tooltip or highlight the arc on hover.
+   */
+  skipInteraction: PropTypes.bool,
   startAngle: PropTypes.number.isRequired,
 } as any;
 

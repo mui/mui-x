@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { interpolateRdYlBu } from 'd3-scale-chromatic';
 import {
   ContinuousColorLegend,

@@ -186,18 +186,13 @@ const arSDGrid: Partial<GridLocaleText> = {
 
   // Pagination
   paginationRowsPerPage: 'عدد الصفوف في الصفحة:',
-  // paginationDisplayedRows: ({
-  //   from,
-  //   to,
-  //   count,
-  //   estimated
-  // }) => {
-  //   if (!estimated) {
-  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
-  //   }
-  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
-  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
-  // },
+  paginationDisplayedRows: ({ from, to, count, estimated }) => {
+    if (!estimated) {
+      return `\u200E${to}-${from}\u200E من ${count !== -1 ? count : `أكثر من ${to}`}`;
+    }
+    const estimatedLabel = estimated && estimated > to ? `حوالي ${estimated}` : `أكثر من ${to}`;
+    return `\u200E${to}-${from}\u200E من ${count !== -1 ? count : estimatedLabel}`;
+  },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {
       return 'انتقل إلى الصفحة الأولى';
@@ -326,6 +321,7 @@ const arSDGrid: Partial<GridLocaleText> = {
   // promptChangePivotRowsLabel: (count: number) => `Rows (${count})`,
   // promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
   // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
+  // promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) => `Dimensions (${dimensionsCount}), Values (${valuesCount})`,
 };
 
 export const arSD: Localization = getGridLocalization(arSDGrid);

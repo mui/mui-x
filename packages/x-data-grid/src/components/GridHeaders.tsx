@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 import { useGridSelector } from '../hooks/utils/useGridSelector';

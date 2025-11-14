@@ -202,6 +202,10 @@ const pages: MuiPage[] = [
                 plan: 'premium',
               },
               {
+                pathname: '/x/react-data-grid/server-side-data/pivoting',
+                plan: 'premium',
+              },
+              {
                 pathname: '/x/react-data-grid/server-side-data/recipes',
               },
             ],
@@ -592,6 +596,7 @@ const pages: MuiPage[] = [
               { pathname: '/x/react-charts/styling' },
               { pathname: '/x/react-charts/tooltip' },
               { pathname: '/x/react-charts/highlighting' },
+              { pathname: '/x/react-charts/brush' },
               {
                 pathname: '/x/react-charts/zoom-and-pan',
                 title: 'Zoom and pan',
@@ -608,6 +613,10 @@ const pages: MuiPage[] = [
                 title: 'Data Grid integration',
                 plan: 'premium',
                 unstable: true,
+              },
+              {
+                pathname: '/x/react-charts/content-security-policy',
+                title: 'Content Security Policy',
               },
             ],
           },
@@ -657,6 +666,8 @@ const pages: MuiPage[] = [
                   { pathname: '/x/react-charts/hooks/use-legend', title: 'useLegend' },
                   { pathname: '/x/react-charts/hooks/use-drawing-area', title: 'useDrawingArea' },
                   { pathname: '/x/react-charts/hooks/use-scale', title: 'useScale' },
+                  { pathname: '/x/react-charts/hooks/use-axes', title: 'useAxes' },
+                  { pathname: '/x/react-charts/hooks/use-dataset', title: 'useDataset' },
                 ],
               },
               { pathname: '/x/react-charts/plugins', title: 'Plugins' },

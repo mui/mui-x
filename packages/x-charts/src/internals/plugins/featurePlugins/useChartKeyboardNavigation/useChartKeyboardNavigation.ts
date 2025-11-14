@@ -107,18 +107,12 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
   svgRef,
 }) => {
   const removeFocus = useEventCallback(function removeFocus() {
-    store.update((state) => {
-      if (state.keyboardNavigation.item === null) {
-        return state;
-      }
-      return {
-        ...state,
-        keyboardNavigation: {
-          ...state.keyboardNavigation,
-          item: null,
-        },
-      };
-    });
+    if (store.state.keyboardNavigation.item !== null) {
+      store.set('keyboardNavigation', {
+        ...store.state.keyboardNavigation,
+        item: null,
+      });
+    }
   });
 
   React.useEffect(() => {
@@ -129,44 +123,42 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     }
 
     function keyboardHandler(event: KeyboardEvent) {
-      store.update((prevState) => {
-        let newFocusedItem = prevState.keyboardNavigation.item;
-
-        switch (event.key) {
-          case 'ArrowRight':
-            newFocusedItem = getNextIndexFocusedItem(prevState);
-            break;
-          case 'ArrowLeft':
-            newFocusedItem = getPreviousIndexFocusedItem(prevState);
-            break;
-          case 'ArrowDown': {
-            newFocusedItem = getPreviousSeriesFocusedItem(prevState);
-            break;
-          }
-          case 'ArrowUp': {
-            newFocusedItem = getNextSeriesFocusedItem(prevState);
-            break;
-          }
-          default:
-            break;
+      let newFocusedItem = store.state.keyboardNavigation.item;
+      switch (event.key) {
+        case 'ArrowRight':
+          newFocusedItem = getNextIndexFocusedItem(store.state);
+          break;
+        case 'ArrowLeft':
+          newFocusedItem = getPreviousIndexFocusedItem(store.state);
+          break;
+        case 'ArrowDown': {
+          newFocusedItem = getPreviousSeriesFocusedItem(store.state);
+          break;
         }
-
-        if (newFocusedItem !== prevState.keyboardNavigation.item) {
-          event.preventDefault();
-          return {
-            ...prevState,
-            ...(prevState.interaction && {
-              interaction: { ...prevState.interaction, lastUpdate: 'keyboard' },
-            }),
-            keyboardNavigation: {
-              ...prevState.keyboardNavigation,
-              item: newFocusedItem,
-            },
-          };
+        case 'ArrowUp': {
+          newFocusedItem = getNextSeriesFocusedItem(store.state);
+          break;
         }
+        default:
+          break;
+      }
 
-        return prevState;
-      });
+      if (newFocusedItem !== store.state.keyboardNavigation.item) {
+        event.preventDefault();
+
+        store.update({
+          ...(store.state.highlight && {
+            highlight: { ...store.state.highlight, lastUpdate: 'keyboard' },
+          }),
+          ...(store.state.interaction && {
+            interaction: { ...store.state.interaction, lastUpdate: 'keyboard' },
+          }),
+          keyboardNavigation: {
+            ...store.state.keyboardNavigation,
+            item: newFocusedItem,
+          },
+        });
+      }
     }
 
     element.addEventListener('keydown', keyboardHandler);
@@ -177,22 +169,16 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     };
   }, [svgRef, removeFocus, params.enableKeyboardNavigation, store]);
 
-  useEnhancedEffect(
-    () =>
-      store.update((prev) =>
-        prev.keyboardNavigation.enableKeyboardNavigation === params.enableKeyboardNavigation
-          ? prev
-          : {
-              ...prev,
-              keyboardNavigation: {
-                ...prev.keyboardNavigation,
-                enableKeyboardNavigation: !!params.enableKeyboardNavigation,
-              },
-            },
-      ),
-
-    [store, params.enableKeyboardNavigation],
-  );
+  useEnhancedEffect(() => {
+    if (
+      store.state.keyboardNavigation.enableKeyboardNavigation !== params.enableKeyboardNavigation
+    ) {
+      store.set('keyboardNavigation', {
+        ...store.state.keyboardNavigation,
+        enableKeyboardNavigation: !!params.enableKeyboardNavigation,
+      });
+    }
+  }, [store, params.enableKeyboardNavigation]);
 
   return {};
 };

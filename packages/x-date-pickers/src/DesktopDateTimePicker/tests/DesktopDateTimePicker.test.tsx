@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { spy } from 'sinon';
 import { screen } from '@mui/internal-test-utils';
 import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker';

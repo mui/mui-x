@@ -14,7 +14,7 @@ import { useTreeView } from '../internals/useTreeView';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { RICH_TREE_VIEW_PLUGINS, RichTreeViewPluginSignatures } from './RichTreeView.plugins';
 import { RichTreeViewItems } from '../internals/components/RichTreeViewItems';
-import { itemsSelectors } from '../internals/plugins/useTreeViewItems';
+import { lazyLoadingSelectors } from '../internals/plugins/useTreeViewLazyLoading';
 
 const useThemeProps = createUseThemeProps('MuiRichTreeView');
 
@@ -88,8 +88,8 @@ const RichTreeView = React.forwardRef(function RichTreeView<
     rootRef: ref,
     props: other,
   });
-  const isLoading = useStore(contextValue.store, itemsSelectors.isLoading);
-  const treeViewError = useStore(contextValue.store, itemsSelectors.error);
+  const isLoading = useStore(contextValue.store, lazyLoadingSelectors.isItemLoading, null);
+  const error = useStore(contextValue.store, lazyLoadingSelectors.itemError, null);
 
   const classes = useUtilityClasses(props);
 
@@ -106,8 +106,8 @@ const RichTreeView = React.forwardRef(function RichTreeView<
     return <Typography>Loading...</Typography>;
   }
 
-  if (treeViewError) {
-    return <Alert severity="error">{treeViewError.message}</Alert>;
+  if (error) {
+    return <Alert severity="error">{error.message}</Alert>;
   }
 
   return (
@@ -149,7 +149,7 @@ RichTreeView.propTypes = {
     }),
   }),
   /**
-   * If `true`, the Tree View renders a checkbox at the left of its label that allows selecting it.
+   * Whether the Tree View renders a checkbox at the left of its label that allows selecting it.
    * @default false
    */
   checkboxSelection: PropTypes.bool,
@@ -171,12 +171,12 @@ RichTreeView.propTypes = {
    */
   defaultSelectedItems: PropTypes.any,
   /**
-   * If `true`, will allow focus on disabled items.
+   * Whether the items should be focusable when disabled.
    * @default false
    */
   disabledItemsFocusable: PropTypes.bool,
   /**
-   * If `true` selection is disabled.
+   * Whether selection is disabled.
    * @default false
    */
   disableSelection: PropTypes.bool,
@@ -204,7 +204,7 @@ RichTreeView.propTypes = {
    *
    * @template R
    * @param {R} item The item to check.
-   * @returns {string} The id of the item.
+   * @returns {TreeViewItemId} The id of the item.
    * @default (item) => item.id
    */
   getItemId: PropTypes.func,
@@ -245,33 +245,33 @@ RichTreeView.propTypes = {
   itemChildrenIndentation: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   items: PropTypes.array.isRequired,
   /**
-   * If `true`, `ctrl` and `shift` will trigger multiselect.
+   * Whether multiple items can be selected.
    * @default false
    */
   multiSelect: PropTypes.bool,
   /**
    * Callback fired when Tree Items are expanded/collapsed.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemExpansion()` method.
-   * @param {array} itemIds The ids of the expanded items.
+   * @param {TreeViewItemId[]} itemIds The ids of the expanded items.
    */
   onExpandedItemsChange: PropTypes.func,
   /**
    * Callback fired when the `content` slot of a given Tree Item is clicked.
    * @param {React.MouseEvent} event The DOM event that triggered the change.
-   * @param {string} itemId The id of the focused item.
+   * @param {TreeViewItemId} itemId The id of the focused item.
    */
   onItemClick: PropTypes.func,
   /**
    * Callback fired when a Tree Item is expanded or collapsed.
    * @param {React.SyntheticEvent | null} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemExpansion()` method.
-   * @param {array} itemId The itemId of the modified item.
-   * @param {array} isExpanded `true` if the item has just been expanded, `false` if it has just been collapsed.
+   * @param {TreeViewItemId} itemId The itemId of the modified item.
+   * @param {boolean} isExpanded `true` if the item has just been expanded, `false` if it has just been collapsed.
    */
   onItemExpansionToggle: PropTypes.func,
   /**
    * Callback fired when a given Tree Item is focused.
    * @param {React.SyntheticEvent | null} event The DOM event that triggered the change. **Warning**: This is a generic event not a focus event.
-   * @param {string} itemId The id of the focused item.
+   * @param {TreeViewItemId} itemId The id of the focused item.
    */
   onItemFocus: PropTypes.func,
   /**
@@ -283,14 +283,14 @@ RichTreeView.propTypes = {
   /**
    * Callback fired when a Tree Item is selected or deselected.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemSelection()` method.
-   * @param {array} itemId The itemId of the modified item.
-   * @param {array} isSelected `true` if the item has just been selected, `false` if it has just been deselected.
+   * @param {TreeViewItemId} itemId The itemId of the modified item.
+   * @param {boolean} isSelected `true` if the item has just been selected, `false` if it has just been deselected.
    */
   onItemSelectionToggle: PropTypes.func,
   /**
    * Callback fired when Tree Items are selected/deselected.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemSelection()` method.
-   * @param {string[] | string} itemIds The ids of the selected items.
+   * @param {TreeViewItemId[] | TreeViewItemId} itemIds The ids of the selected items.
    * When `multiSelect` is `true`, this is an array of strings; when false (default) a string.
    */
   onSelectedItemsChange: PropTypes.func,
