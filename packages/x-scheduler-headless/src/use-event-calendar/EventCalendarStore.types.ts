@@ -2,7 +2,7 @@ import {
   EventCalendarPreferences,
   CalendarView,
   EventCalendarPreferencesMenuConfig,
-  CalendarViewConfig,
+  EventCalendarViewConfig,
 } from '../models';
 import { SchedulerState, SchedulerParameters } from '../utils/SchedulerStore';
 
@@ -28,7 +28,7 @@ export interface EventCalendarState extends SchedulerState {
    * Config of the current view.
    * Should not be used in selectors, only in event handlers.
    */
-  viewConfig: CalendarViewConfig | null;
+  viewConfig: EventCalendarViewConfig | null;
 }
 
 export interface EventCalendarParameters<TEvent extends object, TResource extends object>

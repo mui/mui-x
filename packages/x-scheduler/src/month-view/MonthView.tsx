@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { useStore } from '@base-ui-components/utils/store';
 import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
+import { EventCalendarViewConfig } from '@mui/x-scheduler-headless/models';
 import { useDayList } from '@mui/x-scheduler-headless/use-day-list';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventCalendarView } from '@mui/x-scheduler-headless/use-event-calendar-view';
@@ -27,6 +28,11 @@ const CELL_PADDING = 8;
 const DAY_NUMBER_HEADER_HEIGHT = 18;
 const EVENT_HEIGHT = 18;
 const EVENT_GAP = 5;
+
+const MONTH_VIEW_CONFIG: EventCalendarViewConfig = {
+  siblingVisibleDateGetter: ({ state, delta }) =>
+    state.adapter.addMonths(state.adapter.startOfMonth(state.visibleDate), delta),
+};
 
 /**
  * A Month View to use inside the Event Calendar.
@@ -55,6 +61,8 @@ export const MonthView = React.memo(
     const [maxEvents, setMaxEvents] = React.useState<number>(4);
 
     // Feature hooks
+    useEventCalendarView(MONTH_VIEW_CONFIG);
+
     const getDayList = useDayList();
     const getWeekList = useWeekList();
     const { weeks, days } = React.useMemo(() => {
@@ -70,11 +78,6 @@ export const MonthView = React.memo(
     }, [adapter, getWeekList, getDayList, visibleDate, showWeekends]);
 
     const occurrencesMap = useEventOccurrencesGroupedByDay({ days });
-
-    useEventCalendarView(() => ({
-      siblingVisibleDateGetter: (date, delta) =>
-        adapter.addMonths(adapter.startOfMonth(date), delta),
-    }));
 
     useResizeObserver(
       cellRef,
