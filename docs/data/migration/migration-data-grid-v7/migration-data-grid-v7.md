@@ -34,6 +34,10 @@ Since `v8` is a major release, it contains changes that affect the public API.
 These changes were done for consistency, improved stability and to make room for new features.
 Described below are the steps needed to migrate from `v7` to `v8`.
 
+## Minimum TypeScript version
+
+The minimum supported version of TypeScript is `v5` to take advantage of the [`const` type parameters](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#const-type-parameters) feature.
+
 ## Package layout changes
 
 MUI X v8 packages have been updated to use the [Node.js `exports` field](https://nodejs.org/api/packages.html#exports), following [Material v7 package layout changes](https://mui.com/system/migration/upgrade-to-v7/#package-layout).
