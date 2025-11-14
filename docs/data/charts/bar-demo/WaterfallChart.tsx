@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BarChart } from '@mui/x-charts/BarChart';
+import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 import { useTheme } from '@mui/system';
 import { rainbowSurgePalette } from '@mui/x-charts/colorPalettes';
 
@@ -18,7 +18,7 @@ export default function WaterfallChart() {
   const green = palette[4];
 
   return (
-    <BarChart
+    <BarChartPro
       xAxis={[
         {
           data: [
