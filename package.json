@@ -165,6 +165,9 @@
           "lodash.kebabcase": "^4.1.1"
         }
       }
+    },
+    "patchedDependencies": {
+      "@base-ui-components/react": "patches/@base-ui-components__react.patch"
     }
   }
 }
