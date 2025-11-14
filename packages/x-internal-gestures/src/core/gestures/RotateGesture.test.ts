@@ -56,6 +56,12 @@ describe('Rotate Gesture', () => {
         `rotateEnd: rotation: ${Math.floor(detail.rotation)}° | delta: ${Math.floor(detail.delta)}° | totalRotation: ${Math.floor(detail.totalRotation)}°`,
       );
     });
+    gestureTarget.addEventListener('rotateCancel', (event) => {
+      const detail = event.detail;
+      events.push(
+        `rotateCancel: rotation: ${Math.floor(detail.rotation)}° | delta: ${Math.floor(detail.delta)}° | totalRotation: ${Math.floor(detail.totalRotation)}°`,
+      );
+    });
   });
 
   afterEach(() => {
@@ -190,5 +196,28 @@ describe('Rotate Gesture', () => {
       maxPointers: 3,
       preventIf: ['pinch', 'pan'],
     });
+  });
+
+  it('should emit rotateCancel and rotateEnd when cancel is called', async () => {
+    target.addEventListener('rotate', ((event: CustomEvent) => {
+      event.detail.cancel();
+    }) as EventListener);
+
+    await touchGesture.rotate({
+      target,
+      steps: 1,
+      rotationAngle: 90,
+    });
+
+    expect(events).toStrictEqual([
+      'rotateStart: rotation: 45° | delta: 45° | totalRotation: 45°',
+      'rotate: rotation: 45° | delta: 45° | totalRotation: 45°',
+      'rotateCancel: rotation: 45° | delta: 45° | totalRotation: 45°',
+      'rotateEnd: rotation: 45° | delta: 45° | totalRotation: 45°',
+      'rotateStart: rotation: -45° | delta: -90° | totalRotation: -45°',
+      'rotate: rotation: -45° | delta: -90° | totalRotation: -45°',
+      'rotateCancel: rotation: -45° | delta: -90° | totalRotation: -45°',
+      'rotateEnd: rotation: -45° | delta: -90° | totalRotation: -45°',
+    ]);
   });
 });
