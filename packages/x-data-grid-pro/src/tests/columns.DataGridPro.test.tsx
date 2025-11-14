@@ -615,6 +615,26 @@ describe('<DataGridPro /> - Columns', () => {
       });
     });
 
+    it('should work with custom column header sort icon', async () => {
+      const iconSize = 24;
+      function CustomSortIcon() {
+        return <span style={{ fontSize: iconSize }}>⇅</span>;
+      }
+      render(
+        <Test
+          rows={rows}
+          columns={columns}
+          slots={{
+            columnHeaderSortIcon: CustomSortIcon,
+          }}
+        />,
+      );
+      await waitFor(() => {
+        // 2 is the gap.
+        expect(getWidths()).to.deep.equal([152 + 2 + iconSize, 174 + 2 + iconSize]);
+      });
+    });
+
     describe('options', () => {
       const autosize = async (options: GridAutosizeOptions | undefined, widths: number[]) => {
         render(<Test rows={rows} columns={columns} />);
