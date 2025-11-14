@@ -202,7 +202,7 @@ export function FormContent(props: FormContentProps) {
   }, [resources, translations.labelNoResource]);
 
   return (
-    <Form errors={errors} onClearErrors={setErrors} onSubmit={handleSubmit}>
+    <Form errors={errors} onSubmit={handleSubmit}>
       <EventPopoverHeader>
         <Field.Root className="EventPopoverFieldRoot" name="title">
           <Field.Label className="EventPopoverTitle">
