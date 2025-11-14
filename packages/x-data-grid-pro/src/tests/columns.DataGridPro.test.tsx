@@ -629,10 +629,8 @@ describe('<DataGridPro /> - Columns', () => {
           }}
         />,
       );
-      await waitFor(() => {
-        // 2 is the gap.
-        expect(getWidths()).to.deep.equal([152 + 2 + iconSize, 174 + 2 + iconSize]);
-      });
+      await act(async () => apiRef.current?.autosizeColumns());
+      expect(getWidths()).to.deep.equal([152 + 2 + iconSize, 174 + 2 + iconSize]); // 2 is the gap.
     });
 
     describe('options', () => {
