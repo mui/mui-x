@@ -4,6 +4,7 @@ packages:
   - test
   - test/*
   - bundle-size
+  - examples/*
 
 catalog:
   '@babel/cli': ^7.28.3
