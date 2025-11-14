@@ -38,11 +38,11 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
   const preferencesMenuConfig = useStore(store, eventCalendarPreferenceSelectors.menuConfig);
 
   const handleToggle = (key: keyof EventCalendarPreferences, checked: boolean, event: Event) => {
-    store.setPreferences({ [key]: checked }, event);
+    store.updatePreferences({ [key]: checked }, event);
   };
 
   const handleTimeFormatChange = (value: '12' | '24', event: Event) => {
-    store.setPreferences({ ampm: value === '12' }, event);
+    store.updatePreferences({ ampm: value === '12' }, event);
   };
 
   if (preferencesMenuConfig === false) {

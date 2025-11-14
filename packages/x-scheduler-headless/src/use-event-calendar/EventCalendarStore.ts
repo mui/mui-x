@@ -44,7 +44,10 @@ const mapper: SchedulerParametersToStateMapper<
   getInitialState: (schedulerInitialState, parameters) => ({
     ...schedulerInitialState,
     ...deriveStateFromParameters(parameters),
-    preferences: { ...DEFAULT_EVENT_CALENDAR_PREFERENCES, ...parameters.preferences },
+    preferences: parameters.preferences ?? {
+      ...DEFAULT_EVENT_CALENDAR_PREFERENCES,
+      ...parameters.defaultPreferences,
+    },
     preferencesMenuConfig:
       parameters.preferencesMenuConfig === false
         ? parameters.preferencesMenuConfig
@@ -62,6 +65,7 @@ const mapper: SchedulerParametersToStateMapper<
     };
 
     updateModel(newState, 'view', 'defaultView');
+    updateModel(newState, 'preferences', 'defaultPreferences');
     return newState;
   },
 };
@@ -183,14 +187,22 @@ export class EventCalendarStore<
   /**
    * Updates some preferences of the calendar.
    */
-  public setPreferences = (
+  public updatePreferences = (
     partialPreferences: Partial<EventCalendarPreferences>,
-    _event: React.UIEvent | Event,
+    event: React.UIEvent | Event,
   ) => {
-    this.set('preferences', {
+    const { preferences: preferencesProp, onPreferencesChange } = this.parameters;
+
+    const updated = {
       ...this.state.preferences,
       ...partialPreferences,
-    });
+    };
+
+    if (preferencesProp === undefined) {
+      this.set('preferences', updated);
+    }
+
+    onPreferencesChange?.(updated, event);
   };
 
   /**

@@ -15,7 +15,7 @@ describe('Preferences - EventCalendarStore', () => {
   describe('Method: setPreferences', () => {
     it('should merge a partial: showWeekNumber=true keeps showWeekends=true', () => {
       const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
-      store.setPreferences({ showWeekNumber: true }, {} as any);
+      store.updatePreferences({ showWeekNumber: true }, {} as any);
 
       expect(store.state.preferences).to.deep.equal({
         ...DEFAULT_PREFERENCES,
@@ -25,7 +25,7 @@ describe('Preferences - EventCalendarStore', () => {
 
     it('should update multiple preferences in a single call', () => {
       const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
-      store.setPreferences({ showWeekends: false, showWeekNumber: true }, {} as any);
+      store.updatePreferences({ showWeekends: false, showWeekNumber: true }, {} as any);
 
       expect(store.state.preferences).to.deep.equal({
         ...DEFAULT_PREFERENCES,
@@ -36,8 +36,8 @@ describe('Preferences - EventCalendarStore', () => {
 
     it('should accumulate successive partial updates', () => {
       const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
-      store.setPreferences({ showWeekends: false }, {} as any);
-      store.setPreferences({ showWeekNumber: true }, {} as any);
+      store.updatePreferences({ showWeekends: false }, {} as any);
+      store.updatePreferences({ showWeekNumber: true }, {} as any);
 
       expect(store.state.preferences).to.deep.equal({
         ...DEFAULT_PREFERENCES,
