@@ -1,0 +1,16 @@
+diff --git a/utils/useScrollLock.js b/utils/useScrollLock.js
+index 58ccee9f790bd2d64f04a642c115f36fc73e9264..a807f223d5f8cd2acac029373b79ef34af4563a6 100644
+--- a/utils/useScrollLock.js
++++ b/utils/useScrollLock.js
+@@ -124,7 +124,10 @@ function preventScrollStandard(referenceElement) {
+   return () => {
+     resizeFrame.cancel();
+     cleanup();
+-    win.removeEventListener('resize', handleResize);
++    console.log('cleaning up', typeof win.removeEventListener)
++    if (win.removeEventListener) {
++      win.removeEventListener('resize', handleResize);
++    }
+   };
+ }
+ class ScrollLocker {
