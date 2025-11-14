@@ -85,7 +85,7 @@ export const Virtualization = {
 export namespace Virtualization {
   export type State = {
     virtualization: VirtualizationState;
-    legacyAPI: ReturnType<typeof useVirtualization>['legacyAPI'];
+    getters: ReturnType<typeof useVirtualization>['getters'];
   };
   export type API = ReturnType<typeof useVirtualization>;
 }
@@ -100,7 +100,7 @@ function initializeState(params: ParamsWithDefaults) {
       ...params.initialState?.virtualization,
     },
     // FIXME: refactor once the state shape is settled
-    legacyAPI: null as unknown as ReturnType<typeof useVirtualization>['legacyAPI'],
+    getters: null as unknown as ReturnType<typeof useVirtualization>['getters'],
   };
   return state;
 }
@@ -602,7 +602,7 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
   };
 
   // Legacy API, cannot change without a breaking change in the grid (GridDetailPanels, etc)
-  const legacyAPI = {
+  const getters = {
     setPanels,
     getRows,
     getContainerProps: () => ({
@@ -712,18 +712,18 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     useFirstRender(() => {
       store.state = {
         ...store.state,
-        legacyAPI,
+        getters,
       };
     });
     React.useEffect(() => {
-      store.update({ legacyAPI });
+      store.update({ getters });
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, Object.values(legacyAPI));
+    }, Object.values(getters));
     /* eslint-enable react-hooks/rules-of-hooks */
   }
 
   return {
-    legacyAPI,
+    getters,
     useVirtualization: () => useStore(store, (state) => state),
     setPanels,
     forceUpdateRenderContext,

@@ -30,7 +30,7 @@ import {
 /* eslint-disable jsdoc/require-returns-type */
 
 export type Virtualizer = ReturnType<typeof useVirtualizer>;
-export type VirtualScrollerCompat = Virtualization.State['legacyAPI'];
+export type VirtualScrollerCompat = Virtualization.State['getters'];
 
 export type BaseState = Virtualization.State & Dimensions.State;
 

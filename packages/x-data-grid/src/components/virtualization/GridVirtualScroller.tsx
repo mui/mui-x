@@ -100,7 +100,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
   };
   const classes = useUtilityClasses(ownerState);
 
-  const virtualScroller = apiRef.current.virtualizer.api.useVirtualization().legacyAPI;
+  const virtualScroller = apiRef.current.virtualizer.api.useVirtualization().getters;
 
   const {
     getContainerProps,
