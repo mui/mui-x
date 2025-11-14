@@ -13,39 +13,10 @@ import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
 import {
   selectorChartsLastInteraction,
-  selectorChartsTooltipItemIsDefined,
   selectorChartsTooltipItemPosition,
 } from '../internals/plugins/featurePlugins/useChartInteraction';
-import {
-  selectorChartsInteractionAxisTooltip,
-  UseChartCartesianAxisSignature,
-} from '../internals/plugins/featurePlugins/useChartCartesianAxis';
-import { selectorChartsInteractionPolarAxisTooltip } from '../internals/plugins/featurePlugins/useChartPolarAxis/useChartPolarInteraction.selectors';
-import { useAxisSystem } from '../hooks/useAxisSystem';
-import { useSvgRef } from '../hooks';
-import { selectorBrushShouldPreventTooltip } from '../internals/plugins/featurePlugins/useChartBrush';
-
-const selectorReturnFalse = () => false;
-
-function getIsOpenSelector(
-  trigger: TriggerOptions,
-  axisSystem: 'none' | 'polar' | 'cartesian',
-  shouldPreventBecauseOfBrush?: boolean,
-) {
-  if (shouldPreventBecauseOfBrush) {
-    return selectorReturnFalse;
-  }
-  if (trigger === 'item') {
-    return selectorChartsTooltipItemIsDefined;
-  }
-  if (axisSystem === 'polar') {
-    return selectorChartsInteractionPolarAxisTooltip;
-  }
-  if (axisSystem === 'cartesian') {
-    return selectorChartsInteractionAxisTooltip;
-  }
-  return selectorReturnFalse;
-}
+import { UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+import { useIsTooltipActive, useSvgRef } from '../hooks';
 
 export interface ChartsTooltipContainerProps<T extends TriggerOptions = TriggerOptions>
   extends Partial<PopperProps> {
@@ -113,15 +84,9 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   const popperRef: PopperProps['popperRef'] = React.useRef(null);
   const positionRef = useLazyRef(() => ({ x: 0, y: 0 }));
 
-  const axisSystem = useAxisSystem();
-
   const store = useStore<[UseChartCartesianAxisSignature]>();
 
-  const shouldPreventBecauseOfBrush = useSelector(store, selectorBrushShouldPreventTooltip);
-  const isOpen = useSelector(
-    store,
-    getIsOpenSelector(trigger, axisSystem, shouldPreventBecauseOfBrush),
-  );
+  const isOpen = useIsTooltipActive(trigger);
 
   const lastInteraction = useSelector(store, selectorChartsLastInteraction);
   const computedAnchor = lastInteraction === 'keyboard' ? 'node' : anchor;
