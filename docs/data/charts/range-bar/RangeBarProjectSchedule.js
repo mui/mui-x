@@ -22,7 +22,7 @@ import Typography from '@mui/material/Typography';
 import { ScatterPlot } from '@mui/x-charts/ScatterChart';
 
 const importantHappeningsLabels = [
-  'Final design process under way.\nExploratory archaeology digs begin.',
+  'Exploratory archaeology digs begin.',
   'South Boston Haul Road opens',
   'New Broadway Bridge opens.\nLeverett Circle Connector Bridge opens.',
   'Leonard P. Zakim Bunker Hill Bridge completed',
@@ -45,6 +45,7 @@ const importantHappenings = [
   { x: 2002, y: 5 },
   { x: 2003, y: 5 },
   { x: 2004, y: 6 },
+  { x: 2005, y: 6 },
   { x: 2006, y: 7 },
   { x: 2007, y: 8 },
 ];

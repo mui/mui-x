@@ -4,14 +4,16 @@ import {
   useXAxes,
   useYAxes,
 } from '@mui/x-charts/hooks';
-import getColor from '@mui/x-charts/BarChart/seriesConfig/rangeBar/getColor';
 import {
   checkBarChartScaleErrors,
   ComputedAxis,
   ComputedAxisConfig,
+  defaultSeriesConfig,
 } from '@mui/x-charts/internals';
 import { ChartsXAxisProps, ChartsYAxisProps } from '@mui/x-charts/models';
 import { ProcessedRangeBarData, ProcessedRangeBarSeriesData } from './types';
+
+const getColor = defaultSeriesConfig.rangeBar.colorProcessor;
 
 export function useRangeBarPlotData(
   drawingArea: ChartDrawingArea,
