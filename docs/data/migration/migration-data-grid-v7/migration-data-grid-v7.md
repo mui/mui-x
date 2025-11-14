@@ -36,7 +36,7 @@ Described below are the steps needed to migrate from `v7` to `v8`.
 
 ## Minimum TypeScript version
 
-The minimum supported version of TypeScript is **v5.x** to take advantage of the [`const` type parameters](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#const-type-parameters) feature.
+The minimum supported version of TypeScript is `v5` to take advantage of the [`const` type parameters](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#const-type-parameters) feature.
 
 ## Package layout changes
 
