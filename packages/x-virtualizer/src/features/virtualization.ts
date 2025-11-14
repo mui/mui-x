@@ -8,11 +8,11 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import type { integer } from '@mui/x-internals/types';
 import * as platform from '@mui/x-internals/platform';
 import { useRunOnce } from '@mui/x-internals/useRunOnce';
-import { useFirstRender } from '@mui/x-internals/useFirstRender';
 import { createSelector, useStore, useStoreEffect, Store } from '@mui/x-internals/store';
-import { PinnedRows, PinnedColumns } from '../models/core';
+import reactMajor from '@mui/x-internals/reactMajor';
+import { PinnedRows, PinnedColumns, Size } from '../models/core';
 import type { CellColSpanInfo } from '../models/colspan';
-import { Dimensions } from './dimensions';
+import { Dimensions, observeRootNode } from './dimensions';
 import type { BaseState, VirtualizerParams } from '../useVirtualizer';
 import {
   PinnedRowPosition,
@@ -61,6 +61,7 @@ export const EMPTY_RENDER_CONTEXT = {
 };
 
 const selectors = {
+  store: createSelector((state: BaseState) => state.virtualization),
   renderContext: createSelector((state: BaseState) => state.virtualization.renderContext),
   enabledForRows: createSelector((state: BaseState) => state.virtualization.enabledForRows),
   enabledForColumns: createSelector((state: BaseState) => state.virtualization.enabledForColumns),
@@ -139,7 +140,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
 
   const hasBottomPinnedRows = pinnedRows.bottom.length > 0;
   const [panels, setPanels] = React.useState(EMPTY_DETAIL_PANELS);
-  const [, setRefTick] = React.useState(0);
+  const isUpdateScheduled = React.useRef(false);
 
   const isRenderContextReady = React.useRef(false);
 
@@ -291,7 +292,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     return nextRenderContext;
   });
 
-  const forceUpdateRenderContext = useEventCallback(() => {
+  const forceUpdateRenderContext = () => {
     // skip update if dimensions are not ready and virtualization is enabled
     if (
       !Dimensions.selectors.dimensions(store.state).isReady &&
@@ -304,7 +305,26 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     // Reset the frozen context when the render context changes, see the illustration in https://github.com/mui/mui-x/pull/12353
     frozenContext.current = undefined;
     updateRenderContext(nextRenderContext);
+  };
+
+  const forceUpdateRenderContextCallback = useEventCallback(forceUpdateRenderContext);
+
+  useStoreEffect(store, Dimensions.selectors.dimensions, (previous, next) => {
+    if (next.isReady) {
+      forceUpdateRenderContext();
+    }
   });
+
+  useEnhancedEffect(() => {
+    if (isUpdateScheduled.current) {
+      forceUpdateRenderContext();
+      isUpdateScheduled.current = false;
+    }
+  });
+
+  const scheduleUpdateRenderContext = () => {
+    isUpdateScheduled.current = true;
+  };
 
   const handleScroll = useEventCallback(() => {
     if (ignoreNextScrollEvent.current) {
@@ -543,8 +563,8 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     if (!isRenderContextReady.current) {
       return;
     }
-    forceUpdateRenderContext();
-  }, [enabledForColumns, enabledForRows, forceUpdateRenderContext]);
+    forceUpdateRenderContextCallback();
+  }, [enabledForColumns, enabledForRows, forceUpdateRenderContextCallback]);
 
   useEnhancedEffect(() => {
     if (refs.scroller.current) {
@@ -609,22 +629,90 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
   const refSetter = (name: keyof typeof refs) => (node: HTMLDivElement | null) => {
     if (node && refs[name].current !== node) {
       refs[name].current = node;
-      setRefTick((tick) => tick + 1);
     }
   };
+
+  const isFirstSizing = React.useRef(true);
+
+  const containerCleanup = React.useRef<() => void | undefined>(undefined);
+
+  const containerRef = useEventCallback((node: HTMLDivElement | null) => {
+    if (!node) {
+      // Cleanup for R18
+      containerCleanup.current?.();
+      return;
+    }
+
+    refs.container.current = node;
+    const unsubscribe = observeRootNode(node, store, (rootSize: Size) => {
+      if (
+        rootSize.width === 0 &&
+        rootSize.height === 0 &&
+        store.state.rootSize.height !== 0 &&
+        store.state.rootSize.width !== 0
+      ) {
+        return;
+      }
+      store.state.rootSize = rootSize;
+      if (isFirstSizing.current || !api.debouncedUpdateDimensions) {
+        // We want to initialize the grid dimensions as soon as possible to avoid flickering
+        api.updateDimensions(isFirstSizing.current);
+        isFirstSizing.current = false;
+      } else {
+        api.debouncedUpdateDimensions();
+      }
+    });
+    containerCleanup.current = () => {
+      unsubscribe?.();
+      refs.container.current = null;
+    };
+
+    if (reactMajor >= 19) {
+      /* eslint-disable-next-line consistent-return */
+      return containerCleanup.current;
+    }
+  });
+
+  const scrollerCleanup = React.useRef<() => void | undefined>(undefined);
+  const scrollerRef = useEventCallback((node: HTMLDivElement | null) => {
+    if (!node) {
+      // Cleanup for R18
+      scrollerCleanup.current?.();
+      return;
+    }
+
+    scrollerCleanup.current?.();
+    refs.scroller.current = node;
+    const opts: AddEventListenerOptions = { passive: true };
+    node.addEventListener('scroll', handleScroll, opts);
+    node.addEventListener('wheel', onWheel as any, opts);
+    node.addEventListener('touchmove', onTouchMove as any, opts);
+    scrollerCleanup.current = () => {
+      node.removeEventListener('scroll', handleScroll, opts);
+      node.removeEventListener('wheel', onWheel as any, opts);
+      node.removeEventListener('touchmove', onTouchMove as any, opts);
+      refs.scroller.current = null;
+    };
+
+    if (reactMajor >= 19) {
+      /* eslint-disable-next-line consistent-return */
+      return scrollerCleanup.current;
+    }
+  });
+
+  const scrollbarVerticalRef = useEventCallback(refSetter('scrollbarVertical'));
+  const scrollbarHorizontalRef = useEventCallback(refSetter('scrollbarHorizontal'));
 
   const getters = {
     setPanels,
     getOffsetTop,
     getRows,
+    rows: params.rows,
     getContainerProps: () => ({
-      ref: refSetter('container'),
+      ref: containerRef,
     }),
     getScrollerProps: () => ({
-      ref: refSetter('scroller'),
-      onScroll: handleScroll,
-      onWheel,
-      onTouchMove,
+      ref: scrollerRef,
       style: scrollerStyle,
       role: 'presentation',
       // `tabIndex` shouldn't be used along role=presentation, but it fixes a Firefox bug
@@ -637,28 +725,17 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
       role: 'presentation',
     }),
     getScrollbarVerticalProps: () => ({
-      ref: refSetter('scrollbarVertical'),
+      ref: scrollbarVerticalRef,
       scrollPosition,
     }),
     getScrollbarHorizontalProps: () => ({
-      ref: refSetter('scrollbarHorizontal'),
+      ref: scrollbarHorizontalRef,
       scrollPosition,
     }),
     getScrollAreaProps: () => ({
       scrollPosition,
     }),
   };
-
-  useFirstRender(() => {
-    store.state = {
-      ...store.state,
-      getters,
-    };
-  });
-  React.useEffect(() => {
-    store.update({ getters });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, Object.values(getters));
 
   /* Placeholder API functions for colspan & rowspan to re-implement */
 
@@ -679,6 +756,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     useVirtualization: () => useStore(store, (state) => state),
     setPanels,
     forceUpdateRenderContext,
+    scheduleUpdateRenderContext,
     getCellColSpanInfo,
     calculateColSpan,
     getHiddenCellsOrigin,
