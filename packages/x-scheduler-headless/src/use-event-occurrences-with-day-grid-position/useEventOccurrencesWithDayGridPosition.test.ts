@@ -1,8 +1,8 @@
-import { adapter } from 'test/utils/scheduler';
+import { adapter, createProcessedEvent } from 'test/utils/scheduler';
 import { renderHook } from '@mui/internal-test-utils';
 import { useEventOccurrencesWithDayGridPosition } from './useEventOccurrencesWithDayGridPosition';
 import { processDate } from '../process-date';
-import { CalendarEvent } from '../models';
+import { SchedulerProcessedEvent } from '../models';
 import { innerGetEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
 
 describe('useDayListEventOccurrencesWithPosition', () => {
@@ -12,21 +12,28 @@ describe('useDayListEventOccurrencesWithPosition', () => {
     processDate(adapter.date('2024-01-17'), adapter),
   ];
 
-  function testHook(events: CalendarEvent[]) {
+  function testHook(events: SchedulerProcessedEvent[]) {
     const { result } = renderHook(() => {
-      const occurrencesMap = innerGetEventOccurrencesGroupedByDay(adapter, days, events, new Map());
+      const occurrencesMap = innerGetEventOccurrencesGroupedByDay(
+        adapter,
+        days,
+        events,
+        new Map(),
+        new Map(),
+      );
       return useEventOccurrencesWithDayGridPosition({ days, occurrencesMap });
     });
 
     return result.current;
   }
 
-  const createEvent = (id: string, start: string, end: string): CalendarEvent => ({
-    id,
-    start: adapter.date(start),
-    end: adapter.date(end),
-    title: `Event ${id}`,
-  });
+  const createEvent = (id: string, start: string, end: string) =>
+    createProcessedEvent({
+      id,
+      start: adapter.date(start),
+      end: adapter.date(end),
+      title: `Event ${id}`,
+    });
 
   it('should set index to 1 for the first event on a day', () => {
     const result = testHook([createEvent('A', '2024-01-15', '2024-01-15')]);

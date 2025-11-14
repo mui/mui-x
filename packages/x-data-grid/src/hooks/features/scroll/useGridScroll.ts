@@ -8,7 +8,6 @@ import {
   gridColumnPositionsSelector,
   gridVisibleColumnDefinitionsSelector,
 } from '../columns/gridColumnsSelector';
-import { useGridSelector } from '../../utils/useGridSelector';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { gridPageSelector, gridPageSizeSelector } from '../pagination/gridPaginationSelector';
 import { gridRowCountSelector } from '../rows/gridRowsSelector';
@@ -60,7 +59,6 @@ export const useGridScroll = (
   const logger = useGridLogger(apiRef, 'useGridScroll');
   const colRef = apiRef.current.columnHeadersContainerRef;
   const virtualScrollerRef = apiRef.current.virtualScrollerRef!;
-  const visibleSortedRows = useGridSelector(apiRef, gridExpandedSortedRowEntriesSelector);
 
   const scrollToIndexes = React.useCallback<GridScrollApi['scrollToIndexes']>(
     (params: Partial<GridCellIndexCoordinates>) => {
@@ -82,6 +80,7 @@ export const useGridScroll = (
         let cellWidth: number | undefined;
 
         if (typeof params.rowIndex !== 'undefined') {
+          const visibleSortedRows = gridExpandedSortedRowEntriesSelector(apiRef);
           const rowId = visibleSortedRows[params.rowIndex]?.id;
           const cellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(
             rowId,
@@ -140,7 +139,7 @@ export const useGridScroll = (
 
       return false;
     },
-    [logger, apiRef, virtualScrollerRef, props.pagination, visibleSortedRows],
+    [logger, apiRef, virtualScrollerRef, props.pagination],
   );
 
   const scroll = React.useCallback<GridScrollApi['scroll']>(

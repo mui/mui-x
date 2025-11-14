@@ -6,7 +6,7 @@
     opacity: 0.5;
   }
 
-  &:hover .EventResizeHandler {
+  &:hover .DayGridEventResizeHandler {
     opacity: 1;
   }
 }

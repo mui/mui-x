@@ -96,8 +96,8 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
                 <span className="DayGridEventTime">{translations.allDay}</span>
               ) : (
                 <time className="DayGridEventTime">
-                  <span>{formatTime(occurrence.start)}</span>
-                  <span> - {formatTime(occurrence.end)}</span>
+                  <span>{formatTime(occurrence.start.value)}</span>
+                  <span> - {formatTime(occurrence.end.value)}</span>
                 </time>
               )}
 

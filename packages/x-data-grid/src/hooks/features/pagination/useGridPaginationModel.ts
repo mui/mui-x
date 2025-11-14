@@ -255,7 +255,9 @@ export const useGridPaginationModel = (
 
       const pageCount = gridPageCountSelector(apiRef);
       if (paginationModel.page > pageCount - 1) {
-        apiRef.current.setPage(Math.max(0, pageCount - 1));
+        queueMicrotask(() => {
+          apiRef.current.setPage(Math.max(0, pageCount - 1));
+        });
       }
     },
     [apiRef],

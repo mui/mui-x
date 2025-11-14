@@ -8,7 +8,7 @@ The Model Context Protocol (MCP) is a new open standard for connecting AI assist
 For users, this means you get answers that are accurate, up-to-date, and directly reference the official docs.
 
 Want to learn more about MCP?
-See the [official MCP documentation](https://modelcontextprotocol.io/introduction).
+See the [official MCP documentation](https://modelcontextprotocol.io/docs/getting-started/intro).
 
 ## Why MCP?
 

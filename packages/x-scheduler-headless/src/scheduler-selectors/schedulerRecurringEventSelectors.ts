@@ -1,12 +1,11 @@
-import { createSelectorMemoized } from '@base-ui-components/utils/store';
+import { createSelector, createSelectorMemoized } from '@base-ui-components/utils/store';
 import {
-  CalendarEvent,
   RecurringEventPresetKey,
   RecurringEventRecurrenceRule,
-  SchedulerValidDate,
+  SchedulerProcessedDate,
 } from '../models';
 import { SchedulerState as State } from '../utils/SchedulerStore/SchedulerStore.types';
-import { getWeekDayCode } from '../utils/recurring-event-utils';
+import { getWeekDayCode, serializeRRule } from '../utils/recurring-event-utils';
 
 export const schedulerRecurringEventSelectors = {
   /**
@@ -16,24 +15,24 @@ export const schedulerRecurringEventSelectors = {
     (state: State) => state.adapter,
     (
       adapter,
-      date: SchedulerValidDate,
+      date: SchedulerProcessedDate,
     ): Record<RecurringEventPresetKey, RecurringEventRecurrenceRule> => {
       return {
-        daily: {
+        DAILY: {
           freq: 'DAILY',
           interval: 1,
         },
-        weekly: {
+        WEEKLY: {
           freq: 'WEEKLY',
           interval: 1,
-          byDay: [getWeekDayCode(adapter, date)],
+          byDay: [getWeekDayCode(adapter, date.value)],
         },
-        monthly: {
+        MONTHLY: {
           freq: 'MONTHLY',
           interval: 1,
-          byMonthDay: [adapter.getDate(date)],
+          byMonthDay: [adapter.getDate(date.value)],
         },
-        yearly: {
+        YEARLY: {
           freq: 'YEARLY',
           interval: 1,
         },
@@ -49,8 +48,8 @@ export const schedulerRecurringEventSelectors = {
     (state: State) => state.adapter,
     (
       adapter,
-      rule: CalendarEvent['rrule'] | undefined,
-      occurrenceStart: SchedulerValidDate,
+      rule: RecurringEventRecurrenceRule | undefined,
+      occurrenceStart: SchedulerProcessedDate,
     ): RecurringEventPresetKey | 'custom' | null => {
       if (!rule) {
         return null;
@@ -67,12 +66,12 @@ export const schedulerRecurringEventSelectors = {
       switch (rule.freq) {
         case 'DAILY': {
           // Preset "Daily" => FREQ=DAILY;INTERVAL=1; no COUNT/UNTIL;
-          return interval === 1 && neverEnds && !hasSelectors ? 'daily' : 'custom';
+          return interval === 1 && neverEnds && !hasSelectors ? 'DAILY' : 'custom';
         }
 
         case 'WEEKLY': {
           // Preset "Weekly" => FREQ=WEEKLY;INTERVAL=1;BYDAY=<weekday-of-start>; no COUNT/UNTIL;
-          const occurrenceStartWeekDayCode = getWeekDayCode(adapter, occurrenceStart);
+          const occurrenceStartWeekDayCode = getWeekDayCode(adapter, occurrenceStart.value);
 
           const byDay = rule.byDay ?? [];
           const matchesDefaultByDay =
@@ -83,12 +82,12 @@ export const schedulerRecurringEventSelectors = {
             matchesDefaultByDay &&
             !(rule.byMonthDay?.length || rule.byMonth?.length);
 
-          return isPresetWeekly ? 'weekly' : 'custom';
+          return isPresetWeekly ? 'WEEKLY' : 'custom';
         }
 
         case 'MONTHLY': {
           // Preset "Monthly" => FREQ=MONTHLY;INTERVAL=1;BYMONTHDAY=<start-day>; no COUNT/UNTIL;
-          const day = adapter.getDate(occurrenceStart);
+          const day = adapter.getDate(occurrenceStart.value);
           const byMonthDay = rule.byMonthDay ?? [];
           const matchesDefaultByMonthDay =
             byMonthDay.length === 0 || (byMonthDay.length === 1 && byMonthDay[0] === day);
@@ -98,17 +97,36 @@ export const schedulerRecurringEventSelectors = {
             matchesDefaultByMonthDay &&
             !(rule.byDay?.length || rule.byMonth?.length);
 
-          return isPresetMonthly ? 'monthly' : 'custom';
+          return isPresetMonthly ? 'MONTHLY' : 'custom';
         }
 
         case 'YEARLY': {
           // Preset "Yearly" => FREQ=YEARLY;INTERVAL=1; no COUNT/UNTIL;
-          return interval === 1 && neverEnds && !hasSelectors ? 'yearly' : 'custom';
+          return interval === 1 && neverEnds && !hasSelectors ? 'YEARLY' : 'custom';
         }
 
         default:
           return 'custom';
       }
+    },
+  ),
+  /**
+   * Returns true if both recurrence rules are equivalent.
+   */
+  isSameRRule: createSelector(
+    (state: State) => state.adapter,
+    (
+      adapter,
+      rruleA: RecurringEventRecurrenceRule | undefined,
+      rruleB: RecurringEventRecurrenceRule | undefined,
+    ): boolean => {
+      if (!rruleA && !rruleB) {
+        return true;
+      } // Both undefined -> same
+      if (!rruleA || !rruleB) {
+        return false;
+      } // One missing -> different
+      return serializeRRule(adapter, rruleA) === serializeRRule(adapter, rruleB);
     },
   ),
 };
