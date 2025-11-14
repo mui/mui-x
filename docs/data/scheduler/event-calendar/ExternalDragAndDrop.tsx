@@ -128,7 +128,7 @@ export default function ExternalDragAndDrop() {
           areEventsDraggable
           canDragEventsFromTheOutside
           canDropEventsToTheOutside
-          preferences={{ isSidePanelOpen: false }}
+          defaultPreferences={{ isSidePanelOpen: false }}
         />
       </div>
     </div>

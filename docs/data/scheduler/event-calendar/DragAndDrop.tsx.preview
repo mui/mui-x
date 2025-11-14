@@ -5,5 +5,5 @@
   onEventsChange={setEvents}
   areEventsDraggable
   areEventsResizable
-  preferences={{ isSidePanelOpen: false }}
+  defaultPreferences={{ isSidePanelOpen: false }}
 />

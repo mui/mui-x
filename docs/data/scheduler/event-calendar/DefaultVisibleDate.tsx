@@ -16,7 +16,7 @@ export default function DefaultVisibleDate() {
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
-        preferences={{ isSidePanelOpen: false }}
+        defaultPreferences={{ isSidePanelOpen: false }}
       />
     </div>
   );

@@ -48,7 +48,7 @@ export default function StartEndProperties() {
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
         eventModelStructure={eventModelStructure}
-        preferences={{ isSidePanelOpen: false }}
+        defaultPreferences={{ isSidePanelOpen: false }}
       />
     </div>
   );
