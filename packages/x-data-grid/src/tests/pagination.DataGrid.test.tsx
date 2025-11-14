@@ -248,7 +248,7 @@ describe('<DataGrid /> - Pagination', () => {
       await waitFor(() => {
         expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3']);
       });
-      expect(onPaginationModelChange.callCount).to.equal(2);
+      expect(onPaginationModelChange.callCount).to.equal(1);
       expect(onPaginationModelChange.lastCall.args[0]).to.deep.equal({ page: 0, pageSize: 5 });
     });
 
