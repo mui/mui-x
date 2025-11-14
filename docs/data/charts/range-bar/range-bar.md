@@ -24,8 +24,32 @@ Each data point in a range bar series consists of a `{ start: number, end: numbe
 
 ## Composition
 
-Similarly, you can use the `<RangeBarPlot />` component to render range bar series in a composed chart.
+You can use the `<ChartDataProviderPro />` to provide `series`, `xAxis`, and `yAxis` props for composition.
 
-In the example below, we create a project schedule chart using range bars to represent task durations.
+Besides the common chart components available for [composition](/x/react-charts/composition/), to compose a range bar chart you need to render the `<RangeBarPlot />` component to display the range bars and their labels.
+
+Here's roughly a `<BarChartPro />` is composed, which you can use as a reference:
+
+```jsx
+<ChartDataProviderPro>
+  <ChartsWrapper>
+    <ChartsLegend />
+    <ChartsSurface>
+      <ChartsGrid />
+      <g clipPath={`url(#${clipPathId})`}>
+        <BarPlot />
+        <RangeBarPlot /> 
+        <ChartsOverlay />
+        <ChartsAxisHighlight />
+      </g>
+      <ChartsAxis />
+      <ChartsClipPath id={clipPathId} />
+    </ChartsSurface>
+    <ChartsTooltip />
+  </ChartsWrapper>
+</ChartDataProviderPro>
+```
+
+In the example below, we follow a similar pattern and create a project schedule chart using range bars to represent task durations.
 
 {{"demo": "RangeBarProjectSchedule.js"}}
