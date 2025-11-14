@@ -27,7 +27,7 @@ export const useMoreEventsPopoverContext = MoreEventsPopover.useContext;
 export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) {
   const { anchor, container, occurrences, day } = props;
 
-  // Feature hooks
+  // Context hooks
   const translations = useTranslations();
   const adapter = useAdapter();
 

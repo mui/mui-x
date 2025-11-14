@@ -20,7 +20,10 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
 ) {
   const { occurrence, className, variant, ...other } = props;
 
+  // Context hooks
   const store = useEventCalendarStoreContext();
+
+  // Selector hooks
   const isRecurring = Boolean(occurrence.rrule);
   const isDraggable = useStore(store, eventCalendarEventSelectors.isDraggable, occurrence.id);
   const isResizable = useStore(
@@ -30,6 +33,8 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
     'time-grid',
   );
   const color = useStore(store, schedulerEventSelectors.color, occurrence.id);
+
+  // Feature hooks
   const formatTime = useFormatTime();
 
   const durationMs = occurrence.end.timestamp - occurrence.start.timestamp;

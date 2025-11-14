@@ -17,9 +17,10 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
 ) {
   const { occurrence, ariaLabelledBy, className, variant, id: idProp, style, ...other } = props;
 
+  // Context hooks
   const store = useTimelineStoreContext();
 
-  const id = useId(idProp);
+  // Selector hooks
   const isDraggable = useStore(store, timelineEventSelectors.isDraggable);
   const isResizable = useStore(
     store,
@@ -28,6 +29,9 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
     'timeline',
   );
   const color = useStore(store, schedulerEventSelectors.color, occurrence.id);
+
+  // Feature hooks
+  const id = useId(idProp);
 
   const sharedProps = {
     id,
