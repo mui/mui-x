@@ -1,13 +1,16 @@
 import * as React from 'react';
 import { SchedulerEvent } from '@mui/x-scheduler/models';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
-import {
-  initialEvents,
-  defaultVisibleDate,
-  resources,
-} from '../datasets/all-day-events';
+import { initialEvents, resources } from '../datasets/personal-agenda';
 
-export default function AllDay() {
+const defaultPreferences = {
+  ampm: false,
+  showWeekends: false,
+  showWeekNumber: true,
+  isSidePanelOpen: false,
+};
+
+export default function DefaultPreferences() {
   const [events, setEvents] = React.useState<SchedulerEvent[]>(initialEvents);
 
   return (
@@ -15,9 +18,8 @@ export default function AllDay() {
       <EventCalendar
         events={events}
         resources={resources}
-        defaultVisibleDate={defaultVisibleDate}
+        defaultPreferences={defaultPreferences}
         onEventsChange={setEvents}
-        defaultPreferences={{ isSidePanelOpen: false }}
       />
     </div>
   );

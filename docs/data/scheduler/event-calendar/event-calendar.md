@@ -162,6 +162,34 @@ import { frFR } from '@mui/x-scheduler/translations';
 
 {{"demo": "Translations.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### Default preferences
+
+```tsx
+const defaultPreferences = {
+  ampm: false,
+  showWeekends: false,
+  showWeekNumber: true,
+  isSidePanelOpen: false,
+}
+
+<EventCalendar defaultPreferences={defaultPreferences} />;
+```
+
+{{"demo": "DefaultPreferences.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::success
+You can also control the preferences using `preferences` and `onPreferencesChange` props:
+
+```tsx
+const [preferences, setPreferences] = React.useState();
+
+return (
+  <EventCalendar preferences={preferences} onPreferencesChange={setPreferences} />
+);
+```
+
+:::
+
 ### Preferences menu
 
 You can customize the preferences menu using the `preferencesMenuConfig` prop:

@@ -41,7 +41,7 @@ export const DateNavigator = React.forwardRef(function DateNavigator(
         type="button"
         aria-label={isSidePanelOpen ? translations.closeSidePanel : translations.openSidePanel}
         className={clsx('OutlinedNeutralButton', 'Button', 'IconButton')}
-        onClick={(event) => store.updatePreferences({ isSidePanelOpen: !isSidePanelOpen }, event)}
+        onClick={(event) => store.setPreferences({ isSidePanelOpen: !isSidePanelOpen }, event)}
       >
         {isSidePanelOpen ? (
           <PanelLeftClose size={20} strokeWidth={1.5} className="Icon" />

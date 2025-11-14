@@ -1,13 +1,16 @@
 import * as React from 'react';
 
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
-import {
-  initialEvents,
-  defaultVisibleDate,
-  resources,
-} from '../datasets/palette-demo';
+import { initialEvents, resources } from '../datasets/personal-agenda';
 
-export default function ColorPalettes() {
+const defaultPreferences = {
+  ampm: false,
+  showWeekends: false,
+  showWeekNumber: true,
+  isSidePanelOpen: false,
+};
+
+export default function DefaultPreferences() {
   const [events, setEvents] = React.useState(initialEvents);
 
   return (
@@ -15,9 +18,8 @@ export default function ColorPalettes() {
       <EventCalendar
         events={events}
         resources={resources}
-        defaultVisibleDate={defaultVisibleDate}
+        defaultPreferences={defaultPreferences}
         onEventsChange={setEvents}
-        defaultPreferences={{ showWeekends: false, isSidePanelOpen: false }}
       />
     </div>
   );

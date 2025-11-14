@@ -55,7 +55,7 @@ export interface EventCalendarParameters<TEvent extends object, TResource extend
   /**
    * The default preferences for the calendar.
    * To render a controlled calendar, use the `preferences` prop.
-   * @default { showWeekends: true, showWeekNumber: false, isSidePanelOpen: true, showEmptyDaysInAgenda: true }
+   * @default { showWeekends: true, showWeekNumber: false, isSidePanelOpen: true, showEmptyDaysInAgenda: true, ampm: true }
    */
   defaultPreferences?: Partial<EventCalendarPreferences>;
   /**
