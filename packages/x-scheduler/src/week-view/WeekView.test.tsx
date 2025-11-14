@@ -200,7 +200,7 @@ describe('<WeekView />', () => {
 
   describe('current time indicator', () => {
     it('renders one indicator per day when today is in view', () => {
-      const visibleDate = adapter.date('2025-05-04T00:00:00Z');
+      const visibleDate = adapter.date('2025-05-04T00:00:00Z', 'default');
       render(<EventCalendar events={[]} visibleDate={visibleDate} view="week" />);
 
       const indicators = document.querySelectorAll('.DayTimeGridCurrentTimeIndicator');
@@ -211,7 +211,7 @@ describe('<WeekView />', () => {
     });
 
     it("doesn't render the current time indicator if today is not in view", () => {
-      const visibleDate = adapter.date('2025-05-18T00:00:00Z');
+      const visibleDate = adapter.date('2025-05-18T00:00:00Z', 'default');
       render(<EventCalendar events={[]} visibleDate={visibleDate} view="week" />);
 
       const indicators = document.querySelectorAll('.DayTimeGridCurrentTimeIndicator');
@@ -223,7 +223,7 @@ describe('<WeekView />', () => {
 
     it('hides hour labels close to the indicator', () => {
       // 12:10 => the 12 hour label should be hidden
-      const visibleDate = adapter.date('2025-05-04T12:10:00Z');
+      const visibleDate = adapter.date('2025-05-04T12:10:00Z', 'default');
 
       render(<EventCalendar events={[]} visibleDate={visibleDate} view="week" />);
 
@@ -232,7 +232,7 @@ describe('<WeekView />', () => {
     });
 
     it('respects flag: hides indicator when showCurrentTimeIndicator is false', () => {
-      const visibleDate = adapter.date('2025-05-04T00:00:00Z');
+      const visibleDate = adapter.date('2025-05-04T00:00:00Z', 'default');
 
       render(
         <EventCalendar

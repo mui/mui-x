@@ -33,7 +33,7 @@ describe('Core - EventCalendarStore', () => {
         resourceModelStructure: undefined,
         resourceChildrenIdLookup: new Map(),
         visibleResources: new Map(),
-        nowUpdatedEveryMinute: adapter.date(),
+        nowUpdatedEveryMinute: adapter.now('default'),
         isMultiDayEvent: DEFAULT_IS_MULTI_DAY_EVENT,
         areEventsDraggable: false,
         areEventsResizable: false,
@@ -46,7 +46,7 @@ describe('Core - EventCalendarStore', () => {
         preferencesMenuConfig: DEFAULT_PREFERENCES_MENU_CONFIG,
         viewConfig: null,
         occurrencePlaceholder: null,
-        visibleDate: adapter.startOfDay(adapter.date()),
+        visibleDate: adapter.startOfDay(adapter.now('default')),
         readOnly: false,
       };
 

@@ -1,4 +1,6 @@
-import { DateTime } from 'luxon';
+import { TemporalSupportedObject } from '../base-ui-copy/types';
 
-// TODO: Add correct type if we support several date libraries
-export type SchedulerValidDate = DateTime;
+/**
+ * Deprecated, use "TemporalSupportedObject" instead.
+ */
+export type SchedulerValidDate = TemporalSupportedObject;

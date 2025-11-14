@@ -15,6 +15,7 @@ import EventPopoverHeader from './EventPopoverHeader';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { getColorClassName } from '../../utils/color-utils';
 import { getRecurrenceLabel } from './utils';
+import { useFormatTime } from '../../hooks/useFormatTime';
 
 type ReadonlyContentProps = {
   occurrence: SchedulerEventOccurrence;
@@ -43,6 +44,8 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
     occurrence.start,
   );
 
+  // Feature hook
+  const formatTime = useFormatTime();
   const recurrenceLabel = getRecurrenceLabel(
     adapter,
     occurrence.start,
@@ -75,17 +78,20 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
             style={{ '--number-of-lines': 1 } as React.CSSProperties}
           >
             <time
-              dateTime={adapter.format(occurrence.start.value, 'keyboardDate')}
+              dateTime={adapter.format(occurrence.start.value, 'localizedNumericDate')}
               className="EventDate"
             >
-              <span>{adapter.format(occurrence.start.value, 'fullDate')}, </span>
+              <span>
+                {adapter.format(occurrence.start.value, 'localizedDateWithFullMonthAndWeekDay')}
+                ,{' '}
+              </span>
             </time>
             {occurrence.allDay ? (
               <span className="EventAllDay"> {translations.allDayLabel}</span>
             ) : (
               <time className="EventTime">
-                <span>{adapter.format(occurrence.start.value, 'fullTime24h')}</span>
-                <span> - {adapter.format(occurrence.end.value, 'fullTime24h')}</span>
+                <span>{formatTime(occurrence.start.value)}</span>
+                <span> - {formatTime(occurrence.end.value)}</span>
               </time>
             )}
           </p>

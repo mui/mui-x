@@ -296,8 +296,8 @@ describe('<EventPopoverContent />', () => {
 
   describe('Event creation', () => {
     it('should change surface of the placeholder to day-grid when all-day is changed to true', async () => {
-      const start = adapter.date('2025-05-26T07:30:00');
-      const end = adapter.date('2025-05-26T08:30:00');
+      const start = adapter.date('2025-05-26T07:30:00', 'default');
+      const end = adapter.date('2025-05-26T08:30:00', 'default');
       const handleSurfaceChange = spy();
 
       const creationOccurrence = createOccurrenceFromEvent({
@@ -343,8 +343,8 @@ describe('<EventPopoverContent />', () => {
     });
 
     it('should change surface of the placeholder to time-grid when all-day is changed to false', async () => {
-      const start = adapter.date('2025-05-26T07:30:00');
-      const end = adapter.date('2025-05-26T08:30:00');
+      const start = adapter.date('2025-05-26T07:30:00', 'default');
+      const end = adapter.date('2025-05-26T08:30:00', 'default');
       const handleSurfaceChange = spy();
 
       const creationOccurrence = createOccurrenceFromEvent({
@@ -390,8 +390,8 @@ describe('<EventPopoverContent />', () => {
     });
 
     it('should not change surfaceType when all day changed to true and lockSurfaceType=true', async () => {
-      const start = adapter.date('2025-05-26T07:30:00');
-      const end = adapter.date('2025-05-26T08:30:00');
+      const start = adapter.date('2025-05-26T07:30:00', 'default');
+      const end = adapter.date('2025-05-26T08:30:00', 'default');
       const handleSurfaceChange = spy();
 
       const creationOccurrence = createOccurrenceFromEvent({
@@ -436,8 +436,8 @@ describe('<EventPopoverContent />', () => {
     });
 
     it('should call createEvent with metaChanges + computed start/end on Submit', async () => {
-      const start = adapter.date('2025-06-10T09:00:00');
-      const end = adapter.date('2025-06-10T09:30:00');
+      const start = adapter.date('2025-06-10T09:00:00', 'default');
+      const end = adapter.date('2025-06-10T09:30:00', 'default');
       const placeholder: SchedulerOccurrencePlaceholderCreation = {
         type: 'creation',
         surfaceType: 'time-grid' as const,
@@ -611,8 +611,12 @@ describe('<EventPopoverContent />', () => {
         expect(openPayload.changes.title).to.equal('Daily standup');
         expect(openPayload.changes.description).to.equal('sync');
         expect(openPayload.changes.allDay).to.equal(false);
-        expect(openPayload.changes.start).to.toEqualDateTime(adapter.date('2025-06-11T10:05:00'));
-        expect(openPayload.changes.end).to.toEqualDateTime(adapter.date('2025-06-11T10:35:00'));
+        expect(openPayload.changes.start).to.toEqualDateTime(
+          adapter.date('2025-06-11T10:05:00', 'default'),
+        );
+        expect(openPayload.changes.end).to.toEqualDateTime(
+          adapter.date('2025-06-11T10:35:00', 'default'),
+        );
         expect(openPayload.changes).to.not.have.property('rrule');
 
         expect(selectRecurringEventUpdateScopeSpy?.calledOnce).to.equal(true);
@@ -939,7 +943,7 @@ describe('<EventPopoverContent />', () => {
           expect(updated.rrule).to.deep.include({ freq: 'YEARLY', interval: 3 });
           expect(updated.rrule?.count ?? undefined).to.equal(undefined);
           expect(updated.rrule?.until).toEqualDateTime(
-            adapter.startOfDay(adapter.date('2025-07-20T00:00:00')),
+            adapter.startOfDay(adapter.date('2025-07-20T00:00:00', 'default')),
           );
         });
       });
@@ -986,8 +990,8 @@ describe('<EventPopoverContent />', () => {
         expect(payload.description).to.equal('new description');
         expect(payload.resource).to.equal('r1');
         expect(payload.allDay).to.equal(false);
-        expect(payload.start).toEqualDateTime(adapter.date('2025-06-12T14:00:00'));
-        expect(payload.end).toEqualDateTime(adapter.date('2025-06-12T15:00:00'));
+        expect(payload.start).toEqualDateTime(adapter.date('2025-06-12T14:00:00', 'default'));
+        expect(payload.end).toEqualDateTime(adapter.date('2025-06-12T15:00:00', 'default'));
         expect(payload.rrule).to.equal(undefined);
       });
 
