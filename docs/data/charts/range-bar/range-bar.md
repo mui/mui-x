@@ -38,7 +38,7 @@ Here's roughly a `<BarChartPro />` is composed, which you can use as a reference
       <ChartsGrid />
       <g clipPath={`url(#${clipPathId})`}>
         <BarPlot />
-        <RangeBarPlot /> 
+        <RangeBarPlot />
         <ChartsOverlay />
         <ChartsAxisHighlight />
       </g>
