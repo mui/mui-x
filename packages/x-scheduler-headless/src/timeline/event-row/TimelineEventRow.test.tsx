@@ -5,8 +5,8 @@ import { adapter, createSchedulerRenderer, describeConformance } from 'test/util
 describe('<Timeline.EventRow />', () => {
   const { render } = createSchedulerRenderer();
 
-  const start = adapter.startOfDay(adapter.date());
-  const end = adapter.endOfDay(adapter.date());
+  const start = adapter.startOfDay(adapter.now('default'));
+  const end = adapter.endOfDay(adapter.now('default'));
 
   describeConformance(<Timeline.EventRow start={start} end={end} resourceId={null} />, () => ({
     refInstanceof: window.HTMLDivElement,

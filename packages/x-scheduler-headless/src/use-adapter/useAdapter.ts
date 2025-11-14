@@ -1,10 +1,12 @@
 import { SchedulerValidDate } from '../models';
-import { AdapterLuxon } from './AdapterLuxon';
-import { Adapter } from './useAdapter.types';
+import { UnstableTemporalAdapterLuxon } from '../base-ui-copy/temporal-adapter-luxon';
+import { TemporalAdapter } from '../base-ui-copy/types';
 
-export const DO_NOT_USE_THIS_VARIABLE_ADAPTER_CLASS = new AdapterLuxon();
+export const DO_NOT_USE_THIS_VARIABLE_ADAPTER_CLASS = new UnstableTemporalAdapterLuxon();
 
-export const DO_NOT_USE_THIS_VARIABLE_ADAPTER_CLASS_FR = new AdapterLuxon({ locale: 'fr' });
+export const DO_NOT_USE_THIS_VARIABLE_ADAPTER_CLASS_FR = new UnstableTemporalAdapterLuxon({
+  locale: 'fr',
+});
 
 // TODO: Replace with Base UI adapter when available.
 export function useAdapter() {
@@ -21,7 +23,7 @@ const MS_WEEK = MS_DAY * 7;
  * TODO: move to adapter (and make sure it works well with DST and timezone).
  */
 export function diffIn(
-  adapter: Adapter,
+  adapter: TemporalAdapter,
   a: SchedulerValidDate,
   b: SchedulerValidDate,
   unit: 'minutes' | 'hours' | 'days' | 'weeks' | 'months' | 'years',
@@ -80,9 +82,9 @@ export function diffIn(
  * Checks if the given date is a weekend (Saturday or Sunday).
  * TODO: move to adapter.
  */
-export function isWeekend(adapter: Adapter, value: SchedulerValidDate): boolean {
-  const sunday = adapter.format(adapter.date('2025-08-09'), 'weekday');
-  const saturday = adapter.format(adapter.date('2025-08-10'), 'weekday');
+export function isWeekend(adapter: TemporalAdapter, value: SchedulerValidDate): boolean {
+  const sunday = adapter.format(adapter.date('2025-08-09', 'default'), 'weekday');
+  const saturday = adapter.format(adapter.date('2025-08-10', 'default'), 'weekday');
   const formattedValue = adapter.format(value, 'weekday');
 
   return formattedValue === sunday || formattedValue === saturday;

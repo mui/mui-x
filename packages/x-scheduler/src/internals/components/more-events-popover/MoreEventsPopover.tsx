@@ -10,6 +10,7 @@ import { EventItem } from '../event/event-item/EventItem';
 import { createPopover } from '../create-popover';
 import { ArrowSvg } from './arrow/ArrowSvg';
 import './MoreEventsPopover.css';
+import { formatWeekDayMonthAndDayOfMonth } from '../../utils/date-utils';
 
 interface MoreEventsData {
   occurrences: SchedulerEventOccurrence[];
@@ -46,10 +47,10 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
           <div
             className="MoreEventsPopoverHeader"
             id={`PopoverHeader-${day.key}`}
-            aria-label={`${adapter.format(day.value, 'normalDateWithWeekday')}`}
+            aria-label={`${formatWeekDayMonthAndDayOfMonth(day.value, adapter)}`}
           >
             <Popover.Title className="MoreEventsPopoverTitle">
-              {adapter.format(day.value, 'normalDateWithWeekday')}
+              {formatWeekDayMonthAndDayOfMonth(day.value, adapter)}
             </Popover.Title>
             <Popover.Close
               aria-label={translations.closeButtonAriaLabel}

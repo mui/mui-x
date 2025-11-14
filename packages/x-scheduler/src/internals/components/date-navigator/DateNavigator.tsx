@@ -50,7 +50,7 @@ export const DateNavigator = React.forwardRef(function DateNavigator(
         )}
       </button>
       <p className="DateNavigatorLabel" aria-live="polite">
-        {adapter.format(visibleDate, 'month')} {adapter.format(visibleDate, 'year')}
+        {adapter.format(visibleDate, 'monthFullLetter')} {adapter.format(visibleDate, 'yearPadded')}
       </p>
       <div className="DateNavigatorButtonsContainer">
         <button

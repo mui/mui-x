@@ -5,8 +5,8 @@ import { getOccurrencesFromEvents } from '../utils/event-utils';
 import { SchedulerProcessedEvent } from '../models';
 
 describe('useDayListEventOccurrencesWithPosition', () => {
-  const collectionStart = adapter.date('2024-01-15');
-  const collectionEnd = adapter.endOfDay(adapter.date('2024-01-15'));
+  const collectionStart = adapter.date('2024-01-15', 'default');
+  const collectionEnd = adapter.endOfDay(adapter.date('2024-01-15', 'default'));
 
   function testHook(events: SchedulerProcessedEvent[], maxSpan: number) {
     const { result } = renderHook(() => {
@@ -27,8 +27,8 @@ describe('useDayListEventOccurrencesWithPosition', () => {
   const createEvent = (id: string, start: string, end: string) =>
     createProcessedEvent({
       id,
-      start: adapter.date(start),
-      end: adapter.date(end),
+      start: adapter.date(start, 'default'),
+      end: adapter.date(end, 'default'),
       title: `Event ${id}`,
     });
 

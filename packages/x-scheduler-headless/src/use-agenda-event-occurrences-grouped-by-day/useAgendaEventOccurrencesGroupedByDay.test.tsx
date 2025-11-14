@@ -19,8 +19,8 @@ describe('useAgendaEventOccurrencesGroupedByDay', () => {
     extra: Partial<SchedulerEvent> = {},
   ): SchedulerEvent => ({
     id,
-    start: adapter.date(startISO),
-    end: adapter.date(endISO),
+    start: adapter.date(startISO, 'default'),
+    end: adapter.date(endISO, 'default'),
     title: `Event ${id}`,
     ...extra,
   });
@@ -53,7 +53,7 @@ describe('useAgendaEventOccurrencesGroupedByDay', () => {
 
   it('should return exactly AGENDA_VIEW_DAYS_AMOUNT days and fills occurrences with [] when there are no events and showEmptyDays=true', () => {
     const res = testHook({
-      visibleDate: adapter.date('2024-01-01'),
+      visibleDate: adapter.date('2024-01-01', 'default'),
       showWeekends: true,
       showEmptyDaysInAgenda: true,
     });
@@ -84,25 +84,25 @@ describe('useAgendaEventOccurrencesGroupedByDay', () => {
 
     const res = testHook({
       events,
-      visibleDate: adapter.date('2025-01-01'),
+      visibleDate: adapter.date('2025-01-01', 'default'),
       showWeekends: true,
       showEmptyDaysInAgenda: false,
     });
 
     expect(res.days).to.have.length(AGENDA_VIEW_DAYS_AMOUNT);
     const expectedKeys = [
-      processDate(adapter.date('2025-01-01'), adapter).key,
-      processDate(adapter.date('2025-01-03'), adapter).key,
-      processDate(adapter.date('2025-01-05'), adapter).key,
-      processDate(adapter.date('2025-01-08'), adapter).key,
-      processDate(adapter.date('2025-01-09'), adapter).key,
-      processDate(adapter.date('2025-01-10'), adapter).key,
-      processDate(adapter.date('2025-01-11'), adapter).key,
-      processDate(adapter.date('2025-01-13'), adapter).key,
-      processDate(adapter.date('2025-01-14'), adapter).key,
-      processDate(adapter.date('2025-01-16'), adapter).key,
-      processDate(adapter.date('2025-01-18'), adapter).key,
-      processDate(adapter.date('2025-01-20'), adapter).key,
+      processDate(adapter.date('2025-01-01', 'default'), adapter).key,
+      processDate(adapter.date('2025-01-03', 'default'), adapter).key,
+      processDate(adapter.date('2025-01-05', 'default'), adapter).key,
+      processDate(adapter.date('2025-01-08', 'default'), adapter).key,
+      processDate(adapter.date('2025-01-09', 'default'), adapter).key,
+      processDate(adapter.date('2025-01-10', 'default'), adapter).key,
+      processDate(adapter.date('2025-01-11', 'default'), adapter).key,
+      processDate(adapter.date('2025-01-13', 'default'), adapter).key,
+      processDate(adapter.date('2025-01-14', 'default'), adapter).key,
+      processDate(adapter.date('2025-01-16', 'default'), adapter).key,
+      processDate(adapter.date('2025-01-18', 'default'), adapter).key,
+      processDate(adapter.date('2025-01-20', 'default'), adapter).key,
     ];
     expect(res.days.map((day) => day.key)).to.deep.equal(expectedKeys);
     for (const day of res.days) {
@@ -134,7 +134,7 @@ describe('useAgendaEventOccurrencesGroupedByDay', () => {
 
     const res = testHook({
       events,
-      visibleDate: adapter.date('2025-10-03'), // Friday
+      visibleDate: adapter.date('2025-10-03', 'default'), // Friday
       showWeekends: false,
       showEmptyDaysInAgenda: true,
     });

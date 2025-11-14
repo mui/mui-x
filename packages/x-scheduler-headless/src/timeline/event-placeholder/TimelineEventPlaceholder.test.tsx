@@ -7,8 +7,8 @@ import { processDate } from '@mui/x-scheduler-headless/process-date';
 describe('<Timeline.EventPlaceholder />', () => {
   const { render } = createSchedulerRenderer();
 
-  const start = processDate(adapter.startOfDay(adapter.date()), adapter);
-  const end = processDate(adapter.endOfDay(adapter.date()), adapter);
+  const start = processDate(adapter.startOfDay(adapter.now('default')), adapter);
+  const end = processDate(adapter.endOfDay(adapter.now('default')), adapter);
 
   describeConformance(<Timeline.EventPlaceholder start={start} end={end} />, () => ({
     refInstanceof: window.HTMLDivElement,

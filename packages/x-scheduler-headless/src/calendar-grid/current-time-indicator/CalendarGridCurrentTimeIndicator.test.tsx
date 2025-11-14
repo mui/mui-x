@@ -5,7 +5,7 @@ import { adapter, createSchedulerRenderer, describeConformance } from 'test/util
 describe('<CalendarGrid.CurrentTimeIndicator />', () => {
   const { render } = createSchedulerRenderer();
 
-  const day = adapter.date();
+  const day = adapter.now('default');
 
   describeConformance(<CalendarGrid.CurrentTimeIndicator />, () => ({
     refInstanceof: window.HTMLDivElement,

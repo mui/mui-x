@@ -5,7 +5,7 @@ import { adapter, createSchedulerRenderer, describeConformance } from 'test/util
 describe('<CalendarGrid.TimeColumn />', () => {
   const { render } = createSchedulerRenderer();
 
-  const day = adapter.date();
+  const day = adapter.now('default');
 
   describeConformance(
     <CalendarGrid.TimeColumn start={day.startOf('day')} end={day.endOf('day')} />,

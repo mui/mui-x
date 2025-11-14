@@ -6,6 +6,7 @@ import {
 } from '@mui/x-scheduler-headless/models';
 import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
 import { SchedulerTranslations } from '../../../models';
+import { formatDayOfMonthAndMonthFullLetter } from '../../utils/date-utils';
 
 export interface ControlledValue {
   startDate: string;
@@ -22,16 +23,16 @@ export type EndsSelection = 'never' | 'after' | 'until';
 
 export function computeRange(adapter: Adapter, next: ControlledValue) {
   if (next.allDay) {
-    const newStart = adapter.startOfDay(adapter.date(next.startDate));
-    const newEnd = adapter.endOfDay(adapter.date(next.endDate));
+    const newStart = adapter.startOfDay(adapter.date(next.startDate, 'default'));
+    const newEnd = adapter.endOfDay(adapter.date(next.endDate, 'default'));
     return { start: newStart, end: newEnd, surfaceType: 'day-grid' as const };
   }
   // fallback values
   const startTime = next.startTime || '12:00';
   const endTime = next.endTime || '12:30';
 
-  const newStart = adapter.date(`${next.startDate}T${startTime}`);
-  const newEnd = adapter.date(`${next.endDate}T${endTime}`);
+  const newStart = adapter.date(`${next.startDate}T${startTime}`, 'default');
+  const newEnd = adapter.date(`${next.endDate}T${endTime}`, 'default');
 
   return { start: newStart, end: newEnd, surfaceType: 'time-grid' as const };
 }
@@ -80,7 +81,7 @@ export function getRecurrenceLabel(
       return translations.recurrenceMonthlyPresetLabel(date);
     }
     case 'yearly': {
-      const normalDate = adapter.format(start, 'normalDate');
+      const normalDate = formatDayOfMonthAndMonthFullLetter(start, adapter);
       return translations.recurrenceYearlyPresetLabel(normalDate);
     }
     case 'custom':

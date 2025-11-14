@@ -8,6 +8,7 @@ import { useTimelineStoreContext } from '@mui/x-scheduler-headless/use-timeline-
 import { HeaderProps } from './Headers.types';
 import { TIME_UNITS_COUNT } from '../../constants';
 import { useFormatTime } from '../../../internals/hooks/useFormatTime';
+import { formatWeekDayMonthAndDayOfMonth } from '../../../internals/utils/date-utils';
 import './Headers.css';
 
 export function TimeHeader(props: HeaderProps) {
@@ -34,7 +35,7 @@ export function TimeHeader(props: HeaderProps) {
       {days.map((day) => (
         <div key={day.key} className="TimeHeaderCell">
           <time dateTime={day.key} className="DayLabel">
-            {adapter.format(day.value, 'normalDateWithWeekday')}
+            {formatWeekDayMonthAndDayOfMonth(day.value, adapter)}
           </time>
           <div className="TimeCellsRow">
             {/* TODO: Make sure it works across DST */}

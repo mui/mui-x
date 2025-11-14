@@ -21,5 +21,5 @@ export function mergeDateAndTime(
  * It only contains date information, two dates representing the same day but with different time will have the same key.
  */
 export function getDateKey(day: SchedulerValidDate, adapter: Adapter): string {
-  return adapter.format(day, 'keyboardDate');
+  return adapter.format(day, 'localizedNumericDate');
 }
