@@ -54,7 +54,7 @@ export interface EventCalendarParameters<TEvent extends object, TResource extend
   onViewChange?: (view: CalendarView, event: React.UIEvent | Event) => void;
   /**
    * The default preferences for the calendar.
-   * To render a controlled preferences, use the `preferences` prop.
+   * To use controlled preferences, use the `preferences` prop.
    * @default { showWeekends: true, showWeekNumber: false, isSidePanelOpen: true, showEmptyDaysInAgenda: true, ampm: true }
    */
   defaultPreferences?: Partial<EventCalendarPreferences>;
