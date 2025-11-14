@@ -3,7 +3,6 @@ import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-
 import { screen } from '@mui/internal-test-utils';
 import { EventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { afterAll } from 'vitest';
-import { sleep } from 'test/utils/helperFn';
 import { PreferencesMenu } from './PreferencesMenu';
 import { getPreferencesMenu, openPreferencesMenu } from '../../../utils/test-utils';
 
@@ -14,7 +13,9 @@ describe('<PreferencesMenu />', () => {
   const { render } = createSchedulerRenderer();
 
   afterAll(async () => {
-    await sleep(0);
+    await new Promise((resolve) => {
+      setTimeout(resolve);
+    });
   });
 
   it('should render the menu when no config is provided', async () => {
