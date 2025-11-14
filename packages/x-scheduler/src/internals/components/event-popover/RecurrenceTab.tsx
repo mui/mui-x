@@ -53,6 +53,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     schedulerRecurringEventSelectors.monthlyReference,
     occurrence.start,
   );
+  const weeklyDays = useStore(store, schedulerRecurringEventSelectors.weeklyDays);
 
   const handleRecurrenceSelectionChange = (value: RecurringEventPresetKey | null | 'custom') => {
     if (value === 'custom') {
@@ -217,8 +218,6 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
       value: 'YEARLY',
     },
   ];
-
-  const weeklyDays = useStore(store, schedulerRecurringEventSelectors.weeklyDays);
 
   const weeklyDayItems = React.useMemo(
     () =>
