@@ -187,7 +187,7 @@ export class EventCalendarStore<
   /**
    * Updates some preferences of the calendar.
    */
-  public updatePreferences = (
+  public setPreferences = (
     partialPreferences: Partial<EventCalendarPreferences>,
     event: React.UIEvent | Event,
   ) => {
