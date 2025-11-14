@@ -123,7 +123,7 @@ export class EventCalendarStore<
     const canSetView = viewProp === undefined && hasViewChange;
 
     if (canSetVisibleDate || canSetView) {
-      this.apply({
+      this.update({
         ...(canSetVisibleDate ? { visibleDate } : undefined),
         ...(canSetView ? { view } : undefined),
       });

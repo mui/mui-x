@@ -29,7 +29,7 @@ export const TimelineRoot = React.forwardRef(function TimelineRoot(
   const contextValue = React.useMemo(() => ({ store }), [store]);
 
   useIsoLayoutEffect(() => {
-    store.apply({ items: itemsProp });
+    store.update({ items: itemsProp });
   }, [store, itemsProp]);
 
   const element = useRenderElement('div', componentProps, {
