@@ -69,7 +69,6 @@
   { "name": "FilterPanelState", "kind": "Interface" },
   { "name": "FilterPanelTrigger", "kind": "Variable" },
   { "name": "FilterPanelTriggerProps", "kind": "TypeAlias" },
-  { "name": "FocusElement", "kind": "Interface" },
   { "name": "FooterPropsOverrides", "kind": "Interface" },
   { "name": "FooterRowCountOverrides", "kind": "Interface" },
   { "name": "getAggregationFooterRowIdFromGroupId", "kind": "Variable" },

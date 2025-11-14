@@ -306,6 +306,20 @@ export interface GridActionsColDef<R extends GridValidRowModel = any, V = any, F
    * Function that returns the actions to be shown.
    * @param {GridRowParams} params The params for each row.
    * @returns {readonly React.ReactElement<GridActionsCellItemProps>[]} An array of [[GridActionsCell]] elements.
+   * @deprecated Use `renderCell` instead
+   * @example
+   * // Before
+   * getActions: (params) => [
+   *   <GridActionsCellItem icon={...} onClick={...} label="Delete" />,
+   *   <GridActionsCellItem icon={...} onClick={...} label="Print" showInMenu />,
+   * ],
+   * // After
+   * renderCell: (params) => (
+   *   <GridActionsCell {...params}>
+   *     <GridActionsCellItem icon={...} onClick={...} label="Delete" />
+   *     <GridActionsCellItem icon={...} onClick={...} label="Print" showInMenu />
+   *   </GridActionsCell>
+   * ),
    */
   getActions: (params: GridRowParams<R>) => readonly React.ReactElement<GridActionsCellItemProps>[];
 }
