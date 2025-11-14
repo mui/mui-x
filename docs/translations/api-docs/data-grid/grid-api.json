@@ -218,6 +218,7 @@
     "setRowIndex": {
       "description": "Moves a row from its original position to the position given by <code>targetIndex</code>."
     },
+    "setRowPosition": { "description": "Moves a row to a new position relative to another row." },
     "setRows": { "description": "Sets a new set of rows." },
     "setRowSelectionModel": {
       "description": "Sets the new row selection model.<br /><br />⚠️ Caution: <code>setRowSelectionModel</code> doesn&#39;t apply the selection propagation automatically.<br />Pass model returned by API method <code>getPropagatedRowSelectionModel</code> instead to apply the selection propagation."
