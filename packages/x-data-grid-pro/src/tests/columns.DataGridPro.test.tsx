@@ -617,6 +617,7 @@ describe('<DataGridPro /> - Columns', () => {
 
     it('should work with custom column header sort icon', async () => {
       const iconSize = 24;
+      const iconScrollSize = iconSize + 1;
       function CustomSortIcon() {
         return <span style={{ fontSize: iconSize }}>⇅</span>;
       }
@@ -630,7 +631,7 @@ describe('<DataGridPro /> - Columns', () => {
         />,
       );
       await act(async () => apiRef.current?.autosizeColumns());
-      expect(getWidths()).to.deep.equal([152 + 2 + iconSize, 174 + 2 + iconSize]); // 2 is the gap.
+      expect(getWidths()).to.deep.equal([152 + 2 + iconScrollSize, 174 + 2 + iconScrollSize]); // 2 is the gap.
     });
 
     describe('options', () => {
