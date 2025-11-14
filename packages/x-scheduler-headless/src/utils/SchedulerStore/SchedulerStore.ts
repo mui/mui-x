@@ -286,8 +286,7 @@ export class SchedulerStore<
    * Creates a new event in the calendar.
    */
   public createEvent = (calendarEvent: SchedulerEventCreationProperties) => {
-    const response = this.updateEvents({ created: [calendarEvent] });
-    return response.created[0];
+    return this.updateEvents({ created: [calendarEvent] }).created[0];
   };
 
   /**
@@ -382,7 +381,10 @@ export class SchedulerStore<
   };
 
   /**
-   * Duplicates an event occurrence from the calendar.
+   * Creates an event from an event occurrence.
+   * The new event will have the same properties as the original event except:
+   * - the start and end dates will be those provided as parameters.
+   * - the recurrence rule will be removed.
    */
   public duplicateEventOccurrence = (
     eventId: SchedulerEventId,
@@ -394,11 +396,8 @@ export class SchedulerStore<
       throw new Error(`${this.instanceName}: the original event was not found (id="${eventId}").`);
     }
 
-    const response = this.updateEvents({
-      created: [createEventFromRecurringEvent(original, { start, end })],
-    });
-
-    return response.created[0];
+    const duplicatedEvent = createEventFromRecurringEvent(original, { start, end });
+    return this.updateEvents({ created: [duplicatedEvent] }).created[0];
   };
 
   /**
