@@ -274,3 +274,16 @@ export type SchedulerEventModelStructure<TEvent extends object> = {
     ) => TEvent | Partial<TEvent>;
   };
 };
+
+export interface SchedulerEventCreationConfig {
+  /**
+   * The interaction required to create an event.
+   * @default 'double-click'
+   */
+  interaction: 'click' | 'double-click';
+  /**
+   * The default duration (in minutes) of the created event.
+   * @default 30
+   */
+  duration: number;
+}

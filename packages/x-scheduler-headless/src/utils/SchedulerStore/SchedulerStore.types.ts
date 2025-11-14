@@ -12,6 +12,7 @@ import {
   SchedulerEventModelStructure,
   SchedulerEvent,
   SchedulerPreferences,
+  SchedulerEventCreationConfig,
 } from '../../models';
 import { Adapter } from '../../use-adapter/useAdapter.types';
 
@@ -123,6 +124,13 @@ export interface SchedulerState<TEvent extends object = any> {
    * Preferences for the scheduler.
    */
   preferences: SchedulerPreferences;
+  /**
+   * Configures how event are created.
+   * If `false`, event creation is disabled.
+   * If `true`, event creation is enabled with default configuration.
+   * If an object, event creation is enabled with the provided configuration.
+   */
+  eventCreation: Partial<SchedulerEventCreationConfig> | boolean;
 }
 
 export interface SchedulerParameters<TEvent extends object, TResource extends object> {
@@ -203,6 +211,13 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
    * @default false
    */
   readOnly?: boolean;
+  /**
+   * Configures how event are created.
+   * If `false`, event creation is disabled.
+   * If `true`, event creation is enabled with default configuration.
+   * If an object, event creation is enabled with the provided configuration.
+   */
+  eventCreation?: Partial<SchedulerEventCreationConfig> | boolean;
 }
 
 /**

@@ -21,6 +21,8 @@ import {
   schedulerOccurrencePlaceholderSelectors,
 } from '../scheduler-selectors';
 import { isInternalDragOrResizePlaceholder } from './drag-utils';
+import { StandaloneEvent } from '../standalone-event';
+import { useAdapter } from '../use-adapter';
 
 export function useDropTarget<Targets extends keyof EventDropDataLookup>(
   parameters: useDropTarget.Parameters<Targets>,
@@ -33,6 +35,8 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
     isValidDropTarget,
     addPropertiesToDroppedEvent,
   } = parameters;
+
+  const adapter = useAdapter();
   const store = useSchedulerStoreContext();
 
   React.useEffect(() => {
@@ -40,19 +44,7 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
       return undefined;
     }
 
-    const createDropData: useDropTarget.CreateDropData = (data, newStart, newEnd) => {
-      if (data.source === 'StandaloneEvent') {
-        return {
-          type: 'external-drag',
-          surfaceType,
-          start: newStart,
-          end: newEnd,
-          eventData: data.eventData,
-          onEventDrop: data.onEventDrop,
-          resourceId: resourceId === undefined ? (data.eventData.resource ?? null) : resourceId,
-        };
-      }
-
+    const getDataFromInside: useDropTarget.GetDataFromInside = (data, newStart, newEnd) => {
       const type =
         data.source === 'CalendarGridDayEventResizeHandler' ||
         data.source === 'CalendarGridTimeEventResizeHandler'
@@ -69,6 +61,24 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
         originalOccurrence: data.originalOccurrence,
         resourceId:
           resourceId === undefined ? (data.originalOccurrence.resource ?? null) : resourceId,
+      };
+    };
+
+    const getDataFromOutside: useDropTarget.GetDataFromOutside = (data, start) => {
+      const eventCreationConfig = schedulerEventSelectors.creationConfig(store.state);
+      if (eventCreationConfig === false) {
+        return undefined;
+      }
+
+      return {
+        type: 'external-drag',
+        surfaceType,
+        start,
+        // TODO: Improve the start and end time of a non all-day event dropped in the Month View.
+        end: adapter.addMinutes(start, data.eventData.duration ?? eventCreationConfig.duration),
+        eventData: data.eventData,
+        onEventDrop: data.onEventDrop,
+        resourceId: resourceId === undefined ? (data.eventData.resource ?? null) : resourceId,
       };
     };
 
@@ -92,7 +102,8 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
       onDrag: ({ source, location }) => {
         const newPlaceholder = getEventDropData({
           data: source.data,
-          createDropData,
+          getDataFromInside,
+          getDataFromOutside,
           input: location.current.input,
         });
         if (newPlaceholder) {
@@ -102,7 +113,8 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
       onDrop: ({ source, location }) => {
         const dropData = getEventDropData({
           data: source.data,
-          createDropData,
+          getDataFromInside,
+          getDataFromOutside,
           input: location.current.input,
         });
 
@@ -142,6 +154,7 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
     getEventDropData,
     isValidDropTarget,
     addPropertiesToDroppedEvent,
+    adapter,
     store,
   ]);
 }
@@ -164,16 +177,22 @@ export namespace useDropTarget {
     resourceId?: SchedulerResourceId | null;
   }
 
-  export type CreateDropData = (
-    data: EventDropData,
+  export type GetDataFromInside = (
+    data: Exclude<EventDropData, StandaloneEvent.DragData>,
     newStart: SchedulerValidDate,
     newEnd: SchedulerValidDate,
-  ) => SchedulerOccurrencePlaceholder;
+  ) => SchedulerOccurrencePlaceholderInternalDragOrResize;
+
+  export type GetDataFromOutside = (
+    data: StandaloneEvent.DragData,
+    start: SchedulerValidDate,
+  ) => SchedulerOccurrencePlaceholderExternalDrag | undefined;
 
   export type GetEventDropData = (parameters: {
     data: any;
     input: { clientX: number; clientY: number };
-    createDropData: CreateDropData;
+    getDataFromInside: GetDataFromInside;
+    getDataFromOutside: GetDataFromOutside;
   }) => SchedulerOccurrencePlaceholder | undefined;
 }
 

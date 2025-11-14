@@ -25,6 +25,7 @@ export function useExtractEventCalendarParameters<
     preferences,
     preferencesMenuConfig,
     eventColor,
+    eventCreation,
     showCurrentTimeIndicator,
     readOnly,
     ...forwardedProps
@@ -50,6 +51,7 @@ export function useExtractEventCalendarParameters<
       preferences,
       preferencesMenuConfig,
       eventColor,
+      eventCreation,
       showCurrentTimeIndicator,
       readOnly,
     }),
@@ -72,6 +74,7 @@ export function useExtractEventCalendarParameters<
       preferences,
       preferencesMenuConfig,
       eventColor,
+      eventCreation,
       showCurrentTimeIndicator,
       readOnly,
     ],
