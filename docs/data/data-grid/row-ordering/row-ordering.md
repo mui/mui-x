@@ -120,10 +120,6 @@ The row reorder feature has an internal validation ruleset to ensure that only t
 `isValidRowReorder()` should only be used to add more validation rules.
 :::
 
-:::info
-The above demo uses tree data to demonstrate the concept. You can check more about this in the [Tree data—Drag-and-drop tree data reordering](/x/react-data-grid/tree-data/#drag-and-drop-tree-data-reordering) documentation section.
-:::
-
 ## Row reordering with tree data
 
 Users can drag and drop rows to move between parents, or convert leaf nodes into parent groups.
