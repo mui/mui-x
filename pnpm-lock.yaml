@@ -221,7 +221,7 @@ packageExtensionsChecksum: sha256-GmuHKPl+EPPmpH9o6dpG/x6YUd/4eHjpfdYnSqH1GqA=
 
 patchedDependencies:
   '@base-ui-components/react':
-    hash: a23a5e3d2555fd74b3b6a83cfe733742964f01052d2aaa76925d7c6cdccdcdbf
+    hash: 3664d48852b86d17681328c1aab4327b7edca91991d608ef6402fa049d2d4e33
     path: patches/@base-ui-components__react.patch
 
 importers:
@@ -1613,7 +1613,7 @@ importers:
         version: 7.28.4
       '@base-ui-components/react':
         specifier: ^1.0.0-beta.4
-        version: 1.0.0-beta.4(patch_hash=a23a5e3d2555fd74b3b6a83cfe733742964f01052d2aaa76925d7c6cdccdcdbf)(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+        version: 1.0.0-beta.4(patch_hash=3664d48852b86d17681328c1aab4327b7edca91991d608ef6402fa049d2d4e33)(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@base-ui-components/utils':
         specifier: ^0.1.2
         version: 0.1.2(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -1675,7 +1675,7 @@ importers:
         version: 7.28.4
       '@base-ui-components/react':
         specifier: ^1.0.0-beta.4
-        version: 1.0.0-beta.4(patch_hash=a23a5e3d2555fd74b3b6a83cfe733742964f01052d2aaa76925d7c6cdccdcdbf)(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+        version: 1.0.0-beta.4(patch_hash=3664d48852b86d17681328c1aab4327b7edca91991d608ef6402fa049d2d4e33)(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@base-ui-components/utils':
         specifier: ^0.1.2
         version: 0.1.2(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -13601,7 +13601,7 @@ snapshots:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.28.5
 
-  '@base-ui-components/react@1.0.0-beta.4(patch_hash=a23a5e3d2555fd74b3b6a83cfe733742964f01052d2aaa76925d7c6cdccdcdbf)(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)':
+  '@base-ui-components/react@1.0.0-beta.4(patch_hash=3664d48852b86d17681328c1aab4327b7edca91991d608ef6402fa049d2d4e33)(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)':
     dependencies:
       '@babel/runtime': 7.28.4
       '@base-ui-components/utils': 0.1.2(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
