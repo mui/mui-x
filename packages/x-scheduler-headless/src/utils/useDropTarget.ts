@@ -3,13 +3,13 @@ import * as React from 'react';
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import {
   SchedulerEvent,
-  CalendarOccurrencePlaceholder,
-  CalendarOccurrencePlaceholderExternalDrag,
-  CalendarOccurrencePlaceholderInternalDragOrResize,
+  SchedulerOccurrencePlaceholder,
+  SchedulerOccurrencePlaceholderExternalDrag,
+  SchedulerOccurrencePlaceholderInternalDragOrResize,
   EventSurfaceType,
-  CalendarEventUpdatedProperties,
+  SchedulerEventUpdatedProperties,
   SchedulerValidDate,
-  CalendarResourceId,
+  SchedulerResourceId,
 } from '../models';
 import {
   EventDropData,
@@ -161,20 +161,20 @@ export namespace useDropTarget {
      * If null, the event will be dropped outside of any resource.
      * If not defined, the event will be dropped onto the resource it was originally in (if any).
      */
-    resourceId?: CalendarResourceId | null;
+    resourceId?: SchedulerResourceId | null;
   }
 
   export type CreateDropData = (
     data: EventDropData,
     newStart: SchedulerValidDate,
     newEnd: SchedulerValidDate,
-  ) => CalendarOccurrencePlaceholder;
+  ) => SchedulerOccurrencePlaceholder;
 
   export type GetEventDropData = (parameters: {
     data: any;
     input: { clientX: number; clientY: number };
     createDropData: CreateDropData;
-  }) => CalendarOccurrencePlaceholder | undefined;
+  }) => SchedulerOccurrencePlaceholder | undefined;
 }
 
 /**
@@ -182,7 +182,7 @@ export namespace useDropTarget {
  */
 async function applyInternalDragOrResizeOccurrencePlaceholder(
   store: SchedulerStoreInContext<any, any>,
-  placeholder: CalendarOccurrencePlaceholderInternalDragOrResize,
+  placeholder: SchedulerOccurrencePlaceholderInternalDragOrResize,
   addPropertiesToDroppedEvent?: () => Partial<SchedulerEvent>,
 ): Promise<void> {
   // TODO: Try to do a single state update.
@@ -195,7 +195,7 @@ async function applyInternalDragOrResizeOccurrencePlaceholder(
     throw new Error(`Scheduler: the original event was not found (id="${eventId}").`);
   }
 
-  const changes: CalendarEventUpdatedProperties = { id: eventId, start, end };
+  const changes: SchedulerEventUpdatedProperties = { id: eventId, start, end };
 
   // If `undefined`, we want to set the event resource to `undefined` (no resource).
   // If `null`, we want to keep the original event resource.
@@ -220,7 +220,7 @@ async function applyInternalDragOrResizeOccurrencePlaceholder(
 
 function applyExternalDragOccurrencePlaceholder(
   store: SchedulerStoreInContext<any, any>,
-  placeholder: CalendarOccurrencePlaceholderExternalDrag,
+  placeholder: SchedulerOccurrencePlaceholderExternalDrag,
   addPropertiesToDroppedEvent?: () => Partial<SchedulerEvent>,
 ) {
   const event: SchedulerEvent = {
