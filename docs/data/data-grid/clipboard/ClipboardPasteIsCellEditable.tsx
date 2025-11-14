@@ -99,7 +99,10 @@ export default function ClipboardPasteIsCellEditable() {
             <strong>Last Modified column:</strong> Cannot be pasted in any row
           </li>
         </Box>
-        <Box component="p" sx={{ mt: 1, fontSize: '0.875rem', color: 'text.secondary' }}>
+        <Box
+          component="p"
+          sx={{ mt: 1, fontSize: '0.875rem', color: 'text.secondary' }}
+        >
           Try selecting multiple cells and pasting data. Cells marked as non-editable
           by <code>isCellEditable</code> will not be updated.
         </Box>
@@ -127,4 +130,3 @@ export default function ClipboardPasteIsCellEditable() {
     </Box>
   );
 }
-
