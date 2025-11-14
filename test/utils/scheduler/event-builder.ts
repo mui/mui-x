@@ -1,5 +1,5 @@
 import {
-  CalendarResourceId,
+  SchedulerResourceId,
   RecurringEventPresetKey,
   RecurringEventRecurrenceRule,
 } from '@mui/x-scheduler-headless/models';
@@ -72,7 +72,7 @@ export class EventBuilder {
   }
 
   /** Associate a resource id. */
-  resource(resourceId?: CalendarResourceId) {
+  resource(resourceId?: SchedulerResourceId) {
     this.event.resource = resourceId;
     return this;
   }
@@ -177,19 +177,12 @@ export class EventBuilder {
   recurrent(kind: RecurringEventPresetKey, rrule?: Omit<RecurringEventRecurrenceRule, 'freq'>) {
     const anchor = this.event.start ?? DEFAULT_TESTING_VISIBLE_DATE;
 
-    const freqMap: Record<RecurringEventPresetKey, RecurringEventRecurrenceRule['freq']> = {
-      daily: 'DAILY',
-      weekly: 'WEEKLY',
-      monthly: 'MONTHLY',
-      yearly: 'YEARLY',
-    };
+    let base: RecurringEventRecurrenceRule = { freq: kind, interval: 1 };
 
-    let base: RecurringEventRecurrenceRule = { freq: freqMap[kind], interval: 1 };
-
-    if (kind === 'weekly') {
+    if (kind === 'WEEKLY') {
       const code = getWeekDayCode(this.adapter, anchor);
       base = { ...base, byDay: [code] };
-    } else if (kind === 'monthly') {
+    } else if (kind === 'MONTHLY') {
       const dayOfMonth = this.adapter.getDate(anchor);
       base = { ...base, byMonthDay: [dayOfMonth] };
     }

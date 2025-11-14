@@ -8,9 +8,9 @@ import {
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   EventBuilder,
 } from 'test/utils/scheduler';
-import { SchedulerEvent, CalendarResource, TimelineView } from '@mui/x-scheduler-headless/models';
+import { SchedulerEvent, SchedulerResource, TimelineView } from '@mui/x-scheduler-headless/models';
 
-const baseResources: CalendarResource[] = [
+const baseResources: SchedulerResource[] = [
   { id: 'resource-1', title: 'Engineering', eventColor: 'blue' },
   { id: 'resource-2', title: 'Design', eventColor: 'jade' },
 ];
@@ -33,7 +33,7 @@ describe('<Timeline />', () => {
   });
 
   function renderTimeline(options?: {
-    resources?: CalendarResource[];
+    resources?: SchedulerResource[];
     events?: SchedulerEvent[];
     view?: TimelineView;
     views?: TimelineView[];
@@ -61,7 +61,7 @@ describe('<Timeline />', () => {
     });
 
     it('does render resources with no events', () => {
-      const extendedResources: CalendarResource[] = [
+      const extendedResources: SchedulerResource[] = [
         ...baseResources,
         { id: 'resource-3', title: 'QA', eventColor: 'red' },
       ];

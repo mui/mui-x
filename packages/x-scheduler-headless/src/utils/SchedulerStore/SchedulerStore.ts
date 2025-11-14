@@ -6,7 +6,7 @@ import {
   SchedulerEventId,
   SchedulerEventOccurrence,
   SchedulerOccurrencePlaceholder,
-  CalendarResourceId,
+  SchedulerResourceId,
   SchedulerValidDate,
   SchedulerEventUpdatedProperties,
   RecurringEventUpdateScope,
@@ -379,7 +379,7 @@ export class SchedulerStore<
   /**
    * Updates the visible resources.
    */
-  public setVisibleResources = (visibleResources: Map<CalendarResourceId, boolean>) => {
+  public setVisibleResources = (visibleResources: Map<SchedulerResourceId, boolean>) => {
     if (this.state.visibleResources !== visibleResources) {
       this.set('visibleResources', visibleResources);
     }
