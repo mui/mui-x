@@ -266,6 +266,7 @@ export type AxisGroups = {
 export interface AxisScaleConfig {
   band: {
     scaleType: 'band';
+    isNumerical?: boolean;
     scale: ScaleBand<{ toString(): string }>;
     /**
      * The ratio between the space allocated for padding between two categories and the category width.
@@ -284,16 +285,21 @@ export interface AxisScaleConfig {
     Pick<TickParams, 'tickPlacement' | 'tickLabelPlacement'>;
   point: {
     scaleType: 'point';
+    isNumerical?: boolean;
     scale: ScalePoint<{ toString(): string }>;
     colorMap?: OrdinalColorConfig | ContinuousColorConfig | PiecewiseColorConfig;
   } & AxisGroups;
   log: {
     scaleType: 'log';
+
+    isNumerical?: false;
     scale: ScaleLogarithmic<number, number>;
     colorMap?: ContinuousColorConfig | PiecewiseColorConfig;
   };
   symlog: {
     scaleType: 'symlog';
+
+    isNumerical?: false;
     scale: ScaleSymLog<number, number>;
     colorMap?: ContinuousColorConfig | PiecewiseColorConfig;
     /**
@@ -304,26 +310,36 @@ export interface AxisScaleConfig {
   };
   pow: {
     scaleType: 'pow';
+
+    isNumerical?: false;
     scale: ScalePower<number, number>;
     colorMap?: ContinuousColorConfig | PiecewiseColorConfig;
   };
   sqrt: {
     scaleType: 'sqrt';
+
+    isNumerical?: false;
     scale: ScalePower<number, number>;
     colorMap?: ContinuousColorConfig | PiecewiseColorConfig;
   };
   time: {
     scaleType: 'time';
+
+    isNumerical?: false;
     scale: ScaleTime<number, number>;
     colorMap?: ContinuousColorConfig | PiecewiseColorConfig;
   };
   utc: {
     scaleType: 'utc';
+
+    isNumerical?: false;
     scale: ScaleTime<number, number>;
     colorMap?: ContinuousColorConfig | PiecewiseColorConfig;
   };
   linear: {
     scaleType: 'linear';
+
+    isNumerical?: false;
     scale: ScaleLinear<number, number>;
     colorMap?: ContinuousColorConfig | PiecewiseColorConfig;
   };
@@ -677,11 +693,9 @@ export type DefaultedAxis<
 /**
  * The x-axis configuration with missing values filled with default values.
  */
-export type DefaultedXAxis<S extends ScaleName = ScaleName, V = any> = DefaultedAxis<
-  S,
-  V,
-  ChartsXAxisProps
->;
+export type DefaultedXAxis<S extends ScaleName = ScaleName, V = any> = S extends ScaleName
+  ? DefaultedAxis<S, V, ChartsXAxisProps>
+  : never;
 
 /**
  * The y-axis configuration with missing values filled with default values.

@@ -14,13 +14,14 @@ import { useAxisTicksProps } from './useAxisTicksProps';
 
 interface ChartsSingleXAxisProps extends ChartsXAxisProps {
   axisLabelHeight: number;
+  continuousTickPlacement?: boolean;
 }
 
 /**
  * @ignore - internal component.
  */
 function ChartsSingleXAxisTicks(inProps: ChartsSingleXAxisProps) {
-  const { axisLabelHeight } = inProps;
+  const { axisLabelHeight, continuousTickPlacement } = inProps;
   const {
     xScale,
     defaultizedProps,
@@ -63,6 +64,7 @@ function ChartsSingleXAxisTicks(inProps: ChartsSingleXAxisProps) {
     tickPlacement,
     tickLabelPlacement,
     direction: 'x',
+    continuousTickPlacement,
   });
 
   const visibleLabels = getVisibleLabels(xTicks, {

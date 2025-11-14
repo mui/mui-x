@@ -17,9 +17,15 @@ interface ChartsGridVerticalProps {
 export function ChartsGridVertical(props: ChartsGridVerticalProps) {
   const { axis, start, end, classes } = props;
 
-  const { scale, tickNumber, tickInterval } = axis;
+  const { scale, tickNumber, tickInterval, isNumerical } = axis;
 
-  const xTicks = useTicks({ scale, tickNumber, tickInterval, direction: 'x' });
+  const xTicks = useTicks({
+    scale,
+    tickNumber,
+    tickInterval,
+    continuousTickPlacement: isNumerical,
+    direction: 'x',
+  });
 
   return (
     <React.Fragment>
