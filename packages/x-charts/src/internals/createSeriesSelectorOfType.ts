@@ -54,15 +54,18 @@ export const selectorSeriesOfType = createSelectorMemoized(
   },
 );
 
+export const useAllSeriesOfType = <T extends keyof ChartsSeriesConfig>(seriesType: T) => {
+  const store = useStore();
+  return useSelector(store, selectorAllSeriesOfType, seriesType) as ProcessedSeries[T];
+};
+
 export const useSeriesOfType = <T extends keyof ChartsSeriesConfig>(
   seriesType: T,
   seriesId?: SeriesId | SeriesId[],
 ) => {
   const store = useStore();
-  return useSelector(store, selectorSeriesOfType, seriesType, seriesId);
-};
-
-export const useAllSeriesOfType = <T extends keyof ChartsSeriesConfig>(seriesType: T) => {
-  const store = useStore();
-  return useSelector(store, selectorAllSeriesOfType, seriesType);
+  return useSelector(store, selectorSeriesOfType, seriesType, seriesId) as
+    | ChartSeriesDefaultized<T>
+    | ChartSeriesDefaultized<T>[]
+    | undefined;
 };
