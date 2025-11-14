@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 
 import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
-import { useTreeViewApiRef } from '@mui/x-tree-view/hooks';
+import { useRichTreeViewProApiRef } from '@mui/x-tree-view-pro/hooks';
 
 const MUI_X_PRODUCTS = [
   {
@@ -50,7 +50,7 @@ const getAllItemsWithChildrenItemIds = (items) => {
 };
 
 export default function SendAllItemsToServer() {
-  const apiRefTreeViewA = useTreeViewApiRef();
+  const apiRefTreeViewA = useRichTreeViewProApiRef();
   const [itemsTreeViewB, setItemsTreeViewB] = React.useState(MUI_X_PRODUCTS);
 
   const handleItemPositionChangeTreeViewA = () => {

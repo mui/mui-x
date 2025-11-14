@@ -10,8 +10,6 @@ export * from './TreeItemProvider';
 export * from './TreeItemDragAndDropOverlay';
 export * from './TreeItemLabelInput';
 
-export { unstable_resetCleanupTracking } from './internals/hooks/useInstanceEventHandler';
-
 export * from './models';
 export * from './icons';
 export * from './hooks';

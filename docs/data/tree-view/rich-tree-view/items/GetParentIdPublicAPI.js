@@ -3,11 +3,11 @@ import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { useTreeViewApiRef } from '@mui/x-tree-view/hooks';
+import { useRichTreeViewApiRef } from '@mui/x-tree-view/hooks';
 import { MUI_X_PRODUCTS } from './products';
 
 export default function GetParentIdPublicAPI() {
-  const apiRef = useTreeViewApiRef();
+  const apiRef = useRichTreeViewApiRef();
   const [selectedItemParent, setSelectedItemParent] = React.useState();
 
   const handleSelectedItemsChange = (_event, id) => {
