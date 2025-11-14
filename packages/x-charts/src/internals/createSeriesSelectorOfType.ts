@@ -1,5 +1,5 @@
 import { warnOnce } from '@mui/x-internals/warning';
-import { createSelector } from '@mui/x-internals/store';
+import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import { ChartSeriesDefaultized, ChartsSeriesConfig } from '../models/seriesType/config';
 import { SeriesId } from '../models/seriesType/common';
 import { selectorChartSeriesProcessed } from './plugins/corePlugins/useChartSeries/useChartSeries.selectors';
@@ -9,13 +9,11 @@ import { useSelector } from './store/useSelector';
 
 export const selectorAllSeriesOfType = createSelector(
   selectorChartSeriesProcessed,
-  <T extends keyof ChartsSeriesConfig>(
-    processedSeries: ProcessedSeries,
-    seriesType: T,
-  ): ProcessedSeries[T] => processedSeries[seriesType],
+  <T extends keyof ChartsSeriesConfig>(processedSeries: ProcessedSeries, seriesType: T) =>
+    processedSeries[seriesType],
 );
 
-export const selectorSeriesOfType = createSelector(
+export const selectorSeriesOfType = createSelectorMemoized(
   selectorChartSeriesProcessed,
   <T extends keyof ChartsSeriesConfig>(
     processedSeries: ProcessedSeries,
