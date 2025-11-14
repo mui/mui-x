@@ -222,19 +222,31 @@ function extractColumnWidths(
     if (options.includeHeaders) {
       const header = findGridHeader(apiRef.current, column.field);
       if (header) {
-        const title = header.querySelector(`.${gridClasses.columnHeaderTitle}`);
-        const content = header.querySelector(`.${gridClasses.columnHeaderTitleContainerContent}`)!;
-        const iconContainer = header.querySelector(`.${gridClasses.iconButtonContainer}`);
+        const titleContainer = header.querySelector(`.${gridClasses.columnHeaderTitleContainer}`)!;
+        const children = Array.from(titleContainer.children);
         const menuContainer = header.querySelector(`.${gridClasses.menuIcon}`);
-        const element = title ?? content;
 
-        const style = window.getComputedStyle(header, null);
-        const paddingWidth = parseInt(style.paddingLeft, 10) + parseInt(style.paddingRight, 10);
-        const contentWidth = element.scrollWidth + 1;
+        const titleContainerStyle = window.getComputedStyle(titleContainer, null);
+        const gap = parseInt(titleContainerStyle.gap, 10) || 0;
+
+        const headerStyle = window.getComputedStyle(header, null);
+        const paddingWidth =
+          parseInt(headerStyle.paddingLeft, 10) + parseInt(headerStyle.paddingRight, 10);
+
+        let totalChildren = 0;
+        let childrenWidth = 0;
+        for (let i = 0; i < children.length; i += 1) {
+          const child = children[i] as HTMLElement;
+          if (child.clientWidth > 0) {
+            totalChildren += 1;
+            childrenWidth += child.scrollWidth + 1;
+          }
+        }
+
         const width =
-          contentWidth +
+          childrenWidth +
+          gap * (totalChildren - 1) +
           paddingWidth +
-          (iconContainer?.clientWidth ?? 0) +
           (menuContainer?.clientWidth ?? 0);
 
         filteredWidths.push(width);
