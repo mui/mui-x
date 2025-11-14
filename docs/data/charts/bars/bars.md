@@ -56,12 +56,6 @@ And a value of `-1` will make bars overlap on top of each other.
 
 {{"demo": "BarGap.js", "hideToolbar": true, "bg": "playground"}}
 
-## Range bar
-
-You can create range bars by providing an array of two values for each data point and setting the series' `type` property to `'rangeBar'`.
-
-{{"demo": "BasicRangeBar.js"}}
-
 ## Stacking
 
 Bar series accept a `stack` property that identifies a stack.
@@ -306,11 +300,3 @@ Here's how the Bar Chart is composed:
 ```
 
 {{"demo": "BarScatterCompostion.js"}}
-
-### Range bar
-
-Similarly, you can use the `<RangeBarPlot />` component to render range bar series in a composed chart.
-
-In the example below, we create a project schedule chart using range bars to represent task durations.
-
-{{"demo": "RangeBarProjectSchedule.js"}}

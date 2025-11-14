@@ -2,17 +2,20 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import { barElementClasses } from './barElementClasses';
-import { BarElement, BarElementSlotProps, BarElementSlots } from './BarElement';
-import { BarItemIdentifier } from '../models';
-import { useDrawingArea, useXAxes, useYAxes } from '../hooks';
-import { BarLabelSlotProps, BarLabelSlots } from './BarLabel/BarLabelItem';
-import { BarLabelPlot } from './BarLabel/BarLabelPlot';
-import { useSkipAnimation } from '../hooks/useSkipAnimation';
-import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
-import { useUtilityClasses } from './barClasses';
+import { BarLabelPlot, useSkipAnimation } from '@mui/x-charts/internals';
+import {
+  BarElement,
+  BarElementSlotProps,
+  BarElementSlots,
+  barElementClasses,
+  BarLabelSlots,
+  BarLabelSlotProps,
+} from '@mui/x-charts/BarChart';
+import { BarItemIdentifier, RangeBarValueType } from '@mui/x-charts/models';
+import { useDrawingArea, useXAxes, useYAxes } from '@mui/x-charts/hooks';
+import { useUtilityClasses } from './useUtilityClasses';
 import { useRangeBarPlotData } from './useRangeBarPlotData';
-import { RangeBarValueType } from '../models/seriesType/rangeBar';
+import { useIsZoomInteracting } from '../../hooks';
 
 export interface RangeBarPlotSlots extends BarElementSlots, BarLabelSlots {}
 
@@ -70,7 +73,7 @@ const RangeBarPlotRoot = styled('g', {
  */
 function RangeBarPlot(props: RangeBarPlotProps): React.JSX.Element {
   const { skipAnimation: inSkipAnimation, onItemClick, borderRadius, ...other } = props;
-  const isZoomInteracting = useInternalIsZoomInteracting();
+  const isZoomInteracting = useIsZoomInteracting();
   const skipAnimation = useSkipAnimation(isZoomInteracting || inSkipAnimation);
   const { xAxis: xAxes } = useXAxes();
   const { yAxis: yAxes } = useYAxes();
@@ -112,6 +115,7 @@ function RangeBarPlot(props: RangeBarPlotProps): React.JSX.Element {
       {completedData.map((processedSeries) => (
         <BarLabelPlot<RangeBarValueType | null>
           key={processedSeries.seriesId}
+          className={classes.seriesLabels}
           processedSeries={processedSeries}
           skipAnimation={skipAnimation}
           {...other}

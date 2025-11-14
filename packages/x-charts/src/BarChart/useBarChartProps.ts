@@ -14,7 +14,6 @@ import { ChartsLegendSlotExtension } from '../ChartsLegend';
 import type { ChartsWrapperProps } from '../ChartsWrapper';
 import type { AxisConfig, ChartsXAxisProps, ChartsYAxisProps } from '../models/axis';
 import { BAR_CHART_PLUGINS, BarChartPluginSignatures } from './BarChart.plugins';
-import { RangeBarPlotProps } from './RangeBarPlot';
 
 /**
  * A helper function that extracts BarChartProps from the input props
@@ -151,13 +150,6 @@ export const useBarChartProps = (props: BarChartProps) => {
     barLabel,
   };
 
-  const rangeBarPlotProps: RangeBarPlotProps = {
-    onItemClick,
-    slots,
-    slotProps,
-    borderRadius,
-  };
-
   const gridProps: ChartsGridProps = {
     vertical: grid?.vertical,
     horizontal: grid?.horizontal,
@@ -203,7 +195,6 @@ export const useBarChartProps = (props: BarChartProps) => {
     chartsWrapperProps,
     chartContainerProps,
     barPlotProps,
-    rangeBarPlotProps,
     gridProps,
     clipPathProps,
     clipPathGroupProps,

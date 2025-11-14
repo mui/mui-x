@@ -1,6 +1,5 @@
 export * from './BarChart';
 export * from './BarPlot';
-export * from './RangeBarPlot';
 export * from './BarElement';
 export * from './BarLabel';
 export * from './barElementClasses';

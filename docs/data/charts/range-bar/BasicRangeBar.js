@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { BarChart } from '@mui/x-charts/BarChart';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-import { AxisValueFormatterContext } from '@mui/x-charts/models';
+
+import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 
 const months = [
   'January',
@@ -25,15 +25,15 @@ export default function BasicRangeBar() {
       <Typography textAlign="center">
         Average monthly temperature ranges in °C for Porto and Berlin in 1991-2020
       </Typography>
-      <BarChart
+      <BarChartPro
         xAxis={[
           {
             data: months,
-            valueFormatter: (v: string, context: AxisValueFormatterContext) =>
+            valueFormatter: (v, context) =>
               context.location === 'tick' ? v.slice(0, 3) : v,
           },
         ]}
-        yAxis={[{ valueFormatter: (value: number) => `${value}°C` }]}
+        yAxis={[{ valueFormatter: (value) => `${value}°C` }]}
         series={[
           {
             id: 'porto',
@@ -42,18 +42,18 @@ export default function BasicRangeBar() {
             valueFormatter: (value) =>
               value === null ? null : `${value.start}°C - ${value.end}°C`,
             data: [
-              { end: 14.0, start: 6.4 },
-              { end: 15.0, start: 6.8 },
-              { end: 17.0, start: 8.8 },
-              { end: 18.1, start: 10.1 },
-              { end: 20.3, start: 12.3 },
-              { end: 22.7, start: 14.5 },
-              { end: 24.3, start: 15.5 },
-              { end: 24.8, start: 15.7 },
-              { end: 23.5, start: 14.8 },
-              { end: 20.7, start: 12.9 },
-              { end: 16.8, start: 9.4 },
-              { end: 14.7, start: 7.6 },
+              { start: 6.4, end: 14.0 },
+              { start: 6.8, end: 15.0 },
+              { start: 8.8, end: 17.0 },
+              { start: 10.1, end: 18.1 },
+              { start: 12.3, end: 20.3 },
+              { start: 14.5, end: 22.7 },
+              { start: 15.5, end: 24.3 },
+              { start: 15.7, end: 24.8 },
+              { start: 14.8, end: 23.5 },
+              { start: 12.9, end: 20.7 },
+              { start: 9.4, end: 16.8 },
+              { start: 7.6, end: 14.7 },
             ],
           },
           {

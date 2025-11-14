@@ -12,7 +12,7 @@ const getAxisMessage = (axisDirection: 'x' | 'y', axisId: AxisId) => {
     : `The ${axisName} with id "${axisId}"`;
 };
 
-export function checkScaleErrors(
+export function checkBarChartScaleErrors(
   verticalLayout: boolean,
   seriesId: SeriesId,
   seriesDataLength: number,

@@ -2,7 +2,7 @@ import { ChartsXAxisProps, ChartsYAxisProps, ComputedAxis, ScaleName } from '../
 import getColor from './seriesConfig/bar/getColor';
 import { ChartDrawingArea, useChartId, useXAxes, useYAxes } from '../hooks';
 import { MaskData, ProcessedBarData, ProcessedBarSeriesData } from './types';
-import { checkScaleErrors } from './checkScaleErrors';
+import { checkBarChartScaleErrors } from './checkBarChartScaleErrors';
 import { useBarSeriesContext } from '../hooks/useBarSeries';
 import { SeriesProcessorResult } from '../internals/plugins/models/seriesConfig/seriesProcessor.types';
 import { ComputedAxisConfig } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxis.types';
@@ -45,7 +45,7 @@ export function useBarPlotData(
       const verticalLayout = series[seriesId].layout === 'vertical';
       const reverse = (verticalLayout ? yAxisConfig.reverse : xAxisConfig.reverse) ?? false;
 
-      checkScaleErrors(
+      checkBarChartScaleErrors(
         verticalLayout,
         seriesId,
         series[seriesId].stackedData.length,

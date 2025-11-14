@@ -162,6 +162,7 @@ function BarPlot(props: BarPlotProps) {
       {completedData.map((processedSeries) => (
         <BarLabelPlot<BarValueType | null>
           key={processedSeries.seriesId}
+          className={classes.seriesLabels}
           processedSeries={processedSeries}
           skipAnimation={skipAnimation}
           barLabel={barLabel}

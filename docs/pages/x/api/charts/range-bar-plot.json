@@ -18,10 +18,8 @@
   },
   "name": "RangeBarPlot",
   "imports": [
-    "import { RangeBarPlot } from '@mui/x-charts/BarChart';",
-    "import { RangeBarPlot } from '@mui/x-charts';",
-    "import { RangeBarPlot } from '@mui/x-charts-pro';",
-    "import { RangeBarPlot } from '@mui/x-charts-premium';"
+    "import { RangeBarPlot } from '@mui/x-charts-pro/BarChartPro';",
+    "import { RangeBarPlot } from '@mui/x-charts-pro';"
   ],
   "slots": [
     {
@@ -39,8 +37,8 @@
   ],
   "classes": [],
   "muiName": "MuiRangeBarPlot",
-  "filename": "/packages/x-charts/src/BarChart/RangeBarPlot.tsx",
+  "filename": "/packages/x-charts-pro/src/BarChartPro/RangeBar/RangeBarPlot.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/bars/\">Charts - Bars</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/bars/\">Charts - Bars</a></li>\n<li><a href=\"/x/react-charts/range-bar/\">Charts - Bars</a></li></ul>",
   "cssComponent": false
 }
