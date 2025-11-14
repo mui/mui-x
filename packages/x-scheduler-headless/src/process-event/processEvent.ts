@@ -17,5 +17,6 @@ export function processEvent(model: SchedulerEvent, adapter: Adapter): Scheduler
     readOnly: model.readOnly ?? false,
     extractedFromId: model.extractedFromId,
     modelInBuiltInFormat: model,
+    color: model.color,
   };
 }

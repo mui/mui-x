@@ -27,6 +27,10 @@ export const schedulerEventSelectors = {
       return state.eventColor;
     }
 
+    if (event.color) {
+      return event.color;
+    }
+
     const resourceColor = schedulerResourceSelectors.processedResource(
       state,
       event.resource,
