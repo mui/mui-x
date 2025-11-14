@@ -122,8 +122,8 @@ You can check integration of different versions of React (for example different 
 
 Possible values for `version`:
 
-- an NPM tag, for example `next`, `experimental` or `latest`
-- an older version, for example `^18.0.0`
+- an npm tag, for example `next`, `experimental` or `latest`
+- an older version, for example `18`
 
 For React 18 specifically, you can run the `pnpm use-react-18` script.
 
