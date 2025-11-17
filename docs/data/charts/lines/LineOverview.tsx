@@ -14,7 +14,7 @@ import { ChartZoomSlider } from '@mui/x-charts-pro/ChartZoomSlider';
 import { ChartsClipPath } from '@mui/x-charts-pro/ChartsClipPath';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsLegend } from '@mui/x-charts-pro/ChartsLegend';
-import { DATA } from '../dataset/usUnempGdp';
+import { usaUnemploymentAndGdp } from '../dataset/usaUnemploymentAndGdp';
 
 type RecessionPeriod = {
   start: Date;
@@ -67,7 +67,7 @@ function RecessionBands({ periods }: { periods: RecessionPeriod[] }) {
             <rect
               x={textX}
               y={top}
-              width={xEnd - xStart}
+              width={Math.min(xEnd, left + width) - textX}
               height={height}
               fill="grey"
               opacity={0.2}
@@ -98,95 +98,95 @@ export default function LineOverview() {
       <Typography textAlign="center">
         US unemployment rate comparison with GDP per capita
       </Typography>
-      <Box sx={{ width: '100%', height: 400 }}>
-        <ChartDataProviderPro
-          experimentalFeatures={{ preferStrictDomainInLineCharts: true }}
-          dataset={DATA}
-          series={[
-            {
-              type: 'line',
-              id: 'unemployment',
-              dataKey: 'UNRATE',
-              label: 'Unemployment rate',
-              color: '#af3838',
-              showMark: false,
-              yAxisId: 'unemployment-axis',
-              valueFormatter: (value) =>
-                value == null ? '' : `${value.toFixed(1)}%`,
-            },
-            {
-              type: 'line',
-              dataKey: 'GDP_per_capita',
-              label: 'GDP per capita',
-              color: '#4caf50',
-              showMark: false,
-              yAxisId: 'gdp-axis',
-              connectNulls: true,
-              valueFormatter: (value) =>
-                value == null ? '' : `${(value / 1000).toFixed(1)}k`,
-            },
-          ]}
-          xAxis={[
-            {
-              scaleType: 'time',
-              dataKey: 'date',
-              tickNumber: 4,
-              valueFormatter: (date, context) => {
-                if (context.location !== 'tick') {
-                  return date.toLocaleDateString('en-US', {
+
+      <ChartDataProviderPro
+        height={300}
+        experimentalFeatures={{ preferStrictDomainInLineCharts: true }}
+        dataset={usaUnemploymentAndGdp}
+        series={[
+          {
+            type: 'line',
+            id: 'unemployment',
+            dataKey: 'unemploymentRate',
+            label: 'Unemployment rate',
+            color: '#af3838',
+            showMark: false,
+            yAxisId: 'unemployment-axis',
+            valueFormatter: (value) => (value == null ? '' : `${value.toFixed(1)}%`),
+          },
+          {
+            type: 'line',
+            dataKey: 'gdpPerCapita',
+            label: 'GDP per capita',
+            color: '#4caf50',
+            showMark: false,
+            yAxisId: 'gdp-axis',
+            connectNulls: true,
+            valueFormatter: (value) =>
+              value == null ? '' : `${(value / 1000).toFixed(1)}k`,
+          },
+        ]}
+        xAxis={[
+          {
+            scaleType: 'time',
+            dataKey: 'date',
+            tickNumber: 4,
+            valueFormatter: (date, context) => {
+              if (context.location !== 'tick') {
+                return date.toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'short',
+                });
+              }
+              return date.getMonth() === 0
+                ? date.toLocaleDateString('en-US', {
                     year: 'numeric',
+                  })
+                : date.toLocaleDateString('en-US', {
                     month: 'short',
                   });
-                }
-                return date.getMonth() === 0
-                  ? date.toLocaleDateString('en-US', {
-                      year: 'numeric',
-                    })
-                  : date.toLocaleDateString('en-US', {
-                      month: 'short',
-                    });
-              },
-              zoom: {
-                slider: { enabled: true },
-              },
             },
-          ]}
-          yAxis={[
-            {
-              id: 'unemployment-axis',
-              scaleType: 'linear',
-              valueFormatter: (value) => `${value}%`,
-              width: 55,
-              position: 'left',
+            zoom: {
+              slider: { enabled: true },
             },
-            {
-              id: 'gdp-axis',
-              scaleType: 'linear',
-              width: 50,
-              position: 'right',
-              valueFormatter: (value) => `${(value / 1000).toLocaleString()}k`,
-            },
-          ]}
-        >
-          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 1 }}>
-            <ChartsLegend />
-          </Box>
-          <ChartsSurface>
-            <ChartsClipPath id={clipPathId} />
-            <RecessionBands periods={recessions} />
-            <ChartsGrid horizontal />
-            <g clipPath={`url(#${clipPathId})`}>
-              <LinePlot />
-            </g>
-            <ChartsXAxis />
-            <ChartsYAxis axisId="unemployment-axis" label="Unemployment Rate" />
-            <ChartsYAxis axisId="gdp-axis" label="GDP per capita in US$" />
-            <ChartsAxisHighlight x="line" />
-            <ChartZoomSlider />
-          </ChartsSurface>
-          <ChartsTooltip />
-        </ChartDataProviderPro>
-      </Box>
+          },
+        ]}
+        yAxis={[
+          {
+            id: 'unemployment-axis',
+            scaleType: 'linear',
+            valueFormatter: (value) => `${value}%`,
+            width: 55,
+            position: 'left',
+          },
+          {
+            id: 'gdp-axis',
+            scaleType: 'linear',
+            width: 50,
+            position: 'right',
+            valueFormatter: (value) => `${(value / 1000).toLocaleString()}k`,
+          },
+        ]}
+      >
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 1 }}>
+          <ChartsLegend />
+        </Box>
+        <ChartsSurface>
+          <ChartsClipPath id={clipPathId} />
+          <RecessionBands periods={recessions} />
+          <ChartsGrid horizontal />
+          <g clipPath={`url(#${clipPathId})`}>
+            <LinePlot />
+          </g>
+          <ChartsXAxis />
+          <ChartsYAxis axisId="unemployment-axis" label="Unemployment Rate" />
+          <ChartsYAxis axisId="gdp-axis" label="GDP per capita in US$" />
+          <ChartsAxisHighlight x="line" />
+          <ChartZoomSlider />
+        </ChartsSurface>
+        <ChartsTooltip />
+      </ChartDataProviderPro>
+
       <Typography
         variant="caption"
         component="p"

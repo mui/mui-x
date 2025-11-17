@@ -11,6 +11,7 @@ components: LineChart, LineChartPro, LineElement, LineHighlightElement, LineHigh
 ## Overview
 
 Line charts are ideal for showing how values change over continuous dimensions such as time or measurement scales.
+
 They emphasize trends, patterns, and fluctuations, making them useful for exploring relationships, detecting cycles, or tracking performance over time.
 Each line typically represents a series, allowing easy comparison between multiple variables or groups.
 
