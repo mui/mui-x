@@ -9,7 +9,7 @@ import {
   waitFor,
 } from '@mui/internal-test-utils';
 import clsx from 'clsx';
-import { spy, stub } from 'sinon';
+import { vi } from 'vitest';
 import Portal from '@mui/material/Portal';
 import {
   DataGrid,
@@ -98,7 +98,7 @@ describe('<DataGrid /> - Rows', () => {
   });
 
   it('should ignore events coming from a portal in the cell', async () => {
-    const handleRowClick = spy();
+    const handleRowClick = vi.fn();
     function InputCell() {
       return <input type="text" name="input" />;
     }
@@ -129,9 +129,9 @@ describe('<DataGrid /> - Rows', () => {
       </div>,
     );
     await user.click(document.querySelector('input[name="portal-input"]')!);
-    expect(handleRowClick.callCount).to.equal(0);
+    expect(handleRowClick).toHaveBeenCalledTimes(0);
     await user.click(document.querySelector('input[name="input"]')!);
-    expect(handleRowClick.callCount).to.equal(1);
+    expect(handleRowClick).toHaveBeenCalledTimes(1);
   });
 
   // https://github.com/mui/mui-x/issues/8042
@@ -254,10 +254,10 @@ describe('<DataGrid /> - Rows', () => {
     });
 
     it('should call getActions with the row params', () => {
-      const getActions = stub().returns([]);
+      const getActions = vi.fn().mockReturnValue([]);
       render(<TestCase getActions={getActions} />);
-      expect(getActions.args[0][0].id).to.equal(1);
-      expect(getActions.args[0][0].row).to.deep.equal({ id: 1 });
+      expect(getActions.mock.calls[0][0].id).to.equal(1);
+      expect(getActions.mock.calls[0][0].row).to.deep.equal({ id: 1 });
     });
 
     it('should always show the actions not marked as showInMenu', () => {
@@ -923,7 +923,7 @@ describe('<DataGrid /> - Rows', () => {
     }
 
     it('should be called with the correct params', async () => {
-      const getRowSpacing = stub().returns({});
+      const getRowSpacing = vi.fn().mockReturnValue({});
       const { user } = render(
         <TestCase
           getRowSpacing={getRowSpacing}
@@ -931,7 +931,7 @@ describe('<DataGrid /> - Rows', () => {
           pageSizeOptions={[2]}
         />,
       );
-      expect(getRowSpacing.args[0][0]).to.deep.equal({
+      expect(getRowSpacing.mock.calls[0][0]).to.deep.equal({
         isFirstVisible: true,
         isLastVisible: false,
         indexRelativeToCurrentPage: 0,

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import {
   adapter,
   createOccurrenceFromEvent,
@@ -83,7 +83,7 @@ describe('<EventPopoverContent />', () => {
   });
 
   it('should call "onEventsChange" with updated values on submit', async () => {
-    const onEventsChange = spy();
+    const onEventsChange = vi.fn();
     const { user } = render(
       <EventCalendarProvider
         events={[DEFAULT_EVENT]}
@@ -141,7 +141,7 @@ describe('<EventPopoverContent />', () => {
   });
 
   it('should call "onEventsChange" with the updated values when delete button is clicked', async () => {
-    const onEventsChange = spy();
+    const onEventsChange = vi.fn();
     const { user } = render(
       <EventCalendarProvider events={[DEFAULT_EVENT]} onEventsChange={onEventsChange}>
         <Popover.Root open>
@@ -222,7 +222,7 @@ describe('<EventPopoverContent />', () => {
   });
 
   it('should handle a resource without an eventColor (fallback to default)', async () => {
-    const onEventsChange = spy();
+    const onEventsChange = vi.fn();
 
     const resourcesNoColor: SchedulerResource[] = [
       { id: 'r1', title: 'Work', eventColor: 'blue' },
@@ -257,7 +257,7 @@ describe('<EventPopoverContent />', () => {
   });
 
   it('should fallback to "No resource" with default color when the event has no resource', async () => {
-    const onEventsChange = spy();
+    const onEventsChange = vi.fn();
 
     const eventWithoutResource: SchedulerEvent = {
       ...DEFAULT_EVENT,
@@ -298,7 +298,7 @@ describe('<EventPopoverContent />', () => {
     it('should change surface of the placeholder to day-grid when all-day is changed to true', async () => {
       const start = adapter.date('2025-05-26T07:30:00');
       const end = adapter.date('2025-05-26T08:30:00');
-      const handleSurfaceChange = spy();
+      const handleSurfaceChange = vi.fn();
 
       const creationOccurrence = createOccurrenceFromEvent({
         id: 'tmp',
@@ -345,7 +345,7 @@ describe('<EventPopoverContent />', () => {
     it('should change surface of the placeholder to time-grid when all-day is changed to false', async () => {
       const start = adapter.date('2025-05-26T07:30:00');
       const end = adapter.date('2025-05-26T08:30:00');
-      const handleSurfaceChange = spy();
+      const handleSurfaceChange = vi.fn();
 
       const creationOccurrence = createOccurrenceFromEvent({
         id: 'tmp',
@@ -392,7 +392,7 @@ describe('<EventPopoverContent />', () => {
     it('should not change surfaceType when all day changed to true and lockSurfaceType=true', async () => {
       const start = adapter.date('2025-05-26T07:30:00');
       const end = adapter.date('2025-05-26T08:30:00');
-      const handleSurfaceChange = spy();
+      const handleSurfaceChange = vi.fn();
 
       const creationOccurrence = createOccurrenceFromEvent({
         id: 'tmp',
@@ -456,7 +456,7 @@ describe('<EventPopoverContent />', () => {
         allDay: false,
       });
 
-      const onEventsChange = spy();
+      const onEventsChange = vi.fn();
       let createEventSpy;
 
       const { user } = render(
@@ -788,7 +788,7 @@ describe('<EventPopoverContent />', () => {
         });
 
         it('should submit custom recurrence with Ends: after', async () => {
-          const onEventsChange = spy();
+          const onEventsChange = vi.fn();
 
           const { user } = render(
             <EventCalendarProvider
@@ -843,7 +843,7 @@ describe('<EventPopoverContent />', () => {
         });
 
         it('should submit custom recurrence with Ends: never', async () => {
-          const onEventsChange = spy();
+          const onEventsChange = vi.fn();
 
           const { user } = render(
             <EventCalendarProvider
@@ -892,7 +892,7 @@ describe('<EventPopoverContent />', () => {
         });
 
         it('should submit custom recurrence with Ends: until and selected date', async () => {
-          const onEventsChange = spy();
+          const onEventsChange = vi.fn();
 
           const { user } = render(
             <EventCalendarProvider

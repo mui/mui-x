@@ -1,4 +1,4 @@
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import { adapter } from 'test/utils/scheduler';
 import {
   SchedulerEvent,
@@ -75,7 +75,7 @@ storeClasses.forEach((storeClass) => {
       });
 
       it('should use the provided event model structure to write event properties', () => {
-        const onEventsChange = spy();
+        const onEventsChange = vi.fn();
 
         const events: MyEvent[] = [
           {
@@ -113,7 +113,7 @@ storeClasses.forEach((storeClass) => {
       });
 
       it('should use the provided event model structure to create an event', () => {
-        const onEventsChange = spy();
+        const onEventsChange = vi.fn();
 
         const events: MyEvent[] = [];
 
@@ -150,7 +150,7 @@ storeClasses.forEach((storeClass) => {
           end: SchedulerValidDate;
         }
 
-        const idGetter = spy((event: MyEvent2) => event.myId);
+        const idGetter = vi.fn((event: MyEvent2) => event.myId);
 
         const eventModelStructure2: SchedulerEventModelStructure<MyEvent2> = {
           id: {
@@ -234,7 +234,7 @@ storeClasses.forEach((storeClass) => {
 
     describe('Method: updateEvent', () => {
       it('should replace matching id and emit onEventsChange with the updated events', () => {
-        const onEventsChange = spy();
+        const onEventsChange = vi.fn();
         const events = [
           buildEvent(
             '1',
@@ -279,7 +279,7 @@ storeClasses.forEach((storeClass) => {
 
     describe('Method: deleteEvent', () => {
       it('should remove by id and call onEventsChange with the updated events', () => {
-        const onEventsChange = spy();
+        const onEventsChange = vi.fn();
         const events = [
           buildEvent(
             '1',
@@ -312,7 +312,7 @@ storeClasses.forEach((storeClass) => {
 
     describe('Method: createEvent', () => {
       it('should append the new event and emit onEventsChange with the updated list', () => {
-        const onEventsChange = spy();
+        const onEventsChange = vi.fn();
         const existing = [
           buildEvent(
             '1',
@@ -352,7 +352,7 @@ storeClasses.forEach((storeClass) => {
       });
 
       it('should throw when an event with the same id already exists and not call onEventsChange', () => {
-        const onEventsChange = spy();
+        const onEventsChange = vi.fn();
         const events = [
           buildEvent(
             'Event 1',

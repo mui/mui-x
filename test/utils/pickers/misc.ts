@@ -1,4 +1,4 @@
-import sinon from 'sinon';
+import { vi } from 'vitest';
 import { MuiPickersAdapter, PickerValidDate } from '@mui/x-date-pickers/models';
 import { onTestFinished } from 'vitest';
 import { PickerComponentFamily } from './describe.types';
@@ -6,7 +6,7 @@ import { OpenPickerParams } from './openPicker';
 
 export const stubMatchMedia = (matches = true) => {
   const original = window.matchMedia;
-  window.matchMedia = sinon.stub().returns({
+  window.matchMedia = vi.fn().mockReturnValue({
     matches,
     addListener: () => {},
     addEventListener: () => {},
