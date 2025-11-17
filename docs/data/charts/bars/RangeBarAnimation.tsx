@@ -4,9 +4,8 @@ import Typography from '@mui/material/Typography';
 import Slider from '@mui/material/Slider';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import { BarChart } from '@mui/x-charts/BarChart';
 import { HighlightScope } from '@mui/x-charts/context';
-import { BarChartPro, RangeBarSeries } from '@mui/x-charts-pro';
+import { BarChartPro, RangeBarSeries } from '@mui/x-charts-pro/BarChartPro';
 
 export default function RangeBarAnimation() {
   const [seriesNb, setSeriesNb] = React.useState(2);

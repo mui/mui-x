@@ -80,10 +80,10 @@ function RangeBarPlot(props: RangeBarPlotProps): React.JSX.Element {
   const completedData = useRangeBarPlotData(useDrawingArea(), xAxes, yAxes);
 
   const classes = useUtilityClasses();
-  const slots = {
+  const slots: BarElementSlots = {
     ...props.slots,
     bar: props.slots?.bar ?? AnimatedRangeBarElement,
-  } satisfies BarElementSlots;
+  };
 
   return (
     <RangeBarPlotRoot className={classes.root}>

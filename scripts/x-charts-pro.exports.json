@@ -560,6 +560,7 @@
   { "name": "UseAnimateParams", "kind": "Interface" },
   { "name": "useAnimatePieArc", "kind": "Function" },
   { "name": "useAnimatePieArcLabel", "kind": "Function" },
+  { "name": "useAnimateRangeBar", "kind": "Function" },
   { "name": "UseAnimateReturn", "kind": "TypeAlias" },
   { "name": "useAxesTooltip", "kind": "Function" },
   { "name": "useAxisTooltip", "kind": "Function" },
