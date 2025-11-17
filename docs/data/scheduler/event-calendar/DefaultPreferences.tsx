@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { SchedulerEvent } from '@mui/x-scheduler/models';
+import { EventCalendarPreferences, SchedulerEvent } from '@mui/x-scheduler/models';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import { initialEvents, resources } from '../datasets/personal-agenda';
 
-const defaultPreferences = {
+const defaultPreferences: Partial<EventCalendarPreferences> = {
   ampm: false,
   showWeekends: false,
   isSidePanelOpen: false,
