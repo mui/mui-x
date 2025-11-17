@@ -228,16 +228,19 @@ function extractColumnWidths(
 
         const titleContainerStyle = window.getComputedStyle(titleContainer, null);
         const gap = parseInt(titleContainerStyle.gap, 10) || 0;
+        console.log('gap', gap);
 
         const headerStyle = window.getComputedStyle(header, null);
         const paddingWidth =
           parseInt(headerStyle.paddingLeft, 10) + parseInt(headerStyle.paddingRight, 10);
+        console.log('paddingWidth', paddingWidth);
 
         let totalChildren = 0;
         let childrenWidth = 0;
         for (let i = 0; i < children.length; i += 1) {
           const child = children[i] as HTMLElement;
           if (child.clientWidth > 0) {
+            console.log('child.scrollWidth + 1', child.scrollWidth + 1);
             totalChildren += 1;
             childrenWidth += child.scrollWidth + 1;
           }
