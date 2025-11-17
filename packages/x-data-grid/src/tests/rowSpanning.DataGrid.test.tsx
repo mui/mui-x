@@ -3,7 +3,7 @@ import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { DataGrid, useGridApiRef, DataGridProps, GridApi } from '@mui/x-data-grid';
 import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
-import { getCell, getActiveCell } from 'test/utils/helperFn';
+import { getCell, getActiveCell, microtasks } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
 
 describe.skipIf(isJSDOM)('<DataGrid /> - Row spanning', () => {
@@ -112,7 +112,7 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Row spanning', () => {
 
   const rowHeight = 52;
 
-  it('should span the repeating row values', () => {
+  it('should span the repeating row values', async () => {
     render(<TestDataGrid />);
     const api = unwrapPrivateAPI(publicApiRef.current!);
 
@@ -129,10 +129,11 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Row spanning', () => {
     expect(spanValue).to.deep.equal({ '0': 3, '4': 3 });
     const spannedCell = getCell(rowIndex, 0);
     expect(spannedCell).to.have.style('height', `${rowHeight * spanValue[0]}px`);
+    await microtasks();
   });
 
   describe('sorting', () => {
-    it('should work with sorting when initializing sorting', () => {
+    it('should work with sorting when initializing sorting', async () => {
       render(
         <TestDataGrid
           initialState={{ sorting: { sortModel: [{ field: 'code', sort: 'desc' }] } }}
@@ -149,9 +150,10 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Row spanning', () => {
       expect(spanValue).to.deep.equal({ '0': 3, '4': 3 });
       const spannedCell = getCell(rowIndex, 0);
       expect(spannedCell).to.have.style('height', `${rowHeight * spanValue[0]}px`);
+      await microtasks();
     });
 
-    it('should work with sorting when controlling sorting', () => {
+    it('should work with sorting when controlling sorting', async () => {
       render(<TestDataGrid sortModel={[{ field: 'code', sort: 'desc' }]} />);
 
       const api = unwrapPrivateAPI(publicApiRef.current!);
@@ -164,11 +166,12 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Row spanning', () => {
       expect(spanValue).to.deep.equal({ '0': 3, '4': 3 });
       const spannedCell = getCell(rowIndex, 0);
       expect(spannedCell).to.have.style('height', `${rowHeight * spanValue[0]}px`);
+      await microtasks();
     });
   });
 
   describe('filtering', () => {
-    it('should work with filtering when initializing filter', () => {
+    it('should work with filtering when initializing filter', async () => {
       render(
         <TestDataGrid
           initialState={{
@@ -191,9 +194,10 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Row spanning', () => {
       expect(spanValue).to.deep.equal({ '0': 2, '4': 2 });
       const spannedCell = getCell(rowIndex, 0);
       expect(spannedCell).to.have.style('height', `${rowHeight * spanValue[0]}px`);
+      await microtasks();
     });
 
-    it('should work with filtering when controlling filter', () => {
+    it('should work with filtering when controlling filter', async () => {
       render(
         <TestDataGrid
           filterModel={{
@@ -212,6 +216,7 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Row spanning', () => {
       expect(spanValue).to.deep.equal({ '0': 2, '4': 2 });
       const spannedCell = getCell(rowIndex, 0);
       expect(spannedCell).to.have.style('height', `${rowHeight * spanValue[0]}px`);
+      await microtasks();
     });
   });
 
@@ -238,7 +243,7 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Row spanning', () => {
   });
 
   describe('keyboard navigation', () => {
-    it('should respect the spanned cells when navigating using keyboard', () => {
+    it('should respect the spanned cells when navigating using keyboard', async () => {
       render(<TestDataGrid />);
       // Set focus to the cell with value `- 16GB RAM Upgrade`
       act(() => publicApiRef.current?.setCellFocus(5, 'description'));
@@ -249,6 +254,7 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Row spanning', () => {
       const cell30 = getCell(3, 0);
       fireEvent.keyDown(cell30, { key: 'ArrowRight' });
       expect(getActiveCell()).to.equal('3-1');
+      await microtasks();
     });
   });
 
