@@ -362,8 +362,8 @@ storeClasses.forEach((storeClass) => {
 
         const store = new storeClass.Value({ events: [event], onEventsChange }, adapter);
 
-        const start = adapter.date('2025-07-01T09:00:00Z');
-        const end = adapter.date('2025-07-01T10:00:00Z');
+        const start = adapter.date('2025-07-01T09:00:00Z', 'default');
+        const end = adapter.date('2025-07-01T10:00:00Z', 'default');
         const duplicatedId = store.duplicateEventOccurrence(event.id, start, end);
 
         expect(onEventsChange.calledOnce).to.equal(true);
