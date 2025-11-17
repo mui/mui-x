@@ -61,6 +61,42 @@ You can use this attribute to target elements based on their series.
 
 {{"demo": "RangeBarGradient.js"}}
 
+## Click event
+
+Bar charts provides two click handlers:
+
+- `onItemClick` for click on a specific bar.
+- `onAxisClick` for a click anywhere in the chart
+
+They both provide the following signature.
+
+```js
+const clickHandler = (
+  event, // The mouse event.
+  params, // An object that identifies the clicked elements.
+) => {};
+```
+
+{{"demo": "RangeBarClick.js"}}
+
+:::info
+There is a slight difference between the `event` of `onItemClick` and `onAxisClick`:
+
+- For `onItemClick` it's a React synthetic mouse event emitted by the bar component.
+- For `onAxisClick` it's a native mouse event emitted by the svg component.
+
+:::
+
+If you're composing a custom component, you can incorporate click events as shown in the code snippet below.
+Note that `onAxisClick` can handle both bar and line series if you mix them.
+
+```jsx
+<ChartContainer onAxisClick={onAxisClick}>
+  {/* ... */}
+  <BarPlot onItemClick={onItemClick} />
+</ChartContainer>
+```
+
 ## Composition
 
 You can use the `<ChartDataProviderPro />` to provide `series`, `xAxis`, and `yAxis` props for composition.
