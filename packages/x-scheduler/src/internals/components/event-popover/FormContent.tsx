@@ -143,9 +143,7 @@ export function FormContent(props: FormContentProps) {
     if (controlled.recurrenceSelection === null) {
       rruleToSubmit = undefined;
     } else if (controlled.recurrenceSelection === 'custom') {
-      rruleToSubmit = {
-        ...controlled.rruleDraft,
-      };
+      rruleToSubmit = controlled.rruleDraft;
     } else {
       rruleToSubmit = recurrencePresets[controlled.recurrenceSelection];
     }
