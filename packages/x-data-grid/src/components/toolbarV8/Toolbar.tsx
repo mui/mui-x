@@ -41,7 +41,7 @@ const ToolbarRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'Toolbar',
 })({
-  flex: '0 1 52px',
+  flex: 0,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'end',
