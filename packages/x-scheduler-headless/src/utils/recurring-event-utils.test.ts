@@ -15,7 +15,7 @@ import {
   estimateOccurrencesUpTo,
   matchesRecurrence,
   buildEndGuard,
-  getAllDaySpanDays,
+  getEventDurationInDays,
   countYearlyOccurrencesUpToExact,
   tokenizeByDay,
   parsesByDayForWeeklyFrequency,
@@ -92,7 +92,7 @@ describe('recurring-event-utils', () => {
     });
   });
 
-  describe('getAllDaySpanDays', () => {
+  describe('getEventDurationInDays', () => {
     const createEvent = (overrides: Partial<SchedulerEvent>) =>
       createProcessedEvent({
         id: 'event-1',
@@ -103,12 +103,11 @@ describe('recurring-event-utils', () => {
         ...overrides,
       });
 
-    // TODO: This should change after we implement support for timed events that span multiple days
-    it('returns 1 for non-allDay multi-day event', () => {
+    it('returns inclusive day count for non-allDay multi-day event', () => {
       const event = createEvent({
         end: adapter.date('2025-01-03T18:00:00Z'),
       });
-      expect(getAllDaySpanDays(adapter, event)).to.equal(1);
+      expect(getEventDurationInDays(adapter, event)).to.equal(3);
     });
 
     it('returns 1 for allDay event on same calendar day', () => {
@@ -117,7 +116,7 @@ describe('recurring-event-utils', () => {
         end: adapter.date('2025-02-10T23:59:59Z'),
         allDay: true,
       });
-      expect(getAllDaySpanDays(adapter, event)).to.equal(1);
+      expect(getEventDurationInDays(adapter, event)).to.equal(1);
     });
 
     it('returns inclusive day count for allDay multi-day event', () => {
@@ -127,7 +126,7 @@ describe('recurring-event-utils', () => {
         allDay: true,
       });
       // Jan 1,2,3,4 => 4 days
-      expect(getAllDaySpanDays(adapter, event)).to.equal(4);
+      expect(getEventDurationInDays(adapter, event)).to.equal(4);
     });
 
     it('handles month boundary correctly', () => {
@@ -137,7 +136,7 @@ describe('recurring-event-utils', () => {
         allDay: true,
       });
       // Jan 30,31, Feb 1,2 => 4 days
-      expect(getAllDaySpanDays(adapter, event)).to.equal(4);
+      expect(getEventDurationInDays(adapter, event)).to.equal(4);
     });
 
     it('handles leap day span', () => {
@@ -147,7 +146,7 @@ describe('recurring-event-utils', () => {
         allDay: true,
       });
       // Feb 28, Feb 29, Mar 1 => 3 days
-      expect(getAllDaySpanDays(adapter, event)).to.equal(3);
+      expect(getEventDurationInDays(adapter, event)).to.equal(3);
     });
   });
 
