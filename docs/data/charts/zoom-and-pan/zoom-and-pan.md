@@ -26,6 +26,12 @@ Additional zoom interactions can be enabled through configuration:
 
 - **Tap and drag**: Zoom in/out by tapping twice and then dragging vertically.
 
+:::warning
+Enabling zoom adds `touch-action: pan-y` to allow panning on touch devices. This interferes with other touch interactions, such as scrolling horizontally.
+
+If you want to customize the touch-action behavior, you can override it by targeting the `.MuiChartsSurface-root` class in your CSS.
+:::
+
 {{"demo": "ZoomScatterChart.js"}}
 {{"demo": "ZoomBarChart.js"}}
 {{"demo": "ZoomLineChart.js"}}
@@ -165,8 +171,14 @@ The `zoomInteractionConfig` prop allows you to specify which interactions are en
 
 **Pan** interactions:
 
+- `wheel` (default\*): Pan the chart by scrolling the mouse wheel. On a desktop trackpad, it enables pan using two fingers. Only pans the horizontal axis by default. Use `allowedDirection` to customize which axes are affected.
 - `drag` (default): Pan the chart by dragging with the mouse or touch
 - `pressAndDrag`: Pan the chart by pressing and holding, then dragging. Useful for avoiding conflicts with selection gestures.
+
+:::warning
+
+\* The `wheel` pan interaction is only added automatically if pan is enabled for at least one of the x-axis and none of the y-axis.
+:::
 
 :::info
 When modifying the zoom interaction configuration, care should be taken as to not create a bad user experience.
