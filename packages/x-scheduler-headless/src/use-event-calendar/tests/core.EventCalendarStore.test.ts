@@ -8,7 +8,6 @@ import {
   EventCalendarStore,
 } from '../EventCalendarStore';
 import { CalendarView } from '../../models';
-import { DEFAULT_IS_MULTI_DAY_EVENT } from '../../utils/SchedulerStore';
 
 const DEFAULT_PARAMS = { events: [] };
 
@@ -30,7 +29,6 @@ describe('Core - EventCalendarStore', () => {
         eventModelList: [],
         eventModelLookup: new Map(),
         eventModelStructure: undefined,
-        isMultiDayEvent: DEFAULT_IS_MULTI_DAY_EVENT,
         nowUpdatedEveryMinute: adapter.date(),
         occurrencePlaceholder: null,
         pendingUpdateRecurringEventParameters: null,
@@ -41,7 +39,6 @@ describe('Core - EventCalendarStore', () => {
         readOnly: false,
         resourceChildrenIdLookup: new Map(),
         resourceIdList: [],
-        resourceModelStructure: undefined,
         showCurrentTimeIndicator: true,
         view: DEFAULT_VIEW,
         viewConfig: null,
