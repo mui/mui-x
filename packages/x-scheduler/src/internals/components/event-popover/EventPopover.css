@@ -434,7 +434,6 @@ button.Button.EventPopoverMenuTrigger.Ghost {
   border: none;
   padding: 0;
   margin: 0;
-  font-size: var(--font-size-2);
 
   &[data-disabled] {
     color: var(--disabled-text-color);
@@ -454,6 +453,7 @@ button.Button.EventPopoverMenuTrigger.Ghost {
   display: flex;
   align-items: center;
   gap: var(--space-2);
+  font-size: var(--font-size-2);
 }
 
 .EventPopoverAfterTimesInputWrapper {
