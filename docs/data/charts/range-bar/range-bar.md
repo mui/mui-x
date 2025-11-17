@@ -4,7 +4,7 @@ productId: x-charts
 components: BarChart, RangeBarPlot
 ---
 
-# Charts - Bars
+# Charts - Range Bar
 
 <p class="description">Range bar charts highlight the range between minimum and maximum values across categories.</p>
 
