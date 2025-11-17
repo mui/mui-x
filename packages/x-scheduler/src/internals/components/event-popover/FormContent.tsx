@@ -150,7 +150,6 @@ export function FormContent(props: FormContentProps) {
 
     if (rawPlaceholder?.type === 'creation') {
       store.createEvent({
-        id: crypto.randomUUID(),
         ...metaChanges,
         start,
         end,
