@@ -7,7 +7,10 @@ export default mergeConfig(
   defineConfig({
     test: {
       name: getTestName(import.meta.url),
-      browser: { enabled: true },
+      browser: {
+        enabled: true,
+        instances: [{ browser: 'chromium' }],
+      },
     },
   }),
 );
