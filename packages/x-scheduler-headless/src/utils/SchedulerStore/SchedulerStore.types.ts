@@ -9,8 +9,8 @@ import {
   SchedulerEventId,
   SchedulerResourceModelStructure,
   SchedulerEventModelStructure,
-  SchedulerEvent,
   SchedulerPreferences,
+  SchedulerEventCreationProperties,
 } from '../../models';
 import { Adapter } from '../../use-adapter/useAdapter.types';
 
@@ -254,6 +254,6 @@ export type SchedulerModelUpdater<
 
 export interface UpdateEventsParameters {
   deleted?: SchedulerEventId[];
-  created?: SchedulerEvent[];
+  created?: SchedulerEventCreationProperties[];
   updated?: SchedulerEventUpdatedProperties[];
 }
