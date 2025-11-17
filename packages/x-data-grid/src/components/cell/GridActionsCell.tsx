@@ -78,7 +78,8 @@ function GridActionsCell(props: GridActionsCellProps) {
       } else {
         const childType = typeof child.type === 'function' ? child.type.name : child.type;
         warnOnce(
-          `MUI X: Invalid child type in \`GridActionsCell\`. Expected \`GridActionsCellItem\` or \`React.Fragment\`, got \`${childType}\`.`,
+          `MUI X: Invalid child type in \`GridActionsCell\`. Expected \`GridActionsCellItem\` or \`React.Fragment\`, got \`${childType}\`.
+If this is intentional, you can suppress this warning by passing the \`suppressChildrenValidation\` prop to \`GridActionsCell\`.`,
           'error',
         );
       }
