@@ -1,7 +1,7 @@
 ---
 title: React Range Bar chart
 productId: x-charts
-components: BarChart, RangeBarPlot
+components: BarChartPro, RangeBarPlot
 ---
 
 # Charts - Range Bar
