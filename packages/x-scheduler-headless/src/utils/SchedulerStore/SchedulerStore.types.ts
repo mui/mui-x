@@ -1,7 +1,6 @@
 import {
   SchedulerProcessedEvent,
   SchedulerEventColor,
-  SchedulerEventOccurrence,
   SchedulerOccurrencePlaceholder,
   SchedulerResource,
   SchedulerResourceId,
@@ -10,8 +9,8 @@ import {
   SchedulerEventId,
   SchedulerResourceModelStructure,
   SchedulerEventModelStructure,
-  SchedulerEvent,
   SchedulerPreferences,
+  SchedulerEventCreationProperties,
 } from '../../models';
 import { Adapter } from '../../use-adapter/useAdapter.types';
 
@@ -104,12 +103,6 @@ export interface SchedulerState<TEvent extends object = any> {
    * The current date and time, updated every minute.
    */
   nowUpdatedEveryMinute: SchedulerValidDate;
-  /**
-   * Checks whether the event is a multi-day event.
-   * A multi day event is rendered in the day grid instead of the time grid when both are available.
-   * It can also be styled differently in the day grid.
-   */
-  isMultiDayEvent: (event: SchedulerProcessedEvent | SchedulerEventOccurrence) => boolean;
   /**
    * Whether the calendar is in read-only mode.
    * @default false
@@ -261,6 +254,6 @@ export type SchedulerModelUpdater<
 
 export interface UpdateEventsParameters {
   deleted?: SchedulerEventId[];
-  created?: SchedulerEvent[];
+  created?: SchedulerEventCreationProperties[];
   updated?: SchedulerEventUpdatedProperties[];
 }
