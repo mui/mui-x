@@ -1,7 +1,6 @@
 import * as React from 'react';
 
-import { DayView } from '@mui/x-scheduler/material/day-view';
-import { StandaloneView } from '@mui/x-scheduler/material/standalone-view';
+import { StandaloneDayView } from '@mui/x-scheduler/day-view';
 import {
   initialEvents,
   defaultVisibleDate,
@@ -13,14 +12,12 @@ export default function BasicDayView() {
 
   return (
     <div style={{ height: '500px', width: '100%' }}>
-      <StandaloneView
+      <StandaloneDayView
         events={events}
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
-      >
-        <DayView />
-      </StandaloneView>
+      />
     </div>
   );
 }

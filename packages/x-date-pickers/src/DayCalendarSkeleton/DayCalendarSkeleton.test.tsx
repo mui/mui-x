@@ -1,4 +1,3 @@
-import * as React from 'react';
 import {
   DayCalendarSkeleton,
   dayCalendarSkeletonClasses as classes,

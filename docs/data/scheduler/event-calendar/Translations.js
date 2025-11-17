@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import { EventCalendar } from '@mui/x-scheduler/material/event-calendar';
-import { frFR } from '@mui/x-scheduler/material/translations/frFR';
+import { EventCalendar } from '@mui/x-scheduler/event-calendar';
+import { frFR } from '@mui/x-scheduler/translations';
 import {
   initialEvents,
   defaultVisibleDate,

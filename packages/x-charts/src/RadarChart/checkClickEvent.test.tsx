@@ -1,8 +1,8 @@
-import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { RadarChart, RadarChartProps } from '@mui/x-charts/RadarChart';
 import { isJSDOM } from 'test/utils/skipIf';
+import { CHART_SELECTOR } from '../tests/constants';
 
 const config: RadarChartProps = {
   series: [
@@ -34,7 +34,7 @@ describe('RadarChart - click event', () => {
           <RadarChart {...config} onAxisClick={onAxisClick} />
         </div>,
       );
-      const svg = document.querySelector<HTMLElement>('svg')!;
+      const svg = document.querySelector<HTMLElement>(CHART_SELECTOR)!;
 
       await user.pointer([
         {
@@ -84,7 +84,7 @@ describe('RadarChart - click event', () => {
             />
           </div>,
         );
-        const svg = document.querySelector<HTMLElement>('svg')!;
+        const svg = document.querySelector<HTMLElement>(CHART_SELECTOR)!;
 
         await user.pointer([
           {

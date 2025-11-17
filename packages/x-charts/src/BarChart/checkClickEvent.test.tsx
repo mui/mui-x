@@ -1,8 +1,8 @@
-import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { isJSDOM } from 'test/utils/skipIf';
+import { CHART_SELECTOR } from '../tests/constants';
 
 const config = {
   dataset: [
@@ -49,7 +49,7 @@ describe('BarChart - click event', () => {
           />
         </div>,
       );
-      const svg = document.querySelector<HTMLElement>('svg')!;
+      const svg = document.querySelector<HTMLElement>(CHART_SELECTOR)!;
 
       await user.pointer([
         {
@@ -104,7 +104,7 @@ describe('BarChart - click event', () => {
             />
           </div>,
         );
-        const svg = document.querySelector<HTMLElement>('svg')!;
+        const svg = document.querySelector<HTMLElement>(CHART_SELECTOR)!;
 
         await user.pointer([
           {

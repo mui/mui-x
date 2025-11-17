@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { LinePlot } from '@mui/x-charts/LineChart';
 import { XAxis } from '@mui/x-charts/models';

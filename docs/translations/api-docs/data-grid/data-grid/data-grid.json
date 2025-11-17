@@ -1386,6 +1386,18 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the horizontal scrollbar"
     },
+    "scrollShadow": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the scroll shadow element"
+    },
+    "scrollShadow--horizontal": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the horizontal scroll shadow element"
+    },
+    "scrollShadow--vertical": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the vertical scroll shadow element"
+    },
     "selectedRowCount": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the footer selected row count element"

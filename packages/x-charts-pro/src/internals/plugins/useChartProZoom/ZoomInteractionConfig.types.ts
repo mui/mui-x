@@ -6,18 +6,21 @@ export type ZoomInteractionConfig = {
    * - `wheel`: Zooms in or out when the mouse wheel is scrolled.
    * - `pinch`: Zooms in or out when a pinch gesture is detected.
    * - `tapAndDrag`: Zooms in or out by tapping twice and then dragging vertically. Dragging up zooms in, dragging down zooms out.
+   * - `brush`: Zooms into a selected area by clicking and dragging to create a selection area. (Conflicts with `drag` pan interaction)
+   * - `doubleTapReset`: Resets the zoom level to the original state when double-tapping.
    *
    * @default ['wheel', 'pinch']
    */
-  zoom?: (ZoomInteraction | ZoomInteraction['type'])[];
+  zoom?: readonly (ZoomInteraction | ZoomInteraction['type'])[];
   /**
    * Defines the interactions that trigger panning.
    * - `drag`: Pans the chart when dragged with the mouse.
    * - `pressAndDrag`: Pans the chart by pressing and holding, then dragging. Useful for avoiding conflicts with selection gestures.
+   * - `wheel`: Pans the chart when the mouse wheel is scrolled (horizontal by default).
    *
-   * @default ['drag']
+   * @default ['drag', 'wheel']
    */
-  pan?: (PanInteraction | PanInteraction['type'])[];
+  pan?: readonly (PanInteraction | PanInteraction['type'])[];
 };
 
 type Entry<T extends AnyInteraction> = {
@@ -25,6 +28,7 @@ type Entry<T extends AnyInteraction> = {
     mouse: { requiredKeys?: KeyboardKey[] };
     touch: { requiredKeys?: KeyboardKey[] };
     pointerMode?: PointerMode[];
+    allowedDirection?: 'x' | 'y' | 'xy';
   };
 };
 export type DefaultizedZoomInteractionConfig = {
@@ -32,8 +36,13 @@ export type DefaultizedZoomInteractionConfig = {
   pan: Entry<PanInteraction>;
 };
 
-export type ZoomInteraction = WheelInteraction | PinchInteraction | TapAndDragInteraction;
-export type PanInteraction = DragInteraction | PressAndDragInteraction;
+export type ZoomInteraction =
+  | WheelInteraction
+  | PinchInteraction
+  | TapAndDragInteraction
+  | DoubleTapResetInteraction
+  | BrushInteraction;
+export type PanInteraction = DragInteraction | PressAndDragInteraction | WheelPanInteraction;
 
 export type ZoomInteractionName = ZoomInteraction['type'];
 export type PanInteractionName = PanInteraction['type'];
@@ -109,13 +118,44 @@ export type PressAndDragInteraction = Unpack<
     AllKeysProp
 >;
 
+export type WheelPanInteraction = Unpack<
+  {
+    type: 'wheel';
+    /**
+     * Defines which axes are affected by pan on wheel.
+     * - `'x'`: Only pan horizontally
+     * - `'y'`: Only pan vertically
+     * - `'xy'`: Pan both axes
+     * @default 'x'
+     */
+    allowedDirection?: 'x' | 'y' | 'xy';
+  } & NoModeProp &
+    AllKeysProp
+>;
+
+export type DoubleTapResetInteraction = Unpack<
+  {
+    type: 'doubleTapReset';
+  } & AllModeProp &
+    AllKeysProp
+>;
+
+export type BrushInteraction = Unpack<
+  {
+    type: 'brush';
+  } & NoModeProp &
+    NoKeysProp
+>;
+
 export type AnyInteraction = {
   type: string;
   pointerMode?: InteractionMode;
   requiredKeys?: KeyboardKey[];
+  allowedDirection?: 'x' | 'y' | 'xy';
 };
 export type AnyEntry = Omit<AnyInteraction, 'pointerMode'> & {
   mouse: { requiredKeys?: KeyboardKey[] };
   touch: { requiredKeys?: KeyboardKey[] };
   pointerMode?: PointerMode[];
+  allowedDirection?: 'x' | 'y' | 'xy';
 };

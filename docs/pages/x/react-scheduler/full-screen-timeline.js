@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { Timeline } from '@mui/x-scheduler/material/timeline';
+import { Timeline } from '@mui/x-scheduler/timeline';
 import {
   initialEvents,
   defaultVisibleDate,
@@ -22,6 +22,8 @@ export default function FullTimeline() {
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
+        areEventsDraggable
+        areEventsResizable
       />
     </div>
   );
