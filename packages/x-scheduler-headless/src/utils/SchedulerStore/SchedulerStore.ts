@@ -43,6 +43,14 @@ export const DEFAULT_SCHEDULER_PREFERENCES: SchedulerPreferences = {
   ampm: true,
 };
 
+const MOCK_EVENT_STATE = {
+  eventIdList: [],
+  eventModelLookup: new Map(),
+  eventModelStructure: undefined,
+  processedEventLookup: new Map(),
+  eventModelList: [],
+};
+
 /**
  * Instance shared by the Event Calendar and the Timeline components.
  */
@@ -70,7 +78,7 @@ export class SchedulerStore<
   ) {
     const schedulerInitialState: SchedulerState<TEvent> = {
       ...SchedulerStore.deriveStateFromParameters(parameters, adapter),
-      ...buildEventsState(parameters, adapter),
+      ...(parameters.dataSource ? MOCK_EVENT_STATE : buildEventsState(parameters, adapter)),
       ...buildResourcesState(parameters),
       preferences: DEFAULT_SCHEDULER_PREFERENCES,
       adapter,
@@ -102,6 +110,11 @@ export class SchedulerStore<
       });
     });
 
+    // Load events from data source if provided
+    if (parameters.dataSource) {
+      this.loadEventsFromDataSource();
+    }
+
     if (process.env.NODE_ENV !== 'production') {
       this.initialParameters = parameters;
     }
@@ -126,6 +139,34 @@ export class SchedulerStore<
       readOnly: parameters.readOnly ?? false,
     };
   }
+
+  /**
+   * Loads events from the data source.
+   */
+  private loadEventsFromDataSource = async () => {
+    const { dataSource } = this.parameters;
+
+    if (!dataSource) {
+      return;
+    }
+
+    try {
+      const events = await dataSource.getEvents();
+
+      console.log('Loaded events from data source:', events);
+      // Only update if we're still using the same dataSource
+      const { adapter } = this.state;
+      const eventsState = buildEventsState({ ...this.parameters, events } as Parameters, adapter);
+
+      this.apply({
+        ...eventsState,
+      } as Partial<State>);
+    } catch (error) {
+      // error handling is intentionally left blank
+    } finally {
+      // unset loading state
+    }
+  };
 
   /**
    * Updates the state of the calendar based on the new parameters provided to the root component.
@@ -171,11 +212,19 @@ export class SchedulerStore<
     ) as Partial<State>;
 
     if (
-      parameters.events !== this.parameters.events ||
-      parameters.eventModelStructure !== this.parameters.eventModelStructure ||
-      adapter !== this.state.adapter
+      !parameters.dataSource &&
+      (parameters.events !== this.parameters.events ||
+        parameters.eventModelStructure !== this.parameters.eventModelStructure ||
+        adapter !== this.state.adapter)
     ) {
       Object.assign(newSchedulerState, buildEventsState(parameters, adapter));
+    }
+
+    // If dataSource changed, trigger a new fetch
+    if (parameters.dataSource !== this.parameters.dataSource) {
+      if (parameters.dataSource) {
+        queueMicrotask(() => this.loadEventsFromDataSource());
+      }
     }
 
     if (

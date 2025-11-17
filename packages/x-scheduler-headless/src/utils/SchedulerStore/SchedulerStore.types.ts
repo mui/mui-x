@@ -118,6 +118,10 @@ export interface SchedulerState<TEvent extends object = any> {
   preferences: SchedulerPreferences;
 }
 
+export interface SchedulerDataSource<TEvent extends object> {
+  getEvents: () => Promise<TEvent[]>;
+}
+
 export interface SchedulerParameters<TEvent extends object, TResource extends object> {
   /**
    * The events currently available in the calendar.
@@ -196,6 +200,11 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
    * @default false
    */
   readOnly?: boolean;
+  /**
+   * Data source for fetching events asynchronously.
+   * If provided, the `events` prop will be ignored.
+   */
+  dataSource?: SchedulerDataSource<TEvent>;
 }
 
 /**
