@@ -36,8 +36,11 @@ function initialize<State, Value>(params?: {
     subscribe: () => {
       instance.dispose ??= store.subscribe((state) => {
         const nextState = selector(state);
-        instance.effect(previousState, nextState);
-        previousState = nextState;
+        if (!Object.is(previousState, nextState)) {
+          const prev = previousState;
+          previousState = nextState;
+          instance.effect(prev, nextState);
+        }
       });
     },
     onMount: () => {
