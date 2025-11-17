@@ -1680,10 +1680,6 @@ describe('recurring-event-utils', () => {
         id: original.id,
         ...changesWithoutId,
       };
-      const changes: SchedulerEventUpdatedProperties = {
-        id: original.id,
-        ...changesWithoutId,
-      };
 
       const updatedEvents = applyRecurringUpdateOnlyThis(
         adapter,
@@ -1739,10 +1735,6 @@ describe('recurring-event-utils', () => {
         title: 'Only-this changed date',
         start: adapter.date('2025-01-08T11:00:00Z', 'default'),
         end: adapter.date('2025-01-08T12:00:00Z', 'default'),
-      };
-      const changes: SchedulerEventUpdatedProperties = {
-        id: original.id,
-        ...changesWithoutId,
       };
       const changes: SchedulerEventUpdatedProperties = {
         id: original.id,

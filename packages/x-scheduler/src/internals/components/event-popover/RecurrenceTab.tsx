@@ -225,7 +225,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
       weeklyDays.map(({ code, date }) => ({
         value: code,
         ariaLabel: adapter.format(date, 'weekday'),
-        label: adapter.format(date, 'weekdayShort'),
+        label: adapter.format(date, 'weekday3Letters'),
       })),
     [adapter, weeklyDays],
   );
