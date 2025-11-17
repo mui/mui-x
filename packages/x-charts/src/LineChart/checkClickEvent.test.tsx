@@ -1,5 +1,5 @@
 import { createRenderer } from '@mui/internal-test-utils';
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { isJSDOM } from 'test/utils/skipIf';
 import { CHART_SELECTOR } from '../tests/constants';
@@ -24,7 +24,7 @@ describe('LineChart - click event', () => {
   describe('onAxisClick', () => {
     // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
     it.skipIf(isJSDOM)('should provide the right context as second argument', async () => {
-      const onAxisClick = spy();
+      const onAxisClick = vi.fn();
       const { user } = render(
         <div
           style={{
@@ -104,7 +104,7 @@ describe('LineChart - click event', () => {
 
     // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
     it.skipIf(isJSDOM)('should provide the right context as second argument', async () => {
-      const onMarkClick = spy();
+      const onMarkClick = vi.fn();
       const { user } = render(
         <div
           style={{
@@ -172,7 +172,7 @@ describe('LineChart - click event', () => {
 
     // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
     it.skipIf(isJSDOM)('should provide the right context as second argument', async () => {
-      const onAreaClick = spy();
+      const onAreaClick = vi.fn();
       const { user } = render(
         <div
           style={{
@@ -231,7 +231,7 @@ describe('LineChart - click event', () => {
 
     // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
     it.skipIf(isJSDOM)('should provide the right context as second argument', async () => {
-      const onLineClick = spy();
+      const onLineClick = vi.fn();
       const { user } = render(
         <div
           style={{

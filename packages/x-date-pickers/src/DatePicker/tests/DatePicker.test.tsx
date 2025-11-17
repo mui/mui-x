@@ -42,7 +42,8 @@ describe('<DatePicker />', () => {
       await user.keyboard('{Enter}');
 
       expect(handleSubmit).toHaveBeenCalledTimes(1);
-      expect([...handleSubmit.mock.lastCall![0]][0]).to.deep.equal(['testDate', '04/17/2022']);
+      const lastCall = handleSubmit.mock.calls[handleSubmit.mock.calls.length - 1];
+      expect([...lastCall[0]][0]).to.deep.equal(['testDate', '04/17/2022']);
     });
 
     it('should not submit the form when "Enter" is pressed on the input with "defaultMuiPrevented" set to "true"', async () => {

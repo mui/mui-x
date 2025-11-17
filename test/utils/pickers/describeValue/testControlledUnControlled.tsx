@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import { screen } from '@mui/internal-test-utils';
 import { inputBaseClasses } from '@mui/material/InputBase';
 import {
@@ -116,7 +116,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       });
 
       it('should call onChange when updating a value defined with `props.defaultValue` and update the rendered value', () => {
-        const onChange = spy();
+        const onChange = vi.fn();
 
         const v7Response = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
@@ -131,7 +131,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
 
         assertRenderedValue(newValue);
         // // TODO: Clean this exception or change the clock behavior
-        // expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily, params));
+        // expect(onChange).toHaveBeenCalledTimes(getExpectedOnChangeCount(componentFamily, params));
         // if (Array.isArray(newValue)) {
         //   newValue.forEach((value, index) => {
         //     expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
@@ -142,7 +142,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       });
 
       it('should call onChange when updating a value defined with `props.value`', () => {
-        const onChange = spy();
+        const onChange = vi.fn();
 
         const useControlledElement = (props: any) => {
           const [value, setValue] = React.useState(props?.value || null);
@@ -166,7 +166,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
           closeMobilePicker: true,
         });
 
-        expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily, params));
+        expect(onChange).toHaveBeenCalledTimes(getExpectedOnChangeCount(componentFamily, params));
         if (Array.isArray(newValue)) {
           newValue.forEach((value, index) => {
             expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
@@ -217,7 +217,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
           return;
         }
 
-        const handleChange = spy();
+        const handleChange = vi.fn();
 
         const v7Response = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
@@ -226,7 +226,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         });
         v7Response.selectSection(undefined);
         fireUserEvent.keyPress(v7Response.getActiveSection(0), { key: 'ArrowUp' });
-        expect(handleChange.callCount).to.equal(isPickerSingleInput(params) ? 1 : 0);
+        expect(handleChange).toHaveBeenCalledTimes(isPickerSingleInput(params) ? 1 : 0);
       });
 
       it('should have correct labelledby relationship when toolbar is shown', () => {

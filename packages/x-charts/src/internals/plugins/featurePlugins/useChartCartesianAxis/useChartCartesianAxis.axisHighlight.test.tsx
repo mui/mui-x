@@ -1,4 +1,4 @@
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import { createRenderer, waitFor } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
@@ -13,7 +13,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
   const { render } = createRenderer();
 
   it('should call onHighlightedAxisChange when crossing any value', async () => {
-    const onHighlightedAxisChange = spy();
+    const onHighlightedAxisChange = vi.fn();
     const { user } = render(
       <ChartDataProvider<'bar', [UseChartInteractionSignature, UseChartCartesianAxisSignature]>
         plugins={[useChartInteraction, useChartCartesianAxis]}
@@ -32,7 +32,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
 
     await user.pointer([{ keys: '[TouchA>]', target: svg, coords: { clientX: 75, clientY: 60 } }]);
 
-    await waitFor(() => expect(onHighlightedAxisChange.callCount).to.equal(1));
+    await waitFor(() => expect(onHighlightedAxisChange).toHaveBeenCalledTimes(1));
 
     await user.pointer([
       {
@@ -50,7 +50,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
       },
     ]);
 
-    expect(onHighlightedAxisChange.callCount).to.equal(4);
+    expect(onHighlightedAxisChange).toHaveBeenCalledTimes(4);
 
     expect(onHighlightedAxisChange.getCall(0).firstArg).to.deep.equal([
       { axisId: 'x-axis', dataIndex: 1 },
@@ -71,7 +71,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
   });
 
   it('should call onHighlightedAxisChange when axis got modified', async () => {
-    const onHighlightedAxisChange = spy();
+    const onHighlightedAxisChange = vi.fn();
     const { user, setProps } = render(
       <ChartDataProvider<'bar', [UseChartInteractionSignature, UseChartCartesianAxisSignature]>
         plugins={[useChartInteraction, useChartCartesianAxis]}
@@ -90,7 +90,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
 
     await user.pointer([{ keys: '[TouchA>]', target: svg, coords: { clientX: 45, clientY: 60 } }]);
 
-    await waitFor(() => expect(onHighlightedAxisChange.callCount).to.equal(1));
+    await waitFor(() => expect(onHighlightedAxisChange).toHaveBeenCalledTimes(1));
     expect(onHighlightedAxisChange.lastCall.firstArg).to.deep.equal([
       { axisId: 'x-axis', dataIndex: 0 },
     ]);
@@ -99,14 +99,14 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
       xAxis: [{ id: 'x-axis', scaleType: 'band', data: ['A', 'B', 'C'], position: 'none' }],
     });
 
-    expect(onHighlightedAxisChange.callCount).to.equal(2);
+    expect(onHighlightedAxisChange).toHaveBeenCalledTimes(2);
     expect(onHighlightedAxisChange.lastCall.firstArg).to.deep.equal([
       { axisId: 'x-axis', dataIndex: 1 },
     ]);
   });
 
   it('should not call onHighlightedAxisChange when axis got modified but highlighted item stay the same', async () => {
-    const onHighlightedAxisChange = spy();
+    const onHighlightedAxisChange = vi.fn();
     const { user, setProps } = render(
       <ChartDataProvider<'bar', [UseChartInteractionSignature, UseChartCartesianAxisSignature]>
         plugins={[useChartInteraction, useChartCartesianAxis]}
@@ -125,7 +125,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
 
     await user.pointer([{ keys: '[TouchA>]', target: svg, coords: { clientX: 10, clientY: 60 } }]);
 
-    await waitFor(() => expect(onHighlightedAxisChange.callCount).to.equal(1));
+    await waitFor(() => expect(onHighlightedAxisChange).toHaveBeenCalledTimes(1));
     expect(onHighlightedAxisChange.lastCall.firstArg).to.deep.equal([
       { axisId: 'x-axis', dataIndex: 0 },
     ]);
@@ -134,11 +134,11 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
       xAxis: [{ id: 'x-axis', scaleType: 'band', data: ['A', 'B', 'C'], position: 'none' }],
     });
 
-    expect(onHighlightedAxisChange.callCount).to.equal(1);
+    expect(onHighlightedAxisChange).toHaveBeenCalledTimes(1);
   });
 
   it('should call onHighlightedAxisChange when highlighted axis got removed', async () => {
-    const onHighlightedAxisChange = spy();
+    const onHighlightedAxisChange = vi.fn();
     const { user, setProps } = render(
       <ChartDataProvider<'bar', [UseChartInteractionSignature, UseChartCartesianAxisSignature]>
         plugins={[useChartInteraction, useChartCartesianAxis]}
@@ -157,7 +157,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
 
     await user.pointer([{ keys: '[TouchA>]', target: svg, coords: { clientX: 10, clientY: 60 } }]);
 
-    await waitFor(() => expect(onHighlightedAxisChange.callCount).to.equal(1));
+    await waitFor(() => expect(onHighlightedAxisChange).toHaveBeenCalledTimes(1));
     expect(onHighlightedAxisChange.lastCall.firstArg).to.deep.equal([
       { axisId: 'x-axis', dataIndex: 0 },
     ]);
@@ -166,7 +166,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
       xAxis: [{ id: 'new-axis', scaleType: 'band', data: ['A', 'B'], position: 'none' }],
     });
 
-    expect(onHighlightedAxisChange.callCount).to.equal(2);
+    expect(onHighlightedAxisChange).toHaveBeenCalledTimes(2);
     expect(onHighlightedAxisChange.lastCall.firstArg).to.deep.equal([
       { axisId: 'new-axis', dataIndex: 0 },
     ]);

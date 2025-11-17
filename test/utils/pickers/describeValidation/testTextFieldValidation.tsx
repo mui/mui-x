@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import { TimeView } from '@mui/x-date-pickers/models';
 import { adapterToUse, getFieldInputRoot } from 'test/utils/pickers';
 import { vi } from 'vitest';
@@ -12,7 +12,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
     it.skipIf(['picker', 'field'].includes(componentFamily) && !withDate)(
       'should apply shouldDisableDate',
       () => {
-        const onErrorMock = spy();
+        const onErrorMock = vi.fn();
         const { setProps } = render(
           <ElementToTest
             onError={onErrorMock}
@@ -25,24 +25,24 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
 
         if (withDate) {
           expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'true');
-          expect(onErrorMock.callCount).to.equal(1);
+          expect(onErrorMock).toHaveBeenCalledTimes(1);
           expect(onErrorMock.lastCall.args[0]).to.equal('shouldDisableDate');
 
           setProps({ value: adapterToUse.date('2018-03-09') });
 
-          expect(onErrorMock.callCount).to.equal(2);
+          expect(onErrorMock).toHaveBeenCalledTimes(2);
           expect(onErrorMock.lastCall.args[0]).to.equal(null);
           expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
         } else {
           expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
-          expect(onErrorMock.callCount).to.equal(0);
+          expect(onErrorMock).toHaveBeenCalledTimes(0);
         }
       },
     );
 
     // TODO: Remove when DateTimePickers will support those props
     it.skipIf(!withDate)('should apply shouldDisableYear', () => {
-      const onErrorMock = spy();
+      const onErrorMock = vi.fn();
       const { setProps } = render(
         <ElementToTest
           onError={onErrorMock}
@@ -51,20 +51,20 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
         />,
       );
 
-      expect(onErrorMock.callCount).to.equal(1);
+      expect(onErrorMock).toHaveBeenCalledTimes(1);
       expect(onErrorMock.lastCall.args[0]).to.equal('shouldDisableYear');
       expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'true');
 
       setProps({ value: adapterToUse.date('2019-03-09') });
 
-      expect(onErrorMock.callCount).to.equal(2);
+      expect(onErrorMock).toHaveBeenCalledTimes(2);
       expect(onErrorMock.lastCall.args[0]).to.equal(null);
       expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
     });
 
     // TODO: Remove when DateTimePickers will support those props
     it.skipIf(!withDate)('should apply shouldDisableMonth', () => {
-      const onErrorMock = spy();
+      const onErrorMock = vi.fn();
       const { setProps } = render(
         <ElementToTest
           onError={onErrorMock}
@@ -73,24 +73,24 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
         />,
       );
 
-      expect(onErrorMock.callCount).to.equal(1);
+      expect(onErrorMock).toHaveBeenCalledTimes(1);
       expect(onErrorMock.lastCall.args[0]).to.equal('shouldDisableMonth');
       expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'true');
 
       setProps({ value: adapterToUse.date('2019-03-09') });
 
-      expect(onErrorMock.callCount).to.equal(1);
+      expect(onErrorMock).toHaveBeenCalledTimes(1);
       expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'true');
 
       setProps({ value: adapterToUse.date('2018-04-09') });
 
-      expect(onErrorMock.callCount).to.equal(2);
+      expect(onErrorMock).toHaveBeenCalledTimes(2);
       expect(onErrorMock.lastCall.args[0]).to.equal(null);
       expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
     });
 
     it.skipIf(!withTime)('should apply shouldDisableTime', () => {
-      const onErrorMock = spy();
+      const onErrorMock = vi.fn();
       const { setProps } = render(
         <ElementToTest
           onError={onErrorMock}
@@ -107,31 +107,31 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
         />,
       );
 
-      expect(onErrorMock.callCount).to.equal(1);
+      expect(onErrorMock).toHaveBeenCalledTimes(1);
       expect(onErrorMock.lastCall.args[0]).to.equal('shouldDisableTime-hours');
       expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'true');
 
       setProps({ value: adapterToUse.date('2019-03-12T09:05:00') });
 
-      expect(onErrorMock.callCount).to.equal(2);
+      expect(onErrorMock).toHaveBeenCalledTimes(2);
       expect(onErrorMock.lastCall.args[0]).to.equal(null);
       expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
 
       setProps({ value: adapterToUse.date('2018-03-12T09:10:00') });
 
-      expect(onErrorMock.callCount).to.equal(3);
+      expect(onErrorMock).toHaveBeenCalledTimes(3);
       expect(onErrorMock.lastCall.args[0]).to.equal('shouldDisableTime-minutes');
       expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'true');
 
       setProps({ value: adapterToUse.date('2018-03-12T09:09:00') });
 
-      expect(onErrorMock.callCount).to.equal(4);
+      expect(onErrorMock).toHaveBeenCalledTimes(4);
       expect(onErrorMock.lastCall.args[0]).to.equal(null);
       expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
 
       setProps({ value: adapterToUse.date('2018-03-12T09:09:10') });
 
-      expect(onErrorMock.callCount).to.equal(5);
+      expect(onErrorMock).toHaveBeenCalledTimes(5);
       expect(onErrorMock.lastCall.args[0]).to.equal('shouldDisableTime-seconds');
       expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'true');
     });
@@ -151,24 +151,24 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
           return <ElementToTest value={now} {...props} />;
         }
 
-        const onErrorMock = spy();
+        const onErrorMock = vi.fn();
         const { setProps } = render(<WithFakeTimer disablePast onError={onErrorMock} />);
 
         const tomorrow = adapterToUse.addDays(now, 1);
         const yesterday = adapterToUse.addDays(now, -1);
 
-        expect(onErrorMock.callCount).to.equal(0);
+        expect(onErrorMock).toHaveBeenCalledTimes(0);
         expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
 
         setProps({ value: yesterday });
 
-        expect(onErrorMock.callCount).to.equal(1);
+        expect(onErrorMock).toHaveBeenCalledTimes(1);
         expect(onErrorMock.lastCall.args[0]).to.equal('disablePast');
         expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'true');
 
         setProps({ value: tomorrow });
 
-        expect(onErrorMock.callCount).to.equal(2);
+        expect(onErrorMock).toHaveBeenCalledTimes(2);
         expect(onErrorMock.lastCall.args[0]).to.equal(null);
         expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
       });
@@ -180,22 +180,22 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
         return <ElementToTest value={now} {...props} />;
       }
 
-      const onErrorMock = spy();
+      const onErrorMock = vi.fn();
       const { setProps } = render(<WithFakeTimer disableFuture onError={onErrorMock} />);
 
       const tomorrow = adapterToUse.addDays(now, 1);
       const yesterday = adapterToUse.addDays(now, -1);
 
-      expect(onErrorMock.callCount).to.equal(0);
+      expect(onErrorMock).toHaveBeenCalledTimes(0);
       expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
 
       setProps({ value: tomorrow });
-      expect(onErrorMock.callCount).to.equal(1);
+      expect(onErrorMock).toHaveBeenCalledTimes(1);
       expect(onErrorMock.lastCall.args[0]).to.equal('disableFuture');
       expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'true');
 
       setProps({ value: yesterday });
-      expect(onErrorMock.callCount).to.equal(2);
+      expect(onErrorMock).toHaveBeenCalledTimes(2);
       expect(onErrorMock.lastCall.args[0]).to.equal(null);
       expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
     });
@@ -203,7 +203,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
     it.skipIf(['picker', 'field'].includes(componentFamily) && !withDate)(
       'should apply minDate',
       () => {
-        const onErrorMock = spy();
+        const onErrorMock = vi.fn();
         const { setProps } = render(
           <ElementToTest
             onError={onErrorMock}
@@ -213,17 +213,17 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
         );
 
         if (withDate) {
-          expect(onErrorMock.callCount).to.equal(1);
+          expect(onErrorMock).toHaveBeenCalledTimes(1);
           expect(onErrorMock.lastCall.args[0]).to.equal('minDate');
           expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'true');
 
           setProps({ value: adapterToUse.date('2019-06-20') });
 
-          expect(onErrorMock.callCount).to.equal(2);
+          expect(onErrorMock).toHaveBeenCalledTimes(2);
           expect(onErrorMock.lastCall.args[0]).to.equal(null);
           expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
         } else {
-          expect(onErrorMock.callCount).to.equal(0);
+          expect(onErrorMock).toHaveBeenCalledTimes(0);
           expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
         }
       },
@@ -232,7 +232,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
     it.skipIf(['picker', 'field'].includes(componentFamily) && !withDate)(
       'should apply maxDate',
       () => {
-        const onErrorMock = spy();
+        const onErrorMock = vi.fn();
         const { setProps } = render(
           <ElementToTest
             onError={onErrorMock}
@@ -242,17 +242,17 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
         );
 
         if (withDate) {
-          expect(onErrorMock.callCount).to.equal(1);
+          expect(onErrorMock).toHaveBeenCalledTimes(1);
           expect(onErrorMock.lastCall.args[0]).to.equal('maxDate');
           expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'true');
 
           setProps({ value: adapterToUse.date('2019-06-10') });
 
-          expect(onErrorMock.callCount).to.equal(2);
+          expect(onErrorMock).toHaveBeenCalledTimes(2);
           expect(onErrorMock.lastCall.args[0]).to.equal(null);
           expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
         } else {
-          expect(onErrorMock.callCount).to.equal(0);
+          expect(onErrorMock).toHaveBeenCalledTimes(0);
           expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
         }
       },
@@ -261,7 +261,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
     it.skipIf(['picker', 'field'].includes(componentFamily) && !withTime)(
       'should apply minTime',
       () => {
-        const onErrorMock = spy();
+        const onErrorMock = vi.fn();
         const { setProps } = render(
           <ElementToTest
             onError={onErrorMock}
@@ -270,17 +270,17 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
           />,
         );
         if (withTime) {
-          expect(onErrorMock.callCount).to.equal(1);
+          expect(onErrorMock).toHaveBeenCalledTimes(1);
           expect(onErrorMock.lastCall.args[0]).to.equal('minTime');
           expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'true');
 
           setProps({ value: adapterToUse.date('2019-06-15T13:10:00') });
 
-          expect(onErrorMock.callCount).to.equal(2);
+          expect(onErrorMock).toHaveBeenCalledTimes(2);
           expect(onErrorMock.lastCall.args[0]).to.equal(null);
           expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
         } else {
-          expect(onErrorMock.callCount).to.equal(0);
+          expect(onErrorMock).toHaveBeenCalledTimes(0);
           expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
         }
       },
@@ -289,7 +289,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
     it.skipIf(['picker', 'field'].includes(componentFamily) && !withTime)(
       'should apply maxTime',
       () => {
-        const onErrorMock = spy();
+        const onErrorMock = vi.fn();
         const { setProps } = render(
           <ElementToTest
             onError={onErrorMock}
@@ -298,23 +298,23 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
           />,
         );
         if (withTime) {
-          expect(onErrorMock.callCount).to.equal(0);
+          expect(onErrorMock).toHaveBeenCalledTimes(0);
           expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
 
           setProps({ value: adapterToUse.date('2019-06-15T13:10:00') });
 
-          expect(onErrorMock.callCount).to.equal(1);
+          expect(onErrorMock).toHaveBeenCalledTimes(1);
           expect(onErrorMock.lastCall.args[0]).to.equal('maxTime');
           expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'true');
         } else {
-          expect(onErrorMock.callCount).to.equal(0);
+          expect(onErrorMock).toHaveBeenCalledTimes(0);
           expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
         }
       },
     );
 
     it.skipIf(!withDate || !withTime)('should apply maxDateTime', () => {
-      const onErrorMock = spy();
+      const onErrorMock = vi.fn();
       const { setProps } = render(
         <ElementToTest
           onError={onErrorMock}
@@ -322,30 +322,30 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
           maxDateTime={adapterToUse.date('2019-06-15T12:00:00')}
         />,
       );
-      expect(onErrorMock.callCount).to.equal(1);
+      expect(onErrorMock).toHaveBeenCalledTimes(1);
       expect(onErrorMock.lastCall.args[0]).to.equal('maxTime');
       expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'true');
 
       // Test 5 minutes before
       setProps({ value: adapterToUse.date('2019-06-15T11:55:00') });
-      expect(onErrorMock.callCount).to.equal(2);
+      expect(onErrorMock).toHaveBeenCalledTimes(2);
       expect(onErrorMock.lastCall.args[0]).to.equal(null);
       expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
 
       // Test 1 day before
       setProps({ value: adapterToUse.date('2019-06-14T20:10:00') });
-      expect(onErrorMock.callCount).to.equal(2);
+      expect(onErrorMock).toHaveBeenCalledTimes(2);
       expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
 
       // Test 1 day after
       setProps({ value: adapterToUse.date('2019-06-16T10:00:00') });
-      expect(onErrorMock.callCount).to.equal(3);
+      expect(onErrorMock).toHaveBeenCalledTimes(3);
       expect(onErrorMock.lastCall.args[0]).to.equal('maxDate');
       expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'true');
     });
 
     it.skipIf(!withDate || !withTime)('should apply minDateTime', () => {
-      const onErrorMock = spy();
+      const onErrorMock = vi.fn();
       const { setProps } = render(
         <ElementToTest
           onError={onErrorMock}
@@ -353,24 +353,24 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
           minDateTime={adapterToUse.date('2019-06-15T12:00:00')}
         />,
       );
-      expect(onErrorMock.callCount).to.equal(0);
+      expect(onErrorMock).toHaveBeenCalledTimes(0);
       expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
 
       // Test 5 minutes before (invalid)
       setProps({ value: adapterToUse.date('2019-06-15T11:55:00') });
-      expect(onErrorMock.callCount).to.equal(1);
+      expect(onErrorMock).toHaveBeenCalledTimes(1);
       expect(onErrorMock.lastCall.args[0]).to.equal('minTime');
       expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'true');
 
       // Test 1 day before (invalid)
       setProps({ value: adapterToUse.date('2019-06-14T20:10:00') });
-      expect(onErrorMock.callCount).to.equal(2);
+      expect(onErrorMock).toHaveBeenCalledTimes(2);
       expect(onErrorMock.lastCall.args[0]).to.equal('minDate');
       expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'true');
 
       // Test 1 day after
       setProps({ value: adapterToUse.date('2019-06-16T10:00:00') });
-      expect(onErrorMock.callCount).to.equal(3);
+      expect(onErrorMock).toHaveBeenCalledTimes(3);
       expect(onErrorMock.lastCall.args[0]).to.equal(null);
       expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
     });
@@ -378,7 +378,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
     it.skipIf(['picker', 'field'].includes(componentFamily) && !withTime)(
       'should apply minutesStep',
       () => {
-        const onErrorMock = spy();
+        const onErrorMock = vi.fn();
         const { setProps } = render(
           <ElementToTest
             onError={onErrorMock}
@@ -387,17 +387,17 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
           />,
         );
         if (withTime) {
-          expect(onErrorMock.callCount).to.equal(1);
+          expect(onErrorMock).toHaveBeenCalledTimes(1);
           expect(onErrorMock.lastCall.args[0]).to.equal('minutesStep');
           expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'true');
 
           setProps({ value: adapterToUse.date('2019-06-15T10:30:00') });
 
-          expect(onErrorMock.callCount).to.equal(2);
+          expect(onErrorMock).toHaveBeenCalledTimes(2);
           expect(onErrorMock.lastCall.args[0]).to.equal(null);
           expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
         } else {
-          expect(onErrorMock.callCount).to.equal(0);
+          expect(onErrorMock).toHaveBeenCalledTimes(0);
           expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
         }
       },

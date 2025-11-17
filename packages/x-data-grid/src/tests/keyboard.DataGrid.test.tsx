@@ -906,7 +906,7 @@ describe('<DataGrid /> - Keyboard', () => {
 
       return {
         cell: cell.textContent,
-        deletedValue: valueSetterMock.mock.lastCall![0],
+        deletedValue: valueSetterMock.mock.calls[valueSetterMock.mock.calls.length - 1][0],
       };
     }
 

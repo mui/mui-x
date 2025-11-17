@@ -38,11 +38,12 @@ export function expectPickerChangeHandlerValue(
   spyCallback: MockInstance,
   expectedValue: any,
 ) {
+  const lastCall = spyCallback.mock.calls[spyCallback.mock.calls.length - 1];
   if (isPickerRangeType(type)) {
-    spyCallback.mock.lastCall![0].forEach((value: any, index: number) => {
+    lastCall[0].forEach((value: any, index: number) => {
       expect(value).to.deep.equal(expectedValue[index]);
     });
   } else {
-    expect(spyCallback.mock.lastCall![0]).to.deep.equal(expectedValue);
+    expect(lastCall[0]).to.deep.equal(expectedValue);
   }
 }

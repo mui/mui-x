@@ -1,5 +1,5 @@
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import { fireEvent, createEvent } from '@mui/internal-test-utils';
 import { DragEventTypes, MockedDataTransfer } from 'test/utils/dragAndDrop';
 import { chooseActionToApply } from './useTreeViewItemsReordering.utils';
@@ -132,7 +132,7 @@ describeTreeView<RichTreeViewProStore<any, any>>(
 
       describe('onItemPositionChange prop', () => {
         it('should call onItemPositionChange when an item is moved', () => {
-          const onItemPositionChange = spy();
+          const onItemPositionChange = vi.fn();
           const view = render({
             items: [{ id: '1' }, { id: '2' }, { id: '3' }],
             itemsReordering: true,
@@ -140,7 +140,7 @@ describeTreeView<RichTreeViewProStore<any, any>>(
           });
 
           dragEvents.fullDragSequence(view.getItemRoot('1'), view.getItemContent('2'));
-          expect(onItemPositionChange.callCount).to.equal(1);
+          expect(onItemPositionChange).toHaveBeenCalledTimes(1);
           expect(onItemPositionChange.lastCall.firstArg).to.deep.equal({
             itemId: '1',
             oldPosition: { parentId: null, index: 0 },
@@ -178,7 +178,7 @@ describeTreeView<RichTreeViewProStore<any, any>>(
 
       describe('canMoveItemToNewPosition prop', () => {
         it('should call canMoveItemToNewPosition with the correct parameters', () => {
-          const canMoveItemToNewPosition = spy();
+          const canMoveItemToNewPosition = vi.fn();
           const view = render({
             items: [{ id: '1' }, { id: '2' }, { id: '3' }],
             itemsReordering: true,

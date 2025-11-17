@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import { fireEvent, screen } from '@mui/internal-test-utils';
 import { PickerRangeValue } from '@mui/x-date-pickers/internals';
 import {
@@ -34,9 +34,9 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
   describe('Picker action bar', () => {
     describe('clear action', () => {
       it('should call onClose, onChange with empty value and onAccept with empty value', () => {
-        const onChange = spy();
-        const onAccept = spy();
-        const onClose = spy();
+        const onChange = vi.fn();
+        const onAccept = vi.fn();
+        const onClose = vi.fn();
 
         render(
           <ElementToTest
@@ -51,17 +51,17 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
         // Clear the date
         fireEvent.click(screen.getByText(/clear/i));
-        expect(onChange.callCount).to.equal(1);
+        expect(onChange).toHaveBeenCalledTimes(1);
         expectPickerChangeHandlerValue(pickerParams.type, onChange, emptyValue);
-        expect(onAccept.callCount).to.equal(1);
+        expect(onAccept).toHaveBeenCalledTimes(1);
         expectPickerChangeHandlerValue(pickerParams.type, onAccept, emptyValue);
-        expect(onClose.callCount).to.equal(1);
+        expect(onClose).toHaveBeenCalledTimes(1);
       });
 
       it('should not call onChange or onAccept if the value is already empty value', () => {
-        const onChange = spy();
-        const onAccept = spy();
-        const onClose = spy();
+        const onChange = vi.fn();
+        const onAccept = vi.fn();
+        const onClose = vi.fn();
 
         render(
           <ElementToTest
@@ -76,17 +76,17 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
         // Clear the date
         fireEvent.click(screen.getByText(/clear/i));
-        expect(onChange.callCount).to.equal(0);
-        expect(onAccept.callCount).to.equal(0);
-        expect(onClose.callCount).to.equal(1);
+        expect(onChange).toHaveBeenCalledTimes(0);
+        expect(onAccept).toHaveBeenCalledTimes(0);
+        expect(onClose).toHaveBeenCalledTimes(1);
       });
     });
 
     describe('cancel action', () => {
       it('should call onClose and onChange with the initial value', () => {
-        const onChange = spy();
-        const onAccept = spy();
-        const onClose = spy();
+        const onChange = vi.fn();
+        const onAccept = vi.fn();
+        const onClose = vi.fn();
 
         const { selectSection, pressKey } = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
@@ -104,7 +104,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
         // Cancel the modifications
         fireEvent.click(screen.getByText(/cancel/i));
-        expect(onChange.callCount).to.equal(
+        expect(onChange).toHaveBeenCalledTimes(
           getExpectedOnChangeCount(componentFamily, pickerParams) + 1,
         );
         if (isRangeType) {
@@ -114,14 +114,14 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         } else {
           expect(onChange.lastCall.args[0]).toEqualDateTime(values[0] as any);
         }
-        expect(onAccept.callCount).to.equal(0);
-        expect(onClose.callCount).to.equal(1);
+        expect(onAccept).toHaveBeenCalledTimes(0);
+        expect(onClose).toHaveBeenCalledTimes(1);
       });
 
       it('should not call onChange if no prior value modification', () => {
-        const onChange = spy();
-        const onAccept = spy();
-        const onClose = spy();
+        const onChange = vi.fn();
+        const onAccept = vi.fn();
+        const onClose = vi.fn();
 
         render(
           <ElementToTest
@@ -137,17 +137,17 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
         // Cancel the modifications
         fireEvent.click(screen.getByText(/cancel/i));
-        expect(onChange.callCount).to.equal(0);
-        expect(onAccept.callCount).to.equal(0);
-        expect(onClose.callCount).to.equal(1);
+        expect(onChange).toHaveBeenCalledTimes(0);
+        expect(onAccept).toHaveBeenCalledTimes(0);
+        expect(onClose).toHaveBeenCalledTimes(1);
       });
     });
 
     describe('confirm action', () => {
       it('should call onClose and onAccept with the live value', () => {
-        const onChange = spy();
-        const onAccept = spy();
-        const onClose = spy();
+        const onChange = vi.fn();
+        const onAccept = vi.fn();
+        const onClose = vi.fn();
 
         const { selectSection, pressKey } = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
@@ -165,17 +165,17 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
         // Accept the modifications
         fireEvent.click(screen.getAllByRole('button', { name: 'OK' })[0]);
-        expect(onChange.callCount).to.equal(
+        expect(onChange).toHaveBeenCalledTimes(
           getExpectedOnChangeCount(componentFamily, pickerParams),
         ); // The accepted value as already been committed, don't call onChange again
-        expect(onAccept.callCount).to.equal(1);
-        expect(onClose.callCount).to.equal(1);
+        expect(onAccept).toHaveBeenCalledTimes(1);
+        expect(onClose).toHaveBeenCalledTimes(1);
       });
 
       it('should call onChange, onClose and onAccept when validating the default value', () => {
-        const onChange = spy();
-        const onAccept = spy();
-        const onClose = spy();
+        const onChange = vi.fn();
+        const onAccept = vi.fn();
+        const onClose = vi.fn();
 
         render(
           <ElementToTest
@@ -191,15 +191,15 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
         // Accept the modifications
         fireEvent.click(screen.getByText(/ok/i));
-        expect(onChange.callCount).to.equal(1);
-        expect(onAccept.callCount).to.equal(1);
-        expect(onClose.callCount).to.equal(1);
+        expect(onChange).toHaveBeenCalledTimes(1);
+        expect(onAccept).toHaveBeenCalledTimes(1);
+        expect(onClose).toHaveBeenCalledTimes(1);
       });
 
       it('should call onClose but not onAccept when validating an already validated value', () => {
-        const onChange = spy();
-        const onAccept = spy();
-        const onClose = spy();
+        const onChange = vi.fn();
+        const onAccept = vi.fn();
+        const onClose = vi.fn();
 
         render(
           <ElementToTest
@@ -215,9 +215,9 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
         // Accept the modifications
         fireEvent.click(screen.getByText(/ok/i));
-        expect(onChange.callCount).to.equal(0);
-        expect(onAccept.callCount).to.equal(0);
-        expect(onClose.callCount).to.equal(1);
+        expect(onChange).toHaveBeenCalledTimes(0);
+        expect(onAccept).toHaveBeenCalledTimes(0);
+        expect(onClose).toHaveBeenCalledTimes(1);
       });
     });
 
@@ -231,9 +231,9 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
       });
 
       it("should call onClose, onChange with today's value and onAccept with today's value", () => {
-        const onChange = spy();
-        const onAccept = spy();
-        const onClose = spy();
+        const onChange = vi.fn();
+        const onAccept = vi.fn();
+        const onClose = vi.fn();
 
         render(
           <ElementToTest
@@ -257,11 +257,11 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
           startOfToday = adapterToUse.date();
         }
 
-        expect(onChange.callCount).to.equal(1);
+        expect(onChange).toHaveBeenCalledTimes(1);
         expectPickerChangeHandlerValue(pickerParams.type, onChange, startOfToday);
-        expect(onAccept.callCount).to.equal(1);
+        expect(onAccept).toHaveBeenCalledTimes(1);
         expectPickerChangeHandlerValue(pickerParams.type, onAccept, startOfToday);
-        expect(onClose.callCount).to.equal(1);
+        expect(onClose).toHaveBeenCalledTimes(1);
       });
     });
   });

@@ -1,5 +1,5 @@
 import { createRenderer } from '@mui/internal-test-utils';
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import { PieChart } from '@mui/x-charts/PieChart';
 
 const config = {
@@ -39,7 +39,7 @@ describe('PieChart - click event', () => {
     });
 
     it('should provide the right context as second argument', async () => {
-      const onItemClick = spy();
+      const onItemClick = vi.fn();
       const { user } = render(
         <PieChart
           {...config}

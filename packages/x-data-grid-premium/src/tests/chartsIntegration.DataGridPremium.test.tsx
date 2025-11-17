@@ -1,4 +1,4 @@
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import { RefObject, GridChartsConfigurationOptions } from '@mui/x-internals/types';
 import { act, createRenderer, screen, waitFor } from '@mui/internal-test-utils';
 import {
@@ -115,7 +115,7 @@ const configurationOptions: GridChartsConfigurationOptions = {
 
 describe('<DataGridPremium /> - Charts Integration', () => {
   const { render } = createRenderer();
-  const renderSpy = spy();
+  const renderSpy = vi.fn();
 
   let apiRef: RefObject<GridApiPremium | null>;
   let integrationContext: GridChartsIntegrationContextValue | null = null;
@@ -712,7 +712,7 @@ describe('<DataGridPremium /> - Charts Integration', () => {
       render(<Test initialState={baseInitialState} />);
 
       renderSpy.resetHistory();
-      expect(renderSpy.callCount).to.equal(0);
+      expect(renderSpy).toHaveBeenCalledTimes(0);
 
       act(() => {
         apiRef!.current?.sortColumn('amount', 'desc');

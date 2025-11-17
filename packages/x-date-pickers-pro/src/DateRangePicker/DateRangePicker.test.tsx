@@ -1,6 +1,6 @@
 import { DateRangePicker, DateRangePickerProps } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { screen } from '@mui/internal-test-utils/createRenderer';
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import {
   buildFieldInteractions,
   createPickerRenderer,
@@ -71,14 +71,14 @@ describe('<DateRangePicker />', () => {
     }
 
     it('should submit the form when "Enter" is pressed on the input', async () => {
-      const handleSubmit = spy();
+      const handleSubmit = vi.fn();
       const { user } = render(<TestComponent onSubmit={handleSubmit} />);
 
       // focus the input
       await user.keyboard('{Tab}');
       await user.keyboard('{Enter}');
 
-      expect(handleSubmit.callCount).to.equal(1);
+      expect(handleSubmit).toHaveBeenCalledTimes(1);
       expect([...handleSubmit.lastCall.args[0]][0]).to.deep.equal([
         'testDate',
         '04/17/2022 – 04/21/2022',
@@ -86,7 +86,7 @@ describe('<DateRangePicker />', () => {
     });
 
     it('should not submit the form when "Enter" is pressed on the multi input field', async () => {
-      const handleSubmit = spy();
+      const handleSubmit = vi.fn();
       const { user } = render(
         <TestComponent
           onSubmit={handleSubmit}
@@ -99,11 +99,11 @@ describe('<DateRangePicker />', () => {
       await user.keyboard('{Tab}');
       await user.keyboard('{Enter}');
 
-      expect(handleSubmit.callCount).to.equal(0);
+      expect(handleSubmit).toHaveBeenCalledTimes(0);
     });
 
     it('should not submit the form when "Enter" is pressed on the input with "defaultMuiPrevented" set to "true"', async () => {
-      const handleSubmit = spy();
+      const handleSubmit = vi.fn();
       const { user } = render(
         <TestComponent
           onSubmit={handleSubmit}
@@ -123,7 +123,7 @@ describe('<DateRangePicker />', () => {
       await user.keyboard('{Tab}');
       await user.keyboard('{Enter}');
 
-      expect(handleSubmit.callCount).to.equal(0);
+      expect(handleSubmit).toHaveBeenCalledTimes(0);
     });
   });
 });

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import { fireEvent, screen, act, within, waitFor } from '@mui/internal-test-utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -134,8 +134,8 @@ describe('<DesktopDateRangePicker />', () => {
 
   describe('Component slot: Popper', () => {
     it('should forward onClick and onTouchStart', async () => {
-      const handleClick = spy();
-      const handleTouchStart = spy();
+      const handleClick = vi.fn();
+      const handleTouchStart = vi.fn();
       render(
         <DesktopDateRangePicker
           open
@@ -154,14 +154,14 @@ describe('<DesktopDateRangePicker />', () => {
       fireEvent.click(popper);
       fireEvent.touchStart(popper);
 
-      expect(handleClick.callCount).to.equal(1);
-      expect(handleTouchStart.callCount).to.equal(1);
+      expect(handleClick).toHaveBeenCalledTimes(1);
+      expect(handleTouchStart).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('picker state', () => {
     it('should open when clicking the start input (multi input field)', async () => {
-      const onOpen = spy();
+      const onOpen = vi.fn();
 
       const { user } = render(
         <DesktopDateRangePicker onOpen={onOpen} slots={{ field: MultiInputDateRangeField }} />,
@@ -173,12 +173,12 @@ describe('<DesktopDateRangePicker />', () => {
         fieldType: 'multi-input',
       });
 
-      expect(onOpen.callCount).to.equal(1);
+      expect(onOpen).toHaveBeenCalledTimes(1);
       expect(screen.getByRole('tooltip')).toBeVisible();
     });
 
     it('should open when clicking the end input (multi input field)', async () => {
-      const onOpen = spy();
+      const onOpen = vi.fn();
 
       const { user } = render(
         <DesktopDateRangePicker onOpen={onOpen} slots={{ field: MultiInputDateRangeField }} />,
@@ -190,13 +190,13 @@ describe('<DesktopDateRangePicker />', () => {
         fieldType: 'multi-input',
       });
 
-      expect(onOpen.callCount).to.equal(1);
+      expect(onOpen).toHaveBeenCalledTimes(1);
       expect(screen.getByRole('tooltip')).toBeVisible();
     });
 
     ['Enter', 'Space'].forEach((key) =>
       it(`should open when pressing "${key}" in the start input (multi input field)`, async () => {
-        const onOpen = spy();
+        const onOpen = vi.fn();
 
         const { user } = render(
           <DesktopDateRangePicker onOpen={onOpen} slots={{ field: MultiInputDateRangeField }} />,
@@ -206,14 +206,14 @@ describe('<DesktopDateRangePicker />', () => {
         await act(async () => startInput.focus());
         await user.keyboard(`[${key}]`);
 
-        expect(onOpen.callCount).to.equal(1);
+        expect(onOpen).toHaveBeenCalledTimes(1);
         expect(screen.getByRole('tooltip')).toBeVisible();
       }),
     );
 
     ['Enter', 'Space'].forEach((key) =>
       it(`should open when pressing "${key}" in the end input (multi input field)`, async () => {
-        const onOpen = spy();
+        const onOpen = vi.fn();
 
         const { user } = render(
           <DesktopDateRangePicker onOpen={onOpen} slots={{ field: MultiInputDateRangeField }} />,
@@ -223,15 +223,15 @@ describe('<DesktopDateRangePicker />', () => {
         await act(async () => endInput.focus());
         await user.keyboard(`[${key}]`);
 
-        expect(onOpen.callCount).to.equal(1);
+        expect(onOpen).toHaveBeenCalledTimes(1);
         expect(screen.getByRole('tooltip')).toBeVisible();
       }),
     );
 
     it('should call onChange with updated start date then call onChange with updated end date, onClose and onAccept with update date range when opening from start input', async () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
+      const onChange = vi.fn();
+      const onAccept = vi.fn();
+      const onClose = vi.fn();
       const defaultValue: DateRange<PickerValidDate> = [
         adapterToUse.date('2018-01-01'),
         adapterToUse.date('2018-01-06'),
@@ -253,32 +253,32 @@ describe('<DesktopDateRangePicker />', () => {
         initialFocus: 'start',
         fieldType: 'multi-input',
       });
-      expect(onChange.callCount).to.equal(0);
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(0);
+      expect(onChange).toHaveBeenCalledTimes(0);
+      expect(onAccept).toHaveBeenCalledTimes(0);
+      expect(onClose).toHaveBeenCalledTimes(0);
 
       // Change the start date
       await user.click(getPickerDay('3'));
-      expect(onChange.callCount).to.equal(1);
+      expect(onChange).toHaveBeenCalledTimes(1);
       expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onChange.lastCall.args[0][1]).toEqualDateTime(defaultValue[1]);
 
       // Change the end date
       await user.click(getPickerDay('5'));
-      expect(onChange.callCount).to.equal(2);
+      expect(onChange).toHaveBeenCalledTimes(2);
       expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 5));
 
-      expect(onAccept.callCount).to.equal(1);
+      expect(onAccept).toHaveBeenCalledTimes(1);
       expect(onAccept.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onAccept.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 5));
-      expect(onClose.callCount).to.equal(1);
+      expect(onClose).toHaveBeenCalledTimes(1);
     });
 
     it('should call onChange with updated end date, onClose and onAccept with update date range when opening from end input (multi input field)', async () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
+      const onChange = vi.fn();
+      const onAccept = vi.fn();
+      const onClose = vi.fn();
       const defaultValue: DateRange<PickerValidDate> = [
         adapterToUse.date('2018-01-01'),
         adapterToUse.date('2018-01-06'),
@@ -300,24 +300,24 @@ describe('<DesktopDateRangePicker />', () => {
         initialFocus: 'end',
         fieldType: 'multi-input',
       });
-      expect(onChange.callCount).to.equal(0);
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(0);
+      expect(onChange).toHaveBeenCalledTimes(0);
+      expect(onAccept).toHaveBeenCalledTimes(0);
+      expect(onClose).toHaveBeenCalledTimes(0);
 
       // Change the end date
       fireEvent.click(getPickerDay('3'));
-      expect(onChange.callCount).to.equal(1);
+      expect(onChange).toHaveBeenCalledTimes(1);
       expect(onChange.lastCall.args[0][0]).toEqualDateTime(defaultValue[0]);
       expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 3));
-      expect(onAccept.callCount).to.equal(1);
+      expect(onAccept).toHaveBeenCalledTimes(1);
       expect(onAccept.lastCall.args[0][0]).toEqualDateTime(defaultValue[0]);
       expect(onAccept.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 3));
-      expect(onClose.callCount).to.equal(1);
+      expect(onClose).toHaveBeenCalledTimes(1);
     });
 
     it('should not call onClose and onAccept when selecting the end date if props.closeOnSelect = false (multi input field)', async () => {
-      const onAccept = spy();
-      const onClose = spy();
+      const onAccept = vi.fn();
+      const onClose = vi.fn();
       const defaultValue: DateRange<PickerValidDate> = [
         adapterToUse.date('2018-01-01'),
         adapterToUse.date('2018-01-06'),
@@ -342,14 +342,14 @@ describe('<DesktopDateRangePicker />', () => {
       // Change the end date
       await user.click(getPickerDay('3'));
 
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(0);
+      expect(onAccept).toHaveBeenCalledTimes(0);
+      expect(onClose).toHaveBeenCalledTimes(0);
     });
 
     it('should call onClose and onAccept with the live value when pressing Escape', async () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
+      const onChange = vi.fn();
+      const onAccept = vi.fn();
+      const onClose = vi.fn();
       const defaultValue: DateRange<PickerValidDate> = [
         adapterToUse.date('2018-01-01'),
         adapterToUse.date('2018-01-06'),
@@ -375,17 +375,17 @@ describe('<DesktopDateRangePicker />', () => {
 
       // Dismiss the picker
       await user.keyboard('[Escape]');
-      expect(onChange.callCount).to.equal(1); // Start date change
-      expect(onAccept.callCount).to.equal(1);
+      expect(onChange).toHaveBeenCalledTimes(1); // Start date change
+      expect(onAccept).toHaveBeenCalledTimes(1);
       expect(onAccept.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onAccept.lastCall.args[0][1]).toEqualDateTime(defaultValue[1]);
-      expect(onClose.callCount).to.equal(1);
+      expect(onClose).toHaveBeenCalledTimes(1);
     });
 
     it('should call onClose when clicking outside of the picker without prior change (multi input field)', async () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
+      const onChange = vi.fn();
+      const onAccept = vi.fn();
+      const onClose = vi.fn();
 
       const { user } = render(
         <div>
@@ -410,15 +410,15 @@ describe('<DesktopDateRangePicker />', () => {
 
       await user.pointer({ keys: '[MouseLeft>]', target: input });
 
-      expect(onChange.callCount).to.equal(0);
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(1);
+      expect(onChange).toHaveBeenCalledTimes(0);
+      expect(onAccept).toHaveBeenCalledTimes(0);
+      expect(onClose).toHaveBeenCalledTimes(1);
     });
 
     it('should call onClose and onAccept with the live value when clicking outside of the picker (multi input field)', async () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
+      const onChange = vi.fn();
+      const onAccept = vi.fn();
+      const onClose = vi.fn();
       const defaultValue: DateRange<PickerValidDate> = [
         adapterToUse.date('2018-01-01'),
         adapterToUse.date('2018-01-06'),
@@ -452,17 +452,17 @@ describe('<DesktopDateRangePicker />', () => {
       await user.click(input);
 
       // Start date change
-      expect(onChange.callCount).to.equal(1);
-      expect(onAccept.callCount).to.equal(1);
+      expect(onChange).toHaveBeenCalledTimes(1);
+      expect(onAccept).toHaveBeenCalledTimes(1);
       expect(onAccept.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onAccept.lastCall.args[0][1]).toEqualDateTime(defaultValue[1]);
-      expect(onClose.callCount).to.equal(1);
+      expect(onClose).toHaveBeenCalledTimes(1);
     });
 
     it('should not call onClose or onAccept when clicking outside of the picker if not opened (multi input field)', async () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
+      const onChange = vi.fn();
+      const onAccept = vi.fn();
+      const onClose = vi.fn();
 
       const { user } = render(
         <DesktopDateRangePicker
@@ -475,18 +475,18 @@ describe('<DesktopDateRangePicker />', () => {
 
       // Dismiss the picker
       await user.click(document.body);
-      expect(onChange.callCount).to.equal(0);
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(0);
+      expect(onChange).toHaveBeenCalledTimes(0);
+      expect(onAccept).toHaveBeenCalledTimes(0);
+      expect(onClose).toHaveBeenCalledTimes(0);
     });
 
     // test:unit does not call `blur` when focusing another element.
     it.skipIf(isJSDOM)(
       'should call onClose when blur the current field without prior change (multi input field)',
       async () => {
-        const onChange = spy();
-        const onAccept = spy();
-        const onClose = spy();
+        const onChange = vi.fn();
+        const onAccept = vi.fn();
+        const onClose = vi.fn();
 
         const { user } = render(
           <React.Fragment>
@@ -511,18 +511,18 @@ describe('<DesktopDateRangePicker />', () => {
 
         await act(async () => document.querySelector<HTMLButtonElement>('#test')!.focus());
 
-        expect(onChange.callCount).to.equal(0);
-        expect(onAccept.callCount).to.equal(0);
+        expect(onChange).toHaveBeenCalledTimes(0);
+        expect(onAccept).toHaveBeenCalledTimes(0);
         await waitFor(() => {
-          expect(onClose.callCount).to.equal(1);
+          expect(onClose).toHaveBeenCalledTimes(1);
         });
       },
     );
 
     it('should call onClose and onAccept when blur the current field (multi input field)', async () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
+      const onChange = vi.fn();
+      const onAccept = vi.fn();
+      const onClose = vi.fn();
       const defaultValue: DateRange<PickerValidDate> = [
         adapterToUse.date('2018-01-01'),
         adapterToUse.date('2018-01-06'),
@@ -551,22 +551,22 @@ describe('<DesktopDateRangePicker />', () => {
       // Change the start date (already tested)
       await user.click(getPickerDay('3'));
 
-      expect(onAccept.callCount).to.equal(0);
+      expect(onAccept).toHaveBeenCalledTimes(0);
 
       await user.click(document.querySelector<HTMLButtonElement>('#test')!);
 
       // Start date change
-      expect(onChange.callCount).to.equal(1);
-      expect(onAccept.callCount).to.equal(1);
+      expect(onChange).toHaveBeenCalledTimes(1);
+      expect(onAccept).toHaveBeenCalledTimes(1);
       expect(onAccept.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onAccept.lastCall.args[0][1]).toEqualDateTime(defaultValue[1]);
-      expect(onClose.callCount).to.equal(1);
+      expect(onClose).toHaveBeenCalledTimes(1);
     });
 
     it('should call onClose, onChange with empty value and onAccept with empty value when pressing the "Clear" button', async () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
+      const onChange = vi.fn();
+      const onAccept = vi.fn();
+      const onClose = vi.fn();
       const defaultValue: DateRange<PickerValidDate> = [
         adapterToUse.date('2018-01-01'),
         adapterToUse.date('2018-01-06'),
@@ -590,17 +590,17 @@ describe('<DesktopDateRangePicker />', () => {
 
       // Clear the date
       await user.click(screen.getByText(/clear/i));
-      expect(onChange.callCount).to.equal(1); // Start date change
+      expect(onChange).toHaveBeenCalledTimes(1); // Start date change
       expect(onChange.lastCall.args[0]).to.deep.equal([null, null]);
-      expect(onAccept.callCount).to.equal(1);
+      expect(onAccept).toHaveBeenCalledTimes(1);
       expect(onAccept.lastCall.args[0]).to.deep.equal([null, null]);
-      expect(onClose.callCount).to.equal(1);
+      expect(onClose).toHaveBeenCalledTimes(1);
     });
 
     it('should not call onChange or onAccept when pressing "Clear" button with an already null value', async () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
+      const onChange = vi.fn();
+      const onAccept = vi.fn();
+      const onClose = vi.fn();
 
       const { user } = render(
         <DesktopDateRangePicker
@@ -620,18 +620,18 @@ describe('<DesktopDateRangePicker />', () => {
 
       // Clear the date
       await user.click(screen.getByText(/clear/i));
-      expect(onChange.callCount).to.equal(0);
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(1);
+      expect(onChange).toHaveBeenCalledTimes(0);
+      expect(onAccept).toHaveBeenCalledTimes(0);
+      expect(onClose).toHaveBeenCalledTimes(1);
     });
 
     // TODO: Write test
     // it('should call onClose and onAccept with the live value when clicking outside of the picker', () => {
     // })
     it('should not close picker when switching focus from start to end input (multi input field)', async () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
+      const onChange = vi.fn();
+      const onAccept = vi.fn();
+      const onClose = vi.fn();
 
       const { user } = render(
         <DesktopDateRangePicker
@@ -656,15 +656,15 @@ describe('<DesktopDateRangePicker />', () => {
         initialFocus: 'end',
         fieldType: 'multi-input',
       });
-      expect(onChange.callCount).to.equal(0);
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(0);
+      expect(onChange).toHaveBeenCalledTimes(0);
+      expect(onAccept).toHaveBeenCalledTimes(0);
+      expect(onClose).toHaveBeenCalledTimes(0);
     });
 
     it('should not close picker when switching focus from end to start input (multi input field)', async () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
+      const onChange = vi.fn();
+      const onAccept = vi.fn();
+      const onClose = vi.fn();
 
       const { user } = render(
         <DesktopDateRangePicker
@@ -689,9 +689,9 @@ describe('<DesktopDateRangePicker />', () => {
         initialFocus: 'start',
         fieldType: 'multi-input',
       });
-      expect(onChange.callCount).to.equal(0);
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(0);
+      expect(onChange).toHaveBeenCalledTimes(0);
+      expect(onAccept).toHaveBeenCalledTimes(0);
+      expect(onClose).toHaveBeenCalledTimes(0);
     });
 
     it('should work with separate start and end "reference" dates', async () => {
