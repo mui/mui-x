@@ -134,10 +134,6 @@ The bar charts use by priority:
 
 Learn more about the `colorMap` properties in the [Styling docs](/x/react-charts/styling/#values-color).
 
-:::warning
-The `colorMap` property does not work for the numerical axis of range bar charts (that is, the y-axis for vertical bar charts and the x-axis for horizontal bar charts).
-:::
-
 {{"demo": "ColorScale.js"}}
 
 ### Border radius

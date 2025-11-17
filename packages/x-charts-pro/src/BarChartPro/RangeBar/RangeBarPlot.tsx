@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import { BarLabelPlot, useSkipAnimation } from '@mui/x-charts/internals';
+import { BarLabelPlot, useSkipAnimation, BarClipPath } from '@mui/x-charts/internals';
 import {
   BarElement,
   BarElementSlotProps,
@@ -64,8 +64,7 @@ const RangeBarPlotRoot = styled('g', {
 /**
  * Demos:
  *
- * - [Bars](https://mui.com/x/react-charts/bars/)
- * - [Bar demonstration](https://mui.com/x/react-charts/bar-demo/)
+ * - [Range Bar](https://mui.com/x/react-charts/range-bar/)
  *
  * API:
  *
@@ -77,38 +76,75 @@ function RangeBarPlot(props: RangeBarPlotProps): React.JSX.Element {
   const skipAnimation = useSkipAnimation(isZoomInteracting || inSkipAnimation);
   const { xAxis: xAxes } = useXAxes();
   const { yAxis: yAxes } = useYAxes();
-  const completedData = useRangeBarPlotData(useDrawingArea(), xAxes, yAxes);
+  const { completedData, masksData } = useRangeBarPlotData(useDrawingArea(), xAxes, yAxes);
+  const withoutBorderRadius = !borderRadius || borderRadius <= 0;
 
   const classes = useUtilityClasses();
 
   return (
     <RangeBarPlotRoot className={classes.root}>
-      {completedData.map(({ seriesId, data }) => {
-        return (
-          <g key={seriesId} data-series={seriesId} className={classes.series}>
-            {data.map(({ dataIndex, color, layout, x, xOrigin, y, yOrigin, width, height }) => (
-              <BarElement
-                key={dataIndex}
-                id={seriesId}
-                dataIndex={dataIndex}
-                color={color}
-                skipAnimation={skipAnimation ?? false}
-                layout={layout ?? 'vertical'}
+      {!withoutBorderRadius &&
+        masksData.map(
+          ({ id, x, y, xOrigin, yOrigin, width, height, hasPositive, hasNegative, layout }) => {
+            return (
+              <BarClipPath
+                key={id}
+                maskId={id}
+                borderRadius={borderRadius}
+                hasNegative={hasNegative}
+                hasPositive={hasPositive}
+                layout={layout}
                 x={x}
-                xOrigin={xOrigin}
                 y={y}
+                xOrigin={xOrigin}
                 yOrigin={yOrigin}
                 width={width}
                 height={height}
-                {...other}
-                onClick={
-                  onItemClick &&
-                  ((event) => {
-                    onItemClick(event, { type: 'bar', seriesId, dataIndex });
-                  })
-                }
+                skipAnimation={skipAnimation ?? false}
               />
-            ))}
+            );
+          },
+        )}
+      {completedData.map(({ seriesId, data }) => {
+        return (
+          <g key={seriesId} data-series={seriesId} className={classes.series}>
+            {data.map(
+              ({ dataIndex, color, maskId, layout, x, xOrigin, y, yOrigin, width, height }) => {
+                const barElement = (
+                  <BarElement
+                    key={dataIndex}
+                    id={seriesId}
+                    dataIndex={dataIndex}
+                    color={color}
+                    skipAnimation={skipAnimation ?? false}
+                    layout={layout ?? 'vertical'}
+                    x={x}
+                    xOrigin={xOrigin}
+                    y={y}
+                    yOrigin={yOrigin}
+                    width={width}
+                    height={height}
+                    {...other}
+                    onClick={
+                      onItemClick &&
+                      ((event) => {
+                        onItemClick(event, { type: 'bar', seriesId, dataIndex });
+                      })
+                    }
+                  />
+                );
+
+                if (withoutBorderRadius) {
+                  return barElement;
+                }
+
+                return (
+                  <g key={dataIndex} clipPath={`url(#${maskId})`}>
+                    {barElement}
+                  </g>
+                );
+              },
+            )}
           </g>
         );
       })}

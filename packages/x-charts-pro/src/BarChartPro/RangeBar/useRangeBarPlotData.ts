@@ -3,6 +3,7 @@ import {
   ChartDrawingArea,
   useXAxes,
   useYAxes,
+  useChartId,
 } from '@mui/x-charts/hooks';
 import {
   checkBarChartScaleErrors,
@@ -11,7 +12,7 @@ import {
   defaultSeriesConfig,
 } from '@mui/x-charts/internals';
 import { ChartsXAxisProps, ChartsYAxisProps } from '@mui/x-charts/models';
-import { ProcessedRangeBarData, ProcessedRangeBarSeriesData } from './types';
+import { ProcessedRangeBarData, ProcessedRangeBarSeriesData, MaskData } from './types';
 
 const getColor = defaultSeriesConfig.rangeBar.colorProcessor;
 
@@ -19,12 +20,19 @@ export function useRangeBarPlotData(
   drawingArea: ChartDrawingArea,
   xAxes: ComputedAxisConfig<ChartsXAxisProps>,
   yAxes: ComputedAxisConfig<ChartsYAxisProps>,
-): ProcessedRangeBarSeriesData[] {
+): {
+  completedData: ProcessedRangeBarSeriesData[];
+  masksData: MaskData[];
+} {
   const seriesData = useRangeBarSeriesContext() ?? { series: {}, seriesOrder: [] };
   const defaultXAxisId = useXAxes().xAxisIds[0];
   const defaultYAxisId = useYAxes().yAxisIds[0];
 
+  const chartId = useChartId();
+
   const { series, seriesOrder } = seriesData;
+
+  const masks: Record<string, MaskData> = {};
 
   const xMin = drawingArea.left;
   const xMax = drawingArea.left + drawingArea.width;
@@ -40,6 +48,7 @@ export function useRangeBarPlotData(
     const yAxisConfig = yAxes[yAxisId];
 
     const verticalLayout = series[seriesId].layout === 'vertical';
+    const reverse = (verticalLayout ? yAxisConfig.reverse : xAxisConfig.reverse) ?? false;
 
     checkBarChartScaleErrors(
       verticalLayout,
@@ -99,6 +108,7 @@ export function useRangeBarPlotData(
         width: verticalLayout ? barWidth : barSize,
         color: colorGetter(dataIndex),
         value: currentSeriesData[dataIndex],
+        maskId: `${chartId}_${seriesId}_${dataIndex}`,
       };
 
       if (
@@ -110,6 +120,35 @@ export function useRangeBarPlotData(
         continue;
       }
 
+      if (!masks[result.maskId]) {
+        masks[result.maskId] = {
+          id: result.maskId,
+          width: 0,
+          height: 0,
+          hasNegative: false,
+          hasPositive: false,
+          layout: result.layout,
+          xOrigin: xScale(0)!,
+          yOrigin: yScale(0)!,
+          x: 0,
+          y: 0,
+        };
+      }
+
+      const mask = masks[result.maskId];
+      mask.width = result.layout === 'vertical' ? result.width : mask.width + result.width;
+      mask.height = result.layout === 'vertical' ? mask.height + result.height : result.height;
+      mask.x = Math.min(mask.x === 0 ? Infinity : mask.x, result.x);
+      mask.y = Math.min(mask.y === 0 ? Infinity : mask.y, result.y);
+
+      const value = result.value ?? { start: 0, end: 0 };
+      mask.hasNegative =
+        mask.hasNegative ||
+        (reverse ? Math.max(value.start, value.end) > 0 : Math.min(value.start, value.end) < 0);
+      mask.hasPositive =
+        mask.hasPositive ||
+        (reverse ? Math.min(value.start, value.end) < 0 : Math.max(value.start, value.end) > 0);
+
       seriesDataPoints.push(result);
     }
 
@@ -119,7 +158,7 @@ export function useRangeBarPlotData(
     };
   });
 
-  return data;
+  return { completedData: data, masksData: Object.values(masks) };
 }
 
 /**

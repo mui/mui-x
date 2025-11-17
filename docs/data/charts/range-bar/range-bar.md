@@ -24,11 +24,36 @@ Each data point in a range bar series consists of a `{ start: number, end: numbe
 
 ## Customization
 
-Similarly to a standard bar chart, you can customize the appearance of range bars using props on the `<BarChartPro />` component or by defining styles in the series data.
+### Grid
 
-In the example below, the color of the range bars is defined based on range values.
+You can add a grid in the background of the chart with the `grid` prop.
 
-{{"demo": "WaterfallChart.js"}}
+See [Axis—Grid](/x/react-charts/axis/#grid) documentation for more information.
+
+### Color
+
+As with other charts, you can modify the series color either directly, or with the color palette.
+
+An alternative is to use a `colorMap`, which maps values to colors. The color set by `colorMap` has priority over other color settings.
+
+:::warning
+Unlike other chart types, the `colorMap` property does not work for the numerical axis of range bar charts (that is, the y-axis for vertical bar charts and the x-axis for horizontal bar charts).
+:::
+
+You can learn more about the `colorMap` in the [Styling docs](/x/react-charts/styling/#values-color).
+
+{{"demo": "ColorScale.js"}}
+
+### Border radius
+
+{{"demo": "RangeBarBorderRadius.js"}}
+
+### CSS
+
+
+## Labels
+
+TODO
 
 ## Composition
 
