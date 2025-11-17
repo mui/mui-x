@@ -613,9 +613,6 @@ importers:
       chance:
         specifier: 'catalog:'
         version: 1.1.13
-      clipboard-copy:
-        specifier: ^4.0.1
-        version: 4.0.1
       clsx:
         specifier: 'catalog:'
         version: 2.1.1
