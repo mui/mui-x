@@ -1,5 +1,5 @@
 import { spy } from 'sinon';
-import { adapter } from 'test/utils/scheduler';
+import { adapter, EventBuilder } from 'test/utils/scheduler';
 import {
   SchedulerEvent,
   SchedulerEventModelStructure,
@@ -121,8 +121,7 @@ storeClasses.forEach((storeClass) => {
           { events, eventModelStructure, onEventsChange },
           adapter,
         );
-        store.createEvent({
-          id: '1',
+        const createdId = store.createEvent({
           title: 'Event 1',
           start: adapter.date('2025-07-01T09:00:00.000+00:00', 'default'),
           end: adapter.date('2025-07-01T10:00:00.000+00:00', 'default'),
@@ -133,7 +132,7 @@ storeClasses.forEach((storeClass) => {
         expect(onEventsChange.calledOnce).to.equal(true);
         expect(onEventsChange.lastCall.firstArg).to.deep.equal([
           {
-            myId: '1',
+            myId: createdId,
             myTitle: 'Event 1',
             myStart: '2025-07-01T09:00:00.000+00:00',
             myEnd: '2025-07-01T10:00:00.000+00:00',
@@ -328,6 +327,7 @@ storeClasses.forEach((storeClass) => {
 
         const store = new storeClass.Value({ events: existing, onEventsChange }, adapter);
 
+        // TODO: When migrating to EventBuilder, add an EventBuilder.buildWithoutId() method to pass to store.createEvent()
         const newEvent = buildEvent(
           '2',
           'New Event',
@@ -336,16 +336,15 @@ storeClasses.forEach((storeClass) => {
           { description: 'New event description', allDay: true },
         );
 
-        store.createEvent(newEvent);
+        const createdId = store.createEvent(newEvent);
 
         expect(onEventsChange.calledOnce).to.equal(true);
         const created = onEventsChange.lastCall.firstArg.find(
-          (event: SchedulerEvent) => event.id === '2',
+          (event: SchedulerEvent) => event.id === createdId,
         );
-        expect(created.id).to.equal('2');
         expect(created.title).to.equal('New Event');
         const updated = onEventsChange.lastCall.firstArg;
-        expect(getIds(updated)).to.deep.equal(['1', '2']);
+        expect(getIds(updated)).to.deep.equal(['1', createdId]);
 
         const appended = updated[1];
         expect(appended.title).to.equal('New Event');
@@ -354,31 +353,51 @@ storeClasses.forEach((storeClass) => {
         expect(appended.start).toEqualDateTime(adapter.date('2025-07-01T11:00:00Z', 'default'));
         expect(appended.end).toEqualDateTime(adapter.date('2025-07-01T12:00:00Z', 'default'));
       });
+    });
 
-      it('should throw when an event with the same id already exists and not call onEventsChange', () => {
+    describe('Method: duplicateEventOccurrence', () => {
+      it('should duplicate the event occurrence and emit onEventsChange with the updated list', () => {
         const onEventsChange = spy();
-        const events = [
-          buildEvent(
-            'Event 1',
-            'Existing',
-            adapter.date('2025-07-01T09:00:00Z', 'default'),
-            adapter.date('2025-07-01T10:00:00Z', 'default'),
-          ),
-        ];
+        const event = EventBuilder.new().build();
 
-        const store = new storeClass.Value({ events, onEventsChange }, adapter);
+        const store = new storeClass.Value({ events: [event], onEventsChange }, adapter);
 
-        const duplicate = buildEvent(
-          'Event 1',
-          'Should fail',
-          adapter.date('2025-07-01T11:00:00Z', 'default'),
-          adapter.date('2025-07-01T12:00:00Z', 'default'),
-        );
+        const start = adapter.date('2025-07-01T09:00:00Z');
+        const end = adapter.date('2025-07-01T10:00:00Z');
+        const duplicatedId = store.duplicateEventOccurrence(event.id, start, end);
 
-        expect(() => store.createEvent(duplicate)).to.throw(
-          `${store.instanceName}: an event with id="Event 1" already exists. Use updateEvent(...) instead.`,
-        );
-        expect(onEventsChange.called).to.equal(false);
+        expect(onEventsChange.calledOnce).to.equal(true);
+        expect(onEventsChange.lastCall.firstArg).to.deep.equal([
+          event,
+          { ...event, id: duplicatedId, extractedFromId: event.id, start, end },
+        ]);
+      });
+
+      it('should remove rrule and exDates from the original event', () => {
+        const onEventsChange = spy();
+        const event = EventBuilder.new().recurrent('DAILY').exDates(['2025-07-14']).build();
+
+        const store = new storeClass.Value({ events: [event], onEventsChange }, adapter);
+
+        const start = adapter.date('2025-07-01T09:00:00Z', 'default');
+        const end = adapter.date('2025-07-01T10:00:00Z', 'default');
+        const duplicatedId = store.duplicateEventOccurrence(event.id, start, end);
+
+        const originalEventWithoutRecurrence = { ...event };
+        delete originalEventWithoutRecurrence.rrule;
+        delete originalEventWithoutRecurrence.exDates;
+
+        expect(onEventsChange.calledOnce).to.equal(true);
+        expect(onEventsChange.lastCall.firstArg).to.deep.equal([
+          event,
+          {
+            ...originalEventWithoutRecurrence,
+            id: duplicatedId,
+            extractedFromId: event.id,
+            start,
+            end,
+          },
+        ]);
       });
     });
   });

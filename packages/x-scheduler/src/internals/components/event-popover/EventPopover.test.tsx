@@ -491,7 +491,6 @@ describe('<EventPopoverContent />', () => {
       expect(createEventSpy?.calledOnce).to.equal(true);
       const payload = createEventSpy.lastCall.firstArg;
 
-      expect(payload.id).to.be.a('string');
       expect(payload.title).to.equal('New title');
       expect(payload.description).to.equal('Some details');
       expect(payload.allDay).to.equal(false);
@@ -945,6 +944,124 @@ describe('<EventPopoverContent />', () => {
           expect(updated.rrule?.until).toEqualDateTime(
             adapter.startOfDay(adapter.date('2025-07-20T00:00:00', 'default')),
           );
+        });
+
+        it('should submit custom weekly with selected weekdays', async () => {
+          const onEventsChange = spy();
+
+          const { user } = render(
+            <EventCalendarProvider
+              events={[DEFAULT_EVENT]}
+              resources={resources}
+              onEventsChange={onEventsChange}
+            >
+              <Popover.Root open>
+                <EventPopoverContent {...defaultProps} />
+              </Popover.Root>
+            </EventCalendarProvider>,
+          );
+
+          await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+          await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+          await user.click(await screen.findByRole('option', { name: /custom/i }));
+
+          const repeatGroup = screen.getByRole('group', { name: /repeat/i });
+          const freqCombo = within(repeatGroup).getByRole('combobox');
+          await user.click(freqCombo);
+          await user.click(await screen.findByRole('option', { name: /weeks/i }));
+
+          // Select Monday and Friday in the weekly day toggles
+          await user.click(screen.getByRole('button', { name: /monday/i }));
+          await user.click(screen.getByRole('button', { name: /friday/i }));
+
+          await user.click(screen.getByRole('button', { name: /save changes/i }));
+
+          expect(onEventsChange.calledOnce).to.equal(true);
+          const updated = onEventsChange.firstCall.firstArg[0];
+
+          expect(updated.rrule).to.deep.equal({
+            freq: 'WEEKLY',
+            interval: 1,
+            byDay: ['MO', 'FR'],
+            byMonthDay: [],
+          });
+        });
+
+        it('should submit custom monthly with "day of month" option', async () => {
+          const onEventsChange = spy();
+
+          const { user } = render(
+            <EventCalendarProvider
+              events={[DEFAULT_EVENT]}
+              resources={resources}
+              onEventsChange={onEventsChange}
+            >
+              <Popover.Root open>
+                <EventPopoverContent {...defaultProps} />
+              </Popover.Root>
+            </EventCalendarProvider>,
+          );
+
+          await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+          await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+          await user.click(await screen.findByRole('option', { name: /custom/i }));
+
+          const repeatGroup = screen.getByRole('group', { name: /repeat/i });
+          const freqCombo = within(repeatGroup).getByRole('combobox');
+          await user.click(freqCombo);
+          await user.click(await screen.findByRole('option', { name: /months/i }));
+
+          await user.click(screen.getByRole('button', { name: /day 26/i })); // DEFAULT_EVENT is 2025-05-26
+
+          await user.click(screen.getByRole('button', { name: /save changes/i }));
+
+          expect(onEventsChange.calledOnce).to.equal(true);
+          const updated = onEventsChange.firstCall.firstArg[0];
+
+          expect(updated.rrule).to.deep.equal({
+            freq: 'MONTHLY',
+            interval: 1,
+            byMonthDay: [26],
+          });
+        });
+
+        it('should submit custom monthly with "ordinal weekday" option', async () => {
+          const onEventsChange = spy();
+
+          const { user } = render(
+            <EventCalendarProvider
+              events={[DEFAULT_EVENT]}
+              resources={resources}
+              onEventsChange={onEventsChange}
+            >
+              <Popover.Root open>
+                <EventPopoverContent {...defaultProps} />
+              </Popover.Root>
+            </EventCalendarProvider>,
+          );
+
+          await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+          await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+          await user.click(await screen.findByRole('option', { name: /custom/i }));
+
+          const repeatGroup = screen.getByRole('group', { name: /repeat/i });
+          const freqCombo = within(repeatGroup).getByRole('combobox');
+          await user.click(freqCombo);
+          await user.click(await screen.findByRole('option', { name: /months/i }));
+
+          // The DEFAULT_EVENT (2025-05-26 Mon) is the last Monday of the month ("-1MO")
+          await user.click(screen.getByRole('button', { name: /mon.*last week/i }));
+
+          await user.click(screen.getByRole('button', { name: /save changes/i }));
+
+          expect(onEventsChange.calledOnce).to.equal(true);
+          const updated = onEventsChange.firstCall.firstArg[0];
+
+          expect(updated.rrule).to.deep.equal({
+            freq: 'MONTHLY',
+            interval: 1,
+            byDay: ['-1MO'],
+          });
         });
       });
     });

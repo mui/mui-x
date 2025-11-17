@@ -17,10 +17,14 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
 ) {
   const { className, ...other } = props;
 
+  // Context hooks
   const store = useEventCalendarStoreContext();
   const translations = useTranslations();
+
+  // Selector hooks
   const views = useStore(store, eventCalendarViewSelectors.views);
   const view = useStore(store, eventCalendarViewSelectors.view);
+
   const showViewSwitcher = views.length > 1;
 
   return (
