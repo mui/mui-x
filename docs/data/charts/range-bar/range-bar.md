@@ -22,6 +22,14 @@ Each data point in a range bar series consists of a `{ start: number, end: numbe
 
 {{"demo": "BasicRangeBar.js"}}
 
+## Customization
+
+Similarly to a standard bar chart, you can customize the appearance of range bars using props on the `<BarChartPro />` component or by defining styles in the series data.
+
+In the example below, the color of the range bars is defined based on range values.
+
+{{"demo": "WaterfallChart.js"}}
+
 ## Composition
 
 You can use the `<ChartDataProviderPro />` to provide `series`, `xAxis`, and `yAxis` props for composition.

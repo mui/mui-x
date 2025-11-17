@@ -23,9 +23,9 @@ import { ScatterPlot, ScatterSeries } from '@mui/x-charts/ScatterChart';
 
 const importantHappeningsLabels = [
   'Exploratory archaeology digs begin.',
-  'South Boston Haul Road opens',
+  'South Boston Haul Road opens.',
   'New Broadway Bridge opens.\nLeverett Circle Connector Bridge opens.',
-  'Leonard P. Zakim Bunker Hill Bridge completed',
+  'Leonard P. Zakim Bunker Hill Bridge completed.',
   'I-90 Connector from South Boston to Rt. 1A in East Boston opens in January.\nI-93 Northbound opens in March.\nI-93 Southbound opens in December.',
   'Tunnel from Storrow Drive to Leverett Circle Connector opens.',
   [
@@ -310,8 +310,14 @@ function HappeningTooltip() {
 
   return (
     <TooltipContainer>
+      <Typography fontWeight="bold">{happening.x}</Typography>
       <Typography>
-        {happening.x}: {importantHappeningsLabels[dataIndex]}
+        {importantHappeningsLabels[dataIndex].split('\n').map((line, index) => (
+          <React.Fragment>
+            <span key={index}>{line}</span>
+            <br />
+          </React.Fragment>
+        ))}
       </Typography>
     </TooltipContainer>
   );
