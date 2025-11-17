@@ -3,7 +3,7 @@ import {
   RecurringEventWeekDayCode,
   RecurringEventByDayValue,
   SchedulerProcessedEvent,
-  CalendarEventUpdatedProperties,
+  SchedulerEventUpdatedProperties,
   RecurringEventRecurrenceRule,
   SchedulerValidDate,
   SchedulerEvent,
@@ -29,6 +29,8 @@ import {
   getWeekDayCode,
   getWeekDayNumberFromCode,
   adjustRRuleForAllMove,
+  parseRRuleString,
+  serializeRRule,
 } from './recurring-event-utils';
 import { diffIn } from '../use-adapter';
 import { mergeDateAndTime } from './date-utils';
@@ -1288,7 +1290,7 @@ describe('recurring-event-utils', () => {
       const original = createRecurringEvent();
 
       const occurrenceStart = adapter.date('2025-01-07T09:00:00Z');
-      const changes: CalendarEventUpdatedProperties = {
+      const changes: SchedulerEventUpdatedProperties = {
         id: original.id,
         start: adapter.date('2025-01-07T10:00:00Z'),
         end: adapter.date('2025-01-07T11:00:00Z'),
@@ -1311,7 +1313,7 @@ describe('recurring-event-utils', () => {
 
       // Edit an occurrence on Jan 05
       const occurrenceStart = adapter.date('2025-01-05T09:00:00Z');
-      const changes: CalendarEventUpdatedProperties = {
+      const changes: SchedulerEventUpdatedProperties = {
         id: original.id,
         // New timing for the split series
         start: adapter.date('2025-01-05T11:00:00Z'),
@@ -1360,7 +1362,7 @@ describe('recurring-event-utils', () => {
 
       // occurrenceStart same calendar day as DTSTART → shouldDropOldSeries = true
       const occurrenceStart = adapter.date('2025-01-10T09:00:00Z');
-      const changes: CalendarEventUpdatedProperties = {
+      const changes: SchedulerEventUpdatedProperties = {
         id: original.id,
         start: adapter.date('2025-01-10T12:00:00Z'),
         end: adapter.date('2025-01-10T13:00:00Z'),
@@ -1395,7 +1397,7 @@ describe('recurring-event-utils', () => {
       // Original: daily from Jan 01
       const original = createRecurringEvent();
       const occurrenceStart = adapter.date('2025-01-03T09:00:00Z');
-      const changes: CalendarEventUpdatedProperties = {
+      const changes: SchedulerEventUpdatedProperties = {
         id: original.id,
         start: adapter.date('2025-01-03T10:00:00Z'),
         end: adapter.date('2025-01-03T11:00:00Z'),
@@ -1444,7 +1446,7 @@ describe('recurring-event-utils', () => {
       const original = createRecurringEvent({ rrule: { freq: 'DAILY', interval: 2 } });
 
       const occurrenceStart = adapter.date('2025-01-06T09:00:00Z');
-      const changes: CalendarEventUpdatedProperties = {
+      const changes: SchedulerEventUpdatedProperties = {
         id: original.id,
         start: adapter.date('2025-01-06T15:00:00Z'),
         end: adapter.date('2025-01-06T16:00:00Z'),
@@ -1464,7 +1466,9 @@ describe('recurring-event-utils', () => {
       // Original series is truncated with UNTIL = day(occurrenceStart) - 1
       const expectedUntil = adapter.addDays(adapter.startOfDay(occurrenceStart), -1);
       expect(updatedEvents.updated).to.have.length(1);
-      expect(updatedEvents.updated![0].rrule!.until).toEqualDateTime(expectedUntil);
+      expect(
+        (updatedEvents.updated![0].rrule as RecurringEventRecurrenceRule)!.until,
+      ).toEqualDateTime(expectedUntil);
     });
   });
 
@@ -1544,7 +1548,7 @@ describe('recurring-event-utils', () => {
       const original = createRecurringEvent();
 
       const occurrenceStart = original.start;
-      const changes: CalendarEventUpdatedProperties = {
+      const changes: SchedulerEventUpdatedProperties = {
         id: original.id,
         title: 'Now Weekly',
         rrule: { freq: 'WEEKLY', interval: 2, byDay: ['MO'] },
@@ -1568,7 +1572,7 @@ describe('recurring-event-utils', () => {
       const original = createRecurringEvent();
 
       const occurrenceStart = original.start;
-      const changes: CalendarEventUpdatedProperties = {
+      const changes: SchedulerEventUpdatedProperties = {
         id: original.id,
         title: 'One-off',
         rrule: undefined,
@@ -1593,7 +1597,7 @@ describe('recurring-event-utils', () => {
       const occurrenceStart = adapter.date('2025-01-05T09:00:00Z');
       const newStart = adapter.date('2025-01-05T11:15:00Z');
       const newEnd = adapter.date('2025-01-05T12:15:00Z');
-      const changes: CalendarEventUpdatedProperties = {
+      const changes: SchedulerEventUpdatedProperties = {
         id: original.id,
         start: newStart,
         end: newEnd,
@@ -1617,7 +1621,7 @@ describe('recurring-event-utils', () => {
     it('should update the rrule when editing a non-first occurrence with a different day', () => {
       const original = createRecurringEvent({ rrule: { byDay: ['SU'], freq: 'WEEKLY' } });
       const occurrenceStart = adapter.date('2025-01-05T09:00:00Z'); // Jan 5, a Sunday
-      const changes: CalendarEventUpdatedProperties = {
+      const changes: SchedulerEventUpdatedProperties = {
         id: original.id,
         start: adapter.date('2025-01-11T11:00:00Z'), // Saturday
         end: adapter.date('2025-01-11T12:00:00Z'),
@@ -1641,7 +1645,7 @@ describe('recurring-event-utils', () => {
       const original = createRecurringEvent(); // DTSTART = 2025-01-01
       const occurrenceStart = original.start;
 
-      const changes: CalendarEventUpdatedProperties = {
+      const changes: SchedulerEventUpdatedProperties = {
         id: original.id,
         start: adapter.date('2025-01-12T11:00:00Z'),
         end: adapter.date('2025-01-12T12:00:00Z'),
@@ -1668,7 +1672,7 @@ describe('recurring-event-utils', () => {
       const original = createRecurringEvent();
 
       const occurrenceStart = adapter.date('2025-01-05T09:00:00Z');
-      const changes: CalendarEventUpdatedProperties = {
+      const changes: SchedulerEventUpdatedProperties = {
         id: original.id,
         title: 'Only-this edited',
         start: adapter.date('2025-01-05T11:00:00Z'),
@@ -1702,7 +1706,7 @@ describe('recurring-event-utils', () => {
       const original = createRecurringEvent({ exDates: [prevEx] });
 
       const occurrenceStart = adapter.date('2025-01-05T09:00:00Z');
-      const changes: CalendarEventUpdatedProperties = {
+      const changes: SchedulerEventUpdatedProperties = {
         id: original.id,
         title: 'Another only-this',
         start: adapter.date('2025-01-05T11:00:00Z'),
@@ -1728,7 +1732,7 @@ describe('recurring-event-utils', () => {
       const original = createRecurringEvent();
 
       const occurrenceStart = adapter.date('2025-01-07T09:00:00Z');
-      const changes: CalendarEventUpdatedProperties = {
+      const changes: SchedulerEventUpdatedProperties = {
         id: original.id,
         title: 'Only-this changed date',
         start: adapter.date('2025-01-08T11:00:00Z'),
@@ -1755,6 +1759,269 @@ describe('recurring-event-utils', () => {
       expect(updatedEvents.updated).to.deep.equal([
         { id: original.id, exDates: [adapter.startOfDay(occurrenceStart)] },
       ]);
+    });
+  });
+
+  describe('parseRRuleString', () => {
+    it('should return the same object if the input is already an object', () => {
+      const input: RecurringEventRecurrenceRule = { freq: 'DAILY', interval: 2 };
+      const result = parseRRuleString(adapter, input);
+      expect(result).to.equal(input);
+    });
+
+    it('should parse a simple RRULE string into an object', () => {
+      const result = parseRRuleString(adapter, 'FREQ=DAILY;INTERVAL=2;COUNT=5');
+      expect(result).to.deep.equal({
+        freq: 'DAILY',
+        interval: 2,
+        count: 5,
+      });
+    });
+
+    it('should parse BYDAY correctly', () => {
+      const result = parseRRuleString(adapter, 'FREQ=WEEKLY;BYDAY=MO,WE,FR');
+      expect(result).to.deep.equal({
+        freq: 'WEEKLY',
+        byDay: ['MO', 'WE', 'FR'],
+      });
+
+      const resultWithOrdinals = parseRRuleString(adapter, 'FREQ=MONTHLY;BYDAY=-1FR');
+      expect(resultWithOrdinals).to.deep.equal({
+        freq: 'MONTHLY',
+        byDay: ['-1FR'],
+      });
+    });
+
+    it('should parse BYMONTHDAY correctly', () => {
+      const result = parseRRuleString(adapter, 'FREQ=WEEKLY;BYMONTHDAY=15, 28');
+      expect(result).to.deep.equal({
+        freq: 'WEEKLY',
+        byMonthDay: [15, 28],
+      });
+    });
+
+    it('should parse BYMONTH correctly', () => {
+      const result = parseRRuleString(adapter, 'FREQ=YEARLY;BYMONTH=1,6,12');
+      expect(result).to.deep.equal({
+        freq: 'YEARLY',
+        byMonth: [1, 6, 12],
+      });
+    });
+
+    it('should parse UNTIL correctly', () => {
+      const result = parseRRuleString(adapter, 'FREQ=DAILY;UNTIL=20250315T000000Z');
+      expect(adapter.isValid(result.until!)).to.equal(true);
+    });
+
+    it('should sort BYDAY values in standard order regardless of input order', () => {
+      const result = parseRRuleString(adapter, 'FREQ=WEEKLY;BYDAY=FR,MO,WE');
+      expect(result.byDay).to.deep.equal(['MO', 'WE', 'FR']);
+    });
+
+    it('should sort BYDAY with ordinals correctly', () => {
+      const result = parseRRuleString(adapter, 'FREQ=MONTHLY;BYDAY=2TU,-1FR,1MO');
+      expect(result.byDay).to.deep.equal(['1MO', '2TU', '-1FR']);
+    });
+
+    it('should sort BYMONTHDAY numerically', () => {
+      const result = parseRRuleString(adapter, 'FREQ=MONTHLY;BYMONTHDAY=28,5,15');
+      expect(result.byMonthDay).to.deep.equal([5, 15, 28]);
+    });
+
+    it('should sort BYMONTH numerically', () => {
+      const result = parseRRuleString(adapter, 'FREQ=YEARLY;BYMONTH=12,1,6');
+      expect(result.byMonth).to.deep.equal([1, 6, 12]);
+    });
+
+    it('should throw when the input is empty', () => {
+      expect(() => parseRRuleString(adapter, '')).to.throw(
+        'Scheduler: RRULE must include a FREQ property.',
+      );
+    });
+
+    it('should throw when the key or the value are empty', () => {
+      expect(() => parseRRuleString(adapter, 'FREQ=DAILY;=2')).to.throw(
+        'Scheduler: Invalid RRULE part: "=2"',
+      );
+      expect(() => parseRRuleString(adapter, 'FREQ=DAILY;INTERVAL=')).to.throw(
+        'Scheduler: Invalid RRULE part: "INTERVAL="',
+      );
+    });
+
+    it('should throw when UNTIL is invalid', () => {
+      expect(() => parseRRuleString(adapter, 'FREQ=DAILY;UNTIL=not-a-date')).to.throw(
+        'Scheduler: Invalid UNTIL date: "NOT-A-DATE"',
+      );
+    });
+
+    it('should throw when FREQ is missing', () => {
+      expect(() => parseRRuleString(adapter, 'INTERVAL=2')).to.throw(
+        'Scheduler: RRULE must include a FREQ property.',
+      );
+    });
+
+    it('should throw when the RRULE contains unsupported properties', () => {
+      expect(() => parseRRuleString(adapter, 'FREQ=DAILY;FOO=bar')).to.throw(
+        'Scheduler: Unsupported RRULE property: "FOO"',
+      );
+    });
+
+    it('should throw for invalid INTERVAL value', () => {
+      expect(() => parseRRuleString(adapter, 'FREQ=DAILY;INTERVAL=zero')).to.throw(
+        'Scheduler: Invalid INTERVAL value: "ZERO"',
+      );
+    });
+
+    it('should throw for invalid BYMONTHDAY values', () => {
+      expect(() => parseRRuleString(adapter, 'FREQ=MONTHLY;BYMONTHDAY=0,50')).to.throw(
+        'Scheduler: Invalid BYMONTHDAY values: "0,50"',
+      );
+    });
+
+    it('should throw for invalid BYMONTH values', () => {
+      expect(() => parseRRuleString(adapter, 'FREQ=YEARLY;BYMONTH=0,13')).to.throw(
+        'Scheduler: Invalid BYMONTH values: "0,13"',
+      );
+    });
+
+    it('should throw for invalid COUNT value', () => {
+      expect(() => parseRRuleString(adapter, 'FREQ=DAILY;COUNT=-2')).to.throw(
+        'Scheduler: Invalid COUNT value: "-2"',
+      );
+    });
+
+    it('should trim whitespace and handle lowercase properties', () => {
+      const result = parseRRuleString(adapter, '  freq=weekly ; byday= mo, tu  ; interval= 3 ');
+      expect(result).to.deep.equal({
+        freq: 'WEEKLY',
+        byDay: ['MO', 'TU'],
+        interval: 3,
+      });
+    });
+  });
+
+  describe('serializeRRule', () => {
+    it('should serialize a simple DAILY rule', () => {
+      const rule = { freq: 'DAILY' as const };
+      const result = serializeRRule(adapter, rule);
+      expect(result).to.equal('FREQ=DAILY');
+    });
+
+    it('should include INTERVAL only when different from 1', () => {
+      const ruleWithInterval1 = { freq: 'DAILY' as const, interval: 1 };
+      const resultWithoutInterval = serializeRRule(adapter, ruleWithInterval1);
+      expect(resultWithoutInterval).to.equal('FREQ=DAILY');
+
+      const ruleWithInterval2 = { freq: 'DAILY' as const, interval: 2 };
+      const resultWithInterval = serializeRRule(adapter, ruleWithInterval2);
+      expect(resultWithInterval).to.equal('FREQ=DAILY;INTERVAL=2');
+    });
+
+    it('should serialize BYDAY correctly', () => {
+      const rule = {
+        freq: 'WEEKLY' as const,
+        byDay: ['MO', 'WE', 'FR'] as RecurringEventByDayValue[],
+      };
+      const result = serializeRRule(adapter, rule);
+      expect(result).to.equal('FREQ=WEEKLY;BYDAY=MO,WE,FR');
+    });
+
+    it('should serialize BYMONTHDAY correctly', () => {
+      const rule = { freq: 'MONTHLY' as const, byMonthDay: [5, 15, 28] };
+      const result = serializeRRule(adapter, rule);
+      expect(result).to.equal('FREQ=MONTHLY;BYMONTHDAY=5,15,28');
+    });
+
+    it('should serialize BYMONTH correctly', () => {
+      const rule = { freq: 'YEARLY' as const, byMonth: [1, 6, 12] };
+      const result = serializeRRule(adapter, rule);
+      expect(result).to.equal('FREQ=YEARLY;BYMONTH=1,6,12');
+    });
+
+    it('should serialize COUNT correctly', () => {
+      const rule = { freq: 'DAILY' as const, count: 5 };
+      const result = serializeRRule(adapter, rule);
+      expect(result).to.equal('FREQ=DAILY;COUNT=5');
+    });
+
+    it('should serialize UNTIL in RFC5545 UTC format', () => {
+      const until = adapter.date('2025-03-15T00:00:00');
+      const rule = { freq: 'DAILY' as const, until };
+      const result = serializeRRule(adapter, rule);
+      expect(result).to.equal('FREQ=DAILY;UNTIL=20250315T000000Z');
+    });
+
+    it('should combine multiple properties correctly', () => {
+      const until = adapter.date('2025-03-15T00:00:00Z');
+      const rule = {
+        freq: 'WEEKLY' as const,
+        interval: 2,
+        byDay: ['MO', 'FR'] as RecurringEventByDayValue[],
+        until,
+      };
+
+      const result = serializeRRule(adapter, rule);
+      expect(result).to.equal('FREQ=WEEKLY;INTERVAL=2;BYDAY=MO,FR;UNTIL=20250315T000000Z');
+    });
+
+    it('should handle empty BYDAY, BYMONTHDAY AND BYMONTHgracefully', () => {
+      const ruleWithEmptyByDay = { freq: 'WEEKLY' as const, byDay: [] };
+      const resultWithoutByDay = serializeRRule(adapter, ruleWithEmptyByDay);
+      expect(resultWithoutByDay).to.equal('FREQ=WEEKLY');
+
+      const ruleWithEmptyByMonthDay = { freq: 'MONTHLY' as const, byMonthDay: [] };
+      const resultWithoutByMonthDay = serializeRRule(adapter, ruleWithEmptyByMonthDay);
+      expect(resultWithoutByMonthDay).to.equal('FREQ=MONTHLY');
+
+      const ruleWithEmptyByMonth = { freq: 'YEARLY' as const, byMonth: [] };
+      const resultWithoutByMonth = serializeRRule(adapter, ruleWithEmptyByMonth);
+      expect(resultWithoutByMonth).to.equal('FREQ=YEARLY');
+    });
+
+    it('should serialize BYDAY values in correct order regardless of input order', () => {
+      const rule = {
+        freq: 'WEEKLY' as const,
+        byDay: ['FR', 'MO', 'WE'] as RecurringEventByDayValue[],
+      };
+      const result = serializeRRule(adapter, rule);
+      expect(result).to.equal('FREQ=WEEKLY;BYDAY=MO,WE,FR');
+    });
+
+    it('should serialize BYDAY with ordinals in correct order', () => {
+      const rule = {
+        freq: 'MONTHLY' as const,
+        byDay: ['2TU', '-1FR', '1MO'] as RecurringEventByDayValue[],
+      };
+      const result = serializeRRule(adapter, rule);
+      expect(result).to.equal('FREQ=MONTHLY;BYDAY=1MO,2TU,-1FR');
+    });
+
+    it('should serialize BYMONTHDAY and BYMONTH sorted numerically', () => {
+      const rule = { freq: 'YEARLY' as const, byMonthDay: [28, 5, 15], byMonth: [12, 1, 6] };
+      const result = serializeRRule(adapter, rule);
+      expect(result).to.equal('FREQ=YEARLY;BYMONTHDAY=5,15,28;BYMONTH=1,6,12');
+    });
+
+    it('should normalize equivalent RRULE strings with different BYDAY order', () => {
+      const inputA = 'FREQ=WEEKLY;BYDAY=MO,WE,FR';
+      const inputB = 'FREQ=WEEKLY;BYDAY=FR,MO,WE';
+      const parsedA = parseRRuleString(adapter, inputA);
+      const parsedB = parseRRuleString(adapter, inputB);
+      expect(serializeRRule(adapter, parsedA)).to.equal(serializeRRule(adapter, parsedB));
+    });
+
+    it('should round-trip correctly (parseRRuleString - serializeRRule)', () => {
+      const input = 'FREQ=WEEKLY;INTERVAL=2;BYDAY=MO,FR;UNTIL=20250315T000000Z';
+      const parsed = parseRRuleString(adapter, input);
+      const serialized = serializeRRule(adapter, parsed);
+      expect(serialized).to.equal(input);
+    });
+
+    it('should round-trip even if BYDAY order differs in input', () => {
+      const input = 'FREQ=WEEKLY;BYDAY=FR,MO,WE';
+      const parsed = parseRRuleString(adapter, input);
+      const serialized = serializeRRule(adapter, parsed);
+      expect(serialized).to.equal('FREQ=WEEKLY;BYDAY=MO,WE,FR');
     });
   });
 });

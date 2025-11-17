@@ -326,7 +326,7 @@ describe('<DataGridPro /> - Detail panel', () => {
     // from React 19 it is:
     //   2x during state initialization
     // + 2x when sortedRowsSet is fired
-    const expectedCallCount = reactMajor >= 19 ? 8 : 12;
+    const expectedCallCount = reactMajor >= 19 ? 6 : 10;
 
     expect(getDetailPanelContent.callCount).to.equal(expectedCallCount);
     await user.click(screen.getByRole('button', { name: 'Expand' }));
@@ -368,7 +368,7 @@ describe('<DataGridPro /> - Detail panel', () => {
     // from React 19 it is:
     //   2x during state initialization
     // + 2x when sortedRowsSet is fired
-    const expectedCallCount = reactMajor >= 19 ? 8 : 12;
+    const expectedCallCount = reactMajor >= 19 ? 6 : 10;
 
     expect(getDetailPanelHeight.callCount).to.equal(expectedCallCount);
     await user.click(screen.getByRole('button', { name: 'Expand' }));
@@ -441,7 +441,7 @@ describe('<DataGridPro /> - Detail panel', () => {
     // from React 19 it is:
     //   1x during state initialization
     // + 1x when sortedRowsSet is fired
-    const expectedCallCount = reactMajor >= 19 ? 4 : 6;
+    const expectedCallCount = reactMajor >= 19 ? 3 : 5;
 
     expect(getDetailPanelHeight.callCount).to.equal(expectedCallCount);
     expect(getDetailPanelHeight.lastCall.args[0].id).to.equal(0);
