@@ -1,14 +1,15 @@
-import type { CalendarEvent } from './event';
+import type { SchedulerEvent, SchedulerProcessedEvent } from './event';
 
 export type RenderDragPreviewParameters =
   | {
       type: 'internal-event';
-      data: CalendarEvent;
+      data: SchedulerProcessedEvent;
     }
-  | { type: 'standalone-event'; data: CalendarOccurrencePlaceholderExternalDragData };
+  | { type: 'standalone-event'; data: SchedulerOccurrencePlaceholderExternalDragData };
 
-export interface CalendarOccurrencePlaceholderExternalDragData
-  extends Omit<CalendarEvent, 'start' | 'end'> {
+// TODO: Add support for eventModelStructure.
+export interface SchedulerOccurrencePlaceholderExternalDragData
+  extends Omit<SchedulerEvent, 'start' | 'end'> {
   /**
    * The default duration of the event in minutes.
    * Will be ignored if the event is dropped on a UI that only handles multi-day events.

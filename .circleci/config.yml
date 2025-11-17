@@ -144,13 +144,18 @@ jobs:
           react-version: << parameters.react-version >>
       - run:
           name: Test JSDOM
-          command: pnpm test:unit:jsdom
+          command: |
+            # Fully saturate all the available CPUs by splitting the tests in 1 shard per CPU
+            pnpm exec concurrently "pnpm test:unit:jsdom --reporter=blob  --reporter=dot --shard=1/2" "pnpm test:unit:jsdom --reporter=blob  --reporter=dot --shard=2/2" || TEST_EXIT_CODE=$?
+            pnpm exec vitest run --merge-reports
+            # Reports merged, we can now exit with the stored code
+            exit ${TEST_EXIT_CODE:-0}
       - store_test_results:
           path: test-results
   test_browser:
     <<: *default-job
     docker:
-      - image: mcr.microsoft.com/playwright:v1.55.1-noble
+      - image: mcr.microsoft.com/playwright:v1.56.1-noble
     resource_class: large
     steps:
       - checkout
@@ -296,7 +301,7 @@ jobs:
   test_e2e:
     <<: *default-job
     docker:
-      - image: mcr.microsoft.com/playwright:v1.55.1-noble
+      - image: mcr.microsoft.com/playwright:v1.56.1-noble
     steps:
       - checkout
       - install_js:
@@ -308,7 +313,7 @@ jobs:
   test_e2e_website:
     <<: *default-job
     docker:
-      - image: mcr.microsoft.com/playwright:v1.55.1-noble
+      - image: mcr.microsoft.com/playwright:v1.56.1-noble
     steps:
       - checkout
       - install_js:
@@ -347,7 +352,7 @@ jobs:
   test_regressions:
     <<: *default-job
     docker:
-      - image: mcr.microsoft.com/playwright:v1.55.1-noble
+      - image: mcr.microsoft.com/playwright:v1.56.1-noble
     steps:
       - checkout
       - install_js:

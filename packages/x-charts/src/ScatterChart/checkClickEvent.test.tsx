@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';

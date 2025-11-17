@@ -5,10 +5,12 @@ import {
   describeTreeView,
   DescribeTreeViewRendererUtils,
 } from 'test/utils/tree-view/describeTreeView';
-import { UseTreeViewExpansionSignature } from '@mui/x-tree-view/internals';
 import { treeItemClasses } from '@mui/x-tree-view/TreeItem';
 
-describeTreeView<[UseTreeViewExpansionSignature]>(
+// TODO #20051: Replace with imported type
+type TreeViewAnyStore = { parameters: any };
+
+describeTreeView<TreeViewAnyStore>(
   'useTreeItem hook',
   ({ render, renderFromJSX, TreeItemComponent, treeViewComponentName, TreeViewComponent }) => {
     describe('role prop', () => {

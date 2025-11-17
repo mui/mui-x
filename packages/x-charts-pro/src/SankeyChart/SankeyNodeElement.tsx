@@ -65,8 +65,8 @@ export const SankeyNodeElement = React.forwardRef<SVGGElement, SankeyNodeElement
       node,
     };
 
-    const isHighlighted = useSelector(store, selectorIsNodeHighlighted, [node]);
-    const isFaded = useSelector(store, selectorIsSankeyItemFaded, [isHighlighted]);
+    const isHighlighted = useSelector(store, selectorIsNodeHighlighted, node.id);
+    const isFaded = useSelector(store, selectorIsSankeyItemFaded, isHighlighted);
 
     // Add interaction props for tooltips
     const interactionProps = useInteractionItemProps(identifier);

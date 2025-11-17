@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { interpolateBlues } from 'd3-scale-chromatic';
 import { Heatmap } from '@mui/x-charts-pro/Heatmap';
 

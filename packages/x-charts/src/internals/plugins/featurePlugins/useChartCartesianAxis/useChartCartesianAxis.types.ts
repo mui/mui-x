@@ -85,11 +85,12 @@ export interface DefaultizedZoomOptions extends Required<Omit<ZoomOptions, 'slid
   axisId: AxisId;
   axisDirection: 'x' | 'y';
   slider: DefaultedZoomSliderOptions;
+  reverse: boolean;
 }
 
 export interface UseChartCartesianAxisState {
   /**
-   * @ignore - state populated by the useChartProZoomPlugin
+   * @ignore - state populated by the useChartProZoom plugin
    */
   zoom?: {
     isInteracting: boolean;

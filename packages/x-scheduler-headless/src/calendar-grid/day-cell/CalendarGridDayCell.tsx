@@ -24,7 +24,7 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
   const { ref: listItemRef, index } = useCompositeListItem();
   const dropTargetRef = useDayCellDropTarget({ value, addPropertiesToDroppedEvent });
 
-  const props = React.useMemo(() => ({ role: 'gridcell' }), []);
+  const props = { role: 'gridcell' };
 
   const contextValue: CalendarGridDayCellContext = React.useMemo(
     () => ({

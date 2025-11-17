@@ -1,15 +1,15 @@
-import type { CalendarEventColor } from './event';
+import type { SchedulerEventColor } from './event';
 
-export type CalendarResourceId = string;
+export type SchedulerResourceId = string;
 
-export interface CalendarResource {
+export interface SchedulerResource {
   /**
    * The unique identifier of the resource.
    * This is the value that must be set in the `resource` property of the events.
    */
-  id: CalendarResourceId;
+  id: SchedulerResourceId;
   /**
-   * The name of the resource.
+   * The title of the resource.
    */
   title: string;
   /**
@@ -17,5 +17,15 @@ export interface CalendarResource {
    * Can be overridden per event using the `color` property on the event model. (TODO: not implemented yet)
    * @default "jade"
    */
-  eventColor?: CalendarEventColor;
+  eventColor?: SchedulerEventColor;
+  /**
+   * The child resources of this resource.
+   */
+  children?: SchedulerResource[];
 }
+
+export type SchedulerResourceModelStructure<TResource extends object> = {
+  [key in keyof SchedulerResource]?: {
+    getter: (event: TResource) => SchedulerResource[key];
+  };
+};

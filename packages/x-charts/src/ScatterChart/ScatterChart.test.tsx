@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { createRenderer, screen } from '@mui/internal-test-utils/createRenderer';
 import { describeConformance } from 'test/utils/describeConformance';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
@@ -133,7 +132,7 @@ describe('<ScatterChart />', () => {
     expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', '(5, 5)']);
   });
 
-  it.skipIf(isJSDOM)('should support dataset with missing values', async () => {
+  it('should support dataset with missing values', async () => {
     // x from 500 to 600
     // y from 100 to 200
     const dataset = [

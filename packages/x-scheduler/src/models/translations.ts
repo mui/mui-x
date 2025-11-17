@@ -27,9 +27,11 @@ export interface SchedulerTranslations {
   amPm12h: string;
   hour24h: string;
   preferencesMenu: string;
+  showEmptyDaysInAgenda: string;
   showWeekends: string;
   showWeekNumber: string;
   timeFormat: string;
+  viewSpecificOptions: (view: CalendarView) => string;
 
   // WeekView
   allDay: string;
@@ -43,25 +45,59 @@ export interface SchedulerTranslations {
   weekAbbreviation: string;
   weekNumberAriaLabel: (weekNumber: number) => string;
 
+  // EventItem
+  eventItemMultiDayLabel: (endDate: string) => string;
+
   // EventPopover
   allDayLabel: string;
   closeButtonAriaLabel: string;
+  closeButtonLabel: string;
   deleteEvent: string;
   descriptionLabel: string;
   editDisabledNotice: string;
   endDateLabel: string;
   endTimeLabel: string;
   eventTitleAriaLabel: string;
+  generalTabLabel: string;
   labelNoResource: string;
   recurrenceLabel: string;
   recurrenceNoRepeat: string;
+  recurrenceCustomRepeat: string;
   recurrenceDailyPresetLabel: string;
+  recurrenceDailyFrequencyLabel: string;
+  recurrenceEndsLabel: string;
+  recurrenceEndsAfterLabel: string;
+  recurrenceEndsNeverLabel: string;
+  recurrenceEndsUntilLabel: string;
+  recurrenceEndsTimesLabel: string;
+  recurrenceEveryLabel: string;
+  recurrenceRepeatLabel: string;
+  recurrenceTabLabel: string;
+  recurrenceMainSelectCustomLabel: string;
+  recurrenceWeeklyFrequencyLabel: string;
   recurrenceWeeklyPresetLabel: (weekday: string) => string;
+  recurrenceMonthlyDayOfMonthLabel: (dayNumber: number) => string;
+  recurrenceMonthlyFrequencyLabel: string;
+  recurrenceMonthlyLastWeekAriaLabel: (weekDay: string) => string;
+  recurrenceMonthlyLastWeekLabel: (weekDay: string) => string;
   recurrenceMonthlyPresetLabel: (dayNumber: number) => string;
+  recurrenceMonthlyWeekNumberAriaLabel: (ord: number, weekDay: string) => string;
+  recurrenceMonthlyWeekNumberLabel: (ord: number, weekDay: string) => string;
+  recurrenceWeeklyMonthlySpecificInputsLabel: string;
+  recurrenceYearlyFrequencyLabel: string;
   recurrenceYearlyPresetLabel: (date: string) => string;
   resourceLabel: string;
   saveChanges: string;
   startDateAfterEndDateError: string;
   startDateLabel: string;
   startTimeLabel: string;
+
+  // ScopeDialog
+  all: string;
+  cancel: string;
+  confirm: string;
+  onlyThis: string;
+  radioGroupAriaLabel: string;
+  thisAndFollowing: string;
+  title: string;
 }

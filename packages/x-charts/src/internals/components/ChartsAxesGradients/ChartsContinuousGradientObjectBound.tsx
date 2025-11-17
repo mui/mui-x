@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { interpolateDate, interpolateNumber } from '@mui/x-charts-vendor/d3-interpolate';
 import { ContinuousColorConfig } from '../../../models/colorMapping';
 

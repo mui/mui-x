@@ -2,43 +2,73 @@ import { Adapter } from '../use-adapter/useAdapter.types';
 import {
   RecurringEventWeekDayCode,
   RecurringEventByDayValue,
-  CalendarEvent,
-  CalendarEventOccurrence,
-  CalendarEventUpdatedProperties,
+  SchedulerProcessedEvent,
+  SchedulerEventOccurrence,
+  SchedulerEventUpdatedProperties,
   RecurringEventRecurrenceRule,
   SchedulerValidDate,
+  SchedulerEvent,
+  SchedulerEventCreationProperties,
 } from '../models';
 import { mergeDateAndTime, getDateKey } from './date-utils';
 import { diffIn } from '../use-adapter';
 import { UpdateEventsParameters } from './SchedulerStore';
+import { processDate } from '../process-date';
 
 /**
  * The week day codes for all 7 days of the week.
  */
-export const WEEK_DAYS: RecurringEventWeekDayCode[] = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
+export const NOT_LOCALIZED_WEEK_DAYS: RecurringEventWeekDayCode[] = [
+  'MO',
+  'TU',
+  'WE',
+  'TH',
+  'FR',
+  'SA',
+  'SU',
+];
 
+const mondayMap = new WeakMap<Adapter, SchedulerValidDate>();
 /**
- * Builds maps to convert between a week day code and a week day number.
- * This method uses a known ISO Monday (2025-01-06).
- * Day numbers come from adapter.getDayOfWeek(), so it respects the adapter’s locale numbering.
+ * Returns the week day number (1..7) of Monday for a given adapter.
  */
-export function getWeekDayMaps(adapter: Adapter): {
-  codeToNum: Record<RecurringEventWeekDayCode, number>;
-  numToCode: Record<number, RecurringEventWeekDayCode>;
-} {
-  const baseMonday = adapter.date('2025-01-06T00:00:00Z', 'utc'); // ISO Monday
-  const codeToNum = {} as Record<RecurringEventWeekDayCode, number>;
-  const numToCode: Record<number, RecurringEventWeekDayCode> = {};
-
-  for (let i = 0; i < WEEK_DAYS.length; i += 1) {
-    const day = i === 0 ? baseMonday : adapter.addDays(baseMonday, i);
-    const code = WEEK_DAYS[i];
-    const num = adapter.getDayOfWeek(day);
-    codeToNum[code] = num;
-    numToCode[num] = code;
+function getMondayWeekDayNumber(adapter: Adapter) {
+  let monday: SchedulerValidDate;
+  const mondayFromCache = mondayMap.get(adapter);
+  if (mondayFromCache != null) {
+    monday = mondayFromCache;
+  } else {
+    monday = adapter.date('2025-01-06T00:00:00Z', 'utc'); // ISO Monday
+    mondayMap.set(adapter, monday);
   }
 
-  return { codeToNum, numToCode };
+  return adapter.getDayOfWeek(monday);
+}
+
+/**
+ * Returns the week day code (MO..SU) for a given date.
+ * Day numbers come from adapter.getDayOfWeek(), so it respects the adapter’s locale numbering.
+ */
+export function getWeekDayCode(
+  adapter: Adapter,
+  date: SchedulerValidDate,
+): RecurringEventWeekDayCode {
+  const dayOfWeek = adapter.getDayOfWeek(date);
+  const mondayWeekDayNumber = getMondayWeekDayNumber(adapter);
+  return NOT_LOCALIZED_WEEK_DAYS[(dayOfWeek - mondayWeekDayNumber + 7) % 7];
+}
+
+/**
+ * Returns the week day number (1..7) for a given week day code (MO..SU).
+ * Day numbers come from adapter.getDayOfWeek(), so it respects the adapter’s locale numbering.
+ */
+export function getWeekDayNumberFromCode(
+  adapter: Adapter,
+  code: RecurringEventWeekDayCode,
+): number {
+  const mondayWeekDayNumber = getMondayWeekDayNumber(adapter);
+  const indexOfCode = NOT_LOCALIZED_WEEK_DAYS.indexOf(code);
+  return ((indexOfCode + mondayWeekDayNumber - 1) % 7) + 1;
 }
 
 /**
@@ -65,10 +95,9 @@ export function tokenizeByDay(byDay: RecurringEventByDayValue): {
  */
 export function parsesByDayForWeeklyFrequency(
   ruleByDay: RecurringEventRecurrenceRule['byDay'] | undefined,
-  fallback: RecurringEventWeekDayCode[],
-): RecurringEventWeekDayCode[] {
+): RecurringEventWeekDayCode[] | null {
   if (!ruleByDay?.length) {
-    return fallback;
+    return null;
   }
   const parsed = ruleByDay.map(tokenizeByDay);
   if (parsed.some((item) => item.ord !== null)) {
@@ -102,18 +131,18 @@ export function parsesByDayForMonthlyFrequency(ruleByDay: RecurringEventByDayVal
 }
 
 /**
- *  Inclusive span (in days) for all-day events.
+ *  Duration of the event in days.
  *  @returns At least 1, start==end yields 1.
  */
-export function getAllDaySpanDays(adapter: Adapter, event: CalendarEvent): number {
-  // TODO: Now only all-day events are implemented, we should add support for timed events that span multiple days later
-  if (!event.allDay) {
-    return 1;
-  }
+export function getEventDurationInDays(adapter: Adapter, event: SchedulerProcessedEvent): number {
   // +1 so start/end same day = 1 day, spans include last day
-  return Math.max(
-    1,
-    diffIn(adapter, adapter.startOfDay(event.end), adapter.startOfDay(event.start), 'days') + 1,
+  return (
+    diffIn(
+      adapter,
+      adapter.startOfDay(event.end.value),
+      adapter.startOfDay(event.start.value),
+      'days',
+    ) + 1
   );
 }
 
@@ -124,19 +153,19 @@ export function getAllDaySpanDays(adapter: Adapter, event: CalendarEvent): numbe
  *  @returns Sorted list (by start) of concrete occurrences.
  */
 export function getRecurringEventOccurrencesForVisibleDays(
-  event: CalendarEvent,
+  event: SchedulerProcessedEvent,
   start: SchedulerValidDate,
   end: SchedulerValidDate,
   adapter: Adapter,
-): CalendarEventOccurrence[] {
+): SchedulerEventOccurrence[] {
   const rule = event.rrule!;
-  const instances: CalendarEventOccurrence[] = [];
+  const occurrences: SchedulerEventOccurrence[] = [];
 
-  const endGuard = buildEndGuard(rule, event.start, adapter);
-  const durationMinutes = diffIn(adapter, event.end, event.start, 'minutes');
+  const endGuard = buildEndGuard(rule, event.start.value, adapter);
+  const durationMinutes = diffIn(adapter, event.end.value, event.start.value, 'minutes');
 
-  const allDaySpanDays = getAllDaySpanDays(adapter, event);
-  const scanStart = adapter.addDays(start, -(allDaySpanDays - 1));
+  const eventDuration = getEventDurationInDays(adapter, event);
+  const scanStart = adapter.addDays(start, -(eventDuration - 1));
 
   for (
     let day = adapter.startOfDay(scanStart);
@@ -154,27 +183,27 @@ export function getRecurringEventOccurrencesForVisibleDays(
 
     const occurrenceStart = event.allDay
       ? adapter.startOfDay(day)
-      : mergeDateAndTime(adapter, day, event.start);
+      : mergeDateAndTime(adapter, day, event.start.value);
 
     const occurrenceEnd = event.allDay
-      ? adapter.endOfDay(adapter.addDays(occurrenceStart, allDaySpanDays - 1))
+      ? adapter.endOfDay(adapter.addDays(occurrenceStart, eventDuration - 1))
       : adapter.addMinutes(occurrenceStart, durationMinutes);
 
     const key = `${event.id}::${getDateKey(occurrenceStart, adapter)}`;
 
-    if ((event.exDates ?? []).some((exDate) => adapter.isSameDay(exDate, occurrenceStart))) {
+    if (event.exDates?.some((exDate) => adapter.isSameDay(exDate, occurrenceStart))) {
       continue;
     }
 
-    instances.push({
+    occurrences.push({
       ...event,
       key,
-      start: occurrenceStart,
-      end: occurrenceEnd,
+      start: processDate(occurrenceStart, adapter),
+      end: processDate(occurrenceEnd, adapter),
     });
   }
 
-  return instances;
+  return occurrences;
 }
 
 /**
@@ -232,9 +261,7 @@ export function nthWeekdayOfMonth(
   weekdayCode: RecurringEventWeekDayCode,
   ordinal: number,
 ): SchedulerValidDate | null {
-  const { codeToNum } = getWeekDayMaps(adapter);
-  const targetWeekdayNumber = codeToNum[weekdayCode];
-
+  const targetWeekdayNumber = getWeekDayNumberFromCode(adapter, weekdayCode);
   const totalDaysInMonth = adapter.getDaysInMonth(monthStart);
 
   // Path A — Nth occurrence from the start of the month (ordinal > 0)
@@ -280,10 +307,10 @@ export function matchesRecurrence(
   rule: RecurringEventRecurrenceRule,
   date: SchedulerValidDate,
   adapter: Adapter,
-  event: CalendarEvent,
+  event: SchedulerProcessedEvent,
 ): boolean {
   const interval = Math.max(1, rule.interval ?? 1);
-  const seriesStartDay = adapter.startOfDay(event.start);
+  const seriesStartDay = adapter.startOfDay(event.start.value);
   const candidateDay = adapter.startOfDay(date);
 
   if (adapter.isBefore(candidateDay, seriesStartDay)) {
@@ -299,14 +326,13 @@ export function matchesRecurrence(
     case 'WEEKLY': {
       const seriesWeek = adapter.startOfWeek(seriesStartDay);
       const dateWeek = adapter.startOfWeek(candidateDay);
-      const { numToCode } = getWeekDayMaps(adapter);
 
       // If no BYDAY is provided in a WEEKLY rule, default to the weekday of DTSTART.
-      const weekDayCode = parsesByDayForWeeklyFrequency(rule.byDay, [
-        numToCode[adapter.getDayOfWeek(seriesStartDay)],
-      ]);
+      const weekDayCode = parsesByDayForWeeklyFrequency(rule.byDay) ?? [
+        getWeekDayCode(adapter, seriesStartDay),
+      ];
 
-      const dateDowCode = numToCode[adapter.getDayOfWeek(candidateDay)];
+      const dateDowCode = getWeekDayCode(adapter, candidateDay);
       if (!weekDayCode.includes(dateDowCode)) {
         return false;
       }
@@ -426,9 +452,8 @@ function dayInWeek(
   weekStart: SchedulerValidDate,
   code: RecurringEventWeekDayCode,
 ) {
-  const { codeToNum } = getWeekDayMaps(adapter);
   const weekStartDow = adapter.getDayOfWeek(weekStart);
-  const ruleDow = codeToNum[code];
+  const ruleDow = getWeekDayNumberFromCode(adapter, code);
   const delta = (((ruleDow - weekStartDow) % 7) + 7) % 7;
   return adapter.startOfDay(adapter.addDays(weekStart, delta));
 }
@@ -448,10 +473,7 @@ export function countWeeklyOccurrencesUpToExact(
     return 0;
   }
 
-  const { numToCode } = getWeekDayMaps(adapter);
-  const byDay = parsesByDayForWeeklyFrequency(rule.byDay, [
-    numToCode[adapter.getDayOfWeek(seriesStart)],
-  ]);
+  const byDay = parsesByDayForWeeklyFrequency(rule.byDay) ?? [getWeekDayCode(adapter, seriesStart)];
 
   const interval = Math.max(1, rule.interval ?? 1);
 
@@ -644,8 +666,7 @@ export function countYearlyOccurrencesUpToExact(
  */
 export function computeMonthlyOrdinal(adapter: Adapter, date: SchedulerValidDate): number {
   const monthStart = adapter.startOfMonth(date);
-  const { numToCode } = getWeekDayMaps(adapter);
-  const code = numToCode[adapter.getDayOfWeek(date)];
+  const code = getWeekDayCode(adapter, date);
 
   // Is it the last same-weekday of the month? (-1)
   const lastSameWeekday = nthWeekdayOfMonth(adapter, monthStart, code, -1)!;
@@ -671,19 +692,38 @@ export function realignWeeklyByDay(
   oldRefDay: SchedulerValidDate,
   newStart: SchedulerValidDate,
 ): RecurringEventWeekDayCode[] {
-  const { numToCode, codeToNum } = getWeekDayMaps(adapter);
-  const oldCode = numToCode[adapter.getDayOfWeek(oldRefDay)];
-  const newCode = numToCode[adapter.getDayOfWeek(newStart)];
+  const oldCode = getWeekDayCode(adapter, oldRefDay);
+  const newCode = getWeekDayCode(adapter, newStart);
 
   if (oldCode === newCode) {
     return weekDayCodes;
   }
 
-  const swapped = Array.from(new Set(weekDayCodes.map((d) => (d === oldCode ? newCode : d))));
+  const weekDayCodesSet = new Set(weekDayCodes);
+  const mondayWeekDayNumber = getMondayWeekDayNumber(adapter);
 
-  swapped.sort((a, b) => codeToNum[a] - codeToNum[b]);
+  const newWeekDayCodes: RecurringEventWeekDayCode[] = [];
+  for (let i = 0; i < NOT_LOCALIZED_WEEK_DAYS.length; i += 1) {
+    const code = NOT_LOCALIZED_WEEK_DAYS[(i + mondayWeekDayNumber - 1) % 7];
 
-  return swapped;
+    let shouldAddCode: boolean;
+    // Only add the newCode if the oldCode was present
+    if (code === newCode && weekDayCodesSet.has(oldCode)) {
+      shouldAddCode = true;
+    }
+    // Only add other codes if they were present originally and are not the oldCode
+    else if (weekDayCodesSet.has(code) && code !== oldCode) {
+      shouldAddCode = true;
+    } else {
+      shouldAddCode = false;
+    }
+
+    if (shouldAddCode) {
+      newWeekDayCodes.push(code);
+    }
+  }
+
+  return newWeekDayCodes;
 }
 
 /**
@@ -708,7 +748,7 @@ export function decideSplitRRule(
   originalRule: RecurringEventRecurrenceRule,
   originalSeriesStart: SchedulerValidDate,
   splitStart: SchedulerValidDate,
-  changes: Partial<CalendarEvent>,
+  changes: Partial<SchedulerEvent>,
 ): RecurringEventRecurrenceRule | undefined {
   // Normalize base pattern (drop COUNT/UNTIL)
   const { count, until, ...baseRule } = originalRule;
@@ -719,7 +759,7 @@ export function decideSplitRRule(
 
   // Case A — user provided a new RRULE → respect it (including COUNT/UNTIL)
   if (hasRRuleProp && changesRRule) {
-    return changesRRule;
+    return changesRRule as RecurringEventRecurrenceRule;
   }
 
   // Case B — user explicitly removed recurrence → one-off
@@ -752,8 +792,7 @@ export function decideSplitRRule(
 
     // B) Ordinal BYDAY → recompute ordinal + weekday for the new date
     if (baseRule.byDay?.length) {
-      const { numToCode } = getWeekDayMaps(adapter);
-      const code = numToCode[adapter.getDayOfWeek(changes.start)];
+      const code = getWeekDayCode(adapter, changes.start);
       const ord = computeMonthlyOrdinal(adapter, changes.start);
       realignedRule = { ...realignedRule, byDay: [`${ord}${code}` as RecurringEventByDayValue] };
     }
@@ -787,11 +826,11 @@ export function decideSplitRRule(
  */
 export function applyRecurringUpdateFollowing(
   adapter: Adapter,
-  originalEvent: CalendarEvent,
+  originalEvent: SchedulerProcessedEvent,
   occurrenceStart: SchedulerValidDate,
-  changes: CalendarEventUpdatedProperties,
+  changes: SchedulerEventUpdatedProperties,
 ): UpdateEventsParameters {
-  const newStart = changes.start ?? originalEvent.start;
+  const newStart = changes.start ?? originalEvent.start.value;
 
   // 1) Old series: truncate rule to end the day before the edited occurrence
   const occurrenceDayStart = adapter.startOfDay(occurrenceStart);
@@ -804,14 +843,14 @@ export function applyRecurringUpdateFollowing(
   const newRRule = decideSplitRRule(
     adapter,
     originalRule,
-    originalEvent.start,
+    originalEvent.start.value,
     occurrenceStart,
     changes,
   );
   const newEventId = `${originalEvent.id}::${getDateKey(newStart, adapter)}`;
 
-  const newEvent: CalendarEvent = {
-    ...originalEvent,
+  const newEvent: SchedulerEvent = {
+    ...originalEvent.modelInBuiltInFormat!,
     ...changes,
     id: newEventId,
     rrule: newRRule,
@@ -821,7 +860,7 @@ export function applyRecurringUpdateFollowing(
   // 3) If UNTIL falls before DTSTART, the original series has no remaining occurrences -> drop it, otherwise truncate it.
   const shouldDropOldSeries = adapter.isBefore(
     adapter.endOfDay(untilDate),
-    adapter.startOfDay(originalEvent.start),
+    adapter.startOfDay(originalEvent.start.value),
   );
 
   if (shouldDropOldSeries) {
@@ -835,45 +874,140 @@ export function applyRecurringUpdateFollowing(
 }
 
 /**
- * Applies a "all" update to a recurring series by updating the first event of the series.
- * Merges date and time parts of start/end according to what the caller touched.
- * If the caller changed the date part of start or end, uses the provided value as-is.
- * Otherwise, merges the new time part into the original start/end dates.
+ * Adjusts a recurring event's RRULE when applying an "all" update that changes the weekday.
+ *
+ * Rules:
+ * - WEEKLY: realign BYDAY by swapping the weekday of the edited occurrence
+ *   with the weekday of the destination.
+ * - MONTHLY:
+ *   - If BYMONTHDAY is used → set it to the new start date's day of month.
+ *   - If BYDAY (ordinal) is used → recompute the ordinal (e.g. 2TU → 3WE) based on the new start.
+ * @returns The adjusted RRULE object, or the original rrule if no change is needed.
+ */
+export function adjustRRuleForAllMove(
+  adapter: Adapter,
+  rrule: RecurringEventRecurrenceRule,
+  occurrenceStart: SchedulerValidDate,
+  newStart: SchedulerValidDate,
+): RecurringEventRecurrenceRule {
+  let nextRRule: RecurringEventRecurrenceRule = { ...rrule };
+
+  if (rrule.freq === 'WEEKLY') {
+    const normalized = parsesByDayForWeeklyFrequency(rrule.byDay) ?? [
+      getWeekDayCode(adapter, occurrenceStart),
+    ];
+
+    const swapped = realignWeeklyByDay(adapter, normalized, occurrenceStart, newStart);
+    nextRRule = { ...nextRRule, byDay: swapped };
+  }
+
+  if (rrule.freq === 'MONTHLY') {
+    // BYMONTHDAY → match the new calendar day
+    if (rrule.byMonthDay?.length) {
+      nextRRule = { ...nextRRule, byMonthDay: [adapter.getDate(newStart)] };
+    }
+    // Ordinal BYDAY → recompute ordinal + weekday for newStart
+    if (rrule.byDay?.length) {
+      const code = getWeekDayCode(adapter, newStart);
+      const ord = computeMonthlyOrdinal(adapter, newStart);
+      nextRRule = { ...nextRRule, byDay: [`${ord}${code}` as RecurringEventByDayValue] };
+    }
+  }
+
+  return nextRRule;
+}
+
+/**
+ * Applies an "all events" update to a recurring series.
+ *
+ * Rules:
+ * - If the edited occurrence is not the first, keeps the original DTSTART
+ *   and adjusts the RRULE pattern (e.g. weekday swap) so all past and future
+ *   events follow the new pattern.
+ * - If the edited occurrence is the first of the series, updates DTSTART/DTEND directly.
+ * - When only the time changes, merges the new time into the original date.
  * @returns The updated list of events.
  */
 export function applyRecurringUpdateAll(
   adapter: Adapter,
-  originalEvent: CalendarEvent,
+  originalEvent: SchedulerProcessedEvent,
   occurrenceStart: SchedulerValidDate,
-  changes: CalendarEventUpdatedProperties,
+  changes: SchedulerEventUpdatedProperties,
 ): UpdateEventsParameters {
-  const eventUpdatedProperties: CalendarEventUpdatedProperties = { ...changes };
+  const eventUpdatedProperties: SchedulerEventUpdatedProperties = { ...changes };
 
-  // 2) If the caller touched the date part of start or end, use the provided values as-is.
-  // Otherwise, merge the new time part into the original start/end dates.
+  // 1) Detect if caller changed the date part of start or end (vs only time)
+  const occurrenceEnd = adapter.addMinutes(
+    occurrenceStart,
+    diffIn(adapter, originalEvent.end.value, originalEvent.start.value, 'minutes'),
+  );
+  const touchedStartDate =
+    changes.start != null && !adapter.isSameDay(occurrenceStart, changes.start);
+  const touchedEndDate = changes.end != null && !adapter.isSameDay(occurrenceEnd, changes.end);
+
+  // 2) Is the edited occurrence the first of the series (DTSTART)?
+  const editedIsDtstart = adapter.isSameDay(occurrenceStart, originalEvent.start.value);
+
+  // 3) Decide new start/end
   if (changes.start != null) {
-    if (adapter.isSameDay(occurrenceStart, changes.start)) {
-      eventUpdatedProperties.start = mergeDateAndTime(adapter, originalEvent.start, changes.start);
+    if (touchedStartDate) {
+      // Date changed
+      if (editedIsDtstart) {
+        // First occurrence: allow moving DTSTART date
+        eventUpdatedProperties.start = changes.start;
+      } else {
+        // Not first: keep original DTSTART date, merge only time
+        eventUpdatedProperties.start = mergeDateAndTime(
+          adapter,
+          originalEvent.start.value,
+          changes.start,
+        );
+      }
     } else {
-      eventUpdatedProperties.start = changes.start;
+      // Same day -> merge time into original date
+      eventUpdatedProperties.start = mergeDateAndTime(
+        adapter,
+        originalEvent.start.value,
+        changes.start,
+      );
     }
   }
 
   if (changes.end != null) {
-    const occurrenceEnd = adapter.addMinutes(
-      occurrenceStart,
-      diffIn(adapter, originalEvent.end, originalEvent.start, 'minutes'),
-    );
-
-    if (adapter.isSameDay(occurrenceEnd, changes.end)) {
-      eventUpdatedProperties.end = mergeDateAndTime(adapter, originalEvent.end, changes.end);
+    if (touchedEndDate) {
+      if (editedIsDtstart) {
+        eventUpdatedProperties.end = changes.end;
+      } else {
+        eventUpdatedProperties.end = mergeDateAndTime(
+          adapter,
+          originalEvent.end.value,
+          changes.end,
+        );
+      }
     } else {
-      eventUpdatedProperties.end = changes.end;
+      eventUpdatedProperties.end = mergeDateAndTime(adapter, originalEvent.end.value, changes.end);
     }
   }
 
-  // 4) Replace the series root in the list
-  return { updated: [eventUpdatedProperties] };
+  // 4) RRULE adjustment: only if day changed and the event is recurring
+  if ((touchedStartDate || touchedEndDate) && originalEvent.rrule) {
+    const newOccurrenceStart = changes.start ?? occurrenceStart;
+    eventUpdatedProperties.rrule = adjustRRuleForAllMove(
+      adapter,
+      originalEvent.rrule,
+      occurrenceStart,
+      newOccurrenceStart,
+    );
+  }
+
+  // 5) Return the updated event
+  return {
+    updated: [
+      {
+        ...eventUpdatedProperties,
+      },
+    ],
+  };
 }
 
 /**
@@ -884,22 +1018,12 @@ export function applyRecurringUpdateAll(
  */
 export function applyRecurringUpdateOnlyThis(
   adapter: Adapter,
-  originalEvent: CalendarEvent,
+  originalEvent: SchedulerProcessedEvent,
   occurrenceStart: SchedulerValidDate,
-  changes: CalendarEventUpdatedProperties,
+  changes: SchedulerEventUpdatedProperties,
 ): UpdateEventsParameters {
-  const detachedId = `${originalEvent.id}::${getDateKey(changes.start ?? originalEvent.start, adapter)}`;
-
-  const detachedEvent: CalendarEvent = {
-    ...originalEvent,
-    ...changes,
-    id: detachedId,
-    rrule: undefined,
-    extractedFromId: originalEvent.id,
-  };
-
   return {
-    created: [detachedEvent],
+    created: [createEventFromRecurringEvent(originalEvent, changes)],
     updated: [
       {
         id: originalEvent.id,
@@ -907,4 +1031,185 @@ export function applyRecurringUpdateOnlyThis(
       },
     ],
   };
+}
+
+/**
+ * Generates the property to pass to `store.updateEvents()` to create an event extracted from a potentially recurring event.
+ */
+export function createEventFromRecurringEvent(
+  originalEvent: SchedulerProcessedEvent,
+  changes: Partial<SchedulerEvent>,
+): SchedulerEventCreationProperties {
+  const createdEvent: SchedulerEventCreationProperties = {
+    ...originalEvent.modelInBuiltInFormat!,
+    ...changes,
+    extractedFromId: originalEvent.id,
+  };
+
+  // @ts-ignore
+  delete createdEvent.id;
+  delete createdEvent.rrule;
+  delete createdEvent.exDates;
+
+  return createdEvent;
+}
+
+const SUPPORTED_RRULE_KEYS = [
+  'FREQ',
+  'INTERVAL',
+  'BYDAY',
+  'BYMONTHDAY',
+  'BYMONTH',
+  'UNTIL',
+  'COUNT',
+] as const;
+
+/**
+ * Parses a string RRULE (e.g. "FREQ=DAILY;COUNT=5;INTERVAL=2")
+ * into a RecurringEventRecurrenceRule object.
+ * Also validates unsupported or malformed properties.
+ */
+export function parseRRuleString(
+  adapter: Adapter,
+  input: string | RecurringEventRecurrenceRule,
+): RecurringEventRecurrenceRule {
+  if (typeof input === 'object') {
+    return input;
+  }
+
+  const rruleObject: Record<string, string> = {};
+  const parts = input
+    .split(';')
+    .map((p) => p.trim())
+    .filter(Boolean);
+
+  for (const part of parts) {
+    const [rawKey, rawValue] = part.split('=');
+    const key = rawKey?.trim().toUpperCase();
+    const value = rawValue?.trim().toUpperCase();
+
+    if (!key || !value) {
+      throw new Error(`Scheduler: Invalid RRULE part: "${part}"`);
+    }
+
+    if (!SUPPORTED_RRULE_KEYS.includes(key as any)) {
+      throw new Error(`Scheduler: Unsupported RRULE property: "${key}"`);
+    }
+
+    rruleObject[key] = value;
+  }
+
+  if (!rruleObject.FREQ) {
+    throw new Error('Scheduler: RRULE must include a FREQ property.');
+  }
+
+  const rrule: RecurringEventRecurrenceRule = {
+    freq: rruleObject.FREQ as RecurringEventRecurrenceRule['freq'],
+  };
+
+  if (rruleObject.INTERVAL) {
+    const interval = Number(rruleObject.INTERVAL);
+    if (Number.isNaN(interval) || interval < 1) {
+      throw new Error(`Scheduler: Invalid INTERVAL value: "${rruleObject.INTERVAL}"`);
+    }
+    rrule.interval = interval;
+  }
+
+  if (rruleObject.BYDAY) {
+    rrule.byDay = rruleObject.BYDAY.split(',').map((v) => v.trim()) as RecurringEventByDayValue[];
+  }
+
+  if (rruleObject.BYDAY) {
+    const tokens = rruleObject.BYDAY.split(',').map((v) => v.trim()) as RecurringEventByDayValue[];
+    rrule.byDay = tokens
+      .map((t) => tokenizeByDay(t))
+      .sort(
+        (a, b) => NOT_LOCALIZED_WEEK_DAYS.indexOf(a.code) - NOT_LOCALIZED_WEEK_DAYS.indexOf(b.code),
+      )
+      .map((t) => (t.ord != null ? (`${t.ord}${t.code}` as RecurringEventByDayValue) : t.code));
+  }
+
+  if (rruleObject.BYMONTHDAY) {
+    const days = rruleObject.BYMONTHDAY.split(',').map((d) => Number(d.trim()));
+    if (days.some((d) => Number.isNaN(d) || d < 1 || d > 31)) {
+      throw new Error(`Scheduler: Invalid BYMONTHDAY values: "${rruleObject.BYMONTHDAY}"`);
+    }
+    rrule.byMonthDay = days.toSorted((a, b) => a - b);
+  }
+
+  if (rruleObject.BYMONTH) {
+    const months = rruleObject.BYMONTH.split(',').map((m) => Number(m.trim()));
+    if (months.some((m) => Number.isNaN(m) || m < 1 || m > 12)) {
+      throw new Error(`Scheduler: Invalid BYMONTH values: "${rruleObject.BYMONTH}"`);
+    }
+    rrule.byMonth = months.toSorted((a, b) => a - b);
+  }
+
+  if (rruleObject.COUNT) {
+    const count = Number(rruleObject.COUNT);
+    if (Number.isNaN(count) || count < 1) {
+      throw new Error(`Scheduler: Invalid COUNT value: "${rruleObject.COUNT}"`);
+    }
+    rrule.count = count;
+  }
+
+  if (rruleObject.UNTIL) {
+    const parsed = adapter.date(rruleObject.UNTIL);
+
+    if (!adapter.isValid(parsed)) {
+      throw new Error(`Scheduler: Invalid UNTIL date: "${rruleObject.UNTIL}"`);
+    }
+
+    rrule.until = parsed;
+  }
+
+  return rrule;
+}
+
+/**
+ * Serializes a RecurringEventRecurrenceRule object
+ * into a RRULE string (RFC5545).
+ */
+export function serializeRRule(adapter: Adapter, rule: RecurringEventRecurrenceRule): string {
+  const parts: string[] = [];
+
+  parts.push(`FREQ=${rule.freq}`);
+
+  const interval = rule.interval ?? 1;
+  if (interval !== 1) {
+    parts.push(`INTERVAL=${interval}`);
+  }
+
+  if (rule.byDay?.length) {
+    const normalized = [...rule.byDay]
+      .map((t) => tokenizeByDay(t))
+      .sort(
+        (a, b) => NOT_LOCALIZED_WEEK_DAYS.indexOf(a.code) - NOT_LOCALIZED_WEEK_DAYS.indexOf(b.code),
+      )
+      .map((t) => (t.ord != null ? (`${t.ord}${t.code}` as RecurringEventByDayValue) : t.code));
+    parts.push(`BYDAY=${normalized.join(',')}`);
+  }
+
+  if (rule.byMonthDay?.length) {
+    parts.push(`BYMONTHDAY=${rule.byMonthDay.toSorted((a, b) => a - b).join(',')}`);
+  }
+
+  if (rule.byMonth?.length) {
+    parts.push(`BYMONTH=${rule.byMonth.toSorted((a, b) => a - b).join(',')}`);
+  }
+
+  if (typeof rule.count === 'number') {
+    parts.push(`COUNT=${rule.count}`);
+  }
+
+  if (rule.until) {
+    const utcDate = adapter.setTimezone(rule.until, 'UTC');
+
+    // RFC5545 format: YYYYMMDDTHHmmssZ
+    const untilIso = adapter.formatByString(utcDate, "yyyyMMdd'T'HHmmss'Z'");
+
+    parts.push(`UNTIL=${untilIso}`);
+  }
+
+  return parts.join(';');
 }
