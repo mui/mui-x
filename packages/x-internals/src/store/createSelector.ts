@@ -37,7 +37,6 @@ export const createSelector = ((
   }
 
   let selector: any;
-
   if (a && b && c && d && e && f && g && h) {
     selector = (state: any, a1: any, a2: any, a3: any) => {
       const va = a(state, a1, a2, a3);
