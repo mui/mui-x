@@ -16,7 +16,7 @@ export interface ControlledValue {
   endTime: string;
   resourceId: SchedulerResourceId | null;
   allDay: boolean;
-  colorId: SchedulerEventColor | null;
+  color: SchedulerEventColor | null;
   recurrenceSelection: RecurringEventPresetKey | null | 'custom';
   rruleDraft: RecurringEventRecurrenceRule;
 }

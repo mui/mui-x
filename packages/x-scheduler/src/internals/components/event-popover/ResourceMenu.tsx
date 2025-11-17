@@ -14,9 +14,9 @@ import { getColorClassName } from '../../utils/color-utils';
 interface ResourceSelectProps {
   readOnly?: boolean;
   resourceId: string | null;
-  handleResourceChange: (value: SchedulerResourceId) => void;
-  handleColorChange: (value: SchedulerEventColor) => void;
-  colorId: SchedulerEventColor | null;
+  onResourceChange: (value: SchedulerResourceId) => void;
+  onColorChange: (value: SchedulerEventColor) => void;
+  color: SchedulerEventColor | null;
 }
 
 interface ResourceMenuTriggerContentProps {
@@ -47,7 +47,7 @@ function ResourceMenuTriggerContent(props: ResourceMenuTriggerContentProps) {
 }
 
 export default function ResourceMenu(props: ResourceSelectProps) {
-  const { readOnly, resourceId, handleResourceChange, handleColorChange, colorId } = props;
+  const { readOnly, resourceId, onResourceChange, onColorChange, color } = props;
 
   // Context hooks
   const translations = useTranslations();
@@ -67,9 +67,9 @@ export default function ResourceMenu(props: ResourceSelectProps) {
     ];
   }, [resources, translations.labelNoResource]);
 
-  const findResourceByValue = (value: string | null) => {
-    return resourcesOptions.find((option) => option.value === value);
-  };
+  const resource = React.useMemo(() => {
+    return resourcesOptions.find((option) => option.value === resourceId) || null;
+  }, [resourcesOptions, resourceId]);
 
   return (
     <Menu.Root>
@@ -77,13 +77,8 @@ export default function ResourceMenu(props: ResourceSelectProps) {
         className="Button Ghost EventPopoverMenuTrigger"
         aria-label={translations.resourceLabel}
       >
-        <ResourceMenuTriggerContent
-          resource={findResourceByValue(resourceId) || null}
-          color={colorId}
-        />
-        <span>
-          {resourceId ? findResourceByValue(resourceId)?.label : translations.labelNoResource}
-        </span>
+        <ResourceMenuTriggerContent resource={resource} color={color} />
+        <span>{resourceId ? resource?.label : translations.labelNoResource}</span>
         <ChevronDown size={14} />
       </Menu.Trigger>
       <Menu.Portal>
@@ -93,24 +88,24 @@ export default function ResourceMenu(props: ResourceSelectProps) {
               <Menu.GroupLabel className="MenuGroupLabel">Resources</Menu.GroupLabel>
               <Menu.RadioGroup
                 value={resourceId}
-                onValueChange={handleResourceChange}
+                onValueChange={onResourceChange}
                 disabled={readOnly}
               >
-                {resourcesOptions.map((resource) => (
+                {resourcesOptions.map((currentResource) => (
                   <Menu.RadioItem
-                    key={resource.value}
-                    value={resource.value}
+                    key={currentResource.value}
+                    value={currentResource.value}
                     className="EventPopoverMenuItem"
-                    aria-label={resource.label}
+                    aria-label={currentResource.label}
                   >
                     <div className="EventPopoverMenuItemTitleWrapper">
                       <span
                         className={clsx(
                           'ResourceLegendColor',
-                          getColorClassName(resource.eventColor ?? DEFAULT_EVENT_COLOR),
+                          getColorClassName(currentResource.eventColor ?? DEFAULT_EVENT_COLOR),
                         )}
                       />
-                      <span className="EventPopoverSelectItemText">{resource.label}</span>
+                      <span className="EventPopoverSelectItemText">{currentResource.label}</span>
                     </div>
                     <Menu.RadioItemIndicator className="CheckboxIndicator">
                       <CheckIcon size={16} strokeWidth={1.5} />
@@ -122,17 +117,17 @@ export default function ResourceMenu(props: ResourceSelectProps) {
             <Menu.Group>
               <Menu.GroupLabel className="MenuGroupLabel">Colors</Menu.GroupLabel>
               <Menu.RadioGroup
-                value={colorId}
-                onValueChange={handleColorChange}
+                value={color}
+                onValueChange={onColorChange}
                 disabled={readOnly}
                 className="ColorRadioGroup"
               >
-                {EVENT_COLORS.map((color) => (
+                {EVENT_COLORS.map((currentColor) => (
                   <Menu.RadioItem
-                    key={color}
-                    value={color}
+                    key={currentColor}
+                    value={currentColor}
                     className="EventPopoverColorMenuItem"
-                    aria-label={color}
+                    aria-label={currentColor}
                   >
                     <div
                       className={clsx(

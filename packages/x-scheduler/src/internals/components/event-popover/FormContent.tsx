@@ -77,7 +77,7 @@ export function FormContent(props: FormContentProps) {
       endTime: fmtTime(occurrence.end),
       resourceId: occurrence.resource ?? null,
       allDay: !!occurrence.allDay,
-      colorId: occurrence.color ?? null,
+      color: occurrence.color ?? null,
       recurrenceSelection: defaultRecurrencePresetKey,
       rruleDraft: {
         freq: (base?.freq ?? 'DAILY') as RecurringEventFrequency,
@@ -120,7 +120,7 @@ export function FormContent(props: FormContentProps) {
       return;
     }
 
-    const newState = { ...controlled, colorId: value === controlled.colorId ? null : value };
+    const newState = { ...controlled, color: value === controlled.color ? null : value };
     pushPlaceholder(newState);
     setControlled(newState);
   };
@@ -143,7 +143,7 @@ export function FormContent(props: FormContentProps) {
       description: (form.get('description') as string).trim(),
       allDay: controlled.allDay,
       resource: controlled.resourceId === null ? undefined : controlled.resourceId,
-      color: controlled.colorId === null ? undefined : controlled.colorId,
+      color: controlled.color === null ? undefined : controlled.color,
     };
 
     let rruleToSubmit: RecurringEventRecurrenceRule | undefined;
@@ -213,9 +213,9 @@ export function FormContent(props: FormContentProps) {
         <ResourceMenu
           readOnly={isPropertyReadOnly('resource')}
           resourceId={controlled.resourceId}
-          handleResourceChange={handleResourceChange}
-          handleColorChange={handleColorChange}
-          colorId={controlled.colorId}
+          onResourceChange={handleResourceChange}
+          onColorChange={handleColorChange}
+          color={controlled.color}
         />
       </EventPopoverHeader>
       <Tabs.Root defaultValue="general">
