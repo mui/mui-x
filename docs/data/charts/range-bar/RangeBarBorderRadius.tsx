@@ -64,10 +64,10 @@ export default function RangeBarBorderRadius() {
 }
 
 const dataset = [
-  [3, -7, 'First'],
-  [0, -5, 'Second'],
-  [10, 0, 'Third'],
-  [9, 6, 'Fourth'],
+  [3, -7, '1st'],
+  [0, -5, '2nd'],
+  [10, 0, '3rd'],
+  [9, 6, '4th'],
 ].map(([high, low, order]) => ({
   high,
   low,
