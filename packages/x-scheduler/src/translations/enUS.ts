@@ -45,6 +45,9 @@ export const enUS: SchedulerTranslations = {
   weekAbbreviation: 'W',
   weekNumberAriaLabel: (weekNumber) => `Week ${weekNumber}`,
 
+  // EventItem
+  eventItemMultiDayLabel: (endDate) => `Ends ${endDate}`,
+
   // EventPopover
   allDayLabel: 'All Day',
   closeButtonAriaLabel: 'Close modal',

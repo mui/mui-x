@@ -76,6 +76,7 @@ export const AgendaView = React.memo(
                       render={
                         <EventItem
                           occurrence={occurrence}
+                          date={date}
                           variant="regular"
                           ariaLabelledBy={`DayHeaderCell-${date.key}`}
                         />

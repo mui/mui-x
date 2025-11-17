@@ -20,7 +20,7 @@ import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { EventPopoverTrigger } from '../../internals/components/event-popover';
 import { MoreEventsPopoverTrigger } from '../../internals/components/more-events-popover/MoreEventsPopover';
 import { useEventPopoverContext } from '../../internals/components/event-popover/EventPopover';
-import { isEventAllDayOrMultipleDay } from '../../internals/utils/event-utils';
+import { isOccurrenceAllDayOrMultipleDay } from '../../internals/utils/event-utils';
 import './MonthViewWeekRow.css';
 
 export const MonthViewCell = React.forwardRef(function MonthViewCell(
@@ -134,7 +134,9 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
               render={
                 <DayGridEvent
                   occurrence={occurrence}
-                  variant={isEventAllDayOrMultipleDay(occurrence, adapter) ? 'filled' : 'compact'}
+                  variant={
+                    isOccurrenceAllDayOrMultipleDay(occurrence, adapter) ? 'filled' : 'compact'
+                  }
                 />
               }
             />

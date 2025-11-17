@@ -17,7 +17,7 @@ import {
 } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { DayGridEventProps } from './DayGridEvent.types';
 import { getColorClassName } from '../../../utils/color-utils';
-import { isEventAllDayOrMultipleDay } from '../../../utils/event-utils';
+import { isOccurrenceAllDayOrMultipleDay } from '../../../utils/event-utils';
 import { useTranslations } from '../../../utils/TranslationsContext';
 import { EventDragPreview } from '../../event-drag-preview';
 import { useFormatTime } from '../../../hooks/useFormatTime';
@@ -42,7 +42,7 @@ const isResizableSelector = createSelector(
 
     // In month view, only multi-day and all-day events can be resized
     if (view === 'month') {
-      return isEventAllDayOrMultipleDay(occurrence, adapter);
+      return isOccurrenceAllDayOrMultipleDay(occurrence, adapter);
     }
 
     return true;

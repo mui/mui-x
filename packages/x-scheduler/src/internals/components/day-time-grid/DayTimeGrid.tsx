@@ -22,7 +22,7 @@ import { TimeGridColumn } from './TimeGridColumn';
 import { DayGridCell } from './DayGridCell';
 import './DayTimeGrid.css';
 import { useFormatTime } from '../../hooks/useFormatTime';
-import { isEventAllDayOrMultipleDay } from '../../utils/event-utils';
+import { isOccurrenceAllDayOrMultipleDay } from '../../utils/event-utils';
 
 export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   props: DayTimeGridProps,
@@ -53,7 +53,8 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     days,
     occurrencesMap,
     shouldAddPosition: React.useCallback(
-      (occurrence: SchedulerEventOccurrence) => isEventAllDayOrMultipleDay(occurrence, adapter),
+      (occurrence: SchedulerEventOccurrence) =>
+        isOccurrenceAllDayOrMultipleDay(occurrence, adapter),
       [adapter],
     ),
   });

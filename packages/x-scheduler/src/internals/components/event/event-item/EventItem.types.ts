@@ -1,11 +1,15 @@
 import * as React from 'react';
-import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
+import { SchedulerEventOccurrence, SchedulerProcessedDate } from '@mui/x-scheduler-headless/models';
 
 export interface EventItemProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * The event occurrence to render.
    */
   occurrence: SchedulerEventOccurrence;
+  /**
+   * The date the event occurrence is displayed in.
+   */
+  date: SchedulerProcessedDate;
   /**
    * The event variant.
    * 'regular' does not make the styling distinction between all day events and timed events, expect for the time display.
