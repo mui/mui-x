@@ -1,11 +1,11 @@
 import { spy } from 'sinon';
 import {
-  CalendarResourceId,
+  SchedulerResourceId,
   SchedulerResourceModelStructure,
 } from '@mui/x-scheduler-headless/models';
 import { adapter } from 'test/utils/scheduler';
 import { storeClasses } from './utils';
-import { selectors } from '../../../scheduler-selectors';
+import { schedulerResourceSelectors } from '../../../scheduler-selectors';
 
 const DEFAULT_PARAMS = { events: [] };
 
@@ -38,7 +38,7 @@ storeClasses.forEach((storeClass) => {
           { events: [], resources, resourceModelStructure },
           adapter,
         );
-        const resource = selectors.resource(store.state, '1');
+        const resource = schedulerResourceSelectors.processedResource(store.state, '1');
 
         expect(resource).to.deep.contain({
           id: '1',
@@ -136,7 +136,7 @@ storeClasses.forEach((storeClass) => {
       it('should set only when reference changes', () => {
         const store = new storeClass.Value(DEFAULT_PARAMS, adapter);
 
-        const resourcesMap = new Map<CalendarResourceId, boolean>([['r1', true]]);
+        const resourcesMap = new Map<SchedulerResourceId, boolean>([['r1', true]]);
         store.setVisibleResources(resourcesMap);
         expect(store.state.visibleResources).to.equal(resourcesMap);
 

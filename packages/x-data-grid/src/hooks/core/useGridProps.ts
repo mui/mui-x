@@ -20,7 +20,12 @@ export const useGridProps = <PrivateApi extends GridPrivateApiCommon>(
   apiRef: RefObject<PrivateApi>,
   props: GridStateProps,
 ) => {
+  const isFirstRender = React.useRef(true);
   React.useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     apiRef.current.setState((state: GridStateCommunity) => ({
       ...state,
       props: {

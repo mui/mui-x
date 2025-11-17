@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { DefaultizedPieValueType } from '@mui/x-charts/models';
 import { PieChart, pieArcLabelClasses } from '@mui/x-charts/PieChart';
 

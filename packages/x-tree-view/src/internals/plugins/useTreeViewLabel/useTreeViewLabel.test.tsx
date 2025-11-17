@@ -1,9 +1,12 @@
 import { act, fireEvent } from '@mui/internal-test-utils';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
-import { UseTreeViewLabelSignature } from '@mui/x-tree-view/internals';
 
-describeTreeView<[UseTreeViewLabelSignature]>(
-  'useTreeViewLabel plugin',
+// TODO #20051: Replace with imported type
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+type ExtendableRichTreeViewStore<A, B, C, D> = { parameters: any };
+
+describeTreeView<ExtendableRichTreeViewStore<any, any, any, any>>(
+  'TreeViewLabelEditingPlugin',
   ({ render, treeViewComponentName }) => {
     const isSimpleTreeView = treeViewComponentName.startsWith('SimpleTreeView');
 

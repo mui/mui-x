@@ -1,14 +1,13 @@
 import { adapter } from 'test/utils/scheduler';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import {
-  DEFAULT_PREFERENCES,
+  DEFAULT_EVENT_CALENDAR_PREFERENCES,
   DEFAULT_PREFERENCES_MENU_CONFIG,
   DEFAULT_VIEW,
   DEFAULT_VIEWS,
   EventCalendarStore,
 } from '../EventCalendarStore';
 import { CalendarView } from '../../models';
-import { DEFAULT_IS_MULTI_DAY_EVENT } from '../../utils/SchedulerStore';
 
 const DEFAULT_PARAMS = { events: [] };
 
@@ -31,9 +30,9 @@ describe('Core - EventCalendarStore', () => {
         resourceIdList: [],
         processedResourceLookup: new Map(),
         resourceModelStructure: undefined,
+        resourceChildrenIdLookup: new Map(),
         visibleResources: new Map(),
         nowUpdatedEveryMinute: adapter.date(),
-        isMultiDayEvent: DEFAULT_IS_MULTI_DAY_EVENT,
         areEventsDraggable: false,
         areEventsResizable: false,
         canDragEventsFromTheOutside: false,
@@ -41,7 +40,7 @@ describe('Core - EventCalendarStore', () => {
         showCurrentTimeIndicator: true,
         eventColor: 'jade',
         pendingUpdateRecurringEventParameters: null,
-        preferences: DEFAULT_PREFERENCES,
+        preferences: DEFAULT_EVENT_CALENDAR_PREFERENCES,
         preferencesMenuConfig: DEFAULT_PREFERENCES_MENU_CONFIG,
         viewConfig: null,
         occurrencePlaceholder: null,

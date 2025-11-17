@@ -44,7 +44,11 @@ export type ProcessedSeries<TSeriesTypes extends ChartSeriesType = ChartSeriesTy
 };
 
 export interface UseChartSeriesState<T extends ChartSeriesType = ChartSeriesType> {
-  series: { processedSeries: ProcessedSeries<T>; seriesConfig: ChartSeriesConfig<T> };
+  series: {
+    processedSeries: ProcessedSeries<T>;
+    seriesConfig: ChartSeriesConfig<T>;
+    dataset?: Readonly<DatasetType>;
+  };
 }
 
 export interface UseChartSeriesInstance {}

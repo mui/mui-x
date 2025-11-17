@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { createSchedulerRenderer, SchedulerStoreRunner } from 'test/utils/scheduler';
 import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
 import { screen } from '@mui/internal-test-utils';

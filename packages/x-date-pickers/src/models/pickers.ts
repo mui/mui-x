@@ -4,6 +4,14 @@ import type { PickersShortcutsItemContext } from '../PickersShortcuts';
 export interface PickerChangeHandlerContext<TError> {
   validationError: TError;
   /**
+   * Source of the change that triggered `onChange` or `onAccept`.
+   * Simplified to one of the following values:
+   * - 'field' (changes coming from the text field)
+   * - 'view' (any interaction inside the picker UI: views, toolbar, action bar, shortcuts, etc.)
+   * - 'unknown' (unspecified or third-party triggers)
+   */
+  source: 'field' | 'view' | 'unknown';
+  /**
    * Shortcut causing this `onChange` or `onAccept` call.
    * If the call has not been caused by a shortcut selection, this property will be `undefined`.
    */

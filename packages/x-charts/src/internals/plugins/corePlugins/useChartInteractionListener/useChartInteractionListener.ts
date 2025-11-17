@@ -23,17 +23,11 @@ const preventDefault = (event: Event) => event.preventDefault();
 type GestureManagerTyped = GestureManager<
   string,
   | PanGesture<'pan'>
-  | PanGesture<'zoomPan'>
   | MoveGesture<'move'>
+  | PanGesture<'zoomPan'>
   | PinchGesture<'zoomPinch'>
   | TurnWheelGesture<'zoomTurnWheel'>
-  | TapGesture<'tap'>
-  | PressGesture<'quickPress'>,
-  | PanGesture<'pan'>
-  | PanGesture<'zoomPan'>
-  | MoveGesture<'move'>
-  | PinchGesture<'zoomPinch'>
-  | TurnWheelGesture<'zoomTurnWheel'>
+  | TurnWheelGesture<'panTurnWheel'>
   | TapGesture<'tap'>
   | PressGesture<'quickPress'>
   | TapAndDragGesture<'zoomTapAndDrag'>
@@ -81,18 +75,20 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
           new PanGesture({
             name: 'zoomPan',
             threshold: 0,
-            maxPointers: 1,
             preventIf: ['zoomTapAndDrag', 'zoomPressAndDrag'],
           }),
           new PinchGesture({
             name: 'zoomPinch',
             threshold: 5,
-            preventIf: ['pan', 'zoomPan'],
           }),
           new TurnWheelGesture({
             name: 'zoomTurnWheel',
             sensitivity: 0.01,
             initialDelta: 1,
+          }),
+          new TurnWheelGesture({
+            name: 'panTurnWheel',
+            sensitivity: 0.5,
           }),
           new TapAndDragGesture({
             name: 'zoomTapAndDrag',
@@ -125,6 +121,7 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
         'zoomPinch',
         'zoomPan',
         'zoomTurnWheel',
+        'panTurnWheel',
         'tap',
         'quickPress',
         'zoomTapAndDrag',

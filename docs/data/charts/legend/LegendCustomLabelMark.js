@@ -1,5 +1,4 @@
 import { BarChart } from '@mui/x-charts/BarChart';
-import * as React from 'react';
 
 function HTMLCircle({ className, color }) {
   return (

@@ -1,13 +1,13 @@
 import { SchedulerValidDate } from '../../models/date';
-import { CalendarEvent } from '../../models/event';
+import { SchedulerEvent } from '../../models/event';
 
 export function buildEvent(
   id: string,
   title: string,
   start: SchedulerValidDate,
   end: SchedulerValidDate,
-  extra: Partial<CalendarEvent> = {},
-): CalendarEvent {
+  extra: Partial<SchedulerEvent> = {},
+): SchedulerEvent {
   return {
     id,
     title,

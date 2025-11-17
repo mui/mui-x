@@ -1,13 +1,13 @@
-import * as React from 'react';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
 import { adapter, createSchedulerRenderer, describeConformance } from 'test/utils/scheduler';
+import { processDate } from '@mui/x-scheduler-headless/process-date';
 
 describe('<CalendarGrid.DayEvent />', () => {
   const { render } = createSchedulerRenderer();
 
-  const eventStart = adapter.date();
-  const eventEnd = adapter.addHours(eventStart, 1);
+  const eventStart = processDate(adapter.date(), adapter);
+  const eventEnd = processDate(adapter.addHours(eventStart.value, 1), adapter);
 
   describeConformance(
     <CalendarGrid.DayEvent
@@ -23,8 +23,8 @@ describe('<CalendarGrid.DayEvent />', () => {
         return render(
           <EventCalendarProvider events={[]}>
             <CalendarGrid.Root>
-              <CalendarGrid.DayRow start={eventStart} end={eventEnd}>
-                <CalendarGrid.DayCell value={eventStart}>{node}</CalendarGrid.DayCell>
+              <CalendarGrid.DayRow start={eventStart.value} end={eventEnd.value}>
+                <CalendarGrid.DayCell value={eventStart.value}>{node}</CalendarGrid.DayCell>
               </CalendarGrid.DayRow>
             </CalendarGrid.Root>
           </EventCalendarProvider>,

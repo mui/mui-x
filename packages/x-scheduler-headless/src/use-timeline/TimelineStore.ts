@@ -1,6 +1,10 @@
 import { TimelinePreferences, TimelineView } from '../models';
 import { Adapter } from '../use-adapter';
-import { SchedulerParametersToStateMapper, SchedulerStore } from '../utils/SchedulerStore';
+import {
+  DEFAULT_SCHEDULER_PREFERENCES,
+  SchedulerParametersToStateMapper,
+  SchedulerStore,
+} from '../utils/SchedulerStore';
 import { TimelineState, TimelineParameters } from './TimelineStore.types';
 
 export const DEFAULT_VIEWS: TimelineView[] = ['time', 'days', 'weeks', 'months', 'years'];
@@ -11,9 +15,8 @@ const deriveStateFromParameters = <TEvent extends object, TResource extends obje
 ) => ({
   views: parameters.views ?? DEFAULT_VIEWS,
 });
-export const DEFAULT_PREFERENCES: TimelinePreferences = {
-  ampm: true,
-};
+
+export const DEFAULT_PREFERENCES: TimelinePreferences = DEFAULT_SCHEDULER_PREFERENCES;
 
 const mapper: SchedulerParametersToStateMapper<TimelineState, TimelineParameters<any, any>> = {
   getInitialState: (schedulerInitialState, parameters) => ({

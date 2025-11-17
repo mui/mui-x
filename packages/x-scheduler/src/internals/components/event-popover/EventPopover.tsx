@@ -3,9 +3,11 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { useStore } from '@base-ui-components/utils/store';
 import { Popover } from '@base-ui-components/react/popover';
-import { CalendarEventOccurrence } from '@mui/x-scheduler-headless/models';
-import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { selectors } from '@mui/x-scheduler-headless/scheduler-selectors';
+import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
+import {
+  schedulerEventSelectors,
+  schedulerOtherSelectors,
+} from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import {
   EventPopoverProps,
@@ -15,10 +17,10 @@ import {
 import { getColorClassName } from '../../utils/color-utils';
 import { createPopover } from '../create-popover';
 import './EventPopover.css';
-import FormContent from './FormContent';
 import ReadonlyContent from './ReadonlyContent';
+import { FormContent } from './FormContent';
 
-const EventPopover = createPopover<CalendarEventOccurrence>({
+const EventPopover = createPopover<SchedulerEventOccurrence>({
   contextName: 'EventPopoverContext',
 });
 
@@ -30,13 +32,12 @@ export const EventPopoverContent = React.forwardRef(function EventPopoverContent
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const { className, style, container, anchor, occurrence, onClose, ...other } = props;
-
   // Context hooks
   const store = useSchedulerStoreContext();
 
   // Selector hooks
-  const color = useStore(store, selectors.eventColor, occurrence.id);
-  const isEventReadOnly = useStore(store, selectors.isEventReadOnly, occurrence.id);
+  const color = useStore(store, schedulerEventSelectors.color, occurrence.id);
+  const isEventReadOnly = useStore(store, schedulerEventSelectors.isReadOnly, occurrence.id);
 
   return (
     <div ref={forwardedRef} className={className} {...other}>
@@ -62,8 +63,8 @@ export const EventPopoverContent = React.forwardRef(function EventPopoverContent
 
 export function EventPopoverProvider(props: EventPopoverProviderProps) {
   const { containerRef, children } = props;
-  const store = useEventCalendarStoreContext();
-  const isScopeDialogOpen = useStore(store, selectors.isScopeDialogOpen);
+  const store = useSchedulerStoreContext();
+  const isScopeDialogOpen = useStore(store, schedulerOtherSelectors.isScopeDialogOpen);
 
   return (
     <EventPopover.Provider

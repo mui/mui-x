@@ -31,7 +31,7 @@ export const useZoomOnWheel = (
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
   const startedOutsideRef = React.useRef(false);
   const startedOutsideTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
-  const config = useSelector(store, selectorZoomInteractionConfig, ['wheel' as const]);
+  const config = useSelector(store, selectorZoomInteractionConfig, 'wheel' as const);
 
   const isZoomOnWheelEnabled: boolean = Object.keys(optionsLookup).length > 0 && Boolean(config);
 

@@ -7,15 +7,15 @@ import { CheckboxGroup } from '@base-ui-components/react/checkbox-group';
 import { useStore } from '@base-ui-components/utils/store';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { selectors } from '@mui/x-scheduler-headless/use-event-calendar';
-import { CalendarResource } from '@mui/x-scheduler-headless/models';
+import { schedulerResourceSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
+import { SchedulerResource } from '@mui/x-scheduler-headless/models';
 import { DEFAULT_EVENT_COLOR } from '@mui/x-scheduler-headless/constants';
 import { ResourceLegendProps } from './ResourceLegend.types';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { getColorClassName } from '../../utils/color-utils';
 import './ResourceLegend.css';
 
-function ResourceLegendItem(props: { resource: CalendarResource }) {
+function ResourceLegendItem(props: { resource: SchedulerResource }) {
   const { resource } = props;
   const translations = useTranslations();
 
@@ -65,13 +65,13 @@ export const ResourceLegend = React.forwardRef(function ResourceLegend(
   const { className, ...other } = props;
   const translations = useTranslations();
   const store = useEventCalendarStoreContext();
-  const resources = useStore(store, selectors.processedResourceList);
-  const visibleResourcesList = useStore(store, selectors.visibleResourcesList);
+  const resources = useStore(store, schedulerResourceSelectors.processedResourceList);
+  const visibleResourcesList = useStore(store, schedulerResourceSelectors.visibleIdList);
 
   const handleVisibleResourcesChange = useEventCallback((value: string[]) => {
     const valueSet = new Set(value);
     const newVisibleResourcesMap = new Map(
-      selectors
+      schedulerResourceSelectors
         .processedResourceList(store.state)
         .filter((resource) => !valueSet.has(resource.id))
         .map((resource) => [resource.id, false]),

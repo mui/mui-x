@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { GridColDef, GridRowId, gridRowNodeSelector } from '@mui/x-data-grid-pro';
 import type { GridBaseColDef } from '@mui/x-data-grid-pro/internals';
@@ -14,12 +13,7 @@ import { GridFooterCell } from '../../../components/GridFooterCell';
 import { GridAggregationHeader } from '../../../components/GridAggregationHeader';
 import { gridPivotActiveSelector } from '../pivoting/gridPivotingSelectors';
 
-type WrappableColumnProperty =
-  | 'valueGetter'
-  | 'valueFormatter'
-  | 'renderCell'
-  | 'renderHeader'
-  | 'filterOperators';
+type WrappableColumnProperty = 'renderCell' | 'renderHeader';
 
 interface GridColDefWithAggregationWrappers extends GridBaseColDef {
   aggregationWrappedProperties: {

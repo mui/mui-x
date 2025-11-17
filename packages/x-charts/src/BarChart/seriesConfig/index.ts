@@ -1,13 +1,13 @@
 import { ChartSeriesTypeConfig } from '../../internals/plugins/models/seriesConfig';
-import { getExtremumX, getExtremumY } from './extremums';
-import seriesProcessor from './seriesProcessor';
-import legendGetter from './legend';
-import getColor from './getColor';
-import tooltipGetter, { axisTooltipGetter } from './tooltip';
-import tooltipItemPositionGetter from './tooltipPosition';
-import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
+import { getExtremumX, getExtremumY } from './bar/extremums';
+import seriesProcessor from './bar/seriesProcessor';
+import legendGetter from './bar/legend';
+import getColor from './bar/getColor';
+import tooltipGetter, { axisTooltipGetter } from './bar/tooltip';
+import tooltipItemPositionGetter from './bar/tooltipPosition';
+import getSeriesWithDefaultValues from './bar/getSeriesWithDefaultValues';
 
-export const seriesConfig: ChartSeriesTypeConfig<'bar'> = {
+export const barSeriesConfig: ChartSeriesTypeConfig<'bar'> = {
   seriesProcessor,
   colorProcessor: getColor,
   legendGetter,

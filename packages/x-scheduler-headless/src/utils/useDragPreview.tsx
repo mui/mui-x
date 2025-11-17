@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { RenderDragPreviewParameters } from '../models';
 import { useSchedulerStoreContext } from '../use-scheduler-store-context';
-import { selectors } from '../scheduler-selectors';
+import { schedulerEventSelectors } from '../scheduler-selectors';
 
 /**
  * Returns the drag preview to render when the dragged event is not over a valid drop target.
@@ -49,7 +49,7 @@ export function useDragPreview(parameters: useDragPreview.Parameters): useDragPr
         if (
           store &&
           type === 'internal-event' &&
-          !selectors.canDropEventsToTheOutside(store.state)
+          !schedulerEventSelectors.canDropEventsToTheOutside(store.state)
         ) {
           shouldShowPreview = false;
         } else if (location.current.dropTargets.some((el) => el.data.isSchedulerDropTarget)) {
