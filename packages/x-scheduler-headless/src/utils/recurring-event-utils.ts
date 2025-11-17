@@ -8,6 +8,7 @@ import {
   RecurringEventRecurrenceRule,
   SchedulerValidDate,
   SchedulerEvent,
+  SchedulerEventCreationProperties,
 } from '../models';
 import { mergeDateAndTime, getDateKey } from './date-utils';
 import { diffIn } from '../use-adapter';
@@ -130,23 +131,18 @@ export function parsesByDayForMonthlyFrequency(ruleByDay: RecurringEventByDayVal
 }
 
 /**
- *  Inclusive span (in days) for all-day events.
+ *  Duration of the event in days.
  *  @returns At least 1, start==end yields 1.
  */
-export function getAllDaySpanDays(adapter: Adapter, event: SchedulerProcessedEvent): number {
-  // TODO: Now only all-day events are implemented, we should add support for timed events that span multiple days later
-  if (!event.allDay) {
-    return 1;
-  }
+export function getEventDurationInDays(adapter: Adapter, event: SchedulerProcessedEvent): number {
   // +1 so start/end same day = 1 day, spans include last day
-  return Math.max(
-    1,
+  return (
     diffIn(
       adapter,
       adapter.startOfDay(event.end.value),
       adapter.startOfDay(event.start.value),
       'days',
-    ) + 1,
+    ) + 1
   );
 }
 
@@ -168,8 +164,8 @@ export function getRecurringEventOccurrencesForVisibleDays(
   const endGuard = buildEndGuard(rule, event.start.value, adapter);
   const durationMinutes = diffIn(adapter, event.end.value, event.start.value, 'minutes');
 
-  const allDaySpanDays = getAllDaySpanDays(adapter, event);
-  const scanStart = adapter.addDays(start, -(allDaySpanDays - 1));
+  const eventDuration = getEventDurationInDays(adapter, event);
+  const scanStart = adapter.addDays(start, -(eventDuration - 1));
 
   for (
     let day = adapter.startOfDay(scanStart);
@@ -190,7 +186,7 @@ export function getRecurringEventOccurrencesForVisibleDays(
       : mergeDateAndTime(adapter, day, event.start.value);
 
     const occurrenceEnd = event.allDay
-      ? adapter.endOfDay(adapter.addDays(occurrenceStart, allDaySpanDays - 1))
+      ? adapter.endOfDay(adapter.addDays(occurrenceStart, eventDuration - 1))
       : adapter.addMinutes(occurrenceStart, durationMinutes);
 
     const key = `${event.id}::${getDateKey(occurrenceStart, adapter)}`;
@@ -763,7 +759,7 @@ export function decideSplitRRule(
 
   // Case A — user provided a new RRULE → respect it (including COUNT/UNTIL)
   if (hasRRuleProp && changesRRule) {
-    return changesRRule;
+    return changesRRule as RecurringEventRecurrenceRule;
   }
 
   // Case B — user explicitly removed recurrence → one-off
@@ -1026,18 +1022,8 @@ export function applyRecurringUpdateOnlyThis(
   occurrenceStart: SchedulerValidDate,
   changes: SchedulerEventUpdatedProperties,
 ): UpdateEventsParameters {
-  const detachedId = `${originalEvent.id}::${getDateKey(changes.start ?? originalEvent.start.value, adapter)}`;
-
-  const detachedEvent: SchedulerEvent = {
-    ...originalEvent.modelInBuiltInFormat!,
-    ...changes,
-    id: detachedId,
-    rrule: undefined,
-    extractedFromId: originalEvent.id,
-  };
-
   return {
-    created: [detachedEvent],
+    created: [createEventFromRecurringEvent(originalEvent, changes)],
     updated: [
       {
         id: originalEvent.id,
@@ -1045,4 +1031,185 @@ export function applyRecurringUpdateOnlyThis(
       },
     ],
   };
+}
+
+/**
+ * Generates the property to pass to `store.updateEvents()` to create an event extracted from a potentially recurring event.
+ */
+export function createEventFromRecurringEvent(
+  originalEvent: SchedulerProcessedEvent,
+  changes: Partial<SchedulerEvent>,
+): SchedulerEventCreationProperties {
+  const createdEvent: SchedulerEventCreationProperties = {
+    ...originalEvent.modelInBuiltInFormat!,
+    ...changes,
+    extractedFromId: originalEvent.id,
+  };
+
+  // @ts-ignore
+  delete createdEvent.id;
+  delete createdEvent.rrule;
+  delete createdEvent.exDates;
+
+  return createdEvent;
+}
+
+const SUPPORTED_RRULE_KEYS = [
+  'FREQ',
+  'INTERVAL',
+  'BYDAY',
+  'BYMONTHDAY',
+  'BYMONTH',
+  'UNTIL',
+  'COUNT',
+] as const;
+
+/**
+ * Parses a string RRULE (e.g. "FREQ=DAILY;COUNT=5;INTERVAL=2")
+ * into a RecurringEventRecurrenceRule object.
+ * Also validates unsupported or malformed properties.
+ */
+export function parseRRuleString(
+  adapter: Adapter,
+  input: string | RecurringEventRecurrenceRule,
+): RecurringEventRecurrenceRule {
+  if (typeof input === 'object') {
+    return input;
+  }
+
+  const rruleObject: Record<string, string> = {};
+  const parts = input
+    .split(';')
+    .map((p) => p.trim())
+    .filter(Boolean);
+
+  for (const part of parts) {
+    const [rawKey, rawValue] = part.split('=');
+    const key = rawKey?.trim().toUpperCase();
+    const value = rawValue?.trim().toUpperCase();
+
+    if (!key || !value) {
+      throw new Error(`Scheduler: Invalid RRULE part: "${part}"`);
+    }
+
+    if (!SUPPORTED_RRULE_KEYS.includes(key as any)) {
+      throw new Error(`Scheduler: Unsupported RRULE property: "${key}"`);
+    }
+
+    rruleObject[key] = value;
+  }
+
+  if (!rruleObject.FREQ) {
+    throw new Error('Scheduler: RRULE must include a FREQ property.');
+  }
+
+  const rrule: RecurringEventRecurrenceRule = {
+    freq: rruleObject.FREQ as RecurringEventRecurrenceRule['freq'],
+  };
+
+  if (rruleObject.INTERVAL) {
+    const interval = Number(rruleObject.INTERVAL);
+    if (Number.isNaN(interval) || interval < 1) {
+      throw new Error(`Scheduler: Invalid INTERVAL value: "${rruleObject.INTERVAL}"`);
+    }
+    rrule.interval = interval;
+  }
+
+  if (rruleObject.BYDAY) {
+    rrule.byDay = rruleObject.BYDAY.split(',').map((v) => v.trim()) as RecurringEventByDayValue[];
+  }
+
+  if (rruleObject.BYDAY) {
+    const tokens = rruleObject.BYDAY.split(',').map((v) => v.trim()) as RecurringEventByDayValue[];
+    rrule.byDay = tokens
+      .map((t) => tokenizeByDay(t))
+      .sort(
+        (a, b) => NOT_LOCALIZED_WEEK_DAYS.indexOf(a.code) - NOT_LOCALIZED_WEEK_DAYS.indexOf(b.code),
+      )
+      .map((t) => (t.ord != null ? (`${t.ord}${t.code}` as RecurringEventByDayValue) : t.code));
+  }
+
+  if (rruleObject.BYMONTHDAY) {
+    const days = rruleObject.BYMONTHDAY.split(',').map((d) => Number(d.trim()));
+    if (days.some((d) => Number.isNaN(d) || d < 1 || d > 31)) {
+      throw new Error(`Scheduler: Invalid BYMONTHDAY values: "${rruleObject.BYMONTHDAY}"`);
+    }
+    rrule.byMonthDay = days.toSorted((a, b) => a - b);
+  }
+
+  if (rruleObject.BYMONTH) {
+    const months = rruleObject.BYMONTH.split(',').map((m) => Number(m.trim()));
+    if (months.some((m) => Number.isNaN(m) || m < 1 || m > 12)) {
+      throw new Error(`Scheduler: Invalid BYMONTH values: "${rruleObject.BYMONTH}"`);
+    }
+    rrule.byMonth = months.toSorted((a, b) => a - b);
+  }
+
+  if (rruleObject.COUNT) {
+    const count = Number(rruleObject.COUNT);
+    if (Number.isNaN(count) || count < 1) {
+      throw new Error(`Scheduler: Invalid COUNT value: "${rruleObject.COUNT}"`);
+    }
+    rrule.count = count;
+  }
+
+  if (rruleObject.UNTIL) {
+    const parsed = adapter.date(rruleObject.UNTIL);
+
+    if (!adapter.isValid(parsed)) {
+      throw new Error(`Scheduler: Invalid UNTIL date: "${rruleObject.UNTIL}"`);
+    }
+
+    rrule.until = parsed;
+  }
+
+  return rrule;
+}
+
+/**
+ * Serializes a RecurringEventRecurrenceRule object
+ * into a RRULE string (RFC5545).
+ */
+export function serializeRRule(adapter: Adapter, rule: RecurringEventRecurrenceRule): string {
+  const parts: string[] = [];
+
+  parts.push(`FREQ=${rule.freq}`);
+
+  const interval = rule.interval ?? 1;
+  if (interval !== 1) {
+    parts.push(`INTERVAL=${interval}`);
+  }
+
+  if (rule.byDay?.length) {
+    const normalized = [...rule.byDay]
+      .map((t) => tokenizeByDay(t))
+      .sort(
+        (a, b) => NOT_LOCALIZED_WEEK_DAYS.indexOf(a.code) - NOT_LOCALIZED_WEEK_DAYS.indexOf(b.code),
+      )
+      .map((t) => (t.ord != null ? (`${t.ord}${t.code}` as RecurringEventByDayValue) : t.code));
+    parts.push(`BYDAY=${normalized.join(',')}`);
+  }
+
+  if (rule.byMonthDay?.length) {
+    parts.push(`BYMONTHDAY=${rule.byMonthDay.toSorted((a, b) => a - b).join(',')}`);
+  }
+
+  if (rule.byMonth?.length) {
+    parts.push(`BYMONTH=${rule.byMonth.toSorted((a, b) => a - b).join(',')}`);
+  }
+
+  if (typeof rule.count === 'number') {
+    parts.push(`COUNT=${rule.count}`);
+  }
+
+  if (rule.until) {
+    const utcDate = adapter.setTimezone(rule.until, 'UTC');
+
+    // RFC5545 format: YYYYMMDDTHHmmssZ
+    const untilIso = adapter.formatByString(utcDate, "yyyyMMdd'T'HHmmss'Z'");
+
+    parts.push(`UNTIL=${untilIso}`);
+  }
+
+  return parts.join(';');
 }
