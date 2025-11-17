@@ -22,8 +22,8 @@ export function getBarLabel<
     }
 
     if (typeof value === 'object') {
-      // For range bars, we show the range as "start - end"
-      return `${value.start} - ${value.end}`;
+      // For range bars, we show the range as "[start, end]"
+      return `[${value.start}, ${value.end}]`;
     }
 
     return value.toString();

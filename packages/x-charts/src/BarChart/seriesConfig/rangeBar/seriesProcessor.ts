@@ -79,7 +79,7 @@ const seriesProcessor: SeriesProcessor<'rangeBar'> = (params, dataset) => {
   return {
     seriesOrder,
     series: defaultizeValueFormatter(completedSeries, (v) =>
-      v == null ? '' : `${v.start} - ${v.end}`,
+      v == null ? '' : `[${v.start}, ${v.end}]`,
     ),
   };
 };

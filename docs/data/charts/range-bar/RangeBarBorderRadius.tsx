@@ -6,14 +6,17 @@ import MenuItem from '@mui/material/MenuItem';
 import Slider from '@mui/material/Slider';
 import Typography from '@mui/material/Typography';
 import { BarChartPro, BarChartProProps } from '@mui/x-charts-pro/BarChartPro';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 
 export default function RangeBarBorderRadius() {
   const [layout, setLayout] = React.useState<'horizontal' | 'vertical'>('vertical');
   const [radius, setRadius] = React.useState(10);
+  const [reverse, setReverse] = React.useState(false);
 
   return (
     <Stack direction="column" spacing={1} sx={{ width: '100%', maxWidth: 600 }}>
-      <Stack direction="row" spacing={4}>
+      <Stack direction="row" spacing={4} flexWrap="wrap" justifyContent="center">
         <Stack direction="column" spacing={1} flex={1}>
           <Typography gutterBottom>Border Radius</Typography>
           <Slider
@@ -37,18 +40,26 @@ export default function RangeBarBorderRadius() {
           <MenuItem value="horizontal">Horizontal</MenuItem>
           <MenuItem value="vertical">Vertical</MenuItem>
         </TextField>
+
+        <FormControlLabel
+          checked={reverse}
+          control={
+            <Checkbox onChange={(event) => setReverse(event.target.checked)} />
+          }
+          label="Reverse"
+          labelPlacement="end"
+        />
       </Stack>
       <BarChartPro
         series={[
           {
             type: 'rangeBar',
             datasetKeys: { start: 'low', end: 'high' },
-            label: 'High',
             layout,
           },
         ]}
         margin={{ left: 0 }}
-        {...(layout === 'vertical' ? chartSettingsV : chartSettingsH)}
+        {...getChartSettings(layout, reverse)}
         borderRadius={radius}
       />
       <HighlightedCode
@@ -73,19 +84,24 @@ const dataset = [
   low,
   order,
 }));
-const chartSettingsH: Partial<BarChartProProps> = {
-  dataset,
-  height: 300,
-  yAxis: [{ scaleType: 'band', dataKey: 'order' }],
-  slotProps: {
-    legend: {
-      direction: 'horizontal',
-      position: { vertical: 'bottom', horizontal: 'center' },
+
+function getChartSettings(
+  layout: 'vertical' | 'horizontal',
+  reverse: boolean,
+): Partial<BarChartProProps> {
+  return {
+    dataset,
+    height: 300,
+    xAxis: layout === 'horizontal' ? [{ reverse }] : [{ dataKey: 'order' }],
+    yAxis:
+      layout === 'horizontal'
+        ? [{ scaleType: 'band', dataKey: 'order' }]
+        : [{ reverse }],
+    slotProps: {
+      legend: {
+        direction: 'horizontal',
+        position: { vertical: 'bottom', horizontal: 'center' },
+      },
     },
-  },
-};
-const chartSettingsV: Partial<BarChartProProps> = {
-  ...chartSettingsH,
-  xAxis: [{ dataKey: 'order' }],
-  yAxis: undefined,
-};
+  };
+}
