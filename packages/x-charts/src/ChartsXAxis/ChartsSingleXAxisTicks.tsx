@@ -11,17 +11,18 @@ import { shortenLabels } from './shortenLabels';
 import { getVisibleLabels } from './getVisibleLabels';
 import { AXIS_LABEL_TICK_LABEL_GAP, TICK_LABEL_GAP } from './utilities';
 import { useAxisTicksProps } from './useAxisTicksProps';
+import { TimeOrdinalTicks } from '../internals/timeTicks';
 
 interface ChartsSingleXAxisProps extends ChartsXAxisProps {
   axisLabelHeight: number;
-  continuousTickPlacement?: boolean;
+  timeOrdinalTicks?: TimeOrdinalTicks;
 }
 
 /**
  * @ignore - internal component.
  */
 function ChartsSingleXAxisTicks(inProps: ChartsSingleXAxisProps) {
-  const { axisLabelHeight, continuousTickPlacement } = inProps;
+  const { axisLabelHeight, timeOrdinalTicks } = inProps;
   const {
     xScale,
     defaultizedProps,
@@ -64,7 +65,7 @@ function ChartsSingleXAxisTicks(inProps: ChartsSingleXAxisProps) {
     tickPlacement,
     tickLabelPlacement,
     direction: 'x',
-    continuousTickPlacement,
+    timeOrdinalTicks,
   });
 
   const visibleLabels = getVisibleLabels(xTicks, {

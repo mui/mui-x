@@ -18,6 +18,7 @@ import { ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
 import { ChartsTextProps } from '../ChartsText';
 import { ContinuousColorConfig, OrdinalColorConfig, PiecewiseColorConfig } from './colorMapping';
+import { TimeOrdinalTicks } from '../internals/timeTicks';
 
 export type AxisId = string | number;
 
@@ -266,7 +267,10 @@ export type AxisGroups = {
 export interface AxisScaleConfig {
   band: {
     scaleType: 'band';
-    isNumerical?: boolean;
+    /**
+     * Definition of the tick placements with date data.
+     */
+    timeOrdinalTicks?: TimeOrdinalTicks;
     scale: ScaleBand<{ toString(): string }>;
     /**
      * The ratio between the space allocated for padding between two categories and the category width.
@@ -285,21 +289,22 @@ export interface AxisScaleConfig {
     Pick<TickParams, 'tickPlacement' | 'tickLabelPlacement'>;
   point: {
     scaleType: 'point';
-    isNumerical?: boolean;
+    /**
+     * Definition of the tick placements with date data.
+     */
+    timeOrdinalTicks?: TimeOrdinalTicks;
     scale: ScalePoint<{ toString(): string }>;
     colorMap?: OrdinalColorConfig | ContinuousColorConfig | PiecewiseColorConfig;
   } & AxisGroups;
   log: {
     scaleType: 'log';
-
-    isNumerical?: false;
+    timeOrdinalTicks?: never;
     scale: ScaleLogarithmic<number, number>;
     colorMap?: ContinuousColorConfig | PiecewiseColorConfig;
   };
   symlog: {
     scaleType: 'symlog';
-
-    isNumerical?: false;
+    timeOrdinalTicks?: never;
     scale: ScaleSymLog<number, number>;
     colorMap?: ContinuousColorConfig | PiecewiseColorConfig;
     /**
@@ -310,36 +315,31 @@ export interface AxisScaleConfig {
   };
   pow: {
     scaleType: 'pow';
-
-    isNumerical?: false;
+    timeOrdinalTicks?: never;
     scale: ScalePower<number, number>;
     colorMap?: ContinuousColorConfig | PiecewiseColorConfig;
   };
   sqrt: {
     scaleType: 'sqrt';
-
-    isNumerical?: false;
+    timeOrdinalTicks?: never;
     scale: ScalePower<number, number>;
     colorMap?: ContinuousColorConfig | PiecewiseColorConfig;
   };
   time: {
     scaleType: 'time';
-
-    isNumerical?: false;
+    timeOrdinalTicks?: never;
     scale: ScaleTime<number, number>;
     colorMap?: ContinuousColorConfig | PiecewiseColorConfig;
   };
   utc: {
     scaleType: 'utc';
-
-    isNumerical?: false;
+    timeOrdinalTicks?: never;
     scale: ScaleTime<number, number>;
     colorMap?: ContinuousColorConfig | PiecewiseColorConfig;
   };
   linear: {
     scaleType: 'linear';
-
-    isNumerical?: false;
+    timeOrdinalTicks?: never;
     scale: ScaleLinear<number, number>;
     colorMap?: ContinuousColorConfig | PiecewiseColorConfig;
   };

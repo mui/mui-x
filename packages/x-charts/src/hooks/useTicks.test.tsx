@@ -2,10 +2,9 @@ import { scaleBand } from '@mui/x-charts-vendor/d3-scale';
 import { getTicks } from './useTicks';
 
 const defaultOptions = {
-  scale: scaleBand<number | string | Date>([1, 2, 3, 5], [0, 100]),
+  scale: scaleBand([1, 2, 3, 5], [0, 100]) as unknown as any,
   tickNumber: 5,
   isInside: (value: number) => value >= 0 && value <= 100,
-  continuousTickPlacement: false,
 };
 
 const numberData = Array.from({ length: 25 }, (_, i) => i + 1);
@@ -75,7 +74,7 @@ describe('getTicks', () => {
     });
 
     it('should place tick at the start/middle/end according to the closest position of ticks value.', () => {
-      const ticks = getTicks({
+      const ticks = getTicks<number | string | Date>({
         ...defaultOptions,
         scale: scaleBand<number | string | Date>(sparseNumberData, [0, 100]),
         tickNumber: 4,

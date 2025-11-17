@@ -181,13 +181,19 @@ At the bottom, you can see one tick for the beginning and the middle of the day,
 ### Ordinal tick management
 
 Ordinal scales (`'band'` and `'point'`) display one tick per item by default.
-If you set `isNumerical` to `true` in the axis config, this behavior gets modified.
+If you're axis is about date, you can subsample them with `timeOrdinalTicks` property.
 
-Ticks are computed as if the scale was a continuous one (`'linear'` or `'time'`) and placed on the closest value.
+It takes an array of frequencies at which ticks can be placed sorted from the largest to the smallest.
+Tick are placed according to those frequencies plus the the `tickNumber`.
 
-The demo bellow shows the daily GOOGL stock exchange volume.
-Thanks to band scale, the missing day (week-end and bank holidays) are not visible.
-But ticks appear as a continuous scale.
+It can either be a subsample of built in frequencies: `'years'`, `'3-months'`, `'months'`, `'2-weeks'`, `'weeks'`, `'days'`, `'hours'`.
+Or a custom definition of type `TimeTicksDefinition` which is an object made of following properties:
+
+- `getTickNumber: (from: Date, to: Date) => number` Returns the number of ticks that will be displayed between `from` and `to` dates.
+- `isTick: (prev: Date, value: Date) => boolean` Returns `true` is a tick should be placed on `value`. For example if it's the beginning of a new month.
+- `format: (d: Date) => string` Returns for tick label.
+
+In, the following demo, you can modify the `timeOrdinalTicks` based on built-in frequencies and see how it impacts zoom behavior.
 
 {{"demo": "OrdinalTickPlacement.js"}}
 

@@ -17,13 +17,13 @@ interface ChartsGridVerticalProps {
 export function ChartsGridVertical(props: ChartsGridVerticalProps) {
   const { axis, start, end, classes } = props;
 
-  const { scale, tickNumber, tickInterval, isNumerical } = axis;
+  const { scale, tickNumber, tickInterval, timeOrdinalTicks } = axis;
 
   const xTicks = useTicks({
     scale,
     tickNumber,
     tickInterval,
-    continuousTickPlacement: isNumerical,
+    timeOrdinalTicks,
     direction: 'x',
   });
 

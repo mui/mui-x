@@ -26,7 +26,7 @@ interface ChartsXAxisImplProps extends Omit<ChartsXAxisProps, 'axis'> {
  * @ignore - internal component. Use `ChartsXAxis` instead.
  */
 export function ChartsXAxisImpl({ axis, ...inProps }: ChartsXAxisImplProps) {
-  const { scale: xScale, tickNumber, reverse, isNumerical, ...settings } = axis;
+  const { scale: xScale, tickNumber, reverse, timeOrdinalTicks, ...settings } = axis;
 
   // eslint-disable-next-line material-ui/mui-name-matches-component-name
   const themedProps = useThemeProps({ props: { ...settings, ...inProps }, name: 'MuiChartsXAxis' });
@@ -87,7 +87,7 @@ export function ChartsXAxisImpl({ axis, ...inProps }: ChartsXAxisImplProps) {
         <ChartsSingleXAxisTicks
           {...inProps}
           axisLabelHeight={labelHeight}
-          continuousTickPlacement={isNumerical}
+          timeOrdinalTicks={timeOrdinalTicks}
         />
       );
   }
