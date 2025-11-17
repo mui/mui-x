@@ -621,9 +621,7 @@ describe('<DataGridPro /> - Columns', () => {
       const gap = 2;
       const padding = 20;
       function CustomSortIcon() {
-        return (
-          <span style={{ fontSize: iconSize, width: iconSize, display: 'inline-block' }}>⇅</span>
-        );
+        return <span style={{ width: iconSize, flex: 'none' }}>⇅</span>;
       }
       render(
         <Test
