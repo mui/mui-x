@@ -17,10 +17,15 @@ import './ScopeDialog.css';
 export const RecurringScopeDialog = React.forwardRef<HTMLDivElement, ScopePopoverProps>(
   function ScopeDialog(props, ref) {
     const { className, containerRef, ...other } = props;
+
+    // Context hooks
     const translations = useTranslations();
     const store = useSchedulerStoreContext();
+
+    // Selector hooks
     const open = useStore(store, schedulerOtherSelectors.isScopeDialogOpen);
 
+    // Feature hooks
     const handleOpenChange = React.useCallback(
       (next: boolean) => {
         if (!next) {
