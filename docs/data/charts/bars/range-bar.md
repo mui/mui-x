@@ -42,7 +42,7 @@ Unlike other chart types, the `colorMap` property does not work for the numerica
 
 You can learn more about the `colorMap` in the [Styling docs](/x/react-charts/styling/#values-color).
 
-{{"demo": "ColorScale.js"}}
+{{"demo": "RangeBarColorScale.js"}}
 
 ### Border radius
 
@@ -54,10 +54,12 @@ When using composition, you can set the `borderRadius` prop on the `RangeBarPlot
 
 ### CSS
 
+You can customize the range bar chart elements using CSS selectors.
 
-## Labels
+Like a bar chart, each series renders a `g` element that contains a `data-series` attribute.
+You can use this attribute to target elements based on their series.
 
-TODO
+{{"demo": "RangeBarGradient.js"}}
 
 ## Composition
 

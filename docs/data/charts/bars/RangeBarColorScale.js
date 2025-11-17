@@ -20,7 +20,7 @@ const series = [
   },
 ];
 
-export default function ColorScale() {
+export default function RangeBarColorScale() {
   const [colorX, setColorX] = React.useState('piecewise');
 
   return (

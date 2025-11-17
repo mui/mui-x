@@ -39,6 +39,6 @@
   "muiName": "MuiRangeBarPlot",
   "filename": "/packages/x-charts-pro/src/BarChartPro/RangeBar/RangeBarPlot.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/bars/\">Charts - Bars</a></li>\n<li><a href=\"/x/react-charts/range-bar/\">Charts - Bars</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/bars/\">Charts - Bars</a></li>\n<li><a href=\"/x/react-charts/bars/\">Charts - Range Bar</a></li></ul>",
   "cssComponent": false
 }

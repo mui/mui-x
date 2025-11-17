@@ -21,7 +21,7 @@ const series = [
   } satisfies RangeBarSeries,
 ];
 
-export default function ColorScale() {
+export default function RangeBarColorScale() {
   const [colorX, setColorX] = React.useState<
     'None' | 'piecewise' | 'continuous' | 'ordinal'
   >('piecewise');
