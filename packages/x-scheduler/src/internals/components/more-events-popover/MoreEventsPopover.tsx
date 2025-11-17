@@ -67,6 +67,7 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
                 }
                 key={occurrence.key}
                 occurrence={occurrence}
+                date={day}
                 ariaLabelledBy={`PopoverHeader-${day.key}`}
               />
             ))}
