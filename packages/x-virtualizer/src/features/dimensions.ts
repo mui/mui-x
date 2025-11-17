@@ -122,140 +122,148 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
     onResize,
   } = params;
 
-  const containerNode = refs.container.current;
+  const updateDimensions = React.useCallback(
+    (firstUpdate?: boolean) => {
+      if (firstUpdate) {
+        isFirstSizing.current = false;
+      }
+      if (isFirstSizing.current) {
+        return;
+      }
 
-  const updateDimensions = React.useCallback(() => {
-    if (isFirstSizing.current) {
-      return;
-    }
+      const containerNode = refs.container.current;
+      const rootSize = selectors.rootSize(store.state);
+      const rowsMeta = selectors.rowsMeta(store.state);
 
-    const rootSize = selectors.rootSize(store.state);
-    const rowsMeta = selectors.rowsMeta(store.state);
+      // All the floating point dimensions should be rounded to .1 decimal places to avoid subpixel rendering issues
+      // https://github.com/mui/mui-x/issues/9550#issuecomment-1619020477
+      // https://github.com/mui/mui-x/issues/15721
+      const scrollbarSize = measureScrollbarSize(containerNode, params.dimensions.scrollbarSize);
 
-    // All the floating point dimensions should be rounded to .1 decimal places to avoid subpixel rendering issues
-    // https://github.com/mui/mui-x/issues/9550#issuecomment-1619020477
-    // https://github.com/mui/mui-x/issues/15721
-    const scrollbarSize = measureScrollbarSize(containerNode, params.dimensions.scrollbarSize);
+      const topContainerHeight = topPinnedHeight + rowsMeta.pinnedTopRowsTotalHeight;
+      const bottomContainerHeight = bottomPinnedHeight + rowsMeta.pinnedBottomRowsTotalHeight;
 
-    const topContainerHeight = topPinnedHeight + rowsMeta.pinnedTopRowsTotalHeight;
-    const bottomContainerHeight = bottomPinnedHeight + rowsMeta.pinnedBottomRowsTotalHeight;
-
-    const contentSize = {
-      width: columnsTotalWidth,
-      height: roundToDecimalPlaces(rowsMeta.currentPageTotalHeight, 1),
-    };
-
-    let viewportOuterSize: Size;
-    let viewportInnerSize: Size;
-    let hasScrollX = false;
-    let hasScrollY = false;
-
-    if (params.autoHeight) {
-      hasScrollY = false;
-      hasScrollX = Math.round(columnsTotalWidth) > Math.round(rootSize.width);
-
-      viewportOuterSize = {
-        width: rootSize.width,
-        height: topContainerHeight + bottomContainerHeight + contentSize.height,
-      };
-      viewportInnerSize = {
-        width: Math.max(0, viewportOuterSize.width - (hasScrollY ? scrollbarSize : 0)),
-        height: Math.max(0, viewportOuterSize.height - (hasScrollX ? scrollbarSize : 0)),
-      };
-    } else {
-      viewportOuterSize = {
-        width: rootSize.width,
-        height: rootSize.height,
-      };
-      viewportInnerSize = {
-        width: Math.max(0, viewportOuterSize.width),
-        height: Math.max(0, viewportOuterSize.height - topContainerHeight - bottomContainerHeight),
+      const contentSize = {
+        width: columnsTotalWidth,
+        height: roundToDecimalPlaces(rowsMeta.currentPageTotalHeight, 1),
       };
 
-      const content = contentSize;
-      const container = viewportInnerSize;
+      let viewportOuterSize: Size;
+      let viewportInnerSize: Size;
+      let hasScrollX = false;
+      let hasScrollY = false;
 
-      const hasScrollXIfNoYScrollBar = content.width > container.width;
-      const hasScrollYIfNoXScrollBar = content.height > container.height;
+      if (params.autoHeight) {
+        hasScrollY = false;
+        hasScrollX = Math.round(columnsTotalWidth) > Math.round(rootSize.width);
 
-      if (hasScrollXIfNoYScrollBar || hasScrollYIfNoXScrollBar) {
-        hasScrollY = hasScrollYIfNoXScrollBar;
-        hasScrollX = content.width + (hasScrollY ? scrollbarSize : 0) > container.width;
+        viewportOuterSize = {
+          width: rootSize.width,
+          height: topContainerHeight + bottomContainerHeight + contentSize.height,
+        };
+        viewportInnerSize = {
+          width: Math.max(0, viewportOuterSize.width - (hasScrollY ? scrollbarSize : 0)),
+          height: Math.max(0, viewportOuterSize.height - (hasScrollX ? scrollbarSize : 0)),
+        };
+      } else {
+        viewportOuterSize = {
+          width: rootSize.width,
+          height: rootSize.height,
+        };
+        viewportInnerSize = {
+          width: Math.max(0, viewportOuterSize.width),
+          height: Math.max(
+            0,
+            viewportOuterSize.height - topContainerHeight - bottomContainerHeight,
+          ),
+        };
 
-        // We recalculate the scroll y to consider the size of the x scrollbar.
+        const content = contentSize;
+        const container = viewportInnerSize;
+
+        const hasScrollXIfNoYScrollBar = content.width > container.width;
+        const hasScrollYIfNoXScrollBar = content.height > container.height;
+
+        if (hasScrollXIfNoYScrollBar || hasScrollYIfNoXScrollBar) {
+          hasScrollY = hasScrollYIfNoXScrollBar;
+          hasScrollX = content.width + (hasScrollY ? scrollbarSize : 0) > container.width;
+
+          // We recalculate the scroll y to consider the size of the x scrollbar.
+          if (hasScrollX) {
+            hasScrollY = content.height + scrollbarSize > container.height;
+          }
+        }
+
+        if (hasScrollY) {
+          viewportInnerSize.width -= scrollbarSize;
+        }
         if (hasScrollX) {
-          hasScrollY = content.height + scrollbarSize > container.height;
+          viewportInnerSize.height -= scrollbarSize;
         }
       }
 
-      if (hasScrollY) {
-        viewportInnerSize.width -= scrollbarSize;
+      if (params.disableHorizontalScroll) {
+        hasScrollX = false;
       }
-      if (hasScrollX) {
-        viewportInnerSize.height -= scrollbarSize;
+
+      if (params.disableVerticalScroll) {
+        hasScrollY = false;
       }
-    }
 
-    if (params.disableHorizontalScroll) {
-      hasScrollX = false;
-    }
+      const rowWidth = Math.max(
+        viewportOuterSize.width,
+        columnsTotalWidth + (hasScrollY ? scrollbarSize : 0),
+      );
 
-    if (params.disableVerticalScroll) {
-      hasScrollY = false;
-    }
+      const minimumSize = {
+        width: columnsTotalWidth,
+        height: topContainerHeight + contentSize.height + bottomContainerHeight,
+      };
 
-    const rowWidth = Math.max(
-      viewportOuterSize.width,
-      columnsTotalWidth + (hasScrollY ? scrollbarSize : 0),
-    );
+      const newDimensions: DimensionsState = {
+        isReady: true,
+        root: rootSize,
+        viewportOuterSize,
+        viewportInnerSize,
+        contentSize,
+        minimumSize,
+        hasScrollX,
+        hasScrollY,
+        scrollbarSize,
+        rowWidth,
+        rowHeight,
+        columnsTotalWidth,
+        leftPinnedWidth,
+        rightPinnedWidth,
+        topContainerHeight,
+        bottomContainerHeight,
+      };
 
-    const minimumSize = {
-      width: columnsTotalWidth,
-      height: topContainerHeight + contentSize.height + bottomContainerHeight,
-    };
+      const prevDimensions = store.state.dimensions;
 
-    const newDimensions: DimensionsState = {
-      isReady: true,
-      root: rootSize,
-      viewportOuterSize,
-      viewportInnerSize,
-      contentSize,
-      minimumSize,
-      hasScrollX,
-      hasScrollY,
-      scrollbarSize,
-      rowWidth,
+      if (isDeepEqual(prevDimensions as any, newDimensions)) {
+        return;
+      }
+
+      store.update({ dimensions: newDimensions });
+      onResize?.(newDimensions.root);
+    },
+    [
+      store,
+      refs.container,
+      params.dimensions.scrollbarSize,
+      params.autoHeight,
+      params.disableHorizontalScroll,
+      params.disableVerticalScroll,
+      onResize,
       rowHeight,
       columnsTotalWidth,
       leftPinnedWidth,
       rightPinnedWidth,
-      topContainerHeight,
-      bottomContainerHeight,
-    };
-
-    const prevDimensions = store.state.dimensions;
-
-    if (isDeepEqual(prevDimensions as any, newDimensions)) {
-      return;
-    }
-
-    store.update({ dimensions: newDimensions });
-    onResize?.(newDimensions.root);
-  }, [
-    store,
-    containerNode,
-    params.dimensions.scrollbarSize,
-    params.autoHeight,
-    params.disableHorizontalScroll,
-    params.disableVerticalScroll,
-    onResize,
-    rowHeight,
-    columnsTotalWidth,
-    leftPinnedWidth,
-    rightPinnedWidth,
-    topPinnedHeight,
-    bottomPinnedHeight,
-  ]);
+      topPinnedHeight,
+      bottomPinnedHeight,
+    ],
+  );
 
   const { resizeThrottleMs } = params;
   const updateDimensionCallback = useEventCallback(updateDimensions);
@@ -264,23 +272,6 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
     [resizeThrottleMs, updateDimensionCallback],
   );
   React.useEffect(() => debouncedUpdateDimensions?.clear, [debouncedUpdateDimensions]);
-
-  const setRootSize = useEventCallback((rootSize: Size) => {
-    store.state.rootSize = rootSize;
-
-    if (isFirstSizing.current || !debouncedUpdateDimensions) {
-      // We want to initialize the grid dimensions as soon as possible to avoid flickering
-      isFirstSizing.current = false;
-      updateDimensions();
-    } else {
-      debouncedUpdateDimensions();
-    }
-  });
-
-  useLayoutEffect(
-    () => observeRootNode(containerNode, store, setRootSize),
-    [containerNode, store, setRootSize],
-  );
 
   useLayoutEffect(updateDimensions, [updateDimensions]);
 
@@ -429,7 +420,6 @@ function useRowsMeta(
     };
 
     store.set('rowsMeta', rowsMeta);
-
     if (didHeightsChange) {
       updateDimensions();
     }
@@ -528,7 +518,7 @@ function useRowsMeta(
   };
 }
 
-function observeRootNode(
+export function observeRootNode(
   node: Element | null,
   store: Store<BaseState>,
   setRootSize: (size: Size) => void,

@@ -1,8 +1,8 @@
 import {
   SchedulerValidDate,
   SchedulerProcessedEvent,
-  CalendarProcessedDate,
-  CalendarEventOccurrence,
+  SchedulerProcessedDate,
+  SchedulerEventOccurrence,
 } from '../models';
 import { Adapter } from '../use-adapter/useAdapter.types';
 import { getRecurringEventOccurrencesForVisibleDays } from './recurring-event-utils';
@@ -11,8 +11,8 @@ import { getRecurringEventOccurrencesForVisibleDays } from './recurring-event-ut
  *  Returns the key of the days an event occurrence should be visible on.
  */
 export function getDaysTheOccurrenceIsVisibleOn(
-  event: CalendarEventOccurrence,
-  days: CalendarProcessedDate[],
+  event: SchedulerEventOccurrence,
+  days: SchedulerProcessedDate[],
   adapter: Adapter,
 ) {
   const dayKeys: string[] = [];
@@ -58,7 +58,7 @@ const checkResourceVisibility = (
  */
 export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsParameters) {
   const { adapter, start, end, events, visibleResources, resourceParentIds } = parameters;
-  const occurrences: CalendarEventOccurrence[] = [];
+  const occurrences: SchedulerEventOccurrence[] = [];
 
   for (const event of events) {
     // STEP 1: Skip events from resources that are not visible
@@ -84,27 +84,35 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
     occurrences.push({ ...event, key: String(event.id) });
   }
 
-  // STEP 3: Sort by the actual start date of each occurrence
-  // If two events have the same start date, put the longest one first
-  // We sort here so that events are processed in the correct order
-  return (
-    occurrences
-      // TODO: Avoid JS Date conversion
-      .map((occurrence) => ({
-        occurrence,
-        start: adapter.toJsDate(occurrence.start.value).getTime(),
-        end: adapter.toJsDate(occurrence.end.value).getTime(),
-      }))
-      .sort((a, b) => a.start - b.start || b.end - a.end)
-      .map((item) => item.occurrence)
-  );
+  return occurrences;
 }
 
-interface GetOccurrencesFromEventsParameters {
+export interface GetOccurrencesFromEventsParameters {
   adapter: Adapter;
   start: SchedulerValidDate;
   end: SchedulerValidDate;
   events: SchedulerProcessedEvent[];
   visibleResources: Map<string, boolean>;
   resourceParentIds: Map<string, string | null>;
+}
+
+export function sortEventOccurrences(
+  occurrences: SchedulerEventOccurrence[],
+  adapter: Adapter,
+): SchedulerEventOccurrence[] {
+  return occurrences
+    .map((occurrence) => {
+      return {
+        occurrence,
+        // TODO: Avoid JS Date conversion
+        start: occurrence.allDay
+          ? adapter.toJsDate(adapter.startOfDay(occurrence.start.value)).getTime()
+          : occurrence.start.timestamp,
+        end: occurrence.allDay
+          ? adapter.toJsDate(adapter.endOfDay(occurrence.end.value)).getTime()
+          : occurrence.end.timestamp,
+      };
+    })
+    .sort((a, b) => a.start - b.start || b.end - a.end)
+    .map((item) => item.occurrence);
 }
