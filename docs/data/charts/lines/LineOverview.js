@@ -7,12 +7,7 @@ import { ChartsSurface } from '@mui/x-charts-pro/ChartsSurface';
 import { LinePlot } from '@mui/x-charts-pro/LineChart';
 import { ChartsXAxis } from '@mui/x-charts-pro/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts-pro/ChartsYAxis';
-import {
-  useDrawingArea,
-  useXScale,
-  useYScale,
-  useLineSeries,
-} from '@mui/x-charts-pro/hooks';
+import { useDrawingArea, useXScale } from '@mui/x-charts-pro/hooks';
 import { ChartsTooltip } from '@mui/x-charts-pro/ChartsTooltip';
 import { ChartsGrid } from '@mui/x-charts-pro/ChartsGrid';
 import { ChartZoomSlider } from '@mui/x-charts-pro/ChartZoomSlider';
@@ -20,10 +15,6 @@ import { ChartsClipPath } from '@mui/x-charts-pro/ChartsClipPath';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsLegend } from '@mui/x-charts-pro/ChartsLegend';
 import { DATA } from '../dataset/usUnempGdp';
-
-const dates = DATA.map((d) => new Date(d.date));
-const unemploymentData = DATA.map((d) => d.UNRATE);
-const gdpData = DATA.map((d) => d.GDP_per_capita);
 
 const recessions = [
   {
@@ -51,49 +42,39 @@ function RecessionBands({ periods }) {
         const xStart = xScale(p.start.getTime());
         const xEnd = xScale(p.end.getTime());
 
-        if (
-          xStart === undefined ||
-          xEnd === undefined ||
-          xStart > left + width ||
-          xEnd < left
-        ) {
+        if (xStart === undefined || xEnd === undefined) {
           return null;
         }
 
-        const x = Math.max(xStart, left);
-        const w = Math.min(xEnd, left + width) - x;
-
-        if (w <= 0) {
+        // Stick to the left of the drawing area boundaries
+        let textX;
+        if (xStart >= left && xStart <= left + width) {
+          textX = xStart;
+        } else if (xEnd >= left && xEnd <= left + width) {
+          textX = left;
+        } else {
           return null;
         }
-
-        const textX = x - 5;
-        const textY = top + height / 5;
 
         return (
           <React.Fragment key={index}>
             <rect
-              x={x}
+              x={textX}
               y={top}
-              width={w}
+              width={xEnd - xStart}
               height={height}
               fill="grey"
               opacity={0.2}
             />
             <text
               x={textX}
-              y={textY}
-              transform={`rotate(-90, ${textX}, ${textY})`}
-              textAnchor="middle"
-              dominantBaseline="central"
+              y={top - 5}
+              textAnchor="start"
+              dominantBaseline="auto"
               fill={labelFill}
-              style={{
-                fontSize: '0.6rem',
-                fontWeight: 500,
-                textTransform: 'uppercase',
-                letterSpacing: '0.1em',
-                pointerEvents: 'none',
-              }}
+              fontSize="0.8rem"
+              fontWeight={500}
+              pointerEvents="none"
             >
               {p.label}
             </text>
@@ -104,77 +85,22 @@ function RecessionBands({ periods }) {
   );
 }
 
-function MaxUnemploymentLabel() {
-  const { top, left, width, height } = useDrawingArea();
-  const xScale = useXScale();
-  const yScale = useYScale('unemployment-axis');
-  const unemploymentSeries = useLineSeries('unemployment');
-
-  const { value: maxValue, index: maxIndex } = React.useMemo(() => {
-    const { value, index } = (unemploymentSeries?.data ?? []).reduce(
-      (acc, v, i) => (v != null && v > acc.value ? { value: v, index: i } : acc),
-      { value: 0, index: -1 },
-    );
-    return { value, index };
-  }, [unemploymentSeries]);
-
-  if (maxIndex < 0) {
-    return null;
-  }
-
-  const x = xScale(dates[maxIndex].getTime());
-  const y = yScale(maxValue);
-
-  // Ensure the marker is within the drawing area
-  if (
-    x == null ||
-    y == null ||
-    x < left ||
-    x > left + width ||
-    y < top ||
-    y > top + height
-  ) {
-    return null;
-  }
-
-  return (
-    <g pointerEvents="none">
-      <circle cx={x} cy={y} r={3} fill="#af3838" stroke="#fff" strokeWidth={1} />
-      <text
-        x={x + 6}
-        y={y - 6}
-        fill="#af3838"
-        style={{ fontSize: 12, fontWeight: 600 }}
-      >
-        {`${maxValue.toFixed(1)}%`}
-      </text>
-    </g>
-  );
-}
-
 export default function LineOverview() {
   const clipPathId = React.useId();
   return (
     <Box sx={{ width: '100%' }}>
-      <Box
-        sx={{
-          width: '100%',
-          overflow: 'auto',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
-        <Typography>US unemployment rate comparison with GDP per capita</Typography>
-      </Box>
+      <Typography textAlign="center">
+        US unemployment rate comparison with GDP per capita
+      </Typography>
       <Box sx={{ width: '100%', height: 400 }}>
         <ChartDataProviderPro
           experimentalFeatures={{ preferStrictDomainInLineCharts: true }}
+          dataset={DATA}
           series={[
             {
               type: 'line',
               id: 'unemployment',
-              data: unemploymentData,
+              dataKey: 'UNRATE',
               label: 'Unemployment rate',
               color: '#af3838',
               showMark: false,
@@ -184,7 +110,7 @@ export default function LineOverview() {
             },
             {
               type: 'line',
-              data: gdpData,
+              dataKey: 'GDP_per_capita',
               label: 'GDP per capita',
               color: '#4caf50',
               showMark: false,
@@ -197,12 +123,23 @@ export default function LineOverview() {
           xAxis={[
             {
               scaleType: 'time',
-              data: dates,
-              valueFormatter: (date) =>
-                date.toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'short',
-                }),
+              dataKey: 'date',
+              tickNumber: 4,
+              valueFormatter: (date, context) => {
+                if (context.location !== 'tick') {
+                  return date.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                  });
+                }
+                return date.getMonth() === 0
+                  ? date.toLocaleDateString('en-US', {
+                      year: 'numeric',
+                    })
+                  : date.toLocaleDateString('en-US', {
+                      month: 'short',
+                    });
+              },
               zoom: {
                 slider: { enabled: true },
               },
@@ -234,7 +171,6 @@ export default function LineOverview() {
             <ChartsGrid horizontal />
             <g clipPath={`url(#${clipPathId})`}>
               <LinePlot />
-              <MaxUnemploymentLabel />
             </g>
             <ChartsXAxis />
             <ChartsYAxis axisId="unemployment-axis" label="Unemployment Rate" />
@@ -245,11 +181,15 @@ export default function LineOverview() {
           <ChartsTooltip />
         </ChartDataProviderPro>
       </Box>
-      <Box sx={{ mt: 1, textAlign: 'left' }}>
-        <Typography variant="caption" color="text.secondary">
-          Source: FRED
-        </Typography>
-      </Box>
+      <Typography
+        variant="caption"
+        component="p"
+        color="text.secondary"
+        textAlign="left"
+        sx={{ pt: 1 }}
+      >
+        Source: FRED
+      </Typography>
     </Box>
   );
 }
