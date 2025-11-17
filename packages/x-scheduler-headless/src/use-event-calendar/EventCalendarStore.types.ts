@@ -61,7 +61,7 @@ export interface EventCalendarParameters<TEvent extends object, TResource extend
   /**
    * Preferences currently displayed in the calendar.
    */
-  preferences?: EventCalendarPreferences;
+  preferences?: Partial<EventCalendarPreferences>;
   /**
    * Event handler called when the preferences change.
    */

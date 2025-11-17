@@ -44,9 +44,10 @@ const mapper: SchedulerParametersToStateMapper<
   getInitialState: (schedulerInitialState, parameters) => ({
     ...schedulerInitialState,
     ...deriveStateFromParameters(parameters),
-    preferences: parameters.preferences ?? {
+    preferences: {
       ...DEFAULT_EVENT_CALENDAR_PREFERENCES,
       ...parameters.defaultPreferences,
+      ...parameters.preferences,
     },
     preferencesMenuConfig:
       parameters.preferencesMenuConfig === false
