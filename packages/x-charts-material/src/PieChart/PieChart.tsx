@@ -1,8 +1,25 @@
 import * as React from 'react';
+import { PieChartProps } from '@mui/x-charts';
+import { PieChart as PieChartBase } from '@mui/x-charts-base';
+import { ChartsSurface } from '../ChartsSurface/ChartsSurface';
+import { ChartsTooltip } from '../ChartsTooltip';
+import { FakeCss } from '../FakeCss';
 
 export const PieChart = React.forwardRef(function PieChart(
-  props: any,
+  props: PieChartProps,
   ref: React.Ref<SVGSVGElement>,
 ) {
-  return <div>PieChartMaterial</div>;
+  const { title, desc, sx, ...other } = props;
+
+  return (
+    <PieChartBase.Root {...other}>
+      <FakeCss>
+        <ChartsSurface ref={ref} title={title} desc={desc} sx={sx}>
+          <PieChartBase.Plot />
+          <PieChartBase.LabelPlot />
+        </ChartsSurface>
+        <ChartsTooltip trigger="item" />
+      </FakeCss>
+    </PieChartBase.Root>
+  );
 });

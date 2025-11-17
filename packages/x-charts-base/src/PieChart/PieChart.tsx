@@ -90,6 +90,8 @@ const PieRoot = React.forwardRef(function PieChart(
   );
 });
 
+// We could use `ChartsSurface` directly, but I think we could propose a different pattern, like if you want a single chart, then
+// you can use `PieChart.Surface`, but if you want composition, we could use like `Composition.Surface`, technically they are the same though.
 const PieSurface = ChartsSurface;
 
 export { PieRoot as Root, PieSurface as Surface, PiePlot as Plot, PieLabelPlot as LabelPlot };
