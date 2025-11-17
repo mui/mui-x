@@ -62,7 +62,6 @@ export function innerGetEventOccurrencesGroupedByDay(
   visibleResources: Map<string, boolean>,
   resourceParentIds: Map<string, string | null>,
 ): Map<string, SchedulerEventOccurrence[]> {
-  // STEP 4: Create a Map of the occurrences grouped by day
   const occurrencesGroupedByDay = new Map<
     string,
     Record<'allDay' | 'nonAllDay', SchedulerEventOccurrence[]>
@@ -87,7 +86,7 @@ export function innerGetEventOccurrencesGroupedByDay(
     }
   }
 
-  // STEP 5: Make sure the all-day events are before the non-all-day events
+  // Make sure the all-day events are before the non-all-day events
   const cleanMap: useEventOccurrencesGroupedByDay.ReturnValue = new Map();
   occurrencesGroupedByDay.forEach((value, key) => {
     cleanMap.set(key, [...value.allDay, ...value.nonAllDay]);
