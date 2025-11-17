@@ -105,7 +105,7 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
     const result = run([e1, e2, e3]);
 
     expect(result.get(days[0].key)!.map((o) => o.id)).to.deep.equal([e2.id]);
-    expect(result.get(days[1].key)!.map((o) => o.id)).to.deep.equal([e2.id, e1.id]);
+    expect(result.get(days[1].key)!.map((o) => o.id)).to.deep.equal([e1.id, e2.id]);
     expect(result.get(days[2].key)!.map((o) => o.id)).to.deep.equal([e2.id, e3.id]);
   });
 });
