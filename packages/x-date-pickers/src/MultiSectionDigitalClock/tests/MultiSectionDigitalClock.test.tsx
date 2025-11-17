@@ -41,7 +41,7 @@ describe('<MultiSectionDigitalClock />', () => {
         adapterToUse.setMinutes(adapterToUse.setHours(adapterToUse.date(), 15), 30),
       );
       expect(onChange.callCount).to.equal(3);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2018, 0, 1, 15, 30));
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0]).toEqualDateTime(new Date(2018, 0, 1, 15, 30));
     });
 
     it('should fallback to making the first entry focusable when `referenceDate` does not map to an option', () => {
@@ -83,7 +83,7 @@ describe('<MultiSectionDigitalClock />', () => {
         adapterToUse.setMinutes(adapterToUse.setHours(adapterToUse.date(), 15), 30),
       );
       expect(onChange.callCount).to.equal(3);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 0, 1, 15, 30));
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0]).toEqualDateTime(new Date(2019, 0, 1, 15, 30));
     });
 
     it('should not use `referenceDate` when a defaultValue is defined', () => {
@@ -102,7 +102,7 @@ describe('<MultiSectionDigitalClock />', () => {
         adapterToUse.setMinutes(adapterToUse.setHours(adapterToUse.date(), 15), 30),
       );
       expect(onChange.callCount).to.equal(3);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 0, 1, 15, 30));
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0]).toEqualDateTime(new Date(2019, 0, 1, 15, 30));
     });
   });
 

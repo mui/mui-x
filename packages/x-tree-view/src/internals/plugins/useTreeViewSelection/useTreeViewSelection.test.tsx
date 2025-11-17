@@ -77,7 +77,7 @@ describeTreeView<TreeViewAnyStore>(
         fireEvent.click(view.getItemContent('1'));
 
         expect(onSelectedItemsChange.callCount).to.equal(1);
-        expect(onSelectedItemsChange.lastCall.args[1]).to.deep.equal('1');
+        expect(onSelectedItemsChange.mock.calls[onSelectedItemsChange.mock.calls.length - 1][1]).to.deep.equal('1');
       });
 
       // TODO: Re-enable this test if we have a way to un-select an item in single selection.
@@ -93,7 +93,7 @@ describeTreeView<TreeViewAnyStore>(
         fireEvent.click(view.getItemContent('1'));
 
         expect(onSelectedItemsChange.callCount).to.equal(1);
-        expect(onSelectedItemsChange.lastCall.args[1]).to.deep.equal([]);
+        expect(onSelectedItemsChange.mock.calls[onSelectedItemsChange.mock.calls.length - 1][1]).to.deep.equal([]);
       });
 
       it('should call the onSelectedItemsChange callback when the model is updated (multi selection and add selected item to empty list)', () => {
@@ -108,7 +108,7 @@ describeTreeView<TreeViewAnyStore>(
         fireEvent.click(view.getItemContent('1'));
 
         expect(onSelectedItemsChange.callCount).to.equal(1);
-        expect(onSelectedItemsChange.lastCall.args[1]).to.deep.equal(['1']);
+        expect(onSelectedItemsChange.mock.calls[onSelectedItemsChange.mock.calls.length - 1][1]).to.deep.equal(['1']);
       });
 
       it('should call the onSelectedItemsChange callback when the model is updated (multi selection and add selected item to non-empty list)', () => {
@@ -124,7 +124,7 @@ describeTreeView<TreeViewAnyStore>(
         fireEvent.click(view.getItemContent('2'), { ctrlKey: true });
 
         expect(onSelectedItemsChange.callCount).to.equal(1);
-        expect(onSelectedItemsChange.lastCall.args[1]).to.deep.equal(['2', '1']);
+        expect(onSelectedItemsChange.mock.calls[onSelectedItemsChange.mock.calls.length - 1][1]).to.deep.equal(['2', '1']);
       });
 
       it('should call the onSelectedItemsChange callback when the model is updated (multi selection and remove selected item)', () => {
@@ -140,7 +140,7 @@ describeTreeView<TreeViewAnyStore>(
         fireEvent.click(view.getItemContent('1'), { ctrlKey: true });
 
         expect(onSelectedItemsChange.callCount).to.equal(1);
-        expect(onSelectedItemsChange.lastCall.args[1]).to.deep.equal([]);
+        expect(onSelectedItemsChange.mock.calls[onSelectedItemsChange.mock.calls.length - 1][1]).to.deep.equal([]);
       });
 
       it('should warn when switching from controlled to uncontrolled', () => {
@@ -1008,8 +1008,8 @@ describeTreeView<TreeViewAnyStore>(
 
         fireEvent.click(view.getItemContent('1'));
         expect(onItemSelectionToggle.callCount).to.equal(1);
-        expect(onItemSelectionToggle.lastCall.args[1]).to.equal('1');
-        expect(onItemSelectionToggle.lastCall.args[2]).to.equal(true);
+        expect(onItemSelectionToggle.mock.calls[onItemSelectionToggle.mock.calls.length - 1][1]).to.equal('1');
+        expect(onItemSelectionToggle.mock.calls[onItemSelectionToggle.mock.calls.length - 1][2]).to.equal(true);
       });
 
       it('should call the onItemSelectionToggle callback when un-selecting an item', () => {
@@ -1024,8 +1024,8 @@ describeTreeView<TreeViewAnyStore>(
 
         fireEvent.click(view.getItemContent('1'), { ctrlKey: true });
         expect(onItemSelectionToggle.callCount).to.equal(1);
-        expect(onItemSelectionToggle.lastCall.args[1]).to.equal('1');
-        expect(onItemSelectionToggle.lastCall.args[2]).to.equal(false);
+        expect(onItemSelectionToggle.mock.calls[onItemSelectionToggle.mock.calls.length - 1][1]).to.equal('1');
+        expect(onItemSelectionToggle.mock.calls[onItemSelectionToggle.mock.calls.length - 1][2]).to.equal(false);
       });
     });
 
@@ -1133,9 +1133,9 @@ describeTreeView<TreeViewAnyStore>(
           });
 
           expect(onItemSelectionToggle.callCount).to.equal(1);
-          expect(onItemSelectionToggle.lastCall.args[0]).to.equal(event);
-          expect(onItemSelectionToggle.lastCall.args[1]).to.equal('1');
-          expect(onItemSelectionToggle.lastCall.args[2]).to.equal(true);
+          expect(onItemSelectionToggle.mock.calls[onItemSelectionToggle.mock.calls.length - 1][0]).to.equal(event);
+          expect(onItemSelectionToggle.mock.calls[onItemSelectionToggle.mock.calls.length - 1][1]).to.equal('1');
+          expect(onItemSelectionToggle.mock.calls[onItemSelectionToggle.mock.calls.length - 1][2]).to.equal(true);
         });
 
         it('should call call onItemSelectionToggle callback when un-selecting an item', () => {
@@ -1153,9 +1153,9 @@ describeTreeView<TreeViewAnyStore>(
           });
 
           expect(onItemSelectionToggle.callCount).to.equal(1);
-          expect(onItemSelectionToggle.lastCall.args[0]).to.equal(event);
-          expect(onItemSelectionToggle.lastCall.args[1]).to.equal('1');
-          expect(onItemSelectionToggle.lastCall.args[2]).to.equal(false);
+          expect(onItemSelectionToggle.mock.calls[onItemSelectionToggle.mock.calls.length - 1][0]).to.equal(event);
+          expect(onItemSelectionToggle.mock.calls[onItemSelectionToggle.mock.calls.length - 1][1]).to.equal('1');
+          expect(onItemSelectionToggle.mock.calls[onItemSelectionToggle.mock.calls.length - 1][2]).to.equal(false);
         });
       });
     });

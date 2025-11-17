@@ -14,8 +14,8 @@ describe('View - EventCalendarStore', () => {
       store.setView('day', {} as any);
 
       expect(store.state.view).to.equal('day');
-      expect(onViewChange.calledOnce).to.equal(true);
-      expect(onViewChange.lastCall.firstArg).to.equal('day');
+      expect(onViewChange).toHaveBeenCalledOnce();
+      expect(onViewChange.mock.calls[onViewChange.mock.calls.length - 1][0]).to.equal('day');
     });
 
     it('should NOT mutate store but calls onViewChange when is controlled', () => {
@@ -28,8 +28,8 @@ describe('View - EventCalendarStore', () => {
       store.setView('day', {} as any);
 
       expect(store.state.view).to.equal('week');
-      expect(onViewChange.calledOnce).to.equal(true);
-      expect(onViewChange.lastCall.firstArg).to.equal('day');
+      expect(onViewChange).toHaveBeenCalledOnce();
+      expect(onViewChange.mock.calls[onViewChange.mock.calls.length - 1][0]).to.equal('day');
     });
 
     it('should do nothing if setting the same view: no state change, no callback', () => {
@@ -42,7 +42,7 @@ describe('View - EventCalendarStore', () => {
       store.setView('month', {} as any);
 
       expect(store.state.view).to.equal('month');
-      expect(onViewChange.called).to.equal(false);
+      expect(onViewChange).not.toHaveBeenCalled();
     });
 
     it('should throw when switching to a view not included in the allowed views', () => {

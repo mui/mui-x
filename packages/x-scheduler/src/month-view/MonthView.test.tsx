@@ -67,9 +67,9 @@ describe('<MonthView />', () => {
     const button = screen.getByRole('button', { name: '15' });
     await user.click(button);
 
-    expect(handleViewChange.calledOnce).to.equal(true);
+    expect(handleViewChange).toHaveBeenCalledOnce();
     expect(handleViewChange.firstCall.firstArg).to.equal('day');
-    expect(handleVisibleDateChange.calledOnce).to.equal(true);
+    expect(handleVisibleDateChange).toHaveBeenCalledOnce();
     expect(handleVisibleDateChange.firstCall.firstArg).toEqualDateTime(
       adapter.date('2025-05-15T00:00:00'),
     );
@@ -286,7 +286,7 @@ describe('<MonthView />', () => {
       );
 
       await user.click(screen.getByRole('button', { name: /previous month/i }));
-      expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
+      expect(onVisibleDateChange.mock.calls[onVisibleDateChange.mock.calls.length - 1][0]).toEqualDateTime(
         adapter.addMonths(adapter.startOfMonth(DEFAULT_TESTING_VISIBLE_DATE), -1),
       );
     });
@@ -304,7 +304,7 @@ describe('<MonthView />', () => {
       );
 
       await user.click(screen.getByRole('button', { name: /next month/i }));
-      expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
+      expect(onVisibleDateChange.mock.calls[onVisibleDateChange.mock.calls.length - 1][0]).toEqualDateTime(
         adapter.addMonths(adapter.startOfMonth(DEFAULT_TESTING_VISIBLE_DATE), 1),
       );
     });

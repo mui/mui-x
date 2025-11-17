@@ -646,7 +646,7 @@ describe('<TimeField /> - Editing', () => {
         await view.selectSectionAsync('hours');
         fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowDown' });
 
-        expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 2, 3, 3));
+        expect(onChangeV7.mock.calls[onChangeV7.mock.calls.length - 1][0]).toEqualDateTime(new Date(2010, 3, 3, 2, 3, 3));
 
         view.unmount();
 
@@ -663,7 +663,7 @@ describe('<TimeField /> - Editing', () => {
         await view.selectSectionAsync('hours');
         fireEvent.keyDown(input, { key: 'ArrowDown' });
 
-        expect(onChangeV6.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 2, 3, 3));
+        expect(onChangeV6.mock.calls[onChangeV6.mock.calls.length - 1][0]).toEqualDateTime(new Date(2010, 3, 3, 2, 3, 3));
       });
 
       it('should not loose date information when cleaning the date then filling it again', async () => {
@@ -691,7 +691,7 @@ describe('<TimeField /> - Editing', () => {
 
         view.pressKey(1, '4');
         expectFieldValueV7(view.getSectionsContainer(), '03:04');
-        expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 3, 4, 3));
+        expect(onChangeV7.mock.calls[onChangeV7.mock.calls.length - 1][0]).toEqualDateTime(new Date(2010, 3, 3, 3, 4, 3));
 
         view.unmount();
 
@@ -716,7 +716,7 @@ describe('<TimeField /> - Editing', () => {
 
         fireEvent.change(input, { target: { value: '03:4' } }); // Press "3"
         expectFieldValueV6(input, '03:04');
-        expect(onChangeV6.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 3, 4, 3));
+        expect(onChangeV6.mock.calls[onChangeV6.mock.calls.length - 1][0]).toEqualDateTime(new Date(2010, 3, 3, 3, 4, 3));
       });
 
       it('should not loose time information when using the hour format and value is provided', async () => {
@@ -733,7 +733,7 @@ describe('<TimeField /> - Editing', () => {
         await view.selectSectionAsync('hours');
         fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowDown' });
 
-        expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 2, 3, 3));
+        expect(onChangeV7.mock.calls[onChangeV7.mock.calls.length - 1][0]).toEqualDateTime(new Date(2010, 3, 3, 2, 3, 3));
 
         view.unmount();
 
@@ -751,7 +751,7 @@ describe('<TimeField /> - Editing', () => {
         await view.selectSectionAsync('hours');
         fireEvent.keyDown(input, { key: 'ArrowDown' });
 
-        expect(onChangeV6.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 2, 3, 3));
+        expect(onChangeV6.mock.calls[onChangeV6.mock.calls.length - 1][0]).toEqualDateTime(new Date(2010, 3, 3, 2, 3, 3));
       });
     },
   );

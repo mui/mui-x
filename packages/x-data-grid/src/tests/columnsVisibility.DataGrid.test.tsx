@@ -68,7 +68,7 @@ describe('<DataGrid /> - Columns visibility', () => {
       await user.click(screen.getByRole('checkbox', { name: 'id' }));
       expect(getColumnHeadersTextContent()).to.deep.equal(['idBis']);
       expect(onColumnVisibilityModelChange.callCount).to.equal(1);
-      expect(onColumnVisibilityModelChange.lastCall.firstArg).to.deep.equal({
+      expect(onColumnVisibilityModelChange.mock.calls[onColumnVisibilityModelChange.mock.calls.length - 1][0]).to.deep.equal({
         id: false,
       });
     });
@@ -88,7 +88,7 @@ describe('<DataGrid /> - Columns visibility', () => {
       fireEvent.click(screen.getByRole('checkbox', { name: 'id' }));
       expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
       expect(onColumnVisibilityModelChange.callCount).to.equal(1);
-      expect(onColumnVisibilityModelChange.lastCall.firstArg).to.deep.equal({
+      expect(onColumnVisibilityModelChange.mock.calls[onColumnVisibilityModelChange.mock.calls.length - 1][0]).to.deep.equal({
         id: false,
         idBis: false,
       });
@@ -119,12 +119,12 @@ describe('<DataGrid /> - Columns visibility', () => {
       // Hide all
       await user.click(showHideAllCheckbox);
       expect(onColumnVisibilityModelChange.callCount).to.equal(1);
-      expect(onColumnVisibilityModelChange.lastCall.firstArg).to.deep.equal({});
+      expect(onColumnVisibilityModelChange.mock.calls[onColumnVisibilityModelChange.mock.calls.length - 1][0]).to.deep.equal({});
 
       // Show all
       await user.click(showHideAllCheckbox);
       expect(onColumnVisibilityModelChange.callCount).to.equal(2);
-      expect(onColumnVisibilityModelChange.lastCall.firstArg).to.deep.equal({
+      expect(onColumnVisibilityModelChange.mock.calls[onColumnVisibilityModelChange.mock.calls.length - 1][0]).to.deep.equal({
         id: false,
         idBis: false,
       });

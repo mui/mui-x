@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { spy as sinonSpy, SinonSpy } from 'sinon';
+import { vi, MockInstance } from 'vitest';
 
 export function StoreSpy<T>({
   Context,
@@ -8,25 +8,25 @@ export function StoreSpy<T>({
 }: {
   Context: React.Context<T | null>;
   method: Extract<keyof T, string>;
-  onSpyReady: (sp: SinonSpy) => void;
+  onSpyReady: (sp: MockInstance) => void;
 }) {
   const store = React.useContext(Context);
   if (!store) {
     throw new Error('StoreSpy must be used inside the matching Provider');
   }
 
-  const spyRef = React.useRef<SinonSpy | null>(null);
+  const spyRef = React.useRef<MockInstance | null>(null);
 
   React.useEffect(() => {
     const fn = (store as any)[method];
     if (typeof fn !== 'function') {
       throw new Error(`Method "${String(method)}" not found or is not a function on store`);
     }
-    const sp = sinonSpy(store as any, method as any);
+    const sp = vi.spyOn(store as any, method as any);
     spyRef.current = sp;
     onSpyReady(sp);
 
-    return () => spyRef.current?.restore?.();
+    return () => spyRef.current?.mockRestore?.();
   }, [store, method, onSpyReady]);
 
   return null;

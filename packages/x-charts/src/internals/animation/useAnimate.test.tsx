@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import { createRenderer, reactMajor, screen, waitFor } from '@mui/internal-test-utils';
 import { interpolateNumber } from '@mui/x-charts-vendor/d3-interpolate';
 // It's not publicly exported, so, using a relative import
@@ -25,10 +25,10 @@ describe('useAnimate', () => {
 
   const lastCallWidth = () => applyProps.lastCall?.args[1].width;
   const firstCallWidth = () => applyProps.firstCall?.args[1].width;
-  const callCount = () => applyProps.callCount;
+  const callCount = () => applyProps.mock.calls.length;
 
   afterEach(() => {
-    applyProps.resetHistory();
+    applyProps.mockClear();
   });
 
   it('starts animating from initial props', async () => {

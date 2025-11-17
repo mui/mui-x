@@ -1,7 +1,7 @@
 import { createRenderer, screen } from '@mui/internal-test-utils/createRenderer';
 import { describeConformance } from 'test/utils/describeConformance';
 import { Unstable_RadarChart as RadarChart, RadarChartProps } from '@mui/x-charts/RadarChart';
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
 import { CHART_SELECTOR } from '../tests/constants';
 
@@ -44,13 +44,13 @@ describe('<RadarChart />', () => {
 
   // svg.createSVGPoint not supported by JSDom https://github.com/jsdom/jsdom/issues/300
   it.skipIf(isJSDOM)('should call onHighlightChange', async () => {
-    const onHighlightChange = spy();
+    const onHighlightChange = vi.fn();
     const { user } = render(<RadarChart {...radarConfig} onHighlightChange={onHighlightChange} />);
 
     const path = document.querySelector<HTMLElement>('svg .MuiRadarSeriesPlot-area')!;
     await user.pointer({ target: path });
 
-    expect(onHighlightChange.callCount).to.equal(1);
+    expect(onHighlightChange).toHaveBeenCalledTimes(1);
   });
 
   it.skipIf(isJSDOM)('should highlight axis on hover', async () => {

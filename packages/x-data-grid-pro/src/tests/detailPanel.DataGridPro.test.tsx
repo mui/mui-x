@@ -444,7 +444,7 @@ describe('<DataGridPro /> - Detail panel', () => {
     const expectedCallCount = reactMajor >= 19 ? 3 : 5;
 
     expect(getDetailPanelHeight.callCount).to.equal(expectedCallCount);
-    expect(getDetailPanelHeight.lastCall.args[0].id).to.equal(0);
+    expect(getDetailPanelHeight.mock.calls[getDetailPanelHeight.mock.calls.length - 1][0].id).to.equal(0);
   });
 
   it('should not select the row when opening the detail panel', async () => {
@@ -556,15 +556,15 @@ describe('<DataGridPro /> - Detail panel', () => {
         />,
       );
       await user.click(screen.getAllByRole('button', { name: 'Expand' })[0]); // Expand the 1st row
-      expect(handleDetailPanelsExpandedRowIdsChange.lastCall.args[0]).to.deep.equal(new Set([0]));
+      expect(handleDetailPanelsExpandedRowIdsChange.mock.calls[handleDetailPanelsExpandedRowIdsChange.mock.calls.length - 1][0]).to.deep.equal(new Set([0]));
       await user.click(screen.getAllByRole('button', { name: 'Expand' })[0]); // Expand the 2nd row
-      expect(handleDetailPanelsExpandedRowIdsChange.lastCall.args[0]).to.deep.equal(
+      expect(handleDetailPanelsExpandedRowIdsChange.mock.calls[handleDetailPanelsExpandedRowIdsChange.mock.calls.length - 1][0]).to.deep.equal(
         new Set([0, 1]),
       );
       await user.click(screen.getAllByRole('button', { name: 'Collapse' })[0]); // Close the 1st row
-      expect(handleDetailPanelsExpandedRowIdsChange.lastCall.args[0]).to.deep.equal(new Set([1]));
+      expect(handleDetailPanelsExpandedRowIdsChange.mock.calls[handleDetailPanelsExpandedRowIdsChange.mock.calls.length - 1][0]).to.deep.equal(new Set([1]));
       await user.click(screen.getAllByRole('button', { name: 'Collapse' })[0]); // Close the 2nd row
-      expect(handleDetailPanelsExpandedRowIdsChange.lastCall.args[0]).to.deep.equal(new Set([]));
+      expect(handleDetailPanelsExpandedRowIdsChange.mock.calls[handleDetailPanelsExpandedRowIdsChange.mock.calls.length - 1][0]).to.deep.equal(new Set([]));
     });
 
     it('should not change the open detail panels when called while detailPanelsExpandedRowIds is the same', async () => {
@@ -578,7 +578,7 @@ describe('<DataGridPro /> - Detail panel', () => {
       );
       expect(screen.getByText('Row 0')).not.to.equal(null);
       await user.click(screen.getByRole('button', { name: 'Collapse' }));
-      expect(handleDetailPanelsExpandedRowIdsChange.lastCall.args[0]).to.deep.equal(new Set([]));
+      expect(handleDetailPanelsExpandedRowIdsChange.mock.calls[handleDetailPanelsExpandedRowIdsChange.mock.calls.length - 1][0]).to.deep.equal(new Set([]));
       expect(screen.getByText('Row 0')).not.to.equal(null);
     });
   });

@@ -74,7 +74,7 @@ describe('<DesktopTimePicker />', () => {
 
       await user.click(screen.getByRole('option', { name: '09:00 AM' }));
       expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1, 9, 0));
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0]).toEqualDateTime(new Date(2018, 0, 1, 9, 0));
       // closeOnSelect false by default
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);

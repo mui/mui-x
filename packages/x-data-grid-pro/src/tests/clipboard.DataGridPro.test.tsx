@@ -55,7 +55,7 @@ describe('<DataGridPro /> - Clipboard', () => {
         const cell = getCell(0, 0);
         fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'c', keyCode: 67, [key]: true });
-        expect(writeText.firstCall.args[0]).to.equal(['0\tNike', '1\tAdidas'].join('\r\n'));
+        expect(writeText.firstCall.mock.calls[0]).to.equal(['0\tNike', '1\tAdidas'].join('\r\n'));
       });
     });
 
@@ -75,7 +75,7 @@ describe('<DataGridPro /> - Clipboard', () => {
       fireUserEvent.mousePress(cell);
 
       fireEvent.keyDown(cell, { key: 'c', keyCode: 67, ctrlKey: true });
-      expect(writeText.lastCall.firstArg).to.equal('1 " 1');
+      expect(writeText.mock.calls[writeText.mock.calls.length - 1][0]).to.equal('1 " 1');
     });
 
     it('should not escape double quotes when copying rows to clipboard', () => {
@@ -96,7 +96,7 @@ describe('<DataGridPro /> - Clipboard', () => {
       const cell = getCell(0, 0);
       fireUserEvent.mousePress(cell);
       fireEvent.keyDown(cell, { key: 'c', keyCode: 67, ctrlKey: true });
-      expect(writeText.firstCall.args[0]).to.equal(['1 " 1', '2'].join('\r\n'));
+      expect(writeText.firstCall.mock.calls[0]).to.equal(['1 " 1', '2'].join('\r\n'));
     });
   });
 });

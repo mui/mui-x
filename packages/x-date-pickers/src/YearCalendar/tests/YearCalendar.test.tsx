@@ -22,7 +22,7 @@ describe('<YearCalendar />', () => {
     fireEvent.click(targetYear);
 
     expect(onChange.callCount).to.equal(1);
-    expect(onChange.args[0][0]).toEqualDateTime(new Date(2025, 1, 2));
+    expect(onChange.mock.calls[0][0]).toEqualDateTime(new Date(2025, 1, 2));
   });
 
   it('should select start of year without time when no initial value is present', () => {
@@ -32,7 +32,7 @@ describe('<YearCalendar />', () => {
     fireEvent.click(screen.getByRole('radio', { name: '2025' }));
 
     expect(onChange.callCount).to.equal(1);
-    expect(onChange.args[0][0]).toEqualDateTime(new Date(2025, 0, 1, 0, 0, 0, 0));
+    expect(onChange.mock.calls[0][0]).toEqualDateTime(new Date(2025, 0, 1, 0, 0, 0, 0));
   });
 
   it('does not allow to pick year if readOnly prop is passed', () => {

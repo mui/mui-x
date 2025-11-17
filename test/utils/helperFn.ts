@@ -1,4 +1,4 @@
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import { act, screen } from '@mui/internal-test-utils';
 import { gridClasses, GridRowId } from '@mui/x-data-grid';
 import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
@@ -55,7 +55,7 @@ export function spyApi(api: GridApiCommon, methodName: string) {
   const privateApi = unwrapPrivateAPI(api);
   const method = privateApi[methodKey];
 
-  const spyFn = spy((...args: any[]) => {
+  const spyFn = vi.fn((...args: any[]) => {
     return spyFn.target(...args);
   }) as any;
   spyFn.spying = true;

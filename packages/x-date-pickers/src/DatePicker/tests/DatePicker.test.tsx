@@ -1,4 +1,4 @@
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import { DatePicker, DatePickerProps } from '@mui/x-date-pickers/DatePicker';
 import { screen } from '@mui/internal-test-utils';
 import { createPickerRenderer, stubMatchMedia } from 'test/utils/pickers';
@@ -34,19 +34,20 @@ describe('<DatePicker />', () => {
     }
 
     it('should submit the form when "Enter" is pressed on the input', async () => {
-      const handleSubmit = spy();
+      const handleSubmit = vi.fn();
       const { user } = render(<TestComponent onSubmit={handleSubmit} />);
 
       // focus the input
       await user.keyboard('{Tab}');
       await user.keyboard('{Enter}');
 
-      expect(handleSubmit.callCount).to.equal(1);
-      expect([...handleSubmit.lastCall.args[0]][0]).to.deep.equal(['testDate', '04/17/2022']);
+      expect(handleSubmit).toHaveBeenCalledTimes(1);
+      const lastCall = handleSubmit.mock.calls[handleSubmit.mock.calls.length - 1];
+      expect([...lastCall[0]][0]).to.deep.equal(['testDate', '04/17/2022']);
     });
 
     it('should not submit the form when "Enter" is pressed on the input with "defaultMuiPrevented" set to "true"', async () => {
-      const handleSubmit = spy();
+      const handleSubmit = vi.fn();
       const { user } = render(
         <TestComponent
           onSubmit={handleSubmit}
@@ -66,7 +67,7 @@ describe('<DatePicker />', () => {
       await user.keyboard('{Tab}');
       await user.keyboard('{Enter}');
 
-      expect(handleSubmit.callCount).to.equal(0);
+      expect(handleSubmit).toHaveBeenCalledTimes(0);
     });
   });
 });

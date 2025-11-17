@@ -22,7 +22,7 @@ describe('<MonthCalendar />', () => {
     fireEvent.click(targetMonth);
 
     expect(onChange.callCount).to.equal(1);
-    expect(onChange.args[0][0]).toEqualDateTime(new Date(2019, 1, 2));
+    expect(onChange.mock.calls[0][0]).toEqualDateTime(new Date(2019, 1, 2));
   });
 
   describe('with fake timers', () => {
@@ -41,7 +41,7 @@ describe('<MonthCalendar />', () => {
       fireEvent.click(screen.getByRole('radio', { name: 'February' }));
 
       expect(onChange.callCount).to.equal(1);
-      expect(onChange.args[0][0]).toEqualDateTime(new Date(2019, 1, 1, 0, 0, 0));
+      expect(onChange.mock.calls[0][0]).toEqualDateTime(new Date(2019, 1, 1, 0, 0, 0));
     });
 
     it('should mark only the month in the current year as `aria-current="date"`', () => {

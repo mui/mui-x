@@ -19,8 +19,8 @@ storeClasses.forEach((storeClass) => {
 
         const expected = adapter.startOfDay(adapter.date());
         expect(store.state.visibleDate).toEqualDateTime(expected);
-        expect(onVisibleDateChange.calledOnce).to.equal(true);
-        expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(expected);
+        expect(onVisibleDateChange).toHaveBeenCalledOnce();
+        expect(onVisibleDateChange.mock.calls[onVisibleDateChange.mock.calls.length - 1][0]).toEqualDateTime(expected);
       });
 
       it('should not change the state but calls onVisibleDateChange with today when is controlled', () => {
@@ -36,8 +36,8 @@ storeClasses.forEach((storeClass) => {
 
         const expected = adapter.startOfDay(adapter.date());
         expect(store.state.visibleDate).toEqualDateTime(controlledDate);
-        expect(onVisibleDateChange.calledOnce).to.equal(true);
-        expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(expected);
+        expect(onVisibleDateChange).toHaveBeenCalledOnce();
+        expect(onVisibleDateChange.mock.calls[onVisibleDateChange.mock.calls.length - 1][0]).toEqualDateTime(expected);
       });
 
       it('should do nothing if already at today (no state change, no callback)', () => {
@@ -52,7 +52,7 @@ storeClasses.forEach((storeClass) => {
         store.goToToday({} as any);
 
         expect(store.state.visibleDate).toEqualDateTime(todayStart);
-        expect(onVisibleDateChange.called).to.equal(false);
+        expect(onVisibleDateChange).not.toHaveBeenCalled();
       });
     });
   });

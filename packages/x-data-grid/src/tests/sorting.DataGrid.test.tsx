@@ -179,7 +179,7 @@ describe('<DataGrid /> - Sorting', () => {
     fireEvent.click(header);
     expect(getColumnValues(0)).to.deep.equal(['0', '5', '10']);
     expect(onSortModelChange.callCount).to.equal(1);
-    expect(onSortModelChange.lastCall.firstArg).to.deep.equal([{ field: 'id', sort: 'asc' }]);
+    expect(onSortModelChange.mock.calls[onSortModelChange.mock.calls.length - 1][0]).to.deep.equal([{ field: 'id', sort: 'asc' }]);
 
     // Clear the sort using `apiRef`
     act(() => apiRef.current?.sortColumn('id', null));
@@ -187,7 +187,7 @@ describe('<DataGrid /> - Sorting', () => {
     expect(onSortModelChange.callCount).to.equal(2);
 
     // Confirm that the sort item is cleared and not passed to `onSortModelChange`
-    expect(onSortModelChange.lastCall.firstArg).to.deep.equal([]);
+    expect(onSortModelChange.mock.calls[onSortModelChange.mock.calls.length - 1][0]).to.deep.equal([]);
   });
 
   it('should always set correct `aria-sort` attribute', () => {
@@ -714,7 +714,7 @@ describe('<DataGrid /> - Sorting', () => {
     setProps({ columns: [{ field: 'id' }] });
     expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
     expect(onSortModelChange.callCount).to.equal(2);
-    expect(onSortModelChange.lastCall.firstArg).to.deep.equal([]);
+    expect(onSortModelChange.mock.calls[onSortModelChange.mock.calls.length - 1][0]).to.deep.equal([]);
   });
 
   // See https://github.com/mui/mui-x/issues/9204

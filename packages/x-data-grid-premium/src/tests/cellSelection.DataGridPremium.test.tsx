@@ -139,8 +139,8 @@ describe('<DataGridPremium /> - Cell selection', () => {
       await user.keyboard('{Shift>}');
       await user.click(getCell(2, 1));
       await user.keyboard('{/Shift}');
-      expect(spiedSelectCellsBetweenRange.lastCall.args[0]).to.deep.equal({ id: 0, field: 'id' });
-      expect(spiedSelectCellsBetweenRange.lastCall.args[1]).to.deep.equal({
+      expect(spiedSelectCellsBetweenRange.mock.calls[spiedSelectCellsBetweenRange.mock.calls.length - 1][0]).to.deep.equal({ id: 0, field: 'id' });
+      expect(spiedSelectCellsBetweenRange.mock.calls[spiedSelectCellsBetweenRange.mock.calls.length - 1][1]).to.deep.equal({
         id: 2,
         field: 'currencyPair',
       });
@@ -192,8 +192,8 @@ describe('<DataGridPremium /> - Cell selection', () => {
       cell.focus();
       await user.click(cell);
       await user.keyboard('{Shift>}{ArrowDown}{/Shift}');
-      expect(spiedSelectCellsBetweenRange.lastCall.args[0]).to.deep.equal({ id: 0, field: 'id' });
-      expect(spiedSelectCellsBetweenRange.lastCall.args[1]).to.deep.equal({ id: 1, field: 'id' });
+      expect(spiedSelectCellsBetweenRange.mock.calls[spiedSelectCellsBetweenRange.mock.calls.length - 1][0]).to.deep.equal({ id: 0, field: 'id' });
+      expect(spiedSelectCellsBetweenRange.mock.calls[spiedSelectCellsBetweenRange.mock.calls.length - 1][1]).to.deep.equal({ id: 1, field: 'id' });
     });
 
     it('should call selectCellRange when ArrowUp is pressed', async () => {
@@ -205,8 +205,8 @@ describe('<DataGridPremium /> - Cell selection', () => {
       });
       await user.click(cell);
       await user.keyboard('{Shift>}{ArrowUp}{/Shift}');
-      expect(spiedSelectCellsBetweenRange.lastCall.args[0]).to.deep.equal({ id: 1, field: 'id' });
-      expect(spiedSelectCellsBetweenRange.lastCall.args[1]).to.deep.equal({ id: 0, field: 'id' });
+      expect(spiedSelectCellsBetweenRange.mock.calls[spiedSelectCellsBetweenRange.mock.calls.length - 1][0]).to.deep.equal({ id: 1, field: 'id' });
+      expect(spiedSelectCellsBetweenRange.mock.calls[spiedSelectCellsBetweenRange.mock.calls.length - 1][1]).to.deep.equal({ id: 0, field: 'id' });
     });
 
     it('should call selectCellRange when ArrowLeft is pressed', async () => {
@@ -216,11 +216,11 @@ describe('<DataGridPremium /> - Cell selection', () => {
       cell.focus();
       await user.click(cell);
       await user.keyboard('{Shift>}{ArrowLeft}{/Shift}');
-      expect(spiedSelectCellsBetweenRange.lastCall.args[0]).to.deep.equal({
+      expect(spiedSelectCellsBetweenRange.mock.calls[spiedSelectCellsBetweenRange.mock.calls.length - 1][0]).to.deep.equal({
         id: 0,
         field: 'currencyPair',
       });
-      expect(spiedSelectCellsBetweenRange.lastCall.args[1]).to.deep.equal({ id: 0, field: 'id' });
+      expect(spiedSelectCellsBetweenRange.mock.calls[spiedSelectCellsBetweenRange.mock.calls.length - 1][1]).to.deep.equal({ id: 0, field: 'id' });
     });
 
     it('should call selectCellRange when ArrowRight is pressed', async () => {
@@ -230,8 +230,8 @@ describe('<DataGridPremium /> - Cell selection', () => {
       cell.focus();
       await user.click(cell);
       await user.keyboard('{Shift>}{ArrowRight}{/Shift}');
-      expect(spiedSelectCellsBetweenRange.lastCall.args[0]).to.deep.equal({ id: 0, field: 'id' });
-      expect(spiedSelectCellsBetweenRange.lastCall.args[1]).to.deep.equal({
+      expect(spiedSelectCellsBetweenRange.mock.calls[spiedSelectCellsBetweenRange.mock.calls.length - 1][0]).to.deep.equal({ id: 0, field: 'id' });
+      expect(spiedSelectCellsBetweenRange.mock.calls[spiedSelectCellsBetweenRange.mock.calls.length - 1][1]).to.deep.equal({
         id: 0,
         field: 'currencyPair',
       });
@@ -259,7 +259,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
       await user.click(getCell(0, 0));
 
       expect(onCellSelectionModelChange.callCount).to.equal(1);
-      expect(onCellSelectionModelChange.lastCall.args[0]).to.deep.equal({ '0': { id: true } });
+      expect(onCellSelectionModelChange.mock.calls[onCellSelectionModelChange.mock.calls.length - 1][0]).to.deep.equal({ '0': { id: true } });
     });
 
     // Context: https://github.com/mui/mui-x/issues/14184
@@ -286,7 +286,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
       ]);
       await user.keyboard(isMac ? '{/Meta}' : '{/Control}');
 
-      expect(onCellSelectionModelChange.lastCall.args[0]).to.deep.equal({
+      expect(onCellSelectionModelChange.mock.calls[onCellSelectionModelChange.mock.calls.length - 1][0]).to.deep.equal({
         '0': { id: true },
         '2': { id: true },
         '3': { id: true },

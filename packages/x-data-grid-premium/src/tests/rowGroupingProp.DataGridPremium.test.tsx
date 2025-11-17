@@ -736,7 +736,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
         );
 
         fireUserEvent.mousePress(getCell(1, 0));
-        expect(renderIdCell.lastCall.firstArg.field).to.equal('id');
+        expect(renderIdCell.mock.calls[renderIdCell.mock.calls.length - 1][0].field).to.equal('id');
         expect(getCell(1, 0)).to.have.text('Focused: true');
       });
     });

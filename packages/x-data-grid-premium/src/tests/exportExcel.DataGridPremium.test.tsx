@@ -408,13 +408,13 @@ describe('<DataGridPremium /> - Export Excel', () => {
       render(<TestCaseExcelExport />);
       const getDataAsExcelSpy = spyApi(apiRef.current!, 'getDataAsExcel');
       await act(() => apiRef.current?.exportDataAsExcel({ worker: () => workerMock as any }));
-      expect(getDataAsExcelSpy.calledOnce).to.equal(false);
+      expect(getDataAsExcelSpy).not.toHaveBeenCalled();
     });
 
     it('should post a message to the web worker with the serialized columns', async () => {
       render(<TestCaseExcelExport />);
       await act(() => apiRef.current?.exportDataAsExcel({ worker: () => workerMock as any }));
-      expect(workerMock.postMessage.lastCall.args[0].serializedColumns).to.deep.equal([
+      expect(workerMock.postMessage.mock.calls[postMessage.mock.calls.length - 1][0].serializedColumns).to.deep.equal([
         { key: 'id', headerText: 'id', style: {}, width: 100 / 7.5 },
         { key: 'brand', headerText: 'Brand', style: {}, width: 100 / 7.5 },
       ]);
@@ -423,7 +423,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
     it('should post a message to the web worker with the serialized rows', async () => {
       render(<TestCaseExcelExport />);
       await act(() => apiRef.current?.exportDataAsExcel({ worker: () => workerMock as any }));
-      expect(workerMock.postMessage.lastCall.args[0].serializedRows).to.deep.equal([
+      expect(workerMock.postMessage.mock.calls[postMessage.mock.calls.length - 1][0].serializedRows).to.deep.equal([
         {
           dataValidation: {},
           mergedCells: [],

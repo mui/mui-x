@@ -84,7 +84,7 @@ describeTreeView<TreeViewAnyStore>(
         fireEvent.click(view.getItemContent('1'));
 
         expect(onExpandedItemsChange.callCount).to.equal(1);
-        expect(onExpandedItemsChange.lastCall.args[1]).to.deep.equal(['1']);
+        expect(onExpandedItemsChange.mock.calls[onExpandedItemsChange.mock.calls.length - 1][1]).to.deep.equal(['1']);
       });
 
       it('should call the onExpandedItemsChange callback when the model is updated (add expanded item to non-empty list)', () => {
@@ -102,7 +102,7 @@ describeTreeView<TreeViewAnyStore>(
         fireEvent.click(view.getItemContent('2'));
 
         expect(onExpandedItemsChange.callCount).to.equal(1);
-        expect(onExpandedItemsChange.lastCall.args[1]).to.deep.equal(['2', '1']);
+        expect(onExpandedItemsChange.mock.calls[onExpandedItemsChange.mock.calls.length - 1][1]).to.deep.equal(['2', '1']);
       });
 
       it('should call the onExpandedItemsChange callback when the model is updated (remove expanded item)', () => {
@@ -120,7 +120,7 @@ describeTreeView<TreeViewAnyStore>(
         fireEvent.click(view.getItemContent('1'));
 
         expect(onExpandedItemsChange.callCount).to.equal(1);
-        expect(onExpandedItemsChange.lastCall.args[1]).to.deep.equal([]);
+        expect(onExpandedItemsChange.mock.calls[onExpandedItemsChange.mock.calls.length - 1][1]).to.deep.equal([]);
       });
 
       it('should warn when switching from controlled to uncontrolled', () => {
@@ -299,8 +299,8 @@ describeTreeView<TreeViewAnyStore>(
 
         fireEvent.click(view.getItemContent('1'));
         expect(onItemExpansionToggle.callCount).to.equal(1);
-        expect(onItemExpansionToggle.lastCall.args[1]).to.equal('1');
-        expect(onItemExpansionToggle.lastCall.args[2]).to.equal(true);
+        expect(onItemExpansionToggle.mock.calls[onItemExpansionToggle.mock.calls.length - 1][1]).to.equal('1');
+        expect(onItemExpansionToggle.mock.calls[onItemExpansionToggle.mock.calls.length - 1][2]).to.equal(true);
       });
 
       it('should call the onItemExpansionToggle callback when collapsing an item', () => {
@@ -314,8 +314,8 @@ describeTreeView<TreeViewAnyStore>(
 
         fireEvent.click(view.getItemContent('1'));
         expect(onItemExpansionToggle.callCount).to.equal(1);
-        expect(onItemExpansionToggle.lastCall.args[1]).to.equal('1');
-        expect(onItemExpansionToggle.lastCall.args[2]).to.equal(false);
+        expect(onItemExpansionToggle.mock.calls[onItemExpansionToggle.mock.calls.length - 1][1]).to.equal('1');
+        expect(onItemExpansionToggle.mock.calls[onItemExpansionToggle.mock.calls.length - 1][2]).to.equal(false);
       });
     });
 
@@ -338,8 +338,8 @@ describeTreeView<TreeViewAnyStore>(
 
         expect(view.isItemExpanded('1')).to.equal(true);
         expect(onItemExpansionToggle.callCount).to.equal(1);
-        expect(onItemExpansionToggle.lastCall.args[1]).to.equal('1');
-        expect(onItemExpansionToggle.lastCall.args[2]).to.equal(true);
+        expect(onItemExpansionToggle.mock.calls[onItemExpansionToggle.mock.calls.length - 1][1]).to.equal('1');
+        expect(onItemExpansionToggle.mock.calls[onItemExpansionToggle.mock.calls.length - 1][2]).to.equal(true);
       });
 
       it('should collapse an expanded item when calling the setItemExpansion method with `shouldBeExpanded=false`', () => {
@@ -361,8 +361,8 @@ describeTreeView<TreeViewAnyStore>(
 
         expect(view.isItemExpanded('1')).to.equal(false);
         expect(onItemExpansionToggle.callCount).to.equal(1);
-        expect(onItemExpansionToggle.lastCall.args[1]).to.equal('1');
-        expect(onItemExpansionToggle.lastCall.args[2]).to.equal(false);
+        expect(onItemExpansionToggle.mock.calls[onItemExpansionToggle.mock.calls.length - 1][1]).to.equal('1');
+        expect(onItemExpansionToggle.mock.calls[onItemExpansionToggle.mock.calls.length - 1][2]).to.equal(false);
       });
 
       it('should do nothing when calling the setItemExpansion method with `shouldBeExpanded=true` on an already expanded item', () => {

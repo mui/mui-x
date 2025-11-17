@@ -32,7 +32,7 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Data source', () => {
   // TODO: Resets strictmode calls, need to find a better fix for this, maybe an AbortController?
   function Reset() {
     React.useLayoutEffect(() => {
-      fetchRowsSpy.resetHistory();
+      fetchRowsSpy.mockClear();
     }, []);
     return null;
   }
@@ -336,7 +336,7 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Data source', () => {
         </div>,
       );
       await waitFor(() => {
-        expect(getRows.called).to.equal(true);
+        expect(getRows).toHaveBeenCalled();
       });
       unmount();
       reject();
@@ -376,7 +376,7 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Data source', () => {
       await user.click(cell);
       expect(cell).toHaveFocus();
 
-      clearSpy.resetHistory();
+      clearSpy.mockClear();
 
       expect(cache.size).to.equal(1);
 
@@ -384,7 +384,7 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Data source', () => {
       await user.keyboard('{Enter} updated{Enter}');
 
       expect(editRowSpy.callCount).to.equal(1);
-      expect(editRowSpy.lastCall.args[0].updatedRow.commodity).to.contain('updated');
+      expect(editRowSpy.mock.calls[editRowSpy.mock.calls.length - 1][0].updatedRow.commodity).to.contain('updated');
 
       await waitFor(() => {
         expect(clearSpy.callCount).to.equal(1);
@@ -425,13 +425,13 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Data source', () => {
       await user.click(cell);
       expect(cell).toHaveFocus();
 
-      editRowSpy.resetHistory();
+      editRowSpy.mockClear();
 
       // edit the cell
       await user.keyboard('{Enter}{Enter}');
 
       expect(editRowSpy.callCount).to.equal(1);
-      expect(editRowSpy.lastCall.args[0].updatedRow.commodity).to.contain('-edited');
+      expect(editRowSpy.mock.calls[editRowSpy.mock.calls.length - 1][0].updatedRow.commodity).to.contain('-edited');
     });
   });
 });

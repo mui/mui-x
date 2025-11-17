@@ -142,7 +142,7 @@ storeClasses.forEach((storeClass) => {
 
         const setSpy = spy(store, 'set');
         store.setVisibleResources(resourcesMap);
-        expect(setSpy.called).to.equal(false);
+        expect(setSpy).not.toHaveBeenCalled();
       });
     });
   });

@@ -264,12 +264,12 @@ describe('<DataGridPro /> - Column pinning', () => {
       const handlePinnedColumnsChange = spy();
       render(<TestCase onPinnedColumnsChange={handlePinnedColumnsChange} />);
       await act(() => apiRef.current?.pinColumn('currencyPair', GridPinnedColumnPosition.LEFT));
-      expect(handlePinnedColumnsChange.lastCall.args[0]).to.deep.equal({
+      expect(handlePinnedColumnsChange.mock.calls[handlePinnedColumnsChange.mock.calls.length - 1][0]).to.deep.equal({
         left: ['currencyPair'],
         right: [],
       });
       await act(() => apiRef.current?.pinColumn('price17M', GridPinnedColumnPosition.RIGHT));
-      expect(handlePinnedColumnsChange.lastCall.args[0]).to.deep.equal({
+      expect(handlePinnedColumnsChange.mock.calls[handlePinnedColumnsChange.mock.calls.length - 1][0]).to.deep.equal({
         left: ['currencyPair'],
         right: ['price17M'],
       });
@@ -287,7 +287,7 @@ describe('<DataGridPro /> - Column pinning', () => {
       await act(() => apiRef.current?.pinColumn('price17M', GridPinnedColumnPosition.LEFT));
       await microtasks();
       expect($$(`[role="gridcell"].${gridClasses['cell--pinnedLeft']}`)).to.have.length(1);
-      expect(handlePinnedColumnsChange.lastCall.args[0]).to.deep.equal({
+      expect(handlePinnedColumnsChange.mock.calls[handlePinnedColumnsChange.mock.calls.length - 1][0]).to.deep.equal({
         left: ['currencyPair', 'price17M'],
         right: [],
       });

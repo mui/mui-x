@@ -1,4 +1,4 @@
-import { SinonSpy } from 'sinon';
+import { MockInstance } from 'vitest';
 import {
   cleanText,
   isPickerRangeType,
@@ -35,14 +35,15 @@ export const expectFieldPlaceholderV6 = (
 
 export function expectPickerChangeHandlerValue(
   type: PickerComponentType | PickerRangeComponentType,
-  spyCallback: SinonSpy,
+  spyCallback: MockInstance,
   expectedValue: any,
 ) {
+  const lastCall = spyCallback.mock.calls[spyCallback.mock.calls.length - 1];
   if (isPickerRangeType(type)) {
-    spyCallback.lastCall.firstArg.forEach((value: any, index: number) => {
+    lastCall[0].forEach((value: any, index: number) => {
       expect(value).to.deep.equal(expectedValue[index]);
     });
   } else {
-    expect(spyCallback.lastCall.firstArg).to.deep.equal(expectedValue);
+    expect(lastCall[0]).to.deep.equal(expectedValue);
   }
 }

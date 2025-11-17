@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import { screen, fireEvent, createDescribe } from '@mui/internal-test-utils';
 import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
 import { DescribePickerOptions } from './describePicker.types';
@@ -60,8 +60,8 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
 
   describe('Component slot: DesktopPaper', () => {
     it.skipIf(hasNoView || variant !== 'desktop')('should forward onClick and onTouchStart', () => {
-      const handleClick = spy();
-      const handleTouchStart = spy();
+      const handleClick = vi.fn();
+      const handleTouchStart = vi.fn();
       render(
         <ElementToTest
           {...propsToOpen}
@@ -79,15 +79,15 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
       fireEvent.click(paper);
       fireEvent.touchStart(paper);
 
-      expect(handleClick.callCount).to.equal(1);
-      expect(handleTouchStart.callCount).to.equal(1);
+      expect(handleClick).toHaveBeenCalledTimes(1);
+      expect(handleTouchStart).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('Component slot: Popper', () => {
     it.skipIf(hasNoView || variant !== 'desktop')('should forward onClick and onTouchStart', () => {
-      const handleClick = spy();
-      const handleTouchStart = spy();
+      const handleClick = vi.fn();
+      const handleTouchStart = vi.fn();
       render(
         <ElementToTest
           {...propsToOpen}
@@ -105,8 +105,8 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
       fireEvent.click(popper);
       fireEvent.touchStart(popper);
 
-      expect(handleClick.callCount).to.equal(1);
-      expect(handleTouchStart.callCount).to.equal(1);
+      expect(handleClick).toHaveBeenCalledTimes(1);
+      expect(handleTouchStart).toHaveBeenCalledTimes(1);
     });
   });
 

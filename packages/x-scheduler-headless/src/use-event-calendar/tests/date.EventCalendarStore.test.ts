@@ -30,10 +30,10 @@ describe('Date - EventCalendarStore', () => {
       expect(store.state.view).to.equal('day');
       expect(store.state.visibleDate).toEqualDateTime(nextDate);
 
-      expect(onVisibleDateChange.calledOnce).to.equal(true);
-      expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(nextDate);
-      expect(onViewChange.calledOnce).to.equal(true);
-      expect(onViewChange.lastCall.firstArg).to.equal('day');
+      expect(onVisibleDateChange).toHaveBeenCalledOnce();
+      expect(onVisibleDateChange.mock.calls[onVisibleDateChange.mock.calls.length - 1][0]).toEqualDateTime(nextDate);
+      expect(onViewChange).toHaveBeenCalledOnce();
+      expect(onViewChange.mock.calls[onViewChange.mock.calls.length - 1][0]).to.equal('day');
     });
 
     it('should NOT mutate store but calls both callbacks when both change when is controlled', () => {
@@ -59,10 +59,10 @@ describe('Date - EventCalendarStore', () => {
       expect(store.state.view).to.equal('week');
       expect(store.state.visibleDate).toEqualDateTime(initialDate);
 
-      expect(onVisibleDateChange.calledOnce).to.equal(true);
-      expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(nextDate);
-      expect(onViewChange.calledOnce).to.equal(true);
-      expect(onViewChange.lastCall.firstArg).to.equal('day');
+      expect(onVisibleDateChange).toHaveBeenCalledOnce();
+      expect(onVisibleDateChange.mock.calls[onVisibleDateChange.mock.calls.length - 1][0]).toEqualDateTime(nextDate);
+      expect(onViewChange).toHaveBeenCalledOnce();
+      expect(onViewChange.mock.calls[onViewChange.mock.calls.length - 1][0]).to.equal('day');
     });
 
     it('should update date in store and calls onVisibleDateChange if only date changes when is uncontrolled', () => {
@@ -87,8 +87,8 @@ describe('Date - EventCalendarStore', () => {
 
       expect(store.state.view).to.equal('day');
       expect(store.state.visibleDate).toEqualDateTime(nextDate);
-      expect(onVisibleDateChange.calledOnce).to.equal(true);
-      expect(onViewChange.called).to.equal(false);
+      expect(onVisibleDateChange).toHaveBeenCalledOnce();
+      expect(onViewChange).not.toHaveBeenCalled();
     });
 
     it('should update date and calls only onVisibleDateChange when is partially controlled (view controlled, visibleDate uncontrolled)', () => {
@@ -113,8 +113,8 @@ describe('Date - EventCalendarStore', () => {
 
       expect(store.state.view).to.equal('day');
       expect(store.state.visibleDate).toEqualDateTime(nextDate);
-      expect(onVisibleDateChange.calledOnce).to.equal(true);
-      expect(onViewChange.called).to.equal(false);
+      expect(onVisibleDateChange).toHaveBeenCalledOnce();
+      expect(onViewChange).not.toHaveBeenCalled();
     });
 
     it('should update view and calls only onViewChange when is partially controlled (view uncontrolled, visibleDate controlled)', () => {
@@ -138,9 +138,9 @@ describe('Date - EventCalendarStore', () => {
 
       expect(store.state.view).to.equal('day');
       expect(store.state.visibleDate).toEqualDateTime(currentDate);
-      expect(onVisibleDateChange.calledOnce).to.equal(false);
-      expect(onViewChange.calledOnce).to.equal(true);
-      expect(onViewChange.lastCall.firstArg).to.equal('day');
+      expect(onVisibleDateChange).not.toHaveBeenCalled();
+      expect(onViewChange).toHaveBeenCalledOnce();
+      expect(onViewChange.mock.calls[onViewChange.mock.calls.length - 1][0]).to.equal('day');
     });
 
     it('should do nothing if nothing changes, does not update store or call callbacks', () => {
@@ -163,8 +163,8 @@ describe('Date - EventCalendarStore', () => {
 
       expect(store.state.view).to.equal('day');
       expect(store.state.visibleDate).toEqualDateTime(sameDate);
-      expect(onVisibleDateChange.called).to.equal(false);
-      expect(onViewChange.called).to.equal(false);
+      expect(onVisibleDateChange).not.toHaveBeenCalled();
+      expect(onViewChange).not.toHaveBeenCalled();
     });
 
     it('should throw if the view is not an allowed view', () => {
@@ -197,7 +197,7 @@ describe('Date - EventCalendarStore', () => {
 
       store.setViewConfig({ siblingVisibleDateGetter });
       store.goToPreviousVisibleDate({} as any);
-      expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(targetDate);
+      expect(onVisibleDateChange.mock.calls[onVisibleDateChange.mock.calls.length - 1][0]).toEqualDateTime(targetDate);
       expect(siblingVisibleDateGetter.lastCall.lastArg).toEqual(-1);
     });
   });
@@ -220,7 +220,7 @@ describe('Date - EventCalendarStore', () => {
 
       store.setViewConfig({ siblingVisibleDateGetter });
       store.goToNextVisibleDate({} as any);
-      expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(targetDate);
+      expect(onVisibleDateChange.mock.calls[onVisibleDateChange.mock.calls.length - 1][0]).toEqualDateTime(targetDate);
       expect(siblingVisibleDateGetter.lastCall.lastArg).toEqual(1);
     });
   });

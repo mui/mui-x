@@ -24,7 +24,7 @@ describe('<AgendaView />', () => {
       );
 
       await user.click(screen.getByRole('button', { name: /previous agenda/i }));
-      expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
+      expect(onVisibleDateChange.mock.calls[onVisibleDateChange.mock.calls.length - 1][0]).toEqualDateTime(
         adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, -12),
       );
     });
@@ -42,7 +42,7 @@ describe('<AgendaView />', () => {
       );
 
       await user.click(screen.getByRole('button', { name: /next agenda/i }));
-      expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
+      expect(onVisibleDateChange.mock.calls[onVisibleDateChange.mock.calls.length - 1][0]).toEqualDateTime(
         adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 12),
       );
     });

@@ -52,7 +52,7 @@ describe('<PickerDay2 />', () => {
     fireEvent.click(targetDay);
 
     expect(handleDaySelect.callCount).to.equal(1);
-    expect(handleDaySelect.args[0][0]).toEqualDateTime(day);
+    expect(handleDaySelect.mock.calls[0][0]).toEqualDateTime(day);
   });
 
   it('renders the day of the month by default', () => {

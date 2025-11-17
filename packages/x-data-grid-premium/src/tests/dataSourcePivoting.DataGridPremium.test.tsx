@@ -34,7 +34,7 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
   // TODO: Resets strictmode calls, need to find a better fix for this, maybe an AbortController?
   function Reset() {
     React.useLayoutEffect(() => {
-      fetchRowsSpy.resetHistory();
+      fetchRowsSpy.mockClear();
     }, []);
     return null;
   }
@@ -135,7 +135,7 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
       expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
     });
 
-    expect(fetchRowsSpy.lastCall.args[0].pivotModel).to.deep.equal(pivotModel);
+    expect(fetchRowsSpy.mock.calls[fetchRowsSpy.mock.calls.length - 1][0].pivotModel).to.deep.equal(pivotModel);
   });
 
   it('should not pass hidden rows, columns and values in the `pivotModel` in the `getRows` params', async () => {
@@ -159,7 +159,7 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
       expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
     });
 
-    expect(fetchRowsSpy.lastCall.args[0].pivotModel).to.deep.equal({
+    expect(fetchRowsSpy.mock.calls[fetchRowsSpy.mock.calls.length - 1][0].pivotModel).to.deep.equal({
       rows: [],
       columns: [],
       values: [],
@@ -230,7 +230,7 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
       expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
     });
 
-    expect(fetchRowsSpy.lastCall.args[0].pivotModel).to.deep.equal(pivotModel);
+    expect(fetchRowsSpy.mock.calls[fetchRowsSpy.mock.calls.length - 1][0].pivotModel).to.deep.equal(pivotModel);
     await waitFor(() => {
       expect(getColumnHeadersTextContent()).to.deep.equal([
         '',
@@ -284,7 +284,7 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
     });
 
     // Verify that pivot model is passed to getRows
-    expect(fetchRowsSpy.lastCall.args[0].pivotModel).to.deep.equal(pivotModel);
+    expect(fetchRowsSpy.mock.calls[fetchRowsSpy.mock.calls.length - 1][0].pivotModel).to.deep.equal(pivotModel);
 
     // Verify displayed data
     await waitFor(() => {
@@ -339,7 +339,7 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
     });
 
     // Verify that pivot model is passed to getRows
-    expect(fetchRowsSpy.lastCall.args[0].pivotModel).to.deep.equal(pivotModel);
+    expect(fetchRowsSpy.mock.calls[fetchRowsSpy.mock.calls.length - 1][0].pivotModel).to.deep.equal(pivotModel);
 
     // Verify displayed data
     await waitFor(() => {

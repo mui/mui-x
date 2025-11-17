@@ -89,14 +89,14 @@ describe('<DataGridPro /> - Columns visibility', () => {
 
       act(() => apiRef.current?.setColumnVisibility('id', false));
       expect(onColumnVisibilityModelChange.callCount).to.equal(1);
-      expect(onColumnVisibilityModelChange.lastCall.firstArg).to.deep.equal({
+      expect(onColumnVisibilityModelChange.mock.calls[onColumnVisibilityModelChange.mock.calls.length - 1][0]).to.deep.equal({
         id: false,
         idBis: false,
       });
 
       act(() => apiRef.current?.setColumnVisibility('id', true));
       expect(onColumnVisibilityModelChange.callCount).to.equal(2);
-      expect(onColumnVisibilityModelChange.lastCall.firstArg).to.deep.equal({
+      expect(onColumnVisibilityModelChange.mock.calls[onColumnVisibilityModelChange.mock.calls.length - 1][0]).to.deep.equal({
         idBis: false,
         id: true,
       });
@@ -115,7 +115,7 @@ describe('<DataGridPro /> - Columns visibility', () => {
       );
       act(() => apiRef.current?.setColumnVisibilityModel({}));
       expect(onColumnVisibilityModelChange.callCount).to.equal(1);
-      expect(onColumnVisibilityModelChange.lastCall.firstArg).to.deep.equal({});
+      expect(onColumnVisibilityModelChange.mock.calls[onColumnVisibilityModelChange.mock.calls.length - 1][0]).to.deep.equal({});
     });
   });
 

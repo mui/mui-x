@@ -77,7 +77,7 @@ describe('<DataGridPremium /> - Row selection', () => {
         />,
       );
 
-      expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
+      expect(onRowSelectionModelChange.mock.calls[onRowSelectionModelChange.mock.calls.length - 1][0]).to.deep.equal(
         includeRowSelection([3, 4, 'auto-generated-row-category1/Cat B']),
       );
     });
@@ -96,7 +96,7 @@ describe('<DataGridPremium /> - Row selection', () => {
         setProps({ rowSelectionModel: includeRowSelection([3, 4]) });
       });
       expect(onRowSelectionModelChange.callCount).to.equal(1);
-      expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
+      expect(onRowSelectionModelChange.mock.calls[onRowSelectionModelChange.mock.calls.length - 1][0]).to.deep.equal(
         includeRowSelection([3, 4, 'auto-generated-row-category1/Cat B']),
       );
     });
@@ -117,7 +117,7 @@ describe('<DataGridPremium /> - Row selection', () => {
         });
       });
       expect(onRowSelectionModelChange.callCount).to.equal(1);
-      expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
+      expect(onRowSelectionModelChange.mock.calls[onRowSelectionModelChange.mock.calls.length - 1][0]).to.deep.equal(
         includeRowSelection([3, 4, 'auto-generated-row-category1/Cat B']),
       );
     });
@@ -229,7 +229,7 @@ describe('<DataGridPremium /> - Row selection', () => {
           setProps({ rows });
         });
         expect(onRowSelectionModelChange.callCount).to.equal(1);
-        expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
+        expect(onRowSelectionModelChange.mock.calls[onRowSelectionModelChange.mock.calls.length - 1][0]).to.deep.equal(
           includeRowSelection([3, 4, 'auto-generated-row-category1/Cat B']),
         );
       });
@@ -251,7 +251,7 @@ describe('<DataGridPremium /> - Row selection', () => {
           setProps({ rows });
         });
         expect(onRowSelectionModelChange.callCount).to.equal(1);
-        expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
+        expect(onRowSelectionModelChange.mock.calls[onRowSelectionModelChange.mock.calls.length - 1][0]).to.deep.equal(
           includeRowSelection(['auto-generated-row-category1/Cat B', 3, 4]),
         );
       });

@@ -5,7 +5,7 @@ import { generateTestLicenseKey, setupTestLicenseKey } from 'test/utils/testLice
 import { configure } from '@mui/internal-test-utils';
 import { config } from 'react-transition-group';
 
-import sinon from 'sinon';
+import { vi } from 'vitest';
 import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingDataGrid } from '@mui/x-data-grid';
 import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingDataGridPro } from '@mui/x-data-grid-pro';
 import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingTreeView } from '@mui/x-tree-view';
@@ -37,9 +37,8 @@ afterEach(() => {
   unstable_resetCleanupTrackingDataGridPro();
   unstable_resetCleanupTrackingTreeView();
 
-  // Restore Sinon default sandbox to avoid memory leak
-  // See https://github.com/sinonjs/sinon/issues/1866
-  sinon.restore();
+  // Restore all mocks to avoid memory leak
+  vi.restoreAllMocks();
   config.disabled = false;
 });
 
