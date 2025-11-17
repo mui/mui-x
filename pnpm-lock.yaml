@@ -55,7 +55,7 @@ catalogs:
       specifier: ^7.3.5
       version: 7.3.5
     '@mui/x-internal-exceljs-fork':
-      specifier: ^4.4.3
+      specifier: 4.4.3
       version: 4.4.3
     '@playwright/test':
       specifier: ^1.56.1
