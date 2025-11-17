@@ -18,7 +18,6 @@ import { ChartsWrapper } from '@mui/x-charts-pro/ChartsWrapper';
 import { ChartsSurface } from '@mui/x-charts-pro/ChartsSurface';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-
 import { ScatterPlot } from '@mui/x-charts/ScatterChart';
 
 const importantHappeningsLabels = [

@@ -8,7 +8,6 @@ import {
   BarChartSlots,
   BarPlot,
   BarSeries,
-  RangeBarSeries,
 } from '@mui/x-charts/BarChart';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
@@ -20,6 +19,7 @@ import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
+import { RangeBarSeriesType } from '@mui/x-charts/models';
 import {
   ChartsToolbarProSlotProps,
   ChartsToolbarProSlots,
@@ -43,8 +43,10 @@ export interface BarChartProSlotProps
     ChartsToolbarProSlotProps,
     Partial<ChartsSlotPropsPro> {}
 
+export type RangeBarSeries = RangeBarSeriesType;
+
 export interface BarChartProProps
-  extends Omit<BarChartProps, 'apiRef' | 'slots' | 'slotProps'>,
+  extends Omit<BarChartProps, 'apiRef' | 'series' | 'slots' | 'slotProps'>,
     Omit<
       ChartContainerProProps<'bar', BarChartProPluginSignatures>,
       'series' | 'plugins' | 'seriesConfig' | 'slots' | 'slotProps' | 'experimentalFeatures'

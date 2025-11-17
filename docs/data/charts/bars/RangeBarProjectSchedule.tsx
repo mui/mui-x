@@ -1,4 +1,4 @@
-import { RangeBarPlot } from '@mui/x-charts-pro/BarChartPro';
+import { RangeBarPlot, RangeBarSeries } from '@mui/x-charts-pro/BarChartPro';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
@@ -18,7 +18,6 @@ import { ChartsWrapper } from '@mui/x-charts-pro/ChartsWrapper';
 import { ChartsSurface } from '@mui/x-charts-pro/ChartsSurface';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { RangeBarSeries } from '@mui/x-charts/BarChart';
 import { ScatterPlot, ScatterSeries } from '@mui/x-charts/ScatterChart';
 
 const importantHappeningsLabels = [

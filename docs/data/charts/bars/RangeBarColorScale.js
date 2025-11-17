@@ -4,7 +4,6 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
-// FIXME: Fix import
 
 const series = [
   {

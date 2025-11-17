@@ -3,9 +3,7 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
-import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
-// FIXME: Fix import
-import { RangeBarSeries } from '@mui/x-charts-pro/BarChart';
+import { BarChartPro, RangeBarSeries } from '@mui/x-charts-pro/BarChartPro';
 
 const series = [
   {

@@ -28,7 +28,6 @@ import { ChartsSurface } from '../ChartsSurface';
 import { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
 import { ChartsWrapper } from '../ChartsWrapper';
 import { BarChartPluginSignatures } from './BarChart.plugins';
-import { RangeBarSeriesType } from '../models';
 
 export interface BarChartSlots
   extends ChartsAxisSlots,
@@ -48,7 +47,6 @@ export interface BarChartSlotProps
     Partial<ChartsSlotProps> {}
 
 export type BarSeries = MakeOptional<BarSeriesType, 'type'>;
-export type RangeBarSeries = RangeBarSeriesType;
 
 export interface BarChartProps
   extends Omit<
@@ -62,7 +60,7 @@ export interface BarChartProps
    * The series to display in the bar chart.
    * An array of [[BarSeries]] objects.
    */
-  series: ReadonlyArray<BarSeries | RangeBarSeries>;
+  series: ReadonlyArray<BarSeries>;
   /**
    * Option to display a cartesian grid in the background.
    */

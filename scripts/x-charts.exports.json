@@ -371,7 +371,6 @@
   { "name": "rainbowSurgePaletteDark", "kind": "Variable" },
   { "name": "rainbowSurgePaletteLight", "kind": "Variable" },
   { "name": "RangeBarItemIdentifier", "kind": "TypeAlias" },
-  { "name": "RangeBarSeries", "kind": "TypeAlias" },
   { "name": "RangeBarSeriesType", "kind": "Interface" },
   { "name": "RangeBarValueType", "kind": "TypeAlias" },
   { "name": "redPalette", "kind": "Variable" },
