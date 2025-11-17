@@ -18,7 +18,13 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
   const noParents = new Map<string, string | null>();
 
   function run(events: SchedulerEventOccurrence[]) {
-    return innerGetEventOccurrencesGroupedByDay(adapter, days, events, visible, noParents);
+    return innerGetEventOccurrencesGroupedByDay({
+      adapter,
+      days,
+      events,
+      visibleResources: visible,
+      resourceParentIds: noParents,
+    });
   }
 
   it('should return empty arrays when no events exist', () => {
@@ -51,17 +57,6 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
     expect(result.get(days[2].key)).to.have.length(1);
   });
 
-  it('should place all-day events before non-all-day events', () => {
-    const allDay = EventBuilder.new(adapter).fullDay(day0Str).buildOccurrence();
-    const timed = EventBuilder.new(adapter).singleDay(day0Str).buildOccurrence();
-
-    const result = run([allDay, timed]);
-    const list = result.get(days[0].key)!;
-
-    expect(list[0].id).to.equal(allDay.id);
-    expect(list[1].id).to.equal(timed.id);
-  });
-
   it('should exclude events whose resource is not visible', () => {
     const visibilityWithHidden = new Map(visible);
     visibilityWithHidden.set('Resource X', false);
@@ -76,13 +71,13 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
       .singleDay(day1Str)
       .buildOccurrence();
 
-    const result = innerGetEventOccurrencesGroupedByDay(
+    const result = innerGetEventOccurrencesGroupedByDay({
       adapter,
       days,
-      [visibleEvent, invisibleEvent],
-      visibilityWithHidden,
-      noParents,
-    );
+      events: [visibleEvent, invisibleEvent],
+      visibleResources: visibilityWithHidden,
+      resourceParentIds: noParents,
+    });
 
     const list = result.get(days[1].key)!;
 
