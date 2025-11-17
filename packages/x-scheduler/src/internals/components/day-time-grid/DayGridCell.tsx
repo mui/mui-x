@@ -78,7 +78,7 @@ export function DayGridCell(props: DayGridCellProps) {
             <EventPopoverTrigger
               key={occurrence.key}
               occurrence={occurrence}
-              render={<DayGridEvent occurrence={occurrence} variant="allDay" />}
+              render={<DayGridEvent occurrence={occurrence} variant="filled" />}
             />
           );
         })}

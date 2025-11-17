@@ -45,6 +45,9 @@ export interface SchedulerTranslations {
   weekAbbreviation: string;
   weekNumberAriaLabel: (weekNumber: number) => string;
 
+  // EventItem
+  eventItemMultiDayLabel: (endDate: string) => string;
+
   // EventPopover
   allDayLabel: string;
   closeButtonAriaLabel: string;
