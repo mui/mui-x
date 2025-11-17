@@ -8,7 +8,6 @@ import {
   EventCalendarStore,
 } from '../EventCalendarStore';
 import { CalendarView } from '../../models';
-import { DEFAULT_IS_MULTI_DAY_EVENT } from '../../utils/SchedulerStore';
 
 const DEFAULT_PARAMS = { events: [] };
 
@@ -34,7 +33,6 @@ describe('Core - EventCalendarStore', () => {
         resourceChildrenIdLookup: new Map(),
         visibleResources: new Map(),
         nowUpdatedEveryMinute: adapter.now('default'),
-        isMultiDayEvent: DEFAULT_IS_MULTI_DAY_EVENT,
         areEventsDraggable: false,
         areEventsResizable: false,
         canDragEventsFromTheOutside: false,

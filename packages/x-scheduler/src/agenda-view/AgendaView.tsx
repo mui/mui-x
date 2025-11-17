@@ -30,7 +30,7 @@ export const AgendaView = React.memo(
     const handleRef = useMergedRefs(forwardedRef, containerRef);
 
     // Feature hooks
-    const { days, occurrencesMap } = useAgendaEventOccurrencesGroupedByDay();
+    const days = useAgendaEventOccurrencesGroupedByDay();
     useEventCalendarView(() => ({
       siblingVisibleDateGetter: (date, delta) =>
         adapter.addDays(date, AGENDA_VIEW_DAYS_AMOUNT * delta),
@@ -45,39 +45,41 @@ export const AgendaView = React.memo(
         className={clsx('AgendaViewContainer', 'mui-x-scheduler', props.className)}
       >
         <EventPopoverProvider containerRef={containerRef}>
-          {days.map((day) => (
+          {days.map(({ date, occurrences }) => (
             <section
               className="AgendaViewRow"
-              key={day.key}
-              id={`AgendaViewRow-${day.key}`}
-              aria-labelledby={`DayHeaderCell-${day.key}`}
+              key={date.key}
+              id={`AgendaViewRow-${date.key}`}
+              aria-labelledby={`DayHeaderCell-${date.key}`}
             >
               <header
-                id={`DayHeaderCell-${day.key}`}
+                id={`DayHeaderCell-${date.key}`}
                 className="DayHeaderCell"
-                aria-label={`${adapter.format(day.value, 'weekday')} ${adapter.format(day.value, 'dayOfMonth')}`}
-                data-current={adapter.isSameDay(day.value, today) ? '' : undefined}
+                aria-label={`${adapter.format(date.value, 'weekday')} ${adapter.format(date.value, 'dayOfMonth')}`}
+                data-current={adapter.isSameDay(date.value, today) ? '' : undefined}
               >
-                <span className="DayNumberCell">{adapter.format(day.value, 'dayOfMonth')}</span>
+                <span className="DayNumberCell">{adapter.format(date.value, 'dayOfMonth')}</span>
                 <div className="WeekDayCell">
                   <span className={clsx('AgendaWeekDayNameLabel', 'LinesClamp')}>
-                    {adapter.format(day.value, 'weekday')}
+                    {adapter.format(date.value, 'weekday')}
                   </span>
                   <span className={clsx('AgendaYearAndMonthLabel', 'LinesClamp')}>
-                    {adapter.format(day.value, 'monthFullLetter')},{' '}
-                    {adapter.format(day.value, 'yearPadded')}
+                    {adapter.format(date.value, 'monthFullLetter')},{' '}
+                    {adapter.format(date.value, 'yearPadded')}
                   </span>
                 </div>
               </header>
               <ul className="EventsList">
-                {occurrencesMap.get(day.key)!.map((occurrence) => (
+                {occurrences.map((occurrence) => (
                   <li key={occurrence.key}>
                     <EventPopoverTrigger
                       occurrence={occurrence}
                       render={
                         <EventItem
                           occurrence={occurrence}
-                          ariaLabelledBy={`DayHeaderCell-${day.key}`}
+                          date={date}
+                          variant="regular"
+                          ariaLabelledBy={`DayHeaderCell-${date.key}`}
                         />
                       }
                     />

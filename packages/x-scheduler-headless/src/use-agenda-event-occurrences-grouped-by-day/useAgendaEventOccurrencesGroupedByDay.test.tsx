@@ -8,7 +8,6 @@ import {
   useAgendaEventOccurrencesGroupedByDayOptions,
 } from './useAgendaEventOccurrencesGroupedByDay';
 import { EventCalendarProvider } from '../event-calendar-provider/EventCalendarProvider';
-import { getIdsFromOccurrencesMap } from '../utils/SchedulerStore/tests/utils';
 import { AGENDA_VIEW_DAYS_AMOUNT } from '../constants';
 
 describe('useAgendaEventOccurrencesGroupedByDay', () => {
@@ -58,9 +57,9 @@ describe('useAgendaEventOccurrencesGroupedByDay', () => {
       showEmptyDaysInAgenda: true,
     });
 
-    expect(res.days).to.have.length(12);
-    for (const day of res.days) {
-      expect(res.occurrencesMap.get(day.key)).to.deep.equal([]);
+    expect(res).to.have.length(12);
+    for (const day of res) {
+      expect(day.occurrences).to.deep.equal([]);
     }
   });
 
@@ -89,7 +88,7 @@ describe('useAgendaEventOccurrencesGroupedByDay', () => {
       showEmptyDaysInAgenda: false,
     });
 
-    expect(res.days).to.have.length(AGENDA_VIEW_DAYS_AMOUNT);
+    expect(res).to.have.length(AGENDA_VIEW_DAYS_AMOUNT);
     const expectedKeys = [
       processDate(adapter.date('2025-01-01', 'default'), adapter).key,
       processDate(adapter.date('2025-01-03', 'default'), adapter).key,
@@ -104,9 +103,9 @@ describe('useAgendaEventOccurrencesGroupedByDay', () => {
       processDate(adapter.date('2025-01-18', 'default'), adapter).key,
       processDate(adapter.date('2025-01-20', 'default'), adapter).key,
     ];
-    expect(res.days.map((day) => day.key)).to.deep.equal(expectedKeys);
-    for (const day of res.days) {
-      expect((res.occurrencesMap.get(day.key) ?? []).length).to.greaterThan(0);
+    expect(res.map((day) => day.date.key)).to.deep.equal(expectedKeys);
+    for (const day of res) {
+      expect(day.occurrences.length).to.greaterThan(0);
     }
   });
 
@@ -138,11 +137,13 @@ describe('useAgendaEventOccurrencesGroupedByDay', () => {
       showWeekends: false,
       showEmptyDaysInAgenda: true,
     });
-    expect(res.days).to.have.length(12);
+    expect(res).to.have.length(12);
     const weekendIds = ['2', '3', '9', '10', '16', '17'];
-    const includedIds = getIdsFromOccurrencesMap(res.occurrencesMap);
-    for (const id of weekendIds) {
-      expect(includedIds).to.not.include(id);
+    for (const day of res) {
+      const includedIds = day.occurrences.map((occ) => occ.id);
+      for (const id of weekendIds) {
+        expect(includedIds).to.not.include(id);
+      }
     }
   });
 });

@@ -2,9 +2,7 @@ import { Store } from '@base-ui-components/utils/store';
 // TODO: Use the Base UI warning utility once it supports cleanup in tests.
 import { warnOnce } from '@mui/x-internals/warning';
 import {
-  SchedulerProcessedEvent,
   SchedulerEventId,
-  SchedulerEventOccurrence,
   SchedulerOccurrencePlaceholder,
   SchedulerResourceId,
   SchedulerValidDate,
@@ -38,17 +36,6 @@ import {
 } from './SchedulerStore.utils';
 import { TimeoutManager } from '../TimeoutManager';
 import { DEFAULT_EVENT_COLOR } from '../../constants';
-
-// TODO: Add a prop to configure the behavior.
-export const DEFAULT_IS_MULTI_DAY_EVENT = (
-  event: SchedulerProcessedEvent | SchedulerEventOccurrence,
-) => {
-  if (event.allDay) {
-    return true;
-  }
-
-  return false;
-};
 
 const ONE_MINUTE_IN_MS = 60 * 1000;
 
@@ -89,7 +76,6 @@ export class SchedulerStore<
       adapter,
       occurrencePlaceholder: null,
       nowUpdatedEveryMinute: adapter.now('default'),
-      isMultiDayEvent: DEFAULT_IS_MULTI_DAY_EVENT,
       pendingUpdateRecurringEventParameters: null,
       visibleResources: new Map(),
       visibleDate:
