@@ -1,4 +1,3 @@
-import * as React from 'react';
 import type { ProcessedBarSeriesData } from '../types';
 import { BarLabelItem, BarLabelItemProps } from './BarLabelItem';
 import { useUtilityClasses } from '../barClasses';
@@ -42,6 +41,7 @@ function BarLabelPlot(props: BarLabelPlotProps) {
           layout={layout ?? 'vertical'}
           {...other}
           barLabel={barLabel}
+          barLabelPlacement={processedSeries.barLabelPlacement || 'center'}
         />
       ))}
     </g>

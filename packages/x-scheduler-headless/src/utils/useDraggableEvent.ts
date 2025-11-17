@@ -8,7 +8,7 @@ import {
   schedulerEventSelectors,
   schedulerOccurrencePlaceholderSelectors,
 } from '../scheduler-selectors';
-import { CalendarEventId, SchedulerValidDate } from '../models';
+import { SchedulerEventId, SchedulerValidDate } from '../models';
 import { useDragPreview } from './useDragPreview';
 import { useEvent } from './useEvent';
 import { useAdapter } from '../use-adapter';
@@ -119,7 +119,7 @@ export namespace useDraggableEvent {
     /**
      * The unique identifier of the event.
      */
-    eventId: CalendarEventId;
+    eventId: SchedulerEventId;
     /**
      * The unique identifier of the event occurrence.
      */
