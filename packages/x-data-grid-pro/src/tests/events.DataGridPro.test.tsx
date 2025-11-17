@@ -237,7 +237,7 @@ describe('<DataGridPro /> - Events params', () => {
       const cell11 = getCell(1, 1);
       fireEvent.click(cell11);
       expect(handleRowSelectionModelChange.callCount).to.equal(1);
-      expect(handleRowSelectionModelChange.lastCall.firstArg).to.deep.equal(
+      expect(handleRowSelectionModelChange.mock.calls[handleRowSelectionModelChange.mock.calls.length - 1][0]).to.deep.equal(
         includeRowSelection([2]),
       );
     });
@@ -345,7 +345,7 @@ describe('<DataGridPro /> - Events params', () => {
         />,
       );
       expect(handleFetchRows.callCount).to.equal(1);
-      expect(handleFetchRows.lastCall.firstArg).to.contain({
+      expect(handleFetchRows.mock.calls[handleFetchRows.mock.calls.length - 1][0]).to.contain({
         firstRowToRender: 3,
         lastRowToRender: 50,
       });
@@ -375,7 +375,7 @@ describe('<DataGridPro /> - Events params', () => {
       });
     });
     expect(handleFetchRows.callCount).to.equal(2);
-    expect(handleFetchRows.lastCall.firstArg).to.contain({
+    expect(handleFetchRows.mock.calls[handleFetchRows.mock.calls.length - 1][0]).to.contain({
       firstRowToRender: 3,
       lastRowToRender: 10,
     });
@@ -388,6 +388,6 @@ describe('<DataGridPro /> - Events params', () => {
 
     act(() => apiRef.current?.subscribeEvent('unmount', onUnmount));
     unmount();
-    expect(onUnmount.calledOnce).to.equal(true);
+    expect(onUnmount).toHaveBeenCalledOnce();
   });
 });

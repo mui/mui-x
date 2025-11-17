@@ -468,7 +468,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       render(<TestDataSourceLazyLoader dataSourceCache={testCache} />);
 
       await waitFor(() => {
-        expect(cacheGetSpy.called).to.equal(true);
+        expect(cacheGetSpy).toHaveBeenCalled();
       });
 
       cacheGetSpy.mockClear();

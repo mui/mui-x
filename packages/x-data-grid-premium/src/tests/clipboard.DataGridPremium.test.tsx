@@ -136,7 +136,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       fireEvent.click(getCell(2, 0), { ctrlKey: true });
 
       fireEvent.keyDown(cell, { key: 'c', keyCode: 67, ctrlKey: true });
-      expect(writeText.lastCall.firstArg).to.equal(['Adidas', 'Nike', 'Puma'].join('\r\n'));
+      expect(writeText.mock.calls[writeText.mock.calls.length - 1][0]).to.equal(['Adidas', 'Nike', 'Puma'].join('\r\n'));
     });
 
     it('should not escape double quotes when copying multiple cells to clipboard', async () => {
@@ -164,7 +164,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       fireEvent.click(getCell(1, 0), { ctrlKey: true });
 
       fireEvent.keyDown(cell, { key: 'c', keyCode: 67, ctrlKey: true });
-      expect(writeText.lastCall.firstArg).to.equal(['1 " 1', '2'].join('\r\n'));
+      expect(writeText.mock.calls[writeText.mock.calls.length - 1][0]).to.equal(['1 " 1', '2'].join('\r\n'));
     });
 
     it('should copy aggregation cell value to clipboard', async () => {

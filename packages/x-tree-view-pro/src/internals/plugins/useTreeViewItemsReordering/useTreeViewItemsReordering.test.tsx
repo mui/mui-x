@@ -141,7 +141,7 @@ describeTreeView<RichTreeViewProStore<any, any>>(
 
           dragEvents.fullDragSequence(view.getItemRoot('1'), view.getItemContent('2'));
           expect(onItemPositionChange).toHaveBeenCalledTimes(1);
-          expect(onItemPositionChange.lastCall.firstArg).to.deep.equal({
+          expect(onItemPositionChange.mock.calls[onItemPositionChange.mock.calls.length - 1][0]).to.deep.equal({
             itemId: '1',
             oldPosition: { parentId: null, index: 0 },
             newPosition: { parentId: '2', index: 0 },
@@ -186,7 +186,7 @@ describeTreeView<RichTreeViewProStore<any, any>>(
           });
 
           dragEvents.fullDragSequence(view.getItemRoot('1'), view.getItemContent('2'));
-          expect(canMoveItemToNewPosition.lastCall.firstArg).to.deep.equal({
+          expect(canMoveItemToNewPosition.mock.calls[canMoveItemToNewPosition.mock.calls.length - 1][0]).to.deep.equal({
             itemId: '1',
             oldPosition: { parentId: null, index: 0 },
             newPosition: { parentId: null, index: 1 },

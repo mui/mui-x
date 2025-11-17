@@ -267,7 +267,7 @@ describe('<DataGridPro /> - Sorting', () => {
       expect(onModelChange.callCount).to.equal(0);
       fireEvent.click(getColumnHeaderCell(0));
       expect(onModelChange.callCount).to.equal(1);
-      expect(onModelChange.lastCall.firstArg).to.deep.equal([{ field: 'brand', sort: 'asc' }]);
+      expect(onModelChange.mock.calls[onModelChange.mock.calls.length - 1][0]).to.deep.equal([{ field: 'brand', sort: 'asc' }]);
     });
 
     it('should control sort state when the model and the onChange are set', () => {

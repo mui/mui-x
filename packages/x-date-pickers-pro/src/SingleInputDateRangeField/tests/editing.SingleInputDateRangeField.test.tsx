@@ -201,8 +201,8 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         expectFieldValueV7(view.getSectionsContainer(), '06/04/2022 – 06/05/2022');
 
         expect(onChangeV7).toHaveBeenCalledTimes(1);
-        expect(onChangeV7.lastCall.firstArg[0]).toEqualDateTime(new Date(2023, 5, 4));
-        expect(onChangeV7.lastCall.firstArg[1]).toEqualDateTime(new Date(2022, 5, 5));
+        expect(onChangeV7.mock.calls[onChangeV7.mock.calls.length - 1][0][0]).toEqualDateTime(new Date(2023, 5, 4));
+        expect(onChangeV7.mock.calls[onChangeV7.mock.calls.length - 1][0][1]).toEqualDateTime(new Date(2022, 5, 5));
 
         view.unmount();
 
@@ -221,8 +221,8 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         expectFieldValueV6(getTextbox(), '06/04/2022 – 06/05/2022');
 
         expect(onChangeV6).toHaveBeenCalledTimes(1);
-        expect(onChangeV6.lastCall.firstArg[0]).toEqualDateTime(new Date(2023, 5, 4));
-        expect(onChangeV6.lastCall.firstArg[1]).toEqualDateTime(new Date(2022, 5, 5));
+        expect(onChangeV6.mock.calls[onChangeV6.mock.calls.length - 1][0][0]).toEqualDateTime(new Date(2023, 5, 4));
+        expect(onChangeV6.mock.calls[onChangeV6.mock.calls.length - 1][0][1]).toEqualDateTime(new Date(2022, 5, 5));
       });
 
       it('should call the onChange callback when the value is updated and should change the displayed value if the value is not controlled', async () => {
@@ -240,8 +240,8 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         expectFieldValueV7(view.getSectionsContainer(), '06/04/2023 – 06/05/2022');
 
         expect(onChangeV7).toHaveBeenCalledTimes(1);
-        expect(onChangeV7.lastCall.firstArg[0]).toEqualDateTime(new Date(2023, 5, 4));
-        expect(onChangeV7.lastCall.firstArg[1]).toEqualDateTime(new Date(2022, 5, 5));
+        expect(onChangeV7.mock.calls[onChangeV7.mock.calls.length - 1][0][0]).toEqualDateTime(new Date(2023, 5, 4));
+        expect(onChangeV7.mock.calls[onChangeV7.mock.calls.length - 1][0][1]).toEqualDateTime(new Date(2022, 5, 5));
 
         view.unmount();
 
@@ -260,8 +260,8 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         expectFieldValueV6(getTextbox(), '06/04/2023 – 06/05/2022');
 
         expect(onChangeV6).toHaveBeenCalledTimes(1);
-        expect(onChangeV6.lastCall.firstArg[0]).toEqualDateTime(new Date(2023, 5, 4));
-        expect(onChangeV6.lastCall.firstArg[1]).toEqualDateTime(new Date(2022, 5, 5));
+        expect(onChangeV6.mock.calls[onChangeV6.mock.calls.length - 1][0][0]).toEqualDateTime(new Date(2023, 5, 4));
+        expect(onChangeV6.mock.calls[onChangeV6.mock.calls.length - 1][0][1]).toEqualDateTime(new Date(2022, 5, 5));
       });
 
       it('should not call the onChange callback before filling the last section of the active date when starting from a null value', async () => {
@@ -283,8 +283,8 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         view.pressKey(1, 'S');
         // // We reset the value displayed because the `onChange` callback did not update the controlled value.
         expect(onChangeV7).toHaveBeenCalledTimes(1);
-        expect(onChangeV7.lastCall.firstArg[0]).toEqualDateTime(new Date(2022, 8, 4));
-        expect(onChangeV7.lastCall.firstArg[1]).to.equal(null);
+        expect(onChangeV7.mock.calls[onChangeV7.mock.calls.length - 1][0][0]).toEqualDateTime(new Date(2022, 8, 4));
+        expect(onChangeV7.mock.calls[onChangeV7.mock.calls.length - 1][0][1]).to.equal(null);
         await waitFor(() => {
           expectFieldValueV7(view.getSectionsContainer(), 'DD MMMM – DD MMMM');
         });
@@ -310,8 +310,8 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
 
         fireEvent.change(input, { target: { value: '04 S – DD MMMM' } }); // Press S
         expect(onChangeV6).toHaveBeenCalledTimes(1);
-        expect(onChangeV6.lastCall.firstArg[0]).toEqualDateTime(new Date(2022, 8, 4));
-        expect(onChangeV6.lastCall.firstArg[1]).to.equal(null);
+        expect(onChangeV6.mock.calls[onChangeV6.mock.calls.length - 1][0][0]).toEqualDateTime(new Date(2022, 8, 4));
+        expect(onChangeV6.mock.calls[onChangeV6.mock.calls.length - 1][0][1]).to.equal(null);
         // // We reset the value displayed because the `onChange` callback did not update the controlled value.
         await waitFor(() => {
           expectFieldValueV6(input, 'DD MMMM – DD MMMM');
@@ -465,8 +465,8 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       // Start date
       fireEvent.keyDown(view.getActiveSection(0), { key: 'Delete' });
       expect(onChangeV7).toHaveBeenCalledTimes(1);
-      expect(onChangeV7.lastCall.firstArg[0]).to.equal(null);
-      expect(onChangeV7.lastCall.firstArg[1]).toEqualDateTime(adapter.addYears(adapter.date(), 1));
+      expect(onChangeV7.mock.calls[onChangeV7.mock.calls.length - 1][0][0]).to.equal(null);
+      expect(onChangeV7.mock.calls[onChangeV7.mock.calls.length - 1][0][1]).toEqualDateTime(adapter.addYears(adapter.date(), 1));
 
       fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowRight' });
       fireEvent.keyDown(view.getActiveSection(1), { key: 'Delete' });
@@ -480,8 +480,8 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       fireEvent.keyDown(view.getActiveSection(2), { key: 'ArrowRight' });
       fireEvent.keyDown(view.getActiveSection(3), { key: 'Delete' });
       expect(onChangeV7).toHaveBeenCalledTimes(2);
-      expect(onChangeV7.lastCall.firstArg[0]).to.equal(null);
-      expect(onChangeV7.lastCall.firstArg[1]).to.equal(null);
+      expect(onChangeV7.mock.calls[onChangeV7.mock.calls.length - 1][0][0]).to.equal(null);
+      expect(onChangeV7.mock.calls[onChangeV7.mock.calls.length - 1][0][1]).to.equal(null);
 
       fireEvent.keyDown(view.getActiveSection(3), { key: 'ArrowRight' });
       fireEvent.keyDown(view.getActiveSection(4), { key: 'Delete' });
@@ -508,8 +508,8 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       // Start date
       fireEvent.keyDown(input, { key: 'Delete' });
       expect(onChangeV6).toHaveBeenCalledTimes(1);
-      expect(onChangeV6.lastCall.firstArg[0]).to.equal(null);
-      expect(onChangeV6.lastCall.firstArg[1]).toEqualDateTime(adapter.addYears(adapter.date(), 1));
+      expect(onChangeV6.mock.calls[onChangeV6.mock.calls.length - 1][0][0]).to.equal(null);
+      expect(onChangeV6.mock.calls[onChangeV6.mock.calls.length - 1][0][1]).toEqualDateTime(adapter.addYears(adapter.date(), 1));
 
       fireEvent.keyDown(input, { key: 'ArrowRight' });
       fireEvent.keyDown(input, { key: 'Delete' });
@@ -523,8 +523,8 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       fireEvent.keyDown(input, { key: 'ArrowRight' });
       fireEvent.keyDown(input, { key: 'Delete' });
       expect(onChangeV6).toHaveBeenCalledTimes(2);
-      expect(onChangeV6.lastCall.firstArg[0]).to.equal(null);
-      expect(onChangeV6.lastCall.firstArg[1]).to.equal(null);
+      expect(onChangeV6.mock.calls[onChangeV6.mock.calls.length - 1][0][0]).to.equal(null);
+      expect(onChangeV6.mock.calls[onChangeV6.mock.calls.length - 1][0][1]).to.equal(null);
 
       fireEvent.keyDown(input, { key: 'ArrowRight' });
       fireEvent.keyDown(input, { key: 'Delete' });
@@ -725,8 +725,8 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         // Start date
         view.pressKey(0, '');
         expect(onChangeV7).toHaveBeenCalledTimes(1);
-        expect(onChangeV7.lastCall.firstArg[0]).to.equal(null);
-        expect(onChangeV7.lastCall.firstArg[1]).toEqualDateTime(
+        expect(onChangeV7.mock.calls[onChangeV7.mock.calls.length - 1][0][0]).to.equal(null);
+        expect(onChangeV7.mock.calls[onChangeV7.mock.calls.length - 1][0][1]).toEqualDateTime(
           adapter.addYears(adapter.date(), 1),
         );
 
@@ -742,8 +742,8 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         fireEvent.keyDown(view.getActiveSection(2), { key: 'ArrowRight' });
         view.pressKey(3, '');
         expect(onChangeV7).toHaveBeenCalledTimes(2);
-        expect(onChangeV7.lastCall.firstArg[0]).to.equal(null);
-        expect(onChangeV7.lastCall.firstArg[1]).to.equal(null);
+        expect(onChangeV7.mock.calls[onChangeV7.mock.calls.length - 1][0][0]).to.equal(null);
+        expect(onChangeV7.mock.calls[onChangeV7.mock.calls.length - 1][0][1]).to.equal(null);
 
         fireEvent.keyDown(view.getActiveSection(3), { key: 'ArrowRight' });
         view.pressKey(4, '');
@@ -770,8 +770,8 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         // Start date
         fireEvent.change(input, { target: { value: '/15/2022 – 06/15/2023' } });
         expect(onChangeV6).toHaveBeenCalledTimes(1);
-        expect(onChangeV6.lastCall.firstArg[0]).to.equal(null);
-        expect(onChangeV6.lastCall.firstArg[1]).toEqualDateTime(
+        expect(onChangeV6.mock.calls[onChangeV6.mock.calls.length - 1][0][0]).to.equal(null);
+        expect(onChangeV6.mock.calls[onChangeV6.mock.calls.length - 1][0][1]).toEqualDateTime(
           adapter.addYears(adapter.date(), 1),
         );
 
@@ -787,8 +787,8 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         await view.user.keyboard('{ArrowRight}');
         fireEvent.change(input, { target: { value: 'MM/DD/YYYY – /15/2023' } });
         expect(onChangeV6).toHaveBeenCalledTimes(2);
-        expect(onChangeV6.lastCall.firstArg[0]).to.equal(null);
-        expect(onChangeV6.lastCall.firstArg[1]).to.equal(null);
+        expect(onChangeV6.mock.calls[onChangeV6.mock.calls.length - 1][0][0]).to.equal(null);
+        expect(onChangeV6.mock.calls[onChangeV6.mock.calls.length - 1][0][1]).to.equal(null);
 
         await view.user.keyboard('{ArrowRight}');
         fireEvent.change(input, { target: { value: 'MM/DD/YYYY – MM//2023' } });

@@ -52,7 +52,7 @@ describe('<DesktopDatePicker />', () => {
 
       await openPickerAsync(user, { type: 'date' });
       expect(handleViewChange.callCount).to.equal(2);
-      expect(handleViewChange.lastCall.firstArg).to.equal('day');
+      expect(handleViewChange.mock.calls[handleViewChange.mock.calls.length - 1][0]).to.equal('day');
     });
 
     it('should go to the `openTo` view when re-opening the picker', async () => {
@@ -77,7 +77,7 @@ describe('<DesktopDatePicker />', () => {
 
       await openPickerAsync(user, { type: 'date' });
       expect(handleViewChange.callCount).to.equal(2);
-      expect(handleViewChange.lastCall.firstArg).to.equal('month');
+      expect(handleViewChange.mock.calls[handleViewChange.mock.calls.length - 1][0]).to.equal('month');
     });
 
     it('should go to the relevant `view` when `views` prop changes', async () => {

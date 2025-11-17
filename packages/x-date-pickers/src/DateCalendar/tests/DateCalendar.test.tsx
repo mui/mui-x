@@ -158,7 +158,7 @@ describe('<DateCalendar />', () => {
       // select the current year with a date in the past to trigger "findClosestEnabledDate"
       await user.click(screen.getByRole('radio', { name: '2019' }));
 
-      expect(onChange.lastCall.firstArg).toEqualDateTime(defaultDate);
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0]).toEqualDateTime(defaultDate);
     });
   });
 
@@ -205,7 +205,7 @@ describe('<DateCalendar />', () => {
 
       await user.click(screen.getByRole('gridcell', { name: '2' }));
       expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 3, 2, 12, 30));
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0]).toEqualDateTime(new Date(2022, 3, 2, 12, 30));
     });
 
     it('should not use `referenceDate` when a value is defined', async () => {
@@ -222,7 +222,7 @@ describe('<DateCalendar />', () => {
 
       await user.click(screen.getByRole('gridcell', { name: '2' }));
       expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 0, 2, 12, 20));
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0]).toEqualDateTime(new Date(2019, 0, 2, 12, 20));
     });
 
     it('should not use `referenceDate` when a defaultValue is defined', async () => {
@@ -239,7 +239,7 @@ describe('<DateCalendar />', () => {
 
       await user.click(screen.getByRole('gridcell', { name: '2' }));
       expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 0, 2, 12, 20));
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0]).toEqualDateTime(new Date(2019, 0, 2, 12, 20));
     });
 
     it('should keep the time of the currently provided date', async () => {
@@ -255,7 +255,7 @@ describe('<DateCalendar />', () => {
 
       await user.click(screen.getByRole('gridcell', { name: '2' }));
       expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0]).toEqualDateTime(
         adapterToUse.date('2018-01-02T11:11:11.111'),
       );
     });
@@ -316,7 +316,7 @@ describe('<DateCalendar />', () => {
       await user.click(april);
 
       expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 3, 6));
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0]).toEqualDateTime(new Date(2019, 3, 6));
     });
 
     it('should respect minDate when selecting closest enabled date', async () => {
@@ -336,7 +336,7 @@ describe('<DateCalendar />', () => {
       await user.click(april);
 
       expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 3, 7));
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0]).toEqualDateTime(new Date(2019, 3, 7));
     });
 
     it('should respect maxDate when selecting closest enabled date', async () => {
@@ -356,7 +356,7 @@ describe('<DateCalendar />', () => {
       await user.click(april);
 
       expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 3, 22));
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0]).toEqualDateTime(new Date(2019, 3, 22));
     });
 
     it('should go to next view without changing the date when no date of the new month is enabled', async () => {
@@ -395,7 +395,7 @@ describe('<DateCalendar />', () => {
       await user.click(april);
 
       expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2018, 3, 1, 12, 30));
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0]).toEqualDateTime(new Date(2018, 3, 1, 12, 30));
     });
 
     it('should not use `referenceDate` when a value is defined', async () => {
@@ -415,7 +415,7 @@ describe('<DateCalendar />', () => {
       await user.click(april);
 
       expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 3, 1, 12, 20));
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0]).toEqualDateTime(new Date(2019, 3, 1, 12, 20));
     });
 
     it('should not use `referenceDate` when a defaultValue is defined', async () => {
@@ -435,7 +435,7 @@ describe('<DateCalendar />', () => {
       await user.click(april);
 
       expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 3, 1, 12, 20));
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0]).toEqualDateTime(new Date(2019, 3, 1, 12, 20));
     });
   });
 
@@ -465,7 +465,7 @@ describe('<DateCalendar />', () => {
       await user.click(year2022);
 
       expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 4, 1));
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0]).toEqualDateTime(new Date(2022, 4, 1));
     });
 
     it('should respect minDate when selecting closest enabled date', async () => {
@@ -485,7 +485,7 @@ describe('<DateCalendar />', () => {
       await user.click(year2017);
 
       expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2017, 4, 12));
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0]).toEqualDateTime(new Date(2017, 4, 12));
     });
 
     it('should respect maxDate when selecting closest enabled date', async () => {
@@ -505,7 +505,7 @@ describe('<DateCalendar />', () => {
       await user.click(year2022);
 
       expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 2, 31));
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0]).toEqualDateTime(new Date(2022, 2, 31));
     });
 
     it('should go to next view without changing the date when no date of the new year is enabled', async () => {
@@ -567,7 +567,7 @@ describe('<DateCalendar />', () => {
       await user.click(year2022);
 
       expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 0, 1, 12, 30));
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0]).toEqualDateTime(new Date(2022, 0, 1, 12, 30));
     });
 
     it('should not use `referenceDate` when a value is defined', async () => {
@@ -587,7 +587,7 @@ describe('<DateCalendar />', () => {
       await user.click(year2022);
 
       expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 0, 1, 12, 20));
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0]).toEqualDateTime(new Date(2022, 0, 1, 12, 20));
     });
 
     it('should not use `referenceDate` when a defaultValue is defined', async () => {
@@ -607,7 +607,7 @@ describe('<DateCalendar />', () => {
       await user.click(year2022);
 
       expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 0, 1, 12, 20));
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0]).toEqualDateTime(new Date(2022, 0, 1, 12, 20));
     });
   });
 

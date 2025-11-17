@@ -174,7 +174,7 @@ describe('<WeekView />', () => {
       );
 
       await user.click(screen.getByRole('button', { name: /previous week/i }));
-      expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
+      expect(onVisibleDateChange.mock.calls[onVisibleDateChange.mock.calls.length - 1][0]).toEqualDateTime(
         adapter.addWeeks(adapter.startOfWeek(DEFAULT_TESTING_VISIBLE_DATE), -1),
       );
     });
@@ -192,7 +192,7 @@ describe('<WeekView />', () => {
       );
 
       await user.click(screen.getByRole('button', { name: /next week/i }));
-      expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
+      expect(onVisibleDateChange.mock.calls[onVisibleDateChange.mock.calls.length - 1][0]).toEqualDateTime(
         adapter.addWeeks(adapter.startOfWeek(DEFAULT_TESTING_VISIBLE_DATE), 1),
       );
     });

@@ -602,7 +602,7 @@ describe('<TimeClock />', () => {
         'hours',
       );
       expect(onChange.callCount).to.equal(2);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2018, 0, 1, 15, 30));
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0]).toEqualDateTime(new Date(2018, 0, 1, 15, 30));
     });
 
     it('should not use `referenceDate` when a value is defined', () => {
@@ -622,7 +622,7 @@ describe('<TimeClock />', () => {
         'hours',
       );
       expect(onChange.callCount).to.equal(2);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 0, 1, 15, 20));
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0]).toEqualDateTime(new Date(2019, 0, 1, 15, 20));
     });
 
     it('should not use `referenceDate` when a defaultValue is defined', () => {
@@ -642,7 +642,7 @@ describe('<TimeClock />', () => {
         'hours',
       );
       expect(onChange.callCount).to.equal(2);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 0, 1, 15, 20));
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0]).toEqualDateTime(new Date(2019, 0, 1, 15, 20));
     });
   });
 });

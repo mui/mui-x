@@ -75,7 +75,7 @@ describe('<DataGridPro /> - Clipboard', () => {
       fireUserEvent.mousePress(cell);
 
       fireEvent.keyDown(cell, { key: 'c', keyCode: 67, ctrlKey: true });
-      expect(writeText.lastCall.firstArg).to.equal('1 " 1');
+      expect(writeText.mock.calls[writeText.mock.calls.length - 1][0]).to.equal('1 " 1');
     });
 
     it('should not escape double quotes when copying rows to clipboard', () => {

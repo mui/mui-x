@@ -836,7 +836,7 @@ describe('<DataGrid /> - Row selection', () => {
         rows: data.rows.slice(0, 1),
       });
 
-      expect(onRowSelectionModelChangeSpy.called).to.equal(true);
+      expect(onRowSelectionModelChangeSpy).toHaveBeenCalled();
     });
 
     it('should retain the outdated selected rows when the rows prop changes when keepNonExistentRowsSelected is true', () => {

@@ -41,7 +41,7 @@ describe('<ChartsRenderer />', () => {
       </div>,
     );
 
-    expect(onRenderSpy.lastCall.firstArg).to.equal('line');
+    expect(onRenderSpy.mock.calls[onRenderSpy.mock.calls.length - 1][0]).to.equal('line');
   });
 
   it('should compute props for the chart', () => {

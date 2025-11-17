@@ -450,7 +450,7 @@ describe('<DateField /> - Editing Keyboard', () => {
 
       await view.user.keyboard('[Delete]');
       expect(onChangeV7.callCount).to.equal(1);
-      expect(onChangeV7.lastCall.firstArg).to.equal(null);
+      expect(onChangeV7.mock.calls[onChangeV7.mock.calls.length - 1][0]).to.equal(null);
 
       await view.user.keyboard('[ArrowRight][Delete]');
 
@@ -472,7 +472,7 @@ describe('<DateField /> - Editing Keyboard', () => {
 
       await view.user.keyboard('[Delete]');
       expect(onChangeV6.callCount).to.equal(1);
-      expect(onChangeV6.lastCall.firstArg).to.equal(null);
+      expect(onChangeV6.mock.calls[onChangeV6.mock.calls.length - 1][0]).to.equal(null);
 
       await view.user.keyboard('[ArrowRight][Delete]');
       expect(onChangeV6.callCount).to.equal(1);

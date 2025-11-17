@@ -74,7 +74,7 @@ describe('<DateRangeCalendar />', () => {
       expect(rangeOn1stCall[0]).to.toEqualDateTime(new Date(2019, 0, 1));
       expect(rangeOn1stCall[1]).to.equal(null);
 
-      const rangeOn2ndCall = onChange.lastCall.firstArg;
+      const rangeOn2ndCall = onChange.mock.calls[onChange.mock.calls.length - 1][0];
       expect(rangeOn2ndCall[0]).to.toEqualDateTime(new Date(2019, 0, 1));
       expect(rangeOn2ndCall[1]).to.toEqualDateTime(new Date(2019, 2, 19));
     });
@@ -94,7 +94,7 @@ describe('<DateRangeCalendar />', () => {
       fireEvent.click(getPickerDay('30', 'January 2019'));
 
       expect(onChange).toHaveBeenCalledTimes(3);
-      const range = onChange.lastCall.firstArg;
+      const range = onChange.mock.calls[onChange.mock.calls.length - 1][0];
       expect(range[0]).to.toEqualDateTime(new Date(2019, 0, 19));
       expect(range[1]).to.toEqualDateTime(new Date(2019, 0, 30));
     });

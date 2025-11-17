@@ -100,8 +100,8 @@ storeClasses.forEach((storeClass) => {
         });
 
         // Should call onEventsChange with the updated event using the custom model structure
-        expect(onEventsChange.calledOnce).to.equal(true);
-        expect(onEventsChange.lastCall.firstArg).to.deep.equal([
+        expect(onEventsChange).toHaveBeenCalledOnce();
+        expect(onEventsChange.mock.calls[onEventsChange.mock.calls.length - 1][0]).to.deep.equal([
           {
             myId: '1',
             myTitle: 'Event 1 updated',
@@ -130,8 +130,8 @@ storeClasses.forEach((storeClass) => {
         });
 
         // Should call onEventsChange with the created event using the custom model structure
-        expect(onEventsChange.calledOnce).to.equal(true);
-        expect(onEventsChange.lastCall.firstArg).to.deep.equal([
+        expect(onEventsChange).toHaveBeenCalledOnce();
+        expect(onEventsChange.mock.calls[onEventsChange.mock.calls.length - 1][0]).to.deep.equal([
           {
             myId: '1',
             myTitle: 'Event 1',
@@ -177,7 +177,7 @@ storeClasses.forEach((storeClass) => {
         );
 
         // Called to convert Event 1 on mount.
-        expect(idGetter.callCount).to.equal(1);
+        expect(idGetter).toHaveBeenCalledTimes(1);
 
         store.updateStateFromParameters(
           {
@@ -189,7 +189,7 @@ storeClasses.forEach((storeClass) => {
         );
 
         // Not called again when updating a non-related parameter.
-        expect(idGetter.callCount).to.equal(1);
+        expect(idGetter).toHaveBeenCalledTimes(1);
 
         const events2: MyEvent2[] = [
           {
@@ -216,7 +216,7 @@ storeClasses.forEach((storeClass) => {
         );
 
         // Called again to convert Event 1 and Event 2 because props.events changed.
-        expect(idGetter.callCount).to.equal(3);
+        expect(idGetter).toHaveBeenCalledTimes(3);
 
         store.updateStateFromParameters(
           {
@@ -228,7 +228,7 @@ storeClasses.forEach((storeClass) => {
         );
 
         // Called again to convert Event 1 and Event 2 because props.eventModelStructure changed.
-        expect(idGetter.callCount).to.equal(5);
+        expect(idGetter).toHaveBeenCalledTimes(5);
       });
     });
 
@@ -265,8 +265,8 @@ storeClasses.forEach((storeClass) => {
 
         store.updateEvent(updatedEvent);
 
-        expect(onEventsChange.calledOnce).to.equal(true);
-        const updatedEvents = onEventsChange.lastCall.firstArg;
+        expect(onEventsChange).toHaveBeenCalledOnce();
+        const updatedEvents = onEventsChange.mock.calls[onEventsChange.mock.calls.length - 1][0];
 
         expect(updatedEvents).to.have.length(2);
         expect(updatedEvents[0].title).to.equal('Event 1');
@@ -304,8 +304,8 @@ storeClasses.forEach((storeClass) => {
         const store = new storeClass.Value({ events, onEventsChange }, adapter);
         store.deleteEvent('2');
 
-        expect(onEventsChange.calledOnce).to.equal(true);
-        const updatedEvents = onEventsChange.lastCall.firstArg;
+        expect(onEventsChange).toHaveBeenCalledOnce();
+        const updatedEvents = onEventsChange.mock.calls[onEventsChange.mock.calls.length - 1][0];
         expect(updatedEvents.map((event) => event.id)).to.deep.equal(['1', '3']);
       });
     });
@@ -334,13 +334,13 @@ storeClasses.forEach((storeClass) => {
 
         store.createEvent(newEvent);
 
-        expect(onEventsChange.calledOnce).to.equal(true);
-        const created = onEventsChange.lastCall.firstArg.find(
+        expect(onEventsChange).toHaveBeenCalledOnce();
+        const created = onEventsChange.mock.calls[onEventsChange.mock.calls.length - 1][0].find(
           (event: SchedulerEvent) => event.id === '2',
         );
         expect(created.id).to.equal('2');
         expect(created.title).to.equal('New Event');
-        const updated = onEventsChange.lastCall.firstArg;
+        const updated = onEventsChange.mock.calls[onEventsChange.mock.calls.length - 1][0];
         expect(getIds(updated)).to.deep.equal(['1', '2']);
 
         const appended = updated[1];
@@ -374,7 +374,7 @@ storeClasses.forEach((storeClass) => {
         expect(() => store.createEvent(duplicate)).to.throw(
           `${store.instanceName}: an event with id="Event 1" already exists. Use updateEvent(...) instead.`,
         );
-        expect(onEventsChange.called).to.equal(false);
+        expect(onEventsChange).not.toHaveBeenCalled();
       });
     });
   });

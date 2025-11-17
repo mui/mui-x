@@ -873,8 +873,8 @@ describe('<DataGridPro /> - Filter', () => {
       const filterForms = document.querySelectorAll(`.MuiDataGrid-filterForm`);
       expect(filterForms).to.have.length(2);
       expect(onModelChange.callCount).to.equal(1);
-      expect(onModelChange.lastCall.firstArg.items.length).to.deep.equal(2);
-      expect(onModelChange.lastCall.firstArg.logicOperator).to.deep.equal(GridLogicOperator.And);
+      expect(onModelChange.mock.calls[onModelChange.mock.calls.length - 1][0].items.length).to.deep.equal(2);
+      expect(onModelChange.mock.calls[onModelChange.mock.calls.length - 1][0].logicOperator).to.deep.equal(GridLogicOperator.And);
     });
 
     it('should control filter state when the model and the onChange are set', () => {
@@ -998,7 +998,7 @@ describe('<DataGridPro /> - Filter', () => {
       fireEvent.click(screen.getByRole('menuitem', { name: 'Equals' }));
 
       expect(onFilterModelChange.callCount).to.equal(1);
-      expect(onFilterModelChange.lastCall.firstArg.items[0].operator).to.equal('equals');
+      expect(onFilterModelChange.mock.calls[onFilterModelChange.mock.calls.length - 1][0].items[0].operator).to.equal('equals');
       expect(getColumnValues(0)).to.deep.equal([]);
     });
 

@@ -91,7 +91,7 @@ describe('<DataGrid /> - Quick filter', () => {
       await user.type(screen.getByRole('searchbox'), 'adid, nik');
 
       await waitFor(() => {
-        expect(onFilterModelChange.lastCall.firstArg).to.deep.equal({
+        expect(onFilterModelChange.mock.calls[onFilterModelChange.mock.calls.length - 1][0]).to.deep.equal({
           items: [],
           logicOperator: 'and',
           quickFilterValues: ['adid', 'nik'],

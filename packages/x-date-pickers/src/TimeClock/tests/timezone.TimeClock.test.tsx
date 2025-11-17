@@ -24,7 +24,7 @@ describe('<TimeClock /> - Timezone', () => {
         const expectedDate = adapter.setHours(adapter.date(), 8);
 
         // Check the `onChange` value (uses default timezone, for example: UTC, see TZ env variable)
-        const actualDate = onChange.lastCall.firstArg;
+        const actualDate = onChange.mock.calls[onChange.mock.calls.length - 1][0];
 
         // On dayjs, we are not able to know if a date is UTC because it's the system timezone or because it was created as UTC.
         // In a real world scenario, this should probably never occur.
@@ -50,7 +50,7 @@ describe('<TimeClock /> - Timezone', () => {
             );
 
             // Check the `onChange` value (uses timezone prop)
-            const actualDate = onChange.lastCall.firstArg;
+            const actualDate = onChange.mock.calls[onChange.mock.calls.length - 1][0];
             expect(adapter.getTimezone(actualDate)).to.equal(timezone);
             expect(actualDate).toEqualDateTime(expectedDate);
           });
@@ -81,7 +81,7 @@ describe('<TimeClock /> - Timezone', () => {
             fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', hourClockEvent);
             fireTouchChangedEvent(screen.getByTestId('clock'), 'touchend', hourClockEvent);
 
-            const actualDate = onChange.lastCall.firstArg;
+            const actualDate = onChange.mock.calls[onChange.mock.calls.length - 1][0];
 
             const renderedHourAfter = getTimeClockValue();
             expect(renderedHourAfter).to.equal(

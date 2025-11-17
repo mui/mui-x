@@ -336,7 +336,7 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Data source', () => {
         </div>,
       );
       await waitFor(() => {
-        expect(getRows.called).to.equal(true);
+        expect(getRows).toHaveBeenCalled();
       });
       unmount();
       reject();

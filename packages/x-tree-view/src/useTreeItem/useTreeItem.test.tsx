@@ -49,7 +49,7 @@ describeTreeView<TreeViewAnyStore>(
         fireEvent.click(view.getItemContent('1.1'));
         expect(onClick.callCount).to.equal(2);
         expect(onClick.firstCall.firstArg.target.parentElement.dataset.testid).to.equal('1.1');
-        expect(onClick.lastCall.firstArg.target.parentElement.dataset.testid).to.equal('1.1');
+        expect(onClick.mock.calls[onClick.mock.calls.length - 1][0].target.parentElement.dataset.testid).to.equal('1.1');
       });
 
       it('should call onClick even when the element is disabled', () => {

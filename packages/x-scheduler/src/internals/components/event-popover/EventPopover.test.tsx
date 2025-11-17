@@ -104,7 +104,7 @@ describe('<EventPopoverContent />', () => {
     await user.click(await screen.findByRole('option', { name: /work/i }));
     await user.click(screen.getByRole('button', { name: /save changes/i }));
 
-    expect(onEventsChange.calledOnce).to.equal(true);
+    expect(onEventsChange).toHaveBeenCalledOnce();
     const updated = onEventsChange.firstCall.firstArg[0];
 
     const expectedUpdatedEvent = {
@@ -150,7 +150,7 @@ describe('<EventPopoverContent />', () => {
       </EventCalendarProvider>,
     );
     await user.click(screen.getByRole('button', { name: /delete event/i }));
-    expect(onEventsChange.calledOnce).to.equal(true);
+    expect(onEventsChange).toHaveBeenCalledOnce();
     expect(onEventsChange.firstCall.firstArg).to.deep.equal([]);
   });
 
@@ -289,7 +289,7 @@ describe('<EventPopoverContent />', () => {
 
     await user.click(screen.getByRole('button', { name: /save changes/i }));
 
-    expect(onEventsChange.calledOnce).to.equal(true);
+    expect(onEventsChange).toHaveBeenCalledOnce();
     const updated = onEventsChange.firstCall.firstArg[0];
     expect(updated.resource).to.equal(undefined);
   });
@@ -488,8 +488,8 @@ describe('<EventPopoverContent />', () => {
       await user.click(await screen.findByRole('option', { name: /daily/i }));
       await user.click(screen.getByRole('button', { name: /save changes/i }));
 
-      expect(createEventSpy?.calledOnce).to.equal(true);
-      const payload = createEventSpy.lastCall.firstArg;
+      expect(createEventSpy?).toHaveBeenCalledOnce();
+      const payload = createEventSpy.mock.calls[createEventSpy.mock.calls.length - 1][0];
 
       expect(payload.id).to.be.a('string');
       expect(payload.title).to.equal('New title');
@@ -555,8 +555,8 @@ describe('<EventPopoverContent />', () => {
         await user.click(screen.getByLabelText(/All events in the series/i));
         await user.click(screen.getByRole('button', { name: /Cancel/i }));
 
-        expect(updateRecurringEventSpy?.calledOnce).to.equal(true);
-        expect(selectRecurringEventUpdateScopeSpy?.called).to.equal(true);
+        expect(updateRecurringEventSpy?).toHaveBeenCalledOnce();
+        expect(selectRecurringEventUpdateScopeSpy?).toHaveBeenCalled();
         expect(selectRecurringEventUpdateScopeSpy?.lastCall.firstArg).to.equal(null);
         expect(updateRecurringEventSpy?.callCount).to.equal(1);
       });
@@ -604,8 +604,8 @@ describe('<EventPopoverContent />', () => {
         await user.click(screen.getByLabelText(/All events in the series/i));
         await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
-        expect(updateRecurringEventSpy?.calledOnce).to.equal(true);
-        const openPayload = updateRecurringEventSpy.lastCall.firstArg;
+        expect(updateRecurringEventSpy?).toHaveBeenCalledOnce();
+        const openPayload = updateRecurringEventSpy.mock.calls[updateRecurringEventSpy.mock.calls.length - 1][0];
 
         expect(openPayload.changes.id).to.equal(originalRecurringEvent.id);
         expect(openPayload.changes.title).to.equal('Daily standup');
@@ -615,7 +615,7 @@ describe('<EventPopoverContent />', () => {
         expect(openPayload.changes.end).to.toEqualDateTime(adapter.date('2025-06-11T10:35:00'));
         expect(openPayload.changes).to.not.have.property('rrule');
 
-        expect(selectRecurringEventUpdateScopeSpy?.calledOnce).to.equal(true);
+        expect(selectRecurringEventUpdateScopeSpy?).toHaveBeenCalledOnce();
         expect(selectRecurringEventUpdateScopeSpy?.lastCall.firstArg).to.equal('all');
       });
 
@@ -661,8 +661,8 @@ describe('<EventPopoverContent />', () => {
         await user.click(screen.getByLabelText(/Only this event/i));
         await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
-        expect(updateRecurringEventSpy?.calledOnce).to.equal(true);
-        const openPayload = updateRecurringEventSpy.lastCall.firstArg;
+        expect(updateRecurringEventSpy?).toHaveBeenCalledOnce();
+        const openPayload = updateRecurringEventSpy.mock.calls[updateRecurringEventSpy.mock.calls.length - 1][0];
 
         expect(openPayload.changes.id).to.equal(originalRecurringEvent.id);
         expect(openPayload.changes.title).to.equal(originalRecurringEventOccurrence.title);
@@ -675,7 +675,7 @@ describe('<EventPopoverContent />', () => {
           interval: 1,
           byDay: ['WE'],
         });
-        expect(selectRecurringEventUpdateScopeSpy?.calledOnce).to.equal(true);
+        expect(selectRecurringEventUpdateScopeSpy?).toHaveBeenCalledOnce();
         expect(selectRecurringEventUpdateScopeSpy?.lastCall.firstArg).to.equal('only-this');
       });
 
@@ -721,13 +721,13 @@ describe('<EventPopoverContent />', () => {
         await user.click(screen.getByLabelText(/This and following events/i));
         await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
-        expect(updateRecurringEventSpy?.calledOnce).to.equal(true);
-        const openPayload = updateRecurringEventSpy.lastCall.firstArg;
+        expect(updateRecurringEventSpy?).toHaveBeenCalledOnce();
+        const openPayload = updateRecurringEventSpy.mock.calls[updateRecurringEventSpy.mock.calls.length - 1][0];
 
         expect(openPayload.changes.id).to.equal(originalRecurringEvent.id);
         expect(openPayload.changes.rrule).to.equal(undefined);
 
-        expect(selectRecurringEventUpdateScopeSpy?.calledOnce).to.equal(true);
+        expect(selectRecurringEventUpdateScopeSpy?).toHaveBeenCalledOnce();
         expect(selectRecurringEventUpdateScopeSpy?.lastCall.firstArg).to.equal(
           'this-and-following',
         );
@@ -829,7 +829,7 @@ describe('<EventPopoverContent />', () => {
 
           await user.click(screen.getByRole('button', { name: /save changes/i }));
 
-          expect(onEventsChange.calledOnce).to.equal(true);
+          expect(onEventsChange).toHaveBeenCalledOnce();
           const updated = onEventsChange.firstCall.firstArg[0];
 
           expect(updated.rrule).to.deep.equal({
@@ -880,7 +880,7 @@ describe('<EventPopoverContent />', () => {
 
           await user.click(screen.getByRole('button', { name: /save changes/i }));
 
-          expect(onEventsChange.calledOnce).to.equal(true);
+          expect(onEventsChange).toHaveBeenCalledOnce();
           const updated = onEventsChange.firstCall.firstArg[0];
 
           expect(updated.rrule).to.deep.equal({
@@ -933,7 +933,7 @@ describe('<EventPopoverContent />', () => {
 
           await user.click(screen.getByRole('button', { name: /save changes/i }));
 
-          expect(onEventsChange.calledOnce).to.equal(true);
+          expect(onEventsChange).toHaveBeenCalledOnce();
           const updated = onEventsChange.firstCall.firstArg[0];
 
           expect(updated.rrule).to.deep.include({ freq: 'YEARLY', interval: 3 });
@@ -978,8 +978,8 @@ describe('<EventPopoverContent />', () => {
         await user.click(await screen.findByRole('option', { name: /work/i }));
         await user.click(screen.getByRole('button', { name: /save changes/i }));
 
-        expect(updateEventSpy?.calledOnce).to.equal(true);
-        const payload = updateEventSpy.lastCall.firstArg;
+        expect(updateEventSpy?).toHaveBeenCalledOnce();
+        const payload = updateEventSpy.mock.calls[updateEventSpy.mock.calls.length - 1][0];
 
         expect(payload.id).to.equal(nonRecurringEvent.id);
         expect(payload.title).to.equal('Task updated');
@@ -1013,8 +1013,8 @@ describe('<EventPopoverContent />', () => {
         await user.click(await screen.findByRole('option', { name: /repeats daily/i }));
         await user.click(screen.getByRole('button', { name: /save changes/i }));
 
-        expect(updateEventSpy?.calledOnce).to.equal(true);
-        const payload = updateEventSpy.lastCall.firstArg;
+        expect(updateEventSpy?).toHaveBeenCalledOnce();
+        const payload = updateEventSpy.mock.calls[updateEventSpy.mock.calls.length - 1][0];
 
         expect(payload.id).to.equal(nonRecurringEvent.id);
         expect(payload.rrule).to.deep.equal({

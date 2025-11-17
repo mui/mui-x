@@ -30,7 +30,7 @@ describe('<DateField /> - Editing', () => {
         expectFieldValueV7(view.getSectionsContainer(), '06/04/2022');
 
         expect(onChangeV7.callCount).to.equal(1);
-        expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2023, 5, 4));
+        expect(onChangeV7.mock.calls[onChangeV7.mock.calls.length - 1][0]).toEqualDateTime(new Date(2023, 5, 4));
 
         view.unmount();
 
@@ -48,7 +48,7 @@ describe('<DateField /> - Editing', () => {
         expectFieldValueV6(getTextbox(), '06/04/2022');
 
         expect(onChangeV6.callCount).to.equal(1);
-        expect(onChangeV6.lastCall.firstArg).toEqualDateTime(new Date(2023, 5, 4));
+        expect(onChangeV6.mock.calls[onChangeV6.mock.calls.length - 1][0]).toEqualDateTime(new Date(2023, 5, 4));
       });
 
       it('should call the onChange callback when the value is updated and should change the displayed value if the value is not controlled', async () => {
@@ -66,7 +66,7 @@ describe('<DateField /> - Editing', () => {
         expectFieldValueV7(view.getSectionsContainer(), '06/04/2023');
 
         expect(onChangeV7.callCount).to.equal(1);
-        expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2023, 5, 4));
+        expect(onChangeV7.mock.calls[onChangeV7.mock.calls.length - 1][0]).toEqualDateTime(new Date(2023, 5, 4));
 
         view.unmount();
 
@@ -83,7 +83,7 @@ describe('<DateField /> - Editing', () => {
         expectFieldValueV6(getTextbox(), '06/04/2023');
 
         expect(onChangeV6.callCount).to.equal(1);
-        expect(onChangeV6.lastCall.firstArg).toEqualDateTime(new Date(2023, 5, 4));
+        expect(onChangeV6.mock.calls[onChangeV6.mock.calls.length - 1][0]).toEqualDateTime(new Date(2023, 5, 4));
       });
 
       it('should not call the onChange callback before filling the last section when starting from a null value', async () => {
@@ -105,7 +105,7 @@ describe('<DateField /> - Editing', () => {
         view.pressKey(1, 'S');
         // // We reset the value displayed because the `onChange` callback did not update the controlled value.
         expect(onChangeV7.callCount).to.equal(1);
-        expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 4));
+        expect(onChangeV7.mock.calls[onChangeV7.mock.calls.length - 1][0]).toEqualDateTime(new Date(2022, 8, 4));
         await waitFor(() => {
           expectFieldValueV7(view.getSectionsContainer(), 'DD MMMM');
         });
@@ -130,7 +130,7 @@ describe('<DateField /> - Editing', () => {
 
         fireEvent.change(input, { target: { value: '04 S' } }); // Press S
         expect(onChangeV6.callCount).to.equal(1);
-        expect(onChangeV6.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 4));
+        expect(onChangeV6.mock.calls[onChangeV6.mock.calls.length - 1][0]).toEqualDateTime(new Date(2022, 8, 4));
         // // We reset the value displayed because the `onChange` callback did not update the controlled value.
         await waitFor(() => {
           expectFieldValueV6(input, 'DD MMMM');
@@ -821,7 +821,7 @@ describe('<DateField /> - Editing', () => {
         await view.selectSectionAsync('month');
         view.pressKey(0, '');
         expect(onChangeV7.callCount).to.equal(1);
-        expect(onChangeV7.lastCall.firstArg).to.equal(null);
+        expect(onChangeV7.mock.calls[onChangeV7.mock.calls.length - 1][0]).to.equal(null);
 
         await view.selectSectionAsync('year');
         view.pressKey(1, '');
@@ -843,7 +843,7 @@ describe('<DateField /> - Editing', () => {
         await view.selectSectionAsync('month');
         fireEvent.change(input, { target: { value: ' 2022' } });
         expect(onChangeV6.callCount).to.equal(1);
-        expect(onChangeV7.lastCall.firstArg).to.equal(null);
+        expect(onChangeV7.mock.calls[onChangeV7.mock.calls.length - 1][0]).to.equal(null);
 
         await view.user.keyboard('{ArrowRight}');
 
@@ -949,7 +949,7 @@ describe('<DateField /> - Editing', () => {
       await firePasteEventV7(view.getSectionsContainer(), '09/16/2022');
 
       expect(onChangeV7.callCount).to.equal(1);
-      expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 16));
+      expect(onChangeV7.mock.calls[onChangeV7.mock.calls.length - 1][0]).toEqualDateTime(new Date(2022, 8, 16));
 
       view.unmount();
 
@@ -969,7 +969,7 @@ describe('<DateField /> - Editing', () => {
       await firePasteEventV6(input, '09/16/2022');
 
       expect(onChangeV6.callCount).to.equal(1);
-      expect(onChangeV6.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 16));
+      expect(onChangeV6.mock.calls[onChangeV6.mock.calls.length - 1][0]).toEqualDateTime(new Date(2022, 8, 16));
     });
 
     it('should set the date when all sections are selected, the pasted value is valid and no value is provided', async () => {
@@ -991,7 +991,7 @@ describe('<DateField /> - Editing', () => {
       await firePasteEventV7(view.getSectionsContainer(), '09/16/2022');
 
       expect(onChangeV7.callCount).to.equal(1);
-      expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 16));
+      expect(onChangeV7.mock.calls[onChangeV7.mock.calls.length - 1][0]).toEqualDateTime(new Date(2022, 8, 16));
       view.unmount();
 
       // Test with non-accessible DOM structure
@@ -1009,7 +1009,7 @@ describe('<DateField /> - Editing', () => {
       await firePasteEventV6(input, '09/16/2022');
 
       expect(onChangeV6.callCount).to.equal(1);
-      expect(onChangeV6.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 16));
+      expect(onChangeV6.mock.calls[onChangeV6.mock.calls.length - 1][0]).toEqualDateTime(new Date(2022, 8, 16));
     });
 
     it('should not set the date when all sections are selected and the pasted value is not valid', async () => {
@@ -1070,7 +1070,7 @@ describe('<DateField /> - Editing', () => {
 
       await firePasteEventV7(view.getSectionsContainer(), `Escaped 2014`);
       expect(onChangeV7.callCount).to.equal(1);
-      expect(adapter.getYear(onChangeV7.lastCall.firstArg)).to.equal(2014);
+      expect(adapter.getYear(onChangeV7.mock.calls[onChangeV7.mock.calls.length - 1][0])).to.equal(2014);
       view.unmount();
 
       // Test with non-accessible DOM structure
@@ -1089,7 +1089,7 @@ describe('<DateField /> - Editing', () => {
 
       await firePasteEventV6(input, `Escaped 2014`);
       expect(onChangeV6.callCount).to.equal(1);
-      expect(adapter.getYear(onChangeV6.lastCall.firstArg)).to.equal(2014);
+      expect(adapter.getYear(onChangeV6.mock.calls[onChangeV6.mock.calls.length - 1][0])).to.equal(2014);
     });
 
     it('should not set the date when all sections are selected and props.readOnly = true', async () => {
@@ -1188,7 +1188,7 @@ describe('<DateField /> - Editing', () => {
       await firePasteEventV7(view.getActiveSection(0), '12');
       expectFieldValueV7(view.getSectionsContainer(), '12/13/2018');
       expect(onChangeV7.callCount).to.equal(1);
-      expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2018, 11, 13));
+      expect(onChangeV7.mock.calls[onChangeV7.mock.calls.length - 1][0]).toEqualDateTime(new Date(2018, 11, 13));
 
       view.unmount();
 
@@ -1208,7 +1208,7 @@ describe('<DateField /> - Editing', () => {
       await firePasteEventV6(input, '12');
       expectFieldValueV6(input, '12/13/2018');
       expect(onChangeV6.callCount).to.equal(1);
-      expect(onChangeV6.lastCall.firstArg).toEqualDateTime(new Date(2018, 11, 13));
+      expect(onChangeV6.mock.calls[onChangeV6.mock.calls.length - 1][0]).toEqualDateTime(new Date(2018, 11, 13));
     });
 
     it('should not update the section when one section is selected and the pasted value has incorrect type', async () => {
@@ -1387,7 +1387,7 @@ describe('<DateField /> - Editing', () => {
         });
         await view.selectSectionAsync('year');
         await view.user.keyboard('{ArrowDown}');
-        expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2009, 3, 3, 3, 3, 3));
+        expect(onChangeV7.mock.calls[onChangeV7.mock.calls.length - 1][0]).toEqualDateTime(new Date(2009, 3, 3, 3, 3, 3));
 
         view.unmount();
 
@@ -1400,7 +1400,7 @@ describe('<DateField /> - Editing', () => {
         });
         await view.selectSectionAsync('year');
         await view.user.keyboard('{ArrowDown}');
-        expect(onChangeV6.lastCall.firstArg).toEqualDateTime(new Date(2009, 3, 3, 3, 3, 3));
+        expect(onChangeV6.mock.calls[onChangeV6.mock.calls.length - 1][0]).toEqualDateTime(new Date(2009, 3, 3, 3, 3, 3));
       });
 
       it('should not loose time information when cleaning the date then filling it again', async () => {
@@ -1434,7 +1434,7 @@ describe('<DateField /> - Editing', () => {
 
         await view.user.keyboard('2009');
         expectFieldValueV7(view.getSectionsContainer(), '11/25/2009');
-        expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2009, 10, 25, 3, 3, 3));
+        expect(onChangeV7.mock.calls[onChangeV7.mock.calls.length - 1][0]).toEqualDateTime(new Date(2009, 10, 25, 3, 3, 3));
 
         view.unmount();
 
@@ -1467,7 +1467,7 @@ describe('<DateField /> - Editing', () => {
 
         await view.user.keyboard('2009');
         expectFieldValueV6(input, '11/25/2009');
-        expect(onChangeV6.lastCall.firstArg).toEqualDateTime(new Date(2009, 10, 25, 3, 3, 3));
+        expect(onChangeV6.mock.calls[onChangeV6.mock.calls.length - 1][0]).toEqualDateTime(new Date(2009, 10, 25, 3, 3, 3));
       });
 
       it('should not loose date information when using the year format and value is provided', async () => {
@@ -1484,7 +1484,7 @@ describe('<DateField /> - Editing', () => {
         await view.selectSectionAsync('year');
         await view.user.keyboard('{ArrowDown}');
 
-        expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2009, 3, 3, 3, 3, 3));
+        expect(onChangeV7.mock.calls[onChangeV7.mock.calls.length - 1][0]).toEqualDateTime(new Date(2009, 3, 3, 3, 3, 3));
 
         view.unmount();
 
@@ -1501,7 +1501,7 @@ describe('<DateField /> - Editing', () => {
         await view.selectSectionAsync('year');
         await view.user.keyboard('{ArrowDown}');
 
-        expect(onChangeV6.lastCall.firstArg).toEqualDateTime(new Date(2009, 3, 3, 3, 3, 3));
+        expect(onChangeV6.mock.calls[onChangeV6.mock.calls.length - 1][0]).toEqualDateTime(new Date(2009, 3, 3, 3, 3, 3));
       });
 
       it('should not loose date information when using the month format and value is provided', async () => {
@@ -1517,7 +1517,7 @@ describe('<DateField /> - Editing', () => {
 
         await view.selectSectionAsync('month');
         await view.user.keyboard('{ArrowDown}');
-        expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2010, 2, 3, 3, 3, 3));
+        expect(onChangeV7.mock.calls[onChangeV7.mock.calls.length - 1][0]).toEqualDateTime(new Date(2010, 2, 3, 3, 3, 3));
 
         view.unmount();
 
@@ -1533,7 +1533,7 @@ describe('<DateField /> - Editing', () => {
 
         await view.selectSectionAsync('month');
         await view.user.keyboard('{ArrowDown}');
-        expect(onChangeV6.lastCall.firstArg).toEqualDateTime(new Date(2010, 2, 3, 3, 3, 3));
+        expect(onChangeV6.mock.calls[onChangeV6.mock.calls.length - 1][0]).toEqualDateTime(new Date(2010, 2, 3, 3, 3, 3));
       });
     },
   );
@@ -1552,7 +1552,7 @@ describe('<DateField /> - Editing', () => {
         fireEvent.change(view.getHiddenInput(), { target: { value: '09/16/2022' } });
 
         expect(onChangeV7.callCount).to.equal(1);
-        expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 16));
+        expect(onChangeV7.mock.calls[onChangeV7.mock.calls.length - 1][0]).toEqualDateTime(new Date(2022, 8, 16));
 
         view.unmount();
 
@@ -1566,7 +1566,7 @@ describe('<DateField /> - Editing', () => {
         fireEvent.change(input, { target: { value: '09/16/2022' } });
 
         expect(onChangeV6.callCount).to.equal(1);
-        expect(onChangeV6.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 16));
+        expect(onChangeV6.mock.calls[onChangeV6.mock.calls.length - 1][0]).toEqualDateTime(new Date(2022, 8, 16));
       });
 
       it('should set the date when the change value is valid and a value is provided', () => {
@@ -1582,7 +1582,7 @@ describe('<DateField /> - Editing', () => {
         fireEvent.change(view.getHiddenInput(), { target: { value: '09/16/2022' } });
 
         expect(onChangeV7.callCount).to.equal(1);
-        expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 16, 3, 3, 3));
+        expect(onChangeV7.mock.calls[onChangeV7.mock.calls.length - 1][0]).toEqualDateTime(new Date(2022, 8, 16, 3, 3, 3));
 
         view.unmount();
 
@@ -1599,7 +1599,7 @@ describe('<DateField /> - Editing', () => {
         fireEvent.change(input, { target: { value: '09/16/2022' } });
 
         expect(onChangeV6.callCount).to.equal(1);
-        expect(onChangeV6.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 16, 3, 3, 3));
+        expect(onChangeV6.mock.calls[onChangeV6.mock.calls.length - 1][0]).toEqualDateTime(new Date(2022, 8, 16, 3, 3, 3));
       });
     },
   );
