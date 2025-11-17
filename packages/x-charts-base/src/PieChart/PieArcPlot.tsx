@@ -4,7 +4,6 @@ import {
   type ComputedPieRadius,
   type PieItemIdentifier,
   type DefaultizedPieValueType,
-  pieArcClasses,
 } from '@mui/x-charts';
 import { useFocusedItem } from '@mui/x-charts/hooks/useFocusedItem';
 import { useTransformData } from '@mui/x-charts/PieChart/dataTransform/useTransformData';
@@ -16,6 +15,7 @@ export interface PieArcPlotProps
       DefaultizedPieSeriesType,
       'data' | 'faded' | 'highlighted' | 'cornerRadius' | 'paddingAngle' | 'id'
     >,
+    Pick<React.ComponentProps<'g'>, 'transform'>,
     ComputedPieRadius {
   /**
    * Override the arc attributes when it is faded.
@@ -60,8 +60,11 @@ function PieArcPlot(props: PieArcPlotProps) {
     data,
   });
 
-  const { dataIndex: focusedIndex = -1 } = useFocusedItem() ?? {};
-  const focusedItem = focusedIndex !== -1 ? transformedData[focusedIndex] : null;
+  const { dataIndex, seriesId, seriesType } = useFocusedItem() ?? {};
+  const focusedItem =
+    dataIndex !== undefined && seriesId === id && seriesType === 'pie'
+      ? transformedData[dataIndex]
+      : null;
 
   if (data.length === 0) {
     return null;
@@ -107,8 +110,8 @@ function PieArcPlot(props: PieArcPlotProps) {
           cornerRadius={focusedItem.cornerRadius}
           stroke={'var(--FocusIndicator-color, blue)'}
           id={id}
-          className={pieArcClasses.focusIndicator}
-          dataIndex={focusedIndex}
+          className={'PieArc-focusIndicator'}
+          dataIndex={focusedItem.dataIndex}
           isFaded={false}
           isHighlighted={false}
           isFocused={false}

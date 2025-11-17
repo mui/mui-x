@@ -272,16 +272,9 @@ The bell curve is calculated based on the mean and standard deviation of the dat
 
 ### POC: Base and Material UI packages
 
-:::warning
-This is a Proof of Concept (POC) demo showcasing a new two-layer architecture for MUI X Charts.
-The packages `@mui/x-charts-base` and `@mui/x-charts-material` are experimental and not yet available.
-:::
-
 This example demonstrates the proposed architecture where charts functionality is split into two packages:
 
 - **@mui/x-charts-base**: Framework-agnostic core with inline styles and a custom theme system
-- **@mui/x-charts-material**: Material UI integration layer using the `styled()` API
-
-Both packages share the same plugin architecture for features like interaction, highlighting, and keyboard navigation, but differ in their styling approach and dependencies.
+- **@mui/x-charts-material**: Material UI integration layer using material components and theming
 
 {{"demo": "PocBaseAndMaterial.js" }}

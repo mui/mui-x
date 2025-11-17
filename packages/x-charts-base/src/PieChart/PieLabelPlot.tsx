@@ -1,13 +1,9 @@
 'use client';
 
-import { type PieArcPlotProps } from '@mui/x-charts';
-import { PieArcPlot } from './PieArcPlot';
+import { PieArcLabelPlot } from './PieArcLabelPlot';
 import { usePiePlotData } from './PieChart.hooks';
 
-export interface PiePlotProps extends Pick<PieArcPlotProps, 'onItemClick'> {}
-
-function PiePlot(props: PiePlotProps) {
-  const { onItemClick } = props;
+function PieLabelPlot() {
   const plotData = usePiePlotData();
 
   return plotData?.map((seriesData) => {
@@ -17,27 +13,29 @@ function PiePlot(props: PiePlotProps) {
       cornerRadius,
       paddingAngle,
       data,
-      highlighted,
-      faded,
+      availableRadius,
+      arcLabelRadius,
       id,
+      arcLabel,
+      arcLabelMinAngle,
       transform,
     } = seriesData;
 
     return (
-      <PieArcPlot
+      <PieArcLabelPlot
         transform={transform}
         innerRadius={innerRadius}
-        outerRadius={outerRadius}
+        outerRadius={outerRadius ?? availableRadius}
+        arcLabelRadius={arcLabelRadius}
         cornerRadius={cornerRadius}
         paddingAngle={paddingAngle}
         id={id}
         data={data}
-        highlighted={highlighted}
-        faded={faded}
-        onItemClick={onItemClick}
+        arcLabel={arcLabel}
+        arcLabelMinAngle={arcLabelMinAngle}
       />
     );
   });
 }
 
-export { PiePlot };
+export { PieLabelPlot };

@@ -1,0 +1,75 @@
+import { getPieCoordinates } from '@mui/x-charts';
+import { getPercentageValue } from '@mui/x-charts/internals/getPercentageValue';
+import { selectorChartDrawingArea } from '@mui/x-charts/internals/plugins/corePlugins/useChartDimensions';
+import type { ProcessedSeries } from '@mui/x-charts/internals/plugins/corePlugins/useChartSeries';
+import { selectorAllSeriesOfType } from '@mui/x-charts/internals/seriesSelectorOfType';
+import { useSelector } from '@mui/x-charts/internals/store/useSelector';
+import { useStore } from '@mui/x-charts/internals/store/useStore';
+import { createSelector } from '@mui/x-internals/store';
+
+const pieSelector = (store: any) => selectorAllSeriesOfType(store, 'pie') as ProcessedSeries['pie'];
+
+const selectorPieSeriesData = createSelector(
+  pieSelector,
+  selectorChartDrawingArea,
+  (pieSeries, drawingArea) => {
+    if (!pieSeries) {
+      return null;
+    }
+
+    const { width, height, left, top } = drawingArea;
+
+    const { series, seriesOrder } = pieSeries;
+
+    return seriesOrder.map((seriesId) => {
+      const {
+        innerRadius: innerRadiusParam,
+        outerRadius: outerRadiusParam,
+        arcLabelRadius: arcLabelRadiusParam,
+        cornerRadius,
+        paddingAngle,
+        arcLabel,
+        arcLabelMinAngle,
+        data,
+        highlighted,
+        faded,
+        cx: cxParam,
+        cy: cyParam,
+      } = series[seriesId];
+
+      const { cx, cy, availableRadius } = getPieCoordinates(
+        { cx: cxParam, cy: cyParam },
+        { width, height },
+      );
+      const outerRadius = getPercentageValue(outerRadiusParam ?? availableRadius, availableRadius);
+      const innerRadius = getPercentageValue(innerRadiusParam ?? 0, availableRadius);
+
+      const arcLabelRadius =
+        arcLabelRadiusParam === undefined
+          ? (outerRadius + innerRadius) / 2
+          : getPercentageValue(arcLabelRadiusParam, availableRadius);
+      return {
+        innerRadius,
+        outerRadius,
+        cornerRadius,
+        paddingAngle,
+        id: seriesId,
+        data,
+        highlighted,
+        faded,
+        arcLabelRadius,
+        arcLabel,
+        arcLabelMinAngle,
+        availableRadius,
+        cx,
+        cy,
+        transform: `translate(${left + cx}, ${top + cy})`,
+      };
+    });
+  },
+);
+
+export const usePiePlotData = () => {
+  const store = useStore();
+  return useSelector(store, selectorPieSeriesData);
+};

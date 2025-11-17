@@ -1,7 +1,7 @@
 import {
   ChartDataProvider,
   PIE_CHART_PLUGINS,
-  type ChartContainerProps,
+  type ChartDataProviderProps,
   type PieChartPluginSignatures,
   type PiePlotProps,
   type PieSeriesType,
@@ -16,11 +16,12 @@ import { useChartContainerProps } from '@mui/x-charts/ChartContainer/useChartCon
 import { FakeCss } from '../FakeCss';
 import { ChartsSurface } from '../ChartsSurface';
 import { PiePlot } from './PiePlot';
+import { PieLabelPlot } from './PieLabelPlot';
 
 export type PieSeries = MakeOptional<PieSeriesType<MakeOptional<PieValueType, 'id'>>, 'type'>;
-export interface PieChartProps
+export interface PieRootProps
   extends Omit<
-      ChartContainerProps<'pie', PieChartPluginSignatures>,
+      ChartDataProviderProps<'pie', PieChartPluginSignatures>,
       'series' | 'slots' | 'slotProps' | 'experimentalFeatures'
     >,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
@@ -44,8 +45,8 @@ export interface PieChartProps
   showToolbar?: boolean;
 }
 
-export const PieChart = React.forwardRef(function PieChart(
-  props: PieChartProps,
+const PieRoot = React.forwardRef(function PieChart(
+  props: PieRootProps,
   ref: React.Ref<SVGSVGElement>,
 ) {
   const {
@@ -54,7 +55,6 @@ export const PieChart = React.forwardRef(function PieChart(
     height,
     margin: marginProps,
     colors,
-    sx,
     skipAnimation,
     hideLegend,
     children,
@@ -62,16 +62,12 @@ export const PieChart = React.forwardRef(function PieChart(
     loading,
     highlightedItem,
     onHighlightChange,
-    className,
     showToolbar,
     ...other
   } = props;
   const margin = defaultizeMargin(marginProps, DEFAULT_PIE_CHART_MARGIN);
 
-  const { chartDataProviderProps, chartsSurfaceProps } = useChartContainerProps<
-    'pie',
-    PieChartPluginSignatures
-  >(
+  const { chartDataProviderProps } = useChartContainerProps<'pie', PieChartPluginSignatures>(
     {
       ...other,
       series: series.map((s) => ({ type: 'pie', ...s })),
@@ -81,7 +77,6 @@ export const PieChart = React.forwardRef(function PieChart(
       colors,
       highlightedItem,
       onHighlightChange,
-      className,
       skipAnimation,
       plugins: PIE_CHART_PLUGINS,
     },
@@ -90,11 +85,11 @@ export const PieChart = React.forwardRef(function PieChart(
 
   return (
     <ChartDataProvider<'pie', PieChartPluginSignatures> {...chartDataProviderProps}>
-      <FakeCss>
-        <ChartsSurface {...chartsSurfaceProps}>
-          <PiePlot onItemClick={onItemClick}></PiePlot>
-        </ChartsSurface>
-      </FakeCss>
+      <FakeCss>{children}</FakeCss>
     </ChartDataProvider>
   );
 });
+
+const PieSurface = ChartsSurface;
+
+export { PieRoot as Root, PieSurface as Surface, PiePlot as Plot, PieLabelPlot as LabelPlot };

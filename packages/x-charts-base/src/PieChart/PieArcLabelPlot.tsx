@@ -51,6 +51,7 @@ export interface PieArcLabelPlotProps
       | 'arcLabelMinAngle'
       | 'id'
     >,
+    Pick<React.ComponentProps<'g'>, 'transform'>,
     ComputedPieRadius {
   /**
    * Override the arc attributes when it is faded.
