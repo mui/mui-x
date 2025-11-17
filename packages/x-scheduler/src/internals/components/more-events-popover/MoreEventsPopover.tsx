@@ -9,6 +9,7 @@ import { useTranslations } from '../../utils/TranslationsContext';
 import { EventItem } from '../event/event-item/EventItem';
 import { createPopover } from '../create-popover';
 import { ArrowSvg } from './arrow/ArrowSvg';
+import { isOccurrenceAllDayOrMultipleDay } from '../../utils/event-utils';
 import './MoreEventsPopover.css';
 
 interface MoreEventsData {
@@ -61,9 +62,12 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
           <div className="MoreEventsPopoverContent">
             {occurrences.map((occurrence) => (
               <EventItem
-                variant={occurrence.allDay ? 'allDay' : 'compact'}
+                variant={
+                  isOccurrenceAllDayOrMultipleDay(occurrence, adapter) ? 'filled' : 'compact'
+                }
                 key={occurrence.key}
                 occurrence={occurrence}
+                date={day}
                 ariaLabelledBy={`PopoverHeader-${day.key}`}
               />
             ))}
