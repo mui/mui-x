@@ -79,7 +79,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
         fireEvent.click(getCell(2, 2), { shiftKey: true });
 
         fireEvent.keyDown(cell, { key: 'c', keyCode: 67, [key]: true });
-        expect(writeText.firstCall.args[0]).to.equal(
+        expect(writeText.firstCall.mock.calls[0]).to.equal(
           [
             ['0', 'USDGBP', '1'].join('\t'),
             ['1', 'USDEUR', '11'].join('\t'),
@@ -102,7 +102,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       fireEvent.click(getCell(0, 2), { shiftKey: true });
 
       fireEvent.keyDown(cell, { key: 'c', keyCode: 67, ctrlKey: true });
-      expect(writeText.firstCall.args[0]).to.equal([['0', 'USDGBP', '1'].join('\t')].join('\r\n'));
+      expect(writeText.firstCall.mock.calls[0]).to.equal([['0', 'USDGBP', '1'].join('\t')].join('\r\n'));
     });
 
     it(`should copy cells range selected based on their sorted order`, async () => {
@@ -189,7 +189,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       await user.click(aggregationCell);
       fireEvent.keyDown(aggregationCell, { key: 'c', keyCode: 67, ctrlKey: true });
 
-      expect(writeText.firstCall.args[0]).to.equal('30');
+      expect(writeText.firstCall.mock.calls[0]).to.equal('30');
     });
   });
 
@@ -631,7 +631,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
 
       await waitFor(() => expect(getColumnValues(0)).to.deep.equal(['Jon', 'John']));
       expect(processRowUpdateSpy).toHaveBeenCalledTimes(1);
-      expect(processRowUpdateSpy.args[0]).to.deep.equal([
+      expect(processRowUpdateSpy.mock.calls[0]).to.deep.equal([
         { id: 1, firstName: 'John', lastName: 'Doe' },
         { id: 1, firstName: 'Cersei', lastName: 'Lannister' },
         { rowId: '1' },
@@ -863,7 +863,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       await waitFor(() => {
         expect(onProcessRowUpdateError).toHaveBeenCalledTimes(1);
       });
-      expect(onProcessRowUpdateError.args[0][0]).to.equal(error);
+      expect(onProcessRowUpdateError.mock.calls[0][0]).to.equal(error);
     });
 
     it('should emit clipboard paste events', async () => {

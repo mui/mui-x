@@ -345,7 +345,7 @@ describe('<DataGridPro /> - Cell editing', () => {
           render(<TestCase columnProps={{ renderEditCell }} />);
           act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
           expect(renderEditCell.mock.calls[renderEditCell.mock.calls.length - 1][0].value).to.equal('USDGBP');
-          renderEditCell.resetHistory();
+          renderEditCell.mockClear();
           apiRef.current?.setEditCellValue({
             id: 0,
             field: 'currencyPair',
@@ -1340,12 +1340,12 @@ describe('<DataGridPro /> - Cell editing', () => {
       const onCellModesModelChange = spy();
       render(<TestCase onCellModesModelChange={onCellModesModelChange} />);
       act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
-      onCellModesModelChange.resetHistory();
+      onCellModesModelChange.mockClear();
       act(() => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' }));
-      expect(onCellModesModelChange.args[0][0]).to.deep.equal({
+      expect(onCellModesModelChange.mock.calls[0][0]).to.deep.equal({
         0: { currencyPair: { mode: 'view' } },
       });
-      expect(onCellModesModelChange.args[1][0]).to.deep.equal({});
+      expect(onCellModesModelChange.mock.calls[1][0]).to.deep.equal({});
     });
 
     it(`should not be called when changing the cellModesModel prop`, () => {

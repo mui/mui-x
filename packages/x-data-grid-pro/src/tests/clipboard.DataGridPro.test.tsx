@@ -55,7 +55,7 @@ describe('<DataGridPro /> - Clipboard', () => {
         const cell = getCell(0, 0);
         fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'c', keyCode: 67, [key]: true });
-        expect(writeText.firstCall.args[0]).to.equal(['0\tNike', '1\tAdidas'].join('\r\n'));
+        expect(writeText.firstCall.mock.calls[0]).to.equal(['0\tNike', '1\tAdidas'].join('\r\n'));
       });
     });
 
@@ -96,7 +96,7 @@ describe('<DataGridPro /> - Clipboard', () => {
       const cell = getCell(0, 0);
       fireUserEvent.mousePress(cell);
       fireEvent.keyDown(cell, { key: 'c', keyCode: 67, ctrlKey: true });
-      expect(writeText.firstCall.args[0]).to.equal(['1 " 1', '2'].join('\r\n'));
+      expect(writeText.firstCall.mock.calls[0]).to.equal(['1 " 1', '2'].join('\r\n'));
     });
   });
 });

@@ -283,7 +283,7 @@ describe('<DataGrid /> - Row selection', () => {
 
       // The callback should be called with exclude type and empty ids
       expect(onRowSelectionModelChange.callCount).to.equal(1);
-      const selectionModel = onRowSelectionModelChange.firstCall.args[0];
+      const selectionModel = onRowSelectionModelChange.firstCall.mock.calls[0];
       expect(selectionModel.type).to.equal('exclude');
       expect(selectionModel.ids.size).to.equal(0);
 
@@ -315,14 +315,14 @@ describe('<DataGrid /> - Row selection', () => {
       await user.click(selectAllCheckbox);
 
       // Reset the spy to check the next call
-      onRowSelectionModelChange.resetHistory();
+      onRowSelectionModelChange.mockClear();
 
       // Deselect one row
       await user.click(getCell(1, 0).querySelector('input')!);
 
       // Should still be exclude type but with the deselected row ID
       expect(onRowSelectionModelChange.callCount).to.equal(1);
-      const selectionModel = onRowSelectionModelChange.firstCall.args[0];
+      const selectionModel = onRowSelectionModelChange.firstCall.mock.calls[0];
       expect(selectionModel.type).to.equal('exclude');
       expect(selectionModel.ids.size).to.equal(1);
       expect(selectionModel.ids.has(1)).to.equal(true);

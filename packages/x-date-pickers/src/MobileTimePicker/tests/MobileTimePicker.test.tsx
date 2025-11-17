@@ -29,7 +29,7 @@ describe('<MobileTimePicker />', () => {
       fireEvent.click(buttonPM);
 
       expect(handleChange.callCount).to.equal(1);
-      expect(handleChange.firstCall.args[0]).toEqualDateTime(new Date(2019, 0, 1, 16, 20));
+      expect(handleChange.firstCall.mock.calls[0]).toEqualDateTime(new Date(2019, 0, 1, 16, 20));
     });
 
     it.skipIf(!hasTouchSupport)('should call onChange when selecting each view', async () => {

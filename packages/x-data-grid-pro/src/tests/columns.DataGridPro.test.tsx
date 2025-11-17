@@ -120,8 +120,8 @@ describe('<DataGridPro /> - Columns', () => {
       ]);
 
       expect(onColumnResize.callCount).to.equal(2);
-      expect(onColumnResize.args[0][0].width).to.equal(110);
-      expect(onColumnResize.args[1][0].width).to.equal(120);
+      expect(onColumnResize.mock.calls[0][0].width).to.equal(110);
+      expect(onColumnResize.mock.calls[1][0].width).to.equal(120);
     });
 
     it('should call onColumnWidthChange after resizing', async () => {
@@ -138,7 +138,7 @@ describe('<DataGridPro /> - Columns', () => {
       ]);
 
       expect(onColumnWidthChange.callCount).to.equal(1);
-      expect(onColumnWidthChange.args[0][0].width).to.equal(120);
+      expect(onColumnWidthChange.mock.calls[0][0].width).to.equal(120);
     });
 
     it('should call onColumnWidthChange with correct width after resizing and then clicking the separator', async () => {
@@ -155,7 +155,7 @@ describe('<DataGridPro /> - Columns', () => {
       ]);
 
       expect(onColumnWidthChange.callCount).to.equal(1);
-      expect(onColumnWidthChange.args[0][0].width).to.equal(120);
+      expect(onColumnWidthChange.mock.calls[0][0].width).to.equal(120);
       await user.dblClick(separator);
 
       expect(onColumnWidthChange.callCount).to.be.at.least(2);

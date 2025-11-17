@@ -423,7 +423,7 @@ describe('<DataGridPro /> - Row editing', () => {
           render(<TestCase column1Props={{ renderEditCell }} />);
           await act(async () => apiRef.current?.startRowEditMode({ id: 0 }));
           expect(renderEditCell.mock.calls[renderEditCell.mock.calls.length - 1][0].value).to.equal('USDGBP');
-          renderEditCell.resetHistory();
+          renderEditCell.mockClear();
           await act(async () => {
             apiRef.current?.setEditCellValue({
               id: 0,
@@ -1509,12 +1509,12 @@ describe('<DataGridPro /> - Row editing', () => {
       const onRowModesModelChange = spy();
       render(<TestCase onRowModesModelChange={onRowModesModelChange} />);
       act(() => apiRef.current?.startRowEditMode({ id: 0, fieldToFocus: 'currencyPair' }));
-      onRowModesModelChange.resetHistory();
+      onRowModesModelChange.mockClear();
       act(() => apiRef.current?.stopRowEditMode({ id: 0 }));
-      expect(onRowModesModelChange.args[0][0]).to.deep.equal({
+      expect(onRowModesModelChange.mock.calls[0][0]).to.deep.equal({
         0: { mode: 'view' },
       });
-      expect(onRowModesModelChange.args[1][0]).to.deep.equal({});
+      expect(onRowModesModelChange.mock.calls[1][0]).to.deep.equal({});
     });
 
     it(`should not be called when changing the rowModesModel prop`, () => {

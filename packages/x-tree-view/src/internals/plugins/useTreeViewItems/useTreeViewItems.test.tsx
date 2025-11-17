@@ -254,11 +254,11 @@ describeTreeView<TreeViewAnyStore>(
             slotProps: { item: { slots: { label: spyLabel } } },
           });
 
-          spyLabel.resetHistory();
+          spyLabel.mockClear();
 
           view.setProps({ onClick: () => {} });
 
-          const renders = spyLabel.getCalls().map((call) => call.args[0].children);
+          const renders = spyLabel.getCalls().map((call) => call.mock.calls[0].children);
           expect(renders).to.deep.equal([]);
         },
       );
@@ -273,11 +273,11 @@ describeTreeView<TreeViewAnyStore>(
             slotProps: { item: { slots: { label: spyLabel } } },
           });
 
-          spyLabel.resetHistory();
+          spyLabel.mockClear();
 
           view.setProps({ selectedItems: ['1'] });
 
-          const renders = spyLabel.getCalls().map((call) => call.args[0].children);
+          const renders = spyLabel.getCalls().map((call) => call.mock.calls[0].children);
 
           // 2 renders of the 1st item to remove to tabIndex={0}
           // 2 renders of the selected item to change its visual state
@@ -297,11 +297,11 @@ describeTreeView<TreeViewAnyStore>(
             slotProps: { item: { slots: { label: spyLabel } } },
           });
 
-          spyLabel.resetHistory();
+          spyLabel.mockClear();
 
           view.setProps({ onClick: () => {} });
 
-          const renders = spyLabel.getCalls().map((call) => call.args[0].children);
+          const renders = spyLabel.getCalls().map((call) => call.mock.calls[0].children);
           expect(renders).to.deep.equal([]);
         },
       );
@@ -320,11 +320,11 @@ describeTreeView<TreeViewAnyStore>(
             slotProps: { item: { slots: { label: spyLabel } } },
           });
 
-          spyLabel.resetHistory();
+          spyLabel.mockClear();
 
           view.setProps({ selectedItems: ['1'] });
 
-          const renders = spyLabel.getCalls().map((call) => call.args[0].children);
+          const renders = spyLabel.getCalls().map((call) => call.mock.calls[0].children);
 
           // 2 renders of the 1st item to remove to tabIndex={0}
           // 2 renders of the selected item to change its visual state

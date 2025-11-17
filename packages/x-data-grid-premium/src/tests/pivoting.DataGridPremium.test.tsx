@@ -928,8 +928,8 @@ describe('<DataGridPremium /> - Pivoting', () => {
       await user.dblClick(separators[1]);
 
       expect(onColumnWidthChange).toHaveBeenCalledTimes(1);
-      expect(onColumnWidthChange.args[0][0].colDef.field).to.equal('2024>->volume');
-      expect(onColumnWidthChange.args[0][0].width).to.equal(68);
+      expect(onColumnWidthChange.mock.calls[0][0].colDef.field).to.equal('2024>->volume');
+      expect(onColumnWidthChange.mock.calls[0][0].width).to.equal(68);
       expect(getColumnHeaderCell(1).offsetWidth).to.equal(68);
 
       await waitFor(() => {

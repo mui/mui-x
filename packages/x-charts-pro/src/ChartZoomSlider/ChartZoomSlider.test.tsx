@@ -129,7 +129,7 @@ describe.skipIf(isJSDOM)('<ChartZoomSlider />', () => {
     expect(getAxisTickValues('x')).to.not.include('A');
 
     // Reset zoom change spy
-    onZoomChange.resetHistory();
+    onZoomChange.mockClear();
 
     // Move the end thumb to zoom in from the right
     await user.pointer([

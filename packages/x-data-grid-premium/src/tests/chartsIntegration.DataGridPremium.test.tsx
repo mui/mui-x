@@ -157,7 +157,7 @@ describe('<DataGridPremium /> - Charts Integration', () => {
   }
 
   beforeEach(() => {
-    renderSpy.resetHistory();
+    renderSpy.mockClear();
   });
 
   describe('GridChartsIntegrationContextProvider', () => {
@@ -711,7 +711,7 @@ describe('<DataGridPremium /> - Charts Integration', () => {
     it('should trigger another render when the context is updated', async () => {
       render(<Test initialState={baseInitialState} />);
 
-      renderSpy.resetHistory();
+      renderSpy.mockClear();
       expect(renderSpy).toHaveBeenCalledTimes(0);
 
       act(() => {

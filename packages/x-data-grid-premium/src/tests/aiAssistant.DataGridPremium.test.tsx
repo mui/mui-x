@@ -89,8 +89,8 @@ describe('<DataGridPremium /> - AI Assistant', () => {
       await user.keyboard('{Enter}');
 
       expect(promptSpy.callCount).to.equal(1);
-      expect(promptSpy.firstCall.args[1]).contains('Example1');
-      expect(promptSpy.firstCall.args[1]).not.contains('CatA');
+      expect(promptSpy.firstCall.mock.calls[1]).contains('Example1');
+      expect(promptSpy.firstCall.mock.calls[1]).not.contains('CatA');
     });
 
     it('should sample rows to generate the prompt context', async () => {
@@ -104,8 +104,8 @@ describe('<DataGridPremium /> - AI Assistant', () => {
       await user.keyboard('{Enter}');
 
       expect(promptSpy.callCount).to.equal(1);
-      expect(promptSpy.firstCall.args[1]).not.contains('Example1');
-      expect(promptSpy.firstCall.args[1]).contains('CatA');
+      expect(promptSpy.firstCall.mock.calls[1]).not.contains('Example1');
+      expect(promptSpy.firstCall.mock.calls[1]).contains('CatA');
     });
   });
 

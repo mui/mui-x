@@ -938,7 +938,7 @@ describe('<DataGrid /> - Rows', () => {
         id: 0,
         model: rows[0],
       });
-      expect(getRowSpacing.args[1][0]).to.deep.equal({
+      expect(getRowSpacing.mock.calls[1][0]).to.deep.equal({
         isFirstVisible: false,
         isLastVisible: true,
         indexRelativeToCurrentPage: 1,
@@ -946,17 +946,17 @@ describe('<DataGrid /> - Rows', () => {
         model: rows[1],
       });
 
-      getRowSpacing.resetHistory();
+      getRowSpacing.mockClear();
       await user.click(screen.getByRole('button', { name: /next page/i }));
 
-      expect(getRowSpacing.args[0][0]).to.deep.equal({
+      expect(getRowSpacing.mock.calls[0][0]).to.deep.equal({
         isFirstVisible: true,
         isLastVisible: false,
         indexRelativeToCurrentPage: 0,
         id: 2,
         model: rows[2],
       });
-      expect(getRowSpacing.args[1][0]).to.deep.equal({
+      expect(getRowSpacing.mock.calls[1][0]).to.deep.equal({
         isFirstVisible: false,
         isLastVisible: true,
         indexRelativeToCurrentPage: 1,

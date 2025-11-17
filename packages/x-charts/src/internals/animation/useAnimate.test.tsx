@@ -28,7 +28,7 @@ describe('useAnimate', () => {
   const callCount = () => applyProps.mock.calls.length;
 
   afterEach(() => {
-    applyProps.resetHistory();
+    applyProps.mockClear();
   });
 
   it('starts animating from initial props', async () => {

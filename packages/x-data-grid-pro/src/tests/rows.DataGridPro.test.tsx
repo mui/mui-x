@@ -878,8 +878,8 @@ describe('<DataGridPro /> - Rows', () => {
       expect(handleCellFocusOut.callCount).to.equal(0);
       await user.click(document.body);
       expect(handleCellFocusOut.callCount).to.equal(1);
-      expect(handleCellFocusOut.args[0][0].id).to.equal(baselineProps.rows[1].id);
-      expect(handleCellFocusOut.args[0][0].field).to.equal(baselineProps.columns[0].field);
+      expect(handleCellFocusOut.mock.calls[0][0].id).to.equal(baselineProps.rows[1].id);
+      expect(handleCellFocusOut.mock.calls[0][0].field).to.equal(baselineProps.columns[0].field);
     });
 
     it('should not crash when the row is removed during the click', async () => {
