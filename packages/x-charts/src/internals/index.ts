@@ -71,6 +71,7 @@ export * from './invertScale';
 export * from './scaleGuards';
 export * from './findMinMax';
 export { checkBarChartScaleErrors } from '../BarChart/checkBarChartScaleErrors';
+export { getBandSize } from './getBandSize';
 
 // contexts
 export { getAxisExtrema } from './plugins/featurePlugins/useChartCartesianAxis/getAxisExtrema';

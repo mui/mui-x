@@ -76,75 +76,42 @@ function RangeBarPlot(props: RangeBarPlotProps): React.JSX.Element {
   const skipAnimation = useSkipAnimation(isZoomInteracting || inSkipAnimation);
   const { xAxis: xAxes } = useXAxes();
   const { yAxis: yAxes } = useYAxes();
-  const { completedData, masksData } = useRangeBarPlotData(useDrawingArea(), xAxes, yAxes);
-  const withoutBorderRadius = !borderRadius || borderRadius <= 0;
+  const completedData = useRangeBarPlotData(useDrawingArea(), xAxes, yAxes);
 
   const classes = useUtilityClasses();
 
   return (
     <RangeBarPlotRoot className={classes.root}>
-      {!withoutBorderRadius &&
-        masksData.map(
-          ({ id, x, y, xOrigin, yOrigin, width, height, hasPositive, hasNegative, layout }) => {
-            return (
-              <BarClipPath
-                key={id}
-                maskId={id}
-                borderRadius={borderRadius}
-                hasNegative={hasNegative}
-                hasPositive={hasPositive}
-                layout={layout}
-                x={x}
-                y={y}
-                xOrigin={xOrigin}
-                yOrigin={yOrigin}
-                width={width}
-                height={height}
-                skipAnimation={skipAnimation ?? false}
-              />
-            );
-          },
-        )}
       {completedData.map(({ seriesId, data }) => {
         return (
           <g key={seriesId} data-series={seriesId} className={classes.series}>
-            {data.map(
-              ({ dataIndex, color, maskId, layout, x, xOrigin, y, yOrigin, width, height }) => {
-                const barElement = (
-                  <BarElement
-                    key={dataIndex}
-                    id={seriesId}
-                    dataIndex={dataIndex}
-                    color={color}
-                    skipAnimation={skipAnimation ?? false}
-                    layout={layout ?? 'vertical'}
-                    x={x}
-                    xOrigin={xOrigin}
-                    y={y}
-                    yOrigin={yOrigin}
-                    width={width}
-                    height={height}
-                    {...other}
-                    onClick={
-                      onItemClick &&
-                      ((event) => {
-                        onItemClick(event, { type: 'bar', seriesId, dataIndex });
-                      })
-                    }
-                  />
-                );
-
-                if (withoutBorderRadius) {
-                  return barElement;
-                }
-
-                return (
-                  <g key={dataIndex} clipPath={`url(#${maskId})`}>
-                    {barElement}
-                  </g>
-                );
-              },
-            )}
+            {data.map(({ dataIndex, color, layout, x, xOrigin, y, yOrigin, width, height }) => {
+              return (
+                <BarElement
+                  key={dataIndex}
+                  id={seriesId}
+                  dataIndex={dataIndex}
+                  color={color}
+                  skipAnimation={skipAnimation ?? false}
+                  layout={layout ?? 'vertical'}
+                  x={x}
+                  xOrigin={xOrigin}
+                  y={y}
+                  yOrigin={yOrigin}
+                  width={width}
+                  height={height}
+                  rx={borderRadius}
+                  ry={borderRadius}
+                  {...other}
+                  onClick={
+                    onItemClick &&
+                    ((event) => {
+                      onItemClick(event, { type: 'bar', seriesId, dataIndex });
+                    })
+                  }
+                />
+              );
+            })}
           </g>
         );
       })}

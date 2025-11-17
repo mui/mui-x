@@ -7,6 +7,7 @@ import { useBarSeriesContext } from '../hooks/useBarSeries';
 import { SeriesProcessorResult } from '../internals/plugins/models/seriesConfig/seriesProcessor.types';
 import { ComputedAxisConfig } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxis.types';
 import { ChartSeriesDefaultized } from '../models/seriesType/config';
+import { getBandSize } from '../internals/getBandSize';
 
 export function useBarPlotData(
   drawingArea: ChartDrawingArea,
@@ -144,38 +145,6 @@ export function useBarPlotData(
   };
 }
 
-/**
- * Solution of the equations
- * W = barWidth * N + offset * (N-1)
- * offset / (offset + barWidth) = r
- * @param bandWidth The width available to place bars.
- * @param numberOfGroups The number of bars to place in that space.
- * @param gapRatio The ratio of the gap between bars over the bar width.
- * @returns The bar width and the offset between bars.
- */
-function getBandSize({
-  bandWidth: W,
-  numberOfGroups: N,
-  gapRatio: r,
-}: {
-  bandWidth: number;
-  numberOfGroups: number;
-  gapRatio: number;
-}) {
-  if (r === 0) {
-    return {
-      barWidth: W / N,
-      offset: 0,
-    };
-  }
-  const barWidth = W / (N + (N - 1) * r);
-  const offset = r * barWidth;
-  return {
-    barWidth,
-    offset,
-  };
-}
-
 function shouldInvertStartCoordinate(verticalLayout: boolean, baseValue: number, reverse: boolean) {
   const isVerticalAndPositive = verticalLayout && baseValue > 0;
   const isHorizontalAndNegative = !verticalLayout && baseValue < 0;
@@ -206,11 +175,11 @@ export function getBarDimensions(params: {
   const baseScaleConfig = (verticalLayout ? xAxisConfig : yAxisConfig) as ComputedAxis<'band'>;
   const reverse = (verticalLayout ? yAxisConfig.reverse : xAxisConfig.reverse) ?? false;
 
-  const { barWidth, offset } = getBandSize({
-    bandWidth: baseScaleConfig.scale.bandwidth(),
+  const { barWidth, offset } = getBandSize(
+    baseScaleConfig.scale.bandwidth(),
     numberOfGroups,
-    gapRatio: baseScaleConfig.barGapRatio,
-  });
+    baseScaleConfig.barGapRatio,
+  );
   const barOffset = groupIndex * (barWidth + offset);
 
   const xScale = xAxisConfig.scale;

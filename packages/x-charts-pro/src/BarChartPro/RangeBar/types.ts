@@ -12,12 +12,6 @@ export interface LayoutData {
   layout: BarSeriesType['layout'];
 }
 
-export interface MaskData extends LayoutData {
-  id: string;
-  hasNegative: boolean;
-  hasPositive: boolean;
-}
-
 export interface ProcessedRangeBarSeriesData {
   seriesId: SeriesId;
   data: ProcessedRangeBarData[];
@@ -28,5 +22,4 @@ export interface ProcessedRangeBarData extends LayoutData {
   dataIndex: number;
   color: string;
   value: RangeBarValueType | null;
-  maskId: string;
 }
