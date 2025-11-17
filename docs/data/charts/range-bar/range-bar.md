@@ -48,6 +48,8 @@ You can learn more about the `colorMap` in the [Styling docs](/x/react-charts/st
 
 A range bar chart supports rounded corners. To achieve it, set the value of the `borderRadius` prop on the `BarChartPro` to any positive value.
 
+When using composition, you can set the `borderRadius` prop on the `RangeBarPlot` component.
+
 {{"demo": "RangeBarBorderRadius.js"}}
 
 ### CSS

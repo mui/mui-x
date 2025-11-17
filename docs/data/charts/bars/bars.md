@@ -142,6 +142,8 @@ To give your bar chart rounded corners, you can change the value of the `borderR
 
 It works with any positive value and is properly applied to horizontal layouts, stacks, and negative values.
 
+When using composition, you can set the `borderRadius` prop on the `BarPlot` component.
+
 {{"demo": "BorderRadius.js"}}
 
 ### CSS
