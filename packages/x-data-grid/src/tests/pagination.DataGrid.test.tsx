@@ -92,12 +92,12 @@ describe('<DataGrid /> - Pagination', () => {
 
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       expect(onPaginationModelChange.callCount).to.equal(1);
-      expect(onPaginationModelChange.lastCall.args[0].page).to.equal(1);
+      expect(onPaginationModelChange.mock.calls[onPaginationModelChange.mock.calls.length - 1][0].page).to.equal(1);
       expect(getColumnValues(0)).to.deep.equal(['1']);
 
       fireEvent.click(screen.getByRole('button', { name: /previous page/i }));
       expect(onPaginationModelChange.callCount).to.equal(2);
-      expect(onPaginationModelChange.lastCall.args[0].page).to.equal(0);
+      expect(onPaginationModelChange.mock.calls[onPaginationModelChange.mock.calls.length - 1][0].page).to.equal(0);
       expect(getColumnValues(0)).to.deep.equal(['0']);
     });
 
@@ -124,7 +124,7 @@ describe('<DataGrid /> - Pagination', () => {
 
       fireEvent.click(screen.queryAllByRole('option')[1]);
       expect(onPaginationModelChange.callCount).to.equal(1);
-      expect(onPaginationModelChange.lastCall.args[0].pageSize).to.equal(2);
+      expect(onPaginationModelChange.mock.calls[onPaginationModelChange.mock.calls.length - 1][0].pageSize).to.equal(2);
       expect(getColumnValues(0)).to.deep.equal(['0', '1']);
     });
 
@@ -152,11 +152,11 @@ describe('<DataGrid /> - Pagination', () => {
       render(<TestCase handlePaginationModelChange={onPaginationModelChange} />);
 
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
-      expect(onPaginationModelChange.lastCall.args[0]).to.deep.equal({ page: 1, pageSize: 1 });
+      expect(onPaginationModelChange.mock.calls[onPaginationModelChange.mock.calls.length - 1][0]).to.deep.equal({ page: 1, pageSize: 1 });
       expect(getColumnValues(0)).to.deep.equal(['1']);
 
       fireEvent.click(screen.getByRole('button', { name: /previous page/i }));
-      expect(onPaginationModelChange.lastCall.args[0]).to.deep.equal({ page: 0, pageSize: 1 });
+      expect(onPaginationModelChange.mock.calls[onPaginationModelChange.mock.calls.length - 1][0]).to.deep.equal({ page: 0, pageSize: 1 });
       expect(getColumnValues(0)).to.deep.equal(['0']);
     });
 
@@ -174,9 +174,9 @@ describe('<DataGrid /> - Pagination', () => {
       );
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       expect(onPaginationModelChange.callCount).to.equal(1);
-      expect(onPaginationModelChange.lastCall.args[0]).to.deep.equal({ page: 1, pageSize: 1 });
+      expect(onPaginationModelChange.mock.calls[onPaginationModelChange.mock.calls.length - 1][0]).to.deep.equal({ page: 1, pageSize: 1 });
       fireEvent.click(screen.getByRole('button', { name: /previous page/i }));
-      expect(onPaginationModelChange.lastCall.args[0]).to.deep.equal({ page: 0, pageSize: 1 });
+      expect(onPaginationModelChange.mock.calls[onPaginationModelChange.mock.calls.length - 1][0]).to.deep.equal({ page: 0, pageSize: 1 });
     });
 
     it('should not change the state when clicking on next button and a `paginationModel` prop is provided', () => {
@@ -247,7 +247,7 @@ describe('<DataGrid /> - Pagination', () => {
 
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3']);
       expect(onPaginationModelChange.callCount).to.equal(1);
-      expect(onPaginationModelChange.lastCall.args[0]).to.deep.equal({ page: 0, pageSize: 5 });
+      expect(onPaginationModelChange.mock.calls[onPaginationModelChange.mock.calls.length - 1][0]).to.deep.equal({ page: 0, pageSize: 5 });
     });
 
     it('should scroll to the top of the page when changing page', () => {
@@ -293,7 +293,7 @@ describe('<DataGrid /> - Pagination', () => {
 
       fireEvent.click(screen.queryAllByRole('option')[1]);
       expect(onPaginationModelChange.callCount).to.equal(1);
-      expect(onPaginationModelChange.lastCall.args[0]).to.deep.equal({ pageSize: 2, page: 0 });
+      expect(onPaginationModelChange.mock.calls[onPaginationModelChange.mock.calls.length - 1][0]).to.deep.equal({ pageSize: 2, page: 0 });
     });
 
     it('should not change the pageSize state when clicking on a page size option when paginationModel prop is provided', () => {
@@ -503,7 +503,7 @@ describe('<DataGrid /> - Pagination', () => {
       rows = document.querySelectorAll('.MuiDataGrid-virtualScrollerRenderZone [role="row"]');
       expect(rows.length).to.equal(expectedViewportRowsLengthAfter);
 
-      expect(onPaginationModelChange.lastCall.args[0].pageSize).to.equal(
+      expect(onPaginationModelChange.mock.calls[onPaginationModelChange.mock.calls.length - 1][0].pageSize).to.equal(
         expectedViewportRowsLengthAfter,
       );
     });

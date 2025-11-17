@@ -134,10 +134,10 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         // expect(onChange).toHaveBeenCalledTimes(getExpectedOnChangeCount(componentFamily, params));
         // if (Array.isArray(newValue)) {
         //   newValue.forEach((value, index) => {
-        //     expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
+        //     expect(onChange.mock.calls[onChange.mock.calls.length - 1][0][index]).toEqualDateTime(value);
         //   });
         // } else {
-        //   expect(onChange.lastCall.args[0]).toEqualDateTime(newValue as any);
+        //   expect(onChange.mock.calls[onChange.mock.calls.length - 1][0]).toEqualDateTime(newValue as any);
         // }
       });
 
@@ -169,10 +169,10 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         expect(onChange).toHaveBeenCalledTimes(getExpectedOnChangeCount(componentFamily, params));
         if (Array.isArray(newValue)) {
           newValue.forEach((value, index) => {
-            expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
+            expect(onChange.mock.calls[onChange.mock.calls.length - 1][0][index]).toEqualDateTime(value);
           });
         } else {
-          expect(onChange.lastCall.args[0]).toEqualDateTime(newValue as any);
+          expect(onChange.mock.calls[onChange.mock.calls.length - 1][0]).toEqualDateTime(newValue as any);
         }
       });
     });

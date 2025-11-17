@@ -85,9 +85,9 @@ describe('<DataGridPro /> - Cell editing', () => {
         render(<TestCase columnProps={{ renderEditCell }} />);
 
         act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
-        expect(renderEditCell.lastCall.args[0].value).to.equal('USDGBP');
-        expect(renderEditCell.lastCall.args[0].error).to.equal(false);
-        expect(renderEditCell.lastCall.args[0].isProcessingProps).to.equal(false);
+        expect(renderEditCell.mock.calls[renderEditCell.mock.calls.length - 1][0].value).to.equal('USDGBP');
+        expect(renderEditCell.mock.calls[renderEditCell.mock.calls.length - 1][0].error).to.equal(false);
+        expect(renderEditCell.mock.calls[renderEditCell.mock.calls.length - 1][0].isProcessingProps).to.equal(false);
       });
 
       it('should empty the value if deleteValue is true', () => {
@@ -98,9 +98,9 @@ describe('<DataGridPro /> - Cell editing', () => {
         act(() =>
           apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair', deleteValue: true }),
         );
-        expect(renderEditCell.lastCall.args[0].value).to.equal('');
-        expect(renderEditCell.lastCall.args[0].error).to.equal(false);
-        expect(renderEditCell.lastCall.args[0].isProcessingProps).to.equal(false);
+        expect(renderEditCell.mock.calls[renderEditCell.mock.calls.length - 1][0].value).to.equal('');
+        expect(renderEditCell.mock.calls[renderEditCell.mock.calls.length - 1][0].error).to.equal(false);
+        expect(renderEditCell.mock.calls[renderEditCell.mock.calls.length - 1][0].isProcessingProps).to.equal(false);
       });
     });
 
@@ -111,11 +111,11 @@ describe('<DataGridPro /> - Cell editing', () => {
         render(<TestCase columnProps={{ renderEditCell }} />);
 
         act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
-        expect(renderEditCell.lastCall.args[0].value).to.equal('USDGBP');
+        expect(renderEditCell.mock.calls[renderEditCell.mock.calls.length - 1][0].value).to.equal('USDGBP');
         await act(() =>
           apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'usdgbp' }),
         );
-        expect(renderEditCell.lastCall.args[0].value).to.equal('usdgbp');
+        expect(renderEditCell.mock.calls[renderEditCell.mock.calls.length - 1][0].value).to.equal('usdgbp');
       });
 
       it('should pass to renderEditCell the row with the value updated', async () => {
@@ -128,11 +128,11 @@ describe('<DataGridPro /> - Cell editing', () => {
 
         render(<TestCase columnProps={{ valueSetter, renderEditCell }} />);
         act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
-        expect(renderEditCell.lastCall.args[0].row).to.deep.equal(defaultData.rows[0]);
+        expect(renderEditCell.mock.calls[renderEditCell.mock.calls.length - 1][0].row).to.deep.equal(defaultData.rows[0]);
         await act(() =>
           apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: ' usdgbp ' }),
         );
-        expect(renderEditCell.lastCall.args[0].row).to.deep.equal({
+        expect(renderEditCell.mock.calls[renderEditCell.mock.calls.length - 1][0].row).to.deep.equal({
           ...defaultData.rows[0],
           currencyPair: 'usdgbp',
         });
@@ -150,7 +150,7 @@ describe('<DataGridPro /> - Cell editing', () => {
           apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
         );
         expect(valueParser.callCount).to.equal(1);
-        expect(renderEditCell.lastCall.args[0].value).to.equal('usd gbp');
+        expect(renderEditCell.mock.calls[renderEditCell.mock.calls.length - 1][0].value).to.equal('usd gbp');
       });
 
       it('should return true if no preProcessEditCellProps is defined', async () => {
@@ -178,7 +178,7 @@ describe('<DataGridPro /> - Cell editing', () => {
             value: 'USD GBP',
           }) as Promise<boolean>;
         });
-        expect(renderEditCell.lastCall.args[0].isProcessingProps).to.equal(true);
+        expect(renderEditCell.mock.calls[renderEditCell.mock.calls.length - 1][0].isProcessingProps).to.equal(true);
         return act(() => promise);
       });
 
@@ -193,7 +193,7 @@ describe('<DataGridPro /> - Cell editing', () => {
             value: 'USD GBP',
           }),
         );
-        const args = preProcessEditCellProps.lastCall.args[0];
+        const args = preProcessEditCellProps.mock.calls[preProcessEditCellProps.mock.calls.length - 1][0];
         expect(args.id).to.equal(0);
         expect(args.row).to.deep.equal(defaultData.rows[0]);
         expect(args.hasChanged).to.equal(true);
@@ -244,11 +244,11 @@ describe('<DataGridPro /> - Cell editing', () => {
 
         render(<TestCase columnProps={{ preProcessEditCellProps, renderEditCell }} />);
         act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
-        expect(renderEditCell.lastCall.args[0].foo).to.equal(undefined);
+        expect(renderEditCell.mock.calls[renderEditCell.mock.calls.length - 1][0].foo).to.equal(undefined);
         await act(() =>
           apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
         );
-        expect(renderEditCell.lastCall.args[0].foo).to.equal('bar');
+        expect(renderEditCell.mock.calls[renderEditCell.mock.calls.length - 1][0].foo).to.equal('bar');
       });
 
       it('should not pass to renderEditCell the value returned by preProcessEditCellProps', async () => {
@@ -260,11 +260,11 @@ describe('<DataGridPro /> - Cell editing', () => {
 
         render(<TestCase columnProps={{ preProcessEditCellProps, renderEditCell }} />);
         act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
-        expect(renderEditCell.lastCall.args[0].value).to.equal('USDGBP');
+        expect(renderEditCell.mock.calls[renderEditCell.mock.calls.length - 1][0].value).to.equal('USDGBP');
         await act(() =>
           apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
         );
-        expect(renderEditCell.lastCall.args[0].value).to.equal('USD GBP');
+        expect(renderEditCell.mock.calls[renderEditCell.mock.calls.length - 1][0].value).to.equal('USD GBP');
       });
 
       it('should set isProcessingProps to false after calling preProcessEditCellProps', async () => {
@@ -282,9 +282,9 @@ describe('<DataGridPro /> - Cell editing', () => {
             value: 'USD GBP',
           }) as Promise<boolean>;
         });
-        expect(renderEditCell.lastCall.args[0].isProcessingProps).to.equal(true);
+        expect(renderEditCell.mock.calls[renderEditCell.mock.calls.length - 1][0].isProcessingProps).to.equal(true);
         await act(() => promise);
-        expect(renderEditCell.lastCall.args[0].isProcessingProps).to.equal(false);
+        expect(renderEditCell.mock.calls[renderEditCell.mock.calls.length - 1][0].isProcessingProps).to.equal(false);
       });
 
       it('should return false if preProcessEditCellProps sets an error', async () => {
@@ -344,7 +344,7 @@ describe('<DataGridPro /> - Cell editing', () => {
 
           render(<TestCase columnProps={{ renderEditCell }} />);
           act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
-          expect(renderEditCell.lastCall.args[0].value).to.equal('USDGBP');
+          expect(renderEditCell.mock.calls[renderEditCell.mock.calls.length - 1][0].value).to.equal('USDGBP');
           renderEditCell.resetHistory();
           apiRef.current?.setEditCellValue({
             id: 0,
@@ -365,7 +365,7 @@ describe('<DataGridPro /> - Cell editing', () => {
             expect(renderEditCell.callCount).not.to.equal(0);
           });
 
-          expect(renderEditCell.lastCall.args[0].value).to.equal('USD GBP');
+          expect(renderEditCell.mock.calls[renderEditCell.mock.calls.length - 1][0].value).to.equal('USD GBP');
         });
       });
     });
@@ -472,7 +472,7 @@ describe('<DataGridPro /> - Cell editing', () => {
           apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
         );
         act(() => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' }));
-        expect(onCellModesModelChange.lastCall.args[0]).to.deep.equal({
+        expect(onCellModesModelChange.mock.calls[onCellModesModelChange.mock.calls.length - 1][0]).to.deep.equal({
           0: { currencyPair: { mode: 'edit' } },
         });
       });
@@ -531,11 +531,11 @@ describe('<DataGridPro /> - Cell editing', () => {
         );
         act(() => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' }));
         await act(() => Promise.resolve());
-        expect(processRowUpdate.lastCall.args[0]).to.deep.equal({
+        expect(processRowUpdate.mock.calls[processRowUpdate.mock.calls.length - 1][0]).to.deep.equal({
           ...defaultData.rows[0],
           currencyPair: 'USD GBP',
         });
-        expect(processRowUpdate.lastCall.args[1]).to.deep.equal(defaultData.rows[0]);
+        expect(processRowUpdate.mock.calls[processRowUpdate.mock.calls.length - 1][1]).to.deep.equal(defaultData.rows[0]);
       });
 
       it('should stay in edit mode if processRowUpdate throws an error', async () => {
@@ -571,7 +571,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         );
         act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
         act(() => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' }));
-        expect(onProcessRowUpdateError.lastCall.args[0]).to.equal(error);
+        expect(onProcessRowUpdateError.mock.calls[onProcessRowUpdateError.mock.calls.length - 1][0]).to.equal(error);
       });
 
       it('should call onProcessRowUpdateError if processRowUpdate rejects', async () => {
@@ -589,7 +589,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
         act(() => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' }));
         await act(() => Promise.resolve());
-        expect(onProcessRowUpdateError.lastCall.args[0]).to.equal(error);
+        expect(onProcessRowUpdateError.mock.calls[onProcessRowUpdateError.mock.calls.length - 1][0]).to.equal(error);
       });
 
       it('should keep mode=edit if processRowUpdate rejects', async () => {
@@ -611,7 +611,7 @@ describe('<DataGridPro /> - Cell editing', () => {
           apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
         );
         act(() => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' }));
-        expect(onCellModesModelChange.lastCall.args[0]).to.deep.equal({
+        expect(onCellModesModelChange.mock.calls[onCellModesModelChange.mock.calls.length - 1][0]).to.deep.equal({
           0: { currencyPair: { mode: 'edit' } },
         });
       });
@@ -633,8 +633,8 @@ describe('<DataGridPro /> - Cell editing', () => {
           currencyPair: 'USDGBP',
           _currencyPair: 'USD GBP',
         });
-        expect(valueSetter.lastCall.args[0]).to.equal('USD GBP');
-        expect(valueSetter.lastCall.args[1]).to.deep.equal(defaultData.rows[0]);
+        expect(valueSetter.mock.calls[valueSetter.mock.calls.length - 1][0]).to.equal('USD GBP');
+        expect(valueSetter.mock.calls[valueSetter.mock.calls.length - 1][1]).to.deep.equal(defaultData.rows[0]);
       });
 
       it('should move focus to the cell below when cellToFocusAfter=below', async () => {
@@ -730,7 +730,7 @@ describe('<DataGridPro /> - Cell editing', () => {
             }),
         );
         act(() => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' }));
-        expect(renderEditCell.lastCall.args[0].value).to.equal('USD GBP');
+        expect(renderEditCell.mock.calls[renderEditCell.mock.calls.length - 1][0].value).to.equal('USD GBP');
         expect((processRowUpdate.lastCall as any).args[0].currencyPair).to.equal('USD GBP');
       });
 
@@ -753,19 +753,19 @@ describe('<DataGridPro /> - Cell editing', () => {
           apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
         );
         act(() => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' }));
-        expect(onCellModesModelChange.lastCall.args[0]).to.deep.equal({
+        expect(onCellModesModelChange.mock.calls[onCellModesModelChange.mock.calls.length - 1][0]).to.deep.equal({
           0: { currencyPair: { mode: 'view' } },
         });
 
         act(() => apiRef.current?.startCellEditMode({ id: 1, field: 'currencyPair' }));
-        expect(onCellModesModelChange.lastCall.args[0]).to.have.keys('0', '1');
-        expect(onCellModesModelChange.lastCall.args[0][1]).to.deep.equal({
+        expect(onCellModesModelChange.mock.calls[onCellModesModelChange.mock.calls.length - 1][0]).to.have.keys('0', '1');
+        expect(onCellModesModelChange.mock.calls[onCellModesModelChange.mock.calls.length - 1][0][1]).to.deep.equal({
           currencyPair: { mode: 'edit' },
         });
 
         resolveCallback!();
         await act(() => Promise.resolve());
-        expect(onCellModesModelChange.lastCall.args[0]).to.deep.equal({
+        expect(onCellModesModelChange.mock.calls[onCellModesModelChange.mock.calls.length - 1][0]).to.deep.equal({
           1: { currencyPair: { mode: 'edit' } },
         });
       });
@@ -780,7 +780,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         apiRef.current?.subscribeEvent('cellEditStart', listener);
         const cell = getCell(0, 1);
         fireEvent.doubleClick(cell);
-        expect(listener.lastCall.args[0].reason).to.equal('cellDoubleClick');
+        expect(listener.mock.calls[listener.mock.calls.length - 1][0].reason).to.equal('cellDoubleClick');
       });
 
       it(`should not publish 'cellEditStart' if the cell is not editable`, () => {
@@ -809,7 +809,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         const cell = getCell(0, 1);
         fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: '$' });
-        expect(listener.lastCall.args[0].reason).to.equal('printableKeyDown');
+        expect(listener.mock.calls[listener.mock.calls.length - 1][0].reason).to.equal('printableKeyDown');
       });
 
       it(`should not publish 'cellEditStart' if space is pressed`, async () => {
@@ -831,7 +831,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         const cell = getCell(0, 1);
         fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: '1' });
-        expect(listener.lastCall.args[0].reason).to.equal('printableKeyDown');
+        expect(listener.mock.calls[listener.mock.calls.length - 1][0].reason).to.equal('printableKeyDown');
       });
     });
 
@@ -843,7 +843,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         const cell = getCell(0, 1);
         fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'Enter' });
-        expect(listener.lastCall.args[0].reason).to.equal('enterKeyDown');
+        expect(listener.mock.calls[listener.mock.calls.length - 1][0].reason).to.equal('enterKeyDown');
       });
 
       it(`should not publish 'cellEditStart' if the cell is not editable`, () => {
@@ -874,7 +874,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         const cell = getCell(0, 1);
         fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'Delete' });
-        expect(listener.lastCall.args[0].reason).to.equal('deleteKeyDown');
+        expect(listener.mock.calls[listener.mock.calls.length - 1][0].reason).to.equal('deleteKeyDown');
       });
 
       it(`should not publish 'cellEditStart' if the cell is not editable`, () => {
@@ -903,7 +903,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'Delete' });
         expect(spiedStartCellEditMode.callCount).to.equal(1);
-        expect(spiedStartCellEditMode.lastCall.args[0]).to.deep.equal({
+        expect(spiedStartCellEditMode.mock.calls[spiedStartCellEditMode.mock.calls.length - 1][0]).to.deep.equal({
           id: 0,
           field: 'currencyPair',
           deleteValue: true,
@@ -920,7 +920,7 @@ describe('<DataGridPro /> - Cell editing', () => {
 
         expect(preProcessEditCellProps.callCount).to.equal(1);
 
-        expect(preProcessEditCellProps.lastCall.args[0].props).to.deep.equal({
+        expect(preProcessEditCellProps.mock.calls[preProcessEditCellProps.mock.calls.length - 1][0].props).to.deep.equal({
           value: '',
           error: false,
           isProcessingProps: true,
@@ -945,7 +945,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         const cell = getCell(0, 1);
         fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'a' }); // A
-        expect(listener.lastCall.args[0].reason).to.equal('printableKeyDown');
+        expect(listener.mock.calls[listener.mock.calls.length - 1][0].reason).to.equal('printableKeyDown');
       });
 
       it(`should not publish 'cellEditStart' if the cell is not editable`, () => {
@@ -1007,7 +1007,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'a' });
         expect(spiedStartCellEditMode.callCount).to.equal(1);
-        expect(spiedStartCellEditMode.lastCall.args[0]).to.deep.equal({
+        expect(spiedStartCellEditMode.mock.calls[spiedStartCellEditMode.mock.calls.length - 1][0]).to.deep.equal({
           id: 0,
           field: 'currencyPair',
           deleteValue: true,
@@ -1027,7 +1027,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         fireEvent.keyDown(cell, { key: 'Enter', keyCode: 13 });
         expect(listener.callCount).to.equal(1);
         expect(input.value).to.equal('あ');
-        expect(listener.lastCall.args[0].reason).to.equal('enterKeyDown');
+        expect(listener.mock.calls[listener.mock.calls.length - 1][0].reason).to.equal('enterKeyDown');
       });
 
       it(`should ignore keydown event until the IME is confirmed with multiple letters`, () => {
@@ -1043,7 +1043,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         fireEvent.keyDown(cell, { key: 'Enter', keyCode: 13 });
         expect(listener.callCount).to.equal(1);
         expect(input.value).to.equal('ありがとう');
-        expect(listener.lastCall.args[0].reason).to.equal('enterKeyDown');
+        expect(listener.mock.calls[listener.mock.calls.length - 1][0].reason).to.equal('enterKeyDown');
       });
     });
   });
@@ -1057,7 +1057,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         fireEvent.doubleClick(getCell(0, 1));
         expect(listener.callCount).to.equal(0);
         fireUserEvent.mousePress(getCell(1, 1));
-        expect(listener.lastCall.args[0].reason).to.equal('cellFocusOut');
+        expect(listener.mock.calls[listener.mock.calls.length - 1][0].reason).to.equal('cellFocusOut');
       });
 
       it('should call stopCellEditMode with ignoreModifications=false and cellToFocusAfter=undefined', () => {
@@ -1066,7 +1066,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         fireEvent.doubleClick(getCell(0, 1));
         fireUserEvent.mousePress(getCell(1, 1));
         expect(spiedStopCellEditMode.callCount).to.equal(1);
-        expect(spiedStopCellEditMode.lastCall.args[0]).to.deep.equal({
+        expect(spiedStopCellEditMode.mock.calls[spiedStopCellEditMode.mock.calls.length - 1][0]).to.deep.equal({
           id: 0,
           field: 'currencyPair',
           cellToFocusAfter: undefined,
@@ -1088,7 +1088,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         );
         fireUserEvent.mousePress(getCell(1, 1));
         expect(spiedStopCellEditMode.callCount).to.equal(1);
-        expect(spiedStopCellEditMode.lastCall.args[0].ignoreModifications).to.equal(false);
+        expect(spiedStopCellEditMode.mock.calls[spiedStopCellEditMode.mock.calls.length - 1][0].ignoreModifications).to.equal(false);
       });
     });
 
@@ -1102,7 +1102,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         fireEvent.doubleClick(cell);
         expect(listener.callCount).to.equal(0);
         fireEvent.keyDown(cell, { key: 'Escape' });
-        expect(listener.lastCall.args[0].reason).to.equal('escapeKeyDown');
+        expect(listener.mock.calls[listener.mock.calls.length - 1][0].reason).to.equal('escapeKeyDown');
       });
 
       it('should call stopCellEditMode with ignoreModifications=true and cellToFocusAfter=undefined', () => {
@@ -1113,7 +1113,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         fireEvent.doubleClick(cell);
         fireEvent.keyDown(cell, { key: 'Escape' });
         expect(spiedStopCellEditMode.callCount).to.equal(1);
-        expect(spiedStopCellEditMode.lastCall.args[0]).to.deep.equal({
+        expect(spiedStopCellEditMode.mock.calls[spiedStopCellEditMode.mock.calls.length - 1][0]).to.deep.equal({
           id: 0,
           field: 'currencyPair',
           cellToFocusAfter: undefined,
@@ -1132,7 +1132,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         fireEvent.doubleClick(cell);
         expect(listener.callCount).to.equal(0);
         fireEvent.keyDown(cell, { key: 'Enter' });
-        expect(listener.lastCall.args[0].reason).to.equal('enterKeyDown');
+        expect(listener.mock.calls[listener.mock.calls.length - 1][0].reason).to.equal('enterKeyDown');
       });
 
       it('should call stopCellEditMode with ignoreModifications=false and cellToFocusAfter=below', () => {
@@ -1143,7 +1143,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         fireEvent.doubleClick(cell);
         fireEvent.keyDown(cell, { key: 'Enter' });
         expect(spiedStopCellEditMode.callCount).to.equal(1);
-        expect(spiedStopCellEditMode.lastCall.args[0]).to.deep.equal({
+        expect(spiedStopCellEditMode.mock.calls[spiedStopCellEditMode.mock.calls.length - 1][0]).to.deep.equal({
           id: 0,
           field: 'currencyPair',
           cellToFocusAfter: 'below',
@@ -1167,7 +1167,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         );
         fireEvent.keyDown(cell, { key: 'Enter' });
         expect(spiedStopCellEditMode.callCount).to.equal(1);
-        expect(spiedStopCellEditMode.lastCall.args[0].ignoreModifications).to.equal(false);
+        expect(spiedStopCellEditMode.mock.calls[spiedStopCellEditMode.mock.calls.length - 1][0].ignoreModifications).to.equal(false);
       });
     });
 
@@ -1181,7 +1181,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         await user.dblClick(cell);
         expect(listener.callCount).to.equal(0);
         await user.keyboard('{Tab}');
-        expect(listener.lastCall.args[0].reason).to.equal('tabKeyDown');
+        expect(listener.mock.calls[listener.mock.calls.length - 1][0].reason).to.equal('tabKeyDown');
       });
 
       it('should call stopCellEditMode with ignoreModifications=false and cellToFocusAfter=right', () => {
@@ -1192,7 +1192,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         fireEvent.doubleClick(cell);
         fireEvent.keyDown(cell, { key: 'Tab' });
         expect(spiedStopCellEditMode.callCount).to.equal(1);
-        expect(spiedStopCellEditMode.lastCall.args[0]).to.deep.equal({
+        expect(spiedStopCellEditMode.mock.calls[spiedStopCellEditMode.mock.calls.length - 1][0]).to.deep.equal({
           id: 0,
           field: 'currencyPair',
           cellToFocusAfter: 'right',
@@ -1216,7 +1216,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         );
         fireEvent.keyDown(cell, { key: 'Tab' });
         expect(spiedStopCellEditMode.callCount).to.equal(1);
-        expect(spiedStopCellEditMode.lastCall.args[0].ignoreModifications).to.equal(false);
+        expect(spiedStopCellEditMode.mock.calls[spiedStopCellEditMode.mock.calls.length - 1][0].ignoreModifications).to.equal(false);
       });
     });
   });
@@ -1278,7 +1278,7 @@ describe('<DataGridPro /> - Cell editing', () => {
       apiRef.current?.subscribeEvent('cellModesModelChange', listener);
       const cell = getCell(0, 1);
       fireEvent.doubleClick(cell);
-      expect(listener.lastCall.args[0]).to.deep.equal({
+      expect(listener.mock.calls[listener.mock.calls.length - 1][0]).to.deep.equal({
         0: { currencyPair: { mode: 'edit' } },
       });
     });
@@ -1289,7 +1289,7 @@ describe('<DataGridPro /> - Cell editing', () => {
       expect(listener.callCount).to.equal(0);
       apiRef.current?.subscribeEvent('cellModesModelChange', listener);
       setProps({ cellModesModel: { 0: { currencyPair: { mode: 'edit' } } } });
-      expect(listener.lastCall.args[0]).to.deep.equal({
+      expect(listener.mock.calls[listener.mock.calls.length - 1][0]).to.deep.equal({
         0: { currencyPair: { mode: 'edit' } },
       });
     });
@@ -1331,7 +1331,7 @@ describe('<DataGridPro /> - Cell editing', () => {
       expect(onCellModesModelChange.callCount).to.equal(0);
       act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
       expect(onCellModesModelChange.callCount).to.equal(1);
-      expect(onCellModesModelChange.lastCall.args[0]).to.deep.equal({
+      expect(onCellModesModelChange.mock.calls[onCellModesModelChange.mock.calls.length - 1][0]).to.deep.equal({
         0: { currencyPair: { mode: 'edit' } },
       });
     });

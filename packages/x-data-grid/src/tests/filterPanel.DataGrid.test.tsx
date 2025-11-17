@@ -251,7 +251,7 @@ describe('<DataGrid /> - Filter panel', () => {
     setOperatorValue('isEmpty');
 
     expect(onFilterModelChange.callCount).to.equal(1);
-    expect(onFilterModelChange.lastCall.args[0].items[0].value).to.equal(undefined);
+    expect(onFilterModelChange.mock.calls[onFilterModelChange.mock.calls.length - 1][0].items[0].value).to.equal(undefined);
 
     expect(getSelectByName('Operator').value).to.equal('isEmpty');
   });

@@ -79,7 +79,7 @@ describe('<DateRangePicker />', () => {
       await user.keyboard('{Enter}');
 
       expect(handleSubmit).toHaveBeenCalledTimes(1);
-      expect([...handleSubmit.lastCall.args[0]][0]).to.deep.equal([
+      expect([...handleSubmit.mock.calls[handleSubmit.mock.calls.length - 1][0]][0]).to.deep.equal([
         'testDate',
         '04/17/2022 – 04/21/2022',
       ]);

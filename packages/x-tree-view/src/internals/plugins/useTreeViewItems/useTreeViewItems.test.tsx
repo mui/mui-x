@@ -96,7 +96,7 @@ describeTreeView<TreeViewAnyStore>(
         // Check if the internal state is updated by running a range selection
         fireEvent.click(view.getItemContent('1'));
         fireEvent.click(view.getItemContent('3'), { shiftKey: true });
-        expect(onSelectedItemsChange.lastCall.args[1]).to.deep.equal(['1', '3']);
+        expect(onSelectedItemsChange.mock.calls[onSelectedItemsChange.mock.calls.length - 1][1]).to.deep.equal(['1', '3']);
       });
 
       it('should not mark an item as expandable if its children is an empty array', () => {

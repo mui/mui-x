@@ -760,7 +760,7 @@ describe('<DataGridPro /> - Row pinning', () => {
 
     expect(cell.textContent).to.equal('Marcus');
     expect(processRowUpdate.callCount).to.equal(1);
-    expect(processRowUpdate.lastCall.args[0]).to.deep.equal({ id: 3, name: 'Marcus' });
+    expect(processRowUpdate.mock.calls[processRowUpdate.mock.calls.length - 1][0]).to.deep.equal({ id: 3, name: 'Marcus' });
   });
 
   // flaky in JSDOM
@@ -798,7 +798,7 @@ describe('<DataGridPro /> - Row pinning', () => {
 
     expect(cell.textContent).to.equal('Marcus');
     expect(processRowUpdate.callCount).to.equal(1);
-    expect(processRowUpdate.lastCall.args[0]).to.deep.equal({ id: 3, name: 'Marcus' });
+    expect(processRowUpdate.mock.calls[processRowUpdate.mock.calls.length - 1][0]).to.deep.equal({ id: 3, name: 'Marcus' });
   });
 
   it('should support `updateRows`', async () => {

@@ -151,10 +151,10 @@ describe('<DataGrid /> - Cells', () => {
       </div>,
     );
     expect(getCell(0, 0)).to.have.text('Yes');
-    // expect(valueFormatter.lastCall.args[0]).to.have.keys('id', 'field', 'value', 'api');
-    expect(valueFormatter.lastCall.args[0]).to.equal(true);
-    expect(valueFormatter.lastCall.args[1]).to.deep.equal({ id: 0, isActive: true });
-    expect(valueFormatter.lastCall.args[2].field).to.equal('isActive');
+    // expect(valueFormatter.mock.calls[valueFormatter.mock.calls.length - 1][0]).to.have.keys('id', 'field', 'value', 'api');
+    expect(valueFormatter.mock.calls[valueFormatter.mock.calls.length - 1][0]).to.equal(true);
+    expect(valueFormatter.mock.calls[valueFormatter.mock.calls.length - 1][1]).to.deep.equal({ id: 0, isActive: true });
+    expect(valueFormatter.mock.calls[valueFormatter.mock.calls.length - 1][2].field).to.equal('isActive');
   });
 
   it('should throw when focusing cell without updating the state', async () => {

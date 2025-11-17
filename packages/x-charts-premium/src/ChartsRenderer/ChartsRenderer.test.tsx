@@ -58,7 +58,7 @@ describe('<ChartsRenderer />', () => {
       </div>,
     );
 
-    const props = onRenderSpy.lastCall.args[1];
+    const props = onRenderSpy.mock.calls[onRenderSpy.mock.calls.length - 1][1];
     expect(props.colors).to.equal(colorPaletteLookup.get('rainbowSurgePalette'));
   });
 
@@ -78,7 +78,7 @@ describe('<ChartsRenderer />', () => {
       </div>,
     );
 
-    const props = onRenderSpy.lastCall.args[1];
+    const props = onRenderSpy.mock.calls[onRenderSpy.mock.calls.length - 1][1];
     expect(props.colors).to.equal(colorPaletteLookup.get('mangoFusionPalette'));
   });
 
@@ -96,7 +96,7 @@ describe('<ChartsRenderer />', () => {
       </div>,
     );
 
-    const props = onRenderSpy.lastCall.args[1];
+    const props = onRenderSpy.mock.calls[onRenderSpy.mock.calls.length - 1][1];
     expect(props.series[0].data).to.deep.equal([1, 2, 3]);
   });
 });

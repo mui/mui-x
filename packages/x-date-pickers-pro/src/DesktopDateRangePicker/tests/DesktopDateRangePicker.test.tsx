@@ -260,18 +260,18 @@ describe('<DesktopDateRangePicker />', () => {
       // Change the start date
       await user.click(getPickerDay('3'));
       expect(onChange).toHaveBeenCalledTimes(1);
-      expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
-      expect(onChange.lastCall.args[0][1]).toEqualDateTime(defaultValue[1]);
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0][0]).toEqualDateTime(new Date(2018, 0, 3));
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0][1]).toEqualDateTime(defaultValue[1]);
 
       // Change the end date
       await user.click(getPickerDay('5'));
       expect(onChange).toHaveBeenCalledTimes(2);
-      expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
-      expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 5));
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0][0]).toEqualDateTime(new Date(2018, 0, 3));
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0][1]).toEqualDateTime(new Date(2018, 0, 5));
 
       expect(onAccept).toHaveBeenCalledTimes(1);
-      expect(onAccept.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
-      expect(onAccept.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 5));
+      expect(onAccept.mock.calls[onAccept.mock.calls.length - 1][0][0]).toEqualDateTime(new Date(2018, 0, 3));
+      expect(onAccept.mock.calls[onAccept.mock.calls.length - 1][0][1]).toEqualDateTime(new Date(2018, 0, 5));
       expect(onClose).toHaveBeenCalledTimes(1);
     });
 
@@ -307,11 +307,11 @@ describe('<DesktopDateRangePicker />', () => {
       // Change the end date
       fireEvent.click(getPickerDay('3'));
       expect(onChange).toHaveBeenCalledTimes(1);
-      expect(onChange.lastCall.args[0][0]).toEqualDateTime(defaultValue[0]);
-      expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 3));
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0][0]).toEqualDateTime(defaultValue[0]);
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0][1]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onAccept).toHaveBeenCalledTimes(1);
-      expect(onAccept.lastCall.args[0][0]).toEqualDateTime(defaultValue[0]);
-      expect(onAccept.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 3));
+      expect(onAccept.mock.calls[onAccept.mock.calls.length - 1][0][0]).toEqualDateTime(defaultValue[0]);
+      expect(onAccept.mock.calls[onAccept.mock.calls.length - 1][0][1]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onClose).toHaveBeenCalledTimes(1);
     });
 
@@ -377,8 +377,8 @@ describe('<DesktopDateRangePicker />', () => {
       await user.keyboard('[Escape]');
       expect(onChange).toHaveBeenCalledTimes(1); // Start date change
       expect(onAccept).toHaveBeenCalledTimes(1);
-      expect(onAccept.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
-      expect(onAccept.lastCall.args[0][1]).toEqualDateTime(defaultValue[1]);
+      expect(onAccept.mock.calls[onAccept.mock.calls.length - 1][0][0]).toEqualDateTime(new Date(2018, 0, 3));
+      expect(onAccept.mock.calls[onAccept.mock.calls.length - 1][0][1]).toEqualDateTime(defaultValue[1]);
       expect(onClose).toHaveBeenCalledTimes(1);
     });
 
@@ -454,8 +454,8 @@ describe('<DesktopDateRangePicker />', () => {
       // Start date change
       expect(onChange).toHaveBeenCalledTimes(1);
       expect(onAccept).toHaveBeenCalledTimes(1);
-      expect(onAccept.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
-      expect(onAccept.lastCall.args[0][1]).toEqualDateTime(defaultValue[1]);
+      expect(onAccept.mock.calls[onAccept.mock.calls.length - 1][0][0]).toEqualDateTime(new Date(2018, 0, 3));
+      expect(onAccept.mock.calls[onAccept.mock.calls.length - 1][0][1]).toEqualDateTime(defaultValue[1]);
       expect(onClose).toHaveBeenCalledTimes(1);
     });
 
@@ -558,8 +558,8 @@ describe('<DesktopDateRangePicker />', () => {
       // Start date change
       expect(onChange).toHaveBeenCalledTimes(1);
       expect(onAccept).toHaveBeenCalledTimes(1);
-      expect(onAccept.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
-      expect(onAccept.lastCall.args[0][1]).toEqualDateTime(defaultValue[1]);
+      expect(onAccept.mock.calls[onAccept.mock.calls.length - 1][0][0]).toEqualDateTime(new Date(2018, 0, 3));
+      expect(onAccept.mock.calls[onAccept.mock.calls.length - 1][0][1]).toEqualDateTime(defaultValue[1]);
       expect(onClose).toHaveBeenCalledTimes(1);
     });
 
@@ -591,9 +591,9 @@ describe('<DesktopDateRangePicker />', () => {
       // Clear the date
       await user.click(screen.getByText(/clear/i));
       expect(onChange).toHaveBeenCalledTimes(1); // Start date change
-      expect(onChange.lastCall.args[0]).to.deep.equal([null, null]);
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0]).to.deep.equal([null, null]);
       expect(onAccept).toHaveBeenCalledTimes(1);
-      expect(onAccept.lastCall.args[0]).to.deep.equal([null, null]);
+      expect(onAccept.mock.calls[onAccept.mock.calls.length - 1][0]).to.deep.equal([null, null]);
       expect(onClose).toHaveBeenCalledTimes(1);
     });
 

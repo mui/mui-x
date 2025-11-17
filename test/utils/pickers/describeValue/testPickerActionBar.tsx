@@ -109,10 +109,10 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         );
         if (isRangeType) {
           (values[0] as PickerRangeValue).forEach((value, index) => {
-            expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
+            expect(onChange.mock.calls[onChange.mock.calls.length - 1][0][index]).toEqualDateTime(value);
           });
         } else {
-          expect(onChange.lastCall.args[0]).toEqualDateTime(values[0] as any);
+          expect(onChange.mock.calls[onChange.mock.calls.length - 1][0]).toEqualDateTime(values[0] as any);
         }
         expect(onAccept).toHaveBeenCalledTimes(0);
         expect(onClose).toHaveBeenCalledTimes(1);

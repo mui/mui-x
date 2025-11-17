@@ -60,7 +60,7 @@ describe('<MobileTimePicker />', () => {
         },
       ]);
       expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.args[0]).toEqualDateTime(adapterToUse.date('2018-01-01T11:00:00'));
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0]).toEqualDateTime(adapterToUse.date('2018-01-01T11:00:00'));
 
       // Change the minutes
       const minuteClockEvent = getClockTouchEvent(53, 'minutes');
@@ -73,7 +73,7 @@ describe('<MobileTimePicker />', () => {
         },
       ]);
       expect(onChange.callCount).to.equal(2);
-      expect(onChange.lastCall.args[0]).toEqualDateTime(adapterToUse.date('2018-01-01T11:53:00'));
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0]).toEqualDateTime(adapterToUse.date('2018-01-01T11:53:00'));
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
     });

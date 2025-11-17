@@ -102,23 +102,23 @@ describe('<MobileDateTimePicker />', () => {
       await user.click(screen.getByText('2010', { selector: 'button' }));
 
       expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2010, 0, 1));
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0]).toEqualDateTime(new Date(2010, 0, 1));
 
       // Change the date
       await user.click(screen.getByRole('gridcell', { name: '15' }));
       expect(onChange.callCount).to.equal(2);
-      expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2010, 0, 15));
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0]).toEqualDateTime(new Date(2010, 0, 15));
 
       // Change the hours
       fireEvent.click(screen.getByRole('button', { name: 'Next' }));
       fireEvent.click(screen.getByRole('option', { name: '11 hours' }));
       expect(onChange.callCount).to.equal(3);
-      expect(onChange.lastCall.args[0]).toEqualDateTime(adapterToUse.date('2010-01-15T11:00:00'));
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0]).toEqualDateTime(adapterToUse.date('2010-01-15T11:00:00'));
 
       // Change the minutes
       fireEvent.click(screen.getByRole('option', { name: '55 minutes' }));
       expect(onChange.callCount).to.equal(4);
-      expect(onChange.lastCall.args[0]).toEqualDateTime(adapterToUse.date('2010-01-15T11:55:00'));
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0]).toEqualDateTime(adapterToUse.date('2010-01-15T11:55:00'));
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
     });

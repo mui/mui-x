@@ -88,10 +88,10 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
           pressKey,
         });
         (newValue as PickerRangeValue).forEach((value, index) => {
-          expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
+          expect(onChange.mock.calls[onChange.mock.calls.length - 1][0][index]).toEqualDateTime(value);
         });
       } else {
-        expect(onChange.lastCall.args[0]).toEqualDateTime(newValue);
+        expect(onChange.mock.calls[onChange.mock.calls.length - 1][0]).toEqualDateTime(newValue);
       }
 
       expect(onAccept).toHaveBeenCalledTimes(!shouldCloseOnSelect ? 0 : 1);
@@ -146,10 +146,10 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
           pressKey,
         });
         (newValue as PickerRangeValue).forEach((value, index) => {
-          expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
+          expect(onChange.mock.calls[onChange.mock.calls.length - 1][0][index]).toEqualDateTime(value);
         });
       } else {
-        expect(onChange.lastCall.args[0]).toEqualDateTime(newValue);
+        expect(onChange.mock.calls[onChange.mock.calls.length - 1][0]).toEqualDateTime(newValue);
       }
       expect(onAccept).toHaveBeenCalledTimes(1);
       expect(onClose).toHaveBeenCalledTimes(1);
@@ -220,10 +220,10 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
           pressKey,
         });
         (newValue as PickerRangeValue).forEach((value, index) => {
-          expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
+          expect(onChange.mock.calls[onChange.mock.calls.length - 1][0][index]).toEqualDateTime(value);
         });
       } else {
-        expect(onChange.lastCall.args[0]).toEqualDateTime(newValue);
+        expect(onChange.mock.calls[onChange.mock.calls.length - 1][0]).toEqualDateTime(newValue);
       }
       expect(onAccept).toHaveBeenCalledTimes(0);
       expect(onClose).toHaveBeenCalledTimes(0);
@@ -243,7 +243,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
           pressKey,
         });
         (newValueBis as PickerRangeValue).forEach((value, index) => {
-          expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
+          expect(onChange.mock.calls[onChange.mock.calls.length - 1][0][index]).toEqualDateTime(value);
         });
       } else {
         expect(onChange).toHaveBeenCalledTimes(
@@ -252,7 +252,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
             // meridiem does not change this time in case of multi section digital clock
             (pickerParams.type === 'time' || pickerParams.type === 'date-time' ? 1 : 0),
         );
-        expect(onChange.lastCall.args[0]).toEqualDateTime(newValueBis);
+        expect(onChange.mock.calls[onChange.mock.calls.length - 1][0]).toEqualDateTime(newValueBis);
       }
       expect(onAccept).toHaveBeenCalledTimes(0);
       expect(onClose).toHaveBeenCalledTimes(0);
@@ -285,10 +285,10 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
       expect(onAccept).toHaveBeenCalledTimes(1);
       if (isRangeType) {
         (newValue as PickerRangeValue).forEach((value, index) => {
-          expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
+          expect(onChange.mock.calls[onChange.mock.calls.length - 1][0][index]).toEqualDateTime(value);
         });
       } else {
-        expect(onChange.lastCall.args[0]).toEqualDateTime(newValue);
+        expect(onChange.mock.calls[onChange.mock.calls.length - 1][0]).toEqualDateTime(newValue);
       }
       expect(onClose).toHaveBeenCalledTimes(1);
     });
@@ -350,7 +350,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
           getExpectedOnChangeCount(componentFamily, pickerParams),
         );
         expect(onAccept).toHaveBeenCalledTimes(1);
-        expect(onAccept.lastCall.args[0]).toEqualDateTime(newValue);
+        expect(onAccept.mock.calls[onAccept.mock.calls.length - 1][0]).toEqualDateTime(newValue);
         expect(onClose).toHaveBeenCalledTimes(1);
       },
     );

@@ -104,14 +104,14 @@ describe('<MobileDateRangePicker />', () => {
       // Change the start date
       fireEvent.click(screen.getByRole('gridcell', { name: '3' }));
       expect(onChange).toHaveBeenCalledTimes(1);
-      expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
-      expect(onChange.lastCall.args[0][1]).toEqualDateTime(defaultValue[1]);
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0][0]).toEqualDateTime(new Date(2018, 0, 3));
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0][1]).toEqualDateTime(defaultValue[1]);
 
       // Change the end date
       fireEvent.click(screen.getByRole('gridcell', { name: '5' }));
       expect(onChange).toHaveBeenCalledTimes(2);
-      expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
-      expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 5));
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0][0]).toEqualDateTime(new Date(2018, 0, 3));
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0][1]).toEqualDateTime(new Date(2018, 0, 5));
 
       expect(onAccept).toHaveBeenCalledTimes(0);
       expect(onClose).toHaveBeenCalledTimes(0);
@@ -149,8 +149,8 @@ describe('<MobileDateRangePicker />', () => {
       // Change the end date
       fireEvent.click(screen.getByRole('gridcell', { name: '3' }));
       expect(onChange).toHaveBeenCalledTimes(1);
-      expect(onChange.lastCall.args[0][0]).toEqualDateTime(defaultValue[0]);
-      expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 3));
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0][0]).toEqualDateTime(defaultValue[0]);
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0][1]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onAccept).toHaveBeenCalledTimes(0);
       expect(onClose).toHaveBeenCalledTimes(0);
     });
@@ -179,8 +179,8 @@ describe('<MobileDateRangePicker />', () => {
       fireEvent.click(screen.getByRole('gridcell', { name: '3' }));
 
       expect(onAccept).toHaveBeenCalledTimes(1);
-      expect(onAccept.lastCall.args[0][0]).toEqualDateTime(defaultValue[0]);
-      expect(onAccept.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 3));
+      expect(onAccept.mock.calls[onAccept.mock.calls.length - 1][0][0]).toEqualDateTime(defaultValue[0]);
+      expect(onAccept.mock.calls[onAccept.mock.calls.length - 1][0][1]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onClose).toHaveBeenCalledTimes(1);
     });
 
@@ -211,8 +211,8 @@ describe('<MobileDateRangePicker />', () => {
       // Cancel the modifications
       fireEvent.click(screen.getByText(/cancel/i));
       expect(onChange).toHaveBeenCalledTimes(2); // Start date change + reset
-      expect(onChange.lastCall.args[0][0]).toEqualDateTime(defaultValue[0]);
-      expect(onChange.lastCall.args[0][1]).toEqualDateTime(defaultValue[1]);
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0][0]).toEqualDateTime(defaultValue[0]);
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0][1]).toEqualDateTime(defaultValue[1]);
       expect(onAccept).toHaveBeenCalledTimes(0);
       expect(onClose).toHaveBeenCalledTimes(1);
     });
@@ -244,8 +244,8 @@ describe('<MobileDateRangePicker />', () => {
       fireEvent.click(screen.getByText(/ok/i));
       expect(onChange).toHaveBeenCalledTimes(1); // Start date change
       expect(onAccept).toHaveBeenCalledTimes(1);
-      expect(onAccept.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
-      expect(onAccept.lastCall.args[0][1]).toEqualDateTime(defaultValue[1]);
+      expect(onAccept.mock.calls[onAccept.mock.calls.length - 1][0][0]).toEqualDateTime(new Date(2018, 0, 3));
+      expect(onAccept.mock.calls[onAccept.mock.calls.length - 1][0][1]).toEqualDateTime(defaultValue[1]);
       expect(onClose).toHaveBeenCalledTimes(1);
     });
 
@@ -273,9 +273,9 @@ describe('<MobileDateRangePicker />', () => {
       // Clear the date
       fireEvent.click(screen.getByText(/clear/i));
       expect(onChange).toHaveBeenCalledTimes(1); // Start date change
-      expect(onChange.lastCall.args[0]).to.deep.equal([null, null]);
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0]).to.deep.equal([null, null]);
       expect(onAccept).toHaveBeenCalledTimes(1);
-      expect(onAccept.lastCall.args[0]).to.deep.equal([null, null]);
+      expect(onAccept.mock.calls[onAccept.mock.calls.length - 1][0]).to.deep.equal([null, null]);
       expect(onClose).toHaveBeenCalledTimes(1);
     });
 

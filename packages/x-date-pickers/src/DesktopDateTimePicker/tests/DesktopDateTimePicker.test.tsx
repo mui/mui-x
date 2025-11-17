@@ -45,7 +45,7 @@ describe('<DesktopDateTimePicker />', () => {
       // Select year
       await user.click(screen.getByRole('radio', { name: '2025' }));
       expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2025, 0, 1, 11, 55));
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0]).toEqualDateTime(new Date(2025, 0, 1, 11, 55));
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
 
@@ -164,7 +164,7 @@ describe('<DesktopDateTimePicker />', () => {
       await user.click(screen.getByRole('option', { name: '03:00 AM' }));
 
       expect(onChange.callCount).to.equal(2);
-      expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 2, 3, 0, 0));
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0]).toEqualDateTime(new Date(2018, 0, 2, 3, 0, 0));
       expect(onAccept.callCount).to.equal(0); // onAccept false by default
 
       // Click on 'accept' action to close the picker
@@ -189,7 +189,7 @@ describe('<DesktopDateTimePicker />', () => {
       await user.click(screen.getByRole('option', { name: '03:00 AM' }));
 
       expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1, 3, 0, 0));
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0]).toEqualDateTime(new Date(2018, 0, 1, 3, 0, 0));
       expect(onAccept.callCount).to.equal(0); // onAccept false by default
 
       // Click on 'accept' action to close the picker

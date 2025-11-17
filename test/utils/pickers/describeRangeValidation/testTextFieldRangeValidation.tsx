@@ -57,7 +57,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       );
 
       expect(onErrorMock).toHaveBeenCalledTimes(1);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['invalidRange', 'invalidRange']);
+      expect(onErrorMock.mock.calls[60mock.calls.length - 1][0]).to.deep.equal(['invalidRange', 'invalidRange']);
       testInvalidStatus([true, true], fieldType);
     });
 
@@ -81,7 +81,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       });
 
       expect(onErrorMock).toHaveBeenCalledTimes(1);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, 'shouldDisableDate']);
+      expect(onErrorMock.mock.calls[84mock.calls.length - 1][0]).to.deep.equal([null, 'shouldDisableDate']);
       testInvalidStatus([false, true], fieldType);
 
       setProps({
@@ -89,7 +89,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       });
 
       expect(onErrorMock).toHaveBeenCalledTimes(2);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal([
+      expect(onErrorMock.mock.calls[92mock.calls.length - 1][0]).to.deep.equal([
         'shouldDisableDate',
         'shouldDisableDate',
       ]);
@@ -102,7 +102,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       });
 
       expect(onErrorMock).toHaveBeenCalledTimes(3);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['shouldDisableDate', null]);
+      expect(onErrorMock.mock.calls[105mock.calls.length - 1][0]).to.deep.equal(['shouldDisableDate', null]);
       testInvalidStatus([true, false], fieldType);
     });
 
@@ -126,7 +126,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       });
 
       expect(onErrorMock).toHaveBeenCalledTimes(1);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, 'shouldDisableDate']);
+      expect(onErrorMock.mock.calls[129mock.calls.length - 1][0]).to.deep.equal([null, 'shouldDisableDate']);
       testInvalidStatus([false, true], fieldType);
 
       setProps({
@@ -134,7 +134,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       });
 
       expect(onErrorMock).toHaveBeenCalledTimes(1);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, 'shouldDisableDate']);
+      expect(onErrorMock.mock.calls[137mock.calls.length - 1][0]).to.deep.equal([null, 'shouldDisableDate']);
       testInvalidStatus([false, true], fieldType);
 
       setProps({
@@ -144,7 +144,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       });
 
       expect(onErrorMock).toHaveBeenCalledTimes(2);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, null]);
+      expect(onErrorMock.mock.calls[147mock.calls.length - 1][0]).to.deep.equal([null, null]);
       testInvalidStatus([false, false], fieldType);
     });
 
@@ -178,7 +178,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       });
 
       expect(onErrorMock).toHaveBeenCalledTimes(1);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['shouldDisableDate', null]);
+      expect(onErrorMock.mock.calls[181mock.calls.length - 1][0]).to.deep.equal(['shouldDisableDate', null]);
       testInvalidStatus([true, false], fieldType);
 
       setProps({
@@ -226,7 +226,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
         });
 
         expect(onErrorMock).toHaveBeenCalledTimes(1);
-        expect(onErrorMock.lastCall.args[0]).to.deep.equal(['disablePast', null]);
+        expect(onErrorMock.mock.calls[229mock.calls.length - 1][0]).to.deep.equal(['disablePast', null]);
         testInvalidStatus([true, false], fieldType);
 
         setProps({
@@ -234,7 +234,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
         });
 
         expect(onErrorMock).toHaveBeenCalledTimes(2);
-        expect(onErrorMock.lastCall.args[0]).to.deep.equal(['disablePast', 'disablePast']);
+        expect(onErrorMock.mock.calls[237mock.calls.length - 1][0]).to.deep.equal(['disablePast', 'disablePast']);
         testInvalidStatus([true, true], fieldType);
       });
     });
@@ -265,7 +265,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       });
 
       expect(onErrorMock).toHaveBeenCalledTimes(1);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, 'disableFuture']);
+      expect(onErrorMock.mock.calls[268mock.calls.length - 1][0]).to.deep.equal([null, 'disableFuture']);
       testInvalidStatus([false, true], fieldType);
 
       setProps({
@@ -273,7 +273,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       });
 
       expect(onErrorMock).toHaveBeenCalledTimes(2);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['disableFuture', 'disableFuture']);
+      expect(onErrorMock.mock.calls[276mock.calls.length - 1][0]).to.deep.equal(['disableFuture', 'disableFuture']);
       testInvalidStatus([true, true], fieldType);
     });
 
@@ -288,7 +288,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       );
 
       expect(onErrorMock).toHaveBeenCalledTimes(1);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['minDate', 'minDate']);
+      expect(onErrorMock.mock.calls[291mock.calls.length - 1][0]).to.deep.equal(['minDate', 'minDate']);
       testInvalidStatus([true, true], fieldType);
 
       setProps({
@@ -296,7 +296,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       });
 
       expect(onErrorMock).toHaveBeenCalledTimes(2);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['minDate', null]);
+      expect(onErrorMock.mock.calls[299mock.calls.length - 1][0]).to.deep.equal(['minDate', null]);
       testInvalidStatus([true, false], fieldType);
 
       setProps({
@@ -304,7 +304,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       });
 
       expect(onErrorMock).toHaveBeenCalledTimes(3);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, null]);
+      expect(onErrorMock.mock.calls[307mock.calls.length - 1][0]).to.deep.equal([null, null]);
       testInvalidStatus([false, false], fieldType);
     });
 
@@ -319,7 +319,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       );
 
       expect(onErrorMock).toHaveBeenCalledTimes(1);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['minDate', null]);
+      expect(onErrorMock.mock.calls[322mock.calls.length - 1][0]).to.deep.equal(['minDate', null]);
       testInvalidStatus([true, false], fieldType, true);
 
       setProps({
@@ -327,7 +327,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       });
 
       expect(onErrorMock).toHaveBeenCalledTimes(2);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, null]);
+      expect(onErrorMock.mock.calls[330mock.calls.length - 1][0]).to.deep.equal([null, null]);
       testInvalidStatus([false, false], fieldType, true);
     });
 
@@ -342,7 +342,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       );
 
       expect(onErrorMock).toHaveBeenCalledTimes(1);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, 'minDate']);
+      expect(onErrorMock.mock.calls[345mock.calls.length - 1][0]).to.deep.equal([null, 'minDate']);
       testInvalidStatus([false, true], fieldType, true);
 
       setProps({
@@ -350,7 +350,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       });
 
       expect(onErrorMock).toHaveBeenCalledTimes(2);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, null]);
+      expect(onErrorMock.mock.calls[353mock.calls.length - 1][0]).to.deep.equal([null, null]);
       testInvalidStatus([false, false], fieldType, true);
     });
 
@@ -372,7 +372,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       });
 
       expect(onErrorMock).toHaveBeenCalledTimes(1);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, 'maxDate']);
+      expect(onErrorMock.mock.calls[375mock.calls.length - 1][0]).to.deep.equal([null, 'maxDate']);
       testInvalidStatus([false, true], fieldType);
 
       setProps({
@@ -380,7 +380,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       });
 
       expect(onErrorMock).toHaveBeenCalledTimes(2);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['maxDate', 'maxDate']);
+      expect(onErrorMock.mock.calls[383mock.calls.length - 1][0]).to.deep.equal(['maxDate', 'maxDate']);
       testInvalidStatus([true, true], fieldType);
     });
 
@@ -398,7 +398,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       );
 
       expect(onErrorMock).toHaveBeenCalledTimes(1);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['minTime', 'minTime']);
+      expect(onErrorMock.mock.calls[401mock.calls.length - 1][0]).to.deep.equal(['minTime', 'minTime']);
       testInvalidStatus([true, true], fieldType);
 
       setProps({
@@ -406,7 +406,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       });
 
       expect(onErrorMock).toHaveBeenCalledTimes(2);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['minTime', null]);
+      expect(onErrorMock.mock.calls[409mock.calls.length - 1][0]).to.deep.equal(['minTime', null]);
       testInvalidStatus([true, false], fieldType);
 
       setProps({
@@ -414,7 +414,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       });
 
       expect(onErrorMock).toHaveBeenCalledTimes(3);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, null]);
+      expect(onErrorMock.mock.calls[417mock.calls.length - 1][0]).to.deep.equal([null, null]);
       testInvalidStatus([false, false], fieldType);
     });
     it.skipIf(!withTime)('should ignore date when applying minTime', () => {
@@ -431,7 +431,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       );
 
       expect(onErrorMock).toHaveBeenCalledTimes(1);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['minTime', 'minTime']);
+      expect(onErrorMock.mock.calls[434mock.calls.length - 1][0]).to.deep.equal(['minTime', 'minTime']);
       testInvalidStatus([true, true], fieldType);
 
       setProps({
@@ -439,7 +439,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       });
 
       expect(onErrorMock).toHaveBeenCalledTimes(2);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, null]);
+      expect(onErrorMock.mock.calls[442mock.calls.length - 1][0]).to.deep.equal([null, null]);
       testInvalidStatus([false, false], fieldType);
     });
 
@@ -461,7 +461,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       });
 
       expect(onErrorMock).toHaveBeenCalledTimes(1);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['minTime', null]);
+      expect(onErrorMock.mock.calls[464mock.calls.length - 1][0]).to.deep.equal(['minTime', null]);
       testInvalidStatus([true, false], fieldType, true);
     });
 
@@ -483,7 +483,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       });
 
       expect(onErrorMock).toHaveBeenCalledTimes(1);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, 'minTime']);
+      expect(onErrorMock.mock.calls[486mock.calls.length - 1][0]).to.deep.equal([null, 'minTime']);
       testInvalidStatus([false, true], fieldType, true);
     });
 
@@ -508,7 +508,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       });
 
       expect(onErrorMock).toHaveBeenCalledTimes(1);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, 'maxTime']);
+      expect(onErrorMock.mock.calls[511mock.calls.length - 1][0]).to.deep.equal([null, 'maxTime']);
       testInvalidStatus([false, true], fieldType);
 
       setProps({
@@ -516,7 +516,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       });
 
       expect(onErrorMock).toHaveBeenCalledTimes(2);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['maxTime', 'maxTime']);
+      expect(onErrorMock.mock.calls[519mock.calls.length - 1][0]).to.deep.equal(['maxTime', 'maxTime']);
       testInvalidStatus([true, true], fieldType);
     });
 
@@ -541,7 +541,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       });
 
       expect(onErrorMock).toHaveBeenCalledTimes(1);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['maxTime', 'maxTime']);
+      expect(onErrorMock.mock.calls[544mock.calls.length - 1][0]).to.deep.equal(['maxTime', 'maxTime']);
       testInvalidStatus([true, true], fieldType);
     });
 
@@ -565,13 +565,13 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       setProps({ maxDateTime: adapterToUse.date('2018-03-02T08:00:00') });
 
       expect(onErrorMock).toHaveBeenCalledTimes(1);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, 'maxTime']);
+      expect(onErrorMock.mock.calls[568mock.calls.length - 1][0]).to.deep.equal([null, 'maxTime']);
       testInvalidStatus([false, true], fieldType);
 
       setProps({ maxDateTime: adapterToUse.date('2018-03-01T05:00:00') });
 
       expect(onErrorMock).toHaveBeenCalledTimes(2);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['maxTime', 'maxDate']);
+      expect(onErrorMock.mock.calls[574mock.calls.length - 1][0]).to.deep.equal(['maxTime', 'maxDate']);
       testInvalidStatus([true, true], fieldType);
     });
 
@@ -589,19 +589,19 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       );
 
       expect(onErrorMock).toHaveBeenCalledTimes(1);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['minDate', 'minTime']);
+      expect(onErrorMock.mock.calls[592mock.calls.length - 1][0]).to.deep.equal(['minDate', 'minTime']);
       testInvalidStatus([true, true], fieldType);
 
       setProps({ minDateTime: adapterToUse.date('2018-03-02T08:00:00') });
 
       expect(onErrorMock).toHaveBeenCalledTimes(2);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['minDate', null]);
+      expect(onErrorMock.mock.calls[598mock.calls.length - 1][0]).to.deep.equal(['minDate', null]);
       testInvalidStatus([true, false], fieldType);
 
       setProps({ minDateTime: adapterToUse.date('2018-03-01T05:00:00') });
 
       expect(onErrorMock).toHaveBeenCalledTimes(3);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, null]);
+      expect(onErrorMock.mock.calls[604mock.calls.length - 1][0]).to.deep.equal([null, null]);
       testInvalidStatus([false, false], fieldType);
     });
   });

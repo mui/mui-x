@@ -44,7 +44,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
         });
       });
       expect(onErrorMock).toHaveBeenCalledTimes(1);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['invalidRange', 'invalidRange']);
+      expect(onErrorMock.mock.calls[onErrorMock.mock.calls.length - 1][0]).to.deep.equal(['invalidRange', 'invalidRange']);
       testInvalidStatus([true, true], fieldType);
     });
 
@@ -74,7 +74,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       });
 
       expect(onErrorMock).toHaveBeenCalledTimes(1);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, 'shouldDisableDate']);
+      expect(onErrorMock.mock.calls[onErrorMock.mock.calls.length - 1][0]).to.deep.equal([null, 'shouldDisableDate']);
       testInvalidStatus([false, true], fieldType);
 
       act(() => {
@@ -82,7 +82,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       });
 
       expect(onErrorMock).toHaveBeenCalledTimes(2);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal([
+      expect(onErrorMock.mock.calls[onErrorMock.mock.calls.length - 1][0]).to.deep.equal([
         'shouldDisableDate',
         'shouldDisableDate',
       ]);
@@ -94,7 +94,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       });
 
       expect(onErrorMock).toHaveBeenCalledTimes(3);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['shouldDisableDate', null]);
+      expect(onErrorMock.mock.calls[onErrorMock.mock.calls.length - 1][0]).to.deep.equal(['shouldDisableDate', null]);
       testInvalidStatus([true, false], fieldType);
     });
     describe('with fake timers', () => {
@@ -127,7 +127,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
         });
 
         expect(onErrorMock).toHaveBeenCalledTimes(1);
-        expect(onErrorMock.lastCall.args[0]).to.deep.equal(['disablePast', null]);
+        expect(onErrorMock.mock.calls[onErrorMock.mock.calls.length - 1][0]).to.deep.equal(['disablePast', null]);
         testInvalidStatus([true, false], fieldType);
 
         act(() => {
@@ -135,14 +135,14 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
         });
 
         expect(onErrorMock).toHaveBeenCalledTimes(2);
-        expect(onErrorMock.lastCall.args[0]).to.deep.equal(['disablePast', 'disablePast']);
+        expect(onErrorMock.mock.calls[onErrorMock.mock.calls.length - 1][0]).to.deep.equal(['disablePast', 'disablePast']);
         testInvalidStatus([true, true], fieldType);
 
         act(() => {
           setValue(now);
         });
         expect(onErrorMock).toHaveBeenCalledTimes(3);
-        expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, 'disablePast']);
+        expect(onErrorMock.mock.calls[onErrorMock.mock.calls.length - 1][0]).to.deep.equal([null, 'disablePast']);
         testInvalidStatus([false, true], fieldType);
       });
     });
@@ -169,7 +169,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       });
 
       expect(onErrorMock).toHaveBeenCalledTimes(1);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, 'disableFuture']);
+      expect(onErrorMock.mock.calls[onErrorMock.mock.calls.length - 1][0]).to.deep.equal([null, 'disableFuture']);
       testInvalidStatus([false, true], fieldType);
 
       act(() => {
@@ -177,7 +177,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       });
 
       expect(onErrorMock).toHaveBeenCalledTimes(2);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['disableFuture', 'disableFuture']);
+      expect(onErrorMock.mock.calls[onErrorMock.mock.calls.length - 1][0]).to.deep.equal(['disableFuture', 'disableFuture']);
       testInvalidStatus([true, true], fieldType);
 
       act(() => {
@@ -185,7 +185,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       });
 
       expect(onErrorMock).toHaveBeenCalledTimes(3);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, 'disableFuture']);
+      expect(onErrorMock.mock.calls[onErrorMock.mock.calls.length - 1][0]).to.deep.equal([null, 'disableFuture']);
       testInvalidStatus([false, true], fieldType);
     });
 
@@ -202,7 +202,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       });
 
       expect(onErrorMock).toHaveBeenCalledTimes(2);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['minDate', 'minDate']);
+      expect(onErrorMock.mock.calls[onErrorMock.mock.calls.length - 1][0]).to.deep.equal(['minDate', 'minDate']);
       testInvalidStatus([true, true], fieldType);
 
       act(() => {
@@ -210,7 +210,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       });
 
       expect(onErrorMock).toHaveBeenCalledTimes(3);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, 'minDate']);
+      expect(onErrorMock.mock.calls[onErrorMock.mock.calls.length - 1][0]).to.deep.equal([null, 'minDate']);
       testInvalidStatus([false, true], fieldType);
 
       act(() => {
@@ -218,7 +218,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       });
 
       expect(onErrorMock).toHaveBeenCalledTimes(4);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, null]);
+      expect(onErrorMock.mock.calls[onErrorMock.mock.calls.length - 1][0]).to.deep.equal([null, null]);
       testInvalidStatus([false, false], fieldType);
     });
 
@@ -235,7 +235,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       });
 
       expect(onErrorMock).toHaveBeenCalledTimes(1);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, 'maxDate']);
+      expect(onErrorMock.mock.calls[onErrorMock.mock.calls.length - 1][0]).to.deep.equal([null, 'maxDate']);
       testInvalidStatus([false, true], fieldType);
 
       act(() => {
@@ -243,7 +243,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       });
 
       expect(onErrorMock).toHaveBeenCalledTimes(2);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['maxDate', 'maxDate']);
+      expect(onErrorMock.mock.calls[onErrorMock.mock.calls.length - 1][0]).to.deep.equal(['maxDate', 'maxDate']);
       testInvalidStatus([true, true], fieldType);
     });
 
@@ -263,7 +263,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       });
 
       expect(onErrorMock).toHaveBeenCalledTimes(2);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['minTime', 'minTime']);
+      expect(onErrorMock.mock.calls[onErrorMock.mock.calls.length - 1][0]).to.deep.equal(['minTime', 'minTime']);
       testInvalidStatus([true, true], fieldType);
 
       act(() => {
@@ -271,7 +271,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       });
 
       expect(onErrorMock).toHaveBeenCalledTimes(3);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['minTime', null]);
+      expect(onErrorMock.mock.calls[onErrorMock.mock.calls.length - 1][0]).to.deep.equal(['minTime', null]);
       testInvalidStatus([true, false], fieldType);
 
       act(() => {
@@ -279,7 +279,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       });
 
       expect(onErrorMock).toHaveBeenCalledTimes(4);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, null]);
+      expect(onErrorMock.mock.calls[onErrorMock.mock.calls.length - 1][0]).to.deep.equal([null, null]);
       testInvalidStatus([false, false], fieldType);
     });
 
@@ -299,7 +299,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       });
 
       expect(onErrorMock).toHaveBeenCalledTimes(1);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, 'maxTime']);
+      expect(onErrorMock.mock.calls[onErrorMock.mock.calls.length - 1][0]).to.deep.equal([null, 'maxTime']);
       testInvalidStatus([false, true], fieldType);
 
       act(() => {
@@ -307,7 +307,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       });
 
       expect(onErrorMock).toHaveBeenCalledTimes(2);
-      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['maxTime', 'maxTime']);
+      expect(onErrorMock.mock.calls[onErrorMock.mock.calls.length - 1][0]).to.deep.equal(['maxTime', 'maxTime']);
       testInvalidStatus([true, true], fieldType);
     });
   });

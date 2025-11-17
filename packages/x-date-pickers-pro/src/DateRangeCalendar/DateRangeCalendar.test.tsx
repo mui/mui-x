@@ -222,8 +222,8 @@ describe('<DateRangeCalendar />', () => {
         );
 
         expect(onChange).toHaveBeenCalledTimes(1);
-        expect(onChange.lastCall.args[0][0]).toEqualDateTime(initialValue[0]);
-        expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 29));
+        expect(onChange.mock.calls[onChange.mock.calls.length - 1][0][0]).toEqualDateTime(initialValue[0]);
+        expect(onChange.mock.calls[onChange.mock.calls.length - 1][0][1]).toEqualDateTime(new Date(2018, 0, 29));
         expect(document.activeElement).toHaveAccessibleName('29');
 
         // test range expansion
@@ -233,8 +233,8 @@ describe('<DateRangeCalendar />', () => {
         );
 
         expect(onChange).toHaveBeenCalledTimes(2);
-        expect(onChange.lastCall.args[0][0]).toEqualDateTime(initialValue[0]);
-        expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 30));
+        expect(onChange.mock.calls[onChange.mock.calls.length - 1][0][0]).toEqualDateTime(initialValue[0]);
+        expect(onChange.mock.calls[onChange.mock.calls.length - 1][0][1]).toEqualDateTime(new Date(2018, 0, 30));
         expect(document.activeElement).toHaveAccessibleName('30');
 
         // test range flip
@@ -244,8 +244,8 @@ describe('<DateRangeCalendar />', () => {
         );
 
         expect(onChange).toHaveBeenCalledTimes(3);
-        expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 2));
-        expect(onChange.lastCall.args[0][1]).toEqualDateTime(initialValue[0]);
+        expect(onChange.mock.calls[onChange.mock.calls.length - 1][0][0]).toEqualDateTime(new Date(2018, 0, 2));
+        expect(onChange.mock.calls[onChange.mock.calls.length - 1][0][1]).toEqualDateTime(initialValue[0]);
         expect(document.activeElement).toHaveAccessibleName('2');
       });
 
@@ -267,8 +267,8 @@ describe('<DateRangeCalendar />', () => {
           );
 
           expect(onChange).toHaveBeenCalledTimes(1);
-          expect(onChange.lastCall.args[0][0]).toEqualDateTime(initialValue[0]);
-          expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 10));
+          expect(onChange.mock.calls[onChange.mock.calls.length - 1][0][0]).toEqualDateTime(initialValue[0]);
+          expect(onChange.mock.calls[onChange.mock.calls.length - 1][0][1]).toEqualDateTime(new Date(2018, 0, 10));
 
           // test range expansion
           executeDateTouchDrag(
@@ -278,8 +278,8 @@ describe('<DateRangeCalendar />', () => {
           );
 
           expect(onChange).toHaveBeenCalledTimes(2);
-          expect(onChange.lastCall.args[0][0]).toEqualDateTime(initialValue[0]);
-          expect(onChange.lastCall.args[0][1]).toEqualDateTime(initialValue[1]);
+          expect(onChange.mock.calls[onChange.mock.calls.length - 1][0][0]).toEqualDateTime(initialValue[0]);
+          expect(onChange.mock.calls[onChange.mock.calls.length - 1][0][1]).toEqualDateTime(initialValue[1]);
 
           // test range flip
           executeDateTouchDrag(
@@ -289,8 +289,8 @@ describe('<DateRangeCalendar />', () => {
           );
 
           expect(onChange).toHaveBeenCalledTimes(3);
-          expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 1));
-          expect(onChange.lastCall.args[0][1]).toEqualDateTime(initialValue[0]);
+          expect(onChange.mock.calls[onChange.mock.calls.length - 1][0][0]).toEqualDateTime(new Date(2018, 0, 1));
+          expect(onChange.mock.calls[onChange.mock.calls.length - 1][0][1]).toEqualDateTime(initialValue[0]);
         },
       );
 
@@ -306,24 +306,24 @@ describe('<DateRangeCalendar />', () => {
         executeDateDrag(getPickerDay('1'), getPickerDay('2'), getPickerDay('3'));
 
         expect(onChange).toHaveBeenCalledTimes(1);
-        expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
-        expect(onChange.lastCall.args[0][1]).toEqualDateTime(initialValue[1]);
+        expect(onChange.mock.calls[onChange.mock.calls.length - 1][0][0]).toEqualDateTime(new Date(2018, 0, 3));
+        expect(onChange.mock.calls[onChange.mock.calls.length - 1][0][1]).toEqualDateTime(initialValue[1]);
         expect(document.activeElement).toHaveAccessibleName('3');
 
         // test range expansion
         executeDateDrag(getPickerDay('3'), getPickerDay('1'));
 
         expect(onChange).toHaveBeenCalledTimes(2);
-        expect(onChange.lastCall.args[0][0]).toEqualDateTime(initialValue[0]);
-        expect(onChange.lastCall.args[0][1]).toEqualDateTime(initialValue[1]);
+        expect(onChange.mock.calls[onChange.mock.calls.length - 1][0][0]).toEqualDateTime(initialValue[0]);
+        expect(onChange.mock.calls[onChange.mock.calls.length - 1][0][1]).toEqualDateTime(initialValue[1]);
         expect(document.activeElement).toHaveAccessibleName('1');
 
         // test range flip
         executeDateDrag(getPickerDay('1'), getPickerDay('22'));
 
         expect(onChange).toHaveBeenCalledTimes(3);
-        expect(onChange.lastCall.args[0][0]).toEqualDateTime(initialValue[1]);
-        expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 22));
+        expect(onChange.mock.calls[onChange.mock.calls.length - 1][0][0]).toEqualDateTime(initialValue[1]);
+        expect(onChange.mock.calls[onChange.mock.calls.length - 1][0][1]).toEqualDateTime(new Date(2018, 0, 22));
         expect(document.activeElement).toHaveAccessibleName('22');
       });
 
@@ -345,8 +345,8 @@ describe('<DateRangeCalendar />', () => {
           );
 
           expect(onChange).toHaveBeenCalledTimes(1);
-          expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 2));
-          expect(onChange.lastCall.args[0][1]).toEqualDateTime(initialValue[1]);
+          expect(onChange.mock.calls[onChange.mock.calls.length - 1][0][0]).toEqualDateTime(new Date(2018, 0, 2));
+          expect(onChange.mock.calls[onChange.mock.calls.length - 1][0][1]).toEqualDateTime(initialValue[1]);
 
           // test range expansion
           executeDateTouchDrag(
@@ -356,8 +356,8 @@ describe('<DateRangeCalendar />', () => {
           );
 
           expect(onChange).toHaveBeenCalledTimes(2);
-          expect(onChange.lastCall.args[0][0]).toEqualDateTime(initialValue[0]);
-          expect(onChange.lastCall.args[0][1]).toEqualDateTime(initialValue[1]);
+          expect(onChange.mock.calls[onChange.mock.calls.length - 1][0][0]).toEqualDateTime(initialValue[0]);
+          expect(onChange.mock.calls[onChange.mock.calls.length - 1][0][1]).toEqualDateTime(initialValue[1]);
 
           // test range flip
           executeDateTouchDrag(
@@ -367,8 +367,8 @@ describe('<DateRangeCalendar />', () => {
           );
 
           expect(onChange).toHaveBeenCalledTimes(3);
-          expect(onChange.lastCall.args[0][0]).toEqualDateTime(initialValue[1]);
-          expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 11));
+          expect(onChange.mock.calls[onChange.mock.calls.length - 1][0][0]).toEqualDateTime(initialValue[1]);
+          expect(onChange.mock.calls[onChange.mock.calls.length - 1][0][1]).toEqualDateTime(new Date(2018, 0, 11));
         },
       );
 

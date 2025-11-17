@@ -44,7 +44,7 @@ describe('<ChartsLocalizationProvider />', () => {
       </ThemeProvider>,
     );
 
-    const localeText: ChartsLocaleText = handleContextChange.lastCall.args[0].localeText;
+    const localeText: ChartsLocaleText = handleContextChange.mock.calls[handleContextChange.mock.calls.length - 1][0].localeText;
     expect(localeText.noData).to.equal('Pas de data');
     expect(localeText.loading).to.equal('Loading data…');
   });
@@ -70,7 +70,7 @@ describe('<ChartsLocalizationProvider />', () => {
       </ThemeProvider>,
     );
 
-    const localeText: ChartsLocaleText = handleContextChange.lastCall.args[0].localeText;
+    const localeText: ChartsLocaleText = handleContextChange.mock.calls[handleContextChange.mock.calls.length - 1][0].localeText;
     expect(localeText.noData).to.equal('Prioritized');
   });
 
@@ -85,7 +85,7 @@ describe('<ChartsLocalizationProvider />', () => {
       </ChartsLocalizationProvider>,
     );
 
-    const localeText: ChartsLocaleText = handleContextChange.lastCall.args[0].localeText;
+    const localeText: ChartsLocaleText = handleContextChange.mock.calls[handleContextChange.mock.calls.length - 1][0].localeText;
     expect(localeText.noData).to.equal('Prioritized');
   });
 
@@ -100,7 +100,7 @@ describe('<ChartsLocalizationProvider />', () => {
       </ChartsLocalizationProvider>,
     );
 
-    const localeText: ChartsLocaleText = handleContextChange.lastCall.args[0].localeText;
+    const localeText: ChartsLocaleText = handleContextChange.mock.calls[handleContextChange.mock.calls.length - 1][0].localeText;
     expect(localeText.noData).to.equal('Prioritized');
     expect(localeText.loading).to.equal('Other Locale');
   });

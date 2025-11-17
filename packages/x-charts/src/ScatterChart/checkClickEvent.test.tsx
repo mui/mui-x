@@ -57,7 +57,7 @@ describe('ScatterChart - click event', () => {
           coords: { clientX: 10, clientY: 10 },
         },
       ]);
-      expect(onItemClick.lastCall.args[1]).to.deep.equal({
+      expect(onItemClick.mock.calls[onItemClick.mock.calls.length - 1][1]).to.deep.equal({
         type: 'scatter',
         dataIndex: 0,
         seriesId: 's1',
@@ -70,7 +70,7 @@ describe('ScatterChart - click event', () => {
           coords: { clientX: 30, clientY: 30 },
         },
       ]);
-      expect(onItemClick.lastCall.args[1]).to.deep.equal({
+      expect(onItemClick.mock.calls[onItemClick.mock.calls.length - 1][1]).to.deep.equal({
         type: 'scatter',
         dataIndex: 4,
         seriesId: 's1',
@@ -107,7 +107,7 @@ describe('ScatterChart - click event', () => {
           },
         },
       ]);
-      expect(onItemClick.lastCall.args[1]).to.deep.equal({
+      expect(onItemClick.mock.calls[onItemClick.mock.calls.length - 1][1]).to.deep.equal({
         type: 'scatter',
         dataIndex: 1,
         seriesId: 's1',
@@ -176,7 +176,7 @@ describe('ScatterChart - click event', () => {
         },
       ]);
 
-      expect(onItemClick.lastCall.args[1]).to.deep.equal({
+      expect(onItemClick.mock.calls[onItemClick.mock.calls.length - 1][1]).to.deep.equal({
         type: 'scatter',
         dataIndex: 1,
         seriesId: 's1',

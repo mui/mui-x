@@ -240,7 +240,7 @@ describe('<DesktopDatePicker />', () => {
       // Select year
       await user.click(screen.getByRole('radio', { name: '2025' }));
       expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2025, 0, 1));
+      expect(onChange.mock.calls[onChange.mock.calls.length - 1][0]).toEqualDateTime(new Date(2025, 0, 1));
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
 
@@ -248,7 +248,7 @@ describe('<DesktopDatePicker />', () => {
       await user.click(screen.getByRole('gridcell', { name: '1' }));
       expect(onChange.callCount).to.equal(1); // Don't call onChange again since the value did not change
       expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0]).toEqualDateTime(new Date(2025, 0, 1));
+      expect(onAccept.mock.calls[onAccept.mock.calls.length - 1][0]).toEqualDateTime(new Date(2025, 0, 1));
       expect(onClose.callCount).to.equal(1);
     });
 
@@ -285,7 +285,7 @@ describe('<DesktopDatePicker />', () => {
       await user.click(screen.getByRole('gridcell', { name: '2' }));
       expect(onChange.callCount).to.equal(1);
       expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 2));
+      expect(onAccept.mock.calls[onAccept.mock.calls.length - 1][0]).toEqualDateTime(new Date(2018, 0, 2));
       expect(onClose.callCount).to.equal(1);
       await openPickerAsync(user, { type: 'date' });
 
@@ -293,7 +293,7 @@ describe('<DesktopDatePicker />', () => {
       await user.click(screen.getByRole('gridcell', { name: '1' }));
       expect(onChange.callCount).to.equal(2);
       expect(onAccept.callCount).to.equal(2);
-      expect(onAccept.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1));
+      expect(onAccept.mock.calls[onAccept.mock.calls.length - 1][0]).toEqualDateTime(new Date(2018, 0, 1));
       expect(onClose.callCount).to.equal(2);
     });
   });
