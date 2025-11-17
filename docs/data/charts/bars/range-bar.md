@@ -97,6 +97,24 @@ Note that `onAxisClick` can handle both bar and line series if you mix them.
 </ChartContainer>
 ```
 
+## Animation
+
+Chart containers respect [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/prefers-reduced-motion), but you can also disable animations manually by setting the `skipAnimation` prop to `true`.
+
+When `skipAnimation` is enabled, the chart renders without any animations.
+
+```jsx
+// For a single component chart
+<BarChart skipAnimation />
+
+// For a composed chart
+<ChartContainer>
+  <BarPlot skipAnimation />
+</ChartContainer>
+```
+
+{{"demo": "RangeBarAnimation.js"}}
+
 ## Composition
 
 You can use the `<ChartDataProviderPro />` to provide `series`, `xAxis`, and `yAxis` props for composition.
