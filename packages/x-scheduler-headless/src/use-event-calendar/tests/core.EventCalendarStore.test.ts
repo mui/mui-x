@@ -39,6 +39,7 @@ describe('Core - EventCalendarStore', () => {
         readOnly: false,
         resourceChildrenIdLookup: new Map(),
         resourceIdList: [],
+        resourceModelStructure: undefined,
         showCurrentTimeIndicator: true,
         view: DEFAULT_VIEW,
         viewConfig: null,
