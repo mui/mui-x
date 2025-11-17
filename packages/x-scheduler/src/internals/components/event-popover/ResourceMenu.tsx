@@ -91,21 +91,21 @@ export default function ResourceMenu(props: ResourceSelectProps) {
                 onValueChange={onResourceChange}
                 disabled={readOnly}
               >
-                {resourcesOptions.map((currentResource) => (
+                {resourcesOptions.map((resourceOption) => (
                   <Menu.RadioItem
-                    key={currentResource.value}
-                    value={currentResource.value}
+                    key={resourceOption.value}
+                    value={resourceOption.value}
                     className="EventPopoverMenuItem"
-                    aria-label={currentResource.label}
+                    aria-label={resourceOption.label}
                   >
                     <div className="EventPopoverMenuItemTitleWrapper">
                       <span
                         className={clsx(
                           'ResourceLegendColor',
-                          getColorClassName(currentResource.eventColor ?? DEFAULT_EVENT_COLOR),
+                          getColorClassName(resourceOption.eventColor ?? DEFAULT_EVENT_COLOR),
                         )}
                       />
-                      <span className="EventPopoverSelectItemText">{currentResource.label}</span>
+                      <span className="EventPopoverSelectItemText">{resourceOption.label}</span>
                     </div>
                     <Menu.RadioItemIndicator className="CheckboxIndicator">
                       <CheckIcon size={16} strokeWidth={1.5} />
@@ -122,17 +122,17 @@ export default function ResourceMenu(props: ResourceSelectProps) {
                 disabled={readOnly}
                 className="ColorRadioGroup"
               >
-                {EVENT_COLORS.map((currentColor) => (
+                {EVENT_COLORS.map((colorOption) => (
                   <Menu.RadioItem
-                    key={currentColor}
-                    value={currentColor}
+                    key={colorOption}
+                    value={colorOption}
                     className="EventPopoverColorMenuItem"
-                    aria-label={currentColor}
+                    aria-label={colorOption}
                   >
                     <div
                       className={clsx(
                         'ColorRadioItemCircle',
-                        getColorClassName(color ?? DEFAULT_EVENT_COLOR),
+                        getColorClassName(colorOption ?? DEFAULT_EVENT_COLOR),
                       )}
                     >
                       <Menu.RadioItemIndicator className="CheckboxIndicator">
