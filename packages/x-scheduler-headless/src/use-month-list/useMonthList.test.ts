@@ -5,7 +5,6 @@ import {
   DEFAULT_TESTING_VISIBLE_DATE_STR,
 } from 'test/utils/scheduler';
 import { useMonthList } from './useMonthList';
-import { processDate } from '../process-date';
 
 describe('useMonthList', () => {
   function testHook(date: string, amount: number | 'end-of-year') {
@@ -24,10 +23,9 @@ describe('useMonthList', () => {
     const months = testHook(DEFAULT_TESTING_VISIBLE_DATE_STR, 1);
 
     const start = adapter.startOfMonth(DEFAULT_TESTING_VISIBLE_DATE);
-    const expected = processDate(start, adapter);
 
     expect(months).to.have.length(1);
-    expect(months[0]).to.toEqualDateTime(expected);
+    expect(months[0].value).to.toEqualDateTime(start);
   });
 
   it('should return consecutive months', () => {
@@ -38,10 +36,8 @@ describe('useMonthList', () => {
     const start = adapter.startOfMonth(DEFAULT_TESTING_VISIBLE_DATE);
 
     for (let i = 0; i < 4; i += 1) {
-      const rawMonth = adapter.addMonths(start, i);
-      const expected = processDate(rawMonth, adapter);
-
-      expect(months[i]).to.toEqualDateTime(expected);
+      const expectedMonth = adapter.addMonths(start, i);
+      expect(months[i].value).to.toEqualDateTime(expectedMonth);
     }
   });
 
@@ -52,11 +48,7 @@ describe('useMonthList', () => {
 
     const months = testHook(DEFAULT_TESTING_VISIBLE_DATE_STR, 'end-of-year');
 
-    expect(months[0]).to.toEqualDateTime(processDate(start, adapter));
-
-    const last = months[months.length - 1];
-    const expectedLast = processDate(lastMonthStart, adapter);
-
-    expect(last).to.toEqualDateTime(expectedLast);
+    expect(months[0].value).to.toEqualDateTime(start);
+    expect(months[months.length - 1].value).to.toEqualDateTime(lastMonthStart);
   });
 });
