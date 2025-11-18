@@ -1,6 +1,6 @@
 import * as React from 'react';
 import useLazyRef from '@mui/utils/useLazyRef';
-import { integer, RefObject } from '@mui/x-internals/types';
+import { integer } from '@mui/x-internals/types';
 import { Store } from '@mui/x-internals/store';
 import { Colspan } from './features/colspan';
 import { Dimensions } from './features/dimensions';
