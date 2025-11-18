@@ -15,7 +15,7 @@ Common conformance guidelines for accessibility include:
 WCAG 2.1 has three levels of conformance: A, AA, and AAA.
 Level AA exceeds the basic criteria for accessibility and is a common target for most organizations, so this is what we aim to support.
 
-The [WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) provide valuable information on how to optimize the accessibility of a `DataGrid`.
+The [WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) provide valuable information on how to optimize the accessibility of a data grid.
 
 ## Density
 
@@ -73,7 +73,7 @@ For an element to be included in the tab sequence, it needs to have a `tabIndex`
 When a user focuses on a `DataGrid` cell, the first inner element with `tabIndex={0}` receives the focus.
 If there is no element with `tabIndex={0}`, the focus is set on the cell itself.
 
-The two data grids below illustrate how the user experience is impacted by improper management of the page tab sequence, making it difficult to navigate through the data set:
+The two Data Grids below illustrate how the user experience is impacted by improper management of the page tab sequence, making it difficult to navigate through the data set:
 
 {{"demo": "FocusManagement.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -101,14 +101,14 @@ While the default tab sequence behavior works well for most use cases, you may w
 
 The `tabNavigation` prop supports the following values:
 
-- **`"none"`** (default): This is the standard tab sequence behavior described above, and it is in line with the [`grid` composite widget pattern](https://www.w3.org/WAI/ARIA/apg/patterns/grid/), which states that only one of the focusable elements contained by the grid is included in the page tab sequence.
+- **`"none"`** (default): This is the standard tab sequence behavior described above. It aligns with the [grid composite widget pattern](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) which states that only one of the focusable elements contained by the grid should be included in the page tab sequence.
   In this case, `DataGrid` does not handle <kbd class="key">Tab</kbd> key presses, allowing the browser's default tab sequence to control focus movement.
-  Pressing <kbd class="key">Tab</kbd> or <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Tab</kbd></kbd> will move focus to the next or previous element in the page's tab sequence, which may move focus outside of the grid.
+  Pressing <kbd class="key">Tab</kbd> or <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Tab</kbd></kbd> moves the focus to the next or previous element in the page's tab sequence, respectively, which may be outside of the grid.
 
 - **`"content"`**: <kbd class="key">Tab</kbd> navigation is enabled only for grid cells (content area).
   Pressing <kbd class="key">Tab</kbd> moves focus to the next cell in the same row, or to the first cell of the next row if the key is pressed at the end of a row.
-  Pressing <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Tab</kbd></kbd> moves focus to the previous cell in the same row, or to the last cell of the previous row if the key is pressed at the start of a row.
-  When focus is on a column header and <kbd class="key">Tab</kbd> is pressed, focus moves to the first cell.
+  Pressing <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Tab</kbd></kbd> moves the focus to the previous cell in the same row, or to the last cell of the previous row if the key is pressed at the start of a row.
+  When the focus is on a column header and <kbd class="key">Tab</kbd> is pressed, the focus moves to the first cell.
   Tab navigation is not enabled for headers, header filters, or column groups.
 
 - **`"header"`**: <kbd class="key">Tab</kbd> navigation is enabled only for the header area (column groups, column headers, and header filters).
