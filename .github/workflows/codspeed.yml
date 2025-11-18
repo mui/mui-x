@@ -1,23 +1,24 @@
 name: Benchmarks
 
 on:
-  push:
-    branches:
-      - master
-      - next
-    paths:
-      - 'packages/x-charts*/**'
-  pull_request:
-    types:
-      # Default
-      - opened
-      - synchronize
-      - reopened
-      # To run when the right labels are applied
-      - labeled
-    branches:
-      - master
-      - next
+  # push:
+  #   branches:
+  #     - master
+  #     - next
+  #   paths:
+  #     - 'packages/x-charts*/**'
+  # pull_request:
+  #   types:
+  #     # Default
+  #     - opened
+  #     - synchronize
+  #     - reopened
+  #     # To run when the right labels are applied
+  #     - labeled
+  #   branches:
+  #     - master
+  #     - next
+  workflow_dispatch:
 
 permissions: {}
 
@@ -44,7 +45,7 @@ jobs:
         uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
         with:
           node-version: 22.18.0
-          cache: 'pnpm' # https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-dependencies
+          cache: "pnpm" # https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-dependencies
       - run: pnpm install --frozen-lockfile
       # Ensure we are running on the prod version of our libs
       - run: pnpm --filter "@mui/x-charts-premium..." build
