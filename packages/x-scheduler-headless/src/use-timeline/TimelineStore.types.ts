@@ -48,4 +48,11 @@ export interface TimelineParameters<TEvent extends object, TResource extends obj
    * Preferences currently displayed in the timeline.
    */
   preferences?: Partial<TimelinePreferences>;
+  /**
+   * Event handler called when the preferences change.
+   */
+  onPreferencesChange?: (
+    preferences: Partial<TimelinePreferences>,
+    event: React.UIEvent | Event,
+  ) => void;
 }

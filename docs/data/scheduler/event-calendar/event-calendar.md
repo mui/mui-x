@@ -128,7 +128,7 @@ return (
 
 :::
 
-### Default preferences
+### Initialize / control the preferences
 
 ```tsx
 const defaultPreferences = {
@@ -147,8 +147,8 @@ You can also control the preferences using `preferences` and `onPreferencesChang
 
 ```tsx
 const [preferences, setPreferences] = React.useState<
-  EventCalendarPreferences | undefined
->(undefined);
+  Partial<EventCalendarPreferences>
+>({});
 
 return (
   <EventCalendar preferences={preferences} onPreferencesChange={setPreferences} />
