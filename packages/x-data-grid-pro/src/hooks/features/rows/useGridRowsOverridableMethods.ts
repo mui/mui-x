@@ -83,7 +83,7 @@ export const useGridRowsOverridableMethods = (
     async (
       sourceRowId: GridRowId,
       targetOriginalIndex: number,
-      dropPosition?: 'above' | 'below' | 'inside',
+      dropPosition?: RowReorderDropPosition,
     ) => {
       if (!dropPosition) {
         throw new Error(

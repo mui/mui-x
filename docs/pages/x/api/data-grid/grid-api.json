@@ -458,14 +458,14 @@
     },
     "setRowIndex": {
       "type": {
-        "description": "(rowId: GridRowId, targetIndex: number, dropPosition?: 'above' | 'below' | 'over') =&gt; void | Promise&lt;void&gt;"
+        "description": "(rowId: GridRowId, targetIndex: number, dropPosition?: RowReorderDropPosition) =&gt; void | Promise&lt;void&gt;"
       },
       "required": true,
       "isProPlan": true
     },
     "setRowPosition": {
       "type": {
-        "description": "(sourceRowId: GridRowId, targetRowId: GridRowId, position: 'above' | 'below' | 'over') =&gt; void | Promise&lt;void&gt;"
+        "description": "(sourceRowId: GridRowId, targetRowId: GridRowId, position: RowReorderDropPosition) =&gt; void | Promise&lt;void&gt;"
       },
       "required": true,
       "isProPlan": true

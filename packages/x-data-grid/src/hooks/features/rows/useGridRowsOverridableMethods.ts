@@ -62,16 +62,16 @@ export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiCo
           position === 'above' ? targetRowIndexUnadjusted - 1 : targetRowIndexUnadjusted;
       }
 
+      if (targetRowIndex === sourceRowIndex) {
+        return;
+      }
+
       apiRef.current.setState((state) => {
         const group = gridRowTreeSelector(apiRef)[GRID_ROOT_GROUP_ID] as GridGroupNode;
         const allRows = group.children;
-        const oldIndex = allRows.findIndex((row) => row === sourceRowId);
-        if (oldIndex === -1 || oldIndex === targetRowIndex) {
-          return state;
-        }
 
         const updatedRows = [...allRows];
-        updatedRows.splice(targetRowIndex, 0, updatedRows.splice(oldIndex, 1)[0]);
+        updatedRows.splice(targetRowIndex, 0, updatedRows.splice(sourceRowIndex, 1)[0]);
 
         return {
           ...state,
@@ -94,9 +94,9 @@ export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiCo
 
   const setRowIndex = React.useCallback(
     (
-      rowId: GridRowId,
+      sourceRowId: GridRowId,
       targetIndex: number,
-      dropPosition: 'above' | 'below' | 'inside' = 'below',
+      dropPosition: RowReorderDropPosition = 'below',
     ) => {
       // Get all row IDs to find the targetRowId at the given targetIndex
       const group = gridRowTreeSelector(apiRef)[GRID_ROOT_GROUP_ID] as GridGroupNode;
@@ -112,7 +112,7 @@ export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiCo
       const targetRowId = allRows[targetIndex];
 
       // All other validations (node existence, type, parent) happen in setRowPosition
-      return setRowPosition(rowId, targetRowId, dropPosition);
+      return setRowPosition(sourceRowId, targetRowId, dropPosition);
     },
     [apiRef, setRowPosition],
   );

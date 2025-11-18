@@ -12,14 +12,12 @@ import {
   useGridApiRef,
   type ReorderValidationContext,
   type GridGroupNode,
-  IsRowReorderableParams,
+  type IsRowReorderableParams,
 } from '@mui/x-data-grid-pro';
 import { isJSDOM } from 'test/utils/skipIf';
+import type { RowReorderDropPosition } from '@mui/x-data-grid/internals';
 
-function createDragOverEvent(
-  target: ChildNode,
-  dropPosition: 'above' | 'below' | 'over' = 'above',
-) {
+function createDragOverEvent(target: ChildNode, dropPosition: RowReorderDropPosition = 'above') {
   const dragOverEvent = createEvent.dragOver(target);
   Object.defineProperty(dragOverEvent, 'clientX', { value: 1 });
 
@@ -46,7 +44,7 @@ function createDragOverEvent(
   } else if (dropPosition === 'below') {
     clientY = rect.top + rect.height * 0.9; // Bottom 20% for tree data
   } else {
-    clientY = rect.top + rect.height * 0.5; // Middle 60% for "over"
+    clientY = rect.top + rect.height * 0.5; // Middle 60% for "inside"
   }
 
   Object.defineProperty(dragOverEvent, 'clientY', { value: clientY });
@@ -102,7 +100,7 @@ const setTreeDataPath = (path: readonly string[], row: GridRowModel) => ({
 function performDragOperation(
   sourceCell: ChildNode,
   targetCell: ChildNode,
-  dropPosition: 'above' | 'below' | 'over' = 'above',
+  dropPosition: RowReorderDropPosition = 'above',
   isOutsideGrid: boolean = false,
 ) {
   fireDragStart(sourceCell);
@@ -293,9 +291,9 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
     });
   });
 
-  describe('Drop "over" operations', () => {
-    describe('Drop over leaf', () => {
-      it('should convert leaf to parent when item dropped over it', async () => {
+  describe('Drop "inside" operations', () => {
+    describe('Drop inside leaf', () => {
+      it('should convert leaf to parent when item dropped inside it', async () => {
         const handleRowOrderChange = spy();
         const processedRows: GridRowModel[] = [];
 
@@ -319,7 +317,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
         // Debug what's rendered
         const allValues = getColumnValues(0);
 
-        // Drop LeafA "over" LeafB to make LeafB a parent of LeafA
+        // Drop LeafA "inside" LeafB to make LeafB a parent of LeafA
         const leafAIndex = findRowIndex(allValues, 'LeafA', 2);
         const leafBIndex = findRowIndex(allValues, 'LeafB', 3);
 
@@ -335,7 +333,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
         const sourceCell = getCell(leafAIndex, 0).firstChild!;
         const targetCell = getCell(leafBIndex, 0);
 
-        performDragOperation(sourceCell, targetCell, 'over');
+        performDragOperation(sourceCell, targetCell, 'inside');
 
         await waitFor(() => {
           expect(handleRowOrderChange.callCount).to.equal(1);
@@ -349,7 +347,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
         expect(leafANode.parent).to.equal(leafBNode.id);
       });
 
-      it('should handle group dropped over leaf', async () => {
+      it('should handle group dropped inside leaf', async () => {
         const handleRowOrderChange = spy();
 
         render(
@@ -364,7 +362,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
           />,
         );
 
-        // Drop Group over Leaf to make Leaf a parent of Group
+        // Drop Group inside Leaf to make Leaf a parent of Group
         const allValues = getColumnValues(0);
         const groupIndex = allValues.indexOf('Group');
         const leafIndex = allValues.indexOf('Leaf');
@@ -387,7 +385,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
 
         fireDragStart(sourceCell);
         fireEvent.dragEnter(targetCell);
-        const dragOverEvent = createDragOverEvent(targetCell, 'over');
+        const dragOverEvent = createDragOverEvent(targetCell, 'inside');
         fireEvent(targetCell, dragOverEvent);
         const dragEndEvent = createDragEndEvent(sourceCell);
         fireEvent(sourceCell, dragEndEvent);
@@ -405,8 +403,8 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
       });
     });
 
-    describe('Drop over group', () => {
-      it('should drop leaf over expanded group as first child', async () => {
+    describe('Drop inside group', () => {
+      it('should drop leaf inside expanded group as first child', async () => {
         const handleRowOrderChange = spy();
 
         render(
@@ -422,7 +420,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
           />,
         );
 
-        // Drag File.txt "over" Folder
+        // Drag File.txt "inside" Folder
         const allValues = getColumnValues(0);
         const fileIndex = findRowIndex(allValues, 'File.txt', 5);
         const folderIndex = findRowIndex(allValues, 'Folder', 2);
@@ -433,7 +431,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
         const sourceCell = getCell(fileIndex, 0).firstChild!;
         const targetCell = getCell(folderIndex, 0);
 
-        performDragOperation(sourceCell, targetCell, 'over');
+        performDragOperation(sourceCell, targetCell, 'inside');
 
         await waitFor(() => {
           expect(handleRowOrderChange.callCount).to.equal(1);
@@ -459,7 +457,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
         expect(fileNode.depth).to.equal(folderNode.depth + 1);
       });
 
-      it('should drop group over group with all descendants', async () => {
+      it('should drop group inside group with all descendants', async () => {
         const handleRowOrderChange = spy();
         const processRowUpdateCalls: any[] = [];
         const processRowUpdate = async (newRow: GridRowModel) => {
@@ -483,7 +481,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
           />,
         );
 
-        // Drag SourceFolder "over" TargetFolder
+        // Drag SourceFolder "inside" TargetFolder
         const allValues = getColumnValues(0);
         const sourceFolderIndex = findRowIndex(allValues, 'SourceFolder', 4);
         const targetFolderIndex = findRowIndex(allValues, 'TargetFolder', 2);
@@ -494,7 +492,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
         const sourceCell = getCell(sourceFolderIndex, 0).firstChild!;
         const targetCell = getCell(targetFolderIndex, 0);
 
-        performDragOperation(sourceCell, targetCell, 'over');
+        performDragOperation(sourceCell, targetCell, 'inside');
 
         await waitFor(() => {
           expect(handleRowOrderChange.callCount).to.equal(1);
@@ -543,7 +541,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
         );
       });
 
-      it('should prevent dropping group "over" its own descendant', () => {
+      it('should prevent dropping group "inside" its own descendant', () => {
         const handleRowOrderChange = spy();
 
         render(
@@ -558,7 +556,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
           />,
         );
 
-        // Try to drag Parent "over" Child (its direct descendant)
+        // Try to drag Parent "inside" Child (its direct descendant)
         const allValues = getColumnValues(0);
         const parentIndex = findRowIndex(allValues, 'Parent', 2);
         const childIndex = findRowIndex(allValues, 'Child', 3);
@@ -569,7 +567,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
         const sourceCell = getCell(parentIndex, 0).firstChild!;
         const targetCell = getCell(childIndex, 0);
 
-        performDragOperation(sourceCell, targetCell, 'over');
+        performDragOperation(sourceCell, targetCell, 'inside');
 
         // Verify operation was blocked
         expect(handleRowOrderChange.callCount).to.equal(0);
@@ -582,12 +580,12 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
         expect(parentNode.parent).to.equal(1); // Still under Root
         expect(childNode.parent).to.equal(2); // Still under Parent
 
-        // Try to drag Parent "over" Grandchild (deeper descendant)
+        // Try to drag Parent "inside" Grandchild (deeper descendant)
         const grandchildIndex = findRowIndex(allValues, 'Grandchild', 4);
         expect(grandchildIndex).to.be.greaterThan(-1, 'Grandchild should be found');
 
         const grandchildCell = getCell(grandchildIndex, 0);
-        performDragOperation(sourceCell, grandchildCell, 'over');
+        performDragOperation(sourceCell, grandchildCell, 'inside');
 
         // Verify this was also blocked
         expect(handleRowOrderChange.callCount).to.equal(0);
@@ -624,7 +622,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
           />,
         );
 
-        // Drag Project group "over" Vacation
+        // Drag Project group "inside" Vacation
         const allValues = getColumnValues(0);
         const projectIndex = findRowIndex(allValues, 'Project', 3);
         const vacationIndex = findRowIndex(allValues, 'Vacation', 6);
@@ -635,7 +633,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
         const sourceCell = getCell(projectIndex, 0).firstChild!;
         const targetCell = getCell(vacationIndex, 0);
 
-        performDragOperation(sourceCell, targetCell, 'over');
+        performDragOperation(sourceCell, targetCell, 'inside');
 
         await waitFor(() => {
           expect(handleRowOrderChange.callCount).to.equal(1);
