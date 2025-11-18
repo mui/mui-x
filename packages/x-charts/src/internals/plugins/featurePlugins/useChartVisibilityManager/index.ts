@@ -6,4 +6,3 @@ export type {
   UseChartVisibilityManagerDefaultizedParameters,
   UseChartVisibilityManagerState,
 } from './useChartVisibilityManager.types';
-export { selectorHiddenSeriesIds, isSeriesVisible } from './useChartVisibilityManager.selectors';

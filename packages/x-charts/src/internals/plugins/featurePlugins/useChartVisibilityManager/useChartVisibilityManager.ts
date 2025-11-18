@@ -1,50 +1,65 @@
 import useEventCallback from '@mui/utils/useEventCallback';
 import { ChartPlugin } from '../../models';
 import { UseChartVisibilityManagerSignature } from './useChartVisibilityManager.types';
-import { SeriesId } from '../../../../models/seriesType/common';
+import { SeriesItemIdentifier } from '../../../../models/seriesType';
+import { isSameIdentifier } from './isSameIdentifier';
 
 export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSignature> = ({
   store,
   params,
 }) => {
-  const hideItem = useEventCallback((seriesId: SeriesId) => {
-    const currentHidden = store.getSnapshot().visibilityManager.hiddenSeriesIds;
-    if (currentHidden.has(seriesId)) {
+  const hideItem = useEventCallback((itemIdentifier: SeriesItemIdentifier) => {
+    const currentHidden = store.getSnapshot().visibilityManager.hiddenIdentifiers;
+    if (
+      currentHidden.some((currentIdentifier) => isSameIdentifier(currentIdentifier, itemIdentifier))
+    ) {
       return; // Already hidden
     }
 
-    const newHidden = new Set(currentHidden);
-    newHidden.add(seriesId);
-    store.set('visibilityManager', { hiddenSeriesIds: newHidden });
+    const newHidden = [...currentHidden, itemIdentifier];
+    store.set('visibilityManager', { hiddenIdentifiers: newHidden });
 
-    params.onVisibilityChange?.(Array.from(newHidden));
+    params.onVisibilityChange?.(newHidden);
   });
 
-  const showItem = useEventCallback((seriesId: SeriesId) => {
-    const currentHidden = store.getSnapshot().visibilityManager.hiddenSeriesIds;
-    if (!currentHidden.has(seriesId)) {
+  const showItem = useEventCallback((itemIdentifier: SeriesItemIdentifier) => {
+    const currentHidden = store.getSnapshot().visibilityManager.hiddenIdentifiers;
+    if (
+      !currentHidden.some((currentIdentifier) =>
+        isSameIdentifier(currentIdentifier, itemIdentifier),
+      )
+    ) {
       return; // Already visible
     }
 
-    const newHidden = new Set(currentHidden);
-    newHidden.delete(seriesId);
-    store.set('visibilityManager', { hiddenSeriesIds: newHidden });
+    const newHidden = [
+      ...currentHidden.filter(
+        (currentIdentifier) => !isSameIdentifier(currentIdentifier, itemIdentifier),
+      ),
+    ];
+    store.set('visibilityManager', { hiddenIdentifiers: newHidden });
 
     params.onVisibilityChange?.(Array.from(newHidden));
   });
 
-  const toggleItem = useEventCallback((seriesId: SeriesId) => {
-    const currentHidden = store.getSnapshot().visibilityManager.hiddenSeriesIds;
+  const toggleItem = useEventCallback((itemIdentifier: SeriesItemIdentifier) => {
+    const currentHidden = store.getSnapshot().visibilityManager.hiddenIdentifiers;
 
-    if (currentHidden.has(seriesId)) {
-      showItem(seriesId);
+    if (
+      currentHidden.some((currentIdentifier) => isSameIdentifier(currentIdentifier, itemIdentifier))
+    ) {
+      showItem(itemIdentifier);
     } else {
-      hideItem(seriesId);
+      hideItem(itemIdentifier);
     }
   });
 
-  const isItemVisible = useEventCallback((seriesId: SeriesId) => {
-    return !store.getSnapshot().visibilityManager.hiddenSeriesIds.has(seriesId);
+  const isItemVisible = useEventCallback((itemIdentifier: SeriesItemIdentifier) => {
+    return !store
+      .getSnapshot()
+      .visibilityManager.hiddenIdentifiers.some((currentIdentifier) =>
+        isSameIdentifier(currentIdentifier, itemIdentifier),
+      );
   });
 
   return {
@@ -59,12 +74,10 @@ export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSig
 
 useChartVisibilityManager.getInitialState = (params, state) => ({
   visibilityManager: {
-    hiddenSeriesIds: new Set(
-      Object.values(state.series.processedSeries).flatMap((seriesData) =>
-        Object.values(seriesData.series)
-          .filter((s) => s.hidden === true)
-          .map((s) => s.id),
-      ),
+    hiddenIdentifiers: Object.values(state.series.processedSeries).flatMap((seriesData) =>
+      Object.values(seriesData.series)
+        .filter((s) => s.hidden === true)
+        .map((s) => s.id),
     ),
   },
 });

@@ -1,37 +1,37 @@
 import { ChartPluginSignature } from '../../models';
-import { SeriesId } from '../../../../models/seriesType/common';
+import { SeriesItemIdentifier } from '../../../../models/seriesType';
 import { UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
 
 export interface UseChartVisibilityManagerInstance {
   /**
-   * Hide a series by its id.
-   * @param {SeriesId} seriesId The id of the series to hide.
+   * Hide an item by its identifier.
+   * @param {SeriesItemIdentifier} identifier The identifier of the item to hide.
    */
-  hideItem: (seriesId: SeriesId) => void;
+  hideItem: (identifier: SeriesItemIdentifier) => void;
   /**
-   * Show a series by its id.
-   * @param {SeriesId} seriesId The id of the series to show.
+   * Show an item by its identifier.
+   * @param {SeriesItemIdentifier} identifier The identifier of the item to show.
    */
-  showItem: (seriesId: SeriesId) => void;
+  showItem: (identifier: SeriesItemIdentifier) => void;
   /**
-   * Toggle the visibility of a series by its id.
-   * @param {SeriesId} seriesId The id of the series to toggle.
+   * Toggle the visibility of an item by its identifier.
+   * @param {SeriesItemIdentifier} identifier The identifier of the item to toggle.
    */
-  toggleItem: (seriesId: SeriesId) => void;
+  toggleItem: (identifier: SeriesItemIdentifier) => void;
   /**
-   * Check if a series is visible.
-   * @param {SeriesId} seriesId The id of the series to check.
-   * @returns {boolean} Whether the series is visible.
+   * Check if an item is visible.
+   * @param {SeriesItemIdentifier} identifier The identifier of the item to check.
+   * @returns {boolean} Whether the item is visible.
    */
-  isItemVisible: (seriesId: SeriesId) => boolean;
+  isItemVisible: (identifier: SeriesItemIdentifier) => boolean;
 }
 
 export interface UseChartVisibilityManagerParameters {
   /**
    * Callback fired when the visible series change.
-   * @param {SeriesId[]} hiddenSeries The ids of the hidden series.
+   * @param {SeriesItemIdentifier[]} hiddenSeries The ids of the hidden series.
    */
-  onVisibilityChange?: (hiddenSeries: SeriesId[]) => void;
+  onVisibilityChange?: (hiddenSeries: SeriesItemIdentifier[]) => void;
 }
 
 export type UseChartVisibilityManagerDefaultizedParameters = UseChartVisibilityManagerParameters;
@@ -41,7 +41,7 @@ export interface UseChartVisibilityManagerState {
     /**
      * Set of series ids that are currently hidden.
      */
-    hiddenSeriesIds: Set<SeriesId>;
+    hiddenIdentifiers: SeriesItemIdentifier[];
   };
 }
 
