@@ -1,7 +1,9 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
+import useEventCallback from '@mui/utils/useEventCallback';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -45,7 +47,21 @@ const GridCellCheckboxForwardRef = forwardRef<HTMLInputElement, GridRenderCellPa
     const ownerState = { classes: rootProps.classes };
     const classes = useUtilityClasses(ownerState);
 
+    const { isIndeterminate, isChecked, isSelectable } = useGridSelector(
+      apiRef,
+      checkboxPropsSelector,
+      {
+        groupId: id,
+        autoSelectParents: rootProps.rowSelectionPropagation?.parents ?? false,
+      },
+    );
+
+    const disabled = !isSelectable;
+
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (disabled) {
+        return;
+      }
       const params: GridRowSelectionCheckboxParams = { value: event.target.checked, id };
       apiRef.current.publishEvent('rowSelectionCheckboxChange', params, event);
     };
@@ -59,19 +75,29 @@ const GridCellCheckboxForwardRef = forwardRef<HTMLInputElement, GridRenderCellPa
       }
     }, [apiRef, tabIndex, id, field]);
 
-    const handleKeyDown = React.useCallback((event: React.KeyboardEvent) => {
+    const handleKeyDown = useEventCallback((event: React.KeyboardEvent) => {
       if (event.key === ' ') {
         // We call event.stopPropagation to avoid selecting the row and also scrolling to bottom
         // TODO: Remove and add a check inside useGridKeyboardNavigation
         event.stopPropagation();
       }
-    }, []);
 
-    const isSelectable = apiRef.current.isRowSelectable(id);
+      if (disabled) {
+        return;
+      }
+    });
 
-    const { isIndeterminate, isChecked } = useGridSelector(apiRef, checkboxPropsSelector, {
-      groupId: id,
-      autoSelectParents: rootProps.rowSelectionPropagation?.parents ?? false,
+    const handleClick = useEventCallback((event: React.MouseEvent) => {
+      if (disabled) {
+        event.preventDefault();
+        return;
+      }
+    });
+
+    const handleMouseDown = useEventCallback(() => {
+      if (disabled) {
+        return;
+      }
     });
 
     if (rowNode.type === 'footer' || rowNode.type === 'pinnedRow') {
@@ -87,13 +113,21 @@ const GridCellCheckboxForwardRef = forwardRef<HTMLInputElement, GridRenderCellPa
         tabIndex={tabIndex}
         checked={isChecked && !isIndeterminate}
         onChange={handleChange}
-        className={classes.root}
+        onClick={handleClick}
+        onMouseDown={handleMouseDown}
+        className={clsx(classes.root, disabled && 'Mui-disabled')}
+        material={{
+          disableRipple: disabled,
+        }}
         slotProps={{
-          htmlInput: { 'aria-label': label, name: 'select_row' },
+          htmlInput: {
+            'aria-disabled': disabled || undefined,
+            'aria-label': label,
+            name: 'select_row',
+          },
         }}
         onKeyDown={handleKeyDown}
         indeterminate={isIndeterminate}
-        disabled={!isSelectable}
         {...rootProps.slotProps?.baseCheckbox}
         {...other}
         ref={ref as any}
@@ -123,19 +157,6 @@ GridCellCheckboxForwardRef.propTypes = {
    * The column field of the cell that triggered the event.
    */
   field: PropTypes.string.isRequired,
-  /**
-   * A ref allowing to set imperative focus.
-   * It can be passed to the element that should receive focus.
-   * @ignore - do not document.
-   */
-  focusElementRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.shape({
-        focus: PropTypes.func.isRequired,
-      }),
-    }),
-  ]),
   /**
    * The cell value formatted with the column valueFormatter.
    */

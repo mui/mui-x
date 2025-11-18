@@ -41,7 +41,6 @@ function GridFooterCell(props: GridFooterCellProps) {
     value,
     rowNode,
     field,
-    focusElementRef,
     hasFocus,
     tabIndex,
     isEditable,
