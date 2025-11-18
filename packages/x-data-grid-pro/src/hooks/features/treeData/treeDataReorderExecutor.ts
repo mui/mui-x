@@ -225,7 +225,7 @@ class CrossParentLeafOperation extends BaseReorderOperation {
       targetNode,
       actualTargetIndex,
       isLastChild: placeholderIndex >= sortedFilteredRowIds.length,
-      operationType: 'cross-parent-leaf',
+      operationType: this.operationType,
     };
   }
 
@@ -376,7 +376,7 @@ class DropOnLeafOperation extends BaseReorderOperation {
       targetNode,
       actualTargetIndex,
       isLastChild: false,
-      operationType: 'drop-on-leaf',
+      operationType: this.operationType,
     };
   }
 
@@ -581,7 +581,7 @@ class DropOnGroupOperation extends BaseReorderOperation {
       targetNode,
       actualTargetIndex,
       isLastChild: false,
-      operationType: 'drop-on-group',
+      operationType: this.operationType,
     };
   }
 
@@ -777,7 +777,7 @@ class CrossParentGroupOperation extends BaseReorderOperation {
       targetNode,
       actualTargetIndex,
       isLastChild: placeholderIndex >= sortedFilteredRowIds.length,
-      operationType: 'cross-parent-group',
+      operationType: this.operationType,
     };
   }
 
