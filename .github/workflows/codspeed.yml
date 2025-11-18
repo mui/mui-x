@@ -1,23 +1,24 @@
 name: Benchmarks
 
 on:
-  push:
-    branches:
-      - master
-      - next
-    paths:
-      - 'packages/x-charts*/**'
-  pull_request:
-    types:
-      # Default
-      - opened
-      - synchronize
-      - reopened
-      # To run when the right labels are applied
-      - labeled
-    branches:
-      - master
-      - next
+  # push:
+  #   branches:
+  #     - master
+  #     - next
+  #   paths:
+  #     - 'packages/x-charts*/**'
+  # pull_request:
+  #   types:
+  #     # Default
+  #     - opened
+  #     - synchronize
+  #     - reopened
+  #     # To run when the right labels are applied
+  #     - labeled
+  #   branches:
+  #     - master
+  #     - next
+  workflow_dispatch:
 
 permissions: {}
 
