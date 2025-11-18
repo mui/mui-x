@@ -4,14 +4,6 @@ import { EventCalendarStore } from '../EventCalendarStore';
 
 const DEFAULT_PARAMS = { events: [] };
 
-const DEFAULT_PREFERENCES = {
-  showWeekends: true,
-  showWeekNumber: false,
-  showEmptyDaysInAgenda: true,
-  isSidePanelOpen: true,
-  ampm: true,
-};
-
 describe('Preferences - EventCalendarStore', () => {
   describe('Method: setPreferences', () => {
     it('should update the store preferences and call onPreferencesChange when value changes and is uncontrolled', () => {
@@ -21,12 +13,10 @@ describe('Preferences - EventCalendarStore', () => {
       store.setPreferences({ showWeekends: false }, {} as any);
 
       expect(store.state.preferences).to.deep.equal({
-        ...DEFAULT_PREFERENCES,
         showWeekends: false,
       });
       expect(onPreferencesChange.calledOnce).to.equal(true);
       expect(onPreferencesChange.lastCall.firstArg).to.deep.equal({
-        ...DEFAULT_PREFERENCES,
         showWeekends: false,
       });
     });
@@ -36,7 +26,7 @@ describe('Preferences - EventCalendarStore', () => {
       const store = new EventCalendarStore(
         {
           ...DEFAULT_PARAMS,
-          preferences: { ...DEFAULT_PREFERENCES, showWeekends: false },
+          preferences: { showWeekends: false },
           onPreferencesChange,
         },
         adapter,
@@ -45,12 +35,10 @@ describe('Preferences - EventCalendarStore', () => {
       store.setPreferences({ showWeekends: true }, {} as any);
 
       expect(store.state.preferences).to.deep.equal({
-        ...DEFAULT_PREFERENCES,
         showWeekends: false,
       });
       expect(onPreferencesChange.calledOnce).to.equal(true);
       expect(onPreferencesChange.lastCall.firstArg).to.deep.equal({
-        ...DEFAULT_PREFERENCES,
         showWeekends: true,
       });
     });
@@ -60,7 +48,6 @@ describe('Preferences - EventCalendarStore', () => {
       store.setPreferences({ showWeekNumber: true }, {} as any);
 
       expect(store.state.preferences).to.deep.equal({
-        ...DEFAULT_PREFERENCES,
         showWeekNumber: true,
       });
     });
@@ -70,7 +57,6 @@ describe('Preferences - EventCalendarStore', () => {
       store.setPreferences({ showWeekends: false, showWeekNumber: true }, {} as any);
 
       expect(store.state.preferences).to.deep.equal({
-        ...DEFAULT_PREFERENCES,
         showWeekends: false,
         showWeekNumber: true,
       });
@@ -82,7 +68,6 @@ describe('Preferences - EventCalendarStore', () => {
       store.setPreferences({ showWeekNumber: true }, {} as any);
 
       expect(store.state.preferences).to.deep.equal({
-        ...DEFAULT_PREFERENCES,
         showWeekends: false,
         showWeekNumber: true,
       });

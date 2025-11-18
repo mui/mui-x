@@ -18,7 +18,7 @@ export interface EventCalendarState extends SchedulerState {
   /**
    * Preferences for the calendar.
    */
-  preferences: EventCalendarPreferences;
+  preferences: Partial<EventCalendarPreferences>;
   /**
    * Config of the preferences menu.
    * Defines which options are visible in the menu.
@@ -66,7 +66,7 @@ export interface EventCalendarParameters<TEvent extends object, TResource extend
    * Event handler called when the preferences change.
    */
   onPreferencesChange?: (
-    preferences: EventCalendarPreferences,
+    preferences: Partial<EventCalendarPreferences>,
     event: React.UIEvent | Event,
   ) => void;
   /**

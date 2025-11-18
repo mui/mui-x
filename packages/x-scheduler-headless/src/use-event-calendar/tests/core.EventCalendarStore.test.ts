@@ -1,7 +1,7 @@
 import { adapter } from 'test/utils/scheduler';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
+import { EMPTY_OBJECT } from '@base-ui-components/utils/empty';
 import {
-  DEFAULT_EVENT_CALENDAR_PREFERENCES,
   DEFAULT_PREFERENCES_MENU_CONFIG,
   DEFAULT_VIEW,
   DEFAULT_VIEWS,
@@ -32,7 +32,7 @@ describe('Core - EventCalendarStore', () => {
         nowUpdatedEveryMinute: adapter.date(),
         occurrencePlaceholder: null,
         pendingUpdateRecurringEventParameters: null,
-        preferences: DEFAULT_EVENT_CALENDAR_PREFERENCES,
+        preferences: EMPTY_OBJECT,
         preferencesMenuConfig: DEFAULT_PREFERENCES_MENU_CONFIG,
         processedEventLookup: new Map(),
         processedResourceLookup: new Map(),

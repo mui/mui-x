@@ -1,4 +1,5 @@
 import { warn } from '@base-ui-components/utils/warn';
+import { EMPTY_OBJECT } from '@base-ui-components/utils/empty';
 import {
   EventCalendarPreferences,
   CalendarView,
@@ -44,11 +45,7 @@ const mapper: SchedulerParametersToStateMapper<
   getInitialState: (schedulerInitialState, parameters) => ({
     ...schedulerInitialState,
     ...deriveStateFromParameters(parameters),
-    preferences: {
-      ...DEFAULT_EVENT_CALENDAR_PREFERENCES,
-      ...parameters.defaultPreferences,
-      ...parameters.preferences,
-    },
+    preferences: parameters.preferences ?? parameters.defaultPreferences ?? EMPTY_OBJECT,
     preferencesMenuConfig:
       parameters.preferencesMenuConfig === false
         ? parameters.preferencesMenuConfig
