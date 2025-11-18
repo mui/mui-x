@@ -116,7 +116,7 @@ export interface SchedulerState<TEvent extends object = any> {
   /**
    * Preferences for the scheduler.
    */
-  preferences: SchedulerPreferences;
+  preferences: Partial<SchedulerPreferences>;
   /**
    * Configures how event are created.
    * If `false`, event creation is disabled.
@@ -252,7 +252,7 @@ export interface SchedulerParametersToStateMapper<
    * Updates the state based on the new parameters.
    */
   updateStateFromParameters: (
-    newState: Omit<Partial<SchedulerState>, 'preferences'>,
+    newState: Partial<SchedulerState>,
     parameters: Parameters,
     updateModel: SchedulerModelUpdater<State, Parameters>,
   ) => Partial<State>;
