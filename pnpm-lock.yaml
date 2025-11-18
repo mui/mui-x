@@ -55,7 +55,7 @@ catalogs:
       specifier: ^7.3.5
       version: 7.3.5
     '@mui/x-internal-exceljs-fork':
-      specifier: ^4.4.3
+      specifier: 4.4.3
       version: 4.4.3
     '@playwright/test':
       specifier: ^1.56.1
@@ -218,6 +218,11 @@ overrides:
   ast-types: ^0.14.2
 
 packageExtensionsChecksum: sha256-GmuHKPl+EPPmpH9o6dpG/x6YUd/4eHjpfdYnSqH1GqA=
+
+patchedDependencies:
+  '@base-ui-components/react':
+    hash: a23a5e3d2555fd74b3b6a83cfe733742964f01052d2aaa76925d7c6cdccdcdbf
+    path: patches/@base-ui-components__react.patch
 
 importers:
 
@@ -1605,7 +1610,7 @@ importers:
         version: 7.28.4
       '@base-ui-components/react':
         specifier: ^1.0.0-beta.4
-        version: 1.0.0-beta.4(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+        version: 1.0.0-beta.4(patch_hash=a23a5e3d2555fd74b3b6a83cfe733742964f01052d2aaa76925d7c6cdccdcdbf)(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@base-ui-components/utils':
         specifier: ^0.1.2
         version: 0.1.2(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -1649,9 +1654,6 @@ importers:
       rimraf:
         specifier: 'catalog:'
         version: 6.1.0
-      use-isomorphic-layout-effect:
-        specifier: ^1.2.1
-        version: 1.2.1(@types/react@19.2.2)(react@19.2.0)
     publishDirectory: build
 
   packages/x-scheduler-headless:
@@ -1667,7 +1669,7 @@ importers:
         version: 7.28.4
       '@base-ui-components/react':
         specifier: ^1.0.0-beta.4
-        version: 1.0.0-beta.4(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+        version: 1.0.0-beta.4(patch_hash=a23a5e3d2555fd74b3b6a83cfe733742964f01052d2aaa76925d7c6cdccdcdbf)(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@base-ui-components/utils':
         specifier: ^0.1.2
         version: 0.1.2(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -1714,9 +1716,6 @@ importers:
       rimraf:
         specifier: 'catalog:'
         version: 6.1.0
-      use-isomorphic-layout-effect:
-        specifier: ^1.2.1
-        version: 1.2.1(@types/react@19.2.2)(react@19.2.0)
     publishDirectory: build
 
   packages/x-telemetry:
@@ -11583,15 +11582,6 @@ packages:
     resolution: {integrity: sha512-oCwdVC7mTuWiPyjLUz/COz5TLk6wgp0RCsN+wHZ2Ekneac9w8uuV0njcbbie2ME+Vs+d6duwmYuR3HgQXs1fOg==}
     engines: {node: '>= 0.4'}
 
-  use-isomorphic-layout-effect@1.2.1:
-    resolution: {integrity: sha512-tpZZ+EX0gaghDAiFR37hj5MgY6ZN55kLiPkJsKxBMZ6GZdOSPJXiOzPM984oPYZ5AnehYx5WQp1+ME8I/P/pRA==}
-    peerDependencies:
-      '@types/react': '*'
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-
   use-sync-external-store@1.6.0:
     resolution: {integrity: sha512-Pp6GSwGP/NrPIrxVFAIkOQeyw8lFenOHijQWkUTrDvrF4ALqylP2C/KCkeS9dpUM3KvYRQhna5vt7IL95+ZQ9w==}
     peerDependencies:
@@ -13589,7 +13579,7 @@ snapshots:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.28.5
 
-  '@base-ui-components/react@1.0.0-beta.4(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)':
+  '@base-ui-components/react@1.0.0-beta.4(patch_hash=a23a5e3d2555fd74b3b6a83cfe733742964f01052d2aaa76925d7c6cdccdcdbf)(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)':
     dependencies:
       '@babel/runtime': 7.28.4
       '@base-ui-components/utils': 0.1.2(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -23550,12 +23540,6 @@ snapshots:
       punycode: 1.4.1
       qs: 6.14.0
     optional: true
-
-  use-isomorphic-layout-effect@1.2.1(@types/react@19.2.2)(react@19.2.0):
-    dependencies:
-      react: 19.2.0
-    optionalDependencies:
-      '@types/react': 19.2.2
 
   use-sync-external-store@1.6.0(react@19.2.0):
     dependencies:
