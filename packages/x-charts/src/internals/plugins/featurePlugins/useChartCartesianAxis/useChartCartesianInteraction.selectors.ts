@@ -1,6 +1,5 @@
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
-import { createSelectorMemoizedWithOptions } from '@mui/x-internals/store';
-import { createSelector } from '../../utils/selectors';
+import { createSelector, createSelectorMemoizedWithOptions } from '@mui/x-internals/store';
 import { AxisId, AxisItemIdentifier, ChartsAxisProps } from '../../../../models/axis';
 import {
   selectorChartsInteractionPointerX,
@@ -38,22 +37,23 @@ export const selectChartsInteractionAxisIndex = (
 };
 
 export const selectorChartsInteractionXAxisIndex = createSelector(
-  [selectorChartsInteractionPointerX, selectorChartXAxis],
+  selectorChartsInteractionPointerX,
+  selectorChartXAxis,
   selectChartsInteractionAxisIndex,
 );
 
 export const selectorChartsInteractionYAxisIndex = createSelector(
-  [selectorChartsInteractionPointerY, selectorChartYAxis],
+  selectorChartsInteractionPointerY,
+  selectorChartYAxis,
   selectChartsInteractionAxisIndex,
 );
 
 export const selectorChartAxisInteraction = createSelector(
-  [
-    selectorChartsInteractionPointerX,
-    selectorChartsInteractionPointerY,
-    selectorChartXAxis,
-    selectorChartYAxis,
-  ],
+  selectorChartsInteractionPointerX,
+  selectorChartsInteractionPointerY,
+  selectorChartXAxis,
+  selectorChartYAxis,
+
   (x, y, xAxis, yAxis) =>
     [
       ...(x === null
@@ -104,7 +104,9 @@ function valueGetter(
 }
 
 export const selectorChartsInteractionXAxisValue = createSelector(
-  [selectorChartsInteractionPointerX, selectorChartXAxis, selectorChartsInteractionXAxisIndex],
+  selectorChartsInteractionPointerX,
+  selectorChartXAxis,
+  selectorChartsInteractionXAxisIndex,
   (x, xAxes, xIndex, id?: AxisId) => {
     if (x === null || xAxes.axisIds.length === 0) {
       return null;
@@ -114,7 +116,9 @@ export const selectorChartsInteractionXAxisValue = createSelector(
 );
 
 export const selectorChartsInteractionYAxisValue = createSelector(
-  [selectorChartsInteractionPointerY, selectorChartYAxis, selectorChartsInteractionYAxisIndex],
+  selectorChartsInteractionPointerY,
+  selectorChartYAxis,
+  selectorChartsInteractionYAxisIndex,
   (y, yAxes, yIndex, id?: AxisId) => {
     if (y === null || yAxes.axisIds.length === 0) {
       return null;
@@ -181,6 +185,7 @@ export const selectorChartsInteractionTooltipYAxes = createSelectorMemoizedWithO
  * Return `true` if the axis tooltip has something to display.
  */
 export const selectorChartsInteractionAxisTooltip = createSelector(
-  [selectorChartsInteractionTooltipXAxes, selectorChartsInteractionTooltipYAxes],
+  selectorChartsInteractionTooltipXAxes,
+  selectorChartsInteractionTooltipYAxes,
   (xTooltip, yTooltip) => xTooltip.length > 0 || yTooltip.length > 0,
 );
