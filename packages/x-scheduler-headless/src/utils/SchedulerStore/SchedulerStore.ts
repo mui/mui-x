@@ -141,17 +141,35 @@ export class SchedulerStore<
   }
 
   /**
+   * Calculates the date range to fetch events for based on the current visible date and view config.
+   */
+  private getDateRangeForFetch(): { start: SchedulerValidDate; end: SchedulerValidDate } {
+    const { adapter, visibleDate } = this.state;
+
+    // Default to a week range if no view config is available
+    const start = adapter.startOfWeek(visibleDate);
+    const end = adapter.endOfWeek(visibleDate);
+
+    return { start, end };
+  }
+
+  /**
    * Loads events from the data source.
    */
-  private loadEventsFromDataSource = async () => {
+  private loadEventsFromDataSource = async (dateRange?: {
+    start: SchedulerValidDate;
+    end: SchedulerValidDate;
+  }) => {
     const { dataSource } = this.parameters;
 
     if (!dataSource) {
       return;
     }
 
+    const range = dateRange ?? this.getDateRangeForFetch();
+
     try {
-      const events = await dataSource.getEvents();
+      const events = await dataSource.getEvents(range.start, range.end);
 
       console.log('Loaded events from data source:', events);
       // Only update if we're still using the same dataSource
@@ -221,10 +239,8 @@ export class SchedulerStore<
     }
 
     // If dataSource changed, trigger a new fetch
-    if (parameters.dataSource !== this.parameters.dataSource) {
-      if (parameters.dataSource) {
-        queueMicrotask(() => this.loadEventsFromDataSource());
-      }
+    if (parameters.dataSource) {
+      queueMicrotask(() => this.loadEventsFromDataSource());
     }
 
     if (

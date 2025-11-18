@@ -119,7 +119,7 @@ export interface SchedulerState<TEvent extends object = any> {
 }
 
 export interface SchedulerDataSource<TEvent extends object> {
-  getEvents: () => Promise<TEvent[]>;
+  getEvents: (start: SchedulerValidDate, end: SchedulerValidDate) => Promise<TEvent[]>;
 }
 
 export interface SchedulerParameters<TEvent extends object, TResource extends object> {
