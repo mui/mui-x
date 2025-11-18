@@ -1,40 +1,40 @@
 import useEventCallback from '@mui/utils/useEventCallback';
 import { ChartPlugin } from '../../models';
-import { UseChartVisibleSeriesSignature } from './useChartVisibleSeries.types';
+import { UseChartVisibilityManagerSignature } from './useChartVisibilityManager.types';
 import { SeriesId } from '../../../../models/seriesType/common';
 
-export const useChartVisibleSeries: ChartPlugin<UseChartVisibleSeriesSignature> = ({
+export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSignature> = ({
   store,
   params,
 }) => {
   const hideItem = useEventCallback((seriesId: SeriesId) => {
-    const currentHidden = store.getSnapshot().visibleSeries.hiddenSeriesIds;
+    const currentHidden = store.getSnapshot().visibilityManager.hiddenSeriesIds;
     if (currentHidden.has(seriesId)) {
       return; // Already hidden
     }
 
     const newHidden = new Set(currentHidden);
     newHidden.add(seriesId);
-    store.set('visibleSeries', { hiddenSeriesIds: newHidden });
+    store.set('visibilityManager', { hiddenSeriesIds: newHidden });
 
-    params.onVisibleSeriesChange?.(Array.from(newHidden));
+    params.onVisibilityChange?.(Array.from(newHidden));
   });
 
   const showItem = useEventCallback((seriesId: SeriesId) => {
-    const currentHidden = store.getSnapshot().visibleSeries.hiddenSeriesIds;
+    const currentHidden = store.getSnapshot().visibilityManager.hiddenSeriesIds;
     if (!currentHidden.has(seriesId)) {
       return; // Already visible
     }
 
     const newHidden = new Set(currentHidden);
     newHidden.delete(seriesId);
-    store.set('visibleSeries', { hiddenSeriesIds: newHidden });
+    store.set('visibilityManager', { hiddenSeriesIds: newHidden });
 
-    params.onVisibleSeriesChange?.(Array.from(newHidden));
+    params.onVisibilityChange?.(Array.from(newHidden));
   });
 
   const toggleItem = useEventCallback((seriesId: SeriesId) => {
-    const currentHidden = store.getSnapshot().visibleSeries.hiddenSeriesIds;
+    const currentHidden = store.getSnapshot().visibilityManager.hiddenSeriesIds;
 
     if (currentHidden.has(seriesId)) {
       showItem(seriesId);
@@ -44,7 +44,7 @@ export const useChartVisibleSeries: ChartPlugin<UseChartVisibleSeriesSignature> 
   });
 
   const isItemVisible = useEventCallback((seriesId: SeriesId) => {
-    return !store.getSnapshot().visibleSeries.hiddenSeriesIds.has(seriesId);
+    return !store.getSnapshot().visibilityManager.hiddenSeriesIds.has(seriesId);
   });
 
   return {
@@ -57,8 +57,8 @@ export const useChartVisibleSeries: ChartPlugin<UseChartVisibleSeriesSignature> 
   };
 };
 
-useChartVisibleSeries.getInitialState = (params, state) => ({
-  visibleSeries: {
+useChartVisibilityManager.getInitialState = (params, state) => ({
+  visibilityManager: {
     hiddenSeriesIds: new Set(
       Object.values(state.series.processedSeries).flatMap((seriesData) =>
         Object.values(seriesData.series)
@@ -69,6 +69,6 @@ useChartVisibleSeries.getInitialState = (params, state) => ({
   },
 });
 
-useChartVisibleSeries.params = {
-  onVisibleSeriesChange: true,
+useChartVisibilityManager.params = {
+  onVisibilityChange: true,
 };

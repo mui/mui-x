@@ -28,9 +28,9 @@ import {
   UseChartBrushSignature,
 } from '../internals/plugins/featurePlugins/useChartBrush';
 import {
-  useChartVisibleSeries,
-  UseChartVisibleSeriesSignature,
-} from '../internals/plugins/featurePlugins/useChartVisibleSeries';
+  useChartVisibilityManager,
+  UseChartVisibilityManagerSignature,
+} from '../internals/plugins/featurePlugins/useChartVisibilityManager';
 
 export type ScatterChartPluginSignatures = [
   UseChartZAxisSignature,
@@ -38,7 +38,7 @@ export type ScatterChartPluginSignatures = [
   UseChartInteractionSignature,
   UseChartCartesianAxisSignature<'scatter'>,
   UseChartHighlightSignature,
-  UseChartVisibleSeriesSignature,
+  UseChartVisibilityManagerSignature,
   UseChartClosestPointSignature,
   UseChartKeyboardNavigationSignature,
 ];
@@ -49,7 +49,7 @@ export const SCATTER_CHART_PLUGINS: ConvertSignaturesIntoPlugins<ScatterChartPlu
   useChartInteraction,
   useChartCartesianAxis,
   useChartHighlight,
-  useChartVisibleSeries,
+  useChartVisibilityManager,
   useChartClosestPoint,
   useChartKeyboardNavigation,
 ];

@@ -11,20 +11,20 @@ import {
   UseChartHighlightSignature,
 } from '../internals/plugins/featurePlugins/useChartHighlight';
 import {
-  useChartVisibleSeries,
-  UseChartVisibleSeriesSignature,
-} from '../internals/plugins/featurePlugins/useChartVisibleSeries';
+  useChartVisibilityManager,
+  UseChartVisibilityManagerSignature,
+} from '../internals/plugins/featurePlugins/useChartVisibilityManager';
 
 export const RADAR_PLUGINS = [
   useChartInteraction,
   useChartPolarAxis,
   useChartHighlight,
-  useChartVisibleSeries,
+  useChartVisibilityManager,
 ] as const;
 
 export type RadarChartPluginSignatures = [
   UseChartInteractionSignature,
   UseChartPolarAxisSignature,
   UseChartHighlightSignature,
-  UseChartVisibleSeriesSignature,
+  UseChartVisibilityManagerSignature,
 ];

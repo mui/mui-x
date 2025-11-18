@@ -2,7 +2,7 @@ import { ChartPluginSignature } from '../../models';
 import { SeriesId } from '../../../../models/seriesType/common';
 import { UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
 
-export interface UseChartVisibleSeriesInstance {
+export interface UseChartVisibilityManagerInstance {
   /**
    * Hide a series by its id.
    * @param {SeriesId} seriesId The id of the series to hide.
@@ -26,18 +26,18 @@ export interface UseChartVisibleSeriesInstance {
   isItemVisible: (seriesId: SeriesId) => boolean;
 }
 
-export interface UseChartVisibleSeriesParameters {
+export interface UseChartVisibilityManagerParameters {
   /**
    * Callback fired when the visible series change.
    * @param {SeriesId[]} hiddenSeries The ids of the hidden series.
    */
-  onVisibleSeriesChange?: (hiddenSeries: SeriesId[]) => void;
+  onVisibilityChange?: (hiddenSeries: SeriesId[]) => void;
 }
 
-export type UseChartVisibleSeriesDefaultizedParameters = UseChartVisibleSeriesParameters;
+export type UseChartVisibilityManagerDefaultizedParameters = UseChartVisibilityManagerParameters;
 
-export interface UseChartVisibleSeriesState {
-  visibleSeries: {
+export interface UseChartVisibilityManagerState {
+  visibilityManager: {
     /**
      * Set of series ids that are currently hidden.
      */
@@ -45,10 +45,10 @@ export interface UseChartVisibleSeriesState {
   };
 }
 
-export type UseChartVisibleSeriesSignature = ChartPluginSignature<{
-  instance: UseChartVisibleSeriesInstance;
-  state: UseChartVisibleSeriesState;
-  params: UseChartVisibleSeriesParameters;
-  defaultizedParams: UseChartVisibleSeriesDefaultizedParameters;
+export type UseChartVisibilityManagerSignature = ChartPluginSignature<{
+  instance: UseChartVisibilityManagerInstance;
+  state: UseChartVisibilityManagerState;
+  params: UseChartVisibilityManagerParameters;
+  defaultizedParams: UseChartVisibilityManagerDefaultizedParameters;
   dependencies: [UseChartSeriesSignature];
 }>;
