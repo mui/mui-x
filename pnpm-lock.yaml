@@ -219,6 +219,11 @@ overrides:
 
 packageExtensionsChecksum: sha256-GmuHKPl+EPPmpH9o6dpG/x6YUd/4eHjpfdYnSqH1GqA=
 
+patchedDependencies:
+  '@base-ui-components/react':
+    hash: d4271385b91b00eef23d65d6e7cd705e4bddf0db5b9b792fa9c0f0027cabd221
+    path: patches/@base-ui-components__react.patch
+
 importers:
 
   .:
@@ -613,9 +618,6 @@ importers:
       chance:
         specifier: 'catalog:'
         version: 1.1.13
-      clean-css:
-        specifier: ^5.3.3
-        version: 5.3.3
       clipboard-copy:
         specifier: ^4.0.1
         version: 4.0.1
@@ -653,8 +655,8 @@ importers:
         specifier: ^1.5.0
         version: 1.5.0
       markdown-to-jsx:
-        specifier: ^7.7.17
-        version: 7.7.17(react@19.2.0)
+        specifier: ^8.0.0
+        version: 8.0.0(react@19.2.0)
       moment:
         specifier: 'catalog:'
         version: 2.30.1
@@ -1744,7 +1746,7 @@ importers:
         version: 7.28.4
       '@base-ui-components/react':
         specifier: ^1.0.0-beta.4
-        version: 1.0.0-beta.4(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+        version: 1.0.0-beta.4(patch_hash=d4271385b91b00eef23d65d6e7cd705e4bddf0db5b9b792fa9c0f0027cabd221)(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@base-ui-components/utils':
         specifier: ^0.1.2
         version: 0.1.2(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -1788,9 +1790,6 @@ importers:
       rimraf:
         specifier: 'catalog:'
         version: 6.1.0
-      use-isomorphic-layout-effect:
-        specifier: ^1.2.1
-        version: 1.2.1(@types/react@19.2.2)(react@19.2.0)
     publishDirectory: build
 
   packages/x-scheduler-headless:
@@ -1806,7 +1805,7 @@ importers:
         version: 7.28.4
       '@base-ui-components/react':
         specifier: ^1.0.0-beta.4
-        version: 1.0.0-beta.4(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+        version: 1.0.0-beta.4(patch_hash=d4271385b91b00eef23d65d6e7cd705e4bddf0db5b9b792fa9c0f0027cabd221)(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@base-ui-components/utils':
         specifier: ^0.1.2
         version: 0.1.2(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -1853,9 +1852,6 @@ importers:
       rimraf:
         specifier: 'catalog:'
         version: 6.1.0
-      use-isomorphic-layout-effect:
-        specifier: ^1.2.1
-        version: 1.2.1(@types/react@19.2.2)(react@19.2.0)
     publishDirectory: build
 
   packages/x-telemetry:
@@ -6816,10 +6812,6 @@ packages:
     resolution: {integrity: sha512-Wdy2Igu8OcBpI2pZePZ5oWjPC38tmDVx5WKUXKwlLYkA0ozo85sLsLvkBbBn/sZaSCMFOGZJ14fvW9t5/d7kdA==}
     engines: {node: '>=8'}
 
-  clean-css@5.3.3:
-    resolution: {integrity: sha512-D5J+kHaVb/wKSFcyyV75uCn8fiY4sV38XJoe4CUyGQ+mOU/fMVYUdH1hJC+CJQ5uY3EnW27SbJYS4X8BiLrAFg==}
-    engines: {node: '>= 10.0'}
-
   clean-stack@2.2.0:
     resolution: {integrity: sha512-4diC9HaTE+KRAMWhDhrGOECgWZxoevMc5TlkObMqNSsVU62PYzXZ/SMTjzyGAFF1YusgxGcSWTEXBhp0CPwQ1A==}
     engines: {node: '>=6'}
@@ -9331,8 +9323,8 @@ packages:
     resolution: {integrity: sha512-a54IwgWPaeBCAAsv13YgmALOF1elABB08FxO9i+r4VFk5Vl4pKokRPeX8u5TCgSsPi6ec1otfLjdOpVcgbpshg==}
     hasBin: true
 
-  markdown-to-jsx@7.7.17:
-    resolution: {integrity: sha512-7mG/1feQ0TX5I7YyMZVDgCC/y2I3CiEhIRQIhyov9nGBP5eoVrOXXHuL5ZP8GRfxVZKRiXWJgwXkb9It+nQZfQ==}
+  markdown-to-jsx@8.0.0:
+    resolution: {integrity: sha512-hWEaRxeCDjes1CVUQqU+Ov0mCqBqkGhLKjL98KdbwHSgEWZZSJQeGlJQatVfeZ3RaxrfTrZZ3eczl2dhp5c/pA==}
     engines: {node: '>= 10'}
     peerDependencies:
       react: '>= 0.14.0'
@@ -11726,15 +11718,6 @@ packages:
     resolution: {integrity: sha512-oCwdVC7mTuWiPyjLUz/COz5TLk6wgp0RCsN+wHZ2Ekneac9w8uuV0njcbbie2ME+Vs+d6duwmYuR3HgQXs1fOg==}
     engines: {node: '>= 0.4'}
 
-  use-isomorphic-layout-effect@1.2.1:
-    resolution: {integrity: sha512-tpZZ+EX0gaghDAiFR37hj5MgY6ZN55kLiPkJsKxBMZ6GZdOSPJXiOzPM984oPYZ5AnehYx5WQp1+ME8I/P/pRA==}
-    peerDependencies:
-      '@types/react': '*'
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-
   use-sync-external-store@1.6.0:
     resolution: {integrity: sha512-Pp6GSwGP/NrPIrxVFAIkOQeyw8lFenOHijQWkUTrDvrF4ALqylP2C/KCkeS9dpUM3KvYRQhna5vt7IL95+ZQ9w==}
     peerDependencies:
@@ -13732,7 +13715,7 @@ snapshots:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.28.5
 
-  '@base-ui-components/react@1.0.0-beta.4(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)':
+  '@base-ui-components/react@1.0.0-beta.4(patch_hash=d4271385b91b00eef23d65d6e7cd705e4bddf0db5b9b792fa9c0f0027cabd221)(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)':
     dependencies:
       '@babel/runtime': 7.28.4
       '@base-ui-components/utils': 0.1.2(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -17782,10 +17765,6 @@ snapshots:
 
   ci-info@4.3.1: {}
 
-  clean-css@5.3.3:
-    dependencies:
-      source-map: 0.6.1
-
   clean-stack@2.2.0: {}
 
   cli-boxes@3.0.0: {}
@@ -20784,7 +20763,7 @@ snapshots:
       punycode.js: 2.3.1
       uc.micro: 2.1.0
 
-  markdown-to-jsx@7.7.17(react@19.2.0):
+  markdown-to-jsx@8.0.0(react@19.2.0):
     optionalDependencies:
       react: 19.2.0
 
@@ -23697,12 +23676,6 @@ snapshots:
       punycode: 1.4.1
       qs: 6.14.0
     optional: true
-
-  use-isomorphic-layout-effect@1.2.1(@types/react@19.2.2)(react@19.2.0):
-    dependencies:
-      react: 19.2.0
-    optionalDependencies:
-      '@types/react': 19.2.2
 
   use-sync-external-store@1.6.0(react@19.2.0):
     dependencies:
