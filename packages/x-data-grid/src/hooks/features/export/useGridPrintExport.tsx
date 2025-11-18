@@ -160,7 +160,6 @@ export const useGridPrintExport = (
       virtualScrollerContent.style.flexBasis = 'auto';
 
       gridClone.querySelector<HTMLElement>(`.${gridClasses['scrollbar--vertical']}`)?.remove();
-      // gridClone.querySelector<HTMLElement>(`.${gridClasses['scrollbar--horizontal']}`)?.remove();
       if (
         !(
           virtualScrollerContent.nextSibling instanceof HTMLElement &&
@@ -168,7 +167,6 @@ export const useGridPrintExport = (
         )
       ) {
         const filler = document.createElement('div');
-        filler.classList.add(gridClasses.filler);
         filler.style.height = 'var(--DataGrid-scrollbarSize)';
         virtualScrollerContent.insertAdjacentElement('afterend', filler);
       }
