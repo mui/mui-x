@@ -32,7 +32,7 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props
     itemId,
   );
   const canItemBeReordered = useStore(store, itemsReorderingSelectors.canItemBeReordered, itemId);
-  const isValidTarget = useStore(store, itemsReorderingSelectors.isItemValidDropTarget, itemId);
+  const isDragging = useStore(store, itemsReorderingSelectors.isDragging, itemId);
 
   return {
     propsEnhancers: {
@@ -108,7 +108,7 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props
         externalEventHandlers,
         contentRefObject,
       }): UseTreeItemContentSlotPropsFromItemsReordering => {
-        if (!isValidTarget) {
+        if (!isDragging) {
           return {};
         }
 
