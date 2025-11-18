@@ -3,14 +3,18 @@ import * as React from 'react';
 import { styled, SxProps, Theme } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import useEventCallback from '@mui/utils/useEventCallback';
 import { useLegend } from '../hooks/useLegend';
 import type { Direction } from './direction';
-import { SeriesLegendItemContext } from './legendContext.types';
+import { SeriesLegendItemContext, type LegendItemParams } from './legendContext.types';
 import { ChartsLabelMark } from '../ChartsLabel/ChartsLabelMark';
 import { seriesContextBuilder } from './onClickContextBuilder';
 import { legendClasses, useUtilityClasses, type ChartsLegendClasses } from './chartsLegendClasses';
 import { consumeSlots } from '../internals/consumeSlots';
 import { ChartsLabel } from '../ChartsLabel/ChartsLabel';
+import { useChartContext } from '../context/ChartProvider';
+import type { UseChartVisibilityManagerSignature } from '../plugins';
+import { useGetIsItemVisible } from '../internals/plugins/featurePlugins/useChartVisibilityManager/useChartVisibilityManager.hooks';
 
 export interface ChartsLegendProps {
   /**
@@ -78,6 +82,10 @@ const RootElement = styled('ul', {
     display: ownerState.direction === 'vertical' ? 'flex' : 'inline-flex',
     alignItems: 'center',
     gap: theme.spacing(1),
+
+    [`&.${legendClasses.hidden}`]: {
+      opacity: 0.5,
+    },
   },
   gridArea: 'legend',
 }));
@@ -97,13 +105,37 @@ const ChartsLegend = consumeSlots(
     ref: React.Ref<HTMLUListElement>,
   ) {
     const data = useLegend();
-    const { direction, onItemClick, className, classes, ...other } = props;
+    const { instance } = useChartContext<[UseChartVisibilityManagerSignature]>();
+    const isItemVisible = useGetIsItemVisible();
+    const {
+      direction,
+      onItemClick,
+      className,
+      classes,
+      toggleVisibilityOnClick = true,
+      ...other
+    } = props;
+
+    const isButton = Boolean(onItemClick || toggleVisibilityOnClick);
+
+    const Element = isButton ? 'button' : 'div';
+
+    const handleClick = useEventCallback(
+      (item: LegendItemParams, i: number) =>
+        (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+          if (onItemClick && item) {
+            onItemClick(event, seriesContextBuilder(item), i);
+          }
+
+          if (toggleVisibilityOnClick) {
+            instance.toggleItem({ seriesId: item.seriesId!, itemId: item.itemId });
+          }
+        },
+    );
 
     if (data.items.length === 0) {
       return null;
     }
-
-    const Element = onItemClick ? 'button' : 'div';
 
     return (
       <RootElement
@@ -113,18 +145,15 @@ const ChartsLegend = consumeSlots(
         ownerState={props}
       >
         {data.items.map((item, i) => {
+          const isVisible = isItemVisible({ seriesId: item.seriesId!, itemId: item.itemId });
           return (
             <li key={item.id} className={classes?.item} data-series={item.id}>
               <Element
-                className={classes?.series}
-                role={onItemClick ? 'button' : undefined}
-                type={onItemClick ? 'button' : undefined}
-                onClick={
-                  onItemClick
-                    ? // @ts-ignore onClick is only attached to a button
-                      (event) => onItemClick(event, seriesContextBuilder(item), i)
-                    : undefined
-                }
+                className={clsx(classes?.series, !isVisible && classes?.hidden)}
+                role={isButton ? 'button' : undefined}
+                type={isButton ? 'button' : undefined}
+                // @ts-expect-error onClick is only attached to a button
+                onClick={onItemClick ? handleClick(item, i) : undefined}
               >
                 <ChartsLabelMark
                   className={classes?.mark}

@@ -1,8 +1,11 @@
 import { ChartPluginSignature } from '../../models';
-import { SeriesItemIdentifier } from '../../../../models/seriesType';
 import { UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
+import type { SeriesId } from '../../../../models/seriesType/common';
 
-export type VisibilityItemIdentifier = Omit<SeriesItemIdentifier, 'type'>;
+export type VisibilityItemIdentifier = {
+  seriesId: SeriesId;
+  itemId?: string | number;
+};
 
 export interface UseChartVisibilityManagerInstance {
   /**
