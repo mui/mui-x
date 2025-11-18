@@ -114,11 +114,11 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
     refs,
     dimensions: {
       rowHeight,
-      columnsTotalWidth = 0,
-      leftPinnedWidth = 0,
-      rightPinnedWidth = 0,
-      topPinnedHeight = 0,
-      bottomPinnedHeight = 0,
+      columnsTotalWidth,
+      leftPinnedWidth,
+      rightPinnedWidth,
+      topPinnedHeight,
+      bottomPinnedHeight,
     },
     onResize,
   } = params;
@@ -266,7 +266,7 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
     ],
   );
 
-  const { resizeThrottleMs = 100 } = params;
+  const { resizeThrottleMs } = params;
   const updateDimensionCallback = useEventCallback(updateDimensions);
   const debouncedUpdateDimensions = React.useMemo(
     () => (resizeThrottleMs > 0 ? throttle(updateDimensionCallback, resizeThrottleMs) : undefined),
