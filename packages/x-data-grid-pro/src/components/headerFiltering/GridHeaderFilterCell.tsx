@@ -224,7 +224,7 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
       }
       const elementToFocus = focusableElement || cellRef.current;
       elementToFocus?.focus({
-        preventScroll: true
+        preventScroll: true,
       });
       if (apiRef.current.columnHeadersContainerRef.current) {
         apiRef.current.columnHeadersContainerRef.current.scrollLeft = 0;
