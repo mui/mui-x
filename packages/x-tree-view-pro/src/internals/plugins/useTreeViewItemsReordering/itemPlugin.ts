@@ -114,13 +114,18 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props
 
         const handleDragOver = (event: React.DragEvent & TreeViewCancellableEvent) => {
           externalEventHandlers.onDragOver?.(event);
-          if (event.defaultMuiPrevented || validActionsRef.current == null) {
+          if (
+            event.defaultMuiPrevented ||
+            validActionsRef.current == null ||
+            !contentRefObject.current
+          ) {
             return;
           }
 
-          const rect = (event.target as HTMLDivElement).getBoundingClientRect();
+          const rect = contentRefObject.current.getBoundingClientRect();
           const y = event.clientY - rect.top;
           const x = event.clientX - rect.left;
+
           instance.setDragTargetItem({
             itemId,
             validActions: validActionsRef.current,
