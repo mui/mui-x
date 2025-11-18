@@ -8,7 +8,7 @@ import { useStoreEffect } from '@mui/x-internals/store';
 import {
   useVirtualizer,
   Dimensions,
-  LayoutMode,
+  LayoutDataGrid,
   VirtualizerParams,
   Virtualization,
   EMPTY_RENDER_CONTEXT,
@@ -167,16 +167,18 @@ export function useGridVirtualizer() {
   // We need it to trigger a new render, but rowsMeta needs access to the latest value, hence we cannot pass it to the focusedVirtualCell callback in the virtualizer params
   eslintUseValue(focusedVirtualCell);
 
-  const virtualizer = useVirtualizer({
-    legacy: true,
-    layout: LayoutMode.DataGrid,
+  const layout = useLazyRef(
+    () =>
+      new LayoutDataGrid({
+        container: apiRef.current.mainElementRef,
+        scroller: apiRef.current.virtualScrollerRef,
+        scrollbarVertical: apiRef.current.virtualScrollbarVerticalRef,
+        scrollbarHorizontal: apiRef.current.virtualScrollbarHorizontalRef,
+      }),
+  ).current;
 
-    refs: {
-      container: apiRef.current.mainElementRef,
-      scroller: apiRef.current.virtualScrollerRef,
-      scrollbarVertical: apiRef.current.virtualScrollbarVerticalRef,
-      scrollbarHorizontal: apiRef.current.virtualScrollbarHorizontalRef,
-    },
+  const virtualizer = useVirtualizer({
+    layout,
 
     dimensions: dimensionsParams,
     virtualization: {

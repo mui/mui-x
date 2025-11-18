@@ -10,11 +10,10 @@ import * as platform from '@mui/x-internals/platform';
 import { useRunOnce } from '@mui/x-internals/useRunOnce';
 import { createSelector, useStore, useStoreEffect, Store } from '@mui/x-internals/store';
 import reactMajor from '@mui/x-internals/reactMajor';
-import { PinnedRows, PinnedColumns, Size } from '../models/core';
-import type { CellColSpanInfo } from '../models/colspan';
-import { Dimensions, observeRootNode } from './dimensions';
-import { LayoutMode } from '../constants';
-import type { BaseState, ParamsWithDefaults } from '../useVirtualizer';
+import { PinnedRows, PinnedColumns, Size } from '../../models/core';
+import type { CellColSpanInfo } from '../../models/colspan';
+import { Dimensions, observeRootNode } from '../dimensions';
+import type { BaseState, ParamsWithDefaults } from '../../useVirtualizer';
 import {
   PinnedRowPosition,
   RenderContext,
@@ -24,7 +23,7 @@ import {
   RowEntry,
   ScrollPosition,
   ScrollDirection,
-} from '../models';
+} from '../../models';
 
 /* eslint-disable import/export, @typescript-eslint/no-redeclare */
 
@@ -120,9 +119,15 @@ type AbstractAPI = {
 
 type RequiredAPI = Dimensions.API & AbstractAPI;
 
+export type VirtualizationLayoutParams = {
+  containerRef: (node: HTMLDivElement | null) => void;
+  scrollerRef: (node: HTMLDivElement | null) => void;
+  scrollPosition: React.RefObject<ScrollPosition>;
+};
+
 function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, api: RequiredAPI) {
   const {
-    refs,
+    layout,
     dimensions: { rowHeight, columnsTotalWidth = 0 },
     virtualization: { isRtl = false, rowBufferPx = 150, columnBufferPx = 150 },
     colspan,
@@ -132,9 +137,6 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     columns,
     pinnedRows = PinnedRows.EMPTY,
     pinnedColumns = PinnedColumns.EMPTY,
-
-    minimalContentHeight,
-    autoHeight,
 
     onWheel,
     onTouchMove,
@@ -147,8 +149,6 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     renderInfiniteLoadingTrigger,
   } = params;
 
-  const needsHorizontalScrollbar = useStore(store, Dimensions.selectors.needsHorizontalScrollbar);
-
   const hasBottomPinnedRows = pinnedRows.bottom.length > 0;
   const [panels, setPanels] = React.useState(EMPTY_DETAIL_PANELS);
   const isUpdateScheduled = React.useRef(false);
@@ -158,7 +158,6 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
   const renderContext = useStore(store, selectors.renderContext);
   const enabledForRows = useStore(store, selectors.enabledForRows);
   const enabledForColumns = useStore(store, selectors.enabledForColumns);
-  const offsetTop = useStore(store, selectors.offsetTop);
 
   const contentHeight = useStore(store, Dimensions.selectors.contentHeight);
 
@@ -216,7 +215,7 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
   );
 
   const triggerUpdateRenderContext = useEventCallback(() => {
-    const scroller = refs.scroller.current;
+    const scroller = layout.refs.scroller.current;
     if (!scroller) {
       return undefined;
     }
@@ -537,82 +536,6 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
   };
 
   const scrollRestoreCallback = React.useRef<Function | null>(null);
-  const contentNodeRef = React.useCallback(
-    (node: HTMLDivElement | null) => {
-      if (!node) {
-        return;
-      }
-      scrollRestoreCallback.current?.(columnsTotalWidth, contentHeight);
-    },
-    [columnsTotalWidth, contentHeight],
-  );
-
-  const scrollerStyle = React.useMemo(
-    () =>
-      ({
-        overflowX: !needsHorizontalScrollbar ? 'hidden' : undefined,
-        overflowY: autoHeight ? 'hidden' : undefined,
-        position: params.layout === LayoutMode.ListSimple ? 'relative' : undefined,
-      }) as React.CSSProperties,
-    [needsHorizontalScrollbar, autoHeight, params.layout],
-  );
-
-  const contentStyle = React.useMemo(() => {
-    switch (params.layout) {
-      case LayoutMode.DataGrid: {
-        const style: React.CSSProperties = {
-          width: needsHorizontalScrollbar ? columnsTotalWidth : 'auto',
-          flexBasis: contentHeight,
-          flexShrink: 0,
-        };
-
-        if (style.flexBasis === 0) {
-          style.flexBasis = minimalContentHeight; // Give room to show the overlay when there no rows.
-        }
-
-        return style;
-      }
-      case LayoutMode.ListSimple: {
-        const style: React.CSSProperties = {
-          position: 'absolute',
-          display: 'inline-block',
-          width: '100%',
-          height: contentHeight,
-          top: 0,
-          left: 0,
-          zIndex: -1,
-        };
-        return style;
-      }
-      default:
-        throw new Error(`MUI: Unsupported layout: ${params.layout}`);
-    }
-  }, [
-    columnsTotalWidth,
-    contentHeight,
-    needsHorizontalScrollbar,
-    minimalContentHeight,
-    params.layout,
-  ]);
-
-  const positionerStyle = React.useMemo(() => {
-    switch (params.layout) {
-      case LayoutMode.DataGrid: {
-        const style: React.CSSProperties = {
-          transform: `translate3d(0, ${offsetTop}px, 0)`,
-        };
-        return style;
-      }
-      case LayoutMode.ListSimple: {
-        const style: React.CSSProperties = {
-          height: offsetTop,
-        };
-        return style;
-      }
-      default:
-        throw new Error(`MUI: Unsupported layout: ${params.layout}`);
-    }
-  }, [offsetTop, params.layout]);
 
   useEnhancedEffect(() => {
     if (!isRenderContextReady.current) {
@@ -622,18 +545,18 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
   }, [enabledForColumns, enabledForRows, forceUpdateRenderContextCallback]);
 
   useEnhancedEffect(() => {
-    if (refs.scroller.current) {
-      refs.scroller.current.scrollLeft = 0;
+    if (layout.refs.scroller.current) {
+      layout.refs.scroller.current.scrollLeft = 0;
     }
-  }, [refs.scroller, scrollReset]);
+  }, [layout.refs.scroller, scrollReset]);
 
   useRunOnce(renderContext !== EMPTY_RENDER_CONTEXT, () => {
     onScrollChange?.(scrollPosition.current, renderContext);
 
     isRenderContextReady.current = true;
 
-    if (initialState?.scroll && refs.scroller.current) {
-      const scroller = refs.scroller.current;
+    if (initialState?.scroll && layout.refs.scroller.current) {
+      const scroller = layout.refs.scroller.current;
       const { top, left } = initialState.scroll;
 
       const isScrollRestored = {
@@ -681,24 +604,16 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
 
   useStoreEffect(store, Dimensions.selectors.dimensions, forceUpdateRenderContext);
 
-  const refSetter = (name: keyof typeof refs) => (node: HTMLDivElement | null) => {
-    if (node && refs[name].current !== node) {
-      refs[name].current = node;
+  useEnhancedEffect(() => {
+    if (layout.refs.scroller) {
+      scrollRestoreCallback.current?.(columnsTotalWidth, contentHeight);
     }
-  };
+  }, [columnsTotalWidth, contentHeight]);
 
   const isFirstSizing = React.useRef(true);
 
-  const containerCleanup = React.useRef<() => void | undefined>(undefined);
-
-  const containerRef = useEventCallback((node: HTMLDivElement | null) => {
-    if (!node) {
-      // Cleanup for R18
-      containerCleanup.current?.();
-      return;
-    }
-
-    refs.container.current = node;
+  const containerRef = useRefCallback((node: HTMLDivElement | null) => {
+    layout.refs.container.current = node;
     const unsubscribe = observeRootNode(node, store, (rootSize: Size) => {
       if (
         rootSize.width === 0 &&
@@ -717,91 +632,67 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
         api.debouncedUpdateDimensions();
       }
     });
-    containerCleanup.current = () => {
+    return () => {
       unsubscribe?.();
-      refs.container.current = null;
+      layout.refs.container.current = null;
     };
-
-    if (reactMajor >= 19) {
-      /* eslint-disable-next-line consistent-return */
-      return containerCleanup.current;
-    }
   });
 
-  const scrollerCleanup = React.useRef<() => void | undefined>(undefined);
-  const scrollerRef = useEventCallback((node: HTMLDivElement | null) => {
-    if (!node) {
-      // Cleanup for R18
-      scrollerCleanup.current?.();
-      return;
-    }
-
-    scrollerCleanup.current?.();
-    refs.scroller.current = node;
+  const scrollerRef = useRefCallback((node: HTMLDivElement) => {
+    layout.refs.scroller.current = node;
     const opts: AddEventListenerOptions = { passive: true };
     node.addEventListener('scroll', handleScroll, opts);
     node.addEventListener('wheel', onWheel as any, opts);
     node.addEventListener('touchmove', onTouchMove as any, opts);
-    scrollerCleanup.current = () => {
+    return () => {
       node.removeEventListener('scroll', handleScroll, opts);
       node.removeEventListener('wheel', onWheel as any, opts);
       node.removeEventListener('touchmove', onTouchMove as any, opts);
-      refs.scroller.current = null;
+      layout.refs.scroller.current = null;
     };
-
-    if (reactMajor >= 19) {
-      /* eslint-disable-next-line consistent-return */
-      return scrollerCleanup.current;
-    }
   });
 
-  const scrollbarVerticalRef = useEventCallback(refSetter('scrollbarVertical'));
-  const scrollbarHorizontalRef = useEventCallback(refSetter('scrollbarHorizontal'));
+  const layoutParams = {
+    containerRef,
+    scrollerRef,
+    scrollPosition,
+  };
+
+  const layoutAPI = layout.use(store, params, api, layoutParams);
 
   const getters = {
     setPanels,
     getRows,
     rows: params.rows,
-    getContainerProps: () => ({
-      ref: containerRef,
-    }),
-    getScrollerProps: () => ({
-      ref: scrollerRef,
-      style: scrollerStyle,
-      role: 'presentation',
-      // `tabIndex` shouldn't be used along role=presentation, but it fixes a Firefox bug
-      // https://github.com/mui/mui-x/pull/13891#discussion_r1683416024
-      tabIndex: platform.isFirefox ? -1 : undefined,
-    }),
-    getContentProps: () => ({
-      ref: contentNodeRef,
-      style: contentStyle,
-      role: 'presentation',
-    }),
-    getPositionerProps: () => ({
-      style: positionerStyle,
-    }),
-    getScrollbarVerticalProps: () => ({
-      ref: scrollbarVerticalRef,
-      scrollPosition,
-    }),
-    getScrollbarHorizontalProps: () => ({
-      ref: scrollbarHorizontalRef,
-      scrollPosition,
-    }),
-    getScrollAreaProps: () => ({
-      scrollPosition,
-    }),
+    ...layoutAPI,
   };
 
   return {
     getters,
-    useVirtualization: () => useStore(store, (state) => state),
     setPanels,
     forceUpdateRenderContext,
     scheduleUpdateRenderContext,
     ...createSpanningAPI(),
   };
+}
+
+function useRefCallback(fn: (node: HTMLDivElement) => (() => void) | undefined) {
+  const refCleanup = React.useRef<() => void | undefined>(undefined);
+  const refCallback = useEventCallback((node: HTMLDivElement | null) => {
+    if (!node) {
+      // Cleanup for R18
+      refCleanup.current?.();
+      return;
+    }
+
+    refCleanup.current = fn(node);
+
+    if (reactMajor >= 19) {
+      /* eslint-disable-next-line consistent-return */
+      return refCleanup.current;
+    }
+  });
+  return refCallback;
 }
 
 type RenderContextInputs = ReturnType<typeof inputsSelector>;

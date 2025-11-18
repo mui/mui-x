@@ -1,8 +1,3 @@
-export enum LayoutMode {
-  DataGrid = 'DataGrid',
-  ListSimple = 'ListSimple',
-}
-
 export const DEFAULT_COLUMNS = [{ field: 'DEFAULT_COLUMN' }];
 
 export const DEFAULT_PARAMS = {

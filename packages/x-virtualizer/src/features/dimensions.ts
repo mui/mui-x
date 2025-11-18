@@ -111,7 +111,7 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
   const isFirstSizing = React.useRef(true);
 
   const {
-    refs,
+    layout,
     dimensions: {
       rowHeight,
       columnsTotalWidth,
@@ -132,7 +132,7 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
         return;
       }
 
-      const containerNode = refs.container.current;
+      const containerNode = layout.refs.container.current;
       const rootSize = selectors.rootSize(store.state);
       const rowsMeta = selectors.rowsMeta(store.state);
 
@@ -251,7 +251,7 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
     },
     [
       store,
-      refs.container,
+      layout.refs.container,
       params.dimensions.scrollbarSize,
       params.autoHeight,
       params.disableHorizontalScroll,
