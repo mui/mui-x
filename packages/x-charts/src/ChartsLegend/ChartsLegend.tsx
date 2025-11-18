@@ -107,14 +107,7 @@ const ChartsLegend = consumeSlots(
     const data = useLegend();
     const { instance } = useChartContext<[UseChartVisibilityManagerSignature]>();
     const isItemVisible = useGetIsItemVisible();
-    const {
-      direction,
-      onItemClick,
-      className,
-      classes,
-      toggleVisibilityOnClick = true,
-      ...other
-    } = props;
+    const { direction, onItemClick, className, classes, toggleVisibilityOnClick, ...other } = props;
 
     const isButton = Boolean(onItemClick || toggleVisibilityOnClick);
 
@@ -153,7 +146,7 @@ const ChartsLegend = consumeSlots(
                 role={isButton ? 'button' : undefined}
                 type={isButton ? 'button' : undefined}
                 // @ts-expect-error onClick is only attached to a button
-                onClick={onItemClick ? handleClick(item, i) : undefined}
+                onClick={isButton ? handleClick(item, i) : undefined}
               >
                 <ChartsLabelMark
                   className={classes?.mark}

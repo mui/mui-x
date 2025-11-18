@@ -14,6 +14,29 @@ In chart components, the legend links series with `label` properties and their c
 
 {{"demo": "BasicLegend.js"}}
 
+## Toggle visibility
+
+You can enable interactive visibility toggling by setting the `toggleVisibilityOnClick` prop to `true`.
+When enabled, clicking on a legend item will hide or show the corresponding series or data item in the chart.
+
+Hidden items are visually indicated in the legend with reduced opacity.
+
+{{"demo": "ToggleSeriesVisibility.js"}}
+
+### Visibility change callback
+
+You can listen to visibility changes using the `onVisibilityChange` prop on the chart component.
+This callback receives an array of hidden item identifiers whenever the visibility state changes.
+
+The following demo shows a pie chart where you can toggle individual slices and see the count of visible slices update.
+
+{{"demo": "TogglePieSliceVisibility.js"}}
+
+:::info
+The `toggleVisibilityOnClick` prop can be combined with the `onItemClick` handler.
+When both are provided, the `onItemClick` callback is called first, followed by the visibility toggle.
+:::
+
 ## Customization
 
 This section explains how to customize the legend using classes and properties.

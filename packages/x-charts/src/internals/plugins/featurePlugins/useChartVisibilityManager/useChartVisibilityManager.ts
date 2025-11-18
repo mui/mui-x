@@ -39,7 +39,7 @@ export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSig
     ];
     store.set('visibilityManager', { hiddenIdentifiers: newHidden });
 
-    params.onVisibilityChange?.(Array.from(newHidden));
+    params.onVisibilityChange?.(newHidden);
   });
 
   const toggleItem = useEventCallback((identifier: VisibilityItemIdentifier) => {
@@ -54,26 +54,16 @@ export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSig
     }
   });
 
-  const isItemVisible = useEventCallback((identifier: VisibilityItemIdentifier) => {
-    return !store
-      .getSnapshot()
-      .visibilityManager.hiddenIdentifiers.some((currentIdentifier) =>
-        isSameIdentifier(currentIdentifier, identifier),
-      );
-  });
-
   return {
     instance: {
       hideItem,
       showItem,
       toggleItem,
-      isItemVisible,
     },
     publicAPI: {
       hideItem,
       showItem,
       toggleItem,
-      isItemVisible,
     },
   };
 };

@@ -23,12 +23,6 @@ export interface UseChartVisibilityManagerInstance {
    * @param {VisibilityItemIdentifier} identifier The identifier of the item to toggle.
    */
   toggleItem: (identifier: VisibilityItemIdentifier) => void;
-  /**
-   * Check if an item is visible.
-   * @param {VisibilityItemIdentifier} identifier The identifier of the item to check.
-   * @returns {boolean} Whether the item is visible.
-   */
-  isItemVisible: (identifier: VisibilityItemIdentifier) => boolean;
 }
 
 export interface UseChartVisibilityManagerParameters {
