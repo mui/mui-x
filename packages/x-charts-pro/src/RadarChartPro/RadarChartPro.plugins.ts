@@ -6,6 +6,8 @@ import {
   UseChartInteractionSignature,
   useChartPolarAxis,
   UseChartPolarAxisSignature,
+  useChartVisibleSeries,
+  UseChartVisibleSeriesSignature,
 } from '@mui/x-charts/internals';
 import {
   useChartProExport,
@@ -16,8 +18,15 @@ export type RadarChartProPluginSignatures = [
   UseChartInteractionSignature,
   UseChartPolarAxisSignature,
   UseChartHighlightSignature,
+  UseChartVisibleSeriesSignature,
   UseChartProExportSignature,
 ];
 
 export const RADAR_CHART_PRO_PLUGINS: ConvertSignaturesIntoPlugins<RadarChartProPluginSignatures> =
-  [useChartInteraction, useChartPolarAxis, useChartHighlight, useChartProExport];
+  [
+    useChartInteraction,
+    useChartPolarAxis,
+    useChartHighlight,
+    useChartVisibleSeries,
+    useChartProExport,
+  ];

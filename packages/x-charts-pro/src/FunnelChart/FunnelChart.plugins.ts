@@ -4,6 +4,8 @@ import {
   UseChartHighlightSignature,
   useChartInteraction,
   UseChartInteractionSignature,
+  useChartVisibleSeries,
+  UseChartVisibleSeriesSignature,
 } from '@mui/x-charts/internals';
 import {
   useChartProExport,
@@ -16,6 +18,7 @@ export type FunnelChartPluginSignatures = [
   UseChartFunnelAxisSignature,
   UseChartInteractionSignature,
   UseChartHighlightSignature,
+  UseChartVisibleSeriesSignature,
   UseChartProExportSignature,
 ];
 
@@ -23,5 +26,6 @@ export const FUNNEL_CHART_PLUGINS: ConvertSignaturesIntoPlugins<FunnelChartPlugi
   useChartFunnelAxis,
   useChartInteraction,
   useChartHighlight,
+  useChartVisibleSeries,
   useChartProExport,
 ];

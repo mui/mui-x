@@ -23,6 +23,10 @@ import {
   useChartBrush,
   UseChartBrushSignature,
 } from '../internals/plugins/featurePlugins/useChartBrush';
+import {
+  useChartVisibleSeries,
+  UseChartVisibleSeriesSignature,
+} from '../internals/plugins/featurePlugins/useChartVisibleSeries';
 
 export type LineChartPluginSignatures = [
   UseChartZAxisSignature,
@@ -30,6 +34,7 @@ export type LineChartPluginSignatures = [
   UseChartInteractionSignature,
   UseChartCartesianAxisSignature<'line'>,
   UseChartHighlightSignature,
+  UseChartVisibleSeriesSignature,
   UseChartKeyboardNavigationSignature,
 ];
 
@@ -39,5 +44,6 @@ export const LINE_CHART_PLUGINS: ConvertSignaturesIntoPlugins<LineChartPluginSig
   useChartInteraction,
   useChartCartesianAxis,
   useChartHighlight,
+  useChartVisibleSeries,
   useChartKeyboardNavigation,
 ];
