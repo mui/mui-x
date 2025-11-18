@@ -67,13 +67,13 @@ export default function ResourceMenu(props: ResourceSelectProps) {
     ];
   }, [resources, translations.labelNoResource]);
 
-  const resource = React.useMemo(() => {
-    return (
+  const resource = React.useMemo(
+    () =>
       resourcesOptions.find((option) =>
         resourceId ? option.value === resourceId : option.value === null,
-      ) || null
-    );
-  }, [resourcesOptions, resourceId]);
+      ) || null,
+    [resourcesOptions, resourceId],
+  );
 
   return (
     <Menu.Root>
