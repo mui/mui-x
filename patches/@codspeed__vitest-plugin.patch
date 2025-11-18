@@ -1,0 +1,17 @@
+diff --git a/dist/index.mjs b/dist/index.mjs
+index 7ccc91c566dfd0c9f9b26217cda8e0342b19ad86..89d9cff9447fd0eb2a1368069436c4f0d251a291 100644
+--- a/dist/index.mjs
++++ b/dist/index.mjs
+@@ -33,10 +33,8 @@ function codspeedPlugin() {
+       const config = {
+         test: {
+           pool: "forks",
+-          poolOptions: {
+-            forks: {
+-              execArgv: getV8Flags()
+-            }
++          forks: {
++            execArgv: getV8Flags()
+           },
+           globalSetup: [getCodSpeedFileFromName("globalSetup")],
+           ...runnerFile && {

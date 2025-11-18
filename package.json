@@ -167,7 +167,8 @@
       }
     },
     "patchedDependencies": {
-      "@base-ui-components/react": "patches/@base-ui-components__react.patch"
+      "@base-ui-components/react": "patches/@base-ui-components__react.patch",
+      "@codspeed/vitest-plugin": "patches/@codspeed__vitest-plugin.patch"
     }
   }
 }

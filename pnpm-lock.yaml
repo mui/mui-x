@@ -223,6 +223,9 @@ patchedDependencies:
   '@base-ui-components/react':
     hash: a23a5e3d2555fd74b3b6a83cfe733742964f01052d2aaa76925d7c6cdccdcdbf
     path: patches/@base-ui-components__react.patch
+  '@codspeed/vitest-plugin':
+    hash: 0b82fa819fe4689b2169b9ac21e181684bfe68f5a3f0fb15f44b0f8a3b25719f
+    path: patches/@codspeed__vitest-plugin.patch
 
 importers:
 
@@ -2133,7 +2136,7 @@ importers:
     devDependencies:
       '@codspeed/vitest-plugin':
         specifier: ^5.0.1
-        version: 5.0.1(tinybench@2.9.0)(vite@7.2.2(@types/node@24.5.2)(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.1))(vitest@4.0.8)
+        version: 5.0.1(patch_hash=0b82fa819fe4689b2169b9ac21e181684bfe68f5a3f0fb15f44b0f8a3b25719f)(tinybench@2.9.0)(vite@7.2.2(@types/node@24.5.2)(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.1))(vitest@4.0.8)
       '@emotion/react':
         specifier: 'catalog:'
         version: 11.14.0(@types/react@19.2.2)(react@19.2.0)
@@ -13631,7 +13634,7 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  '@codspeed/vitest-plugin@5.0.1(tinybench@2.9.0)(vite@7.2.2(@types/node@24.5.2)(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.1))(vitest@4.0.8)':
+  '@codspeed/vitest-plugin@5.0.1(patch_hash=0b82fa819fe4689b2169b9ac21e181684bfe68f5a3f0fb15f44b0f8a3b25719f)(tinybench@2.9.0)(vite@7.2.2(@types/node@24.5.2)(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.1))(vitest@4.0.8)':
     dependencies:
       '@codspeed/core': 5.0.1
       tinybench: 2.9.0
