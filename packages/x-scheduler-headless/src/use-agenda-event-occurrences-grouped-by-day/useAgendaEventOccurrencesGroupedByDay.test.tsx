@@ -2,13 +2,12 @@ import * as React from 'react';
 import { renderHook } from '@mui/internal-test-utils';
 import { adapter } from 'test/utils/scheduler';
 import { processDate } from '../process-date';
-import { CalendarEvent, SchedulerValidDate } from '../models';
+import { SchedulerEvent, SchedulerValidDate } from '../models';
 import {
   useAgendaEventOccurrencesGroupedByDay,
   useAgendaEventOccurrencesGroupedByDayOptions,
 } from './useAgendaEventOccurrencesGroupedByDay';
 import { EventCalendarProvider } from '../event-calendar-provider/EventCalendarProvider';
-import { getIdsFromOccurrencesMap } from '../utils/SchedulerStore/tests/utils';
 import { AGENDA_VIEW_DAYS_AMOUNT } from '../constants';
 
 describe('useAgendaEventOccurrencesGroupedByDay', () => {
@@ -16,8 +15,8 @@ describe('useAgendaEventOccurrencesGroupedByDay', () => {
     id: string,
     startISO: string,
     endISO: string,
-    extra: Partial<CalendarEvent> = {},
-  ): CalendarEvent => ({
+    extra: Partial<SchedulerEvent> = {},
+  ): SchedulerEvent => ({
     id,
     start: adapter.date(startISO),
     end: adapter.date(endISO),
@@ -31,7 +30,7 @@ describe('useAgendaEventOccurrencesGroupedByDay', () => {
     showWeekends,
     showEmptyDaysInAgenda,
   }: {
-    events?: CalendarEvent[];
+    events?: SchedulerEvent[];
     visibleDate: SchedulerValidDate;
     showWeekends: boolean;
     showEmptyDaysInAgenda: boolean;
@@ -58,14 +57,14 @@ describe('useAgendaEventOccurrencesGroupedByDay', () => {
       showEmptyDaysInAgenda: true,
     });
 
-    expect(res.days).to.have.length(12);
-    for (const day of res.days) {
-      expect(res.occurrencesMap.get(day.key)).to.deep.equal([]);
+    expect(res).to.have.length(12);
+    for (const day of res) {
+      expect(day.occurrences).to.deep.equal([]);
     }
   });
 
   it('should extend forward until it fills AGENDA_VIEW_DAYS_AMOUNT days that contain events when showEmptyDays=false', () => {
-    const events: CalendarEvent[] = [
+    const events = [
       createEvent('1', '2025-01-01', '2025-01-01'),
       createEvent('2', '2025-01-03', '2025-01-03'),
       createEvent('3', '2025-01-05', '2025-01-05'),
@@ -89,7 +88,7 @@ describe('useAgendaEventOccurrencesGroupedByDay', () => {
       showEmptyDaysInAgenda: false,
     });
 
-    expect(res.days).to.have.length(AGENDA_VIEW_DAYS_AMOUNT);
+    expect(res).to.have.length(AGENDA_VIEW_DAYS_AMOUNT);
     const expectedKeys = [
       processDate(adapter.date('2025-01-01'), adapter).key,
       processDate(adapter.date('2025-01-03'), adapter).key,
@@ -104,14 +103,14 @@ describe('useAgendaEventOccurrencesGroupedByDay', () => {
       processDate(adapter.date('2025-01-18'), adapter).key,
       processDate(adapter.date('2025-01-20'), adapter).key,
     ];
-    expect(res.days.map((day) => day.key)).to.deep.equal(expectedKeys);
-    for (const day of res.days) {
-      expect((res.occurrencesMap.get(day.key) ?? []).length).to.greaterThan(0);
+    expect(res.map((day) => day.date.key)).to.deep.equal(expectedKeys);
+    for (const day of res) {
+      expect(day.occurrences.length).to.greaterThan(0);
     }
   });
 
   it('should respect showWeekends preference when building the day list', () => {
-    const events: CalendarEvent[] = [
+    const events = [
       createEvent('1', '2025-10-03', '2025-10-03'), // Fri
       createEvent('2', '2025-10-04', '2025-10-04'), // Sat
       createEvent('3', '2025-10-05', '2025-10-05'), // Sun
@@ -138,11 +137,13 @@ describe('useAgendaEventOccurrencesGroupedByDay', () => {
       showWeekends: false,
       showEmptyDaysInAgenda: true,
     });
-    expect(res.days).to.have.length(12);
+    expect(res).to.have.length(12);
     const weekendIds = ['2', '3', '9', '10', '16', '17'];
-    const includedIds = getIdsFromOccurrencesMap(res.occurrencesMap);
-    for (const id of weekendIds) {
-      expect(includedIds).to.not.include(id);
+    for (const day of res) {
+      const includedIds = day.occurrences.map((occ) => occ.id);
+      for (const id of weekendIds) {
+        expect(includedIds).to.not.include(id);
+      }
     }
   });
 });

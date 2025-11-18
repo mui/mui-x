@@ -1,5 +1,5 @@
 import { createSelector } from '@base-ui-components/utils/store';
-import { SchedulerValidDate } from '../models';
+import { SchedulerProcessedDate } from '../models';
 import { SchedulerState as State } from '../utils/SchedulerStore/SchedulerStore.types';
 
 export const schedulerOccurrenceSelectors = {
@@ -7,10 +7,10 @@ export const schedulerOccurrenceSelectors = {
   isStartedOrEnded: createSelector(
     (state: State) => state.adapter,
     (state: State) => state.nowUpdatedEveryMinute,
-    (adapter, now, start: SchedulerValidDate, end: SchedulerValidDate) => {
+    (adapter, now, start: SchedulerProcessedDate, end: SchedulerProcessedDate) => {
       return {
-        started: adapter.isBefore(start, now) || adapter.isEqual(start, now),
-        ended: adapter.isBefore(end, now),
+        started: adapter.isBefore(start.value, now) || adapter.isEqual(start.value, now),
+        ended: adapter.isBefore(end.value, now),
       };
     },
   ),

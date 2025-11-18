@@ -1,5 +1,5 @@
 import { screen } from '@mui/internal-test-utils';
-import { adapter, createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
+import { createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import {
   changeTo24HoursFormat,
@@ -246,24 +246,11 @@ describe('EventCalendar', () => {
     });
 
     it('should allow to show / hide empty days using the UI in the agenda view', async () => {
+      const saturdayEvent = EventBuilder.new().singleDay('2025-05-31T07:30:00').build();
+      const sundayEvent = EventBuilder.new().singleDay('2025-06-02T07:30:00').build();
+
       const { user } = render(
-        <EventCalendar
-          events={[
-            {
-              id: '1',
-              start: adapter.date('2025-05-31'),
-              end: adapter.date('2025-05-31'),
-              title: 'Saturday event',
-            },
-            {
-              id: '2',
-              start: adapter.date('2025-06-02'),
-              end: adapter.date('2025-06-02'),
-              title: 'Monday event',
-            },
-          ]}
-          defaultView="agenda"
-        />,
+        <EventCalendar events={[saturdayEvent, sundayEvent]} defaultView="agenda" />,
       );
 
       // Empty days should be visible by default

@@ -6,7 +6,7 @@ import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { useButton } from '../base-ui-copy/utils/useButton';
 import { useRenderElement } from '../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps, NonNativeButtonProps } from '../base-ui-copy/utils/types';
-import { CalendarOccurrencePlaceholderExternalDragData } from '../models';
+import { SchedulerOccurrencePlaceholderExternalDragData } from '../models';
 import { useDragPreview } from '../utils/useDragPreview';
 
 export const StandaloneEvent = React.forwardRef(function StandaloneEvent(
@@ -110,7 +110,7 @@ export namespace StandaloneEvent {
     source: 'StandaloneEvent';
     eventId: string | number;
     occurrenceKey: string;
-    eventData: CalendarOccurrencePlaceholderExternalDragData;
+    eventData: SchedulerOccurrencePlaceholderExternalDragData;
     onEventDrop?: () => void;
   }
 }

@@ -1,5 +1,5 @@
 {
-  "version": "8.17.0",
+  "version": "8.18.0",
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
@@ -46,7 +46,7 @@
     "test:argos": "code-infra argos-push --folder test/regressions/screenshots/chrome",
     "typescript": "lerna run --no-bail --parallel typescript",
     "typescript:ci": "lerna run --concurrency 1 --no-bail --no-sort typescript",
-    "use-react-version": "node scripts/useReactVersion.mjs",
+    "use-react-18": "code-infra set-version-overrides --pkg react@18",
     "use-material-ui-v6": "code-infra set-version-overrides --pkg @mui/material@6",
     "use-material-ui-next": "code-infra set-version-overrides --pkg @mui/material@next",
     "release:changelog": "node scripts/releaseChangelog.mjs",
@@ -70,18 +70,18 @@
     "@babel/types": "^7.28.5",
     "@emotion/cache": "catalog:",
     "@inquirer/prompts": "^7.9.0",
-    "@mui/internal-babel-plugin-display-name": "^1.0.4-canary.7",
-    "@mui/internal-bundle-size-checker": "^1.0.9-canary.53",
-    "@mui/internal-code-infra": "^0.0.3-canary.38",
-    "@mui/internal-markdown": "^2.0.11",
+    "@mui/internal-babel-plugin-display-name": "^1.0.4-canary.8",
+    "@mui/internal-bundle-size-checker": "^1.0.9-canary.55",
+    "@mui/internal-code-infra": "^0.0.3-canary.48",
+    "@mui/internal-markdown": "^2.0.12",
     "@mui/internal-netlify-cache": "^0.0.2-canary.1",
     "@mui/internal-test-utils": "catalog:",
     "@mui/material": "catalog:",
-    "@mui/monorepo": "github:mui/material-ui#3cddd14593b0d9f7dff75b6a0d409cc2d5e086c7",
+    "@mui/monorepo": "github:mui/material-ui#15ff3955e950f3d1ee70b0ea9d9fd8c1057ee0cb",
     "@mui/utils": "catalog:",
     "@next/eslint-plugin-next": "15.5.6",
     "@octokit/plugin-retry": "^8.0.3",
-    "@octokit/rest": "^22.0.0",
+    "@octokit/rest": "^22.0.1",
     "@playwright/test": "catalog:",
     "@types/babel__core": "^7.20.5",
     "@types/babel__traverse": "^7.28.0",
@@ -94,7 +94,7 @@
     "@types/yargs": "^17.0.34",
     "@typescript-eslint/parser": "catalog:",
     "@vitejs/plugin-react": "catalog:",
-    "@vitest/browser": "catalog:",
+    "@vitest/browser-playwright": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "@vvago/vale": "^3.12.0",
     "axe-core": "4.11.0",
@@ -106,20 +106,20 @@
     "chai-dom": "^1.12.1",
     "concurrently": "^9.2.1",
     "cross-env": "catalog:",
-    "danger": "^13.0.4",
+    "danger": "^13.0.5",
     "date-fns-jalali-v2": "npm:date-fns-jalali@2.30.0-0",
     "date-fns-v2": "npm:date-fns@2.30.0",
     "es-toolkit": "^1.41.0",
-    "esbuild": "^0.25.11",
-    "eslint": "^9.38.0",
+    "esbuild": "^0.25.12",
+    "eslint": "^9.39.1",
     "eslint-import-resolver-webpack": "^0.13.10",
     "eslint-plugin-consistent-default-export-name": "^0.0.15",
-    "eslint-plugin-jsdoc": "^61.1.11",
+    "eslint-plugin-jsdoc": "^61.1.12",
     "eslint-plugin-mui-x": "workspace:^",
     "execa": "^9.6.0",
     "glob-gitignore": "^1.0.15",
     "globby": "^15.0.0",
-    "jsdom": "26.1.0",
+    "jsdom": "^26.1.0",
     "lerna": "^9.0.0",
     "magic-string": "^0.30.21",
     "markdownlint-cli2": "^0.18.1",
@@ -153,9 +153,9 @@
   "resolutions": {
     "ast-types": "^0.14.2"
   },
-  "packageManager": "pnpm@10.19.0",
+  "packageManager": "pnpm@10.20.0",
   "engines": {
-    "pnpm": "10.19.0",
+    "pnpm": "10.20.0",
     "node": ">=22.18"
   },
   "pnpm": {
@@ -165,6 +165,9 @@
           "lodash.kebabcase": "^4.1.1"
         }
       }
+    },
+    "patchedDependencies": {
+      "@base-ui-components/react": "patches/@base-ui-components__react.patch"
     }
   }
 }

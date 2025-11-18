@@ -1,23 +1,24 @@
 name: Benchmarks
 
 on:
-  push:
-    branches:
-      - master
-      - next
-    paths:
-      - 'packages/x-charts*/**'
-  pull_request:
-    types:
-      # Default
-      - opened
-      - synchronize
-      - reopened
-      # To run when the right labels are applied
-      - labeled
-    branches:
-      - master
-      - next
+  # push:
+  #   branches:
+  #     - master
+  #     - next
+  #   paths:
+  #     - 'packages/x-charts*/**'
+  # pull_request:
+  #   types:
+  #     # Default
+  #     - opened
+  #     - synchronize
+  #     - reopened
+  #     # To run when the right labels are applied
+  #     - labeled
+  #   branches:
+  #     - master
+  #     - next
+  workflow_dispatch:
 
 permissions: {}
 
@@ -49,7 +50,7 @@ jobs:
       # Ensure we are running on the prod version of our libs
       - run: pnpm --filter "@mui/x-charts-premium..." build
       - name: Run benchmarks
-        uses: CodSpeedHQ/action@4348f634fa7309fe23aac9502e88b999ec90a164
+        uses: CodSpeedHQ/action@6a8e2b874c338bf81cc5e8be715ada75908d3871
         with:
           mode: instrumentation
           run: pnpm --filter @mui-x-internal/performance-charts test:performance

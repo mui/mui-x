@@ -76,7 +76,7 @@ export default function ExternalDragAndDrop() {
 
         setPlaceholder({
           ...eventData,
-          duration: end.diff(start).as('minutes'),
+          duration: end.value.diff(start.value).as('minutes'),
         });
       },
       onDragLeave: () => {
@@ -125,7 +125,7 @@ export default function ExternalDragAndDrop() {
           areEventsDraggable
           canDragEventsFromTheOutside
           canDropEventsToTheOutside
-          preferences={{ isSidePanelOpen: false }}
+          defaultPreferences={{ isSidePanelOpen: false }}
         />
       </div>
     </div>

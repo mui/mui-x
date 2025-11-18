@@ -2,7 +2,7 @@ import { EventBuilder, getEventCalendarStateFromParameters } from 'test/utils/sc
 import { eventCalendarEventSelectors } from './eventCalendarEventSelectors';
 
 const defaultEvent = EventBuilder.new().id('event-1').build();
-const readOnlyEvent = EventBuilder.new().id('event-1').readOnly(true).build();
+const readOnlyEvent = EventBuilder.new().id('event-1').readOnly().build();
 
 describe('eventCalendarEventSelectors', () => {
   describe('isDraggable', () => {
@@ -77,7 +77,7 @@ describe('eventCalendarEventSelectors', () => {
         view: 'week',
         areEventsResizable: undefined,
       });
-      expect(eventCalendarEventSelectors.isResizable(state, 'event-1', 'day-grid')).to.equal(false);
+      expect(eventCalendarEventSelectors.isResizable(state, 'event-1')).to.equal(false);
     });
 
     it('should return false when areEventsResizable is false', () => {
@@ -86,7 +86,7 @@ describe('eventCalendarEventSelectors', () => {
         view: 'week',
         areEventsResizable: false,
       });
-      expect(eventCalendarEventSelectors.isResizable(state, 'event-1', 'day-grid')).to.equal(false);
+      expect(eventCalendarEventSelectors.isResizable(state, 'event-1')).to.equal(false);
     });
 
     it('should return false when the event is read-only', () => {
@@ -95,7 +95,7 @@ describe('eventCalendarEventSelectors', () => {
         view: 'week',
         areEventsResizable: true,
       });
-      expect(eventCalendarEventSelectors.isResizable(state, 'event-1', 'day-grid')).to.equal(false);
+      expect(eventCalendarEventSelectors.isResizable(state, 'event-1')).to.equal(false);
     });
 
     it('should return false when the calendar is read-only', () => {
@@ -105,7 +105,7 @@ describe('eventCalendarEventSelectors', () => {
         areEventsResizable: true,
         readOnly: true,
       });
-      expect(eventCalendarEventSelectors.isResizable(state, 'event-1', 'day-grid')).to.equal(false);
+      expect(eventCalendarEventSelectors.isResizable(state, 'event-1')).to.equal(false);
     });
 
     it('should return false when the event start property is read-only', () => {
@@ -117,7 +117,7 @@ describe('eventCalendarEventSelectors', () => {
           start: { getter: (event) => event.start },
         },
       });
-      expect(eventCalendarEventSelectors.isResizable(state, 'event-1', 'day-grid')).to.equal(false);
+      expect(eventCalendarEventSelectors.isResizable(state, 'event-1')).to.equal(false);
     });
 
     it('should return false when the event end property is read-only', () => {
@@ -129,7 +129,7 @@ describe('eventCalendarEventSelectors', () => {
           end: { getter: (event) => event.end },
         },
       });
-      expect(eventCalendarEventSelectors.isResizable(state, 'event-1', 'day-grid')).to.equal(false);
+      expect(eventCalendarEventSelectors.isResizable(state, 'event-1')).to.equal(false);
     });
 
     it('should return true when areEventsResizable is true and the event is not read-only', () => {
@@ -138,43 +138,7 @@ describe('eventCalendarEventSelectors', () => {
         view: 'week',
         areEventsResizable: true,
       });
-      expect(eventCalendarEventSelectors.isResizable(state, 'event-1', 'day-grid')).to.equal(true);
-    });
-
-    it('should return false in day view on day-grid surface', () => {
-      const state = getEventCalendarStateFromParameters({
-        events: [defaultEvent],
-        view: 'day',
-        areEventsResizable: true,
-      });
-      expect(eventCalendarEventSelectors.isResizable(state, 'event-1', 'day-grid')).to.equal(false);
-    });
-
-    it('should return true in day view on time-grid surface', () => {
-      const state = getEventCalendarStateFromParameters({
-        events: [defaultEvent],
-        view: 'day',
-        areEventsResizable: true,
-      });
-      expect(eventCalendarEventSelectors.isResizable(state, 'event-1', 'time-grid')).to.equal(true);
-    });
-
-    it('should return false in month view on day-grid surface for single-day events', () => {
-      const state = getEventCalendarStateFromParameters({
-        events: [defaultEvent],
-        view: 'month',
-        areEventsResizable: true,
-      });
-      expect(eventCalendarEventSelectors.isResizable(state, 'event-1', 'day-grid')).to.equal(false);
-    });
-
-    it('should return true in month view on day-grid surface for multi-day events', () => {
-      const state = getEventCalendarStateFromParameters({
-        events: [{ ...defaultEvent, allDay: true }],
-        view: 'month',
-        areEventsResizable: true,
-      });
-      expect(eventCalendarEventSelectors.isResizable(state, 'event-1', 'day-grid')).to.equal(true);
+      expect(eventCalendarEventSelectors.isResizable(state, 'event-1')).to.equal(true);
     });
   });
 });
