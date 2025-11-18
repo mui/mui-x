@@ -82,6 +82,9 @@ export const ScrollbarCorner = styled(Scrollbar)({
   right: 0,
   bottom: 0,
   overflow: 'scroll',
+  '@media print': {
+    display: 'none',
+  },
 });
 
 const GridVirtualScrollbar = forwardRef<HTMLDivElement, GridVirtualScrollbarProps>(
