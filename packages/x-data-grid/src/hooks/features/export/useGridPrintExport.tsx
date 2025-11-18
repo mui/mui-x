@@ -145,6 +145,9 @@ export const useGridPrintExport = (
 
       const gridRootElement = apiRef.current.rootElementRef.current;
       const gridClone = gridRootElement!.cloneNode(true) as HTMLElement;
+      const virtualScrollerContent = gridClone.querySelector<HTMLElement>(
+        `.${gridClasses.virtualScrollerContent}`,
+      )!;
 
       // Allow to overflow to not hide the border of the last row
       const gridMain: HTMLElement | null = gridClone.querySelector(`.${gridClasses.main}`);
@@ -154,11 +157,21 @@ export const useGridPrintExport = (
         `.${gridClasses.virtualScrollerRenderZone}`,
       )!.style.position = 'static';
 
-      gridClone.querySelector<HTMLElement>(
-        `.${gridClasses.virtualScrollerContent}`,
-      )!.style.flexBasis = 'auto';
+      virtualScrollerContent.style.flexBasis = 'auto';
 
       gridClone.querySelector<HTMLElement>(`.${gridClasses['scrollbar--vertical']}`)?.remove();
+      // gridClone.querySelector<HTMLElement>(`.${gridClasses['scrollbar--horizontal']}`)?.remove();
+      if (
+        !(
+          virtualScrollerContent.nextSibling instanceof HTMLElement &&
+          virtualScrollerContent.nextSibling.classList.contains(gridClasses.filler)
+        )
+      ) {
+        const filler = document.createElement('div');
+        filler.classList.add(gridClasses.filler);
+        filler.style.height = 'var(--DataGrid-scrollbarSize)';
+        virtualScrollerContent.insertAdjacentElement('afterend', filler);
+      }
 
       const gridFooterElement = gridClone.querySelector<HTMLElement>(
         `.${gridClasses.footerContainer}`,
