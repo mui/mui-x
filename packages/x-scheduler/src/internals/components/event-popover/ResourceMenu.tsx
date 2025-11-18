@@ -68,7 +68,11 @@ export default function ResourceMenu(props: ResourceSelectProps) {
   }, [resources, translations.labelNoResource]);
 
   const resource = React.useMemo(() => {
-    return resourcesOptions.find((option) => option.value === resourceId) || null;
+    return (
+      resourcesOptions.find((option) =>
+        resourceId ? option.value === resourceId : option.value === null,
+      ) || null
+    );
   }, [resourcesOptions, resourceId]);
 
   return (
@@ -78,7 +82,7 @@ export default function ResourceMenu(props: ResourceSelectProps) {
         aria-label={translations.resourceLabel}
       >
         <ResourceMenuTriggerContent resource={resource} color={color} />
-        <span>{resourceId ? resource?.label : translations.labelNoResource}</span>
+        <span>{resource?.label}</span>
         <ChevronDown size={14} />
       </Menu.Trigger>
       <Menu.Portal>
