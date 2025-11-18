@@ -228,3 +228,5 @@ export * from '../hooks/features/pivoting';
 export { createSvgIcon } from '../material/icons/createSvgIcon';
 
 export { useGridPanelContext } from '../components/panel/GridPanelContext';
+
+export type { RowReorderDropPosition, RowReorderDragDirection } from '../models/api/gridRowApi';

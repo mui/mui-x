@@ -26,22 +26,23 @@ import {
   useGridRegisterPipeProcessor,
   type GridPipeProcessor,
   type GridStateInitializer,
+  type RowReorderDropPosition,
+  type RowReorderDragDirection,
 } from '@mui/x-data-grid/internals';
 import { GridRowOrderChangeParams } from '../../../models/gridRowOrderChangeParams';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GRID_REORDER_COL_DEF } from './gridRowReorderColDef';
 import type { ReorderValidationContext } from './reorderValidationTypes';
+
 import { findCellElement } from './utils';
 
 type OwnerState = { classes: DataGridProProcessedProps['classes'] };
 
-type GridRowReorderDirection = 'up' | 'down';
-
 interface ReorderStateProps {
   previousTargetId: GridRowId | null;
-  dragDirection: GridRowReorderDirection | null;
-  previousDropPosition: 'above' | 'below' | 'over' | null;
+  dragDirection: RowReorderDragDirection | null;
+  previousDropPosition: RowReorderDropPosition | null;
 }
 
 const EMPTY_REORDER_STATE: ReorderStateProps = {
@@ -53,7 +54,7 @@ const EMPTY_REORDER_STATE: ReorderStateProps = {
 interface DropTarget {
   targetRowId: GridRowId | null;
   targetRowIndex: number | null;
-  dropPosition: 'above' | 'below' | 'over' | null;
+  dropPosition: RowReorderDropPosition | null;
 }
 
 interface TimeoutInfo {
@@ -131,7 +132,7 @@ export const useGridRowReorder = (
   }, [props.rowReordering, sortModel]);
 
   const calculateDropPosition = React.useCallback(
-    (event: MuiEvent<React.DragEvent<HTMLElement>>): 'above' | 'below' | 'over' => {
+    (event: MuiEvent<React.DragEvent<HTMLElement>>): RowReorderDropPosition => {
       // For tree data, we need to find the cell element to avoid flickerings on top 20% selection
       const targetElement = props.treeData
         ? findCellElement(event.target)
@@ -150,7 +151,7 @@ export const useGridRowReorder = (
         if (relativeY > bottomThreshold) {
           return 'below';
         }
-        return 'over';
+        return 'inside';
       }
       // For flat data and row grouping: split at midpoint
       const midPoint = targetRect.height / 2;
@@ -334,7 +335,7 @@ export const useGridRowReorder = (
         !targetNode.childrenExpanded &&
         !timeoutInfoRef.current.rowId &&
         targetNode.id !== sourceNode.id &&
-        (dropPosition === 'over' || targetNode.depth < sourceNode.depth)
+        (dropPosition === 'inside' || targetNode.depth < sourceNode.depth)
       ) {
         timeout.start(500, () => {
           const rowNode = gridRowNodeSelector(apiRef, params.id) as GridGroupNode;
@@ -378,7 +379,7 @@ export const useGridRowReorder = (
             sourceRowId: dragRowId,
             targetRowId: params.id,
             dropPosition,
-            dragDirection: currentReorderState.dragDirection as GridRowReorderDirection,
+            dragDirection: currentReorderState.dragDirection as RowReorderDragDirection,
           },
         );
 
@@ -512,7 +513,7 @@ export const useGridRowReorder = (
               await apiRef.current.setRowPosition(
                 dragRowId,
                 dropTarget.current.targetRowId!,
-                dropTarget.current.dropPosition as 'above' | 'below' | 'over',
+                dropTarget.current.dropPosition as RowReorderDropPosition,
               );
 
               const updatedTree = gridRowTreeSelector(apiRef);

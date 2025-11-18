@@ -20,7 +20,7 @@ export class SameParentSwapOperation extends BaseReorderOperation {
   readonly operationType = 'same-parent-swap';
 
   detectOperation(ctx: ReorderExecutionContext): ReorderOperation | null {
-    if (ctx.dropPosition === 'over') {
+    if (ctx.dropPosition === 'inside') {
       return null;
     }
 
@@ -161,8 +161,8 @@ class CrossParentLeafOperation extends BaseReorderOperation {
   readonly operationType = 'cross-parent-leaf';
 
   detectOperation(ctx: ReorderExecutionContext): ReorderOperation | null {
-    // Fail for "over" position - let DropOnLeafOperation handle it
-    if (ctx.dropPosition === 'over') {
+    // Fail for "inside" position - let DropOnLeafOperation handle it
+    if (ctx.dropPosition === 'inside') {
       return null;
     }
 
@@ -315,7 +315,7 @@ class CrossParentLeafOperation extends BaseReorderOperation {
 }
 
 /**
- * Handles dropping any node (leaf or group) "over" a leaf node.
+ * Handles dropping any node (leaf or group) "inside" a leaf node.
  * This converts the target leaf into a parent group and makes the dragged node its child.
  */
 class DropOnLeafOperation extends BaseReorderOperation {
@@ -331,8 +331,8 @@ class DropOnLeafOperation extends BaseReorderOperation {
       setTreeDataPath,
     } = ctx;
 
-    // Only applies to "over" drop position
-    if (dropPosition !== 'over') {
+    // Only applies to "inside" drop position
+    if (dropPosition !== 'inside') {
       return null;
     }
 
@@ -514,7 +514,7 @@ class DropOnLeafOperation extends BaseReorderOperation {
 }
 
 /**
- * Handles dropping any node (leaf or group) "over" a group node.
+ * Handles dropping any node (leaf or group) "inside" a group node.
  * This makes the dragged node the first child of the target group.
  */
 class DropOnGroupOperation extends BaseReorderOperation {
@@ -531,8 +531,8 @@ class DropOnGroupOperation extends BaseReorderOperation {
       rowTree,
     } = ctx;
 
-    // Only applies to "over" drop position
-    if (dropPosition !== 'over') {
+    // Only applies to "inside" drop position
+    if (dropPosition !== 'inside') {
       return null;
     }
 
@@ -711,8 +711,8 @@ class CrossParentGroupOperation extends BaseReorderOperation {
   readonly operationType = 'cross-parent-group';
 
   detectOperation(ctx: ReorderExecutionContext): ReorderOperation | null {
-    // Fail for "over" position - let DropOnLeafOperation handle it
-    if (ctx.dropPosition === 'over') {
+    // Fail for "inside" position - let DropOnLeafOperation handle it
+    if (ctx.dropPosition === 'inside') {
       return null;
     }
 

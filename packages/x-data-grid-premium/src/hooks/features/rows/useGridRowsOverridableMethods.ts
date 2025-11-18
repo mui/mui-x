@@ -12,6 +12,7 @@ import {
   useGridRowsOverridableMethodsPro,
   useGridSelector,
   type ReorderExecutionContext,
+  type RowReorderDropPosition,
 } from '@mui/x-data-grid-pro/internals';
 import type { RefObject } from '@mui/x-internals/types';
 import { rowGroupingReorderExecutor } from '../rowReorder/rowGroupingReorderExecutor';
@@ -34,11 +35,7 @@ export const useGridRowsOverridableMethods = (
   const flatTree = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector) === 1;
 
   const setRowPosition = React.useCallback(
-    async (
-      sourceRowId: GridRowId,
-      targetRowId: GridRowId,
-      position: 'above' | 'below' | 'over',
-    ) => {
+    async (sourceRowId: GridRowId, targetRowId: GridRowId, position: RowReorderDropPosition) => {
       const sortedFilteredRowIds = gridExpandedSortedRowIdsSelector(apiRef);
       const sortedFilteredRowIndexLookup = gridExpandedSortedRowIndexLookupSelector(apiRef);
       const rowTree = gridRowTreeSelector(apiRef);
@@ -104,7 +101,7 @@ export const useGridRowsOverridableMethods = (
     async (
       sourceRowId: GridRowId,
       targetOriginalIndex: number,
-      dropPosition: 'above' | 'below' | 'over' = 'below',
+      dropPosition: RowReorderDropPosition = 'below',
     ) => {
       // Get all row IDs to find the targetRowId at the given targetIndex
       const sortedFilteredRowIds = gridExpandedSortedRowIdsSelector(apiRef);

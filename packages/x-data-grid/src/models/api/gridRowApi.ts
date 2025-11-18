@@ -6,6 +6,9 @@ import {
   GridTreeNode,
 } from '../gridRows';
 
+export type RowReorderDropPosition = 'above' | 'below' | 'inside';
+export type RowReorderDragDirection = 'up' | 'down';
+
 export interface GridRowGroupChildrenGetterParams {
   /**
    * The row id of the group
@@ -107,26 +110,26 @@ export interface GridRowProApi {
    * Moves a row from its original position to the position given by `targetIndex`.
    * @param {GridRowId} rowId The row id
    * @param {number} targetIndex The new position (0-based).
-   * @param {('above' | 'below' | 'over')} dropPosition The drop position (only used for tree data ordering)
+   * @param {DropPosition} dropPosition The drop position (only used for tree data ordering)
    * @returns {void | Promise<void>} Returns a Promise when async operations are involved (e.g., processRowUpdate)
    * @deprecated Use `setRowPosition()` instead. This method will be removed in the next major version.
    */
   setRowIndex: (
     rowId: GridRowId,
     targetIndex: number,
-    dropPosition?: 'above' | 'below' | 'over',
+    dropPosition?: RowReorderDropPosition,
   ) => void | Promise<void>;
   /**
    * Moves a row to a new position relative to another row.
    * @param {GridRowId} sourceRowId The ID of the row to move
    * @param {GridRowId} targetRowId The ID of the row to position relative to
-   * @param {('above' | 'below' | 'over')} position Where to place the source row: 'above', 'below', or 'over' (for tree data)
+   * @param {DropPosition} position Where to place the source row: 'above', 'below', or 'over' (for tree data)
    * @returns {void | Promise<void>} Returns a Promise when async operations are involved (e.g., processRowUpdate)
    */
   setRowPosition: (
     sourceRowId: GridRowId,
     targetRowId: GridRowId,
-    position: 'above' | 'below' | 'over',
+    position: RowReorderDropPosition,
   ) => void | Promise<void>;
   /**
    * Gets the rows of a grouping criteria.

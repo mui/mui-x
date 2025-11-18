@@ -1,4 +1,5 @@
 import type { GridRowId } from '../../../models/gridRows';
+import type { RowReorderDropPosition } from '../../../models/api/gridRowApi';
 
 /**
  * The row reorder state.
@@ -23,6 +24,6 @@ export interface GridRowReorderState {
     /**
      * The position of the drop indicator relative to the target row.
      */
-    position: 'above' | 'below' | 'over' | null;
+    position: RowReorderDropPosition | null;
   };
 }

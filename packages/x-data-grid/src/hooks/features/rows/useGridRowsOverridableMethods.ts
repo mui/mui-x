@@ -5,10 +5,11 @@ import { gridRowTreeSelector, gridRowNodeSelector } from './gridRowsSelector';
 import { gridExpandedSortedRowIndexLookupSelector } from '../filter/gridFilterSelector';
 import { GRID_ROOT_GROUP_ID } from './gridRowsUtils';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import type { RowReorderDropPosition } from '../../../models/api/gridRowApi';
 
 export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiCommunity>) => {
   const setRowPosition = React.useCallback(
-    (sourceRowId: GridRowId, targetRowId: GridRowId, position: 'above' | 'below' | 'over') => {
+    (sourceRowId: GridRowId, targetRowId: GridRowId, position: RowReorderDropPosition) => {
       const sourceNode = gridRowNodeSelector(apiRef, sourceRowId);
       const targetNode = gridRowNodeSelector(apiRef, targetRowId);
 
@@ -30,9 +31,9 @@ export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiCo
         );
       }
 
-      if (position === 'over') {
+      if (position === 'inside') {
         throw new Error(
-          `MUI X: The 'over' position is only supported for tree data. Use 'above' or 'below' for flat data.`,
+          `MUI X: The 'inside' position is only supported for tree data. Use 'above' or 'below' for flat data.`,
         );
       }
 
@@ -92,7 +93,11 @@ export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiCo
   );
 
   const setRowIndex = React.useCallback(
-    (rowId: GridRowId, targetIndex: number, dropPosition: 'above' | 'below' | 'over' = 'below') => {
+    (
+      rowId: GridRowId,
+      targetIndex: number,
+      dropPosition: 'above' | 'below' | 'inside' = 'below',
+    ) => {
       // Get all row IDs to find the targetRowId at the given targetIndex
       const group = gridRowTreeSelector(apiRef)[GRID_ROOT_GROUP_ID] as GridGroupNode;
       const allRows = group.children;

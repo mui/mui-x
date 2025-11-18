@@ -1,10 +1,8 @@
 import type { GridRowId, GridTreeNode, GridRowTreeConfig } from '@mui/x-data-grid';
 import type { RefObject } from '@mui/x-internals/types';
+import type { RowReorderDropPosition } from '@mui/x-data-grid/internals';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import type { DropPosition } from './reorderValidationTypes';
-
-export type { DropPosition, DragDirection } from './reorderValidationTypes';
 
 export type ReorderOperationType =
   | 'same-parent-swap'
@@ -15,7 +13,7 @@ export type ReorderOperationType =
 
 export interface ReorderExecutionContext<ApiRef extends GridPrivateApiPro = GridPrivateApiPro> {
   sourceRowId: GridRowId;
-  dropPosition: DropPosition;
+  dropPosition: RowReorderDropPosition;
   placeholderIndex: number;
   sortedFilteredRowIds: GridRowId[];
   sortedFilteredRowIndexLookup: Record<GridRowId, number>;

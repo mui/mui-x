@@ -6,6 +6,7 @@ import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContex
 import { useGridSelector } from '../hooks/utils/useGridSelector';
 import { gridRowDropPositionSelector } from '../hooks/features/rowReorder/gridRowReorderSelector';
 import type { GridRowId } from '../models/gridRows';
+import type { RowReorderDropPosition } from '../models/api/gridRowApi';
 
 export interface GridRowDragAndDropOverlayProps {
   rowId: GridRowId;
@@ -16,7 +17,7 @@ const GridRowDragAndDropOverlayRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'RowDragOverlay',
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'action',
-})<{ action: 'above' | 'below' | 'over' }>(({ theme, action }) => ({
+})<{ action: RowReorderDropPosition }>(({ theme, action }) => ({
   position: 'absolute',
   left: 0,
   right: 0,
@@ -51,7 +52,7 @@ const GridRowDragAndDropOverlayRoot = styled('div', {
     },
   }),
 
-  ...(action === 'over' && {
+  ...(action === 'inside' && {
     backgroundColor: theme.vars
       ? `rgba(${theme.vars.palette.primary.mainChannel} / 0.1)`
       : alpha(theme.palette.primary.main, 0.1),

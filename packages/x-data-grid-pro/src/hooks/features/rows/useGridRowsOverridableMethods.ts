@@ -8,7 +8,10 @@ import {
   gridRowMaximumTreeDepthSelector,
   gridExpandedSortedRowIndexLookupSelector,
 } from '@mui/x-data-grid';
-import { useGridRowsOverridableMethodsCommunity } from '@mui/x-data-grid/internals';
+import {
+  useGridRowsOverridableMethodsCommunity,
+  type RowReorderDropPosition,
+} from '@mui/x-data-grid/internals';
 import type { RefObject } from '@mui/x-internals/types';
 import type { ReorderExecutionContext } from '../rowReorder/types';
 import { treeDataReorderExecutor } from '../treeData/treeDataReorderExecutor';
@@ -29,11 +32,7 @@ export const useGridRowsOverridableMethods = (
   const flatTree = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector) === 1;
 
   const setRowPosition = React.useCallback(
-    async (
-      sourceRowId: GridRowId,
-      targetRowId: GridRowId,
-      position: 'above' | 'below' | 'over',
-    ) => {
+    async (sourceRowId: GridRowId, targetRowId: GridRowId, position: RowReorderDropPosition) => {
       const sortedFilteredRowIds = gridExpandedSortedRowIdsSelector(apiRef);
       const sortedFilteredRowIndexLookup = gridExpandedSortedRowIndexLookupSelector(apiRef);
       const rowTree = gridRowTreeSelector(apiRef);
@@ -84,7 +83,7 @@ export const useGridRowsOverridableMethods = (
     async (
       sourceRowId: GridRowId,
       targetOriginalIndex: number,
-      dropPosition?: 'above' | 'below' | 'over',
+      dropPosition?: 'above' | 'below' | 'inside',
     ) => {
       if (!dropPosition) {
         throw new Error(

@@ -22,6 +22,7 @@ import { GridHydrateRowsValue } from '../../features/rows/gridRowsInterfaces';
 import { GridPreferencePanelsValue } from '../../features/preferencesPanel';
 import { GridGetRowsParams, GridGetRowsResponse } from '../../../models/gridDataSource';
 import { HeightEntry } from '../../features/rows/gridRowsMetaInterfaces';
+import type { RowReorderDropPosition } from '../../../models/api/gridRowApi';
 
 export type GridPipeProcessorGroup = keyof GridPipeProcessingLookup;
 
@@ -84,7 +85,7 @@ export interface GridPipeProcessingLookup {
     context: {
       sourceRowId: GridRowId;
       targetRowId: GridRowId;
-      dropPosition: 'above' | 'below' | 'over';
+      dropPosition: RowReorderDropPosition;
       dragDirection: 'up' | 'down';
     };
   };
