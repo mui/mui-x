@@ -1,5 +1,6 @@
 export * from './translations';
 export type {
+  EventCalendarPreferences,
   SchedulerEvent,
   SchedulerResource,
   SchedulerEventColor,
