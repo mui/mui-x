@@ -57,18 +57,18 @@ export const useChartVisibleSeries: ChartPlugin<UseChartVisibleSeriesSignature> 
   };
 };
 
-useChartVisibleSeries.getDefaultizedParams = ({ params }) => ({
-  ...params,
-  initialHiddenSeries: params.initialHiddenSeries ?? [],
-});
-
-useChartVisibleSeries.getInitialState = (params) => ({
+useChartVisibleSeries.getInitialState = (params, state) => ({
   visibleSeries: {
-    hiddenSeriesIds: new Set(params.initialHiddenSeries),
+    hiddenSeriesIds: new Set(
+      Object.values(state.series.processedSeries).flatMap((seriesData) =>
+        Object.values(seriesData.series)
+          .filter((s) => s.hidden === true)
+          .map((s) => s.id),
+      ),
+    ),
   },
 });
 
 useChartVisibleSeries.params = {
-  initialHiddenSeries: true,
   onVisibleSeriesChange: true,
 };

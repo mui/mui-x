@@ -33,6 +33,11 @@ export interface ChartsLegendProps {
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<ChartsLegendClasses>;
+  /**
+   * If `true`, clicking on a legend item will toggle the visibility of the corresponding series.
+   * @default false
+   */
+  toggleVisibilityOnClick?: boolean;
   className?: string;
   sx?: SxProps<Theme>;
   tabIndex?: number;

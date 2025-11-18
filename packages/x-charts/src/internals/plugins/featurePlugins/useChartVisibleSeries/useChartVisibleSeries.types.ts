@@ -1,4 +1,3 @@
-import { DefaultizedProps } from '@mui/x-internals/types';
 import { ChartPluginSignature } from '../../models';
 import { SeriesId } from '../../../../models/seriesType/common';
 import { UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
@@ -29,21 +28,13 @@ export interface UseChartVisibleSeriesInstance {
 
 export interface UseChartVisibleSeriesParameters {
   /**
-   * An array of series ids that should be initially hidden.
-   * @default []
-   */
-  initialHiddenSeries?: SeriesId[];
-  /**
    * Callback fired when the visible series change.
    * @param {SeriesId[]} hiddenSeries The ids of the hidden series.
    */
   onVisibleSeriesChange?: (hiddenSeries: SeriesId[]) => void;
 }
 
-export type UseChartVisibleSeriesDefaultizedParameters = DefaultizedProps<
-  UseChartVisibleSeriesParameters,
-  'initialHiddenSeries'
->;
+export type UseChartVisibleSeriesDefaultizedParameters = UseChartVisibleSeriesParameters;
 
 export interface UseChartVisibleSeriesState {
   visibleSeries: {
