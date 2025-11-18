@@ -189,7 +189,7 @@ You also need to pass the `setTreeDataPath()` prop to revert the operation done 
 
 To sync the updated row order with an external store, depending on how you manage the order of rows in the external store, you can use either [`processRowUpdate()`](/x/api/data-grid/data-grid-pro/#data-grid-pro-prop-processRowUpdate) or the [`onRowOrderChange()`](/x/api/data-grid/data-grid-pro/#data-grid-pro-prop-onRowOrderChange) callback, or both.
 
-The `processRowUpdate()` callback is triggered whenever a row is updated, so when doing a cross-parent reorder operation, the `path` value gets updated based on the new positions of the rows, resulting in one or more `processRowUpdate()` calls. 
+The `processRowUpdate()` callback is triggered whenever a row is updated, so when doing a cross-parent reorder operation, the `path` value gets updated based on the new positions of the rows, resulting in one or more `processRowUpdate()` calls.
 If the `path` value is part of the row data, you can use the `processRowUpdate()` callback to update the `path` value.
 
 After the reorder operation is successfully completed, the `onRowOrderChange()` callback is triggered, which contains information about the new row reordering of the format [`GridRowOrderChangeParams`](/x/api/data-grid/grid-row-order-change-params/).
@@ -207,7 +207,7 @@ After the reorder operation is successfully completed, the `onRowOrderChange()` 
 
 The demo below uses a custom data store bound using `useSyncExternalStore()` to persist the row data in local storage.
 
-It maintains a row tree structure which is used to recompute path values after a reorder operation is performed, so `processRowUpdate()` is not needed—`onRowOrderChange()` alone is sufficient for syncing the updated row order with the external store. 
+It maintains a row tree structure which is used to recompute path values after a reorder operation is performed, so `processRowUpdate()` is not needed—`onRowOrderChange()` alone is sufficient for syncing the updated row order with the external store.
 This could be different with your specific implementation of row order persistence.
 
 You can test out the demo by reordering the rows and then refreshing the page to see that the order persists.
