@@ -24,7 +24,7 @@
       "description": "The <code>id</code> of the element containing a label for the Data Grid."
     },
     "autoHeight": {
-      "description": "If <code>true</code>, the Data Grid height is dynamic and follows the number of rows in the Data Grid."
+      "description": "If <code>true</code>, the Data Grid height is dynamic and takes as much space as it needs to display all rows. Use it instead of a flex parent container approach, if: - you don&#39;t need to set a minimum or maximum height for the Data Grid - you want to avoid the scrollbar flickering when the content changes"
     },
     "autoPageSize": {
       "description": "If <code>true</code>, the pageSize is calculated according to the container size and the max number of rows to avoid rendering a vertical scroll bar."
