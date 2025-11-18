@@ -18,7 +18,7 @@ const validationRules: ValidationRule[] = [
     message: 'Source and target are adjacent',
   },
   {
-    name: 'group-to-leaf',
+    name: 'to-descendent',
     applies: (ctx) => conditions.isGroupToLeaf(ctx) || conditions.isGroupToGroup(ctx),
     isInvalid: (ctx) => {
       let currentNode = ctx.targetNode;
