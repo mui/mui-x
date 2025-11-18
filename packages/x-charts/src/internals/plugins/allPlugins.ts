@@ -20,6 +20,10 @@ import {
 } from './featurePlugins/useChartClosestPoint';
 import { useChartZAxis, UseChartZAxisSignature } from './featurePlugins/useChartZAxis';
 import { useChartBrush, UseChartBrushSignature } from './featurePlugins/useChartBrush';
+import {
+  useChartVisibleSeries,
+  UseChartVisibleSeriesSignature,
+} from './featurePlugins/useChartVisibleSeries';
 
 export type AllPluginSignatures<TSeries extends ChartSeriesType = ChartSeriesType> = [
   UseChartZAxisSignature,
@@ -28,6 +32,7 @@ export type AllPluginSignatures<TSeries extends ChartSeriesType = ChartSeriesTyp
   UseChartPolarAxisSignature,
   UseChartInteractionSignature,
   UseChartHighlightSignature,
+  UseChartVisibleSeriesSignature,
   UseChartClosestPointSignature,
   UseChartKeyboardNavigationSignature,
 ];
@@ -38,6 +43,7 @@ export type DefaultPluginSignatures<TSeries extends ChartSeriesType = ChartSerie
   UseChartInteractionSignature,
   UseChartCartesianAxisSignature<TSeries>,
   UseChartHighlightSignature,
+  UseChartVisibleSeriesSignature,
   UseChartClosestPointSignature,
   UseChartKeyboardNavigationSignature,
 ];
@@ -48,6 +54,7 @@ export const DEFAULT_PLUGINS = [
   useChartInteraction,
   useChartCartesianAxis,
   useChartHighlight,
+  useChartVisibleSeries,
   useChartClosestPoint,
   useChartKeyboardNavigation,
 ] as const;
