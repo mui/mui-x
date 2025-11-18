@@ -15,6 +15,7 @@ export interface ProcessedBarSeriesData {
   seriesId: SeriesId;
   data: ProcessedBarData[];
   barLabel?: BarSeriesType['barLabel'];
+  barLabelPlacement?: BarSeriesType['barLabelPlacement'];
 }
 
 export interface ProcessedBarData extends AnimationData {

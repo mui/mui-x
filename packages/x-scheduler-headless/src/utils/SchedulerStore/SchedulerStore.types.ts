@@ -1,17 +1,16 @@
 import {
   SchedulerProcessedEvent,
-  CalendarEventColor,
-  CalendarEventOccurrence,
-  CalendarOccurrencePlaceholder,
-  CalendarResource,
-  CalendarResourceId,
-  CalendarEventUpdatedProperties,
+  SchedulerEventColor,
+  SchedulerOccurrencePlaceholder,
+  SchedulerResource,
+  SchedulerResourceId,
+  SchedulerEventUpdatedProperties,
   SchedulerValidDate,
-  CalendarEventId,
+  SchedulerEventId,
   SchedulerResourceModelStructure,
   SchedulerEventModelStructure,
-  SchedulerEvent,
   SchedulerPreferences,
+  SchedulerEventCreationProperties,
 } from '../../models';
 import { Adapter } from '../../use-adapter/useAdapter.types';
 
@@ -32,15 +31,15 @@ export interface SchedulerState<TEvent extends object = any> {
   /**
    * The IDs of the events available in the calendar.
    */
-  eventIdList: CalendarEventId[];
+  eventIdList: SchedulerEventId[];
   /**
    * A lookup to get the event model as provided to props.events from its ID.
    */
-  eventModelLookup: Map<CalendarEventId, TEvent>;
+  eventModelLookup: Map<SchedulerEventId, TEvent>;
   /**
    * A lookup to get the processed event from its ID.
    */
-  processedEventLookup: Map<CalendarEventId, SchedulerProcessedEvent>;
+  processedEventLookup: Map<SchedulerEventId, SchedulerProcessedEvent>;
   /**
    * The structure of the event model.
    * It defines how to read and write properties of the event model.
@@ -50,11 +49,15 @@ export interface SchedulerState<TEvent extends object = any> {
   /**
    * The IDs of the resources the events can be assigned to.
    */
-  resourceIdList: readonly CalendarResourceId[];
+  resourceIdList: readonly SchedulerResourceId[];
+  /**
+   * A lookup to get the children of a resource from its ID.
+   */
+  resourceChildrenIdLookup: Map<SchedulerResourceId, SchedulerResourceId[]>;
   /**
    * A lookup to get the processed resource from its ID.
    */
-  processedResourceLookup: Map<CalendarResourceId, CalendarResource>;
+  processedResourceLookup: Map<SchedulerResourceId, SchedulerResource>;
   /**
    * The structure of the resource model.
    * It defines how to read properties of the resource model.
@@ -65,7 +68,7 @@ export interface SchedulerState<TEvent extends object = any> {
    * Visibility status for each resource.
    * A resource is visible if it is registered in this lookup with `true` value or if it is not registered at all.
    */
-  visibleResources: Map<CalendarResourceId, boolean>;
+  visibleResources: Map<SchedulerResourceId, boolean>;
   /**
    * Whether the event can be dragged to change its start and end dates without changing the duration.
    */
@@ -87,7 +90,7 @@ export interface SchedulerState<TEvent extends object = any> {
   /**
    * The color palette used for all events.
    */
-  eventColor: CalendarEventColor;
+  eventColor: SchedulerEventColor;
   /**
    * Whether the component should display the current time indicator.
    */
@@ -95,17 +98,11 @@ export interface SchedulerState<TEvent extends object = any> {
   /**
    * The placeholder occurrence of the event being created or the event occurrences being dragged
    */
-  occurrencePlaceholder: CalendarOccurrencePlaceholder | null;
+  occurrencePlaceholder: SchedulerOccurrencePlaceholder | null;
   /**
    * The current date and time, updated every minute.
    */
   nowUpdatedEveryMinute: SchedulerValidDate;
-  /**
-   * Checks whether the event is a multi-day event.
-   * A multi day event is rendered in the day grid instead of the time grid when both are available.
-   * It can also be styled differently in the day grid.
-   */
-  isMultiDayEvent: (event: SchedulerProcessedEvent | CalendarEventOccurrence) => boolean;
   /**
    * Whether the calendar is in read-only mode.
    * @default false
@@ -118,7 +115,7 @@ export interface SchedulerState<TEvent extends object = any> {
   /**
    * Preferences for the scheduler.
    */
-  preferences: SchedulerPreferences;
+  preferences: Partial<SchedulerPreferences>;
 }
 
 export interface SchedulerParameters<TEvent extends object, TResource extends object> {
@@ -193,7 +190,7 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
    * Can be overridden per event using the `color` property on the event model. (TODO: not implemented yet)
    * @default "jade"
    */
-  eventColor?: CalendarEventColor;
+  eventColor?: SchedulerEventColor;
   /**
    * Whether the calendar is in read-only mode.
    * @default false
@@ -213,7 +210,7 @@ export type UpdateRecurringEventParameters = {
    * The changes to apply.
    * Requires `start` and `end`, all other properties are optional.
    */
-  changes: CalendarEventUpdatedProperties;
+  changes: SchedulerEventUpdatedProperties;
   /**
    * Callback fired when the user submits the recurring scope dialog.
    */
@@ -240,7 +237,7 @@ export interface SchedulerParametersToStateMapper<
    * Updates the state based on the new parameters.
    */
   updateStateFromParameters: (
-    newState: Omit<Partial<SchedulerState>, 'preferences'>,
+    newState: Partial<SchedulerState>,
     parameters: Parameters,
     updateModel: SchedulerModelUpdater<State, Parameters>,
   ) => Partial<State>;
@@ -256,7 +253,7 @@ export type SchedulerModelUpdater<
 ) => void;
 
 export interface UpdateEventsParameters {
-  deleted?: CalendarEventId[];
-  created?: SchedulerEvent[];
-  updated?: CalendarEventUpdatedProperties[];
+  deleted?: SchedulerEventId[];
+  created?: SchedulerEventCreationProperties[];
+  updated?: SchedulerEventUpdatedProperties[];
 }

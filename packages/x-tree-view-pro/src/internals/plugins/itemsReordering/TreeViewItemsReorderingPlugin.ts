@@ -13,24 +13,7 @@ export class TreeViewItemsReorderingPlugin {
     this.store = store;
     store.itemPluginManager.register(useTreeViewItemsReorderingItemPlugin, null);
   }
-
-  /**
-   * Check if a given item can be dragged.
-   * @param {TreeViewItemId} itemId The id of the item to check.
-   * @returns {boolean} `true` if the item can be dragged, `false` otherwise.
-   */
-  public canItemBeDragged = (itemId: TreeViewItemId) => {
-    if (!this.store.parameters.itemsReordering) {
-      return false;
-    }
-
-    const isItemReorderable = this.store.parameters.isItemReorderable;
-    if (isItemReorderable) {
-      return isItemReorderable(itemId);
-    }
-
-    return true;
-  };
+  q;
 
   /**
    * Get the valid reordering action if a given item is the target of the ongoing reordering.

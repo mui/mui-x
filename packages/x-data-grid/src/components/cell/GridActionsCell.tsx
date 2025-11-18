@@ -3,12 +3,14 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useRtl } from '@mui/system/RtlProvider';
 import useId from '@mui/utils/useId';
+import { warnOnce } from '@mui/x-internals/warning';
 import { GridRenderCellParams } from '../../models/params/gridCellParams';
 import { gridClasses } from '../../constants/gridClasses';
 import { GridMenu, GridMenuProps } from '../menu/GridMenu';
 import { GridActionsColDef } from '../../models/colDef/gridColDef';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
+import { GridActionsCellItem, type GridActionsCellItemProps } from './GridActionsCellItem';
 
 const hasActions = (colDef: any): colDef is GridActionsColDef =>
   typeof colDef.getActions === 'function';
@@ -20,6 +22,14 @@ interface TouchRippleActions {
 interface GridActionsCellProps extends Omit<GridRenderCellParams, 'api'> {
   api?: GridRenderCellParams['api'];
   position?: GridMenuProps['position'];
+  children: React.ReactNode;
+  /**
+   * If true, the children passed to the component will not be validated.
+   * If false, only `GridActionsCellItem` and `React.Fragment` are allowed as children.
+   * Only use this prop if you know what you are doing.
+   * @default false
+   */
+  suppressChildrenValidation?: boolean;
 }
 
 function GridActionsCell(props: GridActionsCellProps) {
@@ -37,7 +47,8 @@ function GridActionsCell(props: GridActionsCellProps) {
     cellMode,
     tabIndex,
     position = 'bottom-end',
-    focusElementRef,
+    children,
+    suppressChildrenValidation,
     ...other
   } = props;
   const [focusedButtonIndex, setFocusedButtonIndex] = React.useState(-1);
@@ -52,13 +63,31 @@ function GridActionsCell(props: GridActionsCellProps) {
   const buttonId = useId();
   const rootProps = useGridRootProps();
 
-  if (!hasActions(colDef)) {
-    throw new Error('MUI X: Missing the `getActions` property in the `GridColDef`.');
-  }
+  const actions: React.ReactElement<GridActionsCellItemProps>[] = [];
+  React.Children.forEach(children, (child) => {
+    // Unwrap React.Fragment
+    if (React.isValidElement<GridActionsCellItemProps>(child)) {
+      if (child.type === React.Fragment) {
+        React.Children.forEach(child.props.children, (fragChild) => {
+          if (React.isValidElement<GridActionsCellItemProps>(fragChild)) {
+            actions.push(fragChild);
+          }
+        });
+      } else if (child.type === GridActionsCellItem || suppressChildrenValidation) {
+        actions.push(child);
+      } else {
+        const childType = typeof child.type === 'function' ? child.type.name : child.type;
+        warnOnce(
+          `MUI X: Invalid child type in \`GridActionsCell\`. Expected \`GridActionsCellItem\` or \`React.Fragment\`, got \`${childType}\`.
+If this is intentional, you can suppress this warning by passing the \`suppressChildrenValidation\` prop to \`GridActionsCell\`.`,
+          'error',
+        );
+      }
+    }
+  });
 
-  const options = colDef.getActions(apiRef.current.getRowParams(id));
-  const iconButtons = options.filter((option) => !option.props.showInMenu);
-  const menuButtons = options.filter((option) => option.props.showInMenu);
+  const iconButtons = actions.filter((option) => !option.props.showInMenu);
+  const menuButtons = actions.filter((option) => option.props.showInMenu);
   const numberOfButtons = iconButtons.length + (menuButtons.length ? 1 : 0);
 
   React.useLayoutEffect(() => {
@@ -84,27 +113,16 @@ function GridActionsCell(props: GridActionsCellProps) {
     child.focus({ preventScroll: true });
   }, [focusedButtonIndex]);
 
+  const firstFocusableButtonIndex = actions.findIndex((o) => !o.props.disabled);
   React.useEffect(() => {
+    if (hasFocus && focusedButtonIndex === -1) {
+      setFocusedButtonIndex(firstFocusableButtonIndex);
+    }
     if (!hasFocus) {
       setFocusedButtonIndex(-1);
       ignoreCallToFocus.current = false;
     }
-  }, [hasFocus]);
-
-  React.useImperativeHandle(
-    focusElementRef,
-    () => ({
-      focus() {
-        // If ignoreCallToFocus is true, then one of the buttons was clicked and the focus is already set
-        if (!ignoreCallToFocus.current) {
-          // find the first focusable button and pass the index to the state
-          const focusableButtonIndex = options.findIndex((o) => !o.props.disabled);
-          setFocusedButtonIndex(focusableButtonIndex);
-        }
-      },
-    }),
-    [options],
-  );
+  }, [hasFocus, focusedButtonIndex, firstFocusableButtonIndex]);
 
   React.useEffect(() => {
     if (focusedButtonIndex >= numberOfButtons) {
@@ -139,8 +157,6 @@ function GridActionsCell(props: GridActionsCellProps) {
   const handleButtonClick =
     (index: number, onClick?: React.MouseEventHandler): React.MouseEventHandler =>
     (event) => {
-      event.stopPropagation();
-      event.preventDefault();
       setFocusedButtonIndex(index);
       ignoreCallToFocus.current = true;
 
@@ -155,7 +171,7 @@ function GridActionsCell(props: GridActionsCellProps) {
     }
 
     const getNewIndex = (index: number, direction: 'left' | 'right'): number => {
-      if (index < 0 || index > options.length) {
+      if (index < 0 || index > actions.length) {
         return index;
       }
 
@@ -164,7 +180,7 @@ function GridActionsCell(props: GridActionsCellProps) {
       const indexMod = (direction === 'left' ? -1 : 1) * rtlMod;
 
       // if the button that should receive focus is disabled go one more step
-      return options[index + indexMod]?.props.disabled
+      return actions[index + indexMod]?.props.disabled
         ? getNewIndex(index + indexMod, direction)
         : index + indexMod;
     };
@@ -254,6 +270,7 @@ GridActionsCell.propTypes = {
    * The mode of the cell.
    */
   cellMode: PropTypes.oneOf(['edit', 'view']).isRequired,
+  children: PropTypes.node.isRequired,
   /**
    * The column of the row that the current cell belongs to.
    */
@@ -262,19 +279,6 @@ GridActionsCell.propTypes = {
    * The column field of the cell that triggered the event.
    */
   field: PropTypes.string.isRequired,
-  /**
-   * A ref allowing to set imperative focus.
-   * It can be passed to the element that should receive focus.
-   * @ignore - do not document.
-   */
-  focusElementRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.shape({
-        focus: PropTypes.func.isRequired,
-      }),
-    }),
-  ]),
   /**
    * The cell value formatted with the column valueFormatter.
    */
@@ -326,4 +330,26 @@ GridActionsCell.propTypes = {
 
 export { GridActionsCell };
 
-export const renderActionsCell = (params: GridRenderCellParams) => <GridActionsCell {...params} />;
+// Temporary wrapper for backward compatibility.
+// Only used to support `getActions` method in `GridColDef`.
+// TODO(v9): Remove this wrapper and the default `renderCell` in gridActionsColDef
+function GridActionsCellWrapper(props: GridRenderCellParams) {
+  const { colDef, id } = props;
+  const apiRef = useGridApiContext();
+
+  if (!hasActions(colDef)) {
+    throw new Error('MUI X: Missing the `getActions` property in the `GridColDef`.');
+  }
+
+  const actions = colDef.getActions(apiRef.current.getRowParams(id));
+
+  return (
+    <GridActionsCell suppressChildrenValidation {...props}>
+      {actions}
+    </GridActionsCell>
+  );
+}
+
+export const renderActionsCell = (params: GridRenderCellParams) => (
+  <GridActionsCellWrapper {...params} />
+);

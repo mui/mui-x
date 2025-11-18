@@ -14,7 +14,13 @@ describe('useDayListEventOccurrencesWithPosition', () => {
 
   function testHook(events: SchedulerProcessedEvent[]) {
     const { result } = renderHook(() => {
-      const occurrencesMap = innerGetEventOccurrencesGroupedByDay(adapter, days, events, new Map());
+      const occurrencesMap = innerGetEventOccurrencesGroupedByDay({
+        adapter,
+        days,
+        events,
+        visibleResources: new Map(),
+        resourceParentIds: new Map(),
+      });
       return useEventOccurrencesWithDayGridPosition({ days, occurrencesMap });
     });
 
