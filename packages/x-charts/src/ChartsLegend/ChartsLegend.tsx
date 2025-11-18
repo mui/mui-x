@@ -82,6 +82,7 @@ const RootElement = styled('ul', {
     display: ownerState.direction === 'vertical' ? 'flex' : 'inline-flex',
     alignItems: 'center',
     gap: theme.spacing(1),
+    cursor: ownerState.onItemClick || ownerState.toggleVisibilityOnClick ? 'pointer' : 'default',
 
     [`&.${legendClasses.hidden}`]: {
       opacity: 0.5,
