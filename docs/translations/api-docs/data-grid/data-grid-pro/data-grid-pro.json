@@ -9,7 +9,7 @@
       "description": "The <code>id</code> of the element containing a label for the Data Grid."
     },
     "autoHeight": {
-      "description": "If <code>true</code>, the Data Grid height is dynamic and follows the number of rows in the Data Grid."
+      "description": "If <code>true</code>, the Data Grid height is dynamic and takes as much space as it needs to display all rows. Use it instead of a flex parent container approach, if: - you don&#39;t need to set a minimum or maximum height for the Data Grid - you want to avoid the scrollbar flickering when the content changes"
     },
     "autoPageSize": {
       "description": "If <code>true</code>, the pageSize is calculated according to the container size and the max number of rows to avoid rendering a vertical scroll bar."
@@ -817,6 +817,9 @@
     "sortModel": { "description": "Set the sort model of the Data Grid." },
     "sx": {
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
+    },
+    "tabNavigation": {
+      "description": "Sets the tab navigation behavior for the Data Grid. - &quot;none&quot;: No Data Grid specific tab navigation. Pressing the tab key will move the focus to the next element in the tab sequence. - &quot;content&quot;: Pressing the tab key will move the focus to the next cell in the same row or the first cell in the next row. Shift+Tab will move the focus to the previous cell in the same row or the last cell in the previous row. Tab navigation is not enabled for the header. - &quot;header&quot;: Pressing the tab key will move the focus to the next column group, column header or header filter. Shift+Tab will move the focus to the previous column group, column header or header filter. Tab navigation is not enabled for the content. - &quot;all&quot;: Combines the &quot;content&quot; and &quot;header&quot; behavior."
     },
     "throttleRowsMs": {
       "description": "If positive, the Data Grid will throttle updates coming from <code>apiRef.current.updateRows</code> and <code>apiRef.current.setRows</code>. It can be useful if you have a high update rate but do not want to do heavy work like filtering / sorting or rendering on each  individual update."

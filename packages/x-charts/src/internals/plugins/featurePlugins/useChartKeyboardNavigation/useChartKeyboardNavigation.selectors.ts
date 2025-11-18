@@ -1,4 +1,5 @@
-import { ChartOptionalRootSelector, createSelector } from '../../utils/selectors';
+import { createSelector } from '@mui/x-internals/store';
+import { ChartOptionalRootSelector } from '../../utils/selectors';
 import { UseChartKeyboardNavigationSignature } from './useChartKeyboardNavigation.types';
 import { ProcessedSeries, selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';
 import {
@@ -16,7 +17,7 @@ const selectKeyboardNavigation: ChartOptionalRootSelector<UseChartKeyboardNaviga
 ) => state.keyboardNavigation;
 
 export const selectorChartsItemIsFocused = createSelector(
-  [selectKeyboardNavigation],
+  selectKeyboardNavigation,
   (keyboardNavigationState, item: FocusedItemData) => {
     return (
       keyboardNavigationState?.item != null &&
@@ -28,27 +29,27 @@ export const selectorChartsItemIsFocused = createSelector(
 );
 
 export const selectorChartsHasFocusedItem = createSelector(
-  [selectKeyboardNavigation],
+  selectKeyboardNavigation,
   (keyboardNavigationState) => keyboardNavigationState?.item != null,
 );
 
 export const selectorChartsFocusedSeriesType = createSelector(
-  [selectKeyboardNavigation],
+  selectKeyboardNavigation,
   (keyboardNavigationState) => keyboardNavigationState?.item?.type,
 );
 
 export const selectorChartsFocusedSeriesId = createSelector(
-  [selectKeyboardNavigation],
+  selectKeyboardNavigation,
   (keyboardNavigationState) => keyboardNavigationState?.item?.seriesId,
 );
 
 export const selectorChartsFocusedDataIndex = createSelector(
-  [selectKeyboardNavigation],
+  selectKeyboardNavigation,
   (keyboardNavigationState) => keyboardNavigationState?.item?.dataIndex,
 );
 
 export const selectorChartsIsKeyboardNavigationEnabled = createSelector(
-  [selectKeyboardNavigation],
+  selectKeyboardNavigation,
   (keyboardNavigationState) => !!keyboardNavigationState?.enableKeyboardNavigation,
 );
 
@@ -87,29 +88,25 @@ const createSelectAxisHighlight =
   };
 
 export const selectorChartsKeyboardXAxisIndex = createSelector(
-  [
-    selectorChartsFocusedSeriesType,
-    selectorChartsFocusedSeriesId,
-    selectorChartsFocusedDataIndex,
-    selectorChartXAxis,
-    selectorChartSeriesProcessed,
-  ],
+  selectorChartsFocusedSeriesType,
+  selectorChartsFocusedSeriesId,
+  selectorChartsFocusedDataIndex,
+  selectorChartXAxis,
+  selectorChartSeriesProcessed,
   createSelectAxisHighlight('x'),
 );
 
 export const selectorChartsKeyboardYAxisIndex = createSelector(
-  [
-    selectorChartsFocusedSeriesType,
-    selectorChartsFocusedSeriesId,
-    selectorChartsFocusedDataIndex,
-    selectorChartYAxis,
-    selectorChartSeriesProcessed,
-  ],
+  selectorChartsFocusedSeriesType,
+  selectorChartsFocusedSeriesId,
+  selectorChartsFocusedDataIndex,
+  selectorChartYAxis,
+  selectorChartSeriesProcessed,
   createSelectAxisHighlight('y'),
 );
 
 export const selectorChartsKeyboardItem = createSelector(
-  [selectKeyboardNavigation],
+  selectKeyboardNavigation,
   function selectorChartsKeyboardItem(keyboardState) {
     if (keyboardState?.item == null) {
       return null;
@@ -124,7 +121,9 @@ export const selectorChartsKeyboardItem = createSelector(
 );
 
 export const selectorChartsKeyboardItemIsDefined = createSelector(
-  [selectorChartsFocusedSeriesType, selectorChartsFocusedSeriesId, selectorChartsFocusedDataIndex],
+  selectorChartsFocusedSeriesType,
+  selectorChartsFocusedSeriesId,
+  selectorChartsFocusedDataIndex,
   function selectorChartsKeyboardItemIsDefined(seriesType, seriesId, dataIndex) {
     return seriesId !== undefined && dataIndex !== undefined;
   },

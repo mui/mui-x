@@ -95,8 +95,7 @@
     "luxon": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "rimraf": "catalog:",
-    "use-isomorphic-layout-effect": "^1.2.1"
+    "rimraf": "catalog:"
   },
   "engines": {
     "node": ">=14.0.0"
