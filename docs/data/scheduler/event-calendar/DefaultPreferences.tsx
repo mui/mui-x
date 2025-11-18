@@ -1,12 +1,15 @@
 import * as React from 'react';
-import { DateTime } from 'luxon';
-import { SchedulerEvent } from '@mui/x-scheduler/models';
+import { EventCalendarPreferences, SchedulerEvent } from '@mui/x-scheduler/models';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import { initialEvents, resources } from '../datasets/personal-agenda';
 
-const defaultVisibleDate = DateTime.fromISO('2025-11-01');
+const defaultPreferences: Partial<EventCalendarPreferences> = {
+  ampm: false,
+  showWeekends: false,
+  isSidePanelOpen: false,
+};
 
-export default function DefaultVisibleDate() {
+export default function DefaultPreferences() {
   const [events, setEvents] = React.useState<SchedulerEvent[]>(initialEvents);
 
   return (
@@ -14,9 +17,8 @@ export default function DefaultVisibleDate() {
       <EventCalendar
         events={events}
         resources={resources}
-        defaultVisibleDate={defaultVisibleDate}
+        defaultPreferences={defaultPreferences}
         onEventsChange={setEvents}
-        defaultPreferences={{ isSidePanelOpen: false }}
       />
     </div>
   );
