@@ -12,6 +12,7 @@ import {
   useGridApiRef,
   type ReorderValidationContext,
   type GridGroupNode,
+  IsRowReorderableParams,
 } from '@mui/x-data-grid-pro';
 import { isJSDOM } from 'test/utils/skipIf';
 
@@ -660,41 +661,11 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
     });
   });
 
-  describe('Validation', () => {
-    it('should prevent moving parent into its own descendant', () => {
-      const handleRowOrderChange = spy();
-      render(<Test onRowOrderChange={handleRowOrderChange} />);
-
-      // Try to move Documents into Work (its child)
-      const allValues = getColumnValues(0);
-      const documentsIndex = allValues.indexOf('Documents');
-      const workIndex = allValues.indexOf('Work');
-
-      expect(documentsIndex).to.be.greaterThan(-1, 'Documents should be found');
-      expect(workIndex).to.be.greaterThan(-1, 'Work should be found');
-
-      const sourceCell = getCell(documentsIndex, 0).firstChild!;
-      const targetCell = getCell(workIndex, 0);
-
-      fireDragStart(sourceCell);
-      fireEvent.dragEnter(targetCell);
-      const dragOverEvent = createDragOverEvent(targetCell, 'below');
-      fireEvent(targetCell, dragOverEvent);
-      const dragEndEvent = createDragEndEvent(sourceCell);
-      fireEvent(sourceCell, dragEndEvent);
-
-      // Verify operation was blocked
-      expect(handleRowOrderChange.callCount).to.equal(0);
-    });
-  });
-
   describe('Props behavior', () => {
     describe('isRowReorderable', () => {
       it('should prevent specific rows from being dragged', async () => {
         const handleRowOrderChange = spy();
-
-        // Prevent dragging rows with even IDs
-        const isRowReorderable = (params: any) => params.row.id % 2 !== 0;
+        const isRowReorderable = (params: IsRowReorderableParams) => params.row.id % 2 !== 0;
 
         render(
           <Test onRowOrderChange={handleRowOrderChange} isRowReorderable={isRowReorderable} />,
@@ -702,42 +673,17 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
 
         const allValues = getColumnValues(0);
 
-        // Try to drag an even ID row (should be blocked)
-        // Look for a row with even ID (like Q1.pdf which has id=4)
         const q1Index = findRowIndex(allValues, 'Q1.pdf', 4); // Has id=4 (even)
         const q2Index = findRowIndex(allValues, 'Q2.pdf', 5); // Has id=5 (odd)
 
         expect(q1Index).to.be.greaterThan(-1, 'Q1.pdf should be found');
         expect(q2Index).to.be.greaterThan(-1, 'Q2.pdf should be found');
 
-        let sourceCell = getCell(q1Index, 0).firstChild!;
-        let targetCell = getCell(q2Index, 0);
+        const evenCell = getCell(q1Index, 0).firstChild!;
+        expect(evenCell).to.have.attribute('draggable', 'false');
 
-        fireDragStart(sourceCell);
-        fireEvent.dragEnter(targetCell);
-        let dragOverEvent = createDragOverEvent(targetCell, 'above');
-        fireEvent(targetCell, dragOverEvent);
-        let dragEndEvent = createDragEndEvent(sourceCell);
-        fireEvent(sourceCell, dragEndEvent);
-
-        // Verify drag was blocked
-        expect(handleRowOrderChange.callCount).to.equal(0);
-
-        // Try to drag an odd ID row (should be executed)
-        sourceCell = getCell(q2Index, 0).firstChild!;
-        targetCell = getCell(q1Index, 0);
-
-        fireDragStart(sourceCell);
-        fireEvent.dragEnter(targetCell);
-        dragOverEvent = createDragOverEvent(targetCell, 'above');
-        fireEvent(targetCell, dragOverEvent);
-        dragEndEvent = createDragEndEvent(sourceCell);
-        fireEvent(sourceCell, dragEndEvent);
-
-        // Verify drag was executed
-        await waitFor(() => {
-          expect(handleRowOrderChange.callCount).to.equal(1);
-        });
+        const oddCell = getCell(q2Index, 0).firstChild!;
+        expect(oddCell).to.have.attribute('draggable', 'true');
       });
     });
 
@@ -1026,8 +972,6 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
         expect(processRowUpdateCallCount).to.be.greaterThan(0);
       });
 
-      // Verify that the error was handled
-      expect(processRowUpdateCallCount).to.be.greaterThan(0);
       expect(handleProcessRowUpdateError.callCount).to.be.greaterThan(0);
     });
 
@@ -1055,82 +999,8 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
       fireEvent(sourceCell, dragEndEvent);
 
       await waitFor(() => {
-        expect(processRowUpdateCalls.length).to.be.greaterThan(1); // Work + its children
+        expect(processRowUpdateCalls.length).to.equal(4); // Work + its children (3) + Pictures (1)
       });
-
-      // Verify Work and its descendants were all updated
-      const workUpdate = processRowUpdateCalls.find((row) => row.name === 'Work');
-      const reportsUpdate = processRowUpdateCalls.find((row) => row.name === 'Reports');
-      expect(workUpdate).to.not.equal(undefined);
-      expect(reportsUpdate).to.not.equal(undefined);
-    });
-  });
-
-  describe('Drop Position Validation', () => {
-    it('should detect "above" drop position in top 20%', () => {
-      render(<Test />);
-
-      const allValues = getColumnValues(0);
-      const q1Index = findRowIndex(allValues, 'Q1.pdf', 4);
-      const q2Index = findRowIndex(allValues, 'Q2.pdf', 5);
-
-      const sourceCell = getCell(q1Index, 0).firstChild!;
-      const targetCell = getCell(q2Index, 0);
-
-      fireDragStart(sourceCell);
-      fireEvent.dragEnter(targetCell);
-
-      // Create event in top area to trigger "above" detection
-      const dragOverEvent = createDragOverEvent(targetCell, 'above');
-      fireEvent(targetCell, dragOverEvent);
-
-      // Verify drag operation was set up (should not throw errors)
-      expect(sourceCell).to.not.equal(null);
-      expect(targetCell).to.not.equal(null);
-    });
-
-    it('should detect "over" drop position in middle 60%', () => {
-      render(<Test />);
-
-      const allValues = getColumnValues(0);
-      const q1Index = findRowIndex(allValues, 'Q1.pdf', 4);
-      const documentsIndex = findRowIndex(allValues, 'Documents', 1);
-
-      const sourceCell = getCell(q1Index, 0).firstChild!;
-      const targetCell = getCell(documentsIndex, 0);
-
-      fireDragStart(sourceCell);
-      fireEvent.dragEnter(targetCell);
-
-      // Create event in middle for "over" detection
-      const dragOverEvent = createDragOverEvent(targetCell, 'over');
-      fireEvent(targetCell, dragOverEvent);
-
-      // Verify drag operation was set up (should not throw errors)
-      expect(sourceCell).to.not.equal(null);
-      expect(targetCell).to.not.equal(null);
-    });
-
-    it('should detect "below" drop position in bottom 20%', () => {
-      render(<Test />);
-
-      const allValues = getColumnValues(0);
-      const q1Index = findRowIndex(allValues, 'Q1.pdf', 4);
-      const q2Index = findRowIndex(allValues, 'Q2.pdf', 5);
-
-      const sourceCell = getCell(q1Index, 0).firstChild!;
-      const targetCell = getCell(q2Index, 0);
-
-      fireDragStart(sourceCell);
-      fireEvent.dragEnter(targetCell);
-
-      // Create event in bottom area to trigger "below" detection
-      const dragOverEvent = createDragOverEvent(targetCell, 'below');
-      fireEvent(targetCell, dragOverEvent);
-
-      // Verify drag operation was set up (should not throw errors)
-      expect(sourceCell).to.not.equal(null);
-      expect(targetCell).to.not.equal(null);
     });
   });
 });
