@@ -4,6 +4,7 @@ import { BarChartPro, BarChartProProps } from '@mui/x-charts-pro/BarChartPro';
 import { shareOfRenewables } from 'docsx/data/charts/dataset/shareOfRenewables';
 import { countryData } from 'docsx/data/charts/dataset/countryData';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { Stack } from '@mui/material';
 
 const darkTheme = createTheme({ palette: { mode: 'dark' } });
 
@@ -35,16 +36,18 @@ const barSettings = {
 export default function ZoomSliderPreview() {
   return (
     <ThemeProvider theme={darkTheme}>
-      <BarChartPro
-        {...barSettings}
-        xAxis={[
-          {
-            ...barXAxis,
-            zoom: { filterMode: 'discard', slider: { enabled: true, preview: true } },
-          },
-        ]}
-        zoomData={[{ axisId: 'x', start: 10, end: 30 }]}
-      />
+      <Stack width="100%" sx={(theme) => ({ background: theme.palette.background.default })}>
+        <BarChartPro
+          {...barSettings}
+          xAxis={[
+            {
+              ...barXAxis,
+              zoom: { filterMode: 'discard', slider: { enabled: true, preview: true } },
+            },
+          ]}
+          zoomData={[{ axisId: 'x', start: 10, end: 30 }]}
+        />
+      </Stack>
     </ThemeProvider>
   );
 }
