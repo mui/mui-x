@@ -1,4 +1,5 @@
 import {
+  SchedulerEventColor,
   SchedulerResourceId,
   RecurringEventPresetKey,
   RecurringEventRecurrenceRule,
@@ -16,6 +17,7 @@ export interface ControlledValue {
   endTime: string;
   resourceId: SchedulerResourceId | null;
   allDay: boolean;
+  color: SchedulerEventColor | null;
   recurrenceSelection: RecurringEventPresetKey | null | 'custom';
   rruleDraft: RecurringEventRecurrenceRule;
 }

@@ -59,9 +59,20 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
         <p className="EventPopoverTitle"> {occurrence.title}</p>
 
         <div className="EventPopoverResourceContainer">
-          <span
-            className={clsx('ResourceLegendColor', getColorClassName(color ?? DEFAULT_EVENT_COLOR))}
-          />
+          <div className="EventPopoverResourceLegendContainer">
+            {resource?.eventColor && resource.eventColor !== color && (
+              <span
+                className={clsx('ResourceLegendColor', getColorClassName(resource.eventColor))}
+              />
+            )}
+
+            <span
+              className={clsx(
+                'ResourceLegendColor',
+                getColorClassName(color ?? DEFAULT_EVENT_COLOR),
+              )}
+            />
+          </div>
           <p
             className={clsx('EventPopoverResourceTitle', 'LinesClamp')}
             style={{ '--number-of-lines': 1 } as React.CSSProperties}
