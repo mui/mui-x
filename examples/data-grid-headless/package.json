@@ -1,5 +1,5 @@
 {
-  "name": "data-grid-core-example",
+  "name": "data-grid-headless-example",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -9,9 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@mui/x-data-grid-core": "workspace:@mui/x-data-grid-core@*",
-    "@mui/x-data-grid-core-pro": "workspace:@mui/x-data-grid-core-pro@*",
-    "@mui/x-data-grid-core-premium": "workspace:@mui/x-data-grid-core-premium@*",
+    "@mui/x-data-grid-headless": "workspace:@mui/x-data-grid-headless@*",
+    "@mui/x-data-grid-headless-pro": "workspace:@mui/x-data-grid-headless-pro@*",
+    "@mui/x-data-grid-headless-premium": "workspace:@mui/x-data-grid-headless-premium@*",
     "react": "catalog:",
     "react-dom": "catalog:"
   },

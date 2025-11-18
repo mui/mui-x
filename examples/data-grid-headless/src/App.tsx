@@ -1,6 +1,6 @@
-import { useDataGrid } from '@mui/x-data-grid-core';
-// import { useDataGridPro } from '@mui/x-data-grid-core-pro';
-// import { useDataGridPremium } from '@mui/x-data-grid-core-premium';
+import { useDataGrid } from '@mui/x-data-grid-headless';
+// import { useDataGridPro } from '@mui/x-data-grid-headless-pro';
+// import { useDataGridPremium } from '@mui/x-data-grid-headless-premium';
 import './App.css';
 
 function DataGrid() {

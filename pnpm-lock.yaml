@@ -788,17 +788,17 @@ importers:
         specifier: 'catalog:'
         version: 14.2.5
 
-  examples/data-grid-core:
+  examples/data-grid-headless:
     dependencies:
-      '@mui/x-data-grid-core':
-        specifier: workspace:@mui/x-data-grid-core@*
-        version: link:../../packages/x-data-grid-core/build
-      '@mui/x-data-grid-core-premium':
-        specifier: workspace:@mui/x-data-grid-core-premium@*
-        version: link:../../packages/x-data-grid-core-premium/build
-      '@mui/x-data-grid-core-pro':
-        specifier: workspace:@mui/x-data-grid-core-pro@*
-        version: link:../../packages/x-data-grid-core-pro/build
+      '@mui/x-data-grid-headless':
+        specifier: workspace:@mui/x-data-grid-headless@*
+        version: link:../../packages/x-data-grid-headless/build
+      '@mui/x-data-grid-headless-premium':
+        specifier: workspace:@mui/x-data-grid-headless-premium@*
+        version: link:../../packages/x-data-grid-headless-premium/build
+      '@mui/x-data-grid-headless-pro':
+        specifier: workspace:@mui/x-data-grid-headless-pro@*
+        version: link:../../packages/x-data-grid-headless-pro/build
       react:
         specifier: 'catalog:'
         version: 19.2.0
@@ -1223,108 +1223,6 @@ importers:
         version: 6.1.0
     publishDirectory: build
 
-  packages/x-data-grid-core:
-    dependencies:
-      '@babel/runtime':
-        specifier: 'catalog:'
-        version: 7.28.4
-      '@mui/x-internals':
-        specifier: workspace:*
-        version: link:../x-internals/build
-      prop-types:
-        specifier: 'catalog:'
-        version: 15.8.1
-    devDependencies:
-      '@mui/internal-test-utils':
-        specifier: 'catalog:'
-        version: 2.0.15(@babel/core@7.28.5)(@playwright/test@1.56.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(chai@6.2.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
-      '@types/prop-types':
-        specifier: 'catalog:'
-        version: 15.7.15
-      react:
-        specifier: 'catalog:'
-        version: 19.2.0
-      react-dom:
-        specifier: 'catalog:'
-        version: 19.2.0(react@19.2.0)
-      rimraf:
-        specifier: 'catalog:'
-        version: 6.1.0
-    publishDirectory: build
-
-  packages/x-data-grid-core-premium:
-    dependencies:
-      '@babel/runtime':
-        specifier: 'catalog:'
-        version: 7.28.4
-      '@mui/x-data-grid-core':
-        specifier: workspace:*
-        version: link:../x-data-grid-core/build
-      '@mui/x-data-grid-core-pro':
-        specifier: workspace:*
-        version: link:../x-data-grid-core-pro/build
-      '@mui/x-internals':
-        specifier: workspace:*
-        version: link:../x-internals/build
-      '@mui/x-license':
-        specifier: workspace:*
-        version: link:../x-license/build
-      prop-types:
-        specifier: 'catalog:'
-        version: 15.8.1
-    devDependencies:
-      '@mui/internal-test-utils':
-        specifier: 'catalog:'
-        version: 2.0.15(@babel/core@7.28.5)(@playwright/test@1.56.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(chai@6.2.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
-      '@types/prop-types':
-        specifier: 'catalog:'
-        version: 15.7.15
-      react:
-        specifier: 'catalog:'
-        version: 19.2.0
-      react-dom:
-        specifier: 'catalog:'
-        version: 19.2.0(react@19.2.0)
-      rimraf:
-        specifier: 'catalog:'
-        version: 6.1.0
-    publishDirectory: build
-
-  packages/x-data-grid-core-pro:
-    dependencies:
-      '@babel/runtime':
-        specifier: 'catalog:'
-        version: 7.28.4
-      '@mui/x-data-grid-core':
-        specifier: workspace:*
-        version: link:../x-data-grid-core/build
-      '@mui/x-internals':
-        specifier: workspace:*
-        version: link:../x-internals/build
-      '@mui/x-license':
-        specifier: workspace:*
-        version: link:../x-license/build
-      prop-types:
-        specifier: 'catalog:'
-        version: 15.8.1
-    devDependencies:
-      '@mui/internal-test-utils':
-        specifier: 'catalog:'
-        version: 2.0.15(@babel/core@7.28.5)(@playwright/test@1.56.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(chai@6.2.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
-      '@types/prop-types':
-        specifier: 'catalog:'
-        version: 15.7.15
-      react:
-        specifier: 'catalog:'
-        version: 19.2.0
-      react-dom:
-        specifier: 'catalog:'
-        version: 19.2.0(react@19.2.0)
-      rimraf:
-        specifier: 'catalog:'
-        version: 6.1.0
-    publishDirectory: build
-
   packages/x-data-grid-generator:
     dependencies:
       '@babel/runtime':
@@ -1367,6 +1265,108 @@ importers:
       '@types/chance':
         specifier: 'catalog:'
         version: 1.1.7
+      react:
+        specifier: 'catalog:'
+        version: 19.2.0
+      react-dom:
+        specifier: 'catalog:'
+        version: 19.2.0(react@19.2.0)
+      rimraf:
+        specifier: 'catalog:'
+        version: 6.1.0
+    publishDirectory: build
+
+  packages/x-data-grid-headless:
+    dependencies:
+      '@babel/runtime':
+        specifier: 'catalog:'
+        version: 7.28.4
+      '@mui/x-internals':
+        specifier: workspace:*
+        version: link:../x-internals/build
+      prop-types:
+        specifier: 'catalog:'
+        version: 15.8.1
+    devDependencies:
+      '@mui/internal-test-utils':
+        specifier: 'catalog:'
+        version: 2.0.15(@babel/core@7.28.5)(@playwright/test@1.56.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(chai@6.2.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      '@types/prop-types':
+        specifier: 'catalog:'
+        version: 15.7.15
+      react:
+        specifier: 'catalog:'
+        version: 19.2.0
+      react-dom:
+        specifier: 'catalog:'
+        version: 19.2.0(react@19.2.0)
+      rimraf:
+        specifier: 'catalog:'
+        version: 6.1.0
+    publishDirectory: build
+
+  packages/x-data-grid-headless-premium:
+    dependencies:
+      '@babel/runtime':
+        specifier: 'catalog:'
+        version: 7.28.4
+      '@mui/x-data-grid-headless':
+        specifier: workspace:*
+        version: link:../x-data-grid-headless/build
+      '@mui/x-data-grid-headless-pro':
+        specifier: workspace:*
+        version: link:../x-data-grid-headless-pro/build
+      '@mui/x-internals':
+        specifier: workspace:*
+        version: link:../x-internals/build
+      '@mui/x-license':
+        specifier: workspace:*
+        version: link:../x-license/build
+      prop-types:
+        specifier: 'catalog:'
+        version: 15.8.1
+    devDependencies:
+      '@mui/internal-test-utils':
+        specifier: 'catalog:'
+        version: 2.0.15(@babel/core@7.28.5)(@playwright/test@1.56.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(chai@6.2.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      '@types/prop-types':
+        specifier: 'catalog:'
+        version: 15.7.15
+      react:
+        specifier: 'catalog:'
+        version: 19.2.0
+      react-dom:
+        specifier: 'catalog:'
+        version: 19.2.0(react@19.2.0)
+      rimraf:
+        specifier: 'catalog:'
+        version: 6.1.0
+    publishDirectory: build
+
+  packages/x-data-grid-headless-pro:
+    dependencies:
+      '@babel/runtime':
+        specifier: 'catalog:'
+        version: 7.28.4
+      '@mui/x-data-grid-headless':
+        specifier: workspace:*
+        version: link:../x-data-grid-headless/build
+      '@mui/x-internals':
+        specifier: workspace:*
+        version: link:../x-internals/build
+      '@mui/x-license':
+        specifier: workspace:*
+        version: link:../x-license/build
+      prop-types:
+        specifier: 'catalog:'
+        version: 15.8.1
+    devDependencies:
+      '@mui/internal-test-utils':
+        specifier: 'catalog:'
+        version: 2.0.15(@babel/core@7.28.5)(@playwright/test@1.56.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(chai@6.2.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      '@types/prop-types':
+        specifier: 'catalog:'
+        version: 15.7.15
       react:
         specifier: 'catalog:'
         version: 19.2.0

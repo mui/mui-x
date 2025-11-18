@@ -1,10 +1,10 @@
 {
-  "name": "@mui/x-data-grid-core",
+  "name": "@mui/x-data-grid-headless-premium",
   "version": "0.0.1",
   "private": true,
   "author": "MUI Team",
-  "description": "The Community plan edition of the Data Grid Core.",
-  "license": "MIT",
+  "description": "The Premium plan edition of the headless Data Grid.",
+  "license": "SEE LICENSE IN LICENSE",
   "bugs": {
     "url": "https://github.com/mui/mui-x/issues"
   },
@@ -34,11 +34,14 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mui/mui-x.git",
-    "directory": "packages/x-data-grid-core"
+    "directory": "packages/x-data-grid-headless-premium"
   },
   "dependencies": {
     "@babel/runtime": "catalog:",
+    "@mui/x-data-grid-headless": "workspace:*",
+    "@mui/x-data-grid-headless-pro": "workspace:*",
     "@mui/x-internals": "workspace:*",
+    "@mui/x-license": "workspace:*",
     "prop-types": "catalog:"
   },
   "peerDependencies": {

@@ -12,7 +12,7 @@
     "types": ["../../mui-env.d.ts"]
   },
   "references": [
-    { "path": "../x-data-grid-core/tsconfig.build.json" },
+    { "path": "../x-data-grid-headless/tsconfig.build.json" },
     { "path": "../x-license/tsconfig.build.json" },
     { "path": "../x-internals/tsconfig.build.json" }
   ],
