@@ -41,10 +41,6 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props
         contentRefObject,
         externalEventHandlers,
       }): UseTreeItemRootSlotPropsFromItemsReordering => {
-        if (!canItemBeReordered) {
-          return {};
-        }
-
         const handleDragStart = (event: React.DragEvent & TreeViewCancellableEvent) => {
           externalEventHandlers.onDragStart?.(event);
           if (event.defaultMuiPrevented || event.defaultPrevented) {
@@ -98,7 +94,7 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props
         };
 
         return {
-          draggable: true,
+          draggable: canItemBeReordered ? true : undefined,
           onDragStart: handleDragStart,
           onDragOver: handleRootDragOver,
           onDragEnd: handleRootDragEnd,
