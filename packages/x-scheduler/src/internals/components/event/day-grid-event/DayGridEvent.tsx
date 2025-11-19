@@ -33,11 +33,8 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     ...other
   } = props;
 
-  // Context hooks
   const translations = useTranslations();
   const store = useEventCalendarStoreContext();
-
-  // Selector hooks
   const isDraggable = useStore(store, eventCalendarEventSelectors.isDraggable, occurrence.id);
   const isResizable = useStore(
     store,
@@ -51,10 +48,8 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     occurrence.resource,
   );
   const color = useStore(store, schedulerEventSelectors.color, occurrence.id);
-
-  // Feature hooks
-  const formatTime = useFormatTime();
   const isRecurring = Boolean(occurrence.rrule);
+  const formatTime = useFormatTime();
 
   const content = React.useMemo(() => {
     switch (variant) {
