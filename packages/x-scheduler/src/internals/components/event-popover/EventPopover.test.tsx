@@ -491,6 +491,7 @@ describe('<EventPopoverContent />', () => {
       expect(createEventSpy?.calledOnce).to.equal(true);
       const payload = createEventSpy.lastCall.firstArg;
 
+      expect(payload.id).to.be.a('string');
       expect(payload.title).to.equal('New title');
       expect(payload.description).to.equal('Some details');
       expect(payload.allDay).to.equal(false);

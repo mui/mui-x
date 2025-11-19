@@ -42,6 +42,7 @@ describe('recurring-event-utils', () => {
       title: 'Recurring Event',
       start: adapter.date('2025-01-01T09:00:00Z'),
       end: adapter.date('2025-01-01T10:00:00Z'),
+      allDay: false,
       rrule: { freq: 'DAILY', interval: 1 },
       ...overrides,
     });
@@ -1671,14 +1672,11 @@ describe('recurring-event-utils', () => {
       const original = createRecurringEvent();
 
       const occurrenceStart = adapter.date('2025-01-05T09:00:00Z');
-      const changesWithoutId = {
+      const changes: SchedulerEventUpdatedProperties = {
+        id: original.id,
         title: 'Only-this edited',
         start: adapter.date('2025-01-05T11:00:00Z'),
         end: adapter.date('2025-01-05T12:00:00Z'),
-      };
-      const changes: SchedulerEventUpdatedProperties = {
-        id: original.id,
-        ...changesWithoutId,
       };
 
       const updatedEvents = applyRecurringUpdateOnlyThis(
@@ -1691,8 +1689,11 @@ describe('recurring-event-utils', () => {
       expect(updatedEvents.deleted).to.equal(undefined);
       expect(updatedEvents.created).to.deep.equal([
         {
-          ...changesWithoutId,
+          ...original.modelInBuiltInFormat,
+          ...changes,
+          id: `${original.id}::${adapter.format(changes.start!, 'keyboardDate')}`,
           extractedFromId: original.id,
+          rrule: undefined,
         },
       ]);
       expect(updatedEvents.updated).to.deep.equal([
@@ -1731,14 +1732,11 @@ describe('recurring-event-utils', () => {
       const original = createRecurringEvent();
 
       const occurrenceStart = adapter.date('2025-01-07T09:00:00Z');
-      const changesWithoutId = {
+      const changes: SchedulerEventUpdatedProperties = {
+        id: original.id,
         title: 'Only-this changed date',
         start: adapter.date('2025-01-08T11:00:00Z'),
         end: adapter.date('2025-01-08T12:00:00Z'),
-      };
-      const changes: SchedulerEventUpdatedProperties = {
-        id: original.id,
-        ...changesWithoutId,
       };
 
       const updatedEvents = applyRecurringUpdateOnlyThis(
@@ -1751,8 +1749,11 @@ describe('recurring-event-utils', () => {
       expect(updatedEvents.deleted).to.equal(undefined);
       expect(updatedEvents.created).to.deep.equal([
         {
+          ...original.modelInBuiltInFormat,
+          ...changes,
+          id: `${original.id}::${adapter.format(changes.start!, 'keyboardDate')}`,
           extractedFromId: original.id,
-          ...changesWithoutId,
+          rrule: undefined,
         },
       ]);
       expect(updatedEvents.updated).to.deep.equal([

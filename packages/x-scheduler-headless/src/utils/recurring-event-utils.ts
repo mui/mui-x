@@ -8,7 +8,6 @@ import {
   RecurringEventRecurrenceRule,
   SchedulerValidDate,
   SchedulerEvent,
-  SchedulerEventCreationProperties,
 } from '../models';
 import { mergeDateAndTime, getDateKey } from './date-utils';
 import { diffIn } from '../use-adapter';
@@ -1027,8 +1026,18 @@ export function applyRecurringUpdateOnlyThis(
   occurrenceStart: SchedulerValidDate,
   changes: SchedulerEventUpdatedProperties,
 ): UpdateEventsParameters {
+  const detachedId = `${originalEvent.id}::${getDateKey(changes.start ?? originalEvent.start.value, adapter)}`;
+
+  const detachedEvent: SchedulerEvent = {
+    ...originalEvent.modelInBuiltInFormat!,
+    ...changes,
+    id: detachedId,
+    rrule: undefined,
+    extractedFromId: originalEvent.id,
+  };
+
   return {
-    created: [createEventFromRecurringEvent(originalEvent, changes)],
+    created: [detachedEvent],
     updated: [
       {
         id: originalEvent.id,
@@ -1036,27 +1045,6 @@ export function applyRecurringUpdateOnlyThis(
       },
     ],
   };
-}
-
-/**
- * Generates the property to pass to `store.updateEvents()` to create an event extracted from a potentially recurring event.
- */
-export function createEventFromRecurringEvent(
-  originalEvent: SchedulerProcessedEvent,
-  changes: Partial<SchedulerEvent>,
-): SchedulerEventCreationProperties {
-  const createdEvent: SchedulerEventCreationProperties = {
-    ...originalEvent.modelInBuiltInFormat!,
-    ...changes,
-    extractedFromId: originalEvent.id,
-  };
-
-  // @ts-ignore
-  delete createdEvent.id;
-  delete createdEvent.rrule;
-  delete createdEvent.exDates;
-
-  return createdEvent;
 }
 
 const SUPPORTED_RRULE_KEYS = [

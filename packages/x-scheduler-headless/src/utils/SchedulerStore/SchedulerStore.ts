@@ -10,8 +10,8 @@ import {
   SchedulerValidDate,
   SchedulerEventUpdatedProperties,
   RecurringEventUpdateScope,
+  SchedulerEvent,
   SchedulerPreferences,
-  SchedulerEventCreationProperties,
 } from '../../models';
 import {
   SchedulerState,
@@ -26,7 +26,6 @@ import {
   applyRecurringUpdateFollowing,
   applyRecurringUpdateAll,
   applyRecurringUpdateOnlyThis,
-  createEventFromRecurringEvent,
 } from '../recurring-event-utils';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
 import {
@@ -258,20 +257,16 @@ export class SchedulerStore<
       newEvents.push(...schedulerEventSelectors.modelList(this.state));
     }
 
-    const createdIds: SchedulerEventId[] = [];
     for (const createdEvent of created) {
-      const response = createEventModel(createdEvent, this.state.eventModelStructure);
-      newEvents.push(response.model);
-      createdIds.push(response.id);
+      if (schedulerEventSelectors.processedEvent(this.state, createdEvent.id)) {
+        throw new Error(
+          `${this.instanceName}: an event with id="${createdEvent.id}" already exists. Use updateEvent(...) instead.`,
+        );
+      }
+      newEvents.push(createEventModel(createdEvent, this.state.eventModelStructure));
     }
 
     this.parameters.onEventsChange?.(newEvents);
-
-    return {
-      deleted: deletedParam ?? [],
-      updated: Array.from(updated.keys()),
-      created: createdIds,
-    };
   }
 
   /**
@@ -285,8 +280,8 @@ export class SchedulerStore<
   /**
    * Creates a new event in the calendar.
    */
-  public createEvent = (calendarEvent: SchedulerEventCreationProperties) => {
-    return this.updateEvents({ created: [calendarEvent] }).created[0];
+  public createEvent = (calendarEvent: SchedulerEvent) => {
+    this.updateEvents({ created: [calendarEvent] });
   };
 
   /**
@@ -378,26 +373,6 @@ export class SchedulerStore<
    */
   public deleteEvent = (eventId: SchedulerEventId) => {
     this.updateEvents({ deleted: [eventId] });
-  };
-
-  /**
-   * Creates an event from an event occurrence.
-   * The new event will have the same properties as the original event except:
-   * - the start and end dates will be those provided as parameters.
-   * - the recurrence rule will be removed.
-   */
-  public duplicateEventOccurrence = (
-    eventId: SchedulerEventId,
-    start: SchedulerValidDate,
-    end: SchedulerValidDate,
-  ) => {
-    const original = schedulerEventSelectors.processedEvent(this.state, eventId);
-    if (!original) {
-      throw new Error(`${this.instanceName}: the original event was not found (id="${eventId}").`);
-    }
-
-    const duplicatedEvent = createEventFromRecurringEvent(original, { start, end });
-    return this.updateEvents({ created: [duplicatedEvent] }).created[0];
   };
 
   /**
