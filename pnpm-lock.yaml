@@ -27,6 +27,9 @@ catalogs:
     '@babel/traverse':
       specifier: ^7.28.5
       version: 7.28.5
+    '@date-fns/tz':
+      specifier: ^1.2.0
+      version: 1.4.1
     '@emotion/cache':
       specifier: ^11.14.0
       version: 11.14.0
@@ -1692,6 +1695,9 @@ importers:
         specifier: ^6.3.0
         version: 6.3.0
     devDependencies:
+      '@date-fns/tz':
+        specifier: 'catalog:'
+        version: 1.4.1
       '@mui/internal-test-utils':
         specifier: 'catalog:'
         version: 2.0.15(@babel/core@7.28.5)(@playwright/test@1.56.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(chai@6.2.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -1704,6 +1710,9 @@ importers:
       '@types/use-sync-external-store':
         specifier: 'catalog:'
         version: 1.5.0
+      date-fns:
+        specifier: 'catalog:'
+        version: 4.1.0
       luxon:
         specifier: 'catalog:'
         version: 3.7.2
@@ -3270,6 +3279,9 @@ packages:
     engines: {node: '>=18'}
     peerDependencies:
       postcss-selector-parser: ^7.0.0
+
+  '@date-fns/tz@1.4.1':
+    resolution: {integrity: sha512-P5LUNhtbj6YfI3iJjw5EL9eUAG6OitD0W3fWQcpQjDRc/QIsL0tRNuO1PcDvPccWL1fSTXXdE1ds+l95DV/OFA==}
 
   '@discoveryjs/json-ext@0.5.7':
     resolution: {integrity: sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==}
@@ -13694,6 +13706,8 @@ snapshots:
   '@csstools/selector-specificity@5.0.0(postcss-selector-parser@7.1.0)':
     dependencies:
       postcss-selector-parser: 7.1.0
+
+  '@date-fns/tz@1.4.1': {}
 
   '@discoveryjs/json-ext@0.5.7': {}
 

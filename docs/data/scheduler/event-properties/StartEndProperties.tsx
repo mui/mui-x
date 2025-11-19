@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { DateTime } from 'luxon';
+import { parseISO } from 'date-fns/parseISO';
+import { formatISO } from 'date-fns/formatISO';
 import {
   RecurringEventRecurrenceRule,
   SchedulerEventModelStructure,
@@ -34,16 +35,16 @@ const initialEvents: CustomEvent[] = [
 
 const eventModelStructure: SchedulerEventModelStructure<CustomEvent> = {
   start: {
-    getter: (event) => DateTime.fromISO(event.start),
+    getter: (event) => parseISO(event.start),
     setter: (event, newValue) => {
-      event.start = newValue.toISO()!;
+      event.start = formatISO(newValue);
       return event;
     },
   },
   end: {
-    getter: (event) => DateTime.fromISO(event.end),
+    getter: (event) => parseISO(event.end),
     setter: (event, newValue) => {
-      event.end = newValue.toISO()!;
+      event.end = formatISO(newValue);
       return event;
     },
   },
