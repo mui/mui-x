@@ -26,6 +26,7 @@ import {
 import { Tabs } from '@base-ui-components/react/tabs';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { ControlledValue, EndsSelection, getEndsSelectionFromRRule } from './utils';
+import { formatDayOfMonthAndMonthFullLetter } from '../../utils/date-utils';
 
 interface RecurrenceTabProps {
   occurrence: SchedulerEventOccurrence;
@@ -101,7 +102,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
           ...prev,
           rruleDraft: {
             ...prev.rruleDraft,
-            until: adapter.date(prev.endDate),
+            until: adapter.date(prev.endDate, 'default'),
             count: undefined,
           },
         }));
@@ -141,7 +142,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     const value = event.currentTarget.value;
     setControlled((prev) => ({
       ...prev,
-      rruleDraft: { ...prev.rruleDraft, until: adapter.date(value) },
+      rruleDraft: { ...prev.rruleDraft, until: adapter.date(value, 'default') },
     }));
   };
 
@@ -174,7 +175,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
   );
 
   const weekday = adapter.format(occurrence.start.value, 'weekday');
-  const normalDate = adapter.format(occurrence.start.value, 'normalDate');
+  const dateForYearlyOption = formatDayOfMonthAndMonthFullLetter(occurrence.start.value, adapter);
 
   const recurrenceOptions: {
     label: string;
@@ -191,7 +192,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
       value: 'MONTHLY',
     },
     {
-      label: `${translations.recurrenceYearlyPresetLabel(normalDate)}`,
+      label: `${translations.recurrenceYearlyPresetLabel(dateForYearlyOption)}`,
       value: 'YEARLY',
     },
     {
@@ -224,7 +225,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
       weeklyDays.map(({ code, date }) => ({
         value: code,
         ariaLabel: adapter.format(date, 'weekday'),
-        label: adapter.format(date, 'weekdayShort'),
+        label: adapter.format(date, 'weekday3Letters'),
       })),
     [adapter, weeklyDays],
   );

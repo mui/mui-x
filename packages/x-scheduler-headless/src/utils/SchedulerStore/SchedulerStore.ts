@@ -75,13 +75,13 @@ export class SchedulerStore<
       preferences: DEFAULT_SCHEDULER_PREFERENCES,
       adapter,
       occurrencePlaceholder: null,
-      nowUpdatedEveryMinute: adapter.date(),
+      nowUpdatedEveryMinute: adapter.now('default'),
       pendingUpdateRecurringEventParameters: null,
       visibleResources: new Map(),
       visibleDate:
         parameters.visibleDate ??
         parameters.defaultVisibleDate ??
-        adapter.startOfDay(adapter.date()),
+        adapter.startOfDay(adapter.now('default')),
     };
 
     const initialState = mapper.getInitialState(schedulerInitialState, parameters, adapter);
@@ -96,9 +96,9 @@ export class SchedulerStore<
       ONE_MINUTE_IN_MS - (currentDate.getSeconds() * 1000 + currentDate.getMilliseconds());
 
     this.timeoutManager.startTimeout('set-now', timeUntilNextMinuteMs, () => {
-      this.set('nowUpdatedEveryMinute', adapter.date());
+      this.set('nowUpdatedEveryMinute', adapter.now('default'));
       this.timeoutManager.startInterval('set-now', ONE_MINUTE_IN_MS, () => {
-        this.set('nowUpdatedEveryMinute', adapter.date());
+        this.set('nowUpdatedEveryMinute', adapter.now('default'));
       });
     });
 
@@ -193,7 +193,7 @@ export class SchedulerStore<
       updateModel,
     );
 
-    this.apply(newState);
+    this.update(newState);
     this.parameters = parameters;
   };
 
@@ -265,7 +265,7 @@ export class SchedulerStore<
    */
   public goToToday = (event: React.UIEvent) => {
     const { adapter } = this.state;
-    this.setVisibleDate(adapter.startOfDay(adapter.date()), event);
+    this.setVisibleDate(adapter.startOfDay(adapter.now('default')), event);
   };
 
   /**

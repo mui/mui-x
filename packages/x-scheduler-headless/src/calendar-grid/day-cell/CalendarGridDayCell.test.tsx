@@ -5,7 +5,7 @@ import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-
 describe('<CalendarGrid.DayCell />', () => {
   const { render } = createSchedulerRenderer();
 
-  const day = adapter.date();
+  const day = adapter.now('default');
 
   describeConformance(<CalendarGrid.DayCell value={day} />, () => ({
     refInstanceof: window.HTMLDivElement,
