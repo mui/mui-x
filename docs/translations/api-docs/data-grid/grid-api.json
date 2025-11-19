@@ -216,7 +216,7 @@
     },
     "setRowGroupingModel": { "description": "Sets the columns to use as grouping criteria." },
     "setRowIndex": {
-      "description": "Moves a row from its original position to the position given by <code>targetIndex</code>."
+      "description": "Moves a row from its original position to the position given by <code>targetIndex</code>.<br />Doesn&#39;t support tree data ordering. Use <code>setRowPosition()</code> instead."
     },
     "setRowPosition": { "description": "Moves a row to a new position relative to another row." },
     "setRows": { "description": "Sets a new set of rows." },

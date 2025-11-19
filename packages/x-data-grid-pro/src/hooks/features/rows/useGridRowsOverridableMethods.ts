@@ -7,11 +7,9 @@ import {
   useGridSelector,
   gridRowMaximumTreeDepthSelector,
   gridExpandedSortedRowIndexLookupSelector,
+  GridRowProApi,
 } from '@mui/x-data-grid';
-import {
-  useGridRowsOverridableMethodsCommunity,
-  type RowReorderDropPosition,
-} from '@mui/x-data-grid/internals';
+import { useGridRowsOverridableMethodsCommunity } from '@mui/x-data-grid/internals';
 import type { RefObject } from '@mui/x-internals/types';
 import type { ReorderExecutionContext } from '../rowReorder/types';
 import { treeDataReorderExecutor } from '../treeData/treeDataReorderExecutor';
@@ -31,8 +29,8 @@ export const useGridRowsOverridableMethods = (
 
   const flatTree = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector) === 1;
 
-  const setRowPosition = React.useCallback(
-    async (sourceRowId: GridRowId, targetRowId: GridRowId, position: RowReorderDropPosition) => {
+  const setRowPosition = React.useCallback<GridRowProApi['setRowPosition']>(
+    async (sourceRowId, targetRowId, position) => {
       const sortedFilteredRowIds = gridExpandedSortedRowIdsSelector(apiRef);
       const sortedFilteredRowIndexLookup = gridExpandedSortedRowIndexLookupSelector(apiRef);
       const rowTree = gridRowTreeSelector(apiRef);
@@ -79,35 +77,11 @@ export const useGridRowsOverridableMethods = (
     [apiRef, processRowUpdate, onProcessRowUpdateError, setTreeDataPath],
   );
 
-  const setRowIndex = React.useCallback(
-    async (
-      sourceRowId: GridRowId,
-      targetOriginalIndex: number,
-      dropPosition?: RowReorderDropPosition,
-    ) => {
-      if (!dropPosition) {
-        throw new Error(
-          `MUI X: \`dropPosition\` must be provided for the tree data reordering to work.`,
-        );
-      }
-
-      const sortedFilteredRowIds = gridExpandedSortedRowIdsSelector(apiRef);
-
-      if (targetOriginalIndex === sortedFilteredRowIds.length) {
-        targetOriginalIndex = targetOriginalIndex - 1;
-      }
-      if (targetOriginalIndex > sortedFilteredRowIds.length) {
-        throw new Error(
-          `MUI X: Target index ${targetOriginalIndex} is out of bounds. Maximum index is ${sortedFilteredRowIds.length - 1}.`,
-        );
-      }
-
-      const targetRowId = sortedFilteredRowIds[targetOriginalIndex];
-
-      return setRowPosition(sourceRowId, targetRowId, dropPosition);
-    },
-    [apiRef, setRowPosition],
-  );
+  const setRowIndex = React.useCallback<GridRowProApi['setRowIndex']>(async () => {
+    throw new Error(
+      `MUI X: \`setRowIndex()\` is not supported for tree data. Use \`setRowPosition()\` instead.`,
+    );
+  }, []);
 
   return {
     setRowIndex: flatTree ? setRowIndexFlat : setRowIndex,

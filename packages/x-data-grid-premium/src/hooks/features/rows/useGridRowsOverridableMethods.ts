@@ -6,13 +6,13 @@ import {
   gridRowNodeSelector,
   gridRowMaximumTreeDepthSelector,
   gridExpandedSortedRowIndexLookupSelector,
+  GridRowProApi,
 } from '@mui/x-data-grid-pro';
 import {
   useGridRowsOverridableMethodsCommunity,
   useGridRowsOverridableMethodsPro,
   useGridSelector,
   type ReorderExecutionContext,
-  type RowReorderDropPosition,
 } from '@mui/x-data-grid-pro/internals';
 import type { RefObject } from '@mui/x-internals/types';
 import { rowGroupingReorderExecutor } from '../rowReorder/rowGroupingReorderExecutor';
@@ -34,8 +34,8 @@ export const useGridRowsOverridableMethods = (
 
   const flatTree = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector) === 1;
 
-  const setRowPosition = React.useCallback(
-    async (sourceRowId: GridRowId, targetRowId: GridRowId, position: RowReorderDropPosition) => {
+  const setRowPosition = React.useCallback<GridRowProApi['setRowPosition']>(
+    async (sourceRowId, targetRowId, position) => {
       const sortedFilteredRowIds = gridExpandedSortedRowIdsSelector(apiRef);
       const sortedFilteredRowIndexLookup = gridExpandedSortedRowIndexLookupSelector(apiRef);
       const rowTree = gridRowTreeSelector(apiRef);
@@ -96,29 +96,35 @@ export const useGridRowsOverridableMethods = (
     [apiRef, processRowUpdate, onProcessRowUpdateError],
   );
 
-  // Delegate method: setRowIndex calls setRowPosition
-  const setRowIndex = React.useCallback(
-    async (
-      sourceRowId: GridRowId,
-      targetOriginalIndex: number,
-      dropPosition: RowReorderDropPosition = 'below',
-    ) => {
-      // Get all row IDs to find the targetRowId at the given targetIndex
+  const setRowIndex = React.useCallback<GridRowProApi['setRowIndex']>(
+    async (sourceRowId, targetOriginalIndex) => {
       const sortedFilteredRowIds = gridExpandedSortedRowIdsSelector(apiRef);
+      const sortedFilteredRowIndexLookup = gridExpandedSortedRowIndexLookupSelector(apiRef);
+      const rowTree = gridRowTreeSelector(apiRef);
 
-      if (targetOriginalIndex === sortedFilteredRowIds.length) {
-        // "below" position on last node will end up index to be equal to the length of array
-        targetOriginalIndex = targetOriginalIndex - 1;
-      }
-      if (targetOriginalIndex > sortedFilteredRowIds.length) {
-        throw new Error(
-          `MUI X: Target index ${targetOriginalIndex} is out of bounds. Maximum index is ${sortedFilteredRowIds.length - 1}.`,
-        );
+      const sourceNode = gridRowNodeSelector(apiRef, sourceRowId);
+
+      if (!sourceNode) {
+        throw new Error(`MUI X: No row with id #${sourceRowId} found.`);
       }
 
-      const targetRowId = sortedFilteredRowIds[targetOriginalIndex];
+      if (sourceNode.type === 'footer') {
+        throw new Error(`MUI X: The row reordering do not support reordering of footer rows.`);
+      }
 
-      return setRowPosition(sourceRowId, targetRowId, dropPosition);
+      const executionContext: ReorderExecutionContext = {
+        sourceRowId,
+        dropPosition: 'below',
+        placeholderIndex: targetOriginalIndex,
+        sortedFilteredRowIds,
+        sortedFilteredRowIndexLookup,
+        rowTree,
+        apiRef,
+        processRowUpdate,
+        onProcessRowUpdateError,
+      };
+
+      return rowGroupingReorderExecutor.execute(executionContext);
     },
     [apiRef, setRowPosition],
   );

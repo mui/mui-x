@@ -48,8 +48,8 @@ export class RowReorderExecutor {
 
     warnOnce(
       [
-        'MUI X: The parameters provided to the `setRowIndex()` resulted in a no-op.',
-        'Consider looking at the documentation at https://mui.com/x/react-data-grid/row-grouping/',
+        'MUI X: The parameters provided to the API method resulted in a no-op.',
+        'Consider looking at the documentation at https://mui.com/x/react-data-grid/row-ordering/',
       ],
       'warning',
     );

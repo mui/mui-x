@@ -5,11 +5,11 @@ import { gridRowTreeSelector, gridRowNodeSelector } from './gridRowsSelector';
 import { gridExpandedSortedRowIndexLookupSelector } from '../filter/gridFilterSelector';
 import { GRID_ROOT_GROUP_ID } from './gridRowsUtils';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import type { RowReorderDropPosition } from '../../../models/api/gridRowApi';
+import type { GridRowProApi } from '../../../models/api/gridRowApi';
 
 export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiCommunity>) => {
-  const setRowPosition = React.useCallback(
-    (sourceRowId: GridRowId, targetRowId: GridRowId, position: RowReorderDropPosition) => {
+  const setRowPosition = React.useCallback<GridRowProApi['setRowPosition']>(
+    (sourceRowId, targetRowId, position) => {
       const sourceNode = gridRowNodeSelector(apiRef, sourceRowId);
       const targetNode = gridRowNodeSelector(apiRef, targetRowId);
 
@@ -92,12 +92,8 @@ export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiCo
     [apiRef],
   );
 
-  const setRowIndex = React.useCallback(
-    (
-      sourceRowId: GridRowId,
-      targetIndex: number,
-      dropPosition: RowReorderDropPosition = 'below',
-    ) => {
+  const setRowIndex = React.useCallback<GridRowProApi['setRowIndex']>(
+    (sourceRowId, targetIndex) => {
       // Get all row IDs to find the targetRowId at the given targetIndex
       const group = gridRowTreeSelector(apiRef)[GRID_ROOT_GROUP_ID] as GridGroupNode;
       const allRows = group.children;
@@ -112,7 +108,7 @@ export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiCo
       const targetRowId = allRows[targetIndex];
 
       // All other validations (node existence, type, parent) happen in setRowPosition
-      return setRowPosition(sourceRowId, targetRowId, dropPosition);
+      return setRowPosition(sourceRowId, targetRowId, 'below');
     },
     [apiRef, setRowPosition],
   );

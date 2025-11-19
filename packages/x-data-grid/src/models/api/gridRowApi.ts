@@ -108,17 +108,13 @@ export interface GridRowApi {
 export interface GridRowProApi {
   /**
    * Moves a row from its original position to the position given by `targetIndex`.
+   * Doesn't support tree data ordering. Use `setRowPosition()` instead.
    * @param {GridRowId} rowId The row id
    * @param {number} targetIndex The new position (0-based).
-   * @param {DropPosition} dropPosition The drop position (only used for tree data ordering)
    * @returns {void | Promise<void>} Returns a Promise when async operations are involved (e.g., processRowUpdate)
    * @deprecated Use `setRowPosition()` instead. This method will be removed in the next major version.
    */
-  setRowIndex: (
-    rowId: GridRowId,
-    targetIndex: number,
-    dropPosition?: RowReorderDropPosition,
-  ) => void | Promise<void>;
+  setRowIndex: (rowId: GridRowId, targetIndex: number) => void | Promise<void>;
   /**
    * Moves a row to a new position relative to another row.
    * @param {GridRowId} sourceRowId The ID of the row to move
