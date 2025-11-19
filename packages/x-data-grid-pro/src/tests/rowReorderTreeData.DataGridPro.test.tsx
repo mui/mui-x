@@ -289,6 +289,69 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
       const parentNode = rowTree[2];
       expect(parentNode.type).to.equal('leaf');
     });
+
+    it('should not allow to drop group on the above position on the next group when the previous node is a leaf', async () => {
+      // This test ensures that the 'group-to-group-above-leaf-belongs-to-source' validation rule is applied correctly
+      const handleRowOrderChange = spy();
+
+      render(
+        <Test
+          onRowOrderChange={handleRowOrderChange}
+          rows={[
+            { id: 1, path: ['Root'], name: 'Root' },
+            { id: 2, path: ['Root', 'SourceGroup'], name: 'SourceGroup' },
+            { id: 3, path: ['Root', 'SourceGroup', 'ChildLeaf-1'], name: 'ChildLeaf-1' },
+            { id: 4, path: ['Root', 'TargetGroup'], name: 'TargetGroup' },
+            { id: 5, path: ['Root', 'TargetGroup', 'ChildLeaf-2'], name: 'ChildLeaf-2' },
+          ]}
+        />,
+      );
+
+      // Try to drop SourceGroup above TargetGroup
+      // The previous node before TargetGroup is ChildLeaf-1, which belongs to SourceGroup
+      // This should be blocked by the 'group-to-group-above-leaf-belongs-to-source' rule
+      const allValues = getColumnValues(0);
+      const sourceGroupIndex = findRowIndex(allValues, 'SourceGroup', 2);
+      const targetGroupIndex = findRowIndex(allValues, 'TargetGroup', 4);
+
+      expect(sourceGroupIndex).to.be.greaterThan(-1, 'SourceGroup should be found');
+      expect(targetGroupIndex).to.be.greaterThan(-1, 'TargetGroup should be found');
+
+      const sourceCell = getCell(sourceGroupIndex, 0).firstChild!;
+      const targetCell = getCell(targetGroupIndex, 0);
+
+      // Start drag
+      fireDragStart(sourceCell);
+
+      // Hover over the target row - drop indicator should NOT render
+      const dragOverEvent = createDragOverEvent(targetCell, 'above');
+      fireEvent(targetCell, dragOverEvent);
+
+      const targetRow = targetCell.closest('[data-id]');
+      const rowDragPlaceholder = targetRow?.lastElementChild;
+
+      // Verify drop indicator is NOT rendered (element should not have placeholder styling)
+      if (rowDragPlaceholder) {
+        const computedStyle = window.getComputedStyle(rowDragPlaceholder);
+        // If placeholder exists, it should not have the absolute positioning that indicates a valid drop
+        expect(computedStyle.position).not.to.equal('absolute');
+      }
+
+      // Complete the drag operation
+      const dragEndEvent = createDragEndEvent(sourceCell);
+      fireEvent(sourceCell, dragEndEvent);
+
+      // Verify operation was blocked
+      expect(handleRowOrderChange.callCount).to.equal(0);
+
+      // Verify tree structure unchanged
+      const rowTree = gridRowTreeSelector(apiRef!);
+      const sourceGroupNode = rowTree[2];
+      const targetGroupNode = rowTree[4];
+
+      expect(sourceGroupNode.parent).to.equal(1); // Still under Root
+      expect(targetGroupNode.parent).to.equal(1); // Still under Root
+    });
   });
 
   describe('Drop "inside" operations', () => {
