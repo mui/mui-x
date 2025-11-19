@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { Box } from '@mui/material';
 
 const CELL_PADDING_MAP = {
@@ -9,7 +9,7 @@ const CELL_PADDING_MAP = {
 };
 
 export default function PrintExportDynamicRowHeight() {
-  const columns: GridColDef<(typeof rows)[number]>[] = [
+  const columns = [
     { field: 'id', headerName: 'ID', width: 90 },
     {
       field: 'firstName',
