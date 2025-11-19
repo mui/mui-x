@@ -73,22 +73,3 @@ export const applySeriesProcessors = <TSeriesType extends ChartSeriesType>(
 
   return processedSeries;
 };
-
-/**
- * @deprecated Use defaultizeSeries and applySeriesProcessors separately instead.
- * This method is kept for backwards compatibility but will be removed in a future version.
- */
-export const preprocessSeries = <TSeriesType extends ChartSeriesType>({
-  series,
-  colors,
-  seriesConfig,
-  dataset,
-}: {
-  series: Readonly<AllSeriesType<TSeriesType>[]>;
-  colors: readonly string[];
-  seriesConfig: ChartSeriesConfig<TSeriesType>;
-  dataset?: Readonly<DatasetType>;
-}) => {
-  const defaultizedSeriesGroups = defaultizeSeries({ series, colors, seriesConfig });
-  return applySeriesProcessors(defaultizedSeriesGroups, seriesConfig, dataset);
-};
