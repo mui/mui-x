@@ -551,7 +551,7 @@ describe('<EventPopoverContent />', () => {
         await user.click(screen.getByRole('button', { name: /save changes/i }));
 
         await screen.findByText(/Apply this change to:/i);
-        await user.click(screen.getByLabelText(/All events in the series/i));
+        await user.click(screen.getByText(/All events in the series/i));
         await user.click(screen.getByRole('button', { name: /Cancel/i }));
 
         expect(updateRecurringEventSpy?.calledOnce).to.equal(true);
@@ -600,7 +600,7 @@ describe('<EventPopoverContent />', () => {
         await user.click(screen.getByRole('button', { name: /save changes/i }));
 
         await screen.findByText(/Apply this change to:/i);
-        await user.click(screen.getByLabelText(/All events in the series/i));
+        await user.click(screen.getByText(/All events in the series/i));
         await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
         expect(updateRecurringEventSpy?.calledOnce).to.equal(true);
@@ -661,7 +661,7 @@ describe('<EventPopoverContent />', () => {
         await user.click(screen.getByRole('button', { name: /save changes/i }));
 
         await screen.findByText(/Apply this change to:/i);
-        await user.click(screen.getByLabelText(/Only this event/i));
+        await user.click(screen.getByText(/Only this event/i));
         await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
         expect(updateRecurringEventSpy?.calledOnce).to.equal(true);
@@ -721,7 +721,7 @@ describe('<EventPopoverContent />', () => {
         await user.click(screen.getByRole('button', { name: /save changes/i }));
 
         await screen.findByText(/Apply this change to:/i);
-        await user.click(screen.getByLabelText(/This and following events/i));
+        await user.click(screen.getByText(/This and following events/i));
         await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
         expect(updateRecurringEventSpy?.calledOnce).to.equal(true);
@@ -753,7 +753,7 @@ describe('<EventPopoverContent />', () => {
           );
 
           expect(screen.getByLabelText(/repeat/i)).to.have.attribute('aria-disabled', 'true');
-          expect(screen.getByLabelText(/ends/i)).to.have.attribute('aria-disabled', 'true');
+          expect(screen.getByText('Ends').parentElement).to.have.attribute('aria-disabled', 'true');
         });
 
         it('should keep recurrence fields disabled when a preset is selected', async () => {
@@ -770,7 +770,10 @@ describe('<EventPopoverContent />', () => {
           await user.click(await screen.findByRole('option', { name: /repeats daily/i }));
 
           expect(screen.getByLabelText(/repeat/i)).to.have.attribute('aria-disabled', 'true');
-          expect(screen.getByLabelText(/ends/i)).to.have.attribute('aria-disabled', 'true');
+          expect(screen.getByText('Never').parentElement).to.have.attribute(
+            'aria-disabled',
+            'true',
+          );
         });
 
         it('should enable recurrence fields when selecting the custom repeat rule option', async () => {
@@ -787,7 +790,7 @@ describe('<EventPopoverContent />', () => {
           await user.click(await screen.findByRole('option', { name: /custom repeat rule/i }));
 
           expect(screen.getByLabelText(/repeat/i)).not.to.have.attribute('disabled');
-          expect(screen.getByLabelText(/ends/i)).not.to.have.attribute('disabled');
+          expect(screen.getByText('Never').parentElement).not.to.have.attribute('disabled');
         });
 
         it('should submit custom recurrence with Ends: after', async () => {
@@ -822,7 +825,7 @@ describe('<EventPopoverContent />', () => {
 
           // Ends: select "After"
           const endsFieldset = screen.getByRole('group', { name: /ends/i });
-          const afterRadio = within(endsFieldset).getByRole('radio', { name: /after/i });
+          const afterRadio = within(endsFieldset).getByText('After');
           await user.click(afterRadio);
 
           // Set count = 5
@@ -876,7 +879,7 @@ describe('<EventPopoverContent />', () => {
 
           // Ends: keep Never (default)
           const endsFieldset = screen.getByRole('group', { name: /ends/i });
-          expect(within(endsFieldset).getByRole('radio', { name: /never/i })).to.have.attribute(
+          expect(within(endsFieldset).getByText('Never').parentElement).to.have.attribute(
             'aria-checked',
             'true',
           );
@@ -923,10 +926,10 @@ describe('<EventPopoverContent />', () => {
           await user.click(freqCombo);
           await user.click(await screen.findByRole('option', { name: /years/i }));
 
-          const endsGroup = screen.getByRole('group', { name: /ends/i });
-
           // Ends: "Until" and date 2025-07-20
-          const untilRadio = within(endsGroup).getByRole('radio', { name: /until/i });
+          const untilRadio = within(screen.getByRole('group', { name: /ends/i })).getByText(
+            'Until',
+          );
           await user.click(untilRadio);
           const labelEl = untilRadio.closest('label');
           const dateInput = labelEl?.querySelector('input[type="date"]') as HTMLInputElement;

@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
+import { useStableCallback } from '@base-ui-components/utils/useStableCallback';
 import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
 import { useAdapter, diffIn } from '../../use-adapter';
 import { SchedulerEvent, SchedulerValidDate } from '../../models';
@@ -21,7 +21,7 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
   const adapter = useAdapter();
   const ref = React.useRef<HTMLDivElement>(null);
 
-  const getEventDropData: useDropTarget.GetEventDropData = useEventCallback(
+  const getEventDropData: useDropTarget.GetEventDropData = useStableCallback(
     ({ data, createDropData }) => {
       if (!isValidDropTarget(data)) {
         return undefined;
