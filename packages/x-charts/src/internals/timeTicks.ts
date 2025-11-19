@@ -4,7 +4,14 @@ export type TicksFrequencyDefinition = {
   format: (d: Date) => string;
 };
 
-export type TicksFrequency = 'years' | 'quarters' | 'months' | 'biweekly' | 'weeks' | 'days' | 'hours';
+export type TicksFrequency =
+  | 'years'
+  | 'quarters'
+  | 'months'
+  | 'biweekly'
+  | 'weeks'
+  | 'days'
+  | 'hours';
 
 export type TimeOrdinalTicks = (TicksFrequencyDefinition | TicksFrequency)[];
 
@@ -29,7 +36,7 @@ export const tickFrequencies: Record<TicksFrequency, TicksFrequencyDefinition> =
     isTick: (prev: Date, value: Date) => value.getFullYear() !== prev.getFullYear(),
     format: (d: Date) => d.getFullYear().toString(),
   },
-  'quarters': {
+  quarters: {
     getTickNumber: (from: Date, to: Date) => Math.floor(monthNumber(from, to) / 3),
     isTick: (prev: Date, value: Date) =>
       value.getMonth() !== prev.getMonth() && value.getMonth() % 3 === 0,
@@ -40,7 +47,7 @@ export const tickFrequencies: Record<TicksFrequency, TicksFrequencyDefinition> =
     isTick: (prev: Date, value: Date) => value.getMonth() !== prev.getMonth(),
     format: new Intl.DateTimeFormat('default', { month: 'short' }).format,
   },
-  'biweekly': {
+  biweekly: {
     getTickNumber: (from: Date, to: Date) => dayNumber(from, to) / 14,
     isTick: (prev: Date, value: Date) =>
       (value.getDay() < prev.getDay() || dayNumber(value, prev) > 7) &&
@@ -50,7 +57,7 @@ export const tickFrequencies: Record<TicksFrequency, TicksFrequencyDefinition> =
   weeks: {
     getTickNumber: (from: Date, to: Date) => dayNumber(from, to) / 7,
     isTick: (prev: Date, value: Date) =>
-      value.getDay() < prev.getDay() || dayNumber(value, prev) > 7,
+      value.getDay() < prev.getDay() || dayNumber(value, prev) >= 7,
     format: new Intl.DateTimeFormat('default', { day: 'numeric' }).format,
   },
   days: {

@@ -211,7 +211,6 @@ ChartContainer.propTypes = {
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
       ignoreTooltip: PropTypes.bool,
-      isNumerical: PropTypes.oneOf([false]),
       label: PropTypes.string,
       labelStyle: PropTypes.object,
       max: PropTypes.number,
@@ -300,7 +299,6 @@ ChartContainer.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
         ignoreTooltip: PropTypes.bool,
-        isNumerical: PropTypes.bool,
         label: PropTypes.string,
         labelGap: PropTypes.number,
         labelStyle: PropTypes.object,
@@ -379,7 +377,6 @@ ChartContainer.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
         ignoreTooltip: PropTypes.bool,
-        isNumerical: PropTypes.bool,
         label: PropTypes.string,
         labelGap: PropTypes.number,
         labelStyle: PropTypes.object,
@@ -442,7 +439,7 @@ ChartContainer.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
         ignoreTooltip: PropTypes.bool,
-        isNumerical: PropTypes.oneOf([false]),
+        
         label: PropTypes.string,
         labelGap: PropTypes.number,
         labelStyle: PropTypes.object,
@@ -508,7 +505,7 @@ ChartContainer.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
         ignoreTooltip: PropTypes.bool,
-        isNumerical: PropTypes.oneOf([false]),
+        
         label: PropTypes.string,
         labelGap: PropTypes.number,
         labelStyle: PropTypes.object,
@@ -573,7 +570,7 @@ ChartContainer.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
         ignoreTooltip: PropTypes.bool,
-        isNumerical: PropTypes.oneOf([false]),
+        
         label: PropTypes.string,
         labelGap: PropTypes.number,
         labelStyle: PropTypes.object,
@@ -638,7 +635,7 @@ ChartContainer.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
         ignoreTooltip: PropTypes.bool,
-        isNumerical: PropTypes.oneOf([false]),
+        
         label: PropTypes.string,
         labelGap: PropTypes.number,
         labelStyle: PropTypes.object,
@@ -703,7 +700,7 @@ ChartContainer.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
         ignoreTooltip: PropTypes.bool,
-        isNumerical: PropTypes.oneOf([false]),
+        
         label: PropTypes.string,
         labelGap: PropTypes.number,
         labelStyle: PropTypes.object,
@@ -778,7 +775,7 @@ ChartContainer.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
         ignoreTooltip: PropTypes.bool,
-        isNumerical: PropTypes.oneOf([false]),
+        
         label: PropTypes.string,
         labelGap: PropTypes.number,
         labelStyle: PropTypes.object,
@@ -853,7 +850,7 @@ ChartContainer.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
         ignoreTooltip: PropTypes.bool,
-        isNumerical: PropTypes.oneOf([false]),
+        
         label: PropTypes.string,
         labelGap: PropTypes.number,
         labelStyle: PropTypes.object,
@@ -981,7 +978,6 @@ ChartContainer.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        isNumerical: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         offset: PropTypes.number,
@@ -1059,7 +1055,6 @@ ChartContainer.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        isNumerical: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         offset: PropTypes.number,
@@ -1121,7 +1116,7 @@ ChartContainer.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        isNumerical: PropTypes.oneOf([false]),
+        
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         max: PropTypes.number,
@@ -1186,7 +1181,7 @@ ChartContainer.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        isNumerical: PropTypes.oneOf([false]),
+        
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         max: PropTypes.number,
@@ -1250,7 +1245,7 @@ ChartContainer.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        isNumerical: PropTypes.oneOf([false]),
+        
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         max: PropTypes.number,
@@ -1314,7 +1309,7 @@ ChartContainer.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        isNumerical: PropTypes.oneOf([false]),
+        
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         max: PropTypes.number,
@@ -1378,7 +1373,7 @@ ChartContainer.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        isNumerical: PropTypes.oneOf([false]),
+        
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         max: PropTypes.oneOfType([
@@ -1452,7 +1447,7 @@ ChartContainer.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        isNumerical: PropTypes.oneOf([false]),
+        
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         max: PropTypes.oneOfType([
@@ -1526,7 +1521,7 @@ ChartContainer.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        isNumerical: PropTypes.oneOf([false]),
+        
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         max: PropTypes.number,
@@ -1616,7 +1611,6 @@ ChartContainer.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        isNumerical: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         offset: PropTypes.number,
@@ -1693,7 +1687,6 @@ ChartContainer.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        isNumerical: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         offset: PropTypes.number,
@@ -1754,7 +1747,7 @@ ChartContainer.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        isNumerical: PropTypes.oneOf([false]),
+        
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         max: PropTypes.number,
@@ -1818,7 +1811,7 @@ ChartContainer.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        isNumerical: PropTypes.oneOf([false]),
+        
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         max: PropTypes.number,
@@ -1881,7 +1874,7 @@ ChartContainer.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        isNumerical: PropTypes.oneOf([false]),
+        
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         max: PropTypes.number,
@@ -1944,7 +1937,7 @@ ChartContainer.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        isNumerical: PropTypes.oneOf([false]),
+        
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         max: PropTypes.number,
@@ -2007,7 +2000,7 @@ ChartContainer.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        isNumerical: PropTypes.oneOf([false]),
+        
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         max: PropTypes.oneOfType([
@@ -2080,7 +2073,7 @@ ChartContainer.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        isNumerical: PropTypes.oneOf([false]),
+        
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         max: PropTypes.oneOfType([
@@ -2153,7 +2146,7 @@ ChartContainer.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        isNumerical: PropTypes.oneOf([false]),
+        
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         max: PropTypes.number,

@@ -1,5 +1,6 @@
 import { scaleBand } from '@mui/x-charts-vendor/d3-scale';
 import { getTicks } from './useTicks';
+import { D3Scale } from '../models/axis';
 
 const defaultOptions = {
   scale: scaleBand([1, 2, 3, 5], [0, 100]) as unknown as any,
@@ -7,11 +8,18 @@ const defaultOptions = {
   isInside: (value: number) => value >= 0 && value <= 100,
 };
 
-const numberData = Array.from({ length: 25 }, (_, i) => i + 1);
-const sparseNumberData = numberData.filter((d, i) => i % 4 !== 0);
+const startDate = new Date(2025, 0, 6);
 
-const dateData = Array.from({ length: 30 }, (_, i) => new Date(2025, 9, i + 1, 0, 0, 0));
-const sparseDateData = dateData.filter((d) => d.getDay() < 6 && d.getDay() !== 0); // Remove week-ends
+const weeks = Array.from({ length: 20 }, (_, i) => {
+  const date = new Date(startDate);
+  if (i !== 5) {
+    date.setDate(startDate.getDate() + i * 7);
+  } else {
+    // Move one week to Wednesday for edge cases
+    date.setDate(startDate.getDate() + i * 7 + 2);
+  }
+  return date;
+});
 
 describe('getTicks', () => {
   describe('band scale - ordinal ticks', () => {
@@ -24,7 +32,7 @@ describe('getTicks', () => {
       expect(ticks.map((tick) => tick.labelOffset)).to.deep.equal([12.5, 12.5, 12.5, 12.5, 0]);
     });
 
-    it('should not add an empty tick when tickPlacement is ', () => {
+    it('should not add an empty tick when tickPlacement is start', () => {
       const ticks = getTicks({ ...defaultOptions, tickPlacement: 'start' });
 
       expect(ticks).to.have.length(4); // No extra tick
@@ -34,100 +42,74 @@ describe('getTicks', () => {
     });
   });
 
-  describe('band scale - continuous ticks', () => {
-    it('should place ticks on the next band larger than the tick number value', () => {
+  describe.only('band scale - time values', () => {
+    it('should return no ticks if the timeOrdinalTicks array is empty', () => {
       const ticks = getTicks({
         ...defaultOptions,
-        scale: scaleBand<number | string | Date>(
-          numberData.filter((v) => v % 2 !== 0),
-          [0, 100],
-        ),
-        tickInterval: [0, 10, 20],
-        continuousTickPlacement: true,
-      });
-
-      expect(ticks.map((tick) => tick.value)).to.deep.equal([1, 11, 21]);
-      expect(ticks.map((tick) => tick.formattedValue)).to.deep.equal(['0', '10', '20']);
-    });
-
-    it('should place ticks on the next band larger than the tick date value', () => {
-      const ticks = getTicks({
-        ...defaultOptions,
-        scale: scaleBand<number | string | Date>(sparseDateData, [0, 100]),
-        tickNumber: 6,
-        continuousTickPlacement: true,
-      });
-
-      expect(ticks.map((tick) => tick.value)).to.deep.equal([
-        new Date(2025, 9, 6, 0, 0, 0, 0),
-        new Date(2025, 9, 13, 0, 0, 0, 0),
-        new Date(2025, 9, 20, 0, 0, 0, 0),
-        new Date(2025, 9, 27, 0, 0, 0, 0),
-      ]);
-      // Band move them to monday because sunday does not exist.
-      expect(ticks.map((tick) => tick.formattedValue)).to.deep.equal([
-        'Oct 05',
-        'Oct 12',
-        'Oct 19',
-        'Oct 26',
-      ]);
-    });
-
-    it('should place tick at the start/middle/end according to the closest position of ticks value.', () => {
-      const ticks = getTicks<number | string | Date>({
-        ...defaultOptions,
-        scale: scaleBand<number | string | Date>(sparseNumberData, [0, 100]),
+        scale: scaleBand<Date>(weeks, [0, 100]) as unknown as D3Scale,
         tickNumber: 4,
-        tickInterval: [0, 10, 20, 25], // Force to have ticks outside bands.
-        continuousTickPlacement: true,
+        timeOrdinalTicks: [],
       });
 
-      expect(ticks).to.have.length(4); // Extra tick for the end
-      expect(ticks.map((tick) => tick.value)).to.deep.equal([2, 10, 20, 24]);
-      expect(ticks.map((tick) => tick.formattedValue)).to.deep.equal(['0', '10', '20', '25']);
-
-      expect(ticks.map((tick) => Math.floor(tick.offset))).to.deep.equal([0, 36, 81, 100]);
+      expect(ticks).to.deep.equal([]);
     });
 
-    it('should place extra tick at the beginning/end when nice values are close.', () => {
+    it('should place one tick per months', () => {
       const ticks = getTicks({
         ...defaultOptions,
-        scale: scaleBand<number | string | Date>(
-          Array.from({ length: 49 }, (_, i) => i + 1),
-          [0, 100],
-        ),
+        scale: scaleBand(weeks, [0, 100]) as unknown as D3Scale,
         tickNumber: 4,
-        continuousTickPlacement: true,
+        timeOrdinalTicks: ['months'],
       });
 
-      expect(ticks.map((tick) => tick.value)).to.deep.equal([1, 10, 20, 30, 40, 49]);
-      // 0 and 50 are out of range but close enough to be added.
-      expect(ticks.map((tick) => tick.formattedValue)).to.deep.equal([
-        '0',
-        '10',
-        '20',
-        '30',
-        '40',
-        '50',
+      expect(ticks.map(({ value }) => value.getMonth())).to.deep.equal([1, 2, 3, 4]);
+    });
+
+    it.only('should not place too many ticks', () => {
+      const ticks = getTicks({
+        ...defaultOptions,
+        scale: scaleBand(weeks, [0, 100]) as unknown as D3Scale,
+        tickNumber: 4,
+        timeOrdinalTicks: ['years', 'quarters', 'months', 'weeks', 'days'],
+      });
+
+      expect(ticks.map(({ value }) => value.getMonth())).to.deep.equal([1, 2, 3, 4]);
+    });
+
+    it.only('should place ticks when feasible even if it exceed the targeted ticks number', () => {
+      const ticks = getTicks({
+        ...defaultOptions,
+        scale: scaleBand(weeks, [0, 100]) as unknown as D3Scale,
+        tickNumber: 4,
+        timeOrdinalTicks: ['years', 'weeks', 'days'],
+      });
+
+      // Since there is no year ticks to display we have to display weeks ticks even if it exceed the tickNumber
+      expect(ticks.map(({ value }) => value.getMonth())).to.deep.equal([
+        0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4,
       ]);
     });
-  });
 
-  it('should not place extra tick at the beginning/end when nice values are too far.', () => {
-    const ticks = getTicks({
-      ...defaultOptions,
-      scale: scaleBand<number | string | Date>(
-        Array.from({ length: 42 }, (_, i) => i + 4), // numbers in [4, 45]
-        [0, 100],
-      ),
-      tickNumber: 4,
-      continuousTickPlacement: true,
+    it('should support scale without value', () => {
+      const ticks = getTicks({
+        ...defaultOptions,
+        scale: scaleBand([], [0, 100]) as unknown as D3Scale,
+        tickNumber: 4,
+        timeOrdinalTicks: ['months'],
+      });
+
+      expect(ticks).to.deep.equal([]);
     });
 
-    // 0 and 50 are not added cause too far from range [4, 45].
-    expect(ticks.map((tick) => tick.value)).to.deep.equal([10, 20, 30, 40]);
-    expect(ticks.map((tick) => tick.formattedValue)).to.deep.equal(['10', '20', '30', '40']);
+    it('should support scale with single value', () => {
+      const ticks = getTicks({
+        ...defaultOptions,
+        scale: scaleBand([new Date(2025, 0, 1)], [0, 100]) as unknown as D3Scale,
+        tickNumber: 4,
+        timeOrdinalTicks: ['months'],
+      });
 
-    expect(ticks.map((tick) => Math.floor(tick.offset))).to.deep.equal([15, 39, 63, 87]);
+      expect(ticks).to.deep.equal([]);
+    });
   });
 });

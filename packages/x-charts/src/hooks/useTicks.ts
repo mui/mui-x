@@ -4,7 +4,12 @@ import { useChartContext } from '../context/ChartProvider';
 import { AxisConfig, D3ContinuousScale, D3Scale } from '../models/axis';
 import { isBandScale, isOrdinalScale } from '../internals/scaleGuards';
 import { isInfinity } from '../internals/isInfinity';
-import { tickFrequencies, TimeOrdinalTicks, TicksFrequencyDefinition } from '../internals/timeTicks';
+import {
+  tickFrequencies,
+  TimeOrdinalTicks,
+  TicksFrequencyDefinition,
+} from '../internals/timeTicks';
+import { isDateData } from '../internals/dateHelpers';
 
 export interface TickParams {
   /**
@@ -65,38 +70,43 @@ export type TickItemType = {
   labelOffset: number;
 };
 
-interface GetTicksOptions
-  extends Pick<TickParams, 'tickInterval' | 'tickPlacement' | 'tickLabelPlacement'>,
-  Required<Pick<TickParams, 'tickNumber'>> {
-  scale: D3Scale;
-  valueFormatter?: AxisConfig['valueFormatter'];
-  isInside: (offset: number) => boolean;
-  timeOrdinalTicks?: TimeOrdinalTicks;
-}
+function getTimeTicks(
+  domain: Date[],
+  tickNumber: number,
+  ticksFrequencies: TicksFrequencyDefinition[],
+) {
+  if (ticksFrequencies.length === 0) {
+    return [];
+  }
 
-function getTimeTicks(domain: Date[], tickNumber: number, tickSpaces: TicksFrequencyDefinition[]) {
   const start = domain[0];
   const end = domain[domain.length - 1];
 
   let startSpaceIndex = 0;
-  while (
-    startSpaceIndex < tickSpaces.length &&
-    tickSpaces[startSpaceIndex].getTickNumber(start, end) === 0
-  ) { startSpaceIndex += 1; }
 
-  let endSpaceIndex = Math.max(0, startSpaceIndex - 1);
+  for (let i = 0; i < ticksFrequencies.length; i += 1) {
+    if (ticksFrequencies[i].getTickNumber(start, end) !== 0) {
+      startSpaceIndex = i;
+      break;
+    }
+  }
 
-  let prevTickCount = tickSpaces[endSpaceIndex].getTickNumber(start, end);
-  let nextTickCount = tickSpaces[endSpaceIndex + 1].getTickNumber(start, end);
+  let endSpaceIndex = startSpaceIndex;
+  for (let i = startSpaceIndex; i < ticksFrequencies.length; i += 1) {
+    if (i === ticksFrequencies.length - 1) {
+      // If we reached the end, use the last tick frequency
+      endSpaceIndex = i;
+      break;
+    }
 
-  // Smooth ratio between ticks steps: ticksNumber[i]*ticksNumber[i+1] <= targetTickNumber^2
-  while (
-    endSpaceIndex + 1 < tickSpaces.length &&
-    (nextTickCount <= tickNumber || tickNumber / prevTickCount >= nextTickCount / tickNumber)
-  ) {
-    endSpaceIndex += 1;
-    prevTickCount = nextTickCount;
-    if (endSpaceIndex + 1 < tickSpaces.length) { nextTickCount = tickSpaces[endSpaceIndex + 1].getTickNumber(start, end); }
+    const prevTickCount = ticksFrequencies[i].getTickNumber(start, end);
+    const nextTickCount = ticksFrequencies[i + 1].getTickNumber(start, end);
+
+    // Smooth ratio between ticks steps: ticksNumber[i]*ticksNumber[i+1] <= targetTickNumber^2
+    if (nextTickCount > tickNumber || tickNumber / prevTickCount < nextTickCount / tickNumber) {
+      endSpaceIndex = i;
+      break;
+    }
   }
 
   const ticks: { index: number; formatter: (d: Date) => string }[] = [];
@@ -104,8 +114,8 @@ function getTimeTicks(domain: Date[], tickNumber: number, tickSpaces: TicksFrequ
     for (let i = startSpaceIndex; i <= endSpaceIndex; i += 1) {
       const prevDate = domain[tickIndex - 1];
       const currentDate = domain[tickIndex];
-      if (tickSpaces[i].isTick(prevDate, currentDate)) {
-        ticks.push({ index: tickIndex, formatter: tickSpaces[i].format });
+      if (ticksFrequencies[i].isTick(prevDate, currentDate)) {
+        ticks.push({ index: tickIndex, formatter: ticksFrequencies[i].format });
 
         // once we found a matching tick space, we can break the inner loop
         i = endSpaceIndex + 1;
@@ -114,6 +124,15 @@ function getTimeTicks(domain: Date[], tickNumber: number, tickSpaces: TicksFrequ
   }
 
   return ticks;
+}
+
+interface GetTicksOptions
+  extends Pick<TickParams, 'tickInterval' | 'tickPlacement' | 'tickLabelPlacement'>,
+    Required<Pick<TickParams, 'tickNumber'>> {
+  scale: D3Scale;
+  valueFormatter?: AxisConfig['valueFormatter'];
+  isInside: (offset: number) => boolean;
+  timeOrdinalTicks?: TimeOrdinalTicks;
 }
 
 export function getTicks(options: GetTicksOptions) {
@@ -128,13 +147,18 @@ export function getTicks(options: GetTicksOptions) {
     timeOrdinalTicks,
   } = options;
 
-  // ordinal scale with spaced ticks.
-  if (isOrdinalScale(scale) && timeOrdinalTicks !== undefined && timeOrdinalTicks.length > 0) {
-    const domain = scale.domain();
+  // @ts-ignore Don't know how to let TS understand we are dealing with Date scale here.
+  if (isDateData(scale.domain()) && isOrdinalScale<Date>(scale) && timeOrdinalTicks !== undefined) {
+    // ordinal scale with spaced ticks.
+    const domain = scale.domain() as unknown as Date[];
+
+    if (domain.length === 0 || domain.length === 1) {
+      return [];
+    }
 
     const tickPlacement = 'middle';
     const ticksIndexes = getTimeTicks(
-      domain as Date[],
+      domain,
       tickNumber,
       timeOrdinalTicks.map((tickDef) =>
         typeof tickDef === 'string' ? tickFrequencies[tickDef] : tickDef,
@@ -193,12 +217,12 @@ export function getTicks(options: GetTicksOptions) {
 
         ...(tickPlacement === 'extremities'
           ? [
-            {
-              formattedValue: undefined,
-              offset: scale.range()[1],
-              labelOffset: 0,
-            },
-          ]
+              {
+                formattedValue: undefined,
+                offset: scale.range()[1],
+                labelOffset: 0,
+              },
+            ]
           : []),
       ];
     }

@@ -91,12 +91,12 @@ You can test all configuration options in the following demo:
 
 {{"demo": "TickPlacementBars.js"}}
 
-### Numerical axis
+### Date axis
 
-If your band axis represents numerical data in a usual way (they are sorted and evenly spaced), you can set `isNumerical` to `true` in the axis config.
+If your band axis represents dates in a usual way (they are sorted and evenly spaced), you can set `timeOrdinalTicks` to pick some date frequencies.
 This modifies the [tick management](/x/react-charts/axis/#ordinal-tick-management).
 
-Instead of one tick per band, the axis will display tick as if the scale is continuous.
+Instead of one tick per band, the axis will display ticks at some given frequencies according to the tick number.
 
 ### Minimum bar size
 

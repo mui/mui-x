@@ -391,7 +391,6 @@ ScatterChartPro.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        isNumerical: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         offset: PropTypes.number,
@@ -487,7 +486,6 @@ ScatterChartPro.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        isNumerical: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         offset: PropTypes.number,
@@ -567,7 +565,7 @@ ScatterChartPro.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        isNumerical: PropTypes.oneOf([false]),
+
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         max: PropTypes.number,
@@ -650,7 +648,6 @@ ScatterChartPro.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        isNumerical: PropTypes.oneOf([false]),
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         max: PropTypes.number,
@@ -732,7 +729,7 @@ ScatterChartPro.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        isNumerical: PropTypes.oneOf([false]),
+
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         max: PropTypes.number,
@@ -814,7 +811,7 @@ ScatterChartPro.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        isNumerical: PropTypes.oneOf([false]),
+
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         max: PropTypes.number,
@@ -896,7 +893,7 @@ ScatterChartPro.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        isNumerical: PropTypes.oneOf([false]),
+
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         max: PropTypes.oneOfType([
@@ -988,7 +985,7 @@ ScatterChartPro.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        isNumerical: PropTypes.oneOf([false]),
+
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         max: PropTypes.oneOfType([
@@ -1080,7 +1077,7 @@ ScatterChartPro.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        isNumerical: PropTypes.oneOf([false]),
+
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         max: PropTypes.number,
@@ -1188,7 +1185,6 @@ ScatterChartPro.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        isNumerical: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         offset: PropTypes.number,
@@ -1283,7 +1279,6 @@ ScatterChartPro.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        isNumerical: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         offset: PropTypes.number,
@@ -1362,7 +1357,7 @@ ScatterChartPro.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        isNumerical: PropTypes.oneOf([false]),
+
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         max: PropTypes.number,
@@ -1444,7 +1439,7 @@ ScatterChartPro.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        isNumerical: PropTypes.oneOf([false]),
+
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         max: PropTypes.number,
@@ -1525,7 +1520,7 @@ ScatterChartPro.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        isNumerical: PropTypes.oneOf([false]),
+
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         max: PropTypes.number,
@@ -1606,7 +1601,7 @@ ScatterChartPro.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        isNumerical: PropTypes.oneOf([false]),
+
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         max: PropTypes.number,
@@ -1687,7 +1682,7 @@ ScatterChartPro.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        isNumerical: PropTypes.oneOf([false]),
+
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         max: PropTypes.oneOfType([
@@ -1778,7 +1773,7 @@ ScatterChartPro.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        isNumerical: PropTypes.oneOf([false]),
+
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         max: PropTypes.oneOfType([
@@ -1869,7 +1864,7 @@ ScatterChartPro.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        isNumerical: PropTypes.oneOf([false]),
+
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         max: PropTypes.number,
