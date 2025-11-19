@@ -6,7 +6,7 @@ import { processDate } from '@mui/x-scheduler-headless/process-date';
 describe('<CalendarGrid.DayEvent />', () => {
   const { render } = createSchedulerRenderer();
 
-  const eventStart = processDate(adapter.date(), adapter);
+  const eventStart = processDate(adapter.now('default'), adapter);
   const eventEnd = processDate(adapter.addHours(eventStart.value, 1), adapter);
 
   describeConformance(

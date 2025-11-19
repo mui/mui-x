@@ -2,6 +2,7 @@ import { createSelector, createSelectorMemoized } from '@base-ui-components/util
 import { SchedulerEvent, SchedulerEventId } from '../models';
 import { SchedulerState as State } from '../utils/SchedulerStore/SchedulerStore.types';
 import { schedulerResourceSelectors } from './schedulerResourceSelectors';
+import { DEFAULT_EVENT_CREATION_CONFIG } from '../constants';
 
 const processedEventSelector = createSelector(
   (state: State) => state.processedEventLookup,
@@ -18,13 +19,49 @@ const isEventReadOnlySelector = createSelector(
 );
 
 export const schedulerEventSelectors = {
-  canCreateNewEvent: createSelector((state: State) => !state.readOnly),
+  creationConfig: createSelector(
+    (state: State) => state.readOnly,
+    (state: State) => state.eventCreation,
+    (isSchedulerReadOnly, creationConfig) => {
+      if (isSchedulerReadOnly) {
+        return false;
+      }
+      if (creationConfig === false) {
+        return false;
+      }
+      if (creationConfig === true) {
+        return DEFAULT_EVENT_CREATION_CONFIG;
+      }
+      return {
+        ...DEFAULT_EVENT_CREATION_CONFIG,
+        ...creationConfig,
+      };
+    },
+  ),
+  /**
+   * Gets the default duration (in minutes) for newly created events.
+   * This can be used when you need the value event on read-only calendar.
+   */
+  defaultEventDuration: createSelector(
+    (state: State) => state.eventCreation,
+    (eventCreation) => {
+      if (typeof eventCreation === 'boolean') {
+        return DEFAULT_EVENT_CREATION_CONFIG.duration;
+      }
+
+      return eventCreation?.duration ?? DEFAULT_EVENT_CREATION_CONFIG.duration;
+    },
+  ),
   processedEvent: processedEventSelector,
   isReadOnly: isEventReadOnlySelector,
   color: createSelector((state: State, eventId: SchedulerEventId) => {
     const event = processedEventSelector(state, eventId);
     if (!event) {
       return state.eventColor;
+    }
+
+    if (event.color) {
+      return event.color;
     }
 
     const resourceColor = schedulerResourceSelectors.processedResource(
