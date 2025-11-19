@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useStableCallback } from '@base-ui-components/utils/useStableCallback';
+import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps, NonNativeButtonProps } from '../../base-ui-copy/utils/types';
 import { useButton } from '../../base-ui-copy/utils/useButton';
@@ -51,36 +51,34 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
   const ref = React.useRef<HTMLDivElement>(null);
 
   // Feature hooks
-  const getSharedDragData: TimelineEventContext['getSharedDragData'] = useStableCallback(
-    (input) => {
-      const offsetBeforeRowStart = Math.max(
-        adapter.toJsDate(rowStart).getTime() - start.timestamp,
-        0,
-      );
+  const getSharedDragData: TimelineEventContext['getSharedDragData'] = useEventCallback((input) => {
+    const offsetBeforeRowStart = Math.max(
+      adapter.toJsDate(rowStart).getTime() - start.timestamp,
+      0,
+    );
 
-      const event = schedulerEventSelectors.processedEvent(store.state, eventId)!;
+    const event = schedulerEventSelectors.processedEvent(store.state, eventId)!;
 
-      const originalOccurrence: SchedulerEventOccurrence = {
-        ...event,
-        key: occurrenceKey,
-        id: eventId,
-        start,
-        end,
-      };
+    const originalOccurrence: SchedulerEventOccurrence = {
+      ...event,
+      key: occurrenceKey,
+      id: eventId,
+      start,
+      end,
+    };
 
-      const offsetInsideRow = getCursorPositionInElementMs({ input, elementRef: ref });
-      return {
-        eventId,
-        occurrenceKey,
-        originalOccurrence,
-        start: start.value,
-        end: end.value,
-        initialCursorPositionInEventMs: offsetBeforeRowStart + offsetInsideRow,
-      };
-    },
-  );
+    const offsetInsideRow = getCursorPositionInElementMs({ input, elementRef: ref });
+    return {
+      eventId,
+      occurrenceKey,
+      originalOccurrence,
+      start: start.value,
+      end: end.value,
+      initialCursorPositionInEventMs: offsetBeforeRowStart + offsetInsideRow,
+    };
+  });
 
-  const getDragData = useStableCallback((input) => ({
+  const getDragData = useEventCallback((input) => ({
     ...getSharedDragData(input),
     source: 'TimelineEvent',
   }));

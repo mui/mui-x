@@ -5,7 +5,7 @@ import { Eye, EyeClosed } from 'lucide-react';
 import { Checkbox } from '@base-ui-components/react/checkbox';
 import { CheckboxGroup } from '@base-ui-components/react/checkbox-group';
 import { useStore } from '@base-ui-components/utils/store';
-import { useStableCallback } from '@base-ui-components/utils/useStableCallback';
+import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { schedulerResourceSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { SchedulerResource } from '@mui/x-scheduler-headless/models';
@@ -68,7 +68,7 @@ export const ResourceLegend = React.forwardRef(function ResourceLegend(
   const resources = useStore(store, schedulerResourceSelectors.processedResourceList);
   const visibleResourcesList = useStore(store, schedulerResourceSelectors.visibleIdList);
 
-  const handleVisibleResourcesChange = useStableCallback((value: string[]) => {
+  const handleVisibleResourcesChange = useEventCallback((value: string[]) => {
     const valueSet = new Set(value);
     const newVisibleResourcesMap = new Map(
       schedulerResourceSelectors

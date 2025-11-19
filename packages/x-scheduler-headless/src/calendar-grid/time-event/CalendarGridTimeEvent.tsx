@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useStableCallback } from '@base-ui-components/utils/useStableCallback';
+import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { useId } from '@base-ui-components/utils/useId';
 import { useButton } from '../../base-ui-copy/utils/useButton';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
@@ -60,7 +60,7 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
   const id = useId(idProp);
 
   // Feature hooks
-  const getSharedDragData: CalendarGridTimeEventContext['getSharedDragData'] = useStableCallback(
+  const getSharedDragData: CalendarGridTimeEventContext['getSharedDragData'] = useEventCallback(
     (input) => {
       const offsetBeforeColumnStart = Math.max(
         adapter.toJsDate(columnStart).getTime() - start.timestamp,
@@ -89,7 +89,7 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     },
   );
 
-  const getDragData = useStableCallback((input) => ({
+  const getDragData = useEventCallback((input) => ({
     ...getSharedDragData(input),
     source: 'CalendarGridTimeEvent',
   }));

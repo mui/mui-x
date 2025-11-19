@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useStableCallback } from '@base-ui-components/utils/useStableCallback';
+import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
 import { useEventResizeHandler } from '../../utils/useEventResizeHandler';
@@ -28,7 +28,7 @@ export const TimelineEventResizeHandler = React.forwardRef(function TimelineEven
   const ref = React.useRef<HTMLDivElement>(null);
 
   // Feature hooks
-  const getDragData = useStableCallback((input) => ({
+  const getDragData = useEventCallback((input) => ({
     ...contextValue.getSharedDragData(input),
     source: 'TimelineEventResizeHandler',
     side,

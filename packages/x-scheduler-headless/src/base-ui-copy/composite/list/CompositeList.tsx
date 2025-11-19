@@ -2,7 +2,7 @@
 'use client';
 import * as React from 'react';
 import { useRefWithInit } from '@base-ui-components/utils/useRefWithInit';
-import { useStableCallback } from '@base-ui-components/utils/useStableCallback';
+import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
 import { CompositeListContext } from './CompositeListContext';
 
@@ -31,13 +31,13 @@ export function CompositeList<Metadata>(props: CompositeList.Props<Metadata>) {
   const [mapTick, setMapTick] = React.useState(0);
   const lastTickRef = React.useRef(mapTick);
 
-  const register = useStableCallback((node: Element, metadata: Metadata) => {
+  const register = useEventCallback((node: Element, metadata: Metadata) => {
     map.set(node, metadata ?? null);
     lastTickRef.current += 1;
     setMapTick(lastTickRef.current);
   });
 
-  const unregister = useStableCallback((node: Element) => {
+  const unregister = useEventCallback((node: Element) => {
     map.delete(node);
     lastTickRef.current += 1;
     setMapTick(lastTickRef.current);
@@ -116,7 +116,7 @@ export function CompositeList<Metadata>(props: CompositeList.Props<Metadata>) {
     };
   }, [labelsRef]);
 
-  const subscribeMapChange = useStableCallback((fn) => {
+  const subscribeMapChange = useEventCallback((fn) => {
     listeners.add(fn);
     return () => {
       listeners.delete(fn);

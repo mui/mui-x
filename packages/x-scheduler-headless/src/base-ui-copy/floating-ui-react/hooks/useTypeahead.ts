@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { useValueAsRef } from '@base-ui-components/utils/useValueAsRef';
-import { useStableCallback } from '@base-ui-components/utils/useStableCallback';
+import { useLatestRef } from '@base-ui-components/utils/useLatestRef';
+import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
 import { useTimeout } from '@base-ui-components/utils/useTimeout';
 import { stopEvent } from '../utils';
@@ -81,11 +81,11 @@ export function useTypeahead(context: FloatingRootContext, props: UseTypeaheadPr
   const prevIndexRef = React.useRef<number | null>(selectedIndex ?? activeIndex ?? -1);
   const matchIndexRef = React.useRef<number | null>(null);
 
-  const onMatch = useStableCallback(onMatchProp);
-  const onTypingChange = useStableCallback(onTypingChangeProp);
+  const onMatch = useEventCallback(onMatchProp);
+  const onTypingChange = useEventCallback(onTypingChangeProp);
 
-  const findMatchRef = useValueAsRef(findMatch);
-  const ignoreKeysRef = useValueAsRef(ignoreKeys);
+  const findMatchRef = useLatestRef(findMatch);
+  const ignoreKeysRef = useLatestRef(ignoreKeys);
 
   useIsoLayoutEffect(() => {
     if (open) {
@@ -102,7 +102,7 @@ export function useTypeahead(context: FloatingRootContext, props: UseTypeaheadPr
     }
   }, [open, selectedIndex, activeIndex]);
 
-  const setTypingChange = useStableCallback((value: boolean) => {
+  const setTypingChange = useEventCallback((value: boolean) => {
     if (value) {
       if (!dataRef.current.typing) {
         dataRef.current.typing = value;
@@ -114,7 +114,7 @@ export function useTypeahead(context: FloatingRootContext, props: UseTypeaheadPr
     }
   });
 
-  const onKeyDown = useStableCallback((event: React.KeyboardEvent) => {
+  const onKeyDown = useEventCallback((event: React.KeyboardEvent) => {
     function getMatchingIndex(
       list: Array<string | null>,
       orderedList: Array<string | null>,

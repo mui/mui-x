@@ -2,8 +2,8 @@
 import * as React from 'react';
 import { isElement } from '@floating-ui/utils/dom';
 import { useTimeout } from '@base-ui-components/utils/useTimeout';
-import { useValueAsRef } from '@base-ui-components/utils/useValueAsRef';
-import { useStableCallback } from '@base-ui-components/utils/useStableCallback';
+import { useLatestRef } from '@base-ui-components/utils/useLatestRef';
+import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
 import { contains, getDocument, isMouseLikePointerType } from '../utils';
 
@@ -132,10 +132,10 @@ export function useHover(
 
   const tree = useFloatingTree();
   const parentId = useFloatingParentNodeId();
-  const handleCloseRef = useValueAsRef(handleClose);
-  const delayRef = useValueAsRef(delay);
-  const openRef = useValueAsRef(open);
-  const restMsRef = useValueAsRef(restMs);
+  const handleCloseRef = useLatestRef(handleClose);
+  const delayRef = useLatestRef(delay);
+  const openRef = useLatestRef(open);
+  const restMsRef = useLatestRef(restMs);
 
   const pointerTypeRef = React.useRef<string>(undefined);
   const timeout = useTimeout();
@@ -146,7 +146,7 @@ export function useHover(
   const unbindMouseMoveRef = React.useRef(() => {});
   const restTimeoutPendingRef = React.useRef(false);
 
-  const isHoverOpen = useStableCallback(() => {
+  const isHoverOpen = useEventCallback(() => {
     const type = dataRef.current.openEvent?.type;
     return type?.includes('mouse') && type !== 'mousedown';
   });
@@ -219,12 +219,12 @@ export function useHover(
     [delayRef, onOpenChange, timeout],
   );
 
-  const cleanupMouseMoveHandler = useStableCallback(() => {
+  const cleanupMouseMoveHandler = useEventCallback(() => {
     unbindMouseMoveRef.current();
     handlerRef.current = undefined;
   });
 
-  const clearPointerEvents = useStableCallback(() => {
+  const clearPointerEvents = useEventCallback(() => {
     if (performedPointerEventsMutationRef.current) {
       const body = getDocument(elements.floating).body;
       body.style.pointerEvents = '';
@@ -233,7 +233,7 @@ export function useHover(
     }
   });
 
-  const isClickLikeOpenEvent = useStableCallback(() => {
+  const isClickLikeOpenEvent = useEventCallback(() => {
     return dataRef.current.openEvent
       ? ['click', 'mousedown'].includes(dataRef.current.openEvent.type)
       : false;

@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { isHTMLElement } from '@floating-ui/utils/dom';
-import { useStableCallback } from '@base-ui-components/utils/useStableCallback';
+import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { error } from '@base-ui-components/utils/error';
 import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
 import { makeEventPreventable, mergeProps } from '../merge-props';
@@ -21,7 +21,7 @@ export function useButton(parameters: useButton.Parameters = {}): useButton.Retu
 
   const isCompositeItem = useCompositeRootContext(true) !== undefined;
 
-  const isValidLink = useStableCallback(() => {
+  const isValidLink = useEventCallback(() => {
     const element = elementRef.current;
     return Boolean(element?.tagName === 'A' && (element as HTMLAnchorElement)?.href);
   });
@@ -175,7 +175,7 @@ export function useButton(parameters: useButton.Parameters = {}): useButton.Retu
     [disabled, focusableWhenDisabledProps, isNativeButton, isValidLink],
   );
 
-  const buttonRef = useStableCallback((element: HTMLElement | null) => {
+  const buttonRef = useEventCallback((element: HTMLElement | null) => {
     elementRef.current = element;
     updateDisabled();
   });

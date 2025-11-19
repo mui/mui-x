@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useStableCallback } from '@base-ui-components/utils/useStableCallback';
+import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { EMPTY_ARRAY, EMPTY_OBJECT } from '@base-ui-components/utils/empty';
 import { CompositeList, type CompositeMetadata } from '../list/CompositeList';
 import { useCompositeRoot } from './useCompositeRoot';
@@ -66,7 +66,7 @@ export function CompositeRoot<Metadata extends {}, State extends Record<string, 
     modifierKeys,
   });
 
-  const onMapChange = useStableCallback(
+  const onMapChange = useEventCallback(
     (newMap: Map<Element, CompositeMetadata<Metadata> | null>) => {
       onMapChangeProp?.(newMap);
       onMapChangeUnwrapped(newMap);
