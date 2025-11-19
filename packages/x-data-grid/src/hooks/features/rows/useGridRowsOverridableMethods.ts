@@ -92,25 +92,52 @@ export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiCo
     [apiRef],
   );
 
-  const setRowIndex = React.useCallback<GridRowProApi['setRowIndex']>(
-    (sourceRowId, targetIndex) => {
-      // Get all row IDs to find the targetRowId at the given targetIndex
-      const group = gridRowTreeSelector(apiRef)[GRID_ROOT_GROUP_ID] as GridGroupNode;
-      const allRows = group.children;
+  const setRowIndex = React.useCallback(
+    (rowId: GridRowId, targetIndex: number) => {
+      const node = gridRowNodeSelector(apiRef, rowId);
 
-      // Handle edge case: if targetIndex is at the end or beyond
-      if (targetIndex >= allRows.length) {
+      if (!node) {
+        throw new Error(`MUI X: No row with id #${rowId} found.`);
+      }
+
+      if (node.parent !== GRID_ROOT_GROUP_ID) {
+        throw new Error(`MUI X: The row reordering do not support reordering of grouped rows yet.`);
+      }
+
+      if (node.type !== 'leaf') {
         throw new Error(
-          `MUI X: Target index ${targetIndex} is out of bounds. Maximum index is ${allRows.length - 1}.`,
+          `MUI X: The row reordering do not support reordering of footer or grouping rows.`,
         );
       }
 
-      const targetRowId = allRows[targetIndex];
+      apiRef.current.setState((state) => {
+        const group = gridRowTreeSelector(apiRef)[GRID_ROOT_GROUP_ID] as GridGroupNode;
+        const allRows = group.children;
+        const oldIndex = allRows.findIndex((row) => row === rowId);
+        if (oldIndex === -1 || oldIndex === targetIndex) {
+          return state;
+        }
 
-      // All other validations (node existence, type, parent) happen in setRowPosition
-      return setRowPosition(sourceRowId, targetRowId, 'below');
+        const updatedRows = [...allRows];
+        updatedRows.splice(targetIndex, 0, updatedRows.splice(oldIndex, 1)[0]);
+
+        return {
+          ...state,
+          rows: {
+            ...state.rows,
+            tree: {
+              ...state.rows.tree,
+              [GRID_ROOT_GROUP_ID]: {
+                ...group,
+                children: updatedRows,
+              },
+            },
+          },
+        };
+      });
+      apiRef.current.publishEvent('rowsSet');
     },
-    [apiRef, setRowPosition],
+    [apiRef],
   );
 
   return {
