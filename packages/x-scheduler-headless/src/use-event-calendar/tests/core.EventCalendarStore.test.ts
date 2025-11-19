@@ -29,7 +29,7 @@ describe('Core - EventCalendarStore', () => {
         eventModelList: [],
         eventModelLookup: new Map(),
         eventModelStructure: undefined,
-        nowUpdatedEveryMinute: adapter.date(),
+        nowUpdatedEveryMinute: adapter.now('default'),
         occurrencePlaceholder: null,
         pendingUpdateRecurringEventParameters: null,
         preferences: EMPTY_OBJECT,
@@ -44,7 +44,7 @@ describe('Core - EventCalendarStore', () => {
         view: DEFAULT_VIEW,
         viewConfig: null,
         views: DEFAULT_VIEWS,
-        visibleDate: adapter.startOfDay(adapter.date()),
+        visibleDate: adapter.startOfDay(adapter.now('default')),
         visibleResources: new Map(),
       };
 
