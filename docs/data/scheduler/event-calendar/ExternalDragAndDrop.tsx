@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import { StandaloneEvent } from '@mui/x-scheduler/standalone-event';
-import { SchedulerOccurrencePlaceholderExternalDragData } from '@mui/x-scheduler/models';
+import { CalendarOccurrencePlaceholderExternalDragData } from '@mui/x-scheduler/models';
 // TODO: Estimate if we can avoid all imports from the headless package.
 import { buildIsValidDropTarget } from '@mui/x-scheduler-headless/build-is-valid-drop-target';
 import {
@@ -18,7 +18,7 @@ const isValidDropTarget = buildIsValidDropTarget([
   'CalendarGridDayEvent',
 ]);
 
-const initialExternalEvents: SchedulerOccurrencePlaceholderExternalDragData[] = [
+const initialExternalEvents: CalendarOccurrencePlaceholderExternalDragData[] = [
   {
     id: 'external-1',
     title: 'External Event 1',
@@ -49,11 +49,11 @@ const initialExternalEvents: SchedulerOccurrencePlaceholderExternalDragData[] = 
 export default function ExternalDragAndDrop() {
   const [events, setEvents] = React.useState(initialEvents);
   const [placeholder, setPlaceholder] =
-    React.useState<SchedulerOccurrencePlaceholderExternalDragData | null>(null);
+    React.useState<CalendarOccurrencePlaceholderExternalDragData | null>(null);
   const [externalEvents, setExternalEvents] = React.useState(initialExternalEvents);
 
   const handleEventDropInsideEventCalendar = (
-    removedEvent: SchedulerOccurrencePlaceholderExternalDragData,
+    removedEvent: CalendarOccurrencePlaceholderExternalDragData,
   ) => {
     setExternalEvents((prev) =>
       prev.filter((event) => event.id !== removedEvent.id),

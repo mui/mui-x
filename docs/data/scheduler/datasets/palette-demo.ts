@@ -1,6 +1,6 @@
 // Fake data of an agenda with lots of different resources
 import { DateTime } from 'luxon';
-import { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
+import { SchedulerEvent, CalendarResource } from '@mui/x-scheduler/models';
 
 export const defaultVisibleDate = DateTime.fromISO('2025-07-01T00:00:00');
 
@@ -72,7 +72,7 @@ export const initialEvents: SchedulerEvent[] = [
   },
 ];
 
-export const resources: SchedulerResource[] = [
+export const resources: CalendarResource[] = [
   { title: 'violet', id: 'violet', eventColor: 'violet' },
   { title: 'jade', id: 'jade', eventColor: 'jade' },
   { title: 'lime', id: 'lime', eventColor: 'lime' },

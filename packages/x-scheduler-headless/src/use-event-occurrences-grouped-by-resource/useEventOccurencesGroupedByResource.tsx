@@ -3,7 +3,7 @@ import { useStore } from '@base-ui-components/utils/store';
 import {
   SchedulerProcessedEvent,
   SchedulerEventOccurrence,
-  SchedulerResource,
+  CalendarResource,
   SchedulerValidDate,
 } from '../models';
 import { getOccurrencesFromEvents } from '../utils/event-utils';
@@ -58,13 +58,13 @@ export namespace useEventOccurrencesGroupedByResource {
   }
 
   export type ReturnValue = {
-    resource: SchedulerResource;
+    resource: CalendarResource;
     occurrences: SchedulerEventOccurrence[];
   }[];
 }
 
 interface InnerGetEventOccurrencesGroupedByResourceReturnValue {
-  resource: SchedulerResource;
+  resource: CalendarResource;
   occurrences: SchedulerEventOccurrence[];
 }
 
@@ -76,8 +76,8 @@ export function innerGetEventOccurrencesGroupedByResource(
   adapter: Adapter,
   events: SchedulerProcessedEvent[],
   visibleResources: Map<string, boolean>,
-  resources: readonly SchedulerResource[],
-  resourcesChildrenMap: Map<string, readonly SchedulerResource[]>,
+  resources: readonly CalendarResource[],
+  resourcesChildrenMap: Map<string, readonly CalendarResource[]>,
   resourceParentIds: Map<string, string | null>,
   start: SchedulerValidDate,
   end: SchedulerValidDate,
@@ -104,7 +104,7 @@ export function innerGetEventOccurrencesGroupedByResource(
     }
   }
 
-  const processResources = (innerResources: readonly SchedulerResource[]) => {
+  const processResources = (innerResources: readonly CalendarResource[]) => {
     const sortedResources = innerResources.toSorted((a, b) => a.title.localeCompare(b.title));
     const result: InnerGetEventOccurrencesGroupedByResourceReturnValue[] = [];
 

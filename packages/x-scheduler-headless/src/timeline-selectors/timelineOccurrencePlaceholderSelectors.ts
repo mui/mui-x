@@ -1,6 +1,6 @@
 import { createSelector } from '@base-ui-components/utils/store';
 import { TimelineState as State } from '../use-timeline';
-import { SchedulerResourceId, SchedulerValidDate } from '../models';
+import { CalendarResourceId, SchedulerValidDate } from '../models';
 
 export const timelineOccurrencePlaceholderSelectors = {
   placeholderInTimeRange: createSelector(
@@ -8,7 +8,7 @@ export const timelineOccurrencePlaceholderSelectors = {
       state: State,
       start: SchedulerValidDate,
       end: SchedulerValidDate,
-      resourceId: SchedulerResourceId | null,
+      resourceId: CalendarResourceId | null,
     ) => {
       if (
         state.occurrencePlaceholder === null ||

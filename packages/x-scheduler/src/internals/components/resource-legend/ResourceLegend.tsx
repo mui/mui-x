@@ -8,14 +8,14 @@ import { useStore } from '@base-ui-components/utils/store';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { schedulerResourceSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
-import { SchedulerResource } from '@mui/x-scheduler-headless/models';
+import { CalendarResource } from '@mui/x-scheduler-headless/models';
 import { DEFAULT_EVENT_COLOR } from '@mui/x-scheduler-headless/constants';
 import { ResourceLegendProps } from './ResourceLegend.types';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { getColorClassName } from '../../utils/color-utils';
 import './ResourceLegend.css';
 
-function ResourceLegendItem(props: { resource: SchedulerResource }) {
+function ResourceLegendItem(props: { resource: CalendarResource }) {
   const { resource } = props;
   const translations = useTranslations();
 

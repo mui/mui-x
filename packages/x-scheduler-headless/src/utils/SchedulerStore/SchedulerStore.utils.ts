@@ -3,8 +3,8 @@ import {
   SchedulerProcessedEvent,
   SchedulerEventId,
   SchedulerOccurrencePlaceholder,
-  SchedulerResource,
-  SchedulerResourceId,
+  CalendarResource,
+  CalendarResourceId,
   SchedulerEventModelStructure,
   SchedulerResourceModelStructure,
   SchedulerEvent,
@@ -59,14 +59,14 @@ const EVENT_PROPERTIES_LOOKUP: { [P in keyof SchedulerEvent]-?: true } = {
 
 const EVENT_PROPERTIES = Object.keys(EVENT_PROPERTIES_LOOKUP) as (keyof SchedulerEvent)[];
 
-const RESOURCE_PROPERTIES_LOOKUP: { [P in keyof SchedulerResource]-?: true } = {
+const RESOURCE_PROPERTIES_LOOKUP: { [P in keyof CalendarResource]-?: true } = {
   id: true,
   title: true,
   eventColor: true,
   children: true,
 };
 
-const RESOURCE_PROPERTIES = Object.keys(RESOURCE_PROPERTIES_LOOKUP) as (keyof SchedulerResource)[];
+const RESOURCE_PROPERTIES = Object.keys(RESOURCE_PROPERTIES_LOOKUP) as (keyof CalendarResource)[];
 
 /**
  * Converts an event model to a processed event using the provided model structure.
@@ -158,8 +158,8 @@ function createOrUpdateEventModelFromBuiltInEvnetModel<
 export function getProcessedResourceFromModel<TResource extends object>(
   resource: TResource,
   resourceModelStructure: SchedulerResourceModelStructure<TResource> | undefined,
-): SchedulerResource {
-  const processedResource = {} as SchedulerResource;
+): CalendarResource {
+  const processedResource = {} as CalendarResource;
 
   for (const key of RESOURCE_PROPERTIES) {
     const getter = resourceModelStructure?.[key]?.getter;
@@ -233,10 +233,10 @@ export function buildResourcesState<TEvent extends object, TResource extends obj
   const { resources = EMPTY_ARRAY, resourceModelStructure } = parameters;
 
   const resourceIdList: string[] = [];
-  const processedResourceLookup = new Map<SchedulerResourceId, SchedulerResource>();
-  const resourceChildrenIdLookup = new Map<SchedulerResourceId, SchedulerResourceId[]>();
+  const processedResourceLookup = new Map<CalendarResourceId, CalendarResource>();
+  const resourceChildrenIdLookup = new Map<CalendarResourceId, CalendarResourceId[]>();
 
-  const addResourceToState = (processedResource: SchedulerResource) => {
+  const addResourceToState = (processedResource: CalendarResource) => {
     const { children, ...resourceWithoutChildren } = processedResource;
     processedResourceLookup.set(processedResource.id, resourceWithoutChildren);
     if (children) {

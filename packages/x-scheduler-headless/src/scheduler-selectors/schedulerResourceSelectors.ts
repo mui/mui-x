@@ -1,7 +1,7 @@
 import { createSelector, createSelectorMemoized } from '@base-ui-components/utils/store';
 import { EMPTY_ARRAY } from '@base-ui-components/utils/empty';
 import { SchedulerState as State } from '../utils/SchedulerStore/SchedulerStore.types';
-import { SchedulerResource, SchedulerResourceId } from '../models';
+import { CalendarResource, CalendarResourceId } from '../models';
 
 export const schedulerResourceSelectors = {
   processedResource: createSelector(
@@ -20,7 +20,7 @@ export const schedulerResourceSelectors = {
     (state: State) => state.processedResourceLookup,
     (state: State) => state.resourceChildrenIdLookup,
     (resourceIds, processedResourceLookup, resourceChildrenIdLookup) => {
-      const flatList: SchedulerResource[] = [];
+      const flatList: CalendarResource[] = [];
 
       const addResourceAndChildren = (resourceId: string) => {
         const resource = processedResourceLookup.get(resourceId);
@@ -48,7 +48,7 @@ export const schedulerResourceSelectors = {
     (state: State) => state.processedResourceLookup,
     (state: State) => state.resourceChildrenIdLookup,
     (processedResourceLookup, resourceChildrenIdLookup) => {
-      const result: Map<SchedulerResourceId, SchedulerResource[]> = new Map();
+      const result: Map<CalendarResourceId, CalendarResource[]> = new Map();
 
       for (const [resourceId, childrenIds] of Array.from(resourceChildrenIdLookup.entries())) {
         const children = childrenIds.map((id) => processedResourceLookup.get(id)!);
@@ -60,13 +60,13 @@ export const schedulerResourceSelectors = {
   ),
   childrenIdLookup: (state: State) => state.resourceChildrenIdLookup,
   resourceChildrenIds: createSelector(
-    (state: State, resourceId: SchedulerResourceId) =>
+    (state: State, resourceId: CalendarResourceId) =>
       state.resourceChildrenIdLookup.get(resourceId) ?? EMPTY_ARRAY,
   ),
   resourceParentIdLookup: createSelectorMemoized(
     (state: State) => state.resourceChildrenIdLookup,
     (resourceChildrenIdLookup) => {
-      const result: Map<SchedulerResourceId, SchedulerResourceId | null> = new Map();
+      const result: Map<CalendarResourceId, CalendarResourceId | null> = new Map();
 
       for (const [resourceId, childrenIds] of Array.from(resourceChildrenIdLookup.entries())) {
         for (const childId of childrenIds) {

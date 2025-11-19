@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { useAdapter } from '../../use-adapter/useAdapter';
-import { SchedulerResourceId, SchedulerEvent, SchedulerValidDate } from '../../models';
+import { CalendarResourceId, SchedulerEvent, SchedulerValidDate } from '../../models';
 import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
 import { TimelineEventRowContext } from './TimelineEventRowContext';
 import { useDropTarget } from '../../utils/useDropTarget';
@@ -154,7 +154,7 @@ export namespace useEventRowDropTarget {
      * The id of the resource to drop the event onto.
      * If null, the event will be dropped outside of any resource.
      */
-    resourceId: SchedulerResourceId | null;
+    resourceId: CalendarResourceId | null;
     /**
      * Add properties to the event dropped in the row before storing it in the store.
      */

@@ -1,10 +1,10 @@
 import clsx from 'clsx';
 import { Timeline as TimelinePrimitive } from '@mui/x-scheduler-headless/timeline';
 import { DEFAULT_EVENT_COLOR } from '@mui/x-scheduler-headless/constants';
-import { SchedulerResource } from '@mui/x-scheduler-headless/models';
+import { CalendarResource } from '@mui/x-scheduler-headless/models';
 import { getColorClassName } from '../../../internals/utils/color-utils';
 
-export default function TimelineTitleCell({ resource }: { resource: SchedulerResource }) {
+export default function TimelineTitleCell({ resource }: { resource: CalendarResource }) {
   return (
     <TimelinePrimitive.Row className="TimelineRow">
       <TimelinePrimitive.Cell

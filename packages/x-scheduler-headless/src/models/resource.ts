@@ -1,13 +1,15 @@
 import type { SchedulerEventColor } from './event';
 
-export type SchedulerResourceId = string;
+export type CalendarResourceId = string;
 
-export interface SchedulerResource {
+// TODO: Rename SchedulerProcessedResource and replace the raw SchedulerValidDate with processed dates.
+// TODO: Create a new SchedulerDefaultResourceModel to replace CalendarResource on props.resources.
+export interface CalendarResource {
   /**
    * The unique identifier of the resource.
    * This is the value that must be set in the `resource` property of the events.
    */
-  id: SchedulerResourceId;
+  id: CalendarResourceId;
   /**
    * The title of the resource.
    */
@@ -21,11 +23,11 @@ export interface SchedulerResource {
   /**
    * The child resources of this resource.
    */
-  children?: SchedulerResource[];
+  children?: CalendarResource[];
 }
 
 export type SchedulerResourceModelStructure<TResource extends object> = {
-  [key in keyof SchedulerResource]?: {
-    getter: (event: TResource) => SchedulerResource[key];
+  [key in keyof CalendarResource]?: {
+    getter: (event: TResource) => CalendarResource[key];
   };
 };
