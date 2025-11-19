@@ -82,7 +82,7 @@ export default function ResourceMenu(props: ResourceSelectProps) {
         aria-label={translations.resourceLabel}
       >
         <ResourceMenuTriggerContent resource={resource} color={color} />
-        <span>{resource?.label}</span>
+        <span>{resource ? resource.label : translations.labelInvalidResource}</span>
         <ChevronDown size={14} />
       </Menu.Trigger>
       <Menu.Portal>
