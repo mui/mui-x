@@ -1,17 +1,18 @@
 import {
-  SchedulerProcessedEvent,
   SchedulerEventColor,
-  SchedulerOccurrencePlaceholder,
-  SchedulerResource,
-  SchedulerResourceId,
-  SchedulerEventUpdatedProperties,
-  SchedulerValidDate,
-  SchedulerEventId,
-  SchedulerResourceModelStructure,
-  SchedulerEventModelStructure,
-  SchedulerPreferences,
   SchedulerEventCreationConfig,
   SchedulerEventCreationProperties,
+  SchedulerEventId,
+  SchedulerEventModelStructure,
+  SchedulerEventUpdatedProperties,
+  SchedulerOccurrencePlaceholder,
+  SchedulerPreferences,
+  SchedulerProcessedEvent,
+  SchedulerResource,
+  SchedulerResourceId,
+  SchedulerResourceModelStructure,
+  SchedulerTimezone,
+  SchedulerValidDate,
 } from '../../models';
 import { Adapter } from '../../use-adapter/useAdapter.types';
 
@@ -124,6 +125,13 @@ export interface SchedulerState<TEvent extends object = any> {
    * If an object, event creation is enabled with the provided configuration.
    */
   eventCreation: Partial<SchedulerEventCreationConfig> | boolean;
+  /**
+   * The timezone used by the scheduler.
+   * It must be an IANA timezone name (e.g. "America/New_York", "Europe/Paris")
+   * or 'default' to use the default timezone of the date adapter.
+   * @default 'default'
+   */
+  timezone?: 'default' | SchedulerTimezone;
 }
 
 export interface SchedulerParameters<TEvent extends object, TResource extends object> {
@@ -211,6 +219,13 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
    * If an object, event creation is enabled with the provided configuration.
    */
   eventCreation?: Partial<SchedulerEventCreationConfig> | boolean;
+  /**
+   * The timezone used by the scheduler.
+   * It must be an IANA timezone name (e.g. "America/New_York", "Europe/Paris")
+   * or 'default' to use the default timezone of the date adapter.
+   * @default 'default'
+   */
+  timezone?: 'default' | SchedulerTimezone;
 }
 
 /**
