@@ -614,10 +614,6 @@ const pages: MuiPage[] = [
                 plan: 'premium',
                 unstable: true,
               },
-              {
-                pathname: '/x/react-charts/content-security-policy',
-                title: 'Content Security Policy',
-              },
             ],
           },
           {
