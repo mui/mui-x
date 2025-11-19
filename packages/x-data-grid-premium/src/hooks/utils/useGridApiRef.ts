@@ -1,5 +1,7 @@
 import { RefObject } from '@mui/x-internals/types';
-import { useGridApiRef as useCommunityGridApiRef } from '@mui/x-data-grid';
+import { GridApiCommon, useGridApiRef as useCommunityGridApiRef } from '@mui/x-data-grid';
 import { GridApiPremium } from '../../models/gridApiPremium';
 
-export const useGridApiRef = useCommunityGridApiRef as () => RefObject<GridApiPremium | null>;
+export const useGridApiRef: <
+  Api extends GridApiCommon = GridApiPremium,
+>() => RefObject<Api | null> = useCommunityGridApiRef;
