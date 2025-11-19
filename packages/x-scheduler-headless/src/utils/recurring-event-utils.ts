@@ -42,8 +42,6 @@ function getMondayWeekDayNumber(adapter: Adapter) {
     mondayMap.set(adapter, monday);
   }
 
-  console.log(monday);
-
   return adapter.getDayOfWeek(monday);
 }
 
