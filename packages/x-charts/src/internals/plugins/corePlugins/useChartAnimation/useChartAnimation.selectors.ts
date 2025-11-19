@@ -1,11 +1,10 @@
-import { createSelector } from '@mui/x-internals/store';
-import { ChartRootSelector } from '../../utils/selectors';
+import { ChartRootSelector, createSelector } from '../../utils/selectors';
 import type { UseChartAnimationSignature } from './useChartAnimation.types';
 
 const selectorChartAnimationState: ChartRootSelector<UseChartAnimationSignature> = (state) =>
   state.animation;
 
 export const selectorChartSkipAnimation = createSelector(
-  selectorChartAnimationState,
+  [selectorChartAnimationState],
   (state) => state.skip || state.skipAnimationRequests > 0,
 );
