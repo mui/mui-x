@@ -1,7 +1,7 @@
 'use client';
 import { Timeline as TimelinePrimitive } from '@mui/x-scheduler-headless/timeline';
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-timeline-position';
-import { EventPopoverTrigger } from '../../../internals/components/event-popover';
+
 import { TimelineEvent } from './timeline-event';
 import { TimelineEventRowProps } from './TimelineEventRow.types';
 
@@ -32,16 +32,11 @@ export default function TimelineEventRow({
       end={end}
     >
       {occurrencesWithPosition.occurrences.map((occurrence) => (
-        <EventPopoverTrigger
+        <TimelineEvent
           key={occurrence.key}
           occurrence={occurrence}
-          render={
-            <TimelineEvent
-              occurrence={occurrence}
-              ariaLabelledBy={`TimelineTitleCell-${occurrence.resource}`}
-              variant="regular"
-            />
-          }
+          ariaLabelledBy={`TimelineTitleCell-${occurrence.resource}`}
+          variant="regular"
         />
       ))}
       {placeholder != null && (
