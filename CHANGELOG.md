@@ -59,7 +59,7 @@ Same changes as in `@mui/x-date-pickers@8.19.0`.
 
 - [charts] Expose `niceDomain` utility (#20250) @bernardobelchior
 - [charts] Fix Pie Chart keyboard focus highlight (#20358) @JCQuintas
-- [charts] Memoize series series selectors (#20326) @JCQuintas
+- [charts] Memoize series selectors (#20326) @JCQuintas
 - [charts] Relax dataset type (#20294) @bernardobelchior
 - [charts] Remove `touch-action: pan-y` when zoom is disabled (#20204) @bernardobelchior
 - [charts] Use `getBBox()` for correct SVG sizes in firefox (#20309) @JCQuintas
