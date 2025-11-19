@@ -412,15 +412,6 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    * @default false
    */
   virtualizeColumnsWithAutoRowHeight: boolean;
-  /**
-   * Sets the tab navigation behavior for the Data Grid.
-   * - "none": No Data Grid specific tab navigation. Pressing the tab key will move the focus to the next element in the tab sequence.
-   * - "content": Pressing the tab key will move the focus to the next cell in the same row or the first cell in the next row. Shift+Tab will move the focus to the previous cell in the same row or the last cell in the previous row. Tab navigation is not enabled for the header.
-   * - "header": Pressing the tab key will move the focus to the next column group, column header or header filter. Shift+Tab will move the focus to the previous column group, column header or header filter. Tab navigation is not enabled for the content.
-   * - "all": Combines the "content" and "header" behavior.
-   * @default "none"
-   */
-  tabNavigation: 'none' | 'content' | 'header' | 'all';
 }
 
 /**

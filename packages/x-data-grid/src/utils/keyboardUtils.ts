@@ -11,6 +11,25 @@ export function isPrintableKey(event: React.KeyboardEvent<HTMLElement>): boolean
   return event.key.length === 1 && !event.ctrlKey && !event.metaKey;
 }
 
+export const GRID_MULTIPLE_SELECTION_KEYS = ['Meta', 'Control', 'Shift'];
+export const GRID_CELL_EXIT_EDIT_MODE_KEYS = ['Enter', 'Escape', 'Tab'];
+export const GRID_CELL_EDIT_COMMIT_KEYS = ['Enter', 'Tab'];
+
+export const isMultipleKey = (key: string): boolean =>
+  GRID_MULTIPLE_SELECTION_KEYS.indexOf(key) > -1;
+
+export const isCellEnterEditModeKeys = (event: React.KeyboardEvent<HTMLElement>): boolean =>
+  isPrintableKey(event) ||
+  event.key === 'Enter' ||
+  event.key === 'Backspace' ||
+  event.key === 'Delete';
+
+export const isCellExitEditModeKeys = (key: string): boolean =>
+  GRID_CELL_EXIT_EDIT_MODE_KEYS.indexOf(key) > -1;
+
+export const isCellEditCommitKeys = (key: string): boolean =>
+  GRID_CELL_EDIT_COMMIT_KEYS.indexOf(key) > -1;
+
 export const isNavigationKey = (key: string) =>
   key.indexOf('Arrow') === 0 ||
   key.indexOf('Page') === 0 ||

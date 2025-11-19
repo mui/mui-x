@@ -60,5 +60,4 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   sortingOrder: ['asc' as const, 'desc' as const, null],
   throttleRowsMs: 0,
   virtualizeColumnsWithAutoRowHeight: false,
-  tabNavigation: 'none',
 };
