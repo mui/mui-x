@@ -15,15 +15,18 @@ export function getDaysTheOccurrenceIsVisibleOn(
   days: SchedulerProcessedDate[],
   adapter: Adapter,
 ) {
+  const eventStartStartOfDay = adapter.startOfDay(event.start.value);
+  const eventEndEndOfDay = adapter.endOfDay(event.end.value);
+
   const dayKeys: string[] = [];
   for (const day of days) {
     // If the day is before the event start, skip to the next day
-    if (adapter.isBeforeDay(day.value, event.start.value)) {
+    if (adapter.isBefore(day.value, eventStartStartOfDay)) {
       continue;
     }
 
     // If the day is after the event end, break as the days are sorted by start date
-    if (adapter.isAfterDay(day.value, event.end.value)) {
+    if (adapter.isAfter(day.value, eventEndEndOfDay)) {
       break;
     }
     dayKeys.push(day.key);

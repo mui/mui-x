@@ -47,7 +47,7 @@ export function MonthsHeader(props: HeaderProps) {
                 {adapter.getYear(month.value)}
               </div>
             )}
-            <div className="MonthLabel">{adapter.format(month.value, 'monthShort')}</div>
+            <div className="MonthLabel">{adapter.format(month.value, 'month3Letters')}</div>
           </React.Fragment>
         );
       })}

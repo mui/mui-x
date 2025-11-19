@@ -1,12 +1,11 @@
 'use client';
 import * as React from 'react';
-import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
+import { useStableCallback } from '@base-ui-components/utils/useStableCallback';
 import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
 import { useAdapter, diffIn } from '../../use-adapter';
 import { SchedulerEvent, SchedulerValidDate } from '../../models';
 import { mergeDateAndTime } from '../../utils/date-utils';
 import { useDropTarget } from '../../utils/useDropTarget';
-import { EVENT_CREATION_DEFAULT_LENGTH_MINUTE } from '../../constants';
 
 const isValidDropTarget = buildIsValidDropTarget([
   'CalendarGridDayEvent',
@@ -18,11 +17,15 @@ const isValidDropTarget = buildIsValidDropTarget([
 export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters) {
   const { value, addPropertiesToDroppedEvent } = parameters;
 
+  // Context hooks
   const adapter = useAdapter();
+
+  // Ref hooks
   const ref = React.useRef<HTMLDivElement>(null);
 
-  const getEventDropData: useDropTarget.GetEventDropData = useEventCallback(
-    ({ data, createDropData }) => {
+  // Feature hooks
+  const getEventDropData: useDropTarget.GetEventDropData = useStableCallback(
+    ({ data, getDataFromInside, getDataFromOutside }) => {
       if (!isValidDropTarget(data)) {
         return undefined;
       }
@@ -30,7 +33,7 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
       // Move a Day Grid Event within the Day Grid
       if (data.source === 'CalendarGridDayEvent') {
         const offset = diffIn(adapter, value, data.draggedDay, 'days');
-        return createDropData(
+        return getDataFromInside(
           data,
           offset === 0 ? data.start : adapter.addDays(data.start, offset),
           offset === 0 ? data.end : adapter.addDays(data.end, offset),
@@ -40,7 +43,7 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
       // Resize a Day Grid Event
       if (data.source === 'CalendarGridDayEventResizeHandler') {
         if (data.side === 'start') {
-          if (adapter.isAfterDay(value, data.end)) {
+          if (adapter.isAfter(value, adapter.endOfDay(data.end))) {
             return undefined;
           }
 
@@ -50,11 +53,11 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
           } else {
             newStart = mergeDateAndTime(adapter, value, data.start);
           }
-          return createDropData(data, newStart, data.end);
+          return getDataFromInside(data, newStart, data.end);
         }
 
         if (data.side === 'end') {
-          if (adapter.isBeforeDay(value, data.start)) {
+          if (adapter.isBefore(value, adapter.startOfDay(data.start))) {
             return undefined;
           }
 
@@ -65,7 +68,7 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
             draggedDay = mergeDateAndTime(adapter, value, data.end);
           }
 
-          return createDropData(data, data.start, draggedDay);
+          return getDataFromInside(data, data.start, draggedDay);
         }
       }
 
@@ -77,7 +80,7 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
           data.initialCursorPositionInEventMs / 1000,
         );
         const offset = diffIn(adapter, value, cursorDate, 'days');
-        return createDropData(
+        return getDataFromInside(
           data,
           offset === 0 ? data.start : adapter.addDays(data.start, offset),
           offset === 0 ? data.end : adapter.addDays(data.end, offset),
@@ -86,15 +89,7 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
 
       // Move an Standalone Event into the Time Grid
       if (data.source === 'StandaloneEvent') {
-        // TODO: Improve the start and end time of a non all-day event dropped in the Month View.
-        return createDropData(
-          data,
-          value,
-          adapter.addMinutes(
-            value,
-            data.eventData.duration ?? EVENT_CREATION_DEFAULT_LENGTH_MINUTE,
-          ),
-        );
+        return getDataFromOutside(data, value);
       }
 
       return undefined;
