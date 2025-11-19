@@ -222,19 +222,13 @@ export function getBarDimensions(params: {
   }
 
   const visibleValues = series.visibleStackedData[dataIndex];
-  const fullValues = series.fullStackedData[dataIndex];
   const visibleValueCoordinates = visibleValues.map((v) =>
     verticalLayout ? yScale(v)! : xScale(v)!,
   );
-  const fullValueCoordinates = fullValues.map((v) => (verticalLayout ? yScale(v)! : xScale(v)!));
 
   const [visibleMinValueCoord, visibleMaxValueCoord] = findMinMax(visibleValueCoordinates);
-  const [fullMinValueCoord, fullMaxValueCoord] = findMinMax(fullValueCoordinates);
 
   const isVisible = isItemVisible({ seriesId: series.id });
-
-  const minValue = isVisible ? visibleMinValueCoord : fullMinValueCoord;
-  const maxValue = isVisible ? visibleMaxValueCoord : fullMaxValueCoord;
 
   let barSize = 0;
   if (seriesValue !== 0) {
@@ -248,9 +242,9 @@ export function getBarDimensions(params: {
   let startCoordinate = 0;
 
   if (shouldInvert) {
-    startCoordinate = maxValue - barSize;
+    startCoordinate = visibleMaxValueCoord - barSize;
   } else {
-    startCoordinate = minValue;
+    startCoordinate = visibleMinValueCoord;
   }
 
   return {

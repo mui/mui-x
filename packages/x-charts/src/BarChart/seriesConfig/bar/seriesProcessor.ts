@@ -77,35 +77,38 @@ const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset, hiddenIdentifi
     const keys = ids.map((id) => {
       // Use dataKey if needed and available
       const dataKey = series[id].dataKey;
-      return series[id].data === undefined && dataKey !== undefined
-        ? { key: dataKey, seriesId: id }
-        : { key: id, seriesId: id };
+      return series[id].data === undefined && dataKey !== undefined ? dataKey : id;
     });
 
-    // Get stacked values, and derive the domain
-    const stackedSeries = d3Stack<
-      any,
-      DatasetElementType<number | null>,
-      { key: SeriesId; seriesId: SeriesId }
-    >()
+    const stackedSeries = d3Stack<any, DatasetElementType<number | null>, SeriesId>()
       .keys(keys)
-      .value((d, entry) => {
-        // defaultize null value to 0
-        const realValue = d[entry.key] ?? 0;
-        return hiddenIds.has(entry.seriesId) ? 0 : realValue;
-      })
+      .value((d, key) => d[key] ?? 0) // defaultize null value to 0
       .order(stackingOrder)
       .offset(stackingOffset)(d3Dataset);
 
-    const fullStackedSeries = d3Stack<
-      any,
-      DatasetElementType<number | null>,
-      { key: SeriesId; seriesId: SeriesId }
-    >()
-      .keys(keys)
-      .value((d, entry) => d[entry.key] ?? 0) // defaultize null value to 0
-      .order(stackingOrder)
-      .offset(stackingOffset)(d3Dataset);
+    const fullStackedData = stackedSeries.map((layer) =>
+      layer.map((point) => [point[0], point[1]] as [number, number]),
+    );
+
+    const visibleStackedData = stackedSeries.map((layer, layerIndex, array) =>
+      layer.map((point, pointIndex) => {
+        const id = ids[layerIndex];
+        const isHidden = hiddenIds.has(id);
+
+        if (isHidden) {
+          const diff = point[1] - point[0];
+          // We got to remove the diff from all the upper layers
+          for (let j = layerIndex + 1; j < array.length; j += 1) {
+            array[j][pointIndex][0] -= diff;
+            array[j][pointIndex][1] -= diff;
+          }
+
+          // If the series is hidden or the original value is null, return the lower bound for the visible stacked data
+          return [point[0], point[0]] as [number, number];
+        }
+        return point as [number, number];
+      }),
+    );
 
     ids.forEach((id, index) => {
       const dataKey = series[id].dataKey;
@@ -122,8 +125,8 @@ const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset, hiddenIdentifi
         valueFormatter: series[id].valueFormatter ?? barValueFormatter,
         ...series[id],
         data,
-        visibleStackedData: stackedSeries[index].map(([a, b]) => [a, b]),
-        fullStackedData: fullStackedSeries[index].map(([a, b]) => [a, b]),
+        fullStackedData: fullStackedData[index],
+        visibleStackedData: visibleStackedData[index],
       };
     });
   });
