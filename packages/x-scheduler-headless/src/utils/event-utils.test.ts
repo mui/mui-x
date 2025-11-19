@@ -6,19 +6,19 @@ describe('event-utils', () => {
   const createEventOccurrence = (id: string, start: string, end: string) =>
     createOccurrenceFromEvent({
       id,
-      start: adapter.date(start),
-      end: adapter.date(end),
+      start: adapter.date(start, 'default'),
+      end: adapter.date(end, 'default'),
       title: `Event ${id}`,
       allDay: true,
     });
 
   describe('getDaysTheOccurrenceIsVisibleOn', () => {
     const days = [
-      processDate(adapter.date('2024-01-14'), adapter),
-      processDate(adapter.date('2024-01-15'), adapter),
-      processDate(adapter.date('2024-01-16'), adapter),
-      processDate(adapter.date('2024-01-17'), adapter),
-      processDate(adapter.date('2024-01-18'), adapter),
+      processDate(adapter.date('2024-01-14', 'default'), adapter),
+      processDate(adapter.date('2024-01-15', 'default'), adapter),
+      processDate(adapter.date('2024-01-16', 'default'), adapter),
+      processDate(adapter.date('2024-01-17', 'default'), adapter),
+      processDate(adapter.date('2024-01-18', 'default'), adapter),
     ];
 
     it('should return all days when event spans multiple days', () => {

@@ -6,12 +6,12 @@ import { useAdapter, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
-import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { EventPopoverTrigger } from '../event-popover';
 import { DayGridEvent } from '../event';
 import { useEventPopoverContext } from '../event-popover/EventPopover';
 
 import './DayTimeGrid.css';
+import { useEventCreationProps } from '../../hooks/useEventCreationProps';
 
 export function DayGridCell(props: DayGridCellProps) {
   const { day, row } = props;
@@ -19,6 +19,7 @@ export function DayGridCell(props: DayGridCellProps) {
   // Context hooks
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
+  const { open: startEditing } = useEventPopoverContext();
 
   // Ref hooks
   const cellRef = React.useRef<HTMLDivElement | null>(null);
@@ -29,17 +30,10 @@ export function DayGridCell(props: DayGridCellProps) {
     eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell,
     day.value,
   );
-
-  // Feature hooks
   const placeholder = CalendarGrid.usePlaceholderInDay(day.value, row);
 
-  const { open: startEditing } = useEventPopoverContext();
-
-  const handleDoubleClick = () => {
-    if (!schedulerEventSelectors.canCreateNewEvent(store.state)) {
-      return;
-    }
-
+  // Feature hooks
+  const eventCreationProps = useEventCreationProps(() => {
     store.setOccurrencePlaceholder({
       type: 'creation',
       surfaceType: 'day-grid',
@@ -47,7 +41,7 @@ export function DayGridCell(props: DayGridCellProps) {
       end: adapter.endOfDay(day.value),
       resourceId: null,
     });
-  };
+  });
 
   React.useEffect(() => {
     if (!isCreatingAnEvent || !placeholder || !cellRef.current) {
@@ -70,7 +64,7 @@ export function DayGridCell(props: DayGridCellProps) {
       aria-labelledby={`DayTimeGridHeaderCell-${adapter.getDate(day.value)} DayTimeGridAllDayEventsHeaderCell`}
       role="gridcell"
       data-weekend={isWeekend(adapter, day.value) ? '' : undefined}
-      onDoubleClick={handleDoubleClick}
+      {...eventCreationProps}
     >
       <div className="DayTimeGridAllDayEventsCellEvents">
         {day.withPosition.map((occurrence) => {

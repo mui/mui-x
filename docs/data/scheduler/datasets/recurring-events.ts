@@ -56,7 +56,6 @@ export const initialEvents: SchedulerEvent[] = [
     start: START.set({ weekday: 1, hour: 6, minute: 0 }),
     end: START.set({ weekday: 1, hour: 6, minute: 30 }),
     title: 'Every 2 Days',
-    resource: 'edge',
     rrule: { freq: 'DAILY', interval: 2 },
   },
   {
@@ -64,7 +63,6 @@ export const initialEvents: SchedulerEvent[] = [
     start: START.set({ weekday: 2, hour: 5, minute: 0 }),
     end: START.set({ weekday: 2, hour: 5, minute: 30 }),
     title: 'Every 3 Days',
-    resource: 'edge',
     rrule: { freq: 'DAILY', interval: 3 },
   },
 
