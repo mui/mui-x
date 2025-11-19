@@ -47,7 +47,7 @@ Same changes as in `@mui/x-data-grid-pro@8.19.0`, plus:
 
 #### `@mui/x-date-pickers@8.19.0`
 
-Internal changes.
+- [pickers] Do not loose `slotProps.field.slotProps` (#20322) @flaviendelangle
 
 #### `@mui/x-date-pickers-pro@8.19.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
