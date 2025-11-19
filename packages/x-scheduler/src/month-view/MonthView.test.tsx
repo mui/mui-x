@@ -71,7 +71,7 @@ describe('<MonthView />', () => {
     expect(handleViewChange.firstCall.firstArg).to.equal('day');
     expect(handleVisibleDateChange.calledOnce).to.equal(true);
     expect(handleVisibleDateChange.firstCall.firstArg).toEqualDateTime(
-      adapter.date('2025-05-15T00:00:00'),
+      adapter.date('2025-05-15T00:00:00', 'default'),
     );
   });
 
@@ -132,8 +132,8 @@ describe('<MonthView />', () => {
           events={[
             {
               id: '1',
-              start: adapter.date('2025-05-05T00:00:00'),
-              end: adapter.date('2025-05-07T23:59:59'),
+              start: adapter.date('2025-05-05T00:00:00', 'default'),
+              end: adapter.date('2025-05-07T23:59:59', 'default'),
               title: 'Test event',
               allDay: true,
             },

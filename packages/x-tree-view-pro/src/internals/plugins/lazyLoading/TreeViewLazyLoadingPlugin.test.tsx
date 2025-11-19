@@ -35,6 +35,7 @@ describeTreeView<RichTreeViewProStore<any, any>>(
     if (treeViewComponentName === 'SimpleTreeView' || treeViewComponentName === 'RichTreeView') {
       return;
     }
+
     describe('interaction', () => {
       it('should load children when expanding an item', async () => {
         const view = render({
@@ -70,6 +71,24 @@ describeTreeView<RichTreeViewProStore<any, any>>(
         await awaitMockFetch();
         expect(view.isItemExpanded('1')).to.equal(false);
         expect(view.getAllTreeItemIds()).to.deep.equal(['1']);
+      });
+
+      it('should load children if item has unknown children count', async () => {
+        const view = render({
+          items: [{ id: '1', childrenCount: -1 }],
+          dataSource: {
+            getChildrenCount: (item) => item?.childrenCount as number,
+            getTreeItems: mockFetchData,
+          },
+        });
+
+        expect(view.isItemExpanded('1')).to.equal(false);
+        expect(view.getAllTreeItemIds()).to.deep.equal(['1']);
+
+        fireEvent.click(view.getItemContent('1'));
+        await awaitMockFetch();
+        expect(view.isItemExpanded('1')).to.equal(true);
+        expect(view.getAllTreeItemIds()).to.deep.equal(['1', '1-1']);
       });
 
       it('should handle errors during fetching', async () => {

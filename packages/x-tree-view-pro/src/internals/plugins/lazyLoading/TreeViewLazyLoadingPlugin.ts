@@ -267,7 +267,7 @@ function getExpandableItemsFromDataSource(
     .filter(
       (itemMeta) =>
         !itemMeta.expandable &&
-        dataSource.getChildrenCount(store.state.itemModelLookup[itemMeta.id]) > 0,
+        dataSource.getChildrenCount(store.state.itemModelLookup[itemMeta.id]) !== 0,
     )
     .map((item) => item.id);
 }

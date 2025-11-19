@@ -210,7 +210,7 @@ export class TreeViewItemsPlugin<R extends TreeViewValidItem<R>> {
       items,
       parentId,
       depth: parentDepth + 1,
-      isItemExpandable: getChildrenCount ? (item) => getChildrenCount(item) > 0 : () => false,
+      isItemExpandable: getChildrenCount ? (item) => getChildrenCount(item) !== 0 : () => false,
       otherItemsMetaLookup: itemsSelectors.itemMetaLookup(this.store.state),
     });
 
