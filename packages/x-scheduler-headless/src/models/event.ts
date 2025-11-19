@@ -138,6 +138,16 @@ export interface SchedulerEvent {
    * Takes precedence over resource color if both are defined.
    */
   color?: SchedulerEventColor;
+  /**
+   * Whether the event is draggable.
+   * If not defined, the event is draggable if the `areEventsDraggable` property is true.
+   */
+  draggable?: boolean;
+  /**
+   * Whether the event is resizable.
+   * If not defined, the event is resizable if the `areEventsResizable` property is true.
+   */
+  resizable?: boolean | 'start' | 'end';
 }
 
 /**
