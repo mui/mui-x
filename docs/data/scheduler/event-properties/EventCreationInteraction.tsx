@@ -17,7 +17,7 @@ export default function EventCreationInteraction() {
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
-        preferences={{ isSidePanelOpen: false }}
+        defaultPreferences={{ isSidePanelOpen: false }}
         eventCreation={{ interaction: 'click' }}
       />
     </div>

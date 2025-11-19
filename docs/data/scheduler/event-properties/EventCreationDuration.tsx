@@ -17,7 +17,7 @@ export default function EventCreationDuration() {
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
-        preferences={{ isSidePanelOpen: false }}
+        defaultPreferences={{ isSidePanelOpen: false }}
         eventCreation={{ duration: 60 }}
       />
     </div>
