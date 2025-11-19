@@ -177,12 +177,19 @@ export class EventBuilder {
   recurrent(kind: RecurringEventPresetKey, rrule?: Omit<RecurringEventRecurrenceRule, 'freq'>) {
     const anchor = this.event.start ?? DEFAULT_TESTING_VISIBLE_DATE;
 
-    let base: RecurringEventRecurrenceRule = { freq: kind, interval: 1 };
+    const freqMap: Record<RecurringEventPresetKey, RecurringEventRecurrenceRule['freq']> = {
+      daily: 'DAILY',
+      weekly: 'WEEKLY',
+      monthly: 'MONTHLY',
+      yearly: 'YEARLY',
+    };
 
-    if (kind === 'WEEKLY') {
+    let base: RecurringEventRecurrenceRule = { freq: freqMap[kind], interval: 1 };
+
+    if (kind === 'weekly') {
       const code = getWeekDayCode(this.adapter, anchor);
       base = { ...base, byDay: [code] };
-    } else if (kind === 'MONTHLY') {
+    } else if (kind === 'monthly') {
       const dayOfMonth = this.adapter.getDate(anchor);
       base = { ...base, byMonthDay: [dayOfMonth] };
     }

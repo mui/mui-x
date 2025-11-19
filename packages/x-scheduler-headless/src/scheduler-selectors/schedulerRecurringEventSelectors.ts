@@ -1,11 +1,11 @@
-import { createSelector, createSelectorMemoized } from '@base-ui-components/utils/store';
+import { createSelectorMemoized } from '@base-ui-components/utils/store';
 import {
   RecurringEventPresetKey,
   RecurringEventRecurrenceRule,
   SchedulerProcessedDate,
 } from '../models';
 import { SchedulerState as State } from '../utils/SchedulerStore/SchedulerStore.types';
-import { getWeekDayCode, serializeRRule } from '../utils/recurring-event-utils';
+import { getWeekDayCode } from '../utils/recurring-event-utils';
 
 export const schedulerRecurringEventSelectors = {
   /**
@@ -18,21 +18,21 @@ export const schedulerRecurringEventSelectors = {
       date: SchedulerProcessedDate,
     ): Record<RecurringEventPresetKey, RecurringEventRecurrenceRule> => {
       return {
-        DAILY: {
+        daily: {
           freq: 'DAILY',
           interval: 1,
         },
-        WEEKLY: {
+        weekly: {
           freq: 'WEEKLY',
           interval: 1,
           byDay: [getWeekDayCode(adapter, date.value)],
         },
-        MONTHLY: {
+        monthly: {
           freq: 'MONTHLY',
           interval: 1,
           byMonthDay: [adapter.getDate(date.value)],
         },
-        YEARLY: {
+        yearly: {
           freq: 'YEARLY',
           interval: 1,
         },
@@ -66,7 +66,7 @@ export const schedulerRecurringEventSelectors = {
       switch (rule.freq) {
         case 'DAILY': {
           // Preset "Daily" => FREQ=DAILY;INTERVAL=1; no COUNT/UNTIL;
-          return interval === 1 && neverEnds && !hasSelectors ? 'DAILY' : 'custom';
+          return interval === 1 && neverEnds && !hasSelectors ? 'daily' : 'custom';
         }
 
         case 'WEEKLY': {
@@ -82,7 +82,7 @@ export const schedulerRecurringEventSelectors = {
             matchesDefaultByDay &&
             !(rule.byMonthDay?.length || rule.byMonth?.length);
 
-          return isPresetWeekly ? 'WEEKLY' : 'custom';
+          return isPresetWeekly ? 'weekly' : 'custom';
         }
 
         case 'MONTHLY': {
@@ -97,36 +97,17 @@ export const schedulerRecurringEventSelectors = {
             matchesDefaultByMonthDay &&
             !(rule.byDay?.length || rule.byMonth?.length);
 
-          return isPresetMonthly ? 'MONTHLY' : 'custom';
+          return isPresetMonthly ? 'monthly' : 'custom';
         }
 
         case 'YEARLY': {
           // Preset "Yearly" => FREQ=YEARLY;INTERVAL=1; no COUNT/UNTIL;
-          return interval === 1 && neverEnds && !hasSelectors ? 'YEARLY' : 'custom';
+          return interval === 1 && neverEnds && !hasSelectors ? 'yearly' : 'custom';
         }
 
         default:
           return 'custom';
       }
-    },
-  ),
-  /**
-   * Returns true if both recurrence rules are equivalent.
-   */
-  isSameRRule: createSelector(
-    (state: State) => state.adapter,
-    (
-      adapter,
-      rruleA: RecurringEventRecurrenceRule | undefined,
-      rruleB: RecurringEventRecurrenceRule | undefined,
-    ): boolean => {
-      if (!rruleA && !rruleB) {
-        return true;
-      } // Both undefined -> same
-      if (!rruleA || !rruleB) {
-        return false;
-      } // One missing -> different
-      return serializeRRule(adapter, rruleA) === serializeRRule(adapter, rruleB);
     },
   ),
 };
