@@ -41,7 +41,7 @@ Same changes as in `@mui/x-data-grid@8.19.0`.
 Same changes as in `@mui/x-data-grid-pro@8.19.0`, plus:
 
 - [DataGridPremium] Fix aggregation with sorting (#19892) @lauri865
-- [DataGridPremium] Lock exceljs version (#20329) @cherniavskii
+- [DataGridPremium] Lock `ExcelJS` version (#20329) @cherniavskii
 
 ### Date and Time Pickers
 
