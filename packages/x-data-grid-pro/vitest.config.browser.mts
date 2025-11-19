@@ -7,7 +7,6 @@ export default mergeConfig(
   defineConfig({
     test: {
       name: getTestName(import.meta.url),
-      exclude: ['**/materialVersion.test.tsx'],
       browser: { enabled: true },
     },
   }),

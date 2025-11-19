@@ -20,7 +20,6 @@ export default mergeConfig(
     test: {
       name: getTestName(import.meta.url),
       setupFiles: [fileURLToPath(new URL('../../test/utils/setupPickers.js', import.meta.url))],
-      exclude: ['**/materialVersion.test.tsx'],
       browser: {
         enabled: true,
         instances: [{ browser: 'chromium' }],
