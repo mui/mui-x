@@ -1,7 +1,6 @@
 import { createSelectorMemoized } from '@mui/x-internals/store';
 import { SeriesId } from '../../../../models/seriesType/common';
 import { ChartSeriesType } from '../../../../models/seriesType/config';
-import { UseChartSeriesSignature } from '../../corePlugins/useChartSeries/useChartSeries.types';
 import { ChartRootSelector, createSelector } from '../../utils/selectors';
 import { HighlightItemData, UseChartHighlightSignature } from './useChartHighlight.types';
 import { HighlightScope } from './highlightConfig.types';
@@ -14,18 +13,17 @@ import {
   isSeriesHighlighted,
 } from './highlightStates';
 import { selectorChartsKeyboardItem } from '../useChartKeyboardNavigation';
+import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
 
 const selectHighlight: ChartRootSelector<UseChartHighlightSignature> = (state) => state.highlight;
 
-const selectSeries: ChartRootSelector<UseChartSeriesSignature> = (state) => state.series;
-
 export const selectorChartsHighlightScopePerSeriesId = createSelector(
-  [selectSeries],
-  (series): Map<SeriesId, Partial<HighlightScope> | undefined> => {
+  [selectorChartSeriesProcessed],
+  (processedSeries): Map<SeriesId, Partial<HighlightScope> | undefined> => {
     const map = new Map<SeriesId, Partial<HighlightScope> | undefined>();
 
-    Object.keys(series.processedSeries).forEach((seriesType) => {
-      const seriesData = series.processedSeries[seriesType as ChartSeriesType];
+    Object.keys(processedSeries).forEach((seriesType) => {
+      const seriesData = processedSeries[seriesType as ChartSeriesType];
       seriesData?.seriesOrder?.forEach((seriesId) => {
         const seriesItem = seriesData?.series[seriesId];
         map.set(seriesId, seriesItem?.highlightScope);

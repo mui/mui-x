@@ -1,8 +1,4 @@
-import {
-  createSelector,
-  type ChartRootSelector,
-  type UseChartSeriesSignature,
-} from '@mui/x-charts/internals';
+import { createSelector, selectorChartSeriesProcessed } from '@mui/x-charts/internals';
 import type { UseSankeyHighlightSignature } from './useSankeyHighlight.types';
 import type { SankeyLayoutLink, SankeyNodeId } from '../sankey.types';
 import type {
@@ -14,12 +10,10 @@ import type {
 
 const selectorSankeyHighlight = (state: UseSankeyHighlightSignature['state']) => state.highlight;
 
-const selectSeries: ChartRootSelector<UseChartSeriesSignature> = (state) => state.series;
-
 const selectorSankeySeries = createSelector(
-  [selectSeries],
-  (series) =>
-    series.processedSeries.sankey?.series[series.processedSeries.sankey?.seriesOrder[0]] || null,
+  [selectorChartSeriesProcessed],
+  (processedSeries) =>
+    processedSeries.sankey?.series[processedSeries.sankey?.seriesOrder[0]] || null,
 );
 
 const DEFAULT_NODE_HIGHLIGHT: SankeyNodeHighlight = 'links';
