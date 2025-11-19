@@ -18,7 +18,7 @@ export { useBarPlotData } from '../BarChart/useBarPlotData';
 export { useRadarChartProps } from '../RadarChart/useRadarChartProps';
 export * from '../ChartContainer/useChartContainerProps';
 export * from '../ChartDataProvider/useChartDataProviderProps';
-export * from './seriesSelectorOfType';
+export * from './createSeriesSelectorOfType';
 
 // plugins
 export * from './plugins/corePlugins/useChartId';

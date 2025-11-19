@@ -1,11 +1,14 @@
 'use client';
 import {
-  useSeriesOfType,
-  useAllSeriesOfType,
+  createAllSeriesSelectorOfType,
+  createSeriesSelectorsOfType,
   ProcessedSeries,
   SeriesId,
   ChartSeriesDefaultized,
 } from '@mui/x-charts/internals';
+
+const useSelectorSeries = createSeriesSelectorsOfType('heatmap');
+const useSelectorSeriesContext = createAllSeriesSelectorOfType('heatmap');
 
 export type UseHeatmapSeriesReturnValue = ChartSeriesDefaultized<'heatmap'>;
 export type UseHeatmapSeriesContextReturnValue = ProcessedSeries['heatmap'];
@@ -33,7 +36,7 @@ export function useHeatmapSeries(): UseHeatmapSeriesReturnValue[];
  */
 export function useHeatmapSeries(seriesIds: SeriesId[]): UseHeatmapSeriesReturnValue[];
 export function useHeatmapSeries(seriesIds?: SeriesId | SeriesId[]) {
-  return useSeriesOfType('heatmap', seriesIds);
+  return useSelectorSeries(seriesIds);
 }
 
 /**
@@ -44,5 +47,5 @@ export function useHeatmapSeries(seriesIds?: SeriesId | SeriesId[]) {
  * @returns the heatmap series
  */
 export function useHeatmapSeriesContext(): UseHeatmapSeriesContextReturnValue {
-  return useAllSeriesOfType('heatmap');
+  return useSelectorSeriesContext();
 }

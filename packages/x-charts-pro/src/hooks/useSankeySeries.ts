@@ -1,11 +1,14 @@
 'use client';
 import {
-  useSeriesOfType,
-  useAllSeriesOfType,
+  createAllSeriesSelectorOfType,
+  createSeriesSelectorsOfType,
   ProcessedSeries,
   SeriesId,
   ChartSeriesDefaultized,
 } from '@mui/x-charts/internals';
+
+const useSelectorSeries = createSeriesSelectorsOfType('sankey');
+const useSelectorSeriesContext = createAllSeriesSelectorOfType('sankey');
 
 export type UseSankeySeriesReturnValue = ChartSeriesDefaultized<'sankey'>;
 export type UseSankeySeriesContextReturnValue = ProcessedSeries['sankey'];
@@ -33,7 +36,7 @@ export function useSankeySeries(): UseSankeySeriesReturnValue[];
  */
 export function useSankeySeries(seriesIds: SeriesId[]): UseSankeySeriesReturnValue[];
 export function useSankeySeries(seriesIds?: SeriesId | SeriesId[]) {
-  return useSeriesOfType('sankey', seriesIds);
+  return useSelectorSeries(seriesIds);
 }
 
 /**
@@ -44,5 +47,5 @@ export function useSankeySeries(seriesIds?: SeriesId | SeriesId[]) {
  * @returns the sankey series
  */
 export function useSankeySeriesContext(): UseSankeySeriesContextReturnValue {
-  return useAllSeriesOfType('sankey');
+  return useSelectorSeriesContext();
 }

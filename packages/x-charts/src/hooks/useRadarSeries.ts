@@ -2,7 +2,13 @@
 import { ProcessedSeries } from '../internals/plugins/corePlugins/useChartSeries/useChartSeries.types';
 import { SeriesId } from '../models/seriesType/common';
 import { ChartSeriesDefaultized } from '../models/seriesType/config';
-import { useSeriesOfType, useAllSeriesOfType } from '../internals/seriesSelectorOfType';
+import {
+  createSeriesSelectorsOfType,
+  createAllSeriesSelectorOfType,
+} from '../internals/createSeriesSelectorOfType';
+
+const useSelectorSeries = createSeriesSelectorsOfType('radar');
+const useSelectorSeriesContext = createAllSeriesSelectorOfType('radar');
 
 export type UseRadarSeriesReturnValue = ChartSeriesDefaultized<'radar'>;
 export type UseRadarSeriesContextReturnValue = ProcessedSeries['radar'];
@@ -30,7 +36,7 @@ export function useRadarSeries(): UseRadarSeriesReturnValue[];
  */
 export function useRadarSeries(seriesIds?: SeriesId[]): UseRadarSeriesReturnValue[];
 export function useRadarSeries(seriesIds?: SeriesId | SeriesId[]) {
-  return useSeriesOfType('radar', seriesIds);
+  return useSelectorSeries(seriesIds);
 }
 
 /**
@@ -41,5 +47,5 @@ export function useRadarSeries(seriesIds?: SeriesId | SeriesId[]) {
  * @returns the radar series
  */
 export function useRadarSeriesContext(): UseRadarSeriesContextReturnValue {
-  return useAllSeriesOfType('radar');
+  return useSelectorSeriesContext();
 }

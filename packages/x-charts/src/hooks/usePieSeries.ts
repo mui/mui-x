@@ -2,7 +2,13 @@
 import { ProcessedSeries } from '../internals/plugins/corePlugins/useChartSeries/useChartSeries.types';
 import { SeriesId } from '../models/seriesType/common';
 import { ChartSeriesDefaultized } from '../models/seriesType/config';
-import { useSeriesOfType, useAllSeriesOfType } from '../internals/seriesSelectorOfType';
+import {
+  createSeriesSelectorsOfType,
+  createAllSeriesSelectorOfType,
+} from '../internals/createSeriesSelectorOfType';
+
+const useSelectorSeries = createSeriesSelectorsOfType('pie');
+const useSelectorSeriesContext = createAllSeriesSelectorOfType('pie');
 
 export type UsePieSeriesReturnValue = ChartSeriesDefaultized<'pie'>;
 export type UsePieSeriesContextReturnValue = ProcessedSeries['pie'];
@@ -30,7 +36,7 @@ export function usePieSeries(): UsePieSeriesReturnValue[];
  */
 export function usePieSeries(seriesIds: SeriesId[]): UsePieSeriesReturnValue[];
 export function usePieSeries(seriesIds?: SeriesId | SeriesId[]) {
-  return useSeriesOfType('pie', seriesIds);
+  return useSelectorSeries(seriesIds);
 }
 
 /**
@@ -41,5 +47,5 @@ export function usePieSeries(seriesIds?: SeriesId | SeriesId[]) {
  * @returns the pie series
  */
 export function usePieSeriesContext(): UsePieSeriesContextReturnValue {
-  return useAllSeriesOfType('pie');
+  return useSelectorSeriesContext();
 }

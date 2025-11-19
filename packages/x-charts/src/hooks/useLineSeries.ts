@@ -2,7 +2,13 @@
 import { ProcessedSeries } from '../internals/plugins/corePlugins/useChartSeries/useChartSeries.types';
 import { SeriesId } from '../models/seriesType/common';
 import { ChartSeriesDefaultized } from '../models/seriesType/config';
-import { useSeriesOfType, useAllSeriesOfType } from '../internals/seriesSelectorOfType';
+import {
+  createSeriesSelectorsOfType,
+  createAllSeriesSelectorOfType,
+} from '../internals/createSeriesSelectorOfType';
+
+const useSelectorSeries = createSeriesSelectorsOfType('line');
+const useSelectorSeriesContext = createAllSeriesSelectorOfType('line');
 
 export type UseLineSeriesReturnValue = ChartSeriesDefaultized<'line'>;
 export type UseLineSeriesContextReturnValue = ProcessedSeries['line'];
@@ -30,7 +36,7 @@ export function useLineSeries(): UseLineSeriesReturnValue[];
  */
 export function useLineSeries(seriesIds: SeriesId[]): UseLineSeriesReturnValue[];
 export function useLineSeries(seriesIds?: SeriesId | SeriesId[]) {
-  return useSeriesOfType('line', seriesIds);
+  return useSelectorSeries(seriesIds);
 }
 
 /**
@@ -42,5 +48,5 @@ export function useLineSeries(seriesIds?: SeriesId | SeriesId[]) {
  * @returns the line series
  */
 export function useLineSeriesContext(): UseLineSeriesContextReturnValue {
-  return useAllSeriesOfType('line');
+  return useSelectorSeriesContext();
 }
