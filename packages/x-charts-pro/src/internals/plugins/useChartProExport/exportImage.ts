@@ -70,17 +70,6 @@ export async function exportImage(
   await iframeLoadPromise;
   await onBeforeExport(iframe);
 
-  if (nonce) {
-    iframe.querySelectorAll('script, style').forEach((node) => {
-      if (!node.getAttribute('nonce') || !(node instanceof HTMLElement && node.nonce)) {
-        console.log('Missing nonce on script or style tag.', node);
-        node.setAttribute('nonce', nonce);
-      }
-    });
-  } else {
-    console.log('No nonce provided for export.');
-  }
-
   const drawDocument = await drawDocumentPromise;
 
   /* Use the size from the export body in case `onBeforeExport` adds some elements that should be in the export. */

@@ -40,18 +40,17 @@ export function loadStyleSheets(document: Document, root: Document | ShadowRoot,
       );
     }
 
-    if (nonce) {
+    // @ts-expect-error
+    if (nonce && window.setNonceBefore) {
       newHeadStyleElement.nonce = nonce;
     }
 
-    console.log(
-      'Appending stylesheet to export document head:',
-      newHeadStyleElement,
-      newHeadStyleElement.nonce,
-      newHeadStyleElement.getAttribute('nonce'),
-      nonce,
-    );
     document.head.appendChild(newHeadStyleElement);
+
+    // @ts-expect-error
+    if (nonce && window.setNonceAfter) {
+      newHeadStyleElement.nonce = nonce;
+    }
   }
 
   return stylesheetLoadPromises;
