@@ -72,12 +72,37 @@ export default function SecureInitialState() {
   }
 
   return (
-    <div className="App">
+    <div className="App" style={{ height: 400, width: '100%' }}>
       <ErrorBoundary
         fallback={(error, { resetError }) => (
-          <div role="alert" style={{ padding: 16 }}>
+          <div
+            role="alert"
+            style={{
+              padding: 16,
+              height: '100%',
+              minHeight: 400,
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: '#f5f5f5',
+              borderRadius: 4,
+              border: '1px solid #e0e0e0',
+            }}
+          >
             <h3>Something went wrong</h3>
-            <pre style={{ whiteSpace: 'pre-wrap' }}>
+            <pre
+              style={{
+                whiteSpace: 'pre-wrap',
+                maxWidth: '100%',
+                overflow: 'auto',
+                padding: '8px 12px',
+                backgroundColor: 'white',
+                borderRadius: 4,
+                fontSize: '0.875rem',
+                margin: '16px 0',
+              }}
+            >
               {String(error.stack || error.message)}
             </pre>
             <Button
@@ -101,6 +126,7 @@ export default function SecureInitialState() {
           columns={columns}
           rows={rows}
           getRowId={(row) => row.id}
+          sx={{ height: '100%' }}
         />
       </ErrorBoundary>
     </div>
