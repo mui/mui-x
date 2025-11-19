@@ -44,7 +44,13 @@ export function loadStyleSheets(document: Document, root: Document | ShadowRoot,
       newHeadStyleElement.nonce = nonce;
     }
 
-    console.log('Appending stylesheet to export document head:', newHeadStyleElement);
+    console.log(
+      'Appending stylesheet to export document head:',
+      newHeadStyleElement,
+      newHeadStyleElement.nonce,
+      newHeadStyleElement.getAttribute('nonce'),
+      nonce,
+    );
     document.head.appendChild(newHeadStyleElement);
   }
 
