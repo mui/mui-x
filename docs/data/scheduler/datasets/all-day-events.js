@@ -57,8 +57,8 @@ export const initialEvents = [
   },
   {
     id: '6',
-    start: subDays(START_OF_FIRST_WEEK, 1),
-    end: subDays(START_OF_FIRST_WEEK, 1),
+    start: START_OF_FIRST_WEEK,
+    end: START_OF_FIRST_WEEK,
     title: 'Event 6',
     allDay: true,
     resource: 'B',
