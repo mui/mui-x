@@ -195,10 +195,7 @@ DateRangePicker.propTypes = {
    * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
    * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
    * @param {TValue} value The value that was just accepted.
-   * @param {FieldChangeHandlerContext<TError>} context Context about this acceptance:
-   * - `validationError`: validation result of the current value
-   * - `source`: source of the acceptance. One of 'field' | 'picker' | 'unknown'
-   * - `shortcut` (optional): the shortcut metadata if the value was accepted via a shortcut selection
+   * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
   onAccept: PropTypes.func,
   /**
@@ -206,10 +203,7 @@ DateRangePicker.propTypes = {
    * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
    * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
    * @param {TValue} value The new value.
-   * @param {FieldChangeHandlerContext<TError>} context Context about this change:
-   * - `validationError`: validation result of the current value
-   * - `source`: source of the change. One of 'field' | 'view' | 'unknown'
-   * - `shortcut` (optional): the shortcut metadata if the change was triggered by a shortcut selection
+   * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
   onChange: PropTypes.func,
   /**

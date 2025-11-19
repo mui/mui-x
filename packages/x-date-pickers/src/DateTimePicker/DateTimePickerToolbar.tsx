@@ -281,7 +281,7 @@ function DateTimePickerToolbar(inProps: DateTimePickerToolbarProps) {
   const setView = overrides ? overrides.setView : setViewContext;
 
   const { meridiemMode, handleMeridiemChange } = useMeridiemMode(value, ampm, (newValue) =>
-    setValue(newValue, { changeImportance: 'set', source: 'view' }),
+    setValue(newValue, { changeImportance: 'set' }),
   );
 
   const toolbarVariant = overrides?.forceDesktopVariant ? 'desktop' : variant;
