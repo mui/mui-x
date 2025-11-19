@@ -60,6 +60,7 @@ export interface SchedulerTranslations {
   eventTitleAriaLabel: string;
   generalTabLabel: string;
   labelNoResource: string;
+  labelInvalidResource: string;
   recurrenceLabel: string;
   recurrenceNoRepeat: string;
   recurrenceCustomRepeat: string;
