@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
 ## 8.19.0
-<!-- generated comparing v8.18.0..master -->
+
 _Nov 19, 2025_
 
 We'd like to extend a big thank you to the 15 contributors who made this release possible. Here are some highlights ✨:
@@ -14,18 +14,18 @@ We'd like to extend a big thank you to the 15 contributors who made this release
 TODO INSERT HIGHLIGHTS
 
 Special thanks go out to these community members for their valuable contributions:
-@arminmeh, @lauri865, @noobyogi0010, @noraleonte, @sai6855
+@lauri865, @noobyogi0010, @sai6855
 
 The following team members contributed to this release:
-@alexfauquette, @bernardobelchior, @cherniavskii, @flaviendelangle, @Janpot, @JCQuintas, @mj12albert, @rita-codes, @siriwatknp, @ZeeshanTamboli
+@alexfauquette, @arminmeh, @bernardobelchior, @cherniavskii, @flaviendelangle, @Janpot, @JCQuintas, @mj12albert, @noraleonte, @rita-codes, @siriwatknp, @ZeeshanTamboli
 
 ### Data Grid
 
 #### `@mui/x-data-grid@8.19.0`
 
 - [DataGrid] Add `tabNavigation` prop to control tab navigation in the grid (#20286) @arminmeh
+- [DataGrid] Allow to focus disabled checkbox cells (#19959) @mj12albert
 - [DataGrid] Alternative actions column definition API (#15041) @cherniavskii
-- [DataGrid] Disabled checkbox cells should be focusable (#19959) @mj12albert
 - [DataGrid] Fix failing tests (#20332) @cherniavskii
 - [DataGrid] Prevent Safari 26 error in the event handler (#20369) @arminmeh
 - [DataGrid] Undeprecate the `autoHeight` prop (#20363) @cherniavskii
