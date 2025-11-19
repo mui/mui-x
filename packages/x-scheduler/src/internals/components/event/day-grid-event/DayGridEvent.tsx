@@ -11,10 +11,7 @@ import {
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import {
-  eventCalendarEventSelectors,
-  eventCalendarViewSelectors,
-} from '@mui/x-scheduler-headless/event-calendar-selectors';
+import { eventCalendarViewSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { DayGridEventProps } from './DayGridEvent.types';
 import { getColorClassName } from '../../../utils/color-utils';
 import { isOccurrenceAllDayOrMultipleDay } from '../../../utils/event-utils';
@@ -28,7 +25,7 @@ import '../index.css';
 
 const isResizableSelector = createSelector(
   (state: EventCalendarState, side: 'start' | 'end', occurrence: SchedulerEventOccurrence) => {
-    if (!eventCalendarEventSelectors.isResizable(state, occurrence.id, side)) {
+    if (!schedulerEventSelectors.isResizable(state, occurrence.id, side)) {
       return false;
     }
 
@@ -66,7 +63,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   const store = useEventCalendarStoreContext();
 
   // Selector hooks
-  const isDraggable = useStore(store, eventCalendarEventSelectors.isDraggable, occurrence.id);
+  const isDraggable = useStore(store, schedulerEventSelectors.isDraggable, occurrence.id);
   const isStartResizable = useStore(store, isResizableSelector, 'start', occurrence);
   const isEndResizable = useStore(store, isResizableSelector, 'end', occurrence);
   const resource = useStore(
