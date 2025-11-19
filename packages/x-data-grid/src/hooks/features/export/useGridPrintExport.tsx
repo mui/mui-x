@@ -23,6 +23,7 @@ import { getDerivedPaginationModel } from '../pagination/useGridPaginationModel'
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import { GridExportDisplayOptions, GridPrintExportMenuItem } from '../../../components/toolbar';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../colDef/gridCheckboxSelectionColDef';
+import { scrollbarSizeCssExpression } from '../../../components/virtualization/GridVirtualScrollbar';
 
 const DEBUG_MODE = false;
 
@@ -167,7 +168,7 @@ export const useGridPrintExport = (
         )
       ) {
         const filler = document.createElement('div');
-        filler.style.height = 'var(--DataGrid-scrollbarSize)';
+        filler.style.height = scrollbarSizeCssExpression;
         virtualScrollerContent.insertAdjacentElement('afterend', filler);
       }
 
