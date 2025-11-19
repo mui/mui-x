@@ -30,6 +30,14 @@ You can add a grid in the background of the chart with the `grid` prop.
 
 See [Axis—Grid](/x/react-charts/axis/#grid) documentation for more information.
 
+### Border radius
+
+A range bar chart supports rounded corners. To achieve it, set the value of the `borderRadius` prop on the `BarChartPro` to any positive value.
+
+When using composition, you can set the `borderRadius` prop on the `RangeBarPlot` component.
+
+{{"demo": "RangeBarBorderRadius.js"}}
+
 ### Color
 
 As with other charts, you can modify the series color either directly, or with the color palette.
@@ -44,14 +52,6 @@ You can learn more about the `colorMap` in the [Styling docs](/x/react-charts/st
 
 {{"demo": "RangeBarColorScale.js"}}
 
-### Border radius
-
-A range bar chart supports rounded corners. To achieve it, set the value of the `borderRadius` prop on the `BarChartPro` to any positive value.
-
-When using composition, you can set the `borderRadius` prop on the `RangeBarPlot` component.
-
-{{"demo": "RangeBarBorderRadius.js"}}
-
 ### CSS
 
 You can customize the range bar chart elements using CSS selectors.
@@ -63,55 +63,17 @@ You can use this attribute to target elements based on their series.
 
 ## Click event
 
-Bar charts provides two click handlers:
+The click event handlers in range bar charts work similarly to bar charts.
 
-- `onItemClick` for click on a specific bar.
-- `onAxisClick` for a click anywhere in the chart
-
-They both provide the following signature.
-
-```js
-const clickHandler = (
-  event, // The mouse event.
-  params, // An object that identifies the clicked elements.
-) => {};
-```
+You read more about it in bar chart's [Click event](/x/react-charts/bars/#click-event) page.
 
 {{"demo": "RangeBarClick.js"}}
 
-:::info
-There is a slight difference between the `event` of `onItemClick` and `onAxisClick`:
-
-- For `onItemClick` it's a React synthetic mouse event emitted by the bar component.
-- For `onAxisClick` it's a native mouse event emitted by the svg component.
-
-:::
-
-If you're composing a custom component, you can incorporate click events as shown in the code snippet below.
-Note that `onAxisClick` can handle both bar and line series if you mix them.
-
-```jsx
-<ChartContainer onAxisClick={onAxisClick}>
-  {/* ... */}
-  <BarPlot onItemClick={onItemClick} />
-</ChartContainer>
-```
-
 ## Animation
 
-Chart containers respect [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/prefers-reduced-motion), but you can also disable animations manually by setting the `skipAnimation` prop to `true`.
+Animation in range bar charts works similarly to bar charts. 
 
-When `skipAnimation` is enabled, the chart renders without any animations.
-
-```jsx
-// For a single component chart
-<BarChart skipAnimation />
-
-// For a composed chart
-<ChartContainer>
-  <BarPlot skipAnimation />
-</ChartContainer>
-```
+You read more about it in bar chart's [Animation](/x/react-charts/bars/#animation) page.
 
 {{"demo": "RangeBarAnimation.js"}}
 

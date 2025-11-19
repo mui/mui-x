@@ -58,12 +58,8 @@ And a value of `-1` will make bars overlap on top of each other.
 
 ## Stacking
 
-Bar series accept a `stack` property that identifies a stack.
-Series with the same `stack` will be stacked on top of each other.
-
-:::info
-Range bar series cannot be stacked.
-:::
+Bar series accept a string property named `stack`. 
+Series with the same `stack` value are stacked on top of each other.
 
 {{"demo": "StackBars.js"}}
 
