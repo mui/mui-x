@@ -43,10 +43,10 @@ export function findClosestPoints(
   }
 
   const pointX = originalXScale(
-    invertScale(xScale, svgPointX, (dataIndex) => seriesData[dataIndex].x),
+    invertScale(xScale, svgPointX, (dataIndex) => seriesData[dataIndex]?.x),
   );
   const pointY = originalYScale(
-    invertScale(yScale, svgPointY, (dataIndex) => seriesData[dataIndex].y),
+    invertScale(yScale, svgPointY, (dataIndex) => seriesData[dataIndex]?.y),
   );
 
   return flatbush.neighbors(

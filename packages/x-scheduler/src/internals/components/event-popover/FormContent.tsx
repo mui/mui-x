@@ -5,10 +5,9 @@ import { useStore } from '@base-ui-components/utils/store';
 import { Field } from '@base-ui-components/react/field';
 import { Form } from '@base-ui-components/react/form';
 import { Input } from '@base-ui-components/react/input';
-import { Select } from '@base-ui-components/react/select';
 import { Separator } from '@base-ui-components/react/separator';
-import { ChevronDown } from 'lucide-react';
 import {
+  SchedulerEventColor,
   SchedulerEventOccurrence,
   SchedulerEventUpdatedProperties,
   SchedulerProcessedDate,
@@ -18,18 +17,16 @@ import {
 } from '@mui/x-scheduler-headless/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
-import { DEFAULT_EVENT_COLOR } from '@mui/x-scheduler-headless/constants';
 import {
   schedulerEventSelectors,
   schedulerOccurrencePlaceholderSelectors,
   schedulerRecurringEventSelectors,
-  schedulerResourceSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { Tabs } from '@base-ui-components/react/tabs';
 import { useTranslations } from '../../utils/TranslationsContext';
-import { getColorClassName } from '../../utils/color-utils';
 import { computeRange, ControlledValue, validateRange } from './utils';
 import EventPopoverHeader from './EventPopoverHeader';
+import ResourceMenu from './ResourceMenu';
 import { GeneralTab } from './GeneralTab';
 import { RecurrenceTab } from './RecurrenceTab';
 
@@ -53,7 +50,6 @@ export function FormContent(props: FormContentProps) {
     occurrence.id,
   );
   const rawPlaceholder = useStore(store, schedulerOccurrencePlaceholderSelectors.value);
-  const resources = useStore(store, schedulerResourceSelectors.processedResourceFlatList);
   const recurrencePresets = useStore(
     store,
     schedulerRecurringEventSelectors.presets,
@@ -81,6 +77,7 @@ export function FormContent(props: FormContentProps) {
       endTime: fmtTime(occurrence.end),
       resourceId: occurrence.resource ?? null,
       allDay: !!occurrence.allDay,
+      color: occurrence.color ?? null,
       recurrenceSelection: defaultRecurrencePresetKey,
       rruleDraft: {
         freq: (base?.freq ?? 'DAILY') as RecurringEventFrequency,
@@ -118,6 +115,15 @@ export function FormContent(props: FormContentProps) {
     pushPlaceholder(newState);
     setControlled(newState);
   };
+  const handleColorChange = (value: SchedulerEventColor) => {
+    if (!value) {
+      return;
+    }
+
+    const newState = { ...controlled, color: value === controlled.color ? null : value };
+    pushPlaceholder(newState);
+    setControlled(newState);
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -137,6 +143,7 @@ export function FormContent(props: FormContentProps) {
       description: (form.get('description') as string).trim(),
       allDay: controlled.allDay,
       resource: controlled.resourceId === null ? undefined : controlled.resourceId,
+      color: controlled.color === null ? undefined : controlled.color,
     };
 
     let rruleToSubmit: RecurringEventRecurrenceRule | undefined;
@@ -187,19 +194,8 @@ export function FormContent(props: FormContentProps) {
     onClose();
   };
 
-  const resourcesOptions = React.useMemo(() => {
-    return [
-      { label: translations.labelNoResource, value: null, eventColor: DEFAULT_EVENT_COLOR },
-      ...resources.map((resource) => ({
-        label: resource.title,
-        value: resource.id,
-        eventColor: resource.eventColor,
-      })),
-    ];
-  }, [resources, translations.labelNoResource]);
-
   return (
-    <Form errors={errors} onClearErrors={setErrors} onSubmit={handleSubmit}>
+    <Form errors={errors} onSubmit={handleSubmit}>
       <EventPopoverHeader>
         <Field.Root className="EventPopoverFieldRoot" name="title">
           <Field.Label className="EventPopoverTitle">
@@ -214,69 +210,13 @@ export function FormContent(props: FormContentProps) {
           </Field.Label>
           <Field.Error className="EventPopoverRequiredFieldError" />
         </Field.Root>
-        <Field.Root className="EventPopoverFieldRoot" name="resource">
-          <Select.Root
-            items={resourcesOptions}
-            value={controlled.resourceId}
-            onValueChange={handleResourceChange}
-            readOnly={isPropertyReadOnly('resource')}
-          >
-            <Select.Trigger
-              className="EventPopoverSelectTrigger Ghost"
-              aria-label={translations.resourceLabel}
-            >
-              <Select.Value>
-                {(value: string | null) => {
-                  const selected = resourcesOptions.find((option) => option.value === value);
-
-                  return (
-                    <div className="EventPopoverSelectItemTitleWrapper">
-                      <span
-                        className={clsx(
-                          'ResourceLegendColor',
-                          getColorClassName(selected?.eventColor ?? DEFAULT_EVENT_COLOR),
-                        )}
-                      />
-                      <span>{value ? selected?.label : translations.labelNoResource}</span>
-                    </div>
-                  );
-                }}
-              </Select.Value>
-              <Select.Icon className="EventPopoverSelectIcon">
-                <ChevronDown size={14} />
-              </Select.Icon>
-            </Select.Trigger>
-            <Select.Portal>
-              <Select.Positioner
-                alignItemWithTrigger={false}
-                align="start"
-                className="EventPopoverSelectPositioner"
-              >
-                <Select.Popup className="EventPopoverSelectPopup">
-                  {resourcesOptions.map((resource) => (
-                    <Select.Item
-                      key={resource.value}
-                      value={resource.value}
-                      className="EventPopoverSelectItem"
-                    >
-                      <div className="EventPopoverSelectItemTitleWrapper">
-                        <span
-                          className={clsx(
-                            'ResourceLegendColor',
-                            getColorClassName(resource.eventColor ?? DEFAULT_EVENT_COLOR),
-                          )}
-                        />
-                        <Select.ItemText className="EventPopoverSelectItemText">
-                          {resource.label}
-                        </Select.ItemText>
-                      </div>
-                    </Select.Item>
-                  ))}
-                </Select.Popup>
-              </Select.Positioner>
-            </Select.Portal>
-          </Select.Root>
-        </Field.Root>
+        <ResourceMenu
+          readOnly={isPropertyReadOnly('resource')}
+          resourceId={controlled.resourceId}
+          onResourceChange={handleResourceChange}
+          onColorChange={handleColorChange}
+          color={controlled.color}
+        />
       </EventPopoverHeader>
       <Tabs.Root defaultValue="general">
         <Tabs.List className="EventPopoverTabsList">

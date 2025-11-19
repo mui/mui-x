@@ -1,5 +1,5 @@
+import { createSelector } from '@mui/x-internals/store';
 import type { ChartDrawingArea } from '../../../../hooks/useDrawingArea';
-import { createSelector } from '../../utils/selectors';
 import {
   selectorChartRawXAxis,
   selectorChartRawYAxis,
@@ -54,12 +54,10 @@ function createPreviewDrawingArea(
 }
 
 export const selectorChartPreviewXScales = createSelector(
-  [
-    selectorChartRawXAxis,
-    selectorChartDrawingArea,
-    selectorChartZoomOptionsLookup,
-    selectorChartNormalizedXScales,
-  ],
+  selectorChartRawXAxis,
+  selectorChartDrawingArea,
+  selectorChartZoomOptionsLookup,
+  selectorChartNormalizedXScales,
   function selectorChartPreviewXScales(
     xAxes,
     chartDrawingArea,
@@ -90,15 +88,12 @@ export const selectorChartPreviewXScales = createSelector(
 );
 
 export const selectorChartPreviewComputedXAxis = createSelector(
-  [
-    selectorChartSeriesProcessed,
-    selectorChartSeriesConfig,
-    selectorChartZoomOptionsLookup,
-    selectorChartDrawingArea,
-    selectorChartPreviewXScales,
-    selectorChartXAxisWithDomains,
-  ],
-
+  selectorChartSeriesProcessed,
+  selectorChartSeriesConfig,
+  selectorChartZoomOptionsLookup,
+  selectorChartDrawingArea,
+  selectorChartPreviewXScales,
+  selectorChartXAxisWithDomains,
   (
     formattedSeries,
     seriesConfig,
@@ -136,12 +131,10 @@ export const selectorChartPreviewComputedXAxis = createSelector(
 );
 
 export const selectorChartPreviewYScales = createSelector(
-  [
-    selectorChartRawYAxis,
-    selectorChartDrawingArea,
-    selectorChartZoomOptionsLookup,
-    selectorChartNormalizedYScales,
-  ],
+  selectorChartRawYAxis,
+  selectorChartDrawingArea,
+  selectorChartZoomOptionsLookup,
+  selectorChartNormalizedYScales,
   function selectorChartPreviewYScales(
     yAxes,
     chartDrawingArea,
@@ -177,14 +170,12 @@ export const selectorChartPreviewYScales = createSelector(
 );
 
 export const selectorChartPreviewComputedYAxis = createSelector(
-  [
-    selectorChartSeriesProcessed,
-    selectorChartSeriesConfig,
-    selectorChartZoomOptionsLookup,
-    selectorChartDrawingArea,
-    selectorChartPreviewYScales,
-    selectorChartYAxisWithDomains,
-  ],
+  selectorChartSeriesProcessed,
+  selectorChartSeriesConfig,
+  selectorChartZoomOptionsLookup,
+  selectorChartDrawingArea,
+  selectorChartPreviewYScales,
+  selectorChartYAxisWithDomains,
   (
     formattedSeries,
     seriesConfig,

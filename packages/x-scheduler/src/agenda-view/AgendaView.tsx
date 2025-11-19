@@ -39,7 +39,7 @@ export const AgendaView = React.memo(
     useEventCalendarView(AGENDA_VIEW_CONFIG);
 
     const days = useAgendaEventOccurrencesGroupedByDay();
-    const today = adapter.date();
+    const today = adapter.now('default');
 
     return (
       <div
@@ -67,7 +67,8 @@ export const AgendaView = React.memo(
                     {adapter.format(date.value, 'weekday')}
                   </span>
                   <span className={clsx('AgendaYearAndMonthLabel', 'LinesClamp')}>
-                    {adapter.format(date.value, 'month')}, {adapter.format(date.value, 'year')}
+                    {adapter.format(date.value, 'monthFullLetter')},{' '}
+                    {adapter.format(date.value, 'yearPadded')}
                   </span>
                 </div>
               </header>
