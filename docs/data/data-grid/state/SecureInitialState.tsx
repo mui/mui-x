@@ -59,6 +59,7 @@ export default function SecureInitialState() {
             border: '1px solid #e3e3e3',
             boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.05)',
             fontFamily: 'monospace',
+            color: '#333',
           }}
         >
           {String(error.message || 'An error occurred')}
