@@ -70,7 +70,7 @@ export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSig
 
 useChartVisibilityManager.getInitialState = (params, state) => ({
   visibilityManager: {
-    hiddenIdentifiers: Object.values(state.series.processedSeries).flatMap((seriesData) =>
+    hiddenIdentifiers: Object.values(state.series.defaultizedSeries).flatMap((seriesData) =>
       Object.values(seriesData.series)
         .filter((s) => s.hidden === true)
         .map((s) => s.id),

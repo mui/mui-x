@@ -3,6 +3,7 @@ import { AllSeriesType } from '../../../../models/seriesType';
 import { ChartSeriesType, DatasetType } from '../../../../models/seriesType/config';
 import { ChartSeriesConfig } from '../../models/seriesConfig';
 import { DefaultizedSeriesGroups, ProcessedSeries } from './useChartSeries.types';
+import type { VisibilityItemIdentifier } from '../../featurePlugins/useChartVisibilityManager';
 
 /**
  * This method groups series by type and adds defaultized values such as the ids and colors.
@@ -59,6 +60,7 @@ export const applySeriesProcessors = <TSeriesType extends ChartSeriesType>(
   defaultizedSeries: DefaultizedSeriesGroups<TSeriesType>,
   seriesConfig: ChartSeriesConfig<TSeriesType>,
   dataset?: Readonly<DatasetType>,
+  hiddenIdentifiers?: VisibilityItemIdentifier[],
 ): ProcessedSeries<TSeriesType> => {
   const processedSeries: ProcessedSeries<TSeriesType> = {};
 
@@ -66,8 +68,9 @@ export const applySeriesProcessors = <TSeriesType extends ChartSeriesType>(
   (Object.keys(seriesConfig) as TSeriesType[]).forEach((type) => {
     const group = (defaultizedSeries as any)[type];
     if (group !== undefined) {
-      (processedSeries as any)[type] =
-        seriesConfig[type]?.seriesProcessor?.(group, dataset) ?? group;
+      processedSeries[type] =
+        seriesConfig[type]?.seriesProcessor?.(group, dataset, hiddenIdentifiers) ??
+        seriesConfig[type];
     }
   });
 

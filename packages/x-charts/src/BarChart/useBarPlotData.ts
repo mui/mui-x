@@ -1,12 +1,14 @@
 import { ChartsXAxisProps, ChartsYAxisProps, ComputedAxis, ScaleName } from '../models/axis';
 import getColor from './seriesConfig/bar/getColor';
-import { ChartDrawingArea, useChartId, useXAxes, useYAxes } from '../hooks';
+import { ChartDrawingArea, useChartId, useGetIsItemVisible, useXAxes, useYAxes } from '../hooks';
 import { MaskData, ProcessedBarData, ProcessedBarSeriesData } from './types';
 import { checkScaleErrors } from './checkScaleErrors';
 import { useBarSeriesContext } from '../hooks/useBarSeries';
 import { SeriesProcessorResult } from '../internals/plugins/models/seriesConfig/seriesProcessor.types';
 import { ComputedAxisConfig } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxis.types';
 import { ChartSeriesDefaultized } from '../models/seriesType/config';
+import { findMinMax } from '../internals/findMinMax';
+import type { VisibilityItemIdentifier } from '../internals/plugins/featurePlugins/useChartVisibilityManager';
 
 export function useBarPlotData(
   drawingArea: ChartDrawingArea,
@@ -21,6 +23,7 @@ export function useBarPlotData(
     ({ series: {}, stackingGroups: [], seriesOrder: [] } as SeriesProcessorResult<'bar'>);
   const defaultXAxisId = useXAxes().xAxisIds[0];
   const defaultYAxisId = useYAxes().yAxisIds[0];
+  const isItemVisible = useGetIsItemVisible();
 
   const chartId = useChartId();
 
@@ -64,6 +67,7 @@ export function useBarPlotData(
           dataIndex,
           numberOfGroups: stackingGroups.length,
           groupIndex,
+          isItemVisible,
         });
 
         if (barDimensions == null) {
@@ -76,9 +80,9 @@ export function useBarPlotData(
           seriesId,
           dataIndex,
           layout: series[seriesId].layout,
+          ...barDimensions,
           xOrigin: Math.round(xScale(0) ?? 0),
           yOrigin: Math.round(yScale(0) ?? 0),
-          ...barDimensions,
           color: colorGetter(dataIndex),
           value: series[seriesId].data[dataIndex],
           maskId: `${chartId}_${stackId || seriesId}_${groupIndex}_${dataIndex}`,
@@ -184,6 +188,7 @@ export function getBarDimensions(params: {
   dataIndex: number;
   numberOfGroups: number;
   groupIndex: number;
+  isItemVisible: (identifier: VisibilityItemIdentifier) => boolean;
 }) {
   const {
     verticalLayout,
@@ -193,6 +198,7 @@ export function getBarDimensions(params: {
     dataIndex,
     numberOfGroups,
     groupIndex,
+    isItemVisible,
   } = params;
 
   const baseScaleConfig = (verticalLayout ? xAxisConfig : yAxisConfig) as ComputedAxis<'band'>;
@@ -215,17 +221,26 @@ export function getBarDimensions(params: {
     return null;
   }
 
-  const values = series.stackedData[dataIndex];
-  const valueCoordinates = values.map((v) => (verticalLayout ? yScale(v)! : xScale(v)!));
+  const visibleValues = series.visibleStackedData[dataIndex];
+  const fullValues = series.fullStackedData[dataIndex];
+  const visibleValueCoordinates = visibleValues.map((v) =>
+    verticalLayout ? yScale(v)! : xScale(v)!,
+  );
+  const fullValueCoordinates = fullValues.map((v) => (verticalLayout ? yScale(v)! : xScale(v)!));
 
-  const minValueCoord = Math.round(Math.min(...valueCoordinates));
-  const maxValueCoord = Math.round(Math.max(...valueCoordinates));
+  const [visibleMinValueCoord, visibleMaxValueCoord] = findMinMax(visibleValueCoordinates);
+  const [fullMinValueCoord, fullMaxValueCoord] = findMinMax(fullValueCoordinates);
+
+  const isVisible = isItemVisible({ seriesId: series.id });
+
+  const minValue = isVisible ? visibleMinValueCoord : fullMinValueCoord;
 
   const barSize =
-    seriesValue === 0 ? 0 : Math.max(series.minBarSize, maxValueCoord - minValueCoord);
+    seriesValue === 0 ? 0 : Math.max(series.minBarSize, visibleMaxValueCoord - minValue);
+  const maxValue = isVisible ? visibleMaxValueCoord - barSize : visibleMinValueCoord;
   const startCoordinate = shouldInvertStartCoordinate(verticalLayout, seriesValue, reverse)
-    ? maxValueCoord - barSize
-    : minValueCoord;
+    ? maxValue
+    : minValue;
 
   return {
     x: verticalLayout ? xScale(baseValue)! + barOffset : startCoordinate,

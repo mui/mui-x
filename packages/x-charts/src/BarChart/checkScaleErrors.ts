@@ -22,7 +22,10 @@ const getAxisMessage = (axisDirection: 'x' | 'y', axisId: AxisId) => {
 export function checkScaleErrors(
   verticalLayout: boolean,
   seriesId: SeriesId,
-  series: DefaultizedBarSeriesType & { stackedData: [number, number][] },
+  series: DefaultizedBarSeriesType & {
+    fullStackedData: [number, number][];
+    visibleStackedData: [number, number][];
+  },
   xAxisId: AxisId,
   xAxis: { [axisId: AxisId]: ComputedXAxis },
   yAxisId: AxisId,
@@ -56,10 +59,10 @@ export function checkScaleErrors(
     );
   }
   if (process.env.NODE_ENV !== 'production') {
-    if (discreteAxisConfig.data.length < series.stackedData.length) {
+    if (discreteAxisConfig.data.length < series.fullStackedData.length) {
       warnOnce(
         [
-          `MUI X Charts: ${getAxisMessage(discreteAxisDirection, discreteAxisId)} has less data (${discreteAxisConfig.data.length} values) than the bar series of id "${seriesId}" (${series.stackedData.length} values).`,
+          `MUI X Charts: ${getAxisMessage(discreteAxisDirection, discreteAxisId)} has less data (${discreteAxisConfig.data.length} values) than the bar series of id "${seriesId}" (${series.fullStackedData.length} values).`,
           'The axis data should have at least the same length than the series using it.',
         ],
         'error',

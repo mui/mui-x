@@ -6,6 +6,7 @@ import type {
 } from '../../../../models/seriesType/config';
 import type { SeriesId } from '../../../../models/seriesType/common';
 import type { StackingGroupsType } from '../../../stackSeries';
+import type { VisibilityItemIdentifier } from '../../featurePlugins/useChartVisibilityManager';
 
 export type SeriesProcessorParams<TSeriesType extends ChartSeriesType> = {
   series: Record<SeriesId, ChartsSeriesConfig[TSeriesType]['seriesInput']>;
@@ -24,4 +25,5 @@ export type SeriesProcessorResult<TSeriesType extends ChartSeriesType> = {
 export type SeriesProcessor<TSeriesType extends ChartSeriesType> = (
   params: SeriesProcessorParams<TSeriesType>,
   dataset?: Readonly<DatasetType>,
+  hiddenIdentifiers?: VisibilityItemIdentifier[],
 ) => SeriesProcessorResult<TSeriesType>;
