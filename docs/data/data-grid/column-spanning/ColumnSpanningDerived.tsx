@@ -178,7 +178,6 @@ export default function ColumnSpanningDerived() {
   return (
     <Box sx={rootStyles}>
       <DataGridPro
-        autoHeight
         columns={columns}
         rows={rows}
         initialState={{

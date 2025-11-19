@@ -895,11 +895,6 @@ export const useGridChartsIntegration = (
     'sortedRowsSet',
     runIf(isChartsIntegrationAvailable, () => debouncedHandleRowDataUpdate(syncedChartIds)),
   );
-  useGridEvent(
-    apiRef,
-    'aggregationLookupSet',
-    runIf(isChartsIntegrationAvailable, () => debouncedHandleRowDataUpdate(syncedChartIds)),
-  );
 
   const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
     (prevState, exportContext) => {

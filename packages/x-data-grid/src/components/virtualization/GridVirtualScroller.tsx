@@ -29,7 +29,6 @@ import type {
   GridLoadingOverlayVariant,
 } from '../../hooks/features/overlays/gridOverlaysInterfaces';
 import { GridApiCommunity } from '../../models/api/gridApiCommunity';
-import { useGridVirtualizer } from '../../hooks/core/useGridVirtualizer';
 
 type OwnerState = Pick<DataGridProcessedProps, 'classes'> & {
   hasScrollX: boolean;
@@ -101,7 +100,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
   };
   const classes = useUtilityClasses(ownerState);
 
-  const virtualScroller = useGridVirtualizer().api.getters;
+  const virtualScroller = apiRef.current.virtualizer.api.useVirtualization().getters;
 
   const {
     getContainerProps,

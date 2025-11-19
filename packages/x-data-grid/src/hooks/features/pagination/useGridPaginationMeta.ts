@@ -4,7 +4,7 @@ import { RefObject } from '@mui/x-internals/types';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPaginationMetaApi } from './gridPaginationInterfaces';
-import { useGridLogger, useGridApiMethod } from '../../utils';
+import { useGridLogger, useGridSelector, useGridApiMethod } from '../../utils';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import { gridPaginationMetaSelector } from './gridPaginationSelector';
 
@@ -16,6 +16,8 @@ export const useGridPaginationMeta = (
   >,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridPaginationMeta');
+
+  const paginationMeta = useGridSelector(apiRef, gridPaginationMetaSelector);
 
   apiRef.current.registerControlState({
     stateId: 'paginationMeta',
@@ -30,7 +32,6 @@ export const useGridPaginationMeta = (
    */
   const setPaginationMeta = React.useCallback<GridPaginationMetaApi['setPaginationMeta']>(
     (newPaginationMeta) => {
-      const paginationMeta = gridPaginationMetaSelector(apiRef);
       if (paginationMeta === newPaginationMeta) {
         return;
       }
@@ -44,7 +45,7 @@ export const useGridPaginationMeta = (
         },
       }));
     },
-    [apiRef, logger],
+    [apiRef, logger, paginationMeta],
   );
 
   const paginationMetaApi: GridPaginationMetaApi = {

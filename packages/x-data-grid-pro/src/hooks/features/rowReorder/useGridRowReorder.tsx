@@ -91,6 +91,7 @@ export const useGridRowReorder = (
   const ownerState = { classes: props.classes };
   const classes = useUtilityClasses(ownerState);
   const [dragRowId, setDragRowId] = React.useState<GridRowId>('');
+  const sortedRowIndexLookup = useGridSelector(apiRef, gridExpandedSortedRowIndexLookupSelector);
   const timeoutRowId = React.useRef<GridRowId>('');
   const timeout = useTimeout();
   const previousReorderState = React.useRef<ReorderStateProps>(EMPTY_REORDER_STATE);
@@ -254,11 +255,18 @@ export const useGridRowReorder = (
         dragRowNode.current!.classList.remove(classes.rowDragging);
       });
 
-      const sortedRowIndexLookup = gridExpandedSortedRowIndexLookupSelector(apiRef);
       originRowIndex.current = sortedRowIndexLookup[params.id];
       apiRef.current.setCellFocus(params.id, GRID_REORDER_COL_DEF.field);
     },
-    [apiRef, isRowReorderDisabled, logger, classes.rowDragging, applyDraggedState, timeout],
+    [
+      apiRef,
+      isRowReorderDisabled,
+      logger,
+      classes.rowDragging,
+      applyDraggedState,
+      sortedRowIndexLookup,
+      timeout,
+    ],
   );
 
   const handleDragOver = React.useCallback<GridEventListener<'cellDragOver' | 'rowDragOver'>>(
@@ -311,7 +319,6 @@ export const useGridRowReorder = (
         return;
       }
 
-      const sortedRowIndexLookup = gridExpandedSortedRowIndexLookupSelector(apiRef);
       const targetRowIndex = sortedRowIndexLookup[params.id];
       const sourceRowIndex = sortedRowIndexLookup[dragRowId];
 
@@ -374,7 +381,7 @@ export const useGridRowReorder = (
         event.dataTransfer.dropEffect = 'copy';
       }
     },
-    [dragRowId, apiRef, logger, timeout, applyDropIndicator],
+    [dragRowId, apiRef, logger, timeout, sortedRowIndexLookup, applyDropIndicator],
   );
 
   const handleDragEnd = React.useCallback<GridEventListener<'rowDragEnd'>>(
@@ -476,7 +483,6 @@ export const useGridRowReorder = (
         return initialValue;
       }
 
-      const sortedRowIndexLookup = gridExpandedSortedRowIndexLookupSelector(apiRef);
       const targetRowIndex = sortedRowIndexLookup[targetRowId];
       const sourceRowIndex = sortedRowIndexLookup[sourceRowId];
 
@@ -498,7 +504,7 @@ export const useGridRowReorder = (
       }
       return finalTargetIndex;
     },
-    [apiRef],
+    [apiRef, sortedRowIndexLookup],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'getRowReorderTargetIndex', getRowReorderTargetIndex);

@@ -493,11 +493,6 @@ export interface GridEventLookup
    */
   sortedRowsSet: {};
   /**
-   * Fired when the aggregations are done
-   * @ignore - do not document
-   */
-  aggregationLookupSet: {};
-  /**
    * Fired when the expansion of a row is changed. Called with a [[GridGroupNode]] object.
    */
   rowExpansionChange: { params: GridGroupNode };

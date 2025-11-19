@@ -103,10 +103,6 @@ export const useGridColumnPinningPreProcessors = (
         apiRef.current.caches.columnPinning.orderedFieldsBeforePinningColumns =
           newOrderedFieldsBeforePinningColumns;
       } else {
-        if (allPinnedColumns.length === 0) {
-          prevAllPinnedColumns.current = allPinnedColumns;
-          return columnsState;
-        }
         newOrderedFields = [...columnsState.orderedFields];
         apiRef.current.caches.columnPinning.orderedFieldsBeforePinningColumns = [
           ...columnsState.orderedFields,
