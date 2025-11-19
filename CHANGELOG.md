@@ -5,6 +5,109 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.19.0
+<!-- generated comparing v8.18.0..master -->
+_Nov 19, 2025_
+
+We'd like to extend a big thank you to the 15 contributors who made this release possible. Here are some highlights ✨:
+
+TODO INSERT HIGHLIGHTS
+
+Special thanks go out to these community members for their valuable contributions:
+@arminmeh, @lauri865, @noobyogi0010, @noraleonte, @sai6855
+
+The following team members contributed to this release:
+@alexfauquette, @bernardobelchior, @cherniavskii, @flaviendelangle, @Janpot, @JCQuintas, @mj12albert, @rita-codes, @siriwatknp, @ZeeshanTamboli
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.19.0`
+
+- [DataGrid] Add `tabNavigation` prop to control tab navigation in the grid (#20286) @arminmeh
+- [DataGrid] Alternative actions column definition API (#15041) @cherniavskii
+- [DataGrid] Disabled checkbox cells should be focusable (#19959) @mj12albert
+- [DataGrid] Fix failing tests (#20332) @cherniavskii
+- [DataGrid] Prevent Safari 26 error in the event handler (#20369) @arminmeh
+- [DataGrid] Undeprecate the `autoHeight` prop (#20363) @cherniavskii
+
+#### `@mui/x-data-grid-pro@8.19.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.19.0`.
+
+#### `@mui/x-data-grid-premium@8.19.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.19.0`, plus:
+
+- [DataGridPremium] Fix aggregation with sorting (#19892) @lauri865
+- [DataGridPremium] Lock exceljs version (#20329) @cherniavskii
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.19.0`
+
+Internal changes.
+
+#### `@mui/x-date-pickers-pro@8.19.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.19.0`.
+
+### Charts
+
+#### `@mui/x-charts@8.19.0`
+
+- [charts] Expose `niceDomain` utility (#20250) @bernardobelchior
+- [charts] Fix Pie Chart keyboard focus highlight (#20358) @JCQuintas
+- [charts] Memoize series series selectors (#20326) @JCQuintas
+- [charts] Relax dataset type (#20294) @bernardobelchior
+- [charts] Remove `touch-action: pan-y` when zoom is disabled (#20204) @bernardobelchior
+- [charts] Use `getBBox()` for correct SVG sizes in firefox (#20309) @JCQuintas
+- [charts] Use directly selector from `@mui/x-internals` (#20365) @alexfauquette
+
+#### `@mui/x-charts-pro@8.19.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.19.0`, plus:
+
+- [charts-pro] Add pan on `wheel` to zoom (#19998) @JCQuintas
+- [charts-pro] Fix zoom slider preview having an opaque background in dark mode (#20367) @bernardobelchior
+
+#### `@mui/x-charts-premium@8.19.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@8.19.0`.
+
+### Tree View
+
+#### `@mui/x-tree-view@8.19.0`
+
+- [tree view] Enable lazy load when children count is not know in tree view (#18680) @noobyogi0010
+- [tree view] Fix unwanted behaviors on the item re-ordering (#20368) @flaviendelangle
+
+#### `@mui/x-tree-view-pro@8.19.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.19.0`.
+
+### Codemod
+
+#### `@mui/x-codemod@8.19.0`
+
+Internal changes.
+
+### Docs
+
+- [docs] Add minimum Typescript version to migration guide (#20320) @siriwatknp
+- [docs] Fix Autosizing documentation (#20348) @siriwatknp
+- [docs][pickers] Fix seperator opcaity in demo (#20293) @sai6855
+
+### Core
+
+- [code-infra] Disable Codspeed pipeline (#20370) @JCQuintas
+- [code-infra] Optimize `checkMaterialVersion` (#20307) @Janpot
+- [docs-infra] Revert @docsearch/react (#20313) @Janpot
+
+### Miscellaneous
+
+- [test] Fix browser tests skipping some projects (#20318) @cherniavskii
+- [test] Update `use-react-version` pnpm script (#20319) @cherniavskii
+
 ## 8.18.0
 
 <!-- generated comparing v8.17.0..master -->
