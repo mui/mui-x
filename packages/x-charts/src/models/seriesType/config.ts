@@ -123,6 +123,6 @@ export type ChartItemIdentifierWithData<T extends ChartSeriesType> =
   ChartsSeriesConfig[T]['itemIdentifierWithData'];
 
 export type DatasetElementType<T> = {
-  [key: string]: T;
+  [key: string]: Readonly<T>;
 };
-export type DatasetType<T = unknown> = DatasetElementType<T>[];
+export type DatasetType<T = number | string | Date | null | undefined> = DatasetElementType<T>[];
