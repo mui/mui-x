@@ -19,6 +19,8 @@ export const BarLabelComponent = styled('text', {
   stroke: 'none',
   fill: (theme.vars || theme)?.palette?.text?.primary,
   transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
+  textAnchor: 'middle',
+  dominantBaseline: 'central',
   pointerEvents: 'none',
   opacity: 1,
   [`&.${barLabelClasses.faded}`]: {
@@ -55,15 +57,9 @@ export type BarLabelProps = Omit<
      * Height of the bar this label belongs to.
      */
     height: number;
-    /**
-     * The placement of the bar label.
-     * It controls whether the label is rendered in the center or outside the bar.
-     * @default 'center'
-     */
-    placement?: 'center' | 'outside';
   };
 
-function BarLabel(inProps: BarLabelProps): React.JSX.Element {
+function BarLabel(inProps: BarLabelProps) {
   const props = useThemeProps({ props: inProps, name: 'MuiBarLabel' });
 
   const {
@@ -77,62 +73,12 @@ function BarLabel(inProps: BarLabelProps): React.JSX.Element {
     layout,
     xOrigin,
     yOrigin,
-    placement,
     ...otherProps
   } = props;
 
   const animatedProps = useAnimateBarLabel(props);
-  const textAnchor = getTextAnchor(props);
-  const dominantBaseline = getDominantBaseline(props);
 
-  return (
-    <BarLabelComponent
-      textAnchor={textAnchor}
-      dominantBaseline={dominantBaseline}
-      {...otherProps}
-      {...animatedProps}
-    />
-  );
-}
-
-function getTextAnchor({
-  placement,
-  layout,
-  xOrigin,
-  x,
-}: Pick<
-  BarLabelProps,
-  'layout' | 'placement' | 'x' | 'y' | 'xOrigin' | 'yOrigin'
->): React.SVGAttributes<SVGTextElement>['textAnchor'] {
-  if (placement === 'outside') {
-    if (layout === 'horizontal') {
-      return x < xOrigin ? 'end' : 'start';
-    }
-
-    return 'middle';
-  }
-
-  return 'middle';
-}
-
-function getDominantBaseline({
-  placement,
-  layout,
-  yOrigin,
-  y,
-}: Pick<
-  BarLabelProps,
-  'layout' | 'placement' | 'x' | 'y' | 'xOrigin' | 'yOrigin'
->): React.SVGAttributes<SVGTextElement>['dominantBaseline'] {
-  if (placement === 'outside') {
-    if (layout === 'horizontal') {
-      return 'central';
-    }
-
-    return y < yOrigin ? 'auto' : 'hanging';
-  }
-
-  return 'central';
+  return <BarLabelComponent {...otherProps} {...animatedProps} />;
 }
 
 BarLabel.propTypes = {
@@ -149,12 +95,6 @@ BarLabel.propTypes = {
   isFaded: PropTypes.bool.isRequired,
   isHighlighted: PropTypes.bool.isRequired,
   layout: PropTypes.oneOf(['horizontal', 'vertical']).isRequired,
-  /**
-   * The placement of the bar label.
-   * It controls whether the label is rendered in the center or outside the bar.
-   * @default 'center'
-   */
-  placement: PropTypes.oneOf(['center', 'outside']),
   seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   skipAnimation: PropTypes.bool.isRequired,
   /**
