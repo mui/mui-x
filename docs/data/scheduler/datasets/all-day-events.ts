@@ -6,7 +6,6 @@ import { setDay } from 'date-fns/setDay';
 import { setHours } from 'date-fns/setHours';
 import { endOfDay } from 'date-fns/endOfDay';
 import { addDays } from 'date-fns/addDays';
-import { subDays } from 'date-fns/subDays';
 import { addWeeks } from 'date-fns/addWeeks';
 import { subWeeks } from 'date-fns/subWeeks';
 import { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
@@ -58,8 +57,8 @@ export const initialEvents: SchedulerEvent[] = [
   },
   {
     id: '6',
-    start: subDays(START_OF_FIRST_WEEK, 1),
-    end: subDays(START_OF_FIRST_WEEK, 1),
+    start: START_OF_FIRST_WEEK,
+    end: START_OF_FIRST_WEEK,
     title: 'Event 6',
     allDay: true,
     resource: 'B',
