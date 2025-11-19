@@ -6,6 +6,8 @@ import { Dimensions } from '../../features/dimensions';
 import type { BaseState, ParamsWithDefaults } from '../../useVirtualizer';
 import type { VirtualizationLayoutParams } from './index';
 
+/* eslint-disable react-hooks/rules-of-hooks */
+
 type RequiredAPI = Dimensions.API;
 
 type BaseElements = {
