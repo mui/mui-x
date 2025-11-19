@@ -12,13 +12,11 @@ import {
 import debounce from '@mui/utils/debounce';
 import { useEffectAfterFirstRender } from '@mui/x-internals/useEffectAfterFirstRender';
 import { useEventCallback } from '@mui/material/utils';
-import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { calculateZoom } from './calculateZoom';
 import { UseChartProZoomSignature } from './useChartProZoom.types';
 import { useZoomOnWheel } from './gestureHooks/useZoomOnWheel';
 import { useZoomOnPinch } from './gestureHooks/useZoomOnPinch';
 import { usePanOnDrag } from './gestureHooks/usePanOnDrag';
-import { usePanOnWheel } from './gestureHooks/usePanOnWheel';
 import { useZoomOnTapAndDrag } from './gestureHooks/useZoomOnTapAndDrag';
 import { usePanOnPressAndDrag } from './gestureHooks/usePanOnPressAndDrag';
 import { useZoomOnBrush } from './gestureHooks/useZoomOnBrush';
@@ -40,9 +38,9 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginDat
   useEffectAfterFirstRender(() => {
     store.set('zoom', {
       ...store.state.zoom,
-      zoomInteractionConfig: initializeZoomInteractionConfig(zoomInteractionConfig, optionsLookup),
+      zoomInteractionConfig: initializeZoomInteractionConfig(zoomInteractionConfig),
     });
-  }, [store, zoomInteractionConfig, optionsLookup]);
+  }, [store, zoomInteractionConfig]);
 
   // This is debounced. We want to run it only once after the interaction ends.
   const removeIsInteracting = React.useMemo(
@@ -87,10 +85,6 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginDat
     (zoomData: ZoomData[] | ((prev: ZoomData[]) => ZoomData[])) => {
       const newZoomData =
         typeof zoomData === 'function' ? zoomData([...store.state.zoom.zoomData]) : zoomData;
-
-      if (isDeepEqual(store.state.zoom.zoomData, newZoomData)) {
-        return;
-      }
 
       onZoomChange(newZoomData);
       if (store.state.zoom.isControlled) {
@@ -170,8 +164,6 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginDat
 
   usePanOnPressAndDrag(pluginData, setZoomDataCallback);
 
-  usePanOnWheel(pluginData, setZoomDataCallback);
-
   useZoomOnWheel(pluginData, setZoomDataCallback);
 
   useZoomOnPinch(pluginData, setZoomDataCallback);
@@ -241,10 +233,7 @@ useChartProZoom.getInitialState = (params) => {
       zoomData: initializeZoomData(optionsLookup, userZoomData),
       isInteracting: false,
       isControlled: zoomData !== undefined,
-      zoomInteractionConfig: initializeZoomInteractionConfig(
-        params.zoomInteractionConfig,
-        optionsLookup,
-      ),
+      zoomInteractionConfig: initializeZoomInteractionConfig(params.zoomInteractionConfig),
     },
   };
 };

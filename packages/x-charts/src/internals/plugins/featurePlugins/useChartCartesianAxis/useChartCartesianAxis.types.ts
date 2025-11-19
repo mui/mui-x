@@ -90,7 +90,7 @@ export interface DefaultizedZoomOptions extends Required<Omit<ZoomOptions, 'slid
 
 export interface UseChartCartesianAxisState {
   /**
-   * @ignore - state populated by the useChartProZoom plugin
+   * @ignore - state populated by the useChartProZoomPlugin
    */
   zoom?: {
     isInteracting: boolean;

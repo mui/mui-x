@@ -184,11 +184,6 @@ BarPlot.propTypes = {
    */
   barLabel: PropTypes.oneOfType([PropTypes.oneOf(['value']), PropTypes.func]),
   /**
-   * The placement of the bar label.
-   * It controls whether the label is rendered inside or outside the bar.
-   */
-  barLabelPlacement: PropTypes.oneOf(['outside', 'inside']),
-  /**
    * Defines the border radius of the bar element.
    */
   borderRadius: PropTypes.number,

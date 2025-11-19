@@ -132,7 +132,7 @@ describe('<ScatterChart />', () => {
     expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', '(5, 5)']);
   });
 
-  it('should support dataset with missing values', async () => {
+  it.skipIf(isJSDOM)('should support dataset with missing values', async () => {
     // x from 500 to 600
     // y from 100 to 200
     const dataset = [

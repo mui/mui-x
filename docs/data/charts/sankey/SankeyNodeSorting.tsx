@@ -2,14 +2,6 @@ import { Unstable_SankeyChart as SankeyChart } from '@mui/x-charts-pro/SankeyCha
 import Typography from '@mui/material/Typography';
 
 const data = {
-  nodes: [
-    { id: 'C' },
-    { id: 'B' },
-    { id: 'A' },
-    { id: 'X' },
-    { id: 'Y' },
-    { id: 'Z' },
-  ],
   links: [
     { source: 'C', target: 'Y', value: 10 },
     { source: 'A', target: 'X', value: 25 },
@@ -24,7 +16,7 @@ const data = {
 const nodeSortFunction = (a: any, b: any) => {
   const labelA = a.label || a.id;
   const labelB = b.label || b.id;
-  return labelB.localeCompare(labelA);
+  return labelA.localeCompare(labelB);
 };
 
 export default function SankeyNodeSorting() {
@@ -40,37 +32,14 @@ export default function SankeyNodeSorting() {
     >
       <div>
         <Typography variant="h6" gutterBottom>
-          auto (default)
+          Default Node Order
         </Typography>
-        <SankeyChart
-          height={300}
-          series={{
-            data,
-            nodeOptions: {
-              sort: 'auto',
-            },
-          }}
-        />
+        <SankeyChart height={300} series={{ data }} />
       </div>
 
       <div>
         <Typography variant="h6" gutterBottom>
-          fixed
-        </Typography>
-        <SankeyChart
-          height={300}
-          series={{
-            data,
-            nodeOptions: {
-              sort: 'fixed',
-            },
-          }}
-        />
-      </div>
-
-      <div>
-        <Typography variant="h6" gutterBottom>
-          Custom Function
+          Nodes Sorted Alphabetically
         </Typography>
         <SankeyChart
           height={300}

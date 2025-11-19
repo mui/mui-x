@@ -76,12 +76,6 @@ export type BarLabelItemProps = Omit<BarLabelOwnerState, 'isFaded' | 'isHighligh
      * @returns {string} The formatted label.
      */
     barLabel?: 'value' | ((item: BarItem, context: BarLabelContext) => string | null | undefined);
-    /**
-     * The placement of the bar label.
-     * It controls whether the label is rendered in the center or outside the bar.
-     * @default 'center'
-     */
-    barLabelPlacement?: BarLabelProps['placement'];
   };
 
 /**
@@ -105,7 +99,6 @@ function BarLabelItem(props: BarLabelItemProps) {
     value,
     skipAnimation,
     layout,
-    barLabelPlacement,
     ...other
   } = props;
   const { isFaded, isHighlighted } = useItemHighlighted({
@@ -138,7 +131,6 @@ function BarLabelItem(props: BarLabelItemProps) {
       y,
       width,
       height,
-      placement: barLabelPlacement,
       className: classes.root,
     },
     ownerState,

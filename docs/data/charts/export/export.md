@@ -132,11 +132,6 @@ If you want to use a custom wrapper element, you need to use the `useChartRootRe
 
 {{"demo": "ExportCompositionNoSnap.js"}}
 
-## Content Security Policy (CSP)
-
-If your application uses a Content Security Policy (CSP), you might need to adjust it to allow exporting to work correctly.
-You can read more about it in the [Content Security Policy (CSP) guide](/x/react-charts/content-security-policy/).
-
 ## apiRef
 
 ### Print/Export as PDF

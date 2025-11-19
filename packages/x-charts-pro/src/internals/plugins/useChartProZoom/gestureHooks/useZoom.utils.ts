@@ -137,16 +137,10 @@ export function translateZoom(
   movement: { x: number; y: number },
   drawingArea: { width: number; height: number },
   optionsLookup: Record<string | number, DefaultizedZoomOptions>,
-  filterMode: 'x' | 'y' | 'xy' = 'xy',
 ) {
   return initialZoomData.map((zoom) => {
     const options = optionsLookup[zoom.axisId];
-    if (
-      !options ||
-      !options.panning ||
-      (options.axisDirection === 'x' && filterMode === 'y') ||
-      (options.axisDirection === 'y' && filterMode === 'x')
-    ) {
+    if (!options || !options.panning) {
       return zoom;
     }
     const min = zoom.start;

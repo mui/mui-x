@@ -1,4 +1,5 @@
-import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
+import { createSelectorMemoized } from '@mui/x-internals/store';
+import { createSelector } from '../../utils/selectors';
 import { AxisItemIdentifier, ChartsAxisProps } from '../../../../models/axis';
 import { selectorChartXAxis, selectorChartYAxis } from './useChartCartesianAxisRendering.selectors';
 import {
@@ -108,26 +109,28 @@ const selectAxisHighlightWithValue = (
 };
 
 export const selectorChartsHighlightXAxisValue = createSelector(
-  selectorChartsInteractionXAxisIndex,
-  selectorChartsInteractionXAxisValue,
-  selectorChartXAxis,
-  selectorChartControlledCartesianAxisHighlight,
-  selectorChartsKeyboardXAxisIndex,
-  selectorChartsLastInteraction,
-  selectorBrushShouldPreventAxisHighlight,
-
+  [
+    selectorChartsInteractionXAxisIndex,
+    selectorChartsInteractionXAxisValue,
+    selectorChartXAxis,
+    selectorChartControlledCartesianAxisHighlight,
+    selectorChartsKeyboardXAxisIndex,
+    selectorChartsLastInteraction,
+    selectorBrushShouldPreventAxisHighlight,
+  ],
   selectAxisHighlightWithValue,
 );
 
 export const selectorChartsHighlightYAxisValue = createSelector(
-  selectorChartsInteractionYAxisIndex,
-  selectorChartsInteractionYAxisValue,
-  selectorChartYAxis,
-  selectorChartControlledCartesianAxisHighlight,
-  selectorChartsKeyboardYAxisIndex,
-  selectorChartsLastInteraction,
-  selectorBrushShouldPreventAxisHighlight,
-
+  [
+    selectorChartsInteractionYAxisIndex,
+    selectorChartsInteractionYAxisValue,
+    selectorChartYAxis,
+    selectorChartControlledCartesianAxisHighlight,
+    selectorChartsKeyboardYAxisIndex,
+    selectorChartsLastInteraction,
+    selectorBrushShouldPreventAxisHighlight,
+  ],
   selectAxisHighlightWithValue,
 );
 
@@ -152,13 +155,11 @@ const selectAxis = (
 };
 
 export const selectorChartsHighlightXAxis = createSelector(
-  selectorChartControlledCartesianAxisHighlight,
-  selectorChartXAxis,
+  [selectorChartControlledCartesianAxisHighlight, selectorChartXAxis],
   selectAxis,
 );
 
 export const selectorChartsHighlightYAxis = createSelector(
-  selectorChartControlledCartesianAxisHighlight,
-  selectorChartYAxis,
+  [selectorChartControlledCartesianAxisHighlight, selectorChartYAxis],
   selectAxis,
 );

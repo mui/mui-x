@@ -49,7 +49,7 @@ export function getNormalizedAxisScale(
 
   const scaleType = axis.scaleType ?? ('linear' as const);
 
-  const scale = getScale(scaleType as ContinuousScaleName, domain as readonly NumberValue[], range);
+  const scale = getScale(scaleType as ContinuousScaleName, domain, range);
 
   if (isSymlogScaleConfig(axis) && axis.constant != null) {
     (scale as ScaleSymLog<number, number>).constant(axis.constant);

@@ -89,11 +89,8 @@ function PieArcPlot(props: PieArcPlotProps) {
     data,
   });
 
-  const { dataIndex, seriesId, seriesType } = useFocusedItem() ?? {};
-  const focusedItem =
-    dataIndex !== undefined && seriesId === id && seriesType === 'pie'
-      ? transformedData[dataIndex]
-      : null;
+  const { dataIndex: focusedIndex = -1 } = useFocusedItem() ?? {};
+  const focusedItem = focusedIndex !== -1 ? transformedData[focusedIndex] : null;
 
   if (data.length === 0) {
     return null;
@@ -144,7 +141,7 @@ function PieArcPlot(props: PieArcPlotProps) {
           stroke={(theme.vars ?? theme).palette.text.primary}
           id={id}
           className={pieArcClasses.focusIndicator}
-          dataIndex={focusedItem.dataIndex}
+          dataIndex={focusedIndex}
           isFaded={false}
           isHighlighted={false}
           isFocused={false}

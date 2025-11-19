@@ -934,8 +934,8 @@ importers:
         version: 6.1.0
     optionalDependencies:
       rasterizehtml:
-        specifier: ^1.4.0
-        version: 1.4.0
+        specifier: ^1.3.1
+        version: 1.3.1
     publishDirectory: build
 
   packages/x-charts-pro:
@@ -997,8 +997,8 @@ importers:
         version: 6.1.0
     optionalDependencies:
       rasterizehtml:
-        specifier: ^1.4.0
-        version: 1.4.0
+        specifier: ^1.3.1
+        version: 1.3.1
     publishDirectory: build
 
   packages/x-charts-vendor:
@@ -8405,8 +8405,8 @@ packages:
   inline-style-parser@0.2.6:
     resolution: {integrity: sha512-gtGXVaBdl5mAes3rPcMedEBm12ibjt1kDMFfheul1wUAOVEJW60voNdMVzVkfLN06O7ZaD/rxhfKgtlgtTbMjg==}
 
-  inlineresources@1.1.0:
-    resolution: {integrity: sha512-hmb6QWAg6zx1yxj8znuSiiON4w2LlebCnYvIrE8fzDBKD7Nb4UKg7gaqp22pe2aTn4fcjgHYlqu5VzLVrSqvEw==}
+  inlineresources@1.0.1:
+    resolution: {integrity: sha512-r0TMecufaxuZva1tqvTR50hxud4wEAOAe0lWRp+kxWKAjGPYUxYDl+IFcOgWE8jMxVIJQl14vuJfhtMYdomPjw==}
 
   inquirer@12.9.6:
     resolution: {integrity: sha512-603xXOgyfxhuis4nfnWaZrMaotNT0Km9XwwBNWUKbIDqeCY89jGr2F9YPEMiNhU6XjIP4VoWISMBFfcc5NgrTw==}
@@ -10334,8 +10334,8 @@ packages:
     resolution: {integrity: sha512-Hrgsx+orqoygnmhFbKaHE6c296J+HTAQXoxEF6gNupROmmGJRoyzfG3ccAveqCBrwr/2yxQ5BVd/GTl5agOwSg==}
     engines: {node: '>= 0.6'}
 
-  rasterizehtml@1.4.0:
-    resolution: {integrity: sha512-rQhCo4A0CTl9V/Nm01RN3jEl//Qfhs29d1Vu+oES+xNrRX9y3cPjYyhcAOFPfExgg0j4BV6DPbzj7zfMpT1RLw==}
+  rasterizehtml@1.3.1:
+    resolution: {integrity: sha512-YfFxHJgyBWe6fGKQwiZQKWb5IYICQabg2iCyzjMzOXFKj2g+AfntlOxkM4f1+I0I6XjRp7bVOAxqXbfzsqjqTA==}
 
   raw-body@2.5.2:
     resolution: {integrity: sha512-8zGqypfENjCIqGhgXToC8aB2r7YrBX+AQAfIPs/Mlk+BtPTztOvTS01NRW/3Eh60J+a48lt8qsCzirQ6loCVfA==}
@@ -19703,7 +19703,7 @@ snapshots:
 
   inline-style-parser@0.2.6: {}
 
-  inlineresources@1.1.0:
+  inlineresources@1.0.1:
     dependencies:
       css-font-face-src: 1.0.0
       url: 0.11.4
@@ -22011,9 +22011,9 @@ snapshots:
 
   range-parser@1.2.1: {}
 
-  rasterizehtml@1.4.0:
+  rasterizehtml@1.3.1:
     dependencies:
-      inlineresources: 1.1.0
+      inlineresources: 1.0.1
       sane-domparser-error: 0.2.0
       url: 0.11.4
       xmlserializer: 0.6.1
