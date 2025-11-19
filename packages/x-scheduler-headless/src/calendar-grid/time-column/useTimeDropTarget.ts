@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
+import { useStableCallback } from '@base-ui-components/utils/useStableCallback';
 import { useAdapter } from '../../use-adapter/useAdapter';
 import { SchedulerEvent, SchedulerValidDate } from '../../models';
 import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
@@ -34,7 +34,7 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
   const collectionDurationMs = collectionEndTimestamp - collectionStartTimestamp;
 
   const getCursorPositionInElementMs: CalendarGridTimeColumnContext['getCursorPositionInElementMs'] =
-    useEventCallback(({ input, elementRef }) => {
+    useStableCallback(({ input, elementRef }) => {
       if (!ref.current || !elementRef.current) {
         return 0;
       }
@@ -46,7 +46,7 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
       return Math.round(collectionDurationMs * positionY);
     });
 
-  const getEventDropData: useDropTarget.GetEventDropData = useEventCallback(
+  const getEventDropData: useDropTarget.GetEventDropData = useStableCallback(
     ({ data, getDataFromInside, getDataFromOutside, input }) => {
       if (!isValidDropTarget(data)) {
         return undefined;

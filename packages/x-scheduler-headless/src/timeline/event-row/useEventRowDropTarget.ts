@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
+import { useStableCallback } from '@base-ui-components/utils/useStableCallback';
 import { useAdapter } from '../../use-adapter/useAdapter';
 import { SchedulerResourceId, SchedulerEvent, SchedulerValidDate } from '../../models';
 import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
@@ -27,7 +27,7 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
   const collectionDurationMs = collectionEndTimestamp - collectionStartTimestamp;
 
   const getCursorPositionInElementMs: TimelineEventRowContext['getCursorPositionInElementMs'] =
-    useEventCallback(({ input, elementRef }) => {
+    useStableCallback(({ input, elementRef }) => {
       if (!ref.current || !elementRef.current) {
         return 0;
       }
@@ -39,7 +39,7 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
       return Math.round(collectionDurationMs * positionX);
     });
 
-  const getEventDropData: useDropTarget.GetEventDropData = useEventCallback(
+  const getEventDropData: useDropTarget.GetEventDropData = useStableCallback(
     ({ data, getDataFromInside, getDataFromOutside, input }) => {
       if (!isValidDropTarget(data)) {
         return undefined;
