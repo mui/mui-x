@@ -14,14 +14,14 @@ import {
   YAxis,
   ZoomOptions,
 } from '@mui/x-charts-pro/models';
-import { TimeTickKeys } from '@mui/x-charts/models';
+import { TicksFrequency } from '@mui/x-charts/models';
 import alphabetStock from '../dataset/GOOGL.json';
 
-const tickFrequencies: TimeTickKeys[] = [
+const tickFrequencies: TicksFrequency[] = [
   'years',
-  '3-months',
+  'quarters',
   'months',
-  '2-weeks',
+  'biweekly',
   'weeks',
   'days',
   'hours',
@@ -29,12 +29,12 @@ const tickFrequencies: TimeTickKeys[] = [
 
 export default function OrdinalTickPlacement() {
   const [timeOrdinalTicks, setTimeOrdinalTicks] = React.useState<
-    Record<TimeTickKeys, boolean>
+    Record<TicksFrequency, boolean>
   >({
     years: true,
-    '3-months': true,
+    quarters: true,
     months: true,
-    '2-weeks': true,
+    biweekly: true,
     weeks: true,
     days: true,
     hours: true,

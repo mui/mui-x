@@ -12,9 +12,9 @@ import alphabetStock from '../dataset/GOOGL.json';
 
 const tickFrequencies = [
   'years',
-  '3-months',
+  'quarters',
   'months',
-  '2-weeks',
+  'biweekly',
   'weeks',
   'days',
   'hours',
@@ -23,9 +23,9 @@ const tickFrequencies = [
 export default function OrdinalTickPlacement() {
   const [timeOrdinalTicks, setTimeOrdinalTicks] = React.useState({
     years: true,
-    '3-months': true,
+    quarters: true,
     months: true,
-    '2-weeks': true,
+    biweekly: true,
     weeks: true,
     days: true,
     hours: true,

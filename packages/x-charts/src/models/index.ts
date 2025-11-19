@@ -20,4 +20,4 @@ export type {
 export type { PropsFromSlot } from '@mui/x-internals/slots';
 export type { Position } from './position';
 export type { CurveType } from './curve';
-export type { TimeTickKeys, TimeOrdinalTicks, TimeTicksDefinition } from '../internals/timeTicks';
+export type { TicksFrequency, TimeOrdinalTicks, TicksFrequencyDefinition } from '../internals/timeTicks';

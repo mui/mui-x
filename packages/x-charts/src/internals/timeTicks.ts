@@ -1,12 +1,12 @@
-export type TimeTicksDefinition = {
+export type TicksFrequencyDefinition = {
   getTickNumber: (from: Date, to: Date) => number;
   isTick: (prev: Date, value: Date) => boolean;
   format: (d: Date) => string;
 };
 
-export type TimeTickKeys = 'years' | '3-months' | 'months' | '2-weeks' | 'weeks' | 'days' | 'hours';
+export type TicksFrequency = 'years' | 'quarters' | 'months' | 'biweekly' | 'weeks' | 'days' | 'hours';
 
-export type TimeOrdinalTicks = (TimeTicksDefinition | TimeTickKeys)[];
+export type TimeOrdinalTicks = (TicksFrequencyDefinition | TicksFrequency)[];
 
 function yearNumber(from: Date, to: Date) {
   return Math.abs(to.getFullYear() - from.getFullYear());
@@ -23,44 +23,44 @@ function hourNumber(from: Date, to: Date) {
   return Math.abs(to.getTime() - from.getTime()) / (1000 * 60 * 60);
 }
 
-export const tickMapper: Record<TimeTickKeys, TimeTicksDefinition> = {
+export const tickFrequencies: Record<TicksFrequency, TicksFrequencyDefinition> = {
   years: {
     getTickNumber: yearNumber,
     isTick: (prev: Date, value: Date) => value.getFullYear() !== prev.getFullYear(),
     format: (d: Date) => d.getFullYear().toString(),
   },
-  '3-months': {
+  'quarters': {
     getTickNumber: (from: Date, to: Date) => Math.floor(monthNumber(from, to) / 3),
     isTick: (prev: Date, value: Date) =>
       value.getMonth() !== prev.getMonth() && value.getMonth() % 3 === 0,
-    format: (d: Date) => d.toLocaleString('default', { month: 'short' }),
+    format: new Intl.DateTimeFormat('default', { month: 'short' }).format,
   },
   months: {
     getTickNumber: monthNumber,
     isTick: (prev: Date, value: Date) => value.getMonth() !== prev.getMonth(),
-    format: (d: Date) => d.toLocaleString('default', { month: 'short' }),
+    format: new Intl.DateTimeFormat('default', { month: 'short' }).format,
   },
-  '2-weeks': {
+  'biweekly': {
     getTickNumber: (from: Date, to: Date) => dayNumber(from, to) / 14,
     isTick: (prev: Date, value: Date) =>
       (value.getDay() < prev.getDay() || dayNumber(value, prev) > 7) &&
       Math.floor(value.getDate() / 7) % 2 === 1,
-    format: (d: Date) => d.toLocaleString('default', { day: 'numeric' }),
+    format: new Intl.DateTimeFormat('default', { day: 'numeric' }).format,
   },
   weeks: {
     getTickNumber: (from: Date, to: Date) => dayNumber(from, to) / 7,
     isTick: (prev: Date, value: Date) =>
       value.getDay() < prev.getDay() || dayNumber(value, prev) > 7,
-    format: (d: Date) => d.toLocaleString('default', { day: 'numeric' }),
+    format: new Intl.DateTimeFormat('default', { day: 'numeric' }).format,
   },
   days: {
     getTickNumber: dayNumber,
     isTick: (prev: Date, value: Date) => value.getDate() !== prev.getDate(),
-    format: (d: Date) => d.toLocaleString('default', { day: 'numeric' }),
+    format: new Intl.DateTimeFormat('default', { day: 'numeric' }).format,
   },
   hours: {
     getTickNumber: hourNumber,
     isTick: (prev: Date, value: Date) => value.getHours() !== prev.getHours(),
-    format: (d: Date) => d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    format: new Intl.DateTimeFormat('default', { hour: '2-digit', minute: '2-digit' }).format,
   },
 };

@@ -4,7 +4,7 @@ import { useChartContext } from '../context/ChartProvider';
 import { AxisConfig, D3ContinuousScale, D3Scale } from '../models/axis';
 import { isBandScale, isOrdinalScale } from '../internals/scaleGuards';
 import { isInfinity } from '../internals/isInfinity';
-import { tickMapper, TimeOrdinalTicks, TimeTicksDefinition } from '../internals/timeTicks';
+import { tickFrequencies, TimeOrdinalTicks, TicksFrequencyDefinition } from '../internals/timeTicks';
 
 export interface TickParams {
   /**
@@ -74,7 +74,7 @@ interface GetTicksOptions
   timeOrdinalTicks?: TimeOrdinalTicks;
 }
 
-function getTimeTicks(domain: Date[], tickNumber: number, tickSpaces: TimeTicksDefinition[]) {
+function getTimeTicks(domain: Date[], tickNumber: number, tickSpaces: TicksFrequencyDefinition[]) {
   const start = domain[0];
   const end = domain[domain.length - 1];
 
@@ -137,7 +137,7 @@ export function getTicks(options: GetTicksOptions) {
       domain as Date[],
       tickNumber,
       timeOrdinalTicks.map((tickDef) =>
-        typeof tickDef === 'string' ? tickMapper[tickDef] : tickDef,
+        typeof tickDef === 'string' ? tickFrequencies[tickDef] : tickDef,
       ),
     );
 

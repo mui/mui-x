@@ -181,13 +181,13 @@ At the bottom, you can see one tick for the beginning and the middle of the day,
 ### Ordinal tick management
 
 Ordinal scales (`'band'` and `'point'`) display one tick per item by default.
-If you're axis is about date, you can subsample them with `timeOrdinalTicks` property.
+If your axis is about date, you can subsample them with the `timeOrdinalTicks` property.
 
 It takes an array of frequencies at which ticks can be placed sorted from the largest to the smallest.
 Tick are placed according to those frequencies plus the the `tickNumber`.
 
-It can either be a subsample of built in frequencies: `'years'`, `'3-months'`, `'months'`, `'2-weeks'`, `'weeks'`, `'days'`, `'hours'`.
-Or a custom definition of type `TimeTicksDefinition` which is an object made of following properties:
+It can either be a subsample of built in frequencies: `'years'`, `'quarters'`, `'months'`, `'biweekly'`, `'weeks'`, `'days'`, `'hours'`.
+Or a custom definition of type `TicksFrequencyDefinition` which is an object made of following properties:
 
 - `getTickNumber: (from: Date, to: Date) => number` Returns the number of ticks that will be displayed between `from` and `to` dates.
 - `isTick: (prev: Date, value: Date) => boolean` Returns `true` is a tick should be placed on `value`. For example if it's the beginning of a new month.
