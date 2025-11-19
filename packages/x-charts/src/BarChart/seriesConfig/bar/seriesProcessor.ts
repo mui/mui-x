@@ -90,25 +90,40 @@ const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset, hiddenIdentifi
       layer.map((point) => [point[0], point[1]] as [number, number]),
     );
 
-    const visibleStackedData = stackedSeries.map((layer, layerIndex, array) =>
-      layer.map((point, pointIndex) => {
+    // This is a bit complex: we need to create a version of the stacked data
+    // where the hidden series are replaced by 0-height bars, but the other
+    // series keep their original height (i.e. the space taken by the hidden
+    // series is removed from the chart).
+    //
+    // To do that, we iterate over each layer, and for each hidden series,
+    // we compute the diff between its start and end values, and remove that
+    // diff from all the upper layers.
+    //
+    // This way, when we draw the visible series, they will be stacked
+    // correctly without gaps.
+    const visibleStackedData: [number, number][][] = [];
+    for (let layerIndex = 0; layerIndex < stackedSeries.length; layerIndex += 1) {
+      const layer = stackedSeries[layerIndex];
+      const layerResult: [number, number][] = new Array(layer.length);
+      for (let pointIndex = 0; pointIndex < layer.length; pointIndex += 1) {
+        const point = layer[pointIndex];
         const id = ids[layerIndex];
         const isHidden = hiddenIds.has(id);
 
         if (isHidden) {
           const diff = point[1] - point[0];
-          // We got to remove the diff from all the upper layers
-          for (let j = layerIndex + 1; j < array.length; j += 1) {
-            array[j][pointIndex][0] -= diff;
-            array[j][pointIndex][1] -= diff;
+          // Remove the diff from all the upper layers
+          for (let j = layerIndex + 1; j < stackedSeries.length; j += 1) {
+            stackedSeries[j][pointIndex][0] -= diff;
+            stackedSeries[j][pointIndex][1] -= diff;
           }
-
-          // If the series is hidden or the original value is null, return the lower bound for the visible stacked data
-          return [point[0], point[0]] as [number, number];
+          layerResult[pointIndex] = [point[0], point[0]];
+        } else {
+          layerResult[pointIndex] = [point[0], point[1]];
         }
-        return point as [number, number];
-      }),
-    );
+      }
+      visibleStackedData[layerIndex] = layerResult;
+    }
 
     ids.forEach((id, index) => {
       const dataKey = series[id].dataKey;
