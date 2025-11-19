@@ -11,7 +11,9 @@ _Nov 19, 2025_
 
 We'd like to extend a big thank you to the 15 contributors who made this release possible. Here are some highlights ✨:
 
-TODO INSERT HIGHLIGHTS
+- 🔎 Add pan on `wheel` to the charts zoom
+- 🐞 Bugfixes
+- 📚 Documentation improvements
 
 Special thanks go out to these community members for their valuable contributions:
 @lauri865, @noobyogi0010, @sai6855
