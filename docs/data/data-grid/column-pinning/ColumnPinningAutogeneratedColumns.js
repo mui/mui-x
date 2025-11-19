@@ -5,7 +5,6 @@ import {
   GridActionsCellItem,
   GRID_CHECKBOX_SELECTION_COL_DEF,
   GRID_REORDER_COL_DEF,
-  GridActionsCell,
 } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
@@ -58,12 +57,10 @@ const columns = [
     field: 'actions',
     type: 'actions',
     width: 100,
-    renderCell: (params) => (
-      <GridActionsCell {...params}>
-        <GridActionsCellItem icon={<EditIcon />} label="Edit" />
-        <GridActionsCellItem icon={<DeleteIcon />} label="Delete" />
-      </GridActionsCell>
-    ),
+    getActions: () => [
+      <GridActionsCellItem icon={<EditIcon />} label="Edit" />,
+      <GridActionsCellItem icon={<DeleteIcon />} label="Delete" />,
+    ],
   },
 ];
 

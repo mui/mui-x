@@ -21,7 +21,11 @@ import {
   GridRowId,
   GridEditCellProps,
 } from '../../models';
-import { GridRenderEditCellParams, GridCellParams } from '../../models/params/gridCellParams';
+import {
+  GridRenderEditCellParams,
+  FocusElement,
+  GridCellParams,
+} from '../../models/params/gridCellParams';
 import { GridAlignment, GridStateColDef } from '../../models/colDef/gridColDef';
 import { GridRowModel, GridTreeNode, GridTreeNodeWithRender } from '../../models/gridRows';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
@@ -214,8 +218,13 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
 
   const { hasFocus, isEditable = false, value } = cellParams;
 
+  const canManageOwnFocus =
+    column.type === 'actions' &&
+    'getActions' in column &&
+    typeof column.getActions === 'function' &&
+    column.getActions(apiRef.current.getRowParams(rowId)).some((action) => !action.props.disabled);
   const tabIndex =
-    (cellMode === 'view' || !isEditable) && column.type !== 'actions' ? cellParams.tabIndex : -1;
+    (cellMode === 'view' || !isEditable) && !canManageOwnFocus ? cellParams.tabIndex : -1;
 
   const { classes: rootClasses, getCellClassName } = rootProps;
 
@@ -251,6 +260,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
   const valueToRender = cellParams.formattedValue ?? value;
   const cellRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(ref, cellRef);
+  const focusElementRef = React.useRef<FocusElement>(null);
   const isSelectionMode = rootProps.cellSelection ?? false;
 
   const ownerState = {
@@ -357,7 +367,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
 
     if (cellRef.current && !cellRef.current.contains(doc.activeElement!)) {
       const focusableElement = cellRef.current!.querySelector<HTMLElement>('[tabindex="0"]');
-      const elementToFocus = focusableElement || cellRef.current;
+      const elementToFocus = focusElementRef.current || focusableElement || cellRef.current;
 
       if (doesSupportPreventScroll()) {
         elementToFocus.focus({ preventScroll: true });
@@ -442,6 +452,10 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
     const valueString = valueToRender?.toString();
     children = valueString;
     title = valueString;
+  }
+
+  if (React.isValidElement(children) && canManageOwnFocus) {
+    children = React.cloneElement<any>(children, { focusElementRef });
   }
 
   const draggableEventHandlers = disableDragEvents
