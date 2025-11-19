@@ -71,8 +71,10 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 
   const isTodayInView = React.useMemo(
     () =>
-      !adapter.isBeforeDay(now, days[0].value) &&
-      !adapter.isAfterDay(now, days[days.length - 1].value),
+      adapter.isWithinRange(now, [
+        adapter.startOfDay(days[0].value),
+        adapter.endOfDay(days[days.length - 1].value),
+      ]),
     [adapter, days, now],
   );
 
