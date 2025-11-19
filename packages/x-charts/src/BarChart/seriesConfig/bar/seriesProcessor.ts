@@ -101,6 +101,10 @@ const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset, hiddenIdentifi
     //
     // This way, when we draw the visible series, they will be stacked
     // correctly without gaps.
+    //
+    // For negative and positive values, we need to handle them separately:
+    // - When a negative value is hidden, only other negative values in the stack should be adjusted
+    // - When a positive value is hidden, only other positive values in the stack should be adjusted
     const visibleStackedData: [number, number][][] = stackedSeries as [number, number][][];
     for (let layerIndex = 0; layerIndex < visibleStackedData.length; layerIndex += 1) {
       const layer = visibleStackedData[layerIndex];
@@ -112,12 +116,23 @@ const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset, hiddenIdentifi
 
         if (isHidden) {
           const diff = point[1] - point[0];
-          // Remove the diff from all the upper layers
+          // Get the original data value to determine if it's negative
+          const key = keys[layerIndex];
+          const originalValue = d3Dataset[pointIndex]?.[key] ?? 0;
+          const isNegative = originalValue < 0;
+
+          // Remove the diff from all the upper layers, but only for values with the same sign
           for (let j = layerIndex + 1; j < visibleStackedData.length; j += 1) {
             const upperPoint = visibleStackedData[j][pointIndex];
+            const upperKey = keys[j];
+            const upperOriginalValue = d3Dataset[pointIndex]?.[upperKey] ?? 0;
+            const isUpperNegative = upperOriginalValue < 0;
 
-            upperPoint[0] -= diff;
-            upperPoint[1] -= diff;
+            // Only adjust if both are negative or both are positive
+            if (isNegative === isUpperNegative) {
+              upperPoint[0] -= diff;
+              upperPoint[1] -= diff;
+            }
           }
           layerResult[pointIndex][0] = point[0];
           layerResult[pointIndex][1] = point[0];
