@@ -76,8 +76,8 @@ export function useBarPlotData(
           seriesId,
           dataIndex,
           layout: series[seriesId].layout,
-          xOrigin: Math.round(xScale(0) ?? 0),
-          yOrigin: Math.round(yScale(0) ?? 0),
+          xOrigin: xScale(0) ?? 0,
+          yOrigin: yScale(0) ?? 0,
           ...barDimensions,
           color: colorGetter(dataIndex),
           value: series[seriesId].data[dataIndex],
@@ -124,7 +124,6 @@ export function useBarPlotData(
       return {
         seriesId,
         barLabel: series[seriesId].barLabel,
-        barLabelPlacement: series[seriesId].barLabelPlacement,
         data: seriesDataPoints,
       };
     });

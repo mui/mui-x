@@ -12,10 +12,6 @@
         "description": "'value' | ((item: BarItem, context: BarLabelContext) =&gt; string | null | undefined)"
       }
     },
-    "barLabelPlacement": {
-      "type": { "description": "'center' | 'outside'" },
-      "default": "'center'"
-    },
     "color": { "type": { "description": "string" } },
     "colorGetter": {
       "type": { "description": "(data: ColorCallbackValue&lt;TValue&gt;) =&gt; string" }

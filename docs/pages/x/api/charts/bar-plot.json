@@ -1,9 +1,6 @@
 {
   "props": {
     "barLabel": { "type": { "name": "union", "description": "'value'<br>&#124;&nbsp;func" } },
-    "barLabelPlacement": {
-      "type": { "name": "enum", "description": "'outside'<br>&#124;&nbsp;'inside'" }
-    },
     "borderRadius": { "type": { "name": "number" } },
     "onItemClick": {
       "type": { "name": "func" },
