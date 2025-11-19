@@ -5,7 +5,6 @@ import { major } from '@mui/material/version';
 import fs from 'node:fs/promises';
 
 const isMaterialUIv6 = major === 6;
-const isMaterialUIv7 = major === 7;
 
 // Tests that need a longer timeout.
 const timeSensitiveSuites = [
@@ -376,12 +375,6 @@ function isConsoleWarningIgnored(msg?: string) {
       'MUI: The Experimental_CssVarsProvider component has been ported into ThemeProvider.',
     );
 
-  const isMuiLoadingButtonWarning =
-    (isMaterialUIv6 || isMaterialUIv7) &&
-    msg?.includes(
-      'MUI: The LoadingButton component functionality is now part of the Button component from Material UI.',
-    );
-
   const isReactRouterFlagsError = msg?.includes('React Router Future Flag Warning');
 
   const isNoDevRoute = msg?.includes('No routes matched location "/#no-dev"');
@@ -391,13 +384,7 @@ function isConsoleWarningIgnored(msg?: string) {
     'The browser build of Tailwind CSS should not be used in production.',
   );
 
-  if (
-    isMuiV6Error ||
-    isReactRouterFlagsError ||
-    isNoDevRoute ||
-    isTailwindCdnWarning ||
-    isMuiLoadingButtonWarning
-  ) {
+  if (isMuiV6Error || isReactRouterFlagsError || isNoDevRoute || isTailwindCdnWarning) {
     return true;
   }
   return false;
