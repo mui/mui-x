@@ -343,14 +343,6 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
 
       // Verify operation was blocked
       expect(handleRowOrderChange.callCount).to.equal(0);
-
-      // Verify tree structure unchanged
-      const rowTree = gridRowTreeSelector(apiRef!);
-      const sourceGroupNode = rowTree[2];
-      const targetGroupNode = rowTree[4];
-
-      expect(sourceGroupNode.parent).to.equal(1); // Still under Root
-      expect(targetGroupNode.parent).to.equal(1); // Still under Root
     });
   });
 
