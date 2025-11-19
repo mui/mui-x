@@ -292,6 +292,33 @@ async function main() {
         });
       });
 
+      it('should take a screenshot of the print export with dynamic row height', async () => {
+        const route = '/test-regressions-data-grid/PrintExportDynamicRowHeight';
+        const screenshotPath = path.resolve(screenshotDir, `.${route}Print.png`);
+
+        await navigateToTest(route);
+
+        // Click the export button in the toolbar.
+        await page.getByRole('button', { name: 'Export' }).click();
+
+        const printButton = page.getByRole('menuitem', { name: 'Print' });
+        // Click the print export option from the export menu in the toolbar.
+        // Trigger the action async because window.print() is blocking the main thread
+        // like window.alert() is.
+        setTimeout(() => {
+          printButton.click();
+        });
+
+        await sleep(5000);
+
+        await screenshotPrintDialogPreview(screenshotPath, {
+          x: 72,
+          y: 99,
+          width: 520,
+          height: 400,
+        });
+      });
+
       it('should take a screenshot of the charts print preview', async () => {
         const route = '/docs-charts-export/PrintChart';
         const screenshotPath = path.resolve(screenshotDir, `.${route}Print.png`);
