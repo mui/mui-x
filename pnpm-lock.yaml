@@ -58,8 +58,8 @@ catalogs:
       specifier: 4.4.3
       version: 4.4.3
     '@playwright/test':
-      specifier: ^1.55.1
-      version: 1.56.1
+      specifier: 1.55.1
+      version: 1.55.1
     '@react-spring/web':
       specifier: ^10.0.3
       version: 10.0.3
@@ -269,7 +269,7 @@ importers:
         version: 0.0.2-canary.1
       '@mui/internal-test-utils':
         specifier: 'catalog:'
-        version: 2.0.15(@babel/core@7.28.5)(@playwright/test@1.56.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(chai@6.2.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+        version: 2.0.15(@babel/core@7.28.5)(@playwright/test@1.55.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(chai@6.2.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@mui/material':
         specifier: 'catalog:'
         version: 7.3.4(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -290,7 +290,7 @@ importers:
         version: 22.0.1
       '@playwright/test':
         specifier: 'catalog:'
-        version: 1.56.1
+        version: 1.55.1
       '@types/babel__core':
         specifier: ^7.20.5
         version: 7.20.5
@@ -848,7 +848,7 @@ importers:
     devDependencies:
       '@mui/internal-test-utils':
         specifier: 'catalog:'
-        version: 2.0.15(@babel/core@7.28.5)(@playwright/test@1.56.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(chai@6.2.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+        version: 2.0.15(@babel/core@7.28.5)(@playwright/test@1.55.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(chai@6.2.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@mui/material':
         specifier: 'catalog:'
         version: 7.3.4(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -1162,7 +1162,7 @@ importers:
         version: 7.3.4(@mui/material@7.3.4(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(@types/react@19.2.2)(react@19.2.0)
       '@mui/internal-test-utils':
         specifier: 'catalog:'
-        version: 2.0.15(@babel/core@7.28.5)(@playwright/test@1.56.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(chai@6.2.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+        version: 2.0.15(@babel/core@7.28.5)(@playwright/test@1.55.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(chai@6.2.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@mui/material':
         specifier: 'catalog:'
         version: 7.3.4(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -1280,7 +1280,7 @@ importers:
     devDependencies:
       '@mui/internal-test-utils':
         specifier: 'catalog:'
-        version: 2.0.15(@babel/core@7.28.5)(@playwright/test@1.56.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(chai@6.2.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+        version: 2.0.15(@babel/core@7.28.5)(@playwright/test@1.55.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(chai@6.2.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@mui/material':
         specifier: 'catalog:'
         version: 7.3.4(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -1342,7 +1342,7 @@ importers:
     devDependencies:
       '@mui/internal-test-utils':
         specifier: 'catalog:'
-        version: 2.0.15(@babel/core@7.28.5)(@playwright/test@1.56.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(chai@6.2.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+        version: 2.0.15(@babel/core@7.28.5)(@playwright/test@1.55.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(chai@6.2.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@mui/material':
         specifier: 'catalog:'
         version: 7.3.4(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -1401,7 +1401,7 @@ importers:
     devDependencies:
       '@mui/internal-test-utils':
         specifier: 'catalog:'
-        version: 2.0.15(@babel/core@7.28.5)(@playwright/test@1.56.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(chai@6.2.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+        version: 2.0.15(@babel/core@7.28.5)(@playwright/test@1.55.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(chai@6.2.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@mui/material':
         specifier: 'catalog:'
         version: 7.3.4(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -1496,7 +1496,7 @@ importers:
     devDependencies:
       '@mui/internal-test-utils':
         specifier: 'catalog:'
-        version: 2.0.15(@babel/core@7.28.5)(@playwright/test@1.56.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(chai@6.2.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+        version: 2.0.15(@babel/core@7.28.5)(@playwright/test@1.55.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(chai@6.2.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@mui/material':
         specifier: 'catalog:'
         version: 7.3.4(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -1559,7 +1559,7 @@ importers:
     devDependencies:
       '@mui/internal-test-utils':
         specifier: 'catalog:'
-        version: 2.0.15(@babel/core@7.28.5)(@playwright/test@1.56.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(chai@6.2.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+        version: 2.0.15(@babel/core@7.28.5)(@playwright/test@1.55.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(chai@6.2.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@types/use-sync-external-store':
         specifier: 'catalog:'
         version: 1.5.0
@@ -1591,7 +1591,7 @@ importers:
     devDependencies:
       '@mui/internal-test-utils':
         specifier: 'catalog:'
-        version: 2.0.15(@babel/core@7.28.5)(@playwright/test@1.56.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(chai@6.2.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+        version: 2.0.15(@babel/core@7.28.5)(@playwright/test@1.55.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(chai@6.2.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       react:
         specifier: 'catalog:'
         version: 19.2.0
@@ -1632,7 +1632,7 @@ importers:
     devDependencies:
       '@mui/internal-test-utils':
         specifier: 'catalog:'
-        version: 2.0.15(@babel/core@7.28.5)(@playwright/test@1.56.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(chai@6.2.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+        version: 2.0.15(@babel/core@7.28.5)(@playwright/test@1.55.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(chai@6.2.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@types/luxon':
         specifier: 'catalog:'
         version: 3.7.1
@@ -1694,7 +1694,7 @@ importers:
     devDependencies:
       '@mui/internal-test-utils':
         specifier: 'catalog:'
-        version: 2.0.15(@babel/core@7.28.5)(@playwright/test@1.56.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(chai@6.2.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+        version: 2.0.15(@babel/core@7.28.5)(@playwright/test@1.55.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(chai@6.2.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@types/luxon':
         specifier: 'catalog:'
         version: 3.7.1
@@ -1741,7 +1741,7 @@ importers:
     devDependencies:
       '@mui/internal-test-utils':
         specifier: 'catalog:'
-        version: 2.0.15(@babel/core@7.28.5)(@playwright/test@1.56.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(chai@6.2.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+        version: 2.0.15(@babel/core@7.28.5)(@playwright/test@1.55.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(chai@6.2.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@types/device-uuid':
         specifier: ^1.0.3
         version: 1.0.3
@@ -1785,7 +1785,7 @@ importers:
     devDependencies:
       '@mui/internal-test-utils':
         specifier: 'catalog:'
-        version: 2.0.15(@babel/core@7.28.5)(@playwright/test@1.56.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(chai@6.2.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+        version: 2.0.15(@babel/core@7.28.5)(@playwright/test@1.55.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(chai@6.2.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@mui/material':
         specifier: 'catalog:'
         version: 7.3.4(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -1853,7 +1853,7 @@ importers:
     devDependencies:
       '@mui/internal-test-utils':
         specifier: 'catalog:'
-        version: 2.0.15(@babel/core@7.28.5)(@playwright/test@1.56.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(chai@6.2.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+        version: 2.0.15(@babel/core@7.28.5)(@playwright/test@1.55.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(chai@6.2.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@mui/material':
         specifier: 'catalog:'
         version: 7.3.4(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -1891,7 +1891,7 @@ importers:
     devDependencies:
       '@mui/internal-test-utils':
         specifier: ^2.0.15
-        version: 2.0.15(@babel/core@7.28.5)(@playwright/test@1.56.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(chai@6.2.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+        version: 2.0.15(@babel/core@7.28.5)(@playwright/test@1.55.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(chai@6.2.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@mui/types':
         specifier: ^7.4.8
         version: 7.4.8(@types/react@19.2.2)
@@ -1961,7 +1961,7 @@ importers:
         version: link:../packages/x-scheduler-headless/build
       '@playwright/test':
         specifier: 'catalog:'
-        version: 1.56.1
+        version: 1.55.1
       '@react-spring/web':
         specifier: 'catalog:'
         version: 10.0.3(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -2097,7 +2097,7 @@ importers:
         version: link:../../packages/x-license/build
       '@playwright/test':
         specifier: 'catalog:'
-        version: 1.56.1
+        version: 1.55.1
       '@types/moment-jalaali':
         specifier: 'catalog:'
         version: 0.7.9
@@ -2232,7 +2232,7 @@ importers:
         version: link:../../packages/x-tree-view-pro/build
       '@playwright/test':
         specifier: 'catalog:'
-        version: 1.56.1
+        version: 1.55.1
       '@types/moment-jalaali':
         specifier: 'catalog:'
         version: 0.7.9
@@ -4841,6 +4841,11 @@ packages:
   '@pkgr/core@0.2.9':
     resolution: {integrity: sha512-QNqXyfVS2wm9hweSYD2O7F0G06uurj9kZ96TRQE5Y9hU7+tgdZwIkbAKc5Ocy1HxEY2kuDQa6cQ1WRs/O5LFKA==}
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
+
+  '@playwright/test@1.55.1':
+    resolution: {integrity: sha512-IVAh/nOJaw6W9g+RJVlIQJ6gSiER+ae6mKQ5CX1bERzQgbC1VSeBlwdvczT7pxb0GWiyrxH4TGKbMfDb4Sq/ig==}
+    engines: {node: '>=18'}
+    hasBin: true
 
   '@playwright/test@1.56.1':
     resolution: {integrity: sha512-vSMYtL/zOcFpvJCW71Q/OEGQb7KYBPAdKh35WNSkaZA75JlAO8ED8UN6GUNTm3drWomcbcqRPFqQbLae8yBTdg==}
@@ -10164,8 +10169,18 @@ packages:
     resolution: {integrity: sha512-nDywThFk1i4BQK4twPQ6TA4RT8bDY96yeuCVBWL3ePARCiEKDRSrNGbFIgUJpLp+XeIR65v8ra7WuJOFUBtkMA==}
     engines: {node: '>=8'}
 
+  playwright-core@1.55.1:
+    resolution: {integrity: sha512-Z6Mh9mkwX+zxSlHqdr5AOcJnfp+xUWLCt9uKV18fhzA8eyxUd8NUWzAjxUh55RZKSYwDGX0cfaySdhZJGMoJ+w==}
+    engines: {node: '>=18'}
+    hasBin: true
+
   playwright-core@1.56.1:
     resolution: {integrity: sha512-hutraynyn31F+Bifme+Ps9Vq59hKuUCz7H1kDOcBs+2oGguKkWTU50bBWrtz34OUWmIwpBTWDxaRPXrIXkgvmQ==}
+    engines: {node: '>=18'}
+    hasBin: true
+
+  playwright@1.55.1:
+    resolution: {integrity: sha512-cJW4Xd/G3v5ovXtJJ52MAOclqeac9S/aGGgRzLabuF8TnIb6xHvMzKIa6JmrRzUkeXJgfL1MhukP0NK6l39h3A==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -14689,7 +14704,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@mui/internal-test-utils@2.0.15(@babel/core@7.28.5)(@playwright/test@1.56.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(chai@6.2.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)':
+  '@mui/internal-test-utils@2.0.15(@babel/core@7.28.5)(@playwright/test@1.55.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(chai@6.2.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)':
     dependencies:
       '@babel/plugin-transform-modules-commonjs': 7.27.1(@babel/core@7.28.5)
       '@babel/preset-typescript': 7.28.5(@babel/core@7.28.5)
@@ -14697,7 +14712,7 @@ snapshots:
       '@babel/runtime': 7.28.4
       '@emotion/cache': 11.14.0
       '@emotion/react': 11.14.0(@types/react@19.2.2)(react@19.2.0)
-      '@playwright/test': 1.56.1
+      '@playwright/test': 1.55.1
       '@testing-library/dom': 10.4.1
       '@testing-library/react': 16.3.0(@testing-library/dom@10.4.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@testing-library/user-event': 14.6.1(@testing-library/dom@10.4.1)
@@ -15476,9 +15491,14 @@ snapshots:
 
   '@pkgr/core@0.2.9': {}
 
+  '@playwright/test@1.55.1':
+    dependencies:
+      playwright: 1.55.1
+
   '@playwright/test@1.56.1':
     dependencies:
       playwright: 1.56.1
+    optional: true
 
   '@pnpm/constants@1001.3.1': {}
 
@@ -21932,7 +21952,15 @@ snapshots:
     dependencies:
       find-up: 3.0.0
 
+  playwright-core@1.55.1: {}
+
   playwright-core@1.56.1: {}
+
+  playwright@1.55.1:
+    dependencies:
+      playwright-core: 1.55.1
+    optionalDependencies:
+      fsevents: 2.3.2
 
   playwright@1.56.1:
     dependencies:
