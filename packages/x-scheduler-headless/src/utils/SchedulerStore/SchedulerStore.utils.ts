@@ -57,7 +57,6 @@ const EVENT_PROPERTIES_LOOKUP: { [P in keyof SchedulerEvent]-?: true } = {
   readOnly: true,
   extractedFromId: true,
   exDates: true,
-  color: true,
 };
 
 const EVENT_PROPERTIES = Object.keys(EVENT_PROPERTIES_LOOKUP) as (keyof SchedulerEvent)[];

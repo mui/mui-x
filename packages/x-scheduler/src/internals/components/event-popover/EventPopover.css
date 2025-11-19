@@ -209,8 +209,7 @@ p {
   height: 0.8rem;
 }
 
-.EventPopoverSelectTrigger,
-button.Button.EventPopoverMenuTrigger {
+.EventPopoverSelectTrigger {
   display: flex;
   align-items: center;
   gap: var(--space-2);
@@ -224,23 +223,18 @@ button.Button.EventPopoverMenuTrigger {
   cursor: pointer;
   -webkit-user-select: none;
   user-select: none;
-  font-weight: var(--font-weight-1);
 }
 
-.EventPopoverSelectTrigger:focus-visible,
-.EventPopoverMenuTrigger:focus-visible {
+.EventPopoverSelectTrigger:focus-visible {
   outline: 2px solid var(--gray-3);
   outline-offset: var(--outline-focus-offset);
 }
 
-.EventPopoverSelectTrigger.Ghost,
-button.Button.EventPopoverMenuTrigger.Ghost {
-  background-color: transparent;
+.EventPopoverSelectTrigger.Ghost {
   border: 1px solid transparent;
 }
 
-.EventPopoverSelectTrigger.Ghost[data-popup-open],
-.EventPopoverMenuTrigger.Ghost[data-popup-open] {
+.EventPopoverSelectTrigger.Ghost[data-popup-open] {
   background-color: var(--event-color-4);
 }
 
@@ -263,8 +257,7 @@ button.Button.EventPopoverMenuTrigger.Ghost {
   outline: 1px solid var(--border-color);
 }
 
-.EventPopoverSelectItem,
-.EventPopoverMenuItem {
+.EventPopoverSelectItem {
   background-color: var(--surface);
   padding: var(--space-2) var(--space-3) var(--space-2) var(--space-2);
   border-radius: var(--radius-3);
@@ -275,37 +268,25 @@ button.Button.EventPopoverMenuTrigger.Ghost {
   user-select: none;
 }
 
-.EventPopoverMenuItem {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
 .EventPopoverSelectItem:hover,
-.EventPopoverSelectItem[data-highlighted],
-.EventPopoverMenuItem:hover,
-.EventPopoverMenuItem[data-highlighted] {
+.EventPopoverSelectItem[data-highlighted] {
   background-color: var(--interactive-hover-bg);
 }
 
-.EventPopoverSelectItem[data-selected],
-.EventPopoverMenuItem[data-selected] {
+.EventPopoverSelectItem[data-selected] {
   background: var(--interactive-selected-bg);
 }
 
-.EventPopoverSelectItem[data-selected]:hover,
-.EventPopoverMenuItem[data-selected]:hover {
+.EventPopoverSelectItem[data-selected]:hover {
   background: var(--interactive-selected-hover-bg);
 }
 
-.EventPopoverSelectItem:focus-visible,
-.EventPopoverMenuItem:focus-visible {
+.EventPopoverSelectItem:focus-visible {
   outline: 2px solid var(--gray-3);
   outline-offset: var(--outline-focus-offset);
 }
 
-.EventPopoverSelectItemTitleWrapper,
-.EventPopoverMenuItemTitleWrapper {
+.EventPopoverSelectItemTitleWrapper {
   display: flex;
   align-items: center;
   gap: var(--space-2);
@@ -382,32 +363,6 @@ button.Button.EventPopoverMenuTrigger.Ghost {
 .EventRecurrence {
   font-size: var(--font-size-2);
   color: var(--secondary-text-color);
-}
-
-.EventPopoverResourceLegendContainer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.EventPopoverResourceLegendContainer > *:nth-child(n + 2) {
-  margin-left: calc(var(--space-05) * -1);
-}
-
-.ColorRadioItemCircle {
-  width: var(--space-3);
-  height: var(--space-3);
-  border-radius: 50%;
-  background-color: var(--event-color-8);
-}
-
-.ColorRadioGroup {
-  display: flex;
-  gap: var(--space-2);
-  padding: var(--space-1) var(--space-2);
-  width: 100%;
-  max-width: 190px;
-  flex-wrap: wrap;
 }
 
 .EventPopoverTabsList {

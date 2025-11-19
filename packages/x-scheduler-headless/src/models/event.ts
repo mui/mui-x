@@ -60,11 +60,6 @@ export interface SchedulerProcessedEvent {
    * The event model in the `SchedulerEvent` format.
    */
   modelInBuiltInFormat: SchedulerEvent | null;
-  /**
-   * The color of the event.
-   * Takes precedence over resource color if both are defined.
-   */
-  color?: SchedulerEventColor;
 }
 
 export interface SchedulerEvent {
@@ -123,11 +118,6 @@ export interface SchedulerEvent {
    * and no link to an original event will be created.
    */
   extractedFromId?: SchedulerEventId;
-  /**
-   * The color of the event.
-   * Takes precedence over resource color if both are defined.
-   */
-  color?: SchedulerEventColor;
 }
 
 /**

@@ -280,7 +280,6 @@ export class SchedulerStore<
    */
   public updateEvent = (calendarEvent: SchedulerEventUpdatedProperties) => {
     const original = schedulerEventSelectors.processedEvent(this.state, calendarEvent.id);
-
     if (!original) {
       throw new Error(
         `${this.instanceName}: the original event was not found (id="${calendarEvent.id}").`,
