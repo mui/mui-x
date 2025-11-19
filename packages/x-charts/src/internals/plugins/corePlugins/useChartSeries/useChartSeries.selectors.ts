@@ -1,5 +1,5 @@
-import { createSelectorMemoized } from '@mui/x-internals/store';
-import { ChartRootSelector, createSelector } from '../../utils/selectors';
+import { createSelectorMemoized, createSelector } from '@mui/x-internals/store';
+import { ChartRootSelector } from '../../utils/selectors';
 import { UseChartSeriesSignature } from './useChartSeries.types';
 import { applySeriesProcessors } from './processSeries';
 
@@ -7,12 +7,12 @@ export const selectorChartSeriesState: ChartRootSelector<UseChartSeriesSignature
   state.series;
 
 export const selectorChartDefaultizedSeries = createSelector(
-  [selectorChartSeriesState],
+  selectorChartSeriesState,
   (seriesState) => seriesState.defaultizedSeries,
 );
 
 export const selectorChartSeriesConfig = createSelector(
-  [selectorChartSeriesState],
+  selectorChartSeriesState,
   (seriesState) => seriesState.seriesConfig,
 );
 
@@ -21,7 +21,7 @@ export const selectorChartSeriesConfig = createSelector(
  * @returns {DatasetType | undefined} The dataset.
  */
 export const selectorChartDataset = createSelector(
-  [selectorChartSeriesState],
+  selectorChartSeriesState,
   (seriesState) => seriesState.dataset,
 );
 

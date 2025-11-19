@@ -16,7 +16,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
   });
 
   describe('isCreatingInDayCell', () => {
-    const day = adapter.date('2024-01-15');
+    const day = adapter.date('2024-01-15', 'default');
 
     it('should return false when there is no placeholder', () => {
       const state = DEFAULT_EVENT_CALENDAR_STATE;
@@ -100,7 +100,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
   });
 
   describe('isCreatingInTimeRange', () => {
-    const day = adapter.date('2024-01-15');
+    const day = adapter.date('2024-01-15', 'default');
     const dayStart = adapter.startOfDay(day);
     const dayEnd = adapter.endOfDay(day);
 

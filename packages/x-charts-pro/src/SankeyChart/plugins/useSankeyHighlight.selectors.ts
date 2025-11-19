@@ -1,4 +1,5 @@
-import { createSelector, selectorChartSeriesProcessed } from '@mui/x-charts/internals';
+import { createSelector } from '@mui/x-internals/store';
+import { selectorChartSeriesProcessed } from '@mui/x-charts/internals';
 import type { UseSankeyHighlightSignature } from './useSankeyHighlight.types';
 import type { SankeyLayoutLink, SankeyNodeId } from '../sankey.types';
 import type {
@@ -11,7 +12,7 @@ import type {
 const selectorSankeyHighlight = (state: UseSankeyHighlightSignature['state']) => state.highlight;
 
 const selectorSankeySeries = createSelector(
-  [selectorChartSeriesProcessed],
+  selectorChartSeriesProcessed,
   (processedSeries) =>
     processedSeries.sankey?.series[processedSeries.sankey?.seriesOrder[0]] || null,
 );
@@ -25,7 +26,7 @@ const DEFAULT_FADE: SankeyNodeFade & SankeyLinkFade = 'none';
  * Defaults to 'nodes' if not specified.
  */
 export const selectorNodeHighlightConfig = createSelector(
-  [selectorSankeySeries],
+  selectorSankeySeries,
   (series): SankeyNodeHighlight => series?.nodeOptions?.highlight ?? DEFAULT_NODE_HIGHLIGHT,
 );
 
@@ -34,7 +35,7 @@ export const selectorNodeHighlightConfig = createSelector(
  * Defaults to 'none' if not specified.
  */
 export const selectorNodeFadeConfig = createSelector(
-  [selectorSankeySeries],
+  selectorSankeySeries,
   (series): SankeyNodeFade => series?.nodeOptions?.fade ?? DEFAULT_FADE,
 );
 
@@ -43,7 +44,7 @@ export const selectorNodeFadeConfig = createSelector(
  * Defaults to 'links' if not specified.
  */
 export const selectorLinkHighlightConfig = createSelector(
-  [selectorSankeySeries],
+  selectorSankeySeries,
   (series): SankeyLinkHighlight => series?.linkOptions?.highlight ?? DEFAULT_LINK_HIGHLIGHT,
 );
 
@@ -52,7 +53,7 @@ export const selectorLinkHighlightConfig = createSelector(
  * Defaults to 'none' if not specified.
  */
 export const selectorLinkFadeConfig = createSelector(
-  [selectorSankeySeries],
+  selectorSankeySeries,
   (series): SankeyLinkFade => series?.linkOptions?.fade ?? DEFAULT_FADE,
 );
 
@@ -62,7 +63,7 @@ export const selectorLinkFadeConfig = createSelector(
  * @returns {SankeyItemIdentifier | null} The highlighted item identifier or null.
  */
 export const selectorSankeyHighlightedItem = createSelector(
-  [selectorSankeyHighlight],
+  selectorSankeyHighlight,
   (highlight) => highlight.item,
 );
 
@@ -73,7 +74,9 @@ export const selectorSankeyHighlightedItem = createSelector(
  * - It's connected to a highlighted link (based on linkOptions.highlight)
  */
 export const selectorIsNodeHighlighted = createSelector(
-  [selectorSankeyHighlightedItem, selectorNodeHighlightConfig, selectorLinkHighlightConfig],
+  selectorSankeyHighlightedItem,
+  selectorNodeHighlightConfig,
+  selectorLinkHighlightConfig,
   (highlightedItem, nodeHighlight, linkHighlight, nodeId: SankeyNodeId): boolean => {
     if (!highlightedItem) {
       return false;
@@ -113,7 +116,9 @@ export const selectorIsNodeHighlighted = createSelector(
  * - It's connected to a highlighted node (based on nodeOptions.highlight)
  */
 export const selectorIsLinkHighlighted = createSelector(
-  [selectorSankeyHighlightedItem, selectorNodeHighlightConfig, selectorLinkHighlightConfig],
+  selectorSankeyHighlightedItem,
+  selectorNodeHighlightConfig,
+  selectorLinkHighlightConfig,
   (highlightedItem, nodeHighlight, linkHighlight, link: SankeyLayoutLink): boolean => {
     if (!highlightedItem) {
       return false;
@@ -158,7 +163,9 @@ export const selectorIsLinkHighlighted = createSelector(
  * - The fade mode is 'global' for the highlighted element type
  */
 export const selectorIsSankeyItemFaded = createSelector(
-  [selectorSankeyHighlightedItem, selectorNodeFadeConfig, selectorLinkFadeConfig],
+  selectorSankeyHighlightedItem,
+  selectorNodeFadeConfig,
+  selectorLinkFadeConfig,
   (highlightedItem, nodeFade, linkFade, isHighlighted: boolean): boolean => {
     if (!highlightedItem || isHighlighted) {
       return false;
