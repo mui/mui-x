@@ -18,7 +18,6 @@ export const selectorChartSeriesConfig = createSelector(
 
 /**
  * Get the dataset from the series state.
- * @param {ChartState<[UseChartSeriesSignature]>} state The state of the chart.
  * @returns {DatasetType | undefined} The dataset.
  */
 export const selectorChartDataset = createSelector(
@@ -29,7 +28,6 @@ export const selectorChartDataset = createSelector(
 /**
  * Get the processed series after applying series processors.
  * This selector computes the processed series on-demand from the defaultized series.
- * @param {ChartState<[UseChartSeriesSignature]>} state The state of the chart.
  * @returns {ProcessedSeries} The processed series.
  */
 export const selectorChartSeriesProcessed = createSelectorMemoized(
