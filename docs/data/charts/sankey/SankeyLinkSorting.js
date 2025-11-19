@@ -4,11 +4,11 @@ import Typography from '@mui/material/Typography';
 const data = {
   links: [
     { source: 'C', target: 'Y', value: 10 },
+    { source: 'A', target: 'X', value: 25 },
     { source: 'B', target: 'X', value: 10 },
-    { source: 'B', target: 'Y', value: 5 },
     { source: 'X', target: 'Z', value: 25 },
     { source: 'Y', target: 'Z', value: 8 },
-    { source: 'A', target: 'X', value: 25 },
+    { source: 'B', target: 'Y', value: 5 },
   ],
 };
 
@@ -28,37 +28,14 @@ export default function SankeyLinkSorting() {
     >
       <div>
         <Typography variant="h6" gutterBottom>
-          auto (default)
+          Default Link Order
         </Typography>
-        <SankeyChart
-          height={300}
-          series={{
-            data,
-            linkOptions: {
-              sort: 'auto',
-            },
-          }}
-        />
+        <SankeyChart height={300} series={{ data }} />
       </div>
 
       <div>
         <Typography variant="h6" gutterBottom>
-          fixed
-        </Typography>
-        <SankeyChart
-          height={300}
-          series={{
-            data,
-            linkOptions: {
-              sort: 'fixed',
-            },
-          }}
-        />
-      </div>
-
-      <div>
-        <Typography variant="h6" gutterBottom>
-          Custom Function
+          Links Sorted by Value
         </Typography>
         <SankeyChart
           height={300}
