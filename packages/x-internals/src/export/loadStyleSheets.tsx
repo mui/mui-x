@@ -11,7 +11,7 @@ export function loadStyleSheets(document: Document, root: Document | ShadowRoot,
 
   for (let i = 0; i < headStyleElements.length; i += 1) {
     const node = headStyleElements[i];
-    const newHeadStyleElements = document.createElement(node.tagName);
+    const newHeadStyleElement = document.createElement(node.tagName);
 
     if (node.tagName === 'STYLE') {
       const sheet = (node as HTMLStyleElement).sheet;
@@ -23,28 +23,29 @@ export function loadStyleSheets(document: Document, root: Document | ShadowRoot,
             styleCSS += `${sheet.cssRules[j].cssText}\r\n`;
           }
         }
-        newHeadStyleElements.appendChild(document.createTextNode(styleCSS));
+        newHeadStyleElement.appendChild(document.createTextNode(styleCSS));
       }
     } else if (node.getAttribute('href')) {
       for (let j = 0; j < node.attributes.length; j += 1) {
         const attr = node.attributes[j];
         if (attr) {
-          newHeadStyleElements.setAttribute(attr.nodeName, attr.nodeValue || '');
+          newHeadStyleElement.setAttribute(attr.nodeName, attr.nodeValue || '');
         }
       }
 
       stylesheetLoadPromises.push(
         new Promise((resolve) => {
-          newHeadStyleElements.addEventListener('load', () => resolve());
+          newHeadStyleElement.addEventListener('load', () => resolve());
         }),
       );
     }
 
     if (nonce) {
-      newHeadStyleElements.nonce = nonce;
+      newHeadStyleElement.nonce = nonce;
     }
 
-    document.head.appendChild(newHeadStyleElements);
+    console.log('Appending stylesheet to export document head:', newHeadStyleElement);
+    document.head.appendChild(newHeadStyleElement);
   }
 
   return stylesheetLoadPromises;
