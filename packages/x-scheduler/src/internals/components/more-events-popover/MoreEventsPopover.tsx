@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { X } from 'lucide-react';
 import { Popover } from '@base-ui-components/react';
-import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
+import { CalendarEventOccurrence } from '@mui/x-scheduler-headless/models';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 import { MoreEventsPopoverProps, MoreEventsPopoverProviderProps } from './MoreEventsPopover.types';
@@ -12,7 +12,7 @@ import { ArrowSvg } from './arrow/ArrowSvg';
 import './MoreEventsPopover.css';
 
 interface MoreEventsData {
-  occurrences: SchedulerEventOccurrence[];
+  occurrences: CalendarEventOccurrence[];
   count: number;
   day: useEventOccurrencesWithDayGridPosition.DayData;
 }
@@ -98,7 +98,7 @@ export function MoreEventsPopoverProvider(props: MoreEventsPopoverProviderProps)
 
 interface MoreEventsPopoverTriggerProps
   extends Omit<React.ComponentProps<typeof Popover.Trigger>, 'onClick'> {
-  occurrences: SchedulerEventOccurrence[];
+  occurrences: CalendarEventOccurrence[];
   day: useEventOccurrencesWithDayGridPosition.DayData;
 }
 

@@ -1,4 +1,4 @@
-import type { SchedulerEventColor } from './event';
+import type { CalendarEventColor } from './event';
 
 export type CalendarResourceId = string;
 
@@ -19,7 +19,7 @@ export interface CalendarResource {
    * Can be overridden per event using the `color` property on the event model. (TODO: not implemented yet)
    * @default "jade"
    */
-  eventColor?: SchedulerEventColor;
+  eventColor?: CalendarEventColor;
   /**
    * The child resources of this resource.
    */

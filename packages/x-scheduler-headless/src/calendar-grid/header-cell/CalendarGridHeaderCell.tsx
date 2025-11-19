@@ -6,7 +6,7 @@ import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
 import { useCompositeListItem } from '../../base-ui-copy/composite/list/useCompositeListItem';
 import { useAdapter } from '../../use-adapter';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
-import { SchedulerProcessedDate } from '../../models';
+import { CalendarProcessedDate } from '../../models';
 import { getCalendarGridHeaderCellId } from '../../utils/accessibility-utils';
 import { useCalendarGridRootContext } from '../root/CalendarGridRootContext';
 import { schedulerNowSelectors } from '../../scheduler-selectors';
@@ -72,7 +72,7 @@ export namespace CalendarGridHeaderCell {
     /**
      * The date of the events rendered in the same column as this header cell.
      */
-    date: SchedulerProcessedDate;
+    date: CalendarProcessedDate;
     /**
      * The format used for the `aria-label` attribute.
      * @default adapter.formats.weekday

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store/useStore';
-import { SchedulerValidDate } from '../../models';
+import { CalendarEventOccurrenceWithTimePosition, SchedulerValidDate } from '../../models';
 import { useTimelineStoreContext } from '../../use-timeline-store-context';
 import { useEventOccurrencesWithTimelinePosition } from '../../use-event-occurrences-with-timeline-position';
 import { timelineOccurrencePlaceholderSelectors } from '../../timeline-selectors';
@@ -11,7 +11,7 @@ import { useAdapter } from '../../use-adapter';
 
 export function useTimelinePlaceholderInRange(
   parameters: useTimelinePlaceholderInRange.Parameters,
-): useEventOccurrencesWithTimelinePosition.EventOccurrenceWithPosition | null {
+): useTimelinePlaceholderInRange.ReturnValue {
   const { start, end, occurrences, maxIndex, resourceId } = parameters;
 
   const adapter = useAdapter();
@@ -90,4 +90,6 @@ export namespace useTimelinePlaceholderInRange {
      */
     resourceId: string | null;
   }
+
+  export type ReturnValue = CalendarEventOccurrenceWithTimePosition | null;
 }

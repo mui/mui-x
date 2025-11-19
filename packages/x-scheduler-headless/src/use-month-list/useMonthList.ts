@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SchedulerProcessedDate, SchedulerValidDate } from '../models';
+import { CalendarProcessedDate, SchedulerValidDate } from '../models';
 import { useAdapter } from '../use-adapter';
 import { processDate } from '../process-date';
 
@@ -38,7 +38,7 @@ export function useMonthList(): useMonthList.ReturnValue {
 }
 
 export namespace useMonthList {
-  export type ReturnValue = (parameters: ReturnValueParameters) => SchedulerProcessedDate[];
+  export type ReturnValue = (parameters: ReturnValueParameters) => CalendarProcessedDate[];
 
   export interface ReturnValueParameters {
     /**

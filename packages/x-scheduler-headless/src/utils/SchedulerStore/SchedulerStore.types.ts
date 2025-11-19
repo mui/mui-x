@@ -1,13 +1,13 @@
 import {
   SchedulerProcessedEvent,
-  SchedulerEventColor,
-  SchedulerEventOccurrence,
-  SchedulerOccurrencePlaceholder,
+  CalendarEventColor,
+  CalendarEventOccurrence,
+  CalendarOccurrencePlaceholder,
   CalendarResource,
   CalendarResourceId,
-  SchedulerEventUpdatedProperties,
+  CalendarEventUpdatedProperties,
   SchedulerValidDate,
-  SchedulerEventId,
+  CalendarEventId,
   SchedulerResourceModelStructure,
   SchedulerEventModelStructure,
   SchedulerEvent,
@@ -32,15 +32,15 @@ export interface SchedulerState<TEvent extends object = any> {
   /**
    * The IDs of the events available in the calendar.
    */
-  eventIdList: SchedulerEventId[];
+  eventIdList: CalendarEventId[];
   /**
    * A lookup to get the event model as provided to props.events from its ID.
    */
-  eventModelLookup: Map<SchedulerEventId, TEvent>;
+  eventModelLookup: Map<CalendarEventId, TEvent>;
   /**
    * A lookup to get the processed event from its ID.
    */
-  processedEventLookup: Map<SchedulerEventId, SchedulerProcessedEvent>;
+  processedEventLookup: Map<CalendarEventId, SchedulerProcessedEvent>;
   /**
    * The structure of the event model.
    * It defines how to read and write properties of the event model.
@@ -91,7 +91,7 @@ export interface SchedulerState<TEvent extends object = any> {
   /**
    * The color palette used for all events.
    */
-  eventColor: SchedulerEventColor;
+  eventColor: CalendarEventColor;
   /**
    * Whether the component should display the current time indicator.
    */
@@ -99,7 +99,7 @@ export interface SchedulerState<TEvent extends object = any> {
   /**
    * The placeholder occurrence of the event being created or the event occurrences being dragged
    */
-  occurrencePlaceholder: SchedulerOccurrencePlaceholder | null;
+  occurrencePlaceholder: CalendarOccurrencePlaceholder | null;
   /**
    * The current date and time, updated every minute.
    */
@@ -109,7 +109,7 @@ export interface SchedulerState<TEvent extends object = any> {
    * A multi day event is rendered in the day grid instead of the time grid when both are available.
    * It can also be styled differently in the day grid.
    */
-  isMultiDayEvent: (event: SchedulerProcessedEvent | SchedulerEventOccurrence) => boolean;
+  isMultiDayEvent: (event: SchedulerProcessedEvent | CalendarEventOccurrence) => boolean;
   /**
    * Whether the calendar is in read-only mode.
    * @default false
@@ -197,7 +197,7 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
    * Can be overridden per event using the `color` property on the event model. (TODO: not implemented yet)
    * @default "jade"
    */
-  eventColor?: SchedulerEventColor;
+  eventColor?: CalendarEventColor;
   /**
    * Whether the calendar is in read-only mode.
    * @default false
@@ -217,7 +217,7 @@ export type UpdateRecurringEventParameters = {
    * The changes to apply.
    * Requires `start` and `end`, all other properties are optional.
    */
-  changes: SchedulerEventUpdatedProperties;
+  changes: CalendarEventUpdatedProperties;
   /**
    * Callback fired when the user submits the recurring scope dialog.
    */
@@ -260,7 +260,7 @@ export type SchedulerModelUpdater<
 ) => void;
 
 export interface UpdateEventsParameters {
-  deleted?: SchedulerEventId[];
+  deleted?: CalendarEventId[];
   created?: SchedulerEvent[];
-  updated?: SchedulerEventUpdatedProperties[];
+  updated?: CalendarEventUpdatedProperties[];
 }

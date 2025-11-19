@@ -3,12 +3,12 @@ import { Store } from '@base-ui-components/utils/store';
 import { warnOnce } from '@mui/x-internals/warning';
 import {
   SchedulerProcessedEvent,
-  SchedulerEventId,
-  SchedulerEventOccurrence,
-  SchedulerOccurrencePlaceholder,
+  CalendarEventId,
+  CalendarEventOccurrence,
+  CalendarOccurrencePlaceholder,
   CalendarResourceId,
   SchedulerValidDate,
-  SchedulerEventUpdatedProperties,
+  CalendarEventUpdatedProperties,
   RecurringEventUpdateScope,
   SchedulerEvent,
   SchedulerPreferences,
@@ -40,7 +40,7 @@ import { DEFAULT_EVENT_COLOR } from '../../constants';
 
 // TODO: Add a prop to configure the behavior.
 export const DEFAULT_IS_MULTI_DAY_EVENT = (
-  event: SchedulerProcessedEvent | SchedulerEventOccurrence,
+  event: SchedulerProcessedEvent | CalendarEventOccurrence,
 ) => {
   if (event.allDay) {
     return true;
@@ -287,7 +287,7 @@ export class SchedulerStore<
   /**
    * Updates an event in the calendar.
    */
-  public updateEvent = (calendarEvent: SchedulerEventUpdatedProperties) => {
+  public updateEvent = (calendarEvent: CalendarEventUpdatedProperties) => {
     const original = schedulerEventSelectors.processedEvent(this.state, calendarEvent.id);
     if (!original) {
       throw new Error(
@@ -371,7 +371,7 @@ export class SchedulerStore<
   /**
    * Deletes an event from the calendar.
    */
-  public deleteEvent = (eventId: SchedulerEventId) => {
+  public deleteEvent = (eventId: CalendarEventId) => {
     this.updateEvents({ deleted: [eventId] });
   };
 
@@ -387,7 +387,7 @@ export class SchedulerStore<
   /**
    * Sets the occurrence placeholder to render while creating a new event or dragging an existing event occurrence.
    */
-  public setOccurrencePlaceholder = (newPlaceholder: SchedulerOccurrencePlaceholder | null) => {
+  public setOccurrencePlaceholder = (newPlaceholder: CalendarOccurrencePlaceholder | null) => {
     const { adapter, occurrencePlaceholder: previous } = this.state;
     if (shouldUpdateOccurrencePlaceholder(adapter, previous, newPlaceholder)) {
       this.set('occurrencePlaceholder', newPlaceholder);

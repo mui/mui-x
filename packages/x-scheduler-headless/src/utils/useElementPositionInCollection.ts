@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useAdapter } from '../use-adapter/useAdapter';
-import { SchedulerProcessedDate, SchedulerValidDate } from '../models';
+import { CalendarProcessedDate, SchedulerValidDate } from '../models';
 
 export function useElementPositionInCollection(
   parameters: useElementPositionInCollection.Parameters,
@@ -28,8 +28,8 @@ export function useElementPositionInCollection(
 
 namespace useElementPositionInCollection {
   export interface Parameters {
-    start: SchedulerProcessedDate;
-    end: SchedulerProcessedDate;
+    start: CalendarProcessedDate;
+    end: CalendarProcessedDate;
     collectionStart: SchedulerValidDate;
     collectionEnd: SchedulerValidDate;
   }

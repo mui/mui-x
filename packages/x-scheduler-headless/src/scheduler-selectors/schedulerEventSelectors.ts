@@ -1,18 +1,18 @@
 import { createSelector, createSelectorMemoized } from '@base-ui-components/utils/store';
-import { SchedulerEvent, SchedulerEventId } from '../models';
+import { SchedulerEvent, CalendarEventId } from '../models';
 import { SchedulerState as State } from '../utils/SchedulerStore/SchedulerStore.types';
 import { schedulerResourceSelectors } from './schedulerResourceSelectors';
 
 const processedEventSelector = createSelector(
   (state: State) => state.processedEventLookup,
-  (processedEventLookup, eventId: SchedulerEventId | null | undefined) =>
+  (processedEventLookup, eventId: CalendarEventId | null | undefined) =>
     eventId == null ? null : processedEventLookup.get(eventId),
 );
 
 const isEventReadOnlySelector = createSelector(
   processedEventSelector,
   (state: State) => state.readOnly,
-  (event, readOnly, _eventId: SchedulerEventId) => {
+  (event, readOnly, _eventId: CalendarEventId) => {
     return !!event?.readOnly || readOnly;
   },
 );
@@ -21,7 +21,7 @@ export const schedulerEventSelectors = {
   canCreateNewEvent: createSelector((state: State) => !state.readOnly),
   processedEvent: processedEventSelector,
   isReadOnly: isEventReadOnlySelector,
-  color: createSelector((state: State, eventId: SchedulerEventId) => {
+  color: createSelector((state: State, eventId: CalendarEventId) => {
     const event = processedEventSelector(state, eventId);
     if (!event) {
       return state.eventColor;
@@ -40,7 +40,7 @@ export const schedulerEventSelectors = {
   isPropertyReadOnly: createSelector(
     isEventReadOnlySelector,
     (state: State) => state.eventModelStructure,
-    (isEventReadOnly, eventModelStructure, _eventId: SchedulerEventId) => {
+    (isEventReadOnly, eventModelStructure, _eventId: CalendarEventId) => {
       if (isEventReadOnly) {
         return () => true;
       }

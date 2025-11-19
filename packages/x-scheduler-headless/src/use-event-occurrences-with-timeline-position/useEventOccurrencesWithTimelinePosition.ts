@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SchedulerEventOccurrence } from '../models';
+import { CalendarEventOccurrence, CalendarEventOccurrenceWithTimePosition } from '../models';
 import { useAdapter } from '../use-adapter/useAdapter';
 import { Adapter } from '../use-adapter/useAdapter.types';
 
@@ -36,33 +36,18 @@ export namespace useEventOccurrencesWithTimelinePosition {
     /**
      * The occurrences without the position information
      */
-    occurrences: SchedulerEventOccurrence[];
+    occurrences: CalendarEventOccurrence[];
     /**
      * Maximum amount of columns an event can span across.
      */
     maxSpan: number;
   }
 
-  export interface EventOccurrencePosition {
-    /**
-     * The first (1-based) index of the row / column the event should be rendered in.
-     */
-    firstIndex: number;
-    /**
-     * The last (1-based) index of the row / column the event should be rendered in.
-     */
-    lastIndex: number;
-  }
-
-  export interface EventOccurrenceWithPosition extends SchedulerEventOccurrence {
-    position: EventOccurrencePosition;
-  }
-
   export interface ReturnValue {
     /**
      * The occurrences augmented with position information
      */
-    occurrences: EventOccurrenceWithPosition[];
+    occurrences: CalendarEventOccurrenceWithTimePosition[];
     /**
      * The biggest index an event with position has on this time frame.
      */
@@ -76,7 +61,7 @@ export namespace useEventOccurrencesWithTimelinePosition {
  */
 function buildOccurrenceConflicts(
   adapter: Adapter,
-  occurrences: SchedulerEventOccurrence[],
+  occurrences: CalendarEventOccurrence[],
 ): OccurrenceConflicts[] {
   const getEmptyBlock = (): OccurrenceBlock => ({ occurrences: [], longestDurationMs: 0 });
 

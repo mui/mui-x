@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { Popover } from '@base-ui-components/react/popover';
-import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
+import { CalendarEventOccurrence } from '@mui/x-scheduler-headless/models';
 
 export interface EventPopoverProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * The event occurrence to display in the popover.
    */
-  occurrence: SchedulerEventOccurrence;
+  occurrence: CalendarEventOccurrence;
   /**
    * The anchor element for the popover positioning.
    */
@@ -27,5 +27,5 @@ export interface EventPopoverProviderProps {
 }
 
 export interface EventPopoverTriggerProps extends Popover.Trigger.Props {
-  occurrence: SchedulerEventOccurrence;
+  occurrence: CalendarEventOccurrence;
 }

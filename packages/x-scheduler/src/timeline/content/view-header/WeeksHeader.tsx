@@ -6,7 +6,7 @@ import { useDayList } from '@mui/x-scheduler-headless/use-day-list';
 import { useWeekList } from '@mui/x-scheduler-headless/use-week-list';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useTimelineStoreContext } from '@mui/x-scheduler-headless/use-timeline-store-context';
-import { SchedulerProcessedDate } from '@mui/x-scheduler-headless/models';
+import { CalendarProcessedDate } from '@mui/x-scheduler-headless/models';
 import { HeaderProps } from './Headers.types';
 import { WEEKS_UNIT_COUNT } from '../../constants';
 import './Headers.css';
@@ -27,7 +27,7 @@ export function WeeksHeader(props: HeaderProps) {
       amount: amount || WEEKS_UNIT_COUNT,
     });
 
-    const tempWeeks: { date: SchedulerProcessedDate }[][] = [];
+    const tempWeeks: { date: CalendarProcessedDate }[][] = [];
     for (let i = 0; i < weeksFirstDays.length; i += 1) {
       const weekStart = weeksFirstDays[i];
       const weekDays = getDayList({ date: weekStart, amount: 'week' });

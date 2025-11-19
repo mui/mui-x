@@ -1,7 +1,10 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store';
-import { SchedulerValidDate } from '@mui/x-scheduler-headless/models';
+import {
+  CalendarEventOccurrenceWithTimePosition,
+  SchedulerValidDate,
+} from '@mui/x-scheduler-headless/models';
 import {
   EVENT_CREATION_DEFAULT_LENGTH_MINUTE,
   EVENT_CREATION_PRECISION_MINUTE,
@@ -66,7 +69,7 @@ function ColumnInteractiveLayer({
   end: SchedulerValidDate;
   showCurrentTimeIndicator: boolean;
   index: number;
-  occurrences: useEventOccurrencesWithTimelinePosition.EventOccurrenceWithPosition[];
+  occurrences: CalendarEventOccurrenceWithTimePosition[];
   maxIndex: number;
 }) {
   // Context hooks

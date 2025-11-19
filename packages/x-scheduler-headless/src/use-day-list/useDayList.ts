@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SchedulerProcessedDate, SchedulerValidDate } from '../models';
+import { CalendarProcessedDate, SchedulerValidDate } from '../models';
 import { useAdapter, isWeekend } from '../use-adapter/useAdapter';
 import { processDate } from '../process-date';
 
@@ -50,7 +50,7 @@ export function useDayList(): useDayList.ReturnValue {
 }
 
 export namespace useDayList {
-  export type ReturnValue = (parameters: ReturnValueParameters) => SchedulerProcessedDate[];
+  export type ReturnValue = (parameters: ReturnValueParameters) => CalendarProcessedDate[];
 
   export interface ReturnValueParameters {
     /**

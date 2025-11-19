@@ -1,11 +1,11 @@
 import * as React from 'react';
-import type { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
+import { CalendarEventOccurrenceWithDayGridPosition } from '@mui/x-scheduler-headless/models';
 
 export interface DayGridEventProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * The event occurrence to render.
    */
-  occurrence: useEventOccurrencesWithDayGridPosition.EventOccurrenceWithPosition;
+  occurrence: CalendarEventOccurrenceWithDayGridPosition;
   /**
    * The variant of the event, which determines its styling.
    */
