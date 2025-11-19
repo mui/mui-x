@@ -1,23 +1,17 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { createSelector, useStore } from '@base-ui-components/utils/store';
+import { useStore } from '@base-ui-components/utils/store';
 import { Repeat } from 'lucide-react';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
-import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
-import { EventCalendarState } from '@mui/x-scheduler-headless/use-event-calendar';
 import {
   schedulerEventSelectors,
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import {
-  eventCalendarEventSelectors,
-  eventCalendarViewSelectors,
-} from '@mui/x-scheduler-headless/event-calendar-selectors';
+import { eventCalendarEventSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { DayGridEventProps } from './DayGridEvent.types';
 import { getColorClassName } from '../../../utils/color-utils';
-import { isOccurrenceAllDayOrMultipleDay } from '../../../utils/event-utils';
 import { useTranslations } from '../../../utils/TranslationsContext';
 import { EventDragPreview } from '../../event-drag-preview';
 import { useFormatTime } from '../../../hooks/useFormatTime';
@@ -25,29 +19,6 @@ import './DayGridEvent.css';
 // TODO: Create a standalone component for the resource color pin instead of re-using another component's CSS classes
 import '../../resource-legend/ResourceLegend.css';
 import '../index.css';
-
-const isResizableSelector = createSelector(
-  (state: EventCalendarState) => state.adapter,
-  eventCalendarEventSelectors.isResizable,
-  eventCalendarViewSelectors.view,
-  (adapter, isResizable, view, occurrence: SchedulerEventOccurrence) => {
-    if (!isResizable) {
-      return false;
-    }
-
-    // There is only one day cell in the day view
-    if (view === 'day') {
-      return false;
-    }
-
-    // In month view, only multi-day and all-day events can be resized
-    if (view === 'month') {
-      return isOccurrenceAllDayOrMultipleDay(occurrence, adapter);
-    }
-
-    return true;
-  },
-);
 
 export const DayGridEvent = React.forwardRef(function DayGridEvent(
   props: DayGridEventProps,
@@ -68,7 +39,12 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
 
   // Selector hooks
   const isDraggable = useStore(store, eventCalendarEventSelectors.isDraggable, occurrence.id);
-  const isResizable = useStore(store, isResizableSelector, occurrence);
+  const isResizable = useStore(
+    store,
+    eventCalendarEventSelectors.isResizable,
+    occurrence.id,
+    'day-grid',
+  );
   const resource = useStore(
     store,
     schedulerResourceSelectors.processedResource,
@@ -82,10 +58,8 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
 
   const content = React.useMemo(() => {
     switch (variant) {
-      case 'invisible': {
-        return null;
-      }
-      case 'filled':
+      case 'allDay':
+      case 'invisible':
       case 'placeholder':
         return (
           <React.Fragment>
@@ -107,6 +81,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
         );
 
       case 'compact':
+      default:
         return (
           <div className="DayGridEventCardWrapper">
             <span
@@ -122,10 +97,15 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
               className={clsx('DayGridEventCardContent', 'LinesClamp')}
               style={{ '--number-of-lines': 1 } as React.CSSProperties}
             >
-              <time className="DayGridEventTime">
-                <span>{formatTime(occurrence.start.value)}</span>
-                <span> - {formatTime(occurrence.end.value)}</span>
-              </time>
+              {occurrence?.allDay ? (
+                <span className="DayGridEventTime">{translations.allDay}</span>
+              ) : (
+                <time className="DayGridEventTime">
+                  <span>{formatTime(occurrence.start.value)}</span>
+                  <span> - {formatTime(occurrence.end.value)}</span>
+                </time>
+              )}
+
               <span className="DayGridEventTitle">{occurrence.title}</span>
             </p>
             {isRecurring && (
@@ -138,13 +118,12 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
             )}
           </div>
         );
-      default:
-        throw new Error('Unsupported variant provided to EventItem component.');
     }
   }, [
     formatTime,
     variant,
     occurrence.title,
+    occurrence?.allDay,
     occurrence.start,
     occurrence.end,
     isRecurring,

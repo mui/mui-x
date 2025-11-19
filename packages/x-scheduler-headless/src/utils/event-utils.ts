@@ -84,35 +84,27 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
     occurrences.push({ ...event, key: String(event.id) });
   }
 
-  return occurrences;
+  // STEP 3: Sort by the actual start date of each occurrence
+  // If two events have the same start date, put the longest one first
+  // We sort here so that events are processed in the correct order
+  return (
+    occurrences
+      // TODO: Avoid JS Date conversion
+      .map((occurrence) => ({
+        occurrence,
+        start: adapter.toJsDate(occurrence.start.value).getTime(),
+        end: adapter.toJsDate(occurrence.end.value).getTime(),
+      }))
+      .sort((a, b) => a.start - b.start || b.end - a.end)
+      .map((item) => item.occurrence)
+  );
 }
 
-export interface GetOccurrencesFromEventsParameters {
+interface GetOccurrencesFromEventsParameters {
   adapter: Adapter;
   start: SchedulerValidDate;
   end: SchedulerValidDate;
   events: SchedulerProcessedEvent[];
   visibleResources: Map<string, boolean>;
   resourceParentIds: Map<string, string | null>;
-}
-
-export function sortEventOccurrences(
-  occurrences: SchedulerEventOccurrence[],
-  adapter: Adapter,
-): SchedulerEventOccurrence[] {
-  return occurrences
-    .map((occurrence) => {
-      return {
-        occurrence,
-        // TODO: Avoid JS Date conversion
-        start: occurrence.allDay
-          ? adapter.toJsDate(adapter.startOfDay(occurrence.start.value)).getTime()
-          : occurrence.start.timestamp,
-        end: occurrence.allDay
-          ? adapter.toJsDate(adapter.endOfDay(occurrence.end.value)).getTime()
-          : occurrence.end.timestamp,
-      };
-    })
-    .sort((a, b) => a.start - b.start || b.end - a.end)
-    .map((item) => item.occurrence);
 }

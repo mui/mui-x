@@ -125,41 +125,33 @@ describe('<MonthView />', () => {
         .title('Multiple week event')
         .build(),
     ];
-
     it('should render all-day events correctly with main event in start date cell', () => {
       render(
-        <EventCalendarProvider
-          events={[
-            {
-              id: '1',
-              start: adapter.date('2025-05-05T00:00:00'),
-              end: adapter.date('2025-05-07T23:59:59'),
-              title: 'Test event',
-              allDay: true,
-            },
-          ]}
-          resources={[]}
-        >
+        <EventCalendarProvider events={allDayEvents} resources={[]}>
           <MonthView />
         </EventCalendarProvider>,
       );
 
-      const getEventsFromDate = (date: number) => {
-        return screen
-          .getAllByRole('gridcell')
-          .find((cell) => within(cell).queryByText(new RegExp(`^${date.toString()}`)))!
-          .querySelectorAll('.EventContainer');
-      };
+      const gridCells = screen.getAllByRole('gridcell');
+      const may5Cell = gridCells.find((cell) => within(cell).queryByText(/5/));
 
       // Main event should render in the start date cell
-      expect(getEventsFromDate(5)).toHaveLength(1);
+      expect(within(may5Cell!).getByText('Multi-day Conference')).not.to.equal(null);
 
-      // Invisible events should exist in the spanned cells
-      // Also check that invisible events have aria-hidden attribute
-      expect(getEventsFromDate(6)).toHaveLength(1);
-      expect(getEventsFromDate(6)[0]).to.have.attribute('aria-hidden', 'true');
-      expect(getEventsFromDate(7)).toHaveLength(1);
-      expect(getEventsFromDate(7)[0]).to.have.attribute('aria-hidden', 'true');
+      // Invisible event occurrences should exist in the spanned cells
+      const eventInstances = screen.getAllByLabelText('Multi-day Conference');
+      expect(eventInstances.length).to.be.greaterThan(1);
+
+      // Check that invisible event occurrences have aria-hidden attribute
+      const hiddenEventOccurrences = eventInstances.filter(
+        (event) => event.getAttribute('aria-hidden') === 'true',
+      );
+      expect(hiddenEventOccurrences.length).to.be.greaterThan(0);
+
+      const visibleEventOccurrences = eventInstances.filter(
+        (event) => event.getAttribute('aria-hidden') !== 'true',
+      );
+      expect(visibleEventOccurrences).to.have.length(1);
     });
 
     it('should render all-day event in first cell of week when event starts before the week', () => {

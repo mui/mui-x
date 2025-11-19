@@ -131,18 +131,23 @@ export function parsesByDayForMonthlyFrequency(ruleByDay: RecurringEventByDayVal
 }
 
 /**
- *  Duration of the event in days.
+ *  Inclusive span (in days) for all-day events.
  *  @returns At least 1, start==end yields 1.
  */
-export function getEventDurationInDays(adapter: Adapter, event: SchedulerProcessedEvent): number {
+export function getAllDaySpanDays(adapter: Adapter, event: SchedulerProcessedEvent): number {
+  // TODO: Now only all-day events are implemented, we should add support for timed events that span multiple days later
+  if (!event.allDay) {
+    return 1;
+  }
   // +1 so start/end same day = 1 day, spans include last day
-  return (
+  return Math.max(
+    1,
     diffIn(
       adapter,
       adapter.startOfDay(event.end.value),
       adapter.startOfDay(event.start.value),
       'days',
-    ) + 1
+    ) + 1,
   );
 }
 
@@ -164,8 +169,8 @@ export function getRecurringEventOccurrencesForVisibleDays(
   const endGuard = buildEndGuard(rule, event.start.value, adapter);
   const durationMinutes = diffIn(adapter, event.end.value, event.start.value, 'minutes');
 
-  const eventDuration = getEventDurationInDays(adapter, event);
-  const scanStart = adapter.addDays(start, -(eventDuration - 1));
+  const allDaySpanDays = getAllDaySpanDays(adapter, event);
+  const scanStart = adapter.addDays(start, -(allDaySpanDays - 1));
 
   for (
     let day = adapter.startOfDay(scanStart);
@@ -186,7 +191,7 @@ export function getRecurringEventOccurrencesForVisibleDays(
       : mergeDateAndTime(adapter, day, event.start.value);
 
     const occurrenceEnd = event.allDay
-      ? adapter.endOfDay(adapter.addDays(occurrenceStart, eventDuration - 1))
+      ? adapter.endOfDay(adapter.addDays(occurrenceStart, allDaySpanDays - 1))
       : adapter.addMinutes(occurrenceStart, durationMinutes);
 
     const key = `${event.id}::${getDateKey(occurrenceStart, adapter)}`;

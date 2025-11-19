@@ -9,9 +9,9 @@
   --compact-accepted-bg: transparent;
   --compact-circle-bg: var(--event-color-9);
 
-  /* Filled */
-  --filled-accepted-bg: var(--event-color-5);
-  --filled-accepted-primary-text: var(--event-color-12);
+  /* All Day */
+  --allDay-accepted-bg: var(--event-color-5);
+  --allDay-accepted-primary-text: var(--event-color-12);
 }
 
 .EventCard--regular {
@@ -26,10 +26,10 @@
   --event-secondary-text: var(--secondary-text-color);
 }
 
-.EventCard--filled,
+.EventCard--allDay,
 .EventCard--placeholder {
-  --event-background: var(--filled-accepted-bg);
-  --event-primary-text: var(--filled-accepted-primary-text);
+  --event-background: var(--allDay-accepted-bg);
+  --event-primary-text: var(--allDay-accepted-primary-text);
 }
 
 .EventRecurringIcon {

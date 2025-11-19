@@ -1,5 +1,6 @@
 import { adapter } from 'test/utils/scheduler';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
+import { DEFAULT_IS_MULTI_DAY_EVENT } from '../../utils/SchedulerStore';
 import { DEFAULT_PREFERENCES, TimelineStore } from '../TimelineStore';
 
 const DEFAULT_PARAMS = { events: [] };
@@ -24,6 +25,7 @@ describe('Core - TimelineStore', () => {
         resourceModelStructure: undefined,
         resourceChildrenIdLookup: new Map(),
         nowUpdatedEveryMinute: adapter.date(),
+        isMultiDayEvent: DEFAULT_IS_MULTI_DAY_EVENT,
         areEventsDraggable: false,
         areEventsResizable: false,
         canDragEventsFromTheOutside: false,

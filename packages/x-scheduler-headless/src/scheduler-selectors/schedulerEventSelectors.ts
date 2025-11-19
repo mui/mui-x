@@ -54,6 +54,7 @@ export const schedulerEventSelectors = {
       };
     },
   ),
+  isMultiDayEvent: createSelector((state: State) => state.isMultiDayEvent),
   processedEventList: createSelectorMemoized(
     (state: State) => state.eventIdList,
     (state: State) => state.processedEventLookup,

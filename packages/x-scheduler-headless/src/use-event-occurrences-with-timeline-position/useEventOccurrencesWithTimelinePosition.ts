@@ -2,7 +2,6 @@ import * as React from 'react';
 import { SchedulerEventOccurrence } from '../models';
 import { useAdapter } from '../use-adapter/useAdapter';
 import { Adapter } from '../use-adapter/useAdapter.types';
-import { sortEventOccurrences } from '../utils/event-utils';
 
 /**
  * Places event occurrences for a timeline UI.
@@ -14,14 +13,13 @@ export function useEventOccurrencesWithTimelinePosition(
   const adapter = useAdapter();
 
   return React.useMemo(() => {
-    const sortedOccurrences = sortEventOccurrences(occurrences, adapter);
-    const conflicts = buildOccurrenceConflicts(adapter, sortedOccurrences);
+    const conflicts = buildOccurrenceConflicts(adapter, occurrences);
 
     const { firstIndexLookup, maxIndex } = buildFirstIndexLookup(conflicts);
 
     const lastIndexLookup = buildLastIndexLookup(conflicts, firstIndexLookup, maxIndex, maxSpan);
 
-    const occurrencesWithPosition = sortedOccurrences.map((occurrence) => ({
+    const occurrencesWithPosition = occurrences.map((occurrence) => ({
       ...occurrence,
       position: {
         firstIndex: firstIndexLookup[occurrence.key],

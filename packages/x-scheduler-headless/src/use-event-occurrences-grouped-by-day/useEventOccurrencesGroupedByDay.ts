@@ -1,14 +1,15 @@
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store';
-import { SchedulerEventOccurrence, SchedulerProcessedDate } from '../models';
 import {
-  getDaysTheOccurrenceIsVisibleOn,
-  getOccurrencesFromEvents,
-  GetOccurrencesFromEventsParameters,
-} from '../utils/event-utils';
+  SchedulerProcessedEvent,
+  SchedulerEventOccurrence,
+  SchedulerProcessedDate,
+} from '../models';
+import { getDaysTheOccurrenceIsVisibleOn, getOccurrencesFromEvents } from '../utils/event-utils';
 import { useAdapter } from '../use-adapter/useAdapter';
 import { useEventCalendarStoreContext } from '../use-event-calendar-store-context';
 import { schedulerEventSelectors, schedulerResourceSelectors } from '../scheduler-selectors';
+import { Adapter } from '../use-adapter/useAdapter.types';
 
 /**
  * Gets all the event occurrences for the given days.
@@ -28,13 +29,13 @@ export function useEventOccurrencesGroupedByDay(
 
   return React.useMemo(
     () =>
-      innerGetEventOccurrencesGroupedByDay({
+      innerGetEventOccurrencesGroupedByDay(
         adapter,
         days,
         events,
         visibleResources,
         resourceParentIds,
-      }),
+      ),
     [adapter, days, events, visibleResources, resourceParentIds],
   );
 }
@@ -55,16 +56,17 @@ export namespace useEventOccurrencesGroupedByDay {
  * This is only exported for testing purposes.
  */
 export function innerGetEventOccurrencesGroupedByDay(
-  parameters: Pick<
-    GetOccurrencesFromEventsParameters,
-    'adapter' | 'visibleResources' | 'events' | 'resourceParentIds'
-  > & { days: SchedulerProcessedDate[] },
+  adapter: Adapter,
+  days: SchedulerProcessedDate[],
+  events: SchedulerProcessedEvent[],
+  visibleResources: Map<string, boolean>,
+  resourceParentIds: Map<string, string | null>,
 ): Map<string, SchedulerEventOccurrence[]> {
-  const { adapter, days, events, visibleResources, resourceParentIds } = parameters;
-
-  const occurrenceMap = new Map<string, SchedulerEventOccurrence[]>(
-    days.map((day) => [day.key, []]),
-  );
+  // STEP 4: Create a Map of the occurrences grouped by day
+  const occurrencesGroupedByDay = new Map<
+    string,
+    Record<'allDay' | 'nonAllDay', SchedulerEventOccurrence[]>
+  >(days.map((day) => [day.key, { allDay: [], nonAllDay: [] }]));
 
   const start = adapter.startOfDay(days[0].value);
   const end = adapter.endOfDay(days[days.length - 1].value);
@@ -80,9 +82,16 @@ export function innerGetEventOccurrencesGroupedByDay(
   for (const occurrence of occurrences) {
     const eventDays = getDaysTheOccurrenceIsVisibleOn(occurrence, days, adapter);
     for (const dayKey of eventDays) {
-      occurrenceMap.get(dayKey)!.push(occurrence);
+      const occurrenceType = occurrence.allDay ? 'allDay' : 'nonAllDay';
+      occurrencesGroupedByDay.get(dayKey)![occurrenceType].push(occurrence);
     }
   }
 
-  return occurrenceMap;
+  // STEP 5: Make sure the all-day events are before the non-all-day events
+  const cleanMap: useEventOccurrencesGroupedByDay.ReturnValue = new Map();
+  occurrencesGroupedByDay.forEach((value, key) => {
+    cleanMap.set(key, [...value.allDay, ...value.nonAllDay]);
+  });
+
+  return cleanMap;
 }
