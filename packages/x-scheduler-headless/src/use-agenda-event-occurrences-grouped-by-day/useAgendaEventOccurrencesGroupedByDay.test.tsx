@@ -2,13 +2,12 @@ import * as React from 'react';
 import { renderHook } from '@mui/internal-test-utils';
 import { adapter } from 'test/utils/scheduler';
 import { processDate } from '../process-date';
-import { CalendarEvent, SchedulerValidDate } from '../models';
+import { SchedulerEvent, SchedulerValidDate } from '../models';
 import {
   useAgendaEventOccurrencesGroupedByDay,
   useAgendaEventOccurrencesGroupedByDayOptions,
 } from './useAgendaEventOccurrencesGroupedByDay';
 import { EventCalendarProvider } from '../event-calendar-provider/EventCalendarProvider';
-import { getIdsFromOccurrencesMap } from '../utils/SchedulerStore/tests/utils';
 import { AGENDA_VIEW_DAYS_AMOUNT } from '../constants';
 
 describe('useAgendaEventOccurrencesGroupedByDay', () => {
@@ -16,11 +15,11 @@ describe('useAgendaEventOccurrencesGroupedByDay', () => {
     id: string,
     startISO: string,
     endISO: string,
-    extra: Partial<CalendarEvent> = {},
-  ): CalendarEvent => ({
+    extra: Partial<SchedulerEvent> = {},
+  ): SchedulerEvent => ({
     id,
-    start: adapter.date(startISO),
-    end: adapter.date(endISO),
+    start: adapter.date(startISO, 'default'),
+    end: adapter.date(endISO, 'default'),
     title: `Event ${id}`,
     ...extra,
   });
@@ -31,7 +30,7 @@ describe('useAgendaEventOccurrencesGroupedByDay', () => {
     showWeekends,
     showEmptyDaysInAgenda,
   }: {
-    events?: CalendarEvent[];
+    events?: SchedulerEvent[];
     visibleDate: SchedulerValidDate;
     showWeekends: boolean;
     showEmptyDaysInAgenda: boolean;
@@ -53,19 +52,19 @@ describe('useAgendaEventOccurrencesGroupedByDay', () => {
 
   it('should return exactly AGENDA_VIEW_DAYS_AMOUNT days and fills occurrences with [] when there are no events and showEmptyDays=true', () => {
     const res = testHook({
-      visibleDate: adapter.date('2024-01-01'),
+      visibleDate: adapter.date('2024-01-01', 'default'),
       showWeekends: true,
       showEmptyDaysInAgenda: true,
     });
 
-    expect(res.days).to.have.length(12);
-    for (const day of res.days) {
-      expect(res.occurrencesMap.get(day.key)).to.deep.equal([]);
+    expect(res).to.have.length(12);
+    for (const day of res) {
+      expect(day.occurrences).to.deep.equal([]);
     }
   });
 
   it('should extend forward until it fills AGENDA_VIEW_DAYS_AMOUNT days that contain events when showEmptyDays=false', () => {
-    const events: CalendarEvent[] = [
+    const events = [
       createEvent('1', '2025-01-01', '2025-01-01'),
       createEvent('2', '2025-01-03', '2025-01-03'),
       createEvent('3', '2025-01-05', '2025-01-05'),
@@ -84,34 +83,34 @@ describe('useAgendaEventOccurrencesGroupedByDay', () => {
 
     const res = testHook({
       events,
-      visibleDate: adapter.date('2025-01-01'),
+      visibleDate: adapter.date('2025-01-01', 'default'),
       showWeekends: true,
       showEmptyDaysInAgenda: false,
     });
 
-    expect(res.days).to.have.length(AGENDA_VIEW_DAYS_AMOUNT);
+    expect(res).to.have.length(AGENDA_VIEW_DAYS_AMOUNT);
     const expectedKeys = [
-      processDate(adapter.date('2025-01-01'), adapter).key,
-      processDate(adapter.date('2025-01-03'), adapter).key,
-      processDate(adapter.date('2025-01-05'), adapter).key,
-      processDate(adapter.date('2025-01-08'), adapter).key,
-      processDate(adapter.date('2025-01-09'), adapter).key,
-      processDate(adapter.date('2025-01-10'), adapter).key,
-      processDate(adapter.date('2025-01-11'), adapter).key,
-      processDate(adapter.date('2025-01-13'), adapter).key,
-      processDate(adapter.date('2025-01-14'), adapter).key,
-      processDate(adapter.date('2025-01-16'), adapter).key,
-      processDate(adapter.date('2025-01-18'), adapter).key,
-      processDate(adapter.date('2025-01-20'), adapter).key,
+      processDate(adapter.date('2025-01-01', 'default'), adapter).key,
+      processDate(adapter.date('2025-01-03', 'default'), adapter).key,
+      processDate(adapter.date('2025-01-05', 'default'), adapter).key,
+      processDate(adapter.date('2025-01-08', 'default'), adapter).key,
+      processDate(adapter.date('2025-01-09', 'default'), adapter).key,
+      processDate(adapter.date('2025-01-10', 'default'), adapter).key,
+      processDate(adapter.date('2025-01-11', 'default'), adapter).key,
+      processDate(adapter.date('2025-01-13', 'default'), adapter).key,
+      processDate(adapter.date('2025-01-14', 'default'), adapter).key,
+      processDate(adapter.date('2025-01-16', 'default'), adapter).key,
+      processDate(adapter.date('2025-01-18', 'default'), adapter).key,
+      processDate(adapter.date('2025-01-20', 'default'), adapter).key,
     ];
-    expect(res.days.map((day) => day.key)).to.deep.equal(expectedKeys);
-    for (const day of res.days) {
-      expect((res.occurrencesMap.get(day.key) ?? []).length).to.greaterThan(0);
+    expect(res.map((day) => day.date.key)).to.deep.equal(expectedKeys);
+    for (const day of res) {
+      expect(day.occurrences.length).to.greaterThan(0);
     }
   });
 
   it('should respect showWeekends preference when building the day list', () => {
-    const events: CalendarEvent[] = [
+    const events = [
       createEvent('1', '2025-10-03', '2025-10-03'), // Fri
       createEvent('2', '2025-10-04', '2025-10-04'), // Sat
       createEvent('3', '2025-10-05', '2025-10-05'), // Sun
@@ -134,15 +133,17 @@ describe('useAgendaEventOccurrencesGroupedByDay', () => {
 
     const res = testHook({
       events,
-      visibleDate: adapter.date('2025-10-03'), // Friday
+      visibleDate: adapter.date('2025-10-03', 'default'), // Friday
       showWeekends: false,
       showEmptyDaysInAgenda: true,
     });
-    expect(res.days).to.have.length(12);
+    expect(res).to.have.length(12);
     const weekendIds = ['2', '3', '9', '10', '16', '17'];
-    const includedIds = getIdsFromOccurrencesMap(res.occurrencesMap);
-    for (const id of weekendIds) {
-      expect(includedIds).to.not.include(id);
+    for (const day of res) {
+      const includedIds = day.occurrences.map((occ) => occ.id);
+      for (const id of weekendIds) {
+        expect(includedIds).to.not.include(id);
+      }
     }
   });
 });

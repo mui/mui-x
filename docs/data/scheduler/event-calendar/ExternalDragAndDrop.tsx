@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import { StandaloneEvent } from '@mui/x-scheduler/standalone-event';
-import { CalendarOccurrencePlaceholderExternalDragData } from '@mui/x-scheduler/models';
+import { SchedulerOccurrencePlaceholderExternalDragData } from '@mui/x-scheduler/models';
 // TODO: Estimate if we can avoid all imports from the headless package.
 import { buildIsValidDropTarget } from '@mui/x-scheduler-headless/build-is-valid-drop-target';
 import {
@@ -18,7 +18,7 @@ const isValidDropTarget = buildIsValidDropTarget([
   'CalendarGridDayEvent',
 ]);
 
-const initialExternalEvents: CalendarOccurrencePlaceholderExternalDragData[] = [
+const initialExternalEvents: SchedulerOccurrencePlaceholderExternalDragData[] = [
   {
     id: 'external-1',
     title: 'External Event 1',
@@ -49,11 +49,11 @@ const initialExternalEvents: CalendarOccurrencePlaceholderExternalDragData[] = [
 export default function ExternalDragAndDrop() {
   const [events, setEvents] = React.useState(initialEvents);
   const [placeholder, setPlaceholder] =
-    React.useState<CalendarOccurrencePlaceholderExternalDragData | null>(null);
+    React.useState<SchedulerOccurrencePlaceholderExternalDragData | null>(null);
   const [externalEvents, setExternalEvents] = React.useState(initialExternalEvents);
 
   const handleEventDropInsideEventCalendar = (
-    removedEvent: CalendarOccurrencePlaceholderExternalDragData,
+    removedEvent: SchedulerOccurrencePlaceholderExternalDragData,
   ) => {
     setExternalEvents((prev) =>
       prev.filter((event) => event.id !== removedEvent.id),
@@ -79,7 +79,7 @@ export default function ExternalDragAndDrop() {
 
         setPlaceholder({
           ...eventData,
-          duration: end.diff(start).as('minutes'),
+          duration: end.value.diff(start.value).as('minutes'),
         });
       },
       onDragLeave: () => {
@@ -119,7 +119,7 @@ export default function ExternalDragAndDrop() {
           </div>
         )}
       </div>
-      <div style={{ flexGrow: 1 }}>
+      <div style={{ flexGrow: 1, height: 600 }}>
         <EventCalendar
           events={events}
           resources={resources}
@@ -128,8 +128,7 @@ export default function ExternalDragAndDrop() {
           areEventsDraggable
           canDragEventsFromTheOutside
           canDropEventsToTheOutside
-          preferences={{ isSidePanelOpen: false }}
-          className={classes.EventCalendar}
+          defaultPreferences={{ isSidePanelOpen: false }}
         />
       </div>
     </div>

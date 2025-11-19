@@ -23,8 +23,9 @@ export const usePanOnPressAndDrag = (
 ) => {
   const drawingArea = useSelector(store, selectorChartDrawingArea);
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
-  const startRef = React.useRef<readonly ZoomData[]>(null);
-  const config = useSelector(store, selectorPanInteractionConfig, ['pressAndDrag' as const]);
+  const isInteracting = React.useRef<boolean>(false);
+  const accumulatedChange = React.useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+  const config = useSelector(store, selectorPanInteractionConfig, 'pressAndDrag' as const);
 
   const isPanOnPressAndDragEnabled: boolean =
     Object.values(optionsLookup).some((v) => v.panning) && Boolean(config);
@@ -54,36 +55,40 @@ export const usePanOnPressAndDrag = (
 
     const handlePressAndDragStart = (event: PressAndDragEvent) => {
       if (!(event.detail.target as SVGElement)?.closest('[data-charts-zoom-slider]')) {
-        startRef.current = store.value.zoom.zoomData;
+        isInteracting.current = true;
+        accumulatedChange.current = { x: 0, y: 0 };
       }
     };
 
     const handlePressAndDragEnd = () => {
-      startRef.current = null;
+      isInteracting.current = false;
     };
 
-    const throttledCallback = rafThrottle(
-      (event: PressAndDragEvent, zoomData: readonly ZoomData[]) => {
-        const newZoomData = translateZoom(
-          zoomData,
-          { x: event.detail.activeDeltaX, y: -event.detail.activeDeltaY },
+    const throttledCallback = rafThrottle(() => {
+      const x = accumulatedChange.current.x;
+      const y = accumulatedChange.current.y;
+      accumulatedChange.current.x = 0;
+      accumulatedChange.current.y = 0;
+      setZoomDataCallback((prev) =>
+        translateZoom(
+          prev,
+          { x, y: -y },
           {
             width: drawingArea.width,
             height: drawingArea.height,
           },
           optionsLookup,
-        );
-
-        setZoomDataCallback(newZoomData);
-      },
-    );
+        ),
+      );
+    });
 
     const handlePressAndDrag = (event: PressAndDragEvent) => {
-      const zoomData = startRef.current;
-      if (!zoomData) {
+      if (!isInteracting.current) {
         return;
       }
-      throttledCallback(event, zoomData);
+      accumulatedChange.current.x += event.detail.deltaX;
+      accumulatedChange.current.y += event.detail.deltaY;
+      throttledCallback();
     };
 
     const pressAndDragHandler = instance.addInteractionListener(
@@ -114,6 +119,6 @@ export const usePanOnPressAndDrag = (
     drawingArea.height,
     setZoomDataCallback,
     store,
-    startRef,
+    isInteracting,
   ]);
 };

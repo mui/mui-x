@@ -30,16 +30,20 @@ import { useUtilityClasses } from './chartAxisZoomSliderTrackClasses';
 const ZoomSliderActiveTrackRect = styled('rect', {
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'preview',
 })<{ preview: boolean }>(({ theme }) => ({
-  fill:
-    theme.palette.mode === 'dark'
-      ? (theme.vars || theme).palette.grey[500]
-      : (theme.vars || theme).palette.grey[600],
+  fill: (theme.vars || theme).palette.grey[600],
+  ...theme.applyStyles('dark', {
+    fill: (theme.vars || theme).palette.grey[500],
+  }),
   cursor: 'grab',
   variants: [
     {
       props: { preview: true },
       style: {
         fill: 'transparent',
+        // Increases the specificity to override the default fill
+        ...theme.applyStyles('dark', {
+          fill: 'transparent',
+        }),
         rx: 4,
         ry: 4,
         stroke: theme.palette.grey[500],
@@ -75,7 +79,7 @@ export function ChartAxisZoomSliderActiveTrack({
 }: ChartAxisZoomSliderActiveTrackProps) {
   const { instance, svgRef } = useChartContext<[UseChartProZoomSignature]>();
   const store = useStore<[UseChartProZoomSignature]>();
-  const axis = useSelector(store, selectorChartAxis, [axisId]);
+  const axis = useSelector(store, selectorChartAxis, axisId);
   const drawingArea = useDrawingArea();
   const activePreviewRectRef = React.useRef<SVGRectElement>(null);
   const [startThumbEl, setStartThumbEl] = React.useState<SVGRectElement | null>(null);

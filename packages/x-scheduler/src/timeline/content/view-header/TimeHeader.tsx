@@ -3,10 +3,12 @@ import clsx from 'clsx';
 import { useStore } from '@base-ui-components/utils/store/useStore';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { useDayList } from '@mui/x-scheduler-headless/use-day-list';
-import { selectors } from '@mui/x-scheduler-headless/use-timeline';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useTimelineStoreContext } from '@mui/x-scheduler-headless/use-timeline-store-context';
 import { HeaderProps } from './Headers.types';
 import { TIME_UNITS_COUNT } from '../../constants';
+import { useFormatTime } from '../../../internals/hooks/useFormatTime';
+import { formatWeekDayMonthAndDayOfMonth } from '../../../internals/utils/date-utils';
 import './Headers.css';
 
 export function TimeHeader(props: HeaderProps) {
@@ -16,10 +18,8 @@ export function TimeHeader(props: HeaderProps) {
   const getDayList = useDayList();
   const store = useTimelineStoreContext();
 
-  const visibleDate = useStore(store, selectors.visibleDate);
-  const ampm = useStore(store, selectors.ampm);
-
-  const timeFormat = ampm ? 'hoursMinutes12h' : 'hoursMinutes24h';
+  const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
+  const formatTime = useFormatTime();
 
   const days = React.useMemo(
     () =>
@@ -35,7 +35,7 @@ export function TimeHeader(props: HeaderProps) {
       {days.map((day) => (
         <div key={day.key} className="TimeHeaderCell">
           <time dateTime={day.key} className="DayLabel">
-            {adapter.format(day.value, 'normalDateWithWeekday')}
+            {formatWeekDayMonthAndDayOfMonth(day.value, adapter)}
           </time>
           <div className="TimeCellsRow">
             {/* TODO: Make sure it works across DST */}
@@ -45,9 +45,7 @@ export function TimeHeader(props: HeaderProps) {
                 className="TimeCell"
                 style={{ '--hour': hour } as React.CSSProperties}
               >
-                <time className="TimeLabel">
-                  {adapter.format(adapter.setHours(day.value, hour), timeFormat)}
-                </time>
+                <time className="TimeLabel">{formatTime(adapter.setHours(day.value, hour))}</time>
               </div>
             ))}
           </div>

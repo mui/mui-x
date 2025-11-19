@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
 import { adapter, createSchedulerRenderer, describeConformance } from 'test/utils/scheduler';
@@ -6,7 +5,7 @@ import { adapter, createSchedulerRenderer, describeConformance } from 'test/util
 describe('<CalendarGrid.CurrentTimeIndicator />', () => {
   const { render } = createSchedulerRenderer();
 
-  const day = adapter.date();
+  const day = adapter.now('default');
 
   describeConformance(<CalendarGrid.CurrentTimeIndicator />, () => ({
     refInstanceof: window.HTMLDivElement,

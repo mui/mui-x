@@ -6,7 +6,7 @@ import tooltipGetter from './tooltip';
 import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
 import tooltipItemPositionGetter from './tooltipPosition';
 
-export const seriesConfig: ChartSeriesTypeConfig<'pie'> = {
+export const pieSeriesConfig: ChartSeriesTypeConfig<'pie'> = {
   colorProcessor: getColor,
   seriesProcessor,
   legendGetter,

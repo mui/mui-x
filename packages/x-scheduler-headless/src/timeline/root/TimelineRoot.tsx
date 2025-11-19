@@ -22,14 +22,14 @@ export const TimelineRoot = React.forwardRef(function TimelineRoot(
     ...elementProps
   } = componentProps;
 
-  const props = React.useMemo(() => ({ role: 'grid' }), []);
+  const props = { role: 'grid' };
 
   const store = useRefWithInit(() => new Store<State>({ items: itemsProp })).current;
 
   const contextValue = React.useMemo(() => ({ store }), [store]);
 
   useIsoLayoutEffect(() => {
-    store.apply({ items: itemsProp });
+    store.set('items', itemsProp);
   }, [store, itemsProp]);
 
   const element = useRenderElement('div', componentProps, {

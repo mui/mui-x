@@ -5,7 +5,11 @@ import { ChevronLeft, ChevronRight, PanelLeftClose, PanelLeftOpen } from 'lucide
 import { useStore } from '@base-ui-components/utils/store';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { selectors } from '@mui/x-scheduler-headless/use-event-calendar';
+import {
+  eventCalendarPreferenceSelectors,
+  eventCalendarViewSelectors,
+} from '@mui/x-scheduler-headless/event-calendar-selectors';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { DateNavigatorProps } from './DateNavigator.types';
 import { useTranslations } from '../../utils/TranslationsContext';
 import './DateNavigator.css';
@@ -22,9 +26,9 @@ export const DateNavigator = React.forwardRef(function DateNavigator(
   const translations = useTranslations();
 
   // Selector hooks
-  const view = useStore(store, selectors.view);
-  const visibleDate = useStore(store, selectors.visibleDate);
-  const isSidePanelOpen = useStore(store, selectors.preferences).isSidePanelOpen;
+  const view = useStore(store, eventCalendarViewSelectors.view);
+  const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
+  const isSidePanelOpen = useStore(store, eventCalendarPreferenceSelectors.isSidePanelOpen);
 
   return (
     <header
@@ -46,7 +50,7 @@ export const DateNavigator = React.forwardRef(function DateNavigator(
         )}
       </button>
       <p className="DateNavigatorLabel" aria-live="polite">
-        {adapter.format(visibleDate, 'month')} {adapter.format(visibleDate, 'year')}
+        {adapter.format(visibleDate, 'monthFullLetter')} {adapter.format(visibleDate, 'yearPadded')}
       </p>
       <div className="DateNavigatorButtonsContainer">
         <button

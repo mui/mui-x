@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { spy } from 'sinon';
 import { DatePicker, DatePickerProps } from '@mui/x-date-pickers/DatePicker';
 import { screen } from '@mui/internal-test-utils';

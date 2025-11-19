@@ -1,5 +1,4 @@
 'use client';
-import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import List, { ListProps } from '@mui/material/List';
@@ -77,7 +76,7 @@ function PickersShortcuts<TValue extends PickerValidValue>(props: PickersShortcu
       ...item,
       label: item.label,
       onClick: () => {
-        setValue(newValue, { changeImportance, shortcut: item });
+        setValue(newValue, { changeImportance, shortcut: item, source: 'view' });
       },
       disabled: !isValidValue(newValue),
     };

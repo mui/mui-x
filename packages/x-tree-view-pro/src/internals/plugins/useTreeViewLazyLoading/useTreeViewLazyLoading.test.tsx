@@ -1,15 +1,15 @@
 import { act, fireEvent } from '@mui/internal-test-utils';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
-import { TreeViewBaseItem } from '@mui/x-tree-view/models';
-import {
-  UseTreeViewExpansionSignature,
-  UseTreeViewLazyLoadingSignature,
-} from '@mui/x-tree-view/internals';
 
-type ItemType = TreeViewBaseItem<{
+// TODO #20051: Replace with imported type
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+type RichTreeViewProStore<A, B> = any;
+
+interface ItemType {
   id: string;
   childrenCount?: number;
-}>;
+  children?: ItemType[];
+}
 
 const mockFetchData = async (parentId): Promise<ItemType[]> => {
   const items = [
@@ -32,12 +32,13 @@ async function awaitMockFetch() {
   });
 }
 
-describeTreeView<[UseTreeViewLazyLoadingSignature, UseTreeViewExpansionSignature]>(
-  'useTreeViewLabel plugin',
+describeTreeView<RichTreeViewProStore<any, any>>(
+  'TreeViewLazyLoadingPlugin',
   ({ render, treeViewComponentName }) => {
     if (treeViewComponentName === 'SimpleTreeView' || treeViewComponentName === 'RichTreeView') {
       return;
     }
+
     describe('interaction', () => {
       it('should load children when expanding an item', async () => {
         const view = render({
@@ -73,6 +74,24 @@ describeTreeView<[UseTreeViewLazyLoadingSignature, UseTreeViewExpansionSignature
         await awaitMockFetch();
         expect(view.isItemExpanded('1')).to.equal(false);
         expect(view.getAllTreeItemIds()).to.deep.equal(['1']);
+      });
+
+      it('should load children if item has unknown children count', async () => {
+        const view = render({
+          items: [{ id: '1', childrenCount: -1 }],
+          dataSource: {
+            getChildrenCount: (item) => item?.childrenCount as number,
+            getTreeItems: mockFetchData,
+          },
+        });
+
+        expect(view.isItemExpanded('1')).to.equal(false);
+        expect(view.getAllTreeItemIds()).to.deep.equal(['1']);
+
+        fireEvent.click(view.getItemContent('1'));
+        await awaitMockFetch();
+        expect(view.isItemExpanded('1')).to.equal(true);
+        expect(view.getAllTreeItemIds()).to.deep.equal(['1', '1-1']);
       });
 
       it('should handle errors during fetching', async () => {

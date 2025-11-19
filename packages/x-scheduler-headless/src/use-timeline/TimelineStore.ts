@@ -1,6 +1,11 @@
+import { EMPTY_OBJECT } from '@base-ui-components/utils/empty';
 import { TimelinePreferences, TimelineView } from '../models';
 import { Adapter } from '../use-adapter';
-import { SchedulerParametersToStateMapper, SchedulerStore } from '../utils/SchedulerStore';
+import {
+  DEFAULT_SCHEDULER_PREFERENCES,
+  SchedulerParametersToStateMapper,
+  SchedulerStore,
+} from '../utils/SchedulerStore';
 import { TimelineState, TimelineParameters } from './TimelineStore.types';
 
 export const DEFAULT_VIEWS: TimelineView[] = ['time', 'days', 'weeks', 'months', 'years'];
@@ -11,16 +16,15 @@ const deriveStateFromParameters = <TEvent extends object, TResource extends obje
 ) => ({
   views: parameters.views ?? DEFAULT_VIEWS,
 });
-export const DEFAULT_PREFERENCES: TimelinePreferences = {
-  ampm: true,
-};
+
+export const DEFAULT_PREFERENCES: TimelinePreferences = DEFAULT_SCHEDULER_PREFERENCES;
 
 const mapper: SchedulerParametersToStateMapper<TimelineState, TimelineParameters<any, any>> = {
   getInitialState: (schedulerInitialState, parameters) => ({
     ...schedulerInitialState,
     ...deriveStateFromParameters(parameters),
     view: parameters.view ?? parameters.defaultView ?? DEFAULT_VIEW,
-    preferences: { ...DEFAULT_PREFERENCES, ...parameters.preferences },
+    preferences: parameters.preferences ?? parameters.defaultPreferences ?? EMPTY_OBJECT,
   }),
   updateStateFromParameters: (newSchedulerState, parameters, updateModel) => {
     const newState: Partial<TimelineState> = {
@@ -29,6 +33,8 @@ const mapper: SchedulerParametersToStateMapper<TimelineState, TimelineParameters
     };
 
     updateModel(newState, 'view', 'defaultView');
+    updateModel(newState, 'preferences', 'defaultPreferences');
+
     return newState;
   },
 };

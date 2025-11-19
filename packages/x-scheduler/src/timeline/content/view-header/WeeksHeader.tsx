@@ -4,10 +4,11 @@ import { useStore } from '@base-ui-components/utils/store/useStore';
 import { useAdapter, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
 import { useDayList } from '@mui/x-scheduler-headless/use-day-list';
 import { useWeekList } from '@mui/x-scheduler-headless/use-week-list';
-import { selectors } from '@mui/x-scheduler-headless/use-timeline';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useTimelineStoreContext } from '@mui/x-scheduler-headless/use-timeline-store-context';
-import { CalendarProcessedDate } from '@mui/x-scheduler-headless/models';
+import { SchedulerProcessedDate } from '@mui/x-scheduler-headless/models';
 import { HeaderProps } from './Headers.types';
+import { formatWeekDayMonthAndDayOfMonth } from '../../../internals/utils/date-utils';
 import { WEEKS_UNIT_COUNT } from '../../constants';
 import './Headers.css';
 
@@ -19,7 +20,7 @@ export function WeeksHeader(props: HeaderProps) {
   const getWeekList = useWeekList();
   const store = useTimelineStoreContext();
 
-  const visibleDate = useStore(store, selectors.visibleDate);
+  const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
 
   const weeks = React.useMemo(() => {
     const weeksFirstDays = getWeekList({
@@ -27,7 +28,7 @@ export function WeeksHeader(props: HeaderProps) {
       amount: amount || WEEKS_UNIT_COUNT,
     });
 
-    const tempWeeks: { date: CalendarProcessedDate }[][] = [];
+    const tempWeeks: { date: SchedulerProcessedDate }[][] = [];
     for (let i = 0; i < weeksFirstDays.length; i += 1) {
       const weekStart = weeksFirstDays[i];
       const weekDays = getDayList({ date: weekStart, amount: 'week' });
@@ -45,8 +46,8 @@ export function WeeksHeader(props: HeaderProps) {
       {weeks.map((week) => (
         <div key={`${week[0].date.key}-week`} className="TimeHeaderCell">
           <div className="DayLabel">
-            {adapter.format(week[0].date.value, 'normalDateWithWeekday')} -{' '}
-            {adapter.format(week[6].date.value, 'normalDateWithWeekday')}
+            {formatWeekDayMonthAndDayOfMonth(week[0].date.value, adapter)} -{' '}
+            {formatWeekDayMonthAndDayOfMonth(week[6].date.value, adapter)}
           </div>
           <div className="WeekDaysRow">
             {week.map((day) => (
@@ -56,7 +57,7 @@ export function WeeksHeader(props: HeaderProps) {
                 className="WeekDayCell WeekDay"
                 data-weekend={isWeekend(adapter, day.date.value) ? '' : undefined}
               >
-                {adapter.format(day.date.value, 'weekdayShort')}
+                {adapter.format(day.date.value, 'weekday1Letter')}
               </time>
             ))}
           </div>

@@ -1,4 +1,5 @@
-import { ChartOptionalRootSelector, createSelector } from '../../utils/selectors';
+import { createSelector } from '@mui/x-internals/store';
+import { ChartOptionalRootSelector } from '../../utils/selectors';
 import { UseChartKeyboardNavigationSignature } from './useChartKeyboardNavigation.types';
 import { ProcessedSeries, selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';
 import {
@@ -9,33 +10,46 @@ import { ComputeResult } from '../useChartCartesianAxis/computeAxisValue';
 import { ChartSeriesType } from '../../../../models/seriesType/config';
 import { SeriesId } from '../../../../models/seriesType/common';
 import { AxisId, AxisItemIdentifier, ChartsAxisProps } from '../../../../models/axis';
+import { FocusedItemData } from '../../../../hooks/useFocusedItem';
 
 const selectKeyboardNavigation: ChartOptionalRootSelector<UseChartKeyboardNavigationSignature> = (
   state,
 ) => state.keyboardNavigation;
 
+export const selectorChartsItemIsFocused = createSelector(
+  selectKeyboardNavigation,
+  (keyboardNavigationState, item: FocusedItemData) => {
+    return (
+      keyboardNavigationState?.item != null &&
+      keyboardNavigationState.item.type === item.seriesType &&
+      keyboardNavigationState.item.seriesId === item.seriesId &&
+      keyboardNavigationState.item.dataIndex === item.dataIndex
+    );
+  },
+);
+
 export const selectorChartsHasFocusedItem = createSelector(
-  [selectKeyboardNavigation],
+  selectKeyboardNavigation,
   (keyboardNavigationState) => keyboardNavigationState?.item != null,
 );
 
 export const selectorChartsFocusedSeriesType = createSelector(
-  [selectKeyboardNavigation],
+  selectKeyboardNavigation,
   (keyboardNavigationState) => keyboardNavigationState?.item?.type,
 );
 
 export const selectorChartsFocusedSeriesId = createSelector(
-  [selectKeyboardNavigation],
+  selectKeyboardNavigation,
   (keyboardNavigationState) => keyboardNavigationState?.item?.seriesId,
 );
 
 export const selectorChartsFocusedDataIndex = createSelector(
-  [selectKeyboardNavigation],
+  selectKeyboardNavigation,
   (keyboardNavigationState) => keyboardNavigationState?.item?.dataIndex,
 );
 
 export const selectorChartsIsKeyboardNavigationEnabled = createSelector(
-  [selectKeyboardNavigation],
+  selectKeyboardNavigation,
   (keyboardNavigationState) => !!keyboardNavigationState?.enableKeyboardNavigation,
 );
 
@@ -74,29 +88,25 @@ const createSelectAxisHighlight =
   };
 
 export const selectorChartsKeyboardXAxisIndex = createSelector(
-  [
-    selectorChartsFocusedSeriesType,
-    selectorChartsFocusedSeriesId,
-    selectorChartsFocusedDataIndex,
-    selectorChartXAxis,
-    selectorChartSeriesProcessed,
-  ],
+  selectorChartsFocusedSeriesType,
+  selectorChartsFocusedSeriesId,
+  selectorChartsFocusedDataIndex,
+  selectorChartXAxis,
+  selectorChartSeriesProcessed,
   createSelectAxisHighlight('x'),
 );
 
 export const selectorChartsKeyboardYAxisIndex = createSelector(
-  [
-    selectorChartsFocusedSeriesType,
-    selectorChartsFocusedSeriesId,
-    selectorChartsFocusedDataIndex,
-    selectorChartYAxis,
-    selectorChartSeriesProcessed,
-  ],
+  selectorChartsFocusedSeriesType,
+  selectorChartsFocusedSeriesId,
+  selectorChartsFocusedDataIndex,
+  selectorChartYAxis,
+  selectorChartSeriesProcessed,
   createSelectAxisHighlight('y'),
 );
 
 export const selectorChartsKeyboardItem = createSelector(
-  [selectKeyboardNavigation],
+  selectKeyboardNavigation,
   function selectorChartsKeyboardItem(keyboardState) {
     if (keyboardState?.item == null) {
       return null;
@@ -111,7 +121,9 @@ export const selectorChartsKeyboardItem = createSelector(
 );
 
 export const selectorChartsKeyboardItemIsDefined = createSelector(
-  [selectorChartsFocusedSeriesType, selectorChartsFocusedSeriesId, selectorChartsFocusedDataIndex],
+  selectorChartsFocusedSeriesType,
+  selectorChartsFocusedSeriesId,
+  selectorChartsFocusedDataIndex,
   function selectorChartsKeyboardItemIsDefined(seriesType, seriesId, dataIndex) {
     return seriesId !== undefined && dataIndex !== undefined;
   },

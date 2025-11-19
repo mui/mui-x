@@ -22,7 +22,7 @@ import {
   getLookupFromArray,
 } from './useTreeViewSelection.utils';
 import { selectionSelectors } from './useTreeViewSelection.selectors';
-import { useTreeViewSelectionItemPlugin } from './useTreeViewSelection.itemPlugin';
+import { useTreeViewSelectionItemPlugin } from './itemPlugin';
 
 export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature> = ({
   store,

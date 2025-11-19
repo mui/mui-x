@@ -7,7 +7,14 @@
     "import { ChartsSurface } from '@mui/x-charts-pro';",
     "import { ChartsSurface } from '@mui/x-charts-premium';"
   ],
-  "classes": [],
+  "classes": [
+    {
+      "key": "root",
+      "className": "MuiChartsSurface-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    }
+  ],
   "spread": true,
   "themeDefaultProps": null,
   "muiName": "MuiChartsSurface",

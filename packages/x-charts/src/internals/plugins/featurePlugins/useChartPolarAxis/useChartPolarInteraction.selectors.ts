@@ -1,6 +1,6 @@
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
+import { createSelector, createSelectorMemoizedWithOptions } from '@mui/x-internals/store';
 import { AxisId, ChartsAxisProps, AxisItemIdentifier } from '../../../../models/axis';
-import { createSelector } from '../../utils/selectors';
 import {
   selectorChartsInteractionPointerX,
   selectorChartsInteractionPointerY,
@@ -33,7 +33,9 @@ function indexGetter(
  * Helper to get the rotation associated to the interaction coordinate.
  */
 const selectorChartsInteractionRotationAngle = createSelector(
-  [selectorChartsInteractionPointerX, selectorChartsInteractionPointerY, selectorChartPolarCenter],
+  selectorChartsInteractionPointerX,
+  selectorChartsInteractionPointerY,
+  selectorChartPolarCenter,
   (x, y, center) => {
     if (x === null || y === null) {
       return null;
@@ -43,19 +45,25 @@ const selectorChartsInteractionRotationAngle = createSelector(
 );
 
 export const selectorChartsInteractionRotationAxisIndex = createSelector(
-  [selectorChartsInteractionRotationAngle, selectorChartRotationAxis, optionalGetAxisId],
+  selectorChartsInteractionRotationAngle,
+  selectorChartRotationAxis,
+  optionalGetAxisId,
   (rotation, rotationAxis, id = rotationAxis.axisIds[0]) =>
     rotation === null ? null : indexGetter(rotation, rotationAxis, id),
 );
 
 export const selectorChartsInteractionRotationAxisIndexes = createSelector(
-  [selectorChartsInteractionRotationAngle, selectorChartRotationAxis, optionalGetAxisIds],
+  selectorChartsInteractionRotationAngle,
+  selectorChartRotationAxis,
+  optionalGetAxisIds,
   (rotation, rotationAxis, ids = rotationAxis.axisIds) =>
     rotation === null ? null : indexGetter(rotation, rotationAxis, ids),
 );
 
 export const selectorChartsInteractionRotationAxisValue = createSelector(
-  [selectorChartRotationAxis, selectorChartsInteractionRotationAxisIndex, optionalGetAxisId],
+  selectorChartRotationAxis,
+  selectorChartsInteractionRotationAxisIndex,
+  optionalGetAxisId,
   (rotationAxis, rotationIndex, id = rotationAxis.axisIds[0]) => {
     if (rotationIndex === null || rotationIndex === -1 || rotationAxis.axisIds.length === 0) {
       return null;
@@ -70,7 +78,9 @@ export const selectorChartsInteractionRotationAxisValue = createSelector(
 );
 
 export const selectorChartsInteractionRotationAxisValues = createSelector(
-  [selectorChartRotationAxis, selectorChartsInteractionRotationAxisIndexes, optionalGetAxisIds],
+  selectorChartRotationAxis,
+  selectorChartsInteractionRotationAxisIndexes,
+  optionalGetAxisIds,
   (rotationAxis, rotationIndexes, ids = rotationAxis.axisIds) => {
     if (rotationIndexes === null) {
       return null;
@@ -89,44 +99,40 @@ export const selectorChartsInteractionRotationAxisValues = createSelector(
 /**
  * Get rotation-axis ids and corresponding data index that should be display in the tooltip.
  */
-export const selectorChartsInteractionTooltipRotationAxes = createSelector(
-  [selectorChartsInteractionRotationAxisIndexes, selectorChartRotationAxis],
-  (indexes, axes) => {
-    if (indexes === null) {
-      return [];
-    }
+export const selectorChartsInteractionTooltipRotationAxes = createSelectorMemoizedWithOptions({
+  memoizeOptions: {
+    // Keep the same reference if array content is the same.
+    // If possible, avoid this pattern by creating selectors that
+    // uses string/number as arguments.
+    resultEqualityCheck: isDeepEqual,
+  },
+})(selectorChartsInteractionRotationAxisIndexes, selectorChartRotationAxis, (indexes, axes) => {
+  if (indexes === null) {
+    return [];
+  }
 
-    return axes.axisIds
-      .map(
-        (axisId, axisIndex): AxisItemIdentifier => ({
-          axisId,
-          dataIndex: indexes[axisIndex],
-        }),
-      )
-      .filter(({ axisId, dataIndex }) => axes.axis[axisId].triggerTooltip && dataIndex >= 0);
-  },
-  {
-    memoizeOptions: {
-      // Keep the same reference if array content is the same.
-      // If possible, avoid this pattern by creating selectors that
-      // uses string/number as arguments.
-      resultEqualityCheck: isDeepEqual,
-    },
-  },
-);
+  return axes.axisIds
+    .map(
+      (axisId, axisIndex): AxisItemIdentifier => ({
+        axisId,
+        dataIndex: indexes[axisIndex],
+      }),
+    )
+    .filter(({ axisId, dataIndex }) => axes.axis[axisId].triggerTooltip && dataIndex >= 0);
+});
 
 /**
  * Get radius-axis ids and corresponding data index that should be displayed in the tooltip.
  */
-export const selectorChartsInteractionTooltipRadiusAxes = createSelector([], () => {
+export const selectorChartsInteractionTooltipRadiusAxes = () => {
   // TODO implement this selector and add it to the `selectorChartsInteractionPolarAxisTooltip`
   return [];
-});
+};
 
 /**
  * Return `true` if the axis tooltip has something to display.
  */
 export const selectorChartsInteractionPolarAxisTooltip = createSelector(
-  [selectorChartsInteractionTooltipRotationAxes],
+  selectorChartsInteractionTooltipRotationAxes,
   (rotationTooltip) => rotationTooltip.length > 0,
 );

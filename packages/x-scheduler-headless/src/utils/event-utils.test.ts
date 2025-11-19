@@ -1,29 +1,24 @@
-import { adapter } from 'test/utils/scheduler';
-import { CalendarEventOccurrence } from '@mui/x-scheduler-headless/models';
+import { adapter, createOccurrenceFromEvent } from 'test/utils/scheduler';
 import { getDaysTheOccurrenceIsVisibleOn } from './event-utils';
 import { processDate } from '../process-date';
 
 describe('event-utils', () => {
-  const createEventOccurrence = (
-    id: string,
-    start: string,
-    end: string,
-  ): CalendarEventOccurrence => ({
-    id,
-    key: id,
-    start: adapter.date(start),
-    end: adapter.date(end),
-    title: `Event ${id}`,
-    allDay: true,
-  });
+  const createEventOccurrence = (id: string, start: string, end: string) =>
+    createOccurrenceFromEvent({
+      id,
+      start: adapter.date(start, 'default'),
+      end: adapter.date(end, 'default'),
+      title: `Event ${id}`,
+      allDay: true,
+    });
 
   describe('getDaysTheOccurrenceIsVisibleOn', () => {
     const days = [
-      processDate(adapter.date('2024-01-14'), adapter),
-      processDate(adapter.date('2024-01-15'), adapter),
-      processDate(adapter.date('2024-01-16'), adapter),
-      processDate(adapter.date('2024-01-17'), adapter),
-      processDate(adapter.date('2024-01-18'), adapter),
+      processDate(adapter.date('2024-01-14', 'default'), adapter),
+      processDate(adapter.date('2024-01-15', 'default'), adapter),
+      processDate(adapter.date('2024-01-16', 'default'), adapter),
+      processDate(adapter.date('2024-01-17', 'default'), adapter),
+      processDate(adapter.date('2024-01-18', 'default'), adapter),
     ];
 
     it('should return all days when event spans multiple days', () => {

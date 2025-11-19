@@ -2,7 +2,7 @@ import * as React from 'react';
 import { DateTime } from 'luxon';
 import capitalize from '@mui/utils/capitalize';
 import {
-  CalendarResource,
+  SchedulerResource,
   SchedulerEventModelStructure,
 } from '@mui/x-scheduler/models';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
@@ -112,13 +112,13 @@ const initialEvents: CustomEvent[] = [
   },
 ];
 
-const rooms: CalendarResource[] = [
+const rooms: SchedulerResource[] = [
   { id: 'Room A', title: 'Room A', eventColor: 'violet' },
   { id: 'Room B', title: 'Room B', eventColor: 'jade' },
   { id: 'Room C', title: 'Room C', eventColor: 'lime' },
 ];
 
-const classes: CalendarResource[] = [
+const classes: SchedulerResource[] = [
   { id: 'french', title: 'French', eventColor: 'orange' },
   { id: 'science', title: 'Science', eventColor: 'cyan' },
   { id: 'english', title: 'English', eventColor: 'pink' },
@@ -140,7 +140,11 @@ export default function ResourceProperty() {
         resource: {
           getter: (event) => event[resourceProperty],
           setter: (event, newValue) => {
-            event[resourceProperty] = newValue;
+            if (newValue == null) {
+              delete event[resourceProperty];
+            } else {
+              event[resourceProperty] = newValue;
+            }
             return event;
           },
         },

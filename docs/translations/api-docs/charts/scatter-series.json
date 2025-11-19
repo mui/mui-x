@@ -2,7 +2,12 @@
   "interfaceDescription": "",
   "propertiesDescriptions": {
     "type": { "description": "" },
-    "color": { "description": "Color to use when displaying the series." },
+    "color": {
+      "description": "Color to use when displaying the series.<br />If <code>colorGetter</code> is provided, it will be used to get the color for each data point instead.<br />Otherwise, this color will be used for all data points in the series."
+    },
+    "colorGetter": {
+      "description": "A function that returns a color based on the value and/or the data index of a point.<br />The returned color is used when displaying the specific data point, e.g., a marker in a line chart.<br />When the color of the entire series is required, e.g., in legends, the <code>color</code> property is used instead."
+    },
     "data": { "description": "" },
     "datasetKeys": {
       "description": "The keys used to retrieve data from the dataset.<br /><br />When this prop is provided, all of <code>x</code>, <code>y</code>, and <code>id</code> must be provided.<br />While <code>z</code> is optional."

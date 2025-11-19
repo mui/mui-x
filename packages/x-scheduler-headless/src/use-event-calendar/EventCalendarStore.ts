@@ -1,4 +1,5 @@
 import { warn } from '@base-ui-components/utils/warn';
+import { EMPTY_OBJECT } from '@base-ui-components/utils/empty';
 import {
   EventCalendarPreferences,
   CalendarView,
@@ -7,17 +8,22 @@ import {
   EventCalendarPreferencesMenuConfig,
 } from '../models';
 import { Adapter } from '../use-adapter/useAdapter.types';
-import { SchedulerParametersToStateMapper, SchedulerStore } from '../utils/SchedulerStore';
+import {
+  DEFAULT_SCHEDULER_PREFERENCES,
+  SchedulerParametersToStateMapper,
+  SchedulerStore,
+} from '../utils/SchedulerStore';
 import { EventCalendarState, EventCalendarParameters } from './EventCalendarStore.types';
 
 export const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
 export const DEFAULT_VIEW: CalendarView = 'week';
-export const DEFAULT_PREFERENCES: EventCalendarPreferences = {
+
+export const DEFAULT_EVENT_CALENDAR_PREFERENCES: EventCalendarPreferences = {
+  ...DEFAULT_SCHEDULER_PREFERENCES,
   showWeekends: true,
   showWeekNumber: false,
   showEmptyDaysInAgenda: true,
   isSidePanelOpen: true,
-  ampm: true,
 };
 export const DEFAULT_PREFERENCES_MENU_CONFIG: EventCalendarPreferencesMenuConfig = {
   toggleWeekendVisibility: true,
@@ -39,7 +45,7 @@ const mapper: SchedulerParametersToStateMapper<
   getInitialState: (schedulerInitialState, parameters) => ({
     ...schedulerInitialState,
     ...deriveStateFromParameters(parameters),
-    preferences: { ...DEFAULT_PREFERENCES, ...parameters.preferences },
+    preferences: parameters.preferences ?? parameters.defaultPreferences ?? EMPTY_OBJECT,
     preferencesMenuConfig:
       parameters.preferencesMenuConfig === false
         ? parameters.preferencesMenuConfig
@@ -57,6 +63,7 @@ const mapper: SchedulerParametersToStateMapper<
     };
 
     updateModel(newState, 'view', 'defaultView');
+    updateModel(newState, 'preferences', 'defaultPreferences');
     return newState;
   },
 };
@@ -118,7 +125,7 @@ export class EventCalendarStore<
     const canSetView = viewProp === undefined && hasViewChange;
 
     if (canSetVisibleDate || canSetView) {
-      this.apply({
+      this.update({
         ...(canSetVisibleDate ? { visibleDate } : undefined),
         ...(canSetView ? { view } : undefined),
       });
@@ -180,12 +187,20 @@ export class EventCalendarStore<
    */
   public setPreferences = (
     partialPreferences: Partial<EventCalendarPreferences>,
-    _event: React.UIEvent | Event,
+    event: React.UIEvent | Event,
   ) => {
-    this.set('preferences', {
+    const { preferences: preferencesProp, onPreferencesChange } = this.parameters;
+
+    const updated = {
       ...this.state.preferences,
       ...partialPreferences,
-    });
+    };
+
+    if (preferencesProp === undefined) {
+      this.set('preferences', updated);
+    }
+
+    onPreferencesChange?.(updated, event);
   };
 
   /**

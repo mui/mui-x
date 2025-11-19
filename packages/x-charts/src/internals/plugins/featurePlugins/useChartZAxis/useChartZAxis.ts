@@ -84,10 +84,7 @@ export const useChartZAxis: ChartPlugin<UseChartZAxisSignature> = ({ params, sto
       return;
     }
 
-    store.update((prev) => ({
-      ...prev,
-      zAxis: getZAxisState(zAxis, dataset),
-    }));
+    store.set('zAxis', getZAxisState(zAxis, dataset));
   }, [zAxis, dataset, store]);
 
   return {};

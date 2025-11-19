@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 
@@ -49,6 +48,11 @@ const knobs = {
     knob: 'switch',
     defaultValue: false,
   },
+  wheelPan: {
+    displayName: 'Pan on wheel',
+    knob: 'switch',
+    defaultValue: true,
+  },
 } as const;
 
 export default function ZoomAndPanInteractions() {
@@ -82,6 +86,9 @@ export default function ZoomAndPanInteractions() {
         }
         if (props.pressAndDrag) {
           panInteractions.push('pressAndDrag');
+        }
+        if (props.wheelPan) {
+          panInteractions.push('wheel');
         }
 
         const zoomInteractionConfig = {
@@ -137,6 +144,9 @@ export default function ZoomAndPanInteractions() {
         }
         if (props.pressAndDrag) {
           panInteractions.push('pressAndDrag');
+        }
+        if (props.wheelPan) {
+          panInteractions.push('wheel');
         }
 
         const zoomConfig =

@@ -125,6 +125,7 @@ export default defineConfig(
       'material-ui/straight-quotes': 'error',
       // turn off global react compiler plugin as it's controlled per package on this repo
       'react-compiler/react-compiler': 'off',
+      'react/react-in-jsx-scope': 'off',
       'import/no-relative-packages': 'error',
       'import/no-restricted-paths': [
         'error',
@@ -178,15 +179,12 @@ export default defineConfig(
           additionalHooks: '(useEnhancedEffect|useIsoLayoutEffect|useEffectAfterFirstRender)',
         },
       ],
-
-      // TODO enable:
-      'react-hooks/refs': 'off',
-      'react-hooks/globals': 'off',
       'react-hooks/immutability': 'off',
+      'react-hooks/globals': 'off',
+      'react-hooks/refs': 'off',
       'react-hooks/preserve-manual-memoization': 'off',
-      'react-hooks/incompatible-library': 'off',
-      'react-hooks/static-components': 'off',
       'react-hooks/purity': 'off',
+      'react-hooks/static-components': 'off',
     },
   },
   // Test start

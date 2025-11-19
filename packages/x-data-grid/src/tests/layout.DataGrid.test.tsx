@@ -954,8 +954,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
           </ErrorBoundary>,
         );
       }).toErrorDev([
-        'The Data Grid component requires all rows to have a unique `id` property',
-        reactMajor < 19 &&
+        reactMajor >= 19 &&
           'The Data Grid component requires all rows to have a unique `id` property',
         reactMajor < 19 && 'The above error occurred in the <ForwardRef(DataGrid2)> component',
       ]);

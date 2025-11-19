@@ -1,4 +1,3 @@
-import * as React from 'react';
 import SimpleScatterChart from 'docsx/data/charts/scatter-demo/SimpleScatterChart';
 import MultipleYAxesScatterChart from 'docsx/data/charts/scatter-demo/MultipleYAxesScatterChart';
 import { ChartThumbnailCard, ChartThumbnailGridWrapper } from './ChartExampleThumbnailGrid';

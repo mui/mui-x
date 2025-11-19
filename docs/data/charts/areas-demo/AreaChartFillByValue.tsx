@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { ScaleLinear } from 'd3-scale';
 import { green, red } from '@mui/material/colors';
 import Stack from '@mui/material/Stack';
