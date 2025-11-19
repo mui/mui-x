@@ -58,7 +58,7 @@ And a value of `-1` will make bars overlap on top of each other.
 
 ## Stacking
 
-Bar series accept a string property named `stack`. 
+Bar series accept a string property named `stack`.
 Series with the same `stack` value are stacked on top of each other.
 
 {{"demo": "StackBars.js"}}

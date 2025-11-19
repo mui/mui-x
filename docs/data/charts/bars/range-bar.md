@@ -71,7 +71,7 @@ You read more about it in bar chart's [Click event](/x/react-charts/bars/#click-
 
 ## Animation
 
-Animation in range bar charts works similarly to bar charts. 
+Animation in range bar charts works similarly to bar charts.
 
 You read more about it in bar chart's [Animation](/x/react-charts/bars/#animation) page.
 

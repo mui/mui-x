@@ -1,6 +1,6 @@
-import { BarChartProps } from '@mui/x-charts/BarChart';
 import { useBarChartProps } from '@mui/x-charts/internals';
 import { RangeBarPlotProps } from './RangeBar/RangeBarPlot';
+import { BarChartProProps } from './BarChartPro';
 
 /**
  * A helper function that extracts BarChartProProps from the input props
@@ -9,7 +9,7 @@ import { RangeBarPlotProps } from './RangeBar/RangeBarPlot';
  * @param props The input props for BarChartPro
  * @returns An object with props for the children components of BarChartPro
  */
-export function useBarChartProProps(props: BarChartProps) {
+export function useBarChartProProps(props: BarChartProProps) {
   const barChartProps = useBarChartProps(props);
 
   const rangeBarPlotProps: RangeBarPlotProps = {
