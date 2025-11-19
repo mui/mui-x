@@ -22,12 +22,13 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
 
   // Selector hooks
   const isDraggable = useStore(store, timelineEventSelectors.isDraggable);
-  const isResizable = useStore(
+  const isStartResizable = useStore(
     store,
     timelineEventSelectors.isResizable,
     occurrence.id,
-    'timeline',
+    'start',
   );
+  const isEndResizable = useStore(store, timelineEventSelectors.isResizable, occurrence.id, 'end');
   const color = useStore(store, schedulerEventSelectors.color, occurrence.id);
 
   // Feature hooks
@@ -63,11 +64,11 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       {...sharedProps}
     >
-      {isResizable && (
+      {isStartResizable && (
         <Timeline.EventResizeHandler side="start" className="TimelineEventResizeHandler" />
       )}
       {occurrence.title}
-      {isResizable && (
+      {isEndResizable && (
         <Timeline.EventResizeHandler side="end" className="TimelineEventResizeHandler" />
       )}
     </Timeline.Event>

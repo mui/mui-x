@@ -26,7 +26,18 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   // Selector hooks
   const isRecurring = Boolean(occurrence.rrule);
   const isDraggable = useStore(store, eventCalendarEventSelectors.isDraggable, occurrence.id);
-  const isResizable = useStore(store, eventCalendarEventSelectors.isResizable, occurrence.id);
+  const isStartResizable = useStore(
+    store,
+    eventCalendarEventSelectors.isResizable,
+    occurrence.id,
+    'start',
+  );
+  const isEndResizable = useStore(
+    store,
+    eventCalendarEventSelectors.isResizable,
+    occurrence.id,
+    'end',
+  );
   const color = useStore(store, schedulerEventSelectors.color, occurrence.id);
 
   // Feature hooks
@@ -127,11 +138,11 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       {...sharedProps}
     >
-      {isResizable && (
+      {isStartResizable && (
         <CalendarGrid.TimeEventResizeHandler side="start" className="TimeGridEventResizeHandler" />
       )}
       {content}
-      {isResizable && (
+      {isEndResizable && (
         <CalendarGrid.TimeEventResizeHandler side="end" className="TimeGridEventResizeHandler" />
       )}
     </CalendarGrid.TimeEvent>

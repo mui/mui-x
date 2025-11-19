@@ -105,4 +105,77 @@ export const schedulerEventSelectors = {
   canDropEventsToTheOutside: createSelector(
     (state: State) => state.canDropEventsToTheOutside && !state.readOnly,
   ),
+  isDraggable: createSelector(
+    isEventReadOnlySelector,
+    processedEventSelector,
+    (state: State) => state.areEventsDraggable,
+    (state: State) => state.eventModelStructure,
+    (
+      isEventReadOnly,
+      processedEvent,
+      areEventsDraggable,
+      eventModelStructure,
+      _eventId: SchedulerEventId,
+    ) => {
+      if (isEventReadOnly) {
+        return false;
+      }
+
+      if (eventModelStructure?.start && !eventModelStructure?.start.setter) {
+        return false;
+      }
+
+      if (eventModelStructure?.end && !eventModelStructure?.end.setter) {
+        return false;
+      }
+
+      // If the `draggable` property is defined on the event, it takes precedence
+      if (processedEvent!.draggable === true) {
+        return true;
+      }
+
+      // Otherwise, fall back to the component-level setting
+      return areEventsDraggable;
+    },
+  ),
+  isResizable: createSelector(
+    isEventReadOnlySelector,
+    processedEventSelector,
+    (state: State) => state.areEventsResizable,
+    (state: State) => state.eventModelStructure,
+    (
+      isEventReadonly,
+      processedEvent,
+      areEventsResizable,
+      eventModelStructure,
+      _eventId: SchedulerEventId,
+      side: 'start' | 'end',
+    ) => {
+      if (isEventReadonly) {
+        return false;
+      }
+
+      if (side === 'start' && eventModelStructure?.start && !eventModelStructure?.start.setter) {
+        return false;
+      }
+
+      if (side === 'end' && eventModelStructure?.end && !eventModelStructure?.end.setter) {
+        return false;
+      }
+
+      // If the `resizable` property is defined on the event, it takes precedence
+      if (processedEvent!.resizable !== false) {
+        if (processedEvent!.resizable === true) {
+          return true;
+        }
+
+        if (processedEvent!.resizable === side) {
+          return true;
+        }
+      }
+
+      // Otherwise, fall back to the component-level setting
+      return areEventsResizable;
+    },
+  ),
 };
