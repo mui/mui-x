@@ -100,8 +100,6 @@ export const useGridPaginationModel = (
     [apiRef, logger],
   );
 
-  const debouncedSetPage = React.useMemo(() => debounce(setPage, 0), [setPage]);
-
   const setPageSize = React.useCallback<GridPaginationModelApi['setPageSize']>(
     (pageSize) => {
       const currentModel = gridPaginationModelSelector(apiRef);
@@ -258,11 +256,11 @@ export const useGridPaginationModel = (
       const pageCount = gridPageCountSelector(apiRef);
       if (paginationModel.page > pageCount - 1) {
         queueMicrotask(() => {
-          debouncedSetPage(Math.max(0, pageCount - 1));
+          apiRef.current.setPage(Math.max(0, pageCount - 1));
         });
       }
     },
-    [apiRef, debouncedSetPage],
+    [apiRef],
   );
 
   /**
@@ -271,7 +269,7 @@ export const useGridPaginationModel = (
   const navigateToStart = React.useCallback(() => {
     const paginationModel = gridPaginationModelSelector(apiRef);
     if (paginationModel.page !== 0) {
-      debouncedSetPage(0);
+      apiRef.current.setPage(0);
     }
 
     // If the page was not changed it might be needed to scroll to the top
@@ -279,7 +277,7 @@ export const useGridPaginationModel = (
     if (scrollPosition.top !== 0) {
       apiRef.current.scroll({ top: 0 });
     }
-  }, [apiRef, debouncedSetPage]);
+  }, [apiRef]);
 
   const debouncedNavigateToStart = React.useMemo(
     () => debounce(navigateToStart, 0),

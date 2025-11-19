@@ -208,7 +208,7 @@ describe('<DataGrid /> - Pagination', () => {
       expect(getColumnValues(0)).to.deep.equal(['0']);
     });
 
-    it('should go to last page when paginationModel is controlled and the current page is greater than the last page', async () => {
+    it('should go to last page when paginationModel is controlled and the current page is greater than the last page', () => {
       const onPaginationModelChange = spy();
       function TestCasePaginationFilteredData(props: Partial<DataGridProps>) {
         const [paginationModel, setPaginationModel] = React.useState({ page: 1, pageSize: 5 });
@@ -245,9 +245,7 @@ describe('<DataGrid /> - Pagination', () => {
         },
       });
 
-      await waitFor(() => {
-        expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3']);
-      });
+      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3']);
       expect(onPaginationModelChange.callCount).to.equal(1);
       expect(onPaginationModelChange.lastCall.args[0]).to.deep.equal({ page: 0, pageSize: 5 });
     });
