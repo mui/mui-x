@@ -9,6 +9,7 @@ import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
 import { useInteractionAllItemProps } from '../../hooks/useInteractionItemProps';
 import { SeriesId } from '../../models/seriesType/common';
 import { HighlightItemData } from '../../internals/plugins/featurePlugins/useChartHighlight';
+import { useRadarRotationIndex } from './useRadarRotationIndex';
 
 interface GetPathPropsParams {
   seriesId: SeriesId;
@@ -40,8 +41,9 @@ export function getPathProps(params: GetPathPropsParams): React.SVGProps<SVGPath
 }
 
 function RadarSeriesArea(props: RadarSeriesAreaProps) {
-  const { seriesId, ...other } = props;
+  const { seriesId, onItemClick, ...other } = props;
   const seriesCoordinates = useRadarSeriesData(seriesId);
+  const getRotationIndex = useRadarRotationIndex();
 
   const interactionProps = useInteractionAllItemProps(seriesCoordinates);
   const { isFaded, isHighlighted } = useItemHighlightedGetter();
@@ -62,6 +64,14 @@ function RadarSeriesArea(props: RadarSeriesAreaProps) {
               isHighlighted,
               classes,
             })}
+            onClick={(event) =>
+              onItemClick?.(event, {
+                type: 'radar',
+                seriesId: id,
+                dataIndex: getRotationIndex(event),
+              })
+            }
+            cursor={onItemClick ? 'pointer' : 'unset'}
             {...interactionProps[seriesIndex]}
             {...other}
           />
@@ -80,6 +90,12 @@ RadarSeriesArea.propTypes = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
+  /**
+   * Callback fired when an area is clicked.
+   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {RadarItemIdentifier} radarItemIdentifier The radar item identifier.
+   */
+  onItemClick: PropTypes.func,
   /**
    * The id of the series to display.
    * If undefined all series are displayed.

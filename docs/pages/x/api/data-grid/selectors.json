@@ -82,7 +82,12 @@
     "category": "Visible Columns",
     "description": "Get the summed width of all the visible columns."
   },
-  { "name": "gridDataRowIdsSelector", "returnType": "GridRowId[]", "description": "" },
+  {
+    "name": "gridDataRowIdsSelector",
+    "returnType": "GridRowId[]",
+    "category": "Rows",
+    "description": ""
+  },
   { "name": "gridDensityFactorSelector", "returnType": "number", "description": "" },
   { "name": "gridDensitySelector", "returnType": "GridDensity", "description": "" },
   {
@@ -271,6 +276,7 @@
     "category": "Visible Columns",
     "description": "Get the visible pinned columns model."
   },
+  { "name": "gridPivotModelSelector", "returnType": "GridPivotModel", "description": "" },
   {
     "name": "gridPreferencePanelStateSelector",
     "returnType": "GridPreferencePanelState",
@@ -298,7 +304,12 @@
   },
   { "name": "gridRowIsEditingSelector", "returnType": "boolean", "description": "" },
   { "name": "gridRowMaximumTreeDepthSelector", "returnType": "number", "description": "" },
-  { "name": "gridRowNodeSelector", "returnType": "GridTreeNode", "description": "" },
+  {
+    "name": "gridRowNodeSelector",
+    "returnType": "GridTreeNode",
+    "category": "Rows",
+    "description": ""
+  },
   { "name": "gridRowSelectionCountSelector", "returnType": "number", "description": "" },
   {
     "name": "gridRowSelectionIdsSelector",
@@ -315,6 +326,12 @@
     "returnType": "GridRowSelectionModel",
     "description": ""
   },
+  {
+    "name": "gridRowSelector",
+    "returnType": "GridValidRowModel",
+    "category": "Rows",
+    "description": ""
+  },
   { "name": "gridRowTreeDepthsSelector", "returnType": "GridTreeDepths", "description": "" },
   { "name": "gridRowTreeSelector", "returnType": "GridRowTreeConfig", "description": "" },
   { "name": "gridRowsLoadingSelector", "returnType": "boolean | undefined", "description": "" },
@@ -324,6 +341,13 @@
     "description": ""
   },
   { "name": "gridRowsMetaSelector", "returnType": "GridRowsMetaState", "description": "" },
+  {
+    "name": "gridSidebarContentSelector",
+    "returnType": "{ sidebarId: string | undefined; labelId: string | undefined; value: GridSidebarValue | undefined }",
+    "description": ""
+  },
+  { "name": "gridSidebarOpenSelector", "returnType": "boolean", "description": "" },
+  { "name": "gridSidebarStateSelector", "returnType": "GridSidebarState", "description": "" },
   {
     "name": "gridSortModelSelector",
     "returnType": "GridSortModel",

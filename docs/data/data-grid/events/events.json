@@ -1,6 +1,13 @@
 [
   {
     "projects": ["x-data-grid-premium"],
+    "name": "activeChartIdChange",
+    "description": "Fired when the active chart id changes.",
+    "params": "string",
+    "event": "MuiEvent<{}>"
+  },
+  {
+    "projects": ["x-data-grid-premium"],
     "name": "aggregationModelChange",
     "description": "Fired when the aggregation model changes.",
     "params": "GridAggregationModel",
@@ -100,6 +107,13 @@
     "name": "cellSelectionChange",
     "description": "Fired when the selection state of one or multiple cells change.",
     "params": "GridCellSelectionModel",
+    "event": "MuiEvent<{}>"
+  },
+  {
+    "projects": ["x-data-grid-premium"],
+    "name": "chartSynchronizationStateChange",
+    "description": "Fired when the chart synchronization state changes.",
+    "params": "{ chartId: string; synced: boolean }",
     "event": "MuiEvent<{}>"
   },
   {
@@ -458,6 +472,22 @@
     "description": "Fired during the scroll of the grid viewport.",
     "params": "GridScrollParams",
     "event": "MuiEvent<React.UIEvent | MuiBaseEvent>"
+  },
+  {
+    "projects": ["x-data-grid-premium"],
+    "name": "sidebarClose",
+    "description": "Fired when the sidebar is closed.",
+    "params": "{ value: GridSidebarValue }",
+    "event": "MuiEvent<{}>",
+    "componentProp": "onSidebarClose"
+  },
+  {
+    "projects": ["x-data-grid-premium"],
+    "name": "sidebarOpen",
+    "description": "Fired when the sidebar is opened.",
+    "params": "{ value: GridSidebarValue }",
+    "event": "MuiEvent<{}>",
+    "componentProp": "onSidebarOpen"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],

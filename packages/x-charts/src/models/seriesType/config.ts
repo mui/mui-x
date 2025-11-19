@@ -1,4 +1,4 @@
-import { DefaultizedProps, MakeOptional } from '@mui/x-internals/types';
+import { DefaultizedProps, MakeOptional, MakeRequired } from '@mui/x-internals/types';
 import {
   ScatterSeriesType,
   DefaultizedScatterSeriesType,
@@ -15,13 +15,15 @@ import {
   DefaultizedPieValueType,
 } from './pie';
 import { DefaultizedRadarSeriesType, RadarItemIdentifier, RadarSeriesType } from './radar';
+import { SeriesColor } from './common';
 
 export interface ChartsSeriesConfig {
   bar: {
     /**
      * Series type when passed to the formatter (some ids are given default values to simplify the DX)
      */
-    seriesInput: DefaultizedProps<BarSeriesType, 'id'> & { color: string };
+    seriesInput: DefaultizedProps<BarSeriesType, 'id'> &
+      MakeRequired<SeriesColor<number | null>, 'color'>;
     /**
      * Series type when stored in the context (with all the preprocessing added))
      */
@@ -31,41 +33,51 @@ export interface ChartsSeriesConfig {
      */
     seriesProp: BarSeriesType;
     itemIdentifier: BarItemIdentifier;
+    itemIdentifierWithData: BarItemIdentifier;
     valueType: number | null;
     canBeStacked: true;
     axisType: 'cartesian';
   };
   line: {
-    seriesInput: DefaultizedProps<LineSeriesType, 'id'> & { color: string };
+    seriesInput: DefaultizedProps<LineSeriesType, 'id'> &
+      MakeRequired<SeriesColor<number | null>, 'color'>;
     series: DefaultizedLineSeriesType;
     seriesProp: LineSeriesType;
     itemIdentifier: LineItemIdentifier;
+    itemIdentifierWithData: LineItemIdentifier;
     valueType: number | null;
     canBeStacked: true;
     axisType: 'cartesian';
   };
   scatter: {
-    seriesInput: DefaultizedProps<ScatterSeriesType, 'id'> & { color: string };
+    seriesInput: DefaultizedProps<ScatterSeriesType, 'id'> &
+      MakeRequired<SeriesColor<ScatterValueType | null>, 'color'>;
     series: DefaultizedScatterSeriesType;
     seriesProp: ScatterSeriesType;
     valueType: ScatterValueType;
     itemIdentifier: ScatterItemIdentifier;
+    itemIdentifierWithData: ScatterItemIdentifier;
     axisType: 'cartesian';
   };
   pie: {
     seriesInput: Omit<DefaultizedProps<PieSeriesType, 'id'>, 'data'> & {
-      data: (MakeOptional<PieValueType, 'id'> & { color: string })[];
+      data: Array<
+        MakeOptional<PieValueType, 'id'> & MakeRequired<SeriesColor<PieValueType | null>, 'color'>
+      >;
     };
     series: DefaultizedPieSeriesType;
     seriesProp: PieSeriesType<MakeOptional<PieValueType, 'id'>>;
     itemIdentifier: PieItemIdentifier;
+    itemIdentifierWithData: PieItemIdentifier;
     valueType: DefaultizedPieValueType;
   };
   radar: {
-    seriesInput: DefaultizedProps<RadarSeriesType, 'id'> & { color: string };
+    seriesInput: DefaultizedProps<RadarSeriesType, 'id'> &
+      MakeRequired<SeriesColor<number>, 'color'>;
     series: DefaultizedRadarSeriesType;
     seriesProp: RadarSeriesType;
     itemIdentifier: RadarItemIdentifier;
+    itemIdentifierWithData: RadarItemIdentifier;
     valueType: number;
     axisType: 'polar';
   };
@@ -107,7 +119,10 @@ export type ChartSeriesDefaultized<T extends ChartSeriesType> = ChartsSeriesConf
 export type ChartItemIdentifier<T extends ChartSeriesType> =
   ChartsSeriesConfig[T]['itemIdentifier'];
 
+export type ChartItemIdentifierWithData<T extends ChartSeriesType> =
+  ChartsSeriesConfig[T]['itemIdentifierWithData'];
+
 export type DatasetElementType<T> = {
-  [key: string]: Readonly<T>;
+  [key: string]: T;
 };
-export type DatasetType<T = number | string | Date | null | undefined> = DatasetElementType<T>[];
+export type DatasetType<T = unknown> = DatasetElementType<T>[];

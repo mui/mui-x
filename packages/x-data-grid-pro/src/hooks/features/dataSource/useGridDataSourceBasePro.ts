@@ -13,6 +13,8 @@ import {
   GridRowModel,
   gridRowTreeSelector,
   GridUpdateRowParams,
+  GridRowId,
+  GRID_ROOT_GROUP_ID,
 } from '@mui/x-data-grid';
 import {
   gridRowGroupsToFetchSelector,
@@ -22,6 +24,8 @@ import {
   DataSourceRowsUpdateStrategy,
   GridStrategyGroup,
   GridDataSourceBaseOptions,
+  GridStrategyProcessor,
+  getTreeNodeDescendants,
 } from '@mui/x-data-grid/internals';
 import { warnOnce } from '@mui/x-internals/warning';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
@@ -64,31 +68,41 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
 
   const handleEditRow = React.useCallback(
     (params: GridUpdateRowParams, updatedRow: GridRowModel) => {
-      const groupKeys = getGroupKeys(gridRowTreeSelector(apiRef), params.rowId) as string[];
-      apiRef.current.updateNestedRows([updatedRow], groupKeys);
       if (updatedRow && !isDeepEqual(updatedRow, params.previousRow)) {
         // Reset the outdated cache, only if the row is _actually_ updated
         apiRef.current.dataSource.cache.clear();
       }
+      const groupKeys = getGroupKeys(gridRowTreeSelector(apiRef), params.rowId) as string[];
+      apiRef.current.updateNestedRows([updatedRow], groupKeys);
     },
     [apiRef],
   );
 
-  const { api, debouncedFetchRows, strategyProcessor, events, cacheChunkManager, cache } =
-    useGridDataSourceBase(apiRef, props, {
-      fetchRowChildren: nestedDataManager.queue,
-      clearDataSourceState,
-      handleEditRow,
-      ...options,
-    });
+  const {
+    api,
+    debouncedFetchRows,
+    strategyProcessor: flatTreeStrategyProcessor,
+    events,
+    cacheChunkManager,
+    cache,
+  } = useGridDataSourceBase(apiRef, props, {
+    fetchRowChildren: nestedDataManager.queue,
+    clearDataSourceState,
+    handleEditRow,
+    ...options,
+  });
 
   const setStrategyAvailability = React.useCallback(() => {
+    const targetStrategy = props.treeData
+      ? DataSourceRowsUpdateStrategy.GroupedData
+      : DataSourceRowsUpdateStrategy.Default;
+
     apiRef.current.setStrategyAvailability(
       GridStrategyGroup.DataSource,
-      DataSourceRowsUpdateStrategy.Default,
+      targetStrategy,
       props.dataSource && !props.lazyLoading ? () => true : () => false,
     );
-  }, [apiRef, props.dataSource, props.lazyLoading]);
+  }, [apiRef, props.dataSource, props.lazyLoading, props.treeData]);
 
   const onDataSourceErrorProp = props.onDataSourceError;
 
@@ -274,6 +288,86 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
     });
   }, [apiRef]);
 
+  const removeChildrenRows = React.useCallback<GridDataSourcePrivateApiPro['removeChildrenRows']>(
+    (parentId) => {
+      const rowNode = gridRowNodeSelector(apiRef, parentId);
+      if (!rowNode || rowNode.type !== 'group' || rowNode.children.length === 0) {
+        return;
+      }
+
+      const removedRows: { id: GridRowId; _action: 'delete' }[] = [];
+      const traverse = (nodeId: GridRowId) => {
+        const node = gridRowNodeSelector(apiRef, nodeId);
+        if (!node) {
+          return;
+        }
+
+        if (node.type === 'group' && node.children.length > 0) {
+          node.children.forEach(traverse);
+        }
+        removedRows.push({ id: nodeId, _action: 'delete' });
+      };
+
+      rowNode.children.forEach(traverse);
+
+      if (removedRows.length > 0) {
+        apiRef.current.updateNestedRows(removedRows, (rowNode as GridDataSourceGroupNode).path);
+      }
+    },
+    [apiRef],
+  );
+
+  const handleGroupedDataUpdate = React.useCallback<GridStrategyProcessor<'dataSourceRowsUpdate'>>(
+    (params) => {
+      if ('error' in params) {
+        apiRef.current.setRows([]);
+        return;
+      }
+
+      const {
+        response,
+        options: { keepChildrenExpanded },
+      } = params;
+      if (response.rowCount !== undefined) {
+        apiRef.current.setRowCount(response.rowCount);
+      }
+
+      if (keepChildrenExpanded === false) {
+        apiRef.current.setRows(response.rows);
+      } else {
+        const tree = gridRowTreeSelector(apiRef);
+        // Remove existing outdated rows before setting the new ones
+        // Create a set of the current root rows
+        const parentRowsToDelete = new Set(
+          getTreeNodeDescendants(tree, GRID_ROOT_GROUP_ID, false, true),
+        );
+        // Remove from the list the rows that are again in the response
+        response.rows.forEach((row) => {
+          parentRowsToDelete.delete(gridRowIdSelector(apiRef, row));
+        });
+        const rowsToDelete: { id: GridRowId; _action: 'delete' }[] = [];
+        if (parentRowsToDelete.size > 0) {
+          parentRowsToDelete.forEach((parentRowId) => {
+            const descendants = getTreeNodeDescendants(tree, parentRowId, false, false);
+            for (let i = descendants.length - 1; i >= 0; i -= 1) {
+              // delete deepest descendants first
+              rowsToDelete.push({ id: descendants[i], _action: 'delete' });
+            }
+            rowsToDelete.push({ id: parentRowId, _action: 'delete' });
+          });
+        }
+        apiRef.current.updateRows(response.rows.concat(rowsToDelete));
+      }
+
+      apiRef.current.unstable_applyPipeProcessors(
+        'processDataSourceRows',
+        { params: params.fetchParams, response },
+        true,
+      );
+    },
+    [apiRef],
+  );
+
   const dataSourceApi: GridDataSourceApiPro = {
     dataSource: {
       ...api.public.dataSource,
@@ -285,6 +379,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
   const dataSourcePrivateApi: GridDataSourcePrivateApiPro = {
     fetchRowChildren,
     resetDataSourceState,
+    removeChildrenRows,
   };
 
   React.useEffect(() => {
@@ -302,7 +397,12 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
   return {
     api: { public: dataSourceApi, private: dataSourcePrivateApi },
     debouncedFetchRows,
-    strategyProcessor,
+    flatTreeStrategyProcessor,
+    groupedDataStrategyProcessor: {
+      strategyName: DataSourceRowsUpdateStrategy.GroupedData,
+      group: 'dataSourceRowsUpdate' as const,
+      processor: handleGroupedDataUpdate,
+    },
     events,
     setStrategyAvailability,
     cacheChunkManager,

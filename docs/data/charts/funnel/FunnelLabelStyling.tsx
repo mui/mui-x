@@ -1,9 +1,5 @@
-import * as React from 'react';
 import Box from '@mui/material/Box';
-import {
-  Unstable_FunnelChart as FunnelChart,
-  funnelSectionClasses,
-} from '@mui/x-charts-pro/FunnelChart';
+import { FunnelChart, funnelSectionClasses } from '@mui/x-charts-pro/FunnelChart';
 
 export default function FunnelLabelStyling() {
   return (

@@ -4,3 +4,4 @@ export type {
   UseTreeViewIdParameters,
   UseTreeViewIdParametersWithDefaults,
 } from './useTreeViewId.types';
+export { idSelectors } from './useTreeViewId.selectors';

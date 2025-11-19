@@ -11,7 +11,11 @@ import { TriggerOptions, useIsFineMainPointer, usePointerType } from './utils';
 import { ChartsTooltipClasses, useUtilityClasses } from './chartsTooltipClasses';
 import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
-import { selectorChartsInteractionItemIsDefined } from '../internals/plugins/featurePlugins/useChartInteraction';
+import {
+  selectorChartsLastInteraction,
+  selectorChartsTooltipItemIsDefined,
+  selectorChartsTooltipItemPosition,
+} from '../internals/plugins/featurePlugins/useChartInteraction';
 import {
   selectorChartsInteractionAxisTooltip,
   UseChartCartesianAxisSignature,
@@ -19,22 +23,53 @@ import {
 import { selectorChartsInteractionPolarAxisTooltip } from '../internals/plugins/featurePlugins/useChartPolarAxis/useChartPolarInteraction.selectors';
 import { useAxisSystem } from '../hooks/useAxisSystem';
 import { useSvgRef } from '../hooks';
+import { selectorBrushShouldPreventTooltip } from '../internals/plugins/featurePlugins/useChartBrush';
 
-const noAxis = () => false;
+const selectorReturnFalse = () => false;
 
-export interface ChartsTooltipContainerProps extends Partial<PopperProps> {
+function getIsOpenSelector(
+  trigger: TriggerOptions,
+  axisSystem: 'none' | 'polar' | 'cartesian',
+  shouldPreventBecauseOfBrush?: boolean,
+) {
+  if (shouldPreventBecauseOfBrush) {
+    return selectorReturnFalse;
+  }
+  if (trigger === 'item') {
+    return selectorChartsTooltipItemIsDefined;
+  }
+  if (axisSystem === 'polar') {
+    return selectorChartsInteractionPolarAxisTooltip;
+  }
+  if (axisSystem === 'cartesian') {
+    return selectorChartsInteractionAxisTooltip;
+  }
+  return selectorReturnFalse;
+}
+
+export interface ChartsTooltipContainerProps<T extends TriggerOptions = TriggerOptions>
+  extends Partial<PopperProps> {
   /**
    * Select the kind of tooltip to display
-   * - 'item': Shows data about the item below the mouse.
-   * - 'axis': Shows values associated with the hovered x value
-   * - 'none': Does not display tooltip
+   * - 'item': Shows data about the item below the mouse;
+   * - 'axis': Shows values associated with the hovered x value;
+   * - 'none': Does not display tooltip.
    * @default 'axis'
    */
-  trigger?: TriggerOptions;
+  trigger?: T;
   /**
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<ChartsTooltipClasses>;
+  /**
+   * Determine if the tooltip should be placed on the pointer location or on the node.
+   * @default 'pointer'
+   */
+  anchor?: 'pointer' | 'node';
+  /**
+   * Determines the tooltip position relatively to the anchor.
+   */
+  position?: 'top' | 'bottom' | 'left' | 'right';
   children?: React.ReactNode;
 }
 
@@ -60,7 +95,15 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
     props: inProps,
     name: 'MuiChartsTooltipContainer',
   });
-  const { trigger = 'axis', classes: propClasses, children, ...other } = props;
+  const {
+    trigger = 'axis',
+    position,
+    anchor = 'pointer',
+    classes: propClasses,
+    children,
+    ...other
+  } = props;
+
   const svgRef = useSvgRef();
   const classes = useUtilityClasses(propClasses);
 
@@ -73,38 +116,63 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   const axisSystem = useAxisSystem();
 
   const store = useStore<[UseChartCartesianAxisSignature]>();
+
+  const shouldPreventBecauseOfBrush = useSelector(store, selectorBrushShouldPreventTooltip);
   const isOpen = useSelector(
     store,
-    trigger === 'axis'
-      ? (axisSystem === 'polar' && selectorChartsInteractionPolarAxisTooltip) ||
-          (axisSystem === 'cartesian' && selectorChartsInteractionAxisTooltip) ||
-          noAxis
-      : selectorChartsInteractionItemIsDefined,
+    getIsOpenSelector(trigger, axisSystem, shouldPreventBecauseOfBrush),
+  );
+
+  const lastInteraction = useSelector(store, selectorChartsLastInteraction);
+  const computedAnchor = lastInteraction === 'keyboard' ? 'node' : anchor;
+
+  const itemPosition = useSelector(
+    store,
+    trigger === 'item' && computedAnchor === 'node'
+      ? selectorChartsTooltipItemPosition
+      : () => null,
+    [position],
   );
 
   React.useEffect(() => {
-    const element = svgRef.current;
-    if (element === null) {
+    const svgElement = svgRef.current;
+    if (svgElement === null) {
       return () => {};
     }
 
-    const update = rafThrottle(() => popperRef.current?.update());
+    if (itemPosition !== null) {
+      const positionUpdate = rafThrottle(() => {
+        // eslint-disable-next-line react-compiler/react-compiler
+        positionRef.current = {
+          x: svgElement.getBoundingClientRect().left + (itemPosition?.x ?? 0),
+          y: svgElement.getBoundingClientRect().top + (itemPosition?.y ?? 0),
+        };
+        popperRef.current?.update();
+      });
+      positionUpdate();
+      return () => positionUpdate.clear();
+    }
+
+    const pointerUpdate = rafThrottle((x: number, y: number) => {
+      positionRef.current = { x, y };
+      popperRef.current?.update();
+    });
 
     const handlePointerEvent = (event: PointerEvent) => {
-      // eslint-disable-next-line react-compiler/react-compiler
-      positionRef.current = { x: event.clientX, y: event.clientY };
-      update();
+      pointerUpdate(event.clientX, event.clientY);
     };
 
-    element.addEventListener('pointerdown', handlePointerEvent);
-    element.addEventListener('pointermove', handlePointerEvent);
+    svgElement.addEventListener('pointerdown', handlePointerEvent);
+    svgElement.addEventListener('pointermove', handlePointerEvent);
+    svgElement.addEventListener('pointerenter', handlePointerEvent);
 
     return () => {
-      element.removeEventListener('pointerdown', handlePointerEvent);
-      element.removeEventListener('pointermove', handlePointerEvent);
-      update.clear();
+      svgElement.removeEventListener('pointerdown', handlePointerEvent);
+      svgElement.removeEventListener('pointermove', handlePointerEvent);
+      svgElement.removeEventListener('pointerenter', handlePointerEvent);
+      pointerUpdate.clear();
     };
-  }, [svgRef, positionRef]);
+  }, [svgRef, positionRef, itemPosition]);
 
   const anchorEl = React.useMemo(
     () => ({
@@ -150,6 +218,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
             },
           ]
         : []), // Keep default behavior
+      { name: 'preventOverflow', options: { altAxis: true } },
     ],
     [isMouse, isTouch],
   );
@@ -162,13 +231,13 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
     <NoSsr>
       {isOpen && (
         <ChartsTooltipRoot
+          {...other}
           className={classes?.root}
           open={isOpen}
-          placement={isMouse ? 'right-start' : 'top'}
+          placement={other.placement ?? position ?? (isMouse ? 'right-start' : 'top')}
           popperRef={popperRef}
           anchorEl={anchorEl}
           modifiers={modifiers}
-          {...other}
         >
           {children}
         </ChartsTooltipRoot>
@@ -182,6 +251,11 @@ ChartsTooltipContainer.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Determine if the tooltip should be placed on the pointer location or on the node.
+   * @default 'pointer'
+   */
+  anchor: PropTypes.oneOf(['node', 'pointer']),
   /**
    * An HTML element, [virtualElement](https://popper.js.org/docs/v2/virtual-elements/),
    * or a function that returns either.
@@ -386,6 +460,10 @@ ChartsTooltipContainer.propTypes = {
     }),
   ]),
   /**
+   * Determines the tooltip position relatively to the anchor.
+   */
+  position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
+  /**
    * The props used for each slot inside the Popper.
    * @default {}
    */
@@ -411,9 +489,9 @@ ChartsTooltipContainer.propTypes = {
   transition: PropTypes.bool,
   /**
    * Select the kind of tooltip to display
-   * - 'item': Shows data about the item below the mouse.
-   * - 'axis': Shows values associated with the hovered x value
-   * - 'none': Does not display tooltip
+   * - 'item': Shows data about the item below the mouse;
+   * - 'axis': Shows values associated with the hovered x value;
+   * - 'none': Does not display tooltip.
    * @default 'axis'
    */
   trigger: PropTypes.oneOf(['axis', 'item', 'none']),

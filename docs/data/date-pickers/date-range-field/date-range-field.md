@@ -12,8 +12,7 @@ packageName: '@mui/x-date-pickers-pro'
 
 ## Basic usage
 
-You can render your Date Range Field with either one input using `SingleInputDateRangeField`
-or two inputs using `MultiInputDateRangeField` as show below.
+You can render your Date Range Field with either one input using `SingleInputDateRangeField` or two inputs using `MultiInputDateRangeField` as shown below.
 
 :::info
 All the topics covered below are applicable to both `SingleInputDateRangeField` and `MultiInputDateRangeField` unless explicitly mentioned.

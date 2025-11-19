@@ -6,6 +6,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import useId from '@mui/utils/useId';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { useRtl } from '@mui/system/RtlProvider';
+import { doesSupportPreventScroll } from '../../utils/doesSupportPreventScroll';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
 import { GridSortDirection } from '../../models/gridSortModel';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
@@ -39,7 +40,6 @@ interface GridColumnHeaderItemProps {
   pinnedPosition?: PinnedColumnPosition;
   pinnedOffset?: number;
   style?: React.CSSProperties;
-  isLastUnpinned: boolean;
   isSiblingFocused: boolean;
   showLeftBorder: boolean;
   showRightBorder: boolean;
@@ -52,6 +52,7 @@ type OwnerState = GridColumnHeaderItemProps & {
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
+  const { disableColumnSorting } = useGridRootProps();
   const {
     colDef,
     classes,
@@ -61,10 +62,10 @@ const useUtilityClasses = (ownerState: OwnerState) => {
     showLeftBorder,
     filterItemsCounter,
     pinnedPosition,
-    isLastUnpinned,
     isSiblingFocused,
   } = ownerState;
 
+  const isColumnSortable = colDef.sortable && !disableColumnSorting;
   const isColumnSorted = sortDirection != null;
   const isColumnFiltered = filterItemsCounter != null && filterItemsCounter > 0;
   // todo refactor to a prop on col isNumeric or ?? ie: coltype===price wont work
@@ -76,7 +77,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       colDef.headerAlign === 'left' && 'columnHeader--alignLeft',
       colDef.headerAlign === 'center' && 'columnHeader--alignCenter',
       colDef.headerAlign === 'right' && 'columnHeader--alignRight',
-      colDef.sortable && 'columnHeader--sortable',
+      isColumnSortable && 'columnHeader--sortable',
       isDragging && 'columnHeader--moving',
       isColumnSorted && 'columnHeader--sorted',
       isColumnFiltered && 'columnHeader--filtered',
@@ -88,7 +89,6 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       pinnedPosition === PinnedColumnPosition.RIGHT && 'columnHeader--pinnedRight',
       // TODO: Remove classes below and restore `:has` selectors when they are supported in jsdom
       // See https://github.com/mui/mui-x/pull/14559
-      isLastUnpinned && 'columnHeader--lastUnpinned',
       isSiblingFocused && 'columnHeader--siblingFocused',
     ],
     draggableContainer: ['columnHeaderDraggableContainer'],
@@ -128,10 +128,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   const iconButtonRef = React.useRef<HTMLButtonElement>(null);
   const [showColumnMenuIcon, setShowColumnMenuIcon] = React.useState(columnMenuOpen);
 
-  const isDraggable = React.useMemo(
-    () => !rootProps.disableColumnReorder && !disableReorder && !colDef.disableReorder,
-    [rootProps.disableColumnReorder, disableReorder, colDef.disableReorder],
-  );
+  const isDraggable = !rootProps.disableColumnReorder && !disableReorder && !colDef.disableReorder;
 
   let headerComponent: React.ReactNode;
   if (colDef.renderHeader) {
@@ -201,7 +198,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   );
 
   React.useEffect(() => {
-    if (!showColumnMenuIcon) {
+    if (!showColumnMenuIcon && columnMenuOpen) {
       setShowColumnMenuIcon(columnMenuOpen);
     }
   }, [showColumnMenuIcon, columnMenuOpen]);
@@ -267,9 +264,15 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     if (hasFocus && !columnMenuState.open) {
       const focusableElement = headerCellRef.current!.querySelector<HTMLElement>('[tabindex="0"]');
       const elementToFocus = focusableElement || headerCellRef.current;
-      elementToFocus?.focus();
-      if (apiRef.current.columnHeadersContainerRef?.current) {
-        apiRef.current.columnHeadersContainerRef.current.scrollLeft = 0;
+      if (!elementToFocus) {
+        return;
+      }
+      if (doesSupportPreventScroll()) {
+        elementToFocus.focus({ preventScroll: true });
+      } else {
+        const scrollPosition = apiRef.current.getScrollPosition();
+        elementToFocus.focus();
+        apiRef.current.scroll(scrollPosition);
       }
     }
   }, [apiRef, hasFocus]);
@@ -332,7 +335,6 @@ GridColumnHeaderItem.propTypes = {
   headerHeight: PropTypes.number.isRequired,
   isDragging: PropTypes.bool.isRequired,
   isLast: PropTypes.bool.isRequired,
-  isLastUnpinned: PropTypes.bool.isRequired,
   isResizing: PropTypes.bool.isRequired,
   isSiblingFocused: PropTypes.bool.isRequired,
   pinnedOffset: PropTypes.number,

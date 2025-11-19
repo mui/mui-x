@@ -1,8 +1,9 @@
 import type { GridGetRowsParams, GridGetRowsResponse } from '../../../models/gridDataSource';
 
 export enum DataSourceRowsUpdateStrategy {
-  Default = 'set-new-rows',
+  Default = 'set-flat-rows',
   LazyLoading = 'replace-row-range',
+  GroupedData = 'set-grouped-rows',
 }
 
 /**
@@ -40,6 +41,10 @@ export class CacheChunkManager {
 
   public splitResponse = (key: GridGetRowsParams, response: GridGetRowsResponse) => {
     const cacheKeys = this.getCacheKeys(key);
+    if (cacheKeys.length === 1) {
+      return new Map([[key, response]]);
+    }
+
     const responses = new Map<GridGetRowsParams, GridGetRowsResponse>();
     cacheKeys.forEach((chunkKey) => {
       const isLastChunk = chunkKey.end === key.end;
@@ -76,9 +81,8 @@ export class CacheChunkManager {
 
     return responses.reduce(
       (acc, response) => ({
+        ...response,
         rows: [...acc.rows, ...response.rows],
-        rowCount: response.rowCount,
-        pageInfo: response.pageInfo,
       }),
       { rows: [], rowCount: 0, pageInfo: {} },
     );

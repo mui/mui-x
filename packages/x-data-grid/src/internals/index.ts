@@ -17,6 +17,7 @@ export { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from '../constants/defaultGridSlot
 export * from '../constants/signature';
 export { vars } from '../constants/cssVariables';
 
+export { useGridVirtualizer } from '../hooks/core/useGridVirtualizer';
 export { propsStateInitializer } from '../hooks/core/useGridProps';
 export { getGridFilter } from '../components/panel/filterPanel/GridFilterPanel';
 export { getValueOptions } from '../components/panel/filterPanel/filterPanelUtils';
@@ -72,6 +73,8 @@ export { passFilterLogic } from '../hooks/features/filter/gridFilterUtils';
 export {
   gridFilteredChildrenCountLookupSelector,
   gridExpandedSortedRowTreeLevelPositionLookupSelector,
+  gridExpandedSortedRowIndexLookupSelector,
+  gridFilteredSortedDepthRowEntriesSelector,
 } from '../hooks/features/filter/gridFilterSelector';
 export { isSingleSelectColDef } from '../components/panel/filterPanel/filterPanelUtils';
 export type {
@@ -97,6 +100,9 @@ export {
 } from '../hooks/features/rows/useGridRowSpanning';
 export { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
 export { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
+export { useGridRowsOverridableMethods } from '../hooks/features/rows/useGridRowsOverridableMethods';
+export { useGridParamsOverridableMethods } from '../hooks/features/rows/useGridParamsOverridableMethods';
+export { useIsCellEditable } from '../hooks/features/editing/useGridCellEditable';
 export { useGridRowsPreProcessors } from '../hooks/features/rows/useGridRowsPreProcessors';
 export type {
   GridRowTreeCreationParams,
@@ -105,8 +111,6 @@ export type {
   GridRowsPartialUpdates,
   GridRowsPartialUpdateAction,
   GridTreeDepths,
-  GridRowTreeUpdatedGroupsManager,
-  GridRowTreeUpdateGroupAction,
   GridPinnedRowsState,
 } from '../hooks/features/rows/gridRowsInterfaces';
 export { getTreeNodeDescendants, buildRootGroup } from '../hooks/features/rows/gridRowsUtils';
@@ -130,6 +134,8 @@ export {
   useGridRowSelection,
   rowSelectionStateInitializer,
 } from '../hooks/features/rowSelection/useGridRowSelection';
+export { gridIsRowDragActiveSelector } from '../hooks/features/rowReorder/gridRowReorderSelector';
+export type { GridRowReorderState } from '../hooks/features/rowReorder/gridRowReorderInterfaces';
 export { useGridRowSelectionPreProcessors } from '../hooks/features/rowSelection/useGridRowSelectionPreProcessors';
 export { useGridSorting, sortingStateInitializer } from '../hooks/features/sorting/useGridSorting';
 export type { GridSortingModelApplier } from '../hooks/features/sorting/gridSortingState';
@@ -143,10 +149,6 @@ export {
 export * from '../hooks/features/dimensions/gridDimensionsSelectors';
 export { useGridStatePersistence } from '../hooks/features/statePersistence/useGridStatePersistence';
 export type { GridRestoreStatePreProcessingContext } from '../hooks/features/statePersistence/gridStatePersistenceInterface';
-export {
-  useGridVirtualScroller,
-  EMPTY_DETAIL_PANELS,
-} from '../hooks/features/virtualization/useGridVirtualScroller';
 export * from '../hooks/features/virtualization';
 export {
   useGridColumnResize,
@@ -170,6 +172,7 @@ export type {
   GridDataSourceApiBase,
   GridDataSourceApi,
   GridDataSourceBaseOptions,
+  GridDataSourceFetchRowsParams,
 } from '../hooks/features/dataSource/models';
 export { DataSourceRowsUpdateStrategy } from '../hooks/features/dataSource/utils';
 export { useGridDataSourceBase } from '../hooks/features/dataSource/useGridDataSourceBase';
@@ -215,6 +218,7 @@ export * from './demo';
 export { GridSkeletonLoadingOverlayInner } from '../components/GridSkeletonLoadingOverlay';
 
 export type { GridConfiguration } from '../models/configuration/gridConfiguration';
+export type { CellEditableConditionFn } from '../models/configuration/gridCellEditableConfiguration';
 
 export * from '../hooks/features/pivoting';
 

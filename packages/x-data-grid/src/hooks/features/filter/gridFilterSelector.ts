@@ -5,7 +5,7 @@ import {
   createSelectorMemoized,
 } from '../../../utils/createSelector';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
-import { GridRowId } from '../../../models/gridRows';
+import { GridRowEntry, GridRowId, GridValidRowModel } from '../../../models/gridRows';
 import { GridFilterItem } from '../../../models/gridFilterItem';
 import { gridSortedRowEntriesSelector } from '../sorting/gridSortingSelector';
 import { gridColumnLookupSelector } from '../columns/gridColumnsSelector';
@@ -155,20 +155,45 @@ export const gridExpandedSortedRowTreeLevelPositionLookupSelector = createSelect
 );
 
 /**
+ * Get the id and the model of the rows per depth level, accessible after the filtering process.
+ * Returns an array of arrays, where each array index contains the rows for the depth level equal to the index.
+ * @category Filtering
+ */
+export const gridFilteredSortedDepthRowEntriesSelector = createSelectorMemoized(
+  gridFilteredSortedRowEntriesSelector,
+  gridRowTreeSelector,
+  gridRowMaximumTreeDepthSelector,
+  (sortedRows, rowTree, rowTreeDepth) => {
+    if (rowTreeDepth < 2) {
+      return [sortedRows];
+    }
+
+    return sortedRows.reduce(
+      (acc, row) => {
+        const depth = rowTree[row.id]?.depth;
+        if (depth === undefined) {
+          return acc;
+        }
+
+        if (!acc[depth]) {
+          acc[depth] = [];
+        }
+
+        acc[depth].push(row);
+        return acc;
+      },
+      [[]] as GridRowEntry<GridValidRowModel>[][],
+    );
+  },
+);
+
+/**
  * Get the id and the model of the top level rows accessible after the filtering process.
  * @category Filtering
  */
-export const gridFilteredSortedTopLevelRowEntriesSelector = createSelectorMemoized(
-  gridExpandedSortedRowEntriesSelector,
-  gridRowTreeSelector,
-  gridRowMaximumTreeDepthSelector,
-  (visibleSortedRows, rowTree, rowTreeDepth) => {
-    if (rowTreeDepth < 2) {
-      return visibleSortedRows;
-    }
-
-    return visibleSortedRows.filter((row) => rowTree[row.id]?.depth === 0);
-  },
+export const gridFilteredSortedTopLevelRowEntriesSelector = createSelector(
+  gridFilteredSortedDepthRowEntriesSelector,
+  (filteredSortedDepthRows) => filteredSortedDepthRows[0] ?? [],
 );
 
 /**
@@ -259,5 +284,20 @@ export const gridFilterActiveItemsLookupSelector = createSelectorMemoized(
     );
 
     return result;
+  },
+);
+
+/**
+ * Get the index lookup for expanded (visible) rows only.
+ * Does not include collapsed children.
+ * @ignore - do not document.
+ */
+export const gridExpandedSortedRowIndexLookupSelector = createSelectorMemoized(
+  gridExpandedSortedRowIdsSelector,
+  (expandedSortedIds) => {
+    return expandedSortedIds.reduce<Record<GridRowId, number>>((acc, id, index) => {
+      acc[id] = index;
+      return acc;
+    }, Object.create(null));
   },
 );

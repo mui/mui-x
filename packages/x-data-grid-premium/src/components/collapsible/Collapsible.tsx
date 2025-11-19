@@ -10,7 +10,9 @@ import { CollapsibleContext } from './CollapsibleContext';
 import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
-type CollapsibleProps = React.HTMLAttributes<HTMLDivElement>;
+type CollapsibleProps = React.HTMLAttributes<HTMLDivElement> & {
+  initiallyOpen?: boolean;
+};
 
 type OwnerState = Pick<DataGridPremiumProcessedProps, 'classes'> & { open: boolean };
 
@@ -35,8 +37,8 @@ const CollapsibleRoot = styled('div', {
 }));
 
 function Collapsible(props: CollapsibleProps) {
-  const { className, children, ...other } = props;
-  const [open, setOpen] = React.useState(true);
+  const { className, children, initiallyOpen = true, ...other } = props;
+  const [open, setOpen] = React.useState(initiallyOpen);
   const panelId = useId();
   const rootProps = useGridRootProps();
   const ownerState = { classes: rootProps.classes, open };

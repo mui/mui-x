@@ -9,9 +9,9 @@ import {
   TreeViewPublicAPI,
   TreeViewItemPluginSlotPropsEnhancers,
   TreeViewItemPluginSlotPropsEnhancerParams,
+  TreeViewStore,
 } from '../models';
 import { TreeViewCorePluginSignatures } from '../corePlugins';
-import { TreeViewStore } from '../utils/TreeViewStore';
 
 export const useTreeViewBuildContext = <TSignatures extends readonly TreeViewAnyPluginSignature[]>(
   parameters: UseTreeViewBuildContextParameters<TSignatures>,
@@ -148,6 +148,6 @@ interface UseTreeViewBuildContextParameters<
   plugins: ConvertSignaturesIntoPlugins<readonly [...TreeViewCorePluginSignatures, ...TSignatures]>;
   instance: TreeViewInstance<TSignatures>;
   publicAPI: TreeViewPublicAPI<TSignatures>;
-  store: TreeViewStore<TSignatures>;
+  store: TreeViewStore<readonly [...TreeViewCorePluginSignatures, ...TSignatures]>;
   rootRef: React.RefObject<HTMLUListElement | null>;
 }

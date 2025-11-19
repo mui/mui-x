@@ -1,6 +1,6 @@
-import * as ts from 'typescript';
+import { Symbol, JSDocTagInfo, Type, InterfaceDeclaration, isPropertySignature } from 'typescript';
 import { EOL } from 'os';
-import kebabCase from 'lodash/kebabCase';
+import { kebabCase } from 'es-toolkit/string';
 import path from 'path';
 import { renderMarkdown } from '@mui/internal-markdown';
 import {
@@ -24,13 +24,13 @@ interface ParsedObject {
   projects: XProjectNames[];
   description?: string;
   properties: ParsedProperty[];
-  tags: { [tagName: string]: ts.JSDocTagInfo };
+  tags: { [tagName: string]: JSDocTagInfo };
 }
 
 interface ParsedProperty {
   name: string;
   description: string;
-  tags: { [tagName: string]: ts.JSDocTagInfo };
+  tags: { [tagName: string]: JSDocTagInfo };
   required: boolean;
   typeStr: string;
   /**
@@ -40,22 +40,22 @@ interface ParsedProperty {
 }
 
 const parseProperty = async (
-  propertySymbol: ts.Symbol,
+  propertySymbol: Symbol,
   project: XTypeScriptProject,
 ): Promise<ParsedProperty> => ({
   name: propertySymbol.name,
   description: getSymbolDescription(propertySymbol, project),
   tags: getSymbolJSDocTags(propertySymbol),
-  required: !propertySymbol.declarations?.find(ts.isPropertySignature)?.questionToken,
+  required: !propertySymbol.declarations?.find(isPropertySignature)?.questionToken,
   typeStr: await stringifySymbol(propertySymbol, project),
   projects: [project.name],
 });
 
 interface ProjectInterface {
   project: XTypeScriptProject;
-  symbol: ts.Symbol;
-  type: ts.Type;
-  declaration: ts.InterfaceDeclaration;
+  symbol: Symbol;
+  type: Type;
+  declaration: InterfaceDeclaration;
 }
 
 const parseInterfaceSymbol = async (
@@ -162,7 +162,7 @@ function generateImportStatement(object: ParsedObject, projects: XTypeScriptProj
   return projectImports;
 }
 
-function extractDemos(tagInfo: ts.JSDocTagInfo): { demos?: string } {
+function extractDemos(tagInfo: JSDocTagInfo): { demos?: string } {
   if (!tagInfo || !tagInfo.text) {
     return {};
   }
@@ -277,7 +277,6 @@ export async function buildApiInterfacesJson(options: BuildApiInterfacesJsonOpti
       await writePrettifiedFile(
         path.resolve(apiPagesFolder, project.documentationFolderName, `${slug}.json`),
         JSON.stringify(json),
-        project,
       );
       // eslint-disable-next-line no-console
       console.log('Built JSON file for', parsedInterface.name);
@@ -322,7 +321,6 @@ export async function buildInterfacesDocumentationPage(
   for (const [interfaceName, packagesWithThisInterface] of Array.from(
     documentedInterfaces.entries(),
   )) {
-    const project = projects.get(packagesWithThisInterface[0])!;
     // eslint-disable-next-line no-await-in-loop
     const parsedInterface = await parseInterfaceSymbol(
       interfaceName,
@@ -395,14 +393,12 @@ export async function buildInterfacesDocumentationPage(
     await writePrettifiedFile(
       path.resolve(apiPagesDirectory, `${slug}.json`),
       JSON.stringify(content),
-      project,
     );
 
     // eslint-disable-next-line no-await-in-loop
     await writePrettifiedFile(
       path.resolve(translationPagesDirectory, `${slug}.json`),
       JSON.stringify(translations),
-      project,
     );
 
     // eslint-disable-next-line no-await-in-loop
@@ -419,7 +415,7 @@ export async function buildInterfacesDocumentationPage(
       return <InterfaceApiPage {...layoutConfig} descriptions={descriptions} pageContent={pageContent} />;
     }
     
-    Page.getInitialProps = () => {
+    export async function getStaticProps() {
       const req = require.context(
         '${importTranslationPagesDirectory}/',
         false,
@@ -428,12 +424,13 @@ export async function buildInterfacesDocumentationPage(
       const descriptions = mapApiPageTranslations(req);
   
       return {
-        descriptions,
-        pageContent: jsonPageContent,
+        props: {
+          descriptions,
+          pageContent: jsonPageContent,
+        },
       };
     };
     `.replace(/\r?\n/g, EOL),
-      project,
     );
 
     // eslint-disable-next-line no-console

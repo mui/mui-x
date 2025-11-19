@@ -1,4 +1,4 @@
-import type * as Excel from 'exceljs';
+import type * as Excel from '@mui/x-internal-exceljs-fork';
 import { RefObject } from '@mui/x-internals/types';
 import {
   GridRowId,
@@ -89,12 +89,7 @@ export const serializeRowUnsafe = (
 
   if (hasColSpan) {
     // `colSpan` is only calculated for rendered rows, so we need to calculate it during export for every row
-    apiRef.current.calculateColSpan({
-      rowId: id,
-      minFirstColumn: 0,
-      maxLastColumn: columns.length,
-      columns,
-    });
+    apiRef.current.calculateColSpan(id, 0, columns.length, columns);
   }
 
   columns.forEach((column, colIndex) => {

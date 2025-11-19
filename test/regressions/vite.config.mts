@@ -1,6 +1,7 @@
 import path from 'path';
 import { defineConfig, transformWithEsbuild } from 'vite';
 import react from '@vitejs/plugin-react';
+import * as fs from 'fs/promises';
 import { alias } from '../../vitest.shared.mts';
 
 export default defineConfig({
@@ -20,15 +21,39 @@ export default defineConfig({
   worker: {
     format: 'es',
   },
+  optimizeDeps: {
+    esbuildOptions: {
+      plugins: [
+        {
+          name: 'js-as-jsx',
+          setup(build) {
+            build.onLoad({ filter: /\.js$/ }, async (args) => {
+              if (args.path.includes('/node_modules/')) {
+                return null;
+              }
+
+              const contents = await fs.readFile(args.path, 'utf8');
+
+              return { contents, loader: 'jsx' };
+            });
+          },
+        },
+      ],
+    },
+  },
   plugins: [
     react(),
     {
       name: 'replace-code',
       enforce: 'post',
       async transform(code) {
-        return code
-          .replaceAll('DISABLE_CHANCE_RANDOM', 'true')
-          .replaceAll('LICENSE_DISABLE_CHECK', 'true');
+        return (
+          code
+            .replaceAll('DISABLE_CHANCE_RANDOM', 'true')
+            .replaceAll('LICENSE_DISABLE_CHECK', 'true')
+            // Always disable animations in tests
+            .replaceAll('disableAnimations ? 1 : 0', '1')
+        );
       },
     },
     {

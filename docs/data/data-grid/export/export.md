@@ -248,7 +248,7 @@ The demo below shows how to add a custom JSON export option.
 ## Excel export [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
 This feature relies on [exceljs](https://github.com/exceljs/exceljs).
-The Excel export allows translating columns' type and tree structure of a DataGrid to an Excel file.
+With Excel export, users can translate the column types and tree structures of a Data Grid to an Excel file.
 
 Columns with types `'boolean'`, `'number'`, `'singleSelect'`, `'date'`, and `'dateTime'` are exported in their corresponding type in Excel. Please ensure the `rows` values have the correct type, you can always [convert them](/x/react-data-grid/column-definition/#converting-types) as needed.
 
@@ -303,7 +303,7 @@ You can customize the document using two callback functions:
 - `exceljsPostProcess` called **after** the dataset has been exported to the document.
 
 Both functions receive `{ workbook, worksheet }` as input.
-They are [exceljs](https://github.com/exceljs/exceljs#interface) objects and allow you to directly manipulate the Excel file.
+These are [exceljs](https://github.com/exceljs/exceljs#interface) objects that let you directly manipulate the Excel file.
 
 Thanks to these two methods, you can modify the metadata of the exported spreadsheet.
 You can also use it to add custom content on top or bottom of the worksheet, as follows:
@@ -366,7 +366,7 @@ Make sure that the Material UI version you are using is also installing the cor
 :::
 
 Instead of generating the Excel file in the main thread, you can delegate the task to a web worker.
-This method reduces the amount of time that the main thread remains frozen, allowing to interact with the grid while the data is exported in background.
+This method reduces the amount of time that the main thread remains frozen so users can interact with the grid while the data is exported in background.
 To start using web workers for the Excel export, first you need to create a file with the content below.
 This file will be later used as the worker script, so it must be accessible by a direct URL.
 
@@ -489,8 +489,25 @@ If you want to keep the formulas working, you can set the `escapeFormulas` optio
 
 ## Clipboard
 
-The clipboard export allows you to copy the content of the Data Grid to the clipboard.
+The clipboard export lets you copy the content of the Data Grid to the clipboard.
 For more information, check the [Clipboard copy](/x/react-data-grid/clipboard/#clipboard-copy) docs.
+
+## Recipes
+
+### Server-side export [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+
+To export server-side data from the Data Grid, use [`updateRows()`](/x/react-data-grid/row-updates/#the-updaterows-method) to temporarily load all data before calling an export function.
+After the export completes, restore the rows to their original state.
+
+The following example demonstrates how to export data as CSV from a server-side data source.
+
+{{"demo": "ExportServerSideData.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::info
+The exported data includes any filters and sorting that users have applied.
+
+Try changing the sort order or hiding columns, then click export to see how it affects the output.
+:::
 
 ## apiRef
 

@@ -235,13 +235,13 @@ If an external data fetching library sets the values to undefined during loading
 
 🌍 **Localization of the estimated row count**
 
-The Data Grid uses the [Table Pagination](/material-ui/api/table-pagination/) component from the Material UI library which doesn't support `estimated` row count. Until this is supported natively by the Table Pagination component, a workaround to make the localization work is to provide the `labelDisplayedRows` function to the `localeText.MuiTablePagination` property as per the locale you are interested in.
+The Data Grid uses the [Table Pagination](/material-ui/api/table-pagination/) component from the Material UI library which doesn't support `estimated` row count. Until this is supported natively by the Table Pagination component, a workaround to make the localization work is to provide the `paginationDisplayedRows` function to the `localeText` object as per the locale you are interested in.
 
-The Grid injects an additional variable `estimated` to the `labelDisplayedRows` function which you can use to accommodate the estimated row count.
+The Grid injects an additional variable `estimated` to the `paginationDisplayedRows` function which you can use to accommodate the estimated row count.
 The following example demonstrates how to show the estimated row count in the pagination footer in the Croatian (hr-HR) language.
 
 ```jsx
-const labelDisplayedRows = ({ from, to, count, estimated }) => {
+const paginationDisplayedRows = ({ from, to, count, estimated }) => {
   if (!estimated) {
     return `${from}–${to} od ${count !== -1 ? count : `više nego ${to}`}`;
   }
@@ -250,14 +250,7 @@ const labelDisplayedRows = ({ from, to, count, estimated }) => {
   return `${from}–${to} od ${count !== -1 ? count : estimateLabel}`;
 };
 
-<DataGrid
-  {...data}
-  localeText={{
-    MuiTablePagination: {
-      labelDisplayedRows,
-    },
-  }}
-/>;
+<DataGrid {...data} localeText={{ paginationDisplayedRows }} />;
 ```
 
 For more information, see the [Translation keys](/x/react-data-grid/localization/#translation-keys) section of the localization documentation.

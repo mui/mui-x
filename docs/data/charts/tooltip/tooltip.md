@@ -97,6 +97,23 @@ It removes the header showing the x-axis value from the tooltip.
 To hide a series, the formatted value should be `null`.
 To display the series with a blank space, return an empty string.
 
+## Position
+
+By default the tooltip is placed relative to the pointer position.
+If the pointer is not available, it is placed relative to the node instead (e.g., the bar in a bar chart).
+
+This behavior can be modified with the `anchor`, `position`, and `placement` props.
+
+- The `anchor: 'pointer' | 'node'` indicates if the tooltip should be placed relative to the pointer or the node.
+- The `position: 'top' | 'right' | 'bottom' | 'left'` defines the anchor position compared to the node. This prop has no effect if the anchor is the pointer.
+- The `placement` is the tooltip placement from [PopperJS](https://popper.js.org/docs/v2/constructors/#options). It specifies the tooltip position in relation to the anchor position. By default the same value as `position` if defined.
+
+For example, setting `anchor: 'node'`, `position: 'bottom'` and `placement: 'top'` on a bar chart would render a tooltip above the bottom of a bar.
+
+You can pass those props to the tooltip using `slotProps.tooltip`, or directly to either `<ChartsTooltip />` or `<ChartsTooltipContainer />` if you're using composition.
+
+{{"demo": "TooltipPosition.js", "hideToolbar": true, "bg": "playground"}}
+
 ## Style modification
 
 The tooltip can be styled using CSS classes, similar to other elements.
@@ -104,7 +121,7 @@ However, there is one caveat regarding using [portal](https://react.dev/referenc
 
 The tooltip renders as a child of the document's body element.
 From a DOM perspective, it's not inside the chart.
-So using the chart's `sx` prop as follow does not work.
+So using the chart's `sx` prop as follows does not work:
 
 ```tsx
 import { chartsTooltipClasses } from '@mui/x-charts';
@@ -134,29 +151,14 @@ You can replace the default tooltip in single component charts by using slots.
 <LineChart slots={{ tooltip: CustomItemTooltip }} />
 ```
 
-With composition, you can use your component inside the container.
-
-```jsx
-<ChartContainer>
-  // ...
-  <CustomItemTooltip />
-</ChartContainer>
-```
-
-:::warning
-If your custom tooltip is an HTML element and does not use portal, it cannot render inside the ChartContainer.
-Otherwise it would render an HTML element inside an SVG.
-
-The solution is to render your tooltip as a descendant the ChartDataProvider so it can access the chart data, but outside ChartSurface so it isn't rendered inside an SVG element.
+With composition, you can use your component inside the `ChartDataProvider`.
 
 ```jsx
 <ChartDataProvider>
-  <ChartSurface>{/* ... */}</ChartSurface>
-  <CustomItemTooltip disablePortal />
+  <ChartsSurface>{/* ... */}</ChartsSurface>
+  <CustomItemTooltip />
 </ChartDataProvider>
 ```
-
-:::
 
 ## Creating a tooltip
 

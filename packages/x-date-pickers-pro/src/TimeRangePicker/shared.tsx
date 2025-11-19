@@ -105,8 +105,8 @@ export interface BaseTimeRangePickerProps
   thresholdToRenderTimeInASingleColumn?: number;
   /**
    * The time steps between two time unit options.
-   * For example, if `timeStep.minutes = 8`, then the available minute options will be `[0, 8, 16, 24, 32, 40, 48, 56]`.
-   * When single column time renderer is used, only `timeStep.minutes` will be used.
+   * For example, if `timeSteps.minutes = 8`, then the available minute options will be `[0, 8, 16, 24, 32, 40, 48, 56]`.
+   * When single column time renderer is used, only `timeSteps.minutes` will be used.
    * @default{ hours: 1, minutes: 5, seconds: 5 }
    */
   timeSteps?: TimeStepOptions;
@@ -121,6 +121,7 @@ type UseTimeRangePickerDefaultizedProps<Props extends BaseTimeRangePickerProps> 
   > & {
     shouldRenderTimeInASingleColumn: boolean;
     views: readonly TimeViewWithMeridiem[];
+    viewsForFormatting: readonly TimeViewWithMeridiem[];
   };
 
 export function useTimeRangePickerDefaultizedProps<Props extends BaseTimeRangePickerProps>(
@@ -166,6 +167,11 @@ export function useTimeRangePickerDefaultizedProps<Props extends BaseTimeRangePi
     views: defaultViews,
   });
 
+  // Keep the original views for format calculation (before filtering)
+  const viewsForFormatting: readonly TimeViewWithMeridiem[] = ampm
+    ? [...defaultViews, 'meridiem']
+    : defaultViews;
+
   return {
     ...themeProps,
     ...validationProps,
@@ -175,6 +181,7 @@ export function useTimeRangePickerDefaultizedProps<Props extends BaseTimeRangePi
     shouldRenderTimeInASingleColumn,
     thresholdToRenderTimeInASingleColumn,
     views,
+    viewsForFormatting,
     ampm,
     slots: {
       tabs: TimeRangePickerTabs,

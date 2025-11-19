@@ -6,15 +6,21 @@
     "quickFilterFormatter": {
       "description": "Function responsible for formatting values of quick filter in a string when the model is modified",
       "typeDescriptions": {
-        "values": "The new values passed to the quick filter model",
-        "string": "The string to display in the text field"
+        "values": {
+          "name": "values",
+          "description": "The new values passed to the quick filter model"
+        },
+        "string": { "name": "string", "description": "The string to display in the text field" }
       }
     },
     "quickFilterParser": {
       "description": "Function responsible for parsing text input in an array of independent values for quick filtering.",
       "typeDescriptions": {
-        "input": "The value entered by the user",
-        "Array<any>": "The array of value on which quick filter is applied"
+        "input": { "name": "input", "description": "The value entered by the user" },
+        "Array<any>": {
+          "name": "Array<any>",
+          "description": "The array of value on which quick filter is applied"
+        }
       }
     }
   },

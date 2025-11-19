@@ -1,16 +1,19 @@
 import { ActiveGesturesRegistry } from './ActiveGesturesRegistry';
-import { Gesture, GestureEventData, GestureOptions } from './Gesture';
+import {
+  Gesture,
+  GestureEventData,
+  GestureOptions,
+  type BaseGestureOptions,
+  type PointerMode,
+} from './Gesture';
+import type { KeyboardManager } from './KeyboardManager';
 import { PointerData, PointerManager } from './PointerManager';
 import { TargetElement } from './types/TargetElement';
 
 /**
- * Configuration options for pointer-based gestures, extending the base GestureOptions.
- *
- * These options provide fine-grained control over how pointer events are interpreted
- * and when the gesture should be recognized.
+ * Base configuration options that can be overridden per pointer mode.
  */
-export interface PointerGestureOptions<GestureName extends string>
-  extends GestureOptions<GestureName> {
+export type BasePointerGestureOptions = BaseGestureOptions & {
   /**
    * Minimum number of pointers required to activate the gesture.
    * The gesture will not start until at least this many pointers are active.
@@ -26,7 +29,16 @@ export interface PointerGestureOptions<GestureName extends string>
    * @default Infinity (no maximum)
    */
   maxPointers?: number;
-}
+};
+
+/**
+ * Configuration options for pointer-based gestures, extending the base GestureOptions.
+ *
+ * These options provide fine-grained control over how pointer events are interpreted
+ * and when the gesture should be recognized.
+ */
+export interface PointerGestureOptions<GestureName extends string>
+  extends GestureOptions<GestureName, BasePointerGestureOptions> {}
 
 export type PointerGestureEventData<
   CustomData extends Record<string, unknown> = Record<string, unknown>,
@@ -63,7 +75,7 @@ export type PointerGestureEventData<
  *     });
  *   }
  *
- *   handlePointerEvent(pointers, event) {
+ *   handlePointerEvent = (pointers, event) => {
  *     // Handle pointer events here
  *   }
  * }
@@ -102,12 +114,11 @@ export abstract class PointerGesture<GestureName extends string> extends Gesture
     element: TargetElement,
     pointerManager: PointerManager,
     gestureRegistry: ActiveGesturesRegistry<GestureName>,
+    keyboardManager: KeyboardManager,
   ): void {
-    super.init(element, pointerManager, gestureRegistry);
+    super.init(element, pointerManager, gestureRegistry, keyboardManager);
 
-    this.unregisterHandler = this.pointerManager!.registerGestureHandler((pointers, event) =>
-      this.handlePointerEvent(pointers, event),
-    );
+    this.unregisterHandler = this.pointerManager!.registerGestureHandler(this.handlePointerEvent);
   }
 
   protected updateOptions(options: typeof this.mutableOptionsType): void {
@@ -115,6 +126,19 @@ export abstract class PointerGesture<GestureName extends string> extends Gesture
 
     this.minPointers = options.minPointers ?? this.minPointers;
     this.maxPointers = options.maxPointers ?? this.maxPointers;
+  }
+
+  protected getBaseConfig() {
+    return {
+      requiredKeys: this.requiredKeys,
+      minPointers: this.minPointers,
+      maxPointers: this.maxPointers,
+    };
+  }
+
+  protected isWithinPointerCount(pointers: PointerData[], pointerMode: string): boolean {
+    const config = this.getEffectiveConfig(pointerMode as PointerMode, this.getBaseConfig());
+    return pointers.length >= config.minPointers && pointers.length <= config.maxPointers;
   }
 
   /**
@@ -145,10 +169,15 @@ export abstract class PointerGesture<GestureName extends string> extends Gesture
   ): PointerData[] {
     return pointers.filter(
       (pointer) =>
-        calculatedTarget === pointer.target ||
-        calculatedTarget.contains(pointer.target as Node) ||
-        pointer.target === this.originalTarget ||
-        calculatedTarget === this.originalTarget,
+        (this.isPointerTypeAllowed(pointer.pointerType) &&
+          (calculatedTarget === pointer.target ||
+            pointer.target === this.originalTarget ||
+            calculatedTarget === this.originalTarget ||
+            ('contains' in calculatedTarget &&
+              calculatedTarget.contains(pointer.target as Node)))) ||
+        ('getRootNode' in calculatedTarget &&
+          calculatedTarget.getRootNode() instanceof ShadowRoot &&
+          pointer.srcEvent.composedPath().includes(calculatedTarget)),
     );
   }
 

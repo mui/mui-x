@@ -14,18 +14,30 @@ import {
   useChartHighlight,
   UseChartHighlightSignature,
 } from '../internals/plugins/featurePlugins/useChartHighlight';
+import {
+  useChartKeyboardNavigation,
+  UseChartKeyboardNavigationSignature,
+} from '../internals/plugins/featurePlugins/useChartKeyboardNavigation';
 import { ConvertSignaturesIntoPlugins } from '../internals/plugins/models/helpers';
+import {
+  useChartBrush,
+  UseChartBrushSignature,
+} from '../internals/plugins/featurePlugins/useChartBrush';
 
-export type BarChartPluginsSignatures = [
+export type BarChartPluginSignatures = [
   UseChartZAxisSignature,
-  UseChartCartesianAxisSignature<'bar'>,
+  UseChartBrushSignature,
   UseChartInteractionSignature,
+  UseChartCartesianAxisSignature<'bar'>,
   UseChartHighlightSignature,
+  UseChartKeyboardNavigationSignature,
 ];
 
-export const BAR_CHART_PLUGINS: ConvertSignaturesIntoPlugins<BarChartPluginsSignatures> = [
+export const BAR_CHART_PLUGINS: ConvertSignaturesIntoPlugins<BarChartPluginSignatures> = [
   useChartZAxis,
-  useChartCartesianAxis,
+  useChartBrush,
   useChartInteraction,
+  useChartCartesianAxis,
   useChartHighlight,
+  useChartKeyboardNavigation,
 ];

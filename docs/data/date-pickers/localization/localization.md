@@ -92,7 +92,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 You can also customize the translations of a single component.
 
-If you want to customize some translations on specific component, you can use the `localeText` prop exposed by all our pickers.
+If you want to customize some translations on a specific component, you can use the `localeText` prop exposed by all Picker components.
 
 ```jsx
 <DatePicker localeText={{ clearButtonLabel: 'Empty' }} />

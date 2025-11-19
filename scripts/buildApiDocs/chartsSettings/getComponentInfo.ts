@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import kebabCase from 'lodash/kebabCase';
+import { kebabCase } from 'es-toolkit/string';
 import { getHeaders, getTitle, renderMarkdown } from '@mui/internal-markdown';
 import {
   ComponentInfo,
@@ -46,6 +46,7 @@ export function getComponentInfo(filename: string): ComponentInfo {
         .filter((page) => page.pathname.startsWith('/charts') && page.components.includes(name))
         .map((page) => {
           return {
+            filePath: page.filename,
             demoPageTitle: renderMarkdown(getTitle(page.markdownContent)),
             demoPathname: `${page.pathname.replace('/charts', '/x/react-charts')}/`,
           };
@@ -77,8 +78,7 @@ export function getComponentImports(name: string, filename: string) {
 
   if (rootImportPath === '@mui/x-charts') {
     reExportPackage.push('@mui/x-charts-pro');
-    // TODO: CHARTS-PREMIUM: Uncomment when ready
-    // reExportPackage.push('@mui/x-charts-premium');
+    reExportPackage.push('@mui/x-charts-premium');
   }
 
   return [

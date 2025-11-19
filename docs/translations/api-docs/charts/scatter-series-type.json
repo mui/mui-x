@@ -19,6 +19,7 @@
       "description": "Defines the mark type for the series.<br /><br />There is a default mark type for each series type."
     },
     "markerSize": { "description": "" },
+    "preview": { "description": "" },
     "valueFormatter": {
       "description": "Formatter used to render values in tooltip or other data display."
     },

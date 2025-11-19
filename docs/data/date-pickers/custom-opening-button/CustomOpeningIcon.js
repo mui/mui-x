@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { createSvgIcon } from '@mui/material/utils';
 import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';

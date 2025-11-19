@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { dataset, valueFormatter } from '../dataset/weather';
 
@@ -9,6 +8,7 @@ const chartSetting = {
     },
   ],
   height: 400,
+  margin: { left: 0 },
 };
 
 export default function HorizontalBars() {

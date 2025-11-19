@@ -5,14 +5,16 @@ import {
   scaleTime,
   scaleUtc,
   scaleLinear,
+  NumberValue,
 } from '@mui/x-charts-vendor/d3-scale';
 import { ContinuousScaleName, D3ContinuousScale } from '../models/axis';
+import { scaleSymlog } from './scales';
 
-export function getScale(
+export function getScale<Domain extends NumberValue = any, Range = any>(
   scaleType: ContinuousScaleName,
-  domain: any[],
-  range: any[],
-): D3ContinuousScale {
+  domain: Iterable<Domain>,
+  range: readonly Range[],
+): D3ContinuousScale<Range, Range> {
   switch (scaleType) {
     case 'log':
       return scaleLog(domain, range);
@@ -24,6 +26,8 @@ export function getScale(
       return scaleTime(domain, range);
     case 'utc':
       return scaleUtc(domain, range);
+    case 'symlog':
+      return scaleSymlog(domain, range);
     default:
       return scaleLinear(domain, range);
   }

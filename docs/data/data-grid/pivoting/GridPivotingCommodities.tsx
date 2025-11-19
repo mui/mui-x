@@ -5,6 +5,7 @@ import {
   GridPivotModel,
   DataGridPremiumProps,
   GridInitialState,
+  GridSidebarValue,
 } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
@@ -21,11 +22,23 @@ const pivotModel: GridPivotModel = {
 const initialState: GridInitialState = {
   pivoting: {
     model: pivotModel,
-    panelOpen: true,
+  },
+  sidebar: {
+    open: true,
+    value: GridSidebarValue.Pivot,
   },
   pinnedColumns: {
     left: [GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD],
   },
+};
+
+const pivotingColDef: DataGridPremiumProps['pivotingColDef'] = (
+  originalColumnField,
+) => {
+  if (originalColumnField === 'quantity') {
+    return { width: 80 };
+  }
+  return undefined;
 };
 
 export default function GridPivotingCommodities() {
@@ -36,17 +49,6 @@ export default function GridPivotingCommodities() {
   });
 
   const [pivotActive, setPivotActive] = React.useState(false);
-
-  const pivotingColDef = React.useMemo<
-    DataGridPremiumProps['pivotingColDef']
-  >(() => {
-    return (originalColumnField) => {
-      if (originalColumnField === 'quantity') {
-        return { width: 80 };
-      }
-      return undefined;
-    };
-  }, []);
 
   return (
     <div style={{ width: '100%' }}>

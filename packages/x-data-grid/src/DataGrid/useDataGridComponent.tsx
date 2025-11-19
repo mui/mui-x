@@ -1,4 +1,7 @@
+'use client';
+import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
+import { useFirstRender } from '@mui/x-internals/useFirstRender';
 import { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { GridPrivateApiCommunity } from '../models/api/gridApiCommunity';
 import { useGridInitialization } from '../hooks/core/useGridInitialization';
@@ -39,7 +42,7 @@ import {
   dimensionsStateInitializer,
   useGridDimensions,
 } from '../hooks/features/dimensions/useGridDimensions';
-import { rowsMetaStateInitializer, useGridRowsMeta } from '../hooks/features/rows/useGridRowsMeta';
+import { rowsMetaStateInitializer } from '../hooks/features/rows/useGridRowsMeta';
 import { useGridStatePersistence } from '../hooks/features/statePersistence/useGridStatePersistence';
 import { useGridColumnSpanning } from '../hooks/features/columns/useGridColumnSpanning';
 import {
@@ -64,10 +67,12 @@ import {
 } from '../hooks/features/listView/useGridListView';
 import { propsStateInitializer } from '../hooks/core/useGridProps';
 import { useGridDataSource } from '../hooks/features/dataSource/useGridDataSource';
+import { GridConfiguration } from '../models/configuration/gridConfiguration';
 
 export const useDataGridComponent = (
   apiRef: RefObject<GridPrivateApiCommunity>,
   props: DataGridProcessedProps,
+  configuration: GridConfiguration,
 ) => {
   useGridInitialization<GridPrivateApiCommunity>(apiRef, props);
 
@@ -103,20 +108,19 @@ export const useDataGridComponent = (
   useGridKeyboardNavigation(apiRef, props);
   useGridRowSelection(apiRef, props);
   useGridColumns(apiRef, props);
-  useGridRows(apiRef, props);
+  useGridRows(apiRef, props, configuration);
   useGridRowSpanning(apiRef, props);
-  useGridParamsApi(apiRef, props);
+  useGridParamsApi(apiRef, props, configuration);
   useGridColumnSpanning(apiRef);
   useGridColumnGrouping(apiRef, props);
-  useGridEditing(apiRef, props);
+  useGridEditing(apiRef, props, configuration);
   useGridFocus(apiRef, props);
   useGridPreferencesPanel(apiRef, props);
-  useGridFilter(apiRef, props);
+  useGridFilter(apiRef, props, configuration);
   useGridSorting(apiRef, props);
   useGridDensity(apiRef, props);
   useGridColumnResize(apiRef, props);
   useGridPagination(apiRef, props);
-  useGridRowsMeta(apiRef, props);
   useGridScroll(apiRef, props);
   useGridColumnMenu(apiRef);
   useGridCsvExport(apiRef, props);
@@ -128,4 +132,12 @@ export const useDataGridComponent = (
   useGridVirtualization(apiRef, props);
   useGridListView(apiRef, props);
   useGridDataSource(apiRef, props);
+
+  // Should be the last thing to run, because all pre-processors should have been registered by now.
+  useFirstRender(() => {
+    apiRef.current.runAppliersForPendingProcessors();
+  });
+  React.useEffect(() => {
+    apiRef.current.runAppliersForPendingProcessors();
+  });
 };

@@ -1,3 +1,0 @@
-<StandaloneView events={events} resources={resources}>
-  <AgendaView className={classes.Container} onEventsChange={setEvents} />
-</StandaloneView>

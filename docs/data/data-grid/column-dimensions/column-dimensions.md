@@ -42,7 +42,7 @@ Before using fluid width, note that:
 
 ## Resizing
 
-By default, Data Grid allows all columns to be resized by dragging the right portion of the column separator.
+By default, users can resize all columns in the Data Grid by dragging the right portion of the column separator.
 
 To prevent the resizing of a column, set `resizable: false` in the `GridColDef`.
 Alternatively, to disable all columns resize, set the prop `disableColumnResize={true}`.
@@ -60,19 +60,17 @@ To capture changes in the width of a column there are two callbacks that are cal
 
 ## Autosizing
 
-Data Grid allows to autosize the columns' dimensions based on their content. Autosizing is enabled by default. To turn it off, pass the `disableAutosize` prop to the Data Grid.
+Autosizing is the feature to adjust the width of a column to fit its content including the header and the outliers (cells with long content).
+It respects the `minWidth` and `maxWidth` options defined in the `columns` definition prop.
 
-Autosizing can be used by one of the following methods:
+To configure autosizing behavior, use the `autosizeOptions` with the following options:
 
-- Adding the `autosizeOnMount` prop,
-- Double-clicking a column header separator on the grid,
-- Calling the `apiRef.current.autosizeColumns(options)` API method.
-
-You can pass options directly to the API method when you call it. To configure autosize for the other two methods, provide the options in the `autosizeOptions` prop.
-
-Note that for the separator double-click method, the `autosizeOptions.columns` will be replaced by the respective column user double-clicked on.
-
-In all the cases, the `colDef.minWidth` and `colDef.maxWidth` options will be respected.
+- `columns`: An array of column field names to autosize. If not provided, all columns will be autosized.
+- `includeHeaders`: A boolean to indicate whether to include the header content when autosizing. Default is **true**.
+- `includeOutliers`: A boolean to indicate whether to include outlier cells when autosizing. Default is **false**.
+- `outliersFactor`: A number representing the factor to determine outliers. Default is **1.5**.
+- `expand`: A boolean, if the total width is less than the available width, expand columns to fill it. Default is **false**.
+- `disableColumnVirtualization`: A boolean to include virtualized columns (not rendered in the DOM) when autosizing. Default is **true**.
 
 ```tsx
 <DataGrid
@@ -87,21 +85,51 @@ In all the cases, the `colDef.minWidth` and `colDef.maxWidth` options will be re
 
 {{"demo": "ColumnAutosizing.js", "disableAd": true, "bg": "inline"}}
 
-:::warning
-The Data Grid can only autosize based on the currently rendered cells.
+:::info
+The `autosizeOptions` only applies to the [column header separator](#column-header-separator) and the `autosizeOnMount` prop.
 
-DOM access is required to accurately calculate dimensions, so unmounted cells (when [virtualization](/x/react-data-grid/virtualization/) is on) cannot be sized. If you need a bigger row sample, [open an issue](https://github.com/mui/mui-x/issues) to discuss it further.
+It **does not** apply to the `autosizeColumns()` method when you call it programmatically, you have to pass the options directly.
 :::
 
-### Autosizing asynchronously
+### Column header separator
 
-The `autosizeColumns` method from the `apiRef` can be used as well to adjust the column size on specified events, for example when receiving row data from the server.
+Autosizing can be triggered by double-clicking the column header separator.
+
+To disable this behavior, use the `disableAutosize` prop.
+
+```jsx
+<DataGrid {...otherProps} disableAutosize />
+```
+
+Note that for the separator double-click method, the `autosizeOptions.columns` will be replaced by the respective column user double-clicked on.
+
+### Autosizing on mount
+
+To automatically autosize columns when the Data Grid is mounted, use the `autosizeOnMount` prop.
+
+```jsx
+<DataGrid {...otherProps} autosizeOnMount />
+```
+
+### Autosizing programmatically
+
+Use API method `apiRef.current.autosizeColumns(autosizeOptions)` to adjust the column size programmatically. Common usage could be to bind it with specified events, for example when receiving row data from the server.
 
 {{"demo": "ColumnAutosizingAsync.js", "disableAd": true, "bg": "inline"}}
 
 :::warning
 This example uses `ReactDOM.flushSync`. If used incorrectly it can hurt the performance of your application. Please refer to the official [React docs](https://react.dev/reference/react-dom/flushSync) for further information.
 :::
+
+### Autosizing virtualized columns
+
+Use `autoSizeColumns({ disableColumnVirtualization: true})` to include columns that are not visible in the DOM due to column virtualization.
+
+:::warning
+The time to complete the autosizing operation exponentially depends on the number of virtualized columns.
+:::
+
+{{"demo": "ColumnAutosizingVirtualized.js", "disableAd": true, "bg": "inline"}}
 
 ### Autosizing with dynamic row height
 

@@ -30,12 +30,16 @@ function isPlanScopeSufficient(packageName: MuiCommercialPackageName, planScope:
 }
 
 const expiryReg = /^.*EXPIRY=([0-9]+),.*$/;
+const orderReg = /^.*ORDER:([0-9]+),.*$/;
 
 interface MuiLicense {
+  version: 1 | 2;
   licenseModel: LicenseModel | null;
   planScope: PlanScope | null;
-  expiryTimestamp: number | null;
   planVersion: PlanVersion;
+  expiryTimestamp: number | null;
+  expiryDate: Date | null;
+  orderId: number | null;
 }
 
 const PRO_PACKAGES_AVAILABLE_IN_INITIAL_PRO_PLAN: MuiCommercialPackageName[] = [
@@ -46,34 +50,47 @@ const PRO_PACKAGES_AVAILABLE_IN_INITIAL_PRO_PLAN: MuiCommercialPackageName[] = [
 /**
  * Format: ORDER:${orderNumber},EXPIRY=${expiryTimestamp},KEYVERSION=1
  */
-const decodeLicenseVersion1 = (license: string): MuiLicense => {
+function decodeLicenseVersion1(license: string): MuiLicense {
   let expiryTimestamp: number | null;
+  let orderId: number | null;
   try {
     expiryTimestamp = parseInt(license.match(expiryReg)![1], 10);
     if (!expiryTimestamp || Number.isNaN(expiryTimestamp)) {
       expiryTimestamp = null;
     }
+
+    orderId = parseInt(license.match(orderReg)![1], 10);
+    if (!orderId || Number.isNaN(orderId)) {
+      orderId = null;
+    }
   } catch (err) {
     expiryTimestamp = null;
+    orderId = null;
   }
 
   return {
-    planScope: 'pro',
+    version: 1,
     licenseModel: 'perpetual',
-    expiryTimestamp,
+    planScope: 'pro',
     planVersion: 'initial',
+    expiryTimestamp,
+    expiryDate: expiryTimestamp ? new Date(expiryTimestamp) : null,
+    orderId,
   };
-};
+}
 
 /**
  * Format: O=${orderNumber},E=${expiryTimestamp},S=${planScope},LM=${licenseModel},PV=${planVersion},KV=2`;
  */
-const decodeLicenseVersion2 = (license: string): MuiLicense => {
+function decodeLicenseVersion2(license: string): MuiLicense {
   const licenseInfo: MuiLicense = {
-    planScope: null,
+    version: 2,
     licenseModel: null,
-    expiryTimestamp: null,
+    planScope: null,
     planVersion: 'initial',
+    expiryTimestamp: null,
+    expiryDate: null,
+    orderId: null,
   };
 
   license
@@ -93,21 +110,29 @@ const decodeLicenseVersion2 = (license: string): MuiLicense => {
         const expiryTimestamp = parseInt(value, 10);
         if (expiryTimestamp && !Number.isNaN(expiryTimestamp)) {
           licenseInfo.expiryTimestamp = expiryTimestamp;
+          licenseInfo.expiryDate = new Date(expiryTimestamp);
         }
       }
 
       if (key === 'PV') {
         licenseInfo.planVersion = value as PlanVersion;
       }
+
+      if (key === 'O') {
+        const orderNum = parseInt(value, 10);
+        if (orderNum && !Number.isNaN(orderNum)) {
+          licenseInfo.orderId = orderNum;
+        }
+      }
     });
 
   return licenseInfo;
-};
+}
 
 /**
  * Decode the license based on its key version and return a version-agnostic `MuiLicense` object.
  */
-const decodeLicense = (encodedLicense: string): MuiLicense | null => {
+function decodeLicense(encodedLicense: string): MuiLicense | null {
   const license = base64Decode(encodedLicense);
 
   if (license.includes('KEYVERSION=1')) {
@@ -119,7 +144,7 @@ const decodeLicense = (encodedLicense: string): MuiLicense | null => {
   }
 
   return null;
-};
+}
 
 export function verifyLicense({
   releaseInfo,
@@ -159,7 +184,7 @@ export function verifyLicense({
   }
 
   if (license.licenseModel == null || !LICENSE_MODELS.includes(license.licenseModel)) {
-    console.error('MUI X: Error checking license. Licensing model not found or invalid!');
+    console.error('MUI X: Error checking license. License model not found or invalid!');
     return { status: LICENSE_STATUS.Invalid };
   }
 

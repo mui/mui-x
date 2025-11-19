@@ -1,12 +1,12 @@
 'use client';
+import { useStore } from '@mui/x-internals/store';
 import { useTreeViewContext } from '../internals/TreeViewProvider';
-import { useSelector } from '../internals/hooks/useSelector';
-import { selectorItemModel } from '../internals/plugins/useTreeViewItems/useTreeViewItems.selectors';
 import { TreeViewBaseItem, TreeViewDefaultItemModelProperties, TreeViewItemId } from '../models';
+import { itemsSelectors, UseTreeViewItemsSignature } from '../internals/plugins/useTreeViewItems';
 
 export const useTreeItemModel = <R extends {} = TreeViewDefaultItemModelProperties>(
   itemId: TreeViewItemId,
 ) => {
-  const { store } = useTreeViewContext();
-  return useSelector(store, selectorItemModel, itemId) as unknown as TreeViewBaseItem<R> | null;
+  const { store } = useTreeViewContext<[UseTreeViewItemsSignature]>();
+  return useStore(store, itemsSelectors.itemModel, itemId) as unknown as TreeViewBaseItem<R> | null;
 };

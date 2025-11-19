@@ -8,6 +8,20 @@ components: BarChart, BarChartPro, BarElement, BarPlot, ChartsGrid, BarLabel
 
 <p class="description">Bar charts express quantities through a bar's length, using a common baseline.</p>
 
+## Overview
+
+Bar charts are ideal for comparing discrete categories.
+They excel at visualizing differences in magnitude across categories (or a group of categories), highlight trends, and compare proportions at a glance.
+The categories can represent progressive values such as time periods, or independent groups such as products, countries, age brackets, etc.
+Here are the basic requirements to create a bar chart:
+
+- One categorical dimension (x-axis for vertical bars, y-axis for horizontal bars)
+- One or more numerical metric for length of each bar
+
+The horizontal bar chart below compares voter turnout in some European countries:
+
+{{"demo": "ShinyBarChartHorizontal.js"}}
+
 ## Basics
 
 Bar charts series should contain a `data` property containing an array of values.
@@ -77,6 +91,22 @@ You can test all configuration options in the following demo:
 
 {{"demo": "TickPlacementBars.js"}}
 
+### Minimum bar size
+
+You can set a minimum bar size with the `minBarSize` property.
+This property is useful when you want to ensure that bars are always visible, even when the data is sparse or the chart is small.
+
+The `minBarSize` property is ignored if the series value is `null` or `0`.
+It also doesn't work with stacked series.
+
+{{"demo": "MinBarSize.js"}}
+
+### Log scale
+
+A bar chart renders a bar from 0 to the value of a data point. However, the logarithm of zero is undefined, meaning that a y-axis with a log scale cannot plot the bar.
+
+You can work around this limitation by using a [symlog scale](/x/react-charts/axis/#symlog-scale).
+
 ## Customization
 
 ### Grid
@@ -119,14 +149,50 @@ You can use this attribute to target elements based on their series.
 
 {{"demo": "BarGradient.js"}}
 
+### Gradients
+
+By default, a gradient's units are set to [`objectBoundingBox`](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Attribute/gradientUnits#objectboundingbox).
+When applied to a bar, the gradient stretches to fill the entire size of the bar, regardless of the bar's value.
+
+Alternatively, you can set `gradientUnits` to `userSpaceOnUse`, which stretches the gradient to fill the entire size of the chart.
+`userSpaceOnUse` means that the gradient's coordinates are relative to the SVG, meaning that a gradient with `x1="0"` and `x2="100%"` stretches across the entire width of the SVG.
+This effectively reveals the gradient depending on the bar's value, as the gradient is clipped to the bar's size.
+
+{{"demo": "BarOECDHouseholdSavings.js"}}
+
+Note that, in the example above, there are two gradients:
+
+- The series `color` property references the gradient with `gradientUnits="objectBoundingBox"`, which is applied to the tooltip, legend, and other elements that reference the series color.
+- The bar's `fill` property is overridden using CSS to reference the gradient with `gradientUnits="userSpaceOnUse"`.
+
+The first gradient is used for elements showing the whole gradient, such as tooltips and legend.
+The second one is shown in the bars themselves that display the part of the gradient that corresponds to their value.
+
 ## Labels
 
-You can display labels on the bars.
-To do so, the `BarChart` or `BarPlot` accepts a `barLabel` prop.
-It can either get a function that gets the bar item and some context.
-Or you can pass `'value'` to display the raw value of the bar.
+You can display labels on the bars. This can be useful to show the value of each bar directly on the chart.
+
+If you provide `'value'` to the `barLabel` property of a bar series, the value of that bar is shown.
+Alternatively, the `barLabel` property accepts a function that is called with the bar item and context about the bar.
+
+In the example below, the value of the first series is displayed using the default formatter, and format the value of the second series as US dollars. The labels of the third series are hidden.
 
 {{"demo": "BarLabel.js"}}
+
+### Label placement
+
+The position of the bar label can be customized.
+To do so, set a series' `barLabelPlacement` property to one of the following values:
+
+- `center`: the label is centered on the bar;
+- `outside`: the label is placed after the end of the bar, from the point of the view of the origin. For a vertical positive bar, the label is above its top edge; for a horizontal negative bar, the label is placed to the left of its leftmost limit.
+
+{{"demo": "BarLabelPlacement.js"}}
+
+:::info
+When using `outside` placement, if the label does not fit in the chart area, it will be clipped.
+To avoid this, you can decrease/increase the axis min/max respectively so that there's enough space for the labels.
+:::
 
 ### Custom labels
 
@@ -163,7 +229,7 @@ const clickHandler = (
 {{"demo": "BarClick.js"}}
 
 :::info
-Their is a slight difference between the `event` of `onItemClick` and `onAxisClick`:
+There is a slight difference between the `event` of `onItemClick` and `onAxisClick`:
 
 - For `onItemClick` it's a React synthetic mouse event emitted by the bar component.
 - For `onAxisClick` it's a native mouse event emitted by the svg component.
@@ -182,7 +248,7 @@ Note that `onAxisClick` can handle both bar and line series if you mix them.
 
 ## Animation
 
-Chart containers respect [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion), but you can also disable animations manually by setting the `skipAnimation` prop to `true`.
+Chart containers respect [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/prefers-reduced-motion), but you can also disable animations manually by setting the `skipAnimation` prop to `true`.
 
 When `skipAnimation` is enabled, the chart renders without any animations.
 
@@ -224,3 +290,5 @@ Here's how the Bar Chart is composed:
   </ChartsWrapper>
 </ChartDataProvider>
 ```
+
+{{"demo": "BarScatterCompostion.js"}}

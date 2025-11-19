@@ -23,5 +23,10 @@ export const getPinnedCellOffset = (
       break;
   }
 
+  // XXX: fix this properly
+  if (Number.isNaN(pinnedOffset)) {
+    pinnedOffset = undefined;
+  }
+
   return pinnedOffset;
 };

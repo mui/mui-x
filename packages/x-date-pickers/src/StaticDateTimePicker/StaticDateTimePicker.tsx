@@ -263,7 +263,10 @@ StaticDateTimePicker.propTypes = {
    * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
    * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
    * @param {TValue} value The value that was just accepted.
-   * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
+   * @param {FieldChangeHandlerContext<TError>} context Context about this acceptance:
+   * - `validationError`: validation result of the current value
+   * - `source`: source of the acceptance. One of 'field' | 'picker' | 'unknown'
+   * - `shortcut` (optional): the shortcut metadata if the value was accepted via a shortcut selection
    */
   onAccept: PropTypes.func,
   /**
@@ -271,7 +274,10 @@ StaticDateTimePicker.propTypes = {
    * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
    * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
    * @param {TValue} value The new value.
-   * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
+   * @param {FieldChangeHandlerContext<TError>} context Context about this change:
+   * - `validationError`: validation result of the current value
+   * - `source`: source of the change. One of 'field' | 'view' | 'unknown'
+   * - `shortcut` (optional): the shortcut metadata if the change was triggered by a shortcut selection
    */
   onChange: PropTypes.func,
   /**
@@ -297,7 +303,7 @@ StaticDateTimePicker.propTypes = {
   onMonthChange: PropTypes.func,
   /**
    * Callback fired on view change.
-   * @template TView
+   * @template TView Type of the view. It will vary based on the Picker type and the `views` it uses.
    * @param {TView} view The new view.
    */
   onViewChange: PropTypes.func,
@@ -407,8 +413,8 @@ StaticDateTimePicker.propTypes = {
   thresholdToRenderTimeInASingleColumn: PropTypes.number,
   /**
    * The time steps between two time unit options.
-   * For example, if `timeStep.minutes = 8`, then the available minute options will be `[0, 8, 16, 24, 32, 40, 48, 56]`.
-   * When single column time renderer is used, only `timeStep.minutes` will be used.
+   * For example, if `timeSteps.minutes = 8`, then the available minute options will be `[0, 8, 16, 24, 32, 40, 48, 56]`.
+   * When single column time renderer is used, only `timeSteps.minutes` will be used.
    * @default{ hours: 1, minutes: 5, seconds: 5 }
    */
   timeSteps: PropTypes.shape({

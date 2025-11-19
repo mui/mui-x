@@ -1,3 +1,4 @@
+import { GaugeClassKey } from '../Gauge';
 import { BarLabelClassKey } from '../BarChart';
 import { BarElementClassKey } from '../BarChart/barElementClasses';
 import { ChartsAxisHighlightClassKey } from '../ChartsAxisHighlight';
@@ -27,6 +28,9 @@ export interface ChartsComponentNameToClassKey {
   MuiMarkElement: MarkElementClassKey;
 
   // ScatterChart components
+
+  // Gauge components
+  MuiGauge: GaugeClassKey;
 }
 
 declare module '@mui/material/styles' {

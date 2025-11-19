@@ -1,52 +1,56 @@
 import {
   GridColDef,
   GridColumnGroup,
-  GridColumnGroupingModel,
   GridColumnNode,
   GridRowModel,
   isLeaf,
   GridSingleSelectColDef,
   gridStringOrNumberComparator,
   GridLocaleTextApi,
+  GridGroupingColDefOverrideParams,
 } from '@mui/x-data-grid-pro';
 import { getDefaultColTypeDef } from '@mui/x-data-grid-pro/internals';
 import type { RefObject } from '@mui/x-internals/types';
+import { COLUMN_GROUP_ID_SEPARATOR } from '../../../constants/columnGroups';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import type { GridAggregationModel } from '../aggregation';
 import type { GridApiPremium } from '../../../models/gridApiPremium';
 import { isGroupingColumn } from '../rowGrouping';
-import type { GridPivotingPropsOverrides, GridPivotModel } from './gridPivotingInterfaces';
+import type {
+  GridPivotingStaticPropsOverrides,
+  GridPivotingDynamicPropsOverrides,
+  GridPivotModel,
+} from './gridPivotingInterfaces';
+import { defaultGetAggregationPosition } from '../aggregation/gridAggregationUtils';
 
-const columnGroupIdSeparator = '>->';
+interface GridColumnGroupPivoting extends Omit<GridColumnGroup, 'children'> {
+  rawHeaderName: string;
+  children: GridColumnGroupPivoting[];
+}
 
-export const isPivotingAvailable = (
-  props: Pick<DataGridPremiumProcessedProps, 'disablePivoting'>,
-) => {
-  return !props.disablePivoting;
+export const defaultGetPivotDerivedColumns: NonNullable<
+  DataGridPremiumProcessedProps['getPivotDerivedColumns']
+> = (column, getLocaleText) => {
+  if (column.type === 'date') {
+    const field = column.field;
+    return [
+      {
+        // String column type to avoid formatting the value as 2,025 instead of 2025
+        field: `${field}-year`,
+        headerName: `${column.headerName} ${getLocaleText('pivotYearColumnHeaderName')}`,
+        valueGetter: (value, row) => new Date(row[field]).getFullYear(),
+      },
+
+      {
+        field: `${field}-quarter`,
+        headerName: `${column.headerName} ${getLocaleText('pivotQuarterColumnHeaderName')}`,
+        valueGetter: (value, row) => `Q${Math.floor(new Date(row[field]).getMonth() / 3) + 1}`,
+      },
+    ];
+  }
+
+  return undefined;
 };
-
-export const defaultGetPivotDerivedColumns: DataGridPremiumProcessedProps['getPivotDerivedColumns'] =
-  (column, getLocaleText) => {
-    if (column.type === 'date') {
-      const field = column.field;
-      return [
-        {
-          // String column type to avoid formatting the value as 2,025 instead of 2025
-          field: `${field}-year`,
-          headerName: `${column.headerName} ${getLocaleText('pivotYearColumnHeaderName')}`,
-          valueGetter: (value, row) => new Date(row[field]).getFullYear(),
-        },
-
-        {
-          field: `${field}-quarter`,
-          headerName: `${column.headerName} ${getLocaleText('pivotQuarterColumnHeaderName')}`,
-          valueGetter: (value, row) => `Q${Math.floor(new Date(row[field]).getMonth() / 3) + 1}`,
-        },
-      ];
-    }
-
-    return undefined;
-  };
 
 export const getInitialColumns = (
   originalColumns: DataGridPremiumProcessedProps['columns'],
@@ -71,15 +75,22 @@ export const getInitialColumns = (
   return initialColumns;
 };
 
-function sortColumnGroups(
-  columnGroups: GridColumnNode[],
+const sortColumnGroups = (
+  columnGroups: GridColumnGroupPivoting[],
   pivotModelColumns: GridPivotModel['columns'],
   depth = 0,
-) {
+) => {
   if (depth > pivotModelColumns.length - 1) {
     return;
   }
   const sort = pivotModelColumns[depth].sort;
+  if (columnGroups.length < 2) {
+    if (columnGroups[0]?.children) {
+      sortColumnGroups(columnGroups[0].children, pivotModelColumns, depth + 1);
+    }
+    return;
+  }
+
   columnGroups.sort((a, b) => {
     if (isLeaf(a) || isLeaf(b)) {
       return 0;
@@ -95,30 +106,68 @@ function sortColumnGroups(
     }
     return (
       (sort === 'asc' ? 1 : -1) *
-      gridStringOrNumberComparator(a.headerName, b.headerName, {} as any, {} as any)
+      gridStringOrNumberComparator(a.rawHeaderName, b.rawHeaderName, {} as any, {} as any)
     );
   });
-}
+};
 
-export const getPivotedData = ({
+export const getPivotForcedProps = (
+  pivotModel: GridPivotModel,
+  columns: Map<string, GridColDef>,
+  groupingColDef: DataGridPremiumProcessedProps['groupingColDef'],
+): GridPivotingStaticPropsOverrides => {
+  const visibleRows = pivotModel.rows.filter((row) => !row.hidden);
+  const visibleColumns = pivotModel.columns.filter((column) => !column.hidden);
+  const visibleValues = pivotModel.values.filter((value) => !value.hidden);
+
+  const columnVisibilityModel: DataGridPremiumProcessedProps['columnVisibilityModel'] = {};
+  for (const column of columns.values()) {
+    columnVisibilityModel[column.field] = false;
+  }
+  if (visibleColumns.length === 0) {
+    visibleValues.forEach((value) => {
+      delete columnVisibilityModel[value.field];
+    });
+  }
+
+  const groupingColDefOverrides = (params: GridGroupingColDefOverrideParams) => ({
+    ...(typeof groupingColDef === 'function' ? groupingColDef(params) : groupingColDef || {}),
+    ...{
+      filterable: false,
+      aggregable: false,
+      hideable: false,
+    },
+  });
+
+  return {
+    columnVisibilityModel,
+    rowGroupingModel: visibleRows.map((row) => row.field),
+    getAggregationPosition: defaultGetAggregationPosition,
+    groupingColDef: groupingColDefOverrides,
+    headerFilters: false,
+    disableAggregation: false,
+    disableRowGrouping: false,
+  };
+};
+
+export const createPivotPropsFromRows = ({
   rows,
   columns,
   pivotModel,
-  apiRef,
   pivotingColDef,
+  apiRef,
 }: {
   rows: GridRowModel[];
   columns: Map<string, GridColDef>;
   pivotModel: GridPivotModel;
-  apiRef: RefObject<GridApiPremium>;
   pivotingColDef: DataGridPremiumProcessedProps['pivotingColDef'];
-}): GridPivotingPropsOverrides => {
+  apiRef: RefObject<GridApiPremium>;
+}): GridPivotingDynamicPropsOverrides => {
   const visibleColumns = pivotModel.columns.filter((column) => !column.hidden);
   const visibleRows = pivotModel.rows.filter((row) => !row.hidden);
   const visibleValues = pivotModel.values.filter((value) => !value.hidden);
 
   let pivotColumns: GridColDef[] = [];
-  const columnVisibilityModel: DataGridPremiumProcessedProps['columnVisibilityModel'] = {};
   const pivotColumnsIncludedInPivotValues: GridColDef[] = [];
 
   const initialColumns = new Map<string, GridColDef>();
@@ -145,7 +194,6 @@ export const getPivotedData = ({
       } else {
         pivotColumns.push(columnToAdd);
       }
-      columnVisibilityModel[column.field] = false;
     }
   }
 
@@ -172,8 +220,8 @@ export const getPivotedData = ({
 
   const aggregationModel: GridAggregationModel = {};
 
-  const columnGroupingModel: GridColumnGroupingModel = [];
-  const columnGroupingModelLookup = new Map<string, GridColumnGroup>();
+  const columnGroupingModel: GridColumnGroupPivoting[] = [];
+  const columnGroupingModelLookup = new Map<string, GridColumnGroupPivoting>();
 
   let newRows: GridRowModel[] = [];
 
@@ -182,7 +230,6 @@ export const getPivotedData = ({
 
     visibleValues.forEach((pivotValue) => {
       aggregationModel[pivotValue.field] = pivotValue.aggFunc;
-      delete columnVisibilityModel[pivotValue.field];
     });
   } else {
     for (let i = 0; i < rows.length; i += 1) {
@@ -190,32 +237,41 @@ export const getPivotedData = ({
       const newRow = { ...row };
       const columnGroupPath: string[] = [];
 
-      visibleColumns.forEach(({ field: colGroupField }, depth) => {
+      for (let j = 0; j < visibleColumns.length; j += 1) {
+        const { field: colGroupField } = visibleColumns[j];
+        const depth = j;
         const column = initialColumns.get(colGroupField);
         if (!column) {
-          return;
+          continue;
         }
         let colValue = apiRef.current.getRowValue(row, column) ?? '(No value)';
+
         if (column.type === 'singleSelect') {
           const singleSelectColumn = column as GridSingleSelectColDef;
           if (singleSelectColumn.getOptionLabel) {
             colValue = singleSelectColumn.getOptionLabel(colValue);
           }
         }
-        columnGroupPath.push(String(colValue));
-        const groupId = columnGroupPath.join(columnGroupIdSeparator);
+        if (column.type !== 'number') {
+          colValue = String(colValue);
+        }
+
+        const formattedHeaderName = apiRef.current.getRowFormattedValue(row, column) || colValue;
+        columnGroupPath.push(colValue);
+        const groupId = columnGroupPath.join(COLUMN_GROUP_ID_SEPARATOR);
 
         if (!columnGroupingModelLookup.has(groupId)) {
-          const columnGroup: GridColumnGroupingModel[number] = {
+          const columnGroup: GridColumnGroupPivoting = {
             groupId,
-            headerName: String(colValue),
+            headerName: formattedHeaderName,
+            rawHeaderName: colValue,
             children: [],
           };
           columnGroupingModelLookup.set(groupId, columnGroup);
           if (depth === 0) {
             columnGroupingModel.push(columnGroup);
           } else {
-            const parentGroupId = columnGroupPath.slice(0, -1).join(columnGroupIdSeparator);
+            const parentGroupId = columnGroupPath.slice(0, -1).join(COLUMN_GROUP_ID_SEPARATOR);
             const parentGroup = columnGroupingModelLookup.get(parentGroupId);
             if (parentGroup) {
               parentGroup.children.push(columnGroup);
@@ -232,11 +288,11 @@ export const getPivotedData = ({
             if (!originalColumn) {
               return;
             }
-            const valueKey = `${columnGroupPath.join(columnGroupIdSeparator)}${columnGroupIdSeparator}${valueField}`;
+            const valueKey = `${columnGroupPath.join(COLUMN_GROUP_ID_SEPARATOR)}${COLUMN_GROUP_ID_SEPARATOR}${valueField}`;
             newRow[valueKey] = apiRef.current.getRowValue(row, originalColumn);
           });
         }
-      });
+      }
 
       newRows.push(newRow);
     }
@@ -255,7 +311,7 @@ export const getPivotedData = ({
         if (visibleValues.length === 0) {
           // If there are no visible values, there are no actual columns added to the data grid, which leads to column groups not being visible.
           // Adding an empty column to each column group ensures that the column groups are visible.
-          const emptyColumnField = `${columnGroup.groupId}${columnGroupIdSeparator}empty`;
+          const emptyColumnField = `${columnGroup.groupId}${COLUMN_GROUP_ID_SEPARATOR}empty`;
           const emptyColumn: GridColDef = {
             field: emptyColumnField,
             headerName: '',
@@ -273,15 +329,17 @@ export const getPivotedData = ({
         } else {
           visibleValues.forEach((pivotValue) => {
             const valueField = pivotValue.field;
-            const mapValueKey = `${columnGroup.groupId}${columnGroupIdSeparator}${valueField}`;
+            const mapValueKey = `${columnGroup.groupId}${COLUMN_GROUP_ID_SEPARATOR}${valueField}`;
             const overrides =
               typeof pivotingColDef === 'function'
-                ? pivotingColDef(valueField, columnGroup.groupId.split(columnGroupIdSeparator))
+                ? pivotingColDef(valueField, columnGroup.groupId.split(COLUMN_GROUP_ID_SEPARATOR))
                 : pivotingColDef;
             const column: GridColDef = {
               headerName: String(valueField),
               ...getAttributesFromInitialColumn(pivotValue.field),
               ...overrides,
+              // pivoting values are always numbers
+              type: 'number',
               field: mapValueKey,
               aggregable: false,
               groupable: false,
@@ -309,18 +367,7 @@ export const getPivotedData = ({
   return {
     rows: visibleRows.length > 0 ? newRows : [],
     columns: pivotColumns,
-    rowGroupingModel: visibleRows.map((row) => row.field),
-    aggregationModel,
-    getAggregationPosition: (groupNode) => (groupNode.depth === -1 ? 'footer' : 'inline'),
-    columnVisibilityModel,
     columnGroupingModel,
-    groupingColDef: {
-      filterable: false,
-      aggregable: false,
-      hideable: false,
-    },
-    headerFilters: false,
-    disableAggregation: false,
-    disableRowGrouping: false,
+    aggregationModel,
   };
 };

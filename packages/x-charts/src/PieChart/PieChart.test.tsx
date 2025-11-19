@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { createRenderer, screen } from '@mui/internal-test-utils/createRenderer';
+import { createRenderer, screen, act } from '@mui/internal-test-utils';
 import { describeConformance } from 'test/utils/describeConformance';
 import { pieArcClasses, PieChart } from '@mui/x-charts/PieChart';
 
@@ -74,5 +73,103 @@ describe('<PieChart />', () => {
     rerender(<PieChart height={100} width={100} series={[]} hideLegend />);
 
     expect(screen.queryByRole('tooltip')).to.equal(null);
+  });
+
+  it('should show focus indicator when navigating with keyboard', async () => {
+    const { container, user } = render(
+      <PieChart
+        enableKeyboardNavigation
+        data-testid="chart"
+        height={100}
+        width={100}
+        series={[
+          {
+            data: [
+              { id: 0, value: 10 },
+              { id: 1, value: 20 },
+            ],
+          },
+        ]}
+        hideLegend
+      />,
+    );
+
+    // by default does not show focus indicator
+    /* eslint-disable testing-library/no-container */
+    expect(container.querySelector(`.${pieArcClasses.focusIndicator}`)).not.toBeTruthy();
+
+    // focus the chart
+    await act(async () => screen.getByTestId('chart').focus());
+
+    // Focus the first arc
+    await user.keyboard('{ArrowRight}');
+    expect(
+      container.querySelector(`.${pieArcClasses.focusIndicator}.MuiPieArc-data-index-0`),
+    ).toBeTruthy();
+
+    // Focus the second arc
+    await user.keyboard('{ArrowRight}');
+    expect(
+      container.querySelector(`.${pieArcClasses.focusIndicator}.MuiPieArc-data-index-1`),
+    ).toBeTruthy();
+    /* eslint-enable testing-library/no-container */
+  });
+
+  it('should only show focus indicator for the focused series', async () => {
+    const { container, user } = render(
+      <PieChart
+        enableKeyboardNavigation
+        data-testid="chart"
+        height={400}
+        width={400}
+        series={[
+          {
+            id: 'series-1',
+            data: [
+              { id: 0, value: 10 },
+              { id: 1, value: 20 },
+            ],
+            innerRadius: 0,
+            outerRadius: 80,
+          },
+          {
+            id: 'series-2',
+            data: [
+              { id: 0, value: 30 },
+              { id: 1, value: 40 },
+            ],
+            innerRadius: 100,
+            outerRadius: 180,
+          },
+        ]}
+        hideLegend
+      />,
+    );
+
+    /* eslint-disable testing-library/no-container */
+    // focus the chart
+    await act(async () => screen.getByTestId('chart').focus());
+
+    // Focus the first arc of series-1
+    await user.keyboard('{ArrowRight}');
+
+    // Should only have one focus indicator
+    const focusIndicators = container.querySelectorAll(`.${pieArcClasses.focusIndicator}`);
+    expect(focusIndicators.length).to.equal(1);
+
+    // Focus the second arc of series-1
+    await user.keyboard('{ArrowRight}');
+
+    // Should still only have one focus indicator
+    const focusIndicators2 = container.querySelectorAll(`.${pieArcClasses.focusIndicator}`);
+    expect(focusIndicators2.length).to.equal(1);
+
+    // Move to series-2
+    await user.keyboard('{ArrowRight}');
+
+    // Should still only have one focus indicator
+    const focusIndicators3 = container.querySelectorAll(`.${pieArcClasses.focusIndicator}`);
+    expect(focusIndicators3.length).to.equal(1);
+    /* eslint-enable testing-library/no-container */
   });
 });

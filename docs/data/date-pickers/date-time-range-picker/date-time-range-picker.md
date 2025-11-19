@@ -2,7 +2,7 @@
 productId: x-date-pickers
 title: React Date Time Range Picker component
 components: DateTimeRangePicker, DesktopDateTimeRangePicker, MobileDateTimeRangePicker, DateRangeCalendar, DateRangePickerDay, DigitalClock, MultiSectionDigitalClock, DateTimeRangePickerTabs, DateTimeRangePickerToolbar
-githubLabel: 'scope: DateTimeRangePicker'
+githubLabel: 'component: DateTimeRangePicker'
 packageName: '@mui/x-date-pickers-pro'
 materialDesign: https://m2.material.io/components/date-pickers
 ---
@@ -19,7 +19,7 @@ materialDesign: https://m2.material.io/components/date-pickers
 
 The component is built using the `SingleInputDateTimeRangeField` for the keyboard editing, the `DateRangeCalendar` for the date view editing and `DigitalClock` for the time view editing.
 
-Check-out their documentation page for more information:
+Check out their documentation page for more information:
 
 - [Date Time Range Field](/x/react-date-pickers/date-time-range-field/)
 - [Date Range Calendar](/x/react-date-pickers/date-range-calendar/)
@@ -50,13 +50,13 @@ The component is available in three variants:
   It renders the views inside a popover and a field for keyboard editing.
 
 - The `MobileDateTimeRangePicker` component which works best for touch devices and small screens.
-  It renders the view inside a modal and does not allow editing values with the keyboard in the field.
+  It renders the view inside a modal and does not let users edit values with the keyboard in the field.
 
 - The `DateTimeRangePicker` component which renders `DesktopDateTimeRangePicker` or `MobileDateTimeRangePicker` depending on the device it runs on.
 
 {{"demo": "ResponsiveDateTimeRangePickers.js"}}
 
-By default, the `DateTimeRangePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer) matches.
+By default, the `DateTimeRangePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/pointer) matches.
 This can be customized with the `desktopModeMediaQuery` prop.
 
 :::warning

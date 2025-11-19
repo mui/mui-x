@@ -13,14 +13,12 @@ import {
 
 const Rect = styled('rect')(({ theme }) => ({
   [`&.${chartAxisZoomSliderThumbClasses.root}`]: {
-    fill:
-      theme.palette.mode === 'dark'
-        ? (theme.vars || theme).palette.grey[300]
-        : (theme.vars || theme).palette.common.white,
-    stroke:
-      theme.palette.mode === 'dark'
-        ? (theme.vars || theme).palette.grey[600]
-        : (theme.vars || theme).palette.grey[500],
+    fill: (theme.vars || theme).palette.common.white,
+    stroke: (theme.vars || theme).palette.grey[500],
+    ...theme.applyStyles('dark', {
+      fill: (theme.vars || theme).palette.grey[300],
+      stroke: (theme.vars || theme).palette.grey[600],
+    }),
   },
   [`&.${chartAxisZoomSliderThumbClasses.horizontal}`]: {
     cursor: 'ew-resize',
@@ -46,7 +44,7 @@ export interface ChartZoomSliderThumbProps
  */
 export const ChartAxisZoomSliderThumb = React.forwardRef<SVGRectElement, ChartZoomSliderThumbProps>(
   function ChartAxisZoomSliderThumb(
-    { className, onMove, orientation, placement, rx = 4, ry = 4, ...rest },
+    { className, onMove, orientation, placement, rx = 4, ry = 4, ...other },
     forwardedRef,
   ) {
     const classes = useUtilityClasses({ onMove, orientation, placement });
@@ -90,6 +88,6 @@ export const ChartAxisZoomSliderThumb = React.forwardRef<SVGRectElement, ChartZo
       };
     }, [onMoveEvent, orientation]);
 
-    return <Rect className={clsx(classes.root, className)} ref={ref} rx={rx} ry={ry} {...rest} />;
+    return <Rect className={clsx(classes.root, className)} ref={ref} rx={rx} ry={ry} {...other} />;
   },
 );

@@ -21,12 +21,12 @@ You can enable the drag & drop re-ordering of items by setting the `itemsReorder
 
 By default, all the items are reorderable.
 You can prevent the re-ordering of some items using the `isItemReorderable` prop.
-The following example shows how to only allow re-ordering of the leaves using the [`getItemOrderedChildrenIds`](/x/react-tree-view/rich-tree-view/items/#get-an-items-children-by-id) API method.
+The following example shows how to only let users reorder the leaves using the [`getItemOrderedChildrenIds`](/x/react-tree-view/rich-tree-view/items/#get-an-items-children-by-id) API method.
 
 {{"demo": "OnlyReorderLeaves.js"}}
 
 You can also limit the items in which an item can be dropped using the `canMoveItemToNewPosition` prop.
-The following example shows how to only allow re-ordering inside the same parent:
+The following example shows how to only let users reorder inside the same parent:
 
 {{"demo": "OnlyReorderInSameParent.js"}}
 

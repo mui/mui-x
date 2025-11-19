@@ -13,12 +13,13 @@ import {
   RadarChartSlots,
 } from '@mui/x-charts/RadarChart';
 import { useThemeProps } from '@mui/material/styles';
-import { useRadarChartProps, ChartsWrapper } from '@mui/x-charts/internals';
+import { useRadarChartProps } from '@mui/x-charts/internals';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
-import { RADAR_CHART_PRO_PLUGINS, RadarChartProPluginsSignatures } from './RadarChartPro.plugins';
+import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
+import { RADAR_CHART_PRO_PLUGINS, RadarChartProPluginSignatures } from './RadarChartPro.plugins';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
 import {
   ChartsToolbarProSlotProps,
@@ -38,8 +39,8 @@ export interface RadarChartProSlotProps
 export interface RadarChartProProps
   extends Omit<RadarChartProps, 'apiRef' | 'slots' | 'slotProps'>,
     Omit<
-      RadarDataProviderProps<RadarChartProPluginsSignatures>,
-      'plugins' | 'seriesConfig' | 'slots' | 'slotProps'
+      RadarDataProviderProps<RadarChartProPluginSignatures>,
+      'plugins' | 'seriesConfig' | 'slots' | 'slotProps' | 'experimentalFeatures'
     > {
   /**
    * Overridable component slots.
@@ -81,15 +82,15 @@ const RadarChartPro = React.forwardRef(function RadarChartPro(
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
   const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
 
-  const radarDataProviderProProps: RadarDataProviderProps<RadarChartProPluginsSignatures> = {
+  const radarDataProviderProProps: RadarDataProviderProps<RadarChartProPluginSignatures> = {
     ...radarDataProviderProps,
     apiRef:
-      radarDataProviderProps.apiRef as RadarDataProviderProps<RadarChartProPluginsSignatures>['apiRef'],
+      radarDataProviderProps.apiRef as RadarDataProviderProps<RadarChartProPluginSignatures>['apiRef'],
     plugins: RADAR_CHART_PRO_PLUGINS,
   };
 
   return (
-    <RadarDataProvider<RadarChartProPluginsSignatures> {...radarDataProviderProProps}>
+    <RadarDataProvider<RadarChartProPluginSignatures> {...radarDataProviderProProps}>
       <ChartsWrapper {...chartsWrapperProps}>
         {props.showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
@@ -188,11 +189,30 @@ RadarChartPro.propTypes = {
     }),
   ]),
   /**
+   * Callback fired when an area is clicked.
+   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {RadarItemIdentifier} radarItemIdentifier The radar item identifier.
+   */
+  onAreaClick: PropTypes.func,
+  /**
+   * The function called for onClick events.
+   * The second argument contains information about all line/bar elements at the current mouse position.
+   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
+   * @param {null | ChartsAxisData} data The data about the clicked axis and items associated with it.
+   */
+  onAxisClick: PropTypes.func,
+  /**
    * The callback fired when the highlighted item changes.
    *
    * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
+  /**
+   * Callback fired when a mark is clicked.
+   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {RadarItemIdentifier} radarItemIdentifier The radar item identifier.
+   */
+  onMarkClick: PropTypes.func,
   /**
    * The configuration of the radar scales.
    */
@@ -214,7 +234,7 @@ RadarChartPro.propTypes = {
   }).isRequired,
   /**
    * The series to display in the bar chart.
-   * An array of [[RadarSeriesType]] objects.
+   * An array of [[RadarSeries]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**

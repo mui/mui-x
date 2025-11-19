@@ -1,0 +1,56 @@
+{
+  "props": {
+    "angle": { "type": { "name": "number" } },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "divisions": { "type": { "name": "number" }, "default": "1" },
+    "dominantBaseline": {
+      "type": {
+        "name": "union",
+        "description": "'alphabetic'<br>&#124;&nbsp;'auto'<br>&#124;&nbsp;'central'<br>&#124;&nbsp;'hanging'<br>&#124;&nbsp;'ideographic'<br>&#124;&nbsp;'inherit'<br>&#124;&nbsp;'mathematical'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'no-change'<br>&#124;&nbsp;'reset-size'<br>&#124;&nbsp;'text-after-edge'<br>&#124;&nbsp;'text-before-edge'<br>&#124;&nbsp;'use-script'<br>&#124;&nbsp;func"
+      }
+    },
+    "labelOrientation": {
+      "type": { "name": "enum", "description": "'horizontal'<br>&#124;&nbsp;'rotated'" },
+      "default": "'horizontal'"
+    },
+    "metric": { "type": { "name": "string" } },
+    "textAnchor": {
+      "type": {
+        "name": "union",
+        "description": "'end'<br>&#124;&nbsp;'inherit'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'start'<br>&#124;&nbsp;func"
+      }
+    }
+  },
+  "name": "RadarAxis",
+  "imports": [
+    "import { RadarAxis } from '@mui/x-charts/RadarChart';",
+    "import { RadarAxis } from '@mui/x-charts';",
+    "import { RadarAxis } from '@mui/x-charts-pro';",
+    "import { RadarAxis } from '@mui/x-charts-premium';"
+  ],
+  "classes": [
+    {
+      "key": "label",
+      "className": "MuiRadarAxis-label",
+      "description": "Styles applied to every label element.",
+      "isGlobal": false
+    },
+    {
+      "key": "line",
+      "className": "MuiRadarAxis-line",
+      "description": "Styles applied to the line element.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiRadarAxis-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiRadarAxis",
+  "filename": "/packages/x-charts/src/RadarChart/RadarAxis/RadarAxis.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/radar/\">Charts - Radar</a></li></ul>",
+  "cssComponent": false
+}

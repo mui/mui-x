@@ -20,6 +20,7 @@ import {
   isGroupingColumn,
   GridStrategyGroup,
   getRowValue,
+  RowGroupingStrategy,
 } from '@mui/x-data-grid-pro/internals';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import {
@@ -37,11 +38,6 @@ export {
   isGroupingColumn,
 };
 
-export enum RowGroupingStrategy {
-  Default = 'grouping-columns',
-  DataSource = 'grouping-columns-data-source',
-}
-
 export const getRowGroupingFieldFromGroupingCriteria = (groupingCriteria: string | null) => {
   if (groupingCriteria === null) {
     return GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD;
@@ -54,6 +50,7 @@ interface FilterRowTreeFromTreeDataParams {
   rowTree: GridRowTreeConfig;
   isRowMatchingFilters: GridAggregatedFilterItemApplier | null;
   filterModel: GridFilterModel;
+  filterValueGetter: (row: GridRowModel, column: GridColDef) => any;
   apiRef: RefObject<GridPrivateApiPremium>;
 }
 
@@ -79,7 +76,7 @@ const shouldApplyFilterItemOnGroup = (columnField: string, node: GridGroupNode) 
 export const filterRowTreeFromGroupingColumns = (
   params: FilterRowTreeFromTreeDataParams,
 ): Omit<GridFilterState, 'filterModel'> => {
-  const { apiRef, rowTree, isRowMatchingFilters, filterModel } = params;
+  const { apiRef, rowTree, isRowMatchingFilters, filterModel, filterValueGetter } = params;
   const filteredRowsLookup: GridFilterState['filteredRowsLookup'] = {};
   const filteredChildrenCountLookup: GridFilterState['filteredChildrenCountLookup'] = {};
   const filteredDescendantCountLookup: GridFilterState['filteredDescendantCountLookup'] = {};
@@ -136,6 +133,7 @@ export const filterRowTreeFromGroupingColumns = (
           allResults.map((result) => result.passingFilterItems),
           allResults.map((result) => result.passingQuickFilterValues),
           filterModel,
+          filterValueGetter,
           params.apiRef,
           filterCache,
         );
@@ -202,6 +200,11 @@ export const setStrategyAvailability = (
   disableRowGrouping: boolean,
   dataSource?: GridDataSource,
 ) => {
+  const strategy = dataSource ? RowGroupingStrategy.DataSource : RowGroupingStrategy.Default;
+  if (privateApiRef.current.getActiveStrategy(GridStrategyGroup.RowTree) === strategy) {
+    // If the strategy is already active, we don't need to set it again
+    return;
+  }
   let isAvailable: () => boolean;
   if (disableRowGrouping) {
     isAvailable = () => false;
@@ -211,8 +214,6 @@ export const setStrategyAvailability = (
       return rowGroupingSanitizedModel.length > 0;
     };
   }
-
-  const strategy = dataSource ? RowGroupingStrategy.DataSource : RowGroupingStrategy.Default;
 
   privateApiRef.current.setStrategyAvailability(GridStrategyGroup.RowTree, strategy, isAvailable);
 };
@@ -251,6 +252,7 @@ export const getGroupingRules = ({
   sanitizedRowGroupingModel.map((field) => ({
     field,
     groupingValueGetter: columnsLookup[field]?.groupingValueGetter,
+    groupingValueSetter: columnsLookup[field]?.groupingValueSetter,
   }));
 
 /**
@@ -268,6 +270,10 @@ export const areGroupingRulesEqual = (
     const previousRule = previousValue[newRuleIndex];
 
     if (previousRule.groupingValueGetter !== newRule.groupingValueGetter) {
+      return false;
+    }
+
+    if (previousRule.groupingValueSetter !== newRule.groupingValueSetter) {
       return false;
     }
 

@@ -124,10 +124,16 @@ export class PointerManager {
     new Set();
 
   public constructor(options: PointerManagerOptions) {
-    this.root = (options.root ?? document.documentElement) as HTMLElement;
+    this.root =
+      // User provided root element
+      (options.root as HTMLElement) ??
+      // Fallback to document root or body, this fixes shadow DOM scenarios
+      (document.getRootNode({ composed: true }) as HTMLElement) ??
+      // Fallback to document body, for some testing environments
+      document.body;
     this.touchAction = options.touchAction || 'auto';
-    this.passive = options.passive !== false;
-    this.preventEventInterruption = options.preventEventInterruption !== false;
+    this.passive = options.passive ?? false;
+    this.preventEventInterruption = options.preventEventInterruption ?? true;
 
     this.setupEventListeners();
   }
@@ -251,30 +257,11 @@ export class PointerManager {
     const { type, pointerId } = event;
 
     // Create or update pointer data
-    if (type === 'pointerdown') {
-      this.pointers.set(pointerId, this.createPointerData(event));
-      // Capture the pointer to track it even when it leaves the element
-      if (event.target instanceof Element) {
-        try {
-          event.target.setPointerCapture(pointerId);
-        } catch (_) {
-          // The target may not support pointer capture
-        }
-      }
-    } else if (type === 'pointermove') {
+    if (type === 'pointerdown' || type === 'pointermove') {
       this.pointers.set(pointerId, this.createPointerData(event));
     }
     // Remove pointer data on up or cancel
     else if (type === 'pointerup' || type === 'pointercancel' || type === 'forceCancel') {
-      // Release pointer capture on up or cancel
-      if (event.target instanceof Element) {
-        try {
-          event.target.releasePointerCapture(pointerId);
-        } catch (_) {
-          // The target may not support pointer capture
-        }
-      }
-
       // Update one last time before removing
       this.pointers.set(pointerId, this.createPointerData(event));
 
@@ -309,7 +296,6 @@ export class PointerManager {
    * @param event - The original browser pointer event
    * @returns A new PointerData object representing this pointer
    */
-  // eslint-disable-next-line class-methods-use-this
   private createPointerData(event: PointerEvent): PointerData {
     return {
       pointerId: event.pointerId,

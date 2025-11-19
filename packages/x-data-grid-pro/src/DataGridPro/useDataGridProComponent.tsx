@@ -1,3 +1,5 @@
+'use client';
+import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import {
   useGridInitialization,
@@ -21,7 +23,6 @@ import {
   useGridRows,
   useGridRowsPreProcessors,
   rowsStateInitializer,
-  useGridRowsMeta,
   useGridParamsApi,
   useGridRowSelection,
   useGridSorting,
@@ -52,6 +53,8 @@ import {
   useGridListView,
   listViewStateInitializer,
   propsStateInitializer,
+  GridConfiguration,
+  useFirstRender,
 } from '@mui/x-data-grid/internals';
 import { GridPrivateApiPro } from '../models/gridApiPro';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
@@ -74,7 +77,10 @@ import {
   detailPanelStateInitializer,
 } from '../hooks/features/detailPanel/useGridDetailPanel';
 import { useGridDetailPanelPreProcessors } from '../hooks/features/detailPanel/useGridDetailPanelPreProcessors';
-import { useGridRowReorder } from '../hooks/features/rowReorder/useGridRowReorder';
+import {
+  useGridRowReorder,
+  rowReorderStateInitializer,
+} from '../hooks/features/rowReorder/useGridRowReorder';
 import { useGridRowReorderPreProcessors } from '../hooks/features/rowReorder/useGridRowReorderPreProcessors';
 import { useGridLazyLoader } from '../hooks/features/lazyLoader/useGridLazyLoader';
 import { useGridLazyLoaderPreProcessors } from '../hooks/features/lazyLoader/useGridLazyLoaderPreProcessors';
@@ -93,6 +99,7 @@ import { useGridInfiniteLoadingIntersection } from '../hooks/features/serverSide
 export const useDataGridProComponent = (
   apiRef: RefObject<GridPrivateApiPro>,
   props: DataGridProProcessedProps,
+  configuration: GridConfiguration,
 ) => {
   useGridInitialization<GridPrivateApiPro>(apiRef, props);
 
@@ -121,6 +128,7 @@ export const useDataGridProComponent = (
   useGridInitializeState(propsStateInitializer, apiRef, props);
   useGridInitializeState(headerFilteringStateInitializer, apiRef, props);
   useGridInitializeState(rowSelectionStateInitializer, apiRef, props);
+  useGridInitializeState(rowReorderStateInitializer, apiRef, props);
   useGridInitializeState(detailPanelStateInitializer, apiRef, props);
   useGridInitializeState(columnPinningStateInitializer, apiRef, props);
   useGridInitializeState(columnsStateInitializer, apiRef, props);
@@ -151,22 +159,21 @@ export const useDataGridProComponent = (
   useGridColumnPinning(apiRef, props);
   useGridRowPinning(apiRef, props);
   useGridColumns(apiRef, props);
-  useGridRows(apiRef, props);
+  useGridRows(apiRef, props, configuration);
   useGridRowSpanning(apiRef, props);
-  useGridParamsApi(apiRef, props);
+  useGridParamsApi(apiRef, props, configuration);
   useGridDetailPanel(apiRef, props);
   useGridColumnSpanning(apiRef);
   useGridColumnGrouping(apiRef, props);
-  useGridEditing(apiRef, props);
+  useGridEditing(apiRef, props, configuration);
   useGridFocus(apiRef, props);
   useGridPreferencesPanel(apiRef, props);
-  useGridFilter(apiRef, props);
+  useGridFilter(apiRef, props, configuration);
   useGridSorting(apiRef, props);
   useGridDensity(apiRef, props);
   useGridColumnReorder(apiRef, props);
   useGridColumnResize(apiRef, props);
   useGridPagination(apiRef, props);
-  useGridRowsMeta(apiRef, props);
   useGridRowReorder(apiRef, props);
   useGridScroll(apiRef, props);
   useGridInfiniteLoader(apiRef, props);
@@ -183,4 +190,12 @@ export const useDataGridProComponent = (
   useGridVirtualization(apiRef, props);
   useGridDataSource(apiRef, props);
   useGridListView(apiRef, props);
+
+  // Should be the last thing to run, because all pre-processors should have been registered by now.
+  useFirstRender(() => {
+    apiRef.current.runAppliersForPendingProcessors();
+  });
+  React.useEffect(() => {
+    apiRef.current.runAppliersForPendingProcessors();
+  });
 };

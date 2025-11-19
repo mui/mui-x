@@ -7,6 +7,8 @@ export type ChartsTextBaseline =
   | 'text-after-edge'
   | 'text-before-edge';
 
+export type ChartsTextAnchor = 'start' | 'middle' | 'end';
+
 export interface ChartsTextStyle extends React.CSSProperties {
   angle?: number;
   /**
@@ -14,6 +16,11 @@ export interface ChartsTextStyle extends React.CSSProperties {
    * @default 'central'
    */
   dominantBaseline?: ChartsTextBaseline;
+  /**
+   * The text anchor
+   * @default 'middle'
+   */
+  textAnchor?: ChartsTextAnchor;
 }
 
 export interface GetWordsByLinesParams {

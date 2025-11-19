@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useAnimate } from '@mui/x-charts/hooks';
 import { ChartContainer } from '@mui/x-charts/ChartContainer';
 import { BarLabelProps, BarPlot } from '@mui/x-charts/BarChart';
@@ -11,15 +10,10 @@ export default function LabelsAboveBars() {
   return (
     <ChartContainer
       xAxis={[{ scaleType: 'band', data: ['A', 'B', 'C'] }]}
-      series={[
-        {
-          type: 'bar',
-          id: 'base',
-          data: [5, 17, 11],
-        },
-      ]}
-      width={300}
+      series={[{ type: 'bar', id: 'base', data: [5, 17, 11] }]}
       height={400}
+      yAxis={[{ width: 30 }]}
+      margin={{ left: 0, right: 10 }}
     >
       <BarPlot barLabel="value" slots={{ barLabel: BarLabel }} />
       <ChartsXAxis />

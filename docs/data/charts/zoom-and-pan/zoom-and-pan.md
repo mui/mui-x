@@ -1,7 +1,7 @@
 ---
 title: Charts - Zoom and pan
 productId: x-charts
-components: ScatterChartPro, BarChartPro, LineChartPro, ChartZoomSlider
+components: ScatterChartPro, BarChartPro, LineChartPro, ChartZoomSlider, ChartsBrushOverlay
 ---
 
 # Charts - Zoom and pan [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
@@ -16,11 +16,21 @@ To enable zooming and panning, set the `zoom` prop to `true` on the wanted axis.
 
 Enabling zoom will enable all the interactions, which are made to be as intuitive as possible.
 
-The following actions are supported:
+The following actions are enabled by default:
 
 - **Scroll**: Zoom in/out by scrolling the mouse wheel.
 - **Drag**: Pan the chart by dragging the mouse.
 - **Pinch**: Zoom in/out by pinching the chart.
+
+Additional zoom interactions can be enabled through configuration:
+
+- **Tap and drag**: Zoom in/out by tapping twice and then dragging vertically.
+
+:::warning
+Enabling zoom adds `touch-action: pan-y` to allow panning on touch devices. This interferes with other touch interactions, such as scrolling horizontally.
+
+If you want to customize the touch-action behavior, you can override it by targeting the `.MuiChartsSurface-root` class in your CSS.
+:::
 
 {{"demo": "ZoomScatterChart.js"}}
 {{"demo": "ZoomBarChart.js"}}
@@ -52,13 +62,9 @@ See how the secondary axis adapts to the visible part of the primary axis in the
 
 {{"demo": "ZoomFilterMode.js"}}
 
-## Zoom slider 🧪
+## Zoom slider
 
-:::info
-This feature is in preview. It is ready for production use, but its API, visuals and behavior may change in future minor or patch releases.
-:::
-
-You can provide an overview and allow the manipulation of the zoomed area by setting the `zoom.slider.enabled` property on the axis config.
+You can provide an overview that lets users manipulate the zoomed area by setting the `zoom.slider.enabled` property on the axis config.
 
 {{"demo": "ZoomSlider.js"}}
 
@@ -98,6 +104,19 @@ When using composition, you can render the axes' sliders by rendering the `Chart
 
 {{"demo": "ZoomSliderComposition.js"}}
 
+## Preview
+
+When the zoom slider is enabled, you can preview the zoomed area by enabling the `zoom.slider.preview` property on the axis config.
+
+{{"demo": "ZoomSliderPreview.js"}}
+
+### Scatter marker size
+
+The size of the preview marker in scatter charts is 1px by default.
+You can customize it by setting the `zoom.slider.preview.markerSize` property on the series configuration object.
+
+{{"demo": "ZoomSliderPreviewCustomMarkerSize.js"}}
+
 ## Zoom management
 
 ### External zoom management
@@ -122,3 +141,130 @@ The `zoom` state is an array of objects that define the zoom state for each axis
 To synchronize zoom between multiple charts, you can control the zoom state.
 
 {{"demo": "ZoomControlled.js"}}
+
+## Zoom interactions configuration
+
+You can have fine-grained control over which interactions are enabled and under which conditions by using the `zoomInteractionConfig` prop.
+
+### Interactions
+
+The `zoomInteractionConfig` prop allows you to specify which interactions are enabled for zooming and panning:
+
+```jsx
+<BarChartPro
+  zoomInteractionConfig={{
+    // Enable wheel, pinch, and tap-and-drag zoom
+    zoom: ['wheel', 'pinch', 'tapAndDrag'],
+    // Enable drag panning
+    pan: ['drag'],
+  }}
+/>
+```
+
+**Zoom** interactions:
+
+- `wheel` (default): Zoom in/out by scrolling the mouse wheel
+- `pinch` (default): Zoom in/out by pinching on touch devices
+- `tapAndDrag`: Zoom in/out by tapping twice and then dragging vertically. Dragging up zooms in, dragging down zooms out.
+- `brush`: Zoom into a selected area by clicking and dragging to create a selection rectangle.
+- `doubleTapReset`: Reset the zoom level to the original state when double-tapping.
+
+**Pan** interactions:
+
+- `wheel` (default\*): Pan the chart by scrolling the mouse wheel. On a desktop trackpad, it enables pan using two fingers. Only pans the horizontal axis by default. Use `allowedDirection` to customize which axes are affected.
+- `drag` (default): Pan the chart by dragging with the mouse or touch
+- `pressAndDrag`: Pan the chart by pressing and holding, then dragging. Useful for avoiding conflicts with selection gestures.
+
+:::warning
+
+\* The `wheel` pan interaction is only added automatically if pan is enabled for at least one of the x-axis and none of the y-axis.
+:::
+
+:::info
+When modifying the zoom interaction configuration, care should be taken as to not create a bad user experience.
+
+For example, the "drag" and "brush" interactions do not work well together.
+
+If both are needed, the `pointerMode` and `requiredKeys` options described in the next sections can help.
+
+:::
+
+{{"demo": "ZoomAndPanInteractions.js"}}
+
+### Brush zoom
+
+The brush zoom interaction allows users to select a specific area to zoom into by clicking and dragging to create a selection rectangle.
+This provides an intuitive way to focus on a particular region of interest in the chart.
+
+{{"demo": "BrushZoom.js"}}
+
+### Key modifiers
+
+Some interactions allow setting up required keys to be pressed to enable the interaction.
+This can be set up using the `requiredKeys` property in the interaction configuration.
+
+```jsx
+<BarChartPro
+  zoomInteractionConfig={{
+    // Only zoom when Control key is pressed
+    zoom: [{ type: 'wheel', requiredKeys: ['Control'] }],
+    // Only pan when Shift key is pressed
+    pan: [{ type: 'drag', requiredKeys: ['Shift'] }],
+  }}
+/>
+```
+
+Available keys include:
+
+- Modifier keys: `'Shift'`, `'Control'`, `'Alt'`, `'Meta'`
+- `'ControlOrMeta'` which resolves to `Control` on Windows and Linux and to `Meta` on macOS.
+- Any other key can be used as well, such as `'Space'` and `'Enter'` based on [`event.key` values](https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values).
+
+It is also possible to require multiple keys to be pressed simultaneously:
+
+```jsx
+<BarChartPro
+  zoomInteractionConfig={{
+    // Only pan when both Shift and Control are pressed
+    pan: [{ type: 'drag', requiredKeys: ['Shift', 'Control'] }],
+  }}
+/>
+```
+
+### Pointer Modes
+
+Interactions can also be restricted to specific pointer types by using the `mode` property:
+
+```jsx
+<BarChartPro
+  zoomInteractionConfig={{
+    // Only pan with touch, not mouse
+    pan: [{ type: 'drag', pointerMode: 'touch' }],
+  }}
+  // other props
+/>
+```
+
+Available pointer modes:
+
+- `undefined`: Allow both mouse and touch interactions (default)
+- `'mouse'`: Only allow mouse interactions
+- `'touch'`: Only allow touch interactions
+
+### Multiple interactions of the same type
+
+It is possible to define multiple interactions of the same type with different configurations.
+
+In the example below, the pan `drag` interaction is configured to require a specific key combination for mouse, while touch interactions don't require any key to be pressed:
+
+```jsx
+<BarChartPro
+  zoomInteractionConfig={{
+    pan: [
+      { type: 'drag', pointerMode: 'mouse', requiredKeys: ['ControlOrMeta'] },
+      { type: 'drag', pointerMode: 'touch', requiredKeys: [] },
+    ],
+  }}
+  // other props
+/>
+```

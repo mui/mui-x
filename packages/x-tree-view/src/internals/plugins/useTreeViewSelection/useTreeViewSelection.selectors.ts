@@ -1,48 +1,25 @@
+import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import { TreeViewItemId } from '../../../models';
-import { createSelector, TreeViewRootSelector } from '../../utils/selectors';
-import { selectorIsItemDisabled } from '../useTreeViewItems/useTreeViewItems.selectors';
+import { TreeViewState } from '../../models';
+import { itemsSelectors } from '../useTreeViewItems/useTreeViewItems.selectors';
 import { UseTreeViewSelectionSignature } from './useTreeViewSelection.types';
 
-const selectorTreeViewSelectionState: TreeViewRootSelector<UseTreeViewSelectionSignature> = (
-  state,
-) => state.selection;
-
-/**
- * Get the selected items.
- * @param {TreeViewState<[UseTreeViewSelectionSignature]>} state The state of the tree view.
- * @returns {TreeViewSelectionValue<boolean>} The selected items.
- */
-export const selectorSelectionModel = createSelector(
-  [selectorTreeViewSelectionState],
-  (selectionState) => selectionState.selectedItems,
-);
-
-/**
- * Get the selected items as an array.
- * @param {TreeViewState<[UseTreeViewSelectionSignature]>} state The state of the tree view.
- * @returns {TreeViewItemId[]} The selected items as an array.
- */
-export const selectorSelectionModelArray = createSelector(
-  [selectorSelectionModel],
-  (selectedItems) => {
-    if (Array.isArray(selectedItems)) {
-      return selectedItems;
+const selectedItemsSelector = createSelectorMemoized(
+  (state: TreeViewState<[UseTreeViewSelectionSignature]>) => state.selection.selectedItems,
+  (selectedItemsRaw) => {
+    if (Array.isArray(selectedItemsRaw)) {
+      return selectedItemsRaw;
     }
 
-    if (selectedItems != null) {
-      return [selectedItems];
+    if (selectedItemsRaw != null) {
+      return [selectedItemsRaw];
     }
 
     return [];
   },
 );
 
-/**
- * Get the selected items as a map.
- * @param {TreeViewState<[UseTreeViewSelectionSignature]>} state The state of the tree view.
- * @returns {Map<TreeViewItemId, true>} The selected items as a Map.
- */
-const selectorSelectionModelMap = createSelector([selectorSelectionModelArray], (selectedItems) => {
+const selectedItemsMapSelector = createSelectorMemoized(selectedItemsSelector, (selectedItems) => {
   const selectedItemsMap = new Map<TreeViewItemId, true>();
   selectedItems.forEach((id) => {
     selectedItemsMap.set(id, true);
@@ -50,63 +27,60 @@ const selectorSelectionModelMap = createSelector([selectorSelectionModelArray], 
   return selectedItemsMap;
 });
 
-/**
- * Check if an item is selected.
- * @param {TreeViewState<[UseTreeViewSelectionSignature]>} state The state of the tree view.
- * @returns {boolean} `true` if the item is selected, `false` otherwise.
- */
-export const selectorIsItemSelected = createSelector(
-  [selectorSelectionModelMap, (_, itemId: string) => itemId],
-  (selectedItemsMap, itemId) => selectedItemsMap.has(itemId),
-);
-
-/**
- * Check if multi selection is enabled.
- * @param {TreeViewState<[UseTreeViewSelectionSignature]>} state The state of the tree view.
- * @returns {boolean} `true` if multi selection is enabled, `false` otherwise.
- */
-export const selectorIsMultiSelectEnabled = createSelector(
-  [selectorTreeViewSelectionState],
-  (selectionState) => selectionState.isEnabled && selectionState.isMultiSelectEnabled,
-);
-
-/**
- * Check if selection is enabled.
- * @param {TreeViewState<[UseTreeViewSelectionSignature]>} state The state of the tree view.
- * @returns {boolean} `true` if selection is enabled, `false` otherwise.
- */
-export const selectorIsSelectionEnabled = createSelector(
-  [selectorTreeViewSelectionState],
-  (selectionState) => selectionState.isEnabled,
-);
-
-/**
- * Check if checkbox selection is enabled.
- * @param {TreeViewState<[UseTreeViewSelectionSignature]>} state The state of the tree view.
- * @returns {boolean} `true` if checkbox selection is enabled, `false` otherwise.
- */
-export const selectorIsCheckboxSelectionEnabled = createSelector(
-  [selectorTreeViewSelectionState],
-  (selectionState) => selectionState.isCheckboxSelectionEnabled,
-);
-
-/**
- * Check if selection is enabled for an item (if selection is enabled and if the item is not disabled).
- * @param {TreeViewState<[UseTreeViewSelectionSignature]>} state The state of the tree view.
- * @param {string} itemId The id of the item to check.
- * @returns {boolean} `true` if selection is enabled for the item, `false` otherwise.
- */
-export const selectorIsItemSelectionEnabled = createSelector(
-  [selectorIsItemDisabled, selectorIsSelectionEnabled],
-  (isItemDisabled, isSelectionEnabled) => isSelectionEnabled && !isItemDisabled,
-);
-
-/**
- * Get the selection propagation rules.
- * @param {TreeViewState<[UseTreeViewSelectionSignature]>} state The state of the tree view.
- * @returns {TreeViewSelectionPropagation} The selection propagation rules.
- */
-export const selectorSelectionPropagationRules = createSelector(
-  [selectorTreeViewSelectionState],
-  (selectionState) => selectionState.selectionPropagation,
-);
+export const selectionSelectors = {
+  /**
+   * Gets the selected items as provided to the component.
+   */
+  selectedItemsRaw: createSelector(
+    (state: TreeViewState<[UseTreeViewSelectionSignature]>) => state.selection.selectedItems,
+  ),
+  /**
+   * Gets the selected items as an array.
+   */
+  selectedItems: selectedItemsSelector,
+  /**
+   * Gets the selected items as a Map.
+   */
+  selectedItemsMap: selectedItemsMapSelector,
+  /**
+   * Checks whether selection is enabled.
+   */
+  enabled: createSelector(
+    (state: TreeViewState<[UseTreeViewSelectionSignature]>) => state.selection.isEnabled,
+  ),
+  /**
+   * Checks whether multi selection is enabled.
+   */
+  isMultiSelectEnabled: createSelector(
+    (state: TreeViewState<[UseTreeViewSelectionSignature]>) => state.selection.isMultiSelectEnabled,
+  ),
+  /**
+   * Checks whether checkbox selection is enabled.
+   */
+  isCheckboxSelectionEnabled: createSelector(
+    (state: TreeViewState<[UseTreeViewSelectionSignature]>) =>
+      state.selection.isCheckboxSelectionEnabled,
+  ),
+  /**
+   * Gets the selection propagation rules.
+   */
+  propagationRules: createSelector(
+    (state: TreeViewState<[UseTreeViewSelectionSignature]>) => state.selection.selectionPropagation,
+  ),
+  /**
+   * Checks whether an item is selected.
+   */
+  isItemSelected: createSelector(
+    selectedItemsMapSelector,
+    (selectedItemsMap, itemId: TreeViewItemId) => selectedItemsMap.has(itemId),
+  ),
+  /**
+   * Checks whether an item can be selected (if selection is enabled and if the item is not disabled).
+   */
+  canItemBeSelected: createSelector(
+    itemsSelectors.isItemDisabled,
+    (state: TreeViewState<[UseTreeViewSelectionSignature]>) => state.selection.isEnabled,
+    (isItemDisabled, isSelectionEnabled, _itemId: TreeViewItemId) =>
+      isSelectionEnabled && !isItemDisabled,
+  ),
+};

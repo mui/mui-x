@@ -1,0 +1,16 @@
+<Stack spacing={2} direction="row">
+  <Button onClick={checkExpansion}>
+    Check if the the Data Grid is expanded
+  </Button>
+  <Snackbar
+    open={isSnackbarOpen}
+    autoHideDuration={3000}
+    onClose={() => setIsSnackbarOpen(false)}
+    message={`Data Grid is ${isGridExpanded ? 'expanded' : 'collapsed'}`}
+    anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+    sx={{ position: 'absolute' }}
+  />
+</Stack>
+<Box sx={{ minHeight: 352, minWidth: 250 }}>
+  <RichTreeView items={MUI_X_PRODUCTS} apiRef={apiRef} />
+</Box>

@@ -12,12 +12,18 @@ export interface ChartsLabelCustomMarkProps {
   color?: string;
 }
 
+export type ChartsLabelMarkType =
+  | 'square'
+  | 'circle'
+  | 'line'
+  | React.ComponentType<ChartsLabelCustomMarkProps>;
+
 export interface ChartsLabelMarkProps {
   /**
    * The type of the mark.
    * @default 'square'
    */
-  type?: 'square' | 'circle' | 'line' | React.ComponentType<ChartsLabelCustomMarkProps>;
+  type?: ChartsLabelMarkType;
   /**
    * The color of the mark.
    */

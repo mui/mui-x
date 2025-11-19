@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { spy } from 'sinon';
 import { DatePicker, DatePickerProps } from '@mui/x-date-pickers/DatePicker';
 import { screen } from '@mui/internal-test-utils';
@@ -13,7 +12,7 @@ describe('<DatePicker />', () => {
     const { user } = render(<DatePicker />);
 
     await user.click(screen.getByLabelText(/Choose date/));
-    expect(screen.queryByRole('dialog')).to.not.equal(null);
+    expect(screen.queryByRole('dialog')).not.to.equal(null);
   });
 
   describe('form behavior', () => {

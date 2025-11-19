@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
@@ -59,6 +58,9 @@ const settings = {
 export default function ExportChartToolbar() {
   return (
     <Stack width="100%">
+      <Typography sx={{ alignSelf: 'center', my: 1 }}>
+        Inflation rate in France, Germany and the UK, 1960-2024
+      </Typography>
       <LineChartPro {...settings} showToolbar />
       <Typography variant="caption">Source: World Bank</Typography>
     </Stack>

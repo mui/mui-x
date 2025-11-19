@@ -24,6 +24,18 @@ export const sharedLicenseStatuses: {
   };
 } = {};
 
+/**
+ * Clears the license status cache for all packages.
+ * This should not be used in production code, but can be useful for testing purposes.
+ */
+export function clearLicenseStatusCache() {
+  for (const packageName in sharedLicenseStatuses) {
+    if (Object.prototype.hasOwnProperty.call(sharedLicenseStatuses, packageName)) {
+      delete sharedLicenseStatuses[packageName as MuiCommercialPackageName];
+    }
+  }
+}
+
 export function useLicenseVerifier(
   packageName: MuiCommercialPackageName,
   releaseInfo: string,
@@ -69,7 +81,7 @@ export function useLicenseVerifier(
     } else if (licenseStatus.status === LICENSE_STATUS.NotAvailableInInitialProPlan) {
       showNotAvailableInInitialProPlanError();
     } else if (licenseStatus.status === LICENSE_STATUS.OutOfScope) {
-      showLicenseKeyPlanMismatchError();
+      showLicenseKeyPlanMismatchError({ packageName: fullPackageName });
     } else if (licenseStatus.status === LICENSE_STATUS.NotFound) {
       showMissingLicenseKeyError({ plan, packageName: fullPackageName });
     } else if (licenseStatus.status === LICENSE_STATUS.ExpiredAnnualGrace) {

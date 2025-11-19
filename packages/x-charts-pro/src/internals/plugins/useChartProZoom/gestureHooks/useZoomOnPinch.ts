@@ -17,6 +17,7 @@ import {
   isSpanValid,
   zoomAtPoint,
 } from './useZoom.utils';
+import { selectorZoomInteractionConfig } from '../ZoomInteractionConfig.selectors';
 
 export const useZoomOnPinch = (
   {
@@ -28,16 +29,33 @@ export const useZoomOnPinch = (
 ) => {
   const drawingArea = useSelector(store, selectorChartDrawingArea);
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
-  const isZoomEnabled = Object.keys(optionsLookup).length > 0;
+  const config = useSelector(store, selectorZoomInteractionConfig, 'pinch' as const);
+
+  const isZoomOnPinchEnabled: boolean = Object.keys(optionsLookup).length > 0 && Boolean(config);
+
+  React.useEffect(() => {
+    if (!isZoomOnPinchEnabled) {
+      return;
+    }
+
+    instance.updateZoomInteractionListeners('zoomPinch', {
+      requiredKeys: config!.requiredKeys,
+    });
+  }, [config, isZoomOnPinchEnabled, instance]);
 
   // Zoom on pinch
   React.useEffect(() => {
     const element = svgRef.current;
-    if (element === null || !isZoomEnabled) {
+    if (element === null || !isZoomOnPinchEnabled) {
       return () => {};
     }
 
     const rafThrottledCallback = rafThrottle((event: PinchEvent) => {
+      // If the delta is 0, it means the pinch gesture is not valid.
+      if (event.detail.direction === 0) {
+        return;
+      }
+
       setZoomDataCallback((prev) => {
         return prev.map((zoom) => {
           const option = optionsLookup[zoom.axisId];
@@ -48,11 +66,6 @@ export const useZoomOnPinch = (
           const isZoomIn = event.detail.direction > 0;
           const scaleRatio = 1 + event.detail.deltaScale;
 
-          // If the delta is 0, it means the pinch gesture is not valid.
-          if (event.detail.direction === 0) {
-            return zoom;
-          }
-
           const point = getSVGPoint(element, {
             clientX: event.detail.centroid.x,
             clientY: event.detail.centroid.y,
@@ -60,8 +73,8 @@ export const useZoomOnPinch = (
 
           const centerRatio =
             option.axisDirection === 'x'
-              ? getHorizontalCenterRatio(point, drawingArea)
-              : getVerticalCenterRatio(point, drawingArea);
+              ? getHorizontalCenterRatio(point, drawingArea, option.reverse)
+              : getVerticalCenterRatio(point, drawingArea, option.reverse);
 
           const [newMinRange, newMaxRange] = zoomAtPoint(centerRatio, scaleRatio, zoom, option);
 
@@ -73,11 +86,19 @@ export const useZoomOnPinch = (
       });
     });
 
-    const zoomHandler = instance.addInteractionListener('pinch', rafThrottledCallback);
+    const zoomHandler = instance.addInteractionListener('zoomPinch', rafThrottledCallback);
 
     return () => {
       zoomHandler.cleanup();
       rafThrottledCallback.clear();
     };
-  }, [svgRef, drawingArea, isZoomEnabled, optionsLookup, store, instance, setZoomDataCallback]);
+  }, [
+    svgRef,
+    drawingArea,
+    isZoomOnPinchEnabled,
+    optionsLookup,
+    store,
+    instance,
+    setZoomDataCallback,
+  ]);
 };

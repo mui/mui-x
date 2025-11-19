@@ -1,13 +1,28 @@
 {
   "props": {
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "onAreaClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.MouseEvent<SVGPathElement, MouseEvent>, radarItemIdentifier: RadarItemIdentifier) => void",
+        "describedArgs": ["event", "radarItemIdentifier"]
+      }
+    },
+    "onMarkClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.MouseEvent<SVGPathElement, MouseEvent>, radarItemIdentifier: RadarItemIdentifier) => void",
+        "describedArgs": ["event", "radarItemIdentifier"]
+      }
+    },
     "seriesId": { "type": { "name": "string" } }
   },
   "name": "RadarSeriesPlot",
   "imports": [
     "import { RadarSeriesPlot } from '@mui/x-charts/RadarChart';",
     "import { RadarSeriesPlot } from '@mui/x-charts';",
-    "import { RadarSeriesPlot } from '@mui/x-charts-pro';"
+    "import { RadarSeriesPlot } from '@mui/x-charts-pro';",
+    "import { RadarSeriesPlot } from '@mui/x-charts-premium';"
   ],
   "classes": [
     {

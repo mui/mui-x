@@ -357,6 +357,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
             <MonthCalendar
               {...baseDateValidationProps}
               {...commonViewProps}
+              currentMonth={calendarState.currentMonth}
               hasFocus={hasFocus}
               className={className}
               value={value}
@@ -494,7 +495,7 @@ DateCalendar.propTypes = {
   onChange: PropTypes.func,
   /**
    * Callback fired on focused view change.
-   * @template TView
+   * @template TView Type of the view. It will vary based on the Picker type and the `views` it uses.
    * @param {TView} view The new view to focus or not.
    * @param {boolean} hasFocus `true` if the view should be focused.
    */
@@ -506,7 +507,7 @@ DateCalendar.propTypes = {
   onMonthChange: PropTypes.func,
   /**
    * Callback fired on view change.
-   * @template TView
+   * @template TView Type of the view. It will vary based on the Picker type and the `views` it uses.
    * @param {TView} view The new view.
    */
   onViewChange: PropTypes.func,

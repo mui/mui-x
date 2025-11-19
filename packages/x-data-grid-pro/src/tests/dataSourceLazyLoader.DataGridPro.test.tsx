@@ -12,9 +12,11 @@ import {
   GridGetRowsResponse,
   GridRowSelectionModel,
   useGridApiRef,
+  GRID_ROOT_GROUP_ID,
 } from '@mui/x-data-grid-pro';
 import { spy } from 'sinon';
 import { isJSDOM } from 'test/utils/skipIf';
+import { TestCache } from '@mui/x-data-grid/internals';
 
 // Needs layout
 describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
@@ -46,7 +48,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
   function TestDataSourceLazyLoader(
     props: Partial<DataGridProProps> & { mockServerRowCount?: number },
   ) {
-    const { mockServerRowCount, ...rest } = props;
+    const { mockServerRowCount, ...other } = props;
     apiRef = useGridApiRef();
     mockServer = useMockServer(
       { rowLength: mockServerRowCount ?? 100, maxColumns: 1 },
@@ -95,7 +97,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
           scrollEndThreshold={scrollEndThreshold}
           rowHeight={rowHeight}
           columnHeaderHeight={columnHeaderHeight}
-          {...rest}
+          {...other}
         />
       </div>
     );
@@ -205,7 +207,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       });
 
       const beforeSortSearchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
-      expect(beforeSortSearchParams.get('end')).to.not.equal('9');
+      expect(beforeSortSearchParams.get('end')).not.to.equal('9');
 
       await act(async () => apiRef.current?.sortColumn(mockServer.columns[0].field, 'asc'));
 
@@ -336,7 +338,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
 
       const beforeSortingSearchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
       // last row is not the first page anymore
-      expect(beforeSortingSearchParams.get('end')).to.not.equal('9');
+      expect(beforeSortingSearchParams.get('end')).not.to.equal('9');
 
       await act(async () => apiRef.current?.sortColumn(mockServer.columns[0].field, 'asc'));
 
@@ -357,7 +359,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
 
       const beforeFilteringSearchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
       // last row is not the first page anymore
-      expect(beforeFilteringSearchParams.get('end')).to.not.equal('9');
+      expect(beforeFilteringSearchParams.get('end')).not.to.equal('9');
 
       await act(async () => {
         apiRef.current?.setFilterModel({
@@ -456,6 +458,45 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       await waitFor(() => expect(getRow(10)).not.to.be.undefined);
       // The 11th row should be a skeleton
       expect(getRow(10).dataset.id).to.equal('auto-generated-skeleton-row-root-10');
+    });
+  });
+
+  describe('Cache', () => {
+    it('should combine cache chunks when possible to reduce the number of requests', async () => {
+      const testCache = new TestCache();
+      const cacheGetSpy = spy(testCache, 'get');
+      render(<TestDataSourceLazyLoader dataSourceCache={testCache} />);
+
+      await waitFor(() => {
+        expect(cacheGetSpy.called).to.equal(true);
+      });
+
+      cacheGetSpy.resetHistory();
+      fetchRowsSpy.resetHistory();
+
+      act(() => {
+        apiRef.current?.dataSource.fetchRows(GRID_ROOT_GROUP_ID, {
+          start: 0,
+          end: 29,
+        });
+      });
+
+      await waitFor(() => {
+        expect(cacheGetSpy.callCount).to.equal(3);
+      });
+      expect(fetchRowsSpy.callCount).to.equal(1);
+
+      act(() => {
+        apiRef.current?.dataSource.fetchRows(GRID_ROOT_GROUP_ID, {
+          start: 20,
+          end: 29,
+        });
+      });
+
+      await waitFor(() => {
+        expect(cacheGetSpy.callCount).to.equal(4);
+      });
+      expect(fetchRowsSpy.callCount).to.equal(1);
     });
   });
 });

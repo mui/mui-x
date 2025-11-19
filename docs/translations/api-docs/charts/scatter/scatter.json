@@ -1,11 +1,20 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "colorGetter": {
+      "description": "Function to get the color of a scatter item given its data index. The data index argument is optional. If not provided, the color for the entire series is returned. If provided, the color for the specific scatter item is returned."
+    },
     "onItemClick": {
       "description": "Callback fired when clicking on a scatter item.",
       "typeDescriptions": {
-        "event": "Mouse event recorded on the <code>&lt;svg/&gt;</code> element.",
-        "scatterItemIdentifier": "The scatter item identifier."
+        "event": {
+          "name": "event",
+          "description": "Mouse event recorded on the <code>&lt;svg/&gt;</code> element."
+        },
+        "scatterItemIdentifier": {
+          "name": "scatterItemIdentifier",
+          "description": "The scatter item identifier."
+        }
       }
     }
   },

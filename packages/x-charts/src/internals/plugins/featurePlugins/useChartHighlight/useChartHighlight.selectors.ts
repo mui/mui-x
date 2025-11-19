@@ -1,18 +1,26 @@
+import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import { SeriesId } from '../../../../models/seriesType/common';
 import { ChartSeriesType } from '../../../../models/seriesType/config';
 import { UseChartSeriesSignature } from '../../corePlugins/useChartSeries/useChartSeries.types';
-import { ChartRootSelector, createSelector } from '../../utils/selectors';
+import { ChartRootSelector } from '../../utils/selectors';
 import { HighlightItemData, UseChartHighlightSignature } from './useChartHighlight.types';
 import { HighlightScope } from './highlightConfig.types';
 import { createIsHighlighted } from './createIsHighlighted';
 import { createIsFaded } from './createIsFaded';
+import {
+  getSeriesHighlightedItem,
+  getSeriesUnfadedItem,
+  isSeriesFaded,
+  isSeriesHighlighted,
+} from './highlightStates';
+import { selectorChartsKeyboardItem } from '../useChartKeyboardNavigation';
 
 const selectHighlight: ChartRootSelector<UseChartHighlightSignature> = (state) => state.highlight;
 
 const selectSeries: ChartRootSelector<UseChartSeriesSignature> = (state) => state.series;
 
 export const selectorChartsHighlightScopePerSeriesId = createSelector(
-  [selectSeries],
+  selectSeries,
   (series): Map<SeriesId, Partial<HighlightScope> | undefined> => {
     const map = new Map<SeriesId, Partial<HighlightScope> | undefined>();
 
@@ -27,14 +35,18 @@ export const selectorChartsHighlightScopePerSeriesId = createSelector(
   },
 );
 
-export const selectorChartsHighlightedItem = createSelector(
-  [selectHighlight],
-  (highlight) => highlight.item,
+export const selectorChartsHighlightedItem = createSelectorMemoized(
+  selectHighlight,
+  selectorChartsKeyboardItem,
+  function selectorChartsHighlightedItem(highlight, keyboardItem) {
+    return highlight.lastUpdate === 'pointer' ? highlight.item : keyboardItem;
+  },
 );
 
 export const selectorChartsHighlightScope = createSelector(
-  [selectorChartsHighlightScopePerSeriesId, selectorChartsHighlightedItem],
-  (seriesIdToHighlightScope, highlightedItem) => {
+  selectorChartsHighlightScopePerSeriesId,
+  selectorChartsHighlightedItem,
+  function selectorChartsHighlightScope(seriesIdToHighlightScope, highlightedItem) {
     if (!highlightedItem) {
       return null;
     }
@@ -49,30 +61,57 @@ export const selectorChartsHighlightScope = createSelector(
 );
 
 export const selectorChartsIsHighlightedCallback = createSelector(
-  [selectorChartsHighlightScope, selectorChartsHighlightedItem],
+  selectorChartsHighlightScope,
+  selectorChartsHighlightedItem,
   createIsHighlighted,
 );
 
 export const selectorChartsIsFadedCallback = createSelector(
-  [selectorChartsHighlightScope, selectorChartsHighlightedItem],
+  selectorChartsHighlightScope,
+  selectorChartsHighlightedItem,
   createIsFaded,
 );
 
 export const selectorChartsIsHighlighted = createSelector(
-  [
-    selectorChartsHighlightScope,
-    selectorChartsHighlightedItem,
-    (_, item: HighlightItemData | null) => item,
-  ],
-  (highlightScope, highlightedItem, item) =>
-    createIsHighlighted(highlightScope, highlightedItem)(item),
+  selectorChartsHighlightScope,
+  selectorChartsHighlightedItem,
+  function selectorChartsIsHighlighted(
+    highlightScope,
+    highlightedItem,
+    item: HighlightItemData | null,
+  ) {
+    return createIsHighlighted(highlightScope, highlightedItem)(item);
+  },
+);
+
+export const selectorChartIsSeriesHighlighted = createSelector(
+  selectorChartsHighlightScope,
+  selectorChartsHighlightedItem,
+  isSeriesHighlighted,
+);
+
+export const selectorChartIsSeriesFaded = createSelector(
+  selectorChartsHighlightScope,
+  selectorChartsHighlightedItem,
+  isSeriesFaded,
+);
+
+export const selectorChartSeriesUnfadedItem = createSelector(
+  selectorChartsHighlightScope,
+  selectorChartsHighlightedItem,
+  getSeriesUnfadedItem,
+);
+
+export const selectorChartSeriesHighlightedItem = createSelector(
+  selectorChartsHighlightScope,
+  selectorChartsHighlightedItem,
+  getSeriesHighlightedItem,
 );
 
 export const selectorChartsIsFaded = createSelector(
-  [
-    selectorChartsHighlightScope,
-    selectorChartsHighlightedItem,
-    (_, item: HighlightItemData | null) => item,
-  ],
-  (highlightScope, highlightedItem, item) => createIsFaded(highlightScope, highlightedItem)(item),
+  selectorChartsHighlightScope,
+  selectorChartsHighlightedItem,
+  function selectorChartsIsFaded(highlightScope, highlightedItem, item: HighlightItemData | null) {
+    return createIsFaded(highlightScope, highlightedItem)(item);
+  },
 );

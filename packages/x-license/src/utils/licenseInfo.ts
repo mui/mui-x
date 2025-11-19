@@ -5,9 +5,9 @@ export interface MuiLicenseInfo {
   key: string | undefined;
 }
 
-declare namespace globalThis {
-  // eslint-disable-next-line no-underscore-dangle, @typescript-eslint/naming-convention
-  let __MUI_LICENSE_INFO__: MuiLicenseInfo;
+declare global {
+  // eslint-disable-next-line no-underscore-dangle, @typescript-eslint/naming-convention, vars-on-top
+  var __MUI_LICENSE_INFO__: MuiLicenseInfo;
 }
 
 // Store the license information in a global, so it can be shared

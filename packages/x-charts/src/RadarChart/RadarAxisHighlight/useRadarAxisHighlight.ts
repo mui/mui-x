@@ -16,13 +16,6 @@ import {
   selectorChartsInteractionRotationAxisValue,
 } from '../../internals/plugins/featurePlugins/useChartPolarAxis/useChartPolarInteraction.selectors';
 
-interface UseRadarAxisHighlightParams {
-  /**
-   * If true, coordinates of the previous/next point will be added.
-   */
-  includesNeighbors?: boolean;
-}
-
 interface UseRadarAxisHighlightReturnValue {
   /**
    * The radar center.
@@ -52,7 +45,7 @@ interface UseRadarAxisHighlightReturnValue {
    * The { x, y, value } values for the highlighted points in the same order as the `series` array.
    * If `includesNeighbors` is set to `true` it also contains the information for `previous` and `next` data point.
    */
-  points: Points[];
+  points: Point[];
   /**
    * Charts instances giving access to `polar2svg` and `svg2polar` helpers.
    */
@@ -67,17 +60,7 @@ interface Point {
   value: number;
 }
 
-interface Points {
-  highlighted: Point;
-  previous?: Point;
-  next?: Point;
-}
-
-export function useRadarAxisHighlight(
-  params?: UseRadarAxisHighlightParams,
-): UseRadarAxisHighlightReturnValue | null {
-  const { includesNeighbors = false } = params ?? {};
-
+export function useRadarAxisHighlight(): UseRadarAxisHighlightReturnValue | null {
   const radarSeries = useRadarSeries();
 
   const rotationScale = useRotationScale<'point'>();
@@ -124,55 +107,15 @@ export function useRadarAxisHighlight(
       const r = radiusScale(value)!;
       const [x, y] = instance.polar2svg(r, angle);
 
-      const retrunedValue: Points = {
-        highlighted: {
-          x,
-          y,
-          r,
-          angle,
-          value,
-        },
+      const returnedValue: Point = {
+        x,
+        y,
+        r,
+        angle,
+        value,
       };
-      if (!includesNeighbors) {
-        return retrunedValue;
-      }
 
-      const dataLength = series.data.length;
-
-      const prevIndex = (dataLength + highlightedIndex - 1) % dataLength;
-      const nextIndex = (highlightedIndex + 1) % dataLength;
-
-      const prevValue = series.data[prevIndex];
-      const nextValue = series.data[nextIndex];
-
-      if (prevValue != null) {
-        const prevR = radiusAxis[radiusAxisIds[prevIndex]].scale(prevValue)!;
-        const prevAngle = rotationScale(rotationScale.domain()[prevIndex])!;
-        const [px, py] = instance.polar2svg(prevR, prevAngle);
-
-        retrunedValue.previous = {
-          x: px,
-          y: py,
-          r: prevR,
-          angle: prevAngle,
-          value: prevValue,
-        };
-      }
-
-      if (nextValue != null) {
-        const nextR = radiusAxis[radiusAxisIds[nextIndex]].scale(nextValue)!;
-        const nextAngle = rotationScale(rotationScale.domain()[nextIndex])!;
-        const [nx, ny] = instance.polar2svg(nextR, nextAngle);
-
-        retrunedValue.next = {
-          x: nx,
-          y: ny,
-          r: nextR,
-          angle: nextAngle,
-          value: nextValue,
-        };
-      }
-      return retrunedValue;
+      return returnedValue;
     }),
   };
 }

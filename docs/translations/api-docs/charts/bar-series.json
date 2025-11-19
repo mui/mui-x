@@ -1,0 +1,44 @@
+{
+  "interfaceDescription": "",
+  "propertiesDescriptions": {
+    "type": { "description": "" },
+    "barLabel": {
+      "description": "If provided, the function will be used to format the label of the bar.<br />It can be set to &#39;value&#39; to display the current value."
+    },
+    "barLabelPlacement": {
+      "description": "The placement of the bar label. It accepts the following values:<br />- &#39;center&#39;: the label is centered on the bar<br />- &#39;outside&#39;: the label is placed after the end of the bar, from the point of the view of the origin. For a vertical positive bar, the label is above its top edge; for a horizontal negative bar, the label is placed to the left of its leftmost limit."
+    },
+    "color": {
+      "description": "Color to use when displaying the series.<br />If <code>colorGetter</code> is provided, it will be used to get the color for each data point instead.<br />Otherwise, this color will be used for all data points in the series."
+    },
+    "colorGetter": {
+      "description": "A function that returns a color based on the value and/or the data index of a point.<br />The returned color is used when displaying the specific data point, e.g., a marker in a line chart.<br />When the color of the entire series is required, e.g., in legends, the <code>color</code> property is used instead."
+    },
+    "data": { "description": "Data associated to each bar." },
+    "dataKey": { "description": "The key used to retrieve data from the dataset." },
+    "highlightScope": { "description": "The scope to apply when the series is highlighted." },
+    "id": { "description": "The id of this series." },
+    "label": {
+      "description": "The label to display on the tooltip or the legend. It can be a string or a function."
+    },
+    "labelMarkType": {
+      "description": "Defines the mark type for the series.<br /><br />There is a default mark type for each series type."
+    },
+    "layout": { "description": "Layout of the bars. All bar should have the same layout." },
+    "minBarSize": {
+      "description": "If provided, the value will be used as the minimum size of the bar in pixels.<br />This is useful to avoid bars with a size of 0.<br /><br />The property is ignored if the series value is <code>null</code> or <code>0</code>.<br />It also doesn&#39;t work with stacked series."
+    },
+    "stack": {
+      "description": "The key that identifies the stacking group.<br />Series with the same <code>stack</code> property will be stacked together."
+    },
+    "stackOffset": { "description": "Defines how stacked series handle negative values." },
+    "stackOrder": {
+      "description": "The order in which series&#39; of the same group are stacked together."
+    },
+    "valueFormatter": {
+      "description": "Formatter used to render values in tooltip or other data display."
+    },
+    "xAxisId": { "description": "The id of the x-axis used to render the series." },
+    "yAxisId": { "description": "The id of the y-axis used to render the series." }
+  }
+}

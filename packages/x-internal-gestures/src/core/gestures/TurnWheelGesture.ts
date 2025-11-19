@@ -10,6 +10,7 @@
 
 import { ActiveGesturesRegistry } from '../ActiveGesturesRegistry';
 import { Gesture, GestureEventData, GestureOptions, GestureState } from '../Gesture';
+import type { KeyboardManager } from '../KeyboardManager';
 import { PointerData, PointerManager } from '../PointerManager';
 import { TargetElement } from '../types/TargetElement';
 import { calculateCentroid, createEventName } from '../utils';
@@ -56,6 +57,16 @@ export type TurnWheelGestureOptions<GestureName extends string> = GestureOptions
    * @default false
    */
   invert?: boolean;
+
+  /**
+   * Wheel events happen on mouse mode only.
+   */
+  pointerMode?: never;
+
+  /**
+   * Wheel events happen on mouse mode only.
+   */
+  pointerOptions?: never;
 };
 
 /**
@@ -124,7 +135,10 @@ export class TurnWheelGesture<GestureName extends string> extends Gesture<Gestur
 
   protected readonly optionsType!: TurnWheelGestureOptions<GestureName>;
 
-  protected readonly mutableOptionsType!: Omit<typeof this.optionsType, 'name'>;
+  protected readonly mutableOptionsType!: Omit<
+    typeof this.optionsType,
+    'name' | 'pointerMode' | 'pointerOptions'
+  >;
 
   protected readonly mutableStateType!: Partial<typeof this.state>;
 
@@ -158,9 +172,6 @@ export class TurnWheelGesture<GestureName extends string> extends Gesture<Gestur
    */
   private invert: boolean;
 
-  // Store bound event handlers to properly remove them
-  private handleWheelEventBound: (event: WheelEvent) => void;
-
   constructor(options: TurnWheelGestureOptions<GestureName>) {
     super(options);
     this.sensitivity = options.sensitivity ?? 1;
@@ -172,7 +183,6 @@ export class TurnWheelGesture<GestureName extends string> extends Gesture<Gestur
     this.state.totalDeltaX = this.initialDelta;
     this.state.totalDeltaY = this.initialDelta;
     this.state.totalDeltaZ = this.initialDelta;
-    this.handleWheelEventBound = this.handleWheelEvent.bind(this);
   }
 
   public clone(overrides?: Record<string, unknown>): TurnWheelGesture<GestureName> {
@@ -185,6 +195,7 @@ export class TurnWheelGesture<GestureName extends string> extends Gesture<Gestur
       min: this.min,
       initialDelta: this.initialDelta,
       invert: this.invert,
+      requiredKeys: [...this.requiredKeys],
       preventIf: [...this.preventIf],
       // Apply any overrides passed to the method
       ...overrides,
@@ -195,18 +206,19 @@ export class TurnWheelGesture<GestureName extends string> extends Gesture<Gestur
     element: TargetElement,
     pointerManager: PointerManager,
     gestureRegistry: ActiveGesturesRegistry<GestureName>,
+    keyboardManager: KeyboardManager,
   ): void {
-    super.init(element, pointerManager, gestureRegistry);
+    super.init(element, pointerManager, gestureRegistry, keyboardManager);
 
     // Add event listener directly to the element
     // @ts-expect-error, WheelEvent is correct.
-    this.element.addEventListener('wheel', this.handleWheelEventBound);
+    this.element.addEventListener('wheel', this.handleWheelEvent);
   }
 
   public destroy(): void {
     // Remove the element-specific event listener
     // @ts-expect-error, WheelEvent is correct.
-    this.element.removeEventListener('wheel', this.handleWheelEventBound);
+    this.element.removeEventListener('wheel', this.handleWheelEvent);
     this.resetState();
     super.destroy();
   }
@@ -235,9 +247,9 @@ export class TurnWheelGesture<GestureName extends string> extends Gesture<Gestur
    * @param element The element that received the wheel event
    * @param event The original wheel event
    */
-  private handleWheelEvent(event: WheelEvent): void {
+  private handleWheelEvent = (event: WheelEvent): void => {
     // Check if this gesture should be prevented by active gestures
-    if (this.shouldPreventGesture(this.element)) {
+    if (this.shouldPreventGesture(this.element, 'mouse')) {
       return;
     }
 
@@ -266,7 +278,7 @@ export class TurnWheelGesture<GestureName extends string> extends Gesture<Gestur
 
     // Emit the wheel event
     this.emitWheelEvent(pointersArray, event);
-  }
+  };
 
   /**
    * Emit wheel-specific events
@@ -317,6 +329,7 @@ export class TurnWheelGesture<GestureName extends string> extends Gesture<Gestur
     const domEvent = new CustomEvent(eventName, {
       bubbles: true,
       cancelable: true,
+      composed: true,
       detail: customEventData,
     });
 

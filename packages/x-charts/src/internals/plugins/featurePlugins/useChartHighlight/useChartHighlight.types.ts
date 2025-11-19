@@ -30,6 +30,8 @@ export type HighlightItemData = {
   dataIndex?: number;
 };
 
+export type HighlightUpdateSource = 'pointer' | 'keyboard';
+
 export interface UseChartHighlightInstance {
   /**
    * Remove all highlight.
@@ -67,6 +69,11 @@ export interface UseChartHighlightState {
      * The item currently highlighted.
      */
     item: HighlightItemData | null;
+    /**
+     * The last interaction highlight update.
+     * Used to decide if highlight should be based on pointer position or keyboard navigation.
+     */
+    lastUpdate: HighlightUpdateSource;
   };
 }
 

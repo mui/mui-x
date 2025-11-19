@@ -7,18 +7,19 @@ import { BarElement, BarElementSlotProps, BarElementSlots } from './BarElement';
 import { BarItemIdentifier } from '../models';
 import { useDrawingArea, useXAxes, useYAxes } from '../hooks';
 import { BarClipPath } from './BarClipPath';
-import { BarLabelItemProps, BarLabelSlotProps, BarLabelSlots } from './BarLabel/BarLabelItem';
+import { BarLabelSlotProps, BarLabelSlots } from './BarLabel/BarLabelItem';
 import { BarLabelPlot } from './BarLabel/BarLabelPlot';
 import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
 import { useBarPlotData } from './useBarPlotData';
 import { useUtilityClasses } from './barClasses';
+import { BarItem, BarLabelContext } from './BarLabel';
 
 export interface BarPlotSlots extends BarElementSlots, BarLabelSlots {}
 
 export interface BarPlotSlotProps extends BarElementSlotProps, BarLabelSlotProps {}
 
-export interface BarPlotProps extends Pick<BarLabelItemProps, 'barLabel'> {
+export interface BarPlotProps {
   /**
    * If `true`, animations are skipped.
    * @default undefined
@@ -37,6 +38,15 @@ export interface BarPlotProps extends Pick<BarLabelItemProps, 'barLabel'> {
    * Defines the border radius of the bar element.
    */
   borderRadius?: number;
+  /**
+   * @deprecated Use `barLabel` in the chart series instead.
+   * If provided, the function will be used to format the label of the bar.
+   * It can be set to 'value' to display the current value.
+   * @param {BarItem} item The item to format.
+   * @param {BarLabelContext} context data about the bar.
+   * @returns {string} The formatted label.
+   */
+  barLabel?: 'value' | ((item: BarItem, context: BarLabelContext) => string | null | undefined);
   /**
    * The props used for each component slot.
    * @default {}
@@ -83,23 +93,27 @@ function BarPlot(props: BarPlotProps) {
   return (
     <BarPlotRoot className={classes.root}>
       {!withoutBorderRadius &&
-        masksData.map(({ id, x, y, width, height, hasPositive, hasNegative, layout }) => {
-          return (
-            <BarClipPath
-              key={id}
-              maskId={id}
-              borderRadius={borderRadius}
-              hasNegative={hasNegative}
-              hasPositive={hasPositive}
-              layout={layout}
-              x={x}
-              y={y}
-              width={width}
-              height={height}
-              skipAnimation={skipAnimation ?? false}
-            />
-          );
-        })}
+        masksData.map(
+          ({ id, x, y, xOrigin, yOrigin, width, height, hasPositive, hasNegative, layout }) => {
+            return (
+              <BarClipPath
+                key={id}
+                maskId={id}
+                borderRadius={borderRadius}
+                hasNegative={hasNegative}
+                hasPositive={hasPositive}
+                layout={layout}
+                x={x}
+                y={y}
+                xOrigin={xOrigin}
+                yOrigin={yOrigin}
+                width={width}
+                height={height}
+                skipAnimation={skipAnimation ?? false}
+              />
+            );
+          },
+        )}
       {completedData.map(({ seriesId, data }) => {
         return (
           <g key={seriesId} data-series={seriesId} className={classes.series}>
@@ -143,14 +157,15 @@ function BarPlot(props: BarPlotProps) {
           </g>
         );
       })}
-      {barLabel && (
+      {completedData.map((processedSeries) => (
         <BarLabelPlot
-          bars={completedData}
+          key={processedSeries.seriesId}
+          processedSeries={processedSeries}
           skipAnimation={skipAnimation}
           barLabel={barLabel}
           {...other}
         />
-      )}
+      ))}
     </BarPlotRoot>
   );
 }
@@ -168,6 +183,11 @@ BarPlot.propTypes = {
    * @returns {string} The formatted label.
    */
   barLabel: PropTypes.oneOfType([PropTypes.oneOf(['value']), PropTypes.func]),
+  /**
+   * The placement of the bar label.
+   * It controls whether the label is rendered inside or outside the bar.
+   */
+  barLabelPlacement: PropTypes.oneOf(['outside', 'inside']),
   /**
    * Defines the border radius of the bar element.
    */

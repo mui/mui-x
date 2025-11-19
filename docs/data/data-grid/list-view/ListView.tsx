@@ -6,6 +6,7 @@ import {
   GridColDef,
   GridRowParams,
   GridToolbarContainer,
+  GridActionsCell,
 } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Stack from '@mui/material/Stack';
@@ -129,7 +130,11 @@ export default function ListView() {
         type: 'actions',
         field: 'actions',
         width: 75,
-        getActions: (params) => [<MessageAction {...params} />],
+        renderCell: (params: GridRenderCellParams) => (
+          <GridActionsCell {...params}>
+            <MessageAction row={params.row} />
+          </GridActionsCell>
+        ),
       },
     ];
   }, [data.columns]);
@@ -137,7 +142,7 @@ export default function ListView() {
   const rowHeight = isListView ? 64 : 52;
 
   return (
-    <div style={{ maxWidth: 360, height: 600 }}>
+    <div style={{ width: '100%', maxWidth: 360, height: 600 }}>
       <DataGridPro
         {...data}
         loading={loading}

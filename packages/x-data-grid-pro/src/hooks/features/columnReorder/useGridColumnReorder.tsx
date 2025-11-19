@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import composeClasses from '@mui/utils/composeClasses';
+import ownerDocument from '@mui/utils/ownerDocument';
 import { useRtl } from '@mui/system/RtlProvider';
 import {
   CursorCoordinates,
@@ -356,6 +357,27 @@ export const useGridColumnReorder = (
     },
     [apiRef, logger, isRtl],
   );
+
+  React.useEffect(() => {
+    if (!props.keepColumnPositionIfDraggedOutside) {
+      return () => {};
+    }
+
+    const doc = ownerDocument(apiRef.current.rootElementRef!.current);
+    const listener = (event: DragEvent) => {
+      if (event.dataTransfer) {
+        // keep the drop effect if we are keeping the column position if dragged outside
+        // https://github.com/mui/mui-x/issues/19183#issuecomment-3202307783
+        event.preventDefault();
+        event.dataTransfer.dropEffect = 'move';
+      }
+    };
+
+    doc.addEventListener('dragover', listener);
+    return () => {
+      doc.removeEventListener('dragover', listener);
+    };
+  }, [apiRef, props.keepColumnPositionIfDraggedOutside]);
 
   useGridEvent(apiRef, 'columnHeaderDragStart', handleDragStart);
   useGridEvent(apiRef, 'columnHeaderDragEnter', handleDragEnter);

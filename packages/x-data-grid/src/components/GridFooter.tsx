@@ -1,4 +1,3 @@
-import * as React from 'react';
 import PropTypes from 'prop-types';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
@@ -36,7 +35,9 @@ const GridFooter = forwardRef<HTMLDivElement, GridFooterContainerProps>(
 
     const paginationElement = rootProps.pagination &&
       !rootProps.hideFooterPagination &&
-      rootProps.slots.pagination && <rootProps.slots.pagination />;
+      rootProps.slots.pagination && (
+        <rootProps.slots.pagination {...rootProps.slotProps?.pagination} />
+      );
 
     return (
       <GridFooterContainer {...props} ref={ref}>

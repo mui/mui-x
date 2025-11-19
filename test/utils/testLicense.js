@@ -7,7 +7,7 @@ export function generateTestLicenseKey(expiryDate = new Date()) {
   return generateLicense({
     licenseModel: 'subscription',
     planScope: 'premium',
-    orderNumber: 'MUI X tests',
+    orderNumber: '123',
     expiryDate,
     planVersion: 'Q3-2024',
   });

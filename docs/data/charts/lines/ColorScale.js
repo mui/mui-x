@@ -4,10 +4,13 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 
 export default function ColorScale() {
   const [colorX, setColorX] = React.useState('None');
   const [colorY, setColorY] = React.useState('piecewise');
+  const [colorArea, setColorArea] = React.useState(true);
 
   return (
     <Stack direction="column" spacing={1} sx={{ width: '100%', maxWidth: 600 }}>
@@ -34,6 +37,14 @@ export default function ColorScale() {
           <MenuItem value="piecewise">piecewise</MenuItem>
           <MenuItem value="continuous">continuous</MenuItem>
         </TextField>
+        <FormControlLabel
+          checked={colorArea}
+          control={
+            <Checkbox onChange={(event) => setColorArea(event.target.checked)} />
+          }
+          label="Show chart area"
+          labelPlacement="end"
+        />
       </Stack>
 
       <LineChart
@@ -42,7 +53,7 @@ export default function ColorScale() {
         series={[
           {
             data: [-2, -9, 12, 11, 6, -4],
-            area: true,
+            area: colorArea,
           },
         ]}
         yAxis={[
@@ -92,8 +103,9 @@ export default function ColorScale() {
       />
       <HighlightedCode
         code={[
-          `<ScatterChart`,
+          `<LineChart`,
           '  /* ... */',
+          `  series={[{data: [-2, -9, 12, 11, 6, -4], area: ${colorArea}}]}`,
           // ColorX
           ...(colorX === 'None' ? ['  xAxis={[{}]}'] : []),
           ...(colorX === 'continuous'

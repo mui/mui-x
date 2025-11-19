@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { ScaleLogarithmic } from '@mui/x-charts-vendor/d3-scale';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { ChartsReferenceLine } from '@mui/x-charts/ChartsReferenceLine';
@@ -32,7 +31,7 @@ export default function FormatterD3() {
               const d3Text = (
                 context.scale as ScaleLogarithmic<number, number, never>
               ).tickFormat(
-                30,
+                context.tickNumber!,
                 'e',
               )(f);
 

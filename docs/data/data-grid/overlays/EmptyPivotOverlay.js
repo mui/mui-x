@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { DataGridPremium } from '@mui/x-data-grid-premium';
 
 const rows = [

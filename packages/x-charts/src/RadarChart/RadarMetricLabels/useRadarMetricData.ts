@@ -25,11 +25,17 @@ export function useRadarMetricData() {
 
       const r = radiusScale.range()[1] + labelGap;
       const angle = angles[dataIndex];
+      const defaultTickLabel = metric;
       return {
         x: cx + r * Math.sin(angle),
         y: cy - r * Math.cos(angle),
         angle: rad2deg(angle),
-        label: valueFormatter?.(metric, { location: 'tick', scale: rotationScale }) ?? metric,
+        label:
+          valueFormatter?.(metric, {
+            location: 'tick',
+            scale: rotationScale,
+            defaultTickLabel,
+          }) ?? defaultTickLabel,
       };
     }),
   };

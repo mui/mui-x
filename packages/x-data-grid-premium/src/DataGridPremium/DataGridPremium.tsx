@@ -15,6 +15,7 @@ import {
   validateProps,
   GridConfiguration,
   useGridApiInitialization,
+  getRowValue,
 } from '@mui/x-data-grid-pro/internals';
 import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
 import { forwardRef } from '@mui/x-internals/forwardRef';
@@ -25,26 +26,37 @@ import {
 } from '../models/dataGridPremiumProps';
 import { useDataGridPremiumProps } from './useDataGridPremiumProps';
 import { Sidebar } from '../components/sidebar';
-import { GridPivotPanel } from '../components/pivotPanel/GridPivotPanel';
-import { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
-import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
+import { useGridAriaAttributesPremium } from '../hooks/utils/useGridAriaAttributes';
+import { useGridRowAriaAttributesPremium } from '../hooks/features/rows/useGridRowAriaAttributes';
 import { gridCellAggregationResultSelector } from '../hooks/features/aggregation/gridAggregationSelectors';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import type { GridApiPremium, GridPrivateApiPremium } from '../models/gridApiPremium';
-import { gridPivotPanelOpenSelector } from '../hooks/features/pivoting/gridPivotingSelectors';
-import { isPivotingAvailable } from '../hooks/features/pivoting/utils';
+import { useGridRowsOverridableMethods } from '../hooks/features/rows/useGridRowsOverridableMethods';
+import { useGridParamsOverridableMethods } from '../hooks/features/rows/useGridParamsOverridableMethods';
+import { gridSidebarOpenSelector } from '../hooks/features/sidebar';
+import { useIsCellEditable } from '../hooks/features/editing/useGridCellEditable';
 
 export type { GridPremiumSlotsComponent as GridSlots } from '../models';
 
-const configuration: GridConfiguration = {
+const configuration: GridConfiguration<GridPrivateApiPremium, DataGridPremiumProcessedProps> = {
   hooks: {
     useCSSVariables: useMaterialCSSVariables,
-    useGridAriaAttributes,
-    useGridRowAriaAttributes,
+    useGridAriaAttributes: useGridAriaAttributesPremium,
+    useGridRowAriaAttributes: useGridRowAriaAttributesPremium,
     useCellAggregationResult: (id, field) => {
       const apiRef = useGridApiContext();
       return useGridSelector(apiRef, gridCellAggregationResultSelector, { id, field });
     },
+    useFilterValueGetter: (apiRef, props) => (row, column) => {
+      if (props.aggregationRowsScope === 'all') {
+        return apiRef.current.getRowValue(row, column);
+      }
+
+      return getRowValue(row, column, apiRef);
+    },
+    useIsCellEditable,
+    useGridRowsOverridableMethods,
+    useGridParamsOverridableMethods,
   },
 };
 const releaseInfo = '__RELEASE_INFO__';
@@ -66,24 +78,22 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
     initialProps,
   );
 
-  const props = useDataGridPremiumComponent(privateApiRef, initialProps);
+  const props = useDataGridPremiumComponent(privateApiRef, initialProps, configuration);
   useLicenseVerifier('x-data-grid-premium', releaseInfo);
-
-  const pivotSettingsOpen = useGridSelector(privateApiRef, gridPivotPanelOpenSelector);
 
   if (process.env.NODE_ENV !== 'production') {
     validateProps(props, dataGridPremiumPropValidators);
   }
 
-  const sidePanel =
-    isPivotingAvailable(props) && pivotSettingsOpen ? (
-      <Sidebar>
-        <GridPivotPanel />
-      </Sidebar>
-    ) : null;
+  const sidebarOpen = useGridSelector(privateApiRef, gridSidebarOpenSelector);
+  const sidePanel = sidebarOpen ? <Sidebar /> : null;
 
   return (
-    <GridContextProvider privateApiRef={privateApiRef} configuration={configuration} props={props}>
+    <GridContextProvider
+      privateApiRef={privateApiRef}
+      configuration={configuration as GridConfiguration}
+      props={props}
+    >
       <GridRoot
         className={props.className}
         style={props.style}
@@ -103,6 +113,10 @@ DataGridPremiumRaw.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The id of the active chart.
+   */
+  activeChartId: PropTypes.string,
   /**
    * Aggregation functions available on the grid.
    * @default GRID_AGGREGATION_FUNCTIONS when `dataSource` is not provided, `{}` when `dataSource` is provided
@@ -140,6 +154,7 @@ DataGridPremiumRaw.propTypes = {
           helperText: PropTypes.string,
           response: PropTypes.shape({
             aggregation: PropTypes.object.isRequired,
+            chart: PropTypes.object,
             conversationId: PropTypes.string.isRequired,
             filterOperator: PropTypes.oneOf(['and', 'or']),
             filters: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -182,13 +197,11 @@ DataGridPremiumRaw.propTypes = {
    */
   'aria-labelledby': PropTypes.string,
   /**
-   * If `true`, the Data Grid height is dynamic and follows the number of rows in the Data Grid.
+   * If `true`, the Data Grid height is dynamic and takes as much space as it needs to display all rows.
+   * Use it instead of a flex parent container approach, if:
+   * - you don't need to set a minimum or maximum height for the Data Grid
+   * - you want to avoid the scrollbar flickering when the content changes
    * @default false
-   * @deprecated Use flex parent container instead: https://mui.com/x/react-data-grid/layout/#flex-parent-container
-   * @example
-   * <div style={{ display: 'flex', flexDirection: 'column' }}>
-   *   <DataGrid />
-   * </div>
    */
   autoHeight: PropTypes.bool,
   /**
@@ -226,6 +239,11 @@ DataGridPremiumRaw.propTypes = {
    */
   cellSelectionModel: PropTypes.object,
   /**
+   * If `true`, the charts integration feature is enabled.
+   * @default false
+   */
+  chartsIntegration: PropTypes.bool,
+  /**
    * If `true`, the Data Grid will display an extra column with checkboxes for selecting rows.
    * @default false
    */
@@ -251,6 +269,11 @@ DataGridPremiumRaw.propTypes = {
    * @default 150
    */
   columnBufferPx: PropTypes.number,
+  /**
+   * The milliseconds delay to wait after a keystroke before triggering filtering in the columns menu.
+   * @default 150
+   */
+  columnFilterDebounceMs: PropTypes.number,
   /**
    * Sets the height in pixels of the column group headers in the Data Grid.
    * Inherits the `columnHeaderHeight` value if not set.
@@ -401,6 +424,11 @@ DataGridPremiumRaw.propTypes = {
    */
   disableRowGrouping: PropTypes.bool,
   /**
+   * If `true`, the Data Grid will not use the exclude model optimization when selecting all rows.
+   * @default false
+   */
+  disableRowSelectionExcludeModel: PropTypes.bool,
+  /**
    * If `true`, the selection on click on a row or cell is disabled.
    * @default false
    */
@@ -426,6 +454,7 @@ DataGridPremiumRaw.propTypes = {
    * For each feature, if the flag is not explicitly set to `true`, then the feature is fully disabled, and neither property nor method calls will have any effect.
    */
   experimentalFeatures: PropTypes.shape({
+    charts: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**
@@ -496,7 +525,7 @@ DataGridPremiumRaw.propTypes = {
    * @param {GridColDef} column The column to generate derived columns for.
    * @param {GridLocaleTextApi['getLocaleText']} getLocaleText The function to get the locale text.
    * @returns {GridColDef[] | undefined} The derived columns.
-   * @default {defaultGetPivotDerivedColumns} Creates year and quarter columns for date columns.
+   * @default {defaultGetPivotDerivedColumns | undefined} Creates year and quarter columns for date columns if not in server side mode.
    */
   getPivotDerivedColumns: PropTypes.func,
   /**
@@ -691,6 +720,11 @@ DataGridPremiumRaw.propTypes = {
    * Nonce of the inline styles for [Content Security Policy](https://www.w3.org/TR/2016/REC-CSP2-20161215/#script-src-the-nonce-attribute).
    */
   nonce: PropTypes.string,
+  /**
+   * Callback fired when the active chart changes.
+   * @param {string} activeChartId The new active chart id.
+   */
+  onActiveChartIdChange: PropTypes.func,
   /**
    * Callback fired when the row grouping model changes.
    * @param {GridAggregationModel} model The aggregated columns.
@@ -927,6 +961,7 @@ DataGridPremiumRaw.propTypes = {
   /**
    * Callback fired when the pivot side panel open state changes.
    * @param {boolean} pivotPanelOpen Whether the pivot side panel is visible.
+   * @deprecated Use the `sidebarOpen` and `sidebarClose` events or corresponding event handlers `onSidebarOpen()` and `onSidebarClose()` instead.
    */
   onPivotPanelOpenChange: PropTypes.func,
   /**
@@ -944,7 +979,7 @@ DataGridPremiumRaw.propTypes = {
    */
   onPreferencePanelOpen: PropTypes.func,
   /**
-   * Callback called when `processRowUpdate` throws an error or rejects.
+   * Callback called when `processRowUpdate()` throws an error or rejects.
    * @param {any} error The error thrown.
    */
   onProcessRowUpdateError: PropTypes.func,
@@ -1029,6 +1064,20 @@ DataGridPremiumRaw.propTypes = {
    */
   onRowsScrollEnd: PropTypes.func,
   /**
+   * Callback fired when the sidebar is closed.
+   * @param {GridSidebarParams} params With all properties from [[GridSidebarParams]].
+   * @param {MuiEvent<{}>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onSidebarClose: PropTypes.func,
+  /**
+   * Callback fired when the sidebar is opened.
+   * @param {GridSidebarParams} params With all properties from [[GridSidebarParams]].
+   * @param {MuiEvent<{}>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onSidebarOpen: PropTypes.func,
+  /**
    * Callback fired when the sort model changes before a column is sorted.
    * @param {GridSortModel} model With all properties from [[GridSortModel]].
    * @param {GridCallbackDetails} details Additional details for this callback.
@@ -1086,6 +1135,11 @@ DataGridPremiumRaw.propTypes = {
    */
   pinnedColumns: PropTypes.object,
   /**
+   * Sets the type of separator between pinned columns and non-pinned columns.
+   * @default 'border-and-shadow'
+   */
+  pinnedColumnsSectionSeparator: PropTypes.oneOf(['border-and-shadow', 'border', 'shadow']),
+  /**
    * Rows data to pin on top or bottom.
    */
   pinnedRows: PropTypes.shape({
@@ -1093,16 +1147,22 @@ DataGridPremiumRaw.propTypes = {
     top: PropTypes.arrayOf(PropTypes.object),
   }),
   /**
+   * Sets the type of separator between pinned rows and non-pinned rows.
+   * @default 'border-and-shadow'
+   */
+  pinnedRowsSectionSeparator: PropTypes.oneOf(['border-and-shadow', 'border']),
+  /**
    * If `true`, the data grid will show data in pivot mode using the `pivotModel`.
    * @default false
    */
   pivotActive: PropTypes.bool,
   /**
    * The column definition overrides for the columns generated by the pivoting feature.
-   * @param {string} originalColumnField The field of the original column.
-   * @param {string[]} columnGroupPath The path of the column groups the column belongs to.
-   * @returns {Partial<GridPivotingColDefOverrides> | undefined | void} The column definition overrides.
+   * Pass either a partial column definition to apply the same overrides to all pivot columns, or a callback to apply different overrides to each pivot column.
+   * For server-side pivoting, only the `PivotingColDefCallback` signature is supported, and the prop is required.
+   * @type {Partial<GridPivotingColDefOverrides> | PivotingColDefCallback}
    * @default undefined
+   * @throws {Error} If `undefined` and `dataSource` is provided.
    */
   pivotingColDef: PropTypes.oneOfType([
     PropTypes.func,
@@ -1111,6 +1171,7 @@ DataGridPremiumRaw.propTypes = {
       cellClassName: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
       description: PropTypes.string,
       display: PropTypes.oneOf(['flex', 'text']),
+      field: PropTypes.string,
       flex: PropTypes.number,
       headerAlign: PropTypes.oneOf(['center', 'left', 'right']),
       headerClassName: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
@@ -1146,6 +1207,7 @@ DataGridPremiumRaw.propTypes = {
   /**
    * If `true`, the pivot side panel is visible.
    * @default false
+   * @deprecated Use `initialState.sidebar.open` instead.
    */
   pivotPanelOpen: PropTypes.bool,
   /**
@@ -1319,6 +1381,15 @@ DataGridPremiumRaw.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * Sets the tab navigation behavior for the Data Grid.
+   * - "none": No Data Grid specific tab navigation. Pressing the tab key will move the focus to the next element in the tab sequence.
+   * - "content": Pressing the tab key will move the focus to the next cell in the same row or the first cell in the next row. Shift+Tab will move the focus to the previous cell in the same row or the last cell in the previous row. Tab navigation is not enabled for the header.
+   * - "header": Pressing the tab key will move the focus to the next column group, column header or header filter. Shift+Tab will move the focus to the previous column group, column header or header filter. Tab navigation is not enabled for the content.
+   * - "all": Combines the "content" and "header" behavior.
+   * @default "none"
+   */
+  tabNavigation: PropTypes.oneOf(['all', 'content', 'header', 'none']),
   /**
    * If positive, the Data Grid will throttle updates coming from `apiRef.current.updateRows` and `apiRef.current.setRows`.
    * It can be useful if you have a high update rate but do not want to do heavy work like filtering / sorting or rendering on each  individual update.

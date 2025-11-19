@@ -22,7 +22,7 @@ export const useGridStateInitialization = <PrivateApi extends GridPrivateApiComm
     (state, reason) => {
       let newState: PrivateApi['state'];
       if (isFunction(state)) {
-        newState = state(apiRef.current.state);
+        newState = state(apiRef.current.state as any);
       } else {
         newState = state;
       }

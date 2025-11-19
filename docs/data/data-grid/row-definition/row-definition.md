@@ -51,6 +51,10 @@ Otherwise, the Data Grid will re-apply heavy work like sorting and filtering.
 It could be achieved by either defining the prop outside the component scope or by memoizing using the `React.useCallback` hook if the function reuses something from the component scope.
 :::
 
+## Selectors
+
+{{"component": "modules/components/SelectorsDocs.js", "category": "Rows"}}
+
 ## Styling rows
 
 You can check the [styling rows](/x/react-data-grid/style/#styling-rows) section for more information.

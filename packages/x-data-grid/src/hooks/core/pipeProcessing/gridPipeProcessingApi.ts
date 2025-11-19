@@ -73,6 +73,21 @@ export interface GridPipeProcessingLookup {
     // `true` if the row hydration should be re-applied
     context: boolean;
   };
+  /**
+   * Does validation of the current reorder operation.
+   * If the reorder is valid, it returns the position index of the drop indicator.
+   *   - For example before first row is `0` and after the last row is `rows.length`.
+   * If the reorder is invalid, it returns `-1`.
+   */
+  getRowReorderTargetIndex: {
+    value: number;
+    context: {
+      sourceRowId: GridRowId;
+      targetRowId: GridRowId;
+      dropPosition: 'above' | 'below';
+      dragDirection: 'up' | 'down';
+    };
+  };
 }
 
 export type GridPipeProcessor<P extends GridPipeProcessorGroup> = (
@@ -137,4 +152,9 @@ export interface GridPipeProcessingPrivateApi {
    * @param {GridPipeProcessorGroup} group The group to apply.
    */
   requestPipeProcessorsApplication: (group: GridPipeProcessorGroup) => void;
+  /**
+   * Checks of there are any processors that have been updated and runs appliers for them.
+   * It is intended to be called in a useEffect in the top-level data grid hook (`useDataGridComponent`).
+   */
+  runAppliersForPendingProcessors: () => void;
 }

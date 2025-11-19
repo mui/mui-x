@@ -21,7 +21,7 @@ The Pie chart has some specificity described in its [own section](#pie).
 
 ## Conditional formatting
 
-The `label` property also accepts a `function` allowing you to change the label content based on location.
+The `label` property also accepts a `function` that lets you change the label content based on location.
 
 The function receives `location` as its first argument which can have the following values:
 

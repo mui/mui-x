@@ -1,10 +1,15 @@
 import { GridExportDisplayOptions, GridValidRowModel } from '@mui/x-data-grid-pro';
 import type {
+  GridPipeProcessingLookupPro,
   GridControlledStateEventLookupPro,
   GridApiCachesPro,
   GridEventLookupPro,
 } from '@mui/x-data-grid-pro/typeOverloads';
-import type { GridGroupingValueGetter, GridPastedValueParser } from '../models';
+import type {
+  GridGroupingValueGetter,
+  GridGroupingValueSetter,
+  GridPastedValueParser,
+} from '../models';
 import type {
   GridRowGroupingModel,
   GridAggregationModel,
@@ -16,7 +21,11 @@ import type {
 import { GridRowGroupingInternalCache } from '../hooks/features/rowGrouping/gridRowGroupingInterfaces';
 import { GridAggregationInternalCache } from '../hooks/features/aggregation/gridAggregationInterfaces';
 import type { GridExcelExportOptions } from '../hooks/features/export/gridExcelExportInterface';
-import type { GridPivotModel } from '../hooks/features/pivoting/gridPivotingInterfaces';
+import type {
+  GridPivotingInternalCache,
+  GridPivotModel,
+} from '../hooks/features/pivoting/gridPivotingInterfaces';
+import { GridSidebarValue } from '../hooks/features/sidebar/gridSidebarInterfaces';
 
 export interface GridControlledStateEventLookupPremium {
   /**
@@ -40,6 +49,9 @@ export interface GridControlledStateEventLookupPremium {
    */
   pivotModelChange: { params: GridPivotModel };
   pivotModeChange: { params: boolean };
+  /**
+   * @deprecated Use the `sidebarOpen` and `sidebarClose` events instead.
+   */
   pivotPanelOpenChange: { params: boolean };
   /**
    * Fired when the AI Assistant conversation state changes.
@@ -49,6 +61,10 @@ export interface GridControlledStateEventLookupPremium {
    * Fired when the AI Assistant active conversation index changes.
    */
   aiAssistantActiveConversationIndexChange: { params: number };
+  /**
+   * Fired when the active chart id changes.
+   */
+  activeChartIdChange: { params: string };
 }
 
 interface GridEventLookupPremium extends GridEventLookupPro {
@@ -60,6 +76,18 @@ interface GridEventLookupPremium extends GridEventLookupPro {
    * Fired when the clipboard paste operation ends.
    */
   clipboardPasteEnd: {};
+  /**
+   * Fired when the sidebar is opened.
+   */
+  sidebarOpen: { params: { value: GridSidebarValue } };
+  /**
+   * Fired when the sidebar is closed.
+   */
+  sidebarClose: { params: { value: GridSidebarValue } };
+  /**
+   * Fired when the chart synchronization state changes.
+   */
+  chartSynchronizationStateChange: { params: { chartId: string; synced: boolean } };
 }
 
 export interface GridColDefPremium<R extends GridValidRowModel = any, V = any, F = V> {
@@ -80,6 +108,12 @@ export interface GridColDefPremium<R extends GridValidRowModel = any, V = any, F
    */
   groupingValueGetter?: GridGroupingValueGetter<R>;
   /**
+   * Function that takes a grouping value and updates the row data accordingly.
+   * This is the inverse operation of `groupingValueGetter`.
+   * @returns {R} The updated row.
+   */
+  groupingValueSetter?: GridGroupingValueSetter<R>;
+  /**
    * Function that takes the clipboard-pasted value and converts it to a value used internally.
    * @returns {V} The converted value.
    */
@@ -89,6 +123,11 @@ export interface GridColDefPremium<R extends GridValidRowModel = any, V = any, F
    * @default true
    */
   pivotable?: boolean;
+  /**
+   * If `false`, the column will not be available for charts integration.
+   * @default true
+   */
+  chartable?: boolean;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -102,12 +141,24 @@ export interface GridColumnHeaderParamsPremium<R extends GridValidRowModel = any
 }
 
 export interface GridApiCachesPremium extends GridApiCachesPro {
+  pivoting: GridPivotingInternalCache;
   rowGrouping: GridRowGroupingInternalCache;
   aggregation: GridAggregationInternalCache;
 }
 
+export interface GridPipeProcessingLookupPremium {
+  sidebar: {
+    value: React.ReactNode;
+    context: GridSidebarValue;
+  };
+}
+
 declare module '@mui/x-data-grid-pro' {
   interface GridEventLookup extends GridEventLookupPremium {}
+
+  interface GridPipeProcessingLookup
+    extends GridPipeProcessingLookupPro,
+      GridPipeProcessingLookupPremium {}
 
   interface GridControlledStateEventLookup
     extends GridControlledStateEventLookupPro,

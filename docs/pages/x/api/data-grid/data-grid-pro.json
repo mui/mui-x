@@ -7,12 +7,7 @@
     "apiRef": { "type": { "name": "shape", "description": "{ current?: object }" } },
     "aria-label": { "type": { "name": "string" } },
     "aria-labelledby": { "type": { "name": "string" } },
-    "autoHeight": {
-      "type": { "name": "bool" },
-      "default": "false",
-      "deprecated": true,
-      "deprecationInfo": "Use flex parent container instead: <a href=\"https://mui.com/x/react-data-grid/layout/#flex-parent-container\">https://mui.com/x/react-data-grid/layout/#flex-parent-container</a>"
-    },
+    "autoHeight": { "type": { "name": "bool" }, "default": "false" },
     "autoPageSize": { "type": { "name": "bool" }, "default": "false" },
     "autosizeOnMount": { "type": { "name": "bool" }, "default": "false" },
     "autosizeOptions": {
@@ -27,6 +22,7 @@
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "clipboardCopyCellDelimiter": { "type": { "name": "string" }, "default": "'\\t'" },
     "columnBufferPx": { "type": { "name": "number" }, "default": "150" },
+    "columnFilterDebounceMs": { "type": { "name": "number" }, "default": "150" },
     "columnGroupHeaderHeight": { "type": { "name": "number" } },
     "columnHeaderHeight": { "type": { "name": "number" }, "default": "56" },
     "columnVisibilityModel": { "type": { "name": "object" } },
@@ -66,6 +62,7 @@
       "type": { "name": "bool" },
       "default": "false (`!props.checkboxSelection` for MIT Data Grid)"
     },
+    "disableRowSelectionExcludeModel": { "type": { "name": "bool" }, "default": "false" },
     "disableRowSelectionOnClick": { "type": { "name": "bool" }, "default": "false" },
     "disableVirtualization": { "type": { "name": "bool" }, "default": "false" },
     "editMode": {
@@ -532,11 +529,22 @@
       "type": { "name": "shape", "description": "{ page: number, pageSize: number }" }
     },
     "pinnedColumns": { "type": { "name": "object" } },
+    "pinnedColumnsSectionSeparator": {
+      "type": {
+        "name": "enum",
+        "description": "'border-and-shadow'<br>&#124;&nbsp;'border'<br>&#124;&nbsp;'shadow'"
+      },
+      "default": "'border-and-shadow'"
+    },
     "pinnedRows": {
       "type": {
         "name": "shape",
         "description": "{ bottom?: Array&lt;object&gt;, top?: Array&lt;object&gt; }"
       }
+    },
+    "pinnedRowsSectionSeparator": {
+      "type": { "name": "enum", "description": "'border-and-shadow'<br>&#124;&nbsp;'border'" },
+      "default": "'border-and-shadow'"
     },
     "processRowUpdate": {
       "type": { "name": "func" },
@@ -605,6 +613,13 @@
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       },
       "additionalInfo": { "sx": true }
+    },
+    "tabNavigation": {
+      "type": {
+        "name": "enum",
+        "description": "'all'<br>&#124;&nbsp;'content'<br>&#124;&nbsp;'header'<br>&#124;&nbsp;'none'"
+      },
+      "default": "\"none\""
     },
     "throttleRowsMs": { "type": { "name": "number" }, "default": "0" },
     "treeData": { "type": { "name": "bool" }, "default": "false" },
@@ -839,6 +854,12 @@
       "class": null
     },
     {
+      "name": "baseToggleButton",
+      "description": "The custom ToggleButton component used in the grid.",
+      "default": "ToggleButton",
+      "class": null
+    },
+    {
       "name": "baseTooltip",
       "description": "The custom Tooltip component used in the grid.",
       "default": "Tooltip",
@@ -875,6 +896,12 @@
       "class": null
     },
     {
+      "name": "baseTabs",
+      "description": "The custom Tabs component used in the grid.",
+      "default": "Tabs",
+      "class": null
+    },
+    {
       "name": "booleanCellTrueIcon",
       "description": "Icon displayed on the boolean cell to represent the true value.",
       "default": "GridCheckIcon",
@@ -908,6 +935,12 @@
       "name": "columnSelectorIcon",
       "description": "Icon displayed on the column menu selector tab.",
       "default": "GridColumnIcon",
+      "class": null
+    },
+    {
+      "name": "columnUnsortedIcon",
+      "description": "Icon displayed on the side of the column header title when unsorted.",
+      "default": "GridColumnUnsortedIcon",
       "class": null
     },
     {
@@ -2065,6 +2098,12 @@
       "isGlobal": false
     },
     {
+      "key": "row--beingDragged",
+      "className": "MuiDataGridPro-row--beingDragged",
+      "description": "Styles applied to the row element when it is being dragged (entire row).",
+      "isGlobal": false
+    },
+    {
       "key": "row--detailPanelExpanded",
       "className": "MuiDataGridPro-row--detailPanelExpanded",
       "description": "Styles applied to the row if its detail panel is open.",
@@ -2074,6 +2113,18 @@
       "key": "row--dragging",
       "className": "MuiDataGridPro-row--dragging",
       "description": "Styles applied to the floating special row reorder cell element when it is dragged.",
+      "isGlobal": false
+    },
+    {
+      "key": "row--dropAbove",
+      "className": "MuiDataGridPro-row--dropAbove",
+      "description": "Styles applied to the row element when it is a drop target above.",
+      "isGlobal": false
+    },
+    {
+      "key": "row--dropBelow",
+      "className": "MuiDataGridPro-row--dropBelow",
+      "description": "Styles applied to the row element when it is a drop target below.",
       "isGlobal": false
     },
     {
@@ -2149,6 +2200,12 @@
       "isGlobal": false
     },
     {
+      "key": "scrollArea--down",
+      "className": "MuiDataGridPro-scrollArea--down",
+      "description": "Styles applied to the bottom scroll area element.",
+      "isGlobal": false
+    },
+    {
       "key": "scrollArea--left",
       "className": "MuiDataGridPro-scrollArea--left",
       "description": "Styles applied to the left scroll area element.",
@@ -2158,6 +2215,12 @@
       "key": "scrollArea--right",
       "className": "MuiDataGridPro-scrollArea--right",
       "description": "Styles applied to the right scroll area element.",
+      "isGlobal": false
+    },
+    {
+      "key": "scrollArea--up",
+      "className": "MuiDataGridPro-scrollArea--up",
+      "description": "Styles applied to the top scroll area element.",
       "isGlobal": false
     },
     {
@@ -2176,6 +2239,24 @@
       "key": "scrollbar--vertical",
       "className": "MuiDataGridPro-scrollbar--vertical",
       "description": "Styles applied to the horizontal scrollbar.",
+      "isGlobal": false
+    },
+    {
+      "key": "scrollShadow",
+      "className": "MuiDataGridPro-scrollShadow",
+      "description": "Styles applied to the scroll shadow element.",
+      "isGlobal": false
+    },
+    {
+      "key": "scrollShadow--horizontal",
+      "className": "MuiDataGridPro-scrollShadow--horizontal",
+      "description": "Styles applied to the horizontal scroll shadow element.",
+      "isGlobal": false
+    },
+    {
+      "key": "scrollShadow--vertical",
+      "className": "MuiDataGridPro-scrollShadow--vertical",
+      "description": "Styles applied to the vertical scroll shadow element.",
       "isGlobal": false
     },
     {
@@ -2309,6 +2390,6 @@
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/x-data-grid-pro/src/DataGridPro/DataGridPro.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-version\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#premium-version\">DataGridPremium</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-data-grid/#community-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-version\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#premium-version\">DataGridPremium</a></li></ul>",
   "cssComponent": false
 }

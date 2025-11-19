@@ -1,4 +1,3 @@
-/* eslint-disable class-methods-use-this */
 /* v8 ignore next */
 import defaultJMoment, { Moment } from 'moment-jalaali';
 import { AdapterMoment } from '../AdapterMoment';

@@ -4,59 +4,33 @@ import { RefObject } from '@mui/x-internals/types';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
-import {
-  GridColumnGroupingModel,
-  GridColumnNode,
-  isLeaf,
-} from '../../../models/gridColumnGrouping';
+import { GridColumnGroupingModel } from '../../../models/gridColumnGrouping';
 import {
   gridColumnGroupsLookupSelector,
   gridColumnGroupsUnwrappedModelSelector,
 } from './gridColumnGroupsSelector';
-import { GridColumnGroupLookup } from './gridColumnGroupsInterfaces';
 import { GridColumnGroupingApi } from '../../../models/api/gridColumnGroupingApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
-import { getColumnGroupsHeaderStructure, unwrapGroupingColumnModel } from './gridColumnGroupsUtils';
+import {
+  createGroupLookup,
+  getColumnGroupsHeaderStructure,
+  unwrapGroupingColumnModel,
+} from './gridColumnGroupsUtils';
 import { useGridEvent } from '../../utils/useGridEvent';
 import { GridEventListener } from '../../../models/events';
 import { gridColumnFieldsSelector, gridVisibleColumnFieldsSelector } from '../columns';
 
-const createGroupLookup = (columnGroupingModel: GridColumnNode[]): GridColumnGroupLookup => {
-  let groupLookup: GridColumnGroupLookup = {};
-
-  columnGroupingModel.forEach((node) => {
-    if (isLeaf(node)) {
-      return;
-    }
-    const { groupId, children, ...other } = node;
-    if (!groupId) {
-      throw new Error(
-        'MUI X: An element of the columnGroupingModel does not have either `field` or `groupId`.',
-      );
-    }
-    if (process.env.NODE_ENV !== 'production') {
-      if (!children) {
-        console.warn(`MUI X: group groupId=${groupId} has no children.`);
-      }
-    }
-    const groupParam = { ...other, groupId };
-    const subTreeLookup = createGroupLookup(children);
-    if (subTreeLookup[groupId] !== undefined || groupLookup[groupId] !== undefined) {
-      throw new Error(
-        `MUI X: The groupId ${groupId} is used multiple times in the columnGroupingModel.`,
-      );
-    }
-    groupLookup = { ...groupLookup, ...subTreeLookup, [groupId]: groupParam };
-  });
-
-  return { ...groupLookup };
-};
-
 export const columnGroupsStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'columnGroupingModel'>
 > = (state, props, apiRef) => {
+  apiRef.current.caches.columnGrouping = {
+    lastColumnGroupingModel: props.columnGroupingModel,
+  };
   if (!props.columnGroupingModel) {
-    return state;
+    return {
+      ...state,
+      columnGrouping: undefined,
+    };
   }
 
   const columnFields = gridColumnFieldsSelector(apiRef);
@@ -142,6 +116,10 @@ export const useGridColumnGrouping = (
 
   const updateColumnGroupingState = React.useCallback(
     (columnGroupingModel: GridColumnGroupingModel | undefined) => {
+      if (!columnGroupingModel && !apiRef.current.caches.columnGrouping.lastColumnGroupingModel) {
+        return;
+      }
+      apiRef.current.caches.columnGrouping.lastColumnGroupingModel = columnGroupingModel;
       // @ts-expect-error Move this logic to `Pro` package
       const pinnedColumns = apiRef.current.getPinnedColumns?.() ?? {};
       const columnFields = gridColumnFieldsSelector(apiRef);
@@ -187,6 +165,11 @@ export const useGridColumnGrouping = (
    * EFFECTS
    */
   React.useEffect(() => {
+    if (
+      props.columnGroupingModel === apiRef.current.caches.columnGrouping.lastColumnGroupingModel
+    ) {
+      return;
+    }
     updateColumnGroupingState(props.columnGroupingModel);
-  }, [updateColumnGroupingState, props.columnGroupingModel]);
+  }, [apiRef, updateColumnGroupingState, props.columnGroupingModel]);
 };

@@ -36,6 +36,7 @@ import {
 } from './gridFilterUtils';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import type { ItemPlusTag } from '../../../components/panel/filterPanel/GridFilterInputValue';
+import type { GridConfiguration } from '../../../models/configuration/gridConfiguration';
 
 export const filterStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'filterModel' | 'initialState' | 'disableMultipleColumnsFiltering'>
@@ -93,7 +94,9 @@ export const useGridFilter = (
     | 'disableColumnFilter'
     | 'disableEval'
     | 'ignoreDiacritics'
+    | 'signature'
   >,
+  configuration: GridConfiguration,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridFilter');
 
@@ -316,21 +319,23 @@ export const useGridFilter = (
         props.disableMultipleColumnsFiltering,
         apiRef,
       );
+      const filterValueGetter = configuration.hooks.useFilterValueGetter(apiRef, props as any);
       const isRowMatchingFilters =
         props.filterMode === 'client'
-          ? buildAggregatedFilterApplier(filterModel, apiRef, props.disableEval)
+          ? buildAggregatedFilterApplier(filterModel, filterValueGetter, apiRef, props.disableEval)
           : null;
 
       const filterResult = apiRef.current.applyStrategyProcessor('filtering', {
         isRowMatchingFilters,
         filterModel: filterModel ?? getDefaultGridFilterModel(),
+        filterValueGetter,
       });
       return {
         ...filterResult,
         filterModel,
       };
     },
-    [props.disableMultipleColumnsFiltering, props.filterMode, props.disableEval, apiRef],
+    [apiRef, configuration.hooks, props],
   );
 
   const filterApi: GridFilterApi = {
@@ -451,6 +456,7 @@ export const useGridFilter = (
           [result.passingFilterItems],
           [result.passingQuickFilterValues],
           params.filterModel,
+          params.filterValueGetter,
           apiRef,
           filterCache,
         );
@@ -528,9 +534,12 @@ export const useGridFilter = (
   useGridEvent(apiRef, 'rowExpansionChange', updateVisibleRowsLookupState);
   useGridEvent(apiRef, 'columnVisibilityModelChange', () => {
     const filterModel = gridFilterModelSelector(apiRef);
-    if (filterModel.quickFilterValues && shouldQuickFilterExcludeHiddenColumns(filterModel)) {
+    if (
+      filterModel.quickFilterValues?.length &&
+      shouldQuickFilterExcludeHiddenColumns(filterModel)
+    ) {
       // re-apply filters because the quick filter results may have changed
-      apiRef.current.unstable_applyFilters();
+      updateFilteredRows();
     }
   });
 
@@ -538,7 +547,9 @@ export const useGridFilter = (
    * 1ST RENDER
    */
   useFirstRender(() => {
-    apiRef.current.unstable_applyFilters();
+    if (props.signature === 'DataGrid') {
+      updateFilteredRows();
+    }
   });
 
   /**

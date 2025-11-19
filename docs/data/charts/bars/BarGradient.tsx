@@ -15,6 +15,7 @@ const settings = {
   ],
   height: 300,
   barLabel: 'value',
+  margin: { left: 0 },
 } as const;
 
 export default function BarGradient() {
@@ -23,7 +24,7 @@ export default function BarGradient() {
       {...settings}
       sx={{
         [`& .${barClasses.series}[data-series="2"] .${barElementClasses.root}`]: {
-          fill: 'url(#gradient)',
+          fill: 'url(#bar-gradient)',
         },
         [`& .${barClasses.seriesLabels}[data-series="2"] .${barLabelClasses.root}`]:
           {
@@ -32,7 +33,7 @@ export default function BarGradient() {
       }}
     >
       <defs>
-        <Gradient id="gradient" />
+        <Gradient id="bar-gradient" />
       </defs>
     </BarChart>
   );

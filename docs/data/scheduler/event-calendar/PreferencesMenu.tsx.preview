@@ -1,0 +1,8 @@
+<EventCalendar
+  events={events}
+  resources={resources}
+  defaultVisibleDate={defaultVisibleDate}
+  onEventsChange={setEvents}
+  preferencesMenuConfig={{ toggleWeekendVisibility: false }}
+  defaultPreferences={{ isSidePanelOpen: false }}
+/>

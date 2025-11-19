@@ -13,9 +13,9 @@ import Button from '@mui/material/Button';
 import Snackbar from '@mui/material/Snackbar';
 
 function ErrorSnackbar(props) {
-  const { onRetry, ...rest } = props;
+  const { onRetry, ...other } = props;
   return (
-    <Snackbar {...rest}>
+    <Snackbar {...other}>
       <Alert
         severity="error"
         variant="filled"

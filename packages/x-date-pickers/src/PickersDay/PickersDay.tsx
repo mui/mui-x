@@ -8,6 +8,7 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import composeClasses from '@mui/utils/composeClasses';
 import useForkRef from '@mui/utils/useForkRef';
 import { alpha, styled, useThemeProps, Theme } from '@mui/material/styles';
+import { MuiEvent } from '@mui/x-internals/types';
 import { usePickerAdapter } from '../hooks/usePickerAdapter';
 import { DAY_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';
 import {
@@ -229,7 +230,8 @@ const PickersDayRaw = React.forwardRef(function PickersDay(
     }
   };
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClick = (event: MuiEvent<React.MouseEvent<HTMLButtonElement>>) => {
+    event.defaultMuiPrevented = true;
     if (!disabled) {
       onDaySelect(day);
     }

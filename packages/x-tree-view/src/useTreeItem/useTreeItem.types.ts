@@ -7,6 +7,7 @@ import { UseTreeViewFocusSignature } from '../internals/plugins/useTreeViewFocus
 import { UseTreeViewKeyboardNavigationSignature } from '../internals/plugins/useTreeViewKeyboardNavigation';
 import { UseTreeViewLabelSignature } from '../internals/plugins/useTreeViewLabel';
 import { UseTreeViewExpansionSignature } from '../internals/plugins/useTreeViewExpansion';
+import { UseTreeViewLazyLoadingSignature } from '../internals/plugins/useTreeViewLazyLoading';
 
 export interface UseTreeItemParameters {
   /**
@@ -44,7 +45,6 @@ export interface UseTreeItemRootSlotPropsFromUseTreeItem {
   tabIndex: 0 | -1;
   id: string;
   'aria-expanded': React.AriaAttributes['aria-expanded'];
-  'aria-selected': React.AriaAttributes['aria-selected'];
   'aria-disabled': React.AriaAttributes['aria-disabled'];
   onFocus: TreeViewCancellableEventHandler<React.FocusEvent<HTMLElement>>;
   onBlur: TreeViewCancellableEventHandler<React.FocusEvent<HTMLElement>>;
@@ -102,6 +102,7 @@ export type UseTreeItemLabelInputSlotProps<ExternalProps = {}> = ExternalProps &
 
 export interface UseTreeItemCheckboxSlotOwnProps {
   ref: React.RefObject<HTMLButtonElement | null>;
+  'aria-hidden': true;
 }
 
 export type UseTreeItemCheckboxSlotProps<ExternalProps = {}> = ExternalProps &
@@ -263,4 +264,4 @@ export type UseTreeItemMinimalPlugins = readonly [
 /**
  * Plugins that `UseTreeItem` can use if they are present, but are not required.
  */
-export type UseTreeItemOptionalPlugins = readonly [];
+export type UseTreeItemOptionalPlugins = readonly [UseTreeViewLazyLoadingSignature];

@@ -85,7 +85,7 @@ Pass the `enableAccessibleFieldDOMStructure={false}` to any Field or Picker comp
 {{"demo": "MaterialV6Field.js"}}
 
 :::warning
-The non-accessible DOM structure will be deprecated in a follow up minor version and remove in `v9.x`.
+The non-accessible DOM structure will be deprecated in a follow-up minor version and removed in `v9.x`.
 If you are unable to migrate for some reason, please open an issue to describe what is missing from the new DOM structure so that we can improve it before dropping the old one.
 :::
 
@@ -97,7 +97,7 @@ If you are unable to migrate for some reason, please open an issue to describe w
 You will need to use a component that supports the `sx` prop as a wrapper for your input
 to be able to benefit from the **hover** and **focus** behavior of the clear button.
 You will have access to the `clearable` and `onClear` props using native HTML elements,
-but the on **focus** and **hover** behavior depends on styles applied via the `sx` prop.
+but the **focus** and **hover** behavior depends on styles applied via the `sx` prop.
 :::
 
 {{"demo": "BrowserV7Field.js", "defaultCodeOpen": false}}
@@ -262,7 +262,7 @@ The picker can receive some commonly used props that should be forwarded to the 
 <DatePicker label="Birth date" name="birthdate" className="date-picker" sx={{ borderColor: 'red'}}>
 ```
 
-If you are using any of those props in one of your picker, make sure to retrieve them in your field using the `usePickerContext` hook:
+If you are using any of those props in one of your pickers, make sure to retrieve them in your field using the `usePickerContext` hook:
 
 ```jsx
 const { label, name, rootClassName, rootSx, rootRef } = usePickerContext();

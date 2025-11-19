@@ -11,7 +11,6 @@ const workspaceRoot = path.resolve(__dirname, '../../');
 export interface XTypeScriptProject extends Omit<TypeScriptProject, 'name'> {
   name: XProjectNames;
   workspaceRoot: string;
-  prettierConfigPath: string;
   /**
    * @param {Project} project The project to generate the prop-types from.
    * @returns {string[]} Path to the component files from which we want to generate the prop-types.
@@ -67,7 +66,6 @@ const createXTypeScriptProject = (options: CreateXTypeScriptProjectOptions): XTy
     ...other,
     name,
     workspaceRoot,
-    prettierConfigPath: path.join(workspaceRoot, 'prettier.config.js'),
   };
 };
 
@@ -159,20 +157,19 @@ export const interfacesToDocument: InterfacesToDocumentType[] = [
   },
   {
     folder: 'charts',
-    packages: [
-      'x-charts',
-      'x-charts-pro',
-      // TODO: CHARTS-PREMIUM: uncomment when premium is ready
-      // 'x-charts-premium'
-    ],
+    packages: ['x-charts', 'x-charts-pro', 'x-charts-premium'],
     documentedInterfaces: [
-      'BarSeriesType',
-      'LineSeriesType',
-      'PieSeriesType',
-      'ScatterSeriesType',
+      'BarSeries',
+      'LineSeries',
+      'PieSeries',
+      'ScatterSeries',
+      'FunnelSeries',
+      'HeatmapSeries',
+      'RadarSeries',
       'AxisConfig',
       'ChartImageExportOptions',
       'ChartPrintExportOptions',
+      'LegendItemParams',
     ],
   },
 ];
@@ -257,7 +254,10 @@ export const createXTypeScriptProjects = () => {
       documentationFolderName: 'data-grid',
       getComponentsWithPropTypes: getComponentPaths({
         folders: ['src/components'],
-        files: ['src/DataGridPremium/DataGridPremium.tsx'],
+        files: [
+          'src/DataGridPremium/DataGridPremium.tsx',
+          'src/context/GridChartsRendererProxy.tsx',
+        ],
       }),
       getComponentsWithApiDoc: getComponentPaths({
         files: ['src/DataGridPremium/DataGridPremium.tsx'],
@@ -347,24 +347,23 @@ export const createXTypeScriptProjects = () => {
     }),
   );
 
-  // TODO: CHARTS-PREMIUM: uncomment when premium is ready
-  // projects.set(
-  //   'x-charts-premium',
-  //   createXTypeScriptProject({
-  //     name: 'x-charts-premium',
-  //     rootPath: path.join(workspaceRoot, 'packages/x-charts-premium'),
-  //     entryPointPath: 'src/index.ts',
-  //     documentationFolderName: 'charts',
-  //     getComponentsWithPropTypes: getComponentPaths({
-  //       folders: ['src'],
-  //       includeUnstableComponents: true,
-  //     }),
-  //     getComponentsWithApiDoc: getComponentPaths({
-  //       folders: ['src'],
-  //       includeUnstableComponents: true,
-  //     }),
-  //   }),
-  // );
+  projects.set(
+    'x-charts-premium',
+    createXTypeScriptProject({
+      name: 'x-charts-premium',
+      rootPath: path.join(workspaceRoot, 'packages/x-charts-premium'),
+      entryPointPath: 'src/index.ts',
+      documentationFolderName: 'charts',
+      getComponentsWithPropTypes: getComponentPaths({
+        folders: ['src'],
+        includeUnstableComponents: true,
+      }),
+      getComponentsWithApiDoc: getComponentPaths({
+        folders: ['src'],
+        includeUnstableComponents: true,
+      }),
+    }),
+  );
 
   projects.set(
     'x-tree-view',

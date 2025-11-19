@@ -20,7 +20,7 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
     clearButton,
     tabIndex,
     slotProps,
-    ...others
+    ...other
   } = props;
   const [filterValueState, setFilterValueState] = React.useState<boolean | undefined>(
     sanitizeFilterItemValue(item.value),
@@ -70,7 +70,7 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
           },
         }}
         {...baseSelectProps}
-        {...others}
+        {...other}
         {...slotProps?.root}
       >
         <rootProps.slots.baseSelectOption

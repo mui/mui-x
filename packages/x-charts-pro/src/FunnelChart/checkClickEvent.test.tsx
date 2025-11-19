@@ -1,8 +1,8 @@
-import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
-import { Unstable_FunnelChart as FunnelChart } from '@mui/x-charts-pro/FunnelChart';
+import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';
 import { isJSDOM } from 'test/utils/skipIf';
+import { CHART_SELECTOR } from '../tests/constants';
 
 const config = {
   series: [
@@ -61,7 +61,7 @@ describe('FunnelChart - click event', () => {
           <FunnelChart {...config} onAxisClick={onAxisClick} />
         </div>,
       );
-      const svg = document.querySelector<HTMLElement>('svg')!;
+      const svg = document.querySelector<HTMLElement>(CHART_SELECTOR)!;
 
       await user.pointer([
         {
@@ -111,7 +111,7 @@ describe('FunnelChart - click event', () => {
             />
           </div>,
         );
-        const svg = document.querySelector<HTMLElement>('svg')!;
+        const svg = document.querySelector<HTMLElement>(CHART_SELECTOR)!;
 
         await user.pointer([
           {
@@ -162,7 +162,7 @@ describe('FunnelChart - click event', () => {
             />
           </div>,
         );
-        const svg = document.querySelector<HTMLElement>('svg')!;
+        const svg = document.querySelector<HTMLElement>(CHART_SELECTOR)!;
 
         await user.pointer([
           {

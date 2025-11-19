@@ -2,6 +2,7 @@ import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
+import { playwright } from '@vitest/browser-playwright';
 
 const CURRENT_DIR = dirname(fileURLToPath(import.meta.url));
 const WORKSPACE_ROOT = resolve(CURRENT_DIR, './');
@@ -14,10 +15,12 @@ export const alias = [
     { lib: 'x-tree-view', plans: ['pro'] },
     { lib: 'x-data-grid', plans: ['pro', 'premium', 'generator'] },
     { lib: 'x-scheduler' },
+    { lib: 'x-scheduler-headless' },
     { lib: 'x-internals' },
     { lib: 'x-internal-gestures' },
     { lib: 'x-license' },
     { lib: 'x-telemetry' },
+    { lib: 'x-virtualizer' },
   ].flatMap((v) => {
     return [
       {
@@ -59,10 +62,23 @@ export default defineConfig({
     passWithNoTests: true,
     env: {
       NODE_ENV: 'test',
+      VITEST: 'true',
     },
     browser: {
       isolate: false,
-      provider: 'playwright',
+      provider: playwright({
+        launchOptions: {
+          // Required for tests which use scrollbars.
+          ignoreDefaultArgs: ['--hide-scrollbars'],
+        },
+        ...(process.env.PLAYWRIGHT_SERVER_WS
+          ? {
+              connectOptions: {
+                wsEndpoint: process.env.PLAYWRIGHT_SERVER_WS,
+              },
+            }
+          : {}),
+      }),
       headless: true,
       screenshotFailures: false,
       orchestratorScripts: [
@@ -85,14 +101,7 @@ export default defineConfig({
       // Retry failed tests up to 3 times. This is useful for flaky tests.
       retry: 3,
       // Reduce the number of workers to avoid CI timeouts.
-      poolOptions: {
-        forks: {
-          singleFork: true,
-        },
-        threads: {
-          singleThread: true,
-        },
-      },
+      maxWorkers: 1,
     }),
     exclude: ['**/*.spec.{js,ts,tsx}', '**/node_modules/**', '**/dist/**'],
   },

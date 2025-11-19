@@ -72,11 +72,12 @@ export interface GridRowEventLookup {
   };
   /**
    * Fired when the dragging of a row ends.
+   * It's mapped to the `dragend` DOM event.
    * @ignore - do not document.
    */
   rowDragEnd: {
     params: GridRowParams;
-    event: React.DragEvent<HTMLElement>;
+    event: DragEvent;
   };
 }
 
@@ -491,6 +492,11 @@ export interface GridEventLookup
    * @ignore - do not document
    */
   sortedRowsSet: {};
+  /**
+   * Fired when the aggregations are done
+   * @ignore - do not document
+   */
+  aggregationLookupSet: {};
   /**
    * Fired when the expansion of a row is changed. Called with a [[GridGroupNode]] object.
    */

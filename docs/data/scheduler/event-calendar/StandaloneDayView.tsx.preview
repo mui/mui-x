@@ -1,3 +1,0 @@
-<StandaloneView events={events} resources={resources}>
-  <DayView className={classes.Container} onEventsChange={setEvents} />
-</StandaloneView>

@@ -3,7 +3,7 @@ import {
   UseTreeViewItemsState,
   buildSiblingIndexes,
   TREE_VIEW_ROOT_PARENT_ID,
-  selectorItemMeta,
+  itemsSelectors,
 } from '@mui/x-tree-view/internals';
 import { TreeViewItemId, TreeViewItemsReorderingAction } from '@mui/x-tree-view/models';
 import {
@@ -20,7 +20,7 @@ export const isAncestor = (
   itemIdA: string,
   itemIdB: string,
 ): boolean => {
-  const itemMetaA = selectorItemMeta(store.value, itemIdA)!;
+  const itemMetaA = itemsSelectors.itemMeta(store.state, itemIdA)!;
   if (itemMetaA.parentId === itemIdB) {
     return true;
   }
@@ -61,7 +61,7 @@ const parseItemChildrenIndentation = (
   return value;
 };
 
-interface GetNewPositionParams {
+interface GetNewPositionParameters {
   itemChildrenIndentation: string | number;
   validActions: TreeViewItemItemReorderingValidActions;
   targetHeight: number;
@@ -79,7 +79,7 @@ export const chooseActionToApply = ({
   cursorX,
   cursorY,
   contentElement,
-}: GetNewPositionParams) => {
+}: GetNewPositionParameters) => {
   let action: TreeViewItemsReorderingAction | null;
 
   const itemChildrenIndentationPx = parseItemChildrenIndentation(

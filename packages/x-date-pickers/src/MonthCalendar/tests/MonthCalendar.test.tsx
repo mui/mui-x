@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { spy } from 'sinon';
 import { fireEvent, screen } from '@mui/internal-test-utils';
 import { MonthCalendar } from '@mui/x-date-pickers/MonthCalendar';
@@ -44,6 +43,40 @@ describe('<MonthCalendar />', () => {
       expect(onChange.callCount).to.equal(1);
       expect(onChange.args[0][0]).toEqualDateTime(new Date(2019, 1, 1, 0, 0, 0));
     });
+
+    it('should mark only the month in the current year as `aria-current="date"`', () => {
+      const { setProps } = render(<MonthCalendar />);
+
+      expect(screen.getByRole('radio', { name: 'January' })).to.have.attribute(
+        'aria-current',
+        'date',
+      );
+
+      setProps({ currentMonth: adapterToUse.date('2018-01-01') });
+
+      expect(screen.getByRole('radio', { name: 'January' })).not.to.have.attribute('aria-current');
+    });
+
+    it('should mark the month as selected only if the year matches', async () => {
+      const { setProps, user } = render(<MonthCalendar />);
+
+      expect(screen.getByRole('radio', { name: 'February', checked: false })).not.to.equal(null);
+
+      await user.click(screen.getByRole('radio', { name: 'February' }));
+
+      expect(screen.getByRole('radio', { name: 'February', checked: true })).not.to.equal(null);
+
+      setProps({ currentMonth: adapterToUse.date('2018-02-01') });
+
+      expect(screen.getByRole('radio', { name: 'January', checked: false })).not.to.equal(null);
+      expect(screen.getByRole('radio', { name: 'February', checked: false })).not.to.equal(null);
+    });
+  });
+
+  it('should not mark the `referenceDate` month as selected', () => {
+    render(<MonthCalendar referenceDate={adapterToUse.date('2018-02-02')} />);
+
+    expect(screen.getByRole('radio', { name: 'February', checked: false })).not.to.equal(null);
   });
 
   it('does not allow to pick months if readOnly prop is passed', () => {
@@ -180,12 +213,6 @@ describe('<MonthCalendar />', () => {
         expect(january).not.to.have.attribute('disabled');
         expect(february).to.have.attribute('disabled');
       });
-    });
-
-    it('should not mark the `referenceDate` month as selected', () => {
-      render(<MonthCalendar referenceDate={adapterToUse.date('2018-02-02')} />);
-
-      expect(screen.getByRole('radio', { name: 'February', checked: false })).not.to.equal(null);
     });
   });
 });

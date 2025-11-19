@@ -1,4 +1,4 @@
-import { getExtremumX, getExtremumY } from './seriesConfig/extremums';
+import { getExtremumX, getExtremumY } from './seriesConfig/bar/extremums';
 import { CartesianExtremumGetter } from '../internals/plugins/models';
 
 const buildData = (
@@ -12,6 +12,7 @@ const buildData = (
         type: 'bar',
         color: 'red',
         data,
+        minBarSize: 0,
         stackedData: data.length
           ? [
               [data[0], data[1]],
@@ -48,6 +49,7 @@ const buildDataWithAxisId = (
         type: 'bar',
         color: 'red',
         data,
+        minBarSize: 0,
         stackedData: data.length
           ? [
               [data[0], data[1]],

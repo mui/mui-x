@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import kebabCase from 'lodash/kebabCase';
+import { kebabCase } from 'es-toolkit/string';
 import { getHeaders, getTitle, renderMarkdown } from '@mui/internal-markdown';
 import {
   ComponentInfo,
@@ -48,6 +48,7 @@ export function getComponentInfo(filename: string): ComponentInfo {
         )
         .map((page) => {
           return {
+            filePath: page.filename,
             demoPageTitle: renderMarkdown(getTitle(page.markdownContent)),
             demoPathname: `${page.pathname.replace('/date-pickers', '/x/react-date-pickers')}/`,
           };

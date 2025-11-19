@@ -9,7 +9,10 @@ import {
 } from '@mui/x-charts/internals';
 
 export type UseChartFunnelAxisSignature = ChartPluginSignature<{
-  params: Omit<UseChartCartesianAxisParameters, 'onAxisClick'> & {
+  params: Omit<
+    UseChartCartesianAxisParameters,
+    'onAxisClick' | 'onHighlightedAxisChange' | 'highlightedAxis'
+  > & {
     /**
      * The gap, in pixels, between funnel sections.
      * @default 0

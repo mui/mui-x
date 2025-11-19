@@ -4,11 +4,11 @@
     "className": { "description": "Override or extend the styles applied to the component." },
     "onRecordError": {
       "description": "Called when an speech recognition error occurs.",
-      "typeDescriptions": { "error": "The error message" }
+      "typeDescriptions": { "error": { "name": "error", "description": "The error message" } }
     },
     "onSubmit": {
       "description": "Called when the user submits the prompt.",
-      "typeDescriptions": { "prompt": "The prompt" }
+      "typeDescriptions": { "prompt": { "name": "prompt", "description": "The prompt" } }
     },
     "render": { "description": "A function to customize rendering of the component." }
   },

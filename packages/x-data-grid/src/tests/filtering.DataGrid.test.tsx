@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import {
   DataGrid,
@@ -1591,7 +1590,7 @@ describe('<DataGrid /> - Filter', () => {
 
     setProps({ columns: [{ field: 'id' }] });
     expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
-    expect(onFilterModelChange.callCount).to.equal(1);
+    expect(onFilterModelChange.callCount).to.equal(2);
     expect(onFilterModelChange.lastCall.firstArg).to.deep.equal({ items: [] });
   });
 

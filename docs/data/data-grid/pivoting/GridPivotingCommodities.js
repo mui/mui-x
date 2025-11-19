@@ -2,6 +2,7 @@ import * as React from 'react';
 import {
   DataGridPremium,
   GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
+  GridSidebarValue,
 } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
@@ -18,11 +19,21 @@ const pivotModel = {
 const initialState = {
   pivoting: {
     model: pivotModel,
-    panelOpen: true,
+  },
+  sidebar: {
+    open: true,
+    value: GridSidebarValue.Pivot,
   },
   pinnedColumns: {
     left: [GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD],
   },
+};
+
+const pivotingColDef = (originalColumnField) => {
+  if (originalColumnField === 'quantity') {
+    return { width: 80 };
+  }
+  return undefined;
 };
 
 export default function GridPivotingCommodities() {
@@ -33,15 +44,6 @@ export default function GridPivotingCommodities() {
   });
 
   const [pivotActive, setPivotActive] = React.useState(false);
-
-  const pivotingColDef = React.useMemo(() => {
-    return (originalColumnField) => {
-      if (originalColumnField === 'quantity') {
-        return { width: 80 };
-      }
-      return undefined;
-    };
-  }, []);
 
   return (
     <div style={{ width: '100%' }}>

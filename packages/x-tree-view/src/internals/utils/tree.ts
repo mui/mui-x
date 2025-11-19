@@ -1,18 +1,8 @@
 import { TreeViewItemMeta, TreeViewState } from '../models';
 import type { UseTreeViewExpansionSignature } from '../plugins/useTreeViewExpansion';
-import {
-  selectorIsItemExpandable,
-  selectorIsItemExpanded,
-} from '../plugins/useTreeViewExpansion/useTreeViewExpansion.selectors';
+import { expansionSelectors } from '../plugins/useTreeViewExpansion/useTreeViewExpansion.selectors';
 import type { UseTreeViewItemsSignature } from '../plugins/useTreeViewItems';
-import {
-  selectorCanItemBeFocused,
-  selectorIsItemDisabled,
-  selectorItemIndex,
-  selectorItemMeta,
-  selectorItemOrderedChildrenIds,
-  selectorItemParentId,
-} from '../plugins/useTreeViewItems/useTreeViewItems.selectors';
+import { itemsSelectors } from '../plugins/useTreeViewItems/useTreeViewItems.selectors';
 
 const getLastNavigableItemInArray = (
   state: TreeViewState<[UseTreeViewItemsSignature]>,
@@ -20,7 +10,7 @@ const getLastNavigableItemInArray = (
 ) => {
   // Equivalent to Array.prototype.findLastIndex
   let itemIndex = items.length - 1;
-  while (itemIndex >= 0 && !selectorCanItemBeFocused(state, items[itemIndex])) {
+  while (itemIndex >= 0 && !itemsSelectors.canItemBeFocused(state, items[itemIndex])) {
     itemIndex -= 1;
   }
 
@@ -35,13 +25,13 @@ export const getPreviousNavigableItem = (
   state: TreeViewState<[UseTreeViewItemsSignature, UseTreeViewExpansionSignature]>,
   itemId: string,
 ): string | null => {
-  const itemMeta = selectorItemMeta(state, itemId);
+  const itemMeta = itemsSelectors.itemMeta(state, itemId);
   if (!itemMeta) {
     return null;
   }
 
-  const siblings = selectorItemOrderedChildrenIds(state, itemMeta.parentId);
-  const itemIndex = selectorItemIndex(state, itemId);
+  const siblings = itemsSelectors.itemOrderedChildrenIds(state, itemMeta.parentId);
+  const itemIndex = itemsSelectors.itemIndex(state, itemId);
 
   // TODO: What should we do if the parent is not navigable?
   if (itemIndex === 0) {
@@ -51,7 +41,7 @@ export const getPreviousNavigableItem = (
   // Finds the previous navigable sibling.
   let previousNavigableSiblingIndex = itemIndex - 1;
   while (
-    !selectorCanItemBeFocused(state, siblings[previousNavigableSiblingIndex]) &&
+    !itemsSelectors.canItemBeFocused(state, siblings[previousNavigableSiblingIndex]) &&
     previousNavigableSiblingIndex >= 0
   ) {
     previousNavigableSiblingIndex -= 1;
@@ -71,13 +61,13 @@ export const getPreviousNavigableItem = (
   let currentItemId: string = siblings[previousNavigableSiblingIndex];
   let lastNavigableChild = getLastNavigableItemInArray(
     state,
-    selectorItemOrderedChildrenIds(state, currentItemId),
+    itemsSelectors.itemOrderedChildrenIds(state, currentItemId),
   );
-  while (selectorIsItemExpanded(state, currentItemId) && lastNavigableChild != null) {
+  while (expansionSelectors.isItemExpanded(state, currentItemId) && lastNavigableChild != null) {
     currentItemId = lastNavigableChild;
     lastNavigableChild = getLastNavigableItemInArray(
       state,
-      selectorItemOrderedChildrenIds(state, currentItemId),
+      itemsSelectors.itemOrderedChildrenIds(state, currentItemId),
     );
   }
 
@@ -89,37 +79,37 @@ export const getNextNavigableItem = (
   itemId: string,
 ) => {
   // If the item is expanded and has some navigable children, return the first of them.
-  if (selectorIsItemExpanded(state, itemId)) {
-    const firstNavigableChild = selectorItemOrderedChildrenIds(state, itemId).find((childId) =>
-      selectorCanItemBeFocused(state, childId),
-    );
+  if (expansionSelectors.isItemExpanded(state, itemId)) {
+    const firstNavigableChild = itemsSelectors
+      .itemOrderedChildrenIds(state, itemId)
+      .find((childId) => itemsSelectors.canItemBeFocused(state, childId));
     if (firstNavigableChild != null) {
       return firstNavigableChild;
     }
   }
 
-  let itemMeta = selectorItemMeta(state, itemId);
+  let itemMeta = itemsSelectors.itemMeta(state, itemId);
   while (itemMeta != null) {
     // Try to find the first navigable sibling after the current item.
-    const siblings = selectorItemOrderedChildrenIds(state, itemMeta.parentId);
-    const currentItemIndex = selectorItemIndex(state, itemMeta.id);
+    const siblings = itemsSelectors.itemOrderedChildrenIds(state, itemMeta.parentId);
+    const currentItemIndex = itemsSelectors.itemIndex(state, itemMeta.id);
 
     if (currentItemIndex < siblings.length - 1) {
       let nextItemIndex = currentItemIndex + 1;
       while (
-        !selectorCanItemBeFocused(state, siblings[nextItemIndex]) &&
+        !itemsSelectors.canItemBeFocused(state, siblings[nextItemIndex]) &&
         nextItemIndex < siblings.length - 1
       ) {
         nextItemIndex += 1;
       }
 
-      if (selectorCanItemBeFocused(state, siblings[nextItemIndex])) {
+      if (itemsSelectors.canItemBeFocused(state, siblings[nextItemIndex])) {
         return siblings[nextItemIndex];
       }
     }
 
     // If the sibling does not exist, go up a level to the parent and try again.
-    itemMeta = selectorItemMeta(state, itemMeta.parentId!);
+    itemMeta = itemsSelectors.itemMeta(state, itemMeta.parentId!);
   }
 
   return null;
@@ -129,8 +119,8 @@ export const getLastNavigableItem = (
   state: TreeViewState<[UseTreeViewExpansionSignature, UseTreeViewItemsSignature]>,
 ) => {
   let itemId: string | null = null;
-  while (itemId == null || selectorIsItemExpanded(state, itemId)) {
-    const children = selectorItemOrderedChildrenIds(state, itemId);
+  while (itemId == null || expansionSelectors.isItemExpanded(state, itemId)) {
+    const children = itemsSelectors.itemOrderedChildrenIds(state, itemId);
     const lastNavigableChild = getLastNavigableItemInArray(state, children);
 
     // The item has no navigable children.
@@ -147,9 +137,9 @@ export const getLastNavigableItem = (
 export const getFirstNavigableItem = (
   state: TreeViewState<[UseTreeViewExpansionSignature, UseTreeViewItemsSignature]>,
 ) =>
-  selectorItemOrderedChildrenIds(state, null).find((itemId) =>
-    selectorCanItemBeFocused(state, itemId),
-  )!;
+  itemsSelectors
+    .itemOrderedChildrenIds(state, null)
+    .find((itemId) => itemsSelectors.canItemBeFocused(state, itemId))!;
 
 /**
  * This is used to determine the start and end of a selection range so
@@ -174,8 +164,8 @@ export const findOrderInTremauxTree = (
     return [itemAId, itemBId];
   }
 
-  const itemMetaA = selectorItemMeta(state, itemAId);
-  const itemMetaB = selectorItemMeta(state, itemBId);
+  const itemMetaA = itemsSelectors.itemMeta(state, itemAId);
+  const itemMetaB = itemsSelectors.itemMeta(state, itemBId);
 
   if (!itemMetaA || !itemMetaB) {
     return [itemAId, itemBId];
@@ -205,7 +195,7 @@ export const findOrderInTremauxTree = (
       aAncestorIsCommon = bFamily.indexOf(aAncestor) !== -1;
       continueA = aAncestor !== null;
       if (!aAncestorIsCommon && continueA) {
-        aAncestor = selectorItemParentId(state, aAncestor!);
+        aAncestor = itemsSelectors.itemParentId(state, aAncestor!);
       }
     }
 
@@ -214,13 +204,13 @@ export const findOrderInTremauxTree = (
       bAncestorIsCommon = aFamily.indexOf(bAncestor) !== -1;
       continueB = bAncestor !== null;
       if (!bAncestorIsCommon && continueB) {
-        bAncestor = selectorItemParentId(state, bAncestor!);
+        bAncestor = itemsSelectors.itemParentId(state, bAncestor!);
       }
     }
   }
 
   const commonAncestor = aAncestorIsCommon ? aAncestor : bAncestor;
-  const ancestorFamily = selectorItemOrderedChildrenIds(state, commonAncestor);
+  const ancestorFamily = itemsSelectors.itemOrderedChildrenIds(state, commonAncestor);
 
   const aSide = aFamily[aFamily.indexOf(commonAncestor) - 1];
   const bSide = bFamily[bFamily.indexOf(commonAncestor) - 1];
@@ -237,22 +227,25 @@ export const getNonDisabledItemsInRange = (
 ) => {
   const getNextItem = (itemId: string) => {
     // If the item is expanded and has some children, return the first of them.
-    if (selectorIsItemExpandable(state, itemId) && selectorIsItemExpanded(state, itemId)) {
-      return selectorItemOrderedChildrenIds(state, itemId)[0];
+    if (
+      expansionSelectors.isItemExpandable(state, itemId) &&
+      expansionSelectors.isItemExpanded(state, itemId)
+    ) {
+      return itemsSelectors.itemOrderedChildrenIds(state, itemId)[0];
     }
 
-    let itemMeta: TreeViewItemMeta | null = selectorItemMeta(state, itemId);
+    let itemMeta: TreeViewItemMeta | null = itemsSelectors.itemMeta(state, itemId);
     while (itemMeta != null) {
       // Try to find the first navigable sibling after the current item.
-      const siblings = selectorItemOrderedChildrenIds(state, itemMeta.parentId);
-      const currentItemIndex = selectorItemIndex(state, itemMeta.id);
+      const siblings = itemsSelectors.itemOrderedChildrenIds(state, itemMeta.parentId);
+      const currentItemIndex = itemsSelectors.itemIndex(state, itemMeta.id);
 
       if (currentItemIndex < siblings.length - 1) {
         return siblings[currentItemIndex + 1];
       }
 
       // If the item is the last of its siblings, go up a level to the parent and try again.
-      itemMeta = itemMeta.parentId ? selectorItemMeta(state, itemMeta.parentId) : null;
+      itemMeta = itemMeta.parentId ? itemsSelectors.itemMeta(state, itemMeta.parentId) : null;
     }
 
     throw new Error('Invalid range');
@@ -264,7 +257,7 @@ export const getNonDisabledItemsInRange = (
 
   while (current !== last) {
     current = getNextItem(current);
-    if (!selectorIsItemDisabled(state, current)) {
+    if (!itemsSelectors.isItemDisabled(state, current)) {
       items.push(current);
     }
   }

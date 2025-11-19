@@ -1,13 +1,14 @@
 'use client';
-import * as React from 'react';
 import PropTypes from 'prop-types';
 import HTMLElementType from '@mui/utils/HTMLElementType';
 import { ChartsItemTooltipContent } from './ChartsItemTooltipContent';
 import { ChartsAxisTooltipContent } from './ChartsAxisTooltipContent';
 import { ChartsTooltipContainer, ChartsTooltipContainerProps } from './ChartsTooltipContainer';
 import { useUtilityClasses } from './chartsTooltipClasses';
+import { TriggerOptions } from './utils';
 
-export interface ChartsTooltipProps extends Omit<ChartsTooltipContainerProps, 'children'> {}
+export interface ChartsTooltipProps<T extends TriggerOptions = TriggerOptions>
+  extends Omit<ChartsTooltipContainerProps<T>, 'children'> {}
 
 /**
  * Demos:
@@ -39,6 +40,11 @@ ChartsTooltip.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Determine if the tooltip should be placed on the pointer location or on the node.
+   * @default 'pointer'
+   */
+  anchor: PropTypes.oneOf(['node', 'pointer']),
   /**
    * An HTML element, [virtualElement](https://popper.js.org/docs/v2/virtual-elements/),
    * or a function that returns either.
@@ -239,6 +245,10 @@ ChartsTooltip.propTypes = {
     }),
   ]),
   /**
+   * Determines the tooltip position relatively to the anchor.
+   */
+  position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
+  /**
    * The props used for each slot inside the Popper.
    * @default {}
    */
@@ -264,9 +274,9 @@ ChartsTooltip.propTypes = {
   transition: PropTypes.bool,
   /**
    * Select the kind of tooltip to display
-   * - 'item': Shows data about the item below the mouse.
-   * - 'axis': Shows values associated with the hovered x value
-   * - 'none': Does not display tooltip
+   * - 'item': Shows data about the item below the mouse;
+   * - 'axis': Shows values associated with the hovered x value;
+   * - 'none': Does not display tooltip.
    * @default 'axis'
    */
   trigger: PropTypes.oneOf(['axis', 'item', 'none']),

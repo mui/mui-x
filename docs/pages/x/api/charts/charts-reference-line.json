@@ -20,7 +20,7 @@
         "name": "union",
         "description": "number<br>&#124;&nbsp;{ x?: number, y?: number }"
       },
-      "default": "5"
+      "default": "{ x: 0, y: 5 } on a horizontal line and { x: 5, y: 0 } on a vertical line."
     },
     "x": {
       "type": { "name": "union", "description": "Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string" }
@@ -33,7 +33,8 @@
   "imports": [
     "import { ChartsReferenceLine } from '@mui/x-charts/ChartsReferenceLine';",
     "import { ChartsReferenceLine } from '@mui/x-charts';",
-    "import { ChartsReferenceLine } from '@mui/x-charts-pro';"
+    "import { ChartsReferenceLine } from '@mui/x-charts-pro';",
+    "import { ChartsReferenceLine } from '@mui/x-charts-premium';"
   ],
   "classes": [
     {

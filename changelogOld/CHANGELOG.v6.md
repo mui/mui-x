@@ -2021,7 +2021,7 @@ Same changes as in `@mui/x-date-pickers@6.10.0`.
 
 ### Core
 
-- [core] Disambiguate eslint plugin name @oliviertassinari
+- [core] Disambiguate ESLint plugin name @oliviertassinari
 - [core] Update priority support issue template and prompt (#9574) @DanailH
 - [changelog] Clarify each plan (#9446) @oliviertassinari
 - [license] Fix error terminology (#9614) @oliviertassinari
@@ -3903,7 +3903,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 
 ### Core
 
-- [core] Apply eslint rule for React component @oliviertassinari
+- [core] Apply ESLint rule for React component @oliviertassinari
 - [core] Apply title capitalization convention @oliviertassinari
 - [core] Fix the product license reference name (#7367) @oliviertassinari
 - [core] Order the slots alphabetically in the JSON files (#7349) @flaviendelangle
@@ -4559,7 +4559,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 ### Core
 
 - [core] Fix `typescript:ci` failures (#6705) @LukasTy
-- [core] Fixes for upcoming eslint upgrade (#6667) @Janpot
+- [core] Fixes for upcoming ESLint upgrade (#6667) @Janpot
 - [core] Pin GitHub Action to digests (#6683) @oliviertassinari
 
 ## 6.0.0-alpha.5

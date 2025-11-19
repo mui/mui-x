@@ -3,6 +3,7 @@ import {
   UseChartHighlightSignature,
   UseChartInteractionSignature,
   PIE_CHART_PLUGINS,
+  UseChartKeyboardNavigationSignature,
 } from '@mui/x-charts/internals';
 import {
   useChartProExport,
@@ -12,6 +13,7 @@ import {
 export type PieChartProPluginSignatures = [
   UseChartInteractionSignature,
   UseChartHighlightSignature,
+  UseChartKeyboardNavigationSignature,
   UseChartProExportSignature,
 ];
 

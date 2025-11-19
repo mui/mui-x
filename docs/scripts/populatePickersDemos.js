@@ -10,7 +10,7 @@ const { run: jscodeshift } = require('jscodeshift/src/Runner');
  */
 const ignoreList = ['/pages.ts'];
 
-const fse = require('fs-extra');
+const fs = require('node:fs/promises');
 const path = require('path');
 const yargs = require('yargs');
 
@@ -21,9 +21,9 @@ async function getFiles(root) {
 
   try {
     await Promise.all(
-      (await fse.readdir(root)).map(async (name) => {
+      (await fs.readdir(root)).map(async (name) => {
         const filePath = path.join(root, name);
-        const stat = await fse.stat(filePath);
+        const stat = await fs.stat(filePath);
 
         if (stat.isDirectory()) {
           files.push(...(await getFiles(filePath)));

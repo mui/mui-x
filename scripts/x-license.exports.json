@@ -1,4 +1,5 @@
 [
+  { "name": "clearLicenseStatusCache", "kind": "Function" },
   { "name": "generateLicense", "kind": "Function" },
   { "name": "generateReleaseInfo", "kind": "Function" },
   { "name": "LICENSE_STATUS", "kind": "Enum" },

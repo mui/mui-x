@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
 
 export default function CustomLabels() {
@@ -16,6 +15,7 @@ export default function CustomLabels() {
         return context.bar.height < 60 ? null : item.value?.toString();
       }}
       height={350}
+      margin={{ left: 0 }}
     />
   );
 }

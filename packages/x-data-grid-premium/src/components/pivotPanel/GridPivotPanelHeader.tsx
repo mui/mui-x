@@ -57,6 +57,7 @@ const GridPivotPanelSwitchLabel = styled('span', {
   name: 'MuiDataGrid',
   slot: 'PivotPanelSwitchLabel',
 })<{ ownerState: OwnerState }>({
+  font: vars.typography.font.large,
   fontWeight: vars.typography.fontWeight.medium,
 });
 
@@ -90,7 +91,7 @@ function GridPivotPanelHeader(props: GridPivotPanelHeaderProps) {
         />
         <rootProps.slots.baseIconButton
           onClick={() => {
-            apiRef.current.setPivotPanelOpen(false);
+            apiRef.current.hideSidebar();
             if (isEmptyPivot) {
               apiRef.current.setPivotActive(false);
             }

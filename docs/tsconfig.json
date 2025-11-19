@@ -9,7 +9,8 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "incremental": true,
-    "types": ["@mui/internal-test-utils/initMatchers", "vitest/globals"]
+    "jsx": "preserve",
+    "types": ["@mui/internal-test-utils/initMatchers", "vitest/globals", "next"]
   },
   "include": [
     "next-env.d.ts",

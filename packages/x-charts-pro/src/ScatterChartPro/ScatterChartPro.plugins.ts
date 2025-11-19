@@ -7,8 +7,12 @@ import {
   UseChartInteractionSignature,
   useChartHighlight,
   UseChartHighlightSignature,
-  useChartVoronoi,
-  UseChartVoronoiSignature,
+  useChartClosestPoint,
+  UseChartClosestPointSignature,
+  useChartKeyboardNavigation,
+  UseChartKeyboardNavigationSignature,
+  useChartBrush,
+  UseChartBrushSignature,
   ConvertSignaturesIntoPlugins,
 } from '@mui/x-charts/internals';
 import {
@@ -17,23 +21,27 @@ import {
 } from '../internals/plugins/useChartProExport';
 import { useChartProZoom, UseChartProZoomSignature } from '../internals/plugins/useChartProZoom';
 
-export type ScatterChartProPluginsSignatures = [
+export type ScatterChartProPluginSignatures = [
   UseChartZAxisSignature,
-  UseChartCartesianAxisSignature<'scatter'>,
+  UseChartBrushSignature,
   UseChartInteractionSignature,
+  UseChartCartesianAxisSignature<'scatter'>,
   UseChartHighlightSignature,
-  UseChartVoronoiSignature,
+  UseChartClosestPointSignature,
+  UseChartKeyboardNavigationSignature,
   UseChartProZoomSignature,
   UseChartProExportSignature,
 ];
 
-export const SCATTER_CHART_PRO_PLUGINS: ConvertSignaturesIntoPlugins<ScatterChartProPluginsSignatures> =
+export const SCATTER_CHART_PRO_PLUGINS: ConvertSignaturesIntoPlugins<ScatterChartProPluginSignatures> =
   [
     useChartZAxis,
-    useChartCartesianAxis,
+    useChartBrush,
     useChartInteraction,
+    useChartCartesianAxis,
     useChartHighlight,
-    useChartVoronoi,
+    useChartClosestPoint,
+    useChartKeyboardNavigation,
     useChartProZoom,
     useChartProExport,
   ];

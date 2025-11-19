@@ -34,6 +34,9 @@ export interface ChartsComponents<Theme = unknown> {
     defaultProps?: ComponentsProps['MuiChartsSurface'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiChartsSurface'];
   };
+  MuiChartDataProvider?: {
+    defaultProps?: ComponentsProps['MuiChartDataProvider'];
+  };
   MuiBarChart?: {
     defaultProps?: ComponentsProps['MuiBarChart'];
   };
@@ -60,6 +63,9 @@ export interface ChartsComponents<Theme = unknown> {
     defaultProps?: ComponentsProps['MuiScatterChart'];
   };
   MuiScatter?: {};
+  MuiGauge?: {
+    styleOverrides?: ComponentsOverrides<Theme>['MuiGauge'];
+  };
 }
 
 declare module '@mui/material/styles' {

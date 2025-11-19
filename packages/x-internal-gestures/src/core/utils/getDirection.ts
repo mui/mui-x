@@ -1,4 +1,4 @@
-import type { Direction } from '../gestures/PanGesture';
+import type { Direction } from '../types/Direction';
 
 const MAIN_THRESHOLD = 0.00001;
 const ANGLE_THRESHOLD = 0.00001;

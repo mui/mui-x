@@ -10,9 +10,12 @@ import {
   skipSorting,
   skipFiltering,
   GridRowsPartialUpdates,
+  getParentPath,
+  RowGroupingStrategy,
+  gridPivotActiveSelector,
 } from '@mui/x-data-grid-pro/internals';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
-import { getGroupingRules, RowGroupingStrategy } from './gridRowGroupingUtils';
+import { getGroupingRules } from './gridRowGroupingUtils';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { gridRowGroupingSanitizedModelSelector } from './gridRowGroupingSelector';
 
@@ -39,7 +42,10 @@ export const useGridDataSourceRowGroupingPreProcessors = (
         throw new Error('MUI X: No `getChildrenCount` method provided with the dataSource.');
       }
 
+      const pivotingActive = gridPivotActiveSelector(apiRef);
       const sanitizedRowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
+      const maxDepth = pivotingActive ? sanitizedRowGroupingModel.length - 1 : undefined;
+
       const columnsLookup = gridColumnLookupSelector(apiRef);
       const groupingRules = getGroupingRules({
         sanitizedRowGroupingModel,
@@ -48,7 +54,8 @@ export const useGridDataSourceRowGroupingPreProcessors = (
       apiRef.current.caches.rowGrouping.rulesOnLastRowTreeCreation = groupingRules;
 
       const getRowTreeBuilderNode = (rowId: GridRowId) => {
-        const parentPath = (params.updates as GridRowsPartialUpdates).groupKeys ?? [];
+        const parentPath =
+          (params.updates as GridRowsPartialUpdates).groupKeys ?? getParentPath(rowId, params);
         const leafKey = getGroupKey(params.dataRowIdToModelLookup[rowId]);
         return {
           id: rowId,
@@ -67,6 +74,7 @@ export const useGridDataSourceRowGroupingPreProcessors = (
           defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
           isGroupExpandedByDefault: props.isGroupExpandedByDefault,
           groupingName: RowGroupingStrategy.DataSource,
+          maxDepth,
         });
       }
 
@@ -86,6 +94,7 @@ export const useGridDataSourceRowGroupingPreProcessors = (
         defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
         isGroupExpandedByDefault: props.isGroupExpandedByDefault,
         groupingName: RowGroupingStrategy.DataSource,
+        maxDepth,
       });
     },
     [apiRef, props.dataSource, props.defaultGroupingExpansionDepth, props.isGroupExpandedByDefault],

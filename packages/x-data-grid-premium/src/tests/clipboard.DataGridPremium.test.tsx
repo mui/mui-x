@@ -166,6 +166,31 @@ describe('<DataGridPremium /> - Clipboard', () => {
       fireEvent.keyDown(cell, { key: 'c', keyCode: 67, ctrlKey: true });
       expect(writeText.lastCall.firstArg).to.equal(['1 " 1', '2'].join('\r\n'));
     });
+
+    it('should copy aggregation cell value to clipboard', async () => {
+      const columns: GridColDef[] = [{ field: 'group' }, { field: 'value', type: 'number' }];
+      const rows = [
+        { id: 0, group: 'A', value: 10 },
+        { id: 1, group: 'A', value: 20 },
+      ];
+
+      const { user } = render(<Test columns={columns} rows={rows} rowGroupingModel={['group']} />);
+
+      // set aggregation model through API to avoid act error
+      await act(async () => apiRef.current?.setAggregationModel({ value: 'sum' }));
+
+      writeText = spy(navigator.clipboard, 'writeText');
+
+      // Because of the row grouping, the value column only displays the aggregation cells initially
+      const aggregationCell = getCell(0, 2);
+
+      expect(aggregationCell.textContent).to.equal('30');
+
+      await user.click(aggregationCell);
+      fireEvent.keyDown(aggregationCell, { key: 'c', keyCode: 67, ctrlKey: true });
+
+      expect(writeText.firstCall.args[0]).to.equal('30');
+    });
   });
 
   // These test are flaky in JSDOM
@@ -813,7 +838,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       });
     });
 
-    it('should call `onProcessRowUpdateError` if `processRowUpdate` fails', async () => {
+    it('should call `onProcessRowUpdateError()` if `processRowUpdate()` fails', async () => {
       const onProcessRowUpdateError = spy();
       const error = new Error('Something went wrong');
       const { user } = render(

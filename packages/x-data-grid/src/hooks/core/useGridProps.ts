@@ -1,31 +1,39 @@
 'use client';
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
-import type { DataGridProps } from '../../models/props/DataGridProps';
 import type { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
+import type { GridStateCommunity, GridStateProps } from '../../models/gridStateCommunity';
 import type { GridStateInitializer } from '../utils/useGridInitializeState';
 
-type Props = Pick<DataGridProps, 'getRowId'>;
-
-export const propsStateInitializer: GridStateInitializer<Props> = (state, props) => {
+export const propsStateInitializer: GridStateInitializer<GridStateProps> = (state, props) => {
   return {
     ...state,
     props: {
+      listView: props.listView,
       getRowId: props.getRowId,
+      isCellEditable: props.isCellEditable,
     },
   };
 };
 
 export const useGridProps = <PrivateApi extends GridPrivateApiCommon>(
   apiRef: RefObject<PrivateApi>,
-  props: Props,
+  props: GridStateProps,
 ) => {
+  const isFirstRender = React.useRef(true);
   React.useEffect(() => {
-    apiRef.current.setState((state) => ({
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    apiRef.current.setState((state: GridStateCommunity) => ({
       ...state,
       props: {
+        listView: props.listView,
         getRowId: props.getRowId,
+        isCellEditable: props.isCellEditable,
+        isRowSelectable: props.isRowSelectable,
       },
     }));
-  }, [apiRef, props.getRowId]);
+  }, [apiRef, props.listView, props.getRowId, props.isCellEditable, props.isRowSelectable]);
 };
