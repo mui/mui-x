@@ -20,7 +20,7 @@
     "@atlaskit/pragmatic-drag-and-drop": "^1.7.7",
     "@babel/core": "catalog:",
     "@babel/runtime": "catalog:",
-    "@docsearch/react": "^3.9.0",
+    "@docsearch/react": "^4.2.0",
     "@emotion/cache": "catalog:",
     "@emotion/react": "catalog:",
     "@emotion/server": "^11.11.0",
