@@ -40,10 +40,6 @@ const ZoomSliderActiveTrackRect = styled('rect', {
       props: { preview: true },
       style: {
         fill: 'transparent',
-        // Increases the specificity to override the default fill
-        ...theme.applyStyles('dark', {
-          fill: 'transparent',
-        }),
         rx: 4,
         ry: 4,
         stroke: theme.palette.grey[500],
