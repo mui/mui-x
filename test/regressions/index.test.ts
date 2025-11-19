@@ -311,10 +311,11 @@ async function main() {
 
         await sleep(5000);
 
+        await page.mouse.move(500, 300);
         // scroll to the last page of print preview
         await page.mouse.wheel(0, 2000);
-
         await sleep(500);
+        await page.mouse.move(0, 0);
 
         await screenshotPrintDialogPreview(screenshotPath, {
           x: 72,
