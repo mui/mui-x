@@ -106,7 +106,7 @@ Internal changes.
 
 - [code-infra] Disable Codspeed pipeline (#20370) @JCQuintas
 - [code-infra] Optimize `checkMaterialVersion` (#20307) @Janpot
-- [docs-infra] Revert @docsearch/react (#20313) @Janpot
+- [docs-infra] Revert `@docsearch/react` (#20313) @Janpot
 
 ### Miscellaneous
 
