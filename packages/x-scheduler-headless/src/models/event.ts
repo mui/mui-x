@@ -90,11 +90,9 @@ export interface SchedulerEvent {
   resource?: CalendarResourceId | null;
   /**
    * The recurrence rule for the event.
-   * It can be provided either as a string (RFC5545 RRULE format)
-   * or as a RecurringEventRecurrenceRule object.
    * If not defined, the event will have only one occurrence.
    */
-  rrule?: RecurringEventRecurrenceRule | string;
+  rrule?: RecurringEventRecurrenceRule;
   /**
    * Exception dates for the event.
    * These dates will be excluded from the recurrence.
