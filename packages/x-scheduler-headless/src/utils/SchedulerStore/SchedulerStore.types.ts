@@ -1,7 +1,6 @@
 import {
   SchedulerProcessedEvent,
   SchedulerEventColor,
-  SchedulerEventOccurrence,
   SchedulerOccurrencePlaceholder,
   SchedulerResource,
   SchedulerResourceId,
@@ -10,8 +9,9 @@ import {
   SchedulerEventId,
   SchedulerResourceModelStructure,
   SchedulerEventModelStructure,
-  SchedulerEvent,
   SchedulerPreferences,
+  SchedulerEventCreationConfig,
+  SchedulerEventCreationProperties,
 } from '../../models';
 import { Adapter } from '../../use-adapter/useAdapter.types';
 
@@ -105,12 +105,6 @@ export interface SchedulerState<TEvent extends object = any> {
    */
   nowUpdatedEveryMinute: SchedulerValidDate;
   /**
-   * Checks whether the event is a multi-day event.
-   * A multi day event is rendered in the day grid instead of the time grid when both are available.
-   * It can also be styled differently in the day grid.
-   */
-  isMultiDayEvent: (event: SchedulerProcessedEvent | SchedulerEventOccurrence) => boolean;
-  /**
    * Whether the calendar is in read-only mode.
    * @default false
    */
@@ -122,7 +116,14 @@ export interface SchedulerState<TEvent extends object = any> {
   /**
    * Preferences for the scheduler.
    */
-  preferences: SchedulerPreferences;
+  preferences: Partial<SchedulerPreferences>;
+  /**
+   * Configures how event are created.
+   * If `false`, event creation is disabled.
+   * If `true`, event creation is enabled with default configuration.
+   * If an object, event creation is enabled with the provided configuration.
+   */
+  eventCreation: Partial<SchedulerEventCreationConfig> | boolean;
 }
 
 export interface SchedulerParameters<TEvent extends object, TResource extends object> {
@@ -203,6 +204,13 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
    * @default false
    */
   readOnly?: boolean;
+  /**
+   * Configures how events are created.
+   * If `false`, event creation is disabled.
+   * If `true`, event creation is enabled with default configuration.
+   * If an object, event creation is enabled with the provided configuration.
+   */
+  eventCreation?: Partial<SchedulerEventCreationConfig> | boolean;
 }
 
 /**
@@ -244,7 +252,7 @@ export interface SchedulerParametersToStateMapper<
    * Updates the state based on the new parameters.
    */
   updateStateFromParameters: (
-    newState: Omit<Partial<SchedulerState>, 'preferences'>,
+    newState: Partial<SchedulerState>,
     parameters: Parameters,
     updateModel: SchedulerModelUpdater<State, Parameters>,
   ) => Partial<State>;
@@ -261,6 +269,6 @@ export type SchedulerModelUpdater<
 
 export interface UpdateEventsParameters {
   deleted?: SchedulerEventId[];
-  created?: SchedulerEvent[];
+  created?: SchedulerEventCreationProperties[];
   updated?: SchedulerEventUpdatedProperties[];
 }
