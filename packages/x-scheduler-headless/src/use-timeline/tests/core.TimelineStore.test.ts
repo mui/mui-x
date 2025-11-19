@@ -24,7 +24,7 @@ describe('Core - TimelineStore', () => {
         eventModelList: [],
         eventModelLookup: new Map(),
         eventModelStructure: undefined,
-        nowUpdatedEveryMinute: adapter.date(),
+        nowUpdatedEveryMinute: adapter.now('default'),
         occurrencePlaceholder: null,
         pendingUpdateRecurringEventParameters: null,
         preferences: EMPTY_OBJECT,
@@ -37,7 +37,7 @@ describe('Core - TimelineStore', () => {
         showCurrentTimeIndicator: true,
         view: 'time',
         views: ['time', 'days', 'weeks', 'months', 'years'],
-        visibleDate: adapter.startOfDay(adapter.date()),
+        visibleDate: adapter.startOfDay(adapter.now('default')),
         visibleResources: new Map(),
       };
 

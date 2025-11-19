@@ -18,6 +18,7 @@ import { EventPopoverTrigger } from '../../internals/components/event-popover';
 import { MoreEventsPopoverTrigger } from '../../internals/components/more-events-popover/MoreEventsPopover';
 import { useEventPopoverContext } from '../../internals/components/event-popover/EventPopover';
 import { useEventCreationProps } from '../../internals/hooks/useEventCreationProps';
+import { formatMonthAndDayOfMonth } from '../../internals/utils/date-utils';
 import { isOccurrenceAllDayOrMultipleDay } from '../../internals/utils/event-utils';
 import './MonthViewWeekRow.css';
 
@@ -49,7 +50,10 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
 
   const isCurrentMonth = adapter.isSameMonth(day.value, visibleDate);
   const isFirstDayOfMonth = adapter.isSameDay(day.value, adapter.startOfMonth(day.value));
-  const isToday = React.useMemo(() => adapter.isSameDay(day.value, adapter.date()), [adapter, day]);
+  const isToday = React.useMemo(
+    () => adapter.isSameDay(day.value, adapter.now('default')),
+    [adapter, day],
+  );
 
   const visibleOccurrences =
     day.withPosition.length > maxEvents
@@ -60,8 +64,8 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const cellNumberContent = (
     <span className="MonthViewCellNumber">
       {isFirstDayOfMonth
-        ? adapter.formatByString(day.value, adapter.formats.shortDate)
-        : adapter.formatByString(day.value, adapter.formats.dayOfMonth)}
+        ? formatMonthAndDayOfMonth(day.value, adapter)
+        : adapter.format(day.value, 'dayOfMonth')}
     </span>
   );
 

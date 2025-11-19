@@ -43,7 +43,7 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
       // Resize a Day Grid Event
       if (data.source === 'CalendarGridDayEventResizeHandler') {
         if (data.side === 'start') {
-          if (adapter.isAfterDay(value, data.end)) {
+          if (adapter.isAfter(value, adapter.endOfDay(data.end))) {
             return undefined;
           }
 
@@ -57,7 +57,7 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
         }
 
         if (data.side === 'end') {
-          if (adapter.isBeforeDay(value, data.start)) {
+          if (adapter.isBefore(value, adapter.startOfDay(data.start))) {
             return undefined;
           }
 
