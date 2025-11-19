@@ -234,13 +234,24 @@ export function getBarDimensions(params: {
   const isVisible = isItemVisible({ seriesId: series.id });
 
   const minValue = isVisible ? visibleMinValueCoord : fullMinValueCoord;
+  const maxValue = isVisible ? visibleMaxValueCoord : fullMaxValueCoord;
 
-  const barSize =
-    seriesValue === 0 ? 0 : Math.max(series.minBarSize, visibleMaxValueCoord - minValue);
-  const maxValue = isVisible ? visibleMaxValueCoord - barSize : visibleMinValueCoord;
-  const startCoordinate = shouldInvertStartCoordinate(verticalLayout, seriesValue, reverse)
-    ? maxValue
-    : minValue;
+  let barSize = 0;
+  if (seriesValue !== 0) {
+    if (isVisible) {
+      barSize = Math.max(series.minBarSize, visibleMaxValueCoord - visibleMinValueCoord);
+    }
+  }
+
+  const shouldInvert = shouldInvertStartCoordinate(verticalLayout, seriesValue, reverse);
+
+  let startCoordinate = 0;
+
+  if (shouldInvert) {
+    startCoordinate = maxValue - barSize;
+  } else {
+    startCoordinate = minValue;
+  }
 
   return {
     x: verticalLayout ? xScale(baseValue)! + barOffset : startCoordinate,
