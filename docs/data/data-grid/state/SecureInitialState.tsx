@@ -34,12 +34,16 @@ export default function SecureInitialState() {
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
-          backgroundColor: '#f5f5f5',
+          backgroundColor: '#fafafa',
           borderRadius: 4,
-          border: '1px solid #e0e0e0',
+          border: '1px dashed #d0d0d0',
         }}
       >
-        <h3>Something went wrong</h3>
+        <div style={{ fontSize: '48px', marginBottom: '16px' }}>🚧</div>
+        <h3 style={{ margin: '0 0 8px 0', color: '#333' }}>Oops! Grid Under Construction</h3>
+        <p style={{ color: '#666', margin: '0 0 16px 0', textAlign: 'center' }}>
+          Looks like our data hit a roadblock. Let's get things back on track!
+        </p>
         <pre
           style={{
             whiteSpace: 'pre-wrap',
@@ -48,24 +52,29 @@ export default function SecureInitialState() {
             maxHeight: '200px',
             overflow: 'auto',
             padding: '8px 12px',
-            backgroundColor: 'white',
+            backgroundColor: '#fff',
             borderRadius: 4,
             fontSize: '0.875rem',
             margin: '16px 0',
-            border: '1px solid #e0e0e0',
+            border: '1px solid #e3e3e3',
+            boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.05)',
+            fontFamily: 'monospace',
           }}
         >
           {String(error.message || 'An error occurred')}
           {error.stack && `\n\nStack trace:\n${error.stack.split('\n').slice(0, 10).join('\n')}${error.stack.split('\n').length > 10 ? '\n...' : ''}`}
         </pre>
         <Button
+          variant="contained"
+          color="primary"
           onClick={() => {
             setInitialGridState({});
             localStorage.removeItem(gridStateKey);
             resetError();
           }}
+          style={{ textTransform: 'none' }}
         >
-          Reset grid state
+          🔧 Rebuild Grid State
         </Button>
       </div>
     ),
