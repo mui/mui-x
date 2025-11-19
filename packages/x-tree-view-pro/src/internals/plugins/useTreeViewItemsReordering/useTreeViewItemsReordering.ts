@@ -20,6 +20,22 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
   params,
   store,
 }) => {
+  const canItemBeDragged = React.useCallback(
+    (itemId: string) => {
+      if (!params.itemsReordering) {
+        return false;
+      }
+
+      const isItemReorderable = params.isItemReorderable;
+      if (isItemReorderable) {
+        return isItemReorderable(itemId);
+      }
+
+      return true;
+    },
+    [params.itemsReordering, params.isItemReorderable],
+  );
+
   const getDroppingTargetValidActions = React.useCallback(
     (itemId: string) => {
       const currentReorder = itemsReorderingSelectors.currentReorder(store.state);
@@ -244,6 +260,7 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
 
   return {
     instance: {
+      canItemBeDragged,
       getDroppingTargetValidActions,
       startDraggingItem,
       cancelDraggingItem,

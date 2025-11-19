@@ -32,7 +32,7 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props
     itemId,
   );
   const canItemBeReordered = useStore(store, itemsReorderingSelectors.canItemBeReordered, itemId);
-  const isDragging = useStore(store, itemsReorderingSelectors.isDragging, itemId);
+  const isValidTarget = useStore(store, itemsReorderingSelectors.isItemValidDropTarget, itemId);
 
   return {
     propsEnhancers: {
@@ -41,9 +41,13 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props
         contentRefObject,
         externalEventHandlers,
       }): UseTreeItemRootSlotPropsFromItemsReordering => {
+        if (!canItemBeReordered) {
+          return {};
+        }
+
         const handleDragStart = (event: React.DragEvent & TreeViewCancellableEvent) => {
           externalEventHandlers.onDragStart?.(event);
-          if (!canItemBeReordered || event.defaultMuiPrevented || event.defaultPrevented) {
+          if (event.defaultMuiPrevented || event.defaultPrevented) {
             return;
           }
 
@@ -94,7 +98,7 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props
         };
 
         return {
-          draggable: canItemBeReordered ? true : undefined,
+          draggable: true,
           onDragStart: handleDragStart,
           onDragOver: handleRootDragOver,
           onDragEnd: handleRootDragEnd,
@@ -104,24 +108,19 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props
         externalEventHandlers,
         contentRefObject,
       }): UseTreeItemContentSlotPropsFromItemsReordering => {
-        if (!isDragging) {
+        if (!isValidTarget) {
           return {};
         }
 
         const handleDragOver = (event: React.DragEvent & TreeViewCancellableEvent) => {
           externalEventHandlers.onDragOver?.(event);
-          if (
-            event.defaultMuiPrevented ||
-            validActionsRef.current == null ||
-            !contentRefObject.current
-          ) {
+          if (event.defaultMuiPrevented || validActionsRef.current == null) {
             return;
           }
 
-          const rect = contentRefObject.current.getBoundingClientRect();
+          const rect = (event.target as HTMLDivElement).getBoundingClientRect();
           const y = event.clientY - rect.top;
           const x = event.clientX - rect.left;
-
           instance.setDragTargetItem({
             itemId,
             validActions: validActionsRef.current,
