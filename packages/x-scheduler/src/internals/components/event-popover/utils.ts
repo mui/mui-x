@@ -30,14 +30,18 @@ export function computeRange(adapter: Adapter, next: ControlledValue) {
     const newEnd = adapter.endOfDay(adapter.date(next.endDate, 'default'));
     return { start: newStart, end: newEnd, surfaceType: 'day-grid' as const };
   }
-  // fallback values
-  const startTime = next.startTime || '12:00';
-  const endTime = next.endTime || '12:30';
 
-  const newStart = adapter.date(`${next.startDate}T${startTime}`, 'default');
-  const newEnd = adapter.date(`${next.endDate}T${endTime}`, 'default');
+  if (next.startTime === '' || next.endTime === '') {
+    throw new Error(
+      'computeRange: startTime and endTime should not be empty strings for timed events',
+    );
+  }
 
-  return { start: newStart, end: newEnd, surfaceType: 'time-grid' as const };
+  return {
+    start: adapter.date(`${next.startDate}T${next.startTime}`, 'default'),
+    end: adapter.date(`${next.endDate}T${next.endTime}`, 'default'),
+    surfaceType: 'time-grid' as const,
+  };
 }
 
 export function validateRange(

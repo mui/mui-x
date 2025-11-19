@@ -60,6 +60,7 @@ export const enUS: SchedulerTranslations = {
   eventTitleAriaLabel: 'Event title',
   generalTabLabel: 'General',
   labelNoResource: 'No resource',
+  labelInvalidResource: 'Invalid resource',
   recurrenceLabel: 'Recurrence',
   recurrenceNoRepeat: "Don't repeat",
   recurrenceCustomRepeat: 'Custom repeat rule',
