@@ -1,4 +1,3 @@
-import { EMPTY_OBJECT } from '@base-ui-components/utils/empty';
 import { TimelinePreferences, TimelineView } from '../models';
 import { Adapter } from '../use-adapter';
 import {
@@ -24,7 +23,7 @@ const mapper: SchedulerParametersToStateMapper<TimelineState, TimelineParameters
     ...schedulerInitialState,
     ...deriveStateFromParameters(parameters),
     view: parameters.view ?? parameters.defaultView ?? DEFAULT_VIEW,
-    preferences: parameters.preferences ?? parameters.defaultPreferences ?? EMPTY_OBJECT,
+    preferences: { ...DEFAULT_PREFERENCES, ...parameters.preferences },
   }),
   updateStateFromParameters: (newSchedulerState, parameters, updateModel) => {
     const newState: Partial<TimelineState> = {
@@ -33,8 +32,6 @@ const mapper: SchedulerParametersToStateMapper<TimelineState, TimelineParameters
     };
 
     updateModel(newState, 'view', 'defaultView');
-    updateModel(newState, 'preferences', 'defaultPreferences');
-
     return newState;
   },
 };

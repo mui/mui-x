@@ -18,7 +18,7 @@ export default function ColorPalettes() {
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
-        defaultPreferences={{ showWeekends: false, isSidePanelOpen: false }}
+        preferences={{ showWeekends: false, isSidePanelOpen: false }}
       />
     </div>
   );

@@ -14,7 +14,7 @@ export interface TimelineState extends SchedulerState {
   /**
    * Preferences for the timeline.
    */
-  preferences: Partial<TimelinePreferences>;
+  preferences: TimelinePreferences;
 }
 
 export interface TimelineParameters<TEvent extends object, TResource extends object>
@@ -39,20 +39,8 @@ export interface TimelineParameters<TEvent extends object, TResource extends obj
    */
   onViewChange?: (view: TimelineView, event: React.UIEvent | Event) => void;
   /**
-   * The default preferences for the timeline.
-   * To use controlled preferences, use the `preferences` prop.
+   * Preferences for the timeline.
    * @default { ampm: true }
    */
-  defaultPreferences?: Partial<TimelinePreferences>;
-  /**
-   * Preferences currently displayed in the timeline.
-   */
   preferences?: Partial<TimelinePreferences>;
-  /**
-   * Event handler called when the preferences change.
-   */
-  onPreferencesChange?: (
-    preferences: Partial<TimelinePreferences>,
-    event: React.UIEvent | Event,
-  ) => void;
 }

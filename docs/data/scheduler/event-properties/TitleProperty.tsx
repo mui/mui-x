@@ -54,7 +54,7 @@ export default function TitleProperty() {
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
         eventModelStructure={eventModelStructure}
-        defaultPreferences={{ isSidePanelOpen: false }}
+        preferences={{ isSidePanelOpen: false }}
       />
     </div>
   );

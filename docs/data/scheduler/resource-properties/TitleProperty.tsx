@@ -38,7 +38,7 @@ export default function TitleProperty() {
         defaultVisibleDate={defaultVisibleDate}
         resourceModelStructure={resourceModelStructure}
         resources={resources}
-        defaultPreferences={{ isSidePanelOpen: false }}
+        preferences={{ isSidePanelOpen: false }}
       />
     </div>
   );

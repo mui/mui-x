@@ -1,7 +1,6 @@
 import { adapter } from 'test/utils/scheduler';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
-import { EMPTY_OBJECT } from '@base-ui-components/utils/empty';
-import { TimelineStore } from '../TimelineStore';
+import { DEFAULT_PREFERENCES, TimelineStore } from '../TimelineStore';
 
 const DEFAULT_PARAMS = { events: [] };
 
@@ -14,30 +13,30 @@ describe('Core - TimelineStore', () => {
 
       const expectedState = {
         adapter,
+        visibleResources: new Map(),
+        eventIdList: [],
+        eventModelList: [],
+        eventModelLookup: new Map(),
+        processedEventLookup: new Map(),
+        eventModelStructure: undefined,
+        resourceIdList: [],
+        processedResourceLookup: new Map(),
+        resourceModelStructure: undefined,
+        resourceChildrenIdLookup: new Map(),
+        nowUpdatedEveryMinute: adapter.date(),
         areEventsDraggable: false,
         areEventsResizable: false,
         canDragEventsFromTheOutside: false,
         canDropEventsToTheOutside: false,
         eventColor: 'jade',
-        eventIdList: [],
-        eventModelList: [],
-        eventModelLookup: new Map(),
-        eventModelStructure: undefined,
-        nowUpdatedEveryMinute: adapter.date(),
-        occurrencePlaceholder: null,
-        pendingUpdateRecurringEventParameters: null,
-        preferences: EMPTY_OBJECT,
-        processedEventLookup: new Map(),
-        processedResourceLookup: new Map(),
-        readOnly: false,
-        resourceChildrenIdLookup: new Map(),
-        resourceIdList: [],
-        resourceModelStructure: undefined,
         showCurrentTimeIndicator: true,
+        occurrencePlaceholder: null,
+        visibleDate: adapter.startOfDay(adapter.date()),
+        pendingUpdateRecurringEventParameters: null,
+        preferences: DEFAULT_PREFERENCES,
         view: 'time',
         views: ['time', 'days', 'weeks', 'months', 'years'],
-        visibleDate: adapter.startOfDay(adapter.date()),
-        visibleResources: new Map(),
+        readOnly: false,
       };
 
       expect(store.state).to.deep.equal(expectedState);

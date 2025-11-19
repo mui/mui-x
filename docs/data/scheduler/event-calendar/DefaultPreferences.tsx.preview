@@ -1,6 +1,0 @@
-<EventCalendar
-  events={events}
-  resources={resources}
-  defaultPreferences={defaultPreferences}
-  onEventsChange={setEvents}
-/>
