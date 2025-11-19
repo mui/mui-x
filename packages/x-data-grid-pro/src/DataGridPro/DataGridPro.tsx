@@ -105,11 +105,13 @@ DataGridProRaw.propTypes = {
    */
   'aria-labelledby': PropTypes.string,
   /**
-   * If `true`, the Data Grid height is dynamic and takes as much space as it needs to display all rows.
-   * Use it instead of a flex parent container approach, if:
-   * - you don't need to set a minimum or maximum height for the Data Grid
-   * - you want to avoid the scrollbar flickering when the content changes
+   * If `true`, the Data Grid height is dynamic and follows the number of rows in the Data Grid.
    * @default false
+   * @deprecated Use flex parent container instead: https://mui.com/x/react-data-grid/layout/#flex-parent-container
+   * @example
+   * <div style={{ display: 'flex', flexDirection: 'column' }}>
+   *   <DataGrid />
+   * </div>
    */
   autoHeight: PropTypes.bool,
   /**
