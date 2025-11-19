@@ -19,6 +19,7 @@ describe('Core - TimelineStore', () => {
         canDragEventsFromTheOutside: false,
         canDropEventsToTheOutside: false,
         eventColor: 'jade',
+        eventCreation: true,
         eventIdList: [],
         eventModelList: [],
         eventModelLookup: new Map(),
