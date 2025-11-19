@@ -9,7 +9,7 @@ import { useMonthList } from './useMonthList';
 describe('useMonthList', () => {
   function testHook(date: string, amount: number | 'end-of-year') {
     const { result } = renderHook(() => useMonthList());
-    return result.current({ date: adapter.date(date), amount });
+    return result.current({ date: adapter.date(date, 'default'), amount });
   }
 
   it('should throw an error when amount is a non positive number', () => {

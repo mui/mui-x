@@ -9,7 +9,7 @@ import { useWeekList } from './useWeekList';
 describe('useWeekList', () => {
   function testHook(date: string, amount: number | 'end-of-month') {
     const { result } = renderHook(() => useWeekList());
-    return result.current({ date: adapter.date(date), amount });
+    return result.current({ date: adapter.date(date, 'default'), amount });
   }
 
   it('should throw an error when amount is a non positive number', () => {

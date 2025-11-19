@@ -7,7 +7,8 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
   const day0Str = '2024-01-10T00:00:00Z';
   const day1Str = '2024-01-11T00:00:00Z';
   const day2Str = '2024-01-12T00:00:00Z';
-  const day = (date: string): SchedulerProcessedDate => processDate(adapter.date(date), adapter);
+  const day = (date: string): SchedulerProcessedDate =>
+    processDate(adapter.date(date, 'default'), adapter);
   const days: SchedulerProcessedDate[] = [day(day0Str), day(day1Str), day(day2Str)];
 
   const visible = new Map<string, boolean>([

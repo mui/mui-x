@@ -11,7 +11,7 @@ describe('useDayList', () => {
   function testHook(date: string, amount: number | 'week', excludeWeekends?: boolean) {
     const { result } = renderHook(() => useDayList());
     return result.current({
-      date: adapter.date(date),
+      date: adapter.date(date, 'default'),
       amount,
       excludeWeekends,
     });
