@@ -67,6 +67,12 @@ export async function exportImage(
 
   doc.body.appendChild(iframe);
 
+  if (nonce) {
+    iframe.querySelectorAll('script, style').forEach((node) => {
+      node.setAttribute('nonce', nonce);
+    });
+  }
+
   await iframeLoadPromise;
   await onBeforeExport(iframe);
 
