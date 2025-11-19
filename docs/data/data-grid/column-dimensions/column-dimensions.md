@@ -113,7 +113,7 @@ To automatically autosize columns when the Data Grid is mounted, use the `autosi
 
 ### Autosizing programmatically
 
-Use `autosizeColumns()` from the `apiRef` to adjust the column size on specified events, for example when receiving row data from the server.
+Use API method `apiRef.current.autosizeColumns(autosizeOptions)` to adjust the column size programmatically. Common usage could be to bind it with specified events, for example when receiving row data from the server.
 
 {{"demo": "ColumnAutosizingAsync.js", "disableAd": true, "bg": "inline"}}
 
