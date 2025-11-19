@@ -1,3 +1,4 @@
+import { warnOnce } from '@mui/x-internals/warning';
 import { useAssertModelConsistency } from '@mui/x-internals/useAssertModelConsistency';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
@@ -18,27 +19,45 @@ export const useChartHighlight: ChartPlugin<UseChartHighlightSignature> = ({ sto
     if (store.state.highlight.item !== params.highlightedItem) {
       store.set('highlight', { ...store.state.highlight, item: params.highlightedItem });
     }
+    if (process.env.NODE_ENV !== 'production') {
+      if (params.highlightedItem !== undefined && !store.state.highlight.isControlled) {
+        warnOnce(
+          [
+            'MUI X Charts: The `highlightedItem` switched between controlled and uncontrolled state.',
+            'To remove highlight in control mode, you must provide `null` as `highlightedItem` value and not `undefined`.',
+          ].join('\n'),
+        );
+      }
+    }
   }, [store, params.highlightedItem]);
 
   const clearHighlight = useEventCallback(() => {
     params.onHighlightChange?.(null);
-    const prevItem = store.getSnapshot().highlight.item;
-    if (prevItem === null) {
+    const prevHighlight = store.getSnapshot().highlight;
+    if (prevHighlight.item === null || prevHighlight.isControlled) {
       return;
     }
 
-    store.set('highlight', { item: null, lastUpdate: 'pointer' });
+    store.set('highlight', {
+      item: null,
+      lastUpdate: 'pointer',
+      isControlled: false,
+    });
   });
 
   const setHighlight = useEventCallback((newItem: HighlightItemData) => {
-    const prevItem = store.getSnapshot().highlight.item;
+    const prevHighlight = store.getSnapshot().highlight;
 
-    if (fastObjectShallowCompare(prevItem, newItem)) {
+    if (prevHighlight.isControlled || fastObjectShallowCompare(prevHighlight.item, newItem)) {
       return;
     }
 
     params.onHighlightChange?.(newItem);
-    store.set('highlight', { item: newItem, lastUpdate: 'pointer' });
+    store.set('highlight', {
+      item: newItem,
+      lastUpdate: 'pointer',
+      isControlled: false,
+    });
   });
 
   return {
@@ -58,6 +77,7 @@ useChartHighlight.getInitialState = (params) => ({
   highlight: {
     item: params.highlightedItem,
     lastUpdate: 'pointer',
+    isControlled: params.highlightedItem !== undefined,
   },
 });
 
