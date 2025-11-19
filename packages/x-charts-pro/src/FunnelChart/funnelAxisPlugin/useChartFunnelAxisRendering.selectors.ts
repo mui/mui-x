@@ -1,5 +1,6 @@
-import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
+import { createSelectorMemoized } from '@mui/x-internals/store';
 import {
+  createSelector,
   selectorChartSeriesConfig,
   selectorChartSeriesProcessed,
   selectorChartDrawingArea,
@@ -13,7 +14,7 @@ import { UseChartFunnelAxisSignature } from './useChartFunnelAxis.types';
 export const selectorFunnel = (state: ChartState<[], [UseChartFunnelAxisSignature]>) =>
   state.funnel;
 
-export const selectorFunnelGap = createSelector(selectorFunnel, (funnel) => funnel?.gap ?? 0);
+export const selectorFunnelGap = createSelector([selectorFunnel], (funnel) => funnel?.gap ?? 0);
 
 export const selectorChartXAxis = createSelectorMemoized(
   selectorChartRawXAxis,
