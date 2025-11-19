@@ -8,6 +8,7 @@ import {
   RecurringEventRecurrenceRule,
   SchedulerValidDate,
   SchedulerEvent,
+  SchedulerEventCreationProperties,
 } from '../models';
 import { mergeDateAndTime, getDateKey } from './date-utils';
 import { diffIn } from '../use-adapter';
@@ -130,23 +131,18 @@ export function parsesByDayForMonthlyFrequency(ruleByDay: RecurringEventByDayVal
 }
 
 /**
- *  Inclusive span (in days) for all-day events.
+ *  Duration of the event in days.
  *  @returns At least 1, start==end yields 1.
  */
-export function getAllDaySpanDays(adapter: Adapter, event: SchedulerProcessedEvent): number {
-  // TODO: Now only all-day events are implemented, we should add support for timed events that span multiple days later
-  if (!event.allDay) {
-    return 1;
-  }
+export function getEventDurationInDays(adapter: Adapter, event: SchedulerProcessedEvent): number {
   // +1 so start/end same day = 1 day, spans include last day
-  return Math.max(
-    1,
+  return (
     diffIn(
       adapter,
       adapter.startOfDay(event.end.value),
       adapter.startOfDay(event.start.value),
       'days',
-    ) + 1,
+    ) + 1
   );
 }
 
@@ -168,8 +164,8 @@ export function getRecurringEventOccurrencesForVisibleDays(
   const endGuard = buildEndGuard(rule, event.start.value, adapter);
   const durationMinutes = diffIn(adapter, event.end.value, event.start.value, 'minutes');
 
-  const allDaySpanDays = getAllDaySpanDays(adapter, event);
-  const scanStart = adapter.addDays(start, -(allDaySpanDays - 1));
+  const eventDuration = getEventDurationInDays(adapter, event);
+  const scanStart = adapter.addDays(start, -(eventDuration - 1));
 
   for (
     let day = adapter.startOfDay(scanStart);
@@ -190,7 +186,7 @@ export function getRecurringEventOccurrencesForVisibleDays(
       : mergeDateAndTime(adapter, day, event.start.value);
 
     const occurrenceEnd = event.allDay
-      ? adapter.endOfDay(adapter.addDays(occurrenceStart, allDaySpanDays - 1))
+      ? adapter.endOfDay(adapter.addDays(occurrenceStart, eventDuration - 1))
       : adapter.addMinutes(occurrenceStart, durationMinutes);
 
     const key = `${event.id}::${getDateKey(occurrenceStart, adapter)}`;
@@ -1026,18 +1022,8 @@ export function applyRecurringUpdateOnlyThis(
   occurrenceStart: SchedulerValidDate,
   changes: SchedulerEventUpdatedProperties,
 ): UpdateEventsParameters {
-  const detachedId = `${originalEvent.id}::${getDateKey(changes.start ?? originalEvent.start.value, adapter)}`;
-
-  const detachedEvent: SchedulerEvent = {
-    ...originalEvent.modelInBuiltInFormat!,
-    ...changes,
-    id: detachedId,
-    rrule: undefined,
-    extractedFromId: originalEvent.id,
-  };
-
   return {
-    created: [detachedEvent],
+    created: [createEventFromRecurringEvent(originalEvent, changes)],
     updated: [
       {
         id: originalEvent.id,
@@ -1045,6 +1031,27 @@ export function applyRecurringUpdateOnlyThis(
       },
     ],
   };
+}
+
+/**
+ * Generates the property to pass to `store.updateEvents()` to create an event extracted from a potentially recurring event.
+ */
+export function createEventFromRecurringEvent(
+  originalEvent: SchedulerProcessedEvent,
+  changes: Partial<SchedulerEvent>,
+): SchedulerEventCreationProperties {
+  const createdEvent: SchedulerEventCreationProperties = {
+    ...originalEvent.modelInBuiltInFormat!,
+    ...changes,
+    extractedFromId: originalEvent.id,
+  };
+
+  // @ts-ignore
+  delete createdEvent.id;
+  delete createdEvent.rrule;
+  delete createdEvent.exDates;
+
+  return createdEvent;
 }
 
 const SUPPORTED_RRULE_KEYS = [

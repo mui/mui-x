@@ -27,6 +27,10 @@ export const schedulerEventSelectors = {
       return state.eventColor;
     }
 
+    if (event.color) {
+      return event.color;
+    }
+
     const resourceColor = schedulerResourceSelectors.processedResource(
       state,
       event.resource,
@@ -54,7 +58,6 @@ export const schedulerEventSelectors = {
       };
     },
   ),
-  isMultiDayEvent: createSelector((state: State) => state.isMultiDayEvent),
   processedEventList: createSelectorMemoized(
     (state: State) => state.eventIdList,
     (state: State) => state.processedEventLookup,

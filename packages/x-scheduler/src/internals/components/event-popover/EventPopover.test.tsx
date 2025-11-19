@@ -75,7 +75,7 @@ describe('<EventPopoverContent />', () => {
       'aria-checked',
       'false',
     );
-    expect(screen.getByRole('combobox', { name: /resource/i }).textContent).to.match(/personal/i);
+    expect(screen.getByRole('button', { name: /resource/i }).textContent).to.match(/personal/i);
     await user.click(screen.getByRole('tab', { name: /recurrence/i }));
     expect(screen.getByRole('combobox', { name: /recurrence/i }).textContent).to.match(
       /don't repeat/i,
@@ -100,8 +100,9 @@ describe('<EventPopoverContent />', () => {
     await user.click(screen.getByRole('tab', { name: /recurrence/i }));
     await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
     await user.click(await screen.findByRole('option', { name: /repeats daily/i }));
-    await user.click(screen.getByRole('combobox', { name: /resource/i }));
-    await user.click(await screen.findByRole('option', { name: /work/i }));
+    await user.click(screen.getByRole('button', { name: /resource/i }));
+    await user.click(await screen.findByRole('menuitemradio', { name: /work/i }));
+    await user.click(await screen.findByRole('menuitemradio', { name: /pink/i }));
     await user.click(screen.getByRole('button', { name: /save changes/i }));
 
     expect(onEventsChange.calledOnce).to.equal(true);
@@ -116,6 +117,7 @@ describe('<EventPopoverContent />', () => {
       allDay: true,
       rrule: { freq: 'DAILY', interval: 1 },
       resource: 'r1',
+      color: 'pink',
     };
 
     expect(updated).to.deep.equal(expectedUpdatedEvent);
@@ -184,7 +186,7 @@ describe('<EventPopoverContent />', () => {
     expect(screen.queryByRole('checkbox', { name: /all day/i })).to.equal(null);
 
     // Should not have resource/recurrence comboboxes
-    expect(screen.queryByRole('combobox', { name: /resource/i })).to.equal(null);
+    expect(screen.queryByRole('button', { name: /resource/i })).to.equal(null);
     expect(screen.queryByRole('combobox', { name: /recurrence/i })).to.equal(null);
   });
 
@@ -217,7 +219,7 @@ describe('<EventPopoverContent />', () => {
     expect(screen.queryByRole('checkbox', { name: /all day/i })).to.equal(null);
 
     // Should not have resource/recurrence comboboxes
-    expect(screen.queryByRole('combobox', { name: /resource/i })).to.equal(null);
+    expect(screen.queryByRole('button', { name: /resource/i })).to.equal(null);
     expect(screen.queryByRole('combobox', { name: /recurrence/i })).to.equal(null);
   });
 
@@ -250,7 +252,7 @@ describe('<EventPopoverContent />', () => {
       </EventCalendarProvider>,
     );
 
-    expect(screen.getByRole('combobox', { name: /resource/i }).textContent).to.match(/NoColor/i);
+    expect(screen.getByRole('button', { name: /resource/i }).textContent).to.match(/NoColor/i);
     expect(document.querySelector('.ResourceLegendColor')).to.have.class(
       getColorClassName(DEFAULT_EVENT_COLOR),
     );
@@ -279,9 +281,7 @@ describe('<EventPopoverContent />', () => {
       </EventCalendarProvider>,
     );
 
-    expect(screen.getByRole('combobox', { name: /resource/i }).textContent).to.match(
-      /no resource/i,
-    );
+    expect(screen.getByRole('button', { name: /resource/i }).textContent).to.match(/no resource/i);
 
     expect(document.querySelector('.ResourceLegendColor')).to.have.class(
       getColorClassName(DEFAULT_EVENT_COLOR),
@@ -481,8 +481,8 @@ describe('<EventPopoverContent />', () => {
 
       await user.type(screen.getByLabelText(/event title/i), ' New title ');
       await user.type(screen.getByLabelText(/description/i), ' Some details ');
-      await user.click(screen.getByRole('combobox', { name: /resource/i }));
-      await user.click(await screen.findByRole('option', { name: /work/i }));
+      await user.click(screen.getByRole('button', { name: /resource/i }));
+      await user.click(await screen.findByRole('menuitemradio', { name: /work/i }));
       await user.click(screen.getByRole('tab', { name: /recurrence/i }));
       await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
       await user.click(await screen.findByRole('option', { name: /daily/i }));
@@ -491,7 +491,6 @@ describe('<EventPopoverContent />', () => {
       expect(createEventSpy?.calledOnce).to.equal(true);
       const payload = createEventSpy.lastCall.firstArg;
 
-      expect(payload.id).to.be.a('string');
       expect(payload.title).to.equal('New title');
       expect(payload.description).to.equal('Some details');
       expect(payload.allDay).to.equal(false);
@@ -942,6 +941,124 @@ describe('<EventPopoverContent />', () => {
             adapter.startOfDay(adapter.date('2025-07-20T00:00:00')),
           );
         });
+
+        it('should submit custom weekly with selected weekdays', async () => {
+          const onEventsChange = spy();
+
+          const { user } = render(
+            <EventCalendarProvider
+              events={[DEFAULT_EVENT]}
+              resources={resources}
+              onEventsChange={onEventsChange}
+            >
+              <Popover.Root open>
+                <EventPopoverContent {...defaultProps} />
+              </Popover.Root>
+            </EventCalendarProvider>,
+          );
+
+          await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+          await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+          await user.click(await screen.findByRole('option', { name: /custom/i }));
+
+          const repeatGroup = screen.getByRole('group', { name: /repeat/i });
+          const freqCombo = within(repeatGroup).getByRole('combobox');
+          await user.click(freqCombo);
+          await user.click(await screen.findByRole('option', { name: /weeks/i }));
+
+          // Select Monday and Friday in the weekly day toggles
+          await user.click(screen.getByRole('button', { name: /monday/i }));
+          await user.click(screen.getByRole('button', { name: /friday/i }));
+
+          await user.click(screen.getByRole('button', { name: /save changes/i }));
+
+          expect(onEventsChange.calledOnce).to.equal(true);
+          const updated = onEventsChange.firstCall.firstArg[0];
+
+          expect(updated.rrule).to.deep.equal({
+            freq: 'WEEKLY',
+            interval: 1,
+            byDay: ['MO', 'FR'],
+            byMonthDay: [],
+          });
+        });
+
+        it('should submit custom monthly with "day of month" option', async () => {
+          const onEventsChange = spy();
+
+          const { user } = render(
+            <EventCalendarProvider
+              events={[DEFAULT_EVENT]}
+              resources={resources}
+              onEventsChange={onEventsChange}
+            >
+              <Popover.Root open>
+                <EventPopoverContent {...defaultProps} />
+              </Popover.Root>
+            </EventCalendarProvider>,
+          );
+
+          await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+          await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+          await user.click(await screen.findByRole('option', { name: /custom/i }));
+
+          const repeatGroup = screen.getByRole('group', { name: /repeat/i });
+          const freqCombo = within(repeatGroup).getByRole('combobox');
+          await user.click(freqCombo);
+          await user.click(await screen.findByRole('option', { name: /months/i }));
+
+          await user.click(screen.getByRole('button', { name: /day 26/i })); // DEFAULT_EVENT is 2025-05-26
+
+          await user.click(screen.getByRole('button', { name: /save changes/i }));
+
+          expect(onEventsChange.calledOnce).to.equal(true);
+          const updated = onEventsChange.firstCall.firstArg[0];
+
+          expect(updated.rrule).to.deep.equal({
+            freq: 'MONTHLY',
+            interval: 1,
+            byMonthDay: [26],
+          });
+        });
+
+        it('should submit custom monthly with "ordinal weekday" option', async () => {
+          const onEventsChange = spy();
+
+          const { user } = render(
+            <EventCalendarProvider
+              events={[DEFAULT_EVENT]}
+              resources={resources}
+              onEventsChange={onEventsChange}
+            >
+              <Popover.Root open>
+                <EventPopoverContent {...defaultProps} />
+              </Popover.Root>
+            </EventCalendarProvider>,
+          );
+
+          await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+          await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+          await user.click(await screen.findByRole('option', { name: /custom/i }));
+
+          const repeatGroup = screen.getByRole('group', { name: /repeat/i });
+          const freqCombo = within(repeatGroup).getByRole('combobox');
+          await user.click(freqCombo);
+          await user.click(await screen.findByRole('option', { name: /months/i }));
+
+          // The DEFAULT_EVENT (2025-05-26 Mon) is the last Monday of the month ("-1MO")
+          await user.click(screen.getByRole('button', { name: /mon.*last week/i }));
+
+          await user.click(screen.getByRole('button', { name: /save changes/i }));
+
+          expect(onEventsChange.calledOnce).to.equal(true);
+          const updated = onEventsChange.firstCall.firstArg[0];
+
+          expect(updated.rrule).to.deep.equal({
+            freq: 'MONTHLY',
+            interval: 1,
+            byDay: ['-1MO'],
+          });
+        });
       });
     });
 
@@ -974,8 +1091,8 @@ describe('<EventPopoverContent />', () => {
         await user.type(screen.getByLabelText(/event title/i), ' updated ');
         await user.clear(screen.getByLabelText(/description/i));
         await user.type(screen.getByLabelText(/description/i), '  new description  ');
-        await user.click(screen.getByRole('combobox', { name: /resource/i }));
-        await user.click(await screen.findByRole('option', { name: /work/i }));
+        await user.click(screen.getByRole('button', { name: /resource/i }));
+        await user.click(await screen.findByRole('menuitemradio', { name: /work/i }));
         await user.click(screen.getByRole('button', { name: /save changes/i }));
 
         expect(updateEventSpy?.calledOnce).to.equal(true);
