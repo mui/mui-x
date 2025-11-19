@@ -101,10 +101,10 @@ const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset, hiddenIdentifi
     //
     // This way, when we draw the visible series, they will be stacked
     // correctly without gaps.
-    const visibleStackedData: [number, number][][] = [];
-    for (let layerIndex = 0; layerIndex < stackedSeries.length; layerIndex += 1) {
-      const layer = stackedSeries[layerIndex];
-      const layerResult: [number, number][] = new Array(layer.length);
+    const visibleStackedData: [number, number][][] = stackedSeries as [number, number][][];
+    for (let layerIndex = 0; layerIndex < visibleStackedData.length; layerIndex += 1) {
+      const layer = visibleStackedData[layerIndex];
+      const layerResult = { ...layer };
       for (let pointIndex = 0; pointIndex < layer.length; pointIndex += 1) {
         const point = layer[pointIndex];
         const id = ids[layerIndex];
@@ -113,13 +113,17 @@ const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset, hiddenIdentifi
         if (isHidden) {
           const diff = point[1] - point[0];
           // Remove the diff from all the upper layers
-          for (let j = layerIndex + 1; j < stackedSeries.length; j += 1) {
-            stackedSeries[j][pointIndex][0] -= diff;
-            stackedSeries[j][pointIndex][1] -= diff;
+          for (let j = layerIndex + 1; j < visibleStackedData.length; j += 1) {
+            const upperPoint = visibleStackedData[j][pointIndex];
+
+            upperPoint[0] -= diff;
+            upperPoint[1] -= diff;
           }
-          layerResult[pointIndex] = [point[0], point[0]];
+          layerResult[pointIndex][0] = point[0];
+          layerResult[pointIndex][1] = point[0];
         } else {
-          layerResult[pointIndex] = [point[0], point[1]];
+          layerResult[pointIndex][0] = point[0];
+          layerResult[pointIndex][1] = point[1];
         }
       }
       visibleStackedData[layerIndex] = layerResult;
