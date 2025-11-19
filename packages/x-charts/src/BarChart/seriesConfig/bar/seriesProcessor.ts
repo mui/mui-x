@@ -80,69 +80,26 @@ const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset, hiddenIdentifi
       return series[id].data === undefined && dataKey !== undefined ? dataKey : id;
     });
 
-    const stackedSeries = d3Stack<any, DatasetElementType<number | null>, SeriesId>()
+    const fullStackedData = d3Stack<any, DatasetElementType<number | null>, SeriesId>()
       .keys(keys)
       .value((d, key) => d[key] ?? 0) // defaultize null value to 0
       .order(stackingOrder)
       .offset(stackingOffset)(d3Dataset);
 
-    const fullStackedData = stackedSeries.map((layer) =>
-      layer.map((point) => [point[0], point[1]] as [number, number]),
-    );
+    // We sort the keys based on the original stacking order to ensure consistency
+    const idOrder = fullStackedData.sort((a, b) => a.index - b.index).map((s) => s.key);
 
-    // This is a bit complex: we need to create a version of the stacked data
-    // where the hidden series are replaced by 0-height bars, but the other
-    // series keep their original height (i.e. the space taken by the hidden
-    // series is removed from the chart).
-    //
-    // To do that, we iterate over each layer, and for each hidden series,
-    // we compute the diff between its start and end values, and remove that
-    // diff from all the upper layers.
-    //
-    // This way, when we draw the visible series, they will be stacked
-    // correctly without gaps.
-    //
-    // For negative and positive values, we need to handle them separately:
-    // - When a negative value is hidden, only other negative values in the stack should be adjusted
-    // - When a positive value is hidden, only other positive values in the stack should be adjusted
-    const visibleStackedData: [number, number][][] = stackedSeries as [number, number][][];
-    for (let layerIndex = 0; layerIndex < visibleStackedData.length; layerIndex += 1) {
-      const layer = visibleStackedData[layerIndex];
-      const layerResult = { ...layer };
-      for (let pointIndex = 0; pointIndex < layer.length; pointIndex += 1) {
-        const point = layer[pointIndex];
-        const id = ids[layerIndex];
-        const isHidden = hiddenIds.has(id);
-
-        if (isHidden) {
-          const diff = point[1] - point[0];
-          // Get the original data value to determine if it's negative
-          const key = keys[layerIndex];
-          const originalValue = d3Dataset[pointIndex]?.[key] ?? 0;
-          const isNegative = originalValue < 0;
-
-          // Remove the diff from all the upper layers, but only for values with the same sign
-          for (let j = layerIndex + 1; j < visibleStackedData.length; j += 1) {
-            const upperPoint = visibleStackedData[j][pointIndex];
-            const upperKey = keys[j];
-            const upperOriginalValue = d3Dataset[pointIndex]?.[upperKey] ?? 0;
-            const isUpperNegative = upperOriginalValue < 0;
-
-            // Only adjust if both are negative or both are positive
-            if (isNegative === isUpperNegative) {
-              upperPoint[0] -= diff;
-              upperPoint[1] -= diff;
-            }
-          }
-          layerResult[pointIndex][0] = point[0];
-          layerResult[pointIndex][1] = point[0];
-        } else {
-          layerResult[pointIndex][0] = point[0];
-          layerResult[pointIndex][1] = point[1];
+    // Compute visible stacked data
+    const visibleStackedData = d3Stack<any, DatasetElementType<number | null>, SeriesId>()
+      .keys(idOrder)
+      .value((d, key) => {
+        const data = d[key] ?? 0;
+        if (hiddenIds.has(ids[keys.findIndex((k) => k === key)])) {
+          return 0;
         }
-      }
-      visibleStackedData[layerIndex] = layerResult;
-    }
+        return data;
+      }) // defaultize null value to 0
+      .offset(stackingOffset)(d3Dataset);
 
     ids.forEach((id, index) => {
       const dataKey = series[id].dataKey;
@@ -159,8 +116,8 @@ const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset, hiddenIdentifi
         valueFormatter: series[id].valueFormatter ?? barValueFormatter,
         ...series[id],
         data,
-        fullStackedData: fullStackedData[index],
-        visibleStackedData: visibleStackedData[index],
+        fullStackedData: fullStackedData[index] as [number, number][],
+        visibleStackedData: visibleStackedData[index] as [number, number][],
       };
     });
   });
