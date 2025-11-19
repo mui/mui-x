@@ -41,13 +41,11 @@ export const itemsReorderingSelectors = {
     },
   ),
   /**
-   * Checks whether an item is a valid target for the dragged item.
+   * Checks whether an item is being dragged.
    */
-  isItemValidDropTarget: createSelector(
-    (state: TreeViewState<[UseTreeViewItemsReorderingSignature]>, itemId: TreeViewItemId) => {
-      const draggedItemId = state.itemsReordering.currentReorder?.draggedItemId;
-      return draggedItemId != null && draggedItemId !== itemId;
-    },
+  isDragging: createSelector(
+    (state: TreeViewState<[UseTreeViewItemsReorderingSignature]>) =>
+      !!state.itemsReordering.currentReorder?.draggedItemId,
   ),
   /**
    * Checks whether an item can be reordered.
