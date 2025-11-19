@@ -42,6 +42,8 @@ function getMondayWeekDayNumber(adapter: Adapter) {
     mondayMap.set(adapter, monday);
   }
 
+  console.log(monday);
+
   return adapter.getDayOfWeek(monday);
 }
 
@@ -1150,7 +1152,7 @@ export function parseRRuleString(
   }
 
   if (rruleObject.UNTIL) {
-    const parsed = adapter.date(rruleObject.UNTIL, 'default');
+    const parsed = adapter.parse(rruleObject.UNTIL, getUntilFormat(adapter), 'default');
 
     if (!adapter.isValid(parsed)) {
       throw new Error(`Scheduler: Invalid UNTIL date: "${rruleObject.UNTIL}"`);
@@ -1200,18 +1202,22 @@ export function serializeRRule(adapter: Adapter, rule: RecurringEventRecurrenceR
 
   if (rule.until) {
     const utcDate = adapter.setTimezone(rule.until, 'UTC');
-
-    // RFC5545 format: YYYYMMDDTHHmmssZ
-    const f = adapter.formats;
-    const dateFormat = `${f.yearPadded}${f.monthPadded}${f.dayOfMonthPadded}`;
-    const dateTimeSeparator = `${adapter.escapedCharacters.start}T${adapter.escapedCharacters.end}`;
-    const timeFormat = `${f.hours24hPadded}${f.minutesPadded}${f.secondsPadded}`;
-    const timezoneSuffix = `${adapter.escapedCharacters.start}Z${adapter.escapedCharacters.end}`;
-    const format = `${dateFormat}${dateTimeSeparator}${timeFormat}${timezoneSuffix}`;
-    const untilIso = adapter.formatByString(utcDate, format);
+    const untilIso = adapter.formatByString(utcDate, getUntilFormat(adapter));
 
     parts.push(`UNTIL=${untilIso}`);
   }
 
   return parts.join(';');
+}
+
+/**
+ * Builds the date format string for UNTIL serialization (RFC5545 format: YYYYMMDDTHHmmssZ)
+ */
+function getUntilFormat(adapter: Adapter): string {
+  const f = adapter.formats;
+  const dateFormat = `${f.yearPadded}${f.monthPadded}${f.dayOfMonthPadded}`;
+  const dateTimeSeparator = `${adapter.escapedCharacters.start}T${adapter.escapedCharacters.end}`;
+  const timeFormat = `${f.hours24hPadded}${f.minutesPadded}${f.secondsPadded}`;
+  const timezoneSuffix = `${adapter.escapedCharacters.start}Z${adapter.escapedCharacters.end}`;
+  return `${dateFormat}${dateTimeSeparator}${timeFormat}${timezoneSuffix}`;
 }
