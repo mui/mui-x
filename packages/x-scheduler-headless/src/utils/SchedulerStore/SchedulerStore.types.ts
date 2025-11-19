@@ -205,7 +205,7 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
    */
   readOnly?: boolean;
   /**
-   * Configures how event are created.
+   * Configures how events are created.
    * If `false`, event creation is disabled.
    * If `true`, event creation is enabled with default configuration.
    * If an object, event creation is enabled with the provided configuration.
