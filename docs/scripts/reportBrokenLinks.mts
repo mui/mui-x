@@ -12,7 +12,8 @@ async function main() {
       // /^\/(base-ui|joy-ui|store|toolpad)(\/|$)/,
     ],
     knownTargetsDownloadUrl: [
-      'https://deploy-preview-47113--material-ui.netlify.app/material-ui/link-structure.json',
+      // TODO: replace with https://mui.com/material-ui/link-structure.json when available
+      'https://material-ui.netlify.app/material-ui/link-structure.json',
     ],
   });
 
