@@ -64,6 +64,7 @@ Same changes as in `@mui/x-date-pickers@8.19.0`.
 - [charts] Remove `touch-action: pan-y` when zoom is disabled (#20204) @bernardobelchior
 - [charts] Use `getBBox()` for correct SVG sizes in firefox (#20309) @JCQuintas
 - [charts] Use directly selector from `@mui/x-internals` (#20365) @alexfauquette
+- [charts] Fix unnecessary errors in dev mode (#20380) @JCQuintas
 
 #### `@mui/x-charts-pro@8.19.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
