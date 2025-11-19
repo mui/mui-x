@@ -59,6 +59,7 @@
     "babel-plugin-react-remove-properties": "catalog:",
     "babel-plugin-transform-react-remove-prop-types": "catalog:",
     "chance": "catalog:",
+    "clean-css": "^5.3.3",
     "clipboard-copy": "^4.0.1",
     "clsx": "catalog:",
     "cross-env": "catalog:",
