@@ -12,6 +12,8 @@ _Nov 19, 2025_
 We'd like to extend a big thank you to the 15 contributors who made this release possible. Here are some highlights ✨:
 
 - 🔎 Add pan on `wheel` to the charts zoom
+- ⌨️ Allow opt-in to [tab navigation](https://mui.com/x/react-data-grid/accessibility/#tab-navigation) inside the Data Grid.
+- ⚙️ New way of defining [action columns](https://mui.com/x/react-data-grid/column-definition/#ActionsWithModalGrid.tsx) in the Data Grid that makes it easier to keep `columns` prop stable.
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
