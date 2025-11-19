@@ -124,6 +124,7 @@ export class SchedulerStore<
       eventColor: parameters.eventColor ?? DEFAULT_EVENT_COLOR,
       showCurrentTimeIndicator: parameters.showCurrentTimeIndicator ?? true,
       readOnly: parameters.readOnly ?? false,
+      eventCreation: parameters.eventCreation ?? true,
     };
   }
 

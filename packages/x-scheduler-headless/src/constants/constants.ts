@@ -1,8 +1,6 @@
-import { SchedulerEventColor } from '../models';
+import { SchedulerEventColor, SchedulerEventCreationConfig } from '../models';
 
 export const EVENT_CREATION_PRECISION_MINUTE = 30;
-
-export const EVENT_CREATION_DEFAULT_LENGTH_MINUTE = 30;
 
 // TODO: Add a color prop to the SchedulerStore and move DEFAULT_EVENT_COLOR there.
 export const DEFAULT_EVENT_COLOR: SchedulerEventColor = 'jade';
@@ -34,3 +32,8 @@ export const AGENDA_MAX_HORIZON_DAYS = 180;
 
 // TODO: Create a prop to allow users to customize the number of days in agenda view
 export const AGENDA_VIEW_DAYS_AMOUNT = 12;
+
+export const DEFAULT_EVENT_CREATION_CONFIG: SchedulerEventCreationConfig = {
+  interaction: 'double-click',
+  duration: 30,
+};

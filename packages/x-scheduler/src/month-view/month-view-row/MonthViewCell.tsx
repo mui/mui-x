@@ -10,16 +10,14 @@ import {
   eventCalendarOccurrencePlaceholderSelectors,
   eventCalendarViewSelectors,
 } from '@mui/x-scheduler-headless/event-calendar-selectors';
-import {
-  schedulerEventSelectors,
-  schedulerOtherSelectors,
-} from '@mui/x-scheduler-headless/scheduler-selectors';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 import { DayGridEvent } from '../../internals/components/event/day-grid-event/DayGridEvent';
 import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { EventPopoverTrigger } from '../../internals/components/event-popover';
 import { MoreEventsPopoverTrigger } from '../../internals/components/more-events-popover/MoreEventsPopover';
 import { useEventPopoverContext } from '../../internals/components/event-popover/EventPopover';
+import { useEventCreationProps } from '../../internals/hooks/useEventCreationProps';
 import { formatMonthAndDayOfMonth } from '../../internals/utils/date-utils';
 import { isOccurrenceAllDayOrMultipleDay } from '../../internals/utils/event-utils';
 import './MonthViewWeekRow.css';
@@ -74,11 +72,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   // Day number header + max events
   const rowCount = 1 + maxEvents;
 
-  const handleDoubleClick = () => {
-    if (!schedulerEventSelectors.canCreateNewEvent(store.state)) {
-      return;
-    }
-
+  const eventCreationProps = useEventCreationProps(() => {
     store.setOccurrencePlaceholder({
       type: 'creation',
       surfaceType: 'day-grid',
@@ -87,7 +81,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
       lockSurfaceType: true,
       resourceId: null,
     });
-  };
+  });
 
   React.useEffect(() => {
     if (!isCreatingAnEvent || !placeholder || !cellRef.current) {
@@ -109,7 +103,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
         isWeekend(adapter, day.value) && 'Weekend',
       )}
       style={{ '--row-count': rowCount } as React.CSSProperties}
-      onDoubleClick={handleDoubleClick}
+      {...eventCreationProps}
     >
       {hasDayView ? (
         <button
