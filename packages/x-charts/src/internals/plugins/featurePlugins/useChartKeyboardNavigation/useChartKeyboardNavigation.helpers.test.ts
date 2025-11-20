@@ -28,11 +28,13 @@ const seriesSingleType: ProcessedSeries<'bar'> = {
       b: {
         data: [1, 2],
         id: 'b',
+        hidden: false,
         ...barSeries,
       },
       a: {
         data: [1, 2],
         id: 'a',
+        hidden: false,
         ...barSeries,
       },
     },
@@ -47,11 +49,13 @@ const seriesMultipleTypes: ProcessedSeries<'bar' | 'line'> = {
       b: {
         data: [1, 2],
         id: 'b',
+        hidden: false,
         ...barSeries,
       },
       a: {
         data: [1, 2],
         id: 'a',
+        hidden: false,
         ...barSeries,
       },
     },
@@ -63,11 +67,13 @@ const seriesMultipleTypes: ProcessedSeries<'bar' | 'line'> = {
       b: {
         data: [1, 2],
         id: 'b',
+        hidden: false,
         ...lineSeries,
       },
       a: {
         data: [1, 2],
         id: 'a',
+        hidden: false,
         ...lineSeries,
       },
     },
