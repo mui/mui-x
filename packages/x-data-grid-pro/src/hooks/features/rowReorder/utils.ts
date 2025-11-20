@@ -141,21 +141,6 @@ export const isDescendantOf = (
   return false;
 };
 
-// Build a simple string path to a node (for tree data paths)
-export const buildTreeDataPath = (node: GridTreeNode, tree: GridRowTreeConfig): string[] => {
-  const path: string[] = [];
-  let current = node;
-
-  while (current && current.id !== GRID_ROOT_GROUP_ID) {
-    if ((current.type === 'leaf' || current.type === 'group') && current.groupingKey !== null) {
-      path.unshift(String(current.groupingKey));
-    }
-    current = tree[current.parent!];
-  }
-
-  return path;
-};
-
 // Update depths for all descendant nodes recursively
 export const updateDescendantDepths = (
   group: GridGroupNode,
