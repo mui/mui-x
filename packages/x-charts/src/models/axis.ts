@@ -18,7 +18,7 @@ import { ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
 import { ChartsTextProps } from '../ChartsText';
 import { ContinuousColorConfig, OrdinalColorConfig, PiecewiseColorConfig } from './colorMapping';
-import { TimeOrdinalTicks } from '../internals/timeTicks';
+import { TimeOrdinalTicks } from './timeTicks';
 
 export type AxisId = string | number;
 
@@ -298,13 +298,11 @@ export interface AxisScaleConfig {
   } & AxisGroups;
   log: {
     scaleType: 'log';
-    timeOrdinalTicks?: never;
     scale: ScaleLogarithmic<number, number>;
     colorMap?: ContinuousColorConfig | PiecewiseColorConfig;
   };
   symlog: {
     scaleType: 'symlog';
-    timeOrdinalTicks?: never;
     scale: ScaleSymLog<number, number>;
     colorMap?: ContinuousColorConfig | PiecewiseColorConfig;
     /**
@@ -315,31 +313,26 @@ export interface AxisScaleConfig {
   };
   pow: {
     scaleType: 'pow';
-    timeOrdinalTicks?: never;
     scale: ScalePower<number, number>;
     colorMap?: ContinuousColorConfig | PiecewiseColorConfig;
   };
   sqrt: {
     scaleType: 'sqrt';
-    timeOrdinalTicks?: never;
     scale: ScalePower<number, number>;
     colorMap?: ContinuousColorConfig | PiecewiseColorConfig;
   };
   time: {
     scaleType: 'time';
-    timeOrdinalTicks?: never;
     scale: ScaleTime<number, number>;
     colorMap?: ContinuousColorConfig | PiecewiseColorConfig;
   };
   utc: {
     scaleType: 'utc';
-    timeOrdinalTicks?: never;
     scale: ScaleTime<number, number>;
     colorMap?: ContinuousColorConfig | PiecewiseColorConfig;
   };
   linear: {
     scaleType: 'linear';
-    timeOrdinalTicks?: never;
     scale: ScaleLinear<number, number>;
     colorMap?: ContinuousColorConfig | PiecewiseColorConfig;
   };

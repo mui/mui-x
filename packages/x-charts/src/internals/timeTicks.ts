@@ -1,19 +1,4 @@
-export type TicksFrequencyDefinition = {
-  getTickNumber: (from: Date, to: Date) => number;
-  isTick: (prev: Date, value: Date) => boolean;
-  format: (d: Date) => string;
-};
-
-export type TicksFrequency =
-  | 'years'
-  | 'quarters'
-  | 'months'
-  | 'biweekly'
-  | 'weeks'
-  | 'days'
-  | 'hours';
-
-export type TimeOrdinalTicks = (TicksFrequencyDefinition | TicksFrequency)[];
+import { TicksFrequency, TicksFrequencyDefinition } from '../models/timeTicks';
 
 function yearNumber(from: Date, to: Date) {
   return Math.abs(to.getFullYear() - from.getFullYear());
