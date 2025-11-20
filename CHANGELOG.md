@@ -61,6 +61,7 @@ Same changes as in `@mui/x-date-pickers@8.19.0`.
 #### `@mui/x-charts@8.19.0`
 
 - [charts] Expose `niceDomain` utility (#20250) @bernardobelchior
+- [charts] Fix benchmark regression by downgrading to JSDOM v26 (#20405) @bernardobelchior 
 - [charts] Fix Pie Chart keyboard focus highlight (#20358) @JCQuintas
 - [charts] Memoize series selectors (#20326) @JCQuintas
 - [charts] Relax dataset type (#20294) @bernardobelchior
