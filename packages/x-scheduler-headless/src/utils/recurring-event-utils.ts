@@ -412,7 +412,7 @@ export function estimateOccurrencesUpTo(
   seriesStart: SchedulerValidDate,
   date: SchedulerValidDate,
 ): number {
-  if (adapter.isBeforeDay(date, seriesStart)) {
+  if (adapter.isBefore(date, adapter.startOfDay(seriesStart))) {
     return 0;
   }
 
@@ -469,7 +469,8 @@ export function countWeeklyOccurrencesUpToExact(
   seriesStart: SchedulerValidDate,
   date: SchedulerValidDate,
 ): number {
-  if (adapter.isBeforeDay(date, seriesStart)) {
+  const seriesStartDay = adapter.startOfDay(seriesStart);
+  if (adapter.isBefore(date, seriesStartDay)) {
     return 0;
   }
 
@@ -479,6 +480,7 @@ export function countWeeklyOccurrencesUpToExact(
 
   const seriesWeekStart = adapter.startOfWeek(seriesStart);
   const targetWeekStart = adapter.startOfWeek(date);
+  const dateEndDay = adapter.endOfDay(date);
 
   let count = 0;
 
@@ -492,10 +494,7 @@ export function countWeeklyOccurrencesUpToExact(
     for (const code of byDay) {
       const occurrenceDay = dayInWeek(adapter, week, code);
 
-      if (adapter.isBeforeDay(occurrenceDay, seriesStart)) {
-        continue;
-      }
-      if (adapter.isAfterDay(occurrenceDay, date)) {
+      if (!adapter.isWithinRange(occurrenceDay, [seriesStartDay, dateEndDay])) {
         continue;
       }
 
@@ -524,6 +523,9 @@ export function countMonthlyOccurrencesUpToExact(
     return 0;
   }
 
+  const seriesStartDay = adapter.startOfDay(seriesStart);
+  const dateEndDay = adapter.endOfDay(date);
+
   const interval = Math.max(1, rule.interval ?? 1);
 
   // Path A: BYDAY with ordinals (e.g. 2TU, -1FR). Not mixed with BYMONTHDAY.
@@ -547,10 +549,7 @@ export function countMonthlyOccurrencesUpToExact(
         continue;
       }
 
-      if (adapter.isBeforeDay(occurrenceDate, seriesStart)) {
-        continue;
-      }
-      if (adapter.isAfterDay(occurrenceDate, date)) {
+      if (!adapter.isWithinRange(occurrenceDate, [seriesStartDay, dateEndDay])) {
         continue;
       }
 
@@ -584,10 +583,7 @@ export function countMonthlyOccurrencesUpToExact(
     }
 
     const candidate = adapter.startOfDay(adapter.setDate(month, dayOfMonth));
-    if (adapter.isBeforeDay(candidate, seriesStart)) {
-      continue;
-    }
-    if (adapter.isAfterDay(candidate, date)) {
+    if (!adapter.isWithinRange(candidate, [seriesStartDay, dateEndDay])) {
       continue;
     }
 
@@ -610,6 +606,8 @@ export function countYearlyOccurrencesUpToExact(
   date: SchedulerValidDate,
 ): number {
   const seriesStartYear = adapter.startOfYear(seriesStart);
+  const seriesStartDay = adapter.startOfDay(seriesStart);
+  const dateEndDay = adapter.endOfDay(date);
   const targetYearStart = adapter.startOfYear(date);
   if (adapter.isBefore(targetYearStart, seriesStartYear)) {
     return 0;
@@ -647,10 +645,8 @@ export function countYearlyOccurrencesUpToExact(
     }
 
     const candidate = adapter.startOfDay(adapter.setDate(monthAnchor, targetDayOfMonth));
-    if (adapter.isBeforeDay(candidate, seriesStart)) {
-      continue;
-    }
-    if (adapter.isAfterDay(candidate, date)) {
+
+    if (!adapter.isWithinRange(candidate, [seriesStartDay, dateEndDay])) {
       continue;
     }
 
@@ -1154,7 +1150,7 @@ export function parseRRuleString(
   }
 
   if (rruleObject.UNTIL) {
-    const parsed = adapter.date(rruleObject.UNTIL);
+    const parsed = adapter.parse(rruleObject.UNTIL, getUntilFormat(adapter), 'default');
 
     if (!adapter.isValid(parsed)) {
       throw new Error(`Scheduler: Invalid UNTIL date: "${rruleObject.UNTIL}"`);
@@ -1204,12 +1200,22 @@ export function serializeRRule(adapter: Adapter, rule: RecurringEventRecurrenceR
 
   if (rule.until) {
     const utcDate = adapter.setTimezone(rule.until, 'UTC');
-
-    // RFC5545 format: YYYYMMDDTHHmmssZ
-    const untilIso = adapter.formatByString(utcDate, "yyyyMMdd'T'HHmmss'Z'");
+    const untilIso = adapter.formatByString(utcDate, getUntilFormat(adapter));
 
     parts.push(`UNTIL=${untilIso}`);
   }
 
   return parts.join(';');
+}
+
+/**
+ * Builds the date format string for UNTIL serialization (RFC5545 format: YYYYMMDDTHHmmssZ)
+ */
+function getUntilFormat(adapter: Adapter): string {
+  const f = adapter.formats;
+  const dateFormat = `${f.yearPadded}${f.monthPadded}${f.dayOfMonthPadded}`;
+  const dateTimeSeparator = `${adapter.escapedCharacters.start}T${adapter.escapedCharacters.end}`;
+  const timeFormat = `${f.hours24hPadded}${f.minutesPadded}${f.secondsPadded}`;
+  const timezoneSuffix = `${adapter.escapedCharacters.start}Z${adapter.escapedCharacters.end}`;
+  return `${dateFormat}${dateTimeSeparator}${timeFormat}${timezoneSuffix}`;
 }

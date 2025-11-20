@@ -93,14 +93,14 @@ This sections is only here to track what the DX will look like once available.
 In your custom view, you have to use the `useEventCalendarView()` hook to register your view in the parent component.
 
 ```tsx
-import { DateTime } from 'luxon';
+import { addDays } from 'date-fns';
 import { useEventCalendarView } from '@mui/x-scheduler-headless/use-event-calendar-view';
 
 function CustomView() {
   const adapter = useAdapter();
 
   useEventCalendarView(() => ({
-    siblingVisibleDateGetter: (date, delta) => date.plus({ days: delta }),
+    siblingVisibleDateGetter: (date, delta) => addDays(date, delta),
   }));
 }
 ```
@@ -128,39 +128,34 @@ return (
 
 :::
 
-### Color palettes
-
-The Event Calendar supports several color palettes.
-
-Event colors can be set at two levels. The effective color resolves in the following order:
-
-1. The `eventColor` assigned to the event's resource
+### Initialize / control the preferences
 
 ```tsx
-<EventCalendar resources={[{ id: '1', title: 'Resource 1', eventColor: 'pink' }]} />
+const defaultPreferences = {
+  ampm: false,
+  showWeekends: false,
+  isSidePanelOpen: false,
+}
+
+<EventCalendar defaultPreferences={defaultPreferences} />;
 ```
 
-2. The `eventColor` assigned to the Event Calendar
+{{"demo": "DefaultPreferences.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::success
+You can also control the preferences using `preferences` and `onPreferencesChange` props:
 
 ```tsx
-<EventCalendar eventColor="pink" />
+const [preferences, setPreferences] = React.useState<
+  Partial<EventCalendarPreferences>
+>({});
+
+return (
+  <EventCalendar preferences={preferences} onPreferencesChange={setPreferences} />
+);
 ```
 
-3. The default color palette, `"jade"`
-
-The following demo shows one event for each palette:
-
-{{"demo": "ColorPalettes.js", "bg": "inline", "defaultCodeOpen": false}}
-
-### Translations
-
-```tsx
-import { frFR } from '@mui/x-scheduler/translations';
-
-<EventCalendar translations={frFR} />;
-```
-
-{{"demo": "Translations.js", "bg": "inline", "defaultCodeOpen": false}}
+:::
 
 ### Preferences menu
 
@@ -186,3 +181,43 @@ preferencesMenuConfig={{ toggleWeekendVisibility: false, toggleWeekNumberVisibil
 ```
 
 {{"demo": "PreferencesMenu.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Color palettes
+
+The Event Calendar supports several color palettes.
+
+Event colors can be set at two levels. The effective color resolves in the following order:
+
+1. The `color` assigned to the event
+
+```tsx
+<EventCalendar events={[{ id: '1', title: 'Event 1', color: 'pink' }]} />
+```
+
+2. The `eventColor` assigned to the event's resource
+
+```tsx
+<EventCalendar resources={[{ id: '1', title: 'Resource 1', eventColor: 'pink' }]} />
+```
+
+3. The `eventColor` assigned to the Event Calendar
+
+```tsx
+<EventCalendar eventColor="pink" />
+```
+
+4. The default color palette, `"jade"`
+
+The following demo shows one event for each palette:
+
+{{"demo": "ColorPalettes.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Translations
+
+```tsx
+import { frFR } from '@mui/x-scheduler/translations';
+
+<EventCalendar translations={frFR} />;
+```
+
+{{"demo": "Translations.js", "bg": "inline", "defaultCodeOpen": false}}
