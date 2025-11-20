@@ -54,6 +54,32 @@ storeClasses.forEach((storeClass) => {
         expect(store.state.visibleDate).toEqualDateTime(todayStart);
         expect(onVisibleDateChange.called).to.equal(false);
       });
+
+      it('should use the provided timezone when going to today (uncontrolled)', () => {
+        const onVisibleDateChange = spy();
+        const timezone = 'Pacific/Kiritimati';
+
+        const yesterday = adapter.addDays(adapter.startOfDay(adapter.now('default')), -1);
+
+        const store = new storeClass.Value(
+          {
+            ...DEFAULT_PARAMS,
+            defaultVisibleDate: yesterday,
+            onVisibleDateChange,
+            timezone,
+          },
+          adapter,
+        );
+
+        store.goToToday({} as any);
+
+        const expected = adapter.startOfDay(adapter.now(timezone));
+
+        expect(store.state.visibleDate).toEqualDateTime(expected);
+        expect(store.state.timezone).to.equal(timezone);
+        expect(onVisibleDateChange.calledOnce).to.equal(true);
+        expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(expected);
+      });
     });
   });
 });
