@@ -11,13 +11,13 @@ export type GridChartsRendererProxyRendererCallback = (
   Component: React.ComponentType<any>,
 ) => React.ReactNode;
 
-type GridChartsRendererProxyRenderer = React.ComponentType<{
+type GridChartsRendererProxyRenderer = (props: {
   dimensions: ChartState['dimensions'];
   values: ChartState['values'];
   chartType: ChartState['type'];
   configuration: ChartState['configuration'];
   onRender?: GridChartsRendererProxyRendererCallback;
-}>;
+}) => any;
 
 export interface GridChartsRendererProxyProps {
   /**
