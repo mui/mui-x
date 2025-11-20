@@ -72,7 +72,11 @@ function ScatterPlot(props: ScatterPlotProps) {
   return (
     <React.Fragment>
       {seriesOrder.map((seriesId) => {
-        const { id, xAxisId, yAxisId, zAxisId, color } = series[seriesId];
+        const { id, xAxisId, yAxisId, zAxisId, color, hidden } = series[seriesId];
+
+        if (hidden) {
+          return null;
+        }
 
         const colorGetter = scatterSeriesConfig.colorProcessor(
           series[seriesId],
