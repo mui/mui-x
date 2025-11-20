@@ -274,8 +274,8 @@ importers:
         specifier: 'catalog:'
         version: 7.3.5(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@mui/monorepo':
-        specifier: github:mui/material-ui#15ff3955e950f3d1ee70b0ea9d9fd8c1057ee0cb
-        version: https://codeload.github.com/mui/material-ui/tar.gz/15ff3955e950f3d1ee70b0ea9d9fd8c1057ee0cb(@babel/core@7.28.5)(@types/express@5.0.3)(karma@6.4.4)
+        specifier: github:mui/material-ui#d5e68b881225b9d518f58aad68f0fb05317210da
+        version: https://codeload.github.com/mui/material-ui/tar.gz/d5e68b881225b9d518f58aad68f0fb05317210da(@babel/core@7.28.5)(@types/express@5.0.3)(karma@6.4.4)
       '@mui/utils':
         specifier: 'catalog:'
         version: 7.3.5(@types/react@19.2.2)(react@19.2.0)
@@ -4182,10 +4182,10 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/15ff3955e950f3d1ee70b0ea9d9fd8c1057ee0cb':
-    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/15ff3955e950f3d1ee70b0ea9d9fd8c1057ee0cb}
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/d5e68b881225b9d518f58aad68f0fb05317210da':
+    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/d5e68b881225b9d518f58aad68f0fb05317210da}
     version: 7.3.5
-    engines: {node: '>=22.18.0', pnpm: 10.20.0}
+    engines: {node: '>=22.18.0', pnpm: 10.22.0}
 
   '@mui/private-theming@5.17.1':
     resolution: {integrity: sha512-XMxU0NTYcKqdsG8LRmSoxERPXwMbp16sIXPcLVgLGII/bVNagX0xaheWAwFv8+zDK7tI3ajllkuD3GZZE++ICQ==}
@@ -5121,6 +5121,7 @@ packages:
   '@smithy/core@3.18.0':
     resolution: {integrity: sha512-vGSDXOJFZgOPTatSI1ly7Gwyy/d/R9zh2TO3y0JZ0uut5qQ88p9IaWaZYIWSSqtdekNM4CGok/JppxbAff4KcQ==}
     engines: {node: '>=18.0.0'}
+    deprecated: Please upgrade your lockfile to use the latest 3.x version of @smithy/core for various fixes, see https://github.com/smithy-lang/smithy-typescript/blob/main/packages/core/CHANGELOG.md
 
   '@smithy/credential-provider-imds@4.2.5':
     resolution: {integrity: sha512-BZwotjoZWn9+36nimwm/OLIcVe+KYRwzMjfhd4QT7QxPm9WY0HiOV8t/Wlh+HVUif0SBVV7ksq8//hPaBC/okQ==}
@@ -14736,7 +14737,7 @@ snapshots:
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0)
       '@types/react': 19.2.2
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/15ff3955e950f3d1ee70b0ea9d9fd8c1057ee0cb(@babel/core@7.28.5)(@types/express@5.0.3)(karma@6.4.4)':
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/d5e68b881225b9d518f58aad68f0fb05317210da(@babel/core@7.28.5)(@types/express@5.0.3)(karma@6.4.4)':
     dependencies:
       '@netlify/functions': 5.1.0
       '@slack/bolt': 4.6.0(@types/express@5.0.3)
