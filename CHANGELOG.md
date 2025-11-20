@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 8.19.0
 
-_Nov 19, 2025_
+_Nov 20, 2025_
 
 We'd like to extend a big thank you to the 15 contributors who made this release possible. Here are some highlights ✨:
 
