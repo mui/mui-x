@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useChartContext } from '../context/ChartProvider';
-import { AxisConfig, D3ContinuousScale, D3Scale } from '../models/axis';
+import { AxisConfig, D3ContinuousScale, D3OrdinalScale, D3Scale } from '../models/axis';
 import { isOrdinalScale } from '../internals/scaleGuards';
 import { isInfinity } from '../internals/isInfinity';
 
@@ -64,6 +64,16 @@ export type TickItemType = {
   labelOffset: number;
 };
 
+function getTickPosition(
+  scale: D3OrdinalScale,
+  value: any,
+  placement: Required<TickParams>['tickPlacement'],
+) {
+  return (
+    scale(value)! - (scale.step() - scale.bandwidth()) / 2 + offsetRatio[placement] * scale.step()
+  );
+}
+
 export function getTicks(
   options: {
     scale: D3Scale;
@@ -95,8 +105,14 @@ export function getTicks(
         (typeof tickInterval === 'object' && tickInterval) ||
         domain;
 
+      const startIndex = filteredDomain.findIndex((value) =>
+        isInside(getTickPosition(scale, value, tickPlacement)),
+      );
+      const endIndex = filteredDomain.findLastIndex((value) =>
+        isInside(getTickPosition(scale, value, tickPlacement)),
+      );
       return [
-        ...filteredDomain.map((value) => {
+        ...filteredDomain.slice(startIndex, endIndex + 1).map((value) => {
           const defaultTickLabel = `${value}`;
 
           return {
@@ -104,10 +120,7 @@ export function getTicks(
             formattedValue:
               valueFormatter?.(value, { location: 'tick', scale, tickNumber, defaultTickLabel }) ??
               defaultTickLabel,
-            offset:
-              scale(value)! -
-              (scale.step() - scale.bandwidth()) / 2 +
-              offsetRatio[tickPlacement] * scale.step(),
+            offset: getTickPosition(scale, value, tickPlacement),
             labelOffset:
               tickLabelPlacement === 'tick'
                 ? 0
@@ -115,14 +128,14 @@ export function getTicks(
           };
         }),
 
-        ...(tickPlacement === 'extremities'
+        ...(tickPlacement === 'extremities' && endIndex === domain.length - 1 && isInside(scale.range()[1])
           ? [
-              {
-                formattedValue: undefined,
-                offset: scale.range()[1],
-                labelOffset: 0,
-              },
-            ]
+            {
+              formattedValue: undefined,
+              offset: scale.range()[1],
+              labelOffset: 0,
+            },
+          ]
           : []),
       ];
     }
