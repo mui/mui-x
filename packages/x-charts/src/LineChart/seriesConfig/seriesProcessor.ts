@@ -2,7 +2,6 @@ import { stack as d3Stack } from '@mui/x-charts-vendor/d3-shape';
 import { warnOnce } from '@mui/x-internals/warning';
 import { getStackingGroups, StackOrder } from '../../internals/stackSeries';
 import { DatasetElementType, DatasetType } from '../../models/seriesType/config';
-import { defaultizeValueFormatter } from '../../internals/defaultizeValueFormatter';
 import { SeriesId } from '../../models/seriesType/common';
 import { SeriesProcessor } from '../../internals/plugins/models';
 import type { DefaultizedLineSeriesType } from '../../models';
@@ -168,7 +167,7 @@ const seriesProcessor: SeriesProcessor<'line'> = (params, dataset, hiddenIdentif
   return {
     seriesOrder,
     stackingGroups,
-    series: defaultizeValueFormatter(completedSeries, (v) => (v == null ? '' : v.toLocaleString())),
+    series: completedSeries,
   };
 };
 
