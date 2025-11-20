@@ -4,7 +4,7 @@ import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 import { BarSeriesType, XAxis, YAxis, ZoomOptions } from '@mui/x-charts-pro/models';
 import { TicksFrequency } from '@mui/x-charts/models';
 import alphabetStock from '../dataset/GOOGL.json';
-import { SelectTimeFrequency } from './SelectTimeFrequency';
+import SelectTimeFrequency from './SelectTimeFrequency';
 
 const tickFrequencies: TicksFrequency[] = [
   'years',

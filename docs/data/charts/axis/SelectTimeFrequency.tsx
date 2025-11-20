@@ -9,7 +9,7 @@ import { TicksFrequency } from '@mui/x-charts/models';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 
-export function SelectTimeFrequency({
+export default function SelectTimeFrequency({
   tickFrequencies,
   timeOrdinalTicks,
   setTimeOrdinalTicks,

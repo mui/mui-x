@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 
 import alphabetStock from '../dataset/GOOGL.json';
-import { SelectTimeFrequency } from './SelectTimeFrequency';
+import SelectTimeFrequency from './SelectTimeFrequency';
 
 const tickFrequencies = [
   'years',
