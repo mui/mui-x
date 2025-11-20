@@ -4,6 +4,7 @@ import { useRtl } from '@mui/system/RtlProvider';
 import { useIsHydrated } from '../hooks/useIsHydrated';
 import { useTicks } from '../hooks/useTicks';
 import { ChartsXAxisProps } from '../models/axis';
+import { TimeOrdinalTicks } from '../models/timeTicks';
 import { useMounted } from '../hooks/useMounted';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 import { useChartContext } from '../context/ChartProvider/useChartContext';
@@ -11,7 +12,6 @@ import { shortenLabels } from './shortenLabels';
 import { getVisibleLabels } from './getVisibleLabels';
 import { AXIS_LABEL_TICK_LABEL_GAP, TICK_LABEL_GAP } from './utilities';
 import { useAxisTicksProps } from './useAxisTicksProps';
-import { TimeOrdinalTicks } from '../utils/timeTicks';
 
 interface ChartsSingleXAxisProps extends ChartsXAxisProps {
   axisLabelHeight: number;

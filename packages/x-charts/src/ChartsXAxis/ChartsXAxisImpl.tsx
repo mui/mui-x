@@ -26,6 +26,8 @@ interface ChartsXAxisImplProps extends Omit<ChartsXAxisProps, 'axis'> {
  * @ignore - internal component. Use `ChartsXAxis` instead.
  */
 export function ChartsXAxisImpl({ axis, ...inProps }: ChartsXAxisImplProps) {
+  // @ts-expect-error timeOrdinalTicks may not be present on all axis types
+  // Should be set to never, but this causes other issues with proptypes generator.
   const { scale: xScale, tickNumber, reverse, timeOrdinalTicks, ...settings } = axis;
 
   // eslint-disable-next-line material-ui/mui-name-matches-component-name
