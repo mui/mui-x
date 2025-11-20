@@ -100,7 +100,7 @@ Internal changes.
 
 - [docs] Add minimum Typescript version to migration guide (#20320) @siriwatknp
 - [docs] Fix Autosizing documentation (#20348) @siriwatknp
-- [docs][pickers] Fix seperator opcaity in demo (#20293) @sai6855
+- [docs][pickers] Fix separator opacity in demo (#20293) @sai6855
 
 ### Core
 
