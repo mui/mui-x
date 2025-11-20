@@ -855,7 +855,6 @@ function computeRenderContext(
   //     lastColumnIndex: 1,
   //   };
   // }
-
   if (inputs.enabledForColumns) {
     let firstColumnIndex = 0;
     let lastColumnIndex = inputs.columnPositions.length;
