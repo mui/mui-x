@@ -7,7 +7,7 @@ import {
   resources,
 } from '../datasets/personal-agenda';
 
-export default function DragAndDrop() {
+export default function EventCalendarDragAndDrop() {
   const [events, setEvents] = React.useState(initialEvents);
 
   return (

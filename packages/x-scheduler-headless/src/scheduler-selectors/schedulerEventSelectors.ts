@@ -1,5 +1,5 @@
 import { createSelector, createSelectorMemoized } from '@base-ui-components/utils/store';
-import { SchedulerEvent, SchedulerEventId } from '../models';
+import { SchedulerEvent, SchedulerEventId, SchedulerEventSide } from '../models';
 import { SchedulerState as State } from '../utils/SchedulerStore/SchedulerStore.types';
 import { schedulerResourceSelectors } from './schedulerResourceSelectors';
 import { DEFAULT_EVENT_CREATION_CONFIG } from '../constants';
@@ -105,61 +105,50 @@ export const schedulerEventSelectors = {
   canDropEventsToTheOutside: createSelector(
     (state: State) => state.canDropEventsToTheOutside && !state.readOnly,
   ),
-  isDraggable: createSelector(
-    isEventReadOnlySelector,
-    processedEventSelector,
-    (state: State) => state.areEventsDraggable,
-    (state: State) => state.eventModelStructure,
-    (
-      isEventReadOnly,
-      processedEvent,
-      areEventsDraggable,
-      eventModelStructure,
-      _eventId: SchedulerEventId,
-    ) => {
-      if (isEventReadOnly) {
-        return false;
-      }
+  isDraggable: createSelector((state: State, eventId: SchedulerEventId) => {
+    if (isEventReadOnlySelector(state, eventId)) {
+      return false;
+    }
 
-      if (eventModelStructure?.start && !eventModelStructure?.start.setter) {
-        return false;
-      }
+    const eventModelStructure = state.eventModelStructure;
+    if (eventModelStructure?.start && !eventModelStructure?.start.setter) {
+      return false;
+    }
 
-      if (eventModelStructure?.end && !eventModelStructure?.end.setter) {
-        return false;
-      }
+    if (eventModelStructure?.end && !eventModelStructure?.end.setter) {
+      return false;
+    }
 
-      // If the `draggable` property is defined on the event, it takes precedence
-      if (processedEvent!.draggable === true) {
-        return true;
-      }
+    const processedEvent = processedEventSelector(state, eventId);
+    if (!processedEvent) {
+      return false;
+    }
 
-      // Otherwise, fall back to the component-level setting
-      return areEventsDraggable;
-    },
-  ),
+    // If the `draggable` property is defined on the event, it takes precedence
+    if (processedEvent.draggable === true) {
+      return true;
+    }
+
+    // Otherwise, fall back to the component-level setting
+    return state.areEventsDraggable;
+  }),
   isResizable: createSelector(
-    isEventReadOnlySelector,
-    processedEventSelector,
-    (state: State) => state.areEventsResizable,
-    (state: State) => state.eventModelStructure,
-    (
-      isEventReadonly,
-      processedEvent,
-      areEventsResizable,
-      eventModelStructure,
-      _eventId: SchedulerEventId,
-      side: 'start' | 'end',
-    ) => {
-      if (isEventReadonly) {
+    (state: State, eventId: SchedulerEventId, side: SchedulerEventSide) => {
+      if (isEventReadOnlySelector(state, eventId)) {
         return false;
       }
 
+      const eventModelStructure = state.eventModelStructure;
       if (side === 'start' && eventModelStructure?.start && !eventModelStructure?.start.setter) {
         return false;
       }
 
       if (side === 'end' && eventModelStructure?.end && !eventModelStructure?.end.setter) {
+        return false;
+      }
+
+      const processedEvent = processedEventSelector(state, eventId);
+      if (!processedEvent) {
         return false;
       }
 
@@ -175,7 +164,15 @@ export const schedulerEventSelectors = {
       }
 
       // Otherwise, fall back to the component-level setting
-      return areEventsResizable;
+      if (state.areEventsResizable === 'start') {
+        return side === 'start';
+      }
+
+      if (state.areEventsResizable === 'end') {
+        return side === 'end';
+      }
+
+      return state.areEventsResizable;
     },
   ),
 };

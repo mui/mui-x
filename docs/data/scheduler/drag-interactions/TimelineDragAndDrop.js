@@ -7,7 +7,7 @@ import {
   resources,
 } from '../datasets/timeline-events';
 
-export default function DragAndDrop() {
+export default function TimelineDragAndDrop() {
   const [events, setEvents] = React.useState(initialEvents);
 
   return (
