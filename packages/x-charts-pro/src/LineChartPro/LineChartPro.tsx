@@ -432,6 +432,16 @@ LineChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        timeOrdinalTicks: PropTypes.arrayOf(
+          PropTypes.oneOfType([
+            PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarters', 'weeks', 'years']),
+            PropTypes.shape({
+              format: PropTypes.func.isRequired,
+              getTickNumber: PropTypes.func.isRequired,
+              isTick: PropTypes.func.isRequired,
+            }),
+          ]).isRequired,
+        ),
         valueFormatter: PropTypes.func,
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
@@ -527,6 +537,16 @@ LineChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        timeOrdinalTicks: PropTypes.arrayOf(
+          PropTypes.oneOfType([
+            PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarters', 'weeks', 'years']),
+            PropTypes.shape({
+              format: PropTypes.func.isRequired,
+              getTickNumber: PropTypes.func.isRequired,
+              isTick: PropTypes.func.isRequired,
+            }),
+          ]).isRequired,
+        ),
         valueFormatter: PropTypes.func,
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
@@ -577,7 +597,6 @@ LineChartPro.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         max: PropTypes.number,
@@ -660,7 +679,6 @@ LineChartPro.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         max: PropTypes.number,
@@ -742,7 +760,6 @@ LineChartPro.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         max: PropTypes.number,
@@ -824,7 +841,6 @@ LineChartPro.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         max: PropTypes.number,
@@ -906,7 +922,6 @@ LineChartPro.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         max: PropTypes.oneOfType([
@@ -998,7 +1013,6 @@ LineChartPro.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         max: PropTypes.oneOfType([
@@ -1090,7 +1104,6 @@ LineChartPro.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         max: PropTypes.number,
@@ -1226,6 +1239,16 @@ LineChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        timeOrdinalTicks: PropTypes.arrayOf(
+          PropTypes.oneOfType([
+            PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarters', 'weeks', 'years']),
+            PropTypes.shape({
+              format: PropTypes.func.isRequired,
+              getTickNumber: PropTypes.func.isRequired,
+              isTick: PropTypes.func.isRequired,
+            }),
+          ]).isRequired,
+        ),
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
         zoom: PropTypes.oneOfType([
@@ -1320,6 +1343,16 @@ LineChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        timeOrdinalTicks: PropTypes.arrayOf(
+          PropTypes.oneOfType([
+            PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarters', 'weeks', 'years']),
+            PropTypes.shape({
+              format: PropTypes.func.isRequired,
+              getTickNumber: PropTypes.func.isRequired,
+              isTick: PropTypes.func.isRequired,
+            }),
+          ]).isRequired,
+        ),
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
         zoom: PropTypes.oneOfType([
@@ -1370,7 +1403,6 @@ LineChartPro.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         max: PropTypes.number,
@@ -1452,7 +1484,6 @@ LineChartPro.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         max: PropTypes.number,
@@ -1533,7 +1564,6 @@ LineChartPro.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         max: PropTypes.number,
@@ -1614,7 +1644,6 @@ LineChartPro.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         max: PropTypes.number,
@@ -1695,7 +1724,6 @@ LineChartPro.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         max: PropTypes.oneOfType([
@@ -1786,7 +1814,6 @@ LineChartPro.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         max: PropTypes.oneOfType([
@@ -1877,7 +1904,6 @@ LineChartPro.propTypes = {
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
-        
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         max: PropTypes.number,

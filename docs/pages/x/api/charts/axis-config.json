@@ -22,7 +22,6 @@
     "height": { "type": { "description": "number" }, "default": "30" },
     "hideTooltip": { "type": { "description": "boolean" } },
     "ignoreTooltip": { "type": { "description": "boolean" } },
-    "isNumerical": { "type": { "description": "false" } },
     "label": { "type": { "description": "string" } },
     "labelStyle": { "type": { "description": "ChartsTextProps['style']" } },
     "offset": { "type": { "description": "number" }, "default": "0" },

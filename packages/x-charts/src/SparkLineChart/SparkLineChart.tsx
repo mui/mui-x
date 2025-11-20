@@ -622,6 +622,16 @@ SparkLineChart.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      timeOrdinalTicks: PropTypes.arrayOf(
+        PropTypes.oneOfType([
+          PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarters', 'weeks', 'years']),
+          PropTypes.shape({
+            format: PropTypes.func.isRequired,
+            getTickNumber: PropTypes.func.isRequired,
+            isTick: PropTypes.func.isRequired,
+          }),
+        ]).isRequired,
+      ),
       valueFormatter: PropTypes.func,
     }),
     PropTypes.shape({
@@ -697,6 +707,16 @@ SparkLineChart.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      timeOrdinalTicks: PropTypes.arrayOf(
+        PropTypes.oneOfType([
+          PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarters', 'weeks', 'years']),
+          PropTypes.shape({
+            format: PropTypes.func.isRequired,
+            getTickNumber: PropTypes.func.isRequired,
+            isTick: PropTypes.func.isRequired,
+          }),
+        ]).isRequired,
+      ),
       valueFormatter: PropTypes.func,
     }),
     PropTypes.shape({
@@ -729,7 +749,6 @@ SparkLineChart.propTypes = {
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       ignoreTooltip: PropTypes.bool,
-      
       label: PropTypes.string,
       labelStyle: PropTypes.object,
       max: PropTypes.number,
@@ -792,7 +811,6 @@ SparkLineChart.propTypes = {
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       ignoreTooltip: PropTypes.bool,
-      
       label: PropTypes.string,
       labelStyle: PropTypes.object,
       max: PropTypes.number,
@@ -854,7 +872,6 @@ SparkLineChart.propTypes = {
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       ignoreTooltip: PropTypes.bool,
-      
       label: PropTypes.string,
       labelStyle: PropTypes.object,
       max: PropTypes.number,
@@ -916,7 +933,6 @@ SparkLineChart.propTypes = {
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       ignoreTooltip: PropTypes.bool,
-      
       label: PropTypes.string,
       labelStyle: PropTypes.object,
       max: PropTypes.number,
@@ -978,7 +994,6 @@ SparkLineChart.propTypes = {
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       ignoreTooltip: PropTypes.bool,
-      
       label: PropTypes.string,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([
@@ -1050,7 +1065,6 @@ SparkLineChart.propTypes = {
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       ignoreTooltip: PropTypes.bool,
-      
       label: PropTypes.string,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([
@@ -1122,7 +1136,6 @@ SparkLineChart.propTypes = {
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       ignoreTooltip: PropTypes.bool,
-      
       label: PropTypes.string,
       labelStyle: PropTypes.object,
       max: PropTypes.number,
@@ -1233,6 +1246,16 @@ SparkLineChart.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      timeOrdinalTicks: PropTypes.arrayOf(
+        PropTypes.oneOfType([
+          PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarters', 'weeks', 'years']),
+          PropTypes.shape({
+            format: PropTypes.func.isRequired,
+            getTickNumber: PropTypes.func.isRequired,
+            isTick: PropTypes.func.isRequired,
+          }),
+        ]).isRequired,
+      ),
       valueFormatter: PropTypes.func,
       width: PropTypes.number,
     }),
@@ -1307,6 +1330,16 @@ SparkLineChart.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      timeOrdinalTicks: PropTypes.arrayOf(
+        PropTypes.oneOfType([
+          PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarters', 'weeks', 'years']),
+          PropTypes.shape({
+            format: PropTypes.func.isRequired,
+            getTickNumber: PropTypes.func.isRequired,
+            isTick: PropTypes.func.isRequired,
+          }),
+        ]).isRequired,
+      ),
       valueFormatter: PropTypes.func,
       width: PropTypes.number,
     }),
@@ -1339,7 +1372,6 @@ SparkLineChart.propTypes = {
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       ignoreTooltip: PropTypes.bool,
-      
       label: PropTypes.string,
       labelStyle: PropTypes.object,
       max: PropTypes.number,
@@ -1401,7 +1433,6 @@ SparkLineChart.propTypes = {
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       ignoreTooltip: PropTypes.bool,
-      
       label: PropTypes.string,
       labelStyle: PropTypes.object,
       max: PropTypes.number,
@@ -1462,7 +1493,6 @@ SparkLineChart.propTypes = {
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       ignoreTooltip: PropTypes.bool,
-      
       label: PropTypes.string,
       labelStyle: PropTypes.object,
       max: PropTypes.number,
@@ -1523,7 +1553,6 @@ SparkLineChart.propTypes = {
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       ignoreTooltip: PropTypes.bool,
-      
       label: PropTypes.string,
       labelStyle: PropTypes.object,
       max: PropTypes.number,
@@ -1584,7 +1613,6 @@ SparkLineChart.propTypes = {
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       ignoreTooltip: PropTypes.bool,
-      
       label: PropTypes.string,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([
@@ -1655,7 +1683,6 @@ SparkLineChart.propTypes = {
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       ignoreTooltip: PropTypes.bool,
-      
       label: PropTypes.string,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([
@@ -1726,7 +1753,6 @@ SparkLineChart.propTypes = {
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       ignoreTooltip: PropTypes.bool,
-      
       label: PropTypes.string,
       labelStyle: PropTypes.object,
       max: PropTypes.number,
