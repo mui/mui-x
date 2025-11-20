@@ -185,12 +185,17 @@ export function getTicks(options: GetTicksOptions) {
 
     const tickLabelPlacement = tickLabelPlacementProp ?? 'middle';
 
+    const filteredDomain =
+      (typeof tickInterval === 'function' && domain.filter(tickInterval)) ||
+      (typeof tickInterval === 'object' && tickInterval) ||
+      domain;
+
+    if (filteredDomain.length === 0) {
+      return [];
+    }
+
     if (isBandScale(scale)) {
       // scale type = 'band'
-      const filteredDomain =
-        (typeof tickInterval === 'function' && domain.filter(tickInterval)) ||
-        (typeof tickInterval === 'object' && tickInterval) ||
-        domain;
 
       return [
         ...filteredDomain.map((value) => {
@@ -225,10 +230,6 @@ export function getTicks(options: GetTicksOptions) {
     }
 
     // scale type = 'point'
-    const filteredDomain =
-      (typeof tickInterval === 'function' && domain.filter(tickInterval)) ||
-      (typeof tickInterval === 'object' && tickInterval) ||
-      domain;
 
     return filteredDomain.map((value) => {
       const defaultTickLabel = `${value}`;
