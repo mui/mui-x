@@ -101,7 +101,7 @@ Internal changes.
 
 - [docs] Add minimum Typescript version to migration guide (#20320) @siriwatknp
 - [docs] Fix Autosizing documentation (#20348) @siriwatknp
-- [docs][pickers] Fix separator opacity in demo (#20293) @sai6855
+- [docs] Fix separator opacity in demo (#20293) @sai6855
 - [docs] Replace deprecated `LoadingButton` with `Button` component (#20208) @Janpot
 
 ### Core
