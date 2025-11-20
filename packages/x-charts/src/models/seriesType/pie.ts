@@ -21,10 +21,14 @@ export type PieValueType = {
    * @default 'circle'
    */
   labelMarkType?: ChartsLabelMarkProps['type'];
+  /**
+   * Whether the pie slice is hidden or not.
+   */
+  hidden?: boolean;
 };
 
 export type DefaultizedPieValueType = PieValueType &
-  Omit<D3PieArcDatum<any>, 'data'> & { color: string; formattedValue: string };
+  Omit<D3PieArcDatum<any>, 'data' | 'hidden'> & { color: string; formattedValue: string };
 
 export type ChartsPieSorting = 'none' | 'asc' | 'desc' | ((a: number, b: number) => number);
 

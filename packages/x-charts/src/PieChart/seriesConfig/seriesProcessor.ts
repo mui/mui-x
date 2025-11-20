@@ -22,38 +22,81 @@ const getSortingComparator = (comparator: ChartsPieSorting = 'none') => {
   }
 };
 
-const seriesProcessor: SeriesProcessor<'pie'> = (params) => {
+const seriesProcessor: SeriesProcessor<'pie'> = (params, dataset, hiddenIdentifiers) => {
   const { seriesOrder, series } = params;
 
   const defaultizedSeries: Record<SeriesId, ChartSeriesDefaultized<'pie'>> = {};
   seriesOrder.forEach((seriesId) => {
-    const arcs = d3Pie()
+    // Build a map of hidden item IDs for this series
+    const hiddenItemIds = new Set(
+      hiddenIdentifiers
+        ?.filter((item) => item.seriesId === seriesId)
+        .map((item) => item.itemId)
+        .filter((id): id is string | number => id !== undefined) ?? [],
+    );
+
+    // Filter out hidden data points for arc calculation
+    const visibleData = series[seriesId].data.filter((piePoint, index) => {
+      const itemId = piePoint.id ?? `auto-generated-pie-id-${seriesId}-${index}`;
+      return !hiddenItemIds.has(itemId);
+    });
+
+    const visibleArcs = d3Pie()
       .startAngle(deg2rad(series[seriesId].startAngle ?? 0))
       .endAngle(deg2rad(series[seriesId].endAngle ?? 360))
       .padAngle(deg2rad(series[seriesId].paddingAngle ?? 0))
       .sortValues(getSortingComparator(series[seriesId].sortingValues ?? 'none'))(
-      series[seriesId].data.map((piePoint) => piePoint.value),
+      visibleData.map((piePoint) => piePoint.value),
     );
 
+    // Map arcs back to original data, maintaining original indices
+    let visibleIndex = 0;
     defaultizedSeries[seriesId] = {
       labelMarkType: 'circle',
       valueFormatter: (item: PieValueType) => item.value.toLocaleString(),
       ...series[seriesId],
-      data: series[seriesId].data
-        .map((item, index) => ({
+      hidden: false,
+      data: series[seriesId].data.map((item, index) => {
+        const itemId = item.id ?? `auto-generated-pie-id-${seriesId}-${index}`;
+        const isHidden = hiddenItemIds.has(itemId);
+        let arcData;
+
+        if (isHidden) {
+          // For hidden items, create a zero-size arc starting at the previous visible arc's end angle
+          // and ending at the same angle
+          const startAngle =
+            visibleIndex > 0
+              ? visibleArcs[visibleIndex - 1].endAngle
+              : deg2rad(series[seriesId].startAngle ?? 0);
+
+          arcData = {
+            startAngle,
+            endAngle: startAngle,
+            padAngle: 0,
+            value: item.value,
+            index,
+          };
+        } else {
+          arcData = visibleArcs[visibleIndex];
+          visibleIndex += 1;
+        }
+
+        const processedItem = {
           ...item,
-          id: item.id ?? `auto-generated-pie-id-${seriesId}-${index}`,
-          ...arcs[index],
-        }))
-        .map((item, index) => ({
+          id: itemId,
+          ...arcData,
+        };
+
+        return {
           labelMarkType: 'circle',
-          ...item,
+          ...processedItem,
           formattedValue:
             series[seriesId].valueFormatter?.(
-              { ...item, label: getLabel(item.label, 'arc') },
+              { ...processedItem, label: getLabel(processedItem.label, 'arc') },
               { dataIndex: index },
-            ) ?? item.value.toLocaleString(),
-        })),
+            ) ?? processedItem.value.toLocaleString(),
+        };
+      }),
     };
   });
 
