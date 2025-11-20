@@ -84,7 +84,7 @@ export class SchedulerStore<
       occurrencePlaceholder: null,
       nowUpdatedEveryMinute: getNowInRenderTimezone(adapter, parameters.timezone),
       pendingUpdateRecurringEventParameters: null,
-      timezone: parameters.timezone ?? 'default',
+      timezone: getRenderTimezone(parameters.timezone),
       visibleResources: new Map(),
       visibleDate:
         parameters.visibleDate ??
