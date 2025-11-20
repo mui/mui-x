@@ -19,7 +19,7 @@ You can find more information on the corresponding feature documentation page.
 
 ## Secure initializing state with an ErrorBoundary
 
-{{"demo": "ErrorBoundary.js", "bg": "inline"}}
+{{"demo": "SecureInitialState.js", "bg": "inline"}}
 
 ## Access the state
 
