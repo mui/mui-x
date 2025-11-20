@@ -246,7 +246,7 @@ export class AdapterLuxon implements MuiPickersAdapter<string> {
   };
 
   public isValid = (value: DateTime | null): value is DateTime => {
-    if (value === null) {
+    if (value == null) {
       return false;
     }
 
