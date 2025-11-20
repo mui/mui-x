@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid-headless-pro",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
   "author": "MUI Team",
   "description": "The Pro plan edition of the headless Data Grid.",
