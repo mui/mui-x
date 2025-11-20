@@ -455,7 +455,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
                 <Input
                   type="date"
                   value={
-                    customEndsValue === 'until' && controlled.rruleDraft.until
+                    customEndsValue === 'until' && adapter.isValid(controlled.rruleDraft.until)
                       ? adapter.formatByString(controlled.rruleDraft.until, 'yyyy-MM-dd')
                       : ''
                   }
