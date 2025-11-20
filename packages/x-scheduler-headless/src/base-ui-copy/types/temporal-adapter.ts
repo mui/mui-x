@@ -91,11 +91,6 @@ export interface TemporalAdapterFormats {
    * @example "8/6/2014"
    */
   localizedNumericDate: string;
-  /**
-   * The non-localized month and year format.
-   * @example "August 2014"
-   */
-  fullMonthAndYear: string;
 }
 
 export type DateBuilderReturnType<T extends string | null> = [T] extends [null]
@@ -117,6 +112,10 @@ export interface TemporalAdapter {
    * Creates a date in the date library format.
    */
   date<T extends string | null>(value: T, timezone: TemporalTimezone): DateBuilderReturnType<T>;
+  /**
+   * Parses a date from a string in the given format.
+   */
+  parse(value: string, format: string, timezone: TemporalTimezone): TemporalSupportedObject;
   /**
    * Creates a date in the date library format for the current time.
    */

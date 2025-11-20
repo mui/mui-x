@@ -61,16 +61,13 @@
     "lucide-react": "^0.553.0"
   },
   "peerDependencies": {
-    "luxon": "^3.0.2",
     "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
     "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
     "@mui/internal-test-utils": "catalog:",
-    "@types/luxon": "catalog:",
     "@types/prop-types": "catalog:",
     "@types/use-sync-external-store": "catalog:",
-    "luxon": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "rimraf": "catalog:"
