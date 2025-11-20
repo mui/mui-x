@@ -151,6 +151,7 @@ const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset, hiddenIdentifi
             return typeof value === 'number' ? value : null;
           })
         : series[id].data!;
+      const hidden = hiddenIds.has(id);
       completedSeries[id] = {
         layout: 'vertical',
         labelMarkType: 'square',
@@ -158,6 +159,7 @@ const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset, hiddenIdentifi
         valueFormatter: series[id].valueFormatter ?? barValueFormatter,
         ...series[id],
         data,
+        hidden,
         fullStackedData: fullStackedData[index] as [number, number][],
         visibleStackedData: visibleStackedData[index] as [number, number][],
       };
