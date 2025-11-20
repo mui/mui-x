@@ -61,7 +61,7 @@ Same changes as in `@mui/x-date-pickers@8.19.0`.
 #### `@mui/x-charts@8.19.0`
 
 - [charts] Expose `niceDomain` utility (#20250) @bernardobelchior
-- [charts] Fix benchmark regression by downgrading to JSDOM v26 (#20405) @bernardobelchior 
+- [charts] Fix benchmark regression by downgrading to JSDOM v26 (#20405) @bernardobelchior
 - [charts] Fix Pie Chart keyboard focus highlight (#20358) @JCQuintas
 - [charts] Memoize series selectors (#20326) @JCQuintas
 - [charts] Relax dataset type (#20294) @bernardobelchior
@@ -107,7 +107,7 @@ Internal changes.
 
 ### Core
 
-- [code-infra] Add new broken links checker (#20120) @Janpot 
+- [code-infra] Add new broken links checker (#20120) @Janpot
 - [code-infra] Disable Codspeed pipeline (#20370) @JCQuintas
 - [code-infra] Optimize `checkMaterialVersion` (#20307) @Janpot
 - [docs-infra] Revert `@docsearch/react` (#20313) @Janpot
