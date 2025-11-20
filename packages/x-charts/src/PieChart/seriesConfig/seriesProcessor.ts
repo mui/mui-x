@@ -84,6 +84,7 @@ const seriesProcessor: SeriesProcessor<'pie'> = (params, dataset, hiddenIdentifi
         const processedItem = {
           ...item,
           id: itemId,
+          hidden: isHidden,
           ...arcData,
         };
 

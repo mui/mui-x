@@ -133,6 +133,7 @@ function PieArcLabelPlot(props: PieArcLabelPlotProps) {
           outerRadius={item.outerRadius}
           arcLabelRadius={item.arcLabelRadius}
           cornerRadius={item.cornerRadius}
+          hidden={item.hidden}
           id={id}
           color={item.color}
           isFaded={item.isFaded}
