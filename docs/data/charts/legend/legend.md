@@ -17,7 +17,7 @@ In chart components, the legend links series with `label` properties and their c
 ## Toggle visibility
 
 You can enable interactive visibility toggling by setting the `toggleVisibilityOnClick` prop to `true`.
-When enabled, clicking on a legend item will hide or show the corresponding series or data item in the chart.
+When enabled, clicking on a legend item hides or shows the corresponding series or data item in the chart.
 
 Hidden items are visually indicated in the legend with reduced opacity.
 
