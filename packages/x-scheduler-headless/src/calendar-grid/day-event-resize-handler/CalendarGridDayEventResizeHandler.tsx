@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
+import { useStableCallback } from '@base-ui-components/utils/useStableCallback';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
 import { useEventResizeHandler } from '../../utils/useEventResizeHandler';
@@ -29,7 +29,7 @@ export const CalendarGridDayEventResizeHandler = React.forwardRef(
     const ref = React.useRef<HTMLDivElement>(null);
 
     // Feature hooks
-    const getDragData = useEventCallback((input) => ({
+    const getDragData = useStableCallback((input) => ({
       ...contextValue.getSharedDragData(input),
       source: 'CalendarGridDayEventResizeHandler',
       side,
