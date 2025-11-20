@@ -8,6 +8,7 @@ import {
   RecurringEventRecurrenceRule,
   SchedulerValidDate,
   SchedulerEvent,
+  SchedulerEventCreationProperties,
 } from '../models';
 import { mergeDateAndTime, getDateKey } from './date-utils';
 import { diffIn } from '../use-adapter';
@@ -130,23 +131,18 @@ export function parsesByDayForMonthlyFrequency(ruleByDay: RecurringEventByDayVal
 }
 
 /**
- *  Inclusive span (in days) for all-day events.
+ *  Duration of the event in days.
  *  @returns At least 1, start==end yields 1.
  */
-export function getAllDaySpanDays(adapter: Adapter, event: SchedulerProcessedEvent): number {
-  // TODO: Now only all-day events are implemented, we should add support for timed events that span multiple days later
-  if (!event.allDay) {
-    return 1;
-  }
+export function getEventDurationInDays(adapter: Adapter, event: SchedulerProcessedEvent): number {
   // +1 so start/end same day = 1 day, spans include last day
-  return Math.max(
-    1,
+  return (
     diffIn(
       adapter,
       adapter.startOfDay(event.end.value),
       adapter.startOfDay(event.start.value),
       'days',
-    ) + 1,
+    ) + 1
   );
 }
 
@@ -168,8 +164,8 @@ export function getRecurringEventOccurrencesForVisibleDays(
   const endGuard = buildEndGuard(rule, event.start.value, adapter);
   const durationMinutes = diffIn(adapter, event.end.value, event.start.value, 'minutes');
 
-  const allDaySpanDays = getAllDaySpanDays(adapter, event);
-  const scanStart = adapter.addDays(start, -(allDaySpanDays - 1));
+  const eventDuration = getEventDurationInDays(adapter, event);
+  const scanStart = adapter.addDays(start, -(eventDuration - 1));
 
   for (
     let day = adapter.startOfDay(scanStart);
@@ -190,7 +186,7 @@ export function getRecurringEventOccurrencesForVisibleDays(
       : mergeDateAndTime(adapter, day, event.start.value);
 
     const occurrenceEnd = event.allDay
-      ? adapter.endOfDay(adapter.addDays(occurrenceStart, allDaySpanDays - 1))
+      ? adapter.endOfDay(adapter.addDays(occurrenceStart, eventDuration - 1))
       : adapter.addMinutes(occurrenceStart, durationMinutes);
 
     const key = `${event.id}::${getDateKey(occurrenceStart, adapter)}`;
@@ -416,7 +412,7 @@ export function estimateOccurrencesUpTo(
   seriesStart: SchedulerValidDate,
   date: SchedulerValidDate,
 ): number {
-  if (adapter.isBeforeDay(date, seriesStart)) {
+  if (adapter.isBefore(date, adapter.startOfDay(seriesStart))) {
     return 0;
   }
 
@@ -473,7 +469,8 @@ export function countWeeklyOccurrencesUpToExact(
   seriesStart: SchedulerValidDate,
   date: SchedulerValidDate,
 ): number {
-  if (adapter.isBeforeDay(date, seriesStart)) {
+  const seriesStartDay = adapter.startOfDay(seriesStart);
+  if (adapter.isBefore(date, seriesStartDay)) {
     return 0;
   }
 
@@ -483,6 +480,7 @@ export function countWeeklyOccurrencesUpToExact(
 
   const seriesWeekStart = adapter.startOfWeek(seriesStart);
   const targetWeekStart = adapter.startOfWeek(date);
+  const dateEndDay = adapter.endOfDay(date);
 
   let count = 0;
 
@@ -496,10 +494,7 @@ export function countWeeklyOccurrencesUpToExact(
     for (const code of byDay) {
       const occurrenceDay = dayInWeek(adapter, week, code);
 
-      if (adapter.isBeforeDay(occurrenceDay, seriesStart)) {
-        continue;
-      }
-      if (adapter.isAfterDay(occurrenceDay, date)) {
+      if (!adapter.isWithinRange(occurrenceDay, [seriesStartDay, dateEndDay])) {
         continue;
       }
 
@@ -528,6 +523,9 @@ export function countMonthlyOccurrencesUpToExact(
     return 0;
   }
 
+  const seriesStartDay = adapter.startOfDay(seriesStart);
+  const dateEndDay = adapter.endOfDay(date);
+
   const interval = Math.max(1, rule.interval ?? 1);
 
   // Path A: BYDAY with ordinals (e.g. 2TU, -1FR). Not mixed with BYMONTHDAY.
@@ -551,10 +549,7 @@ export function countMonthlyOccurrencesUpToExact(
         continue;
       }
 
-      if (adapter.isBeforeDay(occurrenceDate, seriesStart)) {
-        continue;
-      }
-      if (adapter.isAfterDay(occurrenceDate, date)) {
+      if (!adapter.isWithinRange(occurrenceDate, [seriesStartDay, dateEndDay])) {
         continue;
       }
 
@@ -588,10 +583,7 @@ export function countMonthlyOccurrencesUpToExact(
     }
 
     const candidate = adapter.startOfDay(adapter.setDate(month, dayOfMonth));
-    if (adapter.isBeforeDay(candidate, seriesStart)) {
-      continue;
-    }
-    if (adapter.isAfterDay(candidate, date)) {
+    if (!adapter.isWithinRange(candidate, [seriesStartDay, dateEndDay])) {
       continue;
     }
 
@@ -614,6 +606,8 @@ export function countYearlyOccurrencesUpToExact(
   date: SchedulerValidDate,
 ): number {
   const seriesStartYear = adapter.startOfYear(seriesStart);
+  const seriesStartDay = adapter.startOfDay(seriesStart);
+  const dateEndDay = adapter.endOfDay(date);
   const targetYearStart = adapter.startOfYear(date);
   if (adapter.isBefore(targetYearStart, seriesStartYear)) {
     return 0;
@@ -651,10 +645,8 @@ export function countYearlyOccurrencesUpToExact(
     }
 
     const candidate = adapter.startOfDay(adapter.setDate(monthAnchor, targetDayOfMonth));
-    if (adapter.isBeforeDay(candidate, seriesStart)) {
-      continue;
-    }
-    if (adapter.isAfterDay(candidate, date)) {
+
+    if (!adapter.isWithinRange(candidate, [seriesStartDay, dateEndDay])) {
       continue;
     }
 
@@ -1026,18 +1018,8 @@ export function applyRecurringUpdateOnlyThis(
   occurrenceStart: SchedulerValidDate,
   changes: SchedulerEventUpdatedProperties,
 ): UpdateEventsParameters {
-  const detachedId = `${originalEvent.id}::${getDateKey(changes.start ?? originalEvent.start.value, adapter)}`;
-
-  const detachedEvent: SchedulerEvent = {
-    ...originalEvent.modelInBuiltInFormat!,
-    ...changes,
-    id: detachedId,
-    rrule: undefined,
-    extractedFromId: originalEvent.id,
-  };
-
   return {
-    created: [detachedEvent],
+    created: [createEventFromRecurringEvent(originalEvent, changes)],
     updated: [
       {
         id: originalEvent.id,
@@ -1045,6 +1027,27 @@ export function applyRecurringUpdateOnlyThis(
       },
     ],
   };
+}
+
+/**
+ * Generates the property to pass to `store.updateEvents()` to create an event extracted from a potentially recurring event.
+ */
+export function createEventFromRecurringEvent(
+  originalEvent: SchedulerProcessedEvent,
+  changes: Partial<SchedulerEvent>,
+): SchedulerEventCreationProperties {
+  const createdEvent: SchedulerEventCreationProperties = {
+    ...originalEvent.modelInBuiltInFormat!,
+    ...changes,
+    extractedFromId: originalEvent.id,
+  };
+
+  // @ts-ignore
+  delete createdEvent.id;
+  delete createdEvent.rrule;
+  delete createdEvent.exDates;
+
+  return createdEvent;
 }
 
 const SUPPORTED_RRULE_KEYS = [
@@ -1147,7 +1150,7 @@ export function parseRRuleString(
   }
 
   if (rruleObject.UNTIL) {
-    const parsed = adapter.date(rruleObject.UNTIL);
+    const parsed = adapter.parse(rruleObject.UNTIL, getUntilFormat(adapter), 'default');
 
     if (!adapter.isValid(parsed)) {
       throw new Error(`Scheduler: Invalid UNTIL date: "${rruleObject.UNTIL}"`);
@@ -1197,12 +1200,22 @@ export function serializeRRule(adapter: Adapter, rule: RecurringEventRecurrenceR
 
   if (rule.until) {
     const utcDate = adapter.setTimezone(rule.until, 'UTC');
-
-    // RFC5545 format: YYYYMMDDTHHmmssZ
-    const untilIso = adapter.formatByString(utcDate, "yyyyMMdd'T'HHmmss'Z'");
+    const untilIso = adapter.formatByString(utcDate, getUntilFormat(adapter));
 
     parts.push(`UNTIL=${untilIso}`);
   }
 
   return parts.join(';');
+}
+
+/**
+ * Builds the date format string for UNTIL serialization (RFC5545 format: YYYYMMDDTHHmmssZ)
+ */
+function getUntilFormat(adapter: Adapter): string {
+  const f = adapter.formats;
+  const dateFormat = `${f.yearPadded}${f.monthPadded}${f.dayOfMonthPadded}`;
+  const dateTimeSeparator = `${adapter.escapedCharacters.start}T${adapter.escapedCharacters.end}`;
+  const timeFormat = `${f.hours24hPadded}${f.minutesPadded}${f.secondsPadded}`;
+  const timezoneSuffix = `${adapter.escapedCharacters.start}Z${adapter.escapedCharacters.end}`;
+  return `${dateFormat}${dateTimeSeparator}${timeFormat}${timezoneSuffix}`;
 }

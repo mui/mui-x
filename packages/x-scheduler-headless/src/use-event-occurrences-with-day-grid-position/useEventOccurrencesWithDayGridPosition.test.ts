@@ -7,20 +7,20 @@ import { innerGetEventOccurrencesGroupedByDay } from '../use-event-occurrences-g
 
 describe('useDayListEventOccurrencesWithPosition', () => {
   const days = [
-    processDate(adapter.date('2024-01-15'), adapter),
-    processDate(adapter.date('2024-01-16'), adapter),
-    processDate(adapter.date('2024-01-17'), adapter),
+    processDate(adapter.date('2024-01-15', 'default'), adapter),
+    processDate(adapter.date('2024-01-16', 'default'), adapter),
+    processDate(adapter.date('2024-01-17', 'default'), adapter),
   ];
 
   function testHook(events: SchedulerProcessedEvent[]) {
     const { result } = renderHook(() => {
-      const occurrencesMap = innerGetEventOccurrencesGroupedByDay(
+      const occurrencesMap = innerGetEventOccurrencesGroupedByDay({
         adapter,
         days,
         events,
-        new Map(),
-        new Map(),
-      );
+        visibleResources: new Map(),
+        resourceParentIds: new Map(),
+      });
       return useEventOccurrencesWithDayGridPosition({ days, occurrencesMap });
     });
 
@@ -30,8 +30,8 @@ describe('useDayListEventOccurrencesWithPosition', () => {
   const createEvent = (id: string, start: string, end: string) =>
     createProcessedEvent({
       id,
-      start: adapter.date(start),
-      end: adapter.date(end),
+      start: adapter.date(start, 'default'),
+      end: adapter.date(end, 'default'),
       title: `Event ${id}`,
     });
 

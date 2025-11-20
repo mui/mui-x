@@ -1,12 +1,30 @@
 import { createSelector } from '@base-ui-components/utils/store';
 import { EventCalendarState as State } from '../use-event-calendar';
+import { DEFAULT_EVENT_CALENDAR_PREFERENCES } from '../use-event-calendar/EventCalendarStore';
+
+const allPreferencesSelector = createSelector(
+  (state: State) => state.preferences,
+  (preferences) => ({
+    ...DEFAULT_EVENT_CALENDAR_PREFERENCES,
+    ...preferences,
+  }),
+);
 
 export const eventCalendarPreferenceSelectors = {
-  all: createSelector((state: State) => state.preferences),
+  all: allPreferencesSelector,
   menuConfig: createSelector((state: State) => state.preferencesMenuConfig),
-  ampm: createSelector((state: State) => state.preferences.ampm),
-  showWeekends: createSelector((state: State) => state.preferences.showWeekends),
-  showWeekNumber: createSelector((state: State) => state.preferences.showWeekNumber),
-  showEmptyDaysInAgenda: createSelector((state: State) => state.preferences.showEmptyDaysInAgenda),
-  isSidePanelOpen: createSelector((state: State) => state.preferences.isSidePanelOpen),
+  ampm: createSelector(allPreferencesSelector, (preferences) => preferences.ampm),
+  showWeekends: createSelector(allPreferencesSelector, (preferences) => preferences.showWeekends),
+  showWeekNumber: createSelector(
+    allPreferencesSelector,
+    (preferences) => preferences.showWeekNumber,
+  ),
+  showEmptyDaysInAgenda: createSelector(
+    allPreferencesSelector,
+    (preferences) => preferences.showEmptyDaysInAgenda,
+  ),
+  isSidePanelOpen: createSelector(
+    allPreferencesSelector,
+    (preferences) => preferences.isSidePanelOpen,
+  ),
 };

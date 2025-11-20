@@ -73,8 +73,8 @@
     "@atlaskit/pragmatic-drag-and-drop": "^1.7.7",
     "@atlaskit/pragmatic-drag-and-drop-auto-scroll": "^2.1.2",
     "@babel/runtime": "catalog:",
-    "@base-ui-components/react": "^1.0.0-beta.4",
-    "@base-ui-components/utils": "^0.1.2",
+    "@base-ui-components/react": "^1.0.0-beta.6",
+    "@base-ui-components/utils": "^0.2.0",
     "@floating-ui/react": "^0.27.16",
     "@floating-ui/react-dom": "^2.1.6",
     "@floating-ui/utils": "^0.2.10",
@@ -83,20 +83,18 @@
     "tabbable": "^6.3.0"
   },
   "peerDependencies": {
-    "luxon": "^3.0.2",
     "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
     "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
+    "@date-fns/tz": "catalog:",
     "@mui/internal-test-utils": "catalog:",
-    "@types/luxon": "catalog:",
     "@types/prop-types": "catalog:",
     "@types/use-sync-external-store": "catalog:",
-    "luxon": "catalog:",
+    "date-fns": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "rimraf": "catalog:",
-    "use-isomorphic-layout-effect": "^1.2.1"
+    "rimraf": "catalog:"
   },
   "engines": {
     "node": ">=14.0.0"
