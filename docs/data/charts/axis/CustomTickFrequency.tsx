@@ -2,56 +2,35 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 import { BarSeriesType, XAxis, YAxis, ZoomOptions } from '@mui/x-charts-pro/models';
-import { TicksFrequency } from '@mui/x-charts/models';
+import { tickFrequencies } from '@mui/x-charts/utils';
 import alphabetStock from '../dataset/GOOGL.json';
-import { SelectTimeFrequency } from './SelectTimeFrequency';
 
-const tickFrequencies: TicksFrequency[] = [
-  'years',
-  'quarters',
-  'months',
-  'biweekly',
-  'weeks',
-  'days',
-  'hours',
-];
-
-export default function OrdinalTickPlacement() {
-  const [timeOrdinalTicks, setTimeOrdinalTicks] =
-    React.useState<FilteredTicksState>(defaultTicks);
-  const [tickNumber, setTickNumber] = React.useState(5);
-
+export default function CustomTickFrequency() {
   return (
     <Box sx={{ width: '100%' }}>
-      <SelectTimeFrequency
-        tickFrequencies={tickFrequencies}
-        timeOrdinalTicks={timeOrdinalTicks}
-        setTimeOrdinalTicks={setTimeOrdinalTicks}
-        tickNumber={tickNumber}
-        setTickNumber={setTickNumber}
-      />
-
       <BarChartPro
         {...barSettings}
         xAxis={[
           {
             ...xAxis,
-            tickNumber,
-            timeOrdinalTicks: tickFrequencies.filter(
-              (frequency) =>
-                timeOrdinalTicks[frequency as keyof typeof timeOrdinalTicks],
-            ),
+            tickNumber: 15,
+            timeOrdinalTicks: [
+              'years',
+              {
+                ...tickFrequencies.quarters,
+                format: (d: Date) => `Q${Math.floor(d.getMonth() / 3) + 1}`,
+              },
+              {
+                ...tickFrequencies.weeks,
+                format: (d: Date) => `W${getWeekNumber(d)}`,
+              },
+            ],
           },
         ]}
       />
     </Box>
   );
 }
-
-type FilteredTicksState = Record<TicksFrequency, boolean>;
-const defaultTicks = Object.fromEntries(
-  tickFrequencies.map((frequency) => [frequency, true]),
-) as FilteredTicksState;
 
 const zoom: ZoomOptions = { minSpan: 1, filterMode: 'discard' };
 
@@ -86,4 +65,13 @@ const barSettings = {
       width: 55,
     } as YAxis,
   ],
+  grid: { vertical: true, horizontal: true },
 };
+
+function getWeekNumber(date: Date) {
+  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  const dayNum = d.getUTCDay() || 7;
+  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  return Math.ceil(((d.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
+}

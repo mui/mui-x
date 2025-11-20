@@ -2,51 +2,35 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 
+import { tickFrequencies } from '@mui/x-charts/utils';
 import alphabetStock from '../dataset/GOOGL.json';
-import { SelectTimeFrequency } from './SelectTimeFrequency';
 
-const tickFrequencies = [
-  'years',
-  'quarters',
-  'months',
-  'biweekly',
-  'weeks',
-  'days',
-  'hours',
-];
-
-export default function OrdinalTickPlacement() {
-  const [timeOrdinalTicks, setTimeOrdinalTicks] = React.useState(defaultTicks);
-  const [tickNumber, setTickNumber] = React.useState(5);
-
+export default function CustomTickFrequency() {
   return (
     <Box sx={{ width: '100%' }}>
-      <SelectTimeFrequency
-        tickFrequencies={tickFrequencies}
-        timeOrdinalTicks={timeOrdinalTicks}
-        setTimeOrdinalTicks={setTimeOrdinalTicks}
-        tickNumber={tickNumber}
-        setTickNumber={setTickNumber}
-      />
       <BarChartPro
         {...barSettings}
         xAxis={[
           {
             ...xAxis,
-            tickNumber,
-            timeOrdinalTicks: tickFrequencies.filter(
-              (frequency) => timeOrdinalTicks[frequency],
-            ),
+            tickNumber: 15,
+            timeOrdinalTicks: [
+              'years',
+              {
+                ...tickFrequencies.quarters,
+                format: (d) => `Q${Math.floor(d.getMonth() / 3) + 1}`,
+              },
+              {
+                ...tickFrequencies.weeks,
+                format: (d) => `W${getWeekNumber(d)}`,
+              },
+            ],
           },
         ]}
       />
     </Box>
   );
 }
-
-const defaultTicks = Object.fromEntries(
-  tickFrequencies.map((frequency) => [frequency, true]),
-);
 
 const zoom = { minSpan: 1, filterMode: 'discard' };
 
@@ -81,4 +65,13 @@ const barSettings = {
       width: 55,
     },
   ],
+  grid: { vertical: true, horizontal: true },
 };
+
+function getWeekNumber(date) {
+  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  const dayNum = d.getUTCDay() || 7;
+  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  return Math.ceil(((d.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
+}

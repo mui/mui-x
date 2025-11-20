@@ -11,7 +11,7 @@ import { shortenLabels } from './shortenLabels';
 import { getVisibleLabels } from './getVisibleLabels';
 import { AXIS_LABEL_TICK_LABEL_GAP, TICK_LABEL_GAP } from './utilities';
 import { useAxisTicksProps } from './useAxisTicksProps';
-import { TimeOrdinalTicks } from '../internals/timeTicks';
+import { TimeOrdinalTicks } from '../utils/timeTicks';
 
 interface ChartsSingleXAxisProps extends ChartsXAxisProps {
   axisLabelHeight: number;

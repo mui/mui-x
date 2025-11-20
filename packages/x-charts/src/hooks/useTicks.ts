@@ -5,7 +5,7 @@ import type { AxisConfig, D3ContinuousScale, D3Scale } from '../models/axis';
 import type { TimeOrdinalTicks, TicksFrequencyDefinition } from '../models/timeTicks';
 import { isBandScale, isOrdinalScale } from '../internals/scaleGuards';
 import { isInfinity } from '../internals/isInfinity';
-import { tickFrequencies } from '../internals/timeTicks';
+import { tickFrequencies } from '../utils/timeTicks';
 import { isDateData } from '../internals/dateHelpers';
 
 export interface TickParams {
