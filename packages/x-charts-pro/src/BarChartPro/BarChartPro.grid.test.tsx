@@ -1,4 +1,3 @@
-/* eslint-disable no-promise-executor-return */
 import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils';
 
