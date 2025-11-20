@@ -87,7 +87,7 @@ const columns: DataGridProProps['columns'] = [
 ];
 
 const isValidRowReorder: DataGridProProps['isValidRowReorder'] = (context) => {
-  if (context.targetNode.type === 'leaf' && context.dropPosition === 'over') {
+  if (context.targetNode.type === 'leaf' && context.dropPosition === 'inside') {
     return false;
   }
   return true;
