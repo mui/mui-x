@@ -128,14 +128,16 @@ export function getTicks(
           };
         }),
 
-        ...(tickPlacement === 'extremities' && endIndex === domain.length - 1 && isInside(scale.range()[1])
+        ...(tickPlacement === 'extremities' &&
+        endIndex === domain.length - 1 &&
+        isInside(scale.range()[1])
           ? [
-            {
-              formattedValue: undefined,
-              offset: scale.range()[1],
-              labelOffset: 0,
-            },
-          ]
+              {
+                formattedValue: undefined,
+                offset: scale.range()[1],
+                labelOffset: 0,
+              },
+            ]
           : []),
       ];
     }
