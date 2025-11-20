@@ -107,6 +107,7 @@ Internal changes.
 
 ### Core
 
+- [code-infra] Add new broken links checker (#20120) @Janpot 
 - [code-infra] Disable Codspeed pipeline (#20370) @JCQuintas
 - [code-infra] Optimize `checkMaterialVersion` (#20307) @Janpot
 - [docs-infra] Revert `@docsearch/react` (#20313) @Janpot
