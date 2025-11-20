@@ -29,11 +29,6 @@ export default function MultiSeriesRadar() {
       radar={{
         metrics: ['Oil', 'Coal', 'Gas', 'Flaring', 'Other\nindustry', 'Cement'],
       }}
-      slotProps={{
-        legend: {
-          toggleVisibilityOnClick: true,
-        },
-      }}
     />
   );
 }
