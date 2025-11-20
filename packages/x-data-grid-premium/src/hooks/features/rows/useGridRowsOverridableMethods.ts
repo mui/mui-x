@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {
-  GridRowId,
   gridRowTreeSelector,
   gridExpandedSortedRowIdsSelector,
   gridRowNodeSelector,
@@ -126,7 +125,7 @@ export const useGridRowsOverridableMethods = (
 
       return rowGroupingReorderExecutor.execute(executionContext);
     },
-    [apiRef, setRowPosition],
+    [apiRef, processRowUpdate, onProcessRowUpdateError],
   );
 
   if (flatTree) {
