@@ -83,7 +83,11 @@ const columns = [
 ];
 
 const isValidRowReorder = (context) => {
-  if (context.targetNode.type === 'leaf' && context.dropPosition === 'inside') {
+  const targetRow = context.apiRef.current.getRow(context.targetNode.id);
+  if (
+    !targetRow ||
+    (targetRow.type !== 'folder' && context.dropPosition === 'inside')
+  ) {
     return false;
   }
   return true;
