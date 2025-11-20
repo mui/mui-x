@@ -9,6 +9,11 @@ import { markElementClasses, MarkElementOwnerState, useUtilityClasses } from './
 export type CircleMarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighlighted'> &
   Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> & {
     /**
+     * If `true`, the marker is hidden.
+     * @default false
+     */
+    hidden?: boolean;
+    /**
      * If `true`, animations are skipped.
      * @default false
      */
@@ -32,7 +37,7 @@ export type CircleMarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'is
 const Circle = styled('circle')({
   [`&.${markElementClasses.animate}`]: {
     transitionDuration: `${ANIMATION_DURATION_MS}ms`,
-    transitionProperty: 'cx, cy',
+    transitionProperty: 'cx, cy, opacity',
     transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
   },
 });
@@ -61,6 +66,7 @@ function CircleMarkElement(props: CircleMarkElementProps) {
     skipAnimation,
     isFaded = false,
     isHighlighted = false,
+    hidden,
     ...other
   } = props;
 
@@ -92,6 +98,7 @@ function CircleMarkElement(props: CircleMarkElementProps) {
       {...interactionProps}
       data-highlighted={isHighlighted || undefined}
       data-faded={isFaded || undefined}
+      opacity={hidden ? 0 : 1}
     />
   );
 }

@@ -106,10 +106,11 @@ function MarkPlot(props: MarkPlotProps) {
           const {
             xAxisId = defaultXAxisId,
             yAxisId = defaultYAxisId,
-            stackedData,
+            visibleStackedData,
             data,
             showMark = true,
             shape = 'circle',
+            hidden,
           } = series[seriesId];
 
           if (showMark === false) {
@@ -143,7 +144,7 @@ function MarkPlot(props: MarkPlotProps) {
             <g key={seriesId} clipPath={`url(#${clipId})`} data-series={seriesId}>
               {xData
                 ?.map((x, index) => {
-                  const value = data[index] == null ? null : stackedData[index][1];
+                  const value = data[index] == null ? null : visibleStackedData[index][1];
                   return {
                     x: xScale(x),
                     y: value === null ? null : yScale(value)!,
@@ -183,6 +184,7 @@ function MarkPlot(props: MarkPlotProps) {
                       x={x}
                       y={y!} // Don't know why TS doesn't get from the filter that y can't be null
                       skipAnimation={skipAnimation}
+                      hidden={hidden}
                       onClick={
                         onItemClick &&
                         ((event) =>
