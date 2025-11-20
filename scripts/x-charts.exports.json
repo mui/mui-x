@@ -414,6 +414,7 @@
   { "name": "strawberrySkyPalette", "kind": "Variable" },
   { "name": "strawberrySkyPaletteDark", "kind": "Variable" },
   { "name": "strawberrySkyPaletteLight", "kind": "Variable" },
+  { "name": "tickFrequencies", "kind": "Variable" },
   { "name": "TicksFrequency", "kind": "TypeAlias" },
   { "name": "TicksFrequencyDefinition", "kind": "TypeAlias" },
   { "name": "TimeOrdinalTicks", "kind": "TypeAlias" },

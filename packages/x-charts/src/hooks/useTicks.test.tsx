@@ -42,7 +42,7 @@ describe('getTicks', () => {
     });
   });
 
-  describe.only('band scale - time values', () => {
+  describe('band scale - time values', () => {
     it('should return no ticks if the timeOrdinalTicks array is empty', () => {
       const ticks = getTicks({
         ...defaultOptions,
@@ -65,7 +65,7 @@ describe('getTicks', () => {
       expect(ticks.map(({ value }) => value.getMonth())).to.deep.equal([1, 2, 3, 4]);
     });
 
-    it.only('should not place too many ticks', () => {
+    it('should not place too many ticks', () => {
       const ticks = getTicks({
         ...defaultOptions,
         scale: scaleBand(weeks, [0, 100]) as unknown as D3Scale,
@@ -76,7 +76,7 @@ describe('getTicks', () => {
       expect(ticks.map(({ value }) => value.getMonth())).to.deep.equal([1, 2, 3, 4]);
     });
 
-    it.only('should place ticks when feasible even if it exceed the targeted ticks number', () => {
+    it('should place ticks when feasible even if it exceed the targeted ticks number', () => {
       const ticks = getTicks({
         ...defaultOptions,
         scale: scaleBand(weeks, [0, 100]) as unknown as D3Scale,
