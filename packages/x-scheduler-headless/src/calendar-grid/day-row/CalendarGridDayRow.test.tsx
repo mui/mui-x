@@ -8,7 +8,7 @@ describe('<CalendarGrid.DayRow />', () => {
   const day = adapter.now('default');
 
   describeConformance(
-    <CalendarGrid.DayRow start={day.startOf('day')} end={day.endOf('day')} />,
+    <CalendarGrid.DayRow start={adapter.startOfDay(day)} end={adapter.endOfDay(day)} />,
     () => ({
       refInstanceof: window.HTMLDivElement,
       render(node) {

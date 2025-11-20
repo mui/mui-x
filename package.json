@@ -1,5 +1,5 @@
 {
-  "version": "8.18.0",
+  "version": "8.19.0",
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
@@ -11,7 +11,7 @@
     "docs:api:build": "tsx ./scripts/buildApiDocs/index.ts",
     "docs:api:buildX": "tsx ./docs/scripts/api/buildApi.ts",
     "docs:llms:build": "rimraf --glob ./docs/public/x/ && tsx ./scripts/buildLlmsDocs/index.ts --projectSettings scripts/buildApiDocs/projectSettings.ts",
-    "docs:link-check": "tsx ./docs/scripts/reportBrokenLinks.js",
+    "docs:link-check": "pnpm --filter docs link-check",
     "docs:build": "pnpm release:build && pnpm docs:llms:build && pnpm --filter docs build",
     "docs:typescript:formatted": "pnpm --filter docs typescript:transpile",
     "docs:populate:demos": "pnpm --filter docs populate:demos",
@@ -77,7 +77,7 @@
     "@mui/internal-netlify-cache": "^0.0.2-canary.1",
     "@mui/internal-test-utils": "catalog:",
     "@mui/material": "catalog:",
-    "@mui/monorepo": "github:mui/material-ui#15ff3955e950f3d1ee70b0ea9d9fd8c1057ee0cb",
+    "@mui/monorepo": "github:mui/material-ui#f6e2d525b5314855539aaa4ee785973aab5deca8",
     "@mui/utils": "catalog:",
     "@next/eslint-plugin-next": "15.5.6",
     "@octokit/plugin-retry": "^8.0.3",
