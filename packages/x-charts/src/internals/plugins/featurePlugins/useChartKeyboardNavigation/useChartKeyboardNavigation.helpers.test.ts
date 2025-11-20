@@ -6,7 +6,8 @@ import {
 
 const barSeries = {
   type: 'bar' as const,
-  stackedData: [],
+  fullStackedData: [],
+  visibleStackedData: [],
   valueFormatter: () => '',
   color: '',
   layout: 'horizontal' as const,
@@ -15,7 +16,8 @@ const barSeries = {
 
 const lineSeries = {
   type: 'line' as const,
-  stackedData: [],
+  fullStackedData: [],
+  visibleStackedData: [],
   valueFormatter: () => '',
   color: '',
 };

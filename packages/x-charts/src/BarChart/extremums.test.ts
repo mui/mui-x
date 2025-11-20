@@ -5,6 +5,13 @@ const buildData = (
   data: number[],
   layout: 'vertical' | 'horizontal' = 'vertical',
 ): Parameters<CartesianExtremumGetter<'bar'>>[0] => {
+  const stackData: [number, number][] = data.length
+    ? [
+        [data[0], data[1]],
+        [data[2], data[3]],
+      ]
+    : [];
+
   return {
     series: {
       id1: {
@@ -13,12 +20,8 @@ const buildData = (
         color: 'red',
         data,
         minBarSize: 0,
-        stackedData: data.length
-          ? [
-              [data[0], data[1]],
-              [data[2], data[3]],
-            ]
-          : [],
+        fullStackedData: stackData,
+        visibleStackedData: stackData,
         layout,
         valueFormatter: () => '',
       },
@@ -41,7 +44,12 @@ const buildDataWithAxisId = (
     layout === 'horizontal'
       ? { yAxisId: 'axis-id', xAxisId: 'other-id' }
       : { xAxisId: 'axis-id', yAxisId: 'other-id' };
-
+  const stackData: [number, number][] = data.length
+    ? [
+        [data[0], data[1]],
+        [data[2], data[3]],
+      ]
+    : [];
   return {
     series: {
       id1: {
@@ -50,12 +58,8 @@ const buildDataWithAxisId = (
         color: 'red',
         data,
         minBarSize: 0,
-        stackedData: data.length
-          ? [
-              [data[0], data[1]],
-              [data[2], data[3]],
-            ]
-          : [],
+        fullStackedData: stackData,
+        visibleStackedData: stackData,
         layout,
         valueFormatter: () => '',
         ...axesIds,
