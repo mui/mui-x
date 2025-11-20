@@ -14,27 +14,19 @@ const data = [
 export default function TogglePieSliceVisibility() {
   const [hiddenItems, setHiddenItems] = React.useState([]);
 
-  const handleVisibilityChange = (newHiddenItems) => {
-    setHiddenItems(newHiddenItems);
-  };
-
   const visibleCount = data.length - hiddenItems.length;
 
   return (
     <Stack direction="column" spacing={2}>
       <PieChart
-        series={[
-          {
-            data,
-          },
-        ]}
+        series={[{ data }]}
         height={300}
         slotProps={{
           legend: {
             toggleVisibilityOnClick: true,
           },
         }}
-        onVisibilityChange={handleVisibilityChange}
+        onVisibilityChange={(newHiddenItems) => setHiddenItems(newHiddenItems)}
       />
       <Typography variant="body2" textAlign="center">
         Visible slices: {visibleCount} / {data.length}

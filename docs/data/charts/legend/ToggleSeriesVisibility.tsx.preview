@@ -1,0 +1,16 @@
+<BarChart
+  dataset={dataset}
+  yAxis={[{ scaleType: 'band', dataKey: 'month' }]}
+  series={[
+    { dataKey: 'london', label: 'London', valueFormatter },
+    { dataKey: 'paris', label: 'Paris', valueFormatter },
+    { dataKey: 'newYork', label: 'New York', valueFormatter },
+  ]}
+  layout="horizontal"
+  slotProps={{
+    legend: {
+      toggleVisibilityOnClick: true,
+    },
+  }}
+  {...chartSetting}
+/>
