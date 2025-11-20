@@ -215,7 +215,7 @@ You can test out the demo by reordering the rows and then refreshing the page to
 {{"demo": "TreeDataSyncRowData.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::info
-The demo above uses the `isValidRowReorder()` prop to disable moving nodes "over" files (or leaf nodes) as it would convert them into parent groups.
+The demo above uses the `isValidRowReorder()` prop to disallow converting files (or leaf rows) into parents.
 
 Check the [Row ordering—Disable specific reorder operations](/x/react-data-grid/row-ordering/#disable-specific-reorder-operations) documentation section for more details.
 :::
