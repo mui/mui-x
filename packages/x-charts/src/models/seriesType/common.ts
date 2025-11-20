@@ -65,7 +65,7 @@ export interface CommonSeriesType<TValue> extends SeriesColor<TValue> {
   hidden?: boolean;
 }
 
-export type CommonDefaultizedProps = 'id' | 'valueFormatter' | 'data';
+export type CommonDefaultizedProps = 'id' | 'valueFormatter' | 'data' | 'hidden';
 
 export type CartesianSeriesType = {
   /**
