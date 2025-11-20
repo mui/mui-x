@@ -105,12 +105,15 @@ export function getTicks(
         (typeof tickInterval === 'object' && tickInterval) ||
         domain;
 
-      const startIndex = filteredDomain.findIndex((value) =>
-        isInside(getTickPosition(scale, value, tickPlacement)),
-      );
+      const isReversed = scale.range()[0] > scale.range()[1];
+      // Indexes are inclusive regarding the entire band.
+      const startIndex = filteredDomain.findIndex((value) => {
+        return isInside(getTickPosition(scale, value, isReversed ? 'start' : 'end'));
+      });
       const endIndex = filteredDomain.findLastIndex((value) =>
-        isInside(getTickPosition(scale, value, tickPlacement)),
+        isInside(getTickPosition(scale, value, isReversed ? 'end' : 'start')),
       );
+
       return [
         ...filteredDomain.slice(startIndex, endIndex + 1).map((value) => {
           const defaultTickLabel = `${value}`;
