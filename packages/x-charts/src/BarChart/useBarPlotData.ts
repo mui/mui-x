@@ -80,6 +80,7 @@ export function useBarPlotData(
           seriesId,
           dataIndex,
           layout: series[seriesId].layout,
+          hidden: series[seriesId].hidden,
           ...barDimensions,
           xOrigin: Math.round(xScale(0) ?? 0),
           yOrigin: Math.round(yScale(0) ?? 0),
