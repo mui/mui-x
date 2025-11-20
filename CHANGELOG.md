@@ -33,6 +33,7 @@ The following team members contributed to this release:
 - [DataGrid] Fix failing tests (#20332) @cherniavskii
 - [DataGrid] Prevent Safari 26 error in the event handler (#20369) @arminmeh
 - [DataGrid] Undeprecate the `autoHeight` prop (#20363) @cherniavskii
+- [DataGrid] Fix print export grid dimensions with dynamic row height and print styles (#19835) @cherniavskii
 
 #### `@mui/x-data-grid-pro@8.19.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
