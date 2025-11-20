@@ -5,22 +5,17 @@ import layoutConfig from 'docsx/src/modules/utils/dataGridLayoutConfig';
 import jsonPageContent from './grid-filter-panel.json';
 
 export default function Page(props) {
-  const { descriptions, pageContent } = props;
-  return <ApiPage {...layoutConfig} descriptions={descriptions} pageContent={pageContent} />;
+  const { descriptions } = props;
+  return <ApiPage {...layoutConfig} descriptions={descriptions} pageContent={jsonPageContent} />;
 }
 
 export async function getStaticProps() {
   const req = require.context(
     'docsx/translations/api-docs/data-grid/grid-filter-panel',
     false,
-    /\.\/grid-filter-panel.*.json$/,
+    /\.\/grid-filter-panel.*\.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 
-  return {
-    props: {
-      descriptions,
-      pageContent: jsonPageContent,
-    },
-  };
+  return { props: { descriptions } };
 }
