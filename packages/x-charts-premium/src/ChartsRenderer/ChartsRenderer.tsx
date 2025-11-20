@@ -65,7 +65,7 @@ function ChartsRenderer({
   chartType,
   configuration,
   onRender,
-}: ChartsRendererProps) {
+}: ChartsRendererProps): React.ReactNode {
   const hasMultipleDimensions = dimensions.length > 1;
   const dimensionRawData = dimensions.length > 0 ? dimensions[dimensions.length - 1].data : [];
   const dimensionLabel = [...dimensions.map((dimension) => dimension.label)].reverse().join(' - ');
