@@ -1636,9 +1636,6 @@ importers:
       '@mui/internal-test-utils':
         specifier: 'catalog:'
         version: 2.0.15(@babel/core@7.28.5)(@playwright/test@1.56.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(chai@6.2.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
-      '@types/luxon':
-        specifier: 'catalog:'
-        version: 3.7.1
       '@types/prop-types':
         specifier: 'catalog:'
         version: 15.7.15
@@ -1698,9 +1695,6 @@ importers:
       '@mui/internal-test-utils':
         specifier: 'catalog:'
         version: 2.0.15(@babel/core@7.28.5)(@playwright/test@1.56.1)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(chai@6.2.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
-      '@types/luxon':
-        specifier: 'catalog:'
-        version: 3.7.1
       '@types/prop-types':
         specifier: 'catalog:'
         version: 15.7.15
