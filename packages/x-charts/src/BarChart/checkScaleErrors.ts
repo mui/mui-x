@@ -24,7 +24,6 @@ export function checkScaleErrors(
   seriesId: SeriesId,
   series: DefaultizedBarSeriesType & {
     fullStackedData: [number, number][];
-    visibleStackedData: [number, number][];
   },
   xAxisId: AxisId,
   xAxis: { [axisId: AxisId]: ComputedXAxis },
