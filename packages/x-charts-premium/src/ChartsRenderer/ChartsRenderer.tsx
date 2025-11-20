@@ -335,16 +335,25 @@ ChartsRenderer.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  categories: PropTypes.arrayOf(
+  chartType: PropTypes.string.isRequired,
+  configuration: PropTypes.object.isRequired,
+  dimensions: PropTypes.arrayOf(
     PropTypes.shape({
-      data: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string])).isRequired,
+      data: PropTypes.arrayOf(
+        PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string]),
+      ).isRequired,
       id: PropTypes.string.isRequired,
       label: PropTypes.string.isRequired,
     }),
   ).isRequired,
-  chartType: PropTypes.string.isRequired,
-  configuration: PropTypes.object.isRequired,
-  series: PropTypes.arrayOf(PropTypes.object).isRequired,
+  onRender: PropTypes.func,
+  values: PropTypes.arrayOf(
+    PropTypes.shape({
+      data: PropTypes.arrayOf(PropTypes.number).isRequired,
+      id: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
 } as any;
 
 export { ChartsRenderer };
