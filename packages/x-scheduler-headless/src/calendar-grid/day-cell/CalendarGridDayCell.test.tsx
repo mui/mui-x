@@ -13,7 +13,7 @@ describe('<CalendarGrid.DayCell />', () => {
       return render(
         <EventCalendarProvider events={[]}>
           <CalendarGrid.Root>
-            <CalendarGrid.DayRow start={day.startOf('day')} end={day.endOf('day')}>
+            <CalendarGrid.DayRow start={adapter.startOfDay(day)} end={adapter.endOfDay(day)}>
               {node}
             </CalendarGrid.DayRow>
           </CalendarGrid.Root>
