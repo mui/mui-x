@@ -1,11 +1,12 @@
+import { fr } from 'date-fns/locale/fr';
 import { SchedulerValidDate } from '../models';
-import { UnstableTemporalAdapterLuxon } from '../base-ui-copy/temporal-adapter-luxon';
+import { UnstableTemporalAdapterDateFns } from '../base-ui-copy/temporal-adapter-date-fns';
 import { TemporalAdapter } from '../base-ui-copy/types';
 
-export const DO_NOT_USE_THIS_VARIABLE_ADAPTER_CLASS = new UnstableTemporalAdapterLuxon();
+export const DO_NOT_USE_THIS_VARIABLE_ADAPTER_CLASS = new UnstableTemporalAdapterDateFns();
 
-export const DO_NOT_USE_THIS_VARIABLE_ADAPTER_CLASS_FR = new UnstableTemporalAdapterLuxon({
-  locale: 'fr',
+export const DO_NOT_USE_THIS_VARIABLE_ADAPTER_CLASS_FR = new UnstableTemporalAdapterDateFns({
+  locale: fr,
 });
 
 // TODO: Replace with Base UI adapter when available.

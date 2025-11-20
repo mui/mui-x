@@ -38,14 +38,14 @@ storeClasses.forEach((storeClass) => {
         start: {
           getter: (event) => adapter.date(event.myStart, 'default'),
           setter: (event, value) => {
-            event.myStart = value.toISO()!;
+            event.myStart = value.toISOString()!;
             return event;
           },
         },
         end: {
           getter: (event) => adapter.date(event.myEnd, 'default'),
           setter: (event, value) => {
-            event.myEnd = value.toISO()!;
+            event.myEnd = value.toISOString()!;
             return event;
           },
         },
@@ -56,8 +56,8 @@ storeClasses.forEach((storeClass) => {
           {
             myId: '1',
             myTitle: 'Event 1',
-            myStart: '2025-07-01T09:00:00.000+00:00',
-            myEnd: '2025-07-01T10:00:00.000+00:00',
+            myStart: '2025-07-01T09:00:00.000Z',
+            myEnd: '2025-07-01T10:00:00.000Z',
             allDay: false,
           },
         ];
@@ -68,8 +68,8 @@ storeClasses.forEach((storeClass) => {
         expect(event).to.deep.contain({
           id: '1',
           title: 'Event 1',
-          start: processDate(adapter.date('2025-07-01T09:00:00.000+00:00', 'default'), adapter),
-          end: processDate(adapter.date('2025-07-01T10:00:00.000+00:00', 'default'), adapter),
+          start: processDate(adapter.date('2025-07-01T09:00:00.000Z', 'default'), adapter),
+          end: processDate(adapter.date('2025-07-01T10:00:00.000Z', 'default'), adapter),
           allDay: false,
         });
       });
@@ -81,8 +81,8 @@ storeClasses.forEach((storeClass) => {
           {
             myId: '1',
             myTitle: 'Event 1',
-            myStart: '2025-07-01T09:00:00.000+00:00',
-            myEnd: '2025-07-01T10:00:00.000+00:00',
+            myStart: '2025-07-01T09:00:00.000Z',
+            myEnd: '2025-07-01T10:00:00.000Z',
             allDay: false,
           },
         ];
@@ -94,8 +94,8 @@ storeClasses.forEach((storeClass) => {
         store.updateEvent({
           id: '1',
           title: 'Event 1 updated',
-          start: adapter.date('2025-07-01T09:30:00.000+00:00', 'default'),
-          end: adapter.date('2025-07-01T10:30:00.000+00:00', 'default'),
+          start: adapter.date('2025-07-01T09:30:00.000Z', 'default'),
+          end: adapter.date('2025-07-01T10:30:00.000Z', 'default'),
           allDay: true,
         });
 
@@ -105,8 +105,8 @@ storeClasses.forEach((storeClass) => {
           {
             myId: '1',
             myTitle: 'Event 1 updated',
-            myStart: '2025-07-01T09:30:00.000+00:00',
-            myEnd: '2025-07-01T10:30:00.000+00:00',
+            myStart: '2025-07-01T09:30:00.000Z',
+            myEnd: '2025-07-01T10:30:00.000Z',
             allDay: true,
           },
         ]);
@@ -123,8 +123,8 @@ storeClasses.forEach((storeClass) => {
         );
         const createdId = store.createEvent({
           title: 'Event 1',
-          start: adapter.date('2025-07-01T09:00:00.000+00:00', 'default'),
-          end: adapter.date('2025-07-01T10:00:00.000+00:00', 'default'),
+          start: adapter.date('2025-07-01T09:00:00.000Z', 'default'),
+          end: adapter.date('2025-07-01T10:00:00.000Z', 'default'),
           allDay: false,
         });
 
@@ -134,8 +134,8 @@ storeClasses.forEach((storeClass) => {
           {
             myId: createdId,
             myTitle: 'Event 1',
-            myStart: '2025-07-01T09:00:00.000+00:00',
-            myEnd: '2025-07-01T10:00:00.000+00:00',
+            myStart: '2025-07-01T09:00:00.000Z',
+            myEnd: '2025-07-01T10:00:00.000Z',
             allDay: false,
           },
         ]);
@@ -165,8 +165,8 @@ storeClasses.forEach((storeClass) => {
           {
             myId: '1',
             title: 'Event 1',
-            start: adapter.date('2025-07-01T09:00:00.000+00:00', 'default'),
-            end: adapter.date('2025-07-01T10:00:00.000+00:00', 'default'),
+            start: adapter.date('2025-07-01T09:00:00.000Z', 'default'),
+            end: adapter.date('2025-07-01T10:00:00.000Z', 'default'),
           },
         ];
 
@@ -194,14 +194,14 @@ storeClasses.forEach((storeClass) => {
           {
             myId: '1',
             title: 'Event 1',
-            start: adapter.date('2025-07-01T09:00:00.000+00:00', 'default'),
-            end: adapter.date('2025-07-01T10:00:00.000+00:00', 'default'),
+            start: adapter.date('2025-07-01T09:00:00.000Z', 'default'),
+            end: adapter.date('2025-07-01T10:00:00.000Z', 'default'),
           },
           {
             myId: '2',
             title: 'Event 2',
-            start: adapter.date('2025-07-01T10:00:00.000+00:00', 'default'),
-            end: adapter.date('2025-07-01T11:00:00.000+00:00', 'default'),
+            start: adapter.date('2025-07-01T10:00:00.000Z', 'default'),
+            end: adapter.date('2025-07-01T11:00:00.000Z', 'default'),
           },
         ];
 
