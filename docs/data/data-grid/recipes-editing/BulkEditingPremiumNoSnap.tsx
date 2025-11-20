@@ -17,7 +17,6 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import RestoreIcon from '@mui/icons-material/Restore';
-import LoadingButton from '@mui/lab/LoadingButton';
 import SaveIcon from '@mui/icons-material/Save';
 import { darken } from '@mui/material/styles';
 
@@ -190,7 +189,7 @@ export default function BulkEditingPremiumNoSnap() {
   return (
     <div style={{ width: '100%' }}>
       <div style={{ marginBottom: 8 }}>
-        <LoadingButton
+        <Button
           disabled={!hasUnsavedRows}
           loading={isSaving}
           onClick={saveChanges}
@@ -198,7 +197,7 @@ export default function BulkEditingPremiumNoSnap() {
           loadingPosition="start"
         >
           <span>Save</span>
-        </LoadingButton>
+        </Button>
         <Button
           disabled={!hasUnsavedRows || isSaving}
           onClick={discardChanges}
