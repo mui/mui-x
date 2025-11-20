@@ -1,3 +1,4 @@
+import { TemporalTimezone } from '../../base-ui-copy/types/temporal';
 import {
   SchedulerEventColor,
   SchedulerEventCreationConfig,
@@ -11,7 +12,6 @@ import {
   SchedulerResource,
   SchedulerResourceId,
   SchedulerResourceModelStructure,
-  SchedulerTimezone,
   SchedulerValidDate,
 } from '../../models';
 import { Adapter } from '../../use-adapter/useAdapter.types';
@@ -127,11 +127,11 @@ export interface SchedulerState<TEvent extends object = any> {
   eventCreation: Partial<SchedulerEventCreationConfig> | boolean;
   /**
    * The timezone used by the scheduler.
-   * It must be an IANA timezone name (e.g. "America/New_York", "Europe/Paris")
-   * or 'default' to use the default timezone of the date adapter.
-   * @default 'default'
+   * Typically an IANA timezone name (e.g. "America/New_York", "Europe/Paris")
+   * or "default" to use the adapter's default timezone.
+   * @default "default"
    */
-  timezone?: 'default' | SchedulerTimezone;
+  timezone?: TemporalTimezone;
 }
 
 export interface SchedulerParameters<TEvent extends object, TResource extends object> {
@@ -221,11 +221,11 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
   eventCreation?: Partial<SchedulerEventCreationConfig> | boolean;
   /**
    * The timezone used by the scheduler.
-   * It must be an IANA timezone name (e.g. "America/New_York", "Europe/Paris")
-   * or 'default' to use the default timezone of the date adapter.
-   * @default 'default'
+   * Typically an IANA timezone name (e.g. "America/New_York", "Europe/Paris")
+   * or "default" to use the adapter's default timezone.
+   * @default "default"
    */
-  timezone?: 'default' | SchedulerTimezone;
+  timezone?: TemporalTimezone;
 }
 
 /**
