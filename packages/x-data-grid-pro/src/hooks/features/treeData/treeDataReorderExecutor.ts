@@ -101,7 +101,10 @@ export class SameParentSwapOperation extends BaseReorderOperation {
 
     if (isBelowPosition && sourceNode.parent !== adjustedTargetNode.parent) {
       const unAdjustedTargetIndex = placeholderIndex - 1;
-      const unAdjustedTargetNode = gridRowNodeSelector(apiRef, sortedFilteredRowIds[unAdjustedTargetIndex]);
+      const unAdjustedTargetNode = gridRowNodeSelector(
+        apiRef,
+        sortedFilteredRowIds[unAdjustedTargetIndex],
+      );
       if (unAdjustedTargetNode && unAdjustedTargetNode.parent === sourceNode.parent) {
         adjustedTargetNode = unAdjustedTargetNode;
         isLastChild = true;
