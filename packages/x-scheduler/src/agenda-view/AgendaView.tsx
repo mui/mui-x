@@ -43,6 +43,14 @@ export const AgendaView = React.memo(
     const occurrencesMap = useEventOccurrencesGroupedByDay({ days });
 
     const today = adapter.now('default');
+    const daysWithOccurrences = React.useMemo(
+      () =>
+        days.map((date) => {
+          const occurrences = sortEventOccurrences(occurrencesMap.get(date.key) || [], adapter);
+          return { date, occurrences };
+        }),
+      [days, occurrencesMap, adapter],
+    );
 
     return (
       <div
@@ -51,7 +59,7 @@ export const AgendaView = React.memo(
         className={clsx('AgendaViewContainer', 'mui-x-scheduler', props.className)}
       >
         <EventPopoverProvider containerRef={containerRef}>
-          {days.map((date) => (
+          {daysWithOccurrences.map(({ date, occurrences }) => (
             <section
               className="AgendaViewRow"
               key={date.key}
@@ -76,23 +84,21 @@ export const AgendaView = React.memo(
                 </div>
               </header>
               <ul className="EventsList">
-                {sortEventOccurrences(occurrencesMap.get(date.key) ?? [], adapter).map(
-                  (occurrence) => (
-                    <li key={occurrence.key}>
-                      <EventPopoverTrigger
-                        occurrence={occurrence}
-                        render={
-                          <EventItem
-                            occurrence={occurrence}
-                            date={date}
-                            variant="regular"
-                            ariaLabelledBy={`DayHeaderCell-${date.key}`}
-                          />
-                        }
-                      />
-                    </li>
-                  ),
-                )}
+                {occurrences.map((occurrence) => (
+                  <li key={occurrence.key}>
+                    <EventPopoverTrigger
+                      occurrence={occurrence}
+                      render={
+                        <EventItem
+                          occurrence={occurrence}
+                          date={date}
+                          variant="regular"
+                          ariaLabelledBy={`DayHeaderCell-${date.key}`}
+                        />
+                      }
+                    />
+                  </li>
+                ))}
               </ul>
             </section>
           ))}

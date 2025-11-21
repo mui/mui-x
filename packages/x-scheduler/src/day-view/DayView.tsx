@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { createSelector } from '@base-ui-components/utils/store';
+import { createSelectorMemoized } from '@base-ui-components/utils/store';
 import { EventCalendarViewConfig } from '@mui/x-scheduler-headless/models';
 import {
   useExtractEventCalendarParameters,
@@ -15,7 +15,7 @@ import '../index.css';
 
 const DAY_VIEW_CONFIG: EventCalendarViewConfig = {
   siblingVisibleDateGetter: ({ state, delta }) => state.adapter.addDays(state.visibleDate, delta),
-  visibleDaysSelector: createSelector(
+  visibleDaysSelector: createSelectorMemoized(
     (state: State) => state.visibleDate,
     (state: State) => state.adapter,
     (visibleDate, adapter) => [processDate(visibleDate, adapter)],

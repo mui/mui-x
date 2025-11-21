@@ -2,7 +2,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
-import { createSelector, useStore } from '@base-ui-components/utils/store';
+import { createSelectorMemoized, useStore } from '@base-ui-components/utils/store';
 import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
 import { EventCalendarViewConfig, SchedulerProcessedDate } from '@mui/x-scheduler-headless/models';
 import { getDayList } from '@mui/x-scheduler-headless/get-day-list';
@@ -34,7 +34,7 @@ const EVENT_GAP = 5;
 const MONTH_VIEW_CONFIG: EventCalendarViewConfig = {
   siblingVisibleDateGetter: ({ state, delta }) =>
     state.adapter.addMonths(state.adapter.startOfMonth(state.visibleDate), delta),
-  visibleDaysSelector: createSelector(
+  visibleDaysSelector: createSelectorMemoized(
     (state: State) => state.adapter,
     schedulerOtherSelectors.visibleDate,
     eventCalendarPreferenceSelectors.showWeekends,
