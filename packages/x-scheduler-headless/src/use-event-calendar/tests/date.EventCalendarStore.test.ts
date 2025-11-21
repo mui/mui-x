@@ -198,7 +198,7 @@ describe('Date - EventCalendarStore', () => {
       store.setViewConfig({ siblingVisibleDateGetter });
       store.goToPreviousVisibleDate({} as any);
       expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(targetDate);
-      expect(siblingVisibleDateGetter.lastCall.lastArg).toEqual(-1);
+      expect(siblingVisibleDateGetter.lastCall.firstArg.delta).toEqual(-1);
     });
   });
 
@@ -221,7 +221,7 @@ describe('Date - EventCalendarStore', () => {
       store.setViewConfig({ siblingVisibleDateGetter });
       store.goToNextVisibleDate({} as any);
       expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(targetDate);
-      expect(siblingVisibleDateGetter.lastCall.lastArg).toEqual(1);
+      expect(siblingVisibleDateGetter.lastCall.firstArg.delta).toEqual(1);
     });
   });
 });

@@ -1,7 +1,7 @@
 import { spy } from 'sinon';
 import { adapter } from 'test/utils/scheduler';
-import { SchedulerValidDate } from '@mui/x-scheduler-headless/models';
 import { EventCalendarStore } from '../EventCalendarStore';
+import { EventCalendarState } from '../EventCalendarStore.types';
 
 const DEFAULT_PARAMS = { events: [] };
 
@@ -59,7 +59,9 @@ describe('View - EventCalendarStore', () => {
     it('should set config and cleanup to null', () => {
       const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
 
-      const siblingVisibleDateGetter = spy((d: SchedulerValidDate) => d);
+      const siblingVisibleDateGetter = spy(
+        ({ state }: { state: EventCalendarState }) => state.visibleDate,
+      );
       const cleanup = store.setViewConfig({ siblingVisibleDateGetter });
 
       expect(store.state.viewConfig?.siblingVisibleDateGetter).to.equal(siblingVisibleDateGetter);
