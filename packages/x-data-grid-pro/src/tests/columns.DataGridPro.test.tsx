@@ -619,7 +619,7 @@ describe('<DataGridPro /> - Columns', () => {
       const iconSize = 24;
       const iconScrollSize = iconSize + 1;
       const gap = 2;
-      const padding = 20;
+      const paddingX = 20;
       function CustomSortIcon() {
         return <span style={{ width: iconSize, flex: 'none' }}>⇅</span>;
       }
@@ -633,9 +633,11 @@ describe('<DataGridPro /> - Columns', () => {
         />,
       );
       await act(async () => apiRef.current?.autosizeColumns());
+
+      // Cell structure: |← padding →|← text →|← gap →|← icon →|← padding →|
       expect(getWidths()).to.deep.equal([
-        padding + 132 + gap + iconScrollSize,
-        padding + 154 + gap + iconScrollSize,
+        paddingX + 132 + gap + iconScrollSize, // `132` is the width of the text "This is the ID column"
+        paddingX + 154 + gap + iconScrollSize, // `154` is the width of the text "This is the brand column"
       ]);
     });
 
