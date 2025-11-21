@@ -2,7 +2,7 @@ import type { LegendItemParams } from '../../../ChartsLegend';
 import { getLabel } from '../../../internals/getLabel';
 import { LegendGetter } from '../../../internals/plugins/models';
 
-const legendGetter: LegendGetter<'bar'> = (params) => {
+const legendGetter: LegendGetter<'bar' | 'rangeBar'> = (params) => {
   const { seriesOrder, series } = params;
   return seriesOrder.reduce((acc, seriesId) => {
     const formattedLabel = getLabel(series[seriesId].label, 'legend');

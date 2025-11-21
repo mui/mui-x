@@ -47,6 +47,7 @@ export interface BarChartSlotProps
     Partial<ChartsSlotProps> {}
 
 export type BarSeries = MakeOptional<BarSeriesType, 'type'>;
+
 export interface BarChartProps
   extends Omit<
       ChartContainerProps<'bar', BarChartPluginSignatures>,
@@ -59,7 +60,7 @@ export interface BarChartProps
    * The series to display in the bar chart.
    * An array of [[BarSeries]] objects.
    */
-  series: Readonly<BarSeries[]>;
+  series: ReadonlyArray<BarSeries>;
   /**
    * Option to display a cartesian grid in the background.
    */
@@ -176,7 +177,9 @@ BarChart.propTypes = {
     y: PropTypes.oneOf(['band', 'line', 'none']),
   }),
   /**
-   * @deprecated Use `barLabel` in the chart series instead.
+   * @deprecated Use `barLabel` in the chart series instead. This prop only works for bar series; range bar series are not supported.
+   * For range bar series support, use `barLabel` in the chart series instead.
+   *
    * If provided, the function will be used to format the label of the bar.
    * It can be set to 'value' to display the current value.
    * @param {BarItem} item The item to format.
