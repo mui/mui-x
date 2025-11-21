@@ -188,6 +188,7 @@ export {
   createRootSelector,
   createSelectorMemoized,
 } from '../utils/createSelector';
+export { doesSupportPreventScroll } from '../utils/doesSupportPreventScroll';
 export { gridRowGroupsToFetchSelector } from '../hooks/features/rows/gridRowsSelector';
 export {
   findParentElementFromClassName,
