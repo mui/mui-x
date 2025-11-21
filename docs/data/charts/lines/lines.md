@@ -8,6 +8,15 @@ components: LineChart, LineChartPro, LineElement, LineHighlightElement, LineHigh
 
 <p class="description">Line charts can express qualities about data, such as hierarchy, highlights, and comparisons.</p>
 
+## Overview
+
+Line charts are ideal for showing how values change over continuous dimensions such as time or measurement scales.
+
+They emphasize trends, patterns, and fluctuations, making them useful for exploring relationships, detecting cycles, or tracking performance over time.
+Each line typically represents a series, allowing easy comparison between multiple variables or groups.
+
+{{"demo": "LineOverview.js"}}
+
 ## Basics
 
 ### Data format
