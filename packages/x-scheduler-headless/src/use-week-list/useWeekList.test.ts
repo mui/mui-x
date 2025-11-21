@@ -1,26 +1,21 @@
 import { renderHook } from '@mui/internal-test-utils';
-import {
-  adapter,
-  DEFAULT_TESTING_VISIBLE_DATE,
-  DEFAULT_TESTING_VISIBLE_DATE_STR,
-} from 'test/utils/scheduler';
+import { adapter, DEFAULT_TESTING_VISIBLE_DATE } from 'test/utils/scheduler';
 import { useWeekList } from './useWeekList';
+import { SchedulerValidDate } from '../models';
 
 describe('useWeekList', () => {
-  function testHook(date: string, amount: number | 'end-of-month') {
+  function testHook(date: SchedulerValidDate, amount: number | 'end-of-month') {
     const { result } = renderHook(() => useWeekList());
     return result.current({ date: adapter.date(date, 'default'), amount });
   }
 
   it('should throw an error when amount is a non positive number', () => {
-    expect(() => testHook(DEFAULT_TESTING_VISIBLE_DATE_STR, 0)).to.throw(/amount.*positive number/);
-    expect(() => testHook(DEFAULT_TESTING_VISIBLE_DATE_STR, -2)).to.throw(
-      /amount.*positive number/,
-    );
+    expect(() => testHook(DEFAULT_TESTING_VISIBLE_DATE, 0)).to.throw(/amount.*positive number/);
+    expect(() => testHook(DEFAULT_TESTING_VISIBLE_DATE, -2)).to.throw(/amount.*positive number/);
   });
 
   it('should return one week when amount=1', () => {
-    const weeks = testHook(DEFAULT_TESTING_VISIBLE_DATE_STR, 1);
+    const weeks = testHook(DEFAULT_TESTING_VISIBLE_DATE, 1);
 
     expect(weeks).to.have.length(1);
 
@@ -29,7 +24,7 @@ describe('useWeekList', () => {
   });
 
   it('should return the correct number of consecutive weeks', () => {
-    const weeks = testHook(DEFAULT_TESTING_VISIBLE_DATE_STR, 4);
+    const weeks = testHook(DEFAULT_TESTING_VISIBLE_DATE, 4);
 
     expect(weeks).to.have.length(4);
 
@@ -44,7 +39,7 @@ describe('useWeekList', () => {
     const endOfMonth = adapter.endOfMonth(DEFAULT_TESTING_VISIBLE_DATE);
     const lastWeekStart = adapter.startOfWeek(endOfMonth);
 
-    const weeks = testHook(DEFAULT_TESTING_VISIBLE_DATE_STR, 'end-of-month');
+    const weeks = testHook(DEFAULT_TESTING_VISIBLE_DATE, 'end-of-month');
 
     expect(weeks[0]).to.toEqualDateTime(start);
     expect(weeks[weeks.length - 1]).to.toEqualDateTime(lastWeekStart);
