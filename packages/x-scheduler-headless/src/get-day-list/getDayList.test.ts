@@ -57,7 +57,7 @@ describe('getDayList', () => {
     });
 
     const start = adapter.startOfDay(DEFAULT_TESTING_VISIBLE_DATE);
-    const rawDays = [...Array(7)].map((_, i) => adapter.addDays(start, i));
+    const rawDays = Array.from({ length: 7 }, (_, i) => adapter.addDays(start, i));
 
     const filtered = rawDays.filter((day) => {
       // Same logic as hook: exclude if weekend
