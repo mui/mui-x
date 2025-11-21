@@ -30,6 +30,7 @@ export * from './plugins/featurePlugins/useChartCartesianAxis';
 export * from './plugins/featurePlugins/useChartPolarAxis';
 export * from './plugins/featurePlugins/useChartInteraction';
 export * from './plugins/featurePlugins/useChartHighlight';
+export * from './plugins/featurePlugins/useChartVisibilityManager';
 export * from './plugins/featurePlugins/useChartKeyboardNavigation';
 export * from './plugins/featurePlugins/useChartClosestPoint';
 export * from './plugins/featurePlugins/useChartBrush';
@@ -50,7 +51,6 @@ export * from '../RadarChart/RadarChart.plugins';
 export * from '../PieChart/PieChart.plugins';
 
 // utils
-export * from './defaultizeValueFormatter';
 export * from './configInit';
 export * from './getLabel';
 export * from './getSVGPoint';

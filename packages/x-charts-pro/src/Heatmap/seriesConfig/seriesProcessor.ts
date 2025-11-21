@@ -11,6 +11,7 @@ const seriesProcessor: SeriesProcessor<'heatmap'> = (params) => {
       valueFormatter: (v) => v[2].toString(),
       data: [],
       labelMarkType: 'square',
+      hidden: false,
       ...series[seriesId],
     };
   });

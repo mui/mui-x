@@ -58,9 +58,14 @@ export interface CommonSeriesType<TValue> extends SeriesColor<TValue> {
    * There is a default mark type for each series type.
    */
   labelMarkType?: ChartsLabelMarkType;
+  /**
+   * If true, the series will be hidden.
+   * @default false
+   */
+  hidden?: boolean;
 }
 
-export type CommonDefaultizedProps = 'id' | 'valueFormatter' | 'data';
+export type CommonDefaultizedProps = 'id' | 'valueFormatter' | 'data' | 'hidden';
 
 export type CartesianSeriesType = {
   /**

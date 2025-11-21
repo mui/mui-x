@@ -14,6 +14,7 @@ import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { useXAxes, useYAxes } from '../hooks';
 import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
 import { useLinePlotData } from './useLinePlotData';
+import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 
 export interface LinePlotSlots extends LineElementSlots {}
 
@@ -38,7 +39,9 @@ const LinePlotRoot = styled('g', {
   slot: 'Root',
 })({
   [`& .${lineElementClasses.root}`]: {
-    transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
+    transitionProperty: 'opacity, fill',
+    transitionDuration: `${ANIMATION_DURATION_MS}ms`,
+    transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
   },
 });
 
@@ -67,7 +70,7 @@ function LinePlot(props: LinePlotProps) {
   const completedData = useAggregatedData();
   return (
     <LinePlotRoot {...other}>
-      {completedData.map(({ d, seriesId, color, gradientId }) => {
+      {completedData.map(({ d, seriesId, color, gradientId, hidden }) => {
         return (
           <LineElement
             key={seriesId}
@@ -75,6 +78,7 @@ function LinePlot(props: LinePlotProps) {
             d={d}
             color={color}
             gradientId={gradientId}
+            hidden={hidden}
             skipAnimation={skipAnimation}
             slots={slots}
             slotProps={slotProps}

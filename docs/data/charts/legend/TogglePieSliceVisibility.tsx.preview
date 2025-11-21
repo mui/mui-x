@@ -1,0 +1,15 @@
+<PieChart
+  series={[{ data }]}
+  height={300}
+  slotProps={{
+    legend: {
+      toggleVisibilityOnClick: true,
+    },
+  }}
+  onVisibilityChange={(newHiddenItems: VisibilityItemIdentifier[]) =>
+    setHiddenItems(newHiddenItems)
+  }
+/>
+<Typography variant="body2" textAlign="center">
+  Visible slices: {visibleCount} / {data.length}
+</Typography>

@@ -43,7 +43,8 @@ export function useAreaPlotData(
         const {
           xAxisId = defaultXAxisId,
           yAxisId = defaultYAxisId,
-          stackedData,
+          visibleStackedData,
+          fullStackedData,
           data,
           connectNulls,
           baseline,
@@ -76,9 +77,9 @@ export function useAreaPlotData(
               } should have data property to be able to display a line plot.`,
             );
           }
-          if (xData.length < stackedData.length) {
+          if (xData.length < fullStackedData.length) {
             throw new Error(
-              `MUI X Charts: The data length of the x axis (${xData.length} items) is lower than the length of series (${stackedData.length} items).`,
+              `MUI X Charts: The data length of the x axis (${xData.length} items) is lower than the length of series (${fullStackedData.length} items).`,
             );
           }
         }
@@ -94,11 +95,11 @@ export function useAreaPlotData(
           xData?.flatMap((x, index) => {
             const nullData = data[index] == null;
             if (shouldExpand) {
-              const rep = [{ x, y: stackedData[index], nullData, isExtension: false }];
+              const rep = [{ x, y: visibleStackedData[index], nullData, isExtension: false }];
               if (!nullData && (index === 0 || data[index - 1] == null)) {
                 rep.unshift({
                   x: (xScale(x) ?? 0) - (xScale.step() - xScale.bandwidth()) / 2,
-                  y: stackedData[index],
+                  y: visibleStackedData[index],
                   nullData,
                   isExtension: true,
                 });
@@ -106,14 +107,14 @@ export function useAreaPlotData(
               if (!nullData && (index === data.length - 1 || data[index + 1] == null)) {
                 rep.push({
                   x: (xScale(x) ?? 0) + (xScale.step() + xScale.bandwidth()) / 2,
-                  y: stackedData[index],
+                  y: visibleStackedData[index],
                   nullData,
                   isExtension: true,
                 });
               }
               return rep;
             }
-            return { x, y: stackedData[index], nullData };
+            return { x, y: visibleStackedData[index], nullData };
           }) ?? [];
 
         const d3Data = connectNulls ? formattedData.filter((d) => !d.nullData) : formattedData;

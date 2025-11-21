@@ -20,54 +20,60 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
 
   return (
     <g className={classes.root}>
-      {seriesCoordinates?.map(({ seriesId, points, color, hideMark, fillArea }, seriesIndex) => {
-        return (
-          <g key={seriesId}>
-            {
-              <path
-                key={seriesId}
-                {...getPathProps({
-                  seriesId,
-                  points,
-                  color,
-                  fillArea,
-                  isFaded,
-                  isHighlighted,
-                  classes,
-                })}
-                onClick={(event) =>
-                  onAreaClick?.(event, {
-                    type: 'radar',
+      {seriesCoordinates?.map(
+        ({ seriesId, points, color, hideMark, fillArea, hidden }, seriesIndex) => {
+          if (hidden) {
+            return null;
+          }
+
+          return (
+            <g key={seriesId}>
+              {
+                <path
+                  key={seriesId}
+                  {...getPathProps({
                     seriesId,
-                    dataIndex: getRotationIndex(event),
-                  })
-                }
-                cursor={onAreaClick ? 'pointer' : 'unset'}
-                {...interactionProps[seriesIndex]}
-              />
-            }
-            {!hideMark &&
-              points.map((point, index) => (
-                <circle
-                  key={index}
-                  {...getCircleProps({
-                    seriesId,
-                    point,
-                    color: point.color,
+                    points,
+                    color,
                     fillArea,
                     isFaded,
                     isHighlighted,
                     classes,
                   })}
                   onClick={(event) =>
-                    onMarkClick?.(event, { type: 'radar', seriesId, dataIndex: index })
+                    onAreaClick?.(event, {
+                      type: 'radar',
+                      seriesId,
+                      dataIndex: getRotationIndex(event),
+                    })
                   }
-                  cursor={onMarkClick ? 'pointer' : 'unset'}
+                  cursor={onAreaClick ? 'pointer' : 'unset'}
+                  {...interactionProps[seriesIndex]}
                 />
-              ))}
-          </g>
-        );
-      })}
+              }
+              {!hideMark &&
+                points.map((point, index) => (
+                  <circle
+                    key={index}
+                    {...getCircleProps({
+                      seriesId,
+                      point,
+                      color: point.color,
+                      fillArea,
+                      isFaded,
+                      isHighlighted,
+                      classes,
+                    })}
+                    onClick={(event) =>
+                      onMarkClick?.(event, { type: 'radar', seriesId, dataIndex: index })
+                    }
+                    cursor={onMarkClick ? 'pointer' : 'unset'}
+                  />
+                ))}
+            </g>
+          );
+        },
+      )}
     </g>
   );
 }

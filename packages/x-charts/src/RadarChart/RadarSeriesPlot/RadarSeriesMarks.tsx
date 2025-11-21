@@ -46,8 +46,8 @@ function RadarSeriesMarks(props: RadarSeriesMarksProps) {
 
   return (
     <React.Fragment>
-      {seriesCoordinates?.map(({ seriesId: id, points, hideMark, fillArea }) => {
-        if (hideMark) {
+      {seriesCoordinates?.map(({ seriesId: id, points, hideMark, fillArea, hidden }) => {
+        if (hideMark || hidden) {
           return null;
         }
 

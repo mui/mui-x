@@ -82,6 +82,8 @@ export type BarLabelItemProps = Omit<BarLabelOwnerState, 'isFaded' | 'isHighligh
      * @default 'center'
      */
     barLabelPlacement?: BarLabelProps['placement'];
+    /** If true, the bar label is hidden. */
+    hidden?: boolean;
   };
 
 /**
@@ -106,6 +108,7 @@ function BarLabelItem(props: BarLabelItemProps) {
     skipAnimation,
     layout,
     barLabelPlacement,
+    hidden,
     ...other
   } = props;
   const { isFaded, isHighlighted } = useItemHighlighted({
@@ -162,7 +165,7 @@ function BarLabelItem(props: BarLabelItemProps) {
   }
 
   return (
-    <Component {...barLabelProps} {...barLabelOwnerState}>
+    <Component {...barLabelProps} {...barLabelOwnerState} hidden={hidden}>
       {formattedLabelText}
     </Component>
   );

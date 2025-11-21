@@ -20,3 +20,4 @@ export * from './animation';
 export * from './useChartRootRef';
 export * from './useChartsLocalization';
 export * from './useBrush';
+export * from '../internals/plugins/featurePlugins/useChartVisibilityManager/useChartVisibilityManager.hooks';

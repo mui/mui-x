@@ -14,6 +14,8 @@ import {
   useChartBrush,
   UseChartBrushSignature,
   ConvertSignaturesIntoPlugins,
+  useChartVisibilityManager,
+  UseChartVisibilityManagerSignature,
 } from '@mui/x-charts/internals';
 import {
   useChartProExport,
@@ -27,6 +29,7 @@ export type ScatterChartProPluginSignatures = [
   UseChartInteractionSignature,
   UseChartCartesianAxisSignature<'scatter'>,
   UseChartHighlightSignature,
+  UseChartVisibilityManagerSignature,
   UseChartClosestPointSignature,
   UseChartKeyboardNavigationSignature,
   UseChartProZoomSignature,
@@ -40,6 +43,7 @@ export const SCATTER_CHART_PRO_PLUGINS: ConvertSignaturesIntoPlugins<ScatterChar
     useChartInteraction,
     useChartCartesianAxis,
     useChartHighlight,
+    useChartVisibilityManager,
     useChartClosestPoint,
     useChartKeyboardNavigation,
     useChartProZoom,

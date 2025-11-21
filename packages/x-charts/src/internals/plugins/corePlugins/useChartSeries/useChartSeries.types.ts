@@ -6,6 +6,7 @@ import {
   SeriesProcessorParams,
   SeriesProcessorResult,
 } from '../../models/seriesConfig/seriesProcessor.types';
+import type { UseChartVisibilityManagerSignature } from '../../featurePlugins/useChartVisibilityManager';
 
 export interface UseChartSeriesParameters<T extends ChartSeriesType = ChartSeriesType> {
   /**
@@ -66,4 +67,8 @@ export type UseChartSeriesSignature<SeriesType extends ChartSeriesType = ChartSe
     defaultizedParams: UseChartSeriesDefaultizedParameters<SeriesType>;
     state: UseChartSeriesState<SeriesType>;
     instance: UseChartSeriesInstance;
+    optionalDependencies: [
+      // Optional as the series plugin starts first
+      UseChartVisibilityManagerSignature,
+    ];
   }>;

@@ -17,13 +17,18 @@ const MarkElementPath = styled('path', {
   strokeWidth: 2,
   [`&.${markElementClasses.animate}`]: {
     transitionDuration: `${ANIMATION_DURATION_MS}ms`,
-    transitionProperty: 'transform, transform-origin',
+    transitionProperty: 'transform, transform-origin, opacity',
     transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
   },
 }));
 
 export type MarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighlighted'> &
   Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> & {
+    /**
+     * If `true`, the marker is hidden.
+     * @default false
+     */
+    hidden?: boolean;
     /**
      * If `true`, animations are skipped.
      * @default false
@@ -72,6 +77,7 @@ function MarkElement(props: MarkElementProps) {
     skipAnimation,
     isFaded = false,
     isHighlighted = false,
+    hidden,
     ...other
   } = props;
 
@@ -102,6 +108,7 @@ function MarkElement(props: MarkElementProps) {
       {...interactionProps}
       data-highlighted={isHighlighted || undefined}
       data-faded={isFaded || undefined}
+      opacity={hidden ? 0 : 1}
     />
   );
 }

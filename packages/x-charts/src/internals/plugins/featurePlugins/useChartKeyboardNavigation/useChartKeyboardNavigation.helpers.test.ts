@@ -6,7 +6,8 @@ import {
 
 const barSeries = {
   type: 'bar' as const,
-  stackedData: [],
+  fullStackedData: [],
+  visibleStackedData: [],
   valueFormatter: () => '',
   color: '',
   layout: 'horizontal' as const,
@@ -15,7 +16,8 @@ const barSeries = {
 
 const lineSeries = {
   type: 'line' as const,
-  stackedData: [],
+  fullStackedData: [],
+  visibleStackedData: [],
   valueFormatter: () => '',
   color: '',
 };
@@ -26,11 +28,13 @@ const seriesSingleType: ProcessedSeries<'bar'> = {
       b: {
         data: [1, 2],
         id: 'b',
+        hidden: false,
         ...barSeries,
       },
       a: {
         data: [1, 2],
         id: 'a',
+        hidden: false,
         ...barSeries,
       },
     },
@@ -45,11 +49,13 @@ const seriesMultipleTypes: ProcessedSeries<'bar' | 'line'> = {
       b: {
         data: [1, 2],
         id: 'b',
+        hidden: false,
         ...barSeries,
       },
       a: {
         data: [1, 2],
         id: 'a',
+        hidden: false,
         ...barSeries,
       },
     },
@@ -61,11 +67,13 @@ const seriesMultipleTypes: ProcessedSeries<'bar' | 'line'> = {
       b: {
         data: [1, 2],
         id: 'b',
+        hidden: false,
         ...lineSeries,
       },
       a: {
         data: [1, 2],
         id: 'a',
+        hidden: false,
         ...lineSeries,
       },
     },

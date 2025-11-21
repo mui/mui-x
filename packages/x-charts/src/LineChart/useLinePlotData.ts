@@ -15,6 +15,7 @@ interface LinePlotDataPoint {
   seriesId: SeriesId;
   color: string;
   gradientId?: string;
+  hidden: boolean;
 }
 
 export function useLinePlotData(
@@ -43,7 +44,8 @@ export function useLinePlotData(
         const {
           xAxisId = defaultXAxisId,
           yAxisId = defaultYAxisId,
-          stackedData,
+          fullStackedData,
+          visibleStackedData,
           data,
           connectNulls,
           curve,
@@ -74,9 +76,9 @@ export function useLinePlotData(
               } should have data property to be able to display a line plot.`,
             );
           }
-          if (xData.length < stackedData.length) {
+          if (xData.length < fullStackedData.length) {
             warnOnce(
-              `MUI X Charts: The data length of the x axis (${xData.length} items) is lower than the length of series (${stackedData.length} items).`,
+              `MUI X Charts: The data length of the x axis (${xData.length} items) is lower than the length of series (${fullStackedData.length} items).`,
               'error',
             );
           }
@@ -93,11 +95,11 @@ export function useLinePlotData(
           xData?.flatMap((x, index) => {
             const nullData = data[index] == null;
             if (shouldExpand) {
-              const rep = [{ x, y: stackedData[index], nullData, isExtension: false }];
+              const rep = [{ x, y: visibleStackedData[index], nullData, isExtension: false }];
               if (!nullData && (index === 0 || data[index - 1] == null)) {
                 rep.unshift({
                   x: (xScale(x) ?? 0) - (xScale.step() - xScale.bandwidth()) / 2,
-                  y: stackedData[index],
+                  y: visibleStackedData[index],
                   nullData,
                   isExtension: true,
                 });
@@ -105,14 +107,14 @@ export function useLinePlotData(
               if (!nullData && (index === data.length - 1 || data[index + 1] == null)) {
                 rep.push({
                   x: (xScale(x) ?? 0) + (xScale.step() + xScale.bandwidth()) / 2,
-                  y: stackedData[index],
+                  y: visibleStackedData[index],
                   nullData,
                   isExtension: true,
                 });
               }
               return rep;
             }
-            return { x, y: stackedData[index], nullData };
+            return { x, y: visibleStackedData[index], nullData };
           }) ?? [];
 
         const d3Data = connectNulls ? formattedData.filter((d) => !d.nullData) : formattedData;
@@ -133,6 +135,7 @@ export function useLinePlotData(
           gradientId,
           d,
           seriesId,
+          hidden: series[seriesId].hidden,
         });
       }
     }
