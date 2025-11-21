@@ -35,7 +35,7 @@ import type {
   GridDataSourcePro as GridDataSource,
   GridGetRowsParamsPro as GridGetRowsParams,
 } from '../hooks/features/dataSource/models';
-import type { ReorderValidationContext } from '../hooks/features/rowReorder/reorderValidationTypes';
+import type { ReorderValidationContext } from '../hooks/features/rowReorder/models';
 import type { IsRowReorderableParams } from '../hooks/features/rowReorder';
 
 export interface GridExperimentalProFeatures extends GridExperimentalFeatures {}

@@ -9,7 +9,7 @@ import {
   gridExpandedSortedRowIndexLookupSelector,
 } from '@mui/x-data-grid';
 import { useGridRegisterPipeProcessor, type GridPipeProcessor } from '@mui/x-data-grid/internals';
-import type { ReorderValidationContext } from '../rowReorder/reorderValidationTypes';
+import type { ReorderValidationContext } from '../rowReorder/models';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GRID_TREE_DATA_GROUPING_FIELD } from './gridTreeDataGroupColDef';

@@ -3,7 +3,7 @@ import {
   gridRowTreeSelector,
   type GridGroupNode,
 } from '@mui/x-data-grid';
-import type { ReorderValidationContext as Ctx } from './reorderValidationTypes';
+import type { ReorderValidationContext as Ctx } from './models';
 
 /**
  * Reusable validation conditions for row reordering validation
