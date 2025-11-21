@@ -23,7 +23,7 @@ export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiCo
 
       if (sourceNode.type !== 'leaf') {
         throw new Error(
-          `MUI X: The row reordering do not support reordering of footer or grouping rows.`,
+          `MUI X: The row reordering does not support reordering of footer or grouping rows.`,
         );
       }
 
@@ -98,7 +98,7 @@ export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiCo
 
       if (node.type !== 'leaf') {
         throw new Error(
-          `MUI X: The row reordering do not support reordering of footer or grouping rows.`,
+          `MUI X: The row reordering does not support reordering of footer or grouping rows.`,
         );
       }
 
