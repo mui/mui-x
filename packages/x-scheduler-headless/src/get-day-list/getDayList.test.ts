@@ -1,33 +1,26 @@
-import { renderHook } from '@mui/internal-test-utils';
 import { adapter, DEFAULT_TESTING_VISIBLE_DATE } from 'test/utils/scheduler';
-import { useDayList } from './useDayList';
+import { getDayList } from './getDayList';
 import { isWeekend } from '../use-adapter';
-import { SchedulerValidDate } from '../models';
 
-describe('useDayList', () => {
-  function testHook(date: SchedulerValidDate, amount: number | 'week', excludeWeekends?: boolean) {
-    const { result } = renderHook(() => useDayList());
-    return result.current({
-      date,
-      amount,
-      excludeWeekends,
-    });
-  }
-
+describe('getDayList', () => {
   it('should throw an error when amount is a non positive number', () => {
-    expect(() => testHook(DEFAULT_TESTING_VISIBLE_DATE, 0)).to.throw(/amount.*positive number/);
-    expect(() => testHook(DEFAULT_TESTING_VISIBLE_DATE, -5)).to.throw(/amount.*positive number/);
+    expect(() => getDayList({ adapter, date: DEFAULT_TESTING_VISIBLE_DATE, amount: 0 })).to.throw(
+      /amount.*positive number/,
+    );
+    expect(() => getDayList({ adapter, date: DEFAULT_TESTING_VISIBLE_DATE, amount: -5 })).to.throw(
+      /amount.*positive number/,
+    );
   });
 
   it('should return one day when amount=1', () => {
-    const days = testHook(DEFAULT_TESTING_VISIBLE_DATE, 1);
+    const days = getDayList({ adapter, date: DEFAULT_TESTING_VISIBLE_DATE, amount: 1 });
 
     expect(days).to.have.length(1);
     expect(days[0].value).to.toEqualDateTime(DEFAULT_TESTING_VISIBLE_DATE);
   });
 
   it('should return consecutive days', () => {
-    const days = testHook(DEFAULT_TESTING_VISIBLE_DATE, 4);
+    const days = getDayList({ adapter, date: DEFAULT_TESTING_VISIBLE_DATE, amount: 4 });
 
     expect(days).to.have.length(4);
 
@@ -39,7 +32,7 @@ describe('useDayList', () => {
   });
 
   it('should generate a 7-day range when amount="week"', () => {
-    const days = testHook(DEFAULT_TESTING_VISIBLE_DATE, 'week');
+    const days = getDayList({ adapter, date: DEFAULT_TESTING_VISIBLE_DATE, amount: 'week' });
 
     expect(days).to.have.length(7);
 
@@ -51,7 +44,12 @@ describe('useDayList', () => {
   });
 
   it('should exclude weekends when excludeWeekends=true', () => {
-    const days = testHook(DEFAULT_TESTING_VISIBLE_DATE, 'week', true);
+    const days = getDayList({
+      adapter,
+      date: DEFAULT_TESTING_VISIBLE_DATE,
+      amount: 'week',
+      excludeWeekends: true,
+    });
 
     const start = adapter.startOfDay(DEFAULT_TESTING_VISIBLE_DATE);
     const rawDays = [...Array(7)].map((_, i) => adapter.addDays(start, i));

@@ -6,7 +6,7 @@ import { SchedulerEvent, SchedulerValidDate } from '../models';
 import {
   useAgendaEventOccurrencesGroupedByDay,
   useAgendaEventOccurrencesGroupedByDayOptions,
-} from './useAgendaEventOccurrencesGroupedByDay';
+} from './getAgendaDayList';
 import { EventCalendarProvider } from '../event-calendar-provider/EventCalendarProvider';
 import { AGENDA_VIEW_DAYS_AMOUNT } from '../constants';
 

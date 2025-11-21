@@ -4,10 +4,12 @@ import clsx from 'clsx';
 import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { EventCalendarViewConfig } from '@mui/x-scheduler-headless/models';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
+import { getAgendaDayList } from '@mui/x-scheduler-headless/get-agenda-day-list';
 import { useEventCalendarView } from '@mui/x-scheduler-headless/use-event-calendar-view';
+import { sortEventOccurrences } from '@mui/x-scheduler-headless/sort-event-occurrences';
 import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
 import { useExtractEventCalendarParameters } from '@mui/x-scheduler-headless/use-event-calendar';
-import { useAgendaEventOccurrencesGroupedByDay } from '@mui/x-scheduler-headless/use-agenda-event-occurrences-grouped-by-day';
+import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-headless/use-event-occurrences-grouped-by-day';
 import { AGENDA_VIEW_DAYS_AMOUNT } from '@mui/x-scheduler-headless/constants';
 import { AgendaViewProps, StandaloneAgendaViewProps } from './AgendaView.types';
 import { EventPopoverProvider, EventPopoverTrigger } from '../internals/components/event-popover';
@@ -18,6 +20,24 @@ import '../index.css';
 const AGENDA_VIEW_CONFIG: EventCalendarViewConfig = {
   siblingVisibleDateGetter: ({ state, delta }) =>
     state.adapter.addDays(state.visibleDate, AGENDA_VIEW_DAYS_AMOUNT * delta),
+  getVisibleDays: ({
+    adapter,
+    visibleDate,
+    preferences,
+    events,
+    resourceParentIds,
+    visibleResources,
+  }) =>
+    getAgendaDayList({
+      adapter,
+      excludeWeekends: !preferences.showWeekends,
+      showEmptyDays: preferences.showEmptyDaysInAgenda,
+      start: visibleDate,
+      amount: AGENDA_VIEW_DAYS_AMOUNT,
+      events,
+      visibleResources,
+      resourceParentIds,
+    }),
 };
 
 /**
@@ -36,9 +56,9 @@ export const AgendaView = React.memo(
     const handleRef = useMergedRefs(forwardedRef, containerRef);
 
     // Feature hooks
-    useEventCalendarView(AGENDA_VIEW_CONFIG);
+    const { days } = useEventCalendarView(AGENDA_VIEW_CONFIG);
+    const occurrencesMap = useEventOccurrencesGroupedByDay({ days });
 
-    const days = useAgendaEventOccurrencesGroupedByDay();
     const today = adapter.now('default');
 
     return (
@@ -48,7 +68,7 @@ export const AgendaView = React.memo(
         className={clsx('AgendaViewContainer', 'mui-x-scheduler', props.className)}
       >
         <EventPopoverProvider containerRef={containerRef}>
-          {days.map(({ date, occurrences }) => (
+          {days.map((date) => (
             <section
               className="AgendaViewRow"
               key={date.key}
@@ -73,21 +93,23 @@ export const AgendaView = React.memo(
                 </div>
               </header>
               <ul className="EventsList">
-                {occurrences.map((occurrence) => (
-                  <li key={occurrence.key}>
-                    <EventPopoverTrigger
-                      occurrence={occurrence}
-                      render={
-                        <EventItem
-                          occurrence={occurrence}
-                          date={date}
-                          variant="regular"
-                          ariaLabelledBy={`DayHeaderCell-${date.key}`}
-                        />
-                      }
-                    />
-                  </li>
-                ))}
+                {sortEventOccurrences(occurrencesMap.get(date.key) ?? [], adapter).map(
+                  (occurrence) => (
+                    <li key={occurrence.key}>
+                      <EventPopoverTrigger
+                        occurrence={occurrence}
+                        render={
+                          <EventItem
+                            occurrence={occurrence}
+                            date={date}
+                            variant="regular"
+                            ariaLabelledBy={`DayHeaderCell-${date.key}`}
+                          />
+                        }
+                      />
+                    </li>
+                  ),
+                )}
               </ul>
             </section>
           ))}
