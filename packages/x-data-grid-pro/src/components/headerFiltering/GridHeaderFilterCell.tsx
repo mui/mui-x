@@ -232,9 +232,6 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
         elementToFocus.focus();
         apiRef.current.scroll(scrollPosition);
       }
-      if (apiRef.current.columnHeadersContainerRef.current) {
-        apiRef.current.columnHeadersContainerRef.current.scrollLeft = 0;
-      }
     }
   }, [InputComponent, apiRef, hasFocus, isEditing, isMenuOpen]);
 
