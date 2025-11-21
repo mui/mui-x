@@ -31,7 +31,6 @@ import {
   gridHeaderFilteringMenuSelector,
   isNavigationKey,
   attachPinnedStyle,
-  doesSupportPreventScroll,
 } from '@mui/x-data-grid/internals';
 import { useRtl } from '@mui/system/RtlProvider';
 import { forwardRef } from '@mui/x-internals/forwardRef';
@@ -182,15 +181,11 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
       if (isEditing && InputComponent) {
         focusableElement = inputRef.current;
       }
-      const elementToFocus = focusableElement || cellRef.current!;
+      const elementToFocus = focusableElement || cellRef.current;
 
-      if (doesSupportPreventScroll()) {
-        elementToFocus.focus({ preventScroll: true });
-      } else {
-        const scrollPosition = apiRef.current.getScrollPosition();
-        elementToFocus.focus();
-        apiRef.current.scroll(scrollPosition);
-      }
+      const scrollPosition = apiRef.current.getScrollPosition();
+      elementToFocus?.focus();
+      apiRef.current.scroll(scrollPosition);
     }
   }, [InputComponent, apiRef, hasFocus, isEditing, isMenuOpen]);
 

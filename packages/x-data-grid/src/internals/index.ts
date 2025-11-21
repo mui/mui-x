@@ -158,7 +158,6 @@ export {
   createSelectorMemoized,
   createSelectorMemoizedV8,
 } from '../utils/createSelector';
-export { doesSupportPreventScroll } from '../utils/doesSupportPreventScroll';
 export { useGridSelectorV8 } from '../hooks/utils/useGridSelector';
 export { gridRowGroupsToFetchSelector } from '../hooks/features/rows/gridRowsSelector';
 export {
