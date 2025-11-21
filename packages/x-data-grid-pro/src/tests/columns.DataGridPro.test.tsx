@@ -615,6 +615,32 @@ describe('<DataGridPro /> - Columns', () => {
       });
     });
 
+    it('should work with custom column header sort icon', async () => {
+      const iconSize = 24;
+      const iconScrollSize = iconSize + 1;
+      const gap = 2;
+      const paddingX = 20;
+      function CustomSortIcon() {
+        return <span style={{ width: iconSize, flex: 'none' }}>⇅</span>;
+      }
+      render(
+        <Test
+          rows={rows}
+          columns={columns}
+          slots={{
+            columnHeaderSortIcon: CustomSortIcon,
+          }}
+        />,
+      );
+      await act(async () => apiRef.current?.autosizeColumns());
+
+      // Cell structure: |← padding →|← text →|← gap →|← icon →|← padding →|
+      expect(getWidths()).to.deep.equal([
+        paddingX + 132 + gap + iconScrollSize, // `132` is the width of the text "This is the ID column"
+        paddingX + 154 + gap + iconScrollSize, // `154` is the width of the text "This is the brand column"
+      ]);
+    });
+
     describe('options', () => {
       const autosize = async (options: GridAutosizeOptions | undefined, widths: number[]) => {
         render(<Test rows={rows} columns={columns} />);
