@@ -121,7 +121,3 @@ To be able to drag an event to the outside, your events must be draggable, so `a
 ### Basic Timeline
 
 {{"demo": "TimelineExternalDragAndDrop.js", "bg": "inline", "defaultCodeOpen": false}}
-
-```
-
-```
