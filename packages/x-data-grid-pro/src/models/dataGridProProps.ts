@@ -216,7 +216,7 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    */
   onPinnedColumnsChange?: (
     pinnedColumns: GridPinnedColumnFields,
-    details: GridCallbackDetails,
+    details: GridCallbackDetails<any>,
   ) => void;
   /**
    * The grouping column used by the tree data.
@@ -235,7 +235,10 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * @param {GridRowId[]} ids The ids of the rows which have the detail panel open.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onDetailPanelExpandedRowIdsChange?: (ids: Set<GridRowId>, details: GridCallbackDetails) => void;
+  onDetailPanelExpandedRowIdsChange?: (
+    ids: Set<GridRowId>,
+    details: GridCallbackDetails<any>,
+  ) => void;
   /**
    * Function that returns the element to render in row detail.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
