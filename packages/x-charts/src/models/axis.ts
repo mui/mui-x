@@ -18,6 +18,7 @@ import { ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
 import { ChartsTextProps } from '../ChartsText';
 import { ContinuousColorConfig, OrdinalColorConfig, PiecewiseColorConfig } from './colorMapping';
+import { TimeOrdinalTicks } from './timeTicks';
 
 export type AxisId = string | number;
 
@@ -266,6 +267,10 @@ export type AxisGroups = {
 export interface AxisScaleConfig {
   band: {
     scaleType: 'band';
+    /**
+     * Definition of the tick placements with date data.
+     */
+    timeOrdinalTicks?: TimeOrdinalTicks;
     scale: ScaleBand<{ toString(): string }>;
     /**
      * The ratio between the space allocated for padding between two categories and the category width.
@@ -284,6 +289,10 @@ export interface AxisScaleConfig {
     Pick<TickParams, 'tickPlacement' | 'tickLabelPlacement'>;
   point: {
     scaleType: 'point';
+    /**
+     * Definition of the tick placements with date data.
+     */
+    timeOrdinalTicks?: TimeOrdinalTicks;
     scale: ScalePoint<{ toString(): string }>;
     colorMap?: OrdinalColorConfig | ContinuousColorConfig | PiecewiseColorConfig;
   } & AxisGroups;
@@ -677,11 +686,9 @@ export type DefaultedAxis<
 /**
  * The x-axis configuration with missing values filled with default values.
  */
-export type DefaultedXAxis<S extends ScaleName = ScaleName, V = any> = DefaultedAxis<
-  S,
-  V,
-  ChartsXAxisProps
->;
+export type DefaultedXAxis<S extends ScaleName = ScaleName, V = any> = S extends ScaleName
+  ? DefaultedAxis<S, V, ChartsXAxisProps>
+  : never;
 
 /**
  * The y-axis configuration with missing values filled with default values.

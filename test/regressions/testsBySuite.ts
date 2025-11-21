@@ -37,6 +37,7 @@ const docsImports = import.meta.glob<React.ComponentType>(
     '!docsx/data/data-grid/server-side-data/useNestedPagination',
     '!docsx/data/data-grid/server-side-data/NestedPaginationGroupingCell',
     '!docsx/data/charts/export/ExportOptionSelector', // sub-component for demo purpose
+    '!docsx/data/charts/axis/SelectTimeFrequency', // sub-component for demo purpose
 
     // Exclude codesandbox embedded demos since they're not using packages built from the branch anyway.
     '!docsx/data/migration/migration-pickers-v5/MobileKeyboardView',

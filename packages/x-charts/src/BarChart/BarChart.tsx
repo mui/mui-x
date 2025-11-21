@@ -429,6 +429,16 @@ BarChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        timeOrdinalTicks: PropTypes.arrayOf(
+          PropTypes.oneOfType([
+            PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarters', 'weeks', 'years']),
+            PropTypes.shape({
+              format: PropTypes.func.isRequired,
+              getTickNumber: PropTypes.func.isRequired,
+              isTick: PropTypes.func.isRequired,
+            }),
+          ]).isRequired,
+        ),
         valueFormatter: PropTypes.func,
       }),
       PropTypes.shape({
@@ -506,6 +516,16 @@ BarChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        timeOrdinalTicks: PropTypes.arrayOf(
+          PropTypes.oneOfType([
+            PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarters', 'weeks', 'years']),
+            PropTypes.shape({
+              format: PropTypes.func.isRequired,
+              getTickNumber: PropTypes.func.isRequired,
+              isTick: PropTypes.func.isRequired,
+            }),
+          ]).isRequired,
+        ),
         valueFormatter: PropTypes.func,
       }),
       PropTypes.shape({
@@ -1054,6 +1074,16 @@ BarChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        timeOrdinalTicks: PropTypes.arrayOf(
+          PropTypes.oneOfType([
+            PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarters', 'weeks', 'years']),
+            PropTypes.shape({
+              format: PropTypes.func.isRequired,
+              getTickNumber: PropTypes.func.isRequired,
+              isTick: PropTypes.func.isRequired,
+            }),
+          ]).isRequired,
+        ),
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
       }),
@@ -1130,6 +1160,16 @@ BarChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        timeOrdinalTicks: PropTypes.arrayOf(
+          PropTypes.oneOfType([
+            PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarters', 'weeks', 'years']),
+            PropTypes.shape({
+              format: PropTypes.func.isRequired,
+              getTickNumber: PropTypes.func.isRequired,
+              isTick: PropTypes.func.isRequired,
+            }),
+          ]).isRequired,
+        ),
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
       }),

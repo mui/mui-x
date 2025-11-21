@@ -30,7 +30,7 @@ import {
   selectorChartRawYAxis,
 } from './useChartCartesianAxisLayout.selectors';
 import { selectorPreferStrictDomainInLineCharts } from '../../corePlugins/useChartExperimentalFeature';
-import { getDefaultTickNumber } from '../../../ticks';
+import { getDefaultTickNumber, getTickNumber } from '../../../ticks';
 import { getNormalizedAxisScale, getRange } from './getAxisScale';
 import { isOrdinalScale } from '../../../scaleGuards';
 import { zoomScaleRange } from './zoom';
@@ -136,6 +136,14 @@ export const selectorChartXAxisWithDomains = createSelectorMemoized(
 
       if (isBandScaleConfig(axis) || isPointScaleConfig(axis)) {
         domains[axis.id] = { domain: axis.data! };
+
+        if (axis.timeOrdinalTicks !== undefined) {
+          domains[axis.id].tickNumber = getTickNumber(
+            axis,
+            [axis.data?.find((d) => d !== null), axis.data?.findLast((d) => d !== null)],
+            defaultTickNumber,
+          );
+        }
         return;
       }
 
@@ -183,6 +191,14 @@ export const selectorChartYAxisWithDomains = createSelectorMemoized(
 
       if (isBandScaleConfig(axis) || isPointScaleConfig(axis)) {
         domains[axis.id] = { domain: axis.data! };
+
+        if (axis.timeOrdinalTicks !== undefined) {
+          domains[axis.id].tickNumber = getTickNumber(
+            axis,
+            [axis.data?.find((d) => d !== null), axis.data?.findLast((d) => d !== null)],
+            defaultTickNumber,
+          );
+        }
         return;
       }
 

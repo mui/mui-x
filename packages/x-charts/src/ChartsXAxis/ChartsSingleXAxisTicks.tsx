@@ -4,6 +4,7 @@ import { useRtl } from '@mui/system/RtlProvider';
 import { useIsHydrated } from '../hooks/useIsHydrated';
 import { useTicks } from '../hooks/useTicks';
 import { ChartsXAxisProps } from '../models/axis';
+import { TimeOrdinalTicks } from '../models/timeTicks';
 import { useMounted } from '../hooks/useMounted';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 import { useChartContext } from '../context/ChartProvider/useChartContext';
@@ -14,13 +15,14 @@ import { useAxisTicksProps } from './useAxisTicksProps';
 
 interface ChartsSingleXAxisProps extends ChartsXAxisProps {
   axisLabelHeight: number;
+  timeOrdinalTicks?: TimeOrdinalTicks;
 }
 
 /**
  * @ignore - internal component.
  */
 function ChartsSingleXAxisTicks(inProps: ChartsSingleXAxisProps) {
-  const { axisLabelHeight } = inProps;
+  const { axisLabelHeight, timeOrdinalTicks } = inProps;
   const {
     xScale,
     defaultizedProps,
@@ -63,6 +65,7 @@ function ChartsSingleXAxisTicks(inProps: ChartsSingleXAxisProps) {
     tickPlacement,
     tickLabelPlacement,
     direction: 'x',
+    timeOrdinalTicks,
   });
 
   const visibleLabels = getVisibleLabels(xTicks, {

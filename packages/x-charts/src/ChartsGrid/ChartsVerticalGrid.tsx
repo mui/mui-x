@@ -19,9 +19,17 @@ export function ChartsGridVertical(props: ChartsGridVerticalProps) {
   const { instance } = useChartContext();
   const { axis, start, end, classes } = props;
 
-  const { scale, tickNumber, tickInterval } = axis;
+  // @ts-expect-error timeOrdinalTicks may not be present on all axis types
+  // Should be set to never, but this causes other issues with proptypes generator.
+  const { scale, tickNumber, tickInterval, timeOrdinalTicks } = axis;
 
-  const xTicks = useTicks({ scale, tickNumber, tickInterval, direction: 'x' });
+  const xTicks = useTicks({
+    scale,
+    tickNumber,
+    tickInterval,
+    timeOrdinalTicks,
+    direction: 'x',
+  });
 
   return (
     <React.Fragment>
