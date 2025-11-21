@@ -123,7 +123,7 @@ export const selectorChartsTooltipItemPosition = createSelector(
     placement: 'top' | 'bottom' | 'left' | 'right' = 'top',
   ) {
     if (!identifier) {
-      return {};
+      return null;
     }
 
     const itemSeries = series[identifier.type as T]?.series[identifier.seriesId] as
