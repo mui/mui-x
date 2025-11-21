@@ -153,26 +153,40 @@ export const schedulerEventSelectors = {
       }
 
       // If the `resizable` property is defined on the event, it takes precedence
-      if (processedEvent!.resizable !== false) {
-        if (processedEvent!.resizable === true) {
-          return true;
-        }
+      const isResizableFromEventProperty = getIsResizableFromProperty(
+        processedEvent.resizable,
+        side,
+      );
 
-        if (processedEvent!.resizable === side) {
-          return true;
-        }
+      if (isResizableFromEventProperty !== null) {
+        return isResizableFromEventProperty;
       }
 
-      // Otherwise, fall back to the component-level setting
-      if (state.areEventsResizable === 'start') {
-        return side === 'start';
-      }
+      const isResizableFromComponentProperty = getIsResizableFromProperty(
+        state.areEventsResizable,
+        side,
+      );
 
-      if (state.areEventsResizable === 'end') {
-        return side === 'end';
-      }
-
-      return state.areEventsResizable;
+      return isResizableFromComponentProperty ?? false;
     },
   ),
 };
+
+function getIsResizableFromProperty(
+  propertyValue: boolean | SchedulerEventSide | undefined,
+  side: SchedulerEventSide,
+): boolean | null {
+  if (propertyValue === true) {
+    return true;
+  }
+
+  if (propertyValue === false) {
+    return false;
+  }
+
+  if (propertyValue === side) {
+    return true;
+  }
+
+  return null;
+}
