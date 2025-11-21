@@ -2,7 +2,7 @@ import { gridRowNodeSelector, gridRowTreeSelector } from '@mui/x-data-grid';
 import type { GridTreeNode, GridGroupNode, GridValidRowModel } from '@mui/x-data-grid';
 import { BaseReorderOperation, RowReorderExecutor } from '../rowReorder/reorderExecutor';
 import { type ReorderOperation, type ReorderExecutionContext } from '../rowReorder/types';
-import { determineOperationType, calculateTargetIndex, isDescendantOf } from '../rowReorder/utils';
+import { calculateTargetIndex, isDescendantOf } from '../rowReorder/utils';
 import {
   displaySetTreeDataPathWarning,
   removeNodeFromSourceParent,
@@ -96,8 +96,19 @@ export class SameParentSwapOperation extends BaseReorderOperation {
       }
     }
 
-    const operationType = determineOperationType(sourceNode, adjustedTargetNode);
-    if (operationType !== 'same-parent-swap') {
+    // Check if below last node in the same group as source node
+    const isBelowPosition = ctx.dropPosition === 'below';
+
+    if (isBelowPosition && sourceNode.parent !== adjustedTargetNode.parent) {
+      const unAdjustedTargetIndex = placeholderIndex - 1;
+      const unAdjustedTargetNode = gridRowNodeSelector(apiRef, sortedFilteredRowIds[unAdjustedTargetIndex]);
+      if (unAdjustedTargetNode && unAdjustedTargetNode.parent === sourceNode.parent) {
+        adjustedTargetNode = unAdjustedTargetNode;
+        isLastChild = true;
+      }
+    }
+
+    if (sourceNode.parent !== adjustedTargetNode.parent) {
       return null;
     }
 
@@ -115,7 +126,7 @@ export class SameParentSwapOperation extends BaseReorderOperation {
       targetNode,
       actualTargetIndex,
       isLastChild,
-      operationType,
+      operationType: this.operationType,
     };
   }
 

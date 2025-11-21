@@ -10,6 +10,7 @@ import {
   gridRowTreeSelector,
   GridApi,
   useGridApiRef,
+  GRID_ROOT_GROUP_ID,
   type ReorderValidationContext,
   type GridGroupNode,
   type IsRowReorderableParams,
@@ -152,6 +153,119 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
   }
 
   describe('Same-parent reordering', () => {
+    it('should reorder a leaf in the same parent when dropped below the last node in the same group', async () => {
+      // - A
+      //   - A.A
+      //   - A.B
+      // - B (leaf)
+      // When `A.A` is dragged and dropped on "below" of "A.B", it should swap positions with "A.B" (same parent reorder)
+      const handleRowOrderChange = spy();
+      render(
+        <Test
+          onRowOrderChange={handleRowOrderChange}
+          rows={[
+            { id: 1, path: ['A'], name: 'A' },
+            { id: 2, path: ['A', 'A.A'], name: 'A.A' },
+            { id: 3, path: ['A', 'A.B'], name: 'A.B' },
+            { id: 4, path: ['B'], name: 'B' },
+          ]}
+        />,
+      );
+
+      // Initial order: A.A should be before A.B
+      const initialValues = getColumnValues(0);
+      const initialAAIndex = findRowIndex(initialValues, 'A.A', 2);
+      const initialABIndex = findRowIndex(initialValues, 'A.B', 3);
+
+      expect(initialAAIndex).to.be.greaterThan(-1, 'A.A should be found');
+      expect(initialABIndex).to.be.greaterThan(-1, 'A.B should be found');
+      expect(initialAAIndex).to.be.lessThan(initialABIndex, 'A.A should be before A.B initially');
+
+      // Drag A.A and drop it "below" A.B
+      const sourceCell = getCell(initialAAIndex, 0).firstChild!; // A.A
+      const targetCell = getCell(initialABIndex, 0); // A.B
+
+      performDragOperation(sourceCell, targetCell, 'below');
+
+      // Wait for state updates to complete
+      await waitFor(() => {
+        expect(handleRowOrderChange.callCount).to.equal(1);
+      });
+
+      // Verify A.A is now after A.B
+      const newValues = getColumnValues(0);
+      const newAAIndex = findRowIndex(newValues, 'A.A', 2);
+      const newABIndex = findRowIndex(newValues, 'A.B', 3);
+
+      expect(newAAIndex).to.be.greaterThan(newABIndex, 'A.A should be after A.B after reorder');
+
+      // Verify both still have the same parent (A)
+      const rowTree = gridRowTreeSelector(apiRef!);
+      const aaNode = rowTree[2];
+      const abNode = rowTree[3];
+
+      expect(aaNode.parent).to.equal(1, 'A.A should still be a child of A');
+      expect(abNode.parent).to.equal(1, 'A.B should still be a child of A');
+    });
+
+    it('should reorder a leaf in the next group when dropped above the first node after current group', async () => {
+      // - A
+      //   - A.A
+      //   - A.B
+      // - B (leaf)
+      // When `A.A` is dragged and dropped on "above" of "B", it should become the second direct child of "A" (cross-parent reorder)
+      const handleRowOrderChange = spy();
+      render(
+        <Test
+          onRowOrderChange={handleRowOrderChange}
+          rows={[
+            { id: 1, path: ['A'], name: 'A' },
+            { id: 2, path: ['A', 'A.A'], name: 'A.A' },
+            { id: 3, path: ['A', 'A.B'], name: 'A.B' },
+            { id: 4, path: ['B'], name: 'B' },
+          ]}
+        />,
+      );
+
+      // Initial order: A.A should be before A.B and before B
+      const initialValues = getColumnValues(0);
+      const initialAAIndex = findRowIndex(initialValues, 'A.A', 2);
+      const initialABIndex = findRowIndex(initialValues, 'A.B', 3);
+      const initialBIndex = findRowIndex(initialValues, 'B', 4);
+
+      expect(initialAAIndex).to.be.greaterThan(-1, 'A.A should be found');
+      expect(initialABIndex).to.be.greaterThan(-1, 'A.B should be found');
+      expect(initialBIndex).to.be.greaterThan(-1, 'B should be found');
+      expect(initialAAIndex).to.be.lessThan(initialABIndex, 'A.A should be before A.B initially');
+      expect(initialABIndex).to.be.lessThan(initialBIndex, 'A.B should be before B initially');
+
+      // Drag A.A and drop it "above" B
+      const sourceCell = getCell(initialAAIndex, 0).firstChild!; // A.A
+      const targetCell = getCell(initialBIndex, 0); // B
+
+      performDragOperation(sourceCell, targetCell, 'above');
+
+      // Wait for state updates to complete
+      await waitFor(() => {
+        expect(handleRowOrderChange.callCount).to.equal(1);
+      });
+
+      // Verify A.A is now after A.B (became the second child of A)
+      const newValues = getColumnValues(0);
+      const newAAIndex = findRowIndex(newValues, 'A.A', 2);
+      const newABIndex = findRowIndex(newValues, 'A.B', 3);
+      const newBIndex = findRowIndex(newValues, 'B', 4);
+
+      expect(newAAIndex).to.be.greaterThan(newABIndex, 'A.A should be after A.B after reorder');
+      expect(newAAIndex).to.be.lessThan(newBIndex, 'A.A should still be before B');
+
+      // Verify A.A is still a child of A (same parent)
+      const rowTree = gridRowTreeSelector(apiRef!);
+      const aaNode = rowTree[2];
+
+      expect(aaNode.parent).to.equal(GRID_ROOT_GROUP_ID, 'A.A should be a root node now');
+    });
+
     it('should reorder group nodes within same parent', async () => {
       render(<Test />);
 
