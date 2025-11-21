@@ -25,12 +25,15 @@ describe('useDayListEventOccurrencesWithPosition', () => {
   }
 
   const createEvent = (id: string, start: string, end: string) =>
-    createProcessedEvent({
-      id,
-      start: adapter.date(start, 'default'),
-      end: adapter.date(end, 'default'),
-      title: `Event ${id}`,
-    });
+    createProcessedEvent(
+      {
+        id,
+        start: adapter.date(start, 'default'),
+        end: adapter.date(end, 'default'),
+        title: `Event ${id}`,
+      },
+      'default',
+    );
 
   it('should set firstIndex and lastIndex to all events when no events are overlapping', () => {
     const result = testHook(

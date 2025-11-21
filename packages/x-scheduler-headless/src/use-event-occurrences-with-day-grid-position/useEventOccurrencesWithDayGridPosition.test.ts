@@ -28,12 +28,15 @@ describe('useDayListEventOccurrencesWithPosition', () => {
   }
 
   const createEvent = (id: string, start: string, end: string) =>
-    createProcessedEvent({
-      id,
-      start: adapter.date(start, 'default'),
-      end: adapter.date(end, 'default'),
-      title: `Event ${id}`,
-    });
+    createProcessedEvent(
+      {
+        id,
+        start: adapter.date(start, 'default'),
+        end: adapter.date(end, 'default'),
+        title: `Event ${id}`,
+      },
+      'default',
+    );
 
   it('should set index to 1 for the first event on a day', () => {
     const result = testHook([createEvent('A', '2024-01-15', '2024-01-15')]);

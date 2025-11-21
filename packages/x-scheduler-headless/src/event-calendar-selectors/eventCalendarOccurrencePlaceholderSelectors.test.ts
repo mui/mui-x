@@ -52,12 +52,15 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
           start: adapter.startOfDay(day),
           end: adapter.endOfDay(day),
           resourceId: null,
-          originalOccurrence: createOccurrenceFromEvent({
-            id: 'event-id',
-            title: 'Event',
-            start: adapter.startOfDay(day),
-            end: adapter.endOfDay(day),
-          }),
+          originalOccurrence: createOccurrenceFromEvent(
+            {
+              id: 'event-id',
+              title: 'Event',
+              start: adapter.startOfDay(day),
+              end: adapter.endOfDay(day),
+            },
+            'default',
+          ),
         },
       };
       expect(eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell(state, day)).to.equal(
@@ -138,12 +141,15 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
           start: adapter.startOfDay(day),
           end: adapter.endOfDay(day),
           resourceId: null,
-          originalOccurrence: createOccurrenceFromEvent({
-            id: 'event-id',
-            title: 'Event',
-            start: adapter.startOfDay(day),
-            end: adapter.endOfDay(day),
-          }),
+          originalOccurrence: createOccurrenceFromEvent(
+            {
+              id: 'event-id',
+              title: 'Event',
+              start: adapter.startOfDay(day),
+              end: adapter.endOfDay(day),
+            },
+            'default',
+          ),
         },
       };
       expect(

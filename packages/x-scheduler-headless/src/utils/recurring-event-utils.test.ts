@@ -37,14 +37,17 @@ import { mergeDateAndTime } from './date-utils';
 
 describe('recurring-event-utils', () => {
   const createRecurringEvent = (overrides: Partial<SchedulerEvent> = {}) =>
-    createProcessedEvent({
-      id: 'recurring',
-      title: 'Recurring Event',
-      start: adapter.date('2025-01-01T09:00:00Z', 'default'),
-      end: adapter.date('2025-01-01T10:00:00Z', 'default'),
-      rrule: { freq: 'DAILY', interval: 1 },
-      ...overrides,
-    });
+    createProcessedEvent(
+      {
+        id: 'recurring',
+        title: 'Recurring Event',
+        start: adapter.date('2025-01-01T09:00:00Z', 'default'),
+        end: adapter.date('2025-01-01T10:00:00Z', 'default'),
+        rrule: { freq: 'DAILY', interval: 1 },
+        ...overrides,
+      },
+      'default',
+    );
 
   describe('getWeekDayCodeForDate', () => {
     it('should work with fr (week starts on Monday)', () => {
@@ -94,14 +97,17 @@ describe('recurring-event-utils', () => {
 
   describe('getEventDurationInDays', () => {
     const createEvent = (overrides: Partial<SchedulerEvent>) =>
-      createProcessedEvent({
-        id: 'event-1',
-        title: 'Test Event',
-        start: adapter.date('2025-01-01T09:00:00Z', 'default'),
-        end: adapter.date('2025-01-01T10:00:00Z', 'default'),
-        allDay: false,
-        ...overrides,
-      });
+      createProcessedEvent(
+        {
+          id: 'event-1',
+          title: 'Test Event',
+          start: adapter.date('2025-01-01T09:00:00Z', 'default'),
+          end: adapter.date('2025-01-01T10:00:00Z', 'default'),
+          allDay: false,
+          ...overrides,
+        },
+        'default',
+      );
 
     it('returns inclusive day count for non-allDay multi-day event', () => {
       const event = createEvent({
@@ -369,12 +375,15 @@ describe('recurring-event-utils', () => {
   describe('matchesRecurrence', () => {
     const baseStart = adapter.date('2025-01-10T09:30:00Z', 'default'); // Friday
     const createEvent = (start = baseStart) =>
-      createProcessedEvent({
-        id: 'event-1',
-        title: 'Test Event',
-        start,
-        end: adapter.addHours(start, 1),
-      });
+      createProcessedEvent(
+        {
+          id: 'event-1',
+          title: 'Test Event',
+          start,
+          end: adapter.addHours(start, 1),
+        },
+        'default',
+      );
 
     describe('daily frequency', () => {
       it('returns false for date before series start', () => {
@@ -939,18 +948,21 @@ describe('recurring-event-utils', () => {
 
   describe('getRecurringEventOccurrencesForVisibleDays', () => {
     const createEvent = (overrides: Partial<SchedulerEvent>) =>
-      createProcessedEvent({
-        id: 'base-event',
-        title: 'Recurring Test Event',
-        start: adapter.date('2025-01-01T09:00:00Z', 'default'),
-        end: adapter.date('2025-01-01T10:30:00Z', 'default'),
-        allDay: false,
-        rrule: {
-          freq: 'DAILY',
-          interval: 1,
+      createProcessedEvent(
+        {
+          id: 'base-event',
+          title: 'Recurring Test Event',
+          start: adapter.date('2025-01-01T09:00:00Z', 'default'),
+          end: adapter.date('2025-01-01T10:30:00Z', 'default'),
+          allDay: false,
+          rrule: {
+            freq: 'DAILY',
+            interval: 1,
+          },
+          ...overrides,
         },
-        ...overrides,
-      });
+        'default',
+      );
 
     it('generates daily timed occurrences within visible range preserving duration', () => {
       const visibleStart = adapter.date('2025-01-10T00:00:00Z', 'default');
@@ -1763,12 +1775,12 @@ describe('recurring-event-utils', () => {
   describe('parseRRuleString', () => {
     it('should return the same object if the input is already an object', () => {
       const input: RecurringEventRecurrenceRule = { freq: 'DAILY', interval: 2 };
-      const result = parseRRuleString(adapter, input);
+      const result = parseRRuleString(adapter, input, 'default');
       expect(result).to.equal(input);
     });
 
     it('should parse a simple RRULE string into an object', () => {
-      const result = parseRRuleString(adapter, 'FREQ=DAILY;INTERVAL=2;COUNT=5');
+      const result = parseRRuleString(adapter, 'FREQ=DAILY;INTERVAL=2;COUNT=5', 'default');
       expect(result).to.deep.equal({
         freq: 'DAILY',
         interval: 2,
@@ -1777,13 +1789,13 @@ describe('recurring-event-utils', () => {
     });
 
     it('should parse BYDAY correctly', () => {
-      const result = parseRRuleString(adapter, 'FREQ=WEEKLY;BYDAY=MO,WE,FR');
+      const result = parseRRuleString(adapter, 'FREQ=WEEKLY;BYDAY=MO,WE,FR', 'default');
       expect(result).to.deep.equal({
         freq: 'WEEKLY',
         byDay: ['MO', 'WE', 'FR'],
       });
 
-      const resultWithOrdinals = parseRRuleString(adapter, 'FREQ=MONTHLY;BYDAY=-1FR');
+      const resultWithOrdinals = parseRRuleString(adapter, 'FREQ=MONTHLY;BYDAY=-1FR', 'default');
       expect(resultWithOrdinals).to.deep.equal({
         freq: 'MONTHLY',
         byDay: ['-1FR'],
@@ -1791,7 +1803,7 @@ describe('recurring-event-utils', () => {
     });
 
     it('should parse BYMONTHDAY correctly', () => {
-      const result = parseRRuleString(adapter, 'FREQ=WEEKLY;BYMONTHDAY=15, 28');
+      const result = parseRRuleString(adapter, 'FREQ=WEEKLY;BYMONTHDAY=15,28', 'default');
       expect(result).to.deep.equal({
         freq: 'WEEKLY',
         byMonthDay: [15, 28],
@@ -1799,7 +1811,7 @@ describe('recurring-event-utils', () => {
     });
 
     it('should parse BYMONTH correctly', () => {
-      const result = parseRRuleString(adapter, 'FREQ=YEARLY;BYMONTH=1,6,12');
+      const result = parseRRuleString(adapter, 'FREQ=YEARLY;BYMONTH=1,6,12', 'default');
       expect(result).to.deep.equal({
         freq: 'YEARLY',
         byMonth: [1, 6, 12],
@@ -1807,89 +1819,93 @@ describe('recurring-event-utils', () => {
     });
 
     it('should parse UNTIL correctly', () => {
-      const result = parseRRuleString(adapter, 'FREQ=DAILY;UNTIL=20250315T000000Z');
+      const result = parseRRuleString(adapter, 'FREQ=DAILY;UNTIL=20250315T000000Z', 'default');
       expect(adapter.isValid(result.until!)).to.equal(true);
     });
 
     it('should sort BYDAY values in standard order regardless of input order', () => {
-      const result = parseRRuleString(adapter, 'FREQ=WEEKLY;BYDAY=FR,MO,WE');
+      const result = parseRRuleString(adapter, 'FREQ=WEEKLY;BYDAY=FR,MO,WE', 'default');
       expect(result.byDay).to.deep.equal(['MO', 'WE', 'FR']);
     });
 
     it('should sort BYDAY with ordinals correctly', () => {
-      const result = parseRRuleString(adapter, 'FREQ=MONTHLY;BYDAY=2TU,-1FR,1MO');
+      const result = parseRRuleString(adapter, 'FREQ=MONTHLY;BYDAY=2TU,-1FR,1MO', 'default');
       expect(result.byDay).to.deep.equal(['1MO', '2TU', '-1FR']);
     });
 
     it('should sort BYMONTHDAY numerically', () => {
-      const result = parseRRuleString(adapter, 'FREQ=MONTHLY;BYMONTHDAY=28,5,15');
+      const result = parseRRuleString(adapter, 'FREQ=MONTHLY;BYMONTHDAY=28,5,15', 'default');
       expect(result.byMonthDay).to.deep.equal([5, 15, 28]);
     });
 
     it('should sort BYMONTH numerically', () => {
-      const result = parseRRuleString(adapter, 'FREQ=YEARLY;BYMONTH=12,1,6');
+      const result = parseRRuleString(adapter, 'FREQ=YEARLY;BYMONTH=12,1,6', 'default');
       expect(result.byMonth).to.deep.equal([1, 6, 12]);
     });
 
     it('should throw when the input is empty', () => {
-      expect(() => parseRRuleString(adapter, '')).to.throw(
+      expect(() => parseRRuleString(adapter, '', 'default')).to.throw(
         'Scheduler: RRULE must include a FREQ property.',
       );
     });
 
     it('should throw when the key or the value are empty', () => {
-      expect(() => parseRRuleString(adapter, 'FREQ=DAILY;=2')).to.throw(
+      expect(() => parseRRuleString(adapter, 'FREQ=DAILY;=2', 'default')).to.throw(
         'Scheduler: Invalid RRULE part: "=2"',
       );
-      expect(() => parseRRuleString(adapter, 'FREQ=DAILY;INTERVAL=')).to.throw(
+      expect(() => parseRRuleString(adapter, 'FREQ=DAILY;INTERVAL=', 'default')).to.throw(
         'Scheduler: Invalid RRULE part: "INTERVAL="',
       );
     });
 
     it('should throw when UNTIL is invalid', () => {
-      expect(() => parseRRuleString(adapter, 'FREQ=DAILY;UNTIL=not-a-date')).to.throw(
+      expect(() => parseRRuleString(adapter, 'FREQ=DAILY;UNTIL=not-a-date', 'default')).to.throw(
         'Scheduler: Invalid UNTIL date: "NOT-A-DATE"',
       );
     });
 
     it('should throw when FREQ is missing', () => {
-      expect(() => parseRRuleString(adapter, 'INTERVAL=2')).to.throw(
+      expect(() => parseRRuleString(adapter, 'INTERVAL=2', 'default')).to.throw(
         'Scheduler: RRULE must include a FREQ property.',
       );
     });
 
     it('should throw when the RRULE contains unsupported properties', () => {
-      expect(() => parseRRuleString(adapter, 'FREQ=DAILY;FOO=bar')).to.throw(
+      expect(() => parseRRuleString(adapter, 'FREQ=DAILY;FOO=bar', 'default')).to.throw(
         'Scheduler: Unsupported RRULE property: "FOO"',
       );
     });
 
     it('should throw for invalid INTERVAL value', () => {
-      expect(() => parseRRuleString(adapter, 'FREQ=DAILY;INTERVAL=zero')).to.throw(
+      expect(() => parseRRuleString(adapter, 'FREQ=DAILY;INTERVAL=zero', 'default')).to.throw(
         'Scheduler: Invalid INTERVAL value: "ZERO"',
       );
     });
 
     it('should throw for invalid BYMONTHDAY values', () => {
-      expect(() => parseRRuleString(adapter, 'FREQ=MONTHLY;BYMONTHDAY=0,50')).to.throw(
+      expect(() => parseRRuleString(adapter, 'FREQ=MONTHLY;BYMONTHDAY=0,50', 'default')).to.throw(
         'Scheduler: Invalid BYMONTHDAY values: "0,50"',
       );
     });
 
     it('should throw for invalid BYMONTH values', () => {
-      expect(() => parseRRuleString(adapter, 'FREQ=YEARLY;BYMONTH=0,13')).to.throw(
+      expect(() => parseRRuleString(adapter, 'FREQ=YEARLY;BYMONTH=0,13', 'default')).to.throw(
         'Scheduler: Invalid BYMONTH values: "0,13"',
       );
     });
 
     it('should throw for invalid COUNT value', () => {
-      expect(() => parseRRuleString(adapter, 'FREQ=DAILY;COUNT=-2')).to.throw(
+      expect(() => parseRRuleString(adapter, 'FREQ=DAILY;COUNT=-2', 'default')).to.throw(
         'Scheduler: Invalid COUNT value: "-2"',
       );
     });
 
     it('should trim whitespace and handle lowercase properties', () => {
-      const result = parseRRuleString(adapter, '  freq=weekly ; byday= mo, tu  ; interval= 3 ');
+      const result = parseRRuleString(
+        adapter,
+        '  freq=weekly ; byday= mo, tu  ; interval= 3 ',
+        'default',
+      );
       expect(result).to.deep.equal({
         freq: 'WEEKLY',
         byDay: ['MO', 'TU'],
@@ -2006,21 +2022,21 @@ describe('recurring-event-utils', () => {
     it('should normalize equivalent RRULE strings with different BYDAY order', () => {
       const inputA = 'FREQ=WEEKLY;BYDAY=MO,WE,FR';
       const inputB = 'FREQ=WEEKLY;BYDAY=FR,MO,WE';
-      const parsedA = parseRRuleString(adapter, inputA);
-      const parsedB = parseRRuleString(adapter, inputB);
+      const parsedA = parseRRuleString(adapter, inputA, 'default');
+      const parsedB = parseRRuleString(adapter, inputB, 'default');
       expect(serializeRRule(adapter, parsedA)).to.equal(serializeRRule(adapter, parsedB));
     });
 
     it('should round-trip correctly (parseRRuleString - serializeRRule)', () => {
       const input = 'FREQ=WEEKLY;INTERVAL=2;BYDAY=MO,FR;UNTIL=20250315T000000Z';
-      const parsed = parseRRuleString(adapter, input);
+      const parsed = parseRRuleString(adapter, input, 'default');
       const serialized = serializeRRule(adapter, parsed);
       expect(serialized).to.equal(input);
     });
 
     it('should round-trip even if BYDAY order differs in input', () => {
       const input = 'FREQ=WEEKLY;BYDAY=FR,MO,WE';
-      const parsed = parseRRuleString(adapter, input);
+      const parsed = parseRRuleString(adapter, input, 'default');
       const serialized = serializeRRule(adapter, parsed);
       expect(serialized).to.equal('FREQ=WEEKLY;BYDAY=MO,WE,FR');
     });

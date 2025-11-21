@@ -1,4 +1,5 @@
 import { EMPTY_ARRAY } from '@base-ui-components/utils/empty';
+import { TemporalTimezone } from '../../base-ui-copy/types';
 import {
   SchedulerProcessedEvent,
   SchedulerEventId,
@@ -14,6 +15,7 @@ import {
 import { processEvent } from '../../process-event';
 import { Adapter } from '../../use-adapter/useAdapter.types';
 import { SchedulerParameters, SchedulerState } from './SchedulerStore.types';
+import { getRenderTimezone } from '../timezone-utils';
 
 /**
  * Determines if the occurrence placeholder has changed in a meaningful way that requires updating the store.
@@ -78,6 +80,7 @@ export function getProcessedEventFromModel<TEvent extends object>(
   model: TEvent,
   adapter: Adapter,
   eventModelStructure: SchedulerEventModelStructure<TEvent> | undefined,
+  timezone: TemporalTimezone,
 ): SchedulerProcessedEvent {
   // 1. Convert the model to a default event model
   const modelInDefaultFormat = {} as SchedulerEvent;
@@ -91,7 +94,7 @@ export function getProcessedEventFromModel<TEvent extends object>(
   }
 
   // 2. Convert the default event model to a processed event
-  return processEvent(modelInDefaultFormat, adapter);
+  return processEvent(modelInDefaultFormat, timezone, adapter);
 }
 
 /**
@@ -204,7 +207,10 @@ type AnyEventSetter<TEvent extends object> = (
 ) => TEvent;
 
 export function buildEventsState<TEvent extends object, TResource extends object>(
-  parameters: Pick<SchedulerParameters<TEvent, TResource>, 'events' | 'eventModelStructure'>,
+  parameters: Pick<
+    SchedulerParameters<TEvent, TResource>,
+    'events' | 'eventModelStructure' | 'timezone'
+  >,
   adapter: Adapter,
 ): Pick<
   SchedulerState<TEvent>,
@@ -219,8 +225,14 @@ export function buildEventsState<TEvent extends object, TResource extends object
   const eventIdList: SchedulerEventId[] = [];
   const eventModelLookup = new Map<SchedulerEventId, TEvent>();
   const processedEventLookup = new Map<SchedulerEventId, SchedulerProcessedEvent>();
+  const timezone = getRenderTimezone(parameters.timezone);
   for (const event of events) {
-    const processedEvent = getProcessedEventFromModel(event, adapter, eventModelStructure);
+    const processedEvent = getProcessedEventFromModel(
+      event,
+      adapter,
+      eventModelStructure,
+      timezone,
+    );
     eventIdList.push(processedEvent.id);
     eventModelLookup.set(processedEvent.id, event);
     processedEventLookup.set(processedEvent.id, processedEvent);

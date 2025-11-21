@@ -4,13 +4,16 @@ import { processDate } from '../process-date';
 
 describe('event-utils', () => {
   const createEventOccurrence = (id: string, start: string, end: string) =>
-    createOccurrenceFromEvent({
-      id,
-      start: adapter.date(start, 'default'),
-      end: adapter.date(end, 'default'),
-      title: `Event ${id}`,
-      allDay: true,
-    });
+    createOccurrenceFromEvent(
+      {
+        id,
+        start: adapter.date(start, 'default'),
+        end: adapter.date(end, 'default'),
+        title: `Event ${id}`,
+        allDay: true,
+      },
+      'default',
+    );
 
   describe('getDaysTheOccurrenceIsVisibleOn', () => {
     const days = [

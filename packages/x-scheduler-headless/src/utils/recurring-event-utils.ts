@@ -14,6 +14,7 @@ import { mergeDateAndTime, getDateKey } from './date-utils';
 import { diffIn } from '../use-adapter';
 import { UpdateEventsParameters } from './SchedulerStore';
 import { processDate } from '../process-date';
+import { TemporalTimezone } from '../base-ui-copy/types';
 
 /**
  * The week day codes for all 7 days of the week.
@@ -1068,9 +1069,17 @@ const SUPPORTED_RRULE_KEYS = [
 export function parseRRuleString(
   adapter: Adapter,
   input: string | RecurringEventRecurrenceRule,
+  timezone: TemporalTimezone,
 ): RecurringEventRecurrenceRule {
   if (typeof input === 'object') {
-    return input;
+    if (!input.until) {
+      return input;
+    }
+
+    return {
+      ...input,
+      until: adapter.setTimezone(input.until, timezone),
+    };
   }
 
   const rruleObject: Record<string, string> = {};
@@ -1150,7 +1159,7 @@ export function parseRRuleString(
   }
 
   if (rruleObject.UNTIL) {
-    const parsed = adapter.parse(rruleObject.UNTIL, getUntilFormat(adapter), 'default');
+    const parsed = adapter.parse(rruleObject.UNTIL, getUntilFormat(adapter), timezone);
 
     if (!adapter.isValid(parsed)) {
       throw new Error(`Scheduler: Invalid UNTIL date: "${rruleObject.UNTIL}"`);
