@@ -10,7 +10,7 @@ describe('getDayList', () => {
         start: DEFAULT_TESTING_VISIBLE_DATE,
         end: DEFAULT_TESTING_VISIBLE_DATE,
       }),
-    ).to.throw(/getDayList: The 'end' parameter must be after the 'start' parameter./);
+    ).to.throw(/must be a day after/);
 
     expect(() =>
       getDayList({
@@ -18,7 +18,7 @@ describe('getDayList', () => {
         start: DEFAULT_TESTING_VISIBLE_DATE,
         end: adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, -5),
       }),
-    ).to.throw(/getDayList: The 'end' parameter must be after the 'start' parameter./);
+    ).to.throw(/must be a day after/);
   });
 
   it('should return one day when the start and end dates are one day apart', () => {
