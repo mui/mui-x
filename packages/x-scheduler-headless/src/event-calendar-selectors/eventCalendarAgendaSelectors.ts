@@ -36,7 +36,7 @@ export const eventCalendarAgendaSelectors = {
       let accumulatedDays = getDayList({
         adapter,
         start: visibleDate,
-        end: adapter.addDays(visibleDate, amount),
+        end: adapter.addDays(visibleDate, amount - 1),
         excludeWeekends: !showWeekends,
       });
 
@@ -76,10 +76,7 @@ export const eventCalendarAgendaSelectors = {
         }
 
         // Extend forward by one more chunk and recompute occurrences over the accumulated range
-        const nextStart = adapter.addDays(
-          accumulatedDays[accumulatedDays.length - 1]?.value ?? visibleDate,
-          1,
-        );
+        const nextStart = adapter.addDays(last ?? visibleDate, 1);
 
         const more = getDayList({
           adapter,

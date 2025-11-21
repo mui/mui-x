@@ -5,7 +5,7 @@ import { AGENDA_VIEW_DAYS_AMOUNT } from '../constants';
 
 describe('eventCalendarEventSelectors', () => {
   describe('visibleDays', () => {
-    it('should return exactly AGENDA_VIEW_DAYS_AMOUNT days and fills occurrences with [] when there are no events and showEmptyDays=true', () => {
+    it('should return exactly AGENDA_VIEW_DAYS_AMOUNT days and fills occurrences with [] when there are no events and showEmptyDaysInAgenda=true', () => {
       const state = getEventCalendarStateFromParameters({
         events: [],
         visibleDate: adapter.date('2024-01-01', 'default'),
@@ -19,7 +19,7 @@ describe('eventCalendarEventSelectors', () => {
       expect(visibleDays).to.have.length(AGENDA_VIEW_DAYS_AMOUNT);
     });
 
-    it('should extend forward until it fills AGENDA_VIEW_DAYS_AMOUNT days that contain events when showEmptyDays=false', () => {
+    it('should extend forward until it fills AGENDA_VIEW_DAYS_AMOUNT days that contain events when showEmptyDaysInAgenda=false', () => {
       const events = [
         EventBuilder.new().fullDay('2025-01-01').build(),
         EventBuilder.new().fullDay('2025-01-03').build(),
@@ -48,20 +48,19 @@ describe('eventCalendarEventSelectors', () => {
 
       const visibleDays = eventCalendarAgendaSelectors.visibleDays(state);
 
-      expect(visibleDays).to.have.length(AGENDA_VIEW_DAYS_AMOUNT);
-      expect(visibleDays.map((day) => day.key)).to.deep.equal([
-        processDate(adapter.date('2025-01-01', 'default'), adapter).key,
-        processDate(adapter.date('2025-01-03', 'default'), adapter).key,
-        processDate(adapter.date('2025-01-05', 'default'), adapter).key,
-        processDate(adapter.date('2025-01-08', 'default'), adapter).key,
-        processDate(adapter.date('2025-01-09', 'default'), adapter).key,
-        processDate(adapter.date('2025-01-10', 'default'), adapter).key,
-        processDate(adapter.date('2025-01-11', 'default'), adapter).key,
-        processDate(adapter.date('2025-01-13', 'default'), adapter).key,
-        processDate(adapter.date('2025-01-14', 'default'), adapter).key,
-        processDate(adapter.date('2025-01-16', 'default'), adapter).key,
-        processDate(adapter.date('2025-01-18', 'default'), adapter).key,
-        processDate(adapter.date('2025-01-20', 'default'), adapter).key,
+      expect(visibleDays).to.deep.equal([
+        processDate(adapter.date('2025-01-01', 'default'), adapter),
+        processDate(adapter.date('2025-01-03', 'default'), adapter),
+        processDate(adapter.date('2025-01-05', 'default'), adapter),
+        processDate(adapter.date('2025-01-08', 'default'), adapter),
+        processDate(adapter.date('2025-01-09', 'default'), adapter),
+        processDate(adapter.date('2025-01-10', 'default'), adapter),
+        processDate(adapter.date('2025-01-11', 'default'), adapter),
+        processDate(adapter.date('2025-01-13', 'default'), adapter),
+        processDate(adapter.date('2025-01-14', 'default'), adapter),
+        processDate(adapter.date('2025-01-16', 'default'), adapter),
+        processDate(adapter.date('2025-01-18', 'default'), adapter),
+        processDate(adapter.date('2025-01-20', 'default'), adapter),
       ]);
     });
 
@@ -92,13 +91,26 @@ describe('eventCalendarEventSelectors', () => {
         visibleDate: adapter.date('2025-10-03', 'default'), // Friday
         defaultPreferences: {
           showWeekends: false,
-          showEmptyDaysInAgenda: true,
+          showEmptyDaysInAgenda: false,
         },
       });
 
       const visibleDays = eventCalendarAgendaSelectors.visibleDays(state);
 
-      expect(visibleDays).to.have.length(AGENDA_VIEW_DAYS_AMOUNT);
+      expect(visibleDays).to.deep.equal([
+        processDate(adapter.date('2025-10-03', 'default'), adapter),
+        processDate(adapter.date('2025-10-06', 'default'), adapter),
+        processDate(adapter.date('2025-10-07', 'default'), adapter),
+        processDate(adapter.date('2025-10-08', 'default'), adapter),
+        processDate(adapter.date('2025-10-09', 'default'), adapter),
+        processDate(adapter.date('2025-10-10', 'default'), adapter),
+        processDate(adapter.date('2025-10-13', 'default'), adapter),
+        processDate(adapter.date('2025-10-14', 'default'), adapter),
+        processDate(adapter.date('2025-10-15', 'default'), adapter),
+        processDate(adapter.date('2025-10-16', 'default'), adapter),
+        processDate(adapter.date('2025-10-17', 'default'), adapter),
+        processDate(adapter.date('2025-10-20', 'default'), adapter),
+      ]);
     });
   });
 });
