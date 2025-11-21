@@ -22,8 +22,7 @@ export default function FullEventCalendar() {
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
-        areEventsDraggable
-        areEventsResizable
+        areEventsResizable="end"
       />
     </div>
   );

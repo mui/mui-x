@@ -18,7 +18,7 @@ export default function DragAndDropResizeStart() {
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
         areEventsDraggable
-        areEventsResizable
+        areEventsResizable="end"
         defaultPreferences={{ isSidePanelOpen: false }}
       />
     </div>
