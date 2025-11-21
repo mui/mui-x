@@ -5,9 +5,11 @@ import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { EventCalendarViewConfig } from '@mui/x-scheduler-headless/models';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventCalendarView } from '@mui/x-scheduler-headless/use-event-calendar-view';
+import { sortEventOccurrences } from '@mui/x-scheduler-headless/sort-event-occurrences';
 import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
 import { useExtractEventCalendarParameters } from '@mui/x-scheduler-headless/use-event-calendar';
-import { useAgendaEventOccurrencesGroupedByDay } from '@mui/x-scheduler-headless/use-agenda-event-occurrences-grouped-by-day';
+import { eventCalendarAgendaSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
+import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-headless/use-event-occurrences-grouped-by-day';
 import { AGENDA_VIEW_DAYS_AMOUNT } from '@mui/x-scheduler-headless/constants';
 import { AgendaViewProps, StandaloneAgendaViewProps } from './AgendaView.types';
 import { EventPopoverProvider, EventPopoverTrigger } from '../internals/components/event-popover';
@@ -18,6 +20,7 @@ import '../index.css';
 const AGENDA_VIEW_CONFIG: EventCalendarViewConfig = {
   siblingVisibleDateGetter: ({ state, delta }) =>
     state.adapter.addDays(state.visibleDate, AGENDA_VIEW_DAYS_AMOUNT * delta),
+  visibleDaysSelector: eventCalendarAgendaSelectors.visibleDays,
 };
 
 /**
@@ -36,10 +39,18 @@ export const AgendaView = React.memo(
     const handleRef = useMergedRefs(forwardedRef, containerRef);
 
     // Feature hooks
-    useEventCalendarView(AGENDA_VIEW_CONFIG);
+    const { days } = useEventCalendarView(AGENDA_VIEW_CONFIG);
+    const occurrencesMap = useEventOccurrencesGroupedByDay({ days });
 
-    const days = useAgendaEventOccurrencesGroupedByDay();
     const today = adapter.now('default');
+    const daysWithOccurrences = React.useMemo(
+      () =>
+        days.map((date) => {
+          const occurrences = sortEventOccurrences(occurrencesMap.get(date.key) || [], adapter);
+          return { date, occurrences };
+        }),
+      [days, occurrencesMap, adapter],
+    );
 
     return (
       <div
@@ -48,7 +59,7 @@ export const AgendaView = React.memo(
         className={clsx('AgendaViewContainer', 'mui-x-scheduler', props.className)}
       >
         <EventPopoverProvider containerRef={containerRef}>
-          {days.map(({ date, occurrences }) => (
+          {daysWithOccurrences.map(({ date, occurrences }) => (
             <section
               className="AgendaViewRow"
               key={date.key}
