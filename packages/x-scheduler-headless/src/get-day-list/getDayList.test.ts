@@ -1,17 +1,10 @@
 import { adapter, DEFAULT_TESTING_VISIBLE_DATE } from 'test/utils/scheduler';
 import { getDayList } from './getDayList';
 import { isWeekend } from '../use-adapter';
+import { processDate } from '../process-date';
 
 describe('getDayList', () => {
   it('should throw an error when amount is a non positive number', () => {
-    expect(() =>
-      getDayList({
-        adapter,
-        start: DEFAULT_TESTING_VISIBLE_DATE,
-        end: DEFAULT_TESTING_VISIBLE_DATE,
-      }),
-    ).to.throw(/must be a day after/);
-
     expect(() =>
       getDayList({
         adapter,
@@ -21,31 +14,31 @@ describe('getDayList', () => {
     ).to.throw(/must be a day after/);
   });
 
-  it('should return one day when the start and end dates are one day apart', () => {
+  it('should return one day when the start and end dates are equal', () => {
     const days = getDayList({
       adapter,
       start: DEFAULT_TESTING_VISIBLE_DATE,
-      end: adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 1),
+      end: DEFAULT_TESTING_VISIBLE_DATE,
     });
 
-    expect(days).to.have.length(1);
-    expect(days[0].value).to.toEqualDateTime(DEFAULT_TESTING_VISIBLE_DATE);
+    const expectedDays = [processDate(adapter.startOfDay(DEFAULT_TESTING_VISIBLE_DATE), adapter)];
+
+    expect(days).to.deep.equal(expectedDays);
   });
 
   it('should return consecutive days', () => {
     const days = getDayList({
       adapter,
       start: DEFAULT_TESTING_VISIBLE_DATE,
-      end: adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 4),
+      end: adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 3),
     });
 
-    expect(days).to.have.length(4);
-
     const start = adapter.startOfDay(DEFAULT_TESTING_VISIBLE_DATE);
-    for (let i = 0; i < 4; i += 1) {
-      const expectedDate = adapter.addDays(start, i);
-      expect(days[i].value).to.toEqualDateTime(expectedDate);
-    }
+    const expectedDays = Array.from({ length: 4 }, (_, i) =>
+      processDate(adapter.addDays(start, i), adapter),
+    );
+
+    expect(days).to.deep.equal(expectedDays);
   });
 
   it('should exclude weekends when excludeWeekends=true', () => {
@@ -56,18 +49,11 @@ describe('getDayList', () => {
       excludeWeekends: true,
     });
 
-    const start = adapter.startOfDay(DEFAULT_TESTING_VISIBLE_DATE);
-    const rawDays = Array.from({ length: 7 }, (_, i) => adapter.addDays(start, i));
+    const start = adapter.startOfWeek(DEFAULT_TESTING_VISIBLE_DATE);
+    const expectedDays = Array.from({ length: 7 }, (_, i) =>
+      processDate(adapter.addDays(start, i), adapter),
+    ).filter((day) => !isWeekend(adapter, day.value));
 
-    const filtered = rawDays.filter((day) => {
-      // Same logic as hook: exclude if weekend
-      return !isWeekend(adapter, day);
-    });
-
-    expect(days).to.have.length(filtered.length);
-
-    filtered.forEach((day, idx) => {
-      expect(days[idx].value).to.toEqualDateTime(day);
-    });
+    expect(days).to.deep.equal(expectedDays);
   });
 });

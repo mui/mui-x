@@ -10,7 +10,7 @@ export function getDayList(parameters: GetDaytListParameters): GetDaytListReturn
   const end = adapter.endOfDay(rawEnd);
 
   if (process.env.NODE_ENV !== 'production') {
-    if (!adapter.isAfter(adapter.startOfDay(end), adapter.endOfDay(start))) {
+    if (adapter.isBefore(adapter.startOfDay(end), adapter.startOfDay(start))) {
       throw new Error(`getDayList: The 'end' parameter must be a day after the 'start' parameter.`);
     }
   }
