@@ -37,7 +37,9 @@ export const selectorChartsHighlightedItem = createSelectorMemoized(
   selectHighlight,
   selectorChartsKeyboardItem,
   function selectorChartsHighlightedItem(highlight, keyboardItem) {
-    return highlight.lastUpdate === 'pointer' ? highlight.item : keyboardItem;
+    return highlight.isControlled || highlight.lastUpdate === 'pointer'
+      ? highlight.item
+      : keyboardItem;
   },
 );
 
