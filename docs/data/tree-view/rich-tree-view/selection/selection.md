@@ -163,15 +163,21 @@ The `useApplyPropagationToSelectedItemsOnMount()` must receive the following pro
 ## Imperative API
 
 :::success
-To use the `apiRef` object, you need to initialize it using the `useTreeViewApiRef` hook as follows:
+To use the `apiRef` object, you need to initialize it using the `useRichTreeViewApiRef` or `useRichTreeViewProApiRef` hook as follows:
 
 ```tsx
-const apiRef = useTreeViewApiRef();
+// Community package
+const apiRef = useRichTreeViewApiRef();
 
-return <RichTreeView apiRef={apiRef} items={ITEMS}>;
+return <RichTreeView apiRef={apiRef} items={ITEMS} />;
+
+// Pro package
+const apiRef = useRichTreeViewProApiRef();
+
+return <RichTreeViewPro apiRef={apiRef} items={ITEMS} />;
 ```
 
-When your component first renders, `apiRef` is `undefined`.
+When your component first renders, `apiRef.current` will be `undefined`.
 After this initial render, `apiRef` holds methods to interact imperatively with the Tree View.
 :::
 

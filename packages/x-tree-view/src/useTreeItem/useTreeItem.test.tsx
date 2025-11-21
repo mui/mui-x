@@ -6,9 +6,7 @@ import {
   DescribeTreeViewRendererUtils,
 } from 'test/utils/tree-view/describeTreeView';
 import { treeItemClasses } from '@mui/x-tree-view/TreeItem';
-
-// TODO #20051: Replace with imported type
-type TreeViewAnyStore = { parameters: any };
+import { TreeViewAnyStore } from '../internals/models';
 
 describeTreeView<TreeViewAnyStore>(
   'useTreeItem hook',

@@ -3,13 +3,13 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { useTreeViewApiRef } from '@mui/x-tree-view/hooks';
+import { useRichTreeViewApiRef } from '@mui/x-tree-view/hooks';
 
 export default function ApiMethodSetEditedItem() {
   const [items, setItems] = React.useState([
     { id: '1', label: 'Jane Doe', editable: true },
   ]);
-  const apiRef = useTreeViewApiRef();
+  const apiRef = useRichTreeViewApiRef();
 
   const handleAddFolder = () => {
     const newId = String(items.length + 1);

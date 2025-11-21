@@ -1,18 +1,12 @@
 import * as React from 'react';
+import { TreeViewAnyStore, TreeViewPublicAPI } from '@mui/x-tree-view/internals/models';
 import { TreeViewItemId } from '@mui/x-tree-view/models';
 import { TreeItemProps } from '@mui/x-tree-view/TreeItem';
-import { TreeViewSlotProps, TreeViewSlots } from '@mui/x-tree-view/internals';
-
-// TODO #20051: Replace with imported type
-type TreeViewAnyStore = { parameters: any };
-
-// TODO #20051: Replace with imported type
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-type TreeViewPublicAPI<TStore extends TreeViewAnyStore> = any;
-
-// TODO #20051: Replace with imported type
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-type UseTreeViewStoreParameters<TStore extends TreeViewAnyStore> = any;
+import {
+  TreeViewSlotProps,
+  TreeViewSlots,
+  UseTreeViewStoreParameters,
+} from '@mui/x-tree-view/internals';
 
 export type DescribeTreeViewTestRunner<TStore extends TreeViewAnyStore> = (
   params: DescribeTreeViewTestRunnerParams<TStore>,

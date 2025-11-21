@@ -4,7 +4,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
-import { useTreeViewApiRef } from '@mui/x-tree-view/hooks';
+import { useRichTreeViewApiRef } from '@mui/x-tree-view/hooks';
 
 const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
   {
@@ -37,7 +37,7 @@ const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
 ];
 
 export default function ApiMethodGetItem() {
-  const apiRef = useTreeViewApiRef();
+  const apiRef = useRichTreeViewApiRef();
   const [selectedItem, setSelectedItem] = React.useState<TreeViewBaseItem | null>(
     null,
   );
