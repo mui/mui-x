@@ -73,7 +73,6 @@ export { passFilterLogic } from '../hooks/features/filter/gridFilterUtils';
 export {
   gridFilteredChildrenCountLookupSelector,
   gridExpandedSortedRowTreeLevelPositionLookupSelector,
-  gridExpandedSortedRowIndexLookupSelector,
   gridFilteredSortedDepthRowEntriesSelector,
 } from '../hooks/features/filter/gridFilterSelector';
 export { isSingleSelectColDef } from '../components/panel/filterPanel/filterPanelUtils';
@@ -100,7 +99,7 @@ export {
 } from '../hooks/features/rows/useGridRowSpanning';
 export { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
 export { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
-export { useGridRowsOverridableMethods } from '../hooks/features/rows/useGridRowsOverridableMethods';
+export { useGridRowsOverridableMethods as useGridRowsOverridableMethodsCommunity } from '../hooks/features/rows/useGridRowsOverridableMethods';
 export { useGridParamsOverridableMethods } from '../hooks/features/rows/useGridParamsOverridableMethods';
 export { useIsCellEditable } from '../hooks/features/editing/useGridCellEditable';
 export { useGridRowsPreProcessors } from '../hooks/features/rows/useGridRowsPreProcessors';
@@ -134,7 +133,11 @@ export {
   useGridRowSelection,
   rowSelectionStateInitializer,
 } from '../hooks/features/rowSelection/useGridRowSelection';
-export { gridIsRowDragActiveSelector } from '../hooks/features/rowReorder/gridRowReorderSelector';
+export {
+  gridIsRowDragActiveSelector,
+  gridRowDropPositionSelector,
+  gridRowDropTargetRowIdSelector,
+} from '../hooks/features/rowReorder/gridRowReorderSelector';
 export type { GridRowReorderState } from '../hooks/features/rowReorder/gridRowReorderInterfaces';
 export { useGridRowSelectionPreProcessors } from '../hooks/features/rowSelection/useGridRowSelectionPreProcessors';
 export { useGridSorting, sortingStateInitializer } from '../hooks/features/sorting/useGridSorting';
@@ -225,3 +228,5 @@ export * from '../hooks/features/pivoting';
 export { createSvgIcon } from '../material/icons/createSvgIcon';
 
 export { useGridPanelContext } from '../components/panel/GridPanelContext';
+
+export type { RowReorderDropPosition, RowReorderDragDirection } from '../models/api/gridRowApi';

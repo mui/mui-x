@@ -331,6 +331,10 @@ const pages: MuiPage[] = [
                 title: 'GridRowSpacingParams',
               },
               {
+                pathname: '/x/api/data-grid/grid-row-order-change-params',
+                title: 'GridRowOrderChangeParams',
+              },
+              {
                 pathname: '/x/api/data-grid/grid-aggregation-function',
                 title: 'GridAggregationFunction',
               },

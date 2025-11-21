@@ -1,0 +1,23 @@
+{
+  "name": "GridRowOrderChangeParams",
+  "imports": [
+    "import { GridRowOrderChangeParams } from '@mui/x-data-grid-premium'",
+    "import { GridRowOrderChangeParams } from '@mui/x-data-grid-pro'"
+  ],
+  "demos": "<ul><li><a href=\"/x/react-data-grid/row-ordering/#implementing-row-reordering\">Flat row reordering</a></li></ul>",
+  "properties": {
+    "newParent": {
+      "type": { "description": "GridRowId | null" },
+      "required": true,
+      "isProPlan": true
+    },
+    "oldIndex": { "type": { "description": "number" }, "required": true, "isProPlan": true },
+    "oldParent": {
+      "type": { "description": "GridRowId | null" },
+      "required": true,
+      "isProPlan": true
+    },
+    "row": { "type": { "description": "GridRowModel" }, "required": true, "isProPlan": true },
+    "targetIndex": { "type": { "description": "number" }, "required": true, "isProPlan": true }
+  }
+}

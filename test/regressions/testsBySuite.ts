@@ -36,6 +36,8 @@ const docsImports = import.meta.glob<React.ComponentType>(
     '!docsx/data/charts/brush/*',
     '!docsx/data/data-grid/server-side-data/useNestedPagination',
     '!docsx/data/data-grid/server-side-data/NestedPaginationGroupingCell',
+    '!docsx/data/data-grid/tree-data/utils/TreeDataSyncRowDataGroupingCell',
+    '!docsx/data/data-grid/tree-data/utils/DataStore',
     '!docsx/data/charts/export/ExportOptionSelector', // sub-component for demo purpose
 
     // Exclude codesandbox embedded demos since they're not using packages built from the branch anyway.
