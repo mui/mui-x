@@ -540,9 +540,6 @@ function BasePopper(props: P['basePopper']) {
       result.push({
         name: 'flip',
         enabled: true,
-        options: {
-          rootBoundary: 'document',
-        },
       });
     }
     if (onDidShow || onDidHide) {

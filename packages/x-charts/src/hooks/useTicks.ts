@@ -1,12 +1,12 @@
 'use client';
 import * as React from 'react';
-import { useChartContext } from '../context/ChartProvider';
-import type { AxisConfig, D3ContinuousScale, D3Scale } from '../models/axis';
+import { AxisConfig, D3ContinuousScale, D3OrdinalScale, D3Scale } from '../models/axis';
 import type { TimeOrdinalTicks, TicksFrequencyDefinition } from '../models/timeTicks';
 import { isBandScale, isOrdinalScale } from '../internals/scaleGuards';
 import { isInfinity } from '../internals/isInfinity';
 import { tickFrequencies } from '../utils/timeTicks';
 import { isDateData } from '../internals/dateHelpers';
+import { useChartContext } from '../context/ChartProvider/useChartContext';
 
 export interface TickParams {
   /**
@@ -67,14 +67,35 @@ export type TickItemType = {
   labelOffset: number;
 };
 
+function getTickPosition(
+  scale: D3OrdinalScale<any>,
+  value: any,
+  placement: Required<TickParams>['tickPlacement'],
+) {
+  return (
+    scale(value)! - (scale.step() - scale.bandwidth()) / 2 + offsetRatio[placement] * scale.step()
+  );
+}
+
 function getTimeTicks(
   domain: Date[],
   tickNumber: number,
   ticksFrequencies: TicksFrequencyDefinition[],
+  scale: D3OrdinalScale<Date>,
+  isInside: (offset: number) => boolean,
 ) {
   if (ticksFrequencies.length === 0) {
     return [];
   }
+
+  const isReversed = scale.range()[0] > scale.range()[1];
+  // Indexes are inclusive regarding the entire band.
+  const startIndex = domain.findIndex((value) => {
+    return isInside(getTickPosition(scale, value, isReversed ? 'start' : 'end'));
+  });
+  const endIndex = domain.findLastIndex((value) =>
+    isInside(getTickPosition(scale, value, isReversed ? 'end' : 'start')),
+  );
 
   const start = domain[0];
   const end = domain[domain.length - 1];
@@ -107,7 +128,7 @@ function getTimeTicks(
   }
 
   const ticks: { index: number; formatter: (d: Date) => string }[] = [];
-  for (let tickIndex = 1; tickIndex < domain.length; tickIndex += 1) {
+  for (let tickIndex = Math.max(1, startIndex); tickIndex <= endIndex; tickIndex += 1) {
     for (let i = startSpaceIndex; i <= endSpaceIndex; i += 1) {
       const prevDate = domain[tickIndex - 1];
       const currentDate = domain[tickIndex];
@@ -160,6 +181,8 @@ export function getTicks(options: GetTicksOptions) {
       timeOrdinalTicks.map((tickDef) =>
         typeof tickDef === 'string' ? tickFrequencies[tickDef] : tickDef,
       ),
+      scale,
+      isInside,
     );
 
     return ticksIndexes.map(({ index, formatter }) => {
@@ -197,8 +220,17 @@ export function getTicks(options: GetTicksOptions) {
     if (isBandScale(scale)) {
       // scale type = 'band'
 
+      const isReversed = scale.range()[0] > scale.range()[1];
+      // Indexes are inclusive regarding the entire band.
+      const startIndex = filteredDomain.findIndex((value) => {
+        return isInside(getTickPosition(scale, value, isReversed ? 'start' : 'end'));
+      });
+      const endIndex = filteredDomain.findLastIndex((value) =>
+        isInside(getTickPosition(scale, value, isReversed ? 'end' : 'start')),
+      );
+
       return [
-        ...filteredDomain.map((value) => {
+        ...filteredDomain.slice(startIndex, endIndex + 1).map((value) => {
           const defaultTickLabel = `${value}`;
 
           return {
@@ -206,10 +238,7 @@ export function getTicks(options: GetTicksOptions) {
             formattedValue:
               valueFormatter?.(value, { location: 'tick', scale, tickNumber, defaultTickLabel }) ??
               defaultTickLabel,
-            offset:
-              scale(value)! -
-              (scale.step() - scale.bandwidth()) / 2 +
-              offsetRatio[tickPlacement] * scale.step(),
+            offset: getTickPosition(scale, value, tickPlacement),
             labelOffset:
               tickLabelPlacement === 'tick'
                 ? 0
@@ -217,7 +246,9 @@ export function getTicks(options: GetTicksOptions) {
           };
         }),
 
-        ...(tickPlacement === 'extremities'
+        ...(tickPlacement === 'extremities' &&
+        endIndex === domain.length - 1 &&
+        isInside(scale.range()[1])
           ? [
               {
                 formattedValue: undefined,
