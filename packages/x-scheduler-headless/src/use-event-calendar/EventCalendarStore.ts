@@ -3,7 +3,7 @@ import { EMPTY_OBJECT } from '@base-ui-components/utils/empty';
 import {
   EventCalendarPreferences,
   CalendarView,
-  CalendarViewConfig,
+  EventCalendarViewConfig,
   SchedulerValidDate,
   EventCalendarPreferencesMenuConfig,
 } from '../models';
@@ -148,7 +148,7 @@ export class EventCalendarStore<
       return;
     }
 
-    this.setVisibleDate(siblingVisibleDateGetter(this.state.visibleDate, delta), event);
+    this.setVisibleDate(siblingVisibleDateGetter({ delta, state: this.state }), event);
   };
 
   /**
@@ -207,7 +207,7 @@ export class EventCalendarStore<
    * Sets the method used to determine the previous / next visible date.
    * Returns the cleanup function.
    */
-  public setViewConfig = (config: CalendarViewConfig) => {
+  public setViewConfig = (config: EventCalendarViewConfig) => {
     this.set('viewConfig', config);
     return () => this.set('viewConfig', null);
   };
