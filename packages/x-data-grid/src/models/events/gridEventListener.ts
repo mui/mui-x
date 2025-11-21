@@ -7,5 +7,5 @@ export type GridEventListener<E extends GridEvents> = (
   event: GridEventLookup[E] extends { event: MuiBaseEvent }
     ? MuiEvent<GridEventLookup[E]['event']>
     : MuiEvent<{}>,
-  details: GridCallbackDetails,
+  details: GridCallbackDetails<any>,
 ) => void;

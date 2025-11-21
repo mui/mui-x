@@ -4,7 +4,7 @@ import type { GridApiCommon } from './gridApiCommon';
 /**
  * Additional details passed to the callbacks
  */
-export interface GridCallbackDetails<K extends keyof GridControlledStateReasonLookup = any> {
+export interface GridCallbackDetails<K extends keyof GridControlledStateReasonLookup> {
   /**
    * The reason for this callback to have been called.
    */

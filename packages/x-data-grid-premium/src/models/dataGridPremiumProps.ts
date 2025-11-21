@@ -185,7 +185,10 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    * @param {GridRowGroupingModel} model Columns used as grouping criteria.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onRowGroupingModelChange?: (model: GridRowGroupingModel, details: GridCallbackDetails) => void;
+  onRowGroupingModelChange?: (
+    model: GridRowGroupingModel,
+    details: GridCallbackDetails<any>,
+  ) => void;
   /**
    * Set the aggregation model of the grid.
    */
@@ -195,7 +198,10 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    * @param {GridAggregationModel} model The aggregated columns.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onAggregationModelChange?: (model: GridAggregationModel, details: GridCallbackDetails) => void;
+  onAggregationModelChange?: (
+    model: GridAggregationModel,
+    details: GridCallbackDetails<any>,
+  ) => void;
   /**
    * Set the cell selection model of the grid.
    */
@@ -207,7 +213,7 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    */
   onCellSelectionModelChange?: (
     cellSelectionModel: GridCellSelectionModel,
-    details: GridCallbackDetails,
+    details: GridCallbackDetails<any>,
   ) => void;
   /**
    * Callback fired when the state of the Excel export changes.
