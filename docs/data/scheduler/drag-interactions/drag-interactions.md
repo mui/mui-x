@@ -47,7 +47,7 @@ In the example below, only the "Lunch" event on Tuesday is draggable and resizab
 
 :::success
 The `draggable` and `resizable` event properties take precedence over `areEventsDraggable` and `areEventsResizable`.
-You can enable dragging on all events but some as follow:
+With the following code, all events are draggable and resizable, except `"event-3"`:
 
 ```tsx
 function App() {
@@ -61,7 +61,7 @@ function App() {
     <EventCalendar
       areEventsDraggable
       areEventsResizable
-      events={events} // All events will be draggable and resizable, except event-3
+      events={events} // A
     />
   );
 }
@@ -71,16 +71,34 @@ function App() {
 
 ### Only allow resizing one side
 
+You can enable the resizing only for one side of your events by setting the `areEventsResizable` to `"start"` or `"end"`:
+
 ```tsx
-const event = {
-  // ...other even properties
-  resizable: 'end',
-};
+<EventCalendar
+  areEventsResizable="start" // only the start of the events is resizable
+  areEventsResizable="end" // only the end of the events is resizable
+/>
 ```
 
-In the example below, only the end of the event can be resized:
-
 {{"demo": "DragAndDropResizeStart.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::success
+The `draggable` event property also supports `"start"` and `"end"`.
+With the following code, all events are resizable, but `"event-3"` is only resizable from the end:
+
+```tsx
+function App() {
+  const events = [
+    { id: 'event-1' },
+    { id: 'event-2' },
+    { id: 'event-3', resizable: 'start' },
+  ];
+
+  return <EventCalendar areEventsResizable events={events} />;
+}
+```
+
+:::
 
 :::success
 For now, the editing form is not customizable, but in the future devs should be able to apply the same logic there.
@@ -103,3 +121,7 @@ To be able to drag an event to the outside, your events must be draggable, so `a
 ### Basic Timeline
 
 {{"demo": "TimelineExternalDragAndDrop.js", "bg": "inline", "defaultCodeOpen": false}}
+
+```
+
+```
