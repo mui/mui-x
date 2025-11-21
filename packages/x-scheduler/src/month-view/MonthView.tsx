@@ -79,13 +79,13 @@ export const MonthView = React.memo(
       const tempWeeks: SchedulerProcessedDate[][] = [];
       let weekNumber: number | null = null;
       for (const day of days) {
-        const lastWeek = tempWeeks[tempWeeks.length - 1];
+        const prevWeek = tempWeeks[tempWeeks.length - 1];
         const dayWeekNumber = adapter.getWeekNumber(day.value);
         if (weekNumber !== dayWeekNumber) {
           weekNumber = dayWeekNumber;
           tempWeeks.push([day]);
         } else {
-          lastWeek.push(day);
+          prevWeek.push(day);
         }
       }
       return tempWeeks;
