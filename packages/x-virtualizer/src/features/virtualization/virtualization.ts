@@ -14,6 +14,7 @@ import { PinnedRows, PinnedColumns, Size } from '../../models/core';
 import type { CellColSpanInfo } from '../../models/colspan';
 import { Dimensions, observeRootNode } from '../dimensions';
 import type { BaseState, ParamsWithDefaults } from '../../useVirtualizer';
+import type { Layout } from './layout';
 import {
   PinnedRowPosition,
   RenderContext,
@@ -42,11 +43,14 @@ export type VirtualizationParams = {
   columnBufferPx?: number;
 };
 
-export type VirtualizationState = {
+export type VirtualizationState<K extends string = string> = {
   enabled: boolean;
   enabledForRows: boolean;
   enabledForColumns: boolean;
   renderContext: RenderContext;
+  props: Record<K, Record<string, any>>;
+  context: Record<string, any>;
+  scrollPosition: { current: ScrollPosition };
 };
 
 const EMPTY_SCROLL_POSITION = { top: 0, left: 0 };
@@ -74,6 +78,8 @@ const selectors = (() => {
       firstRowIndexSelector,
       (rowPositions, firstRowIndex) => rowPositions[firstRowIndex] ?? 0,
     ),
+    context: createSelector((state: BaseState) => state.virtualization.context),
+    scrollPosition: createSelector((state: BaseState) => state.virtualization.scrollPosition),
   };
 })();
 
@@ -83,20 +89,26 @@ export const Virtualization = {
   selectors,
 };
 export namespace Virtualization {
-  export type State = {
-    virtualization: VirtualizationState;
+  export type State<L extends Layout> = {
+    virtualization: VirtualizationState<L extends Layout<infer E> ? keyof E : string>;
     getters: ReturnType<typeof useVirtualization>['getters'];
   };
   export type API = ReturnType<typeof useVirtualization>;
 }
 
 function initializeState(params: ParamsWithDefaults) {
-  const state: Virtualization.State = {
+  const state: Virtualization.State<typeof params.layout> = {
     virtualization: {
       enabled: !platform.isJSDOM,
       enabledForRows: !platform.isJSDOM,
       enabledForColumns: !platform.isJSDOM,
       renderContext: EMPTY_RENDER_CONTEXT,
+      props: (params.layout.constructor as typeof Layout).elements.reduce(
+        (acc, key) => (acc[key as string], acc),
+        {} as Record<string, Record<string, any>>,
+      ),
+      context: {},
+      scrollPosition: { current: ScrollPosition.EMPTY },
       ...params.initialState?.virtualization,
     },
     // FIXME: refactor once the state shape is settled
@@ -122,7 +134,6 @@ type RequiredAPI = Dimensions.API & AbstractAPI;
 export type VirtualizationLayoutParams = {
   containerRef: (node: HTMLDivElement | null) => void;
   scrollerRef: (node: HTMLDivElement | null) => void;
-  scrollPosition: React.RefObject<ScrollPosition>;
 };
 
 function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, api: RequiredAPI) {
@@ -193,6 +204,7 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
         store.set('virtualization', {
           ...store.state.virtualization,
           renderContext: nextRenderContext,
+          scrollPosition: { current: { ...scrollPosition.current } },
         });
       }
 
@@ -608,7 +620,7 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     if (layout.refs.scroller) {
       scrollRestoreCallback.current?.(columnsTotalWidth, contentHeight);
     }
-  }, [columnsTotalWidth, contentHeight]);
+  }, [layout.refs.scroller, columnsTotalWidth, contentHeight]);
 
   const isFirstSizing = React.useRef(true);
 
@@ -655,7 +667,6 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
   const layoutParams = {
     containerRef,
     scrollerRef,
-    scrollPosition,
   };
 
   const layoutAPI = layout.use(store, params, api, layoutParams);

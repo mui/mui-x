@@ -41,13 +41,18 @@ const EMPTY_DIMENSIONS: DimensionsState = {
   rightPinnedWidth: 0,
   topContainerHeight: 0,
   bottomContainerHeight: 0,
+  autoHeight: false,
+  minimalContentHeight: undefined,
 };
 
 const selectors = {
   rootSize: (state: BaseState) => state.rootSize,
   dimensions: (state: BaseState) => state.dimensions,
   rowHeight: (state: BaseState) => state.dimensions.rowHeight,
+  columnsTotalWidth: (state: BaseState) => state.dimensions.columnsTotalWidth,
   contentHeight: (state: BaseState) => state.dimensions.contentSize.height,
+  autoHeight: (state: BaseState) => state.dimensions.autoHeight,
+  minimalContentHeight: (state: BaseState) => state.dimensions.minimalContentHeight,
   rowsMeta: (state: BaseState) => state.rowsMeta,
   rowPositions: (state: BaseState) => state.rowsMeta.positions,
   columnPositions: createSelectorMemoized((_, columns: ColumnWithWidth[]) => {
@@ -85,6 +90,8 @@ function initializeState(params: ParamsWithDefaults): Dimensions.State {
   const dimensions = {
     ...EMPTY_DIMENSIONS,
     ...params.dimensions,
+    autoHeight: params.autoHeight,
+    minimalContentHeight: params.minimalContentHeight,
   };
 
   const { rowCount } = params;
@@ -238,6 +245,8 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
         rightPinnedWidth,
         topContainerHeight,
         bottomContainerHeight,
+        autoHeight: params.autoHeight,
+        minimalContentHeight: params.minimalContentHeight,
       };
 
       const prevDimensions = store.state.dimensions;
@@ -275,6 +284,16 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
   React.useEffect(() => debouncedUpdateDimensions?.clear, [debouncedUpdateDimensions]);
 
   useLayoutEffect(updateDimensions, [updateDimensions]);
+
+  useLayoutEffect(() => {
+    store.update({ dimensions: { ...store.state.dimensions, autoHeight: params.autoHeight } });
+  }, [params.autoHeight]);
+
+  useLayoutEffect(() => {
+    store.update({
+      dimensions: { ...store.state.dimensions, minimalContentHeight: params.minimalContentHeight },
+    });
+  }, [params.minimalContentHeight]);
 
   const rowsMeta = useRowsMeta(store, params, updateDimensions);
 

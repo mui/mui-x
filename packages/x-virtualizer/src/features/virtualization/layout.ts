@@ -1,8 +1,9 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import * as platform from '@mui/x-internals/platform';
-import { Store, useStore, createSelector } from '@mui/x-internals/store';
+import { Store, useStore, createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import { Dimensions } from '../../features/dimensions';
+import { Virtualization } from './virtualization';
 import type { BaseState, ParamsWithDefaults } from '../../useVirtualizer';
 import type { VirtualizationLayoutParams } from './index';
 
@@ -17,6 +18,8 @@ type BaseElements = {
 type AnyElements = BaseElements & Record<string, React.RefObject<HTMLElement | null>>;
 
 export abstract class Layout<E extends AnyElements = AnyElements> {
+  static elements: readonly (keyof AnyElements)[] = ['scroller', 'container'];
+
   refs: E;
 
   constructor(refs: E) {
@@ -39,111 +42,143 @@ export abstract class Layout<E extends AnyElements = AnyElements> {
   }
 }
 
-const selectors = (() => {
-  const firstRowIndexSelector = createSelector(
-    (state: BaseState) => state.virtualization.renderContext.firstRowIndex,
-  );
-  return {
-    offsetTop: createSelector(
-      Dimensions.selectors.rowPositions,
-      firstRowIndexSelector,
-      (rowPositions, firstRowIndex) => rowPositions[firstRowIndex] ?? 0,
-    ),
-  };
-})();
-
 type DataGridElements = BaseElements & {
   scrollbarVertical: React.RefObject<HTMLElement | null>;
   scrollbarHorizontal: React.RefObject<HTMLElement | null>;
 };
 
 export class LayoutDataGrid extends Layout<DataGridElements> {
+  static elements = [
+    'scroller',
+    'container',
+    'content',
+    'positioner',
+    'scrollbarVertical',
+    'scrollbarHorizontal',
+  ] as const;
+
   use(
     store: Store<BaseState>,
-    params: ParamsWithDefaults,
+    _params: ParamsWithDefaults,
     _api: RequiredAPI,
     layoutParams: VirtualizationLayoutParams,
   ) {
-    const {
-      minimalContentHeight,
-      autoHeight,
-      dimensions: { columnsTotalWidth = 0 },
-    } = params;
-
-    const { scrollerRef, containerRef, scrollPosition } = layoutParams;
-
-    const offsetTop = useStore(store, selectors.offsetTop);
-    const contentHeight = useStore(store, Dimensions.selectors.contentHeight);
-    const needsHorizontalScrollbar = useStore(store, Dimensions.selectors.needsHorizontalScrollbar);
-
-    const scrollerStyle = React.useMemo(
-      () =>
-        ({
-          overflowX: !needsHorizontalScrollbar ? 'hidden' : undefined,
-          overflowY: autoHeight ? 'hidden' : undefined,
-        }) as React.CSSProperties,
-      [needsHorizontalScrollbar, autoHeight, params.layout],
-    );
-
-    const contentStyle = React.useMemo(() => {
-      const style: React.CSSProperties = {
-        width: needsHorizontalScrollbar ? columnsTotalWidth : 'auto',
-        flexBasis: contentHeight,
-        flexShrink: 0,
-      };
-
-      if (style.flexBasis === 0) {
-        style.flexBasis = minimalContentHeight; // Give room to show the overlay when there no rows.
-      }
-
-      return style;
-    }, [
-      columnsTotalWidth,
-      contentHeight,
-      needsHorizontalScrollbar,
-      minimalContentHeight,
-      params.layout,
-    ]);
-
-    const positionerStyle = React.useMemo(() => {
-      return {
-        transform: `translate3d(0, ${offsetTop}px, 0)`,
-      };
-    }, [offsetTop, params.layout]);
+    const { scrollerRef, containerRef } = layoutParams;
 
     const scrollbarVerticalRef = useEventCallback(this.refSetter('scrollbarVertical'));
     const scrollbarHorizontalRef = useEventCallback(this.refSetter('scrollbarHorizontal'));
 
-    return {
-      getContainerProps: () => ({
-        ref: containerRef,
-      }),
-      getScrollerProps: () => ({
-        ref: scrollerRef,
-        style: scrollerStyle,
+    store.state.virtualization.context = {
+      scrollerRef,
+      containerRef,
+      scrollbarVerticalRef,
+      scrollbarHorizontalRef,
+    };
+  }
+
+  static selectors = {
+    containerProps: createSelectorMemoized(Virtualization.selectors.context, (context) => ({
+      ref: context.containerRef,
+    })),
+
+    scrollerProps: createSelectorMemoized(
+      Virtualization.selectors.context,
+      Dimensions.selectors.autoHeight,
+      Dimensions.selectors.needsHorizontalScrollbar,
+      (context, autoHeight, needsHorizontalScrollbar) => ({
+        ref: context.scrollerRef,
+        style: {
+          overflowX: !needsHorizontalScrollbar ? 'hidden' : undefined,
+          overflowY: autoHeight ? 'hidden' : undefined,
+        },
         role: 'presentation',
         // `tabIndex` shouldn't be used along role=presentation, but it fixes a Firefox bug
         // https://github.com/mui/mui-x/pull/13891#discussion_r1683416024
         tabIndex: platform.isFirefox ? -1 : undefined,
       }),
-      getContentProps: () => ({
-        style: contentStyle,
-        role: 'presentation',
-      }),
-      getPositionerProps: () => ({
-        style: positionerStyle,
-      }),
-      getScrollbarVerticalProps: () => ({
-        ref: scrollbarVerticalRef,
+    ),
+
+    contentProps: createSelectorMemoized(
+      Dimensions.selectors.contentHeight,
+      Dimensions.selectors.minimalContentHeight,
+      Dimensions.selectors.columnsTotalWidth,
+      Dimensions.selectors.needsHorizontalScrollbar,
+      (contentHeight, minimalContentHeight, columnsTotalWidth, needsHorizontalScrollbar) => {
+        const style: React.CSSProperties = {
+          width: needsHorizontalScrollbar ? columnsTotalWidth : 'auto',
+          flexBasis: contentHeight,
+          flexShrink: 0,
+        };
+
+        if (style.flexBasis === 0) {
+          style.flexBasis = minimalContentHeight; // Give room to show the overlay when there no rows.
+        }
+
+        return {
+          style,
+          role: 'presentation',
+        };
+      },
+    ),
+
+    positionerProps: createSelectorMemoized(Virtualization.selectors.offsetTop, (offsetTop) => ({
+      style: {
+        transform: `translate3d(0, ${offsetTop}px, 0)`,
+      },
+    })),
+
+    scrollbarHorizontalProps: createSelectorMemoized(
+      Virtualization.selectors.context,
+      Virtualization.selectors.scrollPosition,
+      (context, scrollPosition) => ({
+        ref: context.scrollbarHorizontalRef,
         scrollPosition,
       }),
-      getScrollbarHorizontalProps: () => ({
-        ref: scrollbarHorizontalRef,
+    ),
+
+    scrollbarVerticalProps: createSelectorMemoized(
+      Virtualization.selectors.context,
+      Virtualization.selectors.scrollPosition,
+      (context, scrollPosition) => ({
+        ref: context.scrollbarVerticalRef,
         scrollPosition,
       }),
-      getScrollAreaProps: () => ({
+    ),
+
+    scrollAreaProps: createSelectorMemoized(
+      Virtualization.selectors.scrollPosition,
+      (scrollPosition) => ({
         scrollPosition,
       }),
+    ),
+  };
+}
+
+export class LayoutDataGridLegacy extends LayoutDataGrid {
+  use(
+    store: Store<BaseState>,
+    _params: ParamsWithDefaults,
+    _api: RequiredAPI,
+    layoutParams: VirtualizationLayoutParams,
+  ) {
+    super.use(store, _params, _api, layoutParams);
+
+    const containerProps = store.use(LayoutDataGrid.selectors.containerProps);
+    const scrollerProps = store.use(LayoutDataGrid.selectors.scrollerProps);
+    const contentProps = store.use(LayoutDataGrid.selectors.contentProps);
+    const positionerProps = store.use(LayoutDataGrid.selectors.positionerProps);
+    const scrollbarVerticalProps = store.use(LayoutDataGrid.selectors.scrollbarVerticalProps);
+    const scrollbarHorizontalProps = store.use(LayoutDataGrid.selectors.scrollbarHorizontalProps);
+    const scrollAreaProps = store.use(LayoutDataGrid.selectors.scrollAreaProps);
+
+    return {
+      getContainerProps: () => containerProps,
+      getScrollerProps: () => scrollerProps,
+      getContentProps: () => contentProps,
+      getPositionerProps: () => positionerProps,
+      getScrollbarVerticalProps: () => scrollbarVerticalProps,
+      getScrollbarHorizontalProps: () => scrollbarHorizontalProps,
+      getScrollAreaProps: () => scrollAreaProps,
     };
   }
 }
@@ -164,7 +199,7 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
 //           overflowY: autoHeight ? 'hidden' : undefined,
 //           position: layout.constructor.name !== 'LayoutDataGrid' ? 'relative' : undefined,
 //         }) as React.CSSProperties,
-//       [needsHorizontalScrollbar, autoHeight, params.layout],
+//       [needsHorizontalScrollbar, autoHeight],
 //     );
 //
 //     const contentStyle = React.useMemo(() => {
@@ -202,7 +237,6 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
 //       contentHeight,
 //       needsHorizontalScrollbar,
 //       minimalContentHeight,
-//       params.layout,
 //     ]);
 //
 //     const positionerStyle = React.useMemo(() => {
@@ -222,7 +256,7 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
 //         default:
 //           throw new Error(`MUI: Unsupported layout: ${params.layout}`);
 //       }
-//     }, [offsetTop, params.layout]);
+//     }, [offsetTop]);
 //
 //     return {
 //       getContainerProps: () => ({

@@ -30,12 +30,12 @@ import {
 /* eslint-disable jsdoc/require-returns-type */
 
 export type Virtualizer = ReturnType<typeof useVirtualizer>;
-export type VirtualScrollerCompat = Virtualization.State['getters'];
+export type VirtualScrollerCompat<L extends Layout = Layout> = Virtualization.State<L>['getters'];
 
-export type BaseState = Virtualization.State & Dimensions.State;
+export type BaseState<L extends Layout = Layout> = Virtualization.State<L> & Dimensions.State;
 
-export type VirtualizerParams = {
-  layout: Layout;
+export type VirtualizerParams<L extends Layout = Layout> = {
+  layout: L;
 
   dimensions: DimensionsParams;
   virtualization: VirtualizationParams;
@@ -44,7 +44,7 @@ export type VirtualizerParams = {
   initialState?: {
     scroll?: { top: number; left: number };
     rowSpanning?: Rowspan.State['rowSpanning'];
-    virtualization?: Partial<Virtualization.State['virtualization']>;
+    virtualization?: Partial<Virtualization.State<L>['virtualization']>;
   };
   /** current page rows */
   rows: RowEntry[];
@@ -136,7 +136,7 @@ export type ParamsWithDefaults = RequiredFields<
 
 const FEATURES = [Dimensions, Virtualization, Colspan, Rowspan, Keyboard] as const;
 
-export const useVirtualizer = (params: VirtualizerParams) => {
+export const useVirtualizer = <L extends Layout = Layout>(params: VirtualizerParams<L>) => {
   const paramsWithDefault = mergeDefaults<ParamsWithDefaults>(params, DEFAULT_PARAMS);
 
   const store = useLazyRef(() => {
@@ -144,7 +144,11 @@ export const useVirtualizer = (params: VirtualizerParams) => {
       FEATURES.map((f) => f.initialize(paramsWithDefault)).reduce(
         (state, partial) => Object.assign(state, partial),
         {},
-      ) as Dimensions.State & Virtualization.State & Colspan.State & Rowspan.State & Keyboard.State,
+      ) as Dimensions.State &
+        Virtualization.State<L> &
+        Colspan.State &
+        Rowspan.State &
+        Keyboard.State,
     );
   }).current;
 
