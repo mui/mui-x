@@ -147,6 +147,10 @@ In the demo below, the top axis has a `tickMinStep` of half a day, and the botto
 
 {{"demo": "TickNumber.js"}}
 
+### Tick spacing
+
+{{"demo": "TickSpacing.js"}}
+
 ### Fixed tick position
 
 If you want more control over the tick position, you can use the `tickInterval` property.
