@@ -194,6 +194,22 @@ export class DataStore {
       this.notify();
     }, 300);
   };
+
+  processRowUpdate = (updatedRow, _, params) => {
+    // Set loading state
+    this.snapshot = { ...this.snapshot, loading: true };
+    this.notify();
+
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        this.rowLookup[params.rowId] = updatedRow;
+        this.snapshot = { ...this.snapshot, loading: false };
+        this.saveToLocalStorage();
+        this.notify();
+        resolve(updatedRow);
+      }, 300);
+    });
+  };
 }
 
 const initialTree = [

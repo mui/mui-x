@@ -33,6 +33,7 @@ export default function TreeDataSyncRowData() {
           isValidRowReorder={isValidRowReorder}
           disableRowSelectionOnClick
           onRowOrderChange={dataStore.handleRowOrderChange}
+          processRowUpdate={dataStore.processRowUpdate}
           getTreeDataPath={getTreeDataPath}
           setTreeDataPath={setTreeDataPath}
           groupingColDef={groupingColDef}
@@ -47,6 +48,7 @@ const columns = [
     field: 'type',
     headerName: 'Type',
     width: 120,
+    editable: true,
     valueGetter: (value) => {
       const typeMap = {
         folder: 'Folder',
@@ -60,13 +62,15 @@ const columns = [
         jpg: 'JPEG Image',
         txt: 'Text',
       };
-      return typeMap[value] || 'File';
+      return typeMap[value] || value;
     },
   },
   {
     field: 'modified',
     headerName: 'Modified',
+    editable: true,
     width: 140,
+    type: 'date',
     valueFormatter: (value) => {
       if (!value) {
         return '';
@@ -79,7 +83,7 @@ const columns = [
       });
     },
   },
-  { field: 'size', headerName: 'Size', width: 100 },
+  { field: 'size', headerName: 'Size', width: 100, editable: true },
 ];
 
 const isValidRowReorder = (context) => {

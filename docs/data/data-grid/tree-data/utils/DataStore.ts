@@ -1,4 +1,4 @@
-import type { GridRowId, GridRowOrderChangeParams } from '@mui/x-data-grid-pro';
+import type { DataGridProProps, GridRowId, GridRowOrderChangeParams } from '@mui/x-data-grid-pro';
 
 interface TreeNode {
   id: GridRowId;
@@ -228,6 +228,22 @@ export class DataStore {
 
       this.notify();
     }, 300);
+  };
+
+  processRowUpdate: DataGridProProps['processRowUpdate'] = (updatedRow: RowData, _, params) => {
+    // Set loading state
+    this.snapshot = { ...this.snapshot, loading: true };
+    this.notify();
+
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        this.rowLookup[params.rowId] = updatedRow;
+        this.snapshot = { ...this.snapshot, loading: false };
+        this.saveToLocalStorage();
+        this.notify();
+        resolve(updatedRow);
+      }, 300);
+    });
   };
 }
 

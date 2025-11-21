@@ -37,6 +37,7 @@ export default function TreeDataSyncRowData() {
           isValidRowReorder={isValidRowReorder}
           disableRowSelectionOnClick
           onRowOrderChange={dataStore.handleRowOrderChange}
+          processRowUpdate={dataStore.processRowUpdate}
           getTreeDataPath={getTreeDataPath}
           setTreeDataPath={setTreeDataPath}
           groupingColDef={groupingColDef}
@@ -51,6 +52,7 @@ const columns: DataGridProProps['columns'] = [
     field: 'type',
     headerName: 'Type',
     width: 120,
+    editable: true,
     valueGetter: (value) => {
       const typeMap: Record<string, string> = {
         folder: 'Folder',
@@ -64,13 +66,15 @@ const columns: DataGridProProps['columns'] = [
         jpg: 'JPEG Image',
         txt: 'Text',
       };
-      return typeMap[value] || 'File';
+      return typeMap[value] || value;
     },
   },
   {
     field: 'modified',
     headerName: 'Modified',
+    editable: true,
     width: 140,
+    type: 'date',
     valueFormatter: (value) => {
       if (!value) {
         return '';
@@ -83,7 +87,7 @@ const columns: DataGridProProps['columns'] = [
       });
     },
   },
-  { field: 'size', headerName: 'Size', width: 100 },
+  { field: 'size', headerName: 'Size', width: 100, editable: true },
 ];
 
 const isValidRowReorder: DataGridProProps['isValidRowReorder'] = (context) => {
