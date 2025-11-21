@@ -4,23 +4,40 @@ import { isWeekend } from '../use-adapter';
 
 describe('getDayList', () => {
   it('should throw an error when amount is a non positive number', () => {
-    expect(() => getDayList({ adapter, date: DEFAULT_TESTING_VISIBLE_DATE, amount: 0 })).to.throw(
-      /amount.*positive number/,
-    );
-    expect(() => getDayList({ adapter, date: DEFAULT_TESTING_VISIBLE_DATE, amount: -5 })).to.throw(
-      /amount.*positive number/,
-    );
+    expect(() =>
+      getDayList({
+        adapter,
+        start: DEFAULT_TESTING_VISIBLE_DATE,
+        end: DEFAULT_TESTING_VISIBLE_DATE,
+      }),
+    ).to.throw(/getDayList: The 'end' parameter must be after the 'start' parameter./);
+
+    expect(() =>
+      getDayList({
+        adapter,
+        start: DEFAULT_TESTING_VISIBLE_DATE,
+        end: adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, -5),
+      }),
+    ).to.throw(/getDayList: The 'end' parameter must be after the 'start' parameter./);
   });
 
-  it('should return one day when amount=1', () => {
-    const days = getDayList({ adapter, date: DEFAULT_TESTING_VISIBLE_DATE, amount: 1 });
+  it('should return one day when the start and end dates are one day apart', () => {
+    const days = getDayList({
+      adapter,
+      start: DEFAULT_TESTING_VISIBLE_DATE,
+      end: adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 1),
+    });
 
     expect(days).to.have.length(1);
     expect(days[0].value).to.toEqualDateTime(DEFAULT_TESTING_VISIBLE_DATE);
   });
 
   it('should return consecutive days', () => {
-    const days = getDayList({ adapter, date: DEFAULT_TESTING_VISIBLE_DATE, amount: 4 });
+    const days = getDayList({
+      adapter,
+      start: DEFAULT_TESTING_VISIBLE_DATE,
+      end: adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 4),
+    });
 
     expect(days).to.have.length(4);
 
@@ -31,23 +48,11 @@ describe('getDayList', () => {
     }
   });
 
-  it('should generate a 7-day range when amount="week"', () => {
-    const days = getDayList({ adapter, date: DEFAULT_TESTING_VISIBLE_DATE, amount: 'week' });
-
-    expect(days).to.have.length(7);
-
-    const start = adapter.startOfDay(DEFAULT_TESTING_VISIBLE_DATE);
-    for (let i = 0; i < 7; i += 1) {
-      const expectedDate = adapter.addDays(start, i);
-      expect(days[i].value).to.toEqualDateTime(expectedDate);
-    }
-  });
-
   it('should exclude weekends when excludeWeekends=true', () => {
     const days = getDayList({
       adapter,
-      date: DEFAULT_TESTING_VISIBLE_DATE,
-      amount: 'week',
+      start: adapter.startOfWeek(DEFAULT_TESTING_VISIBLE_DATE),
+      end: adapter.endOfWeek(DEFAULT_TESTING_VISIBLE_DATE),
       excludeWeekends: true,
     });
 

@@ -1,16 +1,11 @@
-import * as React from 'react';
-import { renderHook } from '@mui/internal-test-utils';
 import { adapter } from 'test/utils/scheduler';
 import { processDate } from '../process-date';
 import { SchedulerEvent, SchedulerValidDate } from '../models';
-import {
-  useAgendaEventOccurrencesGroupedByDay,
-  useAgendaEventOccurrencesGroupedByDayOptions,
-} from './getAgendaDayList';
-import { EventCalendarProvider } from '../event-calendar-provider/EventCalendarProvider';
+import { getAgendaDayList, GetAgendaDayListReturnValue } from './getAgendaDayList';
 import { AGENDA_VIEW_DAYS_AMOUNT } from '../constants';
+import { processEvent } from '../process-event';
 
-describe('useAgendaEventOccurrencesGroupedByDay', () => {
+describe('getAgendaDayList', () => {
   const createEvent = (
     id: string,
     startISO: string,
@@ -24,7 +19,7 @@ describe('useAgendaEventOccurrencesGroupedByDay', () => {
     ...extra,
   });
 
-  function testHook({
+  function test({
     events = [],
     visibleDate,
     showWeekends,
@@ -34,33 +29,27 @@ describe('useAgendaEventOccurrencesGroupedByDay', () => {
     visibleDate: SchedulerValidDate;
     showWeekends: boolean;
     showEmptyDaysInAgenda: boolean;
-  }): useAgendaEventOccurrencesGroupedByDayOptions.ReturnValue {
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <EventCalendarProvider
-        events={events}
-        resources={[]}
-        visibleDate={visibleDate}
-        preferences={{ showWeekends, showEmptyDaysInAgenda }}
-      >
-        {children}
-      </EventCalendarProvider>
-    );
-
-    const { result } = renderHook(() => useAgendaEventOccurrencesGroupedByDay(), { wrapper });
-    return result.current;
+  }): GetAgendaDayListReturnValue {
+    return getAgendaDayList({
+      adapter,
+      start: visibleDate,
+      amount: AGENDA_VIEW_DAYS_AMOUNT,
+      events: events.map((event) => processEvent(event, adapter)),
+      visibleResources: new Map(),
+      resourceParentIds: new Map(),
+      excludeWeekends: !showWeekends,
+      showEmptyDays: showEmptyDaysInAgenda,
+    });
   }
 
   it('should return exactly AGENDA_VIEW_DAYS_AMOUNT days and fills occurrences with [] when there are no events and showEmptyDays=true', () => {
-    const res = testHook({
+    const res = test({
       visibleDate: adapter.date('2024-01-01', 'default'),
       showWeekends: true,
       showEmptyDaysInAgenda: true,
     });
 
     expect(res).to.have.length(12);
-    for (const day of res) {
-      expect(day.occurrences).to.deep.equal([]);
-    }
   });
 
   it('should extend forward until it fills AGENDA_VIEW_DAYS_AMOUNT days that contain events when showEmptyDays=false', () => {
@@ -81,7 +70,7 @@ describe('useAgendaEventOccurrencesGroupedByDay', () => {
       createEvent('14', '2025-01-24', '2025-01-24'),
     ];
 
-    const res = testHook({
+    const res = test({
       events,
       visibleDate: adapter.date('2025-01-01', 'default'),
       showWeekends: true,
@@ -103,10 +92,7 @@ describe('useAgendaEventOccurrencesGroupedByDay', () => {
       processDate(adapter.date('2025-01-18', 'default'), adapter).key,
       processDate(adapter.date('2025-01-20', 'default'), adapter).key,
     ];
-    expect(res.map((day) => day.date.key)).to.deep.equal(expectedKeys);
-    for (const day of res) {
-      expect(day.occurrences.length).to.greaterThan(0);
-    }
+    expect(res.map((day) => day.key)).to.deep.equal(expectedKeys);
   });
 
   it('should respect showWeekends preference when building the day list', () => {
@@ -131,19 +117,12 @@ describe('useAgendaEventOccurrencesGroupedByDay', () => {
       createEvent('18', '2025-10-20', '2025-10-20'), // Mon
     ];
 
-    const res = testHook({
+    const res = test({
       events,
       visibleDate: adapter.date('2025-10-03', 'default'), // Friday
       showWeekends: false,
       showEmptyDaysInAgenda: true,
     });
     expect(res).to.have.length(12);
-    const weekendIds = ['2', '3', '9', '10', '16', '17'];
-    for (const day of res) {
-      const includedIds = day.occurrences.map((occ) => occ.id);
-      for (const id of weekendIds) {
-        expect(includedIds).to.not.include(id);
-      }
-    }
   });
 });
