@@ -12,7 +12,8 @@ const isValidRowReorder = (context: ReorderValidationContext) => {
   }
   if (
     context.targetNode.type === 'group' &&
-    context.targetNode.id !== context.sourceNode.parent
+    context.targetNode.id !== context.sourceNode.parent &&
+    context.dropPosition === 'inside'
   ) {
     return true;
   }
