@@ -1,6 +1,7 @@
 import type { RefObject } from '@mui/x-internals/types';
 import {
   GRID_ROOT_GROUP_ID,
+  gridClasses,
   type GridRowId,
   type GridTreeNode,
   type GridGroupNode,
@@ -31,17 +32,12 @@ export function findCellElement(target: EventTarget | null): Element {
   }
 
   // Check if the target itself is a cell
-  if (
-    element instanceof Element &&
-    element.className &&
-    typeof element.className === 'string' &&
-    element.className.includes('cell')
-  ) {
+  if (element instanceof Element && element.classList.contains(gridClasses.cell)) {
     return element;
   }
 
   // Try to find the closest cell parent
-  const cellElement = element.closest('[class*="cell"]');
+  const cellElement = element.closest(`[class*="${gridClasses.cell}"]`);
   return cellElement || element;
 }
 
@@ -239,7 +235,7 @@ export function handleProcessRowUpdateError(
 ): void {
   if (onProcessRowUpdateError) {
     onProcessRowUpdateError(error);
-  } else if (process.env.NODE_ENV !== 'production') {
+  } else {
     warnOnce(
       [
         'MUI X: A call to `processRowUpdate()` threw an error which was not handled because `onProcessRowUpdateError()` is missing.',
