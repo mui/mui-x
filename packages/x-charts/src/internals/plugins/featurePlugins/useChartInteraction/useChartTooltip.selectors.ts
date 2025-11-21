@@ -54,7 +54,6 @@ export const selectorChartsTooltipItemPosition = createSelector(
   selectorChartXAxis,
   selectorChartYAxis,
   selectorChartSeriesProcessed,
-  (_, placement?: 'top' | 'bottom' | 'left' | 'right') => placement,
 
   function selectorChartsTooltipItemPosition<T extends ChartSeriesType>(
     identifier: ChartItemIdentifierWithData<T> | null,

@@ -92,17 +92,17 @@ export default function TooltipPosition() {
         props.anchor === 'undefined'
           ? ''
           : `
-        anchor: ${props.anchor},`
+        anchor: '${props.anchor}',`
       }${
         props.position === 'undefined'
           ? ''
           : `
-        position: ${props.position},`
+        position: '${props.position}',`
       }${
         props.placement === 'undefined'
           ? ''
           : `
-        placement: ${props.placement},`
+        placement: '${props.placement}',`
       }
       },
     }}

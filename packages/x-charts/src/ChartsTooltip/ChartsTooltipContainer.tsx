@@ -131,7 +131,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
     trigger === 'item' && computedAnchor === 'node'
       ? selectorChartsTooltipItemPosition
       : () => null,
-    [position],
+    position,
   );
 
   React.useEffect(() => {
