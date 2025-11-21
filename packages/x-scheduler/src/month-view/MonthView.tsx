@@ -5,7 +5,7 @@ import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { createSelector, useStore } from '@base-ui-components/utils/store';
 import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
 import { EventCalendarViewConfig, SchedulerProcessedDate } from '@mui/x-scheduler-headless/models';
-import { getDayList, GetDaytListParameters } from '@mui/x-scheduler-headless/get-day-list';
+import { getDayList } from '@mui/x-scheduler-headless/get-day-list';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventCalendarView } from '@mui/x-scheduler-headless/use-event-calendar-view';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
@@ -31,20 +31,20 @@ const DAY_NUMBER_HEADER_HEIGHT = 18;
 const EVENT_HEIGHT = 18;
 const EVENT_GAP = 5;
 
-const MONTH_VIEW_CONFIG: EventCalendarViewConfig<GetDaytListParameters> = {
+const MONTH_VIEW_CONFIG: EventCalendarViewConfig = {
   siblingVisibleDateGetter: ({ state, delta }) =>
     state.adapter.addMonths(state.adapter.startOfMonth(state.visibleDate), delta),
-  getVisibleDays: getDayList,
-  getVisibleDayParametersSelector: createSelector(
+  visibleDaysSelector: createSelector(
     (state: State) => state.adapter,
     schedulerOtherSelectors.visibleDate,
     eventCalendarPreferenceSelectors.showWeekends,
-    (adapter, visibleDate, showWeekends) => ({
-      adapter,
-      start: adapter.startOfWeek(adapter.startOfMonth(visibleDate)),
-      end: adapter.endOfWeek(adapter.endOfMonth(visibleDate)),
-      excludeWeekends: !showWeekends,
-    }),
+    (adapter, visibleDate, showWeekends) =>
+      getDayList({
+        adapter,
+        start: adapter.startOfWeek(adapter.startOfMonth(visibleDate)),
+        end: adapter.endOfWeek(adapter.endOfMonth(visibleDate)),
+        excludeWeekends: !showWeekends,
+      }),
   ),
 };
 

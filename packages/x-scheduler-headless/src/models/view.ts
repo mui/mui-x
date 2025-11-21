@@ -10,10 +10,9 @@ export type TimelineView = 'time' | 'days' | 'weeks' | 'months' | 'years';
  * Configuration defined by each view.
  * This is used to determine how the components outside of the view should behave based on the current view.
  */
-export interface EventCalendarViewConfig<GetVisibleDaysParameters extends object> {
+export interface EventCalendarViewConfig {
   siblingVisibleDateGetter: (parameters: SiblingVisibleDateGetterParameters) => SchedulerValidDate;
-  getVisibleDays: (parameters: GetVisibleDaysParameters) => SchedulerProcessedDate[];
-  getVisibleDayParametersSelector: (state: EventCalendarState) => GetVisibleDaysParameters;
+  visibleDaysSelector: (state: EventCalendarState) => SchedulerProcessedDate[];
 }
 
 interface SiblingVisibleDateGetterParameters {

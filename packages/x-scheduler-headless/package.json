@@ -19,7 +19,6 @@
     "./constants": "./src/constants/index.ts",
     "./event-calendar-provider": "./src/event-calendar-provider/index.ts",
     "./event-calendar-selectors": "./src/event-calendar-selectors/index.ts",
-    "./get-agenda-day-list": "./src/get-agenda-day-list/index.ts",
     "./get-day-list": "./src/get-day-list/index.ts",
     "./models": "./src/models/index.ts",
     "./process-date": "./src/process-date/index.ts",

@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { EventCalendarViewConfig } from '@mui/x-scheduler-headless/models';
-import { getDayList, GetDaytListParameters } from '@mui/x-scheduler-headless/get-day-list';
+import { getDayList } from '@mui/x-scheduler-headless/get-day-list';
 import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
 import {
   useExtractEventCalendarParameters,
@@ -15,20 +15,20 @@ import { StandaloneWeekViewProps, WeekViewProps } from './WeekView.types';
 import { DayTimeGrid } from '../internals/components/day-time-grid/DayTimeGrid';
 import '../index.css';
 
-const WEEK_VIEW_CONFIG: EventCalendarViewConfig<GetDaytListParameters> = {
+const WEEK_VIEW_CONFIG: EventCalendarViewConfig = {
   siblingVisibleDateGetter: ({ state, delta }) =>
     state.adapter.addWeeks(state.adapter.startOfWeek(state.visibleDate), delta),
-  getVisibleDays: getDayList,
-  getVisibleDayParametersSelector: createSelector(
+  visibleDaysSelector: createSelector(
     (state: State) => state.adapter,
     schedulerOtherSelectors.visibleDate,
     eventCalendarPreferenceSelectors.showWeekends,
-    (adapter, visibleDate, showWeekends) => ({
-      adapter,
-      start: adapter.startOfWeek(visibleDate),
-      end: adapter.endOfWeek(visibleDate),
-      excludeWeekends: !showWeekends,
-    }),
+    (adapter, visibleDate, showWeekends) =>
+      getDayList({
+        adapter,
+        start: adapter.startOfWeek(visibleDate),
+        end: adapter.endOfWeek(visibleDate),
+        excludeWeekends: !showWeekends,
+      }),
   ),
 };
 

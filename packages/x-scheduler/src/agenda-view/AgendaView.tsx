@@ -2,26 +2,13 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
-import { createSelector } from '@base-ui-components/utils/store';
 import { EventCalendarViewConfig } from '@mui/x-scheduler-headless/models';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
-import {
-  getAgendaDayList,
-  GetAgendaDayListParameters,
-} from '@mui/x-scheduler-headless/get-agenda-day-list';
 import { useEventCalendarView } from '@mui/x-scheduler-headless/use-event-calendar-view';
 import { sortEventOccurrences } from '@mui/x-scheduler-headless/sort-event-occurrences';
 import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
-import {
-  useExtractEventCalendarParameters,
-  EventCalendarState as State,
-} from '@mui/x-scheduler-headless/use-event-calendar';
-import {
-  schedulerEventSelectors,
-  schedulerOtherSelectors,
-  schedulerResourceSelectors,
-} from '@mui/x-scheduler-headless/scheduler-selectors';
-import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
+import { useExtractEventCalendarParameters } from '@mui/x-scheduler-headless/use-event-calendar';
+import { eventCalendarAgendaSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-headless/use-event-occurrences-grouped-by-day';
 import { AGENDA_VIEW_DAYS_AMOUNT } from '@mui/x-scheduler-headless/constants';
 import { AgendaViewProps, StandaloneAgendaViewProps } from './AgendaView.types';
@@ -30,37 +17,10 @@ import { EventItem } from '../internals/components/event/event-item/EventItem';
 import './AgendaView.css';
 import '../index.css';
 
-const AGENDA_VIEW_CONFIG: EventCalendarViewConfig<GetAgendaDayListParameters> = {
+const AGENDA_VIEW_CONFIG: EventCalendarViewConfig = {
   siblingVisibleDateGetter: ({ state, delta }) =>
     state.adapter.addDays(state.visibleDate, AGENDA_VIEW_DAYS_AMOUNT * delta),
-  getVisibleDays: getAgendaDayList,
-  getVisibleDayParametersSelector: createSelector(
-    (state: State) => state.adapter,
-    schedulerOtherSelectors.visibleDate,
-    eventCalendarPreferenceSelectors.showWeekends,
-    eventCalendarPreferenceSelectors.showEmptyDaysInAgenda,
-    schedulerEventSelectors.processedEventList,
-    schedulerResourceSelectors.visibleMap,
-    schedulerResourceSelectors.resourceParentIdLookup,
-    (
-      adapter,
-      visibleDate,
-      showWeekends,
-      showEmptyDaysInAgenda,
-      events,
-      visibleResources,
-      resourceParentIds,
-    ) => ({
-      adapter,
-      excludeWeekends: !showWeekends,
-      showEmptyDays: showEmptyDaysInAgenda,
-      start: visibleDate,
-      amount: AGENDA_VIEW_DAYS_AMOUNT,
-      events,
-      visibleResources,
-      resourceParentIds,
-    }),
-  ),
+  visibleDaysSelector: eventCalendarAgendaSelectors.visibleDays,
 };
 
 /**

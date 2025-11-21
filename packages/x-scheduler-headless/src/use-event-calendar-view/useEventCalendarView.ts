@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useOnMount } from '@base-ui-components/utils/useOnMount';
 import { useStore } from '@base-ui-components/utils/store/useStore';
 import { EventCalendarViewConfig } from '../models';
@@ -10,19 +9,15 @@ import { useEventCalendarStoreContext } from '../use-event-calendar-store-contex
  * ```
  * @param parameters Parameters for the view.
  */
-export function useEventCalendarView<P extends object>(config: EventCalendarViewConfig<P>) {
+export function useEventCalendarView(config: EventCalendarViewConfig) {
   // Context hooks
   const store = useEventCalendarStoreContext();
 
   // Selector hooks
-  const getVisibleDayParameters = useStore(store, config.getVisibleDayParametersSelector);
+  const days = useStore(store, config.visibleDaysSelector);
 
+  // Feature hooks
   useOnMount(() => store.setViewConfig(config));
 
-  return React.useMemo(
-    () => ({
-      days: config.getVisibleDays(getVisibleDayParameters),
-    }),
-    [config, getVisibleDayParameters],
-  );
+  return { days };
 }

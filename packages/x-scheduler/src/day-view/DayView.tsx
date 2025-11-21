@@ -1,12 +1,11 @@
 'use client';
 import * as React from 'react';
 import { createSelector } from '@base-ui-components/utils/store';
-import { EventCalendarViewConfig, SchedulerValidDate } from '@mui/x-scheduler-headless/models';
+import { EventCalendarViewConfig } from '@mui/x-scheduler-headless/models';
 import {
   useExtractEventCalendarParameters,
   EventCalendarState as State,
 } from '@mui/x-scheduler-headless/use-event-calendar';
-import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
 import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
 import { useEventCalendarView } from '@mui/x-scheduler-headless/use-event-calendar-view';
 import { processDate } from '@mui/x-scheduler-headless/process-date';
@@ -14,16 +13,12 @@ import { DayViewProps, StandaloneDayViewProps } from './DayView.types';
 import { DayTimeGrid } from '../internals/components/day-time-grid/DayTimeGrid';
 import '../index.css';
 
-const DAY_VIEW_CONFIG: EventCalendarViewConfig<{
-  adapter: Adapter;
-  visibleDate: SchedulerValidDate;
-}> = {
+const DAY_VIEW_CONFIG: EventCalendarViewConfig = {
   siblingVisibleDateGetter: ({ state, delta }) => state.adapter.addDays(state.visibleDate, delta),
-  getVisibleDays: ({ adapter, visibleDate }) => [processDate(visibleDate, adapter)],
-  getVisibleDayParametersSelector: createSelector(
+  visibleDaysSelector: createSelector(
     (state: State) => state.visibleDate,
     (state: State) => state.adapter,
-    (visibleDate, adapter) => ({ adapter, visibleDate }),
+    (visibleDate, adapter) => [processDate(visibleDate, adapter)],
   ),
 };
 

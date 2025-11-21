@@ -64,8 +64,7 @@ describe('View - EventCalendarStore', () => {
       );
       const cleanup = store.setViewConfig({
         siblingVisibleDateGetter,
-        getVisibleDays: () => [],
-        getVisibleDayParametersSelector: () => ({}),
+        visibleDaysSelector: () => [],
       });
 
       expect(store.state.viewConfig?.siblingVisibleDateGetter).to.equal(siblingVisibleDateGetter);
