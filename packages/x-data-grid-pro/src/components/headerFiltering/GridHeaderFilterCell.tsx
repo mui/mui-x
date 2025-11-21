@@ -182,10 +182,10 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
         focusableElement = inputRef.current;
       }
       const elementToFocus = focusableElement || cellRef.current;
+
+      const scrollPosition = apiRef.current.getScrollPosition();
       elementToFocus?.focus();
-      if (apiRef.current.columnHeadersContainerRef.current) {
-        apiRef.current.columnHeadersContainerRef.current.scrollLeft = 0;
-      }
+      apiRef.current.scroll(scrollPosition);
     }
   }, [InputComponent, apiRef, hasFocus, isEditing, isMenuOpen]);
 
