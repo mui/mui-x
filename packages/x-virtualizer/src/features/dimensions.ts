@@ -263,6 +263,7 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
       layout.refs.container,
       params.dimensions.scrollbarSize,
       params.autoHeight,
+      params.minimalContentHeight,
       params.disableHorizontalScroll,
       params.disableVerticalScroll,
       onResize,
@@ -287,13 +288,13 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
 
   useLayoutEffect(() => {
     store.update({ dimensions: { ...store.state.dimensions, autoHeight: params.autoHeight } });
-  }, [params.autoHeight]);
+  }, [store, params.autoHeight]);
 
   useLayoutEffect(() => {
     store.update({
       dimensions: { ...store.state.dimensions, minimalContentHeight: params.minimalContentHeight },
     });
-  }, [params.minimalContentHeight]);
+  }, [store, params.minimalContentHeight]);
 
   const rowsMeta = useRowsMeta(store, params, updateDimensions);
 

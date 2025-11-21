@@ -1,7 +1,7 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import * as platform from '@mui/x-internals/platform';
-import { Store, useStore, createSelector, createSelectorMemoized } from '@mui/x-internals/store';
+import { Store, createSelectorMemoized } from '@mui/x-internals/store';
 import { Dimensions } from '../../features/dimensions';
 import { Virtualization } from './virtualization';
 import type { BaseState, ParamsWithDefaults } from '../../useVirtualizer';
