@@ -222,7 +222,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     const newScroll = {
       top: clamp(scroller.scrollTop, 0, maxScrollTop),
       left: isRtl
-        ? clamp(scroller.scrollLeft, -maxScrollLeft, 0)
+        ? clamp(scroller.scrollLeft, -Math.abs(maxScrollLeft), 0)
         : clamp(scroller.scrollLeft, 0, maxScrollLeft),
     };
 
@@ -855,7 +855,6 @@ function computeRenderContext(
   //     lastColumnIndex: 1,
   //   };
   // }
-
   if (inputs.enabledForColumns) {
     let firstColumnIndex = 0;
     let lastColumnIndex = inputs.columnPositions.length;

@@ -36,16 +36,16 @@ storeClasses.forEach((storeClass) => {
           },
         },
         start: {
-          getter: (event) => adapter.date(event.myStart),
+          getter: (event) => adapter.date(event.myStart, 'default'),
           setter: (event, value) => {
-            event.myStart = value.toISO()!;
+            event.myStart = value.toISOString()!;
             return event;
           },
         },
         end: {
-          getter: (event) => adapter.date(event.myEnd),
+          getter: (event) => adapter.date(event.myEnd, 'default'),
           setter: (event, value) => {
-            event.myEnd = value.toISO()!;
+            event.myEnd = value.toISOString()!;
             return event;
           },
         },
@@ -56,8 +56,8 @@ storeClasses.forEach((storeClass) => {
           {
             myId: '1',
             myTitle: 'Event 1',
-            myStart: '2025-07-01T09:00:00.000+00:00',
-            myEnd: '2025-07-01T10:00:00.000+00:00',
+            myStart: '2025-07-01T09:00:00.000Z',
+            myEnd: '2025-07-01T10:00:00.000Z',
             allDay: false,
           },
         ];
@@ -68,8 +68,8 @@ storeClasses.forEach((storeClass) => {
         expect(event).to.deep.contain({
           id: '1',
           title: 'Event 1',
-          start: processDate(adapter.date('2025-07-01T09:00:00.000+00:00'), adapter),
-          end: processDate(adapter.date('2025-07-01T10:00:00.000+00:00'), adapter),
+          start: processDate(adapter.date('2025-07-01T09:00:00.000Z', 'default'), adapter),
+          end: processDate(adapter.date('2025-07-01T10:00:00.000Z', 'default'), adapter),
           allDay: false,
         });
       });
@@ -81,8 +81,8 @@ storeClasses.forEach((storeClass) => {
           {
             myId: '1',
             myTitle: 'Event 1',
-            myStart: '2025-07-01T09:00:00.000+00:00',
-            myEnd: '2025-07-01T10:00:00.000+00:00',
+            myStart: '2025-07-01T09:00:00.000Z',
+            myEnd: '2025-07-01T10:00:00.000Z',
             allDay: false,
           },
         ];
@@ -94,8 +94,8 @@ storeClasses.forEach((storeClass) => {
         store.updateEvent({
           id: '1',
           title: 'Event 1 updated',
-          start: adapter.date('2025-07-01T09:30:00.000+00:00'),
-          end: adapter.date('2025-07-01T10:30:00.000+00:00'),
+          start: adapter.date('2025-07-01T09:30:00.000Z', 'default'),
+          end: adapter.date('2025-07-01T10:30:00.000Z', 'default'),
           allDay: true,
         });
 
@@ -105,8 +105,8 @@ storeClasses.forEach((storeClass) => {
           {
             myId: '1',
             myTitle: 'Event 1 updated',
-            myStart: '2025-07-01T09:30:00.000+00:00',
-            myEnd: '2025-07-01T10:30:00.000+00:00',
+            myStart: '2025-07-01T09:30:00.000Z',
+            myEnd: '2025-07-01T10:30:00.000Z',
             allDay: true,
           },
         ]);
@@ -123,8 +123,8 @@ storeClasses.forEach((storeClass) => {
         );
         const createdId = store.createEvent({
           title: 'Event 1',
-          start: adapter.date('2025-07-01T09:00:00.000+00:00'),
-          end: adapter.date('2025-07-01T10:00:00.000+00:00'),
+          start: adapter.date('2025-07-01T09:00:00.000Z', 'default'),
+          end: adapter.date('2025-07-01T10:00:00.000Z', 'default'),
           allDay: false,
         });
 
@@ -134,8 +134,8 @@ storeClasses.forEach((storeClass) => {
           {
             myId: createdId,
             myTitle: 'Event 1',
-            myStart: '2025-07-01T09:00:00.000+00:00',
-            myEnd: '2025-07-01T10:00:00.000+00:00',
+            myStart: '2025-07-01T09:00:00.000Z',
+            myEnd: '2025-07-01T10:00:00.000Z',
             allDay: false,
           },
         ]);
@@ -165,8 +165,8 @@ storeClasses.forEach((storeClass) => {
           {
             myId: '1',
             title: 'Event 1',
-            start: adapter.date('2025-07-01T09:00:00.000+00:00'),
-            end: adapter.date('2025-07-01T10:00:00.000+00:00'),
+            start: adapter.date('2025-07-01T09:00:00.000Z', 'default'),
+            end: adapter.date('2025-07-01T10:00:00.000Z', 'default'),
           },
         ];
 
@@ -194,14 +194,14 @@ storeClasses.forEach((storeClass) => {
           {
             myId: '1',
             title: 'Event 1',
-            start: adapter.date('2025-07-01T09:00:00.000+00:00'),
-            end: adapter.date('2025-07-01T10:00:00.000+00:00'),
+            start: adapter.date('2025-07-01T09:00:00.000Z', 'default'),
+            end: adapter.date('2025-07-01T10:00:00.000Z', 'default'),
           },
           {
             myId: '2',
             title: 'Event 2',
-            start: adapter.date('2025-07-01T10:00:00.000+00:00'),
-            end: adapter.date('2025-07-01T11:00:00.000+00:00'),
+            start: adapter.date('2025-07-01T10:00:00.000Z', 'default'),
+            end: adapter.date('2025-07-01T11:00:00.000Z', 'default'),
           },
         ];
 
@@ -238,14 +238,14 @@ storeClasses.forEach((storeClass) => {
           buildEvent(
             '1',
             'Event 1',
-            adapter.date('2025-07-01T09:00:00Z'),
-            adapter.date('2025-07-01T10:00:00Z'),
+            adapter.date('2025-07-01T09:00:00Z', 'default'),
+            adapter.date('2025-07-01T10:00:00Z', 'default'),
           ),
           buildEvent(
             '2',
             'Event 2',
-            adapter.date('2025-07-01T11:00:00Z'),
-            adapter.date('2025-07-01T12:00:00Z'),
+            adapter.date('2025-07-01T11:00:00Z', 'default'),
+            adapter.date('2025-07-01T12:00:00Z', 'default'),
           ),
         ];
 
@@ -254,8 +254,8 @@ storeClasses.forEach((storeClass) => {
         const updatedEvent = buildEvent(
           '2',
           'Event 2 updated',
-          adapter.date('2025-07-01T11:30:00Z'),
-          adapter.date('2025-07-01T12:30:00Z'),
+          adapter.date('2025-07-01T11:30:00Z', 'default'),
+          adapter.date('2025-07-01T12:30:00Z', 'default'),
           {
             description: 'Event 2 description',
             allDay: false,
@@ -271,8 +271,12 @@ storeClasses.forEach((storeClass) => {
         expect(updatedEvents[0].title).to.equal('Event 1');
         expect(updatedEvents[1].title).to.equal('Event 2 updated');
         expect(updatedEvents[1].description).to.equal('Event 2 description');
-        expect(updatedEvents[1].start).toEqualDateTime(adapter.date('2025-07-01T11:30:00Z'));
-        expect(updatedEvents[1].end).toEqualDateTime(adapter.date('2025-07-01T12:30:00Z'));
+        expect(updatedEvents[1].start).toEqualDateTime(
+          adapter.date('2025-07-01T11:30:00Z', 'default'),
+        );
+        expect(updatedEvents[1].end).toEqualDateTime(
+          adapter.date('2025-07-01T12:30:00Z', 'default'),
+        );
       });
     });
 
@@ -283,20 +287,20 @@ storeClasses.forEach((storeClass) => {
           buildEvent(
             '1',
             'Event 1',
-            adapter.date('2025-07-01T09:00:00Z'),
-            adapter.date('2025-07-01T10:00:00Z'),
+            adapter.date('2025-07-01T09:00:00Z', 'default'),
+            adapter.date('2025-07-01T10:00:00Z', 'default'),
           ),
           buildEvent(
             '2',
             'Event 2',
-            adapter.date('2025-07-01T11:00:00Z'),
-            adapter.date('2025-07-01T12:00:00Z'),
+            adapter.date('2025-07-01T11:00:00Z', 'default'),
+            adapter.date('2025-07-01T12:00:00Z', 'default'),
           ),
           buildEvent(
             '3',
             'Event 3',
-            adapter.date('2025-07-01T13:00:00Z'),
-            adapter.date('2025-07-01T14:00:00Z'),
+            adapter.date('2025-07-01T13:00:00Z', 'default'),
+            adapter.date('2025-07-01T14:00:00Z', 'default'),
           ),
         ];
 
@@ -316,8 +320,8 @@ storeClasses.forEach((storeClass) => {
           buildEvent(
             '1',
             'Event 1',
-            adapter.date('2025-07-01T09:00:00Z'),
-            adapter.date('2025-07-01T10:00:00Z'),
+            adapter.date('2025-07-01T09:00:00Z', 'default'),
+            adapter.date('2025-07-01T10:00:00Z', 'default'),
           ),
         ];
 
@@ -327,8 +331,8 @@ storeClasses.forEach((storeClass) => {
         const newEvent = buildEvent(
           '2',
           'New Event',
-          adapter.date('2025-07-01T11:00:00Z'),
-          adapter.date('2025-07-01T12:00:00Z'),
+          adapter.date('2025-07-01T11:00:00Z', 'default'),
+          adapter.date('2025-07-01T12:00:00Z', 'default'),
           { description: 'New event description', allDay: true },
         );
 
@@ -346,8 +350,8 @@ storeClasses.forEach((storeClass) => {
         expect(appended.title).to.equal('New Event');
         expect(appended.description).to.equal('New event description');
         expect(appended.allDay).to.equal(true);
-        expect(appended.start).toEqualDateTime(adapter.date('2025-07-01T11:00:00Z'));
-        expect(appended.end).toEqualDateTime(adapter.date('2025-07-01T12:00:00Z'));
+        expect(appended.start).toEqualDateTime(adapter.date('2025-07-01T11:00:00Z', 'default'));
+        expect(appended.end).toEqualDateTime(adapter.date('2025-07-01T12:00:00Z', 'default'));
       });
     });
 
@@ -358,8 +362,8 @@ storeClasses.forEach((storeClass) => {
 
         const store = new storeClass.Value({ events: [event], onEventsChange }, adapter);
 
-        const start = adapter.date('2025-07-01T09:00:00Z');
-        const end = adapter.date('2025-07-01T10:00:00Z');
+        const start = adapter.date('2025-07-01T09:00:00Z', 'default');
+        const end = adapter.date('2025-07-01T10:00:00Z', 'default');
         const duplicatedId = store.duplicateEventOccurrence(event.id, start, end);
 
         expect(onEventsChange.calledOnce).to.equal(true);
@@ -375,8 +379,8 @@ storeClasses.forEach((storeClass) => {
 
         const store = new storeClass.Value({ events: [event], onEventsChange }, adapter);
 
-        const start = adapter.date('2025-07-01T09:00:00Z');
-        const end = adapter.date('2025-07-01T10:00:00Z');
+        const start = adapter.date('2025-07-01T09:00:00Z', 'default');
+        const end = adapter.date('2025-07-01T10:00:00Z', 'default');
         const duplicatedId = store.duplicateEventOccurrence(event.id, start, end);
 
         const originalEventWithoutRecurrence = { ...event };

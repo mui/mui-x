@@ -14,7 +14,7 @@ import { PreviewPlotProps } from './PreviewPlot.types';
 const AreaPlotRoot = styled('g', {
   name: 'MuiAreaPlot',
   slot: 'Root',
-})();
+})({});
 
 interface AreaPreviewPlotProps extends PreviewPlotProps {}
 
