@@ -90,7 +90,7 @@ const isValidRowReorder = (context) => {
   const targetRow = context.apiRef.current.getRow(context.targetNode.id);
   if (
     !targetRow ||
-    (targetRow.type !== 'folder' && context.dropPosition === 'inside')
+    (targetRow.type.toLowerCase() !== 'folder' && context.dropPosition === 'inside')
   ) {
     return false;
   }
