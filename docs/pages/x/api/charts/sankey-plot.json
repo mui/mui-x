@@ -35,6 +35,12 @@
       "isGlobal": false
     },
     {
+      "key": "nodeLabels",
+      "className": "MuiSankeyPlot-nodeLabels",
+      "description": "Styles applied to the node label container.",
+      "isGlobal": false
+    },
+    {
       "key": "nodes",
       "className": "MuiSankeyPlot-nodes",
       "description": "Styles applied to the nodes container.",
