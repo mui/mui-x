@@ -33,7 +33,7 @@ import { GridRowOrderChangeParams } from '../../../models/gridRowOrderChangePara
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GRID_REORDER_COL_DEF } from './gridRowReorderColDef';
-import type { ReorderValidationContext } from './reorderValidationTypes';
+import type { ReorderValidationContext } from './models';
 
 import { findCellElement } from './utils';
 

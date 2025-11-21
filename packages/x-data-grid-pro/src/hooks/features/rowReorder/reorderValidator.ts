@@ -1,4 +1,4 @@
-import { ReorderValidationContext } from './reorderValidationTypes';
+import { ReorderValidationContext } from './models';
 
 export interface ValidationRule {
   name: string;
