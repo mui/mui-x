@@ -8,6 +8,7 @@ export default function BasicExampleDataGridPro() {
     dataSet: 'Employee',
     visibleFields: VISIBLE_FIELDS,
     rowLength: 100,
+    maxColumns: 8,
   });
 
   return (
