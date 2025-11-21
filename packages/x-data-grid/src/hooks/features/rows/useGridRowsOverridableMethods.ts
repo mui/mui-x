@@ -21,10 +21,6 @@ export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiCo
         throw new Error(`MUI X: No row with id #${targetRowId} found.`);
       }
 
-      if (sourceNode.parent !== GRID_ROOT_GROUP_ID) {
-        throw new Error(`MUI X: The row reordering do not support reordering of grouped rows yet.`);
-      }
-
       if (sourceNode.type !== 'leaf') {
         throw new Error(
           `MUI X: The row reordering do not support reordering of footer or grouping rows.`,
@@ -98,10 +94,6 @@ export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiCo
 
       if (!node) {
         throw new Error(`MUI X: No row with id #${rowId} found.`);
-      }
-
-      if (node.parent !== GRID_ROOT_GROUP_ID) {
-        throw new Error(`MUI X: The row reordering do not support reordering of grouped rows yet.`);
       }
 
       if (node.type !== 'leaf') {
