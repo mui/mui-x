@@ -102,7 +102,7 @@ function TreeDataSyncRowDataGroupingCell(props) {
   const row = useGridSelector(apiRef, gridRowSelector, id);
 
   const folderColor = isDarkMode ? '#90caf9' : '#1976d2';
-  const textColor = row.type === 'folder' ? folderColor : 'inherit';
+  const textColor = row.type.toLowerCase() === 'folder' ? folderColor : 'inherit';
 
   return (
     <div
@@ -130,7 +130,7 @@ function TreeDataSyncRowDataGroupingCell(props) {
         )}
       </div>
       <span style={{ display: 'flex', alignItems: 'center', color: textColor }}>
-        {getFileIcon(row.type, isDarkMode)}
+        {getFileIcon(row.type.toLowerCase(), isDarkMode)}
         {formattedValue === undefined ? rowNode.groupingKey : formattedValue}
         {filteredDescendantCount > 0 ? (
           <span style={{ marginLeft: '4px' }}>({filteredDescendantCount})</span>
