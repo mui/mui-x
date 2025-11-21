@@ -207,7 +207,7 @@ export class EventCalendarStore<
    * Sets the method used to determine the previous / next visible date.
    * Returns the cleanup function.
    */
-  public setViewConfig = (config: EventCalendarViewConfig) => {
+  public setViewConfig = (config: EventCalendarViewConfig<any>) => {
     this.set('viewConfig', config);
     return () => this.set('viewConfig', null);
   };

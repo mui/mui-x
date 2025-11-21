@@ -28,7 +28,7 @@ export interface EventCalendarState extends SchedulerState {
    * Config of the current view.
    * Should not be used in selectors, only in event handlers.
    */
-  viewConfig: EventCalendarViewConfig | null;
+  viewConfig: EventCalendarViewConfig<any> | null;
 }
 
 export interface EventCalendarParameters<TEvent extends object, TResource extends object>

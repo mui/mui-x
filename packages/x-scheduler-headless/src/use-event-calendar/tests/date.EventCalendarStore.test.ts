@@ -195,7 +195,11 @@ describe('Date - EventCalendarStore', () => {
         adapter,
       );
 
-      store.setViewConfig({ siblingVisibleDateGetter, getVisibleDays: () => [] });
+      store.setViewConfig({
+        siblingVisibleDateGetter,
+        getVisibleDays: () => [],
+        getVisibleDayParametersSelector: () => ({}),
+      });
       store.goToPreviousVisibleDate({} as any);
       expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(targetDate);
       expect(siblingVisibleDateGetter.lastCall.firstArg.delta).toEqual(-1);
@@ -218,7 +222,11 @@ describe('Date - EventCalendarStore', () => {
         adapter,
       );
 
-      store.setViewConfig({ siblingVisibleDateGetter, getVisibleDays: () => [] });
+      store.setViewConfig({
+        siblingVisibleDateGetter,
+        getVisibleDays: () => [],
+        getVisibleDayParametersSelector: () => ({}),
+      });
       store.goToNextVisibleDate({} as any);
       expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(targetDate);
       expect(siblingVisibleDateGetter.lastCall.firstArg.delta).toEqual(1);
