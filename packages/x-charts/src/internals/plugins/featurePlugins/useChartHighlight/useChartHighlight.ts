@@ -24,7 +24,7 @@ export const useChartHighlight: ChartPlugin<UseChartHighlightSignature> = ({ sto
         warnOnce(
           [
             'MUI X Charts: The `highlightedItem` switched between controlled and uncontrolled state.',
-            'To remove highlight in control mode, you must provide `null` as `highlightedItem` value and not `undefined`.',
+            'To remove the highlight when using controlled state, you must provide `null` to the `highlightedItem` prop instead of `undefined`.',
           ].join('\n'),
         );
       }
