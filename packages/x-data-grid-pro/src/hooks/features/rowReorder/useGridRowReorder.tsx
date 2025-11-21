@@ -413,10 +413,7 @@ export const useGridRowReorder = (
             ...state,
             rowReorder: {
               ...state.rowReorder,
-              dropTarget: {
-                rowId: null,
-                position: null,
-              },
+              dropTarget: undefined,
             },
           }));
         }
@@ -474,10 +471,6 @@ export const useGridRowReorder = (
           rowReorder: {
             isActive: false,
             draggedRowId: null,
-            dropTarget: {
-              rowId: null,
-              position: null,
-            },
           },
         }));
         return;
@@ -542,10 +535,6 @@ export const useGridRowReorder = (
                 rowReorder: {
                   isActive: false,
                   draggedRowId: null,
-                  dropTarget: {
-                    rowId: null,
-                    position: null,
-                  },
                 },
               }));
 
@@ -559,10 +548,6 @@ export const useGridRowReorder = (
               rowReorder: {
                 isActive: false,
                 draggedRowId: null,
-                dropTarget: {
-                  rowId: null,
-                  position: null,
-                },
               },
             }));
           }
@@ -572,7 +557,7 @@ export const useGridRowReorder = (
             ...state,
             rowReorder: {
               ...state.rowReorder,
-              dropTarget: { rowId: null, position: null },
+              dropTarget: undefined,
             },
           }));
         }

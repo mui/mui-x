@@ -16,14 +16,14 @@ export interface GridRowReorderState {
   /**
    * The current drop target information.
    */
-  dropTarget: {
+  dropTarget?: {
     /**
      * The row ID where the drop indicator should be shown.
      */
-    rowId: GridRowId | null;
+    rowId: GridRowId;
     /**
      * The position of the drop indicator relative to the target row.
      */
-    position: RowReorderDropPosition | null;
+    position: RowReorderDropPosition;
   };
 }
