@@ -153,9 +153,16 @@ export class TapGesture<GestureName extends string> extends PointerGesture<Gestu
     event: PointerEvent,
   ): void => {
     const pointersArray = Array.from(pointers.values());
-
-    // Find which element (if any) is being targeted
     const targetElement = this.getTargetElement(event);
+
+    if (
+      event.type === 'forceCancel' ||
+      (targetElement && this.shouldPreventGesture(targetElement, event.pointerType))
+    ) {
+      this.cancel(targetElement, pointersArray, event);
+      return;
+    }
+
     if (!targetElement) {
       return;
     }
@@ -163,14 +170,8 @@ export class TapGesture<GestureName extends string> extends PointerGesture<Gestu
     // Filter pointers to only include those targeting our element or its children
     const relevantPointers = this.getRelevantPointers(pointersArray, targetElement);
 
-    if (
-      this.shouldPreventGesture(targetElement, event.pointerType) ||
-      !this.isWithinPointerCount(relevantPointers, event.pointerType)
-    ) {
-      if (this.isActive) {
-        // Cancel the gesture if it was active
-        this.cancelTap(targetElement, relevantPointers, event);
-      }
+    if (!this.isWithinPointerCount(relevantPointers, event.pointerType)) {
+      this.cancel(targetElement, relevantPointers, event);
       return;
     }
 
@@ -200,7 +201,7 @@ export class TapGesture<GestureName extends string> extends PointerGesture<Gestu
 
           // If moved too far, cancel the tap gesture
           if (distance > this.maxDistance) {
-            this.cancelTap(targetElement, relevantPointers, event);
+            this.cancel(targetElement, relevantPointers, event);
           }
         }
         break;
@@ -213,7 +214,7 @@ export class TapGesture<GestureName extends string> extends PointerGesture<Gestu
           // Make sure we have a valid position before firing the tap event
           const position = this.state.lastPosition || this.state.startCentroid;
           if (!position) {
-            this.cancelTap(targetElement, relevantPointers, event);
+            this.cancel(targetElement, relevantPointers, event);
             return;
           }
 
@@ -250,9 +251,8 @@ export class TapGesture<GestureName extends string> extends PointerGesture<Gestu
         break;
 
       case 'pointercancel':
-      case 'forceCancel':
         // Cancel the gesture
-        this.cancelTap(targetElement, relevantPointers, event);
+        this.cancel(targetElement, relevantPointers, event);
         break;
 
       default:
@@ -286,6 +286,7 @@ export class TapGesture<GestureName extends string> extends PointerGesture<Gestu
       tapCount: this.state.currentTapCount,
       activeGestures,
       customData: this.customData,
+      cancel: () => this.cancelGesture(pointers),
     };
 
     // Dispatch a single 'tap' event (not 'tapStart', 'tapEnd', etc.)
@@ -311,12 +312,17 @@ export class TapGesture<GestureName extends string> extends PointerGesture<Gestu
   /**
    * Cancel the current tap gesture
    */
-  private cancelTap(element: TargetElement, pointers: PointerData[], event: PointerEvent): void {
-    if (this.state.startCentroid || this.state.lastPosition) {
+  private cancel(
+    element: TargetElement | null,
+    pointers: PointerData[],
+    event: PointerEvent,
+  ): void {
+    if (this.isActive && (this.state.startCentroid || this.state.lastPosition)) {
+      const el = element ?? this.element;
       const position = this.state.lastPosition || this.state.startCentroid;
 
       // Get list of active gestures
-      const activeGestures = this.gesturesRegistry.getActiveGestures(element);
+      const activeGestures = this.gesturesRegistry.getActiveGestures(el);
 
       // Create custom event data for the cancel event
       const customEventData: TapGestureEventData = {
@@ -332,6 +338,7 @@ export class TapGesture<GestureName extends string> extends PointerGesture<Gestu
         tapCount: this.state.currentTapCount,
         activeGestures,
         customData: this.customData,
+        cancel: () => this.cancelGesture(pointers),
       };
 
       // Dispatch a 'tapCancel' event
@@ -343,7 +350,7 @@ export class TapGesture<GestureName extends string> extends PointerGesture<Gestu
         detail: customEventData,
       });
 
-      element.dispatchEvent(domEvent);
+      el.dispatchEvent(domEvent);
     }
 
     this.resetState();
