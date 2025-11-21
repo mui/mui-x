@@ -325,7 +325,7 @@ export class Flatbush {
     x,
     y,
     maxResults = Infinity,
-    maxDistSq?: number = Infinity,
+    maxDistSq: number = Infinity,
     filterFn?: (index: number) => boolean,
     sqDistFn = sqDist,
   ) {
