@@ -8,10 +8,6 @@ import { innerGetEventOccurrencesGroupedByResource } from './useEventOccurrences
 import { SchedulerResource, SchedulerProcessedEvent } from '../models';
 
 describe('innerGetEventOccurrencesGroupedByResource', () => {
-  const startString = DEFAULT_TESTING_VISIBLE_DATE_STR;
-  const start = DEFAULT_TESTING_VISIBLE_DATE;
-  const end = adapter.addDays(start, 2);
-
   const makeResource = (id: string, title: string): SchedulerResource => ({
     id,
     title,
@@ -31,8 +27,8 @@ describe('innerGetEventOccurrencesGroupedByResource', () => {
       options.resources ?? [],
       options.resourcesChildrenMap ?? new Map(),
       options.resourceParentIds ?? new Map(),
-      start,
-      end,
+      DEFAULT_TESTING_VISIBLE_DATE,
+      adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 2),
     );
   }
 
@@ -44,7 +40,10 @@ describe('innerGetEventOccurrencesGroupedByResource', () => {
   it('should group single occurrence under a resource', () => {
     const R1 = makeResource('R1', 'Resource 1');
 
-    const occurrence = EventBuilder.new().singleDay(startString).resource(R1.id).buildOccurrence();
+    const occurrence = EventBuilder.new()
+      .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
+      .resource(R1.id)
+      .buildOccurrence();
 
     const out = call({
       events: [occurrence],
@@ -62,7 +61,10 @@ describe('innerGetEventOccurrencesGroupedByResource', () => {
     const R1 = makeResource('R1', 'Resource 1');
     const R2 = makeResource('R2', 'Resource 2');
 
-    const occurrence = EventBuilder.new().singleDay(startString).resource(R1.id).buildOccurrence();
+    const occurrence = EventBuilder.new()
+      .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
+      .resource(R1.id)
+      .buildOccurrence();
 
     const out = call({
       events: [occurrence],
@@ -97,8 +99,14 @@ describe('innerGetEventOccurrencesGroupedByResource', () => {
   it('should group multiple occurrences under the same resource', () => {
     const R1 = makeResource('R1', 'Alpha');
 
-    const occurrence1 = EventBuilder.new().singleDay(startString).resource(R1.id).buildOccurrence();
-    const occurrence2 = EventBuilder.new().singleDay(startString).resource(R1.id).buildOccurrence();
+    const occurrence1 = EventBuilder.new()
+      .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
+      .resource(R1.id)
+      .buildOccurrence();
+    const occurrence2 = EventBuilder.new()
+      .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
+      .resource(R1.id)
+      .buildOccurrence();
 
     const out = call({
       events: [occurrence1, occurrence2],
@@ -114,8 +122,13 @@ describe('innerGetEventOccurrencesGroupedByResource', () => {
   it('should ignore occurrences that have no resource id', () => {
     const R1 = makeResource('R1', 'Resource 1');
 
-    const occurrence1 = EventBuilder.new().singleDay(startString).buildOccurrence();
-    const occurrence2 = EventBuilder.new().singleDay(startString).resource(R1.id).buildOccurrence();
+    const occurrence1 = EventBuilder.new()
+      .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
+      .buildOccurrence();
+    const occurrence2 = EventBuilder.new()
+      .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
+      .resource(R1.id)
+      .buildOccurrence();
 
     const out = call({
       events: [occurrence1, occurrence2],
@@ -133,7 +146,7 @@ describe('innerGetEventOccurrencesGroupedByResource', () => {
     const child2 = makeResource('C2', 'Child Two');
 
     const occurrence = EventBuilder.new()
-      .singleDay(startString)
+      .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
       .resource(child2.id)
       .buildOccurrence();
 
@@ -166,7 +179,10 @@ describe('innerGetEventOccurrencesGroupedByResource', () => {
   it('should return an empty occurrences list when visibleResources marks the resource as false', () => {
     const R1 = makeResource('R1', 'Resource 1');
 
-    const occurrence = EventBuilder.new().singleDay(startString).resource(R1.id).buildOccurrence();
+    const occurrence = EventBuilder.new()
+      .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
+      .resource(R1.id)
+      .buildOccurrence();
 
     const out = call({
       events: [occurrence],
@@ -195,7 +211,10 @@ describe('innerGetEventOccurrencesGroupedByResource', () => {
       ['C', 'B'],
     ]);
 
-    const occurrence = EventBuilder.new().singleDay(startString).resource(c.id).buildOccurrence();
+    const occurrence = EventBuilder.new()
+      .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
+      .resource(c.id)
+      .buildOccurrence();
 
     const out = call({
       events: [occurrence],
