@@ -68,7 +68,7 @@ const ListContent = React.memo(() => {
   return <React.Fragment>{rows}</React.Fragment>;
 });
 
-function ListItem({ model }: { id: number; model: { label: string } }) {
+function ListItem({ id: _id, model }: { id: number; model: { label: string } }) {
   return (
     <Box
       sx={{
