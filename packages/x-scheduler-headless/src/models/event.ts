@@ -65,6 +65,20 @@ export interface SchedulerProcessedEvent {
    * Takes precedence over resource color if both are defined.
    */
   color?: SchedulerEventColor;
+  /**
+   * Whether the event is draggable.
+   * If not defined, the event is draggable if the `areEventsDraggable` property is enabled.
+   */
+  draggable?: boolean;
+  /**
+   * Whether the event is resizable.
+   * If `true`, both start and end can be resized.
+   * If `false`, the event is not resizable.
+   * If `"start"`, only the start can be resized.
+   * If `"end"`, only the end can be resized.
+   * If not defined, the event is resizable if the `areEventsResizable` property is enabled.
+   */
+  resizable?: boolean | SchedulerEventSide;
 }
 
 export interface SchedulerEvent {
@@ -128,6 +142,16 @@ export interface SchedulerEvent {
    * Takes precedence over resource color if both are defined.
    */
   color?: SchedulerEventColor;
+  /**
+   * Whether the event is draggable.
+   * If not defined, the event is draggable if the `areEventsDraggable` property is true.
+   */
+  draggable?: boolean;
+  /**
+   * Whether the event is resizable.
+   * If not defined, the event is resizable if the `areEventsResizable` property is true.
+   */
+  resizable?: boolean | SchedulerEventSide;
 }
 
 /**
@@ -155,6 +179,8 @@ export type SchedulerEventColor =
   | 'pink'
   | 'indigo'
   | 'blue';
+
+export type SchedulerEventSide = 'start' | 'end';
 
 interface SchedulerOccurrencePlaceholderBase {
   /**

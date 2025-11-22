@@ -7,6 +7,7 @@ import {
   SchedulerEvent,
   SchedulerEventId,
   SchedulerEventOccurrence,
+  SchedulerEventSide,
 } from '@mui/x-scheduler-headless/models/event';
 import { processEvent } from '@mui/x-scheduler-headless/process-event';
 import { processDate } from '@mui/x-scheduler-headless/process-date';
@@ -107,6 +108,16 @@ export class EventBuilder {
   /** Reference an original event id (split origin). */
   extractedFromId(id?: SchedulerEventId) {
     this.event.extractedFromId = id;
+    return this;
+  }
+
+  resizable(resizable: boolean | SchedulerEventSide) {
+    this.event.resizable = resizable;
+    return this;
+  }
+
+  draggable(draggable: boolean) {
+    this.event.draggable = draggable;
     return this;
   }
 

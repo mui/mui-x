@@ -4,17 +4,14 @@ import clsx from 'clsx';
 import { createSelector, useStore } from '@base-ui-components/utils/store';
 import { Repeat } from 'lucide-react';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
-import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
+import { SchedulerEventOccurrence, SchedulerEventSide } from '@mui/x-scheduler-headless/models';
 import { EventCalendarState } from '@mui/x-scheduler-headless/use-event-calendar';
 import {
   schedulerEventSelectors,
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import {
-  eventCalendarEventSelectors,
-  eventCalendarViewSelectors,
-} from '@mui/x-scheduler-headless/event-calendar-selectors';
+import { eventCalendarViewSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { DayGridEventProps } from './DayGridEvent.types';
 import { getColorClassName } from '../../../utils/color-utils';
 import { isOccurrenceAllDayOrMultipleDay } from '../../../utils/event-utils';
@@ -27,13 +24,12 @@ import '../../resource-legend/ResourceLegend.css';
 import '../index.css';
 
 const isResizableSelector = createSelector(
-  (state: EventCalendarState) => state.adapter,
-  eventCalendarEventSelectors.isResizable,
-  eventCalendarViewSelectors.view,
-  (adapter, isResizable, view, occurrence: SchedulerEventOccurrence) => {
-    if (!isResizable) {
+  (state: EventCalendarState, side: SchedulerEventSide, occurrence: SchedulerEventOccurrence) => {
+    if (!schedulerEventSelectors.isResizable(state, occurrence.id, side)) {
       return false;
     }
+
+    const view = eventCalendarViewSelectors.view(state);
 
     // There is only one day cell in the day view
     if (view === 'day') {
@@ -42,7 +38,7 @@ const isResizableSelector = createSelector(
 
     // In month view, only multi-day and all-day events can be resized
     if (view === 'month') {
-      return isOccurrenceAllDayOrMultipleDay(occurrence, adapter);
+      return isOccurrenceAllDayOrMultipleDay(occurrence, state.adapter);
     }
 
     return true;
@@ -67,8 +63,9 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   const store = useEventCalendarStoreContext();
 
   // Selector hooks
-  const isDraggable = useStore(store, eventCalendarEventSelectors.isDraggable, occurrence.id);
-  const isResizable = useStore(store, isResizableSelector, occurrence);
+  const isDraggable = useStore(store, schedulerEventSelectors.isDraggable, occurrence.id);
+  const isStartResizable = useStore(store, isResizableSelector, 'start', occurrence);
+  const isEndResizable = useStore(store, isResizableSelector, 'end', occurrence);
   const resource = useStore(
     store,
     schedulerResourceSelectors.processedResource,
@@ -188,11 +185,11 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
       aria-hidden={variant === 'invisible'}
       {...sharedProps}
     >
-      {isResizable && (
+      {isStartResizable && (
         <CalendarGrid.DayEventResizeHandler side="start" className="DayGridEventResizeHandler" />
       )}
       {content}
-      {isResizable && (
+      {isEndResizable && (
         <CalendarGrid.DayEventResizeHandler side="end" className="DayGridEventResizeHandler" />
       )}
     </CalendarGrid.DayEvent>

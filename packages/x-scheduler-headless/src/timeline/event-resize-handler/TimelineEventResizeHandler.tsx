@@ -6,6 +6,7 @@ import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
 import { useEventResizeHandler } from '../../utils/useEventResizeHandler';
 import { useTimelineEventContext } from '../event/TimelineEventContext';
 import type { TimelineEvent } from '../event/TimelineEvent';
+import { SchedulerEventSide } from '../../models';
 
 export const TimelineEventResizeHandler = React.forwardRef(function TimelineEventResizeHandler(
   componentProps: TimelineEventResizeHandler.Props,
@@ -58,6 +59,6 @@ export namespace TimelineEventResizeHandler {
 
   export interface DragData extends TimelineEvent.SharedDragData {
     source: 'TimelineEventResizeHandler';
-    side: 'start' | 'end';
+    side: SchedulerEventSide;
   }
 }
