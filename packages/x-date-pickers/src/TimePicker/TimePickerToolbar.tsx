@@ -22,7 +22,7 @@ import {
   PickerToolbarOwnerState,
   useToolbarOwnerState,
 } from '../internals/hooks/useToolbarOwnerState';
-import { createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
+import { createIsAfterIgnoreDatePart, Meridiem } from '../internals/utils/time-utils';
 import { useControlledValue } from '../internals/hooks/useControlledValue';
 import { useClockReferenceDate } from '../internals/hooks/useClockReferenceDate';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
@@ -202,10 +202,10 @@ function TimePickerToolbar(inProps: TimePickerToolbarProps) {
     timezone,
   });
   const now = useNow(timezone);
-  const isDisableTime = (time: number) => {
+  const isMeridiemDisabled = (meridiem: Meridiem) => {
     const isAfter = createIsAfterIgnoreDatePart(disableIgnoringDatePartForTimeValidation, adapter);
     const start = adapter.setSeconds(
-      adapter.setMinutes(adapter.setHours(adapter.startOfDay(valueOrReferenceDate), time), 0),
+      adapter.setMinutes(adapter.setHours(adapter.startOfDay(valueOrReferenceDate), meridiem === 'am' ? 0 : 12), 0),
       0,
     );
     const end = adapter.addSeconds(adapter.addMinutes(adapter.addHours(start, 11), 59), 59);
@@ -302,7 +302,7 @@ function TimePickerToolbar(inProps: TimePickerToolbarProps) {
             typographyClassName={classes.ampmLabel}
             value={formatMeridiem(adapter, 'am')}
             onClick={readOnly ? undefined : () => handleMeridiemChange('am')}
-            disabled={disabled || !isDisableTime(0)}
+            disabled={disabled || !isMeridiemDisabled('am')}
           />
           <PickersToolbarButton
             disableRipple
@@ -312,7 +312,7 @@ function TimePickerToolbar(inProps: TimePickerToolbarProps) {
             typographyClassName={classes.ampmLabel}
             value={formatMeridiem(adapter, 'pm')}
             onClick={readOnly ? undefined : () => handleMeridiemChange('pm')}
-            disabled={disabled || !isDisableTime(12)}
+            disabled={disabled || !isMeridiemDisabled('pm')}
           />
         </TimePickerToolbarAmPmSelection>
       )}

@@ -252,7 +252,7 @@ export const TimeClock = React.forwardRef(function TimeClock(
             0,
           );
           const end = adapter.addSeconds(adapter.addMinutes(adapter.addHours(start, 11), 59), 59);
-          return !containsValidTime({ start, end });
+          return !containsValidTime({ start, end }) || !isValidValue(rawValue);
         }
 
         default:
