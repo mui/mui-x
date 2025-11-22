@@ -3,6 +3,8 @@ import useLazyRef from '@mui/utils/useLazyRef';
 import Box from '@mui/material/Box';
 import { useVirtualizer, Virtualizer, LayoutList } from '@mui/x-virtualizer';
 
+/* eslint-disable @typescript-eslint/no-use-before-define */
+
 const items = Array.from({ length: 1000 }, (_, index) => ({
   id: index,
   model: { label: `Item ${index + 1}` },
@@ -66,7 +68,7 @@ const ListContent = React.memo(() => {
   return <React.Fragment>{rows}</React.Fragment>;
 });
 
-function ListItem({ id, model }: { id: number; model: { label: string } }) {
+function ListItem({ model }: { id: number; model: { label: string } }) {
   return (
     <Box
       sx={{
