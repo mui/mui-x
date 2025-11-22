@@ -184,7 +184,9 @@ export class LayoutDataGridLegacy extends LayoutDataGrid {
   }
 }
 
-export class LayoutList extends Layout<DataGridElements> {
+type ListElements = BaseElements;
+
+export class LayoutList extends Layout<ListElements> {
   static elements = ['scroller', 'container', 'content', 'positioner'] as const;
 
   use(
