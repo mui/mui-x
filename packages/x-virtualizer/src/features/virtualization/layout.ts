@@ -1,4 +1,5 @@
 import * as React from 'react';
+import useForkRef from '@mui/utils/useForkRef';
 import useEventCallback from '@mui/utils/useEventCallback';
 import * as platform from '@mui/x-internals/platform';
 import { Store, createSelectorMemoized } from '@mui/x-internals/store';
@@ -183,115 +184,62 @@ export class LayoutDataGridLegacy extends LayoutDataGrid {
   }
 }
 
-// export class LayoutList extends Layout<DataGridElements> {
-//   use(store: Store<BaseState>, params: ParamsWithDefaults, api: RequiredAPI): void {
-//     const { refs } = this;
-//
-//     const { minimalContentHeight, autoHeight } = params;
-//
-//     const offsetTop = useStore(store, selectors.offsetTop);
-//     const needsHorizontalScrollbar = useStore(store, Dimensions.selectors.needsHorizontalScrollbar);
-//
-//     const scrollerStyle = React.useMemo(
-//       () =>
-//         ({
-//           overflowX: !needsHorizontalScrollbar ? 'hidden' : undefined,
-//           overflowY: autoHeight ? 'hidden' : undefined,
-//           position: layout.constructor.name !== 'LayoutDataGrid' ? 'relative' : undefined,
-//         }) as React.CSSProperties,
-//       [needsHorizontalScrollbar, autoHeight],
-//     );
-//
-//     const contentStyle = React.useMemo(() => {
-//       switch (layout.constructor.name) {
-//         case 'LayoutDataGrid': {
-//           const style: React.CSSProperties = {
-//             width: needsHorizontalScrollbar ? columnsTotalWidth : 'auto',
-//             flexBasis: contentHeight,
-//             flexShrink: 0,
-//           };
-//
-//           if (style.flexBasis === 0) {
-//             style.flexBasis = minimalContentHeight; // Give room to show the overlay when there no rows.
-//           }
-//
-//           return style;
-//         }
-//         case 'LayoutList': {
-//           const style: React.CSSProperties = {
-//             position: 'absolute',
-//             display: 'inline-block',
-//             width: '100%',
-//             height: contentHeight,
-//             top: 0,
-//             left: 0,
-//             zIndex: -1,
-//           };
-//           return style;
-//         }
-//         default:
-//           throw new Error(`MUI: Unsupported layout: ${params.layout}`);
-//       }
-//     }, [
-//       columnsTotalWidth,
-//       contentHeight,
-//       needsHorizontalScrollbar,
-//       minimalContentHeight,
-//     ]);
-//
-//     const positionerStyle = React.useMemo(() => {
-//       switch (layout.constructor.name) {
-//         case 'LayoutDataGrid': {
-//           const style: React.CSSProperties = {
-//             transform: `translate3d(0, ${offsetTop}px, 0)`,
-//           };
-//           return style;
-//         }
-//         case 'LayoutList': {
-//           const style: React.CSSProperties = {
-//             height: offsetTop,
-//           };
-//           return style;
-//         }
-//         default:
-//           throw new Error(`MUI: Unsupported layout: ${params.layout}`);
-//       }
-//     }, [offsetTop]);
-//
-//     return {
-//       getContainerProps: () => ({
-//         ref: containerRef,
-//       }),
-//       getScrollerProps: () => ({
-//         ref: scrollerRef,
-//         style: scrollerStyle,
-//         role: 'presentation',
-//         // `tabIndex` shouldn't be used along role=presentation, but it fixes a Firefox bug
-//         // https://github.com/mui/mui-x/pull/13891#discussion_r1683416024
-//         tabIndex: platform.isFirefox ? -1 : undefined,
-//       }),
-//       getContentProps: () => ({
-//         style: contentStyle,
-//         role: 'presentation',
-//       }),
-//       getPositionerProps: () => ({
-//         style: positionerStyle,
-//       }),
-//       getScrollbarVerticalProps: () => ({
-//         ref: scrollbarVerticalRef,
-//         scrollPosition,
-//       }),
-//       getScrollbarHorizontalProps: () => ({
-//         ref: scrollbarHorizontalRef,
-//         scrollPosition,
-//       }),
-//       getScrollAreaProps: () => ({
-//         scrollPosition,
-//       }),
-//     };
-//
-//     return {
-//       getters,
-//     };
-//   }
-// }
+export class LayoutList extends Layout<DataGridElements> {
+  static elements = ['scroller', 'container', 'content', 'positioner'] as const;
+
+  use(
+    store: Store<BaseState>,
+    _params: ParamsWithDefaults,
+    _api: RequiredAPI,
+    layoutParams: VirtualizationLayoutParams,
+  ) {
+    const { scrollerRef, containerRef } = layoutParams;
+
+    const mergedRef = useForkRef(scrollerRef, containerRef);
+
+    store.state.virtualization.context = {
+      mergedRef,
+    };
+  }
+
+  static selectors = {
+    containerProps: createSelectorMemoized(
+      Virtualization.selectors.context,
+      Dimensions.selectors.autoHeight,
+      Dimensions.selectors.needsHorizontalScrollbar,
+      (context, autoHeight, needsHorizontalScrollbar) => ({
+        ref: context.mergedRef,
+        style: {
+          overflowX: !needsHorizontalScrollbar ? 'hidden' : undefined,
+          overflowY: autoHeight ? 'hidden' : undefined,
+          position: 'relative',
+        } as React.CSSProperties,
+        role: 'presentation',
+        // `tabIndex` shouldn't be used along role=presentation, but it fixes a Firefox bug
+        // https://github.com/mui/mui-x/pull/13891#discussion_r1683416024
+        tabIndex: platform.isFirefox ? -1 : undefined,
+      }),
+    ),
+
+    contentProps: createSelectorMemoized(Dimensions.selectors.contentHeight, (contentHeight) => {
+      return {
+        style: {
+          position: 'absolute',
+          display: 'inline-block',
+          width: '100%',
+          height: contentHeight,
+          top: 0,
+          left: 0,
+          zIndex: -1,
+        } as React.CSSProperties,
+        role: 'presentation',
+      };
+    }),
+
+    positionerProps: createSelectorMemoized(Virtualization.selectors.offsetTop, (offsetTop) => ({
+      style: {
+        height: offsetTop,
+      } as React.CSSProperties,
+    })),
+  };
+}
