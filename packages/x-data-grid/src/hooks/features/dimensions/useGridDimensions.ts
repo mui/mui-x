@@ -64,6 +64,8 @@ const EMPTY_DIMENSIONS: GridDimensions = {
   headersTotalHeight: 0,
   topContainerHeight: 0,
   bottomContainerHeight: 0,
+  autoHeight: false,
+  minimalContentHeight: undefined,
 };
 
 export const dimensionsStateInitializer: GridStateInitializer<RootProps> = (

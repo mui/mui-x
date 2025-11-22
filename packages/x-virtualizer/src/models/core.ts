@@ -62,6 +62,10 @@ export type GridScrollFn = (v: GridScrollParams) => void;
 export type PinnedRowPosition = keyof PinnedRows;
 
 export type ScrollPosition = { top: number; left: number };
+export const ScrollPosition = {
+  EMPTY: { top: 0, left: 0 },
+  equals: (a: ScrollPosition, b: ScrollPosition) => a.top === b.top && a.left === b.left,
+};
 
 export enum ScrollDirection {
   NONE,

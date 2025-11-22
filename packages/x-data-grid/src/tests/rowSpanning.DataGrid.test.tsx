@@ -287,8 +287,7 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Row spanning', () => {
         ]);
       });
 
-      // 2 updates on `rows` update, one for the reset (necessary to track deleted or updated data values) and one for the new computed state
-      expect(rowSpanningStateUpdates).to.equal(2);
+      expect(rowSpanningStateUpdates).to.equal(1);
 
       dispose();
     });
