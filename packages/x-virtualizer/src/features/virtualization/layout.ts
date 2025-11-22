@@ -155,6 +155,11 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
   };
 }
 
+// The current virtualizer API is exposed on one of the DataGrid slots, so we need to keep
+// the old API for backward compatibility. This API prevents using fine-grained reactivity
+// as all props are returned in a single object, so everything re-renders on any change.
+//
+// TODO(v9): Remove the legacy API.
 export class LayoutDataGridLegacy extends LayoutDataGrid {
   use(
     store: Store<BaseState>,
