@@ -74,13 +74,10 @@ function App() {
 You can enable the resizing only for one side of your events by setting the `areEventsResizable` to `"start"` or `"end"`:
 
 ```tsx
-<EventCalendar
-  areEventsResizable="start" // only the start of the events is resizable
-  areEventsResizable="end" // only the end of the events is resizable
-/>
+<EventCalendar areEventsResizable="end" />
 ```
 
-{{"demo": "DragAndDropResizeStart.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "DragAndDropResizeEnd.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::success
 The `draggable` event property also supports `"start"` and `"end"`.
@@ -91,7 +88,7 @@ function App() {
   const events = [
     { id: 'event-1' },
     { id: 'event-2' },
-    { id: 'event-3', resizable: 'start' },
+    { id: 'event-3', resizable: 'end' },
   ];
 
   return <EventCalendar areEventsResizable events={events} />;

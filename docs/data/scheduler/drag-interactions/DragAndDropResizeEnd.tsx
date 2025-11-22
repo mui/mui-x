@@ -7,7 +7,7 @@ import {
   resources,
 } from '../datasets/personal-agenda';
 
-export default function DragAndDropResizeStart() {
+export default function DragAndDropResizeEnd() {
   const [events, setEvents] = React.useState<SchedulerEvent[]>(initialEvents);
 
   return (
