@@ -271,6 +271,10 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     const shouldUpdate = didCrossThreshold || didChangeDirection;
 
     if (!shouldUpdate) {
+      store.set('virtualization', {
+        ...store.state.virtualization,
+        scrollPosition: { current: { ...scrollPosition.current } },
+      });
       return renderContext;
     }
 
