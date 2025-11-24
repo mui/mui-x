@@ -10,6 +10,7 @@ import {
   RecurringEventUpdateScope,
   SchedulerPreferences,
   SchedulerEventCreationProperties,
+  SchedulerEvent,
 } from '../../models';
 import {
   SchedulerState,
@@ -36,6 +37,8 @@ import {
 } from './SchedulerStore.utils';
 import { TimeoutManager } from '../TimeoutManager';
 import { DEFAULT_EVENT_COLOR } from '../../constants';
+import { SchedulerDataManager, DateRange } from './utils';
+import { SchedulerDataSourceCacheDefault } from './cache';
 
 const ONE_MINUTE_IN_MS = 60 * 1000;
 
@@ -69,6 +72,10 @@ export class SchedulerStore<
   private mapper: SchedulerParametersToStateMapper<State, Parameters>;
 
   protected timeoutManager = new TimeoutManager();
+
+  private dataManager: SchedulerDataManager | null = null;
+
+  private cache: SchedulerDataSourceCacheDefault<TEvent> | null = null;
 
   public constructor(
     parameters: Parameters,
@@ -145,44 +152,128 @@ export class SchedulerStore<
    */
   private getDateRangeForFetch(): { start: SchedulerValidDate; end: SchedulerValidDate } {
     const { adapter, visibleDate } = this.state;
-
     // Default to a week range if no view config is available
     const start = adapter.startOfWeek(visibleDate);
     const end = adapter.endOfWeek(visibleDate);
+    console.log('Calculating date range for fetch with visibleDate:', visibleDate, start, end);
 
     return { start, end };
   }
 
   /**
+   * Gets all individual days in a date range as cache keys.
+   */
+  private getDaysInRange(range: DateRange): string[] {
+    const { adapter } = this.state;
+    const days: string[] = [];
+    let currentDay = range.start;
+
+    while (adapter.isBefore(currentDay, range.end) || adapter.isEqual(currentDay, range.end)) {
+      days.push(adapter.toJsDate(currentDay).getTime().toString());
+      currentDay = adapter.addDays(currentDay, 1) as SchedulerValidDate;
+    }
+
+    return days;
+  }
+
+  /**
    * Loads events from the data source.
    */
-  private loadEventsFromDataSource = async (dateRange?: {
-    start: SchedulerValidDate;
-    end: SchedulerValidDate;
-  }) => {
+  private loadEventsFromDataSource = async (
+    dateRange: {
+      start: SchedulerValidDate;
+      end: SchedulerValidDate;
+    },
+    adapter: Adapter,
+  ) => {
     const { dataSource } = this.parameters;
 
-    if (!dataSource) {
+    if (!dataSource || !this.cache || !this.dataManager) {
       return;
     }
 
+    console.log('Loading events from data source...', dateRange);
+
     const range = dateRange ?? this.getDateRangeForFetch();
+    const daysInRange = this.getDaysInRange(range);
 
-    try {
-      const events = await dataSource.getEvents(range.start, range.end);
+    if (!daysInRange.length) {
+      return;
+    }
 
-      console.log('Loaded events from data source:', events);
-      // Only update if we're still using the same dataSource
-      const { adapter } = this.state;
-      const eventsState = buildEventsState({ ...this.parameters, events } as Parameters, adapter);
+    // Check cache for each day in the range
+    const needsFetch = daysInRange.some((dayKey) => {
+      const cached = this.cache!.get(dayKey);
+      return cached === undefined || cached === -1;
+    });
+
+    console.log(needsFetch, dateRange, daysInRange, this.cache);
+
+    if (!needsFetch) {
+      const allEvents: TEvent[] = [];
+      daysInRange.forEach((dayKey) => {
+        const cachedEvents = this.cache!.get(dayKey);
+        if (cachedEvents && cachedEvents !== -1) {
+          allEvents.push(...cachedEvents);
+        }
+      });
+      const eventsState = buildEventsState(
+        { ...this.parameters, events: allEvents } as Parameters,
+        adapter,
+      );
 
       this.apply({
         ...eventsState,
       } as Partial<State>);
+
+      await this.dataManager.setRequestSettled(range);
+
+      return;
+
+      // TODO: Set not loading state
+      // TODO: Handle partial cache hits
+      // TODO: unset state if cache expired and fetch again
+    }
+
+    try {
+      const events = await dataSource.getEvents(range.start, range.end);
+
+      console.log('Fetched events from data source:', events);
+
+      // TODO: Start debugging from here!!
+
+      // events.forEach((event) => {
+      //   const eventStart = this.state.eventModelStructure?.start
+      //     ? this.state.eventModelStructure.start.getter(event)
+      //     : (event as SchedulerEvent).start;
+
+      //   console.log('Caching event start date:', eventStart);
+
+      //   if (eventStart) {
+      //     const dayKey = adapter.toJsDate(eventStart).getTime().toString();
+      //     const cachedDayEvents = this.cache!.get(dayKey) || [];
+      //     const dayEvents =
+      //       cachedDayEvents !== -1 && cachedDayEvents !== undefined ? cachedDayEvents : [];
+      //     this.cache!.set(dayKey, [...dayEvents, event]);
+      //   }
+      // });
+
+      const eventsState = buildEventsState({ ...this.parameters, events } as Parameters, adapter);
+
+      console.log('Fetched events from data source:', eventsState);
+
+      this.apply({
+        ...eventsState,
+      } as Partial<State>);
+
+      // Mark request as settled
+      await this.dataManager.setRequestSettled(range);
     } catch (error) {
-      // error handling is intentionally left blank
+      // TODO: Set error state for this range
+      await this.dataManager.setRequestSettled(range);
     } finally {
-      // unset loading state
+      // TODO: unset loading state
+      await this.dataManager.setRequestSettled(range);
     }
   };
 
@@ -238,9 +329,11 @@ export class SchedulerStore<
       Object.assign(newSchedulerState, buildEventsState(parameters, adapter));
     }
 
-    // If dataSource changed, trigger a new fetch
     if (parameters.dataSource) {
-      queueMicrotask(() => this.loadEventsFromDataSource());
+      this.cache = new SchedulerDataSourceCacheDefault<TEvent>({ ttl: 300_000 });
+      this.dataManager = new SchedulerDataManager(adapter, this.loadEventsFromDataSource);
+      const range = this.getDateRangeForFetch();
+      queueMicrotask(() => this.dataManager?.queue([range]));
     }
 
     if (
@@ -275,6 +368,12 @@ export class SchedulerStore<
       if (visibleDateProp === undefined) {
         this.set('visibleDate', visibleDate);
       }
+
+      // Fetch new events if using dataSource
+      // if (this.parameters.dataSource) {
+      //   queueMicrotask(() => this.loadEventsFromDataSource());
+      // }
+
       onVisibleDateChange?.(visibleDate, event);
     }
   };
