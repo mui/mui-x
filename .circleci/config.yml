@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  code-infra: https://raw.githubusercontent.com/mui/mui-public/3de4e610816154219d2ea077425f00529cf1435f/.circleci/orbs/code-infra.yml
+  code-infra: https://raw.githubusercontent.com/mui/mui-public/30aee94f7bf1b65be6557be1f2910e3c53d07aad/.circleci/orbs/code-infra.yml
 
 parameters:
   browserstack-force:
@@ -122,6 +122,7 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
+      - code-infra/install-pnpm
       - run:
           name: Test JSDOM
           command: |
@@ -142,6 +143,7 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
+      - code-infra/install-pnpm
       - when:
           condition:
             not:
@@ -175,6 +177,7 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
+      - code-infra/install-pnpm
       - code-infra/run-linters
   test_static:
     <<: *default-job
@@ -182,6 +185,7 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
+      - code-infra/install-pnpm
       - code-infra/check-static-changes
       - run:
           name: Generate PropTypes
@@ -237,6 +241,7 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
+      - code-infra/install-pnpm
       - run:
           name: Transpile TypeScript demos
           command: pnpm docs:typescript:formatted --disable-cache
@@ -257,6 +262,7 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
+      - code-infra/install-pnpm
       - run:
           name: Run e2e tests
           command: pnpm test:e2e
@@ -269,6 +275,7 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
+      - code-infra/install-pnpm
       - run:
           name: pnpm test:e2e-website
           command: pnpm test:e2e-website
@@ -280,6 +287,7 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
+      - code-infra/install-pnpm
       - run:
           name: Build packages
           command: pnpm release:build
@@ -298,6 +306,7 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
+      - code-infra/install-pnpm
       - run:
           name: prepare danger on PRs
           command: pnpm danger ci
@@ -318,6 +327,7 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
+      - code-infra/install-pnpm
       - run:
           name: Install ffmpeg
           command: apt update && apt upgrade -y && apt install ffmpeg -y
