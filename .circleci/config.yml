@@ -272,7 +272,7 @@ jobs:
           command: |
             git remote show origin
             git ls-remote origin
-            git fetch origin refs/pull/20428/head:pull/20428
+            git remote set-url origin .
             git fetch --force --update-head-ok --depth 200 origin pull/20428:argos/pull/20428
       # - install-deps:
       #     react-version: << parameters.react-version >>
