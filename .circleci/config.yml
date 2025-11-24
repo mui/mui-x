@@ -85,7 +85,11 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - "**/node_modules"
+            - node_modules
+            - packages/*/node_modules
+            - docs/node_modules
+            - test/node_modules
+            - test/*/node_modules
   install_js_browser:
     <<: *default-job
     executor:
@@ -98,7 +102,11 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - "**/node_modules"
+            - node_modules
+            - packages/*/node_modules
+            - docs/node_modules
+            - test/node_modules
+            - test/*/node_modules
   checkout:
     <<: *default-job
     steps:
@@ -278,7 +286,11 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - "**/node_modules"
+            - node_modules
+            - packages/*/node_modules
+            - docs/node_modules
+            - test/node_modules
+            - test/*/node_modules
             - packages/*/build
   test_package:
     <<: *default-job
@@ -401,7 +413,6 @@ workflows:
       - test_unit:
           <<: *default-context
           name: test_unit_additional
-          react-version: << pipeline.parameters.with-react-version >>
           requires:
             - install_js_additional
       - test_browser:
@@ -413,20 +424,17 @@ workflows:
       - release_build:
           <<: *default-context
           name: release_build_additional
-          react-version: << pipeline.parameters.with-react-version >>
           requires:
             - install_js_additional
       - test_regressions:
           <<: *default-context
           name: test_regressions_additional
-          react-version: << pipeline.parameters.with-react-version >>
           requires:
             - install_js_browser_additional
             - release_build_additional
       - test_e2e:
           <<: *default-context
           name: test_e2e_additional
-          react-version: << pipeline.parameters.with-react-version >>
           requires:
             - install_js_browser_additional
             - release_build_additional
@@ -460,7 +468,6 @@ workflows:
       - test_unit:
           <<: *default-context
           name: test_unit_react_18
-          react-version: ^18
           requires:
             - install_js_react_18
       - test_browser:
@@ -472,13 +479,11 @@ workflows:
       - release_build:
           <<: *default-context
           name: release_build_react_18
-          react-version: ^18
           requires:
             - install_js_react_18
       - test_e2e:
           <<: *default-context
           name: test_e2e_react_18
-          react-version: ^18
           requires:
             - install_js_browser_react_18
             - release_build_react_18
