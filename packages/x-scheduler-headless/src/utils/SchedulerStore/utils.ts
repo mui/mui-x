@@ -55,7 +55,6 @@ export class SchedulerDataManager {
   }
 
   private processQueue = async () => {
-    console.log('Processing queue...');
     if (this.queuedRequests.size === 0 || this.pendingRequests.size >= this.maxConcurrentRequests) {
       return;
     }
