@@ -61,6 +61,8 @@ export const ChartAxisZoomSliderThumb = React.forwardRef<SVGRectElement, ChartZo
         return;
       }
 
+      let prevTouchAction = 'auto';
+
       const onPointerMove = rafThrottle((event: PointerEvent) => {
         onMoveEvent(event);
       });
@@ -68,6 +70,7 @@ export const ChartAxisZoomSliderThumb = React.forwardRef<SVGRectElement, ChartZo
       const onPointerUp = () => {
         thumb.removeEventListener('pointermove', onPointerMove);
         thumb.removeEventListener('pointerup', onPointerUp);
+        document.body.style.touchAction = prevTouchAction;
       };
 
       const onPointerDown = (event: PointerEvent) => {
@@ -75,6 +78,11 @@ export const ChartAxisZoomSliderThumb = React.forwardRef<SVGRectElement, ChartZo
         event.preventDefault();
         event.stopPropagation();
         thumb.setPointerCapture(event.pointerId);
+
+        /* Disable touch scrolling while dragging to improve slider thumb usage on mobile */
+        prevTouchAction = document.body.style.touchAction;
+        document.body.style.touchAction = 'none';
+
         thumb.addEventListener('pointerup', onPointerUp);
         thumb.addEventListener('pointermove', onPointerMove);
       };
