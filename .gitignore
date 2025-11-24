@@ -31,3 +31,5 @@ CLAUDE.md
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+.pnpm-store
