@@ -218,6 +218,7 @@ export function buildEventsState<TEvent extends object, TResource extends object
   const eventIdList: SchedulerEventId[] = [];
   const eventModelLookup = new Map<SchedulerEventId, TEvent>();
   const processedEventLookup = new Map<SchedulerEventId, SchedulerProcessedEvent>();
+
   for (const event of events) {
     const processedEvent = getProcessedEventFromModel(event, adapter, eventModelStructure);
     eventIdList.push(processedEvent.id);

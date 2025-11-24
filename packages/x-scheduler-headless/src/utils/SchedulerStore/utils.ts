@@ -1,5 +1,6 @@
 import { SchedulerValidDate } from '../../models';
 import { Adapter } from '../../use-adapter/useAdapter.types';
+import { getDateKey } from '../date-utils';
 
 const MAX_CONCURRENT_REQUESTS = 3;
 
@@ -20,8 +21,8 @@ export interface DateRange {
  * Format: "startTimestamp:endTimestamp"
  */
 function getDateRangeKey(adapter: Adapter, range: DateRange): string {
-  const startTimestamp = adapter.toJsDate(range.start).getTime().toString();
-  const endTimestamp = adapter.toJsDate(range.end).getTime().toString();
+  const startTimestamp = getDateKey(range.start, adapter);
+  const endTimestamp = getDateKey(range.end, adapter);
   return `${startTimestamp}:${endTimestamp}`;
 }
 
@@ -41,11 +42,11 @@ export class SchedulerDataManager {
 
   private maxConcurrentRequests: number;
 
-  private fetchFunction: (range: DateRange) => Promise<void>;
+  private fetchFunction: (range: DateRange, adapter: Adapter) => Promise<void>;
 
   constructor(
     adapter: Adapter,
-    fetchFunction: (range: DateRange) => Promise<void>,
+    fetchFunction: (range: DateRange, adapter: Adapter) => Promise<void>,
     maxConcurrentRequests = MAX_CONCURRENT_REQUESTS,
   ) {
     this.adapter = adapter;
@@ -54,6 +55,7 @@ export class SchedulerDataManager {
   }
 
   private processQueue = async () => {
+    console.log('Processing queue...');
     if (this.queuedRequests.size === 0 || this.pendingRequests.size >= this.maxConcurrentRequests) {
       return;
     }
@@ -75,7 +77,7 @@ export class SchedulerDataManager {
       this.queuedRequests.delete(rangeKey);
       this.pendingRequests.set(rangeKey, range);
 
-      fetchPromises.push(this.fetchFunction(range));
+      fetchPromises.push(this.fetchFunction(range, this.adapter));
     }
 
     await Promise.all(fetchPromises);

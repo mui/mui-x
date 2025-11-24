@@ -39,6 +39,7 @@ import { TimeoutManager } from '../TimeoutManager';
 import { DEFAULT_EVENT_COLOR } from '../../constants';
 import { SchedulerDataManager, DateRange } from './utils';
 import { SchedulerDataSourceCacheDefault } from './cache';
+import { getDateKey } from '../date-utils';
 
 const ONE_MINUTE_IN_MS = 60 * 1000;
 
@@ -117,11 +118,6 @@ export class SchedulerStore<
       });
     });
 
-    // Load events from data source if provided
-    if (parameters.dataSource) {
-      this.loadEventsFromDataSource();
-    }
-
     if (process.env.NODE_ENV !== 'production') {
       this.initialParameters = parameters;
     }
@@ -151,25 +147,53 @@ export class SchedulerStore<
    * Calculates the date range to fetch events for based on the current visible date and view config.
    */
   private getDateRangeForFetch(): { start: SchedulerValidDate; end: SchedulerValidDate } {
-    const { adapter, visibleDate } = this.state;
-    // Default to a week range if no view config is available
-    const start = adapter.startOfWeek(visibleDate);
-    const end = adapter.endOfWeek(visibleDate);
-    console.log('Calculating date range for fetch with visibleDate:', visibleDate, start, end);
+    const { adapter, visibleDate, view } = this.state;
 
-    return { start, end };
+    switch (view) {
+      case 'day': {
+        const start = adapter.startOfDay(visibleDate);
+        const end = adapter.endOfDay(visibleDate);
+        return { start, end };
+      }
+
+      case 'week': {
+        const start = adapter.startOfWeek(visibleDate);
+        const end = adapter.endOfWeek(visibleDate);
+        return { start, end };
+      }
+
+      case 'month': {
+        const monthStart = adapter.startOfMonth(visibleDate);
+        const start = adapter.startOfWeek(monthStart);
+        const monthEnd = adapter.endOfMonth(visibleDate);
+        const end = adapter.endOfWeek(monthEnd);
+        return { start, end };
+      }
+
+      case 'agenda': {
+        const start = adapter.startOfDay(visibleDate);
+        const end = adapter.endOfDay(adapter.addDays(visibleDate, 6));
+        return { start, end };
+      }
+      default: {
+        const start = adapter.startOfWeek(visibleDate);
+        const end = adapter.endOfWeek(visibleDate);
+
+        return { start, end };
+      }
+    }
   }
 
   /**
    * Gets all individual days in a date range as cache keys.
    */
-  private getDaysInRange(range: DateRange): string[] {
+  private getDaysInRange(range: DateRange): { key: string; date: SchedulerValidDate }[] {
     const { adapter } = this.state;
-    const days: string[] = [];
+    const days: { key: string; date: SchedulerValidDate }[] = [];
     let currentDay = range.start;
 
     while (adapter.isBefore(currentDay, range.end) || adapter.isEqual(currentDay, range.end)) {
-      days.push(adapter.toJsDate(currentDay).getTime().toString());
+      days.push({ key: getDateKey(currentDay, adapter), date: currentDay });
       currentDay = adapter.addDays(currentDay, 1) as SchedulerValidDate;
     }
 
@@ -179,22 +203,17 @@ export class SchedulerStore<
   /**
    * Loads events from the data source.
    */
-  private loadEventsFromDataSource = async (
-    dateRange: {
-      start: SchedulerValidDate;
-      end: SchedulerValidDate;
-    },
-    adapter: Adapter,
-  ) => {
+  private loadEventsFromDataSource = async (range: {
+    start: SchedulerValidDate;
+    end: SchedulerValidDate;
+  }) => {
     const { dataSource } = this.parameters;
+    const { adapter } = this.state;
 
     if (!dataSource || !this.cache || !this.dataManager) {
       return;
     }
 
-    console.log('Loading events from data source...', dateRange);
-
-    const range = dateRange ?? this.getDateRangeForFetch();
     const daysInRange = this.getDaysInRange(range);
 
     if (!daysInRange.length) {
@@ -202,17 +221,24 @@ export class SchedulerStore<
     }
 
     // Check cache for each day in the range
-    const needsFetch = daysInRange.some((dayKey) => {
-      const cached = this.cache!.get(dayKey);
+    const needsFetch = daysInRange.some(({ key }) => {
+      const cached = this.cache!.get(key);
       return cached === undefined || cached === -1;
     });
 
-    console.log(needsFetch, dateRange, daysInRange, this.cache);
+    console.log(
+      'Loading events from data source for range:',
+      range,
+      'Needs fetch: ',
+      needsFetch,
+      'cache: ',
+      this.cache,
+    );
 
     if (!needsFetch) {
       const allEvents: TEvent[] = [];
-      daysInRange.forEach((dayKey) => {
-        const cachedEvents = this.cache!.get(dayKey);
+      daysInRange.forEach(({ key }) => {
+        const cachedEvents = this.cache!.get(key);
         if (cachedEvents && cachedEvents !== -1) {
           allEvents.push(...cachedEvents);
         }
@@ -221,6 +247,8 @@ export class SchedulerStore<
         { ...this.parameters, events: allEvents } as Parameters,
         adapter,
       );
+
+      console.log('Using cached events for range:', range, allEvents);
 
       this.apply({
         ...eventsState,
@@ -238,29 +266,26 @@ export class SchedulerStore<
     try {
       const events = await dataSource.getEvents(range.start, range.end);
 
-      console.log('Fetched events from data source:', events);
-
-      // TODO: Start debugging from here!!
-
-      // events.forEach((event) => {
-      //   const eventStart = this.state.eventModelStructure?.start
-      //     ? this.state.eventModelStructure.start.getter(event)
-      //     : (event as SchedulerEvent).start;
-
-      //   console.log('Caching event start date:', eventStart);
-
-      //   if (eventStart) {
-      //     const dayKey = adapter.toJsDate(eventStart).getTime().toString();
-      //     const cachedDayEvents = this.cache!.get(dayKey) || [];
-      //     const dayEvents =
-      //       cachedDayEvents !== -1 && cachedDayEvents !== undefined ? cachedDayEvents : [];
-      //     this.cache!.set(dayKey, [...dayEvents, event]);
-      //   }
-      // });
-
       const eventsState = buildEventsState({ ...this.parameters, events } as Parameters, adapter);
+      const eventsByDay = new Map<string, TEvent[]>();
 
-      console.log('Fetched events from data source:', eventsState);
+      events.forEach((event) => {
+        const eventStart = this.state.eventModelStructure?.start
+          ? this.state.eventModelStructure.start.getter(event)
+          : (event as SchedulerEvent).start;
+
+        if (eventStart) {
+          const dayKey = getDateKey(eventStart, adapter);
+          if (!eventsByDay.has(dayKey)) {
+            eventsByDay.set(dayKey, []);
+          }
+          eventsByDay.get(dayKey)!.push(event);
+        }
+      });
+
+      daysInRange.forEach(({ key: dayKey }) => {
+        this.cache!.set(dayKey, eventsByDay.get(dayKey) ?? []);
+      });
 
       this.apply({
         ...eventsState,
@@ -370,9 +395,10 @@ export class SchedulerStore<
       }
 
       // Fetch new events if using dataSource
-      // if (this.parameters.dataSource) {
-      //   queueMicrotask(() => this.loadEventsFromDataSource());
-      // }
+      if (this.parameters.dataSource) {
+        const range = this.getDateRangeForFetch();
+        queueMicrotask(() => this.dataManager?.queue([range]));
+      }
 
       onVisibleDateChange?.(visibleDate, event);
     }
