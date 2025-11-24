@@ -276,9 +276,7 @@ jobs:
           command: xvfb-run pnpm test:regressions
       - run:
           name: Upload screenshots to Argos CI
-          command: |
-            git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
-            pnpm test:argos
+          command: pnpm test:argos
 
 workflows:
   pipeline:
