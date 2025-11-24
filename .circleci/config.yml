@@ -267,7 +267,7 @@ jobs:
           command: |
             git config --add remote.origin.fetch "+refs/pull/*/head:refs/remotes/origin/pr/*"
             git fetch origin
-            git fetch --update-head-ok --depth 200 origin pull/20428:pull/20428
+            git fetch --update-head-ok --depth 200 origin pull/20428/head:pull/20428
       # - install-deps:
       #     react-version: << parameters.react-version >>
       # - run:
