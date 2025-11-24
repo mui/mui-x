@@ -1,24 +1,25 @@
 import * as React from 'react';
 
-import { Timeline } from '@mui/x-scheduler/timeline';
+import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import {
-  defaultVisibleDate,
   initialEvents,
+  defaultVisibleDate,
   resources,
-} from '../datasets/timeline-events';
+} from '../datasets/personal-agenda';
 
-export default function DragAndDrop() {
+export default function EventCalendarDragAndDrop() {
   const [events, setEvents] = React.useState(initialEvents);
 
   return (
-    <div style={{ height: '500px', width: '100%' }}>
-      <Timeline
+    <div style={{ height: '600px', width: '100%' }}>
+      <EventCalendar
         events={events}
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
         areEventsDraggable
         areEventsResizable
+        defaultPreferences={{ isSidePanelOpen: false }}
       />
     </div>
   );
