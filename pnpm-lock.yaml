@@ -2161,9 +2161,6 @@ importers:
       '@vitest/ui':
         specifier: 'catalog:'
         version: 4.0.10(vitest@4.0.10)
-      jsdom:
-        specifier: ^26.1.0
-        version: 26.1.0
       react:
         specifier: 'catalog:'
         version: 19.2.0

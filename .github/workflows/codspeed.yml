@@ -48,6 +48,11 @@ jobs:
       - run: pnpm install --frozen-lockfile
       # Ensure we are running on the prod version of our libs
       - run: pnpm --filter "@mui/x-charts-premium..." build
+
+      - run: pnpm ls jsdom
+      - run: pnpm why jsdom
+      - run: pnpm --filter @mui-x-internal/performance-charts ls jsdom
+      - run: pnpm --filter @mui-x-internal/performance-charts why jsdom
       - name: Run benchmarks
         uses: CodSpeedHQ/action@6a8e2b874c338bf81cc5e8be715ada75908d3871
         with:
