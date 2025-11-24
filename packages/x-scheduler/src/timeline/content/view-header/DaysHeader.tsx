@@ -21,7 +21,7 @@ export function DaysHeader(props: HeaderProps) {
       getDayList({
         adapter,
         start: visibleDate,
-        end: adapter.addDays(visibleDate, amount || DAYS_UNIT_COUNT),
+        end: adapter.addDays(visibleDate, (amount || DAYS_UNIT_COUNT) - 1),
       }),
     [adapter, visibleDate, amount],
   );

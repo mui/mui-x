@@ -25,7 +25,7 @@ export function TimeHeader(props: HeaderProps) {
       getDayList({
         adapter,
         start: visibleDate,
-        end: adapter.addDays(visibleDate, amount || TIME_UNITS_COUNT),
+        end: adapter.addDays(visibleDate, (amount || TIME_UNITS_COUNT) - 1),
       }),
     [adapter, visibleDate, amount],
   );
