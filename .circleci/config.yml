@@ -261,14 +261,10 @@ jobs:
             DANGER_COMMAND: reportBundleSize
   test_regressions:
     <<: *default-job
-    executor:
-      name: code-infra/mui-node-browser
-      playwright-img-version: v1.56.1-noble
     steps:
       - checkout
       - run:
           command: |
-            echo "$CIRCLE_BRANCH"
             git config --add remote.origin.fetch "+refs/pull/*/head:refs/remotes/origin/pr/*"
             git fetch origin
             git fetch --update-head-ok --depth 200 origin pull/20428:pull/20428
