@@ -76,10 +76,35 @@ commands:
           package-overrides: react@<< parameters.react-version >> @mui/material@<< pipeline.parameters.material-ui-version >>
 
 jobs:
+  install_js:
+    <<: *default-job
+    steps:
+      - checkout
+      - install-deps:
+          react-version: << parameters.react-version >>
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .pnpm-store
+  install_js_browser:
+    <<: *default-job
+    executor:
+      name: code-infra/mui-node-browser
+      playwright-img-version: v1.56.1-noble
+    steps:
+      - checkout
+      - install-deps:
+          react-version: << parameters.react-version >>
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .pnpm-store
   checkout:
     <<: *default-job
     steps:
       - checkout
+      - attach_workspace:
+          at: .
       - install-deps
       - run:
           name: Should not have any git not staged
@@ -89,6 +114,8 @@ jobs:
     <<: *default-job
     steps:
       - checkout
+      - attach_workspace:
+          at: .
       - install-deps:
           react-version: << parameters.react-version >>
       - run:
@@ -109,6 +136,8 @@ jobs:
     resource_class: large
     steps:
       - checkout
+      - attach_workspace:
+          at: .
       - install-deps:
           react-version: << parameters.react-version >>
       - when:
@@ -142,12 +171,16 @@ jobs:
     <<: *default-job
     steps:
       - checkout
+      - attach_workspace:
+          at: .
       - install-deps
       - code-infra/run-linters
   test_static:
     <<: *default-job
     steps:
       - checkout
+      - attach_workspace:
+          at: .
       - install-deps
       - code-infra/check-static-changes
       - run:
@@ -202,6 +235,8 @@ jobs:
     <<: *default-job
     steps:
       - checkout
+      - attach_workspace:
+          at: .
       - install-deps
       - run:
           name: Transpile TypeScript demos
@@ -221,6 +256,8 @@ jobs:
       playwright-img-version: v1.56.1-noble
     steps:
       - checkout
+      - attach_workspace:
+          at: .
       - install-deps:
           react-version: << parameters.react-version >>
       - run:
@@ -233,6 +270,8 @@ jobs:
       playwright-img-version: v1.56.1-noble
     steps:
       - checkout
+      - attach_workspace:
+          at: .
       - install-deps
       - run:
           name: pnpm test:e2e-website
@@ -243,6 +282,8 @@ jobs:
     <<: *default-job
     steps:
       - checkout
+      - attach_workspace:
+          at: .
       - install-deps:
           react-version: << parameters.react-version >>
       - run:
@@ -250,15 +291,28 @@ jobs:
           command: pnpm danger ci
           environment:
             DANGER_COMMAND: prepareBundleSizeReport
-      - run:
-          name: Build packages
-          command: pnpm release:build
       - code-infra/upload-size-snapshot
       - run:
           name: Run danger on PRs
           command: pnpm danger ci --fail-on-errors
           environment:
             DANGER_COMMAND: reportBundleSize
+  release_build:
+    <<: *default-job
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - install-deps:
+          react-version: << parameters.react-version >>
+      - run:
+          name: Build packages
+          command: pnpm release:build
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .pnpm-store
+            - packages/*/build
   test_regressions:
     <<: *default-job
     executor:
@@ -266,6 +320,8 @@ jobs:
       playwright-img-version: v1.56.1-noble
     steps:
       - checkout
+      - attach_workspace:
+          at: .
       - install-deps:
           react-version: << parameters.react-version >>
       - run:
@@ -283,31 +339,65 @@ workflows:
     when:
       equal: [pipeline, << pipeline.parameters.workflow >>]
     jobs:
+      - install_js:
+          <<: *default-context
+      - install_js_browser:
+          <<: *default-context
       - checkout:
           <<: *default-context
+          requires:
+            - install_js
       - test_unit:
           <<: *default-context
+          requires:
+            - install_js
       - test_browser:
           <<: *default-context
+          requires:
+            - install_js_browser
       - test_lint:
           <<: *default-context
+          requires:
+            - install_js
       - test_static:
           <<: *default-context
+          requires:
+            - install_js
       - test_types:
           <<: *default-context
+          requires:
+            - install_js
+      - release_build:
+          <<: *default-context
+          requires:
+            - install_js
       - test_e2e:
           <<: *default-context
+          requires:
+            - install_js_browser
+            - release_build
       - test_regressions:
           <<: *default-context
+          requires:
+            - install_js_browser
+            - release_build
       - test_package:
           <<: *default-context
+          requires:
+            - release_build
   e2e-website:
     when:
       equal: [e2e-website, << pipeline.parameters.workflow >>]
     jobs:
+      - install_js_browser:
+          <<: *default-context
       - checkout:
           <<: *default-context
-      - test_e2e_website
+          requires:
+            - install_js_browser
+      - test_e2e_website:
+          requires:
+            - install_js_browser
   additional-tests:
     when:
       and:
@@ -318,22 +408,46 @@ workflows:
             - not:
                 equal: ['stable', << pipeline.parameters.with-react-version >>]
     jobs:
+      - install_js:
+          <<: *default-context
+          name: install_js_additional
+          react-version: << pipeline.parameters.with-react-version >>
+      - install_js_browser:
+          <<: *default-context
+          name: install_js_browser_additional
+          react-version: << pipeline.parameters.with-react-version >>
+      - release_build:
+          <<: *default-context
+          name: release_build_additional
+          react-version: << pipeline.parameters.with-react-version >>
+          requires:
+            - install_js_additional
       - test_unit:
           <<: *default-context
           name: test_unit_additional
           react-version: << pipeline.parameters.with-react-version >>
+          requires:
+            - install_js_additional
       - test_browser:
           <<: *default-context
           name: test_browser_additional
           react-version: << pipeline.parameters.with-react-version >>
+          requires:
+            - install_js_browser_additional
       - test_regressions:
           <<: *default-context
           name: test_regressions_additional
           react-version: << pipeline.parameters.with-react-version >>
+          requires:
+            - install_js_browser_additional
+            - release_build_additional
       - test_e2e:
           <<: *default-context
           name: test_e2e_additional
           react-version: << pipeline.parameters.with-react-version >>
+          requires:
+            - install_js_browser_additional
+            - release_build_additional
   additional-checks:
     when:
       and:
@@ -341,22 +455,48 @@ workflows:
         - not:
             equal: ['stable', << pipeline.parameters.material-ui-version >>]
     jobs:
+      - install_js:
+          <<: *default-context
+          name: install_js_additional_checks
       - test_types:
           <<: *default-context
           name: test_types_additional
+          requires:
+            - install_js_additional_checks
   test-react-18:
     when:
       equal: [pipeline, << pipeline.parameters.workflow >>]
     jobs:
+      - install_js:
+          <<: *default-context
+          name: install_js_react_18
+          react-version: ^18
+      - install_js_browser:
+          <<: *default-context
+          name: install_js_browser_react_18
+          react-version: ^18
+      - release_build:
+          <<: *default-context
+          name: release_build_react_18
+          react-version: ^18
+          requires:
+            - install_js_react_18
       - test_unit:
           <<: *default-context
           name: test_unit_react_18
           react-version: ^18
+          requires:
+            - install_js_react_18
       - test_browser:
           <<: *default-context
           name: test_browser_react_18
           react-version: ^18
+          requires:
+            - install_js_browser_react_18
       - test_e2e:
           <<: *default-context
           name: test_e2e_react_18
           react-version: ^18
+          requires:
+            - install_js_browser_react_18
+            - release_build_react_18
