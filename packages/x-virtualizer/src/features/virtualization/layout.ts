@@ -103,14 +103,22 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
       Dimensions.selectors.minimalContentHeight,
       Dimensions.selectors.columnsTotalWidth,
       Dimensions.selectors.needsHorizontalScrollbar,
-      (contentHeight, minimalContentHeight, columnsTotalWidth, needsHorizontalScrollbar) => ({
-        style: {
+      (contentHeight, minimalContentHeight, columnsTotalWidth, needsHorizontalScrollbar) => {
+        const style: React.CSSProperties = {
           width: needsHorizontalScrollbar ? columnsTotalWidth : 'auto',
-          flexBasis: contentHeight !== 0 ? minimalContentHeight : contentHeight,
+          flexBasis: contentHeight,
           flexShrink: 0,
-        } as React.CSSProperties,
-        role: 'presentation',
-      }),
+        };
+
+        if (style.flexBasis === 0) {
+          style.flexBasis = minimalContentHeight; // Give room to show the overlay when there no rows.
+        }
+
+        return {
+          style,
+          role: 'presentation',
+        };
+      },
     ),
 
     positionerProps: createSelectorMemoized(Virtualization.selectors.offsetTop, (offsetTop) => ({
