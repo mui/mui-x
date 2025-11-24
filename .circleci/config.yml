@@ -277,7 +277,7 @@ jobs:
       - run:
           name: Upload screenshots to Argos CI
           command: |
-            git remote set-url origin .
+            git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
             pnpm test:argos
 
 workflows:
