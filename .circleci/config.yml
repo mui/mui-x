@@ -223,6 +223,8 @@ jobs:
       - checkout
       - install-deps:
           react-version: << parameters.react-version >>
+      - attach_workspace:
+          at: .
       - run:
           name: Run e2e tests
           command: pnpm test:e2e
@@ -239,20 +241,32 @@ jobs:
           command: pnpm test:e2e-website
           environment:
             PLAYWRIGHT_TEST_BASE_URL: << parameters.e2e-base-url >>
-  test_package:
+  release_build:
     <<: *default-job
     steps:
       - checkout
       - install-deps:
           react-version: << parameters.react-version >>
       - run:
+          name: Build packages
+          command: pnpm release:build
+      - persist_to_workspace:
+          root: .
+          paths:
+            - packages/*/build
+  test_package:
+    <<: *default-job
+    steps:
+      - checkout
+      - install-deps:
+          react-version: << parameters.react-version >>
+      - attach_workspace:
+          at: .
+      - run:
           name: prepare danger on PRs
           command: pnpm danger ci
           environment:
             DANGER_COMMAND: prepareBundleSizeReport
-      - run:
-          name: Build packages
-          command: pnpm release:build
       - code-infra/upload-size-snapshot
       - run:
           name: Run danger on PRs
@@ -268,6 +282,8 @@ jobs:
       - checkout
       - install-deps:
           react-version: << parameters.react-version >>
+      - attach_workspace:
+          at: .
       - run:
           name: Install ffmpeg
           command: apt update && apt upgrade -y && apt install ffmpeg -y
@@ -295,12 +311,20 @@ workflows:
           <<: *default-context
       - test_types:
           <<: *default-context
+      - release_build:
+          <<: *default-context
       - test_e2e:
           <<: *default-context
+          requires:
+            - release_build
       - test_regressions:
           <<: *default-context
+          requires:
+            - release_build
       - test_package:
           <<: *default-context
+          requires:
+            - release_build
   e2e-website:
     when:
       equal: [e2e-website, << pipeline.parameters.workflow >>]
@@ -326,14 +350,22 @@ workflows:
           <<: *default-context
           name: test_browser_additional
           react-version: << pipeline.parameters.with-react-version >>
+      - release_build:
+          <<: *default-context
+          name: release_build_additional
+          react-version: << pipeline.parameters.with-react-version >>
       - test_regressions:
           <<: *default-context
           name: test_regressions_additional
           react-version: << pipeline.parameters.with-react-version >>
+          requires:
+            - release_build_additional
       - test_e2e:
           <<: *default-context
           name: test_e2e_additional
           react-version: << pipeline.parameters.with-react-version >>
+          requires:
+            - release_build_additional
   additional-checks:
     when:
       and:
@@ -356,7 +388,13 @@ workflows:
           <<: *default-context
           name: test_browser_react_18
           react-version: ^18
+      - release_build:
+          <<: *default-context
+          name: release_build_react_18
+          react-version: ^18
       - test_e2e:
           <<: *default-context
           name: test_e2e_react_18
           react-version: ^18
+          requires:
+            - release_build_react_18
