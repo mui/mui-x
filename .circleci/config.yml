@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  code-infra: https://raw.githubusercontent.com/mui/mui-public/30aee94f7bf1b65be6557be1f2910e3c53d07aad/.circleci/orbs/code-infra.yml
+  code-infra: https://raw.githubusercontent.com/mui/mui-public/3de4e610816154219d2ea077425f00529cf1435f/.circleci/orbs/code-infra.yml
 
 parameters:
   browserstack-force:
@@ -76,37 +76,6 @@ commands:
           package-overrides: react@<< parameters.react-version >> @mui/material@<< pipeline.parameters.material-ui-version >>
 
 jobs:
-  install_js:
-    <<: *default-job
-    steps:
-      - checkout
-      - install-deps:
-          react-version: << parameters.react-version >>
-      - persist_to_workspace:
-          root: .
-          paths:
-            - node_modules
-            - packages/*/node_modules
-            - docs/node_modules
-            - test/node_modules
-            - test/*/node_modules
-  install_js_browser:
-    <<: *default-job
-    executor:
-      name: code-infra/mui-node-browser
-      playwright-img-version: v1.56.1-noble
-    steps:
-      - checkout
-      - install-deps:
-          react-version: << parameters.react-version >>
-      - persist_to_workspace:
-          root: .
-          paths:
-            - node_modules
-            - packages/*/node_modules
-            - docs/node_modules
-            - test/node_modules
-            - test/*/node_modules
   checkout:
     <<: *default-job
     steps:
@@ -120,9 +89,8 @@ jobs:
     <<: *default-job
     steps:
       - checkout
-      - attach_workspace:
-          at: .
-      - code-infra/install-pnpm
+      - install-deps:
+          react-version: << parameters.react-version >>
       - run:
           name: Test JSDOM
           command: |
@@ -141,9 +109,8 @@ jobs:
     resource_class: large
     steps:
       - checkout
-      - attach_workspace:
-          at: .
-      - code-infra/install-pnpm
+      - install-deps:
+          react-version: << parameters.react-version >>
       - when:
           condition:
             not:
@@ -175,17 +142,13 @@ jobs:
     <<: *default-job
     steps:
       - checkout
-      - attach_workspace:
-          at: .
-      - code-infra/install-pnpm
+      - install-deps
       - code-infra/run-linters
   test_static:
     <<: *default-job
     steps:
       - checkout
-      - attach_workspace:
-          at: .
-      - code-infra/install-pnpm
+      - install-deps
       - code-infra/check-static-changes
       - run:
           name: Generate PropTypes
@@ -239,9 +202,7 @@ jobs:
     <<: *default-job
     steps:
       - checkout
-      - attach_workspace:
-          at: .
-      - code-infra/install-pnpm
+      - install-deps
       - run:
           name: Transpile TypeScript demos
           command: pnpm docs:typescript:formatted --disable-cache
@@ -260,9 +221,10 @@ jobs:
       playwright-img-version: v1.56.1-noble
     steps:
       - checkout
+      - install-deps:
+          react-version: << parameters.react-version >>
       - attach_workspace:
           at: .
-      - code-infra/install-pnpm
       - run:
           name: Run e2e tests
           command: pnpm test:e2e
@@ -273,9 +235,7 @@ jobs:
       playwright-img-version: v1.56.1-noble
     steps:
       - checkout
-      - attach_workspace:
-          at: .
-      - code-infra/install-pnpm
+      - install-deps
       - run:
           name: pnpm test:e2e-website
           command: pnpm test:e2e-website
@@ -285,28 +245,23 @@ jobs:
     <<: *default-job
     steps:
       - checkout
-      - attach_workspace:
-          at: .
-      - code-infra/install-pnpm
+      - install-deps:
+          react-version: << parameters.react-version >>
       - run:
           name: Build packages
           command: pnpm release:build
       - persist_to_workspace:
           root: .
           paths:
-            - node_modules
-            - packages/*/node_modules
-            - docs/node_modules
-            - test/node_modules
-            - test/*/node_modules
             - packages/*/build
   test_package:
     <<: *default-job
     steps:
       - checkout
+      - install-deps:
+          react-version: << parameters.react-version >>
       - attach_workspace:
           at: .
-      - code-infra/install-pnpm
       - run:
           name: prepare danger on PRs
           command: pnpm danger ci
@@ -325,9 +280,10 @@ jobs:
       playwright-img-version: v1.56.1-noble
     steps:
       - checkout
+      - install-deps:
+          react-version: << parameters.react-version >>
       - attach_workspace:
           at: .
-      - code-infra/install-pnpm
       - run:
           name: Install ffmpeg
           command: apt update && apt upgrade -y && apt install ffmpeg -y
@@ -343,47 +299,27 @@ workflows:
     when:
       equal: [pipeline, << pipeline.parameters.workflow >>]
     jobs:
-      - install_js:
-          <<: *default-context
-      - install_js_browser:
-          <<: *default-context
       - checkout:
           <<: *default-context
-          requires:
-            - install_js
       - test_unit:
           <<: *default-context
-          requires:
-            - install_js
       - test_browser:
           <<: *default-context
-          requires:
-            - install_js_browser
       - test_lint:
           <<: *default-context
-          requires:
-            - install_js
       - test_static:
           <<: *default-context
-          requires:
-            - install_js
       - test_types:
           <<: *default-context
-          requires:
-            - install_js
       - release_build:
           <<: *default-context
-          requires:
-            - install_js
       - test_e2e:
           <<: *default-context
           requires:
-            - install_js_browser
             - release_build
       - test_regressions:
           <<: *default-context
           requires:
-            - install_js_browser
             - release_build
       - test_package:
           <<: *default-context
@@ -393,15 +329,9 @@ workflows:
     when:
       equal: [e2e-website, << pipeline.parameters.workflow >>]
     jobs:
-      - install_js_browser:
-          <<: *default-context
       - checkout:
           <<: *default-context
-          requires:
-            - install_js_browser
-      - test_e2e_website:
-          requires:
-            - install_js_browser
+      - test_e2e_website
   additional-tests:
     when:
       and:
@@ -412,41 +342,29 @@ workflows:
             - not:
                 equal: ['stable', << pipeline.parameters.with-react-version >>]
     jobs:
-      - install_js:
-          <<: *default-context
-          name: install_js_additional
-          react-version: << pipeline.parameters.with-react-version >>
-      - install_js_browser:
-          <<: *default-context
-          name: install_js_browser_additional
-          react-version: << pipeline.parameters.with-react-version >>
       - test_unit:
           <<: *default-context
           name: test_unit_additional
-          requires:
-            - install_js_additional
+          react-version: << pipeline.parameters.with-react-version >>
       - test_browser:
           <<: *default-context
           name: test_browser_additional
           react-version: << pipeline.parameters.with-react-version >>
-          requires:
-            - install_js_browser_additional
       - release_build:
           <<: *default-context
           name: release_build_additional
-          requires:
-            - install_js_additional
+          react-version: << pipeline.parameters.with-react-version >>
       - test_regressions:
           <<: *default-context
           name: test_regressions_additional
+          react-version: << pipeline.parameters.with-react-version >>
           requires:
-            - install_js_browser_additional
             - release_build_additional
       - test_e2e:
           <<: *default-context
           name: test_e2e_additional
+          react-version: << pipeline.parameters.with-react-version >>
           requires:
-            - install_js_browser_additional
             - release_build_additional
   additional-checks:
     when:
@@ -455,45 +373,28 @@ workflows:
         - not:
             equal: ['stable', << pipeline.parameters.material-ui-version >>]
     jobs:
-      - install_js:
-          <<: *default-context
-          name: install_js_additional_checks
       - test_types:
           <<: *default-context
           name: test_types_additional
-          requires:
-            - install_js_additional_checks
   test-react-18:
     when:
       equal: [pipeline, << pipeline.parameters.workflow >>]
     jobs:
-      - install_js:
-          <<: *default-context
-          name: install_js_react_18
-          react-version: ^18
-      - install_js_browser:
-          <<: *default-context
-          name: install_js_browser_react_18
-          react-version: ^18
       - test_unit:
           <<: *default-context
           name: test_unit_react_18
-          requires:
-            - install_js_react_18
+          react-version: ^18
       - test_browser:
           <<: *default-context
           name: test_browser_react_18
           react-version: ^18
-          requires:
-            - install_js_browser_react_18
       - release_build:
           <<: *default-context
           name: release_build_react_18
-          requires:
-            - install_js_react_18
+          react-version: ^18
       - test_e2e:
           <<: *default-context
           name: test_e2e_react_18
+          react-version: ^18
           requires:
-            - install_js_browser_react_18
             - release_build_react_18
