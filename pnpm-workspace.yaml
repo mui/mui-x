@@ -46,7 +46,7 @@ catalog:
   '@vitest/browser-playwright': ^4.0.10
   '@vitest/coverage-v8': ^4.0.10
   '@vitest/ui': ^4.0.10
-  autoprefixer: ^10.4.21
+  autoprefixer: ^10.4.22
   babel-plugin-optimize-clsx: ^2.6.2
   babel-plugin-react-remove-properties: ^0.3.1
   babel-plugin-transform-react-remove-prop-types: ^0.4.24

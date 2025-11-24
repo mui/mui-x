@@ -13,6 +13,7 @@ import {
   SchedulerResourceId,
   SchedulerResourceModelStructure,
   SchedulerValidDate,
+  SchedulerEventSide,
 } from '../../models';
 import { Adapter } from '../../use-adapter/useAdapter.types';
 
@@ -77,8 +78,12 @@ export interface SchedulerState<TEvent extends object = any> {
   areEventsDraggable: boolean;
   /**
    * Whether the event start or end can be dragged to change its duration without changing its other date.
+   * If `true`, both start and end can be resized.
+   * If `false`, the events are not resizable.
+   * If `"start"`, only the start can be resized.
+   * If `"end"`, only the end can be resized.
    */
-  areEventsResizable: boolean;
+  areEventsResizable: boolean | SchedulerEventSide;
   /**
    * Whether events can be dragged from outside of the calendar and dropped into it.
    */
@@ -180,9 +185,13 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
   areEventsDraggable?: boolean;
   /**
    * Whether the event start or end can be dragged to change its duration without changing its other date.
+   * If `true`, both start and end can be resized.
+   * If `false`, the events are not resizable.
+   * If `"start"`, only the start can be resized.
+   * If `"end"`, only the end can be resized.
    * @default false
    */
-  areEventsResizable?: boolean;
+  areEventsResizable?: boolean | SchedulerEventSide;
   /**
    * Whether events can be dragged from outside of the calendar and dropped into it.
    * @default false
