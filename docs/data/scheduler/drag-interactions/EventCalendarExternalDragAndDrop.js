@@ -1,19 +1,22 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
-import { Timeline } from '@mui/x-scheduler/timeline';
+import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import { StandaloneEvent } from '@mui/x-scheduler/standalone-event';
 
 // TODO: Estimate if we can avoid all imports from the headless package.
 import { buildIsValidDropTarget } from '@mui/x-scheduler-headless/build-is-valid-drop-target';
 import {
-  defaultVisibleDate,
   initialEvents,
+  defaultVisibleDate,
   resources,
-} from '../datasets/timeline-events';
-import classes from './ExternalDrag.module.css';
+} from '../datasets/personal-agenda';
+import classes from './EventCalendarExternalDragAndDrop.module.css';
 
-const isValidDropTarget = buildIsValidDropTarget(['TimelineEvent']);
+const isValidDropTarget = buildIsValidDropTarget([
+  'CalendarGridTimeEvent',
+  'CalendarGridDayEvent',
+]);
 
 const initialExternalEvents = [
   {
@@ -43,7 +46,7 @@ const initialExternalEvents = [
   },
 ];
 
-export default function ExternalDragAndDrop() {
+export default function EventCalendarExternalDragAndDrop() {
   const [events, setEvents] = React.useState(initialEvents);
   const [placeholder, setPlaceholder] = React.useState(null);
   const [externalEvents, setExternalEvents] = React.useState(initialExternalEvents);
@@ -113,8 +116,8 @@ export default function ExternalDragAndDrop() {
           </div>
         )}
       </div>
-      <div style={{ flexGrow: 1, height: 500 }}>
-        <Timeline
+      <div style={{ flexGrow: 1, height: 600 }}>
+        <EventCalendar
           events={events}
           resources={resources}
           defaultVisibleDate={defaultVisibleDate}
@@ -122,6 +125,7 @@ export default function ExternalDragAndDrop() {
           areEventsDraggable
           canDragEventsFromTheOutside
           canDropEventsToTheOutside
+          defaultPreferences={{ isSidePanelOpen: false }}
         />
       </div>
     </div>
