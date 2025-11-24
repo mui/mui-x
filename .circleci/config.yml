@@ -265,7 +265,8 @@ jobs:
       name: code-infra/mui-node-browser
       playwright-img-version: v1.56.1-noble
     steps:
-      - checkout
+      - checkout:
+          method: full
       - install-deps:
           react-version: << parameters.react-version >>
       - run:
