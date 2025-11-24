@@ -1,5 +1,7 @@
 # MUI X Charts
 
+Trigger build :smile:
+
 This package is the community edition of the chart components.
 It's part of [MUI X](https://mui.com/x/), an open-core extension of our Core libraries, with advanced components.
 
