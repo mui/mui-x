@@ -5,6 +5,7 @@ export const DEFAULT_PARAMS = {
   columns: DEFAULT_COLUMNS,
 
   dimensions: {
+    autoHeight: false,
     columnsTotalWidth: 0,
     leftPinnedWidth: 0,
     rightPinnedWidth: 0,

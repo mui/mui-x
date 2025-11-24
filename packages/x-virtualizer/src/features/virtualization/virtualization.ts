@@ -732,7 +732,7 @@ function inputsSelector(
     api,
     enabledForRows,
     enabledForColumns,
-    autoHeight: params.autoHeight,
+    autoHeight: dimensions.autoHeight,
     rowBufferPx: params.virtualization.rowBufferPx,
     columnBufferPx: params.virtualization.columnBufferPx,
     leftPinnedWidth: dimensions.leftPinnedWidth,

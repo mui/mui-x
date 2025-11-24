@@ -30,8 +30,6 @@ function List() {
     range,
     rowCount: items.length,
 
-    autoHeight: false,
-
     renderRow: (params) => <ListItem key={params.id} id={params.id} model={params.model as any} />,
   });
 

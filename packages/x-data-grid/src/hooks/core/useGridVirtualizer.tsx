@@ -143,6 +143,7 @@ export function useGridVirtualizer() {
     rightPinnedWidth,
     topPinnedHeight: headersTotalHeight,
     bottomPinnedHeight: 0,
+    autoHeight,
     scrollbarSize: rootProps.scrollbarSize,
   };
 
@@ -213,7 +214,6 @@ export function useGridVirtualizer() {
     pinnedRows,
     pinnedColumns,
 
-    autoHeight,
     disableHorizontalScroll: listView,
     disableVerticalScroll:
       overlayState.overlayType === 'noColumnsOverlay' ||

@@ -55,7 +55,6 @@ export type VirtualizerParams<L extends Layout = Layout> = {
   pinnedRows?: PinnedRows;
   pinnedColumns?: PinnedColumns;
 
-  autoHeight: boolean;
   disableHorizontalScroll?: boolean;
   disableVerticalScroll?: boolean;
   minimalContentHeight?: number | string;
@@ -127,6 +126,7 @@ export type ParamsWithDefaults = RequiredFields<
     | 'rightPinnedWidth'
     | 'topPinnedHeight'
     | 'bottomPinnedHeight'
+    | 'autoHeight'
   >;
   virtualization: RequiredFields<
     VirtualizerParams['virtualization'],

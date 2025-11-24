@@ -21,6 +21,7 @@ export type DimensionsParams = {
   rightPinnedWidth?: number;
   topPinnedHeight?: number;
   bottomPinnedHeight?: number;
+  autoHeight?: boolean;
   scrollbarSize?: number;
 };
 
@@ -90,7 +91,7 @@ function initializeState(params: ParamsWithDefaults): Dimensions.State {
   const dimensions = {
     ...EMPTY_DIMENSIONS,
     ...params.dimensions,
-    autoHeight: params.autoHeight,
+    autoHeight: params.dimensions.autoHeight,
     minimalContentHeight: params.minimalContentHeight,
   };
 
@@ -161,7 +162,7 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
       let hasScrollX = false;
       let hasScrollY = false;
 
-      if (params.autoHeight) {
+      if (params.dimensions.autoHeight) {
         hasScrollY = false;
         hasScrollX = Math.round(columnsTotalWidth) > Math.round(rootSize.width);
 
@@ -245,7 +246,7 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
         rightPinnedWidth,
         topContainerHeight,
         bottomContainerHeight,
-        autoHeight: params.autoHeight,
+        autoHeight: params.dimensions.autoHeight,
         minimalContentHeight: params.minimalContentHeight,
       };
 
@@ -262,7 +263,7 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
       store,
       layout.refs.container,
       params.dimensions.scrollbarSize,
-      params.autoHeight,
+      params.dimensions.autoHeight,
       params.minimalContentHeight,
       params.disableHorizontalScroll,
       params.disableVerticalScroll,
@@ -287,8 +288,10 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
   useLayoutEffect(updateDimensions, [updateDimensions]);
 
   useLayoutEffect(() => {
-    store.update({ dimensions: { ...store.state.dimensions, autoHeight: params.autoHeight } });
-  }, [store, params.autoHeight]);
+    store.update({
+      dimensions: { ...store.state.dimensions, autoHeight: params.dimensions.autoHeight },
+    });
+  }, [store, params.dimensions.autoHeight]);
 
   useLayoutEffect(() => {
     store.update({
