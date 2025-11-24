@@ -348,7 +348,6 @@ export const GridRootStyles = styled('div', {
       backgroundColor: headerBackground,
     },
     [`& .${c.columnHeader} .${c.sortButton}`]: {
-      color: vars.colors.foreground.base,
       backgroundColor: vars.header.background.base,
     },
     [`& .${c['columnHeader--filter']}`]: {
@@ -447,16 +446,15 @@ export const GridRootStyles = styled('div', {
           width: 'auto',
         },
       },
-      [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}):hover .${c.sortButton}`]: {
-        opacity: 0.65,
-      },
-      [`& .${c.pivotPanelField}:not(.${c['pivotPanelField--sorted']}):hover .${c.sortButton},
-      & .${c.pivotPanelField}:not(.${c['pivotPanelField--sorted']}) .${c.sortButton}:focus-visible`]:
+      [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}):hover .${c.sortButton},
+        & .${c.pivotPanelField}:not(.${c['pivotPanelField--sorted']}):hover .${c.sortButton},
+        & .${c.pivotPanelField}:not(.${c['pivotPanelField--sorted']}) .${c.sortButton}:focus-visible`]:
         {
           opacity: 1,
         },
       // Add opacity only to the button content to avoid affecting the background color
-      [`& .${c.pivotPanelField}:not(.${c['pivotPanelField--sorted']}):hover .${c.sortButton} > *,
+      [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}):hover .${c.sortButton} > *,
+        & .${c.pivotPanelField}:not(.${c['pivotPanelField--sorted']}):hover .${c.sortButton} > *,
         & .${c.pivotPanelField}:not(.${c['pivotPanelField--sorted']}) .${c.sortButton}:focus-visible > *`]:
         {
           opacity: 0.78,
@@ -477,7 +475,7 @@ export const GridRootStyles = styled('div', {
         },
       },
       [`& .${c.pivotPanelField}:not(.${c['pivotPanelField--sorted']}) .${c.sortButton}`]: {
-        opacity: 0.65,
+        opacity: 0.78,
       },
     },
     // Hide the column separator when the column has border and it is not resizable
