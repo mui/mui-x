@@ -151,7 +151,8 @@
     "yargs": "catalog:"
   },
   "resolutions": {
-    "ast-types": "^0.14.2"
+    "ast-types": "^0.14.2",
+    "@argos-ci/core": "3.2.1"
   },
   "packageManager": "pnpm@10.20.0",
   "engines": {
