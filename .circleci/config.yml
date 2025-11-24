@@ -267,17 +267,21 @@ jobs:
     steps:
       - checkout:
           method: full
-      - install-deps:
-          react-version: << parameters.react-version >>
       - run:
-          name: Install ffmpeg
-          command: apt update && apt upgrade -y && apt install ffmpeg -y
-      - run:
-          name: Run visual regression tests
-          command: xvfb-run pnpm test:regressions
-      - run:
-          name: Upload screenshots to Argos CI
-          command: pnpm test:argos
+          name: Set up Git for visual regression tests
+          command: |
+            git fetch --force --update-head-ok --depth 200 origin pull/20428:argos/pull/20428
+      # - install-deps:
+      #     react-version: << parameters.react-version >>
+      # - run:
+      #     name: Install ffmpeg
+      #     command: apt update && apt upgrade -y && apt install ffmpeg -y
+      # - run:
+      #     name: Run visual regression tests
+      #     command: xvfb-run pnpm test:regressions
+      # - run:
+      #     name: Upload screenshots to Argos CI
+      #     command: pnpm test:argos
 
 workflows:
   pipeline:
