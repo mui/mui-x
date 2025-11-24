@@ -31,7 +31,7 @@ export const selectorChartDataset = createSelector(
  * This selector computes the processed series on-demand from the defaultized series.
  * It's a first step before applying the drawing-area-dependent processors.
  * @returns {ProcessedSeries} The processed series.
-*/
+ */
 export const selectorChartSeriesProcessedWithoutDimensions = createSelectorMemoized(
   selectorChartDefaultizedSeries,
   selectorChartSeriesConfig,
