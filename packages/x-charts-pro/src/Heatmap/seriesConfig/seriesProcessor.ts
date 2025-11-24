@@ -1,7 +1,7 @@
-import { SeriesProcessor, SeriesId } from '@mui/x-charts/internals';
+import { SeriesProcessorWithoutDimensions, SeriesId } from '@mui/x-charts/internals';
 import { DefaultizedHeatmapSeriesType } from '../../models/seriesType/heatmap';
 
-const seriesProcessor: SeriesProcessor<'heatmap'> = (params) => {
+const seriesProcessor: SeriesProcessorWithoutDimensions<'heatmap'> = (params) => {
   const { series, seriesOrder } = params;
 
   const defaultizedSeries: Record<SeriesId, DefaultizedHeatmapSeriesType> = {};

@@ -3,7 +3,7 @@ import { ChartSeriesDefaultized } from '../../models/seriesType/config';
 import { ChartsPieSorting, PieValueType } from '../../models/seriesType/pie';
 import { SeriesId } from '../../models/seriesType/common';
 import { getLabel } from '../../internals/getLabel';
-import { SeriesProcessor } from '../../internals/plugins/models';
+import { SeriesProcessorWithoutDimensions } from '../../internals/plugins/models';
 import { deg2rad } from '../../internals/angleConversion';
 
 const getSortingComparator = (comparator: ChartsPieSorting = 'none') => {
@@ -22,7 +22,7 @@ const getSortingComparator = (comparator: ChartsPieSorting = 'none') => {
   }
 };
 
-const seriesProcessor: SeriesProcessor<'pie'> = (params) => {
+const seriesProcessor: SeriesProcessorWithoutDimensions<'pie'> = (params) => {
   const { seriesOrder, series } = params;
 
   const defaultizedSeries: Record<SeriesId, ChartSeriesDefaultized<'pie'>> = {};

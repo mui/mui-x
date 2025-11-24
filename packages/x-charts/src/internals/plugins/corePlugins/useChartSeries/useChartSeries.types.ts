@@ -5,7 +5,9 @@ import { ChartSeriesType, DatasetType } from '../../../../models/seriesType/conf
 import {
   SeriesProcessorParams,
   SeriesProcessorResult,
+  SeriesProcessorWithoutDimensionsResult,
 } from '../../models/seriesConfig/seriesProcessor.types';
+import { UseChartDimensionsSignature } from '../useChartDimensions';
 
 export interface UseChartSeriesParameters<T extends ChartSeriesType = ChartSeriesType> {
   /**
@@ -46,6 +48,12 @@ export type ProcessedSeries<TSeriesTypes extends ChartSeriesType = ChartSeriesTy
   [type in TSeriesTypes]?: SeriesProcessorResult<type>;
 };
 
+export type ProcessedSeriesWithoutDimensions<
+  TSeriesTypes extends ChartSeriesType = ChartSeriesType,
+> = {
+  [type in TSeriesTypes]?: SeriesProcessorWithoutDimensionsResult<type>;
+};
+
 export type DefaultizedSeriesGroups<TSeriesTypes extends ChartSeriesType = ChartSeriesType> = {
   [type in TSeriesTypes]?: SeriesProcessorParams<type>;
 };
@@ -66,4 +74,5 @@ export type UseChartSeriesSignature<SeriesType extends ChartSeriesType = ChartSe
     defaultizedParams: UseChartSeriesDefaultizedParameters<SeriesType>;
     state: UseChartSeriesState<SeriesType>;
     instance: UseChartSeriesInstance;
+    dependencies: [UseChartDimensionsSignature];
   }>;

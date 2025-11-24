@@ -1,4 +1,4 @@
-import { SeriesProcessor, ChartSeriesDefaultized } from '@mui/x-charts/internals';
+import { SeriesProcessorWithoutDimensions, ChartSeriesDefaultized } from '@mui/x-charts/internals';
 import type { FunnelCurveType } from '../curves';
 
 const createPoint = ({
@@ -38,7 +38,7 @@ const getFunnelDirection = (
     : 'decreasing';
 };
 
-const seriesProcessor: SeriesProcessor<'funnel'> = (params) => {
+const seriesProcessor: SeriesProcessorWithoutDimensions<'funnel'> = (params) => {
   const { seriesOrder, series } = params;
 
   const completedSeries: Record<string, ChartSeriesDefaultized<'funnel'>> = {};

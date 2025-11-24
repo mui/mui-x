@@ -1,7 +1,8 @@
 import { createSelectorMemoized, createSelector } from '@mui/x-internals/store';
 import { ChartRootSelector } from '../../utils/selectors';
 import { UseChartSeriesSignature } from './useChartSeries.types';
-import { applySeriesProcessors } from './processSeries';
+import { applySeriesProcessors, applySeriesProcessorsWithoutDimensions } from './processSeries';
+import { selectorChartDrawingArea } from '../useChartDimensions';
 
 export const selectorChartSeriesState: ChartRootSelector<UseChartSeriesSignature> = (state) =>
   state.series;
@@ -28,13 +29,28 @@ export const selectorChartDataset = createSelector(
 /**
  * Get the processed series after applying series processors.
  * This selector computes the processed series on-demand from the defaultized series.
+ * It's a first step before applying the drawing-area-dependent processors.
  * @returns {ProcessedSeries} The processed series.
- */
-export const selectorChartSeriesProcessed = createSelectorMemoized(
+*/
+export const selectorChartSeriesProcessedWithoutDimensions = createSelectorMemoized(
   selectorChartDefaultizedSeries,
   selectorChartSeriesConfig,
   selectorChartDataset,
-  function selectorChartSeriesProcessed(defaultizedSeries, seriesConfig, dataset) {
-    return applySeriesProcessors(defaultizedSeries, seriesConfig, dataset);
+  function selectorChartSeriesProcessedWithoutDimensions(defaultizedSeries, seriesConfig, dataset) {
+    return applySeriesProcessorsWithoutDimensions(defaultizedSeries, seriesConfig, dataset);
+  },
+);
+
+/**
+ * Get the processed series after applying series processors.
+ * This selector computes the processed series on-demand from the defaultized series.
+ * @returns {ProcessedSeries} The processed series.
+ */
+export const selectorChartSeriesProcessed = createSelectorMemoized(
+  selectorChartSeriesProcessedWithoutDimensions,
+  selectorChartSeriesConfig,
+  selectorChartDrawingArea,
+  function selectorChartSeriesProcessed(processedSeries, seriesConfig, drawingArea) {
+    return applySeriesProcessors(processedSeries, seriesConfig, drawingArea);
   },
 );

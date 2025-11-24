@@ -1,4 +1,4 @@
-import type { SeriesProcessor } from './seriesProcessor.types';
+import type { SeriesProcessor, SeriesProcessorWithoutDimensions } from './seriesProcessor.types';
 import type {
   CartesianChartSeriesType,
   ChartSeriesType,
@@ -13,12 +13,13 @@ import { GetSeriesWithDefaultValues } from './getSeriesWithDefaultValues.types';
 import { TooltipItemPositionGetter } from './tooltipItemPositionGetter.types';
 
 export type ChartSeriesTypeConfig<TSeriesType extends ChartSeriesType> = {
-  seriesProcessor: SeriesProcessor<TSeriesType>;
+  seriesProcessor: SeriesProcessorWithoutDimensions<TSeriesType>;
   colorProcessor: ColorProcessor<TSeriesType>;
   legendGetter: LegendGetter<TSeriesType>;
   tooltipGetter: TooltipGetter<TSeriesType>;
   tooltipItemPositionGetter?: TooltipItemPositionGetter<TSeriesType>;
   getSeriesWithDefaultValues: GetSeriesWithDefaultValues<TSeriesType>;
+  seriesProcessorWithDrawingArea?: SeriesProcessor<TSeriesType>;
 } & (TSeriesType extends CartesianChartSeriesType
   ? {
       xExtremumGetter: CartesianExtremumGetter<TSeriesType>;

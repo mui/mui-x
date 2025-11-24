@@ -1,7 +1,10 @@
 import { ScatterValueType } from '../../models';
-import { SeriesProcessor } from '../../internals/plugins/models';
+import { SeriesProcessorWithoutDimensions } from '../../internals/plugins/models';
 
-const seriesProcessor: SeriesProcessor<'scatter'> = ({ series, seriesOrder }, dataset) => {
+const seriesProcessor: SeriesProcessorWithoutDimensions<'scatter'> = (
+  { series, seriesOrder },
+  dataset,
+) => {
   const completeSeries = Object.fromEntries(
     Object.entries(series).map(([seriesId, seriesData]) => {
       const datasetKeys = seriesData?.datasetKeys;

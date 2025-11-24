@@ -4,14 +4,14 @@ import type { DefaultizedBarSeriesType } from '../../../models';
 import { getStackingGroups } from '../../../internals/stackSeries';
 import { DatasetElementType, DatasetType } from '../../../models/seriesType/config';
 import { SeriesId } from '../../../models/seriesType/common';
-import { SeriesProcessor } from '../../../internals/plugins/models';
+import { SeriesProcessorWithoutDimensions } from '../../../internals/plugins/models';
 
 type BarDataset = DatasetType<number | null>;
 
 const barValueFormatter = ((v) =>
   v == null ? '' : v.toLocaleString()) as DefaultizedBarSeriesType['valueFormatter'];
 
-const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset) => {
+const seriesProcessor: SeriesProcessorWithoutDimensions<'bar'> = (params, dataset) => {
   const { seriesOrder, series } = params;
   const stackingGroups = getStackingGroups(params);
 

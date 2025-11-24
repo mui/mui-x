@@ -1,14 +1,11 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled, useTheme } from '@mui/material/styles';
-import { useDrawingArea } from '@mui/x-charts/hooks';
+import { styled } from '@mui/material/styles';
 import {
-  SankeyLayout,
   type SankeyLinkIdentifierWithData,
   type SankeyNodeIdentifierWithData,
 } from './sankey.types';
-import { calculateSankeyLayout } from './calculateSankeyLayout';
 import { SankeyNodeElement } from './SankeyNodeElement';
 import { SankeyLinkElement } from './SankeyLinkElement';
 import { SankeyLinkLabel } from './SankeyLinkLabel';
@@ -66,15 +63,7 @@ function SankeyPlot(props: SankeyPlotProps) {
 
   const series = seriesContext.series[seriesContext.seriesOrder?.[0]];
   const classes = useUtilityClasses({ classes: inputClasses });
-  const drawingArea = useDrawingArea();
-  const { data, linkOptions, nodeOptions } = series;
-  const theme = useTheme();
-
-  // Calculate layout based on data and dimensions
-  const layout: SankeyLayout = React.useMemo(
-    () => calculateSankeyLayout(data, drawingArea, theme, series),
-    [drawingArea, data, series, theme],
-  );
+  const { data, linkOptions, nodeOptions, sankeyLayout } = series;
 
   // Early return if no data or dimensions
   if (!data || !data.links) {
@@ -84,7 +73,7 @@ function SankeyPlot(props: SankeyPlotProps) {
   return (
     <SankeyPlotRoot className={classes.root}>
       <g className={classes.links}>
-        {layout.links.map((link) => (
+        {sankeyLayout.links.map((link) => (
           <SankeyLinkElement
             seriesId={series.id}
             key={`${link.source.id}-${link.target.id}`}
@@ -96,7 +85,7 @@ function SankeyPlot(props: SankeyPlotProps) {
       </g>
 
       <g className={classes.nodes}>
-        {layout.nodes.map((node) => (
+        {sankeyLayout.nodes.map((node) => (
           <SankeyNodeElement
             seriesId={series.id}
             key={node.id}
@@ -109,7 +98,7 @@ function SankeyPlot(props: SankeyPlotProps) {
 
       {linkOptions?.showValues && (
         <g className={classes.linkLabels}>
-          {layout.links.map((link) => (
+          {sankeyLayout.links.map((link) => (
             <SankeyLinkLabel key={`label-${link.source.id}-${link.target.id}`} link={link} />
           ))}
         </g>

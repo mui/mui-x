@@ -5,9 +5,9 @@ import { getStackingGroups } from '../../internals/stackSeries';
 import { ChartSeries, DatasetElementType, DatasetType } from '../../models/seriesType/config';
 import { defaultizeValueFormatter } from '../../internals/defaultizeValueFormatter';
 import { SeriesId } from '../../models/seriesType/common';
-import { SeriesProcessor } from '../../internals/plugins/models';
+import { SeriesProcessorWithoutDimensions } from '../../internals/plugins/models';
 
-const seriesProcessor: SeriesProcessor<'line'> = (params, dataset) => {
+const seriesProcessor: SeriesProcessorWithoutDimensions<'line'> = (params, dataset) => {
   const { seriesOrder, series } = params;
   const stackingGroups = getStackingGroups({ ...params, defaultStrategy: { stackOffset: 'none' } });
 
