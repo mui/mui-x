@@ -261,48 +261,48 @@ jobs:
             DANGER_COMMAND: reportBundleSize
   test_regressions:
     <<: *default-job
+    executor:
+      name: code-infra/mui-node-browser
+      playwright-img-version: v1.56.1-noble
     steps:
       - checkout
+      - install-deps:
+          react-version: << parameters.react-version >>
       - run:
+          name: Install ffmpeg
+          command: apt update && apt upgrade -y && apt install ffmpeg -y
+      - run:
+          name: Run visual regression tests
+          command: xvfb-run pnpm test:regressions
+      - run:
+          name: Upload screenshots to Argos CI
           command: |
-            git config --add remote.origin.fetch "+refs/pull/*/head:refs/remotes/origin/pr/*"
-            git fetch origin
-            git fetch --update-head-ok --depth 200 origin pull/20428/head:pull/20428
-      # - install-deps:
-      #     react-version: << parameters.react-version >>
-      # - run:
-      #     name: Install ffmpeg
-      #     command: apt update && apt upgrade -y && apt install ffmpeg -y
-      # - run:
-      #     name: Run visual regression tests
-      #     command: xvfb-run pnpm test:regressions
-      # - run:
-      #     name: Upload screenshots to Argos CI
-      #     command: pnpm test:argos
+            CIRCLE_BRANCH="${CIRCLE_BRANCH}/head"
+            pnpm test:argos
 
 workflows:
   pipeline:
     when:
       equal: [pipeline, << pipeline.parameters.workflow >>]
     jobs:
-      # - checkout:
-      #     <<: *default-context
-      # - test_unit:
-      #     <<: *default-context
-      # - test_browser:
-      #     <<: *default-context
-      # - test_lint:
-      #     <<: *default-context
-      # - test_static:
-      #     <<: *default-context
-      # - test_types:
-      #     <<: *default-context
-      # - test_e2e:
-      #     <<: *default-context
+      - checkout:
+          <<: *default-context
+      - test_unit:
+          <<: *default-context
+      - test_browser:
+          <<: *default-context
+      - test_lint:
+          <<: *default-context
+      - test_static:
+          <<: *default-context
+      - test_types:
+          <<: *default-context
+      - test_e2e:
+          <<: *default-context
       - test_regressions:
           <<: *default-context
-      # - test_package:
-      #     <<: *default-context
+      - test_package:
+          <<: *default-context
   e2e-website:
     when:
       equal: [e2e-website, << pipeline.parameters.workflow >>]
