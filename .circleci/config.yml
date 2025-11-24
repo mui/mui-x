@@ -270,6 +270,8 @@ jobs:
       - run:
           name: Set up Git for visual regression tests
           command: |
+            git remote show origin
+            git ls-remote origin
             git fetch --force --update-head-ok --depth 200 origin pull/20428:argos/pull/20428
       # - install-deps:
       #     react-version: << parameters.react-version >>
