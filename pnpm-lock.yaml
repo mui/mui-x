@@ -219,7 +219,6 @@ catalogs:
 
 overrides:
   ast-types: ^0.14.2
-  '@argos-ci/core': 4.4.0
 
 packageExtensionsChecksum: sha256-GmuHKPl+EPPmpH9o6dpG/x6YUd/4eHjpfdYnSqH1GqA=
 
@@ -2346,16 +2345,16 @@ packages:
     resolution: {integrity: sha512-RgLX78ojYOrThJHrIiPzT4HW3yfQa0D7K+MQ81rhxqaNyNBu4F1r+72LNHYH/Z+y9I1Mrjrd/c/Ue5zfDgAEjQ==}
     engines: {node: '>= 14.0.0'}
 
-  '@argos-ci/api-client@0.13.0':
-    resolution: {integrity: sha512-/z1EaroMxTtDP+2loGoqcZFNfXElVwet3vGsTebek5x9ewNZ4bWb8meCLS7/L0caU6/1CBlXDL7lwGakRYHVow==}
+  '@argos-ci/api-client@0.14.0':
+    resolution: {integrity: sha512-lVWN8MrRYEbCjcZcutTzdJEA9tNB1IBqjIUJyjxR1iHMXZJYVLQbWQcmlZz33sIHkicLgAKTKrSVUOjf34MXAA==}
     engines: {node: '>=20.0.0'}
 
-  '@argos-ci/core@4.4.0':
-    resolution: {integrity: sha512-4Z9fpAGX/W9ym58C1wni1y1hKk5O3xVQh559957caJK8VmDgR1QPW26vvBerlKqUSb4KPhCxX+/jUJzkw4oycQ==}
+  '@argos-ci/core@4.5.0':
+    resolution: {integrity: sha512-jERRoj+da36Y9NwFyws00LKFmCLHBTklIE0DYRptrPUSf3aitly6KmllkKHGi2UU1XcIqAO2Pzy1l5shCs/FXw==}
     engines: {node: '>=20.0.0'}
 
-  '@argos-ci/util@3.1.1':
-    resolution: {integrity: sha512-sGb9PS7yqdVVtxpxRD1Nfter3kaioC4nPPTknVmMSqo2GQKO1gdmjMJtwHY+Nf9FgiMfwpTCnk8Rrf0pjS3Sug==}
+  '@argos-ci/util@3.2.0':
+    resolution: {integrity: sha512-/Bn0qCH8VsdPv5WB9TUEf3oTgsIqsTMUEjPVDopHLzKK+j7nQYGOF3MnN7VhBow82BXeStBfJCS3UiZ6cgxRlw==}
     engines: {node: '>=20.0.0'}
 
   '@asamuzakjp/css-color@3.2.0':
@@ -12116,26 +12115,27 @@ snapshots:
     dependencies:
       '@algolia/client-common': 5.35.0
 
-  '@argos-ci/api-client@0.13.0':
+  '@argos-ci/api-client@0.14.0':
     dependencies:
       debug: 4.4.3(supports-color@8.1.1)
       openapi-fetch: 0.15.0
     transitivePeerDependencies:
       - supports-color
 
-  '@argos-ci/core@4.4.0':
+  '@argos-ci/core@4.5.0':
     dependencies:
-      '@argos-ci/api-client': 0.13.0
-      '@argos-ci/util': 3.1.1
+      '@argos-ci/api-client': 0.14.0
+      '@argos-ci/util': 3.2.0
       convict: 6.2.4
       debug: 4.4.3(supports-color@8.1.1)
       fast-glob: 3.3.3
+      mime-types: 3.0.1
       sharp: 0.34.4
       tmp: 0.2.5
     transitivePeerDependencies:
       - supports-color
 
-  '@argos-ci/util@3.1.1': {}
+  '@argos-ci/util@3.2.0': {}
 
   '@asamuzakjp/css-color@3.2.0':
     dependencies:
@@ -14438,7 +14438,7 @@ snapshots:
 
   '@mui/internal-code-infra@0.0.3-canary.48(@next/eslint-plugin-next@15.5.6)(@types/node@22.18.13)(@typescript-eslint/parser@8.46.4(eslint@9.39.1)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.46.4(eslint@9.39.1)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.39.1))(eslint@9.39.1)(postcss@8.5.6)(prettier@3.6.2)(stylelint@16.25.0(typescript@5.9.3))(typescript@5.9.3)':
     dependencies:
-      '@argos-ci/core': 4.4.0
+      '@argos-ci/core': 4.5.0
       '@babel/cli': 7.28.3(@babel/core@7.28.5)
       '@babel/core': 7.28.5
       '@babel/plugin-syntax-jsx': 7.27.1(@babel/core@7.28.5)
