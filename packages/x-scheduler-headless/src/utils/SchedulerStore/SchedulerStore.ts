@@ -101,9 +101,9 @@ export class SchedulerStore<
       ONE_MINUTE_IN_MS - (currentDate.getSeconds() * 1000 + currentDate.getMilliseconds());
 
     this.timeoutManager.startTimeout('set-now', timeUntilNextMinuteMs, () => {
-      this.set('nowUpdatedEveryMinute', getNowInRenderTimezone(adapter, parameters.timezone));
+      this.set('nowUpdatedEveryMinute', getNowInRenderTimezone(adapter, timezone));
       this.timeoutManager.startInterval('set-now', ONE_MINUTE_IN_MS, () => {
-        this.set('nowUpdatedEveryMinute', getNowInRenderTimezone(adapter, parameters.timezone));
+        this.set('nowUpdatedEveryMinute', getNowInRenderTimezone(adapter, timezone));
       });
     });
 
@@ -292,7 +292,7 @@ export class SchedulerStore<
    */
   public goToToday = (event: React.UIEvent) => {
     const { adapter } = this.state;
-    this.setVisibleDate(getStartOfTodayInRenderTimezone(adapter, this.parameters.timezone), event);
+    this.setVisibleDate(getStartOfTodayInRenderTimezone(adapter, this.state.timezone), event);
   };
 
   /**
