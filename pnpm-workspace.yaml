@@ -3,7 +3,6 @@ packages:
   - docs
   - test
   - test/*
-  - bundle-size
 
 catalog:
   '@babel/cli': ^7.28.3

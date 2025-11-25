@@ -2267,6 +2267,24 @@ importers:
         specifier: 'catalog:'
         version: 7.2.4(@types/node@24.5.2)(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.1)
 
+  test/typescript:
+    dependencies:
+      '@mui/material':
+        specifier: '7'
+        version: 7.0.2(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react@19.0.0))(@types/react@19.0.12)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@mui/x-charts':
+        specifier: workspace:*
+        version: link:../../packages/x-charts/build
+      '@mui/x-data-grid':
+        specifier: workspace:*
+        version: link:../../packages/x-data-grid/build
+      '@mui/x-date-pickers':
+        specifier: workspace:*
+        version: link:../../packages/x-date-pickers/build
+      '@mui/x-date-pickers-pro':
+        specifier: workspace:*
+        version: link:../../packages/x-date-pickers-pro/build
+
 packages:
 
   '@algolia/abtesting@1.1.0':
