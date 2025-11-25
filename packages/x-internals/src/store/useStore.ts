@@ -35,7 +35,7 @@ export function useStore(
 ): unknown {
   const getSelection = React.useMemo(
     () => () => selector(store.getSnapshot(), a1, a2, a3),
-    [selector],
+    [store, selector, a1, a2, a3],
   );
 
   return useSyncExternalStore(store.subscribe, getSelection, getSelection);
