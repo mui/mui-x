@@ -51,7 +51,7 @@ describe('<EventPopoverContent />', () => {
   const defaultProps = {
     anchor,
     container: document.body,
-    occurrence: createOccurrenceFromEvent(DEFAULT_EVENT),
+    occurrence: createOccurrenceFromEvent(DEFAULT_EVENT, 'default'),
     onClose: () => {},
   };
 
@@ -163,7 +163,7 @@ describe('<EventPopoverContent />', () => {
         <Popover.Root open>
           <EventPopoverContent
             {...defaultProps}
-            occurrence={createOccurrenceFromEvent(readOnlyEvent)}
+            occurrence={createOccurrenceFromEvent(readOnlyEvent, 'default')}
           />
         </Popover.Root>
       </EventCalendarProvider>,
@@ -196,7 +196,7 @@ describe('<EventPopoverContent />', () => {
         <Popover.Root open>
           <EventPopoverContent
             {...defaultProps}
-            occurrence={createOccurrenceFromEvent(DEFAULT_EVENT)}
+            occurrence={createOccurrenceFromEvent(DEFAULT_EVENT, 'default')}
           />
         </Popover.Root>
       </EventCalendarProvider>,
@@ -246,7 +246,7 @@ describe('<EventPopoverContent />', () => {
         <Popover.Root open>
           <EventPopoverContent
             {...defaultProps}
-            occurrence={createOccurrenceFromEvent(eventWithNoResourceColor)}
+            occurrence={createOccurrenceFromEvent(eventWithNoResourceColor, 'default')}
           />
         </Popover.Root>
       </EventCalendarProvider>,
@@ -275,7 +275,7 @@ describe('<EventPopoverContent />', () => {
         <Popover.Root open>
           <EventPopoverContent
             {...defaultProps}
-            occurrence={createOccurrenceFromEvent(eventWithoutResource)}
+            occurrence={createOccurrenceFromEvent(eventWithoutResource, 'default')}
           />
         </Popover.Root>
       </EventCalendarProvider>,
@@ -300,14 +300,17 @@ describe('<EventPopoverContent />', () => {
       const end = adapter.date('2025-05-26T08:30:00', 'default');
       const handleSurfaceChange = spy();
 
-      const creationOccurrence = createOccurrenceFromEvent({
-        id: 'tmp',
-        start,
-        end,
-        title: '',
-        description: '',
-        allDay: false,
-      });
+      const creationOccurrence = createOccurrenceFromEvent(
+        {
+          id: 'tmp',
+          start,
+          end,
+          title: '',
+          description: '',
+          allDay: false,
+        },
+        'default',
+      );
 
       const { user } = render(
         <EventCalendarProvider events={[]} resources={resources}>
@@ -347,14 +350,17 @@ describe('<EventPopoverContent />', () => {
       const end = adapter.date('2025-05-26T08:30:00', 'default');
       const handleSurfaceChange = spy();
 
-      const creationOccurrence = createOccurrenceFromEvent({
-        id: 'tmp',
-        start,
-        end,
-        title: '',
-        description: '',
-        allDay: true,
-      });
+      const creationOccurrence = createOccurrenceFromEvent(
+        {
+          id: 'tmp',
+          start,
+          end,
+          title: '',
+          description: '',
+          allDay: true,
+        },
+        'default',
+      );
 
       const { user } = render(
         <EventCalendarProvider events={[]} resources={resources}>
@@ -394,14 +400,17 @@ describe('<EventPopoverContent />', () => {
       const end = adapter.date('2025-05-26T08:30:00', 'default');
       const handleSurfaceChange = spy();
 
-      const creationOccurrence = createOccurrenceFromEvent({
-        id: 'tmp',
-        start,
-        end,
-        title: '',
-        description: '',
-        allDay: false,
-      });
+      const creationOccurrence = createOccurrenceFromEvent(
+        {
+          id: 'tmp',
+          start,
+          end,
+          title: '',
+          description: '',
+          allDay: false,
+        },
+        'default',
+      );
 
       const { user } = render(
         <EventCalendarProvider events={[]} resources={resources}>
@@ -447,14 +456,17 @@ describe('<EventPopoverContent />', () => {
         resourceId: null,
       };
 
-      const creationOccurrence = createOccurrenceFromEvent({
-        id: 'placeholder-id',
-        start,
-        end,
-        title: '',
-        description: '',
-        allDay: false,
-      });
+      const creationOccurrence = createOccurrenceFromEvent(
+        {
+          id: 'placeholder-id',
+          start,
+          end,
+          title: '',
+          description: '',
+          allDay: false,
+        },
+        'default',
+      );
 
       const onEventsChange = spy();
       let createEventSpy;
@@ -509,7 +521,10 @@ describe('<EventPopoverContent />', () => {
         .resource('r2')
         .recurrent('DAILY')
         .build();
-      const originalRecurringEventOccurrence = createOccurrenceFromEvent(originalRecurringEvent);
+      const originalRecurringEventOccurrence = createOccurrenceFromEvent(
+        originalRecurringEvent,
+        'default',
+      );
 
       it('should not call updateRecurringEvent if the user cancels the scope dialog', async () => {
         let updateRecurringEventSpy, selectRecurringEventUpdateScopeSpy;
@@ -1074,7 +1089,7 @@ describe('<EventPopoverContent />', () => {
         .description('description')
         .singleDay('2025-06-12T14:00:00')
         .build();
-      const nonRecurringEventOccurrence = createOccurrenceFromEvent(nonRecurringEvent);
+      const nonRecurringEventOccurrence = createOccurrenceFromEvent(nonRecurringEvent, 'default');
 
       it('should call updateEvent with updated values on Submit', async () => {
         let updateEventSpy;
