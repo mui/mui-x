@@ -23,7 +23,6 @@ const timeSensitiveSuites = [
 await main();
 
 async function main() {
-  const baseUrl = 'http://localhost:5001';
   const screenshotDir = path.resolve(import.meta.dirname, './screenshots/chrome');
 
   const browser = await chromium.launch({
@@ -45,10 +44,6 @@ async function main() {
       errorConsole = msg.text();
     }
   });
-
-  // Wait for all requests to finish.
-  // This should load shared resources such as fonts.
-  await page.goto(baseUrl, { waitUntil: 'networkidle' });
 
   // prepare screenshots
   await emptyDir(screenshotDir);
@@ -226,10 +221,6 @@ async function main() {
 
       beforeEach(async () => {
         page = await newTestPage(browser);
-
-        // Wait for all requests to finish.
-        // This should load shared resources such as fonts.
-        await page.goto(baseUrl, { waitUntil: 'networkidle' });
       });
 
       afterEach(async () => {
@@ -396,6 +387,11 @@ async function newTestPage(browser: Browser): Promise<Page> {
       },
     });
   });
+
+  const baseUrl = 'http://localhost:5001';
+  // Wait for all requests to finish.
+  // This should load shared resources such as fonts.
+  await page.goto(baseUrl, { waitUntil: 'networkidle' });
 
   await page.waitForFunction(() => window.muiFixture?.isReady);
 
