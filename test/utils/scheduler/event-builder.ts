@@ -116,10 +116,6 @@ export class EventBuilder {
 
   withTimezone(timezone: TemporalTimezone) {
     this.renderTimezone = timezone;
-
-    this.event.start = this.adapter.setTimezone(this.event.start, timezone);
-    this.event.end = this.adapter.setTimezone(this.event.end, timezone);
-
     return this;
   }
 

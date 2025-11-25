@@ -17,8 +17,8 @@ describe('processEvent', () => {
 
   it('keeps original timezone in modelInBuiltInFormat', () => {
     const event = EventBuilder.new(adapter)
-      .span('2025-01-01T10:00:00Z', '2025-01-01T12:00:00Z')
       .withTimezone('America/New_York')
+      .span('2025-01-01T10:00:00Z', '2025-01-01T12:00:00Z')
       .build();
 
     const processed = processEvent(event, 'Pacific/Kiritimati', adapter);
