@@ -1,7 +1,7 @@
 import { SeriesProcessorWithoutDimensions, SeriesId } from '@mui/x-charts/internals';
 import { DefaultizedHeatmapSeriesType } from '../../models/seriesType/heatmap';
 
-const seriesProcessor: SeriesProcessorWithoutDimensions<'heatmap'> = (params) => {
+const seriesProcessorWithoutDimensions: SeriesProcessorWithoutDimensions<'heatmap'> = (params) => {
   const { series, seriesOrder } = params;
 
   const defaultizedSeries: Record<SeriesId, DefaultizedHeatmapSeriesType> = {};
@@ -21,4 +21,4 @@ const seriesProcessor: SeriesProcessorWithoutDimensions<'heatmap'> = (params) =>
   };
 };
 
-export default seriesProcessor;
+export default seriesProcessorWithoutDimensions;

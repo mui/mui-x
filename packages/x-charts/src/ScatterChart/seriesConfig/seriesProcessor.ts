@@ -1,7 +1,7 @@
 import { ScatterValueType } from '../../models';
 import { SeriesProcessorWithoutDimensions } from '../../internals/plugins/models';
 
-const seriesProcessor: SeriesProcessorWithoutDimensions<'scatter'> = (
+const seriesProcessorWithoutDimensions: SeriesProcessorWithoutDimensions<'scatter'> = (
   { series, seriesOrder },
   dataset,
 ) => {
@@ -56,4 +56,4 @@ const seriesProcessor: SeriesProcessorWithoutDimensions<'scatter'> = (
   };
 };
 
-export default seriesProcessor;
+export default seriesProcessorWithoutDimensions;

@@ -22,7 +22,7 @@ const getSortingComparator = (comparator: ChartsPieSorting = 'none') => {
   }
 };
 
-const seriesProcessor: SeriesProcessorWithoutDimensions<'pie'> = (params) => {
+const seriesProcessorWithoutDimensions: SeriesProcessorWithoutDimensions<'pie'> = (params) => {
   const { seriesOrder, series } = params;
 
   const defaultizedSeries: Record<SeriesId, ChartSeriesDefaultized<'pie'>> = {};
@@ -63,4 +63,4 @@ const seriesProcessor: SeriesProcessorWithoutDimensions<'pie'> = (params) => {
   };
 };
 
-export default seriesProcessor;
+export default seriesProcessorWithoutDimensions;

@@ -8,7 +8,7 @@ import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
 
 export const radarSeriesConfig: ChartSeriesTypeConfig<'radar'> = {
   colorProcessor: getColor,
-  seriesProcessor: formatter,
+  seriesProcessorWithoutDimensions: formatter,
   legendGetter,
   tooltipGetter,
   axisTooltipGetter,

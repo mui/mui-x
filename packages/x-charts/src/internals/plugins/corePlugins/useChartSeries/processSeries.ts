@@ -72,7 +72,7 @@ export const applySeriesProcessorsWithoutDimensions = <TSeriesType extends Chart
     const group = (defaultizedSeries as any)[type];
     if (group !== undefined) {
       (processedSeries as any)[type] =
-        seriesConfig[type]?.seriesProcessor?.(group, dataset) ?? group;
+        seriesConfig[type]?.seriesProcessorWithoutDimensions?.(group, dataset) ?? group;
     }
   });
 
@@ -96,7 +96,7 @@ export const applySeriesProcessors = <TSeriesType extends ChartSeriesType>(
 
   // Apply processors on series type per group
   (Object.keys(processedSeries) as TSeriesType[]).forEach((type) => {
-    const processor = seriesConfig[type]?.seriesProcessorWithDrawingArea;
+    const processor = seriesConfig[type]?.seriesProcessor;
     if (processor !== undefined) {
       const newValue = processor(processedSeries[type] as any, drawingArea);
 

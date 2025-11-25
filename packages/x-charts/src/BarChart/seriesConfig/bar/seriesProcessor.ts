@@ -11,7 +11,10 @@ type BarDataset = DatasetType<number | null>;
 const barValueFormatter = ((v) =>
   v == null ? '' : v.toLocaleString()) as DefaultizedBarSeriesType['valueFormatter'];
 
-const seriesProcessor: SeriesProcessorWithoutDimensions<'bar'> = (params, dataset) => {
+const seriesProcessorWithoutDimensions: SeriesProcessorWithoutDimensions<'bar'> = (
+  params,
+  dataset,
+) => {
   const { seriesOrder, series } = params;
   const stackingGroups = getStackingGroups(params);
 
@@ -112,4 +115,4 @@ const seriesProcessor: SeriesProcessorWithoutDimensions<'bar'> = (params, datase
   };
 };
 
-export default seriesProcessor;
+export default seriesProcessorWithoutDimensions;

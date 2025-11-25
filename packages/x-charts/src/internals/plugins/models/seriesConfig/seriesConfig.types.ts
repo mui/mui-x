@@ -13,13 +13,13 @@ import { GetSeriesWithDefaultValues } from './getSeriesWithDefaultValues.types';
 import { TooltipItemPositionGetter } from './tooltipItemPositionGetter.types';
 
 export type ChartSeriesTypeConfig<TSeriesType extends ChartSeriesType> = {
-  seriesProcessor: SeriesProcessorWithoutDimensions<TSeriesType>;
+  seriesProcessorWithoutDimensions: SeriesProcessorWithoutDimensions<TSeriesType>;
   colorProcessor: ColorProcessor<TSeriesType>;
   legendGetter: LegendGetter<TSeriesType>;
   tooltipGetter: TooltipGetter<TSeriesType>;
   tooltipItemPositionGetter?: TooltipItemPositionGetter<TSeriesType>;
   getSeriesWithDefaultValues: GetSeriesWithDefaultValues<TSeriesType>;
-  seriesProcessorWithDrawingArea?: SeriesProcessor<TSeriesType>;
+  seriesProcessor?: SeriesProcessor<TSeriesType>;
 } & (TSeriesType extends CartesianChartSeriesType
   ? {
       xExtremumGetter: CartesianExtremumGetter<TSeriesType>;

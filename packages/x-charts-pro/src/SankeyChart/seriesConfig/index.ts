@@ -8,11 +8,11 @@ import { tooltipGetter } from './tooltipGetter';
 import { calculateSankeyLayout } from '../calculateSankeyLayout';
 
 // Simple passthrough functions for sankey chart
-const seriesProcessor = (series: any) => series;
+const seriesProcessorWithoutDimensions = (series: any) => series;
 const colorProcessor = (series: any) => series;
 const legendGetter = () => [];
 
-const seriesProcessorWithDrawingArea: SeriesProcessor<'sankey'> = (series, drawingArea) => {
+const seriesProcessor: SeriesProcessor<'sankey'> = (series, drawingArea) => {
   if (series.seriesOrder.length === 0) {
     return series as SeriesProcessorResult<'sankey'>;
   }
@@ -28,10 +28,10 @@ const seriesProcessorWithDrawingArea: SeriesProcessor<'sankey'> = (series, drawi
 };
 
 export const sankeySeriesConfig: ChartSeriesTypeConfig<'sankey'> = {
-  seriesProcessor,
+  seriesProcessorWithoutDimensions,
   colorProcessor,
   legendGetter,
   tooltipGetter,
   getSeriesWithDefaultValues,
-  seriesProcessorWithDrawingArea,
+  seriesProcessor,
 };

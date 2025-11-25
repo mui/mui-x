@@ -38,7 +38,7 @@ const getFunnelDirection = (
     : 'decreasing';
 };
 
-const seriesProcessor: SeriesProcessorWithoutDimensions<'funnel'> = (params) => {
+const seriesProcessorWithoutDimensions: SeriesProcessorWithoutDimensions<'funnel'> = (params) => {
   const { seriesOrder, series } = params;
 
   const completedSeries: Record<string, ChartSeriesDefaultized<'funnel'>> = {};
@@ -143,4 +143,4 @@ const seriesProcessor: SeriesProcessorWithoutDimensions<'funnel'> = (params) => 
   };
 };
 
-export default seriesProcessor;
+export default seriesProcessorWithoutDimensions;

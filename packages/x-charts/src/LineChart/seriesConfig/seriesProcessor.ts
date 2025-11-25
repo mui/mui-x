@@ -7,7 +7,10 @@ import { defaultizeValueFormatter } from '../../internals/defaultizeValueFormatt
 import { SeriesId } from '../../models/seriesType/common';
 import { SeriesProcessorWithoutDimensions } from '../../internals/plugins/models';
 
-const seriesProcessor: SeriesProcessorWithoutDimensions<'line'> = (params, dataset) => {
+const seriesProcessorWithoutDimensions: SeriesProcessorWithoutDimensions<'line'> = (
+  params,
+  dataset,
+) => {
   const { seriesOrder, series } = params;
   const stackingGroups = getStackingGroups({ ...params, defaultStrategy: { stackOffset: 'none' } });
 
@@ -104,4 +107,4 @@ const seriesProcessor: SeriesProcessorWithoutDimensions<'line'> = (params, datas
   };
 };
 
-export default seriesProcessor;
+export default seriesProcessorWithoutDimensions;
