@@ -410,7 +410,7 @@ describe('<DataGrid /> - Row selection', () => {
       expect(getSelectedRowIds()).to.deep.equal([0, 1, 2]);
     });
 
-    it.only('should create selection range only between selected rows', async () => {
+    it('should create selection range only between selected rows', async () => {
       const extendedData = getBasicGridData(10, 2);
       const { user } = render(
         <TestDataGridSelection checkboxSelection disableVirtualization {...extendedData} />,
