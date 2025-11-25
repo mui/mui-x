@@ -43,7 +43,7 @@ storeClasses.forEach((storeClass) => {
 
         const expected = adapter.setTimezone(defaultVisibleDate, timezone);
         expect(store.state.visibleDate).toEqualDateTime(expected);
-        expect(adapter.getTimezone(store.state.visibleDate)).toBe(timezone);
+        expect(adapter.getTimezone(store.state.visibleDate)).to.equal(timezone);
       });
 
       it('should set visibleDate to today in the render timezone when defaultVisibleDate is not provided', () => {
@@ -53,7 +53,7 @@ storeClasses.forEach((storeClass) => {
         const expectedToday = adapter.startOfDay(adapter.now(timezone));
 
         expect(store.state.visibleDate).toEqualDateTime(expectedToday);
-        expect(store.state.timezone).to.equal(timezone);
+        expect(adapter.getTimezone(store.state.visibleDate)).to.equal(timezone);
       });
     });
 
