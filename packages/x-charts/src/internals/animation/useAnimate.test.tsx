@@ -23,7 +23,7 @@ describe('useAnimate', () => {
     element.setAttribute('width', props.width.toString());
   });
 
-  const lastCallWidth = () => applyProps.mock.calls[applyProps.mock.calls.length - 1]?.[1].width;
+  const lastCallWidth = () => applyProps.mock.calls.at(-1)?.[1].width;
   const firstCallWidth = () => applyProps.mock.calls[0]?.[1].width;
   const callCount = () => applyProps.mock.calls.length;
 

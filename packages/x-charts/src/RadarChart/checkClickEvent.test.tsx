@@ -44,7 +44,7 @@ describe('RadarChart - click event', () => {
         },
       ]);
 
-      expect(onAxisClick.mock.calls[onAxisClick.mock.calls.length - 1][1]).to.deep.equal({
+      expect(onAxisClick.mock.calls.at(-1)[1]).to.deep.equal({
         dataIndex: 0,
         axisValue: 'A',
         seriesValues: { s1: 2, s2: 6 },
@@ -58,7 +58,7 @@ describe('RadarChart - click event', () => {
         },
       ]);
 
-      expect(onAxisClick.mock.calls[onAxisClick.mock.calls.length - 1][1]).to.deep.equal({
+      expect(onAxisClick.mock.calls.at(-1)[1]).to.deep.equal({
         dataIndex: 1,
         axisValue: 'B',
         seriesValues: { s1: 3, s2: 5 },
@@ -94,7 +94,7 @@ describe('RadarChart - click event', () => {
           },
         ]);
 
-        expect(onAxisClick.mock.calls[onAxisClick.mock.calls.length - 1][1]).to.deep.equal({
+        expect(onAxisClick.mock.calls.at(-1)[1]).to.deep.equal({
           dataIndex: 3,
           axisValue: 'D',
           seriesValues: { s1: 5, s2: 1 },
@@ -108,7 +108,7 @@ describe('RadarChart - click event', () => {
           },
         ]);
 
-        expect(onAxisClick.mock.calls[onAxisClick.mock.calls.length - 1][1]).to.deep.equal({
+        expect(onAxisClick.mock.calls.at(-1)[1]).to.deep.equal({
           dataIndex: 0,
           axisValue: 'A',
           seriesValues: { s1: 2, s2: 6 },
@@ -151,21 +151,21 @@ describe('RadarChart - click event', () => {
       const marks = document.querySelectorAll<HTMLElement>('circle.MuiRadarSeriesPlot-mark');
 
       await user.click(marks[0]);
-      expect(onItemClick.mock.calls[onItemClick.mock.calls.length - 1][1]).to.deep.equal({
+      expect(onItemClick.mock.calls.at(-1)[1]).to.deep.equal({
         type: 'radar',
         seriesId: 's1',
         dataIndex: 0,
       });
 
       await user.click(marks[1]);
-      expect(onItemClick.mock.calls[onItemClick.mock.calls.length - 1][1]).to.deep.equal({
+      expect(onItemClick.mock.calls.at(-1)[1]).to.deep.equal({
         type: 'radar',
         seriesId: 's1',
         dataIndex: 1,
       });
 
       await user.click(marks[4]);
-      expect(onItemClick.mock.calls[onItemClick.mock.calls.length - 1][1]).to.deep.equal({
+      expect(onItemClick.mock.calls.at(-1)[1]).to.deep.equal({
         type: 'radar',
         seriesId: 's2',
         dataIndex: 0,
@@ -207,7 +207,7 @@ describe('RadarChart - click event', () => {
           coords: { clientX: 50, clientY: 45 },
         },
       ]);
-      expect(onItemClick.mock.calls[onItemClick.mock.calls.length - 1][1]).to.deep.equal({
+      expect(onItemClick.mock.calls.at(-1)[1]).to.deep.equal({
         type: 'radar',
         seriesId: 's1',
         dataIndex: 0,
@@ -220,7 +220,7 @@ describe('RadarChart - click event', () => {
           coords: { clientX: 50, clientY: 55 },
         },
       ]);
-      expect(onItemClick.mock.calls[onItemClick.mock.calls.length - 1][1]).to.deep.equal({
+      expect(onItemClick.mock.calls.at(-1)[1]).to.deep.equal({
         type: 'radar',
         seriesId: 's2',
         dataIndex: 2,
