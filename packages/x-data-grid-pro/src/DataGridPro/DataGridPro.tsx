@@ -4,15 +4,15 @@ import PropTypes from 'prop-types';
 import { useLicenseVerifier, Watermark } from '@mui/x-license';
 import { GridRoot, GridContextProvider, GridValidRowModel } from '@mui/x-data-grid';
 import {
-  GridConfiguration,
+  type GridConfiguration,
   validateProps,
   useGridApiInitialization,
-  useGridRowsOverridableMethods,
   useGridParamsOverridableMethods,
   useIsCellEditable,
 } from '@mui/x-data-grid/internals';
 import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
 import { forwardRef } from '@mui/x-internals/forwardRef';
+import { useGridRowsOverridableMethods } from '../hooks/features/rows/useGridRowsOverridableMethods';
 import { useDataGridProComponent } from './useDataGridProComponent';
 import { DataGridProProps } from '../models/dataGridProProps';
 import { useDataGridProProps } from './useDataGridProProps';
@@ -23,7 +23,7 @@ import type { GridApiPro, GridPrivateApiPro } from '../models/gridApiPro';
 
 export type { GridProSlotsComponent as GridSlots } from '../models';
 
-const configuration: GridConfiguration = {
+const configuration: GridConfiguration<GridPrivateApiPro> = {
   hooks: {
     useCSSVariables: useMaterialCSSVariables,
     useGridAriaAttributes: useGridAriaAttributesPro,
@@ -47,7 +47,7 @@ const DataGridProRaw = forwardRef(function DataGridPro<R extends GridValidRowMod
     props.apiRef,
     props,
   );
-  useDataGridProComponent(privateApiRef, props, configuration);
+  useDataGridProComponent(privateApiRef, props, configuration as GridConfiguration);
   useLicenseVerifier('x-data-grid-pro', releaseInfo);
 
   if (process.env.NODE_ENV !== 'production') {
@@ -55,7 +55,11 @@ const DataGridProRaw = forwardRef(function DataGridPro<R extends GridValidRowMod
   }
 
   return (
-    <GridContextProvider privateApiRef={privateApiRef} configuration={configuration} props={props}>
+    <GridContextProvider
+      privateApiRef={privateApiRef}
+      configuration={configuration as GridConfiguration}
+      props={props}
+    >
       <GridRoot
         className={props.className}
         style={props.style}
@@ -489,11 +493,28 @@ DataGridProRaw.propTypes = {
    */
   isGroupExpandedByDefault: PropTypes.func,
   /**
+   * Indicates whether a row is reorderable.
+   * @param {object} params With all properties from the row.
+   * @param {R} params.row The row model of the row that the current cell belongs to.
+   * @param {GridTreeNode} params.rowNode The node of the row that the current cell belongs to.
+   * @returns {boolean} A boolean indicating if the row is reorderable.
+   */
+  isRowReorderable: PropTypes.func,
+  /**
    * Determines if a row can be selected.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
    * @returns {boolean} A boolean indicating if the row is selectable.
    */
   isRowSelectable: PropTypes.func,
+  /**
+   * Indicates if a row reorder attempt is valid.
+   * Can be used to disable certain row reorder operations based on the context.
+   * The internal validation is still applied, preventing unsupported use-cases.
+   * Use `isValidRowReorder()` to add additional validation rules to the default ones.
+   * @param {ReorderValidationContext} context The context object containing all information about the reorder operation.
+   * @returns {boolean} A boolean indicating if the reorder operation should go through.
+   */
+  isValidRowReorder: PropTypes.func,
   /**
    * If `true`, moving the mouse pointer outside the grid before releasing the mouse button
    * in a column re-order action will not cause the column to jump back to its original position.
@@ -1015,6 +1036,15 @@ DataGridProRaw.propTypes = {
    * @default 80
    */
   scrollEndThreshold: PropTypes.number,
+  /**
+   * Updates the tree path in a row model.
+   * Used when reordering rows across different parents in tree data.
+   * @template R
+   * @param {string[]} path The new path for the row.
+   * @param {R} row The row model to update.
+   * @returns {R} The updated row model with the new path.
+   */
+  setTreeDataPath: PropTypes.func,
   /**
    * If `true`, vertical borders will be displayed between cells.
    * @default false
