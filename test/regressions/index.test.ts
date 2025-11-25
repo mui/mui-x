@@ -100,9 +100,6 @@ async function main() {
 
           await navigateToTest(route.url);
 
-          // Move cursor offscreen to not trigger unwanted hover effects.
-          await page.mouse.move(0, 0);
-
           const screenshotPath = path.resolve(screenshotDir, `.${route.url}.png`);
 
           const testcase = await page.waitForSelector(
@@ -394,6 +391,9 @@ async function newTestPage(browser: Browser): Promise<Page> {
   await page.goto(baseUrl, { waitUntil: 'networkidle' });
 
   await page.waitForFunction(() => window.muiFixture?.isReady);
+
+  // Move cursor offscreen to not trigger unwanted hover effects.
+  await page.mouse.move(0, 0);
 
   return page;
 }
