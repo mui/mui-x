@@ -60,6 +60,13 @@ async function main() {
     });
   });
 
+  // Move cursor offscreen to not trigger unwanted hover effects.
+  // This needs to be done before the navigation to avoid hover and mouse enter/leave effects.
+  await page.mouse.move(0, 0);
+
+  // Skip animations
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+
   // prepare screenshots
   await emptyDir(screenshotDir);
 
@@ -115,22 +122,7 @@ async function main() {
             return;
           }
 
-          // Move cursor offscreen to not trigger unwanted hover effects.
-          // This needs to be done before the navigation to avoid hover and mouse enter/leave effects.
-          await page.mouse.move(0, 0);
-
-          // Skip animations
-          await page.emulateMedia({ reducedMotion: 'reduce' });
-
-          try {
-            await navigateToTest(route.url);
-          } catch (error) {
-            // When one demo crashes, the page becomes empty and there are no links to demos,
-            // so navigation to the next demo throws an error.
-            // Reloading the page fixes this.
-            await page.reload();
-            await navigateToTest(route.url);
-          }
+          await navigateToTest(route.url);
 
           const screenshotPath = path.resolve(screenshotDir, `.${route.url}.png`);
 
@@ -138,21 +130,27 @@ async function main() {
             `[data-testid="testcase"][data-testpath="${route.url}"]:not([aria-busy="true"])`,
           );
 
-          const images = await page.evaluate(() => document.querySelectorAll('img'));
-          if (images.length > 0) {
-            await page.evaluate(() => {
-              images.forEach((img) => {
-                if (!img.complete && img.loading === 'lazy') {
-                  // Force lazy-loaded images to load
-                  img.setAttribute('loading', 'eager');
-                }
-              });
-            });
-            // Wait for the flags to load
-            await page.waitForFunction(() => [...images].every((img) => img.complete), undefined, {
-              timeout: 2000,
-            });
-          }
+          await page.evaluate(async () => {
+            const images = document.querySelectorAll('img');
+            if (images.length <= 0) {
+              return;
+            }
+            const promises = [];
+            for (const img of images) {
+              if (img.complete) {
+                continue;
+              }
+              if (img.loading === 'lazy') {
+                // Force lazy-loaded images to load
+                img.setAttribute('loading', 'eager');
+              }
+              const { promise, resolve, reject } = Promise.withResolvers<void>();
+              img.onload = () => resolve();
+              img.onerror = reject;
+              promises.push(promise);
+            }
+            await Promise.all(promises);
+          });
 
           if (/^\/docs-charts-.*/.test(route.url)) {
             // Run one tick of the clock to get the final animation state
