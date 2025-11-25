@@ -36,11 +36,7 @@ import {
 } from './SchedulerStore.utils';
 import { TimeoutManager } from '../TimeoutManager';
 import { DEFAULT_EVENT_COLOR } from '../../constants';
-import {
-  getNowInRenderTimezone,
-  getRenderTimezone,
-  getStartOfTodayInRenderTimezone,
-} from '../timezone-utils';
+import { getNowInRenderTimezone, getStartOfTodayInRenderTimezone } from '../timezone-utils';
 
 const ONE_MINUTE_IN_MS = 60 * 1000;
 
@@ -73,7 +69,7 @@ export class SchedulerStore<
     instanceName: string,
     mapper: SchedulerParametersToStateMapper<State, Parameters>,
   ) {
-    const renderTimezone = getRenderTimezone(parameters.timezone);
+    const timezone = parameters.timezone ?? 'default';
 
     const schedulerInitialState: SchedulerState<TEvent> = {
       ...SchedulerStore.deriveStateFromParameters(parameters, adapter),
@@ -82,15 +78,15 @@ export class SchedulerStore<
       preferences: DEFAULT_SCHEDULER_PREFERENCES,
       adapter,
       occurrencePlaceholder: null,
-      nowUpdatedEveryMinute: getNowInRenderTimezone(adapter, parameters.timezone),
+      nowUpdatedEveryMinute: getNowInRenderTimezone(adapter, timezone),
       pendingUpdateRecurringEventParameters: null,
-      timezone: getRenderTimezone(parameters.timezone),
+      timezone,
       visibleResources: new Map(),
       visibleDate:
         parameters.visibleDate ??
         (parameters.defaultVisibleDate
-          ? adapter.setTimezone(parameters.defaultVisibleDate, renderTimezone)
-          : getStartOfTodayInRenderTimezone(adapter, parameters.timezone)),
+          ? adapter.setTimezone(parameters.defaultVisibleDate, timezone)
+          : getStartOfTodayInRenderTimezone(adapter, timezone)),
     };
 
     const initialState = mapper.getInitialState(schedulerInitialState, parameters, adapter);

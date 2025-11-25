@@ -1,14 +1,10 @@
 import { TemporalTimezone } from '../base-ui-copy/types';
 import { Adapter } from '../use-adapter';
 
-export function getRenderTimezone(timezone?: TemporalTimezone) {
-  return timezone ?? 'default';
-}
-
 export function getNowInRenderTimezone(adapter: Adapter, timezone?: TemporalTimezone) {
-  return adapter.now(getRenderTimezone(timezone));
+  return adapter.now(timezone ?? 'default');
 }
 
 export function getStartOfTodayInRenderTimezone(adapter: Adapter, timezone?: TemporalTimezone) {
-  return adapter.startOfDay(getNowInRenderTimezone(adapter, timezone));
+  return adapter.startOfDay(getNowInRenderTimezone(adapter, timezone ?? 'default'));
 }
