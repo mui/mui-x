@@ -5,7 +5,7 @@ import { BarElement } from './BarElement';
 import { ProcessedBarSeriesData } from './types';
 import { useUtilityClasses } from './barClasses';
 
-interface BatchBarPlot {
+interface BatchBarPlotProps {
   completedData: ProcessedBarSeriesData[];
   borderRadius?: number;
   skipAnimation?: boolean;
@@ -23,7 +23,7 @@ export function BatchBarPlot({
   onItemClick,
   skipAnimation,
   ...other
-}: BatchBarPlot) {
+}: BatchBarPlotProps) {
   const classes = useUtilityClasses();
   const withoutBorderRadius = !borderRadius || borderRadius <= 0;
 
