@@ -123,6 +123,7 @@ function BarPlot(props: BarPlotProps) {
         )}
       <BarElementPlot
         completedData={completedData}
+        maskData={masksData}
         skipAnimation={skipAnimation}
         onItemClick={onItemClick}
         borderRadius={borderRadius}
