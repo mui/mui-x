@@ -94,3 +94,7 @@ onlyBuiltDependencies:
   - nx
   - sharp
   - unrs-resolver
+
+minimumReleaseAge: 1440
+minimumReleaseAgeExclude:
+  - '@mui/*'
