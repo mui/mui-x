@@ -1,6 +1,7 @@
+import * as React from 'react';
 /* We need to import the shim because React 17 does not support the `useSyncExternalStore` API.
  * More info: https://github.com/mui/mui-x/issues/18303#issuecomment-2958392341 */
-import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/shim/with-selector';
+import { useSyncExternalStore } from 'use-sync-external-store';
 import type { ReadonlyStore } from './Store';
 
 export function useStore<State, Value>(
@@ -32,12 +33,10 @@ export function useStore(
   a2?: unknown,
   a3?: unknown,
 ): unknown {
-  const selectorWithArgs = (state: unknown) => selector(state, a1, a2, a3);
-
-  return useSyncExternalStoreWithSelector(
-    store.subscribe,
-    store.getSnapshot,
-    store.getSnapshot,
-    selectorWithArgs,
+  const getSelection = React.useMemo(
+    () => () => selector(store.getSnapshot(), a1, a2, a3),
+    [selector],
   );
+
+  return useSyncExternalStore(store.subscribe, getSelection, getSelection);
 }
