@@ -345,6 +345,9 @@ export const GridRootStyles = styled('div', {
       alignItems: 'center',
       backgroundColor: headerBackground,
     },
+    [`& .${c.columnHeader} .${c.sortButton}`]: {
+      backgroundColor: vars.header.background.base,
+    },
     [`& .${c['columnHeader--filter']}`]: {
       paddingTop: 8,
       paddingBottom: 8,
@@ -445,8 +448,18 @@ export const GridRootStyles = styled('div', {
         & .${c.pivotPanelField}:not(.${c['pivotPanelField--sorted']}):hover .${c.sortButton},
         & .${c.pivotPanelField}:not(.${c['pivotPanelField--sorted']}) .${c.sortButton}:focus-visible`]:
         {
-          opacity: 0.5,
+          opacity: 1,
         },
+      // Add opacity only to the button content to avoid affecting the background color
+      [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}):hover .${c.sortButton} > *,
+        & .${c.pivotPanelField}:not(.${c['pivotPanelField--sorted']}):hover .${c.sortButton} > *,
+        & .${c.pivotPanelField}:not(.${c['pivotPanelField--sorted']}) .${c.sortButton}:focus-visible > *`]:
+        {
+          opacity: 0.78,
+        },
+      [`& .${c.pivotPanelFieldActionContainer} button:hover`]: {
+        backgroundColor: vars.colors.background.base,
+      },
     },
     '@media (hover: none)': {
       [`& .${c.columnHeader} .${c.menuIcon}`]: {
@@ -460,7 +473,7 @@ export const GridRootStyles = styled('div', {
         },
       },
       [`& .${c.pivotPanelField}:not(.${c['pivotPanelField--sorted']}) .${c.sortButton}`]: {
-        opacity: 0.5,
+        opacity: 0.78,
       },
     },
     // Hide the column separator when the column has border and it is not resizable
