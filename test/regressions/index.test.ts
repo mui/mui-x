@@ -1,6 +1,6 @@
 import * as path from 'path';
 import * as childProcess from 'child_process';
-import { type Browser, chromium } from '@playwright/test';
+import { type Browser, chromium, Page } from '@playwright/test';
 import { major } from '@mui/material/version';
 import fs from 'node:fs/promises';
 
@@ -49,23 +49,6 @@ async function main() {
   // Wait for all requests to finish.
   // This should load shared resources such as fonts.
   await page.goto(baseUrl, { waitUntil: 'networkidle' });
-
-  // Simulate portrait mode for date pickers.
-  // See `usePickerOrientation`.
-  await page.evaluate(() => {
-    Object.defineProperty(window.screen.orientation, 'angle', {
-      get() {
-        return 0;
-      },
-    });
-  });
-
-  // Move cursor offscreen to not trigger unwanted hover effects.
-  // This needs to be done before the navigation to avoid hover and mouse enter/leave effects.
-  await page.mouse.move(0, 0);
-
-  // Skip animations
-  await page.emulateMedia({ reducedMotion: 'reduce' });
 
   // prepare screenshots
   await emptyDir(screenshotDir);
@@ -208,9 +191,6 @@ async function main() {
 
       await navigateToTest(route);
 
-      // Skip animations
-      await page.emulateMedia({ reducedMotion: 'reduce' });
-
       // Make sure demo got loaded
       await page.waitForSelector(
         `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
@@ -334,29 +314,6 @@ async function main() {
         });
       });
     });
-
-    // describe('DateTimePicker', () => {
-    //   it('should handle change in pointer correctly', async () => {
-    //     const index = routes.findIndex(
-    //         (route) => route === '/regression-pickers/UncontrolledDateTimePicker',
-    //     );
-    //     const testcase = await renderFixture(index);
-    //
-    //     await page.click('[aria-label="Choose date"]');
-    //     await page.click('[aria-label*="switch to year view"]');
-    //     await takeScreenshot({
-    //       testcase: await page.waitForSelector('[role="dialog"]'),
-    //       route: '/regression-pickers/UncontrolledDateTimePicker-desktop',
-    //     });
-    //     await page.evaluate(() => {
-    //       window.muiTogglePickerMode();
-    //     });
-    //     await takeScreenshot({
-    //       testcase,
-    //       route: '/regression-pickers/UncontrolledDateTimePicker-mobile',
-    //     });
-    //   });
-    // });
   });
 }
 
@@ -407,7 +364,7 @@ function screenshotPrintDialogPreview(
   });
 }
 
-async function newTestPage(browser: Browser) {
+async function newTestPage(browser: Browser): Promise<Page> {
   // reuse viewport from `vrtest`
   // https://github.com/nathanmarks/vrtest/blob/1185b852a6c1813cedf5d81f6d6843d9a241c1ce/src/server/runner.js#L44
   const page = await browser.newPage({ viewport: { width: 1000, height: 700 } });
@@ -426,16 +383,27 @@ async function newTestPage(browser: Browser) {
 
   await page.waitForFunction(() => window.muiFixture.isReady);
 
+  // Skip animations
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+
+  // Move cursor offscreen to not trigger unwanted hover effects.
+  await page.mouse.move(0, 0);
+
+  // Simulate portrait mode for date pickers.
+  // See `usePickerOrientation`.
+  await page.evaluate(() => {
+    Object.defineProperty(window.screen.orientation, 'angle', {
+      get() {
+        return 0;
+      },
+    });
+  });
+
   return page;
 }
 
-async function emptyDir(dir: string) {
-  let items;
-  try {
-    items = await fs.readdir(dir);
-  } catch {
-    return fs.mkdir(dir, { recursive: true });
-  }
-
-  return Promise.all(items.map((item) => fs.rm(path.join(dir, item), { recursive: true })));
+async function emptyDir(dir: string): Promise<void> {
+  await fs.mkdir(dir, { recursive: true });
+  const items = await fs.readdir(dir);
+  await Promise.all(items.map((item) => fs.rm(path.join(dir, item), { recursive: true })));
 }
