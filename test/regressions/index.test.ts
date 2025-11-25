@@ -381,7 +381,7 @@ async function newTestPage(browser: Browser): Promise<Page> {
     }
   });
 
-  await page.waitForFunction(() => window.muiFixture.isReady);
+  await page.waitForFunction(() => window.muiFixture?.isReady);
 
   // Skip animations
   await page.emulateMedia({ reducedMotion: 'reduce' });
