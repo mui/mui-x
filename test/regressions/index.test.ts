@@ -70,8 +70,6 @@ async function main() {
   // prepare screenshots
   await emptyDir(screenshotDir);
 
-  await page.waitForFunction(() => window.muiFixture.isReady);
-
   const routes = await page.evaluate(() => window.muiFixture.allTests);
 
   async function navigateToTest(route: string) {
@@ -425,6 +423,8 @@ async function newTestPage(browser: Browser) {
       route.continue();
     }
   });
+
+  await page.waitForFunction(() => window.muiFixture.isReady);
 
   return page;
 }
