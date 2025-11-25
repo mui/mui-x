@@ -375,6 +375,9 @@ async function newTestPage(browser: Browser): Promise<Page> {
   // Skip animations
   await page.emulateMedia({ reducedMotion: 'reduce' });
 
+  // Move cursor offscreen to not trigger unwanted hover effects.
+  await page.mouse.move(10000, 10000);
+
   // Simulate portrait mode for date pickers.
   // See `usePickerOrientation`.
   await page.evaluate(() => {
