@@ -22,7 +22,7 @@ import {
 } from './internal-utils';
 
 describe('recurring-events/internal-utils', () => {
-  describe('getWeekDayCodeForDate', () => {
+  describe('getWeekDayCode', () => {
     it('should work with fr (week starts on Monday)', () => {
       const testMonday = adapterFr.date('2025-10-20T00:00:00Z', 'default'); // Monday
       expect(getWeekDayCode(adapterFr, testMonday)).to.equal('MO');
