@@ -1,8 +1,11 @@
 import * as React from 'react';
 /* We need to import the shim because React 17 does not support the `useSyncExternalStore` API.
  * More info: https://github.com/mui/mui-x/issues/18303#issuecomment-2958392341 */
-import { useSyncExternalStore } from 'use-sync-external-store';
+import { useSyncExternalStore as useSyncExternalStoreShim } from 'use-sync-external-store/shim';
 import type { ReadonlyStore } from './Store';
+
+const ObfuscatedReact = { ...React } as any;
+const useSyncExternalStore = ObfuscatedReact.useSyncExternalStore ?? useSyncExternalStoreShim;
 
 export function useStore<State, Value>(
   store: ReadonlyStore<State>,
