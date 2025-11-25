@@ -1,1 +1,1 @@
-export * from './useEventOccurencesGroupedByResource';
+export * from './useEventOccurrencesGroupedByResource';
