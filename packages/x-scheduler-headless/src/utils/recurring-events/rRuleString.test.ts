@@ -5,7 +5,7 @@ import {
 } from '@mui/x-scheduler-headless/models';
 import { parseRRuleString, serializeRRule } from './rRuleString';
 
-describe('recurring-event-utils', () => {
+describe('recurring-events/rRuleString', () => {
   describe('parseRRuleString', () => {
     it('should return the same object if the input is already an object', () => {
       const input: RecurringEventRecurrenceRule = { freq: 'DAILY', interval: 2 };

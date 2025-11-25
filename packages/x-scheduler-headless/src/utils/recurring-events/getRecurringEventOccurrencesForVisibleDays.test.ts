@@ -12,7 +12,7 @@ import {
 } from './getRecurringEventOccurrencesForVisibleDays';
 import { getWeekDayCode } from './internal-utils';
 
-describe('getRecurringEventOccurrencesForVisibleDays and helpers', () => {
+describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
   describe('getRecurringEventOccurrencesForVisibleDays', () => {
     const createEvent = (overrides: Partial<SchedulerEvent>) =>
       createProcessedEvent({

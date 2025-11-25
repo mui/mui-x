@@ -16,7 +16,7 @@ import {
 } from './updateRecurringEvent';
 import { estimateOccurrencesUpTo } from './internal-utils';
 
-describe('recurring-events/internal-utils', () => {
+describe('recurring-events/updateRecurringEvent', () => {
   const createRecurringEvent = (overrides: Partial<SchedulerEvent> = {}) =>
     createProcessedEvent({
       id: 'recurring',
