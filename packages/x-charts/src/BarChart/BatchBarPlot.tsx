@@ -39,15 +39,20 @@ function generateBarPath(
   bottomRightBorderRadius: number,
   bottomLeftBorderRadius: number,
 ) {
-  return `M${x + topLeftBorderRadius},${y}
-   h${width - topLeftBorderRadius - topRightBorderRadius}
-   a${topRightBorderRadius},${topRightBorderRadius} 0 0 1 ${topRightBorderRadius},${topRightBorderRadius}
-   v${height - topRightBorderRadius - bottomRightBorderRadius}
-   a${bottomRightBorderRadius},${bottomRightBorderRadius} 0 0 1 -${bottomRightBorderRadius},${bottomRightBorderRadius}
-   h-${width - bottomRightBorderRadius - bottomLeftBorderRadius}
-   a${bottomLeftBorderRadius},${bottomLeftBorderRadius} 0 0 1 -${bottomLeftBorderRadius},-${bottomLeftBorderRadius}
-   v-${height - bottomLeftBorderRadius - topLeftBorderRadius}
-   a${topLeftBorderRadius},${topLeftBorderRadius} 0 0 1 ${topLeftBorderRadius},-${topLeftBorderRadius}
+  const tLBR = Math.min(topLeftBorderRadius, width / 2, height / 2);
+  const tRBR = Math.min(topRightBorderRadius, width / 2, height / 2);
+  const bRBR = Math.min(bottomRightBorderRadius, width / 2, height / 2);
+  const bLBR = Math.min(bottomLeftBorderRadius, width / 2, height / 2);
+
+  return `M${x + tLBR},${y}
+   h${width - tLBR - tRBR}
+   a${tRBR},${tRBR} 0 0 1 ${tRBR},${tRBR}
+   v${height - tRBR - bRBR}
+   a${bRBR},${bRBR} 0 0 1 -${bRBR},${bRBR}
+   h-${width - bRBR - bLBR}
+   a${bLBR},${bLBR} 0 0 1 -${bLBR},-${bLBR}
+   v-${height - bLBR - tLBR}
+   a${tLBR},${tLBR} 0 0 1 ${tLBR},-${tLBR}
    Z`;
 }
 
