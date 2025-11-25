@@ -48,7 +48,7 @@ async function main() {
 
   // Wait for all requests to finish.
   // This should load shared resources such as fonts.
-  await page.goto(`${baseUrl}#dev`, { waitUntil: 'networkidle' });
+  await page.goto(baseUrl, { waitUntil: 'networkidle' });
 
   // Simulate portrait mode for date pickers.
   // See `usePickerOrientation`.
@@ -251,7 +251,7 @@ async function main() {
 
         // Wait for all requests to finish.
         // This should load shared resources such as fonts.
-        await page.goto(`${baseUrl}#dev`, { waitUntil: 'networkidle' });
+        await page.goto(baseUrl, { waitUntil: 'networkidle' });
       });
 
       afterEach(async () => {
