@@ -59,7 +59,7 @@ describe('BarChart - click event', () => {
         },
       ]);
 
-      expect(onAxisClick.mock.calls.at(-1)[1]).to.deep.equal({
+      expect(onAxisClick.mock.calls.at(-1)![1]).to.deep.equal({
         dataIndex: 0,
         axisValue: 'A',
         seriesValues: { s1: 4, s2: 2 },
@@ -73,7 +73,7 @@ describe('BarChart - click event', () => {
         },
       ]);
 
-      expect(onAxisClick.mock.calls.at(-1)[1]).to.deep.equal({
+      expect(onAxisClick.mock.calls.at(-1)![1]).to.deep.equal({
         dataIndex: 1,
         axisValue: 'B',
         seriesValues: { s1: 1, s2: 1 },
@@ -114,7 +114,7 @@ describe('BarChart - click event', () => {
           },
         ]);
 
-        expect(onAxisClick.mock.calls.at(-1)[1]).to.deep.equal({
+        expect(onAxisClick.mock.calls.at(-1)![1]).to.deep.equal({
           dataIndex: 0,
           axisValue: 'A',
           seriesValues: { s1: 4, s2: 2 },
@@ -128,7 +128,7 @@ describe('BarChart - click event', () => {
           },
         ]);
 
-        expect(onAxisClick.mock.calls.at(-1)[1]).to.deep.equal({
+        expect(onAxisClick.mock.calls.at(-1)![1]).to.deep.equal({
           dataIndex: 1,
           axisValue: 'B',
           seriesValues: { s1: 1, s2: 1 },
@@ -182,21 +182,21 @@ describe('BarChart - click event', () => {
       const rectangles = document.querySelectorAll<HTMLElement>('rect.MuiBarElement-root');
 
       await user.click(rectangles[0]);
-      expect(onItemClick.mock.calls.at(-1)[1]).to.deep.equal({
+      expect(onItemClick.mock.calls.at(-1)![1]).to.deep.equal({
         type: 'bar',
         seriesId: 's1',
         dataIndex: 0,
       });
 
       await user.click(rectangles[1]);
-      expect(onItemClick.mock.calls.at(-1)[1]).to.deep.equal({
+      expect(onItemClick.mock.calls.at(-1)![1]).to.deep.equal({
         type: 'bar',
         seriesId: 's1',
         dataIndex: 1,
       });
 
       await user.click(rectangles[2]);
-      expect(onItemClick.mock.calls.at(-1)[1]).to.deep.equal({
+      expect(onItemClick.mock.calls.at(-1)![1]).to.deep.equal({
         type: 'bar',
         seriesId: 's2',
         dataIndex: 0,

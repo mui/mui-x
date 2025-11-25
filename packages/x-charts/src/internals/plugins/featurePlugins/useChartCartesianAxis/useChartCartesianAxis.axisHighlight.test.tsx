@@ -91,7 +91,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
     await user.pointer([{ keys: '[TouchA>]', target: svg, coords: { clientX: 45, clientY: 60 } }]);
 
     await waitFor(() => expect(onHighlightedAxisChange.mock.calls.length).to.equal(1));
-    expect(onHighlightedAxisChange.mock.calls.at(-1)[0]).to.deep.equal([
+    expect(onHighlightedAxisChange.mock.calls.at(-1)![0]).to.deep.equal([
       { axisId: 'x-axis', dataIndex: 0 },
     ]);
 
@@ -100,7 +100,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
     });
 
     expect(onHighlightedAxisChange.mock.calls.length).to.equal(2);
-    expect(onHighlightedAxisChange.mock.calls.at(-1)[0]).to.deep.equal([
+    expect(onHighlightedAxisChange.mock.calls.at(-1)![0]).to.deep.equal([
       { axisId: 'x-axis', dataIndex: 1 },
     ]);
   });
@@ -126,7 +126,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
     await user.pointer([{ keys: '[TouchA>]', target: svg, coords: { clientX: 10, clientY: 60 } }]);
 
     await waitFor(() => expect(onHighlightedAxisChange.mock.calls.length).to.equal(1));
-    expect(onHighlightedAxisChange.mock.calls.at(-1)[0]).to.deep.equal([
+    expect(onHighlightedAxisChange.mock.calls.at(-1)![0]).to.deep.equal([
       { axisId: 'x-axis', dataIndex: 0 },
     ]);
 
@@ -158,7 +158,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
     await user.pointer([{ keys: '[TouchA>]', target: svg, coords: { clientX: 10, clientY: 60 } }]);
 
     await waitFor(() => expect(onHighlightedAxisChange.mock.calls.length).to.equal(1));
-    expect(onHighlightedAxisChange.mock.calls.at(-1)[0]).to.deep.equal([
+    expect(onHighlightedAxisChange.mock.calls.at(-1)![0]).to.deep.equal([
       { axisId: 'x-axis', dataIndex: 0 },
     ]);
 
@@ -167,7 +167,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
     });
 
     expect(onHighlightedAxisChange.mock.calls.length).to.equal(2);
-    expect(onHighlightedAxisChange.mock.calls.at(-1)[0]).to.deep.equal([
+    expect(onHighlightedAxisChange.mock.calls.at(-1)![0]).to.deep.equal([
       { axisId: 'new-axis', dataIndex: 0 },
     ]);
   });
