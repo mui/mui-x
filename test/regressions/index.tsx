@@ -19,7 +19,7 @@ declare global {
   interface Window {
     muiFixture: {
       allTests: { url: string }[];
-      isReady: () => boolean;
+      isReady: boolean;
       navigate: (test: string) => void;
     };
   }
@@ -31,7 +31,7 @@ const allTests = Object.values(testsBySuite).flatMap((suite) =>
 
 window.muiFixture = {
   allTests,
-  isReady: () => false,
+  isReady: false,
   navigate: () => {
     throw new Error(`muiFixture.navigate is not ready`);
   },
@@ -50,7 +50,7 @@ function Root() {
   const navigate = useNavigate();
   React.useEffect(() => {
     window.muiFixture.navigate = navigate;
-    window.muiFixture.isReady = () => true;
+    window.muiFixture.isReady = true;
   }, [navigate]);
 
   return (

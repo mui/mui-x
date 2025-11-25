@@ -63,11 +63,9 @@ async function main() {
   // prepare screenshots
   await emptyDir(screenshotDir);
 
-  await page.waitForFunction(() => window.muiFixture.isReady());
+  await page.waitForFunction(() => window.muiFixture.isReady);
 
-  const routes = await page.evaluate(() => {
-    return window.muiFixture.allTests;
-  });
+  const routes = await page.evaluate(() => window.muiFixture.allTests);
 
   async function navigateToTest(route: string) {
     // Use client-side routing which is much faster than full page navigation via page.goto().
