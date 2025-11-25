@@ -1,5 +1,5 @@
 import { createRenderer } from '@mui/internal-test-utils';
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { isJSDOM } from 'test/utils/skipIf';
 import { CHART_SELECTOR } from '../tests/constants';
@@ -30,7 +30,7 @@ describe('BarChart - click event', () => {
   describe('onAxisClick', () => {
     // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
     it.skipIf(isJSDOM)('should provide the right context as second argument', async () => {
-      const onAxisClick = spy();
+      const onAxisClick = vi.fn();
       const { user } = render(
         <div
           style={{
@@ -59,7 +59,7 @@ describe('BarChart - click event', () => {
         },
       ]);
 
-      expect(onAxisClick.lastCall.args[1]).to.deep.equal({
+      expect(onAxisClick.mock.calls[onAxisClick.mock.calls.length - 1][1]).to.deep.equal({
         dataIndex: 0,
         axisValue: 'A',
         seriesValues: { s1: 4, s2: 2 },
@@ -73,7 +73,7 @@ describe('BarChart - click event', () => {
         },
       ]);
 
-      expect(onAxisClick.lastCall.args[1]).to.deep.equal({
+      expect(onAxisClick.mock.calls[onAxisClick.mock.calls.length - 1][1]).to.deep.equal({
         dataIndex: 1,
         axisValue: 'B',
         seriesValues: { s1: 1, s2: 1 },
@@ -84,7 +84,7 @@ describe('BarChart - click event', () => {
     it.skipIf(isJSDOM)(
       'should provide the right context as second argument with layout="horizontal"',
       async () => {
-        const onAxisClick = spy();
+        const onAxisClick = vi.fn();
         const { user } = render(
           <div
             style={{
@@ -114,7 +114,7 @@ describe('BarChart - click event', () => {
           },
         ]);
 
-        expect(onAxisClick.lastCall.args[1]).to.deep.equal({
+        expect(onAxisClick.mock.calls[onAxisClick.mock.calls.length - 1][1]).to.deep.equal({
           dataIndex: 0,
           axisValue: 'A',
           seriesValues: { s1: 4, s2: 2 },
@@ -128,7 +128,7 @@ describe('BarChart - click event', () => {
           },
         ]);
 
-        expect(onAxisClick.lastCall.args[1]).to.deep.equal({
+        expect(onAxisClick.mock.calls[onAxisClick.mock.calls.length - 1][1]).to.deep.equal({
           dataIndex: 1,
           axisValue: 'B',
           seriesValues: { s1: 1, s2: 1 },
@@ -159,7 +159,7 @@ describe('BarChart - click event', () => {
 
     // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
     it.skipIf(isJSDOM)('should provide the right context as second argument', async () => {
-      const onItemClick = spy();
+      const onItemClick = vi.fn();
       const { user } = render(
         <div
           style={{
@@ -182,21 +182,21 @@ describe('BarChart - click event', () => {
       const rectangles = document.querySelectorAll<HTMLElement>('rect.MuiBarElement-root');
 
       await user.click(rectangles[0]);
-      expect(onItemClick.lastCall.args[1]).to.deep.equal({
+      expect(onItemClick.mock.calls[onItemClick.mock.calls.length - 1][1]).to.deep.equal({
         type: 'bar',
         seriesId: 's1',
         dataIndex: 0,
       });
 
       await user.click(rectangles[1]);
-      expect(onItemClick.lastCall.args[1]).to.deep.equal({
+      expect(onItemClick.mock.calls[onItemClick.mock.calls.length - 1][1]).to.deep.equal({
         type: 'bar',
         seriesId: 's1',
         dataIndex: 1,
       });
 
       await user.click(rectangles[2]);
-      expect(onItemClick.lastCall.args[1]).to.deep.equal({
+      expect(onItemClick.mock.calls[onItemClick.mock.calls.length - 1][1]).to.deep.equal({
         type: 'bar',
         seriesId: 's2',
         dataIndex: 0,

@@ -1,4 +1,4 @@
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import { createRenderer, waitFor } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
@@ -13,7 +13,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
   const { render } = createRenderer();
 
   it('should call onHighlightedAxisChange when crossing any value', async () => {
-    const onHighlightedAxisChange = spy();
+    const onHighlightedAxisChange = vi.fn();
     const { user } = render(
       <ChartDataProvider<'bar', [UseChartInteractionSignature, UseChartCartesianAxisSignature]>
         plugins={[useChartInteraction, useChartCartesianAxis]}
@@ -32,7 +32,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
 
     await user.pointer([{ keys: '[TouchA>]', target: svg, coords: { clientX: 75, clientY: 60 } }]);
 
-    await waitFor(() => expect(onHighlightedAxisChange.callCount).to.equal(1));
+    await waitFor(() => expect(onHighlightedAxisChange.mock.calls.length).to.equal(1));
 
     await user.pointer([
       {
@@ -50,28 +50,28 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
       },
     ]);
 
-    expect(onHighlightedAxisChange.callCount).to.equal(4);
+    expect(onHighlightedAxisChange.mock.calls.length).to.equal(4);
 
-    expect(onHighlightedAxisChange.getCall(0).firstArg).to.deep.equal([
+    expect(onHighlightedAxisChange.mock.calls[0][0]).to.deep.equal([
       { axisId: 'x-axis', dataIndex: 1 },
       { axisId: 'y-axis', dataIndex: 1 },
     ]);
 
-    expect(onHighlightedAxisChange.getCall(1).firstArg).to.deep.equal([
+    expect(onHighlightedAxisChange.mock.calls[1][0]).to.deep.equal([
       { axisId: 'x-axis', dataIndex: 0 },
       { axisId: 'y-axis', dataIndex: 1 },
     ]);
 
-    expect(onHighlightedAxisChange.getCall(2).firstArg).to.deep.equal([
+    expect(onHighlightedAxisChange.mock.calls[2][0]).to.deep.equal([
       { axisId: 'x-axis', dataIndex: 0 },
       { axisId: 'y-axis', dataIndex: 0 },
     ]);
 
-    expect(onHighlightedAxisChange.getCall(3).firstArg).to.deep.equal([]);
+    expect(onHighlightedAxisChange.mock.calls[3][0]).to.deep.equal([]);
   });
 
   it('should call onHighlightedAxisChange when axis got modified', async () => {
-    const onHighlightedAxisChange = spy();
+    const onHighlightedAxisChange = vi.fn();
     const { user, setProps } = render(
       <ChartDataProvider<'bar', [UseChartInteractionSignature, UseChartCartesianAxisSignature]>
         plugins={[useChartInteraction, useChartCartesianAxis]}
@@ -90,8 +90,8 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
 
     await user.pointer([{ keys: '[TouchA>]', target: svg, coords: { clientX: 45, clientY: 60 } }]);
 
-    await waitFor(() => expect(onHighlightedAxisChange.callCount).to.equal(1));
-    expect(onHighlightedAxisChange.lastCall.firstArg).to.deep.equal([
+    await waitFor(() => expect(onHighlightedAxisChange.mock.calls.length).to.equal(1));
+    expect(onHighlightedAxisChange.mock.calls[onHighlightedAxisChange.mock.calls.length - 1][0]).to.deep.equal([
       { axisId: 'x-axis', dataIndex: 0 },
     ]);
 
@@ -99,14 +99,14 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
       xAxis: [{ id: 'x-axis', scaleType: 'band', data: ['A', 'B', 'C'], position: 'none' }],
     });
 
-    expect(onHighlightedAxisChange.callCount).to.equal(2);
-    expect(onHighlightedAxisChange.lastCall.firstArg).to.deep.equal([
+    expect(onHighlightedAxisChange.mock.calls.length).to.equal(2);
+    expect(onHighlightedAxisChange.mock.calls[onHighlightedAxisChange.mock.calls.length - 1][0]).to.deep.equal([
       { axisId: 'x-axis', dataIndex: 1 },
     ]);
   });
 
   it('should not call onHighlightedAxisChange when axis got modified but highlighted item stay the same', async () => {
-    const onHighlightedAxisChange = spy();
+    const onHighlightedAxisChange = vi.fn();
     const { user, setProps } = render(
       <ChartDataProvider<'bar', [UseChartInteractionSignature, UseChartCartesianAxisSignature]>
         plugins={[useChartInteraction, useChartCartesianAxis]}
@@ -125,8 +125,8 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
 
     await user.pointer([{ keys: '[TouchA>]', target: svg, coords: { clientX: 10, clientY: 60 } }]);
 
-    await waitFor(() => expect(onHighlightedAxisChange.callCount).to.equal(1));
-    expect(onHighlightedAxisChange.lastCall.firstArg).to.deep.equal([
+    await waitFor(() => expect(onHighlightedAxisChange.mock.calls.length).to.equal(1));
+    expect(onHighlightedAxisChange.mock.calls[onHighlightedAxisChange.mock.calls.length - 1][0]).to.deep.equal([
       { axisId: 'x-axis', dataIndex: 0 },
     ]);
 
@@ -134,11 +134,11 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
       xAxis: [{ id: 'x-axis', scaleType: 'band', data: ['A', 'B', 'C'], position: 'none' }],
     });
 
-    expect(onHighlightedAxisChange.callCount).to.equal(1);
+    expect(onHighlightedAxisChange.mock.calls.length).to.equal(1);
   });
 
   it('should call onHighlightedAxisChange when highlighted axis got removed', async () => {
-    const onHighlightedAxisChange = spy();
+    const onHighlightedAxisChange = vi.fn();
     const { user, setProps } = render(
       <ChartDataProvider<'bar', [UseChartInteractionSignature, UseChartCartesianAxisSignature]>
         plugins={[useChartInteraction, useChartCartesianAxis]}
@@ -157,8 +157,8 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
 
     await user.pointer([{ keys: '[TouchA>]', target: svg, coords: { clientX: 10, clientY: 60 } }]);
 
-    await waitFor(() => expect(onHighlightedAxisChange.callCount).to.equal(1));
-    expect(onHighlightedAxisChange.lastCall.firstArg).to.deep.equal([
+    await waitFor(() => expect(onHighlightedAxisChange.mock.calls.length).to.equal(1));
+    expect(onHighlightedAxisChange.mock.calls[onHighlightedAxisChange.mock.calls.length - 1][0]).to.deep.equal([
       { axisId: 'x-axis', dataIndex: 0 },
     ]);
 
@@ -166,8 +166,8 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
       xAxis: [{ id: 'new-axis', scaleType: 'band', data: ['A', 'B'], position: 'none' }],
     });
 
-    expect(onHighlightedAxisChange.callCount).to.equal(2);
-    expect(onHighlightedAxisChange.lastCall.firstArg).to.deep.equal([
+    expect(onHighlightedAxisChange.mock.calls.length).to.equal(2);
+    expect(onHighlightedAxisChange.mock.calls[onHighlightedAxisChange.mock.calls.length - 1][0]).to.deep.equal([
       { axisId: 'new-axis', dataIndex: 0 },
     ]);
   });
