@@ -38,5 +38,7 @@ export function processEvent(
     extractedFromId: model.extractedFromId,
     modelInBuiltInFormat: model,
     color: model.color,
+    draggable: model.draggable,
+    resizable: model.resizable,
   };
 }

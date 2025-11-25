@@ -7,6 +7,7 @@ import {
   SchedulerEvent,
   SchedulerEventId,
   SchedulerEventOccurrence,
+  SchedulerEventSide,
 } from '@mui/x-scheduler-headless/models/event';
 import { processEvent } from '@mui/x-scheduler-headless/process-event';
 import { processDate } from '@mui/x-scheduler-headless/process-date';
@@ -116,13 +117,19 @@ export class EventBuilder {
   withTimezone(timezone: TemporalTimezone) {
     this.renderTimezone = timezone;
 
-    if (this.event.start) {
-      this.event.start = this.adapter.setTimezone(this.event.start, timezone);
-    }
-    if (this.event.end) {
-      this.event.end = this.adapter.setTimezone(this.event.end, timezone);
-    }
+    this.event.start = this.adapter.setTimezone(this.event.start, timezone);
+    this.event.end = this.adapter.setTimezone(this.event.end, timezone);
 
+    return this;
+  }
+
+  resizable(resizable: boolean | SchedulerEventSide) {
+    this.event.resizable = resizable;
+    return this;
+  }
+
+  draggable(draggable: boolean) {
+    this.event.draggable = draggable;
     return this;
   }
 

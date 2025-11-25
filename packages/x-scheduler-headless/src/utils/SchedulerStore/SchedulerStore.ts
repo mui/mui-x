@@ -207,8 +207,29 @@ export class SchedulerStore<
     this.parameters = parameters;
   };
 
+  /**
+   * Returns a cleanup function that need to be called when the store is destroyed.
+   */
   public disposeEffect = () => {
     return this.timeoutManager.clearAll;
+  };
+
+  /**
+   * Registers an effect to be run when the value returned by the selector changes.
+   */
+  public registerStoreEffect = <Value>(
+    selector: (state: State) => Value,
+    effect: (previous: Value, next: Value) => void,
+  ) => {
+    let previousValue = selector(this.state);
+
+    return this.subscribe((state) => {
+      const nextValue = selector(state);
+      if (nextValue !== previousValue) {
+        effect(previousValue, nextValue);
+        previousValue = nextValue;
+      }
+    });
   };
 
   protected setVisibleDate = (visibleDate: SchedulerValidDate, event: React.UIEvent) => {

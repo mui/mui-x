@@ -11,7 +11,7 @@ import {
   defaultVisibleDate,
   resources,
 } from '../datasets/personal-agenda';
-import classes from './ExternalDrag.module.css';
+import classes from './EventCalendarExternalDragAndDrop.module.css';
 
 const isValidDropTarget = buildIsValidDropTarget([
   'CalendarGridTimeEvent',
@@ -46,7 +46,7 @@ const initialExternalEvents: SchedulerOccurrencePlaceholderExternalDragData[] = 
   },
 ];
 
-export default function ExternalDragAndDrop() {
+export default function EventCalendarExternalDragAndDrop() {
   const [events, setEvents] = React.useState(initialEvents);
   const [placeholder, setPlaceholder] =
     React.useState<SchedulerOccurrencePlaceholderExternalDragData | null>(null);
