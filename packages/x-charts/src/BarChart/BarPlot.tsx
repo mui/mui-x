@@ -16,6 +16,7 @@ import { useUtilityClasses } from './barClasses';
 import type { BarItem, BarLabelContext } from './BarLabel';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { IndividualBarPlot } from './IndividualBarPlot';
+import { BatchBarPlot } from './BatchBarPlot';
 
 export interface BarPlotSlots extends BarElementSlots, BarLabelSlots {}
 
@@ -95,7 +96,7 @@ function BarPlot(props: BarPlotProps) {
   const withoutBorderRadius = !borderRadius || borderRadius <= 0;
   const classes = useUtilityClasses();
 
-  const BarElementPlot = IndividualBarPlot;
+  const BarElementPlot = BatchBarPlot;
 
   return (
     <BarPlotRoot className={classes.root}>
