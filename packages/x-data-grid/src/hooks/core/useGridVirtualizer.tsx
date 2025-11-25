@@ -144,6 +144,7 @@ export function useGridVirtualizer() {
     topPinnedHeight: headersTotalHeight,
     bottomPinnedHeight: 0,
     autoHeight,
+    minimalContentHeight,
     scrollbarSize: rootProps.scrollbarSize,
   };
 
@@ -218,7 +219,6 @@ export function useGridVirtualizer() {
     disableVerticalScroll:
       overlayState.overlayType === 'noColumnsOverlay' ||
       overlayState.loadingOverlayVariant === 'skeleton',
-    minimalContentHeight,
     getRowHeight: React.useMemo(() => {
       if (!getRowHeight) {
         return undefined;

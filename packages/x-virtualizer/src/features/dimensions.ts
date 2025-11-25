@@ -22,6 +22,7 @@ export type DimensionsParams = {
   topPinnedHeight?: number;
   bottomPinnedHeight?: number;
   autoHeight?: boolean;
+  minimalContentHeight?: number | string;
   scrollbarSize?: number;
 };
 
@@ -92,7 +93,7 @@ function initializeState(params: ParamsWithDefaults): Dimensions.State {
     ...EMPTY_DIMENSIONS,
     ...params.dimensions,
     autoHeight: params.dimensions.autoHeight,
-    minimalContentHeight: params.minimalContentHeight,
+    minimalContentHeight: params.dimensions.minimalContentHeight,
   };
 
   const { rowCount } = params;
@@ -247,7 +248,7 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
         topContainerHeight,
         bottomContainerHeight,
         autoHeight: params.dimensions.autoHeight,
-        minimalContentHeight: params.minimalContentHeight,
+        minimalContentHeight: params.dimensions.minimalContentHeight,
       };
 
       const prevDimensions = store.state.dimensions;
@@ -264,7 +265,7 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
       layout.refs.container,
       params.dimensions.scrollbarSize,
       params.dimensions.autoHeight,
-      params.minimalContentHeight,
+      params.dimensions.minimalContentHeight,
       params.disableHorizontalScroll,
       params.disableVerticalScroll,
       onResize,
@@ -289,15 +290,13 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
 
   useLayoutEffect(() => {
     store.update({
-      dimensions: { ...store.state.dimensions, autoHeight: params.dimensions.autoHeight },
+      dimensions: {
+        ...store.state.dimensions,
+        autoHeight: params.dimensions.autoHeight,
+        minimalContentHeight: params.dimensions.minimalContentHeight,
+      },
     });
-  }, [store, params.dimensions.autoHeight]);
-
-  useLayoutEffect(() => {
-    store.update({
-      dimensions: { ...store.state.dimensions, minimalContentHeight: params.minimalContentHeight },
-    });
-  }, [store, params.minimalContentHeight]);
+  }, [store, params.dimensions.autoHeight, params.dimensions.minimalContentHeight]);
 
   const rowsMeta = useRowsMeta(store, params, updateDimensions);
 

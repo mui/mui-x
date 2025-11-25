@@ -57,7 +57,6 @@ export type VirtualizerParams<L extends Layout = Layout> = {
 
   disableHorizontalScroll?: boolean;
   disableVerticalScroll?: boolean;
-  minimalContentHeight?: number | string;
   getRowHeight?: (row: RowEntry) => number | null | undefined | 'auto';
   /**
    * Function that returns the estimated height for a row.
