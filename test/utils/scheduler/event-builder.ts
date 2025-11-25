@@ -114,6 +114,10 @@ export class EventBuilder {
     return this;
   }
 
+  /** Set the rendering timezone for date operations.
+   * Important: it does NOT convert existing dates,
+   * it only affects future date setters, so use it early in the chain.
+   **/
   withTimezone(timezone: TemporalTimezone) {
     this.renderTimezone = timezone;
     return this;
