@@ -6,6 +6,7 @@ import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
 import { useEventResizeHandler } from '../../utils/useEventResizeHandler';
 import { useCalendarGridTimeEventContext } from '../time-event/CalendarGridTimeEventContext';
 import type { CalendarGridTimeEvent } from '../time-event/CalendarGridTimeEvent';
+import { SchedulerEventSide } from '../../models';
 
 export const CalendarGridTimeEventResizeHandler = React.forwardRef(
   function CalendarGridTimeEventResizeHandler(
@@ -60,6 +61,6 @@ export namespace CalendarGridTimeEventResizeHandler {
 
   export interface DragData extends CalendarGridTimeEvent.SharedDragData {
     source: 'CalendarGridTimeEventResizeHandler';
-    side: 'start' | 'end';
+    side: SchedulerEventSide;
   }
 }

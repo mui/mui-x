@@ -18,5 +18,7 @@ export function processEvent(model: SchedulerEvent, adapter: Adapter): Scheduler
     extractedFromId: model.extractedFromId,
     modelInBuiltInFormat: model,
     color: model.color,
+    draggable: model.draggable,
+    resizable: model.resizable,
   };
 }
