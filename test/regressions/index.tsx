@@ -18,13 +18,19 @@ Globals.assign({
 declare global {
   interface Window {
     muiFixture: {
+      allTests: { url: string }[];
       isReady: () => boolean;
       navigate: (test: string) => void;
     };
   }
 }
 
+const allTests = Object.values(testsBySuite).flatMap((suite) =>
+  suite.map((test) => ({ url: computePath(test) })),
+);
+
 window.muiFixture = {
+  allTests,
   isReady: () => false,
   navigate: () => {
     throw new Error(`muiFixture.navigate is not ready`);

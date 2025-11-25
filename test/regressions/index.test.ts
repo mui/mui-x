@@ -60,19 +60,17 @@ async function main() {
     });
   });
 
-  let routes = await page.$$eval('#tests a', (links) => {
-    return links.map((link) => {
-      return (link as HTMLAnchorElement).href;
-    });
-  });
-  routes = routes.map((route) => route.replace(baseUrl, ''));
-
   // prepare screenshots
   await emptyDir(screenshotDir);
 
+  await page.waitForFunction(() => window.muiFixture.isReady());
+
+  const routes = await page.evaluate(() => {
+    return window.muiFixture.allTests;
+  });
+
   async function navigateToTest(route: string) {
     // Use client-side routing which is much faster than full page navigation via page.goto().
-    await page.waitForFunction(() => window.muiFixture.isReady());
     return page.evaluate((_route) => {
       window.muiFixture.navigate(`${_route}#no-dev`);
     }, route);
@@ -92,14 +90,14 @@ async function main() {
       expect(msg).to.equal(undefined);
     });
 
-    const getTimeout = (route: string) => {
+    const getTimeout = (route: { url: string }) => {
       // With the playwright inspector we might want to call `page.pause` which would lead to a timeout.
       if (process.env.PWDEBUG) {
         return 0;
       }
 
       // Some routes are more complex and take longer to render.
-      if (route.includes('DataGridProDemo')) {
+      if (route.url.includes('DataGridProDemo')) {
         return 6000;
       }
 
@@ -108,12 +106,12 @@ async function main() {
 
     routes.forEach((route) => {
       it(
-        `creates screenshots of ${route}`,
+        `creates screenshots of ${route.url}`,
         {
           timeout: getTimeout(route),
         },
         async () => {
-          if (/^\/docs-charts-tooltip\/Interaction/.test(route)) {
+          if (/^\/docs-charts-tooltip\/Interaction/.test(route.url)) {
             // Ignore tooltip interaction demo screenshot.
             // There is a dedicated test for it in this file, and this is why we don't exclude it with the glob pattern in test/regressions/testsBySuite.ts
             return;
@@ -127,19 +125,19 @@ async function main() {
           await page.emulateMedia({ reducedMotion: 'reduce' });
 
           try {
-            await navigateToTest(route);
+            await navigateToTest(route.url);
           } catch (error) {
             // When one demo crashes, the page becomes empty and there are no links to demos,
             // so navigation to the next demo throws an error.
             // Reloading the page fixes this.
             await page.reload();
-            await navigateToTest(route);
+            await navigateToTest(route.url);
           }
 
-          const screenshotPath = path.resolve(screenshotDir, `.${route}.png`);
+          const screenshotPath = path.resolve(screenshotDir, `.${route.url}.png`);
 
           const testcase = await page.waitForSelector(
-            `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
+            `[data-testid="testcase"][data-testpath="${route.url}"]:not([aria-busy="true"])`,
           );
 
           const images = await page.evaluate(() => document.querySelectorAll('img'));
@@ -158,12 +156,12 @@ async function main() {
             });
           }
 
-          if (/^\/docs-charts-.*/.test(route)) {
+          if (/^\/docs-charts-.*/.test(route.url)) {
             // Run one tick of the clock to get the final animation state
             await sleep(10);
           }
 
-          if (timeSensitiveSuites.some((suite) => route.includes(suite))) {
+          if (timeSensitiveSuites.some((suite) => route.url.includes(suite))) {
             await sleep(100);
           }
 
@@ -174,7 +172,7 @@ async function main() {
         },
       );
 
-      it(`should have no errors rendering ${route}`, () => {
+      it(`should have no errors rendering ${route.url}`, () => {
         const msg = errorConsole;
         errorConsole = undefined;
         if (isConsoleWarningIgnored(msg)) {
