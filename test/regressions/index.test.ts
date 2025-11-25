@@ -53,7 +53,7 @@ async function main() {
   async function navigateToTest(route: string) {
     // Use client-side routing which is much faster than full page navigation via page.goto().
     return page.evaluate((_route) => {
-      window.muiFixture.navigate(`${_route}#no-dev`);
+      window.muiFixture.navigate(_route);
     }, route);
   }
 

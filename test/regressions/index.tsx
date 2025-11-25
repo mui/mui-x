@@ -142,10 +142,7 @@ function computeIsDev(hash: string) {
   if (hash === '#dev') {
     return true;
   }
-  if (hash === '#no-dev') {
-    return false;
-  }
-  return process.env.NODE_ENV === 'development';
+  return false;
 }
 
 function computePath(test: Test) {
