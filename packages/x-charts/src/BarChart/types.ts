@@ -18,12 +18,23 @@ export interface ProcessedBarSeriesData {
   yOrigin: number;
 }
 
+export const BorderRadiusSide = {
+  top: 'top',
+  bottom: 'bottom',
+  left: 'left',
+  right: 'right',
+} as const;
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export type BorderRadiusSide = (typeof BorderRadiusSide)[keyof typeof BorderRadiusSide];
+
 export interface ProcessedBarData extends AnimationData {
   seriesId: SeriesId;
   dataIndex: number;
   color: string;
   value: number | null;
   maskId: string;
+  borderRadiusSide?: BorderRadiusSide;
 }
 
 export interface MaskData extends AnimationData {

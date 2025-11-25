@@ -34,6 +34,8 @@ export function useBarPlotData(
 
     const yMin = drawingArea.top;
     const yMax = drawingArea.top + drawingArea.height;
+    const lastNegativePerIndex = new Map<number, ProcessedBarData>();
+    const lastPositivePerIndex = new Map<number, ProcessedBarData>();
 
     return seriesIds.map((seriesId) => {
       const xAxisId = series[seriesId].xAxisId ?? defaultXAxisId;
@@ -83,7 +85,7 @@ export function useBarPlotData(
 
         const stackId = series[seriesId].stack;
 
-        const result = {
+        const result: ProcessedBarData = {
           seriesId,
           dataIndex,
           ...barDimensions,
@@ -99,6 +101,25 @@ export function useBarPlotData(
           result.y + result.height < yMin
         ) {
           continue;
+        }
+
+        const lastNegative = lastNegativePerIndex.get(dataIndex);
+        const lastPositive = lastPositivePerIndex.get(dataIndex);
+        const sign = (reverse ? -1 : 1) * Math.sign(result.value ?? 0);
+        if (sign > 0) {
+          if (lastPositive) {
+            delete lastPositive.borderRadiusSide;
+          }
+
+          result.borderRadiusSide = verticalLayout ? 'top' : 'right';
+          lastPositivePerIndex.set(dataIndex, result);
+        } else if (sign < 0) {
+          if (lastNegative) {
+            delete lastNegative.borderRadiusSide;
+          }
+
+          result.borderRadiusSide = verticalLayout ? 'bottom' : 'left';
+          lastNegativePerIndex.set(dataIndex, result);
         }
 
         if (!masks[result.maskId]) {
