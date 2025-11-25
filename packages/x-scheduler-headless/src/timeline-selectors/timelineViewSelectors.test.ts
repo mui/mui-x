@@ -2,25 +2,25 @@ import { getTimelineStateFromParameters } from 'test/utils/scheduler';
 import { timelineViewSelectors } from './timelineViewSelectors';
 
 describe('timelineViewSelectors', () => {
-  describe('view', () => {
-    it('should return the view from state', () => {
-      const state = getTimelineStateFromParameters({
-        events: [],
-        view: 'months',
-      });
-      const view = timelineViewSelectors.view(state);
-      expect(view).toBe('months');
-    });
-  });
-
-  // describe('views', () => {
-  //   it('should return the views from state', () => {
+  // describe('view', () => {
+  //   it('should return the view from state', () => {
   //     const state = getTimelineStateFromParameters({
   //       events: [],
-  //       views: ['days', 'weeks', 'months'],
+  //       view: 'months',
   //     });
-  //     const views = timelineViewSelectors.views(state);
-  //     expect(views).toEqual(['days', 'weeks', 'months']);
+  //     const view = timelineViewSelectors.view(state);
+  //     expect(view).toBe('months');
   //   });
   // });
+
+  describe('views', () => {
+    it('should return the views from state', () => {
+      const state = getTimelineStateFromParameters({
+        events: [],
+        views: ['days', 'weeks', 'months'],
+      });
+      const views = timelineViewSelectors.views(state);
+      expect(views).toEqual(['days', 'weeks', 'months']);
+    });
+  });
 });
