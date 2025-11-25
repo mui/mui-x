@@ -100,6 +100,9 @@ async function main() {
 
           await navigateToTest(route.url);
 
+          // Move cursor offscreen to not trigger unwanted hover effects.
+          await page.mouse.move(0, 0);
+
           const screenshotPath = path.resolve(screenshotDir, `.${route.url}.png`);
 
           const testcase = await page.waitForSelector(
@@ -374,9 +377,6 @@ async function newTestPage(browser: Browser): Promise<Page> {
 
   // Skip animations
   await page.emulateMedia({ reducedMotion: 'reduce' });
-
-  // Move cursor offscreen to not trigger unwanted hover effects.
-  await page.mouse.move(10000, 10000);
 
   // Simulate portrait mode for date pickers.
   // See `usePickerOrientation`.
