@@ -2,8 +2,12 @@ import { warnOnce } from '@mui/x-internals/warning';
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import { ChartSeriesDefaultized, ChartsSeriesConfig } from '../models/seriesType/config';
 import { SeriesId } from '../models/seriesType/common';
-import { selectorChartSeriesProcessed } from './plugins/corePlugins/useChartSeries/useChartSeries.selectors';
+import {
+  selectorChartSeriesProcessed,
+  selectorChartSeriesWithPositions,
+} from './plugins/corePlugins/useChartSeries/useChartSeries.selectors';
 import type { ProcessedSeries } from './plugins/corePlugins/useChartSeries';
+import { SeriesWithPositions } from './plugins/corePlugins/useChartSeries/useChartSeries.types';
 import { useStore } from './store/useStore';
 import { useSelector } from './store/useSelector';
 
@@ -11,6 +15,14 @@ export const selectorAllSeriesOfType = createSelector(
   selectorChartSeriesProcessed,
   <T extends keyof ChartsSeriesConfig>(processedSeries: ProcessedSeries, seriesType: T) =>
     processedSeries[seriesType],
+);
+
+export const selectorAllSeriesOfTypeWithPositions = createSelector(
+  selectorChartSeriesWithPositions,
+  <T extends keyof ChartsSeriesConfig>(
+    seriesWithPositions: SeriesWithPositions,
+    seriesType: T,
+  ): SeriesWithPositions[T] => seriesWithPositions[seriesType],
 );
 
 export const selectorSeriesOfType = createSelectorMemoized(

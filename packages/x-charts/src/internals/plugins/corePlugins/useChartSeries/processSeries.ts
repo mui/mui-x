@@ -1,8 +1,13 @@
+import { ChartDrawingArea } from '../../../../hooks/useDrawingArea';
 import { SeriesId } from '../../../../models/seriesType/common';
 import { AllSeriesType } from '../../../../models/seriesType';
 import { ChartSeriesType, DatasetType } from '../../../../models/seriesType/config';
 import { ChartSeriesConfig } from '../../models/seriesConfig';
-import { DefaultizedSeriesGroups, ProcessedSeries } from './useChartSeries.types';
+import {
+  DefaultizedSeriesGroups,
+  ProcessedSeries,
+  SeriesWithPositions,
+} from './useChartSeries.types';
 
 /**
  * This method groups series by type and adds defaultized values such as the ids and colors.
@@ -72,4 +77,38 @@ export const applySeriesProcessors = <TSeriesType extends ChartSeriesType>(
   });
 
   return processedSeries;
+};
+
+/**
+ * Applies series processors with drawing area to series if defined.
+ * @param processedSeries The processed series groups
+ * @param seriesConfig The series configuration
+ * @param drawingArea The drawing area
+ * @returns Processed series with all transformations applied
+ */
+export const applySeriesPositions = <TSeriesType extends ChartSeriesType>(
+  processedSeries: ProcessedSeries<TSeriesType>,
+  seriesConfig: ChartSeriesConfig<TSeriesType>,
+  drawingArea: ChartDrawingArea,
+): SeriesWithPositions<TSeriesType> => {
+  let processingDetected = false;
+  const modifiedProcessedSeries: ProcessedSeries<TSeriesType> = {};
+
+  // Apply processors on series type per group
+  (Object.keys(processedSeries) as TSeriesType[]).forEach((type) => {
+    const processor = seriesConfig[type]?.seriesPositions;
+    if (processor !== undefined) {
+      const newValue = processor(processedSeries[type] as any, drawingArea);
+
+      if (newValue && newValue !== processedSeries[type]) {
+        processingDetected = true;
+        (modifiedProcessedSeries as any)[type] = newValue;
+      }
+    }
+  });
+
+  if (!processingDetected) {
+    return processedSeries as ProcessedSeries<TSeriesType>;
+  }
+  return { ...processedSeries, ...modifiedProcessedSeries };
 };

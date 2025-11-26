@@ -13,6 +13,7 @@ import {
   HeatmapValueType,
 } from '../models/seriesType/heatmap';
 import {
+  SankeyLayout,
   SankeySeriesType,
   type DefaultizedSankeySeriesType,
   type SankeyItemIdentifier,
@@ -24,6 +25,7 @@ declare module '@mui/x-charts/internals' {
     heatmap: {
       seriesInput: DefaultizedProps<HeatmapSeriesType, 'id'>;
       series: DefaultizedHeatmapSeriesType;
+      seriesComputedPosition: {};
       seriesProp: HeatmapSeriesType;
       itemIdentifier: HeatmapItemIdentifier;
       itemIdentifierWithData: HeatmapItemIdentifier;
@@ -35,6 +37,7 @@ declare module '@mui/x-charts/internals' {
         data: MakeRequired<FunnelValueType, 'color'>[];
       };
       series: DefaultizedFunnelSeriesType;
+      seriesComputedPosition: {};
       seriesProp: FunnelSeriesType;
       itemIdentifier: FunnelItemIdentifier;
       itemIdentifierWithData: FunnelItemIdentifier;
@@ -44,6 +47,9 @@ declare module '@mui/x-charts/internals' {
     sankey: {
       seriesInput: DefaultizedSankeySeriesType;
       series: DefaultizedSankeySeriesType;
+      seriesComputedPosition: {
+        sankeyLayout: SankeyLayout;
+      };
       seriesProp: SankeySeriesType;
       itemIdentifier: SankeyItemIdentifier;
       itemIdentifierWithData: SankeyItemIdentifierWithData;

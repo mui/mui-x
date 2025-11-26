@@ -29,6 +29,11 @@ export interface ChartsSeriesConfig {
      */
     series: DefaultizedBarSeriesType;
     /**
+     * Additional data computed from the series plus drawing area.
+     * Useful for special charts like sankey where the series data is not sufficient to draw the series.
+     * */
+    seriesComputedPosition: {};
+    /**
      * Series typing such that the one user need to provide
      */
     seriesProp: BarSeriesType;
@@ -42,6 +47,7 @@ export interface ChartsSeriesConfig {
     seriesInput: DefaultizedProps<LineSeriesType, 'id'> &
       MakeRequired<SeriesColor<number | null>, 'color'>;
     series: DefaultizedLineSeriesType;
+    seriesComputedPosition: {};
     seriesProp: LineSeriesType;
     itemIdentifier: LineItemIdentifier;
     itemIdentifierWithData: LineItemIdentifier;
@@ -53,6 +59,7 @@ export interface ChartsSeriesConfig {
     seriesInput: DefaultizedProps<ScatterSeriesType, 'id'> &
       MakeRequired<SeriesColor<ScatterValueType | null>, 'color'>;
     series: DefaultizedScatterSeriesType;
+    seriesComputedPosition: {};
     seriesProp: ScatterSeriesType;
     valueType: ScatterValueType;
     itemIdentifier: ScatterItemIdentifier;
@@ -66,6 +73,7 @@ export interface ChartsSeriesConfig {
       >;
     };
     series: DefaultizedPieSeriesType;
+    seriesComputedPosition: {};
     seriesProp: PieSeriesType<MakeOptional<PieValueType, 'id'>>;
     itemIdentifier: PieItemIdentifier;
     itemIdentifierWithData: PieItemIdentifier;
@@ -75,6 +83,7 @@ export interface ChartsSeriesConfig {
     seriesInput: DefaultizedProps<RadarSeriesType, 'id'> &
       MakeRequired<SeriesColor<number>, 'color'>;
     series: DefaultizedRadarSeriesType;
+    seriesComputedPosition: {};
     seriesProp: RadarSeriesType;
     itemIdentifier: RadarItemIdentifier;
     itemIdentifierWithData: RadarItemIdentifier;
@@ -115,6 +124,13 @@ export type ChartSeriesDefaultized<T extends ChartSeriesType> = ChartsSeriesConf
 }
   ? ChartsSeriesConfig[T]['series'] & { stackedData: [number, number][] }
   : ChartsSeriesConfig[T]['series'];
+
+export type ChartSeriesWithPosition<T extends ChartSeriesType> = ChartsSeriesConfig[T] extends {
+  canBeStacked: true;
+}
+  ? ChartsSeriesConfig[T]['series'] &
+      ChartsSeriesConfig[T]['seriesComputedPosition'] & { stackedData: [number, number][] }
+  : ChartsSeriesConfig[T]['series'] & ChartsSeriesConfig[T]['seriesComputedPosition'];
 
 export type ChartItemIdentifier<T extends ChartSeriesType> =
   ChartsSeriesConfig[T]['itemIdentifier'];

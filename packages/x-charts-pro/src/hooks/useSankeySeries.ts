@@ -3,12 +3,17 @@ import {
   useSeriesOfType,
   useAllSeriesOfType,
   ProcessedSeries,
+  SeriesWithPositions,
   SeriesId,
   ChartSeriesDefaultized,
+  useSelector,
+  selectorAllSeriesOfTypeWithPositions,
+  useStore,
 } from '@mui/x-charts/internals';
 
 export type UseSankeySeriesReturnValue = ChartSeriesDefaultized<'sankey'>;
 export type UseSankeySeriesContextReturnValue = ProcessedSeries['sankey'];
+export type UseSankeySeriesWithPositionsContextReturnValue = SeriesWithPositions['sankey'];
 
 /**
  * Get access to the internal state of sankey series.
@@ -45,4 +50,20 @@ export function useSankeySeries(seriesIds?: SeriesId | SeriesId[]) {
  */
 export function useSankeySeriesContext(): UseSankeySeriesContextReturnValue {
   return useAllSeriesOfType('sankey');
+}
+
+/**
+ * Get access to the internal state of sankey series.
+ * The returned object contains:
+ * - series: a mapping from ids to series attributes.
+ * - seriesOrder: the array of series ids.
+ * @returns the sankey series
+ */
+export function useSankeySeriesWithPositionsContext(): UseSankeySeriesWithPositionsContextReturnValue {
+  const store = useStore();
+  return useSelector(
+    store,
+    selectorAllSeriesOfTypeWithPositions,
+    'sankey',
+  ) as SeriesWithPositions['sankey'];
 }
