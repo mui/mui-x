@@ -9,6 +9,6 @@ export function processDate(date: SchedulerValidDate, adapter: Adapter): Schedul
   return {
     value: date,
     key: getDateKey(date, adapter),
-    timestamp: adapter.toJsDate(date).getTime(),
+    timestamp: adapter.getTime(date),
   };
 }

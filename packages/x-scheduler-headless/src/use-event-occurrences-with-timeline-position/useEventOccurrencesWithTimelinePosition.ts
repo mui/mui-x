@@ -89,7 +89,6 @@ function buildOccurrenceConflicts(
   // Group occurrences in non-overlapping blocks to reduce the number of comparisons when looking for conflicts.
   // Computes the properties needed for each occurrence.
   for (const occurrence of occurrences) {
-    // TODO: Avoid JS Date conversion
     const startTimestamp = occurrence.start.timestamp;
     const endTimestamp = occurrence.end.timestamp;
     const occurrenceDurationMs = endTimestamp - startTimestamp;
