@@ -287,7 +287,10 @@ export class SchedulerStore<
    */
   public goToToday = (event: React.UIEvent) => {
     const { adapter } = this.state;
-    this.setVisibleDate(getStartOfTodayInRenderTimezone(adapter, this.state.timezone), event);
+    this.setVisibleDate(
+      getStartOfTodayInRenderTimezone(adapter, this.state.timezone ?? 'default'),
+      event,
+    );
   };
 
   /**
