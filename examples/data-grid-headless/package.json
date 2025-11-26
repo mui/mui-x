@@ -1,0 +1,25 @@
+{
+  "name": "data-grid-headless-example",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@mui/x-data-grid-headless": "workspace:@mui/x-data-grid-headless@*",
+    "@mui/x-data-grid-headless-pro": "workspace:@mui/x-data-grid-headless-pro@*",
+    "@mui/x-data-grid-headless-premium": "workspace:@mui/x-data-grid-headless-premium@*",
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  },
+  "devDependencies": {
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
+    "typescript": "^5.9.3",
+    "vite": "catalog:"
+  }
+}

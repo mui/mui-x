@@ -5,7 +5,6 @@ import { useId } from '@base-ui-components/utils/useId';
 import { Timeline } from '@mui/x-scheduler-headless/timeline';
 import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useTimelineStoreContext } from '@mui/x-scheduler-headless/use-timeline-store-context';
-import { timelineEventSelectors } from '@mui/x-scheduler-headless/timeline-selectors';
 import { getColorClassName } from '../../../../internals/utils/color-utils';
 import { EventDragPreview } from '../../../../internals/components/event-drag-preview';
 import { TimelineEventProps } from './TimelineEvent.types';
@@ -17,17 +16,22 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
 ) {
   const { occurrence, ariaLabelledBy, className, variant, id: idProp, style, ...other } = props;
 
+  // Context hooks
   const store = useTimelineStoreContext();
 
-  const id = useId(idProp);
-  const isDraggable = useStore(store, timelineEventSelectors.isDraggable);
-  const isResizable = useStore(
+  // Selector hooks
+  const isDraggable = useStore(store, schedulerEventSelectors.isDraggable, occurrence.id);
+  const isStartResizable = useStore(
     store,
-    timelineEventSelectors.isResizable,
+    schedulerEventSelectors.isResizable,
     occurrence.id,
-    'timeline',
+    'start',
   );
+  const isEndResizable = useStore(store, schedulerEventSelectors.isResizable, occurrence.id, 'end');
   const color = useStore(store, schedulerEventSelectors.color, occurrence.id);
+
+  // Feature hooks
+  const id = useId(idProp);
 
   const sharedProps = {
     id,
@@ -59,11 +63,11 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       {...sharedProps}
     >
-      {isResizable && (
+      {isStartResizable && (
         <Timeline.EventResizeHandler side="start" className="TimelineEventResizeHandler" />
       )}
       {occurrence.title}
-      {isResizable && (
+      {isEndResizable && (
         <Timeline.EventResizeHandler side="end" className="TimelineEventResizeHandler" />
       )}
     </Timeline.Event>

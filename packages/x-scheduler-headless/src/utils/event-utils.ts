@@ -5,7 +5,7 @@ import {
   SchedulerEventOccurrence,
 } from '../models';
 import { Adapter } from '../use-adapter/useAdapter.types';
-import { getRecurringEventOccurrencesForVisibleDays } from './recurring-event-utils';
+import { getRecurringEventOccurrencesForVisibleDays } from './recurring-events';
 
 /**
  *  Returns the key of the days an event occurrence should be visible on.
@@ -15,15 +15,18 @@ export function getDaysTheOccurrenceIsVisibleOn(
   days: SchedulerProcessedDate[],
   adapter: Adapter,
 ) {
+  const eventStartStartOfDay = adapter.startOfDay(event.start.value);
+  const eventEndEndOfDay = adapter.endOfDay(event.end.value);
+
   const dayKeys: string[] = [];
   for (const day of days) {
     // If the day is before the event start, skip to the next day
-    if (adapter.isBeforeDay(day.value, event.start.value)) {
+    if (adapter.isBefore(day.value, eventStartStartOfDay)) {
       continue;
     }
 
     // If the day is after the event end, break as the days are sorted by start date
-    if (adapter.isAfterDay(day.value, event.end.value)) {
+    if (adapter.isAfter(day.value, eventEndEndOfDay)) {
       break;
     }
     dayKeys.push(day.key);
@@ -84,23 +87,10 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
     occurrences.push({ ...event, key: String(event.id) });
   }
 
-  // STEP 3: Sort by the actual start date of each occurrence
-  // If two events have the same start date, put the longest one first
-  // We sort here so that events are processed in the correct order
-  return (
-    occurrences
-      // TODO: Avoid JS Date conversion
-      .map((occurrence) => ({
-        occurrence,
-        start: adapter.toJsDate(occurrence.start.value).getTime(),
-        end: adapter.toJsDate(occurrence.end.value).getTime(),
-      }))
-      .sort((a, b) => a.start - b.start || b.end - a.end)
-      .map((item) => item.occurrence)
-  );
+  return occurrences;
 }
 
-interface GetOccurrencesFromEventsParameters {
+export interface GetOccurrencesFromEventsParameters {
   adapter: Adapter;
   start: SchedulerValidDate;
   end: SchedulerValidDate;

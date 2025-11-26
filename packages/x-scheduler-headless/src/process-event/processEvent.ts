@@ -1,7 +1,7 @@
 import { SchedulerEvent, SchedulerProcessedEvent } from '../models';
 import { processDate } from '../process-date';
 import { Adapter } from '../use-adapter';
-import { parseRRuleString } from '../utils/recurring-event-utils';
+import { parseRRuleString } from '../utils/recurring-events';
 
 export function processEvent(model: SchedulerEvent, adapter: Adapter): SchedulerProcessedEvent {
   return {
@@ -17,5 +17,8 @@ export function processEvent(model: SchedulerEvent, adapter: Adapter): Scheduler
     readOnly: model.readOnly ?? false,
     extractedFromId: model.extractedFromId,
     modelInBuiltInFormat: model,
+    color: model.color,
+    draggable: model.draggable,
+    resizable: model.resizable,
   };
 }

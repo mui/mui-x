@@ -1,7 +1,7 @@
 import { adapter } from 'test/utils/scheduler';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
-import { DEFAULT_IS_MULTI_DAY_EVENT } from '../../utils/SchedulerStore';
-import { DEFAULT_PREFERENCES, TimelineStore } from '../TimelineStore';
+import { EMPTY_OBJECT } from '@base-ui-components/utils/empty';
+import { TimelineStore } from '../TimelineStore';
 
 const DEFAULT_PARAMS = { events: [] };
 
@@ -14,31 +14,32 @@ describe('Core - TimelineStore', () => {
 
       const expectedState = {
         adapter,
-        visibleResources: new Map(),
-        eventIdList: [],
-        eventModelList: [],
-        eventModelLookup: new Map(),
-        processedEventLookup: new Map(),
-        eventModelStructure: undefined,
-        resourceIdList: [],
-        processedResourceLookup: new Map(),
-        resourceModelStructure: undefined,
-        resourceChildrenIdLookup: new Map(),
-        nowUpdatedEveryMinute: adapter.date(),
-        isMultiDayEvent: DEFAULT_IS_MULTI_DAY_EVENT,
         areEventsDraggable: false,
         areEventsResizable: false,
         canDragEventsFromTheOutside: false,
         canDropEventsToTheOutside: false,
         eventColor: 'jade',
-        showCurrentTimeIndicator: true,
+        eventCreation: true,
+        eventIdList: [],
+        eventModelList: [],
+        eventModelLookup: new Map(),
+        eventModelStructure: undefined,
+        nowUpdatedEveryMinute: adapter.now('default'),
         occurrencePlaceholder: null,
-        visibleDate: adapter.startOfDay(adapter.date()),
         pendingUpdateRecurringEventParameters: null,
-        preferences: DEFAULT_PREFERENCES,
+        preferences: EMPTY_OBJECT,
+        processedEventLookup: new Map(),
+        processedResourceLookup: new Map(),
+        readOnly: false,
+        resourceChildrenIdLookup: new Map(),
+        resourceIdList: [],
+        resourceModelStructure: undefined,
+        showCurrentTimeIndicator: true,
+        timezone: 'default',
         view: 'time',
         views: ['time', 'days', 'weeks', 'months', 'years'],
-        readOnly: false,
+        visibleDate: adapter.startOfDay(adapter.now('default')),
+        visibleResources: new Map(),
       };
 
       expect(store.state).to.deep.equal(expectedState);

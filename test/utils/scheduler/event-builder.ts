@@ -7,15 +7,19 @@ import {
   SchedulerEvent,
   SchedulerEventId,
   SchedulerEventOccurrence,
+  SchedulerEventSide,
 } from '@mui/x-scheduler-headless/models/event';
 import { processEvent } from '@mui/x-scheduler-headless/process-event';
 import { processDate } from '@mui/x-scheduler-headless/process-date';
-import { getWeekDayCode } from '@mui/x-scheduler-headless/utils/recurring-event-utils';
+import { getWeekDayCode } from '@mui/x-scheduler-headless/utils/recurring-events';
 import { Adapter, diffIn } from '@mui/x-scheduler-headless/use-adapter';
 import { adapter as defaultAdapter } from './adapters';
 
 export const DEFAULT_TESTING_VISIBLE_DATE_STR = '2025-07-03T00:00:00Z';
-export const DEFAULT_TESTING_VISIBLE_DATE = defaultAdapter.date(DEFAULT_TESTING_VISIBLE_DATE_STR);
+export const DEFAULT_TESTING_VISIBLE_DATE = defaultAdapter.date(
+  DEFAULT_TESTING_VISIBLE_DATE_STR,
+  'default',
+);
 
 /**
  * Minimal event builder for tests.
@@ -91,7 +95,7 @@ export class EventBuilder {
 
   /** Set exception dates for recurrence. */
   exDates(dates?: string[]) {
-    this.event.exDates = dates?.map((date) => this.adapter.date(date));
+    this.event.exDates = dates?.map((date) => this.adapter.date(date, 'default'));
     return this;
   }
 
@@ -107,6 +111,16 @@ export class EventBuilder {
     return this;
   }
 
+  resizable(resizable: boolean | SchedulerEventSide) {
+    this.event.resizable = resizable;
+    return this;
+  }
+
+  draggable(draggable: boolean) {
+    this.event.draggable = draggable;
+    return this;
+  }
+
   // ─────────────────────────────────────────────
   // Time setters
   // ─────────────────────────────────────────────
@@ -116,7 +130,7 @@ export class EventBuilder {
    * Useful for fine-grained control (e.g., pairing with `.endAt(...)`).
    */
   startAt(startISO: string) {
-    this.event.start = this.adapter.date(startISO);
+    this.event.start = this.adapter.date(startISO, 'default');
     return this;
   }
 
@@ -125,7 +139,7 @@ export class EventBuilder {
    * Useful for fine-grained control (e.g., pairing with `.startAt(...)`).
    */
   endAt(endISO: string) {
-    this.event.end = this.adapter.date(endISO);
+    this.event.end = this.adapter.date(endISO, 'default');
     return this;
   }
 
@@ -133,7 +147,7 @@ export class EventBuilder {
    * Create a single-day timed event starting at `start` with the given duration (minutes).
    */
   singleDay(start: string, durationMinutes = 60) {
-    const startDate = this.adapter.date(start);
+    const startDate = this.adapter.date(start, 'default');
     const endDate = this.adapter.addMinutes(startDate, durationMinutes);
     this.event.start = startDate;
     this.event.end = endDate;
@@ -145,7 +159,7 @@ export class EventBuilder {
    * Sets `allDay=true`.
    */
   fullDay(date: string) {
-    const d = this.adapter.date(date);
+    const d = this.adapter.date(date, 'default');
     this.event.start = this.adapter.startOfDay(d);
     this.event.end = this.adapter.endOfDay(d);
     this.event.allDay = true;
@@ -157,8 +171,8 @@ export class EventBuilder {
    * Optionally override `allDay`.
    */
   span(start: string, end: string, opts?: { allDay?: boolean }) {
-    this.event.start = this.adapter.date(start);
-    this.event.end = this.adapter.date(end);
+    this.event.start = this.adapter.date(start, 'default');
+    this.event.end = this.adapter.date(end, 'default');
     if (opts?.allDay !== undefined) {
       this.event.allDay = opts.allDay;
     }
@@ -209,11 +223,11 @@ export class EventBuilder {
   buildOccurrence(occurrenceStartDate?: string): SchedulerEventOccurrence {
     const event = this.event;
     const effectiveDate = occurrenceStartDate
-      ? this.adapter.date(occurrenceStartDate)
+      ? this.adapter.date(occurrenceStartDate, 'default')
       : event.start;
     const duration = diffIn(this.adapter, event.end, event.start, 'minutes');
     const end = this.adapter.addMinutes(effectiveDate, duration);
-    const key = `${event.id}::${this.adapter.format(effectiveDate, 'keyboardDate')}`;
+    const key = crypto.randomUUID();
     const processedEvent = processEvent(event, this.adapter);
 
     return {

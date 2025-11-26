@@ -1,30 +1,33 @@
-import { DateTime } from 'luxon';
+import { startOfWeek } from 'date-fns/startOfWeek';
+import { setDay } from 'date-fns/setDay';
+import { setHours } from 'date-fns/setHours';
+import { addWeeks } from 'date-fns/addWeeks';
 
 // Timeline starts July 1, 2025
-export const defaultVisibleDate = DateTime.fromISO('2025-07-01T00:00:00');
-const START = defaultVisibleDate.startOf('week');
+export const defaultVisibleDate = new Date('2025-07-01T00:00:00');
+const START = startOfWeek(defaultVisibleDate);
 
 export const initialEvents = [
   // Project
   {
     id: 'meeting-1',
-    start: START.set({ weekday: 2, hour: 10 }),
-    end: START.set({ weekday: 2, hour: 12 }),
+    start: setHours(setDay(START, 2), 10),
+    end: setHours(setDay(START, 2), 12),
     title: 'Kickoff Meeting',
     resource: 'project',
   },
   {
     id: 'weekly-sync',
-    start: START.set({ weekday: 1, hour: 11 }),
-    end: START.set({ weekday: 1, hour: 12 }),
+    start: setHours(setDay(START, 1), 11),
+    end: setHours(setDay(START, 1), 12),
     title: 'Weekly Sync',
     resource: 'project',
     rrule: { freq: 'WEEKLY', interval: 1, byDay: ['MO'] },
   },
   {
     id: 'q3-roadmap',
-    start: DateTime.fromISO('2025-07-01'),
-    end: DateTime.fromISO('2025-09-30'),
+    start: new Date('2025-07-01'),
+    end: new Date('2025-09-30'),
     title: 'Q3 Roadmap Execution',
     resource: 'project',
     allDay: true,
@@ -32,15 +35,15 @@ export const initialEvents = [
   // IT
   {
     id: 'maintenance-window',
-    start: START.set({ weekday: 3, hour: 22 }),
-    end: START.set({ weekday: 4, hour: 2 }),
+    start: setHours(setDay(START, 3), 22),
+    end: setHours(setDay(START, 4), 2),
     title: 'System Maintenance',
     resource: 'it',
   },
   {
     id: 'infrastructure-upgrade',
-    start: DateTime.fromISO('2025-08-01'),
-    end: DateTime.fromISO('2025-10-15'),
+    start: new Date('2025-08-01'),
+    end: new Date('2025-10-15'),
     title: 'Infrastructure Upgrade',
     resource: 'it',
     allDay: true,
@@ -48,8 +51,8 @@ export const initialEvents = [
   // Design
   {
     id: 'design-sprint',
-    start: START.set({ weekday: 2, hour: 9 }),
-    end: START.set({ weekday: 6, hour: 17 }),
+    start: setHours(setDay(START, 2), 9),
+    end: setHours(setDay(START, 6), 17),
     title: 'Design Sprint',
     resource: 'design',
     allDay: true,
@@ -57,8 +60,8 @@ export const initialEvents = [
   // Engineering
   {
     id: 'feature-development',
-    start: START.plus({ weeks: 1 }),
-    end: START.plus({ weeks: 4 }),
+    start: addWeeks(START, 1),
+    end: addWeeks(START, 4),
     title: 'Feature Development',
     resource: 'engineering',
     allDay: true,
@@ -66,8 +69,8 @@ export const initialEvents = [
   // Marketing
   {
     id: 'marketing-campaign',
-    start: START.plus({ weeks: 2 }),
-    end: START.plus({ weeks: 6 }),
+    start: addWeeks(START, 2),
+    end: addWeeks(START, 6),
     title: 'Marketing Campaign',
     resource: 'marketing',
     allDay: true,

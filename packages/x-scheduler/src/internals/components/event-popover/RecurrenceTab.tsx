@@ -7,19 +7,26 @@ import { Input } from '@base-ui-components/react/input';
 import { Select } from '@base-ui-components/react/select';
 import { RadioGroup } from '@base-ui-components/react/radio-group';
 import { Radio } from '@base-ui-components/react/radio';
-import { Separator } from '@base-ui-components/react/separator';
 import { ChevronDown } from 'lucide-react';
+import { Toggle } from '@base-ui-components/react/toggle';
+import { ToggleGroup } from '@base-ui-components/react/toggle-group';
 import {
   SchedulerEventOccurrence,
   RecurringEventFrequency,
   RecurringEventPresetKey,
+  RecurringEventByDayValue,
+  RecurringEventWeekDayCode,
 } from '@mui/x-scheduler-headless/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
-import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
+import {
+  schedulerEventSelectors,
+  schedulerRecurringEventSelectors,
+} from '@mui/x-scheduler-headless/scheduler-selectors';
 import { Tabs } from '@base-ui-components/react/tabs';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { ControlledValue, EndsSelection, getEndsSelectionFromRRule } from './utils';
+import { formatDayOfMonthAndMonthFullLetter } from '../../utils/date-utils';
 
 interface RecurrenceTabProps {
   occurrence: SchedulerEventOccurrence;
@@ -42,6 +49,12 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     occurrence.id,
   );
   const customDisabled = controlled.recurrenceSelection !== 'custom' || isPropertyReadOnly('rrule');
+  const monthlyRef = useStore(
+    store,
+    schedulerRecurringEventSelectors.monthlyReference,
+    occurrence.start,
+  );
+  const weeklyDays = useStore(store, schedulerRecurringEventSelectors.weeklyDays);
 
   const handleRecurrenceSelectionChange = (value: RecurringEventPresetKey | null | 'custom') => {
     if (value === 'custom') {
@@ -89,7 +102,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
           ...prev,
           rruleDraft: {
             ...prev.rruleDraft,
-            until: adapter.date(prev.endDate),
+            until: adapter.date(prev.endDate, 'default'),
             count: undefined,
           },
         }));
@@ -129,8 +142,32 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     const value = event.currentTarget.value;
     setControlled((prev) => ({
       ...prev,
-      rruleDraft: { ...prev.rruleDraft, until: adapter.date(value) },
+      rruleDraft: { ...prev.rruleDraft, until: adapter.date(value, 'default') },
     }));
+  };
+
+  const handleChangeWeeklyDays = (next: RecurringEventWeekDayCode[]) => {
+    setControlled((prev) => ({
+      ...prev,
+      rruleDraft: {
+        ...prev.rruleDraft,
+        byDay: next,
+      },
+    }));
+  };
+
+  const handleChangeMonthlyGroup = (next: string[]) => {
+    const nextKey = next[0];
+
+    setControlled((prev) => {
+      if (nextKey === 'byDay') {
+        const value = `${monthlyRef.ord}${monthlyRef.code}` as RecurringEventByDayValue;
+        const { byMonthDay, ...rest } = prev.rruleDraft;
+        return { ...prev, rruleDraft: { ...rest, byDay: [value] } };
+      }
+      const { byDay, ...rest } = prev.rruleDraft;
+      return { ...prev, rruleDraft: { ...rest, byMonthDay: [monthlyRef.dayOfMonth] } };
+    });
   };
 
   const customEndsValue: 'never' | 'after' | 'until' = getEndsSelectionFromRRule(
@@ -138,7 +175,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
   );
 
   const weekday = adapter.format(occurrence.start.value, 'weekday');
-  const normalDate = adapter.format(occurrence.start.value, 'normalDate');
+  const dateForYearlyOption = formatDayOfMonthAndMonthFullLetter(occurrence.start.value, adapter);
 
   const recurrenceOptions: {
     label: string;
@@ -155,7 +192,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
       value: 'MONTHLY',
     },
     {
-      label: `${translations.recurrenceYearlyPresetLabel(normalDate)}`,
+      label: `${translations.recurrenceYearlyPresetLabel(dateForYearlyOption)}`,
       value: 'YEARLY',
     },
     {
@@ -182,6 +219,46 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
       value: 'YEARLY',
     },
   ];
+
+  const weeklyDayItems = React.useMemo(
+    () =>
+      weeklyDays.map(({ code, date }) => ({
+        value: code,
+        ariaLabel: adapter.format(date, 'weekday'),
+        label: adapter.format(date, 'weekday3Letters'),
+      })),
+    [adapter, weeklyDays],
+  );
+
+  const monthlyItems = React.useMemo(() => {
+    const ordinal = monthlyRef.ord;
+    const dayOfMonthLabel = translations.recurrenceMonthlyDayOfMonthLabel?.(monthlyRef.dayOfMonth);
+    const isLast = ordinal === -1;
+    const weekdayShort = adapter.formatByString(monthlyRef.date, 'ccc');
+    const weekAriaLabel = isLast
+      ? translations.recurrenceMonthlyLastWeekAriaLabel(weekday)
+      : translations.recurrenceMonthlyWeekNumberAriaLabel?.(ordinal, weekday);
+    const weekLabel = isLast
+      ? translations.recurrenceMonthlyLastWeekLabel(weekdayShort)
+      : translations.recurrenceMonthlyWeekNumberLabel?.(ordinal, weekdayShort);
+
+    return [
+      {
+        value: 'byMonthDay',
+        ariaLabel: dayOfMonthLabel,
+        label: dayOfMonthLabel,
+      },
+      {
+        value: 'byDay',
+        ariaLabel: weekAriaLabel,
+        label: weekLabel,
+      },
+    ];
+  }, [adapter, monthlyRef.date, monthlyRef.dayOfMonth, monthlyRef.ord, translations, weekday]);
+
+  const monthlyMode: 'byMonthDay' | 'byDay' = controlled.rruleDraft.byDay?.length
+    ? 'byDay'
+    : 'byMonthDay';
 
   return (
     <Tabs.Panel value="recurrence" keepMounted>
@@ -235,7 +312,6 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
           <Field.Root className="EventPopoverInputsRow">
             {translations.recurrenceEveryLabel}
             <Input
-              name="interval"
               type="number"
               min={1}
               value={controlled.rruleDraft.interval}
@@ -275,14 +351,39 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
           </Field.Root>
         </Fieldset.Root>
         {controlled.recurrenceSelection === 'custom' && controlled.rruleDraft.freq === 'WEEKLY' && (
-          <p className="EventPopoverRecurrenceFieldset">TODO: Weekly Fields</p>
+          <Field.Root className="EventPopoverInputsRow">
+            <Field.Label>{translations.recurrenceWeeklyMonthlySpecificInputsLabel}</Field.Label>
+            <ToggleGroup
+              className="ToggleGroup"
+              multiple
+              value={controlled.rruleDraft.byDay}
+              onValueChange={handleChangeWeeklyDays}
+            >
+              {weeklyDayItems.map(({ value, ariaLabel, label }) => (
+                <Toggle key={value} aria-label={ariaLabel} value={value} className="ToggleItem">
+                  {label}
+                </Toggle>
+              ))}
+            </ToggleGroup>
+          </Field.Root>
         )}
         {controlled.recurrenceSelection === 'custom' &&
           controlled.rruleDraft.freq === 'MONTHLY' && (
-            <p className="EventPopoverRecurrenceFieldset">TODO: Monthly Fields</p>
+            <Field.Root className="EventPopoverInputsRow">
+              <Field.Label>{translations.recurrenceWeeklyMonthlySpecificInputsLabel}</Field.Label>
+              <ToggleGroup
+                className="ToggleGroup"
+                value={[monthlyMode]}
+                onValueChange={handleChangeMonthlyGroup}
+              >
+                {monthlyItems.map(({ value, ariaLabel, label }) => (
+                  <Toggle key={value} aria-label={ariaLabel} value={value} className="ToggleItem">
+                    {label}
+                  </Toggle>
+                ))}
+              </ToggleGroup>
+            </Field.Root>
           )}
-
-        <Separator className="EventPopoverSeparator" />
 
         <Fieldset.Root
           className="EventPopoverRecurrenceFieldset"
@@ -327,7 +428,6 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
                 </Radio.Root>
                 <div className="EventPopoverAfterTimesInputWrapper">
                   <Input
-                    name="count"
                     type="number"
                     min={1}
                     value={customEndsValue === 'after' ? (controlled.rruleDraft.count ?? 1) : 1}
@@ -353,10 +453,9 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
                   </span>
                 </Radio.Root>
                 <Input
-                  name="until"
                   type="date"
                   value={
-                    customEndsValue === 'until' && controlled.rruleDraft.until
+                    customEndsValue === 'until' && adapter.isValid(controlled.rruleDraft.until)
                       ? adapter.formatByString(controlled.rruleDraft.until, 'yyyy-MM-dd')
                       : ''
                   }
