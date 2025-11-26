@@ -20,12 +20,7 @@ import {
   UpdateEventsParameters,
 } from './SchedulerStore.types';
 import { Adapter } from '../../use-adapter/useAdapter.types';
-import {
-  applyRecurringUpdateFollowing,
-  applyRecurringUpdateAll,
-  applyRecurringUpdateOnlyThis,
-  createEventFromRecurringEvent,
-} from '../recurring-event-utils';
+import { createEventFromRecurringEvent, updateRecurringEvent } from '../recurring-events';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
 import {
   buildEventsState,
@@ -353,30 +348,9 @@ export class SchedulerStore<
       );
     }
 
-    let updatedEvents: UpdateEventsParameters;
-
-    switch (scope) {
-      case 'this-and-following': {
-        updatedEvents = applyRecurringUpdateFollowing(adapter, original, occurrenceStart, changes);
-        break;
-      }
-
-      case 'all': {
-        updatedEvents = applyRecurringUpdateAll(adapter, original, occurrenceStart, changes);
-        break;
-      }
-
-      case 'only-this': {
-        updatedEvents = applyRecurringUpdateOnlyThis(adapter, original, occurrenceStart, changes);
-        break;
-      }
-
-      default: {
-        throw new Error(`${this.instanceName}: scope="${scope}" is not supported.`);
-      }
-    }
-
+    const updatedEvents = updateRecurringEvent(adapter, original, occurrenceStart, changes, scope);
     this.updateEvents(updatedEvents);
+
     const submit = onSubmit;
     if (submit) {
       queueMicrotask(() => submit());
