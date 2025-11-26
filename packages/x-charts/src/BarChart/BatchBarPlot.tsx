@@ -1,16 +1,11 @@
-import * as React from 'react';
-import { getValueToPositionMapper, UseChartHighlightSignature, useSvgRef } from '@mui/x-charts';
 import useId from '@mui/utils/useId';
-import { BarPlotSlotProps, BarPlotSlots } from './BarPlot';
-import { BarItemIdentifier } from '../models';
-import { ProcessedBarData, ProcessedBarSeriesData } from './types';
+import * as React from 'react';
 import {
+  UseChartHighlightSignature,
   getSVGPoint,
   selectorChartAxisZoomData,
   selectorChartBarSeriesFlatbushMap,
   selectorChartDrawingArea,
-  selectorChartIsSeriesFaded,
-  selectorChartIsSeriesHighlighted,
   selectorChartSeriesEmptyFlatbushMap,
   selectorChartSeriesHighlightedItem,
   selectorChartSeriesProcessed,
@@ -24,6 +19,10 @@ import {
   useSelector,
   useStore,
 } from '../internals';
+import { useSvgRef } from '../hooks';
+import { BarPlotSlotProps, BarPlotSlots } from './BarPlot';
+import { BarItemIdentifier } from '../models';
+import { ProcessedBarData, ProcessedBarSeriesData } from './types';
 import { findClosestPoints } from '../internals/plugins/featurePlugins/useChartClosestPoint/findClosestPoints';
 import { ANIMATION_DURATION_MS } from '../internals/animation/animation';
 import { useUtilityClasses } from './barClasses';
@@ -255,11 +254,9 @@ export function BatchBarPlot({
 function FadedHighlightedBars({
   processedSeries,
   borderRadius,
-  onItemClick,
 }: {
   processedSeries: ProcessedBarSeriesData;
   borderRadius: number;
-  onItemClick?: BatchBarPlotProps['onItemClick'];
 }) {
   const { store } = useChartContext<[UseChartHighlightSignature]>();
   const seriesHighlightedItem = useSelector(
@@ -272,7 +269,6 @@ function FadedHighlightedBars({
     selectorChartSeriesUnfadedItem,
     processedSeries.seriesId,
   );
-  console.log('new render FadedHighlightedBars');
 
   const siblings: React.ReactNode[] = [];
   if (seriesHighlightedItem != null) {
@@ -329,11 +325,7 @@ function BatchBarSeriesPlot({
   return (
     <React.Fragment>
       {children}
-      <MemoFadedHighlightedBars
-        processedSeries={processedSeries}
-        borderRadius={borderRadius}
-        onItemClick={onItemClick}
-      />
+      <MemoFadedHighlightedBars processedSeries={processedSeries} borderRadius={borderRadius} />
     </React.Fragment>
   );
 }
