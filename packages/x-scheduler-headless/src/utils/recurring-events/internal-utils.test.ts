@@ -287,7 +287,7 @@ describe('recurring-events/internal-utils', () => {
   });
 
   describe('countDailyOccurrencesUpToExact', () => {
-    const createDailyRule = (interval = 1): RecurringEventRecurrenceRule => ({
+    const createRule = (interval = 1): RecurringEventRecurrenceRule => ({
       freq: 'DAILY',
       interval,
     });
@@ -296,7 +296,7 @@ describe('recurring-events/internal-utils', () => {
       expect(
         countDailyOccurrencesUpToExact({
           adapter,
-          rule: createDailyRule(),
+          rule: createRule(),
           seriesStartDay: adapter.date('2025-03-10', 'default'),
           date: adapter.date('2025-03-09T23:59:59Z', 'default'),
         }),
@@ -307,7 +307,7 @@ describe('recurring-events/internal-utils', () => {
       expect(
         countDailyOccurrencesUpToExact({
           adapter,
-          rule: createDailyRule(),
+          rule: createRule(),
           seriesStartDay: adapter.date('2025-01-01', 'default'),
           date: adapter.date('2025-01-05T23:59:59Z', 'default'), // 1,2,3,4,5 = 5
         }),
@@ -318,7 +318,7 @@ describe('recurring-events/internal-utils', () => {
       expect(
         countDailyOccurrencesUpToExact({
           adapter,
-          rule: createDailyRule(2),
+          rule: createRule(2),
           seriesStartDay: adapter.date('2025-01-01', 'default'),
           date: adapter.date('2025-01-11T00:00:00Z', 'default'), // Days: 1,3,5,7,9,11 => 6
         }),
@@ -375,7 +375,7 @@ describe('recurring-events/internal-utils', () => {
         countWeeklyOccurrencesUpToExact({
           adapter,
           rule: createRule(['MO', 'WE']),
-          seriesStartDay: adapter.date('2025-06-02T', 'default'), // Monday,
+          seriesStartDay: adapter.date('2025-06-02', 'default'), // Monday,
           date: adapter.date('2025-06-18T23:59:59Z', 'default'), // includes weeks of Jun 2,9,16
         }),
       ).to.equal(6);
