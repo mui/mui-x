@@ -17,6 +17,7 @@ import type { BarItem, BarLabelContext } from './BarLabel';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { IndividualBarPlot } from './IndividualBarPlot';
 import { BatchBarPlot } from './BatchBarPlot';
+import { type RendererType } from '../ScatterChart';
 
 export interface BarPlotSlots extends BarElementSlots, BarLabelSlots {}
 
@@ -51,6 +52,15 @@ export interface BarPlotProps {
    */
   barLabel?: 'value' | ((item: BarItem, context: BarLabelContext) => string | null | undefined);
   /**
+   * The type of renderer to use for the bar plot.
+   * - `svg-single`: Renders every bar in a `<rect />` element.
+   * - `svg-batch`: Batch renders bars in `<path />` elements for better performance with large datasets, at the cost of some limitations.
+   *                Read more: https://mui.com/x/react-charts/bars/#performance
+   *
+   * @default 'svg-single'
+   */
+  renderer?: RendererType;
+  /**
    * The props used for each component slot.
    * @default {}
    */
@@ -84,9 +94,15 @@ const BarPlotRoot = styled('g', {
  *
  * - [BarPlot API](https://mui.com/x/api/charts/bar-plot/)
  */
-function BarPlot(props: BarPlotProps) {
-  const { skipAnimation: inSkipAnimation, onItemClick, borderRadius, barLabel, ...other } = props;
-
+function BarPlot(props: BarPlotProps): React.JSX.Element {
+  const {
+    skipAnimation: inSkipAnimation,
+    onItemClick,
+    borderRadius,
+    barLabel,
+    renderer,
+    ...other
+  } = props;
   const isZoomInteracting = useInternalIsZoomInteracting();
   const skipAnimation = useSkipAnimation(isZoomInteracting || inSkipAnimation);
   const { xAxis: xAxes } = useXAxes();
@@ -96,7 +112,7 @@ function BarPlot(props: BarPlotProps) {
   const withoutBorderRadius = !borderRadius || borderRadius <= 0;
   const classes = useUtilityClasses();
 
-  const BarElementPlot = BatchBarPlot;
+  const BarElementPlot = renderer === 'svg-batch' ? BatchBarPlot : IndividualBarPlot;
 
   return (
     <BarPlotRoot className={classes.root}>
@@ -150,6 +166,7 @@ BarPlot.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
+   * @deprecated Use `barLabel` in the chart series instead.
    * If provided, the function will be used to format the label of the bar.
    * It can be set to 'value' to display the current value.
    * @param {BarItem} item The item to format.
@@ -157,11 +174,6 @@ BarPlot.propTypes = {
    * @returns {string} The formatted label.
    */
   barLabel: PropTypes.oneOfType([PropTypes.oneOf(['value']), PropTypes.func]),
-  /**
-   * The placement of the bar label.
-   * It controls whether the label is rendered inside or outside the bar.
-   */
-  barLabelPlacement: PropTypes.oneOf(['outside', 'inside']),
   /**
    * Defines the border radius of the bar element.
    */
@@ -172,6 +184,15 @@ BarPlot.propTypes = {
    * @param {BarItemIdentifier} barItemIdentifier The bar item identifier.
    */
   onItemClick: PropTypes.func,
+  /**
+   * The type of renderer to use for the bar plot.
+   * - `svg-single`: Renders every bar in a `<rect />` element.
+   * - `svg-batch`: Batch renders bars in `<path />` elements for better performance with large datasets, at the cost of some limitations.
+   *                Read more: https://mui.com/x/react-charts/bars/#performance
+   *
+   * @default 'svg-single'
+   */
+  renderer: PropTypes.oneOf(['svg-batch', 'svg-single']),
   /**
    * If `true`, animations are skipped.
    * @default undefined
