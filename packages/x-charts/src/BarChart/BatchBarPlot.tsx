@@ -1,7 +1,25 @@
 import * as React from 'react';
+import { useSvgRef } from '@mui/x-charts';
 import { BarPlotSlotProps, BarPlotSlots } from './BarPlot';
 import { BarItemIdentifier } from '../models';
 import { ProcessedBarSeriesData } from './types';
+import {
+  getSVGPoint,
+  selectorChartAxisZoomData,
+  selectorChartBarSeriesFlatbushMap,
+  selectorChartDrawingArea,
+  selectorChartSeriesEmptyFlatbushMap,
+  selectorChartSeriesProcessed,
+  selectorChartXAxis,
+  selectorChartYAxis,
+  selectorChartZoomIsInteracting,
+  SeriesId,
+  UseChartCartesianAxisSignature,
+  useChartContext,
+  useSelector,
+  useStore,
+} from '../internals';
+import { findClosestPoints } from '../internals/plugins/featurePlugins/useChartClosestPoint/findClosestPoints';
 
 interface BatchBarPlotProps {
   completedData: ProcessedBarSeriesData[];
@@ -106,15 +124,116 @@ function useCreatePaths(completedData: ProcessedBarSeriesData[], borderRadius: n
 export function BatchBarPlot({
   completedData,
   borderRadius = 0,
+  onItemClick,
   skipAnimation,
 }: BatchBarPlotProps) {
+  const { instance } = useChartContext();
+  const svgRef = useSvgRef();
+  const store = useStore<[UseChartCartesianAxisSignature]>();
+  const zoomIsInteracting = useSelector(store, selectorChartZoomIsInteracting);
+  const flatbushMap = useSelector(
+    store,
+    zoomIsInteracting ? selectorChartSeriesEmptyFlatbushMap : selectorChartBarSeriesFlatbushMap,
+  );
   const paths = useCreatePaths(completedData, borderRadius);
   const children: React.ReactNode[] = [];
+
+  function onClick(event: React.MouseEvent<SVGElement, MouseEvent>) {
+    const element = svgRef.current;
+
+    if (element == null) {
+      return;
+    }
+
+    const svgPoint = getSVGPoint(element, event);
+
+    if (!instance.isPointInside(svgPoint.x, svgPoint.y)) {
+      return;
+    }
+
+    const { series, seriesOrder } = selectorChartSeriesProcessed(store.getSnapshot())?.bar ?? {};
+    const { axis: xAxes, axisIds: xAxisIds } = selectorChartXAxis(store.getSnapshot());
+    const { axis: yAxes, axisIds: yAxisIds } = selectorChartYAxis(store.getSnapshot());
+    const defaultXAxisId = xAxisIds[0];
+    const defaultYAxisId = yAxisIds[0];
+
+    let closestPoint: { dataIndex: number; seriesId: SeriesId; distanceSq: number } | undefined =
+      undefined;
+
+    for (const seriesId of seriesOrder ?? []) {
+      const aSeries = (series ?? {})[seriesId];
+      const flatbush = flatbushMap.get(seriesId);
+
+      if (!flatbush) {
+        continue;
+      }
+
+      const xAxisId = aSeries.xAxisId ?? defaultXAxisId;
+      const yAxisId = aSeries.yAxisId ?? defaultYAxisId;
+
+      const drawingArea = selectorChartDrawingArea(store.getSnapshot());
+      const xAxisZoom = selectorChartAxisZoomData(store.getSnapshot(), xAxisId);
+      const yAxisZoom = selectorChartAxisZoomData(store.getSnapshot(), yAxisId);
+
+      const xZoomStart = (xAxisZoom?.start ?? 0) / 100;
+      const xZoomEnd = (xAxisZoom?.end ?? 100) / 100;
+      const yZoomStart = (yAxisZoom?.start ?? 0) / 100;
+      const yZoomEnd = (yAxisZoom?.end ?? 100) / 100;
+
+      const xAxis = xAxes[xAxisId];
+      const yAxis = yAxes[yAxisId];
+      const xScale = xAxis.scale;
+      const yScale = yAxis.scale;
+
+      const adaptedData = aSeries.data?.map((d, i) => ({ x: xAxis.data?.[i], y: d })) ?? [];
+
+      const closestPointIndex = findClosestPoints(
+        flatbush,
+        drawingArea,
+        adaptedData,
+        xScale,
+        yScale,
+        xZoomStart,
+        xZoomEnd,
+        yZoomStart,
+        yZoomEnd,
+        svgPoint.x,
+        svgPoint.y,
+      )[0];
+
+      if (closestPointIndex === undefined) {
+        continue;
+      }
+
+      const point = aSeries.data[closestPointIndex];
+      // FIXME: Handle horizontal bars
+      const scaledX = xScale(xAxis.data?.[closestPointIndex] ?? point);
+      const scaledY = yScale(yAxis.data?.[closestPointIndex] ?? point);
+
+      const distSq = (scaledX! - svgPoint.x) ** 2 + (scaledY! - svgPoint.y) ** 2;
+
+      if (closestPoint === undefined || distSq < closestPoint.distanceSq) {
+        closestPoint = {
+          dataIndex: closestPointIndex,
+          seriesId,
+          distanceSq: distSq,
+        };
+      }
+    }
+
+    if (closestPoint) {
+      onItemClick?.(event, {
+        type: 'bar',
+        seriesId: closestPoint.seriesId,
+        dataIndex: closestPoint.dataIndex,
+      });
+    }
+  }
 
   let i = 0;
   for (const [fill, dArray] of paths.entries()) {
     for (const d of dArray) {
-      children.push(<path key={i} fill={fill} d={d} />);
+      children.push(<path key={i} fill={fill} d={d} onClick={onClick} />);
       i += 1;
     }
   }

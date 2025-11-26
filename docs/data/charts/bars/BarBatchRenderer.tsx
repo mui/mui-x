@@ -15,9 +15,16 @@ export default function BarBatchRenderer() {
           valueFormatter: (v: Date) => tickLabelDateFormatter.format(v),
         },
       ]}
-      series={[{ data: data.map((d) => d.close), label: 'Close' }]}
+      series={[
+        {
+          data: data.map((d) => d.close),
+          label: 'Close',
+        },
+        { data: data.map((d) => d.open), label: 'Open' },
+      ]}
       height={300}
       renderer="svg-batch"
+      onItemClick={console.log}
     />
   );
 }
