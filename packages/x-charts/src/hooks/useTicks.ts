@@ -79,6 +79,20 @@ function getTickPosition(
   );
 }
 
+/**
+ * Returns a new domain where each tick is at least {@link tickSpacing}px from the next one.
+ * Assumes tick spacing is greater than 0.
+ * @param domain Domain of the scale.
+ * @param range Range of the scale.
+ * @param tickSpacing Spacing in pixels.
+ */
+function applyTickSpacing<T>(domain: T[], range: [number, number], tickSpacing: number) {
+  const rangeSpan = Math.abs(range[1] - range[0]);
+
+  const every = Math.ceil(domain.length / (rangeSpan / tickSpacing));
+  return domain.filter((_, index) => index % every === 0);
+}
+
 export function getTicks(
   options: {
     scale: D3Scale;
@@ -108,11 +122,7 @@ export function getTicks(
       filteredDomain = tickInterval;
     } else {
       if (tickSpacing > 0) {
-        const range = scale.range();
-        const rangeSpan = Math.abs(range[1] - range[0]);
-
-        const every = Math.ceil(domain.length / (rangeSpan / tickSpacing));
-        filteredDomain = domain.filter((_, index) => index % every === 0);
+        filteredDomain = applyTickSpacing(domain, scale.range(), tickSpacing);
       }
 
       if (typeof tickInterval === 'function') {

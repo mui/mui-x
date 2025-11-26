@@ -149,6 +149,13 @@ In the demo below, the top axis has a `tickMinStep` of half a day, and the botto
 
 ### Tick spacing
 
+You can use the `tickSpacing` property to define the minimum spacing in pixels between two ticks in ordinal scales.
+
+By default, this value is set to 0, so there is no minimum spacing between ticks.
+
+For band scales where hidden ticks can be interpolated, such as numbers and dates, the tick spacing can be set to a value greater than 0. 
+This should improve the readability of the axis by reducing the number of ticks shown as well as improve performance when there is a large number of ticks.
+
 {{"demo": "TickSpacing.js"}}
 
 ### Fixed tick position
