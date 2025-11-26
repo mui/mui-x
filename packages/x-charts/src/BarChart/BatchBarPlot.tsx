@@ -1,5 +1,6 @@
 import useId from '@mui/utils/useId';
 import * as React from 'react';
+import { styled } from '@mui/material/styles';
 import {
   UseChartHighlightSignature,
   getSVGPoint,
@@ -230,6 +231,7 @@ export function BatchBarPlot({
   skipAnimation = false,
 }: BatchBarPlotProps) {
   const classes = useUtilityClasses();
+  const onClick = useOnItemClick(onItemClick);
 
   return (
     <React.Fragment>
@@ -238,6 +240,7 @@ export function BatchBarPlot({
           className={classes.series}
           data-series={series.seriesId}
           skipAnimation={skipAnimation}
+          onClick={onClick}
         >
           <BatchBarSeriesPlot
             key={series.seriesId}
@@ -304,20 +307,17 @@ const MemoFadedHighlightedBars = React.memo(FadedHighlightedBars);
 function BatchBarSeriesPlot({
   processedSeries,
   borderRadius,
-  onItemClick,
 }: {
   processedSeries: ProcessedBarSeriesData;
   borderRadius: number;
-  onItemClick?: BatchBarPlotProps['onItemClick'];
 }) {
-  const onClick = useOnItemClick(onItemClick);
   const paths = useCreatePaths(processedSeries, borderRadius);
   const children: React.ReactNode[] = [];
 
   let i = 0;
   for (const [fill, dArray] of paths.entries()) {
     for (const d of dArray) {
-      children.push(<path key={i} fill={fill} d={d} onClick={onClick} />);
+      children.push(<path key={i} fill={fill} d={d} />);
       i += 1;
     }
   }
@@ -330,12 +330,27 @@ function BatchBarSeriesPlot({
   );
 }
 
+const PathGroup = styled('g')({
+  '&[data-faded="true"]': {
+    opacity: 0.3,
+  },
+  '& path': {
+    /* The browser must do hit testing to know which element a pointer is interacting with.
+     * With many data points, we create many paths causing significant time to be spent in the hit test phase.
+     * To fix this issue, we disable pointer events for the descendant paths.
+     *
+     * Ideally, users should be able to override this in case they need pointer events to be enabled,
+     * but it can affect performance negatively, especially with many data points. */
+    pointerEvents: 'none',
+  },
+});
+
 function BarGroup({
   skipAnimation,
   ...props
 }: React.HTMLAttributes<SVGGElement> & { skipAnimation: boolean }) {
   if (skipAnimation) {
-    return <g {...props} />;
+    return <PathGroup {...props} />;
   }
 
   return <AnimatedGroup {...props} />;
@@ -372,7 +387,7 @@ function AnimatedGroup({ children }: React.PropsWithChildren<{}>) {
           />
         </rect>
       </clipPath>
-      <g clipPath={clipPathId}>{children}</g>
+      <PathGroup clipPath={clipPathId}>{children}</PathGroup>
     </React.Fragment>
   );
 }
