@@ -14,6 +14,7 @@ export default function TickSpacing() {
           data: data.map((d) => new Date(Date.parse(d.date))),
           valueFormatter: (v: Date) => tickLabelDateFormatter.format(v),
           tickSpacing: 50,
+          tickPlacement: 'middle',
         },
       ]}
       series={[{ data: data.map((d) => d.close), label: 'Close' }]}
