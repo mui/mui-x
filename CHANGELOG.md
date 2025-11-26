@@ -22,6 +22,7 @@ The following team members contributed to this release:
 #### `@mui/x-data-grid@8.20.0`
 
 - [DataGrid] Fix RTL virtualization to display columns when viewport width is larger than the grid (#20409) @siriwatknp
+- [DataGrid] Fix row range selection (#20442) @arminmeh
 - [DataGrid] Initialize data grid core packages (#20276) @cherniavskii
 - [DataGrid] Improve accessibility of the sort icon (#20430) @arminmeh
 - [DataGrid] Use `viewport` as a boundary for the `BasePopper` flip (#20311) @arminmeh
@@ -50,6 +51,7 @@ Same changes as in `@mui/x-data-grid-pro@8.20.0`.
 
 Same changes as in `@mui/x-charts@8.20.0`, plus:
 
+- [charts-pro] Fix Content-Security-Policy nonce not being correctly set on export (#20395) @bernardobelchior
 - [charts-pro] Improve vertical zoom slider thumb on mobile (#20439) @bernardobelchior
 - [charts-pro] Provide arguments to the `AreaPlotRoot` styled component (#20414) @arminmeh
 - [charts-pro] Remove grid outside the drawing area (#20412) @alexfauquette
