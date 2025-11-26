@@ -238,4 +238,11 @@ export class EventBuilder {
       key,
     };
   }
+
+  /**
+   * Derives a processed event from the built event.
+   */
+  toProcessed() {
+    return processEvent(this.event, this.adapter);
+  }
 }
