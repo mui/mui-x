@@ -71,14 +71,17 @@ describe('recurring-events/internal-utils', () => {
 
   describe('getEventDurationInDays', () => {
     const createEvent = (overrides: Partial<SchedulerEvent>) =>
-      createProcessedEvent({
-        id: 'event-1',
-        title: 'Test Event',
-        start: adapter.date('2025-01-01T09:00:00Z', 'default'),
-        end: adapter.date('2025-01-01T10:00:00Z', 'default'),
-        allDay: false,
-        ...overrides,
-      });
+      createProcessedEvent(
+        {
+          id: 'event-1',
+          title: 'Test Event',
+          start: adapter.date('2025-01-01T09:00:00Z', 'default'),
+          end: adapter.date('2025-01-01T10:00:00Z', 'default'),
+          allDay: false,
+          ...overrides,
+        },
+        'default',
+      );
 
     it('returns inclusive day count for non-allDay multi-day event', () => {
       const event = createEvent({

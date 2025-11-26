@@ -18,14 +18,17 @@ import { estimateOccurrencesUpTo } from './internal-utils';
 
 describe('recurring-events/updateRecurringEvent', () => {
   const createRecurringEvent = (overrides: Partial<SchedulerEvent> = {}) =>
-    createProcessedEvent({
-      id: 'recurring',
-      title: 'Recurring Event',
-      start: adapter.date('2025-01-01T09:00:00Z', 'default'),
-      end: adapter.date('2025-01-01T10:00:00Z', 'default'),
-      rrule: { freq: 'DAILY', interval: 1 },
-      ...overrides,
-    });
+    createProcessedEvent(
+      {
+        id: 'recurring',
+        title: 'Recurring Event',
+        start: adapter.date('2025-01-01T09:00:00Z', 'default'),
+        end: adapter.date('2025-01-01T10:00:00Z', 'default'),
+        rrule: { freq: 'DAILY', interval: 1 },
+        ...overrides,
+      },
+      'default',
+    );
 
   describe('decideSplitRRule', () => {
     const seriesStart = adapter.date('2025-01-01T09:00:00Z', 'default'); // DTSTART

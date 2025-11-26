@@ -15,18 +15,21 @@ import { getWeekDayCode } from './internal-utils';
 describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
   describe('getRecurringEventOccurrencesForVisibleDays', () => {
     const createEvent = (overrides: Partial<SchedulerEvent>) =>
-      createProcessedEvent({
-        id: 'base-event',
-        title: 'Recurring Test Event',
-        start: adapter.date('2025-01-01T09:00:00Z', 'default'),
-        end: adapter.date('2025-01-01T10:30:00Z', 'default'),
-        allDay: false,
-        rrule: {
-          freq: 'DAILY',
-          interval: 1,
+      createProcessedEvent(
+        {
+          id: 'base-event',
+          title: 'Recurring Test Event',
+          start: adapter.date('2025-01-01T09:00:00Z', 'default'),
+          end: adapter.date('2025-01-01T10:30:00Z', 'default'),
+          allDay: false,
+          rrule: {
+            freq: 'DAILY',
+            interval: 1,
+          },
+          ...overrides,
         },
-        ...overrides,
-      });
+        'default',
+      );
 
     it('generates daily timed occurrences within visible range preserving duration', () => {
       const visibleStart = adapter.date('2025-01-10T00:00:00Z', 'default');
@@ -223,12 +226,15 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
   describe('matchesRecurrence', () => {
     const baseStart = adapter.date('2025-01-10T09:30:00Z', 'default'); // Friday
     const createEvent = (start = baseStart) =>
-      createProcessedEvent({
-        id: 'event-1',
-        title: 'Test Event',
-        start,
-        end: adapter.addHours(start, 1),
-      });
+      createProcessedEvent(
+        {
+          id: 'event-1',
+          title: 'Test Event',
+          start,
+          end: adapter.addHours(start, 1),
+        },
+        'default',
+      );
 
     describe('daily frequency', () => {
       it('returns false for date before series start', () => {

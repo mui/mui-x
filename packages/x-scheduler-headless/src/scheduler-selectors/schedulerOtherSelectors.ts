@@ -12,5 +12,4 @@ export const schedulerOtherSelectors = {
   isScopeDialogOpen: createSelector(
     (state: State) => state.pendingUpdateRecurringEventParameters != null,
   ),
-  timezone: createSelector((state: State) => state.timezone),
 };
