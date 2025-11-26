@@ -279,8 +279,9 @@ export const useGridPrintExport = (
 
       // Revert grid to previous state
       apiRef.current.restoreState(previousGridState.current || {});
+
       if (!previousGridState.current?.columns?.columnVisibilityModel) {
-        // if the apiRef.current.exportState(); did not exported the column visibility, we update it
+        // if the apiRef.current.exportState(); did not export the column visibility, we update it
         apiRef.current.setColumnVisibilityModel(previousColumnVisibility.current);
       }
 
@@ -288,6 +289,7 @@ export const useGridPrintExport = (
         ...state,
         virtualization: previousVirtualizationState.current!,
       }));
+
       apiRef.current.setRows(previousRows.current);
 
       // Clear local state
@@ -333,14 +335,8 @@ export const useGridPrintExport = (
         }));
       }
       previousVirtualizationState.current = apiRef.current.state.virtualization;
-      apiRef.current.setState((state) => ({
-        ...state,
-        virtualization: {
-          ...state.virtualization,
-          enabled: false,
-          enabledForColumns: false,
-        },
-      }));
+
+      apiRef.current.unstable_setVirtualization(false);
 
       await updateGridColumnsForPrint(
         options?.fields,
