@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useSvgRef } from '@mui/x-charts';
+import useId from '@mui/utils/useId';
 import { BarPlotSlotProps, BarPlotSlots } from './BarPlot';
 import { BarItemIdentifier } from '../models';
 import { ProcessedBarSeriesData } from './types';
@@ -20,6 +21,7 @@ import {
   useStore,
 } from '../internals';
 import { findClosestPoints } from '../internals/plugins/featurePlugins/useChartClosestPoint/findClosestPoints';
+import { ANIMATION_DURATION_MS } from '../internals/animation/animation';
 
 interface BatchBarPlotProps {
   completedData: ProcessedBarSeriesData[];
@@ -137,6 +139,7 @@ export function BatchBarPlot({
   );
   const paths = useCreatePaths(completedData, borderRadius);
   const children: React.ReactNode[] = [];
+  const AnimationWrapper = skipAnimation ? React.Fragment : AnimatedGroup;
 
   function onClick(event: React.MouseEvent<SVGElement, MouseEvent>) {
     const element = svgRef.current;
@@ -238,5 +241,41 @@ export function BatchBarPlot({
     }
   }
 
-  return <React.Fragment>{children}</React.Fragment>;
+  return <AnimationWrapper>{children}</AnimationWrapper>;
+}
+
+function AnimatedGroup({ children }: React.PropsWithChildren<{}>) {
+  const store = useStore();
+  const drawingArea = useSelector(store, selectorChartDrawingArea);
+  const clipPathId = useId();
+  // FIXME: Handle layout; handle charts with negative and positive values (i.e., origin not at axis)
+
+  return (
+    <React.Fragment>
+      <clipPath id={clipPathId}>
+        <rect
+          x={drawingArea.left}
+          y={drawingArea.top}
+          width={drawingArea.width}
+          height={drawingArea.height}
+        >
+          <animate
+            attributeName="y"
+            from={drawingArea.top + drawingArea.height}
+            to={drawingArea.top}
+            dur={`${ANIMATION_DURATION_MS}ms`}
+            fill="freeze"
+          />
+          <animate
+            attributeName="height"
+            from={0}
+            to={drawingArea.height}
+            dur={`${ANIMATION_DURATION_MS}ms`}
+            fill="freeze"
+          />
+        </rect>
+      </clipPath>
+      <g clipPath={clipPathId}>{children}</g>
+    </React.Fragment>
+  );
 }
