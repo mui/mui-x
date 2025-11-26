@@ -308,7 +308,6 @@ export function decideSplitRRule(
 
   // Case C — user did not touch RRULE → inherit pattern and recompute boundaries
   let realignedRule: Omit<RecurringEventRecurrenceRule, 'count' | 'until'> = { ...baseRule };
-  const splitDayStart = adapter.startOfDay(splitStart);
 
   // Freq WEEKLY: realign BYDAY, swap the old weekday for the new one while preserving the rest of the weekly pattern.
   if (originalRule.freq === 'WEEKLY' && baseRule.byDay?.length && changes.start) {
@@ -339,7 +338,7 @@ export function decideSplitRRule(
 
   // Recalculate COUNT: original minus prior occurrences.
   if (originalRule.count) {
-    const dayBefore = adapter.addDays(splitDayStart, -1);
+    const dayBefore = adapter.addDays(adapter.startOfDay(splitStart), -1);
     const occurrencesBeforeSplit = estimateOccurrencesUpTo(
       adapter,
       originalRule,
