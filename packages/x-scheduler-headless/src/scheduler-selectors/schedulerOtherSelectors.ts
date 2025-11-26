@@ -1,4 +1,4 @@
-import { createSelectorMemoized } from '@base-ui-components/utils/store';
+import { createSelector, createSelectorMemoized } from '@base-ui-components/utils/store';
 import { SchedulerState as State } from '../utils/SchedulerStore/SchedulerStore.types';
 
 // Warning: Only add selectors here that do not belong to any specific feature.
@@ -9,7 +9,7 @@ export const schedulerOtherSelectors = {
     (state: State) => state.timezone,
     (adapter, visibleDate, timezone) => adapter.setTimezone(visibleDate, timezone),
   ),
-  isScopeDialogOpen: createSelectorMemoized(
+  isScopeDialogOpen: createSelector(
     (state: State) => state.pendingUpdateRecurringEventParameters != null,
   ),
 };
