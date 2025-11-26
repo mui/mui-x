@@ -7,11 +7,7 @@ import {
   SchedulerValidDate,
 } from '../models';
 import { SchedulerState as State } from '../utils/SchedulerStore/SchedulerStore.types';
-import {
-  computeMonthlyOrdinal,
-  getWeekDayCode,
-  serializeRRule,
-} from '../utils/recurring-event-utils';
+import { computeMonthlyOrdinal, getWeekDayCode, serializeRRule } from '../utils/recurring-events';
 
 export const schedulerRecurringEventSelectors = {
   /**
