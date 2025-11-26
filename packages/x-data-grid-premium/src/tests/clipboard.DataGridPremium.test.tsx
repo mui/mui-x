@@ -721,7 +721,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       expect(getColumnValues(4)).to.deep.equal(['4.0', '4.0', '4.9']);
     });
 
-    it('should respect the isCellEditable prop when pasting', async () => {
+    it('should respect the cell editable state when pasting', async () => {
       const rows = [
         { id: 0, brand: 'Nike', category: 'Shoes', price: '$120', rating: '4.0' },
         { id: 1, brand: 'Adidas', category: 'Sneakers', price: '$100', rating: '4.2' },
