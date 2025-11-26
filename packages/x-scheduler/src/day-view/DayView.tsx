@@ -15,10 +15,8 @@ import { DayTimeGrid } from '../internals/components/day-time-grid/DayTimeGrid';
 import '../index.css';
 
 const DAY_VIEW_CONFIG: EventCalendarViewConfig = {
-  siblingVisibleDateGetter: ({ state, delta }) => {
-    const visibleDate = schedulerOtherSelectors.visibleDate(state);
-    return state.adapter.addDays(visibleDate, delta);
-  },
+  siblingVisibleDateGetter: ({ state, delta }) =>
+    state.adapter.addDays(schedulerOtherSelectors.visibleDate(state), delta),
   visibleDaysSelector: createSelectorMemoized(
     schedulerOtherSelectors.visibleDate,
     (state: State) => state.adapter,
