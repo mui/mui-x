@@ -136,7 +136,7 @@ export interface SchedulerState<TEvent extends object = any> {
    * or "default" to use the adapter's default timezone.
    * @default "default"
    */
-  timezone?: TemporalTimezone;
+  timezone: TemporalTimezone;
 }
 
 export interface SchedulerParameters<TEvent extends object, TResource extends object> {
