@@ -1,0 +1,11 @@
+<BarChart
+  xAxis={[
+    {
+      data: data.map((d) => new Date(Date.parse(d.date))),
+      valueFormatter: (v: Date) => tickLabelDateFormatter.format(v),
+    },
+  ]}
+  series={[{ data: data.map((d) => d.close), label: 'Close' }]}
+  height={300}
+  renderer="svg-batch"
+/>
