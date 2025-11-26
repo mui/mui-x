@@ -56,7 +56,7 @@ The priority is the following, from highest to lowest:
 
 ### Controlling paste with isCellEditable
 
-The clipboard paste operation respects the [`isCellEditable`](/x/react-data-grid/editing/#conditional-editing) prop, allowing you to control which cells can receive pasted data based on custom logic.
+The clipboard paste operation respects the [cell editing rules](/x/react-data-grid/editing/#disable-editing-of-specific-cells-within-a-row).
 This is useful when you need to prevent pasting into certain cells based on row data or other conditions.
 
 {{"demo": "ClipboardPasteIsCellEditable.js", "bg": "inline"}}
