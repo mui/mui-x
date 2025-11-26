@@ -410,6 +410,29 @@ describe('<DataGrid /> - Row selection', () => {
       expect(getSelectedRowIds()).to.deep.equal([0, 1, 2]);
     });
 
+    it('should create selection range only between selected rows', async () => {
+      const extendedData = getBasicGridData(10, 2);
+      const { user } = render(
+        <TestDataGridSelection checkboxSelection disableVirtualization {...extendedData} />,
+      );
+
+      await user.click(getCell(0, 1));
+      await user.keyboard('{Shift>}');
+      await user.click(getCell(2, 1));
+      await user.keyboard('{/Shift}');
+      expect(getSelectedRowIds()).to.deep.equal([0, 1, 2]);
+
+      const headerCheckbox = getColumnHeaderCell(0).querySelector('input')!;
+      await user.click(headerCheckbox); // Select all
+      await user.click(headerCheckbox); // Then unselect all
+      expect(getSelectedRowIds()).to.deep.equal([]);
+
+      await user.keyboard('{Shift>}');
+      await user.click(getCell(5, 1));
+      await user.keyboard('{/Shift}');
+      expect(getSelectedRowIds()).to.deep.equal([5]);
+    });
+
     it('should select a range with shift pressed when clicking the checkbox', async () => {
       const { user } = render(<TestDataGridSelection checkboxSelection />);
       await user.click(getCell(0, 0).querySelector('input')!);
