@@ -22,6 +22,7 @@ import {
 } from '../internals';
 import { findClosestPoints } from '../internals/plugins/featurePlugins/useChartClosestPoint/findClosestPoints';
 import { ANIMATION_DURATION_MS } from '../internals/animation/animation';
+import { useUtilityClasses } from './barClasses';
 
 interface BatchBarPlotProps {
   completedData: ProcessedBarSeriesData[];
@@ -75,48 +76,41 @@ function generateBarPath(
    Z`;
 }
 
-function useCreatePaths(completedData: ProcessedBarSeriesData[], borderRadius: number) {
+function useCreatePaths(seriesData: ProcessedBarSeriesData, borderRadius: number) {
   const paths = new Map<string, string[]>();
   const temporaryPaths = new Map<string, string[]>();
 
-  for (let i = 0; i < completedData.length; i += 1) {
-    const seriesData = completedData[i];
-    for (let j = 0; j < seriesData.data.length; j += 1) {
-      const barData = seriesData.data[j];
+  for (let j = 0; j < seriesData.data.length; j += 1) {
+    const barData = seriesData.data[j];
 
-      // Here you would create the path string for the bar considering borderRadius
-      // const pathString = `M${barData.x},${barData.y} v${barData.height} h${barData.width} v${-barData.height} h${-barData.width}Z`;
-      const pathString = generateBarPath(
-        barData.x,
-        barData.y,
-        barData.width,
-        barData.height,
-        barData.borderRadiusSide === 'left' || barData.borderRadiusSide === 'top'
-          ? borderRadius
-          : 0,
-        barData.borderRadiusSide === 'right' || barData.borderRadiusSide === 'top'
-          ? borderRadius
-          : 0,
-        barData.borderRadiusSide === 'right' || barData.borderRadiusSide === 'bottom'
-          ? borderRadius
-          : 0,
-        barData.borderRadiusSide === 'left' || barData.borderRadiusSide === 'bottom'
-          ? borderRadius
-          : 0,
-      );
+    // Here you would create the path string for the bar considering borderRadius
+    // const pathString = `M${barData.x},${barData.y} v${barData.height} h${barData.width} v${-barData.height} h${-barData.width}Z`;
+    const pathString = generateBarPath(
+      barData.x,
+      barData.y,
+      barData.width,
+      barData.height,
+      barData.borderRadiusSide === 'left' || barData.borderRadiusSide === 'top' ? borderRadius : 0,
+      barData.borderRadiusSide === 'right' || barData.borderRadiusSide === 'top' ? borderRadius : 0,
+      barData.borderRadiusSide === 'right' || barData.borderRadiusSide === 'bottom'
+        ? borderRadius
+        : 0,
+      barData.borderRadiusSide === 'left' || barData.borderRadiusSide === 'bottom'
+        ? borderRadius
+        : 0,
+    );
 
-      const tempPath = appendAtKey(temporaryPaths, barData.color, pathString);
+    const tempPath = appendAtKey(temporaryPaths, barData.color, pathString);
 
-      if (tempPath.length >= MAX_POINTS_PER_PATH) {
-        appendAtKey(paths, barData.color, tempPath.join(''));
-        temporaryPaths.delete(barData.color);
-      }
+    if (tempPath.length >= MAX_POINTS_PER_PATH) {
+      appendAtKey(paths, barData.color, tempPath.join(''));
+      temporaryPaths.delete(barData.color);
     }
+  }
 
-    for (const [fill, tempPath] of temporaryPaths.entries()) {
-      if (tempPath.length > 0) {
-        appendAtKey(paths, fill, tempPath.join(''));
-      }
+  for (const [fill, tempPath] of temporaryPaths.entries()) {
+    if (tempPath.length > 0) {
+      appendAtKey(paths, fill, tempPath.join(''));
     }
   }
 
@@ -230,12 +224,42 @@ export function BatchBarPlot({
   completedData,
   borderRadius = 0,
   onItemClick,
-  skipAnimation,
+  skipAnimation = false,
 }: BatchBarPlotProps) {
-  const paths = useCreatePaths(completedData, borderRadius);
-  const children: React.ReactNode[] = [];
-  const AnimationWrapper = skipAnimation ? React.Fragment : AnimatedGroup;
+  const classes = useUtilityClasses();
+
+  return (
+    <React.Fragment>
+      {completedData.map((series) => (
+        <BarGroup
+          className={classes.series}
+          data-series={series.seriesId}
+          skipAnimation={skipAnimation}
+        >
+          <BatchBarSeriesPlot
+            key={series.seriesId}
+            data={series}
+            borderRadius={borderRadius}
+            onItemClick={onItemClick}
+          />
+        </BarGroup>
+      ))}
+    </React.Fragment>
+  );
+}
+
+function BatchBarSeriesPlot({
+  data,
+  borderRadius,
+  onItemClick,
+}: {
+  data: ProcessedBarSeriesData;
+  borderRadius: number;
+  onItemClick?: BatchBarPlotProps['onItemClick'];
+}) {
   const onClick = useOnItemClick(onItemClick);
+  const paths = useCreatePaths(data, borderRadius);
+  const children: React.ReactNode[] = [];
 
   let i = 0;
   for (const [fill, dArray] of paths.entries()) {
@@ -245,7 +269,18 @@ export function BatchBarPlot({
     }
   }
 
-  return <AnimationWrapper>{children}</AnimationWrapper>;
+  return <React.Fragment>{children}</React.Fragment>;
+}
+
+function BarGroup({
+  skipAnimation,
+  ...props
+}: React.HTMLAttributes<SVGGElement> & { skipAnimation: boolean }) {
+  if (skipAnimation) {
+    return <g {...props} />;
+  }
+
+  return <AnimatedGroup {...props} />;
 }
 
 function AnimatedGroup({ children }: React.PropsWithChildren<{}>) {
