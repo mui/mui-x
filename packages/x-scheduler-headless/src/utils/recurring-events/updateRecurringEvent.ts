@@ -1,4 +1,4 @@
-import { Adapter, diffIn } from '../../use-adapter';
+import { Adapter } from '../../use-adapter';
 import {
   RecurringEventByDayValue,
   RecurringEventRecurrenceRule,
