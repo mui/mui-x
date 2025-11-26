@@ -140,7 +140,6 @@ function BarPlot(props: BarPlotProps): React.JSX.Element {
         )}
       <BarElementPlot
         completedData={completedData}
-        maskData={masksData}
         skipAnimation={skipAnimation}
         onItemClick={onItemClick}
         borderRadius={borderRadius}

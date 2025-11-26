@@ -1,11 +1,10 @@
 import * as React from 'react';
 import { BarPlotSlotProps, BarPlotSlots } from './BarPlot';
 import { BarItemIdentifier } from '../models';
-import { MaskData, ProcessedBarSeriesData } from './types';
+import { ProcessedBarSeriesData } from './types';
 
 interface BatchBarPlotProps {
   completedData: ProcessedBarSeriesData[];
-  maskData: MaskData[];
   borderRadius?: number;
   skipAnimation?: boolean;
   onItemClick?: (
@@ -56,11 +55,7 @@ function generateBarPath(
    Z`;
 }
 
-function useCreatePaths(
-  completedData: ProcessedBarSeriesData[],
-  masksData: MaskData[],
-  borderRadius: number,
-) {
+function useCreatePaths(completedData: ProcessedBarSeriesData[], borderRadius: number) {
   const paths = new Map<string, string[]>();
   const temporaryPaths = new Map<string, string[]>();
 
@@ -110,11 +105,10 @@ function useCreatePaths(
 
 export function BatchBarPlot({
   completedData,
-  maskData,
   borderRadius = 0,
   skipAnimation,
 }: BatchBarPlotProps) {
-  const paths = useCreatePaths(completedData, maskData, borderRadius);
+  const paths = useCreatePaths(completedData, borderRadius);
   const children: React.ReactNode[] = [];
 
   let i = 0;
