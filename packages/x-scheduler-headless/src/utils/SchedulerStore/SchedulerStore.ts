@@ -2,15 +2,14 @@ import { Store } from '@base-ui-components/utils/store';
 // TODO: Use the Base UI warning utility once it supports cleanup in tests.
 import { warnOnce } from '@mui/x-internals/warning';
 import {
-  CalendarEvent,
-  CalendarEventId,
-  CalendarEventOccurrence,
-  CalendarOccurrencePlaceholder,
-  CalendarResourceId,
+  SchedulerEventId,
+  SchedulerOccurrencePlaceholder,
+  SchedulerResourceId,
   SchedulerValidDate,
-  CalendarEventUpdatedProperties,
+  SchedulerEventUpdatedProperties,
   RecurringEventUpdateScope,
   SchedulerPreferences,
+  SchedulerEventCreationProperties,
 } from '../../models';
 import {
   SchedulerState,
@@ -21,11 +20,7 @@ import {
   UpdateEventsParameters,
 } from './SchedulerStore.types';
 import { Adapter } from '../../use-adapter/useAdapter.types';
-import {
-  applyRecurringUpdateFollowing,
-  applyRecurringUpdateAll,
-  applyRecurringUpdateOnlyThis,
-} from '../recurring-event-utils';
+import { createEventFromRecurringEvent, updateRecurringEvent } from '../recurring-events';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
 import {
   buildEventsState,
@@ -36,15 +31,6 @@ import {
 } from './SchedulerStore.utils';
 import { TimeoutManager } from '../TimeoutManager';
 import { DEFAULT_EVENT_COLOR } from '../../constants';
-
-// TODO: Add a prop to configure the behavior.
-export const DEFAULT_IS_MULTI_DAY_EVENT = (event: CalendarEvent | CalendarEventOccurrence) => {
-  if (event.allDay) {
-    return true;
-  }
-
-  return false;
-};
 
 const ONE_MINUTE_IN_MS = 60 * 1000;
 
@@ -79,19 +65,19 @@ export class SchedulerStore<
   ) {
     const schedulerInitialState: SchedulerState<TEvent> = {
       ...SchedulerStore.deriveStateFromParameters(parameters, adapter),
-      ...buildEventsState(parameters),
+      ...buildEventsState(parameters, adapter),
       ...buildResourcesState(parameters),
       preferences: DEFAULT_SCHEDULER_PREFERENCES,
       adapter,
       occurrencePlaceholder: null,
-      nowUpdatedEveryMinute: adapter.date(),
-      isMultiDayEvent: DEFAULT_IS_MULTI_DAY_EVENT,
+      nowUpdatedEveryMinute: adapter.now('default'),
       pendingUpdateRecurringEventParameters: null,
+      timezone: parameters.timezone ?? 'default',
       visibleResources: new Map(),
       visibleDate:
         parameters.visibleDate ??
         parameters.defaultVisibleDate ??
-        adapter.startOfDay(adapter.date()),
+        adapter.startOfDay(adapter.now('default')),
     };
 
     const initialState = mapper.getInitialState(schedulerInitialState, parameters, adapter);
@@ -106,9 +92,9 @@ export class SchedulerStore<
       ONE_MINUTE_IN_MS - (currentDate.getSeconds() * 1000 + currentDate.getMilliseconds());
 
     this.timeoutManager.startTimeout('set-now', timeUntilNextMinuteMs, () => {
-      this.set('nowUpdatedEveryMinute', adapter.date());
+      this.set('nowUpdatedEveryMinute', adapter.now('default'));
       this.timeoutManager.startInterval('set-now', ONE_MINUTE_IN_MS, () => {
-        this.set('nowUpdatedEveryMinute', adapter.date());
+        this.set('nowUpdatedEveryMinute', adapter.now('default'));
       });
     });
 
@@ -134,6 +120,7 @@ export class SchedulerStore<
       eventColor: parameters.eventColor ?? DEFAULT_EVENT_COLOR,
       showCurrentTimeIndicator: parameters.showCurrentTimeIndicator ?? true,
       readOnly: parameters.readOnly ?? false,
+      eventCreation: parameters.eventCreation ?? true,
     };
   }
 
@@ -182,9 +169,10 @@ export class SchedulerStore<
 
     if (
       parameters.events !== this.parameters.events ||
-      parameters.eventModelStructure !== this.parameters.eventModelStructure
+      parameters.eventModelStructure !== this.parameters.eventModelStructure ||
+      adapter !== this.state.adapter
     ) {
-      Object.assign(newSchedulerState, buildEventsState(parameters));
+      Object.assign(newSchedulerState, buildEventsState(parameters, adapter));
     }
 
     if (
@@ -202,12 +190,33 @@ export class SchedulerStore<
       updateModel,
     );
 
-    this.apply(newState);
+    this.update(newState);
     this.parameters = parameters;
   };
 
+  /**
+   * Returns a cleanup function that need to be called when the store is destroyed.
+   */
   public disposeEffect = () => {
     return this.timeoutManager.clearAll;
+  };
+
+  /**
+   * Registers an effect to be run when the value returned by the selector changes.
+   */
+  public registerStoreEffect = <Value>(
+    selector: (state: State) => Value,
+    effect: (previous: Value, next: Value) => void,
+  ) => {
+    let previousValue = selector(this.state);
+
+    return this.subscribe((state) => {
+      const nextValue = selector(state);
+      if (nextValue !== previousValue) {
+        effect(previousValue, nextValue);
+        previousValue = nextValue;
+      }
+    });
   };
 
   protected setVisibleDate = (visibleDate: SchedulerValidDate, event: React.UIEvent) => {
@@ -253,16 +262,20 @@ export class SchedulerStore<
       newEvents.push(...schedulerEventSelectors.modelList(this.state));
     }
 
+    const createdIds: SchedulerEventId[] = [];
     for (const createdEvent of created) {
-      if (schedulerEventSelectors.processedEvent(this.state, createdEvent.id)) {
-        throw new Error(
-          `${this.instanceName}: an event with id="${createdEvent.id}" already exists. Use updateEvent(...) instead.`,
-        );
-      }
-      newEvents.push(createEventModel(createdEvent, this.state.eventModelStructure));
+      const response = createEventModel(createdEvent, this.state.eventModelStructure);
+      newEvents.push(response.model);
+      createdIds.push(response.id);
     }
 
     this.parameters.onEventsChange?.(newEvents);
+
+    return {
+      deleted: deletedParam ?? [],
+      updated: Array.from(updated.keys()),
+      created: createdIds,
+    };
   }
 
   /**
@@ -270,22 +283,22 @@ export class SchedulerStore<
    */
   public goToToday = (event: React.UIEvent) => {
     const { adapter } = this.state;
-    this.setVisibleDate(adapter.startOfDay(adapter.date()), event);
+    this.setVisibleDate(adapter.startOfDay(adapter.now('default')), event);
   };
 
   /**
    * Creates a new event in the calendar.
    */
-  public createEvent = (calendarEvent: CalendarEvent): CalendarEvent => {
-    this.updateEvents({ created: [calendarEvent] });
-    return calendarEvent;
+  public createEvent = (calendarEvent: SchedulerEventCreationProperties) => {
+    return this.updateEvents({ created: [calendarEvent] }).created[0];
   };
 
   /**
    * Updates an event in the calendar.
    */
-  public updateEvent = (calendarEvent: CalendarEventUpdatedProperties) => {
+  public updateEvent = (calendarEvent: SchedulerEventUpdatedProperties) => {
     const original = schedulerEventSelectors.processedEvent(this.state, calendarEvent.id);
+
     if (!original) {
       throw new Error(
         `${this.instanceName}: the original event was not found (id="${calendarEvent.id}").`,
@@ -335,30 +348,9 @@ export class SchedulerStore<
       );
     }
 
-    let updatedEvents: UpdateEventsParameters;
-
-    switch (scope) {
-      case 'this-and-following': {
-        updatedEvents = applyRecurringUpdateFollowing(adapter, original, occurrenceStart, changes);
-        break;
-      }
-
-      case 'all': {
-        updatedEvents = applyRecurringUpdateAll(adapter, original, occurrenceStart, changes);
-        break;
-      }
-
-      case 'only-this': {
-        updatedEvents = applyRecurringUpdateOnlyThis(adapter, original, occurrenceStart, changes);
-        break;
-      }
-
-      default: {
-        throw new Error(`${this.instanceName}: scope="${scope}" is not supported.`);
-      }
-    }
-
+    const updatedEvents = updateRecurringEvent(adapter, original, occurrenceStart, changes, scope);
     this.updateEvents(updatedEvents);
+
     const submit = onSubmit;
     if (submit) {
       queueMicrotask(() => submit());
@@ -368,14 +360,34 @@ export class SchedulerStore<
   /**
    * Deletes an event from the calendar.
    */
-  public deleteEvent = (eventId: CalendarEventId) => {
+  public deleteEvent = (eventId: SchedulerEventId) => {
     this.updateEvents({ deleted: [eventId] });
+  };
+
+  /**
+   * Creates an event from an event occurrence.
+   * The new event will have the same properties as the original event except:
+   * - the start and end dates will be those provided as parameters.
+   * - the recurrence rule will be removed.
+   */
+  public duplicateEventOccurrence = (
+    eventId: SchedulerEventId,
+    start: SchedulerValidDate,
+    end: SchedulerValidDate,
+  ) => {
+    const original = schedulerEventSelectors.processedEvent(this.state, eventId);
+    if (!original) {
+      throw new Error(`${this.instanceName}: the original event was not found (id="${eventId}").`);
+    }
+
+    const duplicatedEvent = createEventFromRecurringEvent(original, { start, end });
+    return this.updateEvents({ created: [duplicatedEvent] }).created[0];
   };
 
   /**
    * Updates the visible resources.
    */
-  public setVisibleResources = (visibleResources: Map<CalendarResourceId, boolean>) => {
+  public setVisibleResources = (visibleResources: Map<SchedulerResourceId, boolean>) => {
     if (this.state.visibleResources !== visibleResources) {
       this.set('visibleResources', visibleResources);
     }
@@ -384,7 +396,7 @@ export class SchedulerStore<
   /**
    * Sets the occurrence placeholder to render while creating a new event or dragging an existing event occurrence.
    */
-  public setOccurrencePlaceholder = (newPlaceholder: CalendarOccurrencePlaceholder | null) => {
+  public setOccurrencePlaceholder = (newPlaceholder: SchedulerOccurrencePlaceholder | null) => {
     const { adapter, occurrencePlaceholder: previous } = this.state;
     if (shouldUpdateOccurrencePlaceholder(adapter, previous, newPlaceholder)) {
       this.set('occurrencePlaceholder', newPlaceholder);

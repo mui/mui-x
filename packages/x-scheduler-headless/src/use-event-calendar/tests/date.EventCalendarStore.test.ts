@@ -11,8 +11,8 @@ describe('Date - EventCalendarStore', () => {
       const onVisibleDateChange = spy();
       const onViewChange = spy();
 
-      const initialDate = adapter.date('2025-08-01T00:00:00Z');
-      const nextDate = adapter.date('2025-08-02T00:00:00Z');
+      const initialDate = adapter.date('2025-08-01T00:00:00Z', 'default');
+      const nextDate = adapter.date('2025-08-02T00:00:00Z', 'default');
 
       const store = new EventCalendarStore(
         {
@@ -40,8 +40,8 @@ describe('Date - EventCalendarStore', () => {
       const onVisibleDateChange = spy();
       const onViewChange = spy();
 
-      const initialDate = adapter.date('2025-08-01T00:00:00Z');
-      const nextDate = adapter.date('2025-08-02T00:00:00Z');
+      const initialDate = adapter.date('2025-08-01T00:00:00Z', 'default');
+      const nextDate = adapter.date('2025-08-02T00:00:00Z', 'default');
 
       const store = new EventCalendarStore(
         {
@@ -69,8 +69,8 @@ describe('Date - EventCalendarStore', () => {
       const onVisibleDateChange = spy();
       const onViewChange = spy();
 
-      const currentDate = adapter.date('2025-08-01T00:00:00Z');
-      const nextDate = adapter.date('2025-08-02T00:00:00Z');
+      const currentDate = adapter.date('2025-08-01T00:00:00Z', 'default');
+      const nextDate = adapter.date('2025-08-02T00:00:00Z', 'default');
 
       const store = new EventCalendarStore(
         {
@@ -95,8 +95,8 @@ describe('Date - EventCalendarStore', () => {
       const onVisibleDateChange = spy();
       const onViewChange = spy();
 
-      const currentDate = adapter.date('2025-08-01T00:00:00Z');
-      const nextDate = adapter.date('2025-08-02T00:00:00Z');
+      const currentDate = adapter.date('2025-08-01T00:00:00Z', 'default');
+      const nextDate = adapter.date('2025-08-02T00:00:00Z', 'default');
 
       const store = new EventCalendarStore(
         {
@@ -121,7 +121,7 @@ describe('Date - EventCalendarStore', () => {
       const onVisibleDateChange = spy();
       const onViewChange = spy();
 
-      const currentDate = adapter.date('2025-08-01T00:00:00Z');
+      const currentDate = adapter.date('2025-08-01T00:00:00Z', 'default');
 
       const store = new EventCalendarStore(
         {
@@ -147,7 +147,7 @@ describe('Date - EventCalendarStore', () => {
       const onVisibleDateChange = spy();
       const onViewChange = spy();
 
-      const sameDate = adapter.date('2025-08-02T00:00:00Z');
+      const sameDate = adapter.date('2025-08-02T00:00:00Z', 'default');
       const store = new EventCalendarStore(
         {
           ...DEFAULT_PARAMS,
@@ -172,7 +172,7 @@ describe('Date - EventCalendarStore', () => {
         { ...DEFAULT_PARAMS, views: ['week', 'month', 'agenda'] as CalendarView[] },
         adapter,
       );
-      const newDate = adapter.date('2025-08-02T00:00:00Z');
+      const newDate = adapter.date('2025-08-02T00:00:00Z', 'default');
       expect(() => store.switchToDay(newDate, {} as any)).to.throw(
         /not compatible with the available views/i,
       );
@@ -182,46 +182,52 @@ describe('Date - EventCalendarStore', () => {
   describe('Method: goToPreviousVisibleDate', () => {
     it('should respect the date returned by setSiblingVisibleDateGetter', () => {
       const onVisibleDateChange = spy();
-      const targetDate = adapter.date('2025-07-03T00:00:00Z');
+      const targetDate = adapter.date('2025-07-03T00:00:00Z', 'default');
       const siblingVisibleDateGetter = spy(() => targetDate);
 
       const store = new EventCalendarStore(
         {
           ...DEFAULT_PARAMS,
           view: 'day',
-          visibleDate: adapter.date('2025-07-01T00:00:00Z'),
+          visibleDate: adapter.date('2025-07-01T00:00:00Z', 'default'),
           onVisibleDateChange,
         },
         adapter,
       );
 
-      store.setViewConfig({ siblingVisibleDateGetter });
+      store.setViewConfig({
+        siblingVisibleDateGetter,
+        visibleDaysSelector: () => [],
+      });
       store.goToPreviousVisibleDate({} as any);
       expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(targetDate);
-      expect(siblingVisibleDateGetter.lastCall.lastArg).toEqual(-1);
+      expect(siblingVisibleDateGetter.lastCall.firstArg.delta).toEqual(-1);
     });
   });
 
   describe('Method: goToNextVisibleDate', () => {
     it('should respect the date returned by setSiblingVisibleDateGetter', () => {
       const onVisibleDateChange = spy();
-      const targetDate = adapter.date('2025-07-03T00:00:00Z');
+      const targetDate = adapter.date('2025-07-03T00:00:00Z', 'default');
       const siblingVisibleDateGetter = spy(() => targetDate);
 
       const store = new EventCalendarStore(
         {
           ...DEFAULT_PARAMS,
           view: 'day',
-          visibleDate: adapter.date('2025-07-01T00:00:00Z'),
+          visibleDate: adapter.date('2025-07-01T00:00:00Z', 'default'),
           onVisibleDateChange,
         },
         adapter,
       );
 
-      store.setViewConfig({ siblingVisibleDateGetter });
+      store.setViewConfig({
+        siblingVisibleDateGetter,
+        visibleDaysSelector: () => [],
+      });
       store.goToNextVisibleDate({} as any);
       expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(targetDate);
-      expect(siblingVisibleDateGetter.lastCall.lastArg).toEqual(1);
+      expect(siblingVisibleDateGetter.lastCall.firstArg.delta).toEqual(1);
     });
   });
 });

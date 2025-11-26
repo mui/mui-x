@@ -28,6 +28,7 @@ export async function exportImage(
     quality = 0.9,
     onBeforeExport = defaultOnBeforeExport,
     copyStyles = true,
+    nonce,
   } = params ?? {};
   const drawDocumentPromise = getDrawDocument();
   const doc = ownerDocument(element);
@@ -58,7 +59,7 @@ export async function exportImage(
       rootCandidate.constructor.name === 'ShadowRoot' ? (rootCandidate as ShadowRoot) : doc;
 
     if (copyStyles) {
-      await Promise.all(loadStyleSheets(exportDoc, root));
+      await Promise.all(loadStyleSheets(exportDoc, root, nonce));
     }
 
     resolve();
@@ -84,6 +85,7 @@ export async function exportImage(
     await drawDocument(iframe.contentDocument!, canvas, {
       // Handle retina displays: https://github.com/cburgmer/rasterizeHTML.js/blob/262b3404d1c469ce4a7750a2976dec09b8ae2d6c/examples/retina.html#L71
       zoom: ratio,
+      nonce,
     });
   } finally {
     doc.body.removeChild(iframe);

@@ -3,6 +3,7 @@ import { useTicks } from '../hooks/useTicks';
 import { ComputedXAxis } from '../models/axis';
 import { GridLine } from './styledComponents';
 import { ChartsGridClasses } from './chartsGridClasses';
+import { useChartContext } from '../context/ChartProvider';
 
 interface ChartsGridVerticalProps {
   axis: ComputedXAxis;
@@ -15,6 +16,7 @@ interface ChartsGridVerticalProps {
  * @ignore - internal component.
  */
 export function ChartsGridVertical(props: ChartsGridVerticalProps) {
+  const { instance } = useChartContext();
   const { axis, start, end, classes } = props;
 
   const { scale, tickNumber, tickInterval } = axis;
@@ -23,16 +25,18 @@ export function ChartsGridVertical(props: ChartsGridVerticalProps) {
 
   return (
     <React.Fragment>
-      {xTicks.map(({ value, offset }) => (
-        <GridLine
-          key={`vertical-${value?.getTime?.() ?? value}`}
-          y1={start}
-          y2={end}
-          x1={offset}
-          x2={offset}
-          className={classes.verticalLine}
-        />
-      ))}
+      {xTicks.map(({ value, offset }) =>
+        !instance.isXInside(offset) ? null : (
+          <GridLine
+            key={`vertical-${value?.getTime?.() ?? value}`}
+            y1={start}
+            y2={end}
+            x1={offset}
+            x2={offset}
+            className={classes.verticalLine}
+          />
+        ),
+      )}
     </React.Fragment>
   );
 }

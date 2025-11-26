@@ -1,12 +1,13 @@
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { adapter, createSchedulerRenderer, describeConformance } from 'test/utils/scheduler';
 import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
+import { processDate } from '@mui/x-scheduler-headless/process-date';
 
 describe('<CalendarGrid.TimeEventResizeHandler />', () => {
   const { render } = createSchedulerRenderer();
 
-  const eventStart = adapter.date();
-  const eventEnd = adapter.addHours(eventStart, 1);
+  const eventStart = processDate(adapter.now('default'), adapter);
+  const eventEnd = processDate(adapter.addHours(eventStart.value, 1), adapter);
 
   describeConformance(<CalendarGrid.TimeEventResizeHandler side="start" />, () => ({
     refInstanceof: window.HTMLDivElement,
@@ -14,7 +15,7 @@ describe('<CalendarGrid.TimeEventResizeHandler />', () => {
       return render(
         <EventCalendarProvider events={[]}>
           <CalendarGrid.Root>
-            <CalendarGrid.TimeColumn start={eventStart} end={eventEnd}>
+            <CalendarGrid.TimeColumn start={eventStart.value} end={eventEnd.value}>
               <CalendarGrid.TimeEvent
                 eventId="fake-id"
                 occurrenceKey="fake-key"
