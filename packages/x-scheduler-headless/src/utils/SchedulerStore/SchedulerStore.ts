@@ -79,9 +79,8 @@ export class SchedulerStore<
       visibleResources: new Map(),
       visibleDate:
         parameters.visibleDate ??
-        (parameters.defaultVisibleDate
-          ? adapter.setTimezone(parameters.defaultVisibleDate, timezone)
-          : getStartOfTodayInRenderTimezone(adapter, timezone)),
+        parameters.defaultVisibleDate ??
+        adapter.startOfDay(adapter.now(timezone)),
     };
 
     const initialState = mapper.getInitialState(schedulerInitialState, parameters, adapter);
