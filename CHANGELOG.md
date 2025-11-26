@@ -9,13 +9,13 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Nov 26, 2025_
 
-We'd like to extend a big thank you to the 7 contributors who made this release possible. Here are some highlights ✨:
+We'd like to extend a big thank you to the 8 contributors who made this release possible. Here are some highlights ✨:
 
 - 🔃 Data Grid tree data now supports row reordering. See the [Drag-and-drop tree data reordering](https://mui.com/x/react-data-grid/tree-data/#drag-and-drop-tree-data-reordering) section for more details.
 - 🐞 Bugfixes
 
 The following team members contributed to this release:
-@alexfauquette, @arminmeh, @bernardobelchior, @cherniavskii, @siriwatknp, @JCQuintas, @MBilalShafi
+@alexfauquette, @arminmeh, @bernardobelchior, @cherniavskii, @siriwatknp, @JCQuintas, @MBilalShafi, @prakhargupta1
 
 ### Data Grid
 
@@ -63,6 +63,7 @@ Same changes as in `@mui/x-charts-pro@8.20.0`, plus:
 ### Docs
 
 - [docs] Add `llms.txt` link to the sidebar (#20312) @siriwatknp
+- [docs] Add a line chart demo for the Overview section (#20239) @prakhargupta1
 
 ## 8.19.0
 
