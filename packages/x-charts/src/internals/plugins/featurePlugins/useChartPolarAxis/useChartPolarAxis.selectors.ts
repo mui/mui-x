@@ -1,4 +1,4 @@
-import { createSelector } from '@mui/x-internals/store';
+import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions';
 import {
   selectorChartSeriesConfig,
@@ -25,7 +25,7 @@ export const selectorChartRawRadiusAxis = createSelector(
  * The only interesting selectors that merge axis data and zoom if provided.
  */
 
-export const selectorChartRotationAxis = createSelector(
+export const selectorChartRotationAxis = createSelectorMemoized(
   selectorChartRawRotationAxis,
   selectorChartDrawingArea,
   selectorChartSeriesProcessed,
@@ -40,7 +40,7 @@ export const selectorChartRotationAxis = createSelector(
     }),
 );
 
-export const selectorChartRadiusAxis = createSelector(
+export const selectorChartRadiusAxis = createSelectorMemoized(
   selectorChartRawRadiusAxis,
   selectorChartDrawingArea,
   selectorChartSeriesProcessed,
@@ -55,7 +55,10 @@ export const selectorChartRadiusAxis = createSelector(
     }),
 );
 
-export const selectorChartPolarCenter = createSelector(selectorChartDrawingArea, (drawingArea) => ({
-  cx: drawingArea.left + drawingArea.width / 2,
-  cy: drawingArea.top + drawingArea.height / 2,
-}));
+export const selectorChartPolarCenter = createSelectorMemoized(
+  selectorChartDrawingArea,
+  (drawingArea) => ({
+    cx: drawingArea.left + drawingArea.width / 2,
+    cy: drawingArea.top + drawingArea.height / 2,
+  }),
+);
