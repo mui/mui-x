@@ -15,7 +15,6 @@ import {
 import { processEvent } from '../../process-event';
 import { Adapter } from '../../use-adapter/useAdapter.types';
 import { SchedulerParameters, SchedulerState } from './SchedulerStore.types';
-import { getRenderTimezone } from '../timezone-utils';
 
 /**
  * Determines if the occurrence placeholder has changed in a meaningful way that requires updating the store.
@@ -209,11 +208,9 @@ type AnyEventSetter<TEvent extends object> = (
 ) => TEvent;
 
 export function buildEventsState<TEvent extends object, TResource extends object>(
-  parameters: Pick<
-    SchedulerParameters<TEvent, TResource>,
-    'events' | 'eventModelStructure' | 'timezone'
-  >,
+  parameters: Pick<SchedulerParameters<TEvent, TResource>, 'events' | 'eventModelStructure'>,
   adapter: Adapter,
+  timezone: TemporalTimezone,
 ): Pick<
   SchedulerState<TEvent>,
   | 'eventIdList'
@@ -227,7 +224,7 @@ export function buildEventsState<TEvent extends object, TResource extends object
   const eventIdList: SchedulerEventId[] = [];
   const eventModelLookup = new Map<SchedulerEventId, TEvent>();
   const processedEventLookup = new Map<SchedulerEventId, SchedulerProcessedEvent>();
-  const timezone = getRenderTimezone(parameters.timezone);
+
   for (const event of events) {
     const processedEvent = getProcessedEventFromModel(
       event,

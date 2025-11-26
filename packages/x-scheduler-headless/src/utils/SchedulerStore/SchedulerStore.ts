@@ -68,7 +68,7 @@ export class SchedulerStore<
 
     const schedulerInitialState: SchedulerState<TEvent> = {
       ...SchedulerStore.deriveStateFromParameters(parameters, adapter),
-      ...buildEventsState(parameters, adapter),
+      ...buildEventsState(parameters, adapter, timezone),
       ...buildResourcesState(parameters),
       preferences: DEFAULT_SCHEDULER_PREFERENCES,
       adapter,
@@ -175,7 +175,7 @@ export class SchedulerStore<
       parameters.eventModelStructure !== this.parameters.eventModelStructure ||
       adapter !== this.state.adapter
     ) {
-      Object.assign(newSchedulerState, buildEventsState(parameters, adapter));
+      Object.assign(newSchedulerState, buildEventsState(parameters, adapter, this.state.timezone));
     }
 
     if (

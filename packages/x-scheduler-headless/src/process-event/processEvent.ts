@@ -1,4 +1,4 @@
-import { SchedulerEvent, SchedulerProcessedEvent } from '../models';
+import { SchedulerEvent, SchedulerProcessedEvent, SchedulerValidDate } from '../models';
 import { processDate } from '../process-date';
 import { Adapter } from '../use-adapter';
 import { parseRRuleString } from '../utils/recurring-events';
@@ -22,7 +22,9 @@ export function processEvent(
   const startInRenderTz = adapter.setTimezone(model.start, timezone);
   const endInRenderTz = adapter.setTimezone(model.end, timezone);
 
-  const processededExDates = model.exDates?.map((exDate) => adapter.setTimezone(exDate, timezone));
+  const processededExDates: SchedulerValidDate[] | undefined = model.exDates
+    ? model.exDates.map((exDate) => adapter.setTimezone(exDate, timezone))
+    : undefined;
 
   return {
     id: model.id,
