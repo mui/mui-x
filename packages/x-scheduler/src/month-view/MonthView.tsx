@@ -32,11 +32,11 @@ const EVENT_HEIGHT = 18;
 const EVENT_GAP = 5;
 
 const MONTH_VIEW_CONFIG: EventCalendarViewConfig = {
-  siblingVisibleDateGetter: ({ state, delta }) => {
-    const visibleDate = schedulerOtherSelectors.visibleDate(state);
-    return state.adapter.addMonths(state.adapter.startOfMonth(visibleDate), delta);
-  },
-
+  siblingVisibleDateGetter: ({ state, delta }) =>
+    state.adapter.addMonths(
+      state.adapter.startOfMonth(schedulerOtherSelectors.visibleDate(state)),
+      delta,
+    ),
   visibleDaysSelector: createSelectorMemoized(
     (state: State) => state.adapter,
     schedulerOtherSelectors.visibleDate,
