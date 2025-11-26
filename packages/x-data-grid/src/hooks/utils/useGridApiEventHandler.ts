@@ -50,7 +50,9 @@ export function createUseGridApiEventHandler(registryContainer: RegistryContaine
 
     if (!subscription.current && handlerRef.current) {
       const enhancedHandler: GridEventListener<E> = (params, event, details) => {
-        if (!event.defaultMuiPrevented) {
+        // Check for the existence of the event once more to avoid Safari 26 issue
+        // https://github.com/mui/mui-x/issues/20159
+        if (event && !event.defaultMuiPrevented) {
           handlerRef.current?.(params, event, details);
         }
       };
@@ -82,7 +84,9 @@ export function createUseGridApiEventHandler(registryContainer: RegistryContaine
     React.useEffect(() => {
       if (!subscription.current && handlerRef.current) {
         const enhancedHandler: GridEventListener<E> = (params, event, details) => {
-          if (!event.defaultMuiPrevented) {
+          // Check for the existence of the event once more to avoid Safari 26 issue
+          // https://github.com/mui/mui-x/issues/20159
+          if (event && !event.defaultMuiPrevented) {
             handlerRef.current?.(params, event, details);
           }
         };

@@ -3,6 +3,37 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.29.11
+
+_Nov 19, 2025_
+
+We'd like to extend a big thank you to the 2 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+Following are all team members who have contributed to this release:
+@arminmeh, @mapache-salvaje
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.29.11`
+
+- [DataGrid] Prevent Safari 26 error in the event handler (#20382) @arminmeh
+
+#### `@mui/x-data-grid-pro@7.29.11` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+
+Same changes as in `@mui/x-data-grid@7.29.11`.
+
+#### `@mui/x-data-grid-premium@7.29.11` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link "Premium plan")
+
+Same changes as in `@mui/x-data-grid-pro@7.29.11`.
+
+### Docs
+
+- [docs] Revise the Pro filter docs (#18815) @mapache-salvaje
+
 ## v7.29.10
 
 _Sep 25, 2025_
@@ -14,6 +45,8 @@ We'd like to extend a big thank you to the 1 contributor who made this release p
 The following is the team member who have contributed to this release:
 @flaviendelangle
 
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
 ### Tree View
 
 #### `@mui/x-tree-view@7.29.10`
@@ -23,8 +56,6 @@ The following is the team member who have contributed to this release:
 #### `@mui/x-tree-view-pro@7.29.10` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
 
 Same changes as in `@mui/x-tree-view@7.29.10`.
-
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
 ## 7.29.9
 
