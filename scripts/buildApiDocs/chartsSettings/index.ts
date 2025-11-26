@@ -97,6 +97,8 @@ export default chartsApiPages;
       'x-charts/src/LineChart/FocusedLineMark.tsx',
       'x-charts/src/PieChart/FocusedPieArc.tsx',
       'x-charts/src/ScatterChart/BatchScatter.tsx',
+      'x-charts/src/BarChart/BatchBarPlot.tsx',
+      'x-charts/src/BarChart/IndividualBarPlot.tsx',
       'x-charts-premium/src/ChartsRenderer/ChartsRenderer.tsx',
       'x-charts-premium/src/ChartsRenderer/components/PaletteOption.tsx',
       // TODO(#20275): These two components will be documented in the range bar PR

@@ -273,6 +273,21 @@ When `skipAnimation` is enabled, the chart renders without any animations.
 
 {{"demo": "BarAnimation.js"}}
 
+## Performance
+
+Bar charts can display many bars, which can impact performance. The default rendering of bars use SVG `rect` elements, which can be slow for a large number of bars.
+
+To improve performance, you can use the `renderer` prop set to `"svg-batch"`, which renders the bars more efficiently.
+However, this comes with the following limitations:
+
+- CSS styling of single `bars` elements is no longer possible;
+- Transparent highlight style: for performance reasons, the highlighted state creates a highlighted bar on top of the original bar. Applying transparency to the highlighted bar can cause the original bar to be partially visible;
+- `disableHover` for bar series does not work.
+
+The example below uses the `renderer` prop to improve performance when rendering a dataset with 16,000 data points.
+
+{{"demo": "BarBatchRenderer.js"}}
+
 ## Composition
 
 Use the `<ChartDataProvider />` to provide `series`, `xAxis`, and `yAxis` props for composition.
