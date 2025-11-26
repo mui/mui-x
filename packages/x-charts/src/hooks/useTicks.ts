@@ -86,7 +86,7 @@ function getTickPosition(
  * @param range Range of the scale.
  * @param tickSpacing Spacing in pixels.
  */
-function applyTickSpacing<T>(domain: T[], range: [number, number], tickSpacing: number) {
+export function applyTickSpacing<T>(domain: T[], range: [number, number], tickSpacing: number) {
   const rangeSpan = Math.abs(range[1] - range[0]);
 
   const every = Math.ceil(domain.length / (rangeSpan / tickSpacing));
