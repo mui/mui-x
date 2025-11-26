@@ -22,6 +22,7 @@ import { GridHydrateRowsValue } from '../../features/rows/gridRowsInterfaces';
 import { GridPreferencePanelsValue } from '../../features/preferencesPanel';
 import { GridGetRowsParams, GridGetRowsResponse } from '../../../models/gridDataSource';
 import { HeightEntry } from '../../features/rows/gridRowsMetaInterfaces';
+import type { RowReorderDropPosition } from '../../../models/api/gridRowApi';
 
 export type GridPipeProcessorGroup = keyof GridPipeProcessingLookup;
 
@@ -79,12 +80,12 @@ export interface GridPipeProcessingLookup {
    *   - For example before first row is `0` and after the last row is `rows.length`.
    * If the reorder is invalid, it returns `-1`.
    */
-  getRowReorderTargetIndex: {
-    value: number;
+  isRowReorderValid: {
+    value: boolean;
     context: {
       sourceRowId: GridRowId;
       targetRowId: GridRowId;
-      dropPosition: 'above' | 'below';
+      dropPosition: RowReorderDropPosition;
       dragDirection: 'up' | 'down';
     };
   };

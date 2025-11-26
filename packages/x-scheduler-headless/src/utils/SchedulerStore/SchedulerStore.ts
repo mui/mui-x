@@ -20,12 +20,7 @@ import {
   UpdateEventsParameters,
 } from './SchedulerStore.types';
 import { Adapter } from '../../use-adapter/useAdapter.types';
-import {
-  applyRecurringUpdateFollowing,
-  applyRecurringUpdateAll,
-  applyRecurringUpdateOnlyThis,
-  createEventFromRecurringEvent,
-} from '../recurring-event-utils';
+import { createEventFromRecurringEvent, updateRecurringEvent } from '../recurring-events';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
 import {
   buildEventsState,
@@ -199,8 +194,29 @@ export class SchedulerStore<
     this.parameters = parameters;
   };
 
+  /**
+   * Returns a cleanup function that need to be called when the store is destroyed.
+   */
   public disposeEffect = () => {
     return this.timeoutManager.clearAll;
+  };
+
+  /**
+   * Registers an effect to be run when the value returned by the selector changes.
+   */
+  public registerStoreEffect = <Value>(
+    selector: (state: State) => Value,
+    effect: (previous: Value, next: Value) => void,
+  ) => {
+    let previousValue = selector(this.state);
+
+    return this.subscribe((state) => {
+      const nextValue = selector(state);
+      if (nextValue !== previousValue) {
+        effect(previousValue, nextValue);
+        previousValue = nextValue;
+      }
+    });
   };
 
   protected setVisibleDate = (visibleDate: SchedulerValidDate, event: React.UIEvent) => {
@@ -332,30 +348,9 @@ export class SchedulerStore<
       );
     }
 
-    let updatedEvents: UpdateEventsParameters;
-
-    switch (scope) {
-      case 'this-and-following': {
-        updatedEvents = applyRecurringUpdateFollowing(adapter, original, occurrenceStart, changes);
-        break;
-      }
-
-      case 'all': {
-        updatedEvents = applyRecurringUpdateAll(adapter, original, occurrenceStart, changes);
-        break;
-      }
-
-      case 'only-this': {
-        updatedEvents = applyRecurringUpdateOnlyThis(adapter, original, occurrenceStart, changes);
-        break;
-      }
-
-      default: {
-        throw new Error(`${this.instanceName}: scope="${scope}" is not supported.`);
-      }
-    }
-
+    const updatedEvents = updateRecurringEvent(adapter, original, occurrenceStart, changes, scope);
     this.updateEvents(updatedEvents);
+
     const submit = onSubmit;
     if (submit) {
       queueMicrotask(() => submit());
