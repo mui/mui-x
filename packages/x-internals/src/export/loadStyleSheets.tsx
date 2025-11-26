@@ -40,10 +40,6 @@ export function loadStyleSheets(document: Document, root: Document | ShadowRoot,
       );
     }
 
-    if (nonce) {
-      newHeadStyleElement.setAttribute('nonce', nonce);
-    }
-
     document.head.appendChild(newHeadStyleElement);
 
     if (nonce) {
