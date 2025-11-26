@@ -5,6 +5,7 @@ import {
 } from '@mui/x-scheduler-headless/models';
 import {
   SchedulerEvent,
+  SchedulerEventCreationProperties,
   SchedulerEventId,
   SchedulerEventOccurrence,
   SchedulerEventSide,
@@ -236,5 +237,13 @@ export class EventBuilder {
       end: processDate(end, this.adapter),
       key,
     };
+  }
+
+  /**
+   * Derives a SchedulerEventCreationProperties from the built event.
+   */
+  buildEventCreationProperties(): SchedulerEventCreationProperties {
+    const { id, ...rest } = this.event;
+    return rest;
   }
 }
