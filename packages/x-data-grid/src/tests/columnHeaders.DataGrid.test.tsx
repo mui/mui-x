@@ -200,4 +200,38 @@ describe('<DataGrid /> - Column headers', () => {
     expect(screen.queryByRole('menuitem', { name: /desc/i })).not.to.equal(null);
     expect(screen.queryByRole('menuitem', { name: /unsort/i })).to.equal(null);
   });
+
+  it('should use baseTooltip slot for sort icon', () => {
+    function CustomTooltip({ title, children, enterDelay, ...other }: any) {
+      return (
+        <div data-testid="custom-tooltip" data-title={title} {...other}>
+          {children}
+        </div>
+      );
+    }
+
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid
+          columns={[{ field: 'id', sortable: true }]}
+          rows={[{ id: 1 }]}
+          initialState={{
+            sorting: {
+              sortModel: [{ field: 'id', sort: 'asc' }],
+            },
+          }}
+          slots={{
+            baseTooltip: CustomTooltip,
+          }}
+        />
+      </div>,
+    );
+
+    const sortButton = screen.getByRole('grid').querySelector('.MuiDataGrid-sortButton')!;
+    const tooltip = sortButton.closest('[data-testid="custom-tooltip"]');
+
+    expect(tooltip).not.to.equal(null);
+    expect(tooltip!.getAttribute('data-title')).to.equal('Sort');
+    expect(sortButton.getAttribute('title')).to.equal(null);
+  });
 });
