@@ -45,12 +45,6 @@ export function loadStyleSheets(document: Document, root: Document | ShadowRoot,
     }
 
     document.head.appendChild(newHeadStyleElement);
-
-    if (nonce) {
-      // I don't understand why we need to set the nonce again after appending the element, but I've tested it, and it's
-      // the only way I could find to fix Chrome's warning about a CSP violation.
-      newHeadStyleElement.setAttribute('nonce', nonce);
-    }
   }
 
   return stylesheetLoadPromises;
