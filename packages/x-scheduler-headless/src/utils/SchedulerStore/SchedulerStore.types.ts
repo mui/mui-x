@@ -134,7 +134,6 @@ export interface SchedulerState<TEvent extends object = any> {
    * The timezone used by the scheduler.
    * Typically an IANA timezone name (e.g. "America/New_York", "Europe/Paris")
    * or "default" to use the adapter's default timezone.
-   * @default "default"
    */
   timezone: TemporalTimezone;
 }
