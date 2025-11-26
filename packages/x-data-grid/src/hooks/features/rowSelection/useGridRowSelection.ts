@@ -179,6 +179,15 @@ export const useGridRowSelection = (
       const currentModel = gridRowSelectionStateSelector(apiRef);
       if (currentModel !== model) {
         logger.debug(`Setting selection model`);
+
+        // clear the reference to the last selected row if that row is not in the model anymore
+        if (lastRowToggled.current !== null) {
+          const isInModel = model.ids.has(lastRowToggled.current);
+          if ((model.type === 'include' && !isInModel) || (model.type === 'exclude' && isInModel)) {
+            lastRowToggled.current = null;
+          }
+        }
+
         apiRef.current.setState(
           (state) => ({
             ...state,
@@ -231,7 +240,7 @@ export const useGridRowSelection = (
       }
 
       const tree = gridRowTreeSelector(apiRef);
-      lastRowToggled.current = id;
+      lastRowToggled.current = isSelected ? id : null;
 
       if (resetSelection) {
         logger.debug(`Setting selection for row ${id}`);
