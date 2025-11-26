@@ -43,7 +43,7 @@ describe('innerGetEventOccurrencesGroupedByResource', () => {
     const occurrence = EventBuilder.new()
       .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
       .resource(R1.id)
-      .buildOccurrence();
+      .toOccurrence();
 
     const out = call({
       events: [occurrence],
@@ -64,7 +64,7 @@ describe('innerGetEventOccurrencesGroupedByResource', () => {
     const occurrence = EventBuilder.new()
       .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
       .resource(R1.id)
-      .buildOccurrence();
+      .toOccurrence();
 
     const out = call({
       events: [occurrence],
@@ -102,11 +102,11 @@ describe('innerGetEventOccurrencesGroupedByResource', () => {
     const occurrence1 = EventBuilder.new()
       .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
       .resource(R1.id)
-      .buildOccurrence();
+      .toOccurrence();
     const occurrence2 = EventBuilder.new()
       .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
       .resource(R1.id)
-      .buildOccurrence();
+      .toOccurrence();
 
     const out = call({
       events: [occurrence1, occurrence2],
@@ -124,11 +124,11 @@ describe('innerGetEventOccurrencesGroupedByResource', () => {
 
     const occurrence1 = EventBuilder.new()
       .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
-      .buildOccurrence();
+      .toOccurrence();
     const occurrence2 = EventBuilder.new()
       .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
       .resource(R1.id)
-      .buildOccurrence();
+      .toOccurrence();
 
     const out = call({
       events: [occurrence1, occurrence2],
@@ -148,7 +148,7 @@ describe('innerGetEventOccurrencesGroupedByResource', () => {
     const occurrence = EventBuilder.new()
       .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
       .resource(child2.id)
-      .buildOccurrence();
+      .toOccurrence();
 
     const children = new Map<string, readonly SchedulerResource[]>([
       ['P', [child2, child1]], // intentionally unordered
@@ -182,7 +182,7 @@ describe('innerGetEventOccurrencesGroupedByResource', () => {
     const occurrence = EventBuilder.new()
       .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
       .resource(R1.id)
-      .buildOccurrence();
+      .toOccurrence();
 
     const out = call({
       events: [occurrence],
@@ -214,7 +214,7 @@ describe('innerGetEventOccurrencesGroupedByResource', () => {
     const occurrence = EventBuilder.new()
       .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
       .resource(c.id)
-      .buildOccurrence();
+      .toOccurrence();
 
     const out = call({
       events: [occurrence],
@@ -239,7 +239,7 @@ describe('innerGetEventOccurrencesGroupedByResource', () => {
     const occurrence = EventBuilder.new()
       .singleDay('2024-03-01T09:00:00Z')
       .resource(R1.id)
-      .buildOccurrence();
+      .toOccurrence();
 
     const out = call({
       events: [occurrence],

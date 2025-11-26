@@ -289,7 +289,7 @@ storeClasses.forEach((storeClass) => {
 
         const store = new storeClass.Value({ events: [event1], onEventsChange }, adapter);
 
-        const newEvent = EventBuilder.new().buildEventCreationProperties();
+        const newEvent = EventBuilder.new().toCreationProperties();
 
         const createdId = store.createEvent(newEvent);
 
