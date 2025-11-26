@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useSvgRef } from '@mui/x-charts';
+import { UseChartHighlightSignature, useSvgRef } from '@mui/x-charts';
 import useId from '@mui/utils/useId';
 import { BarPlotSlotProps, BarPlotSlots } from './BarPlot';
 import { BarItemIdentifier } from '../models';
@@ -123,25 +123,17 @@ function useCreatePaths(completedData: ProcessedBarSeriesData[], borderRadius: n
   return paths;
 }
 
-export function BatchBarPlot({
-  completedData,
-  borderRadius = 0,
-  onItemClick,
-  skipAnimation,
-}: BatchBarPlotProps) {
+function useOnItemClick(onItemClick: BatchBarPlotProps['onItemClick'] | undefined) {
   const { instance } = useChartContext();
   const svgRef = useSvgRef();
-  const store = useStore<[UseChartCartesianAxisSignature]>();
+  const store = useStore<[UseChartCartesianAxisSignature, UseChartHighlightSignature]>();
   const zoomIsInteracting = useSelector(store, selectorChartZoomIsInteracting);
   const flatbushMap = useSelector(
     store,
     zoomIsInteracting ? selectorChartSeriesEmptyFlatbushMap : selectorChartBarSeriesFlatbushMap,
   );
-  const paths = useCreatePaths(completedData, borderRadius);
-  const children: React.ReactNode[] = [];
-  const AnimationWrapper = skipAnimation ? React.Fragment : AnimatedGroup;
 
-  function onClick(event: React.MouseEvent<SVGElement, MouseEvent>) {
+  return function onClick(event: React.MouseEvent<SVGElement, MouseEvent>) {
     const element = svgRef.current;
 
     if (element == null) {
@@ -231,7 +223,19 @@ export function BatchBarPlot({
         dataIndex: closestPoint.dataIndex,
       });
     }
-  }
+  };
+}
+
+export function BatchBarPlot({
+  completedData,
+  borderRadius = 0,
+  onItemClick,
+  skipAnimation,
+}: BatchBarPlotProps) {
+  const paths = useCreatePaths(completedData, borderRadius);
+  const children: React.ReactNode[] = [];
+  const AnimationWrapper = skipAnimation ? React.Fragment : AnimatedGroup;
+  const onClick = useOnItemClick(onItemClick);
 
   let i = 0;
   for (const [fill, dArray] of paths.entries()) {
