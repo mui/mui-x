@@ -3,6 +3,35 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.29.12
+
+_Nov 26, 2025_
+
+We'd like to extend a big thank you to the 2 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+Special thanks go out to the community members for their valuable contributions:
+@m2mathew
+
+Following are all team members who have contributed to this release:
+@arminmeh
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.29.12`
+
+- [DataGrid] Avoid automatic scroll back to the focused element after it leaves the viewport (#20417) @arminmeh
+- [DataGrid] Fix missing rows in the print export window (#20157) @m2mathew
+
+#### `@mui/x-data-grid-pro@7.29.12` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+
+Same changes as in `@mui/x-data-grid@7.29.12`.
+
+#### `@mui/x-data-grid-premium@7.29.12` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link "Premium plan")
+
+Same changes as in `@mui/x-data-grid-pro@7.29.12`.
+
 ## 7.29.11
 
 _Nov 19, 2025_
