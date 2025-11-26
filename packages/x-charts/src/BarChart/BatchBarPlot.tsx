@@ -27,6 +27,7 @@ import { ProcessedBarData, ProcessedBarSeriesData } from './types';
 import { findClosestPoints } from '../internals/plugins/featurePlugins/useChartClosestPoint/findClosestPoints';
 import { ANIMATION_DURATION_MS } from '../internals/animation/animation';
 import { useUtilityClasses } from './barClasses';
+import { appendAtKey } from '../internals/appendAtKey';
 
 interface BatchBarPlotProps {
   completedData: ProcessedBarSeriesData[];
@@ -41,17 +42,6 @@ interface BatchBarPlotProps {
 }
 
 const MAX_POINTS_PER_PATH = 1000;
-
-function appendAtKey(map: Map<string, string[]>, key: string, value: string) {
-  let bucket = map.get(key);
-  if (!bucket) {
-    bucket = [value];
-    map.set(key, bucket);
-  } else {
-    bucket.push(value);
-  }
-  return bucket;
-}
 
 function generateBarPath(
   x: number,
