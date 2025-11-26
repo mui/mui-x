@@ -5,6 +5,88 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.19.1
+
+_Nov 26, 2025_
+
+We'd like to extend a big thank you to the 0 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.19.1`
+
+- [DataGrid] Fix RTL virtualization to display columns when viewport width is larger than the grid (#20409) @siriwatknp
+- [DataGrid] Initialize data grid core packages (#20276) @cherniavskii
+- [DataGrid] Improve accessibility of the sort icon (#20430) @arminmeh
+- [DataGrid] Use `viewport` as a boundary for the `BasePopper` flip (#20311) @arminmeh
+
+#### `@mui/x-data-grid-pro@8.19.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.19.1`, plus:
+
+- [DataGridPro] Avoid automatic scroll back to the focused header filter after it leaves the viewport (#20416) @arminmeh
+- [DataGridPro] Tree data row reordering (#19401) @MBilalShafi
+
+#### `@mui/x-data-grid-premium@8.19.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.19.1`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.19.0`
+
+Internal changes.
+
+#### `@mui/x-date-pickers-pro@8.19.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.19.0`.
+
+### Charts
+
+#### `@mui/x-charts@8.19.1`
+
+- [charts] Fix item tooltip position with node anchor (#20421) @alexfauquette
+- [charts] Fix radar item tooltip closing bug (#20429) @alexfauquette
+- [charts] Move series processing to selector (#20388) @JCQuintas
+- [charts] Prevent pointer out from removing controlled highlight (#20385) @alexfauquette
+
+#### `@mui/x-charts-pro@8.19.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.19.1`, plus:
+
+- [charts-pro] Improve vertical zoom slider thumb on mobile (#20439) @bernardobelchior
+- [charts-pro] Provide arguments to the `AreaPlotRoot` styled component (#20414) @arminmeh
+- [charts-pro] Remove grid outside the drawing area (#20412) @alexfauquette
+
+#### `@mui/x-charts-premium@8.19.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@8.19.1`, plus:
+
+- [charts-premium] Add explicit return type to `ChartsRenderer` for better compatibility with React 18 (#20413) @arminmeh
+
+### Tree View
+
+#### `@mui/x-tree-view@8.19.0`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@8.19.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.19.0`.
+
+### Codemod
+
+#### `@mui/x-codemod@8.19.0`
+
+Internal changes.
+
+### Docs
+
+- [docs] Add `llms.txt` link to the sidebar (#20312) @siriwatknp
+
+
 ## 8.19.0
 
 _Nov 20, 2025_
