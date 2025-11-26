@@ -5,7 +5,7 @@ import {
   SchedulerEventOccurrence,
 } from '../models';
 import { Adapter } from '../use-adapter/useAdapter.types';
-import { getRecurringEventOccurrencesForVisibleDays } from './recurring-event-utils';
+import { getRecurringEventOccurrencesForVisibleDays } from './recurring-events';
 
 /**
  *  Returns the key of the days an event occurrence should be visible on.

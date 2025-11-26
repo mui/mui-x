@@ -32,19 +32,6 @@ storeClasses.forEach((storeClass) => {
         expect(schedulerEventSelectors.modelList(store.state)).to.equal(events);
       });
 
-      it('should interpret defaultVisibleDate in the render timezone', () => {
-        const timezone = 'Pacific/Kiritimati';
-        const defaultVisibleDate = adapter.date('2025-07-01T00:00:00', 'default');
-
-        const store = new storeClass.Value(
-          { ...DEFAULT_PARAMS, defaultVisibleDate, timezone },
-          adapter,
-        );
-
-        const expected = adapter.setTimezone(defaultVisibleDate, timezone);
-        expect(store.state.visibleDate).toEqualDateTime(expected);
-      });
-
       it('should set visibleDate to today in the render timezone when defaultVisibleDate is not provided', () => {
         const timezone = 'Pacific/Kiritimati';
         const store = new storeClass.Value({ ...DEFAULT_PARAMS, timezone }, adapter);
@@ -52,7 +39,7 @@ storeClasses.forEach((storeClass) => {
         const expectedToday = adapter.startOfDay(adapter.now(timezone));
 
         expect(store.state.visibleDate).toEqualDateTime(expectedToday);
-        expect(store.state.timezone).to.equal(timezone);
+        expect(adapter.getTimezone(store.state.visibleDate)).to.equal(timezone);
       });
     });
 

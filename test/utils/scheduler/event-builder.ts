@@ -11,7 +11,7 @@ import {
 } from '@mui/x-scheduler-headless/models/event';
 import { processEvent } from '@mui/x-scheduler-headless/process-event';
 import { processDate } from '@mui/x-scheduler-headless/process-date';
-import { getWeekDayCode } from '@mui/x-scheduler-headless/utils/recurring-event-utils';
+import { getWeekDayCode } from '@mui/x-scheduler-headless/utils/recurring-events';
 import { Adapter, diffIn } from '@mui/x-scheduler-headless/use-adapter';
 import { TemporalTimezone } from '@mui/x-scheduler-headless/base-ui-copy/types';
 import { adapter as defaultAdapter } from './adapters';

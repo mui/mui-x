@@ -152,8 +152,6 @@ export const GridRootStyles = styled('div', {
     },
     { [`& .${c.treeDataGroupingCellToggle}`]: styles.treeDataGroupingCellToggle },
     { [`& .${c.withBorderColor}`]: styles.withBorderColor },
-    { [`& .${c['row--dropAbove']}`]: styles['row--dropAbove'] },
-    { [`& .${c['row--dropBelow']}`]: styles['row--dropBelow'] },
     { [`& .${c['row--beingDragged']}`]: styles['row--beingDragged'] },
   ],
 })<{ ownerState: OwnerState }>(() => {
@@ -575,6 +573,7 @@ export const GridRootStyles = styled('div', {
         backgroundColor: 'transparent',
       },
       '&.Mui-selected': selectedStyles,
+      position: 'relative',
     },
 
     /* Cell styles */
@@ -819,39 +818,6 @@ export const GridRootStyles = styled('div', {
       // Hide grid content
       [`& .${c.pinnedRows}`]: {
         display: 'none',
-      },
-    },
-    [`& .${c['row--dropAbove']}`]: {
-      position: 'relative',
-      '&::before': {
-        pointerEvents: 'none',
-        content: '""',
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '2px',
-        backgroundColor: vars.colors.interactive.selected,
-      },
-    },
-    [`& .${c['row--dropBelow']}`]: {
-      position: 'relative',
-      '&::after': {
-        zIndex: 100,
-        pointerEvents: 'none',
-        content: '""',
-        position: 'absolute',
-        bottom: '-2px',
-        left: 0,
-        width: '100%',
-        height: '2px',
-        backgroundColor: vars.colors.interactive.selected,
-      },
-      [`&.${c['row--lastVisible']}`]: {
-        '&::after': {
-          bottom:
-            'calc(var(--DataGrid-hasScrollY) * 0px + (1 - var(--DataGrid-hasScrollY)) * -2px)',
-        },
       },
     },
     [`& .${c['row--beingDragged']}`]: {

@@ -1,11 +1,26 @@
 import { warnOnce } from '@mui/x-internals/warning';
-import {
-  BaseReorderOperation,
-  SameParentSwapOperation,
-  CrossParentLeafOperation,
-  CrossParentGroupOperation,
-} from './operations';
-import type { ReorderExecutionContext } from './types';
+import type { ReorderExecutionContext, ReorderOperation } from './types';
+
+/**
+ * Base class for all reorder operations.
+ * Provides abstract methods for operation detection and execution.
+ */
+export abstract class BaseReorderOperation {
+  abstract readonly operationType: string;
+
+  /**
+   * Detects if this operation can handle the given context.
+   */
+  abstract detectOperation(ctx: ReorderExecutionContext): ReorderOperation | null;
+
+  /**
+   * Executes the detected operation.
+   */
+  abstract executeOperation(
+    operation: ReorderOperation,
+    ctx: ReorderExecutionContext,
+  ): Promise<void> | void;
+}
 
 /**
  * Executor class for handling row reorder operations in grouped data grids.
@@ -13,7 +28,7 @@ import type { ReorderExecutionContext } from './types';
  * This class coordinates the execution of different reorder operation types,
  * trying each operation in order until one succeeds or all fail.
  */
-class RowReorderExecutor {
+export class RowReorderExecutor {
   private operations: BaseReorderOperation[];
 
   constructor(operations: BaseReorderOperation[]) {
@@ -33,16 +48,10 @@ class RowReorderExecutor {
 
     warnOnce(
       [
-        'MUI X: The parameters provided to the `setRowIndex()` resulted in a no-op.',
-        'Consider looking at the documentation at https://mui.com/x/react-data-grid/row-grouping/',
+        'MUI X: The parameters provided to the API method resulted in a no-op.',
+        'Consider looking at the documentation at https://mui.com/x/react-data-grid/row-ordering/',
       ],
       'warning',
     );
   }
 }
-
-export const rowGroupingReorderExecutor = new RowReorderExecutor([
-  new SameParentSwapOperation(),
-  new CrossParentLeafOperation(),
-  new CrossParentGroupOperation(),
-]);
