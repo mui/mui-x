@@ -65,7 +65,7 @@ export default function ClipboardPasteIsCellEditable() {
       field: 'status',
       headerName: 'Status',
       width: 120,
-      editable: true,
+      editable: false,
       renderCell: (params) => (
         <Chip
           label={params.value}
@@ -78,55 +78,26 @@ export default function ClipboardPasteIsCellEditable() {
       field: 'lastModified',
       headerName: 'Last Modified',
       width: 150,
-      editable: true,
+      editable: false,
     },
   ];
 
   return (
-    <Box sx={{ width: '100%' }}>
-      <Box sx={{ mb: 2 }}>
-        <Box component="p" sx={{ mb: 1, fontWeight: 'bold' }}>
-          Paste restrictions:
-        </Box>
-        <Box component="ul" sx={{ mt: 0, pl: 2 }}>
-          <li>
-            <strong>Price column:</strong> Cannot be pasted in archived products
-          </li>
-          <li>
-            <strong>Status column:</strong> Cannot be pasted in any row
-          </li>
-          <li>
-            <strong>Last Modified column:</strong> Cannot be pasted in any row
-          </li>
-        </Box>
-        <Box
-          component="p"
-          sx={{ mt: 1, fontSize: '0.875rem', color: 'text.secondary' }}
-        >
-          Try selecting multiple cells and pasting data. Cells marked as non-editable
-          by <code>isCellEditable</code> will not be updated.
-        </Box>
-      </Box>
-      <Box sx={{ height: 400 }}>
-        <DataGridPremium
-          rows={rows}
-          columns={columns}
-          cellSelection
-          disableRowSelectionOnClick
-          ignoreValueFormatterDuringExport
-          isCellEditable={(params) => {
-            // Price cannot be edited for archived products
-            if (params.field === 'price' && params.row.status === 'archived') {
-              return false;
-            }
-            // Status and lastModified are never editable
-            if (params.field === 'status' || params.field === 'lastModified') {
-              return false;
-            }
-            return true;
-          }}
-        />
-      </Box>
+    <Box sx={{ height: 400, width: '100%' }}>
+      <DataGridPremium
+        rows={rows}
+        columns={columns}
+        cellSelection
+        disableRowSelectionOnClick
+        ignoreValueFormatterDuringExport
+        isCellEditable={(params) => {
+          // Price cannot be edited for archived products
+          if (params.field === 'price' && params.row.status === 'archived') {
+            return false;
+          }
+          return true;
+        }}
+      />
     </Box>
   );
 }

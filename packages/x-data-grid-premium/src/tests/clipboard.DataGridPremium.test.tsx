@@ -732,7 +732,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
         { field: 'brand', editable: true },
         { field: 'category', editable: true },
         { field: 'price', editable: true },
-        { field: 'rating', editable: true },
+        { field: 'rating', editable: false },
       ];
 
       function Component() {
@@ -747,10 +747,6 @@ describe('<DataGridPremium /> - Clipboard', () => {
               isCellEditable={(params) => {
                 // Make price cell non-editable for row with id 1 via isCellEditable
                 if (params.field === 'price' && params.id === 1) {
-                  return false;
-                }
-                // Make rating cell non-editable for all rows via isCellEditable
-                if (params.field === 'rating') {
                   return false;
                 }
                 return true;
