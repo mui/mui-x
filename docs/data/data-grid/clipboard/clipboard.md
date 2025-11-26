@@ -54,7 +54,7 @@ The priority is the following, from highest to lowest:
 
 {{"demo": "ClipboardPaste.js", "bg": "inline"}}
 
-### Controlling paste with isCellEditable
+### Disable pasting to the specific cells within a row
 
 The clipboard paste operation respects the [cell editing rules](/x/react-data-grid/editing/#disable-editing-of-specific-cells-within-a-row).
 Use this to prevent pasting into certain cells based on row data or other conditions.
