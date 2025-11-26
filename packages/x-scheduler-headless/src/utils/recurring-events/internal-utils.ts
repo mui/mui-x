@@ -183,6 +183,13 @@ export function nthWeekdayOfMonth(
   return adapter.startOfDay(nthFromEndOccurrenceDate);
 }
 
+const COUNT_OCCURRENCES_UP_TO_EXACT_METHOD_LOOKUP = {
+  DAILY: countDailyOccurrencesUpToExact,
+  WEEKLY: countWeeklyOccurrencesUpToExact,
+  MONTHLY: countMonthlyOccurrencesUpToExact,
+  YEARLY: countYearlyOccurrencesUpToExact,
+};
+
 /**
  *  Estimates how many occurrences exist from DTSTART up to `date` (inclusive).
  *  Used to enforce COUNT. Delegates to exact counters for WEEKLY/MONTHLY/YEARLY.
@@ -194,36 +201,30 @@ export function estimateOccurrencesUpTo(
   seriesStart: SchedulerValidDate,
   date: SchedulerValidDate,
 ): number {
-  if (adapter.isBefore(date, adapter.startOfDay(seriesStart))) {
-    return 0;
+  const seriesStartDay = adapter.startOfDay(seriesStart);
+
+  const method = COUNT_OCCURRENCES_UP_TO_EXACT_METHOD_LOOKUP[rule.freq];
+  if (!method) {
+    throw new Error(
+      [
+        `Scheduler: Unknown frequency ${rule.freq}.`,
+        'Expected: "DAILY" | "WEEKLY" | "MONTHLY" | "YEARLY".',
+      ].join('\n'),
+    );
   }
 
-  const interval = Math.max(1, rule.interval ?? 1);
+  return method({ adapter, rule, seriesStartDay, date });
+}
 
-  switch (rule.freq) {
-    case 'DAILY': {
-      const totalDays = diffIn(
-        adapter,
-        adapter.startOfDay(date),
-        adapter.startOfDay(seriesStart),
-        'days',
-      );
-      return Math.floor(totalDays / interval) + 1;
-    }
-    case 'WEEKLY':
-      return countWeeklyOccurrencesUpToExact(adapter, rule, seriesStart, date);
-    case 'MONTHLY':
-      return countMonthlyOccurrencesUpToExact(adapter, rule, seriesStart, date);
-    case 'YEARLY':
-      return countYearlyOccurrencesUpToExact(adapter, rule, seriesStart, date);
-    default:
-      throw new Error(
-        [
-          `Scheduler: Unknown frequency ${rule.freq}.`,
-          'Expected: "DAILY" | "WEEKLY" | "MONTHLY" | "YEARLY".',
-        ].join('\n'),
-      );
-  }
+interface CountOccurrencesUpToExactParameters {
+  adapter: Adapter;
+  rule: RecurringEventRecurrenceRule;
+  /**
+   * The series start date (DTSTART).
+   * This is normalized to startOfDay internally.
+   */
+  seriesStartDay: SchedulerValidDate;
+  date: SchedulerValidDate;
 }
 
 /**
@@ -241,26 +242,42 @@ function dayInWeek(
 }
 
 /**
+ * Exact DAILY occurrence count up to `date` (inclusive).
+ */
+export function countDailyOccurrencesUpToExact(
+  parameters: CountOccurrencesUpToExactParameters,
+): number {
+  const { adapter, rule, seriesStartDay, date } = parameters;
+  if (adapter.isBefore(date, seriesStartDay)) {
+    return 0;
+  }
+
+  const interval = Math.max(1, rule.interval ?? 1);
+  const totalDays = diffIn(adapter, adapter.startOfDay(date), seriesStartDay, 'days');
+
+  return Math.floor(totalDays / interval) + 1;
+}
+
+/**
  *  Exact WEEKLY occurrence count up to `date` (inclusive).
  *  Iterates weeks by `interval`, checking each BYDAY. Skips days before DTSTART.
  *  BYDAY defaults to DTSTART weekday if omitted.
  */
 export function countWeeklyOccurrencesUpToExact(
-  adapter: Adapter,
-  rule: RecurringEventRecurrenceRule,
-  seriesStart: SchedulerValidDate,
-  date: SchedulerValidDate,
+  parameters: CountOccurrencesUpToExactParameters,
 ): number {
-  const seriesStartDay = adapter.startOfDay(seriesStart);
+  const { adapter, rule, seriesStartDay, date } = parameters;
   if (adapter.isBefore(date, seriesStartDay)) {
     return 0;
   }
 
-  const byDay = parsesByDayForWeeklyFrequency(rule.byDay) ?? [getWeekDayCode(adapter, seriesStart)];
+  const byDay = parsesByDayForWeeklyFrequency(rule.byDay) ?? [
+    getWeekDayCode(adapter, seriesStartDay),
+  ];
 
   const interval = Math.max(1, rule.interval ?? 1);
 
-  const seriesWeekStart = adapter.startOfWeek(seriesStart);
+  const seriesWeekStart = adapter.startOfWeek(seriesStartDay);
   const targetWeekStart = adapter.startOfWeek(date);
   const dateEndDay = adapter.endOfDay(date);
 
@@ -294,20 +311,16 @@ export function countWeeklyOccurrencesUpToExact(
  * @throws If BYDAY is combined with BYMONTHDAY, or BYMONTHDAY has >1 value.
  */
 export function countMonthlyOccurrencesUpToExact(
-  adapter: Adapter,
-  rule: RecurringEventRecurrenceRule,
-  seriesStart: SchedulerValidDate,
-  date: SchedulerValidDate,
+  parameters: CountOccurrencesUpToExactParameters,
 ): number {
-  const seriesStartMonth = adapter.startOfMonth(seriesStart);
+  const { adapter, rule, seriesStartDay, date } = parameters;
+  const seriesStartMonth = adapter.startOfMonth(seriesStartDay);
   const targetMonth = adapter.startOfMonth(date);
   if (adapter.isBefore(targetMonth, seriesStartMonth)) {
     return 0;
   }
 
-  const seriesStartDay = adapter.startOfDay(seriesStart);
   const dateEndDay = adapter.endOfDay(date);
-
   const interval = Math.max(1, rule.interval ?? 1);
 
   // Path A: BYDAY with ordinals (e.g. 2TU, -1FR). Not mixed with BYMONTHDAY.
@@ -348,7 +361,7 @@ export function countMonthlyOccurrencesUpToExact(
   }
 
   // If no BYMONTHDAY is provided in a MONTHLY rule, default to the day of month of DTSTART.
-  const dayOfMonth = rule.byMonthDay?.length ? rule.byMonthDay[0] : adapter.getDate(seriesStart);
+  const dayOfMonth = rule.byMonthDay?.length ? rule.byMonthDay[0] : adapter.getDate(seriesStartDay);
 
   let count = 0;
 
@@ -382,13 +395,11 @@ export function countMonthlyOccurrencesUpToExact(
  *  @throws If BYMONTH/DAY/BYDAY are present (unsupported for YEARLY at the moment).
  */
 export function countYearlyOccurrencesUpToExact(
-  adapter: Adapter,
-  rule: RecurringEventRecurrenceRule,
-  seriesStart: SchedulerValidDate,
-  date: SchedulerValidDate,
+  parameters: CountOccurrencesUpToExactParameters,
 ): number {
-  const seriesStartYear = adapter.startOfYear(seriesStart);
-  const seriesStartDay = adapter.startOfDay(seriesStart);
+  const { adapter, rule, seriesStartDay, date } = parameters;
+
+  const seriesStartYear = adapter.startOfYear(seriesStartDay);
   const dateEndDay = adapter.endOfDay(date);
   const targetYearStart = adapter.startOfYear(date);
   if (adapter.isBefore(targetYearStart, seriesStartYear)) {
@@ -405,8 +416,8 @@ export function countYearlyOccurrencesUpToExact(
     );
   }
 
-  const targetMonth = adapter.getMonth(seriesStart);
-  const targetDayOfMonth = adapter.getDate(seriesStart);
+  const targetMonth = adapter.getMonth(seriesStartDay);
+  const targetDayOfMonth = adapter.getDate(seriesStartDay);
 
   let count = 0;
 

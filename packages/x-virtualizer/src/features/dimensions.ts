@@ -9,18 +9,20 @@ import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { roundToDecimalPlaces } from '@mui/x-internals/math';
 import { Store, useStore, createSelectorMemoized } from '@mui/x-internals/store';
 import { ColumnWithWidth, DimensionsState, RowId, RowEntry, RowsMetaState, Size } from '../models';
-import type { BaseState, VirtualizerParams } from '../useVirtualizer';
+import type { BaseState, ParamsWithDefaults } from '../useVirtualizer';
 
 /* eslint-disable import/export, @typescript-eslint/no-redeclare */
 /* eslint-disable no-underscore-dangle */
 
 export type DimensionsParams = {
   rowHeight: number;
-  columnsTotalWidth: number;
-  leftPinnedWidth: number;
-  rightPinnedWidth: number;
-  topPinnedHeight: number;
-  bottomPinnedHeight: number;
+  columnsTotalWidth?: number;
+  leftPinnedWidth?: number;
+  rightPinnedWidth?: number;
+  topPinnedHeight?: number;
+  bottomPinnedHeight?: number;
+  autoHeight?: boolean;
+  minimalContentHeight?: number | string;
   scrollbarSize?: number;
 };
 
@@ -41,14 +43,20 @@ const EMPTY_DIMENSIONS: DimensionsState = {
   rightPinnedWidth: 0,
   topContainerHeight: 0,
   bottomContainerHeight: 0,
+  autoHeight: false,
+  minimalContentHeight: undefined,
 };
 
 const selectors = {
   rootSize: (state: BaseState) => state.rootSize,
   dimensions: (state: BaseState) => state.dimensions,
   rowHeight: (state: BaseState) => state.dimensions.rowHeight,
+  columnsTotalWidth: (state: BaseState) => state.dimensions.columnsTotalWidth,
   contentHeight: (state: BaseState) => state.dimensions.contentSize.height,
+  autoHeight: (state: BaseState) => state.dimensions.autoHeight,
+  minimalContentHeight: (state: BaseState) => state.dimensions.minimalContentHeight,
   rowsMeta: (state: BaseState) => state.rowsMeta,
+  rowPositions: (state: BaseState) => state.rowsMeta.positions,
   columnPositions: createSelectorMemoized((_, columns: ColumnWithWidth[]) => {
     const positions: number[] = [];
     let currentPosition = 0;
@@ -80,10 +88,12 @@ export namespace Dimensions {
   export type API = ReturnType<typeof useDimensions>;
 }
 
-function initializeState(params: VirtualizerParams): Dimensions.State {
+function initializeState(params: ParamsWithDefaults): Dimensions.State {
   const dimensions = {
     ...EMPTY_DIMENSIONS,
     ...params.dimensions,
+    autoHeight: params.dimensions.autoHeight,
+    minimalContentHeight: params.dimensions.minimalContentHeight,
   };
 
   const { rowCount } = params;
@@ -106,11 +116,11 @@ function initializeState(params: VirtualizerParams): Dimensions.State {
   };
 }
 
-function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api: {}) {
+function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api: {}) {
   const isFirstSizing = React.useRef(true);
 
   const {
-    refs,
+    layout,
     dimensions: {
       rowHeight,
       columnsTotalWidth,
@@ -131,7 +141,7 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
         return;
       }
 
-      const containerNode = refs.container.current;
+      const containerNode = layout.refs.container.current;
       const rootSize = selectors.rootSize(store.state);
       const rowsMeta = selectors.rowsMeta(store.state);
 
@@ -153,7 +163,7 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
       let hasScrollX = false;
       let hasScrollY = false;
 
-      if (params.autoHeight) {
+      if (params.dimensions.autoHeight) {
         hasScrollY = false;
         hasScrollX = Math.round(columnsTotalWidth) > Math.round(rootSize.width);
 
@@ -237,6 +247,8 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
         rightPinnedWidth,
         topContainerHeight,
         bottomContainerHeight,
+        autoHeight: params.dimensions.autoHeight,
+        minimalContentHeight: params.dimensions.minimalContentHeight,
       };
 
       const prevDimensions = store.state.dimensions;
@@ -250,9 +262,10 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
     },
     [
       store,
-      refs.container,
+      layout.refs.container,
       params.dimensions.scrollbarSize,
-      params.autoHeight,
+      params.dimensions.autoHeight,
+      params.dimensions.minimalContentHeight,
       params.disableHorizontalScroll,
       params.disableVerticalScroll,
       onResize,
@@ -275,6 +288,16 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
 
   useLayoutEffect(updateDimensions, [updateDimensions]);
 
+  useLayoutEffect(() => {
+    store.update({
+      dimensions: {
+        ...store.state.dimensions,
+        autoHeight: params.dimensions.autoHeight,
+        minimalContentHeight: params.dimensions.minimalContentHeight,
+      },
+    });
+  }, [store, params.dimensions.autoHeight, params.dimensions.minimalContentHeight]);
+
   const rowsMeta = useRowsMeta(store, params, updateDimensions);
 
   return {
@@ -286,7 +309,7 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
 
 function useRowsMeta(
   store: Store<BaseState>,
-  params: VirtualizerParams,
+  params: ParamsWithDefaults,
   updateDimensions: Function,
 ) {
   const heightCache = store.state.rowHeights;
