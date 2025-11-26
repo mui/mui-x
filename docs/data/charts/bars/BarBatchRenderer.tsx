@@ -20,12 +20,16 @@ export default function BarBatchRenderer() {
         {
           data: data.map((d) => d.close),
           label: 'Close',
+          highlightScope: { highlight: 'item', fade: 'global' },
         },
-        { data: data.map((d) => d.open), label: 'Open' },
+        {
+          data: data.map((d) => d.open),
+          label: 'Open',
+          highlightScope: { highlight: 'item', fade: 'global' },
+        },
       ]}
       height={300}
       renderer="svg-batch"
-      onItemClick={console.log}
     />
   );
 }

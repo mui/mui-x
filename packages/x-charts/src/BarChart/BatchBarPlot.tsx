@@ -1,16 +1,20 @@
 import * as React from 'react';
-import { UseChartHighlightSignature, useSvgRef } from '@mui/x-charts';
+import { getValueToPositionMapper, UseChartHighlightSignature, useSvgRef } from '@mui/x-charts';
 import useId from '@mui/utils/useId';
 import { BarPlotSlotProps, BarPlotSlots } from './BarPlot';
 import { BarItemIdentifier } from '../models';
-import { ProcessedBarSeriesData } from './types';
+import { ProcessedBarData, ProcessedBarSeriesData } from './types';
 import {
   getSVGPoint,
   selectorChartAxisZoomData,
   selectorChartBarSeriesFlatbushMap,
   selectorChartDrawingArea,
+  selectorChartIsSeriesFaded,
+  selectorChartIsSeriesHighlighted,
   selectorChartSeriesEmptyFlatbushMap,
+  selectorChartSeriesHighlightedItem,
   selectorChartSeriesProcessed,
+  selectorChartSeriesUnfadedItem,
   selectorChartXAxis,
   selectorChartYAxis,
   selectorChartZoomIsInteracting,
@@ -76,6 +80,21 @@ function generateBarPath(
    Z`;
 }
 
+function createPath(barData: ProcessedBarData, borderRadius: number) {
+  return generateBarPath(
+    barData.x,
+    barData.y,
+    barData.width,
+    barData.height,
+    barData.borderRadiusSide === 'left' || barData.borderRadiusSide === 'top' ? borderRadius : 0,
+    barData.borderRadiusSide === 'right' || barData.borderRadiusSide === 'top' ? borderRadius : 0,
+    barData.borderRadiusSide === 'right' || barData.borderRadiusSide === 'bottom'
+      ? borderRadius
+      : 0,
+    barData.borderRadiusSide === 'left' || barData.borderRadiusSide === 'bottom' ? borderRadius : 0,
+  );
+}
+
 function useCreatePaths(seriesData: ProcessedBarSeriesData, borderRadius: number) {
   const paths = new Map<string, string[]>();
   const temporaryPaths = new Map<string, string[]>();
@@ -83,22 +102,7 @@ function useCreatePaths(seriesData: ProcessedBarSeriesData, borderRadius: number
   for (let j = 0; j < seriesData.data.length; j += 1) {
     const barData = seriesData.data[j];
 
-    // Here you would create the path string for the bar considering borderRadius
-    // const pathString = `M${barData.x},${barData.y} v${barData.height} h${barData.width} v${-barData.height} h${-barData.width}Z`;
-    const pathString = generateBarPath(
-      barData.x,
-      barData.y,
-      barData.width,
-      barData.height,
-      barData.borderRadiusSide === 'left' || barData.borderRadiusSide === 'top' ? borderRadius : 0,
-      barData.borderRadiusSide === 'right' || barData.borderRadiusSide === 'top' ? borderRadius : 0,
-      barData.borderRadiusSide === 'right' || barData.borderRadiusSide === 'bottom'
-        ? borderRadius
-        : 0,
-      barData.borderRadiusSide === 'left' || barData.borderRadiusSide === 'bottom'
-        ? borderRadius
-        : 0,
-    );
+    const pathString = createPath(barData, borderRadius);
 
     const tempPath = appendAtKey(temporaryPaths, barData.color, pathString);
 
@@ -238,7 +242,7 @@ export function BatchBarPlot({
         >
           <BatchBarSeriesPlot
             key={series.seriesId}
-            data={series}
+            processedSeries={series}
             borderRadius={borderRadius}
             onItemClick={onItemClick}
           />
@@ -248,17 +252,70 @@ export function BatchBarPlot({
   );
 }
 
-function BatchBarSeriesPlot({
-  data,
+function FadedHighlightedBars({
+  processedSeries,
   borderRadius,
   onItemClick,
 }: {
-  data: ProcessedBarSeriesData;
+  processedSeries: ProcessedBarSeriesData;
+  borderRadius: number;
+  onItemClick?: BatchBarPlotProps['onItemClick'];
+}) {
+  const { store } = useChartContext<[UseChartHighlightSignature]>();
+  const seriesHighlightedItem = useSelector(
+    store,
+    selectorChartSeriesHighlightedItem,
+    processedSeries.seriesId,
+  );
+  const seriesUnfadedItem = useSelector(
+    store,
+    selectorChartSeriesUnfadedItem,
+    processedSeries.seriesId,
+  );
+  console.log('new render FadedHighlightedBars');
+
+  const siblings: React.ReactNode[] = [];
+  if (seriesHighlightedItem != null) {
+    const barData = processedSeries.data[seriesHighlightedItem];
+
+    siblings.push(
+      <path
+        key={`highlighted-${processedSeries.seriesId}`}
+        fill={barData.color}
+        data-highlighted
+        d={createPath(barData, borderRadius)}
+      />,
+    );
+  }
+
+  if (seriesUnfadedItem != null) {
+    const barData = processedSeries.data[seriesUnfadedItem];
+
+    siblings.push(
+      <path
+        key={`unfaded-${processedSeries.seriesId}`}
+        fill={barData.color}
+        d={createPath(barData, borderRadius)}
+      />,
+    );
+  }
+
+  return <React.Fragment>{siblings}</React.Fragment>;
+}
+
+const MemoFadedHighlightedBars = React.memo(FadedHighlightedBars);
+
+function BatchBarSeriesPlot({
+  processedSeries,
+  borderRadius,
+  onItemClick,
+}: {
+  processedSeries: ProcessedBarSeriesData;
   borderRadius: number;
   onItemClick?: BatchBarPlotProps['onItemClick'];
 }) {
   const onClick = useOnItemClick(onItemClick);
-  const paths = useCreatePaths(data, borderRadius);
+  const paths = useCreatePaths(processedSeries, borderRadius);
   const children: React.ReactNode[] = [];
 
   let i = 0;
@@ -269,7 +326,16 @@ function BatchBarSeriesPlot({
     }
   }
 
-  return <React.Fragment>{children}</React.Fragment>;
+  return (
+    <React.Fragment>
+      {children}
+      <MemoFadedHighlightedBars
+        processedSeries={processedSeries}
+        borderRadius={borderRadius}
+        onItemClick={onItemClick}
+      />
+    </React.Fragment>
+  );
 }
 
 function BarGroup({
