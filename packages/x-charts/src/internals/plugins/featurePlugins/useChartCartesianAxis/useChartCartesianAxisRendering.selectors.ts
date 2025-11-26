@@ -648,3 +648,63 @@ export const selectorChartSeriesFlatbushMap = createSelectorMemoized(
     return flatbushMap;
   },
 );
+
+export const selectorChartBarSeriesFlatbushMap = createSelectorMemoized(
+  selectorChartSeriesProcessed,
+  selectorChartNormalizedXScales,
+  selectorChartNormalizedYScales,
+  selectorChartDefaultXAxisId,
+  selectorChartDefaultYAxisId,
+  selectorChartXAxis,
+  selectorChartYAxis,
+  function selectorChartBarSeriesFlatbushMap(
+    allSeries,
+    xAxesScaleMap,
+    yAxesScaleMap,
+    defaultXAxisId,
+    defaultYAxisId,
+    xAxes,
+    yAxes,
+  ) {
+    const validSeries = allSeries.bar;
+    const series = validSeries?.series ?? {};
+    const seriesOrder = allSeries.bar?.seriesOrder ?? [];
+    const flatbushMap = new Map<SeriesId, Flatbush>();
+
+    if (seriesOrder.length === 0) {
+      return flatbushMap;
+    }
+
+    seriesOrder.forEach((seriesId) => {
+      const { data, xAxisId = defaultXAxisId, yAxisId = defaultYAxisId } = series[seriesId];
+
+      const flatbush = new Flatbush(data.length);
+
+      const originalXScale = xAxesScaleMap[xAxisId];
+      const originalYScale = yAxesScaleMap[yAxisId];
+
+      const xAxis = xAxes.axis[xAxisId];
+      const yAxis = yAxes.axis[yAxisId];
+      // FIXME: I'm assuming here that bar series have only one direction: vertical
+
+      const xData = xAxis.data;
+      for (let i = 0; i < data.length; i += 1) {
+        const x = xData?.[i];
+        const y = data[i];
+
+        if (x === null || y == null) {
+          continue;
+        }
+
+        // Add the points using a [0, 1] range so that we don't need to recreate the Flatbush structure when zooming.
+        // This doesn't happen in practice, though, because currently the scales depend on the drawing area.
+        flatbush.add(originalXScale(x)!, originalYScale(y)!);
+      }
+
+      flatbush.finish();
+      flatbushMap.set(seriesId, flatbush);
+    });
+
+    return flatbushMap;
+  },
+);
