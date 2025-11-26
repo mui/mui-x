@@ -10,10 +10,11 @@ import * as platform from '@mui/x-internals/platform';
 import { useRunOnce } from '@mui/x-internals/useRunOnce';
 import { createSelector, useStore, useStoreEffect, Store } from '@mui/x-internals/store';
 import reactMajor from '@mui/x-internals/reactMajor';
-import { PinnedRows, PinnedColumns, Size } from '../models/core';
-import type { CellColSpanInfo } from '../models/colspan';
-import { Dimensions, observeRootNode } from './dimensions';
-import type { BaseState, VirtualizerParams } from '../useVirtualizer';
+import { PinnedRows, PinnedColumns, Size } from '../../models/core';
+import type { CellColSpanInfo } from '../../models/colspan';
+import { Dimensions, observeRootNode } from '../dimensions';
+import type { BaseState, ParamsWithDefaults } from '../../useVirtualizer';
+import type { Layout } from './layout';
 import {
   PinnedRowPosition,
   RenderContext,
@@ -23,7 +24,7 @@ import {
   RowEntry,
   ScrollPosition,
   ScrollDirection,
-} from '../models';
+} from '../../models';
 
 /* eslint-disable import/export, @typescript-eslint/no-redeclare */
 
@@ -42,11 +43,14 @@ export type VirtualizationParams = {
   columnBufferPx?: number;
 };
 
-export type VirtualizationState = {
+export type VirtualizationState<K extends string = string> = {
   enabled: boolean;
   enabledForRows: boolean;
   enabledForColumns: boolean;
   renderContext: RenderContext;
+  props: Record<K, Record<string, any>>;
+  context: Record<string, any>;
+  scrollPosition: { current: ScrollPosition };
 };
 
 const EMPTY_SCROLL_POSITION = { top: 0, left: 0 };
@@ -60,12 +64,24 @@ export const EMPTY_RENDER_CONTEXT = {
   lastColumnIndex: 0,
 };
 
-const selectors = {
-  store: createSelector((state: BaseState) => state.virtualization),
-  renderContext: createSelector((state: BaseState) => state.virtualization.renderContext),
-  enabledForRows: createSelector((state: BaseState) => state.virtualization.enabledForRows),
-  enabledForColumns: createSelector((state: BaseState) => state.virtualization.enabledForColumns),
-};
+const selectors = (() => {
+  const firstRowIndexSelector = createSelector(
+    (state: BaseState) => state.virtualization.renderContext.firstRowIndex,
+  );
+  return {
+    store: createSelector((state: BaseState) => state.virtualization),
+    renderContext: createSelector((state: BaseState) => state.virtualization.renderContext),
+    enabledForRows: createSelector((state: BaseState) => state.virtualization.enabledForRows),
+    enabledForColumns: createSelector((state: BaseState) => state.virtualization.enabledForColumns),
+    offsetTop: createSelector(
+      Dimensions.selectors.rowPositions,
+      firstRowIndexSelector,
+      (rowPositions, firstRowIndex) => rowPositions[firstRowIndex] ?? 0,
+    ),
+    context: createSelector((state: BaseState) => state.virtualization.context),
+    scrollPosition: createSelector((state: BaseState) => state.virtualization.scrollPosition),
+  };
+})();
 
 export const Virtualization = {
   initialize: initializeState,
@@ -73,20 +89,26 @@ export const Virtualization = {
   selectors,
 };
 export namespace Virtualization {
-  export type State = {
-    virtualization: VirtualizationState;
+  export type State<L extends Layout> = {
+    virtualization: VirtualizationState<L extends Layout<infer E> ? keyof E : string>;
     getters: ReturnType<typeof useVirtualization>['getters'];
   };
   export type API = ReturnType<typeof useVirtualization>;
 }
 
-function initializeState(params: VirtualizerParams) {
-  const state: Virtualization.State = {
+function initializeState(params: ParamsWithDefaults) {
+  const state: Virtualization.State<typeof params.layout> = {
     virtualization: {
       enabled: !platform.isJSDOM,
       enabledForRows: !platform.isJSDOM,
       enabledForColumns: !platform.isJSDOM,
       renderContext: EMPTY_RENDER_CONTEXT,
+      props: (params.layout.constructor as typeof Layout).elements.reduce(
+        (acc, key) => (acc[key as string], acc),
+        {} as Record<string, Record<string, any>>,
+      ),
+      context: {},
+      scrollPosition: { current: ScrollPosition.EMPTY },
       ...params.initialState?.virtualization,
     },
     // FIXME: refactor once the state shape is settled
@@ -109,10 +131,15 @@ type AbstractAPI = {
 
 type RequiredAPI = Dimensions.API & AbstractAPI;
 
-function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, api: RequiredAPI) {
+export type VirtualizationLayoutParams = {
+  containerRef: (node: HTMLDivElement | null) => void;
+  scrollerRef: (node: HTMLDivElement | null) => void;
+};
+
+function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, api: RequiredAPI) {
   const {
-    refs,
-    dimensions: { rowHeight, columnsTotalWidth },
+    layout,
+    dimensions: { rowHeight, columnsTotalWidth = 0 },
     virtualization: { isRtl = false, rowBufferPx = 150, columnBufferPx = 150 },
     colspan,
     initialState,
@@ -121,9 +148,6 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     columns,
     pinnedRows = PinnedRows.EMPTY,
     pinnedColumns = PinnedColumns.EMPTY,
-
-    minimalContentHeight,
-    autoHeight,
 
     onWheel,
     onTouchMove,
@@ -136,8 +160,6 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     renderInfiniteLoadingTrigger,
   } = params;
 
-  const needsHorizontalScrollbar = useStore(store, Dimensions.selectors.needsHorizontalScrollbar);
-
   const hasBottomPinnedRows = pinnedRows.bottom.length > 0;
   const [panels, setPanels] = React.useState(EMPTY_DETAIL_PANELS);
   const isUpdateScheduled = React.useRef(false);
@@ -147,7 +169,6 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
   const renderContext = useStore(store, selectors.renderContext);
   const enabledForRows = useStore(store, selectors.enabledForRows);
   const enabledForColumns = useStore(store, selectors.enabledForColumns);
-  const rowsMeta = useStore(store, Dimensions.selectors.rowsMeta);
 
   const contentHeight = useStore(store, Dimensions.selectors.contentHeight);
 
@@ -183,6 +204,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
         store.set('virtualization', {
           ...store.state.virtualization,
           renderContext: nextRenderContext,
+          scrollPosition: { current: { ...scrollPosition.current } },
         });
       }
 
@@ -205,7 +227,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
   );
 
   const triggerUpdateRenderContext = useEventCallback(() => {
-    const scroller = refs.scroller.current;
+    const scroller = layout.refs.scroller.current;
     if (!scroller) {
       return undefined;
     }
@@ -249,6 +271,10 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     const shouldUpdate = didCrossThreshold || didChangeDirection;
 
     if (!shouldUpdate) {
+      store.set('virtualization', {
+        ...store.state.virtualization,
+        scrollPosition: { current: { ...scrollPosition.current } },
+      });
       return renderContext;
     }
 
@@ -336,10 +362,6 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
       onScrollChange?.(scrollPosition.current, nextRenderContext);
     }
   });
-
-  const getOffsetTop = () => {
-    return rowsMeta.positions[renderContext.firstRowIndex] ?? 0;
-  };
 
   /**
    * HACK: unstable_rowTree fixes the issue described below, but does it by tightly coupling this
@@ -518,46 +540,18 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
       if (panel) {
         rowElements.push(panel);
       }
-      if (rowParams.position === undefined && isLastVisibleInSection) {
+      if (
+        rowParams.position === undefined &&
+        isLastVisibleInSection &&
+        renderInfiniteLoadingTrigger
+      ) {
         rowElements.push(renderInfiniteLoadingTrigger(id));
       }
     });
     return rowElements;
   };
 
-  const scrollerStyle = React.useMemo(
-    () =>
-      ({
-        overflowX: !needsHorizontalScrollbar ? 'hidden' : undefined,
-        overflowY: autoHeight ? 'hidden' : undefined,
-      }) as React.CSSProperties,
-    [needsHorizontalScrollbar, autoHeight],
-  );
-
-  const contentSize = React.useMemo(() => {
-    const size: React.CSSProperties = {
-      width: needsHorizontalScrollbar ? columnsTotalWidth : 'auto',
-      flexBasis: contentHeight,
-      flexShrink: 0,
-    };
-
-    if (size.flexBasis === 0) {
-      size.flexBasis = minimalContentHeight; // Give room to show the overlay when there no rows.
-    }
-
-    return size;
-  }, [columnsTotalWidth, contentHeight, needsHorizontalScrollbar, minimalContentHeight]);
-
   const scrollRestoreCallback = React.useRef<Function | null>(null);
-  const contentNodeRef = React.useCallback(
-    (node: HTMLDivElement | null) => {
-      if (!node) {
-        return;
-      }
-      scrollRestoreCallback.current?.(columnsTotalWidth, contentHeight);
-    },
-    [columnsTotalWidth, contentHeight],
-  );
 
   useEnhancedEffect(() => {
     if (!isRenderContextReady.current) {
@@ -567,18 +561,18 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
   }, [enabledForColumns, enabledForRows, forceUpdateRenderContextCallback]);
 
   useEnhancedEffect(() => {
-    if (refs.scroller.current) {
-      refs.scroller.current.scrollLeft = 0;
+    if (layout.refs.scroller.current) {
+      layout.refs.scroller.current.scrollLeft = 0;
     }
-  }, [refs.scroller, scrollReset]);
+  }, [layout.refs.scroller, scrollReset]);
 
   useRunOnce(renderContext !== EMPTY_RENDER_CONTEXT, () => {
     onScrollChange?.(scrollPosition.current, renderContext);
 
     isRenderContextReady.current = true;
 
-    if (initialState?.scroll && refs.scroller.current) {
-      const scroller = refs.scroller.current;
+    if (initialState?.scroll && layout.refs.scroller.current) {
+      const scroller = layout.refs.scroller.current;
       const { top, left } = initialState.scroll;
 
       const isScrollRestored = {
@@ -626,24 +620,16 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
 
   useStoreEffect(store, Dimensions.selectors.dimensions, forceUpdateRenderContext);
 
-  const refSetter = (name: keyof typeof refs) => (node: HTMLDivElement | null) => {
-    if (node && refs[name].current !== node) {
-      refs[name].current = node;
+  useEnhancedEffect(() => {
+    if (layout.refs.scroller) {
+      scrollRestoreCallback.current?.(columnsTotalWidth, contentHeight);
     }
-  };
+  }, [layout.refs.scroller, columnsTotalWidth, contentHeight]);
 
   const isFirstSizing = React.useRef(true);
 
-  const containerCleanup = React.useRef<() => void | undefined>(undefined);
-
-  const containerRef = useEventCallback((node: HTMLDivElement | null) => {
-    if (!node) {
-      // Cleanup for R18
-      containerCleanup.current?.();
-      return;
-    }
-
-    refs.container.current = node;
+  const containerRef = useRefCallback((node: HTMLDivElement | null) => {
+    layout.refs.container.current = node;
     const unsubscribe = observeRootNode(node, store, (rootSize: Size) => {
       if (
         rootSize.width === 0 &&
@@ -662,112 +648,73 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
         api.debouncedUpdateDimensions();
       }
     });
-    containerCleanup.current = () => {
+    return () => {
       unsubscribe?.();
-      refs.container.current = null;
+      layout.refs.container.current = null;
     };
-
-    if (reactMajor >= 19) {
-      /* eslint-disable-next-line consistent-return */
-      return containerCleanup.current;
-    }
   });
 
-  const scrollerCleanup = React.useRef<() => void | undefined>(undefined);
-  const scrollerRef = useEventCallback((node: HTMLDivElement | null) => {
-    if (!node) {
-      // Cleanup for R18
-      scrollerCleanup.current?.();
-      return;
-    }
-
-    scrollerCleanup.current?.();
-    refs.scroller.current = node;
+  const scrollerRef = useRefCallback((node: HTMLDivElement) => {
+    layout.refs.scroller.current = node;
     const opts: AddEventListenerOptions = { passive: true };
     node.addEventListener('scroll', handleScroll, opts);
     node.addEventListener('wheel', onWheel as any, opts);
     node.addEventListener('touchmove', onTouchMove as any, opts);
-    scrollerCleanup.current = () => {
+    return () => {
       node.removeEventListener('scroll', handleScroll, opts);
       node.removeEventListener('wheel', onWheel as any, opts);
       node.removeEventListener('touchmove', onTouchMove as any, opts);
-      refs.scroller.current = null;
+      layout.refs.scroller.current = null;
     };
-
-    if (reactMajor >= 19) {
-      /* eslint-disable-next-line consistent-return */
-      return scrollerCleanup.current;
-    }
   });
 
-  const scrollbarVerticalRef = useEventCallback(refSetter('scrollbarVertical'));
-  const scrollbarHorizontalRef = useEventCallback(refSetter('scrollbarHorizontal'));
+  const layoutParams = {
+    containerRef,
+    scrollerRef,
+  };
+
+  const layoutAPI = layout.use(store, params, api, layoutParams);
 
   const getters = {
     setPanels,
-    getOffsetTop,
     getRows,
     rows: params.rows,
-    getContainerProps: () => ({
-      ref: containerRef,
-    }),
-    getScrollerProps: () => ({
-      ref: scrollerRef,
-      style: scrollerStyle,
-      role: 'presentation',
-      // `tabIndex` shouldn't be used along role=presentation, but it fixes a Firefox bug
-      // https://github.com/mui/mui-x/pull/13891#discussion_r1683416024
-      tabIndex: platform.isFirefox ? -1 : undefined,
-    }),
-    getContentProps: () => ({
-      ref: contentNodeRef,
-      style: contentSize,
-      role: 'presentation',
-    }),
-    getScrollbarVerticalProps: () => ({
-      ref: scrollbarVerticalRef,
-      scrollPosition,
-    }),
-    getScrollbarHorizontalProps: () => ({
-      ref: scrollbarHorizontalRef,
-      scrollPosition,
-    }),
-    getScrollAreaProps: () => ({
-      scrollPosition,
-    }),
-  };
-
-  /* Placeholder API functions for colspan & rowspan to re-implement */
-
-  const getCellColSpanInfo: AbstractAPI['getCellColSpanInfo'] = () => {
-    throw new Error('Unimplemented: colspan feature is required');
-  };
-
-  const calculateColSpan: AbstractAPI['calculateColSpan'] = () => {
-    throw new Error('Unimplemented: colspan feature is required');
-  };
-
-  const getHiddenCellsOrigin: AbstractAPI['getHiddenCellsOrigin'] = () => {
-    throw new Error('Unimplemented: rowspan feature is required');
+    ...layoutAPI,
   };
 
   return {
     getters,
-    useVirtualization: () => useStore(store, (state) => state),
     setPanels,
     forceUpdateRenderContext,
     scheduleUpdateRenderContext,
-    getCellColSpanInfo,
-    calculateColSpan,
-    getHiddenCellsOrigin,
+    ...createSpanningAPI(),
   };
+}
+
+function useRefCallback(fn: (node: HTMLDivElement) => (() => void) | undefined) {
+  const refCleanup = React.useRef<() => void | undefined>(undefined);
+  const refCallback = useEventCallback((node: HTMLDivElement | null) => {
+    if (!node) {
+      // Cleanup for R18
+      refCleanup.current?.();
+      return;
+    }
+
+    refCleanup.current = fn(node);
+
+    if (reactMajor >= 19) {
+      /* eslint-disable-next-line consistent-return */
+      return refCleanup.current;
+    }
+  });
+  return refCallback;
 }
 
 type RenderContextInputs = ReturnType<typeof inputsSelector>;
 
 function inputsSelector(
   store: Store<BaseState>,
-  params: VirtualizerParams,
+  params: ParamsWithDefaults,
   api: RequiredAPI,
   enabledForRows: boolean,
   enabledForColumns: boolean,
@@ -785,7 +732,7 @@ function inputsSelector(
     api,
     enabledForRows,
     enabledForColumns,
-    autoHeight: params.autoHeight,
+    autoHeight: dimensions.autoHeight,
     rowBufferPx: params.virtualization.rowBufferPx,
     columnBufferPx: params.virtualization.columnBufferPx,
     leftPinnedWidth: dimensions.leftPinnedWidth,
@@ -1233,6 +1180,23 @@ function getFirstNonSpannedColumnToRender({
   }
 
   return firstNonSpannedColumnToRender;
+}
+
+/** Placeholder API functions for colspan & rowspan to re-implement */
+function createSpanningAPI(): AbstractAPI {
+  const getCellColSpanInfo: AbstractAPI['getCellColSpanInfo'] = () => {
+    throw new Error('Unimplemented: colspan feature is required');
+  };
+
+  const calculateColSpan: AbstractAPI['calculateColSpan'] = () => {
+    throw new Error('Unimplemented: colspan feature is required');
+  };
+
+  const getHiddenCellsOrigin: AbstractAPI['getHiddenCellsOrigin'] = () => {
+    throw new Error('Unimplemented: rowspan feature is required');
+  };
+
+  return { getCellColSpanInfo, calculateColSpan, getHiddenCellsOrigin };
 }
 
 export function roundToDecimalPlaces(value: number, decimals: number) {
