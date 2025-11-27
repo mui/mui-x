@@ -2,11 +2,13 @@ import * as React from 'react';
 import { BarPlotSlotProps, BarPlotSlots } from './BarPlot';
 import { BarItemIdentifier } from '../models';
 import { BarElement } from './BarElement';
-import { ProcessedBarSeriesData } from './types';
+import { MaskData, ProcessedBarSeriesData } from './types';
 import { useUtilityClasses } from './barClasses';
+import { BarClipPath } from './BarClipPath';
 
-interface IndividualBarPlotProps {
+export interface IndividualBarPlotProps {
   completedData: ProcessedBarSeriesData[];
+  masksData: MaskData[];
   borderRadius?: number;
   skipAnimation?: boolean;
   onItemClick?: (
@@ -19,6 +21,7 @@ interface IndividualBarPlotProps {
 
 export function IndividualBarPlot({
   completedData,
+  masksData,
   borderRadius,
   onItemClick,
   skipAnimation,
@@ -29,6 +32,28 @@ export function IndividualBarPlot({
 
   return (
     <React.Fragment>
+      {!withoutBorderRadius &&
+        masksData.map(
+          ({ id, x, y, xOrigin, yOrigin, width, height, hasPositive, hasNegative, layout }) => {
+            return (
+              <BarClipPath
+                key={id}
+                maskId={id}
+                borderRadius={borderRadius}
+                hasNegative={hasNegative}
+                hasPositive={hasPositive}
+                layout={layout}
+                x={x}
+                y={y}
+                xOrigin={xOrigin}
+                yOrigin={yOrigin}
+                width={width}
+                height={height}
+                skipAnimation={skipAnimation ?? false}
+              />
+            );
+          },
+        )}
       {completedData.map(({ seriesId, layout, xOrigin, yOrigin, data }) => {
         return (
           <g key={seriesId} data-series={seriesId} className={classes.series}>
