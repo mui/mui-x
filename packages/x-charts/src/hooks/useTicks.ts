@@ -46,7 +46,7 @@ export interface TickParams {
    */
   tickLabelPlacement?: 'middle' | 'tick';
   /**
-   * The space between ticks when using an ordinal scale. It defines the minimum distance in pixels between two ticks.
+   * The minimum space between ticks when using an ordinal scale. It defines the minimum distance in pixels between two ticks.
    * @default 0
    */
   tickSpacing?: number;
@@ -108,7 +108,7 @@ export function getTicks(
     tickInterval,
     tickPlacement = 'extremities',
     tickLabelPlacement: tickLabelPlacementProp,
-    tickSpacing = 0,
+    tickSpacing,
     isInside,
   } = options;
 
@@ -121,7 +121,7 @@ export function getTicks(
     if (typeof tickInterval === 'object' && tickInterval != null) {
       filteredDomain = tickInterval;
     } else {
-      if (tickSpacing > 0) {
+      if (tickSpacing !== undefined && tickSpacing > 0) {
         filteredDomain = applyTickSpacing(domain, scale.range(), tickSpacing);
       }
 
