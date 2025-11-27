@@ -59,7 +59,7 @@
     },
     "tickSize": { "description": "The size of the ticks." },
     "tickSpacing": {
-      "description": "The space between ticks when using an ordinal scale. It defines the minimum distance in pixels between two ticks."
+      "description": "The minimum space between ticks when using an ordinal scale. It defines the minimum distance in pixels between two ticks."
     },
     "valueFormatter": { "description": "Formats the axis value." },
     "zoom": { "description": "" }
