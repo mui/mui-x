@@ -231,6 +231,10 @@ export function BatchBarPlot({
           data-series={series.seriesId}
           skipAnimation={skipAnimation}
           onClick={onClick}
+          // Not ideal
+          layout={series.data[0].layout}
+          xOrigin={series.data[0].xOrigin}
+          yOrigin={series.data[0].yOrigin}
         >
           <BatchBarSeriesPlot
             key={series.seriesId}
@@ -335,48 +339,126 @@ const PathGroup = styled('g')({
   },
 });
 
-function BarGroup({
-  skipAnimation,
-  ...props
-}: React.HTMLAttributes<SVGGElement> & { skipAnimation: boolean }) {
+interface BarGroupProps extends React.HTMLAttributes<SVGGElement> {
+  skipAnimation: boolean;
+  layout: 'horizontal' | 'vertical' | undefined;
+  xOrigin: number;
+  yOrigin: number;
+}
+
+function BarGroup({ skipAnimation, layout, xOrigin, yOrigin, ...props }: BarGroupProps) {
   if (skipAnimation) {
     return <PathGroup {...props} />;
   }
 
-  return <AnimatedGroup {...props} />;
+  return <AnimatedGroup {...props} layout={layout} xOrigin={xOrigin} yOrigin={yOrigin} />;
 }
 
-function AnimatedGroup({ children }: React.PropsWithChildren<{}>) {
+function AnimatedGroup({
+  children,
+  layout,
+  xOrigin,
+  yOrigin,
+}: React.PropsWithChildren<{
+  layout: 'horizontal' | 'vertical' | undefined;
+  xOrigin: number;
+  yOrigin: number;
+}>) {
   const store = useStore();
   const drawingArea = useSelector(store, selectorChartDrawingArea);
   const clipPathId = useId();
-  // FIXME: Handle layout; handle charts with negative and positive values (i.e., origin not at axis)
+
+  const animateChildren = [];
+
+  if (layout === 'horizontal') {
+    animateChildren.push(
+      <rect
+        key="left"
+        x1={drawingArea.left}
+        x2={xOrigin}
+        y={drawingArea.top}
+        height={drawingArea.height}
+      >
+        <animate
+          attributeName="x"
+          from={xOrigin}
+          to={drawingArea.left}
+          dur={`${ANIMATION_DURATION_MS}ms`}
+          fill="freeze"
+        />
+        <animate
+          attributeName="width"
+          from={0}
+          to={xOrigin - drawingArea.left}
+          dur={`${ANIMATION_DURATION_MS}ms`}
+          fill="freeze"
+        />
+      </rect>,
+    );
+    animateChildren.push(
+      <rect
+        key="right"
+        x1={xOrigin}
+        y={drawingArea.top}
+        width={drawingArea.width - xOrigin}
+        height={drawingArea.height}
+      >
+        <animate
+          attributeName="width"
+          from={0}
+          to={drawingArea.width - xOrigin}
+          dur={`${ANIMATION_DURATION_MS}ms`}
+          fill="freeze"
+        />
+      </rect>,
+    );
+  } else {
+    animateChildren.push(
+      <rect
+        key="top"
+        x={drawingArea.left}
+        width={drawingArea.width}
+        y1={drawingArea.top}
+        y2={yOrigin}
+      >
+        <animate
+          attributeName="y"
+          from={yOrigin}
+          to={drawingArea.top}
+          dur={`${ANIMATION_DURATION_MS}ms`}
+          fill="freeze"
+        />
+        <animate
+          attributeName="height"
+          from={0}
+          to={yOrigin - drawingArea.top}
+          dur={`${ANIMATION_DURATION_MS}ms`}
+          fill="freeze"
+        />
+      </rect>,
+    );
+    animateChildren.push(
+      <rect
+        key="bottom"
+        x={drawingArea.left}
+        y={yOrigin}
+        width={drawingArea.width}
+        height={drawingArea.height - yOrigin}
+      >
+        <animate
+          attributeName="height"
+          from={0}
+          to={drawingArea.height - yOrigin}
+          dur={`${ANIMATION_DURATION_MS}ms`}
+          fill="freeze"
+        />
+      </rect>,
+    );
+  }
 
   return (
     <React.Fragment>
-      <clipPath id={clipPathId}>
-        <rect
-          x={drawingArea.left}
-          y={drawingArea.top}
-          width={drawingArea.width}
-          height={drawingArea.height}
-        >
-          <animate
-            attributeName="y"
-            from={drawingArea.top + drawingArea.height}
-            to={drawingArea.top}
-            dur={`${ANIMATION_DURATION_MS}ms`}
-            fill="freeze"
-          />
-          <animate
-            attributeName="height"
-            from={0}
-            to={drawingArea.height}
-            dur={`${ANIMATION_DURATION_MS}ms`}
-            fill="freeze"
-          />
-        </rect>
-      </clipPath>
+      <clipPath id={clipPathId}>{animateChildren}</clipPath>
       <PathGroup clipPath={clipPathId}>{children}</PathGroup>
     </React.Fragment>
   );
