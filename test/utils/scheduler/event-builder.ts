@@ -2,7 +2,6 @@ import {
   SchedulerResourceId,
   RecurringEventPresetKey,
   RecurringEventRecurrenceRule,
-  SchedulerValidDate,
 } from '@mui/x-scheduler-headless/models';
 import {
   SchedulerEvent,
