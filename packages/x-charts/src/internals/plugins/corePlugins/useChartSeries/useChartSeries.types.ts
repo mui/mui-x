@@ -1,6 +1,6 @@
 import { AllSeriesType } from '../../../../models/seriesType';
 import { ChartsColorPalette } from '../../../../colorPalettes';
-import { ChartPluginSignature, ChartSeriesConfig, SeriesPositionsResult } from '../../models';
+import { ChartPluginSignature, ChartSeriesConfig, SeriesLayoutGetterResult } from '../../models';
 import { ChartSeriesType, DatasetType } from '../../../../models/seriesType/config';
 import {
   SeriesProcessorParams,
@@ -46,8 +46,8 @@ export type ProcessedSeries<TSeriesTypes extends ChartSeriesType = ChartSeriesTy
   [type in TSeriesTypes]?: SeriesProcessorResult<type>;
 };
 
-export type SeriesWithPositions<TSeriesTypes extends ChartSeriesType = ChartSeriesType> = {
-  [type in TSeriesTypes]?: SeriesPositionsResult<type>;
+export type SeriesLayout<TSeriesTypes extends ChartSeriesType = ChartSeriesType> = {
+  [type in TSeriesTypes]?: SeriesLayoutGetterResult<type>;
 };
 
 export type DefaultizedSeriesGroups<TSeriesTypes extends ChartSeriesType = ChartSeriesType> = {

@@ -9,7 +9,7 @@ import {
 import { SankeyNodeElement } from './SankeyNodeElement';
 import { SankeyLinkElement } from './SankeyLinkElement';
 import { SankeyLinkLabel } from './SankeyLinkLabel';
-import { useSankeySeriesWithPositionsContext } from '../hooks/useSankeySeries';
+import { useSankeySeries, useSankeySeriesLayout } from '../hooks/useSankeySeries';
 import { sankeyPlotClasses, useUtilityClasses, type SankeyPlotClasses } from './sankeyClasses';
 
 export interface SankeyPlotProps {
@@ -53,18 +53,25 @@ const SankeyPlotRoot = styled('g')({
 function SankeyPlot(props: SankeyPlotProps) {
   const { classes: inputClasses, onLinkClick, onNodeClick } = props;
 
-  const seriesContext = useSankeySeriesWithPositionsContext();
+  const classes = useUtilityClasses({ classes: inputClasses });
 
-  if (!seriesContext) {
+  const sankeySeries = useSankeySeries();
+  const sankeySeriesLayout = useSankeySeriesLayout();
+
+  if (!sankeySeries) {
     throw new Error(
       `MUI X Charts: Sankey series context is missing. Ensure the SankeyPlot is used inside a properly configured ChartDataProviderPro.`,
     );
   }
 
-  const series = seriesContext.series[seriesContext.seriesOrder?.[0]];
-  const classes = useUtilityClasses({ classes: inputClasses });
+  const series = sankeySeries[0];
+  const layout = sankeySeriesLayout[0]?.sankeyLayout;
 
-  const { data, linkOptions, nodeOptions, sankeyLayout } = series;
+  if (!series || !layout) {
+    return null;
+  }
+
+  const { data, linkOptions, nodeOptions } = series;
 
   // Early return if no data or dimensions
   if (!data || !data.links) {
@@ -74,7 +81,7 @@ function SankeyPlot(props: SankeyPlotProps) {
   return (
     <SankeyPlotRoot className={classes.root}>
       <g className={classes.links}>
-        {sankeyLayout.links.map((link) => (
+        {layout.links.map((link) => (
           <SankeyLinkElement
             seriesId={series.id}
             key={`${link.source.id}-${link.target.id}`}
@@ -86,7 +93,7 @@ function SankeyPlot(props: SankeyPlotProps) {
       </g>
 
       <g className={classes.nodes}>
-        {sankeyLayout.nodes.map((node) => (
+        {layout.nodes.map((node) => (
           <SankeyNodeElement
             seriesId={series.id}
             key={node.id}
@@ -99,7 +106,7 @@ function SankeyPlot(props: SankeyPlotProps) {
 
       {linkOptions?.showValues && (
         <g className={classes.linkLabels}>
-          {sankeyLayout.links.map((link) => (
+          {layout.links.map((link) => (
             <SankeyLinkLabel key={`label-${link.source.id}-${link.target.id}`} link={link} />
           ))}
         </g>

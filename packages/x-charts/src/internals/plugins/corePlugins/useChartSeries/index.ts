@@ -4,6 +4,6 @@ export type {
   UseChartSeriesParameters,
   UseChartSeriesDefaultizedParameters,
   ProcessedSeries,
-  SeriesWithPositions,
+  SeriesLayout,
 } from './useChartSeries.types';
 export * from './useChartSeries.selectors';

@@ -11,14 +11,14 @@ import type { AxisTooltipGetter, TooltipGetter } from './tooltipGetter.types';
 import { PolarExtremumGetter } from './polarExtremumGetter.types';
 import { GetSeriesWithDefaultValues } from './getSeriesWithDefaultValues.types';
 import { TooltipItemPositionGetter } from './tooltipItemPositionGetter.types';
-import { SeriesPositions } from './seriesPositions.types';
+import { SeriesLayoutGetter } from './seriesLayout.types';
 
 export type ChartSeriesTypeConfig<TSeriesType extends ChartSeriesType> = {
   seriesProcessor: SeriesProcessor<TSeriesType>;
   /**
-   * A processor to add series positions when position do not depend from other series.
+   * A processor to add series layout when the layout does not depend from other series.
    */
-  seriesPositions?: SeriesPositions<TSeriesType>;
+  seriesLayout?: SeriesLayoutGetter<TSeriesType>;
   colorProcessor: ColorProcessor<TSeriesType>;
   legendGetter: LegendGetter<TSeriesType>;
   tooltipGetter: TooltipGetter<TSeriesType>;

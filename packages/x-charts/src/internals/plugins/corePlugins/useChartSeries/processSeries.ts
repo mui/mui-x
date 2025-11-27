@@ -3,11 +3,7 @@ import { SeriesId } from '../../../../models/seriesType/common';
 import { AllSeriesType } from '../../../../models/seriesType';
 import { ChartSeriesType, DatasetType } from '../../../../models/seriesType/config';
 import { ChartSeriesConfig } from '../../models/seriesConfig';
-import {
-  DefaultizedSeriesGroups,
-  ProcessedSeries,
-  SeriesWithPositions,
-} from './useChartSeries.types';
+import { DefaultizedSeriesGroups, ProcessedSeries, SeriesLayout } from './useChartSeries.types';
 
 /**
  * This method groups series by type and adds defaultized values such as the ids and colors.
@@ -86,29 +82,29 @@ export const applySeriesProcessors = <TSeriesType extends ChartSeriesType>(
  * @param drawingArea The drawing area
  * @returns Processed series with all transformations applied
  */
-export const applySeriesPositions = <TSeriesType extends ChartSeriesType>(
+export const applySeriesLayout = <TSeriesType extends ChartSeriesType>(
   processedSeries: ProcessedSeries<TSeriesType>,
   seriesConfig: ChartSeriesConfig<TSeriesType>,
   drawingArea: ChartDrawingArea,
-): SeriesWithPositions<TSeriesType> => {
+): SeriesLayout<TSeriesType> => {
   let processingDetected = false;
-  const modifiedProcessedSeries: ProcessedSeries<TSeriesType> = {};
+  const seriesLayout: SeriesLayout<TSeriesType> = {};
 
   // Apply processors on series type per group
   (Object.keys(processedSeries) as TSeriesType[]).forEach((type) => {
-    const processor = seriesConfig[type]?.seriesPositions;
+    const processor = seriesConfig[type]?.seriesLayout;
     if (processor !== undefined) {
       const newValue = processor(processedSeries[type] as any, drawingArea);
 
       if (newValue && newValue !== processedSeries[type]) {
         processingDetected = true;
-        (modifiedProcessedSeries as any)[type] = newValue;
+        (seriesLayout as any)[type] = newValue;
       }
     }
   });
 
   if (!processingDetected) {
-    return processedSeries as ProcessedSeries<TSeriesType>;
+    return {} as SeriesLayout<TSeriesType>;
   }
-  return { ...processedSeries, ...modifiedProcessedSeries };
+  return seriesLayout;
 };

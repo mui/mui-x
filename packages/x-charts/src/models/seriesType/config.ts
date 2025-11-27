@@ -125,12 +125,9 @@ export type ChartSeriesDefaultized<T extends ChartSeriesType> = ChartsSeriesConf
   ? ChartsSeriesConfig[T]['series'] & { stackedData: [number, number][] }
   : ChartsSeriesConfig[T]['series'];
 
-export type ChartSeriesWithPosition<T extends ChartSeriesType> = ChartsSeriesConfig[T] extends {
-  canBeStacked: true;
-}
-  ? ChartsSeriesConfig[T]['series'] &
-      ChartsSeriesConfig[T]['seriesLayout'] & { stackedData: [number, number][] }
-  : ChartsSeriesConfig[T]['series'] & ChartsSeriesConfig[T]['seriesLayout'];
+export type ChartSeriesLayout<T extends ChartSeriesType> = ChartsSeriesConfig[T] extends any
+  ? ChartsSeriesConfig[T]['seriesLayout']
+  : never;
 
 export type ChartItemIdentifier<T extends ChartSeriesType> =
   ChartsSeriesConfig[T]['itemIdentifier'];
