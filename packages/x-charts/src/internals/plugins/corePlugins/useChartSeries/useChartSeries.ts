@@ -1,5 +1,5 @@
 'use client';
-import * as React from 'react';
+import { useEffectAfterFirstRender } from '@mui/x-internals/useEffectAfterFirstRender';
 import { ChartPlugin } from '../../models';
 import { UseChartSeriesSignature } from './useChartSeries.types';
 import { rainbowSurgePalette } from '../../../../colorPalettes';
@@ -11,7 +11,7 @@ export const useChartSeries: ChartPlugin<UseChartSeriesSignature> = ({
 }) => {
   const { series, dataset, theme, colors } = params;
 
-  React.useEffect(() => {
+  useEffectAfterFirstRender(() => {
     store.set('series', {
       ...store.state.series,
       series,
