@@ -119,8 +119,6 @@ export class SchedulerStore<
     parameters: SchedulerParameters<TEvent, TResource>,
     adapter: Adapter,
   ) {
-    const timezone = parameters.timezone ?? 'default';
-
     return {
       adapter,
       areEventsDraggable: parameters.areEventsDraggable ?? false,
@@ -131,7 +129,7 @@ export class SchedulerStore<
       showCurrentTimeIndicator: parameters.showCurrentTimeIndicator ?? true,
       readOnly: parameters.readOnly ?? false,
       eventCreation: parameters.eventCreation ?? true,
-      timezone,
+      timezone: parameters.timezone ?? 'default',
     };
   }
 
