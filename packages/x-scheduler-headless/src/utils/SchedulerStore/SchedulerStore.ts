@@ -10,7 +10,6 @@ import {
   RecurringEventUpdateScope,
   SchedulerPreferences,
   SchedulerEventCreationProperties,
-  SchedulerEvent,
 } from '../../models';
 import {
   SchedulerState,
@@ -32,9 +31,8 @@ import {
 } from './SchedulerStore.utils';
 import { TimeoutManager } from '../TimeoutManager';
 import { DEFAULT_EVENT_COLOR } from '../../constants';
-import { SchedulerDataManager, DateRange } from './utils';
+import { SchedulerDataManager } from './utils';
 import { SchedulerDataSourceCacheDefault } from './cache';
-import { getDateKey } from '../date-utils';
 import { getNowInRenderTimezone, getStartOfTodayInRenderTimezone } from '../timezone-utils';
 
 const ONE_MINUTE_IN_MS = 60 * 1000;
@@ -46,7 +44,7 @@ export const DEFAULT_SCHEDULER_PREFERENCES: SchedulerPreferences = {
 const MOCK_EVENT_STATE = {
   eventIdList: [],
   eventModelLookup: new Map(),
-  eventModelStructure: undefined,
+  eventModelStructure: {},
   processedEventLookup: new Map(),
   eventModelList: [],
 };
@@ -185,22 +183,6 @@ export class SchedulerStore<
   }
 
   /**
-   * Gets all individual days in a date range as cache keys.
-   */
-  private getDaysInRange(range: DateRange): { key: string; date: SchedulerValidDate }[] {
-    const { adapter } = this.state;
-    const days: { key: string; date: SchedulerValidDate }[] = [];
-    let currentDay = range.start;
-
-    while (adapter.isBefore(currentDay, range.end) || adapter.isEqual(currentDay, range.end)) {
-      days.push({ key: getDateKey(currentDay, adapter), date: currentDay });
-      currentDay = adapter.addDays(currentDay, 1) as SchedulerValidDate;
-    }
-
-    return days;
-  }
-
-  /**
    * Loads events from the data source.
    */
   private loadEventsFromDataSource = async (range: {
@@ -214,32 +196,16 @@ export class SchedulerStore<
       return;
     }
 
-    const daysInRange = this.getDaysInRange(range);
+    if (this.cache.hasCoverage(range.start, range.end)) {
+      console.log('Cache hit for range:', range);
+      const allCachedEvents = this.cache?.getAll() || [];
 
-    if (!daysInRange.length) {
-      return;
-    }
-
-    // Check cache for each day in the range
-    const needsFetch = daysInRange.some(({ key }) => {
-      const cached = this.cache!.get(key);
-      return cached === undefined || cached === -1;
-    });
-
-    if (!needsFetch) {
-      const allEvents: TEvent[] = [];
-      daysInRange.forEach(({ key }) => {
-        const cachedEvents = this.cache!.get(key);
-        if (cachedEvents && cachedEvents !== -1) {
-          allEvents.push(...cachedEvents);
-        }
-      });
       const eventsState = buildEventsState(
-        { ...this.parameters, events: allEvents } as Parameters,
+        { ...this.parameters, events: allCachedEvents } as Parameters,
         adapter,
       );
 
-      this.apply({
+      this.update({
         ...eventsState,
       } as Partial<State>);
 
@@ -255,28 +221,12 @@ export class SchedulerStore<
     try {
       const events = await dataSource.getEvents(range.start, range.end);
 
+      console.log('Fetched events for range:', range, events);
+
+      this.cache!.setRange(range.start, range.end, events ?? []);
       const eventsState = buildEventsState({ ...this.parameters, events } as Parameters, adapter);
-      const eventsByDay = new Map<string, TEvent[]>();
-
-      events.forEach((event) => {
-        const eventStart = this.state.eventModelStructure?.start
-          ? this.state.eventModelStructure.start.getter(event)
-          : (event as SchedulerEvent).start;
-
-        if (eventStart) {
-          const dayKey = getDateKey(eventStart, adapter);
-          if (!eventsByDay.has(dayKey)) {
-            eventsByDay.set(dayKey, []);
-          }
-          eventsByDay.get(dayKey)!.push(event);
-        }
-      });
-
-      daysInRange.forEach(({ key: dayKey }) => {
-        this.cache!.set(dayKey, eventsByDay.get(dayKey) ?? []);
-      });
-
-      this.apply({
+      console.log('Built events state from fetched data:', eventsState);
+      this.update({
         ...eventsState,
       } as Partial<State>);
 

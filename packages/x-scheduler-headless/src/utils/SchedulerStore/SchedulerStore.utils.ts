@@ -92,8 +92,10 @@ export function getProcessedEventFromModel<TEvent extends object>(
     modelInDefaultFormat[key] = getter ? getter(model) : model[key];
   }
 
+  const event = processEvent(modelInDefaultFormat, adapter);
+
   // 2. Convert the default event model to a processed event
-  return processEvent(modelInDefaultFormat, adapter);
+  return event;
 }
 
 /**
