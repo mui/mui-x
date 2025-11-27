@@ -24,6 +24,16 @@ storeClasses.forEach((storeClass) => {
         );
         expect(schedulerEventSelectors.modelList(store.state)).to.equal(events);
       });
+
+      it('should set visibleDate to today in the render timezone when defaultVisibleDate is not provided', () => {
+        const timezone = 'Pacific/Kiritimati';
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS, timezone }, adapter);
+
+        const expectedToday = adapter.startOfDay(adapter.now(timezone));
+
+        expect(store.state.visibleDate).toEqualDateTime(expectedToday);
+        expect(adapter.getTimezone(store.state.visibleDate)).to.equal(timezone);
+      });
     });
 
     describe('updater', () => {

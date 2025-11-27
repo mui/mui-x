@@ -1,4 +1,4 @@
-import { Adapter, diffIn } from '../../use-adapter';
+import { Adapter } from '../../use-adapter';
 import {
   RecurringEventByDayValue,
   RecurringEventRecurrenceRule,
@@ -10,7 +10,7 @@ import {
   SchedulerValidDate,
 } from '../../models';
 import type { UpdateEventsParameters } from '../SchedulerStore';
-import { getDateKey, mergeDateAndTime } from '../date-utils';
+import { getDateKey, getOccurrenceEnd, mergeDateAndTime } from '../date-utils';
 import {
   estimateOccurrencesUpTo,
   getMondayWeekDayNumber,
@@ -125,10 +125,7 @@ export function applyRecurringUpdateAll(
   const eventUpdatedProperties: SchedulerEventUpdatedProperties = { ...changes };
 
   // 1) Detect if caller changed the date part of start or end (vs only time)
-  const occurrenceEnd = adapter.addMinutes(
-    occurrenceStart,
-    diffIn(adapter, originalEvent.end.value, originalEvent.start.value, 'minutes'),
-  );
+  const occurrenceEnd = getOccurrenceEnd({ adapter, occurrenceStart, event: originalEvent });
   const touchedStartDate =
     changes.start != null && !adapter.isSameDay(occurrenceStart, changes.start);
   const touchedEndDate = changes.end != null && !adapter.isSameDay(occurrenceEnd, changes.end);
@@ -308,7 +305,6 @@ export function decideSplitRRule(
 
   // Case C — user did not touch RRULE → inherit pattern and recompute boundaries
   let realignedRule: Omit<RecurringEventRecurrenceRule, 'count' | 'until'> = { ...baseRule };
-  const splitDayStart = adapter.startOfDay(splitStart);
 
   // Freq WEEKLY: realign BYDAY, swap the old weekday for the new one while preserving the rest of the weekly pattern.
   if (originalRule.freq === 'WEEKLY' && baseRule.byDay?.length && changes.start) {
@@ -339,7 +335,7 @@ export function decideSplitRRule(
 
   // Recalculate COUNT: original minus prior occurrences.
   if (originalRule.count) {
-    const dayBefore = adapter.addDays(splitDayStart, -1);
+    const dayBefore = adapter.addDays(adapter.startOfDay(splitStart), -1);
     const occurrencesBeforeSplit = estimateOccurrencesUpTo(
       adapter,
       originalRule,

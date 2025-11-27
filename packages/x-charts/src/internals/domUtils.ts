@@ -2,6 +2,10 @@
 // https://github.com/recharts/recharts/blob/master/src/util/DOMUtils.ts
 import * as React from 'react';
 
+export interface SVGCSSProperties extends Omit<React.CSSProperties, 'dominantBaseline'> {
+  dominantBaseline?: React.SVGAttributes<SVGTextElement>['dominantBaseline'];
+}
+
 function isSsr(): boolean {
   return typeof window === 'undefined';
 }
@@ -63,12 +67,12 @@ function camelCaseToDashCase(text: string) {
  * @param style React style object
  * @returns CSS styling string
  */
-export function getStyleString(style: React.CSSProperties) {
+export function getStyleString(style: SVGCSSProperties) {
   let result = '';
 
   for (const key in style) {
     if (Object.hasOwn(style, key)) {
-      const k = key as keyof React.CSSProperties;
+      const k = key as keyof SVGCSSProperties;
       const value = style[k];
 
       if (value === undefined) {
@@ -87,7 +91,7 @@ export function getStyleString(style: React.CSSProperties) {
  * @param style The style applied
  * @returns width and height of the text
  */
-export const getStringSize = (text: string | number, style: React.CSSProperties = {}) => {
+export const getStringSize = (text: string | number, style: SVGCSSProperties = {}) => {
   if (text === undefined || text === null || isSsr()) {
     return { width: 0, height: 0 };
   }
@@ -138,7 +142,7 @@ export const getStringSize = (text: string | number, style: React.CSSProperties 
 
 export function batchMeasureStrings(
   texts: Iterable<string | number>,
-  style: React.CSSProperties = {},
+  style: SVGCSSProperties = {},
 ) {
   if (isSsr()) {
     return new Map<string | number, { width: number; height: number }>(

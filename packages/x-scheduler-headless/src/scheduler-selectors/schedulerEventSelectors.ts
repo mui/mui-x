@@ -19,7 +19,7 @@ const isEventReadOnlySelector = createSelector(
 );
 
 export const schedulerEventSelectors = {
-  creationConfig: createSelector(
+  creationConfig: createSelectorMemoized(
     (state: State) => state.readOnly,
     (state: State) => state.eventCreation,
     (isSchedulerReadOnly, creationConfig) => {
