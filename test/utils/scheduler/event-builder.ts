@@ -226,7 +226,7 @@ export class EventBuilder {
    */
   recurrent(kind: RecurringEventPresetKey, rrule?: Omit<RecurringEventRecurrenceRule, 'freq'>) {
     const anchor =
-      this.event.start ?? this.adapter.date(DEFAULT_TESTING_VISIBLE_DATE, this.dataTimezone);
+      this.event.start ?? this.adapter.setTimezone(DEFAULT_TESTING_VISIBLE_DATE, this.dataTimezone);
 
     let base: RecurringEventRecurrenceRule = { freq: kind, interval: 1 };
 
