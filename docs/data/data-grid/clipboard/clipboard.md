@@ -71,7 +71,8 @@ The demo below shows a product inventory grid with the following paste restricti
 - **Status column:** Cannot be pasted in any row
 - **Last Modified column:** Cannot be pasted in any row
 
-Try selecting multiple cells and pasting data. Cells marked as non-editable by `isCellEditable` will not be updated.
+Try selecting multiple cells and pasting data.
+Cells marked as non-editable by `isCellEditable` will not be updated.
 
 {{"demo": "ClipboardPasteIsCellEditable.js", "bg": "inline"}}
 
