@@ -773,7 +773,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       expect(getColumnValues(2)).to.deep.equal(['Shoes', 'Shoes', 'Shoes']);
       // Price should not be updated for row 1 due to isCellEditable returning false
       expect(getColumnValues(3)).to.deep.equal(['$120', '$100', '$90']);
-      // Rating should not be updated for any row due to isCellEditable returning false
+      // Rating should not be updated because column is not editable
       expect(getColumnValues(4)).to.deep.equal(['4.0', '4.2', '4.9']);
     });
 
