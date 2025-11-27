@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useStableCallback } from '@base-ui-components/utils/useStableCallback';
 import { useAdapter } from '../../use-adapter/useAdapter';
-import { SchedulerEvent, SchedulerValidDate } from '../../models';
+import { SchedulerEvent, TemporalSupportedObject } from '../../models';
 import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
 import { CalendarGridTimeColumnContext } from './CalendarGridTimeColumnContext';
 import { useDropTarget } from '../../utils/useDropTarget';
@@ -28,7 +28,7 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
   const ref = React.useRef<HTMLDivElement>(null);
 
   // TODO: Avoid JS date conversion
-  const getTimestamp = (date: SchedulerValidDate) => adapter.toJsDate(date).getTime();
+  const getTimestamp = (date: TemporalSupportedObject) => adapter.toJsDate(date).getTime();
   const collectionStartTimestamp = getTimestamp(start);
   const collectionEndTimestamp = getTimestamp(end);
   const collectionDurationMs = collectionEndTimestamp - collectionStartTimestamp;
@@ -54,7 +54,7 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
 
       const cursorOffsetMs = getCursorPositionInElementMs({ input, elementRef: ref });
 
-      const addOffsetToDate = (date: SchedulerValidDate, offsetMs: number) => {
+      const addOffsetToDate = (date: TemporalSupportedObject, offsetMs: number) => {
         const roundedOffset =
           Math.round(offsetMs / EVENT_DRAG_PRECISION_MS) * EVENT_DRAG_PRECISION_MS;
 
@@ -150,11 +150,11 @@ export namespace useTimeDropTarget {
     /**
      * The data and time at which the column starts.
      */
-    start: SchedulerValidDate;
+    start: TemporalSupportedObject;
     /**
      * The data and time at which the column ends.
      */
-    end: SchedulerValidDate;
+    end: TemporalSupportedObject;
     /**
      * Add properties to the event dropped in the column before storing it in the store.
      */

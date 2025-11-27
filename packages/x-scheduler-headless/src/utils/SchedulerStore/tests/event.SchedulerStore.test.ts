@@ -3,7 +3,7 @@ import { adapter, EventBuilder } from 'test/utils/scheduler';
 import {
   SchedulerEvent,
   SchedulerEventModelStructure,
-  SchedulerValidDate,
+  TemporalSupportedObject,
 } from '@mui/x-scheduler-headless/models';
 import { processDate } from '@mui/x-scheduler-headless/process-date';
 import { buildEvent, storeClasses, getIds } from './utils';
@@ -145,8 +145,8 @@ storeClasses.forEach((storeClass) => {
         interface MyEvent2 {
           myId: string;
           title: string;
-          start: SchedulerValidDate;
-          end: SchedulerValidDate;
+          start: TemporalSupportedObject;
+          end: TemporalSupportedObject;
         }
 
         const idGetter = spy((event: MyEvent2) => event.myId);

@@ -1,11 +1,11 @@
-import { SchedulerValidDate } from '../models';
+import { TemporalSupportedObject } from '../models';
 import { Adapter } from '../use-adapter/useAdapter.types';
 
 export function mergeDateAndTime(
   adapter: Adapter,
-  dateParam: SchedulerValidDate,
-  timeParam: SchedulerValidDate,
-): SchedulerValidDate {
+  dateParam: TemporalSupportedObject,
+  timeParam: TemporalSupportedObject,
+): TemporalSupportedObject {
   let mergedDate = dateParam;
   mergedDate = adapter.setHours(mergedDate, adapter.getHours(timeParam));
   mergedDate = adapter.setMinutes(mergedDate, adapter.getMinutes(timeParam));
@@ -20,6 +20,6 @@ export function mergeDateAndTime(
  * It can be used as key in Maps or passed to the React `key` property when looping through days.
  * It only contains date information, two dates representing the same day but with different time will have the same key.
  */
-export function getDateKey(day: SchedulerValidDate, adapter: Adapter): string {
+export function getDateKey(day: TemporalSupportedObject, adapter: Adapter): string {
   return adapter.format(day, 'localizedNumericDate');
 }

@@ -1,5 +1,5 @@
 import {
-  SchedulerValidDate,
+  TemporalSupportedObject,
   SchedulerProcessedEvent,
   SchedulerProcessedDate,
   SchedulerEventOccurrence,
@@ -92,8 +92,8 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
 
 export interface GetOccurrencesFromEventsParameters {
   adapter: Adapter;
-  start: SchedulerValidDate;
-  end: SchedulerValidDate;
+  start: TemporalSupportedObject;
+  end: TemporalSupportedObject;
   events: SchedulerProcessedEvent[];
   visibleResources: Map<string, boolean>;
   resourceParentIds: Map<string, string | null>;

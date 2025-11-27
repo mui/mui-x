@@ -4,7 +4,7 @@ import {
   RecurringEventRecurrenceRule,
   RecurringEventWeekDayCode,
   SchedulerProcessedDate,
-  SchedulerValidDate,
+  TemporalSupportedObject,
 } from '../models';
 import { SchedulerState as State } from '../utils/SchedulerStore/SchedulerStore.types';
 import { computeMonthlyOrdinal, getWeekDayCode, serializeRRule } from '../utils/recurring-events';
@@ -137,7 +137,7 @@ export const schedulerRecurringEventSelectors = {
   weeklyDays: createSelectorMemoized(
     (state: State) => state.adapter,
     (state: State) => state.visibleDate,
-    (adapter, visibleDate): { code: RecurringEventWeekDayCode; date: SchedulerValidDate }[] => {
+    (adapter, visibleDate): { code: RecurringEventWeekDayCode; date: TemporalSupportedObject }[] => {
       const start = adapter.startOfWeek(visibleDate);
       return Array.from({ length: 7 }, (_, i) => {
         const date = adapter.addDays(start, i);
@@ -158,7 +158,7 @@ export const schedulerRecurringEventSelectors = {
       dayOfMonth: number;
       code: RecurringEventWeekDayCode;
       ord: number;
-      date: SchedulerValidDate;
+      date: TemporalSupportedObject;
     } => {
       return {
         dayOfMonth: adapter.getDate(date.value),

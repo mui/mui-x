@@ -4,7 +4,7 @@ import {
   SchedulerEvent,
   RecurringEventByDayValue,
   RecurringEventRecurrenceRule,
-  SchedulerValidDate,
+  TemporalSupportedObject,
 } from '@mui/x-scheduler-headless/models';
 import { mergeDateAndTime } from '../date-utils';
 import {
@@ -34,8 +34,8 @@ describe('recurring-events/updateRecurringEvent', () => {
     const call = (
       originalRule: RecurringEventRecurrenceRule,
       changes: Partial<SchedulerEvent> = {},
-      originalSeriesStart: SchedulerValidDate = seriesStart,
-      split: SchedulerValidDate = splitStart,
+      originalSeriesStart: TemporalSupportedObject = seriesStart,
+      split: TemporalSupportedObject = splitStart,
     ) => decideSplitRRule(adapter, originalRule, originalSeriesStart, split, changes);
 
     it('should return changes.rrule as is when user explicitly changed recurrence', () => {

@@ -1,13 +1,12 @@
-import { SchedulerValidDate } from '../../../models/date';
-import { SchedulerEvent } from '../../../models/event';
+import { TemporalSupportedObject, SchedulerEvent } from '../../../models';
 import { EventCalendarStore } from '../../../use-event-calendar';
 import { TimelineStore } from '../../../use-timeline';
 
 export function buildEvent(
   id: string,
   title: string,
-  start: SchedulerValidDate,
-  end: SchedulerValidDate,
+  start: TemporalSupportedObject,
+  end: TemporalSupportedObject,
   extra: Partial<SchedulerEvent> = {},
 ): SchedulerEvent {
   return {

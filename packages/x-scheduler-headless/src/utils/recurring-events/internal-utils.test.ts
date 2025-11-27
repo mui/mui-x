@@ -3,7 +3,7 @@ import {
   RecurringEventWeekDayCode,
   RecurringEventByDayValue,
   RecurringEventRecurrenceRule,
-  SchedulerValidDate,
+  TemporalSupportedObject,
   SchedulerEvent,
 } from '@mui/x-scheduler-headless/models';
 import {
@@ -234,7 +234,7 @@ describe('recurring-events/internal-utils', () => {
   });
 
   describe('nthWeekdayOfMonth', () => {
-    const expectYMD = (date: SchedulerValidDate, year: number, month: number, day: number) => {
+    const expectYMD = (date: TemporalSupportedObject, year: number, month: number, day: number) => {
       expect(adapter.getYear(date)).to.equal(year);
       // The adapter uses 0-based months
       expect(adapter.getMonth(date)).to.equal(month - 1);
