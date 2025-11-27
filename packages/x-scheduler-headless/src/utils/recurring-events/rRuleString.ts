@@ -17,6 +17,10 @@ const SUPPORTED_RRULE_KEYS = [
  * Parses a string RRULE (e.g. "FREQ=DAILY;COUNT=5;INTERVAL=2")
  * into a RecurringEventRecurrenceRule object.
  * Also validates unsupported or malformed properties.
+ *
+ * @param adapter The date adapter used to parse and convert dates.
+ * @param input The RRULE value. Can be a string or an RecurringEventRecurrenceRule object.
+ * @param timezone The data timezone in which RRULE dates (like UNTIL) should be interpreted
  */
 export function parseRRuleString(
   adapter: Adapter,
