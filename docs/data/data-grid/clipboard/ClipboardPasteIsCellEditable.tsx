@@ -1,7 +1,11 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
-import { DataGridPremium, GridColDef, DataGridPremiumProps } from '@mui/x-data-grid-premium';
+import {
+  DataGridPremium,
+  GridColDef,
+  DataGridPremiumProps,
+} from '@mui/x-data-grid-premium';
 
 interface Row {
   id: number;
@@ -81,16 +85,15 @@ const columns: GridColDef<Row>[] = [
   },
 ];
 
-const isCellEditable: DataGridPremiumProps['isCellEditable']  = (params) => {
+const isCellEditable: DataGridPremiumProps['isCellEditable'] = (params) => {
   // Price cannot be edited for archived products
   if (params.field === 'price' && params.row.status === 'archived') {
     return false;
   }
   return true;
-}
+};
 
 export default function ClipboardPasteIsCellEditable() {
-
   return (
     <Box sx={{ height: 400, width: '100%' }}>
       <DataGridPremium
