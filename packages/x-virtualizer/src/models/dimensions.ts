@@ -66,6 +66,14 @@ export interface DimensionsState {
    * Size of the bottom container.
    */
   bottomContainerHeight: number;
+  /**
+   * Indicates that the container takes the height of its content.
+   */
+  autoHeight: boolean;
+  /**
+   * Minimal height to display the content area.
+   */
+  minimalContentHeight: string | number | undefined;
 }
 
 /**

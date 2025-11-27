@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
-import * as sinon from 'sinon';
+import { vi } from 'vitest';
 import { BarChartPro } from './BarChartPro';
 import { CHART_SELECTOR } from '../tests/constants';
 
@@ -49,7 +49,7 @@ describe.skipIf(isJSDOM)('<BarChartPro /> - Zoom', () => {
   };
 
   it('should zoom on wheel', async () => {
-    const onZoomChange = sinon.spy();
+    const onZoomChange = vi.fn();
     const { user } = render(
       <BarChartPro
         {...barChartProps}
@@ -73,20 +73,20 @@ describe.skipIf(isJSDOM)('<BarChartPro /> - Zoom', () => {
     fireEvent.wheel(svg, { deltaY: -500, clientX: 0, clientY: 50 });
     await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-    expect(onZoomChange.callCount).to.equal(1);
+    expect(onZoomChange.mock.calls.length).to.equal(1);
     expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C']);
 
     // scroll back
     fireEvent.wheel(svg, { deltaY: 500, clientX: 0, clientY: 50 });
     await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-    expect(onZoomChange.callCount).to.equal(2);
+    expect(onZoomChange.mock.calls.length).to.equal(2);
     expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C', 'D']);
   });
 
   ['MouseLeft', 'TouchA'].forEach((pointerName) => {
     it(`should pan on ${pointerName} drag`, async () => {
-      const onZoomChange = sinon.spy();
+      const onZoomChange = vi.fn();
       const { user } = render(
         <BarChartPro
           {...barChartProps}
@@ -121,7 +121,7 @@ describe.skipIf(isJSDOM)('<BarChartPro /> - Zoom', () => {
       // Wait the animation frame
       await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-      expect(onZoomChange.callCount).to.equal(1);
+      expect(onZoomChange.mock.calls.length).to.equal(1);
       expect(getAxisTickValues('x')).to.deep.equal(['C']);
 
       // we drag all the way to the left so A should be visible
@@ -145,13 +145,13 @@ describe.skipIf(isJSDOM)('<BarChartPro /> - Zoom', () => {
       // Wait the animation frame
       await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-      expect(onZoomChange.callCount).to.equal(2);
+      expect(onZoomChange.mock.calls.length).to.equal(2);
       expect(getAxisTickValues('x')).to.deep.equal(['A']);
     });
   });
 
   it('should zoom on pinch', async () => {
-    const onZoomChange = sinon.spy();
+    const onZoomChange = vi.fn();
     const { user } = render(
       <BarChartPro {...barChartProps} onZoomChange={onZoomChange} />,
       options,
@@ -195,12 +195,12 @@ describe.skipIf(isJSDOM)('<BarChartPro /> - Zoom', () => {
     ]);
     await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-    expect(onZoomChange.callCount).to.be.above(0);
+    expect(onZoomChange.mock.calls.length).to.be.above(0);
     expect(getAxisTickValues('x')).to.deep.equal(['B', 'C']);
   });
 
   it('should zoom on tap and drag', async () => {
-    const onZoomChange = sinon.spy();
+    const onZoomChange = vi.fn();
     const { user } = render(
       <BarChartPro
         {...barChartProps}
@@ -245,7 +245,7 @@ describe.skipIf(isJSDOM)('<BarChartPro /> - Zoom', () => {
     ]);
     await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-    expect(onZoomChange.callCount).to.be.above(0);
+    expect(onZoomChange.mock.calls.length).to.be.above(0);
     // Should have zoomed in to show fewer ticks
     expect(getAxisTickValues('x').length).to.be.lessThan(4);
   });

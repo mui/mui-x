@@ -74,11 +74,7 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
 
       // Move a Time Grid Event into the Day Grid
       if (data.source === 'CalendarGridTimeEvent') {
-        // TODO: Use "addMilliseconds" instead of "addSeconds" when available in the adapter
-        const cursorDate = adapter.addSeconds(
-          data.start,
-          data.initialCursorPositionInEventMs / 1000,
-        );
+        const cursorDate = adapter.addMilliseconds(data.start, data.initialCursorPositionInEventMs);
         const offset = diffIn(adapter, value, cursorDate, 'days');
         return getDataFromInside(
           data,

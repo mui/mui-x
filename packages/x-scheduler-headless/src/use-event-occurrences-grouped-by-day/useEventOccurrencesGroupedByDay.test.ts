@@ -1,7 +1,7 @@
 import { adapter, EventBuilder } from 'test/utils/scheduler';
 import { processDate } from '../process-date';
 import { innerGetEventOccurrencesGroupedByDay } from './useEventOccurrencesGroupedByDay';
-import { SchedulerProcessedDate, SchedulerEventOccurrence } from '../models';
+import { SchedulerProcessedDate, SchedulerProcessedEvent } from '../models';
 
 describe('innerGetEventOccurrencesGroupedByDay', () => {
   const day0Str = '2024-01-10T00:00:00Z';
@@ -20,7 +20,7 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
 
   const noParents = new Map<string, string | null>();
 
-  function run(events: SchedulerEventOccurrence[]) {
+  function run(events: SchedulerProcessedEvent[]) {
     return innerGetEventOccurrencesGroupedByDay({
       adapter,
       days,
@@ -39,7 +39,7 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
   });
 
   it('should place a single-day event on the correct day', () => {
-    const event = EventBuilder.new(adapter).singleDay(day1Str).buildOccurrence();
+    const event = EventBuilder.new(adapter).singleDay(day1Str).toProcessed();
 
     const result = run([event]);
 
@@ -51,7 +51,7 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
   });
 
   it('should expand a multi-day event into each day', () => {
-    const event = EventBuilder.new(adapter).span(day0Str, day2Str).buildOccurrence();
+    const event = EventBuilder.new(adapter).span(day0Str, day2Str).toProcessed();
 
     const result = run([event]);
 
@@ -67,12 +67,12 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
     const visibleEvent = EventBuilder.new(adapter)
       .resource('Resource A')
       .singleDay(day1Str)
-      .buildOccurrence();
+      .toProcessed();
 
     const invisibleEvent = EventBuilder.new(adapter)
       .resource('Resource X')
       .singleDay(day1Str)
-      .buildOccurrence();
+      .toProcessed();
 
     const result = innerGetEventOccurrencesGroupedByDay({
       adapter,
@@ -89,9 +89,7 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
   });
 
   it('should handle multi-day all-day events correctly', () => {
-    const event = EventBuilder.new(adapter)
-      .span(day0Str, day2Str, { allDay: true })
-      .buildOccurrence();
+    const event = EventBuilder.new(adapter).span(day0Str, day2Str, { allDay: true }).toProcessed();
 
     const result = run([event]);
 
@@ -101,9 +99,9 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
   });
 
   it('should support multiple events on multiple days', () => {
-    const e1 = EventBuilder.new(adapter).singleDay(day1Str).buildOccurrence();
-    const e2 = EventBuilder.new(adapter).span(day0Str, day2Str).buildOccurrence();
-    const e3 = EventBuilder.new(adapter).singleDay(day2Str).buildOccurrence();
+    const e1 = EventBuilder.new(adapter).singleDay(day1Str).toProcessed();
+    const e2 = EventBuilder.new(adapter).span(day0Str, day2Str).toProcessed();
+    const e3 = EventBuilder.new(adapter).singleDay(day2Str).toProcessed();
 
     const result = run([e1, e2, e3]);
 
