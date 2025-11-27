@@ -137,7 +137,10 @@ export const schedulerRecurringEventSelectors = {
   weeklyDays: createSelectorMemoized(
     (state: State) => state.adapter,
     (state: State) => state.visibleDate,
-    (adapter, visibleDate): { code: RecurringEventWeekDayCode; date: TemporalSupportedObject }[] => {
+    (
+      adapter,
+      visibleDate,
+    ): { code: RecurringEventWeekDayCode; date: TemporalSupportedObject }[] => {
       const start = adapter.startOfWeek(visibleDate);
       return Array.from({ length: 7 }, (_, i) => {
         const date = adapter.addDays(start, i);

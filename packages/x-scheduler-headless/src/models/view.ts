@@ -11,7 +11,9 @@ export type TimelineView = 'time' | 'days' | 'weeks' | 'months' | 'years';
  * This is used to determine how the components outside of the view should behave based on the current view.
  */
 export interface EventCalendarViewConfig {
-  siblingVisibleDateGetter: (parameters: SiblingVisibleDateGetterParameters) => TemporalSupportedObject;
+  siblingVisibleDateGetter: (
+    parameters: SiblingVisibleDateGetterParameters,
+  ) => TemporalSupportedObject;
   visibleDaysSelector: (state: EventCalendarState) => SchedulerProcessedDate[];
 }
 

@@ -21,7 +21,10 @@ export function formatMonthAndDayOfMonth(date: TemporalSupportedObject, adapter:
   return adapter.formatByString(date, dateFormat);
 }
 
-export function formatDayOfMonthAndMonthFullLetter(date: TemporalSupportedObject, adapter: Adapter) {
+export function formatDayOfMonthAndMonthFullLetter(
+  date: TemporalSupportedObject,
+  adapter: Adapter,
+) {
   const f = adapter.formats;
   const dateFormat = `${f.dayOfMonth} ${f.monthFullLetter}`;
 
@@ -31,7 +34,11 @@ export function formatDayOfMonthAndMonthFullLetter(date: TemporalSupportedObject
 /**
  * @example "1:30 PM" or "13:30"
  */
-export function formatHourAndMinutes(date: TemporalSupportedObject, adapter: Adapter, ampm: boolean) {
+export function formatHourAndMinutes(
+  date: TemporalSupportedObject,
+  adapter: Adapter,
+  ampm: boolean,
+) {
   const f = adapter.formats;
   const timeFormat = ampm
     ? `${f.hours12h}:${f.minutesPadded} ${f.meridiem}`
