@@ -12,7 +12,7 @@ export function processEvent(
   const startTimezone = adapter.getTimezone(model.start);
   const endTimezone = adapter.getTimezone(model.end);
 
-  if (startTimezone && endTimezone && startTimezone !== endTimezone) {
+  if (startTimezone !== endTimezone) {
     throw new Error(
       `Scheduler: The event with id "${model.id}" has different timezones for its start ("${startTimezone}") and end ("${endTimezone}") dates. ` +
         `This is not supported and may lead to unexpected behaviors.`,
