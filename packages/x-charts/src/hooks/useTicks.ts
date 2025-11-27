@@ -126,12 +126,12 @@ export function getTicks(
     if (typeof tickInterval === 'object' && tickInterval != null) {
       filteredDomain = tickInterval;
     } else {
-      if (tickSpacing !== undefined && tickSpacing > 0) {
-        filteredDomain = applyTickSpacing(domain, scale.range(), tickSpacing);
-      }
-
       if (typeof tickInterval === 'function') {
         filteredDomain = filteredDomain.filter(tickInterval);
+      }
+
+      if (tickSpacing !== undefined && tickSpacing > 0) {
+        filteredDomain = applyTickSpacing(filteredDomain, scale.range(), tickSpacing);
       }
     }
 

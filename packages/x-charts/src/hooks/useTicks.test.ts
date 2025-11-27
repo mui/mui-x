@@ -1,4 +1,5 @@
-import { applyTickSpacing } from './useTicks';
+import { applyTickSpacing, getTicks } from './useTicks';
+import { scaleBand } from '../internals';
 
 describe('applyTickSpacing', () => {
   it('should return all domain values when tickSpacing allows it', () => {
@@ -109,5 +110,35 @@ describe('applyTickSpacing', () => {
     const result = applyTickSpacing(domain, range, tickSpacing);
 
     expect(result).to.deep.equal(['A', 'B', 'C', 'D']);
+  });
+});
+
+describe('getTicks', () => {
+  it('it applies tickInterval before tickSpacing', () => {
+    const scale = scaleBand<{ toString(): string }>(
+      Array.from({ length: 1000 }).map((_, i) => `${i}`),
+      [0, 500],
+    );
+
+    const ticks = getTicks({
+      scale,
+      tickInterval: (tick) => tick % 101 === 0,
+      tickSpacing: 50,
+      tickNumber: 5,
+      isInside: () => true,
+    });
+
+    expect(ticks.map((t) => t.value)).to.deep.equal([
+      '0',
+      '101',
+      '202',
+      '303',
+      '404',
+      '505',
+      '606',
+      '707',
+      '808',
+      '909',
+    ]);
   });
 });
