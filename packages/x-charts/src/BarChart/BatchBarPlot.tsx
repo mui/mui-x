@@ -1,45 +1,37 @@
 import useId from '@mui/utils/useId';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import {
-  UseChartHighlightSignature,
-  getSVGPoint,
-  selectorChartAxisZoomData,
-  selectorChartBarSeriesFlatbushMap,
-  selectorChartDrawingArea,
-  selectorChartSeriesEmptyFlatbushMap,
-  selectorChartSeriesHighlightedItem,
-  selectorChartSeriesProcessed,
-  selectorChartSeriesUnfadedItem,
-  selectorChartXAxis,
-  selectorChartYAxis,
-  selectorChartZoomIsInteracting,
-  SeriesId,
-  UseChartCartesianAxisSignature,
-  useChartContext,
-  useSelector,
-  useStore,
-} from '../internals';
+
 import { useSvgRef } from '../hooks';
-import { BarPlotSlotProps, BarPlotSlots } from './BarPlot';
-import { BarItemIdentifier } from '../models';
 import { ProcessedBarData, ProcessedBarSeriesData } from './types';
 import { findClosestPoints } from '../internals/plugins/featurePlugins/useChartClosestPoint/findClosestPoints';
 import { ANIMATION_DURATION_MS } from '../internals/animation/animation';
 import { useUtilityClasses } from './barClasses';
 import { appendAtKey } from '../internals/appendAtKey';
+import { IndividualBarPlotProps } from './IndividualBarPlot';
+import { useChartContext } from '../context/ChartProvider/useChartContext';
+import {
+  selectorChartAxisZoomData,
+  selectorChartBarSeriesFlatbushMap,
+  selectorChartSeriesEmptyFlatbushMap,
+  selectorChartXAxis,
+  selectorChartYAxis,
+  selectorChartZoomIsInteracting,
+  UseChartCartesianAxisSignature,
+} from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+import { useSelector } from '../internals/store/useSelector';
+import { selectorChartDrawingArea } from '../internals/plugins/corePlugins/useChartDimensions';
+import { SeriesId } from '../models/seriesType/common';
+import { selectorChartSeriesProcessed } from '../internals/plugins/corePlugins/useChartSeries';
+import { getSVGPoint } from '../internals/getSVGPoint';
+import {
+  selectorChartSeriesHighlightedItem,
+  selectorChartSeriesUnfadedItem,
+  UseChartHighlightSignature,
+} from '../internals/plugins/featurePlugins/useChartHighlight';
+import { useStore } from '../internals/store/useStore';
 
-interface BatchBarPlotProps {
-  completedData: ProcessedBarSeriesData[];
-  borderRadius?: number;
-  skipAnimation?: boolean;
-  onItemClick?: (
-    event: React.MouseEvent<SVGElement, MouseEvent>,
-    barItemIdentifier: BarItemIdentifier,
-  ) => void;
-  slotProps?: BarPlotSlotProps;
-  slots?: BarPlotSlots;
-}
+interface BatchBarPlotProps extends IndividualBarPlotProps {}
 
 const MAX_POINTS_PER_PATH = 1000;
 
@@ -189,9 +181,15 @@ function useOnItemClick(onItemClick: BatchBarPlotProps['onItemClick'] | undefine
       }
 
       const point = aSeries.data[closestPointIndex];
-      // FIXME: Handle horizontal bars
-      const scaledX = xScale(xAxis.data?.[closestPointIndex] ?? point);
-      const scaledY = yScale(yAxis.data?.[closestPointIndex] ?? point);
+
+      if (point == null) {
+        continue;
+      }
+
+      const scaledX =
+        aSeries.layout === 'horizontal' ? xScale(point) : xScale(xAxis.data?.[closestPointIndex]);
+      const scaledY =
+        aSeries.layout === 'horizontal' ? yScale(yAxis.data?.[closestPointIndex]) : yScale(point);
 
       const distSq = (scaledX! - svgPoint.x) ** 2 + (scaledY! - svgPoint.y) ** 2;
 

@@ -6,7 +6,6 @@ import { barElementClasses } from './barElementClasses';
 import { type BarElementSlotProps, type BarElementSlots } from './BarElement';
 import { type BarItemIdentifier } from '../models';
 import { useDrawingArea, useXAxes, useYAxes } from '../hooks';
-import { BarClipPath } from './BarClipPath';
 import { type BarLabelSlotProps, type BarLabelSlots } from './BarLabel/BarLabelItem';
 import { BarLabelPlot } from './BarLabel/BarLabelPlot';
 import { useSkipAnimation } from '../hooks/useSkipAnimation';
@@ -109,37 +108,15 @@ function BarPlot(props: BarPlotProps): React.JSX.Element {
   const { yAxis: yAxes } = useYAxes();
   const { completedData, masksData } = useBarPlotData(useDrawingArea(), xAxes, yAxes);
 
-  const withoutBorderRadius = !borderRadius || borderRadius <= 0;
   const classes = useUtilityClasses();
 
   const BarElementPlot = renderer === 'svg-batch' ? BatchBarPlot : IndividualBarPlot;
 
   return (
     <BarPlotRoot className={classes.root}>
-      {!withoutBorderRadius &&
-        masksData.map(
-          ({ id, x, y, xOrigin, yOrigin, width, height, hasPositive, hasNegative, layout }) => {
-            return (
-              <BarClipPath
-                key={id}
-                maskId={id}
-                borderRadius={borderRadius}
-                hasNegative={hasNegative}
-                hasPositive={hasPositive}
-                layout={layout}
-                x={x}
-                y={y}
-                xOrigin={xOrigin}
-                yOrigin={yOrigin}
-                width={width}
-                height={height}
-                skipAnimation={skipAnimation ?? false}
-              />
-            );
-          },
-        )}
       <BarElementPlot
         completedData={completedData}
+        masksData={masksData}
         skipAnimation={skipAnimation}
         onItemClick={onItemClick}
         borderRadius={borderRadius}
