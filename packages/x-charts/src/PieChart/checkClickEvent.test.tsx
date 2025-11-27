@@ -58,14 +58,14 @@ describe('PieChart - click event', () => {
       const slices = document.querySelectorAll<HTMLElement>('path.MuiPieArc-root');
 
       await user.click(slices[0]);
-      expect(onItemClick.mock.lastCall![1]).to.deep.equal({
+      expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'pie',
         seriesId: 's1',
         dataIndex: 0,
       });
 
       await user.click(slices[1]);
-      expect(onItemClick.mock.lastCall![1]).to.deep.equal({
+      expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'pie',
         seriesId: 's1',
         dataIndex: 1,

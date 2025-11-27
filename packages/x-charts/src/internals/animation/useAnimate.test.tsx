@@ -23,7 +23,7 @@ describe('useAnimate', () => {
     element.setAttribute('width', props.width.toString());
   });
 
-  const lastCallWidth = () => applyProps.mock.lastCall![1].width;
+  const lastCallWidth = () => applyProps.mock.lastCall?.[1].width;
   const firstCallWidth = () => applyProps.mock.calls[0]?.[1].width;
   const callCount = () => applyProps.mock.calls.length;
 
@@ -116,7 +116,7 @@ describe('useAnimate', () => {
     await waitNextFrame();
     expect(callCount()).to.be.equal(1);
 
-    const lastIncreasingCall = lastCallWidth();
+    const lastIncreasingCall = lastCallWidth()!;
     // Should be animating from 1000 to 2000
     expect(lastCallWidth()).to.be.greaterThan(1000);
     expect(lastCallWidth()).to.be.lessThan(2000);
