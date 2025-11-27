@@ -78,10 +78,9 @@ const isCellEditable = (params) => {
     return false;
   }
   return true;
-}
+};
 
 export default function ClipboardPasteIsCellEditable() {
-
   return (
     <Box sx={{ height: 400, width: '100%' }}>
       <DataGridPremium
