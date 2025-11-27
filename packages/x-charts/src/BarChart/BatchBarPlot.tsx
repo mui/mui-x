@@ -239,7 +239,6 @@ export function BatchBarPlot({
             key={series.seriesId}
             processedSeries={series}
             borderRadius={borderRadius}
-            onItemClick={onItemClick}
           />
         </BarGroup>
       ))}
