@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { createRenderer, act } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
-import * as sinon from 'sinon';
+import { vi } from 'vitest';
 import { LineChartPro, type LineChartProProps } from '../LineChartPro/LineChartPro';
 import { chartAxisZoomSliderThumbClasses } from './internals/chartAxisZoomSliderThumbClasses';
 import { chartAxisZoomSliderTrackClasses } from './internals/chartAxisZoomSliderTrackClasses';
@@ -55,7 +55,7 @@ describe.skipIf(isJSDOM)('<ChartZoomSlider />', () => {
   };
 
   it('should pan when using the slider track', async () => {
-    const onZoomChange = sinon.spy();
+    const onZoomChange = vi.fn();
     const { user } = render(
       <LineChartPro
         {...lineChartProps}
@@ -88,13 +88,13 @@ describe.skipIf(isJSDOM)('<ChartZoomSlider />', () => {
     ]);
     await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-    expect(onZoomChange.callCount).to.equal(1);
+    expect(onZoomChange.mock.calls.length).to.equal(1);
     // The visible area should have shifted left
     expect(getAxisTickValues('x')).to.deep.equal(['B']);
   });
 
   it('should zoom pulling the slider thumb', async () => {
-    const onZoomChange = sinon.spy();
+    const onZoomChange = vi.fn();
     const { user } = render(
       <LineChartPro {...lineChartProps} onZoomChange={onZoomChange} />,
       options,
@@ -125,11 +125,11 @@ describe.skipIf(isJSDOM)('<ChartZoomSlider />', () => {
     ]);
     await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-    expect(onZoomChange.callCount).to.be.above(0);
+    expect(onZoomChange.mock.calls.length).to.be.above(0);
     expect(getAxisTickValues('x')).to.not.include('A');
 
     // Reset zoom change spy
-    onZoomChange.resetHistory();
+    onZoomChange.mockClear();
 
     // Move the end thumb to zoom in from the right
     await user.pointer([
@@ -150,7 +150,7 @@ describe.skipIf(isJSDOM)('<ChartZoomSlider />', () => {
     ]);
     await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-    expect(onZoomChange.callCount).to.be.above(0);
+    expect(onZoomChange.mock.calls.length).to.be.above(0);
     expect(getAxisTickValues('x')).to.not.include('D');
   });
 });
