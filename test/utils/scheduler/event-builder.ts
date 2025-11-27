@@ -12,7 +12,7 @@ import {
 import { processEvent } from '@mui/x-scheduler-headless/process-event';
 import { processDate } from '@mui/x-scheduler-headless/process-date';
 import { getWeekDayCode } from '@mui/x-scheduler-headless/utils/recurring-events';
-import { Adapter, diffIn } from '@mui/x-scheduler-headless/use-adapter';
+import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
 import { adapter as defaultAdapter } from './adapters';
 
 export const DEFAULT_TESTING_VISIBLE_DATE_STR = '2025-07-03T00:00:00Z';
@@ -222,19 +222,27 @@ export class EventBuilder {
    */
   buildOccurrence(occurrenceStartDate?: string): SchedulerEventOccurrence {
     const event = this.event;
+    const processedEvent = processEvent(event, this.adapter);
     const effectiveDate = occurrenceStartDate
       ? this.adapter.date(occurrenceStartDate, 'default')
       : event.start;
-    const duration = diffIn(this.adapter, event.end, event.start, 'minutes');
-    const end = this.adapter.addMinutes(effectiveDate, duration);
-    const key = crypto.randomUUID();
-    const processedEvent = processEvent(event, this.adapter);
+    const end = this.adapter.addMilliseconds(
+      effectiveDate,
+      processedEvent.end.timestamp - processedEvent.start.timestamp,
+    );
 
     return {
       ...processedEvent,
       start: processDate(effectiveDate, this.adapter),
       end: processDate(end, this.adapter),
-      key,
+      key: crypto.randomUUID(),
     };
+  }
+
+  /**
+   * Derives a processed event from the built event.
+   */
+  toProcessed() {
+    return processEvent(this.event, this.adapter);
   }
 }
