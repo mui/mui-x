@@ -69,6 +69,59 @@ function App() {
 
 :::
 
+### Only allow dragging and resizing events of some resources
+
+You can enable the dragging and resizing for all events of a specific resource using the `areEventsDraggable` and `areEventsResizable` properties on the resource.
+
+```tsx
+const resources = [
+  {
+    id: 'work',
+    title: 'Work',
+    areEventsDraggable: true,
+    areEventsResizable: true,
+  },
+  {
+    id: 'birthdays',
+    title: 'Birthdays',
+    areEventsDraggable: false,
+    areEventsResizable: false,
+  },
+];
+```
+
+In the example below, "Work" events can be dragged and resized, but "Birthdays" events cannot:
+
+{{"demo": "DragAndDropResourceLevel.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::success
+The priority order for determining if an event is draggable or resizable is:
+
+1. **Event-level**: The `draggable` and `resizable` properties on the event take the highest precedence.
+2. **Resource-level**: The `areEventsDraggable` and `areEventsResizable` properties on the resource are checked next.
+3. **Component-level**: The `areEventsDraggable` and `areEventsResizable` props on the component are used as the final fallback.
+
+With the following code, all "work" events are draggable except `"event-3"`:
+
+```tsx
+function App() {
+  const resources = [
+    { id: 'work', title: 'Work', areEventsDraggable: true },
+    { id: 'personal', title: 'Personal', areEventsDraggable: false },
+  ];
+
+  const events = [
+    { id: 'event-1', resource: 'work' },
+    { id: 'event-2', resource: 'personal' },
+    { id: 'event-3', resource: 'work', draggable: false },
+  ];
+
+  return <EventCalendar resources={resources} events={events} />;
+}
+```
+
+:::
+
 ### Only allow resizing one side
 
 You can enable the resizing only for one side of your events by setting the `areEventsResizable` to `"start"` or `"end"`:

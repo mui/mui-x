@@ -125,8 +125,14 @@ export const schedulerEventSelectors = {
     }
 
     // If the `draggable` property is defined on the event, it takes precedence
-    if (processedEvent.draggable === true) {
-      return true;
+    if (processedEvent.draggable !== undefined) {
+      return processedEvent.draggable;
+    }
+
+    // Then check if the resource has the `areEventsDraggable` property defined
+    const resource = schedulerResourceSelectors.processedResource(state, processedEvent.resource);
+    if (resource?.areEventsDraggable !== undefined) {
+      return resource.areEventsDraggable;
     }
 
     // Otherwise, fall back to the component-level setting
@@ -162,6 +168,18 @@ export const schedulerEventSelectors = {
         return isResizableFromEventProperty;
       }
 
+      // Then check if the resource has the `areEventsResizable` property defined
+      const resource = schedulerResourceSelectors.processedResource(state, processedEvent.resource);
+      const isResizableFromResourceProperty = getIsResizableFromProperty(
+        resource?.areEventsResizable,
+        side,
+      );
+
+      if (isResizableFromResourceProperty !== null) {
+        return isResizableFromResourceProperty;
+      }
+
+      // Otherwise, fall back to the component-level setting
       const isResizableFromComponentProperty = getIsResizableFromProperty(
         state.areEventsResizable,
         side,
@@ -186,6 +204,12 @@ function getIsResizableFromProperty(
 
   if (propertyValue === side) {
     return true;
+  }
+
+  // If the property is a specific side (e.g., 'start' or 'end') but doesn't match the current side,
+  // return false because the property explicitly restricts resizing to a specific side.
+  if (propertyValue === 'start' || propertyValue === 'end') {
+    return false;
   }
 
   return null;
