@@ -9,7 +9,7 @@ import {
 import { SankeyNodeElement } from './SankeyNodeElement';
 import { SankeyLinkElement } from './SankeyLinkElement';
 import { SankeyLinkLabel } from './SankeyLinkLabel';
-import { useSankeySeries, useSankeySeriesLayout } from '../hooks/useSankeySeries';
+import { useSankeyLayout, useSankeySeriesContext } from '../hooks/useSankeySeries';
 import { sankeyPlotClasses, useUtilityClasses, type SankeyPlotClasses } from './sankeyClasses';
 
 export interface SankeyPlotProps {
@@ -55,8 +55,9 @@ function SankeyPlot(props: SankeyPlotProps) {
 
   const classes = useUtilityClasses({ classes: inputClasses });
 
-  const sankeySeries = useSankeySeries();
-  const sankeySeriesLayout = useSankeySeriesLayout();
+  const sankeyContext = useSankeySeriesContext();
+  const sankeySeries = sankeyContext?.series[sankeyContext?.seriesOrder[0]];
+  const layout = useSankeyLayout();
 
   if (!sankeySeries) {
     throw new Error(
@@ -64,15 +65,11 @@ function SankeyPlot(props: SankeyPlotProps) {
     );
   }
 
-  const series = sankeySeries[0];
-  const layout = sankeySeriesLayout[0]?.sankeyLayout;
-
-  if (!series || !layout) {
+  if (!layout) {
     return null;
   }
 
-  const { data, linkOptions, nodeOptions } = series;
-
+  const { data, linkOptions, nodeOptions } = sankeySeries;
   // Early return if no data or dimensions
   if (!data || !data.links) {
     return null;
@@ -83,7 +80,7 @@ function SankeyPlot(props: SankeyPlotProps) {
       <g className={classes.links}>
         {layout.links.map((link) => (
           <SankeyLinkElement
-            seriesId={series.id}
+            seriesId={sankeySeries.id}
             key={`${link.source.id}-${link.target.id}`}
             link={link}
             opacity={linkOptions?.opacity}
@@ -95,7 +92,7 @@ function SankeyPlot(props: SankeyPlotProps) {
       <g className={classes.nodes}>
         {layout.nodes.map((node) => (
           <SankeyNodeElement
-            seriesId={series.id}
+            seriesId={sankeySeries.id}
             key={node.id}
             node={node}
             showLabel={nodeOptions?.showLabels}

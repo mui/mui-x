@@ -6,10 +6,11 @@ import {
   SeriesId,
   ChartSeriesDefaultized,
   useSelector,
-  selectorSeriesLayoutOfType,
   useStore,
   ChartSeriesLayout,
+  selectorChartSeriesLayout,
 } from '@mui/x-charts/internals';
+import { SankeyLayout } from '../SankeyChart';
 
 export type UseSankeySeriesReturnValue = ChartSeriesDefaultized<'sankey'>;
 export type UseSankeySeriesContextReturnValue = ProcessedSeries['sankey'];
@@ -51,41 +52,19 @@ export function useSankeySeries(seriesIds?: SeriesId | SeriesId[]) {
 export function useSankeySeriesContext(): UseSankeySeriesContextReturnValue {
   return useAllSeriesOfType('sankey');
 }
-
 /**
- * Get access to the layout of the sankey series.
- *
- * @param {SeriesId} seriesId The id of the series to get. By default the first one.
- * @returns {UseSankeySeriesLayoutReturnValue} the sankey series layout
+ * Get access to the sankey layout.
+ * @returns {SankeyLayout | undefined} the sankey series
  */
-
-/**
- * Get access to the layout of the sankey series.
- *
- * @param {SeriesId} seriesId The id of the series layout to get.
- * @returns {UseSankeySeriesReturnValue} the sankey series layout
- */
-export function useSankeySeriesLayout(
-  seriesId: SeriesId,
-): UseSankeySeriesLayoutReturnValue | undefined;
-/**
- * Get access to the layout of the sankey series.
- *
- * When called without arguments, it returns all sankey series layouts.
- *
- * @returns {UseSankeySeriesLayoutReturnValue[]} the sankey series layouts
- */
-export function useSankeySeriesLayout(): UseSankeySeriesLayoutReturnValue[];
-/**
- * Get access to the layout of the sankey series.
- *
- * @param {SeriesId[]} seriesIds The ids of the series layouts to get. Order is preserved.
- * @returns {UseSankeySeriesLayoutReturnValue[]} the sankey series layouts
- */
-export function useSankeySeriesLayout(seriesId?: SeriesId | SeriesId[]) {
+export function useSankeyLayout(): SankeyLayout | undefined {
   const store = useStore();
-  return useSelector(store, selectorSeriesLayoutOfType, 'sankey', seriesId) as
-    | UseSankeySeriesLayoutReturnValue
-    | UseSankeySeriesLayoutReturnValue[]
-    | undefined;
+
+  const seriesContext = useSankeySeriesContext();
+  const seriesId = seriesContext?.seriesOrder?.[0];
+  const layout = useSelector(store, selectorChartSeriesLayout);
+
+  if (!seriesId) {
+    return undefined;
+  }
+  return layout?.sankey?.[seriesId]?.sankeyLayout;
 }

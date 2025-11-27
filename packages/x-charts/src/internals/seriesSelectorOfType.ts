@@ -1,17 +1,9 @@
 import { warnOnce } from '@mui/x-internals/warning';
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
-import {
-  ChartSeriesDefaultized,
-  ChartSeriesLayout,
-  ChartsSeriesConfig,
-} from '../models/seriesType/config';
+import { ChartSeriesDefaultized, ChartsSeriesConfig } from '../models/seriesType/config';
 import { SeriesId } from '../models/seriesType/common';
-import {
-  selectorChartSeriesProcessed,
-  selectorChartSeriesLayout,
-} from './plugins/corePlugins/useChartSeries/useChartSeries.selectors';
+import { selectorChartSeriesProcessed } from './plugins/corePlugins/useChartSeries/useChartSeries.selectors';
 import type { ProcessedSeries } from './plugins/corePlugins/useChartSeries';
-import { SeriesLayout } from './plugins/corePlugins/useChartSeries/useChartSeries.types';
 import { useStore } from './store/useStore';
 import { useSelector } from './store/useSelector';
 
@@ -19,55 +11,6 @@ export const selectorAllSeriesOfType = createSelector(
   selectorChartSeriesProcessed,
   <T extends keyof ChartsSeriesConfig>(processedSeries: ProcessedSeries, seriesType: T) =>
     processedSeries[seriesType],
-);
-
-export const selectorAllSeriesLayoutOfType = createSelector(
-  selectorChartSeriesLayout,
-  <T extends keyof ChartsSeriesConfig>(seriesLayout: SeriesLayout, seriesType: T) =>
-    seriesLayout[seriesType],
-);
-
-export const selectorSeriesLayoutOfType = createSelector(
-  selectorChartSeriesProcessed,
-  selectorChartSeriesLayout,
-  <T extends keyof ChartsSeriesConfig>(
-    processedSeries: ProcessedSeries,
-    seriesLayout: SeriesLayout,
-    seriesType: T,
-    ids?: SeriesId | SeriesId[],
-  ) => {
-    if (ids === undefined || (Array.isArray(ids) && ids.length === 0)) {
-      return (
-        processedSeries[seriesType]?.seriesOrder?.map(
-          (seriesId) => seriesLayout[seriesType]?.[seriesId],
-        ) ?? []
-      );
-    }
-
-    if (!Array.isArray(ids)) {
-      return seriesLayout[seriesType]?.[ids];
-    }
-
-    const result: ChartSeriesLayout<T>[] = [];
-    const failedIds: SeriesId[] = [];
-    for (const id of ids) {
-      const series = seriesLayout[seriesType]?.[id];
-      if (series) {
-        result.push(series);
-      } else {
-        failedIds.push(id);
-      }
-    }
-    if (process.env.NODE_ENV !== 'production' && failedIds.length > 0) {
-      const formattedIds = failedIds.map((v) => JSON.stringify(v)).join(', ');
-      const fnName = `use${seriesType.charAt(0).toUpperCase()}${seriesType.slice(1)}SeriesLayout`;
-      warnOnce([
-        `MUI X Charts: The following ids provided to "${fnName}" could not be found: ${formattedIds}.`,
-        `Make sure that they exist and their series are using the "${seriesType}" series type.`,
-      ]);
-    }
-    return result;
-  },
 );
 
 export const selectorSeriesOfType = createSelectorMemoized(
