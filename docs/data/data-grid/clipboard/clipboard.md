@@ -54,6 +54,12 @@ The priority is the following, from highest to lowest:
 
 {{"demo": "ClipboardPaste.js", "bg": "inline"}}
 
+### Disable clipboard paste
+
+To disable clipboard paste, set the `disableClipboardPaste` prop to `true`:
+
+{{"demo": "ClipboardPasteDisabled.js", "bg": "inline"}}
+
 ### Disable pasting to the specific cells within a row
 
 The clipboard paste operation respects the [cell editing rules](/x/react-data-grid/editing/#disable-editing-of-specific-cells-within-a-row).
@@ -68,12 +74,6 @@ The demo below shows a product inventory grid with the following paste restricti
 Try selecting multiple cells and pasting data. Cells marked as non-editable by `isCellEditable` will not be updated.
 
 {{"demo": "ClipboardPasteIsCellEditable.js", "bg": "inline"}}
-
-### Disable clipboard paste
-
-To disable clipboard paste, set the `disableClipboardPaste` prop to `true`:
-
-{{"demo": "ClipboardPasteDisabled.js", "bg": "inline"}}
 
 ### Persisting pasted data
 
