@@ -21,12 +21,7 @@ import {
   UpdateEventsParameters,
 } from './SchedulerStore.types';
 import { Adapter } from '../../use-adapter/useAdapter.types';
-import {
-  applyRecurringUpdateFollowing,
-  applyRecurringUpdateAll,
-  applyRecurringUpdateOnlyThis,
-  createEventFromRecurringEvent,
-} from '../recurring-event-utils';
+import { createEventFromRecurringEvent, updateRecurringEvent } from '../recurring-events';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
 import {
   buildEventsState,
@@ -40,6 +35,7 @@ import { DEFAULT_EVENT_COLOR } from '../../constants';
 import { SchedulerDataManager, DateRange } from './utils';
 import { SchedulerDataSourceCacheDefault } from './cache';
 import { getDateKey } from '../date-utils';
+import { getNowInRenderTimezone, getStartOfTodayInRenderTimezone } from '../timezone-utils';
 
 const ONE_MINUTE_IN_MS = 60 * 1000;
 
@@ -84,6 +80,8 @@ export class SchedulerStore<
     instanceName: string,
     mapper: SchedulerParametersToStateMapper<State, Parameters>,
   ) {
+    const timezone = parameters.timezone ?? 'default';
+
     const schedulerInitialState: SchedulerState<TEvent> = {
       ...SchedulerStore.deriveStateFromParameters(parameters, adapter),
       ...(parameters.dataSource ? MOCK_EVENT_STATE : buildEventsState(parameters, adapter)),
@@ -91,13 +89,14 @@ export class SchedulerStore<
       preferences: DEFAULT_SCHEDULER_PREFERENCES,
       adapter,
       occurrencePlaceholder: null,
-      nowUpdatedEveryMinute: adapter.date(),
+      nowUpdatedEveryMinute: getNowInRenderTimezone(adapter, timezone),
       pendingUpdateRecurringEventParameters: null,
+      timezone,
       visibleResources: new Map(),
       visibleDate:
         parameters.visibleDate ??
         parameters.defaultVisibleDate ??
-        adapter.startOfDay(adapter.date()),
+        adapter.startOfDay(adapter.now(timezone)),
     };
 
     const initialState = mapper.getInitialState(schedulerInitialState, parameters, adapter);
@@ -112,9 +111,9 @@ export class SchedulerStore<
       ONE_MINUTE_IN_MS - (currentDate.getSeconds() * 1000 + currentDate.getMilliseconds());
 
     this.timeoutManager.startTimeout('set-now', timeUntilNextMinuteMs, () => {
-      this.set('nowUpdatedEveryMinute', adapter.date());
+      this.set('nowUpdatedEveryMinute', getNowInRenderTimezone(adapter, timezone));
       this.timeoutManager.startInterval('set-now', ONE_MINUTE_IN_MS, () => {
-        this.set('nowUpdatedEveryMinute', adapter.date());
+        this.set('nowUpdatedEveryMinute', getNowInRenderTimezone(adapter, timezone));
       });
     });
 
@@ -140,6 +139,7 @@ export class SchedulerStore<
       eventColor: parameters.eventColor ?? DEFAULT_EVENT_COLOR,
       showCurrentTimeIndicator: parameters.showCurrentTimeIndicator ?? true,
       readOnly: parameters.readOnly ?? false,
+      eventCreation: parameters.eventCreation ?? true,
     };
   }
 
@@ -226,15 +226,6 @@ export class SchedulerStore<
       return cached === undefined || cached === -1;
     });
 
-    console.log(
-      'Loading events from data source for range:',
-      range,
-      'Needs fetch: ',
-      needsFetch,
-      'cache: ',
-      this.cache,
-    );
-
     if (!needsFetch) {
       const allEvents: TEvent[] = [];
       daysInRange.forEach(({ key }) => {
@@ -247,8 +238,6 @@ export class SchedulerStore<
         { ...this.parameters, events: allEvents } as Parameters,
         adapter,
       );
-
-      console.log('Using cached events for range:', range, allEvents);
 
       this.apply({
         ...eventsState,
@@ -376,12 +365,33 @@ export class SchedulerStore<
       updateModel,
     );
 
-    this.apply(newState);
+    this.update(newState);
     this.parameters = parameters;
   };
 
+  /**
+   * Returns a cleanup function that need to be called when the store is destroyed.
+   */
   public disposeEffect = () => {
     return this.timeoutManager.clearAll;
+  };
+
+  /**
+   * Registers an effect to be run when the value returned by the selector changes.
+   */
+  public registerStoreEffect = <Value>(
+    selector: (state: State) => Value,
+    effect: (previous: Value, next: Value) => void,
+  ) => {
+    let previousValue = selector(this.state);
+
+    return this.subscribe((state) => {
+      const nextValue = selector(state);
+      if (nextValue !== previousValue) {
+        effect(previousValue, nextValue);
+        previousValue = nextValue;
+      }
+    });
   };
 
   protected setVisibleDate = (visibleDate: SchedulerValidDate, event: React.UIEvent) => {
@@ -455,7 +465,7 @@ export class SchedulerStore<
    */
   public goToToday = (event: React.UIEvent) => {
     const { adapter } = this.state;
-    this.setVisibleDate(adapter.startOfDay(adapter.date()), event);
+    this.setVisibleDate(getStartOfTodayInRenderTimezone(adapter, this.state.timezone), event);
   };
 
   /**
@@ -470,6 +480,7 @@ export class SchedulerStore<
    */
   public updateEvent = (calendarEvent: SchedulerEventUpdatedProperties) => {
     const original = schedulerEventSelectors.processedEvent(this.state, calendarEvent.id);
+
     if (!original) {
       throw new Error(
         `${this.instanceName}: the original event was not found (id="${calendarEvent.id}").`,
@@ -519,30 +530,9 @@ export class SchedulerStore<
       );
     }
 
-    let updatedEvents: UpdateEventsParameters;
-
-    switch (scope) {
-      case 'this-and-following': {
-        updatedEvents = applyRecurringUpdateFollowing(adapter, original, occurrenceStart, changes);
-        break;
-      }
-
-      case 'all': {
-        updatedEvents = applyRecurringUpdateAll(adapter, original, occurrenceStart, changes);
-        break;
-      }
-
-      case 'only-this': {
-        updatedEvents = applyRecurringUpdateOnlyThis(adapter, original, occurrenceStart, changes);
-        break;
-      }
-
-      default: {
-        throw new Error(`${this.instanceName}: scope="${scope}" is not supported.`);
-      }
-    }
-
+    const updatedEvents = updateRecurringEvent(adapter, original, occurrenceStart, changes, scope);
     this.updateEvents(updatedEvents);
+
     const submit = onSubmit;
     if (submit) {
       queueMicrotask(() => submit());

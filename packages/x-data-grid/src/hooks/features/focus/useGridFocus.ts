@@ -279,7 +279,6 @@ export const useGridFocus = (
 
   const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
     (params, event) => {
-      // GRID_CELL_NAVIGATION_KEY_DOWN handles the focus on Enter, Tab and navigation keys
       if (
         event.key === 'Enter' ||
         event.key === 'Tab' ||

@@ -1,11 +1,10 @@
 import { NumberValue } from '@mui/x-charts-vendor/d3-scale';
-import { createSelectorMemoized } from '@mui/x-internals/store';
+import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions';
 import {
   selectorChartSeriesConfig,
   selectorChartSeriesProcessed,
 } from '../../corePlugins/useChartSeries';
-import { createSelector } from '../../utils/selectors';
 import { computeAxisValue } from './computeAxisValue';
 import { ExtremumFilter, UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
 import { ChartState } from '../../models/chart';
@@ -54,7 +53,8 @@ const selectorChartZoomState = (state: ChartState<[], [UseChartCartesianAxisSign
   state.zoom;
 
 export const selectorChartHasZoom = createSelector(
-  [selectorChartRawXAxis, selectorChartRawYAxis],
+  selectorChartRawXAxis,
+  selectorChartRawYAxis,
   (xAxes, yAxes) =>
     xAxes?.some((axis) => Boolean(axis.zoom)) || yAxes?.some((axis) => Boolean(axis.zoom)) || false,
 );
@@ -64,7 +64,7 @@ export const selectorChartHasZoom = createSelector(
  */
 
 export const selectorChartZoomIsInteracting = createSelector(
-  [selectorChartZoomState],
+  selectorChartZoomState,
   (zoom) => zoom?.isInteracting,
 );
 
@@ -76,7 +76,7 @@ export const selectorChartZoomMap = createSelectorMemoized(
 );
 
 export const selectorChartAxisZoomData = createSelector(
-  [selectorChartZoomMap],
+  selectorChartZoomMap,
   (zoomMap, axisId: AxisId) => zoomMap?.get(axisId),
 );
 
@@ -92,19 +92,19 @@ export const selectorChartZoomOptionsLookup = createSelectorMemoized(
 );
 
 export const selectorChartAxisZoomOptionsLookup = createSelector(
-  [selectorChartZoomOptionsLookup],
+  selectorChartZoomOptionsLookup,
   (axisLookup, axisId: AxisId) => axisLookup[axisId],
 );
 
 export const selectorDefaultXAxisTickNumber = createSelector(
-  [selectorChartDrawingArea],
+  selectorChartDrawingArea,
   function selectorDefaultXAxisTickNumber(drawingArea) {
     return getDefaultTickNumber(drawingArea.width);
   },
 );
 
 export const selectorDefaultYAxisTickNumber = createSelector(
-  [selectorChartDrawingArea],
+  selectorChartDrawingArea,
   function selectorDefaultYAxisTickNumber(drawingArea) {
     return getDefaultTickNumber(drawingArea.height);
   },
@@ -550,12 +550,14 @@ export const selectorChartYAxis = createSelectorMemoized(
 );
 
 export const selectorChartAxis = createSelector(
-  [selectorChartXAxis, selectorChartYAxis],
+  selectorChartXAxis,
+  selectorChartYAxis,
   (xAxes, yAxes, axisId: AxisId) => xAxes?.axis[axisId] ?? yAxes?.axis[axisId],
 );
 
 export const selectorChartRawAxis = createSelector(
-  [selectorChartRawXAxis, selectorChartRawYAxis],
+  selectorChartRawXAxis,
+  selectorChartRawYAxis,
   (xAxes, yAxes, axisId: AxisId) => {
     const axis = xAxes?.find((a) => a.id === axisId) ?? yAxes?.find((a) => a.id === axisId) ?? null;
 
@@ -568,12 +570,12 @@ export const selectorChartRawAxis = createSelector(
 );
 
 export const selectorChartDefaultXAxisId = createSelector(
-  [selectorChartRawXAxis],
+  selectorChartRawXAxis,
   (xAxes) => xAxes![0].id,
 );
 
 export const selectorChartDefaultYAxisId = createSelector(
-  [selectorChartRawYAxis],
+  selectorChartRawYAxis,
   (yAxes) => yAxes![0].id,
 );
 

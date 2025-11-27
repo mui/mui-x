@@ -2,12 +2,12 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { useStore } from '@base-ui-components/utils/store/useStore';
 import { useAdapter, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
-import { useDayList } from '@mui/x-scheduler-headless/use-day-list';
-import { useWeekList } from '@mui/x-scheduler-headless/use-week-list';
+import { getDayList } from '@mui/x-scheduler-headless/get-day-list';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useTimelineStoreContext } from '@mui/x-scheduler-headless/use-timeline-store-context';
 import { SchedulerProcessedDate } from '@mui/x-scheduler-headless/models';
 import { HeaderProps } from './Headers.types';
+import { formatWeekDayMonthAndDayOfMonth } from '../../../internals/utils/date-utils';
 import { WEEKS_UNIT_COUNT } from '../../constants';
 import './Headers.css';
 
@@ -15,48 +15,50 @@ export function WeeksHeader(props: HeaderProps) {
   const { className, amount, ...other } = props;
 
   const adapter = useAdapter();
-  const getDayList = useDayList();
-  const getWeekList = useWeekList();
   const store = useTimelineStoreContext();
 
   const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
 
   const weeks = React.useMemo(() => {
-    const weeksFirstDays = getWeekList({
-      date: visibleDate,
-      amount: amount || WEEKS_UNIT_COUNT,
+    const weekCount = amount || WEEKS_UNIT_COUNT;
+    const days = getDayList({
+      adapter,
+      start: adapter.startOfWeek(visibleDate),
+      end: adapter.endOfWeek(adapter.addWeeks(visibleDate, weekCount - 1)),
     });
 
-    const tempWeeks: { date: SchedulerProcessedDate }[][] = [];
-    for (let i = 0; i < weeksFirstDays.length; i += 1) {
-      const weekStart = weeksFirstDays[i];
-      const weekDays = getDayList({ date: weekStart, amount: 'week' });
-      const processedWeekDays = weekDays.map((date) => ({
-        date,
-      }));
-      tempWeeks.push(processedWeekDays);
+    const tempWeeks: SchedulerProcessedDate[][] = [];
+    let weekNumber: number | null = null;
+    for (const day of days) {
+      const lastWeek = tempWeeks[tempWeeks.length - 1];
+      const dayWeekNumber = adapter.getWeekNumber(day.value);
+      if (weekNumber !== dayWeekNumber) {
+        weekNumber = dayWeekNumber;
+        tempWeeks.push([day]);
+      } else {
+        lastWeek.push(day);
+      }
     }
-
     return tempWeeks;
-  }, [getWeekList, getDayList, visibleDate, amount]);
+  }, [adapter, amount, visibleDate]);
 
   return (
     <div className={clsx('WeeksHeader', className)} {...other}>
       {weeks.map((week) => (
-        <div key={`${week[0].date.key}-week`} className="TimeHeaderCell">
+        <div key={`${week[0].key}-week`} className="TimeHeaderCell">
           <div className="DayLabel">
-            {adapter.format(week[0].date.value, 'normalDateWithWeekday')} -{' '}
-            {adapter.format(week[6].date.value, 'normalDateWithWeekday')}
+            {formatWeekDayMonthAndDayOfMonth(week[0].value, adapter)} -{' '}
+            {formatWeekDayMonthAndDayOfMonth(week[6].value, adapter)}
           </div>
           <div className="WeekDaysRow">
             {week.map((day) => (
               <time
-                dateTime={day.date.key}
-                key={day.date.key}
+                dateTime={day.key}
+                key={day.key}
                 className="WeekDayCell WeekDay"
-                data-weekend={isWeekend(adapter, day.date.value) ? '' : undefined}
+                data-weekend={isWeekend(adapter, day.value) ? '' : undefined}
               >
-                {adapter.format(day.date.value, 'weekdayShort')}
+                {adapter.format(day.value, 'weekday1Letter')}
               </time>
             ))}
           </div>

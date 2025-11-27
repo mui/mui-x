@@ -1,3 +1,4 @@
+import { createSelector } from '@mui/x-internals/store';
 import {
   ChartItemIdentifierWithData,
   ChartSeriesDefaultized,
@@ -9,7 +10,6 @@ import {
   selectorChartSeriesProcessed,
 } from '../../corePlugins/useChartSeries';
 import { TooltipPositionGetterAxesConfig } from '../../models/seriesConfig/tooltipItemPositionGetter.types';
-import { createSelector } from '../../utils/selectors';
 import {
   selectorChartXAxis,
   selectorChartYAxis,
@@ -31,31 +31,30 @@ import { ChartDrawingArea } from '../../../../hooks/useDrawingArea';
 import { isCartesianSeries } from '../../../isCartesian';
 
 export const selectorChartsTooltipItem = createSelector(
-  [selectorChartsLastInteraction, selectorChartsInteractionItem, selectorChartsKeyboardItem],
+  selectorChartsLastInteraction,
+  selectorChartsInteractionItem,
+  selectorChartsKeyboardItem,
   (lastInteraction, interactionItem, keyboardItem) =>
     lastInteraction === 'keyboard' ? keyboardItem : (interactionItem ?? null),
 );
 
 export const selectorChartsTooltipItemIsDefined = createSelector(
-  [
-    selectorChartsLastInteraction,
-    selectorChartsInteractionItemIsDefined,
-    selectorChartsKeyboardItemIsDefined,
-  ],
+  selectorChartsLastInteraction,
+  selectorChartsInteractionItemIsDefined,
+  selectorChartsKeyboardItemIsDefined,
+
   (lastInteraction, interactionItemIsDefined, keyboardItemIsDefined) =>
     lastInteraction === 'keyboard' ? keyboardItemIsDefined : interactionItemIsDefined,
 );
 
 export const selectorChartsTooltipItemPosition = createSelector(
-  [
-    selectorChartsTooltipItem,
-    selectorChartDrawingArea,
-    selectorChartSeriesConfig,
-    selectorChartXAxis,
-    selectorChartYAxis,
-    selectorChartSeriesProcessed,
-    (_, placement?: 'top' | 'bottom' | 'left' | 'right') => placement,
-  ],
+  selectorChartsTooltipItem,
+  selectorChartDrawingArea,
+  selectorChartSeriesConfig,
+  selectorChartXAxis,
+  selectorChartYAxis,
+  selectorChartSeriesProcessed,
+
   function selectorChartsTooltipItemPosition<T extends ChartSeriesType>(
     identifier: ChartItemIdentifierWithData<T> | null,
     drawingArea: ChartDrawingArea,

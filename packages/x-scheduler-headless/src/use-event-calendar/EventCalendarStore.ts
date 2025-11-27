@@ -1,8 +1,9 @@
 import { warn } from '@base-ui-components/utils/warn';
+import { EMPTY_OBJECT } from '@base-ui-components/utils/empty';
 import {
   EventCalendarPreferences,
   CalendarView,
-  CalendarViewConfig,
+  EventCalendarViewConfig,
   SchedulerValidDate,
   EventCalendarPreferencesMenuConfig,
 } from '../models';
@@ -44,7 +45,7 @@ const mapper: SchedulerParametersToStateMapper<
   getInitialState: (schedulerInitialState, parameters) => ({
     ...schedulerInitialState,
     ...deriveStateFromParameters(parameters),
-    preferences: { ...DEFAULT_EVENT_CALENDAR_PREFERENCES, ...parameters.preferences },
+    preferences: parameters.preferences ?? parameters.defaultPreferences ?? EMPTY_OBJECT,
     preferencesMenuConfig:
       parameters.preferencesMenuConfig === false
         ? parameters.preferencesMenuConfig
@@ -62,6 +63,7 @@ const mapper: SchedulerParametersToStateMapper<
     };
 
     updateModel(newState, 'view', 'defaultView');
+    updateModel(newState, 'preferences', 'defaultPreferences');
     return newState;
   },
 };
@@ -123,7 +125,7 @@ export class EventCalendarStore<
     const canSetView = viewProp === undefined && hasViewChange;
 
     if (canSetVisibleDate || canSetView) {
-      this.apply({
+      this.update({
         ...(canSetVisibleDate ? { visibleDate } : undefined),
         ...(canSetView ? { view } : undefined),
       });
@@ -146,7 +148,7 @@ export class EventCalendarStore<
       return;
     }
 
-    this.setVisibleDate(siblingVisibleDateGetter(this.state.visibleDate, delta), event);
+    this.setVisibleDate(siblingVisibleDateGetter({ delta, state: this.state }), event);
   };
 
   /**
@@ -185,19 +187,27 @@ export class EventCalendarStore<
    */
   public setPreferences = (
     partialPreferences: Partial<EventCalendarPreferences>,
-    _event: React.UIEvent | Event,
+    event: React.UIEvent | Event,
   ) => {
-    this.set('preferences', {
+    const { preferences: preferencesProp, onPreferencesChange } = this.parameters;
+
+    const updated = {
       ...this.state.preferences,
       ...partialPreferences,
-    });
+    };
+
+    if (preferencesProp === undefined) {
+      this.set('preferences', updated);
+    }
+
+    onPreferencesChange?.(updated, event);
   };
 
   /**
    * Sets the method used to determine the previous / next visible date.
    * Returns the cleanup function.
    */
-  public setViewConfig = (config: CalendarViewConfig) => {
+  public setViewConfig = (config: EventCalendarViewConfig) => {
     this.set('viewConfig', config);
     return () => this.set('viewConfig', null);
   };
