@@ -229,12 +229,11 @@ export function BatchBarPlot({
         <BarGroup
           className={classes.series}
           data-series={series.seriesId}
+          layout={series.layout}
+          xOrigin={series.xOrigin}
+          yOrigin={series.yOrigin}
           skipAnimation={skipAnimation}
           onClick={onClick}
-          // Not ideal
-          layout={series.data[0].layout}
-          xOrigin={series.data[0].xOrigin}
-          yOrigin={series.data[0].yOrigin}
         >
           <BatchBarSeriesPlot
             key={series.seriesId}
