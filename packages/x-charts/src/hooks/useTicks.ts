@@ -90,6 +90,11 @@ export function applyTickSpacing<T>(domain: T[], range: [number, number], tickSp
   const rangeSpan = Math.abs(range[1] - range[0]);
 
   const every = Math.ceil(domain.length / (rangeSpan / tickSpacing));
+
+  if (Number.isNaN(every) || every <= 1) {
+    return domain;
+  }
+
   return domain.filter((_, index) => index % every === 0);
 }
 

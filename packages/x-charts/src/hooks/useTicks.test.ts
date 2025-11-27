@@ -90,4 +90,24 @@ describe('applyTickSpacing', () => {
 
     expect(result).to.deep.equal(['A']);
   });
+
+  it('should handle zero tick spacing', () => {
+    const domain = ['A', 'B', 'C'];
+    const range: [number, number] = [0, 100];
+    const tickSpacing = 0;
+
+    const result = applyTickSpacing(domain, range, tickSpacing);
+
+    expect(result).to.deep.equal(['A', 'B', 'C']);
+  });
+
+  it('should handle return all domain elements', () => {
+    const domain = ['A', 'B', 'C', 'D'];
+    const range: [number, number] = [0, 100];
+    const tickSpacing = 25;
+
+    const result = applyTickSpacing(domain, range, tickSpacing);
+
+    expect(result).to.deep.equal(['A', 'B', 'C', 'D']);
+  });
 });
