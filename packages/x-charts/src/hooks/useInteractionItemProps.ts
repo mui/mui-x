@@ -62,22 +62,6 @@ export const useInteractionItemProps = (
   );
 };
 
-export const useInteractionAllItemProps = (
-  data: SeriesItemIdentifierWithData[],
-  skip?: boolean,
-) => {
-  const { instance } =
-    useChartContext<[UseChartInteractionSignature, UseChartHighlightSignature]>();
-
-  const results = React.useMemo(() => {
-    return data.map((item) => {
-      return skip ? {} : getInteractionItemProps(instance, item);
-    });
-  }, [data, instance, skip]);
-
-  return results;
-};
-
 export function getInteractionItemProps(
   instance: ChartInstance<[UseChartInteractionSignature, UseChartHighlightSignature]>,
   item: ChartItemIdentifierWithData<ChartSeriesType>,

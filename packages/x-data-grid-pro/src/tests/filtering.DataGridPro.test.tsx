@@ -26,6 +26,7 @@ import {
   getSelectInput,
   grid,
   includeRowSelection,
+  sleep,
 } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
 
@@ -665,36 +666,42 @@ describe('<DataGridPro /> - Filter', () => {
   });
 
   // Needs layout
-  it.skipIf(isJSDOM)('should not scroll the page when a filter is removed from the panel', () => {
-    render(
-      <div>
-        {/* To simulate a page that needs to be scrolled to reach the grid. */}
-        <div style={{ height: '100vh', width: '100vh' }} />
-        <TestCase
-          initialState={{
-            preferencePanel: {
-              open: true,
-              openedPanelValue: GridPreferencePanelsValue.filters,
-            },
-            filter: {
-              filterModel: {
-                logicOperator: GridLogicOperator.Or,
-                items: [
-                  { id: 1, field: 'brand', value: 'a', operator: 'contains' },
-                  { id: 2, field: 'brand', value: 'm', operator: 'contains' },
-                ],
+  it.skipIf(isJSDOM)(
+    'should not scroll the page when a filter is removed from the panel',
+    async () => {
+      render(
+        <div>
+          {/* To simulate a page that needs to be scrolled to reach the grid. */}
+          <div style={{ height: '100vh', width: '100vh' }} />
+          <TestCase
+            initialState={{
+              preferencePanel: {
+                open: true,
+                openedPanelValue: GridPreferencePanelsValue.filters,
               },
-            },
-          }}
-        />
-      </div>,
-    );
-    grid('root')!.scrollIntoView();
-    const initialScrollPosition = window.scrollY;
-    expect(initialScrollPosition).not.to.equal(0);
-    fireEvent.click(screen.getAllByRole('button', { name: /delete/i })[1]);
-    expect(window.scrollY).to.equal(initialScrollPosition);
-  });
+              filter: {
+                filterModel: {
+                  logicOperator: GridLogicOperator.Or,
+                  items: [
+                    { id: 1, field: 'brand', value: 'a', operator: 'contains' },
+                    { id: 2, field: 'brand', value: 'm', operator: 'contains' },
+                  ],
+                },
+              },
+            }}
+          />
+        </div>,
+      );
+      await act(() => {
+        grid('root')!.scrollIntoView();
+        return sleep(0);
+      });
+      const initialScrollPosition = window.scrollY;
+      expect(initialScrollPosition).not.to.equal(0);
+      fireEvent.click(screen.getAllByRole('button', { name: /delete/i })[1]);
+      expect(window.scrollY).to.equal(initialScrollPosition);
+    },
+  );
 
   // Needs layout
   it.skipIf(isJSDOM)(

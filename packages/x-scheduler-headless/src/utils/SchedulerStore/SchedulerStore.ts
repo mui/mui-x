@@ -20,12 +20,7 @@ import {
   UpdateEventsParameters,
 } from './SchedulerStore.types';
 import { Adapter } from '../../use-adapter/useAdapter.types';
-import {
-  applyRecurringUpdateFollowing,
-  applyRecurringUpdateAll,
-  applyRecurringUpdateOnlyThis,
-  createEventFromRecurringEvent,
-} from '../recurring-event-utils';
+import { createEventFromRecurringEvent, updateRecurringEvent } from '../recurring-events';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
 import {
   buildEventsState,
@@ -36,6 +31,7 @@ import {
 } from './SchedulerStore.utils';
 import { TimeoutManager } from '../TimeoutManager';
 import { DEFAULT_EVENT_COLOR } from '../../constants';
+import { getNowInRenderTimezone, getStartOfTodayInRenderTimezone } from '../timezone-utils';
 
 const ONE_MINUTE_IN_MS = 60 * 1000;
 
@@ -68,6 +64,8 @@ export class SchedulerStore<
     instanceName: string,
     mapper: SchedulerParametersToStateMapper<State, Parameters>,
   ) {
+    const timezone = parameters.timezone ?? 'default';
+
     const schedulerInitialState: SchedulerState<TEvent> = {
       ...SchedulerStore.deriveStateFromParameters(parameters, adapter),
       ...buildEventsState(parameters, adapter),
@@ -75,14 +73,14 @@ export class SchedulerStore<
       preferences: DEFAULT_SCHEDULER_PREFERENCES,
       adapter,
       occurrencePlaceholder: null,
-      nowUpdatedEveryMinute: adapter.now('default'),
+      nowUpdatedEveryMinute: getNowInRenderTimezone(adapter, timezone),
       pendingUpdateRecurringEventParameters: null,
-      timezone: parameters.timezone ?? 'default',
+      timezone,
       visibleResources: new Map(),
       visibleDate:
         parameters.visibleDate ??
         parameters.defaultVisibleDate ??
-        adapter.startOfDay(adapter.now('default')),
+        adapter.startOfDay(adapter.now(timezone)),
     };
 
     const initialState = mapper.getInitialState(schedulerInitialState, parameters, adapter);
@@ -97,9 +95,9 @@ export class SchedulerStore<
       ONE_MINUTE_IN_MS - (currentDate.getSeconds() * 1000 + currentDate.getMilliseconds());
 
     this.timeoutManager.startTimeout('set-now', timeUntilNextMinuteMs, () => {
-      this.set('nowUpdatedEveryMinute', adapter.now('default'));
+      this.set('nowUpdatedEveryMinute', getNowInRenderTimezone(adapter, timezone));
       this.timeoutManager.startInterval('set-now', ONE_MINUTE_IN_MS, () => {
-        this.set('nowUpdatedEveryMinute', adapter.now('default'));
+        this.set('nowUpdatedEveryMinute', getNowInRenderTimezone(adapter, timezone));
       });
     });
 
@@ -288,7 +286,7 @@ export class SchedulerStore<
    */
   public goToToday = (event: React.UIEvent) => {
     const { adapter } = this.state;
-    this.setVisibleDate(adapter.startOfDay(adapter.now('default')), event);
+    this.setVisibleDate(getStartOfTodayInRenderTimezone(adapter, this.state.timezone), event);
   };
 
   /**
@@ -353,30 +351,9 @@ export class SchedulerStore<
       );
     }
 
-    let updatedEvents: UpdateEventsParameters;
-
-    switch (scope) {
-      case 'this-and-following': {
-        updatedEvents = applyRecurringUpdateFollowing(adapter, original, occurrenceStart, changes);
-        break;
-      }
-
-      case 'all': {
-        updatedEvents = applyRecurringUpdateAll(adapter, original, occurrenceStart, changes);
-        break;
-      }
-
-      case 'only-this': {
-        updatedEvents = applyRecurringUpdateOnlyThis(adapter, original, occurrenceStart, changes);
-        break;
-      }
-
-      default: {
-        throw new Error(`${this.instanceName}: scope="${scope}" is not supported.`);
-      }
-    }
-
+    const updatedEvents = updateRecurringEvent(adapter, original, occurrenceStart, changes, scope);
     this.updateEvents(updatedEvents);
+
     const submit = onSubmit;
     if (submit) {
       queueMicrotask(() => submit());

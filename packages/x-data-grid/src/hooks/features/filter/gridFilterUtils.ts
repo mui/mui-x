@@ -86,15 +86,13 @@ export const sanitizeFilterModel = (
 
   let items: GridFilterItem[];
   if (hasSeveralItems && disableMultipleColumnsFiltering) {
-    if (process.env.NODE_ENV !== 'production') {
-      warnOnce(
-        [
-          'MUI X: The `filterModel` can only contain a single item when the `disableMultipleColumnsFiltering` prop is set to `true`.',
-          'If you are using the community version of the Data Grid, this prop is always `true`.',
-        ],
-        'error',
-      );
-    }
+    warnOnce(
+      [
+        'MUI X: The `filterModel` can only contain a single item when the `disableMultipleColumnsFiltering` prop is set to `true`.',
+        'If you are using the community version of the Data Grid, this prop is always `true`.',
+      ],
+      'error',
+    );
     items = [model.items[0]];
   } else {
     items = model.items;
@@ -103,22 +101,18 @@ export const sanitizeFilterModel = (
   const hasItemsWithoutIds = hasSeveralItems && items.some((item) => item.id == null);
   const hasItemWithoutOperator = items.some((item) => item.operator == null);
 
-  if (process.env.NODE_ENV !== 'production') {
-    if (hasItemsWithoutIds) {
-      warnOnce(
-        'MUI X: The `id` field is required on `filterModel.items` when you use multiple filters.',
-        'error',
-      );
-    }
+  if (hasItemsWithoutIds) {
+    warnOnce(
+      'MUI X: The `id` field is required on `filterModel.items` when you use multiple filters.',
+      'error',
+    );
   }
 
-  if (process.env.NODE_ENV !== 'production') {
-    if (hasItemWithoutOperator) {
-      warnOnce(
-        'MUI X: The `operator` field is required on `filterModel.items`, one or more of your filtering item has no `operator` provided.',
-        'error',
-      );
-    }
+  if (hasItemWithoutOperator) {
+    warnOnce(
+      'MUI X: The `operator` field is required on `filterModel.items`, one or more of your filtering item has no `operator` provided.',
+      'error',
+    );
   }
 
   if (hasItemWithoutOperator || hasItemsWithoutIds) {
