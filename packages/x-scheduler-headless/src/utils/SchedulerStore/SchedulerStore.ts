@@ -64,23 +64,22 @@ export class SchedulerStore<
     instanceName: string,
     mapper: SchedulerParametersToStateMapper<State, Parameters>,
   ) {
-    const timezone = parameters.timezone ?? 'default';
+    const stateFromParameters = SchedulerStore.deriveStateFromParameters(parameters, adapter);
 
     const schedulerInitialState: SchedulerState<TEvent> = {
-      ...SchedulerStore.deriveStateFromParameters(parameters, adapter),
-      ...buildEventsState(parameters, adapter, timezone),
+      ...stateFromParameters,
+      ...buildEventsState(parameters, adapter, stateFromParameters.timezone),
       ...buildResourcesState(parameters),
       preferences: DEFAULT_SCHEDULER_PREFERENCES,
       adapter,
       occurrencePlaceholder: null,
-      nowUpdatedEveryMinute: getNowInRenderTimezone(adapter, timezone),
+      nowUpdatedEveryMinute: getNowInRenderTimezone(adapter, stateFromParameters.timezone),
       pendingUpdateRecurringEventParameters: null,
-      timezone,
       visibleResources: new Map(),
       visibleDate:
         parameters.visibleDate ??
         parameters.defaultVisibleDate ??
-        adapter.startOfDay(adapter.now(timezone)),
+        adapter.startOfDay(adapter.now(stateFromParameters.timezone)),
     };
 
     const initialState = mapper.getInitialState(schedulerInitialState, parameters, adapter);
@@ -95,9 +94,15 @@ export class SchedulerStore<
       ONE_MINUTE_IN_MS - (currentDate.getSeconds() * 1000 + currentDate.getMilliseconds());
 
     this.timeoutManager.startTimeout('set-now', timeUntilNextMinuteMs, () => {
-      this.set('nowUpdatedEveryMinute', getNowInRenderTimezone(adapter, timezone));
+      this.set(
+        'nowUpdatedEveryMinute',
+        getNowInRenderTimezone(adapter, stateFromParameters.timezone),
+      );
       this.timeoutManager.startInterval('set-now', ONE_MINUTE_IN_MS, () => {
-        this.set('nowUpdatedEveryMinute', getNowInRenderTimezone(adapter, timezone));
+        this.set(
+          'nowUpdatedEveryMinute',
+          getNowInRenderTimezone(adapter, stateFromParameters.timezone),
+        );
       });
     });
 
@@ -114,6 +119,8 @@ export class SchedulerStore<
     parameters: SchedulerParameters<TEvent, TResource>,
     adapter: Adapter,
   ) {
+    const timezone = parameters.timezone ?? 'default';
+
     return {
       adapter,
       areEventsDraggable: parameters.areEventsDraggable ?? false,
@@ -124,6 +131,7 @@ export class SchedulerStore<
       showCurrentTimeIndicator: parameters.showCurrentTimeIndicator ?? true,
       readOnly: parameters.readOnly ?? false,
       eventCreation: parameters.eventCreation ?? true,
+      timezone,
     };
   }
 
@@ -175,7 +183,10 @@ export class SchedulerStore<
       parameters.eventModelStructure !== this.parameters.eventModelStructure ||
       adapter !== this.state.adapter
     ) {
-      Object.assign(newSchedulerState, buildEventsState(parameters, adapter, this.state.timezone));
+      Object.assign(
+        newSchedulerState,
+        buildEventsState(parameters, adapter, newSchedulerState.timezone!),
+      );
     }
 
     if (
