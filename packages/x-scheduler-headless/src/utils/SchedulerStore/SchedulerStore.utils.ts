@@ -210,7 +210,7 @@ type AnyEventSetter<TEvent extends object> = (
 export function buildEventsState<TEvent extends object, TResource extends object>(
   parameters: Pick<SchedulerParameters<TEvent, TResource>, 'events' | 'eventModelStructure'>,
   adapter: Adapter,
-  timezone: TemporalTimezone,
+  uiTimezone: TemporalTimezone,
 ): Pick<
   SchedulerState<TEvent>,
   | 'eventIdList'
@@ -230,7 +230,7 @@ export function buildEventsState<TEvent extends object, TResource extends object
       event,
       adapter,
       eventModelStructure,
-      timezone,
+      uiTimezone,
     );
     eventIdList.push(processedEvent.id);
     eventModelLookup.set(processedEvent.id, event);
