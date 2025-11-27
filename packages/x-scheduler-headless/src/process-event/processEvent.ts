@@ -6,7 +6,7 @@ import { TemporalTimezone } from '../base-ui-copy/types';
 
 export function processEvent(
   model: SchedulerEvent,
-  timezone: TemporalTimezone,
+  uiTimezone: TemporalTimezone,
   adapter: Adapter,
 ): SchedulerProcessedEvent {
   const startTimezone = adapter.getTimezone(model.start);
@@ -19,11 +19,11 @@ export function processEvent(
     );
   }
 
-  const startInRenderTz = adapter.setTimezone(model.start, timezone);
-  const endInRenderTz = adapter.setTimezone(model.end, timezone);
+  const startInRenderTz = adapter.setTimezone(model.start, uiTimezone);
+  const endInRenderTz = adapter.setTimezone(model.end, uiTimezone);
 
   const processededExDates: SchedulerValidDate[] | undefined = model.exDates
-    ? model.exDates.map((exDate) => adapter.setTimezone(exDate, timezone))
+    ? model.exDates.map((exDate) => adapter.setTimezone(exDate, uiTimezone))
     : undefined;
 
   return {
@@ -33,7 +33,7 @@ export function processEvent(
     start: processDate(startInRenderTz, adapter),
     end: processDate(endInRenderTz, adapter),
     resource: model.resource,
-    rrule: model.rrule ? parseRRuleString(adapter, model.rrule, timezone) : undefined,
+    rrule: model.rrule ? parseRRuleString(adapter, model.rrule, uiTimezone) : undefined,
     exDates: processededExDates,
     allDay: model.allDay ?? false,
     readOnly: model.readOnly ?? false,
