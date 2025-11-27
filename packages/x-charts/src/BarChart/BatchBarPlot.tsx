@@ -146,7 +146,6 @@ function useOnItemClick(onItemClick: BatchBarPlotProps['onItemClick'] | undefine
       const xAxisId = aSeries.xAxisId ?? defaultXAxisId;
       const yAxisId = aSeries.yAxisId ?? defaultYAxisId;
 
-      const drawingArea = selectorChartDrawingArea(store.getSnapshot());
       const xAxisZoom = selectorChartAxisZoomData(store.getSnapshot(), xAxisId);
       const yAxisZoom = selectorChartAxisZoomData(store.getSnapshot(), yAxisId);
 
@@ -160,12 +159,13 @@ function useOnItemClick(onItemClick: BatchBarPlotProps['onItemClick'] | undefine
       const xScale = xAxis.scale;
       const yScale = yAxis.scale;
 
-      const adaptedData = aSeries.data?.map((d, i) => ({ x: xAxis.data?.[i], y: d })) ?? [];
+      const getX = (dataIndex: number) => xAxis.data?.[dataIndex];
+      const getY = (dataIndex: number) => aSeries.data?.[dataIndex];
 
       const closestPointIndex = findClosestPoints(
         flatbush,
-        drawingArea,
-        adaptedData,
+        getX,
+        getY,
         xScale,
         yScale,
         xZoomStart,

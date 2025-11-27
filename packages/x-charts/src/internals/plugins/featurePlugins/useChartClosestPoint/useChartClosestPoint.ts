@@ -89,10 +89,13 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
 
         const xScale = xAxis[xAxisId].scale;
         const yScale = yAxis[yAxisId].scale;
+        const getX = (dataIndex: number) => aSeries.data[dataIndex].x;
+        const getY = (dataIndex: number) => aSeries.data[dataIndex].y;
 
         const closestPointIndex = findClosestPoints(
           flatbush,
-          aSeries.data,
+          getX,
+          getY,
           xScale,
           yScale,
           xZoomStart,
