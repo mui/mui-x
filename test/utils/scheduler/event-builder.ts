@@ -222,20 +222,20 @@ export class EventBuilder {
    */
   buildOccurrence(occurrenceStartDate?: string): SchedulerEventOccurrence {
     const event = this.event;
+    const processedEvent = processEvent(event, this.adapter);
     const effectiveDate = occurrenceStartDate
       ? this.adapter.date(occurrenceStartDate, 'default')
       : event.start;
-    const durationMs =
-      this.adapter.getTime(event.end.value) - this.adapter.getTime(event.start.value);
-    const end = this.adapter.addMilliseconds(effectiveDate, durationMs);
-    const key = crypto.randomUUID();
-    const processedEvent = processEvent(event, this.adapter);
+    const end = this.adapter.addMilliseconds(
+      effectiveDate,
+      processedEvent.end.timestamp - processedEvent.start.timestamp,
+    );
 
     return {
       ...processedEvent,
       start: processDate(effectiveDate, this.adapter),
       end: processDate(end, this.adapter),
-      key,
+      key: crypto.randomUUID(),
     };
   }
 
