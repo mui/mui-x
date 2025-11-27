@@ -62,11 +62,7 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
   // Feature hooks
   const getSharedDragData: CalendarGridTimeEventContext['getSharedDragData'] = useStableCallback(
     (input) => {
-      const offsetBeforeColumnStart = Math.max(
-        adapter.toJsDate(columnStart).getTime() - start.timestamp,
-        0,
-      );
-
+      const offsetBeforeColumnStart = Math.max(adapter.getTime(columnStart) - start.timestamp, 0);
       const event = schedulerEventSelectors.processedEvent(store.state, eventId)!;
 
       const originalOccurrence: SchedulerEventOccurrence = {
