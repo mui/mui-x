@@ -53,7 +53,10 @@ export function createPopover<TAnchorData>(config: CreatePopoverConfig) {
     });
 
     const close = useStableCallback(() => {
-      if (shouldBlockClose) {
+      // Call shouldBlockClose as a function to get the latest value,
+      // avoiding race conditions when close is called from callbacks
+      // before React has re-rendered with updated prop values.
+      if (shouldBlockClose?.()) {
         return;
       }
 

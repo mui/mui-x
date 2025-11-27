@@ -64,7 +64,13 @@ export const EventPopoverContent = React.forwardRef(function EventPopoverContent
 export function EventPopoverProvider(props: EventPopoverProviderProps) {
   const { containerRef, children } = props;
   const store = useSchedulerStoreContext();
-  const isScopeDialogOpen = useStore(store, schedulerOtherSelectors.isScopeDialogOpen);
+
+  // Pass a function that reads the latest value directly from the store,
+  // avoiding race conditions when close is called before React re-renders.
+  const shouldBlockClose = React.useCallback(
+    () => schedulerOtherSelectors.isScopeDialogOpen(store.state),
+    [store],
+  );
 
   return (
     <EventPopover.Provider
@@ -80,7 +86,7 @@ export function EventPopoverProvider(props: EventPopoverProviderProps) {
       onClose={() => {
         store.setOccurrencePlaceholder(null);
       }}
-      shouldBlockClose={isScopeDialogOpen}
+      shouldBlockClose={shouldBlockClose}
     >
       {children}
     </EventPopover.Provider>

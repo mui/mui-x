@@ -27,7 +27,12 @@ export interface ProviderProps<TAnchorData> {
     onClose: () => void;
   }) => React.ReactNode;
   onClose?: () => void;
-  shouldBlockClose?: boolean;
+  /**
+   * A function that returns whether close should be blocked.
+   * Using a function instead of a boolean ensures the latest value is read
+   * when the close function is called, avoiding race conditions.
+   */
+  shouldBlockClose?: () => boolean;
 }
 
 export interface TriggerProps<TAnchorData> extends React.ComponentProps<typeof Popover.Trigger> {
