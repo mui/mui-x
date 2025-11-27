@@ -20,12 +20,12 @@ const SUPPORTED_RRULE_KEYS = [
  *
  * @param adapter The date adapter used to parse and convert dates.
  * @param input The RRULE value. Can be a string or an RecurringEventRecurrenceRule object.
- * @param timezone The data timezone in which RRULE dates (like UNTIL) should be interpreted
+ * @param uiTimezone The render timezone used to display RRULE dates (like UNTIL) in the UI.
  */
 export function parseRRuleString(
   adapter: Adapter,
   input: string | RecurringEventRecurrenceRule,
-  timezone: TemporalTimezone,
+  uiTimezone: TemporalTimezone,
 ): RecurringEventRecurrenceRule {
   if (typeof input === 'object') {
     if (!input.until) {
@@ -34,7 +34,7 @@ export function parseRRuleString(
 
     return {
       ...input,
-      until: adapter.setTimezone(input.until, timezone),
+      until: adapter.setTimezone(input.until, uiTimezone),
     };
   }
 
@@ -115,7 +115,7 @@ export function parseRRuleString(
   }
 
   if (rruleObject.UNTIL) {
-    const parsed = adapter.parse(rruleObject.UNTIL, getUntilFormat(adapter), timezone);
+    const parsed = adapter.parse(rruleObject.UNTIL, getUntilFormat(adapter), uiTimezone);
 
     if (!adapter.isValid(parsed)) {
       throw new Error(`Scheduler: Invalid UNTIL date: "${rruleObject.UNTIL}"`);

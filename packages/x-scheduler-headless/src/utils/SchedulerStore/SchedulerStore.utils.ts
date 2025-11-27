@@ -81,7 +81,7 @@ export function getProcessedEventFromModel<TEvent extends object>(
   model: TEvent,
   adapter: Adapter,
   eventModelStructure: SchedulerEventModelStructure<TEvent> | undefined,
-  timezone: TemporalTimezone,
+  uiTimezone: TemporalTimezone,
 ): SchedulerProcessedEvent {
   // 1. Convert the model to a default event model
   const modelInDefaultFormat = {} as SchedulerEvent;
@@ -95,7 +95,7 @@ export function getProcessedEventFromModel<TEvent extends object>(
   }
 
   // 2. Convert the default event model to a processed event
-  return processEvent(modelInDefaultFormat, timezone, adapter);
+  return processEvent(modelInDefaultFormat, uiTimezone, adapter);
 }
 
 /**

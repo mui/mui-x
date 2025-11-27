@@ -9,18 +9,18 @@ import { adapter } from './adapters';
 
 export function createOccurrenceFromEvent(
   event: SchedulerEvent,
-  timezone: TemporalTimezone,
+  uiTimezone: TemporalTimezone,
   key: string = event.id.toString(),
 ): SchedulerEventOccurrence {
   return {
-    ...processEvent(event, timezone, adapter),
+    ...processEvent(event, uiTimezone, adapter),
     key,
   };
 }
 
 export function createProcessedEvent(
   event: SchedulerEvent,
-  timezone: TemporalTimezone,
+  uiTimezone: TemporalTimezone,
 ): SchedulerProcessedEvent {
-  return processEvent(event, timezone, adapter);
+  return processEvent(event, uiTimezone, adapter);
 }
