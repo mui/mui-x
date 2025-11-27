@@ -2,6 +2,7 @@ import {
   SchedulerResourceId,
   RecurringEventPresetKey,
   RecurringEventRecurrenceRule,
+  SchedulerValidDate,
 } from '@mui/x-scheduler-headless/models';
 import {
   SchedulerEvent,
@@ -32,6 +33,8 @@ export const DEFAULT_TESTING_VISIBLE_DATE = defaultAdapter.date(
  */
 export class EventBuilder {
   protected event: SchedulerEvent;
+
+  protected dataTimezone: TemporalTimezone = 'default';
 
   protected renderTimezone: TemporalTimezone = 'default';
 
@@ -98,7 +101,7 @@ export class EventBuilder {
 
   /** Set exception dates for recurrence. */
   exDates(dates?: string[]) {
-    this.event.exDates = dates?.map((date) => this.adapter.date(date, this.renderTimezone));
+    this.event.exDates = dates?.map((date) => this.adapter.date(date, this.dataTimezone));
     return this;
   }
 
@@ -114,11 +117,32 @@ export class EventBuilder {
     return this;
   }
 
-  /** Set the rendering timezone for date operations.
-   * Important: it does NOT convert existing dates,
-   * it only affects future date setters, so use it early in the chain.
-   **/
+  /** Set the DATA timezone: used for all event fields (start, end, rrule, exDates...). */
   withTimezone(timezone: TemporalTimezone) {
+    if (timezone === this.dataTimezone) {
+      return this;
+    }
+
+    this.event.start = this.adapter.setTimezone(this.event.start, timezone);
+    this.event.end = this.adapter.setTimezone(this.event.end, timezone);
+
+    if (this.event.exDates) {
+      this.event.exDates = this.event.exDates.map((date) =>
+        this.adapter.setTimezone(date, timezone),
+      );
+    }
+
+    const rrule = this.event.rrule;
+    if (rrule && typeof rrule !== 'string' && rrule.until) {
+      rrule.until = this.adapter.setTimezone(rrule.until, timezone);
+    }
+
+    this.dataTimezone = timezone;
+    return this;
+  }
+
+  /** Set the RENDER timezone for processed events. */
+  withRenderTimezone(timezone: TemporalTimezone) {
     this.renderTimezone = timezone;
     return this;
   }
@@ -142,7 +166,7 @@ export class EventBuilder {
    * Useful for fine-grained control (e.g., pairing with `.endAt(...)`).
    */
   startAt(startISO: string) {
-    this.event.start = this.adapter.date(startISO, this.renderTimezone);
+    this.event.start = this.adapter.date(startISO, this.dataTimezone);
     return this;
   }
 
@@ -151,7 +175,7 @@ export class EventBuilder {
    * Useful for fine-grained control (e.g., pairing with `.startAt(...)`).
    */
   endAt(endISO: string) {
-    this.event.end = this.adapter.date(endISO, this.renderTimezone);
+    this.event.end = this.adapter.date(endISO, this.dataTimezone);
     return this;
   }
 
@@ -159,7 +183,7 @@ export class EventBuilder {
    * Create a single-day timed event starting at `start` with the given duration (minutes).
    */
   singleDay(start: string, durationMinutes = 60) {
-    const startDate = this.adapter.date(start, this.renderTimezone);
+    const startDate = this.adapter.date(start, this.dataTimezone);
     const endDate = this.adapter.addMinutes(startDate, durationMinutes);
     this.event.start = startDate;
     this.event.end = endDate;
@@ -171,7 +195,7 @@ export class EventBuilder {
    * Sets `allDay=true`.
    */
   fullDay(date: string) {
-    const d = this.adapter.date(date, this.renderTimezone);
+    const d = this.adapter.date(date, this.dataTimezone);
     this.event.start = this.adapter.startOfDay(d);
     this.event.end = this.adapter.endOfDay(d);
     this.event.allDay = true;
@@ -183,8 +207,8 @@ export class EventBuilder {
    * Optionally override `allDay`.
    */
   span(start: string, end: string, opts?: { allDay?: boolean }) {
-    this.event.start = this.adapter.date(start, this.renderTimezone);
-    this.event.end = this.adapter.date(end, this.renderTimezone);
+    this.event.start = this.adapter.date(start, this.dataTimezone);
+    this.event.end = this.adapter.date(end, this.dataTimezone);
     if (opts?.allDay !== undefined) {
       this.event.allDay = opts.allDay;
     }
@@ -201,7 +225,8 @@ export class EventBuilder {
    * - If kind + rule: merges your rrule over the preset.
    */
   recurrent(kind: RecurringEventPresetKey, rrule?: Omit<RecurringEventRecurrenceRule, 'freq'>) {
-    const anchor = this.event.start ?? DEFAULT_TESTING_VISIBLE_DATE;
+    const anchor =
+      this.event.start ?? this.adapter.date(DEFAULT_TESTING_VISIBLE_DATE, this.dataTimezone);
 
     let base: RecurringEventRecurrenceRule = { freq: kind, interval: 1 };
 
@@ -235,7 +260,7 @@ export class EventBuilder {
   buildOccurrence(occurrenceStartDate?: string): SchedulerEventOccurrence {
     const event = this.event;
     const effectiveDate = occurrenceStartDate
-      ? this.adapter.date(occurrenceStartDate, this.renderTimezone)
+      ? this.adapter.date(occurrenceStartDate, this.dataTimezone)
       : event.start;
     const duration = diffIn(this.adapter, event.end, event.start, 'minutes');
     const end = this.adapter.addMinutes(effectiveDate, duration);
