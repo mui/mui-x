@@ -46,32 +46,41 @@ const rows = [
   },
 ];
 
+const columns = [
+  { field: 'id', headerName: 'ID', width: 70 },
+  { field: 'product', headerName: 'Product', width: 150, editable: true },
+  { field: 'quantity', headerName: 'Quantity', width: 120, editable: true },
+  { field: 'price', headerName: 'Price', width: 120, editable: true },
+  {
+    field: 'status',
+    headerName: 'Status',
+    width: 120,
+    editable: false,
+    renderCell: (params) => (
+      <Chip
+        label={params.value}
+        color={params.value === 'active' ? 'success' : 'default'}
+        size="small"
+      />
+    ),
+  },
+  {
+    field: 'lastModified',
+    headerName: 'Last Modified',
+    width: 150,
+    editable: false,
+  },
+];
+
+const isCellEditable = (params) => {
+  // Price cannot be edited for archived products
+  if (params.field === 'price' && params.row.status === 'archived') {
+    return false;
+  }
+  return true;
+}
+
 export default function ClipboardPasteIsCellEditable() {
-  const columns = [
-    { field: 'id', headerName: 'ID', width: 70 },
-    { field: 'product', headerName: 'Product', width: 150, editable: true },
-    { field: 'quantity', headerName: 'Quantity', width: 120, editable: true },
-    { field: 'price', headerName: 'Price', width: 120, editable: true },
-    {
-      field: 'status',
-      headerName: 'Status',
-      width: 120,
-      editable: false,
-      renderCell: (params) => (
-        <Chip
-          label={params.value}
-          color={params.value === 'active' ? 'success' : 'default'}
-          size="small"
-        />
-      ),
-    },
-    {
-      field: 'lastModified',
-      headerName: 'Last Modified',
-      width: 150,
-      editable: false,
-    },
-  ];
 
   return (
     <Box sx={{ height: 400, width: '100%' }}>
@@ -81,13 +90,7 @@ export default function ClipboardPasteIsCellEditable() {
         cellSelection
         disableRowSelectionOnClick
         ignoreValueFormatterDuringExport
-        isCellEditable={(params) => {
-          // Price cannot be edited for archived products
-          if (params.field === 'price' && params.row.status === 'archived') {
-            return false;
-          }
-          return true;
-        }}
+        isCellEditable={isCellEditable}
       />
     </Box>
   );
