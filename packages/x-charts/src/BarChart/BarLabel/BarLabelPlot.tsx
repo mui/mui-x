@@ -13,7 +13,7 @@ type BarLabelPlotProps = {
  */
 function BarLabelPlot(props: BarLabelPlotProps) {
   const { processedSeries, skipAnimation, ...other } = props;
-  const { seriesId, data } = processedSeries;
+  const { seriesId, data, layout, xOrigin, yOrigin } = processedSeries;
   const classes = useUtilityClasses();
 
   const barLabel = processedSeries.barLabel ?? props.barLabel;
@@ -24,7 +24,7 @@ function BarLabelPlot(props: BarLabelPlotProps) {
 
   return (
     <g key={seriesId} className={classes.seriesLabels} data-series={seriesId}>
-      {data.map(({ xOrigin, yOrigin, x, y, dataIndex, color, value, width, height, layout }) => (
+      {data.map(({ x, y, dataIndex, color, value, width, height }) => (
         <BarLabelItem
           key={dataIndex}
           seriesId={seriesId}
