@@ -365,7 +365,9 @@ describe('schedulerEventSelectors', () => {
 
     it('should handle event.resizable "start" overriding resource.areEventsResizable "end"', () => {
       const state = getEventCalendarStateFromParameters({
-        events: [EventBuilder.new().id('event-1').resource('resource-1').resizable('start').build()],
+        events: [
+          EventBuilder.new().id('event-1').resource('resource-1').resizable('start').build(),
+        ],
         resources: [{ id: 'resource-1', title: 'Resource 1', areEventsResizable: 'end' }],
         areEventsResizable: false,
       });
