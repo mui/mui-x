@@ -90,7 +90,7 @@ const resources = [
 ];
 ```
 
-In the example below, "Work" events can be dragged and resized, but "Birthdays" events cannot:
+In the example below, only "Work" events (and its children: "eXplore Team", "Data Grid Team", etc.) can be dragged and resized:
 
 {{"demo": "DragAndDropResourceLevel.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -98,7 +98,7 @@ In the example below, "Work" events can be dragged and resized, but "Birthdays" 
 The priority order for determining if an event is draggable or resizable is:
 
 1. **Event-level**: The `draggable` and `resizable` properties on the event take the highest precedence.
-2. **Resource-level**: The `areEventsDraggable` and `areEventsResizable` properties on the resource are checked next.
+2. **Resource-level**: The `areEventsDraggable` and `areEventsResizable` properties on the resource are checked next. If the property is not defined on the resource, it checks the parent resource, and so on up the hierarchy.
 3. **Component-level**: The `areEventsDraggable` and `areEventsResizable` props on the component are used as the final fallback.
 
 With the following code, all "work" events are draggable except `"event-3"`:
@@ -118,6 +118,25 @@ function App() {
 
   return <EventCalendar resources={resources} events={events} />;
 }
+```
+
+:::
+
+:::success
+When using nested resources, child resources inherit their parent's `areEventsDraggable` and `areEventsResizable` settings if they don't define their own:
+
+```tsx
+const resources = [
+  {
+    id: 'work',
+    title: 'Work',
+    areEventsDraggable: true,
+    children: [
+      { id: 'team-a', title: 'Team A' }, // Inherits areEventsDraggable: true from parent
+      { id: 'team-b', title: 'Team B', areEventsDraggable: false }, // Overrides parent
+    ],
+  },
+];
 ```
 
 :::

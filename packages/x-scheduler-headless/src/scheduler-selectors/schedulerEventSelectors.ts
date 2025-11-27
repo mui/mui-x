@@ -129,10 +129,15 @@ export const schedulerEventSelectors = {
       return processedEvent.draggable;
     }
 
-    // Then check if the resource has the `areEventsDraggable` property defined
-    const resource = schedulerResourceSelectors.processedResource(state, processedEvent.resource);
-    if (resource?.areEventsDraggable !== undefined) {
-      return resource.areEventsDraggable;
+    // Then check if the resource or any ancestor has the `areEventsDraggable` property defined
+    const resourceParentIdLookup = schedulerResourceSelectors.resourceParentIdLookup(state);
+    let currentResourceId = processedEvent.resource;
+    while (currentResourceId != null) {
+      const resource = schedulerResourceSelectors.processedResource(state, currentResourceId);
+      if (resource?.areEventsDraggable !== undefined) {
+        return resource.areEventsDraggable;
+      }
+      currentResourceId = resourceParentIdLookup.get(currentResourceId) ?? null;
     }
 
     // Otherwise, fall back to the component-level setting
@@ -168,15 +173,20 @@ export const schedulerEventSelectors = {
         return isResizableFromEventProperty;
       }
 
-      // Then check if the resource has the `areEventsResizable` property defined
-      const resource = schedulerResourceSelectors.processedResource(state, processedEvent.resource);
-      const isResizableFromResourceProperty = getIsResizableFromProperty(
-        resource?.areEventsResizable,
-        side,
-      );
+      // Then check if the resource or any ancestor has the `areEventsResizable` property defined
+      const resourceParentIdLookup = schedulerResourceSelectors.resourceParentIdLookup(state);
+      let currentResourceId = processedEvent.resource;
+      while (currentResourceId != null) {
+        const resource = schedulerResourceSelectors.processedResource(state, currentResourceId);
+        const isResizableFromResourceProperty = getIsResizableFromProperty(
+          resource?.areEventsResizable,
+          side,
+        );
 
-      if (isResizableFromResourceProperty !== null) {
-        return isResizableFromResourceProperty;
+        if (isResizableFromResourceProperty !== null) {
+          return isResizableFromResourceProperty;
+        }
+        currentResourceId = resourceParentIdLookup.get(currentResourceId) ?? null;
       }
 
       // Otherwise, fall back to the component-level setting
@@ -194,6 +204,10 @@ function getIsResizableFromProperty(
   propertyValue: boolean | SchedulerEventSide | undefined,
   side: SchedulerEventSide,
 ): boolean | null {
+  if (propertyValue === undefined) {
+    return null;
+  }
+
   if (propertyValue === true) {
     return true;
   }
@@ -208,9 +222,5 @@ function getIsResizableFromProperty(
 
   // If the property is a specific side (e.g., 'start' or 'end') but doesn't match the current side,
   // return false because the property explicitly restricts resizing to a specific side.
-  if (propertyValue === 'start' || propertyValue === 'end') {
-    return false;
-  }
-
-  return null;
+  return false;
 }
