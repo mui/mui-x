@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import { DataGridPremium } from '@mui/x-data-grid-premium';
 
@@ -55,7 +56,7 @@ export default function ClipboardPasteIsCellEditable() {
       field: 'status',
       headerName: 'Status',
       width: 120,
-      editable: true,
+      editable: false,
       renderCell: (params) => (
         <Chip
           label={params.value}
@@ -68,12 +69,12 @@ export default function ClipboardPasteIsCellEditable() {
       field: 'lastModified',
       headerName: 'Last Modified',
       width: 150,
-      editable: true,
+      editable: false,
     },
   ];
 
   return (
-    <div style={{ height: 400, width: '100%' }}>
+    <Box sx={{ height: 400, width: '100%' }}>
       <DataGridPremium
         rows={rows}
         columns={columns}
@@ -85,13 +86,9 @@ export default function ClipboardPasteIsCellEditable() {
           if (params.field === 'price' && params.row.status === 'archived') {
             return false;
           }
-          // Status and lastModified are never editable
-          if (params.field === 'status' || params.field === 'lastModified') {
-            return false;
-          }
           return true;
         }}
       />
-    </div>
+    </Box>
   );
 }

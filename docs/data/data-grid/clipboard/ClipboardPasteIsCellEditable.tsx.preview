@@ -1,0 +1,14 @@
+<DataGridPremium
+  rows={rows}
+  columns={columns}
+  cellSelection
+  disableRowSelectionOnClick
+  ignoreValueFormatterDuringExport
+  isCellEditable={(params) => {
+    // Price cannot be edited for archived products
+    if (params.field === 'price' && params.row.status === 'archived') {
+      return false;
+    }
+    return true;
+  }}
+/>
