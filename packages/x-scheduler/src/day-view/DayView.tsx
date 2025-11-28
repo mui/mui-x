@@ -9,14 +9,16 @@ import {
 import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
 import { useEventCalendarView } from '@mui/x-scheduler-headless/use-event-calendar-view';
 import { processDate } from '@mui/x-scheduler-headless/process-date';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { DayViewProps, StandaloneDayViewProps } from './DayView.types';
 import { DayTimeGrid } from '../internals/components/day-time-grid/DayTimeGrid';
 import '../index.css';
 
 const DAY_VIEW_CONFIG: EventCalendarViewConfig = {
-  siblingVisibleDateGetter: ({ state, delta }) => state.adapter.addDays(state.visibleDate, delta),
+  siblingVisibleDateGetter: ({ state, delta }) =>
+    state.adapter.addDays(schedulerOtherSelectors.visibleDate(state), delta),
   visibleDaysSelector: createSelectorMemoized(
-    (state: State) => state.visibleDate,
+    schedulerOtherSelectors.visibleDate,
     (state: State) => state.adapter,
     (visibleDate, adapter) => [processDate(visibleDate, adapter)],
   ),

@@ -1,3 +1,4 @@
+import { TemporalTimezone } from '../../base-ui-copy/types';
 import { Adapter } from '../../use-adapter/useAdapter.types';
 import { RecurringEventByDayValue, RecurringEventRecurrenceRule } from '../../models';
 import { NOT_LOCALIZED_WEEK_DAYS, tokenizeByDay } from './internal-utils';
@@ -16,13 +17,25 @@ const SUPPORTED_RRULE_KEYS = [
  * Parses a string RRULE (e.g. "FREQ=DAILY;COUNT=5;INTERVAL=2")
  * into a RecurringEventRecurrenceRule object.
  * Also validates unsupported or malformed properties.
+ *
+ * @param adapter The date adapter used to parse and convert dates.
+ * @param input The RRULE value. Can be a string or an RecurringEventRecurrenceRule object.
+ * @param uiTimezone The render timezone used to display RRULE dates (like UNTIL) in the UI.
  */
 export function parseRRuleString(
   adapter: Adapter,
   input: string | RecurringEventRecurrenceRule,
+  uiTimezone: TemporalTimezone,
 ): RecurringEventRecurrenceRule {
   if (typeof input === 'object') {
-    return input;
+    if (!input.until) {
+      return input;
+    }
+
+    return {
+      ...input,
+      until: adapter.setTimezone(input.until, uiTimezone),
+    };
   }
 
   const rruleObject: Record<string, string> = {};
@@ -102,7 +115,7 @@ export function parseRRuleString(
   }
 
   if (rruleObject.UNTIL) {
-    const parsed = adapter.parse(rruleObject.UNTIL, getUntilFormat(adapter), 'default');
+    const parsed = adapter.parse(rruleObject.UNTIL, getUntilFormat(adapter), uiTimezone);
 
     if (!adapter.isValid(parsed)) {
       throw new Error(`Scheduler: Invalid UNTIL date: "${rruleObject.UNTIL}"`);
