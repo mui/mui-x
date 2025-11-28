@@ -22,10 +22,42 @@ import { pathnameToLanguage } from 'docs/src/modules/utils/helpers';
 import getProductInfoFromUrl from 'docs/src/modules/utils/getProductInfoFromUrl';
 import { DocsProvider } from '@mui/docs/DocsProvider';
 import { mapTranslations } from '@mui/docs/i18n';
-import { fontClasses } from 'docs/pages/_app';
+import { Inter, Roboto } from 'next/font/google';
+import localFont from 'next/font/local';
 import * as config from '../config';
 
-export { fontClasses };
+const inter = Inter({
+  weight: ['300', '400', '500', '600', '700'],
+  subsets: ['latin'],
+});
+
+const roboto = Roboto({
+  weight: ['300', '400', '500', '700'],
+  style: ['normal', 'italic'],
+  subsets: ['latin'],
+});
+
+const generalSans = localFont({
+  declarations: [{ prop: 'font-family', value: 'General Sans' }],
+  src: [
+    { path: '../public/static/fonts/GeneralSans-Regular.woff2', weight: '400', style: 'normal' },
+    { path: '../public/static/fonts/GeneralSans-Medium.woff2', weight: '500', style: 'normal' },
+    { path: '../public/static/fonts/GeneralSans-Semibold.woff2', weight: '600', style: 'normal' },
+    { path: '../public/static/fonts/GeneralSans-Bold.woff2', weight: '700', style: 'normal' },
+  ],
+});
+
+const ibmPlexSans = localFont({
+  declarations: [{ prop: 'font-family', value: 'IBM Plex Sans' }],
+  src: [
+    { path: '../public/static/fonts/IBMPlexSans-Regular.woff2', weight: '400', style: 'normal' },
+    { path: '../public/static/fonts/IBMPlexSans-Medium.woff2', weight: '500', style: 'normal' },
+    { path: '../public/static/fonts/IBMPlexSans-SemiBold.woff2', weight: '600', style: 'normal' },
+    { path: '../public/static/fonts/IBMPlexSans-Bold.woff2', weight: '700', style: 'normal' },
+  ],
+});
+
+export const fontClasses = `${inter.className} ${roboto.className} ${generalSans.className} ${ibmPlexSans.className}`;
 
 // Enable telemetry for internal purposes
 muiXTelemetrySettings.enableTelemetry();
