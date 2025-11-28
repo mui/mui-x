@@ -111,5 +111,17 @@ describe('getTicks', () => {
 
       expect(ticks).to.deep.equal([]);
     });
+
+    it('should ignore non Date values', () => {
+      const weeksWithString = [...weeks.slice(0, 9), 'not a date', ...weeks.slice(9)];
+      const ticks = getTicks({
+        ...defaultOptions,
+        scale: scaleBand(weeksWithString, [0, 100]) as unknown as D3Scale,
+        tickNumber: 4,
+        timeOrdinalTicks: ['months'],
+      });
+
+      expect(ticks.map(({ value }) => value.getMonth())).to.deep.equal([1, 2, 3, 4]);
+    });
   });
 });

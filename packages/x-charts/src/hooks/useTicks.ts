@@ -67,8 +67,8 @@ export type TickItemType = {
   labelOffset: number;
 };
 
-function getTickPosition(
-  scale: D3OrdinalScale<any>,
+function getTickPosition<T extends { toString(): string }>(
+  scale: D3OrdinalScale<T>,
   value: any,
   placement: Required<TickParams>['tickPlacement'],
 ) {
@@ -77,11 +77,11 @@ function getTickPosition(
   );
 }
 
-function getTimeTicks(
-  domain: Date[],
+function getTimeTicks<T extends { toString(): string }>(
+  domain: T[],
   tickNumber: number,
   ticksFrequencies: TicksFrequencyDefinition[],
-  scale: D3OrdinalScale<Date>,
+  scale: D3OrdinalScale<T>,
   isInside: (offset: number) => boolean,
 ) {
   if (ticksFrequencies.length === 0) {
@@ -99,6 +99,10 @@ function getTimeTicks(
 
   const start = domain[0];
   const end = domain[domain.length - 1];
+
+  if (!(start instanceof Date) || !(end instanceof Date)) {
+    return [];
+  }
 
   let startSpaceIndex = 0;
 
@@ -132,7 +136,12 @@ function getTimeTicks(
     for (let i = startSpaceIndex; i <= endSpaceIndex; i += 1) {
       const prevDate = domain[tickIndex - 1];
       const currentDate = domain[tickIndex];
-      if (ticksFrequencies[i].isTick(prevDate, currentDate)) {
+
+      if (
+        prevDate instanceof Date &&
+        currentDate instanceof Date &&
+        ticksFrequencies[i].isTick(prevDate, currentDate)
+      ) {
         ticks.push({ index: tickIndex, formatter: ticksFrequencies[i].format });
 
         // once we found a matching tick space, we can break the inner loop
@@ -165,10 +174,9 @@ export function getTicks(options: GetTicksOptions) {
     timeOrdinalTicks,
   } = options;
 
-  // @ts-ignore Don't know how to let TS understand we are dealing with Date scale here.
-  if (isDateData(scale.domain()) && isOrdinalScale<Date>(scale) && timeOrdinalTicks !== undefined) {
+  if (timeOrdinalTicks !== undefined && isDateData(scale.domain()) && isOrdinalScale(scale)) {
     // ordinal scale with spaced ticks.
-    const domain = scale.domain() as unknown as Date[];
+    const domain = scale.domain();
 
     if (domain.length === 0 || domain.length === 1) {
       return [];
