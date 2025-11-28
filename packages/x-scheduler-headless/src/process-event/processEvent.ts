@@ -19,8 +19,8 @@ export function processEvent(
     );
   }
 
-  const startInRenderTz = adapter.setTimezone(model.start, uiTimezone);
-  const endInRenderTz = adapter.setTimezone(model.end, uiTimezone);
+  const startInUITz = adapter.setTimezone(model.start, uiTimezone);
+  const endInUITz = adapter.setTimezone(model.end, uiTimezone);
 
   const processededExDates: SchedulerValidDate[] | undefined = model.exDates
     ? model.exDates.map((exDate) => adapter.setTimezone(exDate, uiTimezone))
@@ -30,8 +30,8 @@ export function processEvent(
     id: model.id,
     title: model.title,
     description: model.description,
-    start: processDate(startInRenderTz, adapter),
-    end: processDate(endInRenderTz, adapter),
+    start: processDate(startInUITz, adapter),
+    end: processDate(endInUITz, adapter),
     resource: model.resource,
     rrule: model.rrule ? parseRRuleString(adapter, model.rrule, uiTimezone) : undefined,
     exDates: processededExDates,
