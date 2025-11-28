@@ -29,7 +29,7 @@ describe('eventCalendarViewSelectors', () => {
         views: ['day', 'week', 'month'],
       });
       const hasDayView = eventCalendarViewSelectors.hasDayView(state);
-      expect(hasDayView).toBe(true);
+      expect(hasDayView).to.equal(true);
     });
     it('should return false if views do not include day', () => {
       const state = getEventCalendarStateFromParameters({
