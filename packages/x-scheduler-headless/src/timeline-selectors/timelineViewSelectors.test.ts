@@ -20,7 +20,7 @@ describe('timelineViewSelectors', () => {
         views: ['days', 'weeks', 'months'],
       });
       const views = timelineViewSelectors.views(state);
-      expect(views).toEqual(['days', 'weeks', 'months']);
+      expect(views).to.deep.equal(['days', 'weeks', 'months']);
     });
   });
 });
