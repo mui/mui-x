@@ -203,6 +203,7 @@ function useOnItemClick(onItemClick: BatchBarPlotProps['onItemClick'] | undefine
     }
 
     if (closestPoint) {
+      console.log(closestPoint);
       onItemClick?.(event, {
         type: 'bar',
         seriesId: closestPoint.seriesId,
@@ -225,6 +226,7 @@ export function BatchBarPlot({
     <React.Fragment>
       {completedData.map((series) => (
         <BarGroup
+          key={series.seriesId}
           className={classes.series}
           data-series={series.seriesId}
           layout={series.layout}
@@ -233,11 +235,7 @@ export function BatchBarPlot({
           skipAnimation={skipAnimation}
           onClick={onClick}
         >
-          <BatchBarSeriesPlot
-            key={series.seriesId}
-            processedSeries={series}
-            borderRadius={borderRadius}
-          />
+          <BatchBarSeriesPlot processedSeries={series} borderRadius={borderRadius} />
         </BarGroup>
       ))}
     </React.Fragment>
@@ -437,14 +435,14 @@ function AnimatedGroup({
       <rect
         key="bottom"
         x={drawingArea.left}
-        y={yOrigin}
         width={drawingArea.width}
-        height={drawingArea.height - yOrigin}
+        y1={yOrigin}
+        y2={yOrigin + drawingArea.height}
       >
         <animate
-          attributeName="height"
-          from={0}
-          to={drawingArea.height - yOrigin}
+          attributeName="y2"
+          from={yOrigin}
+          to={yOrigin + drawingArea.height}
           dur={`${ANIMATION_DURATION_MS}ms`}
           fill="freeze"
         />

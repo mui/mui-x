@@ -50,6 +50,7 @@ export const useBarChartProps = (props: BarChartProps) => {
     hideLegend,
     showToolbar,
     brushConfig,
+    renderer,
     ...other
   } = props;
 
@@ -147,6 +148,7 @@ export const useBarChartProps = (props: BarChartProps) => {
     slots,
     slotProps,
     borderRadius,
+    renderer,
     barLabel,
   };
 
