@@ -254,34 +254,6 @@ export class EventBuilder {
   }
 
   /**
-   * Derives a SchedulerEventOccurrence from the built event.
-   * @param occurrenceStartDate Start date of the recurrence occurrence.
-   * Defaults to the event start date.
-   */
-  toOccurrence(occurrenceStartDate?: string): SchedulerEventOccurrence {
-    const rawStart = occurrenceStartDate
-      ? this.adapter.date(occurrenceStartDate, this.dataTimezone)
-      : this.event.start;
-
-    const baseProcessed = processEvent(this.event, this.dataTimezone, this.adapter);
-    const originalDurationMs = baseProcessed.end.timestamp - baseProcessed.start.timestamp;
-    const rawEnd = this.adapter.addMilliseconds(rawStart, originalDurationMs);
-
-    const occurrenceModel: SchedulerEvent = {
-      ...this.event,
-      start: rawStart,
-      end: rawEnd,
-    };
-
-    const processed = processEvent(occurrenceModel, this.renderTimezone, this.adapter);
-
-    return {
-      ...processed,
-      key: crypto.randomUUID(),
-    };
-  }
-
-  /**
    * Derives a processed event from the built event.
    */
   toProcessed() {
