@@ -281,8 +281,7 @@ To improve performance, you can use the `renderer` prop set to `"svg-batch"`, wh
 However, this comes with the following limitations:
 
 - CSS styling of single bars is no longer possible;
-- Transparent highlight style: for performance reasons, the highlighted state creates a highlighted bar on top of the original bar. Applying transparency to the highlighted bar can cause the original bar to be partially visible;
-- `disableHover` for bar series does not work.
+- Transparent highlight style: for performance reasons, the highlighted state creates a highlighted bar on top of the original bar. Applying transparency to the highlighted bar can cause the original bar to be partially visible.
 
 The example below uses the `renderer` prop to improve performance when rendering a dataset with 500 data points.
 
