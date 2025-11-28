@@ -153,6 +153,7 @@ export default function SankeyOverview() {
             valueFormatter,
             nodeOptions: {
               sort: 'fixed',
+              padding: 20,
             },
             linkOptions: {
               color: 'target',
