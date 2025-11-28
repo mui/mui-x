@@ -1,8 +1,8 @@
-import { SchedulerEvent, SchedulerProcessedEvent, SchedulerValidDate } from '../models';
+import { SchedulerEvent, SchedulerProcessedEvent } from '../models';
 import { processDate } from '../process-date';
 import { Adapter } from '../use-adapter';
 import { parseRRuleString } from '../utils/recurring-events';
-import { TemporalTimezone } from '../base-ui-copy/types';
+import { TemporalSupportedObject, TemporalTimezone } from '../base-ui-copy/types';
 
 export function processEvent(
   model: SchedulerEvent,
@@ -22,7 +22,7 @@ export function processEvent(
   const startInUITz = adapter.setTimezone(model.start, uiTimezone);
   const endInUITz = adapter.setTimezone(model.end, uiTimezone);
 
-  const processededExDates: SchedulerValidDate[] | undefined = model.exDates
+  const processededExDates: TemporalSupportedObject[] | undefined = model.exDates
     ? model.exDates.map((exDate) => adapter.setTimezone(exDate, uiTimezone))
     : undefined;
 
