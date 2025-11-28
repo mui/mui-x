@@ -40,8 +40,8 @@ export function findClosestPoints(
     return fxSq * dx * dx + fySq * dy * dy;
   }
 
-  const pointX = originalXScale(invertScale(xScale, svgPointX, (dataIndex) => getX(dataIndex)));
-  const pointY = originalYScale(invertScale(yScale, svgPointY, (dataIndex) => getY(dataIndex)));
+  const pointX = originalXScale(invertScale(xScale, svgPointX, getX));
+  const pointY = originalYScale(invertScale(yScale, svgPointY, getY));
 
   return flatbush.neighbors(
     pointX,
