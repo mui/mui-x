@@ -31,7 +31,7 @@ import {
 } from './SchedulerStore.utils';
 import { TimeoutManager } from '../TimeoutManager';
 import { DEFAULT_EVENT_COLOR } from '../../constants';
-import { getNowInRenderTimezone, getStartOfTodayInRenderTimezone } from '../timezone-utils';
+import { getStartOfTodayInRenderTimezone } from '../timezone-utils';
 
 const ONE_MINUTE_IN_MS = 60 * 1000;
 
@@ -73,7 +73,7 @@ export class SchedulerStore<
       preferences: DEFAULT_SCHEDULER_PREFERENCES,
       adapter,
       occurrencePlaceholder: null,
-      nowUpdatedEveryMinute: getNowInRenderTimezone(adapter, stateFromParameters.timezone),
+      nowUpdatedEveryMinute: adapter.now(stateFromParameters.timezone),
       pendingUpdateRecurringEventParameters: null,
       visibleResources: new Map(),
       visibleDate:
@@ -94,15 +94,9 @@ export class SchedulerStore<
       ONE_MINUTE_IN_MS - (currentDate.getSeconds() * 1000 + currentDate.getMilliseconds());
 
     this.timeoutManager.startTimeout('set-now', timeUntilNextMinuteMs, () => {
-      this.set(
-        'nowUpdatedEveryMinute',
-        getNowInRenderTimezone(adapter, stateFromParameters.timezone),
-      );
+      this.set('nowUpdatedEveryMinute', this.state.adapter.now(this.state.timezone));
       this.timeoutManager.startInterval('set-now', ONE_MINUTE_IN_MS, () => {
-        this.set(
-          'nowUpdatedEveryMinute',
-          getNowInRenderTimezone(adapter, stateFromParameters.timezone),
-        );
+        this.set('nowUpdatedEveryMinute', this.state.adapter.now(this.state.timezone));
       });
     });
 
@@ -186,6 +180,8 @@ export class SchedulerStore<
         buildEventsState(parameters, adapter, newSchedulerState.timezone!),
       );
     }
+
+    newSchedulerState.nowUpdatedEveryMinute = adapter.now(newSchedulerState.timezone!);
 
     if (
       parameters.resources !== this.parameters.resources ||
