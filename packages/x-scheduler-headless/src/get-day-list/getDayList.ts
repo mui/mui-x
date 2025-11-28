@@ -1,4 +1,4 @@
-import { SchedulerProcessedDate, SchedulerValidDate } from '../models';
+import { SchedulerProcessedDate, TemporalSupportedObject } from '../models';
 import { isWeekend } from '../use-adapter/useAdapter';
 import { processDate } from '../process-date';
 import { TemporalAdapter } from '../base-ui-copy/types';
@@ -17,7 +17,7 @@ export function getDayList(parameters: GetDaytListParameters): GetDaytListReturn
 
   let current = start;
   let currentDayNumber = adapter.getDayOfWeek(current);
-  const days: SchedulerValidDate[] = [];
+  const days: TemporalSupportedObject[] = [];
 
   while (adapter.isBefore(current, end)) {
     if (!excludeWeekends || !isWeekend(adapter, current)) {
@@ -47,11 +47,11 @@ export interface GetDaytListParameters {
   /**
    * The start of the range to generate the day list from.
    */
-  start: SchedulerValidDate;
+  start: TemporalSupportedObject;
   /**
    * The end of the range to generate the day list from.
    */
-  end: SchedulerValidDate;
+  end: TemporalSupportedObject;
   /**
    * Whether to exclude weekends (Saturday and Sunday) from the returned days.
    * @default false

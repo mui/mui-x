@@ -4,7 +4,7 @@ import {
   EventCalendarPreferences,
   CalendarView,
   EventCalendarViewConfig,
-  SchedulerValidDate,
+  TemporalSupportedObject,
   EventCalendarPreferencesMenuConfig,
 } from '../models';
 import { Adapter } from '../use-adapter/useAdapter.types';
@@ -102,7 +102,7 @@ export class EventCalendarStore<
   }
 
   private setVisibleDateAndView = (
-    visibleDate: SchedulerValidDate,
+    visibleDate: TemporalSupportedObject,
     view: CalendarView,
     event: React.UIEvent,
   ) => {
@@ -178,7 +178,7 @@ export class EventCalendarStore<
   /**
    * Goes to a specific day and set the view to 'day'.
    */
-  public switchToDay = (visibleDate: SchedulerValidDate, event: React.UIEvent) => {
+  public switchToDay = (visibleDate: TemporalSupportedObject, event: React.UIEvent) => {
     this.setVisibleDateAndView(visibleDate, 'day', event);
   };
 

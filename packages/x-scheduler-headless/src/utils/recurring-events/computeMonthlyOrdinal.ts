@@ -1,12 +1,12 @@
 import { Adapter, diffIn } from '../../use-adapter';
-import { SchedulerValidDate } from '../../models';
+import { TemporalSupportedObject } from '../../models';
 import { getWeekDayCode, nthWeekdayOfMonth } from './internal-utils';
 
 /**
  * Computes the ordinal for a MONTHLY BYDAY rule for a given date.
  * @returns {number} - The ordinal: -1 for last, otherwise 1..5.
  */
-export function computeMonthlyOrdinal(adapter: Adapter, date: SchedulerValidDate): number {
+export function computeMonthlyOrdinal(adapter: Adapter, date: TemporalSupportedObject): number {
   const monthStart = adapter.startOfMonth(date);
   const code = getWeekDayCode(adapter, date);
 

@@ -69,6 +69,8 @@ const RESOURCE_PROPERTIES_LOOKUP: { [P in keyof SchedulerResource]-?: true } = {
   title: true,
   eventColor: true,
   children: true,
+  areEventsDraggable: true,
+  areEventsResizable: true,
 };
 
 const RESOURCE_PROPERTIES = Object.keys(RESOURCE_PROPERTIES_LOOKUP) as (keyof SchedulerResource)[];
