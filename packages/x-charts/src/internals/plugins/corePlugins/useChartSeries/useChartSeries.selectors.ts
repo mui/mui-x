@@ -1,7 +1,8 @@
 import { createSelectorMemoized, createSelector } from '@mui/x-internals/store';
 import { ChartRootSelector } from '../../utils/selectors';
 import { UseChartSeriesSignature } from './useChartSeries.types';
-import { applySeriesProcessors, defaultizeSeries } from './processSeries';
+import { applySeriesLayout, applySeriesProcessors } from './processSeries';
+import { selectorChartDrawingArea } from '../useChartDimensions/useChartDimensions.selectors';
 
 export const selectorChartSeriesState: ChartRootSelector<UseChartSeriesSignature> = (state) =>
   state.series;
@@ -41,5 +42,19 @@ export const selectorChartSeriesProcessed = createSelectorMemoized(
   selectorChartDataset,
   function selectorChartSeriesProcessed(defaultizedSeries, seriesConfig, dataset) {
     return applySeriesProcessors(defaultizedSeries, seriesConfig, dataset);
+  },
+);
+
+/**
+ * Get the processed series after applying series processors.
+ * This selector computes the processed series on-demand from the defaultized series.
+ * @returns {ProcessedSeries} The processed series.
+ */
+export const selectorChartSeriesLayout = createSelectorMemoized(
+  selectorChartSeriesProcessed,
+  selectorChartSeriesConfig,
+  selectorChartDrawingArea,
+  function selectorChartSeriesLayout(processedSeries, seriesConfig, drawingArea) {
+    return applySeriesLayout(processedSeries, seriesConfig, drawingArea);
   },
 );

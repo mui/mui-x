@@ -125,8 +125,19 @@ export const schedulerEventSelectors = {
     }
 
     // If the `draggable` property is defined on the event, it takes precedence
-    if (processedEvent.draggable === true) {
-      return true;
+    if (processedEvent.draggable !== undefined) {
+      return processedEvent.draggable;
+    }
+
+    // Then check if the resource or any ancestor has the `areEventsDraggable` property defined
+    const resourceParentIdLookup = schedulerResourceSelectors.resourceParentIdLookup(state);
+    let currentResourceId = processedEvent.resource;
+    while (currentResourceId != null) {
+      const resource = schedulerResourceSelectors.processedResource(state, currentResourceId);
+      if (resource?.areEventsDraggable !== undefined) {
+        return resource.areEventsDraggable;
+      }
+      currentResourceId = resourceParentIdLookup.get(currentResourceId) ?? null;
     }
 
     // Otherwise, fall back to the component-level setting
@@ -162,6 +173,24 @@ export const schedulerEventSelectors = {
         return isResizableFromEventProperty;
       }
 
+      // TODO: Pre-process the resource, like we do for the event. That way we can compute this information only once.
+      // Then check if the resource or any ancestor has the `areEventsResizable` property defined
+      const resourceParentIdLookup = schedulerResourceSelectors.resourceParentIdLookup(state);
+      let currentResourceId = processedEvent.resource;
+      while (currentResourceId != null) {
+        const resource = schedulerResourceSelectors.processedResource(state, currentResourceId);
+        const isResizableFromResourceProperty = getIsResizableFromProperty(
+          resource?.areEventsResizable,
+          side,
+        );
+
+        if (isResizableFromResourceProperty !== null) {
+          return isResizableFromResourceProperty;
+        }
+        currentResourceId = resourceParentIdLookup.get(currentResourceId) ?? null;
+      }
+
+      // Otherwise, fall back to the component-level setting
       const isResizableFromComponentProperty = getIsResizableFromProperty(
         state.areEventsResizable,
         side,
@@ -176,6 +205,10 @@ function getIsResizableFromProperty(
   propertyValue: boolean | SchedulerEventSide | undefined,
   side: SchedulerEventSide,
 ): boolean | null {
+  if (propertyValue === undefined) {
+    return null;
+  }
+
   if (propertyValue === true) {
     return true;
   }
@@ -188,5 +221,7 @@ function getIsResizableFromProperty(
     return true;
   }
 
-  return null;
+  // If the property is a specific side (e.g., 'start' or 'end') but doesn't match the current side,
+  // return false because the property explicitly restricts resizing to a specific side.
+  return false;
 }
