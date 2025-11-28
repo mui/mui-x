@@ -8,7 +8,7 @@ import {
   schedulerEventSelectors,
   schedulerOccurrencePlaceholderSelectors,
 } from '../scheduler-selectors';
-import { SchedulerEventId, SchedulerValidDate } from '../models';
+import { SchedulerEventId, TemporalSupportedObject } from '../models';
 import { useDragPreview } from './useDragPreview';
 import { useEvent } from './useEvent';
 import { useAdapter } from '../use-adapter';
@@ -140,11 +140,11 @@ export namespace useDraggableEvent {
     /**
      * The start date of the collection the event belongs to.
      */
-    collectionStart: SchedulerValidDate;
+    collectionStart: TemporalSupportedObject;
     /**
      * The end date of the collection the event belongs to.
      */
-    collectionEnd: SchedulerValidDate;
+    collectionEnd: TemporalSupportedObject;
   }
 
   export interface ReturnValue {
