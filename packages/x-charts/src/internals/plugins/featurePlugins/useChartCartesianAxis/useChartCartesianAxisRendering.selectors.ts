@@ -676,7 +676,7 @@ export const selectorChartBarSeriesFlatbushMap = createSelectorMemoized(
     }
 
     seriesOrder.forEach((seriesId) => {
-      const { data, xAxisId = defaultXAxisId, yAxisId = defaultYAxisId } = series[seriesId];
+      const { data, xAxisId = defaultXAxisId, yAxisId = defaultYAxisId, layout } = series[seriesId];
 
       const flatbush = new Flatbush(data.length);
 
@@ -685,12 +685,13 @@ export const selectorChartBarSeriesFlatbushMap = createSelectorMemoized(
 
       const xAxis = xAxes.axis[xAxisId];
       const yAxis = yAxes.axis[yAxisId];
-      // FIXME: I'm assuming here that bar series have only one direction: vertical
 
-      const xData = xAxis.data;
+      const xData = layout === 'horizontal' ? data : xAxis.data;
+      const yData = layout === 'horizontal' ? yAxis.data : data;
+
       for (let i = 0; i < data.length; i += 1) {
         const x = xData?.[i];
-        const y = data[i];
+        const y = yData?.[i];
 
         if (x === null || y == null) {
           continue;
