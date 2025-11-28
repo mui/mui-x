@@ -70,7 +70,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
     });
 
     it('applies weekly interval > 1 (e.g. every 2 weeks)', () => {
-      const visibleStart = '2025-01-03T09:00:00Z'; // Friday
+      const visibleStart = adapter.date('2025-01-03T09:00:00Z', 'default'); // Friday
       const event = EventBuilder.new()
         .singleDay(visibleStart)
         .rrule({ freq: 'WEEKLY', interval: 2 }) // byDay omitted -> defaults to start weekday
@@ -79,7 +79,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
         visibleStart,
-        adapter.addDays(adapter.date(visibleStart, 'default'), 29),
+        adapter.addDays(visibleStart, 29),
         adapter,
       );
       // Expect Fridays at week 0, 2 and 4
@@ -88,7 +88,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
     });
 
     it('generates monthly byMonthDay occurrences only on matching day and within visible range', () => {
-      const visibleStart = '2025-01-01T00:00:00Z';
+      const visibleStart = adapter.date('2025-01-01T00:00:00Z', 'default');
       const event = EventBuilder.new()
         .singleDay(visibleStart)
         .rrule({
@@ -101,7 +101,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
         visibleStart,
-        adapter.addDays(adapter.date(visibleStart, 'default'), 119),
+        adapter.addDays(visibleStart, 119),
         adapter,
       );
       const daysOfMonth = result.map((o) => adapter.getDate(o.start.value));
