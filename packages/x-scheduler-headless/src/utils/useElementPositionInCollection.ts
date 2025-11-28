@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useAdapter } from '../use-adapter/useAdapter';
-import { SchedulerProcessedDate, SchedulerValidDate } from '../models';
+import { SchedulerProcessedDate, TemporalSupportedObject } from '../models';
 
 export function useElementPositionInCollection(
   parameters: useElementPositionInCollection.Parameters,
@@ -10,11 +10,8 @@ export function useElementPositionInCollection(
   const adapter = useAdapter();
 
   return React.useMemo(() => {
-    // TODO: Avoid JS date conversion
-    const getTimestamp = (date: SchedulerValidDate) => adapter.toJsDate(date).getTime();
-
-    const collectionStartTimestamp = getTimestamp(collectionStart);
-    const collectionEndTimestamp = getTimestamp(collectionEnd);
+    const collectionStartTimestamp = adapter.getTime(collectionStart);
+    const collectionEndTimestamp = adapter.getTime(collectionEnd);
     const collectionDurationMs = collectionEndTimestamp - collectionStartTimestamp;
     const startTimestamp = Math.max(start.timestamp, collectionStartTimestamp);
     const endTimestamp = Math.min(end.timestamp, collectionEndTimestamp);
@@ -30,8 +27,8 @@ namespace useElementPositionInCollection {
   export interface Parameters {
     start: SchedulerProcessedDate;
     end: SchedulerProcessedDate;
-    collectionStart: SchedulerValidDate;
-    collectionEnd: SchedulerValidDate;
+    collectionStart: TemporalSupportedObject;
+    collectionEnd: TemporalSupportedObject;
   }
 
   export interface ReturnValue {

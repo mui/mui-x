@@ -13,12 +13,11 @@ export function sortEventOccurrences(
     .map((occurrence) => {
       return {
         occurrence,
-        // TODO: Avoid JS Date conversion
         start: occurrence.allDay
-          ? adapter.toJsDate(adapter.startOfDay(occurrence.start.value)).getTime()
+          ? adapter.getTime(adapter.startOfDay(occurrence.start.value))
           : occurrence.start.timestamp,
         end: occurrence.allDay
-          ? adapter.toJsDate(adapter.endOfDay(occurrence.end.value)).getTime()
+          ? adapter.getTime(adapter.endOfDay(occurrence.end.value))
           : occurrence.end.timestamp,
       };
     })

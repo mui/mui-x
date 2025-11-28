@@ -41,7 +41,9 @@ export function useAxisTicksProps(inProps: ChartsYAxisProps) {
 
   const axisTickLabelProps = useSlotProps({
     elementType: TickLabel,
+    // @ts-expect-error `useSlotProps` applies `WithCommonProps` with adds a `style: React.CSSProperties` prop automatically.
     externalSlotProps: slotProps?.axisTickLabel,
+    // @ts-expect-error `useSlotProps` applies `WithCommonProps` with adds a `style: React.CSSProperties` prop automatically.
     additionalProps: {
       style: {
         ...theme.typography.caption,
