@@ -1,4 +1,4 @@
-import type { SchedulerValidDate } from './date';
+import type { TemporalSupportedObject } from '../base-ui-copy/types';
 import { RecurringEventRecurrenceRule } from './recurringEvent';
 import type { SchedulerOccurrencePlaceholderExternalDragData } from './dragAndDrop';
 import type { SchedulerResourceId } from './resource';
@@ -37,7 +37,7 @@ export interface SchedulerProcessedEvent {
    * Exception dates for the event.
    * These dates will be excluded from the recurrence.
    */
-  exDates?: SchedulerValidDate[];
+  exDates?: TemporalSupportedObject[];
   /**
    * Whether the event is an all-day event.
    * @default false
@@ -97,11 +97,11 @@ export interface SchedulerEvent {
   /**
    * The start date and time of the event.
    */
-  start: SchedulerValidDate;
+  start: TemporalSupportedObject;
   /**
    * The end date and time of the event.
    */
-  end: SchedulerValidDate;
+  end: TemporalSupportedObject;
   /**
    * The id of the resource this event is associated with.
    * @default null
@@ -118,7 +118,7 @@ export interface SchedulerEvent {
    * Exception dates for the event.
    * These dates will be excluded from the recurrence.
    */
-  exDates?: SchedulerValidDate[];
+  exDates?: TemporalSupportedObject[];
   /**
    * Whether the event is an all-day event.
    * @default false
@@ -191,11 +191,11 @@ interface SchedulerOccurrencePlaceholderBase {
   /**
    * The new start date and time of the event occurrence.
    */
-  start: SchedulerValidDate;
+  start: TemporalSupportedObject;
   /**
    * The new end date and time of the event occurrence.
    */
-  end: SchedulerValidDate;
+  end: TemporalSupportedObject;
   /**
    * The id of the resource onto which to drop the event.
    * If null, the event will be dropped outside of any resource.
@@ -269,7 +269,7 @@ export interface SchedulerProcessedDate {
   /**
    * The date object.
    */
-  value: SchedulerValidDate;
+  value: TemporalSupportedObject;
   /**
    * String representation of the date.
    * It can be used as key in Maps or passed to the React `key` property when looping through days.

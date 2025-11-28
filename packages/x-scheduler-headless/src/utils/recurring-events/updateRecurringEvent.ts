@@ -7,7 +7,7 @@ import {
   SchedulerEvent,
   SchedulerEventUpdatedProperties,
   SchedulerProcessedEvent,
-  SchedulerValidDate,
+  TemporalSupportedObject,
 } from '../../models';
 import type { UpdateEventsParameters } from '../SchedulerStore';
 import { getDateKey, getOccurrenceEnd, mergeDateAndTime } from '../date-utils';
@@ -27,7 +27,7 @@ import { computeMonthlyOrdinal } from './computeMonthlyOrdinal';
 export function updateRecurringEvent(
   adapter: Adapter,
   originalEvent: SchedulerProcessedEvent,
-  occurrenceStart: SchedulerValidDate,
+  occurrenceStart: TemporalSupportedObject,
   changes: SchedulerEventUpdatedProperties,
   scope: RecurringEventUpdateScope,
 ) {
@@ -59,7 +59,7 @@ export function updateRecurringEvent(
 export function applyRecurringUpdateFollowing(
   adapter: Adapter,
   originalEvent: SchedulerProcessedEvent,
-  occurrenceStart: SchedulerValidDate,
+  occurrenceStart: TemporalSupportedObject,
   changes: SchedulerEventUpdatedProperties,
 ): UpdateEventsParameters {
   const newStart = changes.start ?? originalEvent.start.value;
@@ -119,7 +119,7 @@ export function applyRecurringUpdateFollowing(
 export function applyRecurringUpdateAll(
   adapter: Adapter,
   originalEvent: SchedulerProcessedEvent,
-  occurrenceStart: SchedulerValidDate,
+  occurrenceStart: TemporalSupportedObject,
   changes: SchedulerEventUpdatedProperties,
 ): UpdateEventsParameters {
   const eventUpdatedProperties: SchedulerEventUpdatedProperties = { ...changes };
@@ -204,7 +204,7 @@ export function applyRecurringUpdateAll(
 export function applyRecurringUpdateOnlyThis(
   adapter: Adapter,
   originalEvent: SchedulerProcessedEvent,
-  occurrenceStart: SchedulerValidDate,
+  occurrenceStart: TemporalSupportedObject,
   changes: SchedulerEventUpdatedProperties,
 ): UpdateEventsParameters {
   return {
@@ -232,8 +232,8 @@ export function applyRecurringUpdateOnlyThis(
 export function adjustRRuleForAllMove(
   adapter: Adapter,
   rrule: RecurringEventRecurrenceRule,
-  occurrenceStart: SchedulerValidDate,
-  newStart: SchedulerValidDate,
+  occurrenceStart: TemporalSupportedObject,
+  newStart: TemporalSupportedObject,
 ): RecurringEventRecurrenceRule {
   let nextRRule: RecurringEventRecurrenceRule = { ...rrule };
 
@@ -282,8 +282,8 @@ export function adjustRRuleForAllMove(
 export function decideSplitRRule(
   adapter: Adapter,
   originalRule: RecurringEventRecurrenceRule,
-  originalSeriesStart: SchedulerValidDate,
-  splitStart: SchedulerValidDate,
+  originalSeriesStart: TemporalSupportedObject,
+  splitStart: TemporalSupportedObject,
   changes: Partial<SchedulerEvent>,
 ): RecurringEventRecurrenceRule | undefined {
   // Normalize base pattern (drop COUNT/UNTIL)
@@ -362,8 +362,8 @@ export function decideSplitRRule(
 export function realignWeeklyByDay(
   adapter: Adapter,
   weekDayCodes: RecurringEventWeekDayCode[],
-  oldRefDay: SchedulerValidDate,
-  newStart: SchedulerValidDate,
+  oldRefDay: TemporalSupportedObject,
+  newStart: TemporalSupportedObject,
 ): RecurringEventWeekDayCode[] {
   const oldCode = getWeekDayCode(adapter, oldRefDay);
   const newCode = getWeekDayCode(adapter, newStart);

@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useStableCallback } from '@base-ui-components/utils/useStableCallback';
 import { useAdapter } from '../../use-adapter/useAdapter';
-import { SchedulerResourceId, SchedulerEvent, SchedulerValidDate } from '../../models';
+import { SchedulerResourceId, SchedulerEvent, TemporalSupportedObject } from '../../models';
 import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
 import { TimelineEventRowContext } from './TimelineEventRowContext';
 import { useDropTarget } from '../../utils/useDropTarget';
@@ -45,7 +45,7 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
 
       const cursorOffsetMs = getCursorPositionInElementMs({ input, elementRef: ref });
 
-      const addOffsetToDate = (date: SchedulerValidDate, offsetMs: number) => {
+      const addOffsetToDate = (date: TemporalSupportedObject, offsetMs: number) => {
         const roundedOffset =
           Math.round(offsetMs / EVENT_DRAG_PRECISION_MS) * EVENT_DRAG_PRECISION_MS;
 
@@ -125,11 +125,11 @@ export namespace useEventRowDropTarget {
     /**
      * The data and time at which the row starts.
      */
-    start: SchedulerValidDate;
+    start: TemporalSupportedObject;
     /**
      * The data and time at which the row ends.
      */
-    end: SchedulerValidDate;
+    end: TemporalSupportedObject;
     /**
      * The id of the resource to drop the event onto.
      * If null, the event will be dropped outside of any resource.
