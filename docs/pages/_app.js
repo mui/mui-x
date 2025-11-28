@@ -22,21 +22,10 @@ import { pathnameToLanguage } from 'docs/src/modules/utils/helpers';
 import getProductInfoFromUrl from 'docs/src/modules/utils/getProductInfoFromUrl';
 import { DocsProvider } from '@mui/docs/DocsProvider';
 import { mapTranslations } from '@mui/docs/i18n';
-import { Inter, Roboto } from 'next/font/google';
+import { fontClasses } from 'docs/pages/_app';
 import * as config from '../config';
 
-const inter = Inter({
-  weight: ['300', '400', '500', '600', '700'],
-  subsets: ['latin'],
-});
-
-const roboto = Roboto({
-  weight: ['300', '400', '500', '700'],
-  style: ['normal', 'italic'],
-  subsets: ['latin'],
-});
-
-export const fontClasses = `${inter.className} ${roboto.className}`;
+export { fontClasses };
 
 // Enable telemetry for internal purposes
 muiXTelemetrySettings.enableTelemetry();
