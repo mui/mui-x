@@ -3,12 +3,12 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 
 import { useSvgRef } from '../hooks';
-import { ProcessedBarData, ProcessedBarSeriesData } from './types';
+import { type ProcessedBarData, type ProcessedBarSeriesData } from './types';
 import { findClosestPoints } from '../internals/plugins/featurePlugins/useChartClosestPoint/findClosestPoints';
 import { ANIMATION_DURATION_MS } from '../internals/animation/animation';
 import { useUtilityClasses } from './barClasses';
 import { appendAtKey } from '../internals/appendAtKey';
-import { IndividualBarPlotProps } from './IndividualBarPlot';
+import { type IndividualBarPlotProps } from './IndividualBarPlot';
 import { useChartContext } from '../context/ChartProvider/useChartContext';
 import {
   selectorChartAxisZoomData,
@@ -17,17 +17,17 @@ import {
   selectorChartXAxis,
   selectorChartYAxis,
   selectorChartZoomIsInteracting,
-  UseChartCartesianAxisSignature,
+  type UseChartCartesianAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { useSelector } from '../internals/store/useSelector';
 import { selectorChartDrawingArea } from '../internals/plugins/corePlugins/useChartDimensions';
-import { SeriesId } from '../models/seriesType/common';
+import { type SeriesId } from '../models/seriesType/common';
 import { selectorChartSeriesProcessed } from '../internals/plugins/corePlugins/useChartSeries';
 import { getSVGPoint } from '../internals/getSVGPoint';
 import {
   selectorChartSeriesHighlightedItem,
   selectorChartSeriesUnfadedItem,
-  UseChartHighlightSignature,
+  type UseChartHighlightSignature,
 } from '../internals/plugins/featurePlugins/useChartHighlight';
 import { useStore } from '../internals/store/useStore';
 
