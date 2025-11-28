@@ -5,111 +5,63 @@ import Typography from '@mui/material/Typography';
 
 const data = {
   nodes: [
-    // Sub-segment nodes - Server Products and Cloud
-    {
-      id: 'Server Products and Cloud',
-      label: 'Server Products & Cloud',
-      color: '#696969',
-    },
-    {
-      id: 'Enterprise Services',
-      label: 'Enterprise Services',
-      color: '#696969',
-    },
-    // Sub-segment nodes - Productivity
-    {
-      id: 'Microsoft 365 Commercial',
-      label: 'M365 Commercial',
-      color: '#696969',
-    },
-    { id: 'Microsoft 365 Consumer', label: 'M365 Consumer', color: '#696969' },
-    { id: 'LinkedIn', label: 'LinkedIn', color: '#696969' },
-    { id: 'Dynamics', label: 'Dynamics', color: '#696969' },
-    // Sub-segment nodes - Personal Computing
-    { id: 'Gaming', label: 'Gaming', color: '#696969' },
-    { id: 'Windows and Devices', label: 'Windows & Devices', color: '#696969' },
-    {
-      id: 'Search and News Advertising',
-      label: 'Search & News Ads',
-      color: '#696969',
-    },
-    { id: 'Other', label: 'Other', color: '#696969' },
+    // Sub-segment
+    { id: 'Server Products', color: '#595b63' },
+    { id: 'Enterprise Services', color: '#595b63' },
+    { id: 'M365 Commercial', color: '#595b63' },
+    { id: 'M365 Consumer', color: '#595b63' },
+    { id: 'LinkedIn', color: '#595b63' },
+    { id: 'Dynamics', color: '#595b63' },
+    { id: 'Gaming', color: '#595b63' },
+    { id: 'Windows & Devices', color: '#595b63' },
+    { id: 'Search & News Ads', color: '#595b63' },
     // Main revenue segments
-    { id: 'Intelligent Cloud', label: 'Intelligent Cloud', color: '#696969' },
-    { id: 'Productivity', label: 'Productivity & Business', color: '#696969' },
-    { id: 'Personal Computing', label: 'Personal Computing', color: '#696969' },
-    // Revenue node
-    { id: 'Revenue', label: 'Total Revenue', color: '#696969' },
-    // Gross Profit
-    { id: 'Gross Profit', label: 'Gross Profit', color: '#00A34C' },
-    // Operating Profit
-    { id: 'Operating Profit', label: 'Operating Profit', color: '#00A34C' },
-    // Final breakdown
-
-    { id: 'Net Profit', label: 'Net Profit', color: '#00A34C' },
-    { id: 'Tax', label: 'Income Tax', color: '#D1003F' },
-    { id: 'Other Loss', label: 'Other Loss', color: '#D1003F' },
-    // Operating Expenses and breakdown
-    { id: 'Operating Expenses', label: 'Operating Expenses', color: '#D1003F' },
-    { id: 'R&D', label: 'R&D', color: '#D1003F' },
-    { id: 'S&M', label: 'Sales & Marketing', color: '#D1003F' },
-    { id: 'G&A', label: 'G&A', color: '#D1003F' },
+    { id: 'Intelligent Cloud', label: 'Cloud', color: '#595b63' },
+    { id: 'Productivity', color: '#595b63' },
+    { id: 'Personal Computing', label: 'Personal Computing', color: '#595b63' },
+    { id: 'Revenue', label: 'Total Revenue', color: '#595b63' },
+    // Gross Profit and breakdown
+    { id: 'Gross Profit', label: 'Gross Profit', color: '#44CE8D' },
+    { id: 'Operating Profit', label: 'Operating Profit', color: '#44CE8D' },
+    { id: 'Net Profit', label: 'Net Profit', color: '#44CE8D' },
+    { id: 'Tax', label: 'Income Tax', color: '#F35865' },
+    { id: 'Other Loss', label: 'Other Loss', color: '#F35865' },
+    { id: 'Operating Expenses', label: 'Operating Expenses', color: '#F35865' },
+    { id: 'R&D', label: 'R&D', color: '#F35865' },
+    { id: 'S&M', label: 'Sales & Marketing', color: '#F35865' },
+    { id: 'G&A', label: 'G&A', color: '#F35865' },
     // Cost of Revenue and breakdown
-    { id: 'Cost of Revenue', label: 'Cost of Revenue', color: '#D1003F' },
-    { id: 'Product Costs', label: 'Product Costs', color: '#D1003F' },
-    { id: 'Service Costs', label: 'Service Costs', color: '#D1003F' },
+    { id: 'Cost of Revenue', label: 'Cost of Revenue', color: '#F35865' },
+    { id: 'Product Costs', label: 'Product Costs', color: '#F35865' },
+    { id: 'Service Costs', label: 'Service Costs', color: '#F35865' },
   ],
   links: [
-    // Intelligent Cloud sub-segments
-    {
-      source: 'Server Products and Cloud',
-      target: 'Intelligent Cloud',
-      value: 98.435,
-    },
-    { source: 'Enterprise Services', target: 'Intelligent Cloud', value: 7.76 },
-    // Productivity sub-segments
-    {
-      source: 'Microsoft 365 Commercial',
-      target: 'Productivity',
-      value: 87.767,
-    },
-    { source: 'Microsoft 365 Consumer', target: 'Productivity', value: 7.404 },
-    { source: 'LinkedIn', target: 'Productivity', value: 17.812 },
-    { source: 'Dynamics', target: 'Productivity', value: 7.827 },
-    // Personal Computing sub-segments
-    { source: 'Gaming', target: 'Personal Computing', value: 23.455 },
-    {
-      source: 'Windows and Devices',
-      target: 'Personal Computing',
-      value: 17.314,
-    },
-    {
-      source: 'Search and News Advertising',
-      target: 'Personal Computing',
-      value: 13.878,
-    },
-    { source: 'Other', target: 'Personal Computing', value: 0.072 },
-    // Revenue Segments to Total Revenue
-    { source: 'Intelligent Cloud', target: 'Revenue', value: 106.265 },
-    { source: 'Productivity', target: 'Revenue', value: 120.81 },
-    { source: 'Personal Computing', target: 'Revenue', value: 54.649 },
-    // Revenue to Gross Profit and Cost of Revenue
-    { source: 'Revenue', target: 'Cost of Revenue', value: 87.831 },
-    { source: 'Revenue', target: 'Gross Profit', value: 193.893 },
-    // Gross Profit to Operating Profit and Operating Expenses
-    { source: 'Gross Profit', target: 'Operating Profit', value: 128.528 },
-    { source: 'Gross Profit', target: 'Operating Expenses', value: 65.365 },
-    // Cost of Revenue breakdown
-    { source: 'Cost of Revenue', target: 'Product Costs', value: 13.501 },
-    { source: 'Cost of Revenue', target: 'Service Costs', value: 74.33 },
-    // Operating Profit to Net Profit, Tax, and Other Loss
-    { source: 'Operating Profit', target: 'Tax', value: 21.795 },
-    { source: 'Operating Profit', target: 'Other Loss', value: 4.901 },
-    { source: 'Operating Profit', target: 'Net Profit', value: 101.832 },
-    // Operating Expenses breakdown
-    { source: 'Operating Expenses', target: 'R&D', value: 32.488 },
-    { source: 'Operating Expenses', target: 'S&M', value: 25.654 },
-    { source: 'Operating Expenses', target: 'G&A', value: 7.223 },
+    // Revenue-in links
+    { source: 'Server Products', target: 'Intelligent Cloud', value: 98.4 },
+    { source: 'Enterprise Services', target: 'Intelligent Cloud', value: 7.7 },
+    { source: 'M365 Commercial', target: 'Productivity', value: 87.7 },
+    { source: 'M365 Consumer', target: 'Productivity', value: 7.4 },
+    { source: 'LinkedIn', target: 'Productivity', value: 17.8 },
+    { source: 'Dynamics', target: 'Productivity', value: 7.8 },
+    { source: 'Gaming', target: 'Personal Computing', value: 23.4 },
+    { source: 'Windows & Devices', target: 'Personal Computing', value: 17.3 },
+    { source: 'Search & News Ads', target: 'Personal Computing', value: 13.8 },
+    { source: 'Intelligent Cloud', target: 'Revenue', value: 106.2 },
+    { source: 'Productivity', target: 'Revenue', value: 120.8 },
+    { source: 'Personal Computing', target: 'Revenue', value: 54.6 },
+    // Revenue-out links
+    { source: 'Revenue', target: 'Cost of Revenue', value: 87.8 },
+    { source: 'Revenue', target: 'Gross Profit', value: 193.8 },
+    { source: 'Gross Profit', target: 'Operating Profit', value: 128.5 },
+    { source: 'Gross Profit', target: 'Operating Expenses', value: 65.3 },
+    { source: 'Cost of Revenue', target: 'Product Costs', value: 13.5 },
+    { source: 'Cost of Revenue', target: 'Service Costs', value: 74.3 },
+    { source: 'Operating Profit', target: 'Tax', value: 21.7 },
+    { source: 'Operating Profit', target: 'Other Loss', value: 4.9 },
+    { source: 'Operating Profit', target: 'Net Profit', value: 101.8 },
+    { source: 'Operating Expenses', target: 'R&D', value: 32.4 },
+    { source: 'Operating Expenses', target: 'S&M', value: 25.6 },
+    { source: 'Operating Expenses', target: 'G&A', value: 7.2 },
   ],
 };
 
@@ -154,6 +106,7 @@ export default function SankeyOverview() {
             nodeOptions: {
               sort: 'fixed',
               padding: 20,
+              width: 9,
             },
             linkOptions: {
               color: 'target',
