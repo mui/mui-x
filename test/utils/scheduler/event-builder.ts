@@ -273,10 +273,8 @@ export class EventBuilder {
       end: rawEnd,
     };
 
-    // 4) Procesar esa occurrence en la renderTimezone
     const processed = processEvent(occurrenceModel, this.renderTimezone, this.adapter);
 
-    // 5) Devolver la occurrence ya en renderTimezone
     return {
       ...processed,
       key: crypto.randomUUID(),
