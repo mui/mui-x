@@ -24,6 +24,14 @@ const drawingArea = { left: 0, top: 0, width: 1000, height: 1000 };
 const infiniteMaxRadius = Infinity;
 const returnAllResults = Infinity;
 
+function createGetX(data: ScatterValueType[]) {
+  return (index: number) => data[index].x;
+}
+
+function createGetY(data: ScatterValueType[]) {
+  return (index: number) => data[index].y;
+}
+
 describe('findClosestPoints', () => {
   it('finds the closest points without zoom and using two linear scales', () => {
     const seriesData = [
@@ -41,7 +49,8 @@ describe('findClosestPoints', () => {
 
     const closestPoint = findClosestPoints(
       flatbush,
-      seriesData,
+      createGetX(seriesData),
+      createGetY(seriesData),
       xScale,
       yScale,
       noZoom.start, // x
@@ -75,7 +84,8 @@ describe('findClosestPoints', () => {
 
       const closestPoint = findClosestPoints(
         flatbush,
-        seriesData,
+        createGetX(seriesData),
+        createGetY(seriesData),
         xScale,
         yScale,
         noZoom.start, // x
@@ -119,7 +129,8 @@ describe('findClosestPoints', () => {
         expect(
           findClosestPoints(
             flatbush,
-            seriesData,
+            createGetX(seriesData),
+            createGetY(seriesData),
             xScale,
             yScale,
             xZoom.start,
@@ -147,7 +158,8 @@ describe('findClosestPoints', () => {
         expect(
           findClosestPoints(
             flatbush,
-            seriesData,
+            createGetX(seriesData),
+            createGetY(seriesData),
             xScale,
             yScale,
             xZoom.start,
@@ -182,7 +194,8 @@ describe('findClosestPoints', () => {
         expect(
           findClosestPoints(
             flatbush,
-            seriesData,
+            createGetX(seriesData),
+            createGetY(seriesData),
             xScale,
             yScale,
             xZoom.start,
@@ -217,7 +230,8 @@ describe('findClosestPoints', () => {
 
       const closestPoint = findClosestPoints(
         flatbush,
-        seriesData,
+        createGetX(seriesData),
+        createGetY(seriesData),
         xScale,
         yScale,
         noZoom.start, // x
