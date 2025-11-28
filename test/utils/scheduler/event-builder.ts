@@ -140,8 +140,8 @@ export class EventBuilder {
     return this;
   }
 
-  /** Set the RENDER timezone for processed events. */
-  withRenderTimezone(timezone: TemporalTimezone) {
+  /** Set the UI timezone for processed events. */
+  withUITimezone(timezone: TemporalTimezone) {
     this.uiTimezone = timezone;
     return this;
   }
