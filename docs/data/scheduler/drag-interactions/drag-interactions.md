@@ -45,30 +45,6 @@ In the example below, only the "Lunch" event on Tuesday is draggable and resizab
 
 {{"demo": "DragAndDropSomeEvents.js", "bg": "inline", "defaultCodeOpen": false}}
 
-:::success
-The `draggable` and `resizable` event properties take precedence over `areEventsDraggable` and `areEventsResizable`.
-With the following code, all events are draggable and resizable, except `"event-3"`:
-
-```tsx
-function App() {
-  const events = [
-    { id: 'event-1' },
-    { id: 'event-2' },
-    { id: 'event-3', draggable: false, resizable: false },
-  ];
-
-  return (
-    <EventCalendar
-      areEventsDraggable
-      areEventsResizable
-      events={events} // A
-    />
-  );
-}
-```
-
-:::
-
 ### Only allow dragging and resizing events of some resources
 
 You can enable the dragging and resizing for all events of a specific resource using the `areEventsDraggable` and `areEventsResizable` properties on the resource.
@@ -84,8 +60,6 @@ const resources = [
   {
     id: 'birthdays',
     title: 'Birthdays',
-    areEventsDraggable: false,
-    areEventsResizable: false,
   },
 ];
 ```
@@ -94,7 +68,8 @@ In the example below, only "Work" events (and its children: "eXplore Team", "Dat
 
 {{"demo": "DragAndDropResourceLevel.js", "bg": "inline", "defaultCodeOpen": false}}
 
-:::success
+### Priority order
+
 The priority order for determining if an event is draggable or resizable is:
 
 1. **Event-level**: The `draggable` and `resizable` properties on the event take the highest precedence.
@@ -107,7 +82,7 @@ With the following code, all "work" events are draggable except `"event-3"`:
 function App() {
   const resources = [
     { id: 'work', title: 'Work', areEventsDraggable: true },
-    { id: 'personal', title: 'Personal', areEventsDraggable: false },
+    { id: 'personal', title: 'Personal' },
   ];
 
   const events = [
@@ -119,27 +94,6 @@ function App() {
   return <EventCalendar resources={resources} events={events} />;
 }
 ```
-
-:::
-
-:::success
-When using nested resources, child resources inherit their parent's `areEventsDraggable` and `areEventsResizable` settings if they don't define their own:
-
-```tsx
-const resources = [
-  {
-    id: 'work',
-    title: 'Work',
-    areEventsDraggable: true,
-    children: [
-      { id: 'team-a', title: 'Team A' }, // Inherits areEventsDraggable: true from parent
-      { id: 'team-b', title: 'Team B', areEventsDraggable: false }, // Overrides parent
-    ],
-  },
-];
-```
-
-:::
 
 ### Only allow resizing one side
 
