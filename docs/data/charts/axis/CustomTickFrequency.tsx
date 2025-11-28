@@ -13,17 +13,10 @@ export default function CustomTickFrequency() {
         xAxis={[
           {
             ...xAxis,
-            tickNumber: 15,
             timeOrdinalTicks: [
               'years',
-              {
-                ...tickFrequencies.quarters,
-                format: (d: Date) => `Q${Math.floor(d.getMonth() / 3) + 1}`,
-              },
-              {
-                ...tickFrequencies.weeks,
-                format: (d: Date) => `W${getWeekNumber(d)}`,
-              },
+              { ...tickFrequencies.quarterly, format: quarterFormat },
+              { ...tickFrequencies.weeks, format: weekFormat },
             ],
           },
         ]}
@@ -31,6 +24,9 @@ export default function CustomTickFrequency() {
     </Box>
   );
 }
+
+const quarterFormat = (d: Date) => `Q${Math.floor(d.getMonth() / 3) + 1}`;
+const weekFormat = (d: Date) => `W${getWeekNumber(d)}`;
 
 const zoom: ZoomOptions = { minSpan: 1, filterMode: 'discard' };
 
@@ -41,6 +37,7 @@ const xAxis: XAxis = {
   zoom,
   valueFormatter: (value) => value.toLocaleDateString(),
   height: 30,
+  tickNumber: 15,
 };
 
 const barSettings = {

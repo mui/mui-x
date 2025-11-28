@@ -186,7 +186,7 @@ If your axis is about date, you can subsample them with the `timeOrdinalTicks` p
 It takes an array of frequencies at which ticks can be placed sorted from the largest to the smallest.
 Visible ticks are selected according to those frequencies plus the the `tickNumber`.
 
-It can either be a subsample of built in frequencies: `'years'`, `'quarters'`, `'months'`, `'biweekly'`, `'weeks'`, `'days'`, `'hours'`.
+It can either be a subsample of built in frequencies: `'years'`, `'quarterly'`, `'months'`, `'biweekly'`, `'weeks'`, `'days'`, `'hours'`.
 Or a custom definition of type `TicksFrequencyDefinition`.
 
 When using `timeOrdinalTicks` the property `tickPlacement` is ignored, and computation are done as if set to `'middle'`.

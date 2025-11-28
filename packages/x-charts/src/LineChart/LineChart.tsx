@@ -464,7 +464,7 @@ LineChart.propTypes = {
         tickSize: PropTypes.number,
         timeOrdinalTicks: PropTypes.arrayOf(
           PropTypes.oneOfType([
-            PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarters', 'weeks', 'years']),
+            PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarterly', 'weeks', 'years']),
             PropTypes.shape({
               format: PropTypes.func.isRequired,
               getTickNumber: PropTypes.func.isRequired,
@@ -551,7 +551,7 @@ LineChart.propTypes = {
         tickSize: PropTypes.number,
         timeOrdinalTicks: PropTypes.arrayOf(
           PropTypes.oneOfType([
-            PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarters', 'weeks', 'years']),
+            PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarterly', 'weeks', 'years']),
             PropTypes.shape({
               format: PropTypes.func.isRequired,
               getTickNumber: PropTypes.func.isRequired,
@@ -1109,7 +1109,7 @@ LineChart.propTypes = {
         tickSize: PropTypes.number,
         timeOrdinalTicks: PropTypes.arrayOf(
           PropTypes.oneOfType([
-            PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarters', 'weeks', 'years']),
+            PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarterly', 'weeks', 'years']),
             PropTypes.shape({
               format: PropTypes.func.isRequired,
               getTickNumber: PropTypes.func.isRequired,
@@ -1195,7 +1195,7 @@ LineChart.propTypes = {
         tickSize: PropTypes.number,
         timeOrdinalTicks: PropTypes.arrayOf(
           PropTypes.oneOfType([
-            PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarters', 'weeks', 'years']),
+            PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarterly', 'weeks', 'years']),
             PropTypes.shape({
               format: PropTypes.func.isRequired,
               getTickNumber: PropTypes.func.isRequired,

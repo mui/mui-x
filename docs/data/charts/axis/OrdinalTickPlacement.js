@@ -7,7 +7,7 @@ import SelectTimeFrequency from './SelectTimeFrequency';
 
 const tickFrequencies = [
   'years',
-  'quarters',
+  'quarterly',
   'months',
   'biweekly',
   'weeks',

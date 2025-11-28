@@ -6,7 +6,7 @@ export type TicksFrequencyDefinition = {
 
 export type TicksFrequency =
   | 'years'
-  | 'quarters'
+  | 'quarterly'
   | 'months'
   | 'biweekly'
   | 'weeks'

@@ -21,7 +21,7 @@ export const tickFrequencies: Record<TicksFrequency, TicksFrequencyDefinition> =
     isTick: (prev: Date, value: Date) => value.getFullYear() !== prev.getFullYear(),
     format: (d: Date) => d.getFullYear().toString(),
   },
-  quarters: {
+  quarterly: {
     getTickNumber: (from: Date, to: Date) => Math.floor(monthNumber(from, to) / 3),
     isTick: (prev: Date, value: Date) =>
       value.getMonth() !== prev.getMonth() && value.getMonth() % 3 === 0,

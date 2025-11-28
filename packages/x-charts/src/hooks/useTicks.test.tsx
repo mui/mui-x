@@ -70,7 +70,7 @@ describe('getTicks', () => {
         ...defaultOptions,
         scale: scaleBand(weeks, [0, 100]) as unknown as D3Scale,
         tickNumber: 4,
-        timeOrdinalTicks: ['years', 'quarters', 'months', 'weeks', 'days'],
+        timeOrdinalTicks: ['years', 'quarterly', 'months', 'weeks', 'days'],
       });
 
       expect(ticks.map(({ value }) => value.getMonth())).to.deep.equal([1, 2, 3, 4]);
