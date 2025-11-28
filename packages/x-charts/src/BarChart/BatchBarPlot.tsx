@@ -203,7 +203,6 @@ function useOnItemClick(onItemClick: BatchBarPlotProps['onItemClick'] | undefine
     }
 
     if (closestPoint) {
-      console.log(closestPoint);
       onItemClick?.(event, {
         type: 'bar',
         seriesId: closestPoint.seriesId,
@@ -368,8 +367,8 @@ function AnimatedGroup({
     animateChildren.push(
       <rect
         key="left"
-        x1={drawingArea.left}
-        x2={xOrigin}
+        x={drawingArea.left}
+        width={xOrigin - drawingArea.left}
         y={drawingArea.top}
         height={drawingArea.height}
       >
@@ -392,15 +391,15 @@ function AnimatedGroup({
     animateChildren.push(
       <rect
         key="right"
-        x1={xOrigin}
+        x={xOrigin}
+        width={drawingArea.left + drawingArea.width - xOrigin}
         y={drawingArea.top}
-        width={drawingArea.width - xOrigin}
         height={drawingArea.height}
       >
         <animate
           attributeName="width"
           from={0}
-          to={drawingArea.width - xOrigin}
+          to={drawingArea.left + drawingArea.width - xOrigin}
           dur={`${ANIMATION_DURATION_MS}ms`}
           fill="freeze"
         />
@@ -412,8 +411,8 @@ function AnimatedGroup({
         key="top"
         x={drawingArea.left}
         width={drawingArea.width}
-        y1={drawingArea.top}
-        y2={yOrigin}
+        y={drawingArea.top}
+        height={yOrigin - drawingArea.top}
       >
         <animate
           attributeName="y"
@@ -436,13 +435,13 @@ function AnimatedGroup({
         key="bottom"
         x={drawingArea.left}
         width={drawingArea.width}
-        y1={yOrigin}
-        y2={yOrigin + drawingArea.height}
+        y={yOrigin}
+        height={drawingArea.top + drawingArea.height - yOrigin}
       >
         <animate
-          attributeName="y2"
-          from={yOrigin}
-          to={yOrigin + drawingArea.height}
+          attributeName="height"
+          from={0}
+          to={drawingArea.top + drawingArea.height - yOrigin}
           dur={`${ANIMATION_DURATION_MS}ms`}
           fill="freeze"
         />
@@ -453,7 +452,7 @@ function AnimatedGroup({
   return (
     <React.Fragment>
       <clipPath id={clipPathId}>{animateChildren}</clipPath>
-      <PathGroup clipPath={clipPathId}>{children}</PathGroup>
+      <PathGroup clipPath={`url(#${clipPathId})`}>{children}</PathGroup>
     </React.Fragment>
   );
 }
