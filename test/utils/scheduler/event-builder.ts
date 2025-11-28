@@ -14,6 +14,7 @@ import {
 import { processEvent } from '@mui/x-scheduler-headless/process-event';
 import { getWeekDayCode } from '@mui/x-scheduler-headless/utils/recurring-events';
 import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
+import { TemporalTimezone } from '@mui/x-scheduler-headless/base-ui-copy/types';
 import { adapter as defaultAdapter } from './adapters';
 
 export const DEFAULT_TESTING_VISIBLE_DATE_STR = '2025-07-03T00:00:00Z';
