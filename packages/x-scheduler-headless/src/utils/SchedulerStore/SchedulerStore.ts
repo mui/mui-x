@@ -5,7 +5,7 @@ import {
   SchedulerEventId,
   SchedulerOccurrencePlaceholder,
   SchedulerResourceId,
-  SchedulerValidDate,
+  TemporalSupportedObject,
   SchedulerEventUpdatedProperties,
   RecurringEventUpdateScope,
   SchedulerPreferences,
@@ -227,7 +227,7 @@ export class SchedulerStore<
     });
   };
 
-  protected setVisibleDate = (visibleDate: SchedulerValidDate, event: React.UIEvent) => {
+  protected setVisibleDate = (visibleDate: TemporalSupportedObject, event: React.UIEvent) => {
     const { visibleDate: visibleDateProp, onVisibleDateChange } = this.parameters;
     const { adapter } = this.state;
     const hasChange = !adapter.isEqual(this.state.visibleDate, visibleDate);
@@ -380,8 +380,8 @@ export class SchedulerStore<
    */
   public duplicateEventOccurrence = (
     eventId: SchedulerEventId,
-    start: SchedulerValidDate,
-    end: SchedulerValidDate,
+    start: TemporalSupportedObject,
+    end: TemporalSupportedObject,
   ) => {
     const original = schedulerEventSelectors.processedEvent(this.state, eventId);
     if (!original) {

@@ -12,7 +12,7 @@ import {
   SchedulerResource,
   SchedulerResourceId,
   SchedulerResourceModelStructure,
-  SchedulerValidDate,
+  TemporalSupportedObject,
   SchedulerEventSide,
 } from '../../models';
 import { Adapter } from '../../use-adapter/useAdapter.types';
@@ -26,7 +26,7 @@ export interface SchedulerState<TEvent extends object = any> {
   /**
    * The date used to determine the visible date range in each view.
    */
-  visibleDate: SchedulerValidDate;
+  visibleDate: TemporalSupportedObject;
   /**
    * The model of the events available in the calendar as provided to props.events.
    */
@@ -109,7 +109,7 @@ export interface SchedulerState<TEvent extends object = any> {
   /**
    * The current date and time, updated every minute.
    */
-  nowUpdatedEveryMinute: SchedulerValidDate;
+  nowUpdatedEveryMinute: TemporalSupportedObject;
   /**
    * Whether the calendar is in read-only mode.
    * @default false
@@ -171,17 +171,17 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
   /**
    * The date currently used to determine the visible date range in each view.
    */
-  visibleDate?: SchedulerValidDate;
+  visibleDate?: TemporalSupportedObject;
   /**
    * The date initially used to determine the visible date range in each view.
    * To render a controlled calendar, use the `visibleDate` prop.
    * @default today
    */
-  defaultVisibleDate?: SchedulerValidDate;
+  defaultVisibleDate?: TemporalSupportedObject;
   /**
    * Event handler called when the visible date changes.
    */
-  onVisibleDateChange?: (visibleDate: SchedulerValidDate, event: React.UIEvent) => void;
+  onVisibleDateChange?: (visibleDate: TemporalSupportedObject, event: React.UIEvent) => void;
   /**
    * Whether the event can be dragged to change its start and end dates without changing the duration.
    * @default false
@@ -254,7 +254,7 @@ export type UpdateRecurringEventParameters = {
   /**
    * The start date of the occurrence affected by the update.
    */
-  occurrenceStart: SchedulerValidDate;
+  occurrenceStart: TemporalSupportedObject;
   /**
    * The changes to apply.
    * Requires `start` and `end`, all other properties are optional.

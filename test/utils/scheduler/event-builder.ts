@@ -2,7 +2,7 @@ import {
   SchedulerResourceId,
   RecurringEventPresetKey,
   RecurringEventRecurrenceRule,
-  SchedulerValidDate,
+  TemporalSupportedObject,
 } from '@mui/x-scheduler-headless/models';
 import {
   SchedulerEvent,
@@ -181,7 +181,7 @@ export class EventBuilder {
   /**
    * Create a single-day timed event starting at `start` with the given duration (minutes).
    */
-  singleDay(start: string | SchedulerValidDate, durationMinutes = 60) {
+  singleDay(start: string | TemporalSupportedObject, durationMinutes = 60) {
     const startDate =
       typeof start === 'string' ? this.adapter.date(start, this.dataTimezone) : start;
     const endDate = this.adapter.addMinutes(startDate, durationMinutes);

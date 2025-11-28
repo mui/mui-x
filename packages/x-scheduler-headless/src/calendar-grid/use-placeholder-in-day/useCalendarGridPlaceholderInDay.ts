@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store/useStore';
-import { SchedulerValidDate } from '../../models';
+import { TemporalSupportedObject } from '../../models';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
@@ -11,7 +11,7 @@ import { processDate } from '../../process-date';
 import { isInternalDragOrResizePlaceholder } from '../../utils/drag-utils';
 
 export function useCalendarGridPlaceholderInDay(
-  day: SchedulerValidDate,
+  day: TemporalSupportedObject,
   row: useEventOccurrencesWithDayGridPosition.ReturnValue,
 ): useEventOccurrencesWithDayGridPosition.EventOccurrenceWithPosition | null {
   const adapter = useAdapter();

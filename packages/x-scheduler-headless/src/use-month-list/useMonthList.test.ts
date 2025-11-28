@@ -1,10 +1,10 @@
 import { renderHook } from '@mui/internal-test-utils';
 import { adapter, DEFAULT_TESTING_VISIBLE_DATE } from 'test/utils/scheduler';
 import { useMonthList } from './useMonthList';
-import { SchedulerValidDate } from '../models';
+import { TemporalSupportedObject } from '../models';
 
 describe('useMonthList', () => {
-  function testHook(date: SchedulerValidDate, amount: number | 'end-of-year') {
+  function testHook(date: TemporalSupportedObject, amount: number | 'end-of-year') {
     const { result } = renderHook(() => useMonthList());
     return result.current({ date, amount });
   }
