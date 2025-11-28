@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
-import * as sinon from 'sinon';
+import { vi } from 'vitest';
 import { LineChartPro } from './LineChartPro';
 import { CHART_SELECTOR } from '../tests/constants';
 
@@ -50,7 +50,7 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
   };
 
   it('should zoom on wheel', async () => {
-    const onZoomChange = sinon.spy();
+    const onZoomChange = vi.fn();
     const { user, container } = render(
       <LineChartPro {...lineChartProps} onZoomChange={onZoomChange} />,
       options,
@@ -71,14 +71,14 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
     fireEvent.wheel(svg, { deltaY: -10, clientX: 15, clientY: 50 });
     await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-    expect(onZoomChange.callCount).to.equal(1);
+    expect(onZoomChange.mock.calls.length).to.equal(1);
     expect(getAxisTickValues('x', container)).to.deep.equal(['A', 'B', 'C']);
 
     // scroll back
     fireEvent.wheel(svg, { deltaY: 10, clientX: 15, clientY: 50 });
     await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-    expect(onZoomChange.callCount).to.equal(2);
+    expect(onZoomChange.mock.calls.length).to.equal(2);
     expect(getAxisTickValues('x', container)).to.deep.equal(['A', 'B', 'C', 'D']);
 
     // zoom on the right side
@@ -93,20 +93,20 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
     fireEvent.wheel(svg, { deltaY: -10, clientX: 90, clientY: 50 });
     await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-    expect(onZoomChange.callCount).to.equal(3);
+    expect(onZoomChange.mock.calls.length).to.equal(3);
     expect(getAxisTickValues('x', container)).to.deep.equal(['B', 'C']);
 
     // scroll back
     fireEvent.wheel(svg, { deltaY: 10, clientX: 90, clientY: 50 });
     await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-    expect(onZoomChange.callCount).to.equal(4);
+    expect(onZoomChange.mock.calls.length).to.equal(4);
     expect(getAxisTickValues('x', container)).to.deep.equal(['A', 'B', 'C', 'D']);
   });
 
   ['MouseLeft', 'TouchA'].forEach((pointerName) => {
     it(`should pan on ${pointerName} drag`, async () => {
-      const onZoomChange = sinon.spy();
+      const onZoomChange = vi.fn();
       const { user, container } = render(
         <LineChartPro
           {...lineChartProps}
@@ -142,7 +142,7 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
       // Wait the animation frame
       await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-      expect(onZoomChange.callCount).to.equal(1);
+      expect(onZoomChange.mock.calls.length).to.equal(1);
       expect(getAxisTickValues('x', container)).to.deep.equal(['C']);
 
       // we drag all the way to the left so A should be visible
@@ -166,13 +166,13 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
       // Wait the animation frame
       await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-      expect(onZoomChange.callCount).to.equal(2);
+      expect(onZoomChange.mock.calls.length).to.equal(2);
       expect(getAxisTickValues('x', container)).to.deep.equal(['A']);
     });
   });
 
   it('should pan with area series enabled', async () => {
-    const onZoomChange = sinon.spy();
+    const onZoomChange = vi.fn();
     const { user, container } = render(
       <LineChartPro
         {...lineChartProps}
@@ -213,7 +213,7 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
     // Wait the animation frame
     await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-    expect(onZoomChange.callCount).to.equal(1);
+    expect(onZoomChange.mock.calls.length).to.equal(1);
     expect(getAxisTickValues('x', container)).to.deep.equal(['C']);
 
     // Continue dragging to see more data points
@@ -236,12 +236,12 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
     // Wait the animation frame
     await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-    expect(onZoomChange.callCount).to.equal(2);
+    expect(onZoomChange.mock.calls.length).to.equal(2);
     expect(getAxisTickValues('x', container)).to.deep.equal(['A']);
   });
 
   it('should zoom on pinch', async () => {
-    const onZoomChange = sinon.spy();
+    const onZoomChange = vi.fn();
     const { user, container } = render(
       <LineChartPro {...lineChartProps} onZoomChange={onZoomChange} />,
       options,
@@ -286,12 +286,12 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
     ]);
     await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-    expect(onZoomChange.callCount).to.be.above(0);
+    expect(onZoomChange.mock.calls.length).to.be.above(0);
     expect(getAxisTickValues('x', container)).to.deep.equal(['B', 'C']);
   });
 
   it('should zoom on tap and drag', async () => {
-    const onZoomChange = sinon.spy();
+    const onZoomChange = vi.fn();
     const { user, container } = render(
       <LineChartPro
         {...lineChartProps}
@@ -337,13 +337,13 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
     ]);
     await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-    expect(onZoomChange.callCount).to.be.above(0);
+    expect(onZoomChange.mock.calls.length).to.be.above(0);
     // Should have zoomed in to show fewer ticks
     expect(getAxisTickValues('x', container).length).to.be.lessThan(4);
   });
 
   it('should handle extreme deltaY values without breaking zoom (regression test for deltaY < -100)', async () => {
-    const onZoomChange = sinon.spy();
+    const onZoomChange = vi.fn();
     const { user, container } = render(
       <LineChartPro
         {...lineChartProps}
@@ -428,7 +428,7 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
   });
 
   it('should pan on press and drag', async () => {
-    const onZoomChange = sinon.spy();
+    const onZoomChange = vi.fn();
     const { user, container } = render(
       <LineChartPro
         {...lineChartProps}
@@ -471,12 +471,12 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
     // Wait the animation frame
     await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-    expect(onZoomChange.callCount).to.equal(1);
+    expect(onZoomChange.mock.calls.length).to.equal(1);
     expect(getAxisTickValues('x', container)).to.deep.equal(['C']);
   });
 
   it('should not pan on press and drag if there is no press', async () => {
-    const onZoomChange = sinon.spy();
+    const onZoomChange = vi.fn();
     const { user, container } = render(
       <LineChartPro
         {...lineChartProps}
@@ -514,7 +514,7 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
     // Wait the animation frame
     await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-    expect(onZoomChange.callCount).to.equal(0);
+    expect(onZoomChange.mock.calls.length).to.equal(0);
     expect(getAxisTickValues('x', container)).to.deep.equal(['D']); // no change
   });
 });
