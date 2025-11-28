@@ -20,7 +20,7 @@ export const selectorSeriesOfType = createSelectorMemoized(
     seriesType: T,
     ids?: SeriesId | SeriesId[],
   ) => {
-    if (!ids || (Array.isArray(ids) && ids.length === 0)) {
+    if (ids === undefined || (Array.isArray(ids) && ids.length === 0)) {
       return (
         processedSeries[seriesType]?.seriesOrder?.map(
           (seriesId) => processedSeries[seriesType]?.series[seriesId],
