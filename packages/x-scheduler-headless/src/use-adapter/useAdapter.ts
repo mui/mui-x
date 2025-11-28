@@ -31,13 +31,13 @@ export function diffIn(
 ): number {
   switch (unit) {
     case 'minutes': {
-      const msA = adapter.toJsDate(a).getTime();
-      const msB = adapter.toJsDate(b).getTime();
+      const msA = adapter.getTime(a);
+      const msB = adapter.getTime(b);
       return Math.floor((msA - msB) / MS_MIN);
     }
     case 'hours': {
-      const msA = adapter.toJsDate(a).getTime();
-      const msB = adapter.toJsDate(b).getTime();
+      const msA = adapter.getTime(a);
+      const msB = adapter.getTime(b);
       return Math.floor((msA - msB) / MS_HOUR);
     }
     case 'days': {
