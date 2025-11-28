@@ -35,7 +35,7 @@ export class EventBuilder {
 
   protected dataTimezone: TemporalTimezone = 'default';
 
-  protected renderTimezone: TemporalTimezone = 'default';
+  protected uiTimezone: TemporalTimezone = 'default';
 
   protected constructor(protected adapter: Adapter) {
     const id = crypto.randomUUID();
@@ -142,7 +142,7 @@ export class EventBuilder {
 
   /** Set the RENDER timezone for processed events. */
   withRenderTimezone(timezone: TemporalTimezone) {
-    this.renderTimezone = timezone;
+    this.uiTimezone = timezone;
     return this;
   }
 
@@ -256,7 +256,7 @@ export class EventBuilder {
    * Derives a processed event from the built event.
    */
   toProcessed() {
-    return processEvent(this.event, this.renderTimezone, this.adapter);
+    return processEvent(this.event, this.uiTimezone, this.adapter);
   }
 
   /**
