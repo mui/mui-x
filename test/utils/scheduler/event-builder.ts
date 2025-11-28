@@ -12,7 +12,6 @@ import {
   SchedulerEventSide,
 } from '@mui/x-scheduler-headless/models/event';
 import { processEvent } from '@mui/x-scheduler-headless/process-event';
-import { processDate } from '@mui/x-scheduler-headless/process-date';
 import { getWeekDayCode } from '@mui/x-scheduler-headless/utils/recurring-events';
 import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
 import { adapter as defaultAdapter } from './adapters';
