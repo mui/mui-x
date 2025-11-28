@@ -181,9 +181,11 @@ At the bottom, you can see one tick for the beginning and the middle of the day,
 ### Ordinal tick management
 
 Ordinal scales (`'band'` and `'point'`) display one tick per item by default.
-If your axis is about date, you can subsample them with the `timeOrdinalTicks` property.
+If you have a date axis, you can use the `timeOrdinalTicks` property to configure which ticks to show.
 
-It takes an array of frequencies at which ticks can be placed sorted from the largest to the smallest.
+It takes an array of frequencies at which ticks can be placed.
+Those frequencies must be sorted from the largest to the smallest.
+For example `['years', 'months', 'days']`.
 Visible ticks are selected according to those frequencies plus the the `tickNumber`.
 
 It can either be a subsample of built in frequencies: `'years'`, `'quarterly'`, `'months'`, `'biweekly'`, `'weeks'`, `'days'`, `'hours'`.
