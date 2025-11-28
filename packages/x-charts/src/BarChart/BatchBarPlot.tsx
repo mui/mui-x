@@ -159,8 +159,8 @@ function useOnItemClick(onItemClick: BatchBarPlotProps['onItemClick'] | undefine
       const xScale = xAxis.scale;
       const yScale = yAxis.scale;
 
-      const getX = (dataIndex: number) => xAxis.data?.[dataIndex];
-      const getY = (dataIndex: number) => aSeries.data?.[dataIndex];
+      const getX = (dataIndex: number) => xAxis.data?.[dataIndex] ?? 0;
+      const getY = (dataIndex: number) => aSeries.data?.[dataIndex] ?? 0;
 
       const closestPointIndex = findClosestPoints(
         flatbush,
