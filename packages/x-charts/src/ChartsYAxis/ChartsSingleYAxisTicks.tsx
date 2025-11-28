@@ -5,6 +5,8 @@ import { useIsHydrated } from '../hooks/useIsHydrated';
 import { useTicks } from '../hooks/useTicks';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 import { ChartsYAxisProps } from '../models/axis';
+import { TimeOrdinalTicks } from '../models/timeTicks';
+
 import { useChartContext } from '../context/ChartProvider';
 import { shortenLabels } from './shortenLabels';
 import { AXIS_LABEL_TICK_LABEL_GAP, TICK_LABEL_GAP } from './utilities';
@@ -12,13 +14,14 @@ import { useAxisTicksProps } from './useAxisTicksProps';
 
 interface ChartsSingleYAxisProps extends ChartsYAxisProps {
   axisLabelHeight: number;
+  timeOrdinalTicks?: TimeOrdinalTicks;
 }
 
 /**
  * @ignore - internal component.
  */
 function ChartsSingleYAxisTicks(inProps: ChartsSingleYAxisProps) {
-  const { axisLabelHeight } = inProps;
+  const { axisLabelHeight, timeOrdinalTicks } = inProps;
   const {
     yScale,
     defaultizedProps,
@@ -57,6 +60,7 @@ function ChartsSingleYAxisTicks(inProps: ChartsSingleYAxisProps) {
     tickLabelPlacement,
     tickInterval,
     direction: 'y',
+    timeOrdinalTicks,
   });
 
   /* If there's an axis title, the tick labels have less space to render  */
