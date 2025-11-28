@@ -259,20 +259,26 @@ export class EventBuilder {
    * Defaults to the event start date.
    */
   toOccurrence(occurrenceStartDate?: string): SchedulerEventOccurrence {
-    const event = this.event;
-    const processedEvent = processEvent(event, this.dataTimezone, this.adapter);
-    const effectiveDate = occurrenceStartDate
+    const rawStart = occurrenceStartDate
       ? this.adapter.date(occurrenceStartDate, this.dataTimezone)
-      : event.start;
-    const end = this.adapter.addMilliseconds(
-      effectiveDate,
-      processedEvent.end.timestamp - processedEvent.start.timestamp,
-    );
+      : this.event.start;
 
+    const baseProcessed = processEvent(this.event, this.dataTimezone, this.adapter);
+    const originalDurationMs = baseProcessed.end.timestamp - baseProcessed.start.timestamp;
+    const rawEnd = this.adapter.addMilliseconds(rawStart, originalDurationMs);
+
+    const occurrenceModel: SchedulerEvent = {
+      ...this.event,
+      start: rawStart,
+      end: rawEnd,
+    };
+
+    // 4) Procesar esa occurrence en la renderTimezone
+    const processed = processEvent(occurrenceModel, this.renderTimezone, this.adapter);
+
+    // 5) Devolver la occurrence ya en renderTimezone
     return {
-      ...processedEvent,
-      start: processDate(effectiveDate, this.adapter),
-      end: processDate(end, this.adapter),
+      ...processed,
       key: crypto.randomUUID(),
     };
   }
