@@ -159,10 +159,13 @@ function useOnItemClick(onItemClick: BatchBarPlotProps['onItemClick'] | undefine
       const xScale = xAxis.scale;
       const yScale = yAxis.scale;
 
-      const getX = (dataIndex: number) => xAxis.data?.[dataIndex] ?? 0;
-      const getY = (dataIndex: number) => aSeries.data?.[dataIndex] ?? 0;
+      const xData = aSeries.layout === 'horizontal' ? aSeries.data : xAxis.data;
+      const yData = aSeries.layout === 'horizontal' ? yAxis.data : aSeries.data;
 
-      const closestPointIndex = findClosestPoints(
+      const getX = (dataIndex: number) => xData?.[dataIndex] ?? 0;
+      const getY = (dataIndex: number) => yData?.[dataIndex] ?? 0;
+
+      const closestPoints = findClosestPoints(
         flatbush,
         getX,
         getY,
@@ -174,7 +177,11 @@ function useOnItemClick(onItemClick: BatchBarPlotProps['onItemClick'] | undefine
         yZoomEnd,
         svgPoint.x,
         svgPoint.y,
-      )[0];
+      );
+
+      console.log(seriesId, closestPoints);
+
+      const closestPointIndex = closestPoints[0];
 
       if (closestPointIndex === undefined) {
         continue;
@@ -199,6 +206,7 @@ function useOnItemClick(onItemClick: BatchBarPlotProps['onItemClick'] | undefine
           seriesId,
           distanceSq: distSq,
         };
+        console.log(closestPoint);
       }
     }
 
@@ -232,12 +240,28 @@ export function BatchBarPlot({
           xOrigin={series.xOrigin}
           yOrigin={series.yOrigin}
           skipAnimation={skipAnimation}
-          onClick={onClick}
         >
           <BatchBarSeriesPlot processedSeries={series} borderRadius={borderRadius} />
         </BarGroup>
       ))}
+      <DrawingAreaRect onClick={onClick} />
     </React.Fragment>
+  );
+}
+
+function DrawingAreaRect(props: React.HTMLAttributes<SVGRectElement>) {
+  const store = useStore();
+  const drawingArea = useSelector(store, selectorChartDrawingArea);
+
+  return (
+    <rect
+      x={drawingArea.left}
+      y={drawingArea.top}
+      width={drawingArea.width}
+      height={drawingArea.height}
+      fill="transparent"
+      {...props}
+    />
   );
 }
 
@@ -347,16 +371,13 @@ function BarGroup({ skipAnimation, layout, xOrigin, yOrigin, ...props }: BarGrou
   return <AnimatedGroup {...props} layout={layout} xOrigin={xOrigin} yOrigin={yOrigin} />;
 }
 
-function AnimatedGroup({
-  children,
-  layout,
-  xOrigin,
-  yOrigin,
-}: React.PropsWithChildren<{
+interface AnimatedGroupProps extends React.HTMLAttributes<SVGGElement> {
   layout: 'horizontal' | 'vertical' | undefined;
   xOrigin: number;
   yOrigin: number;
-}>) {
+}
+
+function AnimatedGroup({ children, layout, xOrigin, yOrigin, ...props }: AnimatedGroupProps) {
   const store = useStore();
   const drawingArea = useSelector(store, selectorChartDrawingArea);
   const clipPathId = useId();
@@ -452,7 +473,9 @@ function AnimatedGroup({
   return (
     <React.Fragment>
       <clipPath id={clipPathId}>{animateChildren}</clipPath>
-      <PathGroup clipPath={`url(#${clipPathId})`}>{children}</PathGroup>
+      <PathGroup clipPath={`url(#${clipPathId})`} {...props}>
+        {children}
+      </PathGroup>
     </React.Fragment>
   );
 }
