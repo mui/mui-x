@@ -1,12 +1,14 @@
 import { type ChartsXAxisProps, type ChartsYAxisProps, type ComputedAxis } from '../models/axis';
 import getColor from './seriesConfig/bar/getColor';
-import { type ChartDrawingArea, useChartId, useXAxes, useYAxes } from '../hooks';
+import { useXAxes, useYAxes } from '../hooks/useAxis';
 import { type MaskData, type ProcessedBarData, type ProcessedBarSeriesData } from './types';
 import { checkBarChartScaleErrors } from './checkBarChartScaleErrors';
 import { useBarSeriesContext } from '../hooks/useBarSeries';
 import { type SeriesProcessorResult } from '../internals/plugins/models/seriesConfig/seriesProcessor.types';
 import { type ComputedAxisConfig } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxis.types';
 import { getBarDimensions } from '../internals/getBarDimensions';
+import { type ChartDrawingArea } from '../hooks/useDrawingArea';
+import { useChartId } from '../hooks/useChartId';
 
 export function useBarPlotData(
   drawingArea: ChartDrawingArea,
