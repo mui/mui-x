@@ -45,9 +45,9 @@ export function useAxisTicksProps(inProps: ChartsXAxisProps) {
     additionalProps: {
       style: {
         ...theme.typography.caption,
+        textAnchor: isRtl ? invertTextAnchor(defaultTextAnchor) : defaultTextAnchor,
         fontSize: 12,
         lineHeight: 1.25,
-        textAnchor: isRtl ? invertTextAnchor(defaultTextAnchor) : defaultTextAnchor,
         dominantBaseline: defaultDominantBaseline,
         ...tickLabelStyle,
       },

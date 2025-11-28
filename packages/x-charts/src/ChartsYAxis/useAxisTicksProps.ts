@@ -29,8 +29,6 @@ export function useAxisTicksProps(inProps: ChartsYAxisProps) {
 
   const positionSign = position === 'right' ? 1 : -1;
 
-  const tickFontSize = typeof tickLabelStyle?.fontSize === 'number' ? tickLabelStyle.fontSize : 12;
-
   const Tick = slots?.axisTick ?? 'line';
   const TickLabel = slots?.axisTickLabel ?? ChartsText;
 
@@ -47,8 +45,9 @@ export function useAxisTicksProps(inProps: ChartsYAxisProps) {
     additionalProps: {
       style: {
         ...theme.typography.caption,
-        fontSize: tickFontSize,
         textAnchor: isRtl ? invertTextAnchor(defaultTextAnchor) : defaultTextAnchor,
+        fontSize: 12,
+        lineHeight: 1.25,
         dominantBaseline: defaultDominantBaseline,
         ...tickLabelStyle,
       },
