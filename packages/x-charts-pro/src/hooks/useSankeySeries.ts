@@ -54,7 +54,7 @@ export function useSankeySeriesContext(): UseSankeySeriesContextReturnValue {
 }
 /**
  * Get access to the sankey layout.
- * @returns {SankeyLayout | undefined} the sankey series
+ * @returns {SankeyLayout | undefined} the sankey layout
  */
 export function useSankeyLayout(): SankeyLayout | undefined {
   const store = useStore();
