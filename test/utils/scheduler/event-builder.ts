@@ -8,6 +8,7 @@ import {
   SchedulerEvent,
   SchedulerEventCreationProperties,
   SchedulerEventId,
+  SchedulerEventOccurrence,
   SchedulerEventSide,
 } from '@mui/x-scheduler-headless/models/event';
 import { processEvent } from '@mui/x-scheduler-headless/process-event';
@@ -250,6 +251,34 @@ export class EventBuilder {
    */
   build(): SchedulerEvent {
     return this.event;
+  }
+
+  /**
+   * Derives a SchedulerEventOccurrence from the built event.
+   * @param occurrenceStartDate Start date of the recurrence occurrence.
+   * Defaults to the event start date.
+   */
+  toOccurrence(occurrenceStartDate?: string): SchedulerEventOccurrence {
+    const rawStart = occurrenceStartDate
+      ? this.adapter.date(occurrenceStartDate, this.dataTimezone)
+      : this.event.start;
+
+    const baseProcessed = processEvent(this.event, this.dataTimezone, this.adapter);
+    const originalDurationMs = baseProcessed.end.timestamp - baseProcessed.start.timestamp;
+    const rawEnd = this.adapter.addMilliseconds(rawStart, originalDurationMs);
+
+    const occurrenceModel: SchedulerEvent = {
+      ...this.event,
+      start: rawStart,
+      end: rawEnd,
+    };
+
+    const processed = processEvent(occurrenceModel, this.uiTimezone, this.adapter);
+
+    return {
+      ...processed,
+      key: crypto.randomUUID(),
+    };
   }
 
   /**
