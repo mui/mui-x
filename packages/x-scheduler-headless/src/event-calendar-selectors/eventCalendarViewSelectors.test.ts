@@ -37,7 +37,7 @@ describe('eventCalendarViewSelectors', () => {
         views: ['week', 'month'],
       });
       const hasDayView = eventCalendarViewSelectors.hasDayView(state);
-      expect(hasDayView).toBe(false);
+      expect(hasDayView).to.equal(false);
     });
   });
 });
