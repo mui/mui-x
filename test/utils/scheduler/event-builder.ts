@@ -2,9 +2,11 @@ import {
   SchedulerResourceId,
   RecurringEventPresetKey,
   RecurringEventRecurrenceRule,
+  SchedulerValidDate,
 } from '@mui/x-scheduler-headless/models';
 import {
   SchedulerEvent,
+  SchedulerEventCreationProperties,
   SchedulerEventId,
   SchedulerEventOccurrence,
   SchedulerEventSide,
@@ -146,8 +148,8 @@ export class EventBuilder {
   /**
    * Create a single-day timed event starting at `start` with the given duration (minutes).
    */
-  singleDay(start: string, durationMinutes = 60) {
-    const startDate = this.adapter.date(start, 'default');
+  singleDay(start: string | SchedulerValidDate, durationMinutes = 60) {
+    const startDate = typeof start === 'string' ? this.adapter.date(start, 'default') : start;
     const endDate = this.adapter.addMinutes(startDate, durationMinutes);
     this.event.start = startDate;
     this.event.end = endDate;
@@ -220,7 +222,7 @@ export class EventBuilder {
    * @param occurrenceStartDate Start date of the recurrence occurrence.
    * Defaults to the event start date.
    */
-  buildOccurrence(occurrenceStartDate?: string): SchedulerEventOccurrence {
+  toOccurrence(occurrenceStartDate?: string): SchedulerEventOccurrence {
     const event = this.event;
     const processedEvent = processEvent(event, this.adapter);
     const effectiveDate = occurrenceStartDate
@@ -244,5 +246,13 @@ export class EventBuilder {
    */
   toProcessed() {
     return processEvent(this.event, this.adapter);
+  }
+
+  /**
+   * Derives a SchedulerEventCreationProperties from the built event.
+   */
+  toCreationProperties(): SchedulerEventCreationProperties {
+    const { id, ...rest } = this.event;
+    return rest;
   }
 }

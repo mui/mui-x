@@ -1,12 +1,8 @@
 import { spy } from 'sinon';
 import { adapter, EventBuilder } from 'test/utils/scheduler';
-import {
-  SchedulerEvent,
-  SchedulerEventModelStructure,
-  SchedulerValidDate,
-} from '@mui/x-scheduler-headless/models';
+import { SchedulerEventModelStructure, SchedulerValidDate } from '@mui/x-scheduler-headless/models';
 import { processDate } from '@mui/x-scheduler-headless/process-date';
-import { buildEvent, storeClasses, getIds } from './utils';
+import { storeClasses } from './utils';
 import { schedulerEventSelectors } from '../../../scheduler-selectors';
 
 storeClasses.forEach((storeClass) => {
@@ -234,41 +230,25 @@ storeClasses.forEach((storeClass) => {
     describe('Method: updateEvent', () => {
       it('should replace matching id and emit onEventsChange with the updated events', () => {
         const onEventsChange = spy();
-        const events = [
-          buildEvent(
-            '1',
-            'Event 1',
-            adapter.date('2025-07-01T09:00:00Z', 'default'),
-            adapter.date('2025-07-01T10:00:00Z', 'default'),
-          ),
-          buildEvent(
-            '2',
-            'Event 2',
-            adapter.date('2025-07-01T11:00:00Z', 'default'),
-            adapter.date('2025-07-01T12:00:00Z', 'default'),
-          ),
-        ];
+        const event1 = EventBuilder.new().build();
+        const event2 = EventBuilder.new().build();
 
-        const store = new storeClass.Value({ events, onEventsChange }, adapter);
+        const store = new storeClass.Value({ events: [event1, event2], onEventsChange }, adapter);
 
-        const updatedEvent = buildEvent(
-          '2',
-          'Event 2 updated',
-          adapter.date('2025-07-01T11:30:00Z', 'default'),
-          adapter.date('2025-07-01T12:30:00Z', 'default'),
-          {
-            description: 'Event 2 description',
-            allDay: false,
-          },
-        );
-
-        store.updateEvent(updatedEvent);
+        store.updateEvent({
+          id: event2.id,
+          title: 'Event 2 updated',
+          description: 'Event 2 description',
+          allDay: false,
+          start: adapter.date('2025-07-01T11:30:00Z', 'default'),
+          end: adapter.date('2025-07-01T12:30:00Z', 'default'),
+        });
 
         expect(onEventsChange.calledOnce).to.equal(true);
         const updatedEvents = onEventsChange.lastCall.firstArg;
 
         expect(updatedEvents).to.have.length(2);
-        expect(updatedEvents[0].title).to.equal('Event 1');
+        expect(updatedEvents[0].title).to.equal(event1.title);
         expect(updatedEvents[1].title).to.equal('Event 2 updated');
         expect(updatedEvents[1].description).to.equal('Event 2 description');
         expect(updatedEvents[1].start).toEqualDateTime(
@@ -283,75 +263,41 @@ storeClasses.forEach((storeClass) => {
     describe('Method: deleteEvent', () => {
       it('should remove by id and call onEventsChange with the updated events', () => {
         const onEventsChange = spy();
-        const events = [
-          buildEvent(
-            '1',
-            'Event 1',
-            adapter.date('2025-07-01T09:00:00Z', 'default'),
-            adapter.date('2025-07-01T10:00:00Z', 'default'),
-          ),
-          buildEvent(
-            '2',
-            'Event 2',
-            adapter.date('2025-07-01T11:00:00Z', 'default'),
-            adapter.date('2025-07-01T12:00:00Z', 'default'),
-          ),
-          buildEvent(
-            '3',
-            'Event 3',
-            adapter.date('2025-07-01T13:00:00Z', 'default'),
-            adapter.date('2025-07-01T14:00:00Z', 'default'),
-          ),
-        ];
+        const event1 = EventBuilder.new().build();
+        const event2 = EventBuilder.new().build();
+        const event3 = EventBuilder.new().build();
 
-        const store = new storeClass.Value({ events, onEventsChange }, adapter);
-        store.deleteEvent('2');
+        const store = new storeClass.Value(
+          {
+            events: [event1, event2, event3],
+            onEventsChange,
+          },
+          adapter,
+        );
+        store.deleteEvent(event2.id);
 
         expect(onEventsChange.calledOnce).to.equal(true);
         const updatedEvents = onEventsChange.lastCall.firstArg;
-        expect(updatedEvents.map((event) => event.id)).to.deep.equal(['1', '3']);
+        expect(updatedEvents).to.deep.equal([event1, event3]);
       });
     });
 
     describe('Method: createEvent', () => {
       it('should append the new event and emit onEventsChange with the updated list', () => {
         const onEventsChange = spy();
-        const existing = [
-          buildEvent(
-            '1',
-            'Event 1',
-            adapter.date('2025-07-01T09:00:00Z', 'default'),
-            adapter.date('2025-07-01T10:00:00Z', 'default'),
-          ),
-        ];
+        const event1 = EventBuilder.new().build();
 
-        const store = new storeClass.Value({ events: existing, onEventsChange }, adapter);
+        const store = new storeClass.Value({ events: [event1], onEventsChange }, adapter);
 
-        // TODO: When migrating to EventBuilder, add an EventBuilder.buildWithoutId() method to pass to store.createEvent()
-        const newEvent = buildEvent(
-          '2',
-          'New Event',
-          adapter.date('2025-07-01T11:00:00Z', 'default'),
-          adapter.date('2025-07-01T12:00:00Z', 'default'),
-          { description: 'New event description', allDay: true },
-        );
+        const newEvent = EventBuilder.new().toCreationProperties();
 
         const createdId = store.createEvent(newEvent);
 
         expect(onEventsChange.calledOnce).to.equal(true);
-        const created = onEventsChange.lastCall.firstArg.find(
-          (event: SchedulerEvent) => event.id === createdId,
-        );
-        expect(created.title).to.equal('New Event');
-        const updated = onEventsChange.lastCall.firstArg;
-        expect(getIds(updated)).to.deep.equal(['1', createdId]);
-
-        const appended = updated[1];
-        expect(appended.title).to.equal('New Event');
-        expect(appended.description).to.equal('New event description');
-        expect(appended.allDay).to.equal(true);
-        expect(appended.start).toEqualDateTime(adapter.date('2025-07-01T11:00:00Z', 'default'));
-        expect(appended.end).toEqualDateTime(adapter.date('2025-07-01T12:00:00Z', 'default'));
+        expect(onEventsChange.lastCall.firstArg).to.deep.equal([
+          event1,
+          { ...newEvent, id: createdId },
+        ]);
       });
     });
 
