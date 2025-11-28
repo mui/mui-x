@@ -173,6 +173,7 @@ export const schedulerEventSelectors = {
         return isResizableFromEventProperty;
       }
 
+      // TODO: Pre-process the resource, like we do for the event. That way we can compute this information only once.
       // Then check if the resource or any ancestor has the `areEventsResizable` property defined
       const resourceParentIdLookup = schedulerResourceSelectors.resourceParentIdLookup(state);
       let currentResourceId = processedEvent.resource;
