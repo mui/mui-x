@@ -6,7 +6,7 @@ import {
   SchedulerValidDate,
 } from '../../models';
 import { Adapter, diffIn } from '../../use-adapter';
-import { getDateKey, mergeDateAndTime } from '../date-utils';
+import { getDateKey, getOccurrenceEnd, mergeDateAndTime } from '../date-utils';
 import {
   estimateOccurrencesUpTo,
   getEventDurationInDays,
@@ -32,7 +32,6 @@ export function getRecurringEventOccurrencesForVisibleDays(
   const occurrences: SchedulerEventOccurrence[] = [];
 
   const endGuard = buildEndGuard(rule, event.start.value, adapter);
-  const durationMinutes = diffIn(adapter, event.end.value, event.start.value, 'minutes');
 
   const eventDuration = getEventDurationInDays(adapter, event);
   const scanStart = adapter.addDays(start, -(eventDuration - 1));
@@ -51,13 +50,8 @@ export function getRecurringEventOccurrencesForVisibleDays(
       continue;
     }
 
-    const occurrenceStart = event.allDay
-      ? adapter.startOfDay(day)
-      : mergeDateAndTime(adapter, day, event.start.value);
-
-    const occurrenceEnd = event.allDay
-      ? adapter.endOfDay(adapter.addDays(occurrenceStart, eventDuration - 1))
-      : adapter.addMinutes(occurrenceStart, durationMinutes);
+    const occurrenceStart = mergeDateAndTime(adapter, day, event.start.value);
+    const occurrenceEnd = getOccurrenceEnd({ adapter, event, occurrenceStart });
 
     const key = `${event.id}::${getDateKey(occurrenceStart, adapter)}`;
 
