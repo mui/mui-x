@@ -2,9 +2,11 @@ import {
   SchedulerResourceId,
   RecurringEventPresetKey,
   RecurringEventRecurrenceRule,
+  SchedulerValidDate,
 } from '@mui/x-scheduler-headless/models';
 import {
   SchedulerEvent,
+  SchedulerEventCreationProperties,
   SchedulerEventId,
   SchedulerEventOccurrence,
   SchedulerEventSide,
@@ -12,8 +14,7 @@ import {
 import { processEvent } from '@mui/x-scheduler-headless/process-event';
 import { processDate } from '@mui/x-scheduler-headless/process-date';
 import { getWeekDayCode } from '@mui/x-scheduler-headless/utils/recurring-events';
-import { Adapter, diffIn } from '@mui/x-scheduler-headless/use-adapter';
-import { TemporalTimezone } from '@mui/x-scheduler-headless/base-ui-copy/types';
+import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
 import { adapter as defaultAdapter } from './adapters';
 
 export const DEFAULT_TESTING_VISIBLE_DATE_STR = '2025-07-03T00:00:00Z';
@@ -181,8 +182,9 @@ export class EventBuilder {
   /**
    * Create a single-day timed event starting at `start` with the given duration (minutes).
    */
-  singleDay(start: string, durationMinutes = 60) {
-    const startDate = this.adapter.date(start, this.dataTimezone);
+  singleDay(start: string | SchedulerValidDate, durationMinutes = 60) {
+    const startDate =
+      typeof start === 'string' ? this.adapter.date(start, this.dataTimezone) : start;
     const endDate = this.adapter.addMinutes(startDate, durationMinutes);
     this.event.start = startDate;
     this.event.end = endDate;
@@ -256,21 +258,37 @@ export class EventBuilder {
    * @param occurrenceStartDate Start date of the recurrence occurrence.
    * Defaults to the event start date.
    */
-  buildOccurrence(occurrenceStartDate?: string): SchedulerEventOccurrence {
+  toOccurrence(occurrenceStartDate?: string): SchedulerEventOccurrence {
     const event = this.event;
+    const processedEvent = processEvent(event, this.dataTimezone, this.adapter);
     const effectiveDate = occurrenceStartDate
       ? this.adapter.date(occurrenceStartDate, this.dataTimezone)
       : event.start;
-    const duration = diffIn(this.adapter, event.end, event.start, 'minutes');
-    const end = this.adapter.addMinutes(effectiveDate, duration);
-    const key = crypto.randomUUID();
-    const processedEvent = processEvent(event, this.renderTimezone, this.adapter);
+    const end = this.adapter.addMilliseconds(
+      effectiveDate,
+      processedEvent.end.timestamp - processedEvent.start.timestamp,
+    );
 
     return {
       ...processedEvent,
       start: processDate(effectiveDate, this.adapter),
       end: processDate(end, this.adapter),
-      key,
+      key: crypto.randomUUID(),
     };
+  }
+
+  /**
+   * Derives a processed event from the built event.
+   */
+  toProcessed() {
+    return processEvent(this.event, this.renderTimezone, this.adapter);
+  }
+
+  /**
+   * Derives a SchedulerEventCreationProperties from the built event.
+   */
+  toCreationProperties(): SchedulerEventCreationProperties {
+    const { id, ...rest } = this.event;
+    return rest;
   }
 }

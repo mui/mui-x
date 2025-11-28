@@ -1,10 +1,9 @@
-import { adapter, adapterFr, createProcessedEvent } from 'test/utils/scheduler';
+import { adapter, adapterFr, EventBuilder } from 'test/utils/scheduler';
 import {
   RecurringEventWeekDayCode,
   RecurringEventByDayValue,
   RecurringEventRecurrenceRule,
   SchedulerValidDate,
-  SchedulerEvent,
 } from '@mui/x-scheduler-headless/models';
 import {
   countMonthlyOccurrencesUpToExact,
@@ -70,61 +69,32 @@ describe('recurring-events/internal-utils', () => {
   });
 
   describe('getEventDurationInDays', () => {
-    const createEvent = (overrides: Partial<SchedulerEvent>) =>
-      createProcessedEvent(
-        {
-          id: 'event-1',
-          title: 'Test Event',
-          start: adapter.date('2025-01-01T09:00:00Z', 'default'),
-          end: adapter.date('2025-01-01T10:00:00Z', 'default'),
-          allDay: false,
-          ...overrides,
-        },
-        'default',
-      );
-
     it('returns inclusive day count for non-allDay multi-day event', () => {
-      const event = createEvent({
-        end: adapter.date('2025-01-03T18:00:00Z', 'default'),
-      });
+      const event = EventBuilder.new()
+        .span('2025-01-01T09:00:00Z', '2025-01-03T18:00:00Z')
+        .toProcessed();
       expect(getEventDurationInDays(adapter, event)).to.equal(3);
     });
 
     it('returns 1 for allDay event on same calendar day', () => {
-      const event = createEvent({
-        start: adapter.date('2025-02-10T00:00:00Z', 'default'),
-        end: adapter.date('2025-02-10T23:59:59Z', 'default'),
-        allDay: true,
-      });
+      const event = EventBuilder.new().fullDay('2025-02-10').toProcessed();
       expect(getEventDurationInDays(adapter, event)).to.equal(1);
     });
 
-    it('returns inclusive day count for allDay multi-day event', () => {
-      const event = createEvent({
-        start: adapter.date('2025-01-01T00:00:00Z', 'default'),
-        end: adapter.date('2025-01-04T23:59:59Z', 'default'),
-        allDay: true,
-      });
+    it('returns inclusive day count for multi-day event', () => {
+      const event = EventBuilder.new().span('2025-01-01', '2025-01-04').toProcessed();
       // Jan 1,2,3,4 => 4 days
       expect(getEventDurationInDays(adapter, event)).to.equal(4);
     });
 
     it('handles month boundary correctly', () => {
-      const event = createEvent({
-        start: adapter.date('2025-01-30T00:00:00Z', 'default'),
-        end: adapter.date('2025-02-02T23:59:59Z', 'default'),
-        allDay: true,
-      });
+      const event = EventBuilder.new().span('2025-01-30', '2025-02-02').toProcessed();
       // Jan 30,31, Feb 1,2 => 4 days
       expect(getEventDurationInDays(adapter, event)).to.equal(4);
     });
 
     it('handles leap day span', () => {
-      const event = createEvent({
-        start: adapter.date('2024-02-28T00:00:00Z', 'default'),
-        end: adapter.date('2024-03-01T23:59:59Z', 'default'),
-        allDay: true,
-      });
+      const event = EventBuilder.new().span('2024-02-28', '2024-03-01').toProcessed();
       // Feb 28, Feb 29, Mar 1 => 3 days
       expect(getEventDurationInDays(adapter, event)).to.equal(3);
     });
