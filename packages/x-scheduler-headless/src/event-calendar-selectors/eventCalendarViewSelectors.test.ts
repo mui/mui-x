@@ -9,7 +9,7 @@ describe('eventCalendarViewSelectors', () => {
         view: 'month',
       });
       const view = eventCalendarViewSelectors.view(state);
-      expect(view).toBe('month');
+      expect(view).to.equal('month');
     });
   });
   describe('views', () => {
