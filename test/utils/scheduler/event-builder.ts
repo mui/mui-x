@@ -8,7 +8,6 @@ import {
   SchedulerEvent,
   SchedulerEventCreationProperties,
   SchedulerEventId,
-  SchedulerEventOccurrence,
   SchedulerEventSide,
 } from '@mui/x-scheduler-headless/models/event';
 import { processEvent } from '@mui/x-scheduler-headless/process-event';
