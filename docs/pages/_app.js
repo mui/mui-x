@@ -197,6 +197,23 @@ function loadDependencies() {
   );
 }
 
+if (typeof window !== 'undefined' && process.env.NODE_ENV === 'production') {
+  // eslint-disable-next-line no-console
+  console.log(
+    `%c
+
+███╗   ███╗ ██╗   ██╗ ██████╗
+████╗ ████║ ██║   ██║   ██╔═╝
+██╔████╔██║ ██║   ██║   ██║
+██║╚██╔╝██║ ██║   ██║   ██║
+██║ ╚═╝ ██║ ╚██████╔╝ ██████╗
+╚═╝     ╚═╝  ╚═════╝  ╚═════╝
+
+Tip: you can access the documentation \`theme\` object directly in the console.
+`,
+    'font-family:monospace;color:#1976d2;font-size:12px;',
+  );
+}
 function AppWrapper(props) {
   const { children, emotionCache, pageProps } = props;
 
