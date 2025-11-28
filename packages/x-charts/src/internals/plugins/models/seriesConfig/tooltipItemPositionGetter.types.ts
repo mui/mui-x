@@ -5,18 +5,18 @@ import type {
 import {
   ChartsRotationAxisProps,
   ChartsRadiusAxisProps,
-  PolarAxisDefaultized,
   ComputedXAxis,
   ComputedYAxis,
 } from '../../../../models/axis';
 import { ChartDrawingArea } from '../../../../hooks/useDrawingArea';
 import { ProcessedSeries } from '../../corePlugins/useChartSeries';
+import { ComputeResult } from '../../featurePlugins/useChartPolarAxis/computeAxisValue';
 
 export interface TooltipPositionGetterAxesConfig {
   x?: ComputedXAxis;
   y?: ComputedYAxis;
-  rotation?: PolarAxisDefaultized<any, any, ChartsRotationAxisProps>;
-  radius?: PolarAxisDefaultized<any, any, ChartsRadiusAxisProps>;
+  rotationAxes?: ComputeResult<ChartsRotationAxisProps>;
+  radiusAxes?: ComputeResult<ChartsRadiusAxisProps>;
 }
 
 export type TooltipItemPositionGetter<TSeriesType extends ChartSeriesType> = (params: {
