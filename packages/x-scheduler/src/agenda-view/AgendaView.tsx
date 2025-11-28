@@ -11,6 +11,7 @@ import { useExtractEventCalendarParameters } from '@mui/x-scheduler-headless/use
 import { eventCalendarAgendaSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-headless/use-event-occurrences-grouped-by-day';
 import { AGENDA_VIEW_DAYS_AMOUNT } from '@mui/x-scheduler-headless/constants';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { AgendaViewProps, StandaloneAgendaViewProps } from './AgendaView.types';
 import { EventPopoverProvider, EventPopoverTrigger } from '../internals/components/event-popover';
 import { EventItem } from '../internals/components/event/event-item/EventItem';
@@ -19,7 +20,10 @@ import '../index.css';
 
 const AGENDA_VIEW_CONFIG: EventCalendarViewConfig = {
   siblingVisibleDateGetter: ({ state, delta }) =>
-    state.adapter.addDays(state.visibleDate, AGENDA_VIEW_DAYS_AMOUNT * delta),
+    state.adapter.addDays(
+      schedulerOtherSelectors.visibleDate(state),
+      AGENDA_VIEW_DAYS_AMOUNT * delta,
+    ),
   visibleDaysSelector: eventCalendarAgendaSelectors.visibleDays,
 };
 

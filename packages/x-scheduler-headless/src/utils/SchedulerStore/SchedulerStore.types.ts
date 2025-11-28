@@ -132,8 +132,13 @@ export interface SchedulerState<TEvent extends object = any> {
   eventCreation: Partial<SchedulerEventCreationConfig> | boolean;
   /**
    * The timezone used by the scheduler.
-   * Typically an IANA timezone name (e.g. "America/New_York", "Europe/Paris")
-   * or "default" to use the adapter's default timezone.
+   *
+   * Accepts any valid IANA timezone name
+   * (for example "America/New_York", "Europe/Paris", "Asia/Tokyo"),
+   * or keywords understood by the adapter, such as
+   * "default" (use the adapter's default timezone),
+   * "locale" (use the user's current locale timezone),
+   * or "UTC".
    */
   timezone: TemporalTimezone;
 }
@@ -229,8 +234,14 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
   eventCreation?: Partial<SchedulerEventCreationConfig> | boolean;
   /**
    * The timezone used by the scheduler.
-   * Typically an IANA timezone name (e.g. "America/New_York", "Europe/Paris")
-   * or "default" to use the adapter's default timezone.
+   *
+   * Accepts any valid IANA timezone name
+   * (for example "America/New_York", "Europe/Paris", "Asia/Tokyo"),
+   * or keywords understood by the adapter, such as
+   * "default" (use the adapter's default timezone),
+   * "locale" (use the user's current locale timezone),
+   * or "UTC".
+   *
    * @default "default"
    */
   timezone?: TemporalTimezone;
