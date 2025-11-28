@@ -10,11 +10,8 @@ export function useElementPositionInCollection(
   const adapter = useAdapter();
 
   return React.useMemo(() => {
-    // TODO: Avoid JS date conversion
-    const getTimestamp = (date: TemporalSupportedObject) => adapter.toJsDate(date).getTime();
-
-    const collectionStartTimestamp = getTimestamp(collectionStart);
-    const collectionEndTimestamp = getTimestamp(collectionEnd);
+    const collectionStartTimestamp = adapter.getTime(collectionStart);
+    const collectionEndTimestamp = adapter.getTime(collectionEnd);
     const collectionDurationMs = collectionEndTimestamp - collectionStartTimestamp;
     const startTimestamp = Math.max(start.timestamp, collectionStartTimestamp);
     const endTimestamp = Math.min(end.timestamp, collectionEndTimestamp);

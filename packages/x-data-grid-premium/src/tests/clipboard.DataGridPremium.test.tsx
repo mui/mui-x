@@ -721,6 +721,62 @@ describe('<DataGridPremium /> - Clipboard', () => {
       expect(getColumnValues(4)).to.deep.equal(['4.0', '4.0', '4.9']);
     });
 
+    it('should respect the cell editable state when pasting', async () => {
+      const rows = [
+        { id: 0, brand: 'Nike', category: 'Shoes', price: '$120', rating: '4.0' },
+        { id: 1, brand: 'Adidas', category: 'Sneakers', price: '$100', rating: '4.2' },
+        { id: 2, brand: 'Puma', category: 'Shoes', price: '$90', rating: '4.9' },
+      ];
+      const columns: GridColDef[] = [
+        { field: 'id' },
+        { field: 'brand', editable: true },
+        { field: 'category', editable: true },
+        { field: 'price', editable: true },
+        { field: 'rating', editable: false },
+      ];
+
+      function Component() {
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPremium
+              columns={columns}
+              rows={rows}
+              rowSelection={false}
+              cellSelection
+              disableVirtualization
+              isCellEditable={(params) => {
+                // Make price cell non-editable for row with id 1 via isCellEditable
+                if (params.field === 'price' && params.id === 1) {
+                  return false;
+                }
+                return true;
+              }}
+            />
+          </div>
+        );
+      }
+
+      const { user } = render(<Component />);
+
+      const cell = getCell(1, 0);
+      await act(() => cell.focus());
+      await user.click(cell);
+
+      fireEvent.keyDown(cell, { key: 'Shift' });
+      fireEvent.click(getCell(1, 4), { shiftKey: true });
+
+      paste(cell, ['0', 'Nike', 'Shoes', '$120', '4.0'].join('\t'));
+
+      await waitFor(() => {
+        expect(getColumnValues(1)).to.deep.equal(['Nike', 'Nike', 'Puma']);
+      });
+      expect(getColumnValues(2)).to.deep.equal(['Shoes', 'Shoes', 'Shoes']);
+      // Price should not be updated for row 1 due to isCellEditable returning false
+      expect(getColumnValues(3)).to.deep.equal(['$120', '$100', '$90']);
+      // Rating should not be updated because column is not editable
+      expect(getColumnValues(4)).to.deep.equal(['4.0', '4.2', '4.9']);
+    });
+
     it('should call `processRowUpdate` with each row impacted by the paste', async () => {
       const processRowUpdateSpy = spy((newRow) => {
         return newRow;

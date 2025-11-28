@@ -14,8 +14,7 @@ export function useCalendarGridGetDateFromPositionInColumn(
   return React.useCallback(
     (clientY: number): TemporalSupportedObject => {
       const offsetMs = getCursorPositionInElementMs({ input: { clientY }, elementRef });
-      const offsetMin = Math.floor(offsetMs / 60000);
-      const anchor = adapter.addMinutes(start, offsetMin);
+      const anchor = adapter.addMilliseconds(start, offsetMs);
       return adapter.addMinutes(anchor, -(adapter.getMinutes(anchor) % snapMinutes));
     },
     [adapter, getCursorPositionInElementMs, elementRef, snapMinutes, start],

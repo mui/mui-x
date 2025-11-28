@@ -53,11 +53,7 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
   // Feature hooks
   const getSharedDragData: TimelineEventContext['getSharedDragData'] = useStableCallback(
     (input) => {
-      const offsetBeforeRowStart = Math.max(
-        adapter.toJsDate(rowStart).getTime() - start.timestamp,
-        0,
-      );
-
+      const offsetBeforeRowStart = Math.max(adapter.getTime(rowStart) - start.timestamp, 0);
       const event = schedulerEventSelectors.processedEvent(store.state, eventId)!;
 
       const originalOccurrence: SchedulerEventOccurrence = {

@@ -6,7 +6,7 @@ import { TemporalSupportedObject } from '../models';
 describe('useMonthList', () => {
   function testHook(date: TemporalSupportedObject, amount: number | 'end-of-year') {
     const { result } = renderHook(() => useMonthList());
-    return result.current({ date: adapter.date(date, 'default'), amount });
+    return result.current({ date, amount });
   }
 
   it('should throw an error when amount is a non positive number', () => {

@@ -1,4 +1,4 @@
-import { TemporalSupportedObject } from '../models';
+import { SchedulerProcessedEvent, TemporalSupportedObject } from '../models';
 import { Adapter } from '../use-adapter/useAdapter.types';
 
 export function mergeDateAndTime(
@@ -22,4 +22,21 @@ export function mergeDateAndTime(
  */
 export function getDateKey(day: TemporalSupportedObject, adapter: Adapter): string {
   return adapter.format(day, 'localizedNumericDate');
+}
+
+/**
+ * Gets the end date of an event occurrence based on its start date.
+ * For now, the occurrence always has the same duration as the original event, even when the DST applies between its start and the end.
+ */
+export function getOccurrenceEnd({
+  event,
+  occurrenceStart,
+  adapter,
+}: {
+  event: SchedulerProcessedEvent;
+  occurrenceStart: TemporalSupportedObject;
+  adapter: Adapter;
+}): TemporalSupportedObject {
+  const durationMs = adapter.getTime(event.end.value) - adapter.getTime(event.start.value);
+  return adapter.addMilliseconds(occurrenceStart, durationMs);
 }
