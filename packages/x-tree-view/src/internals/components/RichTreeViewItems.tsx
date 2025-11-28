@@ -16,7 +16,7 @@ const RichTreeViewItemsContext = React.createContext<
 
 const EMPTY_ARRAY: any[] = [];
 const selectorNoChildren = () => EMPTY_ARRAY;
-const selectorChildrenIdsNull = (state) => itemsSelectors.itemOrderedChildrenIds(state, null);
+const selectorChildrenIdsNull = (state: any) => itemsSelectors.itemOrderedChildrenIds(state, null);
 
 const WrappedTreeItem = React.memo(function WrappedTreeItem({
   itemSlot,
