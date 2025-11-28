@@ -272,7 +272,6 @@ function getMeasurementContainer() {
     measurementContainer.style.padding = '0';
     measurementContainer.style.margin = '0';
     measurementContainer.style.border = 'none';
-    measurementContainer.style.borderWidth = '0';
     measurementContainer.style.pointerEvents = 'none';
     measurementContainer.style.visibility = 'hidden';
     measurementContainer.style.contain = 'strict';
