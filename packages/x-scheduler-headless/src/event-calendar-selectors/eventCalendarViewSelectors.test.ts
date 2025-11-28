@@ -19,7 +19,7 @@ describe('eventCalendarViewSelectors', () => {
         views: ['day', 'week', 'month'],
       });
       const views = eventCalendarViewSelectors.views(state);
-      expect(views).toEqual(['day', 'week', 'month']);
+      expect(views).to.deep.equal(['day', 'week', 'month']);
     });
   });
   describe('hasDayView', () => {
