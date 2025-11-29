@@ -1,13 +1,13 @@
 import { createSelector } from '@base-ui-components/utils/store';
 import { TimelineState as State } from '../use-timeline';
-import { SchedulerResourceId, SchedulerValidDate } from '../models';
+import { SchedulerResourceId, TemporalSupportedObject } from '../models';
 
 export const timelineOccurrencePlaceholderSelectors = {
   placeholderInTimeRange: createSelector(
     (
       state: State,
-      start: SchedulerValidDate,
-      end: SchedulerValidDate,
+      start: TemporalSupportedObject,
+      end: TemporalSupportedObject,
       resourceId: SchedulerResourceId | null,
     ) => {
       if (

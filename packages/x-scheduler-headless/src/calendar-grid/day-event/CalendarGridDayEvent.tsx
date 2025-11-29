@@ -7,7 +7,7 @@ import { useButton } from '../../base-ui-copy/utils/useButton';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps, NonNativeButtonProps } from '../../base-ui-copy/utils/types';
 import { useDraggableEvent } from '../../utils/useDraggableEvent';
-import { SchedulerEventId, SchedulerEventOccurrence, SchedulerValidDate } from '../../models';
+import { SchedulerEventId, SchedulerEventOccurrence, TemporalSupportedObject } from '../../models';
 import { useAdapter, diffIn } from '../../use-adapter';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
 import {
@@ -165,12 +165,12 @@ export namespace CalendarGridDayEvent {
     eventId: SchedulerEventId;
     occurrenceKey: string;
     originalOccurrence: SchedulerEventOccurrence;
-    start: SchedulerValidDate;
-    end: SchedulerValidDate;
+    start: TemporalSupportedObject;
+    end: TemporalSupportedObject;
   }
 
   export interface DragData extends SharedDragData {
     source: 'CalendarGridDayEvent';
-    draggedDay: SchedulerValidDate;
+    draggedDay: TemporalSupportedObject;
   }
 }

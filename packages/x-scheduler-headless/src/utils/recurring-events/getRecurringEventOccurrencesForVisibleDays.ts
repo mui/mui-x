@@ -3,7 +3,7 @@ import {
   RecurringEventRecurrenceRule,
   SchedulerEventOccurrence,
   SchedulerProcessedEvent,
-  SchedulerValidDate,
+  TemporalSupportedObject,
 } from '../../models';
 import { Adapter, diffIn } from '../../use-adapter';
 import { getDateKey, getOccurrenceEnd, mergeDateAndTime } from '../date-utils';
@@ -24,8 +24,8 @@ import {
  */
 export function getRecurringEventOccurrencesForVisibleDays(
   event: SchedulerProcessedEvent,
-  start: SchedulerValidDate,
-  end: SchedulerValidDate,
+  start: TemporalSupportedObject,
+  end: TemporalSupportedObject,
   adapter: Adapter,
 ): SchedulerEventOccurrence[] {
   const rule = event.rrule!;
@@ -77,9 +77,9 @@ export function getRecurringEventOccurrencesForVisibleDays(
  */
 export function buildEndGuard(
   rule: RecurringEventRecurrenceRule,
-  seriesStart: SchedulerValidDate,
+  seriesStart: TemporalSupportedObject,
   adapter: Adapter,
-): (date: SchedulerValidDate) => boolean {
+): (date: TemporalSupportedObject) => boolean {
   const hasCount = typeof rule.count === 'number' && rule.count > 0;
   const hasUntil = !!rule.until;
 
@@ -124,7 +124,7 @@ export function buildEndGuard(
  */
 export function matchesRecurrence(
   rule: RecurringEventRecurrenceRule,
-  date: SchedulerValidDate,
+  date: TemporalSupportedObject,
   adapter: Adapter,
   event: SchedulerProcessedEvent,
 ): boolean {

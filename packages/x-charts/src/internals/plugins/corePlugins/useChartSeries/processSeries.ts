@@ -1,8 +1,9 @@
+import { ChartDrawingArea } from '../../../../hooks/useDrawingArea';
 import { SeriesId } from '../../../../models/seriesType/common';
 import { AllSeriesType } from '../../../../models/seriesType';
 import { ChartSeriesType, DatasetType } from '../../../../models/seriesType/config';
-import { ChartSeriesConfig } from '../../models/seriesConfig';
-import { DefaultizedSeriesGroups, ProcessedSeries } from './useChartSeries.types';
+import { ChartSeriesConfig, SeriesProcessorParams } from '../../models/seriesConfig';
+import { DefaultizedSeriesGroups, ProcessedSeries, SeriesLayout } from './useChartSeries.types';
 
 /**
  * This method groups series by type and adds defaultized values such as the ids and colors.
@@ -21,7 +22,7 @@ export const defaultizeSeries = <TSeriesType extends ChartSeriesType>({
   seriesConfig: ChartSeriesConfig<TSeriesType>;
 }): DefaultizedSeriesGroups<TSeriesType> => {
   // Group series by type
-  const seriesGroups: { [type in ChartSeriesType]?: any } = {};
+  const seriesGroups: { [type in ChartSeriesType]?: SeriesProcessorParams<type> | undefined } = {};
 
   series.forEach(<T extends TSeriesType>(seriesData: AllSeriesType<T>, seriesIndex: number) => {
     const seriesWithDefaultValues = seriesConfig[seriesData.type as T].getSeriesWithDefaultValues(
@@ -44,7 +45,7 @@ export const defaultizeSeries = <TSeriesType extends ChartSeriesType>({
     seriesGroups[seriesData.type]!.seriesOrder.push(id);
   });
 
-  return seriesGroups as DefaultizedSeriesGroups<TSeriesType>;
+  return seriesGroups;
 };
 
 /**
@@ -64,12 +65,46 @@ export const applySeriesProcessors = <TSeriesType extends ChartSeriesType>(
 
   // Apply formatter on a type group
   (Object.keys(seriesConfig) as TSeriesType[]).forEach((type) => {
-    const group = (defaultizedSeries as any)[type];
+    const group = defaultizedSeries[type];
     if (group !== undefined) {
-      (processedSeries as any)[type] =
-        seriesConfig[type]?.seriesProcessor?.(group, dataset) ?? group;
+      processedSeries[type] = seriesConfig[type]?.seriesProcessor?.(group, dataset) ?? group;
     }
   });
 
   return processedSeries;
+};
+
+/**
+ * Applies series processors with drawing area to series if defined.
+ * @param processedSeries The processed series groups
+ * @param seriesConfig The series configuration
+ * @param drawingArea The drawing area
+ * @returns Processed series with all transformations applied
+ */
+export const applySeriesLayout = <TSeriesType extends ChartSeriesType>(
+  processedSeries: ProcessedSeries<TSeriesType>,
+  seriesConfig: ChartSeriesConfig<TSeriesType>,
+  drawingArea: ChartDrawingArea,
+): SeriesLayout<TSeriesType> => {
+  let processingDetected = false;
+  const seriesLayout: SeriesLayout<TSeriesType> = {};
+
+  // Apply processors on series type per group
+  (Object.keys(processedSeries) as TSeriesType[]).forEach((type) => {
+    const processor = seriesConfig[type]?.seriesLayout;
+    const thisSeries = processedSeries[type];
+    if (processor !== undefined && thisSeries !== undefined) {
+      const newValue = processor(thisSeries, drawingArea);
+
+      if (newValue && newValue !== processedSeries[type]) {
+        processingDetected = true;
+        (seriesLayout as any)[type] = newValue;
+      }
+    }
+  });
+
+  if (!processingDetected) {
+    return {};
+  }
+  return seriesLayout;
 };

@@ -7,6 +7,7 @@ import {
 import { UseChartPolarAxisSignature } from './useChartPolarAxis.types';
 import { ChartState } from '../../models/chart';
 import { computeAxisValue } from './computeAxisValue';
+import type { ChartDrawingArea } from '../../../../hooks/useDrawingArea';
 
 export const selectorChartPolarAxisState = (state: ChartState<[], [UseChartPolarAxisSignature]>) =>
   state.polarAxis;
@@ -55,10 +56,13 @@ export const selectorChartRadiusAxis = createSelectorMemoized(
     }),
 );
 
-export const selectorChartPolarCenter = createSelectorMemoized(
-  selectorChartDrawingArea,
-  (drawingArea) => ({
+export function getDrawingAreaCenter(drawingArea: ChartDrawingArea) {
+  return {
     cx: drawingArea.left + drawingArea.width / 2,
     cy: drawingArea.top + drawingArea.height / 2,
-  }),
+  };
+}
+export const selectorChartPolarCenter = createSelectorMemoized(
+  selectorChartDrawingArea,
+  getDrawingAreaCenter,
 );
