@@ -9,7 +9,7 @@ describe('timelineViewSelectors', () => {
         view: 'months',
       });
       const view = timelineViewSelectors.view(state);
-      expect(view).toBe('months');
+      expect(view).to.equal('months');
     });
   });
 
