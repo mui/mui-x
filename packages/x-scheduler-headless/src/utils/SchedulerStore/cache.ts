@@ -11,12 +11,12 @@ export interface SchedulerDataSourceCache<TEvent extends object> {
   /**
    * Checks if the requested time range is fully covered by cached data.
    */
-  hasCoverage: (start: Date, end: Date) => boolean;
+  hasCoverage: (start: number, end: number) => boolean;
 
   /**
    * Saves the events and marks the specific range as "loaded".
    */
-  setRange: (start: Date, end: Date, events: TEvent[]) => void;
+  setRange: (start: number, end: number, events: TEvent[]) => void;
 
   /**
    * Returns all currently valid (non-expired) events in the cache.
@@ -52,14 +52,12 @@ export class SchedulerDataSourceCacheDefault<TEvent extends object>
 
   private ttl: number;
 
-  constructor({ ttl = 300_000 }: SchedulerDataSourceCacheConfig = {}) {
+  constructor({ ttl = 300000 }: SchedulerDataSourceCacheConfig = {}) {
     this.cache = {};
     this.ttl = ttl;
   }
 
-  hasCoverage(start: Date, end: Date): boolean {
-    const startMs = start.getTime();
-    const endMs = end.getTime();
+  hasCoverage(start: number, end: number): boolean {
     const now = Date.now();
 
     // 1. Filter out expired ranges immediately
@@ -68,12 +66,12 @@ export class SchedulerDataSourceCacheDefault<TEvent extends object>
     // 2. Check if the requested interval is fully covered by the union of valid ranges
     const sortedRanges = [...this.loadedRanges].sort((a, b) => a.start - b.start);
 
-    let currentCoverageStart = startMs;
+    let currentCoverageStart = start;
 
     for (const range of sortedRanges) {
       // If this range starts after our current need, there is a gap.
       if (range.start > currentCoverageStart) {
-        return false;
+        continue;
       }
 
       // If this range covers some of our need, advance our coverage pointer
@@ -82,30 +80,26 @@ export class SchedulerDataSourceCacheDefault<TEvent extends object>
       }
     }
 
-    return currentCoverageStart >= endMs;
+    return currentCoverageStart >= end;
   }
 
-  setRange(start: Date, end: Date, newEvents: TEvent[]) {
-    const startMs = start.getTime();
-    const endMs = end.getTime();
+  setRange(start: number, end: number, newEvents: TEvent[]) {
     const expiry = Date.now() + this.ttl;
-
-    console.log('Setting cache range:', { start, end, newEvents });
 
     // 1. Update Events (Refreshes the expiry of these specific data points)
     for (const event of newEvents) {
       const id = String((event as any).id);
-      console.log('Caching event:', id, event);
       this.cache[id] = { value: event, expiry };
     }
 
     // 2. Add New Range
-    const newRange: CachedRange = { start: startMs, end: endMs, expiry };
+    const newRange: CachedRange = { start, end, expiry };
 
     // 3. Clean up the Registry (Optimization)
     // Remove any existing ranges that are FULLY contained by the new range.
-    this.loadedRanges = this.loadedRanges.filter((r) => !(r.start >= startMs && r.end <= endMs));
-    console.log('Updated loaded ranges before adding new range:', this.loadedRanges);
+    this.loadedRanges = this.loadedRanges.filter(
+      (range) => !(range.start >= start && range.end <= end),
+    );
     this.loadedRanges.push(newRange);
   }
 

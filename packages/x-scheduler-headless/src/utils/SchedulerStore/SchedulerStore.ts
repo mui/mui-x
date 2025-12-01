@@ -141,46 +141,14 @@ export class SchedulerStore<
     };
   }
 
-  /**
-   * Calculates the date range to fetch events for based on the current visible date and view config.
-   */
-  private getDateRangeForFetch(): { start: SchedulerValidDate; end: SchedulerValidDate } {
-    const { adapter, visibleDate, view } = this.state;
-
-    switch (view) {
-      case 'day': {
-        const start = adapter.startOfDay(visibleDate);
-        const end = adapter.endOfDay(visibleDate);
-        return { start, end };
-      }
-
-      case 'week': {
-        const start = adapter.startOfWeek(visibleDate);
-        const end = adapter.endOfWeek(visibleDate);
-        return { start, end };
-      }
-
-      case 'month': {
-        const monthStart = adapter.startOfMonth(visibleDate);
-        const start = adapter.startOfWeek(monthStart);
-        const monthEnd = adapter.endOfMonth(visibleDate);
-        const end = adapter.endOfWeek(monthEnd);
-        return { start, end };
-      }
-
-      case 'agenda': {
-        const start = adapter.startOfDay(visibleDate);
-        const end = adapter.endOfDay(adapter.addDays(visibleDate, 6));
-        return { start, end };
-      }
-      default: {
-        const start = adapter.startOfWeek(visibleDate);
-        const end = adapter.endOfWeek(visibleDate);
-
-        return { start, end };
-      }
+  public queueDataFetchForRange = async (range: {
+    start: SchedulerValidDate;
+    end: SchedulerValidDate;
+  }) => {
+    if (this.dataManager) {
+      await this.dataManager.queue([range]);
     }
-  }
+  };
 
   /**
    * Loads events from the data source.
@@ -196,9 +164,9 @@ export class SchedulerStore<
       return;
     }
 
-    if (this.cache.hasCoverage(range.start, range.end)) {
-      console.log('Cache hit for range:', range);
+    if (this.cache.hasCoverage(adapter.getTime(range.start), adapter.getTime(range.end))) {
       const allCachedEvents = this.cache?.getAll() || [];
+      console.log('SchedulerStore: CACHE hit');
 
       const eventsState = buildEventsState(
         { ...this.parameters, events: allCachedEvents } as Parameters,
@@ -213,23 +181,18 @@ export class SchedulerStore<
 
       return;
 
-      // TODO: Set not loading state
+      // TODO: Unset loading state
       // TODO: Handle partial cache hits
-      // TODO: unset state if cache expired and fetch again
     }
 
     try {
       const events = await dataSource.getEvents(range.start, range.end);
-
-      console.log('Fetched events for range:', range, events);
-
-      this.cache!.setRange(range.start, range.end, events ?? []);
+      console.log('SchedulerStore: FETCHED events from data source');
+      this.cache!.setRange(adapter.getTime(range.start), adapter.getTime(range.end), events ?? []);
       const eventsState = buildEventsState({ ...this.parameters, events } as Parameters, adapter);
-      console.log('Built events state from fetched data:', eventsState);
       this.update({
         ...eventsState,
       } as Partial<State>);
-
       // Mark request as settled
       await this.dataManager.setRequestSettled(range);
     } catch (error) {
@@ -296,8 +259,6 @@ export class SchedulerStore<
     if (parameters.dataSource) {
       this.cache = new SchedulerDataSourceCacheDefault<TEvent>({ ttl: 300_000 });
       this.dataManager = new SchedulerDataManager(adapter, this.loadEventsFromDataSource);
-      const range = this.getDateRangeForFetch();
-      queueMicrotask(() => this.dataManager?.queue([range]));
     }
 
     if (
@@ -352,12 +313,6 @@ export class SchedulerStore<
     if (hasChange) {
       if (visibleDateProp === undefined) {
         this.set('visibleDate', visibleDate);
-      }
-
-      // Fetch new events if using dataSource
-      if (this.parameters.dataSource) {
-        const range = this.getDateRangeForFetch();
-        queueMicrotask(() => this.dataManager?.queue([range]));
       }
 
       onVisibleDateChange?.(visibleDate, event);
