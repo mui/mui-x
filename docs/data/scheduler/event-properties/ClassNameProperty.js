@@ -2,6 +2,7 @@ import * as React from 'react';
 import { setHours } from 'date-fns/setHours';
 import { setMinutes } from 'date-fns/setMinutes';
 import { addDays } from 'date-fns/addDays';
+
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import { defaultVisibleDate } from '../datasets/personal-agenda';
 
