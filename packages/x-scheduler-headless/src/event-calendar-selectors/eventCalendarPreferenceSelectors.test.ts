@@ -15,6 +15,7 @@ describe('eventCalendarPreferenceSelectors', () => {
       const preferences = eventCalendarPreferenceSelectors.all(state);
       expect(preferences).to.deep.equal(DEFAULT_EVENT_CALENDAR_PREFERENCES);
     });
+
     it('should return custom preferences when they are set in the state', () => {
       const state = getEventCalendarStateFromParameters({
         events: [],
@@ -24,12 +25,14 @@ describe('eventCalendarPreferenceSelectors', () => {
       expect(preferences).to.deep.equal({ ...DEFAULT_EVENT_CALENDAR_PREFERENCES, ampm: false });
     });
   });
+
   describe('ampm', () => {
     it('should return the default ampm preference when none is set in the state', () => {
       const state = getEventCalendarStateFromParameters({ events: [] });
       const ampm = eventCalendarPreferenceSelectors.ampm(state);
       expect(ampm).to.equal(true);
     });
+
     it('should return the custom ampm preference when it is set in the state', () => {
       const state = getEventCalendarStateFromParameters({
         events: [],
@@ -39,12 +42,14 @@ describe('eventCalendarPreferenceSelectors', () => {
       expect(ampm).to.equal(false);
     });
   });
+
   describe('showWeekends', () => {
     it('should return the default showWeekends preference when none is set in the state', () => {
       const state = getEventCalendarStateFromParameters({ events: [] });
       const showWeekends = eventCalendarPreferenceSelectors.showWeekends(state);
       expect(showWeekends).to.equal(true);
     });
+
     it('should return the custom showWeekends preference when it is set in the state', () => {
       const state = getEventCalendarStateFromParameters({
         events: [],
@@ -54,12 +59,14 @@ describe('eventCalendarPreferenceSelectors', () => {
       expect(showWeekends).to.equal(false);
     });
   });
+
   describe('showWeekNumber', () => {
     it('should return the default showWeekNumber preference when none is set in the state', () => {
       const state = getEventCalendarStateFromParameters({ events: [] });
       const showWeekNumber = eventCalendarPreferenceSelectors.showWeekNumber(state);
       expect(showWeekNumber).to.equal(false);
     });
+
     it('should return the custom showWeekNumber preference when it is set in the state', () => {
       const state = getEventCalendarStateFromParameters({
         events: [],
@@ -69,12 +76,14 @@ describe('eventCalendarPreferenceSelectors', () => {
       expect(showWeekNumber).to.equal(true);
     });
   });
+
   describe('showEmptyDaysInAgenda', () => {
     it('should return the default showEmptyDaysInAgenda preference when none is set in the state', () => {
       const state = getEventCalendarStateFromParameters({ events: [] });
       const showEmptyDaysInAgenda = eventCalendarPreferenceSelectors.showEmptyDaysInAgenda(state);
       expect(showEmptyDaysInAgenda).to.equal(true);
     });
+
     it('should return the custom showEmptyDaysInAgenda preference when it is set in the state', () => {
       const state = getEventCalendarStateFromParameters({
         events: [],
@@ -84,12 +93,14 @@ describe('eventCalendarPreferenceSelectors', () => {
       expect(showEmptyDaysInAgenda).to.equal(false);
     });
   });
+
   describe('isSidePanelOpen', () => {
     it('should return the default isSidePanelOpen preference when none is set in the state', () => {
       const state = getEventCalendarStateFromParameters({ events: [] });
       const isSidePanelOpen = eventCalendarPreferenceSelectors.isSidePanelOpen(state);
       expect(isSidePanelOpen).to.equal(true);
     });
+
     it('should return the custom isSidePanelOpen preference when it is set in the state', () => {
       const state = getEventCalendarStateFromParameters({
         events: [],
@@ -99,12 +110,14 @@ describe('eventCalendarPreferenceSelectors', () => {
       expect(isSidePanelOpen).to.equal(false);
     });
   });
+
   describe('menuConfig', () => {
     it('should return the default preferences menu config when none is set in the state', () => {
       const state = getEventCalendarStateFromParameters({ events: [] });
       const menuConfig = eventCalendarPreferenceSelectors.menuConfig(state);
       expect(menuConfig).to.deep.equal(DEFAULT_PREFERENCES_MENU_CONFIG);
     });
+
     it('should return the custom preferences menu config when it is set in the state', () => {
       const state = getEventCalendarStateFromParameters({
         events: [],
