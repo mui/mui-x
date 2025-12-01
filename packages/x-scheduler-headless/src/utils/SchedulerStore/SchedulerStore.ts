@@ -166,7 +166,13 @@ export class SchedulerStore<
 
     if (this.cache.hasCoverage(adapter.getTime(range.start), adapter.getTime(range.end))) {
       const allCachedEvents = this.cache?.getAll() || [];
-      console.log('SchedulerStore: CACHE hit', this.cache.loadedRanges);
+      console.log(
+        'SchedulerStore: CACHE hit',
+        this.cache.getLoadedRangesInfo()?.map((r) => ({
+          start: new Date(r.start),
+          end: new Date(r.end),
+        })),
+      );
 
       const eventsState = buildEventsState(
         { ...this.parameters, events: allCachedEvents } as Parameters,
