@@ -71,7 +71,7 @@ catalog:
   react-router: ^7.9.5
   react-transition-group: ^4.4.5
   reselect: ^5.1.1
-  rimraf: ^6.1.0
+  rimraf: ^6.1.2
   serve: ^14.2.5
   stylis: ^4.3.6
   tsx: ^4.20.6
