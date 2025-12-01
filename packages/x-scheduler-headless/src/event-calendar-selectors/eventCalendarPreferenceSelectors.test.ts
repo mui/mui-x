@@ -47,7 +47,7 @@ describe('eventCalendarPreferenceSelectors', () => {
     it('should return the default showWeekends preference when none is set in the state', () => {
       const state = getEventCalendarStateFromParameters({ events: [] });
       const showWeekends = eventCalendarPreferenceSelectors.showWeekends(state);
-      expect(showWeekends).to.equal(true);
+      expect(showWeekends).to.equal(DEFAULT_EVENT_CALENDAR_PREFERENCES.showWeekends);
     });
 
     it('should return the custom showWeekends preference when it is set in the state', () => {
