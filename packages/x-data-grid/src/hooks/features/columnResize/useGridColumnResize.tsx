@@ -239,9 +239,11 @@ function extractColumnWidths(
           const child = children[i] as HTMLElement;
           if (child.clientWidth > 0) {
             totalChildren += 1;
-            childrenWidth += child.scrollWidth + 1;
+            childrenWidth += child.scrollWidth;
           }
         }
+        
+        childrenWidth += 1;
 
         const width =
           childrenWidth +
