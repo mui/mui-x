@@ -1,4 +1,5 @@
-import { TooltipItemPositionGetter, getBarDimensions } from '@mui/x-charts/internals';
+import { TooltipItemPositionGetter } from '@mui/x-charts/internals';
+import { getRangeBarDimensions } from '../useRangeBarPlotData';
 
 const tooltipItemPositionGetter: TooltipItemPositionGetter<'rangeBar'> = (params) => {
   const { series, identifier, axesConfig, placement } = params;
@@ -16,15 +17,15 @@ const tooltipItemPositionGetter: TooltipItemPositionGetter<'rangeBar'> = (params
     return null;
   }
 
-  const dimensions = getBarDimensions({
-    verticalLayout: itemSeries.layout === 'vertical',
-    xAxisConfig: axesConfig.x,
-    yAxisConfig: axesConfig.y,
-    series: itemSeries,
-    dataIndex: identifier.dataIndex,
-    numberOfGroups: series.rangeBar.seriesOrder.length,
-    groupIndex: series.rangeBar.seriesOrder.findIndex((id) => id === itemSeries.id),
-  });
+  const dimensions = getRangeBarDimensions(
+    itemSeries.layout,
+    axesConfig.x,
+    axesConfig.y,
+    itemSeries.data,
+    identifier.dataIndex,
+    series.rangeBar.seriesOrder.length,
+    series.rangeBar.seriesOrder.findIndex((id) => id === itemSeries.id),
+  );
 
   if (dimensions == null) {
     return null;
