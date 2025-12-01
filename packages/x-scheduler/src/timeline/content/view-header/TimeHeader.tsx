@@ -6,7 +6,7 @@ import { getDayList } from '@mui/x-scheduler-headless/get-day-list';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useTimelineStoreContext } from '@mui/x-scheduler-headless/use-timeline-store-context';
 import { HeaderProps } from './Headers.types';
-import { TIME_UNITS_COUNT } from '../../constants';
+import { TIME_UNIT_COUNT } from '../../constants';
 import { useFormatTime } from '../../../internals/hooks/useFormatTime';
 import { formatWeekDayMonthAndDayOfMonth } from '../../../internals/utils/date-utils';
 import './Headers.css';
@@ -25,7 +25,7 @@ export function TimeHeader(props: HeaderProps) {
       getDayList({
         adapter,
         start: visibleDate,
-        end: adapter.addDays(visibleDate, (amount || TIME_UNITS_COUNT) - 1),
+        end: adapter.addDays(visibleDate, (amount || TIME_UNIT_COUNT) - 1),
       }),
     [adapter, visibleDate, amount],
   );
