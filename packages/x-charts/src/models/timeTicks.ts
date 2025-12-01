@@ -1,4 +1,4 @@
-export type TicksFrequencyDefinition = {
+export type TickFrequencyDefinition = {
   getTickNumber: (from: Date, to: Date) => number;
   isTick: (prev: Date, value: Date) => boolean;
   format: (d: Date) => string;
@@ -13,4 +13,4 @@ export type TicksFrequency =
   | 'days'
   | 'hours';
 
-export type TimeOrdinalTicks = (TicksFrequencyDefinition | TicksFrequency)[];
+export type TimeOrdinalTicks = (TickFrequencyDefinition | TicksFrequency)[];

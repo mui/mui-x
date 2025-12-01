@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { AxisConfig, D3ContinuousScale, D3OrdinalScale, D3Scale } from '../models/axis';
-import type { TimeOrdinalTicks, TicksFrequencyDefinition } from '../models/timeTicks';
+import type { TimeOrdinalTicks, TickFrequencyDefinition } from '../models/timeTicks';
 import { isBandScale, isOrdinalScale } from '../internals/scaleGuards';
 import { isInfinity } from '../internals/isInfinity';
 import { tickFrequencies } from '../utils/timeTicks';
@@ -80,7 +80,7 @@ function getTickPosition<T extends { toString(): string }>(
 function getTimeTicks<T extends { toString(): string }>(
   domain: T[],
   tickNumber: number,
-  ticksFrequencies: TicksFrequencyDefinition[],
+  ticksFrequencies: TickFrequencyDefinition[],
   scale: D3OrdinalScale<T>,
   isInside: (offset: number) => boolean,
 ) {

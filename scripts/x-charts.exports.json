@@ -416,7 +416,7 @@
   { "name": "strawberrySkyPaletteLight", "kind": "Variable" },
   { "name": "tickFrequencies", "kind": "Variable" },
   { "name": "TicksFrequency", "kind": "TypeAlias" },
-  { "name": "TicksFrequencyDefinition", "kind": "TypeAlias" },
+  { "name": "TickFrequencyDefinition", "kind": "TypeAlias" },
   { "name": "TimeOrdinalTicks", "kind": "TypeAlias" },
   { "name": "Toolbar", "kind": "Variable" },
   { "name": "ToolbarButton", "kind": "Variable" },
