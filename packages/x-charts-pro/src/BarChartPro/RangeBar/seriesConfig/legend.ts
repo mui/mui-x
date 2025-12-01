@@ -1,8 +1,7 @@
-import type { LegendItemParams } from '../../../ChartsLegend';
-import { getLabel } from '../../../internals/getLabel';
-import { LegendGetter } from '../../../internals/plugins/models';
+import { getLabel, LegendGetter } from '@mui/x-charts/internals';
+import type { LegendItemParams } from '@mui/x-charts/ChartsLegend';
 
-const legendGetter: LegendGetter<'bar'> = (params) => {
+const legendGetter: LegendGetter<'rangeBar'> = (params) => {
   const { seriesOrder, series } = params;
   return seriesOrder.reduce((acc, seriesId) => {
     const formattedLabel = getLabel(series[seriesId].label, 'legend');

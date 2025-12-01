@@ -1,7 +1,7 @@
-import { AllSeriesType } from '../../../models/seriesType';
+import { AllSeriesType } from '@mui/x-charts/models';
 
 export function getSeriesWithDefaultValues(
-  seriesData: AllSeriesType<'bar'>,
+  seriesData: AllSeriesType<'rangeBar'>,
   seriesIndex: number,
   colors: readonly string[],
 ) {
