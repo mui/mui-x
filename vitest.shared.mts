@@ -56,6 +56,11 @@ export default defineConfig({
     alias,
   },
   test: {
+    server: {
+      deps: {
+        inline: ['@testing-library/react', '@testing-library/dom', '@mui/internal-test-utils'],
+      },
+    },
     globals: true,
     setupFiles: [fileURLToPath(new URL('test/setupVitest.ts', import.meta.url))],
     // Required for some tests that contain early returns or conditional tests.
