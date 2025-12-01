@@ -27,6 +27,8 @@ export function useAxisTicksProps(inProps: ChartsXAxisProps) {
   const isRtl = useRtl();
   const classes = useUtilityClasses(defaultizedProps);
 
+  const tickFontSize = typeof tickLabelStyle?.fontSize === 'number' ? tickLabelStyle.fontSize : 12;
+
   const positionSign = position === 'bottom' ? 1 : -1;
 
   const Tick = slots?.axisTick ?? 'line';
@@ -48,10 +50,10 @@ export function useAxisTicksProps(inProps: ChartsXAxisProps) {
       style: {
         ...theme.typography.caption,
         textAnchor: isRtl ? invertTextAnchor(defaultTextAnchor) : defaultTextAnchor,
-        fontSize: 12,
         lineHeight: 1.25,
         dominantBaseline: defaultDominantBaseline,
         ...tickLabelStyle,
+        tickFontSize,
       },
     } as Partial<ChartsTextProps>,
     className: classes.tickLabel,
