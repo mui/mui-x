@@ -30,7 +30,7 @@ describe('eventCalendarPreferenceSelectors', () => {
     it('should return the default ampm preference when none is set in the state', () => {
       const state = getEventCalendarStateFromParameters({ events: [] });
       const ampm = eventCalendarPreferenceSelectors.ampm(state);
-      expect(ampm).to.equal(true);
+      expect(ampm).to.equal(DEFAULT_EVENT_CALENDAR_PREFERENCES.ampm);
     });
 
     it('should return the custom ampm preference when it is set in the state', () => {
