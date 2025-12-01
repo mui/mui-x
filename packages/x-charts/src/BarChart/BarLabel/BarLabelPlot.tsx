@@ -13,7 +13,7 @@ type BarLabelPlotProps = {
  */
 function BarLabelPlot(props: BarLabelPlotProps) {
   const { processedSeries, skipAnimation, ...other } = props;
-  const { seriesId, data } = processedSeries;
+  const { seriesId, data, layout, xOrigin, yOrigin } = processedSeries;
   const classes = useUtilityClasses();
 
   const barLabel = processedSeries.barLabel ?? props.barLabel;
@@ -24,29 +24,27 @@ function BarLabelPlot(props: BarLabelPlotProps) {
 
   return (
     <g key={seriesId} className={classes.seriesLabels} data-series={seriesId}>
-      {data.map(
-        ({ xOrigin, yOrigin, x, y, dataIndex, color, value, width, height, layout, hidden }) => (
-          <BarLabelItem
-            key={dataIndex}
-            seriesId={seriesId}
-            dataIndex={dataIndex}
-            value={value}
-            color={color}
-            xOrigin={xOrigin}
-            yOrigin={yOrigin}
-            x={x}
-            y={y}
-            width={width}
-            height={height}
-            skipAnimation={skipAnimation ?? false}
-            layout={layout ?? 'vertical'}
-            hidden={hidden}
-            {...other}
-            barLabel={barLabel}
-            barLabelPlacement={processedSeries.barLabelPlacement || 'center'}
-          />
-        ),
-      )}
+      {data.map(({ x, y, dataIndex, color, value, width, height, hidden }) => (
+        <BarLabelItem
+          key={dataIndex}
+          seriesId={seriesId}
+          dataIndex={dataIndex}
+          value={value}
+          color={color}
+          xOrigin={xOrigin}
+          yOrigin={yOrigin}
+          x={x}
+          y={y}
+          width={width}
+          height={height}
+          skipAnimation={skipAnimation ?? false}
+          layout={layout ?? 'vertical'}
+          hidden={hidden}
+          {...other}
+          barLabel={barLabel}
+          barLabelPlacement={processedSeries.barLabelPlacement || 'center'}
+        />
+      ))}
     </g>
   );
 }

@@ -6,7 +6,7 @@ import { RadarSeriesAreaProps } from './RadarSeriesPlot.types';
 import { getAreaPath } from './getAreaPath';
 import { RadarSeriesPlotClasses, useUtilityClasses } from './radarSeriesPlotClasses';
 import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
-import { useInteractionAllItemProps } from '../../hooks/useInteractionItemProps';
+import { useInteractionAllItemProps } from './useInteractionAllItemProps';
 import { SeriesId } from '../../models/seriesType/common';
 import { HighlightItemData } from '../../internals/plugins/featurePlugins/useChartHighlight';
 import { useRadarRotationIndex } from './useRadarRotationIndex';

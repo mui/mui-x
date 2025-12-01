@@ -5,12 +5,14 @@ import { ChartSeriesTypeConfig } from '../../internals/plugins/models/seriesConf
 import legendGetter from './legend';
 import tooltipGetter, { axisTooltipGetter } from './tooltip';
 import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
+import tooltipItemPositionGetter from './tooltipPosition';
 
 export const radarSeriesConfig: ChartSeriesTypeConfig<'radar'> = {
   colorProcessor: getColor,
   seriesProcessor,
   legendGetter,
   tooltipGetter,
+  tooltipItemPositionGetter,
   axisTooltipGetter,
   getSeriesWithDefaultValues,
   radiusExtremumGetter,

@@ -117,46 +117,44 @@ function BarPlot(props: BarPlotProps) {
             );
           },
         )}
-      {completedData.map(({ seriesId, data }) => {
+      {completedData.map(({ seriesId, layout, xOrigin, yOrigin, data }) => {
         return (
           <g key={seriesId} data-series={seriesId} className={classes.series}>
-            {data.map(
-              ({ dataIndex, color, maskId, layout, x, xOrigin, y, yOrigin, width, height }) => {
-                const barElement = (
-                  <BarElement
-                    key={dataIndex}
-                    id={seriesId}
-                    dataIndex={dataIndex}
-                    color={color}
-                    skipAnimation={skipAnimation ?? false}
-                    layout={layout ?? 'vertical'}
-                    x={x}
-                    xOrigin={xOrigin}
-                    y={y}
-                    yOrigin={yOrigin}
-                    width={width}
-                    height={height}
-                    {...other}
-                    onClick={
-                      onItemClick &&
-                      ((event) => {
-                        onItemClick(event, { type: 'bar', seriesId, dataIndex });
-                      })
-                    }
-                  />
-                );
+            {data.map(({ dataIndex, color, maskId, x, y, width, height }) => {
+              const barElement = (
+                <BarElement
+                  key={dataIndex}
+                  id={seriesId}
+                  dataIndex={dataIndex}
+                  color={color}
+                  skipAnimation={skipAnimation ?? false}
+                  layout={layout ?? 'vertical'}
+                  x={x}
+                  xOrigin={xOrigin}
+                  y={y}
+                  yOrigin={yOrigin}
+                  width={width}
+                  height={height}
+                  {...other}
+                  onClick={
+                    onItemClick &&
+                    ((event) => {
+                      onItemClick(event, { type: 'bar', seriesId, dataIndex });
+                    })
+                  }
+                />
+              );
 
-                if (withoutBorderRadius) {
-                  return barElement;
-                }
+              if (withoutBorderRadius) {
+                return barElement;
+              }
 
-                return (
-                  <g key={dataIndex} clipPath={`url(#${maskId})`}>
-                    {barElement}
-                  </g>
-                );
-              },
-            )}
+              return (
+                <g key={dataIndex} clipPath={`url(#${maskId})`}>
+                  {barElement}
+                </g>
+              );
+            })}
           </g>
         );
       })}

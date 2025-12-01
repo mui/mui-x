@@ -3,7 +3,7 @@ import {
   SchedulerResourceId,
   RecurringEventPresetKey,
   RecurringEventRecurrenceRule,
-  SchedulerValidDate,
+  TemporalSupportedObject,
   SchedulerProcessedDate,
 } from '@mui/x-scheduler-headless/models';
 import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
@@ -54,8 +54,8 @@ export function computeRange(adapter: Adapter, next: ControlledValue) {
 
 export function validateRange(
   adapter: Adapter,
-  start: SchedulerValidDate,
-  end: SchedulerValidDate,
+  start: TemporalSupportedObject,
+  end: TemporalSupportedObject,
   allDay: boolean,
 ): null | { field: 'startDate' | 'startTime' } {
   const startDay = adapter.startOfDay(start);
@@ -108,7 +108,7 @@ export function getRecurrenceLabel(
 
 export function getEndsSelectionFromRRule(rrule?: {
   count?: number | null;
-  until?: SchedulerValidDate | null;
+  until?: TemporalSupportedObject | null;
 }): EndsSelection {
   if (!rrule) {
     return 'never';

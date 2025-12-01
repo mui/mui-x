@@ -41,6 +41,7 @@ export function useBarPlotData(
     return seriesIds.map((seriesId) => {
       const xAxisId = series[seriesId].xAxisId ?? defaultXAxisId;
       const yAxisId = series[seriesId].yAxisId ?? defaultYAxisId;
+      const layout = series[seriesId].layout;
 
       const xAxisConfig = xAxes[xAxisId];
       const yAxisConfig = yAxes[yAxisId];
@@ -54,6 +55,8 @@ export function useBarPlotData(
 
       const xScale = xAxisConfig.scale;
       const yScale = yAxisConfig.scale;
+      const xOrigin = Math.round(xScale(0) ?? 0);
+      const yOrigin = Math.round(yScale(0) ?? 0);
 
       const colorGetter = getColor(series[seriesId], xAxes[xAxisId], yAxes[yAxisId]);
 
@@ -82,8 +85,6 @@ export function useBarPlotData(
           layout: series[seriesId].layout,
           hidden: series[seriesId].hidden,
           ...barDimensions,
-          xOrigin: Math.round(xScale(0) ?? 0),
-          yOrigin: Math.round(yScale(0) ?? 0),
           color: colorGetter(dataIndex),
           value: series[seriesId].data[dataIndex],
           maskId: `${chartId}_${stackId || seriesId}_${groupIndex}_${dataIndex}`,
@@ -105,17 +106,17 @@ export function useBarPlotData(
             height: 0,
             hasNegative: false,
             hasPositive: false,
-            layout: result.layout,
-            xOrigin: xScale(0)!,
-            yOrigin: yScale(0)!,
+            layout,
+            xOrigin,
+            yOrigin,
             x: 0,
             y: 0,
           };
         }
 
         const mask = masks[result.maskId];
-        mask.width = result.layout === 'vertical' ? result.width : mask.width + result.width;
-        mask.height = result.layout === 'vertical' ? mask.height + result.height : result.height;
+        mask.width = layout === 'vertical' ? result.width : mask.width + result.width;
+        mask.height = layout === 'vertical' ? mask.height + result.height : result.height;
         mask.x = Math.min(mask.x === 0 ? Infinity : mask.x, result.x);
         mask.y = Math.min(mask.y === 0 ? Infinity : mask.y, result.y);
 
@@ -131,6 +132,9 @@ export function useBarPlotData(
         barLabel: series[seriesId].barLabel,
         barLabelPlacement: series[seriesId].barLabelPlacement,
         data: seriesDataPoints,
+        layout,
+        xOrigin,
+        yOrigin,
       };
     });
   });

@@ -126,6 +126,12 @@ class CellValueUpdater {
       return;
     }
 
+    // Check if the cell is editable using the API method, which respects the isCellEditable prop
+    const cellParams = apiRef.current.getCellParams(rowId, field);
+    if (!apiRef.current.isCellEditable(cellParams)) {
+      return;
+    }
+
     let parsedValue = pastedCellValue;
 
     if (colDef.pastedValueParser) {
