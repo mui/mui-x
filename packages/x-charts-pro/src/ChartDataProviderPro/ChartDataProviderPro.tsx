@@ -36,7 +36,7 @@ export type ChartDataProviderProProps<
     slotProps?: Partial<ChartsSlotPropsPro>;
   };
 
-export const DEFAULT_SERIES_CONFIG: ChartSeriesConfig<
+export const DEFAULT_SERIES_CONFIG_PRO: ChartSeriesConfig<
   'bar' | 'rangeBar' | 'scatter' | 'line' | 'pie'
 > = {
   ...defaultSeriesConfig,
@@ -77,7 +77,7 @@ function ChartDataProviderPro<
   const { children, localeText, chartProviderProps, slots, slotProps } =
     useChartDataProviderProProps({
       ...props,
-      seriesConfig: props.seriesConfig ?? DEFAULT_SERIES_CONFIG,
+      seriesConfig: props.seriesConfig ?? DEFAULT_SERIES_CONFIG_PRO,
       plugins: props.plugins ?? DEFAULT_PLUGINS,
     });
 
