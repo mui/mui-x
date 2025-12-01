@@ -19,8 +19,9 @@ The following sections detail how to handle the various dimensions when building
 Drawing area refers to the space available to plot data (such as scatter points, lines, or pie arcs).
 Charts dimensions are defined by the following props:
 
-- `height` and `width` for the SVG size; if not provided, these values are derived from the container
-- `margin` for the space between the SVG border and the drawing area
+- `height` and `width` for the SVG size; if not provided, these values are derived from the container.
+- `margin` for the space between the SVG border and the axes or the drawing area.
+- The axes dimension properties (`xAxis[].height` and `yAxis[].width`) that add extra space to draw axes.
 
 The `margin` is used to leave space for extra elements, or let data items overflow the drawing area.
 
@@ -61,7 +62,7 @@ For example, you can get the `x=0` coordinate as follows:
 ```jsx
 // get the default x-axis scale
 const xAxisScale = useXScale();
-// get the position associated to the value 0  
+// get the position associated to the value 0
 const xOrigin = xAxisScale(0);
 ```
 
