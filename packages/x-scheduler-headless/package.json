@@ -19,17 +19,17 @@
     "./constants": "./src/constants/index.ts",
     "./event-calendar-provider": "./src/event-calendar-provider/index.ts",
     "./event-calendar-selectors": "./src/event-calendar-selectors/index.ts",
+    "./get-day-list": "./src/get-day-list/index.ts",
     "./models": "./src/models/index.ts",
     "./process-date": "./src/process-date/index.ts",
     "./process-event": "./src/process-event/index.ts",
     "./scheduler-selectors": "./src/scheduler-selectors/index.ts",
+    "./sort-event-occurrences": "./src/sort-event-occurrences/index.ts",
     "./standalone-event": "./src/standalone-event/index.ts",
     "./timeline": "./src/timeline/index.ts",
     "./timeline-provider": "./src/timeline-provider/index.ts",
     "./timeline-selectors": "./src/timeline-selectors/index.ts",
     "./use-adapter": "./src/use-adapter/index.ts",
-    "./use-agenda-event-occurrences-grouped-by-day": "./src/use-agenda-event-occurrences-grouped-by-day/index.ts",
-    "./use-day-list": "./src/use-day-list/index.ts",
     "./use-event-calendar": "./src/use-event-calendar/index.ts",
     "./use-event-calendar-store-context": "./src/use-event-calendar-store-context/index.ts",
     "./use-event-calendar-view": "./src/use-event-calendar-view/index.ts",
@@ -40,8 +40,7 @@
     "./use-month-list": "./src/use-month-list/index.ts",
     "./use-scheduler-store-context": "./src/use-scheduler-store-context/index.ts",
     "./use-timeline": "./src/use-timeline/index.ts",
-    "./use-timeline-store-context": "./src/use-timeline-store-context/index.ts",
-    "./use-week-list": "./src/use-week-list/index.ts"
+    "./use-timeline-store-context": "./src/use-timeline-store-context/index.ts"
   },
   "sideEffects": false,
   "publishConfig": {
@@ -83,16 +82,15 @@
     "tabbable": "^6.3.0"
   },
   "peerDependencies": {
-    "luxon": "^3.0.2",
     "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
     "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
+    "@date-fns/tz": "catalog:",
     "@mui/internal-test-utils": "catalog:",
-    "@types/luxon": "catalog:",
     "@types/prop-types": "catalog:",
     "@types/use-sync-external-store": "catalog:",
-    "luxon": "catalog:",
+    "date-fns": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "rimraf": "catalog:"

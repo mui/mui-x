@@ -3,7 +3,7 @@ import * as React from 'react';
 import { ChartPlugin } from '../../models';
 import { UseChartSeriesSignature } from './useChartSeries.types';
 import { rainbowSurgePalette } from '../../../../colorPalettes';
-import { preprocessSeries } from './processSeries';
+import { defaultizeSeries } from './processSeries';
 
 export const useChartSeries: ChartPlugin<UseChartSeriesSignature> = ({
   params,
@@ -24,11 +24,10 @@ export const useChartSeries: ChartPlugin<UseChartSeriesSignature> = ({
 
     store.set('series', {
       ...store.state.series,
-      processedSeries: preprocessSeries({
+      defaultizedSeries: defaultizeSeries({
         series,
         colors: typeof colors === 'function' ? colors(theme) : colors,
         seriesConfig,
-        dataset,
       }),
       dataset,
     });
@@ -57,11 +56,10 @@ useChartSeries.getInitialState = ({ series = [], colors, theme, dataset }, _, se
   return {
     series: {
       seriesConfig,
-      processedSeries: preprocessSeries({
+      defaultizedSeries: defaultizeSeries({
         series,
         colors: typeof colors === 'function' ? colors(theme) : colors,
         seriesConfig,
-        dataset,
       }),
       dataset,
     },

@@ -32,28 +32,6 @@ const event = {
 
 {{"demo": "AllDay.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Drag interactions
-
-### Drag and resize events
-
-You can enable the dragging and resizing of events within the Event Calendar using the `areEventsDraggable` and `areEventsResizable` props.
-When `areEventsDraggable` is `true`, the events can be dragged to another point in time.
-When `areEventsResizable` is `true`, the event extremities can be dragged to change its duration.
-
-{{"demo": "DragAndDrop.js", "bg": "inline", "defaultCodeOpen": false}}
-
-### External drag and drop
-
-You can enable the dragging from and to the outside of the Event Calendar using the `canDragEventsFromTheOutside` and `canDropEventsToTheOutside` props.
-When `canDragEventsFromTheOutside` is `true`, the events created with `<StandaloneEvent />` can be dropped inside the Event Calendar.
-When `canDropEventsToTheOutside` is `true`, the events from within the Event Calendar can be dropped outside of it.
-
-:::success
-To be able to drag an event to the outside, your events must be draggable, so `areEventsDraggable` must be `true`.
-:::
-
-{{"demo": "ExternalDragAndDrop.js", "bg": "inline", "defaultCodeOpen": false}}
-
 ## Customization
 
 ### Available views
@@ -93,14 +71,14 @@ This sections is only here to track what the DX will look like once available.
 In your custom view, you have to use the `useEventCalendarView()` hook to register your view in the parent component.
 
 ```tsx
-import { DateTime } from 'luxon';
+import { addDays } from 'date-fns';
 import { useEventCalendarView } from '@mui/x-scheduler-headless/use-event-calendar-view';
 
 function CustomView() {
   const adapter = useAdapter();
 
   useEventCalendarView(() => ({
-    siblingVisibleDateGetter: (date, delta) => date.plus({ days: delta }),
+    siblingVisibleDateGetter: (date, delta) => addDays(date, delta),
   }));
 }
 ```

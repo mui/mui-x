@@ -1,11 +1,12 @@
-import { SchedulerValidDate } from '../models';
-import { UnstableTemporalAdapterLuxon } from '../base-ui-copy/temporal-adapter-luxon';
+import { fr } from 'date-fns/locale/fr';
+import { TemporalSupportedObject } from '../models';
+import { UnstableTemporalAdapterDateFns } from '../base-ui-copy/temporal-adapter-date-fns';
 import { TemporalAdapter } from '../base-ui-copy/types';
 
-export const DO_NOT_USE_THIS_VARIABLE_ADAPTER_CLASS = new UnstableTemporalAdapterLuxon();
+export const DO_NOT_USE_THIS_VARIABLE_ADAPTER_CLASS = new UnstableTemporalAdapterDateFns();
 
-export const DO_NOT_USE_THIS_VARIABLE_ADAPTER_CLASS_FR = new UnstableTemporalAdapterLuxon({
-  locale: 'fr',
+export const DO_NOT_USE_THIS_VARIABLE_ADAPTER_CLASS_FR = new UnstableTemporalAdapterDateFns({
+  locale: fr,
 });
 
 // TODO: Replace with Base UI adapter when available.
@@ -24,19 +25,19 @@ const MS_WEEK = MS_DAY * 7;
  */
 export function diffIn(
   adapter: TemporalAdapter,
-  a: SchedulerValidDate,
-  b: SchedulerValidDate,
+  a: TemporalSupportedObject,
+  b: TemporalSupportedObject,
   unit: 'minutes' | 'hours' | 'days' | 'weeks' | 'months' | 'years',
 ): number {
   switch (unit) {
     case 'minutes': {
-      const msA = adapter.toJsDate(a).getTime();
-      const msB = adapter.toJsDate(b).getTime();
+      const msA = adapter.getTime(a);
+      const msB = adapter.getTime(b);
       return Math.floor((msA - msB) / MS_MIN);
     }
     case 'hours': {
-      const msA = adapter.toJsDate(a).getTime();
-      const msB = adapter.toJsDate(b).getTime();
+      const msA = adapter.getTime(a);
+      const msB = adapter.getTime(b);
       return Math.floor((msA - msB) / MS_HOUR);
     }
     case 'days': {
@@ -82,7 +83,7 @@ export function diffIn(
  * Checks if the given date is a weekend (Saturday or Sunday).
  * TODO: move to adapter.
  */
-export function isWeekend(adapter: TemporalAdapter, value: SchedulerValidDate): boolean {
+export function isWeekend(adapter: TemporalAdapter, value: TemporalSupportedObject): boolean {
   const sunday = adapter.format(adapter.date('2025-08-09', 'default'), 'weekday');
   const saturday = adapter.format(adapter.date('2025-08-10', 'default'), 'weekday');
   const formattedValue = adapter.format(value, 'weekday');

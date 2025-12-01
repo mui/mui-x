@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useStableCallback } from '@base-ui-components/utils/useStableCallback';
 import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
 import { useAdapter, diffIn } from '../../use-adapter';
-import { SchedulerEvent, SchedulerValidDate } from '../../models';
+import { SchedulerEvent, TemporalSupportedObject } from '../../models';
 import { mergeDateAndTime } from '../../utils/date-utils';
 import { useDropTarget } from '../../utils/useDropTarget';
 
@@ -47,7 +47,7 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
             return undefined;
           }
 
-          let newStart: SchedulerValidDate;
+          let newStart: TemporalSupportedObject;
           if (adapter.isSameDay(value, data.end)) {
             newStart = adapter.startOfDay(data.end);
           } else {
@@ -61,7 +61,7 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
             return undefined;
           }
 
-          let draggedDay: SchedulerValidDate;
+          let draggedDay: TemporalSupportedObject;
           if (adapter.isSameDay(value, data.start)) {
             draggedDay = adapter.endOfDay(data.start);
           } else {
@@ -74,11 +74,7 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
 
       // Move a Time Grid Event into the Day Grid
       if (data.source === 'CalendarGridTimeEvent') {
-        // TODO: Use "addMilliseconds" instead of "addSeconds" when available in the adapter
-        const cursorDate = adapter.addSeconds(
-          data.start,
-          data.initialCursorPositionInEventMs / 1000,
-        );
+        const cursorDate = adapter.addMilliseconds(data.start, data.initialCursorPositionInEventMs);
         const offset = diffIn(adapter, value, cursorDate, 'days');
         return getDataFromInside(
           data,
@@ -112,7 +108,7 @@ export namespace useDayCellDropTarget {
     /**
      * The value of the cell.
      */
-    value: SchedulerValidDate;
+    value: TemporalSupportedObject;
     /**
      * Add properties to the event dropped in the cell before storing it in the store.
      */

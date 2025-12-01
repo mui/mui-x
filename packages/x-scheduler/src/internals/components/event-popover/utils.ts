@@ -3,7 +3,7 @@ import {
   SchedulerResourceId,
   RecurringEventPresetKey,
   RecurringEventRecurrenceRule,
-  SchedulerValidDate,
+  TemporalSupportedObject,
   SchedulerProcessedDate,
 } from '@mui/x-scheduler-headless/models';
 import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
@@ -26,28 +26,36 @@ export type EndsSelection = 'never' | 'after' | 'until';
 
 export function computeRange(adapter: Adapter, next: ControlledValue) {
   if (next.allDay) {
-    const newStart = adapter.startOfDay(adapter.date(next.startDate, 'default'));
-    const newEnd = adapter.endOfDay(adapter.date(next.endDate, 'default'));
-    return { start: newStart, end: newEnd, surfaceType: 'day-grid' as const };
-  }
-
-  if (next.startTime === '' || next.endTime === '') {
-    throw new Error(
-      'computeRange: startTime and endTime should not be empty strings for timed events',
-    );
+    return {
+      start:
+        next.startDate === ''
+          ? adapter.now('default')
+          : adapter.startOfDay(adapter.date(next.startDate, 'default')),
+      end:
+        next.endDate === ''
+          ? adapter.now('default')
+          : adapter.endOfDay(adapter.date(next.endDate, 'default')),
+      surfaceType: 'day-grid' as const,
+    };
   }
 
   return {
-    start: adapter.date(`${next.startDate}T${next.startTime}`, 'default'),
-    end: adapter.date(`${next.endDate}T${next.endTime}`, 'default'),
+    start:
+      next.startDate === '' || next.startTime === ''
+        ? adapter.now('default')
+        : adapter.date(`${next.startDate}T${next.startTime}`, 'default'),
+    end:
+      next.endDate === '' || next.endTime === ''
+        ? adapter.now('default')
+        : adapter.date(`${next.endDate}T${next.endTime}`, 'default'),
     surfaceType: 'time-grid' as const,
   };
 }
 
 export function validateRange(
   adapter: Adapter,
-  start: SchedulerValidDate,
-  end: SchedulerValidDate,
+  start: TemporalSupportedObject,
+  end: TemporalSupportedObject,
   allDay: boolean,
 ): null | { field: 'startDate' | 'startTime' } {
   const startDay = adapter.startOfDay(start);
@@ -100,7 +108,7 @@ export function getRecurrenceLabel(
 
 export function getEndsSelectionFromRRule(rrule?: {
   count?: number | null;
-  until?: SchedulerValidDate | null;
+  until?: TemporalSupportedObject | null;
 }): EndsSelection {
   if (!rrule) {
     return 'never';

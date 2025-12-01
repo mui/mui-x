@@ -51,23 +51,20 @@ interface DefaultStore extends RichTreeViewStore<any, any> {
   };
 }
 
+const depthSelector = (state: any, itemId: string, depthContext: any) => {
+  if (typeof depthContext === 'function') {
+    return depthContext(state, itemId);
+  }
+  return depthContext;
+};
+
 export const useTreeItem = <TStore extends TreeViewAnyStore = DefaultStore>(
   parameters: UseTreeItemParameters,
 ): UseTreeItemReturnValue<TStore> => {
   const { runItemPlugins, publicAPI, store } = useTreeViewContext<TStore>();
   const depthContext = React.useContext(TreeViewItemDepthContext);
 
-  const depth = useStore(
-    store,
-    (...params) => {
-      if (typeof depthContext === 'function') {
-        return depthContext(...(params as [any, any]));
-      }
-
-      return depthContext;
-    },
-    parameters.itemId,
-  );
+  const depth = useStore(store, depthSelector, parameters.itemId, depthContext);
 
   const { id, itemId, label, children, rootRef } = parameters;
 

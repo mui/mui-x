@@ -4,7 +4,7 @@ import { useStableCallback } from '@base-ui-components/utils/useStableCallback';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps, NonNativeButtonProps } from '../../base-ui-copy/utils/types';
 import { useButton } from '../../base-ui-copy/utils/useButton';
-import { SchedulerEventId, SchedulerEventOccurrence, SchedulerValidDate } from '../../models';
+import { SchedulerEventId, SchedulerEventOccurrence, TemporalSupportedObject } from '../../models';
 import { useAdapter } from '../../use-adapter';
 import { useTimelineStoreContext } from '../../use-timeline-store-context';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
@@ -53,11 +53,7 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
   // Feature hooks
   const getSharedDragData: TimelineEventContext['getSharedDragData'] = useStableCallback(
     (input) => {
-      const offsetBeforeRowStart = Math.max(
-        adapter.toJsDate(rowStart).getTime() - start.timestamp,
-        0,
-      );
-
+      const offsetBeforeRowStart = Math.max(adapter.getTime(rowStart) - start.timestamp, 0);
       const event = schedulerEventSelectors.processedEvent(store.state, eventId)!;
 
       const originalOccurrence: SchedulerEventOccurrence = {
@@ -157,8 +153,8 @@ export namespace TimelineEvent {
     eventId: SchedulerEventId;
     occurrenceKey: string;
     originalOccurrence: SchedulerEventOccurrence;
-    start: SchedulerValidDate;
-    end: SchedulerValidDate;
+    start: TemporalSupportedObject;
+    end: TemporalSupportedObject;
     initialCursorPositionInEventMs: number;
   }
 
