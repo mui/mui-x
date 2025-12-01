@@ -144,7 +144,7 @@ When autosizing columns with long content, consider setting the `maxWidth` for t
 
 ### Autosizing header filters [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-To include the header filter content when autosizing columns, set the `includeHeaderFilters` option to `true` in the `autosizeOptions`.
+To include the header filter content when autosizing columns, pass the `includeHeaderFilters` to the `autosizeOptions`.
 
 ```tsx
 <DataGrid
@@ -154,6 +154,8 @@ To include the header filter content when autosizing columns, set the `includeHe
   }}
 />
 ```
+
+{{"demo": "ColumnAutosizingHeaderFilters.js", "disableAd": true, "bg": "inline"}}
 
 or when calling the `autosizeColumns()` method programmatically:
 
