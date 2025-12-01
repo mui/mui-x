@@ -8,6 +8,7 @@ import {
 } from '../models';
 import { SchedulerState as State } from '../utils/SchedulerStore/SchedulerStore.types';
 import { computeMonthlyOrdinal, getWeekDayCode, serializeRRule } from '../utils/recurring-events';
+import { schedulerOtherSelectors } from './schedulerOtherSelectors';
 
 export const schedulerRecurringEventSelectors = {
   /**
@@ -136,7 +137,7 @@ export const schedulerRecurringEventSelectors = {
    */
   weeklyDays: createSelectorMemoized(
     (state: State) => state.adapter,
-    (state: State) => state.visibleDate,
+    schedulerOtherSelectors.visibleDate,
     (
       adapter,
       visibleDate,

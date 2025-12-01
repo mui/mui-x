@@ -8,6 +8,8 @@ import {
   ProcessedSeries,
   selectorChartSeriesConfig,
   selectorChartSeriesProcessed,
+  selectorChartSeriesLayout,
+  SeriesLayout,
 } from '../../corePlugins/useChartSeries';
 import { TooltipPositionGetterAxesConfig } from '../../models/seriesConfig/tooltipItemPositionGetter.types';
 import {
@@ -112,6 +114,7 @@ export const selectorChartsTooltipItemPosition = createSelector(
   selectorChartDrawingArea,
   selectorChartSeriesConfig,
   selectorChartSeriesProcessed,
+  selectorChartSeriesLayout,
   selectorChartsTooltipAxisConfig,
 
   function selectorChartsTooltipItemPosition<T extends ChartSeriesType>(
@@ -119,6 +122,7 @@ export const selectorChartsTooltipItemPosition = createSelector(
     drawingArea: ChartDrawingArea,
     seriesConfig: ChartSeriesConfig<T>,
     series: ProcessedSeries<T>,
+    seriesLayout: SeriesLayout<T>,
     axesConfig: TooltipPositionGetterAxesConfig,
     placement: 'top' | 'bottom' | 'left' | 'right' = 'top',
   ) {
@@ -136,6 +140,7 @@ export const selectorChartsTooltipItemPosition = createSelector(
     return (
       seriesConfig[itemSeries.type as T].tooltipItemPositionGetter?.({
         series,
+        seriesLayout,
         drawingArea,
         axesConfig,
         identifier,
