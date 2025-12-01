@@ -24,14 +24,21 @@ storeClasses.forEach((storeClass) => {
       it('should return the default ampm preference when none is set in the state', () => {
         const state = new storeClass.Value({ events: [] }, adapter).state;
         const ampm = schedulerPreferenceSelectors.ampm(state);
-        expect(ampm).to.equal(true);
+        expect(ampm).to.equal(DEFAULT_SCHEDULER_PREFERENCES.ampm);
       });
 
-      it('should return the custom ampm preference when it is set in the state', () => {
+      it('should return the custom ampm preference when it is set in the state (false)', () => {
         const state = new storeClass.Value({ events: [], preferences: { ampm: false } }, adapter)
           .state;
         const ampm = schedulerPreferenceSelectors.ampm(state);
         expect(ampm).to.equal(false);
+      });
+
+      it('should return the custom ampm preference when it is set in the state (true)', () => {
+        const state = new storeClass.Value({ events: [], preferences: { ampm: true } }, adapter)
+          .state;
+        const ampm = schedulerPreferenceSelectors.ampm(state);
+        expect(ampm).to.equal(true);
       });
     });
   });

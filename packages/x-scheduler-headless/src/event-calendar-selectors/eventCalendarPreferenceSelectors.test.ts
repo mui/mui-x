@@ -33,13 +33,22 @@ describe('eventCalendarPreferenceSelectors', () => {
       expect(ampm).to.equal(DEFAULT_EVENT_CALENDAR_PREFERENCES.ampm);
     });
 
-    it('should return the custom ampm preference when it is set in the state', () => {
+    it('should return the custom ampm preference when it is set in the state (false)', () => {
       const state = getEventCalendarStateFromParameters({
         events: [],
         preferences: { ampm: false },
       });
       const ampm = eventCalendarPreferenceSelectors.ampm(state);
       expect(ampm).to.equal(false);
+    });
+
+    it('should return the custom ampm preference when it is set in the state (true)', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [],
+        preferences: { ampm: true },
+      });
+      const ampm = eventCalendarPreferenceSelectors.ampm(state);
+      expect(ampm).to.equal(true);
     });
   });
 
@@ -50,7 +59,7 @@ describe('eventCalendarPreferenceSelectors', () => {
       expect(showWeekends).to.equal(DEFAULT_EVENT_CALENDAR_PREFERENCES.showWeekends);
     });
 
-    it('should return the custom showWeekends preference when it is set in the state', () => {
+    it('should return the custom showWeekends preference when it is set in the state (false)', () => {
       const state = getEventCalendarStateFromParameters({
         events: [],
         preferences: { showWeekends: false },
@@ -58,16 +67,25 @@ describe('eventCalendarPreferenceSelectors', () => {
       const showWeekends = eventCalendarPreferenceSelectors.showWeekends(state);
       expect(showWeekends).to.equal(false);
     });
+
+    it('should return the custom showWeekends preference when it is set in the state (true)', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [],
+        preferences: { showWeekends: true },
+      });
+      const showWeekends = eventCalendarPreferenceSelectors.showWeekends(state);
+      expect(showWeekends).to.equal(true);
+    });
   });
 
   describe('showWeekNumber', () => {
     it('should return the default showWeekNumber preference when none is set in the state', () => {
       const state = getEventCalendarStateFromParameters({ events: [] });
       const showWeekNumber = eventCalendarPreferenceSelectors.showWeekNumber(state);
-      expect(showWeekNumber).to.equal(false);
+      expect(showWeekNumber).to.equal(DEFAULT_EVENT_CALENDAR_PREFERENCES.showWeekNumber);
     });
 
-    it('should return the custom showWeekNumber preference when it is set in the state', () => {
+    it('should return the custom showWeekNumber preference when it is set in the state (true)', () => {
       const state = getEventCalendarStateFromParameters({
         events: [],
         preferences: { showWeekNumber: true },
@@ -75,16 +93,27 @@ describe('eventCalendarPreferenceSelectors', () => {
       const showWeekNumber = eventCalendarPreferenceSelectors.showWeekNumber(state);
       expect(showWeekNumber).to.equal(true);
     });
+
+    it('should return the custom showWeekNumber preference when it is set in the state (false)', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [],
+        preferences: { showWeekNumber: false },
+      });
+      const showWeekNumber = eventCalendarPreferenceSelectors.showWeekNumber(state);
+      expect(showWeekNumber).to.equal(false);
+    });
   });
 
   describe('showEmptyDaysInAgenda', () => {
     it('should return the default showEmptyDaysInAgenda preference when none is set in the state', () => {
       const state = getEventCalendarStateFromParameters({ events: [] });
       const showEmptyDaysInAgenda = eventCalendarPreferenceSelectors.showEmptyDaysInAgenda(state);
-      expect(showEmptyDaysInAgenda).to.equal(true);
+      expect(showEmptyDaysInAgenda).to.equal(
+        DEFAULT_EVENT_CALENDAR_PREFERENCES.showEmptyDaysInAgenda,
+      );
     });
 
-    it('should return the custom showEmptyDaysInAgenda preference when it is set in the state', () => {
+    it('should return the custom showEmptyDaysInAgenda preference when it is set in the state (false)', () => {
       const state = getEventCalendarStateFromParameters({
         events: [],
         preferences: { showEmptyDaysInAgenda: false },
@@ -92,22 +121,40 @@ describe('eventCalendarPreferenceSelectors', () => {
       const showEmptyDaysInAgenda = eventCalendarPreferenceSelectors.showEmptyDaysInAgenda(state);
       expect(showEmptyDaysInAgenda).to.equal(false);
     });
+
+    it('should return the custom showEmptyDaysInAgenda preference when it is set in the state (true)', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [],
+        preferences: { showEmptyDaysInAgenda: true },
+      });
+      const showEmptyDaysInAgenda = eventCalendarPreferenceSelectors.showEmptyDaysInAgenda(state);
+      expect(showEmptyDaysInAgenda).to.equal(true);
+    });
   });
 
   describe('isSidePanelOpen', () => {
     it('should return the default isSidePanelOpen preference when none is set in the state', () => {
       const state = getEventCalendarStateFromParameters({ events: [] });
       const isSidePanelOpen = eventCalendarPreferenceSelectors.isSidePanelOpen(state);
-      expect(isSidePanelOpen).to.equal(true);
+      expect(isSidePanelOpen).to.equal(DEFAULT_EVENT_CALENDAR_PREFERENCES.isSidePanelOpen);
     });
 
-    it('should return the custom isSidePanelOpen preference when it is set in the state', () => {
+    it('should return the custom isSidePanelOpen preference when it is set in the state (false)', () => {
       const state = getEventCalendarStateFromParameters({
         events: [],
         preferences: { isSidePanelOpen: false },
       });
       const isSidePanelOpen = eventCalendarPreferenceSelectors.isSidePanelOpen(state);
       expect(isSidePanelOpen).to.equal(false);
+    });
+
+    it('should return the custom isSidePanelOpen preference when it is set in the state (true)', () => {
+      const state = getEventCalendarStateFromParameters({
+        events: [],
+        preferences: { isSidePanelOpen: true },
+      });
+      const isSidePanelOpen = eventCalendarPreferenceSelectors.isSidePanelOpen(state);
+      expect(isSidePanelOpen).to.equal(true);
     });
   });
 
