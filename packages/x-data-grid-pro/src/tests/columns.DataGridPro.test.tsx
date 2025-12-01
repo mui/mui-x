@@ -666,7 +666,7 @@ describe('<DataGridPro /> - Columns', () => {
         await act(async () =>
           apiRef.current?.autosizeColumns({
             includeHeaders: true,
-            includeHeaderFilters: false
+            includeHeaderFilters: false,
           }),
         );
         const widthWithoutHeaderFilters = parseInt(getColumnHeaderCell(1).style.width, 10);
@@ -675,7 +675,7 @@ describe('<DataGridPro /> - Columns', () => {
         await act(async () =>
           apiRef.current?.autosizeColumns({
             includeHeaders: true,
-            includeHeaderFilters: true
+            includeHeaderFilters: true,
           }),
         );
         const widthWithHeaderFilters = parseInt(getColumnHeaderCell(1).style.width, 10);
