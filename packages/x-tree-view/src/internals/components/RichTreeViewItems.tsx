@@ -16,6 +16,7 @@ const RichTreeViewItemsContext = React.createContext<
 
 const EMPTY_ARRAY: any[] = [];
 const selectorNoChildren = () => EMPTY_ARRAY;
+const selectorChildrenIdsNull = (state: any) => itemsSelectors.itemOrderedChildrenIds(state, null);
 
 const WrappedTreeItem = React.memo(function WrappedTreeItem({
   itemSlot,
@@ -54,9 +55,7 @@ export function RichTreeViewItems(props: RichTreeViewItemsProps) {
   const domStructure = useStore(store, itemsSelectors.domStructure);
   const items = useStore(
     store,
-    domStructure === 'flat'
-      ? (state) => expansionSelectors.flatList(state)
-      : (state) => itemsSelectors.itemOrderedChildrenIds(state, null),
+    domStructure === 'flat' ? expansionSelectors.flatList : selectorChildrenIdsNull,
   );
 
   const skipChildren = domStructure === 'flat';

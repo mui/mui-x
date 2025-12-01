@@ -107,7 +107,7 @@ const selectAxisHighlightWithValue = (
   return [];
 };
 
-export const selectorChartsHighlightXAxisValue = createSelector(
+export const selectorChartsHighlightXAxisValue = createSelectorMemoized(
   selectorChartsInteractionXAxisIndex,
   selectorChartsInteractionXAxisValue,
   selectorChartXAxis,
@@ -119,7 +119,7 @@ export const selectorChartsHighlightXAxisValue = createSelector(
   selectAxisHighlightWithValue,
 );
 
-export const selectorChartsHighlightYAxisValue = createSelector(
+export const selectorChartsHighlightYAxisValue = createSelectorMemoized(
   selectorChartsInteractionYAxisIndex,
   selectorChartsInteractionYAxisValue,
   selectorChartYAxis,
