@@ -2,7 +2,7 @@ import * as React from 'react';
 import { SchedulerEventOccurrence, SchedulerProcessedDate } from '../models';
 import { useEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
 import { useAdapter, diffIn } from '../use-adapter/useAdapter';
-import { sortEventOccurrences } from '../utils/event-utils';
+import { sortEventOccurrences } from '../sort-event-occurrences';
 
 /**
  * Places event occurrences for a list of days, where if an event is rendered in a day, it fills the entire day cell (no notion of time).

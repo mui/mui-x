@@ -8,7 +8,7 @@ import {
   SchedulerOccurrencePlaceholderInternalDragOrResize,
   EventSurfaceType,
   SchedulerEventUpdatedProperties,
-  SchedulerValidDate,
+  TemporalSupportedObject,
   SchedulerResourceId,
 } from '../models';
 import {
@@ -179,13 +179,13 @@ export namespace useDropTarget {
 
   export type GetDataFromInside = (
     data: Exclude<EventDropData, StandaloneEvent.DragData>,
-    newStart: SchedulerValidDate,
-    newEnd: SchedulerValidDate,
+    newStart: TemporalSupportedObject,
+    newEnd: TemporalSupportedObject,
   ) => SchedulerOccurrencePlaceholderInternalDragOrResize;
 
   export type GetDataFromOutside = (
     data: StandaloneEvent.DragData,
-    start: SchedulerValidDate,
+    start: TemporalSupportedObject,
   ) => SchedulerOccurrencePlaceholderExternalDrag | undefined;
 
   export type GetEventDropData = (parameters: {

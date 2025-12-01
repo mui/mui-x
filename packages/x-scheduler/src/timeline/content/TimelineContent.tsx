@@ -11,7 +11,7 @@ import {
 import { useTimelineStoreContext } from '@mui/x-scheduler-headless/use-timeline-store-context';
 import { useEventOccurrencesGroupedByResource } from '@mui/x-scheduler-headless/use-event-occurrences-grouped-by-resource';
 import { useAdapter, diffIn, Adapter } from '@mui/x-scheduler-headless/use-adapter';
-import { SchedulerValidDate, TimelineView } from '@mui/x-scheduler-headless/models';
+import { TemporalSupportedObject, TimelineView } from '@mui/x-scheduler-headless/models';
 import { timelineViewSelectors } from '@mui/x-scheduler-headless/timeline-selectors';
 import { DaysHeader, MonthsHeader, TimeHeader, WeeksHeader, YearHeader } from './view-header';
 import { TimelineContentProps } from './TimelineContent.types';
@@ -27,7 +27,7 @@ import {
   YEARS_UNIT_COUNT,
 } from '../constants';
 
-const getEndBoundaries = (adapter: Adapter, view: TimelineView, start: SchedulerValidDate) => {
+const getEndBoundaries = (adapter: Adapter, view: TimelineView, start: TemporalSupportedObject) => {
   const endBoundaries = {
     time: adapter.addHours(start, 24 * TIME_UNITS_COUNT),
     days: adapter.addDays(start, DAYS_UNIT_COUNT),
@@ -38,7 +38,7 @@ const getEndBoundaries = (adapter: Adapter, view: TimelineView, start: Scheduler
 
   return endBoundaries[view];
 };
-const getStartDate = (adapter: Adapter, view: TimelineView, start: SchedulerValidDate) => {
+const getStartDate = (adapter: Adapter, view: TimelineView, start: TemporalSupportedObject) => {
   if (view === 'weeks') {
     return adapter.startOfWeek(start);
   }

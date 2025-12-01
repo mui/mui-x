@@ -66,6 +66,10 @@ export type UseChartHighlightDefaultizedParameters = DefaultizedProps<
 export interface UseChartHighlightState {
   highlight: {
     /**
+     * Indicates if the highlighted item is controlled.
+     */
+    isControlled: boolean;
+    /**
      * The item currently highlighted.
      */
     item: HighlightItemData | null;
