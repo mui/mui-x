@@ -214,6 +214,11 @@ async function applyInternalDragOrResizeOccurrencePlaceholder(
     throw new Error(`Scheduler: the original event was not found (id="${eventId}").`);
   }
 
+  const adapter = store.state.adapter;
+  if (adapter.isEqual(original.start.value, start) && adapter.isEqual(original.end.value, end)) {
+    return;
+  }
+
   const changes: SchedulerEventUpdatedProperties = { id: eventId, start, end };
 
   // If `undefined`, we want to set the event resource to `undefined` (no resource).
