@@ -17,10 +17,10 @@ describe('timelineViewSelectors', () => {
     it('should return the views from state', () => {
       const state = getTimelineStateFromParameters({
         events: [],
-        views: ['days', 'weeks', 'months'],
+        views: ['time', 'days'],
       });
       const views = timelineViewSelectors.views(state);
-      expect(views).to.deep.equal(['days', 'weeks', 'months']);
+      expect(views).to.deep.equal(['time', 'days']);
     });
   });
 });
