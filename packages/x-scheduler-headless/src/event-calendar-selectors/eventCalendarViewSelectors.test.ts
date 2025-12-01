@@ -9,7 +9,7 @@ describe('eventCalendarViewSelectors', () => {
         view: 'month',
       });
       const view = eventCalendarViewSelectors.view(state);
-      expect(view).toBe('month');
+      expect(view).to.equal('month');
     });
   });
   describe('views', () => {
@@ -19,7 +19,7 @@ describe('eventCalendarViewSelectors', () => {
         views: ['day', 'week', 'month'],
       });
       const views = eventCalendarViewSelectors.views(state);
-      expect(views).toEqual(['day', 'week', 'month']);
+      expect(views).to.deep.equal(['day', 'week', 'month']);
     });
   });
   describe('hasDayView', () => {
@@ -29,7 +29,7 @@ describe('eventCalendarViewSelectors', () => {
         views: ['day', 'week', 'month'],
       });
       const hasDayView = eventCalendarViewSelectors.hasDayView(state);
-      expect(hasDayView).toBe(true);
+      expect(hasDayView).to.equal(true);
     });
     it('should return false if views do not include day', () => {
       const state = getEventCalendarStateFromParameters({
@@ -37,7 +37,7 @@ describe('eventCalendarViewSelectors', () => {
         views: ['week', 'month'],
       });
       const hasDayView = eventCalendarViewSelectors.hasDayView(state);
-      expect(hasDayView).toBe(false);
+      expect(hasDayView).to.equal(false);
     });
   });
 });
