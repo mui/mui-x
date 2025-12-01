@@ -31,7 +31,6 @@ import {
 } from './SchedulerStore.utils';
 import { TimeoutManager } from '../TimeoutManager';
 import { DEFAULT_EVENT_COLOR } from '../../constants';
-import { getStartOfTodayInRenderTimezone } from '../timezone-utils';
 
 const ONE_MINUTE_IN_MS = 60 * 1000;
 
@@ -291,7 +290,7 @@ export class SchedulerStore<
    */
   public goToToday = (event: React.UIEvent) => {
     const { adapter } = this.state;
-    this.setVisibleDate(getStartOfTodayInRenderTimezone(adapter, this.state.timezone), event);
+    this.setVisibleDate(adapter.startOfDay(adapter.now(this.state.timezone)), event);
   };
 
   /**

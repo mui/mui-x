@@ -9,7 +9,7 @@ import {
   ComputedYAxis,
 } from '../../../../models/axis';
 import { ChartDrawingArea } from '../../../../hooks/useDrawingArea';
-import { ProcessedSeries } from '../../corePlugins/useChartSeries';
+import { ProcessedSeries, SeriesLayout } from '../../corePlugins/useChartSeries';
 import { ComputeResult } from '../../featurePlugins/useChartPolarAxis/computeAxisValue';
 
 export interface TooltipPositionGetterAxesConfig {
@@ -24,6 +24,7 @@ export type TooltipItemPositionGetter<TSeriesType extends ChartSeriesType> = (pa
   axesConfig: TooltipPositionGetterAxesConfig;
   drawingArea: ChartDrawingArea;
   identifier: ChartItemIdentifierWithData<TSeriesType> | null;
+  seriesLayout: SeriesLayout<TSeriesType>;
   /**
    * The preferred placement of the tooltip related to the element.
    * @default 'top'

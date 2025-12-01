@@ -207,9 +207,14 @@ export class EventBuilder {
    * Create an event spanning a start and end.
    * Optionally override `allDay`.
    */
-  span(start: string, end: string, opts?: { allDay?: boolean }) {
-    this.event.start = this.adapter.date(start, this.dataTimezone);
-    this.event.end = this.adapter.date(end, this.dataTimezone);
+  span(
+    start: string | TemporalSupportedObject,
+    end: string | TemporalSupportedObject,
+    opts?: { allDay?: boolean },
+  ) {
+    this.event.start =
+      typeof start === 'string' ? this.adapter.date(start, this.dataTimezone) : start;
+    this.event.end = typeof end === 'string' ? this.adapter.date(end, this.dataTimezone) : end;
     if (opts?.allDay !== undefined) {
       this.event.allDay = opts.allDay;
     }
