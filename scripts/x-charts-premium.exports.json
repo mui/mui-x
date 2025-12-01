@@ -201,6 +201,7 @@
   { "name": "DEFAULT_MARGINS", "kind": "Variable" },
   { "name": "DEFAULT_RADIUS_AXIS_KEY", "kind": "Variable" },
   { "name": "DEFAULT_ROTATION_AXIS_KEY", "kind": "Variable" },
+  { "name": "DEFAULT_SERIES_CONFIG", "kind": "Variable" },
   { "name": "DEFAULT_X_AXIS_KEY", "kind": "Variable" },
   { "name": "DEFAULT_Y_AXIS_KEY", "kind": "Variable" },
   { "name": "DefaultizedBarSeriesType", "kind": "Interface" },

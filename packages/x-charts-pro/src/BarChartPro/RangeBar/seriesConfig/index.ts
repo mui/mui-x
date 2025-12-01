@@ -1,24 +1,21 @@
 import { cartesianSeriesTypes, ChartSeriesTypeConfig } from '@mui/x-charts/internals';
-import {
-  getExtremumX as getRangeBarExtremumX,
-  getExtremumY as getRangeBarExtremumY,
-} from './extrema';
-import rangeBarTooltipGetter, { axisTooltipGetter as rangeBarAxisTooltipGetter } from './tooltip';
-import rangeBarSeriesProcessor from './seriesProcessor';
-import rangeBarGetColor from './getColor';
+import { getExtremumX, getExtremumY } from './extrema';
+import tooltipGetter, { axisTooltipGetter } from './tooltip';
+import seriesProcessor from './seriesProcessor';
+import getColor from './getColor';
 import legendGetter from './legend';
 import tooltipItemPositionGetter from './tooltipPosition';
 import { getSeriesWithDefaultValues } from './getSeriesWithDefaultValues';
 
 export const rangeBarSeriesConfig: ChartSeriesTypeConfig<'rangeBar'> = {
-  seriesProcessor: rangeBarSeriesProcessor,
-  colorProcessor: rangeBarGetColor,
+  seriesProcessor,
+  colorProcessor: getColor,
   legendGetter,
-  tooltipGetter: rangeBarTooltipGetter,
+  tooltipGetter,
   tooltipItemPositionGetter,
-  axisTooltipGetter: rangeBarAxisTooltipGetter,
-  xExtremumGetter: getRangeBarExtremumX,
-  yExtremumGetter: getRangeBarExtremumY,
+  axisTooltipGetter,
+  xExtremumGetter: getExtremumX,
+  yExtremumGetter: getExtremumY,
   getSeriesWithDefaultValues,
 };
 
