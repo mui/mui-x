@@ -5,7 +5,7 @@ import {
   SchedulerEventId,
   SchedulerOccurrencePlaceholder,
   SchedulerResourceId,
-  SchedulerValidDate,
+  TemporalSupportedObject,
   SchedulerEventUpdatedProperties,
   RecurringEventUpdateScope,
   SchedulerPreferences,
@@ -31,7 +31,6 @@ import {
 } from './SchedulerStore.utils';
 import { TimeoutManager } from '../TimeoutManager';
 import { DEFAULT_EVENT_COLOR } from '../../constants';
-import { getNowInRenderTimezone, getStartOfTodayInRenderTimezone } from '../timezone-utils';
 
 const ONE_MINUTE_IN_MS = 60 * 1000;
 
@@ -64,23 +63,22 @@ export class SchedulerStore<
     instanceName: string,
     mapper: SchedulerParametersToStateMapper<State, Parameters>,
   ) {
-    const timezone = parameters.timezone ?? 'default';
+    const stateFromParameters = SchedulerStore.deriveStateFromParameters(parameters, adapter);
 
     const schedulerInitialState: SchedulerState<TEvent> = {
-      ...SchedulerStore.deriveStateFromParameters(parameters, adapter),
-      ...buildEventsState(parameters, adapter),
+      ...stateFromParameters,
+      ...buildEventsState(parameters, adapter, stateFromParameters.timezone),
       ...buildResourcesState(parameters),
       preferences: DEFAULT_SCHEDULER_PREFERENCES,
       adapter,
       occurrencePlaceholder: null,
-      nowUpdatedEveryMinute: getNowInRenderTimezone(adapter, timezone),
+      nowUpdatedEveryMinute: adapter.now(stateFromParameters.timezone),
       pendingUpdateRecurringEventParameters: null,
-      timezone,
       visibleResources: new Map(),
       visibleDate:
         parameters.visibleDate ??
         parameters.defaultVisibleDate ??
-        adapter.startOfDay(adapter.now(timezone)),
+        adapter.startOfDay(adapter.now(stateFromParameters.timezone)),
     };
 
     const initialState = mapper.getInitialState(schedulerInitialState, parameters, adapter);
@@ -95,9 +93,9 @@ export class SchedulerStore<
       ONE_MINUTE_IN_MS - (currentDate.getSeconds() * 1000 + currentDate.getMilliseconds());
 
     this.timeoutManager.startTimeout('set-now', timeUntilNextMinuteMs, () => {
-      this.set('nowUpdatedEveryMinute', getNowInRenderTimezone(adapter, timezone));
+      this.set('nowUpdatedEveryMinute', this.state.adapter.now(this.state.timezone));
       this.timeoutManager.startInterval('set-now', ONE_MINUTE_IN_MS, () => {
-        this.set('nowUpdatedEveryMinute', getNowInRenderTimezone(adapter, timezone));
+        this.set('nowUpdatedEveryMinute', this.state.adapter.now(this.state.timezone));
       });
     });
 
@@ -124,6 +122,7 @@ export class SchedulerStore<
       showCurrentTimeIndicator: parameters.showCurrentTimeIndicator ?? true,
       readOnly: parameters.readOnly ?? false,
       eventCreation: parameters.eventCreation ?? true,
+      timezone: parameters.timezone ?? 'default',
     };
   }
 
@@ -175,8 +174,13 @@ export class SchedulerStore<
       parameters.eventModelStructure !== this.parameters.eventModelStructure ||
       adapter !== this.state.adapter
     ) {
-      Object.assign(newSchedulerState, buildEventsState(parameters, adapter));
+      Object.assign(
+        newSchedulerState,
+        buildEventsState(parameters, adapter, newSchedulerState.timezone!),
+      );
     }
+
+    newSchedulerState.nowUpdatedEveryMinute = adapter.now(newSchedulerState.timezone!);
 
     if (
       parameters.resources !== this.parameters.resources ||
@@ -222,7 +226,7 @@ export class SchedulerStore<
     });
   };
 
-  protected setVisibleDate = (visibleDate: SchedulerValidDate, event: React.UIEvent) => {
+  protected setVisibleDate = (visibleDate: TemporalSupportedObject, event: React.UIEvent) => {
     const { visibleDate: visibleDateProp, onVisibleDateChange } = this.parameters;
     const { adapter } = this.state;
     const hasChange = !adapter.isEqual(this.state.visibleDate, visibleDate);
@@ -286,7 +290,7 @@ export class SchedulerStore<
    */
   public goToToday = (event: React.UIEvent) => {
     const { adapter } = this.state;
-    this.setVisibleDate(getStartOfTodayInRenderTimezone(adapter, this.state.timezone), event);
+    this.setVisibleDate(adapter.startOfDay(adapter.now(this.state.timezone)), event);
   };
 
   /**
@@ -375,8 +379,8 @@ export class SchedulerStore<
    */
   public duplicateEventOccurrence = (
     eventId: SchedulerEventId,
-    start: SchedulerValidDate,
-    end: SchedulerValidDate,
+    start: TemporalSupportedObject,
+    end: TemporalSupportedObject,
   ) => {
     const original = schedulerEventSelectors.processedEvent(this.state, eventId);
     if (!original) {
