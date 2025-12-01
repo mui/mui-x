@@ -2,7 +2,6 @@ import { spy } from 'sinon';
 import { adapter } from 'test/utils/scheduler';
 import { EventCalendarStore } from '../EventCalendarStore';
 import { EventCalendarState } from '../EventCalendarStore.types';
-import { SchedulerChangeEventDetails } from '../../utils/SchedulerStore';
 
 const DEFAULT_PARAMS = { events: [] };
 
@@ -56,11 +55,12 @@ describe('View - EventCalendarStore', () => {
     });
 
     it('should NOT mutate store when onViewChange cancels the change', () => {
-      const onViewChange = spy((newView: string, eventDetails: SchedulerChangeEventDetails) => {
-        eventDetails.cancel();
-      });
       const store = new EventCalendarStore(
-        { ...DEFAULT_PARAMS, defaultView: 'week', onViewChange },
+        {
+          ...DEFAULT_PARAMS,
+          defaultView: 'week',
+          onViewChange: (_, eventDetails) => eventDetails.cancel(),
+        },
         adapter,
       );
 
@@ -128,15 +128,12 @@ describe('View - EventCalendarStore', () => {
     });
 
     it('should NOT mutate store when onViewChange cancels the change', () => {
-      const onViewChange = spy((newView: string, eventDetails: SchedulerChangeEventDetails) => {
-        eventDetails.cancel();
-      });
       const store = new EventCalendarStore(
         {
           ...DEFAULT_PARAMS,
           defaultView: 'week',
           defaultVisibleDate: adapter.date('2025-06-15', 'default'),
-          onViewChange,
+          onViewChange: (_, eventDetails) => eventDetails.cancel(),
         },
         adapter,
       );
