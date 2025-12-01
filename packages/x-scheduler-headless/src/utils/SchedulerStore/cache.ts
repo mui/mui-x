@@ -163,6 +163,7 @@ export class SchedulerDataSourceCacheDefault<TEvent extends object>
     return result;
   }
 
+  // Only for testing purposes - will remove later
   public getLoadedRangesInfo() {
     return this.loadedRanges;
   }
