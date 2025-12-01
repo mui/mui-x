@@ -617,7 +617,7 @@ describe('<DataGridPro /> - Columns', () => {
 
     describe('options', () => {
       const autosize = async (options: GridAutosizeOptions | undefined, widths: number[]) => {
-        render(<Test rows={rows} columns={columns} />);
+        render(<Test rows={rows} columns={columns} headerFilters />);
         await act(async () =>
           apiRef.current?.autosizeColumns({ includeHeaders: false, ...options }),
         );
@@ -648,39 +648,7 @@ describe('<DataGridPro /> - Columns', () => {
       });
 
       it('.includeHeaderFilters works', async () => {
-        render(
-          <Test
-            rows={[
-              { id: 0, name: 'A' },
-              { id: 1, name: 'B' },
-            ]}
-            columns={[
-              { field: 'id', headerName: 'ID', width: 50 },
-              { field: 'name', headerName: 'N' },
-            ]}
-            headerFilters
-          />,
-        );
-
-        // Without includeHeaderFilters, column should be narrow
-        await act(async () =>
-          apiRef.current?.autosizeColumns({
-            includeHeaders: true,
-            includeHeaderFilters: false,
-          }),
-        );
-        const widthWithoutHeaderFilters = parseInt(getColumnHeaderCell(1).style.width, 10);
-
-        // With includeHeaderFilters, column should be wider to accommodate filter input
-        await act(async () =>
-          apiRef.current?.autosizeColumns({
-            includeHeaders: true,
-            includeHeaderFilters: true,
-          }),
-        );
-        const widthWithHeaderFilters = parseInt(getColumnHeaderCell(1).style.width, 10);
-
-        expect(widthWithHeaderFilters).to.be.greaterThan(widthWithoutHeaderFilters);
+        await autosize({ includeHeaderFilters: true }, [236, 236]);
       });
     });
   });
