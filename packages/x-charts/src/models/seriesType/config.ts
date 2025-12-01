@@ -53,6 +53,7 @@ export interface ChartsSeriesConfig {
     seriesInput: DefaultizedProps<RangeBarSeriesType, 'id'> &
       MakeRequired<SeriesColor<RangeBarValueType | null>, 'color'>;
     series: DefaultizedRangeBarSeriesType;
+    seriesLayout: {};
     seriesProp: RangeBarSeriesType;
     itemIdentifier: RangeBarItemIdentifier;
     itemIdentifierWithData: RangeBarItemIdentifier;
