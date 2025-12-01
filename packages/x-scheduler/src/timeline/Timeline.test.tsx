@@ -114,9 +114,9 @@ describe('<Timeline />', () => {
       const hourBoundaries = { start: 9 * 64, end: 10 * 64 }; // 9:00 - 10:00
       renderTimeline({ view: 'time' });
 
-      const event = screen.getByText(event1.title);
-      expect(event).not.to.equal(null);
-      const xPositioning = event.style.getPropertyValue('--x-position');
+      const eventElement = screen.getByLabelText(event1.title);
+      expect(eventElement).not.to.equal(null);
+      const xPositioning = eventElement.style.getPropertyValue('--x-position');
 
       const eventPosition = (totalWidth * parseFloat(xPositioning)) / 100;
 
@@ -129,9 +129,9 @@ describe('<Timeline />', () => {
       const dayBoundaries = { start: 1 * 120, end: 2 * 120 }; // 4th - 5th
       renderTimeline({ view: 'days' });
 
-      const event = screen.getByText(event3.title);
-      expect(event).not.to.equal(null);
-      const xPositioning = event.style.getPropertyValue('--x-position');
+      const eventElement = screen.getByLabelText(event3.title);
+      expect(eventElement).not.to.equal(null);
+      const xPositioning = eventElement.style.getPropertyValue('--x-position');
 
       const eventPosition = (totalWidth * parseFloat(xPositioning)) / 100;
 
@@ -140,16 +140,16 @@ describe('<Timeline />', () => {
     });
 
     it('should render events correctly in the weeks view', () => {
-      const totalWidth = 3584; // 64px * 7 days * 8 weeks
+      const totalWidth = 64 * 7 * 12; // 64px * 7 days * 12 weeks
       const startOfWeek = adapter.startOfWeek(DEFAULT_TESTING_VISIBLE_DATE);
       const weekDayNumber = diffIn(adapter, baseEvents[0].start, startOfWeek, 'days');
       const dayBoundaries = { start: weekDayNumber * 64, end: (weekDayNumber + 1) * 64 };
 
       renderTimeline({ view: 'weeks' });
 
-      const event = screen.getByText(event1.title);
-      expect(event).not.to.equal(null);
-      const xPositioning = event.style.getPropertyValue('--x-position');
+      const eventElement = screen.getByLabelText(event1.title);
+      expect(eventElement).not.to.equal(null);
+      const xPositioning = eventElement.style.getPropertyValue('--x-position');
 
       const eventPosition = (totalWidth * parseFloat(xPositioning)) / 100;
 
@@ -167,16 +167,16 @@ describe('<Timeline />', () => {
 
       renderTimeline({ events: extendedEvents, view: 'months' });
 
-      const totalWidth = 2160; // 12 months * 180px
-      const event1Element = screen.getByText(event1.title);
-      expect(event1).not.to.equal(null);
+      const totalWidth = 180 * 24; // 24 months
+      const event1Element = screen.getByLabelText(event1.title);
+      expect(event1Element).not.to.equal(null);
       const xPositioning = event1Element.style.getPropertyValue('--x-position');
 
       const eventPosition = (totalWidth * parseFloat(xPositioning)) / 100;
 
       expect(eventPosition).to.be.lessThanOrEqual(180); // first month
 
-      const nextMonthEventElement = screen.getByText('Next month');
+      const nextMonthEventElement = screen.getByLabelText('Next month');
       expect(nextMonthEventElement).not.to.equal(null);
       const xPositioning2 = nextMonthEventElement.style.getPropertyValue('--x-position');
 
@@ -185,6 +185,7 @@ describe('<Timeline />', () => {
       expect(eventPosition2).to.be.greaterThanOrEqual(180); // second month
       expect(eventPosition2).to.be.lessThanOrEqual(360); // second month
     });
+
     it('should render events correctly in the month view', () => {
       const thisYearEvent = EventBuilder.new()
         .span('2025-08-03T13:00:00Z', '2025-09-04T14:30:00Z')
@@ -197,8 +198,8 @@ describe('<Timeline />', () => {
 
       renderTimeline({ events: [thisYearEvent, nextYearEvent], view: 'years' });
 
-      const totalWidth = 800;
-      const thisYearEventElement = screen.getByText(thisYearEvent.title);
+      const totalWidth = 12 * 200;
+      const thisYearEventElement = screen.getByLabelText(thisYearEvent.title);
       expect(thisYearEventElement).not.to.equal(null);
       const xPositioning = thisYearEventElement.style.getPropertyValue('--x-position');
 
@@ -206,7 +207,7 @@ describe('<Timeline />', () => {
 
       expect(eventPosition).to.be.lessThanOrEqual(200); // 2025
 
-      const nextYearEventElement = screen.getByText(nextYearEvent.title);
+      const nextYearEventElement = screen.getByLabelText(nextYearEvent.title);
       expect(nextYearEventElement).not.to.equal(null);
       const xPositioning2 = nextYearEventElement.style.getPropertyValue('--x-position');
 
