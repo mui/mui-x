@@ -8,6 +8,7 @@ import { useStoreEffect } from '@mui/x-internals/store';
 import {
   useVirtualizer,
   Dimensions,
+  LayoutDataGridLegacy,
   VirtualizerParams,
   Virtualization,
   EMPTY_RENDER_CONTEXT,
@@ -142,6 +143,8 @@ export function useGridVirtualizer() {
     rightPinnedWidth,
     topPinnedHeight: headersTotalHeight,
     bottomPinnedHeight: 0,
+    autoHeight,
+    minimalContentHeight,
     scrollbarSize: rootProps.scrollbarSize,
   };
 
@@ -166,13 +169,18 @@ export function useGridVirtualizer() {
   // We need it to trigger a new render, but rowsMeta needs access to the latest value, hence we cannot pass it to the focusedVirtualCell callback in the virtualizer params
   eslintUseValue(focusedVirtualCell);
 
+  const layout = useLazyRef(
+    () =>
+      new LayoutDataGridLegacy({
+        container: apiRef.current.mainElementRef,
+        scroller: apiRef.current.virtualScrollerRef,
+        scrollbarVertical: apiRef.current.virtualScrollbarVerticalRef,
+        scrollbarHorizontal: apiRef.current.virtualScrollbarHorizontalRef,
+      }),
+  ).current;
+
   const virtualizer = useVirtualizer({
-    refs: {
-      container: apiRef.current.mainElementRef,
-      scroller: apiRef.current.virtualScrollerRef,
-      scrollbarVertical: apiRef.current.virtualScrollbarVerticalRef,
-      scrollbarHorizontal: apiRef.current.virtualScrollbarHorizontalRef,
-    },
+    layout,
 
     dimensions: dimensionsParams,
     virtualization: {
@@ -207,12 +215,10 @@ export function useGridVirtualizer() {
     pinnedRows,
     pinnedColumns,
 
-    autoHeight,
     disableHorizontalScroll: listView,
     disableVerticalScroll:
       overlayState.overlayType === 'noColumnsOverlay' ||
       overlayState.loadingOverlayVariant === 'skeleton',
-    minimalContentHeight,
     getRowHeight: React.useMemo(() => {
       if (!getRowHeight) {
         return undefined;
@@ -318,7 +324,7 @@ export function useGridVirtualizer() {
     ),
 
     renderInfiniteLoadingTrigger: React.useCallback(
-      (id) => (apiRef as any).current.getInfiniteLoadingTriggerElement?.({ lastRowId: id }),
+      (id: any) => (apiRef as any).current.getInfiniteLoadingTriggerElement?.({ lastRowId: id }),
       [apiRef],
     ),
   });

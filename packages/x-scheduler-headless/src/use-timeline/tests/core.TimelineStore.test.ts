@@ -35,6 +35,7 @@ describe('Core - TimelineStore', () => {
         resourceIdList: [],
         resourceModelStructure: undefined,
         showCurrentTimeIndicator: true,
+        timezone: 'default',
         view: 'time',
         views: ['time', 'days', 'weeks', 'months', 'years'],
         visibleDate: adapter.startOfDay(adapter.now('default')),

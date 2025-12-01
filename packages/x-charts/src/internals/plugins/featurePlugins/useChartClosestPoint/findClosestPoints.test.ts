@@ -41,7 +41,6 @@ describe('findClosestPoints', () => {
 
     const closestPoint = findClosestPoints(
       flatbush,
-      drawingArea,
       seriesData,
       xScale,
       yScale,
@@ -76,7 +75,6 @@ describe('findClosestPoints', () => {
 
       const closestPoint = findClosestPoints(
         flatbush,
-        drawingArea,
         seriesData,
         xScale,
         yScale,
@@ -121,7 +119,6 @@ describe('findClosestPoints', () => {
         expect(
           findClosestPoints(
             flatbush,
-            drawingArea,
             seriesData,
             xScale,
             yScale,
@@ -150,7 +147,6 @@ describe('findClosestPoints', () => {
         expect(
           findClosestPoints(
             flatbush,
-            drawingArea,
             seriesData,
             xScale,
             yScale,
@@ -186,7 +182,6 @@ describe('findClosestPoints', () => {
         expect(
           findClosestPoints(
             flatbush,
-            drawingArea,
             seriesData,
             xScale,
             yScale,
@@ -222,7 +217,6 @@ describe('findClosestPoints', () => {
 
       const closestPoint = findClosestPoints(
         flatbush,
-        drawingArea,
         seriesData,
         xScale,
         yScale,

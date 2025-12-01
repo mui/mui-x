@@ -42,6 +42,7 @@ describe('Core - EventCalendarStore', () => {
         resourceIdList: [],
         resourceModelStructure: undefined,
         showCurrentTimeIndicator: true,
+        timezone: 'default',
         view: DEFAULT_VIEW,
         viewConfig: null,
         views: DEFAULT_VIEWS,

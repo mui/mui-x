@@ -54,7 +54,9 @@ export function ChartsXAxisImpl({ axis, ...inProps }: ChartsXAxisImplProps) {
 
   const axisLabelProps = useSlotProps({
     elementType: Label,
+    // @ts-expect-error `useSlotProps` applies `WithCommonProps` with adds a `style: React.CSSProperties` prop automatically.
     externalSlotProps: slotProps?.axisLabel,
+    // @ts-expect-error `useSlotProps` applies `WithCommonProps` with adds a `style: React.CSSProperties` prop automatically.
     additionalProps: {
       style: {
         ...theme.typography.body1,
