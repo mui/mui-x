@@ -1,6 +1,7 @@
 import { adapter } from 'test/utils/scheduler';
 import { spy } from 'sinon';
 import { EventCalendarStore } from '../EventCalendarStore';
+import { SchedulerChangeEventDetails } from '../../utils/SchedulerStore';
 
 const DEFAULT_PARAMS = { events: [] };
 
@@ -39,6 +40,26 @@ describe('Preferences - EventCalendarStore', () => {
       });
       expect(onPreferencesChange.calledOnce).to.equal(true);
       expect(onPreferencesChange.lastCall.firstArg).to.deep.equal({
+        showWeekends: true,
+      });
+    });
+
+    it('should NOT mutate store when onPreferencesChange cancels the change', () => {
+      const onPreferencesChange = spy((_: any, eventDetails: SchedulerChangeEventDetails) => {
+        eventDetails.cancel();
+      });
+      const store = new EventCalendarStore(
+        {
+          ...DEFAULT_PARAMS,
+          preferences: { showWeekends: true },
+          onPreferencesChange,
+        },
+        adapter,
+      );
+
+      store.setPreferences({ showWeekends: false }, {} as any);
+
+      expect(store.state.preferences).to.deep.equal({
         showWeekends: true,
       });
     });
