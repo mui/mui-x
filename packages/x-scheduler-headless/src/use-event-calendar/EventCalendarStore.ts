@@ -89,27 +89,19 @@ export class EventCalendarStore<
     }
 
     this.registerStoreEffect(
-      (state) => {
-        const visibleDays =
-          state.viewConfig?.visibleDaysSelector?.(state as EventCalendarState) ?? [];
-
-        // Build a primitive key that is stable if the visible range didn't change.
-        // Adjust the mapping if your visibleDays items have a different shape.
-        const visibleDaysKey = visibleDays.map((day) => day.key).join('|');
-
-        return {
-          view: state.view,
-          viewConfig: state.viewConfig,
-          visibleDaysKey,
-        };
-      },
+      (state) => ({
+        view: state.view,
+        visibleDate: state.visibleDate,
+        viewConfig: state.viewConfig,
+      }),
 
       (previous, next) => {
+        const isFirstRun = !previous.viewConfig;
         // Bail out if nothing relevant changed.
         if (
           previous.view === next.view &&
-          previous.viewConfig === next.viewConfig &&
-          previous.visibleDaysKey === next.visibleDaysKey
+          adapter.isSameDay(previous.visibleDate, next.visibleDate) &&
+          !isFirstRun
         ) {
           return;
         }
@@ -120,7 +112,8 @@ export class EventCalendarStore<
         if (!this.parameters.dataSource || visibleDays.length === 0) {
           return;
         }
-        console.log('EventCalendarStore: visibleDays effect triggered', next.visibleDaysKey);
+
+        console.log('Queuing data fetch for view change', next.view, next.visibleDate, visibleDays);
 
         const range = {
           start: visibleDays[0].value,

@@ -1,0 +1,8 @@
+<EventCalendar
+  events={[]}
+  dataSource={{ getEvents: fetchData }}
+  resources={flatResources}
+  areEventsDraggable
+  defaultVisibleDate={defaultVisibleDate}
+  defaultPreferences={{ isSidePanelOpen: false }}
+/>
