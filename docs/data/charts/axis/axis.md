@@ -186,18 +186,17 @@ If you have a date axis, you can use the `timeOrdinalTicks` property to configur
 It takes an array of frequencies at which ticks can be placed.
 Those frequencies must be sorted from the largest to the smallest.
 For example `['years', 'months', 'days']`.
-Visible ticks are selected according to those frequencies plus the the `tickNumber`.
+Visible ticks are selected according to those frequencies and the `tickNumber`.
 
-It can either be a subsample of built in frequencies: `'years'`, `'quarterly'`, `'months'`, `'biweekly'`, `'weeks'`, `'days'`, `'hours'`.
-Or a custom definition of type `TicksFrequencyDefinition`.
+The `timeOrdinalTicks` property can either be an implementation of the `TickFrequencyDefinition` type or a subset of the built-in frequencies: `'years'`, `'quarterly'`, `'months'`, `'biweekly'`, `'weeks'`, `'days'`, `'hours'`.
 
 When using `timeOrdinalTicks` the property `tickPlacement` is ignored, and computation are done as if set to `'middle'`.
 
-In, the following demo, you can modify the `timeOrdinalTicks` based on built-in frequencies and see how it impacts zoom behavior.
+In the following demo, you can modify the `timeOrdinalTicks` based on built-in frequencies and see how it impacts zoom behavior.
 
 {{"demo": "OrdinalTickPlacement.js"}}
 
-The `TicksFrequencyDefinition` is an object made of following properties:
+The `TickFrequencyDefinition` is an object made of following properties:
 
 - `getTickNumber: (from: Date, to: Date) => number` Returns the number of ticks that will be displayed between `from` and `to` dates.
 - `isTick: (prev: Date, value: Date) => boolean` Returns `true` is a tick should be placed on `value`. For example if it's the beginning of a new month.

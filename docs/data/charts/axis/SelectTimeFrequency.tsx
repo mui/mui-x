@@ -24,6 +24,10 @@ export default function SelectTimeFrequency({
   tickNumber: number;
   setTickNumber: React.Dispatch<React.SetStateAction<number>>;
 }) {
+  const selectedFrequenciesNumber = Object.values(timeOrdinalTicks).filter(
+    (value) => value,
+  ).length;
+
   return (
     <Box sx={{ m: 3 }}>
       <FormControl component="fieldset" variant="standard">
@@ -52,16 +56,20 @@ export default function SelectTimeFrequency({
       </FormControl>
       <Typography id="tick-number-slider" gutterBottom>
         Select tick number
+        {selectedFrequenciesNumber <= 1
+          ? ' (disabled when less than 2 frequencies are selected)'
+          : ''}
       </Typography>
 
       <Slider
         value={tickNumber}
         onChange={(_, value) => setTickNumber(value as number)}
         min={1}
-        max={15}
+        max={25}
         aria-labelledby="tick-number-slider"
         valueLabelDisplay="auto"
         sx={{ maxWidth: 200 }}
+        disabled={selectedFrequenciesNumber <= 1}
       />
     </Box>
   );

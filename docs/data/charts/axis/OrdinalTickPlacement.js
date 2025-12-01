@@ -12,7 +12,6 @@ const tickFrequencies = [
   'biweekly',
   'weeks',
   'days',
-  'hours',
 ];
 
 export default function OrdinalTickPlacement() {

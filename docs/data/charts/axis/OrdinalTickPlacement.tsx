@@ -13,7 +13,6 @@ const tickFrequencies: TicksFrequency[] = [
   'biweekly',
   'weeks',
   'days',
-  'hours',
 ];
 
 export default function OrdinalTickPlacement() {
