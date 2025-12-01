@@ -149,7 +149,7 @@ export const useDemoData = (options: UseDemoDataOptions): DemoDataReturnType => 
   });
 
   React.useEffect(() => {
-    const cacheKey = `${options.dataSet}-${rowLength}-${index}-${options.maxColumns}`;
+    const cacheKey = `${options.dataSet}-${rowLength}-${index}-${options.maxColumns}-treeData:${(options.treeData?.maxDepth || 1) > 1 ? 'true' : 'false'}`;
 
     // Cache to allow fast switch between the JavaScript and TypeScript version
     // of the demos.

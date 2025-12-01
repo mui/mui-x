@@ -6,9 +6,6 @@ export type AnimationData = {
   y: number;
   width: number;
   height: number;
-  yOrigin: number;
-  xOrigin: number;
-  layout: BarSeriesType['layout'];
 };
 
 export interface ProcessedBarSeriesData {
@@ -16,6 +13,9 @@ export interface ProcessedBarSeriesData {
   data: ProcessedBarData[];
   barLabel?: BarSeriesType['barLabel'];
   barLabelPlacement?: BarSeriesType['barLabelPlacement'];
+  layout: 'vertical' | 'horizontal';
+  xOrigin: number;
+  yOrigin: number;
 }
 
 export interface ProcessedBarData extends AnimationData {
@@ -30,4 +30,7 @@ export interface MaskData extends AnimationData {
   id: string;
   hasNegative: boolean;
   hasPositive: boolean;
+  xOrigin: number;
+  yOrigin: number;
+  layout: 'horizontal' | 'vertical';
 }

@@ -1,22 +1,38 @@
 'use client';
 import * as React from 'react';
-import { useStore } from '@base-ui-components/utils/store';
 import { EventCalendarViewConfig } from '@mui/x-scheduler-headless/models';
-import { useDayList } from '@mui/x-scheduler-headless/use-day-list';
-import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
-import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
-import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
+import { getDayList } from '@mui/x-scheduler-headless/get-day-list';
 import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
-import { useExtractEventCalendarParameters } from '@mui/x-scheduler-headless/use-event-calendar';
+import {
+  useExtractEventCalendarParameters,
+  EventCalendarState as State,
+} from '@mui/x-scheduler-headless/use-event-calendar';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
+import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { useEventCalendarView } from '@mui/x-scheduler-headless/use-event-calendar-view';
+import { createSelectorMemoized } from '@base-ui-components/utils/store';
 import { StandaloneWeekViewProps, WeekViewProps } from './WeekView.types';
 import { DayTimeGrid } from '../internals/components/day-time-grid/DayTimeGrid';
 import '../index.css';
 
 const WEEK_VIEW_CONFIG: EventCalendarViewConfig = {
   siblingVisibleDateGetter: ({ state, delta }) =>
-    state.adapter.addWeeks(state.adapter.startOfWeek(state.visibleDate), delta),
+    state.adapter.addWeeks(
+      state.adapter.startOfWeek(schedulerOtherSelectors.visibleDate(state)),
+      delta,
+    ),
+  visibleDaysSelector: createSelectorMemoized(
+    (state: State) => state.adapter,
+    schedulerOtherSelectors.visibleDate,
+    eventCalendarPreferenceSelectors.showWeekends,
+    (adapter, visibleDate, showWeekends) =>
+      getDayList({
+        adapter,
+        start: adapter.startOfWeek(visibleDate),
+        end: adapter.endOfWeek(visibleDate),
+        excludeWeekends: !showWeekends,
+      }),
+  ),
 };
 
 /**
@@ -27,28 +43,8 @@ export const WeekView = React.memo(
     props: WeekViewProps,
     forwardedRef: React.ForwardedRef<HTMLDivElement>,
   ) {
-    // Context hooks
-    const adapter = useAdapter();
-    const store = useEventCalendarStoreContext();
-
-    // Selector hooks
-    const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
-    const showWeekends = useStore(store, eventCalendarPreferenceSelectors.showWeekends);
-
     // Feature hooks
-    useEventCalendarView(WEEK_VIEW_CONFIG);
-
-    const getDayList = useDayList();
-
-    const days = React.useMemo(
-      () =>
-        getDayList({
-          date: adapter.startOfWeek(visibleDate),
-          amount: 'week',
-          excludeWeekends: !showWeekends,
-        }),
-      [adapter, getDayList, visibleDate, showWeekends],
-    );
+    const { days } = useEventCalendarView(WEEK_VIEW_CONFIG);
 
     return <DayTimeGrid ref={forwardedRef} days={days} {...props} />;
   }),
