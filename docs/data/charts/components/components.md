@@ -59,7 +59,9 @@ The default `d3-scale` method maps from values to coordinates.
 For example, you can get the `x=0` coordinate as follows:
 
 ```jsx
-const xAxisScale = useXScale(); // get the default x-axis scale
+// get the default x-axis scale
+const xAxisScale = useXScale();
+// get the position associated to the value 0  
 const xOrigin = xAxisScale(0);
 ```
 
@@ -80,7 +82,7 @@ By using `invert()`, the value associated with the current mouse coordinate `y` 
 
 ### Series
 
-Series information is accessible through the `useSeries()` hook for all series types, and the `useXxxSeries()` hook for a specific series type.
+Series information is accessible through the `useSeries()` hook for all series types, and the `use[Type]Series()` hook for a specific series type.
 These hooks return the order of the series and their configuration, including data points, color, and more.
 
 You can use that information to create custom charts.
@@ -90,15 +92,15 @@ For example, you can use `useLineSeries()` to obtain the series of a Line Chart 
 
 ## HTML components
 
-Use the `<ChartDataProvider>` to access chart data from any component.
+Use the `ChartDataProvider` to access chart data from any component.
 This lets you create HTML components that interact with the data.
 
-In the next example, notice that the `<MyCustomLegend>` component displays the series names and colors.
+In the next example, notice that the `MyCustomLegend` component displays the series names and colors.
 This creates an HTML `<table>` element, which can be customized in any way.
 
 {{"demo": "HtmlLegend.js"}}
 
 :::warning
 Note that the HTML components are not part of the SVG hierarchy.
-This means they must be outside of the `<ChartsSurface>` component to avoid mixing HTML and SVG, and inside of the `<ChartDataProvider>` component to get access to the data.
+This means they must be outside of the `ChartsSurface` component to avoid mixing HTML and SVG, and inside of the `ChartDataProvider` component to get access to the data.
 :::
