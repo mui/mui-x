@@ -18,6 +18,7 @@ function useData(length) {
       'Lululemon Athletica Clothing',
       'Varley',
     ];
+
     const rows = Array.from({ length }).map((_, id) => ({
       id,
       brand: names[id % names.length],
