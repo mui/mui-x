@@ -3,18 +3,11 @@ import { RecurringEventRecurrenceRule } from '../models';
 import { processDate } from '../process-date';
 import { schedulerRecurringEventSelectors } from './schedulerRecurringEventSelectors';
 import { storeClasses } from '../utils/SchedulerStore/tests/utils';
-import { SchedulerState as State } from '../utils/SchedulerStore/SchedulerStore.types';
-
-const baseState = (overrides: Partial<State> = {}) =>
-  ({
-    adapter,
-    ...overrides,
-  }) as State;
 
 storeClasses.forEach((storeClass) => {
   describe(`schedulerRecurringEventSelectors - ${storeClass.name}`, () => {
     describe('defaultPresetKey', () => {
-      const state = baseState();
+      const state = new storeClass.Value({ events: [] }, adapter).state;
 
       it('should return null when rule is undefined', () => {
         const start = processDate(adapter.date('2025-08-05T09:00:00', 'default'), adapter);
