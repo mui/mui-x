@@ -4,16 +4,16 @@ import { useStore } from '@base-ui-components/utils/store/useStore';
 import { useAdapter, Adapter } from '@mui/x-scheduler-headless/use-adapter';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useTimelineStoreContext } from '@mui/x-scheduler-headless/use-timeline-store-context';
-import { SchedulerValidDate } from '@mui/x-scheduler-headless/models';
+import { TemporalSupportedObject } from '@mui/x-scheduler-headless/models';
 import { HeaderProps } from './Headers.types';
 import { YEARS_UNIT_COUNT } from '../../constants';
 import './Headers.css';
 
-const getYears = (adapter: Adapter, date: SchedulerValidDate, amount: number) => {
+const getYears = (adapter: Adapter, date: TemporalSupportedObject, amount: number) => {
   const end = adapter.startOfYear(adapter.addYears(date, amount));
 
   let current = date;
-  const years: SchedulerValidDate[] = [];
+  const years: TemporalSupportedObject[] = [];
 
   while (adapter.isBefore(current, end)) {
     years.push(current);

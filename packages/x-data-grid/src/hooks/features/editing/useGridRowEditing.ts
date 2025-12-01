@@ -577,7 +577,7 @@ export const useGridRowEditing = (
 
           if (onProcessRowUpdateError) {
             onProcessRowUpdateError(errorThrown);
-          } else if (process.env.NODE_ENV !== 'production') {
+          } else {
             warnOnce(
               [
                 'MUI X: A call to `processRowUpdate()` threw an error which was not handled because `onProcessRowUpdateError()` is missing.',
