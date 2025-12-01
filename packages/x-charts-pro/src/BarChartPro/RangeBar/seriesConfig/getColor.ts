@@ -1,5 +1,4 @@
-import { ColorProcessor } from '../../../internals/plugins/models';
-import { getSeriesColorFn } from '../../../internals/getSeriesColorFn';
+import { ColorProcessor, getSeriesColorFn } from '@mui/x-charts/internals';
 
 const getColor: ColorProcessor<'rangeBar'> = (series, xAxis, yAxis) => {
   const verticalLayout = series.layout === 'vertical';

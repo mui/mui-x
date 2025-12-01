@@ -8,7 +8,7 @@ const tooltipItemPositionGetter: TooltipItemPositionGetter<'rangeBar'> = (params
   }
   const itemSeries = series.rangeBar?.series[identifier.seriesId];
 
-  if (series.bar == null || itemSeries == null) {
+  if (series.rangeBar == null || itemSeries == null) {
     return null;
   }
 
@@ -22,8 +22,8 @@ const tooltipItemPositionGetter: TooltipItemPositionGetter<'rangeBar'> = (params
     yAxisConfig: axesConfig.y,
     series: itemSeries,
     dataIndex: identifier.dataIndex,
-    numberOfGroups: series.range.stackingGroups.length,
-    groupIndex: series.bar.stackingGroups.findIndex((group) => group.ids.includes(itemSeries.id)),
+    numberOfGroups: series.rangeBar.seriesOrder.length,
+    groupIndex: series.rangeBar.seriesOrder.findIndex((id) => id === itemSeries.id),
   });
 
   if (dimensions == null) {
