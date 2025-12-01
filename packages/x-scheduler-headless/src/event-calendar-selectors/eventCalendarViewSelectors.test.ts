@@ -12,6 +12,7 @@ describe('eventCalendarViewSelectors', () => {
       expect(view).to.equal('month');
     });
   });
+
   describe('views', () => {
     it('should return the views from state', () => {
       const state = getEventCalendarStateFromParameters({
@@ -22,6 +23,7 @@ describe('eventCalendarViewSelectors', () => {
       expect(views).to.deep.equal(['day', 'week', 'month']);
     });
   });
+
   describe('hasDayView', () => {
     it('should return true if views include day', () => {
       const state = getEventCalendarStateFromParameters({
@@ -31,6 +33,7 @@ describe('eventCalendarViewSelectors', () => {
       const hasDayView = eventCalendarViewSelectors.hasDayView(state);
       expect(hasDayView).to.equal(true);
     });
+
     it('should return false if views do not include day', () => {
       const state = getEventCalendarStateFromParameters({
         events: [],
