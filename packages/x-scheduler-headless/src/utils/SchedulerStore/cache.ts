@@ -66,21 +66,30 @@ export class SchedulerDataSourceCacheDefault<TEvent extends object>
     // 2. Check if the requested interval is fully covered by the union of valid ranges
     const sortedRanges = [...this.loadedRanges].sort((a, b) => a.start - b.start);
 
-    let currentCoverageStart = start;
+    let coveredUntil = start;
 
     for (const range of sortedRanges) {
-      // If this range starts after our current need, there is a gap.
-      if (range.start > currentCoverageStart) {
+      // Skip ranges that end before the segment we care about
+      if (range.end <= coveredUntil) {
         continue;
       }
 
-      // If this range covers some of our need, advance our coverage pointer
-      if (range.end >= currentCoverageStart) {
-        currentCoverageStart = Math.max(currentCoverageStart, range.end);
+      // If there's a gap between what we have covered and the next range's start, fail
+      if (range.start > coveredUntil) {
+        return false;
+      }
+
+      // Now we know range.start <= coveredUntil < range.end, so extend coverage
+      coveredUntil = range.end + 1;
+
+      // Early exit: we've covered the target range
+      if (coveredUntil >= end) {
+        return true;
       }
     }
 
-    return currentCoverageStart >= end;
+    // If after consuming all ranges we didn't reach `end`, it's not fully covered
+    return coveredUntil >= end;
   }
 
   setRange(start: number, end: number, newEvents: TEvent[]) {
@@ -95,12 +104,46 @@ export class SchedulerDataSourceCacheDefault<TEvent extends object>
     // 2. Add New Range
     const newRange: CachedRange = { start, end, expiry };
 
-    // 3. Clean up the Registry (Optimization)
-    // Remove any existing ranges that are FULLY contained by the new range.
-    this.loadedRanges = this.loadedRanges.filter(
-      (range) => !(range.start >= start && range.end <= end),
-    );
-    this.loadedRanges.push(newRange);
+    // 3. Clean up the Registry
+    // We want to remove the parts of existing ranges that are covered by the new range.
+    const nextRanges: CachedRange[] = [];
+
+    for (const range of this.loadedRanges) {
+      // If the range is fully contained in the new range, we drop it (it's replaced).
+      if (range.start >= start && range.end <= end) {
+        continue;
+      }
+
+      // If there is no overlap, we keep it.
+      if (range.end <= start || range.start >= end) {
+        nextRanges.push(range);
+        continue;
+      }
+
+      // If we are here, there is an overlap, but it's not fully contained.
+      // We need to trim the existing range.
+
+      // Part before the new range
+      if (range.start < start) {
+        nextRanges.push({
+          start: range.start,
+          end: start,
+          expiry: range.expiry,
+        });
+      }
+
+      // Part after the new range
+      if (range.end > end) {
+        nextRanges.push({
+          start: end,
+          end: range.end,
+          expiry: range.expiry,
+        });
+      }
+    }
+
+    nextRanges.push(newRange);
+    this.loadedRanges = nextRanges;
   }
 
   getAll(): TEvent[] {
@@ -118,6 +161,10 @@ export class SchedulerDataSourceCacheDefault<TEvent extends object>
     }
 
     return result;
+  }
+
+  public getLoadedRangesInfo() {
+    return this.loadedRanges;
   }
 
   clear() {

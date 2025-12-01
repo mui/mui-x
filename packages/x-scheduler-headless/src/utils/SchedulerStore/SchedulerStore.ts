@@ -164,10 +164,19 @@ export class SchedulerStore<
       return;
     }
 
-    if (this.cache.hasCoverage(adapter.getTime(range.start), adapter.getTime(range.end))) {
+    if (
+      this.cache.hasCoverage(
+        adapter.getTime(range.start),
+        adapter.getTime(adapter.endOfDay(range.end)),
+      )
+    ) {
       const allCachedEvents = this.cache?.getAll() || [];
       console.log(
-        'SchedulerStore: CACHE hit',
+        'SchedulerStore: CACHE hit for range',
+        range,
+        'loaded ranges timestamps: ',
+        this.cache.getLoadedRangesInfo(),
+        'loaded ranges: ',
         this.cache.getLoadedRangesInfo()?.map((r) => ({
           start: new Date(r.start),
           end: new Date(r.end),
@@ -194,7 +203,11 @@ export class SchedulerStore<
     try {
       const events = await dataSource.getEvents(range.start, range.end);
       console.log('SchedulerStore: FETCHED events from data source');
-      this.cache!.setRange(adapter.getTime(range.start), adapter.getTime(range.end), events ?? []);
+      this.cache!.setRange(
+        adapter.getTime(range.start),
+        adapter.getTime(adapter.endOfDay(range.end)),
+        events ?? [],
+      );
       const eventsState = buildEventsState({ ...this.parameters, events } as Parameters, adapter);
       this.update({
         ...eventsState,
