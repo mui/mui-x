@@ -23,7 +23,9 @@ export default function TickSpacing() {
         maxWidth={400}
         alignSelf="center"
       >
-        <Typography gutterBottom>Tick Spacing</Typography>
+        <Typography gutterBottom id="tickSpacing">
+          Tick Spacing
+        </Typography>
         <Slider
           value={tickSpacing}
           onChange={(event, value) => setTickSpacing(value as number)}
@@ -32,6 +34,7 @@ export default function TickSpacing() {
           max={100}
           step={5}
           sx={{ mt: 2 }}
+          aria-labelledby="tickSpacing"
         />
       </Stack>
       <BarChart
