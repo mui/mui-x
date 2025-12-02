@@ -45,7 +45,7 @@ export const selectorIsIdentifierHiddenGetter = createSelectorMemoized(
   (visibilityMap, separator) => {
     return {
       // Return an object as selectors don't correctly memoize direct functions
-      fn: (identifier: string | (string | number)[]) =>
+      get: (identifier: string | (string | number)[]) =>
         isIdentifierVisible(visibilityMap, separator, identifier),
     };
   },

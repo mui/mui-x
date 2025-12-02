@@ -90,7 +90,7 @@ export interface UseChartVisibilityManagerParameters {
    * // if seriesId is 'series1' and itemId is 'itemA'
    * identifier = ['series1', 'itemA'].join(separator); // 'series1-itemA'
    */
-  separator?: string;
+  visibilityIdentifierSeparator?: string;
   /**
    * Map of the visibility status of series and/or items.
    *

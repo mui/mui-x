@@ -74,12 +74,12 @@ export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSig
 useChartVisibilityManager.getInitialState = (params) => ({
   visibilityManager: {
     visibilityMap: params.visibilityMap || {},
-    separator: '-',
+    separator: params.visibilityIdentifierSeparator || '-',
   },
 });
 
 useChartVisibilityManager.params = {
   onVisibilityChange: true,
-  separator: true,
+  visibilityIdentifierSeparator: true,
   visibilityMap: true,
 };
