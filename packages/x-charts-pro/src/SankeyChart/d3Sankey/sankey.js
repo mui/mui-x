@@ -55,7 +55,7 @@ function computeLinkBreadths({ nodes }) {
   }
 }
 
-export default function Sankey() {
+export function sankey() {
   let x0 = 0,
     y0 = 0,
     x1 = 1,

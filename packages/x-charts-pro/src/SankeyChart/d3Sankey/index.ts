@@ -1,4 +1,4 @@
-export { default as sankey } from './sankey';
+export * from './sankey';
 export {
   center as sankeyCenter,
   left as sankeyLeft,
