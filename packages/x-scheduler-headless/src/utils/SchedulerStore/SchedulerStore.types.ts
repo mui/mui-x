@@ -142,6 +142,10 @@ export interface SchedulerState<TEvent extends object = any> {
    * or "UTC".
    */
   timezone: TemporalTimezone;
+  /**
+   * The event that has been copied or cut, if any.
+   */
+  copiedEvent: { id: SchedulerEventId; action: 'cut' | 'copy' } | null;
 }
 
 export interface SchedulerParameters<TEvent extends object, TResource extends object> {
