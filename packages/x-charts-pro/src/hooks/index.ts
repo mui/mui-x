@@ -3,6 +3,7 @@ export * from '@mui/x-charts/hooks';
 // End of re-export-block
 export * from './useHeatmapSeries';
 export * from './useFunnelSeries';
+export * from './useRangeBarSeries';
 export * from './zoom';
 export * from './useChartProApiRef';
 export * from './animation';

@@ -1,9 +1,4 @@
-import {
-  useRangeBarSeriesContext,
-  ChartDrawingArea,
-  useXAxes,
-  useYAxes,
-} from '@mui/x-charts/hooks';
+import { ChartDrawingArea, useXAxes, useYAxes } from '@mui/x-charts/hooks';
 import {
   checkBarChartScaleErrors,
   ComputedAxis,
@@ -15,12 +10,10 @@ import {
   useSelector,
   useStore,
 } from '@mui/x-charts/internals';
-import {
-  ChartsXAxisProps,
-  ChartsYAxisProps,
-  DefaultizedRangeBarSeriesType,
-} from '@mui/x-charts/models';
+import { ChartsXAxisProps, ChartsYAxisProps } from '@mui/x-charts/models';
 import { ProcessedRangeBarData, ProcessedRangeBarSeriesData } from './types';
+import { useRangeBarSeriesContext } from '../../hooks';
+import { DefaultizedRangeBarSeriesType } from '../../models/seriesType/rangeBar';
 
 export function useRangeBarPlotData(
   drawingArea: ChartDrawingArea,
