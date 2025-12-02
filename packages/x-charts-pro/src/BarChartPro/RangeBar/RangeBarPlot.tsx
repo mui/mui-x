@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import { BarLabelPlot, useSkipAnimation } from '@mui/x-charts/internals';
+import { useSkipAnimation } from '@mui/x-charts/internals';
 import {
   BarElement,
   BarElementSlotProps,
@@ -11,7 +11,7 @@ import {
   BarLabelSlots,
   BarLabelSlotProps,
 } from '@mui/x-charts/BarChart';
-import { BarItemIdentifier, RangeBarValueType } from '@mui/x-charts/models';
+import { BarItemIdentifier } from '@mui/x-charts/models';
 import { useDrawingArea, useXAxes, useYAxes } from '@mui/x-charts/hooks';
 import { useUtilityClasses } from './useUtilityClasses';
 import { useRangeBarPlotData } from './useRangeBarPlotData';
@@ -121,15 +121,6 @@ function RangeBarPlot(props: RangeBarPlotProps): React.JSX.Element {
           </g>
         );
       })}
-      {completedData.map((processedSeries) => (
-        <BarLabelPlot<RangeBarValueType | null>
-          key={processedSeries.seriesId}
-          className={classes.seriesLabels}
-          processedSeries={processedSeries}
-          skipAnimation={skipAnimation}
-          {...other}
-        />
-      ))}
     </RangeBarPlotRoot>
   );
 }

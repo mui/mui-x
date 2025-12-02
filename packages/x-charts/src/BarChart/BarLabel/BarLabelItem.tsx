@@ -8,7 +8,6 @@ import { getBarLabel } from './getBarLabel';
 import { BarLabel, type BarLabelProps } from './BarLabel';
 import { useItemHighlighted } from '../../hooks/useItemHighlighted';
 import { type BarValueType } from '../../models';
-import { type RangeBarValueType } from '../../models/seriesType/rangeBar';
 
 export interface BarLabelSlots {
   /**
@@ -22,7 +21,7 @@ export interface BarLabelSlotProps {
   barLabel?: SlotComponentPropsFromProps<BarLabelProps, {}, BarLabelOwnerState>;
 }
 
-export type BarLabelItemProps<V extends BarValueType | RangeBarValueType | null> = Omit<
+export type BarLabelItemProps<V extends BarValueType | null> = Omit<
   BarLabelOwnerState,
   'isFaded' | 'isHighlighted'
 > &
@@ -94,7 +93,7 @@ export type BarLabelItemProps<V extends BarValueType | RangeBarValueType | null>
 /**
  * @ignore - internal component.
  */
-function BarLabelItem<V extends BarValueType | RangeBarValueType | null = BarValueType | null>(
+function BarLabelItem<V extends BarValueType | null = BarValueType | null>(
   props: BarLabelItemProps<V>,
 ) {
   const {
