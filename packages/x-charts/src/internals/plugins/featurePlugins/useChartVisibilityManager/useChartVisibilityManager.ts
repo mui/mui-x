@@ -12,14 +12,14 @@ export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSig
   );
 
   const hideItem = useEventCallback((identifier: string | (number | string)[]) => {
-    const currentHidden = store.state.visibilityManager.visibilityMap;
+    const visibilityMap = store.state.visibilityManager.visibilityMap;
     const id = buildIdentifier(identifier);
 
-    if (currentHidden[id]) {
+    if (visibilityMap[id] === false) {
       return; // Already hidden
     }
 
-    const newVisibility = { ...currentHidden, [id]: true };
+    const newVisibility = { ...visibilityMap, [id]: false };
     store.set('visibilityManager', {
       ...store.state.visibilityManager,
       visibilityMap: newVisibility,
@@ -29,14 +29,14 @@ export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSig
   });
 
   const showItem = useEventCallback((identifier: string | (number | string)[]) => {
-    const currentHidden = store.state.visibilityManager.visibilityMap;
+    const visibilityMap = store.state.visibilityManager.visibilityMap;
     const id = buildIdentifier(identifier);
 
-    if (!currentHidden[id]) {
+    if (visibilityMap[id] !== false) {
       return; // Already visible
     }
 
-    const newVisibility = { ...currentHidden, [id]: false };
+    const newVisibility = { ...visibilityMap, [id]: true };
     store.set('visibilityManager', {
       ...store.state.visibilityManager,
       visibilityMap: newVisibility,
@@ -46,10 +46,10 @@ export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSig
   });
 
   const toggleItem = useEventCallback((identifier: string | (number | string)[]) => {
-    const currentHidden = store.state.visibilityManager.visibilityMap;
+    const visibilityMap = store.state.visibilityManager.visibilityMap;
     const id = buildIdentifier(identifier);
 
-    if (currentHidden[id]) {
+    if (visibilityMap[id] === false) {
       showItem(id);
     } else {
       hideItem(id);
