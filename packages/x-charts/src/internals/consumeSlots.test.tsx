@@ -58,7 +58,9 @@ describe('consumeSlots', () => {
   it('should resolve classes', async () => {
     render(<SlotsWrapper shouldOmit />);
 
-    expect(await screen.findByText('wrapper-root test shouldOmit', { selector: '.classes' })).not.to.equal(null);
+    expect(
+      await screen.findByText('wrapper-root test shouldOmit', { selector: '.classes' }),
+    ).not.to.equal(null);
   });
 
   it('should render function component passed as slot', async () => {
