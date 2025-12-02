@@ -917,9 +917,12 @@ importers:
       '@babel/runtime':
         specifier: 'catalog:'
         version: 7.28.4
+      '@mui/material':
+        specifier: 'catalog:'
+        version: 7.3.5(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.0))(@types/react@19.2.7)(react@19.2.0))(@types/react@19.2.7)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@mui/utils':
         specifier: 'catalog:'
-        version: 7.3.5(@types/react@19.2.2)(react@19.2.0)
+        version: 7.3.5(@types/react@19.2.7)(react@19.2.0)
       '@mui/x-charts':
         specifier: workspace:^
         version: link:../x-charts/build
@@ -947,16 +950,16 @@ importers:
         version: 7.28.4
       '@emotion/react':
         specifier: ^11.13.3
-        version: 11.14.0(@types/react@19.2.2)(react@19.2.0)
+        version: 11.14.0(@types/react@19.2.7)(react@19.2.0)
       '@emotion/styled':
         specifier: ^11.13.0
-        version: 11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0)
+        version: 11.14.1(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.0))(@types/react@19.2.7)(react@19.2.0)
       '@mui/material':
         specifier: 'catalog:'
-        version: 7.3.5(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+        version: 7.3.5(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.0))(@types/react@19.2.7)(react@19.2.0))(@types/react@19.2.7)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@mui/utils':
         specifier: 'catalog:'
-        version: 7.3.5(@types/react@19.2.2)(react@19.2.0)
+        version: 7.3.5(@types/react@19.2.7)(react@19.2.0)
       '@mui/x-charts-base':
         specifier: workspace:^
         version: link:../x-charts-base/build
