@@ -16,7 +16,7 @@ Each bar extends from a lower to an upper value, and is commonly used for visual
 
 ## Basics
 
-A range bar chart is created by rendering a `<BarChartPro />` where at least one series has the type `'rangeBar'`.
+A range bar chart is created by rendering a `BarChartPro` where at least one series has the type `'rangeBar'`.
 
 Each data point in a range bar series consists of a `{ start: number, end: number }` object.
 
@@ -79,11 +79,11 @@ You read more about it in bar chart's [Animation](/x/react-charts/bars/#animatio
 
 ## Composition
 
-You can use the `<ChartDataProviderPro />` to provide `series`, `xAxis`, and `yAxis` props for composition.
+You can use the `ChartDataProviderPro` to provide `series`, `xAxis`, and `yAxis` props for composition.
 
-Besides the common chart components available for [composition](/x/react-charts/composition/), to compose a range bar chart you need to render the `<RangeBarPlot />` component to display the range bars and their labels.
+Besides the common chart components available for [composition](/x/react-charts/composition/), to compose a range bar chart you need to render the `RangeBarPlot` component to display the range bars and their labels.
 
-Here's roughly a `<BarChartPro />` is composed, which you can use as a reference:
+Here's roughly a `BarChartPro` is composed, which you can use as a reference:
 
 ```jsx
 <ChartDataProviderPro>
