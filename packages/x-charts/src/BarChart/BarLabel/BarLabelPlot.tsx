@@ -3,19 +3,16 @@ import { AnimationData } from '../types';
 import { BarLabelItem, BarLabelItemProps } from './BarLabelItem';
 import type { SeriesId } from '../../models/seriesType/common';
 import { BarSeriesType, BarValueType } from '../../models/seriesType/bar';
-import { RangeBarValueType } from '../../models/seriesType/rangeBar';
 import { BarLabelFunction } from './BarLabel.types';
 
-interface BarLabelPlotProps<
-  V extends BarValueType | RangeBarValueType | null = BarValueType | null,
-> {
+interface BarLabelPlotProps<V extends BarValueType | null = BarValueType | null> {
   processedSeries: ProcessedBarLabelSeriesData<V>;
   className: string;
   skipAnimation?: boolean;
   barLabel?: BarLabelItemProps<V | null>['barLabel'];
 }
 
-export interface ProcessedBarLabelSeriesData<V extends BarValueType | RangeBarValueType | null> {
+export interface ProcessedBarLabelSeriesData<V extends BarValueType | null> {
   seriesId: SeriesId;
   data: ProcessedBarLabelData<V>[];
   barLabel?: 'value' | BarLabelFunction<V>;
@@ -25,8 +22,7 @@ export interface ProcessedBarLabelSeriesData<V extends BarValueType | RangeBarVa
   yOrigin: number;
 }
 
-export interface ProcessedBarLabelData<V extends BarValueType | RangeBarValueType | null>
-  extends AnimationData {
+export interface ProcessedBarLabelData<V extends BarValueType | null> extends AnimationData {
   seriesId: SeriesId;
   dataIndex: number;
   color: string;
@@ -36,9 +32,7 @@ export interface ProcessedBarLabelData<V extends BarValueType | RangeBarValueTyp
 /**
  * @ignore - internal component.
  */
-function BarLabelPlot<V extends BarValueType | RangeBarValueType | null = BarValueType | null>(
-  props: BarLabelPlotProps<V>,
-) {
+function BarLabelPlot(props: BarLabelPlotProps) {
   const { processedSeries, className, skipAnimation, ...other } = props;
   const { seriesId, data, layout, xOrigin, yOrigin } = processedSeries;
 
