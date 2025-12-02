@@ -20,5 +20,5 @@ export const useIsIdentifierVisible: IsIdentifierVisibleFunction = (identifier) 
  */
 export function useGetIsIdentifierVisible(): IsIdentifierVisibleFunction {
   const store = useStore<[UseChartVisibilityManagerSignature]>();
-  return useSelector(store, selectorIsIdentifierHiddenGetter);
+  return useSelector(store, selectorIsIdentifierHiddenGetter).fn;
 }
