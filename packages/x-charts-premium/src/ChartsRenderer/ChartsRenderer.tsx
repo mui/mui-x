@@ -99,10 +99,10 @@ function ChartsRenderer({
     return String(value);
   };
 
-  const sections = (configurationOptions as any)[chartType]?.customization || [];
+  const sections = (configurationOptions)[chartType]?.customization || [];
   const defaultOptions = Object.fromEntries(
-    sections.flatMap((section: any) =>
-      Object.entries(section.controls).map(([key, value]) => [key, (value as any).default]),
+    sections.flatMap((section) =>
+      Object.entries(section.controls).map(([key, value]) => [key, (value).default]),
     ),
   );
 
