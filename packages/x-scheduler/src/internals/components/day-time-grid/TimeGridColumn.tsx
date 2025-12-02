@@ -1,17 +1,11 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store';
-import { SchedulerValidDate } from '@mui/x-scheduler-headless/models';
-import {
-  EVENT_CREATION_DEFAULT_LENGTH_MINUTE,
-  EVENT_CREATION_PRECISION_MINUTE,
-} from '@mui/x-scheduler-headless/constants';
+import { TemporalSupportedObject } from '@mui/x-scheduler-headless/models';
+import { EVENT_CREATION_PRECISION_MINUTE } from '@mui/x-scheduler-headless/constants';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import {
-  schedulerEventSelectors,
-  schedulerNowSelectors,
-} from '@mui/x-scheduler-headless/scheduler-selectors';
+import { schedulerNowSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useAdapter, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-timeline-position';
@@ -21,6 +15,7 @@ import { EventPopoverTrigger } from '../event-popover';
 import { useEventPopoverContext } from '../event-popover/EventPopover';
 import './DayTimeGrid.css';
 import { useFormatTime } from '../../hooks/useFormatTime';
+import { useEventCreationProps } from '../../hooks/useEventCreationProps';
 
 export function TimeGridColumn(props: TimeGridColumnProps) {
   const { day, showCurrentTimeIndicator, index } = props;
@@ -62,8 +57,8 @@ function ColumnInteractiveLayer({
   occurrences,
   maxIndex,
 }: {
-  start: SchedulerValidDate;
-  end: SchedulerValidDate;
+  start: TemporalSupportedObject;
+  end: TemporalSupportedObject;
   showCurrentTimeIndicator: boolean;
   index: number;
   occurrences: useEventOccurrencesWithTimelinePosition.EventOccurrenceWithPosition[];
@@ -92,21 +87,13 @@ function ColumnInteractiveLayer({
     snapMinutes: EVENT_CREATION_PRECISION_MINUTE,
   });
 
-  const computeInitialRange = (event: React.MouseEvent<HTMLDivElement>) => {
+  const eventCreationProps = useEventCreationProps(({ event, creationConfig }) => {
     const startDateFromPosition = getDateFromPosition(event.clientY);
-
-    return {
+    const draftRange = {
       start: startDateFromPosition,
-      end: adapter.addMinutes(startDateFromPosition, EVENT_CREATION_DEFAULT_LENGTH_MINUTE),
+      end: adapter.addMinutes(startDateFromPosition, creationConfig.duration),
     };
-  };
 
-  const handleDoubleClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (!schedulerEventSelectors.canCreateNewEvent(store.state)) {
-      return;
-    }
-
-    const draftRange = computeInitialRange(event);
     store.setOccurrencePlaceholder({
       type: 'creation',
       surfaceType: 'time-grid',
@@ -114,7 +101,7 @@ function ColumnInteractiveLayer({
       end: draftRange.end,
       resourceId: null,
     });
-  };
+  });
 
   React.useEffect(() => {
     if (!isCreatingAnEvent || !placeholder || !columnRef.current) {
@@ -124,11 +111,7 @@ function ColumnInteractiveLayer({
   }, [isCreatingAnEvent, placeholder, startEditing]);
 
   return (
-    <div
-      className="DayTimeGridColumnInteractiveLayer"
-      ref={columnRef}
-      onDoubleClick={handleDoubleClick}
-    >
+    <div className="DayTimeGridColumnInteractiveLayer" ref={columnRef} {...eventCreationProps}>
       {occurrences.map((occurrence) => (
         <EventPopoverTrigger
           key={occurrence.key}

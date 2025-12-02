@@ -14,8 +14,12 @@ export const selectorAllSeriesOfType = createSelector(
 
 export const selectorSeriesOfType = createSelectorMemoized(
   selectorChartSeriesProcessed,
-  (processedSeries, seriesType: keyof ChartsSeriesConfig, ids?: SeriesId | SeriesId[]) => {
-    if (!ids || (Array.isArray(ids) && ids.length === 0)) {
+  <T extends keyof ChartsSeriesConfig>(
+    processedSeries: ProcessedSeries,
+    seriesType: T,
+    ids?: SeriesId | SeriesId[],
+  ) => {
+    if (ids === undefined || (Array.isArray(ids) && ids.length === 0)) {
       return (
         processedSeries[seriesType]?.seriesOrder?.map(
           (seriesId) => processedSeries[seriesType]?.series[seriesId],

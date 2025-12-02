@@ -177,7 +177,7 @@ function MultiDayDateLabel(props: { occurrence: SchedulerEventOccurrence }) {
   const formatTime = useFormatTime();
 
   if (!adapter.isSameDay(occurrence.start.value, occurrence.end.value)) {
-    const format = `${adapter.formats.dayOfMonth} ${adapter.formats.monthShort}`;
+    const format = `${adapter.formats.dayOfMonth} ${adapter.formats.month3Letters}`;
     return (
       <time className="EventItemTime">
         <span>

@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { isElement } from '@floating-ui/utils/dom';
-import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
+import { useStableCallback } from '@base-ui-components/utils/useStableCallback';
 import { useId } from '@base-ui-components/utils/useId';
 
 import type { FloatingRootContext, ReferenceElement, ContextData } from '../types';
@@ -49,7 +49,7 @@ export function useFloatingRootContext(
     elementsProp.reference,
   );
 
-  const onOpenChange = useEventCallback(
+  const onOpenChange = useStableCallback(
     (newOpen: boolean, eventDetails: BaseUIChangeEventDetails<string>) => {
       dataRef.current.openEvent = newOpen ? eventDetails.event : undefined;
       if (!options.noEmit) {

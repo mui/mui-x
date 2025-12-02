@@ -1,11 +1,12 @@
 'use client';
 import * as React from 'react';
-import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
+import { useStableCallback } from '@base-ui-components/utils/useStableCallback';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
 import { useEventResizeHandler } from '../../utils/useEventResizeHandler';
 import { useCalendarGridTimeEventContext } from '../time-event/CalendarGridTimeEventContext';
 import type { CalendarGridTimeEvent } from '../time-event/CalendarGridTimeEvent';
+import { SchedulerEventSide } from '../../models';
 
 export const CalendarGridTimeEventResizeHandler = React.forwardRef(
   function CalendarGridTimeEventResizeHandler(
@@ -29,7 +30,7 @@ export const CalendarGridTimeEventResizeHandler = React.forwardRef(
     const ref = React.useRef<HTMLDivElement>(null);
 
     // Feature hooks
-    const getDragData = useEventCallback((input) => ({
+    const getDragData = useStableCallback((input) => ({
       ...contextValue.getSharedDragData(input),
       source: 'CalendarGridTimeEventResizeHandler',
       side,
@@ -60,6 +61,6 @@ export namespace CalendarGridTimeEventResizeHandler {
 
   export interface DragData extends CalendarGridTimeEvent.SharedDragData {
     source: 'CalendarGridTimeEventResizeHandler';
-    side: 'start' | 'end';
+    side: SchedulerEventSide;
   }
 }

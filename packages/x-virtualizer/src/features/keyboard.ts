@@ -1,5 +1,5 @@
 import { Store } from '@mui/x-internals/store';
-import type { BaseState, VirtualizerParams } from '../useVirtualizer';
+import type { BaseState, ParamsWithDefaults } from '../useVirtualizer';
 import { Dimensions } from './dimensions';
 import { Virtualization } from './virtualization';
 
@@ -17,13 +17,13 @@ export namespace Keyboard {
   export type API = ReturnType<typeof useKeyboard>;
 }
 
-function initializeState(_params: VirtualizerParams): Keyboard.State {
+function initializeState(_params: ParamsWithDefaults): Keyboard.State {
   return {};
 }
 
 function useKeyboard(
   store: Store<BaseState & Keyboard.State>,
-  params: VirtualizerParams,
+  params: ParamsWithDefaults,
   _api: {},
 ) {
   const getViewportPageSize = () => {

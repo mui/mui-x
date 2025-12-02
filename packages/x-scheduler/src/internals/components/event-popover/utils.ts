@@ -1,12 +1,14 @@
 import {
+  SchedulerEventColor,
   SchedulerResourceId,
   RecurringEventPresetKey,
   RecurringEventRecurrenceRule,
-  SchedulerValidDate,
+  TemporalSupportedObject,
   SchedulerProcessedDate,
 } from '@mui/x-scheduler-headless/models';
 import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
 import { SchedulerTranslations } from '../../../models';
+import { formatDayOfMonthAndMonthFullLetter } from '../../utils/date-utils';
 
 export interface ControlledValue {
   startDate: string;
@@ -15,6 +17,7 @@ export interface ControlledValue {
   endTime: string;
   resourceId: SchedulerResourceId | null;
   allDay: boolean;
+  color: SchedulerEventColor | null;
   recurrenceSelection: RecurringEventPresetKey | null | 'custom';
   rruleDraft: RecurringEventRecurrenceRule;
 }
@@ -23,24 +26,36 @@ export type EndsSelection = 'never' | 'after' | 'until';
 
 export function computeRange(adapter: Adapter, next: ControlledValue) {
   if (next.allDay) {
-    const newStart = adapter.startOfDay(adapter.date(next.startDate));
-    const newEnd = adapter.endOfDay(adapter.date(next.endDate));
-    return { start: newStart, end: newEnd, surfaceType: 'day-grid' as const };
+    return {
+      start:
+        next.startDate === ''
+          ? adapter.now('default')
+          : adapter.startOfDay(adapter.date(next.startDate, 'default')),
+      end:
+        next.endDate === ''
+          ? adapter.now('default')
+          : adapter.endOfDay(adapter.date(next.endDate, 'default')),
+      surfaceType: 'day-grid' as const,
+    };
   }
-  // fallback values
-  const startTime = next.startTime || '12:00';
-  const endTime = next.endTime || '12:30';
 
-  const newStart = adapter.date(`${next.startDate}T${startTime}`);
-  const newEnd = adapter.date(`${next.endDate}T${endTime}`);
-
-  return { start: newStart, end: newEnd, surfaceType: 'time-grid' as const };
+  return {
+    start:
+      next.startDate === '' || next.startTime === ''
+        ? adapter.now('default')
+        : adapter.date(`${next.startDate}T${next.startTime}`, 'default'),
+    end:
+      next.endDate === '' || next.endTime === ''
+        ? adapter.now('default')
+        : adapter.date(`${next.endDate}T${next.endTime}`, 'default'),
+    surfaceType: 'time-grid' as const,
+  };
 }
 
 export function validateRange(
   adapter: Adapter,
-  start: SchedulerValidDate,
-  end: SchedulerValidDate,
+  start: TemporalSupportedObject,
+  end: TemporalSupportedObject,
   allDay: boolean,
 ): null | { field: 'startDate' | 'startTime' } {
   const startDay = adapter.startOfDay(start);
@@ -81,7 +96,7 @@ export function getRecurrenceLabel(
       return translations.recurrenceMonthlyPresetLabel(date);
     }
     case 'yearly': {
-      const normalDate = adapter.format(start.value, 'normalDate');
+      const normalDate = formatDayOfMonthAndMonthFullLetter(start.value, adapter);
       return translations.recurrenceYearlyPresetLabel(normalDate);
     }
     case 'custom':
@@ -93,7 +108,7 @@ export function getRecurrenceLabel(
 
 export function getEndsSelectionFromRRule(rrule?: {
   count?: number | null;
-  until?: SchedulerValidDate | null;
+  until?: TemporalSupportedObject | null;
 }): EndsSelection {
   if (!rrule) {
     return 'never';
