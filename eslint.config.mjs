@@ -200,7 +200,7 @@ export default defineConfig(
       'vitest/valid-expect': 'off',
       // Configure expect-expect to recognize screen methods from testing-library as assertions
       'vitest/expect-expect': [
-        'warn',
+        'error',
         {
           assertFunctionNames: ['expect', 'assert', 'screen.*'],
         },
