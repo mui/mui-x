@@ -35,13 +35,13 @@ describe('consumeThemeProps', () => {
   it('should render default props', async function test() {
     render(<SlotsWrapper />);
 
-    expect(await screen.findByText('test', { selector: '.data' })).not.to.equal(null);
+    expect(await screen.findByText('test', { selector: '.data' })).toBeVisible();
   });
 
   it('should render passed props', async function test() {
     render(<SlotsWrapper data="new" />);
 
-    expect(await screen.findByText('new', { selector: '.data' })).not.to.equal(null);
+    expect(await screen.findByText('new', { selector: '.data' })).toBeVisible();
   });
 
   it('should resolve classes', async () => {
@@ -49,6 +49,6 @@ describe('consumeThemeProps', () => {
 
     expect(
       await screen.findByText('wrapper-root test shouldOmit', { selector: '.classes' }),
-    ).not.to.equal(null);
+    ).toBeVisible();
   });
 });

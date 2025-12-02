@@ -40,19 +40,19 @@ describe('consumeSlots', () => {
   it('should render default props', async () => {
     render(<SlotsWrapper />);
 
-    expect(await screen.findByText('test', { selector: '.data' })).not.to.equal(null);
+    expect(await screen.findByText('test', { selector: '.data' })).toBeVisible();
   });
 
   it('should render passed props', async () => {
     render(<SlotsWrapper data="new" />);
 
-    expect(await screen.findByText('new', { selector: '.data' })).not.to.equal(null);
+    expect(await screen.findByText('new', { selector: '.data' })).toBeVisible();
   });
 
   it('should render omit props in omitProps', async () => {
     render(<SlotsWrapper shouldOmit />);
 
-    expect(await screen.findByText('omitted', { selector: '.shouldOmit' })).not.to.equal(null);
+    expect(await screen.findByText('omitted', { selector: '.shouldOmit' })).toBeVisible();
   });
 
   it('should resolve classes', async () => {
@@ -60,7 +60,7 @@ describe('consumeSlots', () => {
 
     expect(
       await screen.findByText('wrapper-root test shouldOmit', { selector: '.classes' }),
-    ).not.to.equal(null);
+    ).toBeVisible();
   });
 
   it('should render function component passed as slot', async () => {
@@ -72,7 +72,7 @@ describe('consumeSlots', () => {
       />,
     );
 
-    expect(await screen.findByText('function component')).not.to.equal(null);
+    expect(await screen.findByText('function component')).toBeVisible();
   });
 
   it('should render forward ref function passed as slot', async () => {
@@ -86,7 +86,7 @@ describe('consumeSlots', () => {
       />,
     );
 
-    expect(await screen.findByText('forward ref')).not.to.equal(null);
+    expect(await screen.findByText('forward ref')).toBeVisible();
   });
 
   it('should render function with props and ref arguments passed as slot', async () => {
@@ -100,6 +100,6 @@ describe('consumeSlots', () => {
       />,
     );
 
-    expect(await screen.findByText('props and ref arguments')).not.to.equal(null);
+    expect(await screen.findByText('props and ref arguments')).toBeVisible();
   });
 });
