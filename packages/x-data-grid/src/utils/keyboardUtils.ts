@@ -48,3 +48,21 @@ export function isCopyShortcut(event: KeyboardEvent): boolean {
     !event.altKey
   );
 }
+
+export function isUndoShortcut(event: React.KeyboardEvent): boolean {
+  return (
+    (event.ctrlKey || event.metaKey) &&
+    String.fromCharCode(event.keyCode) === 'Z' &&
+    !event.shiftKey &&
+    !event.altKey
+  );
+}
+
+export function isRedoShortcut(event: React.KeyboardEvent): boolean {
+  return (
+    (event.ctrlKey || event.metaKey) &&
+    ((String.fromCharCode(event.keyCode) === 'Z' && event.shiftKey) ||
+      (String.fromCharCode(event.keyCode) === 'Y' && !event.shiftKey)) &&
+    !event.altKey
+  );
+}
