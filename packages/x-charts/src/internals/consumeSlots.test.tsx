@@ -40,25 +40,25 @@ describe('consumeSlots', () => {
   it('should render default props', async () => {
     render(<SlotsWrapper />);
 
-    await screen.findByText('test', { selector: '.data' });
+    expect(await screen.findByText('test', { selector: '.data' })).not.to.equal(null);
   });
 
   it('should render passed props', async () => {
     render(<SlotsWrapper data="new" />);
 
-    await screen.findByText('new', { selector: '.data' });
+    expect(await screen.findByText('new', { selector: '.data' })).not.to.equal(null);
   });
 
   it('should render omit props in omitProps', async () => {
     render(<SlotsWrapper shouldOmit />);
 
-    await screen.findByText('omitted', { selector: '.shouldOmit' });
+    expect(await screen.findByText('omitted', { selector: '.shouldOmit' })).not.to.equal(null);
   });
 
   it('should resolve classes', async () => {
     render(<SlotsWrapper shouldOmit />);
 
-    await screen.findByText('wrapper-root test shouldOmit', { selector: '.classes' });
+    expect(await screen.findByText('wrapper-root test shouldOmit', { selector: '.classes' })).not.to.equal(null);
   });
 
   it('should render function component passed as slot', async () => {
@@ -70,7 +70,7 @@ describe('consumeSlots', () => {
       />,
     );
 
-    await screen.findByText('function component');
+    expect(await screen.findByText('function component')).not.to.equal(null);
   });
 
   it('should render forward ref function passed as slot', async () => {
@@ -84,7 +84,7 @@ describe('consumeSlots', () => {
       />,
     );
 
-    await screen.findByText('forward ref');
+    expect(await screen.findByText('forward ref')).not.to.equal(null);
   });
 
   it('should render function with props and ref arguments passed as slot', async () => {
@@ -98,6 +98,6 @@ describe('consumeSlots', () => {
       />,
     );
 
-    await screen.findByText('props and ref arguments');
+    expect(await screen.findByText('props and ref arguments')).not.to.equal(null);
   });
 });

@@ -35,18 +35,18 @@ describe('consumeThemeProps', () => {
   it('should render default props', async function test() {
     render(<SlotsWrapper />);
 
-    await screen.findByText('test', { selector: '.data' });
+    expect(await screen.findByText('test', { selector: '.data' })).not.to.equal(null);
   });
 
   it('should render passed props', async function test() {
     render(<SlotsWrapper data="new" />);
 
-    await screen.findByText('new', { selector: '.data' });
+    expect(await screen.findByText('new', { selector: '.data' })).not.to.equal(null);
   });
 
   it('should resolve classes', async () => {
     render(<SlotsWrapper shouldOmit />);
 
-    await screen.findByText('wrapper-root test shouldOmit', { selector: '.classes' });
+    expect(await screen.findByText('wrapper-root test shouldOmit', { selector: '.classes' })).not.to.equal(null);
   });
 });
