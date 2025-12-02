@@ -6,5 +6,4 @@ export type {
   UseChartVisibilityManagerParameters,
   UseChartVisibilityManagerDefaultizedParameters,
   UseChartVisibilityManagerState,
-  VisibilityItemIdentifier,
 } from './useChartVisibilityManager.types';

@@ -1,57 +1,53 @@
 import useEventCallback from '@mui/utils/useEventCallback';
 import { ChartPlugin } from '../../models';
-import {
-  UseChartVisibilityManagerSignature,
-  type VisibilityItemIdentifier,
-} from './useChartVisibilityManager.types';
-import { isSameIdentifier } from './isSameIdentifier';
+import { UseChartVisibilityManagerSignature } from './useChartVisibilityManager.types';
 
 export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSignature> = ({
   store,
   params,
 }) => {
-  const hideItem = useEventCallback((identifier: VisibilityItemIdentifier) => {
-    const currentHidden = store.getSnapshot().visibilityManager.hiddenIdentifiers;
-    if (
-      currentHidden.some((currentIdentifier) => isSameIdentifier(currentIdentifier, identifier))
-    ) {
+  const hideItem = useEventCallback((identifier: string) => {
+    const currentHidden = store.state.visibilityManager.visibilityMap;
+    if (currentHidden[identifier]) {
       return; // Already hidden
     }
 
-    const newHidden = [...currentHidden, identifier];
-    store.set('visibilityManager', { hiddenIdentifiers: newHidden });
+    const newVisibility = { ...currentHidden, [identifier]: true };
+    store.set('visibilityManager', {
+      ...store.state.visibilityManager,
+      visibilityMap: newVisibility,
+    });
 
-    params.onVisibilityChange?.(newHidden);
+    params.onVisibilityChange?.(newVisibility);
   });
 
-  const showItem = useEventCallback((identifier: VisibilityItemIdentifier) => {
-    const currentHidden = store.getSnapshot().visibilityManager.hiddenIdentifiers;
-    if (
-      !currentHidden.some((currentIdentifier) => isSameIdentifier(currentIdentifier, identifier))
-    ) {
+  const showItem = useEventCallback((identifier: string) => {
+    const currentHidden = store.state.visibilityManager.visibilityMap;
+    if (!currentHidden[identifier]) {
       return; // Already visible
     }
 
-    const newHidden = [
-      ...currentHidden.filter(
-        (currentIdentifier) => !isSameIdentifier(currentIdentifier, identifier),
-      ),
-    ];
-    store.set('visibilityManager', { hiddenIdentifiers: newHidden });
+    const newVisibility = { ...currentHidden, [identifier]: false };
+    store.set('visibilityManager', {
+      ...store.state.visibilityManager,
+      visibilityMap: newVisibility,
+    });
 
-    params.onVisibilityChange?.(newHidden);
+    params.onVisibilityChange?.(newVisibility);
   });
 
-  const toggleItem = useEventCallback((identifier: VisibilityItemIdentifier) => {
-    const currentHidden = store.getSnapshot().visibilityManager.hiddenIdentifiers;
+  const toggleItem = useEventCallback((identifier: string) => {
+    const currentHidden = store.state.visibilityManager.visibilityMap;
 
-    if (
-      currentHidden.some((currentIdentifier) => isSameIdentifier(currentIdentifier, identifier))
-    ) {
+    if (currentHidden[identifier]) {
       showItem(identifier);
     } else {
       hideItem(identifier);
     }
+  });
+
+  const getIdentifier = useEventCallback((ids: (string | number)[]) => {
+    return ids.join(store.state.visibilityManager.separator);
   });
 
   return {
@@ -59,6 +55,7 @@ export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSig
       hideItem,
       showItem,
       toggleItem,
+      getIdentifier,
     },
     publicAPI: {
       hideItem,
@@ -68,16 +65,15 @@ export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSig
   };
 };
 
-useChartVisibilityManager.getInitialState = (params, state) => ({
+useChartVisibilityManager.getInitialState = (params) => ({
   visibilityManager: {
-    hiddenIdentifiers: Object.values(state.series.defaultizedSeries).flatMap((seriesData) =>
-      Object.values(seriesData.series)
-        .filter((s) => s.hidden === true)
-        .map((s) => s.id),
-    ),
+    visibilityMap: params.visibilityMap || {},
+    separator: '-',
   },
 });
 
 useChartVisibilityManager.params = {
   onVisibilityChange: true,
+  separator: true,
+  visibilityMap: true,
 };
