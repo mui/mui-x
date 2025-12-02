@@ -1,6 +1,12 @@
 import { ChartsXAxisProps, ChartsYAxisProps, ComputedAxis, ScaleName } from '../models/axis';
 import getColor from './seriesConfig/bar/getColor';
-import { ChartDrawingArea, useChartId, useGetIsItemVisible, useXAxes, useYAxes } from '../hooks';
+import {
+  ChartDrawingArea,
+  useChartId,
+  useGetIsIdentifierVisible,
+  useXAxes,
+  useYAxes,
+} from '../hooks';
 import { MaskData, ProcessedBarData, ProcessedBarSeriesData } from './types';
 import { checkScaleErrors } from './checkScaleErrors';
 import { useBarSeriesContext } from '../hooks/useBarSeries';
@@ -8,7 +14,7 @@ import { SeriesProcessorResult } from '../internals/plugins/models/seriesConfig/
 import { ComputedAxisConfig } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxis.types';
 import { ChartSeriesDefaultized } from '../models/seriesType/config';
 import { findMinMax } from '../internals/findMinMax';
-import type { VisibilityItemIdentifier } from '../internals/plugins/featurePlugins/useChartVisibilityManager';
+import type { IsIdentifierVisibleFunction } from '../internals/plugins/featurePlugins/useChartVisibilityManager';
 
 export function useBarPlotData(
   drawingArea: ChartDrawingArea,
@@ -23,7 +29,7 @@ export function useBarPlotData(
     ({ series: {}, stackingGroups: [], seriesOrder: [] } as SeriesProcessorResult<'bar'>);
   const defaultXAxisId = useXAxes().xAxisIds[0];
   const defaultYAxisId = useYAxes().yAxisIds[0];
-  const isItemVisible = useGetIsItemVisible();
+  const isItemVisible = useGetIsIdentifierVisible();
 
   const chartId = useChartId();
 
@@ -193,7 +199,7 @@ export function getBarDimensions(params: {
   dataIndex: number;
   numberOfGroups: number;
   groupIndex: number;
-  isItemVisible: (identifier: VisibilityItemIdentifier) => boolean;
+  isItemVisible: IsIdentifierVisibleFunction;
 }) {
   const {
     verticalLayout,
@@ -233,7 +239,7 @@ export function getBarDimensions(params: {
 
   const [visibleMinValueCoord, visibleMaxValueCoord] = findMinMax(visibleValueCoordinates);
 
-  const isVisible = isItemVisible({ seriesId: series.id });
+  const isVisible = isItemVisible(`${series.id}`);
 
   let barSize = 0;
   if (seriesValue !== 0) {

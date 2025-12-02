@@ -14,7 +14,7 @@ import { consumeSlots } from '../internals/consumeSlots';
 import { ChartsLabel } from '../ChartsLabel/ChartsLabel';
 import { useChartContext } from '../context/ChartProvider';
 import type { UseChartVisibilityManagerSignature } from '../plugins';
-import { useGetIsItemVisible } from '../internals/plugins/featurePlugins/useChartVisibilityManager/useChartVisibilityManager.hooks';
+import { useGetIsIdentifierVisible } from '../internals/plugins/featurePlugins/useChartVisibilityManager/useChartVisibilityManager.hooks';
 
 export interface ChartsLegendProps {
   /**
@@ -107,7 +107,7 @@ const ChartsLegend = consumeSlots(
   ) {
     const data = useLegend();
     const { instance } = useChartContext<[UseChartVisibilityManagerSignature]>();
-    const isItemVisible = useGetIsItemVisible();
+    const isItemVisible = useGetIsIdentifierVisible();
     const { direction, onItemClick, className, classes, toggleVisibilityOnClick, ...other } = props;
 
     const isButton = Boolean(onItemClick || toggleVisibilityOnClick);
@@ -122,7 +122,7 @@ const ChartsLegend = consumeSlots(
           }
 
           if (toggleVisibilityOnClick) {
-            instance.toggleItem({ seriesId: item.seriesId!, itemId: item.itemId });
+            instance.toggleItem([item.seriesId!, item.itemId!]);
           }
         },
     );
@@ -139,7 +139,7 @@ const ChartsLegend = consumeSlots(
         ownerState={props}
       >
         {data.items.map((item, i) => {
-          const isVisible = isItemVisible({ seriesId: item.seriesId!, itemId: item.itemId });
+          const isVisible = isItemVisible([item.seriesId!, item.itemId!]);
           return (
             <li key={item.id} className={classes?.item} data-series={item.id}>
               <Element

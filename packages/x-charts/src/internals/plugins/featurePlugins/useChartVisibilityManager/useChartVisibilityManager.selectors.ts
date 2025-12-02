@@ -1,6 +1,7 @@
-import { createSelector } from '@mui/x-internals/store';
+import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import type { UseChartVisibilityManagerSignature } from './useChartVisibilityManager.types';
 import { ChartOptionalRootSelector } from '../../utils/selectors';
+import { isIdentifierVisible } from './isIdentifierVisible';
 
 /**
  * Selector to get the visibility manager state.
@@ -14,7 +15,15 @@ const selectVisibilityManager: ChartOptionalRootSelector<UseChartVisibilityManag
  */
 export const selectorVisibilityMap = createSelector(
   selectVisibilityManager,
-  (visibilityManager) => visibilityManager?.visibilityMap,
+  (visibilityManager) => visibilityManager?.visibilityMap ?? {},
+);
+
+/**
+ * Selector to get the separator used in the visibility manager.
+ */
+export const selectorSeparator = createSelector(
+  selectVisibilityManager,
+  (visibilityManager) => visibilityManager?.separator ?? '-',
 );
 
 /**
@@ -22,11 +31,19 @@ export const selectorVisibilityMap = createSelector(
  */
 export const selectorIsIdentifierHidden = createSelector(
   selectorVisibilityMap,
-  (visibilityMap, identifier: string | undefined) => {
-    if (!visibilityMap || !identifier) {
-      return false;
-    }
+  selectorSeparator,
+  (visibilityMap, separator, identifier: string | (string | number)[]) =>
+    isIdentifierVisible(visibilityMap, separator, identifier),
+);
 
-    return visibilityMap?.[identifier] === true;
+/**
+ * Selector to check if a specific item identifier is hidden.
+ */
+export const selectorIsIdentifierHiddenGetter = createSelectorMemoized(
+  selectorVisibilityMap,
+  selectorSeparator,
+  (visibilityMap, separator) => {
+    return (identifier: string | (string | number)[]) =>
+      isIdentifierVisible(visibilityMap, separator, identifier);
   },
 );
