@@ -27,7 +27,7 @@ describe('<StaticDatePicker /> - Keyboard interactions', () => {
       { key: 'ArrowRight', expectFocusedDay: '14' },
       { key: 'ArrowDown', expectFocusedDay: '20' },
     ].forEach(({ key, expectFocusedDay }) => {
-      it(key, () => {
+      it(`${key}`, () => {
         render(
           <StaticDatePicker
             autoFocus
@@ -56,7 +56,7 @@ describe('<StaticDatePicker /> - Keyboard interactions', () => {
       { initialDay: '10', key: 'ArrowLeft', expectFocusedDay: '9' },
       { initialDay: '09', key: 'ArrowRight', expectFocusedDay: '10' },
     ].forEach(({ initialDay, key, expectFocusedDay }) => {
-      it(key, () => {
+      it(`${key}`, () => {
         render(
           <StaticDatePicker
             autoFocus
@@ -105,7 +105,7 @@ describe('<StaticDatePicker /> - Keyboard interactions', () => {
       { key: 'ArrowRight', expectFocusedYear: '2021' },
       { key: 'ArrowDown', expectFocusedYear: '2024' },
     ].forEach(({ key, expectFocusedYear }) => {
-      it(key, () => {
+      it(`${key}`, () => {
         render(
           <StaticDatePicker
             openTo="year"
@@ -131,7 +131,7 @@ describe('<StaticDatePicker /> - Keyboard interactions', () => {
       { key: 'ArrowRight', expectFocusedMonth: 'Sep' },
       { key: 'ArrowDown', expectFocusedMonth: 'Nov' },
     ].forEach(({ key, expectFocusedMonth }) => {
-      it(key, () => {
+      it(`${key}`, () => {
         render(
           <StaticDatePicker
             openTo="month"
@@ -158,7 +158,7 @@ describe('<StaticDatePicker /> - Keyboard interactions', () => {
       { key: 'ArrowRight', expectFocusedDay: '14' },
       { key: 'ArrowDown', expectFocusedDay: '20' },
     ].forEach(({ key, expectFocusedDay }) => {
-      it(key, () => {
+      it(`${key}`, () => {
         render(
           <StaticDatePicker
             openTo="day"
