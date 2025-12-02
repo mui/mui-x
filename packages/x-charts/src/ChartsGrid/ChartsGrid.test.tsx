@@ -29,7 +29,7 @@ describe('<ChartsGrid />', () => {
         <ChartsGrid vertical horizontal />
       </ChartContainer>,
     );
-    // Verify grid lines are rendered
+
     const gridLines = document.querySelectorAll('.MuiChartsGrid-line');
     expect(gridLines.length).to.be.greaterThan(0);
   });
@@ -46,7 +46,7 @@ describe('<ChartsGrid />', () => {
         <ChartsGrid vertical horizontal />
       </ChartContainer>,
     );
-    // Verify grid lines are rendered
+
     const gridLines = document.querySelectorAll('.MuiChartsGrid-line');
     expect(gridLines.length).to.be.greaterThan(0);
   });
