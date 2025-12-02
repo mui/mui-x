@@ -171,9 +171,7 @@ describe('<DataGridPremium /> - Pivoting', () => {
     const pivotSwitch = screen.getByRole('switch', { name: 'Pivot' }) as HTMLInputElement;
     if (!pivotSwitch.checked) {
       await user.click(pivotSwitch);
-      await waitFor(() => {
-        expect(pivotSwitch).to.have.property('checked', true);
-      });
+      await waitFor(() => pivotSwitch.checked === true);
     }
 
     expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '12,200']);
@@ -212,9 +210,7 @@ describe('<DataGridPremium /> - Pivoting', () => {
     const pivotSwitch = screen.getByRole('switch', { name: 'Pivot' }) as HTMLInputElement;
     if (!pivotSwitch.checked) {
       await user.click(pivotSwitch);
-      await waitFor(() => {
-        expect(pivotSwitch).to.have.property('checked', true);
-      });
+      await waitFor(() => pivotSwitch.checked === true);
     }
 
     expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '12,200', '$192.77']);
@@ -253,9 +249,7 @@ describe('<DataGridPremium /> - Pivoting', () => {
     const pivotSwitch = screen.getByRole('switch', { name: 'Pivot' }) as HTMLInputElement;
     if (!pivotSwitch.checked) {
       await user.click(pivotSwitch);
-      await waitFor(() => {
-        expect(pivotSwitch).to.have.property('checked', true);
-      });
+      await waitFor(() => pivotSwitch.checked === true);
     }
 
     expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '$192.45', '5,500', '$193.10', '6,700']);

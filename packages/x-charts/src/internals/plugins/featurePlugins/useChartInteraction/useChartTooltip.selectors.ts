@@ -1,4 +1,4 @@
-import { createSelector } from '@mui/x-internals/store';
+import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import {
   ChartItemIdentifierWithData,
   ChartSeriesDefaultized,
@@ -60,7 +60,7 @@ export const selectorChartsTooltipItemIsDefined = createSelector(
     lastInteraction === 'keyboard' ? keyboardItemIsDefined : interactionItemIsDefined,
 );
 
-const selectorChartsTooltipAxisConfig = createSelector(
+const selectorChartsTooltipAxisConfig = createSelectorMemoized(
   selectorChartsTooltipItem,
   selectorChartXAxis,
   selectorChartYAxis,
@@ -109,7 +109,7 @@ const selectorChartsTooltipAxisConfig = createSelector(
   },
 );
 
-export const selectorChartsTooltipItemPosition = createSelector(
+export const selectorChartsTooltipItemPosition = createSelectorMemoized(
   selectorChartsTooltipItem,
   selectorChartDrawingArea,
   selectorChartSeriesConfig,
