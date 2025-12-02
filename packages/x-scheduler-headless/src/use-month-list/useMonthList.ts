@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { CalendarProcessedDate, SchedulerValidDate } from '../models';
+import { SchedulerProcessedDate, TemporalSupportedObject } from '../models';
 import { useAdapter } from '../use-adapter';
 import { processDate } from '../process-date';
 
@@ -23,7 +23,7 @@ export function useMonthList(): useMonthList.ReturnValue {
           : adapter.startOfMonth(adapter.addMonths(start, amount));
 
       let current = start;
-      const months: SchedulerValidDate[] = [];
+      const months: TemporalSupportedObject[] = [];
 
       while (adapter.isBefore(current, end)) {
         months.push(current);
@@ -38,13 +38,13 @@ export function useMonthList(): useMonthList.ReturnValue {
 }
 
 export namespace useMonthList {
-  export type ReturnValue = (parameters: ReturnValueParameters) => CalendarProcessedDate[];
+  export type ReturnValue = (parameters: ReturnValueParameters) => SchedulerProcessedDate[];
 
   export interface ReturnValueParameters {
     /**
      * The base date from which the month list will be generated.
      */
-    date: SchedulerValidDate;
+    date: TemporalSupportedObject;
     /**
      * The amount of months to return.
      * When equal to "end-of-year", the method will return all the months until the end of the year.

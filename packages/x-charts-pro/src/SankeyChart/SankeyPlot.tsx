@@ -1,18 +1,15 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled, useTheme } from '@mui/material/styles';
-import { useDrawingArea } from '@mui/x-charts/hooks';
+import { styled } from '@mui/material/styles';
 import {
-  SankeyLayout,
   type SankeyLinkIdentifierWithData,
   type SankeyNodeIdentifierWithData,
 } from './sankey.types';
-import { calculateSankeyLayout } from './calculateSankeyLayout';
 import { SankeyNodeElement } from './SankeyNodeElement';
 import { SankeyLinkElement } from './SankeyLinkElement';
 import { SankeyLinkLabel } from './SankeyLinkLabel';
-import { useSankeySeriesContext } from '../hooks/useSankeySeries';
+import { useSankeyLayout, useSankeySeriesContext } from '../hooks/useSankeySeries';
 import { sankeyPlotClasses, useUtilityClasses, type SankeyPlotClasses } from './sankeyClasses';
 
 export interface SankeyPlotProps {
@@ -56,26 +53,23 @@ const SankeyPlotRoot = styled('g')({
 function SankeyPlot(props: SankeyPlotProps) {
   const { classes: inputClasses, onLinkClick, onNodeClick } = props;
 
-  const seriesContext = useSankeySeriesContext();
+  const classes = useUtilityClasses({ classes: inputClasses });
 
-  if (!seriesContext) {
+  const sankeyContext = useSankeySeriesContext();
+  const sankeySeries = sankeyContext?.series[sankeyContext?.seriesOrder[0]];
+  const layout = useSankeyLayout();
+
+  if (!sankeySeries) {
     throw new Error(
       `MUI X Charts: Sankey series context is missing. Ensure the SankeyPlot is used inside a properly configured ChartDataProviderPro.`,
     );
   }
 
-  const series = seriesContext.series[seriesContext.seriesOrder?.[0]];
-  const classes = useUtilityClasses({ classes: inputClasses });
-  const drawingArea = useDrawingArea();
-  const { data, linkOptions, nodeOptions } = series;
-  const theme = useTheme();
+  if (!layout) {
+    return null;
+  }
 
-  // Calculate layout based on data and dimensions
-  const layout: SankeyLayout = React.useMemo(
-    () => calculateSankeyLayout(data, drawingArea, theme, series),
-    [drawingArea, data, series, theme],
-  );
-
+  const { data, linkOptions, nodeOptions } = sankeySeries;
   // Early return if no data or dimensions
   if (!data || !data.links) {
     return null;
@@ -86,7 +80,7 @@ function SankeyPlot(props: SankeyPlotProps) {
       <g className={classes.links}>
         {layout.links.map((link) => (
           <SankeyLinkElement
-            seriesId={series.id}
+            seriesId={sankeySeries.id}
             key={`${link.source.id}-${link.target.id}`}
             link={link}
             opacity={linkOptions?.opacity}
@@ -98,7 +92,7 @@ function SankeyPlot(props: SankeyPlotProps) {
       <g className={classes.nodes}>
         {layout.nodes.map((node) => (
           <SankeyNodeElement
-            seriesId={series.id}
+            seriesId={sankeySeries.id}
             key={node.id}
             node={node}
             showLabel={nodeOptions?.showLabels}

@@ -1,5 +1,5 @@
 import { screen } from '@mui/internal-test-utils';
-import { adapter, createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
+import { createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import {
   changeTo24HoursFormat,
@@ -16,12 +16,12 @@ describe('EventCalendar', () => {
   const event1 = EventBuilder.new()
     .title('Running')
     .span('2025-05-26T07:30:00', '2025-05-26T08:15:00')
-    .buildOccurrence();
+    .build();
 
   const event2 = EventBuilder.new()
     .title('Weekly')
     .span('2025-05-27T16:00:00', '2025-05-27T17:00:00')
-    .buildOccurrence();
+    .build();
 
   // TODO: Move in a test file specific to the TimeGrid component.
   it('should render events in the correct column', () => {
@@ -48,13 +48,13 @@ describe('EventCalendar', () => {
       .title('Running')
       .span('2025-05-26T07:30:00', '2025-05-26T08:15:00')
       .resource('1')
-      .buildOccurrence();
+      .build();
 
     const event2WithResource = EventBuilder.new()
       .title('Weekly')
       .span('2025-05-27T16:00:00', '2025-05-27T17:00:00')
       .resource('2')
-      .buildOccurrence();
+      .build();
 
     const { user } = render(
       <EventCalendar
@@ -246,24 +246,11 @@ describe('EventCalendar', () => {
     });
 
     it('should allow to show / hide empty days using the UI in the agenda view', async () => {
+      const saturdayEvent = EventBuilder.new().singleDay('2025-05-31T07:30:00').build();
+      const sundayEvent = EventBuilder.new().singleDay('2025-06-02T07:30:00').build();
+
       const { user } = render(
-        <EventCalendar
-          events={[
-            {
-              id: '1',
-              start: adapter.date('2025-05-31'),
-              end: adapter.date('2025-05-31'),
-              title: 'Saturday event',
-            },
-            {
-              id: '2',
-              start: adapter.date('2025-06-02'),
-              end: adapter.date('2025-06-02'),
-              title: 'Monday event',
-            },
-          ]}
-          defaultView="agenda"
-        />,
+        <EventCalendar events={[saturdayEvent, sundayEvent]} defaultView="agenda" />,
       );
 
       // Empty days should be visible by default

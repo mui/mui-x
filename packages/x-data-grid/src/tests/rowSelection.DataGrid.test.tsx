@@ -358,8 +358,47 @@ describe('<DataGrid /> - Row selection', () => {
       render(
         <TestDataGridSelection isRowSelectable={(params) => params.id === 0} checkboxSelection />,
       );
-      expect(getRow(0).querySelector('input')).to.have.property('disabled', false);
-      expect(getRow(1).querySelector('input')).to.have.property('disabled', true);
+      expect(getRow(0).querySelector('input')?.getAttribute('aria-disabled')).to.equal(null);
+      expect(getRow(1).querySelector('input')?.getAttribute('aria-disabled')).to.equal('true');
+      expect(getRow(1).querySelector('input')?.getAttribute('disabled')).to.equal(null);
+    });
+
+    it('disabled checkboxes cannot be selected', async () => {
+      render(
+        <TestDataGridSelection isRowSelectable={(params) => params.id === 0} checkboxSelection />,
+      );
+
+      const firstCheckbox = getCell(0, 0).querySelector('input');
+      act(() => {
+        firstCheckbox?.click();
+      });
+
+      expect(getSelectedRowIds()).to.deep.equal([0]);
+      // user.click() doesn't work here because of `pointer-events: none`
+      const secondCheckbox = getCell(1, 0).querySelector('input');
+      act(() => {
+        secondCheckbox?.click();
+      });
+
+      expect(getSelectedRowIds()).to.deep.equal([0]);
+    });
+
+    it('disabled checkboxes can be focused', async () => {
+      const { user } = render(
+        <TestDataGridSelection isRowSelectable={(params) => params.id === 0} checkboxSelection />,
+      );
+
+      expect(getSelectedRowIds()).to.deep.equal([]);
+      const firstCheckbox = getCell(0, 0).querySelector('input');
+      await user.keyboard('{Tab}');
+      await user.keyboard('{ArrowDown}');
+      expect(document.activeElement).to.equal(firstCheckbox);
+
+      const secondCheckbox = getCell(1, 0).querySelector('input');
+      await user.keyboard('{ArrowDown}');
+      await user.keyboard('[Space]');
+      expect(getSelectedRowIds()).to.deep.equal([]);
+      expect(document.activeElement).to.equal(secondCheckbox);
     });
 
     it('should select a range with shift pressed when clicking the row', async () => {
@@ -369,6 +408,29 @@ describe('<DataGrid /> - Row selection', () => {
       await user.keyboard('{Shift>}');
       await user.click(getCell(2, 1));
       expect(getSelectedRowIds()).to.deep.equal([0, 1, 2]);
+    });
+
+    it('should create selection range only between selected rows', async () => {
+      const extendedData = getBasicGridData(10, 2);
+      const { user } = render(
+        <TestDataGridSelection checkboxSelection disableVirtualization {...extendedData} />,
+      );
+
+      await user.click(getCell(0, 1));
+      await user.keyboard('{Shift>}');
+      await user.click(getCell(2, 1));
+      await user.keyboard('{/Shift}');
+      expect(getSelectedRowIds()).to.deep.equal([0, 1, 2]);
+
+      const headerCheckbox = getColumnHeaderCell(0).querySelector('input')!;
+      await user.click(headerCheckbox); // Select all
+      await user.click(headerCheckbox); // Then unselect all
+      expect(getSelectedRowIds()).to.deep.equal([]);
+
+      await user.keyboard('{Shift>}');
+      await user.click(getCell(5, 1));
+      await user.keyboard('{/Shift}');
+      expect(getSelectedRowIds()).to.deep.equal([5]);
     });
 
     it('should select a range with shift pressed when clicking the checkbox', async () => {

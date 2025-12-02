@@ -2,7 +2,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { Calendar } from 'lucide-react';
 import { useStore } from '@base-ui-components/utils/store';
-import { CalendarEventOccurrence } from '@mui/x-scheduler-headless/models';
+import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { DEFAULT_EVENT_COLOR } from '@mui/x-scheduler-headless/constants';
 import {
@@ -15,9 +15,10 @@ import EventPopoverHeader from './EventPopoverHeader';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { getColorClassName } from '../../utils/color-utils';
 import { getRecurrenceLabel } from './utils';
+import { useFormatTime } from '../../hooks/useFormatTime';
 
 type ReadonlyContentProps = {
-  occurrence: CalendarEventOccurrence;
+  occurrence: SchedulerEventOccurrence;
   onClose: () => void;
 };
 
@@ -43,6 +44,8 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
     occurrence.start,
   );
 
+  // Feature hook
+  const formatTime = useFormatTime();
   const recurrenceLabel = getRecurrenceLabel(
     adapter,
     occurrence.start,
@@ -56,9 +59,20 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
         <p className="EventPopoverTitle"> {occurrence.title}</p>
 
         <div className="EventPopoverResourceContainer">
-          <span
-            className={clsx('ResourceLegendColor', getColorClassName(color ?? DEFAULT_EVENT_COLOR))}
-          />
+          <div className="EventPopoverResourceLegendContainer">
+            {resource?.eventColor && resource.eventColor !== color && (
+              <span
+                className={clsx('ResourceLegendColor', getColorClassName(resource.eventColor))}
+              />
+            )}
+
+            <span
+              className={clsx(
+                'ResourceLegendColor',
+                getColorClassName(color ?? DEFAULT_EVENT_COLOR),
+              )}
+            />
+          </div>
           <p
             className={clsx('EventPopoverResourceTitle', 'LinesClamp')}
             style={{ '--number-of-lines': 1 } as React.CSSProperties}
@@ -74,15 +88,21 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
             className={clsx('EventPopoverDateTime', 'LinesClamp')}
             style={{ '--number-of-lines': 1 } as React.CSSProperties}
           >
-            <time dateTime={adapter.format(occurrence.start, 'keyboardDate')} className="EventDate">
-              <span>{adapter.format(occurrence.start, 'fullDate')}, </span>
+            <time
+              dateTime={adapter.format(occurrence.start.value, 'localizedNumericDate')}
+              className="EventDate"
+            >
+              <span>
+                {adapter.format(occurrence.start.value, 'localizedDateWithFullMonthAndWeekDay')}
+                ,{' '}
+              </span>
             </time>
             {occurrence.allDay ? (
               <span className="EventAllDay"> {translations.allDayLabel}</span>
             ) : (
               <time className="EventTime">
-                <span>{adapter.format(occurrence.start, 'fullTime24h')}</span>
-                <span> - {adapter.format(occurrence.end, 'fullTime24h')}</span>
+                <span>{formatTime(occurrence.start.value)}</span>
+                <span> - {formatTime(occurrence.end.value)}</span>
               </time>
             )}
           </p>

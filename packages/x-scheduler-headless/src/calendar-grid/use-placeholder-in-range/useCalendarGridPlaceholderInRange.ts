@@ -1,16 +1,20 @@
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store/useStore';
-import { CalendarEventOccurrenceWithTimePosition, SchedulerValidDate } from '../../models';
+import { TemporalSupportedObject } from '../../models';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
 import { useEventOccurrencesWithTimelinePosition } from '../../use-event-occurrences-with-timeline-position';
 import { eventCalendarOccurrencePlaceholderSelectors } from '../../event-calendar-selectors';
+import { processDate } from '../../process-date';
+import { useAdapter } from '../../use-adapter';
 import { isInternalDragOrResizePlaceholder } from '../../utils/drag-utils';
 
 export function useCalendarGridPlaceholderInRange(
   parameters: useCalendarGridPlaceholderInRange.Parameters,
-): useCalendarGridPlaceholderInRange.ReturnValue {
+): useEventOccurrencesWithTimelinePosition.EventOccurrenceWithPosition | null {
   const { start, end, occurrences, maxIndex } = parameters;
+
+  const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
 
   const rawPlaceholder = useStore(
@@ -32,8 +36,9 @@ export function useCalendarGridPlaceholderInRange(
 
     const sharedProperties = {
       key: 'occurrence-placeholder',
-      start: rawPlaceholder.start,
-      end: rawPlaceholder.end,
+      start: processDate(rawPlaceholder.start, adapter),
+      end: processDate(rawPlaceholder.end, adapter),
+      modelInBuiltInFormat: null,
     };
 
     if (rawPlaceholder.type === 'creation') {
@@ -72,14 +77,12 @@ export function useCalendarGridPlaceholderInRange(
       ...sharedProperties,
       position,
     };
-  }, [rawPlaceholder, occurrences, maxIndex, originalEvent]);
+  }, [adapter, rawPlaceholder, occurrences, maxIndex, originalEvent]);
 }
 
 export namespace useCalendarGridPlaceholderInRange {
   export interface Parameters extends useEventOccurrencesWithTimelinePosition.ReturnValue {
-    start: SchedulerValidDate;
-    end: SchedulerValidDate;
+    start: TemporalSupportedObject;
+    end: TemporalSupportedObject;
   }
-
-  export type ReturnValue = CalendarEventOccurrenceWithTimePosition | null;
 }

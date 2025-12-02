@@ -1,7 +1,12 @@
-import { CalendarEventOccurrence, SchedulerValidDate } from '@mui/x-scheduler-headless/models';
+import {
+  SchedulerEventOccurrence,
+  SchedulerResourceId,
+  TemporalSupportedObject,
+} from '@mui/x-scheduler-headless/models';
 
 export type TimelineEventRowProps = {
-  start: SchedulerValidDate;
-  end: SchedulerValidDate;
-  occurrences: CalendarEventOccurrence[];
+  start: TemporalSupportedObject;
+  end: TemporalSupportedObject;
+  resourceId: SchedulerResourceId | null;
+  occurrences: SchedulerEventOccurrence[];
 };

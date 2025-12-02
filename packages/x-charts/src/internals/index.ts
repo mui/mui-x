@@ -2,6 +2,8 @@
 export * from './components/ChartsAxesGradients';
 export * from '../ChartsLabel/ChartsLabelMark';
 export * from './components/NotRendered';
+export * from '../BarChart/BarLabel/BarLabelPlot';
+export * from '../BarChart/BarClipPath';
 
 // hooks
 export { useSeries } from '../hooks/useSeries';
@@ -18,7 +20,8 @@ export { useBarPlotData } from '../BarChart/useBarPlotData';
 export { useRadarChartProps } from '../RadarChart/useRadarChartProps';
 export * from '../ChartContainer/useChartContainerProps';
 export * from '../ChartDataProvider/useChartDataProviderProps';
-export * from './createSeriesSelectorOfType';
+export * from './seriesSelectorOfType';
+export { useSkipAnimation } from '../hooks/useSkipAnimation';
 
 // plugins
 export * from './plugins/corePlugins/useChartId';
@@ -67,6 +70,8 @@ export * from './dateHelpers';
 export * from './invertScale';
 export * from './scaleGuards';
 export * from './findMinMax';
+export { checkBarChartScaleErrors } from '../BarChart/checkBarChartScaleErrors';
+export { getBandSize } from './getBandSize';
 
 // contexts
 export { getAxisExtrema } from './plugins/featurePlugins/useChartCartesianAxis/getAxisExtrema';
