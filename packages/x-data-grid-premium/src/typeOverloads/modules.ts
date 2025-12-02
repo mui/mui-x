@@ -1,4 +1,4 @@
-import { GridExportDisplayOptions, GridValidRowModel } from '@mui/x-data-grid-pro';
+import { GridEventLookup, GridExportDisplayOptions, GridValidRowModel } from '@mui/x-data-grid-pro';
 import type {
   GridPipeProcessingLookupPro,
   GridControlledStateEventLookupPro,
@@ -88,6 +88,14 @@ interface GridEventLookupPremium extends GridEventLookupPro {
    * Fired when the chart synchronization state changes.
    */
   chartSynchronizationStateChange: { params: { chartId: string; synced: boolean } };
+  /**
+   * Fired when an undo operation is executed.
+   */
+  undo: { params: { eventName: keyof GridEventLookup; data: any } };
+  /**
+   * Fired when a redo operation is executed.
+   */
+  redo: { params: { eventName: keyof GridEventLookup; data: any } };
 }
 
 export interface GridColDefPremium<R extends GridValidRowModel = any, V = any, F = V> {

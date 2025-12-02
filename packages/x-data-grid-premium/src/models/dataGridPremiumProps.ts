@@ -8,6 +8,7 @@ import {
   GridUpdateRowError,
   type GridColDef,
   GridLocaleTextApi,
+  type GridEvents,
 } from '@mui/x-data-grid-pro';
 import {
   GridExperimentalProFeatures,
@@ -43,6 +44,7 @@ import {
   PromptResponse,
   PromptSuggestion,
 } from '../hooks/features/aiAssistant/gridAiAssistantInterfaces';
+import type { GridHistoryEventHandler } from '../hooks/features/history/gridHistoryInterfaces';
 
 export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {
   charts?: boolean;
@@ -155,6 +157,17 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
    * @default false
    */
   chartsIntegration: boolean;
+  /**
+   * The maximum size of the history queue.
+   * Set to 0 to disable the undo/redo feature.
+   * @default 30
+   */
+  historyQueueSize: number;
+  /**
+   * Map of grid events to their undo/redo handlers.
+   * @default Handlers for `cellEditStop` and `rowEditStop` events
+   */
+  historyEvents: Map<GridEvents, GridHistoryEventHandler<any>>;
 }
 
 export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowModel = any>
@@ -361,4 +374,12 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    * @param {string} activeChartId The new active chart id.
    */
   onActiveChartIdChange?: (activeChartId: string) => void;
+  /**
+   * Callback fired when an undo operation is executed.
+   */
+  onUndo?: GridEventListener<'undo'>;
+  /**
+   * Callback fired when a redo operation is executed.
+   */
+  onRedo?: GridEventListener<'redo'>;
 }
