@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { BarChart } from '@mui/x-charts/BarChart';
 import Stack from '@mui/material/Stack';
 import Slider from '@mui/material/Slider';
 import Typography from '@mui/material/Typography';
+import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 import data from '../dataset/sp500-intraday.json';
 
 const tickLabelDateFormatter = new Intl.DateTimeFormat(undefined, {
@@ -23,7 +23,9 @@ export default function TickSpacing() {
         maxWidth={400}
         alignSelf="center"
       >
-        <Typography gutterBottom>Tick Spacing</Typography>
+        <Typography gutterBottom id="tickSpacing">
+          Tick Spacing
+        </Typography>
         <Slider
           value={tickSpacing}
           onChange={(event, value) => setTickSpacing(value)}
@@ -32,15 +34,17 @@ export default function TickSpacing() {
           max={100}
           step={5}
           sx={{ mt: 2 }}
+          aria-labelledby="tickSpacing"
         />
       </Stack>
-      <BarChart
+      <BarChartPro
         xAxis={[
           {
             data: data.map((d) => new Date(Date.parse(d.date))),
             valueFormatter: (v) => tickLabelDateFormatter.format(v),
             tickSpacing,
             tickPlacement: 'middle',
+            zoom: true,
           },
         ]}
         series={[{ data: data.map((d) => d.close), label: 'Close' }]}
