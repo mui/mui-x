@@ -1,5 +1,6 @@
 import { DefaultizedProps, MakeRequired } from '@mui/x-internals/types';
-import { AxisId, ZoomOptions } from '@mui/x-charts/internals';
+import { AxisId, SeriesColor, ZoomOptions } from '@mui/x-charts/internals';
+import { RangeBarSeriesType, RangeBarValueType } from '@mui/x-charts/models';
 import {
   DefaultizedFunnelSeriesType,
   FunnelItemIdentifier,
@@ -19,6 +20,10 @@ import {
   type SankeyItemIdentifier,
   type SankeyItemIdentifierWithData,
 } from '../SankeyChart/sankey.types';
+import {
+  DefaultizedRangeBarSeriesType,
+  RangeBarItemIdentifier,
+} from '../models/seriesType/rangeBar';
 
 declare module '@mui/x-charts/internals' {
   interface ChartsSeriesConfig {
@@ -42,6 +47,17 @@ declare module '@mui/x-charts/internals' {
       itemIdentifier: FunnelItemIdentifier;
       itemIdentifierWithData: FunnelItemIdentifier;
       valueType: MakeRequired<FunnelValueType, 'id' | 'color'>;
+      axisType: 'cartesian';
+    };
+    rangeBar: {
+      seriesInput: DefaultizedProps<RangeBarSeriesType, 'id'> &
+        MakeRequired<SeriesColor<RangeBarValueType | null>, 'color'>;
+      series: DefaultizedRangeBarSeriesType;
+      seriesLayout: {};
+      seriesProp: RangeBarSeriesType;
+      itemIdentifier: RangeBarItemIdentifier;
+      itemIdentifierWithData: RangeBarItemIdentifier;
+      valueType: RangeBarValueType | null;
       axisType: 'cartesian';
     };
     sankey: {
