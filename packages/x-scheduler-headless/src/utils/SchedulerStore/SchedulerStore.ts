@@ -31,6 +31,7 @@ import {
 } from './SchedulerStore.utils';
 import { TimeoutManager } from '../TimeoutManager';
 import { DEFAULT_EVENT_COLOR } from '../../constants';
+import { applyDataTimezoneToEventUpdate } from '../date-utils';
 
 const ONE_MINUTE_IN_MS = 60 * 1000;
 
@@ -305,6 +306,7 @@ export class SchedulerStore<
    */
   public updateEvent = (calendarEvent: SchedulerEventUpdatedProperties) => {
     const original = schedulerEventSelectors.processedEvent(this.state, calendarEvent.id);
+    const { adapter } = this.state;
 
     if (!original) {
       throw new Error(
@@ -317,7 +319,15 @@ export class SchedulerStore<
       );
     }
 
-    this.updateEvents({ updated: [calendarEvent] });
+    const updatedEventInDataTimezone = applyDataTimezoneToEventUpdate({
+      adapter,
+      originalEvent: original,
+      changes: calendarEvent,
+    });
+
+    this.updateEvents({
+      updated: [updatedEventInDataTimezone],
+    });
   };
 
   /**
@@ -355,7 +365,22 @@ export class SchedulerStore<
       );
     }
 
-    const updatedEvents = updateRecurringEvent(adapter, original, occurrenceStart, changes, scope);
+    const changesInDataTimezone = applyDataTimezoneToEventUpdate({
+      adapter,
+      originalEvent: original,
+      changes,
+    });
+
+    const originalTz = adapter.getTimezone(original.modelInBuiltInFormat!.start);
+    const occurrenceStartInDataTimezone = adapter.setTimezone(occurrenceStart, originalTz);
+
+    const updatedEvents = updateRecurringEvent(
+      adapter,
+      original,
+      occurrenceStartInDataTimezone,
+      changesInDataTimezone,
+      scope,
+    );
     this.updateEvents(updatedEvents);
 
     const submit = onSubmit;
