@@ -165,8 +165,10 @@ export class EventBuilder {
    * Manually sets the start date/time using an ISO-like string.
    * Useful for fine-grained control (e.g., pairing with `.endAt(...)`).
    */
-  startAt(startISO: string) {
-    this.event.start = this.adapter.date(startISO, this.dataTimezone);
+  startAt(start: string | TemporalSupportedObject) {
+    const startDate =
+      typeof start === 'string' ? this.adapter.date(start, this.dataTimezone) : start;
+    this.event.start = startDate;
     return this;
   }
 
@@ -174,8 +176,9 @@ export class EventBuilder {
    * Manually sets the end date/time using an ISO-like string.
    * Useful for fine-grained control (e.g., pairing with `.startAt(...)`).
    */
-  endAt(endISO: string) {
-    this.event.end = this.adapter.date(endISO, this.dataTimezone);
+  endAt(end: string | TemporalSupportedObject) {
+    const endDate = typeof end === 'string' ? this.adapter.date(end, this.dataTimezone) : end;
+    this.event.end = endDate;
     return this;
   }
 
