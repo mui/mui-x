@@ -22,23 +22,15 @@ const getSortingComparator = (comparator: ChartsPieSorting = 'none') => {
   }
 };
 
-const seriesProcessor: SeriesProcessor<'pie'> = (params, dataset, hiddenIdentifiers) => {
+const seriesProcessor: SeriesProcessor<'pie'> = (params, dataset, isIdentifierVisible) => {
   const { seriesOrder, series } = params;
 
   const defaultizedSeries: Record<SeriesId, ChartSeriesDefaultized<'pie'>> = {};
   seriesOrder.forEach((seriesId) => {
-    // Build a map of hidden item IDs for this series
-    const hiddenItemIds = new Set(
-      hiddenIdentifiers
-        ?.filter((item) => item.seriesId === seriesId)
-        .map((item) => item.itemId)
-        .filter((id): id is string | number => id !== undefined) ?? [],
-    );
-
     // Filter out hidden data points for arc calculation
     const visibleData = series[seriesId].data.filter((piePoint, index) => {
       const itemId = piePoint.id ?? `auto-generated-pie-id-${seriesId}-${index}`;
-      return !hiddenItemIds.has(itemId);
+      return isIdentifierVisible?.([seriesId, itemId]);
     });
 
     const visibleArcs = d3Pie()
@@ -58,7 +50,7 @@ const seriesProcessor: SeriesProcessor<'pie'> = (params, dataset, hiddenIdentifi
       hidden: false,
       data: series[seriesId].data.map((item, index) => {
         const itemId = item.id ?? `auto-generated-pie-id-${seriesId}-${index}`;
-        const isHidden = hiddenItemIds.has(itemId);
+        const isHidden = !isIdentifierVisible?.([seriesId, itemId]);
         let arcData;
 
         if (isHidden) {

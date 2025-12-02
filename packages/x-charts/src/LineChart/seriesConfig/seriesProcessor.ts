@@ -9,7 +9,7 @@ import type { DefaultizedLineSeriesType } from '../../models';
 const lineValueFormatter = ((v) =>
   v == null ? '' : v.toLocaleString()) as DefaultizedLineSeriesType['valueFormatter'];
 
-const seriesProcessor: SeriesProcessor<'line'> = (params, dataset, hiddenIdentifiers) => {
+const seriesProcessor: SeriesProcessor<'line'> = (params, dataset, isIdentifierVisible) => {
   const { seriesOrder, series } = params;
   const stackingGroups = getStackingGroups({ ...params, defaultStrategy: { stackOffset: 'none' } });
 
@@ -72,7 +72,6 @@ const seriesProcessor: SeriesProcessor<'line'> = (params, dataset, hiddenIdentif
 
   stackingGroups.forEach((stackingGroup) => {
     const { ids, stackingOffset, stackingOrder } = stackingGroup;
-    const hiddenIds = new Set(hiddenIdentifiers?.map((v) => v.seriesId));
     const keys = ids.map((id) => {
       // Use dataKey if needed and available
       const dataKey = series[id].dataKey;
@@ -95,7 +94,7 @@ const seriesProcessor: SeriesProcessor<'line'> = (params, dataset, hiddenIdentif
         const keyIndex = keys.indexOf(key);
         const seriesId = ids[keyIndex];
 
-        if (hiddenIds.has(seriesId)) {
+        if (!isIdentifierVisible?.(`${seriesId}`)) {
           // For hidden series, return 0 so they don't contribute to the stack
           return 0;
         }
@@ -111,7 +110,7 @@ const seriesProcessor: SeriesProcessor<'line'> = (params, dataset, hiddenIdentif
       const keyIndex = keys.indexOf(key);
       const seriesId = ids[keyIndex];
 
-      if (hiddenIds.has(seriesId)) {
+      if (!isIdentifierVisible?.(`${seriesId}`)) {
         layer.forEach((point, pointIndex) => {
           // Get the original value to determine if it's negative or positive
           const originalValue = d3Dataset[pointIndex]?.[key] ?? 0;
@@ -125,7 +124,7 @@ const seriesProcessor: SeriesProcessor<'line'> = (params, dataset, hiddenIdentif
             const prevKeyIndex = keys.indexOf(prevKey);
             const prevSeriesId = ids[prevKeyIndex];
 
-            if (!hiddenIds.has(prevSeriesId)) {
+            if (isIdentifierVisible?.(`${prevSeriesId}`)) {
               const value = d3Dataset[pointIndex]?.[prevKey] ?? 0;
               const isPrevNegative = value < 0;
 
@@ -151,7 +150,7 @@ const seriesProcessor: SeriesProcessor<'line'> = (params, dataset, hiddenIdentif
             return typeof value === 'number' ? value : null;
           })
         : series[id].data!;
-      const hidden = hiddenIds.has(id);
+      const hidden = !isIdentifierVisible?.(`${id}`);
       completedSeries[id] = {
         labelMarkType: 'line',
         ...series[id],
