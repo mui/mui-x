@@ -16,5 +16,7 @@ export const isIdentifierVisible = (
     identifier = buildIdentifier(separator, identifier);
   }
 
-  return visibilityMap?.[identifier] === true;
+  const state = visibilityMap?.[identifier];
+
+  return state !== false;
 };
