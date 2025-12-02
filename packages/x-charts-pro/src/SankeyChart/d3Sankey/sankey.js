@@ -33,7 +33,6 @@ function defaultLinks(graph) {
 
 function find(nodeById, id) {
   const node = nodeById.get(id);
-  // eslint-disable-next-line prefer-template
   if (!node) {
     throw new Error('missing: ' + id);
   }

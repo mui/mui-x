@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export default function _default(): ((
   this: any,
   d: import('@mui/x-charts-vendor/d3-shape').DefaultLinkObject,
