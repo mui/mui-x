@@ -61,6 +61,8 @@ export const DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES: DataGridPremiumPropsWithDef
   disablePivoting: false,
   aiAssistant: false,
   chartsIntegration: false,
+  historyQueueSize: 30,
+  historyEvents: new Map(),
 };
 
 const defaultSlots = DATA_GRID_PREMIUM_DEFAULT_SLOTS_COMPONENTS;

@@ -1,4 +1,4 @@
-import type { GridRowId, GridEvents } from '@mui/x-data-grid-pro';
+import type { GridRowId, GridEvents, GridValidRowModel } from '@mui/x-data-grid-pro';
 
 /**
  * Handler for a specific grid event
@@ -15,13 +15,13 @@ export interface GridHistoryEventHandler<T = any> {
    * @param {T} data The stored data.
    * @returns {boolean | Promise<boolean>} True if the operation was successful, false otherwise.
    */
-  undo: (data: T) => boolean | Promise<boolean>;
+  undo: (data: T) => void | Promise<void>;
   /**
    * Redo the changes made by this event.
    * @param {T} data The stored data.
    * @returns {boolean | Promise<boolean>} True if the operation was successful, false otherwise.
    */
-  redo: (data: T) => boolean | Promise<boolean>;
+  redo: (data: T) => void | Promise<void>;
   /**
    * Validate if the undo/redo operation can be performed.
    * @param {T} data The stored data.
@@ -87,7 +87,6 @@ export interface GridCellEditHistoryData {
 
 export interface GridRowEditHistoryData {
   id: GridRowId;
-  oldRow: Record<string, any>;
-  newRow: Record<string, any>;
-  modifiedFields: string[];
+  oldRow: GridValidRowModel;
+  newRow: GridValidRowModel;
 }
