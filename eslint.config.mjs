@@ -196,8 +196,20 @@ export default defineConfig(
     extends: createTestConfig({ useMocha: false, useVitest: true }),
     ignores: ['test/e2e/**/*', 'test/regressions/**/*'],
     rules: {
-      // Doesn't work relianly with chai style .to.deep.equal (replace with .toEqual?)
+      // Doesn't work reliantly with chai style .to.deep.equal (replace with .toEqual?)
       'vitest/valid-expect': 'off',
+    },
+  },
+  {
+    files: [
+      // TODO: Fix one-by-one
+      `packages/x-charts{,-*}/**/*${EXTENSION_TEST_FILE}`,
+      `packages/x-data-grid{,-*}/**/*${EXTENSION_TEST_FILE}`,
+      `packages/x-date-pickers{,-*}/**/*${EXTENSION_TEST_FILE}`,
+      `packages/x-internals{,-*}/**/*${EXTENSION_TEST_FILE}`,
+      `packages/x-scheduler{,-*}/**/*${EXTENSION_TEST_FILE}`,
+    ],
+    rules: {
       // Can't unambiguously detect all patterns of adding expects
       'vitest/expect-expect': 'off',
       'vitest/no-standalone-expect': 'off',
