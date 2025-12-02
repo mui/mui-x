@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { ChartContainer } from '@mui/x-charts/ChartContainer';
 import {
   LinePlot,
@@ -24,7 +23,8 @@ export default function TinyLineChart() {
       width={500}
       height={300}
       series={[{ type: 'line', data: pData }]}
-      xAxis={[{ scaleType: 'point', data: xLabels }]}
+      xAxis={[{ scaleType: 'point', data: xLabels, position: 'none' }]}
+      yAxis={[{ position: 'none' }]}
       sx={{
         [`& .${lineElementClasses.root}`]: {
           stroke: '#8884d8',

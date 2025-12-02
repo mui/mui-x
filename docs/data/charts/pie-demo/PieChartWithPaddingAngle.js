@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import { PieChart } from '@mui/x-charts/PieChart';
 
@@ -11,19 +10,16 @@ const data = [
 
 export default function PieChartWithPaddingAngle() {
   return (
-    <Stack direction="row">
+    <Stack width="100%" height={300} direction="row">
       <PieChart
         series={[
           {
             paddingAngle: 5,
-            innerRadius: 60,
-            outerRadius: 80,
+            innerRadius: '60%',
+            outerRadius: '90%',
             data,
           },
         ]}
-        margin={{ right: 5 }}
-        width={200}
-        height={200}
         hideLegend
       />
       <PieChart
@@ -32,14 +28,11 @@ export default function PieChartWithPaddingAngle() {
             startAngle: -90,
             endAngle: 90,
             paddingAngle: 5,
-            innerRadius: 60,
-            outerRadius: 80,
+            innerRadius: '60%',
+            outerRadius: '90%',
             data,
           },
         ]}
-        margin={{ right: 5 }}
-        width={200}
-        height={200}
         hideLegend
       />
     </Stack>

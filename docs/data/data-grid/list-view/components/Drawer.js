@@ -1,4 +1,3 @@
-import * as React from 'react';
 import MUISwipeableDrawer from '@mui/material/SwipeableDrawer';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -70,12 +69,14 @@ export function Drawer(props) {
       {...other}
       anchor={anchor}
       container={container}
-      PaperProps={{
-        sx: {
-          boxSizing: 'border-box',
-          ...(isBottomDrawer
-            ? { pb: 1, maxHeight: 'calc(100% - 100px)' }
-            : { width }),
+      slotProps={{
+        paper: {
+          sx: {
+            boxSizing: 'border-box',
+            ...(isBottomDrawer
+              ? { pb: 1, maxHeight: 'calc(100% - 100px)' }
+              : { width }),
+          },
         },
       }}
       disableSwipeToOpen

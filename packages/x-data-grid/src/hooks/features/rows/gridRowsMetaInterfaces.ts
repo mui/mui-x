@@ -1,14 +1,7 @@
+import type { HeightEntry } from '@mui/x-virtualizer/models';
 import { GridRowId } from '../../../models/gridRows';
 
-export type HeightEntry = {
-  content: number;
-  spacingTop: number;
-  spacingBottom: number;
-  detail: number;
-
-  autoHeight: boolean;
-  needsFirstMeasurement: boolean;
-};
+export type { HeightEntry } from '@mui/x-virtualizer/models';
 
 export type HeightCache = Map<GridRowId, HeightEntry>;
 

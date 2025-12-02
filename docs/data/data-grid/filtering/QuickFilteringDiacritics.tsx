@@ -1,10 +1,5 @@
 import * as React from 'react';
-import {
-  DataGrid,
-  GridToolbar,
-  GridColDef,
-  GridFilterModel,
-} from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridFilterModel } from '@mui/x-data-grid';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 
@@ -59,8 +54,7 @@ export default function QuickFilteringDiacritics() {
           disableColumnSelector
           disableDensitySelector
           hideFooter
-          slots={{ toolbar: GridToolbar }}
-          slotProps={{ toolbar: { showQuickFilter: true } }}
+          showToolbar
           ignoreDiacritics={ignoreDiacritics}
         />
       </div>

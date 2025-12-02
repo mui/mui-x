@@ -1,63 +1,110 @@
+import { ChartDrawingArea } from '../../../../hooks/useDrawingArea';
+import { SeriesId } from '../../../../models/seriesType/common';
 import { AllSeriesType } from '../../../../models/seriesType';
-import { defaultizeColor } from '../../../defaultizeColor';
 import { ChartSeriesType, DatasetType } from '../../../../models/seriesType/config';
-import { ChartSeriesConfig } from '../../models/seriesConfig';
-import {
-  SeriesProcessorParams,
-  SeriesProcessorResult,
-} from '../../models/seriesConfig/seriesProcessor.types';
+import { ChartSeriesConfig, SeriesProcessorParams } from '../../models/seriesConfig';
+import { DefaultizedSeriesGroups, ProcessedSeries, SeriesLayout } from './useChartSeries.types';
 
 /**
- * This methods is the interface between what the developer is providing and what components receives
- * To simplify the components behaviors, it groups series by type, such that LinePlots props are not updated if some line data are modified
- * It also add defaultized values such as the ids, colors
+ * This method groups series by type and adds defaultized values such as the ids and colors.
+ * It does NOT apply the series processors - that happens in a selector.
  * @param series The array of series provided by the developer
  * @param colors The color palette used to defaultize series colors
- * @returns An object structuring all the series by type.
+ * @returns An object structuring all the series by type with default values.
  */
-export const preprocessSeries = <TSeriesType extends ChartSeriesType>({
+export const defaultizeSeries = <TSeriesType extends ChartSeriesType>({
   series,
   colors,
   seriesConfig,
-  dataset,
 }: {
-  series: AllSeriesType<TSeriesType>[];
-  colors: string[];
+  series: Readonly<AllSeriesType<TSeriesType>[]>;
+  colors: readonly string[];
   seriesConfig: ChartSeriesConfig<TSeriesType>;
-  dataset?: DatasetType;
-}) => {
+}): DefaultizedSeriesGroups<TSeriesType> => {
   // Group series by type
-  const seriesGroups: { [type in ChartSeriesType]?: SeriesProcessorParams<type> } = {};
-  // Notice the line about uses `ChartSeriesType` instead of TSeriesType.
-  // That's probably because the series.type is not propagated from the generic but hardcoded in the config.
+  const seriesGroups: { [type in ChartSeriesType]?: SeriesProcessorParams<type> | undefined } = {};
 
-  series.forEach((seriesData, seriesIndex: number) => {
-    const { id = `auto-generated-id-${seriesIndex}`, type } =
-      seriesData as AllSeriesType<TSeriesType>;
+  series.forEach(<T extends TSeriesType>(seriesData: AllSeriesType<T>, seriesIndex: number) => {
+    const seriesWithDefaultValues = seriesConfig[seriesData.type as T].getSeriesWithDefaultValues(
+      seriesData,
+      seriesIndex,
+      colors,
+    );
 
-    if (seriesGroups[type] === undefined) {
-      seriesGroups[type] = { series: {}, seriesOrder: [] };
+    const id: SeriesId = seriesWithDefaultValues.id;
+
+    if (seriesGroups[seriesData.type] === undefined) {
+      seriesGroups[seriesData.type] = { series: {}, seriesOrder: [] };
     }
-    if (seriesGroups[type]?.series[id] !== undefined) {
-      throw new Error(`MUI X: series' id "${id}" is not unique.`);
+
+    if (seriesGroups[seriesData.type]?.series[id] !== undefined) {
+      throw new Error(`MUI X Charts: series' id "${id}" is not unique.`);
     }
 
-    seriesGroups[type]!.series[id] = {
-      id,
-      ...defaultizeColor(seriesData, seriesIndex, colors),
-    };
-    seriesGroups[type]!.seriesOrder.push(id);
+    seriesGroups[seriesData.type]!.series[id] = seriesWithDefaultValues;
+    seriesGroups[seriesData.type]!.seriesOrder.push(id);
   });
 
-  const processedSeries: { [type in TSeriesType]?: SeriesProcessorResult<TSeriesType> } = {};
+  return seriesGroups;
+};
+
+/**
+ * Applies series processors to the defaultized series groups.
+ * This should be called in a selector to compute processed series on-demand.
+ * @param defaultizedSeries The defaultized series groups
+ * @param seriesConfig The series configuration
+ * @param dataset The optional dataset
+ * @returns Processed series with all transformations applied
+ */
+export const applySeriesProcessors = <TSeriesType extends ChartSeriesType>(
+  defaultizedSeries: DefaultizedSeriesGroups<TSeriesType>,
+  seriesConfig: ChartSeriesConfig<TSeriesType>,
+  dataset?: Readonly<DatasetType>,
+): ProcessedSeries<TSeriesType> => {
+  const processedSeries: ProcessedSeries<TSeriesType> = {};
+
   // Apply formatter on a type group
   (Object.keys(seriesConfig) as TSeriesType[]).forEach((type) => {
-    const group = seriesGroups[type];
+    const group = defaultizedSeries[type];
     if (group !== undefined) {
-      processedSeries[type] =
-        seriesConfig[type]?.seriesProcessor?.(group, dataset) ?? seriesGroups[type];
+      processedSeries[type] = seriesConfig[type]?.seriesProcessor?.(group, dataset) ?? group;
     }
   });
 
   return processedSeries;
+};
+
+/**
+ * Applies series processors with drawing area to series if defined.
+ * @param processedSeries The processed series groups
+ * @param seriesConfig The series configuration
+ * @param drawingArea The drawing area
+ * @returns Processed series with all transformations applied
+ */
+export const applySeriesLayout = <TSeriesType extends ChartSeriesType>(
+  processedSeries: ProcessedSeries<TSeriesType>,
+  seriesConfig: ChartSeriesConfig<TSeriesType>,
+  drawingArea: ChartDrawingArea,
+): SeriesLayout<TSeriesType> => {
+  let processingDetected = false;
+  const seriesLayout: SeriesLayout<TSeriesType> = {};
+
+  // Apply processors on series type per group
+  (Object.keys(processedSeries) as TSeriesType[]).forEach((type) => {
+    const processor = seriesConfig[type]?.seriesLayout;
+    const thisSeries = processedSeries[type];
+    if (processor !== undefined && thisSeries !== undefined) {
+      const newValue = processor(thisSeries, drawingArea);
+
+      if (newValue && newValue !== processedSeries[type]) {
+        processingDetected = true;
+        (seriesLayout as any)[type] = newValue;
+      }
+    }
+  });
+
+  if (!processingDetected) {
+    return {};
+  }
+  return seriesLayout;
 };

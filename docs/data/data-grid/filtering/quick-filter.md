@@ -2,10 +2,11 @@
 
 <p class="description">One filter field to quickly filter grid.</p>
 
-Quick filter allows filtering rows by multiple columns with a single text input.
-To enable it, you can add the `<GridToolbarQuickFilter />` component to your custom toolbar or pass `showQuickFilter` to the default `<GridToolbar />`.
+Quick filter lets users filter rows by multiple columns with a single text input.
 
 By default, the quick filter considers the input as a list of values separated by space and keeps only rows that contain all the values.
+
+The quick filter is displayed by default when `showToolbar` is passed to the `<DataGrid/>` component. See the [Quick Filter component](/x/react-data-grid/components/quick-filter/) for examples on how to add the quick filter to a custom toolbar.
 
 {{"demo": "QuickFilteringGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -55,7 +56,7 @@ However, when you disable the `Exclude hidden columns` switch, the rows containi
 ## Custom filtering logic
 
 The logic used for quick filter can be switched to filter rows that contain _at least_ one of the values specified instead of testing if it contains all of them.
-To do so, set `quickFilterLogicOperator` to `GridLogicOperator.Or` as follow:
+To do so, set `quickFilterLogicOperator` to `GridLogicOperator.Or` as follows:
 
 ```js
 initialState={{
@@ -94,7 +95,7 @@ const getApplyQuickFilterFn: GetApplyQuickFilterFn<any, unknown> = (value) => {
 };
 ```
 
-To remove the quick filtering on a given column set `getApplyQuickFilterFn: undefined`.
+To remove the quick filtering on a given column set `getApplyQuickFilterFn: () => null`.
 
 In the demo below, the column "Name" is not searchable with the quick filter, and 4 digits figures will be compared to the year of column "Created on."
 
@@ -102,24 +103,39 @@ In the demo below, the column "Name" is not searchable with the quick filter, an
 
 ## Parsing values
 
-The values used by the quick filter are obtained by splitting with space.
-If you want to implement a more advanced logic, the `<GridToolbarQuickFilter/>` component accepts a prop `quickFilterParser`.
-This function takes the string from the search text field and returns an array of values.
+The values used by the quick filter are obtained by splitting the input string with space.
+If you want to implement a more advanced logic, the quick filter accepts a custom parser.
+This function takes the quick filter input string and returns an array of values.
 
 If you control the `quickFilterValues` either by controlling `filterModel` or with the initial state, the content of the input must be updated to reflect the new values.
-By default, values are joint with spaces. You can customize this behavior by providing `quickFilterFormatter`.
-This formatter can be seen as the inverse of the `quickFilterParser`.
+By default, values are joint with spaces. You can customize this behavior by providing a custom formatter.
+This formatter can be seen as the inverse of the `parser`.
 
-For example, the following parser allows to search words containing a space by using the `','` to split values.
+For example, the following parser lets you search words containing a space by using the `','` to split values.
 
 ```jsx
-<GridToolbarQuickFilter
-  quickFilterParser={(searchInput) =>
-    searchInput.split(',').map((value) => value.trim())
-  }
-  quickFilterFormatter={(quickFilterValues) => quickFilterValues.join(', ')}
-  debounceMs={200} // time before applying the new quick filter value
+// Default toolbar:
+<DataGrid
+  showToolbar
+  slotProps={{
+    toolbar: {
+      quickFilterProps: {
+        quickFilterParser: (searchInput) => searchInput.split(',').map((value) => value.trim()),
+        quickFilterFormatter: (quickFilterValues) => quickFilterValues.join(', '),
+        debounceMs: 200, // time before applying the new quick filter value
+      },
+    },
+  }}
 />
+
+// Custom quick filter:
+<QuickFilter
+  parser={(searchInput) => searchInput.split(',').map((value) => value.trim())}
+  formatter={(quickFilterValues) => quickFilterValues.join(', ')}
+  debounceMs={200} // time before applying the new quick filter value
+>
+  {/* ... */}
+</QuickFilter>
 ```
 
 In the following demo, the quick filter value `"Saint Martin, Saint Lucia"` will return rows with country is Saint Martin or Saint Lucia.
@@ -128,20 +144,30 @@ In the following demo, the quick filter value `"Saint Martin, Saint Lucia"` will
 
 ## Ignore diacritics (accents)
 
-In some languages, the letters can have diacritics (accents) - for instance, the letter `é` in French.
-By default, these letters are considered different from their non-accented versions when filtering.
+When filtering, diacritics—accented letters such as _é_ or _à_—are considered distinct from their standard counterparts (_e_ and _a_).
+This can lead to a poor experience when users expect them to be treated as equivalent.
 
-To ignore diacritics, set the `ignoreDiacritics` prop to `true`:
+If your dataset includes diacritics that need to be ignored, you can pass the `ignoreDiacritics` prop to the Data Grid:
 
 ```tsx
 <DataGrid ignoreDiacritics />
 ```
 
+In the demo below, you can use the **Ignore diacritics** toggle to see how the filtering behavior changes:
+
 {{"demo": "QuickFilteringDiacritics.js", "bg": "inline", "defaultCodeOpen": false}}
 
-:::warning
-Note that the `ignoreDiacritics` prop affects all columns and all filter types: [normal filters](/x/react-data-grid/filtering/), [quick filter](/x/react-data-grid/filtering/quick-filter/) and [header filters](/x/react-data-grid/filtering/header-filters/).
+:::info
+The `ignoreDiacritics` prop affects all columns and filter types, including [standard filters](/x/react-data-grid/filtering/), [quick filters](/x/react-data-grid/filtering/quick-filter/), and [header filters](/x/react-data-grid/filtering/header-filters/).
 :::
+
+## Disable quick filter
+
+The quick filter can be removed from the toolbar by setting `slotProps.toolbar.showQuickFilter` to `false`:
+
+```tsx
+<DataGrid slotProps={{ toolbar: { showQuickFilter: false } }} />
+```
 
 ## API
 

@@ -1,4 +1,3 @@
-/* eslint-disable class-methods-use-this */
 import { addSeconds } from 'date-fns-jalali/addSeconds';
 import { addMinutes } from 'date-fns-jalali/addMinutes';
 import { addHours } from 'date-fns-jalali/addHours';
@@ -66,10 +65,8 @@ const defaultFormats: AdapterFormats = {
   normalDate: 'd MMMM',
   normalDateWithWeekday: 'EEE, d MMMM',
 
-  fullTime: 'p',
   fullTime12h: 'hh:mm aaa',
   fullTime24h: 'HH:mm',
-  keyboardDateTime: 'P p',
   keyboardDateTime12h: 'P hh:mm aa',
   keyboardDateTime24h: 'P HH:mm',
 };
@@ -123,7 +120,7 @@ export class AdapterDateFnsJalali
   implements MuiPickersAdapter<DateFnsLocale>
 {
   constructor({ locale, formats }: AdapterOptions<DateFnsLocale, never> = {}) {
-    /* istanbul ignore next */
+    /* v8 ignore start */
     if (process.env.NODE_ENV !== 'production') {
       if (typeof addDays !== 'function') {
         throw new Error(
@@ -139,6 +136,7 @@ export class AdapterDateFnsJalali
         );
       }
     }
+    /* v8 ignore stop */
     super({
       locale: locale ?? defaultLocale,
       // some formats are different in jalali adapter,

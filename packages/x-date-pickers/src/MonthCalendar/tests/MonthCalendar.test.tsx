@@ -1,12 +1,11 @@
-import * as React from 'react';
 import { spy } from 'sinon';
-import { expect } from 'chai';
 import { fireEvent, screen } from '@mui/internal-test-utils';
 import { MonthCalendar } from '@mui/x-date-pickers/MonthCalendar';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
+import { vi } from 'vitest';
 
 describe('<MonthCalendar />', () => {
-  const { render } = createPickerRenderer({ clock: 'fake', clockConfig: new Date(2019, 0, 1) });
+  const { render } = createPickerRenderer();
 
   it('should allow to pick month standalone by click, `Enter` and `Space`', () => {
     const onChange = spy();
@@ -26,14 +25,58 @@ describe('<MonthCalendar />', () => {
     expect(onChange.args[0][0]).toEqualDateTime(new Date(2019, 1, 2));
   });
 
-  it('should select start of month without time when no initial value is present', () => {
-    const onChange = spy();
-    render(<MonthCalendar onChange={onChange} />);
+  describe('with fake timers', () => {
+    beforeEach(() => {
+      vi.setSystemTime(new Date(2019, 0, 1));
+    });
 
-    fireEvent.click(screen.getByRole('radio', { name: 'February' }));
+    afterEach(() => {
+      vi.useRealTimers();
+    });
 
-    expect(onChange.callCount).to.equal(1);
-    expect(onChange.args[0][0]).toEqualDateTime(new Date(2019, 1, 1, 0, 0, 0));
+    it('should select start of month without time when no initial value is present', () => {
+      const onChange = spy();
+      render(<MonthCalendar onChange={onChange} />);
+
+      fireEvent.click(screen.getByRole('radio', { name: 'February' }));
+
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.args[0][0]).toEqualDateTime(new Date(2019, 1, 1, 0, 0, 0));
+    });
+
+    it('should mark only the month in the current year as `aria-current="date"`', () => {
+      const { setProps } = render(<MonthCalendar />);
+
+      expect(screen.getByRole('radio', { name: 'January' })).to.have.attribute(
+        'aria-current',
+        'date',
+      );
+
+      setProps({ currentMonth: adapterToUse.date('2018-01-01') });
+
+      expect(screen.getByRole('radio', { name: 'January' })).not.to.have.attribute('aria-current');
+    });
+
+    it('should mark the month as selected only if the year matches', async () => {
+      const { setProps, user } = render(<MonthCalendar />);
+
+      expect(screen.getByRole('radio', { name: 'February', checked: false })).not.to.equal(null);
+
+      await user.click(screen.getByRole('radio', { name: 'February' }));
+
+      expect(screen.getByRole('radio', { name: 'February', checked: true })).not.to.equal(null);
+
+      setProps({ currentMonth: adapterToUse.date('2018-02-01') });
+
+      expect(screen.getByRole('radio', { name: 'January', checked: false })).not.to.equal(null);
+      expect(screen.getByRole('radio', { name: 'February', checked: false })).not.to.equal(null);
+    });
+  });
+
+  it('should not mark the `referenceDate` month as selected', () => {
+    render(<MonthCalendar referenceDate={adapterToUse.date('2018-02-02')} />);
+
+    expect(screen.getByRole('radio', { name: 'February', checked: false })).not.to.equal(null);
   });
 
   it('does not allow to pick months if readOnly prop is passed', () => {
@@ -147,25 +190,29 @@ describe('<MonthCalendar />', () => {
       expect(onChange.callCount).to.equal(1);
     });
 
-    it('should disable months after initial render when "disableFuture" prop changes', () => {
-      const { setProps } = render(<MonthCalendar />);
+    describe('with fake timers', () => {
+      beforeEach(() => {
+        vi.setSystemTime(new Date(2019, 0, 1));
+      });
 
-      const january = screen.getByText('Jan', { selector: 'button' });
-      const february = screen.getByText('Feb', { selector: 'button' });
+      afterEach(() => {
+        vi.useRealTimers();
+      });
 
-      expect(january).not.to.have.attribute('disabled');
-      expect(february).not.to.have.attribute('disabled');
+      it('should disable months after initial render when "disableFuture" prop changes', async () => {
+        const { setProps } = render(<MonthCalendar />);
 
-      setProps({ disableFuture: true });
+        const january = screen.getByText('Jan', { selector: 'button' });
+        const february = screen.getByText('Feb', { selector: 'button' });
 
-      expect(january).not.to.have.attribute('disabled');
-      expect(february).to.have.attribute('disabled');
-    });
+        expect(january).not.to.have.attribute('disabled');
+        expect(february).not.to.have.attribute('disabled');
 
-    it('should not mark the `referenceDate` month as selected', () => {
-      render(<MonthCalendar referenceDate={adapterToUse.date('2018-02-02')} />);
+        setProps({ disableFuture: true });
 
-      expect(screen.getByRole('radio', { name: 'February', checked: false })).not.to.equal(null);
+        expect(january).not.to.have.attribute('disabled');
+        expect(february).to.have.attribute('disabled');
+      });
     });
   });
 });

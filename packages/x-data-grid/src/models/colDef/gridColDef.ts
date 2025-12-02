@@ -287,7 +287,7 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
   /**
    * Example values that can be used by the grid to get more context about the column.
    */
-  unstable_examples?: V[];
+  examples?: V[];
 }
 
 /**
@@ -306,6 +306,20 @@ export interface GridActionsColDef<R extends GridValidRowModel = any, V = any, F
    * Function that returns the actions to be shown.
    * @param {GridRowParams} params The params for each row.
    * @returns {readonly React.ReactElement<GridActionsCellItemProps>[]} An array of [[GridActionsCell]] elements.
+   * @deprecated Use `renderCell` instead
+   * @example
+   * // Before
+   * getActions: (params) => [
+   *   <GridActionsCellItem icon={...} onClick={...} label="Delete" />,
+   *   <GridActionsCellItem icon={...} onClick={...} label="Print" showInMenu />,
+   * ],
+   * // After
+   * renderCell: (params) => (
+   *   <GridActionsCell {...params}>
+   *     <GridActionsCellItem icon={...} onClick={...} label="Delete" />
+   *     <GridActionsCellItem icon={...} onClick={...} label="Print" showInMenu />
+   *   </GridActionsCell>
+   * ),
    */
   getActions: (params: GridRowParams<R>) => readonly React.ReactElement<GridActionsCellItemProps>[];
 }
@@ -330,14 +344,16 @@ export interface GridSingleSelectColDef<R extends GridValidRowModel = any, V = a
    * Used to determine the label displayed for a given value option.
    * @param {ValueOptions} value The current value option.
    * @returns {string} The text to be displayed.
+   * @default {defaultGetOptionLabel}
    */
-  getOptionLabel?: (value: ValueOptions) => string;
+  getOptionLabel: (value: ValueOptions) => string;
   /**
    * Used to determine the value used for a value option.
    * @param {ValueOptions} value The current value option.
    * @returns {string} The value to be used.
+   * @default {defaultGetOptionValue}
    */
-  getOptionValue?: (value: ValueOptions) => any;
+  getOptionValue: (value: ValueOptions) => any;
 }
 
 /**
@@ -355,7 +371,7 @@ export type GridColDef<R extends GridValidRowModel = any, V = any, F = V> =
  * @demos
  *   - [List view](/x/react-data-grid/list-view/)
  */
-export type GridListColDef<R extends GridValidRowModel = any, V = any, F = V> = Pick<
+export type GridListViewColDef<R extends GridValidRowModel = any, V = any, F = V> = Pick<
   GridBaseColDef<R, V, F>,
   'field' | 'renderCell' | 'align' | 'cellClassName' | 'display'
 >;

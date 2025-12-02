@@ -1,4 +1,3 @@
-import * as React from 'react';
 import {
   DataGridPremium,
   GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,

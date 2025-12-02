@@ -2,7 +2,7 @@
 productId: x-date-pickers
 title: React Date Time Range Field components
 components: MultiInputDateTimeRangeField, SingleInputDateTimeRangeField
-githubLabel: 'component: pickers'
+githubLabel: 'scope: pickers'
 packageName: '@mui/x-date-pickers-pro'
 ---
 
@@ -16,8 +16,7 @@ packageName: '@mui/x-date-pickers-pro'
 All the topics covered below are applicable to both `SingleInputDateTimeRangeField` and `MultiInputDateTimeRangeField` unless explicitly mentioned.
 :::
 
-You can render your Date Time Range Field with either one input using `SingleInputDateTimeRangeField`
-or two inputs using `MultiInputDateTimeRangeField` as show below.
+You can render your Date Time Range Field with either one input using `SingleInputDateTimeRangeField` or two inputs using `MultiInputDateTimeRangeField` as shown below.
 
 {{"demo": "BasicDateTimeRangeField.js"}}
 

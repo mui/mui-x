@@ -2,7 +2,7 @@
 productId: x-date-pickers
 title: Date and Time Pickers - UTC and timezones
 components: LocalizationProvider
-githubLabel: 'component: pickers'
+githubLabel: 'scope: pickers'
 packageName: '@mui/x-date-pickers'
 ---
 
@@ -26,7 +26,7 @@ You can use the `timezone` prop to explicitly define the timezone in which the v
 
 {{"demo": "BasicTimezoneProp.js"}}
 
-This will be needed if the component has no `value` or `defaultValue` to deduct the timezone from it or if you don't want to render the value in its original timezone.
+This will be needed if the component has no `value` or `defaultValue` to deduce the timezone from, or if you don't want to render the value in its original timezone.
 
 ## Supported timezones
 

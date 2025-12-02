@@ -1,54 +1,13 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import composeClasses from '@mui/utils/composeClasses';
 import useSlotProps from '@mui/utils/useSlotProps';
-import generateUtilityClass from '@mui/utils/generateUtilityClass';
-import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { BarElementOwnerState, useUtilityClasses } from './barElementClasses';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { SeriesId } from '../models/seriesType/common';
 import { useItemHighlighted } from '../hooks/useItemHighlighted';
 import { AnimatedBarElement, BarProps } from './AnimatedBarElement';
-
-export interface BarElementClasses {
-  /** Styles applied to the root element. */
-  root: string;
-  /** Styles applied to the root element if it is highlighted. */
-  highlighted: string;
-  /** Styles applied to the root element if it is faded. */
-  faded: string;
-}
-
-export type BarElementClassKey = keyof BarElementClasses;
-
-export interface BarElementOwnerState {
-  id: SeriesId;
-  dataIndex: number;
-  color: string;
-  isFaded: boolean;
-  isHighlighted: boolean;
-  classes?: Partial<BarElementClasses>;
-}
-
-export function getBarElementUtilityClass(slot: string) {
-  return generateUtilityClass('MuiBarElement', slot);
-}
-
-export const barElementClasses: BarElementClasses = generateUtilityClasses('MuiBarElement', [
-  'root',
-  'highlighted',
-  'faded',
-]);
-
-const useUtilityClasses = (ownerState: BarElementOwnerState) => {
-  const { classes, id, isHighlighted, isFaded } = ownerState;
-  const slots = {
-    root: ['root', `series-${id}`, isHighlighted && 'highlighted', isFaded && 'faded'],
-  };
-
-  return composeClasses(slots, getBarElementUtilityClass, classes);
-};
+import { useIsItemFocused } from '../hooks/useIsItemFocused';
 
 export interface BarElementSlots {
   /**
@@ -73,6 +32,15 @@ export type BarElementProps = Omit<BarElementOwnerState, 'isFaded' | 'isHighligh
      * @default {}
      */
     slots?: BarElementSlots;
+
+    x: number;
+    xOrigin: number;
+    y: number;
+    yOrigin: number;
+    width: number;
+    height: number;
+    layout: 'horizontal' | 'vertical';
+    skipAnimation: boolean;
   };
 
 function BarElement(props: BarElementProps) {
@@ -85,13 +53,32 @@ function BarElement(props: BarElementProps) {
     slotProps,
     style,
     onClick,
+    skipAnimation,
+    layout,
+    x,
+    xOrigin,
+    y,
+    yOrigin,
+    width,
+    height,
     ...other
   } = props;
-  const getInteractionItemProps = useInteractionItemProps();
-  const { isFaded, isHighlighted } = useItemHighlighted({
-    seriesId: id,
-    dataIndex,
-  });
+  const itemIdentifier = React.useMemo(
+    () => ({ type: 'bar' as const, seriesId: id, dataIndex }),
+    [id, dataIndex],
+  );
+  const interactionProps = useInteractionItemProps(itemIdentifier);
+  const { isFaded, isHighlighted } = useItemHighlighted(itemIdentifier);
+  const isFocused = useIsItemFocused(
+    React.useMemo(
+      () => ({
+        seriesType: 'bar',
+        seriesId: id,
+        dataIndex,
+      }),
+      [id, dataIndex],
+    ),
+  );
 
   const ownerState = {
     id,
@@ -100,6 +87,7 @@ function BarElement(props: BarElementProps) {
     color,
     isFaded,
     isHighlighted,
+    isFocused,
   };
 
   const classes = useUtilityClasses(ownerState);
@@ -111,12 +99,24 @@ function BarElement(props: BarElementProps) {
     externalSlotProps: slotProps?.bar,
     externalForwardedProps: other,
     additionalProps: {
-      ...getInteractionItemProps({ type: 'bar', seriesId: id, dataIndex }),
+      ...interactionProps,
+      id,
+      dataIndex,
+      color,
+      x,
+      xOrigin,
+      y,
+      yOrigin,
+      width,
+      height,
       style,
       onClick,
       cursor: onClick ? 'pointer' : 'unset',
       stroke: 'none',
       fill: color,
+      skipAnimation,
+      layout,
+      'data-focused': isFocused || undefined,
     },
     className: classes.root,
     ownerState,
@@ -133,6 +133,8 @@ BarElement.propTypes = {
   classes: PropTypes.object,
   dataIndex: PropTypes.number.isRequired,
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  layout: PropTypes.oneOf(['horizontal', 'vertical']).isRequired,
+  skipAnimation: PropTypes.bool.isRequired,
   /**
    * The props used for each component slot.
    * @default {}
@@ -143,6 +145,8 @@ BarElement.propTypes = {
    * @default {}
    */
   slots: PropTypes.object,
+  xOrigin: PropTypes.number.isRequired,
+  yOrigin: PropTypes.number.isRequired,
 } as any;
 
 export { BarElement };

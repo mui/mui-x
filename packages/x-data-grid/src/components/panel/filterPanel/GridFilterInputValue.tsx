@@ -1,6 +1,7 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { unstable_useId as useId } from '@mui/utils';
+import useId from '@mui/utils/useId';
 import { useTimeout } from '../../../hooks/utils/useTimeout';
 import { TextFieldProps } from '../../../models/gridBaseSlots';
 import { GridFilterItem } from '../../../models/gridFilterItem';
@@ -11,7 +12,7 @@ export type GridTypeFilterInputValueProps = GridFilterInputValueProps<TextFieldP
   type?: 'text' | 'number' | 'date' | 'datetime-local';
 };
 
-type ItemPlusTag = GridFilterItem & { fromInput?: string };
+export type ItemPlusTag = GridFilterItem & { fromInput?: string };
 
 function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
   const {
@@ -26,7 +27,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
     slotProps,
     clearButton,
     headerFilterMenu,
-    ...others
+    ...other
   } = props;
   const textFieldProps = slotProps?.root;
 
@@ -78,9 +79,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
           ...textFieldProps?.slotProps,
           input: {
             endAdornment: applying ? (
-              <rootProps.slots.baseInputAdornment position="end">
-                <rootProps.slots.loadIcon fontSize="small" color="action" />
-              </rootProps.slots.baseInputAdornment>
+              <rootProps.slots.loadIcon fontSize="small" color="action" />
             ) : null,
             ...textFieldProps?.slotProps?.input,
           },
@@ -91,7 +90,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
         }}
         inputRef={focusElementRef}
         {...rootProps.slotProps?.baseTextField}
-        {...others}
+        {...other}
         {...textFieldProps}
       />
       {headerFilterMenu}

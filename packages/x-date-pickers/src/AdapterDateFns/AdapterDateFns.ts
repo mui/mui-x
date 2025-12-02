@@ -1,4 +1,3 @@
-/* eslint-disable class-methods-use-this */
 import { addDays } from 'date-fns/addDays';
 import { addSeconds } from 'date-fns/addSeconds';
 import { addMinutes } from 'date-fns/addMinutes';
@@ -82,7 +81,7 @@ export class AdapterDateFns
   implements MuiPickersAdapter<DateFnsLocale>
 {
   constructor({ locale, formats }: AdapterOptions<DateFnsLocale, never> = {}) {
-    /* istanbul ignore next */
+    /* v8 ignore start */
     if (process.env.NODE_ENV !== 'production') {
       if (typeof addDays !== 'function') {
         throw new Error(
@@ -98,6 +97,7 @@ export class AdapterDateFns
         );
       }
     }
+    /* v8 ignore stop */
     super({ locale: locale ?? enUS, formats, longFormatters });
   }
 

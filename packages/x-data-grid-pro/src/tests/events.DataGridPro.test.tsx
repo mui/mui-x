@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, screen, act } from '@mui/internal-test-utils';
-import { expect } from 'chai';
 import {
   DataGridPro,
   GridColumnHeaderParams,
@@ -16,12 +15,12 @@ import {
   GridApi,
   GridEventListener,
 } from '@mui/x-data-grid-pro';
-import { getCell, getColumnHeaderCell } from 'test/utils/helperFn';
+import { getCell, getColumnHeaderCell, includeRowSelection } from 'test/utils/helperFn';
 import { spy } from 'sinon';
-import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPro /> - Events params', () => {
-  const { render, clock } = createRenderer();
+  const { render } = createRenderer();
 
   const baselineProps: { rows: GridRowsProp; columns: GridColDef[] } = {
     rows: [
@@ -124,6 +123,7 @@ describe('<DataGridPro /> - Events params', () => {
         hasFocus: false,
         tabIndex: -1,
       });
+      expect(eventArgs!.params.api).not.to.equal(null);
     });
 
     it('should include the correct params when grid is sorted', () => {
@@ -175,8 +175,6 @@ describe('<DataGridPro /> - Events params', () => {
   });
 
   describe('onCellClick', () => {
-    clock.withFakeTimers();
-
     let eventStack: string[] = [];
     const push = (name: string) => () => {
       eventStack.push(name);
@@ -239,7 +237,9 @@ describe('<DataGridPro /> - Events params', () => {
       const cell11 = getCell(1, 1);
       fireEvent.click(cell11);
       expect(handleRowSelectionModelChange.callCount).to.equal(1);
-      expect(handleRowSelectionModelChange.lastCall.firstArg).to.deep.equal([2]);
+      expect(handleRowSelectionModelChange.lastCall.firstArg).to.deep.equal(
+        includeRowSelection([2]),
+      );
     });
 
     it('should not select a row if props.disableRowSelectionOnClick', () => {
@@ -280,8 +280,8 @@ describe('<DataGridPro /> - Events params', () => {
       expect(eventStack).to.deep.equal([]);
     });
 
-    it('should not be called when clicking in an action', () => {
-      render(
+    it('should not be called when clicking in an action', async () => {
+      const { user } = render(
         <TestEvents
           onRowClick={push('rowClick')}
           rows={[{ id: 0 }]}
@@ -294,7 +294,7 @@ describe('<DataGridPro /> - Events params', () => {
           ]}
         />,
       );
-      fireEvent.click(screen.getByRole('menuitem', { name: 'print' }));
+      await user.click(screen.getByRole('menuitem', { name: 'print' }));
       expect(eventStack).to.deep.equal([]);
     });
 
@@ -330,12 +330,9 @@ describe('<DataGridPro /> - Events params', () => {
   });
 
   // Needs layout
-  testSkipIf(isJSDOM)(
+  it.skipIf(isJSDOM)(
     'lazy loaded grid should load the rest of the rows when mounted when virtualization is disabled',
-    function test() {
-      if (isJSDOM) {
-        this.skip(); // Needs layout
-      }
+    () => {
       const handleFetchRows = spy();
       render(
         <TestEvents

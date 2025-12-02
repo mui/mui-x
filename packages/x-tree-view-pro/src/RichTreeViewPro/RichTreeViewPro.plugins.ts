@@ -8,18 +8,17 @@ import {
   useTreeViewFocus,
   UseTreeViewFocusParameters,
   useTreeViewKeyboardNavigation,
-  useTreeViewIcons,
-  UseTreeViewIconsParameters,
   ConvertPluginsIntoSignatures,
-  MergeSignaturesProperty,
   TreeViewCorePluginParameters,
   useTreeViewLabel,
   UseTreeViewLabelParameters,
+  UseTreeViewLazyLoadingParameters,
 } from '@mui/x-tree-view/internals';
 import {
   useTreeViewItemsReordering,
   UseTreeViewItemsReorderingParameters,
 } from '../internals/plugins/useTreeViewItemsReordering';
+import { useTreeViewLazyLoading } from '../internals/plugins/useTreeViewLazyLoading';
 
 export const RICH_TREE_VIEW_PRO_PLUGINS = [
   useTreeViewItems,
@@ -27,23 +26,13 @@ export const RICH_TREE_VIEW_PRO_PLUGINS = [
   useTreeViewSelection,
   useTreeViewFocus,
   useTreeViewKeyboardNavigation,
-  useTreeViewIcons,
   useTreeViewLabel,
+  useTreeViewLazyLoading,
   useTreeViewItemsReordering,
 ] as const;
 
 export type RichTreeViewProPluginSignatures = ConvertPluginsIntoSignatures<
   typeof RICH_TREE_VIEW_PRO_PLUGINS
->;
-
-export type RichTreeViewProPluginSlots = MergeSignaturesProperty<
-  RichTreeViewProPluginSignatures,
-  'slots'
->;
-
-export type RichTreeViewProPluginSlotProps = MergeSignaturesProperty<
-  RichTreeViewProPluginSignatures,
-  'slotProps'
 >;
 
 // We can't infer this type from the plugin, otherwise we would lose the generics.
@@ -53,6 +42,6 @@ export interface RichTreeViewProPluginParameters<R extends {}, Multiple extends 
     UseTreeViewExpansionParameters,
     UseTreeViewFocusParameters,
     UseTreeViewSelectionParameters<Multiple>,
-    UseTreeViewIconsParameters,
     UseTreeViewLabelParameters<R>,
+    UseTreeViewLazyLoadingParameters<R>,
     UseTreeViewItemsReorderingParameters {}

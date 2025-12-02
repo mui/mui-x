@@ -1,22 +1,22 @@
-import { isBandScale } from '../../../isBandScale';
-import { AxisDefaultized } from '../../../../models/axis';
+import { isOrdinalScale } from '../../../scaleGuards';
+import { ComputedAxis, D3Scale } from '../../../../models/axis';
 
 function getAsANumber(value: number | Date) {
   return value instanceof Date ? value.getTime() : value;
 }
 
 /**
- * For a pointer coordinate, this function returns the value and dataIndex associated.
- * Returns `null` if the coordinate is outside of values.
+ * For a pointer coordinate, this function returns the dataIndex associated.
+ * Returns `-1` if no dataIndex matches.
  */
-export function getAxisValue(axisConfig: AxisDefaultized, pointerValue: number) {
+export function getAxisIndex(axisConfig: ComputedAxis, pointerValue: number): number {
   const { scale, data: axisData, reverse } = axisConfig;
 
-  if (!isBandScale(scale)) {
+  if (!isOrdinalScale(scale)) {
     const value = scale.invert(pointerValue);
 
     if (axisData === undefined) {
-      return { value, index: -1 };
+      return -1;
     }
 
     const valueAsNumber = getAsANumber(value);
@@ -42,10 +42,7 @@ export function getAxisValue(axisConfig: AxisDefaultized, pointerValue: number) 
       return false;
     });
 
-    return {
-      value: closestIndex !== undefined && closestIndex >= 0 ? axisData![closestIndex] : value,
-      index: closestIndex,
-    };
+    return closestIndex;
   }
 
   const dataIndex =
@@ -54,17 +51,37 @@ export function getAxisValue(axisConfig: AxisDefaultized, pointerValue: number) 
       : Math.floor((pointerValue - Math.min(...scale.range())) / scale.step());
 
   if (dataIndex < 0 || dataIndex >= axisData!.length) {
+    return -1;
+  }
+  return reverse ? axisData!.length - 1 - dataIndex : dataIndex;
+}
+
+/**
+ * For a pointer coordinate, this function returns the value associated.
+ * Returns `null` if the coordinate has no value associated.
+ */
+export function getAxisValue<
+  Domain extends { toString(): string } = { toString(): string },
+  Range = number,
+  Output = number,
+>(
+  scale: D3Scale<Domain, Range, Output>,
+  axisData: readonly any[] | undefined,
+  pointerValue: number,
+  dataIndex: number | null,
+): number | Date | null {
+  if (!isOrdinalScale(scale)) {
+    if (dataIndex === null) {
+      const invertedValue = scale.invert(pointerValue);
+
+      return Number.isNaN(invertedValue) ? null : invertedValue;
+    }
+    return axisData![dataIndex];
+  }
+
+  if (dataIndex === null || dataIndex < 0 || dataIndex >= axisData!.length) {
     return null;
   }
-  if (reverse) {
-    const reverseIndex = axisData!.length - 1 - dataIndex;
-    return {
-      index: reverseIndex,
-      value: axisData![reverseIndex],
-    };
-  }
-  return {
-    index: dataIndex,
-    value: axisData![dataIndex],
-  };
+
+  return axisData![dataIndex];
 }

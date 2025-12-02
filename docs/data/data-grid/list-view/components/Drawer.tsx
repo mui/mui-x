@@ -1,4 +1,3 @@
-import * as React from 'react';
 import MUISwipeableDrawer, {
   SwipeableDrawerProps as MUISwipeableDrawerProps,
 } from '@mui/material/SwipeableDrawer';
@@ -66,7 +65,7 @@ export function DrawerHeader(props: DrawerHeaderProps) {
 
 export interface DrawerProps extends Omit<MUISwipeableDrawerProps, 'onOpen'> {
   width?: number;
-  container?: () => HTMLElement;
+  container?: HTMLElement;
 }
 
 export function Drawer(props: DrawerProps) {
@@ -79,12 +78,14 @@ export function Drawer(props: DrawerProps) {
       {...other}
       anchor={anchor}
       container={container}
-      PaperProps={{
-        sx: {
-          boxSizing: 'border-box',
-          ...(isBottomDrawer
-            ? { pb: 1, maxHeight: 'calc(100% - 100px)' }
-            : { width }),
+      slotProps={{
+        paper: {
+          sx: {
+            boxSizing: 'border-box',
+            ...(isBottomDrawer
+              ? { pb: 1, maxHeight: 'calc(100% - 100px)' }
+              : { width }),
+          },
         },
       }}
       disableSwipeToOpen

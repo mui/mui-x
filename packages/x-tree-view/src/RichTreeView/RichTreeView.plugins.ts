@@ -16,11 +16,7 @@ import {
   UseTreeViewFocusParameters,
 } from '../internals/plugins/useTreeViewFocus';
 import { useTreeViewKeyboardNavigation } from '../internals/plugins/useTreeViewKeyboardNavigation';
-import {
-  useTreeViewIcons,
-  UseTreeViewIconsParameters,
-} from '../internals/plugins/useTreeViewIcons';
-import { ConvertPluginsIntoSignatures, MergeSignaturesProperty } from '../internals/models';
+import { ConvertPluginsIntoSignatures } from '../internals/models';
 import {
   useTreeViewLabel,
   UseTreeViewLabelParameters,
@@ -32,22 +28,11 @@ export const RICH_TREE_VIEW_PLUGINS = [
   useTreeViewSelection,
   useTreeViewFocus,
   useTreeViewKeyboardNavigation,
-  useTreeViewIcons,
   useTreeViewLabel,
 ] as const;
 
 export type RichTreeViewPluginSignatures = ConvertPluginsIntoSignatures<
   typeof RICH_TREE_VIEW_PLUGINS
->;
-
-export type RichTreeViewPluginSlots = MergeSignaturesProperty<
-  RichTreeViewPluginSignatures,
-  'slots'
->;
-
-export type RichTreeViewPluginSlotProps = MergeSignaturesProperty<
-  RichTreeViewPluginSignatures,
-  'slotProps'
 >;
 
 // We can't infer this type from the plugin, otherwise we would lose the generics.
@@ -57,5 +42,4 @@ export interface RichTreeViewPluginParameters<R extends {}, Multiple extends boo
     UseTreeViewExpansionParameters,
     UseTreeViewFocusParameters,
     UseTreeViewSelectionParameters<Multiple>,
-    UseTreeViewIconsParameters,
     UseTreeViewLabelParameters<R> {}

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { TimeClock, TimeClockProps } from '../TimeClock';
 import { TimeView } from '../models';
 import { DigitalClock, DigitalClockProps } from '../DigitalClock';
@@ -7,7 +6,7 @@ import {
   MultiSectionDigitalClock,
   MultiSectionDigitalClockProps,
 } from '../MultiSectionDigitalClock';
-import { isTimeView } from '../internals/utils/time-utils';
+import { isInternalTimeView, isTimeView } from '../internals/utils/time-utils';
 import { TimeViewWithMeridiem } from '../internals/models';
 import type { TimePickerProps } from '../TimePicker/TimePicker.types';
 
@@ -118,7 +117,7 @@ export const renderDigitalClockTimeView = ({
   <DigitalClock
     view={view}
     onViewChange={onViewChange}
-    focusedView={focusedView}
+    focusedView={focusedView && isTimeView(focusedView) ? focusedView : null}
     onFocusedViewChange={onFocusedViewChange}
     views={views.filter(isTimeView)}
     value={value}
@@ -180,7 +179,7 @@ export const renderMultiSectionDigitalClockTimeView = ({
   <MultiSectionDigitalClock
     view={view}
     onViewChange={onViewChange}
-    focusedView={focusedView}
+    focusedView={focusedView && isInternalTimeView(focusedView) ? focusedView : null}
     onFocusedViewChange={onFocusedViewChange}
     views={views.filter(isTimeView)}
     value={value}

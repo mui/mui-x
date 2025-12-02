@@ -1,55 +1,25 @@
 import * as React from 'react';
-import { useMockServer } from '@mui/x-data-grid-generator';
-import { act, createRenderer, waitFor } from '@mui/internal-test-utils';
-import { expect } from 'chai';
 import { RefObject } from '@mui/x-internals/types';
+import { useMockServer } from '@mui/x-data-grid-generator';
+import { createRenderer, waitFor } from '@mui/internal-test-utils';
 import {
   DataGridPro,
   DataGridProProps,
   GridApi,
   GridDataSource,
-  GridGetRowsParams,
   GridGetRowsResponse,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import { spy } from 'sinon';
-import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
-import { getKeyDefault } from '../hooks/features/dataSource/cache';
+import { getRow } from 'test/utils/helperFn';
+import { isJSDOM } from 'test/utils/skipIf';
+import { TestCache } from '@mui/x-data-grid/internals';
 
-class TestCache {
-  private cache: Map<string, GridGetRowsResponse>;
-
-  constructor() {
-    this.cache = new Map();
-  }
-
-  set(key: GridGetRowsParams, value: GridGetRowsResponse) {
-    this.cache.set(getKeyDefault(key), value);
-  }
-
-  get(key: GridGetRowsParams) {
-    return this.cache.get(getKeyDefault(key));
-  }
-
-  size() {
-    return this.cache.size;
-  }
-
-  clear() {
-    this.cache.clear();
-  }
-}
-
-const pageSizeOptions = [10, 20];
-const serverOptions = { useCursorPagination: false, minDelay: 0, maxDelay: 0, verbose: false };
-
-// Needs layout
-describeSkipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
+describe.skipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
   const { render } = createRenderer();
-  const fetchRowsSpy = spy();
 
   let apiRef: RefObject<GridApi | null>;
-  let mockServer: ReturnType<typeof useMockServer>;
+  const fetchRowsSpy = spy();
 
   // TODO: Resets strictmode calls, need to find a better fix for this, maybe an AbortController?
   function Reset() {
@@ -59,29 +29,26 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
     return null;
   }
 
-  function TestDataSource(props: Partial<DataGridProProps> & { shouldRequestsFail?: boolean }) {
+  function TestDataSource(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();
-    mockServer = useMockServer(
-      { rowLength: 100, maxColumns: 1 },
-      serverOptions,
-      props.shouldRequestsFail ?? false,
+    const { fetchRows, columns, isReady } = useMockServer<GridGetRowsResponse>(
+      { rowLength: 200, maxColumns: 1 },
+      { useCursorPagination: false, minDelay: 0, maxDelay: 0, verbose: false },
     );
-
-    const { fetchRows } = mockServer;
 
     const dataSource: GridDataSource = React.useMemo(() => {
       return {
-        getRows: async (params: GridGetRowsParams) => {
+        getRows: async (params) => {
           const urlParams = new URLSearchParams({
             filterModel: JSON.stringify(params.filterModel),
             sortModel: JSON.stringify(params.sortModel),
-            start: `${params.start}`,
-            end: `${params.end}`,
           });
 
-          const url = `https://mui.com/x/api/data-grid?${urlParams.toString()}`;
-          fetchRowsSpy(url);
-          const getRowsResponse = await fetchRows(url);
+          fetchRowsSpy(params);
+
+          const getRowsResponse = await fetchRows(
+            `https://mui.com/x/api/data-grid?${urlParams.toString()}`,
+          );
 
           return {
             rows: getRowsResponse.rows,
@@ -91,7 +58,7 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
       };
     }, [fetchRows]);
 
-    if (!mockServer.isReady) {
+    if (!isReady) {
       return null;
     }
 
@@ -100,11 +67,8 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
         <Reset />
         <DataGridPro
           apiRef={apiRef}
-          columns={mockServer.columns}
-          unstable_dataSource={dataSource}
-          initialState={{ pagination: { paginationModel: { page: 0, pageSize: 10 }, rowCount: 0 } }}
-          pagination
-          pageSizeOptions={pageSizeOptions}
+          dataSource={dataSource}
+          columns={columns}
           disableVirtualization
           {...props}
         />
@@ -112,190 +76,16 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
     );
   }
 
-  it('should fetch the data on initial render', async () => {
-    render(<TestDataSource />);
-    await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(1);
-    });
-  });
-
-  it('should re-fetch the data on filter change', async () => {
-    const { setProps } = render(<TestDataSource />);
-    await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(1);
-    });
-    setProps({ filterModel: { items: [{ field: 'name', value: 'John', operator: 'contains' }] } });
-    await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(2);
-    });
-  });
-
-  it('should re-fetch the data on sort change', async () => {
-    const { setProps } = render(<TestDataSource />);
-    await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(1);
-    });
-    setProps({ sortModel: [{ field: 'name', sort: 'asc' }] });
-    await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(2);
-    });
-  });
-
-  it('should re-fetch the data on pagination change', async () => {
-    const { setProps } = render(<TestDataSource />);
-    await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(1);
-    });
-    setProps({ paginationModel: { page: 1, pageSize: 10 } });
-    await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(2);
-    });
-  });
-
-  it('should re-fetch the data once if multiple models have changed', async () => {
-    const { setProps } = render(<TestDataSource />);
-    await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(1);
-    });
-
-    setProps({
-      paginationModel: { page: 1, pageSize: 10 },
-      sortModel: [{ field: 'name', sort: 'asc' }],
-      filterModel: { items: [{ field: 'name', value: 'John', operator: 'contains' }] },
-    });
-
-    await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(2);
-    });
-  });
-
   describe('Cache', () => {
-    it('should cache the data using the default cache', async () => {
-      const pageChangeSpy = spy();
-      render(<TestDataSource onPaginationModelChange={pageChangeSpy} />);
-
-      await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(1);
-      });
-      expect(pageChangeSpy.callCount).to.equal(0);
-
-      act(() => {
-        apiRef.current?.setPage(1);
-      });
-
-      await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(2);
-      });
-      expect(pageChangeSpy.callCount).to.equal(1);
-
-      act(() => {
-        apiRef.current?.setPage(0);
-      });
-
-      await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(2);
-      });
-      expect(pageChangeSpy.callCount).to.equal(2);
-    });
-
-    it('should cache the data using the custom cache', async () => {
+    it('should cache the data in one chunk when pagination is disabled', async () => {
       const testCache = new TestCache();
-      render(<TestDataSource unstable_dataSourceCache={testCache} />);
+      render(<TestDataSource dataSourceCache={testCache} />);
       await waitFor(() => {
         expect(fetchRowsSpy.callCount).to.equal(1);
       });
-      expect(testCache.size()).to.equal(1);
-    });
-
-    it('should cache the data in the chunks defined by the minimum page size', async () => {
-      const testCache = new TestCache();
-      render(
-        <TestDataSource
-          unstable_dataSourceCache={testCache}
-          paginationModel={{ page: 0, pageSize: 20 }}
-        />,
-      );
-      await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(1);
-      });
-      expect(testCache.size()).to.equal(2); // 2 chunks of 10 rows
-    });
-
-    it('should use the cached data when the same query is made again', async () => {
-      const testCache = new TestCache();
-      const pageChangeSpy = spy();
-      render(
-        <TestDataSource
-          unstable_dataSourceCache={testCache}
-          onPaginationModelChange={pageChangeSpy}
-        />,
-      );
-      await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(1);
-      });
-      expect(testCache.size()).to.equal(1);
-      expect(pageChangeSpy.callCount).to.equal(0);
-
-      act(() => {
-        apiRef.current?.setPage(1);
-      });
-
-      await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(2);
-      });
-      await waitFor(() => {
-        expect(testCache.size()).to.equal(2);
-      });
-      expect(pageChangeSpy.callCount).to.equal(1);
-
-      act(() => {
-        apiRef.current?.setPage(0);
-      });
-
-      await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(2);
-      });
-      expect(testCache.size()).to.equal(2);
-      expect(pageChangeSpy.callCount).to.equal(2);
-    });
-
-    it('should allow to disable the default cache', async () => {
-      const pageChangeSpy = spy();
-      render(
-        <TestDataSource unstable_dataSourceCache={null} onPaginationModelChange={pageChangeSpy} />,
-      );
-      await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(1);
-      });
-      expect(pageChangeSpy.callCount).to.equal(0);
-
-      act(() => {
-        apiRef.current?.setPage(1);
-      });
-
-      await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(2);
-      });
-      expect(pageChangeSpy.callCount).to.equal(1);
-
-      act(() => {
-        apiRef.current?.setPage(0);
-      });
-
-      await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(3);
-      });
-      expect(pageChangeSpy.callCount).to.equal(2);
-    });
-  });
-
-  describe('Error handling', () => {
-    it('should call `unstable_onDataSourceError` when the data source returns an error', async () => {
-      const onDataSourceError = spy();
-      render(<TestDataSource unstable_onDataSourceError={onDataSourceError} shouldRequestsFail />);
-      await waitFor(() => {
-        expect(onDataSourceError.callCount).to.equal(1);
-      });
+      // wait until the rows are rendered
+      await waitFor(() => expect(getRow(199)).not.to.be.undefined);
+      expect(testCache.size()).to.equal(1); // 1 chunk of 200 rows
     });
   });
 });

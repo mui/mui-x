@@ -1,81 +1,34 @@
 import * as React from 'react';
-import useEventCallback from '@mui/utils/useEventCallback';
+import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { EventHandlers } from '@mui/utils/types';
+import { useStoreEffect } from '@mui/x-internals/store';
 import { TreeViewPlugin } from '../../models';
 import { UseTreeViewFocusSignature } from './useTreeViewFocus.types';
-import { useInstanceEventHandler } from '../../hooks/useInstanceEventHandler';
-import { getFirstNavigableItem } from '../../utils/tree';
 import { TreeViewCancellableEvent } from '../../../models';
-import { convertSelectedItemsToArray } from '../useTreeViewSelection/useTreeViewSelection.utils';
-import {
-  selectorDefaultFocusableItemId,
-  selectorFocusedItemId,
-} from './useTreeViewFocus.selectors';
-import { selectorIsItemExpanded } from '../useTreeViewExpansion/useTreeViewExpansion.selectors';
-import {
-  selectorCanItemBeFocused,
-  selectorItemMeta,
-} from '../useTreeViewItems/useTreeViewItems.selectors';
+import { focusSelectors } from './useTreeViewFocus.selectors';
+import { expansionSelectors } from '../useTreeViewExpansion/useTreeViewExpansion.selectors';
+import { itemsSelectors } from '../useTreeViewItems/useTreeViewItems.selectors';
 
 export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   instance,
   params,
   store,
-  models,
 }) => {
-  React.useEffect(() => {
-    let defaultFocusableItemId = convertSelectedItemsToArray(models.selectedItems.value).find(
-      (itemId) => {
-        if (!selectorCanItemBeFocused(store.value, itemId)) {
-          return false;
-        }
-
-        const itemMeta = selectorItemMeta(store.value, itemId);
-        return (
-          itemMeta &&
-          (itemMeta.parentId == null || selectorIsItemExpanded(store.value, itemMeta.parentId))
-        );
-      },
-    );
-
-    if (defaultFocusableItemId == null) {
-      defaultFocusableItemId = getFirstNavigableItem(store.value) ?? null;
+  const setFocusedItemId = useEventCallback((itemId: string | null) => {
+    const focusedItemId = focusSelectors.focusedItemId(store.state);
+    if (focusedItemId === itemId) {
+      return;
     }
 
-    store.update((prevState) => {
-      if (defaultFocusableItemId === prevState.focus.defaultFocusableItemId) {
-        return prevState;
-      }
-
-      return {
-        ...prevState,
-        focus: {
-          ...prevState.focus,
-          defaultFocusableItemId,
-        },
-      };
-    });
-  }, [store, models.selectedItems.value]);
-
-  const setFocusedItemId = useEventCallback((itemId: string | null) => {
-    store.update((prevState) => {
-      const focusedItemId = selectorFocusedItemId(prevState);
-      if (focusedItemId === itemId) {
-        return prevState;
-      }
-
-      return {
-        ...prevState,
-        focus: { ...prevState.focus, focusedItemId: itemId },
-      };
-    });
+    store.set('focus', { ...store.state.focus, focusedItemId: itemId });
   });
 
   const isItemVisible = (itemId: string) => {
-    const itemMeta = selectorItemMeta(store.value, itemId);
+    const itemMeta = itemsSelectors.itemMeta(store.state, itemId);
     return (
       itemMeta &&
-      (itemMeta.parentId == null || selectorIsItemExpanded(store.value, itemMeta.parentId))
+      (itemMeta.parentId == null ||
+        expansionSelectors.isItemExpanded(store.state, itemMeta.parentId))
     );
   };
 
@@ -92,7 +45,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
     }
   };
 
-  const focusItem = useEventCallback((event: React.SyntheticEvent, itemId: string) => {
+  const focusItem = useEventCallback((event: React.SyntheticEvent | null, itemId: string) => {
     // If we receive an itemId, and it is visible, the focus will be set to it
     if (isItemVisible(itemId)) {
       innerFocusItem(event, itemId);
@@ -100,12 +53,12 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   });
 
   const removeFocusedItem = useEventCallback(() => {
-    const focusedItemId = selectorFocusedItemId(store.value);
+    const focusedItemId = focusSelectors.focusedItemId(store.state);
     if (focusedItemId == null) {
       return;
     }
 
-    const itemMeta = selectorItemMeta(store.value, focusedItemId);
+    const itemMeta = itemsSelectors.itemMeta(store.state, focusedItemId);
     if (itemMeta) {
       const itemElement = instance.getItemDOMElement(focusedItemId);
       if (itemElement) {
@@ -116,12 +69,25 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
     setFocusedItemId(null);
   });
 
-  useInstanceEventHandler(instance, 'removeItem', ({ id }) => {
-    const focusedItemId = selectorFocusedItemId(store.value);
-    const defaultFocusableItemId = selectorDefaultFocusableItemId(store.value);
-    if (focusedItemId === id && defaultFocusableItemId != null) {
-      innerFocusItem(null, defaultFocusableItemId);
+  // Whenever the items change, we need to ensure the focused item is still present.
+  useStoreEffect(store, itemsSelectors.itemMetaLookup, () => {
+    const focusedItemId = focusSelectors.focusedItemId(store.state);
+    if (focusedItemId == null) {
+      return;
     }
+
+    const hasItemBeenRemoved = !itemsSelectors.itemMeta(store.state, focusedItemId);
+    if (!hasItemBeenRemoved) {
+      return;
+    }
+
+    const defaultFocusableItemId = focusSelectors.defaultFocusableItemId(store.state);
+    if (defaultFocusableItemId == null) {
+      setFocusedItemId(null);
+      return;
+    }
+
+    innerFocusItem(null, defaultFocusableItemId);
   });
 
   const createRootHandleFocus =
@@ -133,7 +99,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
       }
 
       // if the event bubbled (which is React specific) we don't want to steal focus
-      const defaultFocusableItemId = selectorDefaultFocusableItemId(store.value);
+      const defaultFocusableItemId = focusSelectors.defaultFocusableItemId(store.state);
       if (event.target === event.currentTarget && defaultFocusableItemId != null) {
         innerFocusItem(event, defaultFocusableItemId);
       }
@@ -166,7 +132,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
 };
 
 useTreeViewFocus.getInitialState = () => ({
-  focus: { focusedItemId: null, defaultFocusableItemId: null },
+  focus: { focusedItemId: null },
 });
 
 useTreeViewFocus.params = {

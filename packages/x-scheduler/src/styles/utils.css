@@ -1,0 +1,10 @@
+.LinesClamp {
+  display: -webkit-box;
+  line-clamp: var(--number-of-lines);
+  -webkit-line-clamp: var(--number-of-lines);
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}

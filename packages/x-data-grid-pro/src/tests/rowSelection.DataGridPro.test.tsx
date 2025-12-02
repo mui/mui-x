@@ -1,9 +1,14 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { spy } from 'sinon';
 import { RefObject } from '@mui/x-internals/types';
-import { getCell, getColumnValues, getRows } from 'test/utils/helperFn';
-import { createRenderer, screen, act, reactMajor, fireEvent } from '@mui/internal-test-utils';
+import {
+  getCell,
+  getColumnValues,
+  getRows,
+  includeRowSelection,
+  excludeRowSelection,
+} from 'test/utils/helperFn';
+import { createRenderer, screen, act, fireEvent } from '@mui/internal-test-utils';
 import {
   GridApi,
   useGridApiRef,
@@ -13,6 +18,7 @@ import {
   GridRowsProp,
   GridColDef,
   GridFilterModel,
+  gridRowSelectionIdsSelector,
 } from '@mui/x-data-grid-pro';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 
@@ -170,6 +176,18 @@ describe('<DataGridPro /> - Row selection', () => {
     );
   }
 
+  // Context: https://github.com/mui/mui-x/pull/15509#discussion_r1878082687
+  it('should keep the selection on the clicked row if selection range is deselected', async () => {
+    const { user } = render(<TestDataGridSelection />);
+    await user.click(getCell(0, 1));
+    await user.keyboard('{Shift>}');
+    await user.click(getCell(2, 1));
+    await user.keyboard('{/Shift}');
+    expect(getSelectedRowIds()).to.deep.equal([0, 1, 2]);
+    await user.click(getCell(1, 1));
+    expect(getSelectedRowIds()).to.deep.equal([1]);
+  });
+
   it('should keep the previously selected tree data parent selected if it becomes leaf after filtering', async () => {
     const { user } = render(<TreeDataGrid defaultGroupingExpansionDepth={-1} density="compact" />);
 
@@ -181,7 +199,7 @@ describe('<DataGridPro /> - Row selection', () => {
 
     expect(apiRef.current?.getSelectedRows()).to.have.length(15);
 
-    await act(() => {
+    await act(async () => {
       apiRef.current?.setFilterModel({
         items: [
           {
@@ -236,7 +254,7 @@ describe('<DataGridPro /> - Row selection', () => {
     expect(apiRef.current?.getSelectedRows()).to.have.length(1);
     expect(Array.from(apiRef.current!.getSelectedRows())[0][0]).to.equal(1);
 
-    await act(() => {
+    await act(async () => {
       apiRef.current?.setFilterModel({
         items: [{ field: 'jobTitle', value: 'Head of Human Resources', operator: 'contains' }],
       });
@@ -253,7 +271,7 @@ describe('<DataGridPro /> - Row selection', () => {
       <TreeDataGrid onRowSelectionModelChange={onRowSelectionModelChange} />,
     );
 
-    await act(() => {
+    await act(async () => {
       setProps({ rows: [...rows, { id: 15, hierarchy: ['New'], jobTitle: 'Test Job' }] });
     });
 
@@ -270,7 +288,9 @@ describe('<DataGridPro /> - Row selection', () => {
   // Context: https://github.com/mui/mui-x/issues/14859
   it('should not throw when controlling a selection model', () => {
     function TestDataGrid() {
-      const [rowSelectionModel, setRowSelectionModel] = React.useState<GridRowSelectionModel>([]);
+      const [rowSelectionModel, setRowSelectionModel] = React.useState<GridRowSelectionModel>(
+        includeRowSelection([]),
+      );
       return (
         <TreeDataGrid
           rowSelectionModel={rowSelectionModel}
@@ -542,7 +562,7 @@ describe('<DataGridPro /> - Row selection', () => {
       const onRowSelectionModelChange = spy();
       render(
         <SelectionPropagationGrid
-          rowSelectionModel={[2, 3, 4, 5, 6, 7]}
+          rowSelectionModel={includeRowSelection([2, 3, 4, 5, 6, 7])}
           onRowSelectionModelChange={onRowSelectionModelChange}
         />,
       );
@@ -617,6 +637,38 @@ describe('<DataGridPro /> - Row selection', () => {
       await user.click(screen.getByRole('checkbox', { name: /select all rows/i }));
       expect(apiRef.current?.getSelectedRows().size).to.equal(0);
     });
+
+    it('should not auto select the parent when all the children are selected using controlled row selection model', async () => {
+      const onRowSelectionModelChange = spy();
+      const { setProps } = render(
+        <SelectionPropagationGrid
+          rowSelectionModel={includeRowSelection([])}
+          onRowSelectionModelChange={onRowSelectionModelChange}
+        />,
+      );
+
+      expect(onRowSelectionModelChange.callCount).to.equal(0);
+      act(() => {
+        setProps({ rowSelectionModel: includeRowSelection([2, 3, 4, 5, 6, 7]) });
+      });
+      expect(onRowSelectionModelChange.callCount).to.equal(0);
+    });
+
+    it('should not auto select descendants when a parent is selected using controlled row selection model', async () => {
+      const onRowSelectionModelChange = spy();
+      const { setProps } = render(
+        <SelectionPropagationGrid
+          rowSelectionModel={includeRowSelection([])}
+          onRowSelectionModelChange={onRowSelectionModelChange}
+        />,
+      );
+
+      expect(onRowSelectionModelChange.callCount).to.equal(0);
+      act(() => {
+        setProps({ rowSelectionModel: includeRowSelection([1]) });
+      });
+      expect(onRowSelectionModelChange.callCount).to.equal(0);
+    });
   });
 
   describe('prop: rowSelectionPropagation = { descendants: true, parents: false }', () => {
@@ -685,6 +737,41 @@ describe('<DataGridPro /> - Row selection', () => {
       expect(apiRef.current?.getSelectedRows().size).to.equal(0);
     });
 
+    it('should not auto select the parent when all the children are selected using controlled row selection model', async () => {
+      const onRowSelectionModelChange = spy();
+      const { setProps } = render(
+        <SelectionPropagationGrid
+          rowSelectionModel={includeRowSelection([])}
+          onRowSelectionModelChange={onRowSelectionModelChange}
+        />,
+      );
+
+      expect(onRowSelectionModelChange.callCount).to.equal(0);
+      act(() => {
+        setProps({ rowSelectionModel: includeRowSelection([2, 3, 4, 5, 6, 7]) });
+      });
+      expect(onRowSelectionModelChange.callCount).to.equal(0);
+    });
+
+    it('should auto select descendants when a parent is selected using controlled row selection model', async () => {
+      const onRowSelectionModelChange = spy();
+      const { setProps } = render(
+        <SelectionPropagationGrid
+          rowSelectionModel={includeRowSelection([])}
+          onRowSelectionModelChange={onRowSelectionModelChange}
+        />,
+      );
+
+      expect(onRowSelectionModelChange.callCount).to.equal(0);
+      act(() => {
+        setProps({ rowSelectionModel: includeRowSelection([1]) });
+      });
+      expect(onRowSelectionModelChange.callCount).to.equal(1);
+      expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
+        includeRowSelection([1, 2, 3, 4, 5, 6, 7]),
+      );
+    });
+
     describe('prop: isRowSelectable', () => {
       it("should not select a parent or it's descendants if not allowed", () => {
         render(
@@ -725,13 +812,15 @@ describe('<DataGridPro /> - Row selection', () => {
       const onRowSelectionModelChange = spy();
       render(
         <SelectionPropagationGrid
-          rowSelectionModel={[2, 3, 4, 5, 6, 7]}
+          rowSelectionModel={includeRowSelection([2, 3, 4, 5, 6, 7])}
           onRowSelectionModelChange={onRowSelectionModelChange}
         />,
       );
 
-      expect(onRowSelectionModelChange.callCount).to.equal(reactMajor < 19 ? 2 : 1); // Dev mode calls twice on React 18
-      expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal([2, 3, 4, 5, 6, 7, 1]);
+      expect(onRowSelectionModelChange.callCount).to.equal(3);
+      expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
+        includeRowSelection([2, 3, 4, 5, 6, 7, 1]),
+      );
     });
 
     it('should select the parent only when selecting it', async () => {
@@ -783,6 +872,41 @@ describe('<DataGridPro /> - Row selection', () => {
       await user.click(getCell(2, 0).querySelector('input')!);
       // The parent row (Thomas, id: 1) should not be among the selected rows
       expect(apiRef.current?.getSelectedRows()).to.have.keys([3, 4, 5, 6, 7]);
+    });
+
+    it('should auto select the parent when all the children are selected using controlled row selection model', async () => {
+      const onRowSelectionModelChange = spy();
+      const { setProps } = render(
+        <SelectionPropagationGrid
+          rowSelectionModel={includeRowSelection([])}
+          onRowSelectionModelChange={onRowSelectionModelChange}
+        />,
+      );
+
+      expect(onRowSelectionModelChange.callCount).to.equal(0);
+      act(() => {
+        setProps({ rowSelectionModel: includeRowSelection([2, 3, 4, 5, 6, 7]) });
+      });
+      expect(onRowSelectionModelChange.callCount).to.equal(1);
+      expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
+        includeRowSelection([2, 3, 4, 5, 6, 7, 1]),
+      );
+    });
+
+    it('should not auto select descendants when a parent is selected using controlled row selection model', async () => {
+      const onRowSelectionModelChange = spy();
+      const { setProps } = render(
+        <SelectionPropagationGrid
+          rowSelectionModel={includeRowSelection([])}
+          onRowSelectionModelChange={onRowSelectionModelChange}
+        />,
+      );
+
+      expect(onRowSelectionModelChange.callCount).to.equal(0);
+      act(() => {
+        setProps({ rowSelectionModel: includeRowSelection([1]) });
+      });
+      expect(onRowSelectionModelChange.callCount).to.equal(0);
     });
 
     describe('prop: isRowSelectable', () => {
@@ -867,14 +991,52 @@ describe('<DataGridPro /> - Row selection', () => {
       expect(apiRef.current?.getSelectedRows()).to.have.keys([1, 2, 3, 4, 5, 6, 7]);
     });
 
+    it('should auto select the parent when all the children are selected using controlled row selection model', async () => {
+      const onRowSelectionModelChange = spy();
+      const { setProps } = render(
+        <SelectionPropagationGrid
+          rowSelectionModel={includeRowSelection([])}
+          onRowSelectionModelChange={onRowSelectionModelChange}
+        />,
+      );
+
+      expect(onRowSelectionModelChange.callCount).to.equal(0);
+      act(() => {
+        setProps({ rowSelectionModel: includeRowSelection([2, 3, 4, 5, 6, 7]) });
+      });
+      expect(onRowSelectionModelChange.callCount).to.equal(1);
+      expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
+        includeRowSelection([2, 3, 4, 5, 6, 7, 1]),
+      );
+    });
+
+    it('should auto select descendants when a parent is selected using controlled row selection model', async () => {
+      const onRowSelectionModelChange = spy();
+      const { setProps } = render(
+        <SelectionPropagationGrid
+          rowSelectionModel={includeRowSelection([])}
+          onRowSelectionModelChange={onRowSelectionModelChange}
+        />,
+      );
+
+      expect(onRowSelectionModelChange.callCount).to.equal(0);
+      act(() => {
+        setProps({ rowSelectionModel: includeRowSelection([1]) });
+      });
+      expect(onRowSelectionModelChange.callCount).to.equal(1);
+      expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
+        includeRowSelection([1, 2, 3, 4, 5, 6, 7]),
+      );
+    });
+
     describe('prop: keepNonExistentRowsSelected = true', () => {
       it('should keep non-existent rows selected on filtering', async () => {
         const { user } = render(<SelectionPropagationGrid keepNonExistentRowsSelected />);
 
         await user.click(getCell(1, 0).querySelector('input')!);
-        expect(apiRef.current?.getSelectedRows()).to.have.keys([1, 2, 3, 4, 5, 6, 7]);
+        expect(gridRowSelectionIdsSelector(apiRef)).to.have.keys([1, 2, 3, 4, 5, 6, 7]);
 
-        await act(() => {
+        await act(async () => {
           apiRef.current?.setFilterModel({
             items: [
               {
@@ -888,7 +1050,33 @@ describe('<DataGridPro /> - Row selection', () => {
 
         await user.click(getCell(0, 0).querySelector('input')!);
 
-        expect(apiRef.current?.getSelectedRows()).to.have.keys([0, 1, 2, 3, 4, 5, 6, 7]);
+        expect(gridRowSelectionIdsSelector(apiRef)).to.have.keys([0, 1, 2, 3, 4, 5, 6, 7]);
+      });
+
+      it('should not apply row selection propagation on filtered rows', async () => {
+        const { user } = render(
+          <SelectionPropagationGrid
+            keepNonExistentRowsSelected
+            defaultGroupingExpansionDepth={-1}
+          />,
+        );
+
+        await user.click(getCell(3, 0).querySelector('input')!);
+        expect(gridRowSelectionIdsSelector(apiRef)).to.have.keys([3]);
+
+        await act(async () => {
+          apiRef.current?.setFilterModel({
+            items: [
+              {
+                field: 'jobTitle',
+                value: 'a-value-that-does-not-exist',
+                operator: 'equals',
+              },
+            ],
+          });
+        });
+
+        expect(gridRowSelectionIdsSelector(apiRef)).to.have.keys([3]);
       });
     });
   });
@@ -899,12 +1087,12 @@ describe('<DataGridPro /> - Row selection', () => {
         <TestDataGridSelection
           onRowSelectionModelChange={(model) => {
             expect(apiRef.current?.getSelectedRows()).to.have.length(1);
-            expect(model).to.deep.equal([1]);
+            expect(model).to.deep.equal(includeRowSelection([1]));
           }}
         />,
       );
       expect(apiRef.current?.getSelectedRows()).to.have.length(0);
-      await act(() => apiRef.current?.selectRow(1));
+      await act(async () => apiRef.current?.selectRow(1));
       expect(apiRef.current?.getSelectedRows().get(1)).to.deep.equal({
         id: 1,
         currencyPair: 'USDEUR',
@@ -923,7 +1111,7 @@ describe('<DataGridPro /> - Row selection', () => {
     });
 
     it('should check if the rows selected with the rowSelectionModel prop are selected', () => {
-      render(<TestDataGridSelection rowSelectionModel={[1]} />);
+      render(<TestDataGridSelection rowSelectionModel={includeRowSelection([1])} />);
 
       expect(apiRef.current?.isRowSelected(0)).to.equal(false);
       expect(apiRef.current?.isRowSelected(1)).to.equal(true);
@@ -934,16 +1122,24 @@ describe('<DataGridPro /> - Row selection', () => {
     it('should call onRowSelectionModelChange with the ids selected', async () => {
       const handleRowSelectionModelChange = spy();
       render(<TestDataGridSelection onRowSelectionModelChange={handleRowSelectionModelChange} />);
-      await act(() => apiRef.current?.selectRow(1));
-      expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal([1]);
+      await act(async () => apiRef.current?.selectRow(1));
+      expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
+        includeRowSelection([1]),
+      );
       // Reset old selection
-      await act(() => apiRef.current?.selectRow(2, true, true));
-      expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal([2]);
+      await act(async () => apiRef.current?.selectRow(2, true, true));
+      expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
+        includeRowSelection([2]),
+      );
       // Keep old selection
-      await act(() => apiRef.current?.selectRow(3));
-      expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal([2, 3]);
-      await act(() => apiRef.current?.selectRow(3, false));
-      expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal([2]);
+      await act(async () => apiRef.current?.selectRow(3));
+      expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
+        includeRowSelection([2, 3]),
+      );
+      await act(async () => apiRef.current?.selectRow(3, false));
+      expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
+        includeRowSelection([2]),
+      );
     });
 
     it('should not call onRowSelectionModelChange if the row is unselectable', async () => {
@@ -954,9 +1150,9 @@ describe('<DataGridPro /> - Row selection', () => {
           onRowSelectionModelChange={handleRowSelectionModelChange}
         />,
       );
-      await act(() => apiRef.current?.selectRow(0));
+      await act(async () => apiRef.current?.selectRow(0));
       expect(handleRowSelectionModelChange.callCount).to.equal(0);
-      await act(() => apiRef.current?.selectRow(1));
+      await act(async () => apiRef.current?.selectRow(1));
       expect(handleRowSelectionModelChange.callCount).to.equal(1);
     });
   });
@@ -971,18 +1167,26 @@ describe('<DataGridPro /> - Row selection', () => {
         />,
       );
 
-      await act(() => apiRef.current?.selectRows([1, 2]));
-      expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal([1, 2]);
+      await act(async () => apiRef.current?.selectRows([1, 2]));
+      expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
+        includeRowSelection([1, 2]),
+      );
 
-      await act(() => apiRef.current?.selectRows([3]));
-      expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal([1, 2, 3]);
+      await act(async () => apiRef.current?.selectRows([3]));
+      expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
+        includeRowSelection([1, 2, 3]),
+      );
 
-      await act(() => apiRef.current?.selectRows([1, 2], false));
-      expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal([3]);
+      await act(async () => apiRef.current?.selectRows([1, 2], false));
+      expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
+        includeRowSelection([3]),
+      );
 
       // Deselect others
-      await act(() => apiRef.current?.selectRows([4, 5], true, true));
-      expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal([4, 5]);
+      await act(async () => apiRef.current?.selectRows([4, 5], true, true));
+      expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
+        includeRowSelection([4, 5]),
+      );
     });
 
     it('should filter out unselectable rows before calling onRowSelectionModelChange', async () => {
@@ -993,14 +1197,16 @@ describe('<DataGridPro /> - Row selection', () => {
           onRowSelectionModelChange={handleRowSelectionModelChange}
         />,
       );
-      await act(() => apiRef.current?.selectRows([0, 1, 2]));
-      expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal([1, 2]);
+      await act(async () => apiRef.current?.selectRows([0, 1, 2]));
+      expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
+        includeRowSelection([1, 2]),
+      );
     });
 
     it('should not select a range of several elements when disableMultipleRowSelection = true', async () => {
       render(<TestDataGridSelection disableMultipleRowSelection />);
 
-      await act(() => apiRef.current?.selectRows([0, 1, 2], true));
+      await act(async () => apiRef.current?.selectRows([0, 1, 2], true));
       expect(getSelectedRowIds()).to.deep.equal([]);
     });
   });
@@ -1009,26 +1215,26 @@ describe('<DataGridPro /> - Row selection', () => {
     it('should select all the rows in the range', async () => {
       render(<TestDataGridSelection />);
 
-      await act(() => apiRef.current?.selectRowRange({ startId: 1, endId: 3 }, true));
+      await act(async () => apiRef.current?.selectRowRange({ startId: 1, endId: 3 }, true));
       expect(getSelectedRowIds()).to.deep.equal([1, 2, 3]);
     });
 
     it('should unselect all the rows in the range', async () => {
       render(<TestDataGridSelection />);
 
-      await act(() => apiRef.current?.setRowSelectionModel([2, 3]));
+      await act(async () => apiRef.current?.setRowSelectionModel(includeRowSelection([2, 3])));
       expect(getSelectedRowIds()).to.deep.equal([2, 3]);
-      await act(() => apiRef.current?.selectRowRange({ startId: 0, endId: 3 }, false));
+      await act(async () => apiRef.current?.selectRowRange({ startId: 0, endId: 3 }, false));
       expect(getSelectedRowIds()).to.deep.equal([]);
     });
 
     it('should not unselect the selected elements if the range is to be selected', async () => {
       render(<TestDataGridSelection />);
 
-      await act(() => {
-        apiRef.current?.setRowSelectionModel([2]);
+      await act(async () => {
+        apiRef.current?.setRowSelectionModel(includeRowSelection([2]));
       });
-      await act(() => {
+      await act(async () => {
         apiRef.current?.selectRowRange({ startId: 1, endId: 3 }, true);
       });
       expect(getSelectedRowIds()).to.deep.equal([1, 2, 3]);
@@ -1037,10 +1243,10 @@ describe('<DataGridPro /> - Row selection', () => {
     it('should not reset the other selections when resetSelection = false', async () => {
       render(<TestDataGridSelection />);
 
-      await act(() => {
-        apiRef.current?.setRowSelectionModel([0]);
+      await act(async () => {
+        apiRef.current?.setRowSelectionModel(includeRowSelection([0]));
       });
-      await act(() => {
+      await act(async () => {
         apiRef.current?.selectRowRange({ startId: 2, endId: 3 }, true, false);
       });
       expect(getSelectedRowIds()).to.deep.equal([0, 2, 3]);
@@ -1049,10 +1255,10 @@ describe('<DataGridPro /> - Row selection', () => {
     it('should reset the other selections when resetSelection = true', async () => {
       render(<TestDataGridSelection />);
 
-      await act(() => {
-        apiRef.current?.setRowSelectionModel([0]);
+      await act(async () => {
+        apiRef.current?.setRowSelectionModel(includeRowSelection([0]));
       });
-      await act(() => {
+      await act(async () => {
         apiRef.current?.selectRowRange({ startId: 2, endId: 3 }, true, true);
       });
       expect(getSelectedRowIds()).to.deep.equal([2, 3]);
@@ -1061,14 +1267,14 @@ describe('<DataGridPro /> - Row selection', () => {
     it('should not select unselectable rows inside the range', async () => {
       render(<TestDataGridSelection isRowSelectable={(params) => Number(params.id) % 2 === 1} />);
 
-      await act(() => apiRef.current?.selectRowRange({ startId: 1, endId: 3 }, true));
+      await act(async () => apiRef.current?.selectRowRange({ startId: 1, endId: 3 }, true));
       expect(getSelectedRowIds()).to.deep.equal([1, 3]);
     });
 
     it('should not select a range of several elements when disableMultipleRowSelection = true', async () => {
       render(<TestDataGridSelection disableMultipleRowSelection />);
 
-      await act(() => apiRef.current?.selectRowRange({ startId: 1, endId: 3 }, true));
+      await act(async () => apiRef.current?.selectRowRange({ startId: 1, endId: 3 }, true));
       expect(getSelectedRowIds()).to.deep.equal([]);
     });
 
@@ -1078,8 +1284,27 @@ describe('<DataGridPro /> - Row selection', () => {
           filterModel={{ items: [{ field: 'id', value: 1, operator: '!=' }] }}
         />,
       );
-      await act(() => apiRef.current?.selectRowRange({ startId: 0, endId: 2 }, true));
+      await act(async () => apiRef.current?.selectRowRange({ startId: 0, endId: 2 }, true));
       expect(getSelectedRowIds()).to.deep.equal([0, 2]);
+    });
+  });
+
+  describe('apiRef: getPropagatedRowSelectionModel', () => {
+    it('`getPropagatedRowSelectionModel` should return exclude models unchanged', () => {
+      render(<TreeDataGrid rowSelectionPropagation={{ descendants: true, parents: true }} />);
+
+      // Exclude models are not affected by propagation
+      const excludeModel = excludeRowSelection([1]);
+      const propagatedModel = apiRef.current?.getPropagatedRowSelectionModel(excludeModel);
+
+      expect(propagatedModel).to.equal(excludeModel); // same object
+
+      // Include models are affected by propagation
+      const includeModel = includeRowSelection([1]);
+      const propagatedIncludeModel = apiRef.current?.getPropagatedRowSelectionModel(includeModel);
+
+      expect(propagatedIncludeModel?.type).to.equal('include');
+      expect(propagatedIncludeModel?.ids).to.have.keys([1, 2, 3, 4, 5, 6, 7]);
     });
   });
 
@@ -1088,7 +1313,7 @@ describe('<DataGridPro /> - Row selection', () => {
     const selectAll = screen.getByRole('checkbox', {
       name: /select all rows/i,
     });
-    await act(() =>
+    await act(async () =>
       apiRef.current?.setFilterModel({
         items: [
           {
@@ -1113,7 +1338,7 @@ describe('<DataGridPro /> - Row selection', () => {
   describe('controlled selection', () => {
     it('should not publish "rowSelectionChange" if the selection state did not change ', () => {
       const handleSelectionChange = spy();
-      const rowSelectionModel: GridRowSelectionModel = [];
+      const rowSelectionModel: GridRowSelectionModel = includeRowSelection([]);
       render(<TestDataGridSelection rowSelectionModel={rowSelectionModel} />);
       apiRef.current?.subscribeEvent('rowSelectionChange', handleSelectionChange);
       apiRef.current?.setRowSelectionModel(rowSelectionModel);
@@ -1125,10 +1350,34 @@ describe('<DataGridPro /> - Row selection', () => {
       render(
         <TestDataGridSelection
           onRowSelectionModelChange={onRowSelectionModelChange}
-          rowSelectionModel={[0, 1]}
+          rowSelectionModel={includeRowSelection([0, 1])}
         />,
       );
       expect(onRowSelectionModelChange.callCount).to.equal(0);
+    });
+
+    it('should call onRowSelectionModelChange with the `exclude` set when select all checkbox is clicked and filters are empty', async () => {
+      const onRowSelectionModelChange = spy();
+      const { user } = render(
+        <TestDataGridSelection
+          checkboxSelection
+          onRowSelectionModelChange={onRowSelectionModelChange}
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [],
+                quickFilterValues: [''],
+              },
+            },
+          }}
+        />,
+      );
+      const selectAllCheckbox = screen.getByRole('checkbox', { name: 'Select all rows' });
+      await user.click(selectAllCheckbox);
+      expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal({
+        type: 'exclude',
+        ids: new Set(),
+      });
     });
   });
 });

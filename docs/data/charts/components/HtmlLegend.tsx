@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Box from '@mui/material/Box';
 import { useLegend } from '@mui/x-charts/hooks';
 import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
@@ -56,8 +55,8 @@ export default function HtmlLegend() {
       >
         <ChartsSurface>
           <BarPlot />
-          <ChartsXAxis position="bottom" axisId="x-axis" />
-          <ChartsYAxis position="left" />
+          <ChartsXAxis axisId="x-axis" />
+          <ChartsYAxis />
         </ChartsSurface>
         <MyCustomLegend />
       </ChartDataProvider>

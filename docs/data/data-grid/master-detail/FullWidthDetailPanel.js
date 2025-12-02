@@ -7,6 +7,8 @@ import {
   DataGridPro,
   useGridApiContext,
   GRID_DETAIL_PANEL_TOGGLE_FIELD,
+  useGridSelector,
+  gridDimensionsSelector,
 } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
@@ -20,26 +22,10 @@ import {
   randomCommodity,
 } from '@mui/x-data-grid-generator';
 
-const getDetailPanelWidth = (gridDimensions) => {
-  return gridDimensions.viewportInnerSize.width;
-};
-
 function DetailPanelContent({ row: rowProp }) {
   const apiRef = useGridApiContext();
-  const [width, setWidth] = React.useState(() =>
-    getDetailPanelWidth(apiRef.current.getRootDimensions()),
-  );
-
-  const handleViewportInnerSizeChange = React.useCallback(() => {
-    setWidth(getDetailPanelWidth(apiRef.current.getRootDimensions()));
-  }, [apiRef]);
-
-  React.useEffect(() => {
-    return apiRef.current.subscribeEvent(
-      'viewportInnerSizeChange',
-      handleViewportInnerSizeChange,
-    );
-  }, [apiRef, handleViewportInnerSizeChange]);
+  const width = useGridSelector(apiRef, gridDimensionsSelector).viewportInnerSize
+    .width;
 
   return (
     <Stack

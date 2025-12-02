@@ -1,19 +1,16 @@
-import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
-import { createRenderer, act } from '@mui/internal-test-utils';
-import { expect } from 'chai';
+import { createRenderer, act, waitFor } from '@mui/internal-test-utils';
 import {
   DataGridPremium as DataGrid,
   DataGridPremiumProps as DataGridProps,
   GridApi,
-  GridToolbar,
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
 import { getColumnValues } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-describe('<DataGrid /> - Quick filter', () => {
+describe('<DataGridPremium />', () => {
   const { render } = createRenderer();
 
   const baselineProps = {
@@ -46,7 +43,7 @@ describe('<DataGrid /> - Quick filter', () => {
         <DataGrid
           {...baselineProps}
           apiRef={apiRef}
-          slots={{ toolbar: GridToolbar }}
+          showToolbar
           disableColumnSelector
           disableDensitySelector
           disableColumnFilter
@@ -95,7 +92,7 @@ describe('<DataGrid /> - Quick filter', () => {
       />,
     );
 
-    await act(() => apiRef.current?.addRowGroupingCriteria('year'));
+    await act(async () => apiRef.current?.addRowGroupingCriteria('year'));
 
     setProps({
       filterModel: {
@@ -104,6 +101,8 @@ describe('<DataGrid /> - Quick filter', () => {
       },
     });
 
-    expect(getColumnValues(0)).to.deep.equal(['20th Century Fox (1)', '']);
+    await waitFor(() => {
+      expect(getColumnValues(0)).to.deep.equal(['20th Century Fox (1)', '']);
+    });
   });
 });

@@ -1,18 +1,15 @@
-import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import {
   GridColDef,
   useGridApiRef,
   DataGridPremium,
   GridApi,
-  GridToolbar,
   DataGridPremiumProps,
   GridActionsCellItem,
 } from '@mui/x-data-grid-premium';
 import { createRenderer, screen, act } from '@mui/internal-test-utils';
 import { spy, SinonSpy } from 'sinon';
-import { expect } from 'chai';
-import Excel from 'exceljs';
+import Excel from '@mui/x-internal-exceljs-fork';
 import { spyApi } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -59,7 +56,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
     });
 
     it('should display export option', async () => {
-      const { user } = render(<TestCaseExcelExport slots={{ toolbar: GridToolbar }} />);
+      const { user } = render(<TestCaseExcelExport showToolbar />);
 
       await user.click(screen.getByRole('button', { name: 'Export' }));
       expect(screen.queryByRole('menu')).not.to.equal(null);

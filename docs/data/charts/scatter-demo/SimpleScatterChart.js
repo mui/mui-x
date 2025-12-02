@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
+import Box from '@mui/material/Box';
 
 const data = [
   { x: 100, y: 200, id: 1 },
@@ -12,11 +12,11 @@ const data = [
 
 export default function SimpleScatterChart() {
   return (
-    <ScatterChart
-      width={500}
-      height={300}
-      series={[{ data, label: 'pv', id: 'pvId' }]}
-      xAxis={[{ min: 0 }]}
-    />
+    <Box sx={{ width: '100%', height: 300 }}>
+      <ScatterChart
+        series={[{ data, label: 'pv', id: 'pvId' }]}
+        xAxis={[{ min: 0 }]}
+      />
+    </Box>
   );
 }

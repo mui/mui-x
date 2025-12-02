@@ -1,31 +1,73 @@
+'use client';
+import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import {
-  useGridApiEventHandler as addEventHandler,
+  useGridEvent as addEventHandler,
   useGridApiMethod,
   GridEventLookup,
 } from '@mui/x-data-grid';
-import { useGridRegisterStrategyProcessor } from '@mui/x-data-grid/internals';
+import { GridStateInitializer, useGridRegisterStrategyProcessor } from '@mui/x-data-grid/internals';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import { useGridDataSourceBase } from './useGridDataSourceBase';
+import { INITIAL_STATE, useGridDataSourceBasePro } from './useGridDataSourceBasePro';
+import { GridGetRowsParamsPro } from './models';
+
+function getKeyPro(params: GridGetRowsParamsPro) {
+  return JSON.stringify([
+    params.filterModel,
+    params.sortModel,
+    params.groupKeys,
+    params.start,
+    params.end,
+  ]);
+}
+
+export const dataSourceStateInitializer: GridStateInitializer = (state) => {
+  return {
+    ...state,
+    dataSource: INITIAL_STATE,
+  };
+};
+
+const options = {
+  cacheOptions: {
+    getKey: getKeyPro,
+  },
+};
 
 export const useGridDataSourcePro = (
   apiRef: RefObject<GridPrivateApiPro>,
   props: DataGridProProcessedProps,
 ) => {
-  const { api, strategyProcessor, events } = useGridDataSourceBase(apiRef, props);
+  const {
+    api,
+    flatTreeStrategyProcessor,
+    groupedDataStrategyProcessor,
+    events,
+    setStrategyAvailability,
+  } = useGridDataSourceBasePro(apiRef, props, options);
 
   useGridApiMethod(apiRef, api.public, 'public');
   useGridApiMethod(apiRef, api.private, 'private');
 
   useGridRegisterStrategyProcessor(
     apiRef,
-    strategyProcessor.strategyName,
-    strategyProcessor.group,
-    strategyProcessor.processor,
+    flatTreeStrategyProcessor.strategyName,
+    flatTreeStrategyProcessor.group,
+    flatTreeStrategyProcessor.processor,
+  );
+  useGridRegisterStrategyProcessor(
+    apiRef,
+    groupedDataStrategyProcessor.strategyName,
+    groupedDataStrategyProcessor.group,
+    groupedDataStrategyProcessor.processor,
   );
 
   Object.entries(events).forEach(([event, handler]) => {
     addEventHandler(apiRef, event as keyof GridEventLookup, handler);
   });
+
+  React.useEffect(() => {
+    setStrategyAvailability();
+  }, [setStrategyAvailability]);
 };

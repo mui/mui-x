@@ -19,7 +19,10 @@ import { PickerAnyRangeManager } from '../../models/managers';
 export type MultiInputRangeFieldProps<TManager extends PickerAnyRangeManager> =
   MultiInputFieldRefs &
     RangeFieldSeparatorProps &
-    Omit<PickerManagerFieldInternalProps<TManager>, 'unstableFieldRef' | 'clearable' | 'onClear'> &
+    Omit<
+      PickerManagerFieldInternalProps<TManager>,
+      'unstableFieldRef' | 'clearable' | 'onClear' | 'focused'
+    > &
     Omit<StackProps, 'position' | keyof PickerManagerFieldInternalProps<TManager>> & {
       /**
        * If `true`, the field is focused during the first mount.
@@ -89,6 +92,7 @@ export interface CreateMultiInputRangeFieldParameters<TManager extends PickerAny
       enableAccessibleFieldDOMStructure: PickerManagerEnableAccessibleFieldDOMStructure<TManager>;
     },
   ) => TManager;
+  allowTriggerShifting?: boolean;
 }
 
 export type CreateMultiInputRangeFieldReturnValue<TManager extends PickerAnyRangeManager> = ((

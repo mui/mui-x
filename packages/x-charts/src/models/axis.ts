@@ -1,15 +1,19 @@
 import type {
   ScaleBand,
-  ScaleLogarithmic,
-  ScalePower,
-  ScaleTime,
   ScaleLinear,
-  ScalePoint,
+  ScaleLogarithmic,
   ScaleOrdinal,
+  ScalePoint,
+  ScalePower,
   ScaleSequential,
   ScaleThreshold,
+  ScaleTime,
+  ScaleSymLog,
+  NumberValue,
 } from '@mui/x-charts-vendor/d3-scale';
 import { SxProps } from '@mui/system/styleFunctionSx';
+import { type MakeOptional, MakeRequired } from '@mui/x-internals/types';
+import type { DefaultizedZoomOptions } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
 import { ChartsTextProps } from '../ChartsText';
@@ -18,11 +22,12 @@ import { ContinuousColorConfig, OrdinalColorConfig, PiecewiseColorConfig } from 
 export type AxisId = string | number;
 
 export type D3Scale<
-  Domain extends { toString(): string } = number | Date | string,
+  Domain extends { toString(): string } = { toString(): string },
   Range = number,
   Output = number,
 > =
   | ScaleBand<Domain>
+  | ScaleSymLog<Range, Output>
   | ScaleLogarithmic<Range, Output>
   | ScalePoint<Domain>
   | ScalePower<Range, Output>
@@ -30,10 +35,15 @@ export type D3Scale<
   | ScaleLinear<Range, Output>;
 
 export type D3ContinuousScale<Range = number, Output = number> =
+  | ScaleSymLog<Range, Output>
   | ScaleLogarithmic<Range, Output>
   | ScalePower<Range, Output>
   | ScaleTime<Range, Output>
   | ScaleLinear<Range, Output>;
+
+export type D3OrdinalScale<Domain extends { toString(): string } = { toString(): string }> =
+  | ScaleBand<Domain>
+  | ScalePoint<Domain>;
 
 export interface ChartsAxisSlots {
   /**
@@ -82,11 +92,6 @@ export interface ChartsAxisProps extends TickParams {
    */
   disableTicks?: boolean;
   /**
-   * The fill color of the axis text.
-   * @default 'currentColor'
-   */
-  fill?: string;
-  /**
    * The style applied to ticks text.
    */
   tickLabelStyle?: ChartsTextProps['style'];
@@ -105,11 +110,6 @@ export interface ChartsAxisProps extends TickParams {
    * The label of the axis.
    */
   label?: string;
-  /**
-   * The stroke color of the axis line.
-   * @default 'currentColor'
-   */
-  stroke?: string;
   /**
    * The size of the ticks.
    * @default 6
@@ -133,18 +133,60 @@ export interface ChartsAxisProps extends TickParams {
 }
 
 export interface ChartsYAxisProps extends ChartsAxisProps {
-  /**
-   * Position of the axis.
-   */
-  position?: 'left' | 'right';
+  axis?: 'y';
 }
 
 export interface ChartsXAxisProps extends ChartsAxisProps {
+  axis?: 'x';
   /**
-   * Position of the axis.
+   * The minimum gap in pixels between two tick labels.
+   * If two tick labels are closer than this minimum gap, one of them will be hidden.
+   * @default 4
    */
-  position?: 'top' | 'bottom';
+  tickLabelMinGap?: number;
 }
+
+type AxisSideConfig<AxisProps extends ChartsAxisProps> = AxisProps extends ChartsXAxisProps
+  ? {
+      /**
+       * Position of the axis.
+       *
+       * When set, the space for the axis is reserved, even if the axis is not displayed due to missing data.
+       *
+       * Set to 'none' to hide the axis.
+       *
+       * The first axis in the list will always have a default position.
+       */
+      position?: 'top' | 'bottom' | 'none';
+      /**
+       * The height of the axis.
+       * @default 30
+       */
+      height?: number;
+    }
+  : AxisProps extends ChartsYAxisProps
+    ? {
+        /**
+         * Position of the axis.
+         *
+         * When set, the space for the axis is reserved, even if the axis is not displayed due to missing data.
+         *
+         * Set to 'none' to hide the axis.
+         *
+         * The first axis in the list will always have a default position.
+         */
+        position?: 'left' | 'right' | 'none';
+        /**
+         * The width of the axis.
+         * @default 30
+         */
+        width?: number;
+      }
+    : {
+        position?: 'top' | 'bottom' | 'left' | 'right' | 'none';
+        height?: number;
+        width?: number;
+      };
 
 export interface ChartsRotationAxisProps extends ChartsAxisProps {
   /**
@@ -155,6 +197,10 @@ export interface ChartsRotationAxisProps extends ChartsAxisProps {
    * The end angle (in deg).
    */
   endAngle?: number;
+  /**
+   * The gap between the axis and the label.
+   */
+  labelGap?: number;
 }
 
 export interface ChartsRadiusAxisProps extends ChartsAxisProps {
@@ -169,12 +215,58 @@ export interface ChartsRadiusAxisProps extends ChartsAxisProps {
 }
 
 export type ScaleName = keyof AxisScaleConfig;
-export type ContinuousScaleName = 'linear' | 'log' | 'pow' | 'sqrt' | 'time' | 'utc';
+export type ContinuousScaleName = 'linear' | 'log' | 'symlog' | 'pow' | 'sqrt' | 'time' | 'utc';
+
+export type AxisGroup = {
+  /**
+   * The function used to return the value for this group.
+   *
+   * @param {any} value The value of the axis item.
+   * @param {number} dataIndex  The index of the data item.
+   * @returns {string | number | Date} The value that will be used to group the axis items.
+   */
+  getValue: (value: any, dataIndex: number) => string | number | Date;
+  /**
+   * The size of the tick in pixels.
+   * @default 6
+   */
+  tickSize?: number;
+  /**
+   * The style applied to ticks text.
+   */
+  tickLabelStyle?: ChartsTextProps['style'];
+};
+
+export type AxisGroups = {
+  /**
+   * Each group will have a label that is the stringified value of the group.
+   *
+   * @example
+   * If the axis is grouped by day, month and year.
+   *
+   * ```tsx
+   * [
+   *   { getValue: getDate },
+   *   { getValue: getMonth },
+   *   { getValue: getFullYear }
+   * ]
+   * ```
+   *
+   * Then the axis will have three rows, one for each group.
+   *
+   * ```bash
+   * | 31   | 1    | 2    |
+   * | Jan  | Feb         |
+   * | 2021               |
+   * ```
+   */
+  groups?: AxisGroup[];
+};
 
 export interface AxisScaleConfig {
   band: {
     scaleType: 'band';
-    scale: ScaleBand<number | Date | string>;
+    scale: ScaleBand<{ toString(): string }>;
     /**
      * The ratio between the space allocated for padding between two categories and the category width.
      * 0 means no gap, and 1 no data.
@@ -188,16 +280,27 @@ export interface AxisScaleConfig {
      */
     barGapRatio: number;
     colorMap?: OrdinalColorConfig | ContinuousColorConfig | PiecewiseColorConfig;
-  } & Pick<TickParams, 'tickPlacement' | 'tickLabelPlacement'>;
+  } & AxisGroups &
+    Pick<TickParams, 'tickPlacement' | 'tickLabelPlacement'>;
   point: {
     scaleType: 'point';
-    scale: ScalePoint<number | Date | string>;
+    scale: ScalePoint<{ toString(): string }>;
     colorMap?: OrdinalColorConfig | ContinuousColorConfig | PiecewiseColorConfig;
-  };
+  } & AxisGroups;
   log: {
     scaleType: 'log';
     scale: ScaleLogarithmic<number, number>;
     colorMap?: ContinuousColorConfig | PiecewiseColorConfig;
+  };
+  symlog: {
+    scaleType: 'symlog';
+    scale: ScaleSymLog<number, number>;
+    colorMap?: ContinuousColorConfig | PiecewiseColorConfig;
+    /**
+     * The constant used to define the zero point of the symlog scale.
+     * @default 1
+     */
+    constant?: number;
   };
   pow: {
     scaleType: 'pow';
@@ -248,6 +351,9 @@ export interface AxisScaleComputedConfig {
   log: {
     colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number, string | null>;
   };
+  symlog: {
+    colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number, string | null>;
+  };
   pow: {
     colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number, string | null>;
   };
@@ -269,39 +375,101 @@ export interface AxisScaleComputedConfig {
   };
 }
 
-export type AxisValueFormatterContext = {
-  /**
-   * Location indicates where the value will be displayed.
-   * - `'tick'` The value is displayed on the axis ticks.
-   * - `'tooltip'` The value is displayed in the tooltip when hovering the chart.
-   * - `'legend'` The value is displayed in the legend when using color legend.
-   */
-  location: 'tick' | 'tooltip' | 'legend';
-};
+export type AxisValueFormatterContext<S extends ScaleName = ScaleName> =
+  | {
+      /**
+       * Location indicates where the value will be displayed.
+       * - `'tick'` The value is displayed on the axis ticks.
+       * - `'tooltip'` The value is displayed in the tooltip when hovering the chart.
+       * - `'legend'` The value is displayed in the legend when using color legend.
+       * - `'zoom-slider-tooltip'` The value is displayed in the zoom slider tooltip.
+       */
+      location: 'legend';
+    }
+  | {
+      /**
+       * Location indicates where the value will be displayed.
+       * - `'tick'` The value is displayed on the axis ticks.
+       * - `'tooltip'` The value is displayed in the tooltip when hovering the chart.
+       * - `'legend'` The value is displayed in the legend when using color legend.
+       * - `'zoom-slider-tooltip'` The value is displayed in the zoom slider tooltip.
+       */
+      location: 'tooltip' | 'zoom-slider-tooltip';
+      /**
+       * The d3-scale instance associated to the axis.
+       */
+      scale: AxisScaleConfig[S]['scale'];
+    }
+  | {
+      /**
+       * Location indicates where the value will be displayed.
+       * - `'tick'` The value is displayed on the axis ticks.
+       * - `'tooltip'` The value is displayed in the tooltip when hovering the chart.
+       * - `'legend'` The value is displayed in the legend when using color legend.
+       * - `'zoom-slider-tooltip'` The value is displayed in the zoom slider tooltip.
+       */
+      location: 'tick';
+      /**
+       * The d3-scale instance associated to the axis.
+       */
+      scale: AxisScaleConfig[S]['scale'];
+      /**
+       * The tick label shown by default if the value isn't formatted.
+       * This value might be an empty string if no tick label should be displayed, which is particularly useful in log
+       * scales where we want to show ticks to demonstrate it's a log scale, but not labels to avoid them overlapping.
+       * @see See {@link https://d3js.org/d3-scale/log#log_tickFormat D3 log scale docs} for more details.
+       */
+      defaultTickLabel: string;
+      /**
+       * A suggestion of the number of ticks to show.
+       * Can be provided to the scale's `ticks` method to compute the ticks, or to `tickFormat` to format the ticks.
+       * Can be `undefined` if the scale doesn't support it, e.g., band, point scales.
+       */
+      tickNumber?: number;
+    };
 
-export type AxisConfig<
-  S extends ScaleName = ScaleName,
-  V = any,
-  AxisProps = ChartsXAxisProps | ChartsYAxisProps,
-> = {
+type MinMaxConfig<S extends ScaleName = ScaleName> = S extends ContinuousScaleName
+  ? S extends 'utc' | 'time'
+    ? {
+        /**
+         * The minimal value of the domain.
+         * If not provided, it gets computed to display the entire chart data.
+         */
+        min?: NumberValue;
+        /**
+         * The maximal value of the domain.
+         * If not provided, it gets computed to display the entire chart data.
+         */
+        max?: NumberValue;
+      }
+    : {
+        /**
+         * The minimal value of the domain.
+         * If not provided, it gets computed to display the entire chart data.
+         */
+        min?: number;
+        /**
+         * The maximal value of the domain.
+         * If not provided, it gets computed to display the entire chart data.
+         */
+        max?: number;
+      }
+  : {};
+
+/**
+ * Config that is shared between cartesian and polar axes.
+ */
+type CommonAxisConfig<S extends ScaleName = ScaleName, V = any> = {
   /**
-   * Id used to identify the axis.
+   * ID used to identify the axis.
+   *
+   * The ID must be unique across all axes in this chart.
    */
   id: AxisId;
   /**
-   * The minimal value of the domain.
-   * If not provided, it gets computed to display the entire chart data.
-   */
-  min?: number | Date;
-  /**
-   * The maximal value of the domain.
-   * If not provided, it gets computed to display the entire chart data.
-   */
-  max?: number | Date;
-  /**
    * The data used by `'band'` and `'point'` scales.
    */
-  data?: V[];
+  data?: readonly V[];
   /**
    * The key used to retrieve `data` from the `dataset` prop.
    */
@@ -312,7 +480,10 @@ export type AxisConfig<
    * @param {AxisValueFormatterContext} context The rendering context of the value.
    * @returns {string} The string to display.
    */
-  valueFormatter?: (value: V, context: AxisValueFormatterContext) => string;
+  valueFormatter?: <TScaleName extends S>(
+    value: V,
+    context: AxisValueFormatterContext<TScaleName>,
+  ) => string;
   /**
    * If `true`, hide this value in the tooltip
    */
@@ -324,29 +495,102 @@ export type AxisConfig<
   /**
    * Defines the axis scale domain based on the min/max values of series linked to it.
    * - 'nice': Rounds the domain at human friendly values.
-   * - 'strict': Set the domain to the min/max value provided. No extras space is added.
+   * - 'strict': Set the domain to the min/max value provided. No extra space is added.
    * - function: Receives the calculated extremums as parameters, and should return the axis domain.
    */
   domainLimit?: 'nice' | 'strict' | ((min: number, max: number) => { min: number; max: number });
-} & Omit<Partial<AxisProps>, 'axisId'> &
+  /**
+   * If `true`, the axis will be ignored by the tooltip with `trigger='axis'`.
+   */
+  ignoreTooltip?: boolean;
+};
+
+export type PolarAxisConfig<
+  S extends ScaleName = ScaleName,
+  V = any,
+  AxisProps extends ChartsAxisProps = ChartsRotationAxisProps | ChartsRadiusAxisProps,
+> = {
+  /**
+   * The offset of the axis in pixels. It can be used to move the axis from its default position.
+   * X-axis: A top axis will move up, and a bottom axis will move down.
+   * Y-axis: A left axis will move left, and a right axis will move right.
+   * @default 0
+   */
+  offset?: number;
+} & CommonAxisConfig<S, V> &
+  MinMaxConfig<S> &
+  Omit<Partial<AxisProps>, 'axisId'> &
   Partial<Omit<AxisScaleConfig[S], 'scale'>> &
+  AxisConfigExtension;
+
+/**
+ * Use this type for advanced typing. For basic usage, use `XAxis`, `YAxis`, `RotationAxis` or `RadiusAxis`.
+ */
+export type AxisConfig<
+  S extends ScaleName = ScaleName,
+  V = any,
+  AxisProps extends ChartsAxisProps = ChartsXAxisProps | ChartsYAxisProps,
+> = {
+  /**
+   * The offset of the axis in pixels. It can be used to move the axis from its default position.
+   * X-axis: A top axis will move up, and a bottom axis will move down.
+   * Y-axis: A left axis will move left, and a right axis will move right.
+   * @default 0
+   */
+  offset?: number;
+} & CommonAxisConfig<S, V> &
+  MinMaxConfig<S> &
+  Omit<Partial<AxisProps>, 'axisId'> &
+  Partial<Omit<AxisScaleConfig[S], 'scale'>> &
+  AxisSideConfig<AxisProps> &
   TickParams &
   AxisConfigExtension;
 
 export interface AxisConfigExtension {}
 
-export type AxisDefaultized<
+export type PolarAxisDefaultized<
   S extends ScaleName = ScaleName,
   V = any,
-  AxisProps = ChartsXAxisProps | ChartsYAxisProps,
-> = Omit<AxisConfig<S, V, AxisProps>, 'scaleType'> &
+  AxisProps extends ChartsAxisProps = ChartsRotationAxisProps | ChartsRadiusAxisProps,
+> = Omit<PolarAxisConfig<S, V, AxisProps>, 'scaleType'> &
+  AxisScaleConfig[S] &
+  AxisScaleComputedConfig[S] & {
+    /**
+     * If true, the contents of the axis will be displayed by a tooltip with `trigger='axis'`.
+     */
+    triggerTooltip?: boolean;
+  };
+
+export type ComputedAxis<
+  S extends ScaleName = ScaleName,
+  V = any,
+  AxisProps extends ChartsAxisProps = ChartsXAxisProps | ChartsYAxisProps,
+> = MakeRequired<Omit<DefaultedAxis<S, V, AxisProps>, 'scaleType'>, 'offset'> &
   AxisScaleConfig[S] &
   AxisScaleComputedConfig[S] & {
     /**
      * An indication of the expected number of ticks.
      */
     tickNumber: number;
-  };
+    /**
+     * Indicate if the axis should be consider by a tooltip with `trigger='axis'`.
+     */
+    triggerTooltip?: boolean;
+  } & (AxisProps extends ChartsXAxisProps
+    ? MakeRequired<AxisSideConfig<AxisProps>, 'height'>
+    : AxisProps extends ChartsYAxisProps
+      ? MakeRequired<AxisSideConfig<AxisProps>, 'width'>
+      : AxisSideConfig<AxisProps>);
+export type ComputedXAxis<S extends ScaleName = ScaleName, V = any> = ComputedAxis<
+  S,
+  V,
+  ChartsXAxisProps
+>;
+export type ComputedYAxis<S extends ScaleName = ScaleName, V = any> = ComputedAxis<
+  S,
+  V,
+  ChartsYAxisProps
+>;
 
 export function isBandScaleConfig(
   scaleConfig: AxisConfig<ScaleName>,
@@ -358,6 +602,18 @@ export function isPointScaleConfig(
   scaleConfig: AxisConfig<ScaleName>,
 ): scaleConfig is AxisConfig<'point'> & { scaleType: 'point' } {
   return scaleConfig.scaleType === 'point';
+}
+
+export function isContinuousScaleConfig(
+  scaleConfig: AxisConfig<ScaleName>,
+): scaleConfig is AxisConfig<ContinuousScaleName> {
+  return scaleConfig.scaleType !== 'point' && scaleConfig.scaleType !== 'band';
+}
+
+export function isSymlogScaleConfig(
+  scaleConfig: AxisConfig<ScaleName>,
+): scaleConfig is AxisConfig<'symlog'> & { scaleType: 'symlog' } {
+  return scaleConfig.scaleType === 'symlog';
 }
 
 /**
@@ -377,3 +633,61 @@ export interface ChartsAxisData {
    */
   seriesValues: Record<string, number | null | undefined>;
 }
+
+export type CartesianDirection = 'x' | 'y';
+export type PolarDirection = 'rotation' | 'radius';
+
+/**
+ * Identifies a data point within an axis.
+ */
+export interface AxisItemIdentifier {
+  /**
+   * The axis id.
+   */
+  axisId: AxisId;
+  /**
+   * The data index.
+   */
+  dataIndex: number;
+}
+
+export type XAxis<S extends ScaleName = ScaleName, V = any> = S extends ScaleName
+  ? MakeOptional<AxisConfig<S, V, ChartsXAxisProps>, 'id'>
+  : never;
+export type YAxis<S extends ScaleName = ScaleName, V = any> = S extends ScaleName
+  ? MakeOptional<AxisConfig<S, V, ChartsYAxisProps>, 'id'>
+  : never;
+export type RotationAxis<S extends ScaleName = ScaleName, V = any> = S extends ScaleName
+  ? AxisConfig<S, V, ChartsRotationAxisProps>
+  : never;
+export type RadiusAxis<S extends 'linear' = 'linear', V = any> = S extends 'linear'
+  ? AxisConfig<S, V, ChartsRadiusAxisProps>
+  : never;
+
+/**
+ * The axis configuration with missing values filled with default values.
+ */
+export type DefaultedAxis<
+  S extends ScaleName = ScaleName,
+  V = any,
+  AxisProps extends ChartsAxisProps = ChartsXAxisProps | ChartsYAxisProps,
+> = AxisConfig<S, V, AxisProps> & {
+  zoom: DefaultizedZoomOptions | undefined;
+};
+/**
+ * The x-axis configuration with missing values filled with default values.
+ */
+export type DefaultedXAxis<S extends ScaleName = ScaleName, V = any> = DefaultedAxis<
+  S,
+  V,
+  ChartsXAxisProps
+>;
+
+/**
+ * The y-axis configuration with missing values filled with default values.
+ */
+export type DefaultedYAxis<S extends ScaleName = ScaleName, V = any> = DefaultedAxis<
+  S,
+  V,
+  ChartsYAxisProps
+>;

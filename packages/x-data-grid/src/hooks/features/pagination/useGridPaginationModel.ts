@@ -1,17 +1,20 @@
+'use client';
 import * as React from 'react';
+import debounce from '@mui/utils/debounce';
 import { RefObject } from '@mui/x-internals/types';
+import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPaginationModelApi, GridPaginationState } from './gridPaginationInterfaces';
 import { GridEventListener } from '../../../models/events';
 import { GridPaginationModel } from '../../../models/gridPaginationProps';
-import { gridDensityFactorSelector } from '../density';
+import { GridFilterModel } from '../../../models/gridFilterModel';
 import {
-  useGridLogger,
-  useGridSelector,
-  useGridApiMethod,
-  useGridApiEventHandler,
-} from '../../utils';
+  gridFilterModelSelector,
+  gridFilterActiveItemsSelector,
+} from '../filter/gridFilterSelector';
+import { gridDensityFactorSelector } from '../density';
+import { useGridLogger, useGridSelector, useGridApiMethod, useGridEvent } from '../../utils';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import { gridPageCountSelector, gridPaginationModelSelector } from './gridPaginationSelector';
 import {
@@ -70,8 +73,9 @@ export const useGridPaginationModel = (
   >,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridPaginationModel');
-
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
+  const previousFilterModel = React.useRef<GridFilterModel>(gridFilterModelSelector(apiRef));
+
   const rowHeight = Math.floor(props.rowHeight * densityFactor);
   apiRef.current.registerControlState({
     stateId: 'paginationModel',
@@ -95,6 +99,8 @@ export const useGridPaginationModel = (
     },
     [apiRef, logger],
   );
+
+  const debouncedSetPage = React.useMemo(() => debounce(setPage, 0), [setPage]);
 
   const setPageSize = React.useCallback<GridPaginationModelApi['setPageSize']>(
     (pageSize) => {
@@ -230,8 +236,9 @@ export const useGridPaginationModel = (
 
     const dimensions = apiRef.current.getRootDimensions();
 
-    const maximumPageSizeWithoutScrollBar = Math.floor(
-      dimensions.viewportInnerSize.height / rowHeight,
+    const maximumPageSizeWithoutScrollBar = Math.max(
+      1,
+      Math.floor(dimensions.viewportInnerSize.height / rowHeight),
     );
 
     apiRef.current.setPageSize(maximumPageSizeWithoutScrollBar);
@@ -242,18 +249,72 @@ export const useGridPaginationModel = (
       if (newRowCount == null) {
         return;
       }
+
       const paginationModel = gridPaginationModelSelector(apiRef);
+      if (paginationModel.page === 0) {
+        return;
+      }
+
       const pageCount = gridPageCountSelector(apiRef);
       if (paginationModel.page > pageCount - 1) {
-        apiRef.current.setPage(Math.max(0, pageCount - 1));
+        queueMicrotask(() => {
+          debouncedSetPage(Math.max(0, pageCount - 1));
+        });
       }
     },
-    [apiRef],
+    [apiRef, debouncedSetPage],
   );
 
-  useGridApiEventHandler(apiRef, 'viewportInnerSizeChange', handleUpdateAutoPageSize);
-  useGridApiEventHandler(apiRef, 'paginationModelChange', handlePaginationModelChange);
-  useGridApiEventHandler(apiRef, 'rowCountChange', handleRowCountChange);
+  /**
+   * Goes to the first row of the grid
+   */
+  const navigateToStart = React.useCallback(() => {
+    const paginationModel = gridPaginationModelSelector(apiRef);
+    if (paginationModel.page !== 0) {
+      debouncedSetPage(0);
+    }
+
+    // If the page was not changed it might be needed to scroll to the top
+    const scrollPosition = apiRef.current.getScrollPosition();
+    if (scrollPosition.top !== 0) {
+      apiRef.current.scroll({ top: 0 });
+    }
+  }, [apiRef, debouncedSetPage]);
+
+  const debouncedNavigateToStart = React.useMemo(
+    () => debounce(navigateToStart, 0),
+    [navigateToStart],
+  );
+
+  /**
+   * Resets the page only if the active items or quick filter has changed from the last time.
+   * This is to avoid resetting the page when the filter model is changed
+   * because of and update of the operator from an item that does not have the value
+   * or reseting when the filter panel is just opened
+   */
+  const handleFilterModelChange = React.useCallback<GridEventListener<'filterModelChange'>>(
+    (filterModel) => {
+      const currentActiveFilters = {
+        ...filterModel,
+        // replace items with the active items
+        items: gridFilterActiveItemsSelector(apiRef),
+      };
+
+      if (isDeepEqual(currentActiveFilters, previousFilterModel.current)) {
+        return;
+      }
+
+      previousFilterModel.current = currentActiveFilters;
+      debouncedNavigateToStart();
+    },
+    [apiRef, debouncedNavigateToStart],
+  );
+
+  useGridEvent(apiRef, 'viewportInnerSizeChange', handleUpdateAutoPageSize);
+  useGridEvent(apiRef, 'paginationModelChange', handlePaginationModelChange);
+  useGridEvent(apiRef, 'rowCountChange', handleRowCountChange);
+  useGridEvent(apiRef, 'sortModelChange', debouncedNavigateToStart);
+  useGridEvent(apiRef, 'filterModelChange', handleFilterModelChange);
 
   /**
    * EFFECTS
@@ -284,7 +345,7 @@ export const useGridPaginationModel = (
     apiRef.current.setState((state) => {
       const isEnabled = props.pagination === true;
       if (
-        state.pagination.paginationMode === props.paginationMode ||
+        state.pagination.paginationMode === props.paginationMode &&
         state.pagination.enabled === isEnabled
       ) {
         return state;
@@ -295,7 +356,7 @@ export const useGridPaginationModel = (
         pagination: {
           ...state.pagination,
           paginationMode: props.paginationMode,
-          enabled: props.pagination === true,
+          enabled: isEnabled,
         },
       };
     });

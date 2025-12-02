@@ -1,22 +1,17 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import {
-  PickerViewRendererLookup,
-  useUtils,
-  PickerRangeValue,
-} from '@mui/x-date-pickers/internals';
+import resolveComponentProps from '@mui/utils/resolveComponentProps';
+import refType from '@mui/utils/refType';
+import { PickerViewRendererLookup, PickerRangeValue } from '@mui/x-date-pickers/internals';
 import { extractValidationProps } from '@mui/x-date-pickers/validation';
 import { PickerOwnerState } from '@mui/x-date-pickers/models';
-import resolveComponentProps from '@mui/utils/resolveComponentProps';
-import { refType } from '@mui/utils';
-import { PickerLayoutOwnerState } from '@mui/x-date-pickers/PickersLayout';
-import { PickersActionBarAction } from '@mui/x-date-pickers/PickersActionBar';
+import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { DesktopDateRangePickerProps } from './DesktopDateRangePicker.types';
 import { useDateRangePickerDefaultizedProps } from '../DateRangePicker/shared';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
-import { MultiInputDateRangeField } from '../MultiInputDateRangeField';
+import { SingleInputDateRangeField } from '../SingleInputDateRangeField';
 import { useDesktopRangePicker } from '../internals/hooks/useDesktopRangePicker';
 import { validateDateRange } from '../validation';
 
@@ -24,8 +19,6 @@ type DesktopDateRangePickerComponent = (<TEnableAccessibleFieldDOMStructure exte
   props: DesktopDateRangePickerProps<TEnableAccessibleFieldDOMStructure> &
     React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
-
-const emptyActions: PickersActionBarAction[] = [];
 
 /**
  * Demos:
@@ -43,7 +36,7 @@ const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
   inProps: DesktopDateRangePickerProps<TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
 
   // Props with the default values common to all date time pickers
   const defaultizedProps = useDateRangePickerDefaultizedProps<
@@ -59,12 +52,13 @@ const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
     ...defaultizedProps,
     closeOnSelect: defaultizedProps.closeOnSelect ?? true,
     viewRenderers,
-    format: utils.formats.keyboardDate,
+    // TODO: Replace with resolveDateFormat() once we support month and year views
+    format: defaultizedProps.format ?? adapter.formats.keyboardDate,
     calendars: defaultizedProps.calendars ?? 2,
     views: ['day'] as const,
     openTo: 'day' as const,
     slots: {
-      field: MultiInputDateRangeField,
+      field: SingleInputDateRangeField,
       ...defaultizedProps.slots,
     },
     slotProps: {
@@ -77,10 +71,6 @@ const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
         hidden: true,
         ...defaultizedProps.slotProps?.toolbar,
       },
-      actionBar: (ownerState: PickerLayoutOwnerState) => ({
-        actions: emptyActions,
-        ...resolveComponentProps(defaultizedProps.slotProps?.actionBar, ownerState),
-      }),
     },
   };
 
@@ -94,6 +84,7 @@ const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
     valueManager: rangeValueManager,
     valueType: 'date',
     validator: validateDateRange,
+    steps: null,
   });
 
   return renderPicker();
@@ -172,7 +163,8 @@ DesktopDateRangePicker.propTypes = {
    */
   disableHighlightToday: PropTypes.bool,
   /**
-   * If `true`, the open picker button will not be rendered (renders only the field).
+   * If `true`, the button to open the Picker will not be rendered (it will only render the field).
+   * @deprecated Use the [field component](https://mui.com/x/react-date-pickers/fields/) instead.
    * @default false
    */
   disableOpenPicker: PropTypes.bool,
@@ -243,7 +235,10 @@ DesktopDateRangePicker.propTypes = {
    * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
    * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
    * @param {TValue} value The value that was just accepted.
-   * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
+   * @param {FieldChangeHandlerContext<TError>} context Context about this acceptance:
+   * - `validationError`: validation result of the current value
+   * - `source`: source of the acceptance. One of 'field' | 'picker' | 'unknown'
+   * - `shortcut` (optional): the shortcut metadata if the value was accepted via a shortcut selection
    */
   onAccept: PropTypes.func,
   /**
@@ -251,7 +246,10 @@ DesktopDateRangePicker.propTypes = {
    * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
    * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
    * @param {TValue} value The new value.
-   * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
+   * @param {FieldChangeHandlerContext<TError>} context Context about this change:
+   * - `validationError`: validation result of the current value
+   * - `source`: source of the change. One of 'field' | 'view' | 'unknown'
+   * - `shortcut` (optional): the shortcut metadata if the change was triggered by a shortcut selection
    */
   onChange: PropTypes.func,
   /**
@@ -314,7 +312,7 @@ DesktopDateRangePicker.propTypes = {
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`.
    */
-  referenceDate: PropTypes.object,
+  referenceDate: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.object), PropTypes.object]),
   /**
    * Component rendered on the "day" view when `props.loading` is true.
    * @returns {React.ReactNode} The node to render when loading.

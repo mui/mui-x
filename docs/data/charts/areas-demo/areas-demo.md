@@ -1,12 +1,12 @@
 ---
-title: Charts - Areas demonstration
+title: Charts - Areas demos
 productId: x-charts
 components: LineChart, LineElement, LineHighlightElement, LineHighlightPlot, LinePlot, MarkElement, MarkPlot, AreaElement, AreaPlot
 ---
 
-# Charts - Areas demonstration
+# Charts - Areas demos
 
-<p class="description">This page groups demonstration using area charts.</p>
+<p class="description">This page groups demos using area charts.</p>
 
 ## SimpleAreaChart
 
@@ -33,7 +33,7 @@ components: LineChart, LineElement, LineHighlightElement, LineHighlightPlot, Lin
 To display multiple colors in the area you can specify a gradient to fill the area (the same method can be applied on other SVG components).
 
 You can pass this gradient definition as a children of the `<LineChart />` and use `sx` to override the area `fill` property.
-To do so you will need to use the [`<linearGradient />`](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/linearGradient) and [`<stop />`](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/stop) SVG elements.
+To do so you will need to use the [`<linearGradient />`](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/linearGradient) and [`<stop />`](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/stop) SVG elements.
 
 The first part is to get the SVG total height.
 Which can be done with the `useDrawingArea()` hook.

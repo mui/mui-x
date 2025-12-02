@@ -15,8 +15,8 @@ export interface ChartsTooltipClasses {
   cell: string;
   /** Styles applied to the mark element. */
   mark: string;
-  /** Styles applied to the markCell element. */
-  markCell: string;
+  /** Styles applied to the markContainer element. */
+  markContainer: string;
   /** Styles applied to the labelCell element. */
   labelCell: string;
   /** Styles applied to the valueCell element. */
@@ -28,7 +28,7 @@ export interface ChartsTooltipClasses {
 export type ChartsTooltipClassKey = keyof Omit<
   ChartsTooltipClasses,
   // these classes are not used for styled components
-  'markCell' | 'labelCell' | 'valueCell'
+  'markContainer' | 'labelCell' | 'valueCell'
 >;
 
 export function getChartsTooltipUtilityClass(slot: string) {
@@ -43,7 +43,7 @@ export const chartsTooltipClasses: ChartsTooltipClasses = generateUtilityClasses
     'row',
     'cell',
     'mark',
-    'markCell',
+    'markContainer',
     'labelCell',
     'valueCell',
     'axisValueCell',
@@ -58,7 +58,7 @@ export const useUtilityClasses = (classes?: Partial<ChartsTooltipClasses>) => {
     row: ['row'],
     cell: ['cell'],
     mark: ['mark'],
-    markCell: ['markCell'],
+    markContainer: ['markContainer'],
     labelCell: ['labelCell'],
     valueCell: ['valueCell'],
     axisValueCell: ['axisValueCell'],

@@ -24,7 +24,7 @@ export interface GridSortApi {
    * Sorts a column.
    * @param {GridColDef['field']} field The field identifier of the column to be sorted.
    * @param {GridSortDirection} direction The direction to be sorted. By default, the next in the `sortingOrder` prop.
-   * @param {boolean} allowMultipleSorting Whether to keep the existing [[GridSortItem]]. Default is `false`.
+   * @param {boolean} allowMultipleSorting Whether to keep the existing [GridSortModel]. Default is `false`.
    */
   sortColumn: (
     field: GridColDef['field'],

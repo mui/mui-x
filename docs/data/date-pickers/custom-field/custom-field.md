@@ -1,7 +1,7 @@
 ---
 productId: x-date-pickers
 title: Date and Time Pickers - Custom field
-githubLabel: 'component: pickers'
+githubLabel: 'scope: pickers'
 packageName: '@mui/x-date-pickers'
 components: PickersSectionList, PickersTextField
 ---
@@ -22,37 +22,6 @@ You can use the `textField` slot to pass custom props to the `TextField`:
 
 {{"demo": "TextFieldSlotProps.js"}}
 
-### Customize the separator of multi input range fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
-
-You can use the `fieldSeparator` slot to pass custom props to the `Typography` rendered between the two `TextField`:
-
-{{"demo": "MultiInputFieldSeparatorSlotProps.js"}}
-
-### Customize the `start` and `end` fields differently [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
-
-You can pass conditional props to the `textField` slot to customize the input styling based on the `position`.
-
-{{"demo": "MultiInputFieldTextFieldProps.js"}}
-
-### Use single input fields on range pickers [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
-
-You can pass the single input fields to the range picker to use it for keyboard editing:
-
-{{"demo": "SingleInputDateRangePicker.js"}}
-
-If you want to create a wrapper around the field, make sure to set the `fieldType` static property to `'single-input'`.
-Otherwise, the picker won't know your field is a single input one and use the multi input event listeners:
-
-{{"demo": "SingleInputDateRangePickerWrapped.js", "defaultCodeOpen": false}}
-
-You can manually add an `endAdornment` if you want your range picker to look exactly like on a simple picker:
-
-{{"demo": "SingleInputDateRangePickerWithAdornment.js"}}
-
-:::info
-This adornment is purely decorative, the focus remains on the field when the picker is opened.
-:::
-
 ### Change the separator of range fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 You can use the `dateSeparator` prop to change the separator rendered between the start and end dates:
@@ -62,9 +31,38 @@ You can use the `dateSeparator` prop to change the separator rendered between th
 ### Change the format density
 
 You can control the field format spacing using the `formatDensity` prop.
-Setting `formatDensity` to `"spacious"` will add a space before and after each `/`, `-` and `.` character.
+Setting `formatDensity` to `"spacious"` adds space before and after each `/`, `-` and `.` character.
 
 {{"demo": "FieldFormatDensity.js"}}
+
+## Multi input range field [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+
+### Usage inside a range picker
+
+You can pass the multi input fields to the range picker to use it for keyboard editing:
+
+{{"demo": "MultiInputDateRangePicker.js"}}
+
+If you want to create a wrapper around the field, make sure to set the `fieldType` static property to `'multi-input'`.
+Otherwise, the picker will throw an error because it won't know how to adapt to this custom field:
+
+{{"demo": "MultiInputDateRangePickerWrapped.js", "defaultCodeOpen": false}}
+
+### Customize the `start` and `end` fields differently
+
+You can pass conditional props to the `textField` slot to customize the input styling based on the `position`.
+
+{{"demo": "MultiInputFieldTextFieldProps.js"}}
+
+### Customize the separator
+
+You can use the `separator` slot to pass custom props to the `Typography` rendered between the two Text Fields:
+
+{{"demo": "MultiInputFieldSeparatorSlotProps.js"}}
+
+:::success
+When used inside a picker, the `separator` slot is not available directly and must be accessed using `slotProps.field.slotProps.separator`.
+:::
 
 ## With Material UI
 
@@ -87,7 +85,7 @@ Pass the `enableAccessibleFieldDOMStructure={false}` to any Field or Picker comp
 {{"demo": "MaterialV6Field.js"}}
 
 :::warning
-The non-accessible DOM structure will be deprecated in a follow up minor version and remove in `v9.x`.
+The non-accessible DOM structure will be deprecated in a follow-up minor version and removed in `v9.x`.
 If you are unable to migrate for some reason, please open an issue to describe what is missing from the new DOM structure so that we can improve it before dropping the old one.
 :::
 
@@ -99,7 +97,7 @@ If you are unable to migrate for some reason, please open an issue to describe w
 You will need to use a component that supports the `sx` prop as a wrapper for your input
 to be able to benefit from the **hover** and **focus** behavior of the clear button.
 You will have access to the `clearable` and `onClear` props using native HTML elements,
-but the on **focus** and **hover** behavior depends on styles applied via the `sx` prop.
+but the **focus** and **hover** behavior depends on styles applied via the `sx` prop.
 :::
 
 {{"demo": "BrowserV7Field.js", "defaultCodeOpen": false}}
@@ -264,7 +262,7 @@ The picker can receive some commonly used props that should be forwarded to the 
 <DatePicker label="Birth date" name="birthdate" className="date-picker" sx={{ borderColor: 'red'}}>
 ```
 
-If you are using any of those props in one of your picker, make sure to retrieve them in your field using the `usePickerContext` hook:
+If you are using any of those props in one of your pickers, make sure to retrieve them in your field using the `usePickerContext` hook:
 
 ```jsx
 const { label, name, rootClassName, rootSx, rootRef } = usePickerContext();

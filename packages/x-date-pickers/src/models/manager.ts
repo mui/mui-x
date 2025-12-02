@@ -1,12 +1,10 @@
 import type { FieldValueManager, UseFieldInternalProps } from '../internals/hooks/useField';
-import type { PickerValueManager } from '../internals/hooks/usePicker';
-import type { UseLocalizationContextReturnValue } from '../internals/hooks/useUtils';
-import type { PickerValidValue } from '../internals/models';
+import type { PickerValidValue, PickerValueManager } from '../internals/models';
 import type { Validator } from '../validation';
 import type { PickerValueType } from './common';
 
 /**
- * Object that contains all the necessary methods and properties to adapter a picker or a field for a given value type.
+ * Object that contains all the necessary methods and properties to adapt a Picker or a Field for a given value type.
  * You should never create your own manager.
  * Instead, use the hooks exported from '@mui/x-date-pickers/managers' and '@mui/x-date-pickers-pro/managers'.
  *
@@ -27,12 +25,8 @@ export interface PickerManager<
   TValue extends PickerValidValue,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
+  TValidationProps extends {},
   TFieldInternalProps extends {},
-  TFieldInternalPropsWithDefaults extends UseFieldInternalProps<
-    TValue,
-    TEnableAccessibleFieldDOMStructure,
-    TError
-  >,
 > {
   /**
    * The type of the value (e.g. 'date', 'date-time', 'time').
@@ -55,14 +49,14 @@ export interface PickerManager<
    * });
    * ```
    */
-  validator: Validator<TValue, TError, TFieldInternalPropsWithDefaults>;
+  validator: Validator<TValue, TError, TValidationProps>;
   /**
-   * Object containing basic methods to interact with the value of the picker or field.
+   * Object containing basic methods to interact with the value of the Picker or Field.
    * This property is not part of the public API and should not be used directly.
    */
   internal_valueManager: PickerValueManager<TValue, TError>;
   /**
-   * Object containing all the necessary methods to interact with the value of the field.
+   * Object containing all the necessary methods to interact with the value of the Field.
    * This property is not part of the public API and should not be used directly.
    */
   internal_fieldValueManager: FieldValueManager<TValue>;
@@ -78,28 +72,16 @@ export interface PickerManager<
    * - a default format to display the value in the field
    * - some default validation props that are needed to validate the value (e.g: minDate, maxDate)
    * This property is not part of the public API and should not be used directly.
-   * @param {ApplyDefaultsToFieldInternalPropsParameters<TFieldInternalProps>} parameters The parameters to apply the defaults.
+   * @param {TFieldInternalProps<TFieldInternalProps>} internalProps The field internal props to apply the defaults to.
    * @returns {TFieldInternalPropsWithDefaults} The field internal props with the defaults applied.
    */
-  internal_applyDefaultsToFieldInternalProps: (
-    parameters: ApplyDefaultsToFieldInternalPropsParameters<TFieldInternalProps>,
-  ) => TFieldInternalPropsWithDefaults;
+  internal_useApplyDefaultValuesToFieldInternalProps: (
+    internalProps: TFieldInternalProps,
+  ) => UseFieldInternalProps<TValue, TEnableAccessibleFieldDOMStructure, TError> & TValidationProps;
   /**
-   * Returns the aria-label to apply on the button that opens the picker.
-   * @param {GetOpenPickerButtonAriaLabelParameters<TValue>} params The parameters to get the aria-label.
-   * @returns {string} The aria-label to apply on the button that opens the picker.
+   * Returns a hook that creates the aria-label to apply on the button that opens the Picker.
+   * @param {TValue} value The value of the Picker.
+   * @returns {string} The aria-label to apply on the button that opens the Picker.
    */
-  internal_getOpenPickerButtonAriaLabel: (
-    params: GetOpenPickerButtonAriaLabelParameters<TValue>,
-  ) => string;
-}
-
-interface ApplyDefaultsToFieldInternalPropsParameters<TFieldInternalProps extends {}>
-  extends UseLocalizationContextReturnValue {
-  internalProps: TFieldInternalProps;
-}
-
-interface GetOpenPickerButtonAriaLabelParameters<TValue extends PickerValidValue>
-  extends UseLocalizationContextReturnValue {
-  value: TValue;
+  internal_useOpenPickerButtonAriaLabel: (value: TValue) => string;
 }

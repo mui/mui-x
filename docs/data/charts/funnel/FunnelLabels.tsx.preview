@@ -1,0 +1,15 @@
+<FunnelChart
+  series={[
+    {
+      data: [
+        { value: 200, label: 'A' },
+        { value: 180, label: 'B' },
+        { value: 90, label: 'C' },
+        { value: 50, label: 'D' },
+      ],
+      valueFormatter: (item, context) =>
+        `${item.label}${context.dataIndex} ${item.value}.00`,
+    },
+  ]}
+  {...funnelProps}
+/>

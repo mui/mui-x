@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -10,10 +9,11 @@ export default function BasicDateTimeRangeField() {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer
         components={[
-          'MultiInputDateTimeRangeField',
           'SingleInputDateTimeRangeField',
+          'MultiInputDateTimeRangeField',
         ]}
       >
+        <SingleInputDateTimeRangeField label="Check-in - Check-out" />
         <MultiInputDateTimeRangeField
           slotProps={{
             textField: ({ position }) => ({
@@ -21,7 +21,6 @@ export default function BasicDateTimeRangeField() {
             }),
           }}
         />
-        <SingleInputDateTimeRangeField label="Check-in - Check-out" />
       </DemoContainer>
     </LocalizationProvider>
   );

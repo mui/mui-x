@@ -1,4 +1,3 @@
-import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import { PickersLayout } from '@mui/x-date-pickers/PickersLayout';
@@ -16,6 +15,7 @@ import {
 } from './useStaticRangePicker.types';
 import { useRangePosition } from '../useRangePosition';
 import { PickerRangePositionContext } from '../../../hooks/usePickerRangePositionContext';
+import { createRangePickerStepNavigation } from '../../utils/createRangePickerStepNavigation';
 
 const PickerStaticLayout = styled(PickersLayout)(({ theme }) => ({
   overflow: 'hidden',
@@ -32,19 +32,26 @@ export const useStaticRangePicker = <
   TExternalProps extends UseStaticRangePickerProps<TView, any, TExternalProps>,
 >({
   props,
+  steps,
   ...pickerParams
 }: UseStaticRangePickerParams<TView, TExternalProps>) => {
   const { localeText, slots, slotProps, displayStaticWrapperAs, autoFocus } = props;
 
   const rangePositionResponse = useRangePosition(props);
 
+  const getStepNavigation = createRangePickerStepNavigation({
+    steps,
+    rangePositionResponse,
+  });
+
   const { providerProps, renderCurrentView } = usePicker<PickerRangeValue, TView, TExternalProps>({
     ...pickerParams,
     props,
-    autoFocusView: autoFocus ?? false,
-    fieldRef: undefined,
-    localeText,
     variant: displayStaticWrapperAs,
+    autoFocusView: autoFocus ?? false,
+    viewContainerRole: null,
+    localeText,
+    getStepNavigation,
   });
 
   const Layout = slots?.layout ?? PickerStaticLayout;

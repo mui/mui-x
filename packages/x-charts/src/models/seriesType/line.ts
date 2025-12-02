@@ -40,12 +40,14 @@ export interface LineSeriesType
   /**
    * Data associated to the line.
    */
-  data?: (number | null)[];
+  data?: readonly (number | null)[];
   /**
    * The key used to retrieve data from the dataset.
    */
   dataKey?: string;
-  stack?: string;
+  /**
+   * If `true`, the series is rendered as an area instead of a line.
+   */
   area?: boolean;
   /**
    * The label to display on the tooltip or the legend. It can be a string or a function.

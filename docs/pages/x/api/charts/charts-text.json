@@ -9,7 +9,8 @@
   "imports": [
     "import { ChartsText } from '@mui/x-charts/ChartsText';",
     "import { ChartsText } from '@mui/x-charts';",
-    "import { ChartsText } from '@mui/x-charts-pro';"
+    "import { ChartsText } from '@mui/x-charts-pro';",
+    "import { ChartsText } from '@mui/x-charts-premium';"
   ],
   "classes": [],
   "muiName": "MuiChartsText",

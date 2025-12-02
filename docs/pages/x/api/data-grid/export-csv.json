@@ -1,0 +1,25 @@
+{
+  "props": {
+    "options": {
+      "type": {
+        "name": "shape",
+        "description": "{ allColumns?: bool, delimiter?: string, escapeFormulas?: bool, fields?: Array&lt;string&gt;, fileName?: string, getRowsToExport?: func, includeColumnGroupsHeaders?: bool, includeHeaders?: bool, shouldAppendQuotes?: bool, utf8WithBom?: bool }"
+      }
+    },
+    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
+  },
+  "name": "ExportCsv",
+  "imports": [
+    "import { ExportCsv } from '@mui/x-data-grid/components';",
+    "import { ExportCsv } from '@mui/x-data-grid';",
+    "import { ExportCsv } from '@mui/x-data-grid-pro';",
+    "import { ExportCsv } from '@mui/x-data-grid-premium';"
+  ],
+  "classes": [],
+  "muiName": "MuiExportCsv",
+  "forwardsRefTo": "GridRoot",
+  "filename": "/packages/x-data-grid/src/components/export/ExportCsv.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-data-grid/components/export\">Data Grid - Export component</a></li></ul>",
+  "cssComponent": false
+}

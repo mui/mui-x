@@ -4,19 +4,34 @@ import {
   UseChartCartesianAxisSignature,
   UseChartCartesianAxisDefaultizedParameters,
   ZoomData,
+  AxisId,
+  type UseChartBrushSignature,
 } from '@mui/x-charts/internals';
+import {
+  ZoomInteractionConfig,
+  DefaultizedZoomInteractionConfig,
+} from './ZoomInteractionConfig.types';
 
 export interface UseChartProZoomParameters {
   /**
    * The list of zoom data related to each axis.
+   * Used to initialize the zoom in a specific configuration without controlling it.
    */
-  initialZoom?: ZoomData[];
+  initialZoom?: readonly ZoomData[];
   /**
    * Callback fired when the zoom has changed.
    *
    * @param {ZoomData[]} zoomData Updated zoom data.
    */
-  onZoomChange?: (zoomData: ZoomData[] | ((zoomData: ZoomData[]) => ZoomData[])) => void;
+  onZoomChange?: (zoomData: ZoomData[]) => void;
+  /**
+   * The list of zoom data related to each axis.
+   */
+  zoomData?: readonly ZoomData[];
+  /**
+   * Configuration for zoom interactions.
+   */
+  zoomInteractionConfig?: ZoomInteractionConfig;
 }
 
 export type UseChartProZoomDefaultizedParameters = UseChartProZoomParameters &
@@ -32,7 +47,15 @@ export interface UseChartProZoomState {
     /**
      * Mapping of axis id to the zoom data.
      */
-    zoomData: ZoomData[];
+    zoomData: readonly ZoomData[];
+    /**
+     * Internal information to know if the user control the state or not.
+     */
+    isControlled: boolean;
+    /**
+     * Configuration for zoom interactions.
+     */
+    zoomInteractionConfig: DefaultizedZoomInteractionConfig;
   };
 }
 
@@ -43,9 +66,31 @@ export interface UseChartProZoomPublicApi {
    * @returns {void}
    */
   setZoomData: (value: ZoomData[] | ((prev: ZoomData[]) => ZoomData[])) => void;
+  /**
+   * Set the zoom data for an axis.
+   * @param {AxisId} axisId The id of the axis to set the zoom data for.
+   * @param {ZoomData | ((prev: ZoomData) => ZoomData)} value  The new value. Can either be the new zoom data, or an updater function.
+   * @returns {void}
+   */
+  setAxisZoomData: (axisId: AxisId, value: ZoomData | ((prev: ZoomData) => ZoomData)) => void;
 }
 
-export interface UseChartProZoomInstance extends UseChartProZoomPublicApi {}
+export interface UseChartProZoomInstance extends UseChartProZoomPublicApi {
+  /**
+   * Translate the zoom range (i.e., both start and end) for a specific axis.
+   * @param {AxisId} axisId The id of the axis to move the zoom range for.
+   * @param {number} by The amount to move the zoom range by. Ranges from 0 to 100.
+   */
+  moveZoomRange: (axisId: AxisId, by: number) => void;
+  /**
+   * Zoom in the chart.
+   */
+  zoomIn: () => void;
+  /**
+   * Zoom out the chart.
+   */
+  zoomOut: () => void;
+}
 
 export type UseChartProZoomSignature = ChartPluginSignature<{
   params: UseChartProZoomParameters;
@@ -53,5 +98,5 @@ export type UseChartProZoomSignature = ChartPluginSignature<{
   state: UseChartProZoomState;
   publicAPI: UseChartProZoomPublicApi;
   instance: UseChartProZoomInstance;
-  dependencies: [UseChartSeriesSignature, UseChartCartesianAxisSignature];
+  dependencies: [UseChartSeriesSignature, UseChartCartesianAxisSignature, UseChartBrushSignature];
 }>;

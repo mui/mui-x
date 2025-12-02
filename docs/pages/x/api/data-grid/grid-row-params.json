@@ -5,7 +5,7 @@
     "import { GridRowParams } from '@mui/x-data-grid-pro'",
     "import { GridRowParams } from '@mui/x-data-grid'"
   ],
-  "demos": "<ul><li><a href=\"/x/react-data-grid/master-detail/\">Master detail</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-data-grid/master-detail/\">Master-detail row panels</a></li></ul>",
   "properties": {
     "columns": { "type": { "description": "GridColDef[]" }, "required": true },
     "id": { "type": { "description": "GridRowId" }, "required": true },

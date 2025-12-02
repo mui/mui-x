@@ -1,18 +1,16 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { spy } from 'sinon';
 import { act, createEvent, fireEvent, screen } from '@mui/internal-test-utils';
 import {
   describeTreeView,
   DescribeTreeViewRendererUtils,
 } from 'test/utils/tree-view/describeTreeView';
-import {
-  UseTreeViewExpansionSignature,
-  UseTreeViewIconsSignature,
-} from '@mui/x-tree-view/internals';
 import { treeItemClasses } from '@mui/x-tree-view/TreeItem';
 
-describeTreeView<[UseTreeViewExpansionSignature, UseTreeViewIconsSignature]>(
+// TODO #20051: Replace with imported type
+type TreeViewAnyStore = { parameters: any };
+
+describeTreeView<TreeViewAnyStore>(
   'useTreeItem hook',
   ({ render, renderFromJSX, TreeItemComponent, treeViewComponentName, TreeViewComponent }) => {
     describe('role prop', () => {
@@ -35,7 +33,7 @@ describeTreeView<[UseTreeViewExpansionSignature, UseTreeViewIconsSignature]>(
     });
 
     describe('onClick prop', () => {
-      it('should call onClick when clicked, but not when children are clicked for TreeItem', () => {
+      it('should call onClick when clicked, and when children are clicked for TreeItem (when using nested DOM structure)', () => {
         const onClick = spy();
 
         const view = render({
@@ -50,6 +48,7 @@ describeTreeView<[UseTreeViewExpansionSignature, UseTreeViewIconsSignature]>(
 
         fireEvent.click(view.getItemContent('1.1'));
         expect(onClick.callCount).to.equal(2);
+        expect(onClick.firstCall.firstArg.target.parentElement.dataset.testid).to.equal('1.1');
         expect(onClick.lastCall.firstArg.target.parentElement.dataset.testid).to.equal('1.1');
       });
 
@@ -101,6 +100,7 @@ describeTreeView<[UseTreeViewExpansionSignature, UseTreeViewIconsSignature]>(
       function ConditionallyMountedItem(props) {
         const [mounted, setMounted] = React.useState(true);
         if (props.itemId === '2') {
+          // eslint-disable-next-line react-compiler/react-compiler
           setActiveItemMounted = setMounted;
         }
 

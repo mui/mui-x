@@ -36,12 +36,14 @@ const deDEPickers: Partial<PickersLocaleText> = {
   clearButtonLabel: 'Löschen',
   okButtonLabel: 'OK',
   todayButtonLabel: 'Heute',
+  nextStepButtonLabel: 'Nächster',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Datum auswählen',
   dateTimePickerToolbarTitle: 'Datum & Uhrzeit auswählen',
   timePickerToolbarTitle: 'Uhrzeit auswählen',
   dateRangePickerToolbarTitle: 'Datumsbereich auswählen',
+  timeRangePickerToolbarTitle: 'Zeitspanne auswählen',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
@@ -59,13 +61,17 @@ const deDEPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Woche ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate ? `Datum auswählen, gewähltes Datum ist ${formattedDate}` : 'Datum auswählen',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime
       ? `Uhrzeit auswählen, gewählte Uhrzeit ist ${formattedTime}`
       : 'Uhrzeit auswählen',
+  openRangePickerDialogue: (formattedRange) =>
+    formattedRange
+      ? `Zeitspanne auswählen, die aktuell ausgewählte Zeitspanne ist ${formattedRange}`
+      : 'Zeitspanne auswählen',
   fieldClearLabel: 'Wert leeren',
 
   // Table labels

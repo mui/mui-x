@@ -4,22 +4,41 @@ import PropTypes from 'prop-types';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { TreeItemIconProps } from './TreeItemIcon.types';
-import { useTreeViewContext } from '../internals/TreeViewProvider';
-import { UseTreeViewIconsSignature } from '../internals/plugins/useTreeViewIcons';
+import { useTreeViewStyleContext } from '../internals/TreeViewProvider/TreeViewStyleContext';
 import { TreeViewCollapseIcon, TreeViewExpandIcon } from '../icons';
 
+function pickIcon(
+  treeItemIcon: React.ElementType | null | undefined,
+  treeViewIcon: React.ElementType | null | undefined,
+  fallback?: React.ElementType,
+) {
+  if (treeItemIcon !== undefined) {
+    return treeItemIcon;
+  }
+  if (treeViewIcon !== undefined) {
+    return treeViewIcon;
+  }
+  return fallback;
+}
+
 function TreeItemIcon(props: TreeItemIconProps) {
-  const { slots, slotProps, status } = props;
+  const { slots: slotsFromTreeItem, slotProps: slotPropsFromTreeItem, status } = props;
+  const { slots: slotsFromTreeView, slotProps: slotPropsFromTreeView } = useTreeViewStyleContext();
 
-  const context = useTreeViewContext<[UseTreeViewIconsSignature]>();
-
-  const contextIcons = {
-    ...context.icons.slots,
-    expandIcon: context.icons.slots.expandIcon ?? TreeViewExpandIcon,
-    collapseIcon: context.icons.slots.collapseIcon ?? TreeViewCollapseIcon,
+  const slots = {
+    collapseIcon: pickIcon(
+      slotsFromTreeItem?.collapseIcon,
+      slotsFromTreeView.collapseIcon,
+      TreeViewCollapseIcon,
+    ),
+    expandIcon: pickIcon(
+      slotsFromTreeItem?.expandIcon,
+      slotsFromTreeView.expandIcon,
+      TreeViewExpandIcon,
+    ),
+    endIcon: pickIcon(slotsFromTreeItem?.endIcon, slotsFromTreeView.endIcon),
+    icon: slotsFromTreeItem?.icon,
   };
-
-  const contextIconProps = context.icons.slotProps;
 
   let iconName: 'collapseIcon' | 'expandIcon' | 'endIcon' | 'icon';
   if (slots?.icon) {
@@ -34,15 +53,15 @@ function TreeItemIcon(props: TreeItemIconProps) {
     iconName = 'endIcon';
   }
 
-  const Icon = slots?.[iconName] ?? contextIcons[iconName as keyof typeof contextIcons];
-  const iconProps = useSlotProps({
-    elementType: Icon,
+  const Icon = slots[iconName];
+  const { ownerState, ...iconProps } = useSlotProps({
+    elementType: Icon as NonNullable<typeof Icon>,
     externalSlotProps: (tempOwnerState: any) => ({
       ...resolveComponentProps(
-        contextIconProps[iconName as keyof typeof contextIconProps],
+        slotPropsFromTreeView[iconName as keyof typeof slotPropsFromTreeView],
         tempOwnerState,
       ),
-      ...resolveComponentProps(slotProps?.[iconName], tempOwnerState),
+      ...resolveComponentProps(slotPropsFromTreeItem?.[iconName], tempOwnerState),
     }),
     // TODO: Add proper ownerState
     ownerState: {},
@@ -74,9 +93,11 @@ TreeItemIcon.propTypes = {
     disabled: PropTypes.bool.isRequired,
     editable: PropTypes.bool.isRequired,
     editing: PropTypes.bool.isRequired,
+    error: PropTypes.bool.isRequired,
     expandable: PropTypes.bool.isRequired,
     expanded: PropTypes.bool.isRequired,
     focused: PropTypes.bool.isRequired,
+    loading: PropTypes.bool.isRequired,
     selected: PropTypes.bool.isRequired,
   }).isRequired,
 } as any;

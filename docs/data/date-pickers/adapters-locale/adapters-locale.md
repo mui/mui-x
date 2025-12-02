@@ -2,7 +2,7 @@
 productId: x-date-pickers
 title: Date and Time Pickers - Date format and localization
 components: LocalizationProvider
-githubLabel: 'component: pickers'
+githubLabel: 'scope: pickers'
 packageName: '@mui/x-date-pickers'
 ---
 
@@ -147,25 +147,21 @@ Here is the list of the currently supported formats:
   - ✅ 4-digits values (for example, `2023`)
   - ❌ Values with ordinal (for example, `2023th`)
 - The month
-
   - ✅ 1-based digit (for example, `08`)
   - ✅ Multi-letter values (for example, `Aug`, `August`)
   - ❌ 1-letter values (for example, `A`) because several months are represented with the same letter
 
 - The day of the month
-
   - ✅ 1-based digit values (for example, `24`)
   - ✅ 1-based digit values with ordinal (for example, `24th`)
 
 - The day of the week
-
   - ✅ 0-based digit values (for example, `03`)
   - ✅ 1-based digit values (for example, `04`)
   - ✅ Multi-letter values (for example, `Tue`, `Tuesday`)
   - ❌ 1-letter values (for example, `T`) because several days of the week are represented with the same letter
 
 - The hours
-
   - ✅ 0-based 12-hours values (for example, `03`)
   - ✅ 0-based 24-hours values (for example, `15`)
   - ❌ 1-based values (for example, `24` instead of `00`)
@@ -197,7 +193,7 @@ Luxon is not able to respect the leading zeroes when using macro tokens (for exa
 
 ### Custom field placeholder
 
-When a section is empty, the fields displays its placeholder instead of an empty value.
+When a section is empty, the field displays its placeholder instead of an empty value.
 For example, if you did not fill any value for the `year` section, the field will render the year placeholder.
 
 These placeholders are based on your current component localization, not on your date localization.
@@ -243,8 +239,8 @@ This prop is available on all pickers.
 ### Custom day of week format
 
 Use `dayOfWeekFormatter` to customize day names in the calendar header.
-This prop takes two parameters, `day` (a string with the name of the day) and `date` ( the day in the format of your date library) and returns the formatted string to display.
-The default formatter only keeps the first letter of the name and capitalises it.
+This prop takes two parameters, `day` (a string with the name of the day) and `date` (the day in the format of your date library), and returns the formatted string to display.
+The default formatter only keeps the first letter of the name and capitalizes it.
 
 :::warning
 The first parameter `day` will be removed in v7 in favor of the second parameter `date` for more flexibility.

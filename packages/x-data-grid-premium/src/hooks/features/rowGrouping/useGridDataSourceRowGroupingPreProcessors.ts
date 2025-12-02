@@ -10,9 +10,12 @@ import {
   skipSorting,
   skipFiltering,
   GridRowsPartialUpdates,
+  getParentPath,
+  RowGroupingStrategy,
+  gridPivotActiveSelector,
 } from '@mui/x-data-grid-pro/internals';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
-import { getGroupingRules, RowGroupingStrategy } from './gridRowGroupingUtils';
+import { getGroupingRules } from './gridRowGroupingUtils';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { gridRowGroupingSanitizedModelSelector } from './gridRowGroupingSelector';
 
@@ -21,26 +24,28 @@ export const useGridDataSourceRowGroupingPreProcessors = (
   props: Pick<
     DataGridPremiumProcessedProps,
     | 'disableRowGrouping'
-    | 'groupingColDef'
     | 'rowGroupingColumnMode'
     | 'defaultGroupingExpansionDepth'
     | 'isGroupExpandedByDefault'
-    | 'unstable_dataSource'
+    | 'dataSource'
   >,
 ) => {
   const createRowTreeForRowGrouping = React.useCallback<GridStrategyProcessor<'rowTreeCreation'>>(
     (params) => {
-      const getGroupKey = props.unstable_dataSource?.getGroupKey;
+      const getGroupKey = props.dataSource?.getGroupKey;
       if (!getGroupKey) {
         throw new Error('MUI X: No `getGroupKey` method provided with the dataSource.');
       }
 
-      const getChildrenCount = props.unstable_dataSource?.getChildrenCount;
+      const getChildrenCount = props.dataSource?.getChildrenCount;
       if (!getChildrenCount) {
         throw new Error('MUI X: No `getChildrenCount` method provided with the dataSource.');
       }
 
+      const pivotingActive = gridPivotActiveSelector(apiRef);
       const sanitizedRowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
+      const maxDepth = pivotingActive ? sanitizedRowGroupingModel.length - 1 : undefined;
+
       const columnsLookup = gridColumnLookupSelector(apiRef);
       const groupingRules = getGroupingRules({
         sanitizedRowGroupingModel,
@@ -49,17 +54,9 @@ export const useGridDataSourceRowGroupingPreProcessors = (
       apiRef.current.caches.rowGrouping.rulesOnLastRowTreeCreation = groupingRules;
 
       const getRowTreeBuilderNode = (rowId: GridRowId) => {
-        const parentPath = (params.updates as GridRowsPartialUpdates).groupKeys ?? [];
-        const row = params.dataRowIdToModelLookup[rowId];
-        const groupingRule = groupingRules[parentPath.length];
-        const groupingValueGetter = groupingRule?.groupingValueGetter;
-        const leafKey =
-          groupingValueGetter?.(
-            row[groupingRule.field] as never,
-            row,
-            columnsLookup[groupingRule.field],
-            apiRef,
-          ) ?? getGroupKey(params.dataRowIdToModelLookup[rowId]);
+        const parentPath =
+          (params.updates as GridRowsPartialUpdates).groupKeys ?? getParentPath(rowId, params);
+        const leafKey = getGroupKey(params.dataRowIdToModelLookup[rowId]);
         return {
           id: rowId,
           path: [...parentPath, leafKey ?? rowId.toString()].map((key, i) => ({
@@ -77,6 +74,7 @@ export const useGridDataSourceRowGroupingPreProcessors = (
           defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
           isGroupExpandedByDefault: props.isGroupExpandedByDefault,
           groupingName: RowGroupingStrategy.DataSource,
+          maxDepth,
         });
       }
 
@@ -96,14 +94,10 @@ export const useGridDataSourceRowGroupingPreProcessors = (
         defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
         isGroupExpandedByDefault: props.isGroupExpandedByDefault,
         groupingName: RowGroupingStrategy.DataSource,
+        maxDepth,
       });
     },
-    [
-      apiRef,
-      props.unstable_dataSource,
-      props.defaultGroupingExpansionDepth,
-      props.isGroupExpandedByDefault,
-    ],
+    [apiRef, props.dataSource, props.defaultGroupingExpansionDepth, props.isGroupExpandedByDefault],
   );
 
   const filterRows = React.useCallback<GridStrategyProcessor<'filtering'>>(() => {

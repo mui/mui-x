@@ -6,6 +6,7 @@ import {
   useGridSelector,
   gridSortModelSelector,
   gridColumnDefinitionsSelector,
+  ToolbarButton,
 } from '@mui/x-data-grid-premium';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import List from '@mui/material/List';
@@ -16,7 +17,6 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import Typography from '@mui/material/Typography';
 import Badge from '@mui/material/Badge';
 import { Drawer, DrawerHeader } from './Drawer';
-import { ToolbarButton } from './ToolbarButton';
 
 export function ToolbarSortItem(props) {
   const { listView, container } = props;

@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { GRID_ROOT_GROUP_ID, GridGroupNode, GridRowTreeConfig } from '@mui/x-data-grid';
 import { createRowTree } from './createRowTree';
 

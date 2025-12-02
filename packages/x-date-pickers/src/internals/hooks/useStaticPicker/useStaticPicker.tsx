@@ -1,4 +1,3 @@
-import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import { UseStaticPickerParams, UseStaticPickerProps } from './useStaticPicker.types';
@@ -8,6 +7,7 @@ import { PickersLayout } from '../../../PickersLayout';
 import { DIALOG_WIDTH } from '../../constants/dimensions';
 import { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
 import { mergeSx } from '../../utils/utils';
+import { createNonRangePickerStepNavigation } from '../../utils/createNonRangePickerStepNavigation';
 
 const PickerStaticLayout = styled(PickersLayout)(({ theme }) => ({
   overflow: 'hidden',
@@ -26,16 +26,21 @@ export const useStaticPicker = <
   TExternalProps extends UseStaticPickerProps<TView, any, TExternalProps>,
 >({
   props,
+  steps,
   ...pickerParams
 }: UseStaticPickerParams<TView, TExternalProps>) => {
   const { localeText, slots, slotProps, displayStaticWrapperAs, autoFocus } = props;
 
+  const getStepNavigation = createNonRangePickerStepNavigation({ steps });
+
   const { providerProps, renderCurrentView } = usePicker<PickerValue, TView, TExternalProps>({
     ...pickerParams,
     props,
-    autoFocusView: autoFocus ?? false,
-    localeText,
     variant: displayStaticWrapperAs,
+    autoFocusView: autoFocus ?? false,
+    viewContainerRole: null,
+    localeText,
+    getStepNavigation,
   });
 
   const Layout = slots?.layout ?? PickerStaticLayout;

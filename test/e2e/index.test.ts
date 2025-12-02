@@ -1,17 +1,16 @@
 import { platform } from 'node:os';
-import { expect } from 'chai';
 import {
   chromium,
   webkit,
   firefox,
-  Page,
-  Browser,
-  BrowserContext,
   devices,
-  BrowserContextOptions,
-  BrowserType,
-  WebError,
-  Locator,
+  type Page,
+  type Browser,
+  type BrowserContext,
+  type BrowserContextOptions,
+  type BrowserType,
+  type WebError,
+  type Locator,
 } from '@playwright/test';
 import { pickersSectionListClasses } from '@mui/x-date-pickers/PickersSectionList';
 
@@ -109,7 +108,7 @@ async function initializeEnvironment(
     ...contextOptions,
   });
   // Circle CI has low-performance CPUs.
-  context.setDefaultTimeout((process.env.CIRCLECI === 'true' ? 4 : 2) * 1000);
+  context.setDefaultTimeout(process.env.CIRCLECI === 'true' ? 20000 : 5000);
   page = await context.newPage();
   // taken from: https://github.com/microsoft/playwright/issues/6347#issuecomment-1085850728
   // Update the Date accordingly in your test pages
@@ -140,13 +139,11 @@ async function initializeEnvironment(
 
 [chromium, webkit, firefox].forEach((browserType) => {
   describe(`e2e: ${browserType.name()}`, () => {
-    before(async function beforeHook() {
-      this.timeout(20000);
-
+    beforeAll(async () => {
       await initializeEnvironment(browserType);
     });
 
-    after(async () => {
+    afterAll(async () => {
       await context.close();
       await browser.close();
     });
@@ -232,41 +229,42 @@ async function initializeEnvironment(
         ).to.equal('Gucci');
       });
 
-      it('should reorder columns by dropping into the header', async () => {
-        // this test sometimes fails on webkit for some reason
-        if (browserType.name() === 'webkit' && process.env.CIRCLECI) {
-          return;
-        }
-        await renderFixture('DataGrid/ColumnReorder');
+      // this test sometimes fails on webkit for some reason
+      it.skipIf(browserType.name() === 'webkit' && process.env.CIRCLECI)(
+        'should reorder columns by dropping into the header',
+        async () => {
+          await renderFixture('DataGrid/ColumnReorder');
 
-        expect(await page.locator('[role="row"]').first().textContent()).to.equal('brandyear');
+          expect(await page.locator('[role="row"]').first().textContent()).to.equal('brandyear');
 
-        const brand = page.locator('[role="columnheader"][aria-colindex="1"] > [draggable]');
-        const year = page.locator('[role="columnheader"][aria-colindex="2"] > [draggable]');
-        await brand.dragTo(year);
+          const brand = page.locator('[role="columnheader"][aria-colindex="1"] > [draggable]');
+          const year = page.locator('[role="columnheader"][aria-colindex="2"] > [draggable]');
+          await brand.dragTo(year);
 
-        expect(
-          await page.evaluate(() => document.querySelector('[role="row"]')!.textContent!),
-        ).to.equal('yearbrand');
-      });
+          expect(
+            await page.evaluate(() => document.querySelector('[role="row"]')!.textContent!),
+          ).to.equal('yearbrand');
+        },
+      );
 
-      it('should reorder columns by dropping into the grid row column', async () => {
-        // this test sometimes fails on webkit for some reason
-        if (browserType.name() === 'webkit' && process.env.CIRCLECI) {
-          return;
-        }
-        await renderFixture('DataGrid/ColumnReorder');
+      // this test sometimes fails on webkit for some reason
+      // @ts-expect-error
+      it.skipIf(browserType.name() === 'webkit' && process.env.CIRCLECI)(
+        'should reorder columns by dropping into the grid row column',
+        async () => {
+          await renderFixture('DataGrid/ColumnReorder');
 
-        expect(await page.locator('[role="row"]').first().textContent()).to.equal('brandyear');
+          expect(await page.locator('[role="row"]').first().textContent()).to.equal('brandyear');
 
-        const brand = page.locator('[role="columnheader"][aria-colindex="1"] > [draggable]');
-        const rowColumn1990 = page.locator(
-          '[role="row"][data-rowindex="0"] [role="gridcell"][data-colindex="1"]',
-        );
-        await brand.dragTo(rowColumn1990);
+          const brand = page.locator('[role="columnheader"][aria-colindex="1"] > [draggable]');
+          const rowColumn1990 = page.locator(
+            '[role="row"][data-rowindex="0"] [role="gridcell"][data-colindex="1"]',
+          );
+          await brand.dragTo(rowColumn1990);
 
-        expect(await page.locator('[role="row"]').first().textContent()).to.equal('yearbrand');
-      });
+          expect(await page.locator('[role="row"]').first().textContent()).to.equal('yearbrand');
+        },
+      );
 
       // https://github.com/mui/mui-x/pull/9117
       it('should not trigger sorting after resizing', async () => {
@@ -325,56 +323,58 @@ async function initializeEnvironment(
 
       // if this test fails locally on chromium, be aware that it uses system locale format,
       // instead of one specified by the `locale`
-      it('should edit date cells', async () => {
-        // webkit has issues with date input locale on circleci
-        if (browserType.name() === 'webkit' && process.env.CIRCLECI) {
-          return;
-        }
-        await renderFixture('DataGrid/KeyboardEditDate');
+      // webkit has issues with date input locale on circleci
+      it.skipIf(browserType.name() === 'webkit' && process.env.CIRCLECI)(
+        'should edit date cells',
+        async () => {
+          await renderFixture('DataGrid/KeyboardEditDate');
 
-        // Edit date column
-        expect(
-          await page.locator('[role="gridcell"][data-field="birthday"]').textContent(),
-        ).to.equal('2/29/1984');
+          // Edit date column
+          expect(
+            await page.locator('[role="gridcell"][data-field="birthday"]').textContent(),
+          ).to.equal('2/29/1984');
 
-        // set 06/25/1986
-        await page.dblclick('[role="gridcell"][data-field="birthday"]');
-        await page.type('[role="gridcell"][data-field="birthday"] input', '06/25/1986');
+          // set 06/25/1986
+          await page.dblclick('[role="gridcell"][data-field="birthday"]');
+          await page.type('[role="gridcell"][data-field="birthday"] input', '06/25/1986');
 
-        await page.keyboard.press('Enter');
+          await page.keyboard.press('Enter');
 
-        expect(
-          await page.locator('[role="gridcell"][data-field="birthday"]').textContent(),
-        ).to.equal('6/25/1986');
+          expect(
+            await page.locator('[role="gridcell"][data-field="birthday"]').textContent(),
+          ).to.equal('6/25/1986');
 
-        // Edit dateTime column
-        expect(
-          await page.locator('[role="gridcell"][data-field="lastConnection"]').textContent(),
-        ).to.equal('2/20/2022, 6:50:00 AM');
+          // Edit dateTime column
+          expect(
+            await page.locator('[role="gridcell"][data-field="lastConnection"]').textContent(),
+          ).to.equal('2/20/2022, 6:50:00 AM');
 
-        // start editing lastConnection
-        await page.keyboard.press('ArrowRight');
-        await page.keyboard.press('Enter');
+          // start editing lastConnection
+          await page.keyboard.press('ArrowRight');
+          await page.keyboard.press('Enter');
 
-        // set 01/31/2025 04:05:00 PM
-        const dateTimeInput = page.locator('[role="gridcell"][data-field="lastConnection"] input');
-        if (browserType.name() === 'firefox') {
-          // firefox seems to break the section jumping if the section is edited without firstly clearing it
-          dateTimeInput.press('Backspace');
-          await dateTimeInput.type('01/31/2025');
-          // only reliable way on firefox to move to time section is via arrow key
-          await dateTimeInput.press('ArrowRight');
-          await dateTimeInput.type('4:5');
-          await dateTimeInput.press('ArrowRight');
-          await dateTimeInput.type('p');
-        } else {
-          await dateTimeInput.type('01/31/2025,4:5:p');
-        }
+          // set 01/31/2025 04:05:00 PM
+          const dateTimeInput = page.locator(
+            '[role="gridcell"][data-field="lastConnection"] input',
+          );
+          if (browserType.name() === 'firefox') {
+            // firefox seems to break the section jumping if the section is edited without firstly clearing it
+            dateTimeInput.press('Backspace');
+            await dateTimeInput.type('01/31/2025');
+            // only reliable way on firefox to move to time section is via arrow key
+            await dateTimeInput.press('ArrowRight');
+            await dateTimeInput.type('4:5');
+            await dateTimeInput.press('ArrowRight');
+            await dateTimeInput.type('p');
+          } else {
+            await dateTimeInput.type('01/31/2025,4:5:p');
+          }
 
-        await page.keyboard.press('Enter');
+          await page.keyboard.press('Enter');
 
-        expect(page.getByText('1/31/2025, 4:05:00 PM')).not.to.equal(null);
-      });
+          expect(page.getByText('1/31/2025, 4:05:00 PM')).not.to.equal(null);
+        },
+      );
 
       // https://github.com/mui/mui-x/issues/3613
       it('should not lose cell focus when scrolling with arrow down', async () => {
@@ -522,7 +522,7 @@ async function initializeEnvironment(
 
         await page.hover('div[role="columnheader"][data-field="birthday"]');
         await page.click(
-          'div[role="columnheader"][data-field="birthday"] button[aria-label="Menu"]',
+          'div[role="columnheader"][data-field="birthday"] button[aria-label="birthday column menu"]',
         );
         await page.click('"Filter"');
         await page.keyboard.type('08/04/2024', { delay: 10 });
@@ -598,6 +598,39 @@ async function initializeEnvironment(
           return document.querySelector('.MuiDataGrid-virtualScroller')!.scrollTop;
         });
         expect(scrollTop).not.to.equal(0);
+      });
+
+      // https://github.com/mui/mui-x/issues/14726
+      it('should not cause scroll jumping when the focused cell is outside of the viewport', async () => {
+        await renderFixture('DataGrid/DynamicRowHeight');
+
+        await page.click('[role="row"][data-id="2"] [role="gridcell"][data-field="id"]');
+
+        const scrollPositions: number[] = [];
+        await page.exposeFunction('storeScrollPosition', async (scrollTop: number) => {
+          scrollPositions.push(scrollTop);
+        });
+        await page.evaluate(() => {
+          const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+          virtualScroller.addEventListener('scroll', () => {
+            // @ts-ignore
+            window.storeScrollPosition(virtualScroller.scrollTop);
+          });
+        });
+
+        await page.mouse.wheel(0, 150);
+        await page.waitForTimeout(500);
+
+        const hadScrollJump = scrollPositions.some((scrollTop, index) => {
+          if (index === 0) {
+            return false;
+          }
+          // When scrolling down, the scrollTop should be always decreasing
+          const prevScrollTop = scrollPositions[index - 1];
+          return scrollTop < prevScrollTop;
+        });
+
+        expect(hadScrollJump).to.equal(false, `Scroll jumped, scrollPositions: ${scrollPositions}`);
       });
     });
 
@@ -792,6 +825,18 @@ async function initializeEnvironment(
           // check that selecting a day doesn't change the day text
           expect(await day11.textContent()).to.equal('11');
         });
+
+        it('should assert that disabled field is not tabbable', async () => {
+          await renderFixture('DatePicker/DesktopDatePickerDisabledField');
+
+          const startButton = page.getByTestId('start-btn');
+
+          await startButton.focus();
+          await page.keyboard.press('Tab');
+
+          const endButton = page.getByTestId('end-btn');
+          expect(await endButton.evaluate((el) => document.activeElement === el)).to.equal(true);
+        });
       });
 
       describe('<MobileDatePicker />', () => {
@@ -893,9 +938,7 @@ async function initializeEnvironment(
         await page.waitForSelector('[role="dialog"]', { state: 'visible' });
 
         // Click 'OK' button to close dialog
-        await page.keyboard.press('Tab'); // move focus to 'cancel' action
-        await page.keyboard.press('Tab'); // move focus to 'accept' action
-        await page.keyboard.press('Enter');
+        await page.getByRole('button', { name: 'OK' }).click();
 
         await page.waitForSelector('[role="dialog"]', { state: 'detached' });
         expect(await page.getByRole('textbox', { includeHidden: true }).inputValue()).to.equal(
@@ -951,7 +994,7 @@ async function initializeEnvironment(
         if (browserType.name() === 'firefox') {
           return;
         }
-        await renderFixture('DatePicker/BasicDesktopDateRangePicker');
+        await renderFixture('DatePicker/MultiInputDesktopDateRangePicker');
 
         // Old selector: await page.getByRole('textbox', { name: 'Start' }).click();
         await page.locator(`.${pickersSectionListClasses.root}`).first().click();
@@ -975,7 +1018,7 @@ async function initializeEnvironment(
         if (browserType.name() === 'firefox') {
           return;
         }
-        await renderFixture('DatePicker/BasicDesktopDateRangePicker');
+        await renderFixture('DatePicker/MultiInputDesktopDateRangePicker');
 
         // Old selector: await page.getByRole('textbox', { name: 'Start' }).click();
         await page.locator(`.${pickersSectionListClasses.root}`).first().click();
@@ -994,31 +1037,30 @@ async function initializeEnvironment(
         await page.waitForSelector('[role="tooltip"]', { state: 'detached' });
       });
 
-      it('should have the same selection process when "readOnly" with single input field with an accessible DOM structure', async () => {
+      it('should have the same selection process as a non-range picker when using a single input field with an accessible DOM structure', async () => {
         // firefox in CI is not happy with this test
         if (browserType.name() === 'firefox') {
           return;
         }
 
         await renderFixture('DatePicker/ReadonlyDesktopDateRangePickerSingle');
+        await page.getByRole('button').click();
 
-        await page.locator(`.${pickersSectionListClasses.root}`).first().click();
-
-        // assert that the tooltip has been opened
-        await page.waitForSelector('[role="tooltip"]', { state: 'attached' });
+        // assert that the dialog has been opened
+        await page.waitForSelector('[role="dialog"]', { state: 'attached' });
 
         await page.getByRole('gridcell', { name: '11' }).first().click();
         await page.getByRole('gridcell', { name: '13' }).first().click();
 
         // assert that the tooltip closes after selection is complete
-        await page.waitForSelector('[role="tooltip"]', { state: 'detached' });
+        await page.waitForSelector('[role="dialog"]', { state: 'detached' });
 
         expect(await page.getByRole('textbox', { includeHidden: true }).inputValue()).to.equal(
           '04/11/2022 – 04/13/2022',
         );
       });
 
-      it('should have the same selection process when "readOnly" with single input field with a non-accessible DOM structure', async () => {
+      it('should have the same selection process as a non-range picker when using a single input field with a non-accessible DOM structure', async () => {
         // firefox in CI is not happy with this test
         if (browserType.name() === 'firefox') {
           return;
@@ -1027,17 +1069,16 @@ async function initializeEnvironment(
         await renderFixture(
           'DatePicker/ReadonlyDesktopDateRangePickerSingleNonAccessibleDOMStructure',
         );
-
-        await page.getByRole('textbox').click();
+        await page.getByRole('button').click();
 
         // assert that the tooltip has been opened
-        await page.waitForSelector('[role="tooltip"]', { state: 'attached' });
+        await page.waitForSelector('[role="dialog"]', { state: 'attached' });
 
         await page.getByRole('gridcell', { name: '11' }).first().click();
         await page.getByRole('gridcell', { name: '13' }).first().click();
 
         // assert that the tooltip closes after selection is complete
-        await page.waitForSelector('[role="tooltip"]', { state: 'detached' });
+        await page.waitForSelector('[role="dialog"]', { state: 'detached' });
 
         expect(await page.getByRole('textbox').inputValue()).to.equal('04/11/2022 – 04/13/2022');
       });
@@ -1055,7 +1096,7 @@ async function initializeEnvironment(
         await renderFixture('DatePicker/SingleDesktopDateRangePickerWithTZ');
 
         // open the picker
-        await page.getByRole('group').click();
+        await page.getByRole('button').click();
 
         await page.getByRole('spinbutton', { name: 'Month' }).first().press('ArrowDown');
 
@@ -1063,24 +1104,54 @@ async function initializeEnvironment(
           'MUI X: The timezone of the start and the end date should be the same.',
         );
       });
+
+      it('should keep the focus on the clicked section', async () => {
+        // firefox in CI is not happy with this test
+        if (browserType.name() === 'firefox') {
+          return;
+        }
+        await renderFixture('DatePicker/DesktopDateRangePickerWithValue');
+
+        const startDaySection = page.getByRole('spinbutton', { name: 'Day' }).first();
+        await startDaySection.click();
+        expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('12');
+
+        const endYearSection = page.getByRole('spinbutton', { name: 'Year' }).last();
+        await endYearSection.click();
+        expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('2024');
+      });
+
+      it('should keep the focus on the clicked section with single input field', async () => {
+        // firefox in CI is not happy with this test
+        if (browserType.name() === 'firefox') {
+          return;
+        }
+        await renderFixture('DatePicker/SingleDesktopDateRangePickerWithTZ');
+
+        const startDaySection = page.getByRole('spinbutton', { name: 'Day' }).first();
+        await startDaySection.click();
+        expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('12');
+
+        const endYearSection = page.getByRole('spinbutton', { name: 'Year' }).last();
+        await endYearSection.click();
+        expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('2024');
+      });
     });
   });
 });
 
 describe('e2e: chromium on Android', () => {
-  before(async function beforeHook() {
-    this.timeout(20000);
-
+  beforeAll(async () => {
     await initializeEnvironment(chromium, devices['Pixel 5']);
   });
 
-  after(async () => {
+  afterAll(async () => {
     await context.close();
     await browser.close();
   });
 
   it('should allow re-selecting value to have the same start and end date', async () => {
-    await renderFixture('DatePicker/BasicDesktopDateRangePicker');
+    await renderFixture('DatePicker/MultiInputDesktopDateRangePicker');
 
     // Old selector: await page.getByRole('textbox', { name: 'Start' }).tap();
     await page.locator(`.${pickersSectionListClasses.root}`).first().tap();

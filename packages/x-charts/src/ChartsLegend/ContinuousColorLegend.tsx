@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { styled, SxProps, Theme } from '@mui/material/styles';
 import clsx from 'clsx';
 import { AppendKeys } from '@mui/x-internals/types';
-import { AxisDefaultized } from '../models/axis';
+import { ComputedAxis } from '../models/axis';
 import { useAxis } from './useAxis';
 import { ColorLegendSelector } from './colorLegend.types';
 import { ChartsLabel } from '../ChartsLabel/ChartsLabel';
@@ -17,6 +17,7 @@ import {
   useUtilityClasses,
 } from './continuousColorLegendClasses';
 import { useChartGradientIdObjectBoundBuilder } from '../hooks/useChartGradientId';
+import { ZAxisDefaultized } from '../models/z-axis';
 
 type LabelFormatter = (params: { value: number | Date; formattedValue: string }) => string;
 
@@ -65,6 +66,7 @@ export interface ContinuousColorLegendProps
   classes?: Partial<ContinuousColorLegendClasses>;
   className?: string;
   sx?: SxProps<Theme>;
+  tabIndex?: number;
 }
 
 const templateAreas = (reverse?: boolean) => {
@@ -108,7 +110,6 @@ const templateAreas = (reverse?: boolean) => {
 const RootElement = styled('ul', {
   name: 'MuiContinuousColorLegend',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: ContinuousColorLegendProps }>(({ theme, ownerState }) => ({
   ...theme.typography.caption,
   color: (theme.vars || theme).palette.text.primary,
@@ -120,6 +121,7 @@ const RootElement = styled('ul', {
   paddingInlineStart: 0,
   marginBlock: theme.spacing(1),
   marginInline: theme.spacing(1),
+  gridArea: 'legend',
   [`&.${continuousColorLegendClasses.horizontal}`]: {
     gridTemplateRows: 'min-content min-content',
     gridTemplateColumns: 'min-content auto min-content',
@@ -179,6 +181,8 @@ const getText = (
   }
   return label?.({ value, formattedValue }) ?? formattedValue;
 };
+const isZAxis = (axis: ComputedAxis | ZAxisDefaultized): axis is ZAxisDefaultized =>
+  (axis as ComputedAxis).scale === undefined;
 
 const ContinuousColorLegend = consumeThemeProps(
   'MuiContinuousColorLegend',
@@ -223,7 +227,8 @@ const ContinuousColorLegend = consumeThemeProps(
 
     // Get texts to display
 
-    const valueFormatter = (axisItem as AxisDefaultized)?.valueFormatter;
+    const valueFormatter = isZAxis(axisItem) ? undefined : axisItem.valueFormatter;
+
     const formattedMin = valueFormatter
       ? valueFormatter(minValue, { location: 'legend' })
       : minValue.toLocaleString();

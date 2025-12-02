@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 
 const rows = [
   {
@@ -26,9 +25,7 @@ export default function VisibleColumnsBasicExample() {
           { field: 'desk' },
         ]}
         rows={rows}
-        slots={{
-          toolbar: GridToolbar,
-        }}
+        showToolbar
       />
     </div>
   );

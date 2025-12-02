@@ -1,36 +1,8 @@
 import { TreeViewItemId, TreeViewSelectionPropagation } from '../../../models';
 import { TreeViewUsedStore } from '../../models';
 import { UseTreeViewSelectionSignature } from './useTreeViewSelection.types';
-import { selectorIsItemSelected } from './useTreeViewSelection.selectors';
-import {
-  selectorItemOrderedChildrenIds,
-  selectorItemParentId,
-} from '../useTreeViewItems/useTreeViewItems.selectors';
-
-/**
- * Transform the `selectedItems` model to be an array if it was a string or null.
- * @param {string[] | string | null} model The raw model.
- * @returns {string[]} The converted model.
- */
-export const convertSelectedItemsToArray = (model: string[] | string | null): string[] => {
-  if (Array.isArray(model)) {
-    return model;
-  }
-
-  if (model != null) {
-    return [model];
-  }
-
-  return [];
-};
-
-export const createSelectedItemsMap = (selectedItems: string | string[] | null) => {
-  const selectedItemsMap = new Map<TreeViewItemId, true>();
-  convertSelectedItemsToArray(selectedItems).forEach((id) => {
-    selectedItemsMap.set(id, true);
-  });
-  return selectedItemsMap;
-};
+import { selectionSelectors } from './useTreeViewSelection.selectors';
+import { itemsSelectors } from '../useTreeViewItems/useTreeViewItems.selectors';
 
 export const getLookupFromArray = (array: string[]) => {
   const lookup: { [itemId: string]: true } = {};
@@ -49,11 +21,14 @@ export const getAddedAndRemovedItems = ({
   oldModel: TreeViewItemId[];
   newModel: TreeViewItemId[];
 }) => {
-  const newModelLookup = createSelectedItemsMap(newModel);
+  const newModelMap = new Map<TreeViewItemId, true>();
+  newModel.forEach((id) => {
+    newModelMap.set(id, true);
+  });
 
   return {
-    added: newModel.filter((itemId) => !selectorIsItemSelected(store.value, itemId)),
-    removed: oldModel.filter((itemId) => !newModelLookup.has(itemId)),
+    added: newModel.filter((itemId) => !selectionSelectors.isItemSelected(store.state, itemId)),
+    removed: oldModel.filter((itemId) => !newModelMap.has(itemId)),
   };
 };
 
@@ -101,7 +76,7 @@ export const propagateSelection = ({
           newModelLookup[itemId] = true;
         }
 
-        selectorItemOrderedChildrenIds(store.value, itemId).forEach(selectDescendants);
+        itemsSelectors.itemOrderedChildrenIds(store.state, itemId).forEach(selectDescendants);
       };
 
       selectDescendants(addedItemId);
@@ -113,17 +88,17 @@ export const propagateSelection = ({
           return false;
         }
 
-        const children = selectorItemOrderedChildrenIds(store.value, itemId);
+        const children = itemsSelectors.itemOrderedChildrenIds(store.state, itemId);
         return children.every(checkAllDescendantsSelected);
       };
 
       const selectParents = (itemId: TreeViewItemId) => {
-        const parentId = selectorItemParentId(store.value, itemId);
+        const parentId = itemsSelectors.itemParentId(store.state, itemId);
         if (parentId == null) {
           return;
         }
 
-        const siblings = selectorItemOrderedChildrenIds(store.value, parentId);
+        const siblings = itemsSelectors.itemOrderedChildrenIds(store.state, parentId);
         if (siblings.every(checkAllDescendantsSelected)) {
           shouldRegenerateModel = true;
           newModelLookup[parentId] = true;
@@ -136,14 +111,14 @@ export const propagateSelection = ({
 
   changes.removed.forEach((removedItemId) => {
     if (selectionPropagation.parents) {
-      let parentId = selectorItemParentId(store.value, removedItemId);
+      let parentId = itemsSelectors.itemParentId(store.state, removedItemId);
       while (parentId != null) {
         if (newModelLookup[parentId]) {
           shouldRegenerateModel = true;
           delete newModelLookup[parentId];
         }
 
-        parentId = selectorItemParentId(store.value, parentId);
+        parentId = itemsSelectors.itemParentId(store.state, parentId);
       }
     }
 
@@ -154,7 +129,7 @@ export const propagateSelection = ({
           delete newModelLookup[itemId];
         }
 
-        selectorItemOrderedChildrenIds(store.value, itemId).forEach(deSelectDescendants);
+        itemsSelectors.itemOrderedChildrenIds(store.state, itemId).forEach(deSelectDescendants);
       };
 
       deSelectDescendants(removedItemId);

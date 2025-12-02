@@ -59,6 +59,7 @@ function GridDetailPanelToggleCell(props: GridRenderCellParams) {
       tabIndex={-1}
       disabled={!hasContent}
       className={classes.root}
+      aria-expanded={isExpanded}
       aria-label={
         isExpanded
           ? apiRef.current.getLocaleText('collapseDetailPanel')
@@ -92,19 +93,6 @@ GridDetailPanelToggleCell.propTypes = {
    * The column field of the cell that triggered the event.
    */
   field: PropTypes.string.isRequired,
-  /**
-   * A ref allowing to set imperative focus.
-   * It can be passed to the element that should receive focus.
-   * @ignore - do not document.
-   */
-  focusElementRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.shape({
-        focus: PropTypes.func.isRequired,
-      }),
-    }),
-  ]),
   /**
    * The cell value formatted with the column valueFormatter.
    */

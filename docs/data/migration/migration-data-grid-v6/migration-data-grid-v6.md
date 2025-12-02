@@ -59,8 +59,6 @@ You can run `v7.0.0/data-grid/preset-safe` targeting only Data Grid or `v7.0.0/p
 
 You can either run it on a specific file, folder, or your entire codebase when choosing the `<path>` argument.
 
-<!-- #default-branch-switch -->
-
 ```bash
 # Data Grid specific
 npx @mui/x-codemod@latest v7.0.0/data-grid/preset-safe <path>
@@ -162,7 +160,6 @@ As a result, the following changes have been made:
 - ✅ The deprecated props `components` and `componentsProps` have been removed. Use `slots` and `slotProps` instead. See [components section](/x/react-data-grid/components/) for more details.
 - The `slots.preferencesPanel` slot and the `slotProps.preferencesPanel` prop were removed. Use `slots.panel` and `slotProps.panel` instead.
 - The `getOptionValue` and `getOptionLabel` props were removed from the following components:
-
   - `GridEditSingleSelectCell`
   - `GridFilterInputSingleSelect`
   - `GridFilterInputMultipleSingleSelect`
@@ -278,7 +275,7 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
 - The signature of `GridColDef['valueFormatter']` has been changed for performance reasons:
 
   ```diff
-  -valueFormatter: ({ value }) => value,
+  -valueFormatter: ({ value, row, column, apiRef }) => value,
   +valueFormatter: (value, row, column, apiRef) => value,
   ```
 
@@ -389,6 +386,33 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
 
 ### Selection
 
+- The interaction between `checkboxSelection` and `disableMultipleSelection` props has been fixed to work as expected. Previously, enabling checkboxes would override the multiple selection restriction.
+
+  ```tsx
+  // v6 behavior: Multiple rows could be selected despite disableMultipleSelection
+  <DataGrid
+    checkboxSelection
+    disableMultipleSelection
+    rows={rows}
+    columns={columns}
+  />
+
+  // v7 behavior: Checkboxes act as radio buttons, only one row selectable
+  // Header checkbox is disabled to prevent "select all" functionality
+  <DataGrid
+    checkboxSelection
+    disableMultipleSelection
+    rows={rows}
+    columns={columns}
+  />
+  ```
+
+  If you need the v6 behavior (multiple selection with checkboxes), remove the `disableMultipleSelection` prop:
+
+  ```tsx
+  <DataGrid checkboxSelection rows={rows} columns={columns} />
+  ```
+
 - ✅ The `unstable_` prefix has been removed from the cell selection props listed below.
 
   | Old name                              | New name                     |
@@ -478,7 +502,6 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
   ```
 
   The most notable changes that might affect your application or tests are:
-
   - The `role="grid"` attribute along with related ARIA attributes are now applied to the inner `div` element instead of the root `div` element:
 
     ```diff

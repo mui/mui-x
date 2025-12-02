@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { LineChart } from '@mui/x-charts/LineChart';
 
 export default function BasicArea() {
@@ -11,7 +10,6 @@ export default function BasicArea() {
           area: true,
         },
       ]}
-      width={500}
       height={300}
     />
   );

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { LineChart } from '@mui/x-charts/LineChart';
 
 export default function DifferentLength() {
@@ -19,7 +18,7 @@ export default function DifferentLength() {
         },
       ]}
       height={200}
-      margin={{ top: 10, bottom: 20 }}
+      margin={{ bottom: 10 }}
     />
   );
 }

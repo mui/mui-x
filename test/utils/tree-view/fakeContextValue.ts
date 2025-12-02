@@ -1,6 +1,6 @@
+import { Store } from '@base-ui-components/utils/store';
 import { TreeViewContextValue } from '@mui/x-tree-view/internals/TreeViewProvider';
 import { SimpleTreeViewPluginSignatures } from '@mui/x-tree-view/SimpleTreeView/SimpleTreeView.plugins';
-import { TreeViewStore } from '@mui/x-tree-view/internals/utils/TreeViewStore';
 
 export const getFakeContextValue = (
   features: { checkboxSelection?: boolean } = {},
@@ -14,23 +14,10 @@ export const getFakeContextValue = (
   }),
   wrapItem: ({ children }) => children,
   wrapRoot: ({ children }) => children,
-  items: {
-    onItemClick: () => {},
-  },
-  icons: {
-    slots: {},
-    slotProps: {},
-  },
-  selection: {
-    multiSelect: false,
-    checkboxSelection: features.checkboxSelection ?? false,
-    disableSelection: false,
-    selectionPropagation: {},
-  },
   rootRef: {
     current: null,
   },
-  store: new TreeViewStore({
+  store: new Store({
     cacheKey: { id: 1 },
     id: { treeId: 'mui-tree-view-1', providedTreeId: undefined },
     items: {
@@ -39,9 +26,16 @@ export const getFakeContextValue = (
       itemModelLookup: {},
       itemOrderedChildrenIdsLookup: {},
       itemChildrenIndexesLookup: {},
+      domStructure: 'nested',
     },
-    expansion: { expandedItemsMap: new Map(), expansionTrigger: 'content' },
-    selection: { selectedItemsMap: new Map() },
-    focus: { focusedItemId: null, defaultFocusableItemId: null },
-  }),
+    expansion: { expandedItems: [], expansionTrigger: 'content' },
+    selection: {
+      selectedItems: null,
+      isEnabled: true,
+      isMultiSelectEnabled: false,
+      isCheckboxSelectionEnabled: features.checkboxSelection ?? false,
+      selectionPropagation: { parents: false, descendants: false },
+    },
+    focus: { focusedItemId: null },
+  }) as any,
 });

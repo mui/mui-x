@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -28,13 +27,13 @@ const rows = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }];
 export default function FocusManagement() {
   return (
     <Grid container spacing={1}>
-      <Grid item xs={12} md={6}>
+      <Grid size={{ xs: 12, md: 6 }}>
         <Typography variant="body2">Without focus management</Typography>
         <Box sx={{ height: 300 }}>
           <DataGrid rows={rows} columns={wrongColumns} hideFooterSelectedRowCount />
         </Box>
       </Grid>
-      <Grid item xs={12} md={6}>
+      <Grid size={{ xs: 12, md: 6 }}>
         <Typography variant="body2">Correct focus management</Typography>
         <Box sx={{ height: 300 }}>
           <DataGrid

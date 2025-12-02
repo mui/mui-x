@@ -1,7 +1,7 @@
 import * as React from 'react';
 import moment from 'moment-hijri';
 import { prefixer } from 'stylis';
-import rtlPlugin from 'stylis-plugin-rtl';
+import rtlPlugin from '@mui/stylis-plugin-rtl';
 import createCache from '@emotion/cache';
 import { CacheProvider } from '@emotion/react';
 import Button from '@mui/material/Button';
@@ -24,7 +24,6 @@ const cacheRtl = createCache({
 
 function ButtonDateTimeField(props) {
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
-  const { focused, ...other } = forwardedProps;
 
   const pickerContext = usePickerContext();
   const parsedFormat = useParsedFormat();
@@ -42,7 +41,7 @@ function ButtonDateTimeField(props) {
 
   return (
     <Button
-      {...other}
+      {...forwardedProps}
       variant="outlined"
       color={hasValidationError ? 'error' : 'primary'}
       className={pickerContext.rootClassName}

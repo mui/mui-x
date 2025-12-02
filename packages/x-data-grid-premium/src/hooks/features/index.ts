@@ -3,4 +3,6 @@ export * from './aggregation';
 export * from './rowGrouping';
 export * from './export';
 export * from './cellSelection';
-export * from './promptControl';
+export * from './aiAssistant';
+export * from './sidebar';
+export * from './pivoting';

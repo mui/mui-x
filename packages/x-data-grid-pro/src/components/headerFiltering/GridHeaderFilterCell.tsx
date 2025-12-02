@@ -1,12 +1,11 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
-import {
-  unstable_useForkRef as useForkRef,
-  unstable_composeClasses as composeClasses,
-  unstable_capitalize as capitalize,
-} from '@mui/utils';
+import useForkRef from '@mui/utils/useForkRef';
+import composeClasses from '@mui/utils/composeClasses';
+import capitalize from '@mui/utils/capitalize';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import {
   GridFilterItem,
@@ -34,6 +33,7 @@ import {
   gridHeaderFilteringMenuSelector,
   isNavigationKey,
   attachPinnedStyle,
+  vars,
 } from '@mui/x-data-grid/internals';
 import { useRtl } from '@mui/system/RtlProvider';
 import { forwardRef } from '@mui/x-internals/forwardRef';
@@ -76,10 +76,10 @@ type OwnerState = DataGridProProcessedProps & {
 const StyledInputComponent = styled(GridFilterInputValue, {
   name: 'MuiDataGrid',
   slot: 'ColumnHeaderFilterInput',
-})(({ theme }) => ({
+})({
   flex: 1,
-  marginRight: theme.spacing(0.5),
-  marginBottom: theme.spacing(-0.25),
+  marginRight: vars.spacing(0.5),
+  marginBottom: vars.spacing(-0.25),
   '& input[type="number"], & input[type="date"], & input[type="datetime-local"]': {
     '&[value=""]:not(:focus)': {
       color: 'transparent',
@@ -89,23 +89,23 @@ const StyledInputComponent = styled(GridFilterInputValue, {
     fontSize: '14px',
   },
   [`.${gridClasses['root--densityCompact']} & .${inputBaseClasses.input}`]: {
-    paddingTop: theme.spacing(0.5),
-    paddingBottom: theme.spacing(0.5),
+    paddingTop: vars.spacing(0.5),
+    paddingBottom: vars.spacing(0.5),
     height: 23,
   },
-}));
+});
 
 const OperatorLabel = styled('span', {
   name: 'MuiDataGrid',
   slot: 'ColumnHeaderFilterOperatorLabel',
-})(({ theme }) => ({
+})({
   flex: 1,
-  marginRight: theme.spacing(0.5),
-  color: theme.palette.text.secondary,
+  marginRight: vars.spacing(0.5),
+  color: vars.colors.foreground.muted,
   whiteSpace: 'nowrap',
   textOverflow: 'ellipsis',
   overflow: 'hidden',
-}));
+});
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { colDef, classes, showRightBorder, showLeftBorder, pinnedPosition } = ownerState;
@@ -223,10 +223,10 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
         focusableElement = inputRef.current;
       }
       const elementToFocus = focusableElement || cellRef.current;
+
+      const scrollPosition = apiRef.current.getScrollPosition();
       elementToFocus?.focus();
-      if (apiRef.current.columnHeadersContainerRef.current) {
-        apiRef.current.columnHeadersContainerRef.current.scrollLeft = 0;
-      }
+      apiRef.current.scroll(scrollPosition);
     }
   }, [InputComponent, apiRef, hasFocus, isEditing, isMenuOpen]);
 

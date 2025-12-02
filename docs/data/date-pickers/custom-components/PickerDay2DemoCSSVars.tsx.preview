@@ -1,0 +1,14 @@
+<StaticDatePicker
+  sx={{
+    [`& .${pickerDay2Classes.root}`]: {
+      '--PickerDay-horizontalMargin': '8px',
+      '--PickerDay-size': '24px',
+    },
+  }}
+  slotProps={{
+    actionBar: {
+      actions: ['accept', 'cancel'],
+    },
+  }}
+  slots={{ day: PickerDay2 }}
+/>

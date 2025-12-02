@@ -224,6 +224,7 @@ function MyApp() {
       slotProps={{
         toolbar: { name, setName },
       }}
+      showToolbar
     />
   );
 }

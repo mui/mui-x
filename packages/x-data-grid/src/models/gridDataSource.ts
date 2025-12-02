@@ -1,9 +1,9 @@
 import type {
   GridSortModel,
   GridFilterModel,
-  GridColDef,
   GridRowModel,
   GridPaginationModel,
+  GridRowId,
 } from '.';
 
 export interface GridGetRowsParams {
@@ -21,16 +21,26 @@ export interface GridGetRowsParams {
    * Last row index to fetch.
    */
   end: number;
+}
+
+export interface GridGetRowsOptions {
   /**
-   * List of grouped columns (only applicable with `rowGrouping`).
+   * If `true`, bypasses the cache and forces a refetch of the rows from the server.
+   * The response will be used to refresh the cache.
    */
-  groupFields?: GridColDef['field'][];
+  skipCache?: boolean;
   /**
-   * Array of keys returned by `getGroupKey` of all the parent rows until the row for which the data is requested
-   * `getGroupKey` prop must be implemented to use this.
-   * Useful for `treeData` and `rowGrouping` only.
+   * By default, the grid tries to keep the children expanded and attached to the parent with the same ID after the data is re-fetched.
+   * If `keepChildrenExpanded` is `false`, the children of the parent with the `parentId` (all children for the root level data fetch) will be collapsed and removed from the tree.
+   * @default true
    */
-  groupKeys?: string[];
+  keepChildrenExpanded?: boolean;
+}
+
+export interface GridUpdateRowParams {
+  rowId: GridRowId;
+  updatedRow: GridRowModel;
+  previousRow: GridRowModel;
 }
 
 export interface GridGetRowsResponse {
@@ -58,24 +68,11 @@ export interface GridDataSource {
    */
   getRows(params: GridGetRowsParams): Promise<GridGetRowsResponse>;
   /**
-   * This method will be called when the user updates a row [Not yet implemented].
-   * @param {GridRowModel} updatedRow The updated row.
+   * This method will be called when the user updates a row.
+   * @param {GridUpdateRowParams} params The parameters required to update the row.
    * @returns {Promise<any>} If resolved (synced on the backend), the grid will update the row and mutate the cache.
    */
-  updateRow?(updatedRow: GridRowModel): Promise<any>;
-  /**
-   * Used to group rows by their parent group. Replaces `getTreeDataPath` used in client side tree-data.
-   * @param {GridRowModel} row The row to get the group key of.
-   * @returns {string} The group key for the row.
-   */
-  getGroupKey?: (row: GridRowModel) => string;
-  /**
-   * Used to determine the number of children a row has on server.
-   * @param {GridRowModel} row The row to check the number of children.
-   * @returns {number} The number of children the row has.
-   * If the children count is not available for some reason, but there are some children, `getChildrenCount` should return `-1`.
-   */
-  getChildrenCount?: (row: GridRowModel) => number;
+  updateRow?(params: GridUpdateRowParams): Promise<any>;
 }
 
 export interface GridDataSourceCache {

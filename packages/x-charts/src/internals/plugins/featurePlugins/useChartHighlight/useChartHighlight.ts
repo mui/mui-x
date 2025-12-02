@@ -1,31 +1,63 @@
+import { warnOnce } from '@mui/x-internals/warning';
+import { useAssertModelConsistency } from '@mui/x-internals/useAssertModelConsistency';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
 import { ChartPlugin } from '../../models';
 import { HighlightItemData, UseChartHighlightSignature } from './useChartHighlight.types';
 
-export const useChartHighlight: ChartPlugin<UseChartHighlightSignature> = ({
-  store,
-  params,
-  models,
-}) => {
+export const useChartHighlight: ChartPlugin<UseChartHighlightSignature> = ({ store, params }) => {
+  useAssertModelConsistency({
+    warningPrefix: 'MUI X Charts',
+    componentName: 'Chart',
+    propName: 'highlightedItem',
+    controlled: params.highlightedItem,
+    defaultValue: null,
+  });
+
   useEnhancedEffect(() => {
-    store.update((prevState) => ({
-      ...prevState,
-      highlight: {
-        ...prevState.highlight,
-        item: models.highlightedItem.value,
-      },
-    }));
-  }, [store, models.highlightedItem.value]);
+    if (store.state.highlight.item !== params.highlightedItem) {
+      store.set('highlight', { ...store.state.highlight, item: params.highlightedItem });
+    }
+    if (process.env.NODE_ENV !== 'production') {
+      if (params.highlightedItem !== undefined && !store.state.highlight.isControlled) {
+        warnOnce(
+          [
+            'MUI X Charts: The `highlightedItem` switched between controlled and uncontrolled state.',
+            'To remove the highlight when using controlled state, you must provide `null` to the `highlightedItem` prop instead of `undefined`.',
+          ].join('\n'),
+        );
+      }
+    }
+  }, [store, params.highlightedItem]);
 
   const clearHighlight = useEventCallback(() => {
     params.onHighlightChange?.(null);
-    models.highlightedItem.setControlledValue(null);
+    const prevHighlight = store.getSnapshot().highlight;
+    if (prevHighlight.item === null || prevHighlight.isControlled) {
+      return;
+    }
+
+    store.set('highlight', {
+      item: null,
+      lastUpdate: 'pointer',
+      isControlled: false,
+    });
   });
 
   const setHighlight = useEventCallback((newItem: HighlightItemData) => {
+    const prevHighlight = store.getSnapshot().highlight;
+
+    if (prevHighlight.isControlled || fastObjectShallowCompare(prevHighlight.item, newItem)) {
+      return;
+    }
+
     params.onHighlightChange?.(newItem);
-    models.highlightedItem.setControlledValue(newItem);
+    store.set('highlight', {
+      item: newItem,
+      lastUpdate: 'pointer',
+      isControlled: false,
+    });
   });
 
   return {
@@ -36,14 +68,12 @@ export const useChartHighlight: ChartPlugin<UseChartHighlightSignature> = ({
   };
 };
 
-useChartHighlight.models = {
-  highlightedItem: {
-    getDefaultValue: () => null,
-  },
-};
-
 useChartHighlight.getInitialState = (params) => ({
-  highlight: { item: params.highlightedItem ?? null },
+  highlight: {
+    item: params.highlightedItem,
+    lastUpdate: 'pointer',
+    isControlled: params.highlightedItem !== undefined,
+  },
 });
 
 useChartHighlight.params = {

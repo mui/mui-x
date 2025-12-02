@@ -1,10 +1,19 @@
-import { expect } from 'chai';
-// eslint-disable-next-line import/no-relative-packages
-import pickersPackageJson from '../../../../packages/x-date-pickers/package.json';
+import { vi } from 'vitest';
+import { getPickerAdapterDeps } from './getPickerAdapterDeps';
 import { ADAPTER_TO_LIBRARY, postProcessImport } from './postProcessImport';
+
+const adapterDependencies = getPickerAdapterDeps();
 
 describe('postProcessImport', () => {
   const ADAPTERS = ['AdapterDateFns', 'AdapterDayjs', 'AdapterLuxon', 'AdapterMoment'];
+
+  beforeEach(() => {
+    vi.stubEnv('PICKERS_ADAPTERS_DEPS', JSON.stringify(adapterDependencies));
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
 
   describe('@mui/lab imports', () => {
     ADAPTERS.forEach((adapter) => {
@@ -13,7 +22,7 @@ describe('postProcessImport', () => {
 
         const expectedLibrary = ADAPTER_TO_LIBRARY[adapter];
         expect(resolvedDep).to.deep.equal({
-          [expectedLibrary]: pickersPackageJson.devDependencies[expectedLibrary],
+          [expectedLibrary]: adapterDependencies[expectedLibrary],
         });
       });
     });
@@ -32,7 +41,7 @@ describe('postProcessImport', () => {
 
         const expectedLibrary = ADAPTER_TO_LIBRARY[adapter];
         expect(resolvedDep).to.deep.equal({
-          [expectedLibrary]: pickersPackageJson.devDependencies[expectedLibrary],
+          [expectedLibrary]: adapterDependencies[expectedLibrary],
         });
       });
     });
@@ -51,7 +60,7 @@ describe('postProcessImport', () => {
 
         const expectedLibrary = ADAPTER_TO_LIBRARY[adapter];
         expect(resolvedDep).to.deep.equal({
-          [expectedLibrary]: pickersPackageJson.devDependencies[expectedLibrary],
+          [expectedLibrary]: adapterDependencies[expectedLibrary],
         });
       });
     });

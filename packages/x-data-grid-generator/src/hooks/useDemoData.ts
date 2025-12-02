@@ -99,9 +99,7 @@ export const getColumnsFromOptions = (options: ColumnsOptions): GridColDefGenera
     options.dataSet === 'Commodity' ? getCommodityColumns(options.editable) : getEmployeeColumns();
 
   if (options.visibleFields) {
-    columns = columns.map((col) =>
-      options.visibleFields?.includes(col.field) ? col : { ...col, hide: true },
-    );
+    columns = columns.map((col) => ({ ...col, hide: !options.visibleFields?.includes(col.field) }));
   }
   if (options.maxColumns) {
     columns = columns.slice(0, options.maxColumns);
@@ -151,7 +149,7 @@ export const useDemoData = (options: UseDemoDataOptions): DemoDataReturnType => 
   });
 
   React.useEffect(() => {
-    const cacheKey = `${options.dataSet}-${rowLength}-${index}-${options.maxColumns}`;
+    const cacheKey = `${options.dataSet}-${rowLength}-${index}-${options.maxColumns}-treeData:${(options.treeData?.maxDepth || 1) > 1 ? 'true' : 'false'}`;
 
     // Cache to allow fast switch between the JavaScript and TypeScript version
     // of the demos.

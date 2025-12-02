@@ -1,0 +1,18 @@
+{
+  "props": {
+    "className": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" } },
+    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
+  },
+  "name": "PromptFieldControl",
+  "imports": [
+    "import { PromptFieldControl } from '@mui/x-data-grid-premium/components';",
+    "import { PromptFieldControl } from '@mui/x-data-grid-premium';"
+  ],
+  "classes": [],
+  "muiName": "MuiPromptFieldControl",
+  "forwardsRefTo": "GridRoot",
+  "filename": "/packages/x-data-grid-premium/src/components/promptField/PromptFieldControl.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-data-grid/components/prompt-field\">Data Grid - Prompt Field component <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a></a></li></ul>",
+  "cssComponent": false
+}

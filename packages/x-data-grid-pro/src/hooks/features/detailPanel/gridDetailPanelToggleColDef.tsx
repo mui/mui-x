@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { GRID_STRING_COL_DEF, GridColDef } from '@mui/x-data-grid';
+import { RefObject } from '@mui/x-internals/types';
+import { GRID_STRING_COL_DEF, GridColDef, gridRowIdSelector } from '@mui/x-data-grid';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '@mui/x-data-grid/internals';
 import { GridApiPro } from '../../../models/gridApiPro';
 import { GridDetailPanelToggleCell } from '../../../components/GridDetailPanelToggleCell';
@@ -17,18 +17,18 @@ export const GRID_DETAIL_PANEL_TOGGLE_COL_DEF: GridColDef = {
   resizable: false,
   // @ts-ignore
   aggregable: false,
+  chartable: false,
   disableColumnMenu: true,
   disableReorder: true,
   disableExport: true,
   align: 'left',
   width: 40,
   valueGetter: (value, row, column, apiRef) => {
-    const rowId = apiRef.current.getRowId(row);
-    const expandedRowIds = gridDetailPanelExpandedRowIdsSelector(
-      (apiRef.current as GridApiPro).state,
-    );
+    const rowId = gridRowIdSelector(apiRef, row);
+    const expandedRowIds = gridDetailPanelExpandedRowIdsSelector(apiRef as RefObject<GridApiPro>);
     return expandedRowIds.has(rowId);
   },
+  rowSpanValueGetter: (_, row, __, apiRef) => gridRowIdSelector(apiRef, row),
   renderCell: (params) => <GridDetailPanelToggleCell {...params} />,
   renderHeader: ({ colDef }) => <div aria-label={colDef.headerName} />,
 };

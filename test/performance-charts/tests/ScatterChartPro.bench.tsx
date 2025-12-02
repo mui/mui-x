@@ -1,13 +1,13 @@
 import * as React from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { render, cleanup } from '@testing-library/react';
-import { bench, describe } from 'vitest';
+import { describe } from 'vitest';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
-import { LicenseInfo, generateLicense } from '@mui/x-license';
 import { options } from '../utils/options';
+import { bench } from '../utils/bench';
 
 describe('ScatterChartPro', () => {
-  const dataLength = 50;
+  const dataLength = 1_400;
   const data = Array.from({ length: dataLength }).map((_, i) => ({
     x: i,
     y: 50 + Math.sin(i / 5) * 25,
@@ -16,18 +16,8 @@ describe('ScatterChartPro', () => {
   const xData = data.map((d) => d.x);
 
   bench(
-    'ScatterChartPro with big data amount',
+    'ScatterChartPro with big data amount (single renderer)',
     async () => {
-      const licenseKey = generateLicense({
-        expiryDate: new Date(3001, 0, 0, 0, 0, 0, 0),
-        orderNumber: 'MUI-123',
-        planScope: 'pro',
-        licenseModel: 'subscription',
-        planVersion: 'Q3-2024',
-      });
-
-      LicenseInfo.setLicenseKey(licenseKey);
-
       const { findByText } = render(
         <ScatterChartPro
           xAxis={[
@@ -35,15 +25,11 @@ describe('ScatterChartPro', () => {
               id: 'x',
               data: xData,
               zoom: { filterMode: 'discard' },
-              valueFormatter: (v) => v.toLocaleString('en-US'),
+              valueFormatter: (v: number) => v.toLocaleString('en-US'),
             },
           ]}
           initialZoom={[{ axisId: 'x', start: 20, end: 70 }]}
-          series={[
-            {
-              data,
-            },
-          ]}
+          series={[{ data }]}
           width={500}
           height={300}
         />,
@@ -55,4 +41,97 @@ describe('ScatterChartPro', () => {
     },
     options,
   );
+
+  bench(
+    'ScatterChartPro with big data amount and zoomed in (single renderer)',
+    async () => {
+      const { findByText } = render(
+        <ScatterChartPro
+          xAxis={[
+            {
+              id: 'x',
+              data: xData,
+              valueFormatter: (v: number) => v.toLocaleString('en-US'),
+              zoom: { minSpan: 0 },
+            },
+          ]}
+          yAxis={[{ id: 'y', zoom: { minSpan: 0 } }]}
+          series={[{ data }]}
+          width={500}
+          height={300}
+          initialZoom={[
+            { axisId: 'x', start: 50, end: 50.1 },
+            { axisId: 'y', start: 50, end: 50.1 },
+          ]}
+        />,
+      );
+
+      await findByText('50.06', { ignore: 'span' });
+
+      cleanup();
+    },
+    options,
+  );
+
+  describe('using renderer="svg-batch"', () => {
+    bench(
+      'ScatterChartPro with big data amount (batch renderer)',
+      async () => {
+        const { findByText } = render(
+          <ScatterChartPro
+            xAxis={[
+              {
+                id: 'x',
+                data: xData,
+                zoom: { filterMode: 'discard' },
+                valueFormatter: (v: number) => v.toLocaleString('en-US'),
+              },
+            ]}
+            initialZoom={[{ axisId: 'x', start: 20, end: 70 }]}
+            series={[{ data }]}
+            width={500}
+            height={300}
+            renderer="svg-batch"
+          />,
+        );
+
+        await findByText('60', { ignore: 'span' });
+
+        cleanup();
+      },
+      options,
+    );
+
+    bench(
+      'ScatterChartPro with big data amount and zoomed in (batch renderer)',
+      async () => {
+        const { findByText } = render(
+          <ScatterChartPro
+            xAxis={[
+              {
+                id: 'x',
+                data: xData,
+                valueFormatter: (v: number) => v.toLocaleString('en-US'),
+                zoom: { minSpan: 0 },
+              },
+            ]}
+            yAxis={[{ id: 'y', zoom: { minSpan: 0 } }]}
+            series={[{ data }]}
+            width={500}
+            height={300}
+            initialZoom={[
+              { axisId: 'x', start: 50, end: 50.1 },
+              { axisId: 'y', start: 50, end: 50.1 },
+            ]}
+            renderer="svg-batch"
+          />,
+        );
+
+        await findByText('50.06', { ignore: 'span' });
+
+        cleanup();
+      },
+      options,
+    );
+  });
 });

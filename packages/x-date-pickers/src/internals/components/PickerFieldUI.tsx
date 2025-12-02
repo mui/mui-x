@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
@@ -6,6 +7,7 @@ import MuiTextField, { TextFieldProps } from '@mui/material/TextField';
 import MuiIconButton, { IconButtonProps } from '@mui/material/IconButton';
 import MuiInputAdornment, { InputAdornmentProps } from '@mui/material/InputAdornment';
 import { SvgIconProps } from '@mui/material/SvgIcon';
+import { major as materialMajor } from '@mui/material/version';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { MakeOptional, SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { FieldOwnerState } from '../../models';
@@ -13,12 +15,14 @@ import { useFieldOwnerState, UseFieldOwnerStateParameters } from '../hooks/useFi
 import { usePickerTranslations } from '../../hooks';
 import { ClearIcon as MuiClearIcon } from '../../icons';
 import { useNullablePickerContext } from '../hooks/useNullablePickerContext';
-import type { UseFieldResponse } from '../hooks/useField';
+import type { UseFieldReturnValue, UseFieldProps } from '../hooks/useField';
 import { PickersTextField, PickersTextFieldProps } from '../../PickersTextField';
+
+const noop = () => {};
 
 export const cleanFieldResponse = <
   TFieldResponse extends MakeOptional<
-    UseFieldResponse<any, ExportedPickerFieldUIProps & { [key: string]: any }>,
+    UseFieldReturnValue<any, ExportedPickerFieldUIProps & { [key: string]: any }>,
     'onClear' | 'clearable'
   >,
 >({
@@ -39,6 +43,10 @@ export const cleanFieldResponse = <
       openPickerAriaLabel,
       ...other
     } = fieldResponse;
+    const mergedInputProps =
+      materialMajor >= 6 && other?.slotProps?.input
+        ? mergeSlotProps(other?.slotProps?.input, InputProps)
+        : noop;
 
     return {
       clearable,
@@ -48,7 +56,19 @@ export const cleanFieldResponse = <
       openPickerAriaLabel,
       textFieldProps: {
         ...other,
-        InputProps: { ...(InputProps ?? {}), readOnly },
+        ...(materialMajor >= 6 && other?.slotProps?.input
+          ? {
+              slotProps: {
+                ...other?.slotProps,
+                input: (ownerState: FieldOwnerState) => ({
+                  ...resolveComponentProps(mergedInputProps, ownerState),
+                  readOnly,
+                }),
+              },
+            }
+          : {
+              InputProps: { ...(InputProps ?? {}), readOnly },
+            }),
       },
     };
   }
@@ -69,6 +89,14 @@ export const cleanFieldResponse = <
     ...other
   } = fieldResponse;
 
+  const mergedInputProps =
+    materialMajor >= 6 && other?.slotProps?.input
+      ? mergeSlotProps(other?.slotProps?.input, InputProps)
+      : noop;
+  const mergedHtmlInputProps =
+    materialMajor >= 6 && other?.slotProps?.htmlInput
+      ? mergeSlotProps(other?.slotProps?.htmlInput, inputProps)
+      : noop;
   return {
     clearable,
     onClear,
@@ -77,24 +105,46 @@ export const cleanFieldResponse = <
     openPickerAriaLabel,
     textFieldProps: {
       ...other,
-      InputProps: { ...(InputProps ?? {}), readOnly },
-      inputProps: { ...(inputProps ?? {}), inputMode, onPaste, onKeyDown, ref: inputRef },
+      ...(materialMajor >= 6 && (other?.slotProps?.input || other?.slotProps?.htmlInput)
+        ? {
+            slotProps: {
+              ...other?.slotProps,
+              input: (ownerState: FieldOwnerState) => ({
+                ...resolveComponentProps(mergedInputProps, ownerState),
+                readOnly,
+              }),
+              htmlInput: (ownerState: FieldOwnerState) => ({
+                ...resolveComponentProps(mergedHtmlInputProps, ownerState),
+                inputMode,
+                onPaste,
+                onKeyDown,
+                ref: inputRef,
+              }),
+            },
+          }
+        : {
+            InputProps: { ...(InputProps ?? {}), readOnly },
+            inputProps: { ...(inputProps ?? {}), inputMode, onPaste, onKeyDown, ref: inputRef },
+          }),
     },
   };
 };
 
-const PickerFieldUIContext = React.createContext<PickerFieldUIContextValue>({
+export const PickerFieldUIContext = React.createContext<PickerFieldUIContextValue>({
   slots: {},
   slotProps: {},
   inputRef: undefined,
 });
 
 /**
- * Adds the button to open the picker and the button to clear the value of the field.
+ * Adds the button to open the Picker and the button to clear the value of the field.
  * @ignore - internal component.
  */
-export function PickerFieldUI(props: PickerFieldUIProps) {
-  const { slots, slotProps, fieldResponse, defaultOpenPickerIcon } = props;
+export function PickerFieldUI<
+  TEnableAccessibleFieldDOMStructure extends boolean,
+  TProps extends UseFieldProps<TEnableAccessibleFieldDOMStructure>,
+>(props: PickerFieldUIProps<TEnableAccessibleFieldDOMStructure, TProps>) {
+  const { fieldResponse, defaultOpenPickerIcon } = props;
 
   const translations = usePickerTranslations();
   const pickerContext = useNullablePickerContext();
@@ -119,18 +169,13 @@ export function PickerFieldUI(props: PickerFieldUIProps) {
   const openPickerButtonPosition = triggerStatus !== 'hidden' ? openPickerButtonPositionProp : null;
 
   const TextField =
-    slots?.textField ??
     pickerFieldUIContext.slots.textField ??
     (fieldResponse.enableAccessibleFieldDOMStructure === false ? MuiTextField : PickersTextField);
 
-  const InputAdornment =
-    slots?.inputAdornment ?? pickerFieldUIContext.slots.inputAdornment ?? MuiInputAdornment;
+  const InputAdornment = pickerFieldUIContext.slots.inputAdornment ?? MuiInputAdornment;
   const { ownerState: startInputAdornmentOwnerState, ...startInputAdornmentProps } = useSlotProps({
     elementType: InputAdornment,
-    externalSlotProps: mergeSlotProps(
-      pickerFieldUIContext.slotProps.inputAdornment,
-      slotProps?.inputAdornment,
-    ),
+    externalSlotProps: pickerFieldUIContext.slotProps.inputAdornment,
     additionalProps: {
       position: 'start' as const,
     },
@@ -138,7 +183,7 @@ export function PickerFieldUI(props: PickerFieldUIProps) {
   });
   const { ownerState: endInputAdornmentOwnerState, ...endInputAdornmentProps } = useSlotProps({
     elementType: InputAdornment,
-    externalSlotProps: slotProps?.inputAdornment,
+    externalSlotProps: pickerFieldUIContext.slotProps.inputAdornment,
     additionalProps: {
       position: 'end' as const,
     },
@@ -158,9 +203,8 @@ export function PickerFieldUI(props: PickerFieldUIProps) {
       onClick: handleClickOpeningButton,
       'aria-label': openPickerAriaLabel,
       edge:
-        clearButtonPosition === 'start' && openPickerButtonPosition === 'start'
-          ? undefined
-          : openPickerButtonPosition,
+        // open button is always rendered at the edge
+        textFieldProps.variant !== 'standard' ? openPickerButtonPosition : false,
     },
     ownerState,
   });
@@ -172,14 +216,11 @@ export function PickerFieldUI(props: PickerFieldUIProps) {
     ownerState,
   });
 
-  const ClearButton = slots?.clearButton ?? pickerFieldUIContext.slots.clearButton ?? MuiIconButton;
+  const ClearButton = pickerFieldUIContext.slots.clearButton ?? MuiIconButton;
   // We don't want to forward the `ownerState` to the `<IconButton />` component, see mui/material-ui#34056
   const { ownerState: clearButtonOwnerState, ...clearButtonProps } = useSlotProps({
     elementType: ClearButton,
-    externalSlotProps: mergeSlotProps(
-      pickerFieldUIContext.slotProps.clearButton,
-      slotProps?.clearButton,
-    ),
+    externalSlotProps: pickerFieldUIContext.slotProps.clearButton,
     className: 'clearButton',
     additionalProps: {
       title: translations.fieldClearLabel,
@@ -187,20 +228,18 @@ export function PickerFieldUI(props: PickerFieldUIProps) {
       onClick: onClear,
       disabled: fieldResponse.disabled || fieldResponse.readOnly,
       edge:
-        clearButtonPosition === 'end' && openPickerButtonPosition === 'end'
-          ? undefined
-          : clearButtonPosition,
+        // clear button can only be at the edge if it's position differs from the open button
+        textFieldProps.variant !== 'standard' && clearButtonPosition !== openPickerButtonPosition
+          ? clearButtonPosition
+          : false,
     },
     ownerState,
   });
 
-  const ClearIcon = slots?.clearIcon ?? pickerFieldUIContext.slots.clearIcon ?? MuiClearIcon;
+  const ClearIcon = pickerFieldUIContext.slots.clearIcon ?? MuiClearIcon;
   const clearIconProps = useSlotProps({
     elementType: ClearIcon,
-    externalSlotProps: mergeSlotProps(
-      pickerFieldUIContext.slotProps.clearIcon,
-      slotProps?.clearIcon,
-    ),
+    externalSlotProps: pickerFieldUIContext.slotProps.clearIcon,
     additionalProps: {
       fontSize: 'small',
     },
@@ -209,19 +248,22 @@ export function PickerFieldUI(props: PickerFieldUIProps) {
 
   textFieldProps.ref = useForkRef(textFieldProps.ref, pickerContext?.rootRef);
 
-  if (!textFieldProps.InputProps) {
-    textFieldProps.InputProps = {};
-  }
+  const additionalTextFieldInputProps: PickersTextFieldProps['InputProps'] = {};
+  const textFieldInputProps = resolveComponentProps(
+    ((materialMajor >= 6 && (textFieldProps as TextFieldProps)?.slotProps?.input) ??
+      textFieldProps.InputProps) as PickersTextFieldProps['InputProps'] | undefined,
+    ownerState,
+  );
 
   if (pickerContext) {
-    textFieldProps.InputProps.ref = pickerContext.triggerRef;
+    additionalTextFieldInputProps.ref = pickerContext.triggerRef;
   }
 
   if (
-    !textFieldProps.InputProps?.startAdornment &&
+    !textFieldInputProps?.startAdornment &&
     (clearButtonPosition === 'start' || openPickerButtonPosition === 'start')
   ) {
-    textFieldProps.InputProps.startAdornment = (
+    additionalTextFieldInputProps.startAdornment = (
       <InputAdornment {...startInputAdornmentProps}>
         {openPickerButtonPosition === 'start' && (
           <OpenPickerButton {...openPickerButtonProps}>
@@ -238,10 +280,10 @@ export function PickerFieldUI(props: PickerFieldUIProps) {
   }
 
   if (
-    !textFieldProps.InputProps?.endAdornment &&
+    !textFieldInputProps?.endAdornment &&
     (clearButtonPosition === 'end' || openPickerButtonPosition === 'end')
   ) {
-    textFieldProps.InputProps.endAdornment = (
+    additionalTextFieldInputProps.endAdornment = (
       <InputAdornment {...endInputAdornmentProps}>
         {clearButtonPosition === 'end' && (
           <ClearButton {...clearButtonProps}>
@@ -255,6 +297,14 @@ export function PickerFieldUI(props: PickerFieldUIProps) {
         )}
       </InputAdornment>
     );
+  }
+  // handle the case of showing custom `inputAdornment` for Field components
+  if (
+    !additionalTextFieldInputProps?.endAdornment &&
+    !additionalTextFieldInputProps?.startAdornment &&
+    pickerFieldUIContext.slots.inputAdornment
+  ) {
+    additionalTextFieldInputProps.endAdornment = <InputAdornment {...endInputAdornmentProps} />;
   }
 
   if (clearButtonPosition != null) {
@@ -278,7 +328,35 @@ export function PickerFieldUI(props: PickerFieldUIProps) {
     ];
   }
 
-  return <TextField {...textFieldProps} />;
+  const resolvedTextFieldInputProps =
+    materialMajor >= 6 && (textFieldProps as TextFieldProps)?.slotProps?.input
+      ? resolveComponentProps(
+          mergeSlotProps(textFieldInputProps, additionalTextFieldInputProps),
+          ownerState,
+        )
+      : {
+          ...textFieldInputProps,
+          ...additionalTextFieldInputProps,
+        };
+
+  // We need to resolve the `inputProps` since we are messing with those props in this component.
+  textFieldProps.inputProps =
+    materialMajor >= 6 && (textFieldProps as TextFieldProps)?.slotProps?.htmlInput
+      ? resolveComponentProps(
+          (textFieldProps as TextFieldProps).slotProps!.htmlInput as any,
+          ownerState,
+        )
+      : textFieldProps.inputProps;
+
+  // Remove the `input` slotProps to avoid them overriding the manually resolved `InputProps`.
+  // Relevant on `materialMajor >= 6` since `slotProps` would take precedence.
+  delete (textFieldProps as TextFieldProps)?.slotProps?.input;
+  if (fieldResponse.enableAccessibleFieldDOMStructure) {
+    // Remove the `slotProps` on `PickersTextField` as they are not supported.
+    delete (textFieldProps as TextFieldProps)?.slotProps;
+  }
+
+  return <TextField {...textFieldProps} InputProps={resolvedTextFieldInputProps} />;
 }
 
 export interface ExportedPickerFieldUIProps {
@@ -299,29 +377,22 @@ export interface ExportedPickerFieldUIProps {
   clearButtonPosition?: 'start' | 'end';
   /**
    * The position at which the opening button is placed.
-   * If there is no picker to open, the button is not rendered
+   * If there is no Picker to open, the button is not rendered
    * @default 'end'
    */
   openPickerButtonPosition?: 'start' | 'end';
 }
 
-export interface PickerFieldUIProps {
-  /**
-   * Overridable component slots.
-   * @default {}
-   */
-  slots?: PickerFieldUISlots;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotProps?: PickerFieldUISlotProps;
+export interface PickerFieldUIProps<
+  TEnableAccessibleFieldDOMStructure extends boolean,
+  TProps extends UseFieldProps<TEnableAccessibleFieldDOMStructure>,
+> {
   /**
    * Object returned by the `useField` hook or one of its wrapper (for example `useDateField`).
    */
-  fieldResponse: UseFieldResponse<any, any>;
+  fieldResponse: UseFieldReturnValue<TEnableAccessibleFieldDOMStructure, TProps>;
   /**
-   * The component to use to render the picker opening icon if none is provided in the picker's slots.
+   * The component to use to render the Picker opening icon if none is provided in the Picker's slots.
    */
   defaultOpenPickerIcon: React.ElementType;
 }
@@ -333,37 +404,37 @@ export interface PickerFieldUISlots {
    */
   textField?: React.ElementType;
   /**
-   * Component displayed on the start or end input adornment used to open the picker on desktop.
+   * Component displayed on the start or end input adornment used to open the Picker.
    * @default InputAdornment
    */
   inputAdornment?: React.ElementType<InputAdornmentProps>;
-  /**
-   * Icon to display inside the clear button.
-   * @default ClearIcon
-   */
-  clearIcon?: React.ElementType;
   /**
    * Button to clear the value.
    * @default IconButton
    */
   clearButton?: React.ElementType;
+  /**
+   * Icon to display in the button used to clean the value.
+   * @default ClearIcon
+   */
+  clearIcon?: React.ElementType;
 }
 
 export interface PickerFieldUISlotsFromContext extends PickerFieldUISlots {
   /**
-   * Button to open the picker on desktop.
+   * Button to open the Picker.
    * @default IconButton
    */
   openPickerButton?: React.ElementType<IconButtonProps>;
   /**
-   * Icon displayed in the open picker button on desktop.
+   * Icon to display in the button used to open the Picker.
    */
   openPickerIcon?: React.ElementType;
 }
 
 export interface PickerFieldUISlotProps {
   textField?: SlotComponentPropsFromProps<
-    PickersTextFieldProps | TextFieldProps,
+    Omit<TextFieldProps, 'onKeyDown'> | PickersTextFieldProps,
     {},
     FieldOwnerState
   >;
@@ -391,7 +462,7 @@ interface PickerFieldUIContextValue {
   slotProps: PickerFieldUISlotPropsFromContext;
 }
 
-function mergeSlotProps<TProps extends {}, TOwnerState extends FieldOwnerState>(
+export function mergeSlotProps<TProps extends {}, TOwnerState extends FieldOwnerState>(
   slotPropsA: SlotComponentPropsFromProps<TProps, {}, TOwnerState> | undefined,
   slotPropsB: SlotComponentPropsFromProps<TProps, {}, TOwnerState> | undefined,
 ) {
@@ -454,7 +525,7 @@ interface UseFieldTextFieldPropsParameters {
   slotProps:
     | {
         textField?: SlotComponentPropsFromProps<
-          PickersTextFieldProps | TextFieldProps,
+          Omit<TextFieldProps, 'onKeyDown'> | PickersTextFieldProps,
           {},
           FieldOwnerState
         >;

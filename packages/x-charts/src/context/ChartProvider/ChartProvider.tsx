@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useCharts } from '../../internals/store/useCharts';
-import { ChartProviderProps } from './ChartProvider.types';
+import type { ChartProviderProps } from './ChartProvider.types';
 import { ChartContext } from './ChartContext';
 import {
   ChartAnyPluginSignature,
@@ -12,32 +12,32 @@ import { useChartCartesianAxis } from '../../internals/plugins/featurePlugins/us
 import { useChartInteraction } from '../../internals/plugins/featurePlugins/useChartInteraction';
 import { useChartZAxis } from '../../internals/plugins/featurePlugins/useChartZAxis';
 import { useChartHighlight } from '../../internals/plugins/featurePlugins/useChartHighlight/useChartHighlight';
-import { plugin as barPlugin } from '../../BarChart/plugin';
-import { plugin as scatterPlugin } from '../../ScatterChart/plugin';
-import { plugin as linePlugin } from '../../LineChart/plugin';
-import { plugin as piePlugin } from '../../PieChart/plugin';
+import { barSeriesConfig } from '../../BarChart/seriesConfig';
+import { scatterSeriesConfig } from '../../ScatterChart/seriesConfig';
+import { lineSeriesConfig } from '../../LineChart/seriesConfig';
+import { pieSeriesConfig } from '../../PieChart/seriesConfig';
 import { ChartSeriesType } from '../../models/seriesType/config';
 
 export const defaultSeriesConfig: ChartSeriesConfig<'bar' | 'scatter' | 'line' | 'pie'> = {
-  bar: barPlugin,
-  scatter: scatterPlugin,
-  line: linePlugin,
-  pie: piePlugin,
+  bar: barSeriesConfig,
+  scatter: scatterSeriesConfig,
+  line: lineSeriesConfig,
+  pie: pieSeriesConfig,
 };
 
 // For consistency with the v7, the cartesian axes are set by default.
 // To remove them, you can provide a `plugins` props.
 const defaultPlugins = [
   useChartZAxis,
-  useChartCartesianAxis,
   useChartInteraction,
+  useChartCartesianAxis,
   useChartHighlight,
 ];
 
 function ChartProvider<
   TSeriesType extends ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[],
->(props: ChartProviderProps<TSeriesType, TSignatures>) {
+>(props: React.PropsWithChildren<ChartProviderProps<TSeriesType, TSignatures>>) {
   const {
     children,
     plugins = defaultPlugins as unknown as ConvertSignaturesIntoPlugins<TSignatures>,

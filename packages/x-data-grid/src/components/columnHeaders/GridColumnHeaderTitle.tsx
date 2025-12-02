@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -24,7 +25,6 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridColumnHeaderTitleRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ColumnHeaderTitle',
-  overridesResolver: (props, styles) => styles.columnHeaderTitle,
 })<{ ownerState: OwnerState }>({
   textOverflow: 'ellipsis',
   overflow: 'hidden',

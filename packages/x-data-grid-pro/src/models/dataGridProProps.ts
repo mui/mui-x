@@ -8,7 +8,9 @@ import {
   GridValidRowModel,
   GridGroupNode,
   GridFeatureMode,
-  GridListColDef,
+  GridListViewColDef,
+  GridGetRowsError,
+  GridUpdateRowError,
 } from '@mui/x-data-grid';
 import type {
   GridExperimentalFeatures,
@@ -19,18 +21,22 @@ import type {
   GridPinnedColumnFields,
   DataGridProSharedPropsWithDefaultValue,
   DataGridProSharedPropsWithoutDefaultValue,
-  GridDataSourceCache,
-  GridGetRowsParams,
 } from '@mui/x-data-grid/internals';
 import type { GridPinnedRowsProp } from '../hooks/features/rowPinning';
-import { GridApiPro } from './gridApiPro';
+import type { GridApiPro } from './gridApiPro';
 import {
   GridGroupingColDefOverride,
   GridGroupingColDefOverrideParams,
 } from './gridGroupingColDefOverride';
-import { GridInitialStatePro } from './gridStatePro';
-import { GridProSlotsComponent } from './gridProSlotsComponent';
+import type { GridInitialStatePro } from './gridStatePro';
+import type { GridProSlotsComponent } from './gridProSlotsComponent';
 import type { GridProSlotProps } from './gridProSlotProps';
+import type {
+  GridDataSourcePro as GridDataSource,
+  GridGetRowsParamsPro as GridGetRowsParams,
+} from '../hooks/features/dataSource/models';
+import type { ReorderValidationContext } from '../hooks/features/rowReorder/models';
+import type { IsRowReorderableParams } from '../hooks/features/rowReorder';
 
 export interface GridExperimentalProFeatures extends GridExperimentalFeatures {}
 
@@ -78,7 +84,7 @@ export interface DataGridProPropsWithDefaultValue<R extends GridValidRowModel = 
     DataGridProSharedPropsWithDefaultValue {
   /**
    * Set the area in `px` at the bottom of the grid viewport where onRowsScrollEnd is called.
-   * If combined with `unstable_lazyLoading`, it defines the area where the next data request is triggered.
+   * If combined with `lazyLoading`, it defines the area where the next data request is triggered.
    * @default 80
    */
   scrollEndThreshold: number;
@@ -132,6 +138,7 @@ export interface DataGridProPropsWithDefaultValue<R extends GridValidRowModel = 
    * Set it to 'client' if you would like enable infnite loading.
    * Set it to 'server' if you would like to enable lazy loading.
    * @default "client"
+   * @deprecated Use the {@link https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading Server-side data-Viewport loading} instead.
    */
   rowsLoadingMode: GridFeatureMode;
   /**
@@ -141,29 +148,23 @@ export interface DataGridProPropsWithDefaultValue<R extends GridValidRowModel = 
    */
   keepColumnPositionIfDraggedOutside: boolean;
   /**
-   * If `true`, displays the data in a list view.
-   * Use in combination with `unstable_listColumn`.
-   */
-  unstable_listView: boolean;
-  /**
-   * Used together with `unstable_dataSource` to enable lazy loading.
+   * Used together with `dataSource` to enable lazy loading.
    * If enabled, the grid stops adding `paginationModel` to the data requests (`getRows`)
    * and starts sending `start` and `end` values depending on the loading mode and the scroll position.
    * @default false
    */
-  unstable_lazyLoading: boolean;
+  lazyLoading: boolean;
   /**
    * If positive, the Data Grid will throttle data source requests on rendered rows interval change.
    * @default 500
    */
-  unstable_lazyLoadingRequestThrottleMs: number;
+  lazyLoadingRequestThrottleMs: number;
+  /**
+   * If `true`, displays the data in a list view.
+   * Use in combination with `listViewColumn`.
+   */
+  listView: boolean;
 }
-
-interface DataGridProDataSourceProps {
-  unstable_dataSourceCache?: GridDataSourceCache | null;
-  unstable_onDataSourceError?: (error: Error, params: GridGetRowsParams) => void;
-}
-
 interface DataGridProRegularProps<R extends GridValidRowModel> {
   /**
    * Determines the path of a row in the tree data.
@@ -174,15 +175,23 @@ interface DataGridProRegularProps<R extends GridValidRowModel> {
    * @returns {string[]} The path to the row.
    */
   getTreeDataPath?: (row: R) => readonly string[];
+  /**
+   * Updates the tree path in a row model.
+   * Used when reordering rows across different parents in tree data.
+   * @template R
+   * @param {string[]} path The new path for the row.
+   * @param {R} row The row model to update.
+   * @returns {R} The updated row model with the new path.
+   */
+  setTreeDataPath?: (path: string[], row: R) => R;
 }
 
 export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel = any>
   extends Omit<
       DataGridPropsWithoutDefaultValue<R>,
-      'initialState' | 'componentsProps' | 'slotProps'
+      'initialState' | 'componentsProps' | 'slotProps' | 'dataSource' | 'onDataSourceError'
     >,
     DataGridProRegularProps<R>,
-    DataGridProDataSourceProps,
     DataGridProSharedPropsWithoutDefaultValue {
   /**
    * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
@@ -204,6 +213,7 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * @param {GridRowScrollEndParams} params With all properties from [[GridRowScrollEndParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
+   * @deprecated Use the {@link https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading Server-side data-Infinite loading} instead.
    */
   onRowsScrollEnd?: GridEventListener<'rowsScrollEnd'>;
   /**
@@ -255,6 +265,7 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * @param {GridFetchRowsParams} params With all properties from [[GridFetchRowsParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
+   * @deprecated Use the {@link https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading Server-side data-Viewport loading} instead.
    */
   onFetchRows?: GridEventListener<'fetchRows'>;
   /**
@@ -266,7 +277,33 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    */
   slotProps?: GridProSlotProps;
   /**
-   * Definition of the column rendered when the `unstable_listView` prop is enabled.
+   * Definition of the column rendered when the `listView` prop is enabled.
    */
-  unstable_listColumn?: GridListColDef<R>;
+  listViewColumn?: GridListViewColDef<R>;
+  /**
+   * The data source of the Data Grid Pro.
+   */
+  dataSource?: GridDataSource;
+  /**
+   * Callback fired when a data source request fails.
+   * @param {GridGetRowsError | GridUpdateRowError} error The data source error object.
+   */
+  onDataSourceError?: (error: GridGetRowsError<GridGetRowsParams> | GridUpdateRowError) => void;
+  /**
+   * Indicates whether a row is reorderable.
+   * @param {object} params With all properties from the row.
+   * @param {R} params.row The row model of the row that the current cell belongs to.
+   * @param {GridTreeNode} params.rowNode The node of the row that the current cell belongs to.
+   * @returns {boolean} A boolean indicating if the row is reorderable.
+   */
+  isRowReorderable?: (params: IsRowReorderableParams) => boolean;
+  /**
+   * Indicates if a row reorder attempt is valid.
+   * Can be used to disable certain row reorder operations based on the context.
+   * The internal validation is still applied, preventing unsupported use-cases.
+   * Use `isValidRowReorder()` to add additional validation rules to the default ones.
+   * @param {ReorderValidationContext} context The context object containing all information about the reorder operation.
+   * @returns {boolean} A boolean indicating if the reorder operation should go through.
+   */
+  isValidRowReorder?: (context: ReorderValidationContext) => boolean;
 }

@@ -25,7 +25,7 @@ Charts come with built-in color palettes to automatically assign colors to serie
 If a particular series lacks a color prop, the chart will default to assigning a color based on the series' index.
 
 You can set a custom color palette by using the prop `colors` on chart components (or `<ChartContainer />` if you are using composition).
-This prop takes an array of colors, or callback whose input is the theme's mode (`'dark'` or `'light'`) and returns the array of colors.
+This prop takes an array of colors, or a callback whose input is the theme's mode (`'dark'` or `'light'`), and returns the array of colors.
 
 #### Provided palettes
 
@@ -102,6 +102,16 @@ This configuration can be used in Bar Charts to set colors according to string c
 }
 ```
 
+### Color callback
+
+If you need more control over the color assignment, you can provide a `colorGetter` callback prop to the chart component.
+
+The callback receives a `{ value, dataIndex }` object and should return a color string for the provided data point.
+
+In components where a series-level color is required (for example, the legend), the `color` prop is used instead.
+
+{{"demo": "ColorCallback.js"}}
+
 ## Overlay
 
 Charts have a _loading_ and _noData_ overlays that appear if:
@@ -119,15 +129,13 @@ You can provide the axes data to display them while loading the data.
 
 ### Custom overlay
 
-To modify the overlay message, you can use the `message` props as follows:
+To modify the default overlay message or translate it, use the `noData` or `loading` key in the [localization](/x/react-charts/localization/).
 
 ```jsx
 <BarChart
-  slotProps={{
-    // Custom loading message
-    loadingOverlay: { message: 'Data should be available soon.' },
-    // Custom message for empty chart
-    noDataOverlay: { message: 'Select some data to display.' },
+  localeText={{
+    loading: 'Data should be available soon.',
+    noData: 'Select some data to display.',
   }}
 />
 ```
@@ -147,14 +155,21 @@ Those will fix the chart's size to the given value (in px).
 
 ### Placement
 
-At the core of chart layout is the drawing area which corresponds to the space available to represent data.
+There are two concepts to consider when defining the placement of a chart:
 
-This space can be defined with the `margin` prop and its properties `top`, `bottom`, `left`, and `right`.
-Those values define the space between the SVG border and the drawing area.
+- **`margin`**: The space between the SVG border and the axis or drawing area.
+- **`axis size`**: The space taken by the [axis](/x/react-charts/axis/#position). Each axis has its own size.
 
-You might want to modify those values to leave more space for your axis ticks or reduce them to provide more space for the data.
+The axes have a default size.
+To update it, use the `xAxis` and `yAxis` configuration as follows:
 
-{{"demo": "MarginNoSnap.js", "hideToolbar": true, "bg": "playground"}}
+- **`x-axis`**: Uses the `height` prop to define the space taken by the axis.
+- **`y-axis`**: Uses the `width` prop instead.
+
+Axes only take up space in the side they are positioned.
+If an axis is not displayed (`position: 'none'`), it will not take up any space, regardless of its size.
+
+{{"demo": "Margin.js", "hideToolbar": true, "bg": "playground"}}
 
 ### CSS
 
@@ -164,6 +179,15 @@ Chart components accept the `sx` props.
 From here, you can target any subcomponents with its class name.
 
 {{"demo": "SxStyling.js"}}
+
+### Drawing area background
+
+To set a background color in the drawing area, you should create a dedicated `<rect />`.
+This is only doable with [composition](/x/react-charts/composition/) because you have to place this new component before all plot components.
+
+The following demo defines a basic `<Background />` component that adds a light gray background.
+
+{{"demo": "BackgroundStyling.js"}}
 
 ### Gradients and patterns
 

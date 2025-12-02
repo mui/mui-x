@@ -1,8 +1,14 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import Box from '@mui/material/Box';
-import { useGridPrivateApiContext } from '@mui/x-data-grid-pro/internals';
+import composeClasses from '@mui/utils/composeClasses';
+import {
+  useGridPrivateApiContext,
+  gridDataSourceErrorSelector,
+  gridDataSourceLoadingIdSelector,
+  gridRowSelector,
+  vars,
+  gridPivotActiveSelector,
+} from '@mui/x-data-grid-pro/internals';
 import {
   useGridSelector,
   getDataGridUtilityClass,
@@ -13,7 +19,7 @@ import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
 import { GridPrivateApiPremium } from '../models/gridApiPremium';
-import { GridStatePremium } from '../models/gridStatePremium';
+import { gridRowGroupingModelSelector } from '../hooks/features/rowGrouping/gridRowGroupingSelector';
 
 type OwnerState = DataGridPremiumProcessedProps;
 
@@ -44,17 +50,17 @@ function GridGroupingCriteriaCellIcon(props: GridGroupingCriteriaCellIconProps) 
   const classes = useUtilityClasses(rootProps);
   const { rowNode, id, field, descendantCount } = props;
 
-  const loadingSelector = (state: GridStatePremium) => state.dataSource.loading[id] ?? false;
-  const errorSelector = (state: GridStatePremium) => state.dataSource.errors[id];
-  const isDataLoading = useGridSelector(apiRef, loadingSelector);
-  const error = useGridSelector(apiRef, errorSelector);
+  const isDataLoading = useGridSelector(apiRef, gridDataSourceLoadingIdSelector, id);
+  const error = useGridSelector(apiRef, gridDataSourceErrorSelector, id);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (!rowNode.childrenExpanded) {
       // always fetch/get from cache the children when the node is expanded
-      apiRef.current.unstable_dataSource.fetchRows(id);
+      apiRef.current.dataSource.fetchRows(id);
     } else {
-      apiRef.current.setRowChildrenExpansion(id, !rowNode.childrenExpanded);
+      // Collapse the node and remove child rows from the grid
+      apiRef.current.setRowChildrenExpansion(id, false);
+      apiRef.current.removeChildrenRows(id);
     }
     apiRef.current.setCellFocus(id, field);
     event.stopPropagation();
@@ -72,7 +78,7 @@ function GridGroupingCriteriaCellIcon(props: GridGroupingCriteriaCellIconProps) 
     );
   }
 
-  return descendantCount > 0 ? (
+  return descendantCount === -1 || descendantCount > 0 ? (
     <rootProps.slots.baseIconButton
       size="small"
       onClick={handleClick}
@@ -98,13 +104,17 @@ export function GridDataSourceGroupingCriteriaCell(props: GridGroupingCriteriaCe
 
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
-  const rowSelector = (state: GridStatePremium) => state.rows.dataRowIdToModelLookup[id];
-  const row = useGridSelector(apiRef, rowSelector);
+  const row = useGridSelector(apiRef, gridRowSelector, id);
+  const pivotActive = useGridSelector(apiRef, gridPivotActiveSelector);
+  const rowGroupingModelLength = useGridSelector(apiRef, gridRowGroupingModelSelector).length;
   const classes = useUtilityClasses(rootProps);
+  const shouldShowToggleContainer = !pivotActive || rowGroupingModelLength > 1;
+  // Do not allow expand/collapse the last grouping criteria cell when in pivot mode
+  const shouldShowToggleButton = !pivotActive || rowNode.depth < rowGroupingModelLength - 1;
 
   let descendantCount = 0;
   if (row) {
-    descendantCount = Math.max(rootProps.unstable_dataSource?.getChildrenCount?.(row) ?? 0, 0);
+    descendantCount = rootProps.dataSource?.getChildrenCount?.(row) ?? 0;
   }
 
   let cellContent: React.ReactNode;
@@ -119,29 +129,32 @@ export function GridDataSourceGroupingCriteriaCell(props: GridGroupingCriteriaCe
   }
 
   return (
-    <Box
+    <div
       className={classes.root}
-      sx={{
-        ml:
+      style={{
+        marginLeft:
           rootProps.rowGroupingColumnMode === 'multiple'
             ? 0
-            : (theme) =>
-                `calc(var(--DataGrid-cellOffsetMultiplier) * ${theme.spacing(rowNode.depth)})`,
+            : `calc(var(--DataGrid-cellOffsetMultiplier) * ${vars.spacing(rowNode.depth)})`,
       }}
     >
-      <div className={classes.toggle}>
-        <GridGroupingCriteriaCellIcon
-          id={id}
-          field={field}
-          rowNode={rowNode}
-          row={row}
-          descendantCount={descendantCount}
-        />
-      </div>
+      {shouldShowToggleContainer && (
+        <div className={classes.toggle}>
+          {shouldShowToggleButton && (
+            <GridGroupingCriteriaCellIcon
+              id={id}
+              field={field}
+              rowNode={rowNode}
+              row={row}
+              descendantCount={descendantCount}
+            />
+          )}
+        </div>
+      )}
       {cellContent}
       {!hideDescendantCount && descendantCount > 0 ? (
         <span style={{ whiteSpace: 'pre' }}> ({descendantCount})</span>
       ) : null}
-    </Box>
+    </div>
   );
 }

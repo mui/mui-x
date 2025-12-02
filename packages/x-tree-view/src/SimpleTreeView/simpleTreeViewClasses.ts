@@ -1,10 +1,12 @@
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
+import { TreeViewClasses } from '../internals/TreeViewProvider/TreeViewStyleContext';
 
-export interface SimpleTreeViewClasses {
-  /** Styles applied to the root element. */
-  root: string;
-}
+export interface SimpleTreeViewClasses
+  extends Omit<
+    TreeViewClasses,
+    'itemDragAndDropOverlay' | 'itemLabelInput' | 'itemErrorIcon' | 'itemLoadingIcon'
+  > {}
 
 export type SimpleTreeViewClassKey = keyof SimpleTreeViewClasses;
 
@@ -14,5 +16,13 @@ export function getSimpleTreeViewUtilityClass(slot: string): string {
 
 export const simpleTreeViewClasses: SimpleTreeViewClasses = generateUtilityClasses(
   'MuiSimpleTreeView',
-  ['root'],
+  [
+    'root',
+    'item',
+    'itemContent',
+    'itemGroupTransition',
+    'itemIconContainer',
+    'itemLabel',
+    'itemCheckbox',
+  ],
 );

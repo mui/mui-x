@@ -14,7 +14,6 @@ export const GridRoot = styled('g', {
 export const GridLine = styled('line', {
   name: 'MuiChartsGrid',
   slot: 'Line',
-  overridesResolver: (props, styles) => styles.line,
 })(({ theme }) => ({
   stroke: (theme.vars || theme).palette.divider,
   shapeRendering: 'crispEdges',

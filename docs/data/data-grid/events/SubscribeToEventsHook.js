@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
   DataGrid,
   GridFooter,
-  useGridApiEventHandler,
+  useGridEvent,
   useGridApiContext,
 } from '@mui/x-data-grid';
 import { useMovieData } from '@mui/x-data-grid-generator';
@@ -18,7 +18,7 @@ function Footer() {
     setMessage(`Movie "${params.row.title}" clicked`);
   };
 
-  useGridApiEventHandler(apiRef, 'rowClick', handleRowClick);
+  useGridEvent(apiRef, 'rowClick', handleRowClick);
 
   return (
     <React.Fragment>

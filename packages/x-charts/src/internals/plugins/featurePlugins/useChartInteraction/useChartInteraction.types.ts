@@ -1,5 +1,13 @@
 import { ChartPluginSignature } from '../../models';
-import { ChartItemIdentifier, ChartSeriesType } from '../../../../models/seriesType/config';
+import {
+  ChartItemIdentifier,
+  ChartSeriesType,
+  type ChartItemIdentifierWithData,
+} from '../../../../models/seriesType/config';
+
+export type Coordinate = { x: number; y: number };
+
+export type InteractionUpdateSource = 'pointer' | 'keyboard';
 
 export interface UseChartInteractionInstance {
   /**
@@ -9,56 +17,40 @@ export interface UseChartInteractionInstance {
   /**
    * Setter for the item the user is interacting with.
    * @param {ChartItemIdentifier} newItem The identifier of the item.
+   * @param {{ interaction: InteractionUpdateSource }} context The context of the interaction.
+   * @param {InteractionUpdateSource} context.interaction The source of the interaction update (pointer or keyboard).
    */
-  setItemInteraction: (newItem: ChartItemIdentifier<ChartSeriesType>) => void;
+  setItemInteraction: (
+    newItem: ChartItemIdentifierWithData<ChartSeriesType>,
+    context: { interaction: InteractionUpdateSource },
+  ) => void;
   /**
    * Remove item interaction if the current if the provided item is still the one interacting.
    * @param {ChartItemIdentifier} itemToRemove The identifier of the item.
    */
-  removeItemInteraction: (itemToRemove: ChartItemIdentifier<ChartSeriesType>) => void;
+  removeItemInteraction: (itemToRemove?: ChartItemIdentifier<ChartSeriesType>) => void;
   /**
-   * Set the new axis the user is interacting with.
-   * @param {Partial<AxisInteractionData>} newAxis The new axis identifier.
+   * Set the new pointer coordinate.
+   * @param {Coordinate | null} newCoordinate The new pointer coordinate.
    */
-  setAxisInteraction: (newAxis: Partial<AxisInteractionData>) => void;
-  /**
-   * Enable the voronoi computation.
-   */
-  enableVoronoid: () => void;
-  /**
-   * Disable the voronoi computation.
-   */
-  disableVoronoid: () => void;
+  setPointerCoordinate: (newCoordinate: Coordinate | null) => void;
 }
-
-export type AxisInteractionData = {
-  x: null | {
-    value: number | Date | string;
-    // Set to -1 if no index.
-    index: number;
-  };
-  y: null | {
-    value: number | Date | string;
-    // Set to -1 if no index.
-    index: number;
-  };
-};
 
 export interface UseChartInteractionState {
   interaction: {
     /**
      * The item currently interacting.
      */
-    item: null | ChartItemIdentifier<ChartSeriesType>;
+    item: null | ChartItemIdentifierWithData<ChartSeriesType>;
     /**
-     * The x- and y-axes currently interacting.
+     * The x/y SVG coordinate of the "main" pointer
      */
-    axis: AxisInteractionData;
+    pointer: Coordinate | null;
     /**
-     * Set to `true` when `VoronoiHandler` is active.
-     * Used to prevent collision with mouseEnter events.
+     * The last interaction highlight update.
+     * Used to decide if highlight should be based on pointer position or keyboard navigation.
      */
-    isVoronoiEnabled?: boolean;
+    lastUpdate: InteractionUpdateSource;
   };
 }
 

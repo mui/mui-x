@@ -1,16 +1,35 @@
 import * as path from 'path';
-import * as url from 'url';
 import * as fs from 'fs';
+import * as url from 'url';
 import { createRequire } from 'module';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
-// @ts-expect-error This expected error should be gone once we update the monorepo
-// eslint-disable-next-line no-restricted-imports
-import withDocsInfra from '@mui/monorepo/docs/nextConfigDocsInfra';
+import { withDeploymentConfig } from '@mui/internal-docs-infra/withDocsInfra';
 import { findPages } from './src/modules/utils/find';
 import { LANGUAGES, LANGUAGES_SSR, LANGUAGES_IGNORE_PAGES, LANGUAGES_IN_PROGRESS } from './config';
 import { SOURCE_CODE_REPO, SOURCE_GITHUB_BRANCH } from './constants';
+import { getPickerAdapterDeps } from './src/modules/utils/getPickerAdapterDeps';
+
+declare global {
+  interface MUIEnv {
+    DEPLOY_ENV?: string;
+    DOCS_STATS_ENABLED?: string;
+    PULL_REQUEST?: string;
+    PICKERS_ADAPTERS_DEPS?: string;
+    LIB_VERSION?: string;
+    SOURCE_CODE_REPO?: string;
+    SOURCE_GITHUB_BRANCH?: string;
+    GITHUB_TEMPLATE_DOCS_FEEDBACK?: string;
+    DATA_GRID_VERSION?: string;
+    DATE_PICKERS_VERSION?: string;
+    CHARTS_VERSION?: string;
+    TREE_VIEW_VERSION?: string;
+  }
+}
+
+const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 
 const currentDirectory = url.fileURLToPath(new URL('.', import.meta.url));
+
 const require = createRequire(import.meta.url);
 
 const WORKSPACE_ROOT = path.resolve(currentDirectory, '../');
@@ -18,24 +37,6 @@ const MONOREPO_PATH = path.resolve(WORKSPACE_ROOT, './node_modules/@mui/monorepo
 const MONOREPO_ALIASES = {
   '@mui/docs': path.resolve(MONOREPO_PATH, './packages/mui-docs/src'),
   '@mui/internal-markdown': path.resolve(MONOREPO_PATH, './packages/markdown'),
-};
-
-const WORKSPACE_ALIASES = {
-  '@mui/x-data-grid': path.resolve(WORKSPACE_ROOT, './packages/x-data-grid/src'),
-  '@mui/x-data-grid-generator': path.resolve(
-    WORKSPACE_ROOT,
-    './packages/x-data-grid-generator/src',
-  ),
-  '@mui/x-data-grid-pro': path.resolve(WORKSPACE_ROOT, './packages/x-data-grid-pro/src'),
-  '@mui/x-data-grid-premium': path.resolve(WORKSPACE_ROOT, './packages/x-data-grid-premium/src'),
-  '@mui/x-date-pickers': path.resolve(WORKSPACE_ROOT, './packages/x-date-pickers/src'),
-  '@mui/x-date-pickers-pro': path.resolve(WORKSPACE_ROOT, './packages/x-date-pickers-pro/src'),
-  '@mui/x-charts': path.resolve(WORKSPACE_ROOT, './packages/x-charts/src'),
-  '@mui/x-charts-pro': path.resolve(WORKSPACE_ROOT, './packages/x-charts-pro/src'),
-  '@mui/x-charts-vendor': path.resolve(WORKSPACE_ROOT, './packages/x-charts-vendor'),
-  '@mui/x-tree-view': path.resolve(WORKSPACE_ROOT, './packages/x-tree-view/src'),
-  '@mui/x-tree-view-pro': path.resolve(WORKSPACE_ROOT, './packages/x-tree-view-pro/src'),
-  '@mui/x-license': path.resolve(WORKSPACE_ROOT, './packages/x-license/src'),
 };
 
 function loadPkg(pkgPath: string): { version: string } {
@@ -49,6 +50,8 @@ const datePickersPkg = loadPkg('./packages/x-date-pickers');
 const chartsPkg = loadPkg('./packages/x-charts');
 const treeViewPkg = loadPkg('./packages/x-tree-view');
 
+const pickersAdaptersDeps = getPickerAdapterDeps();
+
 let localSettings = {};
 try {
   // eslint-disable-next-line import/extensions
@@ -57,11 +60,20 @@ try {
   // Ignore
 }
 
-export default withDocsInfra({
+export default withDeploymentConfig({
+  reactStrictMode: true,
+  typescript: {
+    // The tsconfig also contains path aliases that are used by next.js.
+    tsconfigPath: IS_PRODUCTION ? '../tsconfig.prod.json' : '../tsconfig.dev.json',
+  },
+  experimental: {
+    esmExternals: undefined,
+  },
   transpilePackages: [
     // TODO, those shouldn't be needed in the first place
     '@mui/monorepo', // Migrate everything to @mui/docs until the @mui/monorepo dependency becomes obsolete
     '@mui/docs', // needed to fix slashes in the generated links (https://github.com/mui/mui-x/pull/13713#issuecomment-2205591461, )
+    '@mui/x-license', // build with LICENSE_DISABLE_CHECK
   ],
   // Avoid conflicts with the other Next.js apps hosted under https://mui.com/
   assetPrefix: process.env.DEPLOY_ENV === 'development' ? undefined : '/x',
@@ -76,6 +88,9 @@ export default withDocsInfra({
     DATE_PICKERS_VERSION: datePickersPkg.version,
     CHARTS_VERSION: chartsPkg.version,
     TREE_VIEW_VERSION: treeViewPkg.version,
+    PICKERS_ADAPTERS_DEPS: JSON.stringify(pickersAdaptersDeps),
+    MUI_CHAT_API_BASE_URL: 'https://chat-backend.mui.com',
+    MUI_CHAT_SCOPES: 'x-data-grid,x-date-pickers,x-charts,x-tree-view',
   },
   // @ts-ignore
   webpack: (config, options) => {
@@ -102,7 +117,7 @@ export default withDocsInfra({
         alias: {
           ...config.resolve.alias,
           ...MONOREPO_ALIASES,
-          ...WORKSPACE_ALIASES,
+          '@mui/x-license': path.resolve(currentDirectory, '../packages/x-license/src'),
           // TODO: get rid of this, replace with @mui/docs
           docs: path.resolve(MONOREPO_PATH, './docs'),
           docsx: path.resolve(currentDirectory, '../docs'),
@@ -144,8 +159,8 @@ export default withDocsInfra({
             test: /\.(ts|tsx)$/,
             loader: 'string-replace-loader',
             options: {
-              search: '__RELEASE_INFO__',
-              replace: 'MTU5NjMxOTIwMDAwMA==', // 2020-08-02
+              search: 'LICENSE_DISABLE_CHECK',
+              replace: 'true',
             },
           },
         ]),
@@ -191,8 +206,6 @@ export default withDocsInfra({
       console.log('Considering only English for SSR');
       traverse(pages, 'en');
     } else {
-      // eslint-disable-next-line no-console
-      console.log('Considering various locales for SSR');
       LANGUAGES_SSR.forEach((userLanguage) => {
         traverse(pages, userLanguage);
       });
@@ -201,7 +214,7 @@ export default withDocsInfra({
     return map;
   },
   // Used to signal we run build
-  ...(process.env.NODE_ENV === 'production'
+  ...(IS_PRODUCTION
     ? {
         output: 'export',
       }

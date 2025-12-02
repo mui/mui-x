@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Typography from '@mui/material/Typography';
 import IconImage from 'docs/src/components/icon/IconImage';
 
@@ -22,14 +21,7 @@ export default function XLogo() {
         }),
       ]}
     >
-      <IconImage
-        width={28}
-        height={28}
-        loading="eager"
-        name="product-advanced"
-        // eslint-disable-next-line material-ui/no-hardcoded-labels
-      />{' '}
-      MUI X
+      <IconImage width={28} height={28} loading="eager" name="product-advanced" /> MUI X
     </Typography>
   );
 }

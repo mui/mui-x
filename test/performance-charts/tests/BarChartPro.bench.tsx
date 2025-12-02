@@ -1,13 +1,13 @@
 import * as React from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { render, cleanup } from '@testing-library/react';
-import { bench, describe } from 'vitest';
+import { describe } from 'vitest';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
-import { LicenseInfo, generateLicense } from '@mui/x-license';
 import { options } from '../utils/options';
+import { bench } from '../utils/bench';
 
 describe('BarChartPro', () => {
-  const dataLength = 400;
+  const dataLength = 800;
   const data = Array.from({ length: dataLength + 1 }).map((_, i) => ({
     x: i,
     y: 50 + Math.sin(i / 5) * 25,
@@ -19,19 +19,9 @@ describe('BarChartPro', () => {
   bench(
     'BarChartPro with big data amount',
     async () => {
-      const licenseKey = generateLicense({
-        expiryDate: new Date(3001, 0, 0, 0, 0, 0, 0),
-        orderNumber: 'MUI-123',
-        planScope: 'pro',
-        licenseModel: 'subscription',
-        planVersion: 'Q3-2024',
-      });
-
-      LicenseInfo.setLicenseKey(licenseKey);
-
       const { findByText } = render(
         <BarChartPro
-          xAxis={[{ id: 'x', scaleType: 'band', data: xData, zoom: { filterMode: 'discard' } }]}
+          xAxis={[{ id: 'x', data: xData, zoom: { filterMode: 'discard' } }]}
           initialZoom={[{ axisId: 'x', start: 25, end: 75 }]}
           series={[
             {

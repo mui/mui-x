@@ -6,19 +6,19 @@ export interface TreeItemIconSlots {
   /**
    * The icon used to collapse the item.
    */
-  collapseIcon?: React.ElementType;
+  collapseIcon?: React.ElementType | null;
   /**
    * The icon used to expand the item.
    */
-  expandIcon?: React.ElementType;
+  expandIcon?: React.ElementType | null;
   /**
    * The icon displayed next to an end item.
    */
-  endIcon?: React.ElementType;
+  endIcon?: React.ElementType | null;
   /**
    * The icon to display next to the Tree Item's label.
    */
-  icon?: React.ElementType;
+  icon?: React.ElementType | null;
 }
 
 export interface TreeItemIconSlotProps {

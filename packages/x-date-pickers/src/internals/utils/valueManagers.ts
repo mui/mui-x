@@ -1,4 +1,4 @@
-import type { PickerValueManager } from '../hooks/usePicker';
+import type { PickerValueManager } from '../models';
 import { DateValidationError, TimeValidationError, DateTimeValidationError } from '../../models';
 import type { FieldValueManager } from '../hooks/useField';
 import { areDatesEqual, getTodayDate, replaceInvalidDateByNull } from './date-utils';
@@ -17,7 +17,7 @@ export const singleItemValueManager: SingleItemPickerValueManager = {
   emptyValue: null,
   getTodayValue: getTodayDate,
   getInitialReferenceValue: ({ value, referenceDate, ...params }) => {
-    if (params.utils.isValid(value)) {
+    if (params.adapter.isValid(value)) {
       return value;
     }
 
@@ -32,34 +32,21 @@ export const singleItemValueManager: SingleItemPickerValueManager = {
   isSameError: (a, b) => a === b,
   hasError: (error) => error != null,
   defaultErrorState: null,
-  getTimezone: (utils, value) => (utils.isValid(value) ? utils.getTimezone(value) : null),
-  setTimezone: (utils, timezone, value) =>
-    value == null ? null : utils.setTimezone(value, timezone),
+  getTimezone: (adapter, value) => (adapter.isValid(value) ? adapter.getTimezone(value) : null),
+  setTimezone: (adapter, timezone, value) =>
+    value == null ? null : adapter.setTimezone(value, timezone),
 };
 
 export const singleItemFieldValueManager: FieldValueManager<PickerValue> = {
-  updateReferenceValue: (utils, value, prevReferenceValue) =>
-    !utils.isValid(value) ? prevReferenceValue : value,
-  getSectionsFromValue: (utils, date, prevSections, getSectionsFromDate) => {
-    const shouldReUsePrevDateSections = !utils.isValid(date) && !!prevSections;
-
-    if (shouldReUsePrevDateSections) {
-      return prevSections;
-    }
-
-    return getSectionsFromDate(date!);
-  },
+  updateReferenceValue: (adapter, value, prevReferenceValue) =>
+    adapter.isValid(value) ? value : prevReferenceValue,
+  getSectionsFromValue: (date, getSectionsFromDate) => getSectionsFromDate(date),
   getV7HiddenInputValueFromSections: createDateStrForV7HiddenInputFromSections,
   getV6InputValueFromSections: createDateStrForV6InputFromSections,
-  getActiveDateManager: (utils, state) => ({
-    date: state.value,
-    referenceDate: state.referenceValue,
-    getSections: (sections) => sections,
-    getNewValuesFromNewActiveDate: (newActiveDate) => ({
-      value: newActiveDate,
-      referenceValue: utils.isValid(newActiveDate) ? newActiveDate : state.referenceValue,
-    }),
-  }),
   parseValueStr: (valueStr, referenceValue, parseDate) =>
     parseDate(valueStr.trim(), referenceValue),
+  getDateFromSection: (value) => value,
+  getDateSectionsFromValue: (sections) => sections,
+  updateDateInValue: (value, activeSection, activeDate) => activeDate,
+  clearDateSections: (sections) => sections.map((section) => ({ ...section, value: '' })),
 };

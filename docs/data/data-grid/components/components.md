@@ -50,12 +50,22 @@ As mentioned above, the column menu is a component slot that can be recomposed e
 
 ### Toolbar
 
-To enable the toolbar you need to add the `toolbar: GridToolbar` to the Data Grid `slots` prop.
-This demo showcases how this can be achieved.
+Pass the `showToolbar` prop to the `<DataGrid />` component to enable the default toolbar.
 
 {{"demo": "ToolbarGrid.js", "bg": "inline"}}
 
-You can also compose your own toolbar. Each button in the toolbar is wrapped with a tooltip component.
+You can also compose your own toolbar using the [Toolbar component](/x/react-data-grid/components/toolbar/).
+
+### Legacy toolbar
+
+:::warning
+
+The examples below use the `<GridToolbar />`, `<GridToolbarContainer>`, and various toolbar button components.
+They were deprecated in v8 and will be removed in v9.
+These components are now replaced by the new [Toolbar component](/x/react-data-grid/components/toolbar/).
+:::
+
+Each button in the toolbar is wrapped with a tooltip component.
 In order to override some of the props corresponding to the toolbar buttons, you can use the `slotProps` prop.
 
 The following demo shows how to override the tooltip title of the density selector and the variant of the export button.
@@ -125,6 +135,10 @@ As any component slot, every icon can be customized. However, it is not yet poss
 
 {{"demo": "CustomSortIcons.js", "bg": "inline"}}
 
+:::warning
+Material UI icons need to be passed like `Icon as any` due to typing issues that might be resolved in a later version.
+:::
+
 ### Overlays
 
 See the [Overlays](/x/react-data-grid/overlays/) documentation on how to customize the `loadingOverlay`, `noRowsOverlay`, and `noResultsOverlay`.
@@ -173,6 +187,7 @@ declare module '@mui/x-data-grid' {
       someCustomNumber: 42,
     },
   }}
+  showToolbar
 />;
 ```
 
@@ -197,6 +212,7 @@ declare module '@mui/x-data-grid-pro' {
       someCustomNumber: 42,
     },
   }}
+  showToolbar
 />;
 ```
 
@@ -221,6 +237,7 @@ declare module '@mui/x-data-grid-premium' {
       someCustomNumber: 42,
     },
   }}
+  showToolbar
 />;
 ```
 

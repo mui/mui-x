@@ -4,7 +4,7 @@ import { ChartsSurfaceProps } from '../ChartsSurface';
 import { ChartDataProviderProps } from '../ChartDataProvider';
 import type { ChartContainerProps } from './ChartContainer';
 import { ChartSeriesType } from '../models/seriesType/config';
-import { ALL_PLUGINS, AllPluginSignatures } from '../internals/plugins/allPlugins';
+import { DEFAULT_PLUGINS, AllPluginSignatures } from '../internals/plugins/allPlugins';
 import { ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
 
 export type UseChartContainerPropsReturnValue<
@@ -33,6 +33,11 @@ export const useChartContainerProps = <
     dataset,
     desc,
     onAxisClick,
+    highlightedAxis,
+    onHighlightedAxisChange,
+    disableVoronoi,
+    voronoiMaxRadius,
+    onItemClick,
     disableAxisListener,
     highlightedItem,
     onHighlightChange,
@@ -41,9 +46,17 @@ export const useChartContainerProps = <
     xAxis,
     yAxis,
     zAxis,
+    rotationAxis,
+    radiusAxis,
     skipAnimation,
     seriesConfig,
     plugins,
+    localeText,
+    slots,
+    slotProps,
+    experimentalFeatures,
+    enableKeyboardNavigation,
+    brushConfig,
     ...other
   } = props as ChartContainerProps<TSeries, AllPluginSignatures>;
 
@@ -60,18 +73,31 @@ export const useChartContainerProps = <
     series,
     colors,
     dataset,
+    disableAxisListener,
     highlightedItem,
     onHighlightChange,
     onAxisClick,
+    highlightedAxis,
+    onHighlightedAxisChange,
+    disableVoronoi,
+    voronoiMaxRadius,
+    onItemClick,
     xAxis,
     yAxis,
     zAxis,
+    rotationAxis,
+    radiusAxis,
     skipAnimation,
     width,
     height,
-    disableAxisListener,
+    localeText,
     seriesConfig,
-    plugins: plugins ?? ALL_PLUGINS,
+    experimentalFeatures,
+    enableKeyboardNavigation,
+    brushConfig,
+    plugins: plugins ?? DEFAULT_PLUGINS,
+    slots,
+    slotProps,
   } as unknown as Omit<ChartDataProviderProps<TSeries, TSignatures>, 'children'>;
 
   return {

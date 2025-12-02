@@ -1,9 +1,8 @@
-import * as React from 'react';
-import { expect } from 'chai';
-import { createRenderer, fireEvent } from '@mui/internal-test-utils';
-import { spy } from 'sinon';
+import { createRenderer } from '@mui/internal-test-utils';
+import { vi } from 'vitest';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
-import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
+import { CHART_SELECTOR } from '../tests/constants';
 
 const config = {
   dataset: [
@@ -14,9 +13,11 @@ const config = {
     { id: 5, x: 5, y: 5 },
   ],
   margin: { top: 0, left: 0, bottom: 0, right: 0 },
+  xAxis: [{ position: 'none' }],
+  yAxis: [{ position: 'none' }],
   width: 100,
   height: 100,
-};
+} as const;
 
 // Plot on series as a dice 5
 //
@@ -30,13 +31,12 @@ describe('ScatterChart - click event', () => {
   const { render } = createRenderer();
 
   // svg.createSVGPoint not supported by JSDom https://github.com/jsdom/jsdom/issues/300
-  describeSkipIf(isJSDOM)('onItemClick - using vornoid', () => {
-    it('should provide the right context as second argument when clicking svg', () => {
-      const onItemClick = spy();
-      render(
+  describe.skipIf(isJSDOM)('onItemClick - using voronoi', () => {
+    it('should provide the right context as second argument when clicking svg', async () => {
+      const onItemClick = vi.fn();
+      const { user } = render(
         <div
           style={{
-            margin: -8, // Removes the body default margins
             width: 100,
             height: 100,
           }}
@@ -48,37 +48,42 @@ describe('ScatterChart - click event', () => {
           />
         </div>,
       );
-      const svg = document.querySelector<HTMLElement>('svg')!;
+      const svg = document.querySelector<HTMLElement>(CHART_SELECTOR)!;
 
-      fireEvent.click(svg, {
-        clientX: 10,
-        clientY: 10,
-      });
-      expect(onItemClick.lastCall.args[1]).to.deep.equal({
+      await user.pointer([
+        {
+          keys: '[MouseLeft]',
+          target: svg,
+          coords: { clientX: 10, clientY: 10 },
+        },
+      ]);
+      expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'scatter',
         dataIndex: 0,
         seriesId: 's1',
       });
 
-      fireEvent.click(svg, {
-        clientX: 30,
-        clientY: 30,
-      });
-      expect(onItemClick.lastCall.args[1]).to.deep.equal({
+      await user.pointer([
+        {
+          keys: '[MouseLeft]',
+          target: svg,
+          coords: { clientX: 30, clientY: 30 },
+        },
+      ]);
+      expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'scatter',
         dataIndex: 4,
         seriesId: 's1',
       });
 
-      expect(onItemClick.callCount).to.equal(2);
+      expect(onItemClick.mock.calls.length).to.equal(2);
     });
 
-    it('should provide the right context as second argument when clicking mark', () => {
-      const onItemClick = spy();
-      render(
+    it('should provide the right context as second argument when clicking mark', async () => {
+      const onItemClick = vi.fn();
+      const { user } = render(
         <div
           style={{
-            margin: -8, // Removes the body default margins
             width: 100,
             height: 100,
           }}
@@ -92,27 +97,31 @@ describe('ScatterChart - click event', () => {
       );
       const marks = document.querySelectorAll<HTMLElement>('circle');
 
-      fireEvent.click(marks[1], {
-        clientX: 99,
-        clientY: 2,
-      });
-
-      expect(onItemClick.lastCall.args[1]).to.deep.equal({
+      await user.pointer([
+        {
+          keys: '[MouseLeft]',
+          target: marks[1],
+          coords: {
+            clientX: 99,
+            clientY: 2,
+          },
+        },
+      ]);
+      expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'scatter',
         dataIndex: 1,
         seriesId: 's1',
       });
-      expect(onItemClick.callCount).to.equal(1); // Make sure voronoid + item click does not duplicate event triggering
+      expect(onItemClick.mock.calls.length).to.equal(1); // Make sure voronoi + item click does not duplicate event triggering
     });
   });
 
-  describe('onItemClick - disabling vornoid', () => {
-    it('should not call onItemClick when clicking the SVG', () => {
-      const onItemClick = spy();
-      render(
+  describe('onItemClick - disabling voronoi', () => {
+    it('should not call onItemClick when clicking the SVG', async () => {
+      const onItemClick = vi.fn();
+      const { user } = render(
         <div
           style={{
-            margin: -8, // Removes the body default margins
             width: 100,
             height: 100,
           }}
@@ -125,21 +134,23 @@ describe('ScatterChart - click event', () => {
           />
         </div>,
       );
-      const svg = document.querySelector<HTMLElement>('svg')!;
+      const svg = document.querySelector<HTMLElement>(CHART_SELECTOR)!;
 
-      fireEvent.click(svg, {
-        clientX: 10,
-        clientY: 10,
-      });
-      expect(onItemClick.callCount).to.equal(0);
+      await user.pointer([
+        {
+          keys: '[MouseLeft]',
+          target: svg,
+          coords: { clientX: 10, clientY: 10 },
+        },
+      ]);
+      expect(onItemClick.mock.calls.length).to.equal(0);
     });
 
-    it('should provide the right context as second argument when clicking mark', () => {
-      const onItemClick = spy();
-      render(
+    it('should provide the right context as second argument when clicking mark', async () => {
+      const onItemClick = vi.fn();
+      const { user } = render(
         <div
           style={{
-            margin: -8, // Removes the body default margins
             width: 100,
             height: 100,
           }}
@@ -154,17 +165,23 @@ describe('ScatterChart - click event', () => {
       );
       const marks = document.querySelectorAll<HTMLElement>('circle');
 
-      fireEvent.click(marks[1], {
-        clientX: 99,
-        clientY: 2,
-      });
+      await user.pointer([
+        {
+          keys: '[MouseLeft]',
+          target: marks[1],
+          coords: {
+            clientX: 99,
+            clientY: 2,
+          },
+        },
+      ]);
 
-      expect(onItemClick.lastCall.args[1]).to.deep.equal({
+      expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'scatter',
         dataIndex: 1,
         seriesId: 's1',
       });
-      expect(onItemClick.callCount).to.equal(1); // Make sure voronoid + item click does not duplicate event triggering
+      expect(onItemClick.mock.calls.length).to.equal(1); // Make sure voronoi + item click does not duplicate event triggering
     });
   });
 });

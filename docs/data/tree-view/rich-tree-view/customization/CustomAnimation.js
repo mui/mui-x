@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
 
@@ -45,7 +44,6 @@ function TransitionComponent(props) {
   });
 
   return (
-    // @ts-expect-error
     <animated.div style={style}>
       <Collapse {...props} />
     </animated.div>

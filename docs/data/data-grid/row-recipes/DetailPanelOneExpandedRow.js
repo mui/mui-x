@@ -23,6 +23,7 @@ export default function DetailPanelOneExpandedRow() {
       const newSet = new Set();
       const newIdsArray = Array.from(newIds);
       newSet.add(newIdsArray[newIdsArray.length - 1]);
+      setDetailPanelExpandedRowIds(newSet);
     } else {
       setDetailPanelExpandedRowIds(newIds);
     }

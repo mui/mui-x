@@ -1,0 +1,18 @@
+name: CI
+
+on:
+  push:
+    branches-ignore:
+      # Renovate branches are always Pull Requests.
+      # We don't need to run CI twice (push+pull_request)
+      - 'renovate/**'
+  pull_request:
+
+permissions: {}
+
+jobs:
+  continuous-releases:
+    name: Continuous releases
+    uses: mui/mui-public/.github/workflows/ci-base.yml@master
+    with:
+      node-version: '22.18.0'

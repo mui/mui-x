@@ -48,14 +48,13 @@ function BrowserTextField(props) {
     readOnly,
     focused,
     error,
-    InputProps: { ref, startAdornment, endAdornment } = {},
+    triggerRef,
     // The rest can be passed to the root element
     ...other
   } = props;
 
   return (
-    <BrowserFieldRoot {...other} ref={ref}>
-      {startAdornment}
+    <BrowserFieldRoot {...other} ref={triggerRef}>
       <BrowserFieldContent>
         <PickersSectionList
           elements={elements}
@@ -69,14 +68,13 @@ function BrowserTextField(props) {
           onKeyDown={onKeyDown}
         />
       </BrowserFieldContent>
-      {endAdornment}
     </BrowserFieldRoot>
   );
 }
 
 function BrowserMultiInputDateRangeField(props) {
-  const pickerContext = usePickerContext();
   const manager = useDateRangeManager();
+  const pickerContext = usePickerContext();
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
   const { slotProps, ...otherForwardedProps } = forwardedProps;
 
@@ -95,24 +93,30 @@ function BrowserMultiInputDateRangeField(props) {
   const fieldResponse = useMultiInputRangeField({
     manager,
     internalProps,
-    startForwardedProps: startTextFieldProps,
-    endForwardedProps: endTextFieldProps,
+    startTextFieldProps,
+    endTextFieldProps,
+    rootProps: {
+      ref: pickerContext.rootRef,
+      spacing: 2,
+      direction: 'row',
+      overflow: 'auto',
+      ...otherForwardedProps,
+    },
   });
 
   return (
-    <Stack
-      ref={pickerContext.rootRef}
-      spacing={2}
-      direction="row"
-      overflow="auto"
-      {...otherForwardedProps}
-    >
-      <BrowserTextField {...fieldResponse.startDate} />
+    <Stack {...fieldResponse.root}>
+      <BrowserTextField
+        {...fieldResponse.startTextField}
+        triggerRef={pickerContext.triggerRef}
+      />
       <span>–</span>
-      <BrowserTextField {...fieldResponse.endDate} />
+      <BrowserTextField {...fieldResponse.endTextField} />
     </Stack>
   );
 }
+
+BrowserMultiInputDateRangeField.fieldType = 'multi-input';
 
 function BrowserDateRangePicker(props) {
   return (

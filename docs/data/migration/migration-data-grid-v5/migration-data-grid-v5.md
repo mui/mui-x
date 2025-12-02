@@ -219,7 +219,6 @@ To know more about the supported events and their signatures, check the [events 
   As a consequence, any existing value formatter will not be applied to the individual options anymore, but only to the text of the cell.
   It is recommended to migrate `valueOptions` to an array of objects to be able to add a custom label for each value.
   To override the label used for each option when the cell is in edit mode or in the filter panel, the following components now support a `getOptionLabel` prop:
-
   - `GridEditSingleSelectCell`
   - `GridFilterInputSingleSelect`
   - `GridFilterInputMultipleSingleSelect`

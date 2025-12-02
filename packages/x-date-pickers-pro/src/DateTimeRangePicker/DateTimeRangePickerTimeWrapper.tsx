@@ -2,16 +2,15 @@ import { DefaultizedProps } from '@mui/x-internals/types';
 import {
   PickerSelectionState,
   PickerViewRenderer,
-  isInternalTimeView,
-  useUtils,
   TimeViewWithMeridiem,
   BaseClockProps,
   PickerRangeValue,
   PickerViewsRendererProps,
 } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
+import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
 import { isRangeValid } from '../internals/utils/date-utils';
-import { calculateRangeChange } from '../internals/utils/date-range-manager';
+import { calculateRangeChange, resolveReferenceDate } from '../internals/utils/date-range-manager';
 import { usePickerRangePositionContext } from '../hooks';
 
 export type DateTimeRangePickerTimeWrapperProps<
@@ -46,12 +45,21 @@ function DateTimeRangePickerTimeWrapper<
     'views'
   >,
 >(props: DateTimeRangePickerTimeWrapperProps<TComponentProps>) {
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
 
-  const { viewRenderer, value, onChange, defaultValue, onViewChange, views, className, ...other } =
-    props;
+  const {
+    viewRenderer,
+    value,
+    onChange,
+    defaultValue,
+    onViewChange,
+    views,
+    className,
+    referenceDate: referenceDateProp,
+    ...other
+  } = props;
 
-  const { rangePosition, setRangePosition } = usePickerRangePositionContext();
+  const { rangePosition } = usePickerRangePositionContext();
 
   if (!viewRenderer) {
     return null;
@@ -60,6 +68,7 @@ function DateTimeRangePickerTimeWrapper<
   const currentValue = (rangePosition === 'start' ? value?.[0] : value?.[1]) ?? null;
   const currentDefaultValue =
     (rangePosition === 'start' ? defaultValue?.[0] : defaultValue?.[1]) ?? null;
+  const referenceDate = resolveReferenceDate(referenceDateProp, rangePosition);
   const handleOnChange = (
     newDate: PickerValidDate | null,
     selectionState: PickerSelectionState,
@@ -70,22 +79,17 @@ function DateTimeRangePickerTimeWrapper<
     }
     const { newRange } = calculateRangeChange({
       newDate,
-      utils,
+      adapter,
       range: value,
       rangePosition,
     });
-    const isFullRangeSelected = rangePosition === 'end' && isRangeValid(utils, newRange);
-    const timeViews = views.filter(isInternalTimeView);
-    // reset view to the first time view and swap range position after selecting the last time view (start or end position)
-    if (selectedView === timeViews[timeViews.length - 1] && onViewChange) {
-      onViewChange(views[0]);
-      setRangePosition(rangePosition === 'start' ? 'end' : 'start');
-    }
+    const isFullRangeSelected = rangePosition === 'end' && isRangeValid(adapter, newRange);
     onChange(newRange, isFullRangeSelected ? 'finish' : 'partial', selectedView);
   };
 
   return viewRenderer({
     ...other,
+    referenceDate,
     views,
     onViewChange,
     value: currentValue,

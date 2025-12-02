@@ -30,7 +30,6 @@ const walking = [
 ];
 const xAxis = {
   label: 'Distance between home and office (km)',
-  scaleType: 'band' as const,
   data: [
     '0-1',
     '1-2',
@@ -100,9 +99,8 @@ export default function StackOrderDemo() {
           </MenuItem>
         ))}
       </TextField>
-      <Box sx={{ overflow: 'auto', py: 2 }}>
+      <Box sx={{ py: 2 }}>
         <BarChart
-          width={700}
           height={300}
           xAxis={[
             {
@@ -112,14 +110,11 @@ export default function StackOrderDemo() {
                 dominantBaseline: 'hanging',
                 textAnchor: 'start',
               },
-              labelStyle: {
-                transform: 'translateY(15px)',
-              },
+              height: 65,
             },
           ]}
           yAxis={[{ min: 0, max: 100 }]}
           series={modifiedSeries}
-          margin={{ bottom: 70 }}
         />
       </Box>
     </Box>

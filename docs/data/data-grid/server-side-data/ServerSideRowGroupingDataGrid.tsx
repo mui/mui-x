@@ -12,7 +12,7 @@ export default function ServerSideRowGroupingDataGrid() {
   const apiRef = useGridApiRef();
 
   const { fetchRows, columns } = useMockServer({
-    rowGrouping: true,
+    dataSet: 'Movies',
   });
 
   const dataSource: GridDataSource = React.useMemo(() => {
@@ -51,7 +51,7 @@ export default function ServerSideRowGroupingDataGrid() {
     <div style={{ width: '100%' }}>
       <Button
         onClick={() => {
-          apiRef.current?.unstable_dataSource.cache.clear();
+          apiRef.current?.dataSource.cache.clear();
         }}
       >
         Clear cache
@@ -60,9 +60,10 @@ export default function ServerSideRowGroupingDataGrid() {
       <div style={{ height: 400, position: 'relative' }}>
         <DataGridPremium
           columns={columns}
-          unstable_dataSource={dataSource}
+          dataSource={dataSource}
           apiRef={apiRef}
           initialState={initialState}
+          disablePivoting
         />
       </div>
     </div>

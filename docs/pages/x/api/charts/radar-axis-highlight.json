@@ -1,0 +1,16 @@
+{
+  "props": { "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } } },
+  "name": "RadarAxisHighlight",
+  "imports": [
+    "import { RadarAxisHighlight } from '@mui/x-charts/RadarChart';",
+    "import { RadarAxisHighlight } from '@mui/x-charts';",
+    "import { RadarAxisHighlight } from '@mui/x-charts-pro';",
+    "import { RadarAxisHighlight } from '@mui/x-charts-premium';"
+  ],
+  "classes": [],
+  "muiName": "MuiRadarAxisHighlight",
+  "filename": "/packages/x-charts/src/RadarChart/RadarAxisHighlight/RadarAxisHighlight.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/radar/\">Charts - Radar</a></li></ul>",
+  "cssComponent": false
+}

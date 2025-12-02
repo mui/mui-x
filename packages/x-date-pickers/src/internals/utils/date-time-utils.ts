@@ -9,10 +9,10 @@ import {
 import { resolveTimeFormat, isTimeView, isInternalTimeView } from './time-utils';
 import { isDatePickerView, resolveDateFormat } from './date-utils';
 import { DateOrTimeViewWithMeridiem } from '../models';
-import { DesktopOnlyTimePickerProps } from '../models/props/time';
+import { DigitalTimePickerProps } from '../models/props/time';
 
 export const resolveDateTimeFormat = (
-  utils: MuiPickersAdapter,
+  adapter: MuiPickersAdapter,
   {
     views,
     format,
@@ -40,17 +40,17 @@ export const resolveDateTimeFormat = (
   });
 
   if (timeViews.length === 0) {
-    return resolveDateFormat(utils, { views: dateViews, ...other }, false);
+    return resolveDateFormat(adapter, { views: dateViews, ...other }, false);
   }
 
   if (dateViews.length === 0) {
-    return resolveTimeFormat(utils, { views: timeViews, ...other });
+    return resolveTimeFormat(adapter, { views: timeViews, ...other });
   }
 
-  const timeFormat = resolveTimeFormat(utils, { views: timeViews, ...other });
+  const timeFormat = resolveTimeFormat(adapter, { views: timeViews, ...other });
   const dateFormat = ignoreDateResolving
-    ? utils.formats.keyboardDate
-    : resolveDateFormat(utils, { views: dateViews, ...other }, false);
+    ? adapter.formats.keyboardDate
+    : resolveDateFormat(adapter, { views: dateViews, ...other }, false);
 
   return `${dateFormat} ${timeFormat}`;
 };
@@ -70,7 +70,7 @@ const resolveShouldRenderTimeInASingleColumn = (timeSteps: TimeStepOptions, thre
   (24 * 60) / ((timeSteps.hours ?? 1) * (timeSteps.minutes ?? 5)) <= threshold;
 
 interface DefaultizedTimeViewsProps<TView = DateOrTimeView>
-  extends DefaultizedProps<DesktopOnlyTimePickerProps, 'ampm'> {
+  extends DefaultizedProps<DigitalTimePickerProps, 'ampm'> {
   views: readonly TView[];
 }
 

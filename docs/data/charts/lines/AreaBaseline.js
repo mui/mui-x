@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { LineChart } from '@mui/x-charts/LineChart';
 
 export default function AreaBaseline() {
@@ -12,7 +11,6 @@ export default function AreaBaseline() {
           baseline: 'min',
         },
       ]}
-      width={500}
       height={300}
     />
   );

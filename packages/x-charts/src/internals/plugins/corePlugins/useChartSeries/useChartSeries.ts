@@ -3,7 +3,7 @@ import * as React from 'react';
 import { ChartPlugin } from '../../models';
 import { UseChartSeriesSignature } from './useChartSeries.types';
 import { rainbowSurgePalette } from '../../../../colorPalettes';
-import { preprocessSeries } from './processSeries';
+import { defaultizeSeries } from './processSeries';
 
 export const useChartSeries: ChartPlugin<UseChartSeriesSignature> = ({
   params,
@@ -22,18 +22,15 @@ export const useChartSeries: ChartPlugin<UseChartSeriesSignature> = ({
       return;
     }
 
-    store.update((prev) => ({
-      ...prev,
-      series: {
-        ...prev.series,
-        processedSeries: preprocessSeries({
-          series,
-          colors: typeof colors === 'function' ? colors(theme) : colors,
-          seriesConfig,
-          dataset,
-        }),
-      },
-    }));
+    store.set('series', {
+      ...store.state.series,
+      defaultizedSeries: defaultizeSeries({
+        series,
+        colors: typeof colors === 'function' ? colors(theme) : colors,
+        seriesConfig,
+      }),
+      dataset,
+    });
   }, [colors, dataset, series, theme, seriesConfig, store]);
 
   return {};
@@ -49,8 +46,8 @@ useChartSeries.params = {
 const EMPTY_ARRAY: any[] = [];
 
 useChartSeries.getDefaultizedParams = ({ params }) => ({
-  series: EMPTY_ARRAY,
   ...params,
+  series: params.series?.length ? params.series : EMPTY_ARRAY,
   colors: params.colors ?? rainbowSurgePalette,
   theme: params.theme ?? 'light',
 });
@@ -59,12 +56,12 @@ useChartSeries.getInitialState = ({ series = [], colors, theme, dataset }, _, se
   return {
     series: {
       seriesConfig,
-      processedSeries: preprocessSeries({
+      defaultizedSeries: defaultizeSeries({
         series,
         colors: typeof colors === 'function' ? colors(theme) : colors,
         seriesConfig,
-        dataset,
       }),
+      dataset,
     },
   };
 };

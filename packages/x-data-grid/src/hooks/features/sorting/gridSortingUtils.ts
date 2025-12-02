@@ -11,6 +11,7 @@ import {
   GridSortModel,
   GridSortCellParams,
 } from '../../../models/gridSortModel';
+import { gridRowNodeSelector } from '../rows/gridRowsSelector';
 
 type GridSortingFieldComparator = {
   getSortCellParams: (id: GridRowId) => GridSortCellParams;
@@ -24,15 +25,13 @@ interface GridParsedSortItem {
 
 export const sanitizeSortModel = (model: GridSortModel, disableMultipleColumnsSorting: boolean) => {
   if (disableMultipleColumnsSorting && model.length > 1) {
-    if (process.env.NODE_ENV !== 'production') {
-      warnOnce(
-        [
-          'MUI X: The `sortModel` can only contain a single item when the `disableMultipleColumnsSorting` prop is set to `true`.',
-          'If you are using the community version of the Data Grid, this prop is always `true`.',
-        ],
-        'error',
-      );
-    }
+    warnOnce(
+      [
+        'MUI X: The `sortModel` can only contain a single item when the `disableMultipleColumnsSorting` prop is set to `true`.',
+        'If you are using the community version of the Data Grid, this prop is always `true`.',
+      ],
+      'error',
+    );
     return [model[0]];
   }
 
@@ -52,6 +51,10 @@ export const mergeStateWithSortModel =
 const isDesc = (direction: GridSortDirection) => direction === 'desc';
 
 /**
+ * @name sortValueGetter
+ * @param {GridRowId} id The id of the row.
+ * @param {string} field The field to sort by.
+ *
  * Transform an item of the sorting model into a method comparing two rows.
  * @param {GridSortItem} sortItem The sort item we want to apply.
  * @param {RefObject<GridApiCommunity>} apiRef The API of the grid.
@@ -82,7 +85,7 @@ const parseSortItem = (
   const getSortCellParams = (id: GridRowId): GridSortCellParams => ({
     id,
     field: column.field,
-    rowNode: apiRef.current.getRowNode(id)!,
+    rowNode: gridRowNodeSelector(apiRef, id),
     value: apiRef.current.getCellValue(id, column.field),
     api: apiRef.current,
   });

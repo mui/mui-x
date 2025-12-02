@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
 import { DescribeGregorianAdapterTestSuite } from './describeGregorianAdapter.types';
 

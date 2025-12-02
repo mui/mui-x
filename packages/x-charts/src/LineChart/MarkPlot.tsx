@@ -2,17 +2,25 @@
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
-import { useSkipAnimation } from '../context/AnimationProvider';
+import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { useChartId } from '../hooks/useChartId';
 import { getValueToPositionMapper } from '../hooks/useScale';
-import { useLineSeries } from '../hooks/useSeries';
+import { useLineSeriesContext } from '../hooks/useLineSeries';
 import { cleanId } from '../internals/cleanId';
 import { LineItemIdentifier } from '../models/seriesType/line';
 import { CircleMarkElement } from './CircleMarkElement';
-import getColor from './getColor';
+import getColor from './seriesConfig/getColor';
 import { MarkElement, MarkElementProps } from './MarkElement';
 import { useChartContext } from '../context/ChartProvider';
-import { useXAxes, useYAxes } from '../hooks';
+import { useItemHighlightedGetter, useXAxes, useYAxes } from '../hooks';
+import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
+import {
+  selectorChartsHighlightXAxisIndex,
+  UseChartCartesianAxisSignature,
+} from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+import { useSelector } from '../internals/store/useSelector';
+import { AxisId } from '../models/axis';
+import type { UseChartBrushSignature } from '../internals/plugins/featurePlugins/useChartBrush';
 
 export interface MarkPlotSlots {
   mark?: React.JSXElementConstructor<MarkElementProps>;
@@ -58,14 +66,31 @@ export interface MarkPlotProps
  */
 function MarkPlot(props: MarkPlotProps) {
   const { slots, slotProps, skipAnimation: inSkipAnimation, onItemClick, ...other } = props;
-  const skipAnimation = useSkipAnimation(inSkipAnimation);
+  const isZoomInteracting = useInternalIsZoomInteracting();
+  const skipAnimation = useSkipAnimation(isZoomInteracting || inSkipAnimation);
 
-  const seriesData = useLineSeries();
+  const seriesData = useLineSeriesContext();
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
 
   const chartId = useChartId();
-  const { instance } = useChartContext();
+  const { instance, store } =
+    useChartContext<[UseChartCartesianAxisSignature, UseChartBrushSignature]>();
+  const { isFaded, isHighlighted } = useItemHighlightedGetter();
+  const xAxisHighlightIndexes = useSelector(store, selectorChartsHighlightXAxisIndex);
+
+  const highlightedItems = React.useMemo(() => {
+    const rep: Record<AxisId, Set<number>> = {};
+
+    for (const { dataIndex, axisId } of xAxisHighlightIndexes) {
+      if (rep[axisId] === undefined) {
+        rep[axisId] = new Set([dataIndex]);
+      } else {
+        rep[axisId].add(dataIndex);
+      }
+    }
+    return rep;
+  }, [xAxisHighlightIndexes]);
 
   if (seriesData === undefined) {
     return null;
@@ -97,7 +122,7 @@ function MarkPlot(props: MarkPlotProps) {
 
           if (xData === undefined) {
             throw new Error(
-              `MUI X: ${
+              `MUI X Charts: ${
                 xAxisId === DEFAULT_X_AXIS_KEY
                   ? 'The first `xAxis`'
                   : `The x-axis with id "${xAxisId}"`
@@ -111,8 +136,11 @@ function MarkPlot(props: MarkPlotProps) {
 
           const Mark = slots?.mark ?? (shape === 'circle' ? CircleMarkElement : MarkElement);
 
+          const isSeriesHighlighted = isHighlighted({ seriesId });
+          const isSeriesFaded = !isSeriesHighlighted && isFaded({ seriesId });
+
           return (
-            <g key={seriesId} clipPath={`url(#${clipId})`}>
+            <g key={seriesId} clipPath={`url(#${clipId})`} data-series={seriesId}>
               {xData
                 ?.map((x, index) => {
                   const value = data[index] == null ? null : stackedData[index][1];
@@ -129,7 +157,7 @@ function MarkPlot(props: MarkPlotProps) {
                     // Remove missing data point
                     return false;
                   }
-                  if (!instance.isPointInside({ x, y })) {
+                  if (!instance.isPointInside(x, y)) {
                     // Remove out of range
                     return false;
                   }
@@ -160,6 +188,8 @@ function MarkPlot(props: MarkPlotProps) {
                         ((event) =>
                           onItemClick(event, { type: 'line', seriesId, dataIndex: index }))
                       }
+                      isHighlighted={highlightedItems[xAxisId]?.has(index) || isSeriesHighlighted}
+                      isFaded={isSeriesFaded}
                       {...slotProps?.mark}
                     />
                   );
@@ -185,7 +215,6 @@ MarkPlot.propTypes = {
   onItemClick: PropTypes.func,
   /**
    * If `true`, animations are skipped.
-   * @default false
    */
   skipAnimation: PropTypes.bool,
   /**

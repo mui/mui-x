@@ -7,11 +7,17 @@ import {
   TreeViewItemId,
 } from '../../../models';
 
+export type SetItemChildrenParameters<R> = {
+  items: readonly R[];
+  parentId: TreeViewItemId | null;
+  getChildrenCount: (item: R) => number;
+};
+
 export interface UseTreeViewItemsPublicAPI<R extends {}> {
   /**
    * Get the item with the given id.
    * When used in the Simple Tree View, it returns an object with the `id` and `label` properties.
-   * @param {string} itemId The id of the item to retrieve.
+   * @param {TreeViewItemId} itemId The id of the item to retrieve.
    * @returns {R} The item with the given id.
    */
   getItem: (itemId: TreeViewItemId) => R;
@@ -34,6 +40,18 @@ export interface UseTreeViewItemsPublicAPI<R extends {}> {
    * @returns {TreeViewBaseItem[]} The items in the tree.
    */
   getItemTree: () => TreeViewBaseItem[];
+  /**
+   * Toggle the disabled state of the item with the given id.
+   * @param {object} parameters The params of the method.
+   * @param {TreeViewItemId } parameters.itemId The id of the item to get the children of.
+   * @param {boolean } parameters.shouldBeDisabled true if the item should be disabled.
+   */
+  setIsItemDisabled: (parameters: { itemId: TreeViewItemId; shouldBeDisabled?: boolean }) => void;
+  /** * Get the id of the parent item.
+   * @param {TreeViewItemId} itemId The id of the item to whose parentId we want to retrieve.
+   * @returns {TreeViewItemId | null} The id of the parent item.
+   */
+  getParentId: (itemId: TreeViewItemId) => TreeViewItemId | null;
 }
 
 export interface UseTreeViewItemsInstance<R extends {}>
@@ -49,11 +67,32 @@ export interface UseTreeViewItemsInstance<R extends {}>
    * @returns {boolean} `true` if the updates to the state based on the `items` prop are prevented.
    */
   areItemUpdatesPrevented: () => boolean;
+  /**
+   * Add an array of items to the tree.
+   * @param {SetItemChildrenParameters<R>} args The items to add to the tree and information about their ancestors.
+   */
+  setItemChildren: (args: SetItemChildrenParameters<R>) => void;
+  /**
+   * Remove the children of an item.
+   * @param {TreeViewItemId | null} parentId The id of the item to remove the children of.
+   */
+  removeChildren: (parentId: TreeViewItemId | null) => void;
+  /**
+   * Event handler to fire when the `content` slot of a given Tree Item is clicked.
+   * @param {React.MouseEvent} event The DOM event that triggered the change.
+   * @param {TreeViewItemId} itemId The id of the item being clicked.
+   */
+  handleItemClick: (event: React.MouseEvent, itemId: TreeViewItemId) => void;
+  /**
+   * Mark a list of items as expandable.
+   * @param {TreeViewItemId[]} items The ids of the items to mark as expandable.
+   */
+  addExpandableItems: (items: TreeViewItemId[]) => void;
 }
 
 export interface UseTreeViewItemsParameters<R extends { children?: R[] }> {
   /**
-   * If `true`, will allow focus on disabled items.
+   * Whether the items should be focusable when disabled.
    * @default false
    */
   disabledItemsFocusable?: boolean;
@@ -75,20 +114,29 @@ export interface UseTreeViewItemsParameters<R extends { children?: R[] }> {
    */
   getItemLabel?: (item: R) => string;
   /**
+   * Used to determine the children of a given item.
+   *
+   * @template R
+   * @param {R} item The item to check.
+   * @returns {R[]} The children of the item.
+   * @default (item) => item.children
+   */
+  getItemChildren?: (item: R) => R[] | undefined;
+  /**
    * Used to determine the id of a given item.
    *
    * @template R
    * @param {R} item The item to check.
-   * @returns {string} The id of the item.
+   * @returns {TreeViewItemId} The id of the item.
    * @default (item) => item.id
    */
   getItemId?: (item: R) => TreeViewItemId;
   /**
    * Callback fired when the `content` slot of a given Tree Item is clicked.
    * @param {React.MouseEvent} event The DOM event that triggered the change.
-   * @param {string} itemId The id of the focused item.
+   * @param {TreeViewItemId} itemId The id of the focused item.
    */
-  onItemClick?: (event: React.MouseEvent, itemId: string) => void;
+  onItemClick?: (event: React.MouseEvent, itemId: TreeViewItemId) => void;
   /**
    * Horizontal indentation between an item and its children.
    * Examples: 24, "24px", "2rem", "2em".
@@ -97,21 +145,15 @@ export interface UseTreeViewItemsParameters<R extends { children?: R[] }> {
   itemChildrenIndentation?: string | number;
 }
 
-export type UseTreeViewItemsDefaultizedParameters<R extends { children?: R[] }> = DefaultizedProps<
+export type UseTreeViewItemsParametersWithDefaults<R extends { children?: R[] }> = DefaultizedProps<
   UseTreeViewItemsParameters<R>,
   'disabledItemsFocusable' | 'itemChildrenIndentation'
 >;
 
-interface UseTreeViewItemsEventLookup {
-  removeItem: {
-    params: { id: string };
-  };
-}
-
 export interface UseTreeViewItemsState<R extends {}> {
   items: {
     /**
-     * If `true`, will allow focus on disabled items.
+     * Whether the items should be focusable when disabled.
      * Always equal to `props.disabledItemsFocusable` (or `false` if not provided).
      */
     disabledItemsFocusable: boolean;
@@ -130,26 +172,24 @@ export interface UseTreeViewItemsState<R extends {}> {
     /**
      * Ordered children ids of each item.
      */
-    itemOrderedChildrenIdsLookup: { [parentItemId: string]: string[] };
+    itemOrderedChildrenIdsLookup: { [parentItemId: string]: TreeViewItemId[] };
     /**
      * Index of each child in the ordered children ids of its parent.
      */
     itemChildrenIndexesLookup: { [parentItemId: string]: { [itemId: string]: number } };
-  };
-}
-
-interface UseTreeViewItemsContextValue {
-  items: {
-    onItemClick: (event: React.MouseEvent, itemId: string) => void;
+    /**
+     * When equal to 'flat', the tree is rendered as a flat list (children are rendered as siblings of their parents).
+     * When equal to 'nested', the tree is rendered with nested children (children are rendered inside the groupTransition slot of their children).
+     * Nested DOM structure is not compatible with collapse / expansion animations.
+     */
+    domStructure: 'flat' | 'nested';
   };
 }
 
 export type UseTreeViewItemsSignature = TreeViewPluginSignature<{
   params: UseTreeViewItemsParameters<any>;
-  defaultizedParams: UseTreeViewItemsDefaultizedParameters<any>;
+  paramsWithDefaults: UseTreeViewItemsParametersWithDefaults<any>;
   instance: UseTreeViewItemsInstance<any>;
   publicAPI: UseTreeViewItemsPublicAPI<any>;
-  events: UseTreeViewItemsEventLookup;
   state: UseTreeViewItemsState<TreeViewDefaultItemModelProperties>;
-  contextValue: UseTreeViewItemsContextValue;
 }>;

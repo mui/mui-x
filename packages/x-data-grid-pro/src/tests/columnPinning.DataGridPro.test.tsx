@@ -1,6 +1,4 @@
-import * as React from 'react';
 import { spy } from 'sinon';
-import { expect } from 'chai';
 import { RefObject } from '@mui/x-internals/types';
 import {
   DataGridPro,
@@ -13,7 +11,14 @@ import {
   GridColDef,
 } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
-import { createRenderer, fireEvent, screen, createEvent, act } from '@mui/internal-test-utils';
+import {
+  createRenderer,
+  fireEvent,
+  screen,
+  createEvent,
+  act,
+  waitFor,
+} from '@mui/internal-test-utils';
 import {
   $,
   $$,
@@ -24,7 +29,7 @@ import {
   grid,
 } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
-import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 
 // TODO Move to utils
 // Fix https://github.com/mui/mui-x/pull/2085/files/058f56ac3c729b2142a9a28b79b5b13535cdb819#diff-db85480a519a5286d7341e9b8957844762cf04cdacd946331ebaaaff287482ec
@@ -39,7 +44,7 @@ function createDragOverEvent(target: ChildNode) {
 }
 
 describe('<DataGridPro /> - Column pinning', () => {
-  const { render, clock } = createRenderer();
+  const { render } = createRenderer();
 
   let apiRef: RefObject<GridApi | null>;
 
@@ -89,7 +94,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     window.ResizeObserver = originalResizeObserver;
   });
 
-  testSkipIf(isJSDOM)(
+  it.skipIf(isJSDOM)(
     'should scroll when the next cell to focus is covered by the left pinned columns',
     () => {
       render(<TestCase initialState={{ pinnedColumns: { left: ['id'] } }} />);
@@ -103,7 +108,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     },
   );
 
-  testSkipIf(isJSDOM)(
+  it.skipIf(isJSDOM)(
     'should scroll when the next cell to focus is covered by the right pinned columns',
     () => {
       render(<TestCase initialState={{ pinnedColumns: { right: ['price16M'] } }} />);
@@ -116,7 +121,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     },
   );
 
-  testSkipIf(isJSDOM)(
+  it.skipIf(isJSDOM)(
     'should increase the width of right pinned columns by resizing to the left',
     () => {
       render(<TestCase nbCols={3} initialState={{ pinnedColumns: { right: ['price1M'] } }} />);
@@ -135,7 +140,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     },
   );
 
-  testSkipIf(isJSDOM)(
+  it.skipIf(isJSDOM)(
     'should reduce the width of right pinned columns by resizing to the right',
     () => {
       render(<TestCase nbCols={3} initialState={{ pinnedColumns: { right: ['price1M'] } }} />);
@@ -205,7 +210,7 @@ describe('<DataGridPro /> - Column pinning', () => {
   });
 
   // Doesn't work with mocked window.getComputedStyle
-  testSkipIf(isJSDOM)(
+  it.skipIf(isJSDOM)(
     'should add border to right pinned columns section when `showCellVerticalBorder={true}`',
     () => {
       render(
@@ -226,7 +231,7 @@ describe('<DataGridPro /> - Column pinning', () => {
   );
 
   // https://github.com/mui/mui-x/issues/12431
-  testSkipIf(isJSDOM)('should not render unnecessary filler after the last row', () => {
+  it.skipIf(isJSDOM)('should not render unnecessary filler after the last row', () => {
     const rowHeight = 50;
     const columns: GridColDef[] = [
       { field: 'id', headerName: 'ID', width: 120 },
@@ -325,7 +330,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     it('should not add any button to the column menu', async () => {
       const { user } = render(<TestCase disableColumnPinning />);
       const columnCell = document.querySelector('[role="columnheader"][data-field="id"]')!;
-      const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
+      const menuIconButton = columnCell.querySelector('button[aria-label="brand column menu"]')!;
 
       await user.click(menuIconButton);
       expect(screen.queryByRole('menuitem', { name: 'Pin to left' })).to.equal(null);
@@ -460,7 +465,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     it('should pin the column to the left when clicking the "Pin to left" pinning button', async () => {
       const { user } = render(<TestCase />);
       const columnCell = $('[role="columnheader"][data-field="id"]')!;
-      const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
+      const menuIconButton = columnCell.querySelector('button[aria-label="id column menu"]')!;
       await user.click(menuIconButton);
       await user.click(screen.getByRole('menuitem', { name: 'Pin to left' }));
       expect($(`.${gridClasses['cell--pinnedLeft']}[data-field="id"]`)).not.to.equal(null);
@@ -469,7 +474,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     it('should pin the column to the right when clicking the "Pin to right" pinning button', async () => {
       const { user } = render(<TestCase />);
       const columnCell = $('[role="columnheader"][data-field="id"]')!;
-      const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
+      const menuIconButton = columnCell.querySelector('button[aria-label="id column menu"]')!;
       await user.click(menuIconButton);
       await user.click(screen.getByRole('menuitem', { name: 'Pin to right' }));
       expect($(`.${gridClasses['cell--pinnedRight']}[data-field="id"]`)).not.to.equal(null);
@@ -478,7 +483,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     it('should allow to invert the side when clicking on "Pin to right" pinning button on a left pinned column', async () => {
       const { user } = render(<TestCase initialState={{ pinnedColumns: { left: ['id'] } }} />);
       const columnCell = $('[role="columnheader"][data-field="id"]')!;
-      const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
+      const menuIconButton = columnCell.querySelector('button[aria-label="id column menu"]')!;
       await user.click(menuIconButton);
       await user.click(screen.getByRole('menuitem', { name: 'Pin to right' }));
       expect($(`.${gridClasses['cell--pinnedLeft']}[data-field="id"]`)).to.equal(null);
@@ -488,7 +493,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     it('should allow to invert the side when clicking on "Pin to left" pinning button on a right pinned column', async () => {
       const { user } = render(<TestCase initialState={{ pinnedColumns: { right: ['id'] } }} />);
       const columnCell = $('[role="columnheader"][data-field="id"]')!;
-      const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
+      const menuIconButton = columnCell.querySelector('button[aria-label="id column menu"]')!;
       await user.click(menuIconButton);
       await user.click(screen.getByRole('menuitem', { name: 'Pin to left' }));
       expect($(`.${gridClasses['cell--pinnedRight']}[data-field="id"]`)).to.equal(null);
@@ -498,17 +503,15 @@ describe('<DataGridPro /> - Column pinning', () => {
     it('should allow to unpin a pinned left column when clicking "Unpin" pinning button', async () => {
       const { user } = render(<TestCase initialState={{ pinnedColumns: { left: ['id'] } }} />);
       const columnCell = $('[role="columnheader"][data-field="id"]')!;
-      const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
+      const menuIconButton = columnCell.querySelector('button[aria-label="id column menu"]')!;
       await user.click(menuIconButton);
       await user.click(screen.getByRole('menuitem', { name: 'Unpin' }));
       expect($(`.${gridClasses['cell--pinnedLeft']}[data-field="id"]`)).to.equal(null);
     });
 
     describe('with fake timers', () => {
-      clock.withFakeTimers();
-
-      it('should not render menu items if the column has `pinnable` equals to false', () => {
-        render(
+      it('should not render menu items if the column has `pinnable` equals to false', async () => {
+        const { user } = render(
           <TestCase
             columns={[
               { field: 'brand', pinnable: true },
@@ -519,16 +522,17 @@ describe('<DataGridPro /> - Column pinning', () => {
         );
 
         const brandHeader = document.querySelector('[role="columnheader"][data-field="brand"]')!;
-        fireEvent.click(brandHeader.querySelector('button[aria-label="Menu"]')!);
+        await user.click(brandHeader.querySelector('button[aria-label="brand column menu"]')!);
         expect(screen.queryByRole('menuitem', { name: 'Pin to left' })).not.to.equal(null);
-        fireEvent.keyDown(screen.getByRole('menu'), { key: 'Escape' });
+        await user.keyboard('[Escape]');
 
-        clock.runToLast();
         // Ensure that the first menu was closed
-        expect(screen.queryByRole('menuitem', { name: 'Pin to left' })).to.equal(null);
+        await waitFor(() => {
+          expect(screen.queryByRole('menuitem', { name: 'Pin to left' })).to.equal(null);
+        });
 
         const yearHeader = document.querySelector('[role="columnheader"][data-field="year"]')!;
-        fireEvent.click(yearHeader.querySelector('button[aria-label="Menu"]')!);
+        await user.click(yearHeader.querySelector('button[aria-label="year column menu"]')!);
         expect(screen.queryByRole('menuitem', { name: 'Pin to left' })).to.equal(null);
       });
     });
@@ -712,6 +716,106 @@ describe('<DataGridPro /> - Column pinning', () => {
         '[role="columnheader"][data-fields="|-age-|"]',
       )!;
       expect(ageCellColumnGroupHeader.textContent).to.equal('Basic info');
+    });
+  });
+
+  describe('pinned columns order in column management', () => {
+    it('should keep pinned column order in column management panel when toggling columns', async () => {
+      const { user } = render(
+        <TestCase
+          rows={[{ id: 1, brand: 'Nike' }]}
+          columns={[{ field: 'id' }, { field: 'brand' }]}
+          showToolbar
+          initialState={{
+            pinnedColumns: {
+              left: ['brand'],
+            },
+          }}
+        />,
+      );
+
+      await user.click(screen.getByRole('button', { name: 'Columns' }));
+
+      const columnCheckboxes = screen.getAllByRole('checkbox');
+
+      expect(columnCheckboxes[0]).to.have.attribute('name', 'brand');
+      expect(columnCheckboxes[1]).to.have.attribute('name', 'id');
+
+      await user.click(columnCheckboxes[1]);
+
+      await user.click(screen.getByRole('button', { name: 'Columns' }));
+      await user.click(screen.getByRole('button', { name: 'Columns' }));
+
+      const checkboxesAfterToggle = screen.getAllByRole('checkbox');
+
+      expect(checkboxesAfterToggle[0]).to.have.attribute('name', 'brand');
+      expect(checkboxesAfterToggle[1]).to.have.attribute('name', 'id');
+    });
+
+    it('should keep pinned column order in column management panel when clicking show/hide all checkbox', async () => {
+      const { user } = render(
+        <TestCase
+          rows={[{ id: 0, brand: 'Nike' }]}
+          columns={[{ field: 'id' }, { field: 'brand' }]}
+          showToolbar
+          initialState={{
+            pinnedColumns: {
+              left: ['brand'],
+            },
+          }}
+        />,
+      );
+
+      await user.click(screen.getByRole('button', { name: 'Columns' }));
+
+      const columnCheckboxes = screen.getAllByRole('checkbox');
+
+      expect(columnCheckboxes[0]).to.have.attribute('name', 'brand');
+      expect(columnCheckboxes[1]).to.have.attribute('name', 'id');
+
+      await user.click(columnCheckboxes[columnCheckboxes.length - 1]);
+
+      await user.click(screen.getByRole('button', { name: 'Columns' }));
+      await user.click(screen.getByRole('button', { name: 'Columns' }));
+
+      const checkboxesAfterToggle = screen.getAllByRole('checkbox');
+      expect(checkboxesAfterToggle[0]).to.have.attribute('name', 'brand');
+      expect(checkboxesAfterToggle[1]).to.have.attribute('name', 'id');
+    });
+
+    it('should update column order when pinned columns are updated', async () => {
+      const { user } = render(
+        <TestCase
+          rows={[{ id: 0, brand: 'Nike', price: 100 }]}
+          columns={[{ field: 'id' }, { field: 'brand' }, { field: 'price' }]}
+          showToolbar
+          initialState={{
+            pinnedColumns: {},
+            columns: {
+              columnVisibilityModel: { id: false },
+            },
+          }}
+        />,
+      );
+
+      await user.click(screen.getByRole('button', { name: 'Columns' }));
+
+      const columnCheckboxes = screen.getAllByRole('checkbox');
+
+      expect(columnCheckboxes[0]).to.have.attribute('name', 'id');
+      expect(columnCheckboxes[1]).to.have.attribute('name', 'brand');
+      expect(columnCheckboxes[2]).to.have.attribute('name', 'price');
+
+      await act(() => {
+        apiRef.current?.pinColumn('brand', GridPinnedColumnPosition.LEFT);
+        apiRef.current?.pinColumn('id', GridPinnedColumnPosition.RIGHT);
+      });
+
+      const checkboxesAfterPinning = screen.getAllByRole('checkbox');
+
+      expect(checkboxesAfterPinning[0]).to.have.attribute('name', 'brand');
+      expect(checkboxesAfterPinning[1]).to.have.attribute('name', 'price');
+      expect(checkboxesAfterPinning[2]).to.have.attribute('name', 'id');
     });
   });
 });

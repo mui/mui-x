@@ -19,6 +19,7 @@
       "isPremiumPlan": true
     },
     "cellClassName": { "type": { "description": "GridCellClassNamePropType&lt;R, V&gt;" } },
+    "chartable": { "type": { "description": "boolean" }, "default": "true", "isPremiumPlan": true },
     "colSpan": {
       "type": { "description": "number | GridColSpanFn&lt;R, V, F&gt;" },
       "default": "1"
@@ -29,6 +30,7 @@
     "disableReorder": { "type": { "description": "boolean" }, "default": "false" },
     "display": { "type": { "description": "'text' | 'flex'" } },
     "editable": { "type": { "description": "boolean" }, "default": "false" },
+    "examples": { "type": { "description": "V[]" } },
     "filterable": { "type": { "description": "boolean" }, "default": "true" },
     "filterOperators": {
       "type": { "description": "readonly GridFilterOperator&lt;R, V, F, any&gt;[]" }
@@ -45,6 +47,10 @@
       "type": { "description": "GridGroupingValueGetter&lt;R&gt;" },
       "isPremiumPlan": true
     },
+    "groupingValueSetter": {
+      "type": { "description": "GridGroupingValueSetter&lt;R&gt;" },
+      "isPremiumPlan": true
+    },
     "headerAlign": { "type": { "description": "GridAlignment" } },
     "headerClassName": { "type": { "description": "GridColumnHeaderClassNamePropType" } },
     "headerName": { "type": { "description": "string" } },
@@ -57,6 +63,7 @@
       "isPremiumPlan": true
     },
     "pinnable": { "type": { "description": "boolean" }, "default": "true" },
+    "pivotable": { "type": { "description": "boolean" }, "default": "true", "isPremiumPlan": true },
     "preProcessEditCellProps": {
       "type": {
         "description": "(params: GridPreProcessEditCellProps) =&gt; GridEditCellProps | Promise&lt;GridEditCellProps&gt;"
@@ -87,7 +94,6 @@
     "sortComparator": { "type": { "description": "GridComparatorFn&lt;V&gt;" } },
     "sortingOrder": { "type": { "description": "readonly GridSortDirection[]" } },
     "type": { "type": { "description": "GridColType" }, "default": "'singleSelect'" },
-    "unstable_examples": { "type": { "description": "V[]" } },
     "valueFormatter": { "type": { "description": "GridValueFormatter&lt;R, V, F&gt;" } },
     "valueGetter": { "type": { "description": "GridValueGetter&lt;R, V, F&gt;" } },
     "valueParser": { "type": { "description": "GridValueParser&lt;R, V, F&gt;" } },

@@ -1,0 +1,20 @@
+<BarChart
+  xAxis={[
+    {
+      data,
+      height: 32,
+      groups: [
+        {
+          getValue: getMonth,
+          tickSize: 0,
+        },
+        {
+          getValue: formatQuarterYear,
+          tickSize: 32,
+        },
+      ],
+      valueFormatter,
+    },
+  ]}
+  {...chartConfig}
+/>

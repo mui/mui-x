@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { LineChart, LineChartProps } from '@mui/x-charts/LineChart';
 import { PiecewiseColorLegend } from '@mui/x-charts/ChartsLegend';
 import Stack from '@mui/material/Stack';
@@ -31,7 +30,7 @@ const data: LineChartProps = {
     {
       disableLine: true,
       disableTicks: true,
-      valueFormatter: (value) => `${value}°`,
+      valueFormatter: (value: number) => `${value}°`,
     },
   ],
   grid: { horizontal: true },

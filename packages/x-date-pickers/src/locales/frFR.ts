@@ -35,12 +35,14 @@ const frFRPickers: Partial<PickersLocaleText> = {
   clearButtonLabel: 'Vider',
   okButtonLabel: 'OK',
   todayButtonLabel: "Aujourd'hui",
+  nextStepButtonLabel: 'Suivant',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Choisir une date',
   dateTimePickerToolbarTitle: "Choisir la date et l'heure",
   timePickerToolbarTitle: "Choisir l'heure",
   dateRangePickerToolbarTitle: 'Choisir la plage de dates',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
@@ -58,7 +60,7 @@ const frFRPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Semaine ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate
       ? `Choisir la date, la date sélectionnée est ${formattedDate}`
@@ -67,6 +69,7 @@ const frFRPickers: Partial<PickersLocaleText> = {
     formattedTime
       ? `Choisir l'heure, l'heure sélectionnée est ${formattedTime}`
       : "Choisir l'heure",
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'Effacer la valeur',
 
   // Table labels

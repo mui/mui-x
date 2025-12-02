@@ -1,0 +1,5 @@
+<Typography sx={{ alignSelf: 'center', my: 1 }}>
+  Inflation rate in France, Germany and the UK, 1960-2024
+</Typography>
+<LineChartPro {...settings} showToolbar />
+<Typography variant="caption">Source: World Bank</Typography>

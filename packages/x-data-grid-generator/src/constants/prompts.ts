@@ -1,9 +1,10 @@
-import { unstable_PromptResponse as PromptResponse } from '@mui/x-data-grid-premium';
+import { PromptResponse } from '@mui/x-data-grid-premium';
 
 export const mockPrompts = new Map<string, PromptResponse>([
   [
     'sort by name',
     {
+      conversationId: 'mock',
       select: -1,
       filters: [],
       aggregation: {},
@@ -14,12 +15,14 @@ export const mockPrompts = new Map<string, PromptResponse>([
         },
       ],
       grouping: [],
-      error: null,
+      pivoting: {},
+      chart: null,
     },
   ],
   [
     'sort by company name and employee name',
     {
+      conversationId: 'mock',
       select: -1,
       filters: [],
       aggregation: {},
@@ -34,12 +37,14 @@ export const mockPrompts = new Map<string, PromptResponse>([
         },
       ],
       grouping: [],
-      error: null,
+      pivoting: {},
+      chart: null,
     },
   ],
   [
     'show people from the eu',
     {
+      conversationId: 'mock',
       select: -1,
       filters: [
         {
@@ -79,12 +84,14 @@ export const mockPrompts = new Map<string, PromptResponse>([
       aggregation: {},
       sorting: [],
       grouping: [],
-      error: null,
+      pivoting: {},
+      chart: null,
     },
   ],
   [
     'order companies by amount of people',
     {
+      conversationId: 'mock',
       select: -1,
       filters: [],
       aggregation: {
@@ -101,7 +108,8 @@ export const mockPrompts = new Map<string, PromptResponse>([
           column: 'company',
         },
       ],
-      error: null,
+      pivoting: {},
+      chart: null,
     },
   ],
 ]);

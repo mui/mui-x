@@ -17,7 +17,7 @@ You will find the details of the editing API in the next sections.
 
 You can make a column editable by enabling the `editable` property in its [column definition](/x/api/data-grid/grid-col-def/).
 
-This lets the user edit any cell from the specified columns.
+This lets users edit any cell from the specified columns.
 For example, with the code snippet below, users can edit cells in the `name` column, but not in the `id` column.
 
 ```tsx
@@ -252,7 +252,13 @@ Also, removing one field or row ID from the object will not cause the missing ce
 
 ## apiRef
 
-The grid exposes a set of methods that enables all of these features using the imperative `apiRef`. To know more about how to use it, check the [API Object](/x/react-data-grid/api-object/) section.
+The Data Grid exposes a set of methods via the `apiRef` object that are used internally in the implementation of the editing feature.
+The reference below describes the relevant functions.
+See [API object](/x/react-data-grid/api-object/) for more details.
+
+:::warning
+This API should only be used as a last resort when the Data Grid's built-in props aren't sufficient for your specific use case.
+:::
 
 {{"demo": "EditApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 

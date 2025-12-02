@@ -8,15 +8,24 @@
       },
       "required": true
     },
-    "skipAnimation": { "type": { "name": "bool" }, "default": "false" }
+    "isFaded": { "type": { "name": "bool" }, "default": "false" },
+    "isHighlighted": { "type": { "name": "bool" }, "default": "false" },
+    "skipAnimation": { "type": { "name": "bool" } }
   },
   "name": "MarkElement",
   "imports": [
     "import { MarkElement } from '@mui/x-charts/LineChart';",
     "import { MarkElement } from '@mui/x-charts';",
-    "import { MarkElement } from '@mui/x-charts-pro';"
+    "import { MarkElement } from '@mui/x-charts-pro';",
+    "import { MarkElement } from '@mui/x-charts-premium';"
   ],
   "classes": [
+    {
+      "key": "animate",
+      "className": "MuiMarkElement-animate",
+      "description": "Styles applied to the root element when animation is not skipped.",
+      "isGlobal": false
+    },
     {
       "key": "faded",
       "className": "MuiMarkElement-faded",
@@ -34,11 +43,17 @@
       "className": "MuiMarkElement-root",
       "description": "Styles applied to the root element.",
       "isGlobal": false
+    },
+    {
+      "key": "series",
+      "className": "MuiMarkElement-series",
+      "description": "Styles applied to the root element for a specified series.\nNeeds to be suffixed with the series ID: `.${markElementClasses.series}-${seriesId}`.",
+      "isGlobal": false
     }
   ],
   "muiName": "MuiMarkElement",
   "filename": "/packages/x-charts/src/LineChart/MarkElement.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/areas-demo/\">Charts - Areas demonstration</a></li>\n<li><a href=\"/x/react-charts/line-demo/\">Charts - Line demonstration</a></li>\n<li><a href=\"/x/react-charts/lines/\">Charts - Lines</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/areas-demo/\">Charts - Areas demos</a></li>\n<li><a href=\"/x/react-charts/line-demo/\">Charts - Line demos</a></li>\n<li><a href=\"/x/react-charts/lines/\">Charts - Lines</a></li></ul>",
   "cssComponent": false
 }

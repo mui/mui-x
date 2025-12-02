@@ -1,3 +1,4 @@
+<Typography>Netflix balance sheet</Typography>
 <BarChart
   dataset={balanceSheet}
   series={addLabels([
@@ -9,6 +10,6 @@
     { dataKey: 'retEarn', stack: 'equity' },
     { dataKey: 'treas', stack: 'equity' },
   ])}
-  xAxis={[{ scaleType: 'band', dataKey: 'year' }]}
+  xAxis={[{ dataKey: 'year' }]}
   {...config}
 />

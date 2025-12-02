@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Typography from '@mui/material/Typography';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { ChartsReferenceLine } from '@mui/x-charts/ChartsReferenceLine';
@@ -44,7 +43,6 @@ export default function BasicColorLegend() {
         ]}
         grid={{ horizontal: true }}
         height={300}
-        margin={{ top: 20, right: 20 }}
         slotProps={{
           legend: {
             axisDirection: 'x',

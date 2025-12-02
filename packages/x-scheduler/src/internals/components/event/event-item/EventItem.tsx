@@ -1,0 +1,200 @@
+'use client';
+import * as React from 'react';
+import clsx from 'clsx';
+import { useId } from '@base-ui-components/utils/useId';
+import { useStore } from '@base-ui-components/utils/store';
+import { Repeat } from 'lucide-react';
+import {
+  schedulerEventSelectors,
+  schedulerResourceSelectors,
+} from '@mui/x-scheduler-headless/scheduler-selectors';
+import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
+import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
+import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
+import { EventItemProps } from './EventItem.types';
+import { getColorClassName } from '../../../utils/color-utils';
+import { useTranslations } from '../../../utils/TranslationsContext';
+import { useFormatTime } from '../../../hooks/useFormatTime';
+import './EventItem.css';
+// TODO: Create a standalone component for the resource color pin instead of re-using another component's CSS classes
+import '../../resource-legend/ResourceLegend.css';
+import '../index.css';
+
+/**
+ * Component used to display an event occurrence, without any positioning capabilities
+ * Used in <AgendaView /> and in the event popover of <MonthView /> to display the list of events for a specific day.
+ */
+export const EventItem = React.forwardRef(function EventItem(
+  props: EventItemProps,
+  forwardedRef: React.ForwardedRef<HTMLDivElement>,
+) {
+  const {
+    occurrence,
+    date,
+    ariaLabelledBy,
+    className,
+    id: idProp,
+    style,
+    variant = 'regular',
+    ...other
+  } = props;
+
+  // Context hooks
+  const translations = useTranslations();
+  const store = useEventCalendarStoreContext();
+
+  // State hooks
+  const id = useId(idProp);
+
+  // Selector hooks
+  const resource = useStore(
+    store,
+    schedulerResourceSelectors.processedResource,
+    occurrence.resource,
+  );
+  const color = useStore(store, schedulerEventSelectors.color, occurrence.id);
+
+  const formatTime = useFormatTime();
+
+  const content = React.useMemo(() => {
+    const isRecurring = Boolean(occurrence.rrule);
+
+    switch (variant) {
+      case 'compact':
+        return (
+          <React.Fragment>
+            <span
+              className="ResourceLegendColor"
+              role="img"
+              aria-label={
+                resource?.title
+                  ? translations.resourceAriaLabel(resource.title)
+                  : translations.noResourceAriaLabel
+              }
+            />
+            <p
+              className={clsx('EventItemCardContent', 'LinesClamp')}
+              style={{ '--number-of-lines': 1 } as React.CSSProperties}
+            >
+              <time className="EventItemTime EventItemTime--compact">
+                <span>{formatTime(occurrence.start.value)}</span>
+              </time>
+
+              <span className="EventItemTitle">{occurrence.title}</span>
+            </p>
+            {isRecurring && (
+              <Repeat
+                size={12}
+                strokeWidth={1.5}
+                className="EventRecurringIcon"
+                aria-hidden="true"
+              />
+            )}
+          </React.Fragment>
+        );
+
+      case 'filled':
+        return (
+          <React.Fragment>
+            <p
+              className={clsx('EventItemTitle', 'LinesClamp')}
+              style={{ '--number-of-lines': 1 } as React.CSSProperties}
+            >
+              {occurrence.title}
+            </p>
+            {isRecurring && (
+              <Repeat
+                size={12}
+                strokeWidth={1.5}
+                className="EventRecurringIcon"
+                aria-hidden="true"
+              />
+            )}
+          </React.Fragment>
+        );
+      case 'regular':
+        return (
+          <div className="EventItemCardWrapper">
+            <span
+              className="ResourceLegendColor"
+              role="img"
+              aria-label={
+                resource?.title
+                  ? translations.resourceAriaLabel(resource.title)
+                  : translations.noResourceAriaLabel
+              }
+            />
+            <p
+              className={clsx('EventItemCardContent', 'LinesClamp')}
+              style={{ '--number-of-lines': 1 } as React.CSSProperties}
+            >
+              <MultiDayDateLabel occurrence={occurrence} />
+              <span className="EventItemTitle">{occurrence.title}</span>
+            </p>
+            {isRecurring && (
+              <Repeat
+                size={12}
+                strokeWidth={1.5}
+                className="EventRecurringIcon"
+                aria-hidden="true"
+              />
+            )}
+          </div>
+        );
+      default:
+        throw new Error('Unsupported variant provided to EventItem component.');
+    }
+  }, [variant, occurrence, resource?.title, translations, formatTime]);
+
+  return (
+    // TODO: Use button
+    <div
+      ref={forwardedRef}
+      id={id}
+      className={clsx(
+        className,
+        'EventContainer',
+        'EventCard',
+        'EventItemCard',
+        `EventItemCard--${variant}`,
+        getColorClassName(color),
+      )}
+      aria-labelledby={`${ariaLabelledBy} ${id}`}
+      {...other}
+    >
+      <div className={clsx('EventItemCardWrapper', `EventItemCardWrapper--${variant}`)}>
+        {content}
+      </div>
+    </div>
+  );
+});
+
+function MultiDayDateLabel(props: { occurrence: SchedulerEventOccurrence }) {
+  const { occurrence } = props;
+
+  const adapter = useAdapter();
+  const translations = useTranslations();
+  const formatTime = useFormatTime();
+
+  if (!adapter.isSameDay(occurrence.start.value, occurrence.end.value)) {
+    const format = `${adapter.formats.dayOfMonth} ${adapter.formats.month3Letters}`;
+    return (
+      <time className="EventItemTime">
+        <span>
+          {translations.eventItemMultiDayLabel(
+            adapter.formatByString(occurrence.end.value, format),
+          )}
+        </span>
+      </time>
+    );
+  }
+  if (occurrence.allDay) {
+    return <span className="EventItemTime">{translations.allDay}</span>;
+  }
+  return (
+    <time className="EventItemTime">
+      <span>{formatTime(occurrence.start.value)}</span>
+      <span> - {formatTime(occurrence.end.value)}</span>
+    </time>
+  );
+}

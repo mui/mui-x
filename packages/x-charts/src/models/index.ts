@@ -1,6 +1,6 @@
 export * from './seriesType';
-export * from './layout';
 export * from './stacking';
+export * from './slots';
 export type {
   AxisConfig,
   ChartsYAxisProps,
@@ -8,6 +8,12 @@ export type {
   ScaleName,
   ContinuousScaleName,
   ChartsAxisData,
+  XAxis,
+  YAxis,
+  RadiusAxis,
+  RotationAxis,
+  AxisItemIdentifier,
+  AxisValueFormatterContext,
 } from './axis';
 
 // Utils shared across the X packages

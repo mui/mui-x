@@ -9,6 +9,22 @@ import type {
   GridAggregationInitialState,
   GridCellSelectionModel,
 } from '../hooks';
+import type {
+  GridPivotingInitialState,
+  GridPivotingState,
+} from '../hooks/features/pivoting/gridPivotingInterfaces';
+import type {
+  GridAiAssistantInitialState,
+  GridAiAssistantState,
+} from '../hooks/features/aiAssistant/gridAiAssistantInterfaces';
+import type {
+  GridSidebarInitialState,
+  GridSidebarState,
+} from '../hooks/features/sidebar/gridSidebarState';
+import type {
+  GridChartsIntegrationState,
+  GridChartsIntegrationInitialState,
+} from '../hooks/features/chartsIntegration/gridChartsIntegrationInterfaces';
 
 /**
  * The state of Data Grid Premium.
@@ -17,6 +33,10 @@ export interface GridStatePremium extends GridStatePro {
   rowGrouping: GridRowGroupingState;
   aggregation: GridAggregationState;
   cellSelection: GridCellSelectionModel;
+  pivoting: GridPivotingState;
+  aiAssistant: GridAiAssistantState;
+  sidebar: GridSidebarState;
+  chartsIntegration: GridChartsIntegrationState;
 }
 
 /**
@@ -26,4 +46,8 @@ export interface GridInitialStatePremium extends GridInitialStatePro {
   rowGrouping?: GridRowGroupingInitialState;
   aggregation?: GridAggregationInitialState;
   cellSelection?: GridCellSelectionModel;
+  pivoting?: GridPivotingInitialState;
+  aiAssistant?: GridAiAssistantInitialState;
+  sidebar?: GridSidebarInitialState;
+  chartsIntegration?: GridChartsIntegrationInitialState;
 }

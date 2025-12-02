@@ -1,7 +1,10 @@
 <DataGrid
   {...data}
   loading={loading}
-  slots={{
-    toolbar: CustomToolbar,
+  slotProps={{
+    toolbar: {
+      printOptions: { disableToolbarButton: true },
+    },
   }}
+  showToolbar
 />

@@ -4,21 +4,42 @@ title: Data Grid - Tree data
 
 # Data Grid - Tree data [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-<p class="description">Use Tree data to handle rows with parent / child relationship.</p>
+<p class="description">Use tree data to render rows with parent-child relationships in the Data Grid.</p>
 
-To enable the Tree data, you simply have to use the `treeData` prop as well as provide a `getTreeDataPath` prop.
-The `getTreeDataPath` function returns an array of strings which represents the path to a given row.
+Trees are hierarchical data structures that organize data into parent-child relationships.
+The Data Grid Pro can use tree data to render rows that conform to this pattern.
+The demo below illustrates this feature with a large and complex hierarchical dataset:
+
+{{"demo": "TreeDataFullExample.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::info
+This document covers client-side data.
+For tree data on the server side, see [Server-side data—Tree data](/x/react-data-grid/server-side-data/tree-data/).
+:::
+
+## Rendering tree data
+
+To work with tree data, pass the `treeData` and `getTreeDataPath` props to the `<DataGridPro />` component.
+The `getTreeDataPath` function returns an array of strings representing the path to a given row.
 
 ```tsx
-// The following examples will both render the same tree
+<DataGridPro treeData getTreeDataPath={getTreeDataPath} />
+```
+
+Both examples that follow will render a tree that looks like this:
+
+```tsx
 // - Sarah
 //     - Thomas
 //         - Robert
 //         - Karen
+```
 
+**1. Without transformation:**
+
+```tsx
 const columns: GridColDef[] = [{ field: 'jobTitle', width: 250 }];
 
-// Without transformation
 const rows: GridRowsProp = [
   { path: ['Sarah'], jobTitle: 'CEO', id: 0 },
   { path: ['Sarah', 'Thomas'], jobTitle: 'Head of Sales', id: 1 },
@@ -34,8 +55,13 @@ const getTreeDataPath: DataGridProProps['getTreeDataPath'] = (row) => row.path;
   rows={rows}
   columns={columns}
 />;
+```
 
-// With transformation
+**2. With transformation:**
+
+```tsx
+const columns: GridColDef[] = [{ field: 'jobTitle', width: 250 }];
+
 const rows: GridRowsProp = [
   { path: 'Sarah', jobTitle: 'CEO', id: 0 },
   { path: 'Sarah/Thomas', jobTitle: 'Head of Sales', id: 1 },
@@ -56,20 +82,21 @@ const getTreeDataPath: DataGridProProps['getTreeDataPath'] = (row) =>
 
 :::warning
 The `getTreeDataPath` prop should keep the same reference between two renders.
-If it changes, the Data Grid will consider that the data has changed and will recompute the tree resulting in collapsing all the rows.
+If it changes, the Data Grid assumes that the data itself has changed and recomputes the tree, causing all rows to collapse.
 :::
 
-{{"demo": "TreeDataSimple.js", "bg": "inline", "defaultCodeOpen": false}}
+## Customizing grouping columns with tree data
 
-## Custom grouping column
+For complete details on customizing grouping columns, see [Row grouping—Grouping columns](/x/react-data-grid/row-grouping/#grouping-columns).
+The implementation and behavior are the same when working with tree data, but note that the `leafField` and `mainGroupingCriteria` props are not applicable.
 
-Same behavior as for the [Row grouping](/x/react-data-grid/row-grouping/#grouping-columns) except for the `leafField` and `mainGroupingCriteria` which are not applicable for the Tree data.
+The demo below customizes the **Hierarchy** grouping column:
 
 {{"demo": "TreeDataCustomGroupingColumn.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Accessing the grouping column field
 
-If you want to access the grouping column field, for instance, to use it with column pinning, the `GRID_TREE_DATA_GROUPING_FIELD` constant is available.
+To access the grouping column field—for example, to use it with [column pinning](/x/react-data-grid/column-pinning/)—the Grid provides the `GRID_TREE_DATA_GROUPING_FIELD` constant:
 
 ```tsx
 <DataGridPro
@@ -83,63 +110,124 @@ If you want to access the grouping column field, for instance, to use it with co
 />
 ```
 
-## Group expansion
+## Group expansion with tree data
 
-Same behavior as for the [Row grouping](/x/react-data-grid/row-grouping/#group-expansion).
+For complete details on customizing the group expansion experience, see [Row grouping—Group expansion](/x/react-data-grid/row-grouping/#group-expansion).
+The implementation and behavior are the same when working with tree data.
 
-## Automatic parents and children selection
+## Automatic parent and child selection with tree data
 
-Same behavior as for the [Row grouping](/x/react-data-grid/row-grouping/#automatic-parents-and-children-selection).
+For complete details on automatic parent and child selection, see [Row grouping—Automatic parent and child selection](/x/react-data-grid/row-grouping/#automatic-parent-and-child-selection).
+The implementation and behavior are the same when working with tree data.
 
 ## Gaps in the tree
 
-If some entries are missing to build the full tree, the Data Grid Pro will automatically create rows to fill those gaps.
+If the tree data provided is missing levels in the hierarchy, the Data Grid Pro will automatically create the rows needed to fill the gaps.
+Consider a simple dataset with two rows:
+
+```js
+[{ path: ['A'] }, { path: ['A', 'B', 'C'] }];
+```
+
+This tree data implies a `{ path: ["A", "B"] }` row that's not present.
+To address this, the Grid generates an internal row so it can render without issues.
+
+In the demo below, rows with no gaps are denoted with **✕** in the **Gap** column—you can see that the rows for Thomas, Mary, and Linda have been autogenerated since they're not present in the dataset.
 
 {{"demo": "TreeDataWithGap.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Filtering
+## Filtering tree data
 
-A node is included if one of the following criteria is met:
+When a filter is applied, a node is included if it _or_ any of its descendents passes.
 
-- at least one of its descendants is passing the filters
-- it is passing the filters
-
-By default, the filtering is applied to every depth of the tree.
-You can limit the filtering to the top-level rows with the `disableChildrenFiltering` prop.
+By default, filtering is applied at every level of the tree.
+You can limit it to top-level rows with the `disableChildrenFiltering` prop.
 
 {{"demo": "TreeDataDisableChildrenFiltering.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Sorting
+## Sorting tree data
 
-By default, the sorting is applied to every depth of the tree.
-You can limit the sorting to the top-level rows with the `disableChildrenSorting` prop.
+By default, sorting is applied at every level of the tree.
+You can limit it to top-level rows with the `disableChildrenSorting` prop.
 
 {{"demo": "TreeDataDisableChildrenSorting.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::warning
-If you are using `sortingMode="server"`, the children of a row must always immediately follow their parent.
-For instance:
+When using `sortingMode="server"`, a child must always immediately follow its parent:
 
 ```ts
-// ✅ The row A.A is immediately after its parent
+// ✅ Row A.A immediately follows its parent
 const validRows = [{ path: ['A'] }, { path: ['A', 'A'] }, { path: ['B'] }];
 
-// ❌ The row A.A is not immediately after its parent
-const invalidRows = [{ path: ['A'] }, { path: ['B'] }, { path: ['A', 'A'] }];
+// ❌ Row X.X does not immediately follow its parent
+const invalidRows = [{ path: ['X'] }, { path: ['Y'] }, { path: ['X', 'X'] }];
 ```
 
 :::
 
-## Children lazy-loading
+## Drag-and-drop tree data reordering
 
-Check the [Server-side tree data](/x/react-data-grid/server-side-data/tree-data/) section for more information about lazy-loading tree data children.
+With row reordering, users can reorder tree data or move rows from one group to another.
 
-## Full example
+To enable this feature with tree data, pass the `rowReordering` prop to the Data Grid component.
+You also need to pass the `setTreeDataPath()` prop to revert the operation done by [`getTreeDataPath()`](/x/api/data-grid/data-grid-pro/#data-grid-pro-prop-getTreeDataPath) while building the tree, because row reordering can change the path of the row.
 
-{{"demo": "TreeDataFullExample.js", "bg": "inline", "defaultCodeOpen": false}}
+```tsx
+<DataGridPro
+  columns={columns}
+  rows={rows}
+  treeData
+  getTreeDataPath={getTreeDataPath}
+  setTreeDataPath={setTreeDataPath}
+  rowReordering
+/>
+```
+
+{{"demo": "TreeDataReordering.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Reordering persistance
+
+To sync the updated row order with an external store, depending on how you manage the order of rows in the external store, you can use either [`processRowUpdate()`](/x/api/data-grid/data-grid-pro/#data-grid-pro-prop-processRowUpdate) or the [`onRowOrderChange()`](/x/api/data-grid/data-grid-pro/#data-grid-pro-prop-onRowOrderChange) callback, or both.
+
+The `processRowUpdate()` callback is triggered whenever a row is updated either by row editing or when the `path` value is updated during a cross parent reorder operation.
+
+After the reorder operation is successfully completed, the `onRowOrderChange()` callback is triggered, which contains information about the new row reordering of the format [`GridRowOrderChangeParams`](/x/api/data-grid/grid-row-order-change-params/).
+
+```tsx
+<DataGridPro
+  // Fired when:
+  // - A row is edited (e.g. when the user changes the value of a cell)
+  // - The `path` value is updated during a cross parent reorder operation
+  processRowUpdate={processRowUpdate}
+  // Fired after a reorder operation is completed
+  onRowOrderChange={handleRowOrderChange}
+/>
+```
+
+The demo below uses a custom data store bound using `useSyncExternalStore()` to persist the row data in local storage.
+
+It maintains a row tree structure which is used to recompute path values after a reorder operation is performed, these props are used to sync the updated row order with the external store:
+
+- **`processRowUpdate()`**: Used to update the row data when a row is edited (`path` value change isn't needed due to dynamic path computation. For static paths, you might need to also sync the `path` values).
+- **`onRowOrderChange()`**: Used to capture the new row order after a reorder operation is performed, and update the external store with the new row order.
+
+You can test out the demo by reordering the rows and then refreshing the page to see that the order persists.
+
+{{"demo": "TreeDataSyncRowData.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::info
+The demo above uses the `isValidRowReorder()` prop to disallow converting files (or leaf rows) into parents.
+
+Check the [Row ordering—Disable specific reorder operations](/x/react-data-grid/row-ordering/#disable-specific-reorder-operations) documentation section for more details.
+:::
+
+## Lazy-loading tree data children
+
+See [Server-side data—Tree data](/x/react-data-grid/server-side-data/tree-data/) for details on lazy-loading tree data children.
 
 ## API
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
 - [DataGridPremium](/x/api/data-grid/data-grid-premium/)
+- [GridRowOrderChangeParams](/x/api/data-grid/grid-row-order-change-params/)

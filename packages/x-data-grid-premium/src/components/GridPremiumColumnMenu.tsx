@@ -1,4 +1,3 @@
-import * as React from 'react';
 import {
   GridGenericColumnMenu,
   GridColumnMenuProps,
@@ -7,10 +6,11 @@ import {
   GridColumnMenuItemProps,
 } from '@mui/x-data-grid-pro';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { GridColumnMenuAggregationItem } from './GridColumnMenuAggregationItem';
+import { GridColumnMenuAggregationItem } from './columnMenu/menuItems/GridColumnMenuAggregationItem';
 import { isGroupingColumn } from '../hooks/features/rowGrouping';
-import { GridColumnMenuRowGroupItem } from './GridColumnMenuRowGroupItem';
-import { GridColumnMenuRowUngroupItem } from './GridColumnMenuRowUngroupItem';
+import { GridColumnMenuRowGroupItem } from './columnMenu/menuItems/GridColumnMenuRowGroupItem';
+import { GridColumnMenuRowUngroupItem } from './columnMenu/menuItems/GridColumnMenuRowUngroupItem';
+import { GridColumnMenuManagePanelItem } from './columnMenu/menuItems/GridColumnMenuManagePanelItem';
 
 export function GridColumnMenuGroupingItem(props: GridColumnMenuItemProps) {
   const { colDef } = props;
@@ -25,12 +25,14 @@ export const GRID_COLUMN_MENU_SLOTS_PREMIUM = {
   ...GRID_COLUMN_MENU_SLOTS,
   columnMenuAggregationItem: GridColumnMenuAggregationItem,
   columnMenuGroupingItem: GridColumnMenuGroupingItem,
+  columnMenuManagePanelItem: GridColumnMenuManagePanelItem,
 };
 
 export const GRID_COLUMN_MENU_SLOT_PROPS_PREMIUM = {
   ...GRID_COLUMN_MENU_SLOT_PROPS,
   columnMenuAggregationItem: { displayOrder: 23 },
   columnMenuGroupingItem: { displayOrder: 27 },
+  columnMenuManagePanelItem: { displayOrder: 28 },
 };
 
 export const GridPremiumColumnMenu = forwardRef<HTMLUListElement, GridColumnMenuProps>(

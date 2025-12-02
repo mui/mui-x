@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Grid from '@mui/material/Grid';
 import { InfoCard } from '@mui/docs/InfoCard';
 import ChatBubbleRoundedIcon from '@mui/icons-material/ChatBubble';
@@ -11,6 +10,8 @@ import LineAxisRoundedIcon from '@mui/icons-material/LineAxisRounded';
 import StackedBarChartRoundedIcon from '@mui/icons-material/StackedBarChartRounded';
 import StyleRoundedIcon from '@mui/icons-material/StyleRounded';
 import ZoomInRoundedIcon from '@mui/icons-material/ZoomIn';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import Box from '@mui/material/Box';
 
 const content = [
   {
@@ -63,16 +64,23 @@ const content = [
     link: '/x/react-charts/zoom-and-pan/',
     icon: <ZoomInRoundedIcon fontSize="small" color="primary" />,
   },
+  {
+    title: 'Export',
+    link: '/x/react-charts/export/',
+    icon: <FileDownloadIcon fontSize="small" color="primary" />,
+  },
 ];
 
 export default function ChartFeaturesGrid() {
   return (
-    <Grid container spacing={2}>
-      {content.map(({ icon, title, link }) => (
-        <Grid item key={title} xs={12} sm={6} lg={3}>
-          <InfoCard dense classNameTitle="algolia-lvl3" link={link} title={title} icon={icon} />
-        </Grid>
-      ))}
-    </Grid>
+    <Box mb={12}>
+      <Grid container spacing={2}>
+        {content.map(({ icon, title, link }) => (
+          <Grid key={title} size={{ xs: 12, sm: 6, lg: 3 }}>
+            <InfoCard classNameTitle="algolia-lvl3" link={link} title={title} icon={icon} />
+          </Grid>
+        ))}
+      </Grid>
+    </Box>
   );
 }

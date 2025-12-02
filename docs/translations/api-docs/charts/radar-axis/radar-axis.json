@@ -1,0 +1,30 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "angle": {
+      "description": "The absolute rotation angle of the metrics (in degree) If not defined the metric angle will be used."
+    },
+    "classes": { "description": "Override or extend the styles applied to the component." },
+    "divisions": { "description": "The number of divisions with label." },
+    "dominantBaseline": {
+      "description": "The labels dominant baseline or a function returning the dominant baseline for a given axis angle (in degree)."
+    },
+    "labelOrientation": {
+      "description": "Defines how label align with the axis. - &#39;horizontal&#39;: labels stay horizontal and their placement change with the axis angle. - &#39;rotated&#39;: labels are rotated 90deg relatively to their axis."
+    },
+    "metric": {
+      "description": "The metric to get. If <code>undefined</code>, the hook returns <code>null</code>"
+    },
+    "textAnchor": {
+      "description": "The labels text anchor or a function returning the text anchor for a given axis angle (in degree)."
+    }
+  },
+  "classDescriptions": {
+    "label": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "every label element"
+    },
+    "line": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the line element" },
+    "root": { "description": "Styles applied to the root element." }
+  }
+}

@@ -4,10 +4,5 @@
   disableColumnSelector
   disableDensitySelector
   columns={columns}
-  slots={{ toolbar: GridToolbar }}
-  slotProps={{
-    toolbar: {
-      showQuickFilter: true,
-    },
-  }}
+  showToolbar
 />

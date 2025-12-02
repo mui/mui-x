@@ -34,18 +34,20 @@ export const rangeValueManager: RangePickerValueManager = {
     getTodayDate(utils, timezone, valueType),
   ],
   getInitialReferenceValue: ({ value, referenceDate: referenceDateProp, ...params }) => {
-    const shouldKeepStartDate = params.utils.isValid(value[0]);
-    const shouldKeepEndDate = params.utils.isValid(value[1]);
+    const shouldKeepStartDate = params.adapter.isValid(value[0]);
+    const shouldKeepEndDate = params.adapter.isValid(value[1]);
 
     if (shouldKeepStartDate && shouldKeepEndDate) {
       return value as PickerNonNullableRangeValue;
     }
 
     const referenceDate = referenceDateProp ?? getDefaultReferenceDate(params);
+    const startReferenceDate = Array.isArray(referenceDate) ? referenceDate[0]! : referenceDate;
+    const endReferenceDate = Array.isArray(referenceDate) ? referenceDate[1]! : referenceDate;
 
     return [
-      shouldKeepStartDate ? value[0]! : referenceDate,
-      shouldKeepEndDate ? value[1]! : referenceDate,
+      shouldKeepStartDate ? value[0]! : startReferenceDate,
+      shouldKeepEndDate ? value[1]! : endReferenceDate,
     ];
   },
   cleanValue: (utils, value) =>
@@ -55,9 +57,9 @@ export const rangeValueManager: RangePickerValueManager = {
   isSameError: (a, b) => b !== null && a[1] === b[1] && a[0] === b[0],
   hasError: (error) => error[0] != null || error[1] != null,
   defaultErrorState: [null, null],
-  getTimezone: (utils, value) => {
-    const timezoneStart = utils.isValid(value[0]) ? utils.getTimezone(value[0]) : null;
-    const timezoneEnd = utils.isValid(value[1]) ? utils.getTimezone(value[1]) : null;
+  getTimezone: (adapter, value) => {
+    const timezoneStart = adapter.isValid(value[0]) ? adapter.getTimezone(value[0]) : null;
+    const timezoneEnd = adapter.isValid(value[1]) ? adapter.getTimezone(value[1]) : null;
 
     if (timezoneStart != null && timezoneEnd != null && timezoneStart !== timezoneEnd) {
       throw new Error('MUI X: The timezone of the start and the end date should be the same.');
@@ -65,9 +67,9 @@ export const rangeValueManager: RangePickerValueManager = {
 
     return timezoneStart ?? timezoneEnd;
   },
-  setTimezone: (utils, timezone, value) => [
-    value[0] == null ? null : utils.setTimezone(value[0], timezone),
-    value[1] == null ? null : utils.setTimezone(value[1], timezone),
+  setTimezone: (adapter, timezone, value) => [
+    value[0] == null ? null : adapter.setTimezone(value[0], timezone),
+    value[1] == null ? null : adapter.setTimezone(value[1], timezone),
   ],
 };
 
@@ -76,9 +78,9 @@ export const getRangeFieldValueManager = ({
 }: {
   dateSeparator: string | undefined;
 }): FieldValueManager<PickerRangeValue> => ({
-  updateReferenceValue: (utils, value, prevReferenceValue) => {
-    const shouldKeepStartDate = utils.isValid(value[0]);
-    const shouldKeepEndDate = utils.isValid(value[1]);
+  updateReferenceValue: (adapter, value, prevReferenceValue) => {
+    const shouldKeepStartDate = adapter.isValid(value[0]);
+    const shouldKeepEndDate = adapter.isValid(value[1]);
 
     if (!shouldKeepStartDate && !shouldKeepEndDate) {
       return prevReferenceValue;
@@ -94,23 +96,8 @@ export const getRangeFieldValueManager = ({
 
     return [prevReferenceValue[1]!, value[1]!];
   },
-  getSectionsFromValue: (utils, [start, end], fallbackSections, getSectionsFromDate) => {
-    const separatedFallbackSections =
-      fallbackSections == null
-        ? { startDate: null, endDate: null }
-        : splitDateRangeSections(fallbackSections);
-
-    const getSections = (
-      newDate: PickerValidDate | null,
-      fallbackDateSections: FieldRangeSection[] | null,
-      position: RangePosition,
-    ) => {
-      const shouldReUsePrevDateSections = !utils.isValid(newDate) && !!fallbackDateSections;
-
-      if (shouldReUsePrevDateSections) {
-        return fallbackDateSections;
-      }
-
+  getSectionsFromValue: ([start, end], getSectionsFromDate) => {
+    const getSections = (newDate: PickerValidDate | null, position: RangePosition) => {
       const sections = getSectionsFromDate(newDate!);
       return sections.map((section, sectionIndex) => {
         if (sectionIndex === sections.length - 1 && position === 'start') {
@@ -129,10 +116,7 @@ export const getRangeFieldValueManager = ({
       });
     };
 
-    return [
-      ...getSections(start, separatedFallbackSections.startDate, 'start'),
-      ...getSections(end, separatedFallbackSections.endDate, 'end'),
-    ];
+    return [...getSections(start, 'start'), ...getSections(end, 'end')];
   },
   getV7HiddenInputValueFromSections: (sections) => {
     const dateRangeSections = splitDateRangeSections(sections);
@@ -161,31 +145,37 @@ export const getRangeFieldValueManager = ({
       return parseDate(dateStr.trim(), referenceValue[index]!);
     }) as PickerRangeValue;
   },
-  getActiveDateManager: (utils, state, activeSection) => {
-    const index = activeSection.dateName === 'start' ? 0 : 1;
+  getDateFromSection: (value, activeSection) => value[getActiveDateIndex(activeSection)],
+  getDateSectionsFromValue: (sections, activeSection) => {
+    const dateRangeSections = splitDateRangeSections(sections);
+    if (getActiveDateIndex(activeSection) === 0) {
+      return removeLastSeparator(dateRangeSections.startDate);
+    }
 
-    const updateDateInRange = (newDate: PickerValidDate | null, prevDateRange: PickerRangeValue) =>
-      (index === 0
-        ? [newDate, prevDateRange[1]]
-        : [prevDateRange[0], newDate]) as PickerNonNullableRangeValue;
+    return dateRangeSections.endDate;
+  },
+  updateDateInValue: (value, activeSection, activeDate) => {
+    if (getActiveDateIndex(activeSection) === 0) {
+      return [activeDate, value[1]];
+    }
+    return [value[0], activeDate];
+  },
+  clearDateSections: (sections, activeSection) => {
+    const dateRangeSections = splitDateRangeSections(sections);
+    if (getActiveDateIndex(activeSection) === 0) {
+      return [
+        ...dateRangeSections.startDate.map((section) => ({ ...section, value: '' })),
+        ...dateRangeSections.endDate,
+      ];
+    }
 
-    return {
-      date: state.value[index],
-      referenceDate: state.referenceValue[index]!,
-      getSections: (sections) => {
-        const dateRangeSections = splitDateRangeSections(sections);
-        if (index === 0) {
-          return removeLastSeparator(dateRangeSections.startDate);
-        }
-
-        return dateRangeSections.endDate;
-      },
-      getNewValuesFromNewActiveDate: (newActiveDate) => ({
-        value: updateDateInRange(newActiveDate, state.value),
-        referenceValue: !utils.isValid(newActiveDate)
-          ? state.referenceValue
-          : updateDateInRange(newActiveDate, state.referenceValue),
-      }),
-    };
+    return [
+      ...dateRangeSections.startDate,
+      ...dateRangeSections.endDate.map((section) => ({ ...section, value: '' })),
+    ];
   },
 });
+
+function getActiveDateIndex(activeSection: FieldRangeSection | null): 0 | 1 {
+  return activeSection == null || activeSection.dateName === 'start' ? 0 : 1;
+}

@@ -8,11 +8,13 @@ import {
   gridFocusCellSelector,
   gridVisibleColumnFieldsSelector,
   GridRowModel,
-  useGridApiOptionHandler,
-  useGridApiEventHandler,
+  useGridEventPriority,
+  useGridEvent,
   GridEventListener,
   gridPaginatedVisibleSortedGridRowIdsSelector,
   gridExpandedSortedRowIdsSelector,
+  gridRowSelectionIdsSelector,
+  gridRowSelectionCountSelector,
 } from '@mui/x-data-grid';
 import {
   getRowIdFromRowModel,
@@ -25,7 +27,7 @@ import {
 } from '@mui/x-data-grid/internals';
 import { warnOnce } from '@mui/x-internals/warning';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD, GRID_REORDER_COL_DEF } from '@mui/x-data-grid-pro';
-import { unstable_debounce as debounce } from '@mui/utils';
+import debounce from '@mui/utils/debounce';
 import { GridApiPremium, GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 
@@ -124,6 +126,12 @@ class CellValueUpdater {
       return;
     }
 
+    // Check if the cell is editable using the API method, which respects the isCellEditable prop
+    const cellParams = apiRef.current.getCellParams(rowId, field);
+    if (!apiRef.current.isCellEditable(cellParams)) {
+      return;
+    }
+
     let parsedValue = pastedCellValue;
 
     if (colDef.pastedValueParser) {
@@ -170,8 +178,8 @@ class CellValueUpdater {
           } else if (process.env.NODE_ENV !== 'production') {
             warnOnce(
               [
-                'MUI X: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
-                'To handle the error pass a callback to the `onProcessRowUpdateError` prop, for example `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',
+                'MUI X: A call to `processRowUpdate()` threw an error which was not handled because `onProcessRowUpdateError()` is missing.',
+                'To handle the error pass a callback to the `onProcessRowUpdateError()` prop, for example `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',
                 'For more detail, see https://mui.com/x/react-data-grid/editing/persistence/.',
               ],
               'error',
@@ -253,11 +261,10 @@ function defaultPasteResolver({
     return true;
   });
 
-  const selectedRows = apiRef.current.getSelectedRows();
-
-  if (selectedRows.size > 0 && !isSingleValuePasted) {
+  if (gridRowSelectionCountSelector(apiRef) > 0 && !isSingleValuePasted) {
     // Multiple values are pasted starting from the first and top-most cell
     const pastedRowsDataCount = pastedData.length;
+    const selectedRows = gridRowSelectionIdsSelector(apiRef);
 
     // There's no guarantee that the selected rows are in the same order as the pasted rows
     selectedRows.forEach((row, rowId) => {
@@ -335,18 +342,22 @@ export const useGridClipboardImport = (
     | 'splitClipboardPastedText'
     | 'disableClipboardPaste'
     | 'onBeforeClipboardPasteStart'
+    | 'clipboardCopyCellDelimiter'
   >,
 ): void => {
   const processRowUpdate = props.processRowUpdate;
   const onProcessRowUpdateError = props.onProcessRowUpdateError;
   const getRowId = props.getRowId;
   const enableClipboardPaste = !props.disableClipboardPaste;
-  const rootEl = apiRef.current.rootElementRef?.current;
   const logger = useGridLogger(apiRef, 'useGridClipboardImport');
 
-  const splitClipboardPastedText = props.splitClipboardPastedText;
-
-  const { pagination, paginationMode, onBeforeClipboardPasteStart } = props;
+  const {
+    clipboardCopyCellDelimiter,
+    splitClipboardPastedText,
+    pagination,
+    paginationMode,
+    onBeforeClipboardPasteStart,
+  } = props;
 
   const handlePaste = React.useCallback<GridEventListener<'cellKeyDown'>>(
     async (params, event) => {
@@ -366,6 +377,7 @@ export const useGridClipboardImport = (
         }
       }
 
+      const rootEl = apiRef.current.rootElementRef?.current;
       if (!rootEl) {
         return;
       }
@@ -375,7 +387,7 @@ export const useGridClipboardImport = (
         return;
       }
 
-      const pastedData = splitClipboardPastedText(text);
+      const pastedData = splitClipboardPastedText(text, clipboardCopyCellDelimiter);
       if (!pastedData) {
         return;
       }
@@ -418,8 +430,8 @@ export const useGridClipboardImport = (
       onProcessRowUpdateError,
       getRowId,
       enableClipboardPaste,
-      rootEl,
       splitClipboardPastedText,
+      clipboardCopyCellDelimiter,
       pagination,
       paginationMode,
       onBeforeClipboardPasteStart,
@@ -438,10 +450,10 @@ export const useGridClipboardImport = (
     [enableClipboardPaste],
   );
 
-  useGridApiEventHandler(apiRef, 'cellKeyDown', handlePaste);
+  useGridEvent(apiRef, 'cellKeyDown', handlePaste);
 
-  useGridApiOptionHandler(apiRef, 'clipboardPasteStart', props.onClipboardPasteStart);
-  useGridApiOptionHandler(apiRef, 'clipboardPasteEnd', props.onClipboardPasteEnd);
+  useGridEventPriority(apiRef, 'clipboardPasteStart', props.onClipboardPasteStart);
+  useGridEventPriority(apiRef, 'clipboardPasteEnd', props.onClipboardPasteEnd);
 
   useGridRegisterPipeProcessor(apiRef, 'canStartEditing', checkIfCanStartEditing);
 };

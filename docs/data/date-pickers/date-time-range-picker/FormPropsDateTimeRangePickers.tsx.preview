@@ -1,6 +1,3 @@
-<DemoItem label="disabled" component="DateTimeRangePicker">
-  <DateTimeRangePicker disabled />
-</DemoItem>
-<DemoItem label="readOnly" component="DateTimeRangePicker">
-  <DateTimeRangePicker readOnly />
-</DemoItem>
+<DateTimeRangePicker label="disabled" disabled />
+<DateTimeRangePicker label="readOnly" readOnly />
+<DateTimeRangePicker label="name" name="startDateTimeRange" />

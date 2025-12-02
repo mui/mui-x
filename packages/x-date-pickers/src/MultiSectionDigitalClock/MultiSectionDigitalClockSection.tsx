@@ -6,6 +6,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
 import useForkRef from '@mui/utils/useForkRef';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import {
   MultiSectionDigitalClockSectionClasses,
   getMultiSectionDigitalClockSectionUtilityClass,
@@ -43,7 +44,7 @@ export interface MultiSectionDigitalClockSectionProps<TSectionValue extends numb
   role?: string;
 }
 
-interface MultiSectionDigitalClockSectionOwnerState extends PickerOwnerState {
+export interface MultiSectionDigitalClockSectionOwnerState extends PickerOwnerState {
   /**
    * `true` if this is not the initial render of the digital clock.
    */
@@ -62,12 +63,12 @@ const useUtilityClasses = (classes: Partial<MultiSectionDigitalClockClasses> | u
 const MultiSectionDigitalClockSectionRoot = styled(MenuList, {
   name: 'MuiMultiSectionDigitalClockSection',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })<{ ownerState: MultiSectionDigitalClockSectionOwnerState }>(({ theme }) => ({
   maxHeight: DIGITAL_CLOCK_VIEW_HEIGHT,
   width: 56,
   padding: 0,
   overflow: 'hidden',
+  scrollbarWidth: 'thin',
   '@media (prefers-reduced-motion: no-preference)': {
     scrollBehavior: 'auto',
   },
@@ -81,12 +82,6 @@ const MultiSectionDigitalClockSectionRoot = styled(MenuList, {
   },
   '&:not(:first-of-type)': {
     borderLeft: `1px solid ${(theme.vars || theme).palette.divider}`,
-  },
-  '&::after': {
-    display: 'block',
-    content: '""',
-    // subtracting the height of one item, extra margin and borders to make sure the max height is correct
-    height: 'calc(100% - 40px - 6px)',
   },
   variants: [
     {
@@ -103,7 +98,6 @@ const MultiSectionDigitalClockSectionRoot = styled(MenuList, {
 const MultiSectionDigitalClockSectionItem = styled(MenuItem, {
   name: 'MuiMultiSectionDigitalClockSection',
   slot: 'Item',
-  overridesResolver: (_, styles) => styles.item,
 })(({ theme }) => ({
   padding: 8,
   margin: '2px 4px',
@@ -178,7 +172,7 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
     const DigitalClockSectionItem =
       slots?.digitalClockSectionItem ?? MultiSectionDigitalClockSectionItem;
 
-    React.useEffect(() => {
+    useEnhancedEffect(() => {
       if (containerRef.current === null) {
         return;
       }
@@ -193,9 +187,21 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
       }
       previousActive.current = activeItem;
       const offsetTop = activeItem.offsetTop;
+      const itemHeight = activeItem.offsetHeight;
+      const containerHeight = containerRef.current.clientHeight;
+      const scrollableHeight = containerRef.current.scrollHeight;
 
-      // Subtracting the 4px of extra margin intended for the first visible section item
-      containerRef.current.scrollTop = offsetTop - 4;
+      // Calculate the ideal centered position
+      const centeredPosition = offsetTop - containerHeight / 2 + itemHeight / 2;
+
+      // Calculate the maximum scroll position that would show content at the bottom
+      const maxScrollTop = scrollableHeight - containerHeight;
+
+      // If centering would create empty space at the bottom, align the last items to the bottom instead
+      const scrollPosition = Math.min(centeredPosition, maxScrollTop);
+
+      // Ensure we don't scroll past the top
+      containerRef.current.scrollTop = Math.max(0, scrollPosition);
     });
 
     const focusedOptionIndex = items.findIndex((item) => item.isFocused(item.value));

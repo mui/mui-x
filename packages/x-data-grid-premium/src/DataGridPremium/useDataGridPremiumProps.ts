@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { useThemeProps } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
+import { getThemeProps } from '@mui/system';
 import {
   DATA_GRID_PRO_PROPS_DEFAULT_VALUES,
   GRID_DEFAULT_LOCALE_TEXT,
@@ -15,6 +16,8 @@ import {
 import { GridPremiumSlotsComponent } from '../models';
 import { GRID_AGGREGATION_FUNCTIONS } from '../hooks/features/aggregation';
 import { DATA_GRID_PREMIUM_DEFAULT_SLOTS_COMPONENTS } from '../constants/dataGridPremiumDefaultSlotsComponents';
+import { defaultGetPivotDerivedColumns } from '../hooks/features/pivoting/utils';
+import { defaultGetAggregationPosition } from '../hooks/features/aggregation/gridAggregationUtils';
 
 interface GetDataGridPremiumPropsDefaultValues extends DataGridPremiumProps {}
 
@@ -27,7 +30,7 @@ type GetDataGridProForcedProps = (
 
 const getDataGridPremiumForcedProps: GetDataGridProForcedProps = (themedProps) => ({
   signature: GridSignature.DataGridPremium,
-  ...(themedProps.unstable_dataSource
+  ...(themedProps.dataSource
     ? {
         filterMode: 'server',
         sortingMode: 'server',
@@ -47,25 +50,27 @@ export const DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES: DataGridPremiumPropsWithDef
   rowGroupingColumnMode: 'single',
   aggregationFunctions: GRID_AGGREGATION_FUNCTIONS,
   aggregationRowsScope: 'filtered',
-  getAggregationPosition: (groupNode) => (groupNode.depth === -1 ? 'footer' : 'inline'),
+  getAggregationPosition: defaultGetAggregationPosition,
   disableClipboardPaste: false,
-  splitClipboardPastedText: (pastedText) => {
+  splitClipboardPastedText: (pastedText, delimiter = '\t') => {
     // Excel on Windows adds an empty line break at the end of the copied text.
     // See https://github.com/mui/mui-x/issues/9103
     const text = pastedText.replace(/\r?\n$/, '');
-    return text.split(/\r\n|\n|\r/).map((row) => row.split('\t'));
+    return text.split(/\r\n|\n|\r/).map((row) => row.split(delimiter));
   },
+  disablePivoting: false,
+  aiAssistant: false,
+  chartsIntegration: false,
 };
 
 const defaultSlots = DATA_GRID_PREMIUM_DEFAULT_SLOTS_COMPONENTS;
 
 export const useDataGridPremiumProps = (inProps: DataGridPremiumProps) => {
-  const themedProps =
-    // eslint-disable-next-line material-ui/mui-name-matches-component-name
-    useThemeProps({
-      props: inProps,
-      name: 'MuiDataGrid',
-    });
+  const theme = useTheme();
+  const themedProps = React.useMemo(
+    () => getThemeProps({ props: inProps, theme, name: 'MuiDataGrid' }),
+    [theme, inProps],
+  );
 
   const localeText = React.useMemo(
     () => ({ ...GRID_DEFAULT_LOCALE_TEXT, ...themedProps.localeText }),
@@ -84,7 +89,9 @@ export const useDataGridPremiumProps = (inProps: DataGridPremiumProps) => {
   return React.useMemo<DataGridPremiumProcessedProps>(
     () => ({
       ...DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES,
-      ...(themedProps.unstable_dataSource ? { aggregationFunctions: {} } : {}),
+      ...(themedProps.dataSource
+        ? { aggregationFunctions: {} }
+        : { getPivotDerivedColumns: defaultGetPivotDerivedColumns }),
       ...themedProps,
       localeText,
       slots,

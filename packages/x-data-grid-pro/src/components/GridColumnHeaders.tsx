@@ -1,13 +1,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import { GridBaseColumnHeaders, UseGridColumnHeadersProps } from '@mui/x-data-grid/internals';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { useGridColumnHeaders } from '../hooks/features/columnHeaders/useGridColumnHeaders';
+import { vars, GridBaseColumnHeaders, UseGridColumnHeadersProps } from '@mui/x-data-grid/internals';
+import { useGridColumnHeadersPro } from '../hooks/features/columnHeaders/useGridColumnHeaders';
 
 const Filler = styled('div')({
   flex: 1,
-  backgroundColor: 'var(--DataGrid-headerBackground)',
+  backgroundColor: vars.header.background.base,
 });
 
 export interface GridColumnHeadersProps
@@ -35,7 +35,7 @@ const GridColumnHeaders = forwardRef<HTMLDivElement, GridColumnHeadersProps>(
     } = props;
 
     const { getInnerProps, getColumnHeadersRow, getColumnFiltersRow, getColumnGroupHeadersRows } =
-      useGridColumnHeaders({
+      useGridColumnHeadersPro({
         visibleColumns,
         sortColumnLookup,
         filterColumnLookup,

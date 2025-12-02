@@ -1,6 +1,6 @@
 ---
 productId: x-charts
-githubLabel: 'component: charts'
+githubLabel: 'scope: charts'
 packageName: '@mui/x-charts'
 ---
 
@@ -11,8 +11,6 @@ packageName: '@mui/x-charts'
 ## Installation
 
 Install the Charts package that best suits your needs—Community or Pro:
-
-<!-- #default-branch-switch -->
 
 {{"component": "modules/components/ChartsInstallationInstructions.js"}}
 

@@ -6,12 +6,11 @@ import {
   ErrorBoundary,
   waitFor,
   reactMajor,
+  act,
 } from '@mui/internal-test-utils';
 import { stub, spy } from 'sinon';
-import { expect } from 'chai';
 import {
   DataGrid,
-  GridToolbar,
   DataGridProps,
   GridColDef,
   gridClasses,
@@ -31,12 +30,12 @@ import {
   getRow,
   sleep,
 } from 'test/utils/helperFn';
-import { describeSkipIf, testSkipIf, isJSDOM, isOSX } from 'test/utils/skipIf';
+import { isJSDOM, isOSX } from 'test/utils/skipIf';
 
 const getVariable = (name: string) => $('.MuiDataGrid-root')!.style.getPropertyValue(name);
 
 describe('<DataGrid /> - Layout & warnings', () => {
-  const { clock, render } = createRenderer();
+  const { render } = createRenderer();
 
   const baselineProps = {
     rows: [
@@ -82,7 +81,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
   });
 
   // Need layout to be able to measure the columns
-  describeSkipIf(isJSDOM)('Layout', () => {
+  describe.skipIf(isJSDOM)('Layout', () => {
     it('should resize the width of the columns', async () => {
       interface TestCaseProps {
         width?: number;
@@ -97,15 +96,21 @@ describe('<DataGrid /> - Layout & warnings', () => {
         );
       }
 
-      const { container, setProps } = render(<TestCase width={300} />);
+      const { setProps } = render(<TestCase width={300} />);
       let rect;
-      rect = container.querySelector('[role="row"][data-rowindex="0"]')!.getBoundingClientRect();
+      rect = screen
+        .getAllByRole('row')
+        .find((el) => el.dataset.rowindex === '0')!
+        .getBoundingClientRect();
       expect(rect.width).to.equal(300 - 2);
 
       setProps({ width: 400 });
 
       await waitFor(() => {
-        rect = container.querySelector('[role="row"][data-rowindex="0"]')!.getBoundingClientRect();
+        rect = screen
+          .getAllByRole('row')
+          .find((el) => el.dataset.rowindex === '0')!
+          .getBoundingClientRect();
         expect(rect.width).to.equal(400 - 2);
       });
     });
@@ -189,8 +194,6 @@ describe('<DataGrid /> - Layout & warnings', () => {
     });
 
     describe('layout warnings', () => {
-      clock.withFakeTimers();
-
       it('should error if the container has no intrinsic height', () => {
         expect(() => {
           render(
@@ -199,7 +202,6 @@ describe('<DataGrid /> - Layout & warnings', () => {
             </div>,
           );
           // Use timeout to allow simpler tests in JSDOM.
-          clock.tick(0);
         }).toErrorDev(
           'MUI X: useResizeContainer - The parent DOM element of the Data Grid has an empty height.',
         );
@@ -215,7 +217,6 @@ describe('<DataGrid /> - Layout & warnings', () => {
             </div>,
           );
           // Use timeout to allow simpler tests in JSDOM.
-          clock.tick(0);
         }).toErrorDev(
           'MUI X: useResizeContainer - The parent DOM element of the Data Grid has an empty width',
         );
@@ -223,8 +224,6 @@ describe('<DataGrid /> - Layout & warnings', () => {
     });
 
     describe('swallow warnings', () => {
-      clock.withFakeTimers();
-
       beforeEach(() => {
         stub(console, 'error');
       });
@@ -242,7 +241,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
           </div>,
         );
         const firstHeight = grid('root')?.clientHeight;
-        clock.tick(10);
+
         const secondHeight = grid('root')?.clientHeight;
         expect(firstHeight).to.equal(secondHeight);
       });
@@ -696,7 +695,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
       });
 
       // On MacOS the scrollbar has zero width
-      testSkipIf(isOSX)(
+      it.skipIf(isOSX)(
         'should include the scrollbar in the intrinsic height when there are more columns to show',
         () => {
           const columnHeaderHeight = 40;
@@ -792,7 +791,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
     });
 
     // On MacOS the scrollbar has zero width
-    testSkipIf(isOSX)(
+    it.skipIf(isOSX)(
       'should have a horizontal scrollbar when there are more columns to show and no rows',
       () => {
         render(
@@ -927,7 +926,6 @@ describe('<DataGrid /> - Layout & warnings', () => {
 
   describe('warnings', () => {
     // TODO: reintroduce chainProptypes that has been removed in https://github.com/mui/mui-x/pull/11303
-    // eslint-disable-next-line mocha/no-skipped-tests
     it.skip('should raise a warning if trying to use an enterprise feature', () => {
       expect(() => {
         render(
@@ -941,7 +939,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
 
     // can't catch render errors in the browser for unknown reason
     // tried try-catch + error boundary + window onError preventDefault
-    testSkipIf(!isJSDOM)('should throw if the rows has no id', () => {
+    it.skipIf(!isJSDOM)('should throw if the rows has no id', () => {
       const rows = [
         {
           brand: 'Nike',
@@ -956,10 +954,9 @@ describe('<DataGrid /> - Layout & warnings', () => {
           </ErrorBoundary>,
         );
       }).toErrorDev([
-        'The Data Grid component requires all rows to have a unique `id` property',
-        reactMajor < 19 &&
+        reactMajor >= 19 &&
           'The Data Grid component requires all rows to have a unique `id` property',
-        reactMajor < 19 && 'The above error occurred in the <ForwardRef(DataGrid)> component',
+        reactMajor < 19 && 'The above error occurred in the <ForwardRef(DataGrid2)> component',
       ]);
       expect((errorRef.current as any).errors).to.have.length(1);
       expect((errorRef.current as any).errors[0].toString()).to.include(
@@ -969,22 +966,6 @@ describe('<DataGrid /> - Layout & warnings', () => {
   });
 
   describe('localeText', () => {
-    it('should replace the density selector button label text to "Size"', () => {
-      render(
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid
-            {...baselineProps}
-            slots={{
-              toolbar: GridToolbar,
-            }}
-            localeText={{ toolbarDensity: 'Size' }}
-          />
-        </div>,
-      );
-
-      expect(screen.getByText('Size')).not.to.equal(null);
-    });
-
     it('should support translations in the theme', () => {
       render(
         <ThemeProvider theme={createTheme({}, ptBR)}>
@@ -1000,27 +981,23 @@ describe('<DataGrid /> - Layout & warnings', () => {
       function TestCase(props: Partial<DataGridProps>) {
         return (
           <div style={{ width: 300, height: 300 }}>
-            <DataGrid
-              {...baselineProps}
-              slots={{
-                toolbar: GridToolbar,
-              }}
-              {...props}
-            />
+            <DataGrid {...baselineProps} showToolbar {...props} />
           </div>
         );
       }
-      const { setProps } = render(<TestCase localeText={{ toolbarDensity: 'Density' }} />);
-      expect(screen.getByText('Density')).not.to.equal(null);
-      setProps({ localeText: { toolbarDensity: 'Densidade' } });
-      expect(screen.getByText('Densidade')).not.to.equal(null);
+      const { setProps } = render(
+        <TestCase localeText={{ toolbarQuickFilterPlaceholder: 'Recherche' }} />,
+      );
+      expect(screen.getByPlaceholderText('Recherche')).not.to.equal(null);
+      setProps({ localeText: { toolbarQuickFilterPlaceholder: 'Buscar' } });
+      expect(screen.getByPlaceholderText('Buscar')).not.to.equal(null);
     });
   });
 
   describe('non-strict mode', () => {
     const { render: innerRender } = createRenderer({ strict: false });
 
-    testSkipIf(!isJSDOM)('should render in JSDOM', () => {
+    it.skipIf(!isJSDOM)('should render in JSDOM', () => {
       innerRender(
         <div style={{ width: 300, height: 300 }}>
           <DataGrid {...baselineProps} />
@@ -1032,7 +1009,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
   });
 
   // Doesn't work with mocked window.getComputedStyle
-  testSkipIf(isJSDOM)('should allow style customization using the theme', () => {
+  it.skipIf(isJSDOM)('should allow style customization using the theme', () => {
     const theme = createTheme({
       components: {
         MuiDataGrid: {
@@ -1071,7 +1048,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
   });
 
   // Doesn't work with mocked window.getComputedStyle
-  testSkipIf(isJSDOM)('should support the sx prop', () => {
+  it.skipIf(isJSDOM)('should support the sx prop', () => {
     const theme = createTheme({
       palette: {
         primary: {
@@ -1150,7 +1127,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
   });
 
   // Doesn't work with mocked window.getComputedStyle
-  describeSkipIf(isJSDOM)('should not overflow parent', () => {
+  describe.skipIf(isJSDOM)('should not overflow parent', () => {
     const rows = [{ id: 1, username: '@MUI', age: 20 }];
     const columns = [
       { field: 'id', width: 300 },
@@ -1184,7 +1161,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
 
   // See https://github.com/mui/mui-x/issues/8737
   // Need layout
-  testSkipIf(isJSDOM)(
+  it.skipIf(isJSDOM)(
     'should not add horizontal scrollbar when .MuiDataGrid-main has border',
     async () => {
       render(
@@ -1203,7 +1180,9 @@ describe('<DataGrid /> - Layout & warnings', () => {
       // It should not have a horizontal scrollbar
       expect(getVariable('--DataGrid-hasScrollX')).to.equal('0');
 
-      await sleep(200);
+      await act(async () => {
+        await sleep(200);
+      });
       // The width should not increase infinitely
       expect(virtualScroller.clientWidth).to.equal(initialVirtualScrollerWidth);
     },
@@ -1211,7 +1190,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
 
   // See https://github.com/mui/mui-x/issues/8689#issuecomment-1582616570
   // Need layout
-  testSkipIf(isJSDOM)(
+  it.skipIf(isJSDOM)(
     'should not add scrollbars when the parent container has fractional size',
     async () => {
       render(
@@ -1229,7 +1208,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
 
   // See https://github.com/mui/mui-x/issues/9510
   // Need layout
-  testSkipIf(isJSDOM)(
+  it.skipIf(isJSDOM)(
     'should not exceed maximum call stack size when the parent container has fractional width',
     () => {
       render(
@@ -1242,7 +1221,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
 
   // See https://github.com/mui/mui-x/issues/9550
   // Need layout
-  testSkipIf(isJSDOM)(
+  it.skipIf(isJSDOM)(
     'should not exceed maximum call stack size with duplicated flex fields',
     () => {
       expect(() => {
@@ -1266,7 +1245,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
 
   // See https://github.com/mui/mui-x/issues/9550#issuecomment-1619020477
   // Need layout
-  testSkipIf(isJSDOM)(
+  it.skipIf(isJSDOM)(
     'should not exceed maximum call stack size caused by floating point precision error',
     () => {
       render(
@@ -1289,7 +1268,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
 
   // See https://github.com/mui/mui-x/issues/15721
   // Need layout
-  testSkipIf(isJSDOM)(
+  it.skipIf(isJSDOM)(
     'should not exceed maximum call stack size caused by subpixel rendering',
     () => {
       render(

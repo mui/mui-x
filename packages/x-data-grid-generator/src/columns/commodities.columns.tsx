@@ -124,6 +124,7 @@ export const getCommodityColumns = (editable = false): GridColDefGenerator[] => 
     renderEditCell: renderEditStatus,
     type: 'singleSelect',
     valueOptions: STATUS_OPTIONS,
+    valueFormatter: (value) => (value === 'PartiallyFilled' ? 'Partially Filled' : value),
     width: 150,
     editable,
   },
@@ -251,9 +252,10 @@ export const getCommodityColumns = (editable = false): GridColDefGenerator[] => 
       return value;
     },
     valueFormatter: (value: { label: string }) => value?.label,
-    groupingValueGetter: (value: { code: string }) => value.code,
+    groupingValueGetter: (value: { label: string } | undefined) => value?.label,
     sortComparator: (v1, v2, param1, param2) =>
       gridStringOrNumberComparator(v1.label, v2.label, param1, param2),
+    getOptionLabel: (value: { label: string }) => value?.label,
     editable,
     width: 120,
   } as GridColDef<any, CountryIsoOption, string>,

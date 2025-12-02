@@ -3,13 +3,10 @@ import clsx from 'clsx';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { styled, useThemeProps, Theme } from '@mui/material/styles';
-import {
-  unstable_useEnhancedEffect as useEnhancedEffect,
-  unstable_composeClasses as composeClasses,
-} from '@mui/utils';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import composeClasses from '@mui/utils/composeClasses';
 import { ClockPointer } from './ClockPointer';
-import { usePickerTranslations } from '../hooks/usePickerTranslations';
-import { useUtils } from '../internals/hooks/useUtils';
+import { usePickerAdapter, usePickerTranslations } from '../hooks';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 import { CLOCK_HOUR_WIDTH, getHours, getMinutes } from './shared';
@@ -50,7 +47,7 @@ export interface ClockProps extends ReturnType<typeof useMeridiemMode>, FormProp
   classes?: Partial<ClockClasses>;
 }
 
-interface ClockOwnerState extends PickerOwnerState {
+export interface ClockOwnerState extends PickerOwnerState {
   /**
    * `true` if the clock is disabled, `false` otherwise.
    */
@@ -82,7 +79,6 @@ const useUtilityClasses = (
 const ClockRoot = styled('div', {
   name: 'MuiClock',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })(({ theme }) => ({
   display: 'flex',
   justifyContent: 'center',
@@ -93,7 +89,6 @@ const ClockRoot = styled('div', {
 const ClockClock = styled('div', {
   name: 'MuiClock',
   slot: 'Clock',
-  overridesResolver: (_, styles) => styles.clock,
 })({
   backgroundColor: 'rgba(0,0,0,.07)',
   borderRadius: '50%',
@@ -107,7 +102,6 @@ const ClockClock = styled('div', {
 const ClockWrapper = styled('div', {
   name: 'MuiClock',
   slot: 'Wrapper',
-  overridesResolver: (_, styles) => styles.wrapper,
 })({
   '&:focus': {
     outline: 'none',
@@ -117,7 +111,6 @@ const ClockWrapper = styled('div', {
 const ClockSquareMask = styled('div', {
   name: 'MuiClock',
   slot: 'SquareMask',
-  overridesResolver: (_, styles) => styles.squareMask,
 })<{ ownerState: ClockOwnerState }>({
   width: '100%',
   height: '100%',
@@ -146,7 +139,6 @@ const ClockSquareMask = styled('div', {
 const ClockPin = styled('div', {
   name: 'MuiClock',
   slot: 'Pin',
-  overridesResolver: (_, styles) => styles.pin,
 })(({ theme }) => ({
   width: 6,
   height: 6,
@@ -158,7 +150,10 @@ const ClockPin = styled('div', {
   transform: 'translate(-50%, -50%)',
 }));
 
-const meridiemButtonCommonStyles = (theme: Theme, meridiemMode: Meridiem) => ({
+const meridiemButtonCommonStyles = (
+  theme: Theme,
+  clockMeridiemMode: ClockOwnerState['clockMeridiemMode'],
+) => ({
   zIndex: 1,
   bottom: 8,
   paddingLeft: 4,
@@ -166,7 +161,7 @@ const meridiemButtonCommonStyles = (theme: Theme, meridiemMode: Meridiem) => ({
   width: CLOCK_HOUR_WIDTH,
   variants: [
     {
-      props: { meridiemMode },
+      props: { clockMeridiemMode },
       style: {
         backgroundColor: (theme.vars || theme).palette.primary.main,
         color: (theme.vars || theme).palette.primary.contrastText,
@@ -181,7 +176,6 @@ const meridiemButtonCommonStyles = (theme: Theme, meridiemMode: Meridiem) => ({
 const ClockAmButton = styled(IconButton, {
   name: 'MuiClock',
   slot: 'AmButton',
-  overridesResolver: (_, styles) => styles.amButton,
 })<{ ownerState: ClockOwnerState }>(({ theme }) => ({
   ...meridiemButtonCommonStyles(theme, 'am'),
   // keeping it here to make TS happy
@@ -192,7 +186,6 @@ const ClockAmButton = styled(IconButton, {
 const ClockPmButton = styled(IconButton, {
   name: 'MuiClock',
   slot: 'PmButton',
-  overridesResolver: (_, styles) => styles.pmButton,
 })<{ ownerState: ClockOwnerState }>(({ theme }) => ({
   ...meridiemButtonCommonStyles(theme, 'pm'),
   // keeping it here to make TS happy
@@ -202,8 +195,7 @@ const ClockPmButton = styled(IconButton, {
 
 const ClockMeridiemText = styled(Typography, {
   name: 'MuiClock',
-  slot: 'meridiemText',
-  overridesResolver: (_, styles) => styles.meridiemText,
+  slot: 'MeridiemText',
 })({
   overflow: 'hidden',
   whiteSpace: 'nowrap',
@@ -236,7 +228,7 @@ export function Clock(inProps: ClockProps) {
     classes: classesProp,
   } = props;
 
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
   const translations = usePickerTranslations();
   const { ownerState: pickerOwnerState } = usePickerPrivateContext();
   const ownerState: ClockOwnerState = {
@@ -397,7 +389,7 @@ export function Clock(inProps: ClockProps) {
           aria-activedescendant={selectedId}
           aria-label={translations.clockLabelText(
             type,
-            value == null ? null : utils.format(value, 'fullTime'),
+            value == null ? null : adapter.format(value, ampm ? 'fullTime12h' : 'fullTime24h'),
           )}
           ref={listboxRef}
           role="listbox"
@@ -416,10 +408,10 @@ export function Clock(inProps: ClockProps) {
             disabled={disabled || meridiemMode === null}
             ownerState={ownerState}
             className={classes.amButton}
-            title={formatMeridiem(utils, 'am')}
+            title={formatMeridiem(adapter, 'am')}
           >
             <ClockMeridiemText variant="caption" className={classes.meridiemText}>
-              {formatMeridiem(utils, 'am')}
+              {formatMeridiem(adapter, 'am')}
             </ClockMeridiemText>
           </ClockAmButton>
           <ClockPmButton
@@ -428,10 +420,10 @@ export function Clock(inProps: ClockProps) {
             onClick={readOnly ? undefined : () => handleMeridiemChange('pm')}
             ownerState={ownerState}
             className={classes.pmButton}
-            title={formatMeridiem(utils, 'pm')}
+            title={formatMeridiem(adapter, 'pm')}
           >
             <ClockMeridiemText variant="caption" className={classes.meridiemText}>
-              {formatMeridiem(utils, 'pm')}
+              {formatMeridiem(adapter, 'pm')}
             </ClockMeridiemText>
           </ClockPmButton>
         </React.Fragment>

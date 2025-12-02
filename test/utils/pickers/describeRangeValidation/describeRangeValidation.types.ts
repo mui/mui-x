@@ -13,13 +13,13 @@ interface DescribeRangeValidationKeyboardOptions {
 export interface DescribeRangeValidationInputOptions
   extends DescribeValidationInputOptions,
     DescribeRangeValidationKeyboardOptions {
-  isSingleInput?: boolean;
+  fieldType: 'single-input' | 'multi-input' | 'no-input';
 }
 
 export interface DescribeRangeValidationOptions
   extends DescribeValidationOptions,
     DescribeRangeValidationKeyboardOptions {
-  isSingleInput?: boolean;
+  fieldType: 'single-input' | 'multi-input' | 'no-input';
 }
 
 export type DescribeRangeValidationTestSuite = (

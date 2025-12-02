@@ -11,6 +11,9 @@ import {
   GRID_AGGREGATION_FUNCTIONS,
   GridAggregationModel,
   GridAggregationFunction,
+  GridPivotModel,
+  gridStringOrNumberComparator,
+  GridGetRowsResponse,
 } from '@mui/x-data-grid-premium';
 import { GridStateColDef } from '@mui/x-data-grid-pro/internals';
 import { randomInt } from '../services/random-generator';
@@ -47,7 +50,15 @@ export interface PageInfo {
 }
 
 export interface DefaultServerOptions {
+  /**
+   * The minimum response delay in milliseconds.
+   * For a large dataset, the response delay can be larger than the minimum delay.
+   */
   minDelay: number;
+  /**
+   * The maximum response delay in milliseconds
+   * For a large dataset, the response delay can be larger than the maximum delay.
+   */
   maxDelay: number;
   useCursorPagination?: boolean;
 }
@@ -75,6 +86,17 @@ export interface ServerSideQueryOptions {
   start?: number;
   end?: number;
   groupFields?: string[];
+  pivotModel?: GridPivotModel;
+}
+
+interface NestedDataRowsResponse {
+  rows: GridRowModel[];
+  rootRowCount: number;
+  aggregateRow?: GridRowModel;
+}
+
+interface PivotingDataRowsResponse extends NestedDataRowsResponse {
+  pivotColumns: GridGetRowsResponse['pivotColumns'];
 }
 
 declare const DISABLE_CHANCE_RANDOM: any;
@@ -94,6 +116,7 @@ const simplifiedValueGetter = (field: string, colDef: GridColDef) => (row: GridR
 
 const getRowComparator = (
   sortModel: GridSortModel | undefined,
+  aggregationModel: GridAggregationModel | undefined,
   columnsWithDefaultColDef: GridColDef[],
 ) => {
   if (!sortModel) {
@@ -102,7 +125,7 @@ const getRowComparator = (
   }
   const sortOperators = sortModel.map((sortItem) => {
     const columnField = sortItem.field;
-    const colDef = columnsWithDefaultColDef.find(({ field }) => field === columnField) as any;
+    const colDef = columnsWithDefaultColDef.find(({ field }) => field === sortItem.field) as any;
     return {
       ...sortItem,
       valueGetter: simplifiedValueGetter(columnField, colDef),
@@ -309,13 +332,70 @@ const applyAggregation = (
       return;
     }
     const values = rows.map((row) => row[field]);
-    aggregateValues[`${field}Aggregate`] = aggregationFunction.apply({
+    aggregateValues[field] = aggregationFunction.apply({
       values,
       field,
       groupId,
     });
   });
   return aggregateValues;
+};
+
+const generateParentRows = (pathsToAutogenerate: Set<string>): GridValidRowModel[] => {
+  return Array.from(pathsToAutogenerate).map((path) => {
+    const pathArray = path.split(',');
+    return {
+      id: `auto-generated-parent-${pathArray.join('-')}`,
+      path: pathArray.slice(0, pathArray.length),
+      group: pathArray.slice(-1)[0],
+    };
+  });
+};
+
+/**
+ * Computes pivot aggregations for given pivot column keys
+ */
+const computePivotAggregations = (
+  pivotColumnKeys: string[],
+  rows: GridValidRowModel[],
+  visibleValues: any[],
+  columnTypeMap: Map<string, GridColDef['type']>,
+  groupId: string = 'root',
+  columnGroupIdSeparator: string = '>->',
+): Record<string, any> => {
+  const pivotAggregations: Record<string, any> = {};
+
+  pivotColumnKeys.forEach((pivotColumnKey) => {
+    const values = rows.map((row) => row[pivotColumnKey]).filter((v) => v !== undefined);
+
+    if (values.length > 0) {
+      // Find the corresponding pivot value configuration
+      const pivotValueConfig = visibleValues.find((v) => {
+        if (visibleValues.length === 0 || !visibleValues[0].field) {
+          return v.field === pivotColumnKey;
+        }
+        // For pivot columns with column grouping, extract the value field from the column name
+        const columnParts = pivotColumnKey.split(columnGroupIdSeparator);
+        return columnParts[columnParts.length - 1] === v.field;
+      });
+
+      if (pivotValueConfig) {
+        const availableAggregationFunctions = getAvailableAggregationFunctions(
+          columnTypeMap.get(pivotValueConfig.field),
+        );
+        const aggregationFunction = availableAggregationFunctions.get(pivotValueConfig.aggFunc);
+        if (aggregationFunction) {
+          pivotAggregations[pivotColumnKey] = aggregationFunction.apply({
+            values,
+            field: pivotValueConfig.field,
+            groupId,
+          });
+        }
+      }
+    }
+  });
+
+  return pivotAggregations;
 };
 
 /**
@@ -342,7 +422,11 @@ export const loadServerRows = (
 
   let filteredRows = getFilteredRows(rows, queryOptions.filterModel, columnsWithDefaultColDef);
 
-  const rowComparator = getRowComparator(queryOptions.sortModel, columnsWithDefaultColDef);
+  const rowComparator = getRowComparator(
+    queryOptions.sortModel,
+    queryOptions.aggregationModel,
+    columnsWithDefaultColDef,
+  );
   filteredRows = [...filteredRows].sort(rowComparator);
 
   let aggregateRow = {};
@@ -387,12 +471,6 @@ export const loadServerRows = (
   });
 };
 
-interface NestedDataRowsResponse {
-  rows: GridRowModel[];
-  rootRowCount: number;
-  aggregateRow?: GridRowModel;
-}
-
 const findTreeDataRowChildren = (
   allRows: GridRowModel[],
   parentPath: string[],
@@ -432,7 +510,7 @@ const getTreeDataFilteredRows: GetTreeDataFilteredRows = (
   columnsWithDefaultColDef,
 ): GridValidRowModel[] => {
   let filteredRows = [...rows];
-  if (filterModel && filterModel.quickFilterValues?.length! > 0) {
+  if (filterModel?.quickFilterValues && filterModel.quickFilterValues.length > 0) {
     filteredRows = getQuicklyFilteredRows(rows, filterModel, columnsWithDefaultColDef);
   }
   if ((filterModel?.items.length ?? 0) > 0) {
@@ -502,6 +580,7 @@ export const processTreeDataRows = (
   queryOptions: ServerSideQueryOptions,
   serverOptions: ServerOptions,
   columnsWithDefaultColDef: GridColDef[],
+  nestedPagination: boolean,
 ): Promise<NestedDataRowsResponse> => {
   const { minDelay = 100, maxDelay = 300 } = serverOptions;
   const pathKey = 'path';
@@ -524,7 +603,10 @@ export const processTreeDataRows = (
   ) as GridValidRowModel[];
 
   // get root row count
-  const rootRowCount = findTreeDataRowChildren(filteredRows, []).length;
+  const rootRowCount = findTreeDataRowChildren(
+    filteredRows,
+    nestedPagination ? queryOptions.groupKeys : [],
+  ).length;
 
   // find direct children referring to the `parentPath`
   const childRows = findTreeDataRowChildren(filteredRows, queryOptions.groupKeys);
@@ -550,7 +632,11 @@ export const processTreeDataRows = (
 
   if (queryOptions.sortModel) {
     // apply sorting
-    const rowComparator = getRowComparator(queryOptions.sortModel, columnsWithDefaultColDef);
+    const rowComparator = getRowComparator(
+      queryOptions.sortModel,
+      queryOptions.aggregationModel,
+      columnsWithDefaultColDef,
+    );
     childRowsWithDescendantCounts = [...childRowsWithDescendantCounts].sort(rowComparator);
   }
 
@@ -563,8 +649,9 @@ export const processTreeDataRows = (
     );
   }
 
-  if (queryOptions.paginationModel && queryOptions.groupKeys.length === 0) {
+  if (queryOptions.paginationModel && (queryOptions.groupKeys.length === 0 || nestedPagination)) {
     // Only paginate root rows, grid should refetch root rows when `paginationModel` updates
+    // Except when nested pagination is enabled, in which case we paginate the children of the current group node
     const { pageSize, page } = queryOptions.paginationModel;
     if (pageSize < childRowsWithDescendantCounts.length) {
       childRowsWithDescendantCounts = childRowsWithDescendantCounts.slice(
@@ -613,9 +700,19 @@ export const processRowGroupingRows = (
 
   // add paths and generate parent rows based on `groupFields`
   const groupFields = queryOptions.groupFields;
+
   if (groupFields.length > 0) {
     rowsWithPaths = rows.reduce<GridValidRowModel[]>((acc, row) => {
-      const partialPath = groupFields.map((field) => String(row[field]));
+      const partialPath = groupFields.map((field) => {
+        const colDef = columnsWithDefaultColDef.find(({ field: f }) => f === field);
+        if (colDef?.groupingValueGetter) {
+          return String(colDef.groupingValueGetter(row[field] as never, row, colDef, apiRef));
+        }
+        if (colDef?.valueGetter) {
+          return String(colDef.valueGetter(row[field] as never, row, colDef, apiRef));
+        }
+        return String(row[field]);
+      });
       for (let index = 0; index < partialPath.length; index += 1) {
         const value = partialPath[index];
         if (value === undefined) {
@@ -637,14 +734,7 @@ export const processRowGroupingRows = (
     rowsWithPaths = rows.map((row) => ({ ...row, path: [''] }));
   }
 
-  const autogeneratedRows = Array.from(pathsToAutogenerate).map((path) => {
-    const pathArray = path.split(',');
-    return {
-      id: `auto-generated-parent-${pathArray.join('-')}`,
-      path: pathArray.slice(0, pathArray.length),
-      group: pathArray.slice(-1)[0],
-    };
-  });
+  const autogeneratedRows = generateParentRows(pathsToAutogenerate);
 
   // apply plain filtering
   const filteredRows = getTreeDataFilteredRows(
@@ -691,7 +781,11 @@ export const processRowGroupingRows = (
   });
 
   if (queryOptions.sortModel) {
-    const rowComparator = getRowComparator(queryOptions.sortModel, columnsWithDefaultColDef);
+    const rowComparator = getRowComparator(
+      queryOptions.sortModel,
+      queryOptions.aggregationModel,
+      columnsWithDefaultColDef,
+    );
     const sortedMissingGroups = [...filteredRowsWithMissingGroups].sort(rowComparator);
     const sortedChildRows = [...childRowsWithDescendantCounts].sort(rowComparator);
     childRowsWithDescendantCounts = [...sortedMissingGroups, ...sortedChildRows];
@@ -720,6 +814,323 @@ export const processRowGroupingRows = (
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve({ rows: childRowsWithDescendantCounts, rootRowCount, aggregateRow });
+    }, delay); // simulate network latency
+  });
+};
+
+/**
+ * Simulates server data for pivoting feature
+ */
+export const processPivotingRows = (
+  rows: GridValidRowModel[],
+  queryOptions: ServerSideQueryOptions,
+  serverOptions: ServerOptions,
+  columnsWithDefaultColDef: GridColDef[],
+): Promise<PivotingDataRowsResponse> => {
+  const { minDelay = 100, maxDelay = 300 } = serverOptions;
+
+  if (maxDelay < minDelay) {
+    throw new Error('serverOptions.minDelay is larger than serverOptions.maxDelay ');
+  }
+
+  if (!queryOptions.pivotModel) {
+    throw new Error('queryOptions.pivotModel must be defined to compute pivoting data');
+  }
+
+  const delay = randomInt(minDelay, maxDelay);
+  const { pivotModel } = queryOptions;
+
+  const visibleColumns = pivotModel.columns.filter((column) => !column.hidden);
+  const visibleRows = pivotModel.rows.filter((row) => !row.hidden);
+  const visibleValues = pivotModel.values.filter((value) => !value.hidden);
+
+  // Create column lookup map for O(1) access
+  const columnLookup = new Map<string, GridColDef>();
+  for (const column of columnsWithDefaultColDef) {
+    columnLookup.set(column.field, column);
+  }
+
+  if (visibleRows.length === 0) {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve({ rows: [], rootRowCount: 0, pivotColumns: [] });
+      }, delay); // simulate network latency
+    });
+  }
+
+  // Apply filtering if provided
+  let filteredRows = rows;
+  if (queryOptions.filterModel) {
+    filteredRows = getFilteredRows(rows, queryOptions.filterModel, columnsWithDefaultColDef);
+  }
+
+  // Create pivot columns based on the pivot model
+  const columnGroupIdSeparator = '>->';
+  const pivotColumns: GridGetRowsResponse['pivotColumns'] = [];
+  const uniqueColumnGroups = new Map<string, (string | GridRowModel)[]>();
+
+  // Generate pivot column names based on pivot model columns
+  if (visibleColumns.length > 0 || visibleValues.length > 0) {
+    // Create column groups based on unique combinations of row values
+
+    filteredRows = filteredRows.map((row) => {
+      const columnGroupPath: GridRowModel[] = [];
+      const updatedRow = { ...row };
+
+      for (let i = 0; i < visibleColumns.length; i += 1) {
+        const { field: colGroupField } = visibleColumns[i];
+        const column = columnLookup.get(colGroupField);
+        if (!column) {
+          continue;
+        }
+        if (!column.valueGetter && !column.valueFormatter) {
+          columnGroupPath.push(row[colGroupField]);
+        } else {
+          columnGroupPath.push({
+            [colGroupField]: column.valueGetter
+              ? column.valueGetter(row[colGroupField] as never, row, column, apiRef)
+              : row[colGroupField],
+          });
+        }
+      }
+
+      // Create pivot columns for each value field within this column group
+      visibleValues.forEach((pivotValue) => {
+        let valueKey = pivotValue.field;
+        const column = columnLookup.get(valueKey);
+        if (!column) {
+          return;
+        }
+        if (visibleColumns.length > 0) {
+          const columnGroupPathValue = columnGroupPath.map((path, pathIndex) => {
+            const value = path[visibleColumns[pathIndex].field];
+            if (value instanceof Date) {
+              return value.toLocaleDateString();
+            }
+            return value;
+          });
+          valueKey = `${columnGroupPathValue.join(columnGroupIdSeparator)}${columnGroupIdSeparator}${pivotValue.field}`;
+        }
+        uniqueColumnGroups.set(valueKey, [...columnGroupPath, pivotValue.field]);
+        updatedRow[valueKey] = column.valueGetter
+          ? column.valueGetter(row[pivotValue.field] as never, row, column, apiRef)
+          : row[pivotValue.field];
+      });
+
+      return updatedRow;
+    });
+
+    // Convert uniqueColumnGroups to the pivot column structure
+    const columnGroupMap = new Map<
+      string,
+      { group: string | GridRowModel; children: Map<string, any> }
+    >();
+    uniqueColumnGroups.forEach((columnGroupPath) => {
+      let currentLevel = columnGroupMap;
+      let currentPath = '';
+
+      for (let i = 0; i < columnGroupPath.length - 1; i += 1) {
+        const groupValue = columnGroupPath[i];
+        let groupKey =
+          typeof groupValue === 'string' ? groupValue : groupValue[visibleColumns[i].field];
+        if (groupKey instanceof Date) {
+          groupKey = groupKey.toLocaleDateString();
+        }
+        const pathKey = currentPath ? `${currentPath}-${groupKey}` : groupKey;
+
+        if (!currentLevel.has(groupKey)) {
+          currentLevel.set(groupKey, {
+            group: groupValue,
+            children: new Map(),
+          });
+        }
+
+        const group = currentLevel.get(groupKey)!;
+        currentLevel = group.children;
+        currentPath = pathKey;
+      }
+    });
+
+    const convertMapToArray = (
+      map: Map<string, { group: string | GridRowModel; children: Map<string, any> }>,
+    ): NonNullable<GridGetRowsResponse['pivotColumns']> => {
+      return Array.from(map.entries()).map(([key, group]) => ({
+        key,
+        group: group.group,
+        ...(group.children.size > 0 ? { children: convertMapToArray(group.children) } : {}),
+      }));
+    };
+
+    pivotColumns.push(...convertMapToArray(columnGroupMap));
+  }
+
+  const pivotColumnKeys = Array.from(uniqueColumnGroups.keys());
+
+  // Add paths and generate parent rows based on `visibleRows` (pivot row fields)
+  const pathsToAutogenerate = new Set<string>();
+  let rowsWithPaths = filteredRows;
+  const rowsWithMissingGroups: GridValidRowModel[] = [];
+
+  if (visibleRows.length > 0) {
+    rowsWithPaths = filteredRows.reduce<GridValidRowModel[]>((acc, row) => {
+      const partialPath = visibleRows.map((pivotRow) => {
+        const field = pivotRow.field;
+        const colDef = columnLookup.get(field);
+        if (colDef?.groupingValueGetter) {
+          return String(colDef.groupingValueGetter(row[field] as never, row, colDef, apiRef));
+        }
+        if (colDef?.valueGetter) {
+          return String(colDef.valueGetter(row[field] as never, row, colDef, apiRef));
+        }
+        return String(row[field]);
+      });
+
+      for (let index = 0; index < partialPath.length; index += 1) {
+        const value = partialPath[index];
+        if (value === undefined) {
+          if (index === 0) {
+            rowsWithMissingGroups.push({ ...row, group: false });
+          }
+          return acc;
+        }
+        const parentPath = partialPath.slice(0, index + 1);
+        const stringifiedPath = parentPath.join(',');
+        if (!pathsToAutogenerate.has(stringifiedPath)) {
+          pathsToAutogenerate.add(stringifiedPath);
+        }
+      }
+      acc.push({ ...row, path: [...partialPath, ''] });
+      return acc;
+    }, []);
+  } else {
+    rowsWithPaths = filteredRows.map((row) => ({ ...row, path: [''] }));
+  }
+
+  const autogeneratedRows = generateParentRows(pathsToAutogenerate);
+
+  // Apply tree data filtering to include missing parents and children
+  const filteredRowsWithGroups = getTreeDataFilteredRows(
+    [...autogeneratedRows, ...rowsWithPaths, ...rowsWithMissingGroups],
+    queryOptions.filterModel,
+    columnsWithDefaultColDef,
+  ) as GridValidRowModel[];
+
+  // Get root rows
+  const rootRows = findTreeDataRowChildren(filteredRowsWithGroups, []);
+  const rootRowCount = rootRows.length;
+
+  let filteredRowsWithMissingGroups: GridValidRowModel[] = [];
+  let childRows = rootRows;
+  if (queryOptions.groupKeys?.length === 0) {
+    filteredRowsWithMissingGroups = filteredRowsWithGroups.filter(({ group }) => group === false);
+  } else {
+    childRows = findTreeDataRowChildren(filteredRowsWithGroups, queryOptions.groupKeys || []);
+  }
+
+  const columnTypeMap = new Map<string, GridColDef['type']>();
+  for (const column of columnsWithDefaultColDef) {
+    if (column.type) {
+      columnTypeMap.set(column.field, column.type);
+    }
+  }
+
+  let childRowsWithDescendantCounts = childRows.map((row) => {
+    const descendants = findTreeDataRowChildren(
+      filteredRowsWithGroups,
+      row.path,
+      'path',
+      -1,
+      ({ id }) => typeof id !== 'string' || !id.startsWith('auto-generated-parent-'),
+    );
+    const descendantCount = descendants.length;
+
+    if (descendantCount > 0) {
+      // Parent row, compute aggregation for both regular aggregation model and pivot values
+      const regularAggregation = applyAggregation(
+        queryOptions.pivotModel!.values.map((value) => ({ [value.field]: value.aggFunc })) as any,
+        columnsWithDefaultColDef,
+        descendants,
+        row.id,
+      );
+
+      // Compute aggregations for each pivot column
+      const pivotAggregations = computePivotAggregations(
+        pivotColumnKeys,
+        descendants,
+        visibleValues,
+        columnTypeMap,
+        row.id,
+        columnGroupIdSeparator,
+      );
+
+      return {
+        ...row,
+        descendantCount,
+        ...regularAggregation,
+        ...pivotAggregations,
+      };
+    }
+    return { ...row, descendantCount } as GridRowModel;
+  });
+
+  // Apply sorting if provided
+  if (queryOptions.sortModel) {
+    const rowComparator = getRowComparator(
+      queryOptions.sortModel,
+      {},
+      pivotColumnKeys.map((key) => ({
+        field: key,
+        type: 'number',
+        sortComparator: gridStringOrNumberComparator,
+      })),
+    );
+    const sortedMissingGroups = [...filteredRowsWithMissingGroups].sort(rowComparator);
+    const sortedChildRows = [...childRowsWithDescendantCounts].sort(rowComparator);
+    childRowsWithDescendantCounts = [...sortedMissingGroups, ...sortedChildRows];
+  }
+
+  // Apply pagination if provided
+  if (queryOptions.paginationModel && queryOptions.groupKeys?.length === 0) {
+    // Only paginate root rows, grid should refetch root rows when `paginationModel` updates
+    const { pageSize, page } = queryOptions.paginationModel;
+    if (pageSize < childRowsWithDescendantCounts.length) {
+      childRowsWithDescendantCounts = childRowsWithDescendantCounts.slice(
+        page * pageSize,
+        (page + 1) * pageSize,
+      );
+    }
+  }
+
+  // Compute aggregate row if pivot values are provided
+  let aggregateRow: GridRowModel | undefined;
+  if (visibleValues.length > 0) {
+    const regularAggregation = applyAggregation(
+      visibleValues.map((value) => ({ [value.field]: value.aggFunc })) as any,
+      columnsWithDefaultColDef,
+      filteredRowsWithGroups,
+    );
+
+    // Compute aggregations for each pivot column for the entire dataset
+    const pivotAggregations = computePivotAggregations(
+      pivotColumnKeys,
+      filteredRowsWithGroups.filter(
+        (row) => typeof row.id !== 'string' || !row.id.startsWith('auto-generated-parent-'),
+      ),
+      visibleValues,
+      columnTypeMap,
+      'root',
+      columnGroupIdSeparator,
+    );
+
+    aggregateRow = {
+      ...regularAggregation,
+      ...pivotAggregations,
+    };
+  }
+
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({ rows: childRowsWithDescendantCounts, rootRowCount, pivotColumns, aggregateRow });
     }, delay); // simulate network latency
   });
 };

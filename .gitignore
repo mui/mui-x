@@ -2,11 +2,11 @@
 # However, in order to prevent issues, editor files are ignored here.
 .idea
 .vscode
+.cursor
 
 __diff_output__
 .DS_STORE
 *.log
-*.tsbuildinfo
 /.eslintcache
 /.nyc_output
 /coverage
@@ -15,14 +15,19 @@ __diff_output__
 !/docs/pages/playground/tsconfig.json
 /docs/.env.local
 /docs/export
+/docs/public/x/
 /test/regressions/screenshots
+/test/performance-charts/traces
 build
 dist
 node_modules
 size-snapshot.json
 performance-snapshot.json
 # vale downloaded config
-.github/styles/Google
-.github/styles/MUI
-.github/styles/.vale-config
+.github/styles/
 test-results
+CLAUDE.md
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts

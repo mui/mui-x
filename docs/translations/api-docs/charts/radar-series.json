@@ -1,0 +1,26 @@
+{
+  "interfaceDescription": "",
+  "propertiesDescriptions": {
+    "data": { "description": "" },
+    "type": { "description": "" },
+    "color": {
+      "description": "Color to use when displaying the series.<br />If <code>colorGetter</code> is provided, it will be used to get the color for each data point instead.<br />Otherwise, this color will be used for all data points in the series."
+    },
+    "colorGetter": {
+      "description": "A function that returns a color based on the value and/or the data index of a point.<br />The returned color is used when displaying the specific data point, e.g., a marker in a line chart.<br />When the color of the entire series is required, e.g., in legends, the <code>color</code> property is used instead."
+    },
+    "fillArea": { "description": "If <code>true</code> fill the series area." },
+    "hideMark": { "description": "If <code>true</code> hide marks at value position." },
+    "highlightScope": { "description": "The scope to apply when the series is highlighted." },
+    "id": { "description": "The id of this series." },
+    "label": {
+      "description": "The label to display on the tooltip or the legend. It can be a string or a function."
+    },
+    "labelMarkType": {
+      "description": "Defines the mark type for the series.<br /><br />There is a default mark type for each series type."
+    },
+    "valueFormatter": {
+      "description": "Formatter used to render values in tooltip or other data display."
+    }
+  }
+}

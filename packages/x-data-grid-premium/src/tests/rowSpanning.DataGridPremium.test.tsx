@@ -1,8 +1,6 @@
-import * as React from 'react';
-import { createRenderer } from '@mui/internal-test-utils';
-import { expect } from 'chai';
+import { act, createRenderer } from '@mui/internal-test-utils';
 import { DataGridPremium, DataGridPremiumProps } from '@mui/x-data-grid-premium';
-import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPremium /> - Row spanning', () => {
   const { render } = createRenderer();
@@ -108,7 +106,7 @@ describe('<DataGridPremium /> - Row spanning', () => {
   }
 
   // See https://github.com/mui/mui-x/issues/14691
-  testSkipIf(isJSDOM)('should not throw when initializing an aggregation model', () => {
+  it.skipIf(isJSDOM)('should not throw when initializing an aggregation model', async () => {
     expect(() =>
       render(
         <TestDataGrid
@@ -123,5 +121,8 @@ describe('<DataGridPremium /> - Row spanning', () => {
         />,
       ),
     ).not.toErrorDev();
+
+    // Fixes act warning
+    await act(() => Promise.resolve());
   });
 });

@@ -1,36 +1,48 @@
 import * as React from 'react';
 import { useGridSelector } from '../../utils';
-import { useGridApiContext } from '../../utils/useGridApiContext';
-import { useGridRootProps } from '../../utils/useGridRootProps';
 import { gridExpandedRowCountSelector } from '../filter';
 import { gridRowCountSelector, gridRowsLoadingSelector } from '../rows';
 import { gridPinnedRowsCountSelector } from '../rows/gridRowsSelector';
-import { GridLoadingOverlayVariant } from '../../../components/GridLoadingOverlay';
-import { GridOverlayWrapper } from '../../../components/base/GridOverlays';
-import type { GridOverlayType } from '../../../components/base/GridOverlays';
+import { gridVisibleColumnDefinitionsSelector } from '../columns';
+import { gridPivotActiveSelector } from '../pivoting';
+import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import type { GridOverlayType, GridLoadingOverlayVariant } from './gridOverlaysInterfaces';
 
 /**
  * Uses the grid state to determine which overlay to display.
  * Returns the active overlay type and the active loading overlay variant.
  */
-export const useGridOverlays = () => {
-  const apiRef = useGridApiContext();
-  const rootProps = useGridRootProps();
-
+export const useGridOverlays = (
+  apiRef: React.RefObject<GridApiCommunity>,
+  props: Pick<DataGridProcessedProps, 'slotProps'>,
+) => {
   const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
   const visibleRowCount = useGridSelector(apiRef, gridExpandedRowCountSelector);
   const pinnedRowsCount = useGridSelector(apiRef, gridPinnedRowsCountSelector);
+  const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const noRows = totalRowCount === 0 && pinnedRowsCount === 0;
   const loading = useGridSelector(apiRef, gridRowsLoadingSelector);
+  const pivotActive = useGridSelector(apiRef, gridPivotActiveSelector);
 
   const showNoRowsOverlay = !loading && noRows;
   const showNoResultsOverlay = !loading && totalRowCount > 0 && visibleRowCount === 0;
+  const showNoColumnsOverlay = !loading && visibleColumns.length === 0;
+  const showEmptyPivotOverlay = showNoRowsOverlay && pivotActive;
 
-  let overlayType: GridOverlayType = null;
+  let overlayType: GridOverlayType | 'emptyPivotOverlay' = null;
   let loadingOverlayVariant: GridLoadingOverlayVariant | null = null;
 
   if (showNoRowsOverlay) {
     overlayType = 'noRowsOverlay';
+  }
+
+  if (showNoColumnsOverlay) {
+    overlayType = 'noColumnsOverlay';
+  }
+
+  if (showEmptyPivotOverlay) {
+    overlayType = 'emptyPivotOverlay';
   }
 
   if (showNoResultsOverlay) {
@@ -40,24 +52,12 @@ export const useGridOverlays = () => {
   if (loading) {
     overlayType = 'loadingOverlay';
     loadingOverlayVariant =
-      rootProps.slotProps?.loadingOverlay?.[noRows ? 'noRowsVariant' : 'variant'] ??
+      props.slotProps?.loadingOverlay?.[noRows ? 'noRowsVariant' : 'variant'] ??
       (noRows ? 'skeleton' : 'linear-progress');
   }
 
-  const overlaysProps = { overlayType, loadingOverlayVariant };
-
-  const getOverlay = () => {
-    if (!overlayType) {
-      return null;
-    }
-    const Overlay = rootProps.slots?.[overlayType];
-    const overlayProps = rootProps.slotProps?.[overlayType];
-    return (
-      <GridOverlayWrapper {...overlaysProps}>
-        <Overlay {...overlayProps} />
-      </GridOverlayWrapper>
-    );
+  return {
+    overlayType: overlayType as NonNullable<GridOverlayType>,
+    loadingOverlayVariant,
   };
-
-  return { getOverlay, overlaysProps };
 };

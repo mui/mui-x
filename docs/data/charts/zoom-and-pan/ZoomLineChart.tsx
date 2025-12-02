@@ -1,10 +1,8 @@
-import * as React from 'react';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 
 export default function ZoomLineChart() {
   return (
     <LineChartPro
-      width={600}
       height={300}
       xAxis={[
         {

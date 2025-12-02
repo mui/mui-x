@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
 
 export default function FunctionLabel() {
@@ -14,7 +13,7 @@ export default function FunctionLabel() {
 }
 
 const props = {
-  width: 500,
   height: 300,
-  xAxis: [{ data: ['A', 'B', 'C'], scaleType: 'band' as const }],
+  xAxis: [{ data: ['A', 'B', 'C'] }],
+  yAxis: [{ width: 50 }],
 };

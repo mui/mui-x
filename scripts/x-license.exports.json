@@ -1,4 +1,5 @@
 [
+  { "name": "clearLicenseStatusCache", "kind": "Function" },
   { "name": "generateLicense", "kind": "Function" },
   { "name": "generateReleaseInfo", "kind": "Function" },
   { "name": "LICENSE_STATUS", "kind": "Enum" },
@@ -8,6 +9,7 @@
   { "name": "LicenseStatus", "kind": "TypeAlias" },
   { "name": "MuiCommercialPackageName", "kind": "TypeAlias" },
   { "name": "MuiLicenseInfo", "kind": "Interface" },
+  { "name": "muiXTelemetrySettings", "kind": "Variable" },
   { "name": "PlanScope", "kind": "TypeAlias" },
   { "name": "showExpiredAnnualGraceLicenseKeyError", "kind": "Function" },
   { "name": "showExpiredAnnualLicenseKeyError", "kind": "Function" },

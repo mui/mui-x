@@ -88,7 +88,7 @@ The following snippets build on the demo above to show various use cases for the
 // Aggregate the root group in the top-level footer
 // and the other groups in their grouping row
 // (default behavior)
-getAggregationPosition=(groupNode) => (groupNode == null ? 'footer' : 'inline'),
+getAggregationPosition={(groupNode) => (groupNode.depth === -1 ? 'footer' : 'inline')}
 
 // Aggregate all the groups in their grouping row;
 // the root will not be aggregated
@@ -283,6 +283,13 @@ const aggregationFunction: GridAggregationFunction = {
 ```
 
 {{"demo": "AggregationValueFormatter.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Including pinned rows in the aggregation
+
+By default, pinned rows are not included in the top-level aggregation calculation.
+The demo below overrides the default aggregation functions to include values from the pinned rows in the top-level total aggreagation.
+
+{{"demo": "AggregationPinnedRows.js", "bg": "inline"}}
 
 ## Custom rendering
 

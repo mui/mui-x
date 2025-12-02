@@ -1,20 +1,20 @@
-import * as React from 'react';
-import { expect } from 'chai';
-import { createRenderer, fireEvent } from '@mui/internal-test-utils';
-import { spy } from 'sinon';
+import { createRenderer } from '@mui/internal-test-utils';
+import { vi } from 'vitest';
 import { PieChart } from '@mui/x-charts/PieChart';
 
 const config = {
   width: 400,
   height: 400,
-};
+  xAxis: [{ position: 'none' }],
+  yAxis: [{ position: 'none' }],
+} as const;
 
 describe('PieChart - click event', () => {
   const { render } = createRenderer();
 
   describe('onItemClick', () => {
-    it('should add cursor="pointer" to bar elements', () => {
-      render(
+    it('should add cursor="pointer" to arc elements', () => {
+      const { container } = render(
         <PieChart
           {...config}
           series={[
@@ -29,7 +29,8 @@ describe('PieChart - click event', () => {
           onItemClick={() => {}}
         />,
       );
-      const slices = document.querySelectorAll<HTMLElement>('path.MuiPieArc-root');
+      // eslint-disable-next-line testing-library/no-container
+      const slices = container.querySelectorAll<HTMLElement>('path.MuiPieArc-root');
 
       expect(Array.from(slices).map((slice) => slice.getAttribute('cursor'))).to.deep.equal([
         'pointer',
@@ -37,9 +38,9 @@ describe('PieChart - click event', () => {
       ]);
     });
 
-    it('should provide the right context as second argument', () => {
-      const onItemClick = spy();
-      render(
+    it('should provide the right context as second argument', async () => {
+      const onItemClick = vi.fn();
+      const { user } = render(
         <PieChart
           {...config}
           series={[
@@ -56,15 +57,15 @@ describe('PieChart - click event', () => {
       );
       const slices = document.querySelectorAll<HTMLElement>('path.MuiPieArc-root');
 
-      fireEvent.click(slices[0]);
-      expect(onItemClick.lastCall.args[1]).to.deep.equal({
+      await user.click(slices[0]);
+      expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'pie',
         seriesId: 's1',
         dataIndex: 0,
       });
 
-      fireEvent.click(slices[1]);
-      expect(onItemClick.lastCall.args[1]).to.deep.equal({
+      await user.click(slices[1]);
+      expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'pie',
         seriesId: 's1',
         dataIndex: 1,

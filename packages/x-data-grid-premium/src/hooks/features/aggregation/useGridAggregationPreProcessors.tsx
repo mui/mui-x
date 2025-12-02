@@ -31,7 +31,7 @@ export const useGridAggregationPreProcessors = (
     | 'getAggregationPosition'
     | 'slotProps'
     | 'slots'
-    | 'unstable_dataSource'
+    | 'dataSource'
   >,
 ) => {
   // apiRef.current.caches.aggregation.rulesOnLastColumnHydration is not used because by the time
@@ -46,7 +46,7 @@ export const useGridAggregationPreProcessors = (
             columnsState.lookup,
             gridAggregationModelSelector(apiRef),
             props.aggregationFunctions,
-            !!props.unstable_dataSource,
+            !!props.dataSource,
           );
 
       columnsState.orderedFields.forEach((field) => {
@@ -56,17 +56,11 @@ export const useGridAggregationPreProcessors = (
         let column = columnsState.lookup[field];
 
         if (haveAggregationColumnValue) {
-          column = unwrapColumnFromAggregation({
-            column,
-          });
+          column = unwrapColumnFromAggregation(column);
         }
 
         if (shouldHaveAggregationValue) {
-          column = wrapColumnWithAggregationValue({
-            column,
-            aggregationRule: aggregationRules[field],
-            apiRef,
-          });
+          column = wrapColumnWithAggregationValue(column, aggregationRules[field], apiRef);
         }
 
         columnsState.lookup[field] = column;
@@ -77,7 +71,7 @@ export const useGridAggregationPreProcessors = (
 
       return columnsState;
     },
-    [apiRef, props.aggregationFunctions, props.disableAggregation, props.unstable_dataSource],
+    [apiRef, props.aggregationFunctions, props.disableAggregation, props.dataSource],
   );
 
   const addGroupFooterRows = React.useCallback<GridPipeProcessor<'hydrateRows'>>(
@@ -88,7 +82,7 @@ export const useGridAggregationPreProcessors = (
             gridColumnLookupSelector(apiRef),
             gridAggregationModelSelector(apiRef),
             props.aggregationFunctions,
-            !!props.unstable_dataSource,
+            !!props.dataSource,
           );
 
       const hasAggregationRule = Object.keys(aggregationRules).length > 0;
@@ -116,7 +110,7 @@ export const useGridAggregationPreProcessors = (
       props.disableAggregation,
       props.getAggregationPosition,
       props.aggregationFunctions,
-      props.unstable_dataSource,
+      props.dataSource,
     ],
   );
 
@@ -129,7 +123,7 @@ export const useGridAggregationPreProcessors = (
       const availableAggregationFunctions = getAvailableAggregationFunctions({
         aggregationFunctions: props.aggregationFunctions,
         colDef,
-        isDataSource: !!props.unstable_dataSource,
+        isDataSource: !!props.dataSource,
       });
 
       if (availableAggregationFunctions.length === 0) {
@@ -138,7 +132,7 @@ export const useGridAggregationPreProcessors = (
 
       return [...columnMenuItems, 'columnMenuAggregationItem'];
     },
-    [props.aggregationFunctions, props.disableAggregation, props.unstable_dataSource],
+    [props.aggregationFunctions, props.disableAggregation, props.dataSource],
   );
 
   const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(

@@ -7,6 +7,7 @@ import { UseTreeViewFocusSignature } from '../internals/plugins/useTreeViewFocus
 import { UseTreeViewKeyboardNavigationSignature } from '../internals/plugins/useTreeViewKeyboardNavigation';
 import { UseTreeViewLabelSignature } from '../internals/plugins/useTreeViewLabel';
 import { UseTreeViewExpansionSignature } from '../internals/plugins/useTreeViewExpansion';
+import { UseTreeViewLazyLoadingSignature } from '../internals/plugins/useTreeViewLazyLoading';
 
 export interface UseTreeItemParameters {
   /**
@@ -44,7 +45,6 @@ export interface UseTreeItemRootSlotPropsFromUseTreeItem {
   tabIndex: 0 | -1;
   id: string;
   'aria-expanded': React.AriaAttributes['aria-expanded'];
-  'aria-selected': React.AriaAttributes['aria-selected'];
   'aria-disabled': React.AriaAttributes['aria-disabled'];
   onFocus: TreeViewCancellableEventHandler<React.FocusEvent<HTMLElement>>;
   onBlur: TreeViewCancellableEventHandler<React.FocusEvent<HTMLElement>>;
@@ -62,7 +62,16 @@ export interface UseTreeItemContentSlotPropsFromUseTreeItem {
   onClick: TreeViewCancellableEventHandler<React.MouseEvent>;
   onMouseDown: TreeViewCancellableEventHandler<React.MouseEvent>;
   ref: React.RefCallback<HTMLDivElement> | null;
+  /**
+   * @deprecated Will be removed in the next major version. Please use the data-attrs instead.
+   */
   status: UseTreeItemStatus;
+  'data-expanded'?: '';
+  'data-selected'?: '';
+  'data-focused'?: '';
+  'data-disabled'?: '';
+  'data-editing'?: '';
+  'data-editable'?: '';
 }
 
 export interface UseTreeItemContentSlotOwnProps
@@ -81,10 +90,6 @@ export type UseTreeItemIconContainerSlotProps<ExternalProps = {}> = ExternalProp
 export interface UseTreeItemLabelSlotOwnProps {
   children: React.ReactNode;
   onDoubleClick: TreeViewCancellableEventHandler<React.MouseEvent>;
-  /**
-   * Only defined when the `isItemEditable` experimental feature is enabled.
-   */
-  editable?: boolean;
 }
 
 export type UseTreeItemLabelSlotProps<ExternalProps = {}> = ExternalProps &
@@ -97,10 +102,18 @@ export type UseTreeItemLabelInputSlotProps<ExternalProps = {}> = ExternalProps &
 
 export interface UseTreeItemCheckboxSlotOwnProps {
   ref: React.RefObject<HTMLButtonElement | null>;
+  'aria-hidden': true;
 }
 
 export type UseTreeItemCheckboxSlotProps<ExternalProps = {}> = ExternalProps &
   UseTreeItemCheckboxSlotOwnProps;
+
+export type UseTreeItemErrorContainerSlotProps<ExternalProps = {}> = ExternalProps & {};
+
+export type UseTreeItemLoadingContainerSlotProps<ExternalProps = {}> = ExternalProps & {
+  size: string;
+  thickness: number;
+};
 
 export interface UseTreeItemGroupTransitionSlotOwnProps {
   unmountOnExit: boolean;
@@ -126,6 +139,8 @@ export interface UseTreeItemStatus {
   disabled: boolean;
   editing: boolean;
   editable: boolean;
+  loading: boolean;
+  error: boolean;
 }
 
 export interface UseTreeItemReturnValue<
@@ -203,6 +218,24 @@ export interface UseTreeItemReturnValue<
     externalProps?: ExternalProps,
   ) => UseTreeItemDragAndDropOverlaySlotProps<ExternalProps>;
   /**
+   * Resolver for the ErrorIcon slot's props.
+   * Warning: This slot is only useful when using the `<RichTreeView />` component when lazy loading is enabled.
+   * @param {ExternalProps} externalProps Additional props for the ErrorIcon slot.
+   * @returns {UseTreeItemErrorContainerSlotProps<ExternalProps>} Props that should be spread on the ErrorIcon slot.
+   */
+  getErrorContainerProps: <ExternalProps extends Record<string, any> = {}>(
+    externalProps?: ExternalProps,
+  ) => UseTreeItemErrorContainerSlotProps<ExternalProps>;
+  /**
+   * Resolver for the LoadingIcon slot's props.
+   * Warning: This slot is only useful when using the `<RichTreeView />` component when lazy loading is enabled.
+   * @param {ExternalProps} externalProps Additional props for the LoadingIcon slot.
+   * @returns {UseTreeItemLoadingContainerSlotProps<ExternalProps>} Props that should be spread on the LoadingIcon slot.
+   */
+  getLoadingContainerProps: <ExternalProps extends Record<string, any> = {}>(
+    externalProps?: ExternalProps,
+  ) => UseTreeItemLoadingContainerSlotProps<ExternalProps>;
+  /**
    * A ref to the component's root DOM element.
    */
   rootRef: React.RefCallback<HTMLLIElement> | null;
@@ -231,4 +264,4 @@ export type UseTreeItemMinimalPlugins = readonly [
 /**
  * Plugins that `UseTreeItem` can use if they are present, but are not required.
  */
-export type UseTreeItemOptionalPlugins = readonly [];
+export type UseTreeItemOptionalPlugins = readonly [UseTreeViewLazyLoadingSignature];

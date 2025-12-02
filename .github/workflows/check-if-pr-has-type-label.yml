@@ -1,0 +1,16 @@
+name: Check PR type label
+
+on:
+  pull_request:
+    # Adding `synchronize` to handle workflow runs when the PR's branch is updated
+    types: [opened, reopened, labeled, unlabeled, synchronize]
+
+permissions: {}
+
+jobs:
+  check-label:
+    name: check PR labels
+    permissions:
+      pull-requests: read
+    # no need for a check if the PR is merged. That is done inside the reusable workflow
+    uses: mui/mui-public/.github/workflows/prs_check-if-pr-has-type-label.yml@master

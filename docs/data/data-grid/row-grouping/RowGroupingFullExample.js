@@ -1,4 +1,3 @@
-import * as React from 'react';
 import {
   DataGridPremium,
   GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
@@ -6,6 +5,10 @@ import {
   useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
+
+const groupingColDef = {
+  leafField: 'traderEmail',
+};
 
 export default function RowGroupingFullExample() {
   const { data, loading } = useDemoData({
@@ -37,9 +40,7 @@ export default function RowGroupingFullExample() {
         loading={loading}
         disableRowSelectionOnClick
         initialState={initialState}
-        groupingColDef={{
-          leafField: 'traderEmail',
-        }}
+        groupingColDef={groupingColDef}
       />
     </div>
   );

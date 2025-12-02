@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
 
 const seriesA = {
@@ -16,7 +15,6 @@ const seriesC = {
 export default function BasicStacking() {
   return (
     <BarChart
-      width={600}
       height={300}
       series={[
         { ...seriesA, stack: 'total' },

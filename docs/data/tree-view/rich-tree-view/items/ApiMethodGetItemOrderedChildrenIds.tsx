@@ -43,7 +43,7 @@ export default function ApiMethodGetItemOrderedChildrenIds() {
   );
 
   const handleSelectedItemsChange = (
-    event: React.SyntheticEvent,
+    event: React.SyntheticEvent | null,
     itemId: string | null,
   ) => {
     if (itemId == null) {

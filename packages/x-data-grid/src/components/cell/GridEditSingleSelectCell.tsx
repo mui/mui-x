@@ -1,7 +1,8 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
-import { SelectProps, SelectChangeEvent } from '@mui/material/Select';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import type { GridSlotProps } from '../../models/gridSlotsComponentsProps';
 import { GridCellEditStopReasons } from '../../models/params/gridEditCellParams';
 import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -13,24 +14,25 @@ import {
 } from '../panel/filterPanel/filterPanelUtils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
-export interface GridEditSingleSelectCellProps
-  extends GridRenderEditCellParams,
-    Omit<SelectProps, 'id' | 'tabIndex' | 'value'> {
+export interface GridEditSingleSelectCellProps extends GridRenderEditCellParams {
   /**
    * Callback called when the value is changed by the user.
-   * @param {SelectChangeEvent<any>} event The event source of the callback.
+   * @param {Event<any>} event The event source of the callback.
    * @param {any} newValue The value that is going to be passed to `apiRef.current.setEditCellValue`.
    * @returns {Promise<void> | void} A promise to be awaited before calling `apiRef.current.setEditCellValue`
    */
-  onValueChange?: (event: SelectChangeEvent<any>, newValue: any) => Promise<void> | void;
+  onValueChange?: (
+    event: Parameters<NonNullable<GridSlotProps['baseSelect']['onOpen']>>[0],
+    newValue: any,
+  ) => Promise<void> | void;
   /**
    * If true, the select opens by default.
    */
   initialOpen?: boolean;
 }
 
-function isKeyboardEvent(event: any): event is React.KeyboardEvent {
-  return !!event.key;
+function isKeyboardEvent(event: React.SyntheticEvent): event is React.KeyboardEvent {
+  return 'key' in event && !!event.key;
 }
 
 function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
@@ -59,8 +61,8 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
   } = props;
 
   const apiRef = useGridApiContext();
-  const ref = React.useRef<any>(null);
-  const inputRef = React.useRef<any>(null);
+  const ref = React.useRef<HTMLElement>(null);
+  const inputRef = React.useRef<HTMLInputElement>(null);
   const [open, setOpen] = React.useState(initialOpen);
 
   const baseSelectProps = rootProps.slotProps?.baseSelect || {};
@@ -90,7 +92,7 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
     }
 
     setOpen(false);
-    const target = event.target as HTMLInputElement;
+    const target = event.target;
     // NativeSelect casts the value to a string.
     const formattedTargetValue = getValueFromValueOptions(
       target.value,
@@ -122,7 +124,7 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
     }
   };
 
-  const handleOpen: SelectProps['onOpen'] = (event) => {
+  const handleOpen: GridSlotProps['baseSelect']['onOpen'] = (event) => {
     if (isKeyboardEvent(event) && event.key === 'Enter') {
       return;
     }
@@ -137,7 +139,7 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
     <rootProps.slots.baseSelect
       ref={ref}
       value={valueProp}
-      onChange={handleChange as any}
+      onChange={handleChange}
       open={open}
       onOpen={handleOpen}
       onClose={handleClose}
@@ -217,7 +219,7 @@ GridEditSingleSelectCell.propTypes = {
   isValidating: PropTypes.bool,
   /**
    * Callback called when the value is changed by the user.
-   * @param {SelectChangeEvent<any>} event The event source of the callback.
+   * @param {Event<any>} event The event source of the callback.
    * @param {any} newValue The value that is going to be passed to `apiRef.current.setEditCellValue`.
    * @returns {Promise<void> | void} A promise to be awaited before calling `apiRef.current.setEditCellValue`
    */

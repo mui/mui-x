@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import {
@@ -7,7 +8,6 @@ import {
   GridRenderCellParams,
   GridDataSourceGroupNode,
   GridRowId,
-  GRID_CHECKBOX_SELECTION_FIELD,
 } from '@mui/x-data-grid';
 import {
   GridPipeProcessor,
@@ -22,7 +22,7 @@ import {
   GRID_TREE_DATA_GROUPING_COL_DEF_FORCED_PROPERTIES,
 } from '../treeData/gridTreeDataGroupColDef';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import { skipFiltering, skipSorting } from './utils';
+import { getParentPath, skipFiltering, skipSorting } from './utils';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import {
   GridGroupingColDefOverride,
@@ -48,16 +48,16 @@ export const useGridDataSourceTreeDataPreProcessors = (
     | 'disableChildrenFiltering'
     | 'defaultGroupingExpansionDepth'
     | 'isGroupExpandedByDefault'
-    | 'unstable_dataSource'
+    | 'dataSource'
   >,
 ) => {
   const setStrategyAvailability = React.useCallback(() => {
     privateApiRef.current.setStrategyAvailability(
       GridStrategyGroup.RowTree,
       TreeDataStrategy.DataSource,
-      props.treeData && props.unstable_dataSource ? () => true : () => false,
+      props.treeData && props.dataSource ? () => true : () => false,
     );
-  }, [privateApiRef, props.treeData, props.unstable_dataSource]);
+  }, [privateApiRef, props.treeData, props.dataSource]);
 
   const getGroupingColDef = React.useCallback(() => {
     const groupingColDefProp = props.groupingColDef;
@@ -96,7 +96,7 @@ export const useGridDataSourceTreeDataPreProcessors = (
 
   const updateGroupingColumn = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
     (columnsState) => {
-      if (!props.unstable_dataSource) {
+      if (!props.dataSource) {
         return columnsState;
       }
       const groupingColDefField = GRID_TREE_DATA_GROUPING_COL_DEF_FORCED_PROPERTIES.field;
@@ -112,12 +112,7 @@ export const useGridDataSourceTreeDataPreProcessors = (
         }
         columnsState.lookup[groupingColDefField] = newGroupingColumn;
         if (prevGroupingColumn == null) {
-          const index = columnsState.orderedFields[0] === GRID_CHECKBOX_SELECTION_FIELD ? 1 : 0;
-          columnsState.orderedFields = [
-            ...columnsState.orderedFields.slice(0, index),
-            groupingColDefField,
-            ...columnsState.orderedFields.slice(index),
-          ];
+          columnsState.orderedFields = [groupingColDefField, ...columnsState.orderedFields];
         }
       } else if (!shouldHaveGroupingColumn && prevGroupingColumn) {
         delete columnsState.lookup[groupingColDefField];
@@ -128,24 +123,24 @@ export const useGridDataSourceTreeDataPreProcessors = (
 
       return columnsState;
     },
-    [props.treeData, props.unstable_dataSource, getGroupingColDef],
+    [props.treeData, props.dataSource, getGroupingColDef],
   );
 
   const createRowTreeForTreeData = React.useCallback<GridStrategyProcessor<'rowTreeCreation'>>(
     (params) => {
-      const getGroupKey = props.unstable_dataSource?.getGroupKey;
+      const getGroupKey = props.dataSource?.getGroupKey;
       if (!getGroupKey) {
         throw new Error('MUI X: No `getGroupKey` method provided with the dataSource.');
       }
 
-      const getChildrenCount = props.unstable_dataSource?.getChildrenCount;
+      const getChildrenCount = props.dataSource?.getChildrenCount;
       if (!getChildrenCount) {
         throw new Error('MUI X: No `getChildrenCount` method provided with the dataSource.');
       }
 
-      const parentPath = (params.updates as GridRowsPartialUpdates).groupKeys ?? [];
-
       const getRowTreeBuilderNode = (rowId: GridRowId) => {
+        const parentPath =
+          (params.updates as GridRowsPartialUpdates).groupKeys ?? getParentPath(rowId, params);
         const count = getChildrenCount(params.dataRowIdToModelLookup[rowId]);
         return {
           id: rowId,
@@ -191,11 +186,7 @@ export const useGridDataSourceTreeDataPreProcessors = (
         groupingName: TreeDataStrategy.DataSource,
       });
     },
-    [
-      props.unstable_dataSource,
-      props.defaultGroupingExpansionDepth,
-      props.isGroupExpandedByDefault,
-    ],
+    [props.dataSource, props.defaultGroupingExpansionDepth, props.isGroupExpandedByDefault],
   );
 
   const filterRows = React.useCallback<GridStrategyProcessor<'filtering'>>(() => {

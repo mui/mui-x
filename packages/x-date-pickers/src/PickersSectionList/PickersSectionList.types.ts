@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { SlotComponentProps } from '@mui/utils';
+import { SlotComponentProps } from '@mui/utils/types';
 import { PickersSectionListClasses } from './pickersSectionListClasses';
 import { PickerOwnerState } from '../models';
+import type { UseFieldDOMGetters } from '../internals/hooks/useField/useField.types';
 
 export interface PickersSectionListSlots {
   root: React.ElementType;
@@ -28,17 +29,12 @@ export interface PickersSectionListSlotProps {
 
 export interface PickersSectionElement {
   container: React.HTMLAttributes<HTMLSpanElement>;
-  content: React.HTMLAttributes<HTMLSpanElement>;
+  content: React.HTMLAttributes<HTMLSpanElement> & { 'data-range-position': string | undefined };
   before: React.HTMLAttributes<HTMLSpanElement>;
   after: React.HTMLAttributes<HTMLSpanElement>;
 }
 
-export interface PickersSectionListRef {
-  getRoot: () => HTMLElement;
-  getSectionContainer: (sectionIndex: number) => HTMLElement;
-  getSectionContent: (sectionIndex: number) => HTMLElement;
-  getSectionIndexFromDOMElement: (element: Element | null | undefined) => number | null;
-}
+export interface PickersSectionListRef extends Omit<UseFieldDOMGetters, 'isReady'> {}
 
 export interface ExportedPickersSectionListProps
   extends Pick<React.HTMLAttributes<HTMLDivElement>, 'tabIndex'> {

@@ -1,67 +1,72 @@
 import * as React from 'react';
-import { useTransition } from '@react-spring/web';
-import type { AnimationData, CompletedBarData } from '../types';
+import { AnimationData } from '../types';
 import { BarLabelItem, BarLabelItemProps } from './BarLabelItem';
+import type { SeriesId } from '../../models/seriesType/common';
+import { BarSeriesType, BarValueType } from '../../models/seriesType/bar';
+import { BarLabelFunction } from './BarLabel.types';
 
-const leaveStyle = ({ layout, yOrigin, x, width, y, xOrigin, height }: AnimationData) => ({
-  ...(layout === 'vertical'
-    ? {
-        y: yOrigin,
-        x: x + width / 2,
-        height: 0,
-        width,
-      }
-    : {
-        y: y + height / 2,
-        x: xOrigin,
-        height,
-        width: 0,
-      }),
-});
-
-const enterStyle = ({ x, width, y, height }: AnimationData) => ({
-  x: x + width / 2,
-  y: y + height / 2,
-  height,
-  width,
-});
-
-type BarLabelPlotProps = {
-  bars: CompletedBarData[];
+interface BarLabelPlotProps<V extends BarValueType | null = BarValueType | null> {
+  processedSeries: ProcessedBarLabelSeriesData<V>;
+  className: string;
   skipAnimation?: boolean;
-  barLabel?: BarLabelItemProps['barLabel'];
-};
+  barLabel?: BarLabelItemProps<V | null>['barLabel'];
+}
+
+export interface ProcessedBarLabelSeriesData<V extends BarValueType | null> {
+  seriesId: SeriesId;
+  data: ProcessedBarLabelData<V>[];
+  barLabel?: 'value' | BarLabelFunction<V>;
+  barLabelPlacement?: BarSeriesType['barLabelPlacement'];
+  layout?: 'vertical' | 'horizontal';
+  xOrigin: number;
+  yOrigin: number;
+}
+
+export interface ProcessedBarLabelData<V extends BarValueType | null> extends AnimationData {
+  seriesId: SeriesId;
+  dataIndex: number;
+  color: string;
+  value: V;
+}
 
 /**
  * @ignore - internal component.
  */
-function BarLabelPlot(props: BarLabelPlotProps) {
-  const { bars, skipAnimation, ...other } = props;
+function BarLabelPlot<V extends BarValueType | null = BarValueType | null>(
+  props: BarLabelPlotProps<V>,
+) {
+  const { processedSeries, className, skipAnimation, ...other } = props;
+  const { seriesId, data, layout, xOrigin, yOrigin } = processedSeries;
 
-  const barLabelTransition = useTransition(bars, {
-    keys: (bar) => `${bar.seriesId}-${bar.dataIndex}`,
-    from: skipAnimation ? undefined : leaveStyle,
-    leave: null,
-    enter: enterStyle,
-    update: enterStyle,
-    immediate: skipAnimation,
-  });
+  const barLabel = processedSeries.barLabel ?? props.barLabel;
+
+  if (!barLabel) {
+    return null;
+  }
 
   return (
-    <React.Fragment>
-      {barLabelTransition((style, { seriesId, dataIndex, color, value, width, height }) => (
+    <g key={seriesId} className={className} data-series={seriesId}>
+      {data.map(({ x, y, dataIndex, color, value, width, height }) => (
         <BarLabelItem
+          key={dataIndex}
           seriesId={seriesId}
           dataIndex={dataIndex}
           value={value}
           color={color}
+          xOrigin={xOrigin}
+          yOrigin={yOrigin}
+          x={x}
+          y={y}
           width={width}
           height={height}
+          skipAnimation={skipAnimation ?? false}
+          layout={layout ?? 'vertical'}
           {...other}
-          style={style}
+          barLabel={barLabel}
+          barLabelPlacement={processedSeries.barLabelPlacement || 'center'}
         />
       ))}
-    </React.Fragment>
+    </g>
   );
 }
 

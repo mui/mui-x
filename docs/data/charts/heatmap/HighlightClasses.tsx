@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Box from '@mui/material/Box';
 import { Heatmap, heatmapClasses } from '@mui/x-charts-pro/Heatmap';
 import { data } from './dumbData';
@@ -29,7 +28,6 @@ export default function HighlightClasses() {
             },
           },
         ]}
-        margin={{ top: 5, right: 5, left: 20 }}
         height={300}
       />
     </Box>

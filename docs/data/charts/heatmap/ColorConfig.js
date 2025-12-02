@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { interpolateBlues } from 'd3-scale-chromatic';
 import { Heatmap } from '@mui/x-charts-pro/Heatmap';
 
@@ -105,9 +104,8 @@ export default function ColorConfig() {
       height={400}
       width={600}
       xAxis={[{ data: xData }]}
-      yAxis={[{ data: yData }]}
+      yAxis={[{ data: yData, width: 80 }]}
       series={[{ data }]}
-      margin={{ left: 70 }}
       zAxis={[
         {
           min: 20,

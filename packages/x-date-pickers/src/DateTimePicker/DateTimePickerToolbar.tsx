@@ -8,8 +8,7 @@ import { shouldForwardProp } from '@mui/system/createStyled';
 import { PickersToolbarText } from '../internals/components/PickersToolbarText';
 import { PickersToolbar } from '../internals/components/PickersToolbar';
 import { PickersToolbarButton } from '../internals/components/PickersToolbarButton';
-import { usePickerTranslations } from '../hooks/usePickerTranslations';
-import { useUtils } from '../internals/hooks/useUtils';
+import { usePickerAdapter, usePickerTranslations } from '../hooks';
 import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
 import {
   dateTimePickerToolbarClasses,
@@ -28,7 +27,7 @@ import {
   PickerToolbarOwnerState,
   useToolbarOwnerState,
 } from '../internals/hooks/useToolbarOwnerState';
-import { SetValueActionOptions } from '../internals/hooks/usePicker/usePickerValue.types';
+import { SetValueActionOptions } from '../internals/components/PickerProvider';
 
 export interface ExportedDateTimePickerToolbarProps extends ExportedBaseToolbarProps {
   /**
@@ -70,7 +69,6 @@ const useUtilityClasses = (
 const DateTimePickerToolbarRoot = styled(PickersToolbar, {
   name: 'MuiDateTimePickerToolbar',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'toolbarVariant',
 })<{ ownerState: PickerToolbarOwnerState; toolbarVariant: PickerVariant }>(({ theme }) => ({
   paddingLeft: 16,
@@ -82,7 +80,7 @@ const DateTimePickerToolbarRoot = styled(PickersToolbar, {
       props: { toolbarVariant: 'desktop' },
       style: {
         borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
-        [`& .${pickersToolbarClasses.content} .${pickersToolbarTextClasses.selected}`]: {
+        [`& .${pickersToolbarClasses.content} .${pickersToolbarTextClasses.root}[data-selected]`]: {
           color: (theme.vars || theme).palette.primary.main,
           fontWeight: theme.typography.fontWeightBold,
         },
@@ -107,7 +105,6 @@ const DateTimePickerToolbarRoot = styled(PickersToolbar, {
 const DateTimePickerToolbarDateContainer = styled('div', {
   name: 'MuiDateTimePickerToolbar',
   slot: 'DateContainer',
-  overridesResolver: (props, styles) => styles.dateContainer,
 })<{ ownerState: PickerToolbarOwnerState }>({
   display: 'flex',
   flexDirection: 'column',
@@ -117,7 +114,6 @@ const DateTimePickerToolbarDateContainer = styled('div', {
 const DateTimePickerToolbarTimeContainer = styled('div', {
   name: 'MuiDateTimePickerToolbar',
   slot: 'TimeContainer',
-  overridesResolver: (props, styles) => styles.timeContainer,
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'toolbarVariant',
 })<{ ownerState: PickerToolbarOwnerState; toolbarVariant: PickerVariant }>({
   display: 'flex',
@@ -138,21 +134,14 @@ const DateTimePickerToolbarTimeContainer = styled('div', {
       },
     },
     {
-      props: ({
-        pickerOrientation,
-        toolbarVariant,
-      }: PickerToolbarOwnerState & { toolbarVariant: PickerVariant }) =>
+      props: ({ pickerOrientation, toolbarVariant }) =>
         pickerOrientation === 'landscape' && toolbarVariant !== 'desktop',
       style: {
         flexDirection: 'column',
       },
     },
     {
-      props: ({
-        pickerOrientation,
-        toolbarVariant,
-        toolbarDirection,
-      }: PickerToolbarOwnerState & { toolbarVariant: PickerVariant }) =>
+      props: ({ pickerOrientation, toolbarVariant, toolbarDirection }) =>
         pickerOrientation === 'landscape' &&
         toolbarVariant !== 'desktop' &&
         toolbarDirection === 'rtl',
@@ -166,7 +155,6 @@ const DateTimePickerToolbarTimeContainer = styled('div', {
 const DateTimePickerToolbarTimeDigitsContainer = styled('div', {
   name: 'MuiDateTimePickerToolbar',
   slot: 'TimeDigitsContainer',
-  overridesResolver: (props, styles) => styles.timeDigitsContainer,
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'toolbarVariant',
 })<{ ownerState: PickerToolbarOwnerState; toolbarVariant: PickerVariant }>({
   display: 'flex',
@@ -187,7 +175,6 @@ const DateTimePickerToolbarTimeDigitsContainer = styled('div', {
 const DateTimePickerToolbarSeparator = styled(PickersToolbarText, {
   name: 'MuiDateTimePickerToolbar',
   slot: 'Separator',
-  overridesResolver: (props, styles) => styles.separator,
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'toolbarVariant',
 })<{ ownerState: PickerToolbarOwnerState; toolbarVariant: PickerVariant }>({
   margin: '0 4px 0 2px',
@@ -285,7 +272,7 @@ function DateTimePickerToolbar(inProps: DateTimePickerToolbarProps) {
   const translations = usePickerTranslations();
   const ownerState = useToolbarOwnerState();
   const classes = useUtilityClasses(classesProp, ownerState);
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
   const overrides = React.useContext(DateTimePickerToolbarOverrideContext);
 
   const value = overrides ? overrides.value : valueContext;
@@ -294,7 +281,7 @@ function DateTimePickerToolbar(inProps: DateTimePickerToolbarProps) {
   const setView = overrides ? overrides.setView : setViewContext;
 
   const { meridiemMode, handleMeridiemChange } = useMeridiemMode(value, ampm, (newValue) =>
-    setValue(newValue, { changeImportance: 'set' }),
+    setValue(newValue, { changeImportance: 'set', source: 'view' }),
   );
 
   const toolbarVariant = overrides?.forceDesktopVariant ? 'desktop' : variant;
@@ -303,23 +290,23 @@ function DateTimePickerToolbar(inProps: DateTimePickerToolbarProps) {
   const toolbarTitle = inToolbarTitle ?? translations.dateTimePickerToolbarTitle;
 
   const dateText = React.useMemo(() => {
-    if (!utils.isValid(value)) {
+    if (!adapter.isValid(value)) {
       return toolbarPlaceholder;
     }
 
     if (toolbarFormat) {
-      return utils.formatByString(value, toolbarFormat);
+      return adapter.formatByString(value, toolbarFormat);
     }
 
-    return utils.format(value, 'shortDate');
-  }, [value, toolbarFormat, toolbarPlaceholder, utils]);
+    return adapter.format(value, 'shortDate');
+  }, [value, toolbarFormat, toolbarPlaceholder, adapter]);
 
   const formatSection = (format: keyof AdapterFormats, fallback: string) => {
-    if (!utils.isValid(value)) {
+    if (!adapter.isValid(value)) {
       return fallback;
     }
 
-    return utils.format(value, format);
+    return adapter.format(value, format);
   };
 
   return (
@@ -433,7 +420,7 @@ function DateTimePickerToolbar(inProps: DateTimePickerToolbarProps) {
               variant="subtitle2"
               selected={meridiemMode === 'am'}
               typographyClassName={classes.ampmLabel}
-              value={formatMeridiem(utils, 'am')}
+              value={formatMeridiem(adapter, 'am')}
               onClick={readOnly ? undefined : () => handleMeridiemChange('am')}
               disabled={disabled}
             />
@@ -441,7 +428,7 @@ function DateTimePickerToolbar(inProps: DateTimePickerToolbarProps) {
               variant="subtitle2"
               selected={meridiemMode === 'pm'}
               typographyClassName={classes.ampmLabel}
-              value={formatMeridiem(utils, 'pm')}
+              value={formatMeridiem(adapter, 'pm')}
               onClick={readOnly ? undefined : () => handleMeridiemChange('pm')}
               disabled={disabled}
             />
@@ -454,7 +441,7 @@ function DateTimePickerToolbar(inProps: DateTimePickerToolbarProps) {
             data-testid="am-pm-view-button"
             onClick={() => setView('meridiem')}
             selected={view === 'meridiem'}
-            value={value && meridiemMode ? formatMeridiem(utils, meridiemMode) : '--'}
+            value={value && meridiemMode ? formatMeridiem(adapter, meridiemMode) : '--'}
             width={MULTI_SECTION_CLOCK_SECTION_WIDTH}
           />
         )}

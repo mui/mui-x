@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { Gauge, gaugeClasses } from '@mui/x-charts/Gauge';
 
 const settings = {

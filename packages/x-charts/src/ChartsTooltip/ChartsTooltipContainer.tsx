@@ -6,45 +6,81 @@ import useLazyRef from '@mui/utils/useLazyRef';
 import { styled, useThemeProps } from '@mui/material/styles';
 import Popper, { PopperProps } from '@mui/material/Popper';
 import NoSsr from '@mui/material/NoSsr';
-import { useSvgRef } from '../hooks/useSvgRef';
-import { AxisDefaultized } from '../models/axis';
-import { TriggerOptions, usePointerType } from './utils';
-import { ChartsTooltipClasses } from './chartsTooltipClasses';
+import { rafThrottle } from '@mui/x-internals/rafThrottle';
+import { TriggerOptions, useIsFineMainPointer, usePointerType } from './utils';
+import { ChartsTooltipClasses, useUtilityClasses } from './chartsTooltipClasses';
 import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
-import { useXAxis } from '../hooks';
 import {
-  selectorChartsInteractionItemIsDefined,
-  selectorChartsInteractionXAxisIsDefined,
-  selectorChartsInteractionYAxisIsDefined,
+  selectorChartsLastInteraction,
+  selectorChartsTooltipItemIsDefined,
+  selectorChartsTooltipItemPosition,
 } from '../internals/plugins/featurePlugins/useChartInteraction';
+import {
+  selectorChartsInteractionAxisTooltip,
+  UseChartCartesianAxisSignature,
+} from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+import { selectorChartsInteractionPolarAxisTooltip } from '../internals/plugins/featurePlugins/useChartPolarAxis/useChartPolarInteraction.selectors';
+import { useAxisSystem } from '../hooks/useAxisSystem';
+import { useSvgRef } from '../hooks';
+import { selectorBrushShouldPreventTooltip } from '../internals/plugins/featurePlugins/useChartBrush';
 
-export interface ChartsTooltipContainerProps extends Partial<PopperProps> {
+const selectorReturnFalse = () => false;
+const selectorReturnNull = () => null;
+
+function getIsOpenSelector(
+  trigger: TriggerOptions,
+  axisSystem: 'none' | 'polar' | 'cartesian',
+  shouldPreventBecauseOfBrush?: boolean,
+) {
+  if (shouldPreventBecauseOfBrush) {
+    return selectorReturnFalse;
+  }
+  if (trigger === 'item') {
+    return selectorChartsTooltipItemIsDefined;
+  }
+  if (axisSystem === 'polar') {
+    return selectorChartsInteractionPolarAxisTooltip;
+  }
+  if (axisSystem === 'cartesian') {
+    return selectorChartsInteractionAxisTooltip;
+  }
+  return selectorReturnFalse;
+}
+
+export interface ChartsTooltipContainerProps<T extends TriggerOptions = TriggerOptions>
+  extends Partial<PopperProps> {
   /**
    * Select the kind of tooltip to display
-   * - 'item': Shows data about the item below the mouse.
-   * - 'axis': Shows values associated with the hovered x value
-   * - 'none': Does not display tooltip
+   * - 'item': Shows data about the item below the mouse;
+   * - 'axis': Shows values associated with the hovered x value;
+   * - 'none': Does not display tooltip.
    * @default 'axis'
    */
-  trigger?: TriggerOptions;
+  trigger?: T;
   /**
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<ChartsTooltipClasses>;
+  /**
+   * Determine if the tooltip should be placed on the pointer location or on the node.
+   * @default 'pointer'
+   */
+  anchor?: 'pointer' | 'node';
+  /**
+   * Determines the tooltip position relatively to the anchor.
+   */
+  position?: 'top' | 'bottom' | 'left' | 'right';
   children?: React.ReactNode;
 }
 
 const ChartsTooltipRoot = styled(Popper, {
   name: 'MuiChartsTooltip',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })(({ theme }) => ({
   pointerEvents: 'none',
   zIndex: theme.zIndex.modal,
 }));
-
-const axisHasData = (axis: AxisDefaultized) => axis?.data !== undefined && axis.data.length !== 0;
 
 /**
  * Demos:
@@ -60,45 +96,133 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
     props: inProps,
     name: 'MuiChartsTooltipContainer',
   });
-  const { trigger = 'axis', classes, children, ...other } = props;
+  const {
+    trigger = 'axis',
+    position,
+    anchor = 'pointer',
+    classes: propClasses,
+    children,
+    ...other
+  } = props;
 
   const svgRef = useSvgRef();
+  const classes = useUtilityClasses(propClasses);
+
   const pointerType = usePointerType();
-  const xAxis = useXAxis();
+  const isFineMainPointer = useIsFineMainPointer();
 
   const popperRef: PopperProps['popperRef'] = React.useRef(null);
   const positionRef = useLazyRef(() => ({ x: 0, y: 0 }));
 
-  const store = useStore();
+  const axisSystem = useAxisSystem();
+
+  const store = useStore<[UseChartCartesianAxisSignature]>();
+
+  const shouldPreventBecauseOfBrush = useSelector(store, selectorBrushShouldPreventTooltip);
   const isOpen = useSelector(
     store,
-    // eslint-disable-next-line no-nested-ternary
-    trigger === 'axis'
-      ? axisHasData(xAxis)
-        ? selectorChartsInteractionXAxisIsDefined
-        : selectorChartsInteractionYAxisIsDefined
-      : selectorChartsInteractionItemIsDefined,
+    getIsOpenSelector(trigger, axisSystem, shouldPreventBecauseOfBrush),
   );
 
-  const popperOpen = pointerType !== null && isOpen; // tooltipHasData;
+  const lastInteraction = useSelector(store, selectorChartsLastInteraction);
+  const computedAnchor = lastInteraction === 'keyboard' ? 'node' : anchor;
+
+  const itemPosition = useSelector(
+    store,
+    trigger === 'item' && computedAnchor === 'node'
+      ? selectorChartsTooltipItemPosition
+      : selectorReturnNull,
+    position,
+  );
 
   React.useEffect(() => {
-    const element = svgRef.current;
-    if (element === null) {
+    const svgElement = svgRef.current;
+    if (svgElement === null) {
       return () => {};
     }
 
-    const handleMove = (event: PointerEvent) => {
-      // eslint-disable-next-line react-compiler/react-compiler
-      positionRef.current = { x: event.clientX, y: event.clientY };
+    if (itemPosition !== null) {
+      const positionUpdate = rafThrottle(() => {
+        // eslint-disable-next-line react-compiler/react-compiler
+        positionRef.current = {
+          x: svgElement.getBoundingClientRect().left + (itemPosition?.x ?? 0),
+          y: svgElement.getBoundingClientRect().top + (itemPosition?.y ?? 0),
+        };
+        popperRef.current?.update();
+      });
+      positionUpdate();
+      return () => positionUpdate.clear();
+    }
+
+    const pointerUpdate = rafThrottle((x: number, y: number) => {
+      positionRef.current = { x, y };
       popperRef.current?.update();
+    });
+
+    const handlePointerEvent = (event: PointerEvent) => {
+      pointerUpdate(event.clientX, event.clientY);
     };
-    element.addEventListener('pointermove', handleMove);
+
+    svgElement.addEventListener('pointerdown', handlePointerEvent);
+    svgElement.addEventListener('pointermove', handlePointerEvent);
+    svgElement.addEventListener('pointerenter', handlePointerEvent);
 
     return () => {
-      element.removeEventListener('pointermove', handleMove);
+      svgElement.removeEventListener('pointerdown', handlePointerEvent);
+      svgElement.removeEventListener('pointermove', handlePointerEvent);
+      svgElement.removeEventListener('pointerenter', handlePointerEvent);
+      pointerUpdate.clear();
     };
-  }, [svgRef, positionRef]);
+  }, [svgRef, positionRef, itemPosition]);
+
+  const anchorEl = React.useMemo(
+    () => ({
+      getBoundingClientRect: () => ({
+        x: positionRef.current.x,
+        y: positionRef.current.y,
+        top: positionRef.current.y,
+        left: positionRef.current.x,
+        right: positionRef.current.x,
+        bottom: positionRef.current.y,
+        width: 0,
+        height: 0,
+        toJSON: () => '',
+      }),
+    }),
+    [positionRef],
+  );
+
+  const isMouse = pointerType?.pointerType === 'mouse' || isFineMainPointer;
+  const isTouch = pointerType?.pointerType === 'touch' || !isFineMainPointer;
+
+  const modifiers = React.useMemo(
+    () => [
+      {
+        name: 'offset',
+        options: {
+          offset: () => {
+            if (isTouch) {
+              return [0, 64];
+            }
+            // The popper offset: [skidding, distance]
+            return [0, 8];
+          },
+        },
+      },
+      ...(!isMouse
+        ? [
+            {
+              name: 'flip',
+              options: {
+                fallbackPlacements: ['top-end', 'top-start', 'bottom-end', 'bottom'],
+              },
+            },
+          ]
+        : []), // Keep default behavior
+      { name: 'preventOverflow', options: { altAxis: true } },
+    ],
+    [isMouse, isTouch],
+  );
 
   if (trigger === 'none') {
     return null;
@@ -106,36 +230,15 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
 
   return (
     <NoSsr>
-      {popperOpen && (
+      {isOpen && (
         <ChartsTooltipRoot
-          className={classes?.root}
-          open={popperOpen}
-          placement={
-            pointerType?.pointerType === 'mouse' ? ('right-start' as const) : ('top' as const)
-          }
-          popperRef={popperRef}
-          anchorEl={{
-            getBoundingClientRect: () => ({
-              x: positionRef.current.x,
-              y: positionRef.current.y,
-              top: positionRef.current.y,
-              left: positionRef.current.x,
-              right: positionRef.current.x,
-              bottom: positionRef.current.y,
-              width: 0,
-              height: 0,
-              toJSON: () => '',
-            }),
-          }}
-          modifiers={[
-            {
-              name: 'offset',
-              options: {
-                offset: [0, pointerType?.pointerType === 'touch' ? 40 - pointerType.height : 0],
-              },
-            },
-          ]}
           {...other}
+          className={classes?.root}
+          open={isOpen}
+          placement={other.placement ?? position ?? (isMouse ? 'right-start' : 'top')}
+          popperRef={popperRef}
+          anchorEl={anchorEl}
+          modifiers={modifiers}
         >
           {children}
         </ChartsTooltipRoot>
@@ -149,6 +252,11 @@ ChartsTooltipContainer.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Determine if the tooltip should be placed on the pointer location or on the node.
+   * @default 'pointer'
+   */
+  anchor: PropTypes.oneOf(['node', 'pointer']),
   /**
    * An HTML element, [virtualElement](https://popper.js.org/docs/v2/virtual-elements/),
    * or a function that returns either.
@@ -176,6 +284,8 @@ ChartsTooltipContainer.propTypes = {
   /**
    * The components used for each slot inside the Popper.
    * Either a string to use a HTML element or a component.
+   *
+   * @deprecated use the `slots` prop instead. This prop will be removed in a future major release. [How to migrate](/material-ui/migration/migrating-from-deprecated-apis/).
    * @default {}
    */
   components: PropTypes.shape({
@@ -183,6 +293,8 @@ ChartsTooltipContainer.propTypes = {
   }),
   /**
    * The props used for each slot inside the Popper.
+   *
+   * @deprecated use the `slotProps` prop instead. This prop will be removed in a future major release. [How to migrate](/material-ui/migration/migrating-from-deprecated-apis/).
    * @default {}
    */
   componentsProps: PropTypes.shape({
@@ -349,6 +461,10 @@ ChartsTooltipContainer.propTypes = {
     }),
   ]),
   /**
+   * Determines the tooltip position relatively to the anchor.
+   */
+  position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
+  /**
    * The props used for each slot inside the Popper.
    * @default {}
    */
@@ -374,9 +490,9 @@ ChartsTooltipContainer.propTypes = {
   transition: PropTypes.bool,
   /**
    * Select the kind of tooltip to display
-   * - 'item': Shows data about the item below the mouse.
-   * - 'axis': Shows values associated with the hovered x value
-   * - 'none': Does not display tooltip
+   * - 'item': Shows data about the item below the mouse;
+   * - 'axis': Shows values associated with the hovered x value;
+   * - 'none': Does not display tooltip.
    * @default 'axis'
    */
   trigger: PropTypes.oneOf(['axis', 'item', 'none']),

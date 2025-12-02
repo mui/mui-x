@@ -3,7 +3,6 @@ import {
   DataGridPro,
   useGridApiRef,
   GridInitialState,
-  GridToolbar,
   GridDataSourceCache,
   GridDataSource,
   GridGetRowsParams,
@@ -45,7 +44,7 @@ const cache: GridDataSourceCache = {
 
 const pageSizeOptions = [5, 10, 50];
 const dataSetOptions = {
-  dataSet: 'Employee' as 'Employee',
+  dataSet: 'Employee' as const,
   rowLength: 1000,
   treeData: { maxDepth: 3, groupingField: 'name', averageChildren: 5 },
 };
@@ -97,15 +96,14 @@ export default function ServerSideTreeDataCustomCache() {
       <div style={{ height: 400 }}>
         <DataGridPro
           {...props}
-          unstable_dataSource={dataSource}
-          unstable_dataSourceCache={cache}
+          dataSource={dataSource}
+          dataSourceCache={cache}
           treeData
           apiRef={apiRef}
           pagination
           pageSizeOptions={pageSizeOptions}
           initialState={initialState}
-          slots={{ toolbar: GridToolbar }}
-          slotProps={{ toolbar: { showQuickFilter: true } }}
+          showToolbar
         />
       </div>
     </div>

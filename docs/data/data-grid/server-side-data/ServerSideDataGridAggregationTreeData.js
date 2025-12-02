@@ -5,6 +5,7 @@ import { useMockServer } from '@mui/x-data-grid-generator';
 const dataSetOptions = {
   dataSet: 'Employee',
   rowLength: 1000,
+  editable: true,
   treeData: { maxDepth: 3, groupingField: 'name', averageChildren: 5 },
 };
 
@@ -18,21 +19,8 @@ const aggregationFunctions = {
 
 export default function ServerSideDataGridAggregationTreeData() {
   const apiRef = useGridApiRef();
-  const {
-    fetchRows,
-    columns,
-    initialState: initState,
-  } = useMockServer(dataSetOptions);
-
-  const initialState = React.useMemo(
-    () => ({
-      ...initState,
-      aggregation: {
-        model: { rating: 'avg', website: 'size' },
-      },
-    }),
-    [initState],
-  );
+  const { fetchRows, editRow, columns, initialState } =
+    useMockServer(dataSetOptions);
 
   const dataSource = React.useMemo(
     () => ({
@@ -53,22 +41,29 @@ export default function ServerSideDataGridAggregationTreeData() {
           aggregateRow: getRowsResponse.aggregateRow,
         };
       },
+      updateRow: (params) => editRow(params.rowId, params.updatedRow),
       getGroupKey: (row) => row[dataSetOptions.treeData.groupingField],
       getChildrenCount: (row) => row.descendantCount,
-      getAggregatedValue: (row, field) => row[`${field}Aggregate`],
+      getAggregatedValue: (row, field) => row[field],
     }),
-    [fetchRows],
+    [fetchRows, editRow],
   );
 
   return (
     <div style={{ width: '100%', height: 400 }}>
       <DataGridPremium
         columns={columns}
-        unstable_dataSource={dataSource}
+        dataSource={dataSource}
         treeData
         apiRef={apiRef}
-        initialState={initialState}
+        initialState={{
+          ...initialState,
+          aggregation: {
+            model: { rating: 'avg', website: 'size' },
+          },
+        }}
         aggregationFunctions={aggregationFunctions}
+        disablePivoting
       />
     </div>
   );

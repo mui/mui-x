@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, GridFilterModel, GridToolbar } from '@mui/x-data-grid';
+import { DataGrid, GridFilterModel } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
@@ -36,7 +36,7 @@ export default function ReadOnlyFilters() {
         {...data}
         loading={loading}
         columns={columns}
-        slots={{ toolbar: GridToolbar }}
+        showToolbar
         filterModel={filterModel}
         onFilterModelChange={(newFilterModel) => setFilterModel(newFilterModel)}
       />

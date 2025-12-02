@@ -1,17 +1,17 @@
 import * as React from 'react';
-import {
+import { Store } from '@mui/x-internals/store';
+import type {
   ChartAnyPluginSignature,
   ChartInstance,
   ChartPublicAPI,
+  ChartState,
   ConvertSignaturesIntoPlugins,
   MergeSignaturesProperty,
 } from '../../internals/plugins/models';
-import { ChartStore } from '../../internals/plugins/utils/ChartStore';
-import { ChartCorePluginSignatures } from '../../internals/plugins/corePlugins';
-import { ChartSeriesConfig } from '../../internals/plugins/models/seriesConfig';
-import { AllPluginSignatures } from '../../internals/plugins/allPlugins';
-import { UseChartBaseProps } from '../../internals/store/useCharts.types';
-import { ChartSeriesType } from '../../models/seriesType/config';
+import type { ChartCorePluginSignatures } from '../../internals/plugins/corePlugins';
+import type { ChartSeriesConfig } from '../../internals/plugins/models/seriesConfig';
+import type { UseChartBaseProps } from '../../internals/store/useCharts.types';
+import type { ChartSeriesType } from '../../models/seriesType/config';
 
 export type ChartContextValue<
   TSignatures extends readonly ChartAnyPluginSignature[],
@@ -28,11 +28,15 @@ export type ChartContextValue<
   /**
    * The internal state of the chart.
    */
-  store: ChartStore<TSignatures>;
+  store: Store<ChartState<TSignatures, TOptionalSignatures>>;
   /**
    * The ref to the <svg />.
    */
   svgRef: React.RefObject<SVGSVGElement | null>;
+  /**
+   * The ref to the chart root element.
+   */
+  chartRootRef: React.RefObject<HTMLDivElement | null>;
 };
 
 export type ChartPluginParams<TSignatures extends readonly ChartAnyPluginSignature[]> =
@@ -41,7 +45,7 @@ export type ChartPluginParams<TSignatures extends readonly ChartAnyPluginSignatu
 
 export interface ChartProviderProps<
   TSeries extends ChartSeriesType = ChartSeriesType,
-  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
+  TSignatures extends readonly ChartAnyPluginSignature[] = [],
 > {
   /**
    * Array of plugins used to add features to the chart.
@@ -49,9 +53,8 @@ export interface ChartProviderProps<
   plugins?: ConvertSignaturesIntoPlugins<TSignatures>;
   pluginParams?: ChartPluginParams<TSignatures>;
   /**
-   * The configuration helpers used to compute attributes according to the serries type.
+   * The configuration helpers used to compute attributes according to the series type.
    * @ignore Unstable props for internal usage.
    */
   seriesConfig?: ChartSeriesConfig<TSeries>;
-  children: React.ReactNode;
 }

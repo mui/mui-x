@@ -1,12 +1,13 @@
+import { createSelector, createRootSelector } from '../../../utils/createSelector';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
-import { createSelector } from '../../../utils/createSelector';
 
-export const gridPreferencePanelStateSelector = (state: GridStateCommunity) =>
-  state.preferencePanel;
+export const gridPreferencePanelStateSelector = createRootSelector(
+  (state: GridStateCommunity) => state.preferencePanel,
+);
 
 export const gridPreferencePanelSelectorWithLabel = createSelector(
   gridPreferencePanelStateSelector,
-  (panel, labelId: string) => {
+  (panel, labelId: string | undefined) => {
     if (panel.open && panel.labelId === labelId) {
       return true;
     }

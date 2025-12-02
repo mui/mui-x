@@ -1,15 +1,16 @@
 {
   "name": "@mui/x-data-grid-pro",
-  "version": "8.0.0-alpha.11",
-  "description": "The Pro plan edition of the Data Grid components (MUI X).",
+  "version": "8.20.0",
   "author": "MUI Team",
-  "main": "src/index.ts",
+  "description": "The Pro plan edition of the MUI X Data Grid components.",
   "license": "SEE LICENSE IN LICENSE",
   "bugs": {
     "url": "https://github.com/mui/mui-x/issues"
   },
   "homepage": "https://mui.com/x/react-data-grid/",
-  "sideEffects": false,
+  "sideEffects": [
+    "**/*.css"
+  ],
   "publishConfig": {
     "access": "public",
     "directory": "build"
@@ -29,12 +30,7 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "pnpm build:modern && pnpm build:node && pnpm build:stable && pnpm build:types && pnpm build:copy-files ",
-    "build:modern": "node ../../scripts/build.mjs modern",
-    "build:node": "node ../../scripts/build.mjs node",
-    "build:stable": "node ../../scripts/build.mjs stable",
-    "build:copy-files": "node ../../scripts/copyFiles.mjs",
-    "build:types": "node ../../scripts/buildTypes.mjs",
+    "build": "code-infra build",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {
@@ -43,21 +39,19 @@
     "directory": "packages/x-data-grid-pro"
   },
   "dependencies": {
-    "@babel/runtime": "^7.26.7",
-    "@mui/utils": "^5.16.6 || ^6.0.0",
+    "@babel/runtime": "catalog:",
+    "@mui/utils": "catalog:",
     "@mui/x-data-grid": "workspace:*",
     "@mui/x-internals": "workspace:*",
     "@mui/x-license": "workspace:*",
-    "@types/format-util": "^1.0.4",
-    "clsx": "^2.1.1",
-    "prop-types": "^15.8.1",
-    "reselect": "^5.1.1"
+    "clsx": "catalog:",
+    "prop-types": "catalog:"
   },
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
-    "@mui/material": "^5.15.14 || ^6.0.0",
-    "@mui/system": "^5.15.14 || ^6.0.0",
+    "@mui/material": "^5.15.14 || ^6.0.0 || ^7.0.0",
+    "@mui/system": "^5.15.14 || ^6.0.0 || ^7.0.0",
     "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
     "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },
@@ -70,17 +64,21 @@
     }
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "https://pkg.csb.dev/mui/material-ui/commit/9aaeecbc/@mui/internal-test-utils",
-    "@mui/material": "^5.16.14",
-    "@mui/system": "^5.16.14",
-    "@types/prop-types": "^15.7.14",
-    "@types/react-transition-group": "^4.4.12",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "react-transition-group": "^4.4.5",
-    "rimraf": "^6.0.1"
+    "@mui/internal-test-utils": "catalog:",
+    "@mui/material": "catalog:",
+    "@mui/system": "catalog:",
+    "@types/prop-types": "catalog:",
+    "@types/react-transition-group": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "react-transition-group": "catalog:",
+    "rimraf": "catalog:"
   },
   "engines": {
     "node": ">=14.0.0"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*/index.ts"
   }
 }

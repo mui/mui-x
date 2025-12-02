@@ -1,10 +1,8 @@
-import * as React from 'react';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
 
 export default function ZoomScatterChart() {
   return (
     <ScatterChartPro
-      width={600}
       height={300}
       xAxis={[
         {

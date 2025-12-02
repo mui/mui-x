@@ -4,11 +4,9 @@ import Stack from '@mui/material/Stack';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { BarChart } from '@mui/x-charts/BarChart';
-import { axisClasses } from '@mui/x-charts/ChartsAxis';
 
 export default function MarginAndLabelPosition() {
   const [fixMargin, setFixMargin] = React.useState(true);
-  const [fixLabel, setFixLabel] = React.useState(true);
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -18,15 +16,7 @@ export default function MarginAndLabelPosition() {
           control={
             <Checkbox onChange={(event) => setFixMargin(event.target.checked)} />
           }
-          label="fix chart margin"
-          labelPlacement="end"
-        />
-        <FormControlLabel
-          checked={fixLabel}
-          control={
-            <Checkbox onChange={(event) => setFixLabel(event.target.checked)} />
-          }
-          label="fix axis label position"
+          label="Increase axes size"
           labelPlacement="end"
         />
       </Stack>
@@ -41,26 +31,9 @@ export default function MarginAndLabelPosition() {
                 ? value.split('').join('\n')
                 : usAirportPassengers.find((item) => item.code === value).fullName,
             label: 'airports',
-            labelStyle: fixLabel
-              ? {
-                  // Move the x-axis label with style
-                  transform: 'translateY(30px)',
-                }
-              : {},
+            height: fixMargin ? 75 : undefined,
           },
         ]}
-        // Modify the margin
-        margin={fixMargin ? { top: 5, right: 5, bottom: 80, left: 100 } : undefined}
-        sx={
-          fixLabel
-            ? {
-                [`.${axisClasses.left} .${axisClasses.label}`]: {
-                  // Move the y-axis label with CSS
-                  transform: 'translateX(-35px)',
-                },
-              }
-            : {}
-        }
         // Other props
         height={300}
         dataset={usAirportPassengers}
@@ -76,6 +49,7 @@ export default function MarginAndLabelPosition() {
           {
             valueFormatter: (value) => `${(value / 1000).toLocaleString()}k`,
             label: 'passengers',
+            width: fixMargin ? 85 : undefined,
           },
         ]}
       />

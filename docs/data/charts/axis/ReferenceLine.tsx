@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Box from '@mui/material/Box';
 import { ChartContainer } from '@mui/x-charts/ChartContainer';
 import { LinePlot } from '@mui/x-charts/LineChart';
@@ -53,7 +52,7 @@ export default function ReferenceLine() {
         <ChartsReferenceLine
           x={new Date(2023, 8, 2, 9)}
           lineStyle={{ strokeDasharray: '10 5' }}
-          labelStyle={{ fontSize: '10' }}
+          labelStyle={{ fontSize: '10', lineHeight: 1.2 }}
           label={`Wake up\n9AM`}
           labelAlign="start"
         />

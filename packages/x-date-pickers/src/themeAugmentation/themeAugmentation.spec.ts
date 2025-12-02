@@ -23,6 +23,8 @@ import {
   multiSectionDigitalClockClasses,
   multiSectionDigitalClockSectionClasses,
 } from '../MultiSectionDigitalClock';
+import { pickersInputBaseClasses } from '../PickersTextField';
+import { pickerDay2Classes } from '../PickerDay2';
 
 createTheme({
   components: {
@@ -354,6 +356,25 @@ createTheme({
         },
       },
     },
+    MuiPickerDay2: {
+      defaultProps: {
+        disabled: true,
+        // @ts-expect-error invalid MuiPickerDay2 prop
+        someRandomProp: true,
+      },
+      styleOverrides: {
+        root: {
+          backgroundColor: 'red',
+          [`.${pickerDay2Classes.today}`]: {
+            backgroundColor: 'green',
+          },
+        },
+        // @ts-expect-error invalid MuiPickerDay2 class key
+        content: {
+          backgroundColor: 'blue',
+        },
+      },
+    },
     MuiPickerPopper: {
       defaultProps: {
         placement: 'bottom',
@@ -635,9 +656,12 @@ createTheme({
         someRandomProp: true,
       },
       styleOverrides: {
-        root: {
+        root: ({ ownerState }) => ({
           backgroundColor: 'red',
-        },
+          [`.${pickersInputBaseClasses.activeBar}`]: {
+            backgroundColor: ownerState.isPickerReadOnly ? 'green' : 'blue',
+          },
+        }),
         // @ts-expect-error invalid MuiPickersInputBase class key
         content: {
           backgroundColor: 'blue',

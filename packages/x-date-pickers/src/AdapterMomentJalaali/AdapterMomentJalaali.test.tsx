@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import moment from 'moment';
 import jMoment, { Moment } from 'moment-jalaali';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
@@ -23,11 +22,11 @@ describe('<AdapterMomentJalaali />', () => {
   });
 
   describe('Adapter localization', () => {
-    before(() => {
+    beforeAll(() => {
       jMoment.loadPersian({ dialect: 'persian-modern', usePersianDigits: true });
     });
 
-    after(() => {
+    afterAll(() => {
       moment.locale('en');
     });
 
@@ -42,18 +41,17 @@ describe('<AdapterMomentJalaali />', () => {
 
       expectDate('fullDate', '۱۳۹۸، بهمن ۱م');
       expectDate('keyboardDate', '۱۳۹۸/۱۱/۱۲');
-      expectDate('keyboardDateTime', '۱۳۹۸/۱۱/۱۲ ۲۳:۴۴');
       expectDate('keyboardDateTime12h', '۱۳۹۸/۱۱/۱۲ ۱۱:۴۴ ب.ظ');
       expectDate('keyboardDateTime24h', '۱۳۹۸/۱۱/۱۲ ۲۳:۴۴');
     });
   });
 
   describe('Picker localization', () => {
-    before(() => {
+    beforeAll(() => {
       jMoment.loadPersian();
     });
 
-    after(() => {
+    afterAll(() => {
       moment.locale('en');
     });
 
@@ -69,15 +67,13 @@ describe('<AdapterMomentJalaali />', () => {
       const localeObject = { code: localeKey };
 
       describe(`test with the locale "${localeKey}"`, () => {
-        const { render, clock, adapter } = createPickerRenderer({
-          clock: 'fake',
+        const { render, adapter } = createPickerRenderer({
           adapterName: 'moment-jalaali',
           locale: localeObject,
         });
 
         const { renderWithProps } = buildFieldInteractions({
           render,
-          clock,
           Component: DateTimeField,
         });
 

@@ -1,0 +1,18 @@
+{
+  "props": {
+    "className": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;string" } },
+    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
+  },
+  "name": "PivotPanelTrigger",
+  "imports": [
+    "import { PivotPanelTrigger } from '@mui/x-data-grid-premium/components';",
+    "import { PivotPanelTrigger } from '@mui/x-data-grid-premium';"
+  ],
+  "classes": [],
+  "muiName": "MuiPivotPanelTrigger",
+  "forwardsRefTo": "GridRoot",
+  "filename": "/packages/x-data-grid-premium/src/components/pivotPanel/PivotPanelTrigger.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-data-grid/components/pivot-panel\">Data Grid - Pivot Panel component <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a> 🚧</a></li></ul>",
+  "cssComponent": false
+}

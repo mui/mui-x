@@ -2,7 +2,7 @@
 productId: x-tree-view
 components: RichTreeView, TreeItem
 packageName: '@mui/x-tree-view'
-githubLabel: 'component: tree view'
+githubLabel: 'scope: tree view'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 ---
 
@@ -105,6 +105,61 @@ The example below demonstrates the usage of the `selectionPropagation` prop.
 This feature only works when multi selection is enabled using `props.multiSelect`.
 :::
 
+### Apply propagation on mount
+
+You can use the `useApplyPropagationToSelectedItemsOnMount()` to apply the selection propagation to your `defaultSelectedItems` or `selectedItems` prop.
+
+```tsx
+// Uncontrolled example
+const defaultSelectedItems = useApplyPropagationToSelectedItemsOnMount({
+  items: props.items,
+  selectionPropagation: props.selectedPropagation,
+  selectedItems: ['10', '11', '13', '14'],
+});
+
+return (
+  <RichTreeView
+    items={props.items}
+    selectionPropagation={props.selectionPropagation}
+    defaultSelectedItems={defaultSelectedItems}
+  />
+);
+```
+
+```tsx
+// Controlled example
+const initialSelectedItems = useApplyPropagationToSelectedItemsOnMount({
+  items: props.items,
+  selectionPropagation: props.selectedPropagation,
+  selectedItems: ['10', '11', '13', '14'],
+});
+
+const [selectedItems, setSelectedItems] = React.useState(initialSelectedItems);
+
+return (
+  <RichTreeView
+    items={props.items}
+    selectionPropagation={props.selectionPropagation}
+    selectedItems={selectedItems}
+    onSelectedItemsChange={setSelectedItems}
+  />
+);
+```
+
+In the example below, only Anna, Michael, Elizabeth, and William are selected in the raw data, their ancestors are added to the `defaultSelectedItems` prop by the hook:
+
+{{"demo": "SelectionPropagationMount.js", "defaultCodeOpen": false}}
+
+:::success
+The `useApplyPropagationToSelectedItemsOnMount()` must receive the following props as provided to the Rich Tree View component:
+
+- `items`
+- `selectionPropagation`
+- `getItemId` (can be skipped if not provided to Rich Tree View)
+- `getItemChildren` (can be skipped if not provided to Rich Tree View)
+
+:::
+
 ## Imperative API
 
 :::success
@@ -122,10 +177,10 @@ After this initial render, `apiRef` holds methods to interact imperatively with 
 
 ### Select or deselect an item
 
-Use the `selectItem()` API method to select or deselect an item:
+Use the `setItemSelection()` API method to select or deselect an item:
 
 ```ts
-apiRef.current.selectItem({
+apiRef.current.setItemSelection({
   // The DOM event that triggered the change
   event,
   // The id of the item to select or deselect
@@ -136,13 +191,13 @@ apiRef.current.selectItem({
   keepExistingSelection,
   // If `true` the item will be selected
   // If `false` the item will be deselected
-  // If not defined, the item's new selection status will be the opposite of its current one
+  // If not defined, the item's selection status will be toggled
   shouldBeSelected,
 });
 ```
 
-{{"demo": "ApiMethodSelectItem.js", "defaultCodeOpen": false}}
+{{"demo": "ApiMethodSetItemSelection.js", "defaultCodeOpen": false}}
 
 You can use the `keepExistingSelection` property to avoid losing the already selected items when using `multiSelect`:
 
-{{"demo": "ApiMethodSelectItemKeepExistingSelection.js", "defaultCodeOpen": false}}
+{{"demo": "ApiMethodSetItemSelectionKeepExistingSelection.js", "defaultCodeOpen": false}}

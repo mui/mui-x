@@ -1,13 +1,12 @@
 <BarChartPro
+  height={300}
   dataset={dataset}
   xAxis={[
     {
-      scaleType: 'band',
       dataKey: 'letter',
       zoom: { filterMode: 'discard' },
     },
   ]}
   yAxis={[{ valueFormatter }]}
   series={[{ label: 'Letter Frequency', dataKey: 'frequency', valueFormatter }]}
-  {...chartProps}
 />

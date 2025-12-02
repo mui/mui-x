@@ -43,6 +43,7 @@ export interface MonthCalendarProps
     FormProps {
   autoFocus?: boolean;
   className?: string;
+  currentMonth?: PickerValidDate;
   /**
    * Override or extend the styles applied to the component.
    */

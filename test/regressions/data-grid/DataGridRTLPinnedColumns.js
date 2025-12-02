@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { prefixer } from 'stylis';
-import rtlPlugin from 'stylis-plugin-rtl';
+import rtlPlugin from '@mui/stylis-plugin-rtl';
 import { useGridApiRef, DataGridPro } from '@mui/x-data-grid-pro';
 import { arSD } from '@mui/x-data-grid/locales';
 import createCache from '@emotion/cache';

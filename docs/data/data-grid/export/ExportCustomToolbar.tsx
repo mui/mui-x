@@ -1,12 +1,11 @@
-import * as React from 'react';
-import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
+import { DataGrid, Toolbar, GridToolbarExport } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 function CustomToolbar() {
   return (
-    <GridToolbarContainer>
+    <Toolbar>
       <GridToolbarExport />
-    </GridToolbarContainer>
+    </Toolbar>
   );
 }
 
@@ -25,6 +24,7 @@ export default function ExportCustomToolbar() {
         slots={{
           toolbar: CustomToolbar,
         }}
+        showToolbar
       />
     </div>
   );

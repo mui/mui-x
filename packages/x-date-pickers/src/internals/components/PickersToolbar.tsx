@@ -18,6 +18,7 @@ export interface PickersToolbarProps extends Pick<BaseToolbarProps, 'hidden' | '
 const useUtilityClasses = (classes: Partial<PickersToolbarClasses> | undefined) => {
   const slots = {
     root: ['root'],
+    title: ['title'],
     content: ['content'],
   };
 
@@ -27,7 +28,6 @@ const useUtilityClasses = (classes: Partial<PickersToolbarClasses> | undefined) 
 const PickersToolbarRoot = styled('div', {
   name: 'MuiPickersToolbar',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: PickerToolbarOwnerState }>(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
@@ -51,7 +51,6 @@ const PickersToolbarRoot = styled('div', {
 const PickersToolbarContent = styled('div', {
   name: 'MuiPickersToolbar',
   slot: 'Content',
-  overridesResolver: (props, styles) => styles.content,
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'landscapeDirection',
 })<{
   ownerState: PickerToolbarOwnerState;
@@ -123,6 +122,7 @@ export const PickersToolbar = React.forwardRef(function PickersToolbar(
         color="text.secondary"
         variant="overline"
         id={titleId}
+        className={classes.title}
       >
         {toolbarTitle}
       </Typography>

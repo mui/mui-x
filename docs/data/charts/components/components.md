@@ -66,7 +66,7 @@ const xOrigin = xAxisScale(0);
 
 #### Coordinate to value
 
-The `d3-scale` object allows you to convert a coordinate to a data value with the `invert` method.
+The `d3-scale` object lets you convert a coordinate to a data value with the `invert` method.
 
 The next example contains two lines drawn using different y-axes.
 By using `invert`, the value associated with the current mouse coordinate `y` can be resolved as follows:
@@ -90,7 +90,7 @@ For example, you can use `useLineSeries` to obtain the series of a line chart an
 ## HTML components
 
 With the introduction of the `ChartDataProvider` in v8, the chart data can be accessed from any component.
-This allows you to create HTML components that interact with the charts data.
+This lets you create HTML components that interact with the charts data.
 
 In the next example, notice that `MyCustomLegend` component displays the series names and colors.
 This creates an html `table` element, which can be customized in any way.

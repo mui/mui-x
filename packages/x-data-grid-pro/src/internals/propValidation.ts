@@ -16,7 +16,7 @@ export const propValidatorsDataGridPro: PropValidator<DataGridProProcessedProps>
   (props) =>
     (props.treeData &&
       props.filterMode === 'server' &&
-      !props.unstable_dataSource &&
+      !props.dataSource &&
       'MUI X: The `filterMode="server"` prop is not available when the `treeData` is enabled.') ||
     undefined,
   (props) =>
@@ -34,7 +34,7 @@ export const propValidatorsDataGridPro: PropValidator<DataGridProProcessedProps>
   (props) =>
     (props.signature !== GridSignature.DataGrid &&
       (props.rowsLoadingMode === 'server' || props.onRowsScrollEnd) &&
-      props.unstable_lazyLoading &&
-      'MUI X: Usage of the client side lazy loading (`rowsLoadingMode="server"` or `onRowsScrollEnd=...`) cannot be used together with server side lazy loading `unstable_lazyLoading="true"`.') ||
+      props.lazyLoading &&
+      'MUI X: Usage of the client side lazy loading (`rowsLoadingMode="server"` or `onRowsScrollEnd=...`) cannot be used together with server side lazy loading `lazyLoading="true"`.') ||
     undefined,
 ];

@@ -1,4 +1,3 @@
-import { frFR as frFRCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -6,6 +5,9 @@ const frFRGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Pas de résultats',
   noResultsOverlayLabel: 'Aucun résultat.',
+  noColumnsOverlayLabel: 'Aucune colonne',
+  noColumnsOverlayManageColumns: 'Gérer les colonnes',
+  // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
 
   // Density selector toolbar button text
   toolbarDensity: 'Densité',
@@ -31,17 +33,6 @@ const frFRGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Recherche',
   toolbarQuickFilterDeleteIconLabel: 'Supprimer',
 
-  // Prompt toolbar field
-  // toolbarPromptControlPlaceholder: 'Type a prompt…',
-  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
-  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
-  // toolbarPromptControlLabel: 'Prompt input',
-  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
-  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
-  // toolbarPromptControlSendActionLabel: 'Send',
-  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
-  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
-
   // Export selector toolbar button text
   toolbarExport: 'Exporter',
   toolbarExportLabel: 'Exporter',
@@ -49,12 +40,21 @@ const frFRGrid: Partial<GridLocaleText> = {
   toolbarExportPrint: 'Imprimer',
   toolbarExportExcel: 'Télécharger pour Excel',
 
+  // Toolbar pivot button
+  // toolbarPivot: 'Pivot',
+
+  // Toolbar charts button
+  // toolbarCharts: 'Charts',
+
+  // Toolbar AI Assistant button
+  toolbarAssistant: 'Assistant IA',
+
   // Columns management text
   columnsManagementSearchTitle: 'Rechercher',
   columnsManagementNoColumns: 'Pas de colonnes',
   columnsManagementShowHideAllText: 'Afficher/masquer toutes',
   columnsManagementReset: 'Réinitialiser',
-  // columnsManagementDeleteIconLabel: 'Clear',
+  columnsManagementDeleteIconLabel: 'Effacer',
 
   // Filter panel text
   filterPanelAddFilter: 'Ajouter un filtre',
@@ -113,7 +113,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Est supérieur ou égal à',
   'headerFilterOperator<': 'Est inférieur à',
   'headerFilterOperator<=': 'Est inférieur ou égal à',
-  // headerFilterClear: 'Clear filter',
+  headerFilterClear: 'Effacer le filtre',
 
   // Filter values text
   filterValueAny: 'tous',
@@ -122,6 +122,7 @@ const frFRGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Menu',
+  columnMenuAriaLabel: (columnName: string) => `Menu pour la colonne ${columnName}`,
   columnMenuShowColumns: 'Afficher les colonnes',
   columnMenuManageColumns: 'Gérer les colonnes',
   columnMenuFilter: 'Filtrer',
@@ -129,6 +130,8 @@ const frFRGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'Annuler le tri',
   columnMenuSortAsc: 'Tri ascendant',
   columnMenuSortDesc: 'Tri descendant',
+  // columnMenuManagePivot: 'Manage pivot',
+  // columnMenuManageCharts: 'Manage charts',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -183,16 +186,146 @@ const frFRGrid: Partial<GridLocaleText> = {
   expandDetailPanel: 'Afficher',
   collapseDetailPanel: 'Masquer',
 
+  // Pagination
+  paginationRowsPerPage: 'Lignes par page :',
+  paginationDisplayedRows: ({ from, to, count, estimated }) => {
+    if (!estimated) {
+      return `${from}–${to} sur ${count !== -1 ? count : `plus de ${to}`}`;
+    }
+    const estimatedLabel = estimated && estimated > to ? `environ ${estimated}` : `plus de ${to}`;
+    return `${from}–${to} sur ${count !== -1 ? count : estimatedLabel}`;
+  },
+  paginationItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Aller à la première page';
+    }
+    if (type === 'last') {
+      return 'Aller à la dernière page';
+    }
+    if (type === 'next') {
+      return 'Aller à la page suivante';
+    }
+    // if (type === 'previous') {
+    return 'Aller à la page précédente';
+  },
+
   // Row reordering text
   rowReorderingHeaderName: 'Positionnement des lignes',
 
   // Aggregation
   aggregationMenuItemHeader: 'Agrégation',
+  // aggregationFunctionLabelNone: 'none',
   aggregationFunctionLabelSum: 'Somme',
   aggregationFunctionLabelAvg: 'Moyenne',
   aggregationFunctionLabelMin: 'Minimum',
   aggregationFunctionLabelMax: 'Maximum',
   aggregationFunctionLabelSize: "Nombre d'éléments",
+
+  // Pivot panel
+  // pivotToggleLabel: 'Pivot',
+  // pivotRows: 'Rows',
+  // pivotColumns: 'Columns',
+  // pivotValues: 'Values',
+  // pivotCloseButton: 'Close pivot settings',
+  // pivotSearchButton: 'Search fields',
+  // pivotSearchControlPlaceholder: 'Search fields',
+  // pivotSearchControlLabel: 'Search fields',
+  // pivotSearchControlClear: 'Clear search',
+  // pivotNoFields: 'No fields',
+  // pivotMenuMoveUp: 'Move up',
+  // pivotMenuMoveDown: 'Move down',
+  // pivotMenuMoveToTop: 'Move to top',
+  // pivotMenuMoveToBottom: 'Move to bottom',
+  // pivotMenuRows: 'Rows',
+  // pivotMenuColumns: 'Columns',
+  // pivotMenuValues: 'Values',
+  // pivotMenuOptions: 'Field options',
+  // pivotMenuAddToRows: 'Add to Rows',
+  // pivotMenuAddToColumns: 'Add to Columns',
+  // pivotMenuAddToValues: 'Add to Values',
+  // pivotMenuRemove: 'Remove',
+  // pivotDragToRows: 'Drag here to create rows',
+  // pivotDragToColumns: 'Drag here to create columns',
+  // pivotDragToValues: 'Drag here to create values',
+  // pivotYearColumnHeaderName: '(Year)',
+  // pivotQuarterColumnHeaderName: '(Quarter)',
+
+  // Charts configuration panel
+  chartsNoCharts: 'Aucun graphique disponible',
+  chartsChartNotSelected: 'Sélectionnez un type de graphique pour configurer ses options',
+  chartsTabChart: 'Graphique',
+  chartsTabFields: 'Champs',
+  chartsTabCustomize: 'Personnaliser',
+  chartsCloseButton: 'Fermer la configuration des graphiques',
+  chartsSyncButtonLabel: 'Synchroniser le graphique',
+  chartsSearchPlaceholder: 'Rechercher des champs',
+  chartsSearchLabel: 'Rechercher des champs',
+  chartsSearchClear: 'Effacer la recherche',
+  chartsNoFields: 'Aucun champ',
+  // chartsFieldBlocked: 'This field cannot be added to any section',
+  chartsCategories: 'Catégories',
+  chartsSeries: 'Séries',
+  chartsMenuAddToDimensions: (dimensionLabel: string) => `Ajouter aux ${dimensionLabel}`,
+  chartsMenuAddToValues: (valuesLabel: string) => `Ajouter aux ${valuesLabel}`,
+  chartsMenuMoveUp: 'Déplacer vers le haut',
+  chartsMenuMoveDown: 'Déplacer vers le bas',
+  chartsMenuMoveToTop: 'Déplacer en haut',
+  chartsMenuMoveToBottom: 'Déplacer en bas',
+  chartsMenuOptions: 'Options du champ',
+  chartsMenuRemove: 'Supprimer',
+  chartsDragToDimensions: (dimensionLabel: string) =>
+    `Faites glisser ici pour utiliser la colonne comme ${dimensionLabel}`,
+  chartsDragToValues: (valuesLabel: string) =>
+    `Faites glisser ici pour utiliser la colonne comme ${valuesLabel}`,
+
+  // AI Assistant panel
+  // aiAssistantPanelTitle: 'AI Assistant',
+  // aiAssistantPanelClose: 'Close AI Assistant',
+  // aiAssistantPanelNewConversation: 'New conversation',
+  // aiAssistantPanelConversationHistory: 'Conversation history',
+  // aiAssistantPanelEmptyConversation: 'No prompt history',
+  // aiAssistantSuggestions: 'Suggestions',
+
+  // Prompt field
+  // promptFieldLabel: 'Prompt',
+  // promptFieldPlaceholder: 'Type a prompt…',
+  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
+  // promptFieldPlaceholderListening: 'Listening for prompt…',
+  // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
+  // promptFieldSend: 'Send',
+  // promptFieldRecord: 'Record',
+  // promptFieldStopRecording: 'Stop recording',
+
+  // Prompt
+  // promptRerun: 'Run again',
+  // promptProcessing: 'Processing…',
+  // promptAppliedChanges: 'Applied changes',
+
+  // Prompt changes
+  // promptChangeGroupDescription: (column: string) => `Group by ${column}`,
+  // promptChangeAggregationLabel: (column: string, aggregation: string) => `${column} (${aggregation})`,
+  // promptChangeAggregationDescription: (column: string, aggregation: string) => `Aggregate ${column} (${aggregation})`,
+  // promptChangeFilterLabel: (column: string, operator: string, value: string) => {
+  //   if (operator === 'is any of') {
+  //     return `${column} is any of: ${value}`;
+  //   }
+  //   return `${column} ${operator} ${value}`;
+  // },
+  // promptChangeFilterDescription: (column: string, operator: string, value: string) => {
+  //   if (operator === 'is any of') {
+  //     return `Filter where ${column} is any of: ${value}`;
+  //   }
+  //   return `Filter where ${column} ${operator} ${value}`;
+  // },
+  // promptChangeSortDescription: (column: string, direction: string) => `Sort by ${column} (${direction})`,
+  // promptChangePivotEnableLabel: 'Pivot',
+  // promptChangePivotEnableDescription: 'Enable pivot',
+  // promptChangePivotColumnsLabel: (count: number) => `Columns (${count})`,
+  // promptChangePivotColumnsDescription: (column: string, direction: string) => `${column}${direction ? ` (${direction})` : ''}`,
+  // promptChangePivotRowsLabel: (count: number) => `Rows (${count})`,
+  // promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
+  // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
+  // promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) => `Dimensions (${dimensionsCount}), Values (${valuesCount})`,
 };
 
-export const frFR: Localization = getGridLocalization(frFRGrid, frFRCore);
+export const frFR: Localization = getGridLocalization(frFRGrid);

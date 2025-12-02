@@ -6,6 +6,10 @@ import {
 } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
+const groupingColDef = {
+  width: 250,
+};
+
 export default function ColumnAutosizingGroupedRows() {
   const data = useMovieData();
   const apiRef = useGridApiRef();
@@ -34,7 +38,7 @@ export default function ColumnAutosizingGroupedRows() {
         columns={columns}
         apiRef={apiRef}
         initialState={initialState}
-        groupingColDef={{ width: 250 }}
+        groupingColDef={groupingColDef}
       />
     </div>
   );

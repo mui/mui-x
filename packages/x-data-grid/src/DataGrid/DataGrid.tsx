@@ -5,28 +5,45 @@ import { forwardRef } from '@mui/x-internals/forwardRef';
 import { GridRoot } from '../components';
 import { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
 import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
+import { useGridRowsOverridableMethods } from '../hooks/features/rows/useGridRowsOverridableMethods';
+import { useGridParamsOverridableMethods } from '../hooks/features/rows/useGridParamsOverridableMethods';
+import { useIsCellEditable } from '../hooks/features/editing/useGridCellEditable';
 import { DataGridProps } from '../models/props/DataGridProps';
 import { GridContextProvider } from '../context/GridContextProvider';
 import { useDataGridComponent } from './useDataGridComponent';
 import { useDataGridProps } from './useDataGridProps';
 import { GridValidRowModel } from '../models/gridRows';
 import { propValidatorsDataGrid, validateProps } from '../internals/utils/propValidation';
+import { useMaterialCSSVariables } from '../material/variables';
+import type { GridConfiguration } from '../models/configuration/gridConfiguration';
+import type { GridApiCommunity, GridPrivateApiCommunity } from '../models/api/gridApiCommunity';
+import { useGridApiInitialization } from '../hooks/core/useGridApiInitialization';
 
 export type { GridSlotsComponent as GridSlots } from '../models';
 
-const configuration = {
+const configuration: GridConfiguration = {
   hooks: {
+    useCSSVariables: useMaterialCSSVariables,
     useGridAriaAttributes,
     useGridRowAriaAttributes,
+    useGridRowsOverridableMethods,
+    useGridParamsOverridableMethods,
+    useIsCellEditable,
+    useCellAggregationResult: () => null,
+    useFilterValueGetter: (apiRef) => apiRef.current.getRowValue,
   },
 };
 
-const DataGridRaw = forwardRef(function DataGrid<R extends GridValidRowModel>(
+const DataGridRaw = function DataGrid<R extends GridValidRowModel>(
   inProps: DataGridProps<R>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useDataGridProps(inProps);
-  const privateApiRef = useDataGridComponent(props.apiRef, props);
+  const privateApiRef = useGridApiInitialization<GridPrivateApiCommunity, GridApiCommunity>(
+    props.apiRef,
+    props,
+  );
+  useDataGridComponent(privateApiRef, props, configuration);
 
   if (process.env.NODE_ENV !== 'production') {
     validateProps(props, propValidatorsDataGrid);
@@ -42,7 +59,7 @@ const DataGridRaw = forwardRef(function DataGrid<R extends GridValidRowModel>(
       />
     </GridContextProvider>
   );
-});
+};
 
 interface DataGridComponent {
   <R extends GridValidRowModel = any>(
@@ -58,7 +75,7 @@ interface DataGridComponent {
  * API:
  * - [DataGrid API](https://mui.com/x/api/data-grid/data-grid/)
  */
-export const DataGrid = React.memo(DataGridRaw) as DataGridComponent;
+export const DataGrid = React.memo(forwardRef(DataGridRaw)) as DataGridComponent;
 
 DataGridRaw.propTypes = {
   // ----------------------------- Warning --------------------------------
@@ -72,11 +89,11 @@ DataGridRaw.propTypes = {
     current: PropTypes.object,
   }),
   /**
-   * The label of the Data Grid.
+   * The `aria-label` of the Data Grid.
    */
   'aria-label': PropTypes.string,
   /**
-   * The id of the element containing a label for the Data Grid.
+   * The `id` of the element containing a label for the Data Grid.
    */
   'aria-labelledby': PropTypes.string,
   /**
@@ -123,6 +140,7 @@ DataGridRaw.propTypes = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
+  className: PropTypes.string,
   /**
    * The character used to separate cell values when copying to the clipboard.
    * @default '\t'
@@ -133,6 +151,11 @@ DataGridRaw.propTypes = {
    * @default 150
    */
   columnBufferPx: PropTypes.number,
+  /**
+   * The milliseconds delay to wait after a keystroke before triggering filtering in the columns menu.
+   * @default 150
+   */
+  columnFilterDebounceMs: PropTypes.number,
   /**
    * Sets the height in pixels of the column group headers in the Data Grid.
    * Inherits the `columnHeaderHeight` value if not set.
@@ -153,6 +176,21 @@ DataGridRaw.propTypes = {
    * If defined, the Data Grid will ignore the `hide` property in [[GridColDef]].
    */
   columnVisibilityModel: PropTypes.object,
+  /**
+   * The data source object.
+   */
+  dataSource: PropTypes.shape({
+    getRows: PropTypes.func.isRequired,
+    updateRow: PropTypes.func,
+  }),
+  /**
+   * Data source cache object.
+   */
+  dataSourceCache: PropTypes.shape({
+    clear: PropTypes.func.isRequired,
+    get: PropTypes.func.isRequired,
+    set: PropTypes.func.isRequired,
+  }),
   /**
    * Set the density of the Data Grid.
    * @default "standard"
@@ -204,6 +242,11 @@ DataGridRaw.propTypes = {
    * @default false (`!props.checkboxSelection` for MIT Data Grid)
    */
   disableMultipleRowSelection: PropTypes.bool,
+  /**
+   * If `true`, the Data Grid will not use the exclude model optimization when selecting all rows.
+   * @default false
+   */
+  disableRowSelectionExcludeModel: PropTypes.bool,
   /**
    * If `true`, the selection on click on a row or cell is disabled.
    * @default false
@@ -294,6 +337,8 @@ DataGridRaw.propTypes = {
   getRowHeight: PropTypes.func,
   /**
    * Return the id of a given [[GridRowModel]].
+   * Ensure the reference of this prop is stable to avoid performance implications.
+   * It could be done by either defining the prop outside of the component or by memoizing it.
    */
   getRowId: PropTypes.func,
   /**
@@ -360,6 +405,12 @@ DataGridRaw.propTypes = {
    * @default false
    */
   keepNonExistentRowsSelected: PropTypes.bool,
+  /**
+   * The label of the Data Grid.
+   * If the `showToolbar` prop is `true`, the label will be displayed in the toolbar and applied to the `aria-label` attribute of the grid.
+   * If the `showToolbar` prop is `false`, the label will not be visible but will be applied to the `aria-label` attribute of the grid.
+   */
+  label: PropTypes.string,
   /**
    * If `true`, a loading overlay is displayed.
    * @default false
@@ -509,6 +560,11 @@ DataGridRaw.propTypes = {
    */
   onColumnWidthChange: PropTypes.func,
   /**
+   * Callback fired when a data source request fails.
+   * @param {GridGetRowsError | GridUpdateRowError} error The data source error object.
+   */
+  onDataSourceError: PropTypes.func,
+  /**
    * Callback fired when the density changes.
    * @param {GridDensity} density New density value.
    */
@@ -559,7 +615,7 @@ DataGridRaw.propTypes = {
    */
   onPreferencePanelOpen: PropTypes.func,
   /**
-   * Callback called when `processRowUpdate` throws an error or rejects.
+   * Callback called when `processRowUpdate()` throws an error or rejects.
    * @param {any} error The error thrown.
    */
   onProcessRowUpdateError: PropTypes.func,
@@ -710,11 +766,10 @@ DataGridRaw.propTypes = {
   /**
    * Sets the row selection model of the Data Grid.
    */
-  rowSelectionModel: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired),
-    PropTypes.number,
-    PropTypes.string,
-  ]),
+  rowSelectionModel: PropTypes /* @typescript-to-proptypes-ignore */.shape({
+    ids: PropTypes.instanceOf(Set).isRequired,
+    type: PropTypes.oneOf(['exclude', 'include']).isRequired,
+  }),
   /**
    * Sets the type of space between rows added by `getRowSpacing`.
    * @default "margin"
@@ -739,6 +794,11 @@ DataGridRaw.propTypes = {
    * @default false
    */
   showColumnVerticalBorder: PropTypes.bool,
+  /**
+   * If `true`, the toolbar is displayed.
+   * @default false
+   */
+  showToolbar: PropTypes.bool,
   /**
    * Overridable components props dynamically passed to the component at rendering.
    */
@@ -768,6 +828,7 @@ DataGridRaw.propTypes = {
       sort: PropTypes.oneOf(['asc', 'desc']),
     }),
   ),
+  style: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

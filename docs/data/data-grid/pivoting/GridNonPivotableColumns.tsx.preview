@@ -1,0 +1,12 @@
+<DataGridPremium
+  rows={rows}
+  columns={columns}
+  initialState={initialState}
+  columnGroupHeaderHeight={36}
+  showToolbar
+  slotProps={{
+    toolbar: {
+      showQuickFilter: false,
+    },
+  }}
+/>

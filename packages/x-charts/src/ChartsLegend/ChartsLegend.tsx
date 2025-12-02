@@ -35,12 +35,12 @@ export interface ChartsLegendProps {
   classes?: Partial<ChartsLegendClasses>;
   className?: string;
   sx?: SxProps<Theme>;
+  tabIndex?: number;
 }
 
 const RootElement = styled('ul', {
   name: 'MuiChartsLegend',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: ChartsLegendProps }>(({ ownerState, theme }) => ({
   ...theme.typography.caption,
   color: (theme.vars || theme).palette.text.primary,
@@ -74,6 +74,7 @@ const RootElement = styled('ul', {
     alignItems: 'center',
     gap: theme.spacing(1),
   },
+  gridArea: 'legend',
 }));
 
 const ChartsLegend = consumeSlots(
@@ -86,7 +87,10 @@ const ChartsLegend = consumeSlots(
     omitProps: ['position'],
     classesResolver: useUtilityClasses,
   },
-  function ChartsLegend(props: ChartsLegendProps, ref: React.Ref<HTMLUListElement>) {
+  React.forwardRef(function ChartsLegend(
+    props: ChartsLegendProps,
+    ref: React.Ref<HTMLUListElement>,
+  ) {
     const data = useLegend();
     const { direction, onItemClick, className, classes, ...other } = props;
 
@@ -105,7 +109,7 @@ const ChartsLegend = consumeSlots(
       >
         {data.items.map((item, i) => {
           return (
-            <li key={item.id}>
+            <li key={item.id} className={classes?.item} data-series={item.id}>
               <Element
                 className={classes?.series}
                 role={onItemClick ? 'button' : undefined}
@@ -129,7 +133,7 @@ const ChartsLegend = consumeSlots(
         })}
       </RootElement>
     );
-  },
+  }),
 );
 
 ChartsLegend.propTypes = {

@@ -4,34 +4,29 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { styled, useThemeProps } from '@mui/material/styles';
-import {
-  unstable_composeClasses as composeClasses,
-  unstable_useId as useId,
-  unstable_useEventCallback as useEventCallback,
-} from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
+import useId from '@mui/utils/useId';
+import useEventCallback from '@mui/utils/useEventCallback';
 import { DateCalendarProps, DateCalendarDefaultizedProps } from './DateCalendar.types';
 import { useCalendarState } from './useCalendarState';
-import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import { PickersFadeTransitionGroup } from './PickersFadeTransitionGroup';
 import { DayCalendar } from './DayCalendar';
 import { MonthCalendar } from '../MonthCalendar';
 import { YearCalendar } from '../YearCalendar';
 import { useViews } from '../internals/hooks/useViews';
 import { PickersCalendarHeader, PickersCalendarHeaderProps } from '../PickersCalendarHeader';
-import {
-  findClosestEnabledDate,
-  applyDefaultDate,
-  mergeDateAndTime,
-} from '../internals/utils/date-utils';
+import { findClosestEnabledDate, mergeDateAndTime } from '../internals/utils/date-utils';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { useReduceAnimations } from '../internals/hooks/useReduceAnimations';
 import { DateCalendarClasses, getDateCalendarUtilityClass } from './dateCalendarClasses';
 import { BaseDateValidationProps } from '../internals/models/validation';
-import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
+import { useControlledValue } from '../internals/hooks/useControlledValue';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { PickerOwnerState, PickerValidDate } from '../models';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
+import { useApplyDefaultValuesToDateValidationProps } from '../managers/useDateManager';
+import { usePickerAdapter } from '../hooks/usePickerAdapter';
 
 const useUtilityClasses = (classes: Partial<DateCalendarClasses> | undefined) => {
   const slots = {
@@ -46,33 +41,28 @@ function useDateCalendarDefaultizedProps(
   props: DateCalendarProps,
   name: string,
 ): DateCalendarDefaultizedProps {
-  const utils = useUtils();
-  const defaultDates = useDefaultDates();
   const themeProps = useThemeProps({
     props,
     name,
   });
   const reduceAnimations = useReduceAnimations(themeProps.reduceAnimations);
+  const validationProps = useApplyDefaultValuesToDateValidationProps(themeProps);
 
   return {
     ...themeProps,
+    ...validationProps,
     loading: themeProps.loading ?? false,
-    disablePast: themeProps.disablePast ?? false,
-    disableFuture: themeProps.disableFuture ?? false,
     openTo: themeProps.openTo ?? 'day',
     views: themeProps.views ?? ['year', 'day'],
     reduceAnimations,
     renderLoading:
       themeProps.renderLoading ?? (() => <span data-testid="loading-progress">...</span>),
-    minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
-    maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
   };
 }
 
 const DateCalendarRoot = styled(PickerViewRoot, {
   name: 'MuiDateCalendar',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: PickerOwnerState }>({
   display: 'flex',
   flexDirection: 'column',
@@ -82,7 +72,6 @@ const DateCalendarRoot = styled(PickerViewRoot, {
 const DateCalendarViewTransitionContainer = styled(PickersFadeTransitionGroup, {
   name: 'MuiDateCalendar',
   slot: 'ViewTransitionContainer',
-  overridesResolver: (props, styles) => styles.viewTransitionContainer,
 })<{ ownerState: PickerOwnerState }>({});
 
 type DateCalendarComponent = ((
@@ -104,7 +93,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
   inProps: DateCalendarProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
   const { ownerState } = usePickerPrivateContext();
   const id = useId();
   const props = useDateCalendarDefaultizedProps(inProps, 'MuiDateCalendar');
@@ -151,7 +140,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
     ...other
   } = props;
 
-  const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
+  const { value, handleValueChange, timezone } = useControlledValue({
     name: 'DateCalendar',
     timezone: timezoneProp,
     value: valueProp,
@@ -191,11 +180,11 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
     disableFuture,
     timezone,
     getCurrentMonthFromVisibleDate: (visibleDate, prevMonth) => {
-      if (utils.isSameMonth(visibleDate, prevMonth)) {
+      if (adapter.isSameMonth(visibleDate, prevMonth)) {
         return prevMonth;
       }
 
-      return utils.startOfMonth(visibleDate);
+      return adapter.startOfMonth(visibleDate);
     },
   });
 
@@ -229,15 +218,15 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
   });
 
   const handleDateMonthChange = useEventCallback((newDate: PickerValidDate) => {
-    const startOfMonth = utils.startOfMonth(newDate);
-    const endOfMonth = utils.endOfMonth(newDate);
+    const startOfMonth = adapter.startOfMonth(newDate);
+    const endOfMonth = adapter.endOfMonth(newDate);
 
     const closestEnabledDate = isDateDisabled(newDate)
       ? findClosestEnabledDate({
-          utils,
+          adapter,
           date: newDate,
-          minDate: utils.isBefore(minDate, startOfMonth) ? startOfMonth : minDate,
-          maxDate: utils.isAfter(maxDate, endOfMonth) ? endOfMonth : maxDate,
+          minDate: adapter.isBefore(minDate, startOfMonth) ? startOfMonth : minDate,
+          maxDate: adapter.isAfter(maxDate, endOfMonth) ? endOfMonth : maxDate,
           disablePast,
           disableFuture,
           isDateDisabled,
@@ -255,15 +244,15 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
   });
 
   const handleDateYearChange = useEventCallback((newDate: PickerValidDate) => {
-    const startOfYear = utils.startOfYear(newDate);
-    const endOfYear = utils.endOfYear(newDate);
+    const startOfYear = adapter.startOfYear(newDate);
+    const endOfYear = adapter.endOfYear(newDate);
 
     const closestEnabledDate = isDateDisabled(newDate)
       ? findClosestEnabledDate({
-          utils,
+          adapter,
           date: newDate,
-          minDate: utils.isBefore(minDate, startOfYear) ? startOfYear : minDate,
-          maxDate: utils.isAfter(maxDate, endOfYear) ? endOfYear : maxDate,
+          minDate: adapter.isBefore(minDate, startOfYear) ? startOfYear : minDate,
+          maxDate: adapter.isAfter(maxDate, endOfYear) ? endOfYear : maxDate,
           disablePast,
           disableFuture,
           isDateDisabled,
@@ -284,7 +273,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
     if (day) {
       // If there is a date already selected, then we want to keep its time
       return handleValueChange(
-        mergeDateAndTime(utils, day, value ?? referenceDate),
+        mergeDateAndTime(adapter, day, value ?? referenceDate),
         'finish',
         view,
       );
@@ -294,7 +283,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
   });
 
   React.useEffect(() => {
-    if (utils.isValid(value)) {
+    if (adapter.isValid(value)) {
       setVisibleDate({ target: value, reason: 'controlled-value-change' });
     }
   }, [value]); // eslint-disable-line
@@ -368,6 +357,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
             <MonthCalendar
               {...baseDateValidationProps}
               {...commonViewProps}
+              currentMonth={calendarState.currentMonth}
               hasFocus={hasFocus}
               className={className}
               value={value}
@@ -385,6 +375,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
               {...baseDateValidationProps}
               {...commonViewProps}
               onMonthSwitchingAnimationEnd={onMonthSwitchingAnimationEnd}
+              hasFocus={hasFocus}
               onFocusedDayChange={(focusedDate) =>
                 setVisibleDate({ target: focusedDate, reason: 'cell-interaction' })
               }
@@ -394,7 +385,6 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
               shouldDisableDate={shouldDisableDate}
               shouldDisableMonth={shouldDisableMonth}
               shouldDisableYear={shouldDisableYear}
-              hasFocus={hasFocus}
               onFocusedViewChange={(isViewFocused) => setFocusedView('day', isViewFocused)}
               showDaysOutsideCurrentMonth={showDaysOutsideCurrentMonth}
               fixedWeekNumber={fixedWeekNumber}
@@ -505,7 +495,7 @@ DateCalendar.propTypes = {
   onChange: PropTypes.func,
   /**
    * Callback fired on focused view change.
-   * @template TView
+   * @template TView Type of the view. It will vary based on the Picker type and the `views` it uses.
    * @param {TView} view The new view to focus or not.
    * @param {boolean} hasFocus `true` if the view should be focused.
    */
@@ -517,7 +507,7 @@ DateCalendar.propTypes = {
   onMonthChange: PropTypes.func,
   /**
    * Callback fired on view change.
-   * @template TView
+   * @template TView Type of the view. It will vary based on the Picker type and the `views` it uses.
    * @param {TView} view The new view.
    */
   onViewChange: PropTypes.func,

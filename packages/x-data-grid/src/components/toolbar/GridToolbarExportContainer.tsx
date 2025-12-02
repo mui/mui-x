@@ -1,10 +1,10 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { unstable_useId as useId, unstable_useForkRef as useForkRef } from '@mui/utils';
-import { ButtonProps } from '@mui/material/Button';
-import { TooltipProps } from '@mui/material/Tooltip';
+import useId from '@mui/utils/useId';
+import useForkRef from '@mui/utils/useForkRef';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { isHideMenuKey } from '../../utils/keyboardUtils';
+import type { GridSlotProps } from '../../models/gridSlotsComponentsProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { GridMenu } from '../menu/GridMenu';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -15,7 +15,10 @@ interface GridToolbarExportContainerProps {
    * The props used for each slot inside.
    * @default {}
    */
-  slotProps?: { button?: Partial<ButtonProps>; tooltip?: Partial<TooltipProps> };
+  slotProps?: {
+    button?: Partial<GridSlotProps['baseButton']>;
+    tooltip?: Partial<GridSlotProps['baseTooltip']>;
+  };
 }
 
 const GridToolbarExportContainer = forwardRef<
@@ -41,15 +44,6 @@ const GridToolbarExportContainer = forwardRef<
   };
 
   const handleMenuClose = () => setOpen(false);
-
-  const handleListKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === 'Tab') {
-      event.preventDefault();
-    }
-    if (isHideMenuKey(event.key)) {
-      handleMenuClose();
-    }
-  };
 
   if (children == null) {
     return null;
@@ -83,13 +77,12 @@ const GridToolbarExportContainer = forwardRef<
         open={open}
         target={buttonRef.current}
         onClose={handleMenuClose}
-        position="bottom-start"
+        position="bottom-end"
       >
         <rootProps.slots.baseMenuList
           id={exportMenuId}
           className={gridClasses.menuList}
           aria-labelledby={exportButtonId}
-          onKeyDown={handleListKeyDown}
           autoFocusItem={open}
         >
           {React.Children.map(children, (child) => {

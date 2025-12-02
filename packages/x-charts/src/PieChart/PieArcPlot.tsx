@@ -1,20 +1,16 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useTransition } from '@react-spring/web';
-import { PieArc, PieArcProps } from './PieArc';
+import { useTheme } from '@mui/material/styles';
+import { useFocusedItem } from '../hooks/useFocusedItem';
+import { PieArc, PieArcProps, pieArcClasses } from './PieArc';
 import {
   ComputedPieRadius,
   DefaultizedPieSeriesType,
   DefaultizedPieValueType,
   PieItemIdentifier,
 } from '../models/seriesType/pie';
-import { getDefaultTransitionConfig } from './dataTransform/transition';
-import {
-  AnimatedObject,
-  ValueWithHighlight,
-  useTransformData,
-} from './dataTransform/useTransformData';
+import { useTransformData } from './dataTransform/useTransformData';
 
 export interface PieArcPlotSlots {
   pieArc?: React.JSXElementConstructor<PieArcProps>;
@@ -80,6 +76,8 @@ function PieArcPlot(props: PieArcPlotProps) {
     ...other
   } = props;
 
+  const theme = useTheme();
+
   const transformedData = useTransformData({
     innerRadius,
     outerRadius,
@@ -90,10 +88,12 @@ function PieArcPlot(props: PieArcPlotProps) {
     faded,
     data,
   });
-  const transition = useTransition<ValueWithHighlight, AnimatedObject>(transformedData, {
-    ...getDefaultTransitionConfig(skipAnimation),
-    immediate: skipAnimation,
-  });
+
+  const { dataIndex, seriesId, seriesType } = useFocusedItem() ?? {};
+  const focusedItem =
+    dataIndex !== undefined && seriesId === id && seriesType === 'pie'
+      ? transformedData[dataIndex]
+      : null;
 
   if (data.length === 0) {
     return null;
@@ -103,43 +103,53 @@ function PieArcPlot(props: PieArcPlotProps) {
 
   return (
     <g {...other}>
-      {transition(
-        (
-          {
-            startAngle,
-            endAngle,
-            paddingAngle: pA,
-            innerRadius: iR,
-            outerRadius: oR,
-            cornerRadius: cR,
-          },
-          item,
-          _,
-          index,
-        ) => {
-          return (
-            <Arc
-              startAngle={startAngle}
-              endAngle={endAngle}
-              paddingAngle={pA}
-              innerRadius={iR}
-              outerRadius={oR}
-              cornerRadius={cR}
-              id={id}
-              color={item.color}
-              dataIndex={index}
-              isFaded={item.isFaded}
-              isHighlighted={item.isHighlighted}
-              onClick={
-                onItemClick &&
-                ((event) => {
-                  onItemClick(event, { type: 'pie', seriesId: id, dataIndex: index }, item);
-                })
-              }
-              {...slotProps?.pieArc}
-            />
-          );
-        },
+      {transformedData.map((item, index) => (
+        <Arc
+          key={item.dataIndex}
+          startAngle={item.startAngle}
+          endAngle={item.endAngle}
+          paddingAngle={item.paddingAngle}
+          innerRadius={item.innerRadius}
+          outerRadius={item.outerRadius}
+          cornerRadius={item.cornerRadius}
+          skipAnimation={skipAnimation ?? false}
+          id={id}
+          color={item.color}
+          dataIndex={index}
+          isFaded={item.isFaded}
+          isHighlighted={item.isHighlighted}
+          isFocused={item.isFocused}
+          onClick={
+            onItemClick &&
+            ((event) => {
+              onItemClick(event, { type: 'pie', seriesId: id, dataIndex: index }, item);
+            })
+          }
+          {...slotProps?.pieArc}
+        />
+      ))}
+      {/* Render the focus indicator last, so it can align nicely over all arcs */}
+      {focusedItem && (
+        <Arc
+          startAngle={focusedItem.startAngle}
+          endAngle={focusedItem.endAngle}
+          paddingAngle={focusedItem.paddingAngle}
+          innerRadius={focusedItem.innerRadius}
+          color="transparent"
+          pointerEvents="none"
+          skipInteraction
+          outerRadius={focusedItem.outerRadius}
+          cornerRadius={focusedItem.cornerRadius}
+          skipAnimation
+          stroke={(theme.vars ?? theme).palette.text.primary}
+          id={id}
+          className={pieArcClasses.focusIndicator}
+          dataIndex={focusedItem.dataIndex}
+          isFaded={false}
+          isHighlighted={false}
+          isFocused={false}
+          strokeWidth={3}
+        />
       )}
     </g>
   );
@@ -168,7 +178,10 @@ PieArcPlot.propTypes = {
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       index: PropTypes.number.isRequired,
       label: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
-      labelMarkType: PropTypes.oneOf(['circle', 'line', 'square']),
+      labelMarkType: PropTypes.oneOfType([
+        PropTypes.oneOf(['circle', 'line', 'square']),
+        PropTypes.func,
+      ]),
       padAngle: PropTypes.number.isRequired,
       startAngle: PropTypes.number.isRequired,
       value: PropTypes.number.isRequired,
@@ -199,6 +212,9 @@ PieArcPlot.propTypes = {
     outerRadius: PropTypes.number,
     paddingAngle: PropTypes.number,
   }),
+  /**
+   * The id of this series.
+   */
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   /**
    * The radius between circle center and the beginning of the arc.

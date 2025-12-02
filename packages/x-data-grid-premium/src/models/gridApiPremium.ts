@@ -9,6 +9,7 @@ import {
   GridColumnReorderApi,
   GridRowProApi,
 } from '@mui/x-data-grid-pro';
+import { GridRowReorderPrivateApi } from '@mui/x-data-grid-pro/internals';
 import { GridInitialStatePremium, GridStatePremium } from './gridStatePremium';
 import type { GridRowGroupingApi, GridExcelExportApi, GridAggregationApi } from '../hooks';
 import { GridCellSelectionApi } from '../hooks/features/cellSelection/gridCellSelectionInterfaces';
@@ -18,6 +19,16 @@ import type {
   GridDataSourceApiPremium,
 } from '../hooks/features/dataSource/models';
 import type { GridAggregationPrivateApi } from '../hooks/features/aggregation/gridAggregationInterfaces';
+import type {
+  GridPivotingApi,
+  GridPivotingPrivateApi,
+} from '../hooks/features/pivoting/gridPivotingInterfaces';
+import { GridAiAssistantApi } from '../hooks/features/aiAssistant/gridAiAssistantInterfaces';
+import { GridSidebarApi } from '../hooks/features/sidebar/gridSidebarInterfaces';
+import {
+  GridChartsIntegrationApi,
+  GridChartsIntegrationPrivateApi,
+} from '../hooks/features/chartsIntegration/gridChartsIntegrationInterfaces';
 
 /**
  * The api of Data Grid Premium.
@@ -34,6 +45,10 @@ export interface GridApiPremium
     GridRowPinningApi,
     GridDataSourceApiPremium,
     GridCellSelectionApi,
+    GridPivotingApi,
+    GridAiAssistantApi,
+    GridSidebarApi,
+    GridChartsIntegrationApi,
     // APIs that are private in Community plan, but public in Pro and Premium plans
     GridRowMultiSelectionApi,
     GridColumnReorderApi {}
@@ -43,4 +58,7 @@ export interface GridPrivateApiPremium
     GridPrivateOnlyApiCommon<GridApiPremium, GridPrivateApiPremium, DataGridPremiumProcessedProps>,
     GridDataSourcePremiumPrivateApi,
     GridAggregationPrivateApi,
-    GridDetailPanelPrivateApi {}
+    GridDetailPanelPrivateApi,
+    GridRowReorderPrivateApi,
+    GridPivotingPrivateApi,
+    GridChartsIntegrationPrivateApi {}

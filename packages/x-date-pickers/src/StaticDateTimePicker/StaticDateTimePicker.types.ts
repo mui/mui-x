@@ -9,7 +9,6 @@ import {
   UseStaticPickerSlots,
   UseStaticPickerSlotProps,
 } from '../internals/hooks/useStaticPicker';
-import { DateOrTimeView } from '../models';
 
 export interface StaticDateTimePickerSlots extends BaseDateTimePickerSlots, UseStaticPickerSlots {}
 
@@ -18,7 +17,7 @@ export interface StaticDateTimePickerSlotProps
     UseStaticPickerSlotProps {}
 
 export interface StaticDateTimePickerProps
-  extends BaseDateTimePickerProps<DateOrTimeView>,
+  extends BaseDateTimePickerProps,
     MakeOptional<StaticOnlyPickerProps, 'displayStaticWrapperAs'> {
   /**
    * Overridable component slots.

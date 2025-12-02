@@ -1,10 +1,8 @@
-import * as React from 'react';
-import { expect } from 'chai';
-import { createRenderer, fireEvent } from '@mui/internal-test-utils';
-import { spy } from 'sinon';
+import { createRenderer } from '@mui/internal-test-utils';
+import { vi } from 'vitest';
 import { LineChart } from '@mui/x-charts/LineChart';
-import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
-import { firePointerEvent } from '../tests/firePointerEvent';
+import { isJSDOM } from 'test/utils/skipIf';
+import { CHART_SELECTOR } from '../tests/constants';
 
 const config = {
   dataset: [
@@ -14,21 +12,22 @@ const config = {
     { x: 40, v1: 10, v2: 0 },
   ],
   margin: { top: 0, left: 0, bottom: 0, right: 0 },
+  xAxis: [{ position: 'none' }],
+  yAxis: [{ position: 'none' }],
   width: 400,
   height: 400,
-};
+} as const;
 
 describe('LineChart - click event', () => {
   const { render } = createRenderer();
 
   describe('onAxisClick', () => {
     // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-    testSkipIf(isJSDOM)('should provide the right context as second argument', () => {
-      const onAxisClick = spy();
-      render(
+    it.skipIf(isJSDOM)('should provide the right context as second argument', async () => {
+      const onAxisClick = vi.fn();
+      const { user } = render(
         <div
           style={{
-            margin: -8, // Removes the body default margins
             width: 400,
             height: 400,
           }}
@@ -44,27 +43,31 @@ describe('LineChart - click event', () => {
           />
         </div>,
       );
-      const svg = document.querySelector<HTMLElement>('svg')!;
+      const svg = document.querySelector<HTMLElement>(CHART_SELECTOR)!;
 
-      firePointerEvent(svg, 'pointermove', {
-        clientX: 198,
-        clientY: 60,
-      });
-      fireEvent.click(svg);
+      await user.pointer([
+        {
+          keys: '[MouseLeft]',
+          target: svg,
+          coords: { clientX: 198, clientY: 60 },
+        },
+      ]);
 
-      expect(onAxisClick.lastCall.args[1]).to.deep.equal({
+      expect(onAxisClick.mock.lastCall?.[1]).to.deep.equal({
         dataIndex: 1,
         axisValue: 20,
         seriesValues: { s1: 5, s2: 8 },
       });
 
-      firePointerEvent(svg, 'pointermove', {
-        clientX: 201,
-        clientY: 60,
-      });
-      fireEvent.click(svg);
+      await user.pointer([
+        {
+          keys: '[MouseLeft]',
+          target: svg,
+          coords: { clientX: 201, clientY: 60 },
+        },
+      ]);
 
-      expect(onAxisClick.lastCall.args[1]).to.deep.equal({
+      expect(onAxisClick.mock.lastCall?.[1]).to.deep.equal({
         dataIndex: 2,
         axisValue: 30,
         seriesValues: { s1: 8, s2: 5 },
@@ -100,12 +103,11 @@ describe('LineChart - click event', () => {
     });
 
     // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-    testSkipIf(isJSDOM)('should provide the right context as second argument', () => {
-      const onMarkClick = spy();
-      render(
+    it.skipIf(isJSDOM)('should provide the right context as second argument', async () => {
+      const onMarkClick = vi.fn();
+      const { user } = render(
         <div
           style={{
-            margin: -8, // No idea why, but that make the SVG coordinates match the HTML coordinates
             width: 400,
             height: 400,
           }}
@@ -124,22 +126,22 @@ describe('LineChart - click event', () => {
 
       const marks = document.querySelectorAll<HTMLElement>('.MuiMarkElement-root');
 
-      fireEvent.click(marks[0]);
-      expect(onMarkClick.lastCall.args[1]).to.deep.equal({
+      await user.click(marks[0]);
+      expect(onMarkClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'line',
         seriesId: 's1',
         dataIndex: 0,
       });
 
-      fireEvent.click(marks[1]);
-      expect(onMarkClick.lastCall.args[1]).to.deep.equal({
+      await user.click(marks[1]);
+      expect(onMarkClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'line',
         seriesId: 's1',
         dataIndex: 1,
       });
 
-      fireEvent.click(marks[4]);
-      expect(onMarkClick.lastCall.args[1]).to.deep.equal({
+      await user.click(marks[4]);
+      expect(onMarkClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'line',
         seriesId: 's2',
         dataIndex: 0,
@@ -169,12 +171,11 @@ describe('LineChart - click event', () => {
     });
 
     // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-    testSkipIf(isJSDOM)('should provide the right context as second argument', () => {
-      const onAreaClick = spy();
-      render(
+    it.skipIf(isJSDOM)('should provide the right context as second argument', async () => {
+      const onAreaClick = vi.fn();
+      const { user } = render(
         <div
           style={{
-            margin: -8, // No idea why, but that make the SVG coordinates match the HTML coordinates
             width: 400,
             height: 400,
           }}
@@ -193,14 +194,14 @@ describe('LineChart - click event', () => {
 
       const areas = document.querySelectorAll<HTMLElement>('path.MuiAreaElement-root');
 
-      fireEvent.click(areas[0]);
-      expect(onAreaClick.lastCall.args[1]).to.deep.equal({
+      await user.click(areas[0]);
+      expect(onAreaClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'line',
         seriesId: 's1',
       });
 
-      fireEvent.click(areas[1]);
-      expect(onAreaClick.lastCall.args[1]).to.deep.equal({
+      await user.click(areas[1]);
+      expect(onAreaClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'line',
         seriesId: 's2',
       });
@@ -229,12 +230,11 @@ describe('LineChart - click event', () => {
     });
 
     // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-    testSkipIf(isJSDOM)('should provide the right context as second argument', () => {
-      const onLineClick = spy();
-      render(
+    it.skipIf(isJSDOM)('should provide the right context as second argument', async () => {
+      const onLineClick = vi.fn();
+      const { user } = render(
         <div
           style={{
-            margin: -8, // No idea why, but that make the SVG coordinates match the HTML coordinates
             width: 400,
             height: 400,
           }}
@@ -253,14 +253,14 @@ describe('LineChart - click event', () => {
 
       const lines = document.querySelectorAll<HTMLElement>('path.MuiLineElement-root');
 
-      fireEvent.click(lines[0]);
-      expect(onLineClick.lastCall.args[1]).to.deep.equal({
+      await user.click(lines[0]);
+      expect(onLineClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'line',
         seriesId: 's1',
       });
 
-      fireEvent.click(lines[1]);
-      expect(onLineClick.lastCall.args[1]).to.deep.equal({
+      await user.click(lines[1]);
+      expect(onLineClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'line',
         seriesId: 's2',
       });

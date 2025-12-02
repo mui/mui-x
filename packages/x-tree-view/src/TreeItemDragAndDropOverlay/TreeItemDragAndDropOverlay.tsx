@@ -1,5 +1,4 @@
 'use client';
-import * as React from 'react';
 import PropTypes from 'prop-types';
 import { alpha } from '@mui/material/styles';
 import { shouldForwardProp } from '@mui/system/createStyled';
@@ -10,7 +9,6 @@ import { styled } from '../internals/zero-styled';
 const TreeItemDragAndDropOverlayRoot = styled('div', {
   name: 'MuiTreeItemDragAndDropOverlay',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'action',
 })<{ action?: TreeViewItemsReorderingAction | null }>(({ theme }) => ({
   position: 'absolute',

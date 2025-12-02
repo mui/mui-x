@@ -1,102 +1,9 @@
 'use client';
-import * as React from 'react';
 import PropTypes from 'prop-types';
-import useSlotProps from '@mui/utils/useSlotProps';
-import composeClasses from '@mui/utils/composeClasses';
-import { useThemeProps, useTheme, Theme, styled } from '@mui/material/styles';
-import { useTicks, TickItemType } from '../hooks/useTicks';
-import { AxisDefaultized, ChartsXAxisProps } from '../models/axis';
-import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
-import { AxisRoot } from '../internals/components/AxisSharedComponents';
-import { ChartsText, ChartsTextProps } from '../ChartsText';
-import { getMinXTranslation } from '../internals/geometry';
-import { useMounted } from '../hooks/useMounted';
-import { useDrawingArea } from '../hooks/useDrawingArea';
-import { getWordsByLines } from '../internals/getWordsByLines';
-import { isInfinity } from '../internals/isInfinity';
-import { isBandScale } from '../internals/isBandScale';
-import { useChartContext } from '../context/ChartProvider/useChartContext';
+import { warnOnce } from '@mui/x-internals/warning';
+import { ChartsXAxisProps } from '../models/axis';
 import { useXAxes } from '../hooks/useAxis';
-
-const useUtilityClasses = (ownerState: ChartsXAxisProps & { theme: Theme }) => {
-  const { classes, position } = ownerState;
-  const slots = {
-    root: ['root', 'directionX', position],
-    line: ['line'],
-    tickContainer: ['tickContainer'],
-    tick: ['tick'],
-    tickLabel: ['tickLabel'],
-    label: ['label'],
-  };
-
-  return composeClasses(slots, getAxisUtilityClass, classes);
-};
-
-type LabelExtraData = { width: number; height: number; skipLabel?: boolean };
-
-function addLabelDimension(
-  xTicks: TickItemType[],
-  {
-    tickLabelStyle: style,
-    tickLabelInterval,
-    reverse,
-    isMounted,
-  }: Pick<ChartsXAxisProps, 'tickLabelInterval' | 'tickLabelStyle'> &
-    Pick<AxisDefaultized, 'reverse'> & { isMounted: boolean },
-): (TickItemType & LabelExtraData)[] {
-  const withDimension = xTicks.map((tick) => {
-    if (!isMounted || tick.formattedValue === undefined) {
-      return { ...tick, width: 0, height: 0 };
-    }
-    const tickSizes = getWordsByLines({ style, needsComputation: true, text: tick.formattedValue });
-    return {
-      ...tick,
-      width: Math.max(...tickSizes.map((size) => size.width)),
-      height: Math.max(tickSizes.length * tickSizes[0].height),
-    };
-  });
-
-  if (typeof tickLabelInterval === 'function') {
-    return withDimension.map((item, index) => ({
-      ...item,
-      skipLabel: !tickLabelInterval(item.value, index),
-    }));
-  }
-
-  // Filter label to avoid overlap
-  let currentTextLimit = 0;
-  let previousTextLimit = 0;
-  const direction = reverse ? -1 : 1;
-  return withDimension.map((item, labelIndex) => {
-    const { width, offset, labelOffset, height } = item;
-
-    const distance = getMinXTranslation(width, height, style?.angle);
-    const textPosition = offset + labelOffset;
-    const gapRatio = 1.2; // Ratio applied to the minimal distance to add some margin.
-
-    currentTextLimit = textPosition - (direction * (gapRatio * distance)) / 2;
-    if (labelIndex > 0 && direction * currentTextLimit < direction * previousTextLimit) {
-      // Except for the first label, we skip all label that overlap with the last accepted.
-      // Notice that the early return prevents `previousTextLimit` from being updated.
-      return { ...item, skipLabel: true };
-    }
-    previousTextLimit = textPosition + (direction * (gapRatio * distance)) / 2;
-    return item;
-  });
-}
-
-const XAxisRoot = styled(AxisRoot, {
-  name: 'MuiChartsXAxis',
-  slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
-})({});
-
-const defaultProps = {
-  position: 'bottom',
-  disableLine: false,
-  disableTicks: false,
-  tickSize: 6,
-} as const;
+import { ChartsXAxisImpl } from './ChartsXAxisImpl';
 
 /**
  * Demos:
@@ -109,155 +16,14 @@ const defaultProps = {
  */
 function ChartsXAxis(inProps: ChartsXAxisProps) {
   const { xAxis, xAxisIds } = useXAxes();
-  const { scale: xScale, tickNumber, reverse, ...settings } = xAxis[inProps.axisId ?? xAxisIds[0]];
+  const axis = xAxis[inProps.axisId ?? xAxisIds[0]];
 
-  const isMounted = useMounted();
-
-  const themedProps = useThemeProps({ props: { ...settings, ...inProps }, name: 'MuiChartsXAxis' });
-
-  const defaultizedProps = {
-    ...defaultProps,
-    ...themedProps,
-  };
-
-  const {
-    position,
-    disableLine,
-    disableTicks,
-    tickLabelStyle,
-    label,
-    labelStyle,
-    tickSize: tickSizeProp,
-    valueFormatter,
-    slots,
-    slotProps,
-    tickInterval,
-    tickLabelInterval,
-    tickPlacement,
-    tickLabelPlacement,
-    sx,
-  } = defaultizedProps;
-
-  const theme = useTheme();
-  const classes = useUtilityClasses({ ...defaultizedProps, theme });
-  const { left, top, width, height } = useDrawingArea();
-  const { instance } = useChartContext();
-
-  const tickSize = disableTicks ? 4 : tickSizeProp;
-
-  const positionSign = position === 'bottom' ? 1 : -1;
-
-  const Line = slots?.axisLine ?? 'line';
-  const Tick = slots?.axisTick ?? 'line';
-  const TickLabel = slots?.axisTickLabel ?? ChartsText;
-  const Label = slots?.axisLabel ?? ChartsText;
-
-  const axisTickLabelProps = useSlotProps({
-    elementType: TickLabel,
-    externalSlotProps: slotProps?.axisTickLabel,
-    additionalProps: {
-      style: {
-        fontSize: 12,
-        textAnchor: 'middle',
-        dominantBaseline: position === 'bottom' ? 'hanging' : 'auto',
-        ...tickLabelStyle,
-      },
-    } as Partial<ChartsTextProps>,
-    className: classes.tickLabel,
-    ownerState: {},
-  });
-
-  const xTicks = useTicks({
-    scale: xScale,
-    tickNumber,
-    valueFormatter,
-    tickInterval,
-    tickPlacement,
-    tickLabelPlacement,
-  });
-
-  const xTicksWithDimension = addLabelDimension(xTicks, {
-    tickLabelStyle: axisTickLabelProps.style,
-    tickLabelInterval,
-    reverse,
-    isMounted,
-  });
-
-  const labelRefPoint = {
-    x: left + width / 2,
-    y: positionSign * (tickSize + 22),
-  };
-
-  const axisLabelProps = useSlotProps({
-    elementType: Label,
-    externalSlotProps: slotProps?.axisLabel,
-    additionalProps: {
-      style: {
-        fontSize: 14,
-        textAnchor: 'middle',
-        dominantBaseline: position === 'bottom' ? 'hanging' : 'auto',
-        ...labelStyle,
-      },
-    } as Partial<ChartsTextProps>,
-    ownerState: {},
-  });
-
-  const domain = xScale.domain();
-  const ordinalAxis = isBandScale(xScale);
-  // Skip axis rendering if no data is available
-  // - The domain is an empty array for band/point scales.
-  // - The domains contains Infinity for continuous scales.
-  if ((ordinalAxis && domain.length === 0) || (!ordinalAxis && domain.some(isInfinity))) {
+  if (!axis) {
+    warnOnce(`MUI X Charts: No axis found. The axisId "${inProps.axisId}" is probably invalid.`);
     return null;
   }
-  return (
-    <XAxisRoot
-      transform={`translate(0, ${position === 'bottom' ? top + height : top})`}
-      className={classes.root}
-      sx={sx}
-    >
-      {!disableLine && (
-        <Line x1={left} x2={left + width} className={classes.line} {...slotProps?.axisLine} />
-      )}
 
-      {xTicksWithDimension.map(({ formattedValue, offset, labelOffset, skipLabel }, index) => {
-        const xTickLabel = labelOffset ?? 0;
-        const yTickLabel = positionSign * (tickSize + 3);
-
-        const showTick = instance.isPointInside({ x: offset, y: -1 }, { direction: 'x' });
-        const showTickLabel = instance.isPointInside(
-          { x: offset + xTickLabel, y: -1 },
-          { direction: 'x' },
-        );
-        return (
-          <g key={index} transform={`translate(${offset}, 0)`} className={classes.tickContainer}>
-            {!disableTicks && showTick && (
-              <Tick
-                y2={positionSign * tickSize}
-                className={classes.tick}
-                {...slotProps?.axisTick}
-              />
-            )}
-
-            {formattedValue !== undefined && !skipLabel && showTickLabel && (
-              <TickLabel
-                x={xTickLabel}
-                y={yTickLabel}
-                {...axisTickLabelProps}
-                text={formattedValue.toString()}
-              />
-            )}
-          </g>
-        );
-      })}
-
-      {label && (
-        <g className={classes.label}>
-          <Label {...labelRefPoint} {...axisLabelProps} text={label} />
-        </g>
-      )}
-    </XAxisRoot>
-  );
+  return <ChartsXAxisImpl {...inProps} axis={axis} />;
 }
 
 ChartsXAxis.propTypes = {
@@ -265,6 +31,7 @@ ChartsXAxis.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  axis: PropTypes.oneOf(['x']),
   /**
    * The id of the axis to render.
    * If undefined, it will be the first defined axis.
@@ -285,11 +52,6 @@ ChartsXAxis.propTypes = {
    */
   disableTicks: PropTypes.bool,
   /**
-   * The fill color of the axis text.
-   * @default 'currentColor'
-   */
-  fill: PropTypes.string,
-  /**
    * The label of the axis.
    */
   label: PropTypes.string,
@@ -297,10 +59,6 @@ ChartsXAxis.propTypes = {
    * The style applied to the axis label.
    */
   labelStyle: PropTypes.object,
-  /**
-   * Position of the axis.
-   */
-  position: PropTypes.oneOf(['bottom', 'top']),
   /**
    * The props used for each component slot.
    * @default {}
@@ -311,11 +69,6 @@ ChartsXAxis.propTypes = {
    * @default {}
    */
   slots: PropTypes.object,
-  /**
-   * The stroke color of the axis line.
-   * @default 'currentColor'
-   */
-  stroke: PropTypes.string,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
@@ -338,6 +91,12 @@ ChartsXAxis.propTypes = {
    * @default 'auto'
    */
   tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+  /**
+   * The minimum gap in pixels between two tick labels.
+   * If two tick labels are closer than this minimum gap, one of them will be hidden.
+   * @default 4
+   */
+  tickLabelMinGap: PropTypes.number,
   /**
    * The placement of ticks label. Can be the middle of the band, or the tick position.
    * Only used if scale is 'band'.

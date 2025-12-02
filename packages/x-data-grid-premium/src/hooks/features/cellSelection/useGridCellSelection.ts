@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import ownerDocument from '@mui/utils/ownerDocument';
@@ -12,7 +13,7 @@ import {
   useGridRegisterPipeProcessor,
 } from '@mui/x-data-grid-pro/internals';
 import {
-  useGridApiEventHandler,
+  useGridEvent,
   useGridApiMethod,
   GridEventListener,
   GridEventLookup,
@@ -96,14 +97,14 @@ export const useGridCellSelection = (
       if (!props.cellSelection) {
         return false;
       }
-      const cellSelectionModel = gridCellSelectionStateSelector(apiRef.current.state);
+      const cellSelectionModel = gridCellSelectionStateSelector(apiRef);
       return cellSelectionModel[id] ? !!cellSelectionModel[id][field] : false;
     },
     [apiRef, props.cellSelection],
   );
 
   const getCellSelectionModel = React.useCallback(() => {
-    return gridCellSelectionStateSelector(apiRef.current.state);
+    return gridCellSelectionStateSelector(apiRef);
   }, [apiRef]);
 
   const setCellSelectionModel = React.useCallback<GridCellSelectionApi['setCellSelectionModel']>(
@@ -112,7 +113,6 @@ export const useGridCellSelection = (
         return;
       }
       apiRef.current.setState((prevState) => ({ ...prevState, cellSelection: newModel }));
-      apiRef.current.forceUpdate();
     },
     [apiRef, props.cellSelection],
   );
@@ -288,7 +288,7 @@ export const useGridCellSelection = (
         return;
       }
 
-      const dimensions = gridDimensionsSelector(apiRef.current.state);
+      const dimensions = gridDimensionsSelector(apiRef);
 
       const { x: mouseX, y: mouseY } = mousePosition.current;
       const { width, height: viewportOuterHeight } = dimensions.viewportOuterSize;
@@ -352,7 +352,7 @@ export const useGridCellSelection = (
         return;
       }
 
-      const dimensions = gridDimensionsSelector(apiRef.current.state);
+      const dimensions = gridDimensionsSelector(apiRef);
       const { x, y } = virtualScrollerRect;
       const { width, height: viewportOuterHeight } = dimensions.viewportOuterSize;
       const height = viewportOuterHeight - totalHeaderHeight;
@@ -458,11 +458,11 @@ export const useGridCellSelection = (
     apiRef.current.selectCellRange({ id, field }, cellWithVirtualFocus.current);
   });
 
-  useGridApiEventHandler(apiRef, 'cellClick', runIfCellSelectionIsEnabled(handleCellClick));
-  useGridApiEventHandler(apiRef, 'cellFocusIn', runIfCellSelectionIsEnabled(handleCellFocusIn));
-  useGridApiEventHandler(apiRef, 'cellKeyDown', runIfCellSelectionIsEnabled(handleCellKeyDown));
-  useGridApiEventHandler(apiRef, 'cellMouseDown', runIfCellSelectionIsEnabled(handleCellMouseDown));
-  useGridApiEventHandler(apiRef, 'cellMouseOver', runIfCellSelectionIsEnabled(handleCellMouseOver));
+  useGridEvent(apiRef, 'cellClick', runIfCellSelectionIsEnabled(handleCellClick));
+  useGridEvent(apiRef, 'cellFocusIn', runIfCellSelectionIsEnabled(handleCellFocusIn));
+  useGridEvent(apiRef, 'cellKeyDown', runIfCellSelectionIsEnabled(handleCellKeyDown));
+  useGridEvent(apiRef, 'cellMouseDown', runIfCellSelectionIsEnabled(handleCellMouseDown));
+  useGridEvent(apiRef, 'cellMouseOver', runIfCellSelectionIsEnabled(handleCellMouseOver));
 
   React.useEffect(() => {
     if (props.cellSelectionModel) {
@@ -567,7 +567,7 @@ export const useGridCellSelection = (
       if (apiRef.current.getSelectedCellsAsArray().length <= 1) {
         return value;
       }
-      const sortedRowIds = gridSortedRowIdsSelector(apiRef.current.state);
+      const sortedRowIds = gridSortedRowIdsSelector(apiRef);
       const cellSelectionModel = apiRef.current.getCellSelectionModel();
       const unsortedSelectedRowIds = Object.keys(cellSelectionModel);
       const sortedSelectedRowIds = sortedRowIds.filter((id) =>
@@ -575,7 +575,7 @@ export const useGridCellSelection = (
       );
       const copyData = sortedSelectedRowIds.reduce<string>((acc, rowId) => {
         const fieldsMap = cellSelectionModel[rowId];
-        const rowString = Object.keys(fieldsMap).reduce((acc2, field) => {
+        const rowValues = Object.keys(fieldsMap).map((field) => {
           let cellData: string;
           if (fieldsMap[field]) {
             const cellParams = apiRef.current.getCellParams(rowId, field);
@@ -590,8 +590,9 @@ export const useGridCellSelection = (
           } else {
             cellData = '';
           }
-          return acc2 === '' ? cellData : [acc2, cellData].join(clipboardCopyCellDelimiter);
+          return cellData;
         }, '');
+        const rowString = rowValues.join(clipboardCopyCellDelimiter);
         return acc === '' ? rowString : [acc, rowString].join('\r\n');
       }, '');
       return copyData;

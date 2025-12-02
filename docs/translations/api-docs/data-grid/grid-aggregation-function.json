@@ -4,6 +4,9 @@
     "apply": {
       "description": "Function that takes the current cell values and generates the aggregated value."
     },
+    "applySorting": {
+      "description": "Indicates if the aggregation function depends on rows being in a sorted order.<br />If <code>true</code>, the values provided to <code>apply</code> will be sorted."
+    },
     "columnTypes": {
       "description": "Column types supported by this aggregation function.<br />If not defined, all types are supported (in most cases this property should be defined)."
     },

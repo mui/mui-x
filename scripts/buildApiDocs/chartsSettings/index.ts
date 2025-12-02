@@ -1,4 +1,5 @@
 import path from 'path';
+import fs from 'fs';
 import { LANGUAGES } from 'docs/config';
 import { ProjectSettings, ComponentReactApi, HookReactApi } from '@mui-internal/api-docs-builder';
 import findApiPages from '@mui-internal/api-docs-builder/utils/findApiPages';
@@ -6,6 +7,20 @@ import generateUtilityClass, { isGlobalState } from '@mui/utils/generateUtilityC
 import { getComponentImports, getComponentInfo } from './getComponentInfo';
 
 type PageType = { pathname: string; title: string; plan?: 'community' | 'pro' | 'premium' };
+
+function getNonComponentFolders(): string[] {
+  try {
+    return fs
+      .readdirSync(path.join(process.cwd(), 'docs/data/charts'), { withFileTypes: true })
+      .filter((dirent) => dirent.isDirectory() && dirent.name !== 'components')
+      .map((dirent) => `charts/${dirent.name}`)
+      .sort();
+  } catch (error) {
+    // Fallback to empty array if directory doesn't exist
+    console.warn('Could not read the directories:', error);
+    return [];
+  }
+}
 
 export const projectChartsSettings: ProjectSettings = {
   output: {
@@ -48,6 +63,11 @@ export default chartsApiPages;
       rootPath: path.join(process.cwd(), 'packages/x-charts-pro'),
       entryPointPath: 'src/index.ts',
     },
+    {
+      name: 'charts-premium',
+      rootPath: path.join(process.cwd(), 'packages/x-charts-premium'),
+      entryPointPath: 'src/index.ts',
+    },
   ],
   getApiPages: () => findApiPages('docs/pages/x/api/charts'),
   getComponentInfo,
@@ -69,7 +89,13 @@ export default chartsApiPages;
       'x-charts/src/ChartsOverlay/ChartsNoDataOverlay.tsx',
       'x-charts/src/ChartsOverlay/ChartsLoadingOverlay.tsx',
       'x-charts/src/LineChart/CircleMarkElement.tsx',
+      'x-charts/src/ScatterChart/ScatterMarker.tsx',
       'x-charts/src/BarChart/AnimatedBarElement.tsx',
+      'x-charts/src/RadarChart/RadarDataProvider/RadarDataProvider.tsx',
+      'x-charts/src/LineChart/FocusedMark.tsx',
+      'x-charts/src/ScatterChart/BatchScatter.tsx',
+      'x-charts-premium/src/ChartsRenderer/ChartsRenderer.tsx',
+      'x-charts-premium/src/ChartsRenderer/components/PaletteOption.tsx',
     ].some((invalidPath) => filename.endsWith(invalidPath));
   },
   skipAnnotatingComponentDefinition: true,
@@ -77,11 +103,16 @@ export default chartsApiPages;
   importTranslationPagesDirectory: 'docsx/translations/api-docs/charts',
   getComponentImports,
   propsSettings: {
-    // propsWithoutDefaultVerification: [],
+    propsWithoutDefaultVerification: ['stripeColor'],
   },
   sortingStrategies: {
     slotsSort: (a, b) => a.name.localeCompare(b.name),
   },
   generateClassName: generateUtilityClass,
   isGlobalClassName: isGlobalState,
+  nonComponentFolders: [
+    ...getNonComponentFolders(),
+    'migration/migration-charts-v7',
+    'migration/migration-charts-v6',
+  ],
 };

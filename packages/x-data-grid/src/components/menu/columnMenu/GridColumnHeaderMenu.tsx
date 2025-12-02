@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { unstable_useEventCallback as useEventCallback, HTMLElementType } from '@mui/utils';
+import useEventCallback from '@mui/utils/useEventCallback';
+import HTMLElementType from '@mui/utils/HTMLElementType';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { GridMenu, GridMenuProps } from '../GridMenu';
 
@@ -28,7 +29,7 @@ function GridColumnHeaderMenu({
   const apiRef = useGridApiContext();
   const colDef = apiRef.current.getColumn(field);
 
-  const hideMenu = useEventCallback((event?: Event) => {
+  const hideMenu = useEventCallback((event?: React.KeyboardEvent | MouseEvent | TouchEvent) => {
     if (event) {
       // Prevent triggering the sorting
       event.stopPropagation();
@@ -46,7 +47,7 @@ function GridColumnHeaderMenu({
 
   return (
     <GridMenu
-      placement={`bottom-${colDef!.align === 'right' ? 'start' : 'end'}` as any}
+      position={`bottom-${colDef!.align === 'right' ? 'start' : 'end'}` as any}
       open={open}
       target={target}
       onClose={hideMenu}

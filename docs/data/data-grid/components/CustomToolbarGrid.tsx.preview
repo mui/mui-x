@@ -3,4 +3,5 @@
   slots={{
     toolbar: CustomToolbar,
   }}
+  showToolbar
 />

@@ -1,15 +1,14 @@
 'use client';
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { useLocalizationContext } from '../internals/hooks/useUtils';
-import { MuiPickersAdapterContextValue } from '../LocalizationProvider/LocalizationProvider';
-import { OnErrorProps, PickersTimezone } from '../models';
-import type { PickerValueManager } from '../internals/hooks/usePicker';
+import { MuiPickersAdapter, OnErrorProps, PickersTimezone } from '../models';
+import type { PickerValueManager } from '../internals/models';
 import { PickerValidValue } from '../internals/models';
+import { usePickerAdapter } from '../hooks';
 
 export type Validator<TValue extends PickerValidValue, TError, TValidationProps> = {
   (params: {
-    adapter: MuiPickersAdapterContextValue;
+    adapter: MuiPickersAdapter;
     value: TValue;
     timezone: PickersTimezone;
     props: TValidationProps;
@@ -41,7 +40,7 @@ interface UseValidationOptions<TValue extends PickerValidValue, TError, TValidat
   props: TValidationProps;
 }
 
-interface UseValidationReturnValue<TValue extends PickerValidValue, TError> {
+export interface UseValidationReturnValue<TValue extends PickerValidValue, TError> {
   /**
    * The validation error associated to the value passed to the `useValidation` hook.
    */
@@ -78,7 +77,7 @@ export function useValidation<TValue extends PickerValidValue, TError, TValidati
 ): UseValidationReturnValue<TValue, TError> {
   const { props, validator, value, timezone, onError } = options;
 
-  const adapter = useLocalizationContext();
+  const adapter = usePickerAdapter();
   const previousValidationErrorRef = React.useRef<TError | null>(
     validator.valueManager.defaultErrorState,
   );

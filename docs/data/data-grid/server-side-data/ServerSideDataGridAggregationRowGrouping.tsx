@@ -4,6 +4,7 @@ import {
   useKeepGroupedColumnsHidden,
   useGridApiRef,
   GridDataSource,
+  GridGetRowsResponse,
 } from '@mui/x-data-grid-premium';
 import { useMockServer } from '@mui/x-data-grid-generator';
 
@@ -15,13 +16,24 @@ const aggregationFunctions = {
   size: {},
 };
 
+const VISIBLE_COLUMNS = [
+  'commodity',
+  'traderName',
+  'quantity',
+  'unitPrice',
+  'filledQuantity',
+];
+
 export default function ServerSideDataGridAggregationRowGrouping() {
   const apiRef = useGridApiRef();
-  const {
-    columns,
-    initialState: initState,
-    fetchRows,
-  } = useMockServer({ rowGrouping: true });
+  const { columns, initialState, fetchRows, editRow } =
+    useMockServer<GridGetRowsResponse>({
+      rowLength: 100,
+      maxColumns: 10,
+      dataSet: 'Commodity',
+      editable: true,
+      visibleFields: VISIBLE_COLUMNS,
+    });
 
   const dataSource: GridDataSource = React.useMemo(
     () => ({
@@ -43,22 +55,23 @@ export default function ServerSideDataGridAggregationRowGrouping() {
           aggregateRow: getRowsResponse.aggregateRow,
         };
       },
+      updateRow: (params) => editRow(params.rowId, params.updatedRow),
       getGroupKey: (row) => row.group,
       getChildrenCount: (row) => row.descendantCount,
-      getAggregatedValue: (row, field) => row[`${field}Aggregate`],
+      getAggregatedValue: (row, field) => row[field],
     }),
-    [fetchRows],
+    [fetchRows, editRow],
   );
 
-  const initialState = useKeepGroupedColumnsHidden({
+  const initialStateUpdated = useKeepGroupedColumnsHidden({
     apiRef,
     initialState: {
-      ...initState,
-      rowGrouping: {
-        model: ['company', 'director'],
-      },
+      ...initialState,
       aggregation: {
-        model: { title: 'size', gross: 'sum', year: 'max' },
+        model: { quantity: 'sum', unitPrice: 'avg' },
+      },
+      rowGrouping: {
+        model: ['commodity'],
       },
     },
   });
@@ -68,9 +81,10 @@ export default function ServerSideDataGridAggregationRowGrouping() {
       <DataGridPremium
         apiRef={apiRef}
         columns={columns}
-        unstable_dataSource={dataSource}
-        initialState={initialState}
+        dataSource={dataSource}
+        initialState={initialStateUpdated}
         aggregationFunctions={aggregationFunctions}
+        disablePivoting
       />
     </div>
   );

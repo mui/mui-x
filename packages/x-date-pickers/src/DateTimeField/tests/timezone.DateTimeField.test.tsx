@@ -1,5 +1,4 @@
 import { spy } from 'sinon';
-import { expect } from 'chai';
 import { DateTime } from 'luxon';
 import { fireEvent } from '@mui/internal-test-utils';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
@@ -9,13 +8,12 @@ import {
   describeAdapters,
   buildFieldInteractions,
 } from 'test/utils/pickers';
-import { describeSkipIf } from 'test/utils/skipIf';
 
 const TIMEZONE_TO_TEST = ['UTC', 'system', 'America/New_York'];
 
 describe('<DateTimeField /> - Timezone', () => {
   describeAdapters('Timezone prop', DateTimeField, ({ adapter, renderWithProps }) => {
-    describeSkipIf(!adapter.isTimezoneCompatible)('timezoneCompatible', () => {
+    describe.skipIf(!adapter.isTimezoneCompatible)('timezoneCompatible', () => {
       const format = `${adapter.formats.keyboardDate} ${adapter.formats.hours24h}`;
 
       const fillEmptyValue = (v7Response: ReturnType<typeof renderWithProps>, timezone: string) => {
@@ -84,9 +82,7 @@ describe('<DateTimeField /> - Timezone', () => {
 
             // Check the `onChange` value (uses timezone prop)
             const actualDate = onChange.lastCall.firstArg;
-            expect(adapter.getTimezone(actualDate)).to.equal(
-              adapter.lib === 'dayjs' && timezone === 'system' ? 'UTC' : timezone,
-            );
+            expect(adapter.getTimezone(actualDate)).to.equal(timezone);
             expect(actualDate).toEqualDateTime(expectedDate);
           });
 
@@ -94,7 +90,7 @@ describe('<DateTimeField /> - Timezone', () => {
             const onChange = spy();
             const view = renderWithProps({
               enableAccessibleFieldDOMStructure: true,
-              value: adapter.date(undefined, timezone),
+              defaultValue: adapter.date(undefined, timezone),
               onChange,
               format,
               timezone: 'America/Chicago',
@@ -118,18 +114,16 @@ describe('<DateTimeField /> - Timezone', () => {
   });
 
   describe('Value timezone modification - Luxon', () => {
-    const { render, adapter, clock } = createPickerRenderer({
-      clock: 'fake',
+    const { render, adapter } = createPickerRenderer({
       adapterName: 'luxon',
     });
     const { renderWithProps } = buildFieldInteractions({
-      clock,
       render,
       Component: DateTimeField,
     });
 
-    it('should update the field when time zone changes (timestamp remains the same)', () => {
-      const view = renderWithProps({ enableAccessibleFieldDOMStructure: true });
+    it('should update the field when the timezone changes (timestamp remains the same)', () => {
+      const view = renderWithProps({ enableAccessibleFieldDOMStructure: true, value: null });
 
       const date = (adapter.date('2020-06-18T14:30:10.000Z') as DateTime).setZone('UTC');
       view.setProps({ value: date });

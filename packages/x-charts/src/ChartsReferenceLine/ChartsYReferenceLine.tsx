@@ -1,9 +1,14 @@
 'use client';
-import * as React from 'react';
+import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import { warnOnce } from '@mui/x-internals/warning';
 import { useDrawingArea, useYScale } from '../hooks';
-import { CommonChartsReferenceLineProps, ReferenceLineRoot } from './common';
+import {
+  CommonChartsReferenceLineProps,
+  DEFAULT_SPACING,
+  DEFAULT_SPACING_MIDDLE_OTHER_AXIS,
+  ReferenceLineRoot,
+} from './common';
 import { ChartsText } from '../ChartsText';
 import {
   ChartsReferenceLineClasses,
@@ -23,18 +28,27 @@ export type ChartsYReferenceLineProps<
 type GetTextPlacementParams = {
   left: number;
   width: number;
-  spacingX: number;
-} & Pick<CommonChartsReferenceLineProps, 'labelAlign'>;
+  position: number;
+} & Pick<CommonChartsReferenceLineProps, 'labelAlign' | 'spacing'>;
 
 const getTextParams = ({
   left,
   width,
-  spacingX,
+  spacing,
+  position,
   labelAlign = 'middle',
 }: GetTextPlacementParams) => {
+  const defaultSpacingOtherAxis =
+    labelAlign === 'middle' ? DEFAULT_SPACING_MIDDLE_OTHER_AXIS : DEFAULT_SPACING;
+
+  const spacingX =
+    (typeof spacing === 'object' ? spacing.x : defaultSpacingOtherAxis) ?? defaultSpacingOtherAxis;
+  const spacingY = (typeof spacing === 'object' ? spacing.y : spacing) ?? DEFAULT_SPACING;
+
   switch (labelAlign) {
     case 'start':
       return {
+        y: position - spacingY,
         x: left + spacingX,
         style: {
           dominantBaseline: 'auto',
@@ -44,6 +58,7 @@ const getTextParams = ({
 
     case 'end':
       return {
+        y: position - spacingY,
         x: left + width - spacingX,
         style: {
           dominantBaseline: 'auto',
@@ -53,7 +68,8 @@ const getTextParams = ({
 
     default:
       return {
-        x: left + width / 2,
+        y: position - spacingY,
+        x: left + width / 2 + spacingX,
         style: {
           dominantBaseline: 'auto',
           textAnchor: 'middle',
@@ -78,9 +94,9 @@ function ChartsYReferenceLine(props: ChartsYReferenceLineProps) {
   const {
     y,
     label = '',
-    spacing = 5,
+    spacing,
     classes: inClasses,
-    labelAlign,
+    labelAlign = 'middle',
     lineStyle,
     labelStyle,
     axisId,
@@ -94,7 +110,7 @@ function ChartsYReferenceLine(props: ChartsYReferenceLineProps) {
   if (yPosition === undefined) {
     if (process.env.NODE_ENV !== 'production') {
       warnOnce(
-        `MUI X: the value ${y} does not exist in the data of y axis with id ${axisId}.`,
+        `MUI X Charts: the value ${y} does not exist in the data of y axis with id ${axisId}.`,
         'error',
       );
     }
@@ -105,17 +121,14 @@ function ChartsYReferenceLine(props: ChartsYReferenceLineProps) {
 
   const classes = getYReferenceLineClasses(inClasses);
 
-  const spacingX = typeof spacing === 'object' ? (spacing.x ?? 0) : spacing;
-  const spacingY = typeof spacing === 'object' ? (spacing.y ?? 0) : spacing;
-
   const textParams = {
-    y: yPosition - spacingY,
     text: label,
     fontSize: 12,
     ...getTextParams({
       left,
       width,
-      spacingX,
+      spacing,
+      position: yPosition,
       labelAlign,
     }),
     className: classes.label,
@@ -127,5 +140,56 @@ function ChartsYReferenceLine(props: ChartsYReferenceLineProps) {
     </ReferenceLineRoot>
   );
 }
+
+ChartsYReferenceLine.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * The id of the axis used for the reference value.
+   * @default The `id` of the first defined axis.
+   */
+  axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: PropTypes.object,
+  /**
+   * The label to display along the reference line.
+   */
+  label: PropTypes.string,
+  /**
+   * The alignment if the label is in the chart drawing area.
+   * @default 'middle'
+   */
+  labelAlign: PropTypes.oneOf(['end', 'middle', 'start']),
+  /**
+   * The style applied to the label.
+   */
+  labelStyle: PropTypes.object,
+  /**
+   * The style applied to the line.
+   */
+  lineStyle: PropTypes.object,
+  /**
+   * Additional space around the label in px.
+   * Can be a number or an object `{ x, y }` to distinguish space with the reference line and space with axes.
+   * @default 5
+   */
+  spacing: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.shape({
+      x: PropTypes.number,
+      y: PropTypes.number,
+    }),
+  ]),
+  /**
+   * The y value associated with the reference line.
+   * If defined the reference line will be horizontal.
+   */
+  y: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+    .isRequired,
+} as any;
 
 export { ChartsYReferenceLine };

@@ -1,8 +1,9 @@
 'use client';
 import * as React from 'react';
+import { useStore } from '@mui/x-internals/store';
 import { EventHandlers } from '@mui/utils/types';
 import extractEventHandlers from '@mui/utils/extractEventHandlers';
-import useForkRef from '@mui/utils/useForkRef';
+import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { TreeViewCancellableEvent } from '../models';
 import {
   UseTreeItemParameters,
@@ -19,18 +20,27 @@ import {
   UseTreeItemDragAndDropOverlaySlotProps,
   UseTreeItemRootSlotPropsFromUseTreeItem,
   UseTreeItemContentSlotPropsFromUseTreeItem,
+  UseTreeItemErrorContainerSlotProps,
+  UseTreeItemLoadingContainerSlotProps,
 } from './useTreeItem.types';
 import { useTreeViewContext } from '../internals/TreeViewProvider';
 import { TreeViewItemPluginSlotPropsEnhancerParams } from '../internals/models';
 import { useTreeItemUtils } from '../hooks/useTreeItemUtils';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
 import { isTargetInDescendants } from '../internals/utils/tree';
-import { useSelector } from '../internals/hooks/useSelector';
-import { selectorIsItemTheDefaultFocusableItem } from '../internals/plugins/useTreeViewFocus/useTreeViewFocus.selectors';
 import { generateTreeItemIdAttribute } from '../internals/corePlugins/useTreeViewId/useTreeViewId.utils';
-import { selectorCanItemBeFocused } from '../internals/plugins/useTreeViewItems/useTreeViewItems.selectors';
-import { selectorTreeViewId } from '../internals/corePlugins/useTreeViewId/useTreeViewId.selectors';
-import { selectorItemExpansionTrigger } from '../internals/plugins/useTreeViewExpansion/useTreeViewExpansion.selectors';
+import { focusSelectors } from '../internals/plugins/useTreeViewFocus';
+import { itemsSelectors } from '../internals/plugins/useTreeViewItems';
+import { idSelectors } from '../internals/corePlugins/useTreeViewId';
+import { expansionSelectors } from '../internals/plugins/useTreeViewExpansion';
+import { selectionSelectors } from '../internals/plugins/useTreeViewSelection';
+
+const depthSelector = (state: any, itemId: string, depthContext: any) => {
+  if (typeof depthContext === 'function') {
+    return depthContext(state, itemId);
+  }
+  return depthContext;
+};
 
 export const useTreeItem = <
   TSignatures extends UseTreeItemMinimalPlugins = UseTreeItemMinimalPlugins,
@@ -38,28 +48,13 @@ export const useTreeItem = <
 >(
   parameters: UseTreeItemParameters,
 ): UseTreeItemReturnValue<TSignatures, TOptionalSignatures> => {
-  const {
-    runItemPlugins,
-    items: { onItemClick },
-    selection: { disableSelection, checkboxSelection },
-    label: labelContext,
-    instance,
-    publicAPI,
-    store,
-  } = useTreeViewContext<TSignatures, TOptionalSignatures>();
+  const { runItemPlugins, instance, publicAPI, store } = useTreeViewContext<
+    TSignatures,
+    TOptionalSignatures
+  >();
   const depthContext = React.useContext(TreeViewItemDepthContext);
 
-  const depth = useSelector(
-    store,
-    (...params) => {
-      if (typeof depthContext === 'function') {
-        return depthContext(...params);
-      }
-
-      return depthContext;
-    },
-    parameters.itemId,
-  );
+  const depth = useStore(store, depthSelector, parameters.itemId, depthContext);
 
   const { id, itemId, label, children, rootRef } = parameters;
 
@@ -67,22 +62,23 @@ export const useTreeItem = <
   const { interactions, status } = useTreeItemUtils({ itemId, children });
   const rootRefObject = React.useRef<HTMLLIElement>(null);
   const contentRefObject = React.useRef<HTMLDivElement>(null);
-  const handleRootRef = useForkRef(rootRef, pluginRootRef, rootRefObject)!;
-  const handleContentRef = useForkRef(contentRef, contentRefObject)!;
+  const handleRootRef = useMergedRefs(rootRef, pluginRootRef, rootRefObject)!;
+  const handleContentRef = useMergedRefs(contentRef, contentRefObject)!;
   const checkboxRef = React.useRef<HTMLButtonElement>(null);
 
-  const treeId = useSelector(store, selectorTreeViewId);
+  const treeId = useStore(store, idSelectors.treeId);
+  const isCheckboxSelectionEnabled = useStore(store, selectionSelectors.isCheckboxSelectionEnabled);
   const idAttribute = generateTreeItemIdAttribute({ itemId, treeId, id });
-  const shouldBeAccessibleWithTab = useSelector(
+  const shouldBeAccessibleWithTab = useStore(
     store,
-    selectorIsItemTheDefaultFocusableItem,
+    focusSelectors.isItemTheDefaultFocusableItem,
     itemId,
   );
 
   const sharedPropsEnhancerParams: Omit<
     TreeViewItemPluginSlotPropsEnhancerParams,
     'externalEventHandlers'
-  > = { rootRefObject, contentRefObject, interactions, status };
+  > = { rootRefObject, contentRefObject, interactions };
 
   const createRootHandleFocus =
     (otherHandlers: EventHandlers) =>
@@ -94,7 +90,7 @@ export const useTreeItem = <
 
       if (
         !status.focused &&
-        selectorCanItemBeFocused(store.value, itemId) &&
+        itemsSelectors.canItemBeFocused(store.state, itemId) &&
         event.currentTarget === event.target
       ) {
         instance.focusItem(event, itemId);
@@ -157,16 +153,16 @@ export const useTreeItem = <
   const createContentHandleClick =
     (otherHandlers: EventHandlers) => (event: React.MouseEvent & TreeViewCancellableEvent) => {
       otherHandlers.onClick?.(event);
-      onItemClick(event, itemId);
+      instance.handleItemClick(event, itemId);
 
       if (event.defaultMuiPrevented || checkboxRef.current?.contains(event.target as HTMLElement)) {
         return;
       }
-      if (selectorItemExpansionTrigger(store.value) === 'content') {
+      if (expansionSelectors.triggerSlot(store.state) === 'content') {
         interactions.handleExpansion(event);
       }
 
-      if (!checkboxSelection) {
+      if (!isCheckboxSelectionEnabled) {
         interactions.handleSelection(event);
       }
     };
@@ -190,7 +186,7 @@ export const useTreeItem = <
       if (event.defaultMuiPrevented) {
         return;
       }
-      if (selectorItemExpansionTrigger(store.value) === 'iconContainer') {
+      if (expansionSelectors.triggerSlot(store.state) === 'iconContainer') {
         interactions.handleExpansion(event);
       }
     };
@@ -205,19 +201,6 @@ export const useTreeItem = <
       ...extractEventHandlers(externalProps),
     };
 
-    // https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
-    let ariaSelected: boolean | undefined;
-    if (status.selected) {
-      // - each selected node has aria-selected set to true.
-      ariaSelected = true;
-    } else if (disableSelection || status.disabled) {
-      // - if the tree contains nodes that are not selectable, aria-selected is not present on those nodes.
-      ariaSelected = undefined;
-    } else {
-      // - all nodes that are selectable but not selected have aria-selected set to false.
-      ariaSelected = false;
-    }
-
     const props: UseTreeItemRootSlotPropsFromUseTreeItem = {
       ...externalEventHandlers,
       ref: handleRootRef,
@@ -225,7 +208,6 @@ export const useTreeItem = <
       tabIndex: shouldBeAccessibleWithTab ? 0 : -1,
       id: idAttribute,
       'aria-expanded': status.expandable ? status.expanded : undefined,
-      'aria-selected': ariaSelected,
       'aria-disabled': status.disabled || undefined,
       ...externalProps,
       style: {
@@ -260,6 +242,14 @@ export const useTreeItem = <
       status,
     };
 
+    (['expanded', 'selected', 'focused', 'disabled', 'editing', 'editable'] as const).forEach(
+      (key) => {
+        if (status[key]) {
+          props[`data-${key}`] = '';
+        }
+      },
+    );
+
     const enhancedContentProps =
       propsEnhancers.content?.({ ...sharedPropsEnhancerParams, externalEventHandlers }) ?? {};
 
@@ -277,6 +267,7 @@ export const useTreeItem = <
     const props = {
       ...externalEventHandlers,
       ref: checkboxRef,
+      'aria-hidden': true,
       ...externalProps,
     };
 
@@ -306,11 +297,16 @@ export const useTreeItem = <
       onDoubleClick: createLabelHandleDoubleClick(externalEventHandlers),
     };
 
-    if (labelContext?.isItemEditable) {
-      props.editable = status.editable;
-    }
+    const enhancedLabelProps =
+      propsEnhancers.label?.({
+        ...sharedPropsEnhancerParams,
+        externalEventHandlers,
+      }) ?? {};
 
-    return props;
+    return {
+      ...enhancedLabelProps,
+      ...props,
+    };
   };
 
   const getLabelInputProps = <ExternalProps extends Record<string, any> = {}>(
@@ -339,6 +335,29 @@ export const useTreeItem = <
       ...externalEventHandlers,
       ...externalProps,
       onClick: createIconContainerHandleClick(externalEventHandlers),
+    };
+  };
+
+  const getErrorContainerProps = <ExternalProps extends Record<string, any> = {}>(
+    externalProps: ExternalProps = {} as ExternalProps,
+  ): UseTreeItemErrorContainerSlotProps<ExternalProps> => {
+    const externalEventHandlers = extractEventHandlers(externalProps);
+
+    return {
+      ...externalEventHandlers,
+      ...externalProps,
+    };
+  };
+  const getLoadingContainerProps = <ExternalProps extends Record<string, any> = {}>(
+    externalProps: ExternalProps = {} as ExternalProps,
+  ): UseTreeItemLoadingContainerSlotProps<ExternalProps> => {
+    const externalEventHandlers = extractEventHandlers(externalProps);
+
+    return {
+      size: '12px',
+      thickness: 6,
+      ...externalEventHandlers,
+      ...externalProps,
     };
   };
 
@@ -387,6 +406,8 @@ export const useTreeItem = <
     getLabelProps,
     getLabelInputProps,
     getDragAndDropOverlayProps,
+    getErrorContainerProps,
+    getLoadingContainerProps,
     rootRef: handleRootRef,
     status,
     publicAPI,

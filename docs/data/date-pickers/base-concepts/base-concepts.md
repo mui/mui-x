@@ -2,7 +2,7 @@
 productId: x-date-pickers
 title: Date and Time Picker - Base concepts
 packageName: '@mui/x-date-pickers'
-githubLabel: 'component: pickers'
+githubLabel: 'scope: pickers'
 materialDesign: https://m2.material.io/components/date-pickers
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/
 ---
@@ -134,7 +134,7 @@ In the demo below, you can see that the calendar is set to April 2022 on mount:
 
 {{"demo": "ReferenceDateUsingValue.js"}}
 
-When `value` and `defaultValue` contains no valid date, the component will try to find a reference date that passes the validation to initialize its rendering:
+When `value` and `defaultValue` contain no valid date, the component will try to find a reference date that passes the validation to initialize its rendering:
 
 {{"demo": "ReferenceDateDefaultBehavior.js"}}
 
@@ -143,9 +143,19 @@ You can override this date using the `referenceDate` prop:
 {{"demo": "ReferenceDateExplicitDateTimePicker.js"}}
 
 This can also be useful to set the part of the value that will not be selectable in the component.
-For example, in a Time Picker, it allows you to choose the date of your value:
+For example, in a Time Picker, it lets you choose the date of your value:
 
 {{"demo": "ReferenceDateExplicitTimePicker.js"}}
+
+Reference date can be unique for each range component position.
+You can pass an array of dates to the `referenceDate` prop to set the reference date for each position in the range.
+This might be useful when you want different time values for start and end positions in a Date Time Range Picker.
+
+:::info
+Try selecting a date in the demo below, then move to the next position to observe the end reference date usage.
+:::
+
+{{"demo": "ReferenceDateRange.js"}}
 
 ## Testing caveats
 
@@ -156,16 +166,16 @@ Some test environments (for example `jsdom`) do not support media query. In such
 :::
 
 Be aware that running tests in headless browsers might not pass the default mediaQuery (`pointer: fine`).
-In such case you can [force pointer precision](https://github.com/microsoft/playwright/issues/7769#issuecomment-1205106311) via browser flags or preferences.
+In such cases you can [force pointer precision](https://github.com/microsoft/playwright/issues/7769#issuecomment-1205106311) via browser flags or preferences.
 
 ### Field components
 
 :::info
-To support RTL and some keyboard interactions, field components add some Unicode character that are invisible, but appears in the input value.
+To support RTL and some keyboard interactions, field components add some Unicode characters that are invisible, but appear in the input value.
 :::
 
-To add tests about a field value without having to care about those characters, you can remove the specific character before testing the equality.
-Here is an example about how to do it.
+To add tests about a field value without having to care about those characters, you can remove the specific characters before testing the equality.
+Here is an example of how to do it.
 
 ```js
 // Helper removing specific characters
@@ -181,7 +191,7 @@ expect(cleanText(input.value)).to.equal('04-17-2022');
 Date and Time Pickers are complex components built using many subcomponents known as **slots**.
 Slots are commonly filled by React components that you can override using the `slots` prop.
 You can also pass additional props to the available slots using the `slotProps` prop.
-Learn more about the mental model of slots in the Base UI documentation: [Overriding component structure](/base-ui/guides/overriding-component-structure/).
+Learn more about the mental model of slots in the Base UI documentation: [Overriding component structure](https://v6.mui.com/base-ui/guides/overriding-component-structure/).
 
 You can find the list of available slots for each component in its respective [API reference](/x/api/date-pickers/date-picker/#slots) doc.
 

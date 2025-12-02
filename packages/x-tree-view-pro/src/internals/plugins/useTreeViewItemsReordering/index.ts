@@ -2,6 +2,7 @@ export { useTreeViewItemsReordering } from './useTreeViewItemsReordering';
 export type {
   UseTreeViewItemsReorderingSignature,
   UseTreeViewItemsReorderingParameters,
-  UseTreeViewItemsReorderingDefaultizedParameters,
+  UseTreeViewItemsReorderingParametersWithDefaults,
   TreeViewItemReorderPosition,
 } from './useTreeViewItemsReordering.types';
+export { itemsReorderingSelectors } from './useTreeViewItemsReordering.selectors';

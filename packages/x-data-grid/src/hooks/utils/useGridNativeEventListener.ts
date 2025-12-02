@@ -1,46 +1,33 @@
-import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
-import { isFunction } from '../../utils/utils';
 import { useGridLogger } from './useGridLogger';
 import { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
+import { useGridEventPriority } from './useGridEvent';
 
 export const useGridNativeEventListener = <
   PrivateApi extends GridPrivateApiCommon,
   K extends keyof HTMLElementEventMap,
 >(
   apiRef: RefObject<PrivateApi>,
-  ref: React.RefObject<HTMLDivElement | null> | (() => HTMLElement | undefined | null),
+  ref: () => HTMLElement | undefined | null,
   eventName: K,
-  handler?: (event: HTMLElementEventMap[K]) => any,
+  handler: (event: HTMLElementEventMap[K]) => any,
   options?: AddEventListenerOptions,
 ) => {
   const logger = useGridLogger(apiRef, 'useNativeEventListener');
-  const [added, setAdded] = React.useState(false);
-  const handlerRef = React.useRef(handler);
 
-  const targetElement = isFunction(ref) ? ref() : (ref?.current ?? null);
+  useGridEventPriority(apiRef, 'rootMount', () => {
+    const targetElement = ref();
 
-  const wrapHandler = React.useCallback((event: HTMLElementEventMap[K]) => {
-    return handlerRef.current && handlerRef.current(event);
-  }, []);
-
-  React.useEffect(() => {
-    handlerRef.current = handler;
-  }, [handler]);
-
-  React.useEffect(() => {
-    if (targetElement && eventName && !added) {
-      logger.debug(`Binding native ${eventName} event`);
-      targetElement.addEventListener(eventName, wrapHandler, options);
-
-      setAdded(true);
-
-      const unsubscribe = () => {
-        logger.debug(`Clearing native ${eventName} event`);
-        targetElement.removeEventListener(eventName, wrapHandler, options);
-      };
-
-      apiRef.current.subscribeEvent('unmount', unsubscribe);
+    if (!targetElement || !eventName) {
+      return undefined;
     }
-  }, [targetElement, wrapHandler, eventName, added, logger, options, apiRef]);
+
+    logger.debug(`Binding native ${eventName} event`);
+    targetElement.addEventListener(eventName, handler, options);
+
+    return () => {
+      logger.debug(`Clearing native ${eventName} event`);
+      targetElement.removeEventListener(eventName, handler, options);
+    };
+  });
 };

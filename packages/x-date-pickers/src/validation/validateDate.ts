@@ -7,7 +7,6 @@ import {
   YearValidationProps,
 } from '../internals/models/validation';
 import { DateValidationError } from '../models';
-import { applyDefaultDate } from '../internals/utils/date-utils';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { PickerValue } from '../internals/models';
 
@@ -41,15 +40,20 @@ export const validateDate: Validator<PickerValue, DateValidationError, ValidateD
     return null;
   }
 
-  const { shouldDisableDate, shouldDisableMonth, shouldDisableYear, disablePast, disableFuture } =
-    props;
+  const {
+    shouldDisableDate,
+    shouldDisableMonth,
+    shouldDisableYear,
+    disablePast,
+    disableFuture,
+    minDate,
+    maxDate,
+  } = props;
 
-  const now = adapter.utils.date(undefined, timezone);
-  const minDate = applyDefaultDate(adapter.utils, props.minDate, adapter.defaultDates.minDate);
-  const maxDate = applyDefaultDate(adapter.utils, props.maxDate, adapter.defaultDates.maxDate);
+  const now = adapter.date(undefined, timezone);
 
   switch (true) {
-    case !adapter.utils.isValid(value):
+    case !adapter.isValid(value):
       return 'invalidDate';
 
     case Boolean(shouldDisableDate && shouldDisableDate(value)):
@@ -61,16 +65,16 @@ export const validateDate: Validator<PickerValue, DateValidationError, ValidateD
     case Boolean(shouldDisableYear && shouldDisableYear(value)):
       return 'shouldDisableYear';
 
-    case Boolean(disableFuture && adapter.utils.isAfterDay(value, now)):
+    case Boolean(disableFuture && adapter.isAfterDay(value, now)):
       return 'disableFuture';
 
-    case Boolean(disablePast && adapter.utils.isBeforeDay(value, now)):
+    case Boolean(disablePast && adapter.isBeforeDay(value, now)):
       return 'disablePast';
 
-    case Boolean(minDate && adapter.utils.isBeforeDay(value, minDate)):
+    case Boolean(minDate && adapter.isBeforeDay(value, minDate)):
       return 'minDate';
 
-    case Boolean(maxDate && adapter.utils.isAfterDay(value, maxDate)):
+    case Boolean(maxDate && adapter.isAfterDay(value, maxDate)):
       return 'maxDate';
 
     default:

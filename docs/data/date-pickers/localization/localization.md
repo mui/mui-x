@@ -2,7 +2,7 @@
 productId: x-date-pickers
 title: Date and Time Pickers - Translated components
 components: LocalizationProvider
-githubLabel: 'component: pickers'
+githubLabel: 'scope: pickers'
 packageName: '@mui/x-date-pickers'
 ---
 
@@ -92,7 +92,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 You can also customize the translations of a single component.
 
-If you want to customize some translations on specific component, you can use the `localeText` prop exposed by all our pickers.
+If you want to customize some translations on a specific component, you can use the `localeText` prop exposed by all Picker components.
 
 ```jsx
 <DatePicker localeText={{ clearButtonLabel: 'Empty' }} />

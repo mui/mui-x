@@ -75,7 +75,7 @@ export function PickersModalDialog(props: React.PropsWithChildren<PickersModalDi
   const { children, slots, slotProps } = props;
 
   const { open } = usePickerContext();
-  const { dismissViews } = usePickerPrivateContext();
+  const { dismissViews, onPopperExited } = usePickerPrivateContext();
 
   const Dialog = slots?.dialog ?? PickersModalDialogRoot;
   const Transition = slots?.mobileTransition ?? Fade;
@@ -83,7 +83,10 @@ export function PickersModalDialog(props: React.PropsWithChildren<PickersModalDi
   return (
     <Dialog
       open={open}
-      onClose={dismissViews}
+      onClose={() => {
+        dismissViews();
+        onPopperExited?.();
+      }}
       {...slotProps?.dialog}
       TransitionComponent={Transition}
       TransitionProps={slotProps?.mobileTransition}

@@ -1,7 +1,5 @@
-import * as React from 'react';
 import {
   DataGridPro,
-  GridToolbar,
   FilterColumnsArgs,
   GetColumnForNewFilterArgs,
 } from '@mui/x-data-grid-pro';
@@ -46,7 +44,7 @@ export default function DisableMultiFiltersDataGridPro() {
       <DataGridPro
         {...data}
         loading={loading}
-        slots={{ toolbar: GridToolbar }}
+        showToolbar
         slotProps={{
           filterPanel: {
             filterFormProps: {

@@ -15,32 +15,17 @@ Common conformance guidelines for accessibility include:
 WCAG 2.1 has three levels of conformance: A, AA, and AAA.
 Level AA exceeds the basic criteria for accessibility and is a common target for most organizations, so this is what we aim to support.
 
-The [WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) provide valuable information on how to optimize the accessibility of a Data Grid.
+The [WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) provide valuable information on how to optimize the accessibility of a data grid.
 
 ## Density
 
-You can change the density of the rows and the column header.
-
-### Density selection from the toolbar
-
-To enable the density selection from the toolbar, you can do one of the following:
-
-1. Enable the default toolbar component by passing the `slots.toolbar` prop to the Data Grid.
-2. Create a specific toolbar containing only the `GridToolbarDensitySelector` component and apply it using the `toolbar` property in the Data Grid's `slots` prop.
-
-The user can then change the density of the Data Grid by using the density selection menu from the toolbar, as the following demo illustrates:
-
-{{"demo": "DensitySelectorGrid.js", "bg": "inline"}}
-
-To disable the density selection menu, pass the `disableDensitySelector` prop to the Data Grid.
-
-### Set the density programmatically
-
-The Data Grid exposes the `density` prop which supports the following values:
+`DataGrid` exposes the `density` prop which supports the following values:
 
 - `standard` (default)
 - `compact`
 - `comfortable`
+
+### Set the density programmatically
 
 You can set the density programmatically in one of the following ways:
 
@@ -70,20 +55,22 @@ You can set the density programmatically in one of the following ways:
 The `density` prop applies the values determined by the `rowHeight` and `columnHeaderHeight` props, if supplied.
 The user can override this setting with the optional toolbar density selector.
 
-The following demo shows a Data Grid with the controlled density set to `compact` and outputs the current density to the console when the user changes it using the density selector from the toolbar:
+You can create a custom toolbar with a density selector that lets users change the density of the `DataGrid`, as shown in the demo below.
 
-{{"demo": "DensitySelectorSmallGrid.js", "bg": "inline"}}
+{{"demo": "DensitySelectorGrid.js", "bg": "inline"}}
+
+See the [Toolbar component—Settings menu](/x/react-data-grid/components/toolbar/#settings-menu) for an example of how to create a settings menu that stores user preferences in local storage.
 
 ## Keyboard navigation
 
-The Data Grid listens for keyboard interactions from the user and emits events in response to key presses within cells.
+`DataGrid` listens for keyboard interactions from the user and emits events in response to key presses within cells.
 
 ### Tab sequence
 
 According to [WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/patterns/grid/), only one of the focusable elements contained by a composite widget should be included in the page tab sequence.
 For an element to be included in the tab sequence, it needs to have a `tabIndex` value of zero or greater.
 
-When a user focuses on a Data Grid cell, the first inner element with `tabIndex={0}` receives the focus.
+When a user focuses on a `DataGrid` cell, the first inner element with `tabIndex={0}` receives the focus.
 If there is no element with `tabIndex={0}`, the focus is set on the cell itself.
 
 The two Data Grids below illustrate how the user experience is impacted by improper management of the page tab sequence, making it difficult to navigate through the data set:
@@ -91,7 +78,7 @@ The two Data Grids below illustrate how the user experience is impacted by impro
 {{"demo": "FocusManagement.js", "bg": "inline", "defaultCodeOpen": false}}
 
 If you customize cell rendering with the [`renderCell`](/x/react-data-grid/column-definition/#rendering-cells) method, you become responsible for removing focusable elements from the page tab sequence.
-Use the `tabIndex` prop passed to the `renderCell` params to determine if the rendered cell has focus and if, as a result, the inner elements should be removed from the tab sequence:
+Use the `tabIndex` prop passed to the `renderCell` params to determine if the rendered cell has focus and, as a result, whether the inner elements should be removed from the tab sequence:
 
 ```jsx
 renderCell: (params) => (
@@ -102,6 +89,43 @@ renderCell: (params) => (
   </div>
 );
 ```
+
+### Tab navigation
+
+While the default tab sequence behavior works well for most use cases, you may want to customize how the <kbd class="key">Tab</kbd> key navigates within the grid.
+`DataGrid` provides the `tabNavigation` prop to control this behavior.
+
+```tsx
+<DataGrid rows={rows} columns={columns} tabNavigation="content" />
+```
+
+The `tabNavigation` prop supports the following values:
+
+- **`"none"`** (default): This is the standard tab sequence behavior described above. It aligns with the [grid composite widget pattern](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) which states that only one of the focusable elements contained by the grid should be included in the page tab sequence.
+  In this case, `DataGrid` does not handle <kbd class="key">Tab</kbd> key presses, allowing the browser's default tab sequence to control focus movement.
+  Pressing <kbd class="key">Tab</kbd> or <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Tab</kbd></kbd> moves the focus to the next or previous element in the page's tab sequence, respectively, which may be outside of the grid.
+
+- **`"content"`**: <kbd class="key">Tab</kbd> navigation is enabled only for grid cells (content area).
+  Pressing <kbd class="key">Tab</kbd> moves focus to the next cell in the same row, or to the first cell of the next row if the key is pressed at the end of a row.
+  Pressing <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Tab</kbd></kbd> moves the focus to the previous cell in the same row, or to the last cell of the previous row if the key is pressed at the start of a row.
+  When the focus is on a column header and <kbd class="key">Tab</kbd> is pressed, the focus moves to the first cell.
+  Tab navigation is not enabled for headers, header filters, or column groups.
+
+- **`"header"`**: <kbd class="key">Tab</kbd> navigation is enabled only for the header area (column groups, column headers, and header filters).
+  Pressing <kbd class="key">Tab</kbd> moves focus to the next header element, and <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Tab</kbd></kbd> moves focus to the previous header element.
+  When focus is on a cell and <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Tab</kbd></kbd> is pressed, focus moves to the last header filter or column header.
+  Tab navigation is not enabled for grid cells.
+
+- **`"all"`**: Combines both `"content"` and `"header"` behaviors.
+
+The demo below demonstrates how each `tabNavigation` mode affects keyboard navigation:
+
+:::info
+The tab barriers above and below the grid in the demo are included to make it easier to track navigation outside of the grid without leaving the demo area.
+Press the <kbd class="key">Tab</kbd> key multiple times to pass the barrier.
+:::
+
+{{"demo": "TabNavigation.js", "bg": "inline"}}
 
 ### Navigation
 
@@ -115,10 +139,10 @@ On macOS replace:
 
 Some devices may lack certain keys, requiring the use of key combinations. In this case, replace:
 
-- <kbd class="key">Page Up</kbd> with <kbd class="key">Fn</kbd>+<kbd class="key">Arrow Up</kbd>
-- <kbd class="key">Page Down</kbd> with <kbd class="key">Fn</kbd>+<kbd class="key">Arrow Down</kbd>
-- <kbd class="key">Home</kbd> with <kbd class="key">Fn</kbd>+<kbd class="key">Arrow Left</kbd>
-- <kbd class="key">End</kbd> with <kbd class="key">Fn</kbd>+<kbd class="key">Arrow Right</kbd>
+- <kbd class="key">Page Up</kbd> with <kbd><kbd class="key">Fn</kbd>+<kbd class="key">Arrow Up</kbd></kbd>
+- <kbd class="key">Page Down</kbd> with <kbd><kbd class="key">Fn</kbd>+<kbd class="key">Arrow Down</kbd></kbd>
+- <kbd class="key">Home</kbd> with <kbd><kbd class="key">Fn</kbd>+<kbd class="key">Arrow Left</kbd></kbd>
+- <kbd class="key">End</kbd> with <kbd><kbd class="key">Fn</kbd>+<kbd class="key">Arrow Right</kbd></kbd>
 
 :::
 
@@ -141,7 +165,7 @@ Some devices may lack certain keys, requiring the use of key combinations. In th
 
 |                                                                         Keys | Description                                                          |
 | ---------------------------------------------------------------------------: | :------------------------------------------------------------------- |
-|         <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Space</kbd></kbd> | Select the current row                                               |
+|         <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Space</kbd></kbd> | Select/Deselect the current row                                      |
 | <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Arrow Up/Down</kbd></kbd> | Select the current row and the row above or below                    |
 |                                  <kbd class="key">Shift</kbd>+ Click on cell | Select the range of rows between the first and the last clicked rows |
 |              <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">A</kbd></kbd> | Select all rows                                                      |

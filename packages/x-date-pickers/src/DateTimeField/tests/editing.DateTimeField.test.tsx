@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { spy } from 'sinon';
 import { fireEvent } from '@mui/internal-test-utils';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
@@ -10,13 +9,11 @@ import {
 } from 'test/utils/pickers';
 
 describe('<DateTimeField /> - Editing', () => {
-  const { render, clock } = createPickerRenderer({
-    clock: 'fake',
+  const { render } = createPickerRenderer({
     clockConfig: new Date(2012, 4, 3, 14, 30, 15, 743),
   });
 
   const { renderWithProps } = buildFieldInteractions({
-    clock,
     render,
     Component: DateTimeField,
   });

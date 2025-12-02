@@ -43,11 +43,13 @@ export interface DateTimePickerTabsProps extends ExportedBaseTabsProps {
    * @default `window.innerHeight < 667` for `DesktopDateTimePicker` and `MobileDateTimePicker`, `displayStaticWrapperAs === 'desktop'` for `StaticDateTimePicker`
    */
   hidden?: boolean;
+  // TODO: Consider changing to `React.ReactElement` to avoid the need for wrapping `React.Fragment`.
   /**
    * Date tab icon.
    * @default DateRange
    */
   dateIcon?: React.ReactNode;
+  // TODO: Consider changing to `React.ReactElement` to avoid the need for wrapping `React.Fragment`.
   /**
    * Time tab icon.
    * @default Time
@@ -70,7 +72,6 @@ const useUtilityClasses = (classes: Partial<DateTimePickerTabsClasses> | undefin
 const DateTimePickerTabsRoot = styled(Tabs, {
   name: 'MuiDateTimePickerTabs',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
 })<{ ownerState: PickerOwnerState }>(({ theme }) => ({
   boxShadow: `0 -1px 0 0 inset ${(theme.vars || theme).palette.divider}`,
   '&:last-child': {

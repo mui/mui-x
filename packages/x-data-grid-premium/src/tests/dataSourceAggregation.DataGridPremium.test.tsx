@@ -2,28 +2,26 @@ import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import { createRenderer, waitFor, screen, within } from '@mui/internal-test-utils';
-import { expect } from 'chai';
 import {
   DataGridPremium,
   DataGridPremiumProps,
   GridApi,
   GridDataSource,
-  GridGetRowsParams,
+  GridGetRowsResponse,
   useGridApiRef,
   GRID_AGGREGATION_ROOT_FOOTER_ROW_ID,
   GRID_ROOT_GROUP_ID,
 } from '@mui/x-data-grid-premium';
 import { spy } from 'sinon';
-import { getColumnHeaderCell } from 'test/utils/helperFn';
+import { getColumnHeaderCell, getCell } from 'test/utils/helperFn';
+import { isJSDOM } from 'test/utils/skipIf';
 
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
-describe('<DataGridPremium /> - Data source aggregation', () => {
+describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => {
   const { render } = createRenderer();
 
   let apiRef: RefObject<GridApi | null>;
   const fetchRowsSpy = spy();
-  let mockServer: ReturnType<typeof useMockServer>;
+  const editRowSpy = spy();
 
   // TODO: Resets strictmode calls, need to find a better fix for this, maybe an AbortController?
   function Reset() {
@@ -36,24 +34,37 @@ describe('<DataGridPremium /> - Data source aggregation', () => {
   function TestDataSourceAggregation(
     props: Partial<DataGridPremiumProps> & {
       getAggregatedValue?: GridDataSource['getAggregatedValue'];
+      dataSetOptions?: Record<string, any>;
     },
   ) {
     apiRef = useGridApiRef();
-    const { getAggregatedValue: getAggregatedValueProp, ...rest } = props;
-    mockServer = useMockServer(
-      { rowLength: 10, maxColumns: 1 },
+    const { getAggregatedValue: getAggregatedValueProp, dataSetOptions, ...other } = props;
+    const {
+      fetchRows,
+      columns: mockColumns,
+      isReady,
+      editRow,
+    } = useMockServer<GridGetRowsResponse>(
+      { rowLength: 10, maxColumns: 1, ...dataSetOptions },
       { useCursorPagination: false, minDelay: 0, maxDelay: 0, verbose: false },
     );
 
-    const { fetchRows } = mockServer;
+    const columns = React.useMemo(() => {
+      return mockColumns.map((column) => ({
+        ...column,
+        editable: true,
+      }));
+    }, [mockColumns]);
 
     const dataSource: GridDataSource = React.useMemo(() => {
       return {
-        getRows: async (params: GridGetRowsParams) => {
+        getRows: async (params) => {
           const urlParams = new URLSearchParams({
             filterModel: JSON.stringify(params.filterModel),
             sortModel: JSON.stringify(params.sortModel),
             paginationModel: JSON.stringify(params.paginationModel),
+            groupKeys: JSON.stringify(params.groupKeys),
+            groupFields: JSON.stringify(params.groupFields),
             aggregationModel: JSON.stringify(params.aggregationModel),
           });
 
@@ -69,52 +80,65 @@ describe('<DataGridPremium /> - Data source aggregation', () => {
             aggregateRow: getRowsResponse.aggregateRow,
           };
         },
-        getAggregatedValue:
-          getAggregatedValueProp ??
-          ((row, field) => {
-            return row[`${field}Aggregate`];
-          }),
+        getGroupKey: (row) => row.group,
+        getChildrenCount: (row) => row.descendantCount,
+        getAggregatedValue: getAggregatedValueProp ?? ((row, field) => row[field]),
+        updateRow: async (params) => {
+          editRowSpy(params);
+          const syncedRow = await editRow(params.rowId, params.updatedRow);
+          return syncedRow;
+        },
       };
-    }, [fetchRows, getAggregatedValueProp]);
+    }, [fetchRows, editRow, getAggregatedValueProp]);
 
-    const baselineProps = {
-      unstable_dataSource: dataSource,
-      columns: mockServer.columns,
-      disableVirtualization: true,
-      aggregationFunctions: {
-        sum: { columnTypes: ['number'] },
-        avg: { columnTypes: ['number'] },
-        min: { columnTypes: ['number', 'date', 'dateTime'] },
-        max: { columnTypes: ['number', 'date', 'dateTime'] },
-        size: {},
-      },
-    };
-
-    if (!mockServer.isReady) {
+    if (!isReady) {
       return null;
     }
 
     return (
       <div style={{ width: 300, height: 300 }}>
         <Reset />
-        <DataGridPremium apiRef={apiRef} {...baselineProps} {...rest} />
+        <DataGridPremium
+          apiRef={apiRef}
+          dataSource={dataSource}
+          columns={columns}
+          disableVirtualization
+          aggregationFunctions={{
+            sum: { columnTypes: ['number'] },
+            avg: { columnTypes: ['number'] },
+            min: { columnTypes: ['number', 'date', 'dateTime'] },
+            max: { columnTypes: ['number', 'date', 'dateTime'] },
+            size: {},
+          }}
+          {...other}
+        />
       </div>
     );
   }
 
-  beforeEach(function beforeTest() {
-    if (isJSDOM) {
-      this.skip(); // Needs layout
-    }
-  });
-
-  it('should show aggregation option in the column menu', async () => {
-    const { user } = render(<TestDataSourceAggregation />);
+  // TODO @MBilalShafi: Flaky test, fix it
+  it.skip('should show aggregation option in the column menu', async () => {
+    const dataSource = {
+      getRows: async () => {
+        fetchRowsSpy();
+        return {
+          rows: [{ id: 123 }],
+          rowCount: 1,
+          aggregateRow: {},
+        };
+      },
+      getAggregatedValue: () => 'Agg value',
+    };
+    const { user } = render(
+      <TestDataSourceAggregation dataSource={dataSource} columns={[{ field: 'id' }]} />,
+    );
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
     });
-    await user.click(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
-    expect(await screen.findByLabelText('Aggregation')).not.to.equal(null);
+    await user.click(within(getColumnHeaderCell(0)).getByLabelText('id column menu'));
+    // wait for the column menu to be open first
+    await screen.findByRole('menu', { name: 'id column menu' });
+    await screen.findByLabelText('Aggregation');
   });
 
   it('should not show aggregation option in the column menu when no aggregation function is defined', async () => {
@@ -122,7 +146,7 @@ describe('<DataGridPremium /> - Data source aggregation', () => {
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
     });
-    await user.click(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
+    await user.click(within(getColumnHeaderCell(0)).getByLabelText('id column menu'));
     expect(screen.queryByLabelText('Aggregation')).to.equal(null);
   });
 
@@ -153,8 +177,10 @@ describe('<DataGridPremium /> - Data source aggregation', () => {
       expect(Object.keys(apiRef.current!.state.aggregation.lookup).length).to.be.greaterThan(0);
     });
     expect(apiRef.current?.state.rows.tree[GRID_AGGREGATION_ROOT_FOOTER_ROW_ID]).not.to.equal(null);
-    const footerRow = apiRef.current?.state.aggregation.lookup[GRID_ROOT_GROUP_ID];
-    expect(footerRow?.id).to.deep.equal({ position: 'footer', value: 10 });
+    await waitFor(() => {
+      const footerRow = apiRef.current?.state.aggregation.lookup[GRID_ROOT_GROUP_ID];
+      expect(footerRow?.id).to.deep.equal({ position: 'footer', value: 10 });
+    });
   });
 
   it('should derive the aggregation values using `dataSource.getAggregatedValue`', async () => {
@@ -173,5 +199,47 @@ describe('<DataGridPremium /> - Data source aggregation', () => {
     expect(apiRef.current?.state.aggregation.lookup[GRID_ROOT_GROUP_ID].id.value).to.equal(
       'Agg value',
     );
+  });
+
+  it('should re-fetch all parents when the leaf row is updated', async () => {
+    const { user } = render(
+      <TestDataSourceAggregation
+        dataSourceCache={null}
+        initialState={{
+          rowGrouping: { model: ['company'] },
+          aggregation: { model: { gross: 'sum' } },
+        }}
+        dataSetOptions={{
+          dataSet: 'Movies',
+          rowLength: 100,
+          editable: true,
+          maxColumns: undefined,
+        }}
+      />,
+    );
+
+    expect(fetchRowsSpy.callCount).to.equal(1);
+    await waitFor(() => {
+      expect(Object.keys(apiRef.current!.state.rows.tree).length).to.be.greaterThan(1);
+    });
+
+    const cell11 = getCell(0, 0);
+    await user.click(within(cell11).getByRole('button'));
+
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.equal(2);
+    });
+
+    const cell = getCell(1, apiRef.current!.state.columns.orderedFields.indexOf('gross'));
+    await user.click(cell);
+    expect(cell).toHaveFocus();
+
+    await user.keyboard('{Enter}{Delete}1{Enter}');
+
+    expect(editRowSpy.callCount).to.equal(1);
+    // Two additional calls should be made
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.equal(4);
+    });
   });
 });

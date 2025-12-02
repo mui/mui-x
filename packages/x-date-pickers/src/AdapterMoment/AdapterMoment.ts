@@ -1,4 +1,3 @@
-/* eslint-disable class-methods-use-this */
 import defaultMoment, { Moment, LongDateFormatKey } from 'moment';
 import {
   AdapterFormats,
@@ -75,11 +74,9 @@ const defaultFormats: AdapterFormats = {
   normalDate: 'D MMMM',
   normalDateWithWeekday: 'ddd, MMM D',
 
-  fullTime: 'LT',
   fullTime12h: 'hh:mm A',
   fullTime24h: 'HH:mm',
 
-  keyboardDateTime: 'L LT',
   keyboardDateTime12h: 'L hh:mm A',
   keyboardDateTime24h: 'L HH:mm',
 };
@@ -176,7 +173,7 @@ export class AdapterMoment implements MuiPickersAdapter<string> {
   };
 
   private createTZDate = (value: string | undefined, timezone: PickersTimezone): Moment => {
-    /* istanbul ignore next */
+    /* v8 ignore next 3 */
     if (!this.hasTimezonePlugin()) {
       throw new Error(MISSING_TIMEZONE_PLUGIN);
     }
@@ -237,7 +234,7 @@ export class AdapterMoment implements MuiPickersAdapter<string> {
     }
 
     if (!this.hasTimezonePlugin()) {
-      /* istanbul ignore next */
+      /* v8 ignore next 3 */
       if (timezone !== 'default') {
         throw new Error(MISSING_TIMEZONE_PLUGIN);
       }

@@ -7,8 +7,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import { RefObject } from '@mui/x-internals/types';
 import { createRenderer, act } from '@mui/internal-test-utils';
-import { expect } from 'chai';
-import * as React from 'react';
+import { includeRowSelection } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -35,18 +34,9 @@ describe('<DataGridPro /> - Export', () => {
               apiRef={apiRef}
               columns={columns}
               rows={[
-                {
-                  id: 0,
-                  brand: 'Nike',
-                },
-                {
-                  id: 1,
-                  brand: 'Adidas',
-                },
-                {
-                  id: 2,
-                  brand: 'Puma',
-                },
+                { id: 0, brand: 'Nike' },
+                { id: 1, brand: 'Adidas' },
+                { id: 2, brand: 'Puma' },
               ]}
             />
           </div>
@@ -80,14 +70,8 @@ describe('<DataGridPro /> - Export', () => {
               apiRef={apiRef}
               columns={columns}
               rows={[
-                {
-                  id: 0,
-                  brand: 'Nike',
-                },
-                {
-                  id: 1,
-                  brand: 'Adidas,Puma',
-                },
+                { id: 0, brand: 'Nike' },
+                { id: 1, brand: 'Adidas,Puma' },
               ]}
             />
           </div>
@@ -117,14 +101,8 @@ describe('<DataGridPro /> - Export', () => {
                 },
               ]}
               rows={[
-                {
-                  id: 0,
-                  brand: 'Nike',
-                },
-                {
-                  id: 1,
-                  brand: 'Adidas',
-                },
+                { id: 0, brand: 'Nike' },
+                { id: 1, brand: 'Adidas' },
               ]}
             />
           </div>
@@ -171,22 +149,10 @@ describe('<DataGridPro /> - Export', () => {
               apiRef={apiRef}
               columns={columns}
               rows={[
-                {
-                  id: 0,
-                  brand: `Nike \n Nike`,
-                },
-                {
-                  id: 1,
-                  brand: 'Adidas \n Adidas',
-                },
-                {
-                  id: 2,
-                  brand: 'Puma \r\n Puma',
-                },
-                {
-                  id: 3,
-                  brand: 'Reebok \n\r Reebok',
-                },
+                { id: 0, brand: `Nike \n Nike` },
+                { id: 1, brand: 'Adidas \n Adidas' },
+                { id: 2, brand: 'Puma \r\n Puma' },
+                { id: 3, brand: 'Reebok \n\r Reebok' },
               ]}
             />
           </div>
@@ -215,14 +181,8 @@ describe('<DataGridPro /> - Export', () => {
               apiRef={apiRef}
               columns={columns}
               rows={[
-                {
-                  id: 0,
-                  brand: 'Nike',
-                },
-                {
-                  id: 1,
-                  brand: 'Adidas',
-                },
+                { id: 0, brand: 'Nike' },
+                { id: 1, brand: 'Adidas' },
               ]}
             />
           </div>
@@ -247,16 +207,10 @@ describe('<DataGridPro /> - Export', () => {
               apiRef={apiRef}
               columns={[{ field: 'id' }, { field: 'brand', headerName: 'Brand' }]}
               rows={[
-                {
-                  id: 0,
-                  brand: 'Nike',
-                },
-                {
-                  id: 1,
-                  brand: 'Adidas',
-                },
+                { id: 0, brand: 'Nike' },
+                { id: 1, brand: 'Adidas' },
               ]}
-              rowSelectionModel={[0]}
+              rowSelectionModel={includeRowSelection([0])}
             />
           </div>
         );
@@ -276,14 +230,8 @@ describe('<DataGridPro /> - Export', () => {
               apiRef={apiRef}
               columns={[{ field: 'id' }, { field: 'brand', headerName: 'Brand' }]}
               rows={[
-                {
-                  id: 0,
-                  brand: 'Nike',
-                },
-                {
-                  id: 1,
-                  brand: 'Adidas',
-                },
+                { id: 0, brand: 'Nike' },
+                { id: 1, brand: 'Adidas' },
               ]}
             />
           </div>
@@ -307,14 +255,8 @@ describe('<DataGridPro /> - Export', () => {
               columns={[{ field: 'id' }, { field: 'brand', headerName: 'Brand' }]}
               initialState={{ columns: { columnVisibilityModel: { brand: false } } }}
               rows={[
-                {
-                  id: 0,
-                  brand: 'Nike',
-                },
-                {
-                  id: 1,
-                  brand: 'Adidas',
-                },
+                { id: 0, brand: 'Nike' },
+                { id: 1, brand: 'Adidas' },
               ]}
             />
           </div>
@@ -336,14 +278,8 @@ describe('<DataGridPro /> - Export', () => {
               columns={[{ field: 'id' }, { field: 'brand', headerName: 'Brand' }]}
               initialState={{ columns: { columnVisibilityModel: { brand: false } } }}
               rows={[
-                {
-                  id: 0,
-                  brand: 'Nike',
-                },
-                {
-                  id: 1,
-                  brand: 'Adidas',
-                },
+                { id: 0, brand: 'Nike' },
+                { id: 1, brand: 'Adidas' },
               ]}
             />
           </div>
@@ -371,14 +307,8 @@ describe('<DataGridPro /> - Export', () => {
                 { field: 'brand', headerName: 'Brand', disableExport: true },
               ]}
               rows={[
-                {
-                  id: 0,
-                  brand: 'Nike',
-                },
-                {
-                  id: 1,
-                  brand: 'Adidas',
-                },
+                { id: 0, brand: 'Nike' },
+                { id: 1, brand: 'Adidas' },
               ]}
             />
           </div>
@@ -404,14 +334,8 @@ describe('<DataGridPro /> - Export', () => {
               columns={[{ field: 'id' }, { field: 'brand', headerName: 'Brand' }]}
               initialState={{ columns: { columnVisibilityModel: { brand: false } } }}
               rows={[
-                {
-                  id: 0,
-                  brand: 'Nike',
-                },
-                {
-                  id: 1,
-                  brand: 'Adidas',
-                },
+                { id: 0, brand: 'Nike' },
+                { id: 1, brand: 'Adidas' },
               ]}
             />
           </div>
@@ -440,14 +364,8 @@ describe('<DataGridPro /> - Export', () => {
               ]}
               initialState={{ columns: { columnVisibilityModel: { brand: false } } }}
               rows={[
-                {
-                  id: 0,
-                  brand: 'Nike',
-                },
-                {
-                  id: 1,
-                  brand: 'Adidas',
-                },
+                { id: 0, brand: 'Nike' },
+                { id: 1, brand: 'Adidas' },
               ]}
             />
           </div>

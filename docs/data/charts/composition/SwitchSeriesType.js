@@ -40,13 +40,14 @@ export default function SwitchSeriesType() {
               data: ['A', 'B', 'C', 'D', 'E'],
               scaleType: 'band',
               id: 'x-axis-id',
+              height: 45,
             },
           ]}
           height={200}
         >
           <BarPlot />
           <LinePlot />
-          <ChartsXAxis label="X axis" position="bottom" axisId="x-axis-id" />
+          <ChartsXAxis label="X axis" axisId="x-axis-id" />
         </ChartContainer>
       </div>
     </Box>

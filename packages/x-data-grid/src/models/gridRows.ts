@@ -208,6 +208,8 @@ export interface GridRowEntry<R extends GridValidRowModel = GridValidRowModel> {
 
 /**
  * The function to retrieve the id of a [[GridRowModel]].
+ * @param {R} row The row model.
+ * @returns {GridRowId} The id of the row.
  */
 export type GridRowIdGetter<R extends GridValidRowModel = GridValidRowModel> = (
   row: R,

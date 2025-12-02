@@ -1,6 +1,7 @@
-import * as React from 'react';
+import Box from '@mui/material/Box';
 import { LineChart } from '@mui/x-charts/LineChart';
 
+const margin = { right: 24 };
 const uData = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
 const pData = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
 const xLabels = [
@@ -15,24 +16,26 @@ const xLabels = [
 
 export default function CustomLineMarks() {
   return (
-    <LineChart
-      width={500}
-      height={300}
-      series={[
-        {
-          data: pData,
-          label: 'pv',
-          shape: 'cross',
-          showMark: ({ index }) => index % 2 === 0,
-        },
-        {
-          data: uData,
-          label: 'uv',
-          shape: 'diamond',
-          showMark: ({ index }) => index % 2 === 0,
-        },
-      ]}
-      xAxis={[{ scaleType: 'point', data: xLabels }]}
-    />
+    <Box sx={{ width: '100%', height: 300 }}>
+      <LineChart
+        series={[
+          {
+            data: pData,
+            label: 'pv',
+            shape: 'cross',
+            showMark: ({ index }) => index % 2 === 0,
+          },
+          {
+            data: uData,
+            label: 'uv',
+            shape: 'diamond',
+            showMark: ({ index }) => index % 2 === 0,
+          },
+        ]}
+        xAxis={[{ scaleType: 'point', data: xLabels }]}
+        yAxis={[{ width: 50 }]}
+        margin={margin}
+      />
+    </Box>
   );
 }

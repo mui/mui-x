@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import { DataGrid, GridToolbarContainer, useGridApiContext } from '@mui/x-data-grid';
@@ -39,6 +38,7 @@ export default function UseGridApiContext() {
             },
           },
         }}
+        showToolbar
       />
     </Box>
   );

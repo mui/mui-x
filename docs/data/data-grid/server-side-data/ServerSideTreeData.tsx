@@ -3,7 +3,6 @@ import {
   DataGridPro,
   useGridApiRef,
   GridInitialState,
-  GridToolbar,
   GridDataSource,
 } from '@mui/x-data-grid-pro';
 import Button from '@mui/material/Button';
@@ -13,13 +12,15 @@ const pageSizeOptions = [5, 10, 50];
 const dataSetOptions = {
   dataSet: 'Employee' as const,
   rowLength: 1000,
+  editable: true,
   treeData: { maxDepth: 3, groupingField: 'name', averageChildren: 5 },
 };
 
 export default function ServerSideTreeData() {
   const apiRef = useGridApiRef();
 
-  const { fetchRows, columns, initialState } = useMockServer(dataSetOptions);
+  const { fetchRows, editRow, columns, initialState } =
+    useMockServer(dataSetOptions);
 
   const initialStateWithPagination: GridInitialState = React.useMemo(
     () => ({
@@ -51,28 +52,31 @@ export default function ServerSideTreeData() {
           rowCount: getRowsResponse.rowCount,
         };
       },
+      updateRow: async (params) => {
+        const syncedRow = await editRow(params.rowId, params.updatedRow);
+        return syncedRow;
+      },
       getGroupKey: (row) => row[dataSetOptions.treeData.groupingField],
       getChildrenCount: (row) => row.descendantCount,
     }),
-    [fetchRows],
+    [fetchRows, editRow],
   );
 
   return (
     <div style={{ width: '100%' }}>
-      <Button onClick={() => apiRef.current?.unstable_dataSource.cache.clear()}>
+      <Button onClick={() => apiRef.current?.dataSource.cache.clear()}>
         Reset cache
       </Button>
       <div style={{ height: 400 }}>
         <DataGridPro
           columns={columns}
-          unstable_dataSource={dataSource}
+          dataSource={dataSource}
           treeData
           apiRef={apiRef}
           pagination
           pageSizeOptions={pageSizeOptions}
           initialState={initialStateWithPagination}
-          slots={{ toolbar: GridToolbar }}
-          slotProps={{ toolbar: { showQuickFilter: true } }}
+          showToolbar
         />
       </div>
     </div>

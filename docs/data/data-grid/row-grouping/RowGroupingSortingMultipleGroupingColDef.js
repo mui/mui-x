@@ -1,10 +1,17 @@
-import * as React from 'react';
 import {
   DataGridPremium,
   useGridApiRef,
   useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
+
+const groupingColDef = (params) =>
+  params.fields.includes('director')
+    ? {
+        leafField: 'title',
+        mainGroupingCriteria: 'director',
+      }
+    : {};
 
 export default function RowGroupingSortingMultipleGroupingColDef() {
   const data = useMovieData();
@@ -28,14 +35,7 @@ export default function RowGroupingSortingMultipleGroupingColDef() {
         defaultGroupingExpansionDepth={-1}
         initialState={initialState}
         rowGroupingColumnMode="multiple"
-        groupingColDef={(params) =>
-          params.fields.includes('director')
-            ? {
-                leafField: 'title',
-                mainGroupingCriteria: 'director',
-              }
-            : {}
-        }
+        groupingColDef={groupingColDef}
       />
     </div>
   );

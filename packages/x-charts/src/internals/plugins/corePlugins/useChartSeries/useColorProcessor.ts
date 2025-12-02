@@ -1,27 +1,16 @@
 'use client';
 import * as React from 'react';
 import { ChartSeriesType } from '../../../../models/seriesType/config';
-import { DefaultizedSeriesType } from '../../../../models/seriesType';
-import { AxisDefaultized } from '../../../../models/axis';
-import { ZAxisDefaultized } from '../../../../models/z-axis';
 import { useSelector } from '../../../store/useSelector';
 import { useStore } from '../../../store/useStore';
 import { selectorChartSeriesConfig } from './useChartSeries.selectors';
-
-export type ColorProcessor<T extends ChartSeriesType> = (
-  series: DefaultizedSeriesType<T>,
-  xAxis?: AxisDefaultized,
-  yAxis?: AxisDefaultized,
-  zAxis?: ZAxisDefaultized,
-) => (dataIndex: number) => string;
+import { ColorProcessor } from '../../models/seriesConfig';
 
 export type ColorProcessorsConfig<T extends ChartSeriesType> = {
   [Key in T]?: ColorProcessor<Key>;
 };
 
-export function useColorProcessor<T extends ChartSeriesType>(
-  seriesType: T,
-): ColorProcessorsConfig<T>[T];
+export function useColorProcessor<T extends ChartSeriesType>(seriesType: T): ColorProcessor<T>;
 export function useColorProcessor(): ColorProcessorsConfig<ChartSeriesType>;
 export function useColorProcessor(seriesType?: ChartSeriesType) {
   const store = useStore();
@@ -31,7 +20,8 @@ export function useColorProcessor(seriesType?: ChartSeriesType) {
     const rep: ColorProcessorsConfig<ChartSeriesType> = {};
     (Object.keys(seriesConfig) as ChartSeriesType[]).forEach(
       <T extends ChartSeriesType>(seriesT: T) => {
-        rep[seriesT] = seriesConfig[seriesT].colorProcessor;
+        // @ts-expect-error https://github.com/microsoft/TypeScript/issues/61555
+        rep[seriesT as T] = seriesConfig[seriesT].colorProcessor as ColorProcessor<T>;
       },
     );
     return rep;

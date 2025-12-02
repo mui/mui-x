@@ -1,19 +1,17 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import Autocomplete, { AutocompleteProps, createFilterOptions } from '@mui/material/Autocomplete';
-import { unstable_useId as useId } from '@mui/utils';
-import { getValueOptions, isSingleSelectColDef } from './filterPanelUtils';
+import useId from '@mui/utils/useId';
+import { AutocompleteProps } from '../../../models/gridBaseSlots';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { GridFilterInputValueProps } from '../../../models/gridFilterInputComponent';
 import type { GridSingleSelectColDef, ValueOptions } from '../../../models/colDef/gridColDef';
+import { getValueOptions, isSingleSelectColDef } from './filterPanelUtils';
 
 export type GridFilterInputMultipleSingleSelectProps = GridFilterInputValueProps<
-  Omit<AutocompleteProps<ValueOptions, true, false, true>, 'options' | 'renderInput'>
+  Omit<AutocompleteProps<ValueOptions, true, false, true>, 'options'>
 > & {
   type?: 'singleSelect';
 };
-
-const filter = createFilterOptions<any>();
 
 function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingleSelectProps) {
   const { item, applyValue, type, apiRef, focusElementRef, slotProps, ...other } = props;
@@ -21,16 +19,10 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
   const id = useId();
   const rootProps = useGridRootProps();
 
-  let resolvedColumn: GridSingleSelectColDef | null = null;
-  if (item.field) {
-    const column = apiRef.current.getColumn(item.field);
-    if (isSingleSelectColDef(column)) {
-      resolvedColumn = column;
-    }
-  }
+  const resolvedColumn = apiRef.current.getColumn(item.field) as GridSingleSelectColDef | undefined;
 
-  const getOptionValue = resolvedColumn?.getOptionValue!;
-  const getOptionLabel = resolvedColumn?.getOptionLabel!;
+  const getOptionValue = resolvedColumn!.getOptionValue;
+  const getOptionLabel = resolvedColumn!.getOptionLabel;
 
   const isOptionEqualToValue = React.useCallback(
     (option: ValueOptions, value: ValueOptions) => getOptionValue(option) === getOptionValue(value),
@@ -66,47 +58,30 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
     [applyValue, item, getOptionValue],
   );
 
+  if (!resolvedColumn || !isSingleSelectColDef(resolvedColumn)) {
+    return null;
+  }
+
+  const BaseAutocomplete = rootProps.slots.baseAutocomplete as React.JSXElementConstructor<
+    AutocompleteProps<ValueOptions, true, false, true>
+  >;
+
   return (
-    <Autocomplete<ValueOptions, true, false, true>
+    <BaseAutocomplete
       multiple
       options={resolvedValueOptions}
       isOptionEqualToValue={isOptionEqualToValue}
-      filterOptions={filter}
       id={id}
       value={filteredValues}
       onChange={handleChange}
       getOptionLabel={getOptionLabel}
-      renderTags={(value, getTagProps) =>
-        value.map((option, index) => {
-          const { key, ...tagProps } = getTagProps({ index });
-          return (
-            <rootProps.slots.baseChip
-              key={key}
-              variant="outlined"
-              size="small"
-              label={getOptionLabel(option)}
-              {...tagProps}
-            />
-          );
-        })
-      }
-      renderInput={(params) => {
-        const { inputProps, InputProps, InputLabelProps, ...rest } = params;
-        return (
-          <rootProps.slots.baseTextField
-            {...rest}
-            label={apiRef.current.getLocaleText('filterPanelInputLabel')}
-            placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
-            inputRef={focusElementRef}
-            type={type || 'text'}
-            slotProps={{
-              input: InputProps,
-              inputLabel: InputLabelProps,
-              htmlInput: inputProps,
-            }}
-            {...rootProps.slotProps?.baseTextField}
-          />
-        );
+      label={apiRef.current.getLocaleText('filterPanelInputLabel')}
+      placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
+      slotProps={{
+        textField: {
+          type: type || 'text',
+          inputRef: focusElementRef,
+        },
       }}
       {...other}
       {...slotProps?.root}

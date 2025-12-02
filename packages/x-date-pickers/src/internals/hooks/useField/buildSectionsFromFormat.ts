@@ -8,8 +8,8 @@ import {
   removeLocalizedDigits,
 } from './useField.utils';
 
-interface BuildSectionsFromFormatParams {
-  utils: MuiPickersAdapter;
+interface BuildSectionsFromFormatParameters {
+  adapter: MuiPickersAdapter;
   format: string;
   formatDensity: 'dense' | 'spacious';
   isRtl: boolean;
@@ -22,18 +22,18 @@ interface BuildSectionsFromFormatParams {
 
 type FormatEscapedParts = { start: number; end: number }[];
 
-const expandFormat = ({ utils, format }: BuildSectionsFromFormatParams) => {
+const expandFormat = ({ adapter, format }: BuildSectionsFromFormatParameters) => {
   // Expand the provided format
   let formatExpansionOverflow = 10;
   let prevFormat = format;
-  let nextFormat = utils.expandFormat(format);
+  let nextFormat = adapter.expandFormat(format);
   while (nextFormat !== prevFormat) {
     prevFormat = nextFormat;
-    nextFormat = utils.expandFormat(prevFormat);
+    nextFormat = adapter.expandFormat(prevFormat);
     formatExpansionOverflow -= 1;
     if (formatExpansionOverflow < 0) {
       throw new Error(
-        'MUI X: The format expansion seems to be in an infinite loop. Please open an issue with the format passed to the picker component.',
+        'MUI X: The format expansion seems to be in an infinite loop. Please open an issue with the format passed to the component.',
       );
     }
   }
@@ -42,11 +42,11 @@ const expandFormat = ({ utils, format }: BuildSectionsFromFormatParams) => {
 };
 
 const getEscapedPartsFromFormat = ({
-  utils,
+  adapter,
   expandedFormat,
-}: BuildSectionsFromFormatParams & { expandedFormat: string }) => {
+}: BuildSectionsFromFormatParameters & { expandedFormat: string }) => {
   const escapedParts: FormatEscapedParts = [];
-  const { start: startChar, end: endChar } = utils.escapedCharacters;
+  const { start: startChar, end: endChar } = adapter.escapedCharacters;
   const regExp = new RegExp(`(\\${startChar}[^\\${endChar}]*\\${endChar})+`, 'g');
 
   let match: RegExpExecArray | null = null;
@@ -59,7 +59,7 @@ const getEscapedPartsFromFormat = ({
 };
 
 const getSectionPlaceholder = (
-  utils: MuiPickersAdapter,
+  adapter: MuiPickersAdapter,
   localeText: PickersLocaleText,
   sectionConfig: Pick<FieldSection, 'type' | 'contentType'>,
   sectionFormat: string,
@@ -67,7 +67,8 @@ const getSectionPlaceholder = (
   switch (sectionConfig.type) {
     case 'year': {
       return localeText.fieldYearPlaceholder({
-        digitAmount: utils.formatByString(utils.date(undefined, 'default'), sectionFormat).length,
+        digitAmount: adapter.formatByString(adapter.date(undefined, 'default'), sectionFormat)
+          .length,
         format: sectionFormat,
       });
     }
@@ -113,7 +114,7 @@ const getSectionPlaceholder = (
 };
 
 const createSection = ({
-  utils,
+  adapter,
   date,
   shouldRespectLeadingZeros,
   localeText,
@@ -121,7 +122,7 @@ const createSection = ({
   now,
   token,
   startSeparator,
-}: BuildSectionsFromFormatParams & {
+}: BuildSectionsFromFormatParameters & {
   now: PickerValidDate;
   token: string;
   startSeparator: string;
@@ -130,10 +131,10 @@ const createSection = ({
     throw new Error('MUI X: Should not call `commitToken` with an empty token');
   }
 
-  const sectionConfig = getDateSectionConfigFromFormatToken(utils, token);
+  const sectionConfig = getDateSectionConfigFromFormatToken(adapter, token);
 
   const hasLeadingZerosInFormat = doesSectionFormatHaveLeadingZeros(
-    utils,
+    adapter,
     sectionConfig.contentType,
     sectionConfig.type,
     token,
@@ -143,18 +144,18 @@ const createSection = ({
     ? hasLeadingZerosInFormat
     : sectionConfig.contentType === 'digit';
 
-  const isValidDate = utils.isValid(date);
-  let sectionValue = isValidDate ? utils.formatByString(date, token) : '';
+  const isValidDate = adapter.isValid(date);
+  let sectionValue = isValidDate ? adapter.formatByString(date, token) : '';
   let maxLength: number | null = null;
 
   if (hasLeadingZerosInInput) {
     if (hasLeadingZerosInFormat) {
       maxLength =
-        sectionValue === '' ? utils.formatByString(now, token).length : sectionValue.length;
+        sectionValue === '' ? adapter.formatByString(now, token).length : sectionValue.length;
     } else {
       if (sectionConfig.maxLength == null) {
         throw new Error(
-          `MUI X: The token ${token} should have a 'maxDigitNumber' property on it's adapter`,
+          `MUI X: The token ${token} should have a 'maxLength' property on it's adapter`,
         );
       }
 
@@ -174,7 +175,7 @@ const createSection = ({
     format: token,
     maxLength,
     value: sectionValue,
-    placeholder: getSectionPlaceholder(utils, localeText, sectionConfig, token),
+    placeholder: getSectionPlaceholder(adapter, localeText, sectionConfig, token),
     hasLeadingZerosInFormat,
     hasLeadingZerosInInput,
     startSeparator,
@@ -184,19 +185,19 @@ const createSection = ({
 };
 
 const buildSections = (
-  params: BuildSectionsFromFormatParams & {
+  parameters: BuildSectionsFromFormatParameters & {
     expandedFormat: string;
     escapedParts: FormatEscapedParts;
   },
 ) => {
-  const { utils, expandedFormat, escapedParts } = params;
+  const { adapter, expandedFormat, escapedParts } = parameters;
 
-  const now = utils.date(undefined);
+  const now = adapter.date(undefined);
   const sections: FieldSection[] = [];
   let startSeparator: string = '';
 
   // This RegExp tests if the beginning of a string corresponds to a supported token
-  const validTokens = Object.keys(utils.formatTokenMap).sort((a, b) => b.length - a.length); // Sort to put longest word first
+  const validTokens = Object.keys(adapter.formatTokenMap).sort((a, b) => b.length - a.length); // Sort to put longest word first
 
   const regExpFirstWordInFormat = /^([a-zA-Z]+)/;
   const regExpWordOnlyComposedOfTokens = new RegExp(`^(${validTokens.join('|')})*$`);
@@ -222,7 +223,7 @@ const buildSections = (
       while (word.length > 0) {
         const firstWord = regExpFirstTokenInWord.exec(word)![1];
         word = word.slice(firstWord.length);
-        sections.push(createSection({ ...params, now, token: firstWord, startSeparator }));
+        sections.push(createSection({ ...parameters, now, token: firstWord, startSeparator }));
         startSeparator = '';
       }
 
@@ -244,6 +245,7 @@ const buildSections = (
           startSeparator += char;
         } else {
           sections[sections.length - 1].endSeparator += char;
+          sections[sections.length - 1].isEndFormatSeparator = true;
         }
       }
 
@@ -274,7 +276,7 @@ const postProcessSections = ({
   isRtl,
   formatDensity,
   sections,
-}: BuildSectionsFromFormatParams & {
+}: BuildSectionsFromFormatParameters & {
   sections: FieldSection[];
 }) => {
   return sections.map((section) => {
@@ -298,14 +300,14 @@ const postProcessSections = ({
   });
 };
 
-export const buildSectionsFromFormat = (params: BuildSectionsFromFormatParams) => {
-  let expandedFormat = expandFormat(params);
-  if (params.isRtl && params.enableAccessibleFieldDOMStructure) {
+export const buildSectionsFromFormat = (parameters: BuildSectionsFromFormatParameters) => {
+  let expandedFormat = expandFormat(parameters);
+  if (parameters.isRtl && parameters.enableAccessibleFieldDOMStructure) {
     expandedFormat = expandedFormat.split(' ').reverse().join(' ');
   }
 
-  const escapedParts = getEscapedPartsFromFormat({ ...params, expandedFormat });
-  const sections = buildSections({ ...params, expandedFormat, escapedParts });
+  const escapedParts = getEscapedPartsFromFormat({ ...parameters, expandedFormat });
+  const sections = buildSections({ ...parameters, expandedFormat, escapedParts });
 
-  return postProcessSections({ ...params, sections });
+  return postProcessSections({ ...parameters, sections });
 };

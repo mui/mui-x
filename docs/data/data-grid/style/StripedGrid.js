@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { alpha, styled } from '@mui/material/styles';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
@@ -35,6 +34,9 @@ const StripedDataGrid = styled(DataGrid)(({ theme }) => ({
         },
       },
     },
+    ...theme.applyStyles('dark', {
+      backgroundColor: theme.palette.grey[800],
+    }),
   },
 }));
 

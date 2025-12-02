@@ -1,0 +1,3 @@
+<DateTimeRangePicker
+  referenceDate={[dayjs('2022-04-17T07:45'), dayjs('2022-04-21T17:30')]}
+/>

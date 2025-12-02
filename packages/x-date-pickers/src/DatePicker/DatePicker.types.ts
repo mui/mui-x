@@ -3,7 +3,7 @@ import {
   DesktopDatePickerSlots,
   DesktopDatePickerSlotProps,
 } from '../DesktopDatePicker';
-import { BaseSingleInputFieldProps, PickerValue } from '../internals/models';
+import { BaseSingleInputFieldProps } from '../internals/models';
 import {
   MobileDatePickerProps,
   MobileDatePickerSlots,
@@ -49,6 +49,6 @@ export interface DatePickerProps<TEnableAccessibleFieldDOMStructure extends bool
 }
 
 /**
- * Props the field can receive when used inside a date picker (<DatePicker />, <DesktopDatePicker /> or <MobileDatePicker /> component).
+ * Props the field can receive when used inside a Date Picker (<DatePicker />, <DesktopDatePicker /> or <MobileDatePicker /> component).
  */
-export type DatePickerFieldProps = ValidateDateProps & BaseSingleInputFieldProps<PickerValue>;
+export type DatePickerFieldProps = ValidateDateProps & BaseSingleInputFieldProps;

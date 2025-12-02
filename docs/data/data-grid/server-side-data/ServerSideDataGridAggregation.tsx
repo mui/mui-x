@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { DataGridPremium, GridDataSource } from '@mui/x-data-grid-premium';
+import {
+  DataGridPremium,
+  GridDataSource,
+  GridGetRowsResponse,
+} from '@mui/x-data-grid-premium';
 import { useMockServer } from '@mui/x-data-grid-generator';
 
 const aggregationFunctions = {
@@ -11,10 +15,11 @@ const aggregationFunctions = {
 };
 
 export default function ServerSideDataGridAggregation() {
-  const { columns, initialState, fetchRows } = useMockServer(
-    {},
-    { useCursorPagination: false },
-  );
+  const { columns, initialState, fetchRows, editRow } =
+    useMockServer<GridGetRowsResponse>(
+      { editable: true },
+      { useCursorPagination: false },
+    );
 
   const dataSource: GridDataSource = React.useMemo(
     () => ({
@@ -34,11 +39,13 @@ export default function ServerSideDataGridAggregation() {
           aggregateRow: getRowsResponse.aggregateRow,
         };
       },
-      getAggregatedValue: (row, field) => {
-        return row[`${field}Aggregate`];
+      updateRow: async (params) => {
+        const syncedRow = await editRow(params.rowId, params.updatedRow);
+        return syncedRow;
       },
+      getAggregatedValue: (row, field) => row[field],
     }),
-    [fetchRows],
+    [fetchRows, editRow],
   );
 
   const initialStateWithPagination = React.useMemo(
@@ -59,11 +66,13 @@ export default function ServerSideDataGridAggregation() {
     <div style={{ width: '100%', height: 400 }}>
       <DataGridPremium
         columns={columns}
-        unstable_dataSource={dataSource}
+        dataSource={dataSource}
         pagination
         initialState={initialStateWithPagination}
         pageSizeOptions={[10, 20, 50]}
         aggregationFunctions={aggregationFunctions}
+        disablePivoting
+        disableRowGrouping
       />
     </div>
   );

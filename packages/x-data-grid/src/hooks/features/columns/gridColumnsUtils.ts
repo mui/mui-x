@@ -219,7 +219,10 @@ export const hydrateColumnsWidth = (
     });
 
     Object.keys(computedColumnWidths).forEach((field) => {
-      columnsLookup[field].computedWidth = computedColumnWidths[field].computedWidth;
+      columnsLookup[field] = {
+        ...columnsLookup[field],
+        computedWidth: computedColumnWidths[field].computedWidth,
+      };
     });
   }
 
@@ -294,7 +297,7 @@ export const applyInitialState = (
   return newColumnsState;
 };
 
-function getDefaultColTypeDef(type: GridColDef['type']) {
+export function getDefaultColTypeDef(type: GridColDef['type']) {
   let colDef = COLUMN_TYPES[DEFAULT_GRID_COL_TYPE_KEY];
   if (type && COLUMN_TYPES[type]) {
     colDef = COLUMN_TYPES[type];
@@ -308,11 +311,13 @@ export const createColumnsState = ({
   initialState,
   columnVisibilityModel = gridColumnVisibilityModelSelector(apiRef),
   keepOnlyColumnsToUpsert = false,
+  updateInitialVisibilityModel = false,
 }: {
   columnsToUpsert: readonly GridColDef[];
   initialState: GridColumnsInitialState | undefined;
   columnVisibilityModel?: GridColumnVisibilityModel;
   keepOnlyColumnsToUpsert: boolean;
+  updateInitialVisibilityModel?: boolean;
   apiRef: RefObject<GridApiCommunity>;
 }) => {
   const isInsideStateInitializer = !apiRef.current.state.columns;
@@ -325,22 +330,27 @@ export const createColumnsState = ({
       orderedFields: [],
       lookup: {},
       columnVisibilityModel,
+      initialColumnVisibilityModel: columnVisibilityModel,
     };
   } else {
-    const currentState = gridColumnsStateSelector(apiRef.current.state);
+    const currentState = gridColumnsStateSelector(apiRef);
     columnsState = {
       orderedFields: keepOnlyColumnsToUpsert ? [] : [...currentState.orderedFields],
       lookup: { ...currentState.lookup }, // Will be cleaned later if keepOnlyColumnsToUpsert=true
       columnVisibilityModel,
+      initialColumnVisibilityModel: updateInitialVisibilityModel
+        ? columnVisibilityModel
+        : currentState.initialColumnVisibilityModel,
     };
   }
 
-  let columnsToKeep: Record<string, boolean> = {};
+  const columnsToKeep: Record<string, boolean> = {};
   if (keepOnlyColumnsToUpsert && !isInsideStateInitializer) {
-    columnsToKeep = Object.keys(columnsState.lookup).reduce(
-      (acc, key) => ({ ...acc, [key]: false }),
-      {},
-    );
+    for (const key in columnsState.lookup) {
+      if (Object.prototype.hasOwnProperty.call(columnsState.lookup, key)) {
+        columnsToKeep[key] = false;
+      }
+    }
   }
 
   const columnsToUpsertLookup: Record<string, true> = {};
@@ -380,7 +390,11 @@ export const createColumnsState = ({
       }
     });
 
-    columnsState.lookup[field] = resolveProps(existingState, { ...newColumn, hasBeenResized });
+    columnsState.lookup[field] = resolveProps(existingState, {
+      ...getDefaultColTypeDef(newColumn.type),
+      ...newColumn,
+      hasBeenResized,
+    });
   });
 
   if (keepOnlyColumnsToUpsert && !isInsideStateInitializer) {
@@ -421,16 +435,30 @@ export function getFirstNonSpannedColumnToRender({
   visibleRows: GridRowEntry[];
 }) {
   let firstNonSpannedColumnToRender = firstColumnToRender;
-  for (let i = firstRowToRender; i < lastRowToRender; i += 1) {
-    const row = visibleRows[i];
-    if (row) {
-      const rowId = visibleRows[i].id;
-      const cellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(
-        rowId,
-        firstColumnToRender,
-      );
-      if (cellColSpanInfo && cellColSpanInfo.spannedByColSpan) {
-        firstNonSpannedColumnToRender = cellColSpanInfo.leftVisibleCellIndex;
+  let foundStableColumn = false;
+
+  // Keep checking columns until we find one that's not spanned in any visible row
+  while (!foundStableColumn && firstNonSpannedColumnToRender >= 0) {
+    foundStableColumn = true;
+
+    for (let i = firstRowToRender; i < lastRowToRender; i += 1) {
+      const row = visibleRows[i];
+      if (row) {
+        const rowId = visibleRows[i].id;
+        const cellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(
+          rowId,
+          firstNonSpannedColumnToRender,
+        );
+
+        if (
+          cellColSpanInfo &&
+          cellColSpanInfo.spannedByColSpan &&
+          cellColSpanInfo.leftVisibleCellIndex < firstNonSpannedColumnToRender
+        ) {
+          firstNonSpannedColumnToRender = cellColSpanInfo.leftVisibleCellIndex;
+          foundStableColumn = false;
+          break; // Check the new column index against the visible rows, because it might be spanned
+        }
       }
     }
   }
@@ -442,10 +470,10 @@ export function getTotalHeaderHeight(
   apiRef: RefObject<GridApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
-    'columnHeaderHeight' | 'headerFilterHeight' | 'unstable_listView' | 'columnGroupHeaderHeight'
+    'columnHeaderHeight' | 'headerFilterHeight' | 'listView' | 'columnGroupHeaderHeight'
   >,
 ) {
-  if (props.unstable_listView) {
+  if (props.listView) {
     return 0;
   }
 

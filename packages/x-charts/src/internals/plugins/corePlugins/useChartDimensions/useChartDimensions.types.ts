@@ -1,4 +1,5 @@
 import { ChartPluginSignature } from '../../models';
+import type { UseChartCartesianAxisSignature } from '../../featurePlugins/useChartCartesianAxis';
 
 export interface ChartMargin {
   /**
@@ -31,9 +32,10 @@ export interface UseChartDimensionsParameters {
   /**
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
-   * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
+   *
+   * Accepts a `number` to be used on all sides or an object with the optional properties: `top`, `bottom`, `left`, and `right`.
    */
-  margin?: Partial<ChartMargin>;
+  margin?: Partial<ChartMargin> | number;
 }
 
 export type UseChartDimensionsDefaultizedParameters = UseChartDimensionsParameters & {
@@ -43,21 +45,9 @@ export type UseChartDimensionsDefaultizedParameters = UseChartDimensionsParamete
 export interface UseChartDimensionsState {
   dimensions: {
     /**
-     * The gap between the left border of the SVG and the drawing area.
+     * The drawing area's margin.
      */
-    left: number;
-    /**
-     * The gap between the top border of the SVG and the drawing area.
-     */
-    top: number;
-    /**
-     * The gap between the bottom border of the SVG and the drawing area.
-     */
-    bottom: number;
-    /**
-     * The gap between the right border of the SVG and the drawing area.
-     */
-    right: number;
+    margin: ChartMargin;
     /**
      * The width of the drawing area.
      */
@@ -80,21 +70,24 @@ export interface UseChartDimensionsState {
 export interface UseChartDimensionsInstance {
   /**
    * Checks if a point is inside the drawing area.
-   * @param {Object} point The point to check.
-   * @param {number} point.x The x coordinate of the point.
-   * @param {number} point.y The y coordinate of the point.
-   * @param {Object} options The options of the check.
-   * @param {Element} [options.targetElement] The element to check if it is allowed to overflow the drawing area.
-   * @param {'x' | 'y'} [options.direction] The direction to check.
+   * @param {number} x The x coordinate of the point.
+   * @param {number} y The y coordinate of the point.
+   * @param {Element | EventTarget | null} targetElement The element to check if it is allowed to overflow the drawing area.
    * @returns {boolean} `true` if the point is inside the drawing area, `false` otherwise.
    */
-  isPointInside: (
-    point: { x: number; y: number },
-    options?: {
-      targetElement?: Element;
-      direction?: 'x' | 'y';
-    },
-  ) => boolean;
+  isPointInside: (x: number, y: number, targetElement?: Element | EventTarget | null) => boolean;
+  /**
+   * Checks if the x coordinate is inside the drawing area.
+   * @param {number} x The x coordinate of the point.
+   * @returns {boolean} `true` if the point is inside the drawing area, `false` otherwise.
+   */
+  isXInside: (x: number) => boolean;
+  /**
+   * Checks if the y coordinate is inside the drawing area.
+   * @param {number} y The y coordinate of the point.
+   * @returns {boolean} `true` if the point is inside the drawing area, `false` otherwise.
+   */
+  isYInside: (y: number) => boolean;
 }
 
 export type UseChartDimensionsSignature = ChartPluginSignature<{
@@ -102,4 +95,5 @@ export type UseChartDimensionsSignature = ChartPluginSignature<{
   defaultizedParams: UseChartDimensionsDefaultizedParameters;
   state: UseChartDimensionsState;
   instance: UseChartDimensionsInstance;
+  optionalDependencies: [UseChartCartesianAxisSignature];
 }>;

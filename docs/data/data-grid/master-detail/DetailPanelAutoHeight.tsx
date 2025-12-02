@@ -12,6 +12,8 @@ import {
   DataGridProProps,
   useGridApiContext,
   GridActionsCellItem,
+  GridActionsCell,
+  GridRenderCellParams,
 } from '@mui/x-data-grid-pro';
 import {
   randomId,
@@ -33,6 +35,28 @@ function generateProduct() {
     quantity: randomInt(1, 5),
     unitPrice: randomPrice(1, 1000),
   };
+}
+
+const DetailPanelActionHandlersContext = React.createContext<
+  ((productId: string) => void) | undefined
+>(undefined);
+
+function DetailPanelActionsCell(props: GridRenderCellParams) {
+  const deleteProduct = React.useContext(DetailPanelActionHandlersContext);
+
+  if (!deleteProduct) {
+    throw new Error('DetailPanelActionHandlersContext is empty');
+  }
+
+  return (
+    <GridActionsCell {...props}>
+      <GridActionsCellItem
+        icon={<DeleteIcon />}
+        label="delete"
+        onClick={() => deleteProduct(props.row.id)}
+      />
+    </GridActionsCell>
+  );
 }
 
 function DetailPanelContent({ row: rowProp }: { row: Customer }) {
@@ -78,16 +102,10 @@ function DetailPanelContent({ row: rowProp }: { row: Customer }) {
         headerName: '',
         type: 'actions',
         width: 50,
-        getActions: ({ row }) => [
-          <GridActionsCellItem
-            icon={<DeleteIcon />}
-            label="delete"
-            onClick={deleteProduct(row.id)}
-          />,
-        ],
+        renderCell: (params) => <DetailPanelActionsCell {...params} />,
       },
     ],
-    [deleteProduct],
+    [],
   );
 
   return (
@@ -96,14 +114,14 @@ function DetailPanelContent({ row: rowProp }: { row: Customer }) {
         <Stack direction="column" spacing={1} sx={{ height: 1 }}>
           <Typography variant="h6">{`Order #${rowProp.id}`}</Typography>
           <Grid container>
-            <Grid item md={6}>
+            <Grid size={{ md: 6 }}>
               <Typography variant="body2" color="textSecondary">
                 Customer information
               </Typography>
               <Typography variant="body1">{rowProp.customer}</Typography>
               <Typography variant="body1">{rowProp.email}</Typography>
             </Grid>
-            <Grid item md={6}>
+            <Grid size={{ md: 6 }}>
               <Typography variant="body2" align="right" color="textSecondary">
                 Shipping address
               </Typography>
@@ -122,12 +140,14 @@ function DetailPanelContent({ row: rowProp }: { row: Customer }) {
             </Button>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-            <DataGridPro
-              density="compact"
-              columns={columns}
-              rows={rowProp.products}
-              hideFooter
-            />
+            <DetailPanelActionHandlersContext.Provider value={deleteProduct}>
+              <DataGridPro
+                density="compact"
+                columns={columns}
+                rows={rowProp.products}
+                hideFooter
+              />
+            </DetailPanelActionHandlersContext.Provider>
           </div>
         </Stack>
       </Paper>

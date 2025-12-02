@@ -16,7 +16,11 @@
       "nodeName": "the root element",
       "conditions": "highlighted"
     },
-    "root": { "description": "Styles applied to the root element." }
+    "root": { "description": "Styles applied to the root element." },
+    "series": {
+      "description": "Styles applied to {{nodeName}}. Needs to be suffixed with the series ID: <code>.${areaElementClasses.series}-${seriesId}</code>.",
+      "nodeName": "the root element for a specified series"
+    }
   },
   "slotDescriptions": { "area": "The component that renders the area." }
 }

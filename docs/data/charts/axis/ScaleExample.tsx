@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Box from '@mui/material/Box';
 import { LineChart } from '@mui/x-charts/LineChart';
 
@@ -10,15 +9,13 @@ export default function ScaleExample() {
       <LineChart
         xAxis={[{ data: sample }]}
         yAxis={[
-          { id: 'linearAxis', scaleType: 'linear' },
-          { id: 'logAxis', scaleType: 'log' },
+          { id: 'linearAxis', scaleType: 'linear', position: 'left' },
+          { id: 'logAxis', scaleType: 'log', position: 'right' },
         ]}
         series={[
           { yAxisId: 'linearAxis', data: sample, label: 'linear' },
           { yAxisId: 'logAxis', data: sample, label: 'log' },
         ]}
-        leftAxis="linearAxis"
-        rightAxis="logAxis"
         height={400}
       />
     </Box>

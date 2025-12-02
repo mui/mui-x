@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { shouldForwardProp } from '@mui/system/createStyled';
-import { refType } from '@mui/utils';
+import refType from '@mui/utils/refType';
 import composeClasses from '@mui/utils/composeClasses';
 import {
   pickersInputClasses,
@@ -11,14 +11,14 @@ import {
 } from './pickersInputClasses';
 import { PickersInputBase, PickersInputBaseProps } from '../PickersInputBase';
 import { PickersInputBaseRoot } from '../PickersInputBase/PickersInputBase';
-import { PickerTextFieldOwnerState } from '../PickersTextField.types';
+import { PickerTextFieldOwnerState } from '../../models/fields';
 import { usePickerTextFieldOwnerState } from '../usePickerTextFieldOwnerState';
 
 export interface PickersInputProps extends PickersInputBaseProps {
   disableUnderline?: boolean;
 }
 
-interface PickerInputOwnerState extends PickerTextFieldOwnerState {
+export interface PickerInputOwnerState extends PickerTextFieldOwnerState {
   /**
    * `true` if the input has an underline, `false` otherwise.
    */
@@ -28,7 +28,6 @@ interface PickerInputOwnerState extends PickerTextFieldOwnerState {
 const PickersInputRoot = styled(PickersInputBaseRoot, {
   name: 'MuiPickersInput',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'disableUnderline',
 })<{ ownerState: PickerInputOwnerState }>(({ theme }) => {
   const light = theme.palette.mode === 'light';
@@ -45,7 +44,10 @@ const PickersInputRoot = styled(PickersInputBaseRoot, {
         // @ts-ignore
         .filter((key) => (theme.vars ?? theme).palette[key].main)
         .map((color) => ({
-          props: { inputColor: color },
+          props: {
+            inputColor: color as PickerTextFieldOwnerState['inputColor'],
+            inputHasUnderline: true,
+          },
           style: {
             '&::after': {
               // @ts-ignore
@@ -54,7 +56,7 @@ const PickersInputRoot = styled(PickersInputBaseRoot, {
           },
         })),
       {
-        props: { disableUnderline: false },
+        props: { inputHasUnderline: true },
         style: {
           '&::after': {
             background: 'red',
@@ -162,6 +164,7 @@ const PickersInput = React.forwardRef(function PickersInput(
       slots={{ root: PickersInputRoot }}
       slotProps={{ root: { disableUnderline } }}
       {...other}
+      ownerState={ownerState}
       label={label}
       classes={classes}
       ref={ref as any}
@@ -181,16 +184,13 @@ PickersInput.propTypes = {
    */
   areAllSectionsEmpty: PropTypes.bool.isRequired,
   className: PropTypes.string,
-  /**
-   * The component used for the root node.
-   * Either a string to use a HTML element or a component.
-   */
   component: PropTypes.elementType,
   /**
    * If true, the whole element is editable.
    * Useful when all the sections are selected.
    */
   contentEditable: PropTypes.bool.isRequired,
+  'data-multi-input': PropTypes.string,
   disableUnderline: PropTypes.bool,
   /**
    * The elements to render.
@@ -217,7 +217,7 @@ PickersInput.propTypes = {
   onInput: PropTypes.func.isRequired,
   onKeyDown: PropTypes.func.isRequired,
   onPaste: PropTypes.func.isRequired,
-  ownerState: PropTypes.any,
+  ownerState: PropTypes /* @typescript-to-proptypes-ignore */.any,
   readOnly: PropTypes.bool,
   renderSuffix: PropTypes.func,
   sectionListRef: PropTypes.oneOfType([

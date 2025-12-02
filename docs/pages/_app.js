@@ -8,7 +8,7 @@ import NextHead from 'next/head';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
 import { LicenseInfo } from '@mui/x-license';
-import { ponyfillGlobal } from '@mui/utils';
+import { muiXTelemetrySettings } from '@mui/x-telemetry';
 import PageContext from 'docs/src/modules/components/PageContext';
 import GoogleAnalytics from 'docs/src/modules/components/GoogleAnalytics';
 import { CodeCopyProvider } from '@mui/docs/CodeCopy';
@@ -22,27 +22,64 @@ import { pathnameToLanguage } from 'docs/src/modules/utils/helpers';
 import getProductInfoFromUrl from 'docs/src/modules/utils/getProductInfoFromUrl';
 import { DocsProvider } from '@mui/docs/DocsProvider';
 import { mapTranslations } from '@mui/docs/i18n';
+import { Inter, Roboto } from 'next/font/google';
+import localFont from 'next/font/local';
 import * as config from '../config';
 
+const inter = Inter({
+  weight: ['300', '400', '500', '600', '700'],
+  subsets: ['latin'],
+});
+
+const roboto = Roboto({
+  weight: ['300', '400', '500', '700'],
+  style: ['normal', 'italic'],
+  subsets: ['latin'],
+});
+
+const generalSans = localFont({
+  declarations: [{ prop: 'font-family', value: 'General Sans' }],
+  src: [
+    { path: '../public/static/fonts/GeneralSans-Regular.woff2', weight: '400', style: 'normal' },
+    { path: '../public/static/fonts/GeneralSans-Medium.woff2', weight: '500', style: 'normal' },
+    { path: '../public/static/fonts/GeneralSans-Semibold.woff2', weight: '600', style: 'normal' },
+    { path: '../public/static/fonts/GeneralSans-Bold.woff2', weight: '700', style: 'normal' },
+  ],
+});
+
+const ibmPlexSans = localFont({
+  declarations: [{ prop: 'font-family', value: 'IBM Plex Sans' }],
+  src: [
+    { path: '../public/static/fonts/IBMPlexSans-Regular.woff2', weight: '400', style: 'normal' },
+    { path: '../public/static/fonts/IBMPlexSans-Medium.woff2', weight: '500', style: 'normal' },
+    { path: '../public/static/fonts/IBMPlexSans-SemiBold.woff2', weight: '600', style: 'normal' },
+    { path: '../public/static/fonts/IBMPlexSans-Bold.woff2', weight: '700', style: 'normal' },
+  ],
+});
+
+export const fontClasses = `${inter.className} ${roboto.className} ${generalSans.className} ${ibmPlexSans.className}`;
+
+// Enable telemetry for internal purposes
+muiXTelemetrySettings.enableTelemetry();
 // Remove the license warning from demonstration purposes
 LicenseInfo.setLicenseKey(process.env.NEXT_PUBLIC_MUI_LICENSE);
 
 function getMuiPackageVersion(packageName, commitRef) {
   if (commitRef === undefined) {
-    // #default-branch-switch
+    // #npm-tag-reference
     // Use the "next" tag for the master git branch after we start working on the next major version
     // Once the major release is finished we can go back to "latest"
-    return 'next';
+    return 'latest';
   }
-  const shortSha = commitRef.slice(0, 8);
-  return `https://pkg.csb.dev/mui/mui-x/commit/${shortSha}/@mui/${packageName}`;
+  return `https://pkg.pr.new/mui/mui-x/@mui/${packageName}@${commitRef}`;
 }
 
-ponyfillGlobal.muiDocConfig = {
+globalThis.muiDocConfig = {
   csbIncludePeerDependencies: (deps, { versions }) => {
     const newDeps = { ...deps };
 
-    // #default-branch-switch
+    // #npm-tag-reference
+    // TODO: Do we really need this? The condition does not make that much sense tbh!
     // Check which version of `@mui/material` should be resolved when opening docs examples in StackBlitz or CodeSandbox
     newDeps['@mui/material'] =
       versions['@mui/material'] !== 'next' ? versions['@mui/material'] : 'latest';
@@ -63,10 +100,13 @@ ponyfillGlobal.muiDocConfig = {
       '@mui/x-date-pickers-pro': getMuiPackageVersion('x-date-pickers-pro', muiCommitRef),
       '@mui/x-charts': getMuiPackageVersion('x-charts', muiCommitRef),
       '@mui/x-charts-pro': getMuiPackageVersion('x-charts-pro', muiCommitRef),
+      '@mui/x-charts-premium': getMuiPackageVersion('x-charts-premium', muiCommitRef),
       '@mui/x-tree-view': getMuiPackageVersion('x-tree-view', muiCommitRef),
       '@mui/x-tree-view-pro': getMuiPackageVersion('x-tree-view-pro', muiCommitRef),
       '@mui/x-internals': getMuiPackageVersion('x-internals', muiCommitRef),
+      '@mui/x-internal-gestures': getMuiPackageVersion('x-internal-gestures', muiCommitRef),
       exceljs: 'latest',
+      '@base-ui-components/utils': 'latest',
     };
   },
   postProcessImport,
@@ -222,8 +262,7 @@ function AppWrapper(props) {
             href: `${languagePrefix}${productIdSubpathMap[id]}/`,
           };
         }
-        if (version === 'v7') {
-          // #default-branch-switch
+        if (version === 'v8') {
           return {
             text: version,
             href: `https://mui.com${languagePrefix}${productIdSubpathMap[id]}/`,
@@ -295,13 +334,6 @@ function AppWrapper(props) {
     };
   }, [productId, productCategoryId, pageProps.userLanguage, router.pathname]);
 
-  let fonts = [];
-  if (pathnameToLanguage(router.asPath).canonicalAs.match(/onepirate/)) {
-    fonts = [
-      'https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700&family=Work+Sans:wght@300;400&display=swap',
-    ];
-  }
-
   // Replicate change reverted in https://github.com/mui/material-ui/pull/35969/files#r1089572951
   // Fixes playground styles in dark mode.
   const ThemeWrapper = router.pathname.startsWith('/playground') ? React.Fragment : ThemeProvider;
@@ -310,9 +342,6 @@ function AppWrapper(props) {
     <React.Fragment>
       <NextHead>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
-        {fonts.map((font) => (
-          <link rel="stylesheet" href={font} key={font} />
-        ))}
         <meta name="mui:productId" content={productId} />
         <meta name="mui:productCategoryId" content={productCategoryId} />
       </NextHead>

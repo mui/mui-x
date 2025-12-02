@@ -1,4 +1,8 @@
-import { createSelector, createSelectorMemoized } from '../../../utils/createSelector';
+import {
+  createSelector,
+  createSelectorMemoized,
+  createRootSelector,
+} from '../../../utils/createSelector';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import {
   GridColumnLookup,
@@ -6,12 +10,15 @@ import {
   EMPTY_PINNED_COLUMN_FIELDS,
 } from './gridColumnsInterfaces';
 import { gridIsRtlSelector } from '../../core/gridCoreSelector';
+import { gridListColumnSelector, gridListViewSelector } from '../listView';
 
 /**
  * Get the columns state
  * @category Columns
  */
-export const gridColumnsStateSelector = (state: GridStateCommunity) => state.columns;
+export const gridColumnsStateSelector = createRootSelector(
+  (state: GridStateCommunity) => state.columns,
+);
 
 /**
  * Get an array of column fields in the order rendered on screen.
@@ -52,14 +59,29 @@ export const gridColumnVisibilityModelSelector = createSelector(
 );
 
 /**
+ * Get the "initial" column visibility model, containing the visibility status of each column.
+ * It is updated when the `columns` prop is updated or when `updateColumns` API method is called.
+ * If a column is not registered in the model, it is visible.
+ * @category Visible Columns
+ */
+export const gridInitialColumnVisibilityModelSelector = createSelector(
+  gridColumnsStateSelector,
+  (columnsState) => columnsState.initialColumnVisibilityModel,
+);
+
+/**
  * Get the visible columns as a lookup (an object containing the field for keys and the definition for values).
  * @category Visible Columns
  */
 export const gridVisibleColumnDefinitionsSelector = createSelectorMemoized(
   gridColumnDefinitionsSelector,
   gridColumnVisibilityModelSelector,
-  (columns, columnVisibilityModel) =>
-    columns.filter((column) => columnVisibilityModel[column.field] !== false),
+  gridListViewSelector,
+  gridListColumnSelector,
+  (columns, columnVisibilityModel, listView, listColumn) =>
+    listView && listColumn
+      ? [listColumn]
+      : columns.filter((column) => columnVisibilityModel[column.field] !== false),
 );
 
 /**
@@ -75,7 +97,21 @@ export const gridVisibleColumnFieldsSelector = createSelectorMemoized(
  * Get the visible pinned columns model.
  * @category Visible Columns
  */
-export const gridPinnedColumnsSelector = (state: GridStateCommunity) => state.pinnedColumns;
+export const gridPinnedColumnsSelector = createRootSelector(
+  (state: GridStateCommunity) => state.pinnedColumns,
+);
+
+/**
+ * Get all existing pinned columns. Place the columns on the side that depends on the rtl state.
+ * @category Pinned Columns
+ * @ignore - Do not document
+ */
+export const gridExistingPinnedColumnSelector = createSelectorMemoized(
+  gridPinnedColumnsSelector,
+  gridColumnFieldsSelector,
+  gridIsRtlSelector,
+  (model, orderedFields, isRtl) => filterMissingColumns(model, orderedFields, isRtl),
+);
 
 /**
  * Get the visible pinned columns.
@@ -86,8 +122,12 @@ export const gridVisiblePinnedColumnDefinitionsSelector = createSelectorMemoized
   gridPinnedColumnsSelector,
   gridVisibleColumnFieldsSelector,
   gridIsRtlSelector,
-  (columnsState, model, visibleColumnFields, isRtl) => {
-    const visiblePinnedFields = filterVisibleColumns(model, visibleColumnFields, isRtl);
+  gridListViewSelector,
+  (columnsState, model, visibleColumnFields, isRtl, listView) => {
+    if (listView) {
+      return EMPTY_PINNED_COLUMN_FIELDS;
+    }
+    const visiblePinnedFields = filterMissingColumns(model, visibleColumnFields, isRtl);
     const visiblePinnedColumns = {
       left: visiblePinnedFields.left.map((field) => columnsState.lookup[field]),
       right: visiblePinnedFields.right.map((field) => columnsState.lookup[field]),
@@ -96,7 +136,7 @@ export const gridVisiblePinnedColumnDefinitionsSelector = createSelectorMemoized
   },
 );
 
-function filterVisibleColumns(
+function filterMissingColumns(
   pinnedColumns: GridPinnedColumnFields,
   columns: string[],
   invert?: boolean,

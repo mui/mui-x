@@ -1,6 +1,9 @@
-import * as React from 'react';
-import { LineChart, lineElementClasses } from '@mui/x-charts/LineChart';
-import { dataset } from './GDPperCapita';
+import {
+  areaElementClasses,
+  LineChart,
+  lineElementClasses,
+} from '@mui/x-charts/LineChart';
+import { dataset } from '../dataset/gdpPerCapitaEvolution';
 
 export default function CSSCustomization() {
   return (
@@ -11,7 +14,7 @@ export default function CSSCustomization() {
           strokeDasharray: '10 5',
           strokeWidth: 4,
         },
-        '& .MuiAreaElement-series-Germany': {
+        [`& .${areaElementClasses.root}[data-series="Germany"]`]: {
           fill: "url('#myGradient')",
           filter: 'none', // Remove the default filtering
         },
@@ -24,9 +27,15 @@ export default function CSSCustomization() {
           valueFormatter: (date) => date.getFullYear().toString(),
         },
       ]}
+      yAxis={[
+        {
+          width: 60,
+        },
+      ]}
       series={[
         {
           id: 'France',
+          label: 'France',
           dataKey: 'fr',
           stack: 'total',
           area: true,
@@ -34,6 +43,7 @@ export default function CSSCustomization() {
         },
         {
           id: 'Germany',
+          label: 'Germany',
           dataKey: 'dl',
           stack: 'total',
           area: true,
@@ -41,14 +51,14 @@ export default function CSSCustomization() {
         },
         {
           id: 'United Kingdom',
+          label: 'United Kingdom',
           dataKey: 'gb',
           stack: 'total',
           area: true,
           showMark: false,
         },
       ]}
-      margin={{ left: 60, top: 10, right: 20 }}
-      width={600}
+      experimentalFeatures={{ preferStrictDomainInLineCharts: true }}
       height={300}
     >
       <defs>

@@ -1,10 +1,13 @@
-import * as React from 'react';
 import {
   DataGridPremium,
   useGridApiRef,
   useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
+
+const groupingColDef = {
+  headerName: 'Group',
+};
 
 export default function RowGroupingCustomGroupingColDefObject() {
   const data = useMovieData();
@@ -26,9 +29,7 @@ export default function RowGroupingCustomGroupingColDefObject() {
         apiRef={apiRef}
         disableRowSelectionOnClick
         initialState={initialState}
-        groupingColDef={{
-          headerName: 'Group',
-        }}
+        groupingColDef={groupingColDef}
       />
     </div>
   );

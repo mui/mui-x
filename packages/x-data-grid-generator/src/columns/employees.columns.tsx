@@ -47,6 +47,7 @@ export const getEmployeeColumns = (): GridColDefGenerator[] => [
     filterable: false,
     groupable: false,
     aggregable: false,
+    chartable: false,
     disableExport: true,
   } as GridColDef<any, { color: string; name: string }>,
   {
@@ -118,6 +119,7 @@ export const getEmployeeColumns = (): GridColDefGenerator[] => [
     generateData: randomCountry,
     renderCell: renderCountry,
     renderEditCell: renderEditCountry,
+    groupingValueGetter: (value: { label: string } | undefined) => value?.label,
     sortComparator: (v1, v2, param1, param2) =>
       gridStringOrNumberComparator(v1.label, v2.label, param1, param2),
     width: 150,

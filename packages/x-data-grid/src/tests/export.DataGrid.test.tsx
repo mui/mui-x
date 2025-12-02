@@ -1,14 +1,12 @@
-import * as React from 'react';
-import { expect } from 'chai';
 import { spy, SinonSpy } from 'sinon';
-import { DataGrid, DataGridProps, GridToolbar, GridToolbarExport } from '@mui/x-data-grid';
+import { DataGrid, DataGridProps, GridToolbarExport } from '@mui/x-data-grid';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { createRenderer, screen, fireEvent } from '@mui/internal-test-utils';
-import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 
 // We need `createObjectURL` to test the downloaded value
-describeSkipIf(isJSDOM)('<DataGrid /> - Export', () => {
-  const { render, clock } = createRenderer({ clock: 'fake' });
+describe.skipIf(isJSDOM)('<DataGrid /> - Export', () => {
+  const { render } = createRenderer();
 
   function TestCase(props: Omit<DataGridProps, 'rows' | 'columns'>) {
     const basicData = useBasicDemoData(3, 2);
@@ -22,21 +20,18 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Export', () => {
 
   let spyCreateObjectURL: SinonSpy;
 
-  // eslint-disable-next-line mocha/no-top-level-hooks
   beforeEach(() => {
-    spyCreateObjectURL = spy(global.URL, 'createObjectURL');
+    spyCreateObjectURL = spy(globalThis.URL, 'createObjectURL');
   });
 
-  // eslint-disable-next-line mocha/no-top-level-hooks
   afterEach(() => {
     spyCreateObjectURL.restore();
   });
 
   describe('component: GridToolbar', () => {
     it('should export with the default csvOptions', async () => {
-      render(<TestCase slots={{ toolbar: GridToolbar }} />);
+      render(<TestCase showToolbar />);
       fireEvent.click(screen.getByRole('button', { name: 'Export' }));
-      clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
       fireEvent.click(screen.getByRole('menuitem', { name: 'Download as CSV' }));
       expect(spyCreateObjectURL.callCount).to.equal(1);
@@ -45,14 +40,8 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Export', () => {
     });
 
     it('should apply custom csvOptions', async () => {
-      render(
-        <TestCase
-          slots={{ toolbar: GridToolbar }}
-          slotProps={{ toolbar: { csvOptions: { delimiter: ';' } } }}
-        />,
-      );
+      render(<TestCase showToolbar slotProps={{ toolbar: { csvOptions: { delimiter: ';' } } }} />);
       fireEvent.click(screen.getByRole('button', { name: 'Export' }));
-      clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
       fireEvent.click(screen.getByRole('menuitem', { name: 'Download as CSV' }));
       expect(spyCreateObjectURL.callCount).to.equal(1);
@@ -63,12 +52,12 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Export', () => {
     it('should disable csv export when passing `csvOptions.disableToolbarButton`', () => {
       render(
         <TestCase
-          slots={{ toolbar: GridToolbar }}
+          showToolbar
           slotProps={{ toolbar: { csvOptions: { disableToolbarButton: true } } }}
         />,
       );
       fireEvent.click(screen.getByRole('button', { name: 'Export' }));
-      clock.runToLast();
+
       expect(screen.queryByRole('menu')).not.to.equal(null);
       expect(screen.queryByRole('menuitem', { name: 'Download as CSV' })).to.equal(null);
     });
@@ -88,12 +77,12 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Export', () => {
               { id: 6, name: ',=1+1' },
               { id: 7, name: 'value,=1+1' },
             ]}
-            slots={{ toolbar: GridToolbar }}
+            showToolbar
           />
         </div>,
       );
       fireEvent.click(screen.getByRole('button', { name: 'Export' }));
-      clock.runToLast();
+
       expect(screen.queryByRole('menu')).not.to.equal(null);
       fireEvent.click(screen.getByRole('menuitem', { name: 'Download as CSV' }));
       expect(spyCreateObjectURL.callCount).to.equal(1);
@@ -125,12 +114,12 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Export', () => {
               { id: 2, name: null },
               { id: 3, name: 1234 },
             ]}
-            slots={{ toolbar: GridToolbar }}
+            showToolbar
           />
         </div>,
       );
       fireEvent.click(screen.getByRole('button', { name: 'Export' }));
-      clock.runToLast();
+
       expect(screen.queryByRole('menu')).not.to.equal(null);
       fireEvent.click(screen.getByRole('menuitem', { name: 'Download as CSV' }));
       expect(spyCreateObjectURL.callCount).to.equal(1);
@@ -142,9 +131,9 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Export', () => {
 
   describe('component: GridToolbarExport', () => {
     it('should export with the default csvOptions', async () => {
-      render(<TestCase slots={{ toolbar: () => <GridToolbarExport /> }} />);
+      render(<TestCase slots={{ toolbar: () => <GridToolbarExport /> }} showToolbar />);
       fireEvent.click(screen.getByRole('button', { name: 'Export' }));
-      clock.runToLast();
+
       expect(screen.queryByRole('menu')).not.to.equal(null);
       fireEvent.click(screen.getByRole('menuitem', { name: 'Download as CSV' }));
       expect(spyCreateObjectURL.callCount).to.equal(1);
@@ -156,10 +145,11 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Export', () => {
       render(
         <TestCase
           slots={{ toolbar: () => <GridToolbarExport csvOptions={{ delimiter: ';' }} /> }}
+          showToolbar
         />,
       );
       fireEvent.click(screen.getByRole('button', { name: 'Export' }));
-      clock.runToLast();
+
       expect(screen.queryByRole('menu')).not.to.equal(null);
       fireEvent.click(screen.getByRole('menuitem', { name: 'Download as CSV' }));
       expect(spyCreateObjectURL.callCount).to.equal(1);
@@ -173,10 +163,11 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Export', () => {
           slots={{
             toolbar: () => <GridToolbarExport csvOptions={{ disableToolbarButton: true }} />,
           }}
+          showToolbar
         />,
       );
       fireEvent.click(screen.getByRole('button', { name: 'Export' }));
-      clock.runToLast();
+
       expect(screen.queryByRole('menu')).not.to.equal(null);
       expect(screen.queryByRole('menuitem', { name: 'Download as CSV' })).to.equal(null);
     });

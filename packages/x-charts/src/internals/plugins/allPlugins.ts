@@ -4,28 +4,50 @@ import {
   useChartCartesianAxis,
   UseChartCartesianAxisSignature,
 } from './featurePlugins/useChartCartesianAxis';
-import { UseChartHighlightSignature } from './featurePlugins/useChartHighlight';
-import { useChartHighlight } from './featurePlugins/useChartHighlight/useChartHighlight';
+import { useChartHighlight, UseChartHighlightSignature } from './featurePlugins/useChartHighlight';
 import {
   useChartInteraction,
   UseChartInteractionSignature,
 } from './featurePlugins/useChartInteraction';
+import {
+  useChartKeyboardNavigation,
+  UseChartKeyboardNavigationSignature,
+} from './featurePlugins/useChartKeyboardNavigation';
+import { UseChartPolarAxisSignature } from './featurePlugins/useChartPolarAxis';
+import {
+  useChartClosestPoint,
+  UseChartClosestPointSignature,
+} from './featurePlugins/useChartClosestPoint';
 import { useChartZAxis, UseChartZAxisSignature } from './featurePlugins/useChartZAxis';
-import { ConvertSignaturesIntoPlugins } from './models/helpers';
+import { useChartBrush, UseChartBrushSignature } from './featurePlugins/useChartBrush';
 
 export type AllPluginSignatures<TSeries extends ChartSeriesType = ChartSeriesType> = [
   UseChartZAxisSignature,
+  UseChartBrushSignature,
   UseChartCartesianAxisSignature<TSeries>,
+  UseChartPolarAxisSignature,
   UseChartInteractionSignature,
   UseChartHighlightSignature,
+  UseChartClosestPointSignature,
+  UseChartKeyboardNavigationSignature,
 ];
 
-export type AllPluginsType<TSeries extends ChartSeriesType = ChartSeriesType> =
-  ConvertSignaturesIntoPlugins<AllPluginSignatures<TSeries>>;
+export type DefaultPluginSignatures<TSeries extends ChartSeriesType = ChartSeriesType> = [
+  UseChartZAxisSignature,
+  UseChartBrushSignature,
+  UseChartInteractionSignature,
+  UseChartCartesianAxisSignature<TSeries>,
+  UseChartHighlightSignature,
+  UseChartClosestPointSignature,
+  UseChartKeyboardNavigationSignature,
+];
 
-export const ALL_PLUGINS = [
+export const DEFAULT_PLUGINS = [
   useChartZAxis,
-  useChartCartesianAxis,
+  useChartBrush,
   useChartInteraction,
+  useChartCartesianAxis,
   useChartHighlight,
-];
+  useChartClosestPoint,
+  useChartKeyboardNavigation,
+] as const;

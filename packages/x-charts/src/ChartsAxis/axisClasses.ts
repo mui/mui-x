@@ -10,7 +10,11 @@ export interface ChartsAxisClasses {
   tickContainer: string;
   /** Styles applied to ticks. */
   tick: string;
-  /** Styles applied to ticks label. */
+  /** Styles applied to ticks label.
+   *
+   * ⚠️ For performance reasons, only the inline styles get considered for bounding box computation.
+   * Modifying text size by adding properties like `font-size` or `letter-spacing` to this class might cause labels to overlap.
+   */
   tickLabel: string;
   /** Styles applied to the group containing the axis label. */
   label: string;
@@ -26,6 +30,11 @@ export interface ChartsAxisClasses {
   left: string;
   /** Styles applied to the right axis. */
   right: string;
+  /**
+   * Styles applied to the root element for the axis with the given ID.
+   * Needs to be suffixed with the axis ID: `.${axisClasses.id}-${axisId}`.
+   */
+  id: string;
 }
 
 export type ChartsAxisClassKey = keyof ChartsAxisClasses;
@@ -46,4 +55,5 @@ export const axisClasses: ChartsAxisClasses = generateUtilityClasses('MuiChartsA
   'bottom',
   'left',
   'right',
+  'id',
 ]);

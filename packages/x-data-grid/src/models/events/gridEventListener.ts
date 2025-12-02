@@ -1,6 +1,6 @@
-import { MuiBaseEvent, MuiEvent } from '../muiEvent';
-import { GridCallbackDetails } from '../api/gridCallbackDetails';
-import { GridEventLookup, GridEvents } from './gridEventLookup';
+import type { MuiBaseEvent, MuiEvent } from '@mui/x-internals/types';
+import type { GridCallbackDetails } from '../api/gridCallbackDetails';
+import type { GridEventLookup, GridEvents } from './gridEventLookup';
 
 export type GridEventListener<E extends GridEvents> = (
   params: GridEventLookup[E] extends { params: any } ? GridEventLookup[E]['params'] : undefined,

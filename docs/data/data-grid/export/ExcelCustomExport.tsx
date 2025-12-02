@@ -1,7 +1,5 @@
-import * as React from 'react';
 import {
   DataGridPremium,
-  GridToolbar,
   GridExceljsProcessInput,
   GridColDef,
   DataGridPremiumProps,
@@ -186,7 +184,7 @@ const rows = [
   },
   {
     id: 30,
-    path: ['Group & Pivot', 'Master detail'],
+    path: ['Group & Pivot', 'Master-detail row panels'],
     plan: 'Pro',
     developed: false,
   },
@@ -299,7 +297,7 @@ export default function ExcelCustomExport() {
         columns={columns}
         groupingColDef={groupingColDef}
         defaultGroupingExpansionDepth={-1}
-        slots={{ toolbar: GridToolbar }}
+        showToolbar
         slotProps={{ toolbar: { excelOptions } }}
       />
     </div>

@@ -10,7 +10,7 @@ export const COLORS = [
   purple[500],
 ];
 
-export const STATUS_OPTIONS = ['Open', 'PartiallyFilled', 'Filled', 'Rejected'];
+export const STATUS_OPTIONS = ['Open', 'Partially Filled', 'Filled', 'Rejected'];
 export const TAXCODE_OPTIONS = ['BR', '1250L', '20G', 'BC45', 'IGN179'];
 export const RATE_TYPE_OPTIONS = ['Fixed', 'Floating'];
 export const CONTRACT_TYPE_OPTIONS = ['FP', 'TM', 'CR'];

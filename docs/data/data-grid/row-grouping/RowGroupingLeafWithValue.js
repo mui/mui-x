@@ -1,10 +1,13 @@
-import * as React from 'react';
 import {
   DataGridPremium,
   useGridApiRef,
   useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
+
+const groupingColDef = {
+  leafField: 'title',
+};
 
 export default function RowGroupingLeafWithValue() {
   const data = useMovieData();
@@ -30,7 +33,7 @@ export default function RowGroupingLeafWithValue() {
       <DataGridPremium
         {...data}
         apiRef={apiRef}
-        groupingColDef={{ leafField: 'title' }}
+        groupingColDef={groupingColDef}
         initialState={initialState}
       />
     </div>

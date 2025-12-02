@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -46,7 +47,6 @@ export const useGridHeaderFiltering = (
           },
         };
       });
-      apiRef.current.forceUpdate();
     },
     [apiRef, props.signature, props.headerFilters],
   );

@@ -1,47 +1,9 @@
 'use client';
-import * as React from 'react';
 import PropTypes from 'prop-types';
-import useSlotProps from '@mui/utils/useSlotProps';
-import composeClasses from '@mui/utils/composeClasses';
-import { useThemeProps, useTheme, Theme, styled } from '@mui/material/styles';
-import { useRtl } from '@mui/system/RtlProvider';
-import { useTicks } from '../hooks/useTicks';
-import { useDrawingArea } from '../hooks/useDrawingArea';
+import { warnOnce } from '@mui/x-internals/warning';
 import { ChartsYAxisProps } from '../models/axis';
-import { AxisRoot } from '../internals/components/AxisSharedComponents';
-import { ChartsText, ChartsTextProps } from '../ChartsText';
-import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
-import { isInfinity } from '../internals/isInfinity';
-import { isBandScale } from '../internals/isBandScale';
-import { useChartContext } from '../context/ChartProvider';
 import { useYAxes } from '../hooks';
-
-const useUtilityClasses = (ownerState: ChartsYAxisProps & { theme: Theme }) => {
-  const { classes, position } = ownerState;
-  const slots = {
-    root: ['root', 'directionY', position],
-    line: ['line'],
-    tickContainer: ['tickContainer'],
-    tick: ['tick'],
-    tickLabel: ['tickLabel'],
-    label: ['label'],
-  };
-
-  return composeClasses(slots, getAxisUtilityClass, classes);
-};
-
-const YAxisRoot = styled(AxisRoot, {
-  name: 'MuiChartsYAxis',
-  slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
-})({});
-
-const defaultProps = {
-  position: 'left',
-  disableLine: false,
-  disableTicks: false,
-  tickSize: 6,
-} as const;
+import { ChartsYAxisImpl } from './ChartsYAxisImpl';
 
 /**
  * Demos:
@@ -53,166 +15,15 @@ const defaultProps = {
  * - [ChartsYAxis API](https://mui.com/x/api/charts/charts-y-axis/)
  */
 function ChartsYAxis(inProps: ChartsYAxisProps) {
-  const { yAxisIds, yAxis } = useYAxes();
-  const { scale: yScale, tickNumber, ...settings } = yAxis[inProps.axisId ?? yAxisIds[0]];
+  const { yAxis, yAxisIds } = useYAxes();
 
-  const themedProps = useThemeProps({ props: { ...settings, ...inProps }, name: 'MuiChartsYAxis' });
-
-  const defaultizedProps = {
-    ...defaultProps,
-    ...themedProps,
-  };
-
-  const {
-    position,
-    disableLine,
-    disableTicks,
-    label,
-    labelStyle,
-    tickLabelStyle,
-    tickSize: tickSizeProp,
-    valueFormatter,
-    slots,
-    slotProps,
-    tickPlacement,
-    tickLabelPlacement,
-    tickInterval,
-    tickLabelInterval,
-    sx,
-  } = defaultizedProps;
-
-  const theme = useTheme();
-  const isRtl = useRtl();
-
-  const classes = useUtilityClasses({ ...defaultizedProps, theme });
-
-  const { instance } = useChartContext();
-  const { left, top, width, height } = useDrawingArea();
-
-  const tickSize = disableTicks ? 4 : tickSizeProp;
-
-  const yTicks = useTicks({
-    scale: yScale,
-    tickNumber,
-    valueFormatter,
-    tickPlacement,
-    tickLabelPlacement,
-    tickInterval,
-  });
-
-  const positionSign = position === 'right' ? 1 : -1;
-
-  const tickFontSize = typeof tickLabelStyle?.fontSize === 'number' ? tickLabelStyle.fontSize : 12;
-
-  const labelRefPoint = {
-    x: positionSign * (tickFontSize + tickSize + 10),
-    y: top + height / 2,
-  };
-
-  const Line = slots?.axisLine ?? 'line';
-  const Tick = slots?.axisTick ?? 'line';
-  const TickLabel = slots?.axisTickLabel ?? ChartsText;
-  const Label = slots?.axisLabel ?? ChartsText;
-
-  const revertAnchor = (!isRtl && position === 'right') || (isRtl && position !== 'right');
-  const axisTickLabelProps = useSlotProps({
-    elementType: TickLabel,
-    externalSlotProps: slotProps?.axisTickLabel,
-    additionalProps: {
-      style: {
-        fontSize: tickFontSize,
-        textAnchor: revertAnchor ? 'start' : 'end',
-        dominantBaseline: 'central',
-        ...tickLabelStyle,
-      },
-    } as Partial<ChartsTextProps>,
-    className: classes.tickLabel,
-    ownerState: {},
-  });
-
-  const axisLabelProps = useSlotProps({
-    elementType: Label,
-    externalSlotProps: slotProps?.axisLabel,
-    additionalProps: {
-      style: {
-        fontSize: 14,
-        angle: positionSign * 90,
-        textAnchor: 'middle',
-        dominantBaseline: 'auto',
-        ...labelStyle,
-      } as Partial<ChartsTextProps>['style'],
-    } as Partial<ChartsTextProps>,
-    ownerState: {},
-  });
-
-  const lineSlotProps = useSlotProps({
-    elementType: Line,
-    externalSlotProps: slotProps?.axisLine,
-    additionalProps: {
-      strokeLinecap: 'square' as const,
-    },
-    ownerState: {},
-  });
-
-  const domain = yScale.domain();
-  const ordinalAxis = isBandScale(yScale);
-  // Skip axis rendering if no data is available
-  // - The domain is an empty array for band/point scales.
-  // - The domains contains Infinity for continuous scales.
-  if ((ordinalAxis && domain.length === 0) || (!ordinalAxis && domain.some(isInfinity))) {
+  const axis = yAxis[inProps.axisId ?? yAxisIds[0]];
+  if (!axis) {
+    warnOnce(`MUI X Charts: No axis found. The axisId "${inProps.axisId}" is probably invalid.`);
     return null;
   }
 
-  return (
-    <YAxisRoot
-      transform={`translate(${position === 'right' ? left + width : left}, 0)`}
-      className={classes.root}
-      sx={sx}
-    >
-      {!disableLine && (
-        <Line y1={top} y2={top + height} className={classes.line} {...lineSlotProps} />
-      )}
-
-      {yTicks.map(({ formattedValue, offset, labelOffset, value }, index) => {
-        const xTickLabel = positionSign * (tickSize + 2);
-        const yTickLabel = labelOffset;
-        const skipLabel =
-          typeof tickLabelInterval === 'function' && !tickLabelInterval?.(value, index);
-
-        const showLabel = instance.isPointInside({ x: -1, y: offset }, { direction: 'y' });
-
-        if (!showLabel) {
-          return null;
-        }
-
-        return (
-          <g key={index} transform={`translate(0, ${offset})`} className={classes.tickContainer}>
-            {!disableTicks && (
-              <Tick
-                x2={positionSign * tickSize}
-                className={classes.tick}
-                {...slotProps?.axisTick}
-              />
-            )}
-
-            {formattedValue !== undefined && !skipLabel && (
-              <TickLabel
-                x={xTickLabel}
-                y={yTickLabel}
-                text={formattedValue.toString()}
-                {...axisTickLabelProps}
-              />
-            )}
-          </g>
-        );
-      })}
-      {label && (
-        <g className={classes.label}>
-          <Label {...labelRefPoint} {...axisLabelProps} text={label} />
-        </g>
-      )}
-    </YAxisRoot>
-  );
+  return <ChartsYAxisImpl {...inProps} axis={axis} />;
 }
 
 ChartsYAxis.propTypes = {
@@ -220,6 +31,7 @@ ChartsYAxis.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  axis: PropTypes.oneOf(['y']),
   /**
    * The id of the axis to render.
    * If undefined, it will be the first defined axis.
@@ -240,11 +52,6 @@ ChartsYAxis.propTypes = {
    */
   disableTicks: PropTypes.bool,
   /**
-   * The fill color of the axis text.
-   * @default 'currentColor'
-   */
-  fill: PropTypes.string,
-  /**
    * The label of the axis.
    */
   label: PropTypes.string,
@@ -252,10 +59,6 @@ ChartsYAxis.propTypes = {
    * The style applied to the axis label.
    */
   labelStyle: PropTypes.object,
-  /**
-   * Position of the axis.
-   */
-  position: PropTypes.oneOf(['left', 'right']),
   /**
    * The props used for each component slot.
    * @default {}
@@ -266,11 +69,6 @@ ChartsYAxis.propTypes = {
    * @default {}
    */
   slots: PropTypes.object,
-  /**
-   * The stroke color of the axis line.
-   * @default 'currentColor'
-   */
-  stroke: PropTypes.string,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

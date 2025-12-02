@@ -1,10 +1,9 @@
+'use client';
 import * as React from 'react';
 import { styled } from '@mui/system';
-import {
-  unstable_composeClasses as composeClasses,
-  unstable_useForkRef as useForkRef,
-  unstable_useEventCallback as useEventCallback,
-} from '@mui/utils';
+import useEventCallback from '@mui/utils/useEventCallback';
+import useForkRef from '@mui/utils/useForkRef';
+import composeClasses from '@mui/utils/composeClasses';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useOnMount } from '../../hooks/utils/useOnMount';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
@@ -34,24 +33,26 @@ const useUtilityClasses = (ownerState: OwnerState, position: Position) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
+// In macOS Safari and Gnome Web, scrollbars are overlaid and don't affect the layout. So we consider
+// their size to be 0px throughout all the calculations, but the floating scrollbar container does need
+// to appear and have a real size. We set it to 14px because it seems like an acceptable value and we
+// don't have a method to find the required size for scrollbars on those platforms.
+export const scrollbarSizeCssExpression = 'calc(max(var(--DataGrid-scrollbarSize), 14px))';
+
 const Scrollbar = styled('div')({
   position: 'absolute',
   display: 'inline-block',
-  zIndex: 6,
+  zIndex: 60,
   '&:hover': {
-    zIndex: 7,
+    zIndex: 70,
   },
-  // In macOS Safari and Gnome Web, scrollbars are overlaid and don't affect the layout. So we consider
-  // their size to be 0px throughout all the calculations, but the floating scrollbar container does need
-  // to appear and have a real size. We set it to 14px because it seems like an acceptable value and we
-  // don't have a method to find the required size for scrollbars on those platforms.
-  '--size': 'calc(max(var(--DataGrid-scrollbarSize), 14px))',
+  '--size': scrollbarSizeCssExpression,
 });
 
 const ScrollbarVertical = styled(Scrollbar)({
   width: 'var(--size)',
   height:
-    'calc(var(--DataGrid-hasScrollY) * (100% - var(--DataGrid-topContainerHeight) - var(--DataGrid-bottomContainerHeight) - var(--DataGrid-hasScrollX) * var(--DataGrid-scrollbarSize)))',
+    'calc(var(--DataGrid-hasScrollY) * (100% - var(--DataGrid-headersTotalHeight) - var(--DataGrid-hasScrollX) * var(--DataGrid-scrollbarSize)))',
   overflowY: 'auto',
   overflowX: 'hidden',
   // Disable focus-visible style, it's a scrollbar.
@@ -59,12 +60,13 @@ const ScrollbarVertical = styled(Scrollbar)({
   '& > div': {
     width: 'var(--size)',
   },
-  top: 'var(--DataGrid-topContainerHeight)',
-  right: '0px',
+  top: 'var(--DataGrid-headersTotalHeight)',
+  right: 0,
 });
 
 const ScrollbarHorizontal = styled(Scrollbar)({
-  width: '100%',
+  width:
+    'calc(var(--DataGrid-hasScrollX) * (100% - var(--DataGrid-hasScrollY) * var(--DataGrid-scrollbarSize)))',
   height: 'var(--size)',
   overflowY: 'hidden',
   overflowX: 'auto',
@@ -73,7 +75,18 @@ const ScrollbarHorizontal = styled(Scrollbar)({
   '& > div': {
     height: 'var(--size)',
   },
-  bottom: '0px',
+  bottom: 0,
+});
+
+export const ScrollbarCorner = styled(Scrollbar)({
+  width: 'var(--size)',
+  height: 'var(--size)',
+  right: 0,
+  bottom: 0,
+  overflow: 'scroll',
+  '@media print': {
+    display: 'none',
+  },
 });
 
 const GridVirtualScrollbar = forwardRef<HTMLDivElement, GridVirtualScrollbarProps>(
@@ -83,25 +96,17 @@ const GridVirtualScrollbar = forwardRef<HTMLDivElement, GridVirtualScrollbarProp
     const isLocked = React.useRef(false);
     const lastPosition = React.useRef(0);
     const scrollbarRef = React.useRef<HTMLDivElement>(null);
-    const contentRef = React.useRef<HTMLDivElement>(null);
     const classes = useUtilityClasses(rootProps, props.position);
     const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
 
     const propertyDimension = props.position === 'vertical' ? 'height' : 'width';
     const propertyScroll = props.position === 'vertical' ? 'scrollTop' : 'scrollLeft';
     const propertyScrollPosition = props.position === 'vertical' ? 'top' : 'left';
-    const hasScroll = props.position === 'vertical' ? dimensions.hasScrollX : dimensions.hasScrollY;
-
-    const contentSize =
-      dimensions.minimumSize[propertyDimension] + (hasScroll ? dimensions.scrollbarSize : 0);
-
-    const scrollbarSize =
-      props.position === 'vertical'
-        ? dimensions.viewportInnerSize.height
-        : dimensions.viewportOuterSize.width;
 
     const scrollbarInnerSize =
-      scrollbarSize * (contentSize / dimensions.viewportOuterSize[propertyDimension]);
+      props.position === 'horizontal'
+        ? dimensions.minimumSize.width
+        : dimensions.minimumSize.height - dimensions.headersTotalHeight;
 
     const onScrollerScroll = useEventCallback(() => {
       const scrollbar = scrollbarRef.current;
@@ -123,8 +128,7 @@ const GridVirtualScrollbar = forwardRef<HTMLDivElement, GridVirtualScrollbarProp
       }
       isLocked.current = true;
 
-      const value = scrollPosition[propertyScrollPosition] / contentSize;
-      scrollbar[propertyScroll] = value * scrollbarInnerSize;
+      scrollbar[propertyScroll] = props.scrollPosition.current[propertyScrollPosition];
     });
 
     const onScrollbarScroll = useEventCallback(() => {
@@ -141,8 +145,7 @@ const GridVirtualScrollbar = forwardRef<HTMLDivElement, GridVirtualScrollbarProp
       }
       isLocked.current = true;
 
-      const value = scrollbar[propertyScroll] / scrollbarInnerSize;
-      scroller[propertyScroll] = value * contentSize;
+      scroller[propertyScroll] = scrollbar[propertyScroll];
     });
 
     useOnMount(() => {
@@ -157,26 +160,28 @@ const GridVirtualScrollbar = forwardRef<HTMLDivElement, GridVirtualScrollbarProp
       };
     });
 
-    React.useEffect(() => {
-      const content = contentRef.current!;
-      content.style.setProperty(propertyDimension, `${scrollbarInnerSize}px`);
-    }, [scrollbarInnerSize, propertyDimension]);
-
     const Container = props.position === 'vertical' ? ScrollbarVertical : ScrollbarHorizontal;
+
+    const scrollbarInnerStyle = React.useMemo(
+      () => ({
+        [propertyDimension]: `${scrollbarInnerSize}px`,
+      }),
+      [propertyDimension, scrollbarInnerSize],
+    );
 
     return (
       <Container
         ref={useForkRef(ref, scrollbarRef)}
         className={classes.root}
-        style={
-          props.position === 'vertical' && rootProps.unstable_listView
-            ? { height: '100%', top: 0 }
-            : undefined
-        }
         tabIndex={-1}
         aria-hidden="true"
+        // tabIndex does not prevent focus with a mouse click, throwing a console error
+        // https://github.com/mui/mui-x/issues/16706
+        onFocus={(event) => {
+          event.target.blur();
+        }}
       >
-        <div ref={contentRef} className={classes.content} />
+        <div className={classes.content} style={scrollbarInnerStyle} />
       </Container>
     );
   },

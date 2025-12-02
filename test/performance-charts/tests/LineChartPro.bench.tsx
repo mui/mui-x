@@ -1,13 +1,13 @@
 import * as React from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { render, cleanup } from '@testing-library/react';
-import { bench, describe } from 'vitest';
+import { describe } from 'vitest';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
-import { LicenseInfo, generateLicense } from '@mui/x-license';
 import { options } from '../utils/options';
+import { bench } from '../utils/bench';
 
 describe('LineChartPro', () => {
-  const dataLength = 200;
+  const dataLength = 1_400;
   const data = Array.from({ length: dataLength }).map((_, i) => ({
     x: i,
     y: 50 + Math.sin(i / 5) * 25,
@@ -17,27 +17,13 @@ describe('LineChartPro', () => {
   const yData = data.map((d) => d.y);
 
   bench(
-    'LineChartPro with big data amount',
+    'LineChartPro with big data amount and zoomed in (with marks)',
     async () => {
-      const licenseKey = generateLicense({
-        expiryDate: new Date(3001, 0, 0, 0, 0, 0, 0),
-        orderNumber: 'MUI-123',
-        planScope: 'pro',
-        licenseModel: 'subscription',
-        planVersion: 'Q3-2024',
-      });
-
-      LicenseInfo.setLicenseKey(licenseKey);
-
       const { findByText } = render(
         <LineChartPro
           xAxis={[{ id: 'x', data: xData, zoom: { filterMode: 'discard' } }]}
           initialZoom={[{ axisId: 'x', start: 50, end: 75 }]}
-          series={[
-            {
-              data: yData,
-            },
-          ]}
+          series={[{ data: yData, showMark: true }]}
           width={500}
           height={300}
         />,

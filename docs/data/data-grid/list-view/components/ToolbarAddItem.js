@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { ToolbarButton } from '@mui/x-data-grid-premium';
+
 import AddIcon from '@mui/icons-material/Add';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import NewFolderIcon from '@mui/icons-material/CreateNewFolder';
@@ -9,7 +11,6 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
 
-import { ToolbarButton } from './ToolbarButton';
 import { Drawer, DrawerHeader } from './Drawer';
 
 const ListItemUploadButton = React.forwardRef(

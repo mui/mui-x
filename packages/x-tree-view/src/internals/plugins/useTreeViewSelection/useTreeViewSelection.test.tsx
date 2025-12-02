@@ -1,20 +1,25 @@
-import { expect } from 'chai';
 import { spy } from 'sinon';
 import { fireEvent, act } from '@mui/internal-test-utils';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
-import {
-  UseTreeViewExpansionSignature,
-  UseTreeViewSelectionSignature,
-} from '@mui/x-tree-view/internals';
+import { clearWarningsCache } from '@mui/x-internals/warning';
+
+// TODO #20051: Replace with imported type
+type TreeViewAnyStore = { parameters: any };
 
 /**
  * All tests related to keyboard navigation (e.g.: selection using "Space")
  * are located in the `useTreeViewKeyboardNavigation.test.tsx` file.
  */
-describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>(
-  'useTreeViewSelection plugin',
-  ({ render }) => {
+describeTreeView<TreeViewAnyStore>(
+  'TreeViewSelectionPlugin',
+  // TODO #20051: Remove next line
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  ({ render, treeViewComponentName }) => {
     describe('model props (selectedItems, defaultSelectedItems, onSelectedItemsChange)', () => {
+      beforeEach(() => {
+        clearWarningsCache();
+      });
+
       it('should not select items when no default state and no control state are defined', () => {
         const view = render({
           items: [{ id: '1' }, { id: '2' }],
@@ -76,7 +81,6 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
       });
 
       // TODO: Re-enable this test if we have a way to un-select an item in single selection.
-      // eslint-disable-next-line mocha/no-skipped-tests
       it.skip('should call onSelectedItemsChange callback when the model is updated (single selection and remove selected item', () => {
         const onSelectedItemsChange = spy();
 
@@ -148,7 +152,7 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
         expect(() => {
           view.setProps({ selectedItems: undefined });
         }).toErrorDev(
-          'MUI X: A component is changing the controlled selectedItems state of TreeView to be uncontrolled.',
+          'MUI X: A component is changing the controlled selectedItems state of Tree View to be uncontrolled.',
         );
       });
 
@@ -162,7 +166,7 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
           view.setProps({ defaultSelectedItems: ['2'] });
           expect(view.getSelectedTreeItems()).to.deep.equal(['1']);
         }).toErrorDev(
-          'MUI X: A component is changing the default selectedItems state of an uncontrolled TreeView after being initialized. To suppress this warning opt to use a controlled TreeView.',
+          'MUI X: A component is changing the default selectedItems state of an uncontrolled Tree View after being initialized. To suppress this warning opt to use a controlled Tree View.',
         );
       });
     });
@@ -715,6 +719,79 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
           expect(view.getItemCheckboxInput('1').dataset.indeterminate).to.equal('true');
         });
 
+        it('should set the parent checkbox indeterminate when all its children are selected but the parent is not', () => {
+          const view = render({
+            multiSelect: true,
+            checkboxSelection: true,
+            items: [{ id: '1', children: [{ id: '1.1' }, { id: '1.2' }] }],
+            defaultSelectedItems: ['1.1', '1.2'],
+            defaultExpandedItems: ['1'],
+          });
+
+          expect(view.getItemCheckboxInput('1').dataset.indeterminate).to.equal('true');
+        });
+
+        it('should set the parent checkbox indeterminate when some of its descendants are selected but the parent is not', () => {
+          const view = render({
+            multiSelect: true,
+            checkboxSelection: true,
+            items: [
+              { id: '1', children: [{ id: '1.1' }, { id: '1.2', children: [{ id: '1.2.1' }] }] },
+            ],
+            defaultSelectedItems: ['1.2.1'],
+            defaultExpandedItems: ['1', '1.2'],
+          });
+
+          expect(view.getItemCheckboxInput('1').dataset.indeterminate).to.equal('true');
+        });
+
+        it('should keep the parent checkbox indeterminate after collapsing it and expanding another node', () => {
+          const view = render({
+            multiSelect: true,
+            checkboxSelection: true,
+            items: [
+              { id: '1', children: [{ id: '1.1' }, { id: '1.2' }] },
+              { id: '2', children: [{ id: '2.1' }] },
+            ],
+            defaultSelectedItems: ['1.1'],
+            defaultExpandedItems: ['1'],
+          });
+
+          expect(view.getItemCheckboxInput('1').dataset.indeterminate).to.equal('true');
+
+          fireEvent.click(view.getItemContent('1'));
+          fireEvent.click(view.getItemContent('2'));
+
+          expect(view.getItemCheckboxInput('1').dataset.indeterminate).to.equal('true');
+        });
+
+        it('should keep parent indeterminate (3 levels) after collapsing the parent and expanding a sibling node', () => {
+          const view = render({
+            multiSelect: true,
+            checkboxSelection: true,
+            items: [
+              {
+                id: '1',
+                children: [
+                  { id: '1.1', children: [{ id: '1.1.1' }, { id: '1.1.2' }] },
+                  { id: '1.2' },
+                ],
+              },
+              { id: '2', children: [{ id: '2.1' }] },
+            ],
+            defaultSelectedItems: ['1.1.1'],
+            defaultExpandedItems: ['1', '1.1'],
+          });
+
+          expect(view.getItemCheckboxInput('1.1').dataset.indeterminate).to.equal('true');
+          expect(view.getItemCheckboxInput('1').dataset.indeterminate).to.equal('true');
+
+          fireEvent.click(view.getItemContent('1'));
+          fireEvent.click(view.getItemContent('2'));
+
+          expect(view.getItemCheckboxInput('1').dataset.indeterminate).to.equal('true');
+        });
+
         it('should not set the parent checkbox as indeterminate when no child is selected and the parent is not either', () => {
           const view = render({
             multiSelect: true,
@@ -847,65 +924,74 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
       });
     });
 
-    // The `aria-selected` attribute is used by the `view.isItemSelected` method.
+    // The `aria-checked` attribute is used by the `view.isItemSelected` method.
     // This `describe` only tests basics scenarios, more complex scenarios are tested in this file's other `describe`.
-    describe('aria-selected item attribute', () => {
+    describe('aria-checked item attribute', () => {
       describe('single selection', () => {
-        it('should have the attribute `aria-selected=false` if not selected', () => {
+        it('should have the attribute `aria-checked=false` if not selected', () => {
           const view = render({
             items: [{ id: '1' }, { id: '2' }],
           });
 
-          expect(view.getItemRoot('1')).to.have.attribute('aria-selected', 'false');
+          expect(view.getItemRoot('1')).to.have.attribute('aria-checked', 'false');
         });
 
-        it('should have the attribute `aria-selected=true` if selected', () => {
+        it('should have the attribute `aria-checked=true` if selected', () => {
           const view = render({
             items: [{ id: '1' }, { id: '2' }],
             defaultSelectedItems: '1',
           });
 
-          expect(view.getItemRoot('1')).to.have.attribute('aria-selected', 'true');
+          expect(view.getItemRoot('1')).to.have.attribute('aria-checked', 'true');
+        });
+
+        it('should have the attribute `aria-cheded="mixed"` if partially selected', () => {
+          const view = render({
+            items: [{ id: '1', children: [{ id: '1.1' }, { id: '1.2' }] }, { id: '2' }],
+            defaultSelectedItems: '1.1',
+            defaultExpandedItems: ['1'],
+          });
+          expect(view.getItemRoot('1')).to.have.attribute('aria-checked', 'mixed');
         });
       });
 
       describe('multi selection', () => {
-        it('should have the attribute `aria-selected=false` if not selected', () => {
+        it('should have the attribute `aria-checked=false` if not selected', () => {
           const view = render({
             multiSelect: true,
             items: [{ id: '1' }, { id: '2' }],
           });
 
-          expect(view.getItemRoot('1')).to.have.attribute('aria-selected', 'false');
+          expect(view.getItemRoot('1')).to.have.attribute('aria-checked', 'false');
         });
 
-        it('should have the attribute `aria-selected=true` if selected', () => {
+        it('should have the attribute `aria-checked=true` if selected', () => {
           const view = render({
             multiSelect: true,
             items: [{ id: '1' }, { id: '2' }],
             defaultSelectedItems: ['1'],
           });
 
-          expect(view.getItemRoot('1')).to.have.attribute('aria-selected', 'true');
+          expect(view.getItemRoot('1')).to.have.attribute('aria-checked', 'true');
         });
 
-        it('should not have the attribute `aria-selected=false` if disabledSelection is true', () => {
+        it('should not have the attribute `aria-checked=false` if disabledSelection is true', () => {
           const view = render({
             multiSelect: true,
             items: [{ id: '1' }, { id: '2' }],
             disableSelection: true,
           });
 
-          expect(view.getItemRoot('1')).not.to.have.attribute('aria-selected');
+          expect(view.getItemRoot('1')).not.to.have.attribute('aria-checked');
         });
 
-        it('should not have the attribute `aria-selected=false` if the item is disabled', () => {
+        it('should not have the attribute `aria-checked=false` if the item is disabled', () => {
           const view = render({
             multiSelect: true,
             items: [{ id: '1', disabled: true }, { id: '2' }],
           });
 
-          expect(view.getItemRoot('1')).not.to.have.attribute('aria-selected');
+          expect(view.getItemRoot('1')).not.to.have.attribute('aria-checked');
         });
       });
     });
@@ -943,7 +1029,7 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
       });
     });
 
-    describe('selectItem api method', () => {
+    describe('setItemSelection() api method', () => {
       describe('single selection', () => {
         it('should select un-selected item when shouldBeSelected is not defined', () => {
           const view = render({
@@ -951,7 +1037,7 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
           });
 
           act(() => {
-            view.apiRef.current.selectItem({ itemId: '1', event: {} as any });
+            view.apiRef.current.setItemSelection({ itemId: '1', event: {} as any });
           });
 
           expect(view.isItemSelected('1')).to.equal(true);
@@ -964,7 +1050,7 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
           });
 
           act(() => {
-            view.apiRef.current.selectItem({ itemId: '1', event: {} as any });
+            view.apiRef.current.setItemSelection({ itemId: '1', event: {} as any });
           });
 
           expect(view.isItemSelected('1')).to.equal(false);
@@ -977,7 +1063,7 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
           });
 
           act(() => {
-            view.apiRef.current.selectItem({ itemId: '1', event: {} as any });
+            view.apiRef.current.setItemSelection({ itemId: '1', event: {} as any });
           });
 
           expect(view.isItemSelected('1')).to.equal(false);
@@ -991,7 +1077,7 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
           });
 
           act(() => {
-            view.apiRef.current.selectItem({ itemId: '1', event: {} as any });
+            view.apiRef.current.setItemSelection({ itemId: '1', event: {} as any });
           });
 
           expect(view.isItemSelected('1')).to.equal(true);
@@ -1007,7 +1093,7 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
           });
 
           act(() => {
-            view.apiRef.current.selectItem({ itemId: '1', event: {} as any });
+            view.apiRef.current.setItemSelection({ itemId: '1', event: {} as any });
           });
 
           expect(view.getSelectedTreeItems()).to.deep.equal(['1']);
@@ -1021,7 +1107,7 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
           });
 
           act(() => {
-            view.apiRef.current.selectItem({
+            view.apiRef.current.setItemSelection({
               itemId: '1',
               event: {} as any,
               keepExistingSelection: true,
@@ -1043,7 +1129,7 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
           });
 
           act(() => {
-            view.apiRef.current.selectItem({ itemId: '1', event });
+            view.apiRef.current.setItemSelection({ itemId: '1', event });
           });
 
           expect(onItemSelectionToggle.callCount).to.equal(1);
@@ -1063,7 +1149,7 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
           });
 
           act(() => {
-            view.apiRef.current.selectItem({ itemId: '1', event });
+            view.apiRef.current.setItemSelection({ itemId: '1', event });
           });
 
           expect(onItemSelectionToggle.callCount).to.equal(1);

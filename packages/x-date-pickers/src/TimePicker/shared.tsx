@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { DefaultizedProps } from '@mui/x-internals/types';
-import { useUtils } from '../internals/hooks/useUtils';
 import { TimeClockSlots, TimeClockSlotProps } from '../TimeClock/TimeClock.types';
 import { BasePickerInputProps } from '../internals/models/props/basePickerProps';
 import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
@@ -11,12 +10,14 @@ import {
   TimePickerToolbar,
 } from './TimePickerToolbar';
 import { TimeValidationError } from '../models';
-import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
+import { PickerViewRendererLookup } from '../internals/hooks/usePicker';
 import { TimeViewRendererProps } from '../timeViewRenderers';
 import { applyDefaultViewProps } from '../internals/utils/views';
 import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/time';
 import { PickerValue, TimeViewWithMeridiem } from '../internals/models';
 import { ValidateTimePropsToDefault } from '../validation/validateTime';
+import { useApplyDefaultValuesToTimeValidationProps } from '../managers/useTimeManager';
+import { usePickerAdapter } from '../hooks/usePickerAdapter';
 
 export interface BaseTimePickerSlots extends TimeClockSlots {
   /**
@@ -73,13 +74,14 @@ export function useTimePickerDefaultizedProps<
   TView extends TimeViewWithMeridiem,
   Props extends BaseTimePickerProps<TView>,
 >(props: Props, name: string): UseTimePickerDefaultizedProps<TView, Props> {
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
   const themeProps = useThemeProps({
     props,
     name,
   });
 
-  const ampm = themeProps.ampm ?? utils.is12HourCycleInCurrentLocale();
+  const validationProps = useApplyDefaultValuesToTimeValidationProps(themeProps);
+  const ampm = themeProps.ampm ?? adapter.is12HourCycleInCurrentLocale();
 
   const localeText = React.useMemo<PickersInputLocaleText | undefined>(() => {
     if (themeProps.localeText?.toolbarTitle == null) {
@@ -94,6 +96,7 @@ export function useTimePickerDefaultizedProps<
 
   return {
     ...themeProps,
+    ...validationProps,
     ampm,
     localeText,
     ...applyDefaultViewProps({
@@ -102,8 +105,6 @@ export function useTimePickerDefaultizedProps<
       defaultViews: ['hours', 'minutes'] as TView[],
       defaultOpenTo: 'hours' as TView,
     }),
-    disableFuture: themeProps.disableFuture ?? false,
-    disablePast: themeProps.disablePast ?? false,
     slots: {
       toolbar: TimePickerToolbar,
       ...themeProps.slots,

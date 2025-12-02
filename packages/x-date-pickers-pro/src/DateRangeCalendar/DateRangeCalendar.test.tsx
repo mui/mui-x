@@ -1,7 +1,12 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import { expect } from 'chai';
-import { screen, fireEvent, within, fireTouchChangedEvent } from '@mui/internal-test-utils';
+import {
+  screen,
+  fireEvent,
+  within,
+  fireTouchChangedEvent,
+  waitFor,
+} from '@mui/internal-test-utils';
 import {
   adapterToUse,
   buildPickerDragInteractions,
@@ -15,7 +20,6 @@ import {
 } from '@mui/x-date-pickers-pro/DateRangeCalendar';
 import { DateRangePickerDay } from '@mui/x-date-pickers-pro/DateRangePickerDay';
 import { describeConformance } from 'test/utils/describeConformance';
-import { testSkipIf } from 'test/utils/skipIf';
 import { RangePosition } from '../models';
 
 const getPickerDay = (name: string, picker = 'January 2018') =>
@@ -29,10 +33,7 @@ const dynamicShouldDisableDate = (date, position: RangePosition) => {
 };
 
 describe('<DateRangeCalendar />', () => {
-  const { render, clock } = createPickerRenderer({
-    clock: 'fake',
-    clockConfig: new Date(2018, 0, 10),
-  });
+  const { render } = createPickerRenderer();
 
   describeConformance(<DateRangeCalendar />, () => ({
     classes,
@@ -44,26 +45,28 @@ describe('<DateRangeCalendar />', () => {
   }));
 
   describe('Selection', () => {
-    it('should select the range from the next month', () => {
+    it('should select the range from the next month', async () => {
       const onChange = spy();
 
-      render(
+      const { user } = render(
         <DateRangeCalendar
           onChange={onChange}
           defaultValue={[adapterToUse.date('2019-01-01'), null]}
         />,
       );
 
-      fireEvent.click(getPickerDay('1', 'January 2019'));
+      await user.click(getPickerDay('1', 'January 2019'));
 
-      // FIXME use `getByRole(role, {hidden: false})` and skip JSDOM once this suite can run in JSDOM
       const [visibleButton] = screen.getAllByRole('button', {
-        hidden: true,
         name: 'Next month',
       });
-      fireEvent.click(visibleButton);
-      clock.runToLast();
-      fireEvent.click(getPickerDay('19', 'March 2019'));
+      await user.click(visibleButton);
+
+      await waitFor(() => {
+        getPickerDay('19', 'March 2019');
+      });
+
+      await user.click(getPickerDay('19', 'March 2019'));
 
       expect(onChange.callCount).to.equal(2);
 
@@ -178,7 +181,7 @@ describe('<DateRangeCalendar />', () => {
         expect(onChange.callCount).to.equal(0);
       });
 
-      testSkipIf(!document.elementFromPoint)(
+      it.skipIf(!document.elementFromPoint)(
         'should not emit "onChange" when touch dragging is ended where it was started',
         () => {
           const onChange = spy();
@@ -246,7 +249,7 @@ describe('<DateRangeCalendar />', () => {
         expect(document.activeElement).toHaveAccessibleName('2');
       });
 
-      testSkipIf(!document.elementFromPoint)(
+      it.skipIf(!document.elementFromPoint)(
         'should emit "onChange" when touch dragging end date',
         () => {
           const onChange = spy();
@@ -324,7 +327,7 @@ describe('<DateRangeCalendar />', () => {
         expect(document.activeElement).toHaveAccessibleName('22');
       });
 
-      testSkipIf(!document.elementFromPoint)(
+      it.skipIf(!document.elementFromPoint)(
         'should emit "onChange" when touch dragging start date',
         () => {
           const onChange = spy();
@@ -399,7 +402,7 @@ describe('<DateRangeCalendar />', () => {
         ).to.have.lengthOf(10);
       });
 
-      testSkipIf(!document.elementFromPoint)(
+      it.skipIf(!document.elementFromPoint)(
         'should dynamically update "shouldDisableDate" when flip touch dragging',
         () => {
           const initialValue: [any, any] = [
@@ -450,19 +453,20 @@ describe('<DateRangeCalendar />', () => {
   });
 
   describe('prop: disableAutoMonthSwitching', () => {
-    it('should go to the month of the end date when changing the start date', () => {
-      render(
+    it('should go to the month of the end date when changing the start date', async () => {
+      const { user } = render(
         <DateRangeCalendar
           defaultValue={[adapterToUse.date('2018-01-01'), adapterToUse.date('2018-07-01')]}
         />,
       );
 
-      fireEvent.click(getPickerDay('5', 'January 2018'));
-      clock.runToLast();
-      expect(getPickerDay('1', 'July 2018')).not.to.equal(null);
+      await user.click(getPickerDay('5', 'January 2018'));
+      await waitFor(() => {
+        expect(getPickerDay('1', 'July 2018')).not.to.equal(null);
+      });
     });
 
-    it('should not go to the month of the end date when changing the start date and props.disableAutoMonthSwitching = true', () => {
+    it('should not go to the month of the end date when changing the start date and props.disableAutoMonthSwitching = true', async () => {
       render(
         <DateRangeCalendar
           defaultValue={[adapterToUse.date('2018-01-01'), adapterToUse.date('2018-07-01')]}
@@ -471,11 +475,12 @@ describe('<DateRangeCalendar />', () => {
       );
 
       fireEvent.click(getPickerDay('5', 'January 2018'));
-      clock.runToLast();
-      expect(getPickerDay('1', 'January 2018')).not.to.equal(null);
+      await waitFor(() => {
+        expect(getPickerDay('1', 'January 2018')).not.to.equal(null);
+      });
     });
 
-    it('should go to the month of the start date when changing both date from the outside', () => {
+    it('should go to the month of the start date when changing both date from the outside', async () => {
       const { setProps } = render(
         <DateRangeCalendar
           value={[adapterToUse.date('2018-01-01'), adapterToUse.date('2018-07-01')]}
@@ -485,12 +490,13 @@ describe('<DateRangeCalendar />', () => {
       setProps({
         value: [adapterToUse.date('2018-04-01'), adapterToUse.date('2018-04-01')],
       });
-      clock.runToLast();
-      expect(getPickerDay('1', 'April 2018')).not.to.equal(null);
+      await waitFor(() => {
+        expect(getPickerDay('1', 'April 2018')).not.to.equal(null);
+      });
     });
 
     describe('prop: currentMonthCalendarPosition', () => {
-      it('should switch to the selected month when changing value from the outside', () => {
+      it('should switch to the selected month when changing value from the outside', async () => {
         const { setProps } = render(
           <DateRangeCalendar
             value={[adapterToUse.date('2018-01-10'), adapterToUse.date('2018-01-15')]}
@@ -501,8 +507,10 @@ describe('<DateRangeCalendar />', () => {
         setProps({
           value: [adapterToUse.date('2018-02-11'), adapterToUse.date('2018-02-22')],
         });
-        clock.runToLast();
-        expect(getPickerDay('1', 'February 2018')).not.to.equal(null);
+
+        await waitFor(() => {
+          expect(getPickerDay('1', 'February 2018')).not.to.equal(null);
+        });
       });
     });
   });
@@ -545,6 +553,7 @@ describe('<DateRangeCalendar />', () => {
 
       render(
         <DateRangeCalendar
+          referenceDate={adapterToUse.date('2018-01-01')}
           slots={{
             day: React.memo(RenderCount),
           }}
@@ -561,6 +570,7 @@ describe('<DateRangeCalendar />', () => {
 
       render(
         <DateRangeCalendar
+          referenceDate={adapterToUse.date('2018-01-01')}
           slots={{
             day: React.memo(RenderCount),
           }}

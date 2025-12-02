@@ -1,7 +1,7 @@
 ---
 productId: x-tree-view
 title: Accessibility
-githubLabel: 'component: tree view'
+githubLabel: 'scope: tree view'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 packageName: '@mui/x-tree-view'
 ---
@@ -34,8 +34,8 @@ On macOS replace <kbd class="key">Ctrl</kbd> with <kbd class="key">⌘ Command</
 
 Some devices may lack certain keys, requiring the use of key combinations. In this case, replace:
 
-- <kbd class="key">Home</kbd> with <kbd class="key">Fn</kbd>+<kbd class="key">Arrow Left</kbd>
-- <kbd class="key">End</kbd> with <kbd class="key">Fn</kbd>+<kbd class="key">Arrow Right</kbd>
+- <kbd class="key">Home</kbd> with <kbd><kbd class="key">Fn</kbd>+<kbd class="key">Arrow Left</kbd></kbd>
+- <kbd class="key">End</kbd> with <kbd><kbd class="key">Fn</kbd>+<kbd class="key">Arrow Right</kbd></kbd>
 
 :::
 
@@ -50,7 +50,7 @@ Some devices may lack certain keys, requiring the use of key combinations. In th
 |                                                                    <kbd class="key">End</kbd> | Focuses the last item in the tree                                                                                                                                                                                    |
 |                                                                     <kbd class="key">\*</kbd> | Expands all siblings that are at the same level as the focused item without moving focus                                                                                                                             |
 
-Type-ahead is supported for single characters. When typing a character, focus moves to the next item with a label that starts with the typed character.
+When typing a set of characters, focus moves to the next item with a label that starts with the typed characters.
 
 ## Selection
 
@@ -67,7 +67,7 @@ When a single-select tree receives focus:
 
 |                         Keys | Description                                                  |
 | ---------------------------: | :----------------------------------------------------------- |
-| <kbd class="key">Space</kbd> | Selects the focused item.                                    |
+| <kbd class="key">Space</kbd> | Toggles the selection state of the focused item.             |
 | <kbd class="key">Enter</kbd> | Selects the focused item if the item does not have children. |
 
 ### On multi-select trees
@@ -79,11 +79,11 @@ When a multi-select tree receives focus:
   - the first selected item if it is the first render
   - the item that was last selected otherwise
 
-|                                                                                 Keys | Description                                                       |
-| -----------------------------------------------------------------------------------: | :---------------------------------------------------------------- |
-|                                                         <kbd class="key">Space</kbd> | Toggles the selection state of the focused item.                  |
-|                         <kbd class="key">Shift</kbd>+<kbd class="key">Arrow Up</kbd> | Moves focus and toggles the selection state of the previous item. |
-|                       <kbd class="key">Shift</kbd>+<kbd class="key">Arrow Down</kbd> | Moves focus and toggles the selection state of the next item.     |
-| <kbd class="key">Ctrl</kbd>+<kbd class="key">Shift</kbd>+<kbd class="key">Home</kbd> | Selects the focused item and all items up to the first item.      |
-|  <kbd class="key">Ctrl</kbd>+<kbd class="key">Shift</kbd>+<kbd class="key">End</kbd> | Selects the focused item and all the items down to the last item. |
-|                                 <kbd class="key">Ctrl</kbd>+<kbd class="key">A</kbd> | Selects all items.                                                |
+|                                                                                            Keys | Description                                                       |
+| ----------------------------------------------------------------------------------------------: | :---------------------------------------------------------------- |
+|                                                                    <kbd class="key">Space</kbd> | Toggles the selection state of the focused item.                  |
+|                         <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Arrow Up</kbd></kbd> | Moves focus and toggles the selection state of the previous item. |
+|                       <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Arrow Down</kbd></kbd> | Moves focus and toggles the selection state of the next item.     |
+| <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">Shift</kbd>+<kbd class="key">Home</kbd></kbd> | Selects the focused item and all items up to the first item.      |
+|  <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">Shift</kbd>+<kbd class="key">End</kbd></kbd> | Selects the focused item and all the items down to the last item. |
+|                                 <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">A</kbd></kbd> | Selects all items.                                                |

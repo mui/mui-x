@@ -8,6 +8,11 @@ export interface HeatmapClasses {
   highlighted: string;
   /** Styles applied to the cell element if faded. */
   faded: string;
+  /**
+   * Styles applied to the root element for a specified series.
+   * Needs to be suffixed with the series ID: `.${heatmapClasses.series}-${seriesId}`.
+   */
+  series: string;
 }
 
 export type HeatmapClassKey = keyof HeatmapClasses;
@@ -20,7 +25,7 @@ export function getHeatmapUtilityClass(slot: string) {
   return generateUtilityClass('MuiHeatmap', slot);
 }
 export const heatmapClasses: HeatmapClasses = {
-  ...generateUtilityClasses('MuiHeatmap', ['cell']),
+  ...generateUtilityClasses('MuiHeatmap', ['cell', 'series']),
   highlighted: 'Charts-highlighted',
   faded: 'Charts-faded',
 };

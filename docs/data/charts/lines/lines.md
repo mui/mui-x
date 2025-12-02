@@ -8,15 +8,26 @@ components: LineChart, LineChartPro, LineElement, LineHighlightElement, LineHigh
 
 <p class="description">Line charts can express qualities about data, such as hierarchy, highlights, and comparisons.</p>
 
+## Overview
+
+Line charts are ideal for showing how values change over continuous dimensions such as time or measurement scales.
+
+They emphasize trends, patterns, and fluctuations, making them useful for exploring relationships, detecting cycles, or tracking performance over time.
+Each line typically represents a series, allowing easy comparison between multiple variables or groups.
+
+{{"demo": "LineOverview.js"}}
+
 ## Basics
 
 ### Data format
 
-To plot lines, a series must have a `data` property containing an array of numbers.
-This `data` array corresponds to y values.
+Line charts series should contain a `data` property containing an array of numbers.
+This `data` array corresponds to y-values.
 
-By default, those y values will be associated with integers starting from 0 (0, 1, 2, 3, ...).
-To modify the x values, you should provide a `xAxis` with data property.
+You can specify x-values with the `xAxis` prop.
+This axis can have any `scaleType` and its `data` should have the same length as your series.
+
+By default, those y-values will be associated with integers starting from 0 (0, 1, 2, 3, ...).
 
 {{"demo": "BasicLineChart.js"}}
 
@@ -39,20 +50,50 @@ You can fill the area of the line by setting the series' `area` property to `tru
 
 {{"demo": "BasicArea.js"}}
 
-## Stacking
+### Log scale
+
+A y-axis with a log scale cannot plot a line that crosses zero nor an area chart because the logarithm of zero is undefined.
+
+You can work around this limitation by using a [symlog scale](/x/react-charts/axis/#symlog-scale).
+
+### Stacking
 
 Each line series can get a `stack` property which expects a string value.
 Series with the same `stack` will be stacked on top of each other.
 
-{{"demo": "StackedAreas.js"}}
-
-### Stacking strategy
-
 You can use the `stackOffset` and `stackOrder` properties to define how the series will be stacked.
-
 By default, they are stacked in the order you defined them, with positive values stacked above 0 and negative values stacked below 0.
 
 For more information, see [stacking docs](/x/react-charts/stacking/).
+
+{{"demo": "StackedAreas.js"}}
+
+### Axis domain
+
+By default, axes round their limits to match human-readable values.
+For example, if your data ranges from 2 to 195, the axis displays values from 0 to 200.
+This behavior can be modified by the [axis property `domainLimit`](/x/react-charts/axis/#relative-axis-subdomain).
+
+:::info
+The current default behavior can lead to empty space on left/right of the line chart.
+To fix that issue, future major version will default the x-axis domain limit to `'strict'`.
+
+To test this behavior, add the `experimentalFeatures` prop to your chart with `preferStrictDomainInLineCharts: true` value.
+You can also enable it globally using [theme default props](/material-ui/customization/theme-components/#theme-default-props)
+
+```js
+components: {
+  MuiChartDataProvider: {
+    defaultProps: {
+       experimentalFeatures: { preferStrictDomainInLineCharts: true }
+    },
+  },
+}
+```
+
+:::
+
+{{"demo": "LineDefaultDomainLimit.js"}}
 
 ## Partial data
 
@@ -109,10 +150,10 @@ const clickHandler = (
 ) => {};
 ```
 
-{{"demo": "LineClickNoSnap.js"}}
+{{"demo": "LineClick.js"}}
 
 :::info
-Their is a slight difference between the `event` of `onAxisClick` and the others:
+There is a slight difference between the `event` of `onAxisClick` and the others:
 
 - For `onAxisClick` it's a native mouse event emitted by the svg component.
 - For others, it's a React synthetic mouse event emitted by the area, line, or mark component.
@@ -121,7 +162,7 @@ Their is a slight difference between the `event` of `onAxisClick` and the others
 
 ### Composition
 
-If you're using composition, you can get those click event as follow.
+If you're using composition, you can get those click events as follows.
 Notice that the `onAxisClick` will handle both bar and line series if you mix them.
 
 ```jsx
@@ -169,7 +210,7 @@ This property expects one of the following string values, corresponding to the i
 This series property adds the option to control the interpolation of a series.
 Different series could even have different interpolations.
 
-{{"demo": "InterpolationDemoNoSnap.js", "hideToolbar": true}}
+{{"demo": "InterpolationDemo.js", "hideToolbar": true}}
 
 #### Expanding steps
 
@@ -214,32 +255,33 @@ The highlighted data has a mark regardless if it has an even or odd index.
 Line plots are made of three elements named `LineElement`, `AreaElement`, and `MarkElement`.
 Each element can be selected with the CSS class name `.MuiLineElement-root`, `.MuiAreaElement-root`, or `.MuiMarkElement-root`.
 
-If you want to select the element of a given series, you can use classes `.MuiLineElement-series-<seriesId>` with `<seriesId>` the id of the series you want to customize.
+If you want to select the element of a given series, you can use the `data-series` attribute.
 
 In the next example, each line style is customized with dashes, and marks are removed.
 The area of Germany's GDP also gets a custom gradient color.
 The definition of `myGradient` is passed as a children of the chart component.
 
 ```jsx
-sx={{
-  '& .MuiLineElement-root': {
-    strokeDasharray: '10 5',
-    strokeWidth: 4,
-  },
-  '& .MuiAreaElement-series-Germany': {
-    fill: "url('#myGradient')",
-  },
-}}
+<LineChart
+  sx={{
+    '& .MuiLineElement-root': {
+      strokeDasharray: '10 5',
+      strokeWidth: 4,
+    },
+    '& .MuiAreaElement-root[data-series="Germany"]': {
+      fill: "url('#myGradient')",
+    },
+  }}
+/>
 ```
 
 {{"demo": "CSSCustomization.js"}}
 
 ## Animation
 
-To skip animation at the creation and update of your chart, you can use the `skipAnimation` prop.
-When set to `true` it skips animation powered by `@react-spring/web`.
+Chart containers respect [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/prefers-reduced-motion), but you can also disable animations manually by setting the `skipAnimation` prop to `true`.
 
-Charts containers already use the `useReducedMotion()` from `@react-spring/web` to skip animation [according to user preferences](https://react-spring.dev/docs/utilities/use-reduced-motion#why-is-it-important).
+When `skipAnimation` is enabled, the chart renders without any animations.
 
 :::warning
 If you support interactive ways to add or remove series from your chart, you have to provide the series' id.
@@ -260,3 +302,48 @@ This will lead to strange behaviors.
 ```
 
 {{"demo": "LineAnimation.js"}}
+
+## Composition
+
+Use the `<ChartDataProvider />` to provide `series`, `xAxis`, and `yAxis` props for composition.
+
+In addition to the common chart components available for [composition](/x/react-charts/composition/), you can use the following components:
+
+- `<AreaPlot />` renders the series areas.
+- `<LinePlot />` renders the series lines.
+- `<MarkPlot />` renders the series marks.
+- `<LineHighlightPlot />` renders larger mark dots on the highlighted values.
+
+Here's how the Line Chart is composed:
+
+```jsx
+<ChartDataProvider>
+  <ChartsWrapper>
+    <ChartsLegend />
+    <ChartsSurface>
+      <ChartsGrid />
+      <g clipPath={`url(#${clipPathId})`}>
+        {/* Elements clipped inside the drawing area. */}
+        <AreaPlot />
+        <LinePlot />
+        <ChartsOverlay />
+        <ChartsAxisHighlight />
+      </g>
+      <ChartsAxis />
+      <g data-drawing-container>
+        {/* Elements able to overflow the drawing area. */}
+        <MarkPlot />
+      </g>
+      <LineHighlightPlot />
+      <ChartsClipPath id={clipPathId} />
+    </ChartsSurface>
+    <ChartsTooltip />
+  </ChartsWrapper>
+</ChartDataProvider>
+```
+
+:::info
+The `data-drawing-container` indicates that children of this element should be considered part of the drawing area, even if they overflow.
+
+See [Composition—clipping](/x/react-charts/composition/#clipping) for more info.
+:::

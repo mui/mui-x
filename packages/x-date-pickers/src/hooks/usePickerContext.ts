@@ -6,7 +6,7 @@ import { DateOrTimeViewWithMeridiem, PickerValidValue, PickerValue } from '../in
 export const PickerContext = React.createContext<PickerContextValue<any, any, any> | null>(null);
 
 /**
- * Returns the context passed by the picker that wraps the current component.
+ * Returns the context passed by the Picker wrapping the current component.
  */
 export const usePickerContext = <
   TValue extends PickerValidValue = PickerValue,
@@ -16,7 +16,7 @@ export const usePickerContext = <
   const value = React.useContext(PickerContext) as PickerContextValue<TValue, TView, TError>;
   if (value == null) {
     throw new Error(
-      'MUI X: The `usePickerContext` hook can only be called inside the context of a picker component',
+      'MUI X: The `usePickerContext` hook can only be called inside the context of a Picker component',
     );
   }
 

@@ -2,5 +2,6 @@ export { useTreeViewId } from './useTreeViewId';
 export type {
   UseTreeViewIdSignature,
   UseTreeViewIdParameters,
-  UseTreeViewIdDefaultizedParameters,
+  UseTreeViewIdParametersWithDefaults,
 } from './useTreeViewId.types';
+export { idSelectors } from './useTreeViewId.selectors';

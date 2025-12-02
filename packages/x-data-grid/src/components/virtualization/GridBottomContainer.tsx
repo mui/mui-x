@@ -11,13 +11,15 @@ const useUtilityClasses = () => {
   return composeClasses(slots, getDataGridUtilityClass, {});
 };
 
+export type GridBottomContainerProps = React.PropsWithChildren;
+
 const Element = styled('div')({
   position: 'sticky',
-  zIndex: 4,
+  zIndex: 40,
   bottom: 'calc(var(--DataGrid-hasScrollX) * var(--DataGrid-scrollbarSize))',
 });
 
-export function GridBottomContainer(props: React.PropsWithChildren) {
+export function GridBottomContainer(props: GridBottomContainerProps) {
   const classes = useUtilityClasses();
 
   return (

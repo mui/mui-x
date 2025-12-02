@@ -1,8 +1,8 @@
 import { RefObject } from '@mui/x-internals/types';
+import { Rowspan } from '@mui/x-virtualizer';
 import { gridFilteredSortedRowIdsSelector } from '../filter/gridFilterSelector';
-import { GridColDef, GridRowId } from '../../../models';
-import { gridRowSpanningHiddenCellsSelector } from '../rows/gridRowSpanningSelectors';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridRowId } from '../../../models';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 
 export const getLeftColumnIndex = ({
   currentColIndex,
@@ -51,13 +51,13 @@ export const getRightColumnIndex = ({
 };
 
 export function findNonRowSpannedCell(
-  apiRef: RefObject<GridApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   rowId: GridRowId,
-  field: GridColDef['field'],
+  colIndex: number,
   rowSpanScanDirection: 'up' | 'down',
 ) {
-  const rowSpanHiddenCells = gridRowSpanningHiddenCellsSelector(apiRef);
-  if (!rowSpanHiddenCells[rowId]?.[field]) {
+  const rowSpanHiddenCells = Rowspan.selectors.hiddenCells(apiRef.current.virtualizer.store.state);
+  if (!rowSpanHiddenCells[rowId]?.[colIndex]) {
     return rowId;
   }
   const filteredSortedRowIds = gridFilteredSortedRowIdsSelector(apiRef);
@@ -66,7 +66,7 @@ export function findNonRowSpannedCell(
     filteredSortedRowIds.indexOf(rowId) + (rowSpanScanDirection === 'down' ? 1 : -1);
   while (nextRowIndex >= 0 && nextRowIndex < filteredSortedRowIds.length) {
     const nextRowId = filteredSortedRowIds[nextRowIndex];
-    if (!rowSpanHiddenCells[nextRowId]?.[field]) {
+    if (!rowSpanHiddenCells[nextRowId]?.[colIndex]) {
       return nextRowId;
     }
     nextRowIndex += rowSpanScanDirection === 'down' ? 1 : -1;

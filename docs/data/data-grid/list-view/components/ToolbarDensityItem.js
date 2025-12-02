@@ -7,6 +7,7 @@ import {
   GridCheckIcon,
   GridViewHeadlineIcon,
   GridTableRowsIcon,
+  ToolbarButton,
 } from '@mui/x-data-grid-premium';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -15,7 +16,6 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import Typography from '@mui/material/Typography';
 import { Drawer, DrawerHeader } from './Drawer';
-import { ToolbarButton } from './ToolbarButton';
 
 const DENSITY_ICONS = {
   compact: GridViewHeadlineIcon,

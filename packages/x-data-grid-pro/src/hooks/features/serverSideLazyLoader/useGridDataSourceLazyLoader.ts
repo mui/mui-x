@@ -1,9 +1,11 @@
+'use client';
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { throttle } from '@mui/x-internals/throttle';
-import { unstable_debounce as debounce } from '@mui/utils';
+import useEventCallback from '@mui/utils/useEventCallback';
+import debounce from '@mui/utils/debounce';
 import {
-  useGridApiEventHandler,
+  useGridEvent,
   gridSortModelSelector,
   gridFilterModelSelector,
   GridEventListener,
@@ -11,23 +13,24 @@ import {
   GridGroupNode,
   GridSkeletonRowNode,
   gridPaginationModelSelector,
-  gridDimensionsSelector,
   gridFilteredSortedRowIdsSelector,
+  gridRowIdSelector,
+  GridRowId,
 } from '@mui/x-data-grid';
 import {
   getVisibleRows,
-  GridGetRowsParams,
   gridRenderContextSelector,
   GridStrategyGroup,
   GridStrategyProcessor,
   useGridRegisterStrategyProcessor,
   runIf,
+  DataSourceRowsUpdateStrategy,
 } from '@mui/x-data-grid/internals';
+import { GridGetRowsParamsPro as GridGetRowsParams } from '../dataSource/models';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { findSkeletonRowsSection } from '../lazyLoader/utils';
 import { GRID_SKELETON_ROW_ROOT_ID } from '../lazyLoader/useGridLazyLoaderPreProcessors';
-import { DataSourceRowsUpdateStrategy } from '../dataSource/utils';
 
 enum LoadingTrigger {
   VIEWPORT,
@@ -44,28 +47,22 @@ const getSkeletonRowId = (index: number) => `${GRID_SKELETON_ROW_ROOT_ID}-${inde
 /**
  * @requires useGridRows (state)
  * @requires useGridPagination (state)
- * @requires useGridDimensions (method) - can be after
  * @requires useGridScroll (method
  */
 export const useGridDataSourceLazyLoader = (
   privateApiRef: RefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
-    | 'pagination'
-    | 'paginationMode'
-    | 'unstable_dataSource'
-    | 'unstable_lazyLoading'
-    | 'unstable_lazyLoadingRequestThrottleMs'
-    | 'scrollEndThreshold'
+    'dataSource' | 'lazyLoading' | 'lazyLoadingRequestThrottleMs'
   >,
 ): void => {
   const setStrategyAvailability = React.useCallback(() => {
     privateApiRef.current.setStrategyAvailability(
       GridStrategyGroup.DataSource,
       DataSourceRowsUpdateStrategy.LazyLoading,
-      props.unstable_dataSource && props.unstable_lazyLoading ? () => true : () => false,
+      props.dataSource && props.lazyLoading ? () => true : () => false,
     );
-  }, [privateApiRef, props.unstable_lazyLoading, props.unstable_dataSource]);
+  }, [privateApiRef, props.lazyLoading, props.dataSource]);
 
   const [lazyLoadingRowsUpdateStrategyActive, setLazyLoadingRowsUpdateStrategyActive] =
     React.useState(false);
@@ -73,10 +70,11 @@ export const useGridDataSourceLazyLoader = (
   const previousLastRowIndex = React.useRef(0);
   const loadingTrigger = React.useRef<LoadingTrigger | null>(null);
   const rowsStale = React.useRef<boolean>(false);
+  const draggedRowId = React.useRef<GridRowId | null>(null);
 
   const fetchRows = React.useCallback(
     (params: Partial<GridGetRowsParams>) => {
-      privateApiRef.current.unstable_dataSource.fetchRows(GRID_ROOT_GROUP_ID, params);
+      privateApiRef.current.dataSource.fetchRows(GRID_ROOT_GROUP_ID, params);
     },
     [privateApiRef],
   );
@@ -104,7 +102,7 @@ export const useGridDataSourceLazyLoader = (
 
   const resetGrid = React.useCallback(() => {
     privateApiRef.current.setLoading(true);
-    privateApiRef.current.unstable_dataSource.cache.clear();
+    privateApiRef.current.dataSource.cache.clear();
     rowsStale.current = true;
     previousLastRowIndex.current = 0;
     const paginationModel = gridPaginationModelSelector(privateApiRef);
@@ -159,70 +157,68 @@ export const useGridDataSourceLazyLoader = (
 
     /**
      * Do nothing if
-     * - rowCount is unknown
      * - children count is 0
-     * - children count is equal to rowCount
      */
-    if (
-      pageRowCount === -1 ||
-      pageRowCount === undefined ||
-      rootChildrenCount === 0 ||
-      rootChildrenCount === pageRowCount
-    ) {
+    if (rootChildrenCount === 0) {
       return;
     }
 
-    // fill the grid with skeleton rows
-    for (let i = 0; i < pageRowCount - rootChildrenCount; i += 1) {
-      const skeletonId = getSkeletonRowId(i + rootChildrenCount); // to avoid duplicate keys on rebuild
-      rootGroupChildren.push(skeletonId);
+    const pageToSkip = adjustRowParams({
+      start: renderedRowsIntervalCache.current.firstRowToRender,
+      end: renderedRowsIntervalCache.current.lastRowToRender,
+    } as GridGetRowsParams);
 
-      const skeletonRowNode: GridSkeletonRowNode = {
-        type: 'skeletonRow',
-        id: skeletonId,
-        parent: GRID_ROOT_GROUP_ID,
-        depth: 0,
-      };
+    let hasChanged = false;
+    const isInitialPage =
+      renderedRowsIntervalCache.current.firstRowToRender === 0 &&
+      renderedRowsIntervalCache.current.lastRowToRender === 0;
 
-      tree[skeletonId] = skeletonRowNode;
-    }
-
-    tree[GRID_ROOT_GROUP_ID] = { ...rootGroup, children: rootGroupChildren };
-
-    privateApiRef.current.setState(
-      (state) => ({
-        ...state,
-        rows: {
-          ...state.rows,
-          tree,
-        },
-      }),
-      'addSkeletonRows',
-    );
-  }, [privateApiRef]);
-
-  const rebuildSkeletonRows = React.useCallback(() => {
-    // replace all data rows with skeleton rows.
-    const tree = privateApiRef.current.state.rows.tree;
-    const rootGroup = tree[GRID_ROOT_GROUP_ID] as GridGroupNode;
-    const rootGroupChildren = [...rootGroup.children];
-
-    for (let i = 0; i < rootGroupChildren.length; i += 1) {
-      if (tree[rootGroupChildren[i]]?.type === 'skeletonRow') {
+    for (let i = 0; i < rootChildrenCount; i += 1) {
+      if (isInitialPage) {
+        break;
+      }
+      // replace the rows not in the viewport with skeleton rows
+      if (
+        ((pageToSkip.start as number) <= i && i <= pageToSkip.end) ||
+        tree[rootGroupChildren[i]]?.type === 'skeletonRow' || // ignore rows that are already skeleton rows
+        tree[rootGroupChildren[i]]?.id === draggedRowId.current // ignore row that is being dragged (https://github.com/mui/mui-x/issues/17854)
+      ) {
         continue;
       }
 
-      const skeletonId = getSkeletonRowId(i);
-      rootGroupChildren[i] = skeletonId;
-
+      const rowId = tree[rootGroupChildren[i]].id; // keep the id, so that row related state is maintained
       const skeletonRowNode: GridSkeletonRowNode = {
         type: 'skeletonRow',
-        id: skeletonId,
+        id: rowId,
         parent: GRID_ROOT_GROUP_ID,
         depth: 0,
       };
 
-      tree[rootGroupChildren[i]] = skeletonRowNode;
+      tree[rowId] = skeletonRowNode;
+      hasChanged = true;
+    }
+
+    // Should only happen with VIEWPORT loading trigger
+    if (loadingTrigger.current === LoadingTrigger.VIEWPORT) {
+      // fill the grid with skeleton rows
+      for (let i = 0; i < pageRowCount - rootChildrenCount; i += 1) {
+        const skeletonId = getSkeletonRowId(i + rootChildrenCount); // to avoid duplicate keys on rebuild
+        rootGroupChildren.push(skeletonId);
+
+        const skeletonRowNode: GridSkeletonRowNode = {
+          type: 'skeletonRow',
+          id: skeletonId,
+          parent: GRID_ROOT_GROUP_ID,
+          depth: 0,
+        };
+
+        tree[skeletonId] = skeletonRowNode;
+        hasChanged = true;
+      }
+    }
+
+    if (!hasChanged) {
+      return;
     }
 
     tree[GRID_ROOT_GROUP_ID] = { ...rootGroup, children: rootGroupChildren };
@@ -237,7 +233,7 @@ export const useGridDataSourceLazyLoader = (
       }),
       'addSkeletonRows',
     );
-  }, [privateApiRef]);
+  }, [privateApiRef, adjustRowParams]);
 
   const updateLoadingTrigger = React.useCallback(
     (rowCount: number) => {
@@ -263,6 +259,8 @@ export const useGridDataSourceLazyLoader = (
 
       const { response, fetchParams } = params;
       const pageRowCount = privateApiRef.current.state.pagination.rowCount;
+      const tree = privateApiRef.current.state.rows.tree;
+      const dataRowIdToModelLookup = privateApiRef.current.state.rows.dataRowIdToModelLookup;
       if (response.rowCount !== undefined || pageRowCount === undefined) {
         privateApiRef.current.setRowCount(response.rowCount === undefined ? -1 : response.rowCount);
       }
@@ -273,18 +271,48 @@ export const useGridDataSourceLazyLoader = (
         // the rows can safely be replaced. skeleton rows will be added later
         privateApiRef.current.setRows(response.rows);
       } else {
-        // having stale rows while not having a request for the first page means that the scroll position should be maintained
-        // convert all existing data to skeleton rows to avoid duplicate keys
-        if (rowsStale.current) {
-          rebuildSkeletonRows();
-        }
-
+        const rootGroup = tree[GRID_ROOT_GROUP_ID] as GridGroupNode;
+        const rootGroupChildren = [...rootGroup.children];
         const filteredSortedRowIds = gridFilteredSortedRowIdsSelector(privateApiRef);
 
         const startingIndex =
           typeof fetchParams.start === 'string'
             ? Math.max(filteredSortedRowIds.indexOf(fetchParams.start), 0)
             : fetchParams.start;
+
+        // Check for duplicate rows
+        let duplicateRowCount = 0;
+        response.rows.forEach((row) => {
+          const rowId = gridRowIdSelector(privateApiRef, row);
+          if (tree[rowId] || dataRowIdToModelLookup[rowId]) {
+            const index = rootGroupChildren.indexOf(rowId);
+            if (index !== -1) {
+              const skeletonId = getSkeletonRowId(index);
+              rootGroupChildren[index] = skeletonId;
+              tree[skeletonId] = {
+                type: 'skeletonRow',
+                id: skeletonId,
+                parent: GRID_ROOT_GROUP_ID,
+                depth: 0,
+              };
+            }
+            delete tree[rowId];
+            delete dataRowIdToModelLookup[rowId];
+            duplicateRowCount += 1;
+          }
+        });
+
+        if (duplicateRowCount > 0) {
+          tree[GRID_ROOT_GROUP_ID] = { ...rootGroup, children: rootGroupChildren };
+          privateApiRef.current.setState((state) => ({
+            ...state,
+            rows: {
+              ...state.rows,
+              tree,
+              dataRowIdToModelLookup,
+            },
+          }));
+        }
 
         privateApiRef.current.unstable_replaceRows(startingIndex, response.rows);
       }
@@ -304,7 +332,7 @@ export const useGridDataSourceLazyLoader = (
       );
       privateApiRef.current.requestPipeProcessorsApplication('hydrateRows');
     },
-    [privateApiRef, updateLoadingTrigger, rebuildSkeletonRows, addSkeletonRows],
+    [privateApiRef, updateLoadingTrigger, addSkeletonRows],
   );
 
   const handleRowCountChange = React.useCallback(() => {
@@ -317,8 +345,8 @@ export const useGridDataSourceLazyLoader = (
     privateApiRef.current.requestPipeProcessorsApplication('hydrateRows');
   }, [privateApiRef, updateLoadingTrigger, addSkeletonRows]);
 
-  const handleScrolling: GridEventListener<'scrollPositionChange'> = React.useCallback(
-    (newScrollPosition) => {
+  const handleIntersection: GridEventListener<'rowsScrollEndIntersection'> = useEventCallback(
+    () => {
       if (rowsStale.current || loadingTrigger.current !== LoadingTrigger.SCROLL_END) {
         return;
       }
@@ -328,36 +356,29 @@ export const useGridDataSourceLazyLoader = (
         return;
       }
 
-      const dimensions = gridDimensionsSelector(privateApiRef.current.state);
-      const position = newScrollPosition.top + dimensions.viewportInnerSize.height;
-      const target = dimensions.contentSize.height - props.scrollEndThreshold;
+      previousLastRowIndex.current = renderContext.lastRowIndex;
 
-      if (position >= target) {
-        previousLastRowIndex.current = renderContext.lastRowIndex;
+      const paginationModel = gridPaginationModelSelector(privateApiRef);
+      const sortModel = gridSortModelSelector(privateApiRef);
+      const filterModel = gridFilterModelSelector(privateApiRef);
+      const getRowsParams: GridGetRowsParams = {
+        start: renderContext.lastRowIndex,
+        end: renderContext.lastRowIndex + paginationModel.pageSize - 1,
+        sortModel,
+        filterModel,
+      };
 
-        const paginationModel = gridPaginationModelSelector(privateApiRef);
-        const sortModel = gridSortModelSelector(privateApiRef);
-        const filterModel = gridFilterModelSelector(privateApiRef);
-        const getRowsParams: GridGetRowsParams = {
-          start: renderContext.lastRowIndex,
-          end: renderContext.lastRowIndex + paginationModel.pageSize - 1,
-          sortModel,
-          filterModel,
-        };
+      privateApiRef.current.setLoading(true);
 
-        privateApiRef.current.setLoading(true);
-
-        fetchRows(adjustRowParams(getRowsParams));
-      }
+      fetchRows(adjustRowParams(getRowsParams));
     },
-    [privateApiRef, props.scrollEndThreshold, adjustRowParams, fetchRows],
   );
 
   const handleRenderedRowsIntervalChange = React.useCallback<
     GridEventListener<'renderedRowsIntervalChange'>
   >(
     (params) => {
-      if (rowsStale.current || loadingTrigger.current !== LoadingTrigger.VIEWPORT) {
+      if (rowsStale.current) {
         return;
       }
 
@@ -365,7 +386,7 @@ export const useGridDataSourceLazyLoader = (
       const filterModel = gridFilterModelSelector(privateApiRef);
       const getRowsParams: GridGetRowsParams = {
         start: params.firstRowIndex,
-        end: params.lastRowIndex,
+        end: params.lastRowIndex - 1,
         sortModel,
         filterModel,
       };
@@ -389,7 +410,7 @@ export const useGridDataSourceLazyLoader = (
         visibleRows: currentVisibleRows.rows,
         range: {
           firstRowIndex: params.firstRowIndex,
-          lastRowIndex: params.lastRowIndex,
+          lastRowIndex: params.lastRowIndex - 1,
         },
       });
 
@@ -406,9 +427,10 @@ export const useGridDataSourceLazyLoader = (
   );
 
   const throttledHandleRenderedRowsIntervalChange = React.useMemo(
-    () => throttle(handleRenderedRowsIntervalChange, props.unstable_lazyLoadingRequestThrottleMs),
-    [props.unstable_lazyLoadingRequestThrottleMs, handleRenderedRowsIntervalChange],
+    () => throttle(handleRenderedRowsIntervalChange, props.lazyLoadingRequestThrottleMs),
+    [props.lazyLoadingRequestThrottleMs, handleRenderedRowsIntervalChange],
   );
+
   React.useEffect(() => {
     return () => {
       throttledHandleRenderedRowsIntervalChange.clear();
@@ -420,31 +442,20 @@ export const useGridDataSourceLazyLoader = (
       rowsStale.current = true;
       throttledHandleRenderedRowsIntervalChange.clear();
       previousLastRowIndex.current = 0;
-      const renderContext = gridRenderContextSelector(privateApiRef);
       const paginationModel = gridPaginationModelSelector(privateApiRef);
-      const rangeParams =
-        loadingTrigger.current === LoadingTrigger.VIEWPORT
-          ? {
-              start: renderContext.firstRowIndex,
-              end: renderContext.lastRowIndex,
-            }
-          : {
-              start: 0,
-              end: paginationModel.pageSize - 1,
-            };
-
       const filterModel = gridFilterModelSelector(privateApiRef);
 
       const getRowsParams: GridGetRowsParams = {
-        ...rangeParams,
+        start: 0,
+        end: paginationModel.pageSize - 1,
         sortModel: newSortModel,
         filterModel,
       };
 
       privateApiRef.current.setLoading(true);
-      debouncedFetchRows(adjustRowParams(getRowsParams));
+      debouncedFetchRows(getRowsParams);
     },
-    [privateApiRef, adjustRowParams, debouncedFetchRows, throttledHandleRenderedRowsIntervalChange],
+    [privateApiRef, debouncedFetchRows, throttledHandleRenderedRowsIntervalChange],
   );
 
   const handleGridFilterModelChange = React.useCallback<GridEventListener<'filterModelChange'>>(
@@ -468,6 +479,14 @@ export const useGridDataSourceLazyLoader = (
     [privateApiRef, debouncedFetchRows, throttledHandleRenderedRowsIntervalChange],
   );
 
+  const handleDragStart = React.useCallback<GridEventListener<'rowDragStart'>>((row) => {
+    draggedRowId.current = row.id;
+  }, []);
+
+  const handleDragEnd = React.useCallback<GridEventListener<'rowDragEnd'>>(() => {
+    draggedRowId.current = null;
+  }, []);
+
   const handleStrategyActivityChange = React.useCallback<
     GridEventListener<'strategyAvailabilityChange'>
   >(() => {
@@ -484,32 +503,42 @@ export const useGridDataSourceLazyLoader = (
     handleDataUpdate,
   );
 
-  useGridApiEventHandler(privateApiRef, 'strategyAvailabilityChange', handleStrategyActivityChange);
+  useGridEvent(privateApiRef, 'strategyAvailabilityChange', handleStrategyActivityChange);
 
-  useGridApiEventHandler(
+  useGridEvent(
     privateApiRef,
     'rowCountChange',
     runIf(lazyLoadingRowsUpdateStrategyActive, handleRowCountChange),
   );
-  useGridApiEventHandler(
+  useGridEvent(
     privateApiRef,
-    'scrollPositionChange',
-    runIf(lazyLoadingRowsUpdateStrategyActive, handleScrolling),
+    'rowsScrollEndIntersection',
+    runIf(lazyLoadingRowsUpdateStrategyActive, handleIntersection),
   );
-  useGridApiEventHandler(
+  useGridEvent(
     privateApiRef,
     'renderedRowsIntervalChange',
     runIf(lazyLoadingRowsUpdateStrategyActive, throttledHandleRenderedRowsIntervalChange),
   );
-  useGridApiEventHandler(
+  useGridEvent(
     privateApiRef,
     'sortModelChange',
     runIf(lazyLoadingRowsUpdateStrategyActive, handleGridSortModelChange),
   );
-  useGridApiEventHandler(
+  useGridEvent(
     privateApiRef,
     'filterModelChange',
     runIf(lazyLoadingRowsUpdateStrategyActive, handleGridFilterModelChange),
+  );
+  useGridEvent(
+    privateApiRef,
+    'rowDragStart',
+    runIf(lazyLoadingRowsUpdateStrategyActive, handleDragStart),
+  );
+  useGridEvent(
+    privateApiRef,
+    'rowDragEnd',
+    runIf(lazyLoadingRowsUpdateStrategyActive, handleDragEnd),
   );
 
   React.useEffect(() => {

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -45,6 +44,7 @@ function ReadOnlyDateField(props: DatePickerFieldProps) {
         sx: { cursor: 'pointer', '& *': { cursor: 'inherit' } },
       }}
       error={hasValidationError}
+      focused={pickerContext.open}
       onClick={() => pickerContext.setOpen((prev) => !prev)}
       name={pickerContext.name}
       label={pickerContext.label}

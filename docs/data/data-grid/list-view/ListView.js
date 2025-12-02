@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { DataGridPro, GridToolbarContainer } from '@mui/x-data-grid-pro';
+import {
+  DataGridPro,
+  GridToolbarContainer,
+  GridActionsCell,
+} from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
@@ -47,7 +51,7 @@ function ListViewCell(params) {
   );
 }
 
-const listColDef = {
+const listViewColDef = {
   field: 'listColumn',
   renderCell: ListViewCell,
 };
@@ -110,7 +114,11 @@ export default function ListView() {
         type: 'actions',
         field: 'actions',
         width: 75,
-        getActions: (params) => [<MessageAction {...params} />],
+        renderCell: (params) => (
+          <GridActionsCell {...params}>
+            <MessageAction row={params.row} />
+          </GridActionsCell>
+        ),
       },
     ];
   }, [data.columns]);
@@ -118,17 +126,18 @@ export default function ListView() {
   const rowHeight = isListView ? 64 : 52;
 
   return (
-    <div style={{ maxWidth: 360, height: 600 }}>
+    <div style={{ width: '100%', maxWidth: 360, height: 600 }}>
       <DataGridPro
         {...data}
         loading={loading}
         columns={columns}
         rowHeight={rowHeight}
-        unstable_listView={isListView}
-        unstable_listColumn={listColDef}
+        listView={isListView}
+        listViewColumn={listViewColDef}
         slots={{
           toolbar: Toolbar,
         }}
+        showToolbar
         slotProps={{
           toolbar: {
             view,

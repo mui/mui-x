@@ -36,12 +36,14 @@ const ruRUPickers: Partial<PickersLocaleText> = {
   clearButtonLabel: 'Очистить',
   okButtonLabel: 'Ок',
   todayButtonLabel: 'Сегодня',
+  nextStepButtonLabel: 'Следующий',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Выбрать дату',
   dateTimePickerToolbarTitle: 'Выбрать дату и время',
   timePickerToolbarTitle: 'Выбрать время',
   dateRangePickerToolbarTitle: 'Выбрать период',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
@@ -59,11 +61,12 @@ const ruRUPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Неделя ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
+  // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate ? `Выберите дату, выбрана дата ${formattedDate}` : 'Выберите дату',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Выберите время, выбрано время ${formattedTime}` : 'Выберите время',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'Очистить значение',
 
   // Table labels

@@ -17,16 +17,6 @@ export type MergeSignaturesProperty<
     : {}
   : {};
 
-export type ConvertPluginsIntoSignatures<
-  TPlugins extends readonly ChartPlugin<ChartAnyPluginSignature>[],
-> = TPlugins extends readonly [plugin: infer TPlugin, ...otherPlugin: infer R]
-  ? R extends readonly ChartPlugin<any>[]
-    ? TPlugin extends ChartPlugin<infer TSignature>
-      ? readonly [TSignature, ...ConvertPluginsIntoSignatures<R>]
-      : never
-    : never
-  : [];
-
 export type ConvertSignaturesIntoPlugins<TSignatures extends readonly ChartAnyPluginSignature[]> =
   TSignatures extends readonly [signature: infer TSignature, ...otherSignatures: infer R]
     ? R extends readonly ChartAnyPluginSignature[]

@@ -1,8 +1,14 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
-import { spy, stub, SinonStub, SinonSpy } from 'sinon';
-import { expect } from 'chai';
-import { createRenderer, fireEvent, reactMajor, screen, waitFor } from '@mui/internal-test-utils';
+import { spy, SinonSpy } from 'sinon';
+import {
+  createRenderer,
+  fireEvent,
+  reactMajor,
+  screen,
+  waitFor,
+  act,
+} from '@mui/internal-test-utils';
 import {
   DataGrid,
   DataGridProps,
@@ -15,25 +21,27 @@ import {
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { getCell, getColumnValues, getRows } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
-import { isJSDOM, describeSkipIf } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGrid /> - Pagination', () => {
   const { render } = createRenderer();
+  let apiRef: RefObject<GridApi | null>;
 
   function BaselineTestCase(props: Omit<DataGridProps, 'rows' | 'columns'> & { height?: number }) {
     const { height = 300, ...other } = props;
 
-    const basicData = useBasicDemoData(20, 2);
+    apiRef = useGridApiRef();
+    const basicData = useBasicDemoData(100, 2);
 
     return (
       <div style={{ width: 300, height }}>
-        <DataGrid {...basicData} autoHeight={isJSDOM} {...other} />
+        <DataGrid {...basicData} apiRef={apiRef} autoHeight={isJSDOM} {...other} />
       </div>
     );
   }
 
   // Need layouting
-  describeSkipIf(isJSDOM)('prop: paginationModel and onPaginationModelChange', () => {
+  describe.skipIf(isJSDOM)('prop: paginationModel and onPaginationModelChange', () => {
     it('should display the rows of page given in props', () => {
       render(<BaselineTestCase paginationModel={{ page: 1, pageSize: 1 }} pageSizeOptions={[1]} />);
       expect(getColumnValues(0)).to.deep.equal(['1']);
@@ -200,7 +208,7 @@ describe('<DataGrid /> - Pagination', () => {
       expect(getColumnValues(0)).to.deep.equal(['0']);
     });
 
-    it('should go to last page when paginationModel is controlled and the current page is greater than the last page', () => {
+    it('should go to last page when paginationModel is controlled and the current page is greater than the last page', async () => {
       const onPaginationModelChange = spy();
       function TestCasePaginationFilteredData(props: Partial<DataGridProps>) {
         const [paginationModel, setPaginationModel] = React.useState({ page: 1, pageSize: 5 });
@@ -237,7 +245,9 @@ describe('<DataGrid /> - Pagination', () => {
         },
       });
 
-      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3']);
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3']);
+      });
       expect(onPaginationModelChange.callCount).to.equal(1);
       expect(onPaginationModelChange.lastCall.args[0]).to.deep.equal({ page: 0, pageSize: 5 });
     });
@@ -258,18 +268,12 @@ describe('<DataGrid /> - Pagination', () => {
     });
 
     it('should throw if pageSize exceeds 100', () => {
-      let apiRef: RefObject<GridApi | null>;
-      function TestCase() {
-        apiRef = useGridApiRef();
-        return (
-          <BaselineTestCase
-            apiRef={apiRef}
-            paginationModel={{ pageSize: 1, page: 0 }}
-            pageSizeOptions={[1, 2, 101]}
-          />
-        );
-      }
-      render(<TestCase />);
+      render(
+        <BaselineTestCase
+          paginationModel={{ pageSize: 1, page: 0 }}
+          pageSizeOptions={[1, 2, 101]}
+        />,
+      );
       expect(() => apiRef.current?.setPageSize(101)).to.throw(
         /`pageSize` cannot exceed 100 in the MIT version of the DataGrid./,
       );
@@ -387,7 +391,7 @@ describe('<DataGrid /> - Pagination', () => {
   });
 
   // Need layout
-  describeSkipIf(isJSDOM)('prop: autoPageSize', () => {
+  describe.skipIf(isJSDOM)('prop: autoPageSize', () => {
     function TestCaseAutoPageSize(
       props: Omit<DataGridProps, 'rows' | 'columns'> & { height: number; nbRows: number },
     ) {
@@ -460,11 +464,6 @@ describe('<DataGrid /> - Pagination', () => {
     });
 
     it('should update the amount of rows rendered and call onPageSizeChange when changing the table height', async () => {
-      // Using a fake clock also affects `requestAnimationFrame`
-      // Calling clock.tick() should call the callback passed, but it doesn't work
-      stub(window, 'requestAnimationFrame').callsFake((fn: any) => fn());
-      stub(window, 'cancelAnimationFrame');
-
       const onPaginationModelChange = spy();
 
       const nbRows = 27;
@@ -509,9 +508,6 @@ describe('<DataGrid /> - Pagination', () => {
       expect(onPaginationModelChange.lastCall.args[0].pageSize).to.equal(
         expectedViewportRowsLengthAfter,
       );
-
-      (window.requestAnimationFrame as SinonStub).restore();
-      (window.cancelAnimationFrame as SinonStub).restore();
     });
   });
 
@@ -615,6 +611,71 @@ describe('<DataGrid /> - Pagination', () => {
     });
   });
 
+  it('should reset page to 0 and scroll to top if sort or filter is applied', async () => {
+    render(
+      <BaselineTestCase
+        initialState={{ pagination: { paginationModel: { page: 0, pageSize: 50 }, rowCount: 0 } }}
+        pageSizeOptions={[50]}
+      />,
+    );
+
+    const randomScrollTopPostion = 500;
+
+    act(() => {
+      apiRef.current!.setPage(1);
+      apiRef.current!.scroll({ top: randomScrollTopPostion });
+    });
+    expect(apiRef.current!.state.pagination.paginationModel.page).to.equal(1);
+    expect(apiRef.current!.getScrollPosition().top).to.equal(randomScrollTopPostion);
+
+    act(() => {
+      apiRef.current!.sortColumn('id', 'asc');
+    });
+    // page is reset to 0 after sorting
+    await waitFor(() => {
+      expect(apiRef.current!.state.pagination.paginationModel.page).to.equal(0);
+    });
+    expect(apiRef.current!.getScrollPosition().top).to.equal(0);
+
+    // scroll but stay on the same page
+    act(() => {
+      apiRef.current!.scroll({ top: randomScrollTopPostion });
+    });
+    expect(apiRef.current!.getScrollPosition().top).to.equal(randomScrollTopPostion);
+
+    act(() => {
+      apiRef.current!.sortColumn('id', 'desc');
+    });
+    await waitFor(() => {
+      expect(apiRef.current!.getScrollPosition().top).to.equal(0);
+    });
+
+    // move to the next page again and scroll
+    act(() => {
+      apiRef.current!.setPage(1);
+      apiRef.current!.scroll({ top: randomScrollTopPostion });
+    });
+    expect(apiRef.current!.state.pagination.paginationModel.page).to.equal(1);
+    expect(apiRef.current!.getScrollPosition().top).to.equal(randomScrollTopPostion);
+    act(() => {
+      apiRef.current?.setFilterModel({
+        items: [
+          {
+            field: 'id',
+            value: '1',
+            operator: '>=',
+          },
+        ],
+      });
+    });
+
+    // page and scroll position are reset filtering
+    await waitFor(() => {
+      expect(apiRef.current!.state.pagination.paginationModel.page).to.equal(0);
+    });
+    expect(apiRef.current!.getScrollPosition().top).to.equal(0);
+  });
+
   it('should make the first cell focusable after changing the page', () => {
     render(
       <BaselineTestCase
@@ -628,7 +689,7 @@ describe('<DataGrid /> - Pagination', () => {
   });
 
   // Need layout
-  describeSkipIf(isJSDOM)('prop: initialState.pagination', () => {
+  describe.skipIf(isJSDOM)('prop: initialState.pagination', () => {
     it('should allow to initialize the paginationModel', () => {
       render(
         <BaselineTestCase

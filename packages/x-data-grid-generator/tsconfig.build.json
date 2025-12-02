@@ -7,9 +7,10 @@
     "declaration": true,
     "noEmit": false,
     "emitDeclarationOnly": true,
-    "outDir": "build",
+    "outDir": "build/esm",
     "rootDir": "./src",
-    "types": ["node", "@mui/material/themeCssVarsAugmentation"]
+    "skipLibCheck": true,
+    "types": ["../../mui-env.d.ts", "@mui/material/themeCssVarsAugmentation"]
   },
   "references": [{ "path": "../x-data-grid-premium/tsconfig.build.json" }],
   "include": ["src/**/*.ts*"],

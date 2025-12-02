@@ -3,19 +3,30 @@
     "apiRef": {
       "type": {
         "name": "shape",
-        "description": "{ current?: { focusItem: func, getItem: func, getItemDOMElement: func, getItemOrderedChildrenIds: func, getItemTree: func, selectItem: func, setItemExpansion: func, updateItemLabel: func } }"
+        "description": "{ current?: { focusItem?: func, getItem?: func, getItemDOMElement?: func, getItemOrderedChildrenIds?: func, getItemTree?: func, getParentId?: func, isItemExpanded?: func, setEditedItem?: func, setIsItemDisabled?: func, setItemExpansion?: func, setItemSelection?: func, updateItemChildren?: func, updateItemLabel?: func } }"
       }
     },
     "canMoveItemToNewPosition": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(params: object, params.itemId: string, params.oldPosition: TreeViewItemReorderPosition, params.newPosition: TreeViewItemReorderPosition) => boolean",
-        "describedArgs": ["params", "params.itemId", "params.oldPosition", "params.newPosition"],
+        "type": "function(parameters: object, parameters.itemId: TreeViewItemId, parameters.oldPosition: TreeViewItemReorderPosition, parameters.newPosition: TreeViewItemReorderPosition) => boolean",
+        "describedArgs": [
+          "parameters",
+          "parameters.itemId",
+          "parameters.oldPosition",
+          "parameters.newPosition"
+        ],
         "returned": "boolean"
       }
     },
     "checkboxSelection": { "type": { "name": "bool" }, "default": "false" },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "dataSource": {
+      "type": { "name": "shape", "description": "{ getChildrenCount: func, getTreeItems: func }" }
+    },
+    "dataSourceCache": {
+      "type": { "name": "shape", "description": "{ clear: func, get: func, set: func }" }
+    },
     "defaultExpandedItems": {
       "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" },
       "default": "[]"
@@ -28,14 +39,22 @@
       "type": { "name": "enum", "description": "'content'<br>&#124;&nbsp;'iconContainer'" },
       "default": "'content'"
     },
-    "experimentalFeatures": { "type": { "name": "object" } },
+    "getItemChildren": {
+      "type": { "name": "func" },
+      "default": "(item) => item.children",
+      "signature": {
+        "type": "function(item: R) => Array<R>",
+        "describedArgs": ["item"],
+        "returned": "Array<R>"
+      }
+    },
     "getItemId": {
       "type": { "name": "func" },
       "default": "(item) => item.id",
       "signature": {
-        "type": "function(item: R) => string",
+        "type": "function(item: R) => TreeViewItemId",
         "describedArgs": ["item"],
-        "returned": "string"
+        "returned": "TreeViewItemId"
       }
     },
     "getItemLabel": {
@@ -64,7 +83,7 @@
       "type": { "name": "func" },
       "default": "() => true",
       "signature": {
-        "type": "function(itemId: string) => boolean",
+        "type": "function(itemId: TreeViewItemId) => boolean",
         "describedArgs": ["itemId"],
         "returned": "boolean"
       }
@@ -78,28 +97,28 @@
     "onExpandedItemsChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.SyntheticEvent, itemIds: array) => void",
+        "type": "function(event: React.SyntheticEvent, itemIds: Array<TreeViewItemId>) => void",
         "describedArgs": ["event", "itemIds"]
       }
     },
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.MouseEvent, itemId: string) => void",
+        "type": "function(event: React.MouseEvent, itemId: TreeViewItemId) => void",
         "describedArgs": ["event", "itemId"]
       }
     },
     "onItemExpansionToggle": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.SyntheticEvent, itemId: array, isExpanded: array) => void",
+        "type": "function(event: React.SyntheticEvent | null, itemId: TreeViewItemId, isExpanded: boolean) => void",
         "describedArgs": ["event", "itemId", "isExpanded"]
       }
     },
     "onItemFocus": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.SyntheticEvent | null, itemId: string) => void",
+        "type": "function(event: React.SyntheticEvent | null, itemId: TreeViewItemId) => void",
         "describedArgs": ["event", "itemId"]
       }
     },
@@ -113,21 +132,26 @@
     "onItemPositionChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(params: object, params.itemId: string, params.oldPosition: TreeViewItemReorderPosition, params.newPosition: TreeViewItemReorderPosition) => void",
-        "describedArgs": ["params", "params.itemId", "params.oldPosition", "params.newPosition"]
+        "type": "function(parameters: object, parameters.itemId: TreeViewItemId, parameters.oldPosition: TreeViewItemReorderPosition, parameters.newPosition: TreeViewItemReorderPosition) => void",
+        "describedArgs": [
+          "parameters",
+          "parameters.itemId",
+          "parameters.oldPosition",
+          "parameters.newPosition"
+        ]
       }
     },
     "onItemSelectionToggle": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.SyntheticEvent, itemId: array, isSelected: array) => void",
+        "type": "function(event: React.SyntheticEvent, itemId: TreeViewItemId, isSelected: boolean) => void",
         "describedArgs": ["event", "itemId", "isSelected"]
       }
     },
     "onSelectedItemsChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.SyntheticEvent, itemIds: Array<string> | string) => void",
+        "type": "function(event: React.SyntheticEvent, itemIds: Array<TreeViewItemId> | TreeViewItemId) => void",
         "describedArgs": ["event", "itemIds"]
       }
     },
@@ -181,16 +205,71 @@
       "name": "item",
       "description": "Custom component to render a Tree Item.",
       "default": "TreeItem.",
-      "class": null
+      "class": "MuiRichTreeViewPro-item"
     }
   ],
-  "classes": [],
+  "classes": [
+    {
+      "key": "itemCheckbox",
+      "className": "MuiRichTreeViewPro-itemCheckbox",
+      "description": "Styles applied to the item's checkbox element.",
+      "isGlobal": false
+    },
+    {
+      "key": "itemContent",
+      "className": "MuiRichTreeViewPro-itemContent",
+      "description": "Styles applied to the item's content element.",
+      "isGlobal": false
+    },
+    {
+      "key": "itemDragAndDropOverlay",
+      "className": "MuiRichTreeViewPro-itemDragAndDropOverlay",
+      "description": "Styles applied to the item's drag and drop overlay element.",
+      "isGlobal": false
+    },
+    {
+      "key": "itemErrorIcon",
+      "className": "MuiRichTreeViewPro-itemErrorIcon",
+      "description": "Styles applied to the item's error icon element",
+      "isGlobal": false
+    },
+    {
+      "key": "itemGroupTransition",
+      "className": "MuiRichTreeViewPro-itemGroupTransition",
+      "description": "Styles applied to the item's transition element.",
+      "isGlobal": false
+    },
+    {
+      "key": "itemIconContainer",
+      "className": "MuiRichTreeViewPro-itemIconContainer",
+      "description": "Styles applied to the item's icon container element icon.",
+      "isGlobal": false
+    },
+    {
+      "key": "itemLabel",
+      "className": "MuiRichTreeViewPro-itemLabel",
+      "description": "Styles applied to the item's label element.",
+      "isGlobal": false
+    },
+    {
+      "key": "itemLabelInput",
+      "className": "MuiRichTreeViewPro-itemLabelInput",
+      "description": "Styles applied to the item's label input element (visible only when editing is enabled).",
+      "isGlobal": false
+    },
+    {
+      "key": "itemLoadingIcon",
+      "className": "MuiRichTreeViewPro-itemLoadingIcon",
+      "description": "Styles applied to the item's loading icon element",
+      "isGlobal": false
+    }
+  ],
   "spread": true,
   "themeDefaultProps": true,
   "muiName": "MuiRichTreeViewPro",
   "forwardsRefTo": "HTMLUListElement",
   "filename": "/packages/x-tree-view-pro/src/RichTreeViewPro/RichTreeViewPro.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-tree-view/rich-tree-view/ordering/\">Rich Tree View - Ordering <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-tree-view/rich-tree-view/lazy-loading/\">Rich Tree View - Lazy loading <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/ordering/\">Rich Tree View - Ordering <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
   "cssComponent": false
 }

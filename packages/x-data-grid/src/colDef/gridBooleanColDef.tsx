@@ -41,9 +41,10 @@ export const GRID_BOOLEAN_COL_DEF: GridColTypeDef<boolean | null, any> = {
   sortComparator: gridNumberComparator,
   valueFormatter: gridBooleanFormatter,
   filterOperators: getGridBooleanOperators(),
-  getApplyQuickFilterFn: undefined,
+  getApplyQuickFilterFn: () => null,
   // @ts-ignore
   aggregable: false,
+  chartable: false,
   // @ts-ignore
   pastedValueParser: (value) => stringToBoolean(value),
 };

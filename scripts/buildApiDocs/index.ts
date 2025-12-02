@@ -1,17 +1,7 @@
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
-import { ProjectSettings, buildApi } from '@mui-internal/api-docs-builder';
-import { projectPickersSettings } from './pickersSettings';
-import { projectChartsSettings } from './chartsSettings';
-import { projectGridSettings } from './gridSettings';
-import { projectTreeSettings } from './treeViewSettings';
-
-const projectSettings: ProjectSettings[] = [
-  projectPickersSettings,
-  projectChartsSettings,
-  projectTreeSettings,
-  projectGridSettings,
-];
+import { buildApi } from '@mui-internal/api-docs-builder';
+import { projectSettings } from './projectSettings';
 
 type CommandOptions = { grep?: string };
 

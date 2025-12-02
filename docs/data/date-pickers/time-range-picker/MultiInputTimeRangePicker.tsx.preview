@@ -1,0 +1,1 @@
+<TimeRangePicker slots={{ field: MultiInputTimeRangeField }} />

@@ -8,7 +8,8 @@
   "imports": [
     "import { ChartsGrid } from '@mui/x-charts/ChartsGrid';",
     "import { ChartsGrid } from '@mui/x-charts';",
-    "import { ChartsGrid } from '@mui/x-charts-pro';"
+    "import { ChartsGrid } from '@mui/x-charts-pro';",
+    "import { ChartsGrid } from '@mui/x-charts-premium';"
   ],
   "classes": [
     {
@@ -36,6 +37,8 @@
       "isGlobal": false
     }
   ],
+  "spread": true,
+  "themeDefaultProps": null,
   "muiName": "MuiChartsGrid",
   "filename": "/packages/x-charts/src/ChartsGrid/ChartsGrid.tsx",
   "inheritance": null,

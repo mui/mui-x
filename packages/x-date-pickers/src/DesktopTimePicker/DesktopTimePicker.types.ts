@@ -10,7 +10,7 @@ import {
   BaseTimePickerSlotProps,
 } from '../TimePicker/shared';
 import { TimeViewWithMeridiem } from '../internals/models';
-import { DesktopOnlyTimePickerProps } from '../internals/models/props/time';
+import { DigitalTimePickerProps } from '../internals/models/props/time';
 import { DigitalClockSlots, DigitalClockSlotProps } from '../DigitalClock';
 import {
   MultiSectionDigitalClockSlots,
@@ -33,7 +33,7 @@ export interface DesktopTimePickerSlotProps<TEnableAccessibleFieldDOMStructure e
 export interface DesktopTimePickerProps<TEnableAccessibleFieldDOMStructure extends boolean = true>
   extends BaseTimePickerProps<TimeViewWithMeridiem>,
     DesktopOnlyPickerProps,
-    DesktopOnlyTimePickerProps {
+    DigitalTimePickerProps {
   /**
    * Available views.
    */

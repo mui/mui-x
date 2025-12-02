@@ -1,22 +1,43 @@
 ---
 title: React Pie chart
 productId: x-charts
-components: PieArc, PieArcLabel, PieArcLabelPlot, PieArcPlot, PieChart, PiePlot
+components: PieArc, PieArcLabel, PieArcLabelPlot, PieArcPlot, PieChart, PiePlot, PieChartPro, ChartsWrapper
 ---
 
 # Charts - Pie
 
 <p class="description">Pie charts express portions of a whole, using arcs or angles within a circle.</p>
 
+## Overview
+
+Pie charts are ideal for showing proportions of a whole.
+They excel at visualizing how categories contribute to a total, making relative shares easy to compare at a glance.
+Here are the basic requirements to create a pie chart:
+
+- One categorical dimension (each category represented as a slice)
+- One numerical metric representing the value or size of each slice (converted into percentage of the whole)
+
+The pie chart below compares survival rates of passengers in different classes on the Titanic:
+
+{{"demo": "TitanicPie.js"}}
+
 ## Basics
 
-To plot a pie chart, a series must have a data property containing an array of objects.
-Those objects should contain a property `value`.
-They can also have a `label` property.
+Pie charts series must contain a `data` property containing an array of objects.
+Each object corresponds to a slice of the pie.
+It must contain a property `value` and can have other optional properties like `label`.
 
 If you plan to update/reorder those data, you should add an `id` property which is used for `key` props.
 
 {{"demo": "BasicPie.js"}}
+
+## Donut chart
+
+A donut chart (or doughnut chart) is essentially a pie chart with a hollow center.
+
+You can transform any pie chart into a donut chart by setting the `innerRadius` property to a value greater than 0.
+
+{{"demo": "DonutChart.js"}}
 
 ## Colors
 
@@ -53,7 +74,7 @@ Pie series shape is described by multiple properties:
 - `startAngle`/`endAngle` The angle range of the pie chart. Values are given in degrees.
 - `cx`/`cy` The center of the pie charts. By default the middle of the drawing area.
 
-{{"demo": "PieShapeNoSnap.js", "hideToolbar": true, "bg": "playground"}}
+{{"demo": "PieShape.js", "hideToolbar": true, "bg": "playground"}}
 
 The following properties accept percentage string (for example `'50%'`).
 
@@ -103,14 +124,21 @@ const onItemClick = (
 ) => {};
 ```
 
-{{"demo": "PieClickNoSnap.js"}}
+{{"demo": "PieClick.js"}}
+
+## CSS
+
+You can customize the different elements rendered by a pie chart using CSS.
+
+In the example below, the outer series is selected using the `data-series` attribute to reduce its opacity.
+
+{{"demo": "PieCSSStyling.js"}}
 
 ## Animation
 
-To skip animation at the creation and update of your chart you can use the `skipAnimation` prop.
-When set to `true` it skips animation powered by `@react-spring/web`.
+Chart containers respect [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/prefers-reduced-motion), but you can also disable animations manually by setting the `skipAnimation` prop to `true`.
 
-Charts containers already use the `useReducedMotion()` from `@react-spring/web` to skip animation [according to user preferences](https://react-spring.dev/docs/utilities/use-reduced-motion#why-is-it-important).
+When `skipAnimation` is enabled, the chart renders without any animations.
 
 ```jsx
 // For a single component chart
@@ -123,3 +151,31 @@ Charts containers already use the `useReducedMotion()` from `@react-spring/web` 
 ```
 
 {{"demo": "PieAnimation.js"}}
+
+## Composition
+
+Use the `<ChartDataProvider />` to provide the `series` prop for composition.
+
+In addition to the common chart components available for [composition](/x/react-charts/composition/), you can use the `<PiePlot />` component that renders the pie slices and their labels.
+
+Here's how the Pie Chart is composed:
+
+```jsx
+<ChartDataProvider plugins={PIE_CHART_PLUGINS}>
+  <ChartsWrapper>
+    <ChartsLegend />
+    <ChartsSurface>
+      <PiePlot />
+      <ChartsOverlay />
+    </ChartsSurface>
+    <ChartsTooltip trigger="item" />
+  </ChartsWrapper>
+</ChartDataProvider>
+```
+
+:::info
+The `<ChartDataProvider />` accepts a [`plugins`](/x/react-charts/plugins/) prop.
+This is done to remove cartesian-axis features which are useless for a pie chart, and interfere with the pie position.
+
+For pro users, use the `PIE_CHART_PRO_PLUGINS` instead to activate the export feature.
+:::

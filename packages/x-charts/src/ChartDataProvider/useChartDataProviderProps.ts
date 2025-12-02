@@ -1,47 +1,38 @@
 'use client';
-import { useTheme } from '@mui/material/styles';
+import { useTheme, useThemeProps } from '@mui/material/styles';
 import type { ChartDataProviderProps } from './ChartDataProvider';
-import { AnimationProviderProps } from '../context/AnimationProvider';
 import { ChartProviderProps } from '../context/ChartProvider';
 import { ChartAnyPluginSignature, MergeSignaturesProperty } from '../internals/plugins/models';
 import { ChartSeriesType } from '../models/seriesType/config';
 import { ChartCorePluginSignatures } from '../internals/plugins/corePlugins';
-import { AllPluginSignatures } from '../internals/plugins/allPlugins';
+import { AllPluginSignatures, DEFAULT_PLUGINS } from '../internals/plugins/allPlugins';
+import { ChartsLocalizationProviderProps } from '../ChartsLocalizationProvider';
 
 export const useChartDataProviderProps = <
   TSeries extends ChartSeriesType = ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
 >(
-  props: ChartDataProviderProps<TSeries, TSignatures>,
+  inProps: ChartDataProviderProps<TSeries, TSignatures> & ChartsLocalizationProviderProps,
 ) => {
+  // eslint-disable-next-line material-ui/mui-name-matches-component-name
+  const props = useThemeProps({ props: inProps, name: 'MuiChartDataProvider' });
+
   const {
-    apiRef,
-    width,
-    height,
-    series,
-    margin,
-    colors,
-    dataset,
     children,
-    skipAnimation,
-    plugins,
+    localeText,
+    plugins = DEFAULT_PLUGINS,
     seriesConfig,
+    slots,
+    slotProps,
     ...other
   } = props;
 
   const theme = useTheme();
 
-  const chartProviderProps: Omit<ChartProviderProps<TSeries, TSignatures>, 'children'> = {
-    plugins,
+  const chartProviderProps: ChartProviderProps<TSeries, TSignatures> = {
+    plugins: plugins as ChartProviderProps<TSeries, TSignatures>['plugins'],
     seriesConfig,
     pluginParams: {
-      apiRef,
-      width,
-      height,
-      margin,
-      dataset,
-      series,
-      colors,
       theme: theme.palette.mode,
       ...other,
     } as unknown as MergeSignaturesProperty<
@@ -50,13 +41,11 @@ export const useChartDataProviderProps = <
     >,
   };
 
-  const animationProviderProps: Omit<AnimationProviderProps, 'children'> = {
-    skipAnimation,
-  };
-
   return {
     children,
-    animationProviderProps,
+    localeText,
     chartProviderProps,
+    slots,
+    slotProps,
   };
 };

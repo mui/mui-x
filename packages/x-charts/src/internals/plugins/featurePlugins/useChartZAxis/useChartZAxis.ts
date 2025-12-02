@@ -35,7 +35,10 @@ function processColorMap(axisConfig: ZAxisConfig) {
   };
 }
 
-function getZAxisState(zAxis?: MakeOptional<ZAxisConfig, 'id'>[], dataset?: DatasetType) {
+function getZAxisState(
+  zAxis?: readonly MakeOptional<ZAxisConfig, 'id'>[],
+  dataset?: Readonly<DatasetType>,
+) {
   if (!zAxis || zAxis.length === 0) {
     return { axis: {}, axisIds: [] };
   }
@@ -52,7 +55,7 @@ function getZAxisState(zAxis?: MakeOptional<ZAxisConfig, 'id'>[], dataset?: Data
       return;
     }
     if (dataset === undefined) {
-      throw new Error('MUI X: z-axis uses `dataKey` but no `dataset` is provided.');
+      throw new Error('MUI X Charts: z-axis uses `dataKey` but no `dataset` is provided.');
     }
     zAxisLookup[defaultizedId] = processColorMap(
       addDefaultId(
@@ -81,10 +84,7 @@ export const useChartZAxis: ChartPlugin<UseChartZAxisSignature> = ({ params, sto
       return;
     }
 
-    store.update((prev) => ({
-      ...prev,
-      zAxis: getZAxisState(zAxis, dataset),
-    }));
+    store.set('zAxis', getZAxisState(zAxis, dataset));
   }, [zAxis, dataset, store]);
 
   return {};

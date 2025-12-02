@@ -1,4 +1,3 @@
-import * as React from 'react';
 import dayjs from 'dayjs';
 import Grid from '@mui/material/Grid';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -20,10 +19,10 @@ export default function ValidationBehaviorView() {
         alignItems="center"
         justifyContent="center"
       >
-        <Grid item>
+        <Grid>
           <DateCalendar defaultValue={today} disableFuture />
         </Grid>
-        <Grid item>
+        <Grid>
           <TimeClock defaultValue={twoPM} maxTime={threePM} />
         </Grid>
       </Grid>

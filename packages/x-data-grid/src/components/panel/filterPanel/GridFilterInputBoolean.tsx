@@ -1,6 +1,8 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { refType, unstable_useId as useId } from '@mui/utils';
+import refType from '@mui/utils/refType';
+import useId from '@mui/utils/useId';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { TextFieldProps } from '../../../models/gridBaseSlots';
 import { GridFilterInputValueProps } from '../../../models/gridFilterInputComponent';
@@ -18,7 +20,7 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
     clearButton,
     tabIndex,
     slotProps,
-    ...others
+    ...other
   } = props;
   const [filterValueState, setFilterValueState] = React.useState<boolean | undefined>(
     sanitizeFilterItemValue(item.value),
@@ -68,7 +70,7 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
           },
         }}
         {...baseSelectProps}
-        {...others}
+        {...other}
         {...slotProps?.root}
       >
         <rootProps.slots.baseSelectOption

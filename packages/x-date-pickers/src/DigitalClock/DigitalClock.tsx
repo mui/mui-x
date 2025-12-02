@@ -9,8 +9,9 @@ import composeClasses from '@mui/utils/composeClasses';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
 import useForkRef from '@mui/utils/useForkRef';
-import { usePickerTranslations } from '../hooks/usePickerTranslations';
-import { useUtils, useNow } from '../internals/hooks/useUtils';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import { usePickerAdapter, usePickerTranslations } from '../hooks';
+import { useNow } from '../internals/hooks/useUtils';
 import { createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { DigitalClockClasses, getDigitalClockUtilityClass } from './digitalClockClasses';
@@ -18,7 +19,7 @@ import { DigitalClockOwnerState, DigitalClockProps } from './DigitalClock.types'
 import { useViews } from '../internals/hooks/useViews';
 import { PickerValidDate } from '../models';
 import { DIGITAL_CLOCK_VIEW_HEIGHT } from '../internals/constants/dimensions';
-import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
+import { useControlledValue } from '../internals/hooks/useControlledValue';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useClockReferenceDate } from '../internals/hooks/useClockReferenceDate';
 import { getFocusedListItemIndex } from '../internals/utils/utils';
@@ -37,10 +38,10 @@ const useUtilityClasses = (classes: Partial<DigitalClockClasses> | undefined) =>
 const DigitalClockRoot = styled(PickerViewRoot, {
   name: 'MuiDigitalClock',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: DigitalClockOwnerState }>({
   overflowY: 'auto',
   width: '100%',
+  scrollbarWidth: 'thin',
   '@media (prefers-reduced-motion: no-preference)': {
     scrollBehavior: 'auto',
   },
@@ -60,15 +61,14 @@ const DigitalClockRoot = styled(PickerViewRoot, {
 const DigitalClockList = styled(MenuList, {
   name: 'MuiDigitalClock',
   slot: 'List',
-  overridesResolver: (props, styles) => styles.list,
 })({
   padding: 0,
 });
 
-const DigitalClockItem = styled(MenuItem, {
+export const DigitalClockItem = styled(MenuItem, {
   name: 'MuiDigitalClock',
   slot: 'Item',
-  overridesResolver: (props, styles) => styles.item,
+  shouldForwardProp: (prop) => prop !== 'itemValue' && prop !== 'formattedValue',
 })(({ theme }) => ({
   padding: '8px 16px',
   margin: '2px 4px',
@@ -112,7 +112,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
   inProps: DigitalClockProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
 
   const containerRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(ref, containerRef);
@@ -124,7 +124,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
   });
 
   const {
-    ampm = utils.is12HourCycleInCurrentLocale(),
+    ampm = adapter.is12HourCycleInCurrentLocale(),
     timeStep = 30,
     autoFocus,
     slots,
@@ -159,7 +159,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
     value,
     handleValueChange: handleRawValueChange,
     timezone,
-  } = useControlledValueWithTimezone({
+  } = useControlledValue({
     name: 'DigitalClock',
     timezone: timezoneProp,
     value: valueProp,
@@ -191,7 +191,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
   const valueOrReferenceDate = useClockReferenceDate({
     value,
     referenceDate: referenceDateProp,
-    utils,
+    adapter,
     props,
     timezone,
   });
@@ -214,7 +214,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
     setValueAndGoToNextView(newValue, 'finish');
   });
 
-  React.useEffect(() => {
+  useEnhancedEffect(() => {
     if (containerRef.current === null) {
       return;
     }
@@ -236,7 +236,10 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
 
   const isTimeDisabled = React.useCallback(
     (valueToCheck: PickerValidDate) => {
-      const isAfter = createIsAfterIgnoreDatePart(disableIgnoringDatePartForTimeValidation, utils);
+      const isAfter = createIsAfterIgnoreDatePart(
+        disableIgnoringDatePartForTimeValidation,
+        adapter,
+      );
 
       const containsValidTime = () => {
         if (minTime && isAfter(minTime, valueToCheck)) {
@@ -259,7 +262,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
       };
 
       const isValidValue = () => {
-        if (utils.getMinutes(valueToCheck) % minutesStep !== 0) {
+        if (adapter.getMinutes(valueToCheck) % minutesStep !== 0) {
           return false;
         }
 
@@ -274,7 +277,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
     },
     [
       disableIgnoringDatePartForTimeValidation,
-      utils,
+      adapter,
       minTime,
       maxTime,
       disableFuture,
@@ -287,17 +290,17 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
 
   const timeOptions = React.useMemo(() => {
     const result: PickerValidDate[] = [];
-    const startOfDay = utils.startOfDay(valueOrReferenceDate);
+    const startOfDay = adapter.startOfDay(valueOrReferenceDate);
     let nextTimeStepOption = startOfDay;
-    while (utils.isSameDay(valueOrReferenceDate, nextTimeStepOption)) {
+    while (adapter.isSameDay(valueOrReferenceDate, nextTimeStepOption)) {
       result.push(nextTimeStepOption);
-      nextTimeStepOption = utils.addMinutes(nextTimeStepOption, timeStep);
+      nextTimeStepOption = adapter.addMinutes(nextTimeStepOption, timeStep);
     }
     return result;
-  }, [valueOrReferenceDate, timeStep, utils]);
+  }, [valueOrReferenceDate, timeStep, adapter]);
 
   const focusedOptionIndex = timeOptions.findIndex((option) =>
-    utils.isEqual(option, valueOrReferenceDate),
+    adapter.isEqual(option, valueOrReferenceDate),
   );
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
@@ -345,25 +348,29 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
         onKeyDown={handleKeyDown}
       >
         {timeOptions.map((option, index) => {
-          if (skipDisabled && isTimeDisabled(option)) {
+          const optionDisabled = isTimeDisabled(option);
+          if (skipDisabled && optionDisabled) {
             return null;
           }
-          const isSelected = utils.isEqual(option, value);
-          const formattedValue = utils.format(option, ampm ? 'fullTime12h' : 'fullTime24h');
-          const tabIndex =
-            focusedOptionIndex === index || (focusedOptionIndex === -1 && index === 0) ? 0 : -1;
+          const isSelected = adapter.isEqual(option, value);
+          const formattedValue = adapter.format(option, ampm ? 'fullTime12h' : 'fullTime24h');
+          const isFocused =
+            focusedOptionIndex === index || (focusedOptionIndex === -1 && index === 0);
+          const tabIndex = isFocused ? 0 : -1;
           return (
             <ClockItem
               key={`${option.valueOf()}-${formattedValue}`}
               onClick={() => !readOnly && handleItemSelect(option)}
               selected={isSelected}
-              disabled={disabled || isTimeDisabled(option)}
+              disabled={disabled || optionDisabled}
               disableRipple={readOnly}
               role="option"
               // aria-readonly is not supported here and does not have any effect
               aria-disabled={readOnly}
               aria-selected={isSelected}
               tabIndex={tabIndex}
+              itemValue={option}
+              formattedValue={formattedValue}
               {...clockItemProps}
             >
               {formattedValue}
@@ -382,7 +389,7 @@ DigitalClock.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * 12h/24h view for hour selection clock.
-   * @default utils.is12HourCycleInCurrentLocale()
+   * @default adapter.is12HourCycleInCurrentLocale()
    */
   ampm: PropTypes.bool,
   /**
@@ -453,14 +460,14 @@ DigitalClock.propTypes = {
   onChange: PropTypes.func,
   /**
    * Callback fired on focused view change.
-   * @template TView
+   * @template TView Type of the view. It will vary based on the Picker type and the `views` it uses.
    * @param {TView} view The new view to focus or not.
    * @param {boolean} hasFocus `true` if the view should be focused.
    */
   onFocusedViewChange: PropTypes.func,
   /**
    * Callback fired on view change.
-   * @template TView
+   * @template TView Type of the view. It will vary based on the Picker type and the `views` it uses.
    * @param {TView} view The new view.
    */
   onViewChange: PropTypes.func,

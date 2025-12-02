@@ -7,10 +7,10 @@
     "declaration": true,
     "noEmit": false,
     "emitDeclarationOnly": true,
-    "outDir": "build",
+    "outDir": "build/esm",
     "rootDir": "./src",
     "types": [
-      "node",
+      "../../mui-env.d.ts",
       "@mui/material/themeCssVarsAugmentation",
       "dayjs/plugin/utc.d.ts",
       "dayjs/plugin/timezone.d.ts",

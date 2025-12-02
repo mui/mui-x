@@ -1,0 +1,16 @@
+<FunnelChart
+  {...funnelProps}
+  sx={{
+    [`[data-series="main"] .${funnelSectionClasses.root}:nth-of-type(1)`]: {
+      fill: 'url(#pattern)',
+    },
+  }}
+>
+  <defs>
+    <pattern id="pattern" width="50" height="50" patternUnits="userSpaceOnUse">
+      <rect width="100%" height="100%" fill="hotpink" />
+      <circle fill="slateblue" cx="15" cy="15" r="10" />
+      <circle fill="slateblue" cx="40" cy="40" r="10" />
+    </pattern>
+  </defs>
+</FunnelChart>

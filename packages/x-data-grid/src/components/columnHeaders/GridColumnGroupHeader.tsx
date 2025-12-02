@@ -1,6 +1,9 @@
+'use client';
 import * as React from 'react';
-import { unstable_useId as useId, unstable_composeClasses as composeClasses } from '@mui/utils';
+import useId from '@mui/utils/useId';
+import composeClasses from '@mui/utils/composeClasses';
 import { useRtl } from '@mui/system/RtlProvider';
+import { doesSupportPreventScroll } from '../../utils/doesSupportPreventScroll';
 import { GridAlignment } from '../../models/colDef/gridColDef';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -145,7 +148,16 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
     if (hasFocus) {
       const focusableElement = headerCellRef.current!.querySelector<HTMLElement>('[tabindex="0"]');
       const elementToFocus = focusableElement || headerCellRef.current;
-      elementToFocus?.focus();
+      if (!elementToFocus) {
+        return;
+      }
+      if (doesSupportPreventScroll()) {
+        elementToFocus.focus({ preventScroll: true });
+      } else {
+        const scrollPosition = apiRef.current.getScrollPosition();
+        elementToFocus.focus();
+        apiRef.current.scroll(scrollPosition);
+      }
     }
   }, [apiRef, hasFocus]);
 

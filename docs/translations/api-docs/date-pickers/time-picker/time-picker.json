@@ -27,7 +27,7 @@
       "description": "Do not ignore date part when validating min/max time."
     },
     "disableOpenPicker": {
-      "description": "If <code>true</code>, the open picker button will not be rendered (renders only the field)."
+      "description": "If <code>true</code>, the button to open the Picker will not be rendered (it will only render the field)."
     },
     "disablePast": {
       "description": "If <code>true</code>, disable values before the current date for date components, time for time components and both for date time components."
@@ -56,15 +56,31 @@
     "onAccept": {
       "description": "Callback fired when the value is accepted.",
       "typeDescriptions": {
-        "value": "The value that was just accepted.",
-        "context": "The context containing the validation result of the current value."
+        "value": {
+          "name": "value",
+          "description": "The value that was just accepted.",
+          "argType": "TValue",
+          "argTypeDescription": "The value type. It will be the same type as <code>value</code> or <code>null</code>. It can be in <code>[start, end]</code> format in case of range value."
+        },
+        "context": {
+          "name": "context",
+          "description": "<p>Context about this acceptance: - <code>validationError</code>: validation result of the current value - <code>source</code>: source of the acceptance. One of &#39;field&#39; | &#39;picker&#39; | &#39;unknown&#39; - <code>shortcut</code> (optional): the shortcut metadata if the value was accepted via a shortcut selection</p>\n"
+        }
       }
     },
     "onChange": {
       "description": "Callback fired when the value changes.",
       "typeDescriptions": {
-        "value": "The new value.",
-        "context": "The context containing the validation result of the current value."
+        "value": {
+          "name": "value",
+          "description": "The new value.",
+          "argType": "TValue",
+          "argTypeDescription": "The value type. It will be the same type as <code>value</code> or <code>null</code>. It can be in <code>[start, end]</code> format in case of range value."
+        },
+        "context": {
+          "name": "context",
+          "description": "<p>Context about this change: - <code>validationError</code>: validation result of the current value - <code>source</code>: source of the change. One of &#39;field&#39; | &#39;view&#39; | &#39;unknown&#39; - <code>shortcut</code> (optional): the shortcut metadata if the change was triggered by a shortcut selection</p>\n"
+        }
       }
     },
     "onClose": {
@@ -73,8 +89,18 @@
     "onError": {
       "description": "Callback fired when the error associated with the current value changes. When a validation error is detected, the <code>error</code> parameter contains a non-null value. This can be used to render an appropriate form error.",
       "typeDescriptions": {
-        "error": "The reason why the current value is not valid.",
-        "value": "The value associated with the error."
+        "error": {
+          "name": "error",
+          "description": "The reason why the current value is not valid.",
+          "argType": "TError",
+          "argTypeDescription": "The validation error type. It will be either <code>string</code> or a <code>null</code>. It can be in <code>[start, end]</code> format in case of range value."
+        },
+        "value": {
+          "name": "value",
+          "description": "The value associated with the error.",
+          "argType": "TValue",
+          "argTypeDescription": "The value type. It will be the same type as <code>value</code> or <code>null</code>. It can be in <code>[start, end]</code> format in case of range value."
+        }
       }
     },
     "onOpen": {
@@ -82,11 +108,20 @@
     },
     "onSelectedSectionsChange": {
       "description": "Callback fired when the selected sections change.",
-      "typeDescriptions": { "newValue": "The new selected sections." }
+      "typeDescriptions": {
+        "newValue": { "name": "newValue", "description": "The new selected sections." }
+      }
     },
     "onViewChange": {
       "description": "Callback fired on view change.",
-      "typeDescriptions": { "view": "The new view." }
+      "typeDescriptions": {
+        "view": {
+          "name": "view",
+          "description": "The new view.",
+          "argType": "TView",
+          "argTypeDescription": "Type of the view. It will vary based on the Picker type and the <code>views</code> it uses."
+        }
+      }
     },
     "open": { "description": "Control the popup or dialog open state." },
     "openTo": {
@@ -106,9 +141,12 @@
     "shouldDisableTime": {
       "description": "Disable specific time.",
       "typeDescriptions": {
-        "value": "The value to check.",
-        "view": "The clock type of the timeValue.",
-        "boolean": "If <code>true</code> the time will be disabled."
+        "value": { "name": "value", "description": "The value to check." },
+        "view": { "name": "view", "description": "The clock type of the timeValue." },
+        "boolean": {
+          "name": "boolean",
+          "description": "If <code>true</code> the time will be disabled."
+        }
       }
     },
     "skipDisabled": {
@@ -123,7 +161,7 @@
       "description": "Amount of time options below or at which the single column time renderer is used."
     },
     "timeSteps": {
-      "description": "The time steps between two time unit options. For example, if <code>timeStep.minutes = 8</code>, then the available minute options will be <code>[0, 8, 16, 24, 32, 40, 48, 56]</code>. When single column time renderer is used, only <code>timeStep.minutes</code> will be used."
+      "description": "The time steps between two time unit options. For example, if <code>timeSteps.minutes = 8</code>, then the available minute options will be <code>[0, 8, 16, 24, 32, 40, 48, 56]</code>. When single column time renderer is used, only <code>timeSteps.minutes</code> will be used."
     },
     "timezone": {
       "description": "Choose which timezone to use for the value. Example: &quot;default&quot;, &quot;system&quot;, &quot;UTC&quot;, &quot;America/New_York&quot;. If you pass values from other timezones to some props, they will be converted to this timezone before being used.",
@@ -140,9 +178,9 @@
   },
   "classDescriptions": {},
   "slotDescriptions": {
-    "actionBar": "Custom component for the action bar, it is placed below the picker views.",
+    "actionBar": "Custom component for the action bar, it is placed below the Picker views.",
     "clearButton": "Button to clear the value.",
-    "clearIcon": "Icon to display inside the clear button.",
+    "clearIcon": "Icon to display in the button used to clean the value.",
     "desktopPaper": "Custom component for the paper rendered inside the desktop picker&#39;s Popper.",
     "desktopTransition": "Custom component for the desktop popper <a href=\"https://mui.com/material-ui/transitions/\">Transition</a>.",
     "desktopTrapFocus": "Custom component for trapping the focus inside the views on desktop.",
@@ -150,19 +188,19 @@
     "digitalClockItem": "Component responsible for rendering a single digital clock item.",
     "digitalClockSectionItem": "Component responsible for rendering a single multi section digital clock section item.",
     "field": "Component used to enter the date with the keyboard.",
-    "inputAdornment": "Component displayed on the start or end input adornment used to open the picker on desktop.",
+    "inputAdornment": "Component displayed on the start or end input adornment used to open the Picker.",
     "layout": "Custom component for wrapping the layout. It wraps the toolbar, views, action bar, and shortcuts.",
     "leftArrowIcon": "Icon displayed in the left view switch button.",
     "mobilePaper": "Custom component for the paper rendered inside the mobile picker&#39;s Dialog.",
     "mobileTransition": "Custom component for the mobile dialog <a href=\"https://mui.com/material-ui/transitions/\">Transition</a>.",
     "nextIconButton": "Button allowing to switch to the right view.",
-    "openPickerButton": "Button to open the picker on desktop.",
-    "openPickerIcon": "Icon displayed in the open picker button on desktop.",
+    "openPickerButton": "Button to open the Picker.",
+    "openPickerIcon": "Icon to display in the button used to open the Picker.",
     "popper": "Custom component for the popper inside which the views are rendered on desktop.",
     "previousIconButton": "Button allowing to switch to the left view.",
     "rightArrowIcon": "Icon displayed in the right view switch button.",
     "shortcuts": "Custom component for the shortcuts.",
-    "textField": "Form control with an input to render the value inside the default field.",
+    "textField": "Form control with an input to render the value.",
     "toolbar": "Custom component for the toolbar rendered above the views."
   }
 }

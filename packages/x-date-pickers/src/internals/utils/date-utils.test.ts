@@ -1,6 +1,5 @@
-import { expect } from 'chai';
 import { adapterToUse } from 'test/utils/pickers';
-import { useFakeTimers } from 'sinon';
+import { vi } from 'vitest';
 import { findClosestEnabledDate } from './date-utils';
 
 describe('findClosestEnabledDate', () => {
@@ -12,7 +11,7 @@ describe('findClosestEnabledDate', () => {
       date: adapterToUse.date('2000-01-01'),
       minDate: adapterToUse.date('1999-01-01'), // Use close-by min/max dates to reduce the test runtime.
       maxDate: adapterToUse.date('2001-01-01'),
-      utils: adapterToUse,
+      adapter: adapterToUse,
       isDateDisabled: () => true,
       disableFuture: false,
       disablePast: false,
@@ -27,7 +26,7 @@ describe('findClosestEnabledDate', () => {
       date: adapterToUse.date('2000-01-01'),
       minDate: adapterToUse.date('1900-01-01'),
       maxDate: adapterToUse.date('2100-01-01'),
-      utils: adapterToUse,
+      adapter: adapterToUse,
       isDateDisabled: () => false,
       disableFuture: false,
       disablePast: false,
@@ -42,7 +41,7 @@ describe('findClosestEnabledDate', () => {
       date: adapterToUse.date('2018-08-10'),
       minDate: adapterToUse.date('1900-01-01'),
       maxDate: adapterToUse.date('2100-01-01'),
-      utils: adapterToUse,
+      adapter: adapterToUse,
       isDateDisabled: only18th,
       disableFuture: false,
       disablePast: false,
@@ -57,7 +56,7 @@ describe('findClosestEnabledDate', () => {
       date: adapterToUse.date('2018-08-01'),
       minDate: adapterToUse.date('1900-01-01'),
       maxDate: adapterToUse.date('2100-01-01'),
-      utils: adapterToUse,
+      adapter: adapterToUse,
       isDateDisabled: only18th,
       disableFuture: false,
       disablePast: false,
@@ -73,7 +72,7 @@ describe('findClosestEnabledDate', () => {
       date: adapterToUse.date('2000-01-01'),
       minDate: adapterToUse.date('1900-01-01'),
       maxDate: adapterToUse.date('2100-01-01'),
-      utils: adapterToUse,
+      adapter: adapterToUse,
       isDateDisabled: only18th,
       disableFuture: false,
       disablePast: true,
@@ -90,7 +89,7 @@ describe('findClosestEnabledDate', () => {
       date: adapterToUse.date('2000-01-01'),
       minDate: adapterToUse.date('1900-01-01'),
       maxDate: adapterToUse.date('2100-01-01'),
-      utils: adapterToUse,
+      adapter: adapterToUse,
       isDateDisabled: () => false,
       disableFuture: true,
       disablePast: true,
@@ -100,23 +99,30 @@ describe('findClosestEnabledDate', () => {
     expect(result).toEqualDateTime(today);
   });
 
-  it('should return now with given time part if disablePast and now is valid', () => {
-    const clock = useFakeTimers({ now: new Date('2000-01-02') });
-
-    const tryDate = adapterToUse.date('2000-01-01T11:12:13');
-    const result = findClosestEnabledDate({
-      date: tryDate,
-      minDate: adapterToUse.date('1900-01-01'),
-      maxDate: adapterToUse.date('2100-01-01'),
-      utils: adapterToUse,
-      isDateDisabled: () => false,
-      disableFuture: false,
-      disablePast: true,
-      timezone: 'default',
+  describe('fake clock', () => {
+    beforeEach(() => {
+      vi.setSystemTime(new Date('2000-01-02'));
     });
 
-    expect(result).toEqualDateTime(adapterToUse.addDays(tryDate, 1));
-    clock.reset();
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    it('should return now with given time part if disablePast and now is valid', () => {
+      const tryDate = adapterToUse.date('2000-01-01T11:12:13');
+      const result = findClosestEnabledDate({
+        date: tryDate,
+        minDate: adapterToUse.date('1900-01-01'),
+        maxDate: adapterToUse.date('2100-01-01'),
+        adapter: adapterToUse,
+        isDateDisabled: () => false,
+        disableFuture: false,
+        disablePast: true,
+        timezone: 'default',
+      });
+
+      expect(result).toEqualDateTime(adapterToUse.addDays(tryDate, 1));
+    });
   });
 
   it('should return `null` when disablePast+disableFuture and now is invalid', () => {
@@ -125,7 +131,7 @@ describe('findClosestEnabledDate', () => {
       date: adapterToUse.date('2000-01-01'),
       minDate: adapterToUse.date('1900-01-01'),
       maxDate: adapterToUse.date('2100-01-01'),
-      utils: adapterToUse,
+      adapter: adapterToUse,
       isDateDisabled: (date) => adapterToUse.isSameDay(date, today),
       disableFuture: true,
       disablePast: true,
@@ -140,7 +146,7 @@ describe('findClosestEnabledDate', () => {
       date: adapterToUse.date('2000-01-01'),
       minDate: adapterToUse.date('2018-08-18'),
       maxDate: adapterToUse.date('2100-01-01'),
-      utils: adapterToUse,
+      adapter: adapterToUse,
       isDateDisabled: only18th,
       disableFuture: false,
       disablePast: false,
@@ -155,7 +161,7 @@ describe('findClosestEnabledDate', () => {
       date: adapterToUse.date('2000-01-01'),
       minDate: adapterToUse.date('2018-08-01'),
       maxDate: adapterToUse.date('2100-01-01'),
-      utils: adapterToUse,
+      adapter: adapterToUse,
       isDateDisabled: only18th,
       disableFuture: false,
       disablePast: false,
@@ -165,22 +171,29 @@ describe('findClosestEnabledDate', () => {
     expect(result).toEqualDateTime(adapterToUse.date('2018-08-18'));
   });
 
-  it('should keep the time of the `date` when `disablePast`', () => {
-    const clock = useFakeTimers({ now: new Date('2000-01-02T11:12:13.123Z') });
-
-    const result = findClosestEnabledDate({
-      date: adapterToUse.date('2000-01-01T11:12:13.550Z'),
-      minDate: adapterToUse.date('1900-01-01'),
-      maxDate: adapterToUse.date('2100-01-01'),
-      utils: adapterToUse,
-      isDateDisabled: () => false,
-      disableFuture: false,
-      disablePast: true,
-      timezone: 'default',
+  describe('fake clock hours', () => {
+    beforeEach(() => {
+      vi.setSystemTime(new Date('2000-01-02T11:12:13.123Z'));
     });
 
-    expect(result).toEqualDateTime(adapterToUse.date('2000-01-02T11:12:13.550Z'));
-    clock.reset();
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    it('should keep the time of the `date` when `disablePast`', () => {
+      const result = findClosestEnabledDate({
+        date: adapterToUse.date('2000-01-01T11:12:13.550Z'),
+        minDate: adapterToUse.date('1900-01-01'),
+        maxDate: adapterToUse.date('2100-01-01'),
+        adapter: adapterToUse,
+        isDateDisabled: () => false,
+        disableFuture: false,
+        disablePast: true,
+        timezone: 'default',
+      });
+
+      expect(result).toEqualDateTime(adapterToUse.date('2000-01-02T11:12:13.550Z'));
+    });
   });
 
   it('should return maxDate if it is before the date and valid', () => {
@@ -188,7 +201,7 @@ describe('findClosestEnabledDate', () => {
       date: adapterToUse.date('2050-01-01'),
       minDate: adapterToUse.date('1900-01-01'),
       maxDate: adapterToUse.date('2018-07-18'),
-      utils: adapterToUse,
+      adapter: adapterToUse,
       isDateDisabled: only18th,
       disableFuture: false,
       disablePast: false,
@@ -203,7 +216,7 @@ describe('findClosestEnabledDate', () => {
       date: adapterToUse.date('2050-01-01'),
       minDate: adapterToUse.date('1900-01-01'),
       maxDate: adapterToUse.date('2018-08-17'),
-      utils: adapterToUse,
+      adapter: adapterToUse,
       isDateDisabled: only18th,
       disableFuture: false,
       disablePast: false,
@@ -218,7 +231,7 @@ describe('findClosestEnabledDate', () => {
       date: adapterToUse.date('2000-01-01'),
       minDate: adapterToUse.date('2000-01-01'),
       maxDate: adapterToUse.date('1999-01-01'),
-      utils: adapterToUse,
+      adapter: adapterToUse,
       isDateDisabled: () => false,
       disableFuture: false,
       disablePast: false,

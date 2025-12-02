@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { DataGridPro } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Stack from '@mui/material/Stack';
@@ -30,7 +29,7 @@ function ListViewCell(params) {
   );
 }
 
-const listColDef = {
+const listViewColDef = {
   field: 'listColumn',
   renderCell: ListViewCell,
 };
@@ -62,8 +61,8 @@ export default function ListViewMediaQuery() {
         {...data}
         loading={loading}
         rowHeight={rowHeight}
-        unstable_listView={isListView}
-        unstable_listColumn={listColDef}
+        listView={isListView}
+        listViewColumn={listViewColDef}
       />
     </div>
   );

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { SxProps, Theme } from '@mui/material/styles';
-import { SlotComponentProps } from '@mui/utils';
+import { SlotComponentProps } from '@mui/utils/types';
 import { PickersActionBar, PickersActionBarProps } from '../PickersActionBar';
 import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
 import { ExportedBaseTabsProps } from '../internals/models/props/tabs';
@@ -15,7 +15,7 @@ import { PickerValidValue } from '../internals/models';
 
 export interface ExportedPickersLayoutSlots<TValue extends PickerValidValue> {
   /**
-   * Custom component for the action bar, it is placed below the picker views.
+   * Custom component for the action bar, it is placed below the Picker views.
    * @default PickersActionBar
    */
   actionBar?: React.ElementType<PickersActionBarProps>;
@@ -34,13 +34,18 @@ export interface ExportedPickersLayoutSlots<TValue extends PickerValidValue> {
 }
 
 export interface PickerLayoutOwnerState extends PickerOwnerState {
-  // The direction cannot be part of PickerOwnerState because we need to have the correct direction value even when there is no picker above for standalone components.
+  // The direction cannot be part of PickerOwnerState because we need to have the correct direction value even when there is no Picker above for standalone components.
   /**
    * The direction of the layout.
    * Is equal to "ltr" when the layout is in left-to-right direction.
    * Is equal to "rtl" when the layout is in right-to-left direction.
    */
   layoutDirection: 'ltr' | 'rtl';
+  /**
+   * Whether the layout should display the shortcuts panel or not.
+   * This flag is used to adjust the layout accordingly.
+   */
+  hasShortcuts: boolean;
 }
 
 export interface ExportedPickersLayoutSlotProps<TValue extends PickerValidValue> {
@@ -66,7 +71,7 @@ export interface PickersLayoutSlots<TValue extends PickerValidValue>
   tabs?: React.ElementType<{}>;
   /**
    * Custom component for the toolbar.
-   * It is placed above the picker views.
+   * It is placed above the Picker views.
    */
   toolbar?: React.JSXElementConstructor<BaseToolbarProps>;
 }

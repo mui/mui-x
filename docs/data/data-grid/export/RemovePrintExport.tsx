@@ -1,14 +1,6 @@
-import * as React from 'react';
-import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
-function CustomToolbar() {
-  return (
-    <GridToolbarContainer>
-      <GridToolbarExport printOptions={{ disableToolbarButton: true }} />
-    </GridToolbarContainer>
-  );
-}
 export default function RemovePrintExport() {
   const { data, loading } = useDemoData({
     dataSet: 'Commodity',
@@ -21,9 +13,12 @@ export default function RemovePrintExport() {
       <DataGrid
         {...data}
         loading={loading}
-        slots={{
-          toolbar: CustomToolbar,
+        slotProps={{
+          toolbar: {
+            printOptions: { disableToolbarButton: true },
+          },
         }}
+        showToolbar
       />
     </div>
   );

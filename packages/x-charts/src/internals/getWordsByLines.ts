@@ -1,14 +1,27 @@
+import * as React from 'react';
 import { getStringSize } from './domUtils';
 
-export type ChartsTextBaseline = 'hanging' | 'central' | 'auto';
+export type ChartsTextBaseline =
+  | 'hanging'
+  | 'central'
+  | 'auto'
+  | 'text-after-edge'
+  | 'text-before-edge';
 
-export interface ChartsTextStyle extends React.CSSProperties {
+export type ChartsTextAnchor = 'start' | 'middle' | 'end';
+
+export interface ChartsTextStyle extends Omit<React.CSSProperties, 'dominantBaseline'> {
   angle?: number;
   /**
    * The text baseline
    * @default 'central'
    */
   dominantBaseline?: ChartsTextBaseline;
+  /**
+   * The text anchor
+   * @default 'middle'
+   */
+  textAnchor?: ChartsTextAnchor;
 }
 
 export interface GetWordsByLinesParams {

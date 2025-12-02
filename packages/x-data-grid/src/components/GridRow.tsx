@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { unstable_useForkRef as useForkRef } from '@mui/utils';
+import useForkRef from '@mui/utils/useForkRef';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { isObjectEmpty } from '@mui/x-internals/isObjectEmpty';
@@ -24,12 +24,13 @@ import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../colDef/gridCheckboxSelection
 import { GRID_ACTIONS_COLUMN_TYPE } from '../colDef/gridActionsColDef';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD, PinnedColumnPosition } from '../internals/constants';
 import { gridSortModelSelector } from '../hooks/features/sorting/gridSortingSelector';
-import { gridRowMaximumTreeDepthSelector } from '../hooks/features/rows/gridRowsSelector';
+import { gridRowNodeSelector } from '../hooks/features/rows/gridRowsSelector';
 import {
   gridEditRowsStateSelector,
   gridRowIsEditingSelector,
 } from '../hooks/features/editing/gridEditingSelectors';
-import { GridScrollbarFillerCell as ScrollbarFiller } from './GridScrollbarFillerCell';
+import { gridIsRowDragActiveSelector } from '../hooks/features/rowReorder/gridRowReorderSelector';
+import { GridRowDragAndDropOverlay } from './GridRowDragAndDropOverlay';
 import { getPinnedCellOffset } from '../internals/utils/getPinnedCellOffset';
 import { useGridConfiguration } from '../hooks/utils/useGridConfiguration';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
@@ -37,8 +38,8 @@ import { createSelector } from '../utils/createSelector';
 
 const isRowReorderingEnabledSelector = createSelector(
   gridEditRowsStateSelector,
-  (editRows, rowReordering: boolean) => {
-    if (!rowReordering) {
+  (editRows, { rowReordering, treeData }: { rowReordering: boolean; treeData: boolean }) => {
+    if (!rowReordering || treeData) {
       return false;
     }
     const isEditingRows = !isObjectEmpty(editRows);
@@ -116,16 +117,16 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
   const rootProps = useGridRootProps();
   const currentPage = useGridVisibleRows(apiRef, rootProps);
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
-  const treeDepth = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector);
   const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
   const rowReordering = (rootProps as any).rowReordering as boolean;
-  const isRowReorderingEnabled = useGridSelector(
-    apiRef,
-    isRowReorderingEnabledSelector,
+  const treeData = (rootProps as any).treeData as boolean;
+  const isRowReorderingEnabled = useGridSelector(apiRef, isRowReorderingEnabledSelector, {
     rowReordering,
-  );
+    treeData,
+  });
+  const isRowDragActive = useGridSelector(apiRef, gridIsRowDragActiveSelector);
   const handleRef = useForkRef(ref, refProp);
-  const rowNode = apiRef.current.getRowNode(rowId);
+  const rowNode = gridRowNodeSelector(apiRef, rowId);
   const editing = useGridSelector(apiRef, gridRowIsEditingSelector, {
     rowId,
     editMode: rootProps.editMode,
@@ -278,10 +279,22 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
     }
 
     return rowStyle;
-  }, [isNotVisible, rowHeight, styleProp, heightEntry, rootProps.rowSpacingType]);
+  }, [
+    isNotVisible,
+    rowHeight,
+    styleProp,
+    heightEntry.spacingTop,
+    heightEntry.spacingBottom,
+    rootProps.rowSpacingType,
+  ]);
+
+  // HACK: Sometimes, the rowNode has already been removed from the state but the row is still rendered.
+  if (!rowNode) {
+    return null;
+  }
 
   const rowClassNames = apiRef.current.unstable_applyPipeProcessors('rowClassName', [], rowId);
-  const ariaAttributes = rowNode ? getRowAriaAttributes(rowNode, index) : undefined;
+  const ariaAttributes = getRowAriaAttributes(rowNode, index);
 
   if (typeof rootProps.getRowClassName === 'function') {
     const indexRelativeToCurrentPage = index - (currentPage.range?.firstRowIndex || 0);
@@ -293,11 +306,6 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
     };
 
     rowClassNames.push(rootProps.getRowClassName(rowParams));
-  }
-
-  /* Start of rendering */
-  if (!rowNode) {
-    return null;
   }
 
   const getCell = (
@@ -328,7 +336,7 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
       scrollbarWidth,
     );
 
-    if (rowNode?.type === 'skeletonRow') {
+    if (rowNode.type === 'skeletonRow') {
       return (
         <slots.skeletonCell
           key={column.field}
@@ -346,19 +354,29 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
     const isReorderCell = column.field === '__reorder__';
 
     const canReorderColumn = !(disableColumnReorder || column.disableReorder);
-    const canReorderRow = isRowReorderingEnabled && !sortModel.length && treeDepth <= 1;
+    const canReorderRow = isRowReorderingEnabled && !sortModel.length;
 
-    const disableDragEvents = !(canReorderColumn || (isReorderCell && canReorderRow));
+    const disableDragEvents = !(
+      canReorderColumn ||
+      (isReorderCell && canReorderRow) ||
+      isRowDragActive
+    );
 
     const cellIsNotVisible = pinnedPosition === PinnedColumnPosition.VIRTUAL;
 
-    const showLeftBorder = shouldCellShowLeftBorder(pinnedPosition, indexInSection);
+    const showLeftBorder = shouldCellShowLeftBorder(
+      pinnedPosition,
+      indexInSection,
+      rootProps.showCellVerticalBorder,
+      rootProps.pinnedColumnsSectionSeparator,
+    );
     const showRightBorder = shouldCellShowRightBorder(
       pinnedPosition,
       indexInSection,
       sectionLength,
       rootProps.showCellVerticalBorder,
       gridHasFiller,
+      rootProps.pinnedColumnsSectionSeparator,
     );
 
     return (
@@ -476,9 +494,7 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
       {cells}
       <div role="presentation" className={clsx(gridClasses.cell, gridClasses.cellEmpty)} />
       {rightCells}
-      {scrollbarWidth !== 0 && (
-        <ScrollbarFiller pinnedRight={pinnedColumns.right.length > 0} borderTop={!isFirstVisible} />
-      )}
+      <GridRowDragAndDropOverlay rowId={rowId} />
     </div>
   );
 });

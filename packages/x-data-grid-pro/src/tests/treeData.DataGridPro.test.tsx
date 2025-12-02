@@ -9,7 +9,6 @@ import {
 } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 import * as React from 'react';
-import { expect } from 'chai';
 import { spy } from 'sinon';
 import {
   DataGridPro,
@@ -60,7 +59,7 @@ const baselineProps: DataGridProProps = {
 };
 
 describe('<DataGridPro /> - Tree data', () => {
-  const { render, clock } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   let apiRef: RefObject<GridApi | null>;
 
@@ -173,7 +172,7 @@ describe('<DataGridPro /> - Tree data', () => {
       render(<Test disableVirtualization rows={[{ name: 'A' }, { name: 'A.A' }]} />);
       expect(getColumnValues(1)).to.deep.equal(['A']);
       act(() => apiRef.current?.setRowChildrenExpansion('A', true));
-      clock.runToLast();
+
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.A']);
       act(() => apiRef.current?.updateRows([{ name: 'B' }]));
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'B']);
@@ -307,6 +306,45 @@ describe('<DataGridPro /> - Tree data', () => {
         />,
       );
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'A.B', 'B', 'C']);
+    });
+  });
+
+  describe('apiRef: expandAllRows', () => {
+    it('should expand all rows', async () => {
+      render(<Test />);
+      expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
+      act(() => apiRef.current?.expandAllRows());
+
+      expect(getColumnValues(1)).to.deep.equal([
+        'A',
+        'A.A',
+        'A.B',
+        'B',
+        'B.A',
+        'B.B',
+        'B.B.A',
+        'B.B.A.A',
+        'C',
+      ]);
+    });
+  });
+
+  describe('apiRef: collapseAllRows', () => {
+    it('should collapse all rows', () => {
+      render(<Test defaultGroupingExpansionDepth={-1} />);
+      expect(getColumnValues(1)).to.deep.equal([
+        'A',
+        'A.A',
+        'A.B',
+        'B',
+        'B.A',
+        'B.B',
+        'B.B.A',
+        'B.B.A.A',
+        'C',
+      ]);
+      act(() => apiRef.current?.collapseAllRows());
+      expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
     });
   });
 

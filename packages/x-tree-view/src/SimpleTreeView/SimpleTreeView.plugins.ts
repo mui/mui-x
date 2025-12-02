@@ -16,12 +16,8 @@ import {
   UseTreeViewFocusParameters,
 } from '../internals/plugins/useTreeViewFocus';
 import { useTreeViewKeyboardNavigation } from '../internals/plugins/useTreeViewKeyboardNavigation';
-import {
-  useTreeViewIcons,
-  UseTreeViewIconsParameters,
-} from '../internals/plugins/useTreeViewIcons';
 import { useTreeViewJSXItems } from '../internals/plugins/useTreeViewJSXItems';
-import { ConvertPluginsIntoSignatures, MergeSignaturesProperty } from '../internals/models';
+import { ConvertPluginsIntoSignatures } from '../internals/models';
 
 export const SIMPLE_TREE_VIEW_PLUGINS = [
   useTreeViewItems,
@@ -29,7 +25,6 @@ export const SIMPLE_TREE_VIEW_PLUGINS = [
   useTreeViewSelection,
   useTreeViewFocus,
   useTreeViewKeyboardNavigation,
-  useTreeViewIcons,
   useTreeViewJSXItems,
 ] as const;
 
@@ -37,24 +32,13 @@ export type SimpleTreeViewPluginSignatures = ConvertPluginsIntoSignatures<
   typeof SIMPLE_TREE_VIEW_PLUGINS
 >;
 
-export type SimpleTreeViewPluginSlots = MergeSignaturesProperty<
-  SimpleTreeViewPluginSignatures,
-  'slots'
->;
-
-export type SimpleTreeViewPluginSlotProps = MergeSignaturesProperty<
-  SimpleTreeViewPluginSignatures,
-  'slotProps'
->;
-
 // We can't infer this type from the plugin, otherwise we would lose the generics.
 export interface SimpleTreeViewPluginParameters<Multiple extends boolean | undefined>
   extends TreeViewCorePluginParameters,
     Omit<
       UseTreeViewItemsParameters<any>,
-      'items' | 'isItemDisabled' | 'getItemLabel' | 'getItemId'
+      'items' | 'isItemDisabled' | 'getItemLabel' | 'getItemChildren' | 'getItemId'
     >,
     UseTreeViewExpansionParameters,
     UseTreeViewFocusParameters,
-    UseTreeViewSelectionParameters<Multiple>,
-    UseTreeViewIconsParameters {}
+    UseTreeViewSelectionParameters<Multiple> {}

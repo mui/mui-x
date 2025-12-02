@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Button from '@mui/material/Button';
 import { DataGrid, gridClasses, useGridApiRef } from '@mui/x-data-grid';
 import { randomInt, randomArrayItem } from '@mui/x-data-grid-generator';

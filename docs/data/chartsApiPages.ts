@@ -69,6 +69,10 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsAxisTooltipContent',
   },
   {
+    pathname: '/x/api/charts/charts-brush-overlay',
+    title: 'ChartsBrushOverlay',
+  },
+  {
     pathname: '/x/api/charts/charts-clip-path',
     title: 'ChartsClipPath',
   },
@@ -85,6 +89,10 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsLegend',
   },
   {
+    pathname: '/x/api/charts/charts-localization-provider',
+    title: 'ChartsLocalizationProvider',
+  },
+  {
     pathname: '/x/api/charts/charts-reference-line',
     title: 'ChartsReferenceLine',
   },
@@ -97,6 +105,31 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsText',
   },
   {
+    pathname: '/x/api/charts/charts-toolbar-image-export-trigger',
+    title: 'ChartsToolbarImageExportTrigger',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/charts-toolbar-print-export-trigger',
+    title: 'ChartsToolbarPrintExportTrigger',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/charts-toolbar-pro',
+    title: 'ChartsToolbarPro',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/charts-toolbar-zoom-in-trigger',
+    title: 'ChartsToolbarZoomInTrigger',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/charts-toolbar-zoom-out-trigger',
+    title: 'ChartsToolbarZoomOutTrigger',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/charts/charts-tooltip',
     title: 'ChartsTooltip',
   },
@@ -105,8 +138,8 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsTooltipContainer',
   },
   {
-    pathname: '/x/api/charts/charts-voronoi-handler',
-    title: 'ChartsVoronoiHandler',
+    pathname: '/x/api/charts/charts-wrapper',
+    title: 'ChartsWrapper',
   },
   {
     pathname: '/x/api/charts/charts-x-axis',
@@ -117,8 +150,23 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsYAxis',
   },
   {
+    pathname: '/x/api/charts/chart-zoom-slider',
+    title: 'ChartZoomSlider',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/charts/continuous-color-legend',
     title: 'ContinuousColorLegend',
+  },
+  {
+    pathname: '/x/api/charts/funnel-chart',
+    title: 'FunnelChart',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/funnel-plot',
+    title: 'FunnelPlot',
+    plan: 'pro',
   },
   {
     pathname: '/x/api/charts/gauge',
@@ -141,6 +189,11 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/heatmap-tooltip',
     title: 'HeatmapTooltip',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/heatmap-tooltip-content',
+    title: 'HeatmapTooltipContent',
     plan: 'pro',
   },
   {
@@ -201,8 +254,70 @@ const chartsApiPages: MuiPage[] = [
     title: 'PieChart',
   },
   {
+    pathname: '/x/api/charts/pie-chart-pro',
+    title: 'PieChartPro',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/charts/pie-plot',
     title: 'PiePlot',
+  },
+  {
+    pathname: '/x/api/charts/radar-axis',
+    title: 'RadarAxis',
+  },
+  {
+    pathname: '/x/api/charts/radar-axis-highlight',
+    title: 'RadarAxisHighlight',
+  },
+  {
+    pathname: '/x/api/charts/radar-chart',
+    title: 'RadarChart',
+  },
+  {
+    pathname: '/x/api/charts/radar-chart-pro',
+    title: 'RadarChartPro',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/radar-grid',
+    title: 'RadarGrid',
+  },
+  {
+    pathname: '/x/api/charts/radar-metric-labels',
+    title: 'RadarMetricLabels',
+  },
+  {
+    pathname: '/x/api/charts/radar-series-area',
+    title: 'RadarSeriesArea',
+  },
+  {
+    pathname: '/x/api/charts/radar-series-marks',
+    title: 'RadarSeriesMarks',
+  },
+  {
+    pathname: '/x/api/charts/radar-series-plot',
+    title: 'RadarSeriesPlot',
+  },
+  {
+    pathname: '/x/api/charts/sankey-chart',
+    title: 'SankeyChart',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/sankey-plot',
+    title: 'SankeyPlot',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/sankey-tooltip',
+    title: 'SankeyTooltip',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/sankey-tooltip-content',
+    title: 'SankeyTooltipContent',
+    plan: 'pro',
   },
   {
     pathname: '/x/api/charts/scatter',
@@ -224,6 +339,14 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/spark-line-chart',
     title: 'SparkLineChart',
+  },
+  {
+    pathname: '/x/api/charts/toolbar',
+    title: 'Toolbar',
+  },
+  {
+    pathname: '/x/api/charts/toolbar-button',
+    title: 'ToolbarButton',
   },
 ];
 export default chartsApiPages;

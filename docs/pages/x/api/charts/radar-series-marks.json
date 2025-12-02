@@ -1,0 +1,26 @@
+{
+  "props": {
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "onItemClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.MouseEvent<SVGPathElement, MouseEvent>, radarItemIdentifier: RadarItemIdentifier) => void",
+        "describedArgs": ["event", "radarItemIdentifier"]
+      }
+    },
+    "seriesId": { "type": { "name": "string" } }
+  },
+  "name": "RadarSeriesMarks",
+  "imports": [
+    "import { RadarSeriesMarks } from '@mui/x-charts/RadarChart';",
+    "import { RadarSeriesMarks } from '@mui/x-charts';",
+    "import { RadarSeriesMarks } from '@mui/x-charts-pro';",
+    "import { RadarSeriesMarks } from '@mui/x-charts-premium';"
+  ],
+  "classes": [],
+  "muiName": "MuiRadarSeriesMarks",
+  "filename": "/packages/x-charts/src/RadarChart/RadarSeriesPlot/RadarSeriesMarks.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/radar/\">Charts - Radar</a></li></ul>",
+  "cssComponent": false
+}

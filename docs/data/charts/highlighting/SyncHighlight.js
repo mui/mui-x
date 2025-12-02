@@ -9,7 +9,7 @@ export default function SyncHighlight() {
 
   return (
     <Stack
-      direction={{ xs: 'column', xl: 'row' }}
+      direction={{ xs: 'column', md: 'row' }}
       spacing={1}
       sx={{ width: '100%' }}
     >
@@ -35,8 +35,8 @@ const barChartsProps = {
       highlightScope: { highlight: 'item', fade: 'global' },
     },
   ],
-  xAxis: [{ scaleType: 'band', data: ['A', 'B', 'C', 'D', 'E'] }],
-  height: 400,
+  xAxis: [{ data: ['A', 'B', 'C', 'D', 'E'] }],
+  height: 200,
   hideLegend: true,
 };
 
@@ -54,6 +54,6 @@ const pieChartProps = {
       highlightScope: { highlight: 'item', fade: 'global' },
     },
   ],
-  height: 400,
+  height: 150,
   hideLegend: true,
 };
