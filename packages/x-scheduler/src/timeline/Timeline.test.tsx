@@ -185,7 +185,7 @@ describe('<Timeline />', () => {
       expect(eventPosition2).to.be.greaterThanOrEqual(180); // second month
       expect(eventPosition2).to.be.lessThanOrEqual(360); // second month
     });
-    it('should render events correctly in the month view', () => {
+    it('should render events correctly in the year view', () => {
       const thisYearEvent = EventBuilder.new()
         .span('2025-08-03T13:00:00Z', '2025-09-04T14:30:00Z')
         .resource('resource-1')
