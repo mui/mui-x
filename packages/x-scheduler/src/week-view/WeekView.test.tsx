@@ -31,15 +31,7 @@ describe('<WeekView />', () => {
     it('should render all-day events correctly with main event in start date cell', () => {
       render(
         <EventCalendarProvider
-          events={[
-            {
-              id: '1',
-              start: adapter.date('2025-05-05T00:00:00', 'default'),
-              end: adapter.date('2025-05-07T23:59:59', 'default'),
-              title: 'Test event',
-              allDay: true,
-            },
-          ]}
+          events={[EventBuilder.new().span('2025-05-05', '2025-05-07', { allDay: true }).build()]}
           resources={[]}
         >
           <WeekView />
