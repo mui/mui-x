@@ -1336,7 +1336,7 @@ describe('<DataGridPro /> - Row selection', () => {
   });
 
   describe('controlled selection', () => {
-    it('should not publish "rowSelectionChange" if the selection state did not change ', () => {
+    it('should not publish "rowSelectionChange" if the selection state did not change', () => {
       const handleSelectionChange = spy();
       const rowSelectionModel: GridRowSelectionModel = includeRowSelection([]);
       render(<TestDataGridSelection rowSelectionModel={rowSelectionModel} />);

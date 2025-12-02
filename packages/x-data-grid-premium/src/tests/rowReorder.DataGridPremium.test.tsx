@@ -1527,8 +1527,8 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
       });
     });
 
-    describe.skip('dataSource.editRow integration', () => {
-      // Remove `.skip` when `editRows` and `getGroupKey()` are implemented in the `dataSource`
+    // TODO: Implement `editRows` and `getGroupKey()` in the `dataSource`
+    describe.todo('dataSource.editRow integration', () => {
       const baselineProps: DataGridPremiumProps = {
         columns: [
           { field: 'category', width: 150 },
@@ -2095,6 +2095,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
           const companyA = apiRef.current!.getRowNode('Company A');
           if (companyA && companyA.type === 'group') {
             const children = (companyA as GridGroupNode).children;
+            // eslint-disable-next-line vitest/no-conditional-expect
             expect(children).to.not.include('Sales');
           }
 
@@ -2102,6 +2103,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
           const companyB = apiRef.current!.getRowNode('Company B');
           if (companyB && companyB.type === 'group') {
             const children = (companyB as GridGroupNode).children;
+            // eslint-disable-next-line vitest/no-conditional-expect
             expect(children).to.include('Sales');
           }
 

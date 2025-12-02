@@ -193,8 +193,15 @@ export default defineConfig(
       // matching the pattern of the test runner
       `**/*${EXTENSION_TEST_FILE}`,
     ],
-    extends: createTestConfig({ useMocha: false }),
+    extends: createTestConfig({ useMocha: false, useVitest: true }),
     ignores: ['test/e2e/**/*', 'test/regressions/**/*'],
+    rules: {
+      // Doesn't work relianly with chai style .to.deep.equal (replace with .toEqual?)
+      'vitest/valid-expect': 'off',
+      // Can't unambiguously detect all patterns of adding expects
+      'vitest/expect-expect': 'off',
+      'vitest/no-standalone-expect': 'off',
+    },
   },
   baseSpecRules,
 
