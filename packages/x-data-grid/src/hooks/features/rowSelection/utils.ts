@@ -94,28 +94,41 @@ export const checkboxPropsSelector = createSelector(
       };
     }
 
-    let hasSelectedDescendant = false;
-    let hasUnSelectedDescendant = false;
+   let hasSelectedDescendant = false;
+   let hasUnSelectedDescendant = false;
 
-    const traverseDescendants = (itemToTraverseId: GridRowId) => {
-      if (
-        filteredRowsLookup[itemToTraverseId] === false ||
-        // Perf: Skip checking the rest of the descendants if we already
-        // know that there is a selected and an unselected descendant
-        (hasSelectedDescendant && hasUnSelectedDescendant)
-      ) {
-        return;
-      }
-      const node = rowTree[itemToTraverseId];
-      if (node?.type === 'group') {
-        node.children.forEach(traverseDescendants);
-      }
-      if (rowSelectionManager.has(itemToTraverseId)) {
-        hasSelectedDescendant = true;
-      } else {
-        hasUnSelectedDescendant = true;
-      }
-    };
+   const traverseDescendants = (itemToTraverseId: GridRowId) => {
+     if (
+       filteredRowsLookup[itemToTraverseId] === false ||
+       // Perf: Skip checking the rest of the descendants if we already
+       // know that there is a selected and an unselected descendant
+       (hasSelectedDescendant && hasUnSelectedDescendant)
+     ) {
+       return;
+     }
+     const node = rowTree[itemToTraverseId];
+     if (node?.type === 'group') {
+       node.children.forEach(traverseDescendants);
+     }
+     // Check if row is selectable before considering it for parent selection state
+      const rowParams: GridRowParams = {
+        id: itemToTraverseId,
+        row: rowsLookup[itemToTraverseId],
+       columns,
+     };
+      const rowIsSelectable = typeof isRowSelectable === 'function' 
+        ? isRowSelectable(rowParams) 
+       : true;
+     
+     // Only consider selectable rows when determining parent selection state
+      if (rowIsSelectable) {
+       if (rowSelectionManager.has(itemToTraverseId)) {
+         hasSelectedDescendant = true;
+       } else {
+         hasUnSelectedDescendant = true;
+       }
+     }
+   };
 
     traverseDescendants(groupId);
 
@@ -204,27 +217,44 @@ export const findRowsToSelect = (
     }
   }
 
-  if (autoSelectParents) {
-    const checkAllDescendantsSelected = (rowId: GridRowId): boolean => {
-      if (!rowSelectionManager.has(rowId) && !selectedDescendants.has(rowId)) {
-        return false;
-      }
-      const node = tree[rowId];
-      if (!node) {
-        return false;
-      }
-      if (node.type !== 'group') {
+ if (autoSelectParents) {
+   const checkAllDescendantsSelected = (rowId: GridRowId): boolean => {
+     const node = tree[rowId];
+     if (!node) {
+       return false;
+     }
+      // For non-group nodes, check if it's selected or if it's non-selectable
+     if (node.type !== 'group') {
+        // If the row is selectable, it must be selected
+        if (apiRef.current.isRowSelectable(rowId)) {
+          return rowSelectionManager.has(rowId) || selectedDescendants.has(rowId);
+        }
+        // Non-selectable rows don't affect parent selection
         return true;
       }
-      return node.children.every(checkAllDescendantsSelected);
-    };
+      // For group nodes, check if it's selected or all its children are selected
+      if (rowSelectionManager.has(rowId) || selectedDescendants.has(rowId)) {
+        return true;
+     }
+      // Recursively check all children
+     return node.children.every(checkAllDescendantsSelected);
+   };
 
-    const traverseParents = (rowId: GridRowId) => {
-      const siblings: GridRowId[] = getFilteredRowNodeSiblings(tree, filteredRows, rowId);
-      if (siblings.length === 0 || siblings.every(checkAllDescendantsSelected)) {
-        const rowNode = tree[rowId] as GridGroupNode;
-        const parent = rowNode?.parent;
-        if (
+   const traverseParents = (rowId: GridRowId) => {
+     const siblings: GridRowId[] = getFilteredRowNodeSiblings(tree, filteredRows, rowId);
+      // Check if all selectable siblings are selected
+      const allSelectableSiblingsSelected = siblings.every((siblingId) => {
+        // Non-selectable siblings don't affect parent selection
+        if (!apiRef.current.isRowSelectable(siblingId)) {
+          return true;
+        }
+        return checkAllDescendantsSelected(siblingId);
+      });
+      
+      if (siblings.length === 0 || allSelectableSiblingsSelected) {
+       const rowNode = tree[rowId] as GridGroupNode;
+       const parent = rowNode?.parent;
+       if (
           parent != null &&
           parent !== GRID_ROOT_GROUP_ID &&
           apiRef.current.isRowSelectable(parent)
