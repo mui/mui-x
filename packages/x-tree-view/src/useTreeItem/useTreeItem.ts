@@ -36,6 +36,7 @@ import { idSelectors } from '../internals/plugins/id';
 import { expansionSelectors } from '../internals/plugins/expansion';
 import { selectionSelectors } from '../internals/plugins/selection';
 import { RichTreeViewStore } from '../internals/RichTreeViewStore';
+import { MinimalTreeViewState } from '../internals/MinimalTreeViewStore';
 
 // TODO v8: Remove the lazy loading plugin from the typing on the community useTreeItem and ask users to pass the TStore generic.
 interface DefaultStore extends RichTreeViewStore<any, any> {
@@ -51,7 +52,11 @@ interface DefaultStore extends RichTreeViewStore<any, any> {
   };
 }
 
-const depthSelector = (state: any, itemId: string, depthContext: any) => {
+const depthSelector = (
+  state: MinimalTreeViewState<any, any>,
+  itemId: string,
+  depthContext: number | ((state: MinimalTreeViewState<any, any>, itemId: string) => number),
+) => {
   if (typeof depthContext === 'function') {
     return depthContext(state, itemId);
   }

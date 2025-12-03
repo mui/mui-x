@@ -11,13 +11,15 @@ import { itemsSelectors } from '../plugins/items';
 import { useTreeViewContext } from '../TreeViewProvider';
 import { expansionSelectors } from '../plugins/expansion';
 import { RichTreeViewStore } from '../RichTreeViewStore';
+import { MinimalTreeViewState } from '../MinimalTreeViewStore';
 
 const RichTreeViewItemsContext = React.createContext<
   ((itemId: TreeViewItemId) => React.ReactNode) | null
 >(null);
 
 const selectorNoChildren = () => EMPTY_ARRAY;
-const selectorChildrenIdsNull = (state: any) => itemsSelectors.itemOrderedChildrenIds(state, null);
+const selectorChildrenIdsNull = (state: MinimalTreeViewState<any, any>) =>
+  itemsSelectors.itemOrderedChildrenIds(state, null);
 
 const WrappedTreeItem = React.memo(function WrappedTreeItem({
   itemSlot,
