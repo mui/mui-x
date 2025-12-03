@@ -45,6 +45,11 @@ export interface TickParams {
    * @default 'middle'
    */
   tickLabelPlacement?: 'middle' | 'tick';
+  /**
+   * The minimum space between ticks when using an ordinal scale. It defines the minimum distance in pixels between two ticks.
+   * @default 0
+   */
+  tickSpacing?: number;
 }
 
 const offsetRatio = {
@@ -74,12 +79,31 @@ function getTickPosition(
   );
 }
 
+/**
+ * Returns a new domain where each tick is at least {@link tickSpacing}px from the next one.
+ * Assumes tick spacing is greater than 0.
+ * @param domain Domain of the scale.
+ * @param range Range of the scale.
+ * @param tickSpacing Spacing in pixels.
+ */
+export function applyTickSpacing<T>(domain: T[], range: [number, number], tickSpacing: number) {
+  const rangeSpan = Math.abs(range[1] - range[0]);
+
+  const every = Math.ceil(domain.length / (rangeSpan / tickSpacing));
+
+  if (Number.isNaN(every) || every <= 1) {
+    return domain;
+  }
+
+  return domain.filter((_, index) => index % every === 0);
+}
+
 export function getTicks(
   options: {
     scale: D3Scale;
     valueFormatter?: AxisConfig['valueFormatter'];
     isInside: (offset: number) => boolean;
-  } & Pick<TickParams, 'tickInterval' | 'tickPlacement' | 'tickLabelPlacement'> &
+  } & Pick<TickParams, 'tickInterval' | 'tickPlacement' | 'tickLabelPlacement' | 'tickSpacing'> &
     Required<Pick<TickParams, 'tickNumber'>>,
 ) {
   const {
@@ -89,21 +113,30 @@ export function getTicks(
     tickInterval,
     tickPlacement = 'extremities',
     tickLabelPlacement: tickLabelPlacementProp,
+    tickSpacing,
     isInside,
   } = options;
 
   // band scale
   if (isOrdinalScale(scale)) {
     const domain = scale.domain();
-
     const tickLabelPlacement = tickLabelPlacementProp ?? 'middle';
+
+    let filteredDomain = domain;
+    if (typeof tickInterval === 'object' && tickInterval != null) {
+      filteredDomain = tickInterval;
+    } else {
+      if (typeof tickInterval === 'function') {
+        filteredDomain = filteredDomain.filter(tickInterval);
+      }
+
+      if (tickSpacing !== undefined && tickSpacing > 0) {
+        filteredDomain = applyTickSpacing(filteredDomain, scale.range(), tickSpacing);
+      }
+    }
 
     if (scale.bandwidth() > 0) {
       // scale type = 'band'
-      const filteredDomain =
-        (typeof tickInterval === 'function' && domain.filter(tickInterval)) ||
-        (typeof tickInterval === 'object' && tickInterval) ||
-        domain;
 
       const isReversed = scale.range()[0] > scale.range()[1];
       // Indexes are inclusive regarding the entire band.
@@ -146,11 +179,6 @@ export function getTicks(
     }
 
     // scale type = 'point'
-    const filteredDomain =
-      (typeof tickInterval === 'function' && domain.filter(tickInterval)) ||
-      (typeof tickInterval === 'object' && tickInterval) ||
-      domain;
-
     return filteredDomain.map((value) => {
       const defaultTickLabel = `${value}`;
       return {
@@ -226,7 +254,7 @@ export function useTicks(
     scale: D3Scale;
     valueFormatter?: AxisConfig['valueFormatter'];
     direction: 'x' | 'y';
-  } & Pick<TickParams, 'tickInterval' | 'tickPlacement' | 'tickLabelPlacement'> &
+  } & Pick<TickParams, 'tickInterval' | 'tickPlacement' | 'tickLabelPlacement' | 'tickSpacing'> &
     Required<Pick<TickParams, 'tickNumber'>>,
 ): TickItemType[] {
   const {
@@ -236,6 +264,7 @@ export function useTicks(
     tickInterval,
     tickPlacement = 'extremities',
     tickLabelPlacement,
+    tickSpacing,
     direction,
   } = options;
   const { instance } = useChartContext();
@@ -249,9 +278,19 @@ export function useTicks(
         tickPlacement,
         tickInterval,
         tickLabelPlacement,
+        tickSpacing,
         valueFormatter,
         isInside,
       }),
-    [scale, tickNumber, tickPlacement, tickInterval, tickLabelPlacement, valueFormatter, isInside],
+    [
+      scale,
+      tickNumber,
+      tickPlacement,
+      tickInterval,
+      tickLabelPlacement,
+      tickSpacing,
+      valueFormatter,
+      isInside,
+    ],
   );
 }

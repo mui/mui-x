@@ -51,6 +51,7 @@
       "default": "'extremities'"
     },
     "tickSize": { "type": { "description": "number" }, "default": "6" },
+    "tickSpacing": { "type": { "description": "number" }, "default": "0" },
     "valueFormatter": {
       "type": {
         "description": "&lt;TScaleName extends S&gt;(value: V, context: AxisValueFormatterContext&lt;TScaleName&gt;) =&gt; string"
