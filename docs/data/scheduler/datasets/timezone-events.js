@@ -1,9 +1,7 @@
 // Timezone Events Dataset
 // Non-realistic set focused on edge cases of timezone handling.
 
-import { SchedulerResource } from '@mui/x-scheduler/models';
-
-export const resources: SchedulerResource[] = [
+export const resources = [
   { id: 'ny', title: 'New York', eventColor: 'violet' },
   { id: 'paris', title: 'Paris', eventColor: 'jade' },
   { id: 'tokyo', title: 'Tokyo', eventColor: 'cyan' },
