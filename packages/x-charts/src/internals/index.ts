@@ -92,3 +92,5 @@ export * from './createSvgIcon';
 
 export * from './constants';
 export * from './scales';
+
+export * from '../models/seriesType/rangeBar';

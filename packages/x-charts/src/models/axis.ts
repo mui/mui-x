@@ -18,7 +18,7 @@ import { ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
 import { ChartsTextProps } from '../ChartsText';
 import { ContinuousColorConfig, OrdinalColorConfig, PiecewiseColorConfig } from './colorMapping';
-import { RangeBarValueType } from './seriesType';
+import { RangeBarValueType } from './seriesType/rangeBar';
 
 export type AxisId = string | number;
 

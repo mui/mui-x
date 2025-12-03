@@ -10,11 +10,8 @@ import {
   useSelector,
   useStore,
 } from '@mui/x-charts/internals';
-import {
-  ChartsXAxisProps,
-  ChartsYAxisProps,
-  DefaultizedRangeBarSeriesType,
-} from '@mui/x-charts/models';
+import { ChartsXAxisProps, ChartsYAxisProps } from '@mui/x-charts/models';
+import { DefaultizedRangeBarSeriesType } from '../../models/seriesType/rangeBar';
 import { ProcessedRangeBarData, ProcessedRangeBarSeriesData } from './types';
 import { useRangeBarSeriesContext } from '../../hooks';
 

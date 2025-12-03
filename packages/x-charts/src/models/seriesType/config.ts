@@ -21,7 +21,7 @@ import {
   RangeBarItemIdentifier,
   RangeBarSeriesType,
   RangeBarValueType,
-} from '.';
+} from './rangeBar';
 
 export interface ChartsSeriesConfig {
   bar: {
