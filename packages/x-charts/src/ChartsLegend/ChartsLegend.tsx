@@ -13,8 +13,10 @@ import { legendClasses, useUtilityClasses, type ChartsLegendClasses } from './ch
 import { consumeSlots } from '../internals/consumeSlots';
 import { ChartsLabel } from '../ChartsLabel/ChartsLabel';
 import { useChartContext } from '../context/ChartProvider';
-import type { UseChartVisibilityManagerSignature } from '../plugins';
-import { useGetIsIdentifierVisible } from '../internals/plugins/featurePlugins/useChartVisibilityManager/useChartVisibilityManager.hooks';
+import {
+  useGetIsIdentifierVisible,
+  UseChartVisibilityManagerSignature,
+} from '../internals/plugins/featurePlugins/useChartVisibilityManager';
 
 export interface ChartsLegendProps {
   /**
