@@ -186,7 +186,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
 
   describe('Editing', () => {
     // https://github.com/mui/mui-x/issues/20542
-    it.only('should not clear cell selection when pressing space in edit mode', async () => {
+    it('should not clear cell selection when pressing space in edit mode', async () => {
       const columns = [{ field: 'id' }, { field: 'name', editable: true }, { field: 'age' }];
       const rows = [
         { id: 0, name: 'Alice', age: 30 },
