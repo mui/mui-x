@@ -1,4 +1,5 @@
-import { CartesianSeriesType, CommonSeriesType } from './common';
+import { DefaultizedProps } from '@mui/x-internals/types';
+import { CartesianSeriesType, CommonDefaultizedProps, CommonSeriesType, SeriesId } from './common';
 
 export type RangeBarValueType = {
   start: number;
@@ -36,3 +37,16 @@ export interface RangeBarSeriesType
    */
   layout?: 'horizontal' | 'vertical';
 }
+
+/**
+ * An object that allows to identify a range bar.
+ * Used for item interaction
+ */
+export type RangeBarItemIdentifier = {
+  type: 'rangeBar';
+  seriesId: SeriesId;
+  dataIndex: number;
+};
+
+export interface DefaultizedRangeBarSeriesType
+  extends DefaultizedProps<RangeBarSeriesType, CommonDefaultizedProps | 'color' | 'layout'> {}
