@@ -77,20 +77,23 @@ describeTreeView<TreeViewAnyStore>(
       });
 
       // TODO: Re-enable this test if we have a way to un-select an item in single selection.
-      it.skip('should call onSelectedItemsChange callback when the model is updated (single selection and remove selected item', () => {
-        const onSelectedItemsChange = spy();
+      it.todo(
+        'should call onSelectedItemsChange callback when the model is updated (single selection and remove selected item',
+        () => {
+          const onSelectedItemsChange = spy();
 
-        const view = render({
-          items: [{ id: '1' }, { id: '2' }],
-          onSelectedItemsChange,
-          defaultSelectedItems: ['1'],
-        });
+          const view = render({
+            items: [{ id: '1' }, { id: '2' }],
+            onSelectedItemsChange,
+            defaultSelectedItems: ['1'],
+          });
 
-        fireEvent.click(view.getItemContent('1'));
+          fireEvent.click(view.getItemContent('1'));
 
-        expect(onSelectedItemsChange.callCount).to.equal(1);
-        expect(onSelectedItemsChange.lastCall.args[1]).to.deep.equal([]);
-      });
+          expect(onSelectedItemsChange.callCount).to.equal(1);
+          expect(onSelectedItemsChange.lastCall.args[1]).to.deep.equal([]);
+        },
+      );
 
       it('should call the onSelectedItemsChange callback when the model is updated (multi selection and add selected item to empty list)', () => {
         const onSelectedItemsChange = spy();
@@ -888,7 +891,7 @@ describeTreeView<TreeViewAnyStore>(
           expect(view.getSelectedTreeItems()).to.deep.equal(['1', '1.1', '1.1.1']);
         });
 
-        it('should deselect all the parents when deselecting a child ', () => {
+        it('should deselect all the parents when deselecting a child', () => {
           const view = render({
             multiSelect: true,
             checkboxSelection: true,
