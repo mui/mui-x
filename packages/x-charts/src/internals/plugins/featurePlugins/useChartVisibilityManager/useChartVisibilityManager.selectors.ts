@@ -29,9 +29,9 @@ export const selectorSeparator = createSelector(
 );
 
 /**
- * Selector to check if a specific item identifier is hidden.
+ * Selector to check if a specific item identifier is visible.
  */
-export const selectorIsIdentifierHidden = createSelector(
+export const selectorIsIdentifierVisible = createSelector(
   selectorVisibilityMap,
   selectorSeparator,
   (visibilityMap, separator, identifier: string | (string | number)[]) =>
@@ -41,7 +41,7 @@ export const selectorIsIdentifierHidden = createSelector(
 /**
  * Selector to check if a specific item identifier is hidden.
  */
-export const selectorIsIdentifierHiddenGetter = createSelectorMemoized(
+export const selectorIsIdentifierVisibleGetter = createSelectorMemoized(
   selectorVisibilityMap,
   selectorSeparator,
   (visibilityMap, separator) => {

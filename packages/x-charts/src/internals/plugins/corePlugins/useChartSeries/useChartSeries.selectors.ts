@@ -3,7 +3,7 @@ import { ChartRootSelector } from '../../utils/selectors';
 import { UseChartSeriesSignature } from './useChartSeries.types';
 import { applySeriesLayout, applySeriesProcessors } from './processSeries';
 import { selectorChartDrawingArea } from '../useChartDimensions';
-import { selectorIsIdentifierHiddenGetter } from '../../featurePlugins/useChartVisibilityManager';
+import { selectorIsIdentifierVisibleGetter } from '../../featurePlugins/useChartVisibilityManager';
 
 export const selectorChartSeriesState: ChartRootSelector<UseChartSeriesSignature> = (state) =>
   state.series;
@@ -36,14 +36,14 @@ export const selectorChartSeriesProcessed = createSelectorMemoized(
   selectorChartDefaultizedSeries,
   selectorChartSeriesConfig,
   selectorChartDataset,
-  selectorIsIdentifierHiddenGetter,
+  selectorIsIdentifierVisibleGetter,
   function selectorChartSeriesProcessed(
     defaultizedSeries,
     seriesConfig,
     dataset,
-    isIdentifierHidden,
+    isIdentifierVisible,
   ) {
-    return applySeriesProcessors(defaultizedSeries, seriesConfig, dataset, isIdentifierHidden.get);
+    return applySeriesProcessors(defaultizedSeries, seriesConfig, dataset, isIdentifierVisible.get);
   },
 );
 

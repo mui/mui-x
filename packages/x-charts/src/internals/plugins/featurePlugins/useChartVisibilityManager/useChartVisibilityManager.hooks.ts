@@ -5,13 +5,13 @@ import {
   type IsIdentifierVisibleFunction,
 } from './useChartVisibilityManager.types';
 import {
-  selectorIsIdentifierHidden,
-  selectorIsIdentifierHiddenGetter,
+  selectorIsIdentifierVisible,
+  selectorIsIdentifierVisibleGetter,
 } from './useChartVisibilityManager.selectors';
 
 export const useIsIdentifierVisible: IsIdentifierVisibleFunction = (identifier) => {
   const store = useStore<[UseChartVisibilityManagerSignature]>();
-  return useSelector(store, selectorIsIdentifierHidden, identifier);
+  return useSelector(store, selectorIsIdentifierVisible, identifier);
 };
 
 /**
@@ -20,5 +20,5 @@ export const useIsIdentifierVisible: IsIdentifierVisibleFunction = (identifier) 
  */
 export function useGetIsIdentifierVisible(): IsIdentifierVisibleFunction {
   const store = useStore<[UseChartVisibilityManagerSignature]>();
-  return useSelector(store, selectorIsIdentifierHiddenGetter).get;
+  return useSelector(store, selectorIsIdentifierVisibleGetter).get;
 }
