@@ -2,9 +2,6 @@ import { RefObject } from '@mui/x-internals/types';
 import type {
   GridCellEditStopParams,
   GridRowEditStopParams,
-  GridCellEditStartParams,
-  GridRowEditStartParams,
-  GridRowId,
   GridEvents,
 } from '@mui/x-data-grid-pro';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
@@ -16,37 +13,16 @@ import {
 
 /**
  * Create the default handler for cellEditStop events.
- * It needs to subscribe to cellEditStart to capture the old values.
  */
 export const createCellEditHistoryHandler = (
   apiRef: RefObject<GridPrivateApiPremium>,
 ): GridHistoryEventHandler<GridCellEditHistoryData> => {
-  // Store to track values before editing
-  const cellEditStartValues = new Map<string, any>();
-  const getCellKey = (id: GridRowId, field: string): string => {
-    return `${id}-${field}`;
-  };
-
-  apiRef.current.subscribeEvent('cellEditStart', (params: GridCellEditStartParams) => {
-    const { id, field } = params;
-    const row = apiRef.current.getRow(id);
-    if (row) {
-      const key = getCellKey(id, field);
-      cellEditStartValues.set(key, row[field]);
-    }
-  });
-
   return {
     store: (params: GridCellEditStopParams) => {
       const { id, field } = params;
-      const key = getCellKey(id, field);
-      const oldValue = cellEditStartValues.get(key);
 
-      // Clean up the stored value
-      cellEditStartValues.delete(key);
-
-      const row = apiRef.current.getRow(id);
-      const newValue = row ? row[field] : undefined;
+      const oldValue = apiRef.current.getRow(id)[field];
+      const newValue = apiRef.current.getRowWithUpdatedValues(id, field)[field];
 
       return {
         id,
@@ -100,31 +76,16 @@ export const createCellEditHistoryHandler = (
 
 /**
  * Create the default handler for rowEditStop events.
- * Note: This also needs to subscribe to rowEditStart to capture old values.
  */
 export const createRowEditHistoryHandler = (
   apiRef: RefObject<GridPrivateApiPremium>,
 ): GridHistoryEventHandler<GridRowEditHistoryData> => {
-  const rowEditStartValues = new Map<GridRowId, Record<string, any>>();
-
-  apiRef.current.subscribeEvent('rowEditStart', (params: GridRowEditStartParams) => {
-    const { id } = params;
-    const row = apiRef.current.getRow(id);
-    if (row) {
-      rowEditStartValues.set(id, { ...row });
-    }
-  });
-
   return {
     store: (params: GridRowEditStopParams) => {
       const { id } = params;
-      const oldRow = rowEditStartValues.get(id) || {};
 
-      // Clean up the stored value
-      rowEditStartValues.delete(id);
-
-      const row = apiRef.current.getRow(id);
-      const newRow = row ? { ...row } : {};
+      const oldRow = apiRef.current.getRow(id) || {};
+      const newRow = apiRef.current.getRowWithUpdatedValues(id, '');
 
       return {
         id,

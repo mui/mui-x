@@ -202,6 +202,14 @@
     "hideFooterPagination": { "type": { "name": "bool" }, "default": "false" },
     "hideFooterRowCount": { "type": { "name": "bool" }, "default": "false" },
     "hideFooterSelectedRowCount": { "type": { "name": "bool" }, "default": "false" },
+    "historyEvents": {
+      "type": {
+        "name": "shape",
+        "description": "{ __@iterator@13258: func, __@toStringTag@13638: string, clear: func, delete: func, entries: func, forEach: func, get: func, has: func, keys: func, set: func, size: number, values: func }"
+      },
+      "default": "Handlers for `cellEditStop` and `rowEditStop` events"
+    },
+    "historyQueueSize": { "type": { "name": "number" }, "default": "30" },
     "ignoreDiacritics": { "type": { "name": "bool" }, "default": "false" },
     "ignoreValueFormatterDuringExport": {
       "type": {
@@ -576,6 +584,7 @@
         "returned": "Promise<PromptResponse>"
       }
     },
+    "onRedo": { "type": { "name": "func" } },
     "onResize": {
       "type": { "name": "func" },
       "signature": {
@@ -673,6 +682,7 @@
         "describedArgs": ["model", "details"]
       }
     },
+    "onUndo": { "type": { "name": "func" } },
     "pageSizeOptions": {
       "type": {
         "name": "arrayOf",

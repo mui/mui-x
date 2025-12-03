@@ -600,6 +600,30 @@ DataGridPremiumRaw.propTypes = {
    */
   hideFooterSelectedRowCount: PropTypes.bool,
   /**
+   * Map of grid events to their undo/redo handlers.
+   * @default Handlers for `cellEditStop` and `rowEditStop` events
+   */
+  historyEvents: PropTypes.shape({
+    '__@iterator@13258': PropTypes.func.isRequired,
+    '__@toStringTag@13638': PropTypes.string.isRequired,
+    clear: PropTypes.func.isRequired,
+    delete: PropTypes.func.isRequired,
+    entries: PropTypes.func.isRequired,
+    forEach: PropTypes.func.isRequired,
+    get: PropTypes.func.isRequired,
+    has: PropTypes.func.isRequired,
+    keys: PropTypes.func.isRequired,
+    set: PropTypes.func.isRequired,
+    size: PropTypes.number.isRequired,
+    values: PropTypes.func.isRequired,
+  }),
+  /**
+   * The maximum size of the history queue.
+   * Set to 0 to disable the undo/redo feature.
+   * @default 30
+   */
+  historyQueueSize: PropTypes.number,
+  /**
    * If `true`, the diacritics (accents) are ignored when filtering or quick filtering.
    * E.g. when filter value is `cafe`, the rows with `café` will be visible.
    * @default false
@@ -1013,6 +1037,10 @@ DataGridPremiumRaw.propTypes = {
    */
   onPrompt: PropTypes.func,
   /**
+   * Callback fired when a redo operation is executed.
+   */
+  onRedo: PropTypes.func,
+  /**
    * Callback fired when the Data Grid is resized.
    * @param {ElementSize} containerSize With all properties from [[ElementSize]].
    * @param {MuiEvent<{}>} event The event object.
@@ -1112,6 +1140,10 @@ DataGridPremiumRaw.propTypes = {
    * @ignore - do not document.
    */
   onStateChange: PropTypes.func,
+  /**
+   * Callback fired when an undo operation is executed.
+   */
+  onUndo: PropTypes.func,
   /**
    * Select the pageSize dynamically using the component UI.
    * @default [25, 50, 100]
