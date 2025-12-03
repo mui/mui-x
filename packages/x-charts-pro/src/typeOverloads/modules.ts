@@ -1,6 +1,5 @@
 import { type DefaultizedProps, type MakeRequired } from '@mui/x-internals/types';
 import { type AxisId, type ZoomOptions } from '@mui/x-charts/internals';
-import { type RangeBarSeriesType, type RangeBarValueType } from '@mui/x-charts/models';
 import {
   type DefaultizedFunnelSeriesType,
   type FunnelItemIdentifier,

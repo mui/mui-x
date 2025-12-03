@@ -18,6 +18,10 @@ import { getSVGPoint } from '../../../getSVGPoint';
 import { selectorChartsInteractionIsInitialized } from '../useChartInteraction';
 import { selectorChartAxisInteraction } from './useChartCartesianInteraction.selectors';
 import { checkHasInteractionPlugin } from '../useChartInteraction/checkHasInteractionPlugin';
+import { ChartsAxisData } from '../../../../models';
+
+const AXIS_CLICK_SERIES_TYPES = new Set(['bar', 'line'] as const);
+type AxisClickSeriesType = typeof AXIS_CLICK_SERIES_TYPES extends Set<infer U> ? U : never;
 
 export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<any>> = ({
   params,
@@ -208,10 +212,12 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
       // The .data exist because otherwise the dataIndex would be null or -1.
       const axisValue = (isXAxis ? xAxisWithScale : yAxisWithScale)[USED_AXIS_ID].data![dataIndex];
 
-      const seriesValues: Record<string, number | null | undefined> = {};
+      const seriesValues: ChartsAxisData['seriesValues'] = {};
 
       Object.keys(processedSeries)
-        .filter((seriesType): seriesType is 'bar' | 'line' => ['bar', 'line'].includes(seriesType))
+        .filter((seriesType): seriesType is AxisClickSeriesType =>
+          AXIS_CLICK_SERIES_TYPES.has(seriesType as AxisClickSeriesType),
+        )
         .forEach((seriesType) => {
           processedSeries[seriesType]?.seriesOrder.forEach((seriesId) => {
             const seriesItem = processedSeries[seriesType]!.series[seriesId];
