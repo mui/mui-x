@@ -1,5 +1,5 @@
-import { ChartPluginSignature } from '../../models';
-import { UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
+import { type ChartPluginSignature } from '../../models';
+import { type UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
 
 export type VisibilityMap = {
   [key: string]: boolean;

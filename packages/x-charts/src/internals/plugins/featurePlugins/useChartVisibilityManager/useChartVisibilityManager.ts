@@ -1,6 +1,6 @@
 import useEventCallback from '@mui/utils/useEventCallback';
-import { ChartPlugin } from '../../models';
-import { UseChartVisibilityManagerSignature } from './useChartVisibilityManager.types';
+import { type ChartPlugin } from '../../models';
+import { type UseChartVisibilityManagerSignature } from './useChartVisibilityManager.types';
 import { buildIdentifier as buildIdentifierFn } from './isIdentifierVisible';
 
 export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSignature> = ({

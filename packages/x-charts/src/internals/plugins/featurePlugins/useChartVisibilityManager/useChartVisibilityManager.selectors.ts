@@ -1,6 +1,6 @@
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import type { UseChartVisibilityManagerSignature } from './useChartVisibilityManager.types';
-import { ChartOptionalRootSelector } from '../../utils/selectors';
+import { type ChartOptionalRootSelector } from '../../utils/selectors';
 import { isIdentifierVisible } from './isIdentifierVisible';
 
 /**

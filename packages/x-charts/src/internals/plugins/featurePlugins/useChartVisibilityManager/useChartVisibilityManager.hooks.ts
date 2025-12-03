@@ -1,7 +1,7 @@
 import { useStore } from '../../../store/useStore';
 import { useSelector } from '../../../store/useSelector';
 import {
-  UseChartVisibilityManagerSignature,
+  type UseChartVisibilityManagerSignature,
   type IsIdentifierVisibleFunction,
 } from './useChartVisibilityManager.types';
 import {

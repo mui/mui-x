@@ -12,7 +12,7 @@ import {
 } from '../internals/plugins/featurePlugins/useChartHighlight';
 import {
   useChartVisibilityManager,
-  UseChartVisibilityManagerSignature,
+  type UseChartVisibilityManagerSignature,
 } from '../internals/plugins/featurePlugins/useChartVisibilityManager';
 
 export const RADAR_PLUGINS = [

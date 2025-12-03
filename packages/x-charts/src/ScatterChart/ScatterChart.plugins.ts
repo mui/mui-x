@@ -29,7 +29,7 @@ import {
 } from '../internals/plugins/featurePlugins/useChartBrush';
 import {
   useChartVisibilityManager,
-  UseChartVisibilityManagerSignature,
+  type UseChartVisibilityManagerSignature,
 } from '../internals/plugins/featurePlugins/useChartVisibilityManager';
 
 export type ScatterChartPluginSignatures = [
