@@ -1,4 +1,9 @@
-import { GridEventLookup, GridExportDisplayOptions, GridValidRowModel } from '@mui/x-data-grid-pro';
+import {
+  GridEventLookup,
+  GridExportDisplayOptions,
+  GridRowId,
+  GridValidRowModel,
+} from '@mui/x-data-grid-pro';
 import type {
   GridPipeProcessingLookupPro,
   GridControlledStateEventLookupPro,
@@ -75,7 +80,12 @@ interface GridEventLookupPremium extends GridEventLookupPro {
   /**
    * Fired when the clipboard paste operation ends.
    */
-  clipboardPasteEnd: {};
+  clipboardPasteEnd: {
+    params: {
+      oldRows: { [rowId: GridRowId]: GridValidRowModel };
+      newRows: { [rowId: GridRowId]: GridValidRowModel };
+    };
+  };
   /**
    * Fired when the sidebar is opened.
    */

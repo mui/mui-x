@@ -90,3 +90,8 @@ export interface GridRowEditHistoryData {
   oldRow: GridValidRowModel;
   newRow: GridValidRowModel;
 }
+
+export interface GridClipboardPasteHistoryData {
+  oldRows: { [rowId: GridRowId]: GridValidRowModel };
+  newRows: { [rowId: GridRowId]: GridValidRowModel };
+}

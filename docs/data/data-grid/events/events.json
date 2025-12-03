@@ -128,7 +128,7 @@
     "projects": ["x-data-grid-premium"],
     "name": "clipboardPasteEnd",
     "description": "Fired when the clipboard paste operation ends.",
-    "params": "",
+    "params": "{ oldRows: Record<GridRowId, GridValidRowModel>; newRows: Record<GridRowId, GridValidRowModel> }",
     "event": "MuiEvent<{}>",
     "componentProp": "onClipboardPasteEnd"
   },
