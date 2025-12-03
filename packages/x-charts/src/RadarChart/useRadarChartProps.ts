@@ -6,7 +6,7 @@ import type { ChartsWrapperProps } from '../ChartsWrapper';
 import { RadarDataProviderProps } from './RadarDataProvider/RadarDataProvider';
 import { ChartsSurfaceProps } from '../ChartsSurface';
 import { RadarGridProps } from './RadarGrid';
-import { RadarChartPluginSignatures } from './RadarChart.plugins';
+import { RADAR_PLUGINS, RadarChartPluginSignatures } from './RadarChart.plugins';
 import { RadarSeriesAreaProps, RadarSeriesMarksProps } from './RadarSeriesPlot';
 
 /**
@@ -58,6 +58,7 @@ export const useRadarChartProps = (props: RadarChartProps) => {
     onHighlightChange,
     skipAnimation,
     onAxisClick,
+    plugins: props.plugins ?? RADAR_PLUGINS,
   };
 
   const overlayProps: ChartsOverlayProps = {
