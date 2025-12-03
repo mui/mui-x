@@ -16,6 +16,10 @@ const viVNGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'Tiêu chuẩn',
   toolbarDensityComfortable: 'Rộng',
 
+  // Undo/redo toolbar button text
+  // toolbarUndo: 'Undo',
+  // toolbarRedo: 'Redo',
+
   // Columns selector toolbar button text
   toolbarColumns: 'Cột',
   toolbarColumnsLabel: 'Chọn cột',

@@ -16,6 +16,10 @@ const heILGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'רגילה',
   toolbarDensityComfortable: 'אוורירית',
 
+  // Undo/redo toolbar button text
+  // toolbarUndo: 'Undo',
+  // toolbarRedo: 'Redo',
+
   // Columns selector toolbar button text
   toolbarColumns: 'עמודות',
   toolbarColumnsLabel: 'בחר עמודות',

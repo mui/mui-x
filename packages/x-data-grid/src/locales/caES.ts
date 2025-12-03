@@ -16,6 +16,10 @@ const caESGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'Estàndard',
   toolbarDensityComfortable: 'Còmoda',
 
+  // Undo/redo toolbar button text
+  // toolbarUndo: 'Undo',
+  // toolbarRedo: 'Redo',
+
   // Columns selector toolbar button text
   toolbarColumns: 'Columnes',
   toolbarColumnsLabel: 'Selecciona columnes',

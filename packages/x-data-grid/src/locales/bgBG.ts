@@ -16,6 +16,10 @@ const bgBGGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'Стандартна',
   toolbarDensityComfortable: 'Комфортна',
 
+  // Undo/redo toolbar button text
+  // toolbarUndo: 'Undo',
+  // toolbarRedo: 'Redo',
+
   // Columns selector toolbar button text
   toolbarColumns: 'Колони',
   toolbarColumnsLabel: 'Покажи селектора на колони',
