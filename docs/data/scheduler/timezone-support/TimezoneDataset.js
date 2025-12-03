@@ -13,16 +13,24 @@ export default function TimezoneDataset() {
 
   const eventModelStructure = {
     start: {
-      getter: (event) => adapter.date(event.start, event.timezone),
+      getter: (event) => {
+        const dateUtc = adapter.date(event.start, 'UTC');
+        return adapter.setTimezone(dateUtc, event.timezone);
+      },
       setter: (event, newValue) => {
         event.start = adapter.formatByString(newValue, "yyyy-MM-dd'T'HH:mm:ss");
+        event.timezone = adapter.getTimezone(newValue);
         return event;
       },
     },
     end: {
-      getter: (event) => adapter.date(event.end, event.timezone),
+      getter: (event) => {
+        const dateUtc = adapter.date(event.end, 'UTC');
+        return adapter.setTimezone(dateUtc, event.timezone);
+      },
       setter: (event, newValue) => {
         event.end = adapter.formatByString(newValue, "yyyy-MM-dd'T'HH:mm:ss");
+        event.timezone = adapter.getTimezone(newValue);
         return event;
       },
     },
