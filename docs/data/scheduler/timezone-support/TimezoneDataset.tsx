@@ -17,7 +17,6 @@ export default function TimezoneDataset() {
       getter: (event: TimezoneEvent) => adapter.date(event.start, event.timezone),
       setter: (event, newValue) => {
         event.start = adapter.formatByString(newValue, "yyyy-MM-dd'T'HH:mm:ss");
-        event.timezone = adapter.getTimezone(newValue);
         return event;
       },
     },
@@ -25,7 +24,6 @@ export default function TimezoneDataset() {
       getter: (event: TimezoneEvent) => adapter.date(event.end, event.timezone),
       setter: (event, newValue) => {
         event.end = adapter.formatByString(newValue, "yyyy-MM-dd'T'HH:mm:ss");
-        event.timezone = adapter.getTimezone(newValue);
         return event;
       },
     },
