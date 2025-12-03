@@ -32,6 +32,10 @@ components: LineChart, LineElement, LineHighlightElement, LineHighlightPlot, Lin
 
 {{"demo": "LineChartConnectNulls.js"}}
 
+## CustomLabelLineChart
+
+{{"demo": "CustomLabelChart.js"}}
+
 ## Line chart with live data
 
 {{"demo": "LiveLineChartNoSnap.js"}}
