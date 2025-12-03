@@ -1,4 +1,4 @@
-declare module '@mui/x-charts/models/axis' {
+declare module '@mui/x-charts/models' {
   interface AxisFeatureFlags {
     rangeBarInSeriesValue: true;
   }

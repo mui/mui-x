@@ -19,11 +19,11 @@ import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
-import { type RangeBarSeriesType } from '@mui/x-charts/models';
 import {
   type ChartsToolbarProSlotProps,
   type ChartsToolbarProSlots,
 } from '../ChartsToolbarPro/Toolbar.types';
+import { type RangeBarSeriesType } from '../models/seriesType/rangeBar';
 import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '../internals/material';
 import { ChartZoomSlider } from '../ChartZoomSlider';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';

@@ -33,7 +33,7 @@ import {
   type RangeBarItemIdentifier,
   type RangeBarSeriesType,
   type RangeBarValueType,
-} from '.';
+} from './rangeBar';
 
 export interface ChartsSeriesConfig {
   bar: {
