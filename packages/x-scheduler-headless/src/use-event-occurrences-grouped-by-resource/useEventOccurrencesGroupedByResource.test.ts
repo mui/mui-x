@@ -40,13 +40,13 @@ describe('innerGetEventOccurrencesGroupedByResource', () => {
   it('should group single occurrence under a resource', () => {
     const R1 = makeResource('R1', 'Resource 1');
 
-    const occurrence = EventBuilder.new()
+    const event = EventBuilder.new()
       .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
       .resource(R1.id)
-      .buildOccurrence();
+      .toProcessed();
 
     const out = call({
-      events: [occurrence],
+      events: [event],
       resources: [R1],
       visibleResources: new Map([[R1.id, true]]),
     });
@@ -54,20 +54,20 @@ describe('innerGetEventOccurrencesGroupedByResource', () => {
     expect(out).to.have.length(1);
     expect(out[0].resource.id).to.equal(R1.id);
     expect(out[0].occurrences).to.have.length(1);
-    expect(out[0].occurrences[0].id).to.equal(occurrence.id);
+    expect(out[0].occurrences[0].id).to.equal(event.id);
   });
 
   it('should return empty occurrences for resources without matching events', () => {
     const R1 = makeResource('R1', 'Resource 1');
     const R2 = makeResource('R2', 'Resource 2');
 
-    const occurrence = EventBuilder.new()
+    const event = EventBuilder.new()
       .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
       .resource(R1.id)
-      .buildOccurrence();
+      .toProcessed();
 
     const out = call({
-      events: [occurrence],
+      events: [event],
       resources: [R1, R2],
       visibleResources: new Map([
         [R1.id, true],
@@ -99,45 +99,43 @@ describe('innerGetEventOccurrencesGroupedByResource', () => {
   it('should group multiple occurrences under the same resource', () => {
     const R1 = makeResource('R1', 'Alpha');
 
-    const occurrence1 = EventBuilder.new()
+    const event1 = EventBuilder.new()
       .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
       .resource(R1.id)
-      .buildOccurrence();
-    const occurrence2 = EventBuilder.new()
+      .toProcessed();
+    const event2 = EventBuilder.new()
       .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
       .resource(R1.id)
-      .buildOccurrence();
+      .toProcessed();
 
     const out = call({
-      events: [occurrence1, occurrence2],
+      events: [event1, event2],
       resources: [R1],
       visibleResources: new Map([[R1.id, true]]),
     });
 
     expect(out[0].occurrences).to.have.length(2);
-    expect(out[0].occurrences[0].id).to.equal(occurrence1.id);
-    expect(out[0].occurrences[1].id).to.equal(occurrence2.id);
+    expect(out[0].occurrences[0].id).to.equal(event1.id);
+    expect(out[0].occurrences[1].id).to.equal(event2.id);
   });
 
   it('should ignore occurrences that have no resource id', () => {
     const R1 = makeResource('R1', 'Resource 1');
 
-    const occurrence1 = EventBuilder.new()
-      .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
-      .buildOccurrence();
-    const occurrence2 = EventBuilder.new()
+    const event1 = EventBuilder.new().singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR).toProcessed();
+    const event2 = EventBuilder.new()
       .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
       .resource(R1.id)
-      .buildOccurrence();
+      .toProcessed();
 
     const out = call({
-      events: [occurrence1, occurrence2],
+      events: [event1, event2],
       resources: [R1],
       visibleResources: new Map([[R1.id, true]]),
     });
 
     expect(out[0].occurrences).to.have.length(1);
-    expect(out[0].occurrences[0].id).to.equal(occurrence2.id);
+    expect(out[0].occurrences[0].id).to.equal(event2.id);
   });
 
   it('should include children immediately after their parent', () => {
@@ -145,10 +143,10 @@ describe('innerGetEventOccurrencesGroupedByResource', () => {
     const child1 = makeResource('C1', 'Child One');
     const child2 = makeResource('C2', 'Child Two');
 
-    const occurrence = EventBuilder.new()
+    const event = EventBuilder.new()
       .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
       .resource(child2.id)
-      .buildOccurrence();
+      .toProcessed();
 
     const children = new Map<string, readonly SchedulerResource[]>([
       ['P', [child2, child1]], // intentionally unordered
@@ -160,7 +158,7 @@ describe('innerGetEventOccurrencesGroupedByResource', () => {
     ]);
 
     const out = call({
-      events: [occurrence],
+      events: [event],
       resources: [parent],
       visibleResources: new Map([
         ['P', true],
@@ -173,19 +171,19 @@ describe('innerGetEventOccurrencesGroupedByResource', () => {
 
     expect(out.map((item) => item.resource.id)).to.deep.equal(['P', 'C1', 'C2']);
     expect(out[2].occurrences).to.have.length(1);
-    expect(out[2].occurrences[0].id).to.equal(occurrence.id);
+    expect(out[2].occurrences[0].id).to.equal(event.id);
   });
 
   it('should return an empty occurrences list when visibleResources marks the resource as false', () => {
     const R1 = makeResource('R1', 'Resource 1');
 
-    const occurrence = EventBuilder.new()
+    const event = EventBuilder.new()
       .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
       .resource(R1.id)
-      .buildOccurrence();
+      .toProcessed();
 
     const out = call({
-      events: [occurrence],
+      events: [event],
       resources: [R1],
       visibleResources: new Map([[R1.id, false]]),
     });
@@ -211,13 +209,13 @@ describe('innerGetEventOccurrencesGroupedByResource', () => {
       ['C', 'B'],
     ]);
 
-    const occurrence = EventBuilder.new()
+    const event = EventBuilder.new()
       .singleDay(DEFAULT_TESTING_VISIBLE_DATE_STR)
       .resource(c.id)
-      .buildOccurrence();
+      .toProcessed();
 
     const out = call({
-      events: [occurrence],
+      events: [event],
       resources: [root],
       visibleResources: new Map([
         ['R', true],
@@ -230,19 +228,19 @@ describe('innerGetEventOccurrencesGroupedByResource', () => {
     });
 
     expect(out.map((r) => r.resource.id)).to.deep.equal(['R', 'A', 'B', 'C']);
-    expect(out[3].occurrences[0].id).to.equal(occurrence.id);
+    expect(out[3].occurrences[0].id).to.equal(event.id);
   });
 
   it('should leave occurrences empty when events fall outside the date range', () => {
     const R1 = makeResource('R1', 'Resource 1');
 
-    const occurrence = EventBuilder.new()
+    const event = EventBuilder.new()
       .singleDay('2024-03-01T09:00:00Z')
       .resource(R1.id)
-      .buildOccurrence();
+      .toProcessed();
 
     const out = call({
-      events: [occurrence],
+      events: [event],
       resources: [R1],
       visibleResources: new Map([[R1.id, true]]),
     });

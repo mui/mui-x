@@ -17,7 +17,10 @@ import '../index.css';
 
 const WEEK_VIEW_CONFIG: EventCalendarViewConfig = {
   siblingVisibleDateGetter: ({ state, delta }) =>
-    state.adapter.addWeeks(state.adapter.startOfWeek(state.visibleDate), delta),
+    state.adapter.addWeeks(
+      state.adapter.startOfWeek(schedulerOtherSelectors.visibleDate(state)),
+      delta,
+    ),
   visibleDaysSelector: createSelectorMemoized(
     (state: State) => state.adapter,
     schedulerOtherSelectors.visibleDate,

@@ -26,6 +26,7 @@ import { useSvgRef } from '../hooks';
 import { selectorBrushShouldPreventTooltip } from '../internals/plugins/featurePlugins/useChartBrush';
 
 const selectorReturnFalse = () => false;
+const selectorReturnNull = () => null;
 
 function getIsOpenSelector(
   trigger: TriggerOptions,
@@ -130,7 +131,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
     store,
     trigger === 'item' && computedAnchor === 'node'
       ? selectorChartsTooltipItemPosition
-      : () => null,
+      : selectorReturnNull,
     position,
   );
 

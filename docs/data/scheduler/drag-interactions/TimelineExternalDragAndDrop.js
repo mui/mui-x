@@ -1,5 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
+import { differenceInMinutes } from 'date-fns/differenceInMinutes';
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { Timeline } from '@mui/x-scheduler/timeline';
 import { StandaloneEvent } from '@mui/x-scheduler/standalone-event';
@@ -10,7 +11,7 @@ import {
   defaultVisibleDate,
   initialEvents,
   resources,
-} from '../datasets/timeline-events';
+} from '../datasets/company-roadmap';
 import classes from './TimelineExternalDragAndDrop.module.css';
 
 const isValidDropTarget = buildIsValidDropTarget(['TimelineEvent']);
@@ -73,7 +74,7 @@ export default function TimelineExternalDragAndDrop() {
 
         setPlaceholder({
           ...eventData,
-          duration: end.value.diff(start.value).as('minutes'),
+          duration: differenceInMinutes(end.value, start.value),
         });
       },
       onDragLeave: () => {
