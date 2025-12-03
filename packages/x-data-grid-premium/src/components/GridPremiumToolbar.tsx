@@ -19,7 +19,8 @@ export function GridPremiumToolbar(props: GridToolbarProps) {
   const apiRef = useGridApiContext();
   const { excelOptions, ...other } = props;
 
-  const showUndoRedo = rootProps.slotProps?.toolbar?.showUndoRedo !== false;
+  const showUndoRedo =
+    rootProps.slotProps?.toolbar?.showUndoRedo !== false && rootProps.historyQueueSize > 0;
   const canUndo = useGridSelector(apiRef, gridHistoryCanUndoSelector);
   const canRedo = useGridSelector(apiRef, gridHistoryCanRedoSelector);
 
