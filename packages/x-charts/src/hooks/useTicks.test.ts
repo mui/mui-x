@@ -114,7 +114,7 @@ describe('applyTickSpacing', () => {
 });
 
 describe('getTicks', () => {
-  it('it applies tickInterval before tickSpacing', () => {
+  it('applies tickInterval before tickSpacing', () => {
     const scale = scaleBand<{ toString(): string }>(
       Array.from({ length: 1000 }).map((_, i) => `${i}`),
       [0, 500],
