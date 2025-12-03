@@ -13,7 +13,6 @@ export class TreeViewItemsReorderingPlugin {
     this.store = store;
     store.itemPluginManager.register(useTreeViewItemsReorderingItemPlugin, null);
   }
-  q;
 
   /**
    * Get the valid reordering action if a given item is the target of the ongoing reordering.
