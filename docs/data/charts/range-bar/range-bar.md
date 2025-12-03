@@ -73,9 +73,11 @@ You read more about it in bar chart's [Click event](/x/react-charts/bars/#click-
 If you use `onAxisClick`, the `seriesValues` type will be missing `RangeBarValueType`.
 
 To correct the type, you need to import the following module augmentation:
+
 ```ts
 import type {} from '@mui/x-charts-pro/moduleAugmentation/rangeBarOnAxisClick';
 ```
+
 :::
 
 ## Animation
