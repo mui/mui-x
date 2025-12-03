@@ -7,4 +7,5 @@
   timezone="Europe/Paris"
   areEventsDraggable={true}
   areEventsResizable={true}
+  eventModelStructure={eventModelStructure}
 />
