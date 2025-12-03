@@ -12,7 +12,16 @@ export const resources: SchedulerResource[] = [
 
 export const defaultVisibleDate = new Date('2025-03-10T00:00:00');
 
-export const rawEvents = [
+export interface TimezoneEvent {
+  id: string;
+  title: string;
+  start: string;
+  end: string;
+  timezone: string;
+  resource: string;
+}
+
+export const rawEvents: TimezoneEvent[] = [
   // ----------------------------
   // SIMPLE EVENTS
   // ----------------------------

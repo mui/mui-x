@@ -10,13 +10,26 @@ import {
 export default function TimezoneDataset() {
   const adapter = useAdapter();
 
-  const initialEvents = rawEvents.map((ev) => ({
-    ...ev,
-    start: adapter.date(ev.start, ev.timezone),
-    end: adapter.date(ev.end, ev.timezone),
-  }));
+  const eventModelStructure = {
+    start: {
+      getter: (event) => adapter.date(event.start, event.timezone),
+      setter: (event, newValue) => {
+        event.start = adapter.formatByString(newValue, "yyyy-MM-dd'T'HH:mm:ss");
+        event.timezone = adapter.getTimezone(newValue);
+        return event;
+      },
+    },
+    end: {
+      getter: (event) => adapter.date(event.end, event.timezone),
+      setter: (event, newValue) => {
+        event.end = adapter.formatByString(newValue, "yyyy-MM-dd'T'HH:mm:ss");
+        event.timezone = adapter.getTimezone(newValue);
+        return event;
+      },
+    },
+  };
 
-  const [events, setEvents] = React.useState(initialEvents);
+  const [events, setEvents] = React.useState(rawEvents);
 
   return (
     <div style={{ height: '600px', width: '100%' }}>
@@ -29,6 +42,7 @@ export default function TimezoneDataset() {
         timezone="Europe/Paris"
         areEventsDraggable={true}
         areEventsResizable={true}
+        eventModelStructure={eventModelStructure}
       />
     </div>
   );
