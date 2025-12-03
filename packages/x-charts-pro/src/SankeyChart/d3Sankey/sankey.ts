@@ -1,37 +1,68 @@
 /* eslint-disable */
 import { max, min, sum } from '@mui/x-charts-vendor/d3-array';
-import { justify } from './align';
-import constant from './constant';
+import { sankeyJustify } from './align';
+import type {
+  SankeyExtraProperties,
+  SankeyGraph,
+  SankeyLayout,
+  SankeyLink,
+  SankeyLinkMinimal,
+  SankeyNode,
+  SankeyNodeMinimal,
+} from './sankey.types';
 
-function ascendingSourceBreadth(a, b) {
+// Helper types for internal use within the Sankey layout generator.
+
+type CompleteLink = Omit<Required<SankeyLink<{}, {}>>, 'source' | 'target'> & {
+  source: CompleteNode;
+  target: CompleteNode;
+};
+
+type CompleteNode = Omit<Required<SankeyNode<{}, {}>>, 'sourceLinks' | 'targetLinks'> & {
+  sourceLinks: CompleteLink[];
+  targetLinks: CompleteLink[];
+};
+
+type CompleteGraph = {
+  nodes: CompleteNode[];
+  links: CompleteLink[];
+};
+
+function constant<T>(x: T) {
+  return function () {
+    return x;
+  };
+}
+
+function ascendingSourceBreadth(a: CompleteLink, b: CompleteLink) {
   return ascendingBreadth(a.source, b.source) || a.index - b.index;
 }
 
-function ascendingTargetBreadth(a, b) {
+function ascendingTargetBreadth(a: CompleteLink, b: CompleteLink) {
   return ascendingBreadth(a.target, b.target) || a.index - b.index;
 }
 
-function ascendingBreadth(a, b) {
+function ascendingBreadth(a: CompleteNode, b: CompleteNode) {
   return a.y0 - b.y0;
 }
 
-function value(d) {
+function value(d: CompleteLink | CompleteNode) {
   return d.value;
 }
 
-function defaultId(d) {
+function defaultId(d: any, e: any, f: any) {
   return d.index;
 }
 
-function defaultNodes(graph) {
+function defaultNodes(graph: SankeyGraph<{}, {}>) {
   return graph.nodes;
 }
 
-function defaultLinks(graph) {
+function defaultLinks(graph: SankeyGraph<{}, {}>) {
   return graph.links;
 }
 
-function find(nodeById, id) {
+function find(nodeById: Map<any, SankeyNodeMinimal<{}, {}>>, id: string | number) {
   const node = nodeById.get(id);
   if (!node) {
     throw new Error('missing: ' + id);
@@ -39,7 +70,7 @@ function find(nodeById, id) {
   return node;
 }
 
-function computeLinkBreadths({ nodes }) {
+function computeLinkBreadths({ nodes }: CompleteGraph) {
   for (const node of nodes) {
     let y0 = node.y0;
     let y1 = y0;
@@ -54,24 +85,84 @@ function computeLinkBreadths({ nodes }) {
   }
 }
 
-export function sankey() {
+/**
+ * Get a Sankey layout generator.
+ *
+ * Invoking sankey() without generics, means the node type and link type assume no user-defined attributes, i.e.
+ * only the attributes internally used by the Sankey layout generator.
+ *
+ * Default nodes/links accessors are assumed.
+ */
+export function sankey(): SankeyLayout<SankeyGraph<{}, {}>, {}, {}>;
+/**
+ * Get a Sankey layout generator.
+ *
+ * Default nodes/links accessors are assumed.
+ *
+ * The first generic N refers to user-defined properties contained in the node data passed into
+ * Sankey layout generator. These properties are IN EXCESS to the properties explicitly identified in the
+ * SankeyNodeMinimal interface.
+ *
+ * The second generic L refers to user-defined properties contained in the link data passed into
+ * Sankey layout generator. These properties are IN EXCESS to the properties explicitly identified in the
+ * SankeyLinkMinimal interface.
+ */
+export function sankey<
+  N extends SankeyExtraProperties,
+  L extends SankeyExtraProperties,
+>(): SankeyLayout<SankeyGraph<N, L>, N, L>;
+/**
+ * Get a Sankey layout generator.
+ *
+ * The nodes/links accessors need to be configured to work with the data type of the first argument passed
+ * in when invoking the Sankey layout generator.
+ *
+ * The first generic corresponds to the data type of the first argument passed in when invoking the Sankey layout generator,
+ * and its nodes/links accessors.
+ *
+ * The second generic N refers to user-defined properties contained in the node data passed into
+ * Sankey layout generator. These properties are IN EXCESS to the properties explicitly identified in the
+ * SankeyNodeMinimal interface.
+ *
+ * The third generic L refers to user-defined properties contained in the link data passed into
+ * Sankey layout generator. These properties are IN EXCESS to the properties explicitly identified in the
+ * SankeyLinkMinimal interface.
+ */
+export function sankey<
+  Data,
+  N extends SankeyExtraProperties,
+  L extends SankeyExtraProperties,
+>(): SankeyLayout<Data, N, L>;
+export function sankey<
+  Data,
+  N extends SankeyExtraProperties,
+  L extends SankeyExtraProperties,
+>(): SankeyLayout<Data, N, L> {
   let x0 = 0,
     y0 = 0,
     x1 = 1,
     y1 = 1; // extent
   let dx = 24; // nodeWidth
   let dy = 8,
-    py; // nodePadding
+    py: number; // nodePadding
   let id = defaultId;
-  let align = justify;
-  let sort;
-  let linkSort;
+  let align = sankeyJustify;
+  let sort: undefined;
+  let linkSort:
+    | ((a: SankeyLinkMinimal<{}, {}>, b: SankeyLinkMinimal<{}, {}>) => number)
+    | null
+    | undefined;
   let nodes = defaultNodes;
   let links = defaultLinks;
   let iterations = 6;
 
   function sankey() {
-    const graph = { nodes: nodes.apply(null, arguments), links: links.apply(null, arguments) };
+    const graph = {
+      nodes: nodes.apply(null, arguments as any),
+      links: links.apply(null, arguments as any),
+      // It is not really complete at this point, but will mostly be once
+      // computeNodeLinks(graph) is called.
+    } as CompleteGraph;
     computeNodeLinks(graph);
     computeNodeValues(graph);
     computeNodeDepths(graph);
@@ -81,50 +172,50 @@ export function sankey() {
     return graph;
   }
 
-  sankey.update = function (graph) {
+  sankey.update = function (graph: CompleteGraph) {
     computeLinkBreadths(graph);
     return graph;
   };
 
-  sankey.nodeId = function (_) {
+  sankey.nodeId = function (_: (d: any, e: any, f: any) => any) {
     return arguments.length ? ((id = typeof _ === 'function' ? _ : constant(_)), sankey) : id;
   };
 
-  sankey.nodeAlign = function (_) {
+  sankey.nodeAlign = function (_: (node: SankeyNode<{}, {}>, n: number) => number) {
     return arguments.length ? ((align = typeof _ === 'function' ? _ : constant(_)), sankey) : align;
   };
 
-  sankey.nodeSort = function (_) {
+  sankey.nodeSort = function (_: any) {
     return arguments.length ? ((sort = _), sankey) : sort;
   };
 
-  sankey.nodeWidth = function (_) {
+  sankey.nodeWidth = function (_: string | number) {
     return arguments.length ? ((dx = +_), sankey) : dx;
   };
 
-  sankey.nodePadding = function (_) {
+  sankey.nodePadding = function (_: string | number) {
     return arguments.length ? ((dy = py = +_), sankey) : dy;
   };
 
-  sankey.nodes = function (_) {
+  sankey.nodes = function (_: (graph: SankeyGraph<{}, {}>) => SankeyNodeMinimal<{}, {}>[]) {
     return arguments.length ? ((nodes = typeof _ === 'function' ? _ : constant(_)), sankey) : nodes;
   };
 
-  sankey.links = function (_) {
+  sankey.links = function (_: (graph: SankeyGraph<{}, {}>) => SankeyLinkMinimal<{}, {}>[]) {
     return arguments.length ? ((links = typeof _ === 'function' ? _ : constant(_)), sankey) : links;
   };
 
-  sankey.linkSort = function (_) {
+  sankey.linkSort = function (_: any) {
     return arguments.length ? ((linkSort = _), sankey) : linkSort;
   };
 
-  sankey.size = function (_) {
+  sankey.size = function (_: (string | number)[]) {
     return arguments.length
       ? ((x0 = y0 = 0), (x1 = +_[0]), (y1 = +_[1]), sankey)
       : [x1 - x0, y1 - y0];
   };
 
-  sankey.extent = function (_) {
+  sankey.extent = function (_: (string | number)[][]) {
     return arguments.length
       ? ((x0 = +_[0][0]), (x1 = +_[1][0]), (y0 = +_[0][1]), (y1 = +_[1][1]), sankey)
       : [
@@ -133,11 +224,11 @@ export function sankey() {
         ];
   };
 
-  sankey.iterations = function (_) {
+  sankey.iterations = function (_: string | number) {
     return arguments.length ? ((iterations = +_), sankey) : iterations;
   };
 
-  function computeNodeLinks({ nodes, links }) {
+  function computeNodeLinks({ nodes, links }: SankeyGraph<{}, {}>) {
     for (const [i, node] of nodes.entries()) {
       node.index = i;
       node.sourceLinks = [];
@@ -149,18 +240,18 @@ export function sankey() {
       let { source, target } = link;
       if (typeof source !== 'object') source = link.source = find(nodeById, source);
       if (typeof target !== 'object') target = link.target = find(nodeById, target);
-      source.sourceLinks.push(link);
-      target.targetLinks.push(link);
+      source.sourceLinks!.push(link);
+      target.targetLinks!.push(link);
     }
     if (linkSort != null) {
       for (const { sourceLinks, targetLinks } of nodes) {
-        sourceLinks.sort(linkSort);
-        targetLinks.sort(linkSort);
+        sourceLinks!.sort(linkSort);
+        targetLinks!.sort(linkSort);
       }
     }
   }
 
-  function computeNodeValues({ nodes }) {
+  function computeNodeValues({ nodes }: CompleteGraph) {
     for (const node of nodes) {
       node.value =
         node.fixedValue === undefined
@@ -169,10 +260,10 @@ export function sankey() {
     }
   }
 
-  function computeNodeDepths({ nodes }) {
+  function computeNodeDepths({ nodes }: CompleteGraph) {
     const n = nodes.length;
-    let current = new Set(nodes);
-    let next = new Set();
+    let current = new Set<CompleteNode>(nodes);
+    let next = new Set<CompleteNode>();
     let x = 0;
     while (current.size) {
       for (const node of current) {
@@ -187,10 +278,10 @@ export function sankey() {
     }
   }
 
-  function computeNodeHeights({ nodes }) {
+  function computeNodeHeights({ nodes }: CompleteGraph) {
     const n = nodes.length;
-    let current = new Set(nodes);
-    let next = new Set();
+    let current = new Set<CompleteNode>(nodes);
+    let next = new Set<CompleteNode>();
     let x = 0;
     while (current.size) {
       for (const node of current) {
@@ -205,8 +296,8 @@ export function sankey() {
     }
   }
 
-  function computeNodeLayers({ nodes }) {
-    const x = max(nodes, (d) => d.depth) + 1;
+  function computeNodeLayers({ nodes }: CompleteGraph) {
+    const x = (max(nodes, (d) => d.depth) ?? 0) + 1;
     const kx = (x1 - x0 - dx) / (x - 1);
     const columns = new Array(x);
     for (const node of nodes) {
@@ -224,16 +315,16 @@ export function sankey() {
     return columns;
   }
 
-  function initializeNodeBreadths(columns) {
+  function initializeNodeBreadths(columns: CompleteNode[][]) {
     const ky = min(columns, (c) => (y1 - y0 - (c.length - 1) * py) / sum(c, value));
     for (const nodes of columns) {
       let y = y0;
       for (const node of nodes) {
         node.y0 = y;
-        node.y1 = y + node.value * ky;
+        node.y1 = y + node.value * ky!;
         y = node.y1 + py;
         for (const link of node.sourceLinks) {
-          link.width = link.value * ky;
+          link.width = link.value * ky!;
         }
       }
       y = (y1 - y + py) / (nodes.length + 1);
@@ -246,7 +337,7 @@ export function sankey() {
     }
   }
 
-  function computeNodeBreadths(graph) {
+  function computeNodeBreadths(graph: CompleteGraph) {
     const columns = computeNodeLayers(graph);
     py = Math.min(dy, (y1 - y0) / (max(columns, (c) => c.length) - 1));
     initializeNodeBreadths(columns);
@@ -259,7 +350,7 @@ export function sankey() {
   }
 
   // Reposition each node based on its incoming (target) links.
-  function relaxLeftToRight(columns, alpha, beta) {
+  function relaxLeftToRight(columns: CompleteNode[][], alpha: number, beta: number) {
     for (let i = 1, n = columns.length; i < n; ++i) {
       const column = columns[i];
       for (const target of column) {
@@ -282,7 +373,7 @@ export function sankey() {
   }
 
   // Reposition each node based on its outgoing (source) links.
-  function relaxRightToLeft(columns, alpha, beta) {
+  function relaxRightToLeft(columns: CompleteNode[][], alpha: number, beta: number) {
     for (let n = columns.length, i = n - 2; i >= 0; --i) {
       const column = columns[i];
       for (const source of column) {
@@ -304,7 +395,7 @@ export function sankey() {
     }
   }
 
-  function resolveCollisions(nodes, alpha) {
+  function resolveCollisions(nodes: CompleteNode[], alpha: number) {
     const i = nodes.length >> 1;
     const subject = nodes[i];
     resolveCollisionsBottomToTop(nodes, subject.y0 - py, i - 1, alpha);
@@ -314,7 +405,12 @@ export function sankey() {
   }
 
   // Push any overlapping nodes down.
-  function resolveCollisionsTopToBottom(nodes, y, i, alpha) {
+  function resolveCollisionsTopToBottom(
+    nodes: CompleteNode[],
+    y: number,
+    i: number,
+    alpha: number,
+  ) {
     for (; i < nodes.length; ++i) {
       const node = nodes[i];
       const dy = (y - node.y0) * alpha;
@@ -324,7 +420,12 @@ export function sankey() {
   }
 
   // Push any overlapping nodes up.
-  function resolveCollisionsBottomToTop(nodes, y, i, alpha) {
+  function resolveCollisionsBottomToTop(
+    nodes: CompleteNode[],
+    y: number,
+    i: number,
+    alpha: number,
+  ) {
     for (; i >= 0; --i) {
       const node = nodes[i];
       const dy = (node.y1 - y) * alpha;
@@ -333,7 +434,7 @@ export function sankey() {
     }
   }
 
-  function reorderNodeLinks({ sourceLinks, targetLinks }) {
+  function reorderNodeLinks({ sourceLinks, targetLinks }: CompleteNode) {
     if (linkSort === undefined) {
       for (const {
         source: { sourceLinks },
@@ -348,17 +449,17 @@ export function sankey() {
     }
   }
 
-  function reorderLinks(nodes) {
+  function reorderLinks(nodes: CompleteNode[]) {
     if (linkSort === undefined) {
       for (const { sourceLinks, targetLinks } of nodes) {
-        sourceLinks.sort(ascendingTargetBreadth);
-        targetLinks.sort(ascendingSourceBreadth);
+        sourceLinks?.sort(ascendingTargetBreadth);
+        targetLinks?.sort(ascendingSourceBreadth);
       }
     }
   }
 
   // Returns the target.y0 that would produce an ideal link from source to target.
-  function targetTop(source, target) {
+  function targetTop(source: CompleteNode, target: CompleteNode) {
     let y = source.y0 - ((source.sourceLinks.length - 1) * py) / 2;
     for (const { target: node, width } of source.sourceLinks) {
       if (node === target) break;
@@ -372,7 +473,7 @@ export function sankey() {
   }
 
   // Returns the source.y0 that would produce an ideal link from source to target.
-  function sourceTop(source, target) {
+  function sourceTop(source: CompleteNode, target: CompleteNode) {
     let y = target.y0 - ((target.targetLinks.length - 1) * py) / 2;
     for (const { source: node, width } of target.targetLinks) {
       if (node === source) break;
@@ -385,5 +486,5 @@ export function sankey() {
     return y;
   }
 
-  return sankey;
+  return sankey as any as SankeyLayout<Data, N, L>;
 }

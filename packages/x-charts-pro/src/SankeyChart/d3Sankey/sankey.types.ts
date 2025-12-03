@@ -73,6 +73,10 @@ export interface SankeyNodeMinimal<
    * Node's maximum vertical position (node.y1 - node.y0 is proportional to node.value) calculated by Sankey layout generator.
    */
   y1?: number | undefined;
+  /**
+   * Link's layer in case of layered layout, calculated by Sankey layout generator.
+   */
+  layer?: number | undefined;
 }
 
 /**
@@ -377,114 +381,3 @@ export interface SankeyLayout<
     compare: ((a: SankeyLink<N, L>, b: SankeyLink<N, L>) => number) | undefined | null,
   ): this;
 }
-
-/**
- * Get a Sankey layout generator.
- *
- * Invoking sankey() without generics, means the node type and link type assume no user-defined attributes, i.e.
- * only the attributes internally used by the Sankey layout generator.
- *
- * Default nodes/links accessors are assumed.
- */
-export function sankey(): SankeyLayout<SankeyGraph<{}, {}>, {}, {}>;
-/**
- * Get a Sankey layout generator.
- *
- * Default nodes/links accessors are assumed.
- *
- * The first generic N refers to user-defined properties contained in the node data passed into
- * Sankey layout generator. These properties are IN EXCESS to the properties explicitly identified in the
- * SankeyNodeMinimal interface.
- *
- * The second generic L refers to user-defined properties contained in the link data passed into
- * Sankey layout generator. These properties are IN EXCESS to the properties explicitly identified in the
- * SankeyLinkMinimal interface.
- */
-export function sankey<
-  N extends SankeyExtraProperties,
-  L extends SankeyExtraProperties,
->(): SankeyLayout<SankeyGraph<N, L>, N, L>;
-/**
- * Get a Sankey layout generator.
- *
- * The nodes/links accessors need to be configured to work with the data type of the first argument passed
- * in when invoking the Sankey layout generator.
- *
- * The first generic corresponds to the data type of the first argument passed in when invoking the Sankey layout generator,
- * and its nodes/links accessors.
- *
- * The second generic N refers to user-defined properties contained in the node data passed into
- * Sankey layout generator. These properties are IN EXCESS to the properties explicitly identified in the
- * SankeyNodeMinimal interface.
- *
- * The third generic L refers to user-defined properties contained in the link data passed into
- * Sankey layout generator. These properties are IN EXCESS to the properties explicitly identified in the
- * SankeyLinkMinimal interface.
- */
-export function sankey<
-  Data,
-  N extends SankeyExtraProperties,
-  L extends SankeyExtraProperties,
->(): SankeyLayout<Data, N, L>;
-
-/**
- * Compute the horizontal node position of a node in a Sankey layout with left alignment.
- * Returns (node.depth) to indicate the desired horizontal position of the node in the generated Sankey diagram.
- *
- * @param node Sankey node for which to calculate the horizontal node position.
- * @param n Total depth n of the graph  (one plus the maximum node.depth)
- */
-export function sankeyLeft(node: SankeyNode<{}, {}>, n: number): number;
-
-/**
- * Compute the horizontal node position of a node in a Sankey layout with right alignment.
- * Returns (n - 1 - node.height) to indicate the desired horizontal position of the node in the generated Sankey diagram.
- *
- * @param node Sankey node for which to calculate the horizontal node position.
- * @param n Total depth n of the graph  (one plus the maximum node.depth)
- */
-export function sankeyRight(node: SankeyNode<{}, {}>, n: number): number;
-
-/**
- * Compute the horizontal node position of a node in a Sankey layout with center alignment.
- * Like d3.sankeyLeft, except that nodes without any incoming links are moved as right as possible.
- * Returns an integer between 0 and n - 1 that indicates the desired horizontal position of the node in the generated Sankey diagram.
- *
- * @param node Sankey node for which to calculate the horizontal node position.
- * @param n Total depth n of the graph  (one plus the maximum node.depth)
- */
-export function sankeyCenter(node: SankeyNode<{}, {}>, n: number): number;
-
-/**
- * Compute the horizontal node position of a node in a Sankey layout with justified alignment.
- * Like d3.sankeyLeft, except that nodes without any outgoing links are moved to the far right.
- * Returns an integer between 0 and n - 1 that indicates the desired horizontal position of the node in the generated Sankey diagram.
- *
- * @param node Sankey node for which to calculate the horizontal node position.
- * @param n Total depth n of the graph  (one plus the maximum node.depth)
- */
-export function sankeyJustify(node: SankeyNode<{}, {}>, n: number): number;
-
-/**
- * Get a horizontal link shape suitable for a Sankey diagram.
- * Source and target accessors are pre-configured and work with the
- * default x- and y- accessors of the link shape generator.
- */
-export function sankeyLinkHorizontal(): Link<any, SankeyLink<{}, {}>, [number, number]>;
-/**
- * Get a horizontal link shape suitable for a Sankey diagram.
- * Source and target accessors are pre-configured and work with the
- * default x- and y- accessors of the link shape generator.
- *
- * The first generic N refers to user-defined properties contained in the node data passed into
- * Sankey layout generator. These properties are IN EXCESS to the properties explicitly identified in the
- * SankeyNodeMinimal interface.
- *
- * The second generic L refers to user-defined properties contained in the link data passed into
- * Sankey layout generator. These properties are IN EXCESS to the properties explicitly identified in the
- * SankeyLinkMinimal interface.
- */
-export function sankeyLinkHorizontal<
-  N extends SankeyExtraProperties,
-  L extends SankeyExtraProperties,
->(): Link<any, SankeyLink<N, L>, [number, number]>;
