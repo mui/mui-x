@@ -15,7 +15,7 @@ const seriesLayout: SeriesLayoutGetter<'sankey'> = (series, drawingArea) => {
   }
   return {
     [series.seriesOrder[0]]: {
-      sankeyLayout: calculateSankeyLayout(series.series[series.seriesOrder[0]], drawingArea),
+      sankeyLayout: calculateSankeyLayout(true, series.series[series.seriesOrder[0]], drawingArea),
     },
   };
 };

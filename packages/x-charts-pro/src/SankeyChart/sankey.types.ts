@@ -253,20 +253,20 @@ interface SankeyLayoutLinkWithPosition
 /**
  * Represents the calculated positions and dimensions for a node in the Sankey diagram
  */
-export type SankeyLayoutNode<WithPosition extends boolean> = WithPosition extends true
+export type SankeyLayoutNode<WithPosition extends boolean = true> = WithPosition extends true
   ? SankeyLayoutNodeWithPosition
   : SankeyLayoutNodeWithoutPosition;
 /**
  * Represents the calculated positions and paths for a link in the Sankey diagram
  */
-export type SankeyLayoutLink<WithPosition extends boolean> = WithPosition extends true
+export type SankeyLayoutLink<WithPosition extends boolean = true> = WithPosition extends true
   ? SankeyLayoutLinkWithPosition
   : SankeyLayoutLinkWithoutPosition;
 
 /**
  * Calculated layout for the Sankey diagram
  */
-export interface SankeyLayout<WithPosition extends boolean> {
+export interface SankeyLayout<WithPosition extends boolean = true> {
   nodes: readonly SankeyLayoutNode<WithPosition>[];
   links: readonly SankeyLayoutLink<WithPosition>[];
 }
@@ -300,12 +300,13 @@ export type SankeyNodeIdentifier = SankeyNodeIdentifierBase & {
   nodeId: SankeyNodeId;
 };
 
-export type SankeyNodeIdentifierWithData<WithPosition extends boolean> = SankeyNodeIdentifier & {
-  /**
-   * The node object with all the calculated properties
-   */
-  node: SankeyLayoutNode<WithPosition>;
-};
+export type SankeyNodeIdentifierWithData<WithPosition extends boolean = true> =
+  SankeyNodeIdentifier & {
+    /**
+     * The node object with all the calculated properties
+     */
+    node: SankeyLayoutNode<WithPosition>;
+  };
 
 export type SankeyLinkIdentifier = SankeyNodeIdentifierBase & {
   /**
@@ -322,16 +323,17 @@ export type SankeyLinkIdentifier = SankeyNodeIdentifierBase & {
   targetId: SankeyNodeId;
 };
 
-export type SankeyLinkIdentifierWithData<WithPosition extends boolean> = SankeyLinkIdentifier & {
-  /**
-   * The link object with all the calculated properties
-   */
-  link: SankeyLayoutLink<WithPosition>;
-};
+export type SankeyLinkIdentifierWithData<WithPosition extends boolean = true> =
+  SankeyLinkIdentifier & {
+    /**
+     * The link object with all the calculated properties
+     */
+    link: SankeyLayoutLink<WithPosition>;
+  };
 
 export type SankeyItemIdentifier = SankeyNodeIdentifier | SankeyLinkIdentifier;
 
-export type SankeyItemIdentifierWithData<WithPosition extends boolean> =
+export type SankeyItemIdentifierWithData<WithPosition extends boolean = true> =
   | SankeyNodeIdentifierWithData<WithPosition>
   | SankeyLinkIdentifierWithData<WithPosition>;
 
