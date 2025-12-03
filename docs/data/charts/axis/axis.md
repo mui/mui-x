@@ -153,10 +153,7 @@ Use the `tickSpacing` property to define the minimum spacing in pixels between t
 
 Having a minimum space between ticks improves the readability of the axis and can also improve the chart's performance.
 
-By default, this value is set to 0.
-
-This property is only available for ordinal axes, that is, axes with a band or point scale.
-For ordinal axes where ticks are numbers or dates, the tick spacing can usually be set to a positive value.
+This property defaults to 0 and is only available for ordinal axes, that is, axes with a band or point scale.
 
 {{"demo": "TickSpacing.js"}}
 
