@@ -604,8 +604,8 @@ DataGridPremiumRaw.propTypes = {
    * @default Handlers for `cellEditStop` and `rowEditStop` events
    */
   historyEvents: PropTypes.shape({
-    '__@iterator@13258': PropTypes.func.isRequired,
-    '__@toStringTag@13638': PropTypes.string.isRequired,
+    '__@iterator@13267': PropTypes.func.isRequired,
+    '__@toStringTag@13647': PropTypes.string.isRequired,
     clear: PropTypes.func.isRequired,
     delete: PropTypes.func.isRequired,
     entries: PropTypes.func.isRequired,

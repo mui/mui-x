@@ -774,6 +774,18 @@
       "class": null
     },
     {
+      "name": "undoIcon",
+      "description": "Icon displayed on the undo button in the toolbar.",
+      "default": "GridUndoIcon",
+      "class": null
+    },
+    {
+      "name": "redoIcon",
+      "description": "Icon displayed on the redo button in the toolbar.",
+      "default": "GridRedoIcon",
+      "class": null
+    },
+    {
       "name": "columnMenuIcon",
       "description": "Icon displayed on the side of the column header title to display the filter input component.",
       "default": "GridTripleDotsVerticalIcon",

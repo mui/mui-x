@@ -205,7 +205,7 @@
     "historyEvents": {
       "type": {
         "name": "shape",
-        "description": "{ __@iterator@13258: func, __@toStringTag@13638: string, clear: func, delete: func, entries: func, forEach: func, get: func, has: func, keys: func, set: func, size: number, values: func }"
+        "description": "{ __@iterator@13267: func, __@toStringTag@13647: string, clear: func, delete: func, entries: func, forEach: func, get: func, has: func, keys: func, set: func, size: number, values: func }"
       },
       "default": "Handlers for `cellEditStop` and `rowEditStop` events"
     },
@@ -1139,6 +1139,18 @@
       "name": "booleanCellFalseIcon",
       "description": "Icon displayed on the boolean cell to represent the false value.",
       "default": "GridCloseIcon",
+      "class": null
+    },
+    {
+      "name": "undoIcon",
+      "description": "Icon displayed on the undo button in the toolbar.",
+      "default": "GridUndoIcon",
+      "class": null
+    },
+    {
+      "name": "redoIcon",
+      "description": "Icon displayed on the redo button in the toolbar.",
+      "default": "GridRedoIcon",
       "class": null
     },
     {

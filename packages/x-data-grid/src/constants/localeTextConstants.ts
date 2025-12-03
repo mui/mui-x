@@ -15,6 +15,10 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   toolbarDensityStandard: 'Standard',
   toolbarDensityComfortable: 'Comfortable',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Undo',
+  toolbarRedo: 'Redo',
+
   // Columns selector toolbar button text
   toolbarColumns: 'Columns',
   toolbarColumnsLabel: 'Select columns',

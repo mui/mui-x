@@ -17,6 +17,16 @@ export interface GridIconSlotsComponent {
    */
   booleanCellFalseIcon: React.JSXElementConstructor<IconProps>;
   /**
+   * Icon displayed on the undo button in the toolbar.
+   * @default GridUndoIcon
+   */
+  undoIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon displayed on the redo button in the toolbar.
+   * @default GridRedoIcon
+   */
+  redoIcon: React.JSXElementConstructor<IconProps>;
+  /**
    * Icon displayed on the side of the column header title to display the filter input component.
    * @default GridTripleDotsVerticalIcon
    */

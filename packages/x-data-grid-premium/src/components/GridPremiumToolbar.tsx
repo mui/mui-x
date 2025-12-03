@@ -1,20 +1,72 @@
 import * as React from 'react';
-import { GridToolbar, GridToolbarProps } from '@mui/x-data-grid-pro/internals';
-import { ToolbarButton } from '@mui/x-data-grid-pro';
+import {
+  GridToolbar,
+  GridToolbarDivider,
+  GridToolbarProps,
+  useGridSelector,
+} from '@mui/x-data-grid-pro/internals';
+import { ColumnsPanelTrigger, FilterPanelTrigger, ToolbarButton } from '@mui/x-data-grid-pro';
 import { ExportExcel } from './export';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { PivotPanelTrigger } from './pivotPanel/PivotPanelTrigger';
 import { AiAssistantPanelTrigger } from './aiAssistantPanel';
 import { ChartsPanelTrigger } from './chartsPanel/ChartsPanelTrigger';
+import { gridHistoryCanRedoSelector, gridHistoryCanUndoSelector } from '../hooks/features/history';
 
 export function GridPremiumToolbar(props: GridToolbarProps) {
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
   const { excelOptions, ...other } = props;
 
-  const additionalItems = (
+  const showUndoRedo = rootProps.slotProps?.toolbar?.showUndoRedo !== false;
+  const canUndo = useGridSelector(apiRef, gridHistoryCanUndoSelector);
+  const canRedo = useGridSelector(apiRef, gridHistoryCanRedoSelector);
+
+  const mainControls = (
     <React.Fragment>
+      {showUndoRedo && (
+        <React.Fragment>
+          <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('toolbarUndo')}>
+            <ToolbarButton disabled={!canUndo} onClick={() => apiRef.current.history.undo()}>
+              <rootProps.slots.undoIcon fontSize="small" />
+            </ToolbarButton>
+          </rootProps.slots.baseTooltip>
+          <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('toolbarRedo')}>
+            <ToolbarButton disabled={!canRedo} onClick={() => apiRef.current.history.redo()}>
+              <rootProps.slots.redoIcon fontSize="small" />
+            </ToolbarButton>
+          </rootProps.slots.baseTooltip>
+        </React.Fragment>
+      )}
+      {showUndoRedo && <GridToolbarDivider />}
+      {!rootProps.disableColumnSelector && (
+        <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('toolbarColumns')}>
+          <ColumnsPanelTrigger render={<ToolbarButton />}>
+            <rootProps.slots.columnSelectorIcon fontSize="small" />
+          </ColumnsPanelTrigger>
+        </rootProps.slots.baseTooltip>
+      )}
+      {!rootProps.disableColumnFilter && (
+        <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('toolbarFilters')}>
+          <FilterPanelTrigger
+            render={(triggerProps, state) => (
+              <ToolbarButton
+                {...triggerProps}
+                color={state.filterCount > 0 ? 'primary' : 'default'}
+              >
+                <rootProps.slots.baseBadge
+                  badgeContent={state.filterCount}
+                  color="primary"
+                  variant="dot"
+                >
+                  <rootProps.slots.openFilterButtonIcon fontSize="small" />
+                </rootProps.slots.baseBadge>
+              </ToolbarButton>
+            )}
+          />
+        </rootProps.slots.baseTooltip>
+      )}
       {!rootProps.disablePivoting && (
         <PivotPanelTrigger
           render={(triggerProps, state) => (
@@ -66,7 +118,7 @@ export function GridPremiumToolbar(props: GridToolbarProps) {
   return (
     <GridToolbar
       {...other}
-      additionalItems={additionalItems}
+      mainControls={mainControls}
       additionalExportMenuItems={additionalExportMenuItems}
     />
   );

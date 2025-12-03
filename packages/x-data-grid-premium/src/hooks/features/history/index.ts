@@ -3,3 +3,4 @@ export {
   createCellEditHistoryHandler,
   createRowEditHistoryHandler,
 } from './defaultHistoryHandlers';
+export { gridHistoryCanUndoSelector, gridHistoryCanRedoSelector } from './gridHistorySelectors';
