@@ -1,7 +1,7 @@
 import { applyTickSpacing, getTicks } from './useTicks';
 import { scaleBand } from '../internals';
 
-describe('applyTickSpacing', () => {
+describe(applyTickSpacing, () => {
   it('should return all domain values when tickSpacing allows it', () => {
     const domain = ['A', 'B', 'C', 'D', 'E'];
     const range: [number, number] = [0, 500];
@@ -113,7 +113,7 @@ describe('applyTickSpacing', () => {
   });
 });
 
-describe('getTicks', () => {
+describe(getTicks, () => {
   it('it applies tickInterval before tickSpacing', () => {
     const scale = scaleBand<{ toString(): string }>(
       Array.from({ length: 1000 }).map((_, i) => `${i}`),
