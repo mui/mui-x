@@ -20,9 +20,20 @@ import { getNodeAlignFunction } from './utils';
  */
 
 export function calculateSankeyLayout(
+  withPosition: false,
+  series: DefaultizedSankeySeriesType,
+  drawingArea: ChartDrawingArea | undefined,
+): SankeyLayout<false>;
+export function calculateSankeyLayout(
+  withPosition: true,
   series: DefaultizedSankeySeriesType,
   drawingArea: ChartDrawingArea,
-): SankeyLayout {
+): SankeyLayout<true>;
+export function calculateSankeyLayout<WithPosition extends boolean>(
+  withPosition: WithPosition,
+  series: DefaultizedSankeySeriesType,
+  drawingArea: ChartDrawingArea | undefined,
+): SankeyLayout<WithPosition> {
   const { data, iterations = 6, nodeOptions, linkOptions } = series;
   const {
     width: nodeWidth = 15,
@@ -33,7 +44,6 @@ export function calculateSankeyLayout(
 
   const { color: linkColor = 'source', sort: linkSort, curveCorrection = 10 } = linkOptions ?? {};
 
-  const { width, height, left, top, bottom, right } = drawingArea;
   if (!data || !data.links) {
     return { nodes: [], links: [] };
   }
@@ -48,34 +58,44 @@ export function calculateSankeyLayout(
   };
 
   // Create the sankey layout generator
-  const sankeyGenerator = sankey<typeof graph, SankeyLayoutNode, SankeyLayoutLink>()
-    .nodeWidth(nodeWidth)
-    .nodePadding(nodePadding)
-    .nodeAlign(getNodeAlignFunction(nodeAlign))
-    .extent([
-      [left, top],
-      [width + right, height + bottom],
-    ])
-    .nodeId((d) => d.id)
-    .iterations(iterations);
+  const sankeyGenerator = sankey<
+    typeof graph,
+    SankeyLayoutNode<WithPosition>,
+    SankeyLayoutLink<WithPosition>,
+    WithPosition
+  >(withPosition).nodeId((d) => d.id);
 
-  // For 'auto' or undefined, don't set anything (use d3-sankey default behavior)
-  if (typeof nodeSort === 'function') {
-    sankeyGenerator.nodeSort(nodeSort);
-  } else if (nodeSort === 'fixed') {
-    // Null is not accepted by the types.
-    // https://github.com/DefinitelyTyped/DefinitelyTyped/pull/73953
-    sankeyGenerator.nodeSort(null as any);
-  }
-  if (typeof linkSort === 'function') {
-    sankeyGenerator.linkSort(linkSort);
-  } else if (linkSort === 'fixed') {
-    // Null is not accepted by the types.
-    sankeyGenerator.linkSort(null as any);
+  if (withPosition === true && drawingArea) {
+    const { width, height, left, top, bottom, right } = drawingArea;
+
+    sankeyGenerator
+      .nodeWidth(nodeWidth)
+      .nodePadding(nodePadding)
+      .nodeAlign(getNodeAlignFunction(nodeAlign))
+      .extent([
+        [left, top],
+        [width + right, height + bottom],
+      ])
+      .iterations(iterations);
+
+    // For 'auto' or undefined, don't set anything (use d3-sankey default behavior)
+    if (typeof nodeSort === 'function') {
+      sankeyGenerator.nodeSort(nodeSort);
+    } else if (nodeSort === 'fixed') {
+      // Null is not accepted by the types.
+      // https://github.com/DefinitelyTyped/DefinitelyTyped/pull/73953
+      sankeyGenerator.nodeSort(null as any);
+    }
+    if (typeof linkSort === 'function') {
+      sankeyGenerator.linkSort(linkSort);
+    } else if (linkSort === 'fixed') {
+      // Null is not accepted by the types.
+      sankeyGenerator.linkSort(null as any);
+    }
   }
 
   // Generate the layout
-  let result: SankeyGraph<SankeyLayoutNode, SankeyLayoutLink>;
+  let result: SankeyGraph<true, SankeyLayoutNode<WithPosition>, SankeyLayoutLink<WithPosition>>;
   try {
     result = sankeyGenerator(graph);
   } catch (error) {
@@ -92,27 +112,36 @@ export function calculateSankeyLayout(
   const { nodes, links } = result;
 
   // Convert d3-sankey links to our format
-  const layoutLinks = (links as SankeyLayoutLink[]).map((link) => {
-    // Get the original link data
-    const originalLink = data.links.find((l) => {
-      return l.source === link.source.id && l.target === link.target.id;
-    });
+  const layoutLinks = (links as SankeyLayoutLink<WithPosition>[]).map(
+    (link): SankeyLayoutLink<WithPosition> => {
+      // Get the original link data
+      const originalLink = data.links.find((l) => {
+        return l.source === link.source.id && l.target === link.target.id;
+      });
 
-    let resolvedColor = originalLink?.color ?? linkColor;
+      let resolvedColor = originalLink?.color ?? linkColor;
 
-    if (resolvedColor === 'source') {
-      resolvedColor = link.source.color ?? linkColor;
-    } else if (resolvedColor === 'target') {
-      resolvedColor = link.target.color ?? linkColor;
-    }
+      if (resolvedColor === 'source') {
+        resolvedColor = link.source.color ?? linkColor;
+      } else if (resolvedColor === 'target') {
+        resolvedColor = link.target.color ?? linkColor;
+      }
 
-    return {
-      ...originalLink,
-      ...link,
-      color: resolvedColor,
-      path: improvedNaiveSankeyLinkPathHorizontal(link, curveCorrection),
-    };
-  });
+      const rep = {
+        ...originalLink,
+        ...link,
+        color: resolvedColor,
+        ...(withPosition ? {} : {}),
+      };
+      if (withPosition) {
+        (rep as SankeyLayoutLink<true>).path = improvedNaiveSankeyLinkPathHorizontal(
+          link as SankeyLayoutLink<true>,
+          curveCorrection,
+        );
+      }
+      return rep;
+    },
+  );
 
   const layoutNodes = nodes.map((node) => {
     const originalNode = data.nodes.get(node.id) || {};
@@ -130,7 +159,7 @@ export function calculateSankeyLayout(
 }
 
 export function improvedNaiveSankeyLinkPathHorizontal(
-  link: SankeyLayoutLink,
+  link: SankeyLayoutLink<true>,
   curveCorrection?: number,
 ) {
   const sx = link.source.x1!;
