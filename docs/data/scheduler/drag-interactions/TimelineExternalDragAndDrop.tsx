@@ -11,7 +11,7 @@ import {
   defaultVisibleDate,
   initialEvents,
   resources,
-} from '../datasets/timeline-events';
+} from '../datasets/company-roadmap';
 import classes from './TimelineExternalDragAndDrop.module.css';
 
 const isValidDropTarget = buildIsValidDropTarget(['TimelineEvent']);
