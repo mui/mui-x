@@ -2,10 +2,7 @@
 
 import type { HighlightScope, SeriesId } from '@mui/x-charts/internals';
 import type { DefaultizedProps, MakeRequired } from '@mui/x-internals/types';
-import type {
-  SankeyLink as D3SankeyLink,
-  SankeyNode as D3SankeyNode,
-} from '@mui/x-charts-vendor/d3-sankey';
+import type { SankeyLink as D3SankeyLink, SankeyNode as D3SankeyNode } from './d3Sankey';
 import type { SankeyLinkHighlightScope, SankeyNodeHighlightScope } from './sankey.highlight.types';
 
 export type SankeyNodeId = string | number;
