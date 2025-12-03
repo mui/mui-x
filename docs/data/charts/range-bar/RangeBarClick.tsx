@@ -8,6 +8,9 @@ import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
 import { BarItemIdentifier, ChartsAxisData } from '@mui/x-charts/models';
 
+// Module augmentation to add the rangeBar support for onAxisClick.
+import type {} from '@mui/x-charts-pro/moduleAugmentation/rangeBarOnAxisClick';
+
 const barChartsParams = {
   series: [
     {
