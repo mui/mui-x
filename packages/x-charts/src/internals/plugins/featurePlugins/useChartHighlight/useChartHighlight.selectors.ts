@@ -60,13 +60,13 @@ export const selectorChartsHighlightScope = createSelector(
   },
 );
 
-export const selectorChartsIsHighlightedCallback = createSelector(
+export const selectorChartsIsHighlightedCallback = createSelectorMemoized(
   selectorChartsHighlightScope,
   selectorChartsHighlightedItem,
   createIsHighlighted,
 );
 
-export const selectorChartsIsFadedCallback = createSelector(
+export const selectorChartsIsFadedCallback = createSelectorMemoized(
   selectorChartsHighlightScope,
   selectorChartsHighlightedItem,
   createIsFaded,

@@ -5,7 +5,7 @@ import {
   defaultVisibleDate,
   initialEvents,
   resources,
-} from '../datasets/timeline-events';
+} from '../datasets/company-roadmap';
 
 export default function TimelineDragAndDrop() {
   const [events, setEvents] = React.useState<SchedulerEvent[]>(initialEvents);
