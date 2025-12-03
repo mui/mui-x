@@ -65,15 +65,12 @@ function SankeyPlot(props: SankeyPlotProps) {
     );
   }
 
-  if (!layout) {
+  if (!layout || !layout.links) {
     return null;
   }
 
-  const { data, linkOptions, nodeOptions } = sankeySeries;
+  const { linkOptions, nodeOptions } = sankeySeries;
   // Early return if no data or dimensions
-  if (!data || !data.links) {
-    return null;
-  }
 
   return (
     <SankeyPlotRoot className={classes.root}>

@@ -146,13 +146,13 @@ export function sankey<
   N extends SankeyExtraProperties,
   L extends SankeyExtraProperties,
   WithPosition extends boolean,
->(withoutPositions?: WithPosition): SankeyLayout<WithPosition, Data, N, L>;
+>(withPositions?: WithPosition): SankeyLayout<WithPosition, Data, N, L>;
 export function sankey<
   Data,
   N extends SankeyExtraProperties,
   L extends SankeyExtraProperties,
   WithPosition extends boolean,
->(withoutPositions?: WithPosition): SankeyLayout<WithPosition, Data, N, L> {
+>(withPositions?: WithPosition): SankeyLayout<WithPosition, Data, N, L> {
   let x0 = 0,
     y0 = 0,
     x1 = 1,
@@ -183,7 +183,7 @@ export function sankey<
     computeNodeDepths(graph);
     computeNodeHeights(graph);
 
-    if (withoutPositions) {
+    if (!withPositions) {
       return graph;
     }
 

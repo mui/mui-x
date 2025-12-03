@@ -273,10 +273,11 @@ export interface SankeyLayout<WithPosition extends boolean = true> {
 
 export interface DefaultizedSankeySeriesType
   extends DefaultizedProps<Omit<SankeySeriesType, 'data'>, 'id' | 'valueFormatter'> {
-  data: {
-    nodes: Map<SankeyNodeId, SankeyNode>;
-    links: readonly SankeyLink[];
-  };
+  // data: {
+  //   nodes: Map<SankeyNodeId, SankeyNode>;
+  //   links: readonly SankeyLink[];
+  // };
+  data: SankeyLayout<false>;
   // TODO: Implement, currently here so types don't break.
   highlightScope?: HighlightScope;
 }

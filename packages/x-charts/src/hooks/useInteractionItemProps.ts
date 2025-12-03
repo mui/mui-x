@@ -5,7 +5,7 @@ import { SeriesItemIdentifierWithData } from '../models';
 import { useChartContext } from '../context/ChartProvider';
 import { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
 import { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
-import { ChartSeriesType, type ChartItemIdentifierWithData } from '../models/seriesType/config';
+import type { ChartSeriesType, ChartItemIdentifier } from '../models/seriesType/config';
 import { ChartInstance } from '../internals/plugins/models';
 
 function onPointerDown(event: React.PointerEvent) {
@@ -64,7 +64,7 @@ export const useInteractionItemProps = (
 
 export function getInteractionItemProps(
   instance: ChartInstance<[UseChartInteractionSignature, UseChartHighlightSignature]>,
-  item: ChartItemIdentifierWithData<ChartSeriesType>,
+  item: ChartItemIdentifier<ChartSeriesType>,
 ): {
   onPointerEnter?: () => void;
   onPointerLeave?: () => void;
