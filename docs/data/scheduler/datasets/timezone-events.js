@@ -10,7 +10,7 @@ export const resources = [
 
 export const defaultVisibleDate = new Date('2025-03-10T00:00:00');
 
-export const rawEvents = [
+export const initialEvents = [
   // ----------------------------
   // SIMPLE EVENTS
   // ----------------------------

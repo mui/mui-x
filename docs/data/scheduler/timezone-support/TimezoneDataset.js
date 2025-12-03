@@ -3,7 +3,7 @@ import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import {
   defaultVisibleDate,
-  rawEvents,
+  initialEvents,
   resources,
 } from '../datasets/timezone-events';
 
@@ -29,7 +29,7 @@ export default function TimezoneDataset() {
     },
   };
 
-  const [events, setEvents] = React.useState(rawEvents);
+  const [events, setEvents] = React.useState(initialEvents);
 
   return (
     <div style={{ height: '600px', width: '100%' }}>

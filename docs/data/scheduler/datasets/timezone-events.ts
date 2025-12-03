@@ -21,7 +21,7 @@ export interface TimezoneEvent {
   resource: string;
 }
 
-export const rawEvents: TimezoneEvent[] = [
+export const initialEvents: TimezoneEvent[] = [
   // ----------------------------
   // SIMPLE EVENTS
   // ----------------------------
