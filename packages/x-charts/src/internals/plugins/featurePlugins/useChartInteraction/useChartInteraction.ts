@@ -1,14 +1,14 @@
 import useEventCallback from '@mui/utils/useEventCallback';
 import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
-import { ChartPlugin } from '../../models';
+import { type ChartPlugin } from '../../models';
 import {
-  Coordinate,
-  InteractionUpdateSource,
-  UseChartInteractionSignature,
+  type Coordinate,
+  type InteractionUpdateSource,
+  type UseChartInteractionSignature,
 } from './useChartInteraction.types';
 import {
-  ChartItemIdentifier,
-  ChartSeriesType,
+  type ChartItemIdentifier,
+  type ChartSeriesType,
   type ChartItemIdentifierWithData,
 } from '../../../../models/seriesType/config';
 

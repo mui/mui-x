@@ -1,5 +1,5 @@
 'use client';
-import { FocusedItemData } from './useFocusedItem';
+import { type FocusedItemData } from './useFocusedItem';
 import { useStore } from '../internals/store/useStore';
 import { useSelector } from '../internals/store/useSelector';
 import { selectorChartsItemIsFocused } from '../internals/plugins/featurePlugins/useChartKeyboardNavigation';

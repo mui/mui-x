@@ -1,16 +1,16 @@
 import { createSelector } from '@mui/x-internals/store';
-import { ChartOptionalRootSelector } from '../../utils/selectors';
-import { UseChartKeyboardNavigationSignature } from './useChartKeyboardNavigation.types';
-import { ProcessedSeries, selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';
+import { type ChartOptionalRootSelector } from '../../utils/selectors';
+import { type UseChartKeyboardNavigationSignature } from './useChartKeyboardNavigation.types';
+import { type ProcessedSeries, selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';
 import {
   selectorChartXAxis,
   selectorChartYAxis,
 } from '../useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
-import { ComputeResult } from '../useChartCartesianAxis/computeAxisValue';
-import { ChartSeriesType } from '../../../../models/seriesType/config';
-import { SeriesId } from '../../../../models/seriesType/common';
-import { AxisId, AxisItemIdentifier, ChartsAxisProps } from '../../../../models/axis';
-import { FocusedItemData } from '../../../../hooks/useFocusedItem';
+import { type ComputeResult } from '../useChartCartesianAxis/computeAxisValue';
+import { type ChartSeriesType } from '../../../../models/seriesType/config';
+import { type SeriesId } from '../../../../models/seriesType/common';
+import { type AxisId, type AxisItemIdentifier, type ChartsAxisProps } from '../../../../models/axis';
+import { type FocusedItemData } from '../../../../hooks/useFocusedItem';
 
 const selectKeyboardNavigation: ChartOptionalRootSelector<UseChartKeyboardNavigationSignature> = (
   state,

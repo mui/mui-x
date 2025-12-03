@@ -1,30 +1,30 @@
-import { NumberValue } from '@mui/x-charts-vendor/d3-scale';
+import { type NumberValue } from '@mui/x-charts-vendor/d3-scale';
 import { createScalarFormatter } from '../../../defaultValueFormatters';
-import { ContinuousScaleName, ScaleName } from '../../../../models';
+import { type ContinuousScaleName, type ScaleName } from '../../../../models';
 import {
-  ChartsXAxisProps,
-  ChartsAxisProps,
-  ChartsYAxisProps,
+  type ChartsXAxisProps,
+  type ChartsAxisProps,
+  type ChartsYAxisProps,
   isBandScaleConfig,
   isPointScaleConfig,
-  AxisId,
-  DefaultedXAxis,
-  DefaultedYAxis,
-  DefaultedAxis,
-  AxisValueFormatterContext,
-  ComputedAxis,
-  D3Scale,
+  type AxisId,
+  type DefaultedXAxis,
+  type DefaultedYAxis,
+  type DefaultedAxis,
+  type AxisValueFormatterContext,
+  type ComputedAxis,
+  type D3Scale,
 } from '../../../../models/axis';
-import { CartesianChartSeriesType, ChartSeriesType } from '../../../../models/seriesType/config';
+import { type CartesianChartSeriesType, type ChartSeriesType } from '../../../../models/seriesType/config';
 import { getColorScale, getOrdinalColorScale, getSequentialColorScale } from '../../../colorScale';
 import { scaleTickNumberByRange } from '../../../ticks';
 import { getScale } from '../../../getScale';
 import { isDateData, createDateFormatter } from '../../../dateHelpers';
 import type { ChartDrawingArea } from '../../../../hooks';
-import { ChartSeriesConfig } from '../../models/seriesConfig';
-import { ComputedAxisConfig } from './useChartCartesianAxis.types';
-import { ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
-import { ZoomData } from './zoom.types';
+import { type ChartSeriesConfig } from '../../models/seriesConfig';
+import { type ComputedAxisConfig } from './useChartCartesianAxis.types';
+import { type ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
+import { type ZoomData } from './zoom.types';
 import { getAxisTriggerTooltip } from './getAxisTriggerTooltip';
 import { isBandScale, isOrdinalScale } from '../../../scaleGuards';
 

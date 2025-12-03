@@ -7,11 +7,11 @@ import { useStore } from '../internals/store/useStore';
 import {
   selectorChartsHighlightXAxisValue,
   selectorChartXAxis,
-  UseChartCartesianAxisSignature,
+  type UseChartCartesianAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { useDrawingArea } from '../hooks';
-import { ChartsAxisHighlightType } from './ChartsAxisHighlight.types';
-import { ChartsAxisHighlightClasses } from './chartsAxisHighlightClasses';
+import { type ChartsAxisHighlightType } from './ChartsAxisHighlight.types';
+import { type ChartsAxisHighlightClasses } from './chartsAxisHighlightClasses';
 import { ChartsAxisHighlightPath } from './ChartsAxisHighlightPath';
 import type { UseChartBrushSignature } from '../internals/plugins/featurePlugins/useChartBrush';
 

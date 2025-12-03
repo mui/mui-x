@@ -2,10 +2,10 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { styled, useTheme, useThemeProps } from '@mui/material/styles';
-import { AxisScaleConfig, ChartsXAxisProps, ComputedAxis } from '../models/axis';
+import { type AxisScaleConfig, type ChartsXAxisProps, type ComputedAxis } from '../models/axis';
 import { ChartsSingleXAxisTicks } from './ChartsSingleXAxisTicks';
 import { ChartsGroupedXAxisTicks } from './ChartsGroupedXAxisTicks';
-import { ChartsText, ChartsTextProps } from '../ChartsText';
+import { ChartsText, type ChartsTextProps } from '../ChartsText';
 import { isOrdinalScale } from '../internals/scaleGuards';
 import { isInfinity } from '../internals/isInfinity';
 import { defaultProps, useUtilityClasses } from './utilities';

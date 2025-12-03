@@ -1,6 +1,6 @@
-import { ScatterValueType } from '../../../../models/seriesType/scatter';
-import { Flatbush } from '../../../Flatbush';
-import { D3Scale } from '../../../../models/axis';
+import { type ScatterValueType } from '../../../../models/seriesType/scatter';
+import { type Flatbush } from '../../../Flatbush';
+import { type D3Scale } from '../../../../models/axis';
 import { isOrdinalScale } from '../../../scaleGuards';
 
 export function findClosestPoints(
