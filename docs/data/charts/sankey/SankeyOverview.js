@@ -29,7 +29,7 @@ const data = {
     { id: 'Operating Expenses', label: 'Operating Expenses', color: '#F35865' },
     { id: 'R&D', label: 'R&D', color: '#F35865' },
     { id: 'S&M', label: 'Sales & Marketing', color: '#F35865' },
-    { id: 'G&A', label: 'G&A', color: '#F35865' },
+    { id: 'G&A', label: 'General & Administration', color: '#F35865' },
     // Cost of Revenue and breakdown
     { id: 'Cost of Revenue', label: 'Cost of Revenue', color: '#F35865' },
     { id: 'Product Costs', label: 'Product Costs', color: '#F35865' },
