@@ -617,7 +617,6 @@ describe('<DataGridPro /> - Columns', () => {
 
     it('should work with custom column header sort icon', async () => {
       const iconSize = 24;
-      const iconScrollSize = iconSize + 1;
       const gap = 2;
       const paddingX = 20;
       function CustomSortIcon() {
@@ -636,8 +635,8 @@ describe('<DataGridPro /> - Columns', () => {
 
       // Cell structure: |← padding →|← text →|← gap →|← icon →|← padding →|
       expect(getWidths()).to.deep.equal([
-        paddingX + 132 + gap + iconScrollSize, // `132` is the width of the text "This is the ID column"
-        paddingX + 154 + gap + iconScrollSize, // `154` is the width of the text "This is the brand column"
+        paddingX + 132 + gap + iconSize, // `132` is the width of the text "This is the ID column"
+        paddingX + 154 + gap + iconSize, // `154` is the width of the text "This is the brand column"
       ]);
     });
 
