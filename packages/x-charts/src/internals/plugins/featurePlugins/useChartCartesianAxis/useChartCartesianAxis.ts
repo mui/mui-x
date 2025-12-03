@@ -20,7 +20,7 @@ import { selectorChartAxisInteraction } from './useChartCartesianInteraction.sel
 import { checkHasInteractionPlugin } from '../useChartInteraction/checkHasInteractionPlugin';
 import { ChartsAxisData } from '../../../../models';
 
-const AXIS_CLICK_SERIES_TYPES = new Set(['bar', 'line'] as const);
+const AXIS_CLICK_SERIES_TYPES = new Set(['bar', 'rangeBar', 'line'] as const);
 type AxisClickSeriesType = typeof AXIS_CLICK_SERIES_TYPES extends Set<infer U> ? U : never;
 
 export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<any>> = ({
@@ -227,6 +227,10 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
 
             const axisKey = isXAxis ? providedXAxisId : providedYAxisId;
             if (axisKey === undefined || axisKey === USED_AXIS_ID) {
+              // @ts-ignore This is safe because users need to opt in to use range bar series.
+              // In that case, they should import the module augmentation from `x-charts-pro/moduleAugmentation/rangeBarOnAxisClick`
+              // Which adds the proper type to the series data.
+              // TODO(v9): Remove this ts-expect-error when we can make the breaking change to ChartsAxisData.
               seriesValues[seriesId] = seriesItem.data[dataIndex];
             }
           });

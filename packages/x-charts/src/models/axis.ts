@@ -22,6 +22,7 @@ import {
   type OrdinalColorConfig,
   type PiecewiseColorConfig,
 } from './colorMapping';
+import { type RangeBarValueType } from './seriesType';
 
 export type AxisId = string | number;
 
@@ -625,6 +626,9 @@ export function isSymlogScaleConfig(
   return scaleConfig.scaleType === 'symlog';
 }
 
+export interface AxisFeatureFlags {}
+type HasProperty<T, K extends string> = K extends keyof T ? true : false;
+
 /**
  * The data format returned by onAxisClick.
  */
@@ -640,7 +644,12 @@ export interface ChartsAxisData {
   /**
    * The mapping of series ids to their value for this particular axis index.
    */
-  seriesValues: Record<string, number | null | undefined>;
+  seriesValues: Record<
+    string,
+    HasProperty<AxisFeatureFlags, 'rangeBarInSeriesValue'> extends true
+      ? RangeBarValueType | number | null | undefined
+      : number | null | undefined
+  >;
 }
 
 export type CartesianDirection = 'x' | 'y';
