@@ -69,6 +69,15 @@ You read more about it in bar chart's [Click event](/x/react-charts/bars/#click-
 
 {{"demo": "RangeBarClick.js"}}
 
+:::info
+If you use `onAxisClick`, the `seriesValues` type will be missing `RangeBarValueType`.
+
+To correct the type, you need to import the following module augmentation:
+```ts
+import type {} from '@mui/x-charts-pro/moduleAugmentation/rangeBarOnAxisClick';
+```
+:::
+
 ## Animation
 
 Animation in range bar charts works similarly to bar charts.
