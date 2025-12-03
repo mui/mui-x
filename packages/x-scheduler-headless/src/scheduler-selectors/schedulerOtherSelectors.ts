@@ -12,4 +12,8 @@ export const schedulerOtherSelectors = {
   isScopeDialogOpen: createSelector(
     (state: State) => state.pendingUpdateRecurringEventParameters != null,
   ),
+  /**
+   * The default event color used when no color is specified on the event or its resource.
+   */
+  defaultEventColor: createSelector((state: State) => state.eventColor),
 };

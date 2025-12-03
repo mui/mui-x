@@ -12,7 +12,7 @@ import { formatWeekDayMonthAndDayOfMonth } from '../../../internals/utils/date-u
 import './Headers.css';
 
 export function TimeHeader(props: HeaderProps) {
-  const { className, amount, ...other } = props;
+  const { className, amount = TIME_UNIT_COUNT, ...other } = props;
 
   const adapter = useAdapter();
   const store = useTimelineStoreContext();
@@ -25,7 +25,7 @@ export function TimeHeader(props: HeaderProps) {
       getDayList({
         adapter,
         start: visibleDate,
-        end: adapter.addDays(visibleDate, (amount || TIME_UNIT_COUNT) - 1),
+        end: adapter.addDays(visibleDate, amount - 1),
       }),
     [adapter, visibleDate, amount],
   );

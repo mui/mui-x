@@ -1,3 +1,4 @@
+import { BaseUIChangeEventDetails } from '@base-ui-components/react';
 import { TemporalTimezone } from '../../base-ui-copy/types/temporal';
 import {
   SchedulerEventColor,
@@ -151,7 +152,7 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
   /**
    * Callback fired when some event of the calendar change.
    */
-  onEventsChange?: (value: TEvent[]) => void;
+  onEventsChange?: (value: TEvent[], eventDetails: SchedulerChangeEventDetails) => void;
   /**
    * The structure of the event model.
    * It defines how to read and write the properties of the event model.
@@ -181,7 +182,10 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
   /**
    * Event handler called when the visible date changes.
    */
-  onVisibleDateChange?: (visibleDate: TemporalSupportedObject, event: React.UIEvent) => void;
+  onVisibleDateChange?: (
+    visibleDate: TemporalSupportedObject,
+    eventDetails: SchedulerChangeEventDetails,
+  ) => void;
   /**
    * Whether the event can be dragged to change its start and end dates without changing the duration.
    * @default false
@@ -216,7 +220,7 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
   /**
    * The color palette used for all events.
    * Can be overridden per resource using the `eventColor` property on the resource model.
-   * Can be overridden per event using the `color` property on the event model. (TODO: not implemented yet)
+   * Can be overridden per event using the `color` property on the event model.
    * @default "jade"
    */
   eventColor?: SchedulerEventColor;
@@ -306,3 +310,5 @@ export interface UpdateEventsParameters {
   created?: SchedulerEventCreationProperties[];
   updated?: SchedulerEventUpdatedProperties[];
 }
+
+export type SchedulerChangeEventDetails = BaseUIChangeEventDetails<'none'>;

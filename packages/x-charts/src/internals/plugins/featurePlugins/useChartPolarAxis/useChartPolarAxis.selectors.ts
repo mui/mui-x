@@ -62,7 +62,7 @@ export function getDrawingAreaCenter(drawingArea: ChartDrawingArea) {
     cy: drawingArea.top + drawingArea.height / 2,
   };
 }
-export const selectorChartPolarCenter = createSelector(
+export const selectorChartPolarCenter = createSelectorMemoized(
   selectorChartDrawingArea,
   getDrawingAreaCenter,
 );
