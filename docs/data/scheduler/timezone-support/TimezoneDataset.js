@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import {
