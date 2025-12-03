@@ -23,7 +23,7 @@ function CustomMark(props) {
       <ChartsText
         x={x}
         y={Number(y) - 12}
-        text={Number(y).toFixed(2)}
+        text={pData[props.dataIndex].toString()}
         style={{
           textAnchor: 'middle',
           dominantBaseline: 'auto',
