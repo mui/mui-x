@@ -1,20 +1,17 @@
 import {
   useChartInteraction,
-  UseChartInteractionSignature,
+  type UseChartInteractionSignature,
 } from '../internals/plugins/featurePlugins/useChartInteraction';
 import {
   useChartHighlight,
-  UseChartHighlightSignature,
+  type UseChartHighlightSignature,
 } from '../internals/plugins/featurePlugins/useChartHighlight';
 import {
   useChartKeyboardNavigation,
-  UseChartKeyboardNavigationSignature,
+  type UseChartKeyboardNavigationSignature,
 } from '../internals/plugins/featurePlugins/useChartKeyboardNavigation';
-import { ConvertSignaturesIntoPlugins } from '../internals/plugins/models/helpers';
-import {
-  useChartVisibilityManager,
-  UseChartVisibilityManagerSignature,
-} from '../internals/plugins/featurePlugins/useChartVisibilityManager';
+import { type ConvertSignaturesIntoPlugins } from '../internals/plugins/models/helpers';
+import { type UseChartVisibilityManagerSignature, useChartVisibilityManager } from '../plugins';
 
 export type PieChartPluginSignatures = [
   UseChartInteractionSignature,

@@ -1,7 +1,7 @@
-import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '../../../../models';
-import { AxisId } from '../../../../models/axis';
+import { type AxisConfig, type ChartsXAxisProps, type ChartsYAxisProps, type ScaleName } from '../../../../models';
+import { type AxisId } from '../../../../models/axis';
 import { defaultizeZoom } from './defaultizeZoom';
-import { DefaultizedZoomOptions } from './useChartCartesianAxis.types';
+import { type DefaultizedZoomOptions } from './useChartCartesianAxis.types';
 
 export const createZoomLookup =
   (axisDirection: 'x' | 'y') =>

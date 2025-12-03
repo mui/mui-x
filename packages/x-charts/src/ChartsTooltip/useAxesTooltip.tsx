@@ -1,5 +1,5 @@
 'use client';
-import { useAxisTooltip, UseAxisTooltipParams, UseAxisTooltipReturnValue } from './useAxisTooltip';
+import { useAxisTooltip, type UseAxisTooltipParams, type UseAxisTooltipReturnValue } from './useAxisTooltip';
 
 type UseAxesTooltipParams = Omit<UseAxisTooltipParams, 'multipleAxes'>;
 

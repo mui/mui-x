@@ -2,25 +2,25 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import { RadarChartPluginSignatures } from './RadarChart.plugins';
-import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
+import { type RadarChartPluginSignatures } from './RadarChart.plugins';
+import { ChartsLegend, type ChartsLegendSlotProps, type ChartsLegendSlots } from '../ChartsLegend';
 import {
   ChartsOverlay,
-  ChartsOverlayProps,
-  ChartsOverlaySlotProps,
-  ChartsOverlaySlots,
+  type ChartsOverlayProps,
+  type ChartsOverlaySlotProps,
+  type ChartsOverlaySlots,
 } from '../ChartsOverlay/ChartsOverlay';
 import { useRadarChartProps } from './useRadarChartProps';
-import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
-import { ChartsWrapper, ChartsWrapperProps } from '../ChartsWrapper';
-import { RadarGrid, RadarGridProps } from './RadarGrid';
-import { RadarDataProvider, RadarDataProviderProps } from './RadarDataProvider/RadarDataProvider';
-import { RadarSeriesArea, RadarSeriesMarks, RadarSeriesPlotProps } from './RadarSeriesPlot';
-import { RadarAxisHighlight, RadarAxisHighlightProps } from './RadarAxisHighlight';
+import { ChartsSurface, type ChartsSurfaceProps } from '../ChartsSurface';
+import { ChartsWrapper, type ChartsWrapperProps } from '../ChartsWrapper';
+import { RadarGrid, type RadarGridProps } from './RadarGrid';
+import { RadarDataProvider, type RadarDataProviderProps } from './RadarDataProvider/RadarDataProvider';
+import { RadarSeriesArea, RadarSeriesMarks, type RadarSeriesPlotProps } from './RadarSeriesPlot';
+import { RadarAxisHighlight, type RadarAxisHighlightProps } from './RadarAxisHighlight';
 import { RadarMetricLabels } from './RadarMetricLabels';
-import { ChartsTooltip, ChartsTooltipSlotProps, ChartsTooltipSlots } from '../ChartsTooltip';
-import { ChartsSlotProps, ChartsSlots } from '../internals/material';
-import { ChartsToolbarSlotProps, ChartsToolbarSlots } from '../Toolbar';
+import { ChartsTooltip, type ChartsTooltipSlotProps, type ChartsTooltipSlots } from '../ChartsTooltip';
+import { type ChartsSlotProps, type ChartsSlots } from '../internals/material';
+import { type ChartsToolbarSlotProps, type ChartsToolbarSlots } from '../Toolbar';
 
 export interface RadarChartSlots
   extends ChartsTooltipSlots,

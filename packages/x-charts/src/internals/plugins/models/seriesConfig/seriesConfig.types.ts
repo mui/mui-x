@@ -8,10 +8,10 @@ import type { ColorProcessor } from './colorProcessor.types';
 import type { CartesianExtremumGetter } from './cartesianExtremumGetter.types';
 import type { LegendGetter } from './legendGetter.types';
 import type { AxisTooltipGetter, TooltipGetter } from './tooltipGetter.types';
-import { PolarExtremumGetter } from './polarExtremumGetter.types';
-import { GetSeriesWithDefaultValues } from './getSeriesWithDefaultValues.types';
-import { TooltipItemPositionGetter } from './tooltipItemPositionGetter.types';
-import { SeriesLayoutGetter } from './seriesLayout.types';
+import { type PolarExtremumGetter } from './polarExtremumGetter.types';
+import { type GetSeriesWithDefaultValues } from './getSeriesWithDefaultValues.types';
+import { type TooltipItemPositionGetter } from './tooltipItemPositionGetter.types';
+import { type SeriesLayoutGetter } from './seriesLayout.types';
 
 export type ChartSeriesTypeConfig<TSeriesType extends ChartSeriesType> = {
   seriesProcessor: SeriesProcessor<TSeriesType>;

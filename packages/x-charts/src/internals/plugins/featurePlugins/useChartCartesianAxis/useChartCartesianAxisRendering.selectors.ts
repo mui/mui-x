@@ -1,4 +1,4 @@
-import { NumberValue } from '@mui/x-charts-vendor/d3-scale';
+import { type NumberValue } from '@mui/x-charts-vendor/d3-scale';
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions';
 import {
@@ -6,24 +6,24 @@ import {
   selectorChartSeriesProcessed,
 } from '../../corePlugins/useChartSeries';
 import { computeAxisValue } from './computeAxisValue';
-import { ExtremumFilter, UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
-import { ChartState } from '../../models/chart';
+import { type ExtremumFilter, type UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
+import { type ChartState } from '../../models/chart';
 import {
   createContinuousScaleGetAxisFilter,
   createDiscreteScaleGetAxisFilter,
   createGetAxisFilters,
 } from './createAxisFilterMapper';
-import { ZoomData } from './zoom.types';
+import { type ZoomData } from './zoom.types';
 import { createZoomLookup } from './createZoomLookup';
 import {
-  AxisId,
-  ChartsAxisProps,
-  ContinuousScaleName,
-  D3Scale,
-  DefaultedAxis,
+  type AxisId,
+  type ChartsAxisProps,
+  type ContinuousScaleName,
+  type D3Scale,
+  type DefaultedAxis,
   isBandScaleConfig,
   isPointScaleConfig,
-  ScaleName,
+  type ScaleName,
 } from '../../../../models/axis';
 import {
   selectorChartRawXAxis,
@@ -35,10 +35,10 @@ import { getNormalizedAxisScale, getRange } from './getAxisScale';
 import { isOrdinalScale } from '../../../scaleGuards';
 import { zoomScaleRange } from './zoom';
 import { getAxisExtrema } from './getAxisExtrema';
-import { ChartSeriesConfig } from '../../models';
-import { CartesianChartSeriesType } from '../../../../models/seriesType/config';
+import { type ChartSeriesConfig } from '../../models';
+import { type CartesianChartSeriesType } from '../../../../models/seriesType/config';
 import { calculateFinalDomain, calculateInitialDomainAndTickNumber } from './domain';
-import { SeriesId } from '../../../../models/seriesType/common';
+import { type SeriesId } from '../../../../models/seriesType/common';
 import { Flatbush } from '../../../Flatbush';
 
 export const createZoomMap = (zoom: readonly ZoomData[]) => {

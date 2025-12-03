@@ -201,6 +201,18 @@ export default defineConfig(
     },
   },
   {
+    files: [`packages/x-charts{,-*}/**/*${EXTENSION_TS}`],
+    rules: {
+      'import/no-cycle': 'error',
+      '@typescript-eslint/consistent-type-imports': [
+        'error',
+        {
+          fixStyle: 'inline-type-imports',
+        },
+      ],
+    },
+  },
+  {
     files: [
       // TODO: Fix one-by-one
       `packages/x-data-grid{,-*}/**/*${EXTENSION_TEST_FILE}`,

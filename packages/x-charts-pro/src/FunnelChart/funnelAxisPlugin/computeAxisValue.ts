@@ -1,14 +1,14 @@
-import { ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
-import { ChartDrawingArea } from '@mui/x-charts/hooks';
+import { type ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
+import { type ChartDrawingArea } from '@mui/x-charts/hooks';
 import {
-  ComputedAxisConfig,
-  ChartSeriesType,
-  ProcessedSeries,
-  ChartSeriesConfig,
-  DefaultedYAxis,
-  DefaultedXAxis,
-  DefaultedAxis,
-  CartesianChartSeriesType,
+  type ComputedAxisConfig,
+  type ChartSeriesType,
+  type ProcessedSeries,
+  type ChartSeriesConfig,
+  type DefaultedYAxis,
+  type DefaultedXAxis,
+  type DefaultedAxis,
+  type CartesianChartSeriesType,
   getAxisExtrema,
   isBandScaleConfig,
   isPointScaleConfig,
@@ -24,7 +24,7 @@ import {
   getDefaultTickNumber,
   scaleBand,
 } from '@mui/x-charts/internals';
-import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '@mui/x-charts/models';
+import { type AxisConfig, type ChartsXAxisProps, type ChartsYAxisProps, type ScaleName } from '@mui/x-charts/models';
 
 export const xRangeGetter = (
   drawingArea: ChartDrawingArea,
