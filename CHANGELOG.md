@@ -7,11 +7,12 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 8.21.0
 
-<!-- generated comparing v8.20.0..master -->
-
 _Dec 3, 2025_
 
-We'd like to extend a big thank you to the 0 contributors who made this release possible.
+We'd like to extend a big thank you to the 8 contributors who made this release possible.
+
+The following team members contributed to this release:
+@alexfauquette, @bernardobelchior, @ElliottMiller, @Janpot, @JCQuintas, @romgrk, @sai6855, @siriwatknp
 
 ### Data Grid
 
@@ -90,6 +91,7 @@ Internal changes.
 - [code-infra] Enable vitest eslint plugin (#20530) @Janpot
 - [code-infra] Fix missing font loading for local fonts (#20480) @Janpot
 - [internal] Performance: use raw `useSyncExternalStore` (#20447) @romgrk
+- [code-infra] Enable `vitest/expect-expect` and `vitest/no-standalone-expect` rules for x-charts packages (#20535) @Copilot
 
 ### Miscellaneous
 
