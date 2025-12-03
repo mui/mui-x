@@ -208,7 +208,7 @@ export interface SankeySeriesType {
 // ----------------------------------------------------------------------------------------
 // Those interfaces are here to allow circular dependencies between nodes and links.
 
-interface SankeyLayoutNodeWithoutPosition
+export interface SankeyLayoutNodeWithoutPosition
   extends D3SankeyNode<
     false,
     MakeRequired<SankeyNode, 'label' | 'color'>,
@@ -218,7 +218,7 @@ interface SankeyLayoutNodeWithoutPosition
   sourceLinks: SankeyLayoutLinkWithoutPosition[];
   value: number;
 }
-interface SankeyLayoutLinkWithoutPosition
+export interface SankeyLayoutLinkWithoutPosition
   extends D3SankeyLink<
     false,
     SankeyLayoutNodeWithoutPosition,
@@ -227,7 +227,7 @@ interface SankeyLayoutLinkWithoutPosition
   source: SankeyLayoutNodeWithoutPosition;
   target: SankeyLayoutNodeWithoutPosition;
 }
-interface SankeyLayoutNodeWithPosition
+export interface SankeyLayoutNodeWithPosition
   extends D3SankeyNode<
     true,
     MakeRequired<SankeyNode, 'label' | 'color'>,
@@ -237,7 +237,7 @@ interface SankeyLayoutNodeWithPosition
   sourceLinks: SankeyLayoutLinkWithPosition[];
   value: number;
 }
-interface SankeyLayoutLinkWithPosition
+export interface SankeyLayoutLinkWithPosition
   extends D3SankeyLink<
     true,
     SankeyLayoutNodeWithPosition,
