@@ -7,23 +7,14 @@ import {
   resources,
 } from '../datasets/timezone-events';
 
-const buildTimezoneDataset = (adapter) => {
+export default function TimezoneDataset() {
+  const adapter = useAdapter();
+
   const initialEvents = rawEvents.map((ev) => ({
     ...ev,
     start: adapter.date(ev.start, ev.timezone),
     end: adapter.date(ev.end, ev.timezone),
   }));
-
-  return { initialEvents };
-};
-
-export default function TimezoneDataset() {
-  const adapter = useAdapter();
-
-  const { initialEvents } = React.useMemo(
-    () => buildTimezoneDataset(adapter),
-    [adapter],
-  );
 
   const [events, setEvents] = React.useState(initialEvents);
 
