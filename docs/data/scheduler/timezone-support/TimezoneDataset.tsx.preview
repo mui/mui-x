@@ -5,4 +5,6 @@
   onEventsChange={setEvents}
   defaultPreferences={{ isSidePanelOpen: false }}
   timezone="Europe/Paris"
+  areEventsDraggable={true}
+  areEventsResizable={true}
 />
