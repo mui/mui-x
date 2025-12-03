@@ -4,7 +4,6 @@ import { Calendar } from 'lucide-react';
 import { useStore } from '@base-ui-components/utils/store';
 import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
-import { DEFAULT_EVENT_COLOR } from '@mui/x-scheduler-headless/constants';
 import {
   schedulerEventSelectors,
   schedulerRecurringEventSelectors,
@@ -66,12 +65,7 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
               />
             )}
 
-            <span
-              className={clsx(
-                'ResourceLegendColor',
-                getColorClassName(color ?? DEFAULT_EVENT_COLOR),
-              )}
-            />
+            <span className={clsx('ResourceLegendColor', getColorClassName(color))} />
           </div>
           <p
             className={clsx('EventPopoverResourceTitle', 'LinesClamp')}
