@@ -242,7 +242,7 @@ function extractColumnWidths(
             childrenWidth += child.scrollWidth;
           }
         }
-        
+
         childrenWidth += 1;
 
         const width =
