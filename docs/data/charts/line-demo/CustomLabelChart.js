@@ -1,5 +1,4 @@
 import Box from '@mui/material/Box';
-import { ChartsText } from '@mui/x-charts/ChartsText';
 import { LineChart } from '@mui/x-charts/LineChart';
 
 const margin = { right: 24 };
@@ -20,10 +19,9 @@ function CustomMark(props) {
   return (
     <g>
       <circle cx={x} cy={y} r={4} fill={color || 'currentColor'} />
-      <ChartsText
+      <text
         x={x}
         y={Number(y) - 12}
-        text={pData[props.dataIndex].toString()}
         style={{
           textAnchor: 'middle',
           dominantBaseline: 'auto',
@@ -31,7 +29,9 @@ function CustomMark(props) {
           fontWeight: 'bold',
           fontSize: 12,
         }}
-      />
+      >
+        {pData[props.dataIndex].toString()}
+      </text>
     </g>
   );
 }
