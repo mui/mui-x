@@ -66,7 +66,6 @@ const seriesProcessor: SeriesProcessor<'funnel'> = (params) => {
         id: `${seriesId}-funnel-item-${v.id ?? i}`,
         ...v,
       })),
-      hidden: false,
       funnelDirection,
       dataPoints: [],
     };

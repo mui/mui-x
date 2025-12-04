@@ -47,7 +47,6 @@ const seriesProcessor: SeriesProcessor<'pie'> = (params, dataset, isIdentifierVi
       labelMarkType: 'circle',
       valueFormatter: (item: PieValueType) => item.value.toLocaleString(),
       ...series[seriesId],
-      hidden: false,
       data: series[seriesId].data.map((item, index) => {
         const itemId = item.id ?? `auto-generated-pie-id-${seriesId}-${index}`;
         const isHidden = !isIdentifierVisible?.([seriesId, itemId]);

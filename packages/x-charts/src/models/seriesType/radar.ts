@@ -29,4 +29,6 @@ export type RadarItemIdentifier = {
 };
 
 export interface DefaultizedRadarSeriesType
-  extends DefaultizedProps<RadarSeriesType, CommonDefaultizedProps | 'color'> {}
+  extends DefaultizedProps<RadarSeriesType, CommonDefaultizedProps | 'color'> {
+  hidden: boolean;
+}
