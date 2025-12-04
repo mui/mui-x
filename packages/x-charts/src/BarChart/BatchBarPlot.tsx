@@ -30,6 +30,7 @@ import {
   type UseChartHighlightSignature,
 } from '../internals/plugins/featurePlugins/useChartHighlight';
 import { useStore } from '../internals/store/useStore';
+import { ComputedAxis, getBandSize, invertScale, isBandScale } from '../internals';
 
 interface BatchBarPlotProps extends IndividualBarPlotProps {}
 
@@ -108,10 +109,6 @@ function useOnItemClick(onItemClick: BatchBarPlotProps['onItemClick'] | undefine
   const svgRef = useSvgRef();
   const store = useStore<[UseChartCartesianAxisSignature, UseChartHighlightSignature]>();
   const zoomIsInteracting = useSelector(store, selectorChartZoomIsInteracting);
-  const flatbushMap = useSelector(
-    store,
-    zoomIsInteracting ? selectorChartSeriesEmptyFlatbushMap : selectorChartBarSeriesFlatbushMap,
-  );
 
   return function onClick(event: React.MouseEvent<SVGElement, MouseEvent>) {
     const element = svgRef.current;
@@ -126,22 +123,60 @@ function useOnItemClick(onItemClick: BatchBarPlotProps['onItemClick'] | undefine
       return;
     }
 
-    const { series, seriesOrder } = selectorChartSeriesProcessed(store.getSnapshot())?.bar ?? {};
+    const {
+      series,
+      seriesOrder,
+      stackingGroups = [],
+    } = selectorChartSeriesProcessed(store.getSnapshot())?.bar ?? {};
     const { axis: xAxes, axisIds: xAxisIds } = selectorChartXAxis(store.getSnapshot());
     const { axis: yAxes, axisIds: yAxisIds } = selectorChartYAxis(store.getSnapshot());
     const defaultXAxisId = xAxisIds[0];
     const defaultYAxisId = yAxisIds[0];
 
-    let closestPoint: { dataIndex: number; seriesId: SeriesId; distanceSq: number } | undefined =
+    const closestPoint: { dataIndex: number; seriesId: SeriesId; distanceSq: number } | undefined =
       undefined;
+
+    for (let stackOrder = 0; stackOrder < stackingGroups.length; stackOrder += 1) {
+      const group = stackingGroups[stackOrder];
+      const seriesIds = group.ids;
+
+      for (const seriesId of seriesIds) {
+        const aSeries = (series ?? {})[seriesId];
+
+        const xAxisId = aSeries.xAxisId ?? defaultXAxisId;
+        const yAxisId = aSeries.yAxisId ?? defaultYAxisId;
+
+        const xAxis = xAxes[xAxisId];
+        const yAxis = yAxes[yAxisId];
+
+        const bandAxis = aSeries.layout === 'horizontal' ? yAxis : xAxis;
+        const continuousAxis = aSeries.layout === 'horizontal' ? xAxis : yAxis;
+        const bandScale = bandAxis.scale;
+
+        const ordinalCoordinate = invertScale(
+          bandScale,
+          bandAxis.data ?? [],
+          aSeries.layout === 'horizontal' ? svgPoint.y : svgPoint.x,
+        );
+
+        if (ordinalCoordinate == null) {
+          continue;
+        }
+
+        if (!isBandScale(bandScale)) {
+          continue;
+        }
+
+        const { barWidth, offset } = getBandSize(
+          bandScale.bandwidth(),
+          stackingGroups.length,
+          (bandAxis as ComputedAxis<'band'>).barGapRatio,
+        );
+      }
+    }
 
     for (const seriesId of seriesOrder ?? []) {
       const aSeries = (series ?? {})[seriesId];
-      const flatbush = flatbushMap.get(seriesId);
-
-      if (!flatbush) {
-        continue;
-      }
 
       const xAxisId = aSeries.xAxisId ?? defaultXAxisId;
       const yAxisId = aSeries.yAxisId ?? defaultYAxisId;
@@ -156,67 +191,39 @@ function useOnItemClick(onItemClick: BatchBarPlotProps['onItemClick'] | undefine
 
       const xAxis = xAxes[xAxisId];
       const yAxis = yAxes[yAxisId];
-      const xScale = xAxis.scale;
-      const yScale = yAxis.scale;
 
-      const xData = aSeries.layout === 'horizontal' ? aSeries.data : xAxis.data;
-      const yData = aSeries.layout === 'horizontal' ? yAxis.data : aSeries.data;
+      const ordinalAxis = aSeries.layout === 'horizontal' ? yAxis : xAxis;
+      const continuousAxis = aSeries.layout === 'horizontal' ? xAxis : yAxis;
+      const ordinalScale = ordinalAxis.scale;
 
-      const getX = (dataIndex: number) => xData?.[dataIndex] ?? 0;
-      const getY = (dataIndex: number) => yData?.[dataIndex] ?? 0;
-
-      const closestPoints = findClosestPoints(
-        flatbush,
-        getX,
-        getY,
-        xScale,
-        yScale,
-        xZoomStart,
-        xZoomEnd,
-        yZoomStart,
-        yZoomEnd,
-        svgPoint.x,
-        svgPoint.y,
+      const ordinalCoordinate = invertScale(
+        ordinalScale,
+        ordinalAxis.data,
+        aSeries.layout === 'horizontal' ? svgPoint.y : svgPoint.x,
       );
 
-      console.log(seriesId, closestPoints);
-
-      const closestPointIndex = closestPoints[0];
-
-      if (closestPointIndex === undefined) {
-        continue;
+      if (isBandScale(ordinalScale)) {
+        or;
+      } else {
+        // point scale
       }
 
-      const point = aSeries.data[closestPointIndex];
+      const continuousCoordinate = invertScale(
+        continuousAxis.scale,
+        continuousAxis.data,
+        aSeries.layout === 'horizontal' ? svgPoint.x : svgPoint.y,
+      );
 
-      if (point == null) {
-        continue;
-      }
-
-      const scaledX =
-        aSeries.layout === 'horizontal' ? xScale(point) : xScale(xAxis.data?.[closestPointIndex]);
-      const scaledY =
-        aSeries.layout === 'horizontal' ? yScale(yAxis.data?.[closestPointIndex]) : yScale(point);
-
-      const distSq = (scaledX! - svgPoint.x) ** 2 + (scaledY! - svgPoint.y) ** 2;
-
-      if (closestPoint === undefined || distSq < closestPoint.distanceSq) {
-        closestPoint = {
-          dataIndex: closestPointIndex,
-          seriesId,
-          distanceSq: distSq,
-        };
-        console.log(closestPoint);
-      }
+      console.log(seriesId, ordinalCoordinate, continuousCoordinate);
     }
 
-    if (closestPoint) {
-      onItemClick?.(event, {
-        type: 'bar',
-        seriesId: closestPoint.seriesId,
-        dataIndex: closestPoint.dataIndex,
-      });
-    }
+    // if (closestPoint) {
+    //  onItemClick?.(event, {
+    //    type: 'bar',
+    //    seriesId: closestPoint.seriesId,
+    //    dataIndex: closestPoint.dataIndex,
+    //  });
+    // }
   };
 }
 
