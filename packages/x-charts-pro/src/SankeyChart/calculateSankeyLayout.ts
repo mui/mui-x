@@ -116,10 +116,21 @@ export function calculateSankeyLayout(
 
   const layoutNodes = nodes.map((node) => {
     const originalNode = data.nodes.get(node.id) || {};
+    const nodeDistance =
+      node.targetLinks.length !== 0
+        ? node.targetLinks.reduce(
+            (acc, link) => Math.min(acc, Math.abs(link.source.x1! - node.x0!)),
+            Infinity,
+          )
+        : node.sourceLinks.reduce(
+            (acc, link) => Math.min(acc, Math.abs(node.x1! - link.target.x0!)),
+            Infinity,
+          );
 
     return {
       ...originalNode,
       ...node,
+      nodeDistance: nodeDistance === Infinity ? 0 : nodeDistance,
     };
   });
 

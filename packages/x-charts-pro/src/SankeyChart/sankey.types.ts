@@ -213,6 +213,7 @@ export interface SankeyLayoutNode
   targetLinks: SankeyLayoutLink[];
   sourceLinks: SankeyLayoutLink[];
   value: number;
+  nodeDistance: number;
 }
 
 /**
