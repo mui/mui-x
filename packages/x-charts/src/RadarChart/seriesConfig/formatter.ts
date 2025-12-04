@@ -1,5 +1,5 @@
 import { defaultizeValueFormatter } from '../../internals/defaultizeValueFormatter';
-import { SeriesProcessor } from '../../internals/plugins/models/seriesConfig';
+import { type SeriesProcessor } from '../../internals/plugins/models/seriesConfig';
 
 const formatter: SeriesProcessor<'radar'> = (params) => {
   const { seriesOrder, series } = params;

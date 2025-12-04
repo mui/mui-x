@@ -11,10 +11,10 @@ import {
   TapGesture,
   TurnWheelGesture,
 } from '@mui/x-internal-gestures/core';
-import { ChartPlugin } from '../../models';
+import { type ChartPlugin } from '../../models';
 import {
-  UseChartInteractionListenerSignature,
-  AddInteractionListener,
+  type UseChartInteractionListenerSignature,
+  type AddInteractionListener,
   type UpdateZoomInteractionListeners,
 } from './useChartInteractionListener.types';
 

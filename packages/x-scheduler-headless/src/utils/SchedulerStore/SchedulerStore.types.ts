@@ -142,6 +142,10 @@ export interface SchedulerState<TEvent extends object = any> {
    * or "UTC".
    */
   timezone: TemporalTimezone;
+  /**
+   * The event that has been copied or cut, if any.
+   */
+  copiedEvent: { id: SchedulerEventId; action: 'cut' | 'copy' } | null;
 }
 
 export interface SchedulerParameters<TEvent extends object, TResource extends object> {
@@ -220,7 +224,7 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
   /**
    * The color palette used for all events.
    * Can be overridden per resource using the `eventColor` property on the resource model.
-   * Can be overridden per event using the `color` property on the event model. (TODO: not implemented yet)
+   * Can be overridden per event using the `color` property on the event model.
    * @default "jade"
    */
   eventColor?: SchedulerEventColor;

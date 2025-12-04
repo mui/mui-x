@@ -381,7 +381,7 @@ describe('<DataGridPro /> - Filter', () => {
     expect(getColumnValues(0)).to.deep.equal(['Adidas']);
   });
 
-  it('should work as expected with "Add filter" and "Remove all" buttons ', () => {
+  it('should work as expected with "Add filter" and "Remove all" buttons', () => {
     render(
       <TestCase
         initialState={{

@@ -1,13 +1,13 @@
 import {
-  ConvertSignaturesIntoPlugins,
-  UseChartHighlightSignature,
-  UseChartInteractionSignature,
+  type ConvertSignaturesIntoPlugins,
+  type UseChartHighlightSignature,
+  type UseChartInteractionSignature,
   PIE_CHART_PLUGINS,
-  UseChartKeyboardNavigationSignature,
+  type UseChartKeyboardNavigationSignature,
 } from '@mui/x-charts/internals';
 import {
   useChartProExport,
-  UseChartProExportSignature,
+  type UseChartProExportSignature,
 } from '../internals/plugins/useChartProExport';
 
 export type PieChartProPluginSignatures = [

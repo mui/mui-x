@@ -2,15 +2,15 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import {
   RadarAxisHighlight,
-  RadarChartProps,
+  type RadarChartProps,
   RadarDataProvider,
-  RadarDataProviderProps,
+  type RadarDataProviderProps,
   RadarGrid,
   RadarMetricLabels,
   RadarSeriesArea,
   RadarSeriesMarks,
-  RadarChartSlotProps,
-  RadarChartSlots,
+  type RadarChartSlotProps,
+  type RadarChartSlots,
 } from '@mui/x-charts/RadarChart';
 import { useThemeProps } from '@mui/material/styles';
 import { useRadarChartProps } from '@mui/x-charts/internals';
@@ -19,13 +19,16 @@ import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
-import { RADAR_CHART_PRO_PLUGINS, RadarChartProPluginSignatures } from './RadarChartPro.plugins';
+import {
+  RADAR_CHART_PRO_PLUGINS,
+  type RadarChartProPluginSignatures,
+} from './RadarChartPro.plugins';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
 import {
-  ChartsToolbarProSlotProps,
-  ChartsToolbarProSlots,
+  type ChartsToolbarProSlotProps,
+  type ChartsToolbarProSlots,
 } from '../ChartsToolbarPro/Toolbar.types';
-import { ChartsSlotPropsPro, ChartsSlotsPro } from '../internals/material';
+import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '../internals/material';
 
 export interface RadarChartProSlots
   extends Omit<RadarChartSlots, 'toolbar'>,

@@ -1,4 +1,4 @@
-import { PiecewiseLabelFormatterParams } from './piecewiseColorLegend.types';
+import { type PiecewiseLabelFormatterParams } from './piecewiseColorLegend.types';
 
 export function piecewiseColorDefaultLabelFormatter(params: PiecewiseLabelFormatterParams) {
   if (params.min === null) {

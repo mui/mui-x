@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { RadarGridStripeRenderProps } from './RadarGrid.types';
+import { type RadarGridStripeRenderProps } from './RadarGrid.types';
 
 const getPath = (
   center: RadarGridStripeRenderProps['center'],

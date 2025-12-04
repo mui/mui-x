@@ -1,30 +1,26 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useStore } from '@base-ui-components/utils/store/useStore';
-import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
-import { useMonthList } from '@mui/x-scheduler-headless/use-month-list';
+import { Adapter, useAdapter } from '@mui/x-scheduler-headless/use-adapter';
+import { SchedulerProcessedDate, TemporalSupportedObject } from '@mui/x-scheduler-headless/models';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
+import { processDate } from '@mui/x-scheduler-headless/process-date';
 import { useTimelineStoreContext } from '@mui/x-scheduler-headless/use-timeline-store-context';
 import { MONTHS_UNIT_COUNT } from '../../constants';
 import { HeaderProps } from './Headers.types';
 import './Headers.css';
 
 export function MonthsHeader(props: HeaderProps) {
-  const { className, amount, ...other } = props;
+  const { className, amount = MONTHS_UNIT_COUNT, ...other } = props;
 
   const adapter = useAdapter();
-  const getMonthList = useMonthList();
   const store = useTimelineStoreContext();
 
   const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
 
   const months = React.useMemo(
-    () =>
-      getMonthList({
-        date: visibleDate,
-        amount: amount || MONTHS_UNIT_COUNT,
-      }),
-    [getMonthList, visibleDate, amount],
+    () => getMonths(adapter, visibleDate, amount),
+    [adapter, visibleDate, amount],
   );
 
   return (
@@ -53,4 +49,18 @@ export function MonthsHeader(props: HeaderProps) {
       })}
     </div>
   );
+}
+
+function getMonths(adapter: Adapter, date: TemporalSupportedObject, amount: number) {
+  const end = adapter.startOfMonth(adapter.addMonths(date, amount));
+  let current = adapter.startOfYear(date);
+  const years: SchedulerProcessedDate[] = [];
+
+  while (adapter.isBefore(current, end)) {
+    years.push(processDate(current, adapter));
+
+    current = adapter.addMonths(current, 1);
+  }
+
+  return years;
 }

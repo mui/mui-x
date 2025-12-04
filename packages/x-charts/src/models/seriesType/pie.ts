@@ -1,6 +1,6 @@
-import { PieArcDatum as D3PieArcDatum } from '@mui/x-charts-vendor/d3-shape';
-import { DefaultizedProps } from '@mui/x-internals/types';
-import { CommonDefaultizedProps, CommonSeriesType, SeriesId } from './common';
+import { type PieArcDatum as D3PieArcDatum } from '@mui/x-charts-vendor/d3-shape';
+import { type DefaultizedProps } from '@mui/x-internals/types';
+import { type CommonDefaultizedProps, type CommonSeriesType, type SeriesId } from './common';
 import type { ChartsLabelMarkProps } from '../../ChartsLabel';
 
 export type PieItemId = string | number;
