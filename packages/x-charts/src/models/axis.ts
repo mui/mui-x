@@ -107,6 +107,11 @@ export interface ChartsAxisProps extends TickParams {
    */
   tickLabelInterval?: 'auto' | ((value: any, index: number) => boolean);
   /**
+   * The minimum space between ticks when using an ordinal scale. It defines the minimum distance in pixels between two ticks.
+   * @default 0
+   */
+  tickSpacing?: number;
+  /**
    * The label of the axis.
    */
   label?: string;
