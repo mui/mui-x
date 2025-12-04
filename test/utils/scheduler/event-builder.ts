@@ -157,6 +157,12 @@ export class EventBuilder {
     return this;
   }
 
+  /** Set a custom class name for the event. */
+  className(className: string) {
+    this.event.className = className;
+    return this;
+  }
+
   // ─────────────────────────────────────────────
   // Time setters
   // ─────────────────────────────────────────────

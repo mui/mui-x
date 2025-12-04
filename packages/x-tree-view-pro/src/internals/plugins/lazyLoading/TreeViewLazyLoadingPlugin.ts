@@ -166,10 +166,10 @@ export class TreeViewLazyLoadingPlugin {
    * Method used for updating an item's children.
    * Only relevant for lazy-loaded tree views.
    *
-   * @param {TreeViewItemId} itemId The The id of the item to update the children of.
+   * @param {TreeViewItemId | null} itemId The id of the item to update the children of. If null is passed, it will update the root's children.
    * @returns {Promise<void>} The promise resolved when the items are fetched.
    */
-  public updateItemChildren = (itemId: TreeViewItemId) =>
+  public updateItemChildren = (itemId: TreeViewItemId | null) =>
     this.fetchItemChildren({ itemId, forceRefresh: true });
 
   /**
