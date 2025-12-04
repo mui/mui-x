@@ -1,5 +1,10 @@
 import { type DefaultizedProps } from '@mui/x-internals/types';
-import { type CartesianSeriesType, type CommonDefaultizedProps, type CommonSeriesType, type SeriesId } from './common';
+import {
+  type CartesianSeriesType,
+  type CommonDefaultizedProps,
+  type CommonSeriesType,
+  type SeriesId,
+} from './common';
 
 export type RangeBarValueType = {
   start: number;

@@ -1,7 +1,11 @@
 import { warnOnce } from '@mui/x-internals/warning';
 import { type DefaultizedProps } from '@mui/x-internals/types';
 import { type SeriesId } from '@mui/x-charts/models';
-import { type ChartSeries, defaultizeValueFormatter, type SeriesProcessor } from '@mui/x-charts/internals';
+import {
+  type ChartSeries,
+  defaultizeValueFormatter,
+  type SeriesProcessor,
+} from '@mui/x-charts/internals';
 
 const seriesProcessor: SeriesProcessor<'rangeBar'> = (params, dataset) => {
   const { seriesOrder, series } = params;
