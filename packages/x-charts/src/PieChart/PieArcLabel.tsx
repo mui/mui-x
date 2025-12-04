@@ -114,7 +114,6 @@ const PieArcLabel = React.forwardRef<SVGTextElement, PieArcLabelProps>(
       formattedArcLabel,
       isHighlighted,
       isFaded,
-      style,
       skipAnimation,
       ...other
     } = props;
@@ -141,7 +140,7 @@ const PieArcLabel = React.forwardRef<SVGTextElement, PieArcLabelProps>(
     });
 
     return (
-      <PieArcLabelRoot className={classes.root} {...other} {...animatedProps} style={style}>
+      <PieArcLabelRoot className={classes.root} {...other} {...animatedProps}>
         {formattedArcLabel}
       </PieArcLabelRoot>
     );
