@@ -9,7 +9,6 @@ import { useStableCallback } from '@base-ui-components/utils/useStableCallback';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { schedulerResourceSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { SchedulerResource } from '@mui/x-scheduler-headless/models';
-import { DEFAULT_EVENT_COLOR } from '@mui/x-scheduler-headless/constants';
 import { ResourceLegendProps } from './ResourceLegend.types';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { getColorClassName } from '../../utils/color-utils';
@@ -18,15 +17,12 @@ import './ResourceLegend.css';
 function ResourceLegendItem(props: { resource: SchedulerResource }) {
   const { resource } = props;
   const translations = useTranslations();
+  const store = useEventCalendarStoreContext();
+  const eventColor = useStore(store, schedulerResourceSelectors.defaultEventColor, resource.id);
 
   return (
     <label className="ResourceLegendItem">
-      <span
-        className={clsx(
-          'ResourceLegendColor',
-          getColorClassName(resource.eventColor ?? DEFAULT_EVENT_COLOR),
-        )}
-      />
+      <span className={clsx('ResourceLegendColor', getColorClassName(eventColor))} />
       <span className="ResourceLegendName">{resource.title}</span>
       <Checkbox.Root
         className={clsx('NeutralTextButton', 'Button', 'ResourceLegendButton')}

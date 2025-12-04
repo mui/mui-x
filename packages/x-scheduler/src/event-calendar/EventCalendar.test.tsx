@@ -271,4 +271,46 @@ describe('EventCalendar', () => {
       expect(screen.getByLabelText(/Sunday 1/i)).not.to.equal(null);
     });
   });
+
+  describe('className property', () => {
+    it('should apply className to event elements in week view', () => {
+      const eventWithClassName = EventBuilder.new()
+        .title('Important Meeting')
+        .span('2025-05-26T10:00:00', '2025-05-26T11:00:00')
+        .className('custom-event-class')
+        .build();
+
+      render(<EventCalendar events={[eventWithClassName]} />);
+
+      const eventElement = screen.getByRole('button', { name: /Important Meeting/i });
+      expect(eventElement.classList.contains('custom-event-class')).to.equal(true);
+    });
+
+    it('should apply className to event elements in month view', () => {
+      const eventWithClassName = EventBuilder.new()
+        .title('Monthly Event')
+        .span('2025-05-26T10:00:00', '2025-05-26T11:00:00')
+        .className('monthly-class')
+        .build();
+
+      render(<EventCalendar events={[eventWithClassName]} defaultView="month" />);
+
+      const eventElement = screen.getByLabelText(/Monthly Event/i);
+      expect(eventElement.classList.contains('monthly-class')).to.equal(true);
+    });
+
+    it('should apply className to event elements in agenda view', () => {
+      const eventWithClassName = EventBuilder.new()
+        .title('Agenda Event')
+        .span('2025-05-26T14:00:00', '2025-05-26T15:00:00')
+        .className('agenda-class')
+        .build();
+
+      render(<EventCalendar events={[eventWithClassName]} defaultView="agenda" />);
+
+      const eventElement = document.querySelector('.agenda-class');
+      expect(eventElement).not.to.equal(null);
+      expect(eventElement?.textContent).to.include('Agenda Event');
+    });
+  });
 });

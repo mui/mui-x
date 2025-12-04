@@ -1,12 +1,17 @@
-import { ChartsXAxisProps, ChartsYAxisProps, ComputedAxis, ScaleName } from '../models/axis';
+import {
+  type ChartsXAxisProps,
+  type ChartsYAxisProps,
+  type ComputedAxis,
+  type ScaleName,
+} from '../models/axis';
 import getColor from './seriesConfig/bar/getColor';
-import { ChartDrawingArea, useChartId, useXAxes, useYAxes } from '../hooks';
-import { MaskData, ProcessedBarData, ProcessedBarSeriesData } from './types';
+import { type ChartDrawingArea, useChartId, useXAxes, useYAxes } from '../hooks';
+import { type MaskData, type ProcessedBarData, type ProcessedBarSeriesData } from './types';
 import { checkBarChartScaleErrors } from './checkBarChartScaleErrors';
 import { useBarSeriesContext } from '../hooks/useBarSeries';
-import { SeriesProcessorResult } from '../internals/plugins/models/seriesConfig/seriesProcessor.types';
-import { ComputedAxisConfig } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxis.types';
-import { ChartSeriesDefaultized } from '../models/seriesType/config';
+import { type SeriesProcessorResult } from '../internals/plugins/models/seriesConfig/seriesProcessor.types';
+import { type ComputedAxisConfig } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxis.types';
+import { type ChartSeriesDefaultized } from '../models/seriesType/config';
 import { findMinMax } from '../internals/findMinMax';
 import {
   selectorIsIdentifierVisibleGetter,
