@@ -1,6 +1,6 @@
 import type { GetSeriesWithDefaultValues } from '@mui/x-charts/internals';
 import type { SankeyNodeId, SankeyNode, SankeyLayoutLink, SankeyLayoutNode } from '../sankey.types';
-import { sankey, SankeyGraph } from '../d3Sankey';
+import { sankey, type SankeyGraph } from '../d3Sankey';
 import { getNodeAlignFunction } from '../utils';
 
 const defaultSankeyValueFormatter = (v: number) => (v == null ? '' : v.toLocaleString());
