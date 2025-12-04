@@ -2,9 +2,9 @@
 import {
   useSeriesOfType,
   useAllSeriesOfType,
-  ProcessedSeries,
-  SeriesId,
-  ChartSeriesDefaultized,
+  type ProcessedSeries,
+  type SeriesId,
+  type ChartSeriesDefaultized,
 } from '@mui/x-charts/internals';
 
 export type UseFunnelSeriesReturnValue = ChartSeriesDefaultized<'funnel'>;

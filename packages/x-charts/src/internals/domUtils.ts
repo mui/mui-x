@@ -1,6 +1,6 @@
 // DOM utils adapted from
 // https://github.com/recharts/recharts/blob/master/src/util/DOMUtils.ts
-import * as React from 'react';
+import type * as React from 'react';
 
 export interface SVGCSSProperties extends Omit<React.CSSProperties, 'dominantBaseline'> {
   dominantBaseline?: React.SVGAttributes<SVGTextElement>['dominantBaseline'];
