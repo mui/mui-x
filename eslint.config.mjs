@@ -227,7 +227,17 @@ export default defineConfig(
     },
   },
   baseSpecRules,
-
+  {
+    files: [`packages/x-charts{,-*}/**/*${EXTENSION_TS}`],
+    rules: {
+      '@typescript-eslint/consistent-type-imports': [
+        'error',
+        {
+          fixStyle: 'inline-type-imports',
+        },
+      ],
+    },
+  },
   {
     files: [`**/*${EXTENSION_TEST_FILE}`, `test/**/*${EXTENSION_TS}`],
     rules: {
