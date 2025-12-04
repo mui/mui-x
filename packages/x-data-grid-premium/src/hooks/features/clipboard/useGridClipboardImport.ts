@@ -164,12 +164,20 @@ class CellValueUpdater {
     const rowIdsToUpdate = Object.keys(rowsToUpdate);
 
     if (rowIdsToUpdate.length === 0) {
-      apiRef.current.publishEvent('clipboardPasteEnd');
+      apiRef.current.publishEvent('clipboardPasteEnd', {
+        oldRows: {},
+        newRows: {},
+      });
       return;
     }
 
+    const oldRows: { [rowId: GridRowId]: GridValidRowModel } = {};
+    const newRows: { [rowId: GridRowId]: GridValidRowModel } = {};
+
     const handleRowUpdate = async (rowId: GridRowId) => {
+      const oldRow = apiRef.current.getRow(rowId);
       const newRow = rowsToUpdate[rowId];
+      oldRows[rowId] = oldRow;
 
       if (typeof processRowUpdate === 'function') {
         const handleError = (errorThrown: any) => {
@@ -188,13 +196,14 @@ class CellValueUpdater {
         };
 
         try {
-          const oldRow = apiRef.current.getRow(rowId);
           const finalRowUpdate = await processRowUpdate(newRow, oldRow, { rowId });
+          newRows[rowId] = finalRowUpdate;
           this.updateRow(finalRowUpdate);
         } catch (error) {
           handleError(error);
         }
       } else {
+        newRows[rowId] = newRow;
         this.updateRow(newRow);
       }
     };
@@ -207,8 +216,11 @@ class CellValueUpdater {
       });
     });
     Promise.all(promises).then(() => {
+      apiRef.current.publishEvent('clipboardPasteEnd', {
+        oldRows,
+        newRows,
+      });
       this.rowsToUpdate = {};
-      apiRef.current.publishEvent('clipboardPasteEnd');
     });
   }
 }
