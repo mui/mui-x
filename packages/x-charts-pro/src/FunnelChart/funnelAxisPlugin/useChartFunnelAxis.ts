@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { warnOnce } from '@mui/x-internals/warning';
 import {
-  ChartPlugin,
+  type ChartPlugin,
   getSVGPoint,
   getCartesianAxisIndex,
   selectorChartDrawingArea,
@@ -12,8 +12,8 @@ import {
   defaultizeXAxis,
   defaultizeYAxis,
 } from '@mui/x-charts/internals';
-import { PointerGestureEventData } from '@mui/x-internal-gestures/core';
-import { UseChartFunnelAxisSignature } from './useChartFunnelAxis.types';
+import { type PointerGestureEventData } from '@mui/x-internal-gestures/core';
+import { type UseChartFunnelAxisSignature } from './useChartFunnelAxis.types';
 import { selectorChartXAxis, selectorChartYAxis } from './useChartFunnelAxisRendering.selectors';
 
 export const useChartFunnelAxis: ChartPlugin<UseChartFunnelAxisSignature> = ({
@@ -52,17 +52,15 @@ export const useChartFunnelAxis: ChartPlugin<UseChartFunnelAxisSignature> = ({
       return;
     }
 
-    store.update((prev) => ({
-      ...prev,
+    store.update({
       funnel: {
         gap: gap ?? 0,
       },
       cartesianAxis: {
-        ...prev.cartesianAxis,
         x: defaultizeXAxis(xAxis, dataset),
         y: defaultizeYAxis(yAxis, dataset),
       },
-    }));
+    });
   }, [seriesConfig, drawingArea, xAxis, yAxis, dataset, store, gap]);
 
   React.useEffect(() => {
@@ -129,9 +127,9 @@ export const useChartFunnelAxis: ChartPlugin<UseChartFunnelAxisSignature> = ({
     }
 
     const axisClickHandler = instance.addInteractionListener('tap', (event) => {
-      const { axis: xAxisWithScale, axisIds: xAxisIds } = selectorChartXAxis(store.value);
-      const { axis: yAxisWithScale, axisIds: yAxisIds } = selectorChartYAxis(store.value);
-      const processedSeries = selectorChartSeriesProcessed(store.value);
+      const { axis: xAxisWithScale, axisIds: xAxisIds } = selectorChartXAxis(store.state);
+      const { axis: yAxisWithScale, axisIds: yAxisIds } = selectorChartYAxis(store.state);
+      const processedSeries = selectorChartSeriesProcessed(store.state);
 
       const usedXAxis = xAxisIds[0];
       const usedYAxis = yAxisIds[0];

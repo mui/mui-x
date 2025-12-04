@@ -1,4 +1,3 @@
-import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { PickersModalDialog } from '../../components/PickersModalDialog';
 import { UseMobilePickerParams, UseMobilePickerProps } from './useMobilePicker.types';
@@ -84,7 +83,12 @@ export const useMobilePicker = <
 
   const renderPicker = () => (
     <PickerProvider {...providerProps}>
-      <Field {...fieldProps} slots={slots} slotProps={slotProps} inputRef={inputRef} />
+      <Field
+        {...fieldProps}
+        slots={{ ...slots, ...(fieldProps as any).slots }}
+        slotProps={{ ...slotProps, ...(fieldProps as any).slotProps }}
+        inputRef={inputRef}
+      />
       <PickersModalDialog slots={slots} slotProps={slotProps}>
         <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>
           {renderCurrentView()}

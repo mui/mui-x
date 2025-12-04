@@ -20,14 +20,20 @@ export const useGridProps = <PrivateApi extends GridPrivateApiCommon>(
   apiRef: RefObject<PrivateApi>,
   props: GridStateProps,
 ) => {
+  const isFirstRender = React.useRef(true);
   React.useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     apiRef.current.setState((state: GridStateCommunity) => ({
       ...state,
       props: {
         listView: props.listView,
         getRowId: props.getRowId,
         isCellEditable: props.isCellEditable,
+        isRowSelectable: props.isRowSelectable,
       },
     }));
-  }, [apiRef, props.listView, props.getRowId, props.isCellEditable]);
+  }, [apiRef, props.listView, props.getRowId, props.isCellEditable, props.isRowSelectable]);
 };

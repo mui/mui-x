@@ -13,14 +13,12 @@ import {
 
 const Rect = styled('rect')(({ theme }) => ({
   [`&.${chartAxisZoomSliderThumbClasses.root}`]: {
-    fill:
-      theme.palette.mode === 'dark'
-        ? (theme.vars || theme).palette.grey[300]
-        : (theme.vars || theme).palette.common.white,
-    stroke:
-      theme.palette.mode === 'dark'
-        ? (theme.vars || theme).palette.grey[600]
-        : (theme.vars || theme).palette.grey[500],
+    fill: (theme.vars || theme).palette.common.white,
+    stroke: (theme.vars || theme).palette.grey[500],
+    ...theme.applyStyles('dark', {
+      fill: (theme.vars || theme).palette.grey[300],
+      stroke: (theme.vars || theme).palette.grey[600],
+    }),
   },
   [`&.${chartAxisZoomSliderThumbClasses.horizontal}`]: {
     cursor: 'ew-resize',
@@ -39,6 +37,10 @@ export interface ChartZoomSliderThumbOwnerState {
 export interface ChartZoomSliderThumbProps
   extends Omit<React.ComponentProps<'rect'>, 'orientation'>,
     ChartZoomSliderThumbOwnerState {}
+
+function preventDefault(event: Event) {
+  event.preventDefault();
+}
 
 /**
  * Renders the zoom slider thumb, which is responsible for resizing the zoom range.
@@ -60,16 +62,21 @@ export const ChartAxisZoomSliderThumb = React.forwardRef<SVGRectElement, ChartZo
       const thumb = thumbRef.current;
 
       if (!thumb) {
-        return;
+        return () => {};
       }
+
+      // Prevent scrolling on touch devices when dragging the thumb
+      thumb.addEventListener('touchmove', preventDefault, { passive: false });
 
       const onPointerMove = rafThrottle((event: PointerEvent) => {
         onMoveEvent(event);
       });
 
-      const onPointerUp = () => {
+      const onPointerEnd = (event: PointerEvent) => {
         thumb.removeEventListener('pointermove', onPointerMove);
-        thumb.removeEventListener('pointerup', onPointerUp);
+        thumb.removeEventListener('pointerup', onPointerEnd);
+        thumb.removeEventListener('pointercancel', onPointerEnd);
+        thumb.releasePointerCapture(event.pointerId);
       };
 
       const onPointerDown = (event: PointerEvent) => {
@@ -77,15 +84,20 @@ export const ChartAxisZoomSliderThumb = React.forwardRef<SVGRectElement, ChartZo
         event.preventDefault();
         event.stopPropagation();
         thumb.setPointerCapture(event.pointerId);
-        thumb.addEventListener('pointerup', onPointerUp);
+
         thumb.addEventListener('pointermove', onPointerMove);
+        thumb.addEventListener('pointercancel', onPointerEnd);
+        thumb.addEventListener('pointerup', onPointerEnd);
       };
 
       thumb.addEventListener('pointerdown', onPointerDown);
 
-      // eslint-disable-next-line consistent-return
       return () => {
         thumb.removeEventListener('pointerdown', onPointerDown);
+        thumb.removeEventListener('pointermove', onPointerMove);
+        thumb.removeEventListener('pointercancel', onPointerEnd);
+        thumb.removeEventListener('pointerup', onPointerEnd);
+        thumb.removeEventListener('touchmove', preventDefault);
         onPointerMove.clear();
       };
     }, [onMoveEvent, orientation]);

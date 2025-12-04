@@ -17,6 +17,7 @@ const pages: MuiPage[] = [
       { pathname: `/x/introduction/installation` },
       { pathname: `/x/introduction/licensing` },
       { pathname: `/x/introduction/support` },
+      { pathname: `/x/llms.txt`, title: 'llms.txt', newFeature: true },
       { pathname: `/x/introduction/mcp`, title: 'AI support via MCP', newFeature: true },
       { pathname: `/x/introduction/priority-support`, newFeature: true, plan: 'premium' },
       { pathname: `/x/guides/telemetry`, plan: 'pro' },
@@ -330,6 +331,10 @@ const pages: MuiPage[] = [
                 title: 'GridRowSpacingParams',
               },
               {
+                pathname: '/x/api/data-grid/grid-row-order-change-params',
+                title: 'GridRowOrderChangeParams',
+              },
+              {
                 pathname: '/x/api/data-grid/grid-aggregation-function',
                 title: 'GridAggregationFunction',
               },
@@ -614,6 +619,10 @@ const pages: MuiPage[] = [
                 plan: 'premium',
                 unstable: true,
               },
+              {
+                pathname: '/x/react-charts/content-security-policy',
+                title: 'Content Security Policy',
+              },
             ],
           },
           {
@@ -662,6 +671,8 @@ const pages: MuiPage[] = [
                   { pathname: '/x/react-charts/hooks/use-legend', title: 'useLegend' },
                   { pathname: '/x/react-charts/hooks/use-drawing-area', title: 'useDrawingArea' },
                   { pathname: '/x/react-charts/hooks/use-scale', title: 'useScale' },
+                  { pathname: '/x/react-charts/hooks/use-axes', title: 'useAxes' },
+                  { pathname: '/x/react-charts/hooks/use-dataset', title: 'useDataset' },
                 ],
               },
               { pathname: '/x/react-charts/plugins', title: 'Plugins' },

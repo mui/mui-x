@@ -1,11 +1,12 @@
-import { ChartsXAxisProps, ChartsYAxisProps, ComputedAxis } from '../models/axis';
-import getColor from './seriesConfig/getColor';
-import { ChartDrawingArea, useChartId, useXAxes, useYAxes } from '../hooks';
-import { MaskData, ProcessedBarData, ProcessedBarSeriesData } from './types';
-import { checkScaleErrors } from './checkScaleErrors';
+import { type ChartsXAxisProps, type ChartsYAxisProps, type ComputedAxis } from '../models/axis';
+import getColor from './seriesConfig/bar/getColor';
+import { type ChartDrawingArea, useChartId, useXAxes, useYAxes } from '../hooks';
+import { type MaskData, type ProcessedBarData, type ProcessedBarSeriesData } from './types';
+import { checkBarChartScaleErrors } from './checkBarChartScaleErrors';
 import { useBarSeriesContext } from '../hooks/useBarSeries';
-import { SeriesProcessorResult } from '../internals/plugins/models/seriesConfig/seriesProcessor.types';
-import { ComputedAxisConfig } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxis.types';
+import { type SeriesProcessorResult } from '../internals/plugins/models/seriesConfig/seriesProcessor.types';
+import { type ComputedAxisConfig } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxis.types';
+import { getBarDimensions } from '../internals/getBarDimensions';
 
 export function useBarPlotData(
   drawingArea: ChartDrawingArea,
@@ -37,6 +38,7 @@ export function useBarPlotData(
     return seriesIds.map((seriesId) => {
       const xAxisId = series[seriesId].xAxisId ?? defaultXAxisId;
       const yAxisId = series[seriesId].yAxisId ?? defaultYAxisId;
+      const layout = series[seriesId].layout;
 
       const xAxisConfig = xAxes[xAxisId];
       const yAxisConfig = yAxes[yAxisId];
@@ -44,60 +46,49 @@ export function useBarPlotData(
       const verticalLayout = series[seriesId].layout === 'vertical';
       const reverse = (verticalLayout ? yAxisConfig.reverse : xAxisConfig.reverse) ?? false;
 
-      checkScaleErrors(verticalLayout, seriesId, series[seriesId], xAxisId, xAxes, yAxisId, yAxes);
+      checkBarChartScaleErrors(
+        verticalLayout,
+        seriesId,
+        series[seriesId].stackedData.length,
+        xAxisId,
+        xAxes,
+        yAxisId,
+        yAxes,
+      );
 
       const baseScaleConfig = (verticalLayout ? xAxisConfig : yAxisConfig) as ComputedAxis<'band'>;
 
       const xScale = xAxisConfig.scale;
       const yScale = yAxisConfig.scale;
+      const xOrigin = Math.round(xScale(0) ?? 0);
+      const yOrigin = Math.round(yScale(0) ?? 0);
 
       const colorGetter = getColor(series[seriesId], xAxes[xAxisId], yAxes[yAxisId]);
-      const bandWidth = baseScaleConfig.scale.bandwidth();
-
-      const { barWidth, offset } = getBandSize({
-        bandWidth,
-        numberOfGroups: stackingGroups.length,
-        gapRatio: baseScaleConfig.barGapRatio,
-      });
-      const barOffset = groupIndex * (barWidth + offset);
-
-      const { stackedData, data: currentSeriesData, layout, minBarSize } = series[seriesId];
 
       const seriesDataPoints: ProcessedBarData[] = [];
-
       for (let dataIndex = 0; dataIndex < baseScaleConfig.data!.length; dataIndex += 1) {
-        const baseValue = baseScaleConfig.data![dataIndex];
-        const seriesValue = currentSeriesData[dataIndex];
+        const barDimensions = getBarDimensions({
+          verticalLayout,
+          xAxisConfig,
+          yAxisConfig,
+          series: series[seriesId],
+          dataIndex,
+          numberOfGroups: stackingGroups.length,
+          groupIndex,
+        });
 
-        if (seriesValue == null) {
+        if (barDimensions == null) {
           continue;
         }
 
-        const values = stackedData[dataIndex];
-        const valueCoordinates = values.map((v) => (verticalLayout ? yScale(v)! : xScale(v)!));
-
-        const minValueCoord = Math.round(Math.min(...valueCoordinates));
-        const maxValueCoord = Math.round(Math.max(...valueCoordinates));
-
         const stackId = series[seriesId].stack;
-
-        const barSize = seriesValue === 0 ? 0 : Math.max(minBarSize, maxValueCoord - minValueCoord);
-        const startCoordinate = shouldInvertStartCoordinate(verticalLayout, seriesValue, reverse)
-          ? maxValueCoord - barSize
-          : minValueCoord;
 
         const result = {
           seriesId,
           dataIndex,
-          layout,
-          x: verticalLayout ? xScale(baseValue)! + barOffset : startCoordinate,
-          y: verticalLayout ? startCoordinate : yScale(baseValue)! + barOffset,
-          xOrigin: xScale(0) ?? 0,
-          yOrigin: yScale(0) ?? 0,
-          height: verticalLayout ? barSize : barWidth,
-          width: verticalLayout ? barWidth : barSize,
+          ...barDimensions,
           color: colorGetter(dataIndex),
-          value: currentSeriesData[dataIndex],
+          value: series[seriesId].data[dataIndex],
           maskId: `${chartId}_${stackId || seriesId}_${groupIndex}_${dataIndex}`,
         };
 
@@ -117,17 +108,17 @@ export function useBarPlotData(
             height: 0,
             hasNegative: false,
             hasPositive: false,
-            layout: result.layout,
-            xOrigin: xScale(0)!,
-            yOrigin: yScale(0)!,
+            layout,
+            xOrigin,
+            yOrigin,
             x: 0,
             y: 0,
           };
         }
 
         const mask = masks[result.maskId];
-        mask.width = result.layout === 'vertical' ? result.width : mask.width + result.width;
-        mask.height = result.layout === 'vertical' ? mask.height + result.height : result.height;
+        mask.width = layout === 'vertical' ? result.width : mask.width + result.width;
+        mask.height = layout === 'vertical' ? mask.height + result.height : result.height;
         mask.x = Math.min(mask.x === 0 ? Infinity : mask.x, result.x);
         mask.y = Math.min(mask.y === 0 ? Infinity : mask.y, result.y);
 
@@ -140,7 +131,12 @@ export function useBarPlotData(
 
       return {
         seriesId,
+        barLabel: series[seriesId].barLabel,
+        barLabelPlacement: series[seriesId].barLabelPlacement,
         data: seriesDataPoints,
+        layout,
+        xOrigin,
+        yOrigin,
       };
     });
   });
@@ -149,44 +145,4 @@ export function useBarPlotData(
     completedData: data,
     masksData: Object.values(masks),
   };
-}
-
-/**
- * Solution of the equations
- * W = barWidth * N + offset * (N-1)
- * offset / (offset + barWidth) = r
- * @param bandWidth The width available to place bars.
- * @param numberOfGroups The number of bars to place in that space.
- * @param gapRatio The ratio of the gap between bars over the bar width.
- * @returns The bar width and the offset between bars.
- */
-function getBandSize({
-  bandWidth: W,
-  numberOfGroups: N,
-  gapRatio: r,
-}: {
-  bandWidth: number;
-  numberOfGroups: number;
-  gapRatio: number;
-}) {
-  if (r === 0) {
-    return {
-      barWidth: W / N,
-      offset: 0,
-    };
-  }
-  const barWidth = W / (N + (N - 1) * r);
-  const offset = r * barWidth;
-  return {
-    barWidth,
-    offset,
-  };
-}
-
-function shouldInvertStartCoordinate(verticalLayout: boolean, baseValue: number, reverse: boolean) {
-  const isVerticalAndPositive = verticalLayout && baseValue > 0;
-  const isHorizontalAndNegative = !verticalLayout && baseValue < 0;
-  const invertStartCoordinate = isVerticalAndPositive || isHorizontalAndNegative;
-
-  return reverse ? !invertStartCoordinate : invertStartCoordinate;
 }

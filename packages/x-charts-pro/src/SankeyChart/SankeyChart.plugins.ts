@@ -1,11 +1,11 @@
 import {
-  ConvertSignaturesIntoPlugins,
+  type ConvertSignaturesIntoPlugins,
   useChartInteraction,
-  UseChartInteractionSignature,
+  type UseChartInteractionSignature,
 } from '@mui/x-charts/internals';
 import {
   useChartProExport,
-  UseChartProExportSignature,
+  type UseChartProExportSignature,
 } from '../internals/plugins/useChartProExport';
 import { useSankeyHighlight, type UseSankeyHighlightSignature } from './plugins';
 

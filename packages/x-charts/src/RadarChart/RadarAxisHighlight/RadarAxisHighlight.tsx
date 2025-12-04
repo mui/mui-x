@@ -1,4 +1,3 @@
-import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useTheme } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
@@ -6,8 +5,9 @@ import { useRadarAxisHighlight } from './useRadarAxisHighlight';
 
 import {
   getRadarAxisHighlightUtilityClass,
-  RadarAxisHighlightClasses,
+  type RadarAxisHighlightClasses,
 } from './radarAxisHighlightClasses';
+import { getSeriesColorFn } from '../../internals/getSeriesColorFn';
 
 const useUtilityClasses = (classes: RadarAxisHighlightProps['classes']) => {
   const slots = {
@@ -52,7 +52,7 @@ function RadarAxisHighlight(props: RadarAxisHighlightProps) {
     return null;
   }
 
-  const { center, series, points, radius, highlightedAngle, instance } = data;
+  const { center, series, points, radius, highlightedAngle, highlightedIndex, instance } = data;
 
   const [x, y] = instance.polar2svg(radius, highlightedAngle);
   return (
@@ -66,10 +66,12 @@ function RadarAxisHighlight(props: RadarAxisHighlightProps) {
         strokeDasharray="4 4"
       />
       {points.map((point, seriesIndex) => {
+        const colorGetter = getSeriesColorFn(series[seriesIndex]);
+
         return (
           <circle
             key={series[seriesIndex].id}
-            fill={series[seriesIndex].color}
+            fill={colorGetter({ value: point.value, dataIndex: highlightedIndex })}
             cx={point.x}
             cy={point.y}
             className={classes.dot}

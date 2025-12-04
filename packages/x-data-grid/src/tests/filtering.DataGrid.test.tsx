@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import {
   DataGrid,
@@ -1533,7 +1532,7 @@ describe('<DataGrid /> - Filter', () => {
     });
   });
 
-  it('should translate operators dynamically in toolbar without crashing ', () => {
+  it('should translate operators dynamically in toolbar without crashing', () => {
     expect(() => {
       return (
         <div style={{ height: 400, width: '100%' }}>

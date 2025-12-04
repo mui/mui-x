@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { adapter, createSchedulerRenderer, describeConformance } from 'test/utils/scheduler';
 import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
@@ -8,7 +7,7 @@ describe('<CalendarGrid.HeaderCell />', () => {
   const { render } = createSchedulerRenderer();
 
   describeConformance(
-    <CalendarGrid.HeaderCell date={processDate(adapter.date(), adapter)} />,
+    <CalendarGrid.HeaderCell date={processDate(adapter.now('default'), adapter)} />,
     () => ({
       refInstanceof: window.HTMLDivElement,
       render(node) {

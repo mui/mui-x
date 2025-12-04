@@ -4,20 +4,17 @@ import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslation
 import jsonPageContent from './time-range-picker.json';
 
 export default function Page(props) {
-  const { descriptions, pageContent } = props;
-  return <ApiPage descriptions={descriptions} pageContent={pageContent} />;
+  const { descriptions } = props;
+  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
 }
 
-Page.getInitialProps = () => {
+export async function getStaticProps() {
   const req = require.context(
     'docsx/translations/api-docs/date-pickers/time-range-picker',
     false,
-    /\.\/time-range-picker.*.json$/,
+    /\.\/time-range-picker.*\.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 
-  return {
-    descriptions,
-    pageContent: jsonPageContent,
-  };
-};
+  return { props: { descriptions } };
+}

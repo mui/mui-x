@@ -1,7 +1,6 @@
-import * as React from 'react';
 import Box from '@mui/material/Box';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { useTreeViewApiRef } from '@mui/x-tree-view/hooks';
+import { useRichTreeViewApiRef } from '@mui/x-tree-view/hooks';
 
 const MUI_X_PRODUCTS = [
   {
@@ -37,7 +36,7 @@ const MUI_X_PRODUCTS = [
 ];
 
 export default function EditLeaves() {
-  const apiRef = useTreeViewApiRef();
+  const apiRef = useRichTreeViewApiRef();
   return (
     <Box sx={{ minHeight: 352, minWidth: 260 }}>
       <RichTreeView

@@ -2,11 +2,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import { BarElementOwnerState, useUtilityClasses } from './barElementClasses';
+import { type SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { type BarElementOwnerState, useUtilityClasses } from './barElementClasses';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { useItemHighlighted } from '../hooks/useItemHighlighted';
-import { AnimatedBarElement, BarProps } from './AnimatedBarElement';
+import { AnimatedBarElement, type BarProps } from './AnimatedBarElement';
 import { useIsItemFocused } from '../hooks/useIsItemFocused';
 
 export interface BarElementSlots {
@@ -63,16 +63,22 @@ function BarElement(props: BarElementProps) {
     height,
     ...other
   } = props;
-  const interactionProps = useInteractionItemProps({ type: 'bar', seriesId: id, dataIndex });
-  const { isFaded, isHighlighted } = useItemHighlighted({
-    seriesId: id,
-    dataIndex,
-  });
-  const isFocused = useIsItemFocused({
-    seriesType: 'bar',
-    seriesId: id,
-    dataIndex,
-  });
+  const itemIdentifier = React.useMemo(
+    () => ({ type: 'bar' as const, seriesId: id, dataIndex }),
+    [id, dataIndex],
+  );
+  const interactionProps = useInteractionItemProps(itemIdentifier);
+  const { isFaded, isHighlighted } = useItemHighlighted(itemIdentifier);
+  const isFocused = useIsItemFocused(
+    React.useMemo(
+      () => ({
+        seriesType: 'bar',
+        seriesId: id,
+        dataIndex,
+      }),
+      [id, dataIndex],
+    ),
+  );
 
   const ownerState = {
     id,

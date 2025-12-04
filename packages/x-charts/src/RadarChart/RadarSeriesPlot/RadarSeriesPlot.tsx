@@ -1,8 +1,7 @@
-import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useRadarSeriesData } from './useRadarSeriesData';
-import { RadarSeriesPlotProps } from './RadarSeriesPlot.types';
-import { useInteractionAllItemProps } from '../../hooks/useInteractionItemProps';
+import { type RadarSeriesPlotProps } from './RadarSeriesPlot.types';
+import { useInteractionAllItemProps } from './useInteractionAllItemProps';
 import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
 import { useUtilityClasses } from './radarSeriesPlotClasses';
 import { getPathProps } from './RadarSeriesArea';
@@ -54,7 +53,7 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
                   {...getCircleProps({
                     seriesId,
                     point,
-                    color,
+                    color: point.color,
                     fillArea,
                     isFaded,
                     isHighlighted,

@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import debounce from '@mui/utils/debounce';
 import { RefObject } from '@mui/x-internals/types';
 import useEventCallback from '@mui/utils/useEventCallback';
 import ownerDocument from '@mui/utils/ownerDocument';
@@ -278,7 +279,6 @@ export const useGridFocus = (
 
   const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
     (params, event) => {
-      // GRID_CELL_NAVIGATION_KEY_DOWN handles the focus on Enter, Tab and navigation keys
       if (
         event.key === 'Enter' ||
         event.key === 'Tab' ||
@@ -412,7 +412,7 @@ export const useGridFocus = (
     [apiRef],
   );
 
-  const handleRowSet = React.useCallback<GridEventListener<'rowsSet'>>(() => {
+  const handleRowsSet = React.useCallback<GridEventListener<'rowsSet'>>(() => {
     const cell = gridFocusCellSelector(apiRef);
 
     // If the focused cell is in a row which does not exist anymore,
@@ -445,6 +445,8 @@ export const useGridFocus = (
       }));
     }
   }, [apiRef, props.pagination, props.paginationMode]);
+
+  const debouncedHandleRowsSet = React.useMemo(() => debounce(handleRowsSet, 0), [handleRowsSet]);
 
   const handlePaginationModelChange = useEventCallback(() => {
     const currentFocusedCell = gridFocusCellSelector(apiRef);
@@ -508,6 +510,6 @@ export const useGridFocus = (
   useGridEvent(apiRef, 'cellModeChange', handleCellModeChange);
   useGridEvent(apiRef, 'columnHeaderFocus', handleColumnHeaderFocus);
   useGridEvent(apiRef, 'columnGroupHeaderFocus', handleColumnGroupHeaderFocus);
-  useGridEvent(apiRef, 'rowsSet', handleRowSet);
+  useGridEvent(apiRef, 'rowsSet', debouncedHandleRowsSet);
   useGridEvent(apiRef, 'paginationModelChange', handlePaginationModelChange);
 };

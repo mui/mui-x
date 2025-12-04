@@ -1,18 +1,28 @@
 'use client';
 import * as React from 'react';
-import { useStore } from '@base-ui-components/utils/store';
-import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
+import { createSelectorMemoized } from '@base-ui-components/utils/store';
+import { EventCalendarViewConfig } from '@mui/x-scheduler-headless/models';
 import {
-  selectors,
   useExtractEventCalendarParameters,
+  EventCalendarState as State,
 } from '@mui/x-scheduler-headless/use-event-calendar';
 import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
-import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventCalendarView } from '@mui/x-scheduler-headless/use-event-calendar-view';
 import { processDate } from '@mui/x-scheduler-headless/process-date';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { DayViewProps, StandaloneDayViewProps } from './DayView.types';
 import { DayTimeGrid } from '../internals/components/day-time-grid/DayTimeGrid';
 import '../index.css';
+
+const DAY_VIEW_CONFIG: EventCalendarViewConfig = {
+  siblingVisibleDateGetter: ({ state, delta }) =>
+    state.adapter.addDays(schedulerOtherSelectors.visibleDate(state), delta),
+  visibleDaysSelector: createSelectorMemoized(
+    schedulerOtherSelectors.visibleDate,
+    (state: State) => state.adapter,
+    (visibleDate, adapter) => [processDate(visibleDate, adapter)],
+  ),
+};
 
 /**
  * A Day View to use inside the Event Calendar.
@@ -22,14 +32,8 @@ export const DayView = React.memo(
     props: DayViewProps,
     forwardedRef: React.ForwardedRef<HTMLDivElement>,
   ) {
-    const adapter = useAdapter();
-    const store = useEventCalendarStoreContext();
-    const visibleDate = useStore(store, selectors.visibleDate);
-    const days = React.useMemo(() => [processDate(visibleDate, adapter)], [adapter, visibleDate]);
-
-    useEventCalendarView(() => ({
-      siblingVisibleDateGetter: (date, delta) => adapter.addDays(date, delta),
-    }));
+    // Feature hooks
+    const { days } = useEventCalendarView(DAY_VIEW_CONFIG);
 
     return <DayTimeGrid ref={forwardedRef} days={days} {...props} />;
   }),
@@ -38,15 +42,28 @@ export const DayView = React.memo(
 /**
  * A Day View that can be used outside of the Event Calendar.
  */
-export const StandaloneDayView = React.forwardRef(function StandaloneDayView(
-  props: StandaloneDayViewProps,
+export const StandaloneDayView = React.forwardRef(function StandaloneDayView<
+  TEvent extends object,
+  TResource extends object,
+>(
+  props: StandaloneDayViewProps<TEvent, TResource>,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { parameters, forwardedProps } = useExtractEventCalendarParameters(props);
+  const { parameters, forwardedProps } = useExtractEventCalendarParameters<
+    TEvent,
+    TResource,
+    typeof props
+  >(props);
 
   return (
     <EventCalendarProvider {...parameters}>
       <DayView ref={forwardedRef} {...forwardedProps} />
     </EventCalendarProvider>
   );
-});
+}) as StandaloneDayViewComponent;
+
+type StandaloneDayViewComponent = <TEvent extends object, TResource extends object>(
+  props: StandaloneDayViewProps<TEvent, TResource> & {
+    ref?: React.ForwardedRef<HTMLDivElement>;
+  },
+) => React.JSX.Element;

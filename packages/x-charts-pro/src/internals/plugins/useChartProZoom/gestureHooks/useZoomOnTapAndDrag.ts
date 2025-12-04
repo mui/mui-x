@@ -1,16 +1,16 @@
 'use client';
 import * as React from 'react';
 import {
-  ChartPlugin,
+  type ChartPlugin,
   useSelector,
   getSVGPoint,
   selectorChartDrawingArea,
-  ZoomData,
+  type ZoomData,
   selectorChartZoomOptionsLookup,
 } from '@mui/x-charts/internals';
 import { type TapAndDragEvent } from '@mui/x-internal-gestures/core';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
-import { UseChartProZoomSignature } from '../useChartProZoom.types';
+import { type UseChartProZoomSignature } from '../useChartProZoom.types';
 import {
   getHorizontalCenterRatio,
   getVerticalCenterRatio,
@@ -29,12 +29,10 @@ export const useZoomOnTapAndDrag = (
 ) => {
   const drawingArea = useSelector(store, selectorChartDrawingArea);
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
-  const config = useSelector(store, selectorZoomInteractionConfig, ['tapAndDrag' as const]);
+  const config = useSelector(store, selectorZoomInteractionConfig, 'tapAndDrag' as const);
 
-  const isZoomOnTapAndDragEnabled = React.useMemo(
-    () => (Object.keys(optionsLookup).length > 0 && config) || false,
-    [optionsLookup, config],
-  );
+  const isZoomOnTapAndDragEnabled: boolean =
+    Object.keys(optionsLookup).length > 0 && Boolean(config);
 
   React.useEffect(() => {
     if (!isZoomOnTapAndDragEnabled) {

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { act, createRenderer, fireEvent } from '@mui/internal-test-utils';
 import { getCell, includeRowSelection } from 'test/utils/helperFn';
@@ -211,8 +210,8 @@ describe('<DataGridPremium /> - Row selection', () => {
       ]);
     });
 
-    // Use case yet to be supported
-    describe.skip('prop: keepNonExistentRowsSelected', () => {
+    // TODO: Use case yet to be supported
+    describe.todo('prop: keepNonExistentRowsSelected', () => {
       it('should auto select the parent of a previously selected non existent rows when it is added back', () => {
         const onRowSelectionModelChange = spy();
         const { setProps } = render(

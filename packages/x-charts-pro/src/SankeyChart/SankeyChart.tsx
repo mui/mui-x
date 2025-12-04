@@ -8,13 +8,13 @@ import type { MakeOptional } from '@mui/x-internals/types';
 import { type ChartSeriesConfig } from '@mui/x-charts/internals';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
-import { ChartContainerProProps } from '../ChartContainerPro';
+import { type ChartContainerProProps } from '../ChartContainerPro';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { SankeyPlot, type SankeyPlotProps } from './SankeyPlot';
 import { useSankeyChartProps } from './useSankeyChartProps';
 import { SANKEY_CHART_PLUGINS, type SankeyChartPluginSignatures } from './SankeyChart.plugins';
 import type { SankeySeriesType } from './sankey.types';
-import { seriesConfig as sankeySeriesConfig } from './seriesConfig';
+import { sankeySeriesConfig } from './seriesConfig';
 import { SankeyTooltip } from './SankeyTooltip';
 import type { SankeyChartSlotExtension } from './sankeySlots.types';
 

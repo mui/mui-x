@@ -2,7 +2,7 @@ import { useAssertModelConsistency } from '@mui/x-internals/useAssertModelConsis
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
-import { ChartPlugin } from '@mui/x-charts/internals';
+import { type ChartPlugin } from '@mui/x-charts/internals';
 import type {
   UseSankeyHighlightSignature,
   SankeyHighlightItemData,
@@ -22,22 +22,14 @@ export const useSankeyHighlight: ChartPlugin<UseSankeyHighlightSignature> = ({ s
   });
 
   useEnhancedEffect(() => {
-    store.update((prevState) =>
-      prevState.highlight.item === params.highlightedItem
-        ? prevState
-        : {
-            ...prevState,
-            highlight: {
-              ...prevState.highlight,
-              item: params.highlightedItem,
-            },
-          },
-    );
+    if (store.state.highlight.item !== params.highlightedItem) {
+      store.set('highlight', { ...store.state.highlight, item: params.highlightedItem });
+    }
   }, [store, params.highlightedItem]);
 
   const clearHighlight = useEventCallback(() => {
     params.onHighlightChange?.(null);
-    store.update((prev) => ({ ...prev, highlight: { item: null } }));
+    store.set('highlight', { ...store.state.highlight, item: null });
   });
 
   const setHighlight = useEventCallback((newItem: SankeyHighlightItemData) => {
@@ -48,7 +40,7 @@ export const useSankeyHighlight: ChartPlugin<UseSankeyHighlightSignature> = ({ s
     }
 
     params.onHighlightChange?.(newItem);
-    store.update((prev) => ({ ...prev, highlight: { item: newItem } }));
+    store.set('highlight', { ...store.state.highlight, item: newItem });
   });
 
   return {

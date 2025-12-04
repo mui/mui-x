@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { createRenderer, screen, within, act, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { getCell, getColumnHeaderCell, getColumnValues, microtasks } from 'test/utils/helperFn';
@@ -883,7 +882,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
       ]);
     });
 
-    it('should pass aggregation meta with `hasCellUnit: true` if the aggregation function have no hasCellUnit property ', async () => {
+    it('should pass aggregation meta with `hasCellUnit: true` if the aggregation function have no hasCellUnit property', async () => {
       const renderCell: SinonSpy<[GridRenderCellParams]> = spy((params) => `- ${params.value}`);
 
       const customAggregationFunction: GridAggregationFunction = {
@@ -910,7 +909,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
       expect(callForAggCell!.firstArg.aggregation.hasCellUnit).to.equal(true);
     });
 
-    it('should pass aggregation meta with `hasCellUnit: false` if the aggregation function have `hasCellUnit: false` ', async () => {
+    it('should pass aggregation meta with `hasCellUnit: false` if the aggregation function have `hasCellUnit: false`', async () => {
       const renderCell: SinonSpy<[GridRenderCellParams]> = spy((params) => `- ${params.value}`);
 
       const customAggregationFunction: GridAggregationFunction = {

@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { Popover } from '@base-ui-components/react/popover';
-import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
+import { useStableCallback } from '@base-ui-components/utils/useStableCallback';
 import {
   ContextValue,
   CreatePopoverConfig,
@@ -33,22 +33,34 @@ export function createPopover<TAnchorData>(config: CreatePopoverConfig) {
   }
 
   function Provider(props: ProviderProps<TAnchorData>) {
-    const { containerRef, children, renderPopover, onClose: onCloseProp, modal = true } = props;
+    const {
+      containerRef,
+      children,
+      renderPopover,
+      onClose: onCloseProp,
+      shouldBlockClose,
+      modal = true,
+    } = props;
+
     const [state, setState] = React.useState<PopoverState<TAnchorData>>({
       isOpen: false,
       anchor: null,
       data: null,
     });
 
-    const open = useEventCallback((anchor: HTMLElement, data: TAnchorData) => {
+    const open = useStableCallback((anchor: HTMLElement, data: TAnchorData) => {
       setState({ isOpen: true, anchor, data });
     });
 
-    const close = useEventCallback(() => {
+    const close = useStableCallback(() => {
+      if (shouldBlockClose) {
+        return;
+      }
+
+      onCloseProp?.();
       if (!state.isOpen) {
         return;
       }
-      onCloseProp?.();
       setState({ isOpen: false, anchor: null, data: null });
     });
 

@@ -5,20 +5,17 @@ import layoutConfig from 'docsx/src/modules/utils/dataGridLayoutConfig';
 import jsonPageContent from './export-csv.json';
 
 export default function Page(props) {
-  const { descriptions, pageContent } = props;
-  return <ApiPage {...layoutConfig} descriptions={descriptions} pageContent={pageContent} />;
+  const { descriptions } = props;
+  return <ApiPage {...layoutConfig} descriptions={descriptions} pageContent={jsonPageContent} />;
 }
 
-Page.getInitialProps = () => {
+export async function getStaticProps() {
   const req = require.context(
     'docsx/translations/api-docs/data-grid/export-csv',
     false,
-    /\.\/export-csv.*.json$/,
+    /\.\/export-csv.*\.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 
-  return {
-    descriptions,
-    pageContent: jsonPageContent,
-  };
-};
+  return { props: { descriptions } };
+}

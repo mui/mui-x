@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { useLicenseVerifier } from '../useLicenseVerifier';
 import { LICENSE_STATUS, LicenseStatus } from '../utils/licenseStatus';

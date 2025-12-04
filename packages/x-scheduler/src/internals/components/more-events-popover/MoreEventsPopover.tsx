@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { X } from 'lucide-react';
 import { Popover } from '@base-ui-components/react';
-import { CalendarEventOccurrence } from '@mui/x-scheduler-headless/models';
+import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 import { MoreEventsPopoverProps, MoreEventsPopoverProviderProps } from './MoreEventsPopover.types';
@@ -9,10 +9,12 @@ import { useTranslations } from '../../utils/TranslationsContext';
 import { EventItem } from '../event/event-item/EventItem';
 import { createPopover } from '../create-popover';
 import { ArrowSvg } from './arrow/ArrowSvg';
+import { isOccurrenceAllDayOrMultipleDay } from '../../utils/event-utils';
 import './MoreEventsPopover.css';
+import { formatWeekDayMonthAndDayOfMonth } from '../../utils/date-utils';
 
 interface MoreEventsData {
-  occurrences: CalendarEventOccurrence[];
+  occurrences: SchedulerEventOccurrence[];
   count: number;
   day: useEventOccurrencesWithDayGridPosition.DayData;
 }
@@ -27,7 +29,7 @@ export const useMoreEventsPopoverContext = MoreEventsPopover.useContext;
 export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) {
   const { anchor, container, occurrences, day } = props;
 
-  // Feature hooks
+  // Context hooks
   const translations = useTranslations();
   const adapter = useAdapter();
 
@@ -46,10 +48,10 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
           <div
             className="MoreEventsPopoverHeader"
             id={`PopoverHeader-${day.key}`}
-            aria-label={`${adapter.format(day.value, 'normalDateWithWeekday')}`}
+            aria-label={`${formatWeekDayMonthAndDayOfMonth(day.value, adapter)}`}
           >
             <Popover.Title className="MoreEventsPopoverTitle">
-              {adapter.format(day.value, 'normalDateWithWeekday')}
+              {formatWeekDayMonthAndDayOfMonth(day.value, adapter)}
             </Popover.Title>
             <Popover.Close
               aria-label={translations.closeButtonAriaLabel}
@@ -61,9 +63,12 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
           <div className="MoreEventsPopoverContent">
             {occurrences.map((occurrence) => (
               <EventItem
-                variant={occurrence.allDay ? 'allDay' : 'compact'}
+                variant={
+                  isOccurrenceAllDayOrMultipleDay(occurrence, adapter) ? 'filled' : 'compact'
+                }
                 key={occurrence.key}
                 occurrence={occurrence}
+                date={day}
                 ariaLabelledBy={`PopoverHeader-${day.key}`}
               />
             ))}
@@ -98,7 +103,7 @@ export function MoreEventsPopoverProvider(props: MoreEventsPopoverProviderProps)
 
 interface MoreEventsPopoverTriggerProps
   extends Omit<React.ComponentProps<typeof Popover.Trigger>, 'onClick'> {
-  occurrences: CalendarEventOccurrence[];
+  occurrences: SchedulerEventOccurrence[];
   day: useEventOccurrencesWithDayGridPosition.DayData;
 }
 
@@ -106,6 +111,10 @@ export function MoreEventsPopoverTrigger(props: MoreEventsPopoverTriggerProps) {
   const { occurrences, day, ...other } = props;
 
   return (
-    <MoreEventsPopover.Trigger data={{ occurrences, count: occurrences.length, day }} {...other} />
+    <MoreEventsPopover.Trigger
+      nativeButton={true}
+      data={{ occurrences, count: occurrences.length, day }}
+      {...other}
+    />
   );
 }

@@ -1,32 +1,34 @@
+import { createSelector } from '@mui/x-internals/store';
 import {
-  AxisId,
-  ChartRootSelector,
-  createSelector,
+  type AxisId,
+  type ChartRootSelector,
   selectorChartZoomMap,
   selectorChartZoomOptionsLookup,
 } from '@mui/x-charts/internals';
-import { UseChartProZoomSignature } from './useChartProZoom.types';
+import { type UseChartProZoomSignature } from './useChartProZoom.types';
 
-export const selectorChartZoomState: ChartRootSelector<UseChartProZoomSignature> = (state) =>
-  state.zoom;
+export const selectorChartZoomState: ChartRootSelector<UseChartProZoomSignature, 'zoom'> = (
+  state,
+) => state.zoom;
 
 export const selectorChartZoomIsInteracting = createSelector(
-  [selectorChartZoomState],
+  selectorChartZoomState,
   (zoom) => zoom.isInteracting,
 );
 
 export const selectorChartZoomIsEnabled = createSelector(
-  [selectorChartZoomOptionsLookup],
+  selectorChartZoomOptionsLookup,
   (optionsLookup) => Object.keys(optionsLookup).length > 0,
 );
 
 export const selectorChartAxisZoomData = createSelector(
-  [selectorChartZoomMap, (state, axisId: AxisId) => axisId],
-  (zoomMap, axisId) => zoomMap?.get(axisId),
+  selectorChartZoomMap,
+  (zoomMap, axisId: AxisId) => zoomMap?.get(axisId),
 );
 
 export const selectorChartCanZoomOut = createSelector(
-  [selectorChartZoomState, selectorChartZoomOptionsLookup],
+  selectorChartZoomState,
+  selectorChartZoomOptionsLookup,
   (zoomState, zoomOptions) => {
     return zoomState.zoomData.every((zoomData) => {
       const span = zoomData.end - zoomData.start;
@@ -40,7 +42,8 @@ export const selectorChartCanZoomOut = createSelector(
 );
 
 export const selectorChartCanZoomIn = createSelector(
-  [selectorChartZoomState, selectorChartZoomOptionsLookup],
+  selectorChartZoomState,
+  selectorChartZoomOptionsLookup,
   (zoomState, zoomOptions) => {
     return zoomState.zoomData.every((zoomData) => {
       const span = zoomData.end - zoomData.start;

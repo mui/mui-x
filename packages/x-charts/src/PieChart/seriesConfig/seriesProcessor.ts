@@ -1,9 +1,10 @@
 import { pie as d3Pie } from '@mui/x-charts-vendor/d3-shape';
-import { ChartSeriesDefaultized } from '../../models/seriesType/config';
-import { ChartsPieSorting, PieValueType } from '../../models/seriesType/pie';
-import { SeriesId } from '../../models/seriesType/common';
+import { type ChartSeriesDefaultized } from '../../models/seriesType/config';
+import { type ChartsPieSorting, type PieValueType } from '../../models/seriesType/pie';
+import { type SeriesId } from '../../models/seriesType/common';
 import { getLabel } from '../../internals/getLabel';
-import { SeriesProcessor } from '../../internals/plugins/models';
+import { type SeriesProcessor } from '../../internals/plugins/models';
+import { deg2rad } from '../../internals/angleConversion';
 
 const getSortingComparator = (comparator: ChartsPieSorting = 'none') => {
   if (typeof comparator === 'function') {
@@ -27,12 +28,13 @@ const seriesProcessor: SeriesProcessor<'pie'> = (params) => {
   const defaultizedSeries: Record<SeriesId, ChartSeriesDefaultized<'pie'>> = {};
   seriesOrder.forEach((seriesId) => {
     const arcs = d3Pie()
-      .startAngle((2 * Math.PI * (series[seriesId].startAngle ?? 0)) / 360)
-      .endAngle((2 * Math.PI * (series[seriesId].endAngle ?? 360)) / 360)
-      .padAngle((2 * Math.PI * (series[seriesId].paddingAngle ?? 0)) / 360)
+      .startAngle(deg2rad(series[seriesId].startAngle ?? 0))
+      .endAngle(deg2rad(series[seriesId].endAngle ?? 360))
+      .padAngle(deg2rad(series[seriesId].paddingAngle ?? 0))
       .sortValues(getSortingComparator(series[seriesId].sortingValues ?? 'none'))(
       series[seriesId].data.map((piePoint) => piePoint.value),
     );
+
     defaultizedSeries[seriesId] = {
       labelMarkType: 'circle',
       valueFormatter: (item: PieValueType) => item.value.toLocaleString(),

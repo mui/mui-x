@@ -2,10 +2,10 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { useThemeProps, useTheme, styled } from '@mui/material/styles';
-import { AxisScaleConfig, ChartsYAxisProps, ComputedAxis } from '../models/axis';
+import { type AxisScaleConfig, type ChartsYAxisProps, type ComputedAxis } from '../models/axis';
 import { ChartsSingleYAxisTicks } from './ChartsSingleYAxisTicks';
 import { ChartsGroupedYAxisTicks } from './ChartsGroupedYAxisTicks';
-import { ChartsText, ChartsTextProps } from '../ChartsText';
+import { ChartsText, type ChartsTextProps } from '../ChartsText';
 import { defaultProps, useUtilityClasses } from './utilities';
 import { isInfinity } from '../internals/isInfinity';
 import { useDrawingArea } from '../hooks/useDrawingArea';
@@ -64,7 +64,9 @@ export function ChartsYAxisImpl({ axis, ...inProps }: ChartsYAxisImplProps) {
   });
   const axisLabelProps = useSlotProps({
     elementType: Label,
+    // @ts-expect-error `useSlotProps` applies `WithCommonProps` with adds a `style: React.CSSProperties` prop automatically.
     externalSlotProps: slotProps?.axisLabel,
+    // @ts-expect-error `useSlotProps` applies `WithCommonProps` with adds a `style: React.CSSProperties` prop automatically.
     additionalProps: {
       style: {
         ...theme.typography.body1,

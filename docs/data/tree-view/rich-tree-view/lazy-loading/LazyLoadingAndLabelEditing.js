@@ -1,10 +1,9 @@
-import * as React from 'react';
 import Box from '@mui/material/Box';
 import { randomInt, randomName, randomId } from '@mui/x-data-grid-generator';
 import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
 
 import { DataSourceCacheDefault } from '@mui/x-tree-view/utils';
-import { useTreeViewApiRef } from '@mui/x-tree-view/hooks';
+import { useRichTreeViewProApiRef } from '@mui/x-tree-view-pro/hooks';
 
 const fetchData = async () => {
   const rows = Array.from({ length: 10 }, () => ({
@@ -23,7 +22,7 @@ const fetchData = async () => {
 const customCache = new DataSourceCacheDefault({}); // 10 seconds
 
 export default function LazyLoadingAndLabelEditing() {
-  const apiRef = useTreeViewApiRef();
+  const apiRef = useRichTreeViewProApiRef();
 
   const handleItemLabelChange = (itemId, newLabel) => {
     const parentId = apiRef.current?.getParentId(itemId) || 'root';

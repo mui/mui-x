@@ -7,12 +7,7 @@
     "apiRef": { "type": { "name": "shape", "description": "{ current?: object }" } },
     "aria-label": { "type": { "name": "string" } },
     "aria-labelledby": { "type": { "name": "string" } },
-    "autoHeight": {
-      "type": { "name": "bool" },
-      "default": "false",
-      "deprecated": true,
-      "deprecationInfo": "Use flex parent container instead: <a href=\"https://mui.com/x/react-data-grid/layout/#flex-parent-container\">https://mui.com/x/react-data-grid/layout/#flex-parent-container</a>"
-    },
+    "autoHeight": { "type": { "name": "bool" }, "default": "false" },
     "autoPageSize": { "type": { "name": "bool" }, "default": "false" },
     "autosizeOnMount": { "type": { "name": "bool" }, "default": "false" },
     "autosizeOptions": {
@@ -187,11 +182,27 @@
         "returned": "boolean"
       }
     },
+    "isRowReorderable": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: object, params.row: R, params.rowNode: GridTreeNode) => boolean",
+        "describedArgs": ["params", "params.row", "params.rowNode"],
+        "returned": "boolean"
+      }
+    },
     "isRowSelectable": {
       "type": { "name": "func" },
       "signature": {
         "type": "function(params: GridRowParams) => boolean",
         "describedArgs": ["params"],
+        "returned": "boolean"
+      }
+    },
+    "isValidRowReorder": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(context: ReorderValidationContext) => boolean",
+        "describedArgs": ["context"],
         "returned": "boolean"
       }
     },
@@ -593,6 +604,14 @@
     "rowSpanning": { "type": { "name": "bool" }, "default": "false" },
     "scrollbarSize": { "type": { "name": "number" } },
     "scrollEndThreshold": { "type": { "name": "number" }, "default": "80" },
+    "setTreeDataPath": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(path: Array<string>, row: R) => R",
+        "describedArgs": ["path", "row"],
+        "returned": "R"
+      }
+    },
     "showCellVerticalBorder": { "type": { "name": "bool" }, "default": "false" },
     "showColumnVerticalBorder": { "type": { "name": "bool" }, "default": "false" },
     "showToolbar": { "type": { "name": "bool" }, "default": "false" },
@@ -618,6 +637,13 @@
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       },
       "additionalInfo": { "sx": true }
+    },
+    "tabNavigation": {
+      "type": {
+        "name": "enum",
+        "description": "'all'<br>&#124;&nbsp;'content'<br>&#124;&nbsp;'header'<br>&#124;&nbsp;'none'"
+      },
+      "default": "\"none\""
     },
     "throttleRowsMs": { "type": { "name": "number" }, "default": "0" },
     "treeData": { "type": { "name": "bool" }, "default": "false" },
@@ -2114,18 +2140,6 @@
       "isGlobal": false
     },
     {
-      "key": "row--dropAbove",
-      "className": "MuiDataGridPro-row--dropAbove",
-      "description": "Styles applied to the row element when it is a drop target above.",
-      "isGlobal": false
-    },
-    {
-      "key": "row--dropBelow",
-      "className": "MuiDataGridPro-row--dropBelow",
-      "description": "Styles applied to the row element when it is a drop target below.",
-      "isGlobal": false
-    },
-    {
       "key": "row--dynamicHeight",
       "className": "MuiDataGridPro-row--dynamicHeight",
       "description": "Styles applied to the row if it has dynamic row height.",
@@ -2388,6 +2402,6 @@
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/x-data-grid-pro/src/DataGridPro/DataGridPro.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-version\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#premium-version\">DataGridPremium</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-data-grid/#community-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-version\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#premium-version\">DataGridPremium</a></li></ul>",
   "cssComponent": false
 }

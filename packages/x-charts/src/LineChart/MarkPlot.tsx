@@ -7,19 +7,20 @@ import { useChartId } from '../hooks/useChartId';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { useLineSeriesContext } from '../hooks/useLineSeries';
 import { cleanId } from '../internals/cleanId';
-import { LineItemIdentifier } from '../models/seriesType/line';
+import { type LineItemIdentifier } from '../models/seriesType/line';
 import { CircleMarkElement } from './CircleMarkElement';
 import getColor from './seriesConfig/getColor';
-import { MarkElement, MarkElementProps } from './MarkElement';
+import { MarkElement, type MarkElementProps } from './MarkElement';
 import { useChartContext } from '../context/ChartProvider';
 import { useItemHighlightedGetter, useXAxes, useYAxes } from '../hooks';
 import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
 import {
   selectorChartsHighlightXAxisIndex,
-  UseChartCartesianAxisSignature,
+  type UseChartCartesianAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { useSelector } from '../internals/store/useSelector';
-import { AxisId } from '../models/axis';
+import { type AxisId } from '../models/axis';
+import type { UseChartBrushSignature } from '../internals/plugins/featurePlugins/useChartBrush';
 
 export interface MarkPlotSlots {
   mark?: React.JSXElementConstructor<MarkElementProps>;
@@ -73,7 +74,8 @@ function MarkPlot(props: MarkPlotProps) {
   const { yAxis, yAxisIds } = useYAxes();
 
   const chartId = useChartId();
-  const { instance, store } = useChartContext<[UseChartCartesianAxisSignature]>();
+  const { instance, store } =
+    useChartContext<[UseChartCartesianAxisSignature, UseChartBrushSignature]>();
   const { isFaded, isHighlighted } = useItemHighlightedGetter();
   const xAxisHighlightIndexes = useSelector(store, selectorChartsHighlightXAxisIndex);
 

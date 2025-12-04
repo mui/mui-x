@@ -1,4 +1,3 @@
-import * as React from 'react';
 import {
   DateRangePickerDay2,
   dateRangePickerDay2Classes as classes,

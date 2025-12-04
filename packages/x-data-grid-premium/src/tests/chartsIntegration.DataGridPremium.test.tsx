@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { spy } from 'sinon';
 import { RefObject, GridChartsConfigurationOptions } from '@mui/x-internals/types';
 import { act, createRenderer, screen, waitFor } from '@mui/internal-test-utils';

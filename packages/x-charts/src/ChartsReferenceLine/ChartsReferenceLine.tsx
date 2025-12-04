@@ -1,9 +1,8 @@
 'use client';
-import * as React from 'react';
 import PropTypes from 'prop-types';
-import { ChartsXReferenceLine, ChartsXReferenceLineProps } from './ChartsXReferenceLine';
-import { ChartsYReferenceLine, ChartsYReferenceLineProps } from './ChartsYReferenceLine';
-import { XOR } from '../internals/ts-generic';
+import { ChartsXReferenceLine, type ChartsXReferenceLineProps } from './ChartsXReferenceLine';
+import { ChartsYReferenceLine, type ChartsYReferenceLineProps } from './ChartsYReferenceLine';
+import { type XOR } from '../internals/ts-generic';
 
 type ChartsReferenceLineProps<TValue extends string | number | Date = string | number | Date> = XOR<
   ChartsXReferenceLineProps<TValue>,

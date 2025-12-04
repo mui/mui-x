@@ -1,4 +1,4 @@
-import { DefaultizedZoomOptions, ZoomData } from '@mui/x-charts/internals';
+import { type DefaultizedZoomOptions, type ZoomData } from '@mui/x-charts/internals';
 
 /**
  * Helper to get the range (in percents of a reference range) corresponding to a given scale.
@@ -109,7 +109,7 @@ export function getWheelScaleRatio(event: WheelEvent, step: number) {
 export function getHorizontalCenterRatio(
   point: { x: number; y: number },
   area: { left: number; width: number },
-  reverse = false,
+  reverse: boolean,
 ) {
   const { left, width } = area;
   const ratio = (point.x - left) / width;
@@ -122,7 +122,7 @@ export function getHorizontalCenterRatio(
 export function getVerticalCenterRatio(
   point: { x: number; y: number },
   area: { top: number; height: number },
-  reverse = false,
+  reverse: boolean,
 ) {
   const { top, height } = area;
   const ratio = (top - point.y) / height + 1;
@@ -137,10 +137,16 @@ export function translateZoom(
   movement: { x: number; y: number },
   drawingArea: { width: number; height: number },
   optionsLookup: Record<string | number, DefaultizedZoomOptions>,
+  filterMode: 'x' | 'y' | 'xy' = 'xy',
 ) {
   return initialZoomData.map((zoom) => {
     const options = optionsLookup[zoom.axisId];
-    if (!options || !options.panning) {
+    if (
+      !options ||
+      !options.panning ||
+      (options.axisDirection === 'x' && filterMode === 'y') ||
+      (options.axisDirection === 'y' && filterMode === 'x')
+    ) {
       return zoom;
     }
     const min = zoom.start;

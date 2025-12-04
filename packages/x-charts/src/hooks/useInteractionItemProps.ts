@@ -1,12 +1,15 @@
 'use client';
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { SeriesItemIdentifierWithData } from '../models';
+import { type SeriesItemIdentifierWithData } from '../models';
 import { useChartContext } from '../context/ChartProvider';
-import { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
-import { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
-import { ChartSeriesType, type ChartItemIdentifierWithData } from '../models/seriesType/config';
-import { ChartInstance } from '../internals/plugins/models';
+import { type UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
+import { type UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
+import {
+  type ChartSeriesType,
+  type ChartItemIdentifierWithData,
+} from '../models/seriesType/config';
+import { type ChartInstance } from '../internals/plugins/models';
 
 function onPointerDown(event: React.PointerEvent) {
   if (
@@ -30,7 +33,7 @@ export const useInteractionItemProps = (
   const interactionActive = React.useRef(false);
   const onPointerEnter = useEventCallback(() => {
     interactionActive.current = true;
-    instance.setItemInteraction(data);
+    instance.setItemInteraction(data, { interaction: 'pointer' });
     instance.setHighlight(data);
   });
 
@@ -49,31 +52,17 @@ export const useInteractionItemProps = (
     };
   }, [onPointerLeave]);
 
-  if (skip) {
-    return {};
-  }
-
-  return {
-    onPointerEnter,
-    onPointerLeave,
-    onPointerDown,
-  };
-};
-
-export const useInteractionAllItemProps = (
-  data: SeriesItemIdentifierWithData[],
-  skip?: boolean,
-) => {
-  const { instance } =
-    useChartContext<[UseChartInteractionSignature, UseChartHighlightSignature]>();
-
-  const results = React.useMemo(() => {
-    return data.map((item) => {
-      return skip ? {} : getInteractionItemProps(instance, item);
-    });
-  }, [data, instance, skip]);
-
-  return results;
+  return React.useMemo(
+    () =>
+      skip
+        ? {}
+        : {
+            onPointerEnter,
+            onPointerLeave,
+            onPointerDown,
+          },
+    [skip, onPointerEnter, onPointerLeave],
+  );
 };
 
 export function getInteractionItemProps(
@@ -88,7 +77,7 @@ export function getInteractionItemProps(
     if (!item) {
       return;
     }
-    instance.setItemInteraction(item);
+    instance.setItemInteraction(item, { interaction: 'pointer' });
     instance.setHighlight(item);
   }
 

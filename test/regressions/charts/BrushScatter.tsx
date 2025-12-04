@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
-import { useStore } from '@mui/x-charts/internals';
+import { UseChartBrushSignature, useStore } from '@mui/x-charts/internals';
 
 const scatterData = [
   { x: 10, y: 20, id: 1 },
@@ -15,17 +15,19 @@ const scatterData = [
 ];
 
 function BrushSimulator() {
-  const store = useStore();
+  const store = useStore<[UseChartBrushSignature]>();
 
   React.useEffect(() => {
     // Simulate brush selection for visual regression test
-    store.update((prevState) => ({
-      ...prevState,
+    store.update({
       brush: {
+        enabled: true,
+        preventTooltip: true,
+        preventHighlight: true,
         start: { x: 150, y: 150 },
         current: { x: 350, y: 250 },
       },
-    }));
+    });
   }, [store]);
 
   return <ChartsBrushOverlay />;

@@ -125,6 +125,7 @@ export default defineConfig(
       'material-ui/straight-quotes': 'error',
       // turn off global react compiler plugin as it's controlled per package on this repo
       'react-compiler/react-compiler': 'off',
+      'react/react-in-jsx-scope': 'off',
       'import/no-relative-packages': 'error',
       'import/no-restricted-paths': [
         'error',
@@ -178,6 +179,12 @@ export default defineConfig(
           additionalHooks: '(useEnhancedEffect|useIsoLayoutEffect|useEffectAfterFirstRender)',
         },
       ],
+      'react-hooks/immutability': 'off',
+      'react-hooks/globals': 'off',
+      'react-hooks/refs': 'off',
+      'react-hooks/preserve-manual-memoization': 'off',
+      'react-hooks/purity': 'off',
+      'react-hooks/static-components': 'off',
     },
   },
   // Test start
@@ -186,11 +193,40 @@ export default defineConfig(
       // matching the pattern of the test runner
       `**/*${EXTENSION_TEST_FILE}`,
     ],
-    extends: createTestConfig({ useMocha: false }),
+    extends: createTestConfig({ useMocha: false, useVitest: true }),
     ignores: ['test/e2e/**/*', 'test/regressions/**/*'],
+    rules: {
+      // Doesn't work reliantly with chai style .to.deep.equal (replace with .toEqual?)
+      'vitest/valid-expect': 'off',
+    },
+  },
+  {
+    files: [
+      // TODO: Fix one-by-one
+      `packages/x-data-grid{,-*}/**/*${EXTENSION_TEST_FILE}`,
+      `packages/x-date-pickers{,-*}/**/*${EXTENSION_TEST_FILE}`,
+      `packages/x-internals{,-*}/**/*${EXTENSION_TEST_FILE}`,
+      `packages/x-scheduler{,-*}/**/*${EXTENSION_TEST_FILE}`,
+    ],
+    rules: {
+      // Can't unambiguously detect all patterns of adding expects
+      'vitest/expect-expect': 'off',
+      'vitest/no-standalone-expect': 'off',
+    },
   },
   baseSpecRules,
-
+  {
+    files: [`packages/x-charts{,-*}/**/*${EXTENSION_TS}`],
+    rules: {
+      'import/no-cycle': 'error',
+      '@typescript-eslint/consistent-type-imports': [
+        'error',
+        {
+          fixStyle: 'inline-type-imports',
+        },
+      ],
+    },
+  },
   {
     files: [`**/*${EXTENSION_TEST_FILE}`, `test/**/*${EXTENSION_TS}`],
     rules: {
@@ -200,6 +236,7 @@ export default defineConfig(
           paths: ['@testing-library/react', 'test/utils/index'],
         },
       ],
+      'compat/compat': 'off',
     },
   },
 
@@ -384,10 +421,18 @@ export default defineConfig(
       'no-restricted-imports': [
         'error',
         {
-          paths: RESTRICTED_TOP_LEVEL_IMPORTS.map((pkName) => ({
-            name: pkName,
-            message: 'Use relative import instead',
-          })),
+          paths: [
+            ...RESTRICTED_TOP_LEVEL_IMPORTS.map((pkName) => ({
+              name: pkName,
+              message: 'Use relative import instead',
+            })),
+            {
+              name: '@mui/x-charts-vendor/d3-scale',
+              importNames: ['scaleBand', 'scalePoint'],
+              message:
+                'Use the scaleBand and scalePoint implementations from @mui/x-charts/internals/scales instead',
+            },
+          ],
           patterns: [
             {
               group: ['@mui/*/*/*'],

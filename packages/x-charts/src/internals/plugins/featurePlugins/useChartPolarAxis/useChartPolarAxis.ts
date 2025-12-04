@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
 import { warnOnce } from '@mui/x-internals/warning';
-import { PointerGestureEventData } from '@mui/x-internal-gestures/core';
-import { ChartPlugin } from '../../models';
-import { UseChartPolarAxisSignature } from './useChartPolarAxis.types';
+import { type PointerGestureEventData } from '@mui/x-internal-gestures/core';
+import { type ChartPlugin } from '../../models';
+import { type UseChartPolarAxisSignature } from './useChartPolarAxis.types';
 import { useSelector } from '../../../store/useSelector';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions/useChartDimensions.selectors';
 import { defaultizeAxis } from './defaultizeAxis';
@@ -70,14 +70,11 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
       return;
     }
 
-    store.update((prev) => ({
-      ...prev,
-      polarAxis: {
-        ...prev.polarAxis,
-        rotation: defaultizeAxis(rotationAxis, dataset, 'rotation'),
-        radius: defaultizeAxis(radiusAxis, dataset, 'radius'),
-      },
-    }));
+    store.set('polarAxis', {
+      ...store.state.polarAxis,
+      rotation: defaultizeAxis(rotationAxis, dataset, 'rotation'),
+      radius: defaultizeAxis(radiusAxis, dataset, 'radius'),
+    });
   }, [seriesConfig, drawingArea, rotationAxis, radiusAxis, dataset, store]);
 
   const svg2rotation = React.useMemo(

@@ -2,25 +2,30 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
-import { useStore } from '@base-ui-components/utils/store';
+import { EventCalendarViewConfig } from '@mui/x-scheduler-headless/models';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventCalendarView } from '@mui/x-scheduler-headless/use-event-calendar-view';
+import { sortEventOccurrences } from '@mui/x-scheduler-headless/sort-event-occurrences';
 import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
-import { useDayList } from '@mui/x-scheduler-headless/use-day-list';
-import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import {
-  selectors,
-  useExtractEventCalendarParameters,
-} from '@mui/x-scheduler-headless/use-event-calendar';
+import { useExtractEventCalendarParameters } from '@mui/x-scheduler-headless/use-event-calendar';
+import { eventCalendarAgendaSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-headless/use-event-occurrences-grouped-by-day';
+import { AGENDA_VIEW_DAYS_AMOUNT } from '@mui/x-scheduler-headless/constants';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { AgendaViewProps, StandaloneAgendaViewProps } from './AgendaView.types';
 import { EventPopoverProvider, EventPopoverTrigger } from '../internals/components/event-popover';
 import { EventItem } from '../internals/components/event/event-item/EventItem';
 import './AgendaView.css';
 import '../index.css';
 
-// TODO: Create a prop to allow users to customize the number of days in agenda view
-export const AGENDA_VIEW_DAYS_AMOUNT = 12;
+const AGENDA_VIEW_CONFIG: EventCalendarViewConfig = {
+  siblingVisibleDateGetter: ({ state, delta }) =>
+    state.adapter.addDays(
+      schedulerOtherSelectors.visibleDate(state),
+      AGENDA_VIEW_DAYS_AMOUNT * delta,
+    ),
+  visibleDaysSelector: eventCalendarAgendaSelectors.visibleDays,
+};
 
 /**
  * An Agenda View to use inside the Event Calendar.
@@ -32,35 +37,24 @@ export const AgendaView = React.memo(
   ) {
     // Context hooks
     const adapter = useAdapter();
-    const store = useEventCalendarStoreContext();
 
     // Ref hooks
     const containerRef = React.useRef<HTMLElement | null>(null);
     const handleRef = useMergedRefs(forwardedRef, containerRef);
 
-    // Selector hooks
-    const visibleDate = useStore(store, selectors.visibleDate);
-    const showWeekends = useStore(store, selectors.showWeekends);
-
     // Feature hooks
-    const getDayList = useDayList();
-    const days = React.useMemo(
+    const { days } = useEventCalendarView(AGENDA_VIEW_CONFIG);
+    const occurrencesMap = useEventOccurrencesGroupedByDay({ days });
+
+    const today = adapter.now('default');
+    const daysWithOccurrences = React.useMemo(
       () =>
-        getDayList({
-          date: visibleDate,
-          amount: AGENDA_VIEW_DAYS_AMOUNT,
-          excludeWeekends: !showWeekends,
+        days.map((date) => {
+          const occurrences = sortEventOccurrences(occurrencesMap.get(date.key) || [], adapter);
+          return { date, occurrences };
         }),
-      [getDayList, showWeekends, visibleDate],
+      [days, occurrencesMap, adapter],
     );
-    const occurrences = useEventOccurrencesGroupedByDay({ days, renderEventIn: 'every-day' });
-
-    useEventCalendarView(() => ({
-      siblingVisibleDateGetter: (date, delta) =>
-        adapter.addDays(date, AGENDA_VIEW_DAYS_AMOUNT * delta),
-    }));
-
-    const today = adapter.date();
 
     return (
       <div
@@ -69,38 +63,41 @@ export const AgendaView = React.memo(
         className={clsx('AgendaViewContainer', 'mui-x-scheduler', props.className)}
       >
         <EventPopoverProvider containerRef={containerRef}>
-          {days.map((day) => (
+          {daysWithOccurrences.map(({ date, occurrences }) => (
             <section
               className="AgendaViewRow"
-              key={day.key}
-              id={`AgendaViewRow-${day.key}`}
-              aria-labelledby={`DayHeaderCell-${day.key}`}
+              key={date.key}
+              id={`AgendaViewRow-${date.key}`}
+              aria-labelledby={`DayHeaderCell-${date.key}`}
             >
               <header
-                id={`DayHeaderCell-${day.key}`}
+                id={`DayHeaderCell-${date.key}`}
                 className="DayHeaderCell"
-                aria-label={`${adapter.format(day.value, 'weekday')} ${adapter.format(day.value, 'dayOfMonth')}`}
-                data-current={adapter.isSameDay(day.value, today) ? '' : undefined}
+                aria-label={`${adapter.format(date.value, 'weekday')} ${adapter.format(date.value, 'dayOfMonth')}`}
+                data-current={adapter.isSameDay(date.value, today) ? '' : undefined}
               >
-                <span className="DayNumberCell">{adapter.format(day.value, 'dayOfMonth')}</span>
+                <span className="DayNumberCell">{adapter.format(date.value, 'dayOfMonth')}</span>
                 <div className="WeekDayCell">
                   <span className={clsx('AgendaWeekDayNameLabel', 'LinesClamp')}>
-                    {adapter.format(day.value, 'weekday')}
+                    {adapter.format(date.value, 'weekday')}
                   </span>
                   <span className={clsx('AgendaYearAndMonthLabel', 'LinesClamp')}>
-                    {adapter.format(day.value, 'month')}, {adapter.format(day.value, 'year')}
+                    {adapter.format(date.value, 'monthFullLetter')},{' '}
+                    {adapter.format(date.value, 'yearPadded')}
                   </span>
                 </div>
               </header>
               <ul className="EventsList">
-                {occurrences.get(day.key)!.map((occurrence) => (
+                {occurrences.map((occurrence) => (
                   <li key={occurrence.key}>
                     <EventPopoverTrigger
                       occurrence={occurrence}
                       render={
                         <EventItem
                           occurrence={occurrence}
-                          ariaLabelledBy={`DayHeaderCell-${day.key}`}
+                          date={date}
+                          variant="regular"
+                          ariaLabelledBy={`DayHeaderCell-${date.key}`}
                         />
                       }
                     />
@@ -118,15 +115,28 @@ export const AgendaView = React.memo(
 /**
  * An Agenda View that can be used outside of the Event Calendar.
  */
-export const StandaloneAgendaView = React.forwardRef(function StandaloneAgendaView(
-  props: StandaloneAgendaViewProps,
+export const StandaloneAgendaView = React.forwardRef(function StandaloneAgendaView<
+  TEvent extends object,
+  TResource extends object,
+>(
+  props: StandaloneAgendaViewProps<TEvent, TResource>,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { parameters, forwardedProps } = useExtractEventCalendarParameters(props);
+  const { parameters, forwardedProps } = useExtractEventCalendarParameters<
+    TEvent,
+    TResource,
+    typeof props
+  >(props);
 
   return (
     <EventCalendarProvider {...parameters}>
       <AgendaView ref={forwardedRef} {...forwardedProps} />
     </EventCalendarProvider>
   );
-});
+}) as StandaloneAgendaViewComponent;
+
+type StandaloneAgendaViewComponent = <TEvent extends object, TResource extends object>(
+  props: StandaloneAgendaViewProps<TEvent, TResource> & {
+    ref?: React.ForwardedRef<HTMLDivElement>;
+  },
+) => React.JSX.Element;

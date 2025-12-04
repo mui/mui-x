@@ -1,41 +1,62 @@
-import { ChartOptionalRootSelector, createSelector } from '../../utils/selectors';
-import { UseChartKeyboardNavigationSignature } from './useChartKeyboardNavigation.types';
-import { ProcessedSeries, selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';
+import { createSelector } from '@mui/x-internals/store';
+import { type ChartOptionalRootSelector } from '../../utils/selectors';
+import { type UseChartKeyboardNavigationSignature } from './useChartKeyboardNavigation.types';
+import {
+  type ProcessedSeries,
+  selectorChartSeriesProcessed,
+} from '../../corePlugins/useChartSeries';
 import {
   selectorChartXAxis,
   selectorChartYAxis,
 } from '../useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
-import { ComputeResult } from '../useChartCartesianAxis/computeAxisValue';
-import { ChartSeriesType } from '../../../../models/seriesType/config';
-import { SeriesId } from '../../../../models/seriesType/common';
-import { AxisId, AxisItemIdentifier, ChartsAxisProps } from '../../../../models/axis';
+import { type ComputeResult } from '../useChartCartesianAxis/computeAxisValue';
+import { type ChartSeriesType } from '../../../../models/seriesType/config';
+import { type SeriesId } from '../../../../models/seriesType/common';
+import {
+  type AxisId,
+  type AxisItemIdentifier,
+  type ChartsAxisProps,
+} from '../../../../models/axis';
+import { type FocusedItemData } from '../../../../hooks/useFocusedItem';
 
 const selectKeyboardNavigation: ChartOptionalRootSelector<UseChartKeyboardNavigationSignature> = (
   state,
 ) => state.keyboardNavigation;
 
+export const selectorChartsItemIsFocused = createSelector(
+  selectKeyboardNavigation,
+  (keyboardNavigationState, item: FocusedItemData) => {
+    return (
+      keyboardNavigationState?.item != null &&
+      keyboardNavigationState.item.type === item.seriesType &&
+      keyboardNavigationState.item.seriesId === item.seriesId &&
+      keyboardNavigationState.item.dataIndex === item.dataIndex
+    );
+  },
+);
+
 export const selectorChartsHasFocusedItem = createSelector(
-  [selectKeyboardNavigation],
+  selectKeyboardNavigation,
   (keyboardNavigationState) => keyboardNavigationState?.item != null,
 );
 
 export const selectorChartsFocusedSeriesType = createSelector(
-  [selectKeyboardNavigation],
+  selectKeyboardNavigation,
   (keyboardNavigationState) => keyboardNavigationState?.item?.type,
 );
 
 export const selectorChartsFocusedSeriesId = createSelector(
-  [selectKeyboardNavigation],
+  selectKeyboardNavigation,
   (keyboardNavigationState) => keyboardNavigationState?.item?.seriesId,
 );
 
 export const selectorChartsFocusedDataIndex = createSelector(
-  [selectKeyboardNavigation],
+  selectKeyboardNavigation,
   (keyboardNavigationState) => keyboardNavigationState?.item?.dataIndex,
 );
 
 export const selectorChartsIsKeyboardNavigationEnabled = createSelector(
-  [selectKeyboardNavigation],
+  selectKeyboardNavigation,
   (keyboardNavigationState) => !!keyboardNavigationState?.enableKeyboardNavigation,
 );
 
@@ -74,33 +95,43 @@ const createSelectAxisHighlight =
   };
 
 export const selectorChartsKeyboardXAxisIndex = createSelector(
-  [
-    selectorChartsFocusedSeriesType,
-    selectorChartsFocusedSeriesId,
-    selectorChartsFocusedDataIndex,
-    selectorChartXAxis,
-    selectorChartSeriesProcessed,
-  ],
+  selectorChartsFocusedSeriesType,
+  selectorChartsFocusedSeriesId,
+  selectorChartsFocusedDataIndex,
+  selectorChartXAxis,
+  selectorChartSeriesProcessed,
   createSelectAxisHighlight('x'),
 );
 
 export const selectorChartsKeyboardYAxisIndex = createSelector(
-  [
-    selectorChartsFocusedSeriesType,
-    selectorChartsFocusedSeriesId,
-    selectorChartsFocusedDataIndex,
-    selectorChartYAxis,
-    selectorChartSeriesProcessed,
-  ],
+  selectorChartsFocusedSeriesType,
+  selectorChartsFocusedSeriesId,
+  selectorChartsFocusedDataIndex,
+  selectorChartYAxis,
+  selectorChartSeriesProcessed,
   createSelectAxisHighlight('y'),
 );
 
 export const selectorChartsKeyboardItem = createSelector(
-  [selectorChartsFocusedSeriesType, selectorChartsFocusedSeriesId, selectorChartsFocusedDataIndex],
-  function selectorChartsKeyboardItem(seriesType, seriesId, dataIndex) {
-    if (seriesId === undefined) {
+  selectKeyboardNavigation,
+  function selectorChartsKeyboardItem(keyboardState) {
+    if (keyboardState?.item == null) {
       return null;
     }
-    return { seriesId, dataIndex: seriesType === 'line' ? undefined : dataIndex };
+    const { type, seriesId } = keyboardState.item;
+
+    if (type === undefined || seriesId === undefined) {
+      return null;
+    }
+    return keyboardState.item;
+  },
+);
+
+export const selectorChartsKeyboardItemIsDefined = createSelector(
+  selectorChartsFocusedSeriesType,
+  selectorChartsFocusedSeriesId,
+  selectorChartsFocusedDataIndex,
+  function selectorChartsKeyboardItemIsDefined(seriesType, seriesId, dataIndex) {
+    return seriesId !== undefined && dataIndex !== undefined;
   },
 );

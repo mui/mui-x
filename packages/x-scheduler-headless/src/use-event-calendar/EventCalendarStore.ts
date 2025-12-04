@@ -1,38 +1,52 @@
 import { warn } from '@base-ui-components/utils/warn';
+import { EMPTY_OBJECT } from '@base-ui-components/utils/empty';
 import {
   EventCalendarPreferences,
   CalendarView,
-  CalendarViewConfig,
-  SchedulerValidDate,
+  EventCalendarViewConfig,
+  TemporalSupportedObject,
   EventCalendarPreferencesMenuConfig,
 } from '../models';
 import { Adapter } from '../use-adapter/useAdapter.types';
-import { SchedulerParametersToStateMapper, SchedulerStore } from '../utils/SchedulerStore';
+import {
+  DEFAULT_SCHEDULER_PREFERENCES,
+  SchedulerParametersToStateMapper,
+  SchedulerStore,
+} from '../utils/SchedulerStore';
 import { EventCalendarState, EventCalendarParameters } from './EventCalendarStore.types';
+import { createChangeEventDetails } from '../base-ui-copy/utils/createBaseUIEventDetails';
 
 export const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
 export const DEFAULT_VIEW: CalendarView = 'week';
-export const DEFAULT_PREFERENCES: EventCalendarPreferences = {
+
+export const DEFAULT_EVENT_CALENDAR_PREFERENCES: EventCalendarPreferences = {
+  ...DEFAULT_SCHEDULER_PREFERENCES,
   showWeekends: true,
   showWeekNumber: false,
+  showEmptyDaysInAgenda: true,
   isSidePanelOpen: true,
-  ampm: true,
 };
 export const DEFAULT_PREFERENCES_MENU_CONFIG: EventCalendarPreferencesMenuConfig = {
   toggleWeekendVisibility: true,
   toggleWeekNumberVisibility: true,
+  toggleEmptyDaysInAgenda: true,
   toggleAmpm: true,
 };
 
-const deriveStateFromParameters = (parameters: EventCalendarParameters) => ({
+const deriveStateFromParameters = <TEvent extends object, TResource extends object>(
+  parameters: EventCalendarParameters<TEvent, TResource>,
+) => ({
   views: parameters.views ?? DEFAULT_VIEWS,
 });
 
-const mapper: SchedulerParametersToStateMapper<EventCalendarState, EventCalendarParameters> = {
+const mapper: SchedulerParametersToStateMapper<
+  EventCalendarState,
+  EventCalendarParameters<any, any>
+> = {
   getInitialState: (schedulerInitialState, parameters) => ({
     ...schedulerInitialState,
     ...deriveStateFromParameters(parameters),
-    preferences: { ...DEFAULT_PREFERENCES, ...parameters.preferences },
+    preferences: parameters.preferences ?? parameters.defaultPreferences ?? EMPTY_OBJECT,
     preferencesMenuConfig:
       parameters.preferencesMenuConfig === false
         ? parameters.preferencesMenuConfig
@@ -50,15 +64,21 @@ const mapper: SchedulerParametersToStateMapper<EventCalendarState, EventCalendar
     };
 
     updateModel(newState, 'view', 'defaultView');
+    updateModel(newState, 'preferences', 'defaultPreferences');
     return newState;
   },
 };
 
-export class EventCalendarStore extends SchedulerStore<
+export class EventCalendarStore<
+  TEvent extends object,
+  TResource extends object,
+> extends SchedulerStore<
+  TEvent,
+  TResource,
   EventCalendarState,
-  EventCalendarParameters
+  EventCalendarParameters<TEvent, TResource>
 > {
-  public constructor(parameters: EventCalendarParameters, adapter: Adapter) {
+  public constructor(parameters: EventCalendarParameters<TEvent, TResource>, adapter: Adapter) {
     super(parameters, adapter, 'Event Calendar', mapper);
 
     if (process.env.NODE_ENV !== 'production') {
@@ -83,7 +103,7 @@ export class EventCalendarStore extends SchedulerStore<
   }
 
   private setVisibleDateAndView = (
-    visibleDate: SchedulerValidDate,
+    visibleDate: TemporalSupportedObject,
     view: CalendarView,
     event: React.UIEvent,
   ) => {
@@ -101,22 +121,26 @@ export class EventCalendarStore extends SchedulerStore<
     }
 
     this.assertViewValidity(view);
+    const eventDetails = createChangeEventDetails('none', event.nativeEvent);
+
+    if (hasVisibleDateChange) {
+      onVisibleDateChange?.(visibleDate, eventDetails);
+    }
+    if (hasViewChange) {
+      onViewChange?.(view, eventDetails);
+    }
+
+    if (eventDetails.isCanceled) {
+      return;
+    }
 
     const canSetVisibleDate = visibleDateProp === undefined && hasVisibleDateChange;
     const canSetView = viewProp === undefined && hasViewChange;
-
     if (canSetVisibleDate || canSetView) {
-      this.apply({
+      this.update({
         ...(canSetVisibleDate ? { visibleDate } : undefined),
         ...(canSetView ? { view } : undefined),
       });
-    }
-
-    if (hasVisibleDateChange) {
-      onVisibleDateChange?.(visibleDate, event);
-    }
-    if (hasViewChange) {
-      onViewChange?.(view, event);
     }
   };
 
@@ -129,20 +153,23 @@ export class EventCalendarStore extends SchedulerStore<
       return;
     }
 
-    this.setVisibleDate(siblingVisibleDateGetter(this.state.visibleDate, delta), event);
+    this.setVisibleDate(siblingVisibleDateGetter({ delta, state: this.state }), event);
   };
 
   /**
    * Sets the view of the calendar.
    */
-  public setView = (view: CalendarView, event: React.UIEvent | Event) => {
+  public setView = (view: CalendarView, event: Event) => {
     const { view: viewProp, onViewChange } = this.parameters;
     if (view !== this.state.view) {
       this.assertViewValidity(view);
-      if (viewProp === undefined) {
+
+      const eventDetails = createChangeEventDetails('none', event);
+      onViewChange?.(view, eventDetails);
+
+      if (!eventDetails.isCanceled && viewProp === undefined) {
         this.set('view', view);
       }
-      onViewChange?.(view, event);
     }
   };
 
@@ -159,28 +186,34 @@ export class EventCalendarStore extends SchedulerStore<
   /**
    * Goes to a specific day and set the view to 'day'.
    */
-  public switchToDay = (visibleDate: SchedulerValidDate, event: React.UIEvent) => {
+  public switchToDay = (visibleDate: TemporalSupportedObject, event: React.UIEvent) => {
     this.setVisibleDateAndView(visibleDate, 'day', event);
   };
 
   /**
    * Updates some preferences of the calendar.
    */
-  public setPreferences = (
-    partialPreferences: Partial<EventCalendarPreferences>,
-    _event: React.UIEvent | Event,
-  ) => {
-    this.set('preferences', {
+  public setPreferences = (partialPreferences: Partial<EventCalendarPreferences>, event: Event) => {
+    const { preferences: preferencesProp, onPreferencesChange } = this.parameters;
+
+    const updated = {
       ...this.state.preferences,
       ...partialPreferences,
-    });
+    };
+
+    const eventDetails = createChangeEventDetails('none', event);
+    onPreferencesChange?.(updated, eventDetails);
+
+    if (!eventDetails.isCanceled && preferencesProp === undefined) {
+      this.set('preferences', updated);
+    }
   };
 
   /**
    * Sets the method used to determine the previous / next visible date.
    * Returns the cleanup function.
    */
-  public setViewConfig = (config: CalendarViewConfig) => {
+  public setViewConfig = (config: EventCalendarViewConfig) => {
     this.set('viewConfig', config);
     return () => this.set('viewConfig', null);
   };

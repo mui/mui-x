@@ -1,5 +1,5 @@
-import { getExtremumX, getExtremumY } from './seriesConfig/extremums';
-import { CartesianExtremumGetter } from '../internals/plugins/models';
+import { getExtremumX, getExtremumY } from './seriesConfig/bar/extremums';
+import { type CartesianExtremumGetter } from '../internals/plugins/models';
 
 const buildData = (
   data: number[],

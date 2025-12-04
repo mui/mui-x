@@ -4,8 +4,10 @@ import type { PanEvent } from '@mui/x-internal-gestures/core';
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { getSVGPoint } from '../../../getSVGPoint';
-import { ChartPlugin } from '../../models';
-import { UseChartBrushSignature, type Point } from './useChartBrush.types';
+import { type ChartPlugin } from '../../models';
+import { type UseChartBrushSignature, type Point } from './useChartBrush.types';
+import { useSelector } from '../../../store/useSelector';
+import { selectorIsBrushEnabled } from './useChartBrush.selectors';
 
 export const useChartBrush: ChartPlugin<UseChartBrushSignature> = ({
   store,
@@ -13,17 +15,14 @@ export const useChartBrush: ChartPlugin<UseChartBrushSignature> = ({
   instance,
   params,
 }) => {
+  const isEnabled = useSelector(store, selectorIsBrushEnabled);
+
   useEnhancedEffect(() => {
-    store.update((prev) => {
-      return {
-        ...prev,
-        brush: {
-          ...prev.brush,
-          enabled: params.brushConfig.enabled,
-          preventTooltip: params.brushConfig.preventTooltip,
-          preventHighlight: params.brushConfig.preventHighlight,
-        },
-      };
+    store.set('brush', {
+      ...store.state.brush,
+      enabled: params.brushConfig.enabled,
+      preventTooltip: params.brushConfig.preventTooltip,
+      preventHighlight: params.brushConfig.preventHighlight,
     });
   }, [
     store,
@@ -33,34 +32,34 @@ export const useChartBrush: ChartPlugin<UseChartBrushSignature> = ({
   ]);
 
   const setBrushCoordinates = useEventCallback(function setBrushCoordinates(point: Point | null) {
-    store.update((prev) => {
-      return {
-        ...prev,
-        brush: {
-          ...prev.brush,
-          start: prev.brush.start ?? point,
-          current: point,
-        },
-      };
+    store.set('brush', {
+      ...store.state.brush,
+      start: store.state.brush.start ?? point,
+      current: point,
     });
   });
 
   const clearBrush = useEventCallback(function clearBrush() {
-    store.update((prev) => {
-      return {
-        ...prev,
-        brush: {
-          ...prev.brush,
-          start: null,
-          current: null,
-        },
-      };
+    store.set('brush', {
+      ...store.state.brush,
+      start: null,
+      current: null,
+    });
+  });
+
+  const setZoomBrushEnabled = useEventCallback(function setZoomBrushEnabled(enabled: boolean) {
+    if (store.state.brush.isZoomBrushEnabled === enabled) {
+      return;
+    }
+    store.set('brush', {
+      ...store.state.brush,
+      isZoomBrushEnabled: enabled,
     });
   });
 
   React.useEffect(() => {
     const element = svgRef.current;
-    if (element === null || !store.getSnapshot().brush.enabled) {
+    if (element === null || !isEnabled) {
       return () => {};
     }
 
@@ -97,12 +96,13 @@ export const useChartBrush: ChartPlugin<UseChartBrushSignature> = ({
       brushEndHandler.cleanup();
       brushCancelHandler.cleanup();
     };
-  }, [svgRef, instance, store, clearBrush, setBrushCoordinates]);
+  }, [svgRef, instance, store, clearBrush, setBrushCoordinates, isEnabled]);
 
   return {
     instance: {
       setBrushCoordinates,
       clearBrush,
+      setZoomBrushEnabled,
     },
   };
 };
@@ -126,6 +126,7 @@ useChartBrush.getInitialState = (params) => {
   return {
     brush: {
       enabled: params.brushConfig.enabled,
+      isZoomBrushEnabled: false,
       preventTooltip: params.brushConfig.preventTooltip,
       preventHighlight: params.brushConfig.preventHighlight,
       start: null,

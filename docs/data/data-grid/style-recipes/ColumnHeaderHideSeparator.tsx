@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { DataGridPro, GridColDef, gridClasses } from '@mui/x-data-grid-pro';
 
 const rows = [

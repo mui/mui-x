@@ -8,6 +8,15 @@ components: LineChart, LineChartPro, LineElement, LineHighlightElement, LineHigh
 
 <p class="description">Line charts can express qualities about data, such as hierarchy, highlights, and comparisons.</p>
 
+## Overview
+
+Line charts are ideal for showing how values change over continuous dimensions such as time or measurement scales.
+
+They emphasize trends, patterns, and fluctuations, making them useful for exploring relationships, detecting cycles, or tracking performance over time.
+Each line typically represents a series, allowing easy comparison between multiple variables or groups.
+
+{{"demo": "LineOverview.js"}}
+
 ## Basics
 
 ### Data format
@@ -270,7 +279,7 @@ The definition of `myGradient` is passed as a children of the chart component.
 
 ## Animation
 
-Chart containers respect [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion), but you can also disable animations manually by setting the `skipAnimation` prop to `true`.
+Chart containers respect [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/prefers-reduced-motion), but you can also disable animations manually by setting the `skipAnimation` prop to `true`.
 
 When `skipAnimation` is enabled, the chart renders without any animations.
 
