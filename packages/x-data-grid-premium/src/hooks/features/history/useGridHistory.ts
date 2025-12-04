@@ -227,7 +227,7 @@ export const useGridHistory = (
     [apiRef, historyQueueSize],
   );
 
-  const validateQueueItems = React.useCallback<GridEventListener<'stateChange'>>(() => {
+  const validateQueueItems = React.useCallback<GridEventListener<'rowsSet'>>(() => {
     /**
      * When:
      * - idle: continue with the validation
@@ -291,7 +291,7 @@ export const useGridHistory = (
   );
 
   useGridEvent(apiRef, 'cellKeyDown', runIf(historyQueueSize > 0, handleCellKeyDown));
-  useGridEvent(apiRef, 'stateChange', debouncedValidateQueueItems);
+  useGridEvent(apiRef, 'rowsSet', debouncedValidateQueueItems);
   useGridEvent(apiRef, 'undo', onUndo);
   useGridEvent(apiRef, 'redo', onRedo);
 
