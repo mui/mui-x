@@ -25,7 +25,7 @@ const tooltipItemPositionGetter: TooltipItemPositionGetter<'bar'> = (params) => 
     dataIndex: identifier.dataIndex,
     numberOfGroups: series.bar.stackingGroups.length,
     groupIndex: series.bar.stackingGroups.findIndex((group) => group.ids.includes(itemSeries.id)),
-    isItemVisible: () => true,
+    isSeriesVisible: true,
   });
 
   if (dimensions == null) {
