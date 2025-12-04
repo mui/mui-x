@@ -1,8 +1,8 @@
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
-import { ChartRootSelector } from '../../utils/selectors';
+import { type ChartRootSelector } from '../../utils/selectors';
 import type { UseChartDimensionsSignature } from './useChartDimensions.types';
 import { selectorChartAxisSizes } from '../../featurePlugins/useChartCartesianAxis/useChartAxisSize.selectors';
-import { ChartState } from '../../models/chart';
+import { type ChartState } from '../../models/chart';
 
 export const selectorChartDimensionsState: ChartRootSelector<UseChartDimensionsSignature> = (
   state,

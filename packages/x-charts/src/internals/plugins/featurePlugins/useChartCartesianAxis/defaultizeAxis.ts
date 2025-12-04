@@ -1,5 +1,5 @@
 import { defaultizeZoom } from './defaultizeZoom';
-import { ZoomOptions } from './zoom.types';
+import { type ZoomOptions } from './zoom.types';
 import {
   DEFAULT_X_AXIS_KEY,
   DEFAULT_Y_AXIS_KEY,
@@ -7,9 +7,9 @@ import {
   DEFAULT_AXIS_SIZE_WIDTH,
   AXIS_LABEL_DEFAULT_HEIGHT,
 } from '../../../../constants';
-import { XAxis, YAxis } from '../../../../models';
-import { DefaultedXAxis, DefaultedYAxis } from '../../../../models/axis';
-import { DatasetType } from '../../../../models/seriesType/config';
+import { type XAxis, type YAxis } from '../../../../models';
+import { type DefaultedXAxis, type DefaultedYAxis } from '../../../../models/axis';
+import { type DatasetType } from '../../../../models/seriesType/config';
 
 type InXAxis = XAxis & { zoom?: boolean | ZoomOptions };
 

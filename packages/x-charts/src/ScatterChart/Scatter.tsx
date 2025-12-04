@@ -2,24 +2,27 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { ScatterMarkerSlotProps, ScatterMarkerSlots } from './ScatterMarker.types';
-import { DefaultizedScatterSeriesType, ScatterItemIdentifier } from '../models/seriesType/scatter';
+import { type ScatterMarkerSlotProps, type ScatterMarkerSlots } from './ScatterMarker.types';
+import {
+  type DefaultizedScatterSeriesType,
+  type ScatterItemIdentifier,
+} from '../models/seriesType/scatter';
 import { getInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { useStore } from '../internals/store/useStore';
 import { useSelector } from '../internals/store/useSelector';
-import { D3Scale } from '../models/axis';
+import { type D3Scale } from '../models/axis';
 import { useItemHighlightedGetter } from '../hooks/useItemHighlightedGetter';
 import {
   selectorChartsIsVoronoiEnabled,
-  UseChartClosestPointSignature,
+  type UseChartClosestPointSignature,
 } from '../internals/plugins/featurePlugins/useChartClosestPoint';
 import { ScatterMarker } from './ScatterMarker';
-import { ColorGetter } from '../internals/plugins/models/seriesConfig';
-import { ScatterClasses, useUtilityClasses } from './scatterClasses';
+import { type ColorGetter } from '../internals/plugins/models/seriesConfig';
+import { type ScatterClasses, useUtilityClasses } from './scatterClasses';
 import { useScatterPlotData } from './useScatterPlotData';
 import { useChartContext } from '../context/ChartProvider';
-import { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
-import { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
+import { type UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
+import { type UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
 import { useIsItemFocusedGetter } from '../hooks/useIsItemFocusedGetter';
 
 export interface ScatterProps {

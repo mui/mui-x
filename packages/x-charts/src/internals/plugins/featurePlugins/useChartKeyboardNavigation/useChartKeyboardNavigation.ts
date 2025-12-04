@@ -2,8 +2,8 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { ChartPlugin, ChartState } from '../../models';
-import { UseChartKeyboardNavigationSignature } from './useChartKeyboardNavigation.types';
+import { type ChartPlugin, type ChartState } from '../../models';
+import { type UseChartKeyboardNavigationSignature } from './useChartKeyboardNavigation.types';
 import {
   getNextSeriesWithData,
   getPreviousSeriesWithData,
