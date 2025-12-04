@@ -21,7 +21,7 @@ export function getBarDimensions(params: {
   dataIndex: number;
   numberOfGroups: number;
   groupIndex: number;
-isItemVisible: IsIdentifierVisibleFunction;
+  isItemVisible: IsIdentifierVisibleFunction;
 }) {
   const {
     verticalLayout,

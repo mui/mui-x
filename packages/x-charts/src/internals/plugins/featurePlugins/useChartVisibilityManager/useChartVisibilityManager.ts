@@ -8,7 +8,7 @@ export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSig
   params,
 }) => {
   const buildIdentifier = useEventCallback((ids: string | (string | number)[]) =>
-    buildIdentifierFn(store.state.visibilityManager.separator, ids),
+    buildIdentifierFn(ids),
   );
 
   const hideItem = useEventCallback((identifier: string | (number | string)[]) => {
@@ -61,7 +61,6 @@ export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSig
       hideItem,
       showItem,
       toggleItem,
-      buildIdentifier,
     },
     publicAPI: {
       hideItem,
@@ -74,12 +73,10 @@ export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSig
 useChartVisibilityManager.getInitialState = (params) => ({
   visibilityManager: {
     visibilityMap: params.visibilityMap || {},
-    separator: params.visibilityIdentifierSeparator || '-',
   },
 });
 
 useChartVisibilityManager.params = {
   onVisibilityChange: true,
-  visibilityIdentifierSeparator: true,
   visibilityMap: true,
 };

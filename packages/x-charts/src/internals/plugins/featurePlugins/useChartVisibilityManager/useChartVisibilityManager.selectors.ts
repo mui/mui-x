@@ -21,21 +21,12 @@ export const selectorVisibilityMap = createSelector(
 );
 
 /**
- * Selector to get the separator used in the visibility manager.
- */
-export const selectorSeparator = createSelector(
-  selectVisibilityManager,
-  (visibilityManager) => visibilityManager?.separator ?? '-',
-);
-
-/**
  * Selector to check if a specific item identifier is visible.
  */
 export const selectorIsIdentifierVisible = createSelector(
   selectorVisibilityMap,
-  selectorSeparator,
-  (visibilityMap, separator, identifier: string | (string | number)[]) =>
-    isIdentifierVisible(visibilityMap, separator, identifier),
+  (visibilityMap, identifier: string | (string | number)[]) =>
+    isIdentifierVisible(visibilityMap, identifier),
 );
 
 /**
@@ -43,12 +34,11 @@ export const selectorIsIdentifierVisible = createSelector(
  */
 export const selectorIsIdentifierVisibleGetter = createSelectorMemoized(
   selectorVisibilityMap,
-  selectorSeparator,
-  (visibilityMap, separator) => {
+  (visibilityMap) => {
     return {
       // Return an object as selectors don't correctly memoize direct functions
       get: (identifier: string | (string | number)[]) =>
-        isIdentifierVisible(visibilityMap, separator, identifier),
+        isIdentifierVisible(visibilityMap, identifier),
     };
   },
 );

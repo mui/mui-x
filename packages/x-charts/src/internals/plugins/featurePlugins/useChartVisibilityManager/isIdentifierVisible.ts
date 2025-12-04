@@ -1,19 +1,20 @@
 import type { VisibilityMap } from './useChartVisibilityManager.types';
 
-export const buildIdentifier = (separator: string, ids: string | (string | number)[]) => {
+export const VISIBILITY_SEPARATOR = '-';
+
+export const buildIdentifier = (ids: string | (string | number)[]) => {
   if (typeof ids === 'string') {
     return ids;
   }
-  return ids.filter(Boolean).join(separator);
+  return ids.filter(Boolean).join(VISIBILITY_SEPARATOR);
 };
 
 export const isIdentifierVisible = (
   visibilityMap: VisibilityMap,
-  separator: string,
   identifier: string | (string | number)[],
 ) => {
   if (Array.isArray(identifier)) {
-    identifier = buildIdentifier(separator, identifier);
+    identifier = buildIdentifier(identifier);
   }
 
   const state = visibilityMap?.[identifier];
