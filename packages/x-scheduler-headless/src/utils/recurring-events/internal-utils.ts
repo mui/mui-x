@@ -7,6 +7,42 @@ import {
   RecurringEventRecurrenceRule,
 } from '../../models';
 
+const adapterCache = new WeakMap<
+  Adapter,
+  {
+    /**
+     * Week day number (1..7) of Monday for a given adapter.
+     */
+    mondayWeekDayNumber: number;
+    /**
+     * Date format string for UNTIL serialization (RFC5545 format: YYYYMMDDTHHmmssZ)
+     */
+    untilFormat: string;
+  }
+>();
+
+/**
+ * Returns cached adapter data.
+ */
+export function getAdapterCache(adapter: Adapter) {
+  let cache = adapterCache.get(adapter);
+  if (!cache) {
+    const f = adapter.formats;
+    const dateFormat = `${f.yearPadded}${f.monthPadded}${f.dayOfMonthPadded}`;
+    const dateTimeSeparator = `${adapter.escapedCharacters.start}T${adapter.escapedCharacters.end}`;
+    const timeFormat = `${f.hours24hPadded}${f.minutesPadded}${f.secondsPadded}`;
+    const timezoneSuffix = `${adapter.escapedCharacters.start}Z${adapter.escapedCharacters.end}`;
+    const untilFormat = `${dateFormat}${dateTimeSeparator}${timeFormat}${timezoneSuffix}`;
+
+    cache = {
+      untilFormat,
+      mondayWeekDayNumber: adapter.getDayOfWeek(adapter.date('2025-01-06T00:00:00Z', 'utc')), // ISO Monday
+    };
+    adapterCache.set(adapter, cache);
+  }
+  return cache;
+}
+
 /**
  * The week day codes for all 7 days of the week.
  */
@@ -20,22 +56,12 @@ export const NOT_LOCALIZED_WEEK_DAYS: RecurringEventWeekDayCode[] = [
   'SU',
 ];
 
-const mondayMap = new WeakMap<Adapter, TemporalSupportedObject>();
 /**
- * Returns the week day number (1..7) of Monday for a given adapter.
+ * A map of week day codes to their indexes in NOT_LOCALIZED_WEEK_DAYS.
  */
-export function getMondayWeekDayNumber(adapter: Adapter) {
-  let monday: TemporalSupportedObject;
-  const mondayFromCache = mondayMap.get(adapter);
-  if (mondayFromCache != null) {
-    monday = mondayFromCache;
-  } else {
-    monday = adapter.date('2025-01-06T00:00:00Z', 'utc'); // ISO Monday
-    mondayMap.set(adapter, monday);
-  }
-
-  return adapter.getDayOfWeek(monday);
-}
+export const NOT_LOCALIZED_WEEK_DAYS_INDEXES = new Map<RecurringEventWeekDayCode, number>(
+  NOT_LOCALIZED_WEEK_DAYS.map((code, index) => [code, index]),
+);
 
 /**
  * Returns the week day code (MO..SU) for a given date.
@@ -46,7 +72,7 @@ export function getWeekDayCode(
   date: TemporalSupportedObject,
 ): RecurringEventWeekDayCode {
   const dayOfWeek = adapter.getDayOfWeek(date);
-  const mondayWeekDayNumber = getMondayWeekDayNumber(adapter);
+  const mondayWeekDayNumber = getAdapterCache(adapter).mondayWeekDayNumber;
   return NOT_LOCALIZED_WEEK_DAYS[(dayOfWeek - mondayWeekDayNumber + 7) % 7];
 }
 
@@ -58,8 +84,8 @@ export function getWeekDayNumberFromCode(
   adapter: Adapter,
   code: RecurringEventWeekDayCode,
 ): number {
-  const mondayWeekDayNumber = getMondayWeekDayNumber(adapter);
-  const indexOfCode = NOT_LOCALIZED_WEEK_DAYS.indexOf(code);
+  const mondayWeekDayNumber = getAdapterCache(adapter).mondayWeekDayNumber;
+  const indexOfCode = NOT_LOCALIZED_WEEK_DAYS_INDEXES.get(code)!;
   return ((indexOfCode + mondayWeekDayNumber - 1) % 7) + 1;
 }
 
@@ -230,7 +256,7 @@ interface CountOccurrencesUpToExactParameters {
 /**
  *  Given a week start and a BYDAY code, returns the exact date in that week.
  */
-function dayInWeek(
+export function dayInWeek(
   adapter: Adapter,
   weekStart: TemporalSupportedObject,
   code: RecurringEventWeekDayCode,

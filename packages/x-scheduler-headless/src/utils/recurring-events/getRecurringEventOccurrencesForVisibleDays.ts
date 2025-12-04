@@ -30,9 +30,7 @@ export function getRecurringEventOccurrencesForVisibleDays(
 ): SchedulerEventOccurrence[] {
   const rule = event.rrule!;
   const occurrences: SchedulerEventOccurrence[] = [];
-
   const endGuard = buildEndGuard(rule, event.start.value, adapter);
-
   const eventDuration = getEventDurationInDays(adapter, event);
   const scanStart = adapter.addDays(start, -(eventDuration - 1));
 
