@@ -1,4 +1,5 @@
 import { RefObject } from '@mui/x-internals/types';
+import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import type {
   GridCellEditStopParams,
   GridRowEditStopParams,
@@ -9,6 +10,7 @@ import {
   GridHistoryEventHandler,
   GridCellEditHistoryData,
   GridRowEditHistoryData,
+  GridClipboardPasteHistoryData,
 } from './gridHistoryInterfaces';
 
 /**
@@ -51,7 +53,7 @@ export const createCellEditHistoryHandler = (
       const currentValue = row[field];
       const expectedValue = direction === 'undo' ? newValue : oldValue;
 
-      if (currentValue !== expectedValue) {
+      if (!isDeepEqual(currentValue, expectedValue)) {
         return false;
       }
 
@@ -113,7 +115,7 @@ export const createRowEditHistoryHandler = (
       const expectedRow = direction === 'undo' ? newRow : oldRow;
 
       for (const field of Object.keys(expectedRow)) {
-        if (row[field] !== expectedRow[field]) {
+        if (!isDeepEqual(row[field], expectedRow[field])) {
           return false;
         }
       }
@@ -138,15 +140,99 @@ export const createRowEditHistoryHandler = (
 };
 
 /**
+ * Create the default handler for clipboardPasteEnd events.
+ */
+export const createClipboardPasteHistoryHandler = (
+  apiRef: RefObject<GridPrivateApiPremium>,
+): GridHistoryEventHandler<GridClipboardPasteHistoryData> => {
+  return {
+    store: (params: GridClipboardPasteHistoryData) => params,
+    validate: (data: GridClipboardPasteHistoryData, direction: 'undo' | 'redo') => {
+      const { oldRows, newRows } = data;
+      const updatedRowIds = Object.keys(newRows);
+
+      // Check if any rows were updated
+      if (updatedRowIds.length === 0) {
+        return false;
+      }
+
+      // Check if all affected rows still exist and have expected values
+      for (let i = 0; i < updatedRowIds.length; i += 1) {
+        const rowId = updatedRowIds[i];
+        const row = apiRef.current.getRow(rowId);
+        if (!row) {
+          return false;
+        }
+
+        const expectedRow = direction === 'undo' ? newRows[rowId] : oldRows[rowId];
+
+        // Check if the row values match what we expect
+        for (const field of Object.keys(expectedRow)) {
+          if (!isDeepEqual(row[field], expectedRow[field])) {
+            return false;
+          }
+        }
+      }
+
+      return true;
+    },
+
+    undo: async (data: GridClipboardPasteHistoryData) => {
+      const { oldRows } = data;
+      const oldRowsValues = Object.values(oldRows);
+
+      // Restore all rows to their original state
+      await apiRef.current.updateRows(oldRowsValues);
+
+      const visibleColumns = apiRef.current.getVisibleColumns();
+
+      // Focus the first affected cell
+      if (oldRowsValues.length > 0 && visibleColumns.length > 0) {
+        const firstRowId = Object.keys(oldRows)[0];
+        const firstField = visibleColumns[0].field;
+        if (firstField) {
+          apiRef.current.setCellFocus(firstRowId, firstField);
+        }
+      }
+    },
+
+    redo: async (data: GridClipboardPasteHistoryData) => {
+      const { newRows } = data;
+      const newRowsValues = Object.values(newRows);
+
+      // Restore all rows to the pasted state
+      await apiRef.current.updateRows(newRowsValues);
+
+      const visibleColumns = apiRef.current.getVisibleColumns();
+
+      // Focus the first affected cell
+      if (newRowsValues.length > 0 && visibleColumns.length > 0) {
+        const firstRowId = Object.keys(newRows)[0];
+        const firstField = visibleColumns[0].field;
+        if (firstField) {
+          apiRef.current.setCellFocus(firstRowId, firstField);
+        }
+      }
+    },
+  };
+};
+
+/**
  * Create the default history events map.
  */
 export const createDefaultHistoryHandlers = (
   apiRef: RefObject<GridPrivateApiPremium>,
-): Map<GridEvents, GridHistoryEventHandler<GridCellEditHistoryData | GridRowEditHistoryData>> => {
+): Map<
+  GridEvents,
+  GridHistoryEventHandler<
+    GridCellEditHistoryData | GridRowEditHistoryData | GridClipboardPasteHistoryData
+  >
+> => {
   const map = new Map();
 
   map.set('cellEditStop', createCellEditHistoryHandler(apiRef));
   map.set('rowEditStop', createRowEditHistoryHandler(apiRef));
+  map.set('clipboardPasteEnd', createClipboardPasteHistoryHandler(apiRef));
 
   return map;
 };
