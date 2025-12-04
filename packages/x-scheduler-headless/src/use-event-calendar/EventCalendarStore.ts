@@ -99,7 +99,6 @@ export class EventCalendarStore<
         const visibleDaysKey = visibleDays.map((day) => day.key).join('|');
 
         return {
-          view: state.view,
           viewConfig: state.viewConfig,
           visibleDaysKey,
         };
@@ -107,7 +106,7 @@ export class EventCalendarStore<
 
       (previous, next) => {
         // Bail out if nothing relevant changed.
-        if (previous.view === next.view && previous.visibleDaysKey === next.visibleDaysKey) {
+        if (previous.visibleDaysKey === next.visibleDaysKey) {
           return;
         }
 
@@ -122,7 +121,6 @@ export class EventCalendarStore<
           start: visibleDays[0].value,
           end: visibleDays[visibleDays.length - 1].value,
         };
-        console.log('EventCalendarStore: visibleDays effect triggered', range);
 
         queueMicrotask(() => this.queueDataFetchForRange(range));
       },

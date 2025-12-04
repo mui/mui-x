@@ -1,4 +1,4 @@
-import { SchedulerValidDate } from '../../models';
+import { TemporalSupportedObject } from '../../models';
 import { Adapter } from '../../use-adapter/useAdapter.types';
 import { getDateKey } from '../date-utils';
 
