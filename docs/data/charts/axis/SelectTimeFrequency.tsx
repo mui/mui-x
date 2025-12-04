@@ -12,13 +12,13 @@ import Box from '@mui/material/Box';
 export default function SelectTimeFrequency({
   tickFrequencies,
   timeOrdinalTicks,
-  setTimeOrdinalTicks,
+  setOrdinalTimeTicks,
   tickNumber,
   setTickNumber,
 }: {
   tickFrequencies: TickFrequency[];
   timeOrdinalTicks: Record<TickFrequency, boolean>;
-  setTimeOrdinalTicks: React.Dispatch<
+  setOrdinalTimeTicks: React.Dispatch<
     React.SetStateAction<Record<TickFrequency, boolean>>
   >;
   tickNumber: number;
@@ -36,7 +36,7 @@ export default function SelectTimeFrequency({
           {tickFrequencies.map((label) => {
             const checked = timeOrdinalTicks[label as keyof typeof timeOrdinalTicks];
             const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-              setTimeOrdinalTicks((prev) => ({
+              setOrdinalTimeTicks((prev) => ({
                 ...prev,
                 [event.target.name]: event.target.checked,
               }));

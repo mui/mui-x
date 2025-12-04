@@ -5,7 +5,7 @@ import { useIsHydrated } from '../hooks/useIsHydrated';
 import { useTicks } from '../hooks/useTicks';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 import { ChartsYAxisProps } from '../models/axis';
-import { TimeOrdinalTicks } from '../models/timeTicks';
+import { OrdinalTimeTicks } from '../models/timeTicks';
 
 import { useChartContext } from '../context/ChartProvider';
 import { shortenLabels } from './shortenLabels';
@@ -14,7 +14,7 @@ import { useAxisTicksProps } from './useAxisTicksProps';
 
 interface ChartsSingleYAxisProps extends ChartsYAxisProps {
   axisLabelHeight: number;
-  timeOrdinalTicks?: TimeOrdinalTicks;
+  timeOrdinalTicks?: OrdinalTimeTicks;
 }
 
 /**

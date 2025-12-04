@@ -12,7 +12,7 @@ import Box from '@mui/material/Box';
 export default function SelectTimeFrequency({
   tickFrequencies,
   timeOrdinalTicks,
-  setTimeOrdinalTicks,
+  setOrdinalTimeTicks,
   tickNumber,
   setTickNumber,
 }) {
@@ -28,7 +28,7 @@ export default function SelectTimeFrequency({
           {tickFrequencies.map((label) => {
             const checked = timeOrdinalTicks[label];
             const handleChange = (event) => {
-              setTimeOrdinalTicks((prev) => ({
+              setOrdinalTimeTicks((prev) => ({
                 ...prev,
                 [event.target.name]: event.target.checked,
               }));

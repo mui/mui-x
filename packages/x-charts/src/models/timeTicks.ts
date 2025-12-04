@@ -43,4 +43,4 @@ export type TickFrequency =
   | 'days'
   | 'hours';
 
-export type TimeOrdinalTicks = (TickFrequencyDefinition | TickFrequency)[];
+export type OrdinalTimeTicks = (TickFrequencyDefinition | TickFrequency)[];

@@ -15,7 +15,7 @@ const tickFrequencies = [
 ];
 
 export default function OrdinalTickPlacement() {
-  const [timeOrdinalTicks, setTimeOrdinalTicks] = React.useState(defaultTicks);
+  const [timeOrdinalTicks, setOrdinalTimeTicks] = React.useState(defaultTicks);
   const [tickNumber, setTickNumber] = React.useState(5);
 
   return (
@@ -23,7 +23,7 @@ export default function OrdinalTickPlacement() {
       <SelectTimeFrequency
         tickFrequencies={tickFrequencies}
         timeOrdinalTicks={timeOrdinalTicks}
-        setTimeOrdinalTicks={setTimeOrdinalTicks}
+        setOrdinalTimeTicks={setOrdinalTimeTicks}
         tickNumber={tickNumber}
         setTickNumber={setTickNumber}
       />

@@ -538,7 +538,7 @@
   { "name": "strawberrySkyPaletteLight", "kind": "Variable" },
   { "name": "TickFrequencyDefinition", "kind": "TypeAlias" },
   { "name": "TickFrequency", "kind": "TypeAlias" },
-  { "name": "TimeOrdinalTicks", "kind": "TypeAlias" },
+  { "name": "OrdinalTimeTicks", "kind": "TypeAlias" },
   { "name": "Unstable_FunnelChart", "kind": "Variable" },
   { "name": "Unstable_RadarChart", "kind": "Variable" },
   { "name": "Unstable_RadarDataProvider", "kind": "Variable" },

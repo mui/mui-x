@@ -419,7 +419,7 @@
   { "name": "tickFrequencies", "kind": "Variable" },
   { "name": "TickFrequencyDefinition", "kind": "TypeAlias" },
   { "name": "TickFrequency", "kind": "TypeAlias" },
-  { "name": "TimeOrdinalTicks", "kind": "TypeAlias" },
+  { "name": "OrdinalTimeTicks", "kind": "TypeAlias" },
   { "name": "Toolbar", "kind": "Variable" },
   { "name": "ToolbarButton", "kind": "Variable" },
   { "name": "ToolbarButtonProps", "kind": "TypeAlias" },

@@ -18,7 +18,7 @@ import { ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
 import { ChartsTextProps } from '../ChartsText';
 import { ContinuousColorConfig, OrdinalColorConfig, PiecewiseColorConfig } from './colorMapping';
-import { TimeOrdinalTicks } from './timeTicks';
+import { OrdinalTimeTicks } from './timeTicks';
 
 export type AxisId = string | number;
 
@@ -275,7 +275,7 @@ export interface AxisScaleConfig {
     /**
      * Definition of the tick placements with date data.
      */
-    timeOrdinalTicks?: TimeOrdinalTicks;
+    timeOrdinalTicks?: OrdinalTimeTicks;
     scale: ScaleBand<{ toString(): string }>;
     /**
      * The ratio between the space allocated for padding between two categories and the category width.
@@ -297,7 +297,7 @@ export interface AxisScaleConfig {
     /**
      * Definition of the tick placements with date data.
      */
-    timeOrdinalTicks?: TimeOrdinalTicks;
+    timeOrdinalTicks?: OrdinalTimeTicks;
     scale: ScalePoint<{ toString(): string }>;
     colorMap?: OrdinalColorConfig | ContinuousColorConfig | PiecewiseColorConfig;
   } & AxisGroups;
