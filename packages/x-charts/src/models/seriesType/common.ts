@@ -1,7 +1,7 @@
-import { HighlightScope } from '../../internals/plugins/featurePlugins/useChartHighlight/highlightConfig.types';
+import { type HighlightScope } from '../../internals/plugins/featurePlugins/useChartHighlight/highlightConfig.types';
 import type { StackOffsetType, StackOrderType } from '../stacking';
 import type { ChartsLabelMarkType } from '../../ChartsLabel/ChartsLabelMark';
-import { AxisId } from '../axis';
+import { type AxisId } from '../axis';
 
 export type SeriesId = number | string;
 

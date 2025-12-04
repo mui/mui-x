@@ -2,12 +2,12 @@
 
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { Toolbar, ChartsToolbarProps, ToolbarButton } from '@mui/x-charts/Toolbar';
+import { Toolbar, type ChartsToolbarProps, ToolbarButton } from '@mui/x-charts/Toolbar';
 import {
   useChartContext,
   useSelector,
   useChartsSlots,
-  UseChartCartesianAxisSignature,
+  type UseChartCartesianAxisSignature,
 } from '@mui/x-charts/internals';
 import { useChartsLocalization } from '@mui/x-charts/hooks';
 import useId from '@mui/utils/useId';
@@ -16,13 +16,13 @@ import { ChartsMenu } from './internals/ChartsMenu';
 import { selectorChartZoomIsEnabled } from '../internals/plugins/useChartProZoom';
 import { ChartsToolbarZoomInTrigger } from './ChartsToolbarZoomInTrigger';
 import { ChartsToolbarZoomOutTrigger } from './ChartsToolbarZoomOutTrigger';
-import { ChartsSlotsPro } from '../internals/material';
+import { type ChartsSlotsPro } from '../internals/material';
 import {
-  ChartsToolbarPrintExportOptions,
+  type ChartsToolbarPrintExportOptions,
   ChartsToolbarPrintExportTrigger,
 } from './ChartsToolbarPrintExportTrigger';
 import {
-  ChartsToolbarImageExportOptions,
+  type ChartsToolbarImageExportOptions,
   ChartsToolbarImageExportTrigger,
 } from './ChartsToolbarImageExportTrigger';
 
