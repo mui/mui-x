@@ -1,9 +1,9 @@
-import { BarSeriesType, DefaultizedBarSeriesType } from './bar';
+import { type BarSeriesType, type DefaultizedBarSeriesType } from './bar';
 import {
-  CartesianChartSeriesType,
-  ChartSeriesType,
-  ChartsSeriesConfig,
-  StackableChartSeriesType,
+  type CartesianChartSeriesType,
+  type ChartSeriesType,
+  type ChartsSeriesConfig,
+  type StackableChartSeriesType,
 } from './config';
 
 // Series definition

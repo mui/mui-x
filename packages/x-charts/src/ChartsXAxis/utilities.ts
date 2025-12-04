@@ -1,5 +1,5 @@
 import composeClasses from '@mui/utils/composeClasses';
-import { AxisConfig, ChartsXAxisProps } from '../models/axis';
+import { type AxisConfig, type ChartsXAxisProps } from '../models/axis';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
 
 export const useUtilityClasses = (

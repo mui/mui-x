@@ -4,9 +4,8 @@ import { useRtl } from '@mui/system/RtlProvider';
 import { useIsHydrated } from '../hooks/useIsHydrated';
 import { useTicks } from '../hooks/useTicks';
 import { useDrawingArea } from '../hooks/useDrawingArea';
-import { ChartsYAxisProps } from '../models/axis';
-import { OrdinalTimeTicks } from '../models/timeTicks';
-
+import type { ChartsYAxisProps } from '../models/axis';
+import type { OrdinalTimeTicks } from '../models/timeTicks';
 import { useChartContext } from '../context/ChartProvider';
 import { shortenLabels } from './shortenLabels';
 import { AXIS_LABEL_TICK_LABEL_GAP, TICK_LABEL_GAP } from './utilities';

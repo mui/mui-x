@@ -1,11 +1,11 @@
 import { createSelector } from '@mui/x-internals/store';
 import {
-  AxisId,
-  ChartRootSelector,
+  type AxisId,
+  type ChartRootSelector,
   selectorChartZoomMap,
   selectorChartZoomOptionsLookup,
 } from '@mui/x-charts/internals';
-import { UseChartProZoomSignature } from './useChartProZoom.types';
+import { type UseChartProZoomSignature } from './useChartProZoom.types';
 
 export const selectorChartZoomState: ChartRootSelector<UseChartProZoomSignature, 'zoom'> = (
   state,

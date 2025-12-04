@@ -2,10 +2,10 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { useThemeProps, useTheme, styled } from '@mui/material/styles';
-import { ChartsYAxisProps, ComputedAxis, ScaleName } from '../models/axis';
+import type { ChartsYAxisProps, ComputedAxis, ScaleName } from '../models/axis';
 import { ChartsSingleYAxisTicks } from './ChartsSingleYAxisTicks';
 import { ChartsGroupedYAxisTicks } from './ChartsGroupedYAxisTicks';
-import { ChartsText, ChartsTextProps } from '../ChartsText';
+import { ChartsText, type ChartsTextProps } from '../ChartsText';
 import { defaultProps, useUtilityClasses } from './utilities';
 import { isInfinity } from '../internals/isInfinity';
 import { useDrawingArea } from '../hooks/useDrawingArea';

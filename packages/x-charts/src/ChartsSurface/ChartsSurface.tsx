@@ -1,5 +1,5 @@
 'use client';
-import { styled, SxProps, Theme, useThemeProps } from '@mui/material/styles';
+import { styled, type SxProps, type Theme, useThemeProps } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
