@@ -30,7 +30,7 @@ import {
   type UseChartHighlightSignature,
 } from '../internals/plugins/featurePlugins/useChartHighlight';
 import { useStore } from '../internals/store/useStore';
-import { ComputedAxis, getBandSize, invertScale, isBandScale } from '../internals';
+import { type ComputedAxis, getBandSize, invertScale, isBandScale } from '../internals';
 
 interface BatchBarPlotProps extends IndividualBarPlotProps {}
 
@@ -123,21 +123,19 @@ function useOnItemClick(onItemClick: BatchBarPlotProps['onItemClick'] | undefine
       return;
     }
 
-    const {
-      series,
-      seriesOrder,
-      stackingGroups = [],
-    } = selectorChartSeriesProcessed(store.getSnapshot())?.bar ?? {};
+    // TODO: Check if this also works when zoomed in
+
+    const { series, stackingGroups = [] } =
+      selectorChartSeriesProcessed(store.getSnapshot())?.bar ?? {};
     const { axis: xAxes, axisIds: xAxisIds } = selectorChartXAxis(store.getSnapshot());
     const { axis: yAxes, axisIds: yAxisIds } = selectorChartYAxis(store.getSnapshot());
     const defaultXAxisId = xAxisIds[0];
     const defaultYAxisId = yAxisIds[0];
 
-    const closestPoint: { dataIndex: number; seriesId: SeriesId; distanceSq: number } | undefined =
-      undefined;
+    let closestPoint: { dataIndex: number; seriesId: SeriesId } | undefined = undefined;
 
-    for (let stackOrder = 0; stackOrder < stackingGroups.length; stackOrder += 1) {
-      const group = stackingGroups[stackOrder];
+    for (let stackIndex = 0; stackIndex < stackingGroups.length; stackIndex += 1) {
+      const group = stackingGroups[stackIndex];
       const seriesIds = group.ids;
 
       for (const seriesId of seriesIds) {
@@ -152,78 +150,81 @@ function useOnItemClick(onItemClick: BatchBarPlotProps['onItemClick'] | undefine
         const bandAxis = aSeries.layout === 'horizontal' ? yAxis : xAxis;
         const continuousAxis = aSeries.layout === 'horizontal' ? xAxis : yAxis;
         const bandScale = bandAxis.scale;
-
-        const ordinalCoordinate = invertScale(
-          bandScale,
-          bandAxis.data ?? [],
-          aSeries.layout === 'horizontal' ? svgPoint.y : svgPoint.x,
-        );
-
-        if (ordinalCoordinate == null) {
-          continue;
-        }
+        const svgPointBandCoordinate = aSeries.layout === 'horizontal' ? svgPoint.y : svgPoint.x;
 
         if (!isBandScale(bandScale)) {
           continue;
         }
+
+        const dataIndex =
+          bandScale.bandwidth() === 0
+            ? Math.floor(
+                (svgPointBandCoordinate - Math.min(...bandScale.range()) + bandScale.step() / 2) /
+                  bandScale.step(),
+              )
+            : Math.floor(
+                (svgPointBandCoordinate - Math.min(...bandScale.range())) / bandScale.step(),
+              );
 
         const { barWidth, offset } = getBandSize(
           bandScale.bandwidth(),
           stackingGroups.length,
           (bandAxis as ComputedAxis<'band'>).barGapRatio,
         );
+
+        const barOffset = stackIndex * (barWidth + offset);
+        const bandValue = bandAxis.data?.[dataIndex];
+
+        if (bandValue == null) {
+          continue;
+        }
+
+        const bandStart = bandScale(bandValue);
+
+        if (bandStart == null) {
+          continue;
+        }
+
+        const bandBarStart = bandStart + barOffset;
+        const bandBarEnd = bandBarStart + barWidth;
+        const bandBarMin = Math.min(bandBarStart, bandBarEnd);
+        const bandBarMax = Math.max(bandBarStart, bandBarEnd);
+
+        if (svgPointBandCoordinate >= bandBarMin && svgPointBandCoordinate <= bandBarMax) {
+          // The point is inside the band for this series
+          const svgPointContinuousCoordinate =
+            aSeries.layout === 'horizontal' ? svgPoint.x : svgPoint.y;
+          const bar = aSeries.stackedData[dataIndex];
+          const start = continuousAxis.scale(bar[0]);
+          const end = continuousAxis.scale(bar[1]);
+
+          if (start == null || end == null) {
+            continue;
+          }
+
+          const continuousMin = Math.min(start, end);
+          const continuousMax = Math.max(start, end);
+
+          if (
+            svgPointContinuousCoordinate >= continuousMin &&
+            svgPointContinuousCoordinate <= continuousMax
+          ) {
+            closestPoint = {
+              seriesId,
+              dataIndex,
+            };
+          }
+        }
       }
     }
 
-    for (const seriesId of seriesOrder ?? []) {
-      const aSeries = (series ?? {})[seriesId];
-
-      const xAxisId = aSeries.xAxisId ?? defaultXAxisId;
-      const yAxisId = aSeries.yAxisId ?? defaultYAxisId;
-
-      const xAxisZoom = selectorChartAxisZoomData(store.getSnapshot(), xAxisId);
-      const yAxisZoom = selectorChartAxisZoomData(store.getSnapshot(), yAxisId);
-
-      const xZoomStart = (xAxisZoom?.start ?? 0) / 100;
-      const xZoomEnd = (xAxisZoom?.end ?? 100) / 100;
-      const yZoomStart = (yAxisZoom?.start ?? 0) / 100;
-      const yZoomEnd = (yAxisZoom?.end ?? 100) / 100;
-
-      const xAxis = xAxes[xAxisId];
-      const yAxis = yAxes[yAxisId];
-
-      const ordinalAxis = aSeries.layout === 'horizontal' ? yAxis : xAxis;
-      const continuousAxis = aSeries.layout === 'horizontal' ? xAxis : yAxis;
-      const ordinalScale = ordinalAxis.scale;
-
-      const ordinalCoordinate = invertScale(
-        ordinalScale,
-        ordinalAxis.data,
-        aSeries.layout === 'horizontal' ? svgPoint.y : svgPoint.x,
-      );
-
-      if (isBandScale(ordinalScale)) {
-        or;
-      } else {
-        // point scale
-      }
-
-      const continuousCoordinate = invertScale(
-        continuousAxis.scale,
-        continuousAxis.data,
-        aSeries.layout === 'horizontal' ? svgPoint.x : svgPoint.y,
-      );
-
-      console.log(seriesId, ordinalCoordinate, continuousCoordinate);
+    if (closestPoint) {
+      onItemClick?.(event, {
+        type: 'bar',
+        seriesId: closestPoint.seriesId,
+        dataIndex: closestPoint.dataIndex,
+      });
     }
-
-    // if (closestPoint) {
-    //  onItemClick?.(event, {
-    //    type: 'bar',
-    //    seriesId: closestPoint.seriesId,
-    //    dataIndex: closestPoint.dataIndex,
-    //  });
-    // }
   };
 }
 
