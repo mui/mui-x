@@ -1,6 +1,6 @@
 import { scaleBand } from '@mui/x-charts-vendor/d3-scale';
 import { getTicks } from './useTicks';
-import { D3Scale } from '../models/axis';
+import type { D3Scale } from '../models/axis';
 
 const defaultOptions = {
   scale: scaleBand([1, 2, 3, 5], [0, 100]) as unknown as any,

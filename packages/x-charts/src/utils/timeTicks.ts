@@ -1,4 +1,4 @@
-import { TickFrequency, TickFrequencyDefinition } from '../models/timeTicks';
+import type { TickFrequency, TickFrequencyDefinition } from '../models/timeTicks';
 
 function yearNumber(from: Date, to: Date) {
   return Math.abs(to.getFullYear() - from.getFullYear());
