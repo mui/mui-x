@@ -79,6 +79,10 @@ export interface SchedulerProcessedEvent {
    * If not defined, the event is resizable if the `areEventsResizable` property is enabled.
    */
   resizable?: boolean | SchedulerEventSide;
+  /**
+   * A custom class name to apply to the event element.
+   */
+  className?: string;
 }
 
 export interface SchedulerEvent {
@@ -152,6 +156,10 @@ export interface SchedulerEvent {
    * If not defined, the event is resizable if the `areEventsResizable` property is true.
    */
   resizable?: boolean | SchedulerEventSide;
+  /**
+   * A custom class name to apply to the event element.
+   */
+  className?: string;
 }
 
 /**
