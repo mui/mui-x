@@ -2,7 +2,7 @@ import { type SeriesProcessor } from '../../internals/plugins/models/seriesConfi
 import type { DefaultizedRadarSeriesType } from '../../models';
 import type { SeriesId } from '../../models/seriesType/common';
 
-const radarValueFormatter: DefaultizedRadarSeriesType['valueFormatter'] = (v) =>
+const defaultRadarValueFormatter: DefaultizedRadarSeriesType['valueFormatter'] = (v) =>
   v == null ? '' : v.toLocaleString();
 
 const seriesProcessor: SeriesProcessor<'radar'> = (params, _) => {
@@ -15,8 +15,8 @@ const seriesProcessor: SeriesProcessor<'radar'> = (params, _) => {
 
     completedSeries[seriesId] = {
       labelMarkType: 'square',
-      valueFormatter: radarValueFormatter,
       ...series,
+      valueFormatter: series.valueFormatter ?? defaultRadarValueFormatter,
     };
   });
 
