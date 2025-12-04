@@ -5,7 +5,7 @@ import FormLabel from '@mui/material/FormLabel';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Slider from '@mui/material/Slider';
-import { TicksFrequency } from '@mui/x-charts/models';
+import { TickFrequency } from '@mui/x-charts/models';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 
@@ -16,10 +16,10 @@ export default function SelectTimeFrequency({
   tickNumber,
   setTickNumber,
 }: {
-  tickFrequencies: TicksFrequency[];
-  timeOrdinalTicks: Record<TicksFrequency, boolean>;
+  tickFrequencies: TickFrequency[];
+  timeOrdinalTicks: Record<TickFrequency, boolean>;
   setTimeOrdinalTicks: React.Dispatch<
-    React.SetStateAction<Record<TicksFrequency, boolean>>
+    React.SetStateAction<Record<TickFrequency, boolean>>
   >;
   tickNumber: number;
   setTickNumber: React.Dispatch<React.SetStateAction<number>>;

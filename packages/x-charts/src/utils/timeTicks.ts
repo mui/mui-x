@@ -1,4 +1,4 @@
-import { TicksFrequency, TickFrequencyDefinition } from '../models/timeTicks';
+import { TickFrequency, TickFrequencyDefinition } from '../models/timeTicks';
 
 function yearNumber(from: Date, to: Date) {
   return Math.abs(to.getFullYear() - from.getFullYear());
@@ -15,7 +15,7 @@ function hourNumber(from: Date, to: Date) {
   return Math.abs(to.getTime() - from.getTime()) / (1000 * 60 * 60);
 }
 
-export const tickFrequencies: Record<TicksFrequency, TickFrequencyDefinition> = {
+export const tickFrequencies: Record<TickFrequency, TickFrequencyDefinition> = {
   years: {
     getTickNumber: yearNumber,
     isTick: (prev: Date, value: Date) => value.getFullYear() !== prev.getFullYear(),

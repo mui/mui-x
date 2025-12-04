@@ -34,7 +34,7 @@ export type TickFrequencyDefinition = {
  * - 'days': ticks at the start of each day
  * - 'hours': ticks at the start of each hour
  */
-export type TicksFrequency =
+export type TickFrequency =
   | 'years'
   | 'quarterly'
   | 'months'
@@ -43,4 +43,4 @@ export type TicksFrequency =
   | 'days'
   | 'hours';
 
-export type TimeOrdinalTicks = (TickFrequencyDefinition | TicksFrequency)[];
+export type TimeOrdinalTicks = (TickFrequencyDefinition | TickFrequency)[];
