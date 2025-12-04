@@ -6,7 +6,7 @@ import {
   SchedulerProcessedEvent,
   TemporalSupportedObject,
 } from '../../models';
-import { Adapter, diffIn } from '../../use-adapter';
+import { Adapter } from '../../use-adapter';
 import { getDateKey, getOccurrenceEnd, mergeDateAndTime } from '../date-utils';
 import {
   dayInWeek,
@@ -160,7 +160,7 @@ class RecurringEventExpander {
   private findFirstOccurrence(): TemporalSupportedObject | null {
     switch (this.rule.freq) {
       case 'DAILY': {
-        const daysDiff = diffIn(this.adapter, this.scanFirstDay, this.seriesStart, 'days');
+        const daysDiff = this.adapter.differenceInDays(this.scanFirstDay, this.seriesStart);
         const skipDays = daysDiff > 0 ? Math.floor(daysDiff / this.interval) * this.interval : 0;
         let first = this.adapter.addDays(this.seriesStart, skipDays);
 
@@ -173,7 +173,7 @@ class RecurringEventExpander {
       case 'WEEKLY': {
         const seriesWeekStart = this.adapter.startOfWeek(this.seriesStart);
         const scanWeekStart = this.adapter.startOfWeek(this.scanFirstDay);
-        const weeksDiff = diffIn(this.adapter, scanWeekStart, seriesWeekStart, 'weeks');
+        const weeksDiff = this.adapter.differenceInWeeks(scanWeekStart, seriesWeekStart);
         const skipWeeks = weeksDiff > 0 ? Math.floor(weeksDiff / this.interval) * this.interval : 0;
         const startingWeek = this.adapter.addWeeks(seriesWeekStart, skipWeeks);
 
@@ -190,7 +190,7 @@ class RecurringEventExpander {
       case 'MONTHLY': {
         const seriesMonth = this.adapter.startOfMonth(this.seriesStart);
         const scanMonth = this.adapter.startOfMonth(this.scanFirstDay);
-        const monthsDiff = diffIn(this.adapter, scanMonth, seriesMonth, 'months');
+        const monthsDiff = this.adapter.differenceInMonths(scanMonth, seriesMonth);
         const skipMonths =
           monthsDiff > 0 ? Math.floor(monthsDiff / this.interval) * this.interval : 0;
         const startingMonth = this.adapter.addMonths(seriesMonth, skipMonths);
@@ -200,7 +200,7 @@ class RecurringEventExpander {
       case 'YEARLY': {
         const seriesYear = this.adapter.startOfYear(this.seriesStart);
         const scanYear = this.adapter.startOfYear(this.scanFirstDay);
-        const yearsDiff = diffIn(this.adapter, scanYear, seriesYear, 'years');
+        const yearsDiff = this.adapter.differenceInYears(scanYear, seriesYear);
         const skipYears = yearsDiff > 0 ? Math.floor(yearsDiff / this.interval) * this.interval : 0;
         const startingYear = this.adapter.addYears(seriesYear, skipYears);
 
