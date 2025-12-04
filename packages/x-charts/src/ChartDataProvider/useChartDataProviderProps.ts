@@ -2,7 +2,10 @@
 import { useTheme, useThemeProps } from '@mui/material/styles';
 import type { ChartDataProviderProps } from './ChartDataProvider';
 import { type ChartProviderProps } from '../context/ChartProvider';
-import { type ChartAnyPluginSignature, type MergeSignaturesProperty } from '../internals/plugins/models';
+import {
+  type ChartAnyPluginSignature,
+  type MergeSignaturesProperty,
+} from '../internals/plugins/models';
 import { type ChartSeriesType } from '../models/seriesType/config';
 import { type ChartCorePluginSignatures } from '../internals/plugins/corePlugins';
 import { type AllPluginSignatures, DEFAULT_PLUGINS } from '../internals/plugins/allPlugins';

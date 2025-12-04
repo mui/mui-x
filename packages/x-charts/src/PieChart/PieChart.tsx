@@ -9,7 +9,10 @@ import { type ChartsSlotProps, type ChartsSlots } from '../internals/material';
 import { type ChartContainerProps } from '../ChartContainer';
 import { type PieSeriesType } from '../models/seriesType';
 import { ChartsTooltip } from '../ChartsTooltip';
-import { type ChartsTooltipSlots, type ChartsTooltipSlotProps } from '../ChartsTooltip/ChartTooltip.types';
+import {
+  type ChartsTooltipSlots,
+  type ChartsTooltipSlotProps,
+} from '../ChartsTooltip/ChartTooltip.types';
 import { ChartsLegend, type ChartsLegendSlotProps, type ChartsLegendSlots } from '../ChartsLegend';
 import { PiePlot, type PiePlotProps, type PiePlotSlotProps, type PiePlotSlots } from './PiePlot';
 import { type PieValueType } from '../models/seriesType/pie';

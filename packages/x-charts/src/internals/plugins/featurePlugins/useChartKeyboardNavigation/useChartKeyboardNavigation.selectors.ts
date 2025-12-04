@@ -1,7 +1,10 @@
 import { createSelector } from '@mui/x-internals/store';
 import { type ChartOptionalRootSelector } from '../../utils/selectors';
 import { type UseChartKeyboardNavigationSignature } from './useChartKeyboardNavigation.types';
-import { type ProcessedSeries, selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';
+import {
+  type ProcessedSeries,
+  selectorChartSeriesProcessed,
+} from '../../corePlugins/useChartSeries';
 import {
   selectorChartXAxis,
   selectorChartYAxis,
@@ -9,7 +12,11 @@ import {
 import { type ComputeResult } from '../useChartCartesianAxis/computeAxisValue';
 import { type ChartSeriesType } from '../../../../models/seriesType/config';
 import { type SeriesId } from '../../../../models/seriesType/common';
-import { type AxisId, type AxisItemIdentifier, type ChartsAxisProps } from '../../../../models/axis';
+import {
+  type AxisId,
+  type AxisItemIdentifier,
+  type ChartsAxisProps,
+} from '../../../../models/axis';
 import { type FocusedItemData } from '../../../../hooks/useFocusedItem';
 
 const selectKeyboardNavigation: ChartOptionalRootSelector<UseChartKeyboardNavigationSignature> = (

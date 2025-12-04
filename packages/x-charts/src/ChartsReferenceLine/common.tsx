@@ -1,5 +1,8 @@
 import { styled } from '@mui/material/styles';
-import { referenceLineClasses, type ChartsReferenceLineClasses } from './chartsReferenceLineClasses';
+import {
+  referenceLineClasses,
+  type ChartsReferenceLineClasses,
+} from './chartsReferenceLineClasses';
 import { type ChartsTextStyle } from '../ChartsText';
 import { type AxisId } from '../models/axis';
 

@@ -6,7 +6,12 @@ import * as React from 'react';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
-import { type PieChartProps, type PieChartSlotProps, type PieChartSlots, PiePlot } from '@mui/x-charts/PieChart';
+import {
+  type PieChartProps,
+  type PieChartSlotProps,
+  type PieChartSlots,
+  PiePlot,
+} from '@mui/x-charts/PieChart';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';

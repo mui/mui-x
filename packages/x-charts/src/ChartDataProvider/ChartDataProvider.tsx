@@ -1,7 +1,11 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { defaultSlotsMaterial, type ChartsSlotProps, type ChartsSlots } from '../internals/material';
+import {
+  defaultSlotsMaterial,
+  type ChartsSlotProps,
+  type ChartsSlots,
+} from '../internals/material';
 import { ChartsSlotsProvider } from '../context/ChartsSlotsContext';
 import { useChartDataProviderProps } from './useChartDataProviderProps';
 import { ChartProvider, type ChartProviderProps } from '../context/ChartProvider';

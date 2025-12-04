@@ -17,7 +17,11 @@ import type { DefaultizedZoomOptions } from '../internals/plugins/featurePlugins
 import { type ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
 import { type ChartsTextProps } from '../ChartsText';
-import { type ContinuousColorConfig, type OrdinalColorConfig, type PiecewiseColorConfig } from './colorMapping';
+import {
+  type ContinuousColorConfig,
+  type OrdinalColorConfig,
+  type PiecewiseColorConfig,
+} from './colorMapping';
 
 export type AxisId = string | number;
 

@@ -3,7 +3,10 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { type ScatterMarkerSlotProps, type ScatterMarkerSlots } from './ScatterMarker.types';
-import { type DefaultizedScatterSeriesType, type ScatterItemIdentifier } from '../models/seriesType/scatter';
+import {
+  type DefaultizedScatterSeriesType,
+  type ScatterItemIdentifier,
+} from '../models/seriesType/scatter';
 import { getInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { useStore } from '../internals/store/useStore';
 import { useSelector } from '../internals/store/useSelector';

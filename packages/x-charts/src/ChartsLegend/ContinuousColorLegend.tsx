@@ -8,7 +8,10 @@ import { type ComputedAxis } from '../models/axis';
 import { useAxis } from './useAxis';
 import { type ColorLegendSelector } from './colorLegend.types';
 import { ChartsLabel } from '../ChartsLabel/ChartsLabel';
-import { ChartsLabelGradient, type ChartsLabelGradientProps } from '../ChartsLabel/ChartsLabelGradient';
+import {
+  ChartsLabelGradient,
+  type ChartsLabelGradientProps,
+} from '../ChartsLabel/ChartsLabelGradient';
 import { type Direction } from './direction';
 import { consumeThemeProps } from '../internals/consumeThemeProps';
 import {

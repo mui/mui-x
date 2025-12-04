@@ -4,7 +4,11 @@ import { type MakeOptional } from '@mui/x-internals/types';
 import { type ChartProviderProps } from '../../context/ChartProvider/ChartProvider.types';
 import { RADAR_PLUGINS, type RadarChartPluginSignatures } from '../RadarChart.plugins';
 import { type RadarSeriesType } from '../../models/seriesType/radar';
-import { type ChartsRadiusAxisProps, type ChartsRotationAxisProps, type PolarAxisConfig } from '../../models/axis';
+import {
+  type ChartsRadiusAxisProps,
+  type ChartsRotationAxisProps,
+  type PolarAxisConfig,
+} from '../../models/axis';
 import { ChartDataProvider, type ChartDataProviderProps } from '../../ChartDataProvider';
 import { defaultizeMargin } from '../../internals/defaultizeMargin';
 import { radarSeriesConfig } from '../seriesConfig';

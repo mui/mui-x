@@ -24,7 +24,12 @@ import {
   getDefaultTickNumber,
   scaleBand,
 } from '@mui/x-charts/internals';
-import { type AxisConfig, type ChartsXAxisProps, type ChartsYAxisProps, type ScaleName } from '@mui/x-charts/models';
+import {
+  type AxisConfig,
+  type ChartsXAxisProps,
+  type ChartsYAxisProps,
+  type ScaleName,
+} from '@mui/x-charts/models';
 
 export const xRangeGetter = (
   drawingArea: ChartDrawingArea,

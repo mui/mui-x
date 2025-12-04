@@ -5,7 +5,10 @@ import { type SeriesItemIdentifierWithData } from '../models';
 import { useChartContext } from '../context/ChartProvider';
 import { type UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
 import { type UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
-import { type ChartSeriesType, type ChartItemIdentifierWithData } from '../models/seriesType/config';
+import {
+  type ChartSeriesType,
+  type ChartItemIdentifierWithData,
+} from '../models/seriesType/config';
 import { type ChartInstance } from '../internals/plugins/models';
 
 function onPointerDown(event: React.PointerEvent) {

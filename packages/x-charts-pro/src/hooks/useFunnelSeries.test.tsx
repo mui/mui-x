@@ -1,7 +1,11 @@
 import { renderHook, type RenderHookResult } from '@mui/internal-test-utils';
 import * as React from 'react';
 import { useFunnelSeries, useFunnelSeriesContext } from './useFunnelSeries';
-import { type DefaultizedFunnelSeriesType, FunnelChart, type FunnelSeriesType } from '../FunnelChart';
+import {
+  type DefaultizedFunnelSeriesType,
+  FunnelChart,
+  type FunnelSeriesType,
+} from '../FunnelChart';
 
 const mockSeries: FunnelSeriesType[] = [
   {

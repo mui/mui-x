@@ -6,7 +6,10 @@ import {
   selectorChartSeriesProcessed,
 } from '../../corePlugins/useChartSeries';
 import { computeAxisValue } from './computeAxisValue';
-import { type ExtremumFilter, type UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
+import {
+  type ExtremumFilter,
+  type UseChartCartesianAxisSignature,
+} from './useChartCartesianAxis.types';
 import { type ChartState } from '../../models/chart';
 import {
   createContinuousScaleGetAxisFilter,

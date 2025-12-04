@@ -17,7 +17,10 @@ import {
   useChartProExport,
   type UseChartProExportSignature,
 } from '../internals/plugins/useChartProExport';
-import { useChartProZoom, type UseChartProZoomSignature } from '../internals/plugins/useChartProZoom';
+import {
+  useChartProZoom,
+  type UseChartProZoomSignature,
+} from '../internals/plugins/useChartProZoom';
 
 export type BarChartProPluginSignatures = [
   UseChartZAxisSignature,

@@ -8,7 +8,10 @@ import { type ChartSeriesConfig } from '@mui/x-charts/internals';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { type MakeOptional } from '@mui/x-internals/types';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
-import { ChartsAxisHighlight, type ChartsAxisHighlightProps } from '@mui/x-charts/ChartsAxisHighlight';
+import {
+  ChartsAxisHighlight,
+  type ChartsAxisHighlightProps,
+} from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { FunnelPlot, type FunnelPlotProps } from './FunnelPlot';

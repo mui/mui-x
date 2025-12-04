@@ -10,7 +10,10 @@ import { type ChartContainerProps } from '../ChartContainer';
 import { ChartsAxis, type ChartsAxisProps } from '../ChartsAxis';
 import { type BarSeriesType } from '../models/seriesType/bar';
 import { ChartsTooltip } from '../ChartsTooltip';
-import { type ChartsTooltipSlots, type ChartsTooltipSlotProps } from '../ChartsTooltip/ChartTooltip.types';
+import {
+  type ChartsTooltipSlots,
+  type ChartsTooltipSlotProps,
+} from '../ChartsTooltip/ChartTooltip.types';
 import { ChartsLegend, type ChartsLegendSlots, type ChartsLegendSlotProps } from '../ChartsLegend';
 import { ChartsAxisHighlight, type ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsClipPath } from '../ChartsClipPath';
