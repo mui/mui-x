@@ -74,6 +74,9 @@ const PieArcLabelRoot = styled('text', {
   animationName: 'animate-opacity',
   animationDuration: '0s',
   animationTimingFunction: ANIMATION_TIMING_FUNCTION,
+  transitionDuration: `${ANIMATION_DURATION_MS}ms`,
+  transitionProperty: 'opacity',
+  transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
   [`&.${pieArcLabelClasses.animate}`]: {
     animationDuration: `${ANIMATION_DURATION_MS}ms`,
   },
@@ -138,7 +141,7 @@ const PieArcLabel = React.forwardRef<SVGTextElement, PieArcLabelProps>(
     });
 
     return (
-      <PieArcLabelRoot className={classes.root} {...other} {...animatedProps}>
+      <PieArcLabelRoot className={classes.root} {...other} {...animatedProps} style={style}>
         {formattedArcLabel}
       </PieArcLabelRoot>
     );
