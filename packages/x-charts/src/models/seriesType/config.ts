@@ -29,6 +29,11 @@ export interface ChartsSeriesConfig {
      */
     series: DefaultizedBarSeriesType;
     /**
+     * Additional data computed from the series plus drawing area.
+     * Useful for special charts like sankey where the series data is not sufficient to draw the series.
+     * */
+    seriesLayout: {};
+    /**
      * Series typing such that the one user need to provide
      */
     seriesProp: BarSeriesType;
@@ -42,6 +47,7 @@ export interface ChartsSeriesConfig {
     seriesInput: DefaultizedProps<LineSeriesType, 'id'> &
       MakeRequired<SeriesColor<number | null>, 'color'>;
     series: DefaultizedLineSeriesType;
+    seriesLayout: {};
     seriesProp: LineSeriesType;
     itemIdentifier: LineItemIdentifier;
     itemIdentifierWithData: LineItemIdentifier;
@@ -53,6 +59,7 @@ export interface ChartsSeriesConfig {
     seriesInput: DefaultizedProps<ScatterSeriesType, 'id'> &
       MakeRequired<SeriesColor<ScatterValueType | null>, 'color'>;
     series: DefaultizedScatterSeriesType;
+    seriesLayout: {};
     seriesProp: ScatterSeriesType;
     valueType: ScatterValueType;
     itemIdentifier: ScatterItemIdentifier;
@@ -66,6 +73,7 @@ export interface ChartsSeriesConfig {
       >;
     };
     series: DefaultizedPieSeriesType;
+    seriesLayout: {};
     seriesProp: PieSeriesType<MakeOptional<PieValueType, 'id'>>;
     itemIdentifier: PieItemIdentifier;
     itemIdentifierWithData: PieItemIdentifier;
@@ -75,6 +83,7 @@ export interface ChartsSeriesConfig {
     seriesInput: DefaultizedProps<RadarSeriesType, 'id'> &
       MakeRequired<SeriesColor<number>, 'color'>;
     series: DefaultizedRadarSeriesType;
+    seriesLayout: {};
     seriesProp: RadarSeriesType;
     itemIdentifier: RadarItemIdentifier;
     itemIdentifierWithData: RadarItemIdentifier;
@@ -116,6 +125,10 @@ export type ChartSeriesDefaultized<T extends ChartSeriesType> = ChartsSeriesConf
   ? ChartsSeriesConfig[T]['series'] & { stackedData: [number, number][] }
   : ChartsSeriesConfig[T]['series'];
 
+export type ChartSeriesLayout<T extends ChartSeriesType> = ChartsSeriesConfig[T] extends any
+  ? ChartsSeriesConfig[T]['seriesLayout']
+  : never;
+
 export type ChartItemIdentifier<T extends ChartSeriesType> =
   ChartsSeriesConfig[T]['itemIdentifier'];
 
@@ -123,6 +136,6 @@ export type ChartItemIdentifierWithData<T extends ChartSeriesType> =
   ChartsSeriesConfig[T]['itemIdentifierWithData'];
 
 export type DatasetElementType<T> = {
-  [key: string]: Readonly<T>;
+  [key: string]: T;
 };
-export type DatasetType<T = number | string | Date | null | undefined> = DatasetElementType<T>[];
+export type DatasetType<T = unknown> = DatasetElementType<T>[];

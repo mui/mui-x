@@ -40,6 +40,7 @@ export type SeriesItemIdentifier<T extends ChartSeriesType = ChartSeriesType> =
 export type SeriesItemIdentifierWithData<T extends ChartSeriesType = ChartSeriesType> =
   ChartsSeriesConfig[T]['itemIdentifierWithData'];
 
+export { type SeriesId } from './common';
 export * from './line';
 export * from './bar';
 export * from './scatter';

@@ -31,9 +31,9 @@ export function BarPreviewPlot(props: BarPreviewPlotProps) {
 
   return (
     <g>
-      {completedData.map(({ seriesId, data }) => (
+      {completedData.map(({ seriesId, layout, xOrigin, yOrigin, data }) => (
         <g key={seriesId}>
-          {data.map(({ dataIndex, color, layout, x, xOrigin, y, yOrigin, width, height }) => {
+          {data.map(({ dataIndex, color, x, y, width, height }) => {
             return (
               <BarElement
                 key={dataIndex}

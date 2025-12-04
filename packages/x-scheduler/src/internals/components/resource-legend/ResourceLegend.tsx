@@ -5,28 +5,24 @@ import { Eye, EyeClosed } from 'lucide-react';
 import { Checkbox } from '@base-ui-components/react/checkbox';
 import { CheckboxGroup } from '@base-ui-components/react/checkbox-group';
 import { useStore } from '@base-ui-components/utils/store';
-import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
+import { useStableCallback } from '@base-ui-components/utils/useStableCallback';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { schedulerResourceSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
-import { CalendarResource } from '@mui/x-scheduler-headless/models';
-import { DEFAULT_EVENT_COLOR } from '@mui/x-scheduler-headless/constants';
+import { SchedulerResource } from '@mui/x-scheduler-headless/models';
 import { ResourceLegendProps } from './ResourceLegend.types';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { getColorClassName } from '../../utils/color-utils';
 import './ResourceLegend.css';
 
-function ResourceLegendItem(props: { resource: CalendarResource }) {
+function ResourceLegendItem(props: { resource: SchedulerResource }) {
   const { resource } = props;
   const translations = useTranslations();
+  const store = useEventCalendarStoreContext();
+  const eventColor = useStore(store, schedulerResourceSelectors.defaultEventColor, resource.id);
 
   return (
     <label className="ResourceLegendItem">
-      <span
-        className={clsx(
-          'ResourceLegendColor',
-          getColorClassName(resource.eventColor ?? DEFAULT_EVENT_COLOR),
-        )}
-      />
+      <span className={clsx('ResourceLegendColor', getColorClassName(eventColor))} />
       <span className="ResourceLegendName">{resource.title}</span>
       <Checkbox.Root
         className={clsx('NeutralTextButton', 'Button', 'ResourceLegendButton')}
@@ -68,7 +64,7 @@ export const ResourceLegend = React.forwardRef(function ResourceLegend(
   const resources = useStore(store, schedulerResourceSelectors.processedResourceList);
   const visibleResourcesList = useStore(store, schedulerResourceSelectors.visibleIdList);
 
-  const handleVisibleResourcesChange = useEventCallback((value: string[]) => {
+  const handleVisibleResourcesChange = useStableCallback((value: string[]) => {
     const valueSet = new Set(value);
     const newVisibleResourcesMap = new Map(
       schedulerResourceSelectors

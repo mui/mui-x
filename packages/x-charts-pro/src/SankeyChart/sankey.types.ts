@@ -2,10 +2,7 @@
 
 import type { HighlightScope, SeriesId } from '@mui/x-charts/internals';
 import type { DefaultizedProps, MakeRequired } from '@mui/x-internals/types';
-import type {
-  SankeyLink as D3SankeyLink,
-  SankeyNode as D3SankeyNode,
-} from '@mui/x-charts-vendor/d3-sankey';
+import type { SankeyLink as D3SankeyLink, SankeyNode as D3SankeyNode } from './d3Sankey';
 import type { SankeyLinkHighlightScope, SankeyNodeHighlightScope } from './sankey.highlight.types';
 
 export type SankeyNodeId = string | number;
@@ -90,12 +87,19 @@ export type SankeyNodeOptions = {
    */
   showLabels?: boolean;
   /**
-   * Custom sort function for nodes
+   * Custom sort mode for nodes
+   *
+   * - 'auto': Automatic sorting behavior (default)
+   * - 'fixed': Preserve the order from the nodes array (disables automatic sorting)
+   * - or a custom function
+   *
    * @param {SankeyLayoutNode} a - First node to compare
    * @param {SankeyLayoutNode} b - Second node to compare
    * @returns {number} Comparison result
+   *
+   * @default 'auto'
    */
-  sort?: (a: SankeyLayoutNode, b: SankeyLayoutNode) => number | null;
+  sort?: 'auto' | 'fixed' | ((a: SankeyLayoutNode, b: SankeyLayoutNode) => number);
 } & SankeyNodeHighlightScope;
 
 export type SankeyLinkOptions = {
@@ -116,12 +120,19 @@ export type SankeyLinkOptions = {
    */
   showValues?: boolean;
   /**
-   * Custom sort function for links
+   * Custom sort mode for links
+   * 
+   * - 'auto': Automatic sorting behavior (default)
+   * - 'fixed': Preserve the order from the links array (disables automatic sorting)
+   * - or a custom function
+   * 
    * @param {SankeyLayoutLink} a - First link to compare
    * @param {SankeyLayoutLink} b - Second link to compare
    * @returns {number} Comparison result
+
+  * @default 'auto'
    */
-  sort?: (a: SankeyLayoutLink, b: SankeyLayoutLink) => number | null;
+  sort?: 'auto' | 'fixed' | ((a: SankeyLayoutLink, b: SankeyLayoutLink) => number);
   /**
    * Applies the given number to the X dimension of the control points of the link's curve function.
    * This can create better looking links between nodes, but is dependent on the graph layout.

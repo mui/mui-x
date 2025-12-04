@@ -6,7 +6,7 @@
     opacity: 0.5;
   }
 
-  &:hover .EventResizeHandler {
+  &:hover .DayGridEventResizeHandler {
     opacity: 1;
   }
 }
@@ -47,7 +47,7 @@
   margin-top: var(--space-05);
 }
 
-.EventCard--allDay,
+.EventCard--filled,
 .EventCard--invisible,
 .EventCard--placeholder {
   container-type: inline-size;

@@ -40,6 +40,7 @@ function ChartsSingleYAxisTicks(inProps: ChartsSingleYAxisProps) {
     tickLabelPlacement,
     tickInterval,
     tickLabelInterval,
+    tickSpacing,
     width: axisWidth,
   } = defaultizedProps;
 
@@ -56,6 +57,7 @@ function ChartsSingleYAxisTicks(inProps: ChartsSingleYAxisProps) {
     tickPlacement,
     tickLabelPlacement,
     tickInterval,
+    tickSpacing,
     direction: 'y',
   });
 

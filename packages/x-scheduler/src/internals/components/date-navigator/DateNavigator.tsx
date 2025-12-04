@@ -41,7 +41,9 @@ export const DateNavigator = React.forwardRef(function DateNavigator(
         type="button"
         aria-label={isSidePanelOpen ? translations.closeSidePanel : translations.openSidePanel}
         className={clsx('OutlinedNeutralButton', 'Button', 'IconButton')}
-        onClick={(event) => store.setPreferences({ isSidePanelOpen: !isSidePanelOpen }, event)}
+        onClick={(event) =>
+          store.setPreferences({ isSidePanelOpen: !isSidePanelOpen }, event.nativeEvent)
+        }
       >
         {isSidePanelOpen ? (
           <PanelLeftClose size={20} strokeWidth={1.5} className="Icon" />
@@ -50,7 +52,7 @@ export const DateNavigator = React.forwardRef(function DateNavigator(
         )}
       </button>
       <p className="DateNavigatorLabel" aria-live="polite">
-        {adapter.format(visibleDate, 'month')} {adapter.format(visibleDate, 'year')}
+        {adapter.format(visibleDate, 'monthFullLetter')} {adapter.format(visibleDate, 'yearPadded')}
       </p>
       <div className="DateNavigatorButtonsContainer">
         <button

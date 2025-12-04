@@ -109,15 +109,25 @@ To dynamically customize the order, use the sorting functions for the element th
 
 ### Node sorting
 
-The `nodeOptions.sort` function allows control of the vertical order of nodes within each column.
-It receives two `SankeyLayoutNode` objects and should return a number (similar to [`Array.sort()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#comparefn)).
+The `nodeOptions.sort` property controls the vertical order of nodes within each column.
+
+It accepts the following values:
+
+- A **function** that receives two `SankeyLayoutNode` objects and returns a number (similar to [`Array.sort()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#comparefn))
+- `'auto'` (default): Uses the automatic sorting behavior, which aims to minimize links crossing each other
+- `'fixed'`: Preserves the order from the `nodes` array, disabling automatic sorting
 
 {{"demo": "SankeyNodeSorting.js"}}
 
 ### Link sorting
 
-The `linkOptions.sort` function allows control of the order of links emanating from each node.
-It receives two `SankeyLayoutLink` objects and should return a number.
+The `linkOptions.sort` property controls the order of links emanating from each node.
+
+It accepts the following values:
+
+- A **function** that receives two `SankeyLayoutLink` objects and returns a number
+- `'auto'` (default): Uses the automatic sorting behavior, which aims to minimize links crossing each other
+- `'fixed'`: Preserves the order from the `links` array, disabling automatic sorting
 
 {{"demo": "SankeyLinkSorting.js"}}
 

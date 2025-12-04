@@ -6,6 +6,7 @@ import { Timeline } from '@mui/x-scheduler-headless/timeline';
 import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useTimelineStoreContext } from '@mui/x-scheduler-headless/use-timeline-store-context';
 import { getColorClassName } from '../../../../internals/utils/color-utils';
+import { EventDragPreview } from '../../../../internals/components/event-drag-preview';
 import { TimelineEventProps } from './TimelineEvent.types';
 import './TimelineEvent.css';
 
@@ -13,30 +14,62 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
   props: TimelineEventProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { occurrence, ariaLabelledBy, className, id: idProp, style, ...other } = props;
+  const { occurrence, ariaLabelledBy, className, variant, id: idProp, style, ...other } = props;
 
+  // Context hooks
   const store = useTimelineStoreContext();
 
-  const id = useId(idProp);
+  // Selector hooks
+  const isDraggable = useStore(store, schedulerEventSelectors.isDraggable, occurrence.id);
+  const isStartResizable = useStore(
+    store,
+    schedulerEventSelectors.isResizable,
+    occurrence.id,
+    'start',
+  );
+  const isEndResizable = useStore(store, schedulerEventSelectors.isResizable, occurrence.id, 'end');
   const color = useStore(store, schedulerEventSelectors.color, occurrence.id);
+
+  // Feature hooks
+  const id = useId(idProp);
+
+  const sharedProps = {
+    id,
+    start: occurrence.start,
+    end: occurrence.end,
+    ref: forwardedRef,
+    'aria-labelledby': `${ariaLabelledBy} ${id}`,
+    className: clsx(className, 'TimelineEvent', getColorClassName(color)),
+    style: {
+      '--number-of-lines': 1,
+      '--row-index': occurrence.position.firstIndex,
+    } as React.CSSProperties,
+    ...other,
+  };
+
+  if (variant === 'placeholder') {
+    return (
+      <Timeline.EventPlaceholder aria-hidden={true} {...sharedProps}>
+        <span className="LinesClamp">{occurrence.title}</span>
+      </Timeline.EventPlaceholder>
+    );
+  }
 
   return (
     <Timeline.Event
-      ref={forwardedRef}
-      className={clsx(className, 'TimelineEvent', 'LinesClamp', getColorClassName(color))}
-      id={id}
-      aria-labelledby={`${ariaLabelledBy} ${id}`}
-      style={
-        {
-          '--number-of-lines': 1,
-          '--row-index': occurrence.position.firstIndex,
-        } as React.CSSProperties
-      }
-      start={occurrence.start}
-      end={occurrence.end}
-      {...other}
+      isDraggable={isDraggable}
+      eventId={occurrence.id}
+      occurrenceKey={occurrence.key}
+      renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
+      {...sharedProps}
     >
-      {occurrence.title}
+      {isStartResizable && (
+        <Timeline.EventResizeHandler side="start" className="TimelineEventResizeHandler" />
+      )}
+      <span className="LinesClamp">{occurrence.title}</span>
+      {isEndResizable && (
+        <Timeline.EventResizeHandler side="end" className="TimelineEventResizeHandler" />
+      )}
     </Timeline.Event>
   );
 });

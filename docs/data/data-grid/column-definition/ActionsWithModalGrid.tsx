@@ -4,7 +4,8 @@ import {
   GridActionsCellItem,
   GridRowId,
   GridColDef,
-  GridActionsCellItemProps,
+  GridActionsCell,
+  GridRenderCellParams,
 } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { randomUserName } from '@mui/x-data-grid-generator';
@@ -23,22 +24,39 @@ const initialRows = [
 
 type Row = (typeof initialRows)[number];
 
-function DeleteUserActionItem({
-  rowId,
-  onConfirm,
-  ...props
-}: GridActionsCellItemProps & {
-  rowId: GridRowId;
-  onConfirm: (id: GridRowId) => void;
-}) {
+const ActionHandlersContext = React.createContext<
+  ((id: GridRowId) => void) | undefined
+>(undefined);
+
+function ActionsCell(props: GridRenderCellParams) {
+  const setActionRowId = React.useContext(ActionHandlersContext);
+
+  if (!setActionRowId) {
+    throw new Error('ActionHandlersContext is empty');
+  }
+
   return (
-    <GridActionsCellItem
-      {...(props as any)}
-      onClick={() => onConfirm(rowId)}
-      closeMenuOnClick={false}
-    />
+    <GridActionsCell {...props}>
+      <GridActionsCellItem
+        label="Delete"
+        showInMenu
+        icon={<DeleteIcon />}
+        onClick={() => setActionRowId(props.id)}
+        closeMenuOnClick={false}
+      />
+    </GridActionsCell>
   );
 }
+
+const columns: GridColDef<Row>[] = [
+  { field: 'name', type: 'string' },
+  {
+    field: 'actions',
+    type: 'actions',
+    width: 80,
+    renderCell: (params) => <ActionsCell {...params} />,
+  },
+];
 
 export default function ActionsWithModalGrid() {
   const [rows, setRows] = React.useState<Row[]>(initialRows);
@@ -59,30 +77,11 @@ export default function ActionsWithModalGrid() {
     handleCloseDialog();
   }, [actionRowId, deleteActiveRow, handleCloseDialog]);
 
-  const columns = React.useMemo<GridColDef<Row>[]>(
-    () => [
-      { field: 'name', type: 'string' },
-      {
-        field: 'actions',
-        type: 'actions',
-        width: 80,
-        getActions: (params) => [
-          <DeleteUserActionItem
-            label="Delete"
-            showInMenu
-            icon={<DeleteIcon />}
-            rowId={params.id}
-            onConfirm={setActionRowId}
-          />,
-        ],
-      },
-    ],
-    [],
-  );
-
   return (
     <div style={{ height: 300, width: '100%' }}>
-      <DataGrid columns={columns} rows={rows} />
+      <ActionHandlersContext.Provider value={setActionRowId}>
+        <DataGrid columns={columns} rows={rows} />
+      </ActionHandlersContext.Provider>
       <Dialog
         open={actionRowId !== null}
         onClose={handleCloseDialog}

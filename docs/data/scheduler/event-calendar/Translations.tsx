@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { CalendarEvent } from '@mui/x-scheduler/models';
+import { SchedulerEvent } from '@mui/x-scheduler/models';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import { frFR } from '@mui/x-scheduler/translations';
 import {
@@ -9,7 +9,7 @@ import {
 } from '../datasets/palette-demo';
 
 export default function Translations() {
-  const [events, setEvents] = React.useState<CalendarEvent[]>(initialEvents);
+  const [events, setEvents] = React.useState<SchedulerEvent[]>(initialEvents);
 
   return (
     <div style={{ height: '600px', width: '100%' }}>
@@ -19,7 +19,7 @@ export default function Translations() {
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
         translations={frFR}
-        preferences={{ isSidePanelOpen: false }}
+        defaultPreferences={{ isSidePanelOpen: false }}
       />
     </div>
   );

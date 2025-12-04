@@ -1,17 +1,20 @@
 'use client';
 import {
-  createAllSeriesSelectorOfType,
-  createSeriesSelectorsOfType,
+  useSeriesOfType,
+  useAllSeriesOfType,
   ProcessedSeries,
   SeriesId,
   ChartSeriesDefaultized,
+  useSelector,
+  useStore,
+  ChartSeriesLayout,
+  selectorChartSeriesLayout,
 } from '@mui/x-charts/internals';
-
-const useSelectorSeries = createSeriesSelectorsOfType('sankey');
-const useSelectorSeriesContext = createAllSeriesSelectorOfType('sankey');
+import { SankeyLayout } from '../SankeyChart';
 
 export type UseSankeySeriesReturnValue = ChartSeriesDefaultized<'sankey'>;
 export type UseSankeySeriesContextReturnValue = ProcessedSeries['sankey'];
+export type UseSankeySeriesLayoutReturnValue = ChartSeriesLayout<'sankey'>;
 
 /**
  * Get access to the internal state of sankey series.
@@ -36,7 +39,7 @@ export function useSankeySeries(): UseSankeySeriesReturnValue[];
  */
 export function useSankeySeries(seriesIds: SeriesId[]): UseSankeySeriesReturnValue[];
 export function useSankeySeries(seriesIds?: SeriesId | SeriesId[]) {
-  return useSelectorSeries(seriesIds);
+  return useSeriesOfType('sankey', seriesIds);
 }
 
 /**
@@ -47,5 +50,21 @@ export function useSankeySeries(seriesIds?: SeriesId | SeriesId[]) {
  * @returns the sankey series
  */
 export function useSankeySeriesContext(): UseSankeySeriesContextReturnValue {
-  return useSelectorSeriesContext();
+  return useAllSeriesOfType('sankey');
+}
+/**
+ * Get access to the sankey layout.
+ * @returns {SankeyLayout | undefined} the sankey layout
+ */
+export function useSankeyLayout(): SankeyLayout | undefined {
+  const store = useStore();
+
+  const seriesContext = useSankeySeriesContext();
+  const seriesId = seriesContext?.seriesOrder?.[0];
+  const layout = useSelector(store, selectorChartSeriesLayout);
+
+  if (!seriesId) {
+    return undefined;
+  }
+  return layout?.sankey?.[seriesId]?.sankeyLayout;
 }

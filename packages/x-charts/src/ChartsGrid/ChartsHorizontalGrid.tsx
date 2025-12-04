@@ -3,6 +3,7 @@ import { useTicks } from '../hooks/useTicks';
 import { ComputedYAxis } from '../models/axis';
 import { GridLine } from './styledComponents';
 import { ChartsGridClasses } from './chartsGridClasses';
+import { useChartContext } from '../context/ChartProvider';
 
 interface ChartsGridHorizontalProps {
   axis: ComputedYAxis;
@@ -15,24 +16,33 @@ interface ChartsGridHorizontalProps {
  * @ignore - internal component.
  */
 export function ChartsGridHorizontal(props: ChartsGridHorizontalProps) {
+  const { instance } = useChartContext();
   const { axis, start, end, classes } = props;
 
-  const { scale, tickNumber, tickInterval } = axis;
+  const { scale, tickNumber, tickInterval, tickSpacing } = axis;
 
-  const yTicks = useTicks({ scale, tickNumber, tickInterval, direction: 'y' });
+  const yTicks = useTicks({
+    scale,
+    tickNumber,
+    tickInterval,
+    tickSpacing,
+    direction: 'y',
+  });
 
   return (
     <React.Fragment>
-      {yTicks.map(({ value, offset }) => (
-        <GridLine
-          key={`horizontal-${value?.getTime?.() ?? value}`}
-          y1={offset}
-          y2={offset}
-          x1={start}
-          x2={end}
-          className={classes.horizontalLine}
-        />
-      ))}
+      {yTicks.map(({ value, offset }) =>
+        !instance.isYInside(offset) ? null : (
+          <GridLine
+            key={`horizontal-${value?.getTime?.() ?? value}`}
+            y1={offset}
+            y2={offset}
+            x1={start}
+            x2={end}
+            className={classes.horizontalLine}
+          />
+        ),
+      )}
     </React.Fragment>
   );
 }

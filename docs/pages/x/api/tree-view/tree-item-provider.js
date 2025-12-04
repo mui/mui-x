@@ -4,22 +4,17 @@ import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslation
 import jsonPageContent from './tree-item-provider.json';
 
 export default function Page(props) {
-  const { descriptions, pageContent } = props;
-  return <ApiPage descriptions={descriptions} pageContent={pageContent} />;
+  const { descriptions } = props;
+  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
 }
 
 export async function getStaticProps() {
   const req = require.context(
     'docsx/translations/api-docs/tree-view/tree-item-provider',
     false,
-    /\.\/tree-item-provider.*.json$/,
+    /\.\/tree-item-provider.*\.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 
-  return {
-    props: {
-      descriptions,
-      pageContent: jsonPageContent,
-    },
-  };
+  return { props: { descriptions } };
 }
