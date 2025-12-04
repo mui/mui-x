@@ -305,6 +305,13 @@ export type SchedulerEventUpdatedProperties = Partial<SchedulerEvent> & {
  */
 export type SchedulerEventCreationProperties = Omit<SchedulerEvent, 'id'>;
 
+/**
+ * Properties to pass to the methods that paste an event.
+ */
+export type SchedulerEventPasteProperties = Partial<
+  Pick<SchedulerEvent, 'start' | 'resource' | 'allDay'>
+>;
+
 // TODO: Consider splitting the interface in two, one for the Event Calendar and one for the Timeline.
 /**
  * The type of surface the event is being rendered on.

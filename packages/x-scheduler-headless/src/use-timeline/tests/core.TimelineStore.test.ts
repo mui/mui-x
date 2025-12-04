@@ -18,6 +18,7 @@ describe('Core - TimelineStore', () => {
         areEventsResizable: false,
         canDragEventsFromTheOutside: false,
         canDropEventsToTheOutside: false,
+        copiedEvent: null,
         eventColor: 'jade',
         eventCreation: true,
         eventIdList: [],
