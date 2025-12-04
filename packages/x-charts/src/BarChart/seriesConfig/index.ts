@@ -1,4 +1,4 @@
-import { ChartSeriesTypeConfig } from '../../internals/plugins/models/seriesConfig';
+import { type ChartSeriesTypeConfig } from '../../internals/plugins/models/seriesConfig';
 import { getExtremumX, getExtremumY } from './bar/extremums';
 import seriesProcessor from './bar/seriesProcessor';
 import legendGetter from './bar/legend';

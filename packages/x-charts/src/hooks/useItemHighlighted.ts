@@ -7,8 +7,8 @@ import {
   selectorChartsIsHighlighted,
 } from '../internals/plugins/featurePlugins/useChartHighlight';
 import {
-  HighlightItemData,
-  UseChartHighlightSignature,
+  type HighlightItemData,
+  type UseChartHighlightSignature,
 } from '../internals/plugins/featurePlugins/useChartHighlight/useChartHighlight.types';
 
 type UseItemHighlightedReturnType = {

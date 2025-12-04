@@ -1,5 +1,5 @@
 import { clampAngle } from '../internals/clampAngle';
-import { ChartsTextStyle } from '../internals/getWordsByLines';
+import { type ChartsTextStyle } from '../internals/getWordsByLines';
 
 /**
  * Provide the text-anchor based on the angle between the text and the associated element.
