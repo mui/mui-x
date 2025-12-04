@@ -1,11 +1,11 @@
 import {
-  ChartPluginSignature,
-  UseChartCartesianAxisDefaultizedParameters,
-  UseChartCartesianAxisParameters,
-  UseChartCartesianAxisState,
-  UseChartInteractionSignature,
-  UseChartSeriesSignature,
-  ChartsAxisData,
+  type ChartPluginSignature,
+  type UseChartCartesianAxisDefaultizedParameters,
+  type UseChartCartesianAxisParameters,
+  type UseChartCartesianAxisState,
+  type UseChartInteractionSignature,
+  type UseChartSeriesSignature,
+  type ChartsAxisData,
 } from '@mui/x-charts/internals';
 
 export type UseChartFunnelAxisSignature = ChartPluginSignature<{

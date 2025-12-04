@@ -1,17 +1,17 @@
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import {
-  ChartItemIdentifierWithData,
-  ChartSeriesDefaultized,
-  ChartSeriesType,
+  type ChartItemIdentifierWithData,
+  type ChartSeriesDefaultized,
+  type ChartSeriesType,
 } from '../../../../models/seriesType/config';
 import {
-  ProcessedSeries,
+  type ProcessedSeries,
   selectorChartSeriesConfig,
   selectorChartSeriesProcessed,
   selectorChartSeriesLayout,
-  SeriesLayout,
+  type SeriesLayout,
 } from '../../corePlugins/useChartSeries';
-import { TooltipPositionGetterAxesConfig } from '../../models/seriesConfig/tooltipItemPositionGetter.types';
+import { type TooltipPositionGetterAxesConfig } from '../../models/seriesConfig/tooltipItemPositionGetter.types';
 import {
   selectorChartXAxis,
   selectorChartYAxis,
@@ -25,23 +25,23 @@ import {
   selectorChartsInteractionItemIsDefined,
   selectorChartsLastInteraction,
 } from './useChartInteraction.selectors';
-import { ChartSeriesConfig } from '../../models/seriesConfig/seriesConfig.types';
+import { type ChartSeriesConfig } from '../../models/seriesConfig/seriesConfig.types';
 import {
-  AxisId,
-  ChartsRadiusAxisProps,
-  ChartsRotationAxisProps,
-  ChartsXAxisProps,
-  ChartsYAxisProps,
+  type AxisId,
+  type ChartsRadiusAxisProps,
+  type ChartsRotationAxisProps,
+  type ChartsXAxisProps,
+  type ChartsYAxisProps,
 } from '../../../../models/axis';
-import { ComputeResult } from '../useChartCartesianAxis/computeAxisValue';
+import { type ComputeResult } from '../useChartCartesianAxis/computeAxisValue';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions/useChartDimensions.selectors';
-import { ChartDrawingArea } from '../../../../hooks/useDrawingArea';
+import { type ChartDrawingArea } from '../../../../hooks/useDrawingArea';
 import { isCartesianSeries } from '../../../isCartesian';
 import {
   selectorChartRadiusAxis,
   selectorChartRotationAxis,
 } from '../useChartPolarAxis/useChartPolarAxis.selectors';
-import { ComputeResult as ComputePolarResult } from '../useChartPolarAxis/computeAxisValue';
+import { type ComputeResult as ComputePolarResult } from '../useChartPolarAxis/computeAxisValue';
 
 export const selectorChartsTooltipItem = createSelector(
   selectorChartsLastInteraction,

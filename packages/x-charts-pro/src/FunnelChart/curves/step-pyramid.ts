@@ -1,4 +1,4 @@
-import { FunnelCurveGenerator, CurveOptions, Point } from './curve.types';
+import { type FunnelCurveGenerator, type CurveOptions, type Point } from './curve.types';
 import { borderRadiusPolygon } from './borderRadiusPolygon';
 import { lerpX, lerpY } from './utils';
 

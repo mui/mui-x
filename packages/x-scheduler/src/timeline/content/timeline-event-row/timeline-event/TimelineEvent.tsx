@@ -39,7 +39,7 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
     end: occurrence.end,
     ref: forwardedRef,
     'aria-labelledby': `${ariaLabelledBy} ${id}`,
-    className: clsx(className, 'TimelineEvent', 'LinesClamp', getColorClassName(color)),
+    className: clsx(className, 'TimelineEvent', getColorClassName(color)),
     style: {
       '--number-of-lines': 1,
       '--row-index': occurrence.position.firstIndex,
@@ -50,7 +50,7 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
   if (variant === 'placeholder') {
     return (
       <Timeline.EventPlaceholder aria-hidden={true} {...sharedProps}>
-        {occurrence.title}
+        <span className="LinesClamp">{occurrence.title}</span>
       </Timeline.EventPlaceholder>
     );
   }
@@ -66,7 +66,7 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
       {isStartResizable && (
         <Timeline.EventResizeHandler side="start" className="TimelineEventResizeHandler" />
       )}
-      {occurrence.title}
+      <span className="LinesClamp">{occurrence.title}</span>
       {isEndResizable && (
         <Timeline.EventResizeHandler side="end" className="TimelineEventResizeHandler" />
       )}

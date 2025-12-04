@@ -1,7 +1,7 @@
-import { ChartPluginSignature } from '../../models';
+import { type ChartPluginSignature } from '../../models';
 import {
-  ChartItemIdentifier,
-  ChartSeriesType,
+  type ChartItemIdentifier,
+  type ChartSeriesType,
   type ChartItemIdentifierWithData,
 } from '../../../../models/seriesType/config';
 
