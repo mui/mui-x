@@ -2,8 +2,8 @@ import { type SeriesProcessor } from '../../internals/plugins/models/seriesConfi
 import type { DefaultizedRadarSeriesType } from '../../models';
 import type { SeriesId } from '../../models/seriesType/common';
 
-const radarValueFormatter = ((v) =>
-  v == null ? '' : v.toLocaleString()) as DefaultizedRadarSeriesType['valueFormatter'];
+const radarValueFormatter: DefaultizedRadarSeriesType['valueFormatter'] = (v) =>
+  v == null ? '' : v.toLocaleString();
 
 const seriesProcessor: SeriesProcessor<'radar'> = (params, _) => {
   const { seriesOrder, series: seriesMap } = params;
