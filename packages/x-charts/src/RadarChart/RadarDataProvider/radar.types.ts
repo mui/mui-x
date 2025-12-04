@@ -1,4 +1,4 @@
-import { ChartsRotationAxisProps } from '../../models/axis';
+import { type ChartsRotationAxisProps } from '../../models/axis';
 
 export interface MetricConfig {
   /**

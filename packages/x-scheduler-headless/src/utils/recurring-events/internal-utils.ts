@@ -1,4 +1,4 @@
-import { diffIn, Adapter } from '../../use-adapter';
+import { Adapter } from '../../use-adapter';
 import {
   RecurringEventWeekDayCode,
   RecurringEventByDayValue,
@@ -155,11 +155,9 @@ export function parsesByDayForMonthlyFrequency(ruleByDay: RecurringEventByDayVal
 export function getEventDurationInDays(adapter: Adapter, event: SchedulerProcessedEvent): number {
   // +1 so start/end same day = 1 day, spans include last day
   return (
-    diffIn(
-      adapter,
+    adapter.differenceInDays(
       adapter.startOfDay(event.end.value),
       adapter.startOfDay(event.start.value),
-      'days',
     ) + 1
   );
 }
@@ -279,7 +277,7 @@ export function countDailyOccurrencesUpToExact(
   }
 
   const interval = Math.max(1, rule.interval ?? 1);
-  const totalDays = diffIn(adapter, adapter.startOfDay(date), seriesStartDay, 'days');
+  const totalDays = adapter.differenceInDays(adapter.startOfDay(date), seriesStartDay);
 
   return Math.floor(totalDays / interval) + 1;
 }

@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import {
-  ScatterChartProps,
-  ScatterChartSlotProps,
-  ScatterChartSlots,
+  type ScatterChartProps,
+  type ScatterChartSlotProps,
+  type ScatterChartSlots,
   ScatterPlot,
 } from '@mui/x-charts/ScatterChart';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
@@ -14,23 +14,23 @@ import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
-import { ChartsTooltip, ChartsTooltipProps } from '@mui/x-charts/ChartsTooltip';
+import { ChartsTooltip, type ChartsTooltipProps } from '@mui/x-charts/ChartsTooltip';
 import { useScatterChartProps } from '@mui/x-charts/internals';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
-import { ChartsSlotPropsPro, ChartsSlotsPro } from '../internals/material';
+import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '../internals/material';
 import { ChartZoomSlider } from '../ChartZoomSlider';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
-import { ChartContainerProProps } from '../ChartContainerPro/ChartContainerPro';
+import { type ChartContainerProProps } from '../ChartContainerPro/ChartContainerPro';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
 import {
   SCATTER_CHART_PRO_PLUGINS,
-  ScatterChartProPluginSignatures,
+  type ScatterChartProPluginSignatures,
 } from './ScatterChartPro.plugins';
 import {
-  ChartsToolbarProSlots,
-  ChartsToolbarProSlotProps,
+  type ChartsToolbarProSlots,
+  type ChartsToolbarProSlotProps,
 } from '../ChartsToolbarPro/Toolbar.types';
 
 export interface ScatterChartProSlots

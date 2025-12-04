@@ -5,7 +5,7 @@ import {
   SchedulerProcessedEvent,
   TemporalSupportedObject,
 } from '../../models';
-import { Adapter, diffIn } from '../../use-adapter';
+import { Adapter } from '../../use-adapter';
 import { getDateKey, getOccurrenceEnd, mergeDateAndTime } from '../date-utils';
 import {
   estimateOccurrencesUpTo,
@@ -136,7 +136,7 @@ export function matchesRecurrence(
 
   switch (rule.freq) {
     case 'DAILY': {
-      const daysDiff = diffIn(adapter, candidateDay, seriesStartDay, 'days');
+      const daysDiff = adapter.differenceInDays(candidateDay, seriesStartDay);
       return daysDiff % interval === 0;
     }
 
@@ -154,7 +154,7 @@ export function matchesRecurrence(
         return false;
       }
 
-      const weeksDiff = diffIn(adapter, dateWeek, seriesWeek, 'weeks');
+      const weeksDiff = adapter.differenceInWeeks(dateWeek, seriesWeek);
       return weeksDiff % interval === 0;
     }
 
@@ -162,7 +162,7 @@ export function matchesRecurrence(
       const seriesMonth = adapter.startOfMonth(seriesStartDay);
       const dateMonth = adapter.startOfMonth(candidateDay);
 
-      const monthsDiff = diffIn(adapter, dateMonth, seriesMonth, 'months');
+      const monthsDiff = adapter.differenceInMonths(dateMonth, seriesMonth);
       if (monthsDiff % interval !== 0) {
         return false;
       }
@@ -209,7 +209,7 @@ export function matchesRecurrence(
         return false;
       }
 
-      const yearsDiff = diffIn(adapter, dateYear, seriesYear, 'years');
+      const yearsDiff = adapter.differenceInYears(dateYear, seriesYear);
       return yearsDiff % interval === 0;
     }
 

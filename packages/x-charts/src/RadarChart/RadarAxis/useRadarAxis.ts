@@ -4,7 +4,7 @@ import { useRotationScale } from '../../hooks/useScale';
 import { useChartContext } from '../../context/ChartProvider/useChartContext';
 import {
   selectorChartPolarCenter,
-  UseChartPolarAxisSignature,
+  type UseChartPolarAxisSignature,
 } from '../../internals/plugins/featurePlugins/useChartPolarAxis';
 import { isOrdinalScale } from '../../internals/scaleGuards';
 import { degToRad } from '../../internals/degToRad';

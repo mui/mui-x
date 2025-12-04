@@ -1,4 +1,4 @@
-import { Adapter, diffIn } from '../../use-adapter';
+import { Adapter } from '../../use-adapter';
 import { TemporalSupportedObject } from '../../models';
 import { getWeekDayCode, nthWeekdayOfMonth } from './internal-utils';
 
@@ -19,6 +19,6 @@ export function computeMonthlyOrdinal(adapter: Adapter, date: TemporalSupportedO
 
   // First same-weekday of the month (1..5)
   const firstSameWeekday = nthWeekdayOfMonth(adapter, monthStart, code, 1)!;
-  const daysDiff = diffIn(adapter, dayStart, firstSameWeekday, 'days');
+  const daysDiff = adapter.differenceInDays(dayStart, firstSameWeekday);
   return Math.floor(daysDiff / 7) + 1;
 }
