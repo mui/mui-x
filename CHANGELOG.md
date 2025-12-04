@@ -57,7 +57,7 @@ Same changes as in `@mui/x-date-pickers@8.21.0`.
 - [charts] Remove unused `drawingArea` from `findClosestPoints` (#20471) @bernardobelchior
 - [charts] Revert `useIsHydrated` to default=false (#20511) @JCQuintas
 - [charts] Support tooltip anchor position for radar (#20422) @alexfauquette
-- [charts] Add tick spacing property (#20282) @bernardobelchior 
+- [charts] Add tick spacing property (#20282) @bernardobelchior
 - [charts] Fix Vitest lint error (#20550) @bernardobelchior
 - [charts] Fix infinite loop when highlighting pie slices or scatter points (#20549) @bernardobelchior
 
