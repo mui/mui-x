@@ -9,7 +9,7 @@ function buildApplyFilterFn(
   filterItem: GridFilterItem,
   compareFn: (value1: number, value2: number) => boolean,
   showTime?: boolean,
-  keepHours?: boolean,
+  keepRawComparison?: boolean,
 ): ReturnType<GetApplyFilterFn> {
   if (!filterItem.value) {
     return null;
@@ -35,7 +35,7 @@ function buildApplyFilterFn(
       return false;
     }
 
-    if (keepHours) {
+    if (keepRawComparison) {
       return compareFn(value.getTime(), time);
     }
 
