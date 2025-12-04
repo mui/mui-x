@@ -1,7 +1,11 @@
 import { stack as d3Stack } from '@mui/x-charts-vendor/d3-shape';
 import { warnOnce } from '@mui/x-internals/warning';
 import { getStackingGroups, StackOrder } from '../../internals/stackSeries';
-import { type DatasetElementType, type DatasetType } from '../../models/seriesType/config';
+import {
+  type ChartSeriesDefaultized,
+  type DatasetElementType,
+  type DatasetType,
+} from '../../models/seriesType/config';
 import { type SeriesId } from '../../models/seriesType/common';
 import { type SeriesProcessor } from '../../internals/plugins/models';
 import type { DefaultizedLineSeriesType } from '../../models';
@@ -62,13 +66,7 @@ const seriesProcessor: SeriesProcessor<'line'> = (params, dataset, isIdentifierV
     }
   });
 
-  const completedSeries: Record<
-    SeriesId,
-    DefaultizedLineSeriesType & {
-      visibleStackedData: [number, number][];
-      fullStackedData: [number, number][];
-    }
-  > = {};
+  const completedSeries: Record<SeriesId, ChartSeriesDefaultized<'line'>> = {};
 
   stackingGroups.forEach((stackingGroup) => {
     const { ids, stackingOffset, stackingOrder } = stackingGroup;

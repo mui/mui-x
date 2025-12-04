@@ -8,7 +8,6 @@ import {
 import { eventCalendarPreferenceSelectors } from './eventCalendarPreferenceSelectors';
 import { innerGetEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
 import { SchedulerProcessedDate } from '../models';
-import { diffIn } from '../use-adapter';
 import { AGENDA_MAX_HORIZON_DAYS, AGENDA_VIEW_DAYS_AMOUNT } from '../constants';
 import { getDayList } from '../get-day-list';
 
@@ -67,7 +66,7 @@ export const eventCalendarAgendaSelectors = {
 
         if (first && last) {
           const spanDays =
-            diffIn(adapter, adapter.startOfDay(last), adapter.startOfDay(first), 'days') + 1;
+            adapter.differenceInDays(adapter.startOfDay(last), adapter.startOfDay(first)) + 1;
 
           // Hard stop to avoid scanning too far into the future
           if (spanDays >= AGENDA_MAX_HORIZON_DAYS) {

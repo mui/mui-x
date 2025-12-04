@@ -2,8 +2,8 @@ import { type SeriesProcessor } from '../../internals/plugins/models/seriesConfi
 import type { DefaultizedRadarSeriesType } from '../../models';
 import type { SeriesId } from '../../models/seriesType/common';
 
-const radarValueFormatter = ((v) =>
-  v == null ? '' : v.toLocaleString()) as DefaultizedRadarSeriesType['valueFormatter'];
+const defaultRadarValueFormatter: DefaultizedRadarSeriesType['valueFormatter'] = (v) =>
+  v == null ? '' : v.toLocaleString();
 
 const seriesProcessor: SeriesProcessor<'radar'> = (params, _, isIdentifierVisible) => {
   const { seriesOrder, series: seriesMap } = params;
@@ -15,9 +15,9 @@ const seriesProcessor: SeriesProcessor<'radar'> = (params, _, isIdentifierVisibl
     const hidden = !isIdentifierVisible?.(`${seriesId}`);
 
     completedSeries[seriesId] = {
-      labelMarkType: 'line',
-      valueFormatter: radarValueFormatter,
+      labelMarkType: 'square',
       ...series,
+      valueFormatter: series.valueFormatter ?? defaultRadarValueFormatter,
       hidden,
     };
   });
