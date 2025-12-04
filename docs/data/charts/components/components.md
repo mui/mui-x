@@ -19,11 +19,11 @@ The following sections detail how to handle the various dimensions when building
 Drawing area refers to the space available to plot data (such as scatter points, lines, or pie arcs).
 Charts dimensions are defined by the following props:
 
-- `height` and `width` for the SVG size; if not provided, these values are derived from the container.
-- `margin` for the space between the SVG border and the axes or the drawing area.
-- The axes dimension properties (`xAxis[].height` and `yAxis[].width`) that add extra space to draw axes.
+- `height` and `width` for the SVG size; if not provided, these values are derived from the container
+- `margin` for the space between the SVG border and the axes or the drawing area
+- The axes dimension properties (`xAxis[].height` and `yAxis[].width`) that add extra space to draw axes
 
-The `margin` is used to leave space for extra elements, or let data items overflow the drawing area.
+The `margin` is used to leave space for extra elements, or to let data items overflow the drawing area.
 
 You can use the `useDrawingArea()` hook in the Chart subcomponents to get the coordinates of the drawing area:
 
@@ -40,7 +40,7 @@ const { left, top, width, height } = useDrawingArea();
 Some Charts, such as Line, Bar, and Scatter, do a mapping between their series' data and the SVG coordinates.
 
 For example, a line chart series with a value of $36,725 on the 6th of December 2022 could be mapped to coordinates (628, 514).
-This operation can be reversed.
+This operation can also be reversed:
 The coordinate `x=628` would be associated with the 6th of December 2022 and `y=514` would be associated with the value $36,725.
 
 These mappings depend on the dimensions of the SVG and the drawing area.
