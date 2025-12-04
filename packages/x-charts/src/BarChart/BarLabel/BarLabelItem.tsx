@@ -1,13 +1,13 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import PropTypes from 'prop-types';
-import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { type SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useUtilityClasses } from './barLabelClasses';
-import { BarLabelOwnerState, BarItem, BarLabelContext } from './BarLabel.types';
+import { type BarLabelOwnerState, type BarItem, type BarLabelContext } from './BarLabel.types';
 import { getBarLabel } from './getBarLabel';
-import { BarLabel, BarLabelProps } from './BarLabel';
+import { BarLabel, type BarLabelProps } from './BarLabel';
 import { useItemHighlighted } from '../../hooks/useItemHighlighted';
-import { BarValueType } from '../../models';
+import { type BarValueType } from '../../models';
 
 export interface BarLabelSlots {
   /**

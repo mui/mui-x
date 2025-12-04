@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
 import {
-  ChartPlugin,
-  AxisId,
-  ZoomData,
+  type ChartPlugin,
+  type AxisId,
+  type ZoomData,
   useSelector,
   selectorChartZoomOptionsLookup,
   createZoomLookup,
@@ -14,7 +14,7 @@ import { useEffectAfterFirstRender } from '@mui/x-internals/useEffectAfterFirstR
 import { useEventCallback } from '@mui/material/utils';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { calculateZoom } from './calculateZoom';
-import { UseChartProZoomSignature } from './useChartProZoom.types';
+import { type UseChartProZoomSignature } from './useChartProZoom.types';
 import { useZoomOnWheel } from './gestureHooks/useZoomOnWheel';
 import { useZoomOnPinch } from './gestureHooks/useZoomOnPinch';
 import { usePanOnDrag } from './gestureHooks/usePanOnDrag';

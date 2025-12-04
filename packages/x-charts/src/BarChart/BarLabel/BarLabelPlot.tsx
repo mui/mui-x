@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { AnimationData } from '../types';
-import { BarLabelItem, BarLabelItemProps } from './BarLabelItem';
+import { type AnimationData } from '../types';
+import { BarLabelItem, type BarLabelItemProps } from './BarLabelItem';
 import type { SeriesId } from '../../models/seriesType/common';
-import { BarSeriesType, BarValueType } from '../../models/seriesType/bar';
-import { BarLabelFunction } from './BarLabel.types';
+import { type BarSeriesType, type BarValueType } from '../../models/seriesType/bar';
+import { type BarLabelFunction } from './BarLabel.types';
 
 interface BarLabelPlotProps<V extends BarValueType | null = BarValueType | null> {
   processedSeries: ProcessedBarLabelSeriesData<V>;

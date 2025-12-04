@@ -1,5 +1,5 @@
 'use client';
-import { UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+import { type UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import {
   selectorChartXAxis,
   selectorChartYAxis,
@@ -7,16 +7,16 @@ import {
 import {
   selectorChartRadiusAxis,
   selectorChartRotationAxis,
-  UseChartPolarAxisSignature,
+  type UseChartPolarAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartPolarAxis';
 import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
 import {
-  AxisId,
-  ChartsRadiusAxisProps,
-  ChartsRotationAxisProps,
-  PolarAxisDefaultized,
-  ScaleName,
+  type AxisId,
+  type ChartsRadiusAxisProps,
+  type ChartsRotationAxisProps,
+  type PolarAxisDefaultized,
+  type ScaleName,
   type AxisScaleConfig,
   type ChartsXAxisProps,
   type ChartsYAxisProps,
