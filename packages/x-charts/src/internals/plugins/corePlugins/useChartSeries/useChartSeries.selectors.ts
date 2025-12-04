@@ -1,15 +1,20 @@
 import { createSelectorMemoized, createSelector } from '@mui/x-internals/store';
 import { ChartRootSelector } from '../../utils/selectors';
 import { UseChartSeriesSignature } from './useChartSeries.types';
-import { applySeriesLayout, applySeriesProcessors } from './processSeries';
+import { applySeriesLayout, applySeriesProcessors, defaultizeSeries } from './processSeries';
 import { selectorChartDrawingArea } from '../useChartDimensions/useChartDimensions.selectors';
 
 export const selectorChartSeriesState: ChartRootSelector<UseChartSeriesSignature> = (state) =>
   state.series;
 
-export const selectorChartDefaultizedSeries = createSelector(
+export const selectorChartDefaultizedSeries = createSelectorMemoized(
   selectorChartSeriesState,
-  (seriesState) => seriesState.defaultizedSeries,
+  ({ colors, series, theme, seriesConfig }) =>
+    defaultizeSeries({
+      series,
+      colors: typeof colors === 'function' ? colors(theme) : colors,
+      seriesConfig,
+    }),
 );
 
 export const selectorChartSeriesConfig = createSelector(

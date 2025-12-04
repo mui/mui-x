@@ -56,7 +56,9 @@ export type DefaultizedSeriesGroups<TSeriesTypes extends ChartSeriesType = Chart
 
 export interface UseChartSeriesState<T extends ChartSeriesType = ChartSeriesType> {
   series: {
-    defaultizedSeries: DefaultizedSeriesGroups<T>;
+    series: Readonly<AllSeriesType<T>[]>;
+    colors: ChartsColorPalette;
+    theme: 'light' | 'dark';
     seriesConfig: ChartSeriesConfig<T>;
     dataset?: Readonly<DatasetType>;
   };
