@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { AxisConfig, D3ContinuousScale, D3OrdinalScale, D3Scale } from '../models/axis';
 import type { OrdinalTimeTicks, TickFrequencyDefinition } from '../models/timeTicks';
-import { isBandScale, isOrdinalScale } from '../internals/scaleGuards';
+import { isOrdinalScale } from '../internals/scaleGuards';
 import { isInfinity } from '../internals/isInfinity';
 import { tickFrequencies } from '../utils/timeTicks';
 import { isDateData } from '../internals/dateHelpers';
@@ -101,13 +101,12 @@ export function applyTickSpacing<T>(domain: T[], range: [number, number], tickSp
   return domain.filter((_, index) => index % every === 0);
 }
 
-export function getTicks(
-  options: {
-    scale: D3Scale;
-    valueFormatter?: AxisConfig['valueFormatter'];
-    isInside: (offset: number) => boolean;
-  } & Pick<TickParams, 'tickInterval' | 'tickPlacement' | 'tickLabelPlacement' | 'tickSpacing'> &
-    Required<Pick<TickParams, 'tickNumber'>>,
+function getTimeTicks<T extends { toString(): string }>(
+  domain: T[],
+  tickNumber: number,
+  ticksFrequencies: TickFrequencyDefinition[],
+  scale: D3OrdinalScale<T>,
+  isInside: (offset: number) => boolean,
 ) {
   if (ticksFrequencies.length === 0) {
     return [];
@@ -179,12 +178,12 @@ export function getTicks(
 }
 
 interface GetTicksOptions
-  extends Pick<TickParams, 'tickInterval' | 'tickPlacement' | 'tickLabelPlacement'>,
+  extends Pick<TickParams, 'tickInterval' | 'tickPlacement' | 'tickLabelPlacement' | 'tickSpacing'>,
     Required<Pick<TickParams, 'tickNumber'>> {
   scale: D3Scale;
   valueFormatter?: AxisConfig['valueFormatter'];
   isInside: (offset: number) => boolean;
-  timeOrdinalTicks?: OrdinalTimeTicks;
+  ordinalTimeTicks?: OrdinalTimeTicks;
 }
 
 export function getTicks(options: GetTicksOptions) {
@@ -197,10 +196,10 @@ export function getTicks(options: GetTicksOptions) {
     tickLabelPlacement: tickLabelPlacementProp,
     tickSpacing,
     isInside,
-    timeOrdinalTicks,
+    ordinalTimeTicks,
   } = options;
 
-  if (timeOrdinalTicks !== undefined && isDateData(scale.domain()) && isOrdinalScale(scale)) {
+  if (ordinalTimeTicks !== undefined && isDateData(scale.domain()) && isOrdinalScale(scale)) {
     // ordinal scale with spaced ticks.
     const domain = scale.domain();
 
@@ -212,7 +211,7 @@ export function getTicks(options: GetTicksOptions) {
     const ticksIndexes = getTimeTicks(
       domain,
       tickNumber,
-      timeOrdinalTicks.map((tickDef) =>
+      ordinalTimeTicks.map((tickDef) =>
         typeof tickDef === 'string' ? tickFrequencies[tickDef] : tickDef,
       ),
       scale,
@@ -225,10 +224,7 @@ export function getTicks(options: GetTicksOptions) {
       return {
         value,
         formattedValue,
-        offset:
-          scale(value)! -
-          (scale.step() - scale.bandwidth()) / 2 +
-          offsetRatio[tickPlacement] * scale.step(),
+        offset: getTickPosition(scale, value, tickPlacement),
         labelOffset: 0,
       };
     });
@@ -252,6 +248,10 @@ export function getTicks(options: GetTicksOptions) {
       if (tickSpacing !== undefined && tickSpacing > 0) {
         filteredDomain = applyTickSpacing(filteredDomain, scale.range(), tickSpacing);
       }
+    }
+
+    if (filteredDomain.length === 0) {
+      return [];
     }
 
     if (scale.bandwidth() > 0) {
@@ -369,12 +369,7 @@ function getDefaultTicks(scale: D3ContinuousScale, tickNumber: number) {
 }
 
 export function useTicks(
-  options: {
-    scale: D3Scale;
-    valueFormatter?: AxisConfig['valueFormatter'];
-    direction: 'x' | 'y';
-  } & Pick<TickParams, 'tickInterval' | 'tickPlacement' | 'tickLabelPlacement' | 'tickSpacing'> &
-    Required<Pick<TickParams, 'tickNumber'>>,
+  options: Omit<GetTicksOptions, 'isInside'> & { direction: 'x' | 'y' },
 ): TickItemType[] {
   const {
     scale,
@@ -385,7 +380,7 @@ export function useTicks(
     tickLabelPlacement,
     tickSpacing,
     direction,
-    timeOrdinalTicks,
+    ordinalTimeTicks,
   } = options;
   const { instance } = useChartContext();
   const isInside = direction === 'x' ? instance.isXInside : instance.isYInside;
@@ -401,7 +396,7 @@ export function useTicks(
         tickSpacing,
         valueFormatter,
         isInside,
-        timeOrdinalTicks,
+        ordinalTimeTicks,
       }),
     [
       scale,
@@ -412,6 +407,7 @@ export function useTicks(
       tickSpacing,
       valueFormatter,
       isInside,
+      ordinalTimeTicks,
     ],
   );
 }
