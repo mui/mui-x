@@ -70,6 +70,8 @@ function CircleMarkElement(props: CircleMarkElementProps) {
     skipAnimation,
     isFaded = false,
     isHighlighted = false,
+    // @ts-expect-error, prevents it from being passed to the svg element
+    shape,
     hidden,
     ...other
   } = props;
@@ -82,7 +84,6 @@ function CircleMarkElement(props: CircleMarkElementProps) {
     classes: innerClasses,
     isHighlighted,
     isFaded,
-    color,
     skipAnimation,
   };
   const classes = useUtilityClasses(ownerState);

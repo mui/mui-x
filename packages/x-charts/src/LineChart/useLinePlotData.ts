@@ -118,6 +118,7 @@ export function useLinePlotData(
           }) ?? [];
 
         const d3Data = connectNulls ? formattedData.filter((d) => !d.nullData) : formattedData;
+        const hidden = series[seriesId].hidden;
 
         const linePath = d3Line<{
           x: any;
@@ -127,7 +128,13 @@ export function useLinePlotData(
         }>()
           .x((d) => (d.isExtension ? d.x : xPosition(d.x)))
           .defined((d) => connectNulls || !d.nullData || !!d.isExtension)
-          .y((d) => yScale(d.y[1])!);
+          .y((d) => {
+            if (hidden) {
+              return yScale(yScale.domain()[0] as number)!;
+            }
+
+            return yScale(d.y[1])!;
+          });
 
         const d = linePath.curve(getCurveFactory(curve))(d3Data) || '';
         linePlotData.push({
