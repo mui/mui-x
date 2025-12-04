@@ -84,6 +84,7 @@ Use the `updateItemChildren()` API method to fetch the children of an item:
 ```ts
 apiRef.current.updateItemChildren(
   // The id of the item to update the children of
+  // null if the entire tree needs to be reloaded
   itemId,
 );
 ```

@@ -5,7 +5,7 @@ import {
   selectorChartsIsFadedCallback,
   selectorChartsIsHighlightedCallback,
 } from '../internals/plugins/featurePlugins/useChartHighlight/useChartHighlight.selectors';
-import { UseChartHighlightSignature } from '../plugins';
+import { type UseChartHighlightSignature } from '../plugins';
 
 /**
  * A hook to check the highlighted state of multiple items.

@@ -1,5 +1,5 @@
 // This file is here only to fix typing. The full typing of zoom states is defined in the pro library.
-import { AxisId } from '../../../../models/axis';
+import { type AxisId } from '../../../../models/axis';
 import type { ExtremumFilter } from './useChartCartesianAxis.types';
 
 export type ZoomData = {
