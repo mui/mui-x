@@ -65,15 +65,15 @@ Changes to the label are not automatically updated in the `dataSourceCache` and 
 ## Imperative API
 
 :::success
-To use the `apiRef` object, you need to initialize it using the `useTreeViewApiRef` hook as follows:
+To use the `apiRef` object, you need to initialize it using the `useRichTreeViewProApiRef` hook as follows:
 
 ```tsx
-const apiRef = useTreeViewApiRef();
+const apiRef = useRichTreeViewProApiRef();
 
-return <RichTreeViewPro apiRef={apiRef} items={ITEMS}>;
+return <RichTreeViewPro apiRef={apiRef} items={ITEMS} />;
 ```
 
-When your component first renders, `apiRef` is `undefined`.
+When your component first renders, `apiRef.current` will be `undefined`.
 After this initial render, `apiRef` holds methods to interact imperatively with the Tree View.
 :::
 
