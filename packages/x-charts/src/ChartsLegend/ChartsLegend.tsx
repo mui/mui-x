@@ -14,9 +14,11 @@ import { consumeSlots } from '../internals/consumeSlots';
 import { ChartsLabel } from '../ChartsLabel/ChartsLabel';
 import { useChartContext } from '../context/ChartProvider';
 import {
-  useGetIsIdentifierVisible,
+  selectorIsIdentifierVisibleGetter,
   type UseChartVisibilityManagerSignature,
 } from '../internals/plugins/featurePlugins/useChartVisibilityManager';
+import { useSelector } from '../internals/store/useSelector';
+import { useStore } from '../internals/store/useStore';
 
 export interface ChartsLegendProps {
   /**
@@ -109,7 +111,8 @@ const ChartsLegend = consumeSlots(
   ) {
     const data = useLegend();
     const { instance } = useChartContext<[UseChartVisibilityManagerSignature]>();
-    const isItemVisible = useGetIsIdentifierVisible();
+    const store = useStore<[UseChartVisibilityManagerSignature]>();
+    const isItemVisible = useSelector(store, selectorIsIdentifierVisibleGetter).get;
     const { direction, onItemClick, className, classes, toggleVisibilityOnClick, ...other } = props;
 
     const isButton = Boolean(onItemClick || toggleVisibilityOnClick);

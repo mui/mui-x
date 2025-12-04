@@ -1,18 +1,18 @@
 import { type ChartsXAxisProps, type ChartsYAxisProps, type ComputedAxis } from '../models/axis';
 import getColor from './seriesConfig/bar/getColor';
-import {
-  type ChartDrawingArea,
-  useChartId,
-  useGetIsIdentifierVisible,
-  useXAxes,
-  useYAxes,
-} from '../hooks';
+import { type ChartDrawingArea, useChartId, useXAxes, useYAxes } from '../hooks';
 import { type MaskData, type ProcessedBarData, type ProcessedBarSeriesData } from './types';
 import { checkBarChartScaleErrors } from './checkBarChartScaleErrors';
 import { useBarSeriesContext } from '../hooks/useBarSeries';
 import { type SeriesProcessorResult } from '../internals/plugins/models/seriesConfig/seriesProcessor.types';
 import { type ComputedAxisConfig } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxis.types';
 import { getBarDimensions } from '../internals/getBarDimensions';
+import {
+  selectorIsIdentifierVisibleGetter,
+  type UseChartVisibilityManagerSignature,
+} from '../internals/plugins/featurePlugins/useChartVisibilityManager';
+import { useSelector } from '../internals/store/useSelector';
+import { useStore } from '../internals/store/useStore';
 
 export function useBarPlotData(
   drawingArea: ChartDrawingArea,
@@ -27,7 +27,8 @@ export function useBarPlotData(
     ({ series: {}, stackingGroups: [], seriesOrder: [] } as SeriesProcessorResult<'bar'>);
   const defaultXAxisId = useXAxes().xAxisIds[0];
   const defaultYAxisId = useYAxes().yAxisIds[0];
-  const isItemVisible = useGetIsIdentifierVisible();
+  const store = useStore<[UseChartVisibilityManagerSignature]>();
+  const isItemVisible = useSelector(store, selectorIsIdentifierVisibleGetter).get;
 
   const chartId = useChartId();
 
