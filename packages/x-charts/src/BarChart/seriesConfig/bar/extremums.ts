@@ -33,7 +33,7 @@ const getValueExtremum =
       })
       .reduce(
         (acc, seriesId) => {
-          const { fullStackedData } = series[seriesId];
+          const { stackedData } = series[seriesId];
 
           const filter = getFilters?.({
             currentAxisId: axis.id,
@@ -42,7 +42,7 @@ const getValueExtremum =
             seriesYAxisId: series[seriesId].yAxisId,
           });
 
-          const [seriesMin, seriesMax] = fullStackedData?.reduce(
+          const [seriesMin, seriesMax] = stackedData?.reduce(
             (seriesAcc, values, index) => {
               if (
                 filter &&

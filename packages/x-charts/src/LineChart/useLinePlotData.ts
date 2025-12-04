@@ -44,7 +44,7 @@ export function useLinePlotData(
         const {
           xAxisId = defaultXAxisId,
           yAxisId = defaultYAxisId,
-          fullStackedData,
+          stackedData,
           visibleStackedData,
           data,
           connectNulls,
@@ -76,9 +76,9 @@ export function useLinePlotData(
               } should have data property to be able to display a line plot.`,
             );
           }
-          if (xData.length < fullStackedData.length) {
+          if (xData.length < stackedData.length) {
             warnOnce(
-              `MUI X Charts: The data length of the x axis (${xData.length} items) is lower than the length of series (${fullStackedData.length} items).`,
+              `MUI X Charts: The data length of the x axis (${xData.length} items) is lower than the length of series (${stackedData.length} items).`,
               'error',
             );
           }

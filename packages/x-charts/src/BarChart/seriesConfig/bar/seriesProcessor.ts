@@ -67,7 +67,7 @@ const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset, isIdentifierVi
   const completedSeries: {
     [id: string]: DefaultizedBarSeriesType & {
       visibleStackedData: [number, number][];
-      fullStackedData: [number, number][];
+      stackedData: [number, number][];
     };
   } = {};
 
@@ -79,14 +79,14 @@ const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset, isIdentifierVi
       return series[id].data === undefined && dataKey !== undefined ? dataKey : id;
     });
 
-    const fullStackedData = d3Stack<any, DatasetElementType<number | null>, SeriesId>()
+    const stackedData = d3Stack<any, DatasetElementType<number | null>, SeriesId>()
       .keys(keys)
       .value((d, key) => d[key] ?? 0) // defaultize null value to 0
       .order(stackingOrder)
       .offset(stackingOffset)(d3Dataset);
 
     // We sort the keys based on the original stacking order to ensure consistency
-    const idOrder = fullStackedData.sort((a, b) => a.index - b.index).map((s) => s.key);
+    const idOrder = stackedData.sort((a, b) => a.index - b.index).map((s) => s.key);
 
     // Compute visible stacked data
     const visibleStackedData = d3Stack<any, DatasetElementType<number | null>, SeriesId>()
@@ -159,7 +159,7 @@ const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset, isIdentifierVi
         ...series[id],
         data,
         hidden,
-        fullStackedData: fullStackedData[index] as [number, number][],
+        stackedData: stackedData[index] as [number, number][],
         visibleStackedData: visibleStackedData[index] as [number, number][],
       };
     });

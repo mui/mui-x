@@ -47,7 +47,7 @@ export const getExtremumY: CartesianExtremumGetter<'line'> = (params) => {
     })
     .reduce(
       (acc, seriesId) => {
-        const { area, fullStackedData, data } = series[seriesId];
+        const { area, stackedData, data } = series[seriesId];
         const isArea = area !== undefined;
 
         const filter = getFilters?.({
@@ -63,7 +63,7 @@ export const getExtremumY: CartesianExtremumGetter<'line'> = (params) => {
             ? (d) => d
             : (d) => [d[1], d[1]];
 
-        const seriesExtremums = getSeriesExtremums(getValues, data, fullStackedData, filter);
+        const seriesExtremums = getSeriesExtremums(getValues, data, stackedData, filter);
 
         const [seriesMin, seriesMax] = seriesExtremums;
         return [Math.min(seriesMin, acc[0]), Math.max(seriesMax, acc[1])];

@@ -136,7 +136,7 @@ export type ChartSeriesDefaultized<T extends ChartSeriesType> = ChartsSeriesConf
 }
   ? ChartsSeriesConfig[T]['series'] & {
       visibleStackedData: [number, number][];
-      fullStackedData: [number, number][];
+      stackedData: [number, number][];
     }
   : ChartsSeriesConfig[T]['series'];
 

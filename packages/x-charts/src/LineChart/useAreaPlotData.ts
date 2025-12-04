@@ -44,7 +44,7 @@ export function useAreaPlotData(
           xAxisId = defaultXAxisId,
           yAxisId = defaultYAxisId,
           visibleStackedData,
-          fullStackedData,
+          stackedData,
           data,
           connectNulls,
           baseline,
@@ -77,9 +77,9 @@ export function useAreaPlotData(
               } should have data property to be able to display a line plot.`,
             );
           }
-          if (xData.length < fullStackedData.length) {
+          if (xData.length < stackedData.length) {
             throw new Error(
-              `MUI X Charts: The data length of the x axis (${xData.length} items) is lower than the length of series (${fullStackedData.length} items).`,
+              `MUI X Charts: The data length of the x axis (${xData.length} items) is lower than the length of series (${stackedData.length} items).`,
             );
           }
         }

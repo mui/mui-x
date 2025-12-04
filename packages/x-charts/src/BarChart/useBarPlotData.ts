@@ -49,7 +49,7 @@ export function useBarPlotData(
       checkBarChartScaleErrors(
         verticalLayout,
         seriesId,
-        series[seriesId].fullStackedData.length,
+        series[seriesId].stackedData.length,
         xAxisId,
         xAxes,
         yAxisId,
