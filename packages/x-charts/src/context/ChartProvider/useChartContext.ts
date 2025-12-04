@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
-import { ChartAnyPluginSignature } from '../../internals/plugins/models';
+import { type ChartAnyPluginSignature } from '../../internals/plugins/models';
 import { ChartContext } from './ChartContext';
-import { ChartContextValue } from './ChartProvider.types';
+import { type ChartContextValue } from './ChartProvider.types';
 
 export const useChartContext = <
   TSignatures extends readonly ChartAnyPluginSignature[],
