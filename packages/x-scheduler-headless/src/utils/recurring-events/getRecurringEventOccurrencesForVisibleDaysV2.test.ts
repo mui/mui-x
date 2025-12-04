@@ -1,5 +1,4 @@
 import { adapter, EventBuilder } from 'test/utils/scheduler';
-import { diffIn } from '@mui/x-scheduler-headless/use-adapter';
 import { getRecurringEventOccurrencesForVisibleDaysV2 } from './getRecurringEventOccurrencesForVisibleDaysV2';
 import { getWeekDayCode } from './internal-utils';
 
@@ -24,7 +23,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDaysV2', () => 
         expect(occ.start.key).to.equal(
           adapter.format(adapter.addDays(visibleStart, i), 'localizedNumericDate'),
         );
-        expect(diffIn(adapter, occ.end.value, occ.start.value, 'minutes')).to.equal(90);
+        expect(adapter.differenceInMinutes(occ.end.value, occ.start.value)).to.equal(90);
         expect(occ.key).to.equal(`${event.id}::${occ.start.key}`);
       }
     });
