@@ -14,6 +14,7 @@ export type {
   RotationAxis,
   AxisItemIdentifier,
   AxisValueFormatterContext,
+  AxisFeatureFlags,
 } from './axis';
 
 // Utils shared across the X packages

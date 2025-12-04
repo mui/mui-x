@@ -1,2 +1,8 @@
-// This is required otherwise the esm build of this package would not contain any code from this directory.
+declare module '@mui/x-charts/models' {
+  interface AxisFeatureFlags {
+    rangeBarInSeriesValue: true;
+  }
+}
+
+// Required to make this file into a module
 export default {};
