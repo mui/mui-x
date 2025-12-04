@@ -22,7 +22,7 @@ import {
   type OrdinalColorConfig,
   type PiecewiseColorConfig,
 } from './colorMapping';
-import { type RangeBarValueType } from './seriesType';
+import { type RangeBarValueType } from './seriesType/rangeBar';
 
 export type AxisId = string | number;
 
