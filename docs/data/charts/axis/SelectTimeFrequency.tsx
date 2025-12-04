@@ -11,20 +11,20 @@ import Box from '@mui/material/Box';
 
 export default function SelectTimeFrequency({
   tickFrequencies,
-  timeOrdinalTicks,
+  ordinalTimeTicks,
   setOrdinalTimeTicks,
   tickNumber,
   setTickNumber,
 }: {
   tickFrequencies: TickFrequency[];
-  timeOrdinalTicks: Record<TickFrequency, boolean>;
+  ordinalTimeTicks: Record<TickFrequency, boolean>;
   setOrdinalTimeTicks: React.Dispatch<
     React.SetStateAction<Record<TickFrequency, boolean>>
   >;
   tickNumber: number;
   setTickNumber: React.Dispatch<React.SetStateAction<number>>;
 }) {
-  const selectedFrequenciesNumber = Object.values(timeOrdinalTicks).filter(
+  const selectedFrequenciesNumber = Object.values(ordinalTimeTicks).filter(
     (value) => value,
   ).length;
 
@@ -34,7 +34,7 @@ export default function SelectTimeFrequency({
         <FormLabel component="legend">Select tick frequencies</FormLabel>
         <FormGroup row>
           {tickFrequencies.map((label) => {
-            const checked = timeOrdinalTicks[label as keyof typeof timeOrdinalTicks];
+            const checked = ordinalTimeTicks[label as keyof typeof ordinalTimeTicks];
             const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
               setOrdinalTimeTicks((prev) => ({
                 ...prev,

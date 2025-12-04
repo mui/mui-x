@@ -275,7 +275,7 @@ export interface AxisScaleConfig {
     /**
      * Definition of the tick placements with date data.
      */
-    timeOrdinalTicks?: OrdinalTimeTicks;
+    ordinalTimeTicks?: OrdinalTimeTicks;
     scale: ScaleBand<{ toString(): string }>;
     /**
      * The ratio between the space allocated for padding between two categories and the category width.
@@ -297,7 +297,7 @@ export interface AxisScaleConfig {
     /**
      * Definition of the tick placements with date data.
      */
-    timeOrdinalTicks?: OrdinalTimeTicks;
+    ordinalTimeTicks?: OrdinalTimeTicks;
     scale: ScalePoint<{ toString(): string }>;
     colorMap?: OrdinalColorConfig | ContinuousColorConfig | PiecewiseColorConfig;
   } & AxisGroups;

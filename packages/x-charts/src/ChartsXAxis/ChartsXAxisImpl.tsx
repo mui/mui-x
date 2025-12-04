@@ -26,9 +26,9 @@ interface ChartsXAxisImplProps extends Omit<ChartsXAxisProps, 'axis'> {
  * @ignore - internal component. Use `ChartsXAxis` instead.
  */
 export function ChartsXAxisImpl({ axis, ...inProps }: ChartsXAxisImplProps) {
-  // @ts-expect-error timeOrdinalTicks may not be present on all axis types
+  // @ts-expect-error ordinalTimeTicks may not be present on all axis types
   // Should be set to never, but this causes other issues with proptypes generator.
-  const { scale: xScale, tickNumber, reverse, timeOrdinalTicks, ...settings } = axis;
+  const { scale: xScale, tickNumber, reverse, ordinalTimeTicks, ...settings } = axis;
 
   // eslint-disable-next-line material-ui/mui-name-matches-component-name
   const themedProps = useThemeProps({ props: { ...settings, ...inProps }, name: 'MuiChartsXAxis' });
@@ -91,7 +91,7 @@ export function ChartsXAxisImpl({ axis, ...inProps }: ChartsXAxisImplProps) {
         <ChartsSingleXAxisTicks
           {...inProps}
           axisLabelHeight={labelHeight}
-          timeOrdinalTicks={timeOrdinalTicks}
+          ordinalTimeTicks={ordinalTimeTicks}
         />
       );
   }

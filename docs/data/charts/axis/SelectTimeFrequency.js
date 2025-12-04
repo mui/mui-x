@@ -11,12 +11,12 @@ import Box from '@mui/material/Box';
 
 export default function SelectTimeFrequency({
   tickFrequencies,
-  timeOrdinalTicks,
+  ordinalTimeTicks,
   setOrdinalTimeTicks,
   tickNumber,
   setTickNumber,
 }) {
-  const selectedFrequenciesNumber = Object.values(timeOrdinalTicks).filter(
+  const selectedFrequenciesNumber = Object.values(ordinalTimeTicks).filter(
     (value) => value,
   ).length;
 
@@ -26,7 +26,7 @@ export default function SelectTimeFrequency({
         <FormLabel component="legend">Select tick frequencies</FormLabel>
         <FormGroup row>
           {tickFrequencies.map((label) => {
-            const checked = timeOrdinalTicks[label];
+            const checked = ordinalTimeTicks[label];
             const handleChange = (event) => {
               setOrdinalTimeTicks((prev) => ({
                 ...prev,

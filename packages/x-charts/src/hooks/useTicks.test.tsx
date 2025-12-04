@@ -43,12 +43,12 @@ describe('getTicks', () => {
   });
 
   describe('band scale - time values', () => {
-    it('should return no ticks if the timeOrdinalTicks array is empty', () => {
+    it('should return no ticks if the ordinalTimeTicks array is empty', () => {
       const ticks = getTicks({
         ...defaultOptions,
         scale: scaleBand<Date>(weeks, [0, 100]) as unknown as D3Scale,
         tickNumber: 4,
-        timeOrdinalTicks: [],
+        ordinalTimeTicks: [],
       });
 
       expect(ticks).to.deep.equal([]);
@@ -59,7 +59,7 @@ describe('getTicks', () => {
         ...defaultOptions,
         scale: scaleBand(weeks, [0, 100]) as unknown as D3Scale,
         tickNumber: 4,
-        timeOrdinalTicks: ['months'],
+        ordinalTimeTicks: ['months'],
       });
 
       expect(ticks.map(({ value }) => value.getMonth())).to.deep.equal([1, 2, 3, 4]);
@@ -70,7 +70,7 @@ describe('getTicks', () => {
         ...defaultOptions,
         scale: scaleBand(weeks, [0, 100]) as unknown as D3Scale,
         tickNumber: 4,
-        timeOrdinalTicks: ['years', 'quarterly', 'months', 'weeks', 'days'],
+        ordinalTimeTicks: ['years', 'quarterly', 'months', 'weeks', 'days'],
       });
 
       expect(ticks.map(({ value }) => value.getMonth())).to.deep.equal([1, 2, 3, 4]);
@@ -81,7 +81,7 @@ describe('getTicks', () => {
         ...defaultOptions,
         scale: scaleBand(weeks, [0, 100]) as unknown as D3Scale,
         tickNumber: 4,
-        timeOrdinalTicks: ['years', 'weeks', 'days'],
+        ordinalTimeTicks: ['years', 'weeks', 'days'],
       });
 
       // Since there is no year ticks to display we have to display weeks ticks even if it exceed the tickNumber
@@ -95,7 +95,7 @@ describe('getTicks', () => {
         ...defaultOptions,
         scale: scaleBand([], [0, 100]) as unknown as D3Scale,
         tickNumber: 4,
-        timeOrdinalTicks: ['months'],
+        ordinalTimeTicks: ['months'],
       });
 
       expect(ticks).to.deep.equal([]);
@@ -106,7 +106,7 @@ describe('getTicks', () => {
         ...defaultOptions,
         scale: scaleBand([new Date(2025, 0, 1)], [0, 100]) as unknown as D3Scale,
         tickNumber: 4,
-        timeOrdinalTicks: ['months'],
+        ordinalTimeTicks: ['months'],
       });
 
       expect(ticks).to.deep.equal([]);
@@ -118,7 +118,7 @@ describe('getTicks', () => {
         ...defaultOptions,
         scale: scaleBand(weeksWithString, [0, 100]) as unknown as D3Scale,
         tickNumber: 4,
-        timeOrdinalTicks: ['months'],
+        ordinalTimeTicks: ['months'],
       });
 
       expect(ticks.map(({ value }) => value.getMonth())).to.deep.equal([1, 2, 3, 4]);

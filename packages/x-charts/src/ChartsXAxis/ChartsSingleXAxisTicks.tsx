@@ -15,14 +15,14 @@ import { useAxisTicksProps } from './useAxisTicksProps';
 
 interface ChartsSingleXAxisProps extends ChartsXAxisProps {
   axisLabelHeight: number;
-  timeOrdinalTicks?: OrdinalTimeTicks;
+  ordinalTimeTicks?: OrdinalTimeTicks;
 }
 
 /**
  * @ignore - internal component.
  */
 function ChartsSingleXAxisTicks(inProps: ChartsSingleXAxisProps) {
-  const { axisLabelHeight, timeOrdinalTicks } = inProps;
+  const { axisLabelHeight, ordinalTimeTicks } = inProps;
   const {
     xScale,
     defaultizedProps,
@@ -67,7 +67,7 @@ function ChartsSingleXAxisTicks(inProps: ChartsSingleXAxisProps) {
     tickLabelPlacement,
     tickSpacing,
     direction: 'x',
-    timeOrdinalTicks,
+    ordinalTimeTicks,
   });
 
   const visibleLabels = getVisibleLabels(xTicks, {

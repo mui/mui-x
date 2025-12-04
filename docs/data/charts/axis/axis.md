@@ -191,18 +191,18 @@ At the bottom, you can see one tick for the beginning and the middle of the day,
 ### Ordinal tick management
 
 Ordinal scales (`'band'` and `'point'`) display one tick per item by default.
-If you have a date axis, you can use the `timeOrdinalTicks` property to configure which ticks to show.
+If you have a date axis, you can use the `ordinalTimeTicks` property to configure which ticks to show.
 
 It takes an array of frequencies at which ticks can be placed.
 Those frequencies must be sorted from the largest to the smallest.
 For example `['years', 'months', 'days']`.
 Visible ticks are selected according to those frequencies and the `tickNumber`.
 
-The `timeOrdinalTicks` property can either be an implementation of the `TickFrequencyDefinition` type or a subset of the built-in frequencies: `'years'`, `'quarterly'`, `'months'`, `'biweekly'`, `'weeks'`, `'days'`, `'hours'`.
+The `ordinalTimeTicks` property can either be an implementation of the `TickFrequencyDefinition` type or a subset of the built-in frequencies: `'years'`, `'quarterly'`, `'months'`, `'biweekly'`, `'weeks'`, `'days'`, `'hours'`.
 
-When using `timeOrdinalTicks` the property `tickPlacement` is ignored, and computation are done as if set to `'middle'`.
+When using `ordinalTimeTicks` the property `tickPlacement` is ignored, and computation are done as if set to `'middle'`.
 
-In the following demo, you can modify the `timeOrdinalTicks` based on built-in frequencies and see how it impacts zoom behavior.
+In the following demo, you can modify the `ordinalTimeTicks` based on built-in frequencies and see how it impacts zoom behavior.
 
 {{"demo": "OrdinalTickPlacement.js"}}
 

@@ -14,14 +14,14 @@ import { useAxisTicksProps } from './useAxisTicksProps';
 
 interface ChartsSingleYAxisProps extends ChartsYAxisProps {
   axisLabelHeight: number;
-  timeOrdinalTicks?: OrdinalTimeTicks;
+  ordinalTimeTicks?: OrdinalTimeTicks;
 }
 
 /**
  * @ignore - internal component.
  */
 function ChartsSingleYAxisTicks(inProps: ChartsSingleYAxisProps) {
-  const { axisLabelHeight, timeOrdinalTicks } = inProps;
+  const { axisLabelHeight, ordinalTimeTicks } = inProps;
   const {
     yScale,
     defaultizedProps,
@@ -62,7 +62,7 @@ function ChartsSingleYAxisTicks(inProps: ChartsSingleYAxisProps) {
     tickInterval,
     tickSpacing,
     direction: 'y',
-    timeOrdinalTicks,
+    ordinalTimeTicks,
   });
 
   /* If there's an axis title, the tick labels have less space to render  */

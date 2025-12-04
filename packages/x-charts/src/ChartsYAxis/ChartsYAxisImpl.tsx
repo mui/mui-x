@@ -27,9 +27,9 @@ interface ChartsYAxisImplProps extends Omit<ChartsYAxisProps, 'axis'> {
  * @ignore - internal component. Use `ChartsYAxis` instead.
  */
 export function ChartsYAxisImpl({ axis, ...inProps }: ChartsYAxisImplProps) {
-  // @ts-expect-error timeOrdinalTicks may not be present on all axis types
+  // @ts-expect-error ordinalTimeTicks may not be present on all axis types
   // Should be set to never, but this causes other issues with proptypes generator.
-  const { scale: yScale, tickNumber, reverse, timeOrdinalTicks, ...settings } = axis;
+  const { scale: yScale, tickNumber, reverse, ordinalTimeTicks, ...settings } = axis;
   const isHydrated = useIsHydrated();
 
   // eslint-disable-next-line material-ui/mui-name-matches-component-name
@@ -111,7 +111,7 @@ export function ChartsYAxisImpl({ axis, ...inProps }: ChartsYAxisImplProps) {
         <ChartsSingleYAxisTicks
           {...inProps}
           axisLabelHeight={axisLabelHeight}
-          timeOrdinalTicks={timeOrdinalTicks}
+          ordinalTimeTicks={ordinalTimeTicks}
         />
       );
   }

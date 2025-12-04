@@ -13,7 +13,7 @@ export default function CustomTickFrequency() {
         xAxis={[
           {
             ...xAxis,
-            timeOrdinalTicks: [
+            ordinalTimeTicks: [
               'years',
               { ...tickFrequencies.quarterly, format: quarterFormat },
               { ...tickFrequencies.weeks, format: weekFormat },

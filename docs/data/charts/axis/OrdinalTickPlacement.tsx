@@ -16,7 +16,7 @@ const tickFrequencies: TickFrequency[] = [
 ];
 
 export default function OrdinalTickPlacement() {
-  const [timeOrdinalTicks, setOrdinalTimeTicks] =
+  const [ordinalTimeTicks, setOrdinalTimeTicks] =
     React.useState<FilteredTicksState>(defaultTicks);
   const [tickNumber, setTickNumber] = React.useState(5);
 
@@ -24,7 +24,7 @@ export default function OrdinalTickPlacement() {
     <Box sx={{ width: '100%' }}>
       <SelectTimeFrequency
         tickFrequencies={tickFrequencies}
-        timeOrdinalTicks={timeOrdinalTicks}
+        ordinalTimeTicks={ordinalTimeTicks}
         setOrdinalTimeTicks={setOrdinalTimeTicks}
         tickNumber={tickNumber}
         setTickNumber={setTickNumber}
@@ -36,9 +36,9 @@ export default function OrdinalTickPlacement() {
           {
             ...xAxis,
             tickNumber,
-            timeOrdinalTicks: tickFrequencies.filter(
+            ordinalTimeTicks: tickFrequencies.filter(
               (frequency) =>
-                timeOrdinalTicks[frequency as keyof typeof timeOrdinalTicks],
+                ordinalTimeTicks[frequency as keyof typeof ordinalTimeTicks],
             ),
           },
         ]}

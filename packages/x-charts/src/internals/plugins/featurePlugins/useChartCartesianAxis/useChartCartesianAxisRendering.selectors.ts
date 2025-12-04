@@ -137,7 +137,7 @@ export const selectorChartXAxisWithDomains = createSelectorMemoized(
       if (isBandScaleConfig(axis) || isPointScaleConfig(axis)) {
         domains[axis.id] = { domain: axis.data! };
 
-        if (axis.timeOrdinalTicks !== undefined) {
+        if (axis.ordinalTimeTicks !== undefined) {
           domains[axis.id].tickNumber = getTickNumber(
             axis,
             [axis.data?.find((d) => d !== null), axis.data?.findLast((d) => d !== null)],
@@ -192,7 +192,7 @@ export const selectorChartYAxisWithDomains = createSelectorMemoized(
       if (isBandScaleConfig(axis) || isPointScaleConfig(axis)) {
         domains[axis.id] = { domain: axis.data! };
 
-        if (axis.timeOrdinalTicks !== undefined) {
+        if (axis.ordinalTimeTicks !== undefined) {
           domains[axis.id].tickNumber = getTickNumber(
             axis,
             [axis.data?.find((d) => d !== null), axis.data?.findLast((d) => d !== null)],
