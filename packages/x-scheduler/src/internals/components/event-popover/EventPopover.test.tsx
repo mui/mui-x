@@ -15,13 +15,11 @@ import {
   SchedulerResourceId,
   SchedulerOccurrencePlaceholderCreation,
 } from '@mui/x-scheduler-headless/models';
-import { DEFAULT_EVENT_COLOR } from '@mui/x-scheduler-headless/constants';
 import { Popover } from '@base-ui-components/react/popover';
 import { EventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
 import { SchedulerEvent } from '@mui/x-scheduler/models';
 import { EventPopoverContent } from './EventPopover';
-import { getColorClassName } from '../../utils/color-utils';
 import { RecurringScopeDialog } from '../scope-dialog/ScopeDialog';
 
 const DEFAULT_EVENT: SchedulerEvent = EventBuilder.new()
@@ -275,9 +273,7 @@ describe('<EventPopoverContent />', () => {
     );
 
     expect(screen.getByRole('button', { name: /resource/i }).textContent).to.match(/NoColor/i);
-    expect(document.querySelector('.ResourceLegendColor')).to.have.class(
-      getColorClassName(DEFAULT_EVENT_COLOR),
-    );
+    expect(document.querySelector('.ResourceLegendColor')).to.have.class('palette-jade');
   });
 
   it('should fallback to "No resource" with default color when the event has no resource', async () => {
@@ -309,9 +305,7 @@ describe('<EventPopoverContent />', () => {
 
     expect(screen.getByRole('button', { name: /resource/i }).textContent).to.match(/no resource/i);
 
-    expect(document.querySelector('.ResourceLegendColor')).to.have.class(
-      getColorClassName(DEFAULT_EVENT_COLOR),
-    );
+    expect(document.querySelector('.ResourceLegendColor')).to.have.class('palette-jade');
 
     await user.click(screen.getByRole('button', { name: /save changes/i }));
 

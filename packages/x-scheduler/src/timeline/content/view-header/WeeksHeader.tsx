@@ -12,7 +12,7 @@ import { WEEKS_UNIT_COUNT } from '../../constants';
 import './Headers.css';
 
 export function WeeksHeader(props: HeaderProps) {
-  const { className, amount, ...other } = props;
+  const { className, amount = WEEKS_UNIT_COUNT, ...other } = props;
 
   const adapter = useAdapter();
   const store = useTimelineStoreContext();
@@ -20,11 +20,10 @@ export function WeeksHeader(props: HeaderProps) {
   const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
 
   const weeks = React.useMemo(() => {
-    const weekCount = amount || WEEKS_UNIT_COUNT;
     const days = getDayList({
       adapter,
       start: adapter.startOfWeek(visibleDate),
-      end: adapter.endOfWeek(adapter.addWeeks(visibleDate, weekCount - 1)),
+      end: adapter.endOfWeek(adapter.addWeeks(visibleDate, amount - 1)),
     });
 
     const tempWeeks: SchedulerProcessedDate[][] = [];
